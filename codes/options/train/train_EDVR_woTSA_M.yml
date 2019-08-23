@@ -1,0 +1,71 @@
+#### general settings
+name: 001_EDVRwoTSA_scratch_lr4e-4_600k_REDS_LrCAR4S
+use_tb_logger: true
+model: video_base
+distortion: sr
+scale: 4
+gpu_ids: [0,1,2,3,4,5,6,7]
+
+#### datasets
+datasets:
+  train:
+    name: REDS
+    mode: REDS
+    interval_list: [1]
+    random_reverse: false
+    border_mode: false
+    dataroot_GT: ../datasets/REDS/train_sharp_wval.lmdb
+    dataroot_LQ: ../datasets/REDS/train_sharp_bicubic_wval.lmdb
+    cache_keys: ~
+
+    N_frames: 5
+    use_shuffle: true
+    n_workers: 3  # per GPU
+    batch_size: 32
+    GT_size: 256
+    LQ_size: 64
+    use_flip: true
+    use_rot: true
+    color: RGB
+
+#### network structures
+network_G:
+  which_model_G: EDVR
+  nf: 64
+  nframes: 5
+  groups: 8
+  front_RBs: 5
+  back_RBs: 10
+  predeblur: false
+  HR_in: false
+  w_TSA: false
+
+#### path
+path:
+  pretrain_model_G: ~
+  strict_load: true
+  resume_state: ~
+
+#### training settings: learning rate scheme, loss
+train:
+  lr_G: !!float 4e-4
+  lr_scheme: CosineAnnealingLR_Restart
+  beta1: 0.9
+  beta2: 0.99
+  niter: 600000
+  warmup_iter: -1  # -1: no warm up
+  T_period: [150000, 150000, 150000, 150000]
+  restarts: [150000, 300000, 450000]
+  restart_weights: [1, 1, 1]
+  eta_min: !!float 1e-7
+
+  pixel_criterion: cb
+  pixel_weight: 1.0
+  val_freq: !!float 5e3
+
+  manual_seed: 0
+
+#### logger
+logger:
+  print_freq: 100
+  save_checkpoint_freq: !!float 5e3
