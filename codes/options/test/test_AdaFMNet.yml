@@ -1,32 +1,34 @@
-name: MSRGANx4
+name: modulation_adafmnet_bicx4_finetune_DIV2K
 suffix: ~  # add suffix to saved images
 model: sr
 distortion: sr
-scale: 4
+scale: 1
 crop_border: ~  # crop border when evaluation. If None(~), crop the scale pixels
 gpu_ids: [0]
+
+interpolation_stride: 0.01 # None(~) for standard test; 0.1, 0.01 ... for modulation testing
 
 datasets:
   test_1:  # the 1st test dataset
     name: set5
     mode: LQGT
-    dataroot_GT: ../datasets/val_set5/Set5
-    dataroot_LQ: ../datasets/val_set5/Set5_bicLRx4
+    dataroot_GT: ../datasets/val_set14/Set5
+    dataroot_LQ: ../datasets/val_set14/Set5_bicx4
   test_2:  # the 2st test dataset
     name: set14
     mode: LQGT
     dataroot_GT: ../datasets/val_set14/Set14
-    dataroot_LQ: ../datasets/val_set14/Set14_bicLRx4
+    dataroot_LQ: ../datasets/val_set14/Set14_bicx4
 
 #### network structures
 network_G:
-  which_model_G: MSRResNet
+  which_model_G: AdaFMNet
   in_nc: 3
   out_nc: 3
   nf: 64
   nb: 16
-  upscale: 4
+  adafm_ksize: 1 # None(~) for basic model; 1 | 3 | 5 | 7 for AdaFM-Net
 
 #### path
 path:
-  pretrain_model_G: ../experiments/pretrained_models/MSRGANx4.pth
+  pretrain_model_G: ../experiments/pretrained_models/noise15to75.pth

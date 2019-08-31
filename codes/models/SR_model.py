@@ -50,12 +50,18 @@ class SRModel(BaseModel):
             # optimizers
             wd_G = train_opt['weight_decay_G'] if train_opt['weight_decay_G'] else 0
             optim_params = []
-            for k, v in self.netG.named_parameters():  # can optimize for a part of the model
-                if v.requires_grad:
-                    optim_params.append(v)
-                else:
-                    if self.rank <= 0:
-                        logger.warning('Params [{:s}] will not optimize.'.format(k))
+            if train_opt['finetune_adafm']:
+                for k, v in self.netG.named_parameters():  # can optimize for a part of the model
+                    if k.find('adafm') >= 0 and v.requires_grad:
+                        optim_params.append(v)
+                        logger.info('Params [{:s}] will optimize.'.format(k))
+            else:
+                for k, v in self.netG.named_parameters():  # can optimize for a part of the model
+                    if v.requires_grad:
+                        optim_params.append(v)
+                    else:
+                        if self.rank <= 0:
+                            logger.warning('Params [{:s}] will not optimize.'.format(k))
             self.optimizer_G = torch.optim.Adam(optim_params, lr=train_opt['lr_G'],
                                                 weight_decay=wd_G,
                                                 betas=(train_opt['beta1'], train_opt['beta2']))
@@ -165,6 +171,11 @@ class SRModel(BaseModel):
         if load_path_G is not None:
             logger.info('Loading model for G [{:s}] ...'.format(load_path_G))
             self.load_network(load_path_G, self.netG, self.opt['path']['strict_load'])
+
+    def update(self, new_model_dict):
+        if isinstance(self.netG, nn.DataParallel):
+            network = self.netG.module
+            network.load_state_dict(new_model_dict)
 
     def save(self, iter_label):
         self.save_network(self.netG, 'G', iter_label)
