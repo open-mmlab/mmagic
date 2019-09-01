@@ -2,7 +2,7 @@ import torch
 import models.archs.SRResNet_arch as SRResNet_arch
 import models.archs.discriminator_vgg_arch as SRGAN_arch
 import models.archs.RRDBNet_arch as RRDBNet_arch
-# import models.archs.EDVR_arch as EDVR_arch
+import models.archs.EDVR_arch as EDVR_arch
 import models.archs.RankSRGAN_arch as RankSRGAN_arch
 
 
