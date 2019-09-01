@@ -13,7 +13,8 @@ import options.options as option
 from utils import util
 from data import create_dataloader, create_dataset
 from models import create_model
-
+import matlab
+import matlab.engine
 
 def init_dist(backend='nccl', **kwargs):
     """initialization for distributed training"""
@@ -24,9 +25,9 @@ def init_dist(backend='nccl', **kwargs):
     torch.cuda.set_device(rank % num_gpus)
     dist.init_process_group(backend=backend, **kwargs)
 
-
 def main():
     #### options
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-opt', type=str, help='Path to option YAML file.')
     parser.add_argument('--launcher', choices=['none', 'pytorch'], default='none',
@@ -34,6 +35,7 @@ def main():
     parser.add_argument('--local_rank', type=int, default=0)
     args = parser.parse_args()
     opt = option.parse(args.opt, is_train=True)
+    perceptualmetric_path = os.getcwd() + '/utils/perceptualmetric'
 
     #### distributed training settings
     if args.launcher == 'none':  # disabled distributed training
@@ -141,6 +143,11 @@ def main():
         current_step = 0
         start_epoch = 0
 
+    #### create python-matlab interface
+    eng = matlab.engine.connect_matlab()
+    print('matlab process name: ',matlab.engine.find_matlab())
+    eng.addpath(perceptualmetric_path)
+
     #### training
     logger.info('Start training from epoch: {:d}, iter: {:d}'.format(start_epoch, current_step))
     for epoch in range(start_epoch, total_epochs + 1):
@@ -178,6 +185,8 @@ def main():
                     # does not support multi-GPU validation
                     pbar = util.ProgressBar(len(val_loader))
                     avg_psnr = 0.
+                    avg_niqe = 0
+
                     idx = 0
                     for val_data in val_loader:
                         idx += 1
@@ -201,14 +210,23 @@ def main():
                         sr_img, gt_img = util.crop_border([sr_img, gt_img], opt['scale'])
                         avg_psnr += util.calculate_psnr(sr_img, gt_img)
                         pbar.update('Test {}'.format(img_name))
+                        # calculate NIQE
+                        avg_niqe +=  eng.calc_NIQE(save_img_path,4)
 
                     avg_psnr = avg_psnr / idx
+                    avg_niqe = avg_niqe / idx
 
                     # log
                     logger.info('# Validation # PSNR: {:.4e}'.format(avg_psnr))
+                    logger.info('# Validation # NIQE: {:.4e}'.format(avg_niqe))
+
                     # tensorboard logger
                     if opt['use_tb_logger'] and 'debug' not in opt['name']:
                         tb_logger.add_scalar('psnr', avg_psnr, current_step)
+
+                    if opt['use_tb_logger'] and 'debug' not in opt['name']:
+                        tb_logger.add_scalar('niqe', avg_niqe, current_step)
+
                 else:  # video restoration validation
                     if opt['dist']:
                         # multi-GPU testing

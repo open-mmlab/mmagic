@@ -2,7 +2,8 @@ import torch
 import models.archs.SRResNet_arch as SRResNet_arch
 import models.archs.discriminator_vgg_arch as SRGAN_arch
 import models.archs.RRDBNet_arch as RRDBNet_arch
-import models.archs.EDVR_arch as EDVR_arch
+# import models.archs.EDVR_arch as EDVR_arch
+import models.archs.RankSRGAN_arch as RankSRGAN_arch
 
 
 # Generator
@@ -17,6 +18,9 @@ def define_G(opt):
     elif which_model == 'RRDBNet':
         netG = RRDBNet_arch.RRDBNet(in_nc=opt_net['in_nc'], out_nc=opt_net['out_nc'],
                                     nf=opt_net['nf'], nb=opt_net['nb'])
+    elif which_model == 'SRResNet':
+        netG = RankSRGAN_arch.SRResNet(in_nc=opt_net['in_nc'], out_nc=opt_net['out_nc'],
+                                       nf=opt_net['nf'], nb=opt_net['nb'], upscale=opt_net['scale'])
     # video restoration
     elif which_model == 'EDVR':
         netG = EDVR_arch.EDVR(nf=opt_net['nf'], nframes=opt_net['nframes'],
@@ -37,6 +41,8 @@ def define_D(opt):
 
     if which_model == 'discriminator_vgg_128':
         netD = SRGAN_arch.Discriminator_VGG_128(in_nc=opt_net['in_nc'], nf=opt_net['nf'])
+    elif which_model == 'discriminator_vgg_296':
+        netD = RankSRGAN_arch.Discriminator_VGG_296(in_nc=opt_net['in_nc'], nf=opt_net['nf'])
     else:
         raise NotImplementedError('Discriminator model [{:s}] not recognized'.format(which_model))
     return netD
@@ -55,3 +61,15 @@ def define_F(opt, use_bn=False):
                                           use_input_norm=True, device=device)
     netF.eval()  # No need to train
     return netF
+
+# Define network used for rank-content loss
+def define_R(opt):
+    opt_net = opt['network_R']
+    which_model = opt_net['which_model_R']
+
+    if which_model == 'Ranker_VGG12':
+        netR = RankSRGAN_arch.Ranker_VGG12_296(in_nc=opt_net['in_nc'], nf=opt_net['nf'])
+    else:
+        raise NotImplementedError('Ranker model [{:s}] is not recognized'.format(which_model))
+
+    return netR

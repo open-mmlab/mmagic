@@ -1,0 +1,95 @@
+# Not exactly the same as SRGAN in <Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network>
+# With 16 Residual blocks w/o BN
+
+#### general settings
+name: 001_RankSRGANx4_SRResNetx4_DIV2K
+use_tb_logger: true
+model: ranksrgan
+distortion: sr
+scale: 4
+gpu_ids: [1,2,3]
+
+#### datasets
+datasets:
+  train:
+    name: DIV2K
+    mode: LQGT
+    dataroot_GT: /home/wlzhang/data/DIV2K/DIV2K_train_HR
+    dataroot_LQ: 
+
+    use_shuffle: true
+    n_workers: 6  # per GPU
+    batch_size: 8
+    GT_size: 296
+    use_flip: true
+    use_rot: true
+    color: RGB
+  val:
+    name: val_Pirm_test100
+    mode: LQGT
+    dataroot_GT: /home/wlzhang/BasicSR12/data/val/PIRMtestHR
+    dataroot_LQ: /home/wlzhang/BasicSR12/data/val/PIRMtest
+
+#### network structures
+network_G:
+  which_model_G: SRResNet # SRResNet for RankSRGAN
+  in_nc: 3
+  out_nc: 3
+  nf: 64
+  nb: 16
+  upscale: 4
+network_D:
+  which_model_D: discriminator_vgg_296
+  in_nc: 3
+  nf: 64
+
+network_R:
+  which_model_R: Ranker_VGG12
+  in_nc: 3
+  nf: 64
+
+#### path
+# Download pretrained models from https://drive.google.com/drive/folders/1_KhEc_zBRW7iLeEJITU3i923DC6wv51T?usp=sharing
+path:
+  pretrain_model_G: ../experiments/pretrained_models/mmsr_SRResNet_pretrain.pth
+  pretrain_model_R: ../experiments/pretrained_models/mmsr_Ranker_NIQE.pth
+
+  strict_load: true
+  resume_state: ~
+
+#### training settings: learning rate scheme, loss
+train:
+  lr_G: !!float 1e-4
+  weight_decay_G: 0
+  beta1_G: 0.9
+  beta2_G: 0.99
+  lr_D: !!float 1e-4
+  weight_decay_D: 0
+  beta1_D: 0.9
+  beta2_D: 0.99
+  lr_scheme: MultiStepLR
+
+  niter: 500000
+  warmup_iter: -1  # no warm up
+  lr_steps: [50000, 100000, 200000, 300000]
+  lr_gamma: 0.5
+
+  pixel_criterion: l1
+  pixel_weight: 0
+  feature_criterion: l1
+  feature_weight: 1
+  R_weight: !!float 3e-2 # rank-content loss
+  R_bias: 0
+  gan_type: gan  # gan | ragan
+  gan_weight: !!float 5e-3
+
+  D_update_ratio: 1
+  D_init_iters: 0
+
+  manual_seed: 10
+  val_freq: !!float 2e3
+
+#### logger
+logger:
+  print_freq: 200
+  save_checkpoint_freq: !!float 2e3

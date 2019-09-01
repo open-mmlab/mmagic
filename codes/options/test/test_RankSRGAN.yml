@@ -1,0 +1,33 @@
+name: RankSRGANx4
+suffix: ~  # add suffix to saved images
+model: sr
+distortion: sr
+scale: 4
+crop_border: ~  # crop border when evaluation. If None(~), crop the scale pixels
+gpu_ids: [3]
+
+datasets:
+  test_1:  # the 1st test dataset
+    name: set14
+    mode: LQGT
+    dataroot_GT: /home/wlzhang/BasicSR12/data/val/Set14_mod
+    dataroot_LQ:
+  test_2:  # the 2st test dataset
+    name: PIRMtest
+    mode: LQGT
+    dataroot_GT: /home/wlzhang/RankSRGAN/data/val/PIRMtestHR
+    dataroot_LQ: /home/wlzhang/RankSRGAN/data/val/PIRMtest
+
+#### network structures
+network_G:
+  which_model_G: SRResNet # SRResNet for RankSRGAN
+  in_nc: 3
+  out_nc: 3
+  nf: 64
+  nb: 16
+  upscale: 4
+
+#### path
+# Download pretrained models from https://drive.google.com/drive/folders/1_KhEc_zBRW7iLeEJITU3i923DC6wv51T?usp=sharing
+path:
+  pretrain_model_G: ../experiments/pretrained_models/mmsr_RankSRGAN_NIQE.pth

@@ -2,7 +2,8 @@
 python train.py -opt options/train/train_SRResNet.yml
 python train.py -opt options/train/train_SRGAN.yml
 python train.py -opt options/train/train_ESRGAN.yml
-
+python train.py -opt options/train/train_RankSRGAN.yml # Validation with PSNR
+python train_niqe.py -opt options/train/train_RankSRGAN.yml # Validation with PSNR and NIQE
 
 # distributed training (video SR)
 # 8 GPUs

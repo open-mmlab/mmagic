@@ -9,6 +9,8 @@ def create_model(opt):
         from .SR_model import SRModel as M
     elif model == 'srgan':  # GAN-based super resolution, SRGAN / ESRGAN
         from .SRGAN_model import SRGANModel as M
+    elif model == 'ranksrgan':  # GAN-based super resolution
+        from .RankSRGAN_model import SRGANModel as M
     # video restoration
     elif model == 'video_base':
         from .Video_base_model import VideoBaseModel as M
