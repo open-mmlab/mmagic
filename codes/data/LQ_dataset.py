@@ -11,6 +11,7 @@ class LQDataset(data.Dataset):
     def __init__(self, opt):
         super(LQDataset, self).__init__()
         self.opt = opt
+        self.data_type = self.opt['data_type']
         self.paths_LQ, self.paths_GT = None, None
         self.LQ_env = None  # environment for lmdb
 
@@ -27,7 +28,7 @@ class LQDataset(data.Dataset):
         LQ_path = None
 
         # get LQ image
-        LQ_path = self.LQ_path[index]
+        LQ_path = self.paths_LQ[index]
         resolution = [int(s) for s in self.sizes_LQ[index].split('_')
                       ] if self.data_type == 'lmdb' else None
         img_LQ = util.read_img(self.LQ_env, LQ_path, resolution)
