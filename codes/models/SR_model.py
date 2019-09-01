@@ -52,7 +52,9 @@ class SRModel(BaseModel):
             optim_params = []
             if train_opt['finetune_adafm']:
                 for k, v in self.netG.named_parameters():  # can optimize for a part of the model
-                    if k.find('adafm') >= 0 and v.requires_grad:
+                    v.requires_grad = False
+                    if k.find('adafm') >= 0:
+                        v.requires_grad = True
                         optim_params.append(v)
                         logger.info('Params [{:s}] will optimize.'.format(k))
             else:
