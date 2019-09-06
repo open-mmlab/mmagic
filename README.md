@@ -14,7 +14,7 @@ MMSR is an open source image and video super-resolution toolbox based on PyTorch
 ## Dependencies and Installation
 
 - Python 3 (Recommend to use [Anaconda](https://www.anaconda.com/download/#linux))
-- [PyTorch >= 1.0](https://pytorch.org/)
+- [PyTorch >= 1.1](https://pytorch.org/)
 - NVIDIA GPU + [CUDA](https://developer.nvidia.com/cuda-downloads)
 - [Deformable Convolution](https://arxiv.org/abs/1703.06211). We use [mmdetection](https://github.com/open-mmlab/mmdetection)'s dcn implementation. Please first compile it.
   ```
@@ -24,7 +24,7 @@ MMSR is an open source image and video super-resolution toolbox based on PyTorch
 - Python packages: `pip install numpy opencv-python lmdb pyyaml`
 - TensorBoard:
   - PyTorch >= 1.1: `pip install tb-nightly future`
-  - PyTorch == 1.0: `pip install tensorboardX`
+
 
 ## Dataset Preparation
 We use datasets in LDMB format for faster IO speed. Please refer to [DATASETS.md](datasets/DATASETS.md) for more details.
