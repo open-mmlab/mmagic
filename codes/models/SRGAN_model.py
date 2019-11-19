@@ -133,8 +133,7 @@ class SRGANModel(BaseModel):
 
     def optimize_parameters(self, step):
         # G
-        for p in self.netD.parameters():
-            p.requires_grad = False
+        self.netD.eval()
 
         self.optimizer_G.zero_grad()
         self.fake_H = self.netG(self.var_L)
