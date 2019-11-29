@@ -1,0 +1,6 @@
+numpy
+opencv-python
+lmdb
+pyyaml
+tb-nightly
+future
