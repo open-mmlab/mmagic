@@ -34,7 +34,7 @@ Please see [wiki- Training and Testing](https://github.com/open-mmlab/mmsr/wiki/
 Results and pre-trained models are available in the [wiki-Model Zoo](https://github.com/open-mmlab/mmsr/wiki/Model-Zoo).
 
 ## Contributing
-We appreciate all contributions. Please refer to [mmdetection](https://github.com/open-mmlab/mmdetection/blob/master/CONTRIBUTING.md) for contributing guideline.
+We appreciate all contributions. Please refer to [mmdetection](https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md) for contributing guideline.
 
 **Python code style**<br/>
 We adopt [PEP8](https://python.org/dev/peps/pep-0008) as the preferred code style. We use [flake8](http://flake8.pycqa.org/en/latest) as the linter and [yapf](https://github.com/google/yapf) as the formatter. Please upgrade to the latest yapf (>=0.27.0) and refer to the [yapf configuration](.style.yapf) and [flake8 configuration](.flake8).
