@@ -50,6 +50,9 @@ class VideoTestDataset(data.Dataset):
                 if self.cache_data:
                     self.imgs_LQ[subfolder_name] = util.read_img_seq(img_paths_LQ)
                     self.imgs_GT[subfolder_name] = util.read_img_seq(img_paths_GT)
+                else:
+                    self.imgs_LQ[subfolder_name] = img_paths_LQ
+                    self.imgs_GT[subfolder_name] = img_paths_GT
         elif opt['name'].lower() in ['vimeo90k-test']:
             pass  # TODO
         else:
@@ -63,14 +66,14 @@ class VideoTestDataset(data.Dataset):
         idx, max_idx = self.data_info['idx'][index].split('/')
         idx, max_idx = int(idx), int(max_idx)
         border = self.data_info['border'][index]
-
+        select_idx = util.index_generation(idx, max_idx, self.opt['N_frames'],
+                                           padding=self.opt['padding'])
         if self.cache_data:
-            select_idx = util.index_generation(idx, max_idx, self.opt['N_frames'],
-                                               padding=self.opt['padding'])
             imgs_LQ = self.imgs_LQ[folder].index_select(0, torch.LongTensor(select_idx))
             img_GT = self.imgs_GT[folder][idx]
         else:
-            pass  # TODO
+            imgs_LQ = util.read_img_seq(self.imgs_LQ[folder]).index_select(0, torch.LongTensor(select_idx))
+            img_GT = util.read_img_seq(self.imgs_GT[folder])[idx]
 
         return {
             'LQs': imgs_LQ,
