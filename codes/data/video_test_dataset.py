@@ -48,6 +48,9 @@ class VideoTestDataset(data.Dataset):
                     self.data_info['folder'].append(GT_name_a)
                     previous_name_a = GT_name_a
                     previous_name_b = GT_name_b
+                max_idx = int(previous_name_b) + 1
+                for i in range(max_idx):
+                    self.data_info['idx'].append('{}/{}'.format(i, max_idx))
             else:
                 subfolders_LQ = util.glob_file_list(self.LQ_root)
                 subfolders_GT = util.glob_file_list(self.GT_root)
