@@ -9,7 +9,7 @@ from utils import util  # noqa: E402
 
 
 def main():
-    dataset = 'DIV2K800_sub'  # REDS | Vimeo90K | DIV2K800_sub
+    dataset = 'DIV2K800_sub'  # REDS | Vimeo90K | DIV2K800_sub | REDS4
     opt = {}
     opt['dist'] = False
     opt['gpu_ids'] = [0]
@@ -26,12 +26,16 @@ def main():
         opt['GT_size'] = 256
         opt['LQ_size'] = 64
         opt['scale'] = 4
+        opt['GT_shape'] = [3, 720, 1280]
+        opt['LQ_shape'] = [3, 180, 320]
         opt['use_flip'] = True
         opt['use_rot'] = True
         opt['interval_list'] = [1]
         opt['random_reverse'] = False
         opt['border_mode'] = False
         opt['cache_keys'] = None
+        opt['cache_data'] = False
+        opt['padding'] = 'new_info'
         opt['data_type'] = 'lmdb'  # img | lmdb | mc
     elif dataset == 'Vimeo90K':
         opt['name'] = 'test_Vimeo90K'
@@ -82,13 +86,13 @@ def main():
         if i > 5:
             break
         print(i)
-        if dataset == 'REDS' or dataset == 'Vimeo90K':
+        if dataset == 'REDS' or dataset == 'Vimeo90K' or dataset == 'REDS4':
             LQs = data['LQs']
         else:
             LQ = data['LQ']
         GT = data['GT']
 
-        if dataset == 'REDS' or dataset == 'Vimeo90K':
+        if dataset == 'REDS' or dataset == 'Vimeo90K' or dataset == 'REDS4':
             for j in range(LQs.size(1)):
                 torchvision.utils.save_image(LQs[:, j, :, :, :],
                                              'tmp/LQ_{:03d}_{}.png'.format(i, j), nrow=nrow,
