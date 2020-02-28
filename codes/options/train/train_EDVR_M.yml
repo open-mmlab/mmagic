@@ -32,6 +32,8 @@ datasets:
     mode: video_test
     dataroot_GT: ../datasets/REDS4/GT
     dataroot_LQ: ../datasets/REDS4/sharp_bicubic
+    GT_shape: [3, 720, 1280] # C, H, W
+    LQ_shape: [3, 180, 320] # C, H, W
     cache_data: True
     N_frames: 5
     padding: new_info
