@@ -24,38 +24,57 @@ class VideoTestDataset(data.Dataset):
         self.GT_root, self.LQ_root = opt['dataroot_GT'], opt['dataroot_LQ']
         self.data_type = self.opt['data_type']
         self.data_info = {'path_LQ': [], 'path_GT': [], 'folder': [], 'idx': [], 'border': []}
-        if self.data_type == 'lmdb':
-            self.paths_GT, _ = util.get_image_paths(self.data_type, self.GT_root)
-            self.GT_env, self.LQ_env = None, None
         #### Generate data info and cache data
         self.imgs_LQ, self.imgs_GT = {}, {}
         if opt['name'].lower() in ['vid4', 'reds4']:
-            subfolders_LQ = util.glob_file_list(self.LQ_root)
-            subfolders_GT = util.glob_file_list(self.GT_root)
-            for subfolder_LQ, subfolder_GT in zip(subfolders_LQ, subfolders_GT):
-                subfolder_name = osp.basename(subfolder_GT)
-                img_paths_LQ = util.glob_file_list(subfolder_LQ)
-                img_paths_GT = util.glob_file_list(subfolder_GT)
-                max_idx = len(img_paths_LQ)
-                assert max_idx == len(
-                    img_paths_GT), 'Different number of images in LQ and GT folders'
-                self.data_info['path_LQ'].extend(img_paths_LQ)
-                self.data_info['path_GT'].extend(img_paths_GT)
-                self.data_info['folder'].extend([subfolder_name] * max_idx)
-                for i in range(max_idx):
-                    self.data_info['idx'].append('{}/{}'.format(i, max_idx))
-                border_l = [0] * max_idx
-                for i in range(self.half_N_frames):
-                    border_l[i] = 1
-                    border_l[max_idx - i - 1] = 1
-                self.data_info['border'].extend(border_l)
+            if self.data_type == 'lmdb':
+                self.lmdb_paths_GT, _ = util.get_image_paths(self.data_type, self.GT_root)
+                self.lmdb_paths_LQ, _ = util.get_image_paths(self.data_type, self.LQ_root)
+                self.GT_env, self.LQ_env = None, None
+                previous_name_a = None
+                previous_name_b = None
+                for lmdb_path_GT, lmdb_path_LQ in zip(self.lmdb_paths_GT, self.lmdb_paths_LQ):
+                    GT_name_a, GT_name_b = lmdb_path_GT.split('_')
+                    assert lmdb_path_GT == lmdb_path_LQ, 'GT path and LQ path in lmdb is not matched'
+                    if previous_name_a != GT_name_a and previous_name_a is not None:
+                        max_idx = int(previous_name_b) + 1
+                        for i in range(max_idx):
+                            self.data_info['idx'].append('{}/{}'.format(i, max_idx))
+                        border_l = [0] * max_idx
+                        for i in range(self.half_N_frames):
+                            border_l[i] = 1
+                            border_l[max_idx - i - 1] = 1
+                        self.data_info['border'].extend(border_l)
+                    self.data_info['folder'].append(GT_name_a)
+                    previous_name_a = GT_name_a
+                    previous_name_b = GT_name_b
+            else:
+                subfolders_LQ = util.glob_file_list(self.LQ_root)
+                subfolders_GT = util.glob_file_list(self.GT_root)
+                for subfolder_LQ, subfolder_GT in zip(subfolders_LQ, subfolders_GT):
+                    subfolder_name = osp.basename(subfolder_GT)
+                    img_paths_LQ = util.glob_file_list(subfolder_LQ)
+                    img_paths_GT = util.glob_file_list(subfolder_GT)
+                    max_idx = len(img_paths_LQ)
+                    assert max_idx == len(
+                        img_paths_GT), 'Different number of images in LQ and GT folders'
+                    self.data_info['path_LQ'].extend(img_paths_LQ)
+                    self.data_info['path_GT'].extend(img_paths_GT)
+                    self.data_info['folder'].extend([subfolder_name] * max_idx)
+                    for i in range(max_idx):
+                        self.data_info['idx'].append('{}/{}'.format(i, max_idx))
+                    border_l = [0] * max_idx
+                    for i in range(self.half_N_frames):
+                        border_l[i] = 1
+                        border_l[max_idx - i - 1] = 1
+                    self.data_info['border'].extend(border_l)
 
-                if self.cache_data:
-                    self.imgs_LQ[subfolder_name] = util.read_img_seq(img_paths_LQ)
-                    self.imgs_GT[subfolder_name] = util.read_img_seq(img_paths_GT)
-                else:
-                    self.imgs_LQ[subfolder_name] = img_paths_LQ
-                    self.imgs_GT[subfolder_name] = img_paths_GT
+                    if self.cache_data:
+                        self.imgs_LQ[subfolder_name] = util.read_img_seq(img_paths_LQ)
+                        self.imgs_GT[subfolder_name] = util.read_img_seq(img_paths_GT)
+                    else:
+                        self.imgs_LQ[subfolder_name] = img_paths_LQ
+                        self.imgs_GT[subfolder_name] = img_paths_GT
         elif opt['name'].lower() in ['vimeo90k-test']:
             pass  # TODO
         else:
@@ -81,7 +100,7 @@ class VideoTestDataset(data.Dataset):
         if self.data_type == 'lmdb':
             if self.GT_env is None or self.LQ_env is None:
                 self._init_lmdb()
-            key = self.paths_GT[idx]
+            key = self.lmdb_paths_GT[index]
             name_a, name_b = key.split('_')
             center_frame_idx = int(name_b)
             GT_size_tuple = self.opt['GT_shape']
