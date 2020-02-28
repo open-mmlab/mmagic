@@ -51,6 +51,11 @@ class VideoTestDataset(data.Dataset):
                 max_idx = int(previous_name_b) + 1
                 for i in range(max_idx):
                     self.data_info['idx'].append('{}/{}'.format(i, max_idx))
+                border_l = [0] * max_idx
+                for i in range(self.half_N_frames):
+                    border_l[i] = 1
+                    border_l[max_idx - i - 1] = 1
+                self.data_info['border'].extend(border_l)
             else:
                 subfolders_LQ = util.glob_file_list(self.LQ_root)
                 subfolders_GT = util.glob_file_list(self.GT_root)
