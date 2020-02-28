@@ -134,4 +134,6 @@ class VideoTestDataset(data.Dataset):
         }
 
     def __len__(self):
+        if self.data_type == 'lmdb':
+            return len(self.lmdb_paths_GT)
         return len(self.data_info['path_GT'])
