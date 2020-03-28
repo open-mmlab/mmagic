@@ -29,5 +29,5 @@ test:
     - python -c "import mmedit; print(mmedit.__version__)"
     - echo "Start testing..."
     - pip install pytest coverage
-    - coverage run --source mmedit -m pytest tests/
+    - coverage run --branch --source mmedit -m pytest tests/
     - coverage report -m
