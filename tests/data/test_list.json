@@ -1,0 +1,16 @@
+[
+    {
+        "alpha": "alpha/GT05.jpg",
+        "trimap": "trimap/GT05.jpg",
+        "bg": "bg/GT26r.jpg",
+        "fg": "fg/GT05.jpg",
+        "merged": "merged/GT05.jpg"
+    },
+    {
+        "alpha": "alpha/GT05.jpg",
+        "trimap": "trimap/GT05.jpg",
+        "bg": "bg/GT26r.jpg",
+        "fg": "fg/GT05.jpg",
+        "merged": "merged/GT05.jpg"
+    }
+]
