@@ -8,6 +8,7 @@ from .registry import OPTIMIZERS
 
 def build_optimizer(model, optimizer_cfg):
     """Build optimizer from configs.
+
     Args:
         model (:obj:`nn.Module`): The model with parameters to be optimized.
         optimizer_cfg (dict): The config dict of the optimizer.
@@ -27,8 +28,10 @@ def build_optimizer(model, optimizer_cfg):
                   for all weight and bias parameters of normalization layers.
                   `dwconv_decay_mult` will be multiplied to the weight decay
                   for all weight and bias parameters of depthwise conv layers.
+
     Returns:
         torch.optim.Optimizer: The initialized optimizer.
+
     Example:
         >>> import torch
         >>> model = torch.nn.modules.Conv1d(1, 1, 1)
