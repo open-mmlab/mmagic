@@ -11,10 +11,10 @@ def readme():
     return content
 
 
-MAJOR = 1
-MINOR = 0
-PATCH = ''
-SUFFIX = 'rc1'
+MAJOR = 0
+MINOR = 1
+PATCH = 0
+SUFFIX = ''
 if PATCH:
     SHORT_VERSION = '{}.{}.{}{}'.format(MAJOR, MINOR, PATCH, SUFFIX)
 else:
