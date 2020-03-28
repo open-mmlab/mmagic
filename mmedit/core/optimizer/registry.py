@@ -3,6 +3,8 @@ import inspect
 import torch
 from mmcv.utils import Registry
 
+__all__ = ['OPTIMIZERS']
+
 OPTIMIZERS = Registry('optimizer')
 
 

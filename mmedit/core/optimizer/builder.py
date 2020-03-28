@@ -48,7 +48,9 @@ def build_optimizer(model, optimizer_cfg):
     if paramwise_options is None:
         params = model.parameters()
     else:
-        assert isinstance(paramwise_options, dict)
+        if not isinstance(paramwise_options, dict):
+            raise TypeError(f'paramwise_options must be a dict, '
+                            f'but got {type(paramwise_options)}')
         # get base lr and weight decay
         base_lr = optimizer_cfg['lr']
         base_wd = optimizer_cfg.get('weight_decay', None)
@@ -56,7 +58,9 @@ def build_optimizer(model, optimizer_cfg):
         if ('bias_decay_mult' in paramwise_options
                 or 'norm_decay_mult' in paramwise_options
                 or 'dwconv_decay_mult' in paramwise_options):
-            assert base_wd is not None
+            if base_wd is None:
+                raise ValueError('weight_decay cannot be None since '
+                                 'at least one decay_mult is set')
         # get param-wise options
         bias_lr_mult = paramwise_options.get('bias_lr_mult', 1.)
         bias_decay_mult = paramwise_options.get('bias_decay_mult', 1.)
