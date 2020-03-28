@@ -106,7 +106,6 @@ venv.bak/
 
 # custom
 mmedit/version.py
-data
 .vscode
 .idea
 *.pkl
