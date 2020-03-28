@@ -156,7 +156,7 @@ def test_build_optimizer():
 
 def test_torch_optimizers():
     torch_optimizers = [
-        'ASGD', 'Adadelta', 'Adagrad', 'Adam', 'AdamW', 'Adamax', 'LBFGS',
-        'Optimizer', 'RMSprop', 'Rprop', 'SGD', 'SparseAdam'
+        'ASGD', 'Adadelta', 'Adagrad', 'Adam', 'Adamax', 'LBFGS', 'RMSprop',
+        'Rprop', 'SGD', 'SparseAdam'
     ]
     assert set(torch_optimizers).issubset(set(TORCH_OPTIMIZERS))

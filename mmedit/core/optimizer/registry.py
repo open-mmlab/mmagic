@@ -11,7 +11,7 @@ OPTIMIZERS = Registry('optimizer')
 def register_torch_optimizers():
     torch_optimizers = []
     for module_name in dir(torch.optim):
-        if module_name.startswith('__'):
+        if module_name.startswith('__') or module_name == 'Optimizer':
             continue
         _optim = getattr(torch.optim, module_name)
         if inspect.isclass(_optim) and issubclass(_optim,
