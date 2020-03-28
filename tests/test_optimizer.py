@@ -153,6 +153,8 @@ def test_build_optimizer():
         assert param_group['lr'] == base_lr
         assert param_group['weight_decay'] == base_wd
 
+
+def test_torch_optimizers():
     torch_optimizers = [
         'ASGD', 'Adadelta', 'Adagrad', 'Adam', 'AdamW', 'Adamax', 'LBFGS',
         'Optimizer', 'RMSprop', 'Rprop', 'SGD', 'SparseAdam'
