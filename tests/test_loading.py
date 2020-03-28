@@ -78,8 +78,7 @@ class TestMattingLoading(object):
         cls.results = dict()
         for data_info in data_infos:
             for key in data_info:
-                cls.results[f'{key}_path'] = osp.join(data_prefix,
-                                                      data_info[key])
+                cls.results[key] = osp.join(data_prefix, data_info[key])
 
     def test_load_alpha(self):
         target_keys = [
