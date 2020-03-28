@@ -20,7 +20,7 @@ if PATCH:
 else:
     SHORT_VERSION = '{}.{}{}'.format(MAJOR, MINOR, SUFFIX)
 
-version_file = 'mmediting/version.py'
+version_file = 'mmedit/version.py'
 
 
 def get_git_hash():
@@ -88,7 +88,7 @@ def get_requirements(filename='requirements.txt'):
 if __name__ == '__main__':
     write_version_py()
     setup(
-        name='mmediting',
+        name='mmedit',
         version=get_version(),
         description='Image and Video Editing Toolbox',
         long_description=readme(),
