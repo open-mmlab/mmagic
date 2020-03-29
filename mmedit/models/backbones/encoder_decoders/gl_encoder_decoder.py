@@ -1,0 +1,48 @@
+import torch.nn as nn
+from mmcv.runner import load_checkpoint
+from mmedit.models.builder import build_component
+from mmedit.models.registry import BACKBONES
+from mmedit.utils import get_root_logger
+
+
+@BACKBONES.register_module
+class GLEncoderDecoder(nn.Module):
+    """Encoder-Decoder used in Global&Local model.
+
+    This implementation follows:
+    Globally and locally Consistent Image Completion
+
+    The architecture of the encoder-decoder is:
+        (conv2d x 6) --> (dilated conv2d x 4) --> (conv2d or deconv2d x 7)
+
+    Args:
+        encoder (dict): Config dict to encoder.
+        decoder (dict): Config dict to build decoder.
+        dilation_neck (dict): Config dict to build dilation neck.
+    """
+
+    def __init__(self,
+                 encoder=dict(type='GLEncoder'),
+                 decoder=dict(type='GLDecoder'),
+                 dilation_neck=dict(type='GLDilationNeck')):
+        super(GLEncoderDecoder, self).__init__()
+        self.encoder = build_component(encoder)
+        self.decoder = build_component(decoder)
+        self.dilation_neck = build_component(dilation_neck)
+
+    def forward(self, x):
+        x = self.encoder(x)
+        x = self.dilation_neck(x)
+        x = self.decoder(x)
+
+        return x
+
+    def init_weights(self, pretrained=None):
+        if isinstance(pretrained, str):
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=False, logger=logger)
+        elif pretrained is None:
+            # Here, we just use the default initialization in `ConvModule`.
+            pass
+        else:
+            raise TypeError('pretrained must be a str or None')
