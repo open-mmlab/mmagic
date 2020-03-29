@@ -1,0 +1,43 @@
+import torch.nn as nn
+from mmedit.models.common import ConvModule
+from mmedit.models.registry import COMPONENTS
+
+
+@COMPONENTS.register_module
+class GLEncoder(nn.Module):
+    """Encoder used in Global&Local model.
+
+    This implementation follows:
+    Globally and locally Consistent Image Completion
+
+    Args:
+        norm_cfg (dict): Config dict to build norm layer.
+        act_cfg (dict): Config dict for activation layer, "relu" by default.
+    """
+
+    def __init__(self, norm_cfg=None, act_cfg=dict(type='ReLU')):
+        super(GLEncoder, self).__init__()
+
+        channel_list = [64, 128, 128, 256, 256, 256]
+        kernel_size_list = [5, 3, 3, 3, 3, 3]
+        stride_list = [1, 2, 1, 2, 1, 1]
+        in_channels = 4
+        for i in range(6):
+            ks = kernel_size_list[i]
+            padding = (ks - 1) // 2
+            self.add_module(
+                'enc{}'.format(i + 1),
+                ConvModule(
+                    in_channels,
+                    channel_list[i],
+                    kernel_size=ks,
+                    stride=stride_list[i],
+                    padding=padding,
+                    norm_cfg=norm_cfg,
+                    act_cfg=act_cfg))
+            in_channels = channel_list[i]
+
+    def forward(self, x):
+        for i in range(6):
+            x = getattr(self, 'enc{}'.format(i + 1))(x)
+        return x
