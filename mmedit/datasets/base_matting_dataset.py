@@ -25,11 +25,10 @@ class BaseMattingDataset(BaseDataset):
             eval_results (dict): Evaluation results dict.
         """
         if not isinstance(results, list):
-            raise TypeError('results must be a list, but got {}'.format(
-                type(results)))
+            raise TypeError(f'results must be a list, but got {type(results)}')
         assert len(results) == len(self), (
-            'The length of results is not equal to the dataset len: {} != {}'.
-            format(len(results), len(self)))
+            'The length of results is not equal to the '
+            f'dataset len: {len(results)} != {len(self)}')
 
         results = [res[1] for res in results]  # a list of dict
 
@@ -39,8 +38,8 @@ class BaseMattingDataset(BaseDataset):
                 eval_results[metric].append(val)
         for metric, val_list in eval_results.items():
             assert len(val_list) == len(self), (
-                'Length of evaluation result of {} is {}, should be {}'.format(
-                    metric, len(val_list), len(self)))
+                f'Length of evaluation result of {metric} is {len(val_list)}, '
+                f'should be {len(self)}')
 
         # average the results
         eval_results = {

@@ -122,8 +122,9 @@ class PerceptualLoss(nn.Module):
         if criterion == 'l1':
             self.criterion = torch.nn.L1Loss()
         else:
-            raise NotImplementedError('{} criterion has not been supported in'
-                                      ' this version.'.format(criterion))
+            raise NotImplementedError(
+                f'{criterion} criterion has not been supported in'
+                ' this version.')
 
     def forward(self, x, gt):
         if self.norm_img:

@@ -26,7 +26,7 @@ class GLEncoder(nn.Module):
             ks = kernel_size_list[i]
             padding = (ks - 1) // 2
             self.add_module(
-                'enc{}'.format(i + 1),
+                f'enc{i + 1}',
                 ConvModule(
                     in_channels,
                     channel_list[i],
@@ -39,5 +39,5 @@ class GLEncoder(nn.Module):
 
     def forward(self, x):
         for i in range(6):
-            x = getattr(self, 'enc{}'.format(i + 1))(x)
+            x = getattr(self, f'enc{i + 1}')(x)
         return x
