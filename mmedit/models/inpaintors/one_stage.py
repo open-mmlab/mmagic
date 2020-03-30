@@ -166,20 +166,20 @@ class OneStageInpaintor(BaseModel):
             loss['loss_g_fake'] = loss_g_fake
 
         if self.with_l1_hole_loss:
-            loss_l1_hole = self.loss_l1_hole(fake_res, gt, mask=mask)
+            loss_l1_hole = self.loss_l1_hole(fake_res, gt, weight=mask)
             loss['loss_l1_hole'] = loss_l1_hole
 
         if self.with_l1_valid_loss:
             loss_loss_l1_valid = self.loss_l1_valid(
-                fake_res, gt, mask=1. - mask)
+                fake_res, gt, weight=1. - mask)
             loss['loss_l1_valid'] = loss_loss_l1_valid
 
         if self.with_composed_percep_loss:
-            loss_pecep_, loss_style_ = self.loss_percep(fake_img, gt)
-            if loss_pecep_ is not None:
-                loss['loss_composed_percep'] = loss_pecep_
-            if loss_style_ is not None:
-                loss['loss_composed_style'] = loss_style_
+            loss_pecep, loss_style = self.loss_percep(fake_img, gt)
+            if loss_pecep is not None:
+                loss['loss_composed_percep'] = loss_pecep
+            if loss_style is not None:
+                loss['loss_composed_style'] = loss_style
 
         if self.with_out_percep_loss:
             loss_out_percep, loss_out_style = self.loss_percep(fake_res, gt)
@@ -189,8 +189,8 @@ class OneStageInpaintor(BaseModel):
                 loss['loss_out_style'] = loss_out_style
 
         if self.with_tv_loss:
-            loss_tv_ = self.loss_tv(fake_img, mask)
-            loss['loss_tv'] = loss_tv_
+            loss_tv = self.loss_tv(fake_img, mask=mask)
+            loss['loss_tv'] = loss_tv
 
         res = dict(
             gt_img=gt.cpu(),

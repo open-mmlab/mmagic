@@ -23,16 +23,17 @@ model = dict(
         type='GradientPenaltyLoss',
         loss_weight=1.,
     ),
-    loss_disc_shift=None,
+    loss_disc_shift=dict(type='DiscShiftLoss', loss_weight=0.001),
     loss_composed_percep=dict(
         type='PerceptualLoss',
         layer_weights={'0': 1.},
         perceptual_weight=0.1,
         style_weight=0,
     ),
-    loss_l1_hole=None,
-    loss_l1_valid=None,
-    loss_tv=None,
+    loss_out_percep=True,
+    loss_l1_hole=dict(type='L1Loss', loss_weight=1.0),
+    loss_l1_valid=dict(type='L1Loss', loss_weight=1.0),
+    loss_tv=dict(type='MaskedTVLoss', loss_weight=0.01),
     pretrained=None)
 
 train_cfg = dict(disc_step=1)
