@@ -16,9 +16,9 @@ MINOR = 1
 PATCH = 0
 SUFFIX = ''
 if PATCH:
-    SHORT_VERSION = '{}.{}.{}{}'.format(MAJOR, MINOR, PATCH, SUFFIX)
+    SHORT_VERSION = f'{MAJOR}.{MINOR}.{PATCH}{SUFFIX}'
 else:
-    SHORT_VERSION = '{}.{}{}'.format(MAJOR, MINOR, SUFFIX)
+    SHORT_VERSION = f'{MAJOR}.{MINOR}{SUFFIX}'
 
 version_file = 'mmedit/version.py'
 

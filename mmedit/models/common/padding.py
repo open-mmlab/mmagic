@@ -21,7 +21,7 @@ def build_padding_layer(cfg, *args, **kwargs):
     cfg_ = cfg.copy()
     padding_type = cfg_.pop('type')
     if padding_type not in pad_cfg:
-        raise KeyError('Unrecognized padding type {}'.format(padding_type))
+        raise KeyError(f'Unrecognized padding type {padding_type}.')
     else:
         padding_layer = pad_cfg[padding_type]
 

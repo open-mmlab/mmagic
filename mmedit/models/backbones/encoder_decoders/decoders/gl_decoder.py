@@ -92,11 +92,10 @@ class GLDecoder(nn.Module):
             self.output_act = partial(torch.clamp, min=-1, max=1.)
         else:
             raise ValueError(
-                '{} activation for output has not be supported.'.format(
-                    out_act))
+                f'{out_act} activation for output has not be supported.')
 
     def forward(self, x):
         for i in range(7):
-            x = getattr(self, 'dec{}'.format(i + 1))(x)
+            x = getattr(self, f'dec{i + 1}')(x)
         x = self.output_act(x)
         return x

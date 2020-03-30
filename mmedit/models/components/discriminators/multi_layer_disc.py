@@ -43,7 +43,7 @@ class MultiLayerDiscriminator(nn.Module):
         for i in range(num_convs):
             out_ch = min(64 * 2**i, max_channels)
             self.add_module(
-                'conv{}'.format(i + 1),
+                f'conv{i + 1}',
                 ConvModule(
                     cur_channels,
                     out_ch,
@@ -61,7 +61,7 @@ class MultiLayerDiscriminator(nn.Module):
     def forward(self, x):
         input_size = x.size()
         for i in range(self.num_convs):
-            x = getattr(self, 'conv{}'.format(i + 1))(x)
+            x = getattr(self, f'conv{i + 1}')(x)
 
         if self.with_fc:
             x = x.view(input_size[0], -1)

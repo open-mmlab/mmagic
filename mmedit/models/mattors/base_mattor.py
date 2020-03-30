@@ -72,7 +72,7 @@ class BaseMattor(BaseModel):
         elif mmcv.is_list_of(self.test_cfg.metrics, str):
             for metric in self.test_cfg.metrics:
                 if metric not in self.allowed_metrics:
-                    raise KeyError('metric {} is not supported'.format(metric))
+                    raise KeyError(f'metric {metric} is not supported')
         elif self.test_cfg.metrics is not None:
             raise TypeError('metrics must be None or a list of str')
 
@@ -89,7 +89,7 @@ class BaseMattor(BaseModel):
 
     def init_weights(self, pretrained=None):
         if pretrained is not None:
-            print_log('load model from: {}'.format(pretrained), logger='root')
+            print_log(f'load model from: {pretrained}', logger='root')
         self.backbone.init_weights(pretrained)
         if self.with_refiner:
             self.refiner.init_weights()
