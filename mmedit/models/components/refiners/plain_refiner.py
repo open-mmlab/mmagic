@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from mmcv.cnn.weight_init import constant_init, xavier_init
+from mmcv.cnn.weight_init import xavier_init
 from mmedit.models.registry import COMPONENTS
 
 
@@ -33,8 +33,6 @@ class PlainRefiner(nn.Module):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 xavier_init(m)
-            elif isinstance(m, nn.BatchNorm2d):
-                constant_init(m, 1)
 
     def forward(self, x, raw_alpha):
         out = self.relu(self.refine_conv1(x))
