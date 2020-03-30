@@ -21,10 +21,10 @@ def test_utils():
     assert reduced is loss
 
     reduced = reduce_loss(loss, 'mean')
-    assert reduced == loss.mean()
+    npt.assert_almost_equal(reduced.numpy(), loss.mean())
 
     reduced = reduce_loss(loss, 'sum')
-    assert reduced == loss.sum()
+    npt.assert_almost_equal(reduced.numpy(), loss.sum())
 
     # test mask_reduce_loss()
     reduced = mask_reduce_loss(loss, weight=None, reduction='none')
@@ -33,17 +33,17 @@ def test_utils():
     reduced = mask_reduce_loss(loss, weight=weight, reduction='mean')
     target = (loss *
               weight).sum(dim=[1, 2, 3]) / weight.sum(dim=[1, 2, 3]).mean()
-    assert reduced == target
+    npt.assert_almost_equal(reduced.numpy(), target)
 
     reduced = mask_reduce_loss(loss, weight=weight, reduction='sum')
-    assert reduced == (loss * weight).sum()
+    npt.assert_almost_equal(reduced.numpy(), (loss * weight).sum())
 
     weight_single_channel = weight[:, 0:1, ...]
     reduced = mask_reduce_loss(
         loss, weight=weight_single_channel, reduction='mean')
     target = (loss *
               weight).sum(dim=[1, 2, 3]) / weight.sum(dim=[1, 2, 3]).mean()
-    assert reduced == target
+    npt.assert_almost_equal(reduced.numpy(), target)
 
     loss_b = torch.rand(2, 3, 4, 4)
     weight_b = torch.zeros(2, 1, 4, 4)
@@ -51,7 +51,7 @@ def test_utils():
     weight_b[1, :, :2, :2] = 1
     reduced = mask_reduce_loss(loss_b, weight=weight_b, reduction='mean')
     target = (loss_b * weight_b).sum() / weight_b.sum() / 3.
-    assert reduced == target
+    npt.assert_almost_equal(reduced.numpy(), target)
 
     with pytest.raises(AssertionError):
         weight_wrong = weight[0, 0, ...]
