@@ -45,8 +45,8 @@ def test_to_tensor():
         assert isinstance(results[key], torch.Tensor)
         assert torch.equal(results[key].data, ori_results[key])
 
-    assert repr(to_tensor) == to_tensor.__class__.__name__ + \
-        '(keys={})'.format(target_keys)
+    assert repr(
+        to_tensor) == to_tensor.__class__.__name__ + f'(keys={target_keys})'
 
 
 def test_image_to_tensor():
@@ -70,8 +70,9 @@ def test_image_to_tensor():
     assert torch.equal(results['img'].data, ori_results['img'])
     assert results['img'].dtype == torch.float32
 
-    assert repr(image_to_tensor) == image_to_tensor.__class__.__name__ + \
-        '(keys={}, to_float32={})'.format(keys, to_float32)
+    assert repr(image_to_tensor) == (
+        image_to_tensor.__class__.__name__ +
+        f'(keys={keys}, to_float32={to_float32})')
 
 
 def test_masked_img():
@@ -135,5 +136,6 @@ def test_collect():
     for key in results['meta'].data:
         assert results['meta'].data[key] == inputs[key]
 
-    assert repr(collect) == collect.__class__.__name__ + \
-        '(keys={}, meta_keys={})'.format(keys, collect.meta_keys)
+    assert repr(collect) == (
+        collect.__class__.__name__ +
+        f'(keys={keys}, meta_keys={collect.meta_keys})')

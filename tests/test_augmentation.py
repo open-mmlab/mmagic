@@ -76,9 +76,9 @@ class TestAugmentations(object):
         binarize = BinarizeImage(['mask'], 0.5, to_int=True)
         results = binarize(results)
         assert np.array_equal(results['mask'], gt_mask.astype(np.int32))
-        assert str(binarize) == binarize.__class__.__name__ + \
-            '(keys={}, binary_thr={}, to_int={})'.format(
-            ['mask'], 0.5, True)
+        assert str(binarize) == (
+            binarize.__class__.__name__ +
+            f"(keys={['mask']}, binary_thr=0.5, to_int=True)")
 
     def test_flip(self):
         results = copy.deepcopy(self.results)
@@ -330,9 +330,9 @@ class TestAugmentations(object):
         results = dilation(results)
         assert np.array_equal(results['mask'], gt_mask)
         assert results['mask_dilate_kernel_size'] == 3
-        assert str(dilation) == dilation.__class__.__name__ + \
-            '(keys={}, kernel_min={}, kernel_max={})'. \
-            format(['mask'], 3, 3)
+        assert str(dilation) == (
+            dilation.__class__.__name__ +
+            f"(keys={['mask']}, kernel_min=3, kernel_max=3)")
 
     def test_resize(self):
         with pytest.raises(AssertionError):

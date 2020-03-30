@@ -34,8 +34,8 @@ class Normalize(object):
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += '(keys={}, mean={}, std={}, to_rgb={})'.format(
-            self.keys, self.mean, self.std, self.to_rgb)
+        repr_str += (f'(keys={self.keys}, mean={self.mean}, std={self.std}, '
+                     f'to_rgb={self.to_rgb})')
 
         return repr_str
 

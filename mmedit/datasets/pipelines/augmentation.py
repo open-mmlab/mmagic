@@ -185,7 +185,7 @@ class Flip(object):
 class Pad(object):
     """Pad the images to align with network downsample factor for testing.
 
-    See `Reshape` for more explaination. `numpy.pad` is used for the pad
+    See `Reshape` for more explanation. `numpy.pad` is used for the pad
     operation.
     Required keys are "img_shape" and the keys in attribute "keys", added or
     modified keys are "img_shape", "test_trans" and the keys in attribute
@@ -239,7 +239,7 @@ class RandomAffine(object):
     https://github.com/pytorch/vision/blob/v0.5.0/torchvision/transforms/transforms.py#L1015  # noqa
     It should be noted that in
     https://github.com/Yaoyi-Li/GCA-Matting/blob/master/dataloader/data_generator.py#L70  # noqa
-    random flip is added. See explaination of `flip_ratio` below.
+    random flip is added. See explanation of `flip_ratio` below.
     Required keys are keys in attribute "keys" and "img_shape", modified keys
     are keys in attribute "keys".
 
@@ -260,7 +260,7 @@ class RandomAffine(object):
         shear (float | tuple[float], optional): Range of shear degrees to
             select from. If shear is a float, a shear parallel to the x axis
             and a shear parallel to the y axis in the range (-shear, +shear)
-            will be apllied. Else if shear is a tuple of 2 values, a x-axis
+            will be applied. Else if shear is a tuple of 2 values, a x-axis
             shear and a y-axis shear in (shear[0], shear[1]) will be applied.
             Default: None.
         flip_ratio (float, optional): Probability of the image being flipped.
@@ -525,8 +525,8 @@ class BinarizeImage(object):
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += '(keys={}, binary_thr={}, to_int={})'.format(
-            self.keys, self.binary_thr, self.to_int)
+        repr_str += (f'(keys={self.keys}, binary_thr={self.binary_thr}, '
+                     f'to_int={self.to_int})')
 
         return repr_str
 
@@ -572,8 +572,8 @@ class RandomMaskDilation(object):
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += '(keys={}, kernel_min={}, kernel_max={})'. \
-            format(self.keys, self.kernel_min, self.kernel_max)
+        repr_str += (f'(keys={self.keys}, kernel_min={self.kernel_min}, '
+                     f'kernel_max={self.kernel_max})')
 
         return repr_str
 
