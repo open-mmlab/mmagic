@@ -66,10 +66,10 @@ class TestAugmentations(object):
         self.check_normalize(merged, normalize_results['merged'],
                              normalize_results['img_norm_cfg'])
 
-        assert normalize.__repr__() == normalize.__class__.__name__ +\
-            '(keys={}, mean={}, std={}, to_rgb={})'.format(
-                ['merged'], np.array([123.675, 116.28, 103.53]),
-                np.array([58.395, 57.12, 57.375]), True)
+        assert normalize.__repr__() == (
+            normalize.__class__.__name__ +
+            f"(keys={ ['merged']}, mean={np.array([123.675, 116.28, 103.53])},"
+            f' std={np.array([58.395, 57.12, 57.375])}, to_rgb=True)')
 
     def test_rescale_to_zero_one(self):
         target_keys = ['alpha']

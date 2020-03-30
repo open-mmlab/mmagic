@@ -67,9 +67,9 @@ class TestAugmentations(object):
         random_crop = Crop(['img'], crop_size=(512, 512), random_crop=True)
         results = random_crop(results)
         assert np.array_equal(self.results['img'], results['img'])
-        assert str(random_crop) == random_crop.__class__.__name__ + \
-            'keys={}, crop_size={}, random_crop={}'.\
-            format(['img'], (512, 512), True)
+        assert str(random_crop) == (
+            random_crop.__class__.__name__ +
+            f"keys={['img']}, crop_size={(512, 512)}, random_crop=True")
 
     def test_crop_around_center(self):
 
@@ -141,9 +141,9 @@ class TestAugmentations(object):
         assert self.check_crop_around_semi(
             crop_around_semi_trans_results['alpha'])
 
-        repr_str = crop_around_semi_trans.__class__.__name__ +\
-            '(crop_sizes={}, interpolation={})'.format(
-                [(320, 320)], 'bilinear')
+        repr_str = (
+            crop_around_semi_trans.__class__.__name__ +
+            f'(crop_sizes={[(320, 320)]}, interpolation=bilinear)')
         assert crop_around_semi_trans.__repr__() == repr_str
 
     def test_modcrop(self):

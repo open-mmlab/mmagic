@@ -81,7 +81,6 @@ class GenerateTrimap(object):
     def __repr__(self):
         repr_str = self.__class__.__name__
         repr_str += (
-            '(kernels={}, min_iteration={}, max_iteration={}, symmetric={})'
-        ).format(self.kernels, self.min_iteration, self.max_iteration,
-                 self.symmetric)
+            f'(kernels={self.kernels}, min_iteration={self.min_iteration}, '
+            f'max_iteration={self.max_iteration}, symmetric={self.symmetric})')
         return repr_str

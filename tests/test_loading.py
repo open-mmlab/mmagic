@@ -129,8 +129,7 @@ class TestInpaintLoading(object):
 
         set_loader = LoadMask('set', mask_config)
         class_name = set_loader.__class__.__name__
-        assert repr(
-            set_loader) == class_name + "(mask_mode='{}')".format('set')
+        assert repr(set_loader) == class_name + "(mask_mode='set')"
         for _ in range(2):
             results = dict()
             results = set_loader(results)

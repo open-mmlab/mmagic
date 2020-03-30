@@ -32,5 +32,5 @@ def test_compose():
     compose_results = compose(results)
     assert compose_results is None
 
-    assert repr(compose) == compose.__class__.__name__ + \
-        '(\n    {}\n)'.format(image_to_tensor)
+    assert repr(compose) == (
+        compose.__class__.__name__ + f'(\n    {image_to_tensor}\n)')

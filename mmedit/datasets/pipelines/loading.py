@@ -75,7 +75,7 @@ class LoadAlpha(LoadImageFromFile):
         img_bytes = self.file_client.get(filepath)
         alpha = mmcv.imfrombytes(img_bytes, flag=self.flag)  # HWC, BGR
         img_name = Path(results[f'{self.key}_path']).name
-        assert alpha.shape[0], "{}'s alpha is not valid".format(img_name)
+        assert alpha.shape[0], f"{img_name}'s alpha is not valid"
         results['alpha'] = alpha
         results['img_name'] = img_name
         results['ori_alpha'] = alpha
@@ -228,11 +228,9 @@ class LoadMask(object):
             mask = brush_stroke_mask(**self.mask_config)
         else:
             raise NotImplementedError(
-                'Mask mode {} has not been implemented.'.format(
-                    self.mask_mode))
+                f'Mask mode {self.mask_mode} has not been implemented.')
         results['mask'] = mask
         return results
 
     def __repr__(self):
-        return self.__class__.__name__ + "(mask_mode='{}')".format(
-            self.mask_mode)
+        return self.__class__.__name__ + f"(mask_mode='{self.mask_mode}')"

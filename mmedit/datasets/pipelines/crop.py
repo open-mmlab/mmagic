@@ -22,8 +22,7 @@ class Crop(object):
         if not mmcv.is_tuple_of(crop_size, int):
             raise TypeError(
                 'Elements of crop_size must be int and crop_size must be'
-                ' tuple, but got {} in {}'.format(
-                    type(crop_size), type(crop_size[0])))
+                f' tuple, but got {type(crop_size)} in {type(crop_size[0])}')
 
         self.keys = keys
         self.crop_size = crop_size
@@ -57,8 +56,8 @@ class Crop(object):
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += 'keys={}, crop_size={}, random_crop={}'.\
-            format(self.keys, self.crop_size, self.random_crop)
+        repr_str += (f'keys={self.keys}, crop_size={self.crop_size}, '
+                     f'random_crop={self.random_crop}')
 
         return repr_str
 
@@ -210,13 +209,12 @@ class CropAroundSemiTransparent(object):
 
     def __init__(self, crop_sizes=[320, 480, 640], interpolation='bilinear'):
         if not isinstance(crop_sizes, list):
-            raise TypeError('Crop sizes must be list, but got {}.'.format(
-                type(crop_sizes)))
+            raise TypeError(
+                f'Crop sizes must be list, but got {type(crop_sizes)}.')
         self.crop_sizes = [_pair(crop_size) for crop_size in crop_sizes]
         if not mmcv.is_tuple_of(self.crop_sizes[0], int):
-            raise TypeError('Elements of crop_sizes must be int or tuple of '
-                            'int, but got {}.'.format(
-                                type(self.crop_sizes[0][0])))
+            raise TypeError(f'Elements of crop_sizes must be int or tuple of '
+                            f'int, but got {type(self.crop_sizes[0][0])}.')
 
         self.interpolation = interpolation
 
@@ -271,8 +269,8 @@ class CropAroundSemiTransparent(object):
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += '(crop_sizes={}, interpolation={})'. \
-            format(self.crop_sizes, self.interpolation)
+        repr_str += (f'(crop_sizes={self.crop_sizes}, '
+                     f'interpolation={self.interpolation})')
         return repr_str
 
 

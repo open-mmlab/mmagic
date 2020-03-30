@@ -128,6 +128,7 @@ def test_generate_trimap():
         cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
                                   (kernel_size, kernel_size))
     ]
-    attr_str = '(kernels={}, min_iteration={}, max_iteration={}, symmetric={})'
-    assert repr(generate_trimap) == generate_trimap.__class__.__name__ + \
-        attr_str.format(kernels, iterations, iterations + 1, symmetric)
+    assert repr(generate_trimap) == (
+        generate_trimap.__class__.__name__ +
+        f'(kernels={kernels}, min_iteration={iterations}, '
+        f'max_iteration={iterations + 1}, symmetric={symmetric})')
