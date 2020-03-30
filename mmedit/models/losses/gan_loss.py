@@ -161,3 +161,16 @@ class GradientPenaltyLoss(nn.Module):
             discriminator, real_data, fake_data, mask=mask)
 
         return loss * self.loss_weight
+
+
+@LOSSES.register_module
+class DiscShiftLoss(nn.Module):
+
+    def __init__(self, loss_weight=0.1):
+        super(DiscShiftLoss, self).__init__()
+        self.loss_weight = loss_weight
+
+    def forward(self, x):
+        loss = torch.mean(x**2)
+
+        return loss * self.loss_weight

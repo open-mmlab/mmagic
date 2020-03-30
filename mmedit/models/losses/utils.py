@@ -37,6 +37,8 @@ def mask_reduce_loss(loss, weight=None, reduction='mean'):
     """
     # if weight is specified, apply element-wise weight
     if weight is not None:
+        assert weight.dim() == loss.dim()
+        assert weight.size(1) == 1 or weight.size(1) == loss.size(1)
         loss = loss * weight
 
     # if weight is not specified or reduction is sum, just reduce the loss
@@ -44,9 +46,11 @@ def mask_reduce_loss(loss, weight=None, reduction='mean'):
         loss = reduce_loss(loss, reduction)
     # if reduction is mean, then compute mean over masked region
     elif reduction == 'mean':
-        loss = loss.sum(dim=[1, 2, 3])
-        weight = weight.sum(dim=[1, 2, 3])
-        loss = (loss / weight).mean()
+        if weight.size(1) > 1:
+            weight = weight.sum()
+        else:
+            weight = weight.sum() * loss.size(1)
+        loss = loss.sum() / weight
 
     return loss
 

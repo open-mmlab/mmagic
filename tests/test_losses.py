@@ -5,8 +5,8 @@ import numpy.testing as npt
 import pytest
 import torch
 from mmedit.models.losses import (CharbonnierCompLoss, CharbonnierLoss,
-                                  GANLoss, GradientPenaltyLoss,
-                                  L1CompositionLoss, L1Loss,
+                                  DiscShiftLoss, GANLoss, GradientPenaltyLoss,
+                                  L1CompositionLoss, L1Loss, MaskedTVLoss,
                                   MSECompositionLoss, MSELoss, PerceptualLoss,
                                   PerceptualVGG, mask_reduce_loss, reduce_loss)
 
@@ -37,6 +37,29 @@ def test_utils():
 
     reduced = mask_reduce_loss(loss, weight=weight, reduction='sum')
     assert reduced == (loss * weight).sum()
+
+    weight_single_channel = weight[:, 0:1, ...]
+    reduced = mask_reduce_loss(
+        loss, weight=weight_single_channel, reduction='mean')
+    target = (loss *
+              weight).sum(dim=[1, 2, 3]) / weight.sum(dim=[1, 2, 3]).mean()
+    assert reduced == target
+
+    loss_b = torch.rand(2, 3, 4, 4)
+    weight_b = torch.zeros(2, 1, 4, 4)
+    weight_b[0, :, :3, :3] = 1
+    weight_b[1, :, :2, :2] = 1
+    reduced = mask_reduce_loss(loss_b, weight=weight_b, reduction='mean')
+    target = (loss_b * weight_b).sum() / weight_b.sum() / 3.
+    assert reduced == target
+
+    with pytest.raises(AssertionError):
+        weight_wrong = weight[0, 0, ...]
+        reduced = mask_reduce_loss(loss, weight=weight_wrong, reduction='mean')
+
+    with pytest.raises(AssertionError):
+        weight_wrong = weight[:, 0:2, ...]
+        reduced = mask_reduce_loss(loss, weight=weight_wrong, reduction='mean')
 
 
 def test_pixelwise_losses():
@@ -109,6 +132,15 @@ def test_pixelwise_losses():
     loss = charbonnier_loss(pred, target)
     assert loss.shape == ()
     assert math.isclose(loss.item(), 512, rel_tol=1e-5)
+
+    masked_tv_loss = MaskedTVLoss(loss_weight=1.0)
+    pred = torch.zeros((1, 1, 6, 6))
+    mask = torch.zeros_like(pred)
+    mask[..., 2:4, 2:4] = 1.
+    pred[..., 3, :] = 1.
+    loss = masked_tv_loss(pred, mask)
+    assert loss.shape == ()
+    npt.assert_almost_equal(loss.item(), 1.)
 
 
 def test_composition_losses():
@@ -300,3 +332,11 @@ def test_gradient_penalty_losses():
     mask[:, :, 2:4, 2:4] = 0
     loss = gan_loss(lambda x: x, input, input, mask=mask)
     npt.assert_almost_equal(loss.item(), 774.0408935)
+
+
+def test_disc_shift_loss():
+    loss_disc_shift = DiscShiftLoss()
+    x = torch.Tensor([0.1])
+    loss = loss_disc_shift(x)
+
+    npt.assert_almost_equal(loss.item(), 0.001)

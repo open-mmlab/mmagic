@@ -118,3 +118,20 @@ class CharbonnierLoss(nn.Module):
         """
         return self.loss_weight * charbonnier_loss(
             pred, target, weight, eps=self.eps, reduction=self.reduction)
+
+
+@LOSSES.register_module
+class MaskedTVLoss(L1Loss):
+
+    def __init__(self, loss_weight=1.0):
+        super(MaskedTVLoss, self).__init__(loss_weight=loss_weight)
+
+    def forward(self, pred, mask=None):
+        y_diff = super(MaskedTVLoss, self).forward(
+            pred[:, :, :-1, :], pred[:, :, 1:, :], weight=mask[:, :, :-1, :])
+        x_diff = super(MaskedTVLoss, self).forward(
+            pred[:, :, :, :-1], pred[:, :, :, 1:], weight=mask[:, :, :, :-1])
+
+        loss = x_diff + y_diff
+
+        return loss
