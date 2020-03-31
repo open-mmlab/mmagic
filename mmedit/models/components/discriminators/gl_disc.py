@@ -27,8 +27,8 @@ class GLDiscs(nn.Module):
 
         self.fc = nn.Linear(2048, 1, bias=True)
 
-    def forward(self, g_img, l_img):
-
+    def forward(self, x):
+        g_img, l_img = x
         g_pred = self.global_disc(g_img)
         l_pred = self.local_disc(l_img)
 

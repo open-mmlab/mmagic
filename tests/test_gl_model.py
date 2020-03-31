@@ -59,7 +59,7 @@ def test_gl_discs():
 
     input_g = torch.randn(1, 3, 256, 256)
     input_l = torch.randn(1, 3, 128, 128)
-    output = gl_discs(input_g, input_l)
+    output = gl_discs((input_g, input_l))
     assert output.shape == (1, 1)
 
     with pytest.raises(TypeError):
@@ -69,7 +69,7 @@ def test_gl_discs():
         gl_discs = gl_discs.cuda()
         input_g = torch.randn(1, 3, 256, 256).cuda()
         input_l = torch.randn(1, 3, 128, 128).cuda()
-        output = gl_discs(input_g, input_l)
+        output = gl_discs((input_g, input_l))
         assert output.shape == (1, 1)
 
 
