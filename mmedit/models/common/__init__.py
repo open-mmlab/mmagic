@@ -2,6 +2,7 @@ from .activation import build_activation_layer
 from .aspp import ASPP
 from .conv import build_conv_layer
 from .conv_module import ConvModule
+from .mask_conv_module import MaskConvModule
 from .model_utils import (extract_around_bbox, extract_bbox_patch, scale_bbox,
                           set_requires_grad)
 from .norm import build_norm_layer
@@ -15,6 +16,6 @@ __all__ = [
     'ConvModule', 'build_conv_layer', 'build_norm_layer', 'ASPP',
     'build_activation_layer', 'build_norm_layer', 'build_padding_layer',
     'PartialConv2d', 'PixelShufflePack', 'default_init_weights',
-    'ResidualBlockNoBN', 'make_layer', 'extract_bbox_patch',
+    'ResidualBlockNoBN', 'make_layer', 'MaskConvModule', 'extract_bbox_patch',
     'extract_around_bbox', 'set_requires_grad', 'scale_bbox'
 ]
