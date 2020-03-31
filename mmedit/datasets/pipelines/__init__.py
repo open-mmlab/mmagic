@@ -8,7 +8,7 @@ from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
 from .loading import LoadAlpha, LoadImageFromFile, LoadMask, RandomLoadResizeBg
 from .normalization import Normalize, RescaleToZeroOne
-from .trimap import GenerateTrimap, MergeFgAndBg
+from .trimap import CompositeFg, GenerateTrimap, MergeFgAndBg
 
 __all__ = [
     'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadAlpha', 'LoadMask',
@@ -17,5 +17,5 @@ __all__ = [
     'RandomJitter', 'RandomMaskDilation', 'RandomTransposeHW', 'Resize',
     'Crop', 'CropAroundCenter', 'CropAroundSemiTransparent', 'ModCrop',
     'PairedRandomCrop', 'Normalize', 'RescaleToZeroOne', 'GenerateTrimap',
-    'MergeFgAndBg'
+    'MergeFgAndBg', 'CompositeFg'
 ]
