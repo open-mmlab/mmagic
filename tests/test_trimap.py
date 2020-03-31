@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from mmedit.datasets.pipelines import GenerateTrimap, MergeFgAndBg
+from mmedit.datasets.pipelines import CompositeFg, GenerateTrimap, MergeFgAndBg
 
 
 def check_keys_contain(result_keys, target_keys):
@@ -132,3 +132,36 @@ def test_generate_trimap():
         generate_trimap.__class__.__name__ +
         f'(kernels={kernels}, min_iteration={iterations}, '
         f'max_iteration={iterations + 1}, symmetric={symmetric})')
+
+
+def test_composite_fg():
+    target_keys = ['alpha', 'fg', 'bg', 'img_shape']
+
+    np.random.seed(0)
+    fg = np.random.rand(240, 320, 3).astype(np.float32)
+    bg = np.random.rand(240, 320, 3).astype(np.float32)
+    alpha = np.random.rand(240, 320).astype(np.float32)
+    results = dict(alpha=alpha, fg=fg, bg=bg, img_shape=(240, 320))
+    composite_fg = CompositeFg('tests/data/fg', 'tests/data/alpha', 'jpg',
+                               'jpg')
+    composite_fg_results = composite_fg(results)
+    assert check_keys_contain(composite_fg_results.keys(), target_keys)
+    assert composite_fg_results['fg'].shape == (240, 320, 3)
+
+    fg = np.random.rand(240, 320, 3).astype(np.float32)
+    bg = np.random.rand(240, 320, 3).astype(np.float32)
+    alpha = np.random.rand(240, 320).astype(np.float32)
+    results = dict(alpha=alpha, fg=fg, bg=bg, img_shape=(240, 320))
+    composite_fg = CompositeFg(
+        'tests/data/fg',
+        'tests/data/alpha',
+        fg_ext='jpg',
+        alpha_ext='jpg',
+        interpolation='bilinear')
+    composite_fg_results = composite_fg(results)
+    assert check_keys_contain(composite_fg_results.keys(), target_keys)
+    assert composite_fg_results['fg'].shape == (240, 320, 3)
+
+    assert repr(composite_fg) == composite_fg.__class__.__name__ + (
+        f"(fg_dir='tests/data/fg', alpha_dir='tests/data/alpha', "
+        f"fg_ext='jpg', alpha_ext='jpg', interpolation='bilinear')")
