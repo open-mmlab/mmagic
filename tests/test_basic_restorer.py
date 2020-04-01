@@ -1,6 +1,8 @@
 import torch
 from mmcv.runner import obj_from_dict
-from mmedit.models import L1Loss, MSRResNet, build_model
+from mmedit.models import build_model
+from mmedit.models.backbones import MSRResNet
+from mmedit.models.losses import L1Loss
 
 
 def test_basic_restorer():
