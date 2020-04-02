@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from mmedit.models.backbones import SimpleEncoderDecoder
+from mmedit.models.backbones import EncoderDecoder
 
 
 def assert_dict_keys_equal(dictionary, target_keys):
@@ -15,13 +15,13 @@ def assert_tensor_with_shape(tensor, shape):
     assert tensor.shape == shape
 
 
-def test_simple_autoencoder():
-    """Test SimpleEncoderDecoder."""
+def test_encoder_decoder():
+    """Test EncoderDecoder."""
     # check DIM with only alpha loss
     encoder = dict(type='VGG16')
     decoder = dict(type='PlainDecoder')
 
-    model = SimpleEncoderDecoder(encoder, decoder)
+    model = EncoderDecoder(encoder, decoder)
     model.init_weights()
     model.train()
     fg, bg, merged, alpha, trimap = _demo_inputs_pair()
@@ -32,7 +32,7 @@ def test_simple_autoencoder():
     encoder = dict(type='VGG16')
     decoder = dict(type='PlainDecoder')
 
-    model = SimpleEncoderDecoder(encoder, decoder)
+    model = EncoderDecoder(encoder, decoder)
     model.init_weights()
     model.train()
     fg, bg, merged, alpha, trimap = _demo_inputs_pair()
@@ -42,7 +42,7 @@ def test_simple_autoencoder():
     # check DIM with both alpha and composition loss
     encoder = dict(type='VGG16')
     decoder = dict(type='PlainDecoder')
-    model = SimpleEncoderDecoder(encoder, decoder)
+    model = EncoderDecoder(encoder, decoder)
     model.init_weights()
     model.train()
     fg, bg, merged, alpha, trimap = _demo_inputs_pair()
@@ -54,7 +54,7 @@ def test_simple_autoencoder():
         encoder = dict(type='VGG16')
         decoder = dict(type='PlainDecoder')
 
-        model = SimpleEncoderDecoder(encoder, decoder)
+        model = EncoderDecoder(encoder, decoder)
         model.init_weights()
         model.train()
         fg, bg, merged, alpha, trimap = _demo_inputs_pair(cuda=True)
