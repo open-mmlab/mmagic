@@ -1,6 +1,7 @@
 import numpy as np
+import pytest
 import torch
-from mmedit.models.backbones import VGG16, PlainDecoder
+from mmedit.models.backbones import VGG16, PlainDecoder, ResNetDec, ResNetEnc
 
 
 def assert_tensor_with_shape(tensor, shape):
@@ -33,6 +34,54 @@ def test_plain_decoder():
         img = _demo_inputs().cuda()
         feat, mid_feat = encoder(img)
         prediction = model(feat, mid_feat)
+        assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
+
+
+def test_resnet_decoder():
+    """Test resnet decoder."""
+    with pytest.raises(NotImplementedError):
+        ResNetDec('UnknowBlock', [2, 3, 3, 2], 512)
+
+    model = ResNetDec('BasicBlockDec', [2, 3, 3, 2], 512, kernel_size=5)
+    model.init_weights()
+    model.train()
+    encoder = ResNetEnc('BasicBlock', [2, 4, 4, 2], 6)
+    img = _demo_inputs((1, 6, 64, 64))
+    feat = encoder(img)
+    prediction = model(feat)
+    assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
+
+    model = ResNetDec('BasicBlockDec', [2, 3, 3, 2], 512)
+    model.init_weights()
+    model.train()
+    encoder = ResNetEnc('BasicBlock', [2, 4, 4, 2], 6)
+    img = _demo_inputs((1, 6, 64, 64))
+    feat = encoder(img)
+    prediction = model(feat)
+    assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
+
+    # test forward with gpu
+    if torch.cuda.is_available():
+        model = ResNetDec('BasicBlockDec', [2, 3, 3, 2], 512, kernel_size=5)
+        model.init_weights()
+        model.train()
+        model.cuda()
+        encoder = ResNetEnc('BasicBlock', [2, 4, 4, 2], 6)
+        encoder.cuda()
+        img = _demo_inputs((1, 6, 64, 64)).cuda()
+        feat = encoder(img)
+        prediction = model(feat)
+        assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
+
+        model = ResNetDec('BasicBlockDec', [2, 3, 3, 2], 512)
+        model.init_weights()
+        model.train()
+        model.cuda()
+        encoder = ResNetEnc('BasicBlock', [2, 4, 4, 2], 6)
+        encoder.cuda()
+        img = _demo_inputs((1, 6, 64, 64)).cuda()
+        feat = encoder(img)
+        prediction = model(feat)
         assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
 
 
