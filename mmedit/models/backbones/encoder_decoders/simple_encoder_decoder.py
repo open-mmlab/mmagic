@@ -5,7 +5,7 @@ from mmedit.models.registry import BACKBONES
 
 @BACKBONES.register_module
 class SimpleEncoderDecoder(nn.Module):
-    """Simple autoencoder from matting.
+    """Simple encoder-decoder model from matting.
 
     Args:
         encoder (dict): Config of the encoder.
@@ -24,6 +24,6 @@ class SimpleEncoderDecoder(nn.Module):
         self.decoder.init_weights()
 
     def forward(self, x):
-        out, mid_feat = self.encoder(x)
-        out = self.decoder(out, mid_feat)
+        out = self.encoder(x)
+        out = self.decoder(out)
         return out
