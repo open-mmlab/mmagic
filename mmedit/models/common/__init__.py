@@ -8,6 +8,7 @@ from .model_utils import (extract_around_bbox, extract_bbox_patch, scale_bbox,
 from .norm import build_norm_layer
 from .padding import build_padding_layer
 from .partial_conv import PartialConv2d
+from .separable_conv_module import DepthwiseSeparableConvModule
 from .sr_backbone_utils import (ResidualBlockNoBN, default_init_weights,
                                 make_layer)
 from .upsample import PixelShufflePack
@@ -17,5 +18,6 @@ __all__ = [
     'build_activation_layer', 'build_norm_layer', 'build_padding_layer',
     'PartialConv2d', 'PixelShufflePack', 'default_init_weights',
     'ResidualBlockNoBN', 'make_layer', 'MaskConvModule', 'extract_bbox_patch',
-    'extract_around_bbox', 'set_requires_grad', 'scale_bbox'
+    'extract_around_bbox', 'set_requires_grad', 'scale_bbox',
+    'DepthwiseSeparableConvModule'
 ]
