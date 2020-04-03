@@ -7,8 +7,8 @@ from .crop import (Crop, CropAroundCenter, CropAroundSemiTransparent, ModCrop,
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
 from .loading import LoadAlpha, LoadImageFromFile, LoadMask, RandomLoadResizeBg
+from .matting_aug import CompositeFg, GenerateTrimap, MergeFgAndBg
 from .normalization import Normalize, RescaleToZeroOne
-from .trimap import CompositeFg, GenerateTrimap, MergeFgAndBg
 
 __all__ = [
     'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadAlpha', 'LoadMask',
