@@ -47,7 +47,7 @@ def test_vgg16_encoder():
     assert_tensor_with_shape(feat, torch.Size([2, 512, 2, 2]))
     assert_mid_feat_shape(mid_feat, target_shape)
 
-    model = VGG16(aspp=True, atrous_rates=[6, 12, 18])
+    model = VGG16(aspp=True, dilations=[6, 12, 18])
     model.init_weights()
     model.train()
     img = _demo_inputs()
@@ -76,7 +76,7 @@ def test_vgg16_encoder():
         assert_tensor_with_shape(feat, torch.Size([2, 512, 2, 2]))
         assert_mid_feat_shape(mid_feat, target_shape)
 
-        model = VGG16(aspp=True, atrous_rates=[6, 12, 18])
+        model = VGG16(aspp=True, dilations=[6, 12, 18])
         model.init_weights()
         model.train()
         model.cuda()

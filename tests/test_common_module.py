@@ -1,10 +1,10 @@
 import pytest
 import torch
 import torch.nn as nn
-from mmedit.models.common import (ConvModule, DepthwiseSeparableConvModule,
-                                  MaskConvModule, PartialConv2d,
-                                  build_conv_layer, build_norm_layer,
-                                  build_padding_layer, norm)
+from mmedit.models.common import (ASPP, ConvModule,
+                                  DepthwiseSeparableConvModule, MaskConvModule,
+                                  PartialConv2d, build_conv_layer,
+                                  build_norm_layer, build_padding_layer, norm)
 
 
 def test_build_conv_layer():
@@ -353,3 +353,27 @@ def test_depthwise_separable_conv():
     assert conv.pointwise_conv.activate.__class__.__name__ == 'LeakyReLU'
     output = conv(x)
     assert output.shape == (1, 8, 256, 256)
+
+
+def test_aspp():
+    # test aspp with normal conv
+    aspp = ASPP(128)
+    assert aspp.convs[1].__class__.__name__ == 'ConvModule'
+    assert aspp.convs[1].activate.__class__.__name__ == 'ReLU'
+    x = torch.rand(2, 128, 8, 8)
+    output = aspp(x)
+    assert output.shape == (2, 256, 8, 8)
+
+    # test aspp with separable conv
+    aspp = ASPP(128, separable_conv=True)
+    assert aspp.convs[1].__class__.__name__ == 'DepthwiseSeparableConvModule'
+    x = torch.rand(2, 128, 8, 8)
+    output = aspp(x)
+    assert output.shape == (2, 256, 8, 8)
+
+    # test aspp with ReLU6
+    aspp = ASPP(128, act_cfg=dict(type='ReLU6'))
+    assert aspp.convs[1].activate.__class__.__name__ == 'ReLU6'
+    x = torch.rand(2, 128, 8, 8)
+    output = aspp(x)
+    assert output.shape == (2, 256, 8, 8)
