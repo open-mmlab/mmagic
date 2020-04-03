@@ -2,31 +2,22 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-
-class ASPPConv(nn.Sequential):
-
-    def __init__(self, in_channels, out_channels, dilation):
-        modules = [
-            nn.Conv2d(
-                in_channels,
-                out_channels,
-                3,
-                padding=dilation,
-                dilation=dilation,
-                bias=False),
-            nn.BatchNorm2d(out_channels),
-            nn.ReLU()
-        ]
-        super(ASPPConv, self).__init__(*modules)
+from .conv_module import ConvModule
+from .separable_conv_module import DepthwiseSeparableConvModule
 
 
 class ASPPPooling(nn.Sequential):
 
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, in_channels, out_channels, conv_cfg, norm_cfg, act_cfg):
         super(ASPPPooling, self).__init__(
             nn.AdaptiveAvgPool2d(1),
-            nn.Conv2d(in_channels, out_channels, 1, bias=False),
-            nn.BatchNorm2d(out_channels), nn.ReLU())
+            ConvModule(
+                in_channels,
+                out_channels,
+                1,
+                conv_cfg=conv_cfg,
+                norm_cfg=norm_cfg,
+                act_cfg=act_cfg))
 
     def forward(self, x):
         size = x.shape[-2:]
@@ -37,36 +28,81 @@ class ASPPPooling(nn.Sequential):
 
 
 class ASPP(nn.Module):
-    """ASPP module from DeepLabV3
+    """ASPP module from DeepLabV3.
 
-    The code is transfered from
+    The code is adopted from
     https://github.com/pytorch/vision/blob/master/torchvision/models/segmentation/deeplabv3.py # noqa
 
     For more information about the module:
     `"Rethinking Atrous Convolution for Semantic Image Segmentation"
     <https://arxiv.org/abs/1706.05587>`_.
+
+    Args:
+        in_channels (int): Input channels of the module.
+        out_channels (int): Output channels of the module.
+        dilations (Sequence[int]): Dilation rate of three ASPP conv module.
+            Default: [12, 24, 36].
+        conv_cfg (dict): Config dict for convolution layer. If "None",
+            nn.Conv2d will be applied. Default: None.
+        norm_cfg (dict): Config dict for normalization layer.
+            Default: dict(type='BN').
+        act_cfg (dict): Config dict for activation layer.
+            Default: dict(type='ReLU').
+        separable_conv (bool): Whether replace normal conv with depthwise
+            separable conv which is faster. Default: False.
     """
 
-    def __init__(self, in_channels, atrous_rates):
+    def __init__(self,
+                 in_channels,
+                 out_channels=256,
+                 dilations=(12, 24, 36),
+                 conv_cfg=None,
+                 norm_cfg=dict(type='BN'),
+                 act_cfg=dict(type='ReLU'),
+                 separable_conv=False):
         super(ASPP, self).__init__()
-        out_channels = 256
+
+        if separable_conv:
+            conv_module = DepthwiseSeparableConvModule
+        else:
+            conv_module = ConvModule
+
         modules = []
         modules.append(
-            nn.Sequential(
-                nn.Conv2d(in_channels, out_channels, 1, bias=False),
-                nn.BatchNorm2d(out_channels), nn.ReLU()))
+            ConvModule(
+                in_channels,
+                out_channels,
+                1,
+                conv_cfg=conv_cfg,
+                norm_cfg=norm_cfg,
+                act_cfg=act_cfg))
 
-        rate1, rate2, rate3 = tuple(atrous_rates)
-        modules.append(ASPPConv(in_channels, out_channels, rate1))
-        modules.append(ASPPConv(in_channels, out_channels, rate2))
-        modules.append(ASPPConv(in_channels, out_channels, rate3))
-        modules.append(ASPPPooling(in_channels, out_channels))
+        for dilation in dilations:
+            modules.append(
+                conv_module(
+                    in_channels,
+                    out_channels,
+                    3,
+                    padding=dilation,
+                    dilation=dilation,
+                    conv_cfg=conv_cfg,
+                    norm_cfg=norm_cfg,
+                    act_cfg=act_cfg))
+
+        modules.append(
+            ASPPPooling(in_channels, out_channels, conv_cfg, norm_cfg,
+                        act_cfg))
 
         self.convs = nn.ModuleList(modules)
 
         self.project = nn.Sequential(
-            nn.Conv2d(5 * out_channels, out_channels, 1, bias=False),
-            nn.BatchNorm2d(out_channels), nn.ReLU(), nn.Dropout(0.5))
+            ConvModule(
+                5 * out_channels,
+                out_channels,
+                1,
+                conv_cfg=conv_cfg,
+                norm_cfg=norm_cfg,
+                act_cfg=act_cfg), nn.Dropout(0.5))
 
     def forward(self, x):
         res = []

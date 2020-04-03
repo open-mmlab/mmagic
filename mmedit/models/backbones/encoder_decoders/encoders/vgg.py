@@ -16,14 +16,14 @@ class VGG16(nn.Module):
     Args:
         aspp (bool, optional): Whether use ASPP module after the last conv
             layer.
-        atrous_rates (list[int], optional): Atrous rates of ASPP module.
+        dilations (list[int], optional): Atrous rates of ASPP module.
     """
 
-    def __init__(self, batch_norm=False, aspp=False, atrous_rates=None):
+    def __init__(self, batch_norm=False, aspp=False, dilations=None):
         super(VGG16, self).__init__()
         self.batch_norm = batch_norm
         self.aspp = aspp
-        self.atrous_rates = atrous_rates
+        self.dilations = dilations
 
         self.layer1 = self._make_layer(4, 64, 2)
         self.layer2 = self._make_layer(64, 128, 2)
@@ -37,7 +37,7 @@ class VGG16(nn.Module):
         self.relu = nn.ReLU(inplace=True)
 
         if self.aspp:
-            self.aspp = ASPP(512, self.atrous_rates)
+            self.aspp = ASPP(512, dilations=self.dilations)
             self.out_channels = 256
         else:
             self.out_channels = 512
