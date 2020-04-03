@@ -1,3 +1,3 @@
-from .optimizer import OPTIMIZERS, build_optimizer
+from .optimizer import OPTIMIZERS, build_optimizer, build_optimizers
 
-__all__ = ['OPTIMIZERS', 'build_optimizer']
+__all__ = ['OPTIMIZERS', 'build_optimizer', 'build_optimizers']
