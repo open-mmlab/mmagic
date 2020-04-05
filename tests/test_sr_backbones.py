@@ -12,37 +12,37 @@ def test_srresnet_backbone():
     MSRResNet(
         in_channels=3,
         out_channels=3,
-        mid_channels=64,
-        num_blocks=16,
+        mid_channels=8,
+        num_blocks=2,
         upscale_factor=2)
     # x3 model, initialization and forward (cpu)
     net = MSRResNet(
         in_channels=3,
         out_channels=3,
-        mid_channels=64,
-        num_blocks=16,
+        mid_channels=8,
+        num_blocks=2,
         upscale_factor=3)
     net.init_weights(pretrained=None)
-    input_shape = (1, 3, 64, 64)
+    input_shape = (1, 3, 12, 12)
     img = _demo_inputs(input_shape)
     output = net(img)
-    assert output.shape == (1, 3, 192, 192)
+    assert output.shape == (1, 3, 36, 36)
     # x4 modeland, initialization and forward (cpu)
     net = MSRResNet(
         in_channels=3,
         out_channels=3,
-        mid_channels=64,
-        num_blocks=16,
+        mid_channels=8,
+        num_blocks=2,
         upscale_factor=4)
     net.init_weights(pretrained=None)
     output = net(img)
-    assert output.shape == (1, 3, 256, 256)
+    assert output.shape == (1, 3, 48, 48)
 
     # x4 model forward (gpu)
     if torch.cuda.is_available():
         net = net.cuda()
         output = net(img.cuda())
-        assert output.shape == (1, 3, 256, 256)
+        assert output.shape == (1, 3, 48, 48)
 
     with pytest.raises(TypeError):
         # pretrained should be str or None
@@ -94,9 +94,9 @@ def test_rrdbnet_backbone():
     net = RRDBNet(
         in_channels=3,
         out_channels=3,
-        mid_channels=64,
+        mid_channels=8,
         num_blocks=2,
-        growth_channels=32)
+        growth_channels=4)
     net.init_weights(pretrained=None)
     input_shape = (1, 3, 12, 12)
     img = _demo_inputs(input_shape)
