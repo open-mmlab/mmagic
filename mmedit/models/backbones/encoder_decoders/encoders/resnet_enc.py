@@ -106,9 +106,9 @@ class ResNetEnc(nn.Module):
         layers (list[int]): Number of layers in each block.
         in_channels (int): Number of input channels.
         conv_cfg (dict): dictionary to construct convolution layer. If it is
-            ``None``, 2d convolution with be applied. Default: None.
-        norm_cfg (dict): Config for norm layers. required keys are `type`.
-            Default: dict(type='BN').
+            None, 2d convolution will be applied. Default: None.
+        norm_cfg (dict): Config dict for normalization layer. "BN" by default.
+        act_cfg (dict): Config dict for activation layer, "ReLU" by default.
         late_downsample (bool): Whether to adopt late downsample strategy,
             Default: False.
     """
@@ -242,3 +242,109 @@ class ResNetEnc(nn.Module):
         x = self.layer4(x)
 
         return x
+
+
+@COMPONENTS.register_module
+class ResShortcutEnc(ResNetEnc):
+    """ResNet backbone for image matting with shortcut connection.
+
+    image ---------------- shortcut[0] --- feat1
+      |
+    conv1-conv2 ---------- shortcut[1] --- feat2
+           |
+          conv3-layer1 --- shortcut[2] --- feat3
+                  |
+                 layer2 -- shortcut[5] --- feat4
+                   |
+                  layer3 - shortcut[4] --- feat5
+                    |
+                   layer4 ---------------- out
+
+    Baseline model of Natural Image Matting via Guided Contextual Attention
+    https://arxiv.org/pdf/2001.04069.pdf.
+
+    Args:
+        block (str): Type of residual block. Currently only `BasicBlock` is
+            implemented.
+        layers (list[int]): Number of layers in each block.
+        in_channels (int): Number of input channels.
+        conv_cfg (dict): Dictionary to construct convolution layer. If it is
+            None, 2d convolution will be applied. Default: None.
+        norm_cfg (dict): Config dict for normalization layer. "BN" by default.
+        act_cfg (dict): Config dict for activation layer, "ReLU" by default.
+        late_downsample (bool): Whether to adopt late downsample strategy.
+            Default: False.
+        order (tuple[str]): Order of `conv`, `norm` and `act` layer in shortcut
+            convolution module. Default: ('conv', 'act', 'norm').
+    """
+
+    def __init__(self,
+                 block,
+                 layers,
+                 in_channels,
+                 conv_cfg=None,
+                 norm_cfg=dict(type='BN'),
+                 act_cfg=dict(type='ReLU'),
+                 late_downsample=False,
+                 order=('conv', 'act', 'norm')):
+        super(ResShortcutEnc,
+              self).__init__(block, layers, in_channels, conv_cfg, norm_cfg,
+                             act_cfg, late_downsample)
+
+        # TODO: rename self.midplanes to self.mid_channels in ResNetEnc
+        self.shortcut_in_channels = [in_channels, self.midplanes, 64, 128, 256]
+        self.shortcut_out_channels = [32, self.midplanes, 64, 128, 256]
+
+        self.shortcut = nn.ModuleList()
+        for in_channels, out_channels in zip(self.shortcut_in_channels,
+                                             self.shortcut_out_channels):
+            self.shortcut.append(
+                self._make_shortcut(in_channels, out_channels, conv_cfg,
+                                    norm_cfg, act_cfg, order))
+
+    def _make_shortcut(self, in_channels, out_channels, conv_cfg, norm_cfg,
+                       act_cfg, order):
+        return nn.Sequential(
+            ConvModule(
+                in_channels,
+                out_channels,
+                3,
+                padding=1,
+                conv_cfg=conv_cfg,
+                norm_cfg=norm_cfg,
+                act_cfg=act_cfg,
+                order=order),
+            ConvModule(
+                out_channels,
+                out_channels,
+                3,
+                padding=1,
+                conv_cfg=conv_cfg,
+                norm_cfg=norm_cfg,
+                act_cfg=act_cfg,
+                order=order))
+
+    def forward(self, x):
+        out = self.conv1(x)
+        x1 = self.conv2(out)
+        out = self.conv3(x1)
+
+        x2 = self.layer1(out)
+        x3 = self.layer2(x2)
+        x4 = self.layer3(x3)
+        out = self.layer4(x4)
+
+        feat1 = self.shortcut[0](x)
+        feat2 = self.shortcut[1](x1)
+        feat3 = self.shortcut[2](x2)
+        feat4 = self.shortcut[3](x3)
+        feat5 = self.shortcut[4](x4)
+
+        return {
+            'out': out,
+            'feat1': feat1,
+            'feat2': feat2,
+            'feat3': feat3,
+            'feat4': feat4,
+            'feat5': feat5,
+        }

@@ -57,6 +57,7 @@ class ResNetDec(nn.Module):
             implemented.
         layers (list[int]): Number of layers in each block.
         in_channels (int): Channel num of input features.
+        kernel_size (int): Kernel size of the conv layers in the decoder.
         conv_cfg (dict): dictionary to construct convolution layer. If it is
             None, 2d convolution will be applied. Default: None.
         norm_cfg (dict): Config dict for normalization layer. "BN" by default.
@@ -166,6 +167,68 @@ class ResNetDec(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
         x = self.conv1(x)
+        x = self.conv2(x)
+
+        return x
+
+
+@COMPONENTS.register_module
+class ResShortcutDec(ResNetDec):
+    """ResNet decoder for image matting with shortcut connection.
+
+    feat1 --------------------------- conv2 --- out
+                                   |
+    feat2 ---------------------- conv1
+                              |
+    feat3 ----------------- layer4
+                         |
+    feat4 ------------ layer3
+                    |
+    feat5 ------- layer2
+               |
+    out ---  layer1
+
+    Args:
+        block (str): Type of residual block. Currently only `BasicBlockDec` is
+            implemented.
+        layers (list[int]): Number of layers in each block.
+        in_channels (int): Channel number of input features.
+        kernel_size (int): Kernel size of the conv layers in the decoder.
+        conv_cfg (dict): Dictionary to construct convolution layer. If it is
+            None, 2d convolution will be applied. Default: None.
+        norm_cfg (dict): Config dict for normalization layer. "BN" by default.
+        act_cfg (dict): Config dict for activation layer, "ReLU" by default.
+        late_downsample (bool): Whether to adopt late downsample strategy,
+            Default: False.
+    """
+
+    def forward(self, inputs):
+        """Forward function of resnet shortcut decoder.
+
+        Args:
+            inputs (dict): Output dictionary of the ResNetEnc containing:
+                out (Tensor): Output of the ResNetEnc.
+                feat1 (Tensor): Shortcut connection from input image.
+                feat2 (Tensor): Shortcut connection from conv2 of ResNetEnc.
+                feat3 (Tensor): Shortcut connection from layer1 of ResNetEnc.
+                feat4 (Tensor): Shortcut connection from layer2 of ResNetEnc.
+                feat5 (Tensor): Shortcut connection from layer3 of ResNetEnc.
+
+        Returns:
+            Tensor: Output tensor.
+        """
+        feat1 = inputs['feat1']
+        feat2 = inputs['feat2']
+        feat3 = inputs['feat3']
+        feat4 = inputs['feat4']
+        feat5 = inputs['feat5']
+        x = inputs['out']
+
+        x = self.layer1(x) + feat5
+        x = self.layer2(x) + feat4
+        x = self.layer3(x) + feat3
+        x = self.layer4(x) + feat2
+        x = self.conv1(x) + feat1
         x = self.conv2(x)
 
         return x
