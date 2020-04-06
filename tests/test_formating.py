@@ -100,6 +100,7 @@ def test_format_trimap():
     format_trimap = FormatTrimap(to_onehot=False)
     results = format_trimap(ori_result)
     result_trimap = results['trimap']
+    assert result_trimap.shape == (1, 64, 64)
     assert ((result_trimap.numpy() == 0) == (ori_trimap == 0)).all()
     assert ((result_trimap.numpy() == 1) == (ori_trimap == 128)).all()
     assert ((result_trimap.numpy() == 2) == (ori_trimap == 255)).all()
@@ -108,6 +109,7 @@ def test_format_trimap():
     format_trimap = FormatTrimap(to_onehot=True)
     results = format_trimap(ori_result)
     result_trimap = results['trimap']
+    assert result_trimap.shape == (3, 64, 64)
     assert ((result_trimap[0, ...].numpy() == 1) == (ori_trimap == 0)).all()
     assert ((result_trimap[1, ...].numpy() == 1) == (ori_trimap == 128)).all()
     assert ((result_trimap[2, ...].numpy() == 1) == (ori_trimap == 255)).all()

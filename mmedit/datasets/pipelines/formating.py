@@ -131,6 +131,8 @@ class FormatTrimap(object):
         if self.to_onehot:
             trimap = F.one_hot(trimap.to(torch.long), num_classes=3)
             trimap = trimap.permute(2, 0, 1)
+        else:
+            trimap = trimap[None, ...]  # expand the channels dimension
         results['trimap'] = trimap.float()
         return results
 
