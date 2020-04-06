@@ -22,11 +22,10 @@ class ImgInpaintingDataset(BaseDataset):
                 line = line.strip()
                 _info = dict()
                 line_split = line.split(' ')
-                _info.update(
-                    dict(
-                        filename=Path(self.data_prefix).joinpath(
-                            line_split[0]).as_posix(),
-                        idx=idx))
-                img_infos.append(dict(img_info=_info))
+                _info = dict(
+                    gt_img_path=Path(self.data_prefix).joinpath(
+                        line_split[0]).as_posix(),
+                    gt_img_idx=idx)
+                img_infos.append(_info)
 
         return img_infos

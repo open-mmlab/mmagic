@@ -137,9 +137,12 @@ class ConvModule(nn.Module):
     def init_weights(self):
         if self.with_activation and self.act_cfg['type'] == 'LeakyReLU':
             nonlinearity = 'leaky_relu'
+            a = self.act_cfg.pop('negative_slope', 0.01)
         else:
             nonlinearity = 'relu'
-        kaiming_init(self.conv, nonlinearity=nonlinearity)
+            a = 0
+
+        kaiming_init(self.conv, a=a, nonlinearity=nonlinearity)
         if self.with_norm:
             constant_init(self.norm, 1, bias=0)
 
