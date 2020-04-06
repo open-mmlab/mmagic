@@ -16,7 +16,9 @@ class PerceptualVGG(nn.Module):
 
     Args:
         layer_name_list (list[str]): According to the name in this list,
-            forward function will return the corresponding features.
+            forward function will return the corresponding features. This
+            list contains the name each layer in `vgg.feature`. An example
+            of this list is ['4', '10'].
         vgg_tyep (str): Set the type of vgg network. Default: 'vgg19'.
         use_input_norm (bool): If True, normalize the input image.
             Importantly, the input feature must in the range [0, 1].
@@ -37,9 +39,13 @@ class PerceptualVGG(nn.Module):
         self.use_input_norm = use_input_norm
 
         # get vgg model and load pretrained vgg weight
-        self._vgg = getattr(vgg, vgg_type)()
-        self.init_weights(self._vgg, pretrained)
-        self.vgg_layers = self._vgg.features
+        # remove _vgg from attributes to avoid `find_unused_parameters` bug
+        _vgg = getattr(vgg, vgg_type)()
+        self.init_weights(_vgg, pretrained)
+        num_layers = max(map(int, layer_name_list)) + 1
+        assert len(_vgg.features) >= num_layers
+        # only borrow layers that will be used from _vgg to avoid unused params
+        self.vgg_layers = _vgg.features[:num_layers]
 
         if self.use_input_norm:
             # the mean is for image with range [0, 1]
@@ -63,9 +69,6 @@ class PerceptualVGG(nn.Module):
             x = module(x)
             if name in self.layer_name_list:
                 output[name] = x.clone()
-            # break the for loop to avoid useless computation
-            if len(output) == len(self.layer_name_list):
-                break
         return output
 
     def init_weights(self, model, pretrained):

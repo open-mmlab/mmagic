@@ -251,13 +251,34 @@ def test_perceptual_loss(init_weights):
         gt = torch.randn(1, 3, 64, 64).cuda()
         percep, style = loss_percep(x, gt)
         assert style is None and percep > 0
-
+    # test whether vgg type is valid
     with pytest.raises(AssertionError):
         loss_percep = PerceptualLoss(layer_weights={'0': 1.}, vgg_type='igccc')
-
+    # test whether criterion is valid
     with pytest.raises(NotImplementedError):
         loss_percep = PerceptualLoss(
             layer_weights={'0': 1.}, criterion='igccc')
+
+    layer_name_list = ['2', '10', '30']
+    vgg_model = PerceptualVGG(
+        layer_name_list,
+        use_input_norm=False,
+        vgg_type='vgg16',
+        pretrained='torchvision://vgg16')
+    x = torch.rand((1, 3, 128, 128))
+    output = vgg_model(x)
+    assert isinstance(output, dict)
+    assert len(output) == len(layer_name_list)
+    assert set(output.keys()) == set(layer_name_list)
+
+    # test whether the layer name is valid
+    with pytest.raises(AssertionError):
+        layer_name_list = ['2', '10', '30', '100']
+        vgg_model = PerceptualVGG(
+            layer_name_list,
+            use_input_norm=False,
+            vgg_type='vgg16',
+            pretrained='torchvision://vgg16')
 
 
 def test_gan_losses():
