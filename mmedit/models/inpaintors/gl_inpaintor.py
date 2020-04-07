@@ -198,11 +198,11 @@ class GLInpaintor(OneStageInpaintor):
             if (self.disc_step_count != 0
                     or self.cur_iter <= self.train_cfg.iter_td):
                 results = dict(
-                    gt_img=gt_img,
-                    masked_img=masked_img,
-                    fake_res=fake_res,
-                    fake_img=fake_img,
-                    fake_gt_local=fake_gt_local)
+                    gt_img=gt_img.cpu(),
+                    masked_img=masked_img.cpu(),
+                    fake_res=fake_res.cpu(),
+                    fake_img=fake_img.cpu(),
+                    fake_gt_local=fake_gt_local.cpu())
                 outputs = dict(
                     log_vars=log_vars,
                     num_samples=len(data_batch['gt_img'].data),
@@ -224,7 +224,7 @@ class GLInpaintor(OneStageInpaintor):
             loss_g.backward()
             optimizer['generator'].step()
 
-            results.update(fake_gt_local=fake_gt_local)
+            results.update(fake_gt_local=fake_gt_local.cpu())
             outputs = dict(
                 log_vars=log_vars,
                 num_samples=len(data_batch['gt_img'].data),
