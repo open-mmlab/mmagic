@@ -97,7 +97,13 @@ class OneStageInpaintor(BaseModel):
         if self.with_gan:
             self.disc.init_weights(pretrained=pretrained)
 
-    def forward_train(self, x):
+    def forward(self, masked_img, mask, test_mode=True, **kwargs):
+        if not test_mode:
+            return self.forward_train(masked_img, mask, **kwargs)
+        else:
+            return self.forward_test(masked_img, mask, **kwargs)
+
+    def forward_train(self, *args, **kwargs):
         raise NotImplementedError('This interface should not be used in '
                                   'current training schedule. Please use '
                                   '`train_step` for training.')
@@ -200,15 +206,11 @@ class OneStageInpaintor(BaseModel):
 
         return res, loss
 
-    def forward_test(self, data_batch):
-        gt_img = data_batch['gt_img']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
-
+    def forward_test(self, masked_img, mask, **kwargs):
         input_x = torch.cat([masked_img, mask], dim=1)
 
         fake_res = self.generator(input_x)
-        fake_img = fake_res * mask + gt_img * (1. - mask)
+        fake_img = fake_res * mask + masked_img * (1. - mask)
         output = dict(fake_res=fake_res, fake_img=fake_img)
         return output
 
@@ -303,6 +305,6 @@ class OneStageInpaintor(BaseModel):
         return outputs
 
     def val_step(self, data_batch, **kwargs):
-        output = self.forward_test(data_batch, **kwargs)
+        output = self.forward_test(**data_batch, **kwargs)
 
         return output

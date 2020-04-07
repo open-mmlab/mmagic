@@ -45,7 +45,7 @@ def test_one_stage_inpaintor(mock_init_weights):
         masked_img = gt_img * (1. - mask)
         inpaintor.cuda()
         data_batch = dict(gt_img=gt_img, mask=mask, masked_img=masked_img)
-        output = inpaintor.forward_test(data_batch)
+        output = inpaintor.forward_test(**data_batch)
         assert output['fake_res'].shape == (1, 3, 256, 256)
         assert output['fake_img'].shape == (1, 3, 256, 256)
 
