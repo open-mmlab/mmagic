@@ -6,7 +6,8 @@ activation_cfg = {
     'LeakyReLU': nn.LeakyReLU,
     'PReLU': nn.PReLU,
     'RReLU': nn.RReLU,
-    'ReLU6': nn.ReLU6
+    'ReLU6': nn.ReLU6,
+    'ELU': nn.ELU
 }
 
 
