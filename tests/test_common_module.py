@@ -321,8 +321,16 @@ def test_depthwise_separable_conv():
     output = conv(x)
     assert output.shape == (1, 8, 255, 255)
 
-    conv = DepthwiseSeparableConvModule(3, 8, 2, norm_cfg=dict(type='BN'))
+    # test
+    conv = DepthwiseSeparableConvModule(3, 8, 2, dw_norm_cfg=dict(type='BN'))
     assert conv.depthwise_conv.norm_name == 'bn'
+    assert not conv.pointwise_conv.with_norm
+    x = torch.rand(1, 3, 256, 256)
+    output = conv(x)
+    assert output.shape == (1, 8, 255, 255)
+
+    conv = DepthwiseSeparableConvModule(3, 8, 2, pw_norm_cfg=dict(type='BN'))
+    assert not conv.depthwise_conv.with_norm
     assert conv.pointwise_conv.norm_name == 'bn'
     x = torch.rand(1, 3, 256, 256)
     output = conv(x)
@@ -348,8 +356,15 @@ def test_depthwise_separable_conv():
     assert output.shape == (1, 8, 256, 256)
 
     conv = DepthwiseSeparableConvModule(
-        3, 8, 3, padding=1, act_cfg=dict(type='LeakyReLU'))
+        3, 8, 3, padding=1, dw_act_cfg=dict(type='LeakyReLU'))
     assert conv.depthwise_conv.activate.__class__.__name__ == 'LeakyReLU'
+    assert conv.pointwise_conv.activate.__class__.__name__ == 'ReLU'
+    output = conv(x)
+    assert output.shape == (1, 8, 256, 256)
+
+    conv = DepthwiseSeparableConvModule(
+        3, 8, 3, padding=1, pw_act_cfg=dict(type='LeakyReLU'))
+    assert conv.depthwise_conv.activate.__class__.__name__ == 'ReLU'
     assert conv.pointwise_conv.activate.__class__.__name__ == 'LeakyReLU'
     output = conv(x)
     assert output.shape == (1, 8, 256, 256)
