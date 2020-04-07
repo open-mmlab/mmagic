@@ -25,3 +25,5 @@ repos:
       - id: double-quote-string-fixer
       - id: fix-encoding-pragma
         args: ["--remove"]
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
