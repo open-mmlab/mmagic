@@ -18,7 +18,7 @@ def build_optimizer(model, optimizer_cfg):
             Optional fields are:
                 - any arguments of the corresponding optimizer type, e.g.,
                   weight_decay, momentum, etc.
-                - paramwise_options: a dict with 4 accepted fileds
+                - paramwise_options: a dict with 4 accepted fields
                   (bias_lr_mult, bias_decay_mult, norm_decay_mult,
                   dwconv_decay_mult).
                   `bias_lr_mult` and `bias_decay_mult` will be multiplied to
