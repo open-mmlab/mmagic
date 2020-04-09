@@ -114,6 +114,44 @@ class TestAugmentations(object):
             f"(keys={['lq', 'gt']}, flip_ratio=1, "
             f"direction={results['flip_direction']})")
 
+        # flip a list
+        # horizontal
+        flip = Flip(keys=['lq', 'gt'], flip_ratio=1, direction='horizontal')
+        results = dict(
+            lq=[self.img_lq, np.copy(self.img_lq)],
+            gt=[self.img_gt, np.copy(self.img_gt)],
+            scale=4,
+            lq_path='fake_lq_path',
+            gt_path='fake_gt_path')
+        flip_rlt = flip(copy.deepcopy(results))
+        assert self.check_keys_contain(flip_rlt.keys(), target_keys)
+        assert self.check_flip(self.img_lq, flip_rlt['lq'][0],
+                               flip_rlt['flip_direction'])
+        assert self.check_flip(self.img_gt, flip_rlt['gt'][0],
+                               flip_rlt['flip_direction'])
+        np.testing.assert_almost_equal(flip_rlt['gt'][0], flip_rlt['gt'][1])
+        np.testing.assert_almost_equal(flip_rlt['lq'][0], flip_rlt['lq'][1])
+
+        # vertical
+        flip = Flip(keys=['lq', 'gt'], flip_ratio=1, direction='vertical')
+        flip_rlt = flip(copy.deepcopy(results))
+        assert self.check_keys_contain(flip_rlt.keys(), target_keys)
+        assert self.check_flip(self.img_lq, flip_rlt['lq'][0],
+                               flip_rlt['flip_direction'])
+        assert self.check_flip(self.img_gt, flip_rlt['gt'][0],
+                               flip_rlt['flip_direction'])
+        np.testing.assert_almost_equal(flip_rlt['gt'][0], flip_rlt['gt'][1])
+        np.testing.assert_almost_equal(flip_rlt['lq'][0], flip_rlt['lq'][1])
+
+        # no flip
+        flip = Flip(keys=['lq', 'gt'], flip_ratio=0, direction='vertical')
+        results = flip(copy.deepcopy(results))
+        assert self.check_keys_contain(results.keys(), target_keys)
+        np.testing.assert_almost_equal(results['gt'][0], self.img_gt)
+        np.testing.assert_almost_equal(results['lq'][0], self.img_lq)
+        np.testing.assert_almost_equal(results['gt'][0], results['gt'][1])
+        np.testing.assert_almost_equal(results['lq'][0], results['lq'][1])
+
     def test_pad(self):
         target_keys = ['alpha', 'img_shape']
 

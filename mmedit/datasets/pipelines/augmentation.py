@@ -145,6 +145,7 @@ class Flip(object):
     The shape of the data is preserved, but the elements are reordered.
     Required keys are the keys in attributes "keys", added or modified keys are
     "flip", "flip_direction" and the keys in attributes "keys".
+    It also supports flipping a list of images with the same flip.
 
     Attributes:
         keys (list[str]): The images to be flipped.
@@ -167,7 +168,11 @@ class Flip(object):
 
         if flip:
             for key in self.keys:
-                mmcv.imflip_(results[key], self.direction)
+                if isinstance(results[key], list):
+                    for v in results[key]:
+                        mmcv.imflip_(v, self.direction)
+                else:
+                    mmcv.imflip_(results[key], self.direction)
 
         results['flip'] = flip
         results['flip_direction'] = self.direction
