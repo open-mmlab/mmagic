@@ -120,7 +120,8 @@ class PerceptualLoss(nn.Module):
         self.vgg = PerceptualVGG(
             layer_name_list=list(layer_weights.keys()),
             vgg_type=vgg_type,
-            use_input_norm=use_input_norm)
+            use_input_norm=use_input_norm,
+            pretrained=pretrained)
 
         if criterion == 'l1':
             self.criterion = torch.nn.L1Loss()
