@@ -42,11 +42,11 @@ class BasicRestorer(BaseModel):
     def init_weights(self, pretrained=None):
         self.generator.init_weights(pretrained)
 
-    def forward(self, lq, gt, test_mode, **kwargs):
+    def forward(self, lq, gt=None, test_mode=False, **kwargs):
         if not test_mode:
-            return self.forward_train(lq, gt, **kwargs)
+            return self.forward_train(lq, gt)
         else:
-            return self.forward_test(lq, gt, **kwargs)
+            return self.forward_test(lq)
 
     def forward_train(self, lq, gt):
         losses = dict()
@@ -59,9 +59,9 @@ class BasicRestorer(BaseModel):
             results=dict(lq=lq.cpu(), gt=gt.cpu(), output=output.cpu()))
         return outputs
 
-    def forward_test(self, lq, gt=None):
+    def forward_test(self, lq):
         output = self.generator(lq)
-        results = dict(lq=lq.cpu(), gt=gt.cpu(), output=output.cpu())
+        results = dict(lq=lq.cpu(), output=output.cpu())
         return results
 
     def forward_dummy(self, img):
@@ -81,6 +81,6 @@ class BasicRestorer(BaseModel):
         outputs.update({'log_vars': log_vars})
         return outputs
 
-    def val_step(self, data_batch, **kwargs):
-        output = self.forward_test(**data_batch, **kwargs)
+    def val_step(self, data_batch):
+        output = self.forward_test(data_batch['lq'])
         return output

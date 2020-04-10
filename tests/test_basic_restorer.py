@@ -56,7 +56,6 @@ def test_basic_restorer():
     with torch.no_grad():
         outputs = restorer(**data_batch, test_mode=True)
     assert torch.equal(outputs['lq'], data_batch['lq'])
-    assert torch.equal(outputs['gt'], data_batch['gt'])
     assert torch.is_tensor(outputs['output'])
     assert outputs['output'].size() == (1, 3, 16, 32)
 
@@ -100,7 +99,6 @@ def test_basic_restorer():
         with torch.no_grad():
             outputs = restorer(**data_batch, test_mode=True)
         assert torch.equal(outputs['lq'], data_batch['lq'].cpu())
-        assert torch.equal(outputs['gt'], data_batch['gt'].cpu())
         assert torch.is_tensor(outputs['output'])
         assert outputs['output'].size() == (1, 3, 16, 32)
 
