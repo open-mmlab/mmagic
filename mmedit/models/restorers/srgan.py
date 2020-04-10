@@ -69,12 +69,12 @@ class SRGAN(BasicRestorer):
         if self.discriminator:
             self.discriminator.init_weights(pretrained=pretrained)
 
-    def forward(self, lq, gt, test_mode, **kwargs):
+    def forward(self, lq, gt=None, test_mode=False, **kwargs):
         if not test_mode:
             raise ValueError(
                 'SRGAN model does not supprot `forward_train` function.')
         else:
-            return self.forward_test(lq, gt, **kwargs)
+            return self.forward_test(lq)
 
     def train_step(self, data_batch, optimizer):
         # data
