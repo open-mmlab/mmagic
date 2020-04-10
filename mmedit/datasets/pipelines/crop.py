@@ -35,8 +35,8 @@ class Crop(object):
         crop_w = min(data_w, crop_w)
 
         if self.random_crop:
-            x_offset = random.randint(0, max(0, data_w - crop_w))
-            y_offset = random.randint(0, max(0, data_h - crop_h))
+            x_offset = np.random.randint(0, max(0, data_w - crop_w) + 1)
+            y_offset = np.random.randint(0, max(0, data_h - crop_h) + 1)
         else:
             x_offset = max(0, (data_w - crop_w)) // 2
             y_offset = max(0, (data_h - crop_h)) // 2
