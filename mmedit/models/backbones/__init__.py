@@ -1,12 +1,10 @@
-# yapf:disable
-from .encoder_decoders import (VGG16, DeepFillEncoder, DepthwiseIndexBlock,
-                               EncoderDecoder, GLDecoder, GLDilationNeck,
-                               GLEncoder, GLEncoderDecoder, HolisticIndexBlock,
-                               PConvDecoder, PConvEncoder, PConvEncoderDecoder,
-                               PlainDecoder, ResNetDec, ResNetEnc,
-                               ResShortcutDec, ResShortcutEnc,
+from .encoder_decoders import (VGG16, DeepFillDecoder, DeepFillEncoder,
+                               DepthwiseIndexBlock, EncoderDecoder, GLDecoder,
+                               GLDilationNeck, GLEncoder, GLEncoderDecoder,
+                               HolisticIndexBlock, PConvDecoder, PConvEncoder,
+                               PConvEncoderDecoder, PlainDecoder, ResNetDec,
+                               ResNetEnc, ResShortcutDec, ResShortcutEnc,
                                SimpleEncoderDecoder)
-# yapf:enable
 from .sr_backbones import MSRResNet, RRDBNet
 
 __all__ = [
@@ -14,6 +12,6 @@ __all__ = [
     'GLEncoderDecoder', 'GLEncoder', 'GLDecoder', 'GLDilationNeck',
     'PConvEncoderDecoder', 'PConvEncoder', 'PConvDecoder', 'RRDBNet',
     'EncoderDecoder', 'ResNetEnc', 'ResNetDec', 'ResShortcutEnc',
-    'ResShortcutDec', 'RRDBNet', 'DeepFillEncoder', 'HolisticIndexBlock',
-    'DepthwiseIndexBlock'
+    'ResShortcutDec', 'RRDBNet', 'DeepFillEncoder', 'DeepFillDecoder',
+    'HolisticIndexBlock', 'DepthwiseIndexBlock'
 ]
