@@ -2,9 +2,10 @@ import pytest
 import torch
 import torch.nn as nn
 from mmedit.models.common import (ASPP, ConvModule,
-                                  DepthwiseSeparableConvModule, MaskConvModule,
-                                  PartialConv2d, build_conv_layer,
-                                  build_norm_layer, build_padding_layer, norm)
+                                  DepthwiseSeparableConvModule, GCAModule,
+                                  MaskConvModule, PartialConv2d,
+                                  build_conv_layer, build_norm_layer,
+                                  build_padding_layer, norm)
 
 
 def test_build_conv_layer():
@@ -392,3 +393,19 @@ def test_aspp():
     x = torch.rand(2, 128, 8, 8)
     output = aspp(x)
     assert output.shape == (2, 256, 8, 8)
+
+
+def test_gca_module():
+    img_feat = torch.rand(1, 128, 64, 64)
+    alpha_feat = torch.rand(1, 128, 64, 64)
+    unknown = None
+    gca = GCAModule(128, 128, rate=1)
+    output = gca(img_feat, alpha_feat, unknown)
+    assert output.shape == (1, 128, 64, 64)
+
+    img_feat = torch.rand(1, 128, 64, 64)
+    alpha_feat = torch.rand(1, 128, 64, 64)
+    unknown = torch.rand(1, 1, 64, 64)
+    gca = GCAModule(128, 128, rate=2)
+    output = gca(img_feat, alpha_feat, unknown)
+    assert output.shape == (1, 128, 64, 64)
