@@ -2,6 +2,7 @@ from .activation import build_activation_layer
 from .aspp import ASPP
 from .conv import build_conv_layer
 from .conv_module import ConvModule
+from .gca_module import GCAModule
 from .mask_conv_module import MaskConvModule
 from .model_utils import (extract_around_bbox, extract_bbox_patch, scale_bbox,
                           set_requires_grad)
@@ -19,5 +20,5 @@ __all__ = [
     'PartialConv2d', 'PixelShufflePack', 'default_init_weights',
     'ResidualBlockNoBN', 'make_layer', 'MaskConvModule', 'extract_bbox_patch',
     'extract_around_bbox', 'set_requires_grad', 'scale_bbox',
-    'DepthwiseSeparableConvModule'
+    'DepthwiseSeparableConvModule', 'GCAModule'
 ]
