@@ -2,6 +2,7 @@ import torch
 
 from ..base import BaseModel
 from ..builder import build_backbone, build_component, build_loss
+from ..common import set_requires_grad
 from ..registry import MODELS
 
 
@@ -166,8 +167,7 @@ class OneStageInpaintor(BaseModel):
         loss = dict()
 
         if self.with_gan:
-            with torch.no_grad():
-                g_fake_pred = self.disc(fake_img)
+            g_fake_pred = self.disc(fake_img)
             loss_g_fake = self.loss_gan(g_fake_pred, True, is_disc=False)
             loss['loss_g_fake'] = loss_g_fake
 
@@ -250,7 +250,7 @@ class OneStageInpaintor(BaseModel):
 
         # discriminator training step
         if self.train_cfg.disc_step > 0:
-
+            set_requires_grad(self.disc, True)
             disc_losses = self.forward_train_d(
                 fake_img.detach(), False, is_disc=True)
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
@@ -264,7 +264,8 @@ class OneStageInpaintor(BaseModel):
             loss_disc.backward()
 
             if self.with_gp_loss:
-                loss_d_gp = self.loss_gp(self.disc, gt_img, fake_img)
+                loss_d_gp = self.loss_gp(
+                    self.disc, gt_img, fake_img, mask=mask)
                 loss_disc, log_vars_d = self.parse_losses(
                     dict(loss_gp=loss_d_gp))
                 log_vars.update(log_vars_d)
@@ -290,6 +291,8 @@ class OneStageInpaintor(BaseModel):
 
         # generator (encdec) training step, results contain the data
         # for visualization
+        if self.with_gan:
+            set_requires_grad(self.disc, False)
         results, g_losses = self.generator_loss(fake_res, fake_img, data_batch)
         loss_g, log_vars_g = self.parse_losses(g_losses)
         log_vars.update(log_vars_g)
