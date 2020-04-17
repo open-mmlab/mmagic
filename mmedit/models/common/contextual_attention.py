@@ -124,8 +124,6 @@ class ContextualAttentionModule(nn.Module):
         overlap_factor = self.calculate_overlap_factor(attention_score)
         output /= overlap_factor
 
-        output = self.out(output)
-
         if self.return_attention_score:
             n, _, h_s, w_s = attention_score.size()
             attention_score = attention_score.view(n, h_unfold, w_unfold, h_s,

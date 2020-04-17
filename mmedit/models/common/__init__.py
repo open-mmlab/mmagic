@@ -1,5 +1,6 @@
 from .activation import build_activation_layer
 from .aspp import ASPP
+from .contextual_attention import ContextualAttentionModule
 from .conv import build_conv_layer
 from .conv_module import ConvModule
 from .gca_module import GCAModule
@@ -20,5 +21,5 @@ __all__ = [
     'PartialConv2d', 'PixelShufflePack', 'default_init_weights',
     'ResidualBlockNoBN', 'make_layer', 'MaskConvModule', 'extract_bbox_patch',
     'extract_around_bbox', 'set_requires_grad', 'scale_bbox',
-    'DepthwiseSeparableConvModule', 'GCAModule'
+    'DepthwiseSeparableConvModule', 'ContextualAttentionModule', 'GCAModule'
 ]

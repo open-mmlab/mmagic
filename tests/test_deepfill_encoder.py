@@ -1,5 +1,5 @@
 import torch
-from mmedit.models.backbones import DeepFillEncoder
+from mmedit.models.backbones import ContextualAttentionNeck, DeepFillEncoder
 
 
 def test_deepfill_enc():
@@ -66,3 +66,23 @@ def test_deepfill_enc():
         assert encoder.enc2.out_channels == 32
         assert encoder.enc3.out_channels == 64
         assert encoder.enc4.out_channels == 128
+
+
+def test_deepfill_contextual_attention_neck():
+    # TODO: add unittest for contextual attention module
+    neck = ContextualAttentionNeck(in_channels=128)
+    x = torch.rand((2, 128, 64, 64))
+    mask = torch.zeros((2, 1, 64, 64))
+    mask[..., 20:100, 23:90] = 1.
+
+    res, offest = neck(x, mask)
+
+    assert res.shape == (2, 128, 64, 64)
+    assert offest.shape == (2, 32, 32, 32, 32)
+
+    if torch.cuda.is_available():
+        neck.cuda()
+        res, offest = neck(x.cuda(), mask.cuda())
+
+        assert res.shape == (2, 128, 64, 64)
+        assert offest.shape == (2, 32, 32, 32, 32)
