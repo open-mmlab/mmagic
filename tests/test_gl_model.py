@@ -1,5 +1,6 @@
 import pytest
 import torch
+import torch.nn as nn
 from mmedit.models import build_backbone, build_component
 from mmedit.models.components import MultiLayerDiscriminator
 
@@ -77,10 +78,25 @@ def test_multi_layer_disc():
     input_g = torch.randn(1, 3, 256, 256)
     # test multi-layer discriminators without fc layer
     multi_disc = MultiLayerDiscriminator(
-        in_channels=3, max_channels=256, fc_in_channels=0)
+        in_channels=3, max_channels=256, fc_in_channels=None)
     multi_disc.init_weights()
     disc_pred = multi_disc(input_g)
     assert disc_pred.shape == (1, 256, 8, 8)
+    multi_disc = MultiLayerDiscriminator(
+        in_channels=3, max_channels=256, fc_in_channels=100)
+    assert isinstance(multi_disc.fc_act, nn.ReLU)
 
+    multi_disc = MultiLayerDiscriminator(3, 236, fc_in_channels=None)
+    assert multi_disc.with_out_act
+    assert not multi_disc.with_fc
+    assert isinstance(multi_disc.conv5.activate, nn.ReLU)
+
+    multi_disc = MultiLayerDiscriminator(
+        3, 236, fc_in_channels=None, out_act_cfg=None)
+    assert not multi_disc.conv5.with_activation
     with pytest.raises(TypeError):
         multi_disc.init_weights(pretrained=dict(igccc=4396))
+
+    with pytest.raises(AssertionError):
+        multi_disc = MultiLayerDiscriminator(
+            3, 236, fc_in_channels=-100, out_act_cfg=None)
