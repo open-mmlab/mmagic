@@ -1,4 +1,8 @@
-from .discriminators import GLDiscs, ModifiedVGG, MultiLayerDiscriminator
+from .discriminators import (DeepFillv1Discriminators, GLDiscs, ModifiedVGG,
+                             MultiLayerDiscriminator)
 from .refiners import PlainRefiner
 
-__all__ = ['PlainRefiner', 'GLDiscs', 'ModifiedVGG', 'MultiLayerDiscriminator']
+__all__ = [
+    'PlainRefiner', 'GLDiscs', 'ModifiedVGG', 'MultiLayerDiscriminator',
+    'DeepFillv1Discriminators'
+]

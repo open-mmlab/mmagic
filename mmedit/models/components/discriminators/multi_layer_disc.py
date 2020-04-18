@@ -1,6 +1,6 @@
 import torch.nn as nn
 from mmcv.runner import load_checkpoint
-from mmedit.models.common import ConvModule
+from mmedit.models.common import ConvModule, build_activation_layer
 from mmedit.models.registry import COMPONENTS
 from mmedit.utils import get_root_logger
 
@@ -14,34 +14,44 @@ class MultiLayerDiscriminator(nn.Module):
     Args:
         in_channels (int): Input channel of the first input convolution.
         max_channels (int): The maxinum channel number in this structure.
-        fc_in_channels (int): Input dimension of the fully connected layer.
-            If `fc_in_channels` is zero, the fully connected layer will be
-            removed.
+        fc_in_channels (int | None): Input dimension of the fully connected
+            layer. If `fc_in_channels` is None, the fully connected layer will
+            be removed.
         fc_out_channels (int): Output dimension of the fully connected layer.
         num_convs (int): The number of the stacked convolution layers.
         conv_cfg (dict): Config dict to build conv layer.
         norm_cfg (dict): Config dict to build norm layer.
         act_cfg (dict): Config dict for activation layer, "relu" by default.
+        out_act_cfg (dict): Config dict for output activation, "relu" by
+            default.
     """
 
     def __init__(self,
                  in_channels,
                  max_channels,
-                 fc_in_channels=0,
-                 fc_out_channels=1024,
                  num_convs=5,
+                 fc_in_channels=None,
+                 fc_out_channels=1024,
                  conv_cfg=None,
                  norm_cfg=None,
-                 act_cfg=dict(type='ReLU')):
+                 act_cfg=dict(type='ReLU'),
+                 out_act_cfg=dict(type='ReLU')):
         super(MultiLayerDiscriminator, self).__init__()
+        if fc_in_channels is not None:
+            assert fc_in_channels > 0
 
         self.max_channels = max_channels
-        self.with_fc = fc_in_channels > 0
+        self.with_fc = fc_in_channels is not None
         self.num_convs = num_convs
+        self.with_out_act = out_act_cfg is not None
 
         cur_channels = in_channels
         for i in range(num_convs):
             out_ch = min(64 * 2**i, max_channels)
+            if not self.with_fc and i == num_convs - 1:
+                act_cfg_ = out_act_cfg
+            else:
+                act_cfg_ = act_cfg
             self.add_module(
                 f'conv{i + 1}',
                 ConvModule(
@@ -51,12 +61,13 @@ class MultiLayerDiscriminator(nn.Module):
                     stride=2,
                     padding=2,
                     norm_cfg=norm_cfg,
-                    act_cfg=act_cfg))
+                    act_cfg=act_cfg_))
             cur_channels = out_ch
 
         if self.with_fc:
             self.fc = nn.Linear(fc_in_channels, fc_out_channels, bias=True)
-            self.fc_act = nn.ReLU()
+            if self.with_out_act:
+                self.fc_act = build_activation_layer(out_act_cfg)
 
     def forward(self, x):
         input_size = x.size()
@@ -66,7 +77,8 @@ class MultiLayerDiscriminator(nn.Module):
         if self.with_fc:
             x = x.view(input_size[0], -1)
             x = self.fc(x)
-            x = self.fc_act(x)
+            if self.with_out_act:
+                x = self.fc_act(x)
 
         return x
 
