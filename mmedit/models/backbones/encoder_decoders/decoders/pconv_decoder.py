@@ -81,7 +81,8 @@ class PConvDecoder(nn.Module):
             stride=1,
             padding=1,
             conv_cfg=conv_cfg,
-            norm_cfg=None)
+            norm_cfg=None,
+            act_cfg=None)
 
     def forward(self, input_dict):
         hidden_feats = input_dict['hidden_feats']
