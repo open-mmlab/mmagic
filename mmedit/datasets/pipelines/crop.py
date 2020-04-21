@@ -199,7 +199,7 @@ class CropAroundSemiTransparent(object):
     Randomly select the w and h from a list of (w, h).
     Required keys are "alpha", "merged", "fg" and "bg", added or modified keys
     are "alpha", "merged", "fg", "bg", "ori_merged", "img_shape" and
-    "crop_bbox".
+    "crop_bbox". This class assumes value of "alpha" ranges from 0 to 255.
 
     Attributes:
         crop_sizes (list[int | tuple[int]]): List of (w, h) to be selected.
@@ -244,7 +244,8 @@ class CropAroundSemiTransparent(object):
             alpha = self._resize(alpha, (new_w, new_h))
 
         # Select center of cropping area
-        target_h, target_w = np.where((alpha > 0) & (alpha < 1))
+        assert (alpha > 1).any(), 'No fg or unknown area found in alpha'
+        target_h, target_w = np.where((alpha > 0) & (alpha < 255))
         delta_h = center_h = crop_h / 2
         delta_w = center_w = crop_w / 2
         if len(target_h) > 0:
@@ -262,7 +263,7 @@ class CropAroundSemiTransparent(object):
         results['bg'] = bg[top:bottom, left:right]
         results['merged'] = merged[top:bottom, left:right]
         results['alpha'] = alpha[top:bottom, left:right]
-        results['ori_merged'] = results['merged']
+        results['ori_merged'] = results['merged'].copy()
         results['img_shape'] = results['alpha'].shape
         results['crop_bbox'] = (left, top, right, bottom)
         return results
