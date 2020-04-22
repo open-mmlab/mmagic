@@ -17,9 +17,10 @@ img_norm_cfg = dict(
     mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
 # TODO: add data preparation and update data pipeline
 train_pipeline = [
-    dict(type='LoadAlpha'),
-    dict(type='LoadFgAndBg'),
-    dict(type='LoadMerged'),
+    dict(type='LoadAlpha', key='alpha', flag='grayscale'),
+    dict(type='LoadImageFromFile', key='fg'),
+    dict(type='LoadImageFromFile', key='bg'),
+    dict(type='LoadImageFromFile', key='merged'),
     dict(type='CropAroundSemiTransparent', crop_sizes=[320, 480, 640]),
     dict(type='Flip', keys=['alpha', 'merged', 'ori_merged', 'fg', 'bg']),
     dict(
@@ -32,6 +33,9 @@ train_pipeline = [
         kernel_size=(2, 5),
         iterations=(5, 15),
         symmetric=True),
+    dict(
+        type='RescaleToZeroOne',
+        keys=['merged', 'alpha', 'ori_merged', 'fg', 'bg']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Collect',
@@ -42,21 +46,29 @@ train_pipeline = [
         keys=['merged', 'alpha', 'trimap', 'ori_merged', 'fg', 'bg']),
 ]
 test_pipeline = [
-    dict(type='LoadAlpha'),
-    dict(type='LoadTrimap'),
-    dict(type='LoadMerged'),
-    dict(type='Reshape', keys=['alpha', 'trimap', 'merged']),
+    dict(
+        type='LoadAlpha', key='alpha', flag='grayscale', save_origin_img=True),
+    dict(
+        type='LoadImageFromFile',
+        key='trimap',
+        flag='grayscale',
+        save_origin_img=True),
+    dict(type='LoadImageFromFile', key='merged'),
+    dict(
+        type='Resize',
+        keys=['alpha', 'trimap', 'merged'],
+        size_factor=32,
+        max_size=1600),
+    dict(type='RescaleToZeroOne', keys=['merged', 'alpha', 'ori_alpha']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Collect',
         keys=['merged', 'alpha', 'trimap'],
-        meta_keys=[
-            'img_name', 'test_trans', 'ori_shape', 'ori_alpha', 'ori_trimap'
-        ]),
+        meta_keys=['merged_path', 'ori_shape', 'ori_alpha', 'ori_trimap']),
     dict(type='ImageToTensor', keys=['merged', 'alpha', 'trimap']),
 ]
 data = dict(
-    imgs_per_gpu=1,
+    samples_per_gpu=1,
     workers_per_gpu=4,
     drop_last=True,
     train=dict(
@@ -75,23 +87,22 @@ data = dict(
         data_prefix=data_root,
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='Adam', lr=0.00001)
-optimizer_config = dict(grad_clip=None)
+optimizers = dict(type='Adam', lr=0.00001)
 # learning policy
-lr_config = dict(policy='fixed')
+lr_config = dict(policy='Fixed')
 # checkpoint saving
-checkpoint_config = dict(interval=1)
+checkpoint_config = dict(interval=40000, by_epoch=False)
 # yapf:disable
 log_config = dict(
     interval=10,
     hooks=[
-        dict(type='TextLoggerHook'),
-        # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmmat')),
+        dict(type='IterTextLoggerHook'),
+        dict(type='PaviLoggerHook', init_kwargs=dict(project='dim')),
         # dict(type='TensorboardLoggerHook')
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 12
+total_iters = 1000000
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = './work_dirs/dim_finetune'
@@ -100,4 +111,4 @@ resume_from = None
 workflow = [('train', 1)]
 train_cfg = dict(train_backbone=True, train_refiner=True)
 test_cfg = dict(refine=True, metrics=['SAD', 'MSE'])
-evaluation = dict()
+evaluation = dict(interval=40000, save_image=False)
