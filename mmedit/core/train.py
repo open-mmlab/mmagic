@@ -1,12 +1,15 @@
 import os
+import os.path as osp
 import random
 
+import mmcv
+import mmcv.parallel.distributed_deprecated as ddp_deprecated
 import numpy as np
 import torch
-from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
-from mmcv.runner import IterBasedRunner
-from mmedit.core import build_optimizers
-from mmedit.datasets.builder import build_dataloader
+from mmcv.parallel import MMDataParallel
+from mmcv.runner import HOOKS, IterBasedRunner
+from mmedit.core import DistEvalIterHook, EvalIterHook, build_optimizers
+from mmedit.datasets.builder import build_dataloader, build_dataset
 from mmedit.utils import get_root_logger
 
 
@@ -105,14 +108,23 @@ def _dist_train(model,
             seed=cfg.seed) for ds in dataset
     ]
     # put model on gpus
-    find_unused_parameters = cfg.get('find_unused_parameters', False)
-    # Sets the `find_unused_parameters` parameter in
-    # torch.nn.parallel.DistributedDataParallel
-    model = MMDistributedDataParallel(
-        model.cuda(),
-        device_ids=[torch.cuda.current_device()],
-        broadcast_buffers=False,
-        find_unused_parameters=find_unused_parameters)
+
+    # The following official DistributedDataparallel wrapper may cause
+    # 'unused_parameters' bugs in training procedure. Thus, we keep these code
+    # to be commented and will update it once the official
+    # DistributedDataparallel can be adopted without any bug report.
+
+    # find_unused_parameters = cfg.get('find_unused_parameters', False)
+    # from mmcv.parallel import MMDistributedDataParallel
+    # model = MMDistributedDataParallel(
+    #     model.cuda(),
+    #     device_ids=[torch.cuda.current_device()],
+    #     broadcast_buffers=False,
+    #     find_unused_parameters=find_unused_parameters)
+
+    # In this version, we just use a deprecated version of
+    # DistributedDataParallel in mmcv to avoid bug report at running time.
+    model = ddp_deprecated.MMDistributedDataParallel(model.cuda())
 
     # build runner
     optimizer = build_optimizers(model, cfg.optimizers)
@@ -125,8 +137,29 @@ def _dist_train(model,
     runner.register_training_hooks(cfg.lr_config, cfg.checkpoint_config,
                                    cfg.log_config)
 
-    # TODO： add evaluation hook
-    # TODO: add visualization hook
+    # visual hook
+    if cfg.get('visual_config', None) is not None:
+        cfg.visual_config['output_dir'] = os.path.join(
+            cfg.work_dir, cfg.visual_config['output_dir'])
+        runner.register_hook(mmcv.build_from_cfg(cfg.visual_config, HOOKS))
+
+    # evaluation hook
+    if validate and cfg.get('evaluation', None) is not None:
+        dataset = build_dataset(cfg.data.val)
+        samples_per_gpu = cfg.data.get('val_samples_per_gpu',
+                                       cfg.data.samples_per_gpu)
+        workers_per_gpu = cfg.data.get('val_workers_per_gpu',
+                                       cfg.data.workers_per_gpu)
+        data_loader = build_dataloader(
+            dataset,
+            samples_per_gpu=samples_per_gpu,
+            workers_per_gpu=workers_per_gpu,
+            dist=True,
+            shuffle=False)
+        save_path = osp.join(cfg.work_dir, 'val_visuals')
+        runner.register_hook(
+            DistEvalIterHook(
+                data_loader, save_path=save_path, **cfg.evaluation))
 
     if cfg.resume_from:
         runner.resume(cfg.resume_from)
@@ -185,6 +218,29 @@ def _non_dist_train(model,
     # register hooks
     runner.register_training_hooks(cfg.lr_config, cfg.checkpoint_config,
                                    cfg.log_config)
+
+    # visual hook
+    if cfg.get('visual_config', None) is not None:
+        cfg.visual_config['output_dir'] = os.path.join(
+            cfg.work_dir, cfg.visual_config['output_dir'])
+        runner.register_hook(mmcv.build_from_cfg(cfg.visual_config, HOOKS))
+
+    # evaluation hook
+    if validate and cfg.get('evaluation', None) is not None:
+        dataset = build_dataset(cfg.data.val)
+        samples_per_gpu = cfg.data.get('val_samples_per_gpu',
+                                       cfg.data.samples_per_gpu)
+        workers_per_gpu = cfg.data.get('val_workers_per_gpu',
+                                       cfg.data.workers_per_gpu)
+        data_loader = build_dataloader(
+            dataset,
+            samples_per_gpu=samples_per_gpu,
+            workers_per_gpu=workers_per_gpu,
+            dist=True,
+            shuffle=False)
+        save_path = osp.join(cfg.work_dir, 'val_visuals')
+        runner.register_hook(
+            EvalIterHook(data_loader, save_path=save_path, **cfg.evaluation))
 
     if cfg.resume_from:
         runner.resume(cfg.resume_from)

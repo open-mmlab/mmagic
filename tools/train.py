@@ -18,9 +18,9 @@ from mmedit.utils import get_root_logger
 def parse_args():
     parser = argparse.ArgumentParser(description='Train an editor')
     parser.add_argument('config', help='train config file path')
-    parser.add_argument('--work_dir', help='the dir to save logs and models')
+    parser.add_argument('--work-dir', help='the dir to save logs and models')
     parser.add_argument(
-        '--resume_from', help='the checkpoint file to resume from')
+        '--resume-from', help='the checkpoint file to resume from')
     parser.add_argument(
         '--validate',
         action='store_true',
@@ -116,7 +116,7 @@ def main():
     # meta information
     meta = dict()
     if cfg.get('exp_name', None) is None:
-        cfg['exp_name'] = osp.splitext(osp.basename(cfg.config))[0]
+        cfg['exp_name'] = osp.splitext(osp.basename(cfg.work_dir))[0]
     meta['exp_name'] = cfg.exp_name
     meta['mmedit Version'] = __version__
     meta['seed'] = args.seed
