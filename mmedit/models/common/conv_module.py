@@ -137,7 +137,7 @@ class ConvModule(nn.Module):
     def init_weights(self):
         if self.with_activation and self.act_cfg['type'] == 'LeakyReLU':
             nonlinearity = 'leaky_relu'
-            a = self.act_cfg.pop('negative_slope', 0.01)
+            a = self.act_cfg.get('negative_slope', 0.01)
         else:
             nonlinearity = 'relu'
             a = 0
