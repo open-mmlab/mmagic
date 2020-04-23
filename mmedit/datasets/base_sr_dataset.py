@@ -26,13 +26,13 @@ class BaseSRDataset(BaseDataset):
             path (str | obj:`Path`): Folder path.
 
         Returns:
-            images (list(str)): image list obtained form given folder.
+            list[str]: image list obtained form given folder.
         """
 
         if isinstance(path, (str, Path)):
             path = str(path)
         else:
-            raise TypeError(f'"path" must be a str or a Path object, '
+            raise TypeError("'path' must be a str or a Path object, "
                             f'but received {type(path)}.')
 
         images = list(scandir(path, suffix=IMG_EXTENSIONS, recursive=True))
