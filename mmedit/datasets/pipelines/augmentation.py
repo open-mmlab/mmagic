@@ -23,8 +23,8 @@ class Resize(object):
     and width should be divisible by 32.
 
     Required keys are the keys in attribute "keys", added or modified keys are
-    "img_shape", "keep_ratio", "scale_factor", "test_trans" and the keys in
-    attribute "keys".
+    "img_shape", "keep_ratio", "scale_factor", "interpolation" and the
+    keys in attribute "keys".
 
     All keys in "keys" should have the same shape. "test_trans" is used to
     record the test transformation to align the input's shape.
@@ -48,7 +48,8 @@ class Resize(object):
             Default:None.
             Note that it is used togher with `size_factor`.
         interpolation (str): Algorithm used for interpolation:
-            "nearest" | "bilinear". Default: "bilinear".
+            "nearest" | "bilinear" | "bicubic" | "area" | "lanczos".
+            Default: "bilinear".
     """
 
     def __init__(self,
@@ -123,8 +124,7 @@ class Resize(object):
         results['img_shape'] = results[self.keys[-1]].shape
         results['scale_factor'] = self.scale_factor
         results['keep_ratio'] = self.keep_ratio
-        if self.size_factor:
-            results['size_factor'] = self.size_factor
+        results['interpolation'] = self.interpolation
 
         return results
 
