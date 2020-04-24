@@ -84,7 +84,7 @@ def test_multi_layer_disc():
     assert disc_pred.shape == (1, 256, 8, 8)
     multi_disc = MultiLayerDiscriminator(
         in_channels=3, max_channels=256, fc_in_channels=100)
-    assert isinstance(multi_disc.fc_act, nn.ReLU)
+    assert isinstance(multi_disc.fc.activate, nn.ReLU)
 
     multi_disc = MultiLayerDiscriminator(3, 236, fc_in_channels=None)
     assert multi_disc.with_out_act
@@ -100,3 +100,18 @@ def test_multi_layer_disc():
     with pytest.raises(AssertionError):
         multi_disc = MultiLayerDiscriminator(
             3, 236, fc_in_channels=-100, out_act_cfg=None)
+
+    input_g = torch.randn(1, 3, 16, 16)
+    multi_disc = MultiLayerDiscriminator(
+        in_channels=3,
+        max_channels=256,
+        num_convs=2,
+        fc_in_channels=4 * 4 * 128,
+        fc_out_channels=10,
+        with_spectral_norm=True)
+    multi_disc.init_weights()
+    disc_pred = multi_disc(input_g)
+    assert disc_pred.shape == (1, 10)
+    assert multi_disc.conv1.with_spectral_norm
+    assert multi_disc.conv2.with_spectral_norm
+    assert hasattr(multi_disc.fc.linear, 'weight_orig')

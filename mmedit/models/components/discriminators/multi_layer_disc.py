@@ -1,6 +1,6 @@
 import torch.nn as nn
 from mmcv.runner import load_checkpoint
-from mmedit.models.common import ConvModule, build_activation_layer
+from mmedit.models.common import ConvModule, LinearModule
 from mmedit.models.registry import COMPONENTS
 from mmedit.utils import get_root_logger
 
@@ -24,6 +24,7 @@ class MultiLayerDiscriminator(nn.Module):
         act_cfg (dict): Config dict for activation layer, "relu" by default.
         out_act_cfg (dict): Config dict for output activation, "relu" by
             default.
+        kwargs (keyword arguments).
     """
 
     def __init__(self,
@@ -35,7 +36,9 @@ class MultiLayerDiscriminator(nn.Module):
                  conv_cfg=None,
                  norm_cfg=None,
                  act_cfg=dict(type='ReLU'),
-                 out_act_cfg=dict(type='ReLU')):
+                 out_act_cfg=dict(type='ReLU'),
+                 with_spectral_norm=False,
+                 **kwargs):
         super(MultiLayerDiscriminator, self).__init__()
         if fc_in_channels is not None:
             assert fc_in_channels > 0
@@ -61,13 +64,18 @@ class MultiLayerDiscriminator(nn.Module):
                     stride=2,
                     padding=2,
                     norm_cfg=norm_cfg,
-                    act_cfg=act_cfg_))
+                    act_cfg=act_cfg_,
+                    with_spectral_norm=with_spectral_norm,
+                    **kwargs))
             cur_channels = out_ch
 
         if self.with_fc:
-            self.fc = nn.Linear(fc_in_channels, fc_out_channels, bias=True)
-            if self.with_out_act:
-                self.fc_act = build_activation_layer(out_act_cfg)
+            self.fc = LinearModule(
+                fc_in_channels,
+                fc_out_channels,
+                bias=True,
+                act_cfg=out_act_cfg,
+                with_spectral_norm=with_spectral_norm)
 
     def forward(self, x):
         input_size = x.size()
@@ -77,8 +85,6 @@ class MultiLayerDiscriminator(nn.Module):
         if self.with_fc:
             x = x.view(input_size[0], -1)
             x = self.fc(x)
-            if self.with_out_act:
-                x = self.fc_act(x)
 
         return x
 
