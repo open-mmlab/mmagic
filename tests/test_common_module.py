@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from mmedit.models.common import (ASPP, ConvModule,
                                   DepthwiseSeparableConvModule, GCAModule,
-                                  MaskConvModule, PartialConv2d,
+                                  LinearModule, MaskConvModule, PartialConv2d,
                                   build_conv_layer, build_norm_layer,
                                   build_padding_layer, norm)
 
@@ -409,3 +409,46 @@ def test_gca_module():
     gca = GCAModule(128, 128, rate=2)
     output = gca(img_feat, alpha_feat, unknown)
     assert output.shape == (1, 128, 64, 64)
+
+
+def test_linear_module():
+    linear = LinearModule(10, 20)
+    linear.init_weights()
+    x = torch.rand((3, 10))
+    assert linear.with_bias
+    assert not linear.with_spectral_norm
+    assert linear.out_features == 20
+    assert linear.in_features == 10
+    assert isinstance(linear.activate, nn.ReLU)
+
+    y = linear(x)
+    assert y.shape == (3, 20)
+
+    linear = LinearModule(10, 20, act_cfg=None, with_spectral_norm=True)
+
+    assert hasattr(linear.linear, 'weight_orig')
+    assert not linear.with_activation
+    y = linear(x)
+    assert y.shape == (3, 20)
+
+    linear = LinearModule(
+        10, 20, act_cfg=dict(type='LeakyReLU'), with_spectral_norm=True)
+    y = linear(x)
+    assert y.shape == (3, 20)
+    assert isinstance(linear.activate, nn.LeakyReLU)
+
+    linear = LinearModule(
+        10, 20, bias=False, act_cfg=None, with_spectral_norm=True)
+    y = linear(x)
+    assert y.shape == (3, 20)
+    assert not linear.with_bias
+
+    linear = LinearModule(
+        10,
+        20,
+        bias=False,
+        act_cfg=None,
+        with_spectral_norm=True,
+        order=('act', 'linear'))
+
+    assert linear.order == ('act', 'linear')
