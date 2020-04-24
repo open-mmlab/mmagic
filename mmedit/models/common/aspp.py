@@ -40,6 +40,8 @@ class ASPP(nn.Module):
     Args:
         in_channels (int): Input channels of the module.
         out_channels (int): Output channels of the module.
+        mid_channels (int): Output channels of the intermediate ASPP conv
+            modules.
         dilations (Sequence[int]): Dilation rate of three ASPP conv module.
             Default: [12, 24, 36].
         conv_cfg (dict): Config dict for convolution layer. If "None",
@@ -55,6 +57,7 @@ class ASPP(nn.Module):
     def __init__(self,
                  in_channels,
                  out_channels=256,
+                 mid_channels=256,
                  dilations=(12, 24, 36),
                  conv_cfg=None,
                  norm_cfg=dict(type='BN'),
@@ -71,7 +74,7 @@ class ASPP(nn.Module):
         modules.append(
             ConvModule(
                 in_channels,
-                out_channels,
+                mid_channels,
                 1,
                 conv_cfg=conv_cfg,
                 norm_cfg=norm_cfg,
@@ -81,7 +84,7 @@ class ASPP(nn.Module):
             modules.append(
                 conv_module(
                     in_channels,
-                    out_channels,
+                    mid_channels,
                     3,
                     padding=dilation,
                     dilation=dilation,
@@ -90,14 +93,14 @@ class ASPP(nn.Module):
                     act_cfg=act_cfg))
 
         modules.append(
-            ASPPPooling(in_channels, out_channels, conv_cfg, norm_cfg,
+            ASPPPooling(in_channels, mid_channels, conv_cfg, norm_cfg,
                         act_cfg))
 
         self.convs = nn.ModuleList(modules)
 
         self.project = nn.Sequential(
             ConvModule(
-                5 * out_channels,
+                5 * mid_channels,
                 out_channels,
                 1,
                 conv_cfg=conv_cfg,
