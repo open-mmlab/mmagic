@@ -32,6 +32,8 @@ class GLEncoderDecoder(nn.Module):
 
     def forward(self, x):
         x = self.encoder(x)
+        if isinstance(x, dict):
+            x = x['out']
         x = self.dilation_neck(x)
         x = self.decoder(x)
 
