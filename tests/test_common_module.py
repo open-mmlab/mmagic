@@ -4,8 +4,8 @@ import torch.nn as nn
 from mmedit.models.common import (ASPP, ConvModule,
                                   DepthwiseSeparableConvModule, GCAModule,
                                   LinearModule, MaskConvModule, PartialConv2d,
-                                  build_conv_layer, build_norm_layer,
-                                  build_padding_layer, norm)
+                                  SimpleGatedConvModule, build_conv_layer,
+                                  build_norm_layer, build_padding_layer, norm)
 
 
 def test_build_conv_layer():
@@ -414,6 +414,35 @@ def test_gca_module():
     gca = GCAModule(128, 128, rate=2)
     output = gca(img_feat, alpha_feat, unknown)
     assert output.shape == (1, 128, 64, 64)
+
+
+def test_gated_conv():
+    conv = SimpleGatedConvModule(3, 10, 3, padding=1)
+    x = torch.rand((2, 3, 10, 10))
+    assert not conv.conv.with_activation
+    assert conv.with_feat_act
+    assert conv.with_gate_act
+    assert isinstance(conv.feat_act, nn.ELU)
+    assert isinstance(conv.gate_act, nn.Sigmoid)
+    assert conv.conv.out_channels == 20
+
+    out = conv(x)
+    assert out.shape == (2, 10, 10, 10)
+
+    conv = SimpleGatedConvModule(
+        3, 10, 3, padding=1, feat_act_cfg=None, gate_act_cfg=None)
+    assert not conv.with_gate_act
+    out = conv(x)
+    assert out.shape == (2, 10, 10, 10)
+
+    with pytest.raises(AssertionError):
+        conv = SimpleGatedConvModule(
+            3, 1, 3, padding=1, order=('linear', 'act', 'norm'))
+
+    conv = SimpleGatedConvModule(3, out_channels=10, kernel_size=3, padding=1)
+    assert conv.conv.out_channels == 20
+    out = conv(x)
+    assert out.shape == (2, 10, 10, 10)
 
 
 def test_linear_module():

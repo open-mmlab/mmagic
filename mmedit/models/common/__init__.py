@@ -3,6 +3,7 @@ from .aspp import ASPP
 from .contextual_attention import ContextualAttentionModule
 from .conv import build_conv_layer
 from .conv_module import ConvModule
+from .gated_conv_module import SimpleGatedConvModule
 from .gca_module import GCAModule
 from .linear_module import LinearModule
 from .mask_conv_module import MaskConvModule
@@ -23,5 +24,5 @@ __all__ = [
     'ResidualBlockNoBN', 'make_layer', 'MaskConvModule', 'extract_bbox_patch',
     'extract_around_bbox', 'set_requires_grad', 'scale_bbox',
     'DepthwiseSeparableConvModule', 'ContextualAttentionModule', 'GCAModule',
-    'LinearModule'
+    'SimpleGatedConvModule', 'LinearModule'
 ]

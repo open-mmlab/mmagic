@@ -7,7 +7,8 @@ activation_cfg = {
     'PReLU': nn.PReLU,
     'RReLU': nn.RReLU,
     'ReLU6': nn.ReLU6,
-    'ELU': nn.ELU
+    'ELU': nn.ELU,
+    'Sigmoid': nn.Sigmoid
 }
 
 
