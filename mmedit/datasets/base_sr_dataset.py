@@ -1,5 +1,6 @@
 import copy
 import os.path as osp
+from collections import defaultdict
 from pathlib import Path
 
 from mmcv import scandir
@@ -44,3 +45,37 @@ class BaseSRDataset(BaseDataset):
         results = copy.deepcopy(self.data_infos[idx])
         results['scale'] = self.scale
         return self.pipeline(results)
+
+    def evaluate(self, results, logger=None):
+        """Evaluate with different metrics.
+
+        Args:
+            results (list[tuple]): The output of forward_test() of the model.
+
+        Return:
+            dict: Evaluation results dict.
+        """
+        if not isinstance(results, list):
+            raise TypeError(f'results must be a list, but got {type(results)}')
+        assert len(results) == len(self), (
+            'The length of results is not equal to the dataset len: '
+            f'{len(results)} != {len(self)}')
+
+        results = [res['eval_result'] for res in results]  # a list of dict
+        eval_results = defaultdict(list)  # a dict of list
+
+        for res in results:
+            for metric, val in res.items():
+                eval_results[metric].append(val)
+        for metric, val_list in eval_results.items():
+            assert len(val_list) == len(self), (
+                f'Length of evaluation result of {metric} is {len(val_list)}, '
+                f'should be {len(self)}')
+
+        # average the results
+        eval_results = {
+            metric: sum(values) / len(self)
+            for metric, values in eval_results.items()
+        }
+
+        return eval_results

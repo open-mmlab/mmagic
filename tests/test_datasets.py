@@ -69,6 +69,9 @@ class TestSRDatasets(object):
             def load_annotations(self):
                 pass
 
+            def __len__(self):
+                return 2
+
         toy_dataset = ToyDataset(pipeline=[])
         file_paths = ['gt/baboon.png', 'lq/baboon_x4.png']
         file_paths = [str(self.data_prefix / v) for v in file_paths]
@@ -80,6 +83,43 @@ class TestSRDatasets(object):
 
         with pytest.raises(TypeError):
             toy_dataset.scan_folder(123)
+
+        # test evaluate function
+        results = [{
+            'eval_result': {
+                'PSNR': 20,
+                'SSIM': 0.6
+            }
+        }, {
+            'eval_result': {
+                'PSNR': 30,
+                'SSIM': 0.8
+            }
+        }]
+
+        with pytest.raises(TypeError):
+            # results must be a list
+            toy_dataset.evaluate(results=5)
+        with pytest.raises(AssertionError):
+            # The length of results should be equal to the dataset len
+            toy_dataset.evaluate(results=[results[0]])
+
+        eval_results = toy_dataset.evaluate(results=results)
+        assert eval_results == {'PSNR': 25, 'SSIM': 0.7}
+
+        with pytest.raises(AssertionError):
+            results = [{
+                'eval_result': {
+                    'PSNR': 20,
+                    'SSIM': 0.6
+                }
+            }, {
+                'eval_result': {
+                    'PSNR': 30
+                }
+            }]
+            # Length of evaluation result should be the same as the dataset len
+            toy_dataset.evaluate(results=results)
 
     def test_sr_annotation_dataset(self):
         # setup
