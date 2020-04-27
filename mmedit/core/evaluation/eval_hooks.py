@@ -41,7 +41,6 @@ class EvalIterHook(Hook):
         self.evaluate(runner, results)
 
     def evaluate(self, runner, results):
-        runner.log_buffer.clear()
         eval_res = self.dataloader.dataset.evaluate(
             results, logger=runner.logger, **self.eval_kwargs)
         for name, val in eval_res.items():
@@ -76,6 +75,7 @@ class DistEvalIterHook(EvalIterHook):
     def after_train_iter(self, runner):
         if not self.every_n_iters(runner, self.interval):
             return
+        runner.log_buffer.clear()
         from mmedit.core import multi_gpu_test
         results = multi_gpu_test(
             runner.model,
