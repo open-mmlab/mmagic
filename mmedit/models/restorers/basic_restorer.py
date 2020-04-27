@@ -1,3 +1,9 @@
+import numbers
+import os.path as osp
+
+import mmcv
+from mmedit.core import psnr, ssim, tensor2img
+
 from ..base import BaseModel
 from ..builder import build_backbone, build_loss
 from ..registry import MODELS
@@ -20,6 +26,7 @@ class BasicRestorer(BaseModel):
         test_cfg (dict): Config for testing. Default: None.
         pretrained (str): Path for pretrained model. Default: None.
     """
+    allowed_metrics = {'PSNR': psnr, 'SSIM': ssim}
 
     def __init__(self,
                  generator,
@@ -46,7 +53,7 @@ class BasicRestorer(BaseModel):
         if not test_mode:
             return self.forward_train(lq, gt)
         else:
-            return self.forward_test(lq)
+            return self.forward_test(lq, gt, **kwargs)
 
     def forward_train(self, lq, gt):
         losses = dict()
@@ -59,9 +66,49 @@ class BasicRestorer(BaseModel):
             results=dict(lq=lq.cpu(), gt=gt.cpu(), output=output.cpu()))
         return outputs
 
-    def forward_test(self, lq):
+    def evaluate(self, output, gt):
+        crop_border = self.test_cfg.crop_border
+
+        output = tensor2img(output)
+        gt = tensor2img(gt)
+
+        eval_result = dict()
+        for metric in self.test_cfg.metrics:
+            eval_result[metric] = self.allowed_metrics[metric](output, gt,
+                                                               crop_border)
+        return eval_result
+
+    def forward_test(self,
+                     lq,
+                     gt=None,
+                     meta=None,
+                     save_image=False,
+                     save_path=None,
+                     iteration=None):
         output = self.generator(lq)
-        results = dict(lq=lq.cpu(), output=output.cpu())
+        if self.test_cfg is not None and self.test_cfg.get('metrics', None):
+            assert gt is not None, (
+                'evaluation with metrics must have gt images.')
+            results = dict(eval_result=self.evaluate(output, gt))
+        else:
+            results = dict(lq=lq.cpu(), output=output.cpu())
+            if gt is not None:
+                results['gt'] = gt.cpu()
+
+        # save image
+        if save_image:
+            lq_path = meta[0]['lq_path']
+            folder_name = osp.splitext(osp.basename(lq_path))[0]
+            if isinstance(iteration, numbers.Number):
+                save_path = osp.join(save_path, folder_name,
+                                     f'{folder_name}-{iteration + 1:06d}.png')
+            elif iteration is None:
+                save_path = osp.join(save_path, f'{folder_name}.png')
+            else:
+                raise ValueError('iteration should be number or None, '
+                                 f'but got {type(iteration)}')
+            mmcv.imwrite(tensor2img(output), save_path)
+
         return results
 
     def forward_dummy(self, img):
@@ -81,6 +128,6 @@ class BasicRestorer(BaseModel):
         outputs.update({'log_vars': log_vars})
         return outputs
 
-    def val_step(self, data_batch):
-        output = self.forward_test(data_batch['lq'])
+    def val_step(self, data_batch, **kwargs):
+        output = self.forward_test(**data_batch, **kwargs)
         return output

@@ -1,3 +1,7 @@
+import tempfile
+
+import mmcv
+import pytest
 import torch
 from mmcv.runner import obj_from_dict
 from mmedit.models import build_model
@@ -112,3 +116,53 @@ def test_basic_restorer():
         assert torch.equal(outputs['results']['gt'], data_batch['gt'].cpu())
         assert torch.is_tensor(outputs['results']['output'])
         assert outputs['results']['output'].size() == (1, 3, 16, 32)
+
+    # test with metric and save image
+    test_cfg = dict(metrics=('PSNR', 'SSIM'), crop_border=0)
+    test_cfg = mmcv.Config(test_cfg)
+
+    data_batch = {
+        'lq': inputs,
+        'gt': targets,
+        'meta': [{
+            'lq_path': 'fake_path/fake_name.png'
+        }]
+    }
+
+    restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
+
+    with pytest.raises(AssertionError):
+        # evaluation with metrics must have gt images
+        restorer(lq=inputs, test_mode=True)
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        outputs = restorer(
+            **data_batch,
+            test_mode=True,
+            save_image=True,
+            save_path=tmpdir,
+            iteration=None)
+        assert isinstance(outputs, dict)
+        assert isinstance(outputs['eval_result'], dict)
+        assert isinstance(outputs['eval_result']['PSNR'], float)
+        assert isinstance(outputs['eval_result']['SSIM'], float)
+
+        outputs = restorer(
+            **data_batch,
+            test_mode=True,
+            save_image=True,
+            save_path=tmpdir,
+            iteration=100)
+        assert isinstance(outputs, dict)
+        assert isinstance(outputs['eval_result'], dict)
+        assert isinstance(outputs['eval_result']['PSNR'], float)
+        assert isinstance(outputs['eval_result']['SSIM'], float)
+
+        with pytest.raises(ValueError):
+            # iteration should be number or None
+            restorer(
+                **data_batch,
+                test_mode=True,
+                save_image=True,
+                save_path=tmpdir,
+                iteration='100')
