@@ -67,6 +67,7 @@ class PairedRandomCrop(object):
     """Paried random crop.
 
     It crops a pair of lq and gt images with corresponding locations.
+    It also supports accepting lq list and gt list.
     Required keys are "scale", "lq", and "gt",
     added or modified keys are "lq" and "gt".
 
@@ -80,8 +81,16 @@ class PairedRandomCrop(object):
     def __call__(self, results):
         scale = results['scale']
         lq_patch_size = self.gt_patch_size // scale
-        h_lq, w_lq, _ = results['lq'].shape
-        h_gt, w_gt, _ = results['gt'].shape
+
+        lq_is_list = isinstance(results['lq'], list)
+        if not lq_is_list:
+            results['lq'] = [results['lq']]
+        gt_is_list = isinstance(results['gt'], list)
+        if not gt_is_list:
+            results['gt'] = [results['gt']]
+
+        h_lq, w_lq, _ = results['lq'][0].shape
+        h_gt, w_gt, _ = results['gt'][0].shape
 
         if h_gt != h_lq * scale or w_gt != w_lq * scale:
             raise ValueError(
@@ -90,20 +99,28 @@ class PairedRandomCrop(object):
         if h_lq < lq_patch_size or w_lq < lq_patch_size:
             raise ValueError(
                 f'LQ ({h_lq}, {w_lq}) is smaller than patch size ',
-                f'({lq_patch_size}, {lq_patch_size}). ',
-                f'Please remove {results["lq_path"]} and {results["gt_path"]}.'
-            )
+                f'({lq_patch_size}, {lq_patch_size}). Please check '
+                f'{results["lq_path"][0]} and {results["gt_path"][0]}.')
 
         # randomly choose top and left coordinates for lq patch
-        top = random.randint(0, max(0, h_lq - lq_patch_size))
-        left = random.randint(0, max(0, w_lq - lq_patch_size))
+        top = random.randint(0, h_lq - lq_patch_size)
+        left = random.randint(0, w_lq - lq_patch_size)
         # crop lq patch
-        results['lq'] = results['lq'][top:top + lq_patch_size,
-                                      left:left + lq_patch_size, :]
+        results['lq'] = [
+            v[top:top + lq_patch_size, left:left + lq_patch_size, ...]
+            for v in results['lq']
+        ]
         # crop corresponding gt patch
         top_gt, left_gt = int(top * scale), int(left * scale)
-        results['gt'] = results['gt'][top_gt:top_gt + self.gt_patch_size,
-                                      left_gt:left_gt + self.gt_patch_size, :]
+        results['gt'] = [
+            v[top_gt:top_gt + self.gt_patch_size,
+              left_gt:left_gt + self.gt_patch_size, ...] for v in results['gt']
+        ]
+
+        if not lq_is_list:
+            results['lq'] = results['lq'][0]
+        if not gt_is_list:
+            results['gt'] = results['gt'][0]
         return results
 
     def __repr__(self):
