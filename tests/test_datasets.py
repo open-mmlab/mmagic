@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from mmedit.datasets import (AdobeComp1kDataset, BaseSRDataset, RepeatDataset,
                              SRAnnotationDataset, SRFolderDataset,
-                             SRLmdbDataset, SRVimeo90KDataset)
+                             SRLmdbDataset, SRREDSDataset, SRVimeo90KDataset)
 from torch.utils.data import Dataset
 
 
@@ -302,6 +302,88 @@ def test_repeat_dataset():
     assert len(repeat_dataset) == 10
     assert repeat_dataset[2] == 3
     assert repeat_dataset[8] == 4
+
+
+def test_reds_dataset():
+    root_path = Path(__file__).parent / 'data'
+
+    txt_content = ('000/00000001.png (720, 1280, 3)\n'
+                   '001/00000001.png (720, 1280, 3)\n'
+                   '250/00000001.png (720, 1280, 3)\n')
+    mocked_open_function = mock_open(read_data=txt_content)
+
+    with patch('builtins.open', mocked_open_function):
+        # official val partition
+        reds_dataset = SRREDSDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            ann_file='fake_ann_file',
+            num_input_frames=5,
+            pipeline=[],
+            scale=4,
+            val_partition='official',
+            test_mode=False)
+
+        assert reds_dataset.data_infos == [
+            dict(
+                lq_path=str(root_path),
+                gt_path=str(root_path),
+                key='000/00000001',
+                num_input_frames=5),
+            dict(
+                lq_path=str(root_path),
+                gt_path=str(root_path),
+                key='001/00000001',
+                num_input_frames=5)
+        ]
+
+        # REDS4 val partition
+        reds_dataset = SRREDSDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            ann_file='fake_ann_file',
+            num_input_frames=5,
+            pipeline=[],
+            scale=4,
+            val_partition='REDS4',
+            test_mode=False)
+
+        assert reds_dataset.data_infos == [
+            dict(
+                lq_path=str(root_path),
+                gt_path=str(root_path),
+                key='001/00000001',
+                num_input_frames=5),
+            dict(
+                lq_path=str(root_path),
+                gt_path=str(root_path),
+                key='250/00000001',
+                num_input_frames=5)
+        ]
+
+        with pytest.raises(ValueError):
+            # wrong val_partitaion
+            reds_dataset = SRREDSDataset(
+                lq_folder=root_path,
+                gt_folder=root_path,
+                ann_file='fake_ann_file',
+                num_input_frames=5,
+                pipeline=[],
+                scale=4,
+                val_partition='wrong_val_partition',
+                test_mode=False)
+
+        with pytest.raises(AssertionError):
+            # num_input_frames should be odd numbers
+            reds_dataset = SRREDSDataset(
+                lq_folder=root_path,
+                gt_folder=root_path,
+                ann_file='fake_ann_file',
+                num_input_frames=6,
+                pipeline=[],
+                scale=4,
+                val_partition='wrong_val_partition',
+                test_mode=False)
 
 
 def test_vimeo90k_dataset():
