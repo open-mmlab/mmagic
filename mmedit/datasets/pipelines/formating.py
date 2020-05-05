@@ -80,6 +80,35 @@ class ImageToTensor(object):
 
 
 @PIPELINES.register_module
+class FramesToTensor(ImageToTensor):
+    """Convert frames type to `torch.Tensor` type.
+
+    It accpets a list of frames, converts each to `torch.Tensor` type and then
+    concatenates in a new dimension (dim=0).
+
+    Attributes:
+        keys (Sequence[str]): Required keys to be converted.
+        to_float32 (bool): Whether convert numpy image array to np.float32
+            before converted to tensor. Default: True.
+    """
+
+    def __call__(self, results):
+        for key in self.keys:
+            if not isinstance(results[key], list):
+                raise TypeError(f'results["{key}"] should be a list, '
+                                f'but got {type(results[key])}')
+            for idx, v in enumerate(results[key]):
+                # deal with gray scale img: expand a color channel
+                if len(v.shape) == 2:
+                    v = v[..., None]
+                if self.to_float32 and not isinstance(v, np.float32):
+                    v = v.astype(np.float32)
+                results[key][idx] = to_tensor(v.transpose(2, 0, 1))
+            results[key] = torch.stack(results[key], dim=0)
+        return results
+
+
+@PIPELINES.register_module
 class GetMaskedImage(object):
     """Get masked image.
 

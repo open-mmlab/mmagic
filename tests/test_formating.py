@@ -3,6 +3,7 @@ import pytest
 import torch
 from mmedit.datasets.pipelines import (Collect, FormatTrimap, GetMaskedImage,
                                        ImageToTensor, ToTensor)
+from mmedit.datasets.pipelines.formating import FramesToTensor
 
 
 def check_keys_contain(result_keys, target_keys):
@@ -73,6 +74,45 @@ def test_image_to_tensor():
     assert repr(image_to_tensor) == (
         image_to_tensor.__class__.__name__ +
         f'(keys={keys}, to_float32={to_float32})')
+
+
+def test_frames_to_tensor():
+    with pytest.raises(TypeError):
+        # results[key] should be a list
+        ori_results = dict(img=np.random.randn(12, 12, 3))
+        FramesToTensor(['img'])(ori_results)
+
+    ori_results = dict(
+        img=[np.random.randn(12, 12, 3),
+             np.random.randn(12, 12, 3)])
+    keys = ['img']
+    frames_to_tensor = FramesToTensor(keys, to_float32=False)
+    results = frames_to_tensor(ori_results)
+    assert results['img'].shape == torch.Size([2, 3, 12, 12])
+    assert isinstance(results['img'], torch.Tensor)
+    assert torch.equal(results['img'].data[0, ...], ori_results['img'][0])
+    assert torch.equal(results['img'].data[1, ...], ori_results['img'][1])
+    assert results['img'].dtype == torch.float64
+
+    ori_results = dict(
+        img=[np.random.randn(12, 12, 3),
+             np.random.randn(12, 12, 3)])
+    frames_to_tensor = FramesToTensor(keys, to_float32=True)
+    results = frames_to_tensor(ori_results)
+    assert results['img'].shape == torch.Size([2, 3, 12, 12])
+    assert isinstance(results['img'], torch.Tensor)
+    assert torch.equal(results['img'].data[0, ...], ori_results['img'][0])
+    assert torch.equal(results['img'].data[1, ...], ori_results['img'][1])
+    assert results['img'].dtype == torch.float32
+
+    ori_results = dict(img=[np.random.randn(12, 12), np.random.randn(12, 12)])
+    frames_to_tensor = FramesToTensor(keys, to_float32=True)
+    results = frames_to_tensor(ori_results)
+    assert results['img'].shape == torch.Size([2, 1, 12, 12])
+    assert isinstance(results['img'], torch.Tensor)
+    assert torch.equal(results['img'].data[0, ...], ori_results['img'][0])
+    assert torch.equal(results['img'].data[1, ...], ori_results['img'][1])
+    assert results['img'].dtype == torch.float32
 
 
 def test_masked_img():
