@@ -1,11 +1,12 @@
 import os.path as osp
 from pathlib import Path
+from unittest.mock import mock_open, patch
 
 import numpy as np
 import pytest
 from mmedit.datasets import (AdobeComp1kDataset, BaseSRDataset, RepeatDataset,
                              SRAnnotationDataset, SRFolderDataset,
-                             SRLmdbDataset)
+                             SRLmdbDataset, SRVimeo90KDataset)
 from torch.utils.data import Dataset
 
 
@@ -301,3 +302,43 @@ def test_repeat_dataset():
     assert len(repeat_dataset) == 10
     assert repeat_dataset[2] == 3
     assert repeat_dataset[8] == 4
+
+
+def test_vimeo90k_dataset():
+    root_path = Path(__file__).parent / 'data'
+
+    txt_content = ('00001/0266 (256, 448, 3)\n00002/0268 (256, 448, 3)\n')
+    mocked_open_function = mock_open(read_data=txt_content)
+    lq_paths_1 = [
+        str(root_path / '00001' / '0266' / f'im{v}.png') for v in range(1, 8)
+    ]
+    gt_paths_1 = [str(root_path / '00001' / '0266' / 'im4.png')]
+    lq_paths_2 = [
+        str(root_path / '00002' / '0268' / f'im{v}.png') for v in range(1, 8)
+    ]
+    gt_paths_2 = [str(root_path / '00002' / '0268' / 'im4.png')]
+    with patch('builtins.open', mocked_open_function):
+        vimeo90k_dataset = SRVimeo90KDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            ann_file='fake_ann_file',
+            num_input_frames=7,
+            pipeline=[],
+            scale=4,
+            test_mode=False)
+
+        assert vimeo90k_dataset.data_infos == [
+            dict(lq_path=lq_paths_1, gt_path=gt_paths_1, key='00001/0266'),
+            dict(lq_path=lq_paths_2, gt_path=gt_paths_2, key='00002/0268')
+        ]
+
+        with pytest.raises(AssertionError):
+            # num_input_frames should be odd numbers
+            vimeo90k_dataset = SRVimeo90KDataset(
+                lq_folder=root_path,
+                gt_folder=root_path,
+                ann_file='fake_ann_file',
+                num_input_frames=6,
+                pipeline=[],
+                scale=4,
+                test_mode=False)
