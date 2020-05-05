@@ -1,6 +1,6 @@
 from .augmentation import (BinarizeImage, Flip, Pad, RandomAffine,
                            RandomJitter, RandomMaskDilation, RandomTransposeHW,
-                           Resize)
+                           Resize, TemporalReverse)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundSemiTransparent, ModCrop,
                    PairedRandomCrop)
@@ -18,5 +18,5 @@ __all__ = [
     'RandomJitter', 'RandomMaskDilation', 'RandomTransposeHW', 'Resize',
     'Crop', 'CropAroundCenter', 'CropAroundSemiTransparent', 'ModCrop',
     'PairedRandomCrop', 'Normalize', 'RescaleToZeroOne', 'GenerateTrimap',
-    'MergeFgAndBg', 'CompositeFg', 'LoadImageFromFileList'
+    'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList'
 ]
