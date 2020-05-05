@@ -192,3 +192,19 @@ class TestAugmentations(object):
 
         assert repr(pairedrandomcrop) == (
             pairedrandomcrop.__class__.__name__ + f'(gt_patch_size=128)')
+
+        # for image list
+        results = dict(
+            lq=[self.img_lq, self.img_lq],
+            gt=[self.img_gt, self.img_gt],
+            scale=4,
+            lq_path='fake_lq_path',
+            gt_path='fake_gt_path')
+        pairedrandomcrop = PairedRandomCrop(128)
+        results = pairedrandomcrop(results)
+        for v in results['gt']:
+            assert v.shape == (128, 128, 3)
+        for v in results['lq']:
+            assert v.shape == (32, 32, 3)
+        np.testing.assert_almost_equal(results['gt'][0], results['gt'][1])
+        np.testing.assert_almost_equal(results['lq'][0], results['lq'][1])
