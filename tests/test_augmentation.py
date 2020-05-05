@@ -356,6 +356,32 @@ class TestAugmentations(object):
         assert repr(transposehw) == transposehw.__class__.__name__ + (
             f"(keys={['lq', 'gt']}, transpose_ratio=1)")
 
+        # for image list
+        ori_results = dict(
+            lq=[self.img_lq, np.copy(self.img_lq)],
+            gt=[self.img_gt, np.copy(self.img_gt)],
+            scale=4,
+            lq_path='fake_lq_path',
+            gt_path='fake_gt_path')
+        target_keys = ['lq', 'gt', 'transpose']
+        transposehw = RandomTransposeHW(keys=['lq', 'gt'], transpose_ratio=1)
+        results = transposehw(ori_results.copy())
+        assert self.check_keys_contain(results.keys(), target_keys)
+        assert self.check_transposehw(self.img_lq, results['lq'][0])
+        assert self.check_transposehw(self.img_gt, results['gt'][1])
+        np.testing.assert_almost_equal(results['gt'][0], results['gt'][1])
+        np.testing.assert_almost_equal(results['lq'][0], results['lq'][1])
+
+        # no transpose
+        target_keys = ['lq', 'gt', 'transpose']
+        transposehw = RandomTransposeHW(keys=['lq', 'gt'], transpose_ratio=0)
+        results = transposehw(ori_results.copy())
+        assert self.check_keys_contain(results.keys(), target_keys)
+        np.testing.assert_almost_equal(results['gt'][0], self.img_gt)
+        np.testing.assert_almost_equal(results['lq'][0], self.img_lq)
+        np.testing.assert_almost_equal(results['gt'][0], results['gt'][1])
+        np.testing.assert_almost_equal(results['lq'][0], results['lq'][1])
+
     def test_random_dilation(self):
         mask = np.zeros((3, 3, 1), dtype=np.float32)
         mask[1, 1] = 1

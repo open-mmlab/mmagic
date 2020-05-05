@@ -590,6 +590,7 @@ class RandomTransposeHW(object):
     (TransposeHW = horizontal flip + anti-clockwise rotatation by 90 degrees)
     When used with horizontal/vertical flips, it serves as a way of rotation
     augmentation.
+    It also supports randomly transposing a list of images.
 
     Required keys are the keys in attributes "keys", added or modified keys are
     "transpose" and the keys in attributes "keys".
@@ -608,7 +609,10 @@ class RandomTransposeHW(object):
 
         if transpose:
             for key in self.keys:
-                results[key] = results[key].transpose(1, 0, 2)
+                if isinstance(results[key], list):
+                    results[key] = [v.transpose(1, 0, 2) for v in results[key]]
+                else:
+                    results[key] = results[key].transpose(1, 0, 2)
 
         results['transpose'] = transpose
 
