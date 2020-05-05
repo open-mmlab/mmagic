@@ -623,3 +623,37 @@ class RandomTransposeHW(object):
         repr_str += (
             f'(keys={self.keys}, transpose_ratio={self.transpose_ratio})')
         return repr_str
+
+
+@PIPELINES.register_module
+class TemporalReverse(object):
+    """Reverse frame lists for temporal augmentation.
+
+    Required keys are the keys in attributes "lq" and "gt",
+    added or modified keys are "lq", "gt" and "reverse".
+
+    Attributes:
+        keys (list[str]): The frame lists to be reversed.
+        reverse_ratio (float): The propability to reverse the frame lists.
+            Default: 0.5.
+    """
+
+    def __init__(self, keys, reverse_ratio=0.5):
+        self.keys = keys
+        self.reverse_ratio = reverse_ratio
+
+    def __call__(self, results):
+        reverse = np.random.random() < self.reverse_ratio
+
+        if reverse:
+            for key in self.keys:
+                results[key].reverse()
+
+        results['reverse'] = reverse
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += f'(keys={self.keys}, reverse_ratio={self.reverse_ratio})'
+        return repr_str

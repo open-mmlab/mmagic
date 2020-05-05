@@ -4,7 +4,8 @@ import numpy as np
 import pytest
 from mmedit.datasets.pipelines import (BinarizeImage, Flip, Pad, RandomAffine,
                                        RandomJitter, RandomMaskDilation,
-                                       RandomTransposeHW, Resize)
+                                       RandomTransposeHW, Resize,
+                                       TemporalReverse)
 
 
 class TestAugmentations(object):
@@ -460,3 +461,29 @@ class TestAugmentations(object):
             f"(keys={['gt_img']}, scale=(128, 128), "
             f'keep_ratio={False}, size_factor=None, '
             f'max_size=None,interpolation=bilinear)')
+
+    def test_temporal_reverse(self):
+        img_lq1 = np.random.rand(4, 4, 3).astype(np.float32)
+        img_lq2 = np.random.rand(4, 4, 3).astype(np.float32)
+        img_gt = np.random.rand(8, 8, 3).astype(np.float32)
+        results = dict(lq=[img_lq1, img_lq2], gt=[img_gt])
+
+        target_keys = ['lq', 'gt', 'reverse']
+        temporal_reverse = TemporalReverse(keys=['lq', 'gt'], reverse_ratio=1)
+        results = temporal_reverse(results)
+        assert self.check_keys_contain(results.keys(), target_keys)
+        np.testing.assert_almost_equal(results['lq'][0], img_lq2)
+        np.testing.assert_almost_equal(results['lq'][1], img_lq1)
+        np.testing.assert_almost_equal(results['gt'][0], img_gt)
+
+        assert repr(
+            temporal_reverse) == temporal_reverse.__class__.__name__ + (
+                f"(keys={['lq', 'gt']}, reverse_ratio=1)")
+
+        results = dict(lq=[img_lq1, img_lq2], gt=[img_gt])
+        temporal_reverse = TemporalReverse(keys=['lq', 'gt'], reverse_ratio=0)
+        results = temporal_reverse(results)
+        assert self.check_keys_contain(results.keys(), target_keys)
+        np.testing.assert_almost_equal(results['lq'][0], img_lq1)
+        np.testing.assert_almost_equal(results['lq'][1], img_lq2)
+        np.testing.assert_almost_equal(results['gt'][0], img_gt)
