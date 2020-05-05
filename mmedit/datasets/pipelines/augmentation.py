@@ -1,5 +1,6 @@
 import math
 import numbers
+import os.path as osp
 import random
 
 import cv2
@@ -626,6 +627,64 @@ class RandomTransposeHW(object):
 
 
 @PIPELINES.register_module
+class GenerateFrameIndices(object):
+    """Generate frame index for REDS datasets. It also performs
+    temporal augmention with random interval.
+
+    Required keys: lq_path, gt_path, key, num_input_frames
+    Added or modified keys:  lq_path, gt_path, interval, reverse
+
+    Attributes:
+        interval_list (list[int]): Interval list for temporal augmentation.
+            It will randomly pick an interval from interval_list and sample
+            frame index with the interval.
+        frames_per_clip(int): Number of frames per clips. Default: 99 for
+            REDS dataset.
+    """
+
+    def __init__(self, interval_list, frames_per_clip=99):
+        self.interval_list = interval_list
+        self.frames_per_clip = frames_per_clip
+
+    def __call__(self, results):
+        clip_name, frame_name = results['key'].split(
+            '/')  # key example: 000/00000000
+        center_frame_idx = int(frame_name)
+        num_half_frames = results['num_input_frames'] // 2
+
+        interval = np.random.choice(self.interval_list)
+        # ensure not exceeding the borders
+        start_frame_idx = center_frame_idx - num_half_frames * interval
+        end_frame_idx = center_frame_idx + num_half_frames * interval
+        while (start_frame_idx < 0) or (end_frame_idx > self.frames_per_clip):
+            center_frame_idx = np.random.randint(0, self.frames_per_clip + 1)
+            start_frame_idx = center_frame_idx - num_half_frames * interval
+            end_frame_idx = center_frame_idx + num_half_frames * interval
+        frame_name = f'{center_frame_idx:08d}'
+        neighbor_list = list(
+            range(center_frame_idx - num_half_frames * interval,
+                  center_frame_idx + num_half_frames * interval + 1, interval))
+
+        lq_path_root = results['lq_path']
+        gt_path_root = results['gt_path']
+        lq_paths = [
+            osp.join(lq_path_root, clip_name, f'{v:08d}')
+            for v in neighbor_list
+        ]
+        gt_paths = [osp.join(gt_path_root, clip_name, frame_name)]
+        results['lq_paths'] = lq_paths
+        results['gt_paths'] = gt_paths
+        results['interval'] = interval
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(interval_list={self.interval_list}, '
+                     f'frames_per_clip={self.frames_per_clip})')
+        return repr_str
+
+
 class TemporalReverse(object):
     """Reverse frame lists for temporal augmentation.
 

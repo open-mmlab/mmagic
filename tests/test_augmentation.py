@@ -2,7 +2,8 @@ import copy
 
 import numpy as np
 import pytest
-from mmedit.datasets.pipelines import (BinarizeImage, Flip, Pad, RandomAffine,
+from mmedit.datasets.pipelines import (BinarizeImage, Flip,
+                                       GenerateFrameIndices, Pad, RandomAffine,
                                        RandomJitter, RandomMaskDilation,
                                        RandomTransposeHW, Resize,
                                        TemporalReverse)
@@ -456,11 +457,37 @@ class TestAugmentations(object):
         assert results['gt_img'].shape == (128, 128, 1)
 
         name_ = str(resize_keep_ratio)
-        print(name_)
         assert name_ == resize_keep_ratio.__class__.__name__ + (
             f"(keys={['gt_img']}, scale=(128, 128), "
             f'keep_ratio={False}, size_factor=None, '
             f'max_size=None,interpolation=bilinear)')
+
+    def test_frame_index_generator(self):
+        results = dict(
+            lq_path='fake_lq_root',
+            gt_path='fake_gt_root',
+            key='000/00000010',
+            num_input_frames=3)
+        target_keys = ['lq_paths', 'gt_paths', 'key', 'interval']
+        frame_index_generator = GenerateFrameIndices(
+            interval_list=[1], frames_per_clip=99)
+        rlt = frame_index_generator(copy.deepcopy(results))
+        assert self.check_keys_contain(rlt.keys(), target_keys)
+
+        name_ = repr(frame_index_generator)
+        assert name_ == frame_index_generator.__class__.__name__ + (
+            f'(interval_list=[1], frames_per_clip=99)')
+
+        # index out of range
+        frame_index_generator = GenerateFrameIndices(interval_list=[10])
+        rlt = frame_index_generator(copy.deepcopy(results))
+        assert self.check_keys_contain(rlt.keys(), target_keys)
+
+        # index out of range
+        results['key'] = '000/00000099'
+        frame_index_generator = GenerateFrameIndices(interval_list=[2, 3])
+        rlt = frame_index_generator(copy.deepcopy(results))
+        assert self.check_keys_contain(rlt.keys(), target_keys)
 
     def test_temporal_reverse(self):
         img_lq1 = np.random.rand(4, 4, 3).astype(np.float32)
