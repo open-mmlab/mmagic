@@ -9,10 +9,12 @@ from .registry import DATASETS, PIPELINES
 from .sr_annotation_dataset import SRAnnotationDataset
 from .sr_folder_dataset import SRFolderDataset
 from .sr_lmdb_dataset import SRLmdbDataset
+from .sr_vimeo90k_dataset import SRVimeo90KDataset
 
 __all__ = [
     'DATASETS', 'PIPELINES', 'build_dataset', 'build_dataloader',
     'BaseDataset', 'BaseMattingDataset', 'ImgInpaintingDataset',
     'AdobeComp1kDataset', 'SRLmdbDataset', 'SRFolderDataset',
-    'SRAnnotationDataset', 'BaseSRDataset', 'RepeatDataset'
+    'SRAnnotationDataset', 'BaseSRDataset', 'RepeatDataset',
+    'SRVimeo90KDataset'
 ]
