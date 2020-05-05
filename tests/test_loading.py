@@ -5,7 +5,8 @@ from pathlib import Path
 import mmcv
 import numpy as np
 import pytest
-from mmedit.datasets.pipelines import (LoadAlpha, LoadImageFromFile, LoadMask,
+from mmedit.datasets.pipelines import (LoadAlpha, LoadImageFromFile,
+                                       LoadImageFromFileList, LoadMask,
                                        RandomLoadResizeBg)
 
 
@@ -50,17 +51,57 @@ def test_load_image_from_file():
     assert repr(image_loader) == (
         image_loader.__class__.__name__ +
         (f'(io_backend=disk, key=lq, '
-         f'flag=color, save_origin_img=False)'))
+         f'flag=color, save_original_img=False)'))
 
     results = dict(lq_path=path_baboon_x4)
     config = dict(
-        io_backend='disk', key='lq', flag='grayscale', save_origin_img=True)
+        io_backend='disk', key='lq', flag='grayscale', save_original_img=True)
     image_loader = LoadImageFromFile(**config)
     results = image_loader(results)
     assert results['lq'].shape == (120, 125, 1)
     assert results['lq_ori_shape'] == (120, 125, 1)
     np.testing.assert_almost_equal(results['ori_lq'], results['lq'])
     assert id(results['ori_lq']) != id(results['lq'])
+
+
+def test_load_image_from_file_list():
+    path_baboon = Path(__file__).parent / 'data' / 'gt' / 'baboon.png'
+    img_baboon = mmcv.imread(str(path_baboon), flag='color')
+    path_baboon_x4 = Path(__file__).parent / 'data' / 'lq' / 'baboon_x4.png'
+    img_baboon_x4 = mmcv.imread(str(path_baboon_x4), flag='color')
+
+    # input path is Path object
+    results = dict(lq_path=[path_baboon_x4, path_baboon])
+    config = dict(io_backend='disk', key='lq')
+    image_loader = LoadImageFromFileList(**config)
+    results = image_loader(results)
+    np.testing.assert_almost_equal(results['lq'][0], img_baboon_x4)
+    np.testing.assert_almost_equal(results['lq'][1], img_baboon)
+    assert results['lq_ori_shape'] == [(120, 125, 3), (480, 500, 3)]
+    assert results['lq_path'] == [str(path_baboon_x4), str(path_baboon)]
+    # input path is str
+    results = dict(lq_path=[str(path_baboon_x4), str(path_baboon)])
+    config = dict(io_backend='disk', key='lq')
+    image_loader = LoadImageFromFileList(**config)
+    results = image_loader(results)
+    np.testing.assert_almost_equal(results['lq'][0], img_baboon_x4)
+    np.testing.assert_almost_equal(results['lq'][1], img_baboon)
+    assert results['lq_path'] == [str(path_baboon_x4), str(path_baboon)]
+
+    # save ori_img
+    results = dict(lq_path=[path_baboon_x4])
+    config = dict(io_backend='disk', key='lq', save_original_img=True)
+    image_loader = LoadImageFromFileList(**config)
+    results = image_loader(results)
+    np.testing.assert_almost_equal(results['lq'][0], img_baboon_x4)
+    assert results['lq_ori_shape'] == [(120, 125, 3)]
+    assert results['lq_path'] == [str(path_baboon_x4)]
+    np.testing.assert_almost_equal(results['ori_lq'][0], img_baboon_x4)
+
+    with pytest.raises(TypeError):
+        # filepath should be list
+        results = dict(lq_path=path_baboon_x4)
+        image_loader(results)
 
 
 class TestMattingLoading(object):

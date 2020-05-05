@@ -17,7 +17,7 @@ class LoadImageFromFile(object):
         io_backend (str): io backend where images are store. Default: 'disk'.
         key (str): Keys in results to find corresponding path. Default: 'gt'.
         flag (str): Loading flag for images. Default: 'color'.
-        save_origin_img (bool): If True, maintain a copy of the image in
+        save_original_img (bool): If True, maintain a copy of the image in
             `results` dict with name of `f'ori_{key}'`. Default: False.
         kwargs (dict): Args for file client.
     """
@@ -26,12 +26,12 @@ class LoadImageFromFile(object):
                  io_backend='disk',
                  key='gt',
                  flag='color',
-                 save_origin_img=False,
+                 save_original_img=False,
                  **kwargs):
         self.io_backend = io_backend
         self.key = key
         self.flag = flag
-        self.save_origin_img = save_origin_img
+        self.save_original_img = save_original_img
         self.kwargs = kwargs
         self.file_client = None
 
@@ -47,7 +47,7 @@ class LoadImageFromFile(object):
         results[self.key] = img
         results[f'{self.key}_path'] = filepath
         results[f'{self.key}_ori_shape'] = img.shape
-        if self.save_origin_img:
+        if self.save_original_img:
             results[f'ori_{self.key}'] = img.copy()
 
         return results
@@ -56,8 +56,58 @@ class LoadImageFromFile(object):
         repr_str = self.__class__.__name__
         repr_str += (
             f'(io_backend={self.io_backend}, key={self.key}, '
-            f'flag={self.flag}, save_origin_img={self.save_origin_img})')
+            f'flag={self.flag}, save_original_img={self.save_original_img})')
         return repr_str
+
+
+@PIPELINES.register_module
+class LoadImageFromFileList(LoadImageFromFile):
+    """Load image from file list.
+
+    It accepts a list of path and read each frame from each path. A list
+    of frames will be returned.
+
+    Args:
+        io_backend (str): io backend where images are store. Default: 'disk'.
+        key (str): Keys in results to find corresponding path. Default: 'gt'.
+        flag (str): Loading flag for images. Default: 'color'.
+        save_original_img (bool): If True, maintain a copy of the image in
+            `results` dict with name of `f'ori_{key}'`. Default: False.
+        kwargs (dict): Args for file client.
+    """
+
+    def __call__(self, results):
+
+        if self.file_client is None:
+            self.file_client = FileClient(self.io_backend, **self.kwargs)
+        filepaths = results[f'{self.key}_path']
+        if not isinstance(filepaths, list):
+            raise TypeError(
+                f'filepath should be list, but got {type(filepaths)}')
+
+        filepaths = [str(v) for v in filepaths]
+
+        imgs = []
+        shapes = []
+        if self.save_original_img:
+            ori_imgs = []
+        for filepath in filepaths:
+            img_bytes = self.file_client.get(filepath)
+            img = mmcv.imfrombytes(img_bytes, flag=self.flag)  # HWC, BGR
+            if img.ndim == 2:
+                img = np.expand_dims(img, axis=2)
+            imgs.append(img)
+            shapes.append(img.shape)
+            if self.save_original_img:
+                ori_imgs.append(img.copy())
+
+        results[self.key] = imgs
+        results[f'{self.key}_path'] = filepaths
+        results[f'{self.key}_ori_shape'] = shapes
+        if self.save_original_img:
+            results[f'ori_{self.key}'] = ori_imgs
+
+        return results
 
 
 @PIPELINES.register_module
