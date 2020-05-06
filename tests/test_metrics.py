@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from mmedit.core.evaluation.metrics import psnr, reorder_image, ssim
+from mmedit.core.evaluation.metrics import mse, psnr, reorder_image, sad, ssim
 
 
 def test_reorder_image():
@@ -75,3 +75,41 @@ def test_calculate_ssim():
     np.testing.assert_almost_equal(ssim_result, 0.9130623)
     ssim_result = ssim(img_chw_1, img_chw_2, crop_border=4, input_order='CHW')
     np.testing.assert_almost_equal(ssim_result, 0.9130623)
+
+
+def test_sad():
+    alpha = np.ones((32, 32)) * 255
+    pred_alpha = np.zeros((32, 32))
+    trimap = np.zeros((32, 32))
+    trimap[:16, :16] = 128
+    trimap[16:, 16:] = 255
+
+    with pytest.raises(AssertionError):
+        # pred_alpha should be masked by trimap before evaluation
+        sad(alpha, trimap, pred_alpha)
+
+    # mask pred_alpha
+    pred_alpha[trimap == 0] = 0
+    pred_alpha[trimap == 255] = 255
+
+    sad_result = sad(alpha, trimap, pred_alpha)
+    np.testing.assert_almost_equal(sad_result, 0.768)
+
+
+def test_mse():
+    alpha = np.ones((32, 32)) * 255
+    pred_alpha = np.zeros((32, 32))
+    trimap = np.zeros((32, 32))
+    trimap[:16, :16] = 128
+    trimap[16:, 16:] = 255
+
+    with pytest.raises(AssertionError):
+        # pred_alpha should be masked by trimap before evaluation
+        mse(alpha, trimap, pred_alpha)
+
+    # mask pred_alpha
+    pred_alpha[trimap == 0] = 0
+    pred_alpha[trimap == 255] = 255
+
+    mse_result = mse(alpha, trimap, pred_alpha)
+    np.testing.assert_almost_equal(mse_result, 3.0)

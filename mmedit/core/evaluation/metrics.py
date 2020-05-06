@@ -4,14 +4,18 @@ import numpy as np
 
 def sad(alpha, trimap, pred_alpha):
     assert (pred_alpha[trimap == 0] == 0).all()
-    assert (pred_alpha[trimap == 255] == 1).all()
+    assert (pred_alpha[trimap == 255] == 255).all()
+    alpha = alpha.astype(np.float64) / 255
+    pred_alpha = pred_alpha.astype(np.float64) / 255
     sad = np.abs(pred_alpha - alpha).sum() / 1000
     return sad
 
 
 def mse(alpha, trimap, pred_alpha):
     assert (pred_alpha[trimap == 0] == 0).all()
-    assert (pred_alpha[trimap == 255] == 1).all()
+    assert (pred_alpha[trimap == 255] == 255).all()
+    alpha = alpha.astype(np.float64) / 255
+    pred_alpha = pred_alpha.astype(np.float64) / 255
     weight_sum = (trimap == 128).sum()
     if weight_sum != 0:
         mse = ((pred_alpha - alpha)**2).sum() / weight_sum
