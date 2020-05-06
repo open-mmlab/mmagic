@@ -110,6 +110,18 @@ class BaseMattor(BaseModel):
         """
         ori_trimap = img_meta[0]['ori_trimap']
         ori_h, ori_w = img_meta[0]['ori_shape']
+
+        if 'interpolation' in img_meta[0]:
+            # images have been resized for inference, resize back
+            pred_alpha = mmcv.imresize(
+                pred_alpha, (ori_w, ori_h),
+                interpolation=img_meta[0]['interpolation'])
+        elif 'pad' in img_meta[0]:
+            # iamges have been padded for inference, remove the padding
+            pred_alpha = pred_alpha[:ori_h, :ori_w]
+
+        assert pred_alpha.shape == (ori_h, ori_w)
+
         pred_alpha = mmcv.imresize(pred_alpha, (ori_w, ori_h))
         pred_alpha[ori_trimap == 0] = 0.
         pred_alpha[ori_trimap == 255] = 1.
