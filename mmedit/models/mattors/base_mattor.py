@@ -137,9 +137,8 @@ class BaseMattor(BaseModel):
 
         eval_result = dict()
         for metric in self.test_cfg.metrics:
-            eval_result[metric] = self.allowed_metrics[metric](ori_alpha,
-                                                               ori_trimap,
-                                                               pred_alpha)
+            eval_result[metric] = self.allowed_metrics[metric](
+                ori_alpha * 255, ori_trimap, pred_alpha * 255)
         return eval_result
 
     @abstractmethod
