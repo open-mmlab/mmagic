@@ -4,7 +4,8 @@ from functools import partial
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmedit.models.common import ConvModule, build_activation_layer
+from mmedit.models.common import (ConvModule, SimpleGatedConvModule,
+                                  build_activation_layer)
 from mmedit.models.registry import COMPONENTS
 
 
@@ -16,34 +17,52 @@ class DeepFillDecoder(nn.Module):
     Generative Image Inpainting with Contextual Attention
 
     Args:
-        in_channels (int): The number of input channels..
-        norm_cfg (dict): Config dict to build norm layer.
+        in_channels (int): The number of input channels.
+        conv_type (str): The type of conv module. In DeepFillv1 model, the
+            `conv_type` should be 'conv'. In DeepFillv2 model, the `conv_type`
+            should be 'gated_conv'.
+        norm_cfg (dict): Config dict to build norm layer. Default: None.
         act_cfg (dict): Config dict for activation layer, "elu" by default.
         out_act_cfg (dict): Config dict for output activation layer. Here, we
             provide commonly used `clamp` or `clip` operation.
+        channel_factor (float): The scale factor for channel size.
+            Default: 1.
+        kwargs (keyword arguments).
     """
+    _conv_type = dict(conv=ConvModule, gated_conv=SimpleGatedConvModule)
 
     def __init__(self,
                  in_channels,
+                 conv_type='conv',
                  norm_cfg=None,
                  act_cfg=dict(type='ELU'),
-                 out_act_cfg=dict(type='clip', min=-1., max=1.)):
+                 out_act_cfg=dict(type='clip', min=-1., max=1.),
+                 channel_factor=1.,
+                 **kwargs):
         super(DeepFillDecoder, self).__init__()
         self.with_out_activation = out_act_cfg is not None
 
+        conv_module = self._conv_type[conv_type]
         channel_list = [128, 128, 64, 64, 32, 16, 3]
+        channel_list = [int(x * channel_factor) for x in channel_list]
+        # dirty code for assign output channel with 3
+        channel_list[-1] = 3
         for i in range(7):
+            kwargs_ = copy.deepcopy(kwargs)
             if i == 6:
                 act_cfg = None
+                if conv_type == 'gated_conv':
+                    kwargs_['feat_act_cfg'] = None
             self.add_module(
                 f'dec{i + 1}',
-                ConvModule(
+                conv_module(
                     in_channels,
                     channel_list[i],
                     kernel_size=3,
                     padding=1,
                     norm_cfg=norm_cfg,
-                    act_cfg=act_cfg))
+                    act_cfg=act_cfg,
+                    **kwargs_))
             in_channels = channel_list[i]
 
         if self.with_out_activation:
