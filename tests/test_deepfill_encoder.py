@@ -1,5 +1,6 @@
 import torch
 from mmedit.models.backbones import ContextualAttentionNeck, DeepFillEncoder
+from mmedit.models.common import SimpleGatedConvModule
 
 
 def test_deepfill_enc():
@@ -67,6 +68,18 @@ def test_deepfill_enc():
         assert encoder.enc3.out_channels == 64
         assert encoder.enc4.out_channels == 128
 
+        encoder = DeepFillEncoder(
+            conv_type='gated_conv', channel_factor=0.75).cuda()
+        x = torch.randn((2, 5, 256, 256)).cuda()
+        outputs = encoder(x)
+        assert isinstance(outputs, dict)
+        assert 'out' in outputs
+        res = outputs['out']
+        assert res.shape == (2, 96, 64, 64)
+        assert isinstance(encoder.enc2, SimpleGatedConvModule)
+        assert encoder.enc2.conv.stride == (2, 2)
+        assert encoder.enc2.conv.out_channels == 48 * 2
+
 
 def test_deepfill_contextual_attention_neck():
     # TODO: add unittest for contextual attention module
@@ -86,3 +99,10 @@ def test_deepfill_contextual_attention_neck():
 
         assert res.shape == (2, 128, 64, 64)
         assert offest.shape == (2, 32, 32, 32, 32)
+
+        neck = ContextualAttentionNeck(
+            in_channels=128, conv_type='gated_conv').cuda()
+        res, offest = neck(x.cuda(), mask.cuda())
+        assert res.shape == (2, 128, 64, 64)
+        assert offest.shape == (2, 32, 32, 32, 32)
+        assert isinstance(neck.conv1, SimpleGatedConvModule)

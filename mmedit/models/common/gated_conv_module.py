@@ -1,3 +1,5 @@
+import copy
+
 import torch
 import torch.nn as nn
 
@@ -34,12 +36,13 @@ class SimpleGatedConvModule(nn.Module):
                  **kwargs):
         super(SimpleGatedConvModule, self).__init__()
         # the activation function should specified outside conv module
-        kwargs['act_cfg'] = None
+        kwargs_ = copy.deepcopy(kwargs)
+        kwargs_['act_cfg'] = None
         self.with_feat_act = feat_act_cfg is not None
         self.with_gate_act = gate_act_cfg is not None
 
         self.conv = ConvModule(in_channels, out_channels * 2, kernel_size,
-                               **kwargs)
+                               **kwargs_)
 
         if self.with_feat_act:
             self.feat_act = build_activation_layer(feat_act_cfg)

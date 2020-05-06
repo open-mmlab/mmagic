@@ -2,6 +2,8 @@ import pytest
 import torch
 import torch.nn as nn
 from mmedit.models import build_backbone, build_component
+from mmedit.models.backbones import GLDilationNeck
+from mmedit.models.common import SimpleGatedConvModule
 from mmedit.models.components import MultiLayerDiscriminator
 
 
@@ -34,6 +36,24 @@ def test_gl_encdec():
         gl_encdec = gl_encdec.cuda()
         output = gl_encdec(input_x.cuda())
         assert output.shape == (1, 3, 256, 256)
+
+
+def test_gl_dilation_neck():
+    neck = GLDilationNeck(in_channels=8)
+    x = torch.rand((2, 8, 64, 64))
+    res = neck(x)
+    assert res.shape == (2, 8, 64, 64)
+
+    if torch.cuda.is_available():
+        neck = GLDilationNeck(in_channels=8).cuda()
+        x = torch.rand((2, 8, 64, 64)).cuda()
+        res = neck(x)
+        assert res.shape == (2, 8, 64, 64)
+
+        neck = GLDilationNeck(in_channels=8, conv_type='gated_conv').cuda()
+        res = neck(x)
+        assert isinstance(neck.dilation_convs[0], SimpleGatedConvModule)
+        assert res.shape == (2, 8, 64, 64)
 
 
 def test_gl_discs():
