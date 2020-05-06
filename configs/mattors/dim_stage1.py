@@ -62,7 +62,10 @@ test_pipeline = [
     dict(
         type='Collect',
         keys=['merged', 'alpha', 'trimap'],
-        meta_keys=['merged_path', 'ori_shape', 'ori_alpha', 'ori_trimap']),
+        meta_keys=[
+            'merged_path', 'interpolation', 'ori_shape', 'ori_alpha',
+            'ori_trimap'
+        ]),
     dict(type='ImageToTensor', keys=['merged', 'alpha', 'trimap']),
 ]
 data = dict(

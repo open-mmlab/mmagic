@@ -1,9 +1,11 @@
 import os.path as osp
+from unittest.mock import patch
 
 import mmcv
 import numpy as np
+import pytest
 import torch
-from mmedit.models import build_model
+from mmedit.models import BaseMattor, build_model
 
 
 def _get_model_cfg(fname):
@@ -24,6 +26,68 @@ def assert_dict_keys_equal(dictionary, target_keys):
     """Check if the keys of the dictionary is equal to the target key set."""
     assert isinstance(dictionary, dict)
     assert set(dictionary.keys()) == set(target_keys)
+
+
+@patch.multiple(BaseMattor, __abstractmethods__=set())
+def test_base_mattor():
+    backbone = dict(
+        type='EncoderDecoder',
+        encoder=dict(type='VGG16'),
+        decoder=dict(type='PlainDecoder'))
+    refiner = dict(type='PlainRefiner')
+    train_cfg = mmcv.ConfigDict(train_backbone=True, train_refiner=True)
+    test_cfg = mmcv.ConfigDict(refine=True, metrics=['SAD', 'MSE'])
+
+    with pytest.raises(KeyError):
+        # metrics should be specified in test_cfg
+        BaseMattor(
+            backbone,
+            refiner,
+            train_cfg.copy(),
+            test_cfg=mmcv.ConfigDict(refine=True))
+
+    with pytest.raises(KeyError):
+        # supported metric should be one of {'SAD', 'MSE'}
+        BaseMattor(
+            backbone,
+            refiner,
+            train_cfg.copy(),
+            test_cfg=mmcv.ConfigDict(
+                refine=True, metrics=['UnsupportedMetric']))
+
+    with pytest.raises(TypeError):
+        # metrics must be None or a list of str
+        BaseMattor(
+            backbone,
+            refiner,
+            train_cfg.copy(),
+            test_cfg=mmcv.ConfigDict(refine=True, metrics='SAD'))
+
+    # build mattor without refiner
+    mattor = BaseMattor(
+        backbone, refiner=None, train_cfg=None, test_cfg=test_cfg.copy())
+    assert not mattor.with_refiner
+
+    # only train the refiner, this will freeze the backbone
+    mattor = BaseMattor(
+        backbone,
+        refiner,
+        train_cfg=mmcv.ConfigDict(train_backbone=False, train_refiner=True),
+        test_cfg=test_cfg.copy())
+    assert not mattor.train_cfg.train_backbone
+    assert mattor.train_cfg.train_refiner
+    assert mattor.test_cfg.refine
+
+    # only train the backbone while the refiner is used for inference but not
+    # trained, this behavior is allowed currently but will cause a warning.
+    mattor = BaseMattor(
+        backbone,
+        refiner,
+        train_cfg=mmcv.ConfigDict(train_backbone=True, train_refiner=False),
+        test_cfg=test_cfg.copy())
+    assert mattor.train_cfg.train_backbone
+    assert not mattor.train_cfg.train_refiner
+    assert mattor.test_cfg.refine
 
 
 def test_dim():
@@ -137,10 +201,7 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False):
         bg=bg)
 
 
-def _demo_input_test(img_shape,
-                     batch_size=1,
-                     cuda=False,
-                     test_trans='reshape'):
+def _demo_input_test(img_shape, batch_size=1, cuda=False, test_trans='resize'):
     """
     Create a superset of inputs needed to run backbone.
 
@@ -161,11 +222,13 @@ def _demo_input_test(img_shape,
         merged = merged.cuda()
         trimap = trimap.cuda()
     img_meta = [
-        dict(
-            test_trans=test_trans,
-            ori_alpha=ori_alpha,
-            ori_trimap=ori_trimap,
-            ori_shape=img_shape)
+        dict(ori_alpha=ori_alpha, ori_trimap=ori_trimap, ori_shape=img_shape)
     ]
+
+    if test_trans == 'pad':
+        img_meta[0]['pad'] = (0, 0)
+    elif test_trans == 'resize':
+        # we just test bilinear as the interpolation method
+        img_meta[0]['interpolation'] = 'bilinear'
 
     return dict(merged=merged, trimap=trimap, img_meta=img_meta)
