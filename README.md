@@ -23,6 +23,16 @@ MMSR is an open source image and video super-resolution toolbox based on PyTorch
   ```
 - Python packages: `pip install -r requirements.txt`
 
+### Dockerfile
+
+- dcn compilation has dependencies about GPU. So you should set `TORCH_CUDA_ARCH_LIST` in Dockerfile properly. You can know this value by `torch.cuda.get_device_capability()` in your machine.
+- In other way, you can just remove build folder, unset environment variable and recompile dcn in docker container
+  ```
+  rm -rf ./codes/models/archs/dcn/build
+  unset TORCH_CUDA_ARCH_LIST
+  cd ./codes/models/archs/dcn
+  python setup.py develop
+  ```
 
 ## Dataset Preparation
 We use datasets in LDMB format for faster IO speed. Please refer to [DATASETS.md](datasets/DATASETS.md) for more details.
