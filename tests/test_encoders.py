@@ -100,7 +100,8 @@ def test_resnet_encoder():
         model = ResNetEnc('BasicBlock', [3, 4, 4, 2], 3)
         model.init_weights(list())
 
-    model = ResNetEnc('BasicBlock', [3, 4, 4, 2], 4)
+    model = ResNetEnc('BasicBlock', [3, 4, 4, 2], 4, with_spectral_norm=True)
+    assert hasattr(model.conv1.conv, 'weight_orig')
     model.init_weights()
     model.train()
     # trimap has 1 channels
@@ -119,7 +120,9 @@ def test_resnet_encoder():
 
     if torch.cuda.is_available():
         # repeat above code again
-        model = ResNetEnc('BasicBlock', [3, 4, 4, 2], 4)
+        model = ResNetEnc(
+            'BasicBlock', [3, 4, 4, 2], 4, with_spectral_norm=True)
+        assert hasattr(model.conv1.conv, 'weight_orig')
         model.init_weights()
         model.train()
         model.cuda()
@@ -150,7 +153,9 @@ def test_res_shortcut_encoder():
     target_late_ds_shape = [(2, 32, 64, 64), (2, 64, 32, 32), (2, 64, 16, 16),
                             (2, 128, 8, 8), (2, 256, 4, 4)]
 
-    model = ResShortcutEnc('BasicBlock', [3, 4, 4, 2], 4)
+    model = ResShortcutEnc(
+        'BasicBlock', [3, 4, 4, 2], 4, with_spectral_norm=True)
+    assert hasattr(model.conv1.conv, 'weight_orig')
     model.init_weights()
     model.train()
     # trimap has 1 channels
@@ -192,7 +197,9 @@ def test_res_shortcut_encoder():
 
     if torch.cuda.is_available():
         # repeat above code again
-        model = ResShortcutEnc('BasicBlock', [3, 4, 4, 2], 4)
+        model = ResShortcutEnc(
+            'BasicBlock', [3, 4, 4, 2], 4, with_spectral_norm=True)
+        assert hasattr(model.conv1.conv, 'weight_orig')
         model.init_weights()
         model.train()
         model.cuda()
