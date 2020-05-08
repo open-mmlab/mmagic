@@ -58,7 +58,7 @@ class ModulatedDCNPack(ModulatedDeformConv):
 
 class PCDAlignment(nn.Module):
     """Alignment module using Pyramid, Cascading and Deformable convolution
-    (PCD). It is used in EDVR.
+    (PCD). It is used in EDVRNet.
 
     Args:
         mid_channels (int): Number of the channels of middle features.
@@ -184,7 +184,7 @@ class PCDAlignment(nn.Module):
 
 
 class TSAFusion(nn.Module):
-    """Temporal Spatial Attention (TSA) fusion module. It is used in EDVR.
+    """Temporal Spatial Attention (TSA) fusion module. It is used in EDVRNet.
 
     Args:
         mid_channels (int): Number of the channels of middle features.
@@ -293,7 +293,7 @@ class TSAFusion(nn.Module):
 
 
 @BACKBONES.register_module
-class EDVR(nn.Module):
+class EDVRNet(nn.Module):
     """EDVR network structure for video super-resolution.
 
     Now only support X4 upsampling factor.
@@ -326,7 +326,7 @@ class EDVR(nn.Module):
                  num_blocks_reconstruction=10,
                  center_frame_idx=2,
                  with_tsa=True):
-        super(EDVR, self).__init__()
+        super(EDVRNet, self).__init__()
         self.center_frame_idx = center_frame_idx
         self.with_tsa = with_tsa
         act_cfg = dict(type='LeakyReLU', negative_slope=0.1)
@@ -378,7 +378,7 @@ class EDVR(nn.Module):
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
 
     def forward(self, x):
-        """Forward function for EDVR.
+        """Forward function for EDVRNet.
 
         Args:
             x (Tensor): Input tensor with shape (n, t, c, h, w).
