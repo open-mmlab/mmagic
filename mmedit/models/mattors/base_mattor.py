@@ -108,7 +108,7 @@ class BaseMattor(BaseModel):
         Returns:
             ndarray: The reshaped predicted alpha.
         """
-        ori_trimap = img_meta[0]['ori_trimap']
+        ori_trimap = img_meta[0]['ori_trimap'].squeeze()
         ori_h, ori_w = img_meta[0]['ori_shape']
 
         if 'interpolation' in img_meta[0]:
@@ -132,8 +132,8 @@ class BaseMattor(BaseModel):
         if self.test_cfg.metrics is None:
             return None
 
-        ori_alpha = img_meta[0]['ori_alpha']
-        ori_trimap = img_meta[0]['ori_trimap']
+        ori_alpha = img_meta[0]['ori_alpha'].squeeze()
+        ori_trimap = img_meta[0]['ori_trimap'].squeeze()
 
         eval_result = dict()
         for metric in self.test_cfg.metrics:
@@ -150,16 +150,25 @@ class BaseMattor(BaseModel):
         pass
 
     def train_step(self, data_batch, optimizer):
-        raise NotImplementedError('train_step should not be used in mattors.')
+        outputs = self(**data_batch, test_mode=False)
+        loss, log_vars = self.parse_losses(outputs.pop('losses'))
+
+        # optimize
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        outputs.update({'log_vars': log_vars})
+        return outputs
 
     def forward(self,
                 merged,
                 trimap,
                 alpha=None,
-                img_meta=None,
+                meta=None,
                 test_mode=False,
                 **kwargs):
         if not test_mode:
             return self.forward_train(merged, trimap, alpha, **kwargs)
         else:
-            return self.forward_test(merged, trimap, img_meta, **kwargs)
+            return self.forward_test(merged, trimap, meta, **kwargs)

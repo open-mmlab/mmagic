@@ -101,33 +101,37 @@ def test_dim():
     # test model forward in train mode
     model = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
     input_train = _demo_input_train((64, 64))
-    losses = model(**input_train)
-    assert_dict_keys_equal(losses, ['loss_alpha', 'loss_comp', 'loss_refine'])
+    output_train = model(**input_train)
+    assert output_train['num_samples'] == 1
+    assert_dict_keys_equal(output_train['losses'],
+                           ['loss_alpha', 'loss_comp', 'loss_refine'])
 
     # test model forward in train mode with gpu
     if torch.cuda.is_available():
         model = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
         model.cuda()
         input_train = _demo_input_train((64, 64), cuda=True)
-        losses = model(**input_train)
-        assert_dict_keys_equal(losses,
+        output_train = model(**input_train)
+        assert output_train['num_samples'] == 1
+        assert_dict_keys_equal(output_train['losses'],
                                ['loss_alpha', 'loss_comp', 'loss_refine'])
 
     # test model forward in test mode
     with torch.no_grad():
         model = build_model(model_cfg, train_cfg=None, test_cfg=test_cfg)
         input_test = _demo_input_test((64, 64))
-        prediction, metrics = model(**input_test, test_mode=True)
-        assert isinstance(prediction, np.ndarray)
-        assert_dict_keys_equal(metrics, ['SAD', 'MSE'])
+        output_test = model(**input_test, test_mode=True)
+        assert isinstance(output_test['pred_alpha'], np.ndarray)
+        assert_dict_keys_equal(output_test['eval_result'], ['SAD', 'MSE'])
 
         # test model forward in test mode with gpu
         if torch.cuda.is_available():
             model = build_model(model_cfg, train_cfg=None, test_cfg=test_cfg)
             model.cuda()
             input_test = _demo_input_test((64, 64), cuda=True)
-            prediction, metrics = model(**input_test, test_mode=True)
-            assert_dict_keys_equal(metrics, ['SAD', 'MSE'])
+            output_test = model(**input_test, test_mode=True)
+            assert isinstance(output_test['pred_alpha'], np.ndarray)
+            assert_dict_keys_equal(output_test['eval_result'], ['SAD', 'MSE'])
 
     # 2. test dim model without refiner
     model_cfg['refiner'] = None
@@ -136,33 +140,36 @@ def test_dim():
     # test model forward in train mode
     model = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
     input_train = _demo_input_train((64, 64))
-    losses = model(**input_train)
-    assert_dict_keys_equal(losses, ['loss_alpha', 'loss_comp'])
+    output_train = model(**input_train)
+    assert output_train['num_samples'] == 1
+    assert_dict_keys_equal(output_train['losses'], ['loss_alpha', 'loss_comp'])
 
     # test model forward in train mode with gpu
     if torch.cuda.is_available():
         model = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
         model.cuda()
         input_train = _demo_input_train((64, 64), cuda=True)
-        losses = model(**input_train)
-        assert_dict_keys_equal(losses, ['loss_alpha', 'loss_comp'])
+        output_train = model(**input_train)
+        assert output_train['num_samples'] == 1
+        assert_dict_keys_equal(output_train['losses'],
+                               ['loss_alpha', 'loss_comp'])
 
     # test model forward in test mode
     with torch.no_grad():
         model = build_model(model_cfg, train_cfg=None, test_cfg=test_cfg)
         input_test = _demo_input_test((64, 64))
-        prediction, metrics = model(**input_test, test_mode=True)
-        assert isinstance(prediction, np.ndarray)
-        assert metrics is None
+        output_test = model(**input_test, test_mode=True)
+        assert isinstance(output_test['pred_alpha'], np.ndarray)
+        assert output_test['eval_result'] is None
 
         # check test with gpu
         if torch.cuda.is_available():
             model = build_model(model_cfg, train_cfg=None, test_cfg=test_cfg)
             model.cuda()
             input_test = _demo_input_test((64, 64), cuda=True)
-            prediction, metrics = model(**input_test, test_mode=True)
-            assert isinstance(prediction, np.ndarray)
-            assert metrics is None
+            output_test = model(**input_test, test_mode=True)
+            assert isinstance(output_test['pred_alpha'], np.ndarray)
+            assert output_test['eval_result'] is None
 
 
 def _demo_input_train(img_shape, batch_size=1, cuda=False):
@@ -221,14 +228,14 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, test_trans='resize'):
     if cuda:
         merged = merged.cuda()
         trimap = trimap.cuda()
-    img_meta = [
+    meta = [
         dict(ori_alpha=ori_alpha, ori_trimap=ori_trimap, ori_shape=img_shape)
     ]
 
     if test_trans == 'pad':
-        img_meta[0]['pad'] = (0, 0)
+        meta[0]['pad'] = (0, 0)
     elif test_trans == 'resize':
         # we just test bilinear as the interpolation method
-        img_meta[0]['interpolation'] = 'bilinear'
+        meta[0]['interpolation'] = 'bilinear'
 
-    return dict(merged=merged, trimap=trimap, img_meta=img_meta)
+    return dict(merged=merged, trimap=trimap, meta=meta)

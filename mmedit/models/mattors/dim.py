@@ -1,3 +1,7 @@
+import os.path as osp
+from pathlib import Path
+
+import mmcv
 import torch
 
 from ..builder import build_loss
@@ -98,15 +102,31 @@ class DIM(BaseMattor):
         if self.train_cfg.train_refiner:
             losses['loss_refine'] = self.loss_refine(pred_refine, alpha,
                                                      weight)
-        return losses
+        return {'losses': losses, 'num_samples': merged.size(0)}
 
-    def forward_test(self, merged, trimap, img_meta):
+    def forward_test(self,
+                     merged,
+                     trimap,
+                     meta,
+                     save_image=False,
+                     save_path=None,
+                     iteration=None):
         pred_alpha, pred_refine = self._forward(
             torch.cat((merged, trimap / 255.), 1), self.test_cfg.refine)
         if self.test_cfg.refine:
             pred_alpha = pred_refine
 
         pred_alpha = pred_alpha.cpu().numpy().squeeze()
-        pred_alpha = self.restore_shape(pred_alpha, img_meta)
-        eval_result = self.evaluate(pred_alpha, img_meta)
-        return pred_alpha, eval_result
+        pred_alpha = self.restore_shape(pred_alpha, meta)
+        eval_result = self.evaluate(pred_alpha, meta)
+
+        if save_image:
+            image_stem = Path(meta[0]['merged_path']).stem
+            if iteration is None:
+                save_path = osp.join(save_path, f'{image_stem}.png')
+            else:
+                save_path = osp.join(save_path,
+                                     f'{image_stem}_{iteration + 1:06d}.png')
+            mmcv.imwrite(pred_alpha * 255, save_path)
+
+        return {'pred_alpha': pred_alpha, 'eval_result': eval_result}

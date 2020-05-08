@@ -30,7 +30,7 @@ class BaseMattingDataset(BaseDataset):
             'The length of results is not equal to the '
             f'dataset len: {len(results)} != {len(self)}')
 
-        results = [res[1] for res in results]  # a list of dict
+        results = [res['eval_result'] for res in results]  # a list of dict
 
         eval_results = defaultdict(list)  # a dict of list
         for res in results:
