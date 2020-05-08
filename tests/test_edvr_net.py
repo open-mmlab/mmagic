@@ -1,7 +1,8 @@
 import pytest
 import torch
-from mmedit.models.backbones.sr_backbones.edvr import (EDVR, PCDAlignment,
-                                                       TSAFusion)
+from mmedit.models.backbones.sr_backbones.edvr_net import (EDVRNet,
+                                                           PCDAlignment,
+                                                           TSAFusion)
 
 
 def test_pcd_alignment():
@@ -41,13 +42,13 @@ def test_tsa_fusion():
         assert output.shape == (1, 4, 8, 8)
 
 
-def test_edvr():
-    """Test EDVR."""
+def test_edvrnet():
+    """Test EDVRNet."""
 
     # gpu
     if torch.cuda.is_available():
         # with tsa
-        edvr = EDVR(
+        edvrnet = EDVRNet(
             3,
             3,
             mid_channels=8,
@@ -58,12 +59,12 @@ def test_edvr():
             center_frame_idx=2,
             with_tsa=True).cuda()
         input_tensor = torch.rand(1, 5, 3, 8, 8).cuda()
-        edvr.init_weights(pretrained=None)
-        output = edvr(input_tensor)
+        edvrnet.init_weights(pretrained=None)
+        output = edvrnet(input_tensor)
         assert output.shape == (1, 3, 32, 32)
 
         # without tsa
-        edvr = EDVR(
+        edvrnet = EDVRNet(
             3,
             3,
             mid_channels=8,
@@ -74,14 +75,14 @@ def test_edvr():
             center_frame_idx=2,
             with_tsa=False).cuda()
 
-        output = edvr(input_tensor)
+        output = edvrnet(input_tensor)
         assert output.shape == (1, 3, 32, 32)
 
         with pytest.raises(AssertionError):
             # The height and width of inputs should be a multiple of 4
             input_tensor = torch.rand(1, 5, 3, 3, 3).cuda()
-            edvr(input_tensor)
+            edvrnet(input_tensor)
 
         with pytest.raises(TypeError):
             # pretrained should be str or None
-            edvr.init_weights(pretrained=[1])
+            edvrnet.init_weights(pretrained=[1])
