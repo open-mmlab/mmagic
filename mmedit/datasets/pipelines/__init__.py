@@ -7,7 +7,7 @@ from .crop import (Crop, CropAroundCenter, CropAroundSemiTransparent, ModCrop,
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
 from .loading import (LoadAlpha, LoadImageFromFile, LoadImageFromFileList,
-                      LoadMask, RandomLoadResizeBg)
+                      LoadMask, LoadPairedImageFromFile, RandomLoadResizeBg)
 from .matting_aug import CompositeFg, GenerateTrimap, MergeFgAndBg
 from .normalization import Normalize, RescaleToZeroOne
 
@@ -19,5 +19,5 @@ __all__ = [
     'Crop', 'CropAroundCenter', 'CropAroundSemiTransparent', 'ModCrop',
     'PairedRandomCrop', 'Normalize', 'RescaleToZeroOne', 'GenerateTrimap',
     'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList',
-    'GenerateFrameIndices'
+    'GenerateFrameIndices', 'LoadPairedImageFromFile'
 ]

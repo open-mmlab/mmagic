@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 from mmedit.datasets.pipelines import (LoadAlpha, LoadImageFromFile,
                                        LoadImageFromFileList, LoadMask,
+                                       LoadPairedImageFromFile,
                                        RandomLoadResizeBg)
 
 
@@ -232,3 +233,83 @@ class TestInpaintLoading(object):
         with pytest.raises(NotImplementedError):
             loader = LoadMask('ooxx', mask_config)
             results = loader(results)
+
+
+class TestGenerationLoading(object):
+
+    @staticmethod
+    def check_keys_contain(result_keys, target_keys):
+        """Check if all elements in target_keys is in result_keys."""
+        return set(target_keys).issubset(set(result_keys))
+
+    @classmethod
+    def setup_class(cls):
+        cls.pair_path = osp.join(
+            osp.dirname(__file__), 'data/paired/train/1.jpg')
+        cls.results = dict(pair_path=cls.pair_path)
+        cls.pair_img = mmcv.imread(str(cls.pair_path), flag='color')
+        w = cls.pair_img.shape[1]
+        new_w = w // 2
+        cls.img_a = cls.pair_img[:, :new_w, :]
+        cls.img_b = cls.pair_img[:, new_w:, :]
+        cls.pair_shape = cls.pair_img.shape
+        cls.img_shape = cls.img_a.shape
+        cls.pair_shape_gray = (256, 512, 1)
+        cls.img_shape_gray = (256, 256, 1)
+
+    def test_load_paired_image_from_file(self):
+        # RGB
+        target_keys = [
+            'pair_path', 'pair', 'pair_ori_shape', 'img_a_path', 'img_a',
+            'img_a_ori_shape', 'img_b_path', 'img_b', 'img_b_ori_shape'
+        ]
+        config = dict(io_backend='disk', key='pair', flag='color')
+        results = copy.deepcopy(self.results)
+        load_paired_image_from_file = LoadPairedImageFromFile(**config)
+        results = load_paired_image_from_file(results)
+
+        assert self.check_keys_contain(results.keys(), target_keys)
+        assert results['pair'].shape == self.pair_shape
+        assert results['pair_ori_shape'] == self.pair_shape
+        np.testing.assert_equal(results['pair'], self.pair_img)
+        assert results['pair_path'] == self.pair_path
+        assert results['img_a'].shape == self.img_shape
+        assert results['img_a_ori_shape'] == self.img_shape
+        np.testing.assert_equal(results['img_a'], self.img_a)
+        assert results['img_a_path'] == self.pair_path
+        assert results['img_b'].shape == self.img_shape
+        assert results['img_b_ori_shape'] == self.img_shape
+        np.testing.assert_equal(results['img_b'], self.img_b)
+        assert results['img_b_path'] == self.pair_path
+
+        # Grayscale & save_original_img
+        target_keys = [
+            'pair_path', 'pair', 'pair_ori_shape', 'ori_pair', 'img_a_path',
+            'img_a', 'img_a_ori_shape', 'ori_img_a', 'img_b_path', 'img_b',
+            'img_b_ori_shape', 'ori_img_b'
+        ]
+        config = dict(
+            io_backend='disk',
+            key='pair',
+            flag='grayscale',
+            save_original_img=True)
+        results = copy.deepcopy(self.results)
+        load_paired_image_from_file = LoadPairedImageFromFile(**config)
+        results = load_paired_image_from_file(results)
+
+        assert self.check_keys_contain(results.keys(), target_keys)
+        assert results['pair'].shape == self.pair_shape_gray
+        assert results['pair_ori_shape'] == self.pair_shape_gray
+        np.testing.assert_equal(results['pair'], results['ori_pair'])
+        assert id(results['ori_pair']) != id(results['pair'])
+        assert results['pair_path'] == self.pair_path
+        assert results['img_a'].shape == self.img_shape_gray
+        assert results['img_a_ori_shape'] == self.img_shape_gray
+        np.testing.assert_equal(results['img_a'], results['ori_img_a'])
+        assert id(results['ori_img_a']) != id(results['img_a'])
+        assert results['img_a_path'] == self.pair_path
+        assert results['img_b'].shape == self.img_shape_gray
+        assert results['img_b_ori_shape'] == self.img_shape_gray
+        np.testing.assert_equal(results['img_b'], results['ori_img_b'])
+        assert id(results['ori_img_b']) != id(results['img_b'])
+        assert results['img_b_path'] == self.pair_path
