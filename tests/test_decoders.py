@@ -52,7 +52,9 @@ def test_resnet_decoder():
     prediction = model(feat)
     assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
 
-    model = ResNetDec('BasicBlockDec', [2, 3, 3, 2], 512)
+    model = ResNetDec(
+        'BasicBlockDec', [2, 3, 3, 2], 512, with_spectral_norm=True)
+    assert hasattr(model.conv1.conv, 'weight_orig')
     model.init_weights()
     model.train()
     encoder = ResNetEnc('BasicBlock', [2, 4, 4, 2], 6)
@@ -74,7 +76,9 @@ def test_resnet_decoder():
         prediction = model(feat)
         assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
 
-        model = ResNetDec('BasicBlockDec', [2, 3, 3, 2], 512)
+        model = ResNetDec(
+            'BasicBlockDec', [2, 3, 3, 2], 512, with_spectral_norm=True)
+        assert hasattr(model.conv1.conv, 'weight_orig')
         model.init_weights()
         model.train()
         model.cuda()
