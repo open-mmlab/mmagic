@@ -15,7 +15,7 @@ class BasicBlockDec(BasicBlock):
     """
 
     def build_conv1(self, in_channels, out_channels, kernel_size, stride,
-                    conv_cfg, norm_cfg, act_cfg):
+                    conv_cfg, norm_cfg, act_cfg, with_spectral_norm):
         if stride == 2:
             conv_cfg = dict(type='Deconv')
             kernel_size = 4
@@ -31,10 +31,11 @@ class BasicBlockDec(BasicBlock):
             padding=padding,
             conv_cfg=conv_cfg,
             norm_cfg=norm_cfg,
-            act_cfg=act_cfg)
+            act_cfg=act_cfg,
+            with_spectral_norm=with_spectral_norm)
 
     def build_conv2(self, in_channels, out_channels, kernel_size, conv_cfg,
-                    norm_cfg):
+                    norm_cfg, with_spectral_norm):
         return ConvModule(
             in_channels,
             out_channels,
@@ -43,7 +44,8 @@ class BasicBlockDec(BasicBlock):
             padding=kernel_size // 2,
             conv_cfg=conv_cfg,
             norm_cfg=norm_cfg,
-            act_cfg=None)
+            act_cfg=None,
+            with_spectral_norm=with_spectral_norm)
 
 
 @COMPONENTS.register_module
@@ -62,6 +64,8 @@ class ResNetDec(nn.Module):
             None, 2d convolution will be applied. Default: None.
         norm_cfg (dict): Config dict for normalization layer. "BN" by default.
         act_cfg (dict): Config dict for activation layer, "ReLU" by default.
+        with_spectral_norm (bool): Whether use spectral norm after conv.
+            Default: False.
         late_downsample (bool): Whether to adopt late downsample strategy,
             Default: False.
     """
@@ -73,7 +77,9 @@ class ResNetDec(nn.Module):
                  kernel_size=3,
                  conv_cfg=None,
                  norm_cfg=dict(type='BN'),
-                 act_cfg=dict(type='ReLU'),
+                 act_cfg=dict(
+                     type='LeakyReLU', negative_slope=0.2, inplace=True),
+                 with_spectral_norm=False,
                  late_downsample=False):
         super(ResNetDec, self).__init__()
         if block == 'BasicBlockDec':
@@ -86,13 +92,14 @@ class ResNetDec(nn.Module):
         self.midplanes = 64 if late_downsample else 32
 
         self.layer1 = self._make_layer(block, 256, layers[0], conv_cfg,
-                                       norm_cfg, act_cfg)
+                                       norm_cfg, act_cfg, with_spectral_norm)
         self.layer2 = self._make_layer(block, 128, layers[1], conv_cfg,
-                                       norm_cfg, act_cfg)
+                                       norm_cfg, act_cfg, with_spectral_norm)
         self.layer3 = self._make_layer(block, 64, layers[2], conv_cfg,
-                                       norm_cfg, act_cfg)
+                                       norm_cfg, act_cfg, with_spectral_norm)
         self.layer4 = self._make_layer(block, self.midplanes, layers[3],
-                                       conv_cfg, norm_cfg, act_cfg)
+                                       conv_cfg, norm_cfg, act_cfg,
+                                       with_spectral_norm)
 
         self.conv1 = ConvModule(
             self.midplanes,
@@ -102,14 +109,15 @@ class ResNetDec(nn.Module):
             padding=1,
             conv_cfg=dict(type='Deconv'),
             norm_cfg=norm_cfg,
-            act_cfg=act_cfg)
+            act_cfg=act_cfg,
+            with_spectral_norm=with_spectral_norm)
 
-        self.conv2 = nn.Conv2d(
+        self.conv2 = ConvModule(
             32,
             1,
-            kernel_size=self.kernel_size,
-            stride=1,
-            padding=self.kernel_size // 2)
+            self.kernel_size,
+            padding=self.kernel_size // 2,
+            act_cfg=None)
 
     def init_weights(self):
         for m in self.modules():
@@ -126,7 +134,7 @@ class ResNetDec(nn.Module):
                 constant_init(m.conv2.bn.weight, 0)
 
     def _make_layer(self, block, planes, num_blocks, conv_cfg, norm_cfg,
-                    act_cfg):
+                    act_cfg, with_spectral_norm):
         upsample = nn.Sequential(
             nn.UpsamplingNearest2d(scale_factor=2),
             ConvModule(
@@ -135,7 +143,8 @@ class ResNetDec(nn.Module):
                 1,
                 conv_cfg=conv_cfg,
                 norm_cfg=norm_cfg,
-                act_cfg=None))
+                act_cfg=None,
+                with_spectral_norm=with_spectral_norm))
 
         layers = [
             block(
@@ -146,7 +155,8 @@ class ResNetDec(nn.Module):
                 interpolation=upsample,
                 conv_cfg=conv_cfg,
                 norm_cfg=norm_cfg,
-                act_cfg=act_cfg)
+                act_cfg=act_cfg,
+                with_spectral_norm=with_spectral_norm)
         ]
         self.inplanes = planes * block.expansion
         for _ in range(1, num_blocks):
@@ -157,7 +167,8 @@ class ResNetDec(nn.Module):
                     kernel_size=self.kernel_size,
                     conv_cfg=conv_cfg,
                     norm_cfg=norm_cfg,
-                    act_cfg=act_cfg))
+                    act_cfg=act_cfg,
+                    with_spectral_norm=with_spectral_norm))
 
         return nn.Sequential(*layers)
 

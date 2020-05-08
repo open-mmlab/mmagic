@@ -20,10 +20,8 @@ class BasicBlock(nn.Module):
             None, 2d convolution will be applied. Default: None.
         norm_cfg (dict): Config dict for normalization layer. "BN" by default.
         act_cfg (dict): Config dict for activation layer, "ReLU" by default.
-        decode (bool): If this is a decode block.
-            In decode mode, if stride is 2, the sample layer should be a
-            upsample layer and conv1 will be ConvTranspose2d with kernel_size 4
-            and padding 1. Default: False.
+        with_spectral_norm (bool): Whether use spectral norm after conv.
+            Default: False.
     """
     expansion = 1
 
@@ -35,7 +33,8 @@ class BasicBlock(nn.Module):
                  interpolation=None,
                  conv_cfg=None,
                  norm_cfg=dict(type='BN'),
-                 act_cfg=dict(type='ReLU')):
+                 act_cfg=dict(type='ReLU'),
+                 with_spectral_norm=False):
         super(BasicBlock, self).__init__()
         assert stride == 1 or stride == 2, (
             f'stride other than 1 and 2 is not implemented, got {stride}')
@@ -44,16 +43,17 @@ class BasicBlock(nn.Module):
             f'if stride is 2, interpolation should be specified')
 
         self.conv1 = self.build_conv1(in_channels, out_channels, kernel_size,
-                                      stride, conv_cfg, norm_cfg, act_cfg)
+                                      stride, conv_cfg, norm_cfg, act_cfg,
+                                      with_spectral_norm)
         self.conv2 = self.build_conv2(in_channels, out_channels, kernel_size,
-                                      conv_cfg, norm_cfg)
+                                      conv_cfg, norm_cfg, with_spectral_norm)
 
         self.interpolation = interpolation
         self.activation = build_activation_layer(act_cfg)
         self.stride = stride
 
     def build_conv1(self, in_channels, out_channels, kernel_size, stride,
-                    conv_cfg, norm_cfg, act_cfg):
+                    conv_cfg, norm_cfg, act_cfg, with_spectral_norm):
         return ConvModule(
             in_channels,
             out_channels,
@@ -62,10 +62,11 @@ class BasicBlock(nn.Module):
             padding=kernel_size // 2,
             conv_cfg=conv_cfg,
             norm_cfg=norm_cfg,
-            act_cfg=act_cfg)
+            act_cfg=act_cfg,
+            with_spectral_norm=with_spectral_norm)
 
     def build_conv2(self, in_channels, out_channels, kernel_size, conv_cfg,
-                    norm_cfg):
+                    norm_cfg, with_spectral_norm):
         return ConvModule(
             out_channels,
             out_channels,
@@ -74,7 +75,8 @@ class BasicBlock(nn.Module):
             padding=kernel_size // 2,
             conv_cfg=conv_cfg,
             norm_cfg=norm_cfg,
-            act_cfg=None)
+            act_cfg=None,
+            with_spectral_norm=with_spectral_norm)
 
     def forward(self, x):
         identity = x
@@ -109,6 +111,8 @@ class ResNetEnc(nn.Module):
             None, 2d convolution will be applied. Default: None.
         norm_cfg (dict): Config dict for normalization layer. "BN" by default.
         act_cfg (dict): Config dict for activation layer, "ReLU" by default.
+        with_spectral_norm (bool): Whether use spectral norm after conv.
+            Default: False.
         late_downsample (bool): Whether to adopt late downsample strategy,
             Default: False.
     """
@@ -120,6 +124,7 @@ class ResNetEnc(nn.Module):
                  conv_cfg=None,
                  norm_cfg=dict(type='BN'),
                  act_cfg=dict(type='ReLU'),
+                 with_spectral_norm=False,
                  late_downsample=False):
         super(ResNetEnc, self).__init__()
         if block == 'BasicBlock':
@@ -139,7 +144,8 @@ class ResNetEnc(nn.Module):
             padding=1,
             conv_cfg=conv_cfg,
             norm_cfg=norm_cfg,
-            act_cfg=act_cfg)
+            act_cfg=act_cfg,
+            with_spectral_norm=with_spectral_norm)
         self.conv2 = ConvModule(
             32,
             self.midplanes,
@@ -148,7 +154,8 @@ class ResNetEnc(nn.Module):
             padding=1,
             conv_cfg=conv_cfg,
             norm_cfg=norm_cfg,
-            act_cfg=act_cfg)
+            act_cfg=act_cfg,
+            with_spectral_norm=with_spectral_norm)
         self.conv3 = ConvModule(
             self.midplanes,
             self.inplanes,
@@ -157,16 +164,18 @@ class ResNetEnc(nn.Module):
             padding=1,
             conv_cfg=conv_cfg,
             norm_cfg=norm_cfg,
-            act_cfg=act_cfg)
+            act_cfg=act_cfg,
+            with_spectral_norm=with_spectral_norm)
 
         self.layer1 = self._make_layer(block, 64, layers[0], start_stride[3],
-                                       conv_cfg, norm_cfg, act_cfg)
+                                       conv_cfg, norm_cfg, act_cfg,
+                                       with_spectral_norm)
         self.layer2 = self._make_layer(block, 128, layers[1], 2, conv_cfg,
-                                       norm_cfg, act_cfg)
+                                       norm_cfg, act_cfg, with_spectral_norm)
         self.layer3 = self._make_layer(block, 256, layers[2], 2, conv_cfg,
-                                       norm_cfg, act_cfg)
+                                       norm_cfg, act_cfg, with_spectral_norm)
         self.layer4 = self._make_layer(block, 512, layers[3], 2, conv_cfg,
-                                       norm_cfg, act_cfg)
+                                       norm_cfg, act_cfg, with_spectral_norm)
 
         self.out_channels = 512
 
@@ -196,7 +205,7 @@ class ResNetEnc(nn.Module):
                             f'But received {type(pretrained)}.')
 
     def _make_layer(self, block, planes, num_blocks, stride, conv_cfg,
-                    norm_cfg, act_cfg):
+                    norm_cfg, act_cfg, with_spectral_norm):
         downsample = None
         if stride != 1:
             downsample = nn.Sequential(
@@ -207,7 +216,8 @@ class ResNetEnc(nn.Module):
                     1,
                     conv_cfg=conv_cfg,
                     norm_cfg=norm_cfg,
-                    act_cfg=None))
+                    act_cfg=None,
+                    with_spectral_norm=with_spectral_norm))
 
         layers = [
             block(
@@ -217,7 +227,8 @@ class ResNetEnc(nn.Module):
                 interpolation=downsample,
                 conv_cfg=conv_cfg,
                 norm_cfg=norm_cfg,
-                act_cfg=act_cfg)
+                act_cfg=act_cfg,
+                with_spectral_norm=with_spectral_norm)
         ]
         self.inplanes = planes * block.expansion
         for _ in range(1, num_blocks):
@@ -227,7 +238,8 @@ class ResNetEnc(nn.Module):
                     planes,
                     conv_cfg=conv_cfg,
                     norm_cfg=norm_cfg,
-                    act_cfg=act_cfg))
+                    act_cfg=act_cfg,
+                    with_spectral_norm=with_spectral_norm))
 
         return nn.Sequential(*layers)
 
@@ -254,9 +266,9 @@ class ResShortcutEnc(ResNetEnc):
            |
           conv3-layer1 --- shortcut[2] --- feat3
                   |
-                 layer2 -- shortcut[5] --- feat4
+                 layer2 -- shortcut[4] --- feat4
                    |
-                  layer3 - shortcut[4] --- feat5
+                  layer3 - shortcut[5] --- feat5
                     |
                    layer4 ---------------- out
 
@@ -272,6 +284,8 @@ class ResShortcutEnc(ResNetEnc):
             None, 2d convolution will be applied. Default: None.
         norm_cfg (dict): Config dict for normalization layer. "BN" by default.
         act_cfg (dict): Config dict for activation layer, "ReLU" by default.
+        with_spectral_norm (bool): Whether use spectral norm after conv.
+            Default: False.
         late_downsample (bool): Whether to adopt late downsample strategy.
             Default: False.
         order (tuple[str]): Order of `conv`, `norm` and `act` layer in shortcut
@@ -285,11 +299,12 @@ class ResShortcutEnc(ResNetEnc):
                  conv_cfg=None,
                  norm_cfg=dict(type='BN'),
                  act_cfg=dict(type='ReLU'),
+                 with_spectral_norm=False,
                  late_downsample=False,
                  order=('conv', 'act', 'norm')):
         super(ResShortcutEnc,
               self).__init__(block, layers, in_channels, conv_cfg, norm_cfg,
-                             act_cfg, late_downsample)
+                             act_cfg, with_spectral_norm, late_downsample)
 
         # TODO: rename self.midplanes to self.mid_channels in ResNetEnc
         self.shortcut_in_channels = [in_channels, self.midplanes, 64, 128, 256]
@@ -300,10 +315,11 @@ class ResShortcutEnc(ResNetEnc):
                                              self.shortcut_out_channels):
             self.shortcut.append(
                 self._make_shortcut(in_channels, out_channels, conv_cfg,
-                                    norm_cfg, act_cfg, order))
+                                    norm_cfg, act_cfg, order,
+                                    with_spectral_norm))
 
     def _make_shortcut(self, in_channels, out_channels, conv_cfg, norm_cfg,
-                       act_cfg, order):
+                       act_cfg, order, with_spectral_norm):
         return nn.Sequential(
             ConvModule(
                 in_channels,
@@ -313,6 +329,7 @@ class ResShortcutEnc(ResNetEnc):
                 conv_cfg=conv_cfg,
                 norm_cfg=norm_cfg,
                 act_cfg=act_cfg,
+                with_spectral_norm=with_spectral_norm,
                 order=order),
             ConvModule(
                 out_channels,
@@ -322,6 +339,7 @@ class ResShortcutEnc(ResNetEnc):
                 conv_cfg=conv_cfg,
                 norm_cfg=norm_cfg,
                 act_cfg=act_cfg,
+                with_spectral_norm=with_spectral_norm,
                 order=order))
 
     def forward(self, x):
