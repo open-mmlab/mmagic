@@ -40,13 +40,20 @@ class TestMattingDatasets(object):
         with pytest.raises(TypeError):
             comp1k_dataset.evaluate('Not a list object')
 
-        results = [(None, {
-            'SAD': 26,
-            'MSE': 0.006
-        }), (None, {
-            'SAD': 24,
-            'MSE': 0.004
-        })]
+        results = [{
+            'pred_alpha': None,
+            'eval_result': {
+                'SAD': 26,
+                'MSE': 0.006
+            }
+        }, {
+            'pred_alpha': None,
+            'eval_result': {
+                'SAD': 24,
+                'MSE': 0.004
+            }
+        }]
+
         eval_result = comp1k_dataset.evaluate(results)
         assert set(eval_result.keys()) == set(['SAD', 'MSE'])
         assert eval_result['SAD'] == 25
