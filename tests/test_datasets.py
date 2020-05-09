@@ -4,9 +4,10 @@ from unittest.mock import mock_open, patch
 
 import numpy as np
 import pytest
-from mmedit.datasets import (AdobeComp1kDataset, BaseSRDataset, RepeatDataset,
-                             SRAnnotationDataset, SRFolderDataset,
-                             SRLmdbDataset, SRREDSDataset, SRVimeo90KDataset)
+from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
+                             BaseSRDataset, RepeatDataset, SRAnnotationDataset,
+                             SRFolderDataset, SRLmdbDataset, SRREDSDataset,
+                             SRVimeo90KDataset)
 from torch.utils.data import Dataset
 
 
@@ -288,6 +289,51 @@ class TestSRDatasets(object):
                 gt_folder=str(self.data_prefix),  # normal folder
                 pipeline=sr_pipeline,
                 scale=1)
+
+
+class TestGenerationDatasets(object):
+
+    @classmethod
+    def setup_class(cls):
+        cls.data_prefix = Path(__file__).parent / 'data'
+
+    def test_base_generation_dataset(self):
+
+        class ToyDataset(BaseGenerationDataset):
+            """Toy dataset for testing Generation Dataset."""
+
+            def load_annotations(self):
+                pass
+
+        toy_dataset = ToyDataset(pipeline=[])
+        file_paths = [
+            'paired/test/3.jpg', 'paired/train/1.jpg', 'paired/train/2.jpg'
+        ]
+        file_paths = [str(self.data_prefix / v) for v in file_paths]
+
+        # test scan_folder
+        result = toy_dataset.scan_folder(self.data_prefix)
+        assert check_keys_contain(result, file_paths)
+        result = toy_dataset.scan_folder(str(self.data_prefix))
+        assert check_keys_contain(result, file_paths)
+
+        with pytest.raises(TypeError):
+            toy_dataset.scan_folder(123)
+
+        # test evaluate
+        toy_dataset.data_infos = file_paths
+        with pytest.raises(TypeError):
+            _ = toy_dataset.evaluate(1)
+        test_results = [dict(saved_flag=True), dict(saved_flag=True)]
+        with pytest.raises(AssertionError):
+            _ = toy_dataset.evaluate(test_results)
+        test_results = [
+            dict(saved_flag=True),
+            dict(saved_flag=True),
+            dict(saved_flag=False)
+        ]
+        eval_results = toy_dataset.evaluate(test_results)
+        assert eval_results['val_saved_number'] == 2
 
 
 def test_repeat_dataset():
