@@ -1,8 +1,9 @@
 import numpy as np
 import pytest
 import torch
-from mmedit.models.backbones import (VGG16, PlainDecoder, ResNetDec, ResNetEnc,
-                                     ResShortcutDec, ResShortcutEnc)
+from mmedit.models.backbones import (VGG16, IndexedUpsample, PlainDecoder,
+                                     ResNetDec, ResNetEnc, ResShortcutDec,
+                                     ResShortcutEnc)
 
 
 def assert_tensor_with_shape(tensor, shape):
@@ -117,6 +118,24 @@ def test_res_shortcut_decoder():
         outputs = encoder(img)
         prediction = model(outputs)
         assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
+
+
+def test_indexed_upsample():
+    """Test indexed upsample module for indexnet decoder."""
+    indexed_upsample = IndexedUpsample(12, 12)
+
+    # test indexed_upsample without idx_dec (no upsample will be performed)
+    x = torch.rand(2, 6, 32, 32)
+    shortcut = torch.rand(2, 6, 32, 32)
+    output = indexed_upsample(x, shortcut)
+    assert_tensor_with_shape(output, (2, 12, 32, 32))
+
+    # test indexed_upsample without idx_dec (upsample will be performed)
+    x = torch.rand(2, 6, 32, 32)
+    idx_dec = torch.rand(2, 6, 64, 64)
+    shortcut = torch.rand(2, 6, 64, 64)
+    output = indexed_upsample(x, shortcut, idx_dec)
+    assert_tensor_with_shape(output, (2, 12, 64, 64))
 
 
 def _demo_inputs(input_shape=(1, 4, 64, 64)):

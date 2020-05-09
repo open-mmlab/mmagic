@@ -248,8 +248,7 @@ def test_index_blocks():
     """Test index blocks for indexnet encoder."""
     # test holistic index block
     # test holistic index block without context and nonlinearty
-    block = HolisticIndexBlock(
-        128, kernel_size=2, padding=0, use_nonlinear=False)
+    block = HolisticIndexBlock(128, use_context=False, use_nonlinear=False)
     assert not isinstance(block.index_block, Iterable)
     x = torch.rand(2, 128, 8, 8)
     idx_enc, idx_dec = block(x)
@@ -257,8 +256,7 @@ def test_index_blocks():
     assert idx_dec.shape == (2, 1, 8, 8)
 
     # test holistic index block with context and nonlinearty
-    block = HolisticIndexBlock(
-        128, kernel_size=4, padding=1, use_nonlinear=True)
+    block = HolisticIndexBlock(128, use_context=True, use_nonlinear=True)
     assert len(block.index_block) == 2  # nonlinear mode has two blocks
     x = torch.rand(2, 128, 8, 8)
     idx_enc, idx_dec = block(x)
@@ -268,7 +266,7 @@ def test_index_blocks():
     # test depthwise index block
     # test depthwise index block without context and nonlinearty in o2o mode
     block = DepthwiseIndexBlock(
-        128, kernel_size=2, padding=0, groups=1, use_nonlinear=False)
+        128, use_context=False, mode='oso', use_nonlinear=False)
     assert not isinstance(block.index_blocks[0], Iterable)
     x = torch.rand(2, 128, 8, 8)
     idx_enc, idx_dec = block(x)
@@ -277,7 +275,7 @@ def test_index_blocks():
 
     # test depthwise index block with context and nonlinearty in m2o mode
     block = DepthwiseIndexBlock(
-        128, kernel_size=4, padding=1, groups=128, use_nonlinear=True)
+        128, use_context=True, mode='m2o', use_nonlinear=True)
     assert len(block.index_blocks[0]) == 2  # nonlinear mode has two blocks
     x = torch.rand(2, 128, 8, 8)
     idx_enc, idx_dec = block(x)
