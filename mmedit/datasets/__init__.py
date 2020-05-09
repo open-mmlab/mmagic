@@ -1,4 +1,5 @@
 from .base_dataset import BaseDataset
+from .base_generation_dataset import BaseGenerationDataset
 from .base_matting_dataset import BaseMattingDataset
 from .base_sr_dataset import BaseSRDataset
 from .builder import build_dataloader, build_dataset
@@ -18,5 +19,5 @@ __all__ = [
     'AdobeComp1kDataset', 'SRLmdbDataset', 'SRFolderDataset',
     'SRAnnotationDataset', 'BaseSRDataset', 'RepeatDataset', 'SRREDSDataset',
     'SRVimeo90KDataset', 'SRAnnotationDataset', 'BaseSRDataset',
-    'RepeatDataset'
+    'RepeatDataset', 'BaseGenerationDataset'
 ]
