@@ -627,6 +627,82 @@ class RandomTransposeHW(object):
 
 
 @PIPELINES.register_module
+class GenerateFrameIndiceswithPadding(object):
+    """Generate frame index with padding for REDS dataset and Vid4 dataset
+    during testing.
+
+    Required keys: lq_path, gt_path, key, num_frames, max_frame_num
+    Added or modified keys: lq_path, gt_path
+
+    Attributes:
+         padding (str): padding mode, one of
+            'replicate' | 'reflection' | 'reflection_circle' | 'circle'.
+            Examples: current_idx = 0, num_frames = 5
+            The generated frame indices under different padding mode:
+            replicate: [0, 0, 0, 1, 2]
+            reflection: [2, 1, 0, 1, 2]
+            reflection_circle: [4, 3, 0, 1, 2]
+            circle: [3, 4, 0, 1, 2]
+        filename_tmpl (str): Template for file name. Default: '{:08d}'.
+    """
+
+    def __init__(self, padding, filename_tmpl='{:08d}'):
+        if padding not in ('replicate', 'reflection', 'reflection_circle',
+                           'circle'):
+            raise ValueError(f'Wrong padding mode {padding}.'
+                             'Should be "replicate", "reflection", '
+                             '"reflection_circle",  "circle"')
+        self.padding = padding
+        self.filename_tmpl = filename_tmpl
+
+    def __call__(self, results):
+        clip_name, frame_name = results['key'].split('/')
+        current_idx = int(frame_name)
+        max_frame_num = results['max_frame_num'] - 1  # start from 0
+        num_frames = results['num_frames']
+        num_pad = num_frames // 2
+
+        frame_list = []
+        for i in range(current_idx - num_pad, current_idx + num_pad + 1):
+            if i < 0:
+                if self.padding == 'replicate':
+                    pad_idx = 0
+                elif self.padding == 'reflection':
+                    pad_idx = -i
+                elif self.padding == 'reflection_circle':
+                    pad_idx = current_idx + num_pad - i
+                else:
+                    pad_idx = num_frames + i
+            elif i > max_frame_num:
+                if self.padding == 'replicate':
+                    pad_idx = max_frame_num
+                elif self.padding == 'reflection':
+                    pad_idx = max_frame_num * 2 - i
+                elif self.padding == 'reflection_circle':
+                    pad_idx = (current_idx - num_pad) - (i - max_frame_num)
+                else:
+                    pad_idx = i - num_frames
+            else:
+                pad_idx = i
+            frame_list.append(pad_idx)
+
+        lq_path_root = results['lq_path']
+        gt_path_root = results['gt_path']
+        lq_paths = [
+            osp.join(lq_path_root, clip_name, self.filename_tmpl.format(idx))
+            for idx in frame_list
+        ]
+        gt_paths = [osp.join(gt_path_root, clip_name, frame_name)]
+        results['lq_paths'] = lq_paths
+        results['gt_paths'] = gt_paths
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__ + f"(padding='{self.padding}')"
+        return repr_str
+
+
 class GenerateFrameIndices(object):
     """Generate frame index for REDS datasets. It also performs
     temporal augmention with random interval.
