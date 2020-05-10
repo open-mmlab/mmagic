@@ -5,7 +5,8 @@ from unittest.mock import mock_open, patch
 import numpy as np
 import pytest
 from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
-                             BaseSRDataset, RepeatDataset, SRAnnotationDataset,
+                             BaseSRDataset, GenerationPairedDataset,
+                             RepeatDataset, SRAnnotationDataset,
                              SRFolderDataset, SRLmdbDataset, SRREDSDataset,
                              SRVimeo90KDataset)
 from torch.utils.data import Dataset
@@ -334,6 +335,73 @@ class TestGenerationDatasets(object):
         ]
         eval_results = toy_dataset.evaluate(test_results)
         assert eval_results['val_saved_number'] == 2
+
+    def test_generation_paired_dataset(self):
+        # setup
+        img_norm_cfg = dict(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+        pipeline = [
+            dict(
+                type='LoadPairedImageFromFile',
+                io_backend='disk',
+                key='pair',
+                flag='color'),
+            dict(
+                type='Resize',
+                keys=['img_a', 'img_b'],
+                scale=(286, 286),
+                interpolation='bicubic'),
+            dict(
+                type='FixedCrop',
+                keys=['img_a', 'img_b'],
+                crop_size=(256, 256)),
+            dict(type='Flip', keys=['img_a', 'img_b'], direction='horizontal'),
+            dict(type='RescaleToZeroOne', keys=['img_a', 'img_b']),
+            dict(
+                type='Normalize',
+                keys=['img_a', 'img_b'],
+                to_rgb=True,
+                **img_norm_cfg),
+            dict(type='ImageToTensor', keys=['img_a', 'img_b']),
+            dict(
+                type='Collect',
+                keys=['img_a', 'img_b'],
+                meta_keys=['img_a_path', 'img_b_path'])
+        ]
+        target_keys = ['img_a', 'img_b', 'meta']
+        target_meta_keys = ['img_a_path', 'img_b_path']
+        pair_folder = self.data_prefix / 'paired'
+
+        # input path is Path object
+        generation_paried_dataset = GenerationPairedDataset(
+            dataroot=pair_folder, pipeline=pipeline, test_mode=True)
+        data_infos = generation_paried_dataset.data_infos
+        assert data_infos == [
+            dict(pair_path=str(pair_folder / 'test' / '3.jpg'))
+        ]
+        result = generation_paried_dataset[0]
+        assert (len(generation_paried_dataset) == 1)
+        assert check_keys_contain(result.keys(), target_keys)
+        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert (result['meta'].data['img_a_path'] == str(pair_folder / 'test' /
+                                                         '3.jpg'))
+        assert (result['meta'].data['img_b_path'] == str(pair_folder / 'test' /
+                                                         '3.jpg'))
+
+        # input path is str
+        generation_paried_dataset = GenerationPairedDataset(
+            dataroot=str(pair_folder), pipeline=pipeline, test_mode=True)
+        data_infos = generation_paried_dataset.data_infos
+        assert data_infos == [
+            dict(pair_path=str(pair_folder / 'test' / '3.jpg'))
+        ]
+        result = generation_paried_dataset[0]
+        assert (len(generation_paried_dataset) == 1)
+        assert check_keys_contain(result.keys(), target_keys)
+        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert (result['meta'].data['img_a_path'] == str(pair_folder / 'test' /
+                                                         '3.jpg'))
+        assert (result['meta'].data['img_b_path'] == str(pair_folder / 'test' /
+                                                         '3.jpg'))
 
 
 def test_repeat_dataset():

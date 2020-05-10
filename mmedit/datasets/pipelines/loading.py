@@ -295,9 +295,10 @@ class LoadPairedImageFromFile(LoadImageFromFile):
     dataset. It loads a pair of images as the common loader does and crops
     it into two images with the same shape in different domains.
 
-    Required keys are "pair_path", added or modified keys are "pair",
-    "pair_ori_shape", "ori_pair", "a", "b", "a_path", "b_path",
-    "a_ori_shape", "b_ori_shape", "ori_a" and "ori_b".
+    Required key is "pair_path". Added or modified keys are "pair",
+    "pair_ori_shape", "ori_pair", "img_a", "img_b", "img_a_path",
+    "img_b_path", "img_a_ori_shape", "img_b_ori_shape", "ori_img_a" and
+    "ori_img_b".
     """
 
     def __call__(self, results):
