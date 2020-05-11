@@ -26,11 +26,7 @@ train_pipeline = [
         keys=['alpha', 'merged', 'ori_merged', 'fg', 'bg'],
         scale=(320, 320),
         keep_ratio=False),
-    dict(
-        type='GenerateTrimap',
-        kernel_size=(2, 5),
-        iterations=(5, 15),
-        symmetric=True),
+    dict(type='GenerateTrimap', kernel_size=(1, 30)),
     dict(
         type='RescaleToZeroOne',
         keys=['merged', 'alpha', 'ori_merged', 'fg', 'bg']),
