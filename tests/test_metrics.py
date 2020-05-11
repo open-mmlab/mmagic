@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
-from mmedit.core.evaluation.metrics import mse, psnr, reorder_image, sad, ssim
+from mmedit.core.evaluation.metrics import (gradient_error, mse, psnr,
+                                            reorder_image, sad, ssim)
 
 
 def test_reorder_image():
@@ -113,3 +114,23 @@ def test_mse():
 
     mse_result = mse(alpha, trimap, pred_alpha)
     np.testing.assert_almost_equal(mse_result, 3.0)
+
+
+def test_gradient_error():
+    """Test gradient error for evaluating predicted alpha matte."""
+    alpha = np.ones((32, 32)) * 255
+    pred_alpha = np.zeros((32, 32))
+    trimap = np.zeros((32, 32))
+    trimap[:16, :16] = 128
+    trimap[16:, 16:] = 255
+
+    with pytest.raises(ValueError):
+        # pred_alpha should be masked by trimap before evaluation
+        gradient_error(alpha, trimap, pred_alpha)
+
+    # mask pred_alpha
+    pred_alpha[trimap == 0] = 0
+    pred_alpha[trimap == 255] = 255
+
+    gradient_result = gradient_error(alpha, trimap, pred_alpha)
+    np.testing.assert_almost_equal(gradient_result, 0.0028887)

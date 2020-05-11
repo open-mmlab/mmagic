@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+from .metric_utils import gauss_gradient
+
 
 def sad(alpha, trimap, pred_alpha):
     assert (pred_alpha[trimap == 0] == 0).all()
@@ -22,6 +24,35 @@ def mse(alpha, trimap, pred_alpha):
     else:
         mse = 0
     return mse
+
+
+def gradient_error(alpha, trimap, pred_alpha, sigma=1.4):
+    """Gradient error for evaluating alpha matte prediction.
+
+    Args:
+        alpha (ndarray): Ground-truth alpha matte.
+        trimap (ndarray): Input trimap with its value in {0, 128, 255}.
+        pred_alpha (ndarray): Predicted alpha matte.
+        sigma (float): Standard deviation of the gaussian kernel. Default: 1.4.
+    """
+    if not ((pred_alpha[trimap == 0] == 0).all() and
+            (pred_alpha[trimap == 255] == 255).all()):
+        raise ValueError(
+            'pred_alpha should be masked by trimap before evaluation')
+    alpha = alpha.astype(np.float64)
+    pred_alpha = pred_alpha.astype(np.float64)
+    alpha_normed = np.zeros_like(alpha)
+    pred_alpha_normed = np.zeros_like(pred_alpha)
+    cv2.normalize(alpha, alpha_normed, 1., 0., cv2.NORM_MINMAX)
+    cv2.normalize(pred_alpha, pred_alpha_normed, 1., 0., cv2.NORM_MINMAX)
+
+    alpha_grad = gauss_gradient(alpha_normed, sigma).astype(np.float32)
+    pred_alpha_grad = gauss_gradient(pred_alpha_normed,
+                                     sigma).astype(np.float32)
+
+    grad_loss = ((alpha_grad - pred_alpha_grad)**2 * (trimap == 128)).sum()
+    # same as SAD, divide by 1000 to reduce the magnitude of the result
+    return grad_loss / 1000
 
 
 def reorder_image(img, input_order='HWC'):
