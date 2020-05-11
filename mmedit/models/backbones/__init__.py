@@ -4,9 +4,9 @@ from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
                                DepthwiseIndexBlock, EncoderDecoder, GLDecoder,
                                GLDilationNeck, GLEncoder, GLEncoderDecoder,
                                HolisticIndexBlock, IndexedUpsample,
-                               PConvDecoder, PConvEncoder, PConvEncoderDecoder,
-                               PlainDecoder, ResNetDec, ResNetEnc,
-                               ResShortcutDec, ResShortcutEnc,
+                               IndexNetEncoder, PConvDecoder, PConvEncoder,
+                               PConvEncoderDecoder, PlainDecoder, ResNetDec,
+                               ResNetEnc, ResShortcutDec, ResShortcutEnc,
                                SimpleEncoderDecoder)
 # yapf: enable
 from .sr_backbones import EDVRNet, MSRResNet, RRDBNet
@@ -18,5 +18,5 @@ __all__ = [
     'EncoderDecoder', 'ResNetEnc', 'ResNetDec', 'ResShortcutEnc',
     'ResShortcutDec', 'RRDBNet', 'DeepFillEncoder', 'HolisticIndexBlock',
     'DepthwiseIndexBlock', 'ContextualAttentionNeck', 'DeepFillDecoder',
-    'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample'
+    'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample', 'IndexNetEncoder'
 ]

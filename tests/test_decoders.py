@@ -124,17 +124,17 @@ def test_indexed_upsample():
     """Test indexed upsample module for indexnet decoder."""
     indexed_upsample = IndexedUpsample(12, 12)
 
-    # test indexed_upsample without idx_dec (no upsample will be performed)
+    # test indexed_upsample without dec_idx_feat (no upsample)
     x = torch.rand(2, 6, 32, 32)
     shortcut = torch.rand(2, 6, 32, 32)
     output = indexed_upsample(x, shortcut)
     assert_tensor_with_shape(output, (2, 12, 32, 32))
 
-    # test indexed_upsample without idx_dec (upsample will be performed)
+    # test indexed_upsample without dec_idx_feat (with upsample)
     x = torch.rand(2, 6, 32, 32)
-    idx_dec = torch.rand(2, 6, 64, 64)
+    dec_idx_feat = torch.rand(2, 6, 64, 64)
     shortcut = torch.rand(2, 6, 64, 64)
-    output = indexed_upsample(x, shortcut, idx_dec)
+    output = indexed_upsample(x, shortcut, dec_idx_feat)
     assert_tensor_with_shape(output, (2, 12, 64, 64))
 
 

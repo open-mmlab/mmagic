@@ -42,8 +42,8 @@ class IndexedUpsample(nn.Module):
             if isinstance(m, nn.Conv2d):
                 kaiming_init(m, mode='fan_in', nonlinearity='leaky_relu')
 
-    def forward(self, x, shortcut, idx_dec=None):
-        if idx_dec is not None:
-            x = idx_dec * F.interpolate(x, size=shortcut.shape[2:])
+    def forward(self, x, shortcut, dec_idx_feat=None):
+        if dec_idx_feat is not None:
+            x = dec_idx_feat * F.interpolate(x, size=shortcut.shape[2:])
         out = torch.cat((x, shortcut), dim=1)
         return self.conv(out)
