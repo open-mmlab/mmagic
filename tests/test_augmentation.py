@@ -196,7 +196,7 @@ class TestAugmentations(object):
         if mode not in ['constant', 'reflect']:
             raise NotImplementedError(
                 f'Pad checking of mode {mode} is not implemented.')
-        assert len(origin_img.shape) == 2, f'Image should be 2 dimentional.'
+        assert len(origin_img.shape) == 2, 'Image should be 2 dimentional.'
 
         h, w = origin_img.shape
         new_h = ds_factor * (h - 1) // ds_factor + 1
@@ -330,7 +330,7 @@ class TestAugmentations(object):
         assert random_jitter_results['fg'].shape == (240, 320, 3)
 
         assert repr(random_jitter) == random_jitter.__class__.__name__ + (
-            f'hue_range=(-50, 50)')
+            'hue_range=(-50, 50)')
 
     @staticmethod
     def check_transposehw(origin_img, result_img):
@@ -562,7 +562,7 @@ class TestAugmentations(object):
 
         name_ = repr(frame_index_generator)
         assert name_ == frame_index_generator.__class__.__name__ + (
-            f'(interval_list=[1], frames_per_clip=99)')
+            '(interval_list=[1], frames_per_clip=99)')
 
         # index out of range
         frame_index_generator = GenerateFrameIndices(interval_list=[10])

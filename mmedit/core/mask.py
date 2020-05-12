@@ -145,16 +145,16 @@ def brush_stroke_mask(img_shape,
     elif isinstance(num_vertexes, tuple):
         min_num_vertexes, max_num_vertexes = num_vertexes
     else:
-        raise TypeError(f'The type of num_vertexes should be int'
-                        'or tuple[int], but got type: {num_vertexes}')
+        raise TypeError('The type of num_vertexes should be int'
+                        f'or tuple[int], but got type: {num_vertexes}')
 
     if isinstance(brush_width, tuple):
         min_width, max_width = brush_width
     elif isinstance(brush_width, int):
         min_width, max_width = brush_width, brush_width + 1
     else:
-        raise TypeError(f'The type of brush_width should be int'
-                        'or tuple[int], but got type: {brush_width}')
+        raise TypeError('The type of brush_width should be int'
+                        f'or tuple[int], but got type: {brush_width}')
 
     average_radius = math.sqrt(img_h * img_h + img_w * img_w) / 8
     mask = Image.new('L', (img_w, img_h), 0)
@@ -246,23 +246,23 @@ def random_irregular_mask(img_shape,
     elif isinstance(length_range, tuple):
         min_length, max_length = length_range
     else:
-        raise TypeError(f'The type of length_range should be int'
-                        'or tuple[int], but got type: {length_range}')
+        raise TypeError('The type of length_range should be int'
+                        f'or tuple[int], but got type: {length_range}')
     if isinstance(num_vertexes, int):
         min_num_vertexes, max_num_vertexes = num_vertexes, num_vertexes + 1
     elif isinstance(num_vertexes, tuple):
         min_num_vertexes, max_num_vertexes = num_vertexes
     else:
-        raise TypeError(f'The type of num_vertexes should be int'
-                        'or tuple[int], but got type: {num_vertexes}')
+        raise TypeError('The type of num_vertexes should be int'
+                        f'or tuple[int], but got type: {num_vertexes}')
 
     if isinstance(brush_width, int):
         min_brush_width, max_brush_width = brush_width, brush_width + 1
     elif isinstance(brush_width, tuple):
         min_brush_width, max_brush_width = brush_width
     else:
-        raise TypeError(f'The type of brush_width should be int'
-                        'or tuple[int], but got type: {brush_width}')
+        raise TypeError('The type of brush_width should be int'
+                        f'or tuple[int], but got type: {brush_width}')
 
     num_v = np.random.randint(min_num_vertexes, max_num_vertexes)
 

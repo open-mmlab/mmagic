@@ -40,7 +40,7 @@ class BasicBlock(nn.Module):
             f'stride other than 1 and 2 is not implemented, got {stride}')
 
         assert stride != 2 or interpolation is not None, (
-            f'if stride is 2, interpolation should be specified')
+            'if stride is 2, interpolation should be specified')
 
         self.conv1 = self.build_conv1(in_channels, out_channels, kernel_size,
                                       stride, conv_cfg, norm_cfg, act_cfg,
