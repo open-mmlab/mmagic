@@ -163,5 +163,5 @@ def test_composite_fg():
     assert composite_fg_results['fg'].shape == (240, 320, 3)
 
     assert repr(composite_fg) == composite_fg.__class__.__name__ + (
-        f"(fg_dir='tests/data/fg', alpha_dir='tests/data/alpha', "
-        f"fg_ext='jpg', alpha_ext='jpg', interpolation='bilinear')")
+        "(fg_dir='tests/data/fg', alpha_dir='tests/data/alpha', "
+        "fg_ext='jpg', alpha_ext='jpg', interpolation='bilinear')")

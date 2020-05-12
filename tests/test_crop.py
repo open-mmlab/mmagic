@@ -291,7 +291,7 @@ class TestAugmentations(object):
             results = pairedrandomcrop(results)
 
         assert repr(pairedrandomcrop) == (
-            pairedrandomcrop.__class__.__name__ + f'(gt_patch_size=128)')
+            pairedrandomcrop.__class__.__name__ + '(gt_patch_size=128)')
 
         # for image list
         results = dict(

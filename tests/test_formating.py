@@ -128,7 +128,7 @@ def test_masked_img():
 
     name_ = repr(get_masked_img)
     class_name = get_masked_img.__class__.__name__
-    assert name_ == class_name + f"(img_name='gt_img', mask_name='mask')"
+    assert name_ == class_name + "(img_name='gt_img', mask_name='mask')"
 
 
 def test_format_trimap():

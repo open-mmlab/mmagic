@@ -51,8 +51,8 @@ def test_load_image_from_file():
     assert results['lq_path'] == str(path_baboon_x4)
     assert repr(image_loader) == (
         image_loader.__class__.__name__ +
-        (f'(io_backend=disk, key=lq, '
-         f'flag=color, save_original_img=False)'))
+        ('(io_backend=disk, key=lq, '
+         'flag=color, save_original_img=False)'))
 
     results = dict(lq_path=path_baboon_x4)
     config = dict(
@@ -149,7 +149,7 @@ class TestMattingLoading(object):
             assert random_load_bg_results['bg'].shape == (128, 128, 3)
 
         assert repr(random_load_bg) == random_load_bg.__class__.__name__ + (
-            f"(bg_dir='tests/data/bg')")
+            "(bg_dir='tests/data/bg')")
 
 
 class TestInpaintLoading(object):

@@ -62,13 +62,13 @@ class Resize(object):
                  interpolation='bilinear'):
         assert keys, 'Keys should not be empty.'
         if size_factor:
-            assert scale is None, (f'When size_factor is used, scale should ',
+            assert scale is None, ('When size_factor is used, scale should ',
                                    f'be None. But received {scale}.')
             assert keep_ratio is False, ('When size_factor is used, '
                                          'keep_ratio should be False.')
         if max_size:
             assert size_factor is not None, (
-                f'When max_size is used, '
+                'When max_size is used, '
                 f'size_factor should also be set. But received {size_factor}.')
         if isinstance(scale, float):
             if scale <= 0:
