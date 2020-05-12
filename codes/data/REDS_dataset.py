@@ -149,6 +149,7 @@ class REDSDataset(data.Dataset):
                 len(neighbor_list))
 
         #### get the GT image (as the center frame)
+        key = '{}_{}'.format(name_a, name_b)
         if self.data_type == 'mc':
             img_GT = self._read_img_mc_BGR(self.GT_root, name_a, name_b)
             img_GT = img_GT.astype(np.float32) / 255.
