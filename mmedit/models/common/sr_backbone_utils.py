@@ -48,16 +48,22 @@ class ResidualBlockNoBN(nn.Module):
     Args:
         mid_channels (int): Channel number of intermediate features.
             Default: 64.
+        res_scale (float): Used to scale the residual before addition.
+            Default: 1.0.
     """
 
-    def __init__(self, mid_channels=64):
+    def __init__(self, mid_channels=64, res_scale=1.0):
         super(ResidualBlockNoBN, self).__init__()
+        self.res_scale = res_scale
         self.conv1 = nn.Conv2d(mid_channels, mid_channels, 3, 1, 1, bias=True)
         self.conv2 = nn.Conv2d(mid_channels, mid_channels, 3, 1, 1, bias=True)
 
         self.relu = nn.ReLU(inplace=True)
 
-        self.init_weights()
+        # if res_scale < 1.0, use the default initialization, as in EDSR.
+        # if res_scale = 1.0, use scaled kaiming_init, as in MSRResNet.
+        if res_scale == 1.0:
+            self.init_weights()
 
     def init_weights(self):
         # Initialization methods like `kaiming_init` are for VGG-style
@@ -71,4 +77,4 @@ class ResidualBlockNoBN(nn.Module):
     def forward(self, x):
         identity = x
         out = self.conv2(self.relu(self.conv1(x)))
-        return identity + out
+        return identity + out * self.res_scale
