@@ -112,6 +112,7 @@ mmedit/version.py
 *.pkl.json
 *.log.json
 work_dirs/
+data/
 
 # Pytorch
 *.pth
