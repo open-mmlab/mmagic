@@ -7,6 +7,6 @@ COPY . /workspace/mmsr
 WORKDIR /workspace/mmsr
 RUN cd ./codes && python3 -m pip install --no-cache-dir -r requirements.txt
 # set TORCH_CUDA_ARCH_LIST properly. (6, 1) -> 6.1
-ENV TORCH_CUDA_ARCH_LIST 6.1 
+ARG TORCH_CUDA_ARCH_LIST=6.1 
 RUN cd ./codes/models/archs/dcn && python3 setup.py develop
 CMD /bin/bash
