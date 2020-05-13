@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import pytest
 from mmedit.datasets.pipelines import CompositeFg, GenerateTrimap, MergeFgAndBg
 
 
@@ -8,35 +9,33 @@ def check_keys_contain(result_keys, target_keys):
     return set(target_keys).issubset(set(result_keys))
 
 
-def generate_ref_trimap(alpha, kernel_size, iterations, symmetric):
+def generate_ref_trimap(alpha, kernel_size, iterations, random):
     """Check if a trimap's value is correct."""
     if isinstance(kernel_size, int):
-        min_kernel, max_kernel = kernel_size, kernel_size + 1
-    else:
-        min_kernel, max_kernel = kernel_size
-
+        kernel_size = kernel_size, kernel_size + 1
     if isinstance(iterations, int):
-        min_iteration, max_iteration = iterations, iterations + 1
-    else:
-        min_iteration, max_iteration = iterations
-    kernel_num = max_kernel - min_kernel
+        iterations = iterations, iterations + 1
 
-    erode_ksize_idx = np.random.randint(kernel_num)
-    erode_ksize = min_kernel + erode_ksize_idx
-    erode_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
-                                             (erode_ksize, erode_ksize))
-    erode_iter = np.random.randint(min_iteration, max_iteration)
-
-    if symmetric:
-        dilate_ksize = erode_ksize
-        dilate_kernel = erode_kernel
-        dilate_iter = erode_iter
-    else:
-        dilate_ksize_idx = np.random.randint(kernel_num)
-        dilate_ksize = min_kernel + dilate_ksize_idx
+    if random:
+        min_kernel, max_kernel = kernel_size
+        kernel_num = max_kernel - min_kernel
+        erode_ksize = min_kernel + np.random.randint(kernel_num)
+        erode_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
+                                                 (erode_ksize, erode_ksize))
+        dilate_ksize = min_kernel + np.random.randint(kernel_num)
         dilate_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
                                                   (dilate_ksize, dilate_ksize))
+
+        min_iteration, max_iteration = iterations
+        erode_iter = np.random.randint(min_iteration, max_iteration)
         dilate_iter = np.random.randint(min_iteration, max_iteration)
+    else:
+        erode_ksize, dilate_ksize = kernel_size
+        erode_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
+                                                 (erode_ksize, erode_ksize))
+        dilate_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
+                                                  (dilate_ksize, dilate_ksize))
+        erode_iter, dilate_iter = iterations
 
     h, w = alpha.shape
 
@@ -92,14 +91,31 @@ def test_merge_fg_and_bg():
 
 
 def test_generate_trimap():
+    with pytest.raises(ValueError):
+        # kernel_size must be an int or a tuple of 2 int
+        GenerateTrimap(1.5)
+
+    with pytest.raises(ValueError):
+        # kernel_size must be an int or a tuple of 2 int
+        GenerateTrimap((3, 3, 3))
+
+    with pytest.raises(ValueError):
+        # iterations must be an int or a tuple of 2 int
+        GenerateTrimap(3, iterations=1.5)
+
+    with pytest.raises(ValueError):
+        # iterations must be an int or a tuple of 2 int
+        GenerateTrimap(3, iterations=(3, 3, 3))
+
     target_keys = ['alpha', 'trimap']
 
+    # check random mode
     kernel_size = (3, 5)
     iterations = (3, 5)
-    symmetric = False
+    random = True
     alpha = np.random.randn(256, 256)
     results = dict(alpha=alpha)
-    generate_trimap = GenerateTrimap(kernel_size, iterations, symmetric)
+    generate_trimap = GenerateTrimap(kernel_size, iterations, random)
     np.random.seed(123)
     generate_trimap_results = generate_trimap(results)
     trimap = generate_trimap_results['trimap']
@@ -107,31 +123,34 @@ def test_generate_trimap():
     assert check_keys_contain(generate_trimap_results.keys(), target_keys)
     assert trimap.shape == alpha.shape
     np.random.seed(123)
-    ref_trimap = generate_ref_trimap(alpha, kernel_size, iterations, symmetric)
+    ref_trimap = generate_ref_trimap(alpha, kernel_size, iterations, random)
     assert (trimap == ref_trimap).all()
 
+    # check non-random mode
+    kernel_size = (3, 5)
+    iterations = (5, 3)
+    random = False
+    generate_trimap = GenerateTrimap(kernel_size, iterations, random)
+    generate_trimap_results = generate_trimap(results)
+    trimap = generate_trimap_results['trimap']
+
+    assert check_keys_contain(generate_trimap_results.keys(), target_keys)
+    assert trimap.shape == alpha.shape
+    ref_trimap = generate_ref_trimap(alpha, kernel_size, iterations, random)
+    assert (trimap == ref_trimap).all()
+
+    # check repr string
     kernel_size = 1
     iterations = 1
-    symmetric = True
-    generate_trimap = GenerateTrimap(kernel_size, iterations, symmetric)
-    np.random.seed(123)
-    generate_trimap_results = generate_trimap(results)
-    trimap = generate_trimap_results['trimap']
-
-    assert check_keys_contain(generate_trimap_results.keys(), target_keys)
-    assert trimap.shape == alpha.shape
-    np.random.seed(123)
-    ref_trimap = generate_ref_trimap(alpha, kernel_size, iterations, symmetric)
-    assert (trimap == ref_trimap).all()
-
+    generate_trimap = GenerateTrimap(kernel_size, iterations)
     kernels = [
         cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
                                   (kernel_size, kernel_size))
     ]
     assert repr(generate_trimap) == (
         generate_trimap.__class__.__name__ +
-        f'(kernels={kernels}, min_iteration={iterations}, '
-        f'max_iteration={iterations + 1}, symmetric={symmetric})')
+        f'(kernels={kernels}, iterations={(iterations, iterations + 1)}, '
+        f'random=True)')
 
 
 def test_composite_fg():

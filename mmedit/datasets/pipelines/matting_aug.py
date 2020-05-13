@@ -30,49 +30,70 @@ class GenerateTrimap(object):
     Required key is "alpha", added key is "trimap".
 
     Args:
-        kernel_size (int | tuple[int]): the range of random kernel_size of
-            erode/dilate; int indicates a fixed kernel_size.
-        iterations (int | tuple[int]): the range of random iterations of
-            erode/dilate; int indicates a fixed iterations.
-        symmetric (bool): wether use the same kernel_size and iterations for
-            both erode and dilate.
+        kernel_size (int | tuple[int]): The range of random kernel_size of
+            erode/dilate; int indicates a fixed kernel_size. If `random` is set
+            to False and kernel_size is a tuple of length 2, then it will be
+            interpreted as (erode kernel_size, dilate kernel_size). It should
+            be noted that the kernel of the erosion and dilation has the same
+            height and width.
+        iterations (int | tuple[int], optional): The range of random iterations
+            of erode/dilate; int indicates a fixed iterations. If `random` is
+            set to False and iterations is a tuple of length 2, then it will be
+            interpreted as (erode iterations, dilate iterations). Default to 1.
+        random (bool, optional): Whether use random kernel_size and iterations
+            when generating trimap. See `kernel_size` and `iterations` for more
+            information.
     """
 
-    def __init__(self, kernel_size, iterations=1, symmetric=False):
+    def __init__(self, kernel_size, iterations=1, random=True):
         if isinstance(kernel_size, int):
-            min_kernel, max_kernel = kernel_size, kernel_size + 1
-        else:
-            min_kernel, max_kernel = kernel_size
+            kernel_size = kernel_size, kernel_size + 1
+        elif not mmcv.is_tuple_of(kernel_size, int) or len(kernel_size) != 2:
+            raise ValueError('kernel_size must be an int or a tuple of 2 int, '
+                             f'but got {kernel_size}')
 
         if isinstance(iterations, int):
-            self.min_iteration, self.max_iteration = iterations, iterations + 1
-        else:
-            self.min_iteration, self.max_iteration = iterations
+            iterations = iterations, iterations + 1
+        elif not mmcv.is_tuple_of(iterations, int) or len(iterations) != 2:
+            raise ValueError('iterations must be an int or a tuple of 2 int, '
+                             f'but got {iterations}')
 
-        self.kernels = [
-            cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (size, size))
-            for size in range(min_kernel, max_kernel)
-        ]
-        self.symmetric = symmetric
+        self.random = random
+        if self.random:
+            min_kernel, max_kernel = kernel_size
+            self.iterations = iterations
+            self.kernels = [
+                cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (size, size))
+                for size in range(min_kernel, max_kernel)
+            ]
+        else:
+            erode_ksize, dilate_ksize = kernel_size
+            self.iterations = iterations
+            self.kernels = [
+                cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
+                                          (erode_ksize, erode_ksize)),
+                cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
+                                          (dilate_ksize, dilate_ksize))
+            ]
 
     def __call__(self, results):
         alpha = results['alpha']
 
-        kernel_num = len(self.kernels)
-        erode_ksize_idx = np.random.randint(kernel_num)
-        erode_iter = np.random.randint(self.min_iteration, self.max_iteration)
-        if self.symmetric:
-            dilate_ksize_idx = erode_ksize_idx
-            dilate_iter = erode_iter
+        if self.random:
+            kernel_num = len(self.kernels)
+            erode_kernel_idx = np.random.randint(kernel_num)
+            dilate_kernel_idx = np.random.randint(kernel_num)
+            min_iter, max_iter = self.iterations
+            erode_iter = np.random.randint(min_iter, max_iter)
+            dilate_iter = np.random.randint(min_iter, max_iter)
         else:
-            dilate_ksize_idx = np.random.randint(kernel_num)
-            dilate_iter = np.random.randint(self.min_iteration,
-                                            self.max_iteration)
+            erode_kernel_idx, dilate_kernel_idx = 0, 1
+            erode_iter, dilate_iter = self.iterations
 
         eroded = cv2.erode(
-            alpha, self.kernels[erode_ksize_idx], iterations=erode_iter)
+            alpha, self.kernels[erode_kernel_idx], iterations=erode_iter)
         dilated = cv2.dilate(
-            alpha, self.kernels[dilate_ksize_idx], iterations=dilate_iter)
+            alpha, self.kernels[dilate_kernel_idx], iterations=dilate_iter)
 
         trimap = np.zeros_like(alpha)
         trimap.fill(128)
@@ -83,9 +104,8 @@ class GenerateTrimap(object):
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (
-            f'(kernels={self.kernels}, min_iteration={self.min_iteration}, '
-            f'max_iteration={self.max_iteration}, symmetric={self.symmetric})')
+        repr_str += (f'(kernels={self.kernels}, iterations={self.iterations}, '
+                     f'random={self.random})')
         return repr_str
 
 
