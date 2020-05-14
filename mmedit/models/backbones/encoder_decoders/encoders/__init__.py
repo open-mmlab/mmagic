@@ -1,3 +1,4 @@
+from .bgm_encoder import BGMattingEncoder
 from .deepfill_encoder import DeepFillEncoder
 from .gl_encoder import GLEncoder
 from .indexnet_encoder import (DepthwiseIndexBlock, HolisticIndexBlock,
@@ -9,5 +10,5 @@ from .vgg import VGG16
 __all__ = [
     'GLEncoder', 'VGG16', 'ResNetEnc', 'HolisticIndexBlock',
     'DepthwiseIndexBlock', 'ResShortcutEnc', 'PConvEncoder', 'DeepFillEncoder',
-    'IndexNetEncoder'
+    'IndexNetEncoder', 'BGMattingEncoder'
 ]
