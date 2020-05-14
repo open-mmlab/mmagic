@@ -71,6 +71,39 @@ class TestAugmentations(object):
             f"(keys={ ['merged']}, mean={np.array([123.675, 116.28, 103.53])},"
             f' std={np.array([58.395, 57.12, 57.375])}, to_rgb=True)')
 
+        # input is an image list
+        merged = np.random.rand(240, 320, 3).astype(np.float32)
+        merged_2 = np.random.rand(240, 320, 3).astype(np.float32)
+        results = dict(merged=[merged, merged_2])
+        config = dict(
+            keys=['merged'],
+            mean=[123.675, 116.28, 103.53],
+            std=[58.395, 57.12, 57.375],
+            to_rgb=False)
+        normalize = Normalize(**config)
+        normalize_results = normalize(results)
+        assert self.check_keys_contain(normalize_results.keys(), target_keys)
+        self.check_normalize(merged, normalize_results['merged'][0],
+                             normalize_results['img_norm_cfg'])
+        self.check_normalize(merged_2, normalize_results['merged'][1],
+                             normalize_results['img_norm_cfg'])
+
+        merged = np.random.rand(240, 320, 3).astype(np.float32)
+        merged_2 = np.random.rand(240, 320, 3).astype(np.float32)
+        results = dict(merged=[merged, merged_2])
+        config = dict(
+            keys=['merged'],
+            mean=[123.675, 116.28, 103.53],
+            std=[58.395, 57.12, 57.375],
+            to_rgb=True)
+        normalize = Normalize(**config)
+        normalize_results = normalize(results)
+        assert self.check_keys_contain(normalize_results.keys(), target_keys)
+        self.check_normalize(merged, normalize_results['merged'][0],
+                             normalize_results['img_norm_cfg'])
+        self.check_normalize(merged_2, normalize_results['merged'][1],
+                             normalize_results['img_norm_cfg'])
+
     def test_rescale_to_zero_one(self):
         target_keys = ['alpha']
 
@@ -81,6 +114,20 @@ class TestAugmentations(object):
         assert self.check_keys_contain(rescale_to_zero_one_results.keys(),
                                        target_keys)
         assert rescale_to_zero_one_results['alpha'].shape == (240, 320)
-        assert (rescale_to_zero_one_results['alpha'] == alpha / 255.).all()
+        np.testing.assert_almost_equal(rescale_to_zero_one_results['alpha'],
+                                       alpha / 255.)
         assert repr(rescale_to_zero_one) == (
             rescale_to_zero_one.__class__.__name__ + f"(keys={['alpha']})")
+
+        # input is image list
+        alpha = np.random.rand(240, 320).astype(np.float32)
+        alpha_2 = np.random.rand(240, 320).astype(np.float32)
+        results = dict(alpha=[alpha, alpha_2])
+        rescale_to_zero_one = RescaleToZeroOne(keys=['alpha'])
+        rescale_to_zero_one_results = rescale_to_zero_one(results)
+        assert rescale_to_zero_one_results['alpha'][0].shape == (240, 320)
+        assert rescale_to_zero_one_results['alpha'][1].shape == (240, 320)
+        np.testing.assert_almost_equal(rescale_to_zero_one_results['alpha'][0],
+                                       alpha / 255.)
+        np.testing.assert_almost_equal(rescale_to_zero_one_results['alpha'][1],
+                                       alpha_2 / 255.)

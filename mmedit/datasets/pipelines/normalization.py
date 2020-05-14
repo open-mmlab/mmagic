@@ -10,6 +10,7 @@ class Normalize(object):
 
     Required keys are the keys in attribute "keys", added or modified keys are
     the keys in attribute "keys" and these keys with postfix '_norm_cfg'.
+    It also supports normalizing a list of images.
 
     Attributes:
         keys (Sequence[str]): The images to be normalized.
@@ -26,8 +27,16 @@ class Normalize(object):
 
     def __call__(self, results):
         for key in self.keys:
-            results[key] = mmcv.imnormalize(results[key], self.mean, self.std,
-                                            self.to_rgb)
+            if isinstance(results[key], list):
+                for v in results[key]:
+                    results[key] = [
+                        mmcv.imnormalize(v, self.mean, self.std, self.to_rgb)
+                        for v in results[key]
+                    ]
+            else:
+                results[key] = mmcv.imnormalize(results[key], self.mean,
+                                                self.std, self.to_rgb)
+
         results['img_norm_cfg'] = dict(
             mean=self.mean, std=self.std, to_rgb=self.to_rgb)
         return results
@@ -46,6 +55,7 @@ class RescaleToZeroOne(object):
 
     Required keys are the keys in attribute "keys", added or modified keys are
     the keys in attribute "keys".
+    It also supports rescaling a list of images.
 
     Attributes:
         keys (Sequence[str]): The images to be transformed.
@@ -56,7 +66,12 @@ class RescaleToZeroOne(object):
 
     def __call__(self, results):
         for key in self.keys:
-            results[key] = results[key].astype(np.float32) / 255.
+            if isinstance(results[key], list):
+                results[key] = [
+                    v.astype(np.float32) / 255. for v in results[key]
+                ]
+            else:
+                results[key] = results[key].astype(np.float32) / 255.
         return results
 
     def __repr__(self):
