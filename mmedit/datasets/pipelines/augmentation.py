@@ -631,13 +631,13 @@ class GenerateFrameIndiceswithPadding(object):
     """Generate frame index with padding for REDS dataset and Vid4 dataset
     during testing.
 
-    Required keys: lq_path, gt_path, key, num_frames, max_frame_num
+    Required keys: lq_path, gt_path, key, num_input_frames, max_frame_num
     Added or modified keys: lq_path, gt_path
 
     Attributes:
          padding (str): padding mode, one of
             'replicate' | 'reflection' | 'reflection_circle' | 'circle'.
-            Examples: current_idx = 0, num_frames = 5
+            Examples: current_idx = 0, num_input_frames = 5
             The generated frame indices under different padding mode:
             replicate: [0, 0, 0, 1, 2]
             reflection: [2, 1, 0, 1, 2]
@@ -659,8 +659,8 @@ class GenerateFrameIndiceswithPadding(object):
         clip_name, frame_name = results['key'].split('/')
         current_idx = int(frame_name)
         max_frame_num = results['max_frame_num'] - 1  # start from 0
-        num_frames = results['num_frames']
-        num_pad = num_frames // 2
+        num_input_frames = results['num_input_frames']
+        num_pad = num_input_frames // 2
 
         frame_list = []
         for i in range(current_idx - num_pad, current_idx + num_pad + 1):
@@ -672,7 +672,7 @@ class GenerateFrameIndiceswithPadding(object):
                 elif self.padding == 'reflection_circle':
                     pad_idx = current_idx + num_pad - i
                 else:
-                    pad_idx = num_frames + i
+                    pad_idx = num_input_frames + i
             elif i > max_frame_num:
                 if self.padding == 'replicate':
                     pad_idx = max_frame_num
@@ -681,7 +681,7 @@ class GenerateFrameIndiceswithPadding(object):
                 elif self.padding == 'reflection_circle':
                     pad_idx = (current_idx - num_pad) - (i - max_frame_num)
                 else:
-                    pad_idx = i - num_frames
+                    pad_idx = i - num_input_frames
             else:
                 pad_idx = i
             frame_list.append(pad_idx)
@@ -689,12 +689,13 @@ class GenerateFrameIndiceswithPadding(object):
         lq_path_root = results['lq_path']
         gt_path_root = results['gt_path']
         lq_paths = [
-            osp.join(lq_path_root, clip_name, self.filename_tmpl.format(idx))
+            osp.join(lq_path_root, clip_name,
+                     f'{self.filename_tmpl.format(idx)}.png')
             for idx in frame_list
         ]
-        gt_paths = [osp.join(gt_path_root, clip_name, frame_name)]
-        results['lq_paths'] = lq_paths
-        results['gt_paths'] = gt_paths
+        gt_paths = [osp.join(gt_path_root, clip_name, f'{frame_name}.png')]
+        results['lq_path'] = lq_paths
+        results['gt_path'] = gt_paths
 
         return results
 
@@ -703,6 +704,7 @@ class GenerateFrameIndiceswithPadding(object):
         return repr_str
 
 
+@PIPELINES.register_module
 class GenerateFrameIndices(object):
     """Generate frame index for REDS datasets. It also performs
     temporal augmention with random interval.
@@ -743,13 +745,13 @@ class GenerateFrameIndices(object):
 
         lq_path_root = results['lq_path']
         gt_path_root = results['gt_path']
-        lq_paths = [
-            osp.join(lq_path_root, clip_name, f'{v:08d}')
+        lq_path = [
+            osp.join(lq_path_root, clip_name, f'{v:08d}.png')
             for v in neighbor_list
         ]
-        gt_paths = [osp.join(gt_path_root, clip_name, frame_name)]
-        results['lq_paths'] = lq_paths
-        results['gt_paths'] = gt_paths
+        gt_path = [osp.join(gt_path_root, clip_name, f'{frame_name}.png')]
+        results['lq_path'] = lq_path
+        results['gt_path'] = gt_path
         results['interval'] = interval
 
         return results
@@ -761,6 +763,7 @@ class GenerateFrameIndices(object):
         return repr_str
 
 
+@PIPELINES.register_module
 class TemporalReverse(object):
     """Reverse frame lists for temporal augmentation.
 

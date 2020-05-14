@@ -473,76 +473,90 @@ class TestAugmentations(object):
             gt_path='fake_gt_root',
             key='000/00000000',
             max_frame_num=100,
-            num_frames=5)
-        target_keys = ['lq_paths', 'gt_paths', 'key']
+            num_input_frames=5)
+        target_keys = ['lq_path', 'gt_path', 'key']
         replicate_idx = [0, 0, 0, 1, 2]
         reflection_idx = [2, 1, 0, 1, 2]
         reflection_circle_idx = [4, 3, 0, 1, 2]
         circle_idx = [3, 4, 0, 1, 2]
 
         # replicate
-        lq_paths = [f'fake_lq_root/000/{v:08d}' for v in replicate_idx]
+        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in replicate_idx]
+        gt_paths = ['fake_gt_root/000/00000000.png']
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='replicate')
         rlt = frame_index_generator(copy.deepcopy(results))
         assert self.check_keys_contain(rlt.keys(), target_keys)
-        assert rlt['lq_paths'] == lq_paths
+        assert rlt['lq_path'] == lq_paths
+        assert rlt['gt_path'] == gt_paths
         # reflection
-        lq_paths = [f'fake_lq_root/000/{v:08d}' for v in reflection_idx]
+        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in reflection_idx]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='reflection')
         rlt = frame_index_generator(copy.deepcopy(results))
-        assert rlt['lq_paths'] == lq_paths
+        assert rlt['lq_path'] == lq_paths
+        assert rlt['gt_path'] == gt_paths
         # reflection_circle
-        lq_paths = [f'fake_lq_root/000/{v:08d}' for v in reflection_circle_idx]
+        lq_paths = [
+            f'fake_lq_root/000/{v:08d}.png' for v in reflection_circle_idx
+        ]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='reflection_circle')
         rlt = frame_index_generator(copy.deepcopy(results))
-        assert rlt['lq_paths'] == lq_paths
+        assert rlt['lq_path'] == lq_paths
+        assert rlt['gt_path'] == gt_paths
         # circle
-        lq_paths = [f'fake_lq_root/000/{v:08d}' for v in circle_idx]
+        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in circle_idx]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='circle')
         rlt = frame_index_generator(copy.deepcopy(results))
-        assert rlt['lq_paths'] == lq_paths
+        assert rlt['lq_path'] == lq_paths
+        assert rlt['gt_path'] == gt_paths
 
         results = dict(
             lq_path='fake_lq_root',
             gt_path='fake_gt_root',
             key='000/00000099',
             max_frame_num=100,
-            num_frames=5)
-        target_keys = ['lq_paths', 'gt_paths', 'key']
+            num_input_frames=5)
+        target_keys = ['lq_path', 'gt_path', 'key']
         replicate_idx = [97, 98, 99, 99, 99]
         reflection_idx = [97, 98, 99, 98, 97]
         reflection_circle_idx = [97, 98, 99, 96, 95]
         circle_idx = [97, 98, 99, 95, 96]
 
         # replicate
-        lq_paths = [f'fake_lq_root/000/{v:08d}' for v in replicate_idx]
+        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in replicate_idx]
+        gt_paths = ['fake_gt_root/000/00000099.png']
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='replicate')
         rlt = frame_index_generator(copy.deepcopy(results))
         assert self.check_keys_contain(rlt.keys(), target_keys)
-        assert rlt['lq_paths'] == lq_paths
+        assert rlt['lq_path'] == lq_paths
+        assert rlt['gt_path'] == gt_paths
         # reflection
-        lq_paths = [f'fake_lq_root/000/{v:08d}' for v in reflection_idx]
+        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in reflection_idx]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='reflection')
         rlt = frame_index_generator(copy.deepcopy(results))
-        assert rlt['lq_paths'] == lq_paths
+        assert rlt['lq_path'] == lq_paths
+        assert rlt['gt_path'] == gt_paths
         # reflection_circle
-        lq_paths = [f'fake_lq_root/000/{v:08d}' for v in reflection_circle_idx]
+        lq_paths = [
+            f'fake_lq_root/000/{v:08d}.png' for v in reflection_circle_idx
+        ]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='reflection_circle')
         rlt = frame_index_generator(copy.deepcopy(results))
-        assert rlt['lq_paths'] == lq_paths
+        assert rlt['lq_path'] == lq_paths
+        assert rlt['gt_path'] == gt_paths
         # circle
-        lq_paths = [f'fake_lq_root/000/{v:08d}' for v in circle_idx]
+        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in circle_idx]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='circle')
         rlt = frame_index_generator(copy.deepcopy(results))
-        assert rlt['lq_paths'] == lq_paths
+        assert rlt['lq_path'] == lq_paths
+        assert rlt['gt_path'] == gt_paths
 
         name_ = repr(frame_index_generator)
         assert name_ == frame_index_generator.__class__.__name__ + (
@@ -554,7 +568,7 @@ class TestAugmentations(object):
             gt_path='fake_gt_root',
             key='000/00000010',
             num_input_frames=3)
-        target_keys = ['lq_paths', 'gt_paths', 'key', 'interval']
+        target_keys = ['lq_path', 'gt_path', 'key', 'interval']
         frame_index_generator = GenerateFrameIndices(
             interval_list=[1], frames_per_clip=99)
         rlt = frame_index_generator(copy.deepcopy(results))
