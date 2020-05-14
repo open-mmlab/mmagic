@@ -3,8 +3,8 @@ import copy
 import numpy as np
 import pytest
 from mmedit.datasets.pipelines import (Crop, CropAroundCenter,
-                                       CropAroundSemiTransparent, FixedCrop,
-                                       ModCrop, PairedRandomCrop)
+                                       CropAroundUnknown, FixedCrop, ModCrop,
+                                       PairedRandomCrop)
 
 
 class TestAugmentations(object):
@@ -214,25 +214,50 @@ class TestAugmentations(object):
             f'(crop_size={(200, 200)})')
         assert repr(crop_around_center) == repr_str
 
-    def test_crop_around_semi_transparent(self):
+    def test_crop_around_unknown(self):
+        with pytest.raises(ValueError):
+            # keys must contain 'alpha'
+            CropAroundUnknown(['fg', 'bg'], [320])
         with pytest.raises(TypeError):
-            CropAroundSemiTransparent(320)
+            # crop_size must be a list
+            CropAroundUnknown(['alpha'], 320)
         with pytest.raises(TypeError):
-            CropAroundSemiTransparent([320.])
+            # crop_size must be a list of int
+            CropAroundUnknown(['alpha'], [320.])
+        with pytest.raises(ValueError):
+            # unknown_source must be either 'alpha' or 'trimap'
+            CropAroundUnknown(['alpha', 'fg'], [320], unknown_source='fg')
+        with pytest.raises(ValueError):
+            # if unknown_source is 'trimap', then keys must contain it
+            CropAroundUnknown(['alpha', 'fg'], [320], unknown_source='trimap')
 
+        keys = ['fg', 'bg', 'merged', 'alpha', 'trimap', 'ori_merged']
         target_keys = [
-            'fg', 'bg', 'merged', 'alpha', 'ori_merged', 'img_shape',
+            'fg', 'bg', 'merged', 'alpha', 'trimap', 'ori_merged', 'img_shape',
             'crop_bbox'
         ]
 
+        # test cropping using trimap to decide unknown area
         fg = np.random.rand(240, 320, 3)
         bg = np.random.rand(240, 320, 3)
         merged = np.random.rand(240, 320, 3)
+        ori_merged = merged.copy()
         alpha = np.random.rand(240, 320)
-        # make sure there would be semi-transparent area
-        alpha[128, 128] = 128
-        results = dict(fg=fg, bg=bg, merged=merged, alpha=alpha)
-        crop_around_semi_trans = CropAroundSemiTransparent(crop_sizes=[320])
+        # make sure there would be unknown area
+        alpha[120:160, 120:160] = 128
+        trimap = np.zeros_like(alpha)
+        trimap[alpha > 0] = 128
+        trimap[alpha == 255] = 255
+        results = dict(
+            fg=fg,
+            bg=bg,
+            merged=merged,
+            ori_merged=ori_merged,
+            alpha=alpha,
+            trimap=trimap,
+            img_shape=alpha.shape)
+        crop_around_semi_trans = CropAroundUnknown(
+            keys, crop_sizes=[320], unknown_source='trimap')
         crop_around_semi_trans_results = crop_around_semi_trans(results)
         assert self.check_keys_contain(crop_around_semi_trans_results.keys(),
                                        target_keys)
@@ -241,9 +266,62 @@ class TestAugmentations(object):
         assert self.check_crop_around_semi(
             crop_around_semi_trans_results['alpha'])
 
+        keys = ['fg', 'bg', 'merged', 'alpha', 'ori_merged']
+        target_keys = [
+            'fg', 'bg', 'merged', 'alpha', 'ori_merged', 'img_shape',
+            'crop_bbox'
+        ]
+
+        # test cropping using trimap to decide unknown area
+        fg = np.random.rand(240, 320, 3)
+        bg = np.random.rand(240, 320, 3)
+        merged = np.random.rand(240, 320, 3)
+        ori_merged = merged.copy()
+        alpha = np.random.rand(240, 320)
+        # make sure there would be unknown area
+        alpha[120:160, 120:160] = 128
+        results = dict(
+            fg=fg,
+            bg=bg,
+            merged=merged,
+            ori_merged=ori_merged,
+            alpha=alpha,
+            img_shape=alpha.shape)
+        crop_around_semi_trans = CropAroundUnknown(
+            keys, crop_sizes=[160], unknown_source='alpha')
+        crop_around_semi_trans_results = crop_around_semi_trans(results)
+        assert self.check_keys_contain(crop_around_semi_trans_results.keys(),
+                                       target_keys)
+        assert self.check_crop(crop_around_semi_trans_results['img_shape'],
+                               crop_around_semi_trans_results['crop_bbox'])
+        assert self.check_crop_around_semi(
+            crop_around_semi_trans_results['alpha'])
+
+        # test cropping when there is no unknown area
+        fg = np.random.rand(240, 320, 3)
+        bg = np.random.rand(240, 320, 3)
+        merged = np.random.rand(240, 320, 3)
+        ori_merged = merged.copy()
+        alpha = np.zeros((240, 320))
+        results = dict(
+            fg=fg,
+            bg=bg,
+            merged=merged,
+            ori_merged=ori_merged,
+            alpha=alpha,
+            img_shape=alpha.shape)
+        crop_around_semi_trans = CropAroundUnknown(
+            keys, crop_sizes=[240], unknown_source='alpha')
+        crop_around_semi_trans_results = crop_around_semi_trans(results)
+        assert self.check_keys_contain(crop_around_semi_trans_results.keys(),
+                                       target_keys)
+        assert self.check_crop(crop_around_semi_trans_results['img_shape'],
+                               crop_around_semi_trans_results['crop_bbox'])
+
         repr_str = (
             crop_around_semi_trans.__class__.__name__ +
-            f'(crop_sizes={[(320, 320)]}, interpolation=bilinear)')
+            f"(keys={keys}, crop_sizes={[(240, 240)]}, unknown_source='alpha',"
+            " interpolation='bilinear')")
         assert crop_around_semi_trans.__repr__() == repr_str
 
     def test_modcrop(self):
