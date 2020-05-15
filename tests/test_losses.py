@@ -280,6 +280,9 @@ def test_perceptual_loss(init_weights):
             vgg_type='vgg16',
             pretrained='torchvision://vgg16')
 
+    # reset mock to clear some memory usage
+    init_weights.reset_mock()
+
 
 def test_gan_losses():
     """Test gan losses."""

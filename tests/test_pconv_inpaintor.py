@@ -36,3 +36,6 @@ def test_pconv_inpaintor(init_weights):
 
         output = pconv_inpaintor.forward_test(**data_batch)
         assert output['fake_res'].shape == (1, 3, 256, 256)
+
+    # reset mock to clear some memory usage
+    init_weights.reset_mock()
