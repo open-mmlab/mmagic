@@ -5,10 +5,11 @@ import numpy.testing as npt
 import pytest
 import torch
 from mmedit.models.losses import (CharbonnierCompLoss, CharbonnierLoss,
-                                  DiscShiftLoss, GANLoss, GradientPenaltyLoss,
-                                  L1CompositionLoss, L1Loss, MaskedTVLoss,
-                                  MSECompositionLoss, MSELoss, PerceptualLoss,
-                                  PerceptualVGG, mask_reduce_loss, reduce_loss)
+                                  DiscShiftLoss, GANLoss, GradientLoss,
+                                  GradientPenaltyLoss, L1CompositionLoss,
+                                  L1Loss, MaskedTVLoss, MSECompositionLoss,
+                                  MSELoss, PerceptualLoss, PerceptualVGG,
+                                  mask_reduce_loss, reduce_loss)
 
 
 def test_utils():
@@ -364,3 +365,30 @@ def test_disc_shift_loss():
     loss = loss_disc_shift(x)
 
     npt.assert_almost_equal(loss.item(), 0.001)
+
+
+def test_gradient_loss():
+    with pytest.raises(ValueError):
+        # only 'none', 'mean' and 'sum' are supported
+        GradientLoss(reduction='InvalidValue')
+
+    unknown_h, unknown_w = (32, 32)
+    weight = torch.zeros(1, 1, 64, 64)
+    weight[0, 0, :unknown_h, :unknown_w] = 1
+    pred = weight.clone()
+    target = weight.clone() * 2
+
+    gradient_loss = GradientLoss(loss_weight=1.0, reduction='mean')
+    loss = gradient_loss(pred, target)
+    assert loss.shape == ()
+    npt.assert_almost_equal(loss.item(), 0.1860352)
+
+    gradient_loss = GradientLoss(loss_weight=0.5, reduction='none')
+    loss = gradient_loss(pred, target, weight)
+    assert loss.shape == (1, 1, 64, 64)
+    npt.assert_almost_equal(torch.sum(loss).item(), 252)
+
+    gradient_loss = GradientLoss(loss_weight=0.5, reduction='sum')
+    loss = gradient_loss(pred, target, weight)
+    assert loss.shape == ()
+    npt.assert_almost_equal(loss.item(), 252)
