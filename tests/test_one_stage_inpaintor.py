@@ -11,7 +11,7 @@ from mmedit.models.losses import PerceptualVGG
 
 
 @patch.object(PerceptualVGG, 'init_weights')
-def test_one_stage_inpaintor(mock_init_weights):
+def test_one_stage_inpaintor(init_weights):
     cfg = Config.fromfile(
         Path(__file__).parent.joinpath(
             'data/inpaintor_config/one_stage_gl.py'))
@@ -80,3 +80,6 @@ def test_one_stage_inpaintor(mock_init_weights):
         assert inpaintor.train_cfg.disc_step == 2
         outputs = inpaintor.train_step(data_batch, optim_dict)
         assert 'loss_l1_hole' not in outputs['log_vars']
+
+    # reset mock to clear some memory usage
+    init_weights.reset_mock()
