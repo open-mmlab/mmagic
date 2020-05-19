@@ -6,9 +6,9 @@ import numpy as np
 import pytest
 from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              BaseSRDataset, GenerationPairedDataset,
-                             RepeatDataset, SRAnnotationDataset,
-                             SRFolderDataset, SRLmdbDataset, SRREDSDataset,
-                             SRVimeo90KDataset)
+                             GenerationUnpairedDataset, RepeatDataset,
+                             SRAnnotationDataset, SRFolderDataset,
+                             SRLmdbDataset, SRREDSDataset, SRVimeo90KDataset)
 from torch.utils.data import Dataset
 
 
@@ -402,6 +402,143 @@ class TestGenerationDatasets(object):
                                                          '3.jpg'))
         assert (result['meta'].data['img_b_path'] == str(pair_folder / 'test' /
                                                          '3.jpg'))
+
+        # test_mode = False
+        generation_paried_dataset = GenerationPairedDataset(
+            dataroot=str(pair_folder), pipeline=pipeline, test_mode=False)
+        data_infos = generation_paried_dataset.data_infos
+        assert data_infos == [
+            dict(pair_path=str(pair_folder / 'train' / '1.jpg')),
+            dict(pair_path=str(pair_folder / 'train' / '2.jpg'))
+        ]
+        assert (len(generation_paried_dataset) == 2)
+        result = generation_paried_dataset[0]
+        assert check_keys_contain(result.keys(), target_keys)
+        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert (result['meta'].data['img_a_path'] == str(pair_folder /
+                                                         'train' / '1.jpg'))
+        assert (result['meta'].data['img_b_path'] == str(pair_folder /
+                                                         'train' / '1.jpg'))
+        result = generation_paried_dataset[1]
+        assert check_keys_contain(result.keys(), target_keys)
+        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert (result['meta'].data['img_a_path'] == str(pair_folder /
+                                                         'train' / '2.jpg'))
+        assert (result['meta'].data['img_b_path'] == str(pair_folder /
+                                                         'train' / '2.jpg'))
+
+    def test_generation_unpaired_dataset(self):
+        # setup
+        img_norm_cfg = dict(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+        pipeline = [
+            dict(
+                type='LoadImageFromFile',
+                io_backend='disk',
+                key='img_a',
+                flag='color'),
+            dict(
+                type='LoadImageFromFile',
+                io_backend='disk',
+                key='img_b',
+                flag='color'),
+            dict(
+                type='Resize',
+                keys=['img_a', 'img_b'],
+                scale=(286, 286),
+                interpolation='bicubic'),
+            dict(
+                type='Crop',
+                keys=['img_a', 'img_b'],
+                crop_size=(256, 256),
+                random_crop=True),
+            dict(type='Flip', keys=['img_a'], direction='horizontal'),
+            dict(type='Flip', keys=['img_b'], direction='horizontal'),
+            dict(type='RescaleToZeroOne', keys=['img_a', 'img_b']),
+            dict(
+                type='Normalize',
+                keys=['img_a', 'img_b'],
+                to_rgb=True,
+                **img_norm_cfg),
+            dict(type='ImageToTensor', keys=['img_a', 'img_b']),
+            dict(
+                type='Collect',
+                keys=['img_a', 'img_b'],
+                meta_keys=['img_a_path', 'img_b_path'])
+        ]
+        target_keys = ['img_a', 'img_b', 'meta']
+        target_meta_keys = ['img_a_path', 'img_b_path']
+        unpair_folder = self.data_prefix / 'unpaired'
+
+        # input path is Path object
+        generation_unparied_dataset = GenerationUnpairedDataset(
+            dataroot=unpair_folder, pipeline=pipeline, test_mode=True)
+        data_infos_a = generation_unparied_dataset.data_infos_a
+        data_infos_b = generation_unparied_dataset.data_infos_b
+        assert data_infos_a == [
+            dict(path=str(unpair_folder / 'testA' / '5.jpg'))
+        ]
+        assert data_infos_b == [
+            dict(path=str(unpair_folder / 'testB' / '6.jpg'))
+        ]
+        result = generation_unparied_dataset[0]
+        assert (len(generation_unparied_dataset) == 1)
+        assert check_keys_contain(result.keys(), target_keys)
+        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert (result['meta'].data['img_a_path'] == str(unpair_folder /
+                                                         'testA' / '5.jpg'))
+        assert (result['meta'].data['img_b_path'] == str(unpair_folder /
+                                                         'testB' / '6.jpg'))
+
+        # input path is str
+        generation_unparied_dataset = GenerationUnpairedDataset(
+            dataroot=str(unpair_folder), pipeline=pipeline, test_mode=True)
+        data_infos_a = generation_unparied_dataset.data_infos_a
+        data_infos_b = generation_unparied_dataset.data_infos_b
+        assert data_infos_a == [
+            dict(path=str(unpair_folder / 'testA' / '5.jpg'))
+        ]
+        assert data_infos_b == [
+            dict(path=str(unpair_folder / 'testB' / '6.jpg'))
+        ]
+        result = generation_unparied_dataset[0]
+        assert (len(generation_unparied_dataset) == 1)
+        assert check_keys_contain(result.keys(), target_keys)
+        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert (result['meta'].data['img_a_path'] == str(unpair_folder /
+                                                         'testA' / '5.jpg'))
+        assert (result['meta'].data['img_b_path'] == str(unpair_folder /
+                                                         'testB' / '6.jpg'))
+
+        # test_mode = False
+        generation_unparied_dataset = GenerationUnpairedDataset(
+            dataroot=str(unpair_folder), pipeline=pipeline, test_mode=False)
+        data_infos_a = generation_unparied_dataset.data_infos_a
+        data_infos_b = generation_unparied_dataset.data_infos_b
+        assert data_infos_a == [
+            dict(path=str(unpair_folder / 'trainA' / '1.jpg')),
+            dict(path=str(unpair_folder / 'trainA' / '2.jpg'))
+        ]
+        assert data_infos_b == [
+            dict(path=str(unpair_folder / 'trainB' / '3.jpg')),
+            dict(path=str(unpair_folder / 'trainB' / '4.jpg'))
+        ]
+        assert (len(generation_unparied_dataset) == 2)
+        img_b_paths = [
+            str(unpair_folder / 'trainB' / '3.jpg'),
+            str(unpair_folder / 'trainB' / '4.jpg')
+        ]
+        result = generation_unparied_dataset[0]
+        assert check_keys_contain(result.keys(), target_keys)
+        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert (result['meta'].data['img_a_path'] == str(unpair_folder /
+                                                         'trainA' / '1.jpg'))
+        assert result['meta'].data['img_b_path'] in img_b_paths
+        result = generation_unparied_dataset[1]
+        assert check_keys_contain(result.keys(), target_keys)
+        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert (result['meta'].data['img_a_path'] == str(unpair_folder /
+                                                         'trainA' / '2.jpg'))
+        assert result['meta'].data['img_b_path'] in img_b_paths
 
 
 def test_repeat_dataset():
