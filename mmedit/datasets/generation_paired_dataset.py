@@ -14,7 +14,7 @@ class GenerationPairedDataset(BaseGenerationDataset):
     images concatenated in the w dimension (A|B).
 
     Args:
-        dataroot (str | obj:`Path`): Path to a folder root of paired images.
+        dataroot (str | obj:`Path`): Path to the folder root of paired images.
         pipeline (List[dict | callable]): A sequence of data transformations.
         test_mode (bool): Store `True` when building test dataset.
             Default: `False`.
@@ -22,7 +22,7 @@ class GenerationPairedDataset(BaseGenerationDataset):
 
     def __init__(self, dataroot, pipeline, test_mode=False):
         super(GenerationPairedDataset, self).__init__(pipeline, test_mode)
-        phase = 'train' if not test_mode else 'test'
+        phase = 'test' if test_mode else 'train'
         self.dataroot = osp.join(str(dataroot), phase)
         self.data_infos = self.load_annotations()
 
