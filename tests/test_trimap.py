@@ -79,9 +79,9 @@ def generate_ref_trimap(alpha, kernel_size, iterations, random):
 def test_merge_fg_and_bg():
     target_keys = ['fg', 'bg', 'alpha', 'merged']
 
-    fg = np.random.randn(256, 256, 3)
-    bg = np.random.randn(256, 256, 3)
-    alpha = np.random.randn(256, 256)
+    fg = np.random.randn(32, 32, 3)
+    bg = np.random.randn(32, 32, 3)
+    alpha = np.random.randn(32, 32)
     results = dict(fg=fg, bg=bg, alpha=alpha)
     merge_fg_and_bg = MergeFgAndBg()
     merge_fg_and_bg_results = merge_fg_and_bg(results)
@@ -113,7 +113,7 @@ def test_generate_trimap():
     kernel_size = (3, 5)
     iterations = (3, 5)
     random = True
-    alpha = np.random.randn(256, 256)
+    alpha = np.random.randn(32, 32)
     results = dict(alpha=alpha)
     generate_trimap = GenerateTrimap(kernel_size, iterations, random)
     np.random.seed(123)
@@ -157,20 +157,20 @@ def test_composite_fg():
     target_keys = ['alpha', 'fg', 'bg', 'img_shape']
 
     np.random.seed(0)
-    fg = np.random.rand(240, 320, 3).astype(np.float32)
-    bg = np.random.rand(240, 320, 3).astype(np.float32)
-    alpha = np.random.rand(240, 320).astype(np.float32)
-    results = dict(alpha=alpha, fg=fg, bg=bg, img_shape=(240, 320))
+    fg = np.random.rand(32, 32, 3).astype(np.float32)
+    bg = np.random.rand(32, 32, 3).astype(np.float32)
+    alpha = np.random.rand(32, 32).astype(np.float32)
+    results = dict(alpha=alpha, fg=fg, bg=bg, img_shape=(32, 32))
     composite_fg = CompositeFg('tests/data/fg', 'tests/data/alpha', 'jpg',
                                'jpg')
     composite_fg_results = composite_fg(results)
     assert check_keys_contain(composite_fg_results.keys(), target_keys)
-    assert composite_fg_results['fg'].shape == (240, 320, 3)
+    assert composite_fg_results['fg'].shape == (32, 32, 3)
 
-    fg = np.random.rand(240, 320, 3).astype(np.float32)
-    bg = np.random.rand(240, 320, 3).astype(np.float32)
-    alpha = np.random.rand(240, 320).astype(np.float32)
-    results = dict(alpha=alpha, fg=fg, bg=bg, img_shape=(240, 320))
+    fg = np.random.rand(32, 32, 3).astype(np.float32)
+    bg = np.random.rand(32, 32, 3).astype(np.float32)
+    alpha = np.random.rand(32, 32).astype(np.float32)
+    results = dict(alpha=alpha, fg=fg, bg=bg, img_shape=(32, 32))
     composite_fg = CompositeFg(
         'tests/data/fg',
         'tests/data/alpha',
@@ -179,7 +179,7 @@ def test_composite_fg():
         interpolation='bilinear')
     composite_fg_results = composite_fg(results)
     assert check_keys_contain(composite_fg_results.keys(), target_keys)
-    assert composite_fg_results['fg'].shape == (240, 320, 3)
+    assert composite_fg_results['fg'].shape == (32, 32, 3)
 
     assert repr(composite_fg) == composite_fg.__class__.__name__ + (
         "(fg_dir='tests/data/fg', alpha_dir='tests/data/alpha', "

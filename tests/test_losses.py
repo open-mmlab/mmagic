@@ -219,9 +219,9 @@ def test_composition_losses():
 def test_perceptual_loss(init_weights):
     if torch.cuda.is_available():
         loss_percep = PerceptualLoss(layer_weights={'0': 1.}).cuda()
-        x = torch.randn(1, 3, 64, 64).cuda()
+        x = torch.randn(1, 3, 16, 16).cuda()
         x.requires_grad = True
-        gt = torch.randn(1, 3, 64, 64).cuda()
+        gt = torch.randn(1, 3, 16, 16).cuda()
         percep, style = loss_percep(x, gt)
 
         assert percep.item() > 0
@@ -239,8 +239,8 @@ def test_perceptual_loss(init_weights):
             layer_weights={
                 '0': 1.
             }, perceptual_weight=0.).cuda()
-        x = torch.randn(1, 3, 64, 64).cuda()
-        gt = torch.randn(1, 3, 64, 64).cuda()
+        x = torch.randn(1, 3, 16, 16).cuda()
+        gt = torch.randn(1, 3, 16, 16).cuda()
         percep, style = loss_percep(x, gt)
         assert percep is None and style > 0
 
@@ -248,8 +248,8 @@ def test_perceptual_loss(init_weights):
             layer_weights={
                 '0': 1.
             }, style_weight=0.).cuda()
-        x = torch.randn(1, 3, 64, 64).cuda()
-        gt = torch.randn(1, 3, 64, 64).cuda()
+        x = torch.randn(1, 3, 16, 16).cuda()
+        gt = torch.randn(1, 3, 16, 16).cuda()
         percep, style = loss_percep(x, gt)
         assert style is None and percep > 0
     # test whether vgg type is valid
@@ -266,7 +266,7 @@ def test_perceptual_loss(init_weights):
         use_input_norm=False,
         vgg_type='vgg16',
         pretrained='torchvision://vgg16')
-    x = torch.rand((1, 3, 128, 128))
+    x = torch.rand((1, 3, 32, 32))
     output = vgg_model(x)
     assert isinstance(output, dict)
     assert len(output) == len(layer_name_list)

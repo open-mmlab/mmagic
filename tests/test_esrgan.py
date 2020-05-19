@@ -16,10 +16,10 @@ def test_esrgan():
             type='MSRResNet',
             in_channels=3,
             out_channels=3,
-            mid_channels=64,
-            num_blocks=16,
+            mid_channels=4,
+            num_blocks=1,
             upscale_factor=4),
-        discriminator=dict(type='ModifiedVGG', in_channels=3, mid_channels=64),
+        discriminator=dict(type='ModifiedVGG', in_channels=3, mid_channels=2),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
         gan_loss=dict(
             type='GANLoss',
