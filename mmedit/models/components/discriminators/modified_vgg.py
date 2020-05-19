@@ -52,7 +52,7 @@ class ModifiedVGG(nn.Module):
             mid_channels * 8, mid_channels * 8, 4, 2, 1, bias=False)
         self.bn4_1 = nn.BatchNorm2d(mid_channels * 8, affine=True)
 
-        self.linear1 = nn.Linear(512 * 4 * 4, 100)
+        self.linear1 = nn.Linear(mid_channels * 8 * 4 * 4, 100)
         self.linear2 = nn.Linear(100, 1)
 
         # activation function
