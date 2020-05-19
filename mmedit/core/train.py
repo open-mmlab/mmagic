@@ -3,12 +3,12 @@ import os.path as osp
 import random
 
 import mmcv
-import mmcv.parallel.distributed_deprecated as ddp_deprecated
 import numpy as np
 import torch
 from mmcv.parallel import MMDataParallel
 from mmcv.runner import HOOKS, IterBasedRunner
 from mmedit.core import DistEvalIterHook, EvalIterHook, build_optimizers
+from mmedit.core.distributed_wrapper import DistributedDataParallelWrapper
 from mmedit.datasets.builder import build_dataloader, build_dataset
 from mmedit.utils import get_root_logger
 
@@ -108,23 +108,12 @@ def _dist_train(model,
             seed=cfg.seed) for ds in dataset
     ]
     # put model on gpus
-
-    # The following official DistributedDataparallel wrapper may cause
-    # 'unused_parameters' bugs in training procedure. Thus, we keep these code
-    # to be commented and will update it once the official
-    # DistributedDataparallel can be adopted without any bug report.
-
-    # find_unused_parameters = cfg.get('find_unused_parameters', False)
-    # from mmcv.parallel import MMDistributedDataParallel
-    # model = MMDistributedDataParallel(
-    #     model.cuda(),
-    #     device_ids=[torch.cuda.current_device()],
-    #     broadcast_buffers=False,
-    #     find_unused_parameters=find_unused_parameters)
-
-    # In this version, we just use a deprecated version of
-    # DistributedDataParallel in mmcv to avoid bug report at running time.
-    model = ddp_deprecated.MMDistributedDataParallel(model.cuda())
+    find_unused_parameters = cfg.get('find_unused_parameters', False)
+    model = DistributedDataParallelWrapper(
+        model,
+        device_ids=[torch.cuda.current_device()],
+        broadcast_buffers=False,
+        find_unused_parameters=find_unused_parameters)
 
     # build runner
     optimizer = build_optimizers(model, cfg.optimizers)
