@@ -298,8 +298,13 @@ def test_gan_losses():
     input_2 = torch.ones(1, 3, 6, 6) * 2
 
     # vanilla
+    # fix disc weight
     gan_loss = GANLoss(
-        'vanilla', loss_weight=2.0, real_label_val=1.0, fake_label_val=0.0)
+        'vanilla',
+        loss_weight=2.0,
+        real_label_val=1.0,
+        fake_label_val=0.0,
+        fix_disc_weight=True)
     loss = gan_loss(input_1, True, is_disc=False)
     npt.assert_almost_equal(loss.item(), 0.6265233)
     loss = gan_loss(input_1, False, is_disc=False)
@@ -308,10 +313,30 @@ def test_gan_losses():
     npt.assert_almost_equal(loss.item(), 0.3132616)
     loss = gan_loss(input_1, False, is_disc=True)
     npt.assert_almost_equal(loss.item(), 1.3132616)
+    # not fix disc weight
+    gan_loss = GANLoss(
+        'vanilla',
+        loss_weight=2.0,
+        real_label_val=1.0,
+        fake_label_val=0.0,
+        fix_disc_weight=False)
+    loss = gan_loss(input_1, True, is_disc=False)
+    npt.assert_almost_equal(loss.item(), 0.6265233)
+    loss = gan_loss(input_1, False, is_disc=False)
+    npt.assert_almost_equal(loss.item(), 2.6265232)
+    loss = gan_loss(input_1, True, is_disc=True)
+    npt.assert_almost_equal(loss.item(), 0.3132616 * 2)
+    loss = gan_loss(input_1, False, is_disc=True)
+    npt.assert_almost_equal(loss.item(), 1.3132616 * 2)
 
     # lsgan
+    # fix disc weight
     gan_loss = GANLoss(
-        'lsgan', loss_weight=2.0, real_label_val=1.0, fake_label_val=0.0)
+        'lsgan',
+        loss_weight=2.0,
+        real_label_val=1.0,
+        fake_label_val=0.0,
+        fix_disc_weight=True)
     loss = gan_loss(input_2, True, is_disc=False)
     npt.assert_almost_equal(loss.item(), 2.0)
     loss = gan_loss(input_2, False, is_disc=False)
@@ -320,10 +345,30 @@ def test_gan_losses():
     npt.assert_almost_equal(loss.item(), 1.0)
     loss = gan_loss(input_2, False, is_disc=True)
     npt.assert_almost_equal(loss.item(), 4.0)
+    # not fix disc weight
+    gan_loss = GANLoss(
+        'lsgan',
+        loss_weight=2.0,
+        real_label_val=1.0,
+        fake_label_val=0.0,
+        fix_disc_weight=False)
+    loss = gan_loss(input_2, True, is_disc=False)
+    npt.assert_almost_equal(loss.item(), 2.0)
+    loss = gan_loss(input_2, False, is_disc=False)
+    npt.assert_almost_equal(loss.item(), 8.0)
+    loss = gan_loss(input_2, True, is_disc=True)
+    npt.assert_almost_equal(loss.item(), 2.0)
+    loss = gan_loss(input_2, False, is_disc=True)
+    npt.assert_almost_equal(loss.item(), 8.0)
 
     # wgan
+    # fix disc weight
     gan_loss = GANLoss(
-        'wgan', loss_weight=2.0, real_label_val=1.0, fake_label_val=0.0)
+        'wgan',
+        loss_weight=2.0,
+        real_label_val=1.0,
+        fake_label_val=0.0,
+        fix_disc_weight=True)
     loss = gan_loss(input_2, True, is_disc=False)
     npt.assert_almost_equal(loss.item(), -4.0)
     loss = gan_loss(input_2, False, is_disc=False)
@@ -332,10 +377,30 @@ def test_gan_losses():
     npt.assert_almost_equal(loss.item(), -2.0)
     loss = gan_loss(input_2, False, is_disc=True)
     npt.assert_almost_equal(loss.item(), 2.0)
+    # not fix disc weight
+    gan_loss = GANLoss(
+        'wgan',
+        loss_weight=2.0,
+        real_label_val=1.0,
+        fake_label_val=0.0,
+        fix_disc_weight=False)
+    loss = gan_loss(input_2, True, is_disc=False)
+    npt.assert_almost_equal(loss.item(), -4.0)
+    loss = gan_loss(input_2, False, is_disc=False)
+    npt.assert_almost_equal(loss.item(), 4)
+    loss = gan_loss(input_2, True, is_disc=True)
+    npt.assert_almost_equal(loss.item(), -4.0)
+    loss = gan_loss(input_2, False, is_disc=True)
+    npt.assert_almost_equal(loss.item(), 4.0)
 
     # hinge
+    # fix disc weight
     gan_loss = GANLoss(
-        'hinge', loss_weight=2.0, real_label_val=1.0, fake_label_val=0.0)
+        'hinge',
+        loss_weight=2.0,
+        real_label_val=1.0,
+        fake_label_val=0.0,
+        fix_disc_weight=True)
     loss = gan_loss(input_2, True, is_disc=False)
     npt.assert_almost_equal(loss.item(), -4.0)
     loss = gan_loss(input_2, False, is_disc=False)
@@ -344,6 +409,21 @@ def test_gan_losses():
     npt.assert_almost_equal(loss.item(), 0.0)
     loss = gan_loss(input_2, False, is_disc=True)
     npt.assert_almost_equal(loss.item(), 3.0)
+    # not fix disc weight
+    gan_loss = GANLoss(
+        'hinge',
+        loss_weight=2.0,
+        real_label_val=1.0,
+        fake_label_val=0.0,
+        fix_disc_weight=False)
+    loss = gan_loss(input_2, True, is_disc=False)
+    npt.assert_almost_equal(loss.item(), -4.0)
+    loss = gan_loss(input_2, False, is_disc=False)
+    npt.assert_almost_equal(loss.item(), -4.0)
+    loss = gan_loss(input_2, True, is_disc=True)
+    npt.assert_almost_equal(loss.item(), 0.0)
+    loss = gan_loss(input_2, False, is_disc=True)
+    npt.assert_almost_equal(loss.item(), 6.0)
 
 
 def test_gradient_penalty_losses():
