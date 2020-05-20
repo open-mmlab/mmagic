@@ -14,23 +14,20 @@ class GANLoss(nn.Module):
         real_label_val (float): The value for real label. Default: 1.0.
         fake_label_val (float): The value for fake label. Default: 0.0.
         loss_weight (float): Loss weight. Default: 1.0.
-        fix_disc_weight (bool): If True, loss_weight is always 1.0 for
-            discriminators. If False, the loss weight of the discriminator
-            is the same as the generator.
+            Note that loss_weight is only for generators; and it is always 1.0
+            for discriminators.
     """
 
     def __init__(self,
                  gan_type,
                  real_label_val=1.0,
                  fake_label_val=0.0,
-                 loss_weight=1.0,
-                 fix_disc_weight=True):
+                 loss_weight=1.0):
         super(GANLoss, self).__init__()
         self.gan_type = gan_type
         self.loss_weight = loss_weight
         self.real_label_val = real_label_val
         self.fake_label_val = fake_label_val
-        self.fix_disc_weight = fix_disc_weight
 
         if self.gan_type == 'vanilla':
             self.loss = nn.BCEWithLogitsLoss()
@@ -97,8 +94,7 @@ class GANLoss(nn.Module):
             loss = self.loss(input, target_label)
 
         # loss_weight is always 1.0 for discriminators
-        return loss if (is_disc
-                        and self.fix_disc_weight) else loss * self.loss_weight
+        return loss if is_disc else loss * self.loss_weight
 
 
 def gradient_penalty_loss(discriminator, real_data, fake_data, mask=None):
