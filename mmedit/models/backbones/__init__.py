@@ -8,7 +8,7 @@ from .encoder_decoders import (VGG16, BGMattingDecoder, BGMattingEncoder,
                                IndexNetDecoder, IndexNetEncoder, PConvDecoder,
                                PConvEncoder, PConvEncoderDecoder,
                                PGDownsampleBlock, PGUpsampleBlock,
-                               PlainDecoder, ResGCAEncoder,
+                               PlainDecoder, ResGCADecoder, ResGCAEncoder,
                                ResidualDilationBlock, ResNetDec, ResNetEnc,
                                ResShortcutDec, ResShortcutEnc,
                                SimpleEncoderDecoder, TMADDecoder,
@@ -27,5 +27,5 @@ __all__ = [
     'IndexNetEncoder', 'IndexNetDecoder', 'ResidualDilationBlock',
     'TMADDilationNeck', 'BGMattingEncoder', 'TMADEncoder', 'PGDownsampleBlock',
     'PGUpsampleBlock', 'TMADDecoder', 'BGMattingDecoder', 'TOFlow',
-    'ResGCAEncoder'
+    'ResGCAEncoder', 'ResGCADecoder'
 ]
