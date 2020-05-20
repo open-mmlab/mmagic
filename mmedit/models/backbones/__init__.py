@@ -8,8 +8,9 @@ from .encoder_decoders import (VGG16, BGMattingDecoder, BGMattingEncoder,
                                IndexNetDecoder, IndexNetEncoder, PConvDecoder,
                                PConvEncoder, PConvEncoderDecoder,
                                PGDownsampleBlock, PGUpsampleBlock,
-                               PlainDecoder, ResidualDilationBlock, ResNetDec,
-                               ResNetEnc, ResShortcutDec, ResShortcutEnc,
+                               PlainDecoder, ResGCAEncoder,
+                               ResidualDilationBlock, ResNetDec, ResNetEnc,
+                               ResShortcutDec, ResShortcutEnc,
                                SimpleEncoderDecoder, TMADDecoder,
                                TMADDilationNeck, TMADEncoder)
 # yapf: enable
@@ -25,5 +26,5 @@ __all__ = [
     'EDSR', 'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample',
     'IndexNetEncoder', 'IndexNetDecoder', 'ResidualDilationBlock',
     'TMADDilationNeck', 'BGMattingEncoder', 'TMADEncoder', 'PGDownsampleBlock',
-    'PGUpsampleBlock', 'TMADDecoder', 'BGMattingDecoder'
+    'PGUpsampleBlock', 'TMADDecoder', 'BGMattingDecoder', 'ResGCAEncoder'
 ]
