@@ -14,7 +14,7 @@ from .encoder_decoders import (VGG16, BGMattingDecoder, BGMattingEncoder,
                                SimpleEncoderDecoder, TMADDecoder,
                                TMADDilationNeck, TMADEncoder)
 # yapf: enable
-from .sr_backbones import EDSR, EDVRNet, MSRResNet, RRDBNet
+from .sr_backbones import EDSR, EDVRNet, MSRResNet, RRDBNet, TOFlow
 
 __all__ = [
     'MSRResNet', 'VGG16', 'PlainDecoder', 'SimpleEncoderDecoder',
@@ -26,5 +26,6 @@ __all__ = [
     'EDSR', 'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample',
     'IndexNetEncoder', 'IndexNetDecoder', 'ResidualDilationBlock',
     'TMADDilationNeck', 'BGMattingEncoder', 'TMADEncoder', 'PGDownsampleBlock',
-    'PGUpsampleBlock', 'TMADDecoder', 'BGMattingDecoder', 'ResGCAEncoder'
+    'PGUpsampleBlock', 'TMADDecoder', 'BGMattingDecoder', 'TOFlow',
+    'ResGCAEncoder'
 ]
