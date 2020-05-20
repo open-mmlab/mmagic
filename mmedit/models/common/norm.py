@@ -6,6 +6,7 @@ norm_cfg = {
     'BN3d': ('bn', nn.BatchNorm3d),
     'SyncBN': ('bn', nn.SyncBatchNorm),
     'GN': ('gn', nn.GroupNorm),
+    'IN': ('in', nn.InstanceNorm2d)
 }
 
 
