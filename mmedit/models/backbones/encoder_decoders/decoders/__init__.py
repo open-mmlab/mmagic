@@ -1,3 +1,4 @@
+from .bgm_decoder import BGMattingDecoder
 from .deepfill_decoder import DeepFillDecoder
 from .gl_decoder import GLDecoder
 from .indexnet_decoder import IndexedUpsample, IndexNetDecoder
@@ -9,5 +10,5 @@ from .tmad_dec import PGUpsampleBlock, TMADDecoder
 __all__ = [
     'GLDecoder', 'PlainDecoder', 'PConvDecoder', 'ResNetDec', 'ResShortcutDec',
     'DeepFillDecoder', 'IndexedUpsample', 'IndexNetDecoder', 'TMADDecoder',
-    'PGUpsampleBlock'
+    'PGUpsampleBlock', 'BGMattingDecoder'
 ]
