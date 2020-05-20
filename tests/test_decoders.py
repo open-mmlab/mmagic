@@ -3,7 +3,8 @@ import pytest
 import torch
 from mmedit.models.backbones import (VGG16, BGMattingDecoder, IndexedUpsample,
                                      IndexNetDecoder, IndexNetEncoder,
-                                     PlainDecoder, ResNetDec, ResNetEnc,
+                                     PlainDecoder, ResGCADecoder,
+                                     ResGCAEncoder, ResNetDec, ResNetEnc,
                                      ResShortcutDec, ResShortcutEnc)
 
 
@@ -119,6 +120,35 @@ def test_res_shortcut_decoder():
         outputs = encoder(img)
         prediction = model(outputs)
         assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
+
+
+def test_res_gca_decoder():
+    """Test resnet decoder with shortcut and guided contextual attention."""
+    with pytest.raises(NotImplementedError):
+        ResGCADecoder('UnknowBlock', [2, 3, 3, 2], 512)
+
+    model = ResGCADecoder('BasicBlockDec', [2, 3, 3, 2], 512)
+    model.init_weights()
+    model.train()
+
+    encoder = ResGCAEncoder('BasicBlock', [2, 4, 4, 2], 6)
+    img = _demo_inputs((2, 6, 32, 32))
+    outputs = encoder(img)
+    prediction = model(outputs)
+    assert_tensor_with_shape(prediction, torch.Size([2, 1, 32, 32]))
+
+    # test forward with gpu
+    if torch.cuda.is_available():
+        model = ResGCADecoder('BasicBlockDec', [2, 3, 3, 2], 512)
+        model.init_weights()
+        model.train()
+        model.cuda()
+        encoder = ResGCAEncoder('BasicBlock', [2, 4, 4, 2], 6)
+        encoder.cuda()
+        img = _demo_inputs((2, 6, 32, 32)).cuda()
+        outputs = encoder(img)
+        prediction = model(outputs)
+        assert_tensor_with_shape(prediction, torch.Size([2, 1, 32, 32]))
 
 
 def test_indexed_upsample():
