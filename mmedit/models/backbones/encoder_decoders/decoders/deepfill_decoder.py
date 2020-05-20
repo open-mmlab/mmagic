@@ -67,7 +67,7 @@ class DeepFillDecoder(nn.Module):
 
         if self.with_out_activation:
             act_type = out_act_cfg['type']
-            if act_type in 'clip':
+            if act_type == 'clip':
                 act_cfg_ = copy.deepcopy(out_act_cfg)
                 act_cfg_.pop('type')
                 self.out_act = partial(torch.clamp, **act_cfg_)
