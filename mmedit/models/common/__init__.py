@@ -3,6 +3,7 @@ from .aspp import ASPP
 from .contextual_attention import ContextualAttentionModule
 from .conv import build_conv_layer
 from .conv_module import ConvModule
+from .flow_warp import flow_warp
 from .gated_conv_module import SimpleGatedConvModule
 from .gca_module import GCAModule
 from .generation_model_utils import GANImageBuffer, generation_init_weights
@@ -25,6 +26,6 @@ __all__ = [
     'ResidualBlockNoBN', 'make_layer', 'MaskConvModule', 'extract_bbox_patch',
     'extract_around_bbox', 'set_requires_grad', 'scale_bbox',
     'DepthwiseSeparableConvModule', 'ContextualAttentionModule', 'GCAModule',
-    'SimpleGatedConvModule', 'LinearModule', 'generation_init_weights',
-    'GANImageBuffer'
+    'SimpleGatedConvModule', 'LinearModule', 'flow_warp',
+    'generation_init_weights', 'GANImageBuffer'
 ]
