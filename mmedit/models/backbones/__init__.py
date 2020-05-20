@@ -7,11 +7,11 @@ from .encoder_decoders import (VGG16, BGMattingEncoder,
                                HolisticIndexBlock, IndexedUpsample,
                                IndexNetDecoder, IndexNetEncoder, PConvDecoder,
                                PConvEncoder, PConvEncoderDecoder,
-                               PGDownsampleBlock, PlainDecoder,
-                               ResidualDilationBlock, ResNetDec, ResNetEnc,
-                               ResShortcutDec, ResShortcutEnc,
-                               SimpleEncoderDecoder, TMADDilationNeck,
-                               TMADEncoder)
+                               PGDownsampleBlock, PGUpsampleBlock,
+                               PlainDecoder, ResidualDilationBlock, ResNetDec,
+                               ResNetEnc, ResShortcutDec, ResShortcutEnc,
+                               SimpleEncoderDecoder, TMADDecoder,
+                               TMADDilationNeck, TMADEncoder)
 # yapf: enable
 from .sr_backbones import EDSR, EDVRNet, MSRResNet, RRDBNet
 
@@ -24,5 +24,6 @@ __all__ = [
     'DepthwiseIndexBlock', 'ContextualAttentionNeck', 'DeepFillDecoder',
     'EDSR', 'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample',
     'IndexNetEncoder', 'IndexNetDecoder', 'ResidualDilationBlock',
-    'TMADDilationNeck', 'BGMattingEncoder', 'TMADEncoder', 'PGDownsampleBlock'
+    'TMADDilationNeck', 'BGMattingEncoder', 'TMADEncoder', 'PGDownsampleBlock',
+    'PGUpsampleBlock', 'TMADDecoder'
 ]
