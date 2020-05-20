@@ -111,14 +111,14 @@ class DistributedDataParallelWrapper(nn.Module):
             destination = OrderedDict()
             destination._metadata = OrderedDict()
         destination._metadata[prefix[:-1]] = local_metadata = dict(
-            version=self._version)
-        for name, param in self._parameters.items():
+            version=self.module._version)
+        for name, param in self.module._parameters.items():
             if param is not None:
                 destination[prefix + name] = param if keep_vars else param.data
-        for name, buf in self._buffers.items():
+        for name, buf in self.module._buffers.items():
             if buf is not None:
                 destination[prefix + name] = buf if keep_vars else buf.data
-        for name, module in self._modules.items():
+        for name, module in self.module._modules.items():
             if module is not None:
                 # this is what we modified: if sub-module is wrapped by
                 # DataParallel or DistributedDataParallel, get its module
