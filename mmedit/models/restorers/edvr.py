@@ -1,3 +1,9 @@
+import numbers
+import os.path as osp
+
+import mmcv
+from mmedit.core import tensor2img
+
 from ..registry import MODELS
 from .basic_restorer import BasicRestorer
 
@@ -53,3 +59,39 @@ class EDVR(BasicRestorer):
 
         outputs.update({'log_vars': log_vars})
         return outputs
+
+    def forward_test(self,
+                     lq,
+                     gt=None,
+                     meta=None,
+                     save_image=False,
+                     save_path=None,
+                     iteration=None):
+        output = self.generator(lq)
+        if self.test_cfg is not None and self.test_cfg.get('metrics', None):
+            assert gt is not None, (
+                'evaluation with metrics must have gt images.')
+            results = dict(eval_result=self.evaluate(output, gt))
+        else:
+            results = dict(lq=lq.cpu(), output=output.cpu())
+            if gt is not None:
+                results['gt'] = gt.cpu()
+
+        # save image
+        if save_image:
+            gt_path = meta[0]['gt_path'][0]
+            folder_name = meta[0]['key'].split('/')[0]
+            frame_name = osp.splitext(osp.basename(gt_path))[0]
+
+            if isinstance(iteration, numbers.Number):
+                save_path = osp.join(save_path, folder_name,
+                                     f'{frame_name}-{iteration + 1:06d}.png')
+            elif iteration is None:
+                save_path = osp.join(save_path, folder_name,
+                                     f'{frame_name}.png')
+            else:
+                raise ValueError('iteration should be number or None, '
+                                 f'but got {type(iteration)}')
+            mmcv.imwrite(tensor2img(output), save_path)
+
+        return results
