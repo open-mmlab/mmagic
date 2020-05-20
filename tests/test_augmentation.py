@@ -2,12 +2,17 @@ import copy
 
 import numpy as np
 import pytest
+import torch
+# yapf: disable
 from mmedit.datasets.pipelines import (BinarizeImage, Flip,
                                        GenerateFrameIndices,
-                                       GenerateFrameIndiceswithPadding, Pad,
-                                       RandomAffine, RandomJitter,
-                                       RandomMaskDilation, RandomTransposeHW,
-                                       Resize, TemporalReverse)
+                                       GenerateFrameIndiceswithPadding,
+                                       GetPatchPool, Pad, RandomAffine,
+                                       RandomJitter, RandomMaskDilation,
+                                       RandomTransposeHW, Resize,
+                                       TemporalReverse)
+
+# yapf: enable
 
 
 class TestAugmentations(object):
@@ -27,6 +32,9 @@ class TestAugmentations(object):
 
         cls.results['img'] = np.random.rand(256, 256, 3).astype(np.float32)
         cls.results['mask'] = np.random.rand(256, 256, 1).astype(np.float32)
+        cls.results['img_tensor'] = torch.rand((3, 256, 256))
+        cls.results['mask_tensor'] = torch.zeros((1, 256, 256))
+        cls.results['mask_tensor'][:, 50:150, 40:140] = 1.
 
     @staticmethod
     def assert_img_equal(img, ref_img, ratio_thr=0.999):
@@ -614,3 +622,116 @@ class TestAugmentations(object):
         np.testing.assert_almost_equal(results['lq'][0], img_lq1)
         np.testing.assert_almost_equal(results['lq'][1], img_lq2)
         np.testing.assert_almost_equal(results['gt'][0], img_gt)
+
+    def test_tmad_get_patch_pool(self):
+        get_patch_pool = GetPatchPool(
+            gt_img_key='img_tensor',
+            mask_key='mask_tensor',
+            patch_size=32,
+            stride_valid=16,
+            stride_hole=32,
+            valid_mask_thr=0.,
+            hole_mask_thr=0.,
+            num_pool_hole=30,
+            num_pool_valid=100,
+            mode='train')
+        results = get_patch_pool(self.results)
+        assert results['valid_patch_pool'].size() == (100, 3, 32, 32)
+        assert results['valid_mask_patch_pool'].size() == (100, 1, 32, 32)
+        assert results['valid_score_pool'].size() == (15 * 15, )
+        assert results['hole_patch_index'].size() == (64, )
+
+        img = torch.rand((1, 3, 16, 16))
+        kernel_size = (4, 4)
+        cols = get_patch_pool.im2col(img, kernel_size, stride=4)
+        assert cols.shape == (1, 16, 3, 4, 4)
+
+        with pytest.raises(ValueError):
+            pool = torch.rand((5, 3, 6, 6))
+            get_patch_pool.sample_patches(pool, num_samples=10)
+
+        get_patch_pool = GetPatchPool(
+            gt_img_key='img_tensor',
+            mask_key='mask_tensor',
+            patch_size=32,
+            stride_valid=16,
+            stride_hole=32,
+            valid_mask_thr=0.,
+            hole_mask_thr=0.,
+            num_pool_hole=3,
+            num_pool_valid=100,
+            mode='train')
+        results = get_patch_pool(self.results)
+        assert results['valid_patch_pool'].size() == (100, 3, 32, 32)
+        assert results['valid_mask_patch_pool'].size() == (100, 1, 32, 32)
+        assert results['valid_score_pool'].size() == (15 * 15, )
+        assert results['hole_patch_index'].size() == (64, )
+        assert results['hole_patch_index'].sum().item() == 3
+
+        results = dict()
+        results['img_tensor'] = self.results['img_tensor']
+        mask_ = torch.zeros((1, 256, 256))
+        mask_[:, 32:160, 32:160] = 1.
+        results['mask_tensor'] = mask_
+        get_patch_pool = GetPatchPool(
+            gt_img_key='img_tensor',
+            mask_key='mask_tensor',
+            patch_size=32,
+            stride_valid=16,
+            stride_hole=32,
+            valid_mask_thr=0.,
+            hole_mask_thr=0.,
+            num_pool_hole=25,
+            num_pool_valid=300,
+            mode='train')
+        results = get_patch_pool(results)
+        assert results['valid_patch_pool'].size() == (300, 3, 32, 32)
+        assert results['valid_mask_patch_pool'].size() == (300, 1, 32, 32)
+        assert results['valid_score_pool'].size() == (15 * 15, )
+        assert results['hole_patch_index'].size() == (64, )
+        assert results['hole_patch_index'].sum().item() == 25
+
+        repr_str = get_patch_pool.__class__.__name__
+        repr_str += (' (gt_img_key=img_tensor, mask_key=mask_tensor, '
+                     'patch_size=32, stride_valid=16,'
+                     ' stride_hole=32, '
+                     f'valid_mask_thr={0.}, '
+                     f'hole_mask_thr={0.}, num_pool_hole='
+                     '25, num_pool_valid=300)')
+        assert repr(get_patch_pool) == repr_str
+
+        # assert value error for the actual number of patches in
+        # hole > num_pool_hole in test mode
+        with pytest.raises(ValueError):
+            get_patch_pool = GetPatchPool(
+                gt_img_key='img_tensor',
+                mask_key='mask_tensor',
+                patch_size=32,
+                stride_valid=16,
+                stride_hole=32,
+                valid_mask_thr=0.,
+                hole_mask_thr=0.,
+                num_pool_hole=3,
+                num_pool_valid=100,
+                mode='test')
+            results = get_patch_pool(self.results)
+
+        # check the shape of image tensor
+        with pytest.raises(AssertionError):
+            results = dict()
+            results['img_tensor'] = torch.rand((256, 256))
+            mask_ = torch.zeros((1, 256, 256))
+            mask_[:, 32:160, 32:160] = 1.
+            results['mask_tensor'] = mask_
+            get_patch_pool = GetPatchPool(
+                gt_img_key='img_tensor',
+                mask_key='mask_tensor',
+                patch_size=32,
+                stride_valid=16,
+                stride_hole=32,
+                valid_mask_thr=0.,
+                hole_mask_thr=0.,
+                num_pool_hole=30,
+                num_pool_valid=100,
+                mode='train')
+            results = get_patch_pool(results)

@@ -11,6 +11,7 @@ from .loading import (LoadAlpha, LoadImageFromFile, LoadImageFromFileList,
                       LoadMask, LoadPairedImageFromFile, RandomLoadResizeBg)
 from .matting_aug import CompositeFg, GenerateTrimap, MergeFgAndBg
 from .normalization import Normalize, RescaleToZeroOne
+from .tmad_aug import GetPatchPool
 
 __all__ = [
     'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadAlpha', 'LoadMask',
@@ -21,5 +22,5 @@ __all__ = [
     'PairedRandomCrop', 'Normalize', 'RescaleToZeroOne', 'GenerateTrimap',
     'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList',
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
-    'LoadPairedImageFromFile'
+    'LoadPairedImageFromFile', 'GenerateFrameIndices', 'GetPatchPool'
 ]
