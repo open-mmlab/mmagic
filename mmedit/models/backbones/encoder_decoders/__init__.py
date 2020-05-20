@@ -6,7 +6,7 @@ from .encoder_decoder import EncoderDecoder
 from .encoders import (VGG16, BGMattingEncoder, DeepFillEncoder,
                        DepthwiseIndexBlock, GLEncoder, HolisticIndexBlock,
                        IndexNetEncoder, PConvEncoder, PGDownsampleBlock,
-                       ResNetEnc, ResShortcutEnc, TMADEncoder)
+                       ResGCAEncoder, ResNetEnc, ResShortcutEnc, TMADEncoder)
 from .gl_encoder_decoder import GLEncoderDecoder
 from .necks import (ContextualAttentionNeck, GLDilationNeck,
                     ResidualDilationBlock, TMADDilationNeck)
@@ -23,5 +23,5 @@ __all__ = [
     'DeepFillDecoder', 'ContextualAttentionNeck', 'IndexedUpsample',
     'IndexNetEncoder', 'IndexNetDecoder', 'ResidualDilationBlock',
     'TMADDilationNeck', 'BGMattingEncoder', 'TMADEncoder', 'PGDownsampleBlock',
-    'PGUpsampleBlock', 'TMADDecoder', 'BGMattingDecoder'
+    'PGUpsampleBlock', 'TMADDecoder', 'BGMattingDecoder', 'ResGCAEncoder'
 ]
