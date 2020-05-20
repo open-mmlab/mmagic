@@ -12,7 +12,7 @@ from models import create_model
 
 #### options
 parser = argparse.ArgumentParser()
-parser.add_argument('-opt', type=str, required=True, help='Path to options YMAL file.')
+parser.add_argument('-opt', type=str, required=True, help='Path to options YAML file.')
 opt = option.parse(parser.parse_args().opt, is_train=False)
 opt = option.dict_to_nonedict(opt)
 
