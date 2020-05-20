@@ -14,6 +14,7 @@ Prepare datasets
     Inpainting <datasets_inpainting>
     Matting <datasets_matting>
     Restoration <datasets_restoration>
+    Generation <datasets_generation>
 
 Inference with pretrained models
 ==========================================

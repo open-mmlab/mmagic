@@ -19,6 +19,7 @@ Config Name Style and Field Description
     Inpainting <config_inpainting>
     Matting <config_matting>
     Restoration <config_restoration>
+    Generation <config_generation>
 
 FAQ
 ==========================================

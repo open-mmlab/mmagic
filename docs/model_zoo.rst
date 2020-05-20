@@ -19,3 +19,4 @@ Tasks
     Inpainting <model_zoo_inpainting>
     Matting <model_zoo_matting>
     Restoration <model_zoo_restoration>
+    Generation <model_zoo_generation>
