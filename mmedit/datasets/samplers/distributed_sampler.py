@@ -1,4 +1,5 @@
 from __future__ import division
+import math
 
 import torch
 from torch.utils.data import DistributedSampler as _DistributedSampler
@@ -11,9 +12,29 @@ class DistributedSampler(_DistributedSampler):
     class will port one to DistributedSampler.
     """
 
-    def __init__(self, dataset, num_replicas=None, rank=None, shuffle=True):
+    def __init__(self,
+                 dataset,
+                 num_replicas=None,
+                 rank=None,
+                 shuffle=True,
+                 samples_per_gpu=1):
         super().__init__(dataset, num_replicas=num_replicas, rank=rank)
         self.shuffle = shuffle
+        self.samples_per_gpu = samples_per_gpu
+        # fix the bug of the official implementation
+        self.num_samples_per_replica = int(
+            math.ceil(
+                len(self.dataset) * 1.0 / self.num_replicas / samples_per_gpu))
+        self.total_size = (
+            self.num_samples_per_replica * self.num_replicas *
+            self.samples_per_gpu)
+
+        # to avoid padding bug when meeting too small dataset
+        if len(dataset) < 1.5 * self.num_replicas * samples_per_gpu:
+            raise ValueError(
+                'You may use too small dataset and our distributed '
+                'sampler cannot pad your dataset correctly. We highly '
+                'recommend you to use fewer GPUs to finish your work')
 
     def __iter__(self):
         # deterministically shuffle based on epoch
