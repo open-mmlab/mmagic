@@ -29,7 +29,7 @@ class DistributedSampler(_DistributedSampler):
         self.total_size = self.num_samples * self.num_replicas
 
         # to avoid padding bug when meeting too small dataset
-        if len(dataset) < 1.5 * self.num_replicas * samples_per_gpu:
+        if len(dataset) < self.num_replicas * samples_per_gpu:
             raise ValueError(
                 'You may use too small dataset and our distributed '
                 'sampler cannot pad your dataset correctly. We highly '
