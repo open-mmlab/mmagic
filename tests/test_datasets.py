@@ -8,7 +8,8 @@ from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              BaseSRDataset, GenerationPairedDataset,
                              GenerationUnpairedDataset, RepeatDataset,
                              SRAnnotationDataset, SRFolderDataset,
-                             SRLmdbDataset, SRREDSDataset, SRVimeo90KDataset)
+                             SRLmdbDataset, SRREDSDataset, SRVid4Dataset,
+                             SRVimeo90KDataset)
 from torch.utils.data import Dataset
 
 
@@ -719,6 +720,56 @@ def test_vimeo90k_dataset():
         with pytest.raises(AssertionError):
             # num_input_frames should be odd numbers
             vimeo90k_dataset = SRVimeo90KDataset(
+                lq_folder=root_path,
+                gt_folder=root_path,
+                ann_file='fake_ann_file',
+                num_input_frames=6,
+                pipeline=[],
+                scale=4,
+                test_mode=False)
+
+
+def test_vid4_dataset():
+    root_path = Path(__file__).parent / 'data'
+
+    txt_content = ('calendar 1 (320,480,3)\ncity 2 (320,480,3)\n')
+    mocked_open_function = mock_open(read_data=txt_content)
+
+    with patch('builtins.open', mocked_open_function):
+        vid4_dataset = SRVid4Dataset(
+            lq_folder=root_path / 'lq',
+            gt_folder=root_path / 'gt',
+            ann_file='fake_ann_file',
+            num_input_frames=5,
+            pipeline=[],
+            scale=4,
+            test_mode=False,
+            filename_tmpl='{:08d}')
+
+        assert vid4_dataset.data_infos == [
+            dict(
+                lq_path=str(root_path / 'lq'),
+                gt_path=str(root_path / 'gt'),
+                key='calendar/00000000',
+                num_input_frames=5,
+                max_frame_num=1),
+            dict(
+                lq_path=str(root_path / 'lq'),
+                gt_path=str(root_path / 'gt'),
+                key='city/00000000',
+                num_input_frames=5,
+                max_frame_num=2),
+            dict(
+                lq_path=str(root_path / 'lq'),
+                gt_path=str(root_path / 'gt'),
+                key='city/00000001',
+                num_input_frames=5,
+                max_frame_num=2),
+        ]
+
+        with pytest.raises(AssertionError):
+            # num_input_frames should be odd numbers
+            SRVid4Dataset(
                 lq_folder=root_path,
                 gt_folder=root_path,
                 ann_file='fake_ann_file',
