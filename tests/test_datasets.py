@@ -587,11 +587,13 @@ def test_reds_dataset():
                 lq_path=str(root_path),
                 gt_path=str(root_path),
                 key='000/00000001',
+                max_frame_num=100,
                 num_input_frames=5),
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
                 key='001/00000001',
+                max_frame_num=100,
                 num_input_frames=5)
         ]
 
@@ -611,11 +613,13 @@ def test_reds_dataset():
                 lq_path=str(root_path),
                 gt_path=str(root_path),
                 key='001/00000001',
+                max_frame_num=100,
                 num_input_frames=5),
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
                 key='250/00000001',
+                max_frame_num=100,
                 num_input_frames=5)
         ]
 
@@ -642,6 +646,46 @@ def test_reds_dataset():
                 scale=4,
                 val_partition='wrong_val_partition',
                 test_mode=False)
+
+        # test mode
+        # official val partition
+        reds_dataset = SRREDSDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            ann_file='fake_ann_file',
+            num_input_frames=5,
+            pipeline=[],
+            scale=4,
+            val_partition='official',
+            test_mode=True)
+
+        assert reds_dataset.data_infos == [
+            dict(
+                lq_path=str(root_path),
+                gt_path=str(root_path),
+                key='250/00000001',
+                max_frame_num=100,
+                num_input_frames=5)
+        ]
+        # REDS4 val partition
+        reds_dataset = SRREDSDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            ann_file='fake_ann_file',
+            num_input_frames=5,
+            pipeline=[],
+            scale=4,
+            val_partition='REDS4',
+            test_mode=True)
+
+        assert reds_dataset.data_infos == [
+            dict(
+                lq_path=str(root_path),
+                gt_path=str(root_path),
+                key='000/00000001',
+                max_frame_num=100,
+                num_input_frames=5)
+        ]
 
 
 def test_vimeo90k_dataset():
