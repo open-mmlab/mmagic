@@ -172,6 +172,43 @@ def test_dim():
             assert output_test['eval_result'] is None
 
 
+def test_gca():
+    model_cfg, train_cfg, test_cfg = _get_model_cfg('gca.py')
+    model_cfg['pretrained'] = None
+
+    # test model forward in train mode
+    model = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
+    inputs = _demo_input_train((64, 64), batch_size=2)
+    inputs['trimap'] = inputs['trimap'].expand_as(inputs['merged'])
+    outputs = model(inputs['merged'], inputs['trimap'], inputs['alpha'])
+    assert outputs['num_samples'] == 2
+    assert_dict_keys_equal(outputs['losses'], ['loss'])
+
+    if torch.cuda.is_available():
+        model = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
+        model.cuda()
+        inputs = _demo_input_train((64, 64), batch_size=2, cuda=True)
+        inputs['trimap'] = inputs['trimap'].expand_as(inputs['merged'])
+        outputs = model(inputs['merged'], inputs['trimap'], inputs['alpha'])
+        assert outputs['num_samples'] == 2
+        assert_dict_keys_equal(outputs['losses'], ['loss'])
+
+    # test model forward in test mode
+    with torch.no_grad():
+        model_cfg.backbone.encoder.in_channels = 4
+        model = build_model(model_cfg, train_cfg=None, test_cfg=test_cfg)
+        inputs = _demo_input_test((64, 64))
+        outputs = model(**inputs, test_mode=True)
+        assert_dict_keys_equal(outputs['eval_result'], ['SAD', 'MSE'])
+
+        if torch.cuda.is_available():
+            model = build_model(model_cfg, train_cfg=None, test_cfg=test_cfg)
+            model.cuda()
+            inputs = _demo_input_test((64, 64), cuda=True)
+            outputs = model(**inputs, test_mode=True)
+            assert_dict_keys_equal(outputs['eval_result'], ['SAD', 'MSE'])
+
+
 def _demo_input_train(img_shape, batch_size=1, cuda=False):
     """
     Create a superset of inputs needed to run backbone.
