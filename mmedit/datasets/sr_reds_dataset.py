@@ -64,7 +64,12 @@ class SRREDSDataset(BaseSRDataset):
             raise ValueError(
                 f'Wrong validation partition {self.val_partition}.'
                 f'Supported ones are ["official", "REDS4"]')
-        keys = [v for v in keys if v.split('/')[0] not in val_partition]
+
+        if self.test_mode:
+            keys = [v for v in keys if v.split('/')[0] in val_partition]
+        else:
+            keys = [v for v in keys if v.split('/')[0] not in val_partition]
+
         data_infos = []
         for key in keys:
             data_infos.append(
@@ -72,6 +77,7 @@ class SRREDSDataset(BaseSRDataset):
                     lq_path=self.lq_folder,
                     gt_path=self.gt_folder,
                     key=key,
+                    max_frame_num=100,  # REDS has 100 frames for each clip
                     num_input_frames=self.num_input_frames))
 
         return data_infos
