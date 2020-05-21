@@ -13,6 +13,7 @@ from .sr_annotation_dataset import SRAnnotationDataset
 from .sr_folder_dataset import SRFolderDataset
 from .sr_lmdb_dataset import SRLmdbDataset
 from .sr_reds_dataset import SRREDSDataset
+from .sr_vid4_dataset import SRVid4Dataset
 from .sr_vimeo90k_dataset import SRVimeo90KDataset
 
 __all__ = [
@@ -22,5 +23,5 @@ __all__ = [
     'SRAnnotationDataset', 'BaseSRDataset', 'RepeatDataset', 'SRREDSDataset',
     'SRVimeo90KDataset', 'SRAnnotationDataset', 'BaseSRDataset',
     'RepeatDataset', 'BaseGenerationDataset', 'GenerationPairedDataset',
-    'GenerationUnpairedDataset'
+    'GenerationUnpairedDataset', 'SRVid4Dataset'
 ]
