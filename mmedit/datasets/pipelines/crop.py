@@ -43,7 +43,8 @@ class Crop(object):
             y_offset = max(0, (data_h - crop_h)) // 2
 
         crop_bbox = [x_offset, y_offset, crop_w, crop_h]
-        data_ = data[y_offset:y_offset + crop_h, x_offset:x_offset + crop_w, :]
+        data_ = data[y_offset:y_offset + crop_h, x_offset:x_offset + crop_w,
+                     ...]
 
         return data_, crop_bbox
 

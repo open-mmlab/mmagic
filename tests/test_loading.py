@@ -59,8 +59,8 @@ def test_load_image_from_file():
         io_backend='disk', key='lq', flag='grayscale', save_original_img=True)
     image_loader = LoadImageFromFile(**config)
     results = image_loader(results)
-    assert results['lq'].shape == (120, 125, 1)
-    assert results['lq_ori_shape'] == (120, 125, 1)
+    assert results['lq'].shape == (120, 125)
+    assert results['lq_ori_shape'] == (120, 125)
     np.testing.assert_almost_equal(results['ori_lq'], results['lq'])
     assert id(results['ori_lq']) != id(results['lq'])
 
