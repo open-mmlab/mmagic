@@ -1,5 +1,7 @@
 import logging
+import os.path as osp
 from abc import abstractmethod
+from pathlib import Path
 
 import mmcv
 from mmcv import ConfigDict
@@ -140,6 +142,15 @@ class BaseMattor(BaseModel):
             eval_result[metric] = self.allowed_metrics[metric](
                 ori_alpha * 255, ori_trimap, pred_alpha * 255)
         return eval_result
+
+    def save_image(self, pred_alpha, meta, save_path, iteration):
+        image_stem = Path(meta[0]['merged_path']).stem
+        if iteration is None:
+            save_path = osp.join(save_path, f'{image_stem}.png')
+        else:
+            save_path = osp.join(save_path,
+                                 f'{image_stem}_{iteration + 1:06d}.png')
+        mmcv.imwrite(pred_alpha * 255, save_path)
 
     @abstractmethod
     def forward_train(self, merged, trimap, alpha, **kwargs):
