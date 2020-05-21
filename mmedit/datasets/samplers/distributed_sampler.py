@@ -25,9 +25,8 @@ class DistributedSampler(_DistributedSampler):
         self.num_samples_per_replica = int(
             math.ceil(
                 len(self.dataset) * 1.0 / self.num_replicas / samples_per_gpu))
-        self.total_size = (
-            self.num_samples_per_replica * self.num_replicas *
-            self.samples_per_gpu)
+        self.num_samples = self.num_samples_per_replica * self.samples_per_gpu
+        self.total_size = self.num_samples * self.num_replicas
 
         # to avoid padding bug when meeting too small dataset
         if len(dataset) < 1.5 * self.num_replicas * samples_per_gpu:
