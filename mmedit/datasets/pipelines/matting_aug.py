@@ -1,4 +1,5 @@
 import os.path as osp
+import random
 
 import cv2
 import mmcv
@@ -200,4 +201,112 @@ class CompositeFg(object):
         repr_str += (f"(fg_dir='{self.fg_dir}', alpha_dir='{self.alpha_dir}', "
                      f"fg_ext='{self.fg_ext}', alpha_ext='{self.alpha_ext}', "
                      f"interpolation='{self.interpolation}')")
+        return repr_str
+
+
+@PIPELINES.register_module
+class GenerateSoftSeg(object):
+    """Generate soft segmentation mask from input segmentation mask.
+
+    Required keys are "seg" and "img_shape", added keys is "soft_seg".
+
+    Args:
+        fg_thr (float, optional): Threhold of the foreground in the normalized
+            input segmentation mask. Defaults to 0.2.
+        border_width (int, optional): Width of border to be padded to the
+            bottom of the mask. Defaults to 25.
+        erode_ksize (int, optional): Fixed kernel size of the erosion.
+            Defaults to 5.
+        dilate_ksize (int, optional): Fixed kernel size of the dilation.
+            Defaults to 5.
+        erode_iter_range (tuple, optional): Iteration of erosion.
+            Defaults to (10, 20).
+        dilate_iter_range (tuple, optional): Iteration of dilation.
+            Defaults to (3, 7).
+        blur_ksizes (list, optional): List of (h, w) to be selected as the
+            kernel_size of the gaussian blur.
+            Defaults to [(21, 21), (31, 31), (41, 41)].
+    """
+
+    def __init__(self,
+                 fg_thr=0.2,
+                 border_width=25,
+                 erode_ksize=5,
+                 dilate_ksize=5,
+                 erode_iter_range=(10, 20),
+                 dilate_iter_range=(3, 7),
+                 blur_ksizes=[(21, 21), (31, 31), (41, 41)]):
+        if not isinstance(fg_thr, float):
+            raise TypeError(f'fg_thr must be a float, but got {type(fg_thr)}')
+        if not isinstance(border_width, int):
+            raise TypeError(
+                f'border_width must be an int, but got {type(border_width)}')
+        if not isinstance(erode_ksize, int):
+            raise TypeError(
+                f'erode_ksize must be an int, but got {type(erode_ksize)}')
+        if not isinstance(dilate_ksize, int):
+            raise TypeError(
+                f'dilate_ksize must be an int, but got {type(dilate_ksize)}')
+        if (not mmcv.is_tuple_of(erode_iter_range, int)
+                or len(erode_iter_range) != 2):
+            raise TypeError('erode_iter_range must be a tuple of 2 int, '
+                            f'but got {erode_iter_range}')
+        if (not mmcv.is_tuple_of(dilate_iter_range, int)
+                or len(dilate_iter_range) != 2):
+            raise TypeError('dilate_iter_range must be a tuple of 2 int, '
+                            f'but got {dilate_iter_range}')
+        if not mmcv.is_list_of(blur_ksizes, tuple):
+            raise TypeError(
+                f'blur_ksizes must be a list of tuple, but got {blur_ksizes}')
+
+        self.fg_thr = fg_thr
+        self.border_width = border_width
+        self.erode_ksize = erode_ksize
+        self.dilate_ksize = dilate_ksize
+        self.erode_iter_range = erode_iter_range
+        self.dilate_iter_range = dilate_iter_range
+        self.blur_ksizes = blur_ksizes
+
+    def __call__(self, results):
+        height, width = results['img_shape'][:2]
+        seg = results['seg'].astype(np.float32) / 255
+        seg[seg > self.fg_thr] = 1
+
+        # to align with the original repo, pad the bottom of the mask
+        seg = cv2.copyMakeBorder(seg, 0, self.border_width, 0, 0,
+                                 cv2.BORDER_REPLICATE)
+
+        # erode/dilate segmentation mask
+        erode_kernel = cv2.getStructuringElement(
+            cv2.MORPH_ELLIPSE, (self.erode_ksize, self.erode_ksize))
+        dilate_kernel = cv2.getStructuringElement(
+            cv2.MORPH_ELLIPSE, (self.dilate_ksize, self.dilate_ksize))
+        seg = cv2.erode(
+            seg,
+            erode_kernel,
+            iterations=np.random.randint(*self.erode_iter_range))
+        seg = cv2.erode(
+            seg,
+            dilate_kernel,
+            iterations=np.random.randint(*self.dilate_iter_range))
+
+        # perform gaussian blur to segmentation mask
+        seg = cv2.GaussianBlur(seg, random.choice(self.blur_ksizes), 0)
+
+        # remove the padded rows
+        seg = (seg * 255).astype(np.uint8)
+        seg = np.delete(seg, range(height, height + self.border_width), 0)
+
+        results['soft_seg'] = seg
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(fg_thr={self.fg_thr}, '
+                     f'border_width={self.border_width}, '
+                     f'erode_ksize={self.erode_ksize}, '
+                     f'dilate_ksize={self.dilate_ksize}, '
+                     f'erode_iter_range={self.erode_iter_range}, '
+                     f'dilate_iter_range={self.dilate_iter_range}, '
+                     f'blur_ksizes={self.blur_ksizes})')
         return repr_str
