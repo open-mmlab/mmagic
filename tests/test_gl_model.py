@@ -1,10 +1,8 @@
 import pytest
 import torch
-import torch.nn as nn
 from mmedit.models import build_backbone, build_component
 from mmedit.models.backbones import GLDilationNeck
 from mmedit.models.common import SimpleGatedConvModule
-from mmedit.models.components import MultiLayerDiscriminator
 
 
 def test_gl_encdec():
@@ -92,46 +90,3 @@ def test_gl_discs():
         input_l = torch.randn(1, 3, 128, 128).cuda()
         output = gl_discs((input_g, input_l))
         assert output.shape == (1, 1)
-
-
-def test_multi_layer_disc():
-    input_g = torch.randn(1, 3, 256, 256)
-    # test multi-layer discriminators without fc layer
-    multi_disc = MultiLayerDiscriminator(
-        in_channels=3, max_channels=256, fc_in_channels=None)
-    multi_disc.init_weights()
-    disc_pred = multi_disc(input_g)
-    assert disc_pred.shape == (1, 256, 8, 8)
-    multi_disc = MultiLayerDiscriminator(
-        in_channels=3, max_channels=256, fc_in_channels=100)
-    assert isinstance(multi_disc.fc.activate, nn.ReLU)
-
-    multi_disc = MultiLayerDiscriminator(3, 236, fc_in_channels=None)
-    assert multi_disc.with_out_act
-    assert not multi_disc.with_fc
-    assert isinstance(multi_disc.conv5.activate, nn.ReLU)
-
-    multi_disc = MultiLayerDiscriminator(
-        3, 236, fc_in_channels=None, out_act_cfg=None)
-    assert not multi_disc.conv5.with_activation
-    with pytest.raises(TypeError):
-        multi_disc.init_weights(pretrained=dict(igccc=4396))
-
-    with pytest.raises(AssertionError):
-        multi_disc = MultiLayerDiscriminator(
-            3, 236, fc_in_channels=-100, out_act_cfg=None)
-
-    input_g = torch.randn(1, 3, 16, 16)
-    multi_disc = MultiLayerDiscriminator(
-        in_channels=3,
-        max_channels=256,
-        num_convs=2,
-        fc_in_channels=4 * 4 * 128,
-        fc_out_channels=10,
-        with_spectral_norm=True)
-    multi_disc.init_weights()
-    disc_pred = multi_disc(input_g)
-    assert disc_pred.shape == (1, 10)
-    assert multi_disc.conv1.with_spectral_norm
-    assert multi_disc.conv2.with_spectral_norm
-    assert hasattr(multi_disc.fc.linear, 'weight_orig')
