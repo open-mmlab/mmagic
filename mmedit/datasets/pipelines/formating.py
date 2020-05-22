@@ -105,6 +105,8 @@ class FramesToTensor(ImageToTensor):
                     v = v.astype(np.float32)
                 results[key][idx] = to_tensor(v.transpose(2, 0, 1))
             results[key] = torch.stack(results[key], dim=0)
+            if results[key].size(0) == 1:
+                results[key].squeeze_()
         return results
 
 

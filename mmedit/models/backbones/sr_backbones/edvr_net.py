@@ -81,8 +81,8 @@ class PCDAlignment(nn.Module):
         self.offset_conv1 = nn.ModuleDict()
         self.offset_conv2 = nn.ModuleDict()
         self.offset_conv3 = nn.ModuleDict()
-        self.dcn_pack = nn.ModuleDict({})
-        self.feat_conv = nn.ModuleDict({})
+        self.dcn_pack = nn.ModuleDict()
+        self.feat_conv = nn.ModuleDict()
         for i in range(3, 0, -1):
             level = f'l{i}'
             self.offset_conv1[level] = ConvModule(
@@ -107,12 +107,13 @@ class PCDAlignment(nn.Module):
                 deformable_groups=deformable_groups)
 
             if i < 3:
+                act_cfg_ = act_cfg if i == 2 else None
                 self.feat_conv[level] = ConvModule(
                     mid_channels * 2,
                     mid_channels,
                     3,
                     padding=1,
-                    act_cfg=act_cfg)
+                    act_cfg=act_cfg_)
 
         # Cascading DCN
         self.cas_offset_conv1 = ConvModule(
@@ -169,7 +170,9 @@ class PCDAlignment(nn.Module):
             if i == 3:
                 feat = self.lrelu(feat)
             else:
-                self.feat_conv[level](torch.cat([feat, upsampled_feat], dim=1))
+                feat = self.feat_conv[level](
+                    torch.cat([feat, upsampled_feat], dim=1))
+
             if i > 1:
                 # upsample offset and features
                 upsampled_offset = self.upsample(offset) * 2
@@ -179,7 +182,6 @@ class PCDAlignment(nn.Module):
         offset = torch.cat([feat, ref_feats[0]], dim=1)
         offset = self.cas_offset_conv2(self.cas_offset_conv1(offset))
         feat = self.lrelu(self.cas_dcnpack(feat, offset))
-
         return feat
 
 
