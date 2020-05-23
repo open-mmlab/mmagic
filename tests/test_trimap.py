@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import pytest
 from mmedit.datasets.pipelines import (CompositeFg, GenerateSoftSeg,
-                                       GenerateTrimap, MergeFgAndBg)
+                                       GenerateTrimap, MergeFgAndBg, PerturbBg)
 
 
 def check_keys_contain(result_keys, target_keys):
@@ -185,6 +185,37 @@ def test_composite_fg():
     assert repr(composite_fg) == composite_fg.__class__.__name__ + (
         "(fg_dir='tests/data/fg', alpha_dir='tests/data/alpha', "
         "fg_ext='jpg', alpha_ext='jpg', interpolation='bilinear')")
+
+
+def test_perturb_bg():
+    with pytest.raises(ValueError):
+        # gammma_ratio must be a float between [0, 1]
+        PerturbBg(-0.5)
+
+    with pytest.raises(ValueError):
+        # gammma_ratio must be a float between [0, 1]
+        PerturbBg(1.1)
+
+    target_keys = ['bg', 'noisy_bg']
+    # set a random seed to make sure the test goes through every branch
+    np.random.seed(123)
+
+    img_shape = (32, 32, 3)
+    results = dict(bg=np.random.randint(0, 255, img_shape))
+    perturb_bg = PerturbBg(0.6)
+    perturb_bg_results = perturb_bg(results)
+    assert check_keys_contain(perturb_bg_results.keys(), target_keys)
+    assert perturb_bg_results['noisy_bg'].shape == img_shape
+
+    img_shape = (32, 32, 3)
+    results = dict(bg=np.random.randint(0, 255, img_shape))
+    perturb_bg = PerturbBg(0.6)
+    perturb_bg_results = perturb_bg(results)
+    assert check_keys_contain(perturb_bg_results.keys(), target_keys)
+    assert perturb_bg_results['noisy_bg'].shape == img_shape
+
+    repr_str = perturb_bg.__class__.__name__ + '(gamma_ratio=0.6)'
+    assert repr(perturb_bg) == repr_str
 
 
 def test_generate_soft_seg():

@@ -4,8 +4,17 @@ import random
 import cv2
 import mmcv
 import numpy as np
+from skimage.exposure import adjust_gamma
 
 from ..registry import PIPELINES
+
+
+def add_gaussian_noise(img, mu, sigma):
+    img = img.astype(np.float32)
+    gauss_noise = np.random.normal(mu, sigma, img.shape)
+    noisy_img = img + gauss_noise
+    noisy_img = np.clip(noisy_img, 0, 255)
+    return noisy_img
 
 
 @PIPELINES.register_module
@@ -205,6 +214,38 @@ class CompositeFg(object):
 
 
 @PIPELINES.register_module
+class PerturbBg(object):
+    """Randomly add gaussian noise or gamma change to background image.
+
+    Required key is "bg", added key is "noisy_bg".
+
+    Args:
+        gamma_ratio (float, optional): The probability to use gamma correction
+            instead of gaussian noise. Defaults to 0.6.
+    """
+
+    def __init__(self, gamma_ratio=0.6):
+        if gamma_ratio < 0 or gamma_ratio > 1:
+            raise ValueError('gamma_ratio must be a float between [0, 1], '
+                             f'but got {gamma_ratio}')
+        self.gamma_ratio = gamma_ratio
+
+    def __call__(self, results):
+        if np.random.rand() >= self.gamma_ratio:
+            # generate gaussian noise with random guassian N([-7, 7), [2, 6))
+            mu = np.random.randint(-7, 7)
+            sigma = np.random.randint(2, 6)
+            results['noisy_bg'] = add_gaussian_noise(results['bg'], mu, sigma)
+        else:
+            # adjust gamma in a range of N(1, 0.12)
+            gamma = np.random.normal(1, 0.12)
+            results['noisy_bg'] = adjust_gamma(results['bg'], gamma)
+        return results
+
+    def __repr__(self):
+        return self.__class__.__name__ + f'(gamma_ratio={self.gamma_ratio})'
+
+
 class GenerateSoftSeg(object):
     """Generate soft segmentation mask from input segmentation mask.
 
