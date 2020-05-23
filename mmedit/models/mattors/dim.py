@@ -1,7 +1,3 @@
-import os.path as osp
-from pathlib import Path
-
-import mmcv
 import torch
 
 from ..builder import build_loss
@@ -121,12 +117,6 @@ class DIM(BaseMattor):
         eval_result = self.evaluate(pred_alpha, meta)
 
         if save_image:
-            image_stem = Path(meta[0]['merged_path']).stem
-            if iteration is None:
-                save_path = osp.join(save_path, f'{image_stem}.png')
-            else:
-                save_path = osp.join(save_path,
-                                     f'{image_stem}_{iteration + 1:06d}.png')
-            mmcv.imwrite(pred_alpha * 255, save_path)
+            self.save_image(pred_alpha, meta, save_path, iteration)
 
         return {'pred_alpha': pred_alpha, 'eval_result': eval_result}
