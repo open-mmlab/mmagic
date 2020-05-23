@@ -172,6 +172,55 @@ def test_dim():
             assert output_test['eval_result'] is None
 
 
+def test_indexnet():
+    model_cfg, _, test_cfg = _get_model_cfg('indexnet.py')
+
+    # test indexnet inference
+    with torch.no_grad():
+        indexnet = build_model(model_cfg, train_cfg=None, test_cfg=test_cfg)
+        indexnet.eval()
+        input_test = _demo_input_test((64, 64))
+        output_test = indexnet(**input_test, test_mode=True)
+        assert isinstance(output_test['pred_alpha'], np.ndarray)
+        assert output_test['pred_alpha'].shape == (64, 64)
+        assert_dict_keys_equal(output_test['eval_result'], ['SAD', 'MSE'])
+
+        # test inference with gpu
+        if torch.cuda.is_available():
+            indexnet = build_model(
+                model_cfg, train_cfg=None, test_cfg=test_cfg).cuda()
+            indexnet.eval()
+            input_test = _demo_input_test((64, 64), cuda=True)
+            output_test = indexnet(**input_test, test_mode=True)
+            assert isinstance(output_test['pred_alpha'], np.ndarray)
+            assert output_test['pred_alpha'].shape == (64, 64)
+            assert_dict_keys_equal(output_test['eval_result'], ['SAD', 'MSE'])
+
+    # test forward train though we do not guarantee the training for present
+    model_cfg.loss_alpha = None
+    model_cfg.loss_comp = dict(type='L1CompositionLoss')
+    indexnet = build_model(
+        model_cfg,
+        train_cfg=mmcv.ConfigDict(train_backbone=True),
+        test_cfg=test_cfg)
+    input_train = _demo_input_train((64, 64), batch_size=2)
+    output_train = indexnet(**input_train)
+    assert output_train['num_samples'] == 2
+    assert_dict_keys_equal(output_train['losses'], ['loss_comp'])
+
+    if torch.cuda.is_available():
+        model_cfg.loss_alpha = dict(type='L1Loss')
+        model_cfg.loss_comp = None
+        indexnet = build_model(
+            model_cfg,
+            train_cfg=mmcv.ConfigDict(train_backbone=True),
+            test_cfg=test_cfg).cuda()
+        input_train = _demo_input_train((64, 64), batch_size=2, cuda=True)
+        output_train = indexnet(**input_train)
+        assert output_train['num_samples'] == 2
+        assert_dict_keys_equal(output_train['losses'], ['loss_alpha'])
+
+
 def test_gca():
     model_cfg, train_cfg, test_cfg = _get_model_cfg('gca.py')
     model_cfg['pretrained'] = None
