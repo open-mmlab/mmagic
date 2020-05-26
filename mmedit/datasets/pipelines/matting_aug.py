@@ -272,7 +272,7 @@ class GenerateSoftSeg(object):
     def __init__(self,
                  fg_thr=0.2,
                  border_width=25,
-                 erode_ksize=5,
+                 erode_ksize=3,
                  dilate_ksize=5,
                  erode_iter_range=(10, 20),
                  dilate_iter_range=(3, 7),
@@ -326,7 +326,7 @@ class GenerateSoftSeg(object):
             seg,
             erode_kernel,
             iterations=np.random.randint(*self.erode_iter_range))
-        seg = cv2.erode(
+        seg = cv2.dilate(
             seg,
             dilate_kernel,
             iterations=np.random.randint(*self.dilate_iter_range))
