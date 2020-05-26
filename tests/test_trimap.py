@@ -47,7 +47,7 @@ def generate_ref_trimap(alpha, kernel_size, iterations, random):
     pad = ((erode_kh // 2, (erode_kh - 1) // 2), (erode_kw // 2,
                                                   (erode_kw - 1) // 2))
     for _ in range(erode_iter):
-        src = np.pad(src, pad, constant_values=np.max(src))
+        src = np.pad(src, pad, 'constant', constant_values=np.max(src))
         for i in range(h):
             for j in range(w):
                 target = src[i:i + erode_kh, j:j + erode_kw]
