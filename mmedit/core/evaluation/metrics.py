@@ -194,3 +194,22 @@ def ssim(img1, img2, crop_border=0, input_order='HWC'):
     for i in range(img1.shape[2]):
         ssims.append(_ssim(img1[..., i], img2[..., i]))
     return np.array(ssims).mean()
+
+
+class L1Evaluation(object):
+    """L1 evaluation metric.
+
+    Args:
+        data_dict (dict): Must contain keys of 'gt_img' and 'fake_res'. If
+            'mask' is given, the results will be computed with mask as weight.
+    """
+
+    def __call__(self, data_dict):
+        gt = data_dict['gt_img']
+        pred = data_dict['fake_res']
+        mask = data_dict.get('mask', None)
+
+        from mmedit.models.losses.pixelwise_loss import l1_loss
+        l1_error = l1_loss(pred, gt, weight=mask, reduction='mean')
+
+        return l1_error

@@ -57,6 +57,6 @@ class SimpleGatedConvModule(nn.Module):
             x = self.feat_act(x)
         if self.with_gate_act:
             gate = self.gate_act(gate)
-        x *= gate
+        x = x * gate
 
         return x
