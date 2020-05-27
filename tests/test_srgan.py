@@ -136,7 +136,8 @@ def test_srgan():
         with patch.object(
                 restorer,
                 'perceptual_loss',
-                return_value=(torch.tensor(1.0), torch.tensor(2.0))):
+                return_value=(torch.tensor(1.0).cuda(),
+                              torch.tensor(2.0).cuda())):
             outputs = restorer.train_step(data_batch, optimizer)
             assert isinstance(outputs, dict)
             assert isinstance(outputs['log_vars'], dict)

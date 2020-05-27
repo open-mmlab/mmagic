@@ -93,7 +93,7 @@ def scale_bbox(bbox, target_size):
         left = int(max(0, left_ori - (w - w_ori) // 2))
 
         if isinstance(bbox, torch.Tensor):
-            bbox_new = torch.Tensor([top, left, h, w])
+            bbox_new = torch.Tensor([top, left, h, w]).type_as(bbox)
         else:
             bbox_new = np.asarray([top, left, h, w])
 
