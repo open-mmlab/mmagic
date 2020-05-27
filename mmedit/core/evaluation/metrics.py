@@ -5,6 +5,11 @@ from .metric_utils import gauss_gradient
 
 
 def sad(alpha, trimap, pred_alpha):
+    if alpha.ndim != 2 or trimap.ndim != 2 or pred_alpha.ndim != 2:
+        raise ValueError(
+            'input alpha, trimap and pred_alpha should has two dimensions, '
+            f'alpha {alpha.shape}, please check their shape: '
+            f'trimap {trimap.shape}, pred_alpha {pred_alpha.shape}')
     assert (pred_alpha[trimap == 0] == 0).all()
     assert (pred_alpha[trimap == 255] == 255).all()
     alpha = alpha.astype(np.float64) / 255
@@ -14,6 +19,11 @@ def sad(alpha, trimap, pred_alpha):
 
 
 def mse(alpha, trimap, pred_alpha):
+    if alpha.ndim != 2 or trimap.ndim != 2 or pred_alpha.ndim != 2:
+        raise ValueError(
+            'input alpha, trimap and pred_alpha should has two dimensions, '
+            f'alpha {alpha.shape}, please check their shape: '
+            f'trimap {trimap.shape}, pred_alpha {pred_alpha.shape}')
     assert (pred_alpha[trimap == 0] == 0).all()
     assert (pred_alpha[trimap == 255] == 255).all()
     alpha = alpha.astype(np.float64) / 255
@@ -35,6 +45,11 @@ def gradient_error(alpha, trimap, pred_alpha, sigma=1.4):
         pred_alpha (ndarray): Predicted alpha matte.
         sigma (float): Standard deviation of the gaussian kernel. Default: 1.4.
     """
+    if alpha.ndim != 2 or trimap.ndim != 2 or pred_alpha.ndim != 2:
+        raise ValueError(
+            'input alpha, trimap and pred_alpha should has two dimensions, '
+            f'alpha {alpha.shape}, please check their shape: '
+            f'trimap {trimap.shape}, pred_alpha {pred_alpha.shape}')
     if not ((pred_alpha[trimap == 0] == 0).all() and
             (pred_alpha[trimap == 255] == 255).all()):
         raise ValueError(
@@ -53,6 +68,68 @@ def gradient_error(alpha, trimap, pred_alpha, sigma=1.4):
     grad_loss = ((alpha_grad - pred_alpha_grad)**2 * (trimap == 128)).sum()
     # same as SAD, divide by 1000 to reduce the magnitude of the result
     return grad_loss / 1000
+
+
+def connectivity(alpha, trimap, pred_alpha, step=0.1):
+    """Connectivity error for evaluating alpha matte prediction.
+
+    Args:
+        alpha (ndarray): Ground-truth alpha matte with shape (height, width).
+            Value range of alpha is [0, 255].
+        trimap (ndarray): Input trimap with shape (height, width). Elements
+            in trimap are one of {0, 128, 255}.
+        pred_alpha (ndarray): Predicted alpha matte with shape (height, width).
+            Value range of pred_alpha is [0, 255].
+        step (float): Step of threshold when computing intersection between
+            `alpha` and `pred_alpha`.
+    """
+    if alpha.ndim != 2 or trimap.ndim != 2 or pred_alpha.ndim != 2:
+        raise ValueError(
+            'input alpha, trimap and pred_alpha should has two dimensions, '
+            f'alpha {alpha.shape}, please check their shape: '
+            f'trimap {trimap.shape}, pred_alpha {pred_alpha.shape}')
+    if not ((pred_alpha[trimap == 0] == 0).all() and
+            (pred_alpha[trimap == 255] == 255).all()):
+        raise ValueError(
+            'pred_alpha should be masked by trimap before evaluation')
+    alpha = alpha.astype(np.float32) / 255
+    pred_alpha = pred_alpha.astype(np.float32) / 255
+
+    height, width = alpha.shape
+    thresh_steps = np.arange(0, 1 + step, step)
+    round_down_map = -np.ones_like(alpha)
+    for i in range(1, len(thresh_steps)):
+        alpha_thresh = alpha >= thresh_steps[i]
+        pred_alpha_thresh = pred_alpha >= thresh_steps[i]
+        intersection = (alpha_thresh & pred_alpha_thresh).astype(np.uint8)
+
+        # connected components
+        _, output, stats, _ = cv2.connectedComponentsWithStats(
+            intersection, connectivity=4)
+        # start from 1 in dim 0 to exclude background
+        size = stats[1:, -1]
+        max_id = np.argmax(size)
+
+        # largest connected component of the intersection
+        omega = np.zeros_like(alpha)
+        if size is not None:
+            # plus one to include background
+            omega[output == max_id + 1] = 1
+
+        mask = (round_down_map == -1) & (omega == 0)
+        round_down_map[mask] = thresh_steps[i - 1]
+    round_down_map[round_down_map == -1] = 1
+
+    alpha_diff = alpha - round_down_map
+    pred_alpha_diff = pred_alpha - round_down_map
+    # only calculate difference larger than or equal to 0.15
+    alpha_phi = 1 - alpha_diff * (alpha_diff >= 0.15)
+    pred_alpha_phi = 1 - pred_alpha_diff * (pred_alpha_diff >= 0.15)
+
+    connectivity_error = np.sum(
+        np.abs(alpha_phi - pred_alpha_phi) * (trimap == 128))
+    # same as SAD, divide by 1000 to reduce the magnitude of the result
+    return connectivity_error / 1000
 
 
 def reorder_image(img, input_order='HWC'):

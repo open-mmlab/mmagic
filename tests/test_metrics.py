@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
-from mmedit.core.evaluation.metrics import (gradient_error, mse, psnr,
-                                            reorder_image, sad, ssim)
+from mmedit.core.evaluation.metrics import (connectivity, gradient_error, mse,
+                                            psnr, reorder_image, sad, ssim)
 
 
 def test_reorder_image():
@@ -89,6 +89,10 @@ def test_sad():
         # pred_alpha should be masked by trimap before evaluation
         sad(alpha, trimap, pred_alpha)
 
+    with pytest.raises(ValueError):
+        # input should all be two dimentional
+        sad(alpha[..., None], trimap, pred_alpha)
+
     # mask pred_alpha
     pred_alpha[trimap == 0] = 0
     pred_alpha[trimap == 255] = 255
@@ -107,6 +111,10 @@ def test_mse():
     with pytest.raises(AssertionError):
         # pred_alpha should be masked by trimap before evaluation
         mse(alpha, trimap, pred_alpha)
+
+    with pytest.raises(ValueError):
+        # input should all be two dimentional
+        mse(alpha[..., None], trimap, pred_alpha)
 
     # mask pred_alpha
     pred_alpha[trimap == 0] = 0
@@ -128,9 +136,37 @@ def test_gradient_error():
         # pred_alpha should be masked by trimap before evaluation
         gradient_error(alpha, trimap, pred_alpha)
 
+    with pytest.raises(ValueError):
+        # input should all be two dimentional
+        gradient_error(alpha[..., None], trimap, pred_alpha)
+
     # mask pred_alpha
     pred_alpha[trimap == 0] = 0
     pred_alpha[trimap == 255] = 255
 
     gradient_result = gradient_error(alpha, trimap, pred_alpha)
     np.testing.assert_almost_equal(gradient_result, 0.0028887)
+
+
+def test_connectivity():
+    """Test connectivity error for evaluating predicted alpha matte."""
+    alpha = np.ones((32, 32)) * 255
+    pred_alpha = np.zeros((32, 32))
+    trimap = np.zeros((32, 32))
+    trimap[:16, :16] = 128
+    trimap[16:, 16:] = 255
+
+    with pytest.raises(ValueError):
+        # pred_alpha should be masked by trimap before evaluation
+        connectivity(alpha, trimap, pred_alpha)
+
+    with pytest.raises(ValueError):
+        # input should all be two dimentional
+        connectivity(alpha[..., None], trimap, pred_alpha)
+
+    # mask pred_alpha
+    pred_alpha[trimap == 0] = 0
+    pred_alpha[trimap == 255] = 255
+
+    connectivity_result = connectivity(alpha, trimap, pred_alpha)
+    np.testing.assert_almost_equal(connectivity_result, 0.256)
