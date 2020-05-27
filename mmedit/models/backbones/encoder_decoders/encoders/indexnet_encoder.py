@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn.weight_init import constant_init, xavier_init
 from mmcv.runner import load_checkpoint
+from mmcv.utils.parrots_wrapper import SyncBatchNorm
 from mmedit.models.common import ASPP, ConvModule, DepthwiseSeparableConvModule
 from mmedit.models.registry import COMPONENTS
 from mmedit.utils import get_root_logger
@@ -429,7 +430,7 @@ class IndexNetEncoder(nn.Module):
 
     def freeze_bn(self):
         for m in self.modules():
-            if isinstance(m, (nn.BatchNorm2d, nn.SyncBatchNorm)):
+            if isinstance(m, (nn.BatchNorm2d, SyncBatchNorm)):
                 m.eval()
 
     def init_weights(self, pretrained=None):
