@@ -60,6 +60,10 @@ class BGMattingEncoder(nn.Module):
         # rename this conv as bg_context_conv2.
         self.bg_context_conv2 = self.build_context_conv(norm_cfg)
 
+        self.out_channels = (
+            self.mid_channels * 2**self.num_downsampling +
+            self.context_channels * 3)
+
     def build_encoder(self, in_channels, norm_cfg):
         enc = [
             ConvModule(
