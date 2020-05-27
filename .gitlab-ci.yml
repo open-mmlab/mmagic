@@ -28,7 +28,7 @@ test:
     - git clone git@gitlab.sz.sensetime.com:EIG-Research/mmcv.git
     - cd mmcv && git checkout newer-runner && pip install -e . && cd ..
     - echo "Start building..."
-    - pip install pillow==6.2.1 lmdb scikit-image
+    - pip install pillow==6.2.1 lmdb scikit-image yapf
     - pip install -e .
     - python -c "import mmedit; print(mmedit.__version__)"
     - echo "Start testing..."
