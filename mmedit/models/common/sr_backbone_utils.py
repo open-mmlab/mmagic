@@ -1,6 +1,6 @@
 import torch.nn as nn
 from mmcv.cnn import constant_init, kaiming_init
-from torch.nn.modules.batchnorm import _BatchNorm
+from mmcv.utils.parrots_wrapper import _BatchNorm
 
 
 def default_init_weights(module, scale=1):

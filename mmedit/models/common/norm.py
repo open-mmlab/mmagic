@@ -1,10 +1,11 @@
 import torch.nn as nn
+from mmcv.utils.parrots_wrapper import SyncBatchNorm
 
 norm_cfg = {
     # format: layer_type: (abbreviation, module)
     'BN': ('bn', nn.BatchNorm2d),
     'BN3d': ('bn', nn.BatchNorm3d),
-    'SyncBN': ('bn', nn.SyncBatchNorm),
+    'SyncBN': ('bn', SyncBatchNorm),
     'GN': ('gn', nn.GroupNorm),
     'IN': ('in', nn.InstanceNorm2d)
 }

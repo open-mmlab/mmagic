@@ -4,7 +4,7 @@ import time
 
 import torch
 from setuptools import find_packages, setup
-from torch.utils.cpp_extension import BuildExtension, CUDAExtension
+from mmcv.utils.parrots_wrapper import BuildExtension, CUDAExtension
 
 
 def readme():

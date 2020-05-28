@@ -1,6 +1,7 @@
 import pytest
 import torch
 import torch.nn as nn
+from mmcv.utils.parrots_wrapper import SyncBatchNorm
 from mmedit.models.common import (ASPP, ConvModule,
                                   DepthwiseSeparableConvModule, GCAModule,
                                   LinearModule, MaskConvModule, PartialConv2d,
@@ -293,7 +294,7 @@ def test_norm_layer():
 
     cfg = dict(type='SyncBN')
     name, layer = build_norm_layer(cfg, 3, postfix=3)
-    assert type(layer) == nn.SyncBatchNorm
+    assert type(layer) == SyncBatchNorm
     assert name == 'bn3'
     assert layer.num_features == 3
 
