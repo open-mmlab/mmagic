@@ -23,7 +23,7 @@ class SimpleEncoderDecoder(nn.Module):
         self.encoder.init_weights(pretrained)
         self.decoder.init_weights()
 
-    def forward(self, x):
-        out = self.encoder(x)
+    def forward(self, *args, **kwargs):
+        out = self.encoder(*args, **kwargs)
         out = self.decoder(out)
         return out
