@@ -31,7 +31,7 @@ def assert_dict_keys_equal(dictionary, target_keys):
 @patch.multiple(BaseMattor, __abstractmethods__=set())
 def test_base_mattor():
     backbone = dict(
-        type='EncoderDecoder',
+        type='SimpleEncoderDecoder',
         encoder=dict(type='VGG16'),
         decoder=dict(type='PlainDecoder'))
     refiner = dict(type='PlainRefiner')

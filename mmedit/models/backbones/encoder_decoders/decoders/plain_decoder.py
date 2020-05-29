@@ -31,21 +31,47 @@ class PlainDecoder(nn.Module):
             if isinstance(m, nn.Conv2d):
                 xavier_init(m)
 
-    def forward(self, x, max_indices):
+    def forward(self, inputs):
+        """Forward function of PlainDecoder.
+
+        Args:
+            inputs (dict): Output dictionary of the VGG encoder containing:
+                out (Tensor): Output of the VGG encoder.
+                max_idx_1 (Tensor): Index of the first maxpooling layer in the
+                    VGG encoder.
+                max_idx_2 (Tensor): Index of the second maxpooling layer in the
+                    VGG encoder.
+                max_idx_3 (Tensor): Index of the third maxpooling layer in the
+                    VGG encoder.
+                max_idx_4 (Tensor): Index of the fourth maxpooling layer in the
+                    VGG encoder.
+                max_idx_5 (Tensor): Index of the fifth maxpooling layer in the
+                    VGG encoder.
+
+        Returns:
+            Tensor: Output tensor.
+        """
+        max_idx_1 = inputs['max_idx_1']
+        max_idx_2 = inputs['max_idx_2']
+        max_idx_3 = inputs['max_idx_3']
+        max_idx_4 = inputs['max_idx_4']
+        max_idx_5 = inputs['max_idx_5']
+        x = inputs['out']
+
         out = self.relu(self.deconv6_1(x))
-        out = self.max_unpool2d(out, max_indices[4])
+        out = self.max_unpool2d(out, max_idx_5)
 
         out = self.relu(self.deconv5_1(out))
-        out = self.max_unpool2d(out, max_indices[3])
+        out = self.max_unpool2d(out, max_idx_4)
 
         out = self.relu(self.deconv4_1(out))
-        out = self.max_unpool2d(out, max_indices[2])
+        out = self.max_unpool2d(out, max_idx_3)
 
         out = self.relu(self.deconv3_1(out))
-        out = self.max_unpool2d(out, max_indices[1])
+        out = self.max_unpool2d(out, max_idx_2)
 
         out = self.relu(self.deconv2_1(out))
-        out = self.max_unpool2d(out, max_indices[0])
+        out = self.max_unpool2d(out, max_idx_1)
 
         out = self.relu(self.deconv1_1(out))
         raw_alpha = self.deconv1(out)
