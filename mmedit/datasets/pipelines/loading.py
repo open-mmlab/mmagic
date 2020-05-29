@@ -17,6 +17,8 @@ class LoadImageFromFile(object):
         io_backend (str): io backend where images are store. Default: 'disk'.
         key (str): Keys in results to find corresponding path. Default: 'gt'.
         flag (str): Loading flag for images. Default: 'color'.
+        channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
+            Default to 'bgr'.
         save_original_img (bool): If True, maintain a copy of the image in
             `results` dict with name of `f'ori_{key}'`. Default: False.
         kwargs (dict): Args for file client.
@@ -26,12 +28,14 @@ class LoadImageFromFile(object):
                  io_backend='disk',
                  key='gt',
                  flag='color',
+                 channel_order='bgr',
                  save_original_img=False,
                  **kwargs):
         self.io_backend = io_backend
         self.key = key
         self.flag = flag
         self.save_original_img = save_original_img
+        self.channel_order = channel_order
         self.kwargs = kwargs
         self.file_client = None
 
@@ -40,7 +44,8 @@ class LoadImageFromFile(object):
             self.file_client = FileClient(self.io_backend, **self.kwargs)
         filepath = str(results[f'{self.key}_path'])
         img_bytes = self.file_client.get(filepath)
-        img = mmcv.imfrombytes(img_bytes, flag=self.flag)  # HWC, BGR
+        img = mmcv.imfrombytes(
+            img_bytes, flag=self.flag, channel_order=self.channel_order)  # HWC
 
         results[self.key] = img
         results[f'{self.key}_path'] = filepath
