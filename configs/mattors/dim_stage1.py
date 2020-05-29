@@ -2,7 +2,7 @@
 model = dict(
     type='DIM',
     backbone=dict(
-        type='EncoderDecoder',
+        type='SimpleEncoderDecoder',
         encoder=dict(type='VGG16'),
         decoder=dict(type='PlainDecoder')),
     pretrained=None,  # TODO: add pretrained model

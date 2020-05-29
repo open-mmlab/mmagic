@@ -23,8 +23,8 @@ def test_plain_decoder():
     # create max_pooling index for training
     encoder = VGG16()
     img = _demo_inputs()
-    feat, mid_feat = encoder(img)
-    prediction = model(feat, mid_feat)
+    outputs = encoder(img)
+    prediction = model(outputs)
     assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
 
     # test forward with gpu
@@ -36,8 +36,8 @@ def test_plain_decoder():
         encoder = VGG16()
         encoder.cuda()
         img = _demo_inputs().cuda()
-        feat, mid_feat = encoder(img)
-        prediction = model(feat, mid_feat)
+        outputs = encoder(img)
+        prediction = model(outputs)
         assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
 
 

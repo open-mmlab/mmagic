@@ -80,4 +80,11 @@ class VGG16(nn.Module):
         if self.aspp:
             out = self.aspp(out)
 
-        return out, (max_idx_1, max_idx_2, max_idx_3, max_idx_4, max_idx_5)
+        return {
+            'out': out,
+            'max_idx_1': max_idx_1,
+            'max_idx_2': max_idx_2,
+            'max_idx_3': max_idx_3,
+            'max_idx_4': max_idx_4,
+            'max_idx_5': max_idx_5
+        }
