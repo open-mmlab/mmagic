@@ -9,7 +9,7 @@ def random_choose_unknown(unknown, crop_size):
         crop_size (tuple[int]): The given crop size.
 
     Returns:
-        tuple[int]: The top-left point chosen which is an unknown pixel.
+        tuple[int]: The top-left point of the chosen bbox.
     """
     h, w = unknown.shape
     crop_h, crop_w = crop_size

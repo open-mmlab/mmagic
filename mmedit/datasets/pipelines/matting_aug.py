@@ -7,6 +7,7 @@ import numpy as np
 from skimage.exposure import adjust_gamma
 
 from ..registry import PIPELINES
+from .utils import random_choose_unknown
 
 
 def add_gaussian_noise(img, mu, sigma):
@@ -214,6 +215,104 @@ class CompositeFg(object):
 
 
 @PIPELINES.register_module
+class GenerateSeg(object):
+    """Generate segmentation mask from alpha matte.
+
+    Args:
+        kernel_size (int, optional): Kernel size for both erosion and
+            dilation. The kernel will have the same height and width.
+            Defaults to 5.
+        erode_iter_range (tuple, optional): Iteration of erosion.
+            Defaults to (10, 20).
+        dilate_iter_range (tuple, optional): Iteration of dilation.
+            Defaults to (15, 30).
+        num_holes_range (tuple, optional): Range of number of holes to
+            randomly select from. Defaults to (0, 3).
+        hole_sizes (list, optional): List of (h, w) to be selected as the
+            size of the rectangle hole.
+            Defaults to [(15, 15), (25, 25), (35, 35), (45, 45)].
+        blur_ksizes (list, optional): List of (h, w) to be selected as the
+            kernel_size of the gaussian blur.
+            Defaults to [(21, 21), (31, 31), (41, 41)].
+    """
+
+    def __init__(self,
+                 kernel_size=5,
+                 erode_iter_range=(10, 20),
+                 dilate_iter_range=(15, 30),
+                 num_holes_range=(0, 3),
+                 hole_sizes=[(15, 15), (25, 25), (35, 35), (45, 45)],
+                 blur_ksizes=[(21, 21), (31, 31), (41, 41)]):
+        self.kernel_size = kernel_size
+        self.erode_iter_range = erode_iter_range
+        self.dilate_iter_range = dilate_iter_range
+        self.num_holes_range = num_holes_range
+        self.hole_sizes = hole_sizes
+        self.blur_ksizes = blur_ksizes
+
+    @staticmethod
+    def _crop_hole(img, start_point, hole_size):
+        """Create a all-zero rectangle hole in the image.
+
+        Args:
+            img (np.ndarray): Source image.
+            start_point (tuple[int]): The top-left point of the rectangle.
+            hole_size (tuple[int]): The height and width of the rectangle hole.
+
+        Return:
+            np.ndarray: The cropped image.
+        """
+        top, left = start_point
+        bottom = top + hole_size[0]
+        right = left + hole_size[1]
+        height, weight = img.shape[:2]
+        if top < 0 or bottom > height or left < 0 or right > weight:
+            raise ValueError(f'crop area {(left, top, right, bottom)} exceeds '
+                             f'image size {(height, weight)}')
+        img[top:bottom, left:right] = 0
+        return img
+
+    def __call__(self, results):
+        alpha = results['alpha']
+        trimap = results['trimap']
+
+        # generete segmentation mask
+        kernel = cv2.getStructuringElement(
+            cv2.MORPH_ELLIPSE, (self.kernel_size, self.kernel_size))
+        seg = (alpha > 0.5).astype(np.float32)
+        seg = cv2.erode(
+            seg, kernel, iterations=np.random.randint(*self.erode_iter_range))
+        seg = cv2.dilate(
+            seg, kernel, iterations=np.random.randint(*self.dilate_iter_range))
+
+        # generate some holes in segmentation mask
+        num_holes = np.random.randint(*self.num_holes_range)
+        for i in range(num_holes):
+            hole_size = random.choice(self.hole_sizes)
+            unknown = trimap == 128
+            start_point = random_choose_unknown(unknown, hole_size)
+            seg = self._crop_hole(seg, start_point, hole_size)
+            trimap = self._crop_hole(trimap, start_point, hole_size)
+
+        # perform gaussian blur to segmentation mask
+        seg = cv2.GaussianBlur(seg, random.choice(self.blur_ksizes), 0)
+
+        results['seg'] = seg.astype(np.uint8)
+        results['num_holes'] = num_holes
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (
+            f'(kernel_size={self.kernel_size}, '
+            f'erode_iter_range={self.erode_iter_range}, '
+            f'dilate_iter_range={self.dilate_iter_range}, '
+            f'num_holes_range={self.num_holes_range}, '
+            f'hole_sizes={self.hole_sizes}, blur_ksizes={self.blur_ksizes}')
+        return repr_str
+
+
+@PIPELINES.register_module
 class PerturbBg(object):
     """Randomly add gaussian noise or gamma change to background image.
 
@@ -246,6 +345,7 @@ class PerturbBg(object):
         return self.__class__.__name__ + f'(gamma_ratio={self.gamma_ratio})'
 
 
+@PIPELINES.register_module
 class GenerateSoftSeg(object):
     """Generate soft segmentation mask from input segmentation mask.
 
