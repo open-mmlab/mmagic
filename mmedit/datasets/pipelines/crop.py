@@ -369,6 +369,69 @@ class CropAroundUnknown(object):
 
 
 @PIPELINES.register_module
+class CropAroundFg(object):
+    """Crop around the whole foreground in the segmentation mask.
+
+    Required keys are "img_shape", "seg" and the keys in argument `keys`.
+    Meanwhile, "seg" must be in argument `keys`. Added or modified keys are
+    "img_shape", "crop_bbox" and the keys in argument `keys`.
+
+    Args:
+        keys (Sequence[str]): The images to be cropped. It must contain
+            'seg'.
+        bd_ratio_range (tuple, optional): The range of the boundary (bd) ratio
+            to select from. The boundary ratio is the ratio of the boundary to
+            the minimal bbox that contains the whole foreground given by
+            segmentation. Default to (0.1, 0.4).
+        test_mode (bool): Whether use test mode. In test mode, the tight crop
+            area of foreground will be extended to the a square.
+            Default to False.
+    """
+
+    def __init__(self, keys, bd_ratio_range=(0.1, 0.4), test_mode=False):
+        if 'seg' not in keys:
+            raise ValueError(f'"seg" must be in keys, but got {keys}')
+        if (not mmcv.is_tuple_of(bd_ratio_range, float)
+                or len(bd_ratio_range) != 2):
+            raise TypeError('bd_ratio_range must be a tuple of 2 int, but got '
+                            f'{bd_ratio_range}')
+        self.keys = keys
+        self.bd_ratio_range = bd_ratio_range
+        self.test_mode = test_mode
+
+    def __call__(self, results):
+        seg = results['seg']
+        height, width = seg.shape[:2]
+
+        # get foreground bbox
+        fg_coor = np.array(np.where(seg))
+        top, left = np.amin(fg_coor, axis=1)
+        bottom, right = np.amax(fg_coor, axis=1)
+
+        # enlarge bbox
+        long_side = np.maximum(bottom - top, right - left)
+        if self.test_mode:
+            bottom = top + long_side
+            right = left + long_side
+        boundary_ratio = np.random.uniform(*self.bd_ratio_range)
+        boundary = int(np.round(boundary_ratio * long_side))
+        # NOTE: Different from the original repo, we keep track of the four
+        # corners of the bbox (left, top, right, bottom) while the original
+        # repo use (top, left, height, width) to represent bbox. This may
+        # introduce a difference of 1 pixel in height or width.
+        top = max(top - boundary, 0)
+        left = max(left - boundary, 0)
+        bottom = min(bottom + boundary, height - 1)
+        right = min(right + boundary, width - 1)
+
+        for key in self.keys:
+            results[key] = results[key][top:bottom, left:right]
+        results['img_shape'] = (bottom - top, right - left)
+        results['crop_bbox'] = (left, top, right, bottom)
+        return results
+
+
+@PIPELINES.register_module
 class ModCrop(object):
     """Mod crop gt images, used during testing.
 
