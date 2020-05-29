@@ -2,7 +2,7 @@ import copy
 
 import numpy as np
 import pytest
-from mmedit.datasets.pipelines import (Crop, CropAroundCenter,
+from mmedit.datasets.pipelines import (Crop, CropAroundCenter, CropAroundFg,
                                        CropAroundUnknown, FixedCrop, ModCrop,
                                        PairedRandomCrop)
 
@@ -323,6 +323,39 @@ class TestAugmentations(object):
             f"(keys={keys}, crop_sizes={[(240, 240)]}, unknown_source='alpha',"
             " interpolation='bilinear')")
         assert crop_around_semi_trans.__repr__() == repr_str
+
+    def test_crop_around_fg(self):
+        with pytest.raises(ValueError):
+            # keys must contain 'seg'
+            CropAroundFg(['fg', 'bg'])
+        with pytest.raises(TypeError):
+            # bd_ratio_range must be a tuple of 2 flaot
+            CropAroundFg(['seg', 'merged'], bd_ratio_range=0.1)
+
+        keys = ['bg', 'merged', 'seg']
+        target_keys = ['bg', 'merged', 'seg', 'crop_bbox']
+
+        bg = np.random.rand(60, 60, 3)
+        merged = np.random.rand(60, 60, 3)
+        seg = np.random.rand(60, 60)
+        results = dict(bg=bg, merged=merged, seg=seg, img_shape=seg.shape)
+
+        crop_around_fg = CropAroundFg(keys)
+        crop_around_fg_results = crop_around_fg(results)
+        assert self.check_keys_contain(crop_around_fg_results.keys(),
+                                       target_keys)
+        assert self.check_crop(crop_around_fg_results['img_shape'],
+                               crop_around_fg_results['crop_bbox'])
+
+        crop_around_fg = CropAroundFg(keys, test_mode=True)
+        crop_around_fg_results = crop_around_fg(results)
+        result_img_shape = crop_around_fg_results['img_shape']
+        assert self.check_keys_contain(crop_around_fg_results.keys(),
+                                       target_keys)
+        assert self.check_crop(result_img_shape,
+                               crop_around_fg_results['crop_bbox'])
+        # it should be a square in test mode
+        assert result_img_shape[0] == result_img_shape[1]
 
     def test_modcrop(self):
         # color image
