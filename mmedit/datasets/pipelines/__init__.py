@@ -9,8 +9,8 @@ from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
 from .loading import (LoadAlpha, LoadImageFromFile, LoadImageFromFileList,
                       LoadMask, LoadPairedImageFromFile, RandomLoadResizeBg)
-from .matting_aug import (CompositeFg, GenerateSoftSeg, GenerateTrimap,
-                          MergeFgAndBg, PerturbBg)
+from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
+                          GenerateTrimap, MergeFgAndBg, PerturbBg)
 from .normalization import Normalize, RescaleToZeroOne
 from .tmad_aug import GetPatchPool
 
@@ -24,5 +24,5 @@ __all__ = [
     'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList',
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
     'LoadPairedImageFromFile', 'GenerateFrameIndices', 'GetPatchPool',
-    'GenerateSoftSeg', 'PerturbBg'
+    'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg'
 ]

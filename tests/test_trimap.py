@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
 import pytest
-from mmedit.datasets.pipelines import (CompositeFg, GenerateSoftSeg,
-                                       GenerateTrimap, MergeFgAndBg, PerturbBg)
+from mmedit.datasets.pipelines import (CompositeFg, GenerateSeg,
+                                       GenerateSoftSeg, GenerateTrimap,
+                                       MergeFgAndBg, PerturbBg)
 
 
 def check_keys_contain(result_keys, target_keys):
@@ -185,6 +186,33 @@ def test_composite_fg():
     assert repr(composite_fg) == composite_fg.__class__.__name__ + (
         "(fg_dir='tests/data/fg', alpha_dir='tests/data/alpha', "
         "fg_ext='jpg', alpha_ext='jpg', interpolation='bilinear')")
+
+
+def test_generate_seg():
+    with pytest.raises(ValueError):
+        # crop area should not exceed the image size
+        img = np.random.rand(32, 32, 3)
+        GenerateSeg._crop_hole(img, (0, 0), (64, 64))
+
+    target_keys = ['alpha', 'trimap', 'seg', 'num_holes']
+    alpha = np.random.randint(0, 255, (32, 32))
+    trimap = np.zeros_like(alpha)
+    trimap[(alpha > 0) & (alpha < 255)] = 128
+    trimap[alpha == 255] = 255
+    results = dict(alpha=alpha, trimap=trimap)
+    generate_seg = GenerateSeg()
+    generate_seg_results = generate_seg(results)
+    assert check_keys_contain(generate_seg_results.keys(), target_keys)
+    assert generate_seg_results['seg'].shape == alpha.shape
+    assert isinstance(generate_seg_results['num_holes'], int)
+    assert generate_seg_results['num_holes'] < 3
+
+    # check repr string and the default setting
+    assert repr(generate_seg) == generate_seg.__class__.__name__ + (
+        '(kernel_size=5, erode_iter_range=(10, 20), '
+        'dilate_iter_range=(15, 30), num_holes_range=(0, 3), '
+        'hole_sizes=[(15, 15), (25, 25), (35, 35), (45, 45)], '
+        'blur_ksizes=[(21, 21), (31, 31), (41, 41)]')
 
 
 def test_perturb_bg():
