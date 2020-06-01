@@ -31,15 +31,22 @@ class L1Loss(nn.Module):
         loss_weight (float): Loss weight for L1 loss. Default: 1.0.
         reduction (str): Specifies the reduction to apply to the output.
             Supported choices are 'none' | 'mean' | 'sum'. Default: 'mean'.
+        sample_wise (bool): Whether calculate the loss sample-wise. This
+            argument only takes effect when `reduction` is 'mean' and `weight`
+            (argument of `forward()`) is not None. It will first reduce loss
+            with 'mean' per-sample, and then it means over all the samples.
+            Default: False.
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean'):
+    def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
         super(L1Loss, self).__init__()
+        if reduction not in ['none', 'mean', 'sum']:
+            raise ValueError(f'Unsupported reduction mode: {reduction}. '
+                             f'Supported ones are: {_reduction_modes}')
+
         self.loss_weight = loss_weight
         self.reduction = reduction
-        if self.reduction not in ['none', 'mean', 'sum']:
-            raise ValueError(f'Unsupported reduction mode: {self.reduction}. '
-                             f'Supported ones are: {_reduction_modes}')
+        self.sample_wise = sample_wise
 
     def forward(self, pred, target, weight=None, **kwargs):
         """
@@ -50,7 +57,11 @@ class L1Loss(nn.Module):
                 weights. Default: None.
         """
         return self.loss_weight * l1_loss(
-            pred, target, weight, reduction=self.reduction)
+            pred,
+            target,
+            weight,
+            reduction=self.reduction,
+            sample_wise=self.sample_wise)
 
 
 @LOSSES.register_module
@@ -61,15 +72,22 @@ class MSELoss(nn.Module):
         loss_weight (float): Loss weight for MSE loss. Default: 1.0.
         reduction (str): Specifies the reduction to apply to the output.
             Supported choices are 'none' | 'mean' | 'sum'. Default: 'mean'.
+        sample_wise (bool): Whether calculate the loss sample-wise. This
+            argument only takes effect when `reduction` is 'mean' and `weight`
+            (argument of `forward()`) is not None. It will first reduces loss
+            with 'mean' per-sample, and then it means over all the samples.
+            Default: False.
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean'):
+    def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
         super(MSELoss, self).__init__()
+        if reduction not in ['none', 'mean', 'sum']:
+            raise ValueError(f'Unsupported reduction mode: {reduction}. '
+                             f'Supported ones are: {_reduction_modes}')
+
         self.loss_weight = loss_weight
         self.reduction = reduction
-        if self.reduction not in ['none', 'mean', 'sum']:
-            raise ValueError(f'Unsupported reduction mode: {self.reduction}. '
-                             f'Supported ones are: {_reduction_modes}')
+        self.sample_wise = sample_wise
 
     def forward(self, pred, target, weight=None, **kwargs):
         """
@@ -80,7 +98,11 @@ class MSELoss(nn.Module):
                 weights. Default: None.
         """
         return self.loss_weight * mse_loss(
-            pred, target, weight, reduction=self.reduction)
+            pred,
+            target,
+            weight,
+            reduction=self.reduction,
+            sample_wise=self.sample_wise)
 
 
 @LOSSES.register_module
@@ -95,18 +117,29 @@ class CharbonnierLoss(nn.Module):
         loss_weight (float): Loss weight for L1 loss. Default: 1.0.
         reduction (str): Specifies the reduction to apply to the output.
             Supported choices are 'none' | 'mean' | 'sum'. Default: 'mean'.
+        sample_wise (bool): Whether calculate the loss sample-wise. This
+            argument only takes effect when `reduction` is 'mean' and `weight`
+            (argument of `forward()`) is not None. It will first reduces loss
+            with 'mean' per-sample, and then it means over all the samples.
+            Default: False.
         eps (float): A value used to control the curvature near zero.
             Default: 1e-12.
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean', eps=1e-12):
+    def __init__(self,
+                 loss_weight=1.0,
+                 reduction='mean',
+                 sample_wise=False,
+                 eps=1e-12):
         super(CharbonnierLoss, self).__init__()
+        if reduction not in ['none', 'mean', 'sum']:
+            raise ValueError(f'Unsupported reduction mode: {reduction}. '
+                             f'Supported ones are: {_reduction_modes}')
+
         self.loss_weight = loss_weight
         self.reduction = reduction
+        self.sample_wise = sample_wise
         self.eps = eps
-        if self.reduction not in ['none', 'mean', 'sum']:
-            raise ValueError(f'Unsupported reduction mode: {self.reduction}. '
-                             f'Supported ones are: {_reduction_modes}')
 
     def forward(self, pred, target, weight=None, **kwargs):
         """
@@ -117,7 +150,12 @@ class CharbonnierLoss(nn.Module):
                 weights. Default: None.
         """
         return self.loss_weight * charbonnier_loss(
-            pred, target, weight, eps=self.eps, reduction=self.reduction)
+            pred,
+            target,
+            weight,
+            eps=self.eps,
+            reduction=self.reduction,
+            sample_wise=self.sample_wise)
 
 
 @LOSSES.register_module
