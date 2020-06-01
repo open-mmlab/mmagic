@@ -349,7 +349,7 @@ class CropAroundUnknown(object):
             unknown = (results['alpha'] > 0) & (results['alpha'] < 255)
         else:
             unknown = results['trimap'] == 128
-        top, left = random_choose_unknown(unknown, (crop_h, crop_w))
+        top, left = random_choose_unknown(unknown.squeeze(), (crop_h, crop_w))
 
         bottom = top + crop_h
         right = left + crop_w
@@ -418,11 +418,11 @@ class CropAroundFg(object):
         # NOTE: Different from the original repo, we keep track of the four
         # corners of the bbox (left, top, right, bottom) while the original
         # repo use (top, left, height, width) to represent bbox. This may
-        # introduce a difference of 1 pixel in height or width.
+        # introduce an difference of 1 pixel.
         top = max(top - boundary, 0)
         left = max(left - boundary, 0)
-        bottom = min(bottom + boundary, height - 1)
-        right = min(right + boundary, width - 1)
+        bottom = min(bottom + boundary, height)
+        right = min(right + boundary, width)
 
         for key in self.keys:
             results[key] = results[key][top:bottom, left:right]
