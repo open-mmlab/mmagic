@@ -1,7 +1,10 @@
 import numpy as np
 import torch
+import torch.nn as nn
 from mmcv.cnn import kaiming_init, normal_init, xavier_init
 from torch.nn import init
+
+from .norm import build_norm_layer
 
 
 def generation_init_weights(module, init_type='normal', init_gain=0.02):
@@ -97,3 +100,110 @@ class GANImageBuffer(object):
         # collect all the images and return
         return_images = torch.cat(return_images, 0)
         return return_images
+
+
+class UnetSkipConnectionBlock(nn.Module):
+    """Construct a Unet submodule with skip connections.
+    |-- downsampling -- |submodule| -- upsampling --|
+
+    Args:
+        outer_channels (int): Number of channels at the outer conv layer.
+        inner_channels (int): Number of channels at the inner conv layer.
+        in_channels (int): Number of channels in input images/features. If is
+            None, equals to `outer_channels`. Default: None.
+        submodule (UnetSkipConnectionBlock): Previously constructed submodule.
+            Default: None.
+        is_outermost (bool): Whether this module is the outermost module.
+            Default: False.
+        is_innermost (bool): Whether this module is the innermost module.
+            Default: False.
+        norm_cfg (dict): Config dict to build norm layer. Default:
+            `dict(type='BN')`.
+        use_dropout (bool): Whether to use dropout layers. Default: False.
+    """
+
+    def __init__(self,
+                 outer_channels,
+                 inner_channels,
+                 in_channels=None,
+                 submodule=None,
+                 is_outermost=False,
+                 is_innermost=False,
+                 norm_cfg=dict(type='BN'),
+                 use_dropout=False):
+        super(UnetSkipConnectionBlock, self).__init__()
+        # cannot be both outermost and innermost
+        assert not (is_outermost and is_innermost), (
+            "'is_outermost' and 'is_innermost' cannot be True"
+            'at the same time.')
+        self.is_outermost = is_outermost
+        assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"
+                                            f'got {type(norm_cfg)}')
+        assert 'type' in norm_cfg, "'norm_cfg' must have key 'type'"
+        # We use norm layers in the unet skip connection block.
+        # Only for IN, use bias since it does not have affine parameters.
+        use_bias = norm_cfg['type'] == 'IN'
+
+        kernel_size = 4
+        stride = 2
+        padding = 1
+
+        if in_channels is None:
+            in_channels = outer_channels
+        down_conv = nn.Conv2d(
+            in_channels,
+            inner_channels,
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=padding,
+            bias=use_bias)
+        down_relu = nn.LeakyReLU(0.2, True)
+        _, down_norm = build_norm_layer(norm_cfg, inner_channels)
+        up_relu = nn.ReLU(True)
+        _, up_norm = build_norm_layer(norm_cfg, outer_channels)
+
+        if is_outermost:
+            up_conv = nn.ConvTranspose2d(
+                inner_channels * 2,
+                outer_channels,
+                kernel_size=kernel_size,
+                stride=stride,
+                padding=padding)
+            down = [down_conv]
+            up = [up_relu, up_conv, nn.Tanh()]
+            model = down + [submodule] + up
+        elif is_innermost:
+            up_conv = nn.ConvTranspose2d(
+                inner_channels,
+                outer_channels,
+                kernel_size=kernel_size,
+                stride=stride,
+                padding=padding,
+                bias=use_bias)
+            down = [down_relu, down_conv]
+            up = [up_relu, up_conv, up_norm]
+            model = down + up
+        else:
+            up_conv = nn.ConvTranspose2d(
+                inner_channels * 2,
+                outer_channels,
+                kernel_size=kernel_size,
+                stride=stride,
+                padding=padding,
+                bias=use_bias)
+            down = [down_relu, down_conv, down_norm]
+            up = [up_relu, up_conv, up_norm]
+
+            if use_dropout:
+                model = down + [submodule] + up + [nn.Dropout(0.5)]
+            else:
+                model = down + [submodule] + up
+
+        self.model = nn.Sequential(*model)
+
+    def forward(self, x):
+        if self.is_outermost:
+            return self.model(x)
+        else:
+            # add skip connections
+            return torch.cat([x, self.model(x)], 1)
