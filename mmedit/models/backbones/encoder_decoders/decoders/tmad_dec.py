@@ -29,8 +29,8 @@ class PGUpsampleBlock(nn.Module):
         size (tuple[int]):  When `interpolation` in ['nearest', 'bilinear'],
             this args is the same as `torch.nn.functional.interpolate`.
         interpolation (str | None): Method used for downsampling. Currently, we
-            support ['nearest', 'bilinear']. If given `None`, the interpolation
-            will be removed.
+            support ['nearest', 'bilinear', 'carafe']. If given `None`, the
+            interpolation will be removed.
         kwargs (keyword arguments): Keyword arguments for `ConvModule`.
     """
 
@@ -71,6 +71,9 @@ class PGUpsampleBlock(nn.Module):
                 size=size,
                 scale_factor=scale_factor,
                 mode=interpolation)
+        elif interpolation == 'carafe':
+            from mmedit.ops.carafe_upsample import CARAFEPack
+            self.upsample = CARAFEPack(in_channels, scale_factor=scale_factor)
         elif interpolation is None:
             self.upsample = nn.Identity()
         else:
