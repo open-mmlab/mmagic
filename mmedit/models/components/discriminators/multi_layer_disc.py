@@ -33,6 +33,7 @@ class MultiLayerDiscriminator(nn.Module):
             setting as the intermediate convs but a stride of 1 instead of 2.
             The second out conv is a conv similar to the first out conv but
             reduces the number of channels to 1 and has no activation layer.
+            Default to False.
         with_spectral_norm (bool): Whether use spectral norm after the conv
             layers. Default to False.
         kwargs (keyword arguments).
@@ -50,7 +51,7 @@ class MultiLayerDiscriminator(nn.Module):
                  act_cfg=dict(type='ReLU'),
                  out_act_cfg=dict(type='ReLU'),
                  with_input_norm=True,
-                 with_out_convs=None,
+                 with_out_convs=False,
                  with_spectral_norm=False,
                  **kwargs):
         super(MultiLayerDiscriminator, self).__init__()
@@ -125,7 +126,9 @@ class MultiLayerDiscriminator(nn.Module):
 
     def forward(self, x):
         input_size = x.size()
-        for i in range(self.num_convs):
+        # out_convs has two additional ConvModules
+        num_convs = self.num_convs + 2 * self.with_out_convs
+        for i in range(num_convs):
             x = getattr(self, f'conv{i + 1}')(x)
 
         if self.with_fc:
