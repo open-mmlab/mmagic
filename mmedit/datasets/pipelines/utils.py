@@ -27,7 +27,7 @@ def random_choose_unknown(unknown, crop_size):
         center_w = center_w_list[rand_ind]
 
     # if crop_size has odd number, make sure the top-left point is valid
-    top = min(h - crop_h, center_h - crop_h // 2)
-    left = min(w - crop_w, center_w - crop_w // 2)
+    top = min(h - crop_h, center_h - delta_h)
+    left = min(w - crop_w, center_w - delta_w)
 
     return top, left
