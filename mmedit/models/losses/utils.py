@@ -23,7 +23,7 @@ def reduce_loss(loss, reduction):
         return loss.sum()
 
 
-def mask_reduce_loss(loss, weight=None, reduction='mean'):
+def mask_reduce_loss(loss, weight=None, reduction='mean', sample_wise=False):
     """Apply element-wise weight and reduce loss.
 
     Args:
@@ -31,6 +31,11 @@ def mask_reduce_loss(loss, weight=None, reduction='mean'):
         weight (Tensor): Element-wise weights. Default: None.
         reduction (str): Same as built-in losses of PyTorch. Options are
             "none", "mean" and "sum". Default: 'mean'.
+        sample_wise (bool): Whether calculate the loss sample-wise. This
+            argument only takes effect when `reduction` is 'mean' and `weight`
+            (argument of `forward()`) is not None. It will first reduces loss
+            with 'mean' per-sample, and then it means over all the samples.
+            Default: False.
 
     Returns:
         Tensor: Processed loss values.
@@ -46,11 +51,19 @@ def mask_reduce_loss(loss, weight=None, reduction='mean'):
         loss = reduce_loss(loss, reduction)
     # if reduction is mean, then compute mean over masked region
     elif reduction == 'mean':
-        if weight.size(1) > 1:
-            weight = weight.sum()
+        # expand weight from N1HW to NCHW
+        if weight.size(1) == 1:
+            weight = weight.expand_as(loss)
+        # small value to prevent division by zero
+        eps = 1e-12
+
+        # perform sample-wise mean
+        if sample_wise:
+            weight = weight.sum(dim=[1, 2, 3], keepdims=True)  # NCHW to N111
+            loss = (loss / (weight + eps)).sum() / weight.size(0)
+        # perform pixel-wise mean
         else:
-            weight = weight.sum() * loss.size(1)
-        loss = loss.sum() / weight
+            loss = loss.sum() / (weight.sum() + eps)
 
     return loss
 
@@ -87,10 +100,15 @@ def masked_loss(loss_func):
     """
 
     @functools.wraps(loss_func)
-    def wrapper(pred, target, weight=None, reduction='mean', **kwargs):
+    def wrapper(pred,
+                target,
+                weight=None,
+                reduction='mean',
+                sample_wise=False,
+                **kwargs):
         # get element-wise loss
         loss = loss_func(pred, target, **kwargs)
-        loss = mask_reduce_loss(loss, weight, reduction)
+        loss = mask_reduce_loss(loss, weight, reduction, sample_wise)
         return loss
 
     return wrapper

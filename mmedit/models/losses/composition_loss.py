@@ -14,15 +14,22 @@ class L1CompositionLoss(nn.Module):
         loss_weight (float): Loss weight for L1 loss. Default: 1.0.
         reduction (str): Specifies the reduction to apply to the output.
             Supported choices are 'none' | 'mean' | 'sum'. Default: 'mean'.
+        sample_wise (bool): Whether calculate the loss sample-wise. This
+            argument only takes effect when `reduction` is 'mean' and `weight`
+            (argument of `forward()`) is not None. It will first reduces loss
+            with 'mean' per-sample, and then it means over all the samples.
+            Default: False.
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean'):
+    def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
         super(L1CompositionLoss, self).__init__()
+        if reduction not in ['none', 'mean', 'sum']:
+            raise ValueError(f'Unsupported reduction mode: {reduction}. '
+                             f'Supported ones are: {_reduction_modes}')
+
         self.loss_weight = loss_weight
         self.reduction = reduction
-        if self.reduction not in ['none', 'mean', 'sum']:
-            raise ValueError(f'Unsupported reduction mode: {self.reduction}. '
-                             f'Supported ones are: {_reduction_modes}')
+        self.sample_wise = sample_wise
 
     def forward(self, pred_alpha, fg, bg, ori_merged, weight=None, **kwargs):
         """
@@ -39,7 +46,11 @@ class L1CompositionLoss(nn.Module):
         if weight is not None:
             weight = weight.expand(-1, 3, -1, -1)
         return self.loss_weight * l1_loss(
-            pred_merged, ori_merged, weight, reduction=self.reduction)
+            pred_merged,
+            ori_merged,
+            weight,
+            reduction=self.reduction,
+            sample_wise=self.sample_wise)
 
 
 @LOSSES.register_module
@@ -50,15 +61,22 @@ class MSECompositionLoss(nn.Module):
         loss_weight (float): Loss weight for MSE loss. Default: 1.0.
         reduction (str): Specifies the reduction to apply to the output.
             Supported choices are 'none' | 'mean' | 'sum'. Default: 'mean'.
+        sample_wise (bool): Whether calculate the loss sample-wise. This
+            argument only takes effect when `reduction` is 'mean' and `weight`
+            (argument of `forward()`) is not None. It will first reduces loss
+            with 'mean' per-sample, and then it means over all the samples.
+            Default: False.
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean'):
+    def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
         super(MSECompositionLoss, self).__init__()
+        if reduction not in ['none', 'mean', 'sum']:
+            raise ValueError(f'Unsupported reduction mode: {reduction}. '
+                             f'Supported ones are: {_reduction_modes}')
+
         self.loss_weight = loss_weight
         self.reduction = reduction
-        if self.reduction not in ['none', 'mean', 'sum']:
-            raise ValueError(f'Unsupported reduction mode: {self.reduction}. '
-                             f'Supported ones are: {_reduction_modes}')
+        self.sample_wise = sample_wise
 
     def forward(self, pred_alpha, fg, bg, ori_merged, weight=None, **kwargs):
         """
@@ -75,7 +93,11 @@ class MSECompositionLoss(nn.Module):
         if weight is not None:
             weight = weight.expand(-1, 3, -1, -1)
         return self.loss_weight * mse_loss(
-            pred_merged, ori_merged, weight, reduction=self.reduction)
+            pred_merged,
+            ori_merged,
+            weight,
+            reduction=self.reduction,
+            sample_wise=self.sample_wise)
 
 
 @LOSSES.register_module
@@ -86,18 +108,29 @@ class CharbonnierCompLoss(nn.Module):
         loss_weight (float): Loss weight for L1 loss. Default: 1.0.
         reduction (str): Specifies the reduction to apply to the output.
             Supported choices are 'none' | 'mean' | 'sum'. Default: 'mean'.
+        sample_wise (bool): Whether calculate the loss sample-wise. This
+            argument only takes effect when `reduction` is 'mean' and `weight`
+            (argument of `forward()`) is not None. It will first reduces loss
+            with 'mean' per-sample, and then it means over all the samples.
+            Default: False.
         eps (float): A value used to control the curvature near zero.
             Default: 1e-12.
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean', eps=1e-12):
+    def __init__(self,
+                 loss_weight=1.0,
+                 reduction='mean',
+                 sample_wise=False,
+                 eps=1e-12):
         super(CharbonnierCompLoss, self).__init__()
+        if reduction not in ['none', 'mean', 'sum']:
+            raise ValueError(f'Unsupported reduction mode: {reduction}. '
+                             f'Supported ones are: {_reduction_modes}')
+
         self.loss_weight = loss_weight
         self.reduction = reduction
+        self.sample_wise = sample_wise
         self.eps = eps
-        if self.reduction not in ['none', 'mean', 'sum']:
-            raise ValueError(f'Unsupported reduction mode: {self.reduction}. '
-                             f'Supported ones are: {_reduction_modes}')
 
     def forward(self, pred_alpha, fg, bg, ori_merged, weight=None, **kwargs):
         """
@@ -118,4 +151,5 @@ class CharbonnierCompLoss(nn.Module):
             ori_merged,
             weight,
             eps=self.eps,
-            reduction=self.reduction)
+            reduction=self.reduction,
+            sample_wise=self.sample_wise)

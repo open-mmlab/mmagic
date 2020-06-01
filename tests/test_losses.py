@@ -134,6 +134,20 @@ def test_pixelwise_losses():
     assert loss.shape == ()
     assert math.isclose(loss.item(), 512, rel_tol=1e-5)
 
+    # test samplewise option, use L1Loss as an example
+    unknown_h, unknown_w = (32, 32)
+    weight = torch.zeros(2, 1, 64, 64)
+    weight[0, 0, :unknown_h, :unknown_w] = 1
+    # weight[1, 0, :unknown_h // 2, :unknown_w // 2] = 1
+    pred = weight.clone()
+    target = weight.clone()
+    # make mean l1_loss of sample 2 different from sample 1
+    target[0, ...] *= 2
+    l1_loss = L1Loss(loss_weight=1.0, reduction='mean', sample_wise=True)
+    loss = l1_loss(pred, target, weight)
+    assert loss.shape == ()
+    assert loss.item() == 0.5
+
     masked_tv_loss = MaskedTVLoss(loss_weight=1.0)
     pred = torch.zeros((1, 1, 6, 6))
     mask = torch.zeros_like(pred)
