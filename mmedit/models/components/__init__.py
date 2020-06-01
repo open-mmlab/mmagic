@@ -1,8 +1,10 @@
 from .discriminators import (DeepFillv1Discriminators, GLDiscs, ModifiedVGG,
-                             MultiLayerDiscriminator, TMADPatchDiscriminator)
+                             MultiLayerDiscriminator, PatchDiscriminator,
+                             TMADPatchDiscriminator)
 from .refiners import DeepFillRefiner, PlainRefiner
 
 __all__ = [
     'PlainRefiner', 'GLDiscs', 'ModifiedVGG', 'MultiLayerDiscriminator',
-    'DeepFillv1Discriminators', 'DeepFillRefiner', 'TMADPatchDiscriminator'
+    'DeepFillv1Discriminators', 'DeepFillRefiner', 'TMADPatchDiscriminator',
+    'PatchDiscriminator'
 ]
