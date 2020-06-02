@@ -13,7 +13,7 @@ from .encoder_decoders import (VGG16, BGMattingDecoder, BGMattingEncoder,
                                SimpleEncoderDecoder, TMADDecoder,
                                TMADDilationNeck, TMADEncoder)
 # yapf: enable
-from .generation_backbones import UnetGenerator
+from .generation_backbones import ResnetGenerator, UnetGenerator
 from .sr_backbones import EDSR, SRCNN, EDVRNet, MSRResNet, RRDBNet, TOFlow
 
 __all__ = [
@@ -27,5 +27,5 @@ __all__ = [
     'IndexNetDecoder', 'ResidualDilationBlock', 'TMADDilationNeck',
     'BGMattingEncoder', 'TMADEncoder', 'PGDownsampleBlock', 'PGUpsampleBlock',
     'TMADDecoder', 'BGMattingDecoder', 'TOFlow', 'ResGCAEncoder',
-    'ResGCADecoder', 'SRCNN', 'UnetGenerator'
+    'ResGCADecoder', 'SRCNN', 'UnetGenerator', 'ResnetGenerator'
 ]
