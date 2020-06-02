@@ -5,7 +5,7 @@ Welcome to MMEditing's documentation!
    :maxdepth: 2
 
    install.md
-   getting_started.rst
+   getting_started.md
    config.rst
    tutorial.rst
    model_zoo.rst
