@@ -6,7 +6,8 @@ from .conv_module import ConvModule
 from .flow_warp import flow_warp
 from .gated_conv_module import SimpleGatedConvModule
 from .gca_module import GCAModule
-from .generation_model_utils import (GANImageBuffer, UnetSkipConnectionBlock,
+from .generation_model_utils import (GANImageBuffer, ResidualBlockWithDropout,
+                                     UnetSkipConnectionBlock,
                                      generation_init_weights)
 from .linear_module import LinearModule
 from .mask_conv_module import MaskConvModule
@@ -28,5 +29,6 @@ __all__ = [
     'extract_around_bbox', 'set_requires_grad', 'scale_bbox',
     'DepthwiseSeparableConvModule', 'ContextualAttentionModule', 'GCAModule',
     'SimpleGatedConvModule', 'LinearModule', 'flow_warp',
-    'generation_init_weights', 'GANImageBuffer', 'UnetSkipConnectionBlock'
+    'generation_init_weights', 'GANImageBuffer', 'UnetSkipConnectionBlock',
+    'ResidualBlockWithDropout'
 ]

@@ -207,3 +207,93 @@ class UnetSkipConnectionBlock(nn.Module):
         else:
             # add skip connections
             return torch.cat([x, self.model(x)], 1)
+
+
+class ResidualBlockWithDropout(nn.Module):
+    """Define a Residual Block with dropout layers.
+
+    Ref:
+    Deep Residual Learning for Image Recognition
+    A residual block is a conv block with skip connections. The conv block is
+    constructed in `build_conv_block` function, skip connection is implemented
+    in `forward` function. In `build_conv_block` function, a dropout layer is
+    added between two common conv modules.
+
+    Args:
+        channels (int): Number of channels in the conv layer.
+        padding_mode (str): The name of padding layer:
+            'reflect' | 'replicate' | 'zero'.
+        norm_cfg (dict): Config dict to build norm layer. Default:
+            `dict(type='IN')`.
+        use_dropout (bool): Whether to use dropout layers. Default: True.
+    """
+
+    def __init__(self,
+                 channels,
+                 padding_mode,
+                 norm_cfg=dict(type='BN'),
+                 use_dropout=True):
+        super(ResidualBlockWithDropout, self).__init__()
+        self.conv_block = self.build_conv_block(channels, padding_mode,
+                                                norm_cfg, use_dropout)
+
+    def build_conv_block(self, channels, padding_mode, norm_cfg, use_dropout):
+        assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"
+                                            f'got {type(norm_cfg)}')
+        assert 'type' in norm_cfg, "'norm_cfg' must have key 'type'"
+        # We use norm layers in the residual block with dropout layers.
+        # Only for IN, use bias since it does not have affine parameters.
+        use_bias = norm_cfg['type'] == 'IN'
+
+        conv_block = []
+        padding = 0
+        if padding_mode == 'reflect':
+            conv_block += [nn.ReflectionPad2d(1)]
+        elif padding_mode == 'replicate':
+            conv_block += [nn.ReplicationPad2d(1)]
+        elif padding_mode == 'zero':
+            padding = 1
+        else:
+            raise NotImplementedError(
+                f"padding '{padding_mode}' is not implemented")
+
+        _, norm = build_norm_layer(norm_cfg, channels)
+        conv_block += [
+            nn.Conv2d(
+                channels,
+                channels,
+                kernel_size=3,
+                padding=padding,
+                bias=use_bias), norm,
+            nn.ReLU(True)
+        ]
+
+        if use_dropout:
+            conv_block += [nn.Dropout(0.5)]
+
+        padding = 0
+        if padding_mode == 'reflect':
+            conv_block += [nn.ReflectionPad2d(1)]
+        elif padding_mode == 'replicate':
+            conv_block += [nn.ReplicationPad2d(1)]
+        elif padding_mode == 'zero':
+            padding = 1
+        else:
+            raise NotImplementedError(
+                f"padding '{padding_mode}' is not implemented")
+        _, norm = build_norm_layer(norm_cfg, channels)
+        conv_block += [
+            nn.Conv2d(
+                channels,
+                channels,
+                kernel_size=3,
+                padding=padding,
+                bias=use_bias), norm
+        ]
+
+        return nn.Sequential(*conv_block)
+
+    def forward(self, x):
+        # add skip connections without final ReLU
+        out = x + self.conv_block(x)
+        return out
