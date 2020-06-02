@@ -7,7 +7,11 @@ model = dict(
         decoder=dict(type='IndexNetDecoder')),
     loss_alpha=dict(type='L1Loss'),
     loss_comp=dict(type='L1CompositionLoss'))
-# dataset settings
+# model training and testing settings
+train_cfg = dict(train_backbone=True)
+test_cfg = dict(metrics=['SAD', 'MSE'])
+
+# data settings
 dataset_type = 'AdobeComp1kDataset'
 data_root = './data/adobe_composition-1k/'
 img_norm_cfg = dict(
@@ -45,31 +49,38 @@ test_pipeline = [
     dict(type='ImageToTensor', keys=['merged', 'alpha', 'trimap']),
 ]
 data = dict(
+    # train
     samples_per_gpu=1,
     workers_per_gpu=4,
-    val_workers_per_gpu=4,
     drop_last=True,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'training_list.json',
         data_prefix=data_root,
         pipeline=train_pipeline),
+    # validation
+    val_samples_per_gpu=1,
+    val_workers_per_gpu=4,
     val=dict(
         type=dataset_type,
         ann_file=data_root + 'test_list.json',
         data_prefix=data_root,
         pipeline=test_pipeline),
+    # test
     test=dict(
         type=dataset_type,
         ann_file=data_root + 'test_list.json',
         data_prefix=data_root,
         pipeline=test_pipeline))
+
 # optimizer
 optimizers = None
 # learning policy
 lr_config = None
+
 # checkpoint saving
 checkpoint_config = dict(interval=40000, by_epoch=False)
+evaluation = dict(interval=40000, save_image=False)
 # yapf:disable
 log_config = dict(
     interval=10,
@@ -79,6 +90,7 @@ log_config = dict(
         # dict(type='TensorboardLoggerHook')
     ])
 # yapf:enable
+
 # runtime settings
 total_iters = None
 dist_params = dict(backend='nccl')
@@ -87,6 +99,3 @@ work_dir = './work_dirs/indexnet'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
-train_cfg = dict(train_backbone=True)
-test_cfg = dict(metrics=['SAD', 'MSE'])
-evaluation = dict(interval=40000, save_image=False)

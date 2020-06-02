@@ -8,12 +8,14 @@ model = dict(
     pretrained=None,  # TODO: add pretrained model
     loss_alpha=dict(type='CharbonnierLoss', loss_weight=0.5),
     loss_comp=dict(type='CharbonnierCompLoss', loss_weight=0.5))
-# dataset settings
+train_cfg = dict(train_backbone=True, train_refiner=False)
+test_cfg = dict(refine=False, metrics=['SAD', 'MSE'])
+
+# data settings
 dataset_type = 'AdobeComp1kDataset'
 data_root = './data/adobe_composition-1k/'
 img_norm_cfg = dict(
     mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
-# TODO: add data preparation and update data pipeline
 train_pipeline = [
     dict(type='LoadAlpha', key='alpha', flag='grayscale'),
     dict(type='LoadImageFromFile', key='fg'),
@@ -83,12 +85,15 @@ data = dict(
         ann_file=data_root + 'test_list.json',
         data_prefix=data_root,
         pipeline=test_pipeline))
+
 # optimizer
 optimizers = dict(type='Adam', lr=0.00001)
 # learning policy
 lr_config = dict(policy='Fixed')
+
 # checkpoint saving
 checkpoint_config = dict(interval=40000, by_epoch=False)
+evaluation = dict(interval=40000, save_image=False)
 # yapf:disable
 log_config = dict(
     interval=10,
@@ -98,6 +103,7 @@ log_config = dict(
         # dict(type='TensorboardLoggerHook')
     ])
 # yapf:enable
+
 # runtime settings
 total_iters = 1000000
 dist_params = dict(backend='nccl')
@@ -106,6 +112,3 @@ work_dir = './work_dirs/dim_stage1'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
-train_cfg = dict(train_backbone=True, train_refiner=False)
-test_cfg = dict(refine=False, metrics=['SAD', 'MSE'])
-evaluation = dict(interval=40000, save_image=False)
