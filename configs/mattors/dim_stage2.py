@@ -41,19 +41,22 @@ train_pipeline = [
 ]
 test_pipeline = [
     dict(
-        type='LoadAlpha', key='alpha', flag='grayscale', save_origin_img=True),
+        type='LoadAlpha',
+        key='alpha',
+        flag='grayscale',
+        save_original_img=True),
     dict(
         type='LoadImageFromFile',
         key='trimap',
         flag='grayscale',
-        save_origin_img=True),
+        save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
     dict(
         type='Resize',
         keys=['alpha', 'trimap', 'merged'],
         size_factor=32,
         max_size=1600),
-    dict(type='RescaleToZeroOne', keys=['merged', 'alpha', 'ori_alpha']),
+    dict(type='RescaleToZeroOne', keys=['merged', 'alpha']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Collect',

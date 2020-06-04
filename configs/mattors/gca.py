@@ -63,7 +63,7 @@ test_pipeline = [
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
     dict(type='Pad', keys=['alpha', 'trimap', 'merged'], mode='reflect'),
-    dict(type='RescaleToZeroOne', keys=['merged', 'alpha', 'ori_alpha']),
+    dict(type='RescaleToZeroOne', keys=['merged', 'alpha']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Collect',

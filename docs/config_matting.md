@@ -103,12 +103,12 @@ test_pipeline = [
         type='LoadAlpha',  # Load alpha matte.
         key='alpha',  # Key of alpha matte in annotation file. The pipeline will read alpha matte from path `alpha_path`.
         flag='grayscale',
-        save_origin_img=True),
+        save_original_img=True),
     dict(
         type='LoadImageFromFile',  # Load image from file
         key='trimap',  # Key of image to load. The pipeline will read trimap from path `trimap_path`.
         flag='grayscale',  # Load as grayscale image which has shape (height, width).
-        save_origin_img=True),  # Save a copy of alpha matte for calculating metrics. It will be saved with key `ori_alpha`
+        save_original_img=True),  # Save a copy of alpha matte for calculating metrics. It will be saved with key `ori_alpha`
     dict(
         type='LoadImageFromFile',  # Load image from file
         key='merged'),  # Key of image to load. The pipeline will read merged from path `merged_path`.

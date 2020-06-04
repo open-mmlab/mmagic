@@ -108,11 +108,11 @@ def connectivity(alpha, trimap, pred_alpha, step=0.1):
             intersection, connectivity=4)
         # start from 1 in dim 0 to exclude background
         size = stats[1:, -1]
-        max_id = np.argmax(size)
 
         # largest connected component of the intersection
         omega = np.zeros_like(alpha)
-        if size is not None:
+        if len(size) != 0:
+            max_id = np.argmax(size)
             # plus one to include background
             omega[output == max_id + 1] = 1
 
