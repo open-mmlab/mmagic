@@ -1,5 +1,6 @@
 import torch.nn as nn
-from mmedit.models.common import ConvModule, SimpleGatedConvModule
+from mmcv.cnn import ConvModule
+from mmedit.models.common import SimpleGatedConvModule
 from mmedit.models.common.contextual_attention import ContextualAttentionModule
 from mmedit.models.registry import COMPONENTS
 

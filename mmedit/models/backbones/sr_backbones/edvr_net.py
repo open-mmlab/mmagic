@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
-from mmcv.cnn.weight_init import constant_init
+from mmcv.cnn import ConvModule, constant_init
 from mmcv.runner import load_checkpoint
-from mmedit.models.common import (ConvModule, PixelShufflePack,
-                                  ResidualBlockNoBN, make_layer)
+from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
+                                  make_layer)
 from mmedit.models.registry import BACKBONES
 from mmedit.ops.dcn import ModulatedDeformConv, modulated_deform_conv
 from mmedit.utils import get_root_logger

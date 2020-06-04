@@ -1,7 +1,5 @@
 import torch.nn as nn
-from mmcv.cnn import kaiming_init
-
-from .activation import build_activation_layer
+from mmcv.cnn import build_activation_layer, kaiming_init
 
 
 class LinearModule(nn.Module):

@@ -1,6 +1,6 @@
 import torch.nn as nn
+from mmcv.cnn import ConvModule
 from mmedit.models.backbones import ResidualDilationBlock, TMADEncoder
-from mmedit.models.common import ConvModule
 
 
 class TMADPatchDiscriminator(nn.Module):

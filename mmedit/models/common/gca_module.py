@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
-from mmcv.cnn.weight_init import constant_init, xavier_init
-from mmedit.models.common import ConvModule
+from mmcv.cnn import ConvModule, constant_init, xavier_init
 from torch.nn import functional as F
 
 

@@ -2,9 +2,7 @@ import copy
 
 import torch
 import torch.nn as nn
-
-from .activation import build_activation_layer
-from .conv_module import ConvModule
+from mmcv.cnn import ConvModule, build_activation_layer
 
 
 class SimpleGatedConvModule(nn.Module):
