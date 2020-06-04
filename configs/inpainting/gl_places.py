@@ -140,5 +140,5 @@ work_dir = None
 load_from = None
 resume_from = None
 workflow = [('train', 10000)]
-exp_name = '0006_gl_place'
+exp_name = 'gl_places'
 find_unused_parameters = False
