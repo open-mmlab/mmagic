@@ -3,8 +3,9 @@ import subprocess
 import time
 
 import torch
+from mmcv.utils.parrots_wrapper import (BuildExtension, CppExtension,
+                                        CUDAExtension)
 from setuptools import find_packages, setup
-from mmcv.utils.parrots_wrapper import BuildExtension, CUDAExtension
 
 
 def readme():
@@ -87,27 +88,29 @@ def get_requirements(filename='requirements.txt'):
     return requires
 
 
-def make_cuda_ext(name, module, sources):
+def make_cuda_ext(name, module, sources, sources_cuda=[]):
 
     define_macros = []
+    extra_compile_args = {'cxx': []}
 
     if torch.cuda.is_available() or os.getenv('FORCE_CUDA', '0') == '1':
         define_macros += [('WITH_CUDA', None)]
+        extension = CUDAExtension
+        extra_compile_args['nvcc'] = [
+            '-D__CUDA_NO_HALF_OPERATORS__',
+            '-D__CUDA_NO_HALF_CONVERSIONS__',
+            '-D__CUDA_NO_HALF2_OPERATORS__',
+        ]
+        sources += sources_cuda
     else:
-        raise EnvironmentError('CUDA is required to compile MMEdit!')
+        print(f'Compiling {name} without CUDA')
+        extension = CppExtension
 
-    return CUDAExtension(
+    return extension(
         name=f'{module}.{name}',
         sources=[os.path.join(*module.split('.'), p) for p in sources],
         define_macros=define_macros,
-        extra_compile_args={
-            'cxx': [],
-            'nvcc': [
-                '-D__CUDA_NO_HALF_OPERATORS__',
-                '-D__CUDA_NO_HALF_CONVERSIONS__',
-                '-D__CUDA_NO_HALF2_OPERATORS__',
-            ]
-        })
+        extra_compile_args=extra_compile_args)
 
 
 if __name__ == '__main__':
@@ -132,9 +135,10 @@ if __name__ == '__main__':
         install_requires=get_requirements(),
         ext_modules=[
             make_cuda_ext(
-                name='deform_conv_cuda',
+                name='deform_conv_ext',
                 module='mmedit.ops.dcn',
-                sources=[
+                sources=['src/deform_conv_ext.cpp'],
+                sources_cuda=[
                     'src/deform_conv_cuda.cpp',
                     'src/deform_conv_cuda_kernel.cu'
                 ])
