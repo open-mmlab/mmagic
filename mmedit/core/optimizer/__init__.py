@@ -1,4 +1,3 @@
-from .builder import build_optimizer, build_optimizers
-from .registry import OPTIMIZERS
+from .builder import build_optimizers
 
-__all__ = ['OPTIMIZERS', 'build_optimizer', 'build_optimizers']
+__all__ = ['build_optimizers']
