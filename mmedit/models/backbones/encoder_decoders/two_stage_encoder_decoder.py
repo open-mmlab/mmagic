@@ -56,7 +56,7 @@ class DeepFillEncoderDecoder(nn.Module):
         """
         input_x = x.clone()
         masked_img = input_x[:, :3, ...]
-        mask = input_x[:, -2:-1, ...]
+        mask = input_x[:, -1:, ...]
         x = self.stage1(x)
         stage1_res = x.clone()
         stage1_img = stage1_res * mask + masked_img * (1. - mask)

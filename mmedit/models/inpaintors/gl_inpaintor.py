@@ -83,7 +83,9 @@ class GLInpaintor(OneStageInpaintor):
             train_cfg=train_cfg,
             test_cfg=test_cfg,
             pretrained=pretrained)
-        self.cur_iter = self.train_cfg.start_iter
+
+        if self.train_cfg is not None:
+            self.cur_iter = self.train_cfg.start_iter
 
     def generator_loss(self, fake_res, fake_img, fake_local, data_batch):
         """Forward function in generator training step.
