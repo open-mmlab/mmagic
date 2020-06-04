@@ -1,4 +1,5 @@
 import torch
+from torch.nn.parallel import DataParallel, DistributedDataParallel
 
 from ..common import extract_around_bbox, extract_bbox_patch, set_requires_grad
 from ..registry import MODELS
@@ -7,6 +8,24 @@ from .two_stage import TwoStageInpaintor
 
 @MODELS.register_module
 class DeepFillv1Inpaintor(TwoStageInpaintor):
+
+    def get_module(self, model, module_name):
+        """Get an inner module from model.
+
+        Since we will wrapper DDP for some model, we have to judge whether the
+        module can be indexed directly.
+
+        Args:
+            model (nn.Module): This model may wrapped with DDP or not.
+            module_name (str): The name of specific module.
+
+        Return:
+            nn.Module: Returned sub module.
+        """
+        if isinstance(model, (DataParallel, DistributedDataParallel)):
+            return getattr(model.module, module_name)
+        else:
+            return getattr(model, module_name)
 
     def forward_train_d(self, data_batch, is_real, is_disc):
         """Forward function in discriminator training step.
@@ -195,9 +214,13 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
 
             if self.with_gp_loss:
                 loss_gp_global = self.loss_gp(
-                    self.disc.global_disc, gt_img, stage2_fake_img, mask=mask)
-                loss_gp_local = self.loss_gp(self.disc.local_disc, gt_local,
-                                             stage2_fake_local)
+                    self.get_module(self.disc, 'global_disc'),
+                    gt_img,
+                    stage2_fake_img,
+                    mask=mask)
+                loss_gp_local = self.loss_gp(
+                    self.get_module(self.disc, 'local_disc'), gt_local,
+                    stage2_fake_local)
                 loss_disc, log_vars_d = self.parse_losses(
                     dict(
                         loss_gp_global=loss_gp_global,
