@@ -2,24 +2,6 @@
 
 Same as [MMDetection](https://github.com/open-mmlab/mmdetection), we incorporate modular and inheritance design into our config system, which is convenient to conduct various experiments.
 
-## Config Name Style
-
-We follow the below style to name config files. Contributors are advised to follow the same style.
-
-```
-{model}_[model setting]_[refiner]_[norm_setting]_[gpu x batch_per_gpu]_{iteration}_{dataset}
-```
-
-`{xxx}` is required field and `[yyy]` is optional.
-
-- `{model}`: model type like `dim`, `indexNet`, etc.
-- `[model setting]`: specific setting for some model, like `stage1` or `stage2` for `dim`, etc.
-- `[refiner]`: refiner type like `pln` (Plain Refiner).
-- `[norm_setting]`: `bn` (Batch Normalization) is used unless specified, other norm layer type could be `gn` (Group Normalization), `syncbn` (Synchronized Batch Normalization).
-- `[gpu x batch_per_gpu]`: GPUs and samples per GPU, `8x2` is used by default.
-- `{iteration}`: training iteration, `200k`, `2m`, etc.
-- `{dataset}`: dataset like `comp1k`, `bgm`.
-
 ## An Example - Deep Image Matting Model
 
 To help the users have a basic idea of a complete config, we make a brief comments on the config of the original DIM model we implemented as the following. For more detailed usage and the corresponding alternative for each modules, please refer to the API documentation.
