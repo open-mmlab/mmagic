@@ -1,4 +1,4 @@
-from .conv_module import ConvModule
+from mmcv.cnn import ConvModule
 
 
 class MaskConvModule(ConvModule):

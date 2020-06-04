@@ -3,12 +3,12 @@ from collections.abc import Iterable
 import numpy as np
 import pytest
 import torch
+from mmcv.cnn import ConvModule
 from mmcv.utils.parrots_wrapper import _BatchNorm
 from mmedit.models.backbones import (VGG16, BGMattingEncoder,
                                      DepthwiseIndexBlock, HolisticIndexBlock,
                                      IndexNetEncoder, ResGCAEncoder, ResNetEnc,
                                      ResShortcutEnc)
-from mmedit.models.common import ConvModule
 
 
 def check_norm_state(modules, train_state):

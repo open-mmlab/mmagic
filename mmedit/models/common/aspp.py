@@ -1,8 +1,8 @@
 import torch
+from mmcv.cnn import ConvModule
 from torch import nn
 from torch.nn import functional as F
 
-from .conv_module import ConvModule
 from .separable_conv_module import DepthwiseSeparableConvModule
 
 

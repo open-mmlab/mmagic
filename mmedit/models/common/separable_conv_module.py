@@ -1,6 +1,5 @@
 import torch.nn as nn
-
-from .conv_module import ConvModule
+from mmcv.cnn import ConvModule
 
 
 class DepthwiseSeparableConvModule(nn.Module):

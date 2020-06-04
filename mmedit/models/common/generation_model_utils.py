@@ -1,10 +1,8 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from mmcv.cnn import kaiming_init, normal_init, xavier_init
+from mmcv.cnn import build_norm_layer, kaiming_init, normal_init, xavier_init
 from torch.nn import init
-
-from .norm import build_norm_layer
 
 
 def generation_init_weights(module, init_type='normal', init_gain=0.02):

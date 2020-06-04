@@ -2,8 +2,7 @@ import mmcv
 import numpy as np
 import torch
 import torch.nn as nn
-from mmcv.cnn import normal_init, xavier_init
-from mmedit.models.common import ConvModule
+from mmcv.cnn import ConvModule, normal_init, xavier_init
 from mmedit.models.registry import COMPONENTS
 
 

@@ -1,6 +1,7 @@
 import torch.nn as nn
+from mmcv.cnn import build_norm_layer
 from mmcv.runner import load_checkpoint
-from mmedit.models.common import build_norm_layer, generation_init_weights
+from mmedit.models.common import generation_init_weights
 from mmedit.models.registry import COMPONENTS
 from mmedit.utils import get_root_logger
 
