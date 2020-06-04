@@ -10,11 +10,12 @@ from .losses import *  # noqa: F401, F403
 from .mattors import DIM, GCA, BaseMattor, IndexNet
 from .registry import BACKBONES, COMPONENTS, LOSSES, MODELS
 from .restorers import ESRGAN, SRGAN, BasicRestorer
+from .synthesizers import CycleGAN
 
 __all__ = [
     'BaseModel', 'BasicRestorer', 'OneStageInpaintor', 'build',
     'build_backbone', 'build_component', 'build_loss', 'build_model',
     'BACKBONES', 'COMPONENTS', 'LOSSES', 'BaseMattor', 'DIM', 'MODELS',
     'GLInpaintor', 'PConvInpaintor', 'SRGAN', 'ESRGAN', 'GCA',
-    'TwoStageInpaintor', 'IndexNet', 'DeepFillv1Inpaintor'
+    'TwoStageInpaintor', 'IndexNet', 'DeepFillv1Inpaintor', 'CycleGAN'
 ]
