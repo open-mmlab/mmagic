@@ -4,9 +4,10 @@ from abc import abstractmethod
 from pathlib import Path
 
 import mmcv
+import numpy as np
 from mmcv import ConfigDict
 from mmcv.utils import print_log
-from mmedit.core.evaluation import mse, sad
+from mmedit.core.evaluation import connectivity, gradient_error, mse, sad
 
 from ..base import BaseModel
 from ..builder import build_backbone, build_component
@@ -35,7 +36,12 @@ class BaseMattor(BaseModel):
             refiner, 'train_refiner' should be specified.
         pretrained (str): path of pretrained model.
     """
-    allowed_metrics = {'SAD': sad, 'MSE': mse}
+    allowed_metrics = {
+        'SAD': sad,
+        'MSE': mse,
+        'GRAD': gradient_error,
+        'CONN': connectivity
+    }
 
     def __init__(self,
                  backbone,
@@ -140,7 +146,8 @@ class BaseMattor(BaseModel):
         eval_result = dict()
         for metric in self.test_cfg.metrics:
             eval_result[metric] = self.allowed_metrics[metric](
-                ori_alpha * 255, ori_trimap, pred_alpha * 255)
+                ori_alpha, ori_trimap,
+                np.round(pred_alpha * 255).astype(np.uint8))
         return eval_result
 
     def save_image(self, pred_alpha, meta, save_path, iteration):

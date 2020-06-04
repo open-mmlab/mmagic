@@ -20,14 +20,17 @@ img_norm_cfg = dict(
 train_pipeline = None
 test_pipeline = [
     dict(
-        type='LoadAlpha', key='alpha', flag='grayscale', save_origin_img=True),
+        type='LoadAlpha',
+        key='alpha',
+        flag='grayscale',
+        save_original_img=True),
     dict(
         type='LoadImageFromFile',
         key='trimap',
         flag='grayscale',
-        save_origin_img=True),
+        save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
-    dict(type='RescaleToZeroOne', keys=['merged', 'alpha', 'ori_alpha']),
+    dict(type='RescaleToZeroOne', keys=['merged', 'alpha']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Resize',
