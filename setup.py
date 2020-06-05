@@ -1,11 +1,24 @@
 import os
 import subprocess
 import time
+from functools import partial
 
 import torch
-from mmcv.utils.parrots_wrapper import (BuildExtension, CppExtension,
-                                        CUDAExtension)
 from setuptools import find_packages, setup
+
+
+def _get_extension():
+    if torch.__version__ == 'parrots':
+        from parrots.utils.build_extension import BuildExtension, Extension
+        CppExtension = partial(Extension, cuda=False)
+        CUDAExtension = partial(Extension, cuda=True)
+    else:
+        from torch.utils.cpp_extension import (BuildExtension, CppExtension,
+                                               CUDAExtension)
+    return BuildExtension, CppExtension, CUDAExtension
+
+
+BuildExtension, CppExtension, CUDAExtension = _get_extension()
 
 
 def readme():
