@@ -1,1 +1,1 @@
-lq/baboon_x4.png gt/baboon.png
+baboon.png (480,500,3)

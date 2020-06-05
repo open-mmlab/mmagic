@@ -148,10 +148,12 @@ class TestSRDatasets(object):
 
         # input path is Path object
         sr_annotation_dataset = SRAnnotationDataset(
+            lq_folder=self.data_prefix / 'lq',
+            gt_folder=self.data_prefix / 'gt',
             ann_file=anno_file_path,
             pipeline=sr_pipeline,
             scale=4,
-            data_prefix=self.data_prefix)
+            filename_tmpl='{}_x4')
         data_infos = sr_annotation_dataset.data_infos
         assert data_infos == [
             dict(
@@ -163,10 +165,12 @@ class TestSRDatasets(object):
         assert check_keys_contain(result.keys(), target_keys)
         # input path is str
         sr_annotation_dataset = SRAnnotationDataset(
+            lq_folder=str(self.data_prefix / 'lq'),
+            gt_folder=str(self.data_prefix / 'gt'),
             ann_file=str(anno_file_path),
             pipeline=sr_pipeline,
             scale=4,
-            data_prefix=str(self.data_prefix))
+            filename_tmpl='{}_x4')
         data_infos = sr_annotation_dataset.data_infos
         assert data_infos == [
             dict(
