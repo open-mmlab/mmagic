@@ -64,8 +64,10 @@ def get_data_info(args):
         trimap_dir = 'Test_set/Adobe-licensed images/trimaps'
     else:
         raise KeyError(f'Unknown mode {mode}.')
-    bg_path = osp.join(dir_prefix, 'bg', name_with_postfix)
-    merged_path = osp.join(dir_prefix, 'merged', name_with_postfix)
+    bg_path = osp.join(dir_prefix, 'bg',
+                       name_with_postfix).replace('.jpg', '.png')
+    merged_path = osp.join(dir_prefix, 'merged',
+                           name_with_postfix).replace('.jpg', '.png')
 
     if not osp.exists(source_bg_path):
         raise FileNotFoundError(f'{source_bg_path} does not exist!')
@@ -172,8 +174,7 @@ def generate_json(data_root, source_bg_dir, composite, nproc, mode):
     source_bg_paths = []
     for bg_name in bg_names:
         bg_name = bg_name.strip()
-        # in coco_2017, image names begin with 'COCO_train2014_'
-        # which is not desired
+        # in coco_2017, image names do not begin with 'COCO_train2014_'
         if '2017' in source_bg_dir:
             bg_name = bg_name[15:]  # get rid of 'COCO_train2014_'
         source_bg_paths.append(osp.join(source_bg_dir, bg_name))
