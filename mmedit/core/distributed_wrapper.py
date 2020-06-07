@@ -77,6 +77,8 @@ class DistributedDataParallelWrapper(nn.Module):
         for name, module in self.module._modules.items():
             if next(module.parameters(), None) is None:
                 module = module.cuda()
+            elif all(not p.requires_grad for p in module.parameters()):
+                module = module.cuda()
             else:
                 module = MMDistributedDataParallel(
                     module.cuda(),
