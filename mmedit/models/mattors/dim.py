@@ -64,6 +64,9 @@ class DIM(BaseMattor):
 
         return pred_alpha, pred_refine
 
+    def forward_dummy(self, inputs):
+        return self._forward(inputs, self.with_refiner)
+
     def forward_train(self, merged, trimap, alpha, ori_merged, fg, bg):
         """
         Args:

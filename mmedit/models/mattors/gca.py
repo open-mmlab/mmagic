@@ -56,6 +56,9 @@ class GCA(BaseMattor):
         pred_alpha = (raw_alpha.tanh() + 1.0) / 2.0
         return pred_alpha
 
+    def forward_dummy(self, inputs):
+        return self._forward(inputs)
+
     def forward_train(self, merged, trimap, alpha):
         """Forward function for training GCA model.
 
