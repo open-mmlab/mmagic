@@ -37,6 +37,9 @@ class IndexNet(BaseMattor):
         self.loss_comp = (
             build_loss(loss_comp) if loss_comp is not None else None)
 
+    def forward_dummy(self, inputs):
+        return self.backbone(inputs)
+
     def forward_train(self, merged, trimap, alpha, ori_merged, fg, bg):
         """Forward function for training IndexNet model.
 

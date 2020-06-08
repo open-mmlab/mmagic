@@ -171,6 +171,11 @@ def test_dim():
             assert isinstance(output_test['pred_alpha'], np.ndarray)
             assert output_test['eval_result'] is None
 
+    # test forward_dummy
+    model.cpu().eval()
+    inputs = torch.ones((1, 4, 32, 32))
+    model.forward_dummy(inputs)
+
 
 def test_indexnet():
     model_cfg, _, test_cfg = _get_model_cfg('indexnet.py')
@@ -220,6 +225,11 @@ def test_indexnet():
         assert output_train['num_samples'] == 2
         assert_dict_keys_equal(output_train['losses'], ['loss_alpha'])
 
+    # test forward_dummy
+    indexnet.cpu().eval()
+    inputs = torch.ones((1, 4, 32, 32))
+    indexnet.forward_dummy(inputs)
+
 
 def test_gca():
     model_cfg, train_cfg, test_cfg = _get_model_cfg('gca.py')
@@ -256,6 +266,11 @@ def test_gca():
             inputs = _demo_input_test((64, 64), cuda=True)
             outputs = model(**inputs, test_mode=True)
             assert_dict_keys_equal(outputs['eval_result'], ['SAD', 'MSE'])
+
+    # test forward_dummy
+    model.cpu().eval()
+    inputs = torch.ones((1, 4, 32, 32))
+    model.forward_dummy(inputs)
 
 
 def _demo_input_train(img_shape, batch_size=1, cuda=False):
