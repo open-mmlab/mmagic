@@ -18,15 +18,76 @@ If your folder structure is different, you may need to change the corresponding 
 
 ## Inference with pretrained models
 
-We provide testing scripts to evaluate a whole dataset (COCO, PASCAL VOC, Cityscapes, etc.),
-and also some high-level apis for easier integration to other projects.
+We provide testing scripts to evaluate a whole dataset,
+as well as some task-specific image demos.
 
 ### Test a dataset
 
+MMEditing implements **distributed** testing with `MMDistributedDataParallel`.
+
+#### Test with single/multiple GPUs
+
+You can use the following commands to test a dataset with single/multiple GPUs.
+
+```shell
+# single-gpu testing
+python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [--save-path ${IMAGE_SAVE_PATH}]
+
+# multi-gpu testing
+./tools/dist_test.sh ${CONFIG_FILE} ${CHECKPOINT_FILE} ${GPU_NUM} [--out ${RESULT_FILE}] [--save-path ${IMAGE_SAVE_PATH}]
+```
+For example,
+
+```shell
+# single-gpu testing
+python tools/test.py configs/example_config.py work_dirs/example_exp/example_model_20200202.pth --out work_dirs/example_exp/results.pkl
+
+# multi-gpu testing
+./tools/dist_test.sh configs/example_config.py work_dirs/example_exp/example_model_20200202.pth --save-path work_dirs/example_exp/results/
+```
+
+#### Test with Slurm
+
+If you run MMEditing on a cluster managed with [slurm](https://slurm.schedmd.com/), you can use the script `slurm_test.sh`. (This script also supports single machine testing.)
+
+```shell
+[GPUS=${GPUS}] ./tools/slurm_test.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${CHECKPOINT_FILE}
+```
+Here is an example of using 8 GPUs to test an example model on the 'dev' partition with job name 'test'.
+
+```shell
+GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/example_exp/example_model_20200202.pth
+```
+
+You can check [slurm_test.sh](../tools/slurm_test.sh) for full arguments and environment variables.
+
+#### Optional arguments
+
+- `--out`: Specify the filename of the output results in pickle format. If not given, the results will not be saved to a file.
+- `--save-path`: Specify the path to store edited images. If not given, the images will not be saved.
+- `--seed`: Random seed during testing. This argument is used for fixed results in some tasks such as inpainting.
+- `--deterministic`: Related to `--seed`, this argument decides whether to set deterministic options for CUDNN backend. If specified, it will set `torch.backends.cudnn.deterministic` to True and `torch.backends.cudnn.benchmark` to False.
+
+Note: Currently, we do NOT use `--eval` argument like [MMDetection](https://github.com/open-mmlab/mmdetection) to specify evaluation metrics. The evaluation metrics are given in the config files (see [config.md](config.md)).
+
+
+### Image demos
+
+We provide some task-specific demo scripts to test a single image.
+
+#### Inpainting
+
 [TODO]
 
+#### Matting
 
-### Image demo
+[TODO]
+
+#### Restoration
+
+[TODO]
+
+#### Generation
 
 [TODO]
 
