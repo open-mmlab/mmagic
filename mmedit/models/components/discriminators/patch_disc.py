@@ -12,7 +12,7 @@ class PatchDiscriminator(nn.Module):
 
     Args:
         in_channels (int): Number of channels in input images.
-        base_channels (int): Number of filters at the first conv layer.
+        base_channels (int): Number of channels at the first conv layer.
             Default: 64.
         num_conv (int): Number of stacked intermediate convs (excluding input
             and output conv). Default: 3.
