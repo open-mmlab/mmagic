@@ -128,8 +128,10 @@ def gradient_penalty_loss(discriminator, real_data, fake_data, mask=None):
 
     if mask is not None:
         gradients = gradients * mask
-    gradients = gradients.view(gradients.size(0), -1)
+
     gradients_penalty = ((gradients.norm(2, dim=1) - 1)**2).mean()
+    if mask is not None:
+        gradients_penalty /= torch.mean(mask)
 
     return gradients_penalty
 
