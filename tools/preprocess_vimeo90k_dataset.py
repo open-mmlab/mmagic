@@ -7,12 +7,12 @@ import lmdb
 import mmcv
 
 
-def create_lmdb(mode,
-                data_path,
-                lmdb_path,
-                train_list,
-                batch=5000,
-                compress_level=1):
+def make_lmdb(mode,
+              data_path,
+              lmdb_path,
+              train_list,
+              batch=5000,
+              compress_level=1):
     """Create lmdb for the Vimeo90K dataset.
 
     Contents of lmdb. The file structure is:
@@ -141,7 +141,7 @@ def parse_args():
     parser.add_argument(
         'train-list', help='official training list path for Vimeo90K')
     parser.add_argument(
-        '--create-lmdb', action='store_true', help='create lmdb files')
+        '--make-lmdb', action='store_true', help='create lmdb files')
 
     args = parser.parse_args()
     return args
@@ -154,11 +154,11 @@ if __name__ == '__main__':
     generate_anno_file(args.train_list)
 
     # create lmdb files
-    if args.create_lmdb:
+    if args.make_lmdb:
         # create lmdb for gt
         lmdb_path = osp.join(
             osp.dirname(args.gt_path), 'vimeo90k_train_GT.lmdb')
-        create_lmdb(
+        make_lmdb(
             mode='gt',
             data_path=args.gt_path,
             lmdb_path=lmdb_path,
@@ -166,7 +166,7 @@ if __name__ == '__main__':
         # create lmdb for lq
         lmdb_path = osp.join(
             osp.dirname(args.lq_path), 'vimeo90k_train_LR7frames.lmdb')
-        create_lmdb(
+        make_lmdb(
             mode='lq',
             data_path=args.lq_path,
             lmdb_path=lmdb_path,

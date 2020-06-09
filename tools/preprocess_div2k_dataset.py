@@ -146,7 +146,7 @@ def worker(path, opt):
     return process_info
 
 
-def create_lmdb_for_div2k(data_root):
+def make_lmdb_for_div2k(data_root):
     """Create lmdb files for DIV2K dataset.
 
     Args:
@@ -380,4 +380,4 @@ if __name__ == '__main__':
     main_extract_subimages(args)
     # prepare lmdb files if necessary
     if args.make_lmdb:
-        create_lmdb_for_div2k(args.data_root)
+        make_lmdb_for_div2k(args.data_root)
