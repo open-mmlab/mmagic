@@ -9,7 +9,7 @@ import lmdb
 import mmcv
 
 
-def create_lmdb(mode, data_path, lmdb_path, batch=5000, compress_level=1):
+def make_lmdb(mode, data_path, lmdb_path, batch=5000, compress_level=1):
     """Create lmdb for the REDS dataset.
 
     Contents of lmdb. The file structure is:
@@ -179,7 +179,7 @@ def parse_args():
         'https://gist.github.com/SeungjunNah/b10d369b92840cb8dd2118dd4f41d643')
     parser.add_argument('root-path', help='root path for REDS')
     parser.add_argument(
-        '--create-lmdb', action='store_true', help='create lmdb files')
+        '--make-lmdb', action='store_true', help='create lmdb files')
 
     args = parser.parse_args()
     return args
@@ -242,11 +242,11 @@ if __name__ == '__main__':
     generate_anno_file(root_path)
 
     # create lmdb file
-    if args.create_lmdb:
+    if args.make_lmdb:
         for train_folder in train_folders:
             lmdb_path = osp.join(root_path, train_folder + '.lmdb')
             data_path = osp.join(root_path, train_folder)
             if 'bicubic' in train_folder:
                 data_path = osp.join(data_path, 'X4')
-            create_lmdb(
+            make_lmdb(
                 mode=train_folder, data_path=data_path, lmdb_path=lmdb_path)
