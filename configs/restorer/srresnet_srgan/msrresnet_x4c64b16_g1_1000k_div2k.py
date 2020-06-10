@@ -1,5 +1,6 @@
-exp_name = '001_G1_MSRResNetX4_DIV2K_fromscratch'
+exp_name = 'msrresnet_x4c64b16_g1_1000k_div2k'
 
+scale = 4
 # model settings
 model = dict(
     type='BasicRestorer',
@@ -9,11 +10,11 @@ model = dict(
         out_channels=3,
         mid_channels=64,
         num_blocks=16,
-        upscale_factor=4),
+        upscale_factor=scale),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = None
-test_cfg = dict(metrics=['PSNR'], crop_border=4)
+test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=scale)
 
 # dataset settings
 train_dataset_type = 'SRAnnotationDataset'
@@ -77,10 +78,11 @@ data = dict(
         times=1000,
         dataset=dict(
             type=train_dataset_type,
-            ann_file='./data/DIV2K800_sub.txt',
-            data_prefix='./data',
+            lq_folder='data/DIV2K/DIV2K_train_LR_bicubic/X4_sub',
+            gt_folder='data/DIV2K/DIV2K_train_HR_sub',
+            ann_file='data/DIV2K/meta_info_DIV2K800sub_GT.txt',
             pipeline=train_pipeline,
-            scale=4)),
+            scale=scale)),
     # val
     val_samples_per_gpu=1,
     val_workers_per_gpu=1,
@@ -89,17 +91,16 @@ data = dict(
         lq_folder='./data/val_set5/Set5_bicLRx4',
         gt_folder='./data/val_set5/Set5',
         pipeline=test_pipeline,
-        scale=4,
+        scale=scale,
         filename_tmpl='{}'),
     # test
     test=dict(
         type=val_dataset_type,
-        lq_folder='./data/DIV2K_valid_LR_bicubic',
-        gt_folder='./data/DIV2K_valid_HR',
+        lq_folder='./data/val_set5/Set5_bicLRx4',
+        gt_folder='./data/val_set5/Set5',
         pipeline=test_pipeline,
-        scale=4,
-        filename_tmpl='{}x4'),
-)
+        scale=scale,
+        filename_tmpl='{}'))
 
 # optimizer
 optimizers = dict(generator=dict(type='Adam', lr=2e-4, betas=(0.9, 0.999)))
@@ -110,8 +111,7 @@ lr_config = dict(
     policy='CosineRestart',
     by_epoch=False,
     period=[250000, 250000, 250000, 250000],
-    restarts=[250000, 500000, 750000],
-    restart_weights=[1, 1, 1],
+    restart_weights=[1, 1, 1, 1],
     eta_min=1e-7)
 
 checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
@@ -121,12 +121,12 @@ log_config = dict(
     hooks=[
         dict(type='IterTextLoggerHook'),
         dict(type='TensorboardLoggerHook'),
-        dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit-sr')),
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit-sr'))
     ])
 visual_config = None
 
 # runtime settings
-dist_params = dict(backend='nccl', port=29747)
+dist_params = dict(backend='nccl', port=29500)
 log_level = 'INFO'
 work_dir = f'./work_dirs/{exp_name}'
 load_from = None

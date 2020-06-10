@@ -133,7 +133,7 @@ visual_config = None
 # runtime settings
 total_iters = 266800
 cudnn_benchmark = True
-dist_params = dict(backend='nccl', port=21113)
+dist_params = dict(backend='nccl', port=29500)
 log_level = 'INFO'
 load_from = None
 resume_from = None
