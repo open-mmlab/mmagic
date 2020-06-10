@@ -1,20 +1,34 @@
-exp_name = 'edsr_x2c64b16_g1_300k_div2k'
+exp_name = 'srgan_x4c64b16_g1_1000k_div2k'
 
-scale = 2
+scale = 4
 # model settings
 model = dict(
-    type='BasicRestorer',
+    type='SRGAN',
     generator=dict(
-        type='EDSR',
+        type='MSRResNet',
         in_channels=3,
         out_channels=3,
         mid_channels=64,
         num_blocks=16,
-        upscale_factor=scale,
-        res_scale=1,
-        rgb_mean=(0.4488, 0.4371, 0.4040),
-        rgb_std=(1.0, 1.0, 1.0)),
-    pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
+        upscale_factor=scale),
+    discriminator=dict(type='ModifiedVGG', in_channels=3, mid_channels=64),
+    pixel_loss=dict(type='L1Loss', loss_weight=1e-2, reduction='mean'),
+    perceptual_loss=dict(
+        type='PerceptualLoss',
+        layer_weights={'34': 1.0},
+        vgg_type='vgg19',
+        perceptual_weight=1.0,
+        style_weight=0,
+        norm_img=False),
+    gan_loss=dict(
+        type='GANLoss',
+        gan_type='vanilla',
+        loss_weight=5e-3,
+        real_label_val=1.0,
+        fake_label_val=0),
+    pretrained=None,
+)
+
 # model training and testing settings
 train_cfg = None
 test_cfg = dict(metrics=['PSNR'], crop_border=scale)
@@ -40,7 +54,7 @@ train_pipeline = [
         mean=[0, 0, 0],
         std=[1, 1, 1],
         to_rgb=True),
-    dict(type='PairedRandomCrop', gt_patch_size=96),
+    dict(type='PairedRandomCrop', gt_patch_size=128),
     dict(
         type='Flip', keys=['lq', 'gt'], flip_ratio=0.5,
         direction='horizontal'),
@@ -81,7 +95,7 @@ data = dict(
         times=1000,
         dataset=dict(
             type=train_dataset_type,
-            lq_folder='data/DIV2K/DIV2K_train_LR_bicubic/X2_sub',
+            lq_folder='data/DIV2K/DIV2K_train_LR_bicubic/X4_sub',
             gt_folder='data/DIV2K/DIV2K_train_HR_sub',
             ann_file='data/DIV2K/meta_info_DIV2K800sub_GT.txt',
             pipeline=train_pipeline,
@@ -91,26 +105,32 @@ data = dict(
     val_workers_per_gpu=1,
     val=dict(
         type=val_dataset_type,
-        lq_folder='./data/val_set5/Set5_bicLRx2',
-        gt_folder='./data/val_set5/Set5_mod12',
+        lq_folder='./data/val_set14/Set14_bicLRx4',
+        gt_folder='./data/val_set14/Set14',
         pipeline=test_pipeline,
         scale=scale,
         filename_tmpl='{}'),
     # test
     test=dict(
         type=val_dataset_type,
-        lq_folder='./data/val_set5/Set5_bicLRx2',
-        gt_folder='./data/val_set5/Set5_mod12',
+        lq_folder='./data/val_set14/Set14_bicLRx4',
+        gt_folder='./data/val_set14/Set14',
         pipeline=test_pipeline,
         scale=scale,
         filename_tmpl='{}'))
 
 # optimizer
-optimizers = dict(generator=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999)))
+optimizers = dict(
+    generator=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999)),
+    discriminator=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999)))
 
 # learning policy
-total_iters = 300000
-lr_config = dict(policy='Step', by_epoch=False, step=[200000], gamma=0.5)
+total_iters = 400000
+lr_config = dict(
+    policy='Step',
+    by_epoch=False,
+    step=[50000, 100000, 200000, 300000],
+    gamma=0.5)
 
 checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
 evaluation = dict(interval=5000, save_image=True, gpu_collect=True)
@@ -119,7 +139,7 @@ log_config = dict(
     hooks=[
         dict(type='IterTextLoggerHook'),
         dict(type='TensorboardLoggerHook'),
-        # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit-sr'))
+        dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit-sr'))
     ])
 visual_config = None
 
@@ -127,6 +147,6 @@ visual_config = None
 dist_params = dict(backend='nccl', port=29500)
 log_level = 'INFO'
 work_dir = f'./work_dirs/{exp_name}'
-load_from = None
+load_from = 'work_dirs/001_MSRResNet_cosanealing_iter_1000000.pth'
 resume_from = None
 workflow = [('train', 1)]
