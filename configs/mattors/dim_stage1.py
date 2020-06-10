@@ -11,17 +11,20 @@ model = dict(
 train_cfg = dict(train_backbone=True, train_refiner=False)
 test_cfg = dict(refine=False, metrics=['SAD', 'MSE'])
 
-# data settings
+# dataset settings
 dataset_type = 'AdobeComp1kDataset'
 data_root = './data/adobe_composition-1k/'
 img_norm_cfg = dict(
     mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
 train_pipeline = [
-    dict(type='LoadAlpha', key='alpha', flag='grayscale'),
+    dict(type='LoadImageFromFile', key='alpha', flag='grayscale'),
     dict(type='LoadImageFromFile', key='fg'),
     dict(type='LoadImageFromFile', key='bg'),
-    dict(type='LoadImageFromFile', key='merged'),
-    dict(type='CropAroundSemiTransparent', crop_sizes=[320, 480, 640]),
+    dict(type='LoadImageFromFile', key='merged', save_original_img=True),
+    dict(
+        type='CropAroundUnknown',
+        keys=['alpha', 'merged', 'ori_merged', 'fg', 'bg'],
+        crop_sizes=[320, 480, 640]),
     dict(type='Flip', keys=['alpha', 'merged', 'ori_merged', 'fg', 'bg']),
     dict(
         type='Resize',
@@ -43,7 +46,7 @@ train_pipeline = [
 ]
 test_pipeline = [
     dict(
-        type='LoadAlpha',
+        type='LoadImageFromFile',
         key='alpha',
         flag='grayscale',
         save_original_img=True),
@@ -53,19 +56,14 @@ test_pipeline = [
         flag='grayscale',
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
-    dict(
-        type='Resize',
-        keys=['alpha', 'trimap', 'merged'],
-        size_factor=32,
-        max_size=1600),
+    dict(type='Pad', keys=['alpha', 'trimap', 'merged'], mode='reflect'),
     dict(type='RescaleToZeroOne', keys=['merged', 'alpha']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Collect',
         keys=['merged', 'alpha', 'trimap'],
         meta_keys=[
-            'merged_path', 'interpolation', 'ori_shape', 'ori_alpha',
-            'ori_trimap'
+            'merged_path', 'pad', 'merged_ori_shape', 'ori_alpha', 'ori_trimap'
         ]),
     dict(type='ImageToTensor', keys=['merged', 'alpha', 'trimap']),
 ]
@@ -102,7 +100,7 @@ log_config = dict(
     interval=10,
     hooks=[
         dict(type='IterTextLoggerHook'),
-        dict(type='PaviLoggerHook', init_kwargs=dict(project='dim')),
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='dim')),
         # dict(type='TensorboardLoggerHook')
     ])
 # yapf:enable

@@ -208,9 +208,8 @@ class CropAroundCenter(object):
     same as `semi-transparent area`.
     https://arxiv.org/pdf/2001.04069.pdf
     It retains the center 1/4 images and resizes the images to 'crop_size'.
-    Required keys are "fg", "bg", "trimap", "alpha", "img_shape" and
-    "img_name", modified keys are "fg", "bg", "trimap", "alpha" and
-    "img_shape".
+    Required keys are "fg", "bg", "trimap" and "alpha", added or modified keys
+    are "crop_bbox", "fg", "bg", "trimap" and "alpha".
 
     Attributes:
         crop_size (int | tuple): Desired output size. If int, square crop is
@@ -230,7 +229,7 @@ class CropAroundCenter(object):
         alpha = results['alpha']
         trimap = results['trimap']
         bg = results['bg']
-        h, w = results['img_shape'][:2]
+        h, w = fg.shape[:2]
         assert bg.shape == fg.shape, (f'shape of bg {bg.shape} should be the '
                                       f'same as fg {fg.shape}.')
 
@@ -272,7 +271,6 @@ class CropAroundCenter(object):
         results['alpha'] = alpha[top:bottom, left:right]
         results['trimap'] = trimap[top:bottom, left:right]
         results['bg'] = bg[top:bottom, left:right]
-        results['img_shape'] = (crop_h, crop_w)
         results['crop_bbox'] = (left, top, right, bottom)
         return results
 
@@ -285,8 +283,8 @@ class CropAroundUnknown(object):
     """Crop around unknown area with a randomly selected scale.
 
     Randomly select the w and h from a list of (w, h).
-    Required keys are "img_shape" and the keys in argument `keys`, added or
-    modified keys are "img_shape", "crop_bbox" and the keys in argument `keys`.
+    Required keys are the keys in argument `keys`, added or
+    modified keys are "crop_bbox" and the keys in argument `keys`.
     This class assumes value of "alpha" ranges from 0 to 255.
 
     Attributes:
@@ -330,7 +328,7 @@ class CropAroundUnknown(object):
         self.interpolation = interpolation
 
     def __call__(self, results):
-        h, w = results['img_shape'][:2]
+        h, w = results[self.keys[0]].shape[:2]
 
         rand_ind = np.random.randint(len(self.crop_sizes))
         crop_h, crop_w = self.crop_sizes[rand_ind]
@@ -356,7 +354,6 @@ class CropAroundUnknown(object):
 
         for key in self.keys:
             results[key] = results[key][top:bottom, left:right]
-        results['img_shape'] = results['alpha'].shape
         results['crop_bbox'] = (left, top, right, bottom)
         return results
 
@@ -372,9 +369,9 @@ class CropAroundUnknown(object):
 class CropAroundFg(object):
     """Crop around the whole foreground in the segmentation mask.
 
-    Required keys are "img_shape", "seg" and the keys in argument `keys`.
+    Required keys are "seg" and the keys in argument `keys`.
     Meanwhile, "seg" must be in argument `keys`. Added or modified keys are
-    "img_shape", "crop_bbox" and the keys in argument `keys`.
+    "crop_bbox" and the keys in argument `keys`.
 
     Args:
         keys (Sequence[str]): The images to be cropped. It must contain
@@ -426,7 +423,6 @@ class CropAroundFg(object):
 
         for key in self.keys:
             results[key] = results[key][top:bottom, left:right]
-        results['img_shape'] = (bottom - top, right - left)
         results['crop_bbox'] = (left, top, right, bottom)
         return results
 

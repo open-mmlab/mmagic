@@ -7,15 +7,15 @@ from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    FixedCrop, ModCrop, PairedRandomCrop)
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
-from .loading import (LoadAlpha, LoadImageFromFile, LoadImageFromFileList,
-                      LoadMask, LoadPairedImageFromFile, RandomLoadResizeBg)
+from .loading import (LoadImageFromFile, LoadImageFromFileList, LoadMask,
+                      LoadPairedImageFromFile, RandomLoadResizeBg)
 from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, MergeFgAndBg, PerturbBg)
 from .normalization import Normalize, RescaleToZeroOne
 from .tmad_aug import GetPatchPool
 
 __all__ = [
-    'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadAlpha', 'LoadMask',
+    'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadMask',
     'RandomLoadResizeBg', 'Compose', 'ImageToTensor', 'ToTensor',
     'GetMaskedImage', 'BinarizeImage', 'Flip', 'Pad', 'RandomAffine',
     'RandomJitter', 'RandomMaskDilation', 'RandomTransposeHW', 'Resize',

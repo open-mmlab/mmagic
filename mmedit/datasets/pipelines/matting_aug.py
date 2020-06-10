@@ -137,7 +137,7 @@ class CompositeFg(object):
     :math:`(fg_2, \alpha_2)` is the randomly loaded sample. With the above
     composition, :math:`alpha_{new}` is still in `[0, 1]`.
 
-    Required keys are "fg", "alpha", "img_shape" and "alpha_norm_cfg", added or
+    Required keys are "fg", "alpha" and "alpha_norm_cfg", added or
     modified keys are "alpha" and "fg". "alpha" should be normalized.
 
     Args:
@@ -166,7 +166,7 @@ class CompositeFg(object):
     def __call__(self, results):
         fg = results['fg']
         alpha = results['alpha'].astype(np.float32) / 255.
-        h, w = results['img_shape']
+        h, w = results['fg'].shape[:2]
 
         # randomly select fg
         if np.random.rand() < 0.5:
@@ -194,7 +194,6 @@ class CompositeFg(object):
 
         results['fg'] = fg
         results['alpha'] = (alpha * 255).astype(np.uint8)
-        results['img_shape'] = alpha.shape
         return results
 
     @staticmethod
@@ -349,7 +348,7 @@ class PerturbBg(object):
 class GenerateSoftSeg(object):
     """Generate soft segmentation mask from input segmentation mask.
 
-    Required keys are "seg" and "img_shape", added keys is "soft_seg".
+    Required key is "seg", added key is "soft_seg".
 
     Args:
         fg_thr (float, optional): Threhold of the foreground in the normalized
@@ -409,8 +408,8 @@ class GenerateSoftSeg(object):
         self.blur_ksizes = blur_ksizes
 
     def __call__(self, results):
-        height, width = results['img_shape'][:2]
         seg = results['seg'].astype(np.float32) / 255
+        height, width = seg.shape[:2]
         seg[seg > self.fg_thr] = 1
 
         # to align with the original repo, pad the bottom of the mask

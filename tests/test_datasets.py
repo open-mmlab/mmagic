@@ -25,7 +25,9 @@ class TestMattingDatasets(object):
         # creat para for creating a dataset.
         cls.data_prefix = Path(__file__).parent / 'data'
         cls.ann_file = osp.join(cls.data_prefix, 'test_list.json')
-        cls.pipeline = [dict(type='LoadAlpha', key='alpha', flag='grayscale')]
+        cls.pipeline = [
+            dict(type='LoadImageFromFile', key='alpha', flag='grayscale')
+        ]
 
     def test_comp1k_dataset(self):
         comp1k_dataset = AdobeComp1kDataset(self.ann_file, self.pipeline,
