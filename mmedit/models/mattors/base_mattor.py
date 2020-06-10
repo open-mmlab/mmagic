@@ -117,7 +117,7 @@ class BaseMattor(BaseModel):
             ndarray: The reshaped predicted alpha.
         """
         ori_trimap = img_meta[0]['ori_trimap'].squeeze()
-        ori_h, ori_w = img_meta[0]['ori_shape']
+        ori_h, ori_w = img_meta[0]['merged_ori_shape'][:2]
 
         if 'interpolation' in img_meta[0]:
             # images have been resized for inference, resize back

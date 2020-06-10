@@ -1,6 +1,3 @@
-# data path
-data_root = './data/adobe_composition-1k/'
-bg_dir = './data/coco/train2017'
 # model settings
 model = dict(
     type='GCA',
@@ -19,12 +16,17 @@ model = dict(
             with_spectral_norm=True)),
     loss_alpha=dict(type='L1Loss'),
     pretrained='./weights/model_best_resnet34_En_nomixup_mmedit.pth')
+train_cfg = dict(train_backbone=True)
+test_cfg = dict(metrics=['SAD', 'MSE'])
+
 # dataset settings
 dataset_type = 'AdobeComp1kDataset'
+data_root = './data/adobe_composition-1k/'
+bg_dir = './data/coco/train2017'
 img_norm_cfg = dict(
     mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
 train_pipeline = [
-    dict(type='LoadAlpha', key='alpha', flag='grayscale'),
+    dict(type='LoadImageFromFile', key='alpha', flag='grayscale'),
     dict(type='LoadImageFromFile', key='fg'),
     dict(type='RandomLoadResizeBg', bg_dir=bg_dir),
     dict(
@@ -52,7 +54,7 @@ train_pipeline = [
 ]
 test_pipeline = [
     dict(
-        type='LoadAlpha',
+        type='LoadImageFromFile',
         key='alpha',
         flag='grayscale',
         save_original_img=True),
@@ -69,7 +71,7 @@ test_pipeline = [
         type='Collect',
         keys=['merged', 'trimap'],
         meta_keys=[
-            'merged_path', 'pad', 'ori_shape', 'ori_alpha', 'ori_trimap'
+            'merged_path', 'pad', 'merged_ori_shape', 'ori_alpha', 'ori_trimap'
         ]),
     dict(type='ImageToTensor', keys=['merged', 'trimap']),
     dict(type='FormatTrimap', to_onehot=True),
@@ -95,6 +97,7 @@ data = dict(
         ann_file=data_root + 'test_list.json',
         data_prefix=data_root,
         pipeline=test_pipeline))
+
 # optimizer
 optimizers = dict(type='Adam', lr=4e-4, betas=[0.5, 0.999])
 # learning policy
@@ -104,10 +107,11 @@ lr_config = dict(
     by_epoch=False,
     warmup='linear',
     warmup_iters=5000,
-    warmup_ratio=0.001,
-)
+    warmup_ratio=0.001)
+
 # checkpoint saving
 checkpoint_config = dict(interval=2000, by_epoch=False)
+evaluation = dict(interval=2000, save_image=False, gpu_collect=True)
 # yapf:disable
 log_config = dict(
     interval=10,
@@ -117,6 +121,7 @@ log_config = dict(
         # dict(type='TensorboardLoggerHook')
     ])
 # yapf:enable
+
 # runtime settings
 total_iters = 200000
 dist_params = dict(backend='nccl')
@@ -125,6 +130,3 @@ work_dir = './work_dirs/gca'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
-train_cfg = dict(train_backbone=True)
-test_cfg = dict(metrics=['SAD', 'MSE'])
-evaluation = dict(interval=2000, save_image=False, gpu_collect=True)

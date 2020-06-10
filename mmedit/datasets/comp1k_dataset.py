@@ -1,5 +1,4 @@
 import os.path as osp
-from pathlib import Path
 
 import mmcv
 
@@ -58,24 +57,3 @@ class AdobeComp1kDataset(BaseMattingDataset):
                 data_info[key] = osp.join(self.data_prefix, data_info[key])
 
         return data_infos
-
-    def format_results(self, results):
-        """Gathering predicted alpha matte from output of the model.
-
-        Args:
-            results (list[tuple]): The output of forward_test() of the model.
-
-        Return:
-            alphas (dict): Mapping from input image (merged) name to predicted
-                alpha.
-        """
-        alphas = dict()
-        print('Gathering predicted alpha matte...')
-        prog_bar = mmcv.ProgressBar(len(self))
-        cur = 0
-        for res in results:
-            img_name = Path(self.data_infos[cur]['merged']).name
-            alphas[img_name] = res[0] * 255
-            cur += 1
-            prog_bar.update()
-        return alphas

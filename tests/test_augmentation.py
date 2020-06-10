@@ -164,10 +164,10 @@ class TestAugmentations(object):
         np.testing.assert_almost_equal(results['lq'][0], results['lq'][1])
 
     def test_pad(self):
-        target_keys = ['alpha', 'img_shape']
+        target_keys = ['alpha']
 
         alpha = np.random.rand(319, 321).astype(np.float32)
-        results = dict(alpha=alpha, img_shape=(319, 321))
+        results = dict(alpha=alpha)
         pad = Pad(keys=['alpha'], ds_factor=32, mode='constant')
         pad_results = pad(results)
         assert self.check_keys_contain(pad_results.keys(), target_keys)
@@ -175,7 +175,7 @@ class TestAugmentations(object):
         assert self.check_pad(alpha, results['alpha'], 'constant')
 
         alpha = np.random.rand(319, 321).astype(np.float32)
-        results = dict(alpha=alpha, img_shape=(319, 321))
+        results = dict(alpha=alpha)
         pad = Pad(keys=['alpha'], ds_factor=32, mode='reflect')
         pad_results = pad(results)
         assert self.check_keys_contain(pad_results.keys(), target_keys)
@@ -183,7 +183,7 @@ class TestAugmentations(object):
         assert self.check_pad(alpha, results['alpha'], 'reflect')
 
         alpha = np.random.rand(320, 320).astype(np.float32)
-        results = dict(alpha=alpha, img_shape=(320, 320))
+        results = dict(alpha=alpha)
         pad = Pad(keys=['alpha'], ds_factor=32, mode='reflect')
         pad_results = pad(results)
         assert self.check_keys_contain(pad_results.keys(), target_keys)
@@ -269,7 +269,7 @@ class TestAugmentations(object):
         # test random affine with different valid setting combinations
         alpha = np.random.rand(240, 320).astype(np.float32)
         fg = np.random.rand(240, 320).astype(np.float32)
-        results = dict(alpha=alpha, fg=fg, img_shape=(240, 320))
+        results = dict(alpha=alpha, fg=fg)
         random_affine = RandomAffine(['fg', 'alpha'],
                                      degrees=30,
                                      translate=(0, 1),
@@ -283,7 +283,7 @@ class TestAugmentations(object):
 
         alpha = np.random.rand(240, 320).astype(np.float32)
         fg = np.random.rand(240, 320).astype(np.float32)
-        results = dict(alpha=alpha, fg=fg, img_shape=(240, 320))
+        results = dict(alpha=alpha, fg=fg)
         random_affine = RandomAffine(['fg', 'alpha'],
                                      degrees=(-30, 30),
                                      scale=(0.8, 1.25),
@@ -297,7 +297,7 @@ class TestAugmentations(object):
 
         alpha = np.random.rand(240, 320).astype(np.float32)
         fg = np.random.rand(240, 320).astype(np.float32)
-        results = dict(alpha=alpha, fg=fg, img_shape=(240, 320))
+        results = dict(alpha=alpha, fg=fg)
         random_affine = RandomAffine(['fg', 'alpha'], degrees=30)
         random_affine_results = random_affine(results)
         assert self.check_keys_contain(random_affine_results.keys(),
@@ -425,7 +425,7 @@ class TestAugmentations(object):
         with pytest.raises(TypeError):
             Resize(['gt_img'], dict(test=None))
 
-        target_keys = ['alpha', 'img_shape']
+        target_keys = ['alpha']
 
         alpha = np.random.rand(240, 320).astype(np.float32)
         results = dict(alpha=alpha)

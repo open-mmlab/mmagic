@@ -114,34 +114,10 @@ class LoadImageFromFileList(LoadImageFromFile):
 
 
 @PIPELINES.register_module
-class LoadAlpha(LoadImageFromFile):
-    """Using OpenCV to read image.
-
-    Required keys are "alpha_path", added or modified keys are "alpha",
-    "ori_alpha", "ori_shape", "img_shape" and "img_name".
-    """
-
-    def __call__(self, results):
-        if self.file_client is None:
-            self.file_client = FileClient(self.io_backend, **self.kwargs)
-        filepath = str(results[f'{self.key}_path'])
-        img_bytes = self.file_client.get(filepath)
-        alpha = mmcv.imfrombytes(img_bytes, flag=self.flag)  # HWC, BGR
-        img_name = Path(results[f'{self.key}_path']).name
-        assert alpha.shape[0], f"{img_name}'s alpha is not valid"
-        results['alpha'] = alpha
-        results['img_name'] = img_name
-        results['ori_alpha'] = alpha
-        results['ori_shape'] = alpha.shape
-        results['img_shape'] = alpha.shape
-        return results
-
-
-@PIPELINES.register_module
 class RandomLoadResizeBg(object):
     """Randomly load a background image and resize it.
 
-    Required key is "img_shape", added key is "bg".
+    Required key is "fg", added key is "bg".
 
     Args:
         bg_dir (str): Path of directory to load background images from.
@@ -161,7 +137,7 @@ class RandomLoadResizeBg(object):
     def __call__(self, results):
         if self.file_client is None:
             self.file_client = FileClient(self.io_backend, **self.kwargs)
-        h, w = results['img_shape']
+        h, w = results['fg'].shape[:2]
         idx = np.random.randint(len(self.bg_list))
         filepath = Path(self.bg_dir).joinpath(self.bg_list[idx])
         img_bytes = self.file_client.get(filepath)

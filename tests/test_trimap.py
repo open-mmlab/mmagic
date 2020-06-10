@@ -156,13 +156,13 @@ def test_generate_trimap():
 
 
 def test_composite_fg():
-    target_keys = ['alpha', 'fg', 'bg', 'img_shape']
+    target_keys = ['alpha', 'fg', 'bg']
 
     np.random.seed(0)
     fg = np.random.rand(32, 32, 3).astype(np.float32)
     bg = np.random.rand(32, 32, 3).astype(np.float32)
     alpha = np.random.rand(32, 32).astype(np.float32)
-    results = dict(alpha=alpha, fg=fg, bg=bg, img_shape=(32, 32))
+    results = dict(alpha=alpha, fg=fg, bg=bg)
     composite_fg = CompositeFg('tests/data/fg', 'tests/data/alpha', 'jpg',
                                'jpg')
     composite_fg_results = composite_fg(results)
@@ -172,7 +172,7 @@ def test_composite_fg():
     fg = np.random.rand(32, 32, 3).astype(np.float32)
     bg = np.random.rand(32, 32, 3).astype(np.float32)
     alpha = np.random.rand(32, 32).astype(np.float32)
-    results = dict(alpha=alpha, fg=fg, bg=bg, img_shape=(32, 32))
+    results = dict(alpha=alpha, fg=fg, bg=bg)
     composite_fg = CompositeFg(
         'tests/data/fg',
         'tests/data/alpha',
@@ -269,10 +269,10 @@ def test_generate_soft_seg():
         # blur_ksizes must be a list of tuple
         GenerateSoftSeg(blur_ksizes=[21, 21])
 
-    target_keys = ['seg', 'soft_seg', 'img_shape']
+    target_keys = ['seg', 'soft_seg']
 
     seg = np.random.randint(0, 255, (512, 512))
-    results = dict(seg=seg, img_shape=seg.shape)
+    results = dict(seg=seg)
 
     generate_soft_seg = GenerateSoftSeg(
         erode_ksize=3,

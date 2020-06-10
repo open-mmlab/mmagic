@@ -24,7 +24,7 @@ class Resize(object):
     and width should be divisible by 32.
 
     Required keys are the keys in attribute "keys", added or modified keys are
-    "img_shape", "keep_ratio", "scale_factor", "interpolation" and the
+    "keep_ratio", "scale_factor", "interpolation" and the
     keys in attribute "keys".
 
     All keys in "keys" should have the same shape. "test_trans" is used to
@@ -122,7 +122,6 @@ class Resize(object):
             if len(results[key].shape) == 2:
                 results[key] = np.expand_dims(results[key], axis=2)
 
-        results['img_shape'] = results[self.keys[-1]].shape
         results['scale_factor'] = self.scale_factor
         results['keep_ratio'] = self.keep_ratio
         results['interpolation'] = self.interpolation
@@ -193,8 +192,8 @@ class Pad(object):
 
     See `Reshape` for more explanation. `numpy.pad` is used for the pad
     operation.
-    Required keys are "img_shape" and the keys in attribute "keys", added or
-    modified keys are "img_shape", "test_trans" and the keys in attribute
+    Required keys are the keys in attribute "keys", added or
+    modified keys are "test_trans" and the keys in attribute
     "keys". All keys in "keys" should have the same shape. "test_trans" is used
     to record the test transformation to align the input's shape.
 
@@ -211,7 +210,7 @@ class Pad(object):
         self.kwargs = kwargs
 
     def __call__(self, results):
-        h, w = results['img_shape']
+        h, w = results[self.keys[0]].shape[:2]
 
         new_h = self.ds_factor * ((h - 1) // self.ds_factor + 1)
         new_w = self.ds_factor * ((w - 1) // self.ds_factor + 1)
@@ -224,7 +223,6 @@ class Pad(object):
                 results[key] = np.pad(results[key],
                                       pad_width[:results[key].ndim],
                                       **self.kwargs)
-            results['img_shape'] = (new_h, new_w)
         results['pad'] = (pad_h, pad_w)
         return results
 
@@ -246,7 +244,7 @@ class RandomAffine(object):
     It should be noted that in
     https://github.com/Yaoyi-Li/GCA-Matting/blob/master/dataloader/data_generator.py#L70  # noqa
     random flip is added. See explanation of `flip_ratio` below.
-    Required keys are keys in attribute "keys" and "img_shape", modified keys
+    Required keys are the keys in attribute "keys", modified keys
     are keys in attribute "keys".
 
     Attributes:
@@ -411,7 +409,7 @@ class RandomAffine(object):
         return matrix
 
     def __call__(self, results):
-        h, w = results['img_shape']
+        h, w = results[self.keys[0]].shape[:2]
         # if image is too small, set degree to 0 to reduce introduced dark area
         if np.maximum(h, w) < 1024:
             params = self._get_params((0, 0), self.translate, self.scale,

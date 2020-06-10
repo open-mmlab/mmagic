@@ -330,7 +330,10 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, test_trans='resize'):
         merged = merged.cuda()
         trimap = trimap.cuda()
     meta = [
-        dict(ori_alpha=ori_alpha, ori_trimap=ori_trimap, ori_shape=img_shape)
+        dict(
+            ori_alpha=ori_alpha,
+            ori_trimap=ori_trimap,
+            merged_ori_shape=img_shape)
     ]
 
     if test_trans == 'pad':

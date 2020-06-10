@@ -5,7 +5,7 @@ from pathlib import Path
 import mmcv
 import numpy as np
 import pytest
-from mmedit.datasets.pipelines import (LoadAlpha, LoadImageFromFile,
+from mmedit.datasets.pipelines import (LoadImageFromFile,
                                        LoadImageFromFileList, LoadMask,
                                        LoadPairedImageFromFile,
                                        RandomLoadResizeBg)
@@ -122,24 +122,10 @@ class TestMattingLoading(object):
             for key in data_info:
                 cls.results[key] = osp.join(data_prefix, data_info[key])
 
-    def test_load_alpha(self):
-        target_keys = [
-            'alpha', 'ori_alpha', 'ori_shape', 'img_shape', 'img_name'
-        ]
-        config = dict(io_backend='disk', key='alpha', flag='grayscale')
-        results = copy.deepcopy(self.results)
-        load_alpha = LoadAlpha(**config)
-        for _ in range(2):
-            load_alpha_results = load_alpha(results)
-            assert self.check_keys_contain(load_alpha_results.keys(),
-                                           target_keys)
-            assert isinstance(load_alpha_results['alpha'], np.ndarray)
-            assert load_alpha_results['alpha'].shape == (552, 800)
-
     def test_random_load_bg(self):
         target_keys = ['bg']
 
-        results = dict(img_shape=(128, 128))
+        results = dict(fg=np.random.rand(128, 128))
         random_load_bg = RandomLoadResizeBg('tests/data/bg')
         for _ in range(2):
             random_load_bg_results = random_load_bg(results)
