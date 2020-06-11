@@ -104,8 +104,7 @@ data = dict(
     workers_per_gpu=8,  # Worker to pre-fetch data for each single GPU
     val_samples_per_gpu=1,  # Batch size of a single GPU in validation
     val_workers_per_gpu=8,  # Worker to pre-fetch data for each single GPU in validation
-    train_drop_last=True,  # Whether to drop out the last batch of data
-    val_drop_last=True,  # Whether to drop out the last batch of data
+    drop_last=True,  # Whether to drop out the last batch of data
     train=dict(  # Train dataset config
         type=dataset_type,
         ann_file=data_root + 'train_places_img_list_total.txt',
@@ -128,7 +127,7 @@ checkpoint_config = dict(by_epoch=False, interval=50000)  # Config to set the ch
 log_config = dict(  # config to register logger hook
     interval=100,  # Interval to print the log
     hooks=[
-        dict(type='IterTextLoggerHook'),
+        dict(type='TextLoggerHook', by_epoch=False),
         # dict(type='TensorboardLoggerHook'),  # The Tensorboard logger is also supported
         dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
     ])  # The logger used to record the training process.

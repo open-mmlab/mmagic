@@ -137,9 +137,9 @@ evaluation = dict(interval=5000, save_image=True, gpu_collect=True)
 log_config = dict(
     interval=100,
     hooks=[
-        dict(type='IterTextLoggerHook'),
+        dict(type='TextLoggerHook', by_epoch=False),
         dict(type='TensorboardLoggerHook'),
-        dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit-sr'))
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit-sr'))
     ])
 visual_config = None
 

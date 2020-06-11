@@ -143,7 +143,7 @@ evaluation = dict(  # The config to build the evaluation hook
 log_config = dict(  # Config to register logger hook
     interval=100,  # Interval to print the log
     hooks=[
-        dict(type='IterTextLoggerHook'),  # The logger used to record the training process
+        dict(type='TextLoggerHook', by_epoch=False),  # The logger used to record the training process
         dict(type='TensorboardLoggerHook'),  # The Tensorboard logger is also supported
     ])
 visual_config = None  # Visual config, we do not use it.

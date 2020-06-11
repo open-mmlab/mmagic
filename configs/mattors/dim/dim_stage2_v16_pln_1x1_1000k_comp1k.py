@@ -7,10 +7,8 @@ model = dict(
         decoder=dict(type='PlainDecoder')),
     refiner=dict(type='PlainRefiner'),
     pretrained=None,  # TODO: add pretrained model
-    loss_alpha=dict(type='CharbonnierLoss', loss_weight=0.5),
-    loss_comp=dict(type='CharbonnierCompLoss', loss_weight=0.5),
     loss_refine=dict(type='CharbonnierLoss'))
-train_cfg = dict(train_backbone=True, train_refiner=True)
+train_cfg = dict(train_backbone=False, train_refiner=True)
 test_cfg = dict(refine=True, metrics=['SAD', 'MSE'])
 
 # dataset settings
@@ -72,7 +70,7 @@ test_pipeline = [
 data = dict(
     samples_per_gpu=1,
     workers_per_gpu=4,
-    drop_last=True,
+    drop_last=False,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'training_list.json',
@@ -101,16 +99,17 @@ evaluation = dict(interval=40000, save_image=False)
 log_config = dict(
     interval=10,
     hooks=[
-        dict(type='IterTextLoggerHook'),
-        # dict(type='PaviLoggerHook', init_kwargs=dict(project='dim')),
-        # dict(type='TensorboardLoggerHook')
+        dict(type='TextLoggerHook', by_epoch=False),
+        # dict(type='TensorboardLoggerHook'),
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='dim'))
     ])
 # yapf:enable
+
 # runtime settings
 total_iters = 1000000
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/dim_finetune'
-load_from = './work_dirs/dim_stage2/latest.pth'
+work_dir = './work_dirs/dim_stage2'
+load_from = './work_dirs/dim_stage1/latest.pth'
 resume_from = None
 workflow = [('train', 1)]

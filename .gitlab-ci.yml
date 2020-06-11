@@ -24,9 +24,8 @@ test:
   stage: test
   script:
     - echo "Install MMCV"
-    - ssh-keyscan gitlab.sz.sensetime.com >> ~/.ssh/known_hosts
-    - git clone git@gitlab.sz.sensetime.com:EIG-Research/mmcv.git
-    - cd mmcv && git checkout newer-runner && pip install -e . && cd ..
+    - git clone https://github.com/open-mmlab/mmcv.git
+    - cd mmcv && pip install -e . && cd ..
     - echo "Start building..."
     - pip install -r requirements.txt
     - pip install -e .

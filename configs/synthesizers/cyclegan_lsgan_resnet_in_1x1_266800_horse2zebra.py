@@ -91,7 +91,7 @@ data_root = \
 data = dict(
     samples_per_gpu=1,
     workers_per_gpu=4,
-    train_drop_last=True,
+    drop_last=True,
     val_samples_per_gpu=1,
     val_workers_per_gpu=0,
     train=dict(
@@ -125,8 +125,9 @@ evaluation = dict(interval=13340, save_image=True)
 log_config = dict(
     interval=100,
     hooks=[
-        dict(type='IterTextLoggerHook'),
-        # dict(type='TensorboardLoggerHook')
+        dict(type='TextLoggerHook', by_epoch=False),
+        dict(type='TensorboardLoggerHook')
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
     ])
 visual_config = None
 
