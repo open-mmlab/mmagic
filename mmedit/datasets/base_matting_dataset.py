@@ -22,7 +22,7 @@ class BaseMattingDataset(BaseDataset):
             results (list[tuple]): The output of forward_test() of the model.
 
         Return:
-            eval_results (dict): Evaluation results dict.
+            dict: Evaluation results dict.
         """
         if not isinstance(results, list):
             raise TypeError(f'results must be a list, but got {type(results)}')

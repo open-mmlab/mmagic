@@ -11,20 +11,25 @@ class DIM(BaseMattor):
 
     https://arxiv.org/abs/1703.03872
 
-    For (self.train_cfg.train_backbone, self.train_cfg.train_refiner):
-        (True, False) corresponds to the encoder-decoder stage in the paper,
-        (False, True) corresponds to the refinement stage in the paper,
-        (True, True) corresponds to the fine-tune stage in the paper.
+    .. note::
+
+        For ``(self.train_cfg.train_backbone, self.train_cfg.train_refiner)``:
+
+            * ``(True, False)`` corresponds to the encoder-decoder stage in \
+                the paper.
+            * ``(False, True)`` corresponds to the refinement stage in the \
+                paper.
+            * ``(True, True)`` corresponds to the fine-tune stage in the paper.
 
     Args:
         backbone (dict): Config of backbone.
         refiner (dict): Config of refiner.
-        train_cfg (dict): Config of training. In 'train_cfg', 'train_backbone'
-            should be specified. If the model has a refiner, 'train_refiner'
-            should be specified.
-        test_cfg (dict): Config of testing. In 'test_cfg', If the model has a
-            refiner, 'train_refiner' should be specified.
-        pretrained (str): path of pretrained model.
+        train_cfg (dict): Config of training. In ``train_cfg``,
+            ``train_backbone`` should be specified. If the model has a refiner,
+            ``train_refiner`` should be specified.
+        test_cfg (dict): Config of testing. In ``test_cfg``, If the model has a
+            refiner, ``train_refiner`` should be specified.
+        pretrained (str): Path of pretrained model.
         loss_alpha (dict): Config of the alpha prediction loss. Default: None.
         loss_comp (dict): Config of the composition loss. Default: None.
         loss_refine (dict): Config of the loss of the refiner. Default: None.
@@ -68,7 +73,8 @@ class DIM(BaseMattor):
         return self._forward(inputs, self.with_refiner)
 
     def forward_train(self, merged, trimap, alpha, ori_merged, fg, bg):
-        """
+        """Defines the computation performed at every training call.
+
         Args:
             merged (Tensor): of shape (N, C, H, W) encoding input images.
                 Typically these should be mean centered and std scaled.
@@ -80,6 +86,9 @@ class DIM(BaseMattor):
                 image read by opencv (not normalized).
             fg (Tensor): of shape (N, C, H, W). Tensor of fg read by opencv.
             bg (Tensor): of shape (N, C, H, W). Tensor of bg read by opencv.
+
+        Returns:
+            dict: Contains the loss items and batch infomation.
         """
         pred_alpha, pred_refine = self._forward(
             torch.cat((merged, trimap / 255.), 1),
@@ -110,6 +119,28 @@ class DIM(BaseMattor):
                      save_image=False,
                      save_path=None,
                      iteration=None):
+        """Defines the computation performed at every test call.
+
+        Args:
+            merged (Tensor): Image to predict alpha matte.
+            trimap (Tensor): Trimap of the input image.
+            meta (list[dict]): Meta data about the current data batch.
+                Currently only batch_size 1 is supported. It may contain
+                information needed to calculate metrics (``ori_alpha`` and
+                ``ori_trimap``) or save predicted alpha matte
+                (``merged_path``).
+            save_image (bool, optional): Whether save predicted alpha matte.
+                Defaults to False.
+            save_path (str, optional): The directory to save predicted alpha
+                matte. Defaults to None.
+            iteration (int, optional): If given as None, the saved alpha matte
+                will have the same file name with ``merged_path`` in meta dict.
+                If given as an int, the saved alpha matte would named with
+                postfix ``_{iteration}.png``. Defaults to None.
+
+        Returns:
+            dict: Contains the predicted alpha and evaluation result.
+        """
         pred_alpha, pred_refine = self._forward(
             torch.cat((merged, trimap / 255.), 1), self.test_cfg.refine)
         if self.test_cfg.refine:

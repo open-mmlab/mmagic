@@ -45,7 +45,7 @@ def train_model(model,
 
     Args:
         model (nn.Module): The model to be trained.
-        dataset (Dataset): Train dataset.
+        dataset (:obj:`Dataset`): Train dataset.
         cfg (dict): The config dict for training.
         distributed (bool): Whether to use distributed training.
             Default: False.
@@ -88,7 +88,7 @@ def _dist_train(model,
 
     Args:
         model (nn.Module): The model to be trained.
-        dataset (Dataset): Train dataset.
+        dataset (:obj:`Dataset`): Train dataset.
         cfg (dict): The config dict for training.
         validate (bool): Whether to do evaluation. Default: False.
         logger (logging.Logger | None): Logger for training. Default: None.
@@ -168,7 +168,7 @@ def _non_dist_train(model,
 
     Args:
         model (nn.Module): The model to be trained.
-        dataset (Dataset): Train dataset.
+        dataset (:obj:`Dataset`): Train dataset.
         cfg (dict): The config dict for training.
         validate (bool): Whether to do evaluation. Default: False.
         logger (logging.Logger | None): Logger for training. Default: None.

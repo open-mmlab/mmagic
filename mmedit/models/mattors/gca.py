@@ -32,12 +32,12 @@ class GCA(BaseMattor):
 
     Args:
         backbone (dict): Config of backbone.
-        train_cfg (dict): Config of training. In 'train_cfg', 'train_backbone'
-            should be specified. If the model has a refiner, 'train_refiner'
-            should be specified.
-        test_cfg (dict): Config of testing. In 'test_cfg', If the model has a
-            refiner, 'train_refiner' should be specified.
-        pretrained (str): Path of pretrained model.
+        train_cfg (dict): Config of training. In ``train_cfg``,
+            ``train_backbone`` should be specified. If the model has a refiner,
+            ``train_refiner`` should be specified.
+        test_cfg (dict): Config of testing. In ``test_cfg``, If the model has a
+            refiner, ``train_refiner`` should be specified.
+        pretrained (str): Path of the pretrained model.
         loss_alpha (dict): Config of the alpha prediction loss. Default: None.
     """
 
@@ -84,6 +84,28 @@ class GCA(BaseMattor):
                      save_image=False,
                      save_path=None,
                      iteration=None):
+        """Defines the computation performed at every test call.
+
+        Args:
+            merged (Tensor): Image to predict alpha matte.
+            trimap (Tensor): Trimap of the input image.
+            meta (list[dict]): Meta data about the current data batch.
+                Currently only batch_size 1 is supported. It may contain
+                information needed to calculate metrics (``ori_alpha`` and
+                ``ori_trimap``) or save predicted alpha matte
+                (``merged_path``).
+            save_image (bool, optional): Whether save predicted alpha matte.
+                Defaults to False.
+            save_path (str, optional): The directory to save predicted alpha
+                matte. Defaults to None.
+            iteration (int, optional): If given as None, the saved alpha matte
+                will have the same file name with ``merged_path`` in meta dict.
+                If given as an int, the saved alpha matte would named with
+                postfix ``_{iteration}.png``. Defaults to None.
+
+        Returns:
+            dict: Contains the predicted alpha and evaluation result.
+        """
         pred_alpha = self._forward(torch.cat((merged, trimap), 1))
 
         pred_alpha = pred_alpha.cpu().numpy().squeeze()

@@ -12,7 +12,7 @@ class Normalize(object):
     the keys in attribute "keys" and these keys with postfix '_norm_cfg'.
     It also supports normalizing a list of images.
 
-    Attributes:
+    Args:
         keys (Sequence[str]): The images to be normalized.
         mean (np.ndarray): Mean values of different channels.
         std (np.ndarray): Std values of different channels.
@@ -57,7 +57,7 @@ class RescaleToZeroOne(object):
     the keys in attribute "keys".
     It also supports rescaling a list of images.
 
-    Attributes:
+    Args:
         keys (Sequence[str]): The images to be transformed.
     """
 
