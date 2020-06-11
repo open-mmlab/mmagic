@@ -93,8 +93,7 @@ data = dict(
     workers_per_gpu=8,
     val_samples_per_gpu=1,
     val_workers_per_gpu=8,
-    train_drop_last=True,
-    val_drop_last=True,
+    drop_last=True,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'train_places_img_list_total.txt',
@@ -117,9 +116,9 @@ checkpoint_config = dict(by_epoch=False, interval=50000)
 log_config = dict(
     interval=100,
     hooks=[
-        dict(type='IterTextLoggerHook'),
-        # dict(type='TensorboardLoggerHook'),
-        dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
+        dict(type='TextLoggerHook', by_epoch=False),
+        dict(type='TensorboardLoggerHook'),
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
     ])
 
 visual_config = dict(

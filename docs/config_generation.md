@@ -111,7 +111,7 @@ data_root = './data/pix2pix/facades'  # The root path of data
 data = dict(
     samples_per_gpu=1,  # Batch size of a single GPU
     workers_per_gpu=4,  # Worker to pre-fetch data for each single GPU
-    train_drop_last=True,  # Whether to drop out the last batch of data in training
+    drop_last=True,  # Whether to drop out the last batch of data in training
     val_samples_per_gpu=1,  # Batch size of a single GPU in validation
     val_workers_per_gpu=0,  # Worker to pre-fetch data for each single GPU in validation
     train=dict(  # Training dataset config
@@ -146,7 +146,7 @@ evaluation = dict(  # The config to build the evaluation hook
 log_config = dict(  # config to register logger hook
     interval=100,  # Interval to print the log
     hooks=[
-        dict(type='IterTextLoggerHook'),   # The logger used to record the training process
+        dict(type='TextLoggerHook', by_epoch=False),   # The logger used to record the training process
         # dict(type='TensorboardLoggerHook')  # The Tensorboard logger is also supported
     ])
 visual_config = None  # The config to build the visualization hook

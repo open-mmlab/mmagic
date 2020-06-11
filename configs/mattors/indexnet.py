@@ -88,9 +88,9 @@ evaluation = dict(interval=40000, save_image=False)
 log_config = dict(
     interval=10,
     hooks=[
-        dict(type='IterTextLoggerHook'),
+        dict(type='TextLoggerHook', by_epoch=False),
+        dict(type='TensorboardLoggerHook')
         # dict(type='PaviLoggerHook', init_kwargs=dict(project='indexnet')),
-        # dict(type='TensorboardLoggerHook')
     ])
 # yapf:enable
 

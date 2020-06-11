@@ -70,7 +70,7 @@ test_pipeline = [
 data = dict(
     samples_per_gpu=1,
     workers_per_gpu=4,
-    drop_last=True,
+    drop_last=False,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'training_list.json',
@@ -99,9 +99,9 @@ evaluation = dict(interval=40000, save_image=False)
 log_config = dict(
     interval=10,
     hooks=[
-        dict(type='IterTextLoggerHook'),
-        # dict(type='PaviLoggerHook', init_kwargs=dict(project='dim')),
-        # dict(type='TensorboardLoggerHook')
+        dict(type='TextLoggerHook', by_epoch=False),
+        # dict(type='TensorboardLoggerHook'),
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='dim'))
     ])
 # yapf:enable
 

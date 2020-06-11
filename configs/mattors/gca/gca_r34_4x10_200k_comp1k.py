@@ -116,9 +116,9 @@ evaluation = dict(interval=2000, save_image=False, gpu_collect=True)
 log_config = dict(
     interval=10,
     hooks=[
-        dict(type='IterTextLoggerHook'),
-        # dict(type='PaviLoggerHook', init_kwargs=dict(project='gca')),
-        # dict(type='TensorboardLoggerHook')
+        dict(type='TextLoggerHook', by_epoch=False),
+        # dict(type='TensorboardLoggerHook'),
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='gca'))
     ])
 # yapf:enable
 

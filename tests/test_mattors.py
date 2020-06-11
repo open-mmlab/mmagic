@@ -91,7 +91,8 @@ def test_base_mattor():
 
 
 def test_dim():
-    model_cfg, train_cfg, test_cfg = _get_model_cfg('dim_stage3.py')
+    model_cfg, train_cfg, test_cfg = _get_model_cfg(
+        'dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py')
     model_cfg['pretrained'] = None
 
     # 1. test dim model with refiner
@@ -232,7 +233,8 @@ def test_indexnet():
 
 
 def test_gca():
-    model_cfg, train_cfg, test_cfg = _get_model_cfg('gca.py')
+    model_cfg, train_cfg, test_cfg = _get_model_cfg(
+        'gca/gca_r34_4x10_200k_comp1k.py')
     model_cfg['pretrained'] = None
 
     # test model forward in train mode
