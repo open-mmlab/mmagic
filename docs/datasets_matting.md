@@ -2,7 +2,7 @@
 
 ### Adobe Composition-1k Dataset
 
-It is recommended to synlink the Adobe Composition-1k (comp1k) dataset root, the [MS COCO dataset](http://cocodataset.org/#home) and the [PASCAL VOC dataset](http://host.robots.ox.ac.uk/pascal/VOC/) to `$MMEditing/data`:
+It is recommended to symlink the Adobe Composition-1k (comp1k) dataset root, the [MS COCO dataset](http://cocodataset.org/#home) and the [PASCAL VOC dataset](http://host.robots.ox.ac.uk/pascal/VOC/) to `$MMEditing/data`:
 
 ```
 mmediting
