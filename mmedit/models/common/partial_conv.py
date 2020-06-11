@@ -12,7 +12,7 @@ class PartialConv2d(nn.Conv2d):
     Image Inpainting for Irregular Holes Using Partial Convolutions
     [https://arxiv.org/abs/1804.07723]
 
-    Attributes:
+    Args:
         multi_channel (bool): If True, the mask is multi-channle. Otherwise,
             the mask is single-channel.
         eps (float): Need to be changed for mixed precision training.

@@ -34,7 +34,7 @@ class ToTensor(object):
     """Convert some values in results dict to `torch.Tensor` type
     in data loader pipeline.
 
-    Attributes:
+    Args:
         keys (Sequence[str]): Required keys to be converted.
     """
 
@@ -54,7 +54,7 @@ class ToTensor(object):
 class ImageToTensor(object):
     """Convert image type to `torch.Tensor` type.
 
-    Attributes:
+    Args:
         keys (Sequence[str]): Required keys to be converted.
         to_float32 (bool): Whether convert numpy image array to np.float32
             before converted to tensor. Default: True.
@@ -86,7 +86,7 @@ class FramesToTensor(ImageToTensor):
     It accpets a list of frames, converts each to `torch.Tensor` type and then
     concatenates in a new dimension (dim=0).
 
-    Attributes:
+    Args:
         keys (Sequence[str]): Required keys to be converted.
         to_float32 (bool): Whether convert numpy image array to np.float32
             before converted to tensor. Default: True.
@@ -114,7 +114,7 @@ class FramesToTensor(ImageToTensor):
 class GetMaskedImage(object):
     """Get masked image.
 
-    Attributes:
+    Args:
         img_name (str): Key for clean image.
         mask_name (str): Key for mask image. The mask shape should be
             (h, w, 1) while '1' indicate holes and '0' indicate valid
@@ -147,7 +147,7 @@ class FormatTrimap(object):
     ``to_onehot`` is set to True, the trimap will convert to one-hot tensor of
     shape (3, H, W). Required key is "trimap", modified key is "trimap".
 
-    Attributes:
+    Args:
         to_onehot (bool): whether convert trimap to one-hot tensor. Default:
             ``False``.
     """

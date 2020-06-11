@@ -30,7 +30,7 @@ class Resize(object):
     All keys in "keys" should have the same shape. "test_trans" is used to
     record the test transformation to align the input's shape.
 
-    Attributes:
+    Args:
         keys (list[str]): The images to be resized.
         scale (float | Tuple[int]): If scale is Tuple(int), target spatial
             size (h, w). Otherwise, target spatial size is scaled by input
@@ -147,7 +147,7 @@ class Flip(object):
     "flip", "flip_direction" and the keys in attributes "keys".
     It also supports flipping a list of images with the same flip.
 
-    Attributes:
+    Args:
         keys (list[str]): The images to be flipped.
         flip_ratio (float): The propability to flip the images.
         direction (str): Flip images horizontally or vertically. Options are
@@ -197,7 +197,7 @@ class Pad(object):
     "keys". All keys in "keys" should have the same shape. "test_trans" is used
     to record the test transformation to align the input's shape.
 
-    Attributes:
+    Args:
         keys (list[str]): The images to be padded.
         ds_factor (int): Downsample factor of the network. The height and
             weight will be padded to a multiple of ds_factor. Default: 32.
@@ -247,7 +247,7 @@ class RandomAffine(object):
     Required keys are the keys in attribute "keys", modified keys
     are keys in attribute "keys".
 
-    Attributes:
+    Args:
         keys (Sequence[str]): The images to be affined.
         degrees (float | tuple[float]): Range of degrees to select from. If it
             is a float instead of a tuple like (min, max), the range of degrees
@@ -503,7 +503,7 @@ class RandomJitter(object):
 class BinarizeImage(object):
     """Binarize image.
 
-    Attributes:
+    Args:
         keys (Sequence[str]): The images to be binarized.
         binary_thr (float): Threshold for binarization.
         to_int (bool): If True, return image as int32, otherwise
@@ -539,7 +539,7 @@ class BinarizeImage(object):
 class RandomMaskDilation(object):
     """Randomly dilate binary masks.
 
-    Attributes:
+    Args:
         keys (Sequence[str]): The images to be resized.
         get_binary (bool): If True, according to binary_thr, reset final
             output as binary mask. Otherwise, return masks directly.
@@ -594,7 +594,7 @@ class RandomTransposeHW(object):
     Required keys are the keys in attributes "keys", added or modified keys are
     "transpose" and the keys in attributes "keys".
 
-    Attributes:
+    Args:
         keys (list[str]): The images to be transposed.
         transpose_ratio (float): The propability to transpose the images.
     """
@@ -632,7 +632,7 @@ class GenerateFrameIndiceswithPadding(object):
     Required keys: lq_path, gt_path, key, num_input_frames, max_frame_num
     Added or modified keys: lq_path, gt_path
 
-    Attributes:
+    Args:
          padding (str): padding mode, one of
             'replicate' | 'reflection' | 'reflection_circle' | 'circle'.
             Examples: current_idx = 0, num_input_frames = 5
@@ -710,7 +710,7 @@ class GenerateFrameIndices(object):
     Required keys: lq_path, gt_path, key, num_input_frames
     Added or modified keys:  lq_path, gt_path, interval, reverse
 
-    Attributes:
+    Args:
         interval_list (list[int]): Interval list for temporal augmentation.
             It will randomly pick an interval from interval_list and sample
             frame index with the interval.
@@ -768,7 +768,7 @@ class TemporalReverse(object):
     Required keys are the keys in attributes "lq" and "gt",
     added or modified keys are "lq", "gt" and "reverse".
 
-    Attributes:
+    Args:
         keys (list[str]): The frame lists to be reversed.
         reverse_ratio (float): The propability to reverse the frame lists.
             Default: 0.5.

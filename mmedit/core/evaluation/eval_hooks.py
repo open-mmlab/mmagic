@@ -10,7 +10,7 @@ class EvalIterHook(Hook):
     This hook will regularly perform evaluation in a given interval when
     performing in non-distributed environment.
 
-    Attributes:
+    Args:
         dataloader (DataLoader): A PyTorch dataloader.
         interval (int): Evaluation interval. Default: 1.
         eval_kwargs (dict): Other eval kwargs. It contains:
@@ -51,7 +51,7 @@ class EvalIterHook(Hook):
 class DistEvalIterHook(EvalIterHook):
     """Distributed evaluation hook.
 
-    Attributes:
+    Args:
         dataloader (DataLoader): A PyTorch dataloader.
         interval (int): Evaluation interval. Default: 1.
         tmpdir (str | None): Temporary directory to save the results of all

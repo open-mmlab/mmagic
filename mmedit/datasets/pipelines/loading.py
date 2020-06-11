@@ -193,7 +193,7 @@ class LoadMask(object):
 
         The prefix gives the data path.
 
-    Attributes:
+    Args:
         mask_mode (str): Mask mode in ['bbox', 'irregular', 'ff', 'set'].
             bbox: square bounding box masks.
             irregular: irregular holes.

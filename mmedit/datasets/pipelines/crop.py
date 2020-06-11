@@ -12,7 +12,7 @@ from .utils import random_choose_unknown
 class Crop(object):
     """Crop data to specific size for training.
 
-    Attributes:
+    Args:
         keys (Sequence[str]): The images to be cropped.
         crop_size (Tuple[int]): Target spatial size (h, w).
         random_crop (bool): If set to True, it will random crop
@@ -68,7 +68,7 @@ class Crop(object):
 class FixedCrop(object):
     """Crop paired data (at a specific position) to specific size for training.
 
-    Attributes:
+    Args:
         keys (Sequence[str]): The images to be cropped.
         crop_size (Tuple[int]): Target spatial size (h, w).
         crop_pos (Tuple[int]): Specific position (x, y). If set to None,
@@ -142,7 +142,7 @@ class PairedRandomCrop(object):
     Required keys are "scale", "lq", and "gt",
     added or modified keys are "lq" and "gt".
 
-    Attributes:
+    Args:
         gt_patch_size (int): cropped gt patch size.
     """
 
@@ -211,7 +211,7 @@ class CropAroundCenter(object):
     Required keys are "fg", "bg", "trimap" and "alpha", added or modified keys
     are "crop_bbox", "fg", "bg", "trimap" and "alpha".
 
-    Attributes:
+    Args:
         crop_size (int | tuple): Desired output size. If int, square crop is
             applied.
     """
@@ -287,7 +287,7 @@ class CropAroundUnknown(object):
     modified keys are "crop_bbox" and the keys in argument `keys`.
     This class assumes value of "alpha" ranges from 0 to 255.
 
-    Attributes:
+    Args:
         keys (Sequence[str]): The images to be cropped. It must contain
             'alpha'. If unknown_source is set to 'trimap', then it must also
             contain 'trimap'.
