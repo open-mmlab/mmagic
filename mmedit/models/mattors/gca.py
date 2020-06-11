@@ -93,4 +93,4 @@ class GCA(BaseMattor):
         if save_image:
             self.save_image(pred_alpha, meta, save_path, iteration)
 
-        return {'eval_result': eval_result}
+        return {'pred_alpha': pred_alpha, 'eval_result': eval_result}
