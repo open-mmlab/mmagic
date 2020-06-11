@@ -266,6 +266,62 @@ class LoadMask(object):
 
 
 @PIPELINES.register_module
+class GetSpatialDiscountMask(object):
+    """Get spatial discounting mask constant.
+
+    Spatial discounting mask is first introduced in:
+    Generative Image Inpainting with Contextual Attention.
+
+    Args:
+        gamma (float, optional): Gamma for computing spatial discounting.
+            Defaults to 0.99.
+        beta (float, optional): Beta for computing spatial discounting.
+            Defaults to 1.5.
+    """
+
+    def __init__(self, gamma=0.99, beta=1.5):
+        self.gamma = gamma
+        self.beta = beta
+
+    def spatial_discount_mask(self, mask_width, mask_height):
+        """Generate spatial discounting mask constant.
+
+        Args:
+            mask_width (int): The width of bbox hole.
+            mask_height (int): The height of bbox height.
+
+        Returns:
+            np.ndarray: Spatial discounting mask.
+        """
+        w, h = np.meshgrid(np.arange(mask_width), np.arange(mask_height))
+        grid_stack = np.stack([h, w], axis=2)
+        mask_values = (self.gamma**(np.minimum(
+            grid_stack, [mask_height - 1, mask_width - 1] - grid_stack) *
+                                    self.beta)).max(
+                                        axis=2, keepdims=True)
+
+        return mask_values
+
+    def __call__(self, results):
+        mask_bbox = results['mask_bbox']
+        mask = results['mask']
+        mask_height, mask_width = mask_bbox[-2:]
+        discount_hole = self.spatial_discount_mask(mask_width, mask_height)
+        discount_mask = np.zeros_like(mask)
+        discount_mask[mask_bbox[0]:mask_bbox[0] + mask_height,
+                      mask_bbox[1]:mask_bbox[1] + mask_width,
+                      ...] = discount_hole
+
+        results['discount_mask'] = discount_mask
+
+        return results
+
+    def __repr__(self):
+        return self.__class__.__name__ + (f'(gamma={self.gamma}, '
+                                          f'beta={self.beta})')
+
+
+@PIPELINES.register_module
 class LoadPairedImageFromFile(LoadImageFromFile):
     """Load a pair of images from file.
 
