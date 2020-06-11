@@ -16,5 +16,5 @@
 
 |   Method   |  SAD |  MSE  | GRAD | CONN | Download |
 |:----------:|:----:|:-----:|:----:|:----:|:--------:|
-| DIM stage1 | 54.9 | 0.019 | 32.5 | 55.4 | [model](TODO) | [log](TODO) |
-| DIM stage2 | 53.6 | 0.018 | 30.4 | 53.8 | [model](TODO) | [log](TODO) |
+| DIM stage1 | 54.9 | 0.019 | 32.5 | 55.4 | [model](TODO) \| [log](TODO) |
+| DIM stage2 | 53.6 | 0.018 | 30.4 | 53.8 | [model](TODO) \| [log](TODO) |
