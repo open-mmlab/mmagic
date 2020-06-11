@@ -5,7 +5,7 @@
 - Training dataset:  [DIV2K dataset](https://data.vision.ee.ethz.ch/cvl/DIV2K/).
 - Validation dataset:  Set5 and Set14.
 
-It is recommended to synlink the dataset root to `$MMEditing/data`:
+It is recommended to symlink the dataset root to `$MMEditing/data`:
 
 ```
 mmediting
@@ -87,7 +87,7 @@ You can prepare the REDS dataset by running:
 python tools/preprocess_reds_dataset.py ./data/REDS
 ```
 
-It is also recommended to synlink the dataset root to `$MMEditing/data`:
+It is also recommended to symlink the dataset root to `$MMEditing/data`:
 
 ```
 mmediting

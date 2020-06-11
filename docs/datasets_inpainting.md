@@ -1,6 +1,6 @@
 ## Prepare Datasets for Inpainting
 
-It is recommended to synlink the [Places365](https://github.com/CSAILVision/places365) dataset root, the [CelebA-HQ](https://arxiv.org/abs/1710.10196?context=cs.LG) and the [ParisStreedView](https://github.com/pathak22/context-encoder/issues/24) to `$MMEditing/data`:
+It is recommended to symlink the [Places365](https://github.com/CSAILVision/places365) dataset root, the [CelebA-HQ](https://arxiv.org/abs/1710.10196?context=cs.LG) and the [ParisStreedView](https://github.com/pathak22/context-encoder/issues/24) to `$MMEditing/data`:
 
 ```
 mmediting
