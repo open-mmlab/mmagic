@@ -5,7 +5,8 @@ from pathlib import Path
 import mmcv
 import numpy as np
 import pytest
-from mmedit.datasets.pipelines import (LoadImageFromFile,
+from mmedit.datasets.pipelines import (GetSpatialDiscountMask,
+                                       LoadImageFromFile,
                                        LoadImageFromFileList, LoadMask,
                                        LoadPairedImageFromFile,
                                        RandomLoadResizeBg)
@@ -299,3 +300,32 @@ class TestGenerationLoading(object):
         np.testing.assert_equal(results['img_b'], results['ori_img_b'])
         assert id(results['ori_img_b']) != id(results['img_b'])
         assert results['img_b_path'] == self.pair_path
+
+
+def test_dct_mask():
+    mask = np.zeros((64, 64, 1))
+    mask[20:40, 20:40] = 1.
+    mask_bbox = [20, 20, 20, 20]
+    results = dict(mask=mask, mask_bbox=mask_bbox)
+
+    dct_mask = GetSpatialDiscountMask()
+    results = dct_mask(results)
+    assert 'discount_mask' in results
+    assert results['discount_mask'].shape == (64, 64, 1)
+
+    mask_height = mask_width = 20
+    gamma = 0.99
+    beta = 1.5
+    mask_values = np.ones((mask_width, mask_height, 1))
+    for i in range(mask_width):
+        for j in range(mask_height):
+            mask_values[i,
+                        j] = max(gamma**(min(i, mask_width - i - 1) * beta),
+                                 gamma**(min(j, mask_height - j - 1) * beta))
+    dct_mask_test = np.zeros_like(mask)
+    dct_mask_test[20:40, 20:40, ...] = mask_values
+
+    np.testing.assert_almost_equal(dct_mask_test, results['discount_mask'])
+    repr_str = dct_mask.__class__.__name__ + (f'(gamma={dct_mask.gamma}, '
+                                              f'beta={dct_mask.beta})')
+    assert repr_str == repr(dct_mask)

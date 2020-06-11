@@ -7,8 +7,9 @@ from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    FixedCrop, ModCrop, PairedRandomCrop)
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
-from .loading import (LoadImageFromFile, LoadImageFromFileList, LoadMask,
-                      LoadPairedImageFromFile, RandomLoadResizeBg)
+from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
+                      LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
+                      RandomLoadResizeBg)
 from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, MergeFgAndBg, PerturbBg)
 from .normalization import Normalize, RescaleToZeroOne
@@ -24,5 +25,6 @@ __all__ = [
     'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList',
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
     'LoadPairedImageFromFile', 'GenerateFrameIndices', 'GetPatchPool',
-    'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg', 'CropAroundFg'
+    'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg', 'CropAroundFg',
+    'GetSpatialDiscountMask'
 ]
