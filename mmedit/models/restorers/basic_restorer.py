@@ -50,6 +50,15 @@ class BasicRestorer(BaseModel):
         self.generator.init_weights(pretrained)
 
     def forward(self, lq, gt=None, test_mode=False, **kwargs):
+        """Forward function.
+
+        Args:
+            lq (Tensor): Input lq images.
+            gt (Tensor): Ground-truth image. Default: None.
+            test_mode (bool): Whether in test mode or not. Default: False.
+            kwargs (dict): Other arguments.
+        """
+
         if not test_mode:
             return self.forward_train(lq, gt)
         else:

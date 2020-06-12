@@ -21,7 +21,6 @@ __all__ = [
     'BaseDataset', 'BaseMattingDataset', 'ImgInpaintingDataset',
     'AdobeComp1kDataset', 'SRLmdbDataset', 'SRFolderDataset',
     'SRAnnotationDataset', 'BaseSRDataset', 'RepeatDataset', 'SRREDSDataset',
-    'SRVimeo90KDataset', 'SRAnnotationDataset', 'BaseSRDataset',
-    'RepeatDataset', 'BaseGenerationDataset', 'GenerationPairedDataset',
+    'SRVimeo90KDataset', 'BaseGenerationDataset', 'GenerationPairedDataset',
     'GenerationUnpairedDataset', 'SRVid4Dataset'
 ]

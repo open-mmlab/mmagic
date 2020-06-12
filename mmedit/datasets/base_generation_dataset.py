@@ -17,7 +17,7 @@ class BaseGenerationDataset(BaseDataset):
         """Obtain image path list (including sub-folders) from a given folder.
 
         Args:
-            path (str | obj:`Path`): Folder path.
+            path (str |:obj:`Path`): Folder path.
 
         Returns:
             list[str]: Image list obtained from the given folder.

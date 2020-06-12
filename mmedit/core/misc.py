@@ -11,11 +11,12 @@ def tensor2img(tensor, out_type=np.uint8, min_max=(0, 1)):
     After clamping to (min, max), image values will be normalized to [0, 1].
 
     For differnet tensor shapes, this function will have different behaviors:
-    1. 4D mini-batch Tensor of shape (B x 3/1 x H x W):
-        Use `make_grid` to stitch images in the batch dimension, and then
-        convert it to numpy array
-    2. 3D Tensor of shape (3/1 x H x W) and 2D Tensor of shape (H x W):
-        Directly change to numpy array.
+
+        1. 4D mini-batch Tensor of shape (B x 3/1 x H x W):
+            Use `make_grid` to stitch images in the batch dimension, and then
+            convert it to numpy array.
+        2. 3D Tensor of shape (3/1 x H x W) and 2D Tensor of shape (H x W):
+            Directly change to numpy array.
 
     Note that the image channel in input tensors should be RGB order. This
     function will convert it to cv2 convention, i.e., (H x W x C) with BGR

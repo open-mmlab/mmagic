@@ -167,7 +167,8 @@ def psnr(img1, img2, crop_border=0, input_order='HWC'):
     Ref: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
 
     Args:
-        img1, img2 (ndarray): Images with range [0, 255].
+        img1 (ndarray): Images with range [0, 255].
+        img2 (ndarray): Images with range [0, 255].
         crop_border (int): Cropped pixels in each edges of an image. These
             pixels are not involved in the PSNR calculation. Default: 0.
         input_order (str): Whether the input order is 'HWC' or 'CHW'.

@@ -19,24 +19,27 @@ class SRFolderDataset(BaseSRDataset):
 
     For example, we have two folders with the following structures:
 
-    data_root
-    ├── lq
-    │   ├── 0001_x4.png
-    │   ├── 0002_x4.png
-    ├── gt
-    │   ├── 0001.png
-    │   ├── 0002.png
+    .. code-block:: txt
+
+        data_root
+        ├── lq
+        │   ├── 0001_x4.png
+        │   ├── 0002_x4.png
+        ├── gt
+        │   ├── 0001.png
+        │   ├── 0002.png
 
     then, you need to set:
-    ```
-    lq_folder = data_root/lq
-    gt_folder = data_root/gt
-    filename_tmpl = '{}_x4'
-    ```
+
+    .. code-block:: python
+
+        lq_folder = data_root/lq
+        gt_folder = data_root/gt
+        filename_tmpl = '{}_x4'
 
     Args:
-        lq_folder (str | obj:`Path`): Path to a lq folder.
-        gt_folder (str | obj:`Path`): Path to a gt folder.
+        lq_folder (str |:obj:`Path`): Path to a lq folder.
+        gt_folder (str |:obj:`Path`): Path to a gt folder.
         pipeline (List[dict | callable]): A sequence of data transformations.
         scale (int): Upsampling scale ratio.
         test_mode (bool): Store `True` when building test dataset.

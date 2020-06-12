@@ -9,28 +9,34 @@ def build_optimizers(model, cfgs):
     If `cfgs` only contains one optimizer config, the constructed optimizer
     itself will be returned.
 
-    For example
+    For example,
+
     1) Multiple optimizer configs:
-    ```
-    optimizer_cfg = dict(
-        model1=dict(type='SGD', lr=lr),
-        model2=dict(type='SGD', lr=lr))
-    ```
-    The return dict:
-        dict('model1': torch.optim.Optimizer, 'model2': torch.optim.Optimizer)
+
+    .. code-block:: python
+
+        optimizer_cfg = dict(
+            model1=dict(type='SGD', lr=lr),
+            model2=dict(type='SGD', lr=lr))
+
+    The return dict is
+    ``dict('model1': torch.optim.Optimizer, 'model2': torch.optim.Optimizer)``
+
     2) Single optimizer config:
-    ```
-    optimizer_cfg = dict(type='SGD', lr=lr)
-    ```
-    The return is torch.optim.Optimizer.
+
+    .. code-block:: python
+
+        optimizer_cfg = dict(type='SGD', lr=lr)
+
+    The return is ``torch.optim.Optimizer``.
 
     Args:
         model (:obj:`nn.Module`): The model with parameters to be optimized.
         cfgs (dict): The config dict of the optimizer.
 
     Returns:
-        dict[torch.optim.Optimizer] | torch.optim.Optimizer: The initialized
-        optimizers.
+        dict[:obj:`torch.optim.Optimizer`] | :obj:`torch.optim.Optimizer`:
+            The initialized optimizers.
     """
     optimizers = {}
     if hasattr(model, 'module'):
