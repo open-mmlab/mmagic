@@ -41,7 +41,7 @@ def train_model(model,
                 validate=False,
                 timestamp=None,
                 meta=None):
-    """train model entry function.
+    """Train model entry function.
 
     Args:
         model (nn.Module): The model to be trained.

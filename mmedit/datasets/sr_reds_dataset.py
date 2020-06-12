@@ -14,14 +14,16 @@ class SRREDSDataset(BaseSRDataset):
     Each line contains:
     1. image name; 2, image shape, seperated by a white space.
     Examples:
-    000/00000000.png (720, 1280, 3)
-    000/00000001.png (720, 1280, 3)
-    ...
+
+    .. code-block:: txt
+
+        000/00000000.png (720, 1280, 3)
+        000/00000001.png (720, 1280, 3)
 
     Args:
-        lq_folder (str | obj:`Path`): Path to a lq folder.
-        gt_folder (str | obj:`Path`): Path to a gt folder.
-        ann_file (str | obj:`Path`): Path to the annotation file.
+        lq_folder (str |:obj:`Path`): Path to a lq folder.
+        gt_folder (str |:obj:`Path`): Path to a gt folder.
+        ann_file (str |:obj:`Path`): Path to the annotation file.
         num_input_frames (int): Window size for input frames.
         pipeline (list[dict | callable]): A sequence of data transformations.
         scale (int): Upsampling scale ratio.

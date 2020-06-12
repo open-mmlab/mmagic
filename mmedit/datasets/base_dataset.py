@@ -11,8 +11,9 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
 
     All datasets should subclass it.
     All subclasses should overwrite:
-        Methods:`load_annotations`, supporting to load information and generate
-            image lists.
+
+        ``load_annotations``, supporting to load information and generate
+        image lists.
 
     Args:
         pipeline (list[dict | callable]): A sequence of data transforms.

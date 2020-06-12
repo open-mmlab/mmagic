@@ -10,10 +10,14 @@ class BaseModel(nn.Module, metaclass=ABCMeta):
 
     All models should subclass it.
     All subclass should overwrite:
-        Methods:`init_weights`, supporting to initialize models.
-        Methods:`forward_train`, supporting to forward when training.
-        Methods:`forward_test`, supporting to forward when testing.
-        Methods:`train_step`, supporting to train one step when training.
+
+        ``init_weights``, supporting to initialize models.
+
+        ``forward_train``, supporting to forward when training.
+
+        ``forward_test``, supporting to forward when testing.
+
+        ``train_step``, supporting to train one step when training.
     """
 
     def __init__(self):

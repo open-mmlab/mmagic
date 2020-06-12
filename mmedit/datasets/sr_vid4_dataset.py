@@ -12,17 +12,22 @@ class SRVid4Dataset(BaseSRDataset):
 
     It reads Vid4 keys from the txt file.
     Each line contains:
-    1. folder name; 2. number of frames in this clip (in the same folder);
-    3. image shape, seperated by a white space.
+
+        1. folder name;
+        2. number of frames in this clip (in the same folder);
+        3. image shape, seperated by a white space.
+
     Examples:
-    calendar 40 (320,480,3)
-    city 34 (320,480,3)
-    ...
+
+    .. code-block:: txt
+
+        calendar 40 (320,480,3)
+        city 34 (320,480,3)
 
     Args:
-        lq_folder (str | obj:`Path`): Path to a lq folder.
-        gt_folder (str | obj:`Path`): Path to a gt folder.
-        ann_file (str | obj:`Path`): Path to the annotation file.
+        lq_folder (str |:obj:`Path`): Path to a lq folder.
+        gt_folder (str |:obj:`Path`): Path to a gt folder.
+        ann_file (str |:obj:`Path`): Path to the annotation file.
         num_input_frames (int): Window size for input frames.
         pipeline (list[dict | callable]): A sequence of data transformations.
         scale (int): Upsampling scale ratio.

@@ -18,15 +18,16 @@ class SRAnnotationDataset(BaseSRDataset):
     image shape (usually for gt), separated by a white space.
 
     Example of an annotation file:
-    ```
-    0001_s001.png (480,480,3)
-    0001_s002.png (480,480,3)
-    ```
+
+    .. code-block:: json
+
+        0001_s001.png (480,480,3)
+        0001_s002.png (480,480,3)
 
     Args:
-        lq_folder (str | obj:`Path`): Path to a lq folder.
-        gt_folder (str | obj:`Path`): Path to a gt folder.
-        ann_file (str | obj:`Path`): Path to the annotation file.
+        lq_folder (str | :obj:`Path`): Path to a lq folder.
+        gt_folder (str | :obj:`Path`): Path to a gt folder.
+        ann_file (str | :obj:`Path`): Path to the annotation file.
         pipeline (list[dict | callable]): A sequence of data transformations.
         scale (int): Upsampling scale ratio.
         test_mode (bool): Store `True` when building test dataset.
