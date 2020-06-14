@@ -16,7 +16,7 @@ class TwoStageInpaintor(OneStageInpaintor):
     """Two-Stage Inpaintor.
 
     Currently, we support these loss types in each of two stage inpaintors:
-    ['loss_gan', 'loss_l1_hole', 'loss_l1_valid', 'loss_composed_percep',
+    ['loss_gan', 'loss_l1_hole', 'loss_l1_valid', 'loss_composed_percep',\
      'loss_out_percep', 'loss_tv']
     The `stage1_loss_type` and `stage2_loss_type` should be chosen from these
     loss types.
@@ -207,8 +207,8 @@ class TwoStageInpaintor(OneStageInpaintor):
                 generator and discriminator (if have).
 
         Returns:
-            dict: Dict with loss, information for logger, the number of samples
-                and results for visualization.
+            dict: Dict with loss, information for logger, the number of \
+                samples and results for visualization.
         """
         log_vars = {}
 
