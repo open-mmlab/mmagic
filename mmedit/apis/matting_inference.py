@@ -14,6 +14,7 @@ def init_model(config, checkpoint=None, device='cuda:0'):
             object.
         checkpoint (str, optional): Checkpoint path. If left as None, the model
             will not load any weights.
+        device (str): Which device the model will deploy. Default: 'cuda:0'.
 
     Returns:
         nn.Module: The constructed model.
