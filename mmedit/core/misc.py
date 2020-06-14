@@ -12,7 +12,7 @@ def tensor2img(tensor, out_type=np.uint8, min_max=(0, 1)):
 
     For differnet tensor shapes, this function will have different behaviors:
 
-        1. 4D mini-batch Tensor of shape (B x 3/1 x H x W):
+        1. 4D mini-batch Tensor of shape (N x 3/1 x H x W):
             Use `make_grid` to stitch images in the batch dimension, and then
             convert it to numpy array.
         2. 3D Tensor of shape (3/1 x H x W) and 2D Tensor of shape (H x W):
@@ -43,7 +43,12 @@ def tensor2img(tensor, out_type=np.uint8, min_max=(0, 1)):
         tensor = [tensor]
     result = []
     for _tensor in tensor:
-        _tensor = _tensor.squeeze(0).float().detach().cpu().clamp_(*min_max)
+        # Squeeze two times so that:
+        # 1. (1, 1, h, w) -> (h, w) or
+        # 3. (1, 3, h, w) -> (3, h, w) or
+        # 2. (n>1, 3/1, h, w) -> (n>1, 3/1, h, w)
+        _tensor = _tensor.squeeze(0).squeeze(0)
+        _tensor = _tensor.float().detach().cpu().clamp_(*min_max)
         _tensor = (_tensor - min_max[0]) / (min_max[1] - min_max[0])
         n_dim = _tensor.dim()
         if n_dim == 4:
