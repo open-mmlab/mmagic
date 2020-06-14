@@ -118,13 +118,19 @@ def _dist_train(model,
     # build runner
     optimizer = build_optimizers(model, cfg.optimizers)
     runner = IterBasedRunner(
-        model, optimizer, cfg.work_dir, logger=logger, meta=meta)
+        model,
+        optimizer=optimizer,
+        work_dir=cfg.work_dir,
+        logger=logger,
+        meta=meta)
     # an ugly walkaround to make the .log and .log.json filenames the same
     runner.timestamp = timestamp
 
     # register hooks
-    runner.register_training_hooks(cfg.lr_config, cfg.checkpoint_config,
-                                   cfg.log_config)
+    runner.register_training_hooks(
+        cfg.lr_config,
+        checkpoint_config=cfg.checkpoint_config,
+        log_config=cfg.log_config)
 
     # visual hook
     if cfg.get('visual_config', None) is not None:
