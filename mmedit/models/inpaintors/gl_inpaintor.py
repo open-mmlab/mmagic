@@ -16,6 +16,9 @@ class GLInpaintor(OneStageInpaintor):
     schedule based on `OneStageInpaintor`.
 
     The training pipeline of global&local is as following:
+
+    .. code-block:: python
+
         if cur_iter < iter_tc:
             update generator with only l1 loss
         else:
@@ -25,6 +28,9 @@ class GLInpaintor(OneStageInpaintor):
 
     The new attribute `cur_iter` is added for recording current number of
     iteration. The `train_cfg` contains the setting of the training schedule:
+
+    .. code-block:: python
+
         train_cfg = dict(
             start_iter=0,
             disc_step=1,
@@ -32,8 +38,8 @@ class GLInpaintor(OneStageInpaintor):
             iter_td=100000
         )
 
-    `iter_tc` and `iter_td` correspond to the noation $T_C$ and $T_D$ of the
-    original paper.
+    `iter_tc` and `iter_td` correspond to the noation :math:`T_C` and
+    :math:`T_D` of theoriginal paper.
 
     Args:
         generator (dict): Config for encoder-decoder style generator.
@@ -102,10 +108,10 @@ class GLInpaintor(OneStageInpaintor):
             data_batch (dict): Contain other elements for computing losses.
 
         Returns:
-            tuple[dict]: A tuple containing two dictionaries. The first one is
-                the result dict, which contains the results computed within
-                this function for visualization. The second one is the loss
-                dict, containing loss items computed in this function.
+            tuple[dict]: A tuple containing two dictionaries. The first one \
+                is the result dict, which contains the results computed \
+                within this function for visualization. The second one is the \
+                loss dict, containing loss items computed in this function.
         """
         gt = data_batch['gt_img']
         mask = data_batch['mask']
@@ -155,8 +161,8 @@ class GLInpaintor(OneStageInpaintor):
                 generator and discriminator (if have).
 
         Returns:
-            dict: Dict with loss, information for logger, the number of samples
-                and results for visualization.
+            dict: Dict with loss, information for logger, the number of \
+                samples and results for visualization.
         """
         log_vars = {}
 

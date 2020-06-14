@@ -99,6 +99,17 @@ class OneStageInpaintor(BaseModel):
             self.disc.init_weights(pretrained=pretrained)
 
     def forward(self, masked_img, mask, test_mode=True, **kwargs):
+        """Forward function.
+
+        Args:
+            masked_img (torch.Tensor): Image with hole as input.
+            mask (torch.Tensor): Mask as input.
+            test_mode (bool, optional): Whether use testing mode.
+                Defaults to True.
+
+        Returns:
+            dict: Dict contains output results.
+        """
         if not test_mode:
             return self.forward_train(masked_img, mask, **kwargs)
         else:
@@ -156,9 +167,9 @@ class OneStageInpaintor(BaseModel):
             data_batch (dict): Contain other elements for computing losses.
 
         Returns:
-            dict: Contains the results computed within this function for
-                visualization.
-            dict: Contains the loss items computed in this function.
+            tuple(dict): Dict contains the results computed within this \
+                function for visualization and dict contains the loss items \
+                computed in this function.
         """
         gt = data_batch['gt_img']
         mask = data_batch['mask']
@@ -234,8 +245,8 @@ class OneStageInpaintor(BaseModel):
                 generator and discriminator (if have).
 
         Returns:
-            dict: Dict with loss, information for logger, the number of samples
-                and results for visualization.
+            dict: Dict with loss, information for logger, the number of \
+                samples and results for visualization.
         """
         log_vars = {}
 

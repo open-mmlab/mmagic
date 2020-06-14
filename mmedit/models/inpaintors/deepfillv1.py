@@ -154,6 +154,7 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
 
         In this function, the inpaintor will finish the train step following
         the pipeline:
+
             1. get fake res/image
             2. optimize discriminator (if have)
             3. optimize generator
@@ -169,8 +170,8 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
                 generator and discriminator (if have).
 
         Returns:
-            dict: Dict with loss, information for logger, the number of samples
-                and results for visualization.
+            dict: Dict with loss, information for logger, the number of \
+                samples and results for visualization.
         """
         log_vars = {}
 
