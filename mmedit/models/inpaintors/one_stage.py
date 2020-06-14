@@ -1,4 +1,10 @@
+import os.path as osp
+from pathlib import Path
+
+import mmcv
 import torch
+from mmedit.core import L1Evaluation, psnr, ssim, tensor2img
+from torchvision.utils import save_image
 
 from ..base import BaseModel
 from ..builder import build_backbone, build_component, build_loss
@@ -37,6 +43,7 @@ class OneStageInpaintor(BaseModel):
         test_cfg (dict): Configs for testing scheduler.
         pretrained (str): Path for pretrained model. Default None.
     """
+    _eval_metrics = dict(l1=L1Evaluation, psnr=psnr, ssim=ssim)
 
     def __init__(self,
                  encdec,
@@ -64,6 +71,8 @@ class OneStageInpaintor(BaseModel):
         self.is_train = train_cfg is not None
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
+        self.eval_with_metrics = ('metrics' in self.test_cfg) and (
+            self.test_cfg['metrics'] is not None)
 
         self.generator = build_backbone(encdec)
 
@@ -217,13 +226,67 @@ class OneStageInpaintor(BaseModel):
 
         return res, loss
 
-    def forward_test(self, masked_img, mask, **kwargs):
+    def forward_test(self,
+                     masked_img,
+                     mask,
+                     save_image=False,
+                     save_path=None,
+                     iteration=None,
+                     **kwargs):
         input_x = torch.cat([masked_img, mask], dim=1)
-
         fake_res = self.generator(input_x)
         fake_img = fake_res * mask + masked_img * (1. - mask)
-        output = dict(fake_res=fake_res, fake_img=fake_img)
+
+        output = dict()
+        eval_results = {}
+        if self.eval_with_metrics:
+            gt_img = kwargs['gt_img']
+            data_dict = dict(gt_img=gt_img, fake_res=fake_res, mask=mask)
+            for metric_name in self.test_cfg['metrics']:
+                if metric_name in ['ssim', 'psnr']:
+                    eval_results[metric_name] = self._eval_metrics[
+                        metric_name](tensor2img(fake_img, min_max=(-1, 1)),
+                                     tensor2img(gt_img, min_max=(-1, 1)))
+                else:
+                    eval_results[metric_name] = self._eval_metrics[
+                        metric_name]()(data_dict).item()
+            output['eval_results'] = eval_results
+        else:
+            output['fake_res'] = fake_res
+            output['fake_img'] = fake_img
+
+        output['meta'] = None if 'meta' not in kwargs else kwargs['meta'][0]
+
+        if save_image:
+            assert save_image and save_path is not None, (
+                'Save path should been given')
+            assert output['meta'] is not None, (
+                'Meta information should be given to save image.')
+
+            tmp_filename = output['meta']['gt_img_path']
+            filestem = Path(tmp_filename).stem
+            if iteration is not None:
+                filename = f'{filestem}_{iteration}.png'
+            else:
+                filename = f'{filestem}.png'
+            mmcv.mkdir_or_exist(save_path)
+            img_list = [kwargs['gt_img']] if 'gt_img' in kwargs else []
+            img_list.extend(
+                [masked_img,
+                 mask.expand_as(masked_img), fake_res, fake_img])
+            img = torch.cat(img_list, dim=3).cpu()
+            self.save_visualization(img, osp.join(save_path, filename))
+            output['save_img_path'] = osp.abspath(
+                osp.join(save_path, filename))
+
         return output
+
+    def save_visualization(self, img, filename):
+        if self.test_cfg.get('img_rerange', True):
+            img = (img + 1) / 2
+        if self.test_cfg.get('img_bgr2rgb', True):
+            img = img[:, [2, 1, 0], ...]
+        save_image(img, filename, nrow=1, padding=0)
 
     def train_step(self, data_batch, optimizer):
         """Train step function.

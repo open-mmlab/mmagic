@@ -1,4 +1,6 @@
 import copy
+import os
+import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
@@ -36,7 +38,6 @@ def test_one_stage_inpaintor():
     assert inpaintor.with_disc_shift_loss
     assert inpaintor.is_train
     assert inpaintor.train_cfg['disc_step'] == 1
-    assert inpaintor.test_cfg['test'] == 1
     assert inpaintor.disc_step_count == 0
 
     with patch.object(
@@ -54,12 +55,10 @@ def test_one_stage_inpaintor():
             inpaintor.cuda()
             data_batch = dict(gt_img=gt_img, mask=mask, masked_img=masked_img)
             output = inpaintor.forward_test(**data_batch)
-            assert output['fake_res'].shape == (1, 3, 256, 256)
-            assert output['fake_img'].shape == (1, 3, 256, 256)
+            assert 'eval_results' in output
 
             output = inpaintor.val_step(data_batch)
-            assert output['fake_res'].shape == (1, 3, 256, 256)
-            assert output['fake_img'].shape == (1, 3, 256, 256)
+            assert 'eval_results' in output
 
             optim_g = torch.optim.SGD(inpaintor.generator.parameters(), lr=0.1)
             optim_d = torch.optim.SGD(inpaintor.disc.parameters(), lr=0.1)
@@ -79,6 +78,63 @@ def test_one_stage_inpaintor():
             assert 'fake_loss' in outputs['log_vars']
             assert 'real_loss' in outputs['log_vars']
             assert 'loss_g_fake' in outputs['log_vars']
+
+            # test forward test w/o save image
+            outputs = inpaintor.forward_test(
+                masked_img[0:1], mask[0:1], gt_img=gt_img[0:1, ...])
+            assert 'eval_results' in outputs
+            assert outputs['eval_results']['l1'] > 0
+            assert outputs['eval_results']['psnr'] > 0
+            assert outputs['eval_results']['ssim'] > 0
+
+            # test forward test w/o eval metrics
+            inpaintor.test_cfg = dict()
+            inpaintor.eval_with_metrics = False
+            outputs = inpaintor.forward_test(masked_img[0:1], mask[0:1])
+            for key in ['fake_res', 'fake_img']:
+                assert outputs[key].size() == (1, 3, 256, 256)
+
+            # test forward test w/ save image
+            with tempfile.TemporaryDirectory() as tmpdir:
+                outputs = inpaintor.forward_test(
+                    masked_img[0:1],
+                    mask[0:1],
+                    save_image=True,
+                    save_path=tmpdir,
+                    iteration=4396,
+                    meta=[dict(gt_img_path='igccc.png')])
+
+                assert os.path.exists(os.path.join(tmpdir, 'igccc_4396.png'))
+
+            # test forward test w/ save image w/ gt_img
+            with tempfile.TemporaryDirectory() as tmpdir:
+                outputs = inpaintor.forward_test(
+                    masked_img[0:1],
+                    mask[0:1],
+                    save_image=True,
+                    save_path=tmpdir,
+                    meta=[dict(gt_img_path='igccc.png')],
+                    gt_img=gt_img[0:1, ...])
+
+                assert os.path.exists(os.path.join(tmpdir, 'igccc.png'))
+
+                with pytest.raises(AssertionError):
+                    outputs = inpaintor.forward_test(
+                        masked_img[0:1],
+                        mask[0:1],
+                        save_image=True,
+                        save_path=tmpdir,
+                        iteration=4396,
+                        gt_img=gt_img[0:1, ...])
+                with pytest.raises(AssertionError):
+                    outputs = inpaintor.forward_test(
+                        masked_img[0:1],
+                        mask[0:1],
+                        save_image=True,
+                        save_path=None,
+                        iteration=4396,
+                        meta=[dict(gt_img_path='igccc.png')],
+                        gt_img=gt_img[0:1, ...])
 
             cfg_ = copy.deepcopy(cfg)
             cfg_.train_cfg.disc_step = 2

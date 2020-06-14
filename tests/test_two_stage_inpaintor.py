@@ -85,7 +85,7 @@ def test_two_stage_inpaintor():
         pretrained=None)
 
     train_cfg = Config(dict(disc_step=1))
-    test_cfg = Config(dict(metrics=['l1']))
+    test_cfg = Config(dict(metrics=['l1', 'psnr', 'ssim']))
 
     tsinpaintor = TwoStageInpaintor(
         **model, train_cfg=train_cfg, test_cfg=test_cfg)
@@ -163,6 +163,8 @@ def test_two_stage_inpaintor():
             masked_img[0:1], mask[0:1], gt_img=gt_img[0:1, ...])
         assert 'eval_results' in outputs
         assert outputs['eval_results']['l1'] > 0
+        assert outputs['eval_results']['psnr'] > 0
+        assert outputs['eval_results']['ssim'] > 0
 
         # test forward test w/o eval metrics
         tsinpaintor.test_cfg = dict()

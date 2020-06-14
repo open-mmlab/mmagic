@@ -37,4 +37,4 @@ model = dict(
     pretrained=None)
 
 train_cfg = dict(disc_step=1)
-test_cfg = dict(test=1)
+test_cfg = dict(metrics=['l1', 'psnr', 'ssim'])
