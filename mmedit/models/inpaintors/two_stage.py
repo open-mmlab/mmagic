@@ -3,7 +3,7 @@ from pathlib import Path
 
 import mmcv
 import torch
-from mmedit.core.evaluation import L1Evaluation
+from mmedit.core import tensor2img
 from torchvision.utils import save_image
 
 from ..common.model_utils import set_requires_grad
@@ -31,7 +31,6 @@ class TwoStageInpaintor(OneStageInpaintor):
         disc_input_with_mask (bool): Whether to add mask as input in
             discriminator. Default: False.
     """
-    _eval_metrics = dict(l1=L1Evaluation)
 
     def __init__(self,
                  *args,
@@ -70,8 +69,13 @@ class TwoStageInpaintor(OneStageInpaintor):
             data_dict = dict(
                 gt_img=gt_img, fake_res=stage2_fake_res, mask=mask)
             for metric_name in self.test_cfg['metrics']:
-                eval_results[metric_name] = self._eval_metrics[metric_name]()(
-                    data_dict).item()
+                if metric_name in ['ssim', 'psnr']:
+                    eval_results[metric_name] = self._eval_metrics[
+                        metric_name](tensor2img(fake_img, min_max=(-1, 1)),
+                                     tensor2img(gt_img, min_max=(-1, 1)))
+                else:
+                    eval_results[metric_name] = self._eval_metrics[
+                        metric_name]()(data_dict).item()
             output['eval_results'] = eval_results
         else:
             output['stage1_fake_res'] = stage1_fake_res
