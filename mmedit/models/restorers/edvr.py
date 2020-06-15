@@ -60,6 +60,18 @@ class EDVR(BasicRestorer):
         outputs.update({'log_vars': log_vars})
         return outputs
 
+    def forward_dummy(self, imgs):
+        """Used for computing network FLOPs.
+
+        Args:
+            imgs (Tensor): Input images.
+
+        Returns:
+            Tensor: Restored image.
+        """
+        out = self.generator(imgs)
+        return out
+
     def forward_test(self,
                      lq,
                      gt=None,
