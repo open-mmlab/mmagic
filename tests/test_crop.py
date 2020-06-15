@@ -238,9 +238,9 @@ class TestAugmentations(object):
         bg = np.random.rand(240, 320, 3)
         merged = np.random.rand(240, 320, 3)
         ori_merged = merged.copy()
-        alpha = np.random.rand(240, 320)
+        alpha = np.zeros((240, 320))
         # make sure there would be unknown area
-        alpha[120:160, 120:160] = 128
+        alpha[:16, -16:] = 128
         trimap = np.zeros_like(alpha)
         trimap[alpha > 0] = 128
         trimap[alpha == 255] = 255
@@ -266,7 +266,7 @@ class TestAugmentations(object):
             'fg', 'bg', 'merged', 'alpha', 'ori_merged', 'crop_bbox'
         ]
 
-        # test cropping using trimap to decide unknown area
+        # test cropping using alpha to decide unknown area
         fg = np.random.rand(240, 320, 3)
         bg = np.random.rand(240, 320, 3)
         merged = np.random.rand(240, 320, 3)
@@ -305,7 +305,8 @@ class TestAugmentations(object):
         repr_str = (
             crop_around_semi_trans.__class__.__name__ +
             f"(keys={keys}, crop_sizes={[(240, 240)]}, unknown_source='alpha',"
-            " interpolation='bilinear')")
+            " interpolations=['bilinear', 'bilinear', 'bilinear', 'bilinear', "
+            "'bilinear'])")
         assert crop_around_semi_trans.__repr__() == repr_str
 
     def test_crop_around_fg(self):
