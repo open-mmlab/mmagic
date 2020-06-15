@@ -1,6 +1,9 @@
+import os
+import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
 import torch
 from mmcv import Config
 from mmedit.models import build_model
@@ -34,8 +37,62 @@ def test_pconv_inpaintor(init_weights):
         assert 'loss_l1_valid' in outputs['log_vars']
         assert 'loss_tv' in outputs['log_vars']
 
-        output = pconv_inpaintor.forward_test(**data_batch)
-        assert output['fake_res'].shape == (1, 3, 256, 256)
+        # test forward test w/o save image
+        outputs = pconv_inpaintor.forward_test(
+            masked_img[0:1], mask[0:1], gt_img=gt_img[0:1, ...])
+        assert 'eval_results' in outputs
+        assert outputs['eval_results']['l1'] > 0
+        assert outputs['eval_results']['psnr'] > 0
+        assert outputs['eval_results']['ssim'] > 0
+
+        # test forward test w/o eval metrics
+        pconv_inpaintor.test_cfg = dict()
+        pconv_inpaintor.eval_with_metrics = False
+        outputs = pconv_inpaintor.forward_test(masked_img[0:1], mask[0:1])
+        for key in ['fake_res', 'fake_img']:
+            assert outputs[key].size() == (1, 3, 256, 256)
+
+        # test forward test w/ save image
+        with tempfile.TemporaryDirectory() as tmpdir:
+            outputs = pconv_inpaintor.forward_test(
+                masked_img[0:1],
+                mask[0:1],
+                save_image=True,
+                save_path=tmpdir,
+                iteration=4396,
+                meta=[dict(gt_img_path='igccc.png')])
+
+            assert os.path.exists(os.path.join(tmpdir, 'igccc_4396.png'))
+
+        # test forward test w/ save image w/ gt_img
+        with tempfile.TemporaryDirectory() as tmpdir:
+            outputs = pconv_inpaintor.forward_test(
+                masked_img[0:1],
+                mask[0:1],
+                save_image=True,
+                save_path=tmpdir,
+                meta=[dict(gt_img_path='igccc.png')],
+                gt_img=gt_img[0:1, ...])
+
+            assert os.path.exists(os.path.join(tmpdir, 'igccc.png'))
+
+            with pytest.raises(AssertionError):
+                outputs = pconv_inpaintor.forward_test(
+                    masked_img[0:1],
+                    mask[0:1],
+                    save_image=True,
+                    save_path=tmpdir,
+                    iteration=4396,
+                    gt_img=gt_img[0:1, ...])
+            with pytest.raises(AssertionError):
+                outputs = pconv_inpaintor.forward_test(
+                    masked_img[0:1],
+                    mask[0:1],
+                    save_image=True,
+                    save_path=None,
+                    iteration=4396,
+                    meta=[dict(gt_img_path='igccc.png')],
+                    gt_img=gt_img[0:1, ...])
 
     # reset mock to clear some memory usage
     init_weights.reset_mock()
