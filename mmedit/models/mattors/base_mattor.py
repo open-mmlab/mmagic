@@ -136,12 +136,14 @@ class BaseMattor(BaseModel):
                 pred_alpha, (ori_w, ori_h),
                 interpolation=meta[0]['interpolation'])
         elif 'pad' in meta[0]:
-            # iamges have been padded for inference, remove the padding
+            # images have been padded for inference, remove the padding
             pred_alpha = pred_alpha[:ori_h, :ori_w]
 
         assert pred_alpha.shape == (ori_h, ori_w)
 
-        pred_alpha = mmcv.imresize(pred_alpha, (ori_w, ori_h))
+        # some methods do not have an activation layer after the last conv,
+        # clip to make sure pred_alpha range from 0 to 1.
+        pred_alpha = np.clip(pred_alpha, 0, 1)
         pred_alpha[ori_trimap == 0] = 0.
         pred_alpha[ori_trimap == 255] = 1.
 
