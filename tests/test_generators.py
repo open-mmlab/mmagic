@@ -204,7 +204,7 @@ def test_residual_block_with_dropout():
         assert output.shape == (1, 3, 32, 32)
     # zero padding
     cfg = copy.deepcopy(_cfg)
-    cfg['padding_mode'] = 'zero'
+    cfg['padding_mode'] = 'zeros'
     block = ResidualBlockWithDropout(**cfg)
     # cpu
     output = block(feature)
@@ -216,8 +216,8 @@ def test_residual_block_with_dropout():
         assert output.shape == (1, 3, 32, 32)
     # not implemented padding
     cfg = copy.deepcopy(_cfg)
-    cfg['padding_mode'] = 'circular'
-    with pytest.raises(NotImplementedError):
+    cfg['padding_mode'] = 'abc'
+    with pytest.raises(KeyError):
         block = ResidualBlockWithDropout(**cfg)
 
     # test other norm
