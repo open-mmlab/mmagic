@@ -12,8 +12,8 @@ We follow the below style to name config files. Contributors are advised to foll
 
 `{xxx}` is required field and `[yyy]` is optional.
 
-- `{model}`: model type like `faster_rcnn`, `mask_rcnn`, etc.
-- `[model setting]`: specific setting for some model, like `without_semantic` for `htc`, `moment` for `reppoints`, etc.
+- `{model}`: model type like `srcnn`, `dim`, etc.
+- `[model setting]`: specific setting for some model, like `resolution` for input images, `stage name` for training, etc.
 - `{backbone}`: backbone type like `r50` (ResNet-50), `x101` (ResNeXt-101).
 - `[refiner]`: refiner type like `pln` (Plain Refiner).
 - `[norm_setting]`: `bn` (Batch Normalization) is used unless specified, other norm layer type could be `gn` (Group Normalization), `syncbn` (Synchronized Batch Normalization).
