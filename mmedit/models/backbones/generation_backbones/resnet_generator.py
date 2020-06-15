@@ -1,5 +1,5 @@
 import torch.nn as nn
-from mmcv.cnn import build_norm_layer
+from mmcv.cnn import ConvModule
 from mmcv.runner import load_checkpoint
 from mmedit.models.common import (ResidualBlockWithDropout,
                                   generation_init_weights)
@@ -22,7 +22,7 @@ class ResnetGenerator(nn.Module):
         use_dropout (bool): Whether to use dropout layers. Default: False.
         num_blocks (int): Number of residual blocks. Default: 9.
         padding_mode (str): The name of padding layer in conv layers:
-            'reflect' | 'replicate' | 'zero'. Default: 'reflect'.
+            'reflect' | 'replicate' | 'zeros'. Default: 'reflect'.
         init_cfg (dict): Config dict for initialization.
             `type`: The name of our initialization method. Default: 'normal'.
             `gain`: Scaling factor for normal, xavier and orthogonal.
@@ -49,41 +49,30 @@ class ResnetGenerator(nn.Module):
         use_bias = norm_cfg['type'] == 'IN'
 
         model = []
-        padding = 0
-        if padding_mode == 'reflect':
-            model += [nn.ReflectionPad2d(3)]
-        elif padding_mode == 'replicate':
-            model += [nn.ReplicationPad2d(3)]
-        elif padding_mode == 'zero':
-            padding = 3
-        else:
-            raise NotImplementedError(
-                f"padding '{padding_mode}' is not implemented")
-        _, norm = build_norm_layer(norm_cfg, base_channels)
         model += [
-            nn.Conv2d(
-                in_channels,
-                base_channels,
+            ConvModule(
+                in_channels=in_channels,
+                out_channels=base_channels,
                 kernel_size=7,
-                padding=padding,
-                bias=use_bias), norm,
-            nn.ReLU(True)
+                padding=3,
+                bias=use_bias,
+                norm_cfg=norm_cfg,
+                padding_mode=padding_mode)
         ]
 
         num_down = 2
         # add downsampling layers
         for i in range(num_down):
             multiple = 2**i
-            _, norm = build_norm_layer(norm_cfg, base_channels * multiple * 2)
             model += [
-                nn.Conv2d(
-                    base_channels * multiple,
-                    base_channels * multiple * 2,
+                ConvModule(
+                    in_channels=base_channels * multiple,
+                    out_channels=base_channels * multiple * 2,
                     kernel_size=3,
                     stride=2,
                     padding=1,
-                    bias=use_bias), norm,
-                nn.ReLU(True)
+                    bias=use_bias,
+                    norm_cfg=norm_cfg)
             ]
 
         # add residual blocks
@@ -100,33 +89,28 @@ class ResnetGenerator(nn.Module):
         # add upsampling layers
         for i in range(num_down):
             multiple = 2**(num_down - i)
-            _, norm = build_norm_layer(norm_cfg, base_channels * multiple // 2)
             model += [
-                nn.ConvTranspose2d(
-                    base_channels * multiple,
-                    base_channels * multiple // 2,
+                ConvModule(
+                    in_channels=base_channels * multiple,
+                    out_channels=base_channels * multiple // 2,
                     kernel_size=3,
                     stride=2,
                     padding=1,
-                    output_padding=1,
-                    bias=use_bias), norm,
-                nn.ReLU(True)
+                    bias=use_bias,
+                    conv_cfg=dict(type='Deconv', output_padding=1),
+                    norm_cfg=norm_cfg)
             ]
 
-        padding = 0
-        if padding_mode == 'reflect':
-            model += [nn.ReflectionPad2d(3)]
-        elif padding_mode == 'replicate':
-            model += [nn.ReplicationPad2d(3)]
-        elif padding_mode == 'zero':
-            padding = 3
-        else:
-            raise NotImplementedError(
-                f"padding '{padding_mode}' is not implemented")
         model += [
-            nn.Conv2d(
-                base_channels, out_channels, kernel_size=7, padding=padding),
-            nn.Tanh()
+            ConvModule(
+                in_channels=base_channels,
+                out_channels=out_channels,
+                kernel_size=7,
+                padding=3,
+                bias=True,
+                norm_cfg=None,
+                act_cfg=dict(type='Tanh'),
+                padding_mode=padding_mode)
         ]
 
         self.model = nn.Sequential(*model)
@@ -135,8 +119,8 @@ class ResnetGenerator(nn.Module):
         self.init_gain = 0.02 if init_cfg is None else init_cfg.get(
             'gain', 0.02)
 
-    def forward(self, input):
-        return self.model(input)
+    def forward(self, x):
+        return self.model(x)
 
     def init_weights(self, pretrained=None, strict=True):
         if isinstance(pretrained, str):

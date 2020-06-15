@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from mmcv.cnn import build_norm_layer, kaiming_init, normal_init, xavier_init
+from mmcv.cnn import ConvModule, kaiming_init, normal_init, xavier_init
 from torch.nn import init
 
 
@@ -145,57 +145,60 @@ class UnetSkipConnectionBlock(nn.Module):
         kernel_size = 4
         stride = 2
         padding = 1
-
         if in_channels is None:
             in_channels = outer_channels
-        down_conv = nn.Conv2d(
-            in_channels,
-            inner_channels,
-            kernel_size=kernel_size,
-            stride=stride,
-            padding=padding,
-            bias=use_bias)
-        down_relu = nn.LeakyReLU(0.2, True)
-        _, down_norm = build_norm_layer(norm_cfg, inner_channels)
-        up_relu = nn.ReLU(True)
-        _, up_norm = build_norm_layer(norm_cfg, outer_channels)
+        down_conv_cfg = dict(type='Conv2d')
+        down_norm_cfg = norm_cfg
+        down_act_cfg = dict(type='LeakyReLU', negative_slope=0.2)
+        up_conv_cfg = dict(type='Deconv')
+        up_norm_cfg = norm_cfg
+        up_act_cfg = dict(type='ReLU')
+        up_in_channels = inner_channels * 2
+        up_bias = use_bias
+        middle = [submodule]
+        upper = []
 
         if is_outermost:
-            up_conv = nn.ConvTranspose2d(
-                inner_channels * 2,
-                outer_channels,
-                kernel_size=kernel_size,
-                stride=stride,
-                padding=padding)
-            down = [down_conv]
-            up = [up_relu, up_conv, nn.Tanh()]
-            model = down + [submodule] + up
+            down_act_cfg = None
+            down_norm_cfg = None
+            up_bias = True
+            up_norm_cfg = None
+            upper = [nn.Tanh()]
         elif is_innermost:
-            up_conv = nn.ConvTranspose2d(
-                inner_channels,
-                outer_channels,
-                kernel_size=kernel_size,
-                stride=stride,
-                padding=padding,
-                bias=use_bias)
-            down = [down_relu, down_conv]
-            up = [up_relu, up_conv, up_norm]
-            model = down + up
+            down_norm_cfg = None
+            up_in_channels = inner_channels
+            middle = []
         else:
-            up_conv = nn.ConvTranspose2d(
-                inner_channels * 2,
-                outer_channels,
+            upper = [nn.Dropout(0.5)] if use_dropout else []
+
+        down = [
+            ConvModule(
+                in_channels=in_channels,
+                out_channels=inner_channels,
                 kernel_size=kernel_size,
                 stride=stride,
                 padding=padding,
-                bias=use_bias)
-            down = [down_relu, down_conv, down_norm]
-            up = [up_relu, up_conv, up_norm]
+                bias=use_bias,
+                conv_cfg=down_conv_cfg,
+                norm_cfg=down_norm_cfg,
+                act_cfg=down_act_cfg,
+                order=('act', 'conv', 'norm'))
+        ]
+        up = [
+            ConvModule(
+                in_channels=up_in_channels,
+                out_channels=outer_channels,
+                kernel_size=kernel_size,
+                stride=stride,
+                padding=padding,
+                bias=up_bias,
+                conv_cfg=up_conv_cfg,
+                norm_cfg=up_norm_cfg,
+                act_cfg=up_act_cfg,
+                order=('act', 'conv', 'norm'))
+        ]
 
-            if use_dropout:
-                model = down + [submodule] + up + [nn.Dropout(0.5)]
-            else:
-                model = down + [submodule] + up
+        model = down + middle + up + upper
 
         self.model = nn.Sequential(*model)
 
@@ -212,15 +215,13 @@ class ResidualBlockWithDropout(nn.Module):
 
     Ref:
     Deep Residual Learning for Image Recognition
-    A residual block is a conv block with skip connections. The conv block is
-    constructed in `build_conv_block` function, skip connection is implemented
-    in `forward` function. In `build_conv_block` function, a dropout layer is
+    A residual block is a conv block with skip connections. A dropout layer is
     added between two common conv modules.
 
     Args:
         channels (int): Number of channels in the conv layer.
         padding_mode (str): The name of padding layer:
-            'reflect' | 'replicate' | 'zero'.
+            'reflect' | 'replicate' | 'zeros'.
         norm_cfg (dict): Config dict to build norm layer. Default:
             `dict(type='IN')`.
         use_dropout (bool): Whether to use dropout layers. Default: True.
@@ -232,10 +233,6 @@ class ResidualBlockWithDropout(nn.Module):
                  norm_cfg=dict(type='BN'),
                  use_dropout=True):
         super(ResidualBlockWithDropout, self).__init__()
-        self.conv_block = self.build_conv_block(channels, padding_mode,
-                                                norm_cfg, use_dropout)
-
-    def build_conv_block(self, channels, padding_mode, norm_cfg, use_dropout):
         assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"
                                             f'got {type(norm_cfg)}')
         assert 'type' in norm_cfg, "'norm_cfg' must have key 'type'"
@@ -243,55 +240,35 @@ class ResidualBlockWithDropout(nn.Module):
         # Only for IN, use bias since it does not have affine parameters.
         use_bias = norm_cfg['type'] == 'IN'
 
-        conv_block = []
-        padding = 0
-        if padding_mode == 'reflect':
-            conv_block += [nn.ReflectionPad2d(1)]
-        elif padding_mode == 'replicate':
-            conv_block += [nn.ReplicationPad2d(1)]
-        elif padding_mode == 'zero':
-            padding = 1
-        else:
-            raise NotImplementedError(
-                f"padding '{padding_mode}' is not implemented")
-
-        _, norm = build_norm_layer(norm_cfg, channels)
-        conv_block += [
-            nn.Conv2d(
-                channels,
-                channels,
+        block = [
+            ConvModule(
+                in_channels=channels,
+                out_channels=channels,
                 kernel_size=3,
-                padding=padding,
-                bias=use_bias), norm,
-            nn.ReLU(True)
+                padding=1,
+                bias=use_bias,
+                norm_cfg=norm_cfg,
+                padding_mode=padding_mode)
         ]
 
         if use_dropout:
-            conv_block += [nn.Dropout(0.5)]
+            block += [nn.Dropout(0.5)]
 
-        padding = 0
-        if padding_mode == 'reflect':
-            conv_block += [nn.ReflectionPad2d(1)]
-        elif padding_mode == 'replicate':
-            conv_block += [nn.ReplicationPad2d(1)]
-        elif padding_mode == 'zero':
-            padding = 1
-        else:
-            raise NotImplementedError(
-                f"padding '{padding_mode}' is not implemented")
-        _, norm = build_norm_layer(norm_cfg, channels)
-        conv_block += [
-            nn.Conv2d(
-                channels,
-                channels,
+        block += [
+            ConvModule(
+                in_channels=channels,
+                out_channels=channels,
                 kernel_size=3,
-                padding=padding,
-                bias=use_bias), norm
+                padding=1,
+                bias=use_bias,
+                norm_cfg=norm_cfg,
+                act_cfg=None,
+                padding_mode=padding_mode)
         ]
 
-        return nn.Sequential(*conv_block)
+        self.block = nn.Sequential(*block)
 
     def forward(self, x):
         # add skip connections without final ReLU
-        out = x + self.conv_block(x)
+        out = x + self.block(x)
         return out

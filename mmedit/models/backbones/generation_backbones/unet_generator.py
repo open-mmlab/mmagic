@@ -93,8 +93,8 @@ class UnetGenerator(nn.Module):
         self.init_gain = 0.02 if init_cfg is None else init_cfg.get(
             'gain', 0.02)
 
-    def forward(self, input):
-        return self.model(input)
+    def forward(self, x):
+        return self.model(x)
 
     def init_weights(self, pretrained=None, strict=True):
         if isinstance(pretrained, str):

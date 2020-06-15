@@ -1,5 +1,5 @@
 import torch.nn as nn
-from mmcv.cnn import build_norm_layer
+from mmcv.cnn import ConvModule, build_conv_layer
 from mmcv.runner import load_checkpoint
 from mmedit.models.common import generation_init_weights
 from mmedit.models.registry import COMPONENTS
@@ -43,13 +43,15 @@ class PatchDiscriminator(nn.Module):
 
         # input layer
         sequence = [
-            nn.Conv2d(
-                in_channels,
-                base_channels,
+            ConvModule(
+                in_channels=in_channels,
+                out_channels=base_channels,
                 kernel_size=kernel_size,
                 stride=2,
-                padding=padding),
-            nn.LeakyReLU(0.2, True)
+                padding=padding,
+                bias=True,
+                norm_cfg=None,
+                act_cfg=dict(type='LeakyReLU', negative_slope=0.2))
         ]
 
         # stacked intermediate layers,
@@ -59,34 +61,35 @@ class PatchDiscriminator(nn.Module):
         for n in range(1, num_conv):
             multiple_prev = multiple_now
             multiple_now = min(2**n, 8)
-            _, norm = build_norm_layer(norm_cfg, base_channels * multiple_now)
             sequence += [
-                nn.Conv2d(
-                    base_channels * multiple_prev,
-                    base_channels * multiple_now,
+                ConvModule(
+                    in_channels=base_channels * multiple_prev,
+                    out_channels=base_channels * multiple_now,
                     kernel_size=kernel_size,
                     stride=2,
                     padding=padding,
-                    bias=use_bias), norm,
-                nn.LeakyReLU(0.2, True)
+                    bias=use_bias,
+                    norm_cfg=norm_cfg,
+                    act_cfg=dict(type='LeakyReLU', negative_slope=0.2))
             ]
         multiple_prev = multiple_now
         multiple_now = min(2**num_conv, 8)
-        _, norm = build_norm_layer(norm_cfg, base_channels * multiple_now)
         sequence += [
-            nn.Conv2d(
-                base_channels * multiple_prev,
-                base_channels * multiple_now,
+            ConvModule(
+                in_channels=base_channels * multiple_prev,
+                out_channels=base_channels * multiple_now,
                 kernel_size=kernel_size,
                 stride=1,
                 padding=padding,
-                bias=use_bias), norm,
-            nn.LeakyReLU(0.2, True)
+                bias=use_bias,
+                norm_cfg=norm_cfg,
+                act_cfg=dict(type='LeakyReLU', negative_slope=0.2))
         ]
 
         # output one-channel prediction map
         sequence += [
-            nn.Conv2d(
+            build_conv_layer(
+                dict(type='Conv2d'),
                 base_channels * multiple_now,
                 1,
                 kernel_size=kernel_size,
@@ -100,8 +103,8 @@ class PatchDiscriminator(nn.Module):
         self.init_gain = 0.02 if init_cfg is None else init_cfg.get(
             'gain', 0.02)
 
-    def forward(self, input):
-        return self.model(input)
+    def forward(self, x):
+        return self.model(x)
 
     def init_weights(self, pretrained=None):
         if isinstance(pretrained, str):
