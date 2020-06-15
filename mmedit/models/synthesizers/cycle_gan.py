@@ -226,6 +226,20 @@ class CycleGAN(BaseModel):
 
         return results
 
+    def forward_dummy(self, img):
+        """Used for computing network FLOPs.
+
+        Args:
+            img (Tensor): Dummy input used to compute FLOPs.
+
+        Returns:
+            Tensor: Dummy output produced by forwarding the dummy input.
+        """
+        generators = self.get_module(self.generators)
+        tmp = generators['a'](img)
+        out = generators['b'](tmp)
+        return out
+
     def forward(self, img_a, img_b, meta, test_mode=False, **kwargs):
         if not test_mode:
             return self.forward_train(img_a, img_b, meta)

@@ -84,6 +84,12 @@ def test_pix2pix():
             dict(params=getattr(synthesizer, 'discriminator').parameters()))
     }
 
+    # test forward_dummy
+    with torch.no_grad():
+        output = synthesizer.forward_dummy(data_batch['img_a'])
+    assert torch.is_tensor(output)
+    assert output.size() == (1, 3, 256, 256)
+
     # test forward_test
     with torch.no_grad():
         outputs = synthesizer(inputs, targets, [img_meta], test_mode=True)
