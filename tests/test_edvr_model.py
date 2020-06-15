@@ -101,6 +101,12 @@ def test_edvr_model():
             restorer = build_model(
                 model_cfg, train_cfg=train_cfg, test_cfg=test_cfg).cuda()
 
+        # test forward_dummy
+        with torch.no_grad():
+            output = restorer.forward_dummy(data_batch['lq'])
+        assert torch.is_tensor(output)
+        assert output.size() == (1, 3, 32, 32)
+
         # forward_test
         with torch.no_grad():
             outputs = restorer(**data_batch, test_mode=True)
