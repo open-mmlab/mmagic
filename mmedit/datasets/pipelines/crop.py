@@ -294,16 +294,19 @@ class CropAroundUnknown(object):
         crop_sizes (list[int | tuple[int]]): List of (w, h) to be selected.
         unknown_source (str, optional): Unknown area to select from. It must be
             'alpha' or 'tirmap'. Default to 'alpha'.
-        interpolation (str, optional): Interpolation method of mmcv.imresize.
-            The interpolation operation will be applied when image size is
-            smaller than the crop_size. Default to 'bilinear'.
+        interpolations (str | list[str], optional): Interpolation method of
+            mmcv.imresize. The interpolation operation will be applied when
+            image size is smaller than the crop_size. If given as a list of
+            str, it should have the same length as `keys`. Or if given as a
+            str all the keys will be resized with the same method.
+            Default to 'bilinear'.
     """
 
     def __init__(self,
                  keys,
                  crop_sizes,
                  unknown_source='alpha',
-                 interpolation='bilinear'):
+                 interpolations='bilinear'):
         if 'alpha' not in keys:
             raise ValueError(f'"alpha" must be in keys, but got {keys}')
         self.keys = keys
@@ -325,7 +328,15 @@ class CropAroundUnknown(object):
                 'if unknown_source is "trimap", it must also be set in keys')
         self.unknown_source = unknown_source
 
-        self.interpolation = interpolation
+        if isinstance(interpolations, str):
+            self.interpolations = [interpolations] * len(self.keys)
+        elif mmcv.is_list_of(interpolations,
+                             str) and len(interpolations) == len(self.keys):
+            self.interpolations = interpolations
+        else:
+            raise TypeError(
+                'interpolations must be a str or list of str with '
+                f'the same length as keys, but got {interpolations}')
 
     def __call__(self, results):
         h, w = results[self.keys[0]].shape[:2]
@@ -338,9 +349,9 @@ class CropAroundUnknown(object):
         if rescale_ratio > 1:
             h = max(int(h * rescale_ratio), crop_h)
             w = max(int(w * rescale_ratio), crop_w)
-            for key in self.keys:
+            for key, interpolation in zip(self.keys, self.interpolations):
                 results[key] = mmcv.imresize(
-                    results[key], (w, h), interpolation=self.interpolation)
+                    results[key], (w, h), interpolation=interpolation)
 
         # Select the cropping top-left point which is an unknown pixel
         if self.unknown_source == 'alpha':
@@ -361,7 +372,7 @@ class CropAroundUnknown(object):
         repr_str = self.__class__.__name__
         repr_str += (f'(keys={self.keys}, crop_sizes={self.crop_sizes}, '
                      f"unknown_source='{self.unknown_source}', "
-                     f"interpolation='{self.interpolation}')")
+                     f'interpolations={self.interpolations})')
         return repr_str
 
 

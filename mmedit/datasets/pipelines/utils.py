@@ -1,4 +1,7 @@
+import logging
+
 import numpy as np
+from mmcv.utils import print_log
 
 
 def random_choose_unknown(unknown, crop_size):
@@ -19,15 +22,21 @@ def random_choose_unknown(unknown, crop_size):
     # mask out the validate area for selecting the cropping center
     mask = np.zeros_like(unknown)
     mask[delta_h:h - delta_h, delta_w:w - delta_w] = 1
-    center_h_list, center_w_list = np.where(unknown & mask)
+    if np.any(unknown & mask):
+        center_h_list, center_w_list = np.where(unknown & mask)
+    elif np.any(unknown):
+        center_h_list, center_w_list = np.where(unknown)
+    else:
+        print_log('No unknown pixels found!', level=logging.WARNING)
+        center_h_list = [center_h]
+        center_w_list = [center_w]
     num_unknowns = len(center_h_list)
-    if num_unknowns > 0:
-        rand_ind = np.random.randint(num_unknowns)
-        center_h = center_h_list[rand_ind]
-        center_w = center_w_list[rand_ind]
+    rand_ind = np.random.randint(num_unknowns)
+    center_h = center_h_list[rand_ind]
+    center_w = center_w_list[rand_ind]
 
-    # if crop_size has odd number, make sure the top-left point is valid
-    top = min(h - crop_h, center_h - delta_h)
-    left = min(w - crop_w, center_w - delta_w)
+    # make sure the top-left point is valid
+    top = np.clip(center_h - delta_h, 0, h - crop_h)
+    left = np.clip(center_w - delta_w, 0, w - crop_w)
 
     return top, left
