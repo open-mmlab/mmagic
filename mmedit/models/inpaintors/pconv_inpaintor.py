@@ -98,3 +98,10 @@ class PConvInpaintor(OneStageInpaintor):
             results=results)
 
         return outputs
+
+    def forward_dummy(self, x):
+        mask = x[:, -3:, ...].clone()
+        x = x[:, :-3, ...]
+        res, _ = self.generator(x, mask)
+
+        return res

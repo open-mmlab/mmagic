@@ -37,6 +37,11 @@ def test_pconv_inpaintor(init_weights):
         assert 'loss_l1_valid' in outputs['log_vars']
         assert 'loss_tv' in outputs['log_vars']
 
+        # test forward dummy
+        res = pconv_inpaintor.forward_dummy(
+            torch.cat([masked_img, mask], dim=1))
+        assert res.shape == (1, 3, 256, 256)
+
         # test forward test w/o save image
         outputs = pconv_inpaintor.forward_test(
             masked_img[0:1], mask[0:1], gt_img=gt_img[0:1, ...])
