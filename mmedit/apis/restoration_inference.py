@@ -11,7 +11,7 @@ def restoration_inference(model, img):
         img (str): File path of input image.
 
     Returns:
-        np.ndarray: The predicted restoration result.
+        Tensor: The predicted restoration result.
     """
     cfg = model.cfg
     device = next(model.parameters()).device  # model device

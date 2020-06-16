@@ -12,7 +12,7 @@ def inpainting_inference(model, masked_img, mask):
         mask (str): Mask file path.
 
     Returns:
-        np.ndarray: The predicted inpainting result.
+        Tensor: The predicted inpainting result.
     """
     cfg = model.cfg
     device = next(model.parameters()).device  # model device
