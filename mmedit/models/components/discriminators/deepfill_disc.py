@@ -6,7 +6,7 @@ from mmedit.models.registry import COMPONENTS
 from mmedit.utils import get_root_logger
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class DeepFillv1Discriminators(nn.Module):
     """Discriminators used in DeepFillv1 model.
 

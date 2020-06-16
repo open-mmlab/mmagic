@@ -12,7 +12,7 @@ from ..common import set_requires_grad
 from ..registry import MODELS
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class OneStageInpaintor(BaseModel):
     """Standard one-stage inpaintor with commonly used losses.
 

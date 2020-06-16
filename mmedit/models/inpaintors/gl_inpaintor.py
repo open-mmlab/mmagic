@@ -5,7 +5,7 @@ from ..registry import MODELS
 from .one_stage import OneStageInpaintor
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class GLInpaintor(OneStageInpaintor):
     """Inpaintor for global&local method.
 

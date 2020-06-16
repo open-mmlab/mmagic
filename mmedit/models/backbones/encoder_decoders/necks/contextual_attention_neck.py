@@ -5,7 +5,7 @@ from mmedit.models.common.contextual_attention import ContextualAttentionModule
 from mmedit.models.registry import COMPONENTS
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class ContextualAttentionNeck(nn.Module):
     """Neck with contextual attention module.
 

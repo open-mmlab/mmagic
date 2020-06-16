@@ -4,7 +4,7 @@ from mmcv.cnn.weight_init import xavier_init
 from mmedit.models.registry import COMPONENTS
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class PlainRefiner(nn.Module):
     """Simple refiner from Deep Image Matting.
 

@@ -5,7 +5,7 @@ from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 
-@BACKBONES.register_module
+@BACKBONES.register_module()
 class PConvEncoderDecoder(nn.Module):
     """Encoder-Decoder with partial conv module.
 

@@ -5,7 +5,7 @@ from ..registry import MODELS
 from . import BaseMattor
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class IndexNet(BaseMattor):
     """IndexNet matting model.
 

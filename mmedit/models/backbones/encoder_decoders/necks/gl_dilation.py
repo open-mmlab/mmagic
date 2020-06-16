@@ -4,7 +4,7 @@ from mmedit.models.common import SimpleGatedConvModule
 from mmedit.models.registry import COMPONENTS
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class GLDilationNeck(nn.Module):
     """Dilation Backbone used in Global&Local model.
 

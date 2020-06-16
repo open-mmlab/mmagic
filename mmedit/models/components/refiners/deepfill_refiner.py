@@ -5,7 +5,7 @@ from mmedit.models.builder import build_component
 from mmedit.models.registry import COMPONENTS
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class DeepFillRefiner(nn.Module):
     """Refiner used in DeepFill model.
 

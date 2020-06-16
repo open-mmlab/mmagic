@@ -4,7 +4,7 @@ from mmedit.models.common import SimpleGatedConvModule
 from mmedit.models.registry import COMPONENTS
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class DeepFillEncoder(nn.Module):
     """Encoder used in DeepFill model.
 

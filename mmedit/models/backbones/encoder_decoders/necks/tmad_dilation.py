@@ -80,7 +80,7 @@ class ResidualDilationBlock(nn.Module):
         return x
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class TMADDilationNeck(nn.Module):
     """TMAD dilation neck.
 

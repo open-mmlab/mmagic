@@ -54,7 +54,7 @@ class IndexedUpsample(nn.Module):
         return self.conv(out)
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class IndexNetDecoder(nn.Module):
 
     def __init__(self,

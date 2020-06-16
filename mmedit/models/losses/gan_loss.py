@@ -5,7 +5,7 @@ import torch.nn as nn
 from ..registry import LOSSES
 
 
-@LOSSES.register_module
+@LOSSES.register_module()
 class GANLoss(nn.Module):
     """Define GAN loss.
 
@@ -136,7 +136,7 @@ def gradient_penalty_loss(discriminator, real_data, fake_data, mask=None):
     return gradients_penalty
 
 
-@LOSSES.register_module
+@LOSSES.register_module()
 class GradientPenaltyLoss(nn.Module):
     """Gradient penalty loss for wgan-gp.
 
@@ -165,7 +165,7 @@ class GradientPenaltyLoss(nn.Module):
         return loss * self.loss_weight
 
 
-@LOSSES.register_module
+@LOSSES.register_module()
 class DiscShiftLoss(nn.Module):
 
     def __init__(self, loss_weight=0.1):

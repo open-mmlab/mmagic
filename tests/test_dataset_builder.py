@@ -5,7 +5,7 @@ from mmedit.datasets.samplers import DistributedSampler
 from torch.utils.data import RandomSampler, SequentialSampler
 
 
-@DATASETS.register_module
+@DATASETS.register_module()
 class ToyDataset(object):
 
     def __init__(self, cnt=0):

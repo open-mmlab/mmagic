@@ -14,7 +14,7 @@ from ..builder import build_backbone, build_component
 from ..registry import MODELS
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class BaseMattor(BaseModel):
     """Base class for matting model.
 

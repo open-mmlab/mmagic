@@ -6,7 +6,7 @@ from .base_generation_dataset import BaseGenerationDataset
 from .registry import DATASETS
 
 
-@DATASETS.register_module
+@DATASETS.register_module()
 class GenerationUnpairedDataset(BaseGenerationDataset):
     """General unpaired image folder dataset for image generation.
 

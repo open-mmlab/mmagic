@@ -8,7 +8,7 @@ from ..registry import MODELS
 from .basic_restorer import BasicRestorer
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class EDVR(BasicRestorer):
     """EDVR model for video super-resolution.
 

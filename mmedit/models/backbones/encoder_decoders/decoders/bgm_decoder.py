@@ -48,7 +48,7 @@ class BasicBlock(nn.Module):
         return out
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class BGMattingDecoder(nn.Module):
     """Decoder for Background Matting.
 

@@ -4,7 +4,7 @@ from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 
-@BACKBONES.register_module
+@BACKBONES.register_module()
 class SRCNN(nn.Module):
     """SRCNN network structure for image super resolution.
 

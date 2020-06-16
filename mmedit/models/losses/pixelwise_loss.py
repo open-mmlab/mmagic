@@ -23,7 +23,7 @@ def charbonnier_loss(pred, target, eps=1e-12):
     return torch.sqrt((pred - target)**2 + eps)
 
 
-@LOSSES.register_module
+@LOSSES.register_module()
 class L1Loss(nn.Module):
     """L1 (mean absolute error, MAE) loss.
 
@@ -64,7 +64,7 @@ class L1Loss(nn.Module):
             sample_wise=self.sample_wise)
 
 
-@LOSSES.register_module
+@LOSSES.register_module()
 class MSELoss(nn.Module):
     """MSE (L2) loss.
 
@@ -105,7 +105,7 @@ class MSELoss(nn.Module):
             sample_wise=self.sample_wise)
 
 
-@LOSSES.register_module
+@LOSSES.register_module()
 class CharbonnierLoss(nn.Module):
     """Charbonnier loss (one variant of Robust L1Loss, a differentiable
     variant of L1Loss).
@@ -158,7 +158,7 @@ class CharbonnierLoss(nn.Module):
             sample_wise=self.sample_wise)
 
 
-@LOSSES.register_module
+@LOSSES.register_module()
 class MaskedTVLoss(L1Loss):
 
     def __init__(self, loss_weight=1.0):

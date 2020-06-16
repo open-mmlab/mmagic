@@ -4,7 +4,7 @@ import numpy as np
 from ..registry import PIPELINES
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class Normalize(object):
     """Normalize images with the given mean and std value.
 
@@ -49,7 +49,7 @@ class Normalize(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class RescaleToZeroOne(object):
     """Transform the images into a range between 0 and 1.
 

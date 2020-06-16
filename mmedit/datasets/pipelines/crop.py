@@ -8,7 +8,7 @@ from ..registry import PIPELINES
 from .utils import random_choose_unknown
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class Crop(object):
     """Crop data to specific size for training.
 
@@ -64,7 +64,7 @@ class Crop(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class FixedCrop(object):
     """Crop paired data (at a specific position) to specific size for training.
 
@@ -133,7 +133,7 @@ class FixedCrop(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class PairedRandomCrop(object):
     """Paried random crop.
 
@@ -200,7 +200,7 @@ class PairedRandomCrop(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class CropAroundCenter(object):
     """Randomly crop the images around unknown area in the center 1/4 images.
 
@@ -278,7 +278,7 @@ class CropAroundCenter(object):
         return self.__class__.__name__ + f'(crop_size={self.crop_size})'
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class CropAroundUnknown(object):
     """Crop around unknown area with a randomly selected scale.
 
@@ -376,7 +376,7 @@ class CropAroundUnknown(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class CropAroundFg(object):
     """Crop around the whole foreground in the segmentation mask.
 
@@ -438,7 +438,7 @@ class CropAroundFg(object):
         return results
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class ModCrop(object):
     """Mod crop gt images, used during testing.
 

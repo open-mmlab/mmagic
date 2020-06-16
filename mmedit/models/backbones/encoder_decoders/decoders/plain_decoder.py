@@ -3,7 +3,7 @@ from mmcv.cnn.weight_init import xavier_init
 from mmedit.models.registry import COMPONENTS
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class PlainDecoder(nn.Module):
     """Simple decoder from Deep Image Matting.
 

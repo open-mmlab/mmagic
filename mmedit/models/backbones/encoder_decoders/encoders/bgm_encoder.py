@@ -6,7 +6,7 @@ from mmcv.cnn import ConvModule, normal_init, xavier_init
 from mmedit.models.registry import COMPONENTS
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class BGMattingEncoder(nn.Module):
     """Encoder for Background Matting.
 

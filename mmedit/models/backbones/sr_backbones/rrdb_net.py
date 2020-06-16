@@ -70,7 +70,7 @@ class RRDB(nn.Module):
         return out * 0.2 + x
 
 
-@BACKBONES.register_module
+@BACKBONES.register_module()
 class RRDBNet(nn.Module):
     """Networks consisting of Residual in Residual Dense Block, which is used
     in ESRGAN.

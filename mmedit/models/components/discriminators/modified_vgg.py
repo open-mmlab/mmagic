@@ -4,7 +4,7 @@ from mmedit.models.registry import COMPONENTS
 from mmedit.utils import get_root_logger
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class ModifiedVGG(nn.Module):
     """A modified VGG discriminator with input size 128 x 128.
 

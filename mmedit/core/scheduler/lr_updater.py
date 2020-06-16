@@ -1,7 +1,7 @@
 from mmcv.runner import HOOKS, LrUpdaterHook
 
 
-@HOOKS.register_module
+@HOOKS.register_module()
 class LinearLrUpdaterHook(LrUpdaterHook):
     """Linear learning rate scheduler for image generation.
 

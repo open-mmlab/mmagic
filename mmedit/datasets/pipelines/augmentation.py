@@ -10,7 +10,7 @@ import numpy as np
 from ..registry import PIPELINES
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class Resize(object):
     """Resize data to a specific size for training or resize the images to fit
     the network input regulation for testing.
@@ -137,7 +137,7 @@ class Resize(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class Flip(object):
     """Flip the input data with a probability.
 
@@ -186,7 +186,7 @@ class Flip(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class Pad(object):
     """Pad the images to align with network downsample factor for testing.
 
@@ -235,7 +235,7 @@ class Pad(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class RandomAffine(object):
     """Apply random affine to input images.
 
@@ -438,7 +438,7 @@ class RandomAffine(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class RandomJitter(object):
     """Randomly jitter the foreground in hsv space.
 
@@ -535,7 +535,7 @@ class BinarizeImage(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class RandomMaskDilation(object):
     """Randomly dilate binary masks.
 
@@ -582,7 +582,7 @@ class RandomMaskDilation(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class RandomTransposeHW(object):
     """Randomly transpose images in H and W dimensions with a probability.
 
@@ -624,7 +624,7 @@ class RandomTransposeHW(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class GenerateFrameIndiceswithPadding(object):
     """Generate frame index with padding for REDS dataset and Vid4 dataset
     during testing.
@@ -702,7 +702,7 @@ class GenerateFrameIndiceswithPadding(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class GenerateFrameIndices(object):
     """Generate frame index for REDS datasets. It also performs
     temporal augmention with random interval.
@@ -761,7 +761,7 @@ class GenerateFrameIndices(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class TemporalReverse(object):
     """Reverse frame lists for temporal augmentation.
 

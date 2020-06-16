@@ -8,7 +8,7 @@ from .pixelwise_loss import l1_loss
 _reduction_modes = ['none', 'mean', 'sum']
 
 
-@LOSSES.register_module
+@LOSSES.register_module()
 class GradientLoss(nn.Module):
     """Gradient loss.
 

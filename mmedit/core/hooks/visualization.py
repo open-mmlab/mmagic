@@ -7,7 +7,7 @@ from mmcv.runner.dist_utils import master_only
 from torchvision.utils import save_image
 
 
-@HOOKS.register_module
+@HOOKS.register_module()
 class VisualizationHook(Hook):
     """Visualization hook.
 

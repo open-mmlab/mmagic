@@ -6,7 +6,7 @@ from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 
-@BACKBONES.register_module
+@BACKBONES.register_module()
 class MSRResNet(nn.Module):
     """Modified SRResNet.
 

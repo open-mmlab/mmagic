@@ -7,7 +7,7 @@ from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 
-@BACKBONES.register_module
+@BACKBONES.register_module()
 class ResnetGenerator(nn.Module):
     """Construct a Resnet-based generator that consists of residual blocks
     between a few downsampling/upsampling operations.

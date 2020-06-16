@@ -6,7 +6,7 @@ from mmcv.cnn import ConvModule
 from mmedit.models.registry import COMPONENTS
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class GLDecoder(nn.Module):
     """Decoder used in Global&Local model.
 

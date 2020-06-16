@@ -5,7 +5,7 @@ from ..registry import MODELS
 from .srgan import SRGAN
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class ESRGAN(SRGAN):
     """Enhanced SRGAN model for single image super-resolution.
 

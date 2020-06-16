@@ -7,7 +7,7 @@ from mmedit.utils import get_root_logger
 from .multi_layer_disc import MultiLayerDiscriminator
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class GLDiscs(nn.Module):
     """Discriminators in Global&Local
 

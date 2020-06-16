@@ -35,7 +35,7 @@ class UpsampleModule(nn.Sequential):
         super(UpsampleModule, self).__init__(*modules)
 
 
-@BACKBONES.register_module
+@BACKBONES.register_module()
 class EDSR(nn.Module):
     """EDSR network structure.
 
