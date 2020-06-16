@@ -193,8 +193,15 @@ def test_composite_fg():
     bg = np.random.rand(32, 32, 3).astype(np.float32)
     alpha = np.random.rand(32, 32).astype(np.float32)
     results = dict(alpha=alpha, fg=fg, bg=bg)
-    composite_fg = CompositeFg('tests/data/fg', 'tests/data/alpha', 'jpg',
-                               'jpg')
+    # use merged dir as fake fg dir, trimap dir as fake alpha dir for unittest
+    composite_fg = CompositeFg(['tests/data/fg', 'tests/data/merged'],
+                               ['tests/data/alpha', 'tests/data/trimap'])
+    correct_fg_list = ['tests/data/fg/GT05.jpg', 'tests/data/merged/GT05.jpg']
+    correct_alpha_list = [
+        'tests/data/alpha/GT05.jpg', 'tests/data/trimap/GT05.png'
+    ]
+    assert composite_fg.fg_list == correct_fg_list
+    assert composite_fg.alpha_list == correct_alpha_list
     composite_fg_results = composite_fg(results)
     assert check_keys_contain(composite_fg_results.keys(), target_keys)
     assert composite_fg_results['fg'].shape == (32, 32, 3)
@@ -204,18 +211,14 @@ def test_composite_fg():
     alpha = np.random.rand(32, 32).astype(np.float32)
     results = dict(alpha=alpha, fg=fg, bg=bg)
     composite_fg = CompositeFg(
-        'tests/data/fg',
-        'tests/data/alpha',
-        fg_ext='jpg',
-        alpha_ext='jpg',
-        interpolation='bilinear')
+        'tests/data/fg', 'tests/data/alpha', interpolation='bilinear')
     composite_fg_results = composite_fg(results)
     assert check_keys_contain(composite_fg_results.keys(), target_keys)
     assert composite_fg_results['fg'].shape == (32, 32, 3)
 
     assert repr(composite_fg) == composite_fg.__class__.__name__ + (
-        "(fg_dir='tests/data/fg', alpha_dir='tests/data/alpha', "
-        "fg_ext='jpg', alpha_ext='jpg', interpolation='bilinear')")
+        "(fg_dirs=['tests/data/fg'], alpha_dirs=['tests/data/alpha'], "
+        "interpolation='bilinear')")
 
 
 def test_generate_seg():
