@@ -16,10 +16,10 @@
 ### Places365-Challenge
 | Method | Mask Type | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |            Download            |
 | :----: | :-------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :----------------------------: |
-| PConv  | free-form |  256x256   |    500k     | Places365-val |  8.776   | 22.762 | 0.801 | [model](xxx) &#124; [log](xxx) |
+| PConv  | free-form |  256x256   |    500k     | Places365-val |  8.776   | 22.762 | 0.801 | [model](xxx) \| [log](xxx) |
 
 
 ### CelebA-HQ
 | Method | Mask Type | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  |            Download            |
 | :----: | :-------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :----------------------------: |
-| PConv  | free-form |  256x256   |    500k     | CelebA-val |  5.990   | 25.404 | 0.853 | [model](xxx) &#124; [log](xxx) |
+| PConv  | free-form |  256x256   |    500k     | CelebA-val |  5.990   | 25.404 | 0.853 | [model](xxx) \| [log](xxx) |

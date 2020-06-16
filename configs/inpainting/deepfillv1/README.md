@@ -17,10 +17,10 @@
 ### Places365-Challenge
 |   Method   |  Mask Type  | Resolution | Train Iters |   Test Set    | l1 error | l2 error |   PSNR   |   SSIM   |   TV   |            Download            |
 | :--------: | :---------: | :--------: | :---------: | :-----------: | :------: | :------: | :------: | :------: | :----: | :----------------------------: |
-| DeepFillv1 | square bbox |  256x256   |    500k     | Places365-val |  l1:xxx  |  l2:xxx  | psnr:xxx | ssim:xxx | tv:xxx | [model](xxx) &#124; [log](xxx) |
+| DeepFillv1 | square bbox |  256x256   |    500k     | Places365-val |  l1:xxx  |  l2:xxx  | psnr:xxx | ssim:xxx | tv:xxx | [model](xxx) \| [log](xxx) |
 
 
 ### CelebA-HQ
 |   Method   |  Mask Type  | Resolution | Train Iters |  Test Set  | l1 error | l2 error |   PSNR   |   SSIM   |   TV   |            Download            |
 | :--------: | :---------: | :--------: | :---------: | :--------: | :------: | :------: | :------: | :------: | :----: | :----------------------------: |
-| DeepFillv1 | square bbox |  256x256   |    500k     | CelebA-val |  l1:xxx  |  l2:xxx  | psnr:xxx | ssim:xxx | tv:xxx | [model](xxx) &#124; [log](xxx) |
+| DeepFillv1 | square bbox |  256x256   |    500k     | CelebA-val |  l1:xxx  |  l2:xxx  | psnr:xxx | ssim:xxx | tv:xxx | [model](xxx) \| [log](xxx) |
