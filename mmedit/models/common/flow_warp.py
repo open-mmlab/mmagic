@@ -2,7 +2,11 @@ import torch
 import torch.nn.functional as F
 
 
-def flow_warp(x, flow, interpolation='bilinear', padding_mode='zeros'):
+def flow_warp(x,
+              flow,
+              interpolation='bilinear',
+              padding_mode='zeros',
+              align_corners=True):
     """Warp an image or a feature map with optical flow.
 
     Args:
@@ -14,6 +18,7 @@ def flow_warp(x, flow, interpolation='bilinear', padding_mode='zeros'):
             Default: 'bilinear'.
         padding_mode (str): Padding mode: 'zeros' or 'border' or 'reflection'.
             Default: 'zeros'.
+        align_corners (bool): Whether align corners. Default: True.
 
     Returns:
         Tensor: Warped image or feature map.
@@ -33,5 +38,9 @@ def flow_warp(x, flow, interpolation='bilinear', padding_mode='zeros'):
     grid_flow_y = 2.0 * grid_flow[:, :, :, 1] / max(h - 1, 1) - 1.0
     grid_flow = torch.stack((grid_flow_x, grid_flow_y), dim=3)
     output = F.grid_sample(
-        x, grid_flow, mode=interpolation, padding_mode=padding_mode)
+        x,
+        grid_flow,
+        mode=interpolation,
+        padding_mode=padding_mode,
+        align_corners=align_corners)
     return output
