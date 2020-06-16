@@ -18,7 +18,7 @@ def add_gaussian_noise(img, mu, sigma):
     return noisy_img
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class MergeFgAndBg(object):
     """Composite foreground image and background image with alpha.
 
@@ -34,7 +34,7 @@ class MergeFgAndBg(object):
         return results
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class GenerateTrimap(object):
     """Using random erode/dilate to generate trimap from alpha matte.
 
@@ -120,7 +120,50 @@ class GenerateTrimap(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
+class GenerateTrimapWithDistTransform(object):
+    """Generate trimap with distance transform function.
+
+    Args:
+        dist_thr (int, optional): Distance threshold. Area with alpha value
+            between (0, 255) will be considered as initial unknown area. Then
+            area with distance to unknown area smaller than the distance
+            threshold will also be consider as unknown area. Defaults to 20.
+        random (bool, optional): If True, use random distance threshold from
+            [1, dist_thr). If False, use `dist_thr` as the distance threshold
+            directly. Defaults to True.
+    """
+
+    def __init__(self, dist_thr=20, random=True):
+        if not (isinstance(dist_thr, int) and dist_thr >= 1):
+            raise ValueError('dist_thr must be an int that is greater than 1, '
+                             f'but got {dist_thr}')
+        self.dist_thr = dist_thr
+        self.random = random
+
+    def __call__(self, results):
+        alpha = results['alpha']
+
+        # image dilation implemented by Euclidean distance transform
+        known = (alpha == 0) | (alpha == 255)
+        dist_to_unknown = cv2.distanceTransform(
+            known.astype(np.uint8), cv2.DIST_L2, cv2.DIST_MASK_PRECISE)
+        dist_thr = np.random.randint(
+            1, self.dist_thr) if self.random else self.dist_thr
+        unknown = dist_to_unknown <= dist_thr
+
+        trimap = (alpha == 255) * 255
+        trimap[unknown] = 128
+        results['trimap'] = trimap.astype(np.uint8)
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += f'(dist_thr={self.dist_thr}, random={self.random})'
+        return repr_str
+
+
+@PIPELINES.register_module()
 class CompositeFg(object):
     """Composite foreground with a random foreground.
 
@@ -213,7 +256,7 @@ class CompositeFg(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class GenerateSeg(object):
     """Generate segmentation mask from alpha matte.
 
@@ -311,7 +354,7 @@ class GenerateSeg(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class PerturbBg(object):
     """Randomly add gaussian noise or gamma change to background image.
 
@@ -344,7 +387,7 @@ class PerturbBg(object):
         return self.__class__.__name__ + f'(gamma_ratio={self.gamma_ratio})'
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class GenerateSoftSeg(object):
     """Generate soft segmentation mask from input segmentation mask.
 
