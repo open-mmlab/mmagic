@@ -36,7 +36,8 @@ def test_base_mattor():
         decoder=dict(type='PlainDecoder'))
     refiner = dict(type='PlainRefiner')
     train_cfg = mmcv.ConfigDict(train_backbone=True, train_refiner=True)
-    test_cfg = mmcv.ConfigDict(refine=True, metrics=['SAD', 'MSE'])
+    test_cfg = mmcv.ConfigDict(
+        refine=True, metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
 
     with pytest.raises(KeyError):
         # metrics should be specified in test_cfg
@@ -123,7 +124,8 @@ def test_dim():
         input_test = _demo_input_test((64, 64))
         output_test = model(**input_test, test_mode=True)
         assert isinstance(output_test['pred_alpha'], np.ndarray)
-        assert_dict_keys_equal(output_test['eval_result'], ['SAD', 'MSE'])
+        assert_dict_keys_equal(output_test['eval_result'],
+                               ['SAD', 'MSE', 'GRAD', 'CONN'])
 
         # test model forward in test mode with gpu
         if torch.cuda.is_available():
@@ -132,7 +134,8 @@ def test_dim():
             input_test = _demo_input_test((64, 64), cuda=True)
             output_test = model(**input_test, test_mode=True)
             assert isinstance(output_test['pred_alpha'], np.ndarray)
-            assert_dict_keys_equal(output_test['eval_result'], ['SAD', 'MSE'])
+            assert_dict_keys_equal(output_test['eval_result'],
+                                   ['SAD', 'MSE', 'GRAD', 'CONN'])
 
     # 2. test dim model without refiner
     model_cfg['refiner'] = None
@@ -179,7 +182,8 @@ def test_dim():
 
 
 def test_indexnet():
-    model_cfg, _, test_cfg = _get_model_cfg('indexnet.py')
+    model_cfg, _, test_cfg = _get_model_cfg(
+        'indexnet/indexnet_mobv2_1x16_78k_comp1k.py')
 
     # test indexnet inference
     with torch.no_grad():
@@ -189,7 +193,8 @@ def test_indexnet():
         output_test = indexnet(**input_test, test_mode=True)
         assert isinstance(output_test['pred_alpha'], np.ndarray)
         assert output_test['pred_alpha'].shape == (64, 64)
-        assert_dict_keys_equal(output_test['eval_result'], ['SAD', 'MSE'])
+        assert_dict_keys_equal(output_test['eval_result'],
+                               ['SAD', 'MSE', 'GRAD', 'CONN'])
 
         # test inference with gpu
         if torch.cuda.is_available():
@@ -200,7 +205,8 @@ def test_indexnet():
             output_test = indexnet(**input_test, test_mode=True)
             assert isinstance(output_test['pred_alpha'], np.ndarray)
             assert output_test['pred_alpha'].shape == (64, 64)
-            assert_dict_keys_equal(output_test['eval_result'], ['SAD', 'MSE'])
+            assert_dict_keys_equal(output_test['eval_result'],
+                                   ['SAD', 'MSE', 'GRAD', 'CONN'])
 
     # test forward train though we do not guarantee the training for present
     model_cfg.loss_alpha = None
@@ -260,14 +266,16 @@ def test_gca():
         model = build_model(model_cfg, train_cfg=None, test_cfg=test_cfg)
         inputs = _demo_input_test((64, 64))
         outputs = model(**inputs, test_mode=True)
-        assert_dict_keys_equal(outputs['eval_result'], ['SAD', 'MSE'])
+        assert_dict_keys_equal(outputs['eval_result'],
+                               ['SAD', 'MSE', 'GRAD', 'CONN'])
 
         if torch.cuda.is_available():
             model = build_model(model_cfg, train_cfg=None, test_cfg=test_cfg)
             model.cuda()
             inputs = _demo_input_test((64, 64), cuda=True)
             outputs = model(**inputs, test_mode=True)
-            assert_dict_keys_equal(outputs['eval_result'], ['SAD', 'MSE'])
+            assert_dict_keys_equal(outputs['eval_result'],
+                                   ['SAD', 'MSE', 'GRAD', 'CONN'])
 
     # test forward_dummy
     model.cpu().eval()
