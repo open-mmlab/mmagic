@@ -180,31 +180,25 @@ class CompositeFg(object):
     :math:`(fg_2, \alpha_2)` is the randomly loaded sample. With the above
     composition, :math:`alpha_{new}` is still in `[0, 1]`.
 
-    Required keys are "fg", "alpha" and "alpha_norm_cfg", added or
-    modified keys are "alpha" and "fg". "alpha" should be normalized.
+    Required keys are "alpha" and "fg". Modified keys are "alpha" and "fg".
 
     Args:
-        fg_dir (str): Path of directory to load foreground images from.
-        alpha_dir (str): Path of directory to load alpha mattes from.
-        fg_ext (str): File extension of foreground image.
-        alpha_ext (str): File extension of alpha image.
-        interpolation (str): Interpolation method to resize the randomly loaded
-            images.
+        fg_dirs (str | list[str]): Path of directories to load foreground
+            images from.
+        alpha_dirs (str | list[str]): Path of directories to load alpha mattes
+            from.
+        interpolation (str): Interpolation method of `mmcv.imresize` to resize
+            the randomly loaded images.
     """
 
-    def __init__(self,
-                 fg_dir,
-                 alpha_dir,
-                 fg_ext='png',
-                 alpha_ext='png',
-                 interpolation='nearest'):
-        self.fg_dir = fg_dir
-        self.alpha_dir = alpha_dir
-        self.fg_ext = fg_ext
-        self.alpha_ext = alpha_ext
+    def __init__(self, fg_dirs, alpha_dirs, interpolation='nearest'):
+        self.fg_dirs = fg_dirs if isinstance(fg_dirs, list) else [fg_dirs]
+        self.alpha_dirs = alpha_dirs if isinstance(alpha_dirs,
+                                                   list) else [alpha_dirs]
         self.interpolation = interpolation
 
-        self.stem_list = self._get_stem_list(fg_dir, self.fg_ext)
+        self.fg_list, self.alpha_list = self._get_file_list(
+            self.fg_dirs, self.alpha_dirs)
 
     def __call__(self, results):
         fg = results['fg']
@@ -213,12 +207,9 @@ class CompositeFg(object):
 
         # randomly select fg
         if np.random.rand() < 0.5:
-            idx = np.random.randint(len(self.stem_list))
-            stem = self.stem_list[idx]
-            fg2 = mmcv.imread(osp.join(self.fg_dir, stem + '.' + self.fg_ext))
-            alpha2 = mmcv.imread(
-                osp.join(self.alpha_dir, stem + '.' + self.alpha_ext),
-                'grayscale')
+            idx = np.random.randint(len(self.fg_list))
+            fg2 = mmcv.imread(self.fg_list[idx])
+            alpha2 = mmcv.imread(self.alpha_list[idx], 'grayscale')
             alpha2 = alpha2.astype(np.float32) / 255.
 
             fg2 = mmcv.imresize(fg2, (w, h), interpolation=self.interpolation)
@@ -240,18 +231,26 @@ class CompositeFg(object):
         return results
 
     @staticmethod
-    def _get_stem_list(dir_name, ext):
-        name_list = mmcv.scandir(dir_name, ext)
-        stem_list = list()
-        for name in name_list:
-            stem, _ = osp.splitext(name)
-            stem_list.append(stem)
-        return stem_list
+    def _get_file_list(fg_dirs, alpha_dirs):
+        all_fg_list = list()
+        all_alpha_list = list()
+        for fg_dir, alpha_dir in zip(fg_dirs, alpha_dirs):
+            fg_list = sorted(mmcv.scandir(fg_dir))
+            alpha_list = sorted(mmcv.scandir(alpha_dir))
+            # we assume the file names for fg and alpha are the same
+            assert len(fg_list) == len(alpha_list), (
+                f'{fg_dir} and {alpha_dir} should have the same number of '
+                f'images ({len(fg_list)} differs from ({len(alpha_list)})')
+            fg_list = [osp.join(fg_dir, fg) for fg in fg_list]
+            alpha_list = [osp.join(alpha_dir, alpha) for alpha in alpha_list]
+
+            all_fg_list.extend(fg_list)
+            all_alpha_list.extend(alpha_list)
+        return all_fg_list, all_alpha_list
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (f"(fg_dir='{self.fg_dir}', alpha_dir='{self.alpha_dir}', "
-                     f"fg_ext='{self.fg_ext}', alpha_ext='{self.alpha_ext}', "
+        repr_str += (f'(fg_dirs={self.fg_dirs}, alpha_dirs={self.alpha_dirs}, '
                      f"interpolation='{self.interpolation}')")
         return repr_str
 
