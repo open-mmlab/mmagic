@@ -9,7 +9,7 @@ from ..builder import build_backbone, build_loss
 from ..registry import MODELS
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class BasicRestorer(BaseModel):
     """Basic model for image restoration.
 

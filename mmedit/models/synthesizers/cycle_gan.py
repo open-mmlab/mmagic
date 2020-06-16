@@ -12,7 +12,7 @@ from ..common import GANImageBuffer, set_requires_grad
 from ..registry import MODELS
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class CycleGAN(BaseModel):
     """CycleGAN model for unpaired image-to-image translation.
 

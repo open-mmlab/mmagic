@@ -5,7 +5,7 @@ from mmedit.models.common import MaskConvModule
 from mmedit.models.registry import COMPONENTS
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class PConvDecoder(nn.Module):
     """Decoder with partial conv.
 

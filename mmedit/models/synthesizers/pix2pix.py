@@ -11,7 +11,7 @@ from ..common import set_requires_grad
 from ..registry import MODELS
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class Pix2Pix(BaseModel):
     """Pix2Pix model for paired image-to-image translation.
 

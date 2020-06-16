@@ -3,7 +3,7 @@ from mmedit.models.builder import build_component
 from mmedit.models.registry import BACKBONES
 
 
-@BACKBONES.register_module
+@BACKBONES.register_module()
 class SimpleEncoderDecoder(nn.Module):
     """Simple encoder-decoder model from matting.
 

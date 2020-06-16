@@ -89,7 +89,7 @@ class PGUpsampleBlock(nn.Module):
         return x
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class TMADDecoder(nn.Module):
     """TMAD Decoder.
 

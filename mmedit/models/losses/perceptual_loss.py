@@ -76,7 +76,7 @@ class PerceptualVGG(nn.Module):
         load_checkpoint(model, pretrained, logger=logger)
 
 
-@LOSSES.register_module
+@LOSSES.register_module()
 class PerceptualLoss(nn.Module):
     """Perceptual loss with commonly used style loss.
 

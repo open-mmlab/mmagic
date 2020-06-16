@@ -4,7 +4,7 @@ from .base_dataset import BaseDataset
 from .registry import DATASETS
 
 
-@DATASETS.register_module
+@DATASETS.register_module()
 class ImgInpaintingDataset(BaseDataset):
     """Image dataset for inpainting.
     """

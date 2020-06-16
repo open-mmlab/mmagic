@@ -29,7 +29,7 @@ def to_tensor(data):
         raise TypeError(f'type {type(data)} cannot be converted to tensor.')
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class ToTensor(object):
     """Convert some values in results dict to `torch.Tensor` type
     in data loader pipeline.
@@ -50,7 +50,7 @@ class ToTensor(object):
         return self.__class__.__name__ + f'(keys={self.keys})'
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class ImageToTensor(object):
     """Convert image type to `torch.Tensor` type.
 
@@ -79,7 +79,7 @@ class ImageToTensor(object):
             f'(keys={self.keys}, to_float32={self.to_float32})')
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class FramesToTensor(ImageToTensor):
     """Convert frames type to `torch.Tensor` type.
 
@@ -110,7 +110,7 @@ class FramesToTensor(ImageToTensor):
         return results
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class GetMaskedImage(object):
     """Get masked image.
 
@@ -139,7 +139,7 @@ class GetMaskedImage(object):
             f"(img_name='{self.img_name}', mask_name='{self.mask_name}')")
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class FormatTrimap(object):
     """Convert trimap (tensor) to one-hot representation.
 
@@ -171,7 +171,7 @@ class FormatTrimap(object):
         return self.__class__.__name__ + f'(to_onehot={self.to_onehot})'
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class Collect(object):
     """Collect data from the loader relevant to the specific task.
 

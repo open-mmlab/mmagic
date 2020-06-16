@@ -5,7 +5,7 @@ from mmcv.utils import build_from_cfg
 from ..registry import PIPELINES
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class Compose(object):
     """Compose a data pipeline with a sequence of transforms.
 

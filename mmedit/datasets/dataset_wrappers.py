@@ -1,7 +1,7 @@
 from .registry import DATASETS
 
 
-@DATASETS.register_module
+@DATASETS.register_module()
 class RepeatDataset(object):
     """A wrapper of repeated dataset.
 

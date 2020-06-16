@@ -9,7 +9,7 @@ from mmedit.core.mask import (bbox2mask, brush_stroke_mask, get_irregular_mask,
 from ..registry import PIPELINES
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class LoadImageFromFile(object):
     """Load image from file.
 
@@ -63,7 +63,7 @@ class LoadImageFromFile(object):
         return repr_str
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class LoadImageFromFileList(LoadImageFromFile):
     """Load image from file list.
 
@@ -113,7 +113,7 @@ class LoadImageFromFileList(LoadImageFromFile):
         return results
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class RandomLoadResizeBg(object):
     """Randomly load a background image and resize it.
 
@@ -150,7 +150,7 @@ class RandomLoadResizeBg(object):
         return self.__class__.__name__ + f"(bg_dir='{self.bg_dir}')"
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class LoadMask(object):
     """Load Mask for multiple types.
 
@@ -265,7 +265,7 @@ class LoadMask(object):
         return self.__class__.__name__ + f"(mask_mode='{self.mask_mode}')"
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class GetSpatialDiscountMask(object):
     """Get spatial discounting mask constant.
 
@@ -321,7 +321,7 @@ class GetSpatialDiscountMask(object):
                                           f'beta={self.beta})')
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class LoadPairedImageFromFile(LoadImageFromFile):
     """Load a pair of images from file.
 

@@ -94,7 +94,7 @@ class BasicBlock(nn.Module):
         return out
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class ResNetEnc(nn.Module):
     """ResNet encoder for image matting.
 
@@ -257,7 +257,7 @@ class ResNetEnc(nn.Module):
         return x
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class ResShortcutEnc(ResNetEnc):
     """ResNet backbone for image matting with shortcut connection.
 
@@ -369,7 +369,7 @@ class ResShortcutEnc(ResNetEnc):
         }
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class ResGCAEncoder(ResShortcutEnc):
     """ResNet backbone with shortcut connection and gca module.
 

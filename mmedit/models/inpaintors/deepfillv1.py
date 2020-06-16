@@ -6,7 +6,7 @@ from ..registry import MODELS
 from .two_stage import TwoStageInpaintor
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class DeepFillv1Inpaintor(TwoStageInpaintor):
 
     def get_module(self, model, module_name):

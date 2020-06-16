@@ -8,7 +8,7 @@ from mmcv.utils import print_log
 from ..registry import PIPELINES
 
 
-@PIPELINES.register_module
+@PIPELINES.register_module()
 class GetPatchPool(object):
     """Get patch pool of valid region and mask regions.
 

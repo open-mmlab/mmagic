@@ -2,7 +2,7 @@ from .base_sr_dataset import BaseSRDataset
 from .registry import DATASETS
 
 
-@DATASETS.register_module
+@DATASETS.register_module()
 class SRVid4Dataset(BaseSRDataset):
     """Vid4 dataset for video super resolution.
 

@@ -4,7 +4,7 @@ from .base_sr_dataset import BaseSRDataset
 from .registry import DATASETS
 
 
-@DATASETS.register_module
+@DATASETS.register_module()
 class SRAnnotationDataset(BaseSRDataset):
     """General paired image dataset with an annotation file for image
     restoration.

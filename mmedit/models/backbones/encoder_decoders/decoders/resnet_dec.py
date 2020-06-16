@@ -48,7 +48,7 @@ class BasicBlockDec(BasicBlock):
             with_spectral_norm=with_spectral_norm)
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class ResNetDec(nn.Module):
     """ResNet decoder for image matting.
 
@@ -183,7 +183,7 @@ class ResNetDec(nn.Module):
         return x
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class ResShortcutDec(ResNetDec):
     """ResNet decoder for image matting with shortcut connection.
 
@@ -245,7 +245,7 @@ class ResShortcutDec(ResNetDec):
         return x
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class ResGCADecoder(ResShortcutDec):
     """ResNet decoder with shortcut connection and gca module.
 

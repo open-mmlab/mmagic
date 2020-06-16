@@ -294,7 +294,7 @@ class TSAFusion(nn.Module):
         return feat
 
 
-@BACKBONES.register_module
+@BACKBONES.register_module()
 class EDVRNet(nn.Module):
     """EDVR network structure for video super-resolution.
 

@@ -257,7 +257,7 @@ class InvertedResidual(nn.Module):
         return out
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class IndexNetEncoder(nn.Module):
     """Encoder for IndexNet.
 

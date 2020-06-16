@@ -3,7 +3,7 @@ from mmcv.cnn import ConvModule
 from mmedit.models.registry import COMPONENTS
 
 
-@COMPONENTS.register_module
+@COMPONENTS.register_module()
 class GLEncoder(nn.Module):
     """Encoder used in Global&Local model.
 

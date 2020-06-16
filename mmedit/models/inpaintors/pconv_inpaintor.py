@@ -9,7 +9,7 @@ from ..registry import MODELS
 from .one_stage import OneStageInpaintor
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class PConvInpaintor(OneStageInpaintor):
 
     def forward_test(self,

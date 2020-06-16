@@ -6,7 +6,7 @@ from .base_matting_dataset import BaseMattingDataset
 from .registry import DATASETS
 
 
-@DATASETS.register_module
+@DATASETS.register_module()
 class AdobeComp1kDataset(BaseMattingDataset):
     """Adobe composition-1k dataset.
 

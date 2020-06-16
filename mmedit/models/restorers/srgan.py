@@ -4,7 +4,7 @@ from ..registry import MODELS
 from .basic_restorer import BasicRestorer
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class SRGAN(BasicRestorer):
     """SRGAN model for single image super-resolution.
 

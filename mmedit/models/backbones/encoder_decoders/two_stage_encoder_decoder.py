@@ -8,7 +8,7 @@ from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 
-@BACKBONES.register_module
+@BACKBONES.register_module()
 class DeepFillEncoderDecoder(nn.Module):
     """Two-stage encoder-decoder structure used in DeepFill model.
 

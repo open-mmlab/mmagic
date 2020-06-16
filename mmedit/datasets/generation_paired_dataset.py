@@ -4,7 +4,7 @@ from .base_generation_dataset import BaseGenerationDataset
 from .registry import DATASETS
 
 
-@DATASETS.register_module
+@DATASETS.register_module()
 class GenerationPairedDataset(BaseGenerationDataset):
     """General paired image folder dataset for image generation.
 

@@ -24,7 +24,7 @@ def get_unknown_tensor(trimap):
     return weight
 
 
-@MODELS.register_module
+@MODELS.register_module()
 class GCA(BaseMattor):
     """Guided Contextual Attention image matting model.
 

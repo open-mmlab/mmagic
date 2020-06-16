@@ -4,7 +4,7 @@ from .base_sr_dataset import BaseSRDataset
 from .registry import DATASETS
 
 
-@DATASETS.register_module
+@DATASETS.register_module()
 class SRVimeo90KDataset(BaseSRDataset):
     """Vimeo90K dataset for video super resolution.
 
