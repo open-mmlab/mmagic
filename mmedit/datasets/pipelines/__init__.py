@@ -11,7 +11,8 @@ from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
                       LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
                       RandomLoadResizeBg)
 from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
-                          GenerateTrimap, MergeFgAndBg, PerturbBg)
+                          GenerateTrimap, GenerateTrimapWithDistTransform,
+                          MergeFgAndBg, PerturbBg)
 from .normalization import Normalize, RescaleToZeroOne
 from .tmad_aug import GetPatchPool
 
@@ -26,5 +27,5 @@ __all__ = [
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
     'LoadPairedImageFromFile', 'GenerateFrameIndices', 'GetPatchPool',
     'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg', 'CropAroundFg',
-    'GetSpatialDiscountMask'
+    'GetSpatialDiscountMask', 'GenerateTrimapWithDistTransform'
 ]

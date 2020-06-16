@@ -3,6 +3,7 @@ import numpy as np
 import pytest
 from mmedit.datasets.pipelines import (CompositeFg, GenerateSeg,
                                        GenerateSoftSeg, GenerateTrimap,
+                                       GenerateTrimapWithDistTransform,
                                        MergeFgAndBg, PerturbBg)
 
 
@@ -153,6 +154,35 @@ def test_generate_trimap():
         generate_trimap.__class__.__name__ +
         f'(kernels={kernels}, iterations={(iterations, iterations + 1)}, '
         f'random=True)')
+
+
+def test_generate_trimap_with_dist_transform():
+    with pytest.raises(ValueError):
+        # dist_thr must be an float that is greater than 1
+        GenerateTrimapWithDistTransform(dist_thr=-1)
+
+    target_keys = ['alpha', 'trimap']
+
+    alpha = np.random.randint(0, 256, (32, 32))
+    alpha[:8, :8] = 0
+    alpha[-8:, -8:] = 255
+    results = dict(alpha=alpha)
+    generate_trimap = GenerateTrimapWithDistTransform(dist_thr=3, random=False)
+    generate_trimap_results = generate_trimap(results)
+    trimap = generate_trimap_results['trimap']
+    assert check_keys_contain(generate_trimap_results.keys(), target_keys)
+    assert trimap.shape == alpha.shape
+
+    alpha = np.random.randint(0, 256, (32, 32))
+    results = dict(alpha=alpha)
+    generate_trimap = GenerateTrimapWithDistTransform(dist_thr=3, random=True)
+    generate_trimap_results = generate_trimap(results)
+    trimap = generate_trimap_results['trimap']
+    assert check_keys_contain(generate_trimap_results.keys(), target_keys)
+    assert trimap.shape == alpha.shape
+
+    assert repr(generate_trimap) == (
+        generate_trimap.__class__.__name__ + '(dist_thr=3, random=True)')
 
 
 def test_composite_fg():
