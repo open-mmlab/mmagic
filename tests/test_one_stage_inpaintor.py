@@ -79,6 +79,10 @@ def test_one_stage_inpaintor():
             assert 'real_loss' in outputs['log_vars']
             assert 'loss_g_fake' in outputs['log_vars']
 
+            # test forward dummy
+            res = inpaintor.forward_dummy(torch.cat([masked_img, mask], dim=1))
+            assert res.shape == (1, 3, 256, 256)
+
             # test forward test w/o save image
             outputs = inpaintor.forward_test(
                 masked_img[0:1], mask[0:1], gt_img=gt_img[0:1, ...])

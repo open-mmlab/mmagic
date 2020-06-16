@@ -385,3 +385,8 @@ class OneStageInpaintor(BaseModel):
         output = self.forward_test(**data_batch, **kwargs)
 
         return output
+
+    def forward_dummy(self, x):
+        res = self.generator(x)
+
+        return res
