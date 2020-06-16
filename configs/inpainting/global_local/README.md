@@ -21,10 +21,10 @@
 ### Places365-Challenge
 |    Method    |  Mask Type  | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |            Download            |
 | :----------: | :---------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :----------------------------: |
-| Global&Local | square bbox |  256x256   |    500k     | Places365-val |  11.164  | 23.152 | 0.862 | [model](xxx) &#124; [log](xxx) |
+| Global&Local | square bbox |  256x256   |    500k     | Places365-val |  11.164  | 23.152 | 0.862 | [model](xxx) \| [log](xxx) |
 
 
 ### CelebA-HQ
 |    Method    |  Mask Type  | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  |            Download            |
 | :----------: | :---------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :----------------------------: |
-| Global&Local | square bbox |  256x256   |    500k     | CelebA-val |  6.678   | 26.780 | 0.904 | [model](xxx) &#124; [log](xxx) |
+| Global&Local | square bbox |  256x256   |    500k     | CelebA-val |  6.678   | 26.780 | 0.904 | [model](xxx) \| [log](xxx) |

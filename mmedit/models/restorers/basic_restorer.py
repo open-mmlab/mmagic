@@ -121,7 +121,14 @@ class BasicRestorer(BaseModel):
         return results
 
     def forward_dummy(self, img):
-        """Used for computing network flops."""
+        """Used for computing network FLOPs.
+
+        Args:
+            img (Tensor): Input image.
+
+        Returns:
+            Tensor: Output image.
+        """
         out = self.generator(img)
         return out
 
