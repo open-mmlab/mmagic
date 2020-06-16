@@ -11,7 +11,7 @@ model = dict(
     loss_comp=dict(type='CharbonnierCompLoss', loss_weight=0.5),
     loss_refine=dict(type='CharbonnierLoss'))
 train_cfg = dict(train_backbone=True, train_refiner=True)
-test_cfg = dict(refine=True, metrics=['SAD', 'MSE'])
+test_cfg = dict(refine=True, metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
 
 # dataset settings
 dataset_type = 'AdobeComp1kDataset'
@@ -58,16 +58,16 @@ test_pipeline = [
         flag='grayscale',
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
-    dict(type='Pad', keys=['alpha', 'trimap', 'merged'], mode='reflect'),
-    dict(type='RescaleToZeroOne', keys=['merged', 'alpha']),
+    dict(type='Pad', keys=['trimap', 'merged'], mode='reflect'),
+    dict(type='RescaleToZeroOne', keys=['merged']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Collect',
-        keys=['merged', 'alpha', 'trimap'],
+        keys=['merged', 'trimap'],
         meta_keys=[
             'merged_path', 'pad', 'merged_ori_shape', 'ori_alpha', 'ori_trimap'
         ]),
-    dict(type='ImageToTensor', keys=['merged', 'alpha', 'trimap']),
+    dict(type='ImageToTensor', keys=['merged', 'trimap']),
 ]
 data = dict(
     samples_per_gpu=1,

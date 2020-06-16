@@ -17,7 +17,7 @@ model = dict(
     loss_alpha=dict(type='L1Loss'),
     pretrained='./weights/model_best_resnet34_En_nomixup_mmedit.pth')
 train_cfg = dict(train_backbone=True)
-test_cfg = dict(metrics=['SAD', 'MSE'])
+test_cfg = dict(metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
 
 # dataset settings
 dataset_type = 'AdobeComp1kDataset'
@@ -64,8 +64,8 @@ test_pipeline = [
         flag='grayscale',
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
-    dict(type='Pad', keys=['alpha', 'trimap', 'merged'], mode='reflect'),
-    dict(type='RescaleToZeroOne', keys=['merged', 'alpha']),
+    dict(type='Pad', keys=['trimap', 'merged'], mode='reflect'),
+    dict(type='RescaleToZeroOne', keys=['merged']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Collect',
@@ -111,7 +111,7 @@ lr_config = dict(
 
 # checkpoint saving
 checkpoint_config = dict(interval=2000, by_epoch=False)
-evaluation = dict(interval=2000, save_image=False, gpu_collect=True)
+evaluation = dict(interval=2000, save_image=False, gpu_collect=False)
 # yapf:disable
 log_config = dict(
     interval=10,

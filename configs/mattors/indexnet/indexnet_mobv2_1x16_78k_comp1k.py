@@ -1,15 +1,17 @@
 # model settings
 model = dict(
-    type='DIM',
+    type='IndexNet',
     backbone=dict(
         type='SimpleEncoderDecoder',
-        encoder=dict(type='VGG16'),
-        decoder=dict(type='PlainDecoder')),
-    refiner=dict(type='PlainRefiner'),
-    pretrained=None,  # TODO: add pretrained model
-    loss_refine=dict(type='CharbonnierLoss'))
-train_cfg = dict(train_backbone=False, train_refiner=True)
-test_cfg = dict(refine=True, metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
+        encoder=dict(type='IndexNetEncoder', freeze_bn=True),
+        decoder=dict(type='IndexNetDecoder')),
+    loss_alpha=dict(type='CharbonnierLoss', loss_weight=0.5, sample_wise=True),
+    loss_comp=dict(
+        type='CharbonnierCompLoss', loss_weight=1.5, sample_wise=True),
+    pretrained=None)  # TODO: add pretrained weight
+# model training and testing settings
+train_cfg = dict(train_backbone=True)
+test_cfg = dict(metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
 
 # dataset settings
 dataset_type = 'AdobeComp1kDataset'
@@ -21,17 +23,29 @@ train_pipeline = [
     dict(type='LoadImageFromFile', key='fg'),
     dict(type='LoadImageFromFile', key='bg'),
     dict(type='LoadImageFromFile', key='merged', save_original_img=True),
+    dict(type='GenerateTrimapWithDistTransform', dist_thr=20),
     dict(
         type='CropAroundUnknown',
-        keys=['alpha', 'merged', 'ori_merged', 'fg', 'bg'],
-        crop_sizes=[320, 480, 640]),
-    dict(type='Flip', keys=['alpha', 'merged', 'ori_merged', 'fg', 'bg']),
+        keys=['alpha', 'merged', 'ori_merged', 'fg', 'bg', 'trimap'],
+        crop_sizes=[320, 480, 640],
+        interpolations=[
+            'bicubic', 'bicubic', 'bicubic', 'bicubic', 'bicubic', 'nearest'
+        ]),
+    dict(
+        type='Resize',
+        keys=['trimap'],
+        scale=(320, 320),
+        keep_ratio=False,
+        interpolation='nearest'),
     dict(
         type='Resize',
         keys=['alpha', 'merged', 'ori_merged', 'fg', 'bg'],
         scale=(320, 320),
-        keep_ratio=False),
-    dict(type='GenerateTrimap', kernel_size=(1, 30)),
+        keep_ratio=False,
+        interpolation='bicubic'),
+    dict(
+        type='Flip',
+        keys=['alpha', 'merged', 'ori_merged', 'fg', 'bg', 'trimap']),
     dict(
         type='RescaleToZeroOne',
         keys=['merged', 'alpha', 'ori_merged', 'fg', 'bg']),
@@ -42,7 +56,7 @@ train_pipeline = [
         meta_keys=[]),
     dict(
         type='ImageToTensor',
-        keys=['merged', 'alpha', 'trimap', 'ori_merged', 'fg', 'bg']),
+        keys=['merged', 'alpha', 'trimap', 'ori_merged', 'fg', 'bg'])
 ]
 test_pipeline = [
     dict(
@@ -56,31 +70,46 @@ test_pipeline = [
         flag='grayscale',
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
-    dict(type='Pad', keys=['trimap', 'merged'], mode='reflect'),
     dict(type='RescaleToZeroOne', keys=['merged']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
+    dict(
+        type='Resize',
+        keys=['trimap'],
+        size_factor=32,
+        interpolation='nearest'),
+    dict(
+        type='Resize',
+        keys=['merged'],
+        size_factor=32,
+        interpolation='bicubic'),
     dict(
         type='Collect',
         keys=['merged', 'trimap'],
         meta_keys=[
-            'merged_path', 'pad', 'merged_ori_shape', 'ori_alpha', 'ori_trimap'
+            'merged_path', 'interpolation', 'merged_ori_shape', 'ori_alpha',
+            'ori_trimap'
         ]),
-    dict(type='ImageToTensor', keys=['merged', 'trimap']),
+    dict(type='ImageToTensor', keys=['merged', 'trimap'])
 ]
 data = dict(
-    samples_per_gpu=1,
-    workers_per_gpu=4,
-    drop_last=False,
+    # train
+    samples_per_gpu=16,
+    workers_per_gpu=16,
+    drop_last=True,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'training_list.json',
         data_prefix=data_root,
         pipeline=train_pipeline),
+    # validation
+    val_samples_per_gpu=1,
+    val_workers_per_gpu=4,
     val=dict(
         type=dataset_type,
         ann_file=data_root + 'test_list.json',
         data_prefix=data_root,
         pipeline=test_pipeline),
+    # test
     test=dict(
         type=dataset_type,
         ann_file=data_root + 'test_list.json',
@@ -88,28 +117,33 @@ data = dict(
         pipeline=test_pipeline))
 
 # optimizer
-optimizers = dict(type='Adam', lr=0.00001)
+optimizers = dict(
+    constructor='PretrainedDecayedOptimConstructor',
+    type='Adam',
+    lr=1e-2,
+    paramwise_cfg=dict(
+        pretrained_keys=['encoder.layers'], pretrained_mult=0.01))
 # learning policy
-lr_config = dict(policy='Fixed')
+lr_config = dict(policy='Step', step=[52000, 67600], gamma=0.1, by_epoch=False)
 
 # checkpoint saving
-checkpoint_config = dict(interval=40000, by_epoch=False)
-evaluation = dict(interval=40000, save_image=False)
+checkpoint_config = dict(interval=2600, by_epoch=False)
+evaluation = dict(interval=2600, save_image=False)
 # yapf:disable
 log_config = dict(
     interval=10,
     hooks=[
         dict(type='TextLoggerHook', by_epoch=False),
         # dict(type='TensorboardLoggerHook'),
-        # dict(type='PaviLoggerHook', init_kwargs=dict(project='dim'))
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='indexnet'))
     ])
 # yapf:enable
 
 # runtime settings
-total_iters = 1000000
+total_iters = 78000
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/dim_stage2'
-load_from = './work_dirs/dim_stage1/latest.pth'
+work_dir = './work_dirs/indexnet'
+load_from = None
 resume_from = None
 workflow = [('train', 1)]
