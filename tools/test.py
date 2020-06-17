@@ -2,11 +2,11 @@ import argparse
 import os
 
 import mmcv
-import mmcv.parallel.distributed_deprecated as ddp_deprecated
 import torch
 from mmcv.parallel import MMDataParallel
 from mmcv.runner import get_dist_info, init_dist, load_checkpoint
 from mmedit.core import multi_gpu_test, set_random_seed, single_gpu_test
+from mmedit.core.distributed_wrapper import DistributedDataParallelWrapper
 from mmedit.datasets import build_dataloader, build_dataset
 from mmedit.models import build_model
 
@@ -91,7 +91,13 @@ def main():
             save_path=args.save_path,
             save_image=args.save_image)
     else:
-        model = ddp_deprecated.MMDistributedDataParallel(model.cuda())
+        find_unused_parameters = cfg.get('find_unused_parameters', False)
+        model = DistributedDataParallelWrapper(
+            model,
+            device_ids=[torch.cuda.current_device()],
+            broadcast_buffers=False,
+            find_unused_parameters=find_unused_parameters)
+
         device_id = torch.cuda.current_device()
         _ = load_checkpoint(
             model,
