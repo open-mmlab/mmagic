@@ -50,9 +50,9 @@ class PartialConv2d(nn.Conv2d):
                 mask will be returned. Default: True.
 
         Returns:
-            torch.Tensor : Results after partial conv.
-            torch.Tensor : Updated mask will be returned if mask is given and
-                `return_mask` is True.
+            torch.Tensor : Results after partial conv.\
+            torch.Tensor : Updated mask will be returned if mask is given and \
+                ``return_mask`` is True.
         """
         assert input.dim() == 4
         if mask is not None:

@@ -173,12 +173,12 @@ class CompositeFg(object):
     The composition is performed as:
 
     .. math::
-        fg_{new} = \alpha_1 * fg_1 + (1 - \alpha_1) * fg_2
-        alpha_{new} = 1 - (1 - \alpha_1) * (1 - \alpha_2)
+        fg_{new} = \\alpha_1 * fg_1 + (1 - \\alpha_1) * fg_2
+        \\alpha_{new} = 1 - (1 - \\alpha_1) * (1 - \\alpha_2)
 
-    where :math:`(fg_1, \alpha_1)` is from the current sample and
-    :math:`(fg_2, \alpha_2)` is the randomly loaded sample. With the above
-    composition, :math:`alpha_{new}` is still in `[0, 1]`.
+    where :math:`(fg_1, \\alpha_1)` is from the current sample and
+    :math:`(fg_2, \\alpha_2)` is the randomly loaded sample. With the above
+    composition, :math:`\\alpha_{new}` is still in `[0, 1]`.
 
     Required keys are "alpha" and "fg". Modified keys are "alpha" and "fg".
 

@@ -103,8 +103,8 @@ class PConvEncoder(nn.Module):
             mask (torch.Tensor): Mask tensor with shape (n, c, h, w).
 
         Returns:
-            dict: Contains the results and middle level features in this
-                module. `hidden_feats` contain the middle feature maps and
+            dict: Contains the results and middle level features in this \
+                module. `hidden_feats` contain the middle feature maps and \
                 `hidden_masks` store updated masks.
         """
         # dict for hidden layers of main information flow

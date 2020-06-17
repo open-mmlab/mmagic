@@ -50,8 +50,8 @@ class DeepFillEncoderDecoder(nn.Module):
                 as DeepFillv1 models do.
 
         Returns:
-            tuple[torch.Tensor]: The first two item is the results from first
-                and second stage. If set `return_offset` as True, the offset
+            tuple[torch.Tensor]: The first two item is the results from first \
+                and second stage. If set `return_offset` as True, the offset \
                 will be returned as the third item.
         """
         input_x = x.clone()

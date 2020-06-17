@@ -36,8 +36,8 @@ class DeepFillv1Discriminators(nn.Module):
                 patch.
 
         Returns:
-            tuple[torch.Tensor]: Contains the prediction from discriminators in
-                global image and local image patch.
+            tuple[torch.Tensor]: Contains the prediction from discriminators \
+                in global image and local image patch.
         """
         global_img, local_img = x
 

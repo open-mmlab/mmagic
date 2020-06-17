@@ -49,7 +49,8 @@ class L1Loss(nn.Module):
         self.sample_wise = sample_wise
 
     def forward(self, pred, target, weight=None, **kwargs):
-        """
+        """Forward Function.
+
         Args:
             pred (Tensor): of shape (N, C, H, W). Predicted tensor.
             target (Tensor): of shape (N, C, H, W). Ground truth tensor.
@@ -90,7 +91,8 @@ class MSELoss(nn.Module):
         self.sample_wise = sample_wise
 
     def forward(self, pred, target, weight=None, **kwargs):
-        """
+        """Forward Function.
+
         Args:
             pred (Tensor): of shape (N, C, H, W). Predicted tensor.
             target (Tensor): of shape (N, C, H, W). Ground truth tensor.
@@ -142,7 +144,8 @@ class CharbonnierLoss(nn.Module):
         self.eps = eps
 
     def forward(self, pred, target, weight=None, **kwargs):
-        """
+        """Forward Function.
+
         Args:
             pred (Tensor): of shape (N, C, H, W). Predicted tensor.
             target (Tensor): of shape (N, C, H, W). Ground truth tensor.

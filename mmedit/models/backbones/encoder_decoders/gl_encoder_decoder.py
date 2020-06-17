@@ -12,7 +12,7 @@ class GLEncoderDecoder(nn.Module):
     This implementation follows:
     Globally and locally Consistent Image Completion
 
-    The architecture of the encoder-decoder is:
+    The architecture of the encoder-decoder is:\
         (conv2d x 6) --> (dilated conv2d x 4) --> (conv2d or deconv2d x 7)
 
     Args:

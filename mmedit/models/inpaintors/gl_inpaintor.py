@@ -146,13 +146,14 @@ class GLInpaintor(OneStageInpaintor):
 
         In this function, the inpaintor will finish the train step following
         the pipeline:
-            1. get fake res/image
-            2. optimize discriminator (if in current schedule)
-            3. optimzie generator (if in current schedule)
 
-        If `self.train_cfg.disc_step > 1`, the train step will contain multiple
-        iterations for optimizing discriminator with different input data and
-        only one iteration for optimizing generator after `disc_step`
+        1. get fake res/image
+        2. optimize discriminator (if in current schedule)
+        3. optimzie generator (if in current schedule)
+
+        If ``self.train_cfg.disc_step > 1``, the train step will contain
+        multiple iterations for optimizing discriminator with different input
+        data and sonly one iteration for optimizing generator after `disc_step`
         iterations for discriminator.
 
         Args:
