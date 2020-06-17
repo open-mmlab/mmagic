@@ -16,12 +16,12 @@ class PatchDiscriminator(nn.Module):
             Default: 64.
         num_conv (int): Number of stacked intermediate convs (excluding input
             and output conv). Default: 3.
-        norm_cfg (dict): Config dict to build norm layer.
-            Default: `dict(type='BN')`.
+        norm_cfg (dict): Config dict to build norm layer. Default:
+            `dict(type='BN')`.
         init_cfg (dict): Config dict for initialization.
             `type`: The name of our initialization method. Default: 'normal'.
             `gain`: Scaling factor for normal, xavier and orthogonal.
-                Default: 0.02.
+            Default: 0.02.
     """
 
     def __init__(self,

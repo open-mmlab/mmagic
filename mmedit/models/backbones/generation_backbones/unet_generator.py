@@ -25,7 +25,7 @@ class UnetGenerator(nn.Module):
         init_cfg (dict): Config dict for initialization.
             `type`: The name of our initialization method. Default: 'normal'.
             `gain`: Scaling factor for normal, xavier and orthogonal.
-                Default: 0.02.
+            Default: 0.02.
     """
 
     def __init__(self,
