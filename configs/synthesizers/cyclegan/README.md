@@ -1,0 +1,39 @@
+# CycleGAN: Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks
+
+## Introduction
+
+```
+@inproceedings{zhu2017unpaired,
+  title={Unpaired image-to-image translation using cycle-consistent adversarial networks},
+  author={Zhu, Jun-Yan and Park, Taesung and Isola, Phillip and Efros, Alexei A},
+  booktitle={Proceedings of the IEEE international conference on computer vision},
+  pages={2223--2232},
+  year={2017}
+}
+```
+
+## Results and Models
+
+We use `FID` and `IS` metrics to 	evaluate the generation performance of CycleGAN.
+
+`FID` evaluation:
+
+| Dataset | facades | facades-id0 | summer2winter | summer2winter-id0 | winter2summer | winter2summer-id0 | horse2zebra | horse2zebra-id0 | zebra2horse | zebra2horse-id0 | average |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| official | 123.626 | **119.726** | 77.342 | 76.773 | **72.631** | 74.239 | **62.111** | 77.202 | **138.646** | 137.050 | 95.935 |
+| ours | **118.297** | 126.316 | **76.959** | **76.018** | 72.803 | **73.498** | 63.810 | **71.675** | 139.279 | **132.369** | **95.102** |
+
+`IS` evaluation:
+
+| Dataset | facades | facades-id0 | summer2winter | summer2winter-id0 | winter2summer | winter2summer-id0 | horse2zebra | horse2zebra-id0 | zebra2horse | zebra2horse-id0 | average |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| official | **1.638** | 1.697 | 2.762 | **2.750** | **3.293** | 3.110 | 1.375 | **1.584** | **3.186** | **3.047** | **2.444** |
+| ours | 1.584 | **1.957** | **2.768** | 2.735 | 3.069 | **3.130** | **1.430** | 1.542 | 3.093 | 2.958 | 2.427 |
+
+Model and log downloads:
+
+| Dataset | facades | facades-id0 | summer2winter | summer2winter-id0 | horse2zebra | horse2zebra-id0 |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| download | [model](TODO) \| [log](TODO) | [model](TODO) \| [log](TODO) | [model](TODO) \| [log](TODO) | [model](TODO) \| [log](TODO) | [model](TODO) \| [log](TODO) | [model](TODO) \| [log](TODO) |
+
+Note: With a larger identity loss, the image-to-image translation becomes more conservative, which makes less changes. The original authors did not say what is the best weight for identity loss. Thus, in addition to the default setting, we also set the weight of identity loss to 0 (denoting `id0`) to make a more comprehensive comparison.
