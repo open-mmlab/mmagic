@@ -29,22 +29,22 @@ class CycleGAN(BaseModel):
         train_cfg (dict): Config for training. Default: None.
             You may change the training of gan by setting:
             `disc_steps`: how many discriminator updates after one generator
-            update;
+            update.
             `disc_init_steps`: how many discriminator updates at the start of
             the training.
             These two keys are useful when training with WGAN.
             `direction`: image-to-image translation direction (the model
-                training direction): a2b | b2a.
+            training direction): a2b | b2a.
             `buffer_size`: GAN image buffer size.
         test_cfg (dict): Config for testing. Default: None.
             You may change the testing of gan by setting:
             `direction`: image-to-image translation direction (the model
-                training direction): a2b | b2a.
+            training direction): a2b | b2a.
             `show_input`: whether to show input real images.
             `test_direction`: direction in the test mode (the model testing
-                direction). CycleGAN has two generators. It decides whether
-                to perform forward or backward translation with respect to
-                `direction` during testing: a2b | b2a.
+            direction). CycleGAN has two generators. It decides whether
+            to perform forward or backward translation with respect to
+            `direction` during testing: a2b | b2a.
         pretrained (str): Path for pretrained model. Default: None.
     """
 
@@ -241,6 +241,15 @@ class CycleGAN(BaseModel):
         return out
 
     def forward(self, img_a, img_b, meta, test_mode=False, **kwargs):
+        """Forward function.
+
+        Args:
+            img_a (Tensor): Input image from domain A.
+            img_b (Tensor): Input image from domain B.
+            meta (lst[dict]): Input meta data.
+            test_mode (bool): Whether in test mode or not. Default: False.
+            kwargs (dict): Other arguments.
+        """
         if not test_mode:
             return self.forward_train(img_a, img_b, meta)
         else:

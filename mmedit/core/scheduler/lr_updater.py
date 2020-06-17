@@ -14,7 +14,8 @@ class LinearLrUpdaterHook(LrUpdaterHook):
         target_lr (float): The target learning rate. Default: 0.
         start (int): The start point (iteration / epoch, specified by args
             'by_epoch' in its parent class in mmcv) to update learning rate.
-        interval (int): The interval to update the learning rate.
+            Default: 0.
+        interval (int): The interval to update the learning rate. Default: 1.
     """
 
     def __init__(self, target_lr=0, start=0, interval=1, **kwargs):

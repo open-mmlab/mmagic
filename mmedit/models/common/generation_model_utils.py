@@ -14,7 +14,7 @@ def generation_init_weights(module, init_type='normal', init_gain=0.02):
     Args:
         module (nn.Module): Module to be initialized.
         init_type (str): The name of an initialization method:
-            normal | xavier | kaiming | orthogonal
+            normal | xavier | kaiming | orthogonal.
         init_gain (float): Scaling factor for normal, xavier and
             orthogonal.
     """

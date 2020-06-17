@@ -31,11 +31,11 @@ class Pix2Pix(BaseModel):
             the training.
             These two keys are useful when training with WGAN.
             `direction`: image-to-image translation direction (the model
-                training direction): a2b | b2a.
+            training direction): a2b | b2a.
         test_cfg (dict): Config for testing. Default: None.
             You may change the testing of gan by setting:
             `direction`: image-to-image translation direction (the model
-                training direction, same as testing direction): a2b | b2a.
+            training direction, same as testing direction): a2b | b2a.
             `show_input`: whether to show input real images.
         pretrained (str): Path for pretrained model. Default: None.
     """
@@ -162,6 +162,15 @@ class Pix2Pix(BaseModel):
         return out
 
     def forward(self, img_a, img_b, meta, test_mode=False, **kwargs):
+        """Forward function.
+
+        Args:
+            img_a (Tensor): Input image from domain A.
+            img_b (Tensor): Input image from domain B.
+            meta (lst[dict]): Input meta data.
+            test_mode (bool): Whether in test mode or not. Default: False.
+            kwargs (dict): Other arguments.
+        """
         if not test_mode:
             return self.forward_train(img_a, img_b, meta)
         else:
