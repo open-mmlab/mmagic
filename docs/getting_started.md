@@ -59,7 +59,7 @@ Here is an example of using 8 GPUs to test an example model on the 'dev' partiti
 GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/example_exp/example_model_20200202.pth
 ```
 
-You can check [slurm_test.sh](../tools/slurm_test.sh) for full arguments and environment variables.
+You can check [slurm_test.sh](https://github.com/open-mmlab/mmediting/blob/master/tools/slurm_test.sh) for full arguments and environment variables.
 
 #### Optional arguments
 
