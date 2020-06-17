@@ -15,4 +15,5 @@
 
 |   Method   |  SAD  |  MSE   | GRAD  | CONN  | Download |
 |:----------:|:-----:|:------:|:-----:|:-----:|:--------:|
+|  baseline  | 36.50 | 0.0090 | 17.40 | 34.33 | [model](TODO) \| [log](TODO) |
 |    GCA     | 34.77 | 0.0080 | 16.33 | 32.20 | [model](TODO) \| [log](TODO) |
