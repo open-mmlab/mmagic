@@ -172,6 +172,9 @@ class ContextualAttentionModule(nn.Module):
         reshaped feature map with shape of (n, 1, h_unfold*w_fold, h*w).
 
         A simple specification for horizontal direction is shown below:
+
+        .. code-block:: python
+
                    (h, (h, (h, (h,
                     0)  1)  2)  3)  ...
             (h, 0)
@@ -179,6 +182,7 @@ class ContextualAttentionModule(nn.Module):
             (h, 2)          1
             (h, 3)              1
             ...
+
         """
         # horizontal direction
         n, _, h_map, w_map = correlation_map.size()
@@ -317,9 +321,10 @@ class ContextualAttentionModule(nn.Module):
                 implementation.
 
         Returns:
-            torch.Tensor: Unfolded columns. If `return_cols` is True, the shape
-                of output tensor is `(n, L, c, kernel_size, kernel_size)`.
-                Otherwise, the shape will be `(n, c*$prod{kernel_size}$, L)`.
+            torch.Tensor: Unfolded columns. If `return_cols` is True, the \
+                shape of output tensor is \
+                `(n, L, c, kernel_size, kernel_size)`. Otherwise, the shape \
+                will be `(n, c*$prod{kernel_size}$, L)`.
         """
 
         # unfold img to columns with shape (n, c*kernel_size**2, num_cols)

@@ -33,7 +33,7 @@ def extract_bbox_patch(bbox, img, channel_first=True):
             in the batch) is like (h, w, c).
 
     Returns:
-        (torch.Tensor | numpy.array): Extracted patches. The dimension of the
+        (torch.Tensor | numpy.array): Extracted patches. The dimension of the \
             output should be the same as `img`.
     """
 
@@ -126,7 +126,7 @@ def extract_around_bbox(img, bbox, target_size, channel_first=True):
         target_size (List(int)): Target size of final bbox.
 
     Returns:
-        (torch.Tensor | numpy.array): Extracted patches. The dimension of the
+        (torch.Tensor | numpy.array): Extracted patches. The dimension of the \
             output should be the same as `img`.
     """
     bbox_new = scale_bbox(bbox, target_size)

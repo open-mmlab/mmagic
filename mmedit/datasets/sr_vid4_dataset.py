@@ -25,9 +25,9 @@ class SRVid4Dataset(BaseSRDataset):
         city 34 (320,480,3)
 
     Args:
-        lq_folder (str |:obj:`Path`): Path to a lq folder.
-        gt_folder (str |:obj:`Path`): Path to a gt folder.
-        ann_file (str |:obj:`Path`): Path to the annotation file.
+        lq_folder (str | :obj:`Path`): Path to a lq folder.
+        gt_folder (str | :obj:`Path`): Path to a gt folder.
+        ann_file (str | :obj:`Path`): Path to the annotation file.
         num_input_frames (int): Window size for input frames.
         pipeline (list[dict | callable]): A sequence of data transformations.
         scale (int): Upsampling scale ratio.

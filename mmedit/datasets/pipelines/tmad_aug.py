@@ -120,7 +120,7 @@ class GetPatchPool(object):
                 patches. Defaults to 0..
 
         Returns:
-            torch.Tensor: Tensor with shape of (l, ), where l is the size of
+            torch.Tensor: Tensor with shape of (l, ), where l is the size of \
                 the pool.
         """
 
@@ -188,7 +188,7 @@ class GetPatchPool(object):
                 Defaults to None.
 
         Returns:
-            tuple(torch.Tensor): Sampled pool as tensor with shape of
+            tuple(torch.Tensor): Sampled pool as tensor with shape of \
                 (l, c, h, w) and sample list as tensor with shape of (l', ).
         """
         num_pool = pool.size(0)
@@ -216,8 +216,8 @@ class GetPatchPool(object):
             stride (int | tuple[int]): Same as `torch.nn.Unfold`.
 
         Returns:
-            torch.Tensor: Image columns (patches) with shape of (n, p, c, h, w)
-                where 'p' is the number of columns or patches.
+            torch.Tensor: Image columns (patches) with shape of \
+                (n, p, c, h, w) where 'p' is the number of columns or patches.
         """
         assert img.dim() == 3 or img.dim() == 4, (
             'The shape of image tensor should be (n, c, h, w) or (c, h, w)')

@@ -158,9 +158,14 @@ class LoadMask(object):
     config dict.
 
     Example config for bbox:
+
+    .. code-block:: python
         config = dict(img_shape=(256, 256), max_bbox_shape=128)
 
     Example config for irregular:
+
+    .. code-block:: python
+
         config = dict(
             img_shape=(256, 256),
             num_vertexes=(4, 12),
@@ -170,6 +175,9 @@ class LoadMask(object):
             area_ratio_range=(0.15, 0.5))
 
     Example config for ff:
+
+    .. code-block:: python
+
         config = dict(
             img_shape=(256, 256),
             num_vertexes=(4, 12),
@@ -178,6 +186,9 @@ class LoadMask(object):
             brush_width=(12, 40))
 
     Example config for set:
+
+    .. code-block:: python
+
         config = dict(
             mask_list_file='xxx/xxx/ooxx.txt',
             prefix='/xxx/xxx/ooxx/',
@@ -185,6 +196,7 @@ class LoadMask(object):
             flag='unchanged',
             file_client_kwargs=dict()
         )
+
         The mask_list_file contains the list of mask file name like this:
             test1.jpeg
             test2.jpeg
