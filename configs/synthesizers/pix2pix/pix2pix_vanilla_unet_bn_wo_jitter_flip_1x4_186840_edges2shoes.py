@@ -25,8 +25,8 @@ model = dict(
         loss_weight=1.0),
     pixel_loss=dict(type='L1Loss', loss_weight=100.0, reduction='mean'))
 # model training and testing settings
-train_cfg = dict(direction='b2a')  # model default: a2b
-test_cfg = dict(direction='b2a', show_input=True)
+train_cfg = dict(direction='a2b')  # model default: a2b
+test_cfg = dict(direction='a2b', show_input=True)
 
 # dataset settings
 train_dataset_type = 'GenerationPairedDataset'
@@ -41,10 +41,10 @@ train_pipeline = [
     dict(
         type='Resize',
         keys=['img_a', 'img_b'],
-        scale=(286, 286),
+        scale=(256, 256),
         interpolation='bicubic'),
-    dict(type='FixedCrop', keys=['img_a', 'img_b'], crop_size=(256, 256)),
-    dict(type='Flip', keys=['img_a', 'img_b'], direction='horizontal'),
+    # dict(type='FixedCrop', keys=['img_a', 'img_b'], crop_size=(256, 256)),
+    # dict(type='Flip', keys=['img_a', 'img_b'], direction='horizontal'),
     dict(type='RescaleToZeroOne', keys=['img_a', 'img_b']),
     dict(
         type='Normalize', keys=['img_a', 'img_b'], to_rgb=True,
@@ -76,10 +76,9 @@ test_pipeline = [
         keys=['img_a', 'img_b'],
         meta_keys=['img_a_path', 'img_b_path'])
 ]
-data_root = \
-    '/mnt/lustre/jiangliming/datasets/mmgeneration_datasets/pix2pix/facades'
+data_root = './data/paired/edges2shoes'
 data = dict(
-    samples_per_gpu=1,
+    samples_per_gpu=4,
     workers_per_gpu=4,
     drop_last=True,
     val_samples_per_gpu=1,
@@ -109,24 +108,24 @@ optimizers = dict(
 lr_config = dict(policy='Fixed', by_epoch=False)
 
 # checkpoint saving
-checkpoint_config = dict(interval=4000, save_optimizer=True, by_epoch=False)
-evaluation = dict(interval=4000, save_image=True)
+checkpoint_config = dict(interval=12456, save_optimizer=True, by_epoch=False)
+evaluation = dict(interval=12456, save_image=True)
 log_config = dict(
     interval=100,
     hooks=[
         dict(type='TextLoggerHook', by_epoch=False),
-        dict(type='TensorboardLoggerHook')
+        # dict(type='TensorboardLoggerHook')
         # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
     ])
 visual_config = None
 
 # runtime settings
-total_iters = 80000
+total_iters = 186840
 cudnn_benchmark = True
 dist_params = dict(backend='nccl', port=29500)
 log_level = 'INFO'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
-exp_name = 'pix2pix_facades'
+exp_name = 'pix2pix_edges2shoes_wo_jitter_flip'
 work_dir = f'./work_dirs/{exp_name}'

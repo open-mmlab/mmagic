@@ -85,9 +85,7 @@ test_pipeline = [
         keys=['img_a', 'img_b'],
         meta_keys=['img_a_path', 'img_b_path'])
 ]
-data_root = \
-    '/mnt/lustre/jiangliming/datasets/mmgeneration_datasets/' \
-    'cyclegan/horse2zebra'
+data_root = './data/unpaired/summer2winter_yosemite'
 data = dict(
     samples_per_gpu=1,
     workers_per_gpu=4,
@@ -117,27 +115,27 @@ optimizers = dict(
 
 # learning policy
 lr_config = dict(
-    policy='Linear', by_epoch=False, target_lr=0, start=133400, interval=1334)
+    policy='Linear', by_epoch=False, target_lr=0, start=123100, interval=1231)
 
 # checkpoint saving
-checkpoint_config = dict(interval=13340, save_optimizer=True, by_epoch=False)
-evaluation = dict(interval=13340, save_image=True)
+checkpoint_config = dict(interval=12310, save_optimizer=True, by_epoch=False)
+evaluation = dict(interval=12310, save_image=True)
 log_config = dict(
     interval=100,
     hooks=[
         dict(type='TextLoggerHook', by_epoch=False),
-        dict(type='TensorboardLoggerHook')
+        # dict(type='TensorboardLoggerHook')
         # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
     ])
 visual_config = None
 
 # runtime settings
-total_iters = 266800
+total_iters = 246200
 cudnn_benchmark = True
 dist_params = dict(backend='nccl', port=29500)
 log_level = 'INFO'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
-exp_name = 'cyclegan_horse2zebra'
+exp_name = 'cyclegan_summer2winter'
 work_dir = f'./work_dirs/{exp_name}'
