@@ -207,6 +207,7 @@ class CropAroundCenter(object):
     This cropping strategy is adopted in GCA matting. The `unknown area` is the
     same as `semi-transparent area`.
     https://arxiv.org/pdf/2001.04069.pdf
+
     It retains the center 1/4 images and resizes the images to 'crop_size'.
     Required keys are "fg", "bg", "trimap" and "alpha", added or modified keys
     are "crop_bbox", "fg", "bg", "trimap" and "alpha".

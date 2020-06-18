@@ -61,6 +61,15 @@ class PerceptualVGG(nn.Module):
             v.requies_grad = False
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
+
         if self.use_input_norm:
             x = (x - self.mean) / self.std
         output = {}
@@ -131,6 +140,16 @@ class PerceptualLoss(nn.Module):
                 ' this version.')
 
     def forward(self, x, gt):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+            gt (Tensor): Ground-truth tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
+
         if self.norm_img:
             x = (x + 1.) * 0.5
             gt = (gt + 1.) * 0.5

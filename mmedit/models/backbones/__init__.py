@@ -19,8 +19,8 @@ from .sr_backbones import EDSR, SRCNN, EDVRNet, MSRResNet, RRDBNet, TOFlow
 __all__ = [
     'MSRResNet', 'VGG16', 'PlainDecoder', 'SimpleEncoderDecoder',
     'GLEncoderDecoder', 'GLEncoder', 'GLDecoder', 'GLDilationNeck',
-    'PConvEncoderDecoder', 'PConvEncoder', 'PConvDecoder', 'RRDBNet',
-    'ResNetEnc', 'ResNetDec', 'ResShortcutEnc', 'ResShortcutDec', 'RRDBNet',
+    'PConvEncoderDecoder', 'PConvEncoder', 'PConvDecoder', 'ResNetEnc',
+    'ResNetDec', 'ResShortcutEnc', 'ResShortcutDec', 'RRDBNet',
     'DeepFillEncoder', 'HolisticIndexBlock', 'DepthwiseIndexBlock',
     'ContextualAttentionNeck', 'DeepFillDecoder', 'EDSR',
     'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample', 'IndexNetEncoder',

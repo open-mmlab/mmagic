@@ -14,7 +14,7 @@ class GenerationPairedDataset(BaseGenerationDataset):
     images concatenated in the w dimension (A|B).
 
     Args:
-        dataroot (str |:obj:`Path`): Path to the folder root of paired images.
+        dataroot (str | :obj:`Path`): Path to the folder root of paired images.
         pipeline (List[dict | callable]): A sequence of data transformations.
         test_mode (bool): Store `True` when building test dataset.
             Default: `False`.

@@ -59,6 +59,15 @@ class ModifiedVGG(nn.Module):
         self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
+
         assert x.size(2) == 128 and x.size(3) == 128, (
             f'Input spatial size must be 128x128, '
             f'but received {x.size()}.')

@@ -635,12 +635,15 @@ class GenerateFrameIndiceswithPadding(object):
     Args:
          padding (str): padding mode, one of
             'replicate' | 'reflection' | 'reflection_circle' | 'circle'.
+
             Examples: current_idx = 0, num_input_frames = 5
             The generated frame indices under different padding mode:
-            replicate: [0, 0, 0, 1, 2]
-            reflection: [2, 1, 0, 1, 2]
-            reflection_circle: [4, 3, 0, 1, 2]
-            circle: [3, 4, 0, 1, 2]
+
+                replicate: [0, 0, 0, 1, 2]
+                reflection: [2, 1, 0, 1, 2]
+                reflection_circle: [4, 3, 0, 1, 2]
+                circle: [3, 4, 0, 1, 2]
+
         filename_tmpl (str): Template for file name. Default: '{:08d}'.
     """
 

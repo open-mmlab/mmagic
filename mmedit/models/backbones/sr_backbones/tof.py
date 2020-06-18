@@ -144,11 +144,12 @@ class TOFlow(nn.Module):
 
     In TOFlow, the LR frames are pre-upsampled and have the same size with
     the GT frames.
-    Paper:
-        Xue et al., Video Enhancement with Task-Oriented Flow, IJCV 2018
+
+    Paper: Xue et al., Video Enhancement with Task-Oriented Flow, IJCV 2018
     Code reference:
-        1. https://github.com/anchen1011/toflow
-        2. https://github.com/Coldog2333/pytoflow
+
+    1. https://github.com/anchen1011/toflow
+    2. https://github.com/Coldog2333/pytoflow
 
     Args:
         adapt_official_weights (bool): Whether to adapt the weights translated

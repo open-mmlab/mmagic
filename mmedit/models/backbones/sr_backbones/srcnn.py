@@ -58,6 +58,15 @@ class SRCNN(nn.Module):
         self.relu = nn.ReLU()
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
+
         x = self.img_upsampler(x)
         out = self.relu(self.conv1(x))
         out = self.relu(self.conv2(out))

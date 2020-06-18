@@ -12,7 +12,7 @@ class DepthwiseSeparableConvModule(nn.Module):
     conv block contains depthwise-conv/norm/activation layers. The pointwise
     conv block contains pointwise-conv/norm/activation layers. It should be
     noted that there will be norm/activation layer in the depthwise conv block
-    if `norm_cfg` and `act_cfg` are specified.
+    if ``norm_cfg`` and ``act_cfg`` are specified.
 
     Args:
         in_channels (int): Same as nn.Conv2d.
@@ -26,13 +26,13 @@ class DepthwiseSeparableConvModule(nn.Module):
         act_cfg (dict): Default activation config for both depthwise ConvModule
             and pointwise ConvModule. Default: dict(type='ReLU').
         dw_norm_cfg (dict): Norm config of depthwise ConvModule. If it is
-            'default', it will be the same as `norm_cfg`. Default: 'default'.
+            'default', it will be the same as ``norm_cfg``. Default: 'default'.
         dw_act_cfg (dict): Activation config of depthwise ConvModule. If it is
-            'default', it will be the same as `act_cfg`. Default: 'default'.
+            'default', it will be the same as ``act_cfg``. Default: 'default'.
         pw_norm_cfg (dict): Norm config of pointwise ConvModule. If it is
             'default', it will be the same as `norm_cfg`. Default: 'default'.
         pw_act_cfg (dict): Activation config of pointwise ConvModule. If it is
-            'default', it will be the same as `act_cfg`. Default: 'default'.
+            'default', it will be the same as ``act_cfg``. Default: 'default'.
         kwargs (optional): Other shared arguments for depthwise and pointwise
             ConvModule. See ConvModule for ref.
     """
@@ -83,6 +83,14 @@ class DepthwiseSeparableConvModule(nn.Module):
             **kwargs)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (N, C, H, W).
+
+        Returns:
+            Tensor: Outpur tensor.
+        """
         x = self.depthwise_conv(x)
         x = self.pointwise_conv(x)
         return x
