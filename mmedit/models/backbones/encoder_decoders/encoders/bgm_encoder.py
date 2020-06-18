@@ -104,6 +104,17 @@ class BGMattingEncoder(nn.Module):
                 normal_init(m, 1.0, 0.2)
 
     def forward(self, img, bg, seg):
+        """Forward function.
+
+        Args:
+            img (Tensor): Input image tensor with shape (N, C, H, W).
+            bg (Tensor): Input background tensor with shape (N, C, H, W).
+            seg (Tensor): Input segmentation mask tensor with shape
+                (N, C', H, W).
+
+        Returns:
+            dict: Contains the output tensor and intermediate feature.
+        """
         img_feat1 = self.img_enc1(img)
         img_feat = self.img_enc2(img_feat1)
 

@@ -245,6 +245,14 @@ class ResNetEnc(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (N, C, H, W).
+
+        Returns:
+            Tensor: Output tensor.
+        """
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.conv3(x)
@@ -346,6 +354,14 @@ class ResShortcutEnc(ResNetEnc):
                 order=order))
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (N, C, H, W).
+
+        Returns:
+            dict: Contains the output tensor and shortcut feature.
+        """
         out = self.conv1(x)
         x1 = self.conv2(out)
         out = self.conv3(x1)
@@ -466,6 +482,15 @@ class ResGCAEncoder(ResShortcutEnc):
                             f'But received {type(pretrained)}.')
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (N, C, H, W).
+
+        Returns:
+            dict: Contains the output tensor, shortcut feature and \
+                intermediate feature.
+        """
         out = self.conv1(x)
         x1 = self.conv2(out)
         out = self.conv3(x1)

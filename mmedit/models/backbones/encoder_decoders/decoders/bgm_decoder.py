@@ -40,6 +40,14 @@ class BasicBlock(nn.Module):
             padding_mode=padding_mode)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (N, C, H, W).
+
+        Returns:
+            Tensor: Output tensor.
+        """
         out = self.conv1(x)
         if self.use_dropout:
             out = self.dropout(out)
@@ -170,6 +178,14 @@ class BGMattingDecoder(nn.Module):
                 normal_init(m, 1.0, 0.2)
 
     def forward(self, inputs):
+        """Forward fucntion.
+
+        Args:
+            inputs (dict): Output dict of BGMattingEncoder.
+
+        Returns:
+            Tensor: Predicted alpha matte of the current batch.
+        """
         out = inputs['out']
         img_feat1 = inputs['img_feat1']
 

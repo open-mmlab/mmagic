@@ -97,6 +97,14 @@ class HolisticIndexBlock(nn.Module):
         self.pixel_shuffle = nn.PixelShuffle(2)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input feature map with shape (N, C, H, W).
+
+        Returns:
+            tuple(Tensor): Encoder index feature and decoder index feature.
+        """
         x = self.index_block(x)
 
         # normalization
@@ -160,6 +168,14 @@ class DepthwiseIndexBlock(nn.Module):
         self.pixel_shuffle = nn.PixelShuffle(2)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input feature map with shape (N, C, H, W).
+
+        Returns:
+            tuple(Tensor): Encoder index feature and decoder index feature.
+        """
         n, c, h, w = x.shape
 
         feature_list = [
@@ -249,6 +265,14 @@ class InvertedResidual(nn.Module):
         return F.pad(inputs, (left, right, left, right))
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input feature map with shape (N, C, H, W).
+
+        Returns:
+            Tensor: Output feature map.
+        """
         out = self.conv(self.pad(x, self.kernel_size, self.dilation))
 
         if self.use_res_connect:
@@ -445,6 +469,14 @@ class IndexNetEncoder(nn.Module):
                     constant_init(m, 1)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input feature map with shape (N, C, H, W).
+
+        Returns:
+            dict: Output tensor, shortcut feature and decoder index feature.
+        """
         dec_idx_feat_list = list()
         shortcuts = list()
         for i, layer in enumerate(self.layers):

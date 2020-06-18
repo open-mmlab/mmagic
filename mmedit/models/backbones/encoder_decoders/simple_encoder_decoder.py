@@ -24,6 +24,11 @@ class SimpleEncoderDecoder(nn.Module):
         self.decoder.init_weights()
 
     def forward(self, *args, **kwargs):
+        """Forward function.
+
+        Returns:
+            Tensor: The output tensor of the decoder.
+        """
         out = self.encoder(*args, **kwargs)
         out = self.decoder(out)
         return out

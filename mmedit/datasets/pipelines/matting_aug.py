@@ -174,6 +174,7 @@ class CompositeFg(object):
 
     .. math::
         fg_{new} = \\alpha_1 * fg_1 + (1 - \\alpha_1) * fg_2
+
         \\alpha_{new} = 1 - (1 - \\alpha_1) * (1 - \\alpha_2)
 
     where :math:`(fg_1, \\alpha_1)` is from the current sample and

@@ -36,17 +36,18 @@ class PlainDecoder(nn.Module):
 
         Args:
             inputs (dict): Output dictionary of the VGG encoder containing:
-                out (Tensor): Output of the VGG encoder.
-                max_idx_1 (Tensor): Index of the first maxpooling layer in the
-                    VGG encoder.
-                max_idx_2 (Tensor): Index of the second maxpooling layer in the
-                    VGG encoder.
-                max_idx_3 (Tensor): Index of the third maxpooling layer in the
-                    VGG encoder.
-                max_idx_4 (Tensor): Index of the fourth maxpooling layer in the
-                    VGG encoder.
-                max_idx_5 (Tensor): Index of the fifth maxpooling layer in the
-                    VGG encoder.
+
+              - out (Tensor): Output of the VGG encoder.
+              - max_idx_1 (Tensor): Index of the first maxpooling layer in the
+                VGG encoder.
+              - max_idx_2 (Tensor): Index of the second maxpooling layer in the
+                VGG encoder.
+              - max_idx_3 (Tensor): Index of the third maxpooling layer in the
+                VGG encoder.
+              - max_idx_4 (Tensor): Index of the fourth maxpooling layer in the
+                VGG encoder.
+              - max_idx_5 (Tensor): Index of the fifth maxpooling layer in the
+                VGG encoder.
 
         Returns:
             Tensor: Output tensor.
