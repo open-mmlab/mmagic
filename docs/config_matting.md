@@ -28,7 +28,7 @@ train_cfg = dict(  # Config of training DIM model.
     train_refiner=False)  # In DIM stage1, refiner is not trained.
 test_cfg = dict(  # Config of testing DIM model.
     refine=False,  # Whether use refiner output as output, in stage1, we don't use it.
-    metrics=['SAD', 'MSE'])  # The metrics used when testing.
+    metrics=['SAD', 'MSE', 'GRAD', 'CONN'])  # The metrics used when testing.
 
 # data settings
 dataset_type = 'AdobeComp1kDataset'  # Dataset type, this will be used to define the dataset.
@@ -39,7 +39,7 @@ img_norm_cfg = dict(  # Image normalization config to normalize the input images
     to_rgb=True)  # The channel orders of image used to pre-training the pre-trained backbone models.
 train_pipeline = [  # Training data processing pipeline.
     dict(
-        type='LoadAlpha',  # Load alpha matte.
+        type='LoadImageFromFile',  # Load alpha matte from file.
         key='alpha',  # Key of alpha matte in annotation file. The pipeline will read alpha matte from path `alpha_path`.
         flag='grayscale'),  # Load as grayscale image which has shape (height, width).
     dict(
@@ -52,7 +52,8 @@ train_pipeline = [  # Training data processing pipeline.
         type='LoadImageFromFile',  # Load image from file.
         key='merged'),  # Key of image to load. The pipeline will read merged from path `merged_path`.
     dict(
-        type='CropAroundSemiTransparent',  # Crop images around unknown area (semi-transparent area).
+        type='CropAroundUnknown',  # Crop images around unknown area (semi-transparent area).
+        keys=['alpha', 'merged', 'ori_merged', 'fg', 'bg'],  # Images to crop.
         crop_sizes=[320, 480, 640]),  # Candidate crop size.
     dict(
         type='Flip',  # Augmentation pipeline that flips the images.
@@ -82,7 +83,7 @@ train_pipeline = [  # Training data processing pipeline.
 ]
 test_pipeline = [
     dict(
-        type='LoadAlpha',  # Load alpha matte.
+        type='LoadImageFromFile',  # Load alpha matte.
         key='alpha',  # Key of alpha matte in annotation file. The pipeline will read alpha matte from path `alpha_path`.
         flag='grayscale',
         save_original_img=True),
@@ -90,32 +91,31 @@ test_pipeline = [
         type='LoadImageFromFile',  # Load image from file
         key='trimap',  # Key of image to load. The pipeline will read trimap from path `trimap_path`.
         flag='grayscale',  # Load as grayscale image which has shape (height, width).
-        save_original_img=True),  # Save a copy of alpha matte for calculating metrics. It will be saved with key `ori_alpha`
+        save_original_img=True),  # Save a copy of trimap for calculating metrics. It will be saved with key `ori_trimap`
     dict(
         type='LoadImageFromFile',  # Load image from file
         key='merged'),  # Key of image to load. The pipeline will read merged from path `merged_path`.
     dict(
-        type='Resize',  # Pipeline to resize images to align with the downsample factor of the model.
-        keys=['alpha', 'trimap', 'merged'],  # Images to be resized.
-        size_factor=32,  # Downsample factor of the model. Size of images should be divisible by it.
-        max_size=1600),  # Maximum allowed longest size in case of OOM.
+        type='Pad',  # Pipeline to pad images to align with the downsample factor of the model.
+        keys=['trimap', 'merged'],  # Images to be padded.
+        mode='reflect'),  # Mode of the padding.
     dict(
         type='RescaleToZeroOne',  # Same as it in train_pipeline.
-        keys=['merged', 'alpha', 'ori_alpha']),  # Images to be rescaled.
+        keys=['merged', 'ori_alpha']),  # Images to be rescaled.
     dict(
         type='Normalize',  # Same as it in train_pipeline.
         keys=['merged'],
         **img_norm_cfg),
     dict(
         type='Collect',  # Same as it in train_pipeline.
-        keys=['merged', 'alpha', 'trimap'],
+        keys=['merged', 'trimap'],
         meta_keys=[
-            'merged_path', 'interpolation', 'ori_shape', 'ori_alpha',
+            'merged_path', 'pad', 'merged_ori_shape', 'ori_alpha',
             'ori_trimap'
         ]),
     dict(
         type='ImageToTensor',  # Same as it in train_pipeline.
-        keys=['merged', 'alpha', 'trimap']),
+        keys=['merged', 'trimap']),
 ]
 data = dict(
     samples_per_gpu=1,  # Batch size of a single GPU.
