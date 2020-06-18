@@ -104,6 +104,14 @@ class PatchDiscriminator(nn.Module):
             'gain', 0.02)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
         return self.model(x)
 
     def init_weights(self, pretrained=None):

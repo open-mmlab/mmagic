@@ -18,7 +18,7 @@ class LoadImageFromFile(object):
         key (str): Keys in results to find corresponding path. Default: 'gt'.
         flag (str): Loading flag for images. Default: 'color'.
         channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
-            Default to 'bgr'.
+            Default: 'bgr'.
         save_original_img (bool): If True, maintain a copy of the image in
             `results` dict with name of `f'ori_{key}'`. Default: False.
         kwargs (dict): Args for file client.
@@ -347,6 +347,16 @@ class LoadPairedImageFromFile(LoadImageFromFile):
     "pair_ori_shape", "ori_pair", "img_a", "img_b", "img_a_path",
     "img_b_path", "img_a_ori_shape", "img_b_ori_shape", "ori_img_a" and
     "ori_img_b".
+
+    Args:
+        io_backend (str): io backend where images are store. Default: 'disk'.
+        key (str): Keys in results to find corresponding path. Default: 'gt'.
+        flag (str): Loading flag for images. Default: 'color'.
+        channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
+            Default: 'bgr'.
+        save_original_img (bool): If True, maintain a copy of the image in
+            `results` dict with name of `f'ori_{key}'`. Default: False.
+        kwargs (dict): Args for file client.
     """
 
     def __call__(self, results):
