@@ -47,5 +47,13 @@ class GLDilationNeck(nn.Module):
         self.dilation_convs = nn.Sequential(*dilation_convs_)
 
     def forward(self, x):
+        """Forward Function.
+
+        Args:
+            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+
+        Returns:
+            torch.Tensor: Output tensor with shape of (n, c, h', w').
+        """
         x = self.dilation_convs(x)
         return x

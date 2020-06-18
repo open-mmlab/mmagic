@@ -95,6 +95,14 @@ class GLDecoder(nn.Module):
                 f'{out_act} activation for output has not be supported.')
 
     def forward(self, x):
+        """Forward Function.
+
+        Args:
+            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+
+        Returns:
+            torch.Tensor: Output tensor with shape of (n, c, h', w').
+        """
         for i in range(7):
             x = getattr(self, f'dec{i + 1}')(x)
         x = self.output_act(x)

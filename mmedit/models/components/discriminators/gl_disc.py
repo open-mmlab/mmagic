@@ -28,6 +28,16 @@ class GLDiscs(nn.Module):
         self.fc = nn.Linear(2048, 1, bias=True)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (tuple[torch.Tensor]): Contains global image and the local image
+                patch.
+
+        Returns:
+            tuple[torch.Tensor]: Contains the prediction from discriminators \
+                in global image and local image patch.
+        """
         g_img, l_img = x
         g_pred = self.global_disc(g_img)
         l_pred = self.local_disc(l_img)

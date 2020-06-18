@@ -61,6 +61,14 @@ class DeepFillEncoder(nn.Module):
             in_channels = channel_list[i]
 
     def forward(self, x):
+        """Forward Function.
+
+        Args:
+            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+
+        Returns:
+            torch.Tensor: Output tensor with shape of (n, c, h', w').
+        """
         for i in range(6):
             x = getattr(self, f'enc{i + 1}')(x)
         outputs = dict(out=x)

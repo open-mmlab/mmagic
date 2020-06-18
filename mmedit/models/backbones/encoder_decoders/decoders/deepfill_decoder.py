@@ -75,6 +75,15 @@ class DeepFillDecoder(nn.Module):
                 self.out_act = build_activation_layer(out_act_cfg)
 
     def forward(self, input_dict):
+        """Forward Function.
+
+        Args:
+            input_dict (dict | torch.Tensor): Input dict with middle features
+                or torch.Tensor.
+
+        Returns:
+            torch.Tensor: Output tensor with shape of (n, c, h, w).
+        """
         if isinstance(input_dict, dict):
             x = input_dict['out']
         else:

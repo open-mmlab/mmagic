@@ -49,6 +49,14 @@ class SimpleGatedConvModule(nn.Module):
             self.gate_act = build_activation_layer(gate_act_cfg)
 
     def forward(self, x):
+        """Forward Function.
+
+        Args:
+            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+
+        Returns:
+            torch.Tensor: Output tensor with shape of (n, c, h', w').
+        """
         x = self.conv(x)
         x, gate = torch.split(x, x.size(1) // 2, dim=1)
         if self.with_feat_act:

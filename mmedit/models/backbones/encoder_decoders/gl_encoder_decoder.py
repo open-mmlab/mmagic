@@ -31,6 +31,14 @@ class GLEncoderDecoder(nn.Module):
         self.dilation_neck = build_component(dilation_neck)
 
     def forward(self, x):
+        """Forward Function.
+
+        Args:
+            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+
+        Returns:
+            torch.Tensor: Output tensor with shape of (n, c, h', w').
+        """
         x = self.encoder(x)
         if isinstance(x, dict):
             x = x['out']

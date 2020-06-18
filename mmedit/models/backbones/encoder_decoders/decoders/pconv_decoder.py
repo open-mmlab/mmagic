@@ -85,6 +85,15 @@ class PConvDecoder(nn.Module):
             act_cfg=None)
 
     def forward(self, input_dict):
+        """Forward Function.
+
+        Args:
+            input_dict (dict | torch.Tensor): Input dict with middle features
+                or torch.Tensor.
+
+        Returns:
+            torch.Tensor: Output tensor with shape of (n, c, h, w).
+        """
         hidden_feats = input_dict['hidden_feats']
         hidden_masks = input_dict['hidden_masks']
         h_key = 'h{:d}'.format(self.num_layers)

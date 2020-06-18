@@ -20,6 +20,15 @@ class PConvEncoderDecoder(nn.Module):
         self.decoder = build_component(decoder)
 
     def forward(self, x, mask_in):
+        """Forward Function.
+
+        Args:
+            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+            mask_in (torch.Tensor): Input tensor with shape of (n, c, h, w).
+
+        Returns:
+            torch.Tensor: Output tensor with shape of (n, c, h', w').
+        """
         enc_outputs = self.encoder(x, mask_in)
         x, final_mask = self.decoder(enc_outputs)
 
