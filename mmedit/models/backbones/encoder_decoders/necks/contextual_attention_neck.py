@@ -56,6 +56,15 @@ class ContextualAttentionNeck(nn.Module):
             **kwargs)
 
     def forward(self, x, mask):
+        """Forward Function.
+
+        Args:
+            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+            mask (torch.Tensor): Input tensor with shape of (n, 1, h, w).
+
+        Returns:
+            torch.Tensor: Output tensor with shape of (n, c, h', w').
+        """
         x, offset = self.contextual_attention(x, x, mask)
         x = self.conv1(x)
         x = self.conv2(x)

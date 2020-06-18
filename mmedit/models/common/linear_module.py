@@ -68,6 +68,17 @@ class LinearModule(nn.Module):
         kaiming_init(self.linear, a=a, nonlinearity=nonlinearity)
 
     def forward(self, x, activate=True):
+        """Foward Function.
+
+        Args:
+            x (torch.Tensor): Input tensor with shape of (n, *, c). Same as
+                ``torch.nn.Linear``.
+            activate (bool, optional): Whether to use activation layer.
+                Defaults to True.
+
+        Returns:
+            torch.Tensor: Same as ``torch.nn.Linear``.
+        """
         for layer in self.order:
             if layer == 'linear':
                 x = self.linear(x)

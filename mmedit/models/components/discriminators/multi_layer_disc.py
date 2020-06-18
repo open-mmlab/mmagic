@@ -126,6 +126,14 @@ class MultiLayerDiscriminator(nn.Module):
                 with_spectral_norm=with_spectral_norm)
 
     def forward(self, x):
+        """Forward Function.
+
+        Args:
+            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+
+        Returns:
+            torch.Tensor: Output tensor with shape of (n, c, h', w') or (n, c).
+        """
         input_size = x.size()
         # out_convs has two additional ConvModules
         num_convs = self.num_convs + 2 * self.with_out_convs

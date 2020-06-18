@@ -45,6 +45,15 @@ class DeepFillRefiner(nn.Module):
         self.decoder = build_component(decoder)
 
     def forward(self, x, mask):
+        """Forward Function.
+
+        Args:
+            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+            mask (torch.Tensor): Input tensor with shape of (n, 1, h, w).
+
+        Returns:
+            torch.Tensor: Output tensor with shape of (n, c, h', w').
+        """
         # conv branch
         encoder_dict = self.encoder_conv(x)
         conv_x = self.dilation_neck(encoder_dict['out'])

@@ -72,6 +72,16 @@ class ContextualAttentionModule(nn.Module):
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x, context, mask=None):
+        """Forward Function.
+
+        Args:
+            x (torch.Tensor): Tensor with shape (n, c, h, w).
+            context (torch.Tensor): Tensor with shape (n, c, h, w).
+            mask (torch.Tensor): Tensor with shape (n, 1, h, w). Default: None.
+
+        Returns:
+            tuple(torch.Tensor): Features after contextural attention.
+        """
         # raw features to be used in copy (deconv)
         raw_context = context
         raw_context_cols = self.im2col(
