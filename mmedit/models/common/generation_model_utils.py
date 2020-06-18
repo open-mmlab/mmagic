@@ -8,7 +8,7 @@ from torch.nn import init
 def generation_init_weights(module, init_type='normal', init_gain=0.02):
     """Default initialization of network weights for image generation.
 
-    By default, we use 'normal' init, but xavier and kaiming might work
+    By default, we use normal init, but xavier and kaiming might work
     better for some applications.
 
     Args:
@@ -101,8 +101,8 @@ class GANImageBuffer(object):
 
 
 class UnetSkipConnectionBlock(nn.Module):
-    """Construct a Unet submodule with skip connections.
-    |-- downsampling -- |submodule| -- upsampling --|
+    """Construct a Unet submodule with skip connections, with the following
+    structure: downsampling - `submodule` - upsampling.
 
     Args:
         outer_channels (int): Number of channels at the outer conv layer.
@@ -203,6 +203,14 @@ class UnetSkipConnectionBlock(nn.Module):
         self.model = nn.Sequential(*model)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
         if self.is_outermost:
             return self.model(x)
         else:
@@ -215,6 +223,7 @@ class ResidualBlockWithDropout(nn.Module):
 
     Ref:
     Deep Residual Learning for Image Recognition
+
     A residual block is a conv block with skip connections. A dropout layer is
     added between two common conv modules.
 
@@ -269,6 +278,13 @@ class ResidualBlockWithDropout(nn.Module):
         self.block = nn.Sequential(*block)
 
     def forward(self, x):
-        # add skip connections without final ReLU
+        """Forward function. Add skip connections without final ReLU.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
         out = x + self.block(x)
         return out
