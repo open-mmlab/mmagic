@@ -97,7 +97,19 @@ The predicted alpha matte will be save in `test/data/pred/demo.png`.
 
 #### Restoration
 
-[TODO]
+You can use the following commands to test an image for restoration.
+
+```shell
+python demo/restoration_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${SAVE_FILE} [--imshow] [--device ${GPU_ID}]
+```
+
+If `--imshow` is specified, the demo will also show image with opencv. Examples:
+
+```shell
+python demo/restoration_demo.py configs/restorer/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k.py work_dirs/esrgan_x4c64b23g32_1x16_400k_div2k/latest.pth tests/data/lq/baboon_x4.png demo/demo_out_baboon.png
+```
+
+The restored image will be save in `demo/demo_out_baboon.png`.
 
 #### Generation
 
