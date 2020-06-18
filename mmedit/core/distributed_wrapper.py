@@ -2,11 +2,12 @@ from collections import OrderedDict
 
 import torch
 import torch.nn as nn
-from mmcv.parallel import MMDistributedDataParallel
+from mmcv.parallel import MODULE_WRAPPERS, MMDistributedDataParallel
 from mmcv.parallel.scatter_gather import scatter_kwargs
 from torch.nn.parallel import DataParallel, DistributedDataParallel
 
 
+@MODULE_WRAPPERS.register_module()
 class DistributedDataParallelWrapper(nn.Module):
     """A DistributedDataParallel wrapper for models in MMediting.
 
