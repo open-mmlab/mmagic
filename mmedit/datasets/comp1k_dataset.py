@@ -16,7 +16,7 @@ class AdobeComp1kDataset(BaseMattingDataset):
 
     Example for online comp-1k dataset:
 
-    .. code-block:: json
+    .. code-block::
 
         [
             {
@@ -33,7 +33,7 @@ class AdobeComp1kDataset(BaseMattingDataset):
 
     Example for offline comp-1k dataset:
 
-    .. code-block:: json
+    .. code-block::
 
         [
             {

@@ -19,7 +19,7 @@ class SRAnnotationDataset(BaseSRDataset):
 
     Example of an annotation file:
 
-    .. code-block:: json
+    .. code-block::
 
         0001_s001.png (480,480,3)
         0001_s002.png (480,480,3)

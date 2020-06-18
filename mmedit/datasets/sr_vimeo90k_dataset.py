@@ -17,7 +17,7 @@ class SRVimeo90KDataset(BaseSRDataset):
     1. image name; 2, image shape, seperated by a white space.
     Examples:
 
-    .. code-block:: txt
+    .. code-block::
 
         00001/0266 (256, 448, 3)
         00001/0268 (256, 448, 3)
