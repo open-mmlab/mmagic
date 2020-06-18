@@ -39,12 +39,12 @@ val_dataset_type = 'SRFolderDataset'
 train_pipeline = [
     dict(
         type='LoadImageFromFile',
-        io_backend=' disk',
+        io_backend='disk',
         key='lq',
         flag='unchanged'),
     dict(
         type='LoadImageFromFile',
-        io_backend=' disk',
+        io_backend='disk',
         key='gt',
         flag='unchanged'),
     dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
@@ -66,12 +66,12 @@ train_pipeline = [
 test_pipeline = [
     dict(
         type='LoadImageFromFile',
-        io_backend=' disk',
+        io_backend='disk',
         key='lq',
         flag='unchanged'),
     dict(
         type='LoadImageFromFile',
-        io_backend=' disk',
+        io_backend='disk',
         key='gt',
         flag='unchanged'),
     dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
