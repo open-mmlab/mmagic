@@ -4,7 +4,8 @@ from mmcv.cnn import build_activation_layer, kaiming_init
 
 class LinearModule(nn.Module):
     """A linear block that contains linear/norm/activation layers.
-       For low level visioin, we add spectral norm and padding layer
+
+    For low level visioin, we add spectral norm and padding layer
 
     Args:
         in_features (int): Same as nn.Linear.
