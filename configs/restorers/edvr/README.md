@@ -20,5 +20,5 @@ The metrics are `PSNR / SSIM`.
 
 |   Method   |  REDS4  | Download |
 |:----------:|:----:|:--------:|
-| edvrm_wotsa_x4_g8_600k_reds |  30.3430 /  0.8664  | [model](TODO) \| [log](TODO) |
-| edvrm_x4_g8_600k_reds | 30.3310 / 0.8665 | [model](TODO) \| [log](TODO) |
+| edvrm_wotsa_x4_8x4_600k_reds |  30.3430 /  0.8664  | [model](TODO) \| [log](TODO) |
+| edvrm_x4_8x4_600k_reds | 30.3310 / 0.8665 | [model](TODO) \| [log](TODO) |

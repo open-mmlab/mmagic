@@ -5,7 +5,7 @@
 To help the users have a basic idea of a complete config, we make a brief comments on the config of the EDSR model we implemented as the following. For more detailed usage and the corresponding alternative for each modules, please refer to the API documentation.
 
 ```python
-exp_name = 'edsr_x2c64b16_g1_300k_div2k'  # The experiment name
+exp_name = 'edsr_x2c64b16_1x16_300k_div2k'  # The experiment name
 
 scale = 2  # Scale factor for upsampling
 # model settings
