@@ -43,7 +43,7 @@ class ResidualBlockNoBN(nn.Module):
 
     It has a style of:
 
-    .. code-block:: txt
+    .. code-block::
 
         ---Conv-ReLU-Conv-+-
          |________________|

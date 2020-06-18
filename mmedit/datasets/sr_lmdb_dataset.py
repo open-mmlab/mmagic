@@ -23,7 +23,7 @@ class SRLmdbDataset(BaseSRDataset):
 
     Contents of lmdb. Taking the lq.lmdb for example, the file structure is:
 
-    .. code-block:: json
+    .. code-block::
 
         lq.lmdb
         ├── data.mdb
