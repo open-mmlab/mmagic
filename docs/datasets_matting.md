@@ -5,6 +5,15 @@
 It is recommended to symlink the Adobe Composition-1k (comp1k) dataset root, the [MS COCO dataset](http://cocodataset.org/#home) and the [PASCAL VOC dataset](http://host.robots.ox.ac.uk/pascal/VOC/) to `$MMEditing/data`:
 
 ```
+mkdir data
+ln -s $ADOBE_COMPOSITION_1K_ROOT data/adobe_composition-1k
+ln -s $COCO_ROOT data/coco
+ln -s $VOC_ROOT data/VOCdevkit
+```
+
+The result folder structure should look like:
+
+```
 mmediting
 ├── mmedit
 ├── tools
@@ -31,7 +40,6 @@ mmediting
 │   │   ├── train2014   (or train2017)
 │   ├── VOCdevkit
 │   │   ├── VOC2012
-
 ```
 
 If your folder structure is different, you may need to change the corresponding paths in config files.
@@ -39,11 +47,13 @@ If your folder structure is different, you may need to change the corresponding 
 The Adobe composition-1k dataset contains only `alpha` and `fg` (and `trimap` in test set). It is needed to merge `fg` with COCO data (training) or VOC data (test) before training or evaluation. A script is provided to perform image composition and generate annotation files for training or testing:
 
 ```shell
-python tools/prepare_data.py data/adobe_composition-1k data/coco data/VOCdevkit --composite
+python tools/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --composite
 ```
 
 The generated data is stored under `adobe_composition-1k/Training_set` and `adobe_composition-1k/Test_set` respectively. If you only want to composite test data (since compositing training data is time-consuming), you can remove the `--composite` option:
 
 ```shell
-python tools/prepare_data.py data/adobe_composition-1k data/coco data/VOCdevkit
+python tools/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit
 ```
+
+> Currently, only `GCA` supports online composition of training data. But you can modify the data pipeline of other models to perform online composition instead of loading composited images (we called it `merged` in our data pipeline).

@@ -81,7 +81,19 @@ We provide some task-specific demo scripts to test a single image.
 
 #### Matting
 
-[TODO]
+You can use the following commands to test a pair of image and trimap.
+
+```shell
+python demo/matting_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${TRIMAP_FILE} ${SAVE_FILE} [--imshow] [--device ${GPU_ID}]
+```
+
+If `--imshow` is specified, the demo will also show image with opencv. Examples:
+
+```shell
+python demo/matting_demo.py configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py work_dirs/dim_stage3/latest.pth test/data/merged/GT05.jpg test/data/trimap/GT05.png test/data/pred/GT05.png
+```
+
+The predicted alpha matte will be save in `test/data/pred/demo.png`.
 
 #### Restoration
 
