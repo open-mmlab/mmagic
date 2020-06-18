@@ -35,6 +35,15 @@ class PlainRefiner(nn.Module):
                 xavier_init(m)
 
     def forward(self, x, raw_alpha):
+        """Forward function.
+
+        Args:
+            x (Tensor): The input feature map of refiner.
+            raw_alpha (Tensor): The raw predicted alpha matte.
+
+        Returns:
+            Tensor: The refined alpha matte.
+        """
         out = self.relu(self.refine_conv1(x))
         out = self.relu(self.refine_conv2(out))
         out = self.relu(self.refine_conv3(out))

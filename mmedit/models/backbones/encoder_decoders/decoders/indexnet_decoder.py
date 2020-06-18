@@ -46,6 +46,18 @@ class IndexedUpsample(nn.Module):
                 kaiming_init(m, mode='fan_in', nonlinearity='leaky_relu')
 
     def forward(self, x, shortcut, dec_idx_feat=None):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input feature map with shape (N, C, H, W).
+            shortcut (Tensor): The shorcut connection with shape
+                (N, C, H', W').
+            dec_idx_feat (Tensor, optional): The decode index feature map with
+                shape (N, C, H', W'). Defaults to None.
+
+        Returns:
+            Tensor: Output tensor with shape (N, C, H', W').
+        """
         if dec_idx_feat is not None:
             assert shortcut.dim() == 4, (
                 'shortcut must be tensor with 4 dimensions')
