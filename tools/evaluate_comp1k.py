@@ -8,10 +8,10 @@ from mmedit.core.evaluation import connectivity, gradient_error, mse, sad
 
 
 def evaluate_one(args):
-    """Function to evaluate one piece of data.
+    """Function to evaluate one sample of data.
 
     Args:
-        args (tuple): Information needed to evaluate one piece of data.
+        args (tuple): Information needed to evaluate one sample of data.
 
     Returns:
         dict: The evaluation results including sad, mse, gradient error and

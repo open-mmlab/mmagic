@@ -25,7 +25,7 @@ __all__ = [
     'PairedRandomCrop', 'Normalize', 'RescaleToZeroOne', 'GenerateTrimap',
     'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList',
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
-    'LoadPairedImageFromFile', 'GenerateFrameIndices', 'GetPatchPool',
-    'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg', 'CropAroundFg',
-    'GetSpatialDiscountMask', 'GenerateTrimapWithDistTransform'
+    'LoadPairedImageFromFile', 'GetPatchPool', 'GenerateSoftSeg',
+    'GenerateSeg', 'PerturbBg', 'CropAroundFg', 'GetSpatialDiscountMask',
+    'GenerateTrimapWithDistTransform'
 ]

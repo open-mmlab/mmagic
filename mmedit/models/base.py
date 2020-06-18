@@ -36,6 +36,18 @@ class BaseModel(nn.Module, metaclass=ABCMeta):
         pass
 
     def forward(self, imgs, labels, test_mode, **kwargs):
+        """Forward function for base model.
+
+        Args:
+            imgs (Tensor): Input image(s).
+            labels (Tensor): Ground-truth label(s).
+            test_mode (bool): Whether in test mode.
+            kwargs (dict): Other arguments.
+
+        Returns:
+            Tensor: Forward results.
+        """
+
         if not test_mode:
             return self.forward_train(imgs, labels, **kwargs)
         else:

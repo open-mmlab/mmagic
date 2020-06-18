@@ -6,6 +6,7 @@ class MaskConvModule(ConvModule):
 
     This is a simple wrapper for mask convolution like: 'partial conv'.
     Convolutions in this module always need a mask as extra input.
+
     Args:
         in_channels (int): Same as nn.Conv2d.
         out_channels (int): Same as nn.Conv2d.

@@ -10,9 +10,9 @@ from mmedit.utils import get_root_logger
 class MSRResNet(nn.Module):
     """Modified SRResNet.
 
-    A compacted version modified from SRResNet in
-        "Photo-Realistic Single Image Super-Resolution Using a
-        Generative Adversarial Network"
+    A compacted version modified from SRResNet in "Photo-Realistic Single
+    Image Super-Resolution Using a Generative Adversarial Network".
+
     It uses residual blocks without BN, similar to EDSR.
     Currently, it supports x2, x3 and x4 upsampling scale factor.
 
@@ -78,6 +78,15 @@ class MSRResNet(nn.Module):
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
+
         feat = self.lrelu(self.conv_first(x))
         out = self.trunk_net(feat)
 

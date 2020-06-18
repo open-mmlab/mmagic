@@ -31,7 +31,7 @@ class ASPP(nn.Module):
     """ASPP module from DeepLabV3.
 
     The code is adopted from
-    https://github.com/pytorch/vision/blob/master/torchvision/models/segmentation/deeplabv3.py # noqa
+    https://github.com/pytorch/vision/blob/master/torchvision/models/segmentation/deeplabv3.py  # noqa
 
     For more information about the module:
     `"Rethinking Atrous Convolution for Semantic Image Segmentation"
@@ -108,6 +108,14 @@ class ASPP(nn.Module):
                 act_cfg=act_cfg), nn.Dropout(0.5))
 
     def forward(self, x):
+        """Forward function for ASPP module.
+
+        Args:
+            x (Tensor): Input tensor with shape (N, C, H, W).
+
+        Returns:
+            Tensor: Outpur tensor.
+        """
         res = []
         for conv in self.convs:
             res.append(conv(x))

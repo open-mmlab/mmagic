@@ -160,6 +160,7 @@ class LoadMask(object):
     Example config for bbox:
 
     .. code-block:: python
+
         config = dict(img_shape=(256, 256), max_bbox_shape=128)
 
     Example config for irregular:

@@ -38,8 +38,8 @@ class SRFolderDataset(BaseSRDataset):
         filename_tmpl = '{}_x4'
 
     Args:
-        lq_folder (str |:obj:`Path`): Path to a lq folder.
-        gt_folder (str |:obj:`Path`): Path to a gt folder.
+        lq_folder (str | :obj:`Path`): Path to a lq folder.
+        gt_folder (str | :obj:`Path`): Path to a gt folder.
         pipeline (List[dict | callable]): A sequence of data transformations.
         scale (int): Upsampling scale ratio.
         test_mode (bool): Store `True` when building test dataset.

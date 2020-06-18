@@ -67,6 +67,14 @@ class VGG16(nn.Module):
                     constant_init(m, 1)
 
     def forward(self, x):
+        """Forward function for ASPP module.
+
+        Args:
+            x (Tensor): Input tensor with shape (N, C, H, W).
+
+        Returns:
+            dict: Dict containing output tensor and maxpooling indices.
+        """
         out, max_idx_1 = self.layer1(x)
         out, max_idx_2 = self.layer2(out)
         out, max_idx_3 = self.layer3(out)

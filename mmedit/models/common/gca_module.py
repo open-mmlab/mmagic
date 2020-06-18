@@ -11,6 +11,7 @@ class GCAModule(nn.Module):
     Based on https://github.com/nbei/Deep-Flow-Guided-Video-Inpainting.
     This module use image feature map to augment the alpha feature map with
     guided contextual attention score.
+
     Image feature and alpha feature are unfolded to small patches and later
     used as conv kernel. Thus, we refer the unfolding size as kernel size.
     Image feature patches have a default kernel size 3 while the kernel size of
@@ -165,11 +166,15 @@ class GCAModule(nn.Module):
                 shape (N, 1, img_h, img_w).
 
         Returns:
-            Tensor: Image feature patches of shape
-                (N, img_h*img_w, img_c, img_ks, img_ks).
-            Tensor: Guided contextual attentioned alpha feature map.
-                (N, img_h*img_w, alpha_c, alpha_ks, alpha_ks).
-            Tensor: Unknown mask of shape (N, img_h*img_w, 1, 1).
+            tuple: 3-tuple of
+
+                ``Tensor``: Image feature patches of shape \
+                    (N, img_h*img_w, img_c, img_ks, img_ks).
+
+                ``Tensor``: Guided contextual attentioned alpha feature map. \
+                    (N, img_h*img_w, alpha_c, alpha_ks, alpha_ks).
+
+                ``Tensor``: Unknown mask of shape (N, img_h*img_w, 1, 1).
         """
         # extract image feature patches with shape:
         # (N, img_h*img_w, img_c, img_ks, img_ks)
@@ -197,7 +202,7 @@ class GCAModule(nn.Module):
                 (1, img_h*img_w, img_c, img_ks, img_ks).
 
         Returns:
-            Tensor: Similarity map between image feature patches with shape
+            Tensor: Similarity map between image feature patches with shape \
                 (1, img_h*img_w, img_h, img_w).
         """
         img_ps = img_ps[0]  # squeeze dim 0
@@ -226,7 +231,7 @@ class GCAModule(nn.Module):
                 zero.
 
         Returns:
-            Tensor: Similarity map between image feature patches with shape
+            Tensor: Similarity map between image feature patches with shape \
                 (1, img_h*img_w, img_h, img_w).
         """
         # scale the correlation with predicted scale factor for known and
@@ -251,7 +256,7 @@ class GCAModule(nn.Module):
                 (1, img_h*img_w, alpha_c, alpha_ks, alpha_ks).
 
         Returns:
-            Tensor: Propagted alpha feature map of shape
+            Tensor: Propagted alpha feature map of shape \
                 (1, alpha_c, alpha_h, alpha_w).
         """
         alpha_ps = alpha_ps[0]  # squeeze dim 0
@@ -277,10 +282,13 @@ class GCAModule(nn.Module):
                 if unknown area is not provided in forward. Default: 1.
 
         Returns:
-            Tensor: Interpolated unknown area map of shape
-                (N, img_h*img_w, img_h, img_w).
-            Tensor: Softmax scale tensor of known and unknown area of shape
-                (N, 2).
+            tuple: 2-tuple of
+
+                ``Tensor``: Interpolated unknown area map of shape \
+                    (N, img_h*img_w, img_h, img_w).
+
+                ``Tensor``: Softmax scale tensor of known and unknown area of \
+                    shape (N, 2).
         """
         n, _, h, w = img_feat.shape
 
@@ -313,8 +321,9 @@ class GCAModule(nn.Module):
             x (Tensor): Feature map of shape (N, C, H, W).
             kernel_size (int): Size of each patches.
             stride (int): Stride between patches.
-        Returnes:
-            Tensor: Extracted patches of shape
+
+        Returns:
+            Tensor: Extracted patches of shape \
                 (N, (H / stride) * (W / stride) , C, kernel_size, kernel_size).
         """
         n, c, _, _ = x.shape

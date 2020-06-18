@@ -51,8 +51,8 @@ class SRLmdbDataset(BaseSRDataset):
     Note that we use the same key for the corresponding lq and gt images.
 
     Args:
-        lq_folder (str |:obj:`Path`): Path to a lq lmdb file.
-        gt_folder (str |:obj:`Path`): Path to a gt lmdb file.
+        lq_folder (str | :obj:`Path`): Path to a lq lmdb file.
+        gt_folder (str | :obj:`Path`): Path to a gt lmdb file.
         pipeline (list[dict | callable]): A sequence of data transformations.
         scale (int): Upsampling scale ratio.
         test_mode (bool): Store `True` when building test dataset.

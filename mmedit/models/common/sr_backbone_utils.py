@@ -42,6 +42,9 @@ class ResidualBlockNoBN(nn.Module):
     """Residual block without BN.
 
     It has a style of:
+
+    .. code-block:: txt
+
         ---Conv-ReLU-Conv-+-
          |________________|
 
@@ -75,6 +78,15 @@ class ResidualBlockNoBN(nn.Module):
             default_init_weights(m, 0.1)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
+
         identity = x
         out = self.conv2(self.relu(self.conv1(x)))
         return identity + out * self.res_scale

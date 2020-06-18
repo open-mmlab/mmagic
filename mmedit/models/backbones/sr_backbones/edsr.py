@@ -89,6 +89,15 @@ class EDSR(nn.Module):
             mid_channels, out_channels, 3, 1, 1, bias=True)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
+
         self.mean = self.mean.to(x)
         self.std = self.std.to(x)
 

@@ -35,6 +35,14 @@ class PixelShufflePack(nn.Module):
         default_init_weights(self, 1)
 
     def forward(self, x):
+        """Forward function for PixelShufflePack.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
         x = self.upsample_conv(x)
         x = F.pixel_shuffle(x, self.scale_factor)
         return x

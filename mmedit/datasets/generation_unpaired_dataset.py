@@ -17,7 +17,7 @@ class GenerationUnpairedDataset(BaseGenerationDataset):
     '/path/to/data/testB', respectively.
 
     Args:
-        dataroot (str |:obj:`Path`): Path to the folder root of unpaired
+        dataroot (str | :obj:`Path`): Path to the folder root of unpaired
             images.
         pipeline (List[dict | callable]): A sequence of data transformations.
         test_mode (bool): Store `True` when building test dataset.
