@@ -227,6 +227,12 @@ def main():
                   'training')
 
     # remove the iCCP chunk from the PNG image to avoid unnecessary warning
+    if args.composite:
+        merged_dir = 'Training_set/merged'
+        fix_png_files(osp.join(data_root, merged_dir))
+    bg_dir = 'Training_set/bg'
+    fix_png_files(osp.join(data_root, bg_dir))
+
     fg_dir = 'Test_set/Adobe-licensed images/fg'
     alpha_dir = 'Test_set/Adobe-licensed images/alpha'
     fix_png_files(osp.join(data_root, fg_dir))
