@@ -21,4 +21,4 @@ The metrics are `PSNR / SSIM`.
 |   Method   |  Set5  | Set14 | DIV2K | Download |
 |:----------:|:----:|:-----:|:----:|:--------:|
 | esrgan_psnr_x4c64b23g32_1x16_1000k_div2k | 30.6428 / 0.8559 | 27.0543 / 0.7447 |  29.3354 / 0.8263 | [model](TODO) &#124; [log](TODO) |
-| esrgan_x4c64b23g32_1x16_400k_div2k_mc | 28.2700 /  0.7778 | 24.6328 / 0.6491 | 26.6531 / 0.7340 | [model](TODO) &#124; [log](TODO) |
+| esrgan_x4c64b23g32_1x16_400k_div2k | 28.2700 /  0.7778 | 24.6328 / 0.6491 | 26.6531 / 0.7340 | [model](TODO) &#124; [log](TODO) |
