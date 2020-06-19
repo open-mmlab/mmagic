@@ -27,7 +27,7 @@ def main():
         args.config, args.checkpoint, device=torch.device('cuda', args.device))
 
     result = inpainting_inference(model, args.masked_img_path, args.mask_path)
-    result = tensor2img(result, min_max=(-1, 1))
+    result = tensor2img(result, min_max=(-1, 1))[..., ::-1]
 
     mmcv.imwrite(result, args.save_path)
     if args.imshow:

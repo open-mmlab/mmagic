@@ -164,7 +164,7 @@ class TestInpaintLoading(object):
             results = set_loader(results)
             gt_mask = mmcv.imread(
                 './tests/data/mask/test.png', flag='unchanged')
-            assert np.array_equal(results['mask'], gt_mask[..., 0:1])
+            assert np.array_equal(results['mask'], gt_mask[..., 0:1] / 255.)
 
         mask_config = dict(
             mask_list_file='./tests/data/mask_list_single_ch.txt',
@@ -180,7 +180,7 @@ class TestInpaintLoading(object):
         gt_mask = mmcv.imread(
             './tests/data/mask/test_single_ch.png', flag='unchanged')
         gt_mask = np.expand_dims(gt_mask, axis=2)
-        assert np.array_equal(results['mask'], gt_mask[..., 0:1])
+        assert np.array_equal(results['mask'], gt_mask[..., 0:1] / 255.)
 
         # test mask mode: ff
         mask_config = dict(
@@ -217,8 +217,14 @@ class TestInpaintLoading(object):
         results = bbox_loader(results)
         assert results['mask'].shape == (256, 256, 1)
 
+        # test mask mode: file
+        mask_loader = LoadMask('file')
+        mask = mask_loader(
+            dict(mask_path='./tests/data/mask/test_single_ch.png'))
+        assert mask['mask'].shape == (256, 256, 1)
+
         with pytest.raises(NotImplementedError):
-            loader = LoadMask('ooxx', mask_config)
+            loader = LoadMask('xxxx', mask_config)
             results = loader(results)
 
 

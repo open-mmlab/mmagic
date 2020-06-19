@@ -77,7 +77,19 @@ We provide some task-specific demo scripts to test a single image.
 
 #### Inpainting
 
-[TODO]
+You can use the following commands to test a pair of image and trimap.
+
+```shell
+python demo/matting_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${MASKED_IMAGE_FILE} ${MASK_FILE} ${SAVE_FILE} [--imshow] [--device ${GPU_ID}]
+```
+
+If `--imshow` is specified, the demo will also show image with opencv. Examples:
+
+```shell
+python demo/matting_demo.py configs/inpainting/global_local/gl_256x256_8x12_celeba.py xxx.pth test/data/image/celeba_test.png test/data/image/bbox_mask.png test/data/pred/inpainting_celeba.png
+```
+
+The predicted inpainting result will be save in `test/data/pred/inpainting_celeba.png`.
 
 #### Matting
 

@@ -207,11 +207,13 @@ class LoadMask(object):
         The prefix gives the data path.
 
     Args:
-        mask_mode (str): Mask mode in ['bbox', 'irregular', 'ff', 'set'].
-            bbox: square bounding box masks.
-            irregular: irregular holes.
-            ff: free-form holes from DeepFillv2.
-            set: randomly get a mask from a mask set.
+        mask_mode (str): Mask mode in ['bbox', 'irregular', 'ff', 'set',
+            'file'].
+            * bbox: square bounding box masks.
+            * irregular: irregular holes.
+            * ff: free-form holes from DeepFillv2.
+            * set: randomly get a mask from a mask set.
+            * file: get mask from 'mask_path' in results.
         mask_config (dict): Params for creating masks. Each type of mask needs
             different configs.
     """
@@ -240,6 +242,11 @@ class LoadMask(object):
             self.flag = self.mask_config['flag']
             self.file_client_kwargs = self.mask_config['file_client_kwargs']
             self.file_client = None
+        elif self.mask_mode == 'file':
+            self.io_backend = 'disk'
+            self.flag = 'unchanged'
+            self.file_client_kwargs = dict()
+            self.file_client = None
 
     def _get_random_mask_from_set(self):
         if self.file_client is None:
@@ -255,6 +262,21 @@ class LoadMask(object):
         else:
             mask = mask[:, :, 0:1]
 
+        mask[mask > 0] = 1.
+        return mask
+
+    def _get_mask_from_file(self, path):
+        if self.file_client is None:
+            self.file_client = FileClient(self.io_backend,
+                                          **self.file_client_kwargs)
+        mask_bytes = self.file_client.get(path)
+        mask = mmcv.imfrombytes(mask_bytes, flag=self.flag)  # HWC, BGR
+        if mask.ndim == 2:
+            mask = np.expand_dims(mask, axis=2)
+        else:
+            mask = mask[:, :, 0:1]
+
+        mask[mask > 0] = 1.
         return mask
 
     def __call__(self, results):
@@ -268,6 +290,8 @@ class LoadMask(object):
             mask = self._get_random_mask_from_set()
         elif self.mask_mode == 'ff':
             mask = brush_stroke_mask(**self.mask_config)
+        elif self.mask_mode == 'file':
+            mask = self._get_mask_from_file(results['mask_path'])
         else:
             raise NotImplementedError(
                 f'Mask mode {self.mask_mode} has not been implemented.')
