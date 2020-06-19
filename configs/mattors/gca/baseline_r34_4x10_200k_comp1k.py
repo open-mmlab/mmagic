@@ -15,7 +15,7 @@ model = dict(
             layers=[2, 3, 3, 2],
             with_spectral_norm=True)),
     loss_alpha=dict(type='L1Loss'),
-    pretrained='./weights/model_best_resnet34_En_nomixup_mmedit.pth')
+    pretrained='open-mmlab://mmedit/res34_en_nomixup')
 train_cfg = dict(train_backbone=True)
 test_cfg = dict(metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
 

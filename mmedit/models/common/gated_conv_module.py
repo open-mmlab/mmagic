@@ -10,7 +10,10 @@ class SimpleGatedConvModule(nn.Module):
 
     This module is a simple gated convolutional module. The detailed formula
     is:
-        y = $phi$(conv1(x)) * $sigma$(conv2(x)),
+
+    .. math::
+        y = \\phi(conv1(x)) * \\sigma(conv2(x)),
+
     where `phi` is the feature activation function and `sigma` is the gate
     activation function. In default, the gate activation function is sigmoid.
 

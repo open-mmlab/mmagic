@@ -6,7 +6,7 @@ model = dict(
         encoder=dict(type='VGG16'),
         decoder=dict(type='PlainDecoder')),
     refiner=dict(type='PlainRefiner'),
-    pretrained=None,  # TODO: add pretrained model
+    pretrained=None,
     loss_refine=dict(type='CharbonnierLoss'))
 train_cfg = dict(train_backbone=False, train_refiner=True)
 test_cfg = dict(refine=True, metrics=['SAD', 'MSE', 'GRAD', 'CONN'])

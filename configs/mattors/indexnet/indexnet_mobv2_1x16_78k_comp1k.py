@@ -8,7 +8,7 @@ model = dict(
     loss_alpha=dict(type='CharbonnierLoss', loss_weight=0.5, sample_wise=True),
     loss_comp=dict(
         type='CharbonnierCompLoss', loss_weight=1.5, sample_wise=True),
-    pretrained=None)  # TODO: add pretrained weight
+    pretrained='open-mmlab://mmedit/mobilenet_v2')
 # model training and testing settings
 train_cfg = dict(train_backbone=True)
 test_cfg = dict(metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
@@ -118,11 +118,10 @@ data = dict(
 
 # optimizer
 optimizers = dict(
-    constructor='PretrainedDecayedOptimConstructor',
+    constructor='DefaultOptimizerConstructor',
     type='Adam',
     lr=1e-2,
-    paramwise_cfg=dict(
-        pretrained_keys=['encoder.layers'], pretrained_mult=0.01))
+    paramwise_cfg=dict(custom_keys={'encoder.layers': dict(lr_mult=0.01)}))
 # learning policy
 lr_config = dict(policy='Step', step=[52000, 67600], gamma=0.1, by_epoch=False)
 
