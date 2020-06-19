@@ -6,7 +6,7 @@ model = dict(
         encoder=dict(type='VGG16'),
         decoder=dict(type='PlainDecoder')),
     refiner=dict(type='PlainRefiner'),
-    pretrained=None,  # TODO: add pretrained model
+    pretrained=None,
     loss_alpha=dict(type='CharbonnierLoss', loss_weight=0.5),
     loss_comp=dict(type='CharbonnierCompLoss', loss_weight=0.5),
     loss_refine=dict(type='CharbonnierLoss'))

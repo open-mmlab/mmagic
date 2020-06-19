@@ -5,7 +5,7 @@ model = dict(
         type='SimpleEncoderDecoder',
         encoder=dict(type='VGG16'),
         decoder=dict(type='PlainDecoder')),
-    pretrained=None,  # TODO: add pretrained model
+    pretrained='open-mmlab://mmedit/vgg16',
     loss_alpha=dict(type='CharbonnierLoss', loss_weight=0.5),
     loss_comp=dict(type='CharbonnierCompLoss', loss_weight=0.5))
 train_cfg = dict(train_backbone=True, train_refiner=False)

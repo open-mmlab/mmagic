@@ -184,6 +184,7 @@ def test_dim():
 def test_indexnet():
     model_cfg, _, test_cfg = _get_model_cfg(
         'indexnet/indexnet_mobv2_1x16_78k_comp1k.py')
+    model_cfg['pretrained'] = None
 
     # test indexnet inference
     with torch.no_grad():
