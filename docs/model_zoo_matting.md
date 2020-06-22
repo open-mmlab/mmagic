@@ -19,9 +19,9 @@ Please refer to [IndexNet](https://github.com/open-mmlab/mmediting/blob/master/c
 
 |        Method       |  SAD  |   MSE  |  GRAD |  CONN |
 |:-------------------:|:-----:|:------:|:-----:|:-----:|
-|        DIM          | 50.6  | 0.015  | 29.0  | 50.7  |
+|        DIM          | 50.62 | 0.0151 | 29.01 | 50.69 |
 |        GCA          | 34.77 | 0.0080 | 16.33 | 32.20 |
-|      IndexNet       | 46.8  | 0.016  | 24.6  | 44.6  |
+|      IndexNet       | 45.56 | 0.0125 | 25.49 | 44.79 |
 
 
 ## Evaluation Details
