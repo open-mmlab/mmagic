@@ -85,9 +85,11 @@ def get_data_info(args):
     bg = bg.crop((0, 0, w, h))
 
     # save cropped bg and merged
+    mmcv.utils.mkdir_or_exist(osp.join(data_root, dir_prefix, 'bg'))
     bg.save(osp.join(data_root, bg_path), 'PNG')
     if composite:
         merged = (fg * alpha + bg * (1. - alpha)).astype(np.uint8)
+        mmcv.utils.mkdir_or_exist(osp.join(data_root, dir_prefix, 'merged'))
         Image.fromarray(merged).save(osp.join(data_root, merged_path), 'PNG')
 
     data_info = dict()
