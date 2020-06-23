@@ -22,6 +22,12 @@
 | stage2 (our) | 52.3 | 0.016 | 29.4 | 52.4 | [model](TODO) \| [log](TODO) |
 | stage3 (our) | 50.6 | 0.015 | **29.0** | **50.7** | [model](TODO) \| [log](TODO) |
 
-> stage1: train the encoder-decoder part without the refinement part. \
-> stage2: fix the encoder-decoder part and train the refinement part. \
-> stage3: fine-tune the whole network.
+**NOTE**
+
+* stage1: train the encoder-decoder part without the refinement part. \
+* stage2: fix the encoder-decoder part and train the refinement part. \
+* stage3: fine-tune the whole network.
+
+> The performance of the model is not stable during the training. Thus, the reported performance is not from the last checkpoint. Instead, it is the best performance of all validations during training.
+
+> The performance of training (best performance) with different random seeds diverges in a large range. You may need to run several experiments for each setting to obtain the above performance.

@@ -17,3 +17,5 @@
 |:----------:|:-----:|:------:|:-----:|:-----:|:--------:|
 |  M2O DINs (paper) | 45.8  | 0.013  | 25.9  | **43.7**  | - |
 |  M2O DINs (our)   | **45.6**  | **0.012**  | **25.5**  | 44.8  | [model](TODO) \| [log](TODO) |
+
+> The performance of training (best performance) with different random seeds diverges in a large range. You may need to run several experiments for each setting to obtain the above performance.
