@@ -59,7 +59,7 @@ def mask_reduce_loss(loss, weight=None, reduction='mean', sample_wise=False):
 
         # perform sample-wise mean
         if sample_wise:
-            weight = weight.sum(dim=[1, 2, 3], keepdims=True)  # NCHW to N111
+            weight = weight.sum(dim=[1, 2, 3], keepdim=True)  # NCHW to N111
             loss = (loss / (weight + eps)).sum() / weight.size(0)
         # perform pixel-wise mean
         else:
