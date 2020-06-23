@@ -90,7 +90,6 @@ The code can be built for CPU only environment (where CUDA isn't available).
 However some functionality is gone in this mode:
 
 - Deformable Convolution
-- CARAFE: Content-Aware ReAssembly of FEatures
 
 So if you try to run inference with a model containing deformable convolution you will get an error.
 

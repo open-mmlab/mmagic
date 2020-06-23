@@ -14,7 +14,6 @@ from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, GenerateTrimapWithDistTransform,
                           MergeFgAndBg, PerturbBg)
 from .normalization import Normalize, RescaleToZeroOne
-from .tmad_aug import GetPatchPool
 
 __all__ = [
     'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadMask',
@@ -25,7 +24,6 @@ __all__ = [
     'PairedRandomCrop', 'Normalize', 'RescaleToZeroOne', 'GenerateTrimap',
     'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList',
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
-    'LoadPairedImageFromFile', 'GetPatchPool', 'GenerateSoftSeg',
-    'GenerateSeg', 'PerturbBg', 'CropAroundFg', 'GetSpatialDiscountMask',
-    'GenerateTrimapWithDistTransform'
+    'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
+    'CropAroundFg', 'GetSpatialDiscountMask', 'GenerateTrimapWithDistTransform'
 ]
