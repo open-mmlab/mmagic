@@ -1,11 +1,10 @@
 import numpy as np
 import pytest
 import torch
-from mmedit.models.backbones import (VGG16, BGMattingDecoder, IndexedUpsample,
-                                     IndexNetDecoder, IndexNetEncoder,
-                                     PlainDecoder, ResGCADecoder,
-                                     ResGCAEncoder, ResNetDec, ResNetEnc,
-                                     ResShortcutDec, ResShortcutEnc)
+from mmedit.models.backbones import (VGG16, IndexedUpsample, IndexNetDecoder,
+                                     IndexNetEncoder, PlainDecoder,
+                                     ResGCADecoder, ResGCAEncoder, ResNetDec,
+                                     ResNetEnc, ResShortcutDec, ResShortcutEnc)
 
 
 def assert_tensor_with_shape(tensor, shape):
@@ -197,24 +196,6 @@ def test_indexnet_decoder():
     indexnet_decoder.init_weights()
     out = indexnet_decoder(outputs_enc)
     assert out.shape == (2, 1, 32, 32)
-
-
-def test_bg_matting_decoder():
-    """Test BGMattingDecoder."""
-    out = _demo_inputs((2, 448, 8, 8))
-    img_feat1 = _demo_inputs((2, 128, 16, 16))
-    inputs = {'out': out, 'img_feat1': img_feat1}
-    bg_matting_decoder = BGMattingDecoder(448)
-    bg_matting_decoder.init_weights()
-    outputs = bg_matting_decoder(inputs)
-    assert_tensor_with_shape(outputs['alpha_out'], (2, 1, 32, 32))
-    assert_tensor_with_shape(outputs['fg_out'], (2, 3, 32, 32))
-
-    bg_matting_decoder = BGMattingDecoder(448, use_dropout=True)
-    bg_matting_decoder.init_weights()
-    outputs = bg_matting_decoder(inputs)
-    assert_tensor_with_shape(outputs['alpha_out'], (2, 1, 32, 32))
-    assert_tensor_with_shape(outputs['fg_out'], (2, 3, 32, 32))
 
 
 def _demo_inputs(input_shape=(1, 4, 64, 64)):
