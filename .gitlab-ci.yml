@@ -3,6 +3,7 @@ image: registry.sensetime.com/eig-research/pytorch:1.3.1-cuda10.1-cudnn7-devel
 stages:
     - linting
     - test
+    - deploy
 
 before_script:
   - echo $PATH
@@ -34,3 +35,20 @@ test:
     - pip install pytest coverage
     - coverage run --branch --source mmedit -m pytest tests/
     - coverage report -m
+
+pages:
+  stage: deploy
+  script:
+    - pip install mmcv
+    - pip install sphinx sphinx_rtd_theme recommonmark sphinx-markdown-tables
+    - cd docs
+    - make html
+    - cd ..
+    - mkdir -p ./public
+    - cp -r docs/_build/html/* ./public
+    - ls ./public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
