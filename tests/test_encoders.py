@@ -3,12 +3,10 @@ from collections.abc import Iterable
 import numpy as np
 import pytest
 import torch
-from mmcv.cnn import ConvModule
 from mmcv.utils.parrots_wrapper import _BatchNorm
-from mmedit.models.backbones import (VGG16, BGMattingEncoder,
-                                     DepthwiseIndexBlock, HolisticIndexBlock,
-                                     IndexNetEncoder, ResGCAEncoder, ResNetEnc,
-                                     ResShortcutEnc)
+from mmedit.models.backbones import (VGG16, DepthwiseIndexBlock,
+                                     HolisticIndexBlock, IndexNetEncoder,
+                                     ResGCAEncoder, ResNetEnc, ResShortcutEnc)
 
 
 def check_norm_state(modules, train_state):
@@ -488,34 +486,6 @@ def test_indexnet_encoder():
                                           target_shapes):
         if dec_idx_feat is not None:
             assert dec_idx_feat.shape == target_shape
-
-
-def test_bg_matting_encoder():
-    """Test BGMattingEncoder."""
-    with pytest.raises(ValueError):
-        # in_channels_list must be a tuple of 3 int
-        BGMattingEncoder((3, 3, 1, 4))
-
-    with pytest.raises(ValueError):
-        # in_channels_list must be a tuple of 3 int
-        BGMattingEncoder((3., 3., 1.))
-
-    bg_matting_encoder = BGMattingEncoder((3, 3, 1))
-    bg_matting_encoder.init_weights()
-    for m in bg_matting_encoder.modules():
-        if isinstance(m, ConvModule):
-            # conv layer in bg_matting_encoder should have norm
-            assert m.with_norm
-            if m.kernel_size != (1, 1):
-                # if kernel_size is not 1, then conv layer should have bias
-                assert m.with_bias
-
-    img = _demo_inputs((2, 3, 32, 32))
-    bg = _demo_inputs((2, 3, 32, 32))
-    seg = _demo_inputs((2, 1, 32, 32))
-    outputs = bg_matting_encoder(img, bg, seg)
-    assert_tensor_with_shape(outputs['out'], (2, 448, 8, 8))
-    assert_tensor_with_shape(outputs['img_feat1'], (2, 128, 16, 16))
 
 
 def _demo_inputs(input_shape=(2, 4, 64, 64)):

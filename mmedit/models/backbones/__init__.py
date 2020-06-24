@@ -1,6 +1,5 @@
 # yapf: disable
-from .encoder_decoders import (VGG16, BGMattingDecoder, BGMattingEncoder,
-                               ContextualAttentionNeck, DeepFillDecoder,
+from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
                                DeepFillEncoder, DeepFillEncoderDecoder,
                                DepthwiseIndexBlock, GLDecoder, GLDilationNeck,
                                GLEncoder, GLEncoderDecoder, HolisticIndexBlock,
@@ -22,7 +21,6 @@ __all__ = [
     'DeepFillEncoder', 'HolisticIndexBlock', 'DepthwiseIndexBlock',
     'ContextualAttentionNeck', 'DeepFillDecoder', 'EDSR',
     'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample', 'IndexNetEncoder',
-    'IndexNetDecoder', 'BGMattingEncoder', 'BGMattingDecoder', 'TOFlow',
-    'ResGCAEncoder', 'ResGCADecoder', 'SRCNN', 'UnetGenerator',
-    'ResnetGenerator'
+    'IndexNetDecoder', 'TOFlow', 'ResGCAEncoder', 'ResGCADecoder', 'SRCNN',
+    'UnetGenerator', 'ResnetGenerator'
 ]

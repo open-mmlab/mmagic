@@ -1,4 +1,3 @@
-from .bgm_decoder import BGMattingDecoder
 from .deepfill_decoder import DeepFillDecoder
 from .gl_decoder import GLDecoder
 from .indexnet_decoder import IndexedUpsample, IndexNetDecoder
@@ -8,6 +7,5 @@ from .resnet_dec import ResGCADecoder, ResNetDec, ResShortcutDec
 
 __all__ = [
     'GLDecoder', 'PlainDecoder', 'PConvDecoder', 'ResNetDec', 'ResShortcutDec',
-    'DeepFillDecoder', 'IndexedUpsample', 'IndexNetDecoder',
-    'BGMattingDecoder', 'ResGCADecoder'
+    'DeepFillDecoder', 'IndexedUpsample', 'IndexNetDecoder', 'ResGCADecoder'
 ]
