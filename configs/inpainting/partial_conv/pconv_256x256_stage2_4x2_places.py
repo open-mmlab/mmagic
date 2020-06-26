@@ -130,7 +130,7 @@ visual_config = dict(
 evaluation = dict(interval=50000)
 
 total_iters = 500000
-dist_params = dict(backend='nccl', port=4396)
+dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = './work_dirs/pconv'
 load_from = None

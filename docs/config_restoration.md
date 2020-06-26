@@ -149,7 +149,7 @@ log_config = dict(  # Config to register logger hook
 visual_config = None  # Visual config, we do not use it.
 
 # runtime settings
-dist_params = dict(backend='nccl', port=29500)  # Parameters to setup distributed training, the port can also be set
+dist_params = dict(backend='nccl')  # Parameters to setup distributed training, the port can also be set
 log_level = 'INFO'  # The level of logging
 work_dir = f'./work_dirs/{exp_name}'  # Directory to save the model checkpoints and logs for the current experiments
 load_from = None # load models as a pre-trained model from a given path. This will not resume training

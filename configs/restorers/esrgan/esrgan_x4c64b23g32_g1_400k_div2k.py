@@ -144,7 +144,7 @@ log_config = dict(
 visual_config = None
 
 # runtime settings
-dist_params = dict(backend='nccl', port=29500)
+dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = f'./work_dirs/{exp_name}'
 load_from = 'work_dirs/101_RRDBNet/101_RRDBNet_iter_1000000.pth'
