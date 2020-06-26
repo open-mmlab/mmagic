@@ -24,9 +24,7 @@ linting:
 test:
   stage: test
   script:
-    - echo "Install MMCV"
-    - git clone https://github.com/open-mmlab/mmcv.git
-    - cd mmcv && pip install -e . && cd ..
+    - pip install mmcv==0.6.2
     - echo "Start building..."
     - pip install -r requirements.txt
     - pip install -e .
@@ -39,7 +37,8 @@ test:
 pages:
   stage: deploy
   script:
-    - pip install mmcv
+    - pip install mmcv==0.6.2
+    - pip install scikit-image
     - pip install pillow==6.1.0
     - pip install sphinx sphinx_rtd_theme recommonmark sphinx-markdown-tables
     - cd docs
