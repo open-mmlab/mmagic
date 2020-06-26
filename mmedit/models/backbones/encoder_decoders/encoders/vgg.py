@@ -1,5 +1,5 @@
 import torch.nn as nn
-from mmcv.cnn.weight_init import constant_init, xavier_init
+from mmcv.cnn.utils.weight_init import constant_init, xavier_init
 from mmcv.runner import load_checkpoint
 from mmedit.models.common import ASPP
 from mmedit.models.registry import COMPONENTS
