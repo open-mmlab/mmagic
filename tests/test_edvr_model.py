@@ -69,6 +69,19 @@ def test_edvr_model():
 
         # with TSA
         model_cfg['generator']['with_tsa'] = True
+
+        with pytest.raises(KeyError):
+            # In TSA mode, train_cfg must contain "tsa_iter"
+            train_cfg = dict(other_conent='xxx')
+            restorer = build_model(
+                model_cfg, train_cfg=train_cfg, test_cfg=test_cfg).cuda()
+            outputs = restorer.train_step(data_batch, optimizer)
+
+            train_cfg = None
+            restorer = build_model(
+                model_cfg, train_cfg=train_cfg, test_cfg=test_cfg).cuda()
+            outputs = restorer.train_step(data_batch, optimizer)
+
         train_cfg = mmcv.ConfigDict(tsa_iter=1)
         restorer = build_model(
             model_cfg, train_cfg=train_cfg, test_cfg=test_cfg).cuda()
@@ -90,16 +103,6 @@ def test_edvr_model():
         assert torch.equal(outputs['results']['gt'], data_batch['gt'].cpu())
         assert torch.is_tensor(outputs['results']['output'])
         assert outputs['results']['output'].size() == (1, 3, 32, 32)
-
-        with pytest.raises(KeyError):
-            # In TSA mode, train_cfg must contain "tsa_iter"
-            train_cfg = None
-            restorer = build_model(
-                model_cfg, train_cfg=train_cfg, test_cfg=test_cfg).cuda()
-
-            train_cfg = mmcv.ConfigDict(other_content='xxx')
-            restorer = build_model(
-                model_cfg, train_cfg=train_cfg, test_cfg=test_cfg).cuda()
 
         # test forward_dummy
         with torch.no_grad():

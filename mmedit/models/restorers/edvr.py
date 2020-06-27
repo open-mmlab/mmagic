@@ -32,8 +32,11 @@ class EDVR(BasicRestorer):
                                    pretrained)
         self.with_tsa = generator.get('with_tsa', False)
         self.step_counter = 0  # count training steps
-        if self.train_cfg is not None and self.with_tsa:
-            if 'tsa_iter' not in self.train_cfg:
+
+    def train_step(self, data_batch, optimizer):
+        if self.step_counter == 0 and self.with_tsa:
+            if self.train_cfg is None or (self.train_cfg is not None and
+                                          'tsa_iter' not in self.train_cfg):
                 raise KeyError(
                     'In TSA mode, train_cfg must contain "tsa_iter".')
             # only train TSA module at the beginging if with TSA module
@@ -41,7 +44,6 @@ class EDVR(BasicRestorer):
                 if 'fusion' not in k:
                     v.requires_grad = False
 
-    def train_step(self, data_batch, optimizer):
         if self.with_tsa and (self.step_counter == self.train_cfg.tsa_iter):
             # train all the parameters
             for v in self.generator.parameters():
