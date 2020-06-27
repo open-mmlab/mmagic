@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from mmcv.cnn import ConvModule, constant_init
+from mmcv.cnn import ConvModule, constant_init, kaiming_init
 from mmcv.runner import load_checkpoint
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   make_layer)
@@ -444,7 +444,22 @@ class EDVRNet(nn.Module):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=strict, logger=logger)
         elif pretrained is None:
-            pass
+            if self.with_tsa:
+                for module in [
+                        self.fusion.feat_fusion, self.fusion.spatial_attn1,
+                        self.fusion.spatial_attn2, self.fusion.spatial_attn3,
+                        self.fusion.spatial_attn4, self.fusion.spatial_attn_l1,
+                        self.fusion.spatial_attn_l2,
+                        self.fusion.spatial_attn_l3,
+                        self.fusion.spatial_attn_add1
+                ]:
+                    kaiming_init(
+                        module.conv,
+                        a=0.1,
+                        mode='fan_out',
+                        nonlinearity='leaky_relu',
+                        bias=0,
+                        distribution='uniform')
         else:
             raise TypeError(f'"pretrained" must be a str or None. '
                             f'But received {type(pretrained)}.')
