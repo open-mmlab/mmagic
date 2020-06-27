@@ -23,4 +23,4 @@ The metrics are `PSNR / SSIM`.
 
 |   Method   |  Set5  | Set14 | DIV2K | Download |
 |:----------:|:----:|:-----:|:----:|:--------:|
-| srcnn_x4k915_1x16_1000k_div2k | 28.4316 / 0.8099 | 25.6486 /  0.7014 | 27.7460 / 0.7854 | [model](TODO) &#124; [log](TODO) |
+| srcnn_x4k915_1x16_1000k_div2k | 28.4316 / 0.8099 | 25.6486 /  0.7014 | 27.7460 / 0.7854 | [model](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmedting/v0.1/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth) \| [log](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmedting/v0.1/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608_120159.log.json) |
