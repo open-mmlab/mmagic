@@ -20,5 +20,5 @@ The metrics are `PSNR / SSIM`.
 
 |   Method   |  REDS4  | Download |
 |:----------:|:----:|:--------:|
-| edvrm_wotsa_x4_8x4_600k_reds |  30.3430 /  0.8664  | [model](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmedting/v0.1/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth) \| [log](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmedting/v0.1/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522_141644.log.json) |
-| edvrm_x4_8x4_600k_reds | 30.4194 / 0.8684 | [model](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmedting/v0.1/restorers/edvr/edvrm_x4_8x4_600k_reds_20200622-ba4a43e4.pth) \| [log](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmedting/v0.1/restorers/edvr/edvrm_x4_8x4_600k_reds_20200622_102544.log.json) |
+| edvrm_wotsa_x4_8x4_600k_reds |  30.3430 /  0.8664  | [model](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmediting/v0.1/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth) \| [log](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmediting/v0.1/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522_141644.log.json) |
+| edvrm_x4_8x4_600k_reds | 30.4194 / 0.8684 | [model](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmediting/v0.1/restorers/edvr/edvrm_x4_8x4_600k_reds_20200622-ba4a43e4.pth) \| [log](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmediting/v0.1/restorers/edvr/edvrm_x4_8x4_600k_reds_20200622_102544.log.json) |
