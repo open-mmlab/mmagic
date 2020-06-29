@@ -29,3 +29,13 @@ class ImgInpaintingDataset(BaseDataset):
                 img_infos.append(_info)
 
         return img_infos
+
+    def evaluate(self, outputs, logger=None, **kwargs):
+        metric_keys = outputs[0]['eval_results'].keys()
+        stats = {}
+        for key in metric_keys:
+            val = sum([x['eval_results'][key] for x in outputs])
+            val /= self.__len__()
+            stats[key] = val
+
+        return stats
