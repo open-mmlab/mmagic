@@ -81,6 +81,12 @@ class PerceptualVGG(nn.Module):
         return output
 
     def init_weights(self, model, pretrained):
+        """Init weights.
+
+        Args:
+            model (nn.Module): Models to be inited.
+            pretrained (str): Path for pretrained weights.
+        """
         logger = get_root_logger()
         load_checkpoint(model, pretrained, logger=logger)
 
@@ -181,6 +187,14 @@ class PerceptualLoss(nn.Module):
         return percep_loss, style_loss
 
     def _gram_mat(self, x):
+        """Calculate Gram matrix.
+
+        Args:
+            x (torch.Tensor): Tensor with shape of (n, c, h, w).
+
+        Returns:
+            torch.Tensor: Gram matrix.
+        """
         (n, c, h, w) = x.size()
         features = x.view(n, c, w * h)
         features_t = features.transpose(1, 2)

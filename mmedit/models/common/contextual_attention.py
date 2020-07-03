@@ -143,6 +143,15 @@ class ContextualAttentionModule(nn.Module):
         return output
 
     def patch_correlation(self, x, kernel):
+        """Calculate patch correlation.
+
+        Args:
+            x (torch.Tensor): Input tensor.
+            kernel (torch.Tensor): Kernel tensor.
+
+        Returns:
+            torch.Tensor: Tensor with shape of (n, l, h, w).
+        """
         n, _, h_in, w_in = x.size()
 
         patch_corr = F.conv2d(
@@ -156,6 +165,15 @@ class ContextualAttentionModule(nn.Module):
         return patch_corr.view(n, -1, h_out, w_out)
 
     def patch_copy_deconv(self, attention_score, context_filter):
+        """Copy patches using deconv.
+
+        Args:
+            attention_score (torch.Tensor): Tensor with shape of (n, l , h, w).
+            context_filter (torch.Tensor): Filter kernel.
+
+        Returns:
+            torch.Tensor: Tensor with shape of (n, c, h, w).
+        """
         n, num_context, h, w = attention_score.size()
         attention_score = attention_score.view(1, -1, h, w)
         output = F.conv_transpose2d(

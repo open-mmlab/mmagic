@@ -55,6 +55,20 @@ class TwoStageInpaintor(OneStageInpaintor):
                      save_path=None,
                      iteration=None,
                      **kwargs):
+        """Forward function for testing.
+
+        Args:
+            masked_img (torch.Tensor): Tensor with shape of (n, 3, h, w).
+            mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
+            save_image (bool, optional): If True, results will be saved as
+                image. Defaults to False.
+            save_path (str, optional): If given a valid str, the reuslts will
+                be saved in this path. Defaults to None.
+            iteration (int, optional): Iteration number. Defaults to None.
+
+        Returns:
+            dict: Contain output results and eval metrics (if have).
+        """
         if self.input_with_ones:
             tmp_ones = torch.ones_like(mask)
             input_x = torch.cat([masked_img, tmp_ones, mask], dim=1)
@@ -112,6 +126,12 @@ class TwoStageInpaintor(OneStageInpaintor):
         return output
 
     def save_visualization(self, img, filename):
+        """Save visualization results.
+
+        Args:
+            img (torch.Tensor): Tensor with shape of (n, 3, h, w).
+            filename (str): Path to save visualization.
+        """
         if self.test_cfg.get('img_rerange', True):
             img = (img + 1) / 2
         if self.test_cfg.get('img_bgr2rgb', True):
@@ -119,6 +139,16 @@ class TwoStageInpaintor(OneStageInpaintor):
         save_image(img, filename, nrow=1, padding=0)
 
     def two_stage_loss(self, stage1_data, stage2_data, data_batch):
+        """Calculate two-stage loss.
+
+        Args:
+            stage1_data (dict): Contain stage1 results.
+            stage2_data (dict): Contain stage2 results.
+            data_batch (dict): Contain data needed to calculate loss.
+
+        Returns:
+            dict: Contain losses with name.
+        """
         gt = data_batch['gt_img']
         mask = data_batch['mask']
         masked_img = data_batch['masked_img']
@@ -161,6 +191,20 @@ class TwoStageInpaintor(OneStageInpaintor):
                                  gt,
                                  mask,
                                  prefix='stage1_'):
+        """Calculate multiple types of losses.
+
+        Args:
+            loss_type (str): Type of the loss.
+            fake_res (torch.Tensor): Direct results from model.
+            fake_img (torch.Tensor): Composited results from model.
+            gt (torch.Tensor): Ground-truth tensor.
+            mask (torch.Tensor): Mask tensor.
+            prefix (str, optional): Prefix for loss name.
+                Defaults to 'stage1_'.
+
+        Returns:
+            dict: Contain loss value with its name.
+        """
         loss_dict = dict()
         if loss_type == 'loss_gan':
             if self.disc_input_with_mask:

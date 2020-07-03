@@ -103,6 +103,12 @@ class OneStageInpaintor(BaseModel):
         self.init_weights(pretrained=pretrained)
 
     def init_weights(self, pretrained=None):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+        """
         self.generator.init_weights(pretrained=pretrained)
         if self.with_gan:
             self.disc.init_weights(pretrained=pretrained)
@@ -125,6 +131,10 @@ class OneStageInpaintor(BaseModel):
             return self.forward_test(masked_img, mask, **kwargs)
 
     def forward_train(self, *args, **kwargs):
+        """Forward function for training.
+
+        In this version, we do not use this interface.
+        """
         raise NotImplementedError('This interface should not be used in '
                                   'current training schedule. Please use '
                                   '`train_step` for training.')
@@ -233,6 +243,20 @@ class OneStageInpaintor(BaseModel):
                      save_path=None,
                      iteration=None,
                      **kwargs):
+        """Forward function for testing.
+
+        Args:
+            masked_img (torch.Tensor): Tensor with shape of (n, 3, h, w).
+            mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
+            save_image (bool, optional): If True, results will be saved as
+                image. Defaults to False.
+            save_path (str, optional): If given a valid str, the reuslts will
+                be saved in this path. Defaults to None.
+            iteration (int, optional): Iteration number. Defaults to None.
+
+        Returns:
+            dict: Contain output results and eval metrics (if have).
+        """
         input_x = torch.cat([masked_img, mask], dim=1)
         fake_res = self.generator(input_x)
         fake_img = fake_res * mask + masked_img * (1. - mask)
@@ -282,6 +306,12 @@ class OneStageInpaintor(BaseModel):
         return output
 
     def save_visualization(self, img, filename):
+        """Save visualization results.
+
+        Args:
+            img (torch.Tensor): Tensor with shape of (n, 3, h, w).
+            filename (str): Path to save visualization.
+        """
         if self.test_cfg.get('img_rerange', True):
             img = (img + 1) / 2
         if self.test_cfg.get('img_bgr2rgb', True):
@@ -383,11 +413,27 @@ class OneStageInpaintor(BaseModel):
         return outputs
 
     def val_step(self, data_batch, **kwargs):
+        """Forward function for evaluation.
+
+        Args:
+            data_batch (dict): Contain data for forward.
+
+        Returns:
+            dict: Contain the results from model.
+        """
         output = self.forward_test(**data_batch, **kwargs)
 
         return output
 
     def forward_dummy(self, x):
+        """Forward dummy function for getting flops.
+
+        Args:
+            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+
+        Returns:
+            torch.Tensor: Results tensor with shape of (n, 3, h, w).
+        """
         res = self.generator(x)
 
         return res
