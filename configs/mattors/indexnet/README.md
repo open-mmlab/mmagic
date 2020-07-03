@@ -1,4 +1,4 @@
-# Natural Image Matting via Guided Contextual Attention
+# Indices Matter: Learning to Index for Deep Image Matting
 
 ## Introduction
 
