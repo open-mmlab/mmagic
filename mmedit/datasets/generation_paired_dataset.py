@@ -27,6 +27,11 @@ class GenerationPairedDataset(BaseGenerationDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
+        """Load paired image paths.
+
+        Returns:
+            list[dict]: List that contains paired image paths.
+        """
         data_infos = []
         pair_paths = sorted(self.scan_folder(self.dataroot))
         for pair_path in pair_paths:
