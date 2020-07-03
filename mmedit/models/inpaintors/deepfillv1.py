@@ -68,6 +68,16 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
         return loss
 
     def two_stage_loss(self, stage1_data, stage2_data, data_batch):
+        """Calculate two-stage loss.
+
+        Args:
+            stage1_data (dict): Contain stage1 results.
+            stage2_data (dict): Contain stage2 results.
+            data_batch (dict): Contain data needed to calculate loss.
+
+        Returns:
+            dict: Contain losses with name.
+        """
         gt = data_batch['gt_img']
         mask = data_batch['mask']
         masked_img = data_batch['masked_img']
@@ -118,6 +128,22 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
                                  mask,
                                  prefix='stage1_',
                                  fake_local=None):
+        """Calculate multiple types of losses.
+
+        Args:
+            loss_type (str): Type of the loss.
+            fake_res (torch.Tensor): Direct results from model.
+            fake_img (torch.Tensor): Composited results from model.
+            gt (torch.Tensor): Ground-truth tensor.
+            mask (torch.Tensor): Mask tensor.
+            prefix (str, optional): Prefix for loss name.
+                Defaults to 'stage1_'.
+            fake_local (torch.Tensor, optional): Local results from model.
+                Defaults to None.
+
+        Returns:
+            dict: Contain loss value with its name.
+        """
         loss_dict = dict()
         if loss_type == 'loss_gan':
             g_fake_global_pred, g_fake_local_pred = self.disc(

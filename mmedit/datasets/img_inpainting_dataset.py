@@ -16,6 +16,11 @@ class ImgInpaintingDataset(BaseDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
+        """Load annotations for dataset.
+
+        Returns:
+            list[dict]: Contain dataset annotations.
+        """
         with open(self.ann_file, 'r') as f:
             img_infos = []
             for idx, line in enumerate(f):

@@ -19,6 +19,20 @@ class PConvInpaintor(OneStageInpaintor):
                      save_path=None,
                      iteration=None,
                      **kwargs):
+        """Forward function for testing.
+
+        Args:
+            masked_img (torch.Tensor): Tensor with shape of (n, 3, h, w).
+            mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
+            save_image (bool, optional): If True, results will be saved as
+                image. Defaults to False.
+            save_path (str, optional): If given a valid str, the reuslts will
+                be saved in this path. Defaults to None.
+            iteration (int, optional): Iteration number. Defaults to None.
+
+        Returns:
+            dict: Contain output results and eval metrics (if have).
+        """
         mask_input = mask.expand_as(masked_img)
         mask_input = 1. - mask_input
 
@@ -72,6 +86,29 @@ class PConvInpaintor(OneStageInpaintor):
         return output
 
     def train_step(self, data_batch, optimizer):
+        """Train step function.
+
+        In this function, the inpaintor will finish the train step following
+        the pipeline:
+
+            1. get fake res/image
+            2. optimize discriminator (if have)
+            3. optimize generator
+
+        If `self.train_cfg.disc_step > 1`, the train step will contain multiple
+        iterations for optimizing discriminator with different input data and
+        only one iteration for optimizing gerator after `disc_step` iterations
+        for discriminator.
+
+        Args:
+            data_batch (torch.Tensor): Batch of data as input.
+            optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
+                generator and discriminator (if have).
+
+        Returns:
+            dict: Dict with loss, information for logger, the number of \
+                samples and results for visualization.
+        """
         log_vars = {}
 
         gt_img = data_batch['gt_img']

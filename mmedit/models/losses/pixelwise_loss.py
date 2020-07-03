@@ -163,11 +163,26 @@ class CharbonnierLoss(nn.Module):
 
 @LOSSES.register_module()
 class MaskedTVLoss(L1Loss):
+    """Masked TV loss.
+
+        Args:
+            loss_weight (float, optional): Loss weight. Defaults to 1.0.
+    """
 
     def __init__(self, loss_weight=1.0):
         super(MaskedTVLoss, self).__init__(loss_weight=loss_weight)
 
     def forward(self, pred, mask=None):
+        """Forward function.
+
+        Args:
+            pred (torch.Tensor): Tensor with shape of (n, c, h, w).
+            mask (torch.Tensor, optional): Tensor with shape of (n, 1, h, w).
+                Defaults to None.
+
+        Returns:
+            [type]: [description]
+        """
         y_diff = super(MaskedTVLoss, self).forward(
             pred[:, :, :-1, :], pred[:, :, 1:, :], weight=mask[:, :, :-1, :])
         x_diff = super(MaskedTVLoss, self).forward(

@@ -167,6 +167,11 @@ class GradientPenaltyLoss(nn.Module):
 
 @LOSSES.register_module()
 class DiscShiftLoss(nn.Module):
+    """Disc shift loss.
+
+        Args:
+            loss_weight (float, optional): Loss weight. Defaults to 1.0.
+    """
 
     def __init__(self, loss_weight=0.1):
         super(DiscShiftLoss, self).__init__()
