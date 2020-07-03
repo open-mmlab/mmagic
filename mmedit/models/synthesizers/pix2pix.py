@@ -80,11 +80,27 @@ class Pix2Pix(BaseModel):
         self.init_weights(pretrained)
 
     def init_weights(self, pretrained=None):
+        """Initialize weights for the model.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Default: None.
+        """
         self.generator.init_weights(pretrained=pretrained)
         self.discriminator.init_weights(pretrained=pretrained)
 
     def setup(self, img_a, img_b, meta):
-        # perform necessary pre-processing steps
+        """Perform necessary pre-processing steps.
+
+        Args:
+            img_a (Tensor): Input image from domain A.
+            img_b (Tensor): Input image from domain B.
+            meta (list[dict]): Input meta data.
+
+        Returns:
+            Tensor, Tensor, list[str]: The real images from domain A/B, and \
+                the image path as the metadata.
+        """
         a2b = self.direction == 'a2b'
         real_a = img_a if a2b else img_b
         real_b = img_b if a2b else img_a
@@ -93,6 +109,16 @@ class Pix2Pix(BaseModel):
         return real_a, real_b, image_path
 
     def forward_train(self, img_a, img_b, meta):
+        """Forward function for training.
+
+        Args:
+            img_a (Tensor): Input image from domain A.
+            img_b (Tensor): Input image from domain B.
+            meta (list[dict]): Input meta data.
+
+        Returns:
+            dict: Dict of forward results for training.
+        """
         # necessary setup
         real_a, real_b, image_path = self.setup(img_a, img_b, meta)
         fake_b = self.generator(real_a)
@@ -106,6 +132,21 @@ class Pix2Pix(BaseModel):
                      save_image=False,
                      save_path=None,
                      iteration=None):
+        """Forward function for testing.
+
+        Args:
+            img_a (Tensor): Input image from domain A.
+            img_b (Tensor): Input image from domain B.
+            meta (list[dict]): Input meta data.
+            save_image (bool, optional): If True, results will be saved as
+                images. Default: False.
+            save_path (str, optional): If given a valid str path, the results
+                will be saved in this path. Default: None.
+            iteration (int, optional): Iteration number. Default: None.
+
+        Returns:
+            dict: Dict of forward and evaluation results for testing.
+        """
         # No need for metrics during training for pix2pix. And
         # this is a special trick in pix2pix original paper & implementation,
         # collecting the statistics of the test batch at test time.
@@ -167,7 +208,7 @@ class Pix2Pix(BaseModel):
         Args:
             img_a (Tensor): Input image from domain A.
             img_b (Tensor): Input image from domain B.
-            meta (lst[dict]): Input meta data.
+            meta (list[dict]): Input meta data.
             test_mode (bool): Whether in test mode or not. Default: False.
             kwargs (dict): Other arguments.
         """
@@ -177,6 +218,14 @@ class Pix2Pix(BaseModel):
             return self.forward_test(img_a, img_b, meta, **kwargs)
 
     def backward_discriminator(self, outputs):
+        """Backward function for the discriminator.
+
+        Args:
+            outputs (dict): Dict of forward results.
+
+        Returns:
+            dict: Loss dict.
+        """
         # GAN loss for the discriminator
         losses = dict()
         # conditional GAN
@@ -195,6 +244,14 @@ class Pix2Pix(BaseModel):
         return log_vars_d
 
     def backward_generator(self, outputs):
+        """Backward function for the generator.
+
+        Args:
+            outputs (dict): Dict of forward results.
+
+        Returns:
+            dict: Loss dict.
+        """
         losses = dict()
         # GAN loss for the generator
         fake_ab = torch.cat((outputs['real_a'], outputs['fake_b']), 1)
@@ -211,6 +268,17 @@ class Pix2Pix(BaseModel):
         return log_vars_g
 
     def train_step(self, data_batch, optimizer):
+        """Training step function.
+
+        Args:
+            data_batch (dict): Dict of the input data batch.
+            optimizer (dict[torch.optim.Optimizer]): Dict of optimizers for
+                the generator and discriminator.
+
+        Returns:
+            dict: Dict of loss, information for logger, the number of samples\
+                and results for visualization.
+        """
         # data
         img_a = data_batch['img_a']
         img_b = data_batch['img_b']
@@ -251,6 +319,15 @@ class Pix2Pix(BaseModel):
         return results
 
     def val_step(self, data_batch, **kwargs):
+        """Validation step function.
+
+        Args:
+            data_batch (dict): Dict of the input data batch.
+            kwargs (dict): Other arguments.
+
+        Returns:
+            dict: Dict of evaluation results for validation.
+        """
         # data
         img_a = data_batch['img_a']
         img_b = data_batch['img_b']

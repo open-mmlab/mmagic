@@ -35,6 +35,15 @@ class GenerationUnpairedDataset(BaseGenerationDataset):
         self.len_b = len(self.data_infos_b)
 
     def load_annotations(self, dataroot):
+        """Load unpaired image paths of one domain.
+
+        Args:
+            dataroot (str): Path to the folder root for unpaired images of
+                one domain.
+
+        Returns:
+            list[dict]: List that contains unpaired image paths of one domain.
+        """
         data_infos = []
         paths = sorted(self.scan_folder(dataroot))
         for path in paths:
@@ -42,6 +51,14 @@ class GenerationUnpairedDataset(BaseGenerationDataset):
         return data_infos
 
     def prepare_train_data(self, idx):
+        """Prepare unpaired training data.
+
+        Args:
+            idx (int): Index of current batch.
+
+        Returns:
+            dict: Prepared training data batch.
+        """
         img_a_path = self.data_infos_a[idx % self.len_a]['path']
         idx_b = np.random.randint(0, self.len_b)
         img_b_path = self.data_infos_b[idx_b]['path']
@@ -49,6 +66,14 @@ class GenerationUnpairedDataset(BaseGenerationDataset):
         return self.pipeline(results)
 
     def prepare_test_data(self, idx):
+        """Prepare unpaired test data.
+
+        Args:
+            idx (int): Index of current batch.
+
+        Returns:
+            list[dict]: Prepared test data batch.
+        """
         img_a_path = self.data_infos_a[idx % self.len_a]['path']
         img_b_path = self.data_infos_b[idx % self.len_b]['path']
         results = dict(img_a_path=img_a_path, img_b_path=img_b_path)

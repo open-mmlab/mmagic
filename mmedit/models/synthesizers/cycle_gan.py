@@ -117,19 +117,44 @@ class CycleGAN(BaseModel):
         self.init_weights(pretrained)
 
     def init_weights(self, pretrained=None):
+        """Initialize weights for the model.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Default: None.
+        """
         self.generators['a'].init_weights(pretrained=pretrained)
         self.generators['b'].init_weights(pretrained=pretrained)
         self.discriminators['a'].init_weights(pretrained=pretrained)
         self.discriminators['b'].init_weights(pretrained=pretrained)
 
     def get_module(self, module):
+        """Get `nn.ModuleDict` to fit the `MMDistributedDataParallel` interface.
+
+        Args:
+            module (MMDistributedDataParallel | nn.ModuleDict): The input
+                module that needs processing.
+
+        Returns:
+            nn.ModuleDict: The ModuleDict of multiple networks.
+        """
         if isinstance(module, MMDistributedDataParallel):
             return module.module
         else:
             return module
 
     def setup(self, img_a, img_b, meta):
-        # perform necessary pre-processing steps
+        """Perform necessary pre-processing steps.
+
+        Args:
+            img_a (Tensor): Input image from domain A.
+            img_b (Tensor): Input image from domain B.
+            meta (list[dict]): Input meta data.
+
+        Returns:
+            Tensor, Tensor, list[str]: The real images from domain A/B, and \
+                the image path as the metadata.
+        """
         a2b = self.direction == 'a2b'
         real_a = img_a if a2b else img_b
         real_b = img_b if a2b else img_a
@@ -138,6 +163,16 @@ class CycleGAN(BaseModel):
         return real_a, real_b, image_path
 
     def forward_train(self, img_a, img_b, meta):
+        """Forward function for training.
+
+        Args:
+            img_a (Tensor): Input image from domain A.
+            img_b (Tensor): Input image from domain B.
+            meta (list[dict]): Input meta data.
+
+        Returns:
+            dict: Dict of forward results for training.
+        """
         # necessary setup
         real_a, real_b, image_path = self.setup(img_a, img_b, meta)
 
@@ -164,6 +199,21 @@ class CycleGAN(BaseModel):
                      save_image=False,
                      save_path=None,
                      iteration=None):
+        """Forward function for testing.
+
+        Args:
+            img_a (Tensor): Input image from domain A.
+            img_b (Tensor): Input image from domain B.
+            meta (list[dict]): Input meta data.
+            save_image (bool, optional): If True, results will be saved as
+                images. Default: False.
+            save_path (str, optional): If given a valid str path, the results
+                will be saved in this path. Default: None.
+            iteration (int, optional): Iteration number. Default: None.
+
+        Returns:
+            dict: Dict of forward and evaluation results for testing.
+        """
         # No need for metrics during training for CycleGAN. And
         # this is a special trick in CycleGAN original paper & implementation,
         # collecting the statistics of the test batch at test time.
@@ -246,7 +296,7 @@ class CycleGAN(BaseModel):
         Args:
             img_a (Tensor): Input image from domain A.
             img_b (Tensor): Input image from domain B.
-            meta (lst[dict]): Input meta data.
+            meta (list[dict]): Input meta data.
             test_mode (bool): Whether in test mode or not. Default: False.
             kwargs (dict): Other arguments.
         """
@@ -256,6 +306,14 @@ class CycleGAN(BaseModel):
             return self.forward_test(img_a, img_b, meta, **kwargs)
 
     def backward_discriminators(self, outputs):
+        """Backward function for the discriminators.
+
+        Args:
+            outputs (dict): Dict of forward results.
+
+        Returns:
+            dict: Loss dict.
+        """
         discriminators = self.get_module(self.discriminators)
 
         log_vars_d = dict()
@@ -293,6 +351,14 @@ class CycleGAN(BaseModel):
         return log_vars_d
 
     def backward_generators(self, outputs):
+        """Backward function for the generators.
+
+        Args:
+            outputs (dict): Dict of forward results.
+
+        Returns:
+            dict: Loss dict.
+        """
         generators = self.get_module(self.generators)
         discriminators = self.get_module(self.discriminators)
 
@@ -327,6 +393,17 @@ class CycleGAN(BaseModel):
         return log_vars_g
 
     def train_step(self, data_batch, optimizer):
+        """Training step function.
+
+        Args:
+            data_batch (dict): Dict of the input data batch.
+            optimizer (dict[torch.optim.Optimizer]): Dict of optimizers for
+                the generators and discriminators.
+
+        Returns:
+            dict: Dict of loss, information for logger, the number of samples\
+                and results for visualization.
+        """
         # data
         img_a = data_batch['img_a']
         img_b = data_batch['img_b']
@@ -368,6 +445,15 @@ class CycleGAN(BaseModel):
         return results
 
     def val_step(self, data_batch, **kwargs):
+        """Validation step function.
+
+        Args:
+            data_batch (dict): Dict of the input data batch.
+            kwargs (dict): Other arguments.
+
+        Returns:
+            dict: Dict of evaluation results for validation.
+        """
         # data
         img_a = data_batch['img_a']
         img_b = data_batch['img_b']

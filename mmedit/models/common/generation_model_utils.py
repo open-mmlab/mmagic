@@ -20,6 +20,11 @@ def generation_init_weights(module, init_type='normal', init_gain=0.02):
     """
 
     def init_func(m):
+        """Initialization function.
+
+        Args:
+            m (nn.Module): Module to be initialized.
+        """
         classname = m.__class__.__name__
         if hasattr(m, 'weight') and (classname.find('Conv') != -1
                                      or classname.find('Linear') != -1):
@@ -72,6 +77,11 @@ class GANImageBuffer(object):
         self.buffer_ratio = buffer_ratio
 
     def query(self, images):
+        """Query current image batch using a history of generated images.
+
+        Args:
+            images (Tensor): Current image batch without history information.
+        """
         if self.buffer_size == 0:  # if the buffer size is 0, do nothing
             return images
         return_images = []

@@ -115,6 +115,12 @@ class PatchDiscriminator(nn.Module):
         return self.model(x)
 
     def init_weights(self, pretrained=None):
+        """Initialize weights for the model.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Default: None.
+        """
         if isinstance(pretrained, str):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=False, logger=logger)
