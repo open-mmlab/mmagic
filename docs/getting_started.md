@@ -250,7 +250,7 @@ Params: 1.52 M
 
 (1) FLOPs are related to the input shape while parameters are not. The default input shape is (1, 3, 250, 250).
 (2) Some operators are not counted into FLOPs like GN and custom operators.
-You can add support for new operators by modifying [`mmedit/utils/flops_counter.py`](https://github.com/open-mmlab/mmediting/blob/master/mmedit/utils/flops_counter.py).
+You can add support for new operators by modifying [`mmcv/cnn/utils/flops_counter.py`](https://github.com/open-mmlab/mmcv/blob/master/mmcv/cnn/utils/flops_counter.py).
 
 ### Publish a model
 
