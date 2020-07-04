@@ -10,16 +10,43 @@ _reduction_modes = ['none', 'mean', 'sum']
 
 @masked_loss
 def l1_loss(pred, target):
+    """L1 loss.
+
+    Args:
+        pred (Tensor): Prediction Tensor with shape (n, c, h, w).
+        target ([type]): Target Tensor with shape (n, c, h, w).
+
+    Returns:
+        Tensor: Calculated L1 loss.
+    """
     return F.l1_loss(pred, target, reduction='none')
 
 
 @masked_loss
 def mse_loss(pred, target):
+    """MSE loss.
+
+    Args:
+        pred (Tensor): Prediction Tensor with shape (n, c, h, w).
+        target ([type]): Target Tensor with shape (n, c, h, w).
+
+    Returns:
+        Tensor: Calculated MSE loss.
+    """
     return F.mse_loss(pred, target, reduction='none')
 
 
 @masked_loss
 def charbonnier_loss(pred, target, eps=1e-12):
+    """Charbonnier loss.
+
+    Args:
+        pred (Tensor): Prediction Tensor with shape (n, c, h, w).
+        target ([type]): Target Tensor with shape (n, c, h, w).
+
+    Returns:
+        Tensor: Calculated Charbonnier loss.
+    """
     return torch.sqrt((pred - target)**2 + eps)
 
 

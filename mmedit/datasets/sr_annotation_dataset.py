@@ -53,6 +53,15 @@ class SRAnnotationDataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
+        """Load annoations for SR dataset.
+
+        It loads the LQ and GT image path from the annotation file.
+        Each line in the annotation file contains the image names and
+        image shape (usually for gt), separated by a white space.
+
+        Returns:
+            dict: Returned dict for LQ and GT pairs.
+        """
         data_infos = []
         with open(self.ann_file, 'r') as fin:
             for line in fin:

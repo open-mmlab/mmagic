@@ -149,7 +149,8 @@ class GradientPenaltyLoss(nn.Module):
         self.loss_weight = loss_weight
 
     def forward(self, discriminator, real_data, fake_data, mask=None):
-        """
+        """Forward function.
+
         Args:
             discriminator (nn.Module): Network for the discriminator.
             real_data (Tensor): Real input data.
@@ -178,6 +179,14 @@ class DiscShiftLoss(nn.Module):
         self.loss_weight = loss_weight
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Tensor with shape (n, c, h, w)
+
+        Returns:
+            Tensor: Loss.
+        """
         loss = torch.mean(x**2)
 
         return loss * self.loss_weight

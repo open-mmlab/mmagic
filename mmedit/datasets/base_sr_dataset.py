@@ -42,6 +42,11 @@ class BaseSRDataset(BaseDataset):
         return images
 
     def __getitem__(self, idx):
+        """Get item at each call.
+
+        Args:
+            idx (int): Index for getting each item.
+        """
         results = copy.deepcopy(self.data_infos[idx])
         results['scale'] = self.scale
         return self.pipeline(results)

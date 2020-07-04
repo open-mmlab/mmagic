@@ -65,11 +65,25 @@ class SRGAN(BasicRestorer):
         self.init_weights(pretrained)
 
     def init_weights(self, pretrained=None):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+        """
         self.generator.init_weights(pretrained=pretrained)
         if self.discriminator:
             self.discriminator.init_weights(pretrained=pretrained)
 
     def forward(self, lq, gt=None, test_mode=False, **kwargs):
+        """Forward function.
+
+        Args:
+            lq (Tensor): Input lq images.
+            gt (Tensor): Ground-truth image. Default: None.
+            test_mode (bool): Whether in test mode or not. Default: False.
+            kwargs (dict): Other arguments.
+        """
         if not test_mode:
             raise ValueError(
                 'SRGAN model does not supprot `forward_train` function.')
@@ -77,6 +91,15 @@ class SRGAN(BasicRestorer):
             return self.forward_test(lq, gt, **kwargs)
 
     def train_step(self, data_batch, optimizer):
+        """Train step.
+
+        Args:
+            data_batch (dict): A batch of data.
+            optimizer (obj): Optimizer.
+
+        Returns:
+            dict: Returned output.
+        """
         # data
         lq = data_batch['lq']
         gt = data_batch['gt']

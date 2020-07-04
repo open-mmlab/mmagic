@@ -28,6 +28,15 @@ class Compose(object):
                                 f'but got {type(transform)}')
 
     def __call__(self, data):
+        """Call function.
+
+        Args:
+            data (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         for t in self.transforms:
             data = t(data)
             if data is None:

@@ -58,6 +58,11 @@ class SRVid4Dataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
+        """Load annoations for Vid4 dataset.
+
+        Returns:
+            dict: Returned dict for LQ and GT pairs.
+        """
         data_infos = []
         with open(self.ann_file, 'r') as fin:
             for line in fin:

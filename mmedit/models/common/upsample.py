@@ -32,6 +32,8 @@ class PixelShufflePack(nn.Module):
         self.init_weights()
 
     def init_weights(self):
+        """Initialize weights for PixelShufflePack.
+        """
         default_init_weights(self, 1)
 
     def forward(self, x):

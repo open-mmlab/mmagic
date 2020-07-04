@@ -49,6 +49,15 @@ class Crop(object):
         return data_, crop_bbox
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         for k in self.keys:
             data_, crop_bbox = self._crop(results[k])
             results[k] = data_
@@ -97,6 +106,15 @@ class FixedCrop(object):
         return data_, crop_bbox
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         data_h, data_w = results[self.keys[0]].shape[:2]
         crop_h, crop_w = self.crop_size
         crop_h = min(data_h, crop_h)
@@ -150,6 +168,15 @@ class PairedRandomCrop(object):
         self.gt_patch_size = gt_patch_size
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         scale = results['scale']
         lq_patch_size = self.gt_patch_size // scale
 
@@ -226,6 +253,15 @@ class CropAroundCenter(object):
         self.crop_size = _pair(crop_size)
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         fg = results['fg']
         alpha = results['alpha']
         trimap = results['trimap']
@@ -340,6 +376,15 @@ class CropAroundUnknown(object):
                 f'the same length as keys, but got {interpolations}')
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         h, w = results[self.keys[0]].shape[:2]
 
         rand_ind = np.random.randint(len(self.crop_sizes))
@@ -409,6 +454,15 @@ class CropAroundFg(object):
         self.test_mode = test_mode
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         seg = results['seg']
         height, width = seg.shape[:2]
 
@@ -448,6 +502,15 @@ class ModCrop(object):
     """
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         img = results['gt'].copy()
         scale = results['scale']
         if img.ndim in [2, 3]:

@@ -47,6 +47,12 @@ class BasicRestorer(BaseModel):
         self.pixel_loss = build_loss(pixel_loss)
 
     def init_weights(self, pretrained=None):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+        """
         self.generator.init_weights(pretrained)
 
     def forward(self, lq, gt=None, test_mode=False, **kwargs):
@@ -65,6 +71,15 @@ class BasicRestorer(BaseModel):
             return self.forward_test(lq, gt, **kwargs)
 
     def forward_train(self, lq, gt):
+        """Training forward function.
+
+        Args:
+            lq (Tensor): LQ Tensor with shape (n, c, h, w).
+            gt (Tensor): GT Tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Output tensor.
+        """
         losses = dict()
         output = self.generator(lq)
         loss_pix = self.pixel_loss(output, gt)
@@ -76,6 +91,15 @@ class BasicRestorer(BaseModel):
         return outputs
 
     def evaluate(self, output, gt):
+        """Evaluation function.
+
+        Args:
+            output (Tensor): Model output with shape (n, c, h, w).
+            gt (Tensor): GT Tensor with shape (n, c, h, w).
+
+        Returns:
+            dict: Evaluation results.
+        """
         crop_border = self.test_cfg.crop_border
 
         output = tensor2img(output)
@@ -94,6 +118,19 @@ class BasicRestorer(BaseModel):
                      save_image=False,
                      save_path=None,
                      iteration=None):
+        """Testing forward function.
+
+        Args:
+            lq (Tensor): LQ Tensor with shape (n, c, h, w).
+            gt (Tensor): GT Tensor with shape (n, c, h, w). Default: None.
+            save_image (bool): Whether to save image. Default: False.
+            save_path (str): Path to save image. Default: None.
+            iteration (int): Iteration for the saving image name.
+                Default: None.
+
+        Returns:
+            dict: Output results.
+        """
         output = self.generator(lq)
         if self.test_cfg is not None and self.test_cfg.get('metrics', None):
             assert gt is not None, (
@@ -133,6 +170,15 @@ class BasicRestorer(BaseModel):
         return out
 
     def train_step(self, data_batch, optimizer):
+        """Train step.
+
+        Args:
+            data_batch (dict): A batch of data.
+            optimizer (obj): Optimizer.
+
+        Returns:
+            dict: Returned output.
+        """
         outputs = self(**data_batch, test_mode=False)
         loss, log_vars = self.parse_losses(outputs.pop('losses'))
 
@@ -145,5 +191,14 @@ class BasicRestorer(BaseModel):
         return outputs
 
     def val_step(self, data_batch, **kwargs):
+        """Validation step.
+
+        Args:
+            data_batch (dict): A batch of data.
+            kwargs (dict): Other arguments for ``val_step``.
+
+        Returns:
+            dict: Returned output.
+        """
         output = self.forward_test(**data_batch, **kwargs)
         return output

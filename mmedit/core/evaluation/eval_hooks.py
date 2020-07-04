@@ -29,6 +29,11 @@ class EvalIterHook(Hook):
         self.save_path = self.eval_kwargs.pop('save_path', None)
 
     def after_train_iter(self, runner):
+        """The behavior after each train iteration.
+
+        Args:
+            runner (``mmcv.runner.BaseRunner``): The runner.
+        """
         if not self.every_n_iters(runner, self.interval):
             return
         from mmedit.core import single_gpu_test
@@ -41,6 +46,12 @@ class EvalIterHook(Hook):
         self.evaluate(runner, results)
 
     def evaluate(self, runner, results):
+        """Evaluation function.
+
+        Args:
+            runner (``mmcv.runner.BaseRunner``): The runner.
+            results (dict): Model forward results.
+        """
         eval_res = self.dataloader.dataset.evaluate(
             results, logger=runner.logger, **self.eval_kwargs)
         for name, val in eval_res.items():
@@ -73,6 +84,11 @@ class DistEvalIterHook(EvalIterHook):
         self.gpu_collect = gpu_collect
 
     def after_train_iter(self, runner):
+        """The behavior after each train iteration.
+
+        Args:
+            runner (``mmcv.runner.BaseRunner``): The runner.
+        """
         if not self.every_n_iters(runner, self.interval):
             return
         runner.log_buffer.clear()

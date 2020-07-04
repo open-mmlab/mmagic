@@ -25,6 +25,15 @@ class LinearLrUpdaterHook(LrUpdaterHook):
         self.interval = interval
 
     def get_lr(self, runner, base_lr):
+        """Calculates the learning rate.
+
+        Args:
+            runner (object): The passed runner.
+            base_lr (float): Base learning rate.
+
+        Returns:
+            float: Current learning rate.
+        """
         if self.by_epoch:
             progress = runner.epoch
             max_progress = runner.max_epochs
