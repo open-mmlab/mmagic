@@ -30,13 +30,24 @@ class ResidualDenseBlock(nn.Module):
         self.init_weights()
 
     def init_weights(self):
-        # Use smaller std for better stability and performance. We empirically
-        # use 0.1. See more details in "ESRGAN: Enhanced Super-Resolution
-        # Generative Adversarial Networks"
+        """Init weights for ResidualDenseBlock.
+
+        Use smaller std for better stability and performance. We empirically
+        use 0.1. See more details in "ESRGAN: Enhanced Super-Resolution
+        Generative Adversarial Networks"
+        """
         for i in range(5):
             default_init_weights(getattr(self, f'conv{i+1}'), 0.1)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
         x1 = self.lrelu(self.conv1(x))
         x2 = self.lrelu(self.conv2(torch.cat((x, x1), 1)))
         x3 = self.lrelu(self.conv3(torch.cat((x, x1, x2), 1)))
@@ -63,6 +74,14 @@ class RRDB(nn.Module):
         self.rdb3 = ResidualDenseBlock(mid_channels, growth_channels)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
         out = self.rdb1(x)
         out = self.rdb2(out)
         out = self.rdb3(out)
@@ -131,6 +150,14 @@ class RRDBNet(nn.Module):
         return out
 
     def init_weights(self, pretrained=None, strict=True):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+            strict (boo, optional): Whether strictly load the pretrained model.
+                Defaults to True.
+        """
         if isinstance(pretrained, str):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=strict, logger=logger)

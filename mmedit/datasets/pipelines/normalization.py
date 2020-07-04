@@ -26,6 +26,15 @@ class Normalize(object):
         self.to_rgb = to_rgb
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         for key in self.keys:
             if isinstance(results[key], list):
                 for v in results[key]:
@@ -65,6 +74,15 @@ class RescaleToZeroOne(object):
         self.keys = keys
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         for key in self.keys:
             if isinstance(results[key], list):
                 results[key] = [

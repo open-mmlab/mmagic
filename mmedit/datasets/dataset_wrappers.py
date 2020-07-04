@@ -22,7 +22,17 @@ class RepeatDataset(object):
         self._ori_len = len(self.dataset)
 
     def __getitem__(self, idx):
+        """Get item at each call.
+
+        Args:
+            idx (int): Index for getting each item.
+        """
         return self.dataset[idx % self._ori_len]
 
     def __len__(self):
+        """Length of the dataset.
+
+        Returns:
+            int: Length of the dataset.
+        """
         return self.times * self._ori_len

@@ -58,6 +58,11 @@ class VisualizationHook(Hook):
 
     @master_only
     def after_train_iter(self, runner):
+        """The behavior after each train iteration.
+
+        Args:
+            runner (object): The runner.
+        """
         if not self.every_n_iters(runner, self.interval):
             return
         results = runner.outputs['results']

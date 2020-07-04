@@ -42,6 +42,15 @@ class ToTensor(object):
         self.keys = keys
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         for key in self.keys:
             results[key] = to_tensor(results[key])
         return results
@@ -65,6 +74,15 @@ class ImageToTensor(object):
         self.to_float32 = to_float32
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         for key in self.keys:
             # deal with gray scale img: expand a color channel
             if len(results[key].shape) == 2:
@@ -93,6 +111,15 @@ class FramesToTensor(ImageToTensor):
     """
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         for key in self.keys:
             if not isinstance(results[key], list):
                 raise TypeError(f'results["{key}"] should be a list, '
@@ -126,6 +153,15 @@ class GetMaskedImage(object):
         self.mask_name = mask_name
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         clean_img = results[self.img_name]
         mask = results[self.mask_name]
 
@@ -156,6 +192,15 @@ class FormatTrimap(object):
         self.to_onehot = to_onehot
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         trimap = results['trimap'].squeeze()
         trimap[trimap == 128] = 1
         trimap[trimap == 255] = 2
@@ -192,6 +237,15 @@ class Collect(object):
         self.meta_keys = meta_keys
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         data = {}
         img_meta = {}
         for key in self.meta_keys:

@@ -28,20 +28,49 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
 
     @abstractmethod
     def load_annotations(self):
-        pass
+        """Abstract function for loading annotation.
+
+        All subclasses should overwrite this function
+        """
 
     def prepare_train_data(self, idx):
+        """Prepare training data.
+
+        Args:
+            idx (int): Index of the training batch data.
+
+        Returns:
+            dict: Returned training batch.
+        """
         results = copy.deepcopy(self.data_infos[idx])
         return self.pipeline(results)
 
     def prepare_test_data(self, idx):
+        """Prepare testing data.
+
+        Args:
+            idx (int): Index for getting each testing batch.
+
+        Returns:
+            Tensor: Returned testing batch.
+        """
         results = copy.deepcopy(self.data_infos[idx])
         return self.pipeline(results)
 
     def __len__(self):
+        """Length of the dataset.
+
+        Returns:
+            int: Length of the dataset.
+        """
         return len(self.data_infos)
 
     def __getitem__(self, idx):
+        """Get item at each call.
+
+        Args:
+            idx (int): Index for getting each item.
+        """
         if not self.test_mode:
             return self.prepare_train_data(idx)
         else:

@@ -26,6 +26,15 @@ class MergeFgAndBg(object):
     """
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         alpha = results['alpha'][..., None].astype(np.float32) / 255.
         fg = results['fg']
         bg = results['bg']
@@ -88,6 +97,15 @@ class GenerateTrimap(object):
             ]
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         alpha = results['alpha']
 
         if self.random:
@@ -142,6 +160,15 @@ class GenerateTrimapWithDistTransform(object):
         self.random = random
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         alpha = results['alpha']
 
         # image dilation implemented by Euclidean distance transform
@@ -202,6 +229,15 @@ class CompositeFg(object):
             self.fg_dirs, self.alpha_dirs)
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         fg = results['fg']
         alpha = results['alpha'].astype(np.float32) / 255.
         h, w = results['fg'].shape[:2]
@@ -315,6 +351,15 @@ class GenerateSeg(object):
         return img
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         alpha = results['alpha']
         trimap = results['trimap']
 
@@ -372,6 +417,15 @@ class PerturbBg(object):
         self.gamma_ratio = gamma_ratio
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         if np.random.rand() >= self.gamma_ratio:
             # generate gaussian noise with random guassian N([-7, 7), [2, 6))
             mu = np.random.randint(-7, 7)
@@ -451,6 +505,15 @@ class GenerateSoftSeg(object):
         self.blur_ksizes = blur_ksizes
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         seg = results['seg'].astype(np.float32) / 255
         height, width = seg.shape[:2]
         seg[seg > self.fg_thr] = 1

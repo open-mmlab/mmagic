@@ -136,20 +136,48 @@ class DistributedDataParallelWrapper(nn.Module):
         return destination
 
     def scatter(self, inputs, kwargs, device_ids):
+        """Scatter function.
+
+        Args:
+            inputs (Tensor): Input Tensor.
+            kwargs (dict): Args for
+                ``mmcv.parallel.scatter_gather.scatter_kwargs``.
+            device_ids (int): Device id.
+        """
         return scatter_kwargs(inputs, kwargs, device_ids, dim=self.dim)
 
     def forward(self, *inputs, **kwargs):
+        """Forward function.
+
+        Args:
+            inputs (tuple): Input data.
+            kwargs (dict): Args for
+                ``mmcv.parallel.scatter_gather.scatter_kwargs``.
+        """
         inputs, kwargs = self.scatter(inputs, kwargs,
                                       [torch.cuda.current_device()])
         return self.module(*inputs[0], **kwargs[0])
 
     def train_step(self, *inputs, **kwargs):
+        """Train step function.
+
+        Args:
+            inputs (Tensor): Input Tensor.
+            kwargs (dict): Args for
+                ``mmcv.parallel.scatter_gather.scatter_kwargs``.
+        """
         inputs, kwargs = self.scatter(inputs, kwargs,
                                       [torch.cuda.current_device()])
         output = self.module.train_step(*inputs[0], **kwargs[0])
         return output
 
     def val_step(self, *inputs, **kwargs):
+        """Validation step function.
+
+        Args:
+            inputs (tuple): Input data.
+            kwargs (dict): Args for ``scatter_kwargs``.
+        """
         inputs, kwargs = self.scatter(inputs, kwargs,
                                       [torch.cuda.current_device()])
         output = self.module.val_step(*inputs[0], **kwargs[0])

@@ -107,6 +107,15 @@ class Resize(object):
         return img
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         if self.size_factor:
             h, w = results[self.keys[0]].shape[:2]
             new_h = h - (h % self.size_factor)
@@ -164,6 +173,15 @@ class Flip(object):
         self.direction = direction
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         flip = np.random.random() < self.flip_ratio
 
         if flip:
@@ -210,6 +228,15 @@ class Pad(object):
         self.kwargs = kwargs
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         h, w = results[self.keys[0]].shape[:2]
 
         new_h = self.ds_factor * ((h - 1) // self.ds_factor + 1)
@@ -409,6 +436,15 @@ class RandomAffine(object):
         return matrix
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         h, w = results[self.keys[0]].shape[:2]
         # if image is too small, set degree to 0 to reduce introduced dark area
         if np.maximum(h, w) < 1024:
@@ -464,6 +500,15 @@ class RandomJitter(object):
             self.hue_range = hue_range
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         fg, alpha = results['fg'], results['alpha']
 
         # convert to HSV space;
@@ -522,6 +567,15 @@ class BinarizeImage(object):
         return img
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         for k in self.keys:
             results[k] = self._binarize(results[k])
 
@@ -566,6 +620,15 @@ class RandomMaskDilation(object):
         return img_, dilate_kernel_size
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         for k in self.keys:
             results[k], d_kernel = self._random_dilate(results[k])
             if len(results[k].shape) == 2:
@@ -604,6 +667,15 @@ class RandomTransposeHW(object):
         self.transpose_ratio = transpose_ratio
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         transpose = np.random.random() < self.transpose_ratio
 
         if transpose:
@@ -657,6 +729,15 @@ class GenerateFrameIndiceswithPadding(object):
         self.filename_tmpl = filename_tmpl
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         clip_name, frame_name = results['key'].split('/')
         current_idx = int(frame_name)
         max_frame_num = results['max_frame_num'] - 1  # start from 0
@@ -726,6 +807,15 @@ class GenerateFrameIndices(object):
         self.frames_per_clip = frames_per_clip
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         clip_name, frame_name = results['key'].split(
             '/')  # key example: 000/00000000
         center_frame_idx = int(frame_name)
@@ -782,6 +872,15 @@ class TemporalReverse(object):
         self.reverse_ratio = reverse_ratio
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         reverse = np.random.random() < self.reverse_ratio
 
         if reverse:

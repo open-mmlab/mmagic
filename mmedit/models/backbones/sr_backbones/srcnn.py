@@ -74,6 +74,14 @@ class SRCNN(nn.Module):
         return out
 
     def init_weights(self, pretrained=None, strict=True):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+            strict (boo, optional): Whether strictly load the pretrained model.
+                Defaults to True.
+        """
         if isinstance(pretrained, str):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=strict, logger=logger)

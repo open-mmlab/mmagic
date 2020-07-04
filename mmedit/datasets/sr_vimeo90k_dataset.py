@@ -52,6 +52,11 @@ class SRVimeo90KDataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
+        """Load annoations for VimeoK dataset.
+
+        Returns:
+            dict: Returned dict for LQ and GT pairs.
+        """
         # get keys
         with open(self.ann_file, 'r') as fin:
             keys = [line.strip().split(' ')[0] for line in fin]

@@ -25,14 +25,26 @@ class BaseModel(nn.Module, metaclass=ABCMeta):
 
     @abstractmethod
     def init_weights(self):
+        """Abstract method for initializing weight.
+
+        All subclass should overwrite it.
+        """
         pass
 
     @abstractmethod
     def forward_train(self, imgs, labels):
+        """Abstract method for training forward.
+
+        All subclass should overwrite it.
+        """
         pass
 
     @abstractmethod
     def forward_test(self, imgs):
+        """Abstract method for testing forward.
+
+        All subclass should overwrite it.
+        """
         pass
 
     def forward(self, imgs, labels, test_mode, **kwargs):
@@ -55,9 +67,17 @@ class BaseModel(nn.Module, metaclass=ABCMeta):
 
     @abstractmethod
     def train_step(self, data_batch, optimizer):
+        """Abstract method for one training step.
+
+        All subclass should overwrite it.
+        """
         pass
 
     def val_step(self, data_batch, **kwargs):
+        """Abstract method for one validation step.
+
+        All subclass should overwrite it.
+        """
         output = self.forward_test(**data_batch, **kwargs)
         return output
 

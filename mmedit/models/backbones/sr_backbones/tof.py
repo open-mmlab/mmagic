@@ -183,9 +183,25 @@ class TOFlow(nn.Module):
         self.relu = nn.ReLU(inplace=True)
 
     def normalize(self, img):
+        """Normalize the input image.
+
+        Args:
+            img (Tensor): Input image.
+
+        Returns:
+            Tensor: Normalized image.
+        """
         return (img - self.mean) / self.std
 
     def denormalize(self, img):
+        """Denormalize the output image.
+
+        Args:
+            img (Tensor): Output image.
+
+        Returns:
+            Tensor: Denormalized image.
+        """
         return img * self.std + self.mean
 
     def forward(self, lrs):
@@ -226,6 +242,14 @@ class TOFlow(nn.Module):
         return self.denormalize(hr)
 
     def init_weights(self, pretrained=None, strict=True):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+            strict (boo, optional): Whether strictly load the pretrained model.
+                Defaults to True.
+        """
         if isinstance(pretrained, str):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=strict, logger=logger)

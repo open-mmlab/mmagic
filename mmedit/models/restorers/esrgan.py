@@ -33,6 +33,15 @@ class ESRGAN(SRGAN):
     """
 
     def train_step(self, data_batch, optimizer):
+        """Train step.
+
+        Args:
+            data_batch (dict): A batch of data.
+            optimizer (obj): Optimizer.
+
+        Returns:
+            dict: Returned output.
+        """
         # data
         lq = data_batch['lq']
         gt = data_batch['gt']

@@ -40,6 +40,15 @@ class LoadImageFromFile(object):
         self.file_client = None
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         if self.file_client is None:
             self.file_client = FileClient(self.io_backend, **self.kwargs)
         filepath = str(results[f'{self.key}_path'])
@@ -80,6 +89,15 @@ class LoadImageFromFileList(LoadImageFromFile):
     """
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
 
         if self.file_client is None:
             self.file_client = FileClient(self.io_backend, **self.kwargs)
@@ -135,6 +153,15 @@ class RandomLoadResizeBg(object):
         self.file_client = None
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         if self.file_client is None:
             self.file_client = FileClient(self.io_backend, **self.kwargs)
         h, w = results['fg'].shape[:2]
@@ -280,6 +307,16 @@ class LoadMask(object):
         return mask
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+
         if self.mask_mode == 'bbox':
             mask_bbox = random_bbox(**self.mask_config)
             mask = bbox2mask(self.mask_config['img_shape'], mask_bbox)
@@ -340,6 +377,16 @@ class GetSpatialDiscountMask(object):
         return mask_values
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+
         mask_bbox = results['mask_bbox']
         mask = results['mask']
         mask_height, mask_width = mask_bbox[-2:]
@@ -384,6 +431,15 @@ class LoadPairedImageFromFile(LoadImageFromFile):
     """
 
     def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         if self.file_client is None:
             self.file_client = FileClient(self.io_backend, **self.kwargs)
         filepath = str(results[f'{self.key}_path'])

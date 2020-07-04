@@ -34,6 +34,15 @@ class EDVR(BasicRestorer):
         self.step_counter = 0  # count training steps
 
     def train_step(self, data_batch, optimizer):
+        """Train step.
+
+        Args:
+            data_batch (dict): A batch of data.
+            optimizer (obj): Optimizer.
+
+        Returns:
+            dict: Returned output.
+        """
         if self.step_counter == 0 and self.with_tsa:
             if self.train_cfg is None or (self.train_cfg is not None and
                                           'tsa_iter' not in self.train_cfg):
@@ -81,6 +90,19 @@ class EDVR(BasicRestorer):
                      save_image=False,
                      save_path=None,
                      iteration=None):
+        """Testing forward function.
+
+        Args:
+            lq (Tensor): LQ Tensor with shape (n, c, h, w).
+            gt (Tensor): GT Tensor with shape (n, c, h, w). Default: None.
+            save_image (bool): Whether to save image. Default: False.
+            save_path (str): Path to save image. Default: None.
+            iteration (int): Iteration for the saving image name.
+                Default: None.
+
+        Returns:
+            dict: Output results.
+        """
         output = self.generator(lq)
         if self.test_cfg is not None and self.test_cfg.get('metrics', None):
             assert gt is not None, (
