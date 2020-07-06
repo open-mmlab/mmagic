@@ -36,7 +36,7 @@ class EvalIterHook(Hook):
         """
         if not self.every_n_iters(runner, self.interval):
             return
-        from mmedit.core import single_gpu_test
+        from mmedit.apis import single_gpu_test
         results = single_gpu_test(
             runner.model,
             self.dataloader,
@@ -92,7 +92,7 @@ class DistEvalIterHook(EvalIterHook):
         if not self.every_n_iters(runner, self.interval):
             return
         runner.log_buffer.clear()
-        from mmedit.core import multi_gpu_test
+        from mmedit.apis import multi_gpu_test
         results = multi_gpu_test(
             runner.model,
             self.dataloader,
