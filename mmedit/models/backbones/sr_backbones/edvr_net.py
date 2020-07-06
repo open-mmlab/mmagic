@@ -1,16 +1,16 @@
 import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule, constant_init, kaiming_init
+from mmcv.ops import ModulatedDeformConv2d, modulated_deform_conv2d
 from mmcv.runner import load_checkpoint
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   make_layer)
 from mmedit.models.registry import BACKBONES
-from mmedit.ops.dcn import ModulatedDeformConv, modulated_deform_conv
 from mmedit.utils import get_root_logger
 from torch.nn.modules.utils import _pair
 
 
-class ModulatedDCNPack(ModulatedDeformConv):
+class ModulatedDCNPack(ModulatedDeformConv2d):
     """Modulated Deformable Convolutional Pack.
 
     Different from the official DCN, which generates offsets and masks from
@@ -35,8 +35,7 @@ class ModulatedDCNPack(ModulatedDeformConv):
 
         self.conv_offset = nn.Conv2d(
             self.in_channels,
-            self.deformable_groups * 3 * self.kernel_size[0] *
-            self.kernel_size[1],
+            self.deform_groups * 3 * self.kernel_size[0] * self.kernel_size[1],
             kernel_size=self.kernel_size,
             stride=_pair(self.stride),
             padding=_pair(self.padding),
@@ -51,9 +50,10 @@ class ModulatedDCNPack(ModulatedDeformConv):
         o1, o2, mask = torch.chunk(out, 3, dim=1)
         offset = torch.cat((o1, o2), dim=1)
         mask = torch.sigmoid(mask)
-        return modulated_deform_conv(x, offset, mask, self.weight, self.bias,
-                                     self.stride, self.padding, self.dilation,
-                                     self.groups, self.deformable_groups)
+        return modulated_deform_conv2d(x, offset, mask, self.weight, self.bias,
+                                       self.stride, self.padding,
+                                       self.dilation, self.groups,
+                                       self.deform_groups)
 
 
 class PCDAlignment(nn.Module):
@@ -63,14 +63,14 @@ class PCDAlignment(nn.Module):
     Args:
         mid_channels (int): Number of the channels of middle features.
             Default: 64.
-        deformable_groups (int): Deformable groups. Defaults: 8.
+        deform_groups (int): Deformable groups. Defaults: 8.
         act_cfg (dict): Activation function config for ConvModule.
             Default: LeakyReLU with negative_slope=0.1.
     """
 
     def __init__(self,
                  mid_channels=64,
-                 deformable_groups=8,
+                 deform_groups=8,
                  act_cfg=dict(type='LeakyReLU', negative_slope=0.1)):
         super(PCDAlignment, self).__init__()
 
@@ -104,7 +104,7 @@ class PCDAlignment(nn.Module):
                 mid_channels,
                 3,
                 padding=1,
-                deformable_groups=deformable_groups)
+                deform_groups=deform_groups)
 
             if i < 3:
                 act_cfg_ = act_cfg if i == 2 else None
@@ -125,7 +125,7 @@ class PCDAlignment(nn.Module):
             mid_channels,
             3,
             padding=1,
-            deformable_groups=deformable_groups)
+            deform_groups=deform_groups)
 
         self.upsample = nn.Upsample(
             scale_factor=2, mode='bilinear', align_corners=False)
@@ -308,7 +308,7 @@ class EDVRNet(nn.Module):
         mid_channels (int): Channel number of intermediate features.
             Default: 64.
         num_frames (int): Number of input frames. Default: 5.
-        deformable_groups (int): Deformable groups. Defaults: 8.
+        deform_groups (int): Deformable groups. Defaults: 8.
         num_blocks_extraction (int): Number of blocks for feature extraction.
             Default: 5.
         num_blocks_reconstruction (int): Number of blocks for reconstruction.
@@ -323,7 +323,7 @@ class EDVRNet(nn.Module):
                  out_channels,
                  mid_channels=64,
                  num_frames=5,
-                 deformable_groups=8,
+                 deform_groups=8,
                  num_blocks_extraction=5,
                  num_blocks_reconstruction=10,
                  center_frame_idx=2,
@@ -350,7 +350,7 @@ class EDVRNet(nn.Module):
             mid_channels, mid_channels, 3, 1, 1, act_cfg=act_cfg)
         # pcd alignment
         self.pcd_alignment = PCDAlignment(
-            mid_channels=mid_channels, deformable_groups=deformable_groups)
+            mid_channels=mid_channels, deform_groups=deform_groups)
         # fusion
         if self.with_tsa:
             self.fusion = TSAFusion(

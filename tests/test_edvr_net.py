@@ -10,7 +10,7 @@ def test_pcd_alignment():
 
     # gpu (since it has dcn, only supports gpu testing)
     if torch.cuda.is_available():
-        pcd_alignment = PCDAlignment(mid_channels=4, deformable_groups=2)
+        pcd_alignment = PCDAlignment(mid_channels=4, deform_groups=2)
         input_list = []
         for i in range(3, 0, -1):
             input_list.append(torch.rand(1, 4, 2**i, 2**i))
@@ -53,7 +53,7 @@ def test_edvrnet():
             3,
             mid_channels=8,
             num_frames=5,
-            deformable_groups=2,
+            deform_groups=2,
             num_blocks_extraction=1,
             num_blocks_reconstruction=1,
             center_frame_idx=2,
@@ -69,7 +69,7 @@ def test_edvrnet():
             3,
             mid_channels=8,
             num_frames=5,
-            deformable_groups=2,
+            deform_groups=2,
             num_blocks_extraction=1,
             num_blocks_reconstruction=1,
             center_frame_idx=2,

@@ -20,12 +20,13 @@ linting:
     - flake8 .
     - isort -rc --check-only --diff mmedit/ tools/ tests/
     - yapf -r -d mmedit/ tools/ tests/ configs/
-    - interrogate -v --ignore-init-method --ignore-module --ignore-nested-functions --ignore-regex="__repr__" --exclude mmedit/ops --fail-under 50 mmedit
+    - interrogate -v --ignore-init-method --ignore-module --ignore-nested-functions --ignore-regex="__repr__" --fail-under 50 mmedit
 
 test:
   stage: test
   script:
-    - pip install mmcv==0.6.2
+    - git clone https://github.com/open-mmlab/mmcv.git
+    - cd mmcv && pip install -e . && cd ..
     - echo "Start building..."
     - pip install -r requirements.txt
     - pip install -e .
