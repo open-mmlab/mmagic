@@ -31,9 +31,7 @@ extensions = [
     'recommonmark', 'sphinx_markdown_tables'
 ]
 
-autodoc_mock_imports = [
-    'mmedit.version', 'mmedit.ops.dcn', 'mmcv.runner.IterBasedRunner'
-]
+autodoc_mock_imports = ['mmedit.version', 'mmcv.runner.IterBasedRunner']
 
 source_suffix = {
     '.rst': 'restructuredtext',

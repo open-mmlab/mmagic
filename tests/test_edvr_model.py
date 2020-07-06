@@ -19,7 +19,7 @@ def test_edvr_model():
             out_channels=3,
             mid_channels=8,
             num_frames=5,
-            deformable_groups=2,
+            deform_groups=2,
             num_blocks_extraction=1,
             num_blocks_reconstruction=1,
             center_frame_idx=2,
