@@ -20,6 +20,27 @@ def build_index_block(in_channels,
                       norm_cfg=dict(type='BN'),
                       use_nonlinear=False,
                       expansion=1):
+    """Build an conv block for IndexBlock.
+
+    Args:
+        in_channels (int): The input channels of the block.
+        out_channels (int): The output channels of the block.
+        kernel_size (int): The kernel size of the block.
+        stride (int, optional): The stride of the block. Defaults to 2.
+        padding (int, optional): The padding of the block. Defaults to 0.
+        groups (int, optional): The groups of the block. Defaults to 1.
+        norm_cfg (dict, optional): The norm config of the block.
+            Defaults to dict(type='BN').
+        use_nonlinear (bool, optional): Whether use nonlinearty in the block.
+            If true, a ConvModule with kernel size 1 will be appended and an
+            ``ReLU6`` nonlinearty will be added to the origin ConvModule.
+            Defaults to False.
+        expansion (int, optional): Expandsion ratio of the middle channels.
+            Effective when ``use_nonlinear`` is true. Defaults to 1.
+
+    Returns:
+        nn.Module: The built conv block.
+    """
     if use_nonlinear:
         return nn.Sequential(
             ConvModule(
@@ -453,11 +474,19 @@ class IndexNetEncoder(nn.Module):
         return nn.Sequential(*layers)
 
     def freeze_bn(self):
+        """Set BatchNorm modules in the model to evaluation mode.
+        """
         for m in self.modules():
             if isinstance(m, (nn.BatchNorm2d, SyncBatchNorm)):
                 m.eval()
 
     def init_weights(self, pretrained=None):
+        """Init weights for the model.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+        """
         if isinstance(pretrained, str):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=False, logger=logger)

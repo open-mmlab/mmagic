@@ -27,6 +27,8 @@ class PlainDecoder(nn.Module):
         self.max_unpool2d = nn.MaxUnpool2d(kernel_size=2, stride=2)
 
     def init_weights(self):
+        """Init weights for the module.
+        """
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 xavier_init(m)

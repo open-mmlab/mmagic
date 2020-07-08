@@ -53,6 +53,13 @@ class AdobeComp1kDataset(BaseMattingDataset):
     """
 
     def load_annotations(self):
+        """Load annoations for Adobe Composition-1k dataset.
+
+        It loads image paths from json file.
+
+        Returns:
+            dict: Loaded dict.
+        """
         data_infos = mmcv.load(self.ann_file)
 
         for data_info in data_infos:
