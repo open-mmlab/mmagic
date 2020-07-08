@@ -1,10 +1,7 @@
-from collections import OrderedDict
-
 import torch
 import torch.nn as nn
 from mmcv.parallel import MODULE_WRAPPERS, MMDistributedDataParallel
 from mmcv.parallel.scatter_gather import scatter_kwargs
-from torch.nn.parallel import DataParallel, DistributedDataParallel
 
 
 @MODULE_WRAPPERS.register_module()
@@ -89,51 +86,6 @@ class DistributedDataParallelWrapper(nn.Module):
                     find_unused_parameters=find_unused_parameters,
                     **kwargs)
             self.module._modules[name] = module
-
-    def state_dict(self, destination=None, prefix='', keep_vars=False):
-        """Returns a dictionary containing a whole state of the module.
-
-        Both parameters and persistent buffers (e.g. running averages) are
-        included. Keys are corresponding parameter and buffer names.
-
-        This method is modified from :meth:`torch.nn.Module.state_dict`:
-        1. Support getting sub-module for MMDataParallel or
-            MMDistributedDataParallel.
-
-        Args:
-            destination (OrderedDict): Returned dict for the state of the
-                module.
-            prefix (str): Prefix of the key.
-            keep_vars (bool): Whether to keep the variable property of the
-                parameters. Default: False.
-
-        Returns:
-            dict: a dictionary containing a whole state of the module.
-        """
-        if destination is None:
-            destination = OrderedDict()
-            destination._metadata = OrderedDict()
-        destination._metadata[prefix[:-1]] = local_metadata = dict(
-            version=self.module._version)
-        for name, param in self.module._parameters.items():
-            if param is not None:
-                destination[prefix + name] = param if keep_vars else param.data
-        for name, buf in self.module._buffers.items():
-            if buf is not None:
-                destination[prefix + name] = buf if keep_vars else buf.data
-        for name, module in self.module._modules.items():
-            if module is not None:
-                # this is what we modified: if sub-module is wrapped by
-                # DataParallel or DistributedDataParallel, get its module
-                if isinstance(module, (DataParallel, DistributedDataParallel)):
-                    module = module.module
-                module.state_dict(
-                    destination, prefix + name + '.', keep_vars=keep_vars)
-        for hook in module._state_dict_hooks.values():
-            hook_result = hook(module, destination, prefix, local_metadata)
-            if hook_result is not None:
-                destination = hook_result
-        return destination
 
     def scatter(self, inputs, kwargs, device_ids):
         """Scatter function.
