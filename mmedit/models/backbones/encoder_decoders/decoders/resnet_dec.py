@@ -16,6 +16,24 @@ class BasicBlockDec(BasicBlock):
 
     def build_conv1(self, in_channels, out_channels, kernel_size, stride,
                     conv_cfg, norm_cfg, act_cfg, with_spectral_norm):
+        """Build conv1 of the block.
+
+        Args:
+            in_channels (int): The input channels of the ConvModule.
+            out_channels (int): The output channels of the ConvModule.
+            kernel_size (int): The kernel size of the ConvModule.
+            stride (int): The stride of the ConvModule. If stride is set to 2,
+                then ``conv_cfg`` will be overwritten as
+                ``dict(type='Deconv')`` and ``kernel_size`` will be overwritten
+                as 4.
+            conv_cfg (dict): The conv config of the ConvModule.
+            norm_cfg (dict): The norm config of the ConvModule.
+            act_cfg (dict): The activation config of the ConvModule.
+            with_spectral_norm (bool): Whether use spectral norm.
+
+        Returns:
+            nn.Module: The built ConvModule.
+        """
         if stride == 2:
             conv_cfg = dict(type='Deconv')
             kernel_size = 4
@@ -36,6 +54,19 @@ class BasicBlockDec(BasicBlock):
 
     def build_conv2(self, in_channels, out_channels, kernel_size, conv_cfg,
                     norm_cfg, with_spectral_norm):
+        """Build conv2 of the block.
+
+        Args:
+            in_channels (int): The input channels of the ConvModule.
+            out_channels (int): The output channels of the ConvModule.
+            kernel_size (int): The kernel size of the ConvModule.
+            conv_cfg (dict): The conv config of the ConvModule.
+            norm_cfg (dict): The norm config of the ConvModule.
+            with_spectral_norm (bool): Whether use spectral norm.
+
+        Returns:
+            nn.Module: The built ConvModule.
+        """
         return ConvModule(
             in_channels,
             out_channels,
@@ -120,6 +151,8 @@ class ResNetDec(nn.Module):
             act_cfg=None)
 
     def init_weights(self):
+        """Init weights for the module.
+        """
         for m in self.modules():
             if isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
                 constant_init(m.weight, 1)
