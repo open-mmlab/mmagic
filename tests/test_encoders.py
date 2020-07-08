@@ -35,7 +35,7 @@ def test_vgg16_encoder():
     target_shape = [(2, 64, 32, 32), (2, 128, 16, 16), (2, 256, 8, 8),
                     (2, 512, 4, 4), (2, 512, 2, 2)]
 
-    model = VGG16()
+    model = VGG16(4)
     model.init_weights()
     model.train()
     img = _demo_inputs()
@@ -47,7 +47,7 @@ def test_vgg16_encoder():
     assert_tensor_with_shape(outputs['max_idx_4'], target_shape[3])
     assert_tensor_with_shape(outputs['max_idx_5'], target_shape[4])
 
-    model = VGG16(batch_norm=True)
+    model = VGG16(4, batch_norm=True)
     model.init_weights()
     model.train()
     img = _demo_inputs()
@@ -59,7 +59,7 @@ def test_vgg16_encoder():
     assert_tensor_with_shape(outputs['max_idx_4'], target_shape[3])
     assert_tensor_with_shape(outputs['max_idx_5'], target_shape[4])
 
-    model = VGG16(aspp=True, dilations=[6, 12, 18])
+    model = VGG16(4, aspp=True, dilations=[6, 12, 18])
     model.init_weights()
     model.train()
     img = _demo_inputs()
@@ -74,7 +74,7 @@ def test_vgg16_encoder():
 
     # test forward with gpu
     if torch.cuda.is_available():
-        model = VGG16()
+        model = VGG16(4)
         model.init_weights()
         model.train()
         model.cuda()
@@ -87,7 +87,7 @@ def test_vgg16_encoder():
         assert_tensor_with_shape(outputs['max_idx_4'], target_shape[3])
         assert_tensor_with_shape(outputs['max_idx_5'], target_shape[4])
 
-        model = VGG16(batch_norm=True)
+        model = VGG16(4, batch_norm=True)
         model.init_weights()
         model.train()
         model.cuda()
@@ -100,7 +100,7 @@ def test_vgg16_encoder():
         assert_tensor_with_shape(outputs['max_idx_4'], target_shape[3])
         assert_tensor_with_shape(outputs['max_idx_5'], target_shape[4])
 
-        model = VGG16(aspp=True, dilations=[6, 12, 18])
+        model = VGG16(4, aspp=True, dilations=[6, 12, 18])
         model.init_weights()
         model.train()
         model.cuda()
@@ -403,13 +403,14 @@ def test_indexnet_encoder():
     """Test Indexnet encoder."""
     with pytest.raises(ValueError):
         # out_stride must be 16 or 32
-        IndexNetEncoder(out_stride=8)
+        IndexNetEncoder(4, out_stride=8)
     with pytest.raises(NameError):
         # index_mode must be 'holistic', 'o2o' or 'm2o'
-        IndexNetEncoder(index_mode='unknown_mode')
+        IndexNetEncoder(4, index_mode='unknown_mode')
 
     # test indexnet encoder with default indexnet setting
     indexnet_encoder = IndexNetEncoder(
+        4,
         out_stride=32,
         width_mult=1,
         index_mode='m2o',
@@ -436,6 +437,7 @@ def test_indexnet_encoder():
 
     # test indexnet encoder with other config
     indexnet_encoder = IndexNetEncoder(
+        4,
         out_stride=16,
         width_mult=2,
         index_mode='o2o',
@@ -462,6 +464,7 @@ def test_indexnet_encoder():
 
     # test indexnet encoder with holistic index block
     indexnet_encoder = IndexNetEncoder(
+        4,
         out_stride=16,
         width_mult=2,
         index_mode='holistic',

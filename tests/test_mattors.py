@@ -32,7 +32,7 @@ def assert_dict_keys_equal(dictionary, target_keys):
 def test_base_mattor():
     backbone = dict(
         type='SimpleEncoderDecoder',
-        encoder=dict(type='VGG16'),
+        encoder=dict(type='VGG16', in_channels=4),
         decoder=dict(type='PlainDecoder'))
     refiner = dict(type='PlainRefiner')
     train_cfg = mmcv.ConfigDict(train_backbone=True, train_refiner=True)
@@ -248,7 +248,9 @@ def test_gca():
     model = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
     inputs = _demo_input_train((64, 64), batch_size=2)
     inputs['trimap'] = inputs['trimap'].expand_as(inputs['merged'])
-    outputs = model(inputs['merged'], inputs['trimap'], inputs['alpha'])
+    inputs['meta'][0]['to_onehot'] = True
+    outputs = model(inputs['merged'], inputs['trimap'], inputs['meta'],
+                    inputs['alpha'])
     assert outputs['num_samples'] == 2
     assert_dict_keys_equal(outputs['losses'], ['loss'])
 
@@ -257,7 +259,9 @@ def test_gca():
         model.cuda()
         inputs = _demo_input_train((64, 64), batch_size=2, cuda=True)
         inputs['trimap'] = inputs['trimap'].expand_as(inputs['merged'])
-        outputs = model(inputs['merged'], inputs['trimap'], inputs['alpha'])
+        inputs['meta'][0]['to_onehot'] = True
+        outputs = model(inputs['merged'], inputs['trimap'], inputs['meta'],
+                        inputs['alpha'])
         assert outputs['num_samples'] == 2
         assert_dict_keys_equal(outputs['losses'], ['loss'])
 
@@ -298,6 +302,7 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False):
     merged = torch.from_numpy(np.random.random(color_shape).astype(np.float32))
     trimap = torch.from_numpy(
         np.random.randint(255, size=gray_shape).astype(np.float32))
+    meta = [{}] * batch_size
     alpha = torch.from_numpy(np.random.random(gray_shape).astype(np.float32))
     ori_merged = torch.from_numpy(
         np.random.random(color_shape).astype(np.float32))
@@ -314,6 +319,7 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False):
     return dict(
         merged=merged,
         trimap=trimap,
+        meta=meta,
         alpha=alpha,
         ori_merged=ori_merged,
         fg=fg,
@@ -345,7 +351,7 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, test_trans='resize'):
             ori_alpha=ori_alpha,
             ori_trimap=ori_trimap,
             merged_ori_shape=img_shape)
-    ]
+    ] * batch_size
 
     if test_trans == 'pad':
         meta[0]['pad'] = (0, 0)

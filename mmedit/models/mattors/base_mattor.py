@@ -240,8 +240,8 @@ class BaseMattor(BaseModel):
     def forward(self,
                 merged,
                 trimap,
+                meta,
                 alpha=None,
-                meta=None,
                 test_mode=False,
                 **kwargs):
         """Defines the computation performed at every call.
@@ -249,10 +249,10 @@ class BaseMattor(BaseModel):
         Args:
             merged (Tensor): Image to predict alpha matte.
             trimap (Tensor): Trimap of the input image.
+            meta (list[dict]): Meta data about the current data batch.
+                Defaults to None.
             alpha (Tensor, optional): Ground-truth alpha matte.
                 Defaults to None.
-            meta (list[dict], optional): Meta data about the current data
-                batch. Defaults to None.
             test_mode (bool, optional): Whether in test mode. If ``True``, it
                 will call ``forward_test`` of the model. Otherwise, it will
                 call ``forward_train`` of the model. Defaults to False.
@@ -263,6 +263,6 @@ class BaseMattor(BaseModel):
                 ``self.forward_train``.
         """
         if not test_mode:
-            return self.forward_train(merged, trimap, alpha, **kwargs)
+            return self.forward_train(merged, trimap, meta, alpha, **kwargs)
         else:
             return self.forward_test(merged, trimap, meta, **kwargs)

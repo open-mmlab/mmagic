@@ -181,7 +181,8 @@ class FormatTrimap(object):
 
     It transforms the trimap label from (0, 128, 255) to (0, 1, 2). If
     ``to_onehot`` is set to True, the trimap will convert to one-hot tensor of
-    shape (3, H, W). Required key is "trimap", modified key is "trimap".
+    shape (3, H, W). Required key is "trimap", added or modified key are
+    "trimap" and "to_onehot".
 
     Args:
         to_onehot (bool): whether convert trimap to one-hot tensor. Default:
@@ -210,6 +211,7 @@ class FormatTrimap(object):
         else:
             trimap = trimap[None, ...]  # expand the channels dimension
         results['trimap'] = trimap.float()
+        results['meta'].data['to_onehot'] = self.to_onehot
         return results
 
     def __repr__(self):

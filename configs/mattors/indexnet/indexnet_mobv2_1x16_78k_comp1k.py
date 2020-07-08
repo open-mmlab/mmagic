@@ -3,7 +3,7 @@ model = dict(
     type='IndexNet',
     backbone=dict(
         type='SimpleEncoderDecoder',
-        encoder=dict(type='IndexNetEncoder', freeze_bn=True),
+        encoder=dict(type='IndexNetEncoder', in_channels=4, freeze_bn=True),
         decoder=dict(type='IndexNetDecoder')),
     loss_alpha=dict(type='CharbonnierLoss', loss_weight=0.5, sample_wise=True),
     loss_comp=dict(
@@ -48,7 +48,7 @@ train_pipeline = [
         keys=['alpha', 'merged', 'ori_merged', 'fg', 'bg', 'trimap']),
     dict(
         type='RescaleToZeroOne',
-        keys=['merged', 'alpha', 'ori_merged', 'fg', 'bg']),
+        keys=['merged', 'alpha', 'ori_merged', 'fg', 'bg', 'trimap']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Collect',
@@ -56,7 +56,7 @@ train_pipeline = [
         meta_keys=[]),
     dict(
         type='ImageToTensor',
-        keys=['merged', 'alpha', 'trimap', 'ori_merged', 'fg', 'bg'])
+        keys=['merged', 'alpha', 'trimap', 'ori_merged', 'fg', 'bg']),
 ]
 test_pipeline = [
     dict(
@@ -70,7 +70,7 @@ test_pipeline = [
         flag='grayscale',
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
-    dict(type='RescaleToZeroOne', keys=['merged']),
+    dict(type='RescaleToZeroOne', keys=['merged', 'trimap']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Resize',
@@ -89,7 +89,7 @@ test_pipeline = [
             'merged_path', 'interpolation', 'merged_ori_shape', 'ori_alpha',
             'ori_trimap'
         ]),
-    dict(type='ImageToTensor', keys=['merged', 'trimap'])
+    dict(type='ImageToTensor', keys=['merged', 'trimap']),
 ]
 data = dict(
     # train

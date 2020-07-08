@@ -20,7 +20,7 @@ def test_plain_decoder():
     model.init_weights()
     model.train()
     # create max_pooling index for training
-    encoder = VGG16()
+    encoder = VGG16(4)
     img = _demo_inputs()
     outputs = encoder(img)
     prediction = model(outputs)
@@ -32,7 +32,7 @@ def test_plain_decoder():
         model.init_weights()
         model.train()
         model.cuda()
-        encoder = VGG16()
+        encoder = VGG16(4)
         encoder.cuda()
         img = _demo_inputs().cuda()
         outputs = encoder(img)
@@ -185,7 +185,7 @@ def test_indexnet_decoder():
     indexnet_decoder = IndexNetDecoder(
         160, kernel_size=5, separable_conv=False)
     indexnet_decoder.init_weights()
-    indexnet_encoder = IndexNetEncoder()
+    indexnet_encoder = IndexNetEncoder(4)
     x = torch.rand(2, 4, 32, 32)
     outputs_enc = indexnet_encoder(x)
     out = indexnet_decoder(outputs_enc)

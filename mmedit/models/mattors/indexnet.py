@@ -2,7 +2,8 @@ import torch
 
 from ..builder import build_loss
 from ..registry import MODELS
-from . import BaseMattor
+from .base_mattor import BaseMattor
+from .utils import get_unknown_tensor
 
 
 @MODELS.register_module()
@@ -40,13 +41,14 @@ class IndexNet(BaseMattor):
     def forward_dummy(self, inputs):
         return self.backbone(inputs)
 
-    def forward_train(self, merged, trimap, alpha, ori_merged, fg, bg):
+    def forward_train(self, merged, trimap, meta, alpha, ori_merged, fg, bg):
         """Forward function for training IndexNet model.
 
         Args:
             merged (Tensor): Input images tensor with shape (N, C, H, W).
                 Typically these should be mean centered and std scaled.
             trimap (Tensor): Tensor of trimap with shape (N, 1, H, W).
+            meta (list[dict]): Meta data about the current data batch.
             alpha (Tensor): Tensor of alpha with shape (N, 1, H, W).
             ori_merged (Tensor): Tensor of origin merged images (not
                 normalized) with shape (N, C, H, W).
@@ -56,10 +58,10 @@ class IndexNet(BaseMattor):
         Returns:
             dict: Contains the loss items and batch infomation.
         """
-        pred_alpha = self.backbone(torch.cat((merged, trimap / 255), 1))
+        pred_alpha = self.backbone(torch.cat((merged, trimap), 1))
 
         losses = dict()
-        weight = (trimap == 128).to(trimap)
+        weight = get_unknown_tensor(trimap, meta)
         if self.loss_alpha is not None:
             losses['loss_alpha'] = self.loss_alpha(pred_alpha, alpha, weight)
         if self.loss_comp is not None:
@@ -96,7 +98,7 @@ class IndexNet(BaseMattor):
         Returns:
             dict: Contains the predicted alpha and evaluation result.
         """
-        pred_alpha = self.backbone(torch.cat((merged, trimap / 255), 1))
+        pred_alpha = self.backbone(torch.cat((merged, trimap), 1))
 
         pred_alpha = pred_alpha.cpu().numpy().squeeze()
         pred_alpha = self.restore_shape(pred_alpha, meta)

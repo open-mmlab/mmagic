@@ -136,7 +136,9 @@ def test_format_trimap():
     ori_trimap[ori_trimap == 1] = 128
     ori_trimap[ori_trimap == 2] = 255
 
-    ori_result = dict(trimap=torch.from_numpy(ori_trimap.copy()))
+    from mmcv.parallel import DataContainer
+    ori_result = dict(
+        trimap=torch.from_numpy(ori_trimap.copy()), meta=DataContainer({}))
     format_trimap = FormatTrimap(to_onehot=False)
     results = format_trimap(ori_result)
     result_trimap = results['trimap']
@@ -145,7 +147,8 @@ def test_format_trimap():
     assert ((result_trimap.numpy() == 1) == (ori_trimap == 128)).all()
     assert ((result_trimap.numpy() == 2) == (ori_trimap == 255)).all()
 
-    ori_result = dict(trimap=torch.from_numpy(ori_trimap.copy()))
+    ori_result = dict(
+        trimap=torch.from_numpy(ori_trimap.copy()), meta=DataContainer({}))
     format_trimap = FormatTrimap(to_onehot=True)
     results = format_trimap(ori_result)
     result_trimap = results['trimap']
