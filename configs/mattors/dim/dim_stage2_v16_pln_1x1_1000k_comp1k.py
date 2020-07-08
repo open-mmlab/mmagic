@@ -3,7 +3,7 @@ model = dict(
     type='DIM',
     backbone=dict(
         type='SimpleEncoderDecoder',
-        encoder=dict(type='VGG16'),
+        encoder=dict(type='VGG16', in_channels=4),
         decoder=dict(type='PlainDecoder')),
     refiner=dict(type='PlainRefiner'),
     pretrained=None,
@@ -34,7 +34,7 @@ train_pipeline = [
     dict(type='GenerateTrimap', kernel_size=(1, 30)),
     dict(
         type='RescaleToZeroOne',
-        keys=['merged', 'alpha', 'ori_merged', 'fg', 'bg']),
+        keys=['merged', 'alpha', 'ori_merged', 'fg', 'bg', 'trimap']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Collect',
@@ -57,7 +57,7 @@ test_pipeline = [
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
     dict(type='Pad', keys=['trimap', 'merged'], mode='reflect'),
-    dict(type='RescaleToZeroOne', keys=['merged']),
+    dict(type='RescaleToZeroOne', keys=['merged', 'trimap']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(
         type='Collect',

@@ -2,7 +2,8 @@ import torch
 
 from ..builder import build_loss
 from ..registry import MODELS
-from . import BaseMattor
+from .base_mattor import BaseMattor
+from .utils import get_unknown_tensor
 
 
 @MODELS.register_module()
@@ -72,7 +73,7 @@ class DIM(BaseMattor):
     def forward_dummy(self, inputs):
         return self._forward(inputs, self.with_refiner)
 
-    def forward_train(self, merged, trimap, alpha, ori_merged, fg, bg):
+    def forward_train(self, merged, trimap, meta, alpha, ori_merged, fg, bg):
         """Defines the computation performed at every training call.
 
         Args:
@@ -80,6 +81,7 @@ class DIM(BaseMattor):
                 Typically these should be mean centered and std scaled.
             trimap (Tensor): of shape (N, 1, H, W). Tensor of trimap read by
                 opencv.
+            meta (list[dict]): Meta data about the current data batch.
             alpha (Tensor): of shape (N, 1, H, W). Tensor of alpha read by
                 opencv.
             ori_merged (Tensor): of shape (N, C, H, W). Tensor of origin merged
@@ -91,15 +93,10 @@ class DIM(BaseMattor):
             dict: Contains the loss items and batch infomation.
         """
         pred_alpha, pred_refine = self._forward(
-            torch.cat((merged, trimap / 255.), 1),
-            self.train_cfg.train_refiner)
+            torch.cat((merged, trimap), 1), self.train_cfg.train_refiner)
 
-        weight = torch.zeros_like(trimap)
-        weight[trimap == 128] = 1.
+        weight = get_unknown_tensor(trimap, meta)
         losses = dict()
-        # TODO: remove train_backbone and train_refiner and use loss_alpha,
-        # loss_comp and loss_refine to decide training stage. If this
-        # suggestion is adopted. The base mattor will be modified respectively.
         if self.train_cfg.train_backbone:
             if self.loss_alpha is not None:
                 losses['loss_alpha'] = self.loss_alpha(pred_alpha, alpha,
@@ -142,7 +139,7 @@ class DIM(BaseMattor):
             dict: Contains the predicted alpha and evaluation result.
         """
         pred_alpha, pred_refine = self._forward(
-            torch.cat((merged, trimap / 255.), 1), self.test_cfg.refine)
+            torch.cat((merged, trimap), 1), self.test_cfg.refine)
         if self.test_cfg.refine:
             pred_alpha = pred_refine
 

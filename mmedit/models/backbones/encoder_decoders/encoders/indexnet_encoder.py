@@ -310,7 +310,6 @@ class IndexNetEncoder(nn.Module):
 
     Args:
         in_channels (int, optional): Input channels of the encoder.
-            Defaults to 4.
         out_stride (int, optional): Output stride of the encoder. For
             example, if `out_stride` is 32, the input feature map or image
             will be downsample to the 1/32 of original size.
@@ -342,7 +341,7 @@ class IndexNetEncoder(nn.Module):
     """
 
     def __init__(self,
-                 in_channels=4,
+                 in_channels,
                  out_stride=32,
                  width_mult=1,
                  index_mode='m2o',

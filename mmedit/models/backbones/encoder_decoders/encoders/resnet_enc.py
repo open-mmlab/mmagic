@@ -184,7 +184,7 @@ class ResNetEnc(nn.Module):
         if isinstance(pretrained, str):
             # if pretrained weight is trained on 3-channel images,
             # initialize other channels with zeros
-            self.conv1.weight.data[:, 3:, :, :] = 0
+            self.conv1.conv.weight.data[:, 3:, :, :] = 0
 
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=False, logger=logger)

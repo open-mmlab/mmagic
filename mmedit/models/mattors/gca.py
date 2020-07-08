@@ -2,26 +2,8 @@ import torch
 
 from ..builder import build_loss
 from ..registry import MODELS
-from . import BaseMattor
-
-
-def get_unknown_tensor(trimap):
-    """Get 1-channel unknown area tensor from the 3 or 1-channel trimap tensor.
-
-    Args:
-        trimap (Tensor): with shape (N, 3, H, W) or (N, 1, H, W).
-
-    Returns:
-        Tensor: Unknown area mask of shape (N, 1, H, W).
-    """
-    if trimap.shape[1] == 3:
-        # The three channels correspond to (bg mask, unknown mask, fg mask)
-        # respectively.
-        weight = trimap[:, 1:2, :, :].float()
-    else:
-        # 0 for bg, 1 for unknown, 2 for fg
-        weight = trimap.eq(1).float()
-    return weight
+from .base_mattor import BaseMattor
+from .utils import get_unknown_tensor
 
 
 @MODELS.register_module()
@@ -59,13 +41,15 @@ class GCA(BaseMattor):
     def forward_dummy(self, inputs):
         return self._forward(inputs)
 
-    def forward_train(self, merged, trimap, alpha):
+    def forward_train(self, merged, trimap, meta, alpha):
         """Forward function for training GCA model.
 
         Args:
             merged (Tensor): with shape (N, C, H, W) encoding input images.
                 Typically these should be mean centered and std scaled.
-            trimap (Tensor): with shape (N, 1, H, W). Tensor of trimap.
+            trimap (Tensor): with shape (N, C', H, W). Tensor of trimap. C'
+                might be 1 or 3.
+            meta (list[dict]): Meta data about the current data batch.
             alpha (Tensor): with shape (N, 1, H, W). Tensor of alpha.
 
         Returns:
@@ -73,7 +57,7 @@ class GCA(BaseMattor):
         """
         pred_alpha = self._forward(torch.cat((merged, trimap), 1))
 
-        weight = get_unknown_tensor(trimap)
+        weight = get_unknown_tensor(trimap, meta)
         losses = {'loss': self.loss_alpha(pred_alpha, alpha, weight)}
         return {'losses': losses, 'num_samples': merged.size(0)}
 

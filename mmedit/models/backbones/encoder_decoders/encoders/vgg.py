@@ -14,18 +14,26 @@ class VGG16(nn.Module):
     max pooling layers are returned for unpooling layers in decoders.
 
     Args:
+        in_channels (int): Number of input channels.
+        batch_norm (bool, optional): Whether use ``nn.BatchNorm2d``.
+            Default to False.
         aspp (bool, optional): Whether use ASPP module after the last conv
-            layer.
+            layer. Default to False.
         dilations (list[int], optional): Atrous rates of ASPP module.
+            Default to None.
     """
 
-    def __init__(self, batch_norm=False, aspp=False, dilations=None):
+    def __init__(self,
+                 in_channels,
+                 batch_norm=False,
+                 aspp=False,
+                 dilations=None):
         super(VGG16, self).__init__()
         self.batch_norm = batch_norm
         self.aspp = aspp
         self.dilations = dilations
 
-        self.layer1 = self._make_layer(4, 64, 2)
+        self.layer1 = self._make_layer(in_channels, 64, 2)
         self.layer2 = self._make_layer(64, 128, 2)
         self.layer3 = self._make_layer(128, 256, 3)
         self.layer4 = self._make_layer(256, 512, 3)
