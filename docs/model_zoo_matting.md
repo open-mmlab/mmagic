@@ -23,6 +23,15 @@ Please refer to [IndexNet](https://github.com/open-mmlab/mmediting/blob/master/c
 |        GCA          | 34.77 | 0.0080 | 16.33 | 32.20 |
 |      IndexNet       | 45.56 | 0.0125 | 25.49 | 44.79 |
 
+Result of different methods using the DIM data pipeline:
+
+|        Method       |  SAD  |   MSE  |  GRAD |  CONN |
+|:-------------------:|:-----:|:------:|:-----:|:-----:|
+|        DIM          | 50.62 | 0.0151 | 29.01 | 50.69 |
+|        GCA*         | 49.42 | 0.0129 | 28.07 | 49.47 |
+|      IndexNet*      | 50.11 | 0.0164 | 30.82 | 49.53 |
+
+> *: We only run one experiment under the setting. Thus, the result maybe biased.
 
 ## Evaluation Details
 

@@ -7,7 +7,7 @@ model = dict(
             type='ResGCAEncoder',
             block='BasicBlock',
             layers=[3, 4, 4, 2],
-            in_channels=6,
+            in_channels=4,
             with_spectral_norm=True),
         decoder=dict(
             type='ResGCADecoder',
@@ -27,34 +27,23 @@ img_norm_cfg = dict(
     mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
 train_pipeline = [
     dict(type='LoadImageFromFile', key='alpha', flag='grayscale'),
-    dict(type='LoadImageFromFile', key='fg'),
-    dict(type='RandomLoadResizeBg', bg_dir=bg_dir),
+    dict(type='LoadImageFromFile', key='merged'),
     dict(
-        type='CompositeFg',
-        fg_dirs=[
-            data_root + 'Training_set/Adobe-licensed images/fg',
-            data_root + 'Training_set/Other/fg'
-        ],
-        alpha_dirs=[
-            data_root + 'Training_set/Adobe-licensed images/alpha',
-            data_root + 'Training_set/Other/alpha'
-        ]),
+        type='CropAroundUnknown',
+        keys=['alpha', 'merged'],
+        crop_sizes=[320, 480, 640]),
+    dict(type='Flip', keys=['alpha', 'merged']),
     dict(
-        type='RandomAffine',
-        keys=['alpha', 'fg'],
-        degrees=30,
-        scale=(0.8, 1.25),
-        shear=10,
-        flip_ratio=0.5),
+        type='Resize',
+        keys=['alpha', 'merged'],
+        scale=(320, 320),
+        keep_ratio=False),
     dict(type='GenerateTrimap', kernel_size=(1, 30)),
-    dict(type='CropAroundCenter', crop_size=512),
-    dict(type='RandomJitter'),
-    dict(type='MergeFgAndBg'),
     dict(type='RescaleToZeroOne', keys=['merged', 'alpha']),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(type='Collect', keys=['merged', 'alpha', 'trimap'], meta_keys=[]),
     dict(type='ImageToTensor', keys=['merged', 'alpha', 'trimap']),
-    dict(type='FormatTrimap', to_onehot=True),
+    dict(type='FormatTrimap', to_onehot=False),
 ]
 test_pipeline = [
     dict(
@@ -78,7 +67,7 @@ test_pipeline = [
             'merged_path', 'pad', 'merged_ori_shape', 'ori_alpha', 'ori_trimap'
         ]),
     dict(type='ImageToTensor', keys=['merged', 'trimap']),
-    dict(type='FormatTrimap', to_onehot=True),
+    dict(type='FormatTrimap', to_onehot=False),
 ]
 data = dict(
     samples_per_gpu=10,
