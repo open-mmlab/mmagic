@@ -10,9 +10,9 @@
 
 ## Introduction
 
-The master branch works with **PyTorch 1.3 to 1.5**.
+MMEditing is an open source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://open-mmlab.github.io/) project.
 
-MMEditing is an open source image and video editing toolbox based on PyTorch. It is a part of the OpenMMLab project developed by [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/).
+The master branch works with **PyTorch 1.3 to 1.5**.
 
 <div align="left">
   <img src="resources/mmediting-demo.jpg"/>
@@ -43,7 +43,7 @@ v0.5 was released in 09/07/2020.
 
 ## Benchmark and model zoo
 
-Please refer to [model_zoo.rst](docs/model_zoo.rst) for more details.
+Please refer to [model_zoo.md](docs/model_zoo.md) for more details.
 
 ## Installation
 
@@ -65,12 +65,13 @@ If you use this toolbox or benchmark in your research, please cite this project.
 ```
 @misc{mmediting2020,
   author =       {Jiamin He, Rui Xu, Xintao Wang, Liming Jiang, Wayne Wu, Chen Qian, Kai Chen, Dahua Lin and Chen Change Loy},
-  title =        {mmediting},
+  title =        {{MMEditing}: Open MMLab Image and Video Editing Toolbox},
   howpublished = {\url{https://github.com/open-mmlab/mmediting}},
   year =         {2020}
 }
 ```
+Jiamin He, Rui Xu, Xintao Wang are equal contributors.
 
 ## Contact
 
-This repo is currently maintained by Jiamin He ([@hejm37](https://github.com/hejm37)), Rui Xu ([@nbei](https://github.com/nbei)), Xintao Wang ([@xinntao](https://github.com/xinntao)), Liming Jiang([@EndlessSora](https://github.com/EndlessSora)).
+This repo is currently maintained by Jiamin He ([@hejm37](https://github.com/hejm37)), Rui Xu ([@nbei](https://github.com/nbei)), Xintao Wang ([@xinntao](https://github.com/xinntao)), Liming Jiang([@EndlessSora](https://github.com/EndlessSora)), Kai Chen ([@hellock](https://github.com/hellock)).

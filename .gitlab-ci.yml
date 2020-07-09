@@ -38,7 +38,7 @@ test:
 pages:
   stage: deploy
   script:
-    - pip install mmcv==0.6.2
+    - pip install mmcv
     - pip install scikit-image
     - pip install pillow==6.1.0
     - pip install sphinx sphinx_rtd_theme recommonmark sphinx-markdown-tables
