@@ -83,6 +83,8 @@ It is recommended that you run step d each time you pull some updates from githu
 3. If you would like to use `opencv-python-headless` instead of `opencv-python`,
 you can install it before installing MMCV.
 
+4. Some models (such as EDVR in restorers) depend on CUDA ops in `mmcv-full` which is listed in `requirements.txt`. Install it with the default command `pip install -r requirements.txt` need to compile CUDA ops locally and it may take up to 10 mins. Another option is to install pre-compiled `mmcv-full`, visit [MMCV github page](https://github.com/open-mmlab/mmcv#install-with-pip) for concrete instructions. Moreover, if the model you intend to use does not depend on CUDA ops, you could also install the lite version of mmcv with `pip install mmcv` in which CUDA ops is excluded.
+
 ### Install with CPU only
 The code can be built for CPU only environment (where CUDA isn't available).
 
@@ -120,7 +122,7 @@ conda activate open-mmlab
 conda install -c pytorch pytorch torchvision -y
 git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
-pip install -r requirements/build.txt
+pip install -r requirements.txt
 pip install -v -e .
 ```
 
