@@ -1,5 +1,5 @@
 lmdb
-mmcv>=0.6.2
+mmcv-full>=1.0.0
 pillow==6.1.0
 scikit-image
 yapf
