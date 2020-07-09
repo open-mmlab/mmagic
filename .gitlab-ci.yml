@@ -25,7 +25,7 @@ linting:
 test:
   stage: test
   script:
-    - pip install mmcv-full
+    - pip install mmcv-full==1.0.0+torch1.3.0+cu101 -f https://openmmlab.oss-accelerate.aliyuncs.com/mmcv/dist/index.html
     - echo "Start building..."
     - pip install -r requirements.txt
     - pip install -e .
