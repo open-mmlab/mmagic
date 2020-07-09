@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from mmcv.parallel import MODULE_WRAPPERS, MMDistributedDataParallel
 from mmcv.parallel.scatter_gather import scatter_kwargs
+from torch.cuda._utils import _get_device_index
 
 
 @MODULE_WRAPPERS.register_module()
@@ -65,6 +66,7 @@ class DistributedDataParallelWrapper(nn.Module):
             broadcast_buffers=broadcast_buffers,
             find_unused_parameters=find_unused_parameters,
             **kwargs)
+        self.output_device = _get_device_index(device_ids[0], True)
 
     def to_ddp(self, device_ids, dim, broadcast_buffers,
                find_unused_parameters, **kwargs):
