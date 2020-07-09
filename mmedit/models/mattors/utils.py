@@ -17,6 +17,6 @@ def get_unknown_tensor(trimap, meta):
         weight = trimap.eq(1).float()
     else:
         # trimap is simply processed by pipeline `RescaleToZeroOne`
-        # 0 for bg, 0.5 for unknown, 1 for fg
-        weight = trimap.eq(0.5).float()
+        # 0 for bg, 128/255 for unknown, 1 for fg
+        weight = trimap.eq(128 / 255).float()
     return weight
