@@ -175,10 +175,13 @@ if __name__ == '__main__':
     setup(
         name='mmedit',
         version=get_version(),
-        description='Image and Video Editing Toolbox',
+        description='Open MMLab Image and Video Editing Toolbox and Benchmark',
         long_description=readme(),
         maintainer='OpenMMLab',
         maintainer_email='wxt1994@126.com',
+        keywords='computer vision, inpainting, matting, '
+        'super-resolution, generation',
+        url='https://github.com/open-mmlab/mmediting',
         packages=find_packages(exclude=('configs', 'tools', 'demo')),
         classifiers=[
             'Development Status :: 4 - Beta',
