@@ -31,7 +31,10 @@ extensions = [
     'recommonmark', 'sphinx_markdown_tables'
 ]
 
-autodoc_mock_imports = ['mmedit.version', 'mmcv.runner.IterBasedRunner']
+autodoc_mock_imports = [
+    'mmedit.version', 'skimage', 'mmcv.ops.ModulatedDeformConv2d',
+    'mmcv.ops.modulated_deform_conv2d'
+]
 
 source_suffix = {
     '.rst': 'restructuredtext',
