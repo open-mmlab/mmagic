@@ -1,0 +1,7 @@
+codecov
+flake8
+isort
+pytest
+pytest-cov
+pytest-runner
+ubelt
