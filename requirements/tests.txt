@@ -1,6 +1,6 @@
 codecov
 flake8
-isort
+isort==4.3.21
 pytest
 pytest-cov
 pytest-runner
