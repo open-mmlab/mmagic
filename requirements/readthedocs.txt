@@ -1,3 +1,4 @@
-mmcv
+mmcv-full==1.0.0+torch1.3.0+cu101 -f https://openmmlab.oss-accelerate.aliyuncs.com/mmcv/dist/index.html
+skimage
 torch
 torchvision
