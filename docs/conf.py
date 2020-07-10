@@ -31,7 +31,10 @@ extensions = [
     'recommonmark', 'sphinx_markdown_tables'
 ]
 
-autodoc_mock_imports = ['mmedit.version', 'mmcv.runner.IterBasedRunner']
+autodoc_mock_imports = [
+    'mmedit.version', 'skimage', 'mmcv.ops.ModulatedDeformConv2d',
+    'mmcv.ops.modulated_deform_conv2d', 'mmcv._ext'
+]
 
 source_suffix = {
     '.rst': 'restructuredtext',
@@ -57,3 +60,6 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# The master toctree document.
+master_doc = 'index'

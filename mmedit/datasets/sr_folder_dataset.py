@@ -19,7 +19,7 @@ class SRFolderDataset(BaseSRDataset):
 
     For example, we have two folders with the following structures:
 
-    .. code-block::
+    ::
 
         data_root
         ├── lq

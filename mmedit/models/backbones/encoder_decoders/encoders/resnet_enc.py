@@ -269,7 +269,7 @@ class ResNetEnc(nn.Module):
 class ResShortcutEnc(ResNetEnc):
     """ResNet backbone for image matting with shortcut connection.
 
-    .. code-block::
+    ::
 
         image ---------------- shortcut[0] --- feat1
           |
@@ -391,7 +391,7 @@ class ResShortcutEnc(ResNetEnc):
 class ResGCAEncoder(ResShortcutEnc):
     """ResNet backbone with shortcut connection and gca module.
 
-    .. code-block::
+    ::
 
         image ---------------- shortcut[0] -------------- feat1
          |

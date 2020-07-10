@@ -19,7 +19,7 @@ class SRVid4Dataset(BaseSRDataset):
 
     Examples:
 
-    .. code-block::
+    ::
 
         calendar 40 (320,480,3)
         city 34 (320,480,3)
