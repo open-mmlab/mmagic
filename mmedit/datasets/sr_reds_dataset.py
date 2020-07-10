@@ -15,7 +15,7 @@ class SRREDSDataset(BaseSRDataset):
     1. image name; 2, image shape, seperated by a white space.
     Examples:
 
-    .. code-block::
+    ::
 
         000/00000000.png (720, 1280, 3)
         000/00000001.png (720, 1280, 3)

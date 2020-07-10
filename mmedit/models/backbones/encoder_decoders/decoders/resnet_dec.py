@@ -228,7 +228,7 @@ class ResNetDec(nn.Module):
 class ResShortcutDec(ResNetDec):
     """ResNet decoder for image matting with shortcut connection.
 
-    .. code-block::
+    ::
 
         feat1 --------------------------- conv2 --- out
                                        |
@@ -293,7 +293,7 @@ class ResShortcutDec(ResNetDec):
 class ResGCADecoder(ResShortcutDec):
     """ResNet decoder with shortcut connection and gca module.
 
-    .. code-block::
+    ::
 
         feat1 ---------------------------------------- conv2 --- out
                                                     |
