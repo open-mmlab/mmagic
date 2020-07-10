@@ -177,6 +177,8 @@ if __name__ == '__main__':
         version=get_version(),
         description='Image and Video Editing Toolbox',
         long_description=readme(),
+        maintainer='OpenMMLab',
+        maintainer_email='wxt1994@126.com',
         packages=find_packages(exclude=('configs', 'tools', 'demo')),
         classifiers=[
             'Development Status :: 4 - Beta',
