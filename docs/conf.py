@@ -33,7 +33,7 @@ extensions = [
 
 autodoc_mock_imports = [
     'mmedit.version', 'skimage', 'mmcv.ops.ModulatedDeformConv2d',
-    'mmcv.ops.modulated_deform_conv2d'
+    'mmcv.ops.modulated_deform_conv2d', 'mmcv._ext'
 ]
 
 source_suffix = {
