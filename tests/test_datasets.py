@@ -570,7 +570,8 @@ def test_repeat_dataset():
 
 
 def test_reds_dataset():
-    root_path = Path(__file__).parent / 'data'
+    repo_dpath = osp.dirname(osp.dirname(__file__))
+    root_path = osp.join(repo_dpath, 'data')
 
     txt_content = ('000/00000001.png (720, 1280, 3)\n'
                    '001/00000001.png (720, 1280, 3)\n'
@@ -696,7 +697,8 @@ def test_reds_dataset():
 
 
 def test_vimeo90k_dataset():
-    root_path = Path(__file__).parent / 'data'
+    repo_dpath = osp.dirname(osp.dirname(__file__))
+    root_path = osp.join(repo_dpath, 'data')
 
     txt_content = ('00001/0266 (256, 448, 3)\n00002/0268 (256, 448, 3)\n')
     mocked_open_function = mock_open(read_data=txt_content)
@@ -736,7 +738,8 @@ def test_vimeo90k_dataset():
 
 
 def test_vid4_dataset():
-    root_path = Path(__file__).parent / 'data'
+    repo_dpath = osp.dirname(osp.dirname(__file__))
+    root_path = osp.join(repo_dpath, 'data')
 
     txt_content = ('calendar 1 (320,480,3)\ncity 2 (320,480,3)\n')
     mocked_open_function = mock_open(read_data=txt_content)
