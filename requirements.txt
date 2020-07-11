@@ -1,4 +1,2 @@
-lmdb
-mmcv-full>=1.0.0
-scikit-image
-yapf
+-r requirements/runtime.txt
+-r requirements/tests.txt

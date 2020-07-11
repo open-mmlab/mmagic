@@ -40,7 +40,11 @@ class MaskConvModule(ConvModule):
 
         self.init_weights()
 
-    def forward(self, x, mask=None, activate=True, norm=True,
+    def forward(self,
+                x,
+                mask=None,
+                activate=True,
+                norm=True,
                 return_mask=True):
         """Forward function for partial conv2d.
 
