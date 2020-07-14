@@ -105,7 +105,7 @@ If `--imshow` is specified, the demo will also show image with opencv. Examples:
 python demo/matting_demo.py configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py work_dirs/dim_stage3/latest.pth tests/data/merged/GT05.jpg tests/data/trimap/GT05.png tests/data/pred/GT05.png
 ```
 
-The predicted alpha matte will be save in `tests/data/pred/demo.png`.
+The predicted alpha matte will be save in `tests/data/pred/GT05.png`.
 
 #### Restoration
 
