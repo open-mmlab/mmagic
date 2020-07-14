@@ -1,4 +1,6 @@
+future>=0.18.2
 lmdb
 mmcv-full>=1.0.0
 scikit-image
+tensorboard>=2.2.2
 yapf
