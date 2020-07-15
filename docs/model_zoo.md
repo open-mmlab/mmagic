@@ -1,9 +1,5 @@
 # Model Zoo
 
-## Common settings
-
-- We use distributed training.
-
 ## Inpainting
 
 ### Benchmark
@@ -27,6 +23,24 @@ Please refer to [DeepFillv2](https://github.com/open-mmlab/mmediting/blob/master
 
 ## Matting
 
+### Overview
+
+|        Method       |  SAD  |   MSE  |  GRAD |  CONN |
+|:-------------------:|:-----:|:------:|:-----:|:-----:|
+|        DIM          | 50.62 | 0.0151 | 29.01 | 50.69 |
+|        GCA          | 34.77 | 0.0080 | 16.33 | 32.20 |
+|      IndexNet       | 45.56 | 0.0125 | 25.49 | 44.79 |
+
+Above is the original implementation of the methods. They use different data augmentations. To create a fair comparasion, we run experiments on these methods with the same data augmentations. Below is the result of different methods using the DIM data augmentations:
+
+|        Method       |  SAD  |   MSE  |  GRAD |  CONN |
+|:-------------------:|:-----:|:------:|:-----:|:-----:|
+|        DIM          | 50.62 | 0.0151 | 29.01 | 50.69 |
+|        GCA*         | 49.42 | 0.0129 | 28.07 | 49.47 |
+|      IndexNet*      | 50.11 | 0.0164 | 30.82 | 49.53 |
+
+> *: We only run one experiment under the setting.
+
 ### Benchmark
 
 #### Deep Image Matting (DIM)
@@ -40,25 +54,6 @@ Please refer to [GCA](https://github.com/open-mmlab/mmediting/blob/master/config
 #### IndexNet Matting
 
 Please refer to [IndexNet](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/indexnet) for details.
-
-
-### Overview
-
-|        Method       |  SAD  |   MSE  |  GRAD |  CONN |
-|:-------------------:|:-----:|:------:|:-----:|:-----:|
-|        DIM          | 50.62 | 0.0151 | 29.01 | 50.69 |
-|        GCA          | 34.77 | 0.0080 | 16.33 | 32.20 |
-|      IndexNet       | 45.56 | 0.0125 | 25.49 | 44.79 |
-
-Result of different methods using the DIM data pipeline:
-
-|        Method       |  SAD  |   MSE  |  GRAD |  CONN |
-|:-------------------:|:-----:|:------:|:-----:|:-----:|
-|        DIM          | 50.62 | 0.0151 | 29.01 | 50.69 |
-|        GCA*         | 49.42 | 0.0129 | 28.07 | 49.47 |
-|      IndexNet*      | 50.11 | 0.0164 | 30.82 | 49.53 |
-
-> *: We only run one experiment under the setting. Thus, the result maybe biased.
 
 ### Evaluation Details
 
