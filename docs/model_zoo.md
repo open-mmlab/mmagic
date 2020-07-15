@@ -31,7 +31,9 @@ Please refer to [DeepFillv2](https://github.com/open-mmlab/mmediting/blob/master
 |        GCA          | 34.77 | 0.0080 | 16.33 | 32.20 |
 |      IndexNet       | 45.56 | 0.0125 | 25.49 | 44.79 |
 
-Above is the original implementation of the methods. They use different data augmentations. To create a fair comparasion, we run experiments on these methods with the same data augmentations. Below is the result of different methods using the DIM data augmentations:
+Above results follow the original implementation of these methods.
+However, they adopt different data augmentations and preprocessing pipelines.
+We also provide a benchmark for these methods under the same settings, i.e., using the same data augmentations as DIM. Results are shown as below.
 
 |        Method       |  SAD  |   MSE  |  GRAD |  CONN |
 |:-------------------:|:-----:|:------:|:-----:|:-----:|
