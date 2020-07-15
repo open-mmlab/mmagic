@@ -67,7 +67,6 @@ class DIM(BaseMattor):
             pred_refine = self.refiner(refine_input, raw_alpha)
         else:
             pred_refine = None
-
         return pred_alpha, pred_refine
 
     def forward_dummy(self, inputs):
@@ -143,7 +142,9 @@ class DIM(BaseMattor):
         if self.test_cfg.refine:
             pred_alpha = pred_refine
 
-        pred_alpha = pred_alpha.cpu().numpy().squeeze()
+        if torch.onnx.is_in_onnx_export():
+            return pred_alpha
+        pred_alpha = pred_alpha.detach().cpu().numpy().squeeze()
         pred_alpha = self.restore_shape(pred_alpha, meta)
         eval_result = self.evaluate(pred_alpha, meta)
 

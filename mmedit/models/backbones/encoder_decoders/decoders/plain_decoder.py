@@ -1,7 +1,42 @@
 import torch.nn as nn
+import torch.nn.functional as F
 from mmcv.cnn.utils.weight_init import xavier_init
 
 from mmedit.models.registry import COMPONENTS
+from torch.autograd import Function
+from torch.nn.modules.pooling import _MaxUnpoolNd
+from torch.nn.modules.utils import _pair
+
+
+class MaxUnpool2dop(Function):
+
+    @staticmethod
+    def forward(ctx, input, indices, kernel_size, stride, padding,
+                output_size):
+        return F.max_unpool2d(input, indices, kernel_size, stride, padding,
+                              output_size)
+
+    @staticmethod
+    def symbolic(g, input, indices, kernel_size, stride, padding, output_size):
+        return g.op(
+            'MaxUnpool',
+            input,
+            indices,
+            kernel_shape_i=kernel_size,
+            strides_i=stride)
+
+
+class MaxUnpool2d(_MaxUnpoolNd):
+
+    def __init__(self, kernel_size, stride=None, padding=0):
+        super(MaxUnpool2d, self).__init__()
+        self.kernel_size = _pair(kernel_size)
+        self.stride = _pair(stride or kernel_size)
+        self.padding = _pair(padding)
+
+    def forward(self, input, indices, output_size=None):
+        return MaxUnpool2dop.apply(input, indices, self.kernel_size,
+                                   self.stride, self.padding, output_size)
 
 
 @COMPONENTS.register_module()
@@ -25,7 +60,7 @@ class PlainDecoder(nn.Module):
         self.deconv1 = nn.Conv2d(64, 1, kernel_size=5, padding=2)
 
         self.relu = nn.ReLU(inplace=True)
-        self.max_unpool2d = nn.MaxUnpool2d(kernel_size=2, stride=2)
+        self.max_unpool2d = MaxUnpool2d(kernel_size=2, stride=2)
 
     def init_weights(self):
         """Init weights for the module.
@@ -78,5 +113,6 @@ class PlainDecoder(nn.Module):
         out = self.max_unpool2d(out, max_idx_1)
 
         out = self.relu(self.deconv1_1(out))
+
         raw_alpha = self.deconv1(out)
         return raw_alpha
