@@ -53,7 +53,6 @@ def pytorch2onnx(model,
         # postprocess for onnx result
         ori_trimap = metas[0]['ori_trimap'].squeeze()
         ori_h, ori_w = metas[0]['merged_ori_shape'][:2]
-
         onnx_result = onnx_result.squeeze()
         if 'interpolation' in metas[0]:
             onnx_result = mmcv.imresize(
@@ -67,9 +66,9 @@ def pytorch2onnx(model,
         onnx_result[ori_trimap == 255] = 1.
 
         # check the numerical value
-        assert (np.abs(
-            (pytorch_result.flatten() - onnx_result.flatten())) > 0.01).sum(
-            ) == 0, 'The outputs are different between Pytorch and ONNX'
+        assert np.allclose(
+            pytorch_result,
+            onnx_result), 'The outputs are different between Pytorch and ONNX'
         print('The numerical values are same between Pytorch and ONNX')
 
 

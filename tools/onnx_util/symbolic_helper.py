@@ -273,6 +273,23 @@ def _interpolate_get_scales(g, scale_factor, dim):
     return scale_factor
 
 
+def _size_helper(g, self, dim):
+    full_shape = g.op('Shape', self)
+    from torch.onnx.symbolic_opset9 import select
+    return select(g, full_shape, g.op('Constant', value_t=torch.tensor([0])),
+                  dim)
+
+
+def _avgpool_helper(tuple_fn, padding, kernel_size, stride, divisor_override,
+                    name):
+    if divisor_override and divisor_override.node().kind() != 'prim::Constant':
+        return _unimplemented(name, 'divisor_override')
+    if not stride:
+        stride = kernel_size
+    padding = tuple(tuple_fn(padding))
+    return padding
+
+
 # Metaprogram symbolics for each ATen native specialized cast operator.
 # For e.g. we specify a function named `_cast_uint8_t` that instantiates an
 # ONNX cast node with `to` attribute 'UINT8'
