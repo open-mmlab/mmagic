@@ -21,7 +21,6 @@ def pytorch2onnx(model,
     merged = input['merged'].unsqueeze(0)
     trimap = input['trimap'].unsqueeze(0)
     input = torch.cat((merged, trimap), 1)
-    # onnx.export does not support kwargs
     model.forward = model.forward_dummy
     # pytorch has some bug in pytorch1.3, we have to fix it
     # by replacing these existing op
@@ -42,7 +41,7 @@ def pytorch2onnx(model,
         onnx_model = onnx.load(output_file)
         onnx.checker.check_model(onnx_model)
 
-        # get pytorch output, only compare pred_alpha
+        # get pytorch output, only concern pred_alpha
         pytorch_result = model(input)
         if isinstance(pytorch_result, (tuple, list)):
             pytorch_result = pytorch_result[0]
