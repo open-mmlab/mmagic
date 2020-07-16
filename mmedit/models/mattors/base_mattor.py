@@ -129,6 +129,7 @@ class BaseMattor(BaseModel):
         """
         ori_trimap = meta[0]['ori_trimap'].squeeze()
         ori_h, ori_w = meta[0]['merged_ori_shape'][:2]
+
         if 'interpolation' in meta[0]:
             # images have been resized for inference, resize back
             pred_alpha = mmcv.imresize(

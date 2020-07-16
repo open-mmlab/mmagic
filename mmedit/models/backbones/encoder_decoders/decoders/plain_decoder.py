@@ -113,6 +113,5 @@ class PlainDecoder(nn.Module):
         out = self.max_unpool2d(out, max_idx_1)
 
         out = self.relu(self.deconv1_1(out))
-
         raw_alpha = self.deconv1(out)
         return raw_alpha

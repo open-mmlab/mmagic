@@ -342,7 +342,7 @@ class GCAModule(nn.Module):
     def get_self_correlation_mask(self, img_feat):
         _, _, h, w = img_feat.shape
         # As ONNX does not support dynamic num_classes, we have to convert it
-        # into an integrate
+        # into an integer
         self_mask = F.one_hot(
             torch.arange(h * w).view(h, w), num_classes=int(h * w))
         self_mask = self_mask.permute(2, 0, 1).view(1, h * w, h, w)

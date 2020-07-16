@@ -1,5 +1,4 @@
 import argparse
-from functools import partial
 
 import mmcv
 import numpy as np
@@ -21,17 +20,18 @@ def pytorch2onnx(model,
     model.cpu().eval()
     merged = input['merged'].unsqueeze(0)
     trimap = input['trimap'].unsqueeze(0)
-    metas = [input['meta'].data]
+    input = torch.cat((merged, trimap), 1)
     # onnx.export does not support kwargs
-    model.forward = partial(model.forward, meta=metas, test_mode=True)
+    model.forward = model.forward_dummy
     # pytorch has some bug in pytorch1.3, we have to fix it
     # by replacing these existing op
     register_extra_symbolics(opset_version)
     with torch.no_grad():
         torch.onnx.export(
-            model, (merged, trimap),
+            model,
+            input,
             output_file,
-            input_names=['merged', 'trimap'],
+            input_names=['cat_input'],
             export_params=True,
             keep_initializers_as_inputs=True,
             verbose=show,
@@ -42,29 +42,19 @@ def pytorch2onnx(model,
         onnx_model = onnx.load(output_file)
         onnx.checker.check_model(onnx_model)
 
-        # get pytorch output
-        pytorch_result = model(merged, trimap)['pred_alpha']
+        # get pytorch output, only compare pred_alpha
+        pytorch_result = model(input)
+        if isinstance(pytorch_result, (tuple, list)):
+            pytorch_result = pytorch_result[0]
+        pytorch_result = pytorch_result.detach().numpy()
         # get onnx output
         sess = rt.InferenceSession(output_file)
         onnx_result = sess.run(None, {
-            'merged': merged.detach().numpy(),
-            'trimap': trimap.detach().numpy()
-        })[0]
-        # postprocess for onnx result
-        ori_trimap = metas[0]['ori_trimap'].squeeze()
-        ori_h, ori_w = metas[0]['merged_ori_shape'][:2]
-        onnx_result = onnx_result.squeeze()
-        if 'interpolation' in metas[0]:
-            onnx_result = mmcv.imresize(
-                onnx_result, (ori_w, ori_h),
-                interpolation=metas[0]['interpolation'])
-        elif 'pad' in metas[0]:
-            onnx_result = onnx_result[:ori_h, :ori_w]
-        onnx_result = np.clip(onnx_result, 0, 1)
-
-        onnx_result[ori_trimap == 0] = 0.
-        onnx_result[ori_trimap == 255] = 1.
-
+            'cat_input': input.detach().numpy(),
+        })
+        # only concern pred_alpha value
+        if isinstance(onnx_result, (tuple, list)):
+            onnx_result = onnx_result[0]
         # check the numerical value
         assert np.allclose(
             pytorch_result,
