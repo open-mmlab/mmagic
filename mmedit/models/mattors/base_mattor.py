@@ -140,6 +140,7 @@ class BaseMattor(BaseModel):
             pred_alpha = pred_alpha[:ori_h, :ori_w]
 
         assert pred_alpha.shape == (ori_h, ori_w)
+
         # some methods do not have an activation layer after the last conv,
         # clip to make sure pred_alpha range from 0 to 1.
         pred_alpha = np.clip(pred_alpha, 0, 1)
@@ -164,6 +165,7 @@ class BaseMattor(BaseModel):
         """
         if self.test_cfg.metrics is None:
             return None
+
         ori_alpha = meta[0]['ori_alpha'].squeeze()
         ori_trimap = meta[0]['ori_trimap'].squeeze()
 
