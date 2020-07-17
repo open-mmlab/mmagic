@@ -1,3 +1,4 @@
+import copy
 import platform
 import random
 from functools import partial
@@ -6,7 +7,7 @@ import numpy as np
 from mmcv.parallel import collate
 from mmcv.runner import get_dist_info
 from mmcv.utils import build_from_cfg
-from torch.utils.data import DataLoader
+from torch.utils.data import ConcatDataset, DataLoader
 
 from .dataset_wrappers import RepeatDataset
 from .registry import DATASETS
@@ -21,6 +22,19 @@ if platform.system() != 'Windows':
     resource.setrlimit(resource.RLIMIT_NOFILE, (soft_limit, hard_limit))
 
 
+def _concat_dataset(cfg, default_args=None):
+    ann_files = cfg['ann_file']
+
+    datasets = []
+    num_dset = len(ann_files)
+    for i in range(num_dset):
+        data_cfg = copy.deepcopy(cfg)
+        data_cfg['ann_file'] = ann_files[i]
+        datasets.append(build_dataset(data_cfg, default_args))
+
+    return ConcatDataset(datasets)
+
+
 def build_dataset(cfg, default_args=None):
     """Build a dataset from config dict.
 
@@ -32,11 +46,16 @@ def build_dataset(cfg, default_args=None):
     Returns:
         Dataset: The constructed dataset.
     """
-    if cfg['type'] == 'RepeatDataset':
+    if isinstance(cfg, (list, tuple)):
+        dataset = ConcatDataset([build_dataset(c, default_args) for c in cfg])
+    elif cfg['type'] == 'RepeatDataset':
         dataset = RepeatDataset(
             build_dataset(cfg['dataset'], default_args), cfg['times'])
+    elif isinstance(cfg.get('ann_file'), (list, tuple)):
+        dataset = _concat_dataset(cfg, default_args)
     else:
         dataset = build_from_cfg(cfg, DATASETS, default_args)
+
     return dataset
 
 
