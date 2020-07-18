@@ -23,6 +23,16 @@ if platform.system() != 'Windows':
 
 
 def _concat_dataset(cfg, default_args=None):
+    """Concat datasets with different ann_file but the same type.
+
+    Args:
+        cfg (dict): The config of dataset.
+        default_args (dict, optional): Default initialization arguments.
+            Default: None.
+
+    Returns:
+        Dataset: The concatenated dataset.
+    """
     ann_files = cfg['ann_file']
 
     datasets = []
@@ -37,6 +47,13 @@ def _concat_dataset(cfg, default_args=None):
 
 def build_dataset(cfg, default_args=None):
     """Build a dataset from config dict.
+
+    It supports a variety of dataset config. If ``cfg`` is a Sequential (list
+    or dict), it will be a concatenated dataset of the datasets specified by
+    the Sequential. If it is a ``RepeatDataset``, then it will repeat the
+    dataset ``cfg['dataset']`` for ``cfg['times']`` times. If the ``ann_file``
+    of the dataset is a Sequential, then it will build a concatenated dataset
+    with the same dataset type but different ``ann_file``.
 
     Args:
         cfg (dict): Config dict. It should at least contain the key "type".
