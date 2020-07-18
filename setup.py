@@ -1,24 +1,7 @@
 import os
 import subprocess
 import time
-from functools import partial
 from setuptools import find_packages, setup
-
-import torch
-
-
-def _get_extension():
-    if torch.__version__ == 'parrots':
-        from parrots.utils.build_extension import BuildExtension, Extension
-        CppExtension = partial(Extension, cuda=False)
-        CUDAExtension = partial(Extension, cuda=True)
-    else:
-        from torch.utils.cpp_extension import (BuildExtension, CppExtension,
-                                               CUDAExtension)
-    return BuildExtension, CppExtension, CUDAExtension
-
-
-BuildExtension, CppExtension, CUDAExtension = _get_extension()
 
 
 def readme():
@@ -26,15 +9,6 @@ def readme():
         content = f.read()
     return content
 
-
-MAJOR = 0
-MINOR = 1
-PATCH = 0
-SUFFIX = ''
-if PATCH:
-    SHORT_VERSION = f'{MAJOR}.{MINOR}.{PATCH}{SUFFIX}'
-else:
-    SHORT_VERSION = f'{MAJOR}.{MINOR}{SUFFIX}'
 
 version_file = 'mmedit/version.py'
 
@@ -68,6 +42,12 @@ def get_git_hash():
 def get_hash():
     if os.path.exists('.git'):
         sha = get_git_hash()[:7]
+    elif os.path.exists(version_file):
+        try:
+            from mmdet.version import __version__
+            sha = __version__.split('+')[-1]
+        except ImportError:
+            raise ImportError('Unable to get git version')
     else:
         sha = 'unknown'
 
@@ -77,15 +57,21 @@ def get_hash():
 def write_version_py():
     content = """# GENERATED VERSION FILE
 # TIME: {}
-
 __version__ = '{}'
 short_version = '{}'
+version_info = ({})
 """
     sha = get_hash()
+    with open('mmedit/VERSION', 'r') as f:
+        SHORT_VERSION = f.read().strip()
+    VERSION_INFO = ', '.join(
+        [x if x.isdigit() else f'"{x}"' for x in SHORT_VERSION.split('.')])
     VERSION = SHORT_VERSION + '+' + sha
 
+    version_file_str = content.format(time.asctime(), VERSION, SHORT_VERSION,
+                                      VERSION_INFO)
     with open(version_file, 'w') as f:
-        f.write(content.format(time.asctime(), VERSION, SHORT_VERSION))
+        f.write(version_file_str)
 
 
 def get_version():
@@ -124,6 +110,8 @@ def parse_requirements(fname='requirements.txt', with_version=True):
             info = {'line': line}
             if line.startswith('-e '):
                 info['package'] = line.split('#egg=')[1]
+            elif '@git+' in line:
+                info['package'] = line
             else:
                 # Remove versioning from the package
                 pat = '(' + '|'.join(['>=', '==', '>']) + ')'
@@ -175,10 +163,10 @@ if __name__ == '__main__':
     setup(
         name='mmedit',
         version=get_version(),
-        description='Open MMLab Image and Video Editing Toolbox and Benchmark',
+        description='OpenMMLab Image and Video Editing Toolbox and Benchmark',
         long_description=readme(),
-        maintainer='OpenMMLab',
-        maintainer_email='wxt1994@126.com',
+        maintainer='MMEditing Authors',
+        maintainer_email='openmmlab@gmail.com',
         keywords='computer vision, inpainting, matting, '
         'super-resolution, generation',
         url='https://github.com/open-mmlab/mmediting',
@@ -199,5 +187,4 @@ if __name__ == '__main__':
             'all': parse_requirements('requirements.txt'),
             'tests': parse_requirements('requirements/tests.txt'),
         },
-        cmdclass={'build_ext': BuildExtension},
         zip_safe=False)
