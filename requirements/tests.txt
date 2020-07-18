@@ -3,6 +3,4 @@ flake8
 interrogate
 isort==4.3.21
 pytest
-pytest-cov
 pytest-runner
-ubelt
