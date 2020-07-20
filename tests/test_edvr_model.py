@@ -4,6 +4,7 @@ import mmcv
 import pytest
 import torch
 from mmcv.runner import obj_from_dict
+
 from mmedit.models import build_model
 from mmedit.models.backbones import EDVRNet
 from mmedit.models.losses import L1Loss

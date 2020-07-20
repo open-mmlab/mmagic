@@ -2,6 +2,7 @@ from pathlib import Path
 
 import torch
 from mmcv import Config
+
 from mmedit.models import build_model
 
 

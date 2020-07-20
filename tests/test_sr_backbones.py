@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 import torch
+
 from mmedit.models.backbones import EDSR, SRCNN, MSRResNet, RRDBNet
 from mmedit.models.components import ModifiedVGG
 

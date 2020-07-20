@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 import torch
+
 from mmedit.datasets.pipelines import (Collect, FormatTrimap, GetMaskedImage,
                                        ImageToTensor, ToTensor)
 from mmedit.datasets.pipelines.formating import FramesToTensor

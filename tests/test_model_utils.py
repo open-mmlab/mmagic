@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 import torch
 import torch.nn as nn
+
 from mmedit.models.common import (GANImageBuffer, extract_around_bbox,
                                   extract_bbox_patch, generation_init_weights,
                                   set_requires_grad)

@@ -6,6 +6,7 @@ import pytest
 import torch
 from mmcv.parallel import DataContainer as DC
 from mmcv.runner import obj_from_dict
+
 from mmedit.models import build_model
 from mmedit.models.backbones import UnetGenerator
 from mmedit.models.components import PatchDiscriminator

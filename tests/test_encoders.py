@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 import torch
 from mmcv.utils.parrots_wrapper import _BatchNorm
+
 from mmedit.models.backbones import (VGG16, DepthwiseIndexBlock,
                                      HolisticIndexBlock, IndexNetEncoder,
                                      ResGCAEncoder, ResNetEnc, ResShortcutEnc)

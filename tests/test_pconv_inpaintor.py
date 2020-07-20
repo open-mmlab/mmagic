@@ -6,6 +6,7 @@ from unittest.mock import patch
 import pytest
 import torch
 from mmcv import Config
+
 from mmedit.models import build_model
 from mmedit.models.losses import PerceptualVGG
 

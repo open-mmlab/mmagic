@@ -7,8 +7,8 @@ import mmcv
 import numpy as np
 from mmcv import ConfigDict
 from mmcv.utils import print_log
-from mmedit.core.evaluation import connectivity, gradient_error, mse, sad
 
+from mmedit.core.evaluation import connectivity, gradient_error, mse, sad
 from ..base import BaseModel
 from ..builder import build_backbone, build_component
 from ..registry import MODELS

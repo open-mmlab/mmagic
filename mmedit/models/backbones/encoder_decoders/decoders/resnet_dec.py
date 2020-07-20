@@ -1,8 +1,8 @@
 import torch.nn as nn
 from mmcv.cnn import ConvModule, constant_init
+
 from mmedit.models.common import GCAModule
 from mmedit.models.registry import COMPONENTS
-
 from ..encoders.resnet_enc import BasicBlock
 
 

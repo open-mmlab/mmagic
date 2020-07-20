@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 from mmedit.datasets.pipelines import Compose, ImageToTensor
 
 

@@ -3,6 +3,7 @@ import copy
 import numpy as np
 import pytest
 import torch
+
 # yapf: disable
 from mmedit.datasets.pipelines import (BinarizeImage, Flip,
                                        GenerateFrameIndices,

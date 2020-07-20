@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 from mmcv.parallel import collate, scatter
+
 from mmedit.core import tensor2img
 from mmedit.datasets.pipelines import Compose
 

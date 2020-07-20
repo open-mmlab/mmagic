@@ -2,6 +2,7 @@ import argparse
 
 import mmcv
 import torch
+
 from mmedit.apis import init_model, inpainting_inference
 from mmedit.core import tensor2img
 

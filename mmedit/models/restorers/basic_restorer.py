@@ -2,8 +2,8 @@ import numbers
 import os.path as osp
 
 import mmcv
-from mmedit.core import psnr, ssim, tensor2img
 
+from mmedit.core import psnr, ssim, tensor2img
 from ..base import BaseModel
 from ..builder import build_backbone, build_loss
 from ..registry import MODELS

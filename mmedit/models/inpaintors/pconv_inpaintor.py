@@ -3,8 +3,8 @@ from pathlib import Path
 
 import mmcv
 import torch
-from mmedit.core import tensor2img
 
+from mmedit.core import tensor2img
 from ..registry import MODELS
 from .one_stage import OneStageInpaintor
 

@@ -2,6 +2,7 @@ import mmcv
 import torch
 from mmcv.parallel import collate, scatter
 from mmcv.runner import load_checkpoint
+
 from mmedit.datasets.pipelines import Compose
 from mmedit.models import build_model
 

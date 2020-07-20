@@ -5,6 +5,7 @@ from pathlib import Path
 import mmcv
 import numpy as np
 import pytest
+
 from mmedit.datasets.pipelines import (GetSpatialDiscountMask,
                                        LoadImageFromFile,
                                        LoadImageFromFileList, LoadMask,

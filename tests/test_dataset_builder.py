@@ -1,9 +1,10 @@
 import math
 
+from torch.utils.data import ConcatDataset, RandomSampler, SequentialSampler
+
 from mmedit.datasets import (DATASETS, RepeatDataset, build_dataloader,
                              build_dataset)
 from mmedit.datasets.samplers import DistributedSampler
-from torch.utils.data import ConcatDataset, RandomSampler, SequentialSampler
 
 
 @DATASETS.register_module()

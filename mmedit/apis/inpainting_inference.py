@@ -1,5 +1,6 @@
 import torch
 from mmcv.parallel import collate, scatter
+
 from mmedit.datasets.pipelines import Compose
 
 

@@ -3,9 +3,9 @@ from pathlib import Path
 
 import mmcv
 import torch
-from mmedit.core import tensor2img
 from torchvision.utils import save_image
 
+from mmedit.core import tensor2img
 from ..common.model_utils import set_requires_grad
 from ..registry import MODELS
 from .one_stage import OneStageInpaintor

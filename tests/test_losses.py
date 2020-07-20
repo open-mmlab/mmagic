@@ -4,6 +4,7 @@ from unittest.mock import patch
 import numpy.testing as npt
 import pytest
 import torch
+
 from mmedit.models.losses import (CharbonnierCompLoss, CharbonnierLoss,
                                   DiscShiftLoss, GANLoss, GradientLoss,
                                   GradientPenaltyLoss, L1CompositionLoss,

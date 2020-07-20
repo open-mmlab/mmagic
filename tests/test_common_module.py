@@ -1,6 +1,7 @@
 import pytest
 import torch
 import torch.nn as nn
+
 from mmedit.models.common import (ASPP, DepthwiseSeparableConvModule,
                                   GCAModule, LinearModule, MaskConvModule,
                                   PartialConv2d, SimpleGatedConvModule)

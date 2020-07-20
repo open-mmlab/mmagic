@@ -2,6 +2,7 @@ import argparse
 
 import mmcv
 import torch
+
 from mmedit.apis import generation_inference, init_model
 
 
