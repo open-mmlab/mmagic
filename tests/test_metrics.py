@@ -84,28 +84,28 @@ def test_calculate_niqe():
     img = mmcv.imread('tests/data/gt/baboon.png')
 
     result = niqe(img[:, :, 0], crop_border=0, input_order='HW')
-    np.testing.assert_almost_equal(result, 6.15902)
+    np.testing.assert_almost_equal(result, 6.15902, decimal=5)
 
     result = niqe(img, crop_border=0, input_order='HWC', convert_to='y')
-    np.testing.assert_almost_equal(result, 5.85182)
+    np.testing.assert_almost_equal(result, 5.85182, decimal=5)
     result = niqe(img, crop_border=0, input_order='HWC', convert_to='gray')
-    np.testing.assert_almost_equal(result, 5.89766)
+    np.testing.assert_almost_equal(result, 5.89766, decimal=5)
 
     result = niqe(
         img.transpose(2, 0, 1),
         crop_border=0,
         input_order='CHW',
         convert_to='y')
-    np.testing.assert_almost_equal(result, 5.85182)
+    np.testing.assert_almost_equal(result, 5.85182, decimal=5)
     result = niqe(
         img.transpose(2, 0, 1),
         crop_border=0,
         input_order='CHW',
         convert_to='gray')
-    np.testing.assert_almost_equal(result, 5.89766)
+    np.testing.assert_almost_equal(result, 5.89766, decimal=5)
 
     result = niqe(img, crop_border=6, input_order='HWC', convert_to='y')
-    np.testing.assert_almost_equal(result, 6.14434)
+    np.testing.assert_almost_equal(result, 6.14434, decimal=5)
 
 
 def test_sad():
