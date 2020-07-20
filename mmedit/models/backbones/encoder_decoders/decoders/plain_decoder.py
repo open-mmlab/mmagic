@@ -1,3 +1,5 @@
+import warnings
+
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn.utils.weight_init import xavier_init
@@ -18,6 +20,9 @@ class MaxUnpool2dop(Function):
 
     @staticmethod
     def symbolic(g, input, indices, kernel_size, stride, padding, output_size):
+        warnings.warn(
+            'The definitions of indices are different between Pytorch and ONNX'
+            ', so the outputs between Pytorch and ONNX maybe different')
         return g.op(
             'MaxUnpool',
             input,
