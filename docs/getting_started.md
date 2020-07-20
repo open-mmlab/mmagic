@@ -86,10 +86,10 @@ python demo/matting_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${MASKED_IMAGE_FIL
 If `--imshow` is specified, the demo will also show image with opencv. Examples:
 
 ```shell
-python demo/matting_demo.py configs/inpainting/global_local/gl_256x256_8x12_celeba.py xxx.pth test/data/image/celeba_test.png test/data/image/bbox_mask.png test/data/pred/inpainting_celeba.png
+python demo/matting_demo.py configs/inpainting/global_local/gl_256x256_8x12_celeba.py xxx.pth tests/data/image/celeba_test.png tests/data/image/bbox_mask.png tests/data/pred/inpainting_celeba.png
 ```
 
-The predicted inpainting result will be save in `test/data/pred/inpainting_celeba.png`.
+The predicted inpainting result will be save in `tests/data/pred/inpainting_celeba.png`.
 
 #### Matting
 
@@ -102,10 +102,10 @@ python demo/matting_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${TR
 If `--imshow` is specified, the demo will also show image with opencv. Examples:
 
 ```shell
-python demo/matting_demo.py configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py work_dirs/dim_stage3/latest.pth test/data/merged/GT05.jpg test/data/trimap/GT05.png test/data/pred/GT05.png
+python demo/matting_demo.py configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py work_dirs/dim_stage3/latest.pth tests/data/merged/GT05.jpg tests/data/trimap/GT05.png tests/data/pred/GT05.png
 ```
 
-The predicted alpha matte will be save in `test/data/pred/demo.png`.
+The predicted alpha matte will be save in `tests/data/pred/GT05.png`.
 
 #### Restoration
 

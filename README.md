@@ -2,10 +2,11 @@
   <img src="resources/mmediting-logo.png" width="500px"/>
 </div>
 
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/latest/)
+<br/>
+
 [![build](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
+[![docs](https://readthedocs.org/projects/mmediting/badge/?version=latest)](https://mmediting.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![pypi](https://img.shields.io/pypi/v/mmediting)](https://pypi.org/project/mmediting)
 [![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
 
 ## Introduction
@@ -13,6 +14,8 @@
 MMEditing is an open source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://open-mmlab.github.io/) project.
 
 The master branch works with **PyTorch 1.3 to 1.5**.
+
+Documentation: https://mmediting.readthedocs.io/en/latest/.
 
 <div align="left">
   <img src="resources/mmediting-demo.jpg"/>
@@ -41,6 +44,10 @@ This project is released under the [Apache 2.0 license](LICENSE).
 
 v0.5 was released in 09/07/2020.
 
+Note that **MMSR** has been merged into this repo, as a part of MMEditing.
+With elaborate designs of the new framework and careful implementations,
+hope MMEditing could provide better experience.
+
 ## Benchmark and model zoo
 
 Please refer to [model_zoo.md](docs/model_zoo.md) for more details.
@@ -58,13 +65,17 @@ Please see [getting_started.md](docs/getting_started.md) for the basic usage of 
 
 We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md in MMDetection](https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md) for the contributing guideline.
 
+## Acknowledgement
+
+MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
+
 ## Citation
 
 If you use this toolbox or benchmark in your research, please cite this project.
 
 ```
 @misc{mmediting2020,
-  author =       {Jiamin He, Rui Xu, Xintao Wang, Liming Jiang, Wayne Wu, Chen Qian, Kai Chen, Dahua Lin and Chen Change Loy},
+  author =       {He, Jiamin and Xu, Rui and Wang, Xintao and Jiang, Liming and Wu, Wayne and Qian, Chen and Chen, Kai and Lin, Dahua and Loy, Chen Change},
   title =        {{MMEditing}: Open MMLab Image and Video Editing Toolbox},
   howpublished = {\url{https://github.com/open-mmlab/mmediting}},
   year =         {2020}

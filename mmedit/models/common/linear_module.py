@@ -5,7 +5,7 @@ from mmcv.cnn import build_activation_layer, kaiming_init
 class LinearModule(nn.Module):
     """A linear block that contains linear/norm/activation layers.
 
-    For low level visioin, we add spectral norm and padding layer
+    For low level visioin, we add spectral norm and padding layer.
 
     Args:
         in_features (int): Same as nn.Linear.
@@ -72,8 +72,8 @@ class LinearModule(nn.Module):
         """Foward Function.
 
         Args:
-            x (torch.Tensor): Input tensor with shape of (n, *, c). Same as
-                ``torch.nn.Linear``.
+            x (torch.Tensor): Input tensor with shape of (n, \*,  # noqa: W605
+                c). Same as ``torch.nn.Linear``.
             activate (bool, optional): Whether to use activation layer.
                 Defaults to True.
 

@@ -4,10 +4,9 @@ import random
 import cv2
 import mmcv
 import numpy as np
-from skimage.exposure import adjust_gamma
 
 from ..registry import PIPELINES
-from .utils import random_choose_unknown
+from .utils import adjust_gamma, random_choose_unknown
 
 
 def add_gaussian_noise(img, mu, sigma):

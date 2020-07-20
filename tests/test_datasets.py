@@ -1,6 +1,6 @@
 import os.path as osp
 from pathlib import Path
-from unittest.mock import mock_open, patch
+from unittest.mock import patch
 
 import numpy as np
 import pytest
@@ -11,6 +11,18 @@ from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              SRLmdbDataset, SRREDSDataset, SRVid4Dataset,
                              SRVimeo90KDataset)
 from torch.utils.data import Dataset
+
+
+def mock_open(*args, **kargs):
+    """unittest.mock_open wrapper.
+
+    unittest.mock_open doesn't support iteration. Wrap it to fix this bug.
+    Reference: https://stackoverflow.com/a/41656192
+    """
+    import unittest
+    f_open = unittest.mock.mock_open(*args, **kargs)
+    f_open.return_value.__iter__ = lambda self: iter(self.readline, '')
+    return f_open
 
 
 def check_keys_contain(result_keys, target_keys):

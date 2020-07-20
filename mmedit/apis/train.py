@@ -182,11 +182,6 @@ def _non_dist_train(model,
         meta (dict | None): Meta dict to record some important information.
             Default: None.
     """
-    if validate:
-        raise NotImplementedError('Built-in validation is not implemented '
-                                  'yet in not-distributed training. Use '
-                                  'distributed training or test.py and '
-                                  '*eval.py scripts instead.')
     # prepare data loaders
     dataset = dataset if isinstance(dataset, (list, tuple)) else [dataset]
     data_loaders = [
@@ -247,4 +242,4 @@ def _non_dist_train(model,
         runner.resume(cfg.resume_from)
     elif cfg.load_from:
         runner.load_checkpoint(cfg.load_from)
-    runner.run(data_loaders, cfg.workflow, cfg.total_epochs)
+    runner.run(data_loaders, cfg.workflow, cfg.total_iters)

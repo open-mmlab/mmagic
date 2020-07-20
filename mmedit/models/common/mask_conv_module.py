@@ -59,9 +59,12 @@ class MaskConvModule(ConvModule):
                 mask will be returned. Default: True.
 
         Returns:
-            torch.Tensor : Results after partial conv.
-            torch.Tensor : Updated mask will be returned if mask is given and
-                `return_mask` is True.
+            Tensor or tuple: Result Tensor or 2-tuple of
+
+                ``Tensor``: Results after partial conv.
+
+                ``Tensor``: Updated mask will be returned if mask is given \
+                    and `return_mask` is True.
         """
         for layer in self.order:
             if layer == 'conv':
