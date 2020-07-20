@@ -14,10 +14,12 @@ _integer_types = (
     np.uint,  # 32 or 64 bits
     np.longlong,
     np.ulonglong)  # 64 bits
+
 _integer_ranges = {
     t: (np.iinfo(t).min, np.iinfo(t).max)
     for t in _integer_types
 }
+
 dtype_range = {
     np.bool_: (False, True),
     np.bool8: (False, True),
