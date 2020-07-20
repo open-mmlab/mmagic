@@ -4,8 +4,8 @@ import mmcv
 import numpy as np
 import torch.nn as nn
 from mmcv.parallel import MMDistributedDataParallel
-from mmedit.core import tensor2img
 
+from mmedit.core import tensor2img
 from ..base import BaseModel
 from ..builder import build_backbone, build_component, build_loss
 from ..common import GANImageBuffer, set_requires_grad

@@ -8,6 +8,7 @@ import mmcv
 import torch
 from mmcv import Config
 from mmcv.runner import init_dist
+
 from mmedit import __version__
 from mmedit.apis import set_random_seed, train_model
 from mmedit.datasets import build_dataset

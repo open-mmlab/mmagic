@@ -3,8 +3,8 @@ import os.path as osp
 import mmcv
 import numpy as np
 import torch
-from mmedit.core import tensor2img
 
+from mmedit.core import tensor2img
 from ..base import BaseModel
 from ..builder import build_backbone, build_component, build_loss
 from ..common import set_requires_grad

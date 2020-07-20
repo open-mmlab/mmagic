@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule, build_activation_layer
+
 from mmedit.models.common import SimpleGatedConvModule
 from mmedit.models.registry import COMPONENTS
 

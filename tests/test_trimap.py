@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import pytest
+
 from mmedit.datasets.pipelines import (CompositeFg, GenerateSeg,
                                        GenerateSoftSeg, GenerateTrimap,
                                        GenerateTrimapWithDistTransform,

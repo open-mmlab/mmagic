@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 import torch
 from mmcv.runner import obj_from_dict
+
 from mmedit.models import build_model
 from mmedit.models.backbones import MSRResNet
 from mmedit.models.components import ModifiedVGG

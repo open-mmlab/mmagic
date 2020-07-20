@@ -1,5 +1,6 @@
 import pytest
 import torch
+
 from mmedit.models import build_backbone, build_component
 from mmedit.models.backbones import GLDilationNeck
 from mmedit.models.common import SimpleGatedConvModule

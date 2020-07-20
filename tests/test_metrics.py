@@ -1,6 +1,7 @@
 import mmcv
 import numpy as np
 import pytest
+
 from mmedit.core.evaluation.metrics import (connectivity, gradient_error, mse,
                                             niqe, psnr, reorder_image, sad,
                                             ssim)

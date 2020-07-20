@@ -2,6 +2,7 @@ import copy
 
 import numpy as np
 import pytest
+
 from mmedit.datasets.pipelines import (Crop, CropAroundCenter, CropAroundFg,
                                        CropAroundUnknown, FixedCrop, ModCrop,
                                        PairedRandomCrop)

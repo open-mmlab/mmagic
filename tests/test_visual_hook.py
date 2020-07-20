@@ -7,9 +7,10 @@ import numpy as np
 import pytest
 import torch
 import torch.nn as nn
+from torch.utils.data import DataLoader, Dataset
+
 from mmedit.core import VisualizationHook
 from mmedit.utils import get_root_logger
-from torch.utils.data import DataLoader, Dataset
 
 
 class ExampleDataset(Dataset):

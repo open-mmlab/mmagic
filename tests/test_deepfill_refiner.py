@@ -1,4 +1,5 @@
 import torch
+
 from mmedit.models import (ContextualAttentionNeck, DeepFillDecoder,
                            DeepFillEncoder, DeepFillRefiner, GLDilationNeck)
 

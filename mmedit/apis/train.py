@@ -7,6 +7,7 @@ import numpy as np
 import torch
 from mmcv.parallel import MMDataParallel
 from mmcv.runner import HOOKS, IterBasedRunner
+
 from mmedit.core import DistEvalIterHook, EvalIterHook, build_optimizers
 from mmedit.core.distributed_wrapper import DistributedDataParallelWrapper
 from mmedit.datasets.builder import build_dataloader, build_dataset

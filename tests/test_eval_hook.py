@@ -7,8 +7,9 @@ import pytest
 import torch
 import torch.nn as nn
 from mmcv.runner import obj_from_dict
-from mmedit.core import EvalIterHook
 from torch.utils.data import DataLoader, Dataset
+
+from mmedit.core import EvalIterHook
 
 
 class ExampleDataset(Dataset):

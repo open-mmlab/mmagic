@@ -4,6 +4,7 @@ import re
 
 import mmcv
 import numpy as np
+
 from mmedit.core.evaluation import connectivity, gradient_error, mse, sad
 
 

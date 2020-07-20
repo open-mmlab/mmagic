@@ -1,5 +1,6 @@
 import pytest
 import torch
+
 from mmedit.models.components import (DeepFillv1Discriminators,
                                       MultiLayerDiscriminator)
 

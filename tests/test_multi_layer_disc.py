@@ -1,6 +1,7 @@
 import pytest
 import torch
 import torch.nn as nn
+
 from mmedit.models.components import MultiLayerDiscriminator
 
 

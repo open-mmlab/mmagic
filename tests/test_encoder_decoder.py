@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+
 from mmedit.models.backbones import SimpleEncoderDecoder
 
 

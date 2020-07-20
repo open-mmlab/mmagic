@@ -1,8 +1,9 @@
 import numpy as np
 import pytest
 import torch
-from mmedit.core import tensor2img
 from torchvision.utils import make_grid
+
+from mmedit.core import tensor2img
 
 
 def test_tensor2img():

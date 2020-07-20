@@ -3,9 +3,9 @@ from pathlib import Path
 import mmcv
 import numpy as np
 from mmcv.fileio import FileClient
+
 from mmedit.core.mask import (bbox2mask, brush_stroke_mask, get_irregular_mask,
                               random_bbox)
-
 from ..registry import PIPELINES
 
 

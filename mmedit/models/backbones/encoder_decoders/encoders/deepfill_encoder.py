@@ -1,5 +1,6 @@
 import torch.nn as nn
 from mmcv.cnn import ConvModule
+
 from mmedit.models.common import SimpleGatedConvModule
 from mmedit.models.registry import COMPONENTS
 

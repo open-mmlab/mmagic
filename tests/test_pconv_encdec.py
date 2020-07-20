@@ -1,6 +1,7 @@
 import pytest
 import torch
 from mmcv.utils.parrots_wrapper import _BatchNorm
+
 from mmedit.models.backbones import PConvEncoder, PConvEncoderDecoder
 
 

@@ -3,6 +3,7 @@ import copy
 import numpy as np
 import pytest
 import torch
+
 from mmedit.models import build_component
 
 

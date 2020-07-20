@@ -4,13 +4,14 @@ from unittest.mock import patch
 
 import numpy as np
 import pytest
+from torch.utils.data import Dataset
+
 from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              BaseSRDataset, GenerationPairedDataset,
                              GenerationUnpairedDataset, RepeatDataset,
                              SRAnnotationDataset, SRFolderDataset,
                              SRLmdbDataset, SRREDSDataset, SRVid4Dataset,
                              SRVimeo90KDataset)
-from torch.utils.data import Dataset
 
 
 def mock_open(*args, **kargs):

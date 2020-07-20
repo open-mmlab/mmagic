@@ -5,6 +5,7 @@ import mmcv
 import numpy as np
 import pytest
 import torch
+
 from mmedit.models import BaseMattor, build_model
 
 

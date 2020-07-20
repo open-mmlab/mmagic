@@ -1,5 +1,6 @@
 import pytest
 import torch
+
 from mmedit.models.backbones.sr_backbones.edvr_net import (EDVRNet,
                                                            PCDAlignment,
                                                            TSAFusion)

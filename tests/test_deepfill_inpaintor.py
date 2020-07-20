@@ -5,6 +5,7 @@ import tempfile
 import pytest
 import torch
 from mmcv import Config
+
 from mmedit.core import build_optimizers
 from mmedit.models import DeepFillv1Inpaintor
 
