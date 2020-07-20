@@ -62,7 +62,7 @@ def pytorch2onnx(model,
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Convert MMDet to ONNX')
+    parser = argparse.ArgumentParser(description='Convert MMediting to ONNX')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
     parser.add_argument('img_path', help='path to input image file')
