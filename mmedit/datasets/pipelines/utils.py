@@ -3,6 +3,87 @@ import logging
 import numpy as np
 from mmcv.utils import print_log
 
+_integer_types = (
+    np.byte,
+    np.ubyte,  # 8 bits
+    np.short,
+    np.ushort,  # 16 bits
+    np.intc,
+    np.uintc,  # 16 or 32 or 64 bits
+    np.int_,
+    np.uint,  # 32 or 64 bits
+    np.longlong,
+    np.ulonglong)  # 64 bits
+
+_integer_ranges = {
+    t: (np.iinfo(t).min, np.iinfo(t).max)
+    for t in _integer_types
+}
+
+dtype_range = {
+    np.bool_: (False, True),
+    np.bool8: (False, True),
+    np.float16: (-1, 1),
+    np.float32: (-1, 1),
+    np.float64: (-1, 1)
+}
+dtype_range.update(_integer_ranges)
+
+
+def dtype_limits(image, clip_negative=False):
+    """Return intensity limits, i.e. (min, max) tuple, of the image's dtype.
+
+    This function is adopted from skimage:
+    https://github.com/scikit-image/scikit-image/blob/7e4840bd9439d1dfb6beaf549998452c99f97fdd/skimage/util/dtype.py#L35  # noqa
+
+    Args:
+        image (ndarray): Input image.
+        clip_negative (bool, optional): If True, clip the negative range
+            (i.e. return 0 for min intensity) even if the image dtype allows
+            negative values.
+
+    Returns
+        tuple: Lower and upper intensity limits.
+    """
+    imin, imax = dtype_range[image.dtype.type]
+    if clip_negative:
+        imin = 0
+    return imin, imax
+
+
+def adjust_gamma(image, gamma=1, gain=1):
+    """Performs Gamma Correction on the input image.
+
+    This function is adopted from skimage:
+    https://github.com/scikit-image/scikit-image/blob/7e4840bd9439d1dfb6beaf549998452c99f97fdd/skimage/exposure/exposure.py#L439-L494  # noqa
+
+    Also known as Power Law Transform.
+    This function transforms the input image pixelwise according to the
+    equation ``O = I**gamma`` after scaling each pixel to the range 0 to 1.
+
+    Args:
+        image (ndarray): Input image.
+        gamma (float, optional): Non negative real number. Defaults to 1.
+        gain (float, optional): The constant multiplier. Defaults to 1.
+
+    Returns:
+        ndarray: Gamma corrected output image.
+    """
+    if np.any(image < 0):
+        raise ValueError('Image Correction methods work correctly only on '
+                         'images with non-negative values. Use '
+                         'skimage.exposure.rescale_intensity.')
+
+    dtype = image.dtype.type
+
+    if gamma < 0:
+        raise ValueError('Gamma should be a non-negative real number.')
+
+    scale = float(dtype_limits(image, True)[1] - dtype_limits(image, True)[0])
+
+    out = ((image / scale)**gamma) * scale * gain
+    return out.astype(dtype)
+
 
 def random_choose_unknown(unknown, crop_size):
     """Randomly choose an unknown start (top-left) point for a given crop_size.
