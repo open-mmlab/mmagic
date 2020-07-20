@@ -1,7 +1,9 @@
+import mmcv
 import numpy as np
 import pytest
 from mmedit.core.evaluation.metrics import (connectivity, gradient_error, mse,
-                                            psnr, reorder_image, sad, ssim)
+                                            niqe, psnr, reorder_image, sad,
+                                            ssim)
 
 
 def test_reorder_image():
@@ -76,6 +78,40 @@ def test_calculate_ssim():
     np.testing.assert_almost_equal(ssim_result, 0.9130623)
     ssim_result = ssim(img_chw_1, img_chw_2, crop_border=4, input_order='CHW')
     np.testing.assert_almost_equal(ssim_result, 0.9130623)
+
+
+def test_calculate_niqe():
+    img = mmcv.imread('tests/data/gt/baboon.png')
+
+    result = niqe(img[:, :, 0], crop_border=0, input_order='HW')
+    np.testing.assert_almost_equal(result, 6.15902, decimal=5)
+    result = niqe(img, crop_border=0, input_order='HWC', convert_to='y')
+    np.testing.assert_almost_equal(result, 5.85182, decimal=5)
+    result = niqe(img, crop_border=0, input_order='HWC', convert_to='gray')
+    np.testing.assert_almost_equal(result, 5.89766, decimal=5)
+    result = niqe(
+        img.transpose(2, 0, 1),
+        crop_border=0,
+        input_order='CHW',
+        convert_to='y')
+    np.testing.assert_almost_equal(result, 5.85182, decimal=5)
+    result = niqe(
+        img.transpose(2, 0, 1),
+        crop_border=0,
+        input_order='CHW',
+        convert_to='gray')
+    np.testing.assert_almost_equal(result, 5.89766, decimal=5)
+
+    result = niqe(img[:, :, 0], crop_border=6, input_order='HW')
+    np.testing.assert_almost_equal(result, 6.31046, decimal=5)
+    result = niqe(img, crop_border=6, input_order='HWC', convert_to='y')
+    np.testing.assert_almost_equal(result, 6.14435, decimal=5)
+    result = niqe(
+        img.transpose(2, 0, 1),
+        crop_border=6,
+        input_order='CHW',
+        convert_to='y')
+    np.testing.assert_almost_equal(result, 6.14435, decimal=5)
 
 
 def test_sad():
