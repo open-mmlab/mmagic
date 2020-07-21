@@ -7,6 +7,7 @@ import onnxruntime as rt
 import torch
 from mmcv.onnx import register_extra_symbolics
 from mmcv.runner import load_checkpoint
+
 from mmedit.datasets.pipelines import Compose
 from mmedit.models import build_model
 
@@ -17,6 +18,19 @@ def pytorch2onnx(model,
                  show=False,
                  output_file='tmp.onnx',
                  verify=False):
+    """Export Pytorch model to ONNX model and verify the outputs are same
+    between Pytorch and ONNX.
+
+    Args:
+        model (nn.Module): Pytorch model we want to export.
+        input (dict): We need to use this input to execute the model.
+        opset_version (int): The onnx op version. Default: 11.
+        show (bool): Whether print the computation graph. Default: False.
+        output_file (string): The path to where we store the output ONNX model.
+            Default: `tmp.onnx`.
+        verify (bool): Whether compare the outputs between Pytorch and ONNX.
+            Default: False.
+    """
     model.cpu().eval()
     merged = input['merged'].unsqueeze(0)
     trimap = input['trimap'].unsqueeze(0)
@@ -68,8 +82,8 @@ def parse_args():
     parser.add_argument('img_path', help='path to input image file')
     parser.add_argument('trimap_path', help='path to input trimap file')
     parser.add_argument('--show', action='store_true', help='show onnx graph')
-    parser.add_argument('--output_file', type=str, default='tmp.onnx')
-    parser.add_argument('--opset_version', type=int, default=11)
+    parser.add_argument('--output-file', type=str, default='tmp.onnx')
+    parser.add_argument('--opset-version', type=int, default=11)
     parser.add_argument(
         '--verify',
         action='store_true',
