@@ -91,8 +91,7 @@ class GCA(BaseMattor):
             dict: Contains the predicted alpha and evaluation result.
         """
         pred_alpha = self._forward(torch.cat((merged, trimap), 1))
-
-        pred_alpha = pred_alpha.cpu().numpy().squeeze()
+        pred_alpha = pred_alpha.detach().cpu().numpy().squeeze()
         pred_alpha = self.restore_shape(pred_alpha, meta)
         eval_result = self.evaluate(pred_alpha, meta)
 

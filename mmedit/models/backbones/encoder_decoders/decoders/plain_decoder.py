@@ -1,7 +1,84 @@
+import warnings
+
 import torch.nn as nn
+import torch.nn.functional as F
 from mmcv.cnn.utils.weight_init import xavier_init
+from torch.autograd import Function
+from torch.nn.modules.pooling import _MaxUnpoolNd
+from torch.nn.modules.utils import _pair
 
 from mmedit.models.registry import COMPONENTS
+
+
+class MaxUnpool2dop(Function):
+    """We warp the `torch.nn.functional.max_unpool2d`
+    with an extra `symbolic` method, which is needed while exporting to ONNX.
+    Users should not call this function directly.
+    """
+
+    @staticmethod
+    def forward(ctx, input, indices, kernel_size, stride, padding,
+                output_size):
+        """Forward function of MaxUnpool2dop.
+
+        Args:
+            input (Tensor): Tensor needed to upsample.
+            indices (Tensor): Indices output of the previous MaxPool.
+            kernel_size (Tuple): Size of the max pooling window.
+            stride (Tuple): Stride of the max pooling window.
+            padding (Tuple): Padding that was added to the input.
+            output_size (List or Tuple): The shape of output tensor.
+
+        Returns:
+            Tensor: Output tensor.
+        """
+        return F.max_unpool2d(input, indices, kernel_size, stride, padding,
+                              output_size)
+
+    @staticmethod
+    def symbolic(g, input, indices, kernel_size, stride, padding, output_size):
+        warnings.warn(
+            'The definitions of indices are different between Pytorch and ONNX'
+            ', so the outputs between Pytorch and ONNX maybe different')
+        return g.op(
+            'MaxUnpool',
+            input,
+            indices,
+            kernel_shape_i=kernel_size,
+            strides_i=stride)
+
+
+class MaxUnpool2d(_MaxUnpoolNd):
+    """This module is modified from Pytorch `MaxUnpool2d` module.
+
+    Args:
+      kernel_size (int or tuple): Size of the max pooling window.
+      stride (int or tuple): Stride of the max pooling window.
+          Default: None (It is set to `kernel_size` by default).
+      padding (int or tuple): Padding that is added to the input.
+          Default: 0.
+    """
+
+    def __init__(self, kernel_size, stride=None, padding=0):
+        super(MaxUnpool2d, self).__init__()
+        self.kernel_size = _pair(kernel_size)
+        self.stride = _pair(stride or kernel_size)
+        self.padding = _pair(padding)
+
+    def forward(self, input, indices, output_size=None):
+        """Forward function of MaxUnpool2d.
+
+        Args:
+            input (Tensor): Tensor needed to upsample.
+            indices (Tensor): Indices output of the previous MaxPool.
+            output_size (List or Tuple): The shape of output tensor.
+                Default: None.
+
+        Returns:
+            Tensor: Output tensor.
+        """
+        return MaxUnpool2dop.apply(input, indices, self.kernel_size,
+                                   self.stride, self.padding, output_size)
 
 
 @COMPONENTS.register_module()
@@ -25,7 +102,7 @@ class PlainDecoder(nn.Module):
         self.deconv1 = nn.Conv2d(64, 1, kernel_size=5, padding=2)
 
         self.relu = nn.ReLU(inplace=True)
-        self.max_unpool2d = nn.MaxUnpool2d(kernel_size=2, stride=2)
+        self.max_unpool2d = MaxUnpool2d(kernel_size=2, stride=2)
 
     def init_weights(self):
         """Init weights for the module.
