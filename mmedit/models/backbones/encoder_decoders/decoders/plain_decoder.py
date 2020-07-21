@@ -56,7 +56,7 @@ class MaxUnpool2d(_MaxUnpoolNd):
       stride (int or tuple): Stride of the max pooling window.
           Default: None (It is set to `kernel_size` by default).
       padding (int or tuple): Padding that is added to the input.
-          Default: 0
+          Default: 0.
     """
 
     def __init__(self, kernel_size, stride=None, padding=0):
