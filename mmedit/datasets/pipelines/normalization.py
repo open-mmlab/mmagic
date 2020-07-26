@@ -37,11 +37,10 @@ class Normalize(object):
         """
         for key in self.keys:
             if isinstance(results[key], list):
-                for v in results[key]:
-                    results[key] = [
-                        mmcv.imnormalize(v, self.mean, self.std, self.to_rgb)
-                        for v in results[key]
-                    ]
+                results[key] = [
+                    mmcv.imnormalize(v, self.mean, self.std, self.to_rgb)
+                    for v in results[key]
+                ]
             else:
                 results[key] = mmcv.imnormalize(results[key], self.mean,
                                                 self.std, self.to_rgb)
