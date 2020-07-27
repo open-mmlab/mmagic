@@ -68,21 +68,3 @@ We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUT
 ## Acknowledgement
 
 MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
-
-## Citation
-
-If you use this toolbox or benchmark in your research, please cite this project.
-
-```
-@misc{mmediting2020,
-  author =       {He, Jiamin and Xu, Rui and Wang, Xintao and Jiang, Liming and Wu, Wayne and Qian, Chen and Chen, Kai and Lin, Dahua and Loy, Chen Change},
-  title =        {{MMEditing}: Open MMLab Image and Video Editing Toolbox},
-  howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-  year =         {2020}
-}
-```
-Jiamin He, Rui Xu, Xintao Wang are equal contributors.
-
-## Contact
-
-This repo is currently maintained by Jiamin He ([@hejm37](https://github.com/hejm37)), Rui Xu ([@nbei](https://github.com/nbei)), Xintao Wang ([@xinntao](https://github.com/xinntao)), Liming Jiang([@EndlessSora](https://github.com/EndlessSora)), Kai Chen ([@hellock](https://github.com/hellock)).
