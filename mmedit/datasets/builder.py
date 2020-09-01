@@ -7,7 +7,13 @@ import numpy as np
 from mmcv.parallel import collate
 from mmcv.runner import get_dist_info
 from mmcv.utils import build_from_cfg
-from torch.utils.data import ConcatDataset, DataLoader
+from torch.utils.data import ConcatDataset
+import torch
+if torch.__version__ == 'parrots':
+    from torch.utils.data import PoolDataLoader
+    DataLoader = partial(PoolDataLoader, prefetch_num=2)
+else:
+    from torch.utils.data import DataLoader
 
 from .dataset_wrappers import RepeatDataset
 from .registry import DATASETS
@@ -133,6 +139,8 @@ def build_dataloader(dataset,
         worker_init_fn, num_workers=num_workers, rank=rank,
         seed=seed) if seed is not None else None
 
+    if torch.__version__ == 'parrots':
+        pin_memory = False
     data_loader = DataLoader(
         dataset,
         batch_size=batch_size,
