@@ -20,7 +20,6 @@ if torch.__version__ == 'parrots':
 else:
     from torch.utils.data import DataLoader
 
-
 if platform.system() != 'Windows':
     # https://github.com/pytorch/pytorch/issues/973
     import resource
