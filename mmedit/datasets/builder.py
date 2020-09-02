@@ -16,7 +16,6 @@ from .samplers import DistributedSampler
 
 if torch.__version__ == 'parrots':
     from torch.utils.data import PoolDataLoader
-    DataLoader = partial(PoolDataLoader, prefetch_num=2)
 else:
     from torch.utils.data import DataLoader
 
@@ -120,6 +119,10 @@ def build_dataloader(dataset,
     Returns:
         DataLoader: A PyTorch dataloader.
     """
+    if torch.__version__ == 'parrots':
+        prefetch_num = kwargs.get('prefetch_num', 2)
+        DataLoader = partial(PoolDataLoader, prefetch_num=prefetch_num)
+
     rank, world_size = get_dist_info()
     if dist:
         sampler = DistributedSampler(
@@ -140,8 +143,6 @@ def build_dataloader(dataset,
         worker_init_fn, num_workers=num_workers, rank=rank,
         seed=seed) if seed is not None else None
 
-    if torch.__version__ == 'parrots':
-        pin_memory = False
     data_loader = DataLoader(
         dataset,
         batch_size=batch_size,
