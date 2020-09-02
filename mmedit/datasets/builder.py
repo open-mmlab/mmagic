@@ -15,7 +15,7 @@ from .registry import DATASETS
 from .samplers import DistributedSampler
 
 if torch.__version__ == 'parrots':
-    from torch.utils.data import PoolDataLoader
+    from torch.utils.data import PoolDataLoader as DataLoader
 else:
     from torch.utils.data import DataLoader
 
@@ -138,10 +138,6 @@ def build_dataloader(dataset,
     init_fn = partial(
         worker_init_fn, num_workers=num_workers, rank=rank,
         seed=seed) if seed is not None else None
-
-    if torch.__version__ == 'parrots':
-        prefetch_num = kwargs.get('prefetch_num', 2)
-        DataLoader = partial(PoolDataLoader, prefetch_num=prefetch_num)
 
     data_loader = DataLoader(
         dataset,
