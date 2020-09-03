@@ -4,14 +4,20 @@ import random
 from functools import partial
 
 import numpy as np
+import torch
 from mmcv.parallel import collate
 from mmcv.runner import get_dist_info
 from mmcv.utils import build_from_cfg
-from torch.utils.data import ConcatDataset, DataLoader
+from torch.utils.data import ConcatDataset
 
 from .dataset_wrappers import RepeatDataset
 from .registry import DATASETS
 from .samplers import DistributedSampler
+
+if torch.__version__ == 'parrots':
+    from torch.utils.data import PoolDataLoader as DataLoader
+else:
+    from torch.utils.data import DataLoader
 
 if platform.system() != 'Windows':
     # https://github.com/pytorch/pytorch/issues/973
