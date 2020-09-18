@@ -105,7 +105,6 @@ venv.bak/
 .mypy_cache/
 
 # custom
-# mmedit/version.py
 .vscode
 .idea
 *.pkl
