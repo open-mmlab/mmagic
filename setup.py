@@ -1,6 +1,5 @@
 import os
 import subprocess
-import time
 from setuptools import find_packages, setup
 
 
@@ -52,26 +51,6 @@ def get_hash():
         sha = 'unknown'
 
     return sha
-
-
-def write_version_py():
-    content = """# GENERATED VERSION FILE
-# TIME: {}
-__version__ = '{}'
-short_version = '{}'
-version_info = ({})
-"""
-    sha = get_hash()
-    with open('mmedit/VERSION', 'r') as f:
-        SHORT_VERSION = f.read().strip()
-    VERSION_INFO = ', '.join(
-        [x if x.isdigit() else f'"{x}"' for x in SHORT_VERSION.split('.')])
-    VERSION = SHORT_VERSION + '+' + sha
-
-    version_file_str = content.format(time.asctime(), VERSION, SHORT_VERSION,
-                                      VERSION_INFO)
-    with open(version_file, 'w') as f:
-        f.write(version_file_str)
 
 
 def get_version():
@@ -159,7 +138,6 @@ def parse_requirements(fname='requirements.txt', with_version=True):
 
 
 if __name__ == '__main__':
-    write_version_py()
     setup(
         name='mmedit',
         version=get_version(),
