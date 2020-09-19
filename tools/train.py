@@ -13,7 +13,7 @@ from mmedit import __version__
 from mmedit.apis import set_random_seed, train_model
 from mmedit.datasets import build_dataset
 from mmedit.models import build_model
-from mmedit.utils import get_root_logger
+from mmedit.utils import collect_env, get_root_logger
 
 
 def parse_args():
@@ -85,6 +85,13 @@ def main():
     timestamp = time.strftime('%Y%m%d_%H%M%S', time.localtime())
     log_file = osp.join(cfg.work_dir, f'{timestamp}.log')
     logger = get_root_logger(log_file=log_file, log_level=cfg.log_level)
+
+    # log env info
+    env_info_dict = collect_env()
+    env_info = '\n'.join([f'{k}: {v}' for k, v in env_info_dict.items()])
+    dash_line = '-' * 60 + '\n'
+    logger.info('Environment info:\n' + dash_line + env_info + '\n' +
+                dash_line)
 
     # log some basic info
     logger.info('Distributed training: {}'.format(distributed))
