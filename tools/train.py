@@ -128,6 +128,7 @@ def main():
     meta['exp_name'] = cfg.exp_name
     meta['mmedit Version'] = __version__
     meta['seed'] = args.seed
+    meta['env_info'] = env_info
 
     # add an attribute for visualization convenience
     train_model(
