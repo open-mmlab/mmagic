@@ -34,7 +34,7 @@ class GLEncoderDecoder(nn.Module):
         # support fp16
         self.fp16_enabled = False
 
-    @auto_fp16(apply_to=('x', ))
+    @auto_fp16()
     def forward(self, x):
         """Forward Function.
 
