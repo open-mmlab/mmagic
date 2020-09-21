@@ -1,4 +1,5 @@
 import torch
+from mmcv.runner import auto_fp16
 
 from ..builder import build_loss
 from ..registry import MODELS
@@ -38,9 +39,13 @@ class IndexNet(BaseMattor):
         self.loss_comp = (
             build_loss(loss_comp) if loss_comp is not None else None)
 
+        # support fp16
+        self.fp16_enabled = False
+
     def forward_dummy(self, inputs):
         return self.backbone(inputs)
 
+    @auto_fp16(apply_to=('merged', 'trimap'))
     def forward_train(self, merged, trimap, meta, alpha, ori_merged, fg, bg):
         """Forward function for training IndexNet model.
 

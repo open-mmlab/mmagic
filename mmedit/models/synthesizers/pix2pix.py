@@ -3,6 +3,7 @@ import os.path as osp
 import mmcv
 import numpy as np
 import torch
+from mmcv.runner import auto_fp16
 
 from mmedit.core import tensor2img
 from ..base import BaseModel
@@ -77,6 +78,8 @@ class Pix2Pix(BaseModel):
         self.show_input = (False if self.test_cfg is None else
                            self.test_cfg.get('show_input', False))
 
+        # support fp16
+        self.fp16_enabled = False
         self.init_weights(pretrained)
 
     def init_weights(self, pretrained=None):
@@ -108,6 +111,7 @@ class Pix2Pix(BaseModel):
 
         return real_a, real_b, image_path
 
+    @auto_fp16(apply_to=('img_a', 'img_b'))
     def forward_train(self, img_a, img_b, meta):
         """Forward function for training.
 

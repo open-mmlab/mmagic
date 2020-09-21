@@ -1,3 +1,5 @@
+from mmcv.runner import auto_fp16
+
 from ..builder import build_backbone, build_component, build_loss
 from ..common import set_requires_grad
 from ..registry import MODELS
@@ -50,6 +52,9 @@ class SRGAN(BasicRestorer):
         self.discriminator = build_component(
             discriminator) if discriminator else None
 
+        # support fp16
+        self.fp16_enabled = False
+
         # loss
         self.gan_loss = build_loss(gan_loss) if gan_loss else None
         self.pixel_loss = build_loss(pixel_loss) if pixel_loss else None
@@ -75,6 +80,7 @@ class SRGAN(BasicRestorer):
         if self.discriminator:
             self.discriminator.init_weights(pretrained=pretrained)
 
+    @auto_fp16(apply_to=('lq', ))
     def forward(self, lq, gt=None, test_mode=False, **kwargs):
         """Forward function.
 
