@@ -3,6 +3,7 @@ from pathlib import Path
 
 import mmcv
 import torch
+from mmcv.runner import auto_fp16
 from torchvision.utils import save_image
 
 from mmedit.core import L1Evaluation, psnr, ssim, tensor2img
@@ -76,6 +77,9 @@ class OneStageInpaintor(BaseModel):
 
         self.generator = build_backbone(encdec)
 
+        # support fp16
+        self.fp16_enabled = False
+
         # build loss modules
         if self.with_gan:
             self.disc = build_component(disc)
@@ -113,6 +117,7 @@ class OneStageInpaintor(BaseModel):
         if self.with_gan:
             self.disc.init_weights(pretrained=pretrained)
 
+    @auto_fp16(apply_to=('masked_img', 'mask'))
     def forward(self, masked_img, mask, test_mode=True, **kwargs):
         """Forward function.
 

@@ -1,5 +1,5 @@
 import torch.nn as nn
-from mmcv.runner import load_checkpoint
+from mmcv.runner import auto_fp16, load_checkpoint
 
 from mmedit.models.builder import build_component
 from mmedit.models.registry import BACKBONES
@@ -20,6 +20,10 @@ class PConvEncoderDecoder(nn.Module):
         self.encoder = build_component(encoder)
         self.decoder = build_component(decoder)
 
+        # support fp16
+        self.fp16_enabled = False
+
+    @auto_fp16()
     def forward(self, x, mask_in):
         """Forward Function.
 

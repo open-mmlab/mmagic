@@ -2,6 +2,7 @@ import numbers
 import os.path as osp
 
 import mmcv
+from mmcv.runner import auto_fp16
 
 from mmedit.core import psnr, ssim, tensor2img
 from ..base import BaseModel
@@ -39,6 +40,9 @@ class BasicRestorer(BaseModel):
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
 
+        # support fp16
+        self.fp16_enabled = False
+
         # generator
         self.generator = build_backbone(generator)
         self.init_weights(pretrained)
@@ -55,6 +59,7 @@ class BasicRestorer(BaseModel):
         """
         self.generator.init_weights(pretrained)
 
+    @auto_fp16(apply_to=('lq', ))
     def forward(self, lq, gt=None, test_mode=False, **kwargs):
         """Forward function.
 

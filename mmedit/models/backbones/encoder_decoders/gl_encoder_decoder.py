@@ -1,5 +1,5 @@
 import torch.nn as nn
-from mmcv.runner import load_checkpoint
+from mmcv.runner import auto_fp16, load_checkpoint
 
 from mmedit.models.builder import build_component
 from mmedit.models.registry import BACKBONES
@@ -31,6 +31,10 @@ class GLEncoderDecoder(nn.Module):
         self.decoder = build_component(decoder)
         self.dilation_neck = build_component(dilation_neck)
 
+        # support fp16
+        self.fp16_enabled = False
+
+    @auto_fp16()
     def forward(self, x):
         """Forward Function.
 

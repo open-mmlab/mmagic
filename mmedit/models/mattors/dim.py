@@ -1,4 +1,5 @@
 import torch
+from mmcv.runner import auto_fp16
 
 from ..builder import build_loss
 from ..registry import MODELS
@@ -58,6 +59,10 @@ class DIM(BaseMattor):
         if loss_refine is not None:
             self.loss_refine = build_loss(loss_refine)
 
+        # support fp16
+        self.fp16_enabled = False
+
+    @auto_fp16()
     def _forward(self, x, refine):
         raw_alpha = self.backbone(x)
         pred_alpha = raw_alpha.sigmoid()
