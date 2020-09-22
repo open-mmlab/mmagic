@@ -62,7 +62,7 @@ class DIM(BaseMattor):
         # support fp16
         self.fp16_enabled = False
 
-    @auto_fp16(apply_to=('x', 'refine'))
+    @auto_fp16()
     def _forward(self, x, refine):
         raw_alpha = self.backbone(x)
         pred_alpha = raw_alpha.sigmoid()
