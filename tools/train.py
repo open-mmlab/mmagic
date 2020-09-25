@@ -87,7 +87,7 @@ def main():
     logger = get_root_logger(log_file=log_file, log_level=cfg.log_level)
 
     # log env info
-    env_info_dict = collect_env()
+    env_info_dict = collect_env.collect_env()
     env_info = '\n'.join([f'{k}: {v}' for k, v in env_info_dict.items()])
     dash_line = '-' * 60 + '\n'
     logger.info('Environment info:\n' + dash_line + env_info + '\n' +
