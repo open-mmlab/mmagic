@@ -14,13 +14,13 @@
 
 ## Results and Models
 
-|   Method   |  SAD |  MSE  | GRAD | CONN | Download |
-|:----------:|:----:|:-----:|:----:|:----:|:--------:|
-| stage1 (paper) | 54.6  | 0.017  | 36.7  | 55.3 | - |
-| stage3 (paper) | **50.4**  | **0.014**  | 31.0  | 50.8 | - |
-| stage1 (our) | 53.8 | 0.017 | 32.7 | 54.5 | [model](https://openmmlab.oss-accelerate.aliyuncs.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_SAD-53.8_20200605_140257-979a420f.pth) \| [log](https://openmmlab.oss-accelerate.aliyuncs.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_20200605_140257.log.json) |
-| stage2 (our) | 52.3 | 0.016 | 29.4 | 52.4 | [model](https://openmmlab.oss-accelerate.aliyuncs.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_SAD-52.3_20200607_171909-d83c4775.pth) \| [log](https://openmmlab.oss-accelerate.aliyuncs.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_20200607_171909.log.json) |
-| stage3 (our) | 50.6 | 0.015 | **29.0** | **50.7** | [model](https://openmmlab.oss-accelerate.aliyuncs.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth) \| [log](https://openmmlab.oss-accelerate.aliyuncs.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_20200609_111851.log.json) |
+|     Method     |   SAD    |    MSE    |   GRAD   |   CONN   |                                                                                                                              Download                                                                                                                               |
+| :------------: | :------: | :-------: | :------: | :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| stage1 (paper) |   54.6   |   0.017   |   36.7   |   55.3   |                                                                                                                                  -                                                                                                                                  |
+| stage3 (paper) | **50.4** | **0.014** |   31.0   |   50.8   |                                                                                                                                  -                                                                                                                                  |
+|  stage1 (our)  |   53.8   |   0.017   |   32.7   |   54.5   |     [model](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_SAD-53.8_20200605_140257-979a420f.pth) \| [log](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_20200605_140257.log.json)     |
+|  stage2 (our)  |   52.3   |   0.016   |   29.4   |   52.4   | [model](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_SAD-52.3_20200607_171909-d83c4775.pth) \| [log](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_20200607_171909.log.json) |
+|  stage3 (our)  |   50.6   |   0.015   | **29.0** | **50.7** | [model](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth) \| [log](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_20200609_111851.log.json) |
 
 **NOTE**
 

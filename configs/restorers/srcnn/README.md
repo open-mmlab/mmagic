@@ -21,6 +21,6 @@ Evaluated on RGB channels, `scale` pixels in each border are cropped before eval
 
 The metrics are `PSNR / SSIM`.
 
-|   Method   |  Set5  | Set14 | DIV2K | Download |
-|:----------:|:----:|:-----:|:----:|:--------:|
-| srcnn_x4k915_1x16_1000k_div2k | 28.4316 / 0.8099 | 25.6486 /  0.7014 | 27.7460 / 0.7854 | [model](https://openmmlab.oss-accelerate.aliyuncs.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth) \| [log](https://openmmlab.oss-accelerate.aliyuncs.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608_120159.log.json) |
+|            Method             |       Set5       |       Set14       |      DIV2K       |                                                                                                                    Download                                                                                                                     |
+| :---------------------------: | :--------------: | :---------------: | :--------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| srcnn_x4k915_1x16_1000k_div2k | 28.4316 / 0.8099 | 25.6486 /  0.7014 | 27.7460 / 0.7854 | [model](https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608_120159.log.json) |
