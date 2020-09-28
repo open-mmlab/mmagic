@@ -1,4 +1,4 @@
-ARG PYTORCH="1.5"
+ARG PYTORCH="1.6.0"
 ARG CUDA="10.1"
 ARG CUDNN="7"
 
@@ -17,5 +17,6 @@ RUN conda clean --all
 RUN git clone https://github.com/open-mmlab/mmediting.git /mmediting
 WORKDIR /mmediting
 ENV FORCE_CUDA="1"
+RUN pip install mmcv-full==latest+torch1.6.0+cu101 -f https://download.openmmlab.com/mmcv/dist/index.html
 RUN pip install cython --no-cache-dir
 RUN pip install --no-cache-dir -e .
