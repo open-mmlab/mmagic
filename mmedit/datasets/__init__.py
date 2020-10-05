@@ -7,6 +7,7 @@ from .comp1k_dataset import AdobeComp1kDataset
 from .dataset_wrappers import RepeatDataset
 from .generation_paired_dataset import GenerationPairedDataset
 from .generation_unpaired_dataset import GenerationUnpairedDataset
+from .img_from_folder_dataset import ImgFromFolderDataset
 from .img_inpainting_dataset import ImgInpaintingDataset
 from .registry import DATASETS, PIPELINES
 from .sr_annotation_dataset import SRAnnotationDataset
@@ -22,5 +23,5 @@ __all__ = [
     'AdobeComp1kDataset', 'SRLmdbDataset', 'SRFolderDataset',
     'SRAnnotationDataset', 'BaseSRDataset', 'RepeatDataset', 'SRREDSDataset',
     'SRVimeo90KDataset', 'BaseGenerationDataset', 'GenerationPairedDataset',
-    'GenerationUnpairedDataset', 'SRVid4Dataset'
+    'GenerationUnpairedDataset', 'SRVid4Dataset', 'ImgFromFolderDataset'
 ]

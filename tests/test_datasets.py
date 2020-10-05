@@ -2,16 +2,18 @@ import os.path as osp
 from pathlib import Path
 from unittest.mock import patch
 
+import mmcv
 import numpy as np
 import pytest
+import torch
 from torch.utils.data import Dataset
 
 from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              BaseSRDataset, GenerationPairedDataset,
-                             GenerationUnpairedDataset, RepeatDataset,
-                             SRAnnotationDataset, SRFolderDataset,
-                             SRLmdbDataset, SRREDSDataset, SRVid4Dataset,
-                             SRVimeo90KDataset)
+                             GenerationUnpairedDataset, ImgFromFolderDataset,
+                             RepeatDataset, SRAnnotationDataset,
+                             SRFolderDataset, SRLmdbDataset, SRREDSDataset,
+                             SRVid4Dataset, SRVimeo90KDataset)
 
 
 def mock_open(*args, **kargs):
@@ -796,3 +798,35 @@ def test_vid4_dataset():
                 pipeline=[],
                 scale=4,
                 test_mode=False)
+
+
+def test_imgs_from_folder_dataset():
+    pipeline = [
+        dict(
+            type='LoadImageFromFile',
+            io_backend='disk',
+            key='img',
+            flag='color'),
+        dict(
+            type='Normalize',
+            keys=['img'],
+            to_rgb=False,
+            mean=[127.5, 127.5, 127.5],
+            std=[127.5, 127.5, 127.5]),
+        dict(type='ImageToTensor', keys=['img']),
+        dict(type='Collect', keys=['img'], meta_keys={})
+    ]
+
+    dataset = ImgFromFolderDataset('./tests/data', pipeline)
+
+    imgs = list(
+        mmcv.scandir('./tests/data', suffix=('.jpg', '.png'), recursive=True))
+    assert len(imgs) == len(dataset)
+
+    # fetch an example
+    data = dataset[0]
+    assert isinstance(data['img'], torch.Tensor)
+
+    # test num_samples
+    dataset = ImgFromFolderDataset('./tests/data', pipeline, num_samples=2)
+    assert len(dataset) == 2

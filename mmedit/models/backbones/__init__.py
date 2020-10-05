@@ -3,12 +3,12 @@ from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
                                DeepFillEncoder, DeepFillEncoderDecoder,
                                DepthwiseIndexBlock, GLDecoder, GLDilationNeck,
                                GLEncoder, GLEncoderDecoder, HolisticIndexBlock,
-                               IndexedUpsample, IndexNetDecoder,
+                               InceptionV3, IndexedUpsample, IndexNetDecoder,
                                IndexNetEncoder, PConvDecoder, PConvEncoder,
                                PConvEncoderDecoder, PlainDecoder,
                                ResGCADecoder, ResGCAEncoder, ResNetDec,
                                ResNetEnc, ResShortcutDec, ResShortcutEnc,
-                               SimpleEncoderDecoder)
+                               SimpleEncoderDecoder, fid_inception_v3)
 # yapf: enable
 from .generation_backbones import ResnetGenerator, UnetGenerator
 from .sr_backbones import EDSR, SRCNN, EDVRNet, MSRResNet, RRDBNet, TOFlow
@@ -22,5 +22,5 @@ __all__ = [
     'ContextualAttentionNeck', 'DeepFillDecoder', 'EDSR',
     'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample', 'IndexNetEncoder',
     'IndexNetDecoder', 'TOFlow', 'ResGCAEncoder', 'ResGCADecoder', 'SRCNN',
-    'UnetGenerator', 'ResnetGenerator'
+    'UnetGenerator', 'ResnetGenerator', 'InceptionV3', 'fid_inception_v3'
 ]
