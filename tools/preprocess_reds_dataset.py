@@ -1,5 +1,6 @@
 import argparse
 import glob
+import os
 import os.path as osp
 import shutil
 import sys
@@ -142,6 +143,7 @@ def generate_anno_file(root_path, file_name='REDS/meta_info_REDS_GT.txt'):
 
     print(f'Generate annotation files {file_name}...')
     txt_file = osp.join(root_path, file_name)
+    mmcv.utils.mkdir_or_exist(osp.dirname(txt_file))
     with open(txt_file, 'w') as f:
         for i in range(270):
             for j in range(100):
@@ -160,6 +162,7 @@ def unzip(zip_path):
     """
     zip_files = mmcv.scandir(zip_path, suffix='zip', recursive=False)
     import zipfile
+    import shutil
     unzip_folders = []
     for zip_file in zip_files:
         zip_file = osp.join(zip_path, zip_file)
@@ -167,6 +170,13 @@ def unzip(zip_path):
         print(f'Unzip {zip_file} to {unzip_folder}')
         with zipfile.ZipFile(zip_file, 'r') as zip_ref:
             zip_ref.extractall(unzip_folder)
+        data_name = osp.basename(unzip_folder)
+        data_type = data_name.split('_')[0]
+        if osp.isdir(osp.join(unzip_folder, data_type, data_name)):
+            data_folder = osp.join(unzip_folder, data_type, data_name)
+            for i in os.listdir(data_folder):
+                shutil.move(osp.join(data_folder,i), unzip_folder)
+        shutil.rmtree(osp.join(unzip_folder, data_type))
         unzip_folders.append(unzip_folder)
     return unzip_folders
 
