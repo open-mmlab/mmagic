@@ -164,7 +164,6 @@ def unzip(zip_path):
     for zip_file in zip_files:
         zip_file = osp.join(zip_path, zip_file)
         unzip_folder = zip_file.replace('.zip', '').split('_part')[0]
-        unzip_folder = osp.join(zip_path, unzip_folder)
         print(f'Unzip {zip_file} to {unzip_folder}')
         with zipfile.ZipFile(zip_file, 'r') as zip_ref:
             zip_ref.extractall(unzip_folder)
@@ -177,7 +176,7 @@ def parse_args():
         description='Preprocess REDS datasets',
         epilog='You can first download REDS datasets using the script from:'
         'https://gist.github.com/SeungjunNah/b10d369b92840cb8dd2118dd4f41d643')
-    parser.add_argument('root-path', help='root path for REDS')
+    parser.add_argument('--root-path', type=str, help='root path for REDS')
     parser.add_argument(
         '--make-lmdb', action='store_true', help='create lmdb files')
 
