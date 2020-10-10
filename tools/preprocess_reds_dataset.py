@@ -134,7 +134,7 @@ def merge_train_val(train_path, val_path):
         shutil.move(folder, osp.join(train_path, new_folder_idx))
 
 
-def generate_anno_file(root_path, file_name='REDS/meta_info_REDS_GT.txt'):
+def generate_anno_file(root_path, file_name='meta_info_REDS_GT.txt'):
     """Generate anno file for REDS datasets from the ground-truth folder.
 
     Args:
