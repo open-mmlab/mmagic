@@ -147,7 +147,7 @@ def generate_anno_file(root_path, file_name='meta_info_REDS_GT.txt'):
     with open(txt_file, 'w') as f:
         for i in range(270):
             for j in range(100):
-                f.write(f'{i:03d}/{j:08d} (720, 1280, 3)\n')
+                f.write(f'{i:03d}/{j:08d}.png (720, 1280, 3)\n')
 
 
 def unzip(zip_path):

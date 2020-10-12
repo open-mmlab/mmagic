@@ -17,8 +17,8 @@ class SRREDSDataset(BaseSRDataset):
 
     ::
 
-        000/00000000 (720, 1280, 3)
-        000/00000001 (720, 1280, 3)
+        000/00000000.png (720, 1280, 3)
+        000/00000001.png (720, 1280, 3)
 
     Args:
         lq_folder (str | :obj:`Path`): Path to a lq folder.
@@ -61,7 +61,7 @@ class SRREDSDataset(BaseSRDataset):
         """
         # get keys
         with open(self.ann_file, 'r') as fin:
-            keys = [v.strip().split(' ')[0] for v in fin]
+            keys = [v.strip().split('.')[0] for v in fin]
 
         if self.val_partition == 'REDS4':
             val_partition = ['000', '011', '015', '020']
