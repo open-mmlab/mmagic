@@ -143,6 +143,7 @@ if __name__ == '__main__':
         version=get_version(),
         description='OpenMMLab Image and Video Editing Toolbox and Benchmark',
         long_description=readme(),
+        long_description_content_type='text/markdown',
         maintainer='MMEditing Authors',
         maintainer_email='openmmlab@gmail.com',
         keywords='computer vision, inpainting, matting, '
