@@ -134,7 +134,8 @@ lr_config = dict(
     min_lr=1e-7)
 
 checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
-evaluation = dict(interval=50000, save_image=False, gpu_collect=True) # remove gpu_collect=True in non distributed training
+# remove gpu_collect=True in non distributed training
+evaluation = dict(interval=50000, save_image=False, gpu_collect=True)
 log_config = dict(
     interval=100,
     hooks=[
