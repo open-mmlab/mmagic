@@ -585,9 +585,9 @@ def test_repeat_dataset():
 def test_reds_dataset():
     root_path = Path(__file__).parent / 'data'
 
-    txt_content = ('000/00000001.png (720, 1280, 3)\n'
-                   '001/00000001.png (720, 1280, 3)\n'
-                   '250/00000001.png (720, 1280, 3)\n')
+    txt_content = ('000/00000001 (720, 1280, 3)\n'
+                   '001/00000001 (720, 1280, 3)\n'
+                   '250/00000001 (720, 1280, 3)\n')
     mocked_open_function = mock_open(read_data=txt_content)
 
     with patch('builtins.open', mocked_open_function):
