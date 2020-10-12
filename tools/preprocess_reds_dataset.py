@@ -175,7 +175,7 @@ def unzip(zip_path):
         if osp.isdir(osp.join(unzip_folder, data_type, data_name)):
             data_folder = osp.join(unzip_folder, data_type, data_name)
             for i in os.listdir(data_folder):
-                shutil.move(osp.join(data_folder,i), unzip_folder)
+                shutil.move(osp.join(data_folder, i), unzip_folder)
         shutil.rmtree(osp.join(unzip_folder, data_type))
         unzip_folders.append(unzip_folder)
     return unzip_folders
