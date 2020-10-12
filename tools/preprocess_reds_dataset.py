@@ -172,11 +172,14 @@ def unzip(zip_path):
             zip_ref.extractall(unzip_folder)
         data_name = osp.basename(unzip_folder)
         data_type = data_name.split('_')[0]
+        # if data path like `train_sharp/train/train_sharp/*`
+        # begin reorganizing to `train_sharp/*`
         if osp.isdir(osp.join(unzip_folder, data_type, data_name)):
             data_folder = osp.join(unzip_folder, data_type, data_name)
             for i in os.listdir(data_folder):
                 shutil.move(osp.join(data_folder, i), unzip_folder)
         shutil.rmtree(osp.join(unzip_folder, data_type))
+        # end reorganizing
         unzip_folders.append(unzip_folder)
     return unzip_folders
 
