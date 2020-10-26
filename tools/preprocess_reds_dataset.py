@@ -1,5 +1,6 @@
 import argparse
 import glob
+import os
 import os.path as osp
 import shutil
 import sys
@@ -133,7 +134,7 @@ def merge_train_val(train_path, val_path):
         shutil.move(folder, osp.join(train_path, new_folder_idx))
 
 
-def generate_anno_file(root_path, file_name='REDS/meta_info_REDS_GT.txt'):
+def generate_anno_file(root_path, file_name='meta_info_REDS_GT.txt'):
     """Generate anno file for REDS datasets from the ground-truth folder.
 
     Args:
@@ -142,10 +143,11 @@ def generate_anno_file(root_path, file_name='REDS/meta_info_REDS_GT.txt'):
 
     print(f'Generate annotation files {file_name}...')
     txt_file = osp.join(root_path, file_name)
+    mmcv.utils.mkdir_or_exist(osp.dirname(txt_file))
     with open(txt_file, 'w') as f:
         for i in range(270):
             for j in range(100):
-                f.write(f'{i:03d}/{j:08d} (720, 1280, 3)\n')
+                f.write(f'{i:03d}/{j:08d}.png (720, 1280, 3)\n')
 
 
 def unzip(zip_path):
@@ -160,14 +162,24 @@ def unzip(zip_path):
     """
     zip_files = mmcv.scandir(zip_path, suffix='zip', recursive=False)
     import zipfile
+    import shutil
     unzip_folders = []
     for zip_file in zip_files:
         zip_file = osp.join(zip_path, zip_file)
         unzip_folder = zip_file.replace('.zip', '').split('_part')[0]
-        unzip_folder = osp.join(zip_path, unzip_folder)
         print(f'Unzip {zip_file} to {unzip_folder}')
         with zipfile.ZipFile(zip_file, 'r') as zip_ref:
             zip_ref.extractall(unzip_folder)
+        data_name = osp.basename(unzip_folder)
+        data_type = data_name.split('_')[0]
+        # if data path like `train_sharp/train/train_sharp/*`
+        # begin reorganizing to `train_sharp/*`
+        if osp.isdir(osp.join(unzip_folder, data_type, data_name)):
+            data_folder = osp.join(unzip_folder, data_type, data_name)
+            for i in os.listdir(data_folder):
+                shutil.move(osp.join(data_folder, i), unzip_folder)
+            shutil.rmtree(osp.join(unzip_folder, data_type))
+        # end reorganizing
         unzip_folders.append(unzip_folder)
     return unzip_folders
 
@@ -177,7 +189,7 @@ def parse_args():
         description='Preprocess REDS datasets',
         epilog='You can first download REDS datasets using the script from:'
         'https://gist.github.com/SeungjunNah/b10d369b92840cb8dd2118dd4f41d643')
-    parser.add_argument('root-path', help='root path for REDS')
+    parser.add_argument('--root-path', type=str, help='root path for REDS')
     parser.add_argument(
         '--make-lmdb', action='store_true', help='create lmdb files')
 

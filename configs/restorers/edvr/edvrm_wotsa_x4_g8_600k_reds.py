@@ -88,7 +88,7 @@ data = dict(
         times=1000,
         dataset=dict(
             type=train_dataset_type,
-            lq_folder='./data/REDS/train_sharp_bicubic',
+            lq_folder='./data/REDS/train_sharp_bicubic/X4',
             gt_folder='./data/REDS/train_sharp',
             ann_file='data/REDS/meta_info_REDS_GT.txt',
             num_input_frames=5,
@@ -101,7 +101,7 @@ data = dict(
     val_workers_per_gpu=1,
     val=dict(
         type=val_dataset_type,
-        lq_folder='./data/REDS/train_sharp_bicubic',
+        lq_folder='./data/REDS/train_sharp_bicubic/X4',
         gt_folder='./data/REDS/train_sharp',
         ann_file='data/REDS/meta_info_REDS_GT.txt',
         num_input_frames=5,
@@ -111,7 +111,7 @@ data = dict(
         test_mode=True),
     test=dict(
         type=val_dataset_type,
-        lq_folder='./data/REDS/train_sharp_bicubic',
+        lq_folder='./data/REDS/train_sharp_bicubic/X4',
         gt_folder='./data/REDS/train_sharp',
         ann_file='data/REDS/meta_info_REDS_GT.txt',
         num_input_frames=5,
@@ -134,6 +134,7 @@ lr_config = dict(
     min_lr=1e-7)
 
 checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
+# remove gpu_collect=True in non distributed training
 evaluation = dict(interval=50000, save_image=False, gpu_collect=True)
 log_config = dict(
     interval=100,

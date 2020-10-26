@@ -115,5 +115,5 @@ If you want to use LMDB datasets for faster IO speed, you can make LMDB files by
 # DIV2K
 python tools/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
 # REDS
-python tools/preprocess_reds_dataset.py ./data/REDS --make-lmdb
+python tools/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
