@@ -29,7 +29,7 @@ Documentation: https://mmediting.readthedocs.io/en/latest/.
 
 - **Support of multiple tasks in editing**
 
-  The toolbox directly supports popular and contemporary *inpainting*, *matting*, *super-resolution* ang *generation* tasks.
+  The toolbox directly supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *generation* tasks.
 
 - **State of the art**
 
