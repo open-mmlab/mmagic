@@ -8,11 +8,11 @@ url_prefix = 'https://github.com/open-mmlab/mmediting/blob/master/'
 
 inpainting_files = sorted(glob.glob('../configs/inpainting/*/README.md'))
 mattor_files = sorted(glob.glob('../configs/mattors/*/README.md'))
-restorer_files = sorted(glob.glob('../configs/restores/*/README.md'))
-synthesizer_files = sorted(glob.glob('../configs/synthesizer/*/README.md'))
+restorer_files = sorted(glob.glob('../configs/restorers/*/README.md'))
+synthesizer_files = sorted(glob.glob('../configs/synthesizers/*/README.md'))
 
 all_files = (inpainting_files, mattor_files, restorer_files, synthesizer_files)
-titles = ('Inpainting', 'Mattor', 'Restorer', 'synthesizer')
+titles = ('Inpainting', 'Mattor', 'Restorer', 'Synthesizer')
 
 stats = []
 papers = set()
@@ -42,7 +42,7 @@ for title, files in zip(titles, all_files):
 ### {title}
 
 * Number of checkpoints: {len(ckpts)}
-* Number of papers: {len(papers)}
+* Number of papers: {len(files)}
 {msg}
 """
     stats.append((papers, ckpts, statsmsg))
