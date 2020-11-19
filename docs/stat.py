@@ -27,7 +27,9 @@ for title, files in zip(titles, all_files):
         with open(f, 'r') as content_file:
             content = content_file.read()
 
-        paper = set(list(content.split('\n')[0].replace('#', '')))
+        paper = set([
+            content.split('\n')[0].replace('#', ''),
+        ])
         papers.union(paper)
         ckpts_ = set(x.lower().strip()
                      for x in re.findall(r'https?://download.*\.pth', content)
