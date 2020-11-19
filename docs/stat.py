@@ -57,7 +57,7 @@ modelzoo = f"""
 ## Model Zoo Statistics
 
 * Number of papers: {len(allpapers)}
-* Number of checkpoints: {allckpts}
+* Number of checkpoints: {len(allckpts)}
 {msglist}
 """
 
