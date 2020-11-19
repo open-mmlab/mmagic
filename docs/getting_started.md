@@ -183,7 +183,7 @@ If you run MMEditing on a cluster managed with [slurm](https://slurm.schedmd.com
 Here is an example of using 8 GPUs to train an inpainting model on the dev partition.
 
 ```shell
-GPUS=8 ./tools/slurm_train.sh dev configs/inpainting/gl_places.py /nfs/xxxx/gl_places_256
+GPUS=8 ./tools/slurm_train.sh dev places_256 configs/inpainting/gl_places.py /nfs/xxxx/gl_places_256
 ```
 
 You can check [slurm_train.sh](https://github.com/open-mmlab/mmediting/blob/master/tools/slurm_train.sh) for full arguments and environment variables.
