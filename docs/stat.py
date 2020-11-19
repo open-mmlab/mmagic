@@ -39,7 +39,7 @@ for title, files in zip(titles, all_files):
         msg_list.append(msg)
     msg = '\n'.join(msg_list)
     statsmsg = f"""
-## {title}
+### {title}
 
 * Number of checkpoints: {len(ckpts)}
 * Number of papers: {len(papers)}
