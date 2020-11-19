@@ -15,7 +15,7 @@ all_files = (inpainting_files, mattor_files, restorer_files, synthesizer_files)
 titles = ('Inpainting', 'Mattor', 'Restorer', 'synthesizer')
 
 stats = []
-papers = []
+papers = set()
 total_num_ckpts = 0
 
 for title, files in zip(titles, all_files):
@@ -27,13 +27,13 @@ for title, files in zip(titles, all_files):
         with open(f, 'r') as content_file:
             content = content_file.read()
 
-        paper = content.split('\n')[0].replace('#', '')
-        papers.append(paper)
+        paper = set(list(content.split('\n')[0].replace('#', '')))
+        papers.union(paper)
         ckpts_ = set(x.lower().strip()
                      for x in re.findall(r'https?://download.*\.pth', content)
                      if 'mmediting' in x)
 
-        msg = f"""\t* [{papers}]({url}) ({len(ckpts_)} ckpts)"""
+        msg = f"""\t* [{paper}]({url}) ({len(ckpts_)} ckpts)"""
 
         ckpts = ckpts.union(ckpts_)
         msg_list.append(msg)
@@ -47,7 +47,7 @@ for title, files in zip(titles, all_files):
 """
     stats.append((papers, ckpts, statsmsg))
 
-allpapers = func.reduce(lambda a, b: a.extend(b), [p for p, _, _ in stats])
+allpapers = func.reduce(lambda a, b: a.union(b), [p for p, _, _ in stats])
 allckpts = func.reduce(lambda a, b: a.union(b), [c for _, c, _ in stats])
 msglist = '\n'.join(x for _, _, x in stats)
 
