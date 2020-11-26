@@ -34,10 +34,10 @@ class Crop(object):
             data_list = [data]
         else:
             data_list = data
-        
+
         crop_bbox_list = []
         data_list_ = []
-        
+
         for item in data_list:
             data_h, data_w = item.shape[:2]
             crop_h, crop_w = self.crop_size
@@ -53,8 +53,7 @@ class Crop(object):
 
             crop_bbox = [x_offset, y_offset, crop_w, crop_h]
             item_ = item[y_offset:y_offset + crop_h,
-                         x_offset:x_offset + crop_w,
-                         ...]
+                         x_offset:x_offset + crop_w, ...]
             crop_bbox_list.append(crop_bbox)
             data_list_.append(item_)
 
