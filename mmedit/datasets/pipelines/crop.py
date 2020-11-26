@@ -30,23 +30,36 @@ class Crop(object):
         self.random_crop = random_crop
 
     def _crop(self, data):
-        data_h, data_w = data.shape[:2]
-        crop_h, crop_w = self.crop_size
-        crop_h = min(data_h, crop_h)
-        crop_w = min(data_w, crop_w)
-
-        if self.random_crop:
-            x_offset = np.random.randint(0, data_w - crop_w + 1)
-            y_offset = np.random.randint(0, data_h - crop_h + 1)
+        if not isinstance(data, list):
+            data_list = [data]
         else:
-            x_offset = max(0, (data_w - crop_w)) // 2
-            y_offset = max(0, (data_h - crop_h)) // 2
+            data_list = data
+        
+        crop_bbox_list = []
+        data_list_ = []
+        
+        for item in data_list:
+            data_h, data_w = item.shape[:2]
+            crop_h, crop_w = self.crop_size
+            crop_h = min(data_h, crop_h)
+            crop_w = min(data_w, crop_w)
 
-        crop_bbox = [x_offset, y_offset, crop_w, crop_h]
-        data_ = data[y_offset:y_offset + crop_h, x_offset:x_offset + crop_w,
-                     ...]
+            if self.random_crop:
+                x_offset = np.random.randint(0, data_w - crop_w + 1)
+                y_offset = np.random.randint(0, data_h - crop_h + 1)
+            else:
+                x_offset = max(0, (data_w - crop_w)) // 2
+                y_offset = max(0, (data_h - crop_h)) // 2
 
-        return data_, crop_bbox
+            crop_bbox = [x_offset, y_offset, crop_w, crop_h]
+            item_ = item[y_offset:y_offset + crop_h, x_offset:x_offset + crop_w,
+                              ...]
+            crop_bbox_list.append(crop_bbox)
+            data_list_.append(item_)
+
+        if not isinstance(data, list):
+            return data_list_[0], crop_bbox_list[0]
+        return data_list_, crop_bbox_list
 
     def __call__(self, results):
         """Call function.
