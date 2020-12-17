@@ -24,7 +24,7 @@ for config_dpath in config_dpaths:
                      for x in re.findall(r'https://download.*\.pth', content)
                      if 'mmediting' in x)
         _papers = set(x.lower().strip()
-                      for x in re.findall(r'\btitle *= *"?{(.*)}"?', content))
+                      for x in re.findall(r'\btitle\s*=\s*{(.*)}', content))
 
         ckpts = ckpts.union(_ckpts)
         papers = papers.union(_papers)
