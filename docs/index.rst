@@ -7,7 +7,7 @@ Welcome to MMEditing's documentation!
    install.md
    getting_started.md
    config.md
-   model_zoo.md
+   modelzoo_statistics.md
    api.rst
 
 
