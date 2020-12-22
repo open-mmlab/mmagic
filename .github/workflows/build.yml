@@ -31,10 +31,13 @@ jobs:
         include:
           - torch: 1.3.1
             torchvision: 0.4.2
+            mmcv: "latest+torch1.3.0+cpu"
           - torch: 1.5.1
             torchvision: 0.6.1
+            mmcv: "latest+torch1.5.0+cpu"
           - torch: 1.6.0
             torchvision: 0.7.0
+            mmcv: "latest+torch1.6.0+cpu"
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -47,7 +50,7 @@ jobs:
       - name: Install PyTorch
         run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install MMCV
-        run: pip install --use-deprecated=legacy-resolver mmcv-full==latest+torch${{matrix.torch}}+cpu -f https://openmmlab.oss-accelerate.aliyuncs.com/mmcv/dist/index.html
+        run: pip install --use-deprecated=legacy-resolver mmcv-full==${{matrix.mmcv}} -f https://openmmlab.oss-accelerate.aliyuncs.com/mmcv/dist/index.html
       - name: Install unittest dependencies
         run: pip install -r requirements/tests.txt
       - name: Build and install
