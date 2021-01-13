@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @inproceedings{xu2017deep,
   title={Deep image matting},

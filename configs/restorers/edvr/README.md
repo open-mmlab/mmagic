@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @InProceedings{wang2019edvr,
   author    = {Wang, Xintao and Chan, Kelvin C.K. and Yu, Ke and Dong, Chao and Loy, Chen Change},

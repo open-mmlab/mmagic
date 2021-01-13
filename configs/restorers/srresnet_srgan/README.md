@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @inproceedings{ledig2016photo,
   title={Photo-realistic single image super-resolution using a generative adversarial network},

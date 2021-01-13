@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @inproceedings{wang2018esrgan,
   title={Esrgan: Enhanced super-resolution generative adversarial networks},

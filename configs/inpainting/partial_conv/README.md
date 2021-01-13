@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @inproceedings{liu2018image,
   title={Image inpainting for irregular holes using partial convolutions},

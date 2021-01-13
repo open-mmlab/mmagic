@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @inproceedings{yu2018generative,
   title={Generative image inpainting with contextual attention},
