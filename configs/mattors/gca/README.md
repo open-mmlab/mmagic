@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @inproceedings{li2020natural,
   title={Natural Image Matting via Guided Contextual Attention},

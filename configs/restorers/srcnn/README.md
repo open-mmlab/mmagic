@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @article{dong2015image,
   title={Image super-resolution using deep convolutional networks},

@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @inproceedings{yu2019free,
   title={Free-form image inpainting with gated convolution},

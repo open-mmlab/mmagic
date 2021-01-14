@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @inproceedings{hao2019indexnet,
   title={Indices Matter: Learning to Index for Deep Image Matting},

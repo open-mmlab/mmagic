@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @inproceedings{lim2017enhanced,
   title={Enhanced deep residual networks for single image super-resolution},

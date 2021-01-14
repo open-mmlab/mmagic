@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[ALGORITHM]
+
 ```
 @article{iizuka2017globally,
   title={Globally and locally consistent image completion},
