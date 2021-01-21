@@ -54,7 +54,7 @@ Welcome to MMEditing's documentation!
    :caption: FAQ
 
    faq.md
-   
+
 .. toctree::
    :maxdepth: 2
    :caption: API Reference

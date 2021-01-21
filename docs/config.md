@@ -35,5 +35,3 @@ Please refer to the corresponding page for config file structure for different t
 [Restoration](config_restoration.md)
 
 [Generation](config_generation.md)
-
-

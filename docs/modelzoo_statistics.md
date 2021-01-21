@@ -16,7 +16,7 @@
     - [ALGORITHM] globally and locally consistent image completion
     - [ALGORITHM] image inpainting for irregular holes using partial convolutions
 
- 
+
 
 ### Mattors
 
@@ -26,7 +26,7 @@
     - [ALGORITHM] indices matter: learning to index for deep image matting
     - [ALGORITHM] natural image matting via guided contextual attention
 
- 
+
 
 ### Restorers
 
@@ -39,7 +39,7 @@
     - [ALGORITHM] photo-realistic single image super-resolution using a generative adversarial network
     - [ALGORITHM] video enhancement with task-oriented flow
 
- 
+
 
 ### Synthesizers
 
@@ -48,7 +48,7 @@
     - [ALGORITHM] image-to-image translation with conditional adversarial networks
     - [ALGORITHM] unpaired image-to-image translation using cycle-consistent adversarial networks
 
- 
+
 
 
 ## Inpainting
