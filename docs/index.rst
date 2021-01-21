@@ -5,34 +5,56 @@ Welcome to MMEditing's documentation!
    :maxdepth: 2
    :caption: Get Started
 
+   install.md
+   demo.md
+
 .. toctree::
    :maxdepth: 2
    :caption: Model Zoo
+
+   model_zoo.md
+   modelzoo_statistics.md
 
 .. toctree::
    :maxdepth: 2
    :caption: Dataset Preparation
 
+   datasets_generation.md
+   datasets_inpainting.md
+   datasets_matting.md
+   datasets_restoration.md
+
 .. toctree::
    :maxdepth: 2
    :caption: Quick Run
+
+   quick_run.md
+
 
 .. toctree::
    :maxdepth: 2
    :caption: Tutorials
 
+   config.md
+
 .. toctree::
    :maxdepth: 2
    :caption: Useful Tools and Scripts
+
+   tools_scripts.md
 
 .. toctree::
    :maxdepth: 2
    :caption: Notes
 
+   notes.md
+
 .. toctree::
    :maxdepth: 2
    :caption: FAQ
 
+   faq.md
+   
 .. toctree::
    :maxdepth: 2
    :caption: API Reference

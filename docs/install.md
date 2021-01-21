@@ -1,6 +1,4 @@
-## Installation
-
-### Requirements
+## Prerequisites
 
 - Linux (Windows is not officially supported)
 - Python 3.6+
@@ -10,7 +8,7 @@
 - GCC 4.9 or higher
 - [mmcv](https://github.com/open-mmlab/mmcv)
 
-### Install mmediting
+## Installation
 
 a. Create a conda virtual environment and activate it.
 
