@@ -106,7 +106,7 @@ data = dict(
 optimizers = dict(type='Adam', lr=4e-4, betas=[0.5, 0.999])
 # learning policy
 lr_config = dict(
-    policy='CosineAnealing',
+    policy='CosineAnnealing',
     min_lr=0,
     by_epoch=False,
     warmup='linear',
