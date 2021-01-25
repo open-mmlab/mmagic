@@ -1,5 +1,5 @@
 lmdb
-mmcv-full>=1.0.0
+mmcv-full>=1.2.0
 scikit-image
 tensorboard
 yapf

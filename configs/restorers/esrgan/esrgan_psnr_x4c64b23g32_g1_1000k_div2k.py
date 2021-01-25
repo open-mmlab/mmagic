@@ -110,9 +110,9 @@ total_iters = 1000000
 lr_config = dict(
     policy='CosineRestart',
     by_epoch=False,
-    period=[250000, 250000, 250000, 250000],
+    periods=[250000, 250000, 250000, 250000],
     restart_weights=[1, 1, 1, 1],
-    eta_min=1e-7)
+    min_lr=1e-7)
 
 checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
 evaluation = dict(interval=5000, save_image=True, gpu_collect=True)

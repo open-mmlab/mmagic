@@ -130,7 +130,7 @@ optimizers = dict(generator=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999)))  # C
 # learning policy
 total_iters = 300000  # Total training iters
 lr_config = dict( # Learning rate scheduler config used to register LrUpdater hook
-    policy='Step', by_epoch=False, step=[200000], gamma=0.5)  # The policy of scheduler, also support CosineAnealing, Cyclic, etc. Refer to details of supported LrUpdater from https://github.com/open-mmlab/mmcv/blob/master/mmcv/runner/hooks/lr_updater.py#L9.
+    policy='Step', by_epoch=False, step=[200000], gamma=0.5)  # The policy of scheduler, also support CosineAnnealing, Cyclic, etc. Refer to details of supported LrUpdater from https://github.com/open-mmlab/mmcv/blob/master/mmcv/runner/hooks/lr_updater.py#L9.
 
 checkpoint_config = dict(  # Config to set the checkpoint hook, Refer to https://github.com/open-mmlab/mmcv/blob/master/mmcv/runner/hooks/checkpoint.py for implementation.
     interval=5000,  # The save interval is 5000 iterations
