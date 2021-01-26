@@ -22,7 +22,7 @@ sed -i "s/md###t/html#t/g" synthesizers_models.md
 
 sed -i '1i\# Inpainting Models' inpainting_models.md
 sed -i '1i\# Matting Models' mattors_models.md
-sed -i '1i\# Super-Resolution Models' restorers_models.md
+sed -i '1i\# Restoration Models' restorers_models.md
 sed -i '1i\# Generation Models' synthesizers_models.md
 
 sed -i 's/](\/docs\//](/g' inpainting_models.md # remove /docs/ for link used in doc site
