@@ -4,7 +4,7 @@
 
 [ALGORITHM]
 
-```
+```latex
 @inproceedings{li2020natural,
   title={Natural Image Matting via Guided Contextual Attention},
   author={Li, Yaoyi and Lu, Hongtao},

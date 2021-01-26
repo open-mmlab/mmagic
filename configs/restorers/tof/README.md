@@ -4,7 +4,7 @@
 
 [ALGORITHM]
 
-```
+```latex
 @article{xue2019video,
   title={Video enhancement with task-oriented flow},
   author={Xue, Tianfan and Chen, Baian and Wu, Jiajun and Wei, Donglai and Freeman, William T},

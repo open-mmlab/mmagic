@@ -4,7 +4,7 @@
 
 [ALGORITHM]
 
-```
+```latex
 @inproceedings{wang2018esrgan,
   title={Esrgan: Enhanced super-resolution generative adversarial networks},
   author={Wang, Xintao and Yu, Ke and Wu, Shixiang and Gu, Jinjin and Liu, Yihao and Dong, Chao and Qiao, Yu and Change Loy, Chen},

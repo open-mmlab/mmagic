@@ -4,7 +4,7 @@
 
 [ALGORITHM]
 
-```
+```latex
 @article{dong2015image,
   title={Image super-resolution using deep convolutional networks},
   author={Dong, Chao and Loy, Chen Change and He, Kaiming and Tang, Xiaoou},

@@ -4,7 +4,7 @@
 
 [ALGORITHM]
 
-```
+```latex
 @InProceedings{wang2019edvr,
   author    = {Wang, Xintao and Chan, Kelvin C.K. and Yu, Ke and Dong, Chao and Loy, Chen Change},
   title     = {EDVR: Video restoration with enhanced deformable convolutional networks},
