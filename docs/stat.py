@@ -56,20 +56,12 @@ countstr = '\n'.join(
     [f'   - {t}: {c}' for t, c in zip(papertypes, papercounts)])
 
 modelzoo_statsmsg = f"""
-# Model Zoo
-
-## Model Zoo Statistics
+# Model Zoo Statistics
 * Number of checkpoints: {len(allckpts)}
 * Number of papers: {len(allpapers)}
 {countstr}
-
 {msglist}
 """
 
-with open('model_zoo.md', 'r') as modelzoo_file:
-    modelzoo_content = modelzoo_file.read()
-
-modelzoo = modelzoo_statsmsg + modelzoo_content.replace('# Model Zoo', '', 1)
-
 with open('modelzoo_statistics.md', 'w') as f:
-    f.write(modelzoo)
+    f.write(modelzoo_statsmsg)
