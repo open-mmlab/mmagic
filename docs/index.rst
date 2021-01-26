@@ -12,8 +12,11 @@ Welcome to MMEditing's documentation!
    :maxdepth: 2
    :caption: Model Zoo
 
-   model_zoo.md
-   modelzoo_statistics.md
+   modelzoo.md
+   inpainting_models.md
+   mattors_models.md
+   restorers_models.md
+   synthesizers_models.md
 
 .. toctree::
    :maxdepth: 2

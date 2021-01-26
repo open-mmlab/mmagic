@@ -4,7 +4,7 @@
 
 [ALGORITHM]
 
-```
+```latex
 @inproceedings{lim2017enhanced,
   title={Enhanced deep residual networks for single image super-resolution},
   author={Lim, Bee and Son, Sanghyun and Kim, Heewon and Nah, Seungjun and Mu Lee, Kyoung},

@@ -67,6 +67,7 @@ master_doc = 'index'
 
 
 def builder_inited_handler(app):
+    subprocess.run(['./merge_docs.sh'])
     subprocess.run(['./stat.py'])
 
 

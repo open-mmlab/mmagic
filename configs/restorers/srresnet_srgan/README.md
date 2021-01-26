@@ -4,7 +4,7 @@
 
 [ALGORITHM]
 
-```
+```latex
 @inproceedings{ledig2016photo,
   title={Photo-realistic single image super-resolution using a generative adversarial network},
   author={Ledig, Christian and Theis, Lucas and Husz{\'a}r, Ferenc and Caballero, Jose and Cunningham, Andrew and Acosta, Alejandro and Aitken, Andrew and Tejani, Alykhan and Totz, Johannes and Wang, Zehan},
