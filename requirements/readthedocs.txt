@@ -1,3 +1,6 @@
+lmdb
 mmcv
+scikit-image
+titlecase
 torch
 torchvision
