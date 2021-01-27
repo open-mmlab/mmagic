@@ -30,7 +30,7 @@ sed -i 's/](\/docs\//](/g' mattors_models.md
 sed -i 's/](\/docs\//](/g' restorers_models.md
 sed -i 's/](\/docs\//](/g' synthesizers_models.md
 
-sed -i 's=](/=](https://github.com/open-mmlab/mmpose/tree/master/=g' inpainting_models.md
-sed -i 's=](/=](https://github.com/open-mmlab/mmpose/tree/master/=g' mattors_models.md
-sed -i 's=](/=](https://github.com/open-mmlab/mmpose/tree/master/=g' restorers_models.md
-sed -i 's=](/=](https://github.com/open-mmlab/mmpose/tree/master/=g' synthesizers_models.md
+sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' inpainting_models.md
+sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' mattors_models.md
+sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' restorers_models.md
+sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' synthesizers_models.md
