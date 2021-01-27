@@ -25,4 +25,4 @@ The metrics are `PSNR / SSIM`.
 
 |                                    Method                                     |       Vid4       |                                               Download                                                |
 | :---------------------------------------------------------------------------: | :--------------: | :---------------------------------------------------------------------------------------------------: |
-| [tof_x4_vimeo90k_official](configs/restorers/tof/tof_x4_vimeo90k_official.py) | 24.4377 / 0.7433 | [model](https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth) |
+| [tof_x4_vimeo90k_official](/configs/restorers/tof/tof_x4_vimeo90k_official.py) | 24.4377 / 0.7433 | [model](https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth) |
