@@ -153,3 +153,35 @@ class CharbonnierCompLoss(nn.Module):
             eps=self.eps,
             reduction=self.reduction,
             sample_wise=self.sample_wise)
+
+
+@LOSSES.register_module()
+class FBACompLoss(nn.Module):
+
+    def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
+        super(FBACompLoss, self).__init__()
+        if reduction not in ['none', 'mean', 'sum']:
+            raise ValueError(f'Unsupported reduction mode: {reduction}. '
+                             f'Supported ones are: {_reduction_modes}')
+
+        self.loss_weight = loss_weight
+        self.reduction = reduction
+        self.sample_wise = sample_wise
+
+    def forward(self,
+                pred_fg,
+                pred_bg,
+                alpha,
+                ori_merged,
+                weight=None,
+                **kwargs):
+
+        pred_merged = pred_fg * alpha + (1. - alpha) * pred_bg
+        if weight is not None:
+            weight = weight.expand(-1, 3, -1, -1)
+        return self.loss_weight * l1_loss(
+            pred_merged,
+            ori_merged,
+            weight,
+            reduction=self.reduction,
+            sample_wise=self.sample_wise)

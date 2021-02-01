@@ -83,6 +83,7 @@ class ImageToTensor:
         Returns:
             dict: A dict containing the processed data and information.
         """
+
         for key in self.keys:
             # deal with gray scale img: expand a color channel
             if len(results[key].shape) == 2:
@@ -208,8 +209,9 @@ class FormatTrimap:
         if self.to_onehot:
             trimap = F.one_hot(trimap.to(torch.long), num_classes=3)
             trimap = trimap.permute(2, 0, 1)
-        else:
-            trimap = trimap[None, ...]  # expand the channels dimension
+        elif len(trimap.shape) == 2:
+            trimap = trimap[
+                None, ...]  # expand the channels dimension for single trimap
         results['trimap'] = trimap.float()
         results['meta'].data['to_onehot'] = self.to_onehot
         return results

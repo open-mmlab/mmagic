@@ -48,12 +48,13 @@ class BaseMattor(BaseModel):
                  refiner=None,
                  train_cfg=None,
                  test_cfg=None,
+                 norm_cfg=None,
                  pretrained=None):
         super().__init__()
 
         self.train_cfg = train_cfg if train_cfg is not None else ConfigDict()
         self.test_cfg = test_cfg if test_cfg is not None else ConfigDict()
-
+        self.norm_cfg = norm_cfg if norm_cfg is not None else ConfigDict()
         self.backbone = build_backbone(backbone)
         # build refiner if it's not None.
         if refiner is None:

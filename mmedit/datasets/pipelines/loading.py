@@ -78,7 +78,6 @@ class LoadImageFromFile:
         results[f'{self.key}_ori_shape'] = img.shape
         if self.save_original_img:
             results[f'ori_{self.key}'] = img.copy()
-
         return results
 
     def __repr__(self):
