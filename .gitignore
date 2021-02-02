@@ -112,6 +112,7 @@ venv.bak/
 *.log.json
 work_dirs/
 data/
+data
 
 # Pytorch
 *.pth
