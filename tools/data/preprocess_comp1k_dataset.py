@@ -28,6 +28,23 @@ def fix_png_files(directory):
         shell=True)
 
 
+def fix_png_file(filename, folder):
+    """Fix png files in the target filename using pngfix.
+
+    pngfix is a tool to fix PNG files. It's installed on Linux or MacOS by
+    default.
+
+    Args:
+        filename (str): png file to run pngfix.
+    """
+    subprocess.call(
+        f'pngfix --quiet --strip=color --prefix=fixed_ "{filename}"',
+        cwd=f'{folder}',
+        shell=True)
+    subprocess.call(
+        f'mv "fixed_{filename}" "{filename}"', cwd=f'{folder}', shell=True)
+
+
 def join_first_contain(directories, filename, data_root):
     """Join the first directory that contains the file.
 
@@ -71,7 +88,16 @@ def get_data_info(args):
 
     if not osp.exists(source_bg_path):
         raise FileNotFoundError(f'{source_bg_path} does not exist!')
-    bg = Image.open(source_bg_path).convert('RGB')
+    try:
+        bg = Image.open(source_bg_path).convert('RGB')
+    except Exception as ex:
+        data_info = {
+            'alpha_path': alpha_path,
+            'fg_path': fg_path,
+            'bg_path': bg_path
+        }
+        print('err in ', data_info, ex)
+        return data_info
     bw, bh = bg.size
     w, h = fg.size
 
@@ -86,11 +112,15 @@ def get_data_info(args):
 
     # save cropped bg and merged
     mmcv.utils.mkdir_or_exist(osp.join(data_root, dir_prefix, 'bg'))
-    bg.save(osp.join(data_root, bg_path), 'PNG')
+    bgfilename = osp.join(data_root, bg_path)
+    bg.save(bgfilename, 'PNG')
+    fix_png_file(osp.basename(bgfilename), osp.dirname(bgfilename))
     if composite:
         merged = (fg * alpha + bg * (1. - alpha)).astype(np.uint8)
         mmcv.utils.mkdir_or_exist(osp.join(data_root, dir_prefix, 'merged'))
-        Image.fromarray(merged).save(osp.join(data_root, merged_path), 'PNG')
+        mergedfilename = osp.join(data_root, merged_path)
+        Image.fromarray(merged).save(mergedfilename, 'PNG')
+        fix_png_file(osp.basename(mergedfilename), osp.dirname(mergedfilename))
 
     data_info = dict()
     data_info['alpha_path'] = alpha_path
@@ -215,29 +245,25 @@ def main():
         raise FileNotFoundError(f'{args.coco_root} does not exist!')
     if not osp.exists(args.voc_root):
         raise FileNotFoundError(f'{args.voc_root} does not exist!')
-
     data_root = args.data_root
+
     print('preparing training data...')
-    if osp.exists(osp.join(args.coco_root, 'train2014')):
-        train_source_bg_dir = osp.join(args.coco_root, 'train2014')
-    elif osp.exists(osp.join(args.coco_root, 'train2017')):
+    if osp.exists(osp.join(args.coco_root, 'train2017')):
         train_source_bg_dir = osp.join(args.coco_root, 'train2017')
+    elif osp.exists(osp.join(args.coco_root, 'train2014')):
+        train_source_bg_dir = osp.join(args.coco_root, 'train2014')
     else:
         raise FileNotFoundError(
             f'Could not find train2014 or train2017 under {args.coco_root}')
     generate_json(data_root, train_source_bg_dir, args.composite, args.nproc,
                   'training')
-
-    # remove the iCCP chunk from the PNG image to avoid unnecessary warning
-    if args.composite:
-        merged_dir = 'Training_set/merged'
-        fix_png_files(osp.join(data_root, merged_dir))
-    bg_dir = 'Training_set/bg'
-    fix_png_files(osp.join(data_root, bg_dir))
+    print('train done')
 
     fg_dir = 'Test_set/Adobe-licensed images/fg'
     alpha_dir = 'Test_set/Adobe-licensed images/alpha'
+    print('fixing png of test fg')
     fix_png_files(osp.join(data_root, fg_dir))
+    print('fixing png of test alpha')
     fix_png_files(osp.join(data_root, alpha_dir))
 
     print('\npreparing test data...')

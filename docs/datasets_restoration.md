@@ -39,7 +39,7 @@ If your folder structure is different, you may need to change the corresponding 
 #### Crop sub-images
 For faster IO, we recommend to crop the DIV2K images to sub-images. We provide such a script:
 ```shell
-python tools/preprocess_div2k_dataset.py --data-root ./data/DIV2K
+python tools/data/preprocess_div2k_dataset.py --data-root ./data/DIV2K
 ```
 
 The generated data is stored under `DIV2K` and the data structure is as follows, where `_sub` indicates the sub-images.
@@ -84,7 +84,7 @@ The original val dataset (clip names from 000 to 029) are modified to avoid conf
 
 You can prepare the REDS dataset by running:
 ```shell
-python tools/preprocess_reds_dataset.py ./data/REDS
+python tools/data/preprocess_reds_dataset.py ./data/REDS
 ```
 
 It is also recommended to symlink the dataset root to `$MMEditing/data`:
@@ -113,7 +113,7 @@ mmediting
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 ```shell
 # DIV2K
-python tools/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
+python tools/data/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
 # REDS
-python tools/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
+python tools/data/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
