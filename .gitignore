@@ -111,7 +111,8 @@ venv.bak/
 *.pkl.json
 *.log.json
 work_dirs/
-data/
+/data/
+/data
 
 # Pytorch
 *.pth
