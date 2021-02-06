@@ -137,7 +137,7 @@ def get_data_info(args):
     return data_info
 
 
-def generate_json(data_root, source_bg_dir, composite, nproc, mode):
+def generate_json(data_root, source_bg_dir, composite, extendfg, nproc, mode):
     """Generate training json list or test json list.
 
     It should be noted except for `source_bg_dir`, other strings are incomplete
@@ -148,6 +148,7 @@ def generate_json(data_root, source_bg_dir, composite, nproc, mode):
         data_root (str): path to Adobe composition-1k directory.
         source_bg_dir (str): source background directory.
         composite (bool): whether composite fg with bg and write to file.
+        extendfg (bool): whether extend fg.
         nproc (int): number of processers.
         mode (str): training or test mode.
     """
@@ -199,10 +200,12 @@ def generate_json(data_root, source_bg_dir, composite, nproc, mode):
             255. if composite else None)
 
         # extend fg
-        image = load_image(fg_full_path, 'RGB')
-        alpha = load_image(alpha_full_path, 'GRAY')
-        F = estimate_foreground_ml(image, alpha, return_background=False)
-        fg = Image.fromarray(np.uint8(F * 255))
+        if extendfg:
+            image = load_image(fg_full_path, 'RGB')
+            alpha = load_image(alpha_full_path, 'GRAY')
+            F = estimate_foreground_ml(image, alpha, return_background=False)
+            fg = Image.fromarray(np.uint8(F * 255))
+
         repeat_infos.append((alpha, fg, alpha_path, fg_path))
 
         for bg_idx in range(num_bg):
@@ -223,7 +226,6 @@ def generate_json(data_root, source_bg_dir, composite, nproc, mode):
         get_data_info,
         list(zip(name_with_postfix, source_bg_paths, repeat_infos, constants)),
         nproc)
-
     mmcv.dump(data_infos, osp.join(data_root, save_json_path))
 
 
@@ -238,6 +240,10 @@ def parse_args():
         '--composite',
         action='store_true',
         help='whether to composite training foreground and background offline')
+    parser.add_argument(
+        '--extendfg',
+        action='store_true',
+        help='whether to extend training foreground')
     parser.add_argument(
         '--nproc', type=int, default=4, help='number of processer')
     args = parser.parse_args()
@@ -262,9 +268,11 @@ def main():
     else:
         raise FileNotFoundError(
             f'Could not find train2014 or train2017 under {args.coco_root}')
-    generate_json(data_root, train_source_bg_dir, args.composite, args.nproc,
-                  'training')
-    print('train done')
+    import ipdb
+    ipdb.set_trace
+    generate_json(data_root, train_source_bg_dir, args.composite,
+                  args.extendfg, args.nproc, 'training')
+    print('training data done')
 
     fg_dir = 'Test_set/Adobe-licensed images/fg'
     alpha_dir = 'Test_set/Adobe-licensed images/alpha'
@@ -275,7 +283,8 @@ def main():
 
     print('\npreparing test data...')
     test_source_bg_dir = osp.join(args.voc_root, 'VOC2012/JPEGImages')
-    generate_json(data_root, test_source_bg_dir, True, args.nproc, 'test')
+    generate_json(data_root, test_source_bg_dir, True, False, args.nproc,
+                  'test')
 
     print('\nDone!')
 
