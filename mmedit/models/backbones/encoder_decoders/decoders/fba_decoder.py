@@ -116,7 +116,7 @@ class FBADecoder(nn.Module):
 
         # FBA Fusion
 
-        alpha, F, B = fba_fusion(alpha, img, F, B)
+        # alpha, F, B = fba_fusion(alpha, img, F, B)
 
         output = torch.cat((alpha, F, B), 1)
 

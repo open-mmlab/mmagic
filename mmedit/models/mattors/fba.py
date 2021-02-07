@@ -112,7 +112,8 @@ class FBA(BaseMattor):
     def forward_dummy(self, inputs):
         return self._forward(inputs)
 
-    def forward_train(self, merged, trimap, trimap_transformed, alpha, fg, bg):
+    def forward_train(self, merged, trimap, trimap_transformed, alpha, fg, bg,
+                      ori_fg):
         """Forward function for training FBA model.
 
         Args:
@@ -120,8 +121,13 @@ class FBA(BaseMattor):
                 Typically these should be mean centered and std scaled.
             trimap (Tensor): with shape (N, C', H, W). Tensor of trimap. C'
                 might be 1 or 3.
-            meta (list[dict]): Meta data about the current data batch.
+            trimap_transformed (Tensor): with shape (N, 2, H, W).
+                Tensor of trimap.
             alpha (Tensor): with shape (N, 1, H, W). Tensor of alpha.
+            fg (Tensor): with shape (N, 3, H, W). Tensor of fg.
+                Fg extended to the whole image.
+            bg (Tensor): with shape (N, 3, H, W). Tensor of bg.
+            ori_fg (Tensor): with shape (N, 3, H, W). Tensor of ori_fg.
 
         Returns:
             dict: Contains the loss items and batch infomation.
@@ -141,12 +147,12 @@ class FBA(BaseMattor):
             losses['loss_alpha'] = self.loss_alpha(pred_alpha, alpha)
         if self.loss_alpha_compo is not None:
             losses['loss_alpha_compo'] = self.loss_alpha_compo(
-                pred_alpha, fg, bg, merged)
+                pred_alpha, ori_fg, bg, merged)
         if self.loss_alpha_lap is not None:
             losses['loss_alpha_lap'] = self.loss_alpha_lap(alpha, pred_alpha)
 
         if self.loss_fb is not None:
-            losses['loss_fb'] = self.loss_fb(pred_fg, fg) + self.loss_fb(
+            losses['loss_fb'] = self.loss_fb(pred_fg, ori_fg) + self.loss_fb(
                 pred_bg, bg)
         if self.loss_fb_compo is not None:
             losses['loss_fb_compo'] = self.loss_fb_compo(

@@ -39,7 +39,8 @@ train_pipeline = [  # Training data processing pipeline.
     ),  # Load as grayscale image which has shape (height, width).
     dict(
         type='LoadImageFromFile',  # Load image from file.
-        key='fg'
+        key='fg',
+        save_original_img=True
     ),  # Key of image to load. The pipeline will read fg from path `fg_path`.
     dict(
         type='LoadImageFromFile',  # Load image from file.
@@ -48,6 +49,7 @@ train_pipeline = [  # Training data processing pipeline.
     dict(
         type='LoadImageFromFile',  # Load image from file.
         key='merged'),
+    dict(type='ExtendFg'),
     dict(type='CompositeFg', fg_dirs='', alpha_dirs=''),
     dict(
         type='CropAroundUnknown',
@@ -75,12 +77,17 @@ train_pipeline = [  # Training data processing pipeline.
     dict(type='TransformTrimap'),
     dict(
         type='Collect',
-        keys=['merged', 'trimap', 'transformed_trimap', 'alpha', 'fg', 'bg'],
+        keys=[
+            'merged', 'trimap', 'transformed_trimap', 'alpha', 'fg', 'bg',
+            'ori_fg'
+        ],
         meta_keys=['merged_path', 'merged_ori_shape', 'trimap_o']),
     dict(
         type='ImageToTensor',  # Convert images to tensor.
-        keys=['merged', 'trimap', 'transformed_trimap', 'alpha', 'fg',
-              'bg']),  # Images to be converted to Tensor.
+        keys=[
+            'merged', 'trimap', 'transformed_trimap', 'alpha', 'fg', 'bg',
+            'ori_fg'
+        ]),  # Images to be converted to Tensor.
 ]
 test_pipeline = [
     dict(
@@ -164,5 +171,5 @@ dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = './work_dirs/fba'
 load_from = None
-resume_from = '/nfs/Code/mmediting/work_dirs/fba/iter_2000.pth'
+resume_from = '/nfs/Code/mmediting/work_dirs/fba/iter_8000.pth'
 workflow = [('train', 1)]
