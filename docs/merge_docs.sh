@@ -11,11 +11,6 @@ cat ../configs/mattors/*/*.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1
 cat ../configs/restorers/*/*.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Super-Resolution Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >restorers_models.md
 cat ../configs/synthesizers/*/*.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Generation Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >synthesizers_models.md
 
-# sed -i "s/md###t/html#t/g" inpainting_models.md
-# sed -i "s/md###t/html#t/g" mattors_models.md
-# sed -i "s/md###t/html#t/g" restorers_models.md
-# sed -i "s/md###t/html#t/g" synthesizers_models.md
-
 # gather datasets
 cat ../tools/data/generation/*.md > generation_datasets.md
 cat ../tools/data/inpainting/*.md > inpainting_datasets.md
@@ -36,34 +31,3 @@ cat ../tools/data/generation/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" |
 cat ../tools/data/inpainting/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> inpainting_datasets.md
 cat ../tools/data/matting/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> matting_datasets.md
 cat ../tools/data/super-resolution/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> sr_datasets.md
-
-# sed -i "s/#/#&/" inpainting_models.md
-# sed -i "s/#/#&/" mattors_models.md
-# sed -i "s/#/#&/" restorers_models.md
-# sed -i "s/#/#&/" synthesizers_models.md
-
-
-# sed -i '1i\# Inpainting Models' inpainting_models.md
-# sed -i '1i\# Matting Models' mattors_models.md
-# sed -i '1i\# Super-Resolution Models' restorers_models.md
-# sed -i '1i\# Generation Models' synthesizers_models.md
-
-# sed -i 's/](\/docs\//](/g' inpainting_models.md # remove /docs/ for link used in doc site
-# sed -i 's/](\/docs\//](/g' mattors_models.md
-# sed -i 's/](\/docs\//](/g' restorers_models.md
-# sed -i 's/](\/docs\//](/g' synthesizers_models.md
-
-# sed -i 's/](\/docs\//](/g' generation_datasets.md # remove /docs/ for link used in doc site
-# sed -i 's/](\/docs\//](/g' inpainting_datasets.md
-# sed -i 's/](\/docs\//](/g' matting_datasets.md
-# sed -i 's/](\/docs\//](/g' sr_datasets.md
-
-# sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' inpainting_models.md
-# sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' mattors_models.md
-# sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' restorers_models.md
-# sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' synthesizers_models.md
-
-# sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' generation_datasets.md
-# sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' inpainting_datasets.md
-# sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' matting_datasets.md
-# sed -i 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' sr_datasets.md
