@@ -13,7 +13,7 @@
 
 Follow the instructions [here](https://github.com/tkarras/progressive_growing_of_gans#preparing-datasets-for-training) to prepare the dataset.
 
-```
+```text
 mmediting
 ├── mmedit
 ├── tools

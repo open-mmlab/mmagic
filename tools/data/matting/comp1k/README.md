@@ -14,7 +14,7 @@
 }
 ```
 
-The Adobe Composition-1k dataset consits of foreground images and their corresponding alpha images.
+The Adobe Composition-1k dataset consists of foreground images and their corresponding alpha images.
 To get the full dataset, one need to composite the foregrounds with selected backgrounds from the COCO dataset and the Pascal VOC dataset.
 
 ## Obtain and Extract
@@ -46,7 +46,7 @@ python tools/data/preprocess_comp1k_dataset.py data/adobe_composition-1k data/co
 
 The result folder structure should look like:
 
-```
+```text
 mmediting
 ├── mmedit
 ├── tools

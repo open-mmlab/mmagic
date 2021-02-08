@@ -15,7 +15,7 @@
 - Training dataset: [REDS dataset](https://seungjunnah.github.io/Datasets/reds.html).
 - Validation dataset: [REDS dataset](https://seungjunnah.github.io/Datasets/reds.html) and Vid4.
 
-Note that we merge train and val datasets in REDS for easy switching between REDS4 partition (used in EDVR) and the official validation partition. <br>
+Note that we merge train and val datasets in REDS for easy switching between REDS4 partition (used in EDVR) and the official validation partition.
 The original val dataset (clip names from 000 to 029) are modified to avoid conflicts with training dataset (total 240 clips). Specifically, the clip names are changed to 240, 241, ... 269.
 
 You can prepare the REDS dataset by running:
@@ -24,7 +24,7 @@ You can prepare the REDS dataset by running:
 python tools/data/preprocess_reds_dataset.py ./data/REDS
 ```
 
-```
+```text
 mmediting
 ├── mmedit
 ├── tools

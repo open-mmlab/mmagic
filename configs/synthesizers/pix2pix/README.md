@@ -16,7 +16,7 @@
 
 ## Results and Models
 
-We use `FID` and `IS` metrics to 	evaluate the generation performance of pix2pix.
+We use `FID` and `IS` metrics to evaluate the generation performance of pix2pix.
 
 `FID` evaluation:
 
