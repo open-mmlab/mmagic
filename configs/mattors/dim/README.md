@@ -4,7 +4,7 @@
 
 [ALGORITHM]
 
-```latex
+```bibtex
 @inproceedings{xu2017deep,
   title={Deep image matting},
   author={Xu, Ning and Price, Brian and Cohen, Scott and Huang, Thomas},

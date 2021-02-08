@@ -1,27 +1,12 @@
-## Prepare Datasets for Inpainting
+# Inpainting Datasets
 
-It is recommended to symlink the [Places365](https://github.com/CSAILVision/places365) dataset root, the [CelebA-HQ](https://arxiv.org/abs/1710.10196?context=cs.LG) and the [ParisStreedView](https://github.com/pathak22/context-encoder/issues/24) to `$MMEditing/data`:
+It is recommended to symlink the dataset root to `$MMEDITING/data`. If your folder structure is different, you may need to change the corresponding paths in config files.
 
-```
-mmediting
-├── mmedit
-├── tools
-├── configs
-├── data
-│   ├── places
-│   │   ├── test_set
-│   │   ├── train_set
-|   |   ├── meta
-|   |   |    ├── Places365_train.txt
-|   |   |    ├── Places365_val.txt
-│   ├── celeba
-│   │   ├── train
-|   |   ├── val
-│   ├── paris_street_view
-│   │   ├── train
-|   |   ├── val
+MMEditing supported inpainting datasets:
 
-```
+- [Paris Street View](paris-street-view/README.md) \[ [Homepage](https://github.com/pathak22/context-encoder/issues/24) \]
+- [CelebA-HQ](celeba-hq/README.md) \[ [Homepage](https://github.com/tkarras/progressive_growing_of_gans#preparing-datasets-for-training) \]
+- [Places365](places365/README.md) \[ [Homepage](http://places2.csail.mit.edu/) \]
 
 As we only need images for inpainting task, further preparation is not necessary and the folder structure can be different from the example. You can utilize the information provided by the original dataset like `Place365` (e.g. `meta`). Also, you can easily scan the data set and list all of the images to a specific `txt` file. Here is an example for the `Places365_val.txt` from Places365 and we will only use the image name information in inpainting.
 
