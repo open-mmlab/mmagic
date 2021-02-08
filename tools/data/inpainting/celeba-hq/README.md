@@ -2,7 +2,7 @@
 
 [DATASET]
 
-```latex
+```bibtex
 @article{karras2017progressive,
   title={Progressive growing of gans for improved quality, stability, and variation},
   author={Karras, Tero and Aila, Timo and Laine, Samuli and Lehtinen, Jaakko},

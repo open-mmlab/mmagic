@@ -4,7 +4,7 @@
 
 [ALGORITHM]
 
-```latex
+```bibtex
 @article{iizuka2017globally,
   title={Globally and locally consistent image completion},
   author={Iizuka, Satoshi and Simo-Serra, Edgar and Ishikawa, Hiroshi},

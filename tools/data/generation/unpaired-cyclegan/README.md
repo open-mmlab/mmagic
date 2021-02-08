@@ -2,7 +2,7 @@
 
 [DATASET]
 
-```latex
+```bibtex
 @inproceedings{zhu2017unpaired,
   title={Unpaired image-to-image translation using cycle-consistent adversarial networks},
   author={Zhu, Jun-Yan and Park, Taesung and Isola, Phillip and Efros, Alexei A},

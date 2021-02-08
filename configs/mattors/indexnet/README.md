@@ -4,7 +4,7 @@
 
 [ALGORITHM]
 
-```latex
+```bibtex
 @inproceedings{hao2019indexnet,
   title={Indices Matter: Learning to Index for Deep Image Matting},
   author={Lu, Hao and Dai, Yutong and Shen, Chunhua and Xu, Songcen},
