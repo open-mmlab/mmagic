@@ -21,7 +21,7 @@ To get the full dataset, one need to composite the foregrounds with selected bac
 
 Please follow the instructions of [paper authors](https://sites.google.com/view/deepimagematting) to obtain the Composition-1k (comp1k) dataset.
 
-## Compoiste the full dataset
+## Composite the full dataset
 
 The Adobe composition-1k dataset contains only `alpha` and `fg` (and `trimap` in test set).
 It is needed to merge `fg` with COCO data (training) or VOC data (test) before training or evaluation.
