@@ -20,14 +20,6 @@ To get the full dataset, one need to composite the foregrounds with selected bac
 ## Obtain and Extract
 
 Please follow the instructions of [paper authors](https://sites.google.com/view/deepimagematting) to obtain the Composition-1k (comp1k) dataset.
-It is recommended to symlink the Adobe Composition-1k dataset root, the [MS COCO dataset](http://cocodataset.org/#home) and the [PASCAL VOC dataset](http://host.robots.ox.ac.uk/pascal/VOC/) to `$MMEditing/data`:
-
-```
-mkdir data
-ln -s $ADOBE_COMPOSITION_1K_ROOT data/adobe_composition-1k
-ln -s $COCO_ROOT data/coco
-ln -s $VOC_ROOT data/VOCdevkit
-```
 
 ## Compoiste the full dataset
 
@@ -82,5 +74,3 @@ mmediting
 │   ├── VOCdevkit
 │   │   ├── VOC2012
 ```
-
-If your folder structure is different, you may need to change the corresponding paths in config files.

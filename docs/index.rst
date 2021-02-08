@@ -20,12 +20,13 @@ Welcome to MMEditing's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Dataset Preparation
+   :caption: Datasets
 
-   datasets_generation.md
-   datasets_inpainting.md
-   datasets_matting.md
-   datasets_restoration.md
+   datasets.md
+   inpainting_datasets.md
+   matting_datasets.md
+   sr_datasets.md
+   generation_datasets.md
 
 .. toctree::
    :maxdepth: 2
