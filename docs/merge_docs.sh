@@ -30,27 +30,27 @@ sed -i 's=(places365/README.md)=(#places365-dataset)=g' inpainting_datasets.md
 sed -i 's=(comp1k/README.md)=(#composition-1k-dataset)=g' matting_datasets.md
 sed -i 's=(div2k/README.md)=(#div2k-dataset)=g' sr_datasets.md
 sed -i 's=(reds/README.md)=(#reds-dataset)=g' sr_datasets.md
-sed -i 's=(video90k/README.md)=(#video90k-dataset)=g' sr_datasets.md
+sed -i 's=(vimeo90k/README.md)=(#vimeo90k-dataset)=g' sr_datasets.md
 
-cat ../tools/data/generation/*/*.md >> generation_datasets.md
-cat ../tools/data/inpainting/*/*.md >> inpainting_datasets.md
-cat ../tools/data/matting/*/*.md >> matting_datasets.md
-cat ../tools/data/super-resolution/*/*.md >> sr_datasets.md
+cat ../tools/data/generation/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" >> generation_datasets.md
+cat ../tools/data/inpainting/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" >> inpainting_datasets.md
+cat ../tools/data/matting/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" >> matting_datasets.md
+cat ../tools/data/super-resolution/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" >> sr_datasets.md
 
-sed -i 's/# Preparing/# /g' generation_datasets.md
-sed -i 's/# Preparing/# /g' inpainting_datasets.md
-sed -i 's/# Preparing/# /g' matting_datasets.md
-sed -i 's/# Preparing/# /g' sr_datasets.md
+# sed -i 's/# Preparing/# /g' generation_datasets.md
+# sed -i 's/# Preparing/# /g' inpainting_datasets.md
+# sed -i 's/# Preparing/# /g' matting_datasets.md
+# sed -i 's/# Preparing/# /g' sr_datasets.md
 
 sed -i "s/#/#&/" inpainting_models.md
 sed -i "s/#/#&/" mattors_models.md
 sed -i "s/#/#&/" restorers_models.md
 sed -i "s/#/#&/" synthesizers_models.md
 
-sed -i "s/#/#&/" generation_datasets.md
-sed -i "s/#/#&/" inpainting_datasets.md
-sed -i "s/#/#&/" matting_datasets.md
-sed -i "s/#/#&/" sr_datasets.md
+# sed -i "s/#/#&/" generation_datasets.md
+# sed -i "s/#/#&/" inpainting_datasets.md
+# sed -i "s/#/#&/" matting_datasets.md
+# sed -i "s/#/#&/" sr_datasets.md
 
 # sed -i '1i\# Inpainting Models' inpainting_models.md
 # sed -i '1i\# Matting Models' mattors_models.md

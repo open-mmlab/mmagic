@@ -8,4 +8,4 @@ MMEditing supported super-resolution datasets:
     - [DIV2K](div2k/README.md) \[ [Homepage](https://data.vision.ee.ethz.ch/cvl/DIV2K/) \]
 - Video Super-Resolution
     - [REDS](reds/README.md) \[ [Homepage](https://seungjunnah.github.io/Datasets/reds.html) \]
-    - [Vimeo90K](video90k/README.md) \[ [Homepage](http://toflow.csail.mit.edu) \]
+    - [Vimeo90K](vimeo90k/README.md) \[ [Homepage](http://toflow.csail.mit.edu) \]
