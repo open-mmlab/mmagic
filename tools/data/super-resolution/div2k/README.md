@@ -47,7 +47,7 @@ mmediting
 For faster IO, we recommend to crop the DIV2K images to sub-images. We provide such a script:
 
 ```shell
-python tools/data/preprocess_div2k_dataset.py --data-root ./data/DIV2K
+python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
 ```
 
 The generated data is stored under `DIV2K` and the data structure is as follows, where `_sub` indicates the sub-images.
@@ -91,5 +91,5 @@ Example of an annotation file:
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
+python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
 ```
