@@ -53,7 +53,7 @@ class IndexedUpsample(nn.Module):
 
         Args:
             x (Tensor): Input feature map with shape (N, C, H, W).
-            shortcut (Tensor): The shorcut connection with shape
+            shortcut (Tensor): The shortcut connection with shape
                 (N, C, H', W').
             dec_idx_feat (Tensor, optional): The decode index feature map with
                 shape (N, C, H', W'). Defaults to None.
@@ -117,7 +117,7 @@ class IndexNetDecoder(nn.Module):
                 normal_init(m, mean=0, std=std)
 
     def forward(self, inputs):
-        """Forward fucntion.
+        """Forward function.
 
         Args:
             inputs (dict): Output dict of IndexNetEncoder.

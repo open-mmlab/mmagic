@@ -35,7 +35,7 @@ def evaluate_one(args):
 def evaluate(pred_root, gt_root, trimap_root, verbose, nproc):
     """Evaluate test results of Adobe composition-1k dataset.
 
-    There are 50 different ground truth foregrounds and alpha mattes paire,
+    There are 50 different ground truth foregrounds and alpha mattes pairs,
     each of the foreground will be composited with 20 different backgrounds,
     producing 1000 images for testing. In some repo, the ground truth alpha
     matte will be copied 20 times and named the same as the images. This

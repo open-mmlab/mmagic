@@ -10,12 +10,12 @@ from mmedit.models.registry import COMPONENTS
 class PConvDecoder(nn.Module):
     """Decoder with partial conv.
 
-    About the details for this archetecture, pls see:
+    About the details for this architecture, pls see:
     Image Inpainting for Irregular Holes Using Partial Convolutions
 
     Args:
         num_layers (int): The number of convolutional layers. Default: 7.
-        interpolation (str): The upsamle mode. Default: 'nearest'.
+        interpolation (str): The upsample mode. Default: 'nearest'.
         conv_cfg (dict): Config for convolution module. Default:
             {'type': 'PConv', 'multi_channel': True}.
         norm_cfg (dict): Config for norm layer. Default:

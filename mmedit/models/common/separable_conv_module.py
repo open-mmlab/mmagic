@@ -89,7 +89,7 @@ class DepthwiseSeparableConvModule(nn.Module):
             x (Tensor): Input tensor with shape (N, C, H, W).
 
         Returns:
-            Tensor: Outpur tensor.
+            Tensor: Output tensor.
         """
         x = self.depthwise_conv(x)
         x = self.pointwise_conv(x)

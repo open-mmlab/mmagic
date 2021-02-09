@@ -9,7 +9,7 @@ from mmedit.models.registry import COMPONENTS
 class PConvEncoder(nn.Module):
     """Encoder with partial conv.
 
-    About the details for this archetecture, pls see:
+    About the details for this architecture, pls see:
     Image Inpainting for Irregular Holes Using Partial Convolutions
 
     Args:
