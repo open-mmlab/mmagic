@@ -19,7 +19,7 @@ class PerceptualVGG(nn.Module):
             forward function will return the corresponding features. This
             list contains the name each layer in `vgg.feature`. An example
             of this list is ['4', '10'].
-        vgg_tyep (str): Set the type of vgg network. Default: 'vgg19'.
+        vgg_type (str): Set the type of vgg network. Default: 'vgg19'.
         use_input_norm (bool): If True, normalize the input image.
             Importantly, the input feature must in the range [0, 1].
             Default: True.
@@ -58,7 +58,7 @@ class PerceptualVGG(nn.Module):
                 torch.Tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1))
 
         for v in self.vgg_layers.parameters():
-            v.requies_grad = False
+            v.requires_grad = False
 
     def forward(self, x):
         """Forward function.
@@ -105,14 +105,14 @@ class PerceptualLoss(nn.Module):
         use_input_norm (bool):  If True, normalize the input image in vgg.
             Default: True.
         perceptual_weight (float): If `perceptual_weight > 0`, the perceptual
-            loss will be calculated and the loss will multiplified by the
+            loss will be calculated and the loss will multiplied by the
             weight. Default: 1.0.
-        style_weight (flaot): If `style_weight > 0`, the style loss will be
-            calculated and the loss will multiplified by the weight.
+        style_weight (float): If `style_weight > 0`, the style loss will be
+            calculated and the loss will multiplied by the weight.
             Default: 1.0.
         norm_img (bool): If True, the image will be normed to [0, 1]. Note that
             this is different from the `use_input_norm` which norm the input in
-            in forward fucntion of vgg according to the statistics of dataset.
+            in forward function of vgg according to the statistics of dataset.
             Importantly, the input image must be in range [-1, 1].
         pretrained (str): Path for pretrained weights. Default:
             'torchvision://vgg19'
@@ -163,7 +163,7 @@ class PerceptualLoss(nn.Module):
         x_features = self.vgg(x)
         gt_features = self.vgg(gt.detach())
 
-        # calculate preceptual loss
+        # calculate perceptual loss
         if self.perceptual_weight > 0:
             percep_loss = 0
             for k in x_features.keys():

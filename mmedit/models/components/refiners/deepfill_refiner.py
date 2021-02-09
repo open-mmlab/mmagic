@@ -62,7 +62,7 @@ class DeepFillRefiner(nn.Module):
         # contextual attention branch
         attention_x = self.encoder_attention(x)['out']
         h_x, w_x = attention_x.shape[-2:]
-        # resale mask to a samller size
+        # resale mask to a smaller size
         resized_mask = F.interpolate(mask, size=(h_x, w_x))
         attention_x, offset = self.contextual_attention_neck(
             attention_x, resized_mask)

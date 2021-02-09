@@ -114,7 +114,7 @@ class ASPP(nn.Module):
             x (Tensor): Input tensor with shape (N, C, H, W).
 
         Returns:
-            Tensor: Outpur tensor.
+            Tensor: Output tensor.
         """
         res = []
         for conv in self.convs:
