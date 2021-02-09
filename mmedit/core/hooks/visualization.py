@@ -24,7 +24,7 @@ class VisualizationHook(Hook):
         filename_tmpl (str): Format string used to save images. The output file
             name will be formatted as this args. Default: 'iter_{}.png'.
         rerange (bool): Whether to rerange the output value from [-1, 1] to
-            [0, 1]. We highly recommand users should preprocess the
+            [0, 1]. We highly recommend users should preprocess the
             visualization results on their own. Here, we just provide a simple
             interface. Default: True.
         bgr2rgb (bool): Whether to reformat the channel dimension from BGR to
