@@ -202,8 +202,8 @@ def generate_json(data_root, source_bg_dir, composite, extendfg, nproc, mode):
         # extend fg
         if extendfg:
             image = load_image(fg_full_path, 'RGB')
-            alpha = load_image(alpha_full_path, 'GRAY')
-            F = estimate_foreground_ml(image, alpha, return_background=False)
+            a = load_image(alpha_full_path, 'GRAY')
+            F = estimate_foreground_ml(image, a, return_background=False)
             fg = Image.fromarray(np.uint8(F * 255))
 
         repeat_infos.append((alpha, fg, alpha_path, fg_path))
@@ -268,8 +268,6 @@ def main():
     else:
         raise FileNotFoundError(
             f'Could not find train2014 or train2017 under {args.coco_root}')
-    import ipdb
-    ipdb.set_trace
     generate_json(data_root, train_source_bg_dir, args.composite,
                   args.extendfg, args.nproc, 'training')
     print('training data done')
