@@ -4,21 +4,6 @@ from mmcv.cnn import ConvWS2d
 
 from mmedit.models.registry import COMPONENTS
 
-
-def fba_fusion(alpha, img, F, B):
-    F = ((alpha * img + (1 - alpha**2) * F - alpha * (1 - alpha) * B))
-    B = ((1 - alpha) * img + (2 * alpha - alpha**2) * B - alpha *
-         (1 - alpha) * F)
-
-    F = torch.clamp(F, 0, 1)
-    B = torch.clamp(B, 0, 1)
-    la = 0.1
-    alpha = (alpha * la + torch.sum((img - B) * (F - B), 1, keepdim=True)) / (
-        torch.sum((F - B) * (F - B), 1, keepdim=True) + la)
-    alpha = torch.clamp(alpha, 0, 1)
-    return alpha, F, B
-
-
 @COMPONENTS.register_module()
 class FBADecoder(nn.Module):
 
@@ -114,13 +99,7 @@ class FBADecoder(nn.Module):
         F = torch.sigmoid(output[:, 1:4])
         B = torch.sigmoid(output[:, 4:7])
 
-        # FBA Fusion
-
-        # alpha, F, B = fba_fusion(alpha, img, F, B)
-
-        output = torch.cat((alpha, F, B), 1)
-
-        return output
+        return alpha, F, B
 
 
 def norm(dim, bn=False):
