@@ -217,17 +217,17 @@ class FBA(BaseMattor):
         pred_f[mask == 1] = np2torch(meta[0]['ori_merged'])[0][mask == 1]
         pred_b[mask == 0] = np2torch(meta[0]['ori_merged'])[0][mask == 0]
         pred_a = pred_a.detach().cpu().numpy().squeeze()
-        pred_b = pred_b.detach().cpu().numpy().squeeze()
-        pred_f = pred_f.detach().cpu().numpy().squeeze()
-        # pred_a = self.restore_shape(pred_a, meta)
+        # pred_b = pred_b.detach().cpu().numpy().squeeze()
+        # pred_f = pred_f.detach().cpu().numpy().squeeze()
         eval_result = self.evaluate(pred_a, meta)
-        save_a = os.path.join(save_path, 'alpha')
-        save_b = os.path.join(save_path, 'bg')
-        save_f = os.path.join(save_path, 'fg')
 
         if save_image:
+            save_a = os.path.join(save_path, 'alpha')
+            # save_b = os.path.join(save_path, 'bg')
+            # save_f = os.path.join(save_path, 'fg')
+
             self.save_image(pred_a, meta, save_a, iteration)
-            self.save_image(pred_f, meta, save_f, iteration)
-            self.save_image(pred_b, meta, save_b, iteration)
+            # self.save_image(pred_f, meta, save_f, iteration)
+            # self.save_image(pred_b, meta, save_b, iteration)
 
         return {'pred_alpha': pred_a, 'eval_result': eval_result}
