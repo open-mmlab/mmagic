@@ -234,9 +234,9 @@ def parse_args():
     parser.add_argument(
         '--nproc', type=int, default=4, help='number of processer')
     parser.add_argument(
-        '--notrainset',
+        '--skip_train',
         action='store_true',
-        help='whether to process the training data')
+        help='whether to skip the training data')
     args = parser.parse_args()
     return args
 
@@ -251,7 +251,7 @@ def main():
         raise FileNotFoundError(f'{args.voc_root} does not exist!')
     data_root = args.data_root
 
-    if not args.notrainset:
+    if not args.skip_train:
         print('preparing training data...')
         if osp.exists(osp.join(args.coco_root, 'train2017')):
             train_source_bg_dir = osp.join(args.coco_root, 'train2017')
