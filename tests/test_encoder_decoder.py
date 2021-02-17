@@ -21,7 +21,6 @@ def test_encoder_decoder():
     # check DIM with only alpha loss
     encoder = dict(type='VGG16', in_channels=4)
     decoder = dict(type='PlainDecoder')
-
     model = SimpleEncoderDecoder(encoder, decoder)
     model.init_weights()
     model.train()

@@ -65,7 +65,8 @@ class FBADecoder(nn.Module):
     def init_weights(self, pretrained=None):
         pass
 
-    def forward(self, conv_out, img, two_chan_trimap, indices):
+    def forward(self, in_tuple):
+        conv_out, img, two_chan_trimap, indices = in_tuple
         conv5 = conv_out[-1]
 
         input_size = conv5.size()

@@ -17,7 +17,7 @@ class SimpleEncoderDecoder(nn.Module):
         super().__init__()
 
         self.encoder = build_component(encoder)
-        if 'in_channels' in decoder:
+        if hasattr(self.encoder, 'out_channels'):
             decoder['in_channels'] = self.encoder.out_channels
         self.decoder = build_component(decoder)
 
@@ -32,5 +32,5 @@ class SimpleEncoderDecoder(nn.Module):
             Tensor: The output tensor of the decoder.
         """
         out = self.encoder(*args, **kwargs)
-        out = self.decoder(out[0], out[1], out[2], out[3])
+        out = self.decoder(out)
         return out
