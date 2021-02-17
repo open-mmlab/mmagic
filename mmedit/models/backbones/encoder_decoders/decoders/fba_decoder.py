@@ -4,6 +4,7 @@ from mmcv.cnn import ConvWS2d
 
 from mmedit.models.registry import COMPONENTS
 
+
 @COMPONENTS.register_module()
 class FBADecoder(nn.Module):
 

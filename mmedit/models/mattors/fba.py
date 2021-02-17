@@ -34,6 +34,7 @@ def groupnorm_normalise_image(img, format='nhwc'):
 
     return img
 
+
 def fba_fusion(alpha, img, F, B):
     F = ((alpha * img + (1 - alpha**2) * F - alpha * (1 - alpha) * B))
     B = ((1 - alpha) * img + (2 * alpha - alpha**2) * B - alpha *
@@ -46,7 +47,6 @@ def fba_fusion(alpha, img, F, B):
         torch.sum((F - B) * (F - B), 1, keepdim=True) + la)
     alpha = torch.clamp(alpha, 0, 1)
     return alpha, F, B
-
 
 
 @MODELS.register_module()
@@ -214,7 +214,8 @@ class FBA(BaseMattor):
 
         pred_alpha, pred_fg, pred_bg = self._forward(input_tuple)
         # FBA Fusion
-        pred_alpha, pred_fg, pred_bg = fba_fusion(pred_alpha,merged, pred_fg, pred_bg)
+        pred_alpha, pred_fg, pred_bg = fba_fusion(pred_alpha, merged, pred_fg,
+                                                  pred_bg)
         pred_fba = torch.cat((pred_alpha, pred_fg, pred_bg), 1)[0]
         ori_h, ori_w = meta[0]['merged_ori_shape'][:2]
         pred_fba = cv2.resize(pred_fba.cpu().numpy().transpose((1, 2, 0)),

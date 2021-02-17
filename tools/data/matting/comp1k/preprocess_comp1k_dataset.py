@@ -9,6 +9,7 @@ import numpy as np
 from PIL import Image
 from pymatting import estimate_foreground_ml, load_image
 
+
 def fix_png_files(directory):
     """Fix png files in the target directory using pngfix.
 
@@ -200,7 +201,7 @@ def generate_json(data_root, source_bg_dir, composite, nproc, mode):
         image = load_image(fg_full_path, 'RGB')
         alpha = load_image(alpha_full_path, 'GRAY')
         F = estimate_foreground_ml(image, alpha, return_background=False)
-        fg = Image.fromarray(np.uint8(F*255))
+        fg = Image.fromarray(np.uint8(F * 255))
         repeat_infos.append((alpha, fg, alpha_path, fg_path))
 
         for bg_idx in range(num_bg):

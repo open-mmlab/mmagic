@@ -7,7 +7,6 @@ To visualize cProfile output program.prof, use Snakeviz and run:
 $ snakeviz program.prof
 """
 import argparse
-import os
 
 import mmcv
 from mmcv import Config
@@ -27,14 +26,15 @@ def main():
     logger.info(f'Config: {cfg.text}')
 
     dataset = build_dataset(cfg.data.train)
-    data_loaders = [build_dataloader(
-                ds,
-                cfg.data.samples_per_gpu,
-                cfg.data.workers_per_gpu,
-                dist=False,
-                drop_last=cfg.data.get('drop_last', False),
-                seed=0) for ds in dataset
-        ]
+    data_loaders = [
+        build_dataloader(
+            ds,
+            cfg.data.samples_per_gpu,
+            cfg.data.workers_per_gpu,
+            dist=False,
+            drop_last=cfg.data.get('drop_last', False),
+            seed=0) for ds in dataset
+    ]
     # Start progress bar after first 5 batches
     prog_bar = mmcv.ProgressBar(
         len(dataset) - 5 * cfg.data.samples_per_gpu, start=False)
