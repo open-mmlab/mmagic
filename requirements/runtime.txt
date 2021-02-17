@@ -1,5 +1,6 @@
 lmdb
 mmcv-full>=1.2.0
+pymatting
 scikit-image
 tensorboard
 yapf
