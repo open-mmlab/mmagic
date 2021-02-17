@@ -2,13 +2,45 @@ import argparse
 import os
 import os.path as osp
 import re
+import subprocess
 from multiprocessing import Pool
 
 import numpy as np
 from PIL import Image
-from preprocess_comp1k_dataset import join_first_contain
 from pymatting import estimate_foreground_ml, load_image
 from tqdm import tqdm
+
+
+def fix_png_file(filename, folder):
+    """Fix png files in the target filename using pngfix.
+
+    pngfix is a tool to fix PNG files. It's installed on Linux or MacOS by
+    default.
+
+    Args:
+        filename (str): png file to run pngfix.
+    """
+    subprocess.call(
+        f'pngfix --quiet --strip=color --prefix=fixed_ "{filename}"',
+        cwd=f'{folder}',
+        shell=True)
+    subprocess.call(
+        f'mv "fixed_{filename}" "{filename}"', cwd=f'{folder}', shell=True)
+
+
+def join_first_contain(directories, filename, data_root):
+    """Join the first directory that contains the file.
+
+    Args:
+        directories (list[str]): Directories to search for the file.
+        filename (str): The target filename.
+        data_root (str): Root of the data path.
+    """
+    for directory in directories:
+        cur_path = osp.join(directory, filename)
+        if osp.exists(osp.join(data_root, cur_path)):
+            return cur_path
+    raise FileNotFoundError(f'Cannot find {filename} in dirs {directories}')
 
 
 class ExtendFg:
@@ -23,19 +55,21 @@ class ExtendFg:
         alpha_path = join_first_contain(self.alpha_dirs, fg_name,
                                         self.data_root)
         fg_path = join_first_contain(self.fg_dirs, fg_name, self.data_root)
-        alpha_full_path = osp.join(self.data_root, alpha_path)
-        fg_full_path = osp.join(self.data_root, fg_path)
-        extended_path = re.sub('/fg/', '/fg_extended/', fg_full_path)
+        alpha_path = osp.join(self.data_root, alpha_path)
+        fg_path = osp.join(self.data_root, fg_path)
+        extended_path = re.sub('/fg/', '/fg_extended/', fg_path)
         extended_path = extended_path.replace('jpg', 'png')
-        if not osp.exists(alpha_full_path):
-            raise FileNotFoundError(f'{alpha_full_path} does not exist!')
-        if not osp.exists(fg_full_path):
-            raise FileNotFoundError(f'{fg_full_path} does not exist!')
-        image = load_image(fg_full_path, 'RGB')
-        alpha = load_image(alpha_full_path, 'GRAY')
+        if not osp.exists(alpha_path):
+            raise FileNotFoundError(f'{alpha_path} does not exist!')
+        if not osp.exists(fg_path):
+            raise FileNotFoundError(f'{fg_path} does not exist!')
+
+        image = load_image(fg_path, 'RGB')
+        alpha = load_image(alpha_path, 'GRAY')
         F = estimate_foreground_ml(image, alpha, return_background=False)
         fg = Image.fromarray(np.uint8(F * 255))
         fg.save(extended_path)
+        fix_png_file(osp.basename(extended_path), osp.dirname(extended_path))
 
 
 def parse_args():
