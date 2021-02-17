@@ -28,8 +28,12 @@ def init_model(config, checkpoint=None, device='cuda:0'):
     config.model.pretrained = None
     config.test_cfg.metrics = None
     model = build_model(config.model, test_cfg=config.test_cfg)
+    revise_keys = config.revise_keys if 'revise_keys' in config else [
+        (r'^module.', '')
+    ]
     if checkpoint is not None:
-        checkpoint = load_checkpoint(model, checkpoint)
+        checkpoint = load_checkpoint(
+            model, checkpoint, revise_keys=revise_keys)
 
     model.cfg = config  # save the config in the model for convenience
     model.to(device)
