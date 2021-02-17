@@ -40,11 +40,18 @@ If you only want to composite test data (since compositing training data is time
 python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit
 ```
 
-> Currently, only `GCA` supports online composition of training data. But you can modify the data pipeline of other models to perform online composition instead of loading composited images (we called it `merged` in our data pipeline).
+If you only want to preprocess test data (especially for FBA), you can skip the train set by adding the `--notrainset` option:
+
+```shell
+# skip preprocessing training set
+python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --notrainset
+```
+
+> Currently, `GCA` and `FBA` support online composition of training data. But you can modify the data pipeline of other models to perform online composition instead of loading composited images (we called it `merged` in our data pipeline).
 
 ## Check Directory Structure
 
-The result folder structure should look like:
+The result folder structure for DIM should look like:
 
 ```text
 mmediting
@@ -73,4 +80,14 @@ mmediting
 │   │   ├── train2014   (or train2017)
 │   ├── VOCdevkit
 │   │   ├── VOC2012
+```
+## Dataset-specific Notes
+### FBA
+
+For FBA, we adopt dynamic dataset augmentation tricks proposed in [Learning-base Sampling for Natural Image Matting](https://openaccess.thecvf.com/content_CVPR_2019/papers/Tang_Learning-Based_Sampling_for_Natural_Image_Matting_CVPR_2019_paper.pdf) for train set.
+
+You can extend the foreground as follows:
+
+```shell
+python tools/data/matting/comp1k/extend_fg.py data/adobe_composition-1k data/coco
 ```
