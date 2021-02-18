@@ -491,3 +491,29 @@ class LoadPairedImageFromFile(LoadImageFromFile):
             results['ori_img_b'] = img_b.copy()
 
         return results
+
+
+@PIPELINES.register_module()
+class RenameKeys(object):
+    """Rename keys.
+
+    Args:
+        key_pairs (list). List of tuple (original,new).
+    """
+
+    def __init__(self, key_pairs):
+        self.key_pairs = key_pairs
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        for ori, sub in self.key_pairs:
+            results[sub] = results.pop(ori)
+        return results
