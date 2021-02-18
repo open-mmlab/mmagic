@@ -35,7 +35,9 @@ class MergeFgAndBg:
         Returns:
             dict: A dict containing the processed data and information.
         """
-        alpha = results['alpha'][..., None].astype(np.float32) / 255.
+        if len(results['alpha'].shape) == 2:
+            alpha = results['alpha'][..., None].astype(np.float32) / 255.
+        alpha = results['alpha'].astype(np.float32) / 255.
         fg = results['fg']
         bg = results['bg']
         merged = fg * alpha + (1. - alpha) * bg
