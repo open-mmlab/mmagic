@@ -28,39 +28,45 @@ num_groups = 32
 # dataset settings
 dataset_type = 'AdobeComp1kDataset'
 data_root = './data/adobe_composition-1k/'
-bg_dir = './data/coco/'
-
+bg_dir = './data/coco/train2014'
+fg_dirs = [
+    data_root + 'Training_set/Adobe-licensed images/fg_extended',
+    data_root + 'Training_set/Other/fg_extended'
+]
+alpha_dirs = [
+    data_root + 'Training_set/Adobe-licensed images/alpha',
+    data_root + 'Training_set/Other/alpha'
+]
 img_norm_cfg = dict(
     mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
 train_pipeline = [
     dict(type='LoadImageFromFile', key='alpha', flag='grayscale'),
     dict(type='LoadImageFromFile', key='fg_extended', save_original_img=True),
-    dict(type='LoadImageFromFile', key='bg'),
-    dict(type='LoadImageFromFile', key='merged'),
+    dict(
+        type='RenameKeys',
+        key_pairs=[('fg_extended', 'fg'), ('ori_fg_extended', 'ori_fg'),
+                   ('fg_extended_path', 'fg_path'),
+                   ('fg_extended_ori_shape', 'fg_ori_shape')]),
+    dict(type='RandomLoadResizeBg', bg_dir=bg_dir),
     dict(type='RandomJitter'),
-    # dict(type='CompositeFg', fg_dirs='', alpha_dirs=''),
+    dict(type='CompositeFg', fg_dirs=fg_dirs, alpha_dirs=alpha_dirs),
     dict(
         type='CropAroundUnknown',
-        keys=['alpha', 'merged', 'fg', 'bg'],
+        keys=['alpha', 'fg', 'bg', 'ori_fg'],
         crop_sizes=[320, 480, 640]),
     dict(type='Flip', keys=[
         'alpha',
-        'merged',
         'fg',
         'bg',
     ]),
     dict(
         type='Resize',
-        keys=[
-            'alpha',
-            'merged',
-            'fg',
-            'bg',
-        ],
+        keys=['alpha', 'fg', 'bg', 'ori_fg'],
         scale=(320, 320),
         keep_ratio=False),
     dict(type='PerturbBg'),
     dict(type='GenerateTrimap', kernel_size=(1, 30)),
+    dict(type='MergeFgAndBg'),
     dict(type='RescaleToZeroOne', keys=[
         'merged',
         'alpha',
@@ -73,24 +79,16 @@ train_pipeline = [
     dict(
         type='Collect',
         keys=[
-            'merged',
-            'trimap',
-            'transformed_trimap',
-            'alpha',
-            'fg',
-            'bg',
+            'merged', 'trimap', 'transformed_trimap', 'alpha', 'fg', 'bg',
+            'ori_fg'
         ],
-        meta_keys=['merged_path', 'merged_ori_shape', 'trimap_o']),
+        meta_keys=['trimap_o']),
     dict(
-        type='ImageToTensor',  # Convert images to tensor.
+        type='ImageToTensor',
         keys=[
-            'merged',
-            'trimap',
-            'transformed_trimap',
-            'alpha',
-            'fg',
-            'bg',
-        ]),  # Images to be converted to Tensor.
+            'merged', 'trimap', 'transformed_trimap', 'alpha', 'fg', 'bg',
+            'ori_fg'
+        ]),
 ]
 test_pipeline = [
     dict(
@@ -104,7 +102,7 @@ test_pipeline = [
         flag='grayscale',
         save_original_img=True),
     dict(
-        type='LoadImageFromFile',  # Load image from file.
+        type='LoadImageFromFile',
         key='merged',
         channel_order='rgb',
         save_original_img=True),
