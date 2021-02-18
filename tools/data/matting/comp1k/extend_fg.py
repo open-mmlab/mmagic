@@ -3,12 +3,11 @@ import os
 import os.path as osp
 import re
 import subprocess
-from multiprocessing import Pool
 
+import mmcv
 import numpy as np
 from PIL import Image
 from pymatting import estimate_foreground_ml, load_image
-from tqdm import tqdm
 
 
 def fix_png_file(filename, folder):
@@ -70,6 +69,10 @@ class ExtendFg:
         fg = Image.fromarray(np.uint8(F * 255))
         fg.save(extended_path)
         fix_png_file(osp.basename(extended_path), osp.dirname(extended_path))
+        data_info = dict()
+        data_info['alpha_path'] = alpha_path
+        data_info['fg_extended_path'] = extended_path
+        return data_info
 
 
 def parse_args():
@@ -112,16 +115,14 @@ def main():
         os.makedirs(p, exist_ok=True)
 
     fg_names = osp.join(dir_prefix, f'{fname_prefix}_fg_names.txt')
+    save_json_path = f'{fname_prefix}_list_fba.json'
     fg_names = open(osp.join(data_root, fg_names)).readlines()
     fg_iter = iter(fg_names)
-    num = len(fg_names)
 
     extend_fg = ExtendFg(data_root, fg_dirs, alpha_dirs)
-    with Pool(processes=args.nproc) as p:
-        with tqdm(total=num) as pbar:
-            for i, _ in tqdm(
-                    enumerate(p.imap_unordered(extend_fg.extend, fg_iter))):
-                pbar.update()
+    data_infos = mmcv.track_parallel_progress(extend_fg.extend, list(fg_iter),
+                                              args.nproc)
+    mmcv.dump(data_infos, osp.join(data_root, save_json_path))
 
     print('train done')
 
