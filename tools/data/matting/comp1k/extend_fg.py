@@ -3,7 +3,6 @@ import os
 import os.path as osp
 import re
 import subprocess
-from multiprocessing import Pool
 
 import mmcv
 import numpy as np
