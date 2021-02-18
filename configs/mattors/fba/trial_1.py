@@ -32,65 +32,64 @@ bg_dir = './data/coco/'
 
 img_norm_cfg = dict(
     mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
-train_pipeline = [  # Training data processing pipeline.
-    dict(
-        type='LoadImageFromFile',  # Load alpha matte from file.
-        key='alpha',
-        flag='grayscale'
-    ),  # Load as grayscale image which has shape (height, width).
-    dict(
-        type='LoadImageFromFile',  # Load image from file.
-        key='fg',
-        save_original_img=True
-    ),  # Key of image to load. The pipeline will read fg from path `fg_path`.
-    dict(
-        type='LoadImageFromFile',  # Load image from file.
-        key='bg'
-    ),  # Key of image to load. The pipeline will read bg from path `bg_path`.
-    dict(
-        type='LoadImageFromFile',  # Load image from file.
-        key='merged'),
-    dict(type='ExtendFg'),
+train_pipeline = [
+    dict(type='LoadImageFromFile', key='alpha', flag='grayscale'),
+    dict(type='LoadImageFromFile', key='fg_extended', save_original_img=True),
+    dict(type='LoadImageFromFile', key='bg'),
+    dict(type='LoadImageFromFile', key='merged'),
     dict(type='RandomJitter'),
-    dict(type='CompositeFg', fg_dirs='', alpha_dirs=''),
+    # dict(type='CompositeFg', fg_dirs='', alpha_dirs=''),
     dict(
         type='CropAroundUnknown',
-        keys=['alpha', 'merged', 'fg', 'bg', 'ori_fg'],  # Images to crop.
-        crop_sizes=[320, 480, 640]),  # Candidate crop size.
+        keys=['alpha', 'merged', 'fg', 'bg'],
+        crop_sizes=[320, 480, 640]),
+    dict(type='Flip', keys=[
+        'alpha',
+        'merged',
+        'fg',
+        'bg',
+    ]),
     dict(
-        type='Flip',  # Augmentation pipeline that flips the images.
-        keys=['alpha', 'merged', 'fg', 'bg',
-              'ori_fg']),  # Images to be flipped.
-    dict(
-        type='Resize',  # Augmentation pipeline that resizes the images.
-        keys=['alpha', 'merged', 'fg', 'bg',
-              'ori_fg'],  # Images to be resized.
-        scale=(320, 320),  # Target size.
-        keep_ratio=False
-    ),  # Whether to keep the ratio between height and width.
+        type='Resize',
+        keys=[
+            'alpha',
+            'merged',
+            'fg',
+            'bg',
+        ],
+        scale=(320, 320),
+        keep_ratio=False),
     dict(type='PerturbBg'),
-    dict(
-        type='GenerateTrimap',  # Generate trimap from alpha matte.
-        kernel_size=(1, 30)),  # Kernel size range of the erode/dilate kernel.
-    dict(
-        type='RescaleToZeroOne',  # Rescale images from [0, 255] to [0, 1].
-        keys=['merged', 'alpha', 'fg', 'bg',
-              'ori_fg']),  # Images to be rescaled.
+    dict(type='GenerateTrimap', kernel_size=(1, 30)),
+    dict(type='RescaleToZeroOne', keys=[
+        'merged',
+        'alpha',
+        'fg',
+        'bg',
+    ]),
     dict(type='Normalize', keys=['merged'], **img_norm_cfg),
     dict(type='CutEdge', mode='Train', keys=['merged', 'trimap']),
     dict(type='TransformTrimap'),
     dict(
         type='Collect',
         keys=[
-            'merged', 'trimap', 'transformed_trimap', 'alpha', 'fg', 'bg',
-            'ori_fg'
+            'merged',
+            'trimap',
+            'transformed_trimap',
+            'alpha',
+            'fg',
+            'bg',
         ],
         meta_keys=['merged_path', 'merged_ori_shape', 'trimap_o']),
     dict(
         type='ImageToTensor',  # Convert images to tensor.
         keys=[
-            'merged', 'trimap', 'transformed_trimap', 'alpha', 'fg', 'bg',
-            'ori_fg'
+            'merged',
+            'trimap',
+            'transformed_trimap',
+            'alpha',
+            'fg',
+            'bg',
         ]),  # Images to be converted to Tensor.
 ]
 test_pipeline = [
