@@ -233,6 +233,10 @@ def parse_args():
         help='whether to composite training foreground and background offline')
     parser.add_argument(
         '--nproc', type=int, default=4, help='number of processer')
+    parser.add_argument(
+        '--skip_train',
+        action='store_true',
+        help='whether to skip the training data')
     args = parser.parse_args()
     return args
 
@@ -247,17 +251,19 @@ def main():
         raise FileNotFoundError(f'{args.voc_root} does not exist!')
     data_root = args.data_root
 
-    print('preparing training data...')
-    if osp.exists(osp.join(args.coco_root, 'train2017')):
-        train_source_bg_dir = osp.join(args.coco_root, 'train2017')
-    elif osp.exists(osp.join(args.coco_root, 'train2014')):
-        train_source_bg_dir = osp.join(args.coco_root, 'train2014')
-    else:
-        raise FileNotFoundError(
-            f'Could not find train2014 or train2017 under {args.coco_root}')
-    generate_json(data_root, train_source_bg_dir, args.composite, args.nproc,
-                  'training')
-    print('train done')
+    if not args.skip_train:
+        print('preparing training data...')
+        if osp.exists(osp.join(args.coco_root, 'train2017')):
+            train_source_bg_dir = osp.join(args.coco_root, 'train2017')
+        elif osp.exists(osp.join(args.coco_root, 'train2014')):
+            train_source_bg_dir = osp.join(args.coco_root, 'train2014')
+        else:
+            raise FileNotFoundError(
+                f'Could not find train2014 or train2017 under {args.coco_root}'
+            )
+        generate_json(data_root, train_source_bg_dir, args.composite,
+                      args.nproc, 'training')
+        print('train done')
 
     fg_dir = 'Test_set/Adobe-licensed images/fg'
     alpha_dir = 'Test_set/Adobe-licensed images/alpha'
