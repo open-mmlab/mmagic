@@ -115,7 +115,7 @@ def main():
         os.makedirs(p, exist_ok=True)
 
     fg_names = osp.join(dir_prefix, f'{fname_prefix}_fg_names.txt')
-    save_json_path = f'{fname_prefix}_list.json'
+    save_json_path = f'{fname_prefix}_list_fba.json'
     fg_names = open(osp.join(data_root, fg_names)).readlines()
     fg_iter = iter(fg_names)
 
