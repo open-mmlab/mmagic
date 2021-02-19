@@ -71,7 +71,7 @@ class ExtendFg:
         fix_png_file(osp.basename(extended_path), osp.dirname(extended_path))
         data_info = dict()
         data_info['alpha_path'] = alpha_path
-        data_info['fg_extended_path'] = extended_path
+        data_info['fg_path'] = extended_path
         return data_info
 
 

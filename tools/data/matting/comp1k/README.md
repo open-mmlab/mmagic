@@ -83,16 +83,18 @@ mmediting
 ```
 ## Prepare the dataset for FBA
 
-For FBA, adopt dynamic dataset augmentation tricks proposed in [Learning-base Sampling for Natural Image Matting](https://openaccess.thecvf.com/content_CVPR_2019/papers/Tang_Learning-Based_Sampling_for_Natural_Image_Matting_CVPR_2019_paper.pdf) for train set.
+FBA adopts dynamic dataset augmentation proposed in [Learning-base Sampling for Natural Image Matting](https://openaccess.thecvf.com/content_CVPR_2019/papers/Tang_Learning-Based_Sampling_for_Natural_Image_Matting_CVPR_2019_paper.pdf).
+In addition, to reduce artifacts during augmentation, it uses the extened version of foreground as foreground.
+We provide scripts to estimate foregrounds.
 
 Prepare the test set as follows:
 
 ```shell
-# skip preprocessing training set
+# skip preprocessing training set, as it composites online during training
 python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --skip_train
 ```
 
-Extend the foreground as follows:
+Extend the foreground of training set as follows:
 
 ```shell
 python tools/data/matting/comp1k/extend_fg.py data/adobe_composition-1k data/coco
