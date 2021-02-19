@@ -156,7 +156,7 @@ lr_config = dict(policy='Step', step=[40], gamma=0.0025, by_epoch=True)
 # checkpoint saving
 checkpoint_config = dict(interval=2000, by_epoch=False)
 evaluation = dict(interval=2000, save_image=True)
-# yapf:disable
+
 log_config = dict(
     interval=10,
     hooks=[
@@ -164,7 +164,6 @@ log_config = dict(
         # dict(type='TensorboardLoggerHook'),
         # dict(type='PaviLoggerHook', init_kwargs=dict(project='fba'))
     ])
-# yapf:enable
 
 # runtime settings
 total_iters = 200000
