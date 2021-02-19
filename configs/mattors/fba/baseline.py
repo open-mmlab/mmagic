@@ -1,6 +1,3 @@
-custom_imports = dict(
-    imports=['mmedit.core.optimizer.radam'], allow_failed_imports=False)
-
 model = dict(
     type='FBA',
     backbone=dict(
