@@ -23,15 +23,3 @@ We follow the below style to name config files. Contributors are advised to foll
 `20k` means 20,000 iterations.
 `100k` means 100,000 iterations.
 - `{dataset}`: dataset like `places` (for inpainting), `comp1k` (for matting), `div2k` (for restoration) and `paired` (for generation).
-
-## Config File Structure
-
-Please refer to the corresponding page for config file structure for different tasks.
-
-[Inpainting](config_inpainting.md)
-
-[Matting](config_matting.md)
-
-[Restoration](config_restoration.md)
-
-[Generation](config_generation.md)

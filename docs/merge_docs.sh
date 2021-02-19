@@ -31,3 +31,6 @@ cat ../tools/data/generation/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" |
 cat ../tools/data/inpainting/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> inpainting_datasets.md
 cat ../tools/data/matting/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> matting_datasets.md
 cat ../tools/data/super-resolution/*/*.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> sr_datasets.md
+
+# merge configs
+cat config_*.md | sed "s/#/#&/" >> config.md
