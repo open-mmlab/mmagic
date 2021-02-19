@@ -80,7 +80,6 @@ def parse_args():
         description='Prepare Adobe composition 1k dataset',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('data_root', help='Adobe composition 1k dataset root')
-    parser.add_argument('coco_root', help='COCO2014 or COCO2017 dataset root')
     parser.add_argument(
         '--nproc', type=int, default=4, help='number of processer')
     args = parser.parse_args()
@@ -91,8 +90,6 @@ def main():
     args = parse_args()
     if not osp.exists(args.data_root):
         raise FileNotFoundError(f'{args.data_root} does not exist!')
-    if not osp.exists(args.coco_root):
-        raise FileNotFoundError(f'{args.coco_root} does not exist!')
 
     data_root = args.data_root
 

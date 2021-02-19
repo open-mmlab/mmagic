@@ -97,7 +97,7 @@ python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composi
 Extend the foreground of training set as follows:
 
 ```shell
-python tools/data/matting/comp1k/extend_fg.py data/adobe_composition-1k data/coco
+python tools/data/matting/comp1k/extend_fg.py data/adobe_composition-1k
 ```
 
 ## Check Directory Structure for DIM
