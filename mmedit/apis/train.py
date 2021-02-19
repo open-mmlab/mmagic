@@ -164,16 +164,17 @@ def _dist_train(model,
             warnings.warn('"val_samples_per_gpu/val_workers_per_gpu" have '
                           'been deprecated. Please use '
                           '"val_dataloader=dict(samples_per_gpu=1)" instead. '
-                          'Details see pr link')
+                          'Details see '
+                          'https://github.com/open-mmlab/mmediting/pull/201')
 
         val_loader_cfg = dict(
             loader_cfg,
             shuffle=False,
             drop_last=False,
-            **({} if 'val_samples_per_gpu' not in cfg.data else dict(
-                samples_per_gpu=cfg.data.val_samples_per_gpu)),
-            **({} if 'val_workers_per_gpu' not in cfg.data else dict(
-                workers_per_gpu=cfg.data.val_workers_per_gpu)),
+            **dict((newk, cfg.data[oldk]) for oldk, newk in [
+                ('val_samples_per_gpu', 'samples_per_gpu'),
+                ('val_workers_per_gpu', 'workers_per_gpu'),
+            ] if oldk in cfg.data),
             **cfg.data.get('val_dataloader', {}))
 
         data_loader = build_dataloader(dataset, **val_loader_cfg)
@@ -271,16 +272,17 @@ def _non_dist_train(model,
             warnings.warn('"val_samples_per_gpu/val_workers_per_gpu" have '
                           'been deprecated. Please use '
                           '"val_dataloader=dict(samples_per_gpu=1)" instead. '
-                          'Details see pr link')
+                          'Details see '
+                          'https://github.com/open-mmlab/mmediting/pull/201')
 
         val_loader_cfg = dict(
             loader_cfg,
             shuffle=False,
             drop_last=False,
-            **({} if 'val_samples_per_gpu' not in cfg.data else dict(
-                samples_per_gpu=cfg.data.val_samples_per_gpu)),
-            **({} if 'val_workers_per_gpu' not in cfg.data else dict(
-                workers_per_gpu=cfg.data.val_workers_per_gpu)),
+            **dict((newk, cfg.data[oldk]) for oldk, newk in [
+                ('val_samples_per_gpu', 'samples_per_gpu'),
+                ('val_workers_per_gpu', 'workers_per_gpu'),
+            ] if oldk in cfg.data),
             **cfg.data.get('val_dataloader', {}))
 
         data_loader = build_dataloader(dataset, **val_loader_cfg)
