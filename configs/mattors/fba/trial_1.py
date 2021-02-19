@@ -38,12 +38,7 @@ img_norm_cfg = dict(
     mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
 train_pipeline = [
     dict(type='LoadImageFromFile', key='alpha', flag='grayscale'),
-    dict(type='LoadImageFromFile', key='fg_extended', save_original_img=True),
-    dict(
-        type='RenameKeys',
-        key_pairs=[('fg_extended', 'fg'), ('ori_fg_extended', 'ori_fg'),
-                   ('fg_extended_path', 'fg_path'),
-                   ('fg_extended_ori_shape', 'fg_ori_shape')]),
+    dict(type='LoadImageFromFile', key='fg', save_original_img=True),
     dict(type='RandomLoadResizeBg', bg_dir=bg_dir),
     dict(type='RandomJitter'),
     dict(type='CompositeFg', fg_dirs=fg_dirs, alpha_dirs=alpha_dirs),
