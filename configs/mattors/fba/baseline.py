@@ -158,7 +158,7 @@ log_config = dict(
     hooks=[
         dict(type='TextLoggerHook', by_epoch=False),
         # dict(type='TensorboardLoggerHook'),
-        # dict(type='PaviLoggerHook', init_kwargs=dict(project='gca'))
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='fba'))
     ])
 # yapf:enable
 
@@ -168,5 +168,5 @@ dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = './work_dirs/fba'
 load_from = None
-resume_from = '/nfs/Code/mmediting/work_dirs/fba/iter_8000.pth'
+resume_from = None
 workflow = [('train', 1)]
