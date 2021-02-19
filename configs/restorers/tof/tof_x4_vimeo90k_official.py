@@ -40,9 +40,7 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=4,
-    workers_per_gpu=3,
-    drop_last=True,
+    workers_per_gpu=8,
     test=dict(
         type=val_dataset_type,
         lq_folder='data/Vid4/BIx4up_direct',

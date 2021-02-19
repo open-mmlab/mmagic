@@ -70,7 +70,6 @@ test_pipeline = [
 data = dict(
     samples_per_gpu=1,
     workers_per_gpu=4,
-    drop_last=False,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'training_list.json',
@@ -95,7 +94,6 @@ lr_config = dict(policy='Fixed')
 # checkpoint saving
 checkpoint_config = dict(interval=40000, by_epoch=False)
 evaluation = dict(interval=40000, save_image=False)
-# yapf:disable
 log_config = dict(
     interval=10,
     hooks=[
@@ -103,7 +101,6 @@ log_config = dict(
         # dict(type='TensorboardLoggerHook'),
         # dict(type='PaviLoggerHook', init_kwargs=dict(project='dim'))
     ])
-# yapf:enable
 
 # runtime settings
 total_iters = 1000000

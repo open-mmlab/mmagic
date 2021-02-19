@@ -125,11 +125,10 @@ test_pipeline = train_pipeline
 data_root = './data/places365/'
 
 data = dict(
-    samples_per_gpu=2,
     workers_per_gpu=8,
-    val_samples_per_gpu=1,
-    val_workers_per_gpu=8,
-    drop_last=True,
+    train_dataloader=dict(samples_per_gpu=2, drop_last=True),
+    val_dataloader=dict(samples_per_gpu=1),
+    test_dataloader=dict(samples_per_gpu=1),
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'train_places_img_list_total.txt',
