@@ -27,12 +27,12 @@ dataset_type = 'AdobeComp1kDataset'
 data_root = './data/adobe_composition-1k/'
 bg_dir = './data/coco/train2014'
 fg_dirs = [
-    data_root + 'Training_set/Adobe-licensed images/fg_extended',
-    data_root + 'Training_set/Other/fg_extended'
+    f'{data_root}Training_set/Adobe-licensed images/fg_extended',
+    f'{data_root}Training_set/Other/fg_extended'
 ]
 alpha_dirs = [
-    data_root + 'Training_set/Adobe-licensed images/alpha',
-    data_root + 'Training_set/Other/alpha'
+    f'{data_root}Training_set/Adobe-licensed images/alpha',
+    f'{data_root}Training_set/Other/alpha'
 ]
 img_norm_cfg = dict(
     mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
@@ -120,7 +120,7 @@ data = dict(
     drop_last=True,
     train=dict(
         type=dataset_type,
-        ann_file=data_root + 'training_list.json',
+        ann_file=data_root + 'training_list_fba.json',
         data_prefix=data_root,
         pipeline=train_pipeline),
     val=dict(
