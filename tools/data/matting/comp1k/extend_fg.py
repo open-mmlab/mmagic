@@ -54,17 +54,17 @@ class ExtendFg:
         alpha_path = join_first_contain(self.alpha_dirs, fg_name,
                                         self.data_root)
         fg_path = join_first_contain(self.fg_dirs, fg_name, self.data_root)
-        alpha_path = osp.join(self.data_root, alpha_path)
-        fg_path = osp.join(self.data_root, fg_path)
+        alpha_full_path = osp.join(self.data_root, alpha_path)
+        fg_full_path = osp.join(self.data_root, fg_path)
         extended_path = re.sub('/fg/', '/fg_extended/', fg_path)
         extended_path = extended_path.replace('jpg', 'png')
-        if not osp.exists(alpha_path):
-            raise FileNotFoundError(f'{alpha_path} does not exist!')
-        if not osp.exists(fg_path):
-            raise FileNotFoundError(f'{fg_path} does not exist!')
+        if not osp.exists(alpha_full_path):
+            raise FileNotFoundError(f'{alpha_full_path} does not exist!')
+        if not osp.exists(fg_full_path):
+            raise FileNotFoundError(f'{fg_full_path} does not exist!')
 
-        image = load_image(fg_path, 'RGB')
-        alpha = load_image(alpha_path, 'GRAY')
+        image = load_image(fg_full_path, 'RGB')
+        alpha = load_image(alpha_full_path, 'GRAY')
         F = estimate_foreground_ml(image, alpha, return_background=False)
         fg = Image.fromarray(np.uint8(F * 255))
         fg.save(extended_path)
