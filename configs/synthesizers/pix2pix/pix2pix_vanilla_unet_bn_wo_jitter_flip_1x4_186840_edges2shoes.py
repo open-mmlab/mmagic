@@ -78,11 +78,10 @@ test_pipeline = [
 ]
 data_root = './data/paired/edges2shoes'
 data = dict(
-    samples_per_gpu=4,
-    workers_per_gpu=4,
-    drop_last=True,
-    val_samples_per_gpu=1,
-    val_workers_per_gpu=0,
+    train_dataloader=dict(
+        samples_per_gpu=4, workers_per_gpu=4, drop_last=True),
+    val_dataloader=dict(samples_per_gpu=1, workers_per_gpu=4),
+    test_dataloader=dict(samples_per_gpu=1, workers_per_gpu=4),
     train=dict(
         type=train_dataset_type,
         dataroot=data_root,

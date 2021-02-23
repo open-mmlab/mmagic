@@ -32,9 +32,10 @@ test_pipeline = [
 
 data = dict(
     # train
-    samples_per_gpu=16,
-    workers_per_gpu=6,
-    drop_last=True,
+    train_dataloader = dict(
+        samples_per_gpu=16,
+        workers_per_gpu=6,
+        drop_last=True),
     train=dict(
         type='RepeatDataset',
         times=1000,
@@ -46,8 +47,7 @@ data = dict(
             pipeline=train_pipeline,
             scale=scale)),
     # val
-    val_samples_per_gpu=1,
-    val_workers_per_gpu=1,
+    val_dataloader = dict(samples_per_gpu=1, workers_per_gpu=1),
     val=dict(
         type=val_dataset_type,
         lq_folder='./data/val_set5/Set5_bicLRx2',

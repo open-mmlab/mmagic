@@ -79,10 +79,10 @@ test_pipeline = [
 ]
 
 data = dict(
-    # train
-    samples_per_gpu=4,
-    workers_per_gpu=3,
-    drop_last=True,
+    workers_per_gpu=4,
+    train_dataloader=dict(samples_per_gpu=4, drop_last=True),
+    val_dataloader=dict(samples_per_gpu=1),
+    test_dataloader=dict(samples_per_gpu=1),
     train=dict(
         type='RepeatDataset',
         times=1000,
@@ -96,9 +96,6 @@ data = dict(
             scale=4,
             val_partition='REDS4',
             test_mode=False)),
-    # val
-    val_samples_per_gpu=1,
-    val_workers_per_gpu=1,
     val=dict(
         type=val_dataset_type,
         lq_folder='./data/REDS/train_sharp_bicubic/X4',

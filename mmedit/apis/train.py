@@ -1,6 +1,7 @@
 import os
 import os.path as osp
 import random
+import warnings
 
 import mmcv
 import numpy as np
@@ -97,30 +98,31 @@ def _dist_train(model,
         meta (dict | None): Meta dict to record some important information.
             Default: None.
     """
-    # prepare data loaders
     dataset = dataset if isinstance(dataset, (list, tuple)) else [dataset]
-    if torch.__version__ == 'parrots':
-        data_loaders = [
-            build_dataloader(
-                ds,
-                cfg.data.samples_per_gpu,
-                cfg.data.workers_per_gpu,
-                dist=True,
-                drop_last=cfg.data.get('drop_last', False),
-                seed=cfg.seed,
-                prefetch_num=cfg.data.get('prefetch_num', 2),
-                pin_memory=cfg.data.get('pin_memory', False)) for ds in dataset
-        ]
-    else:
-        data_loaders = [
-            build_dataloader(
-                ds,
-                cfg.data.samples_per_gpu,
-                cfg.data.workers_per_gpu,
-                dist=True,
-                drop_last=cfg.data.get('drop_last', False),
-                seed=cfg.seed) for ds in dataset
-        ]
+
+    # step 1: give default values and override (if exist) from cfg.data
+    loader_cfg = dict(
+        seed=cfg.get('seed'),
+        drop_last=False,
+        dist=True,
+        **({} if torch.__version__ != 'parrots' else dict(
+            prefetch_num=2,
+            pin_memory=False,
+        )),
+        **dict((k, cfg.data[k]) for k in [
+            'samples_per_gpu',
+            'workers_per_gpu',
+            'shuffle',
+            'seed',
+            'drop_last',
+            'prefetch_num',
+            'pin_memory',
+        ] if k in cfg.data))
+
+    # step 2: cfg.data.train_dataloader has highest priority
+    train_loader_cfg = dict(loader_cfg, **cfg.data.get('train_dataloader', {}))
+
+    data_loaders = [build_dataloader(ds, **train_loader_cfg) for ds in dataset]
 
     # put model on gpus
     find_unused_parameters = cfg.get('find_unused_parameters', False)
@@ -156,26 +158,26 @@ def _dist_train(model,
     # evaluation hook
     if validate and cfg.get('evaluation', None) is not None:
         dataset = build_dataset(cfg.data.val)
-        samples_per_gpu = cfg.data.get('val_samples_per_gpu',
-                                       cfg.data.samples_per_gpu)
-        workers_per_gpu = cfg.data.get('val_workers_per_gpu',
-                                       cfg.data.workers_per_gpu)
-        if torch.__version__ == 'parrots':
-            data_loader = build_dataloader(
-                dataset,
-                samples_per_gpu=samples_per_gpu,
-                workers_per_gpu=workers_per_gpu,
-                dist=True,
-                shuffle=False,
-                prefetch_num=cfg.data.get('prefetch_num', 2),
-                pin_memory=cfg.data.get('pin_memory', False))
-        else:
-            data_loader = build_dataloader(
-                dataset,
-                samples_per_gpu=samples_per_gpu,
-                workers_per_gpu=workers_per_gpu,
-                dist=True,
-                shuffle=False)
+
+        if ('val_samples_per_gpu' in cfg.data
+                or 'val_workers_per_gpu' in cfg.data):
+            warnings.warn('"val_samples_per_gpu/val_workers_per_gpu" have '
+                          'been deprecated. Please use '
+                          '"val_dataloader=dict(samples_per_gpu=1)" instead. '
+                          'Details see '
+                          'https://github.com/open-mmlab/mmediting/pull/201')
+
+        val_loader_cfg = dict(
+            loader_cfg,
+            shuffle=False,
+            drop_last=False,
+            **dict((newk, cfg.data[oldk]) for oldk, newk in [
+                ('val_samples_per_gpu', 'samples_per_gpu'),
+                ('val_workers_per_gpu', 'workers_per_gpu'),
+            ] if oldk in cfg.data),
+            **cfg.data.get('val_dataloader', {}))
+
+        data_loader = build_dataloader(dataset, **val_loader_cfg)
         save_path = osp.join(cfg.work_dir, 'val_visuals')
         runner.register_hook(
             DistEvalIterHook(
@@ -207,32 +209,33 @@ def _non_dist_train(model,
         meta (dict | None): Meta dict to record some important information.
             Default: None.
     """
-    # prepare data loaders
     dataset = dataset if isinstance(dataset, (list, tuple)) else [dataset]
-    if torch.__version__ == 'parrots':
-        data_loaders = [
-            build_dataloader(
-                ds,
-                cfg.data.samples_per_gpu,
-                cfg.data.workers_per_gpu,
-                cfg.gpus,
-                dist=False,
-                drop_last=cfg.data.get('drop_last', False),
-                seed=cfg.seed,
-                prefetch_num=cfg.data.get('prefetch_num', 2),
-                pin_memory=cfg.data.get('pin_memory', False)) for ds in dataset
-        ]
-    else:
-        data_loaders = [
-            build_dataloader(
-                ds,
-                cfg.data.samples_per_gpu,
-                cfg.data.workers_per_gpu,
-                cfg.gpus,
-                dist=False,
-                drop_last=cfg.data.get('drop_last', False),
-                seed=cfg.seed) for ds in dataset
-        ]
+
+    # step 1: give default values and override (if exist) from cfg.data
+    loader_cfg = dict(
+        seed=cfg.get('seed'),
+        drop_last=False,
+        dist=False,
+        num_gpus=cfg.gpus,
+        **({} if torch.__version__ != 'parrots' else dict(
+            prefetch_num=2,
+            pin_memory=False,
+        )),
+        **dict((k, cfg.data[k]) for k in [
+            'samples_per_gpu',
+            'workers_per_gpu',
+            'shuffle',
+            'seed',
+            'drop_last',
+            'prefetch_num',
+            'pin_memory',
+        ] if k in cfg.data))
+
+    # step 2: cfg.data.train_dataloader has highest priority
+    train_loader_cfg = dict(loader_cfg, **cfg.data.get('train_dataloader', {}))
+
+    data_loaders = [build_dataloader(ds, **train_loader_cfg) for ds in dataset]
+
     # put model on gpus
     model = MMDataParallel(model, device_ids=range(cfg.gpus)).cuda()
 
@@ -263,26 +266,26 @@ def _non_dist_train(model,
     # evaluation hook
     if validate and cfg.get('evaluation', None) is not None:
         dataset = build_dataset(cfg.data.val)
-        samples_per_gpu = cfg.data.get('val_samples_per_gpu',
-                                       cfg.data.samples_per_gpu)
-        workers_per_gpu = cfg.data.get('val_workers_per_gpu',
-                                       cfg.data.workers_per_gpu)
-        if torch.__version__ == 'parrots':
-            data_loader = build_dataloader(
-                dataset,
-                samples_per_gpu=samples_per_gpu,
-                workers_per_gpu=workers_per_gpu,
-                dist=True,
-                shuffle=False,
-                prefetch_num=cfg.data.get('prefetch_num', 2),
-                pin_memory=cfg.data.get('pin_memory', False))
-        else:
-            data_loader = build_dataloader(
-                dataset,
-                samples_per_gpu=samples_per_gpu,
-                workers_per_gpu=workers_per_gpu,
-                dist=True,
-                shuffle=False)
+
+        if ('val_samples_per_gpu' in cfg.data
+                or 'val_workers_per_gpu' in cfg.data):
+            warnings.warn('"val_samples_per_gpu/val_workers_per_gpu" have '
+                          'been deprecated. Please use '
+                          '"val_dataloader=dict(samples_per_gpu=1)" instead. '
+                          'Details see '
+                          'https://github.com/open-mmlab/mmediting/pull/201')
+
+        val_loader_cfg = dict(
+            loader_cfg,
+            shuffle=False,
+            drop_last=False,
+            **dict((newk, cfg.data[oldk]) for oldk, newk in [
+                ('val_samples_per_gpu', 'samples_per_gpu'),
+                ('val_workers_per_gpu', 'workers_per_gpu'),
+            ] if oldk in cfg.data),
+            **cfg.data.get('val_dataloader', {}))
+
+        data_loader = build_dataloader(dataset, **val_loader_cfg)
         save_path = osp.join(cfg.work_dir, 'val_visuals')
         runner.register_hook(
             EvalIterHook(data_loader, save_path=save_path, **cfg.evaluation))

@@ -69,10 +69,10 @@ test_pipeline = [
 ]
 
 data = dict(
-    # train
-    samples_per_gpu=16,
-    workers_per_gpu=6,
-    drop_last=True,
+    workers_per_gpu=8,
+    train_dataloader=dict(samples_per_gpu=16, drop_last=True),
+    val_dataloader=dict(samples_per_gpu=1),
+    test_dataloader=dict(samples_per_gpu=1),
     train=dict(
         type='RepeatDataset',
         times=1000,
@@ -83,9 +83,6 @@ data = dict(
             ann_file='data/DIV2K/meta_info_DIV2K800sub_GT.txt',
             pipeline=train_pipeline,
             scale=scale)),
-    # val
-    val_samples_per_gpu=1,
-    val_workers_per_gpu=1,
     val=dict(
         type=val_dataset_type,
         lq_folder='./data/val_set5/Set5_bicLRx4',
@@ -93,7 +90,6 @@ data = dict(
         pipeline=test_pipeline,
         scale=scale,
         filename_tmpl='{}'),
-    # test
     test=dict(
         type=val_dataset_type,
         lq_folder='./data/val_set14/Set14_bicLRx4',

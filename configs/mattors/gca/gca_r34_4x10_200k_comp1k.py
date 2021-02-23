@@ -81,11 +81,10 @@ test_pipeline = [
     dict(type='FormatTrimap', to_onehot=True),
 ]
 data = dict(
-    samples_per_gpu=10,
-    workers_per_gpu=4,
-    val_samples_per_gpu=1,
-    val_workers_per_gpu=4,
-    drop_last=True,
+    workers_per_gpu=8,
+    train_dataloader=dict(samples_per_gpu=10, drop_last=True),
+    val_dataloader=dict(samples_per_gpu=1),
+    test_dataloader=dict(samples_per_gpu=1),
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'training_list.json',
@@ -116,7 +115,6 @@ lr_config = dict(
 # checkpoint saving
 checkpoint_config = dict(interval=2000, by_epoch=False)
 evaluation = dict(interval=2000, save_image=False, gpu_collect=False)
-# yapf:disable
 log_config = dict(
     interval=10,
     hooks=[
@@ -124,7 +122,6 @@ log_config = dict(
         # dict(type='TensorboardLoggerHook'),
         # dict(type='PaviLoggerHook', init_kwargs=dict(project='gca'))
     ])
-# yapf:enable
 
 # runtime settings
 total_iters = 200000
