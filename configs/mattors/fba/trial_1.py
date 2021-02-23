@@ -41,8 +41,15 @@ train_pipeline = [
         type='LoadImageFromFile',
         key='alpha',
         flag='grayscale',
+        use_cache=True,
+        data_dirs=alpha_dirs,
         save_float=True),
-    dict(type='LoadImageFromFile', key='fg', save_original_img=True),
+    dict(
+        type='LoadImageFromFile',
+        key='fg',
+        save_original_img=True,
+        use_cache=True,
+        data_dirs=fg_dirs),
     dict(type='RandomLoadResizeBg', bg_dir=bg_dir),
     dict(type='CompositeFg', fg_dirs=fg_dirs, alpha_dirs=alpha_dirs),
     dict(
@@ -114,9 +121,9 @@ test_pipeline = [
 ]
 data = dict(
     samples_per_gpu=1,
-    workers_per_gpu=0,
+    workers_per_gpu=5,
     val_samples_per_gpu=1,
-    val_workers_per_gpu=0,
+    val_workers_per_gpu=5,
     drop_last=True,
     train=dict(
         type=dataset_type,
@@ -161,7 +168,7 @@ log_config = dict(
     ])
 
 # runtime settings
-total_iters = 1000
+total_iters = 800000
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = './work_dirs/fba'

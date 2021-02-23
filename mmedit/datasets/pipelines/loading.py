@@ -1,3 +1,6 @@
+import os
+from collections import OrderedDict
+from glob import glob
 from pathlib import Path
 
 import mmcv
@@ -26,6 +29,8 @@ class LoadImageFromFile:
         save_float (bool): If True, maintain a copy of the image as type
             of float in `results` dict with name of `f'{self.key}_f'`.
             Default: False.
+        use_cache (bool): If True, load all images at once. Default: False.
+        data_dirs (str): Path to the data_dir to be stored. Default: None.
     """
 
     def __init__(self,
