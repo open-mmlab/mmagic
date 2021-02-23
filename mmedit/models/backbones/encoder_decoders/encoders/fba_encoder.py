@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 from mmcv.cnn import ConvWS2d, build_norm_layer
 
@@ -218,9 +217,10 @@ class FBAResnetDilated(nn.Module):
 
     def forward(self, x, return_feature_maps=False):
         # x cat(image_n, trimap_transformed, two_chan_trimap,img)
-        merged_transformed, trimap_transformed, two_chan_trimap, merged = x
-        x = torch.cat(
-            (merged_transformed, trimap_transformed, two_chan_trimap), 1)
+
+        two_chan_trimap = x[:, 9:11]
+        merged = x[:, 11:14]
+        x = x[:, 0:11, ...]
         conv_out = [x]
         x = self.relu(self.bn1(self.conv1(x)))
         conv_out.append(x)
@@ -233,8 +233,11 @@ class FBAResnetDilated(nn.Module):
         conv_out.append(x)
         x = self.layer4(x)
         conv_out.append(x)
-
-        return (conv_out, merged, two_chan_trimap, indices)
+        return {
+            'conv_out': conv_out,
+            'merged': merged,
+            'two_chan_trimap': two_chan_trimap
+        }
 
 
 def l_resnet50(pretrained=False, **kwargs):

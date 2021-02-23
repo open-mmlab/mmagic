@@ -65,10 +65,20 @@ class FBADecoder(nn.Module):
     def init_weights(self, pretrained=None):
         pass
 
-    def forward(self, in_tuple):
-        conv_out, img, two_chan_trimap, indices = in_tuple
-        conv5 = conv_out[-1]
+    def forward(self, inputs):
+        """Forward function.
 
+        Args:
+            inputs (dict): Output dict of FbaEncoder.
+
+        Returns:
+            Tensor: Predicted alpha, fg and bg of the current batch.
+        """
+
+        conv_out = inputs['conv_out']
+        img = inputs['merged']
+        two_chan_trimap = inputs['two_chan_trimap']
+        conv5 = conv_out[-1]
         input_size = conv5.size()
         ppm_out = [conv5]
         for pool_scale in self.ppm:

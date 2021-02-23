@@ -148,9 +148,10 @@ class FBA(BaseMattor):
         """
         merged_transformed = groupnorm_normalise_image(
             merged.clone(), format='nchw')
-        input_tuple = tuple(
-            (merged_transformed, trimap_transformed, trimap, merged))
-        pred_alpha, pred_fg, pred_bg = self._forward(input_tuple)
+
+        input = torch.cat(
+            (merged_transformed, trimap_transformed, trimap, merged), 1)
+        pred_alpha, pred_fg, pred_bg = self._forward(input)
 
         losses = dict()
         if self.loss_alpha is not None:
@@ -209,10 +210,11 @@ class FBA(BaseMattor):
         merged_transformed = groupnorm_normalise_image(
             merged.clone(), format='nchw')
         # for batch size 1
-        input_tuple = tuple(
-            (merged_transformed, trimap_transformed, trimap, merged))
 
-        pred_alpha, pred_fg, pred_bg = self._forward(input_tuple)
+        input = torch.cat(
+            (merged_transformed, trimap_transformed, trimap, merged), 1)
+
+        pred_alpha, pred_fg, pred_bg = self._forward(input)
         # FBA Fusion
         pred_alpha, pred_fg, pred_bg = fba_fusion(pred_alpha, merged, pred_fg,
                                                   pred_bg)
