@@ -37,23 +37,23 @@ alpha_dirs = [
 img_norm_cfg = dict(
     mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='alpha', flag='grayscale'),
+    dict(
+        type='LoadImageFromFile',
+        key='alpha',
+        flag='grayscale',
+        save_float=True),
     dict(type='LoadImageFromFile', key='fg', save_original_img=True),
     dict(type='RandomLoadResizeBg', bg_dir=bg_dir),
-    dict(type='RandomJitter'),
     dict(type='CompositeFg', fg_dirs=fg_dirs, alpha_dirs=alpha_dirs),
     dict(
         type='CropAroundUnknown',
-        keys=['alpha', 'fg', 'bg', 'ori_fg'],
+        keys=['alpha', 'fg', 'bg', 'ori_fg', 'alpha_f'],
         crop_sizes=[320, 480, 640]),
-    dict(type='Flip', keys=[
-        'alpha',
-        'fg',
-        'bg',
-    ]),
+    dict(type='RandomJitter'),
+    dict(type='Flip', keys=['alpha', 'fg', 'bg', 'alpha_f']),
     dict(
         type='Resize',
-        keys=['alpha', 'fg', 'bg', 'ori_fg'],
+        keys=['alpha', 'fg', 'bg', 'ori_fg', 'alpha_f'],
         scale=(320, 320),
         keep_ratio=False),
     dict(type='PerturbBg'),
@@ -146,11 +146,11 @@ optimizers = dict(
             'GroupNorm': dict(lr_mult=1e-5)
         }))
 # learning policy
-lr_config = dict(policy='Step', step=[40], gamma=0.0025, by_epoch=True)
+lr_config = dict(policy='Step', step=[15], gamma=0.0025, by_epoch=True)
 
 # checkpoint saving
-checkpoint_config = dict(interval=2000, by_epoch=False)
-evaluation = dict(interval=2000, save_image=True)
+checkpoint_config = dict(interval=10000, by_epoch=False)
+evaluation = dict(interval=10000, save_image=True)
 
 log_config = dict(
     interval=10,
@@ -161,7 +161,7 @@ log_config = dict(
     ])
 
 # runtime settings
-total_iters = 200000
+total_iters = 1000
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = './work_dirs/fba'

@@ -23,6 +23,9 @@ class LoadImageFromFile:
             `results` dict with name of `f'ori_{key}'`. Default: False.
         use_cache (bool): If True, load all images at once. Default: False.
         kwargs (dict): Args for file client.
+        save_float (bool): If True, maintain a copy of the image as type
+            of float in `results` dict with name of `f'{self.key}_f'`.
+            Default: False.
     """
 
     def __init__(self,
@@ -78,6 +81,9 @@ class LoadImageFromFile:
         results[f'{self.key}_ori_shape'] = img.shape
         if self.save_original_img:
             results[f'ori_{self.key}'] = img.copy()
+        if self.save_float:
+            results[f'{self.key}_f'] = img.astype(np.float32) / 255.
+
         return results
 
     def __repr__(self):

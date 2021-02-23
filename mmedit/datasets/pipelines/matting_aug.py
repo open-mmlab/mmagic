@@ -36,8 +36,8 @@ class MergeFgAndBg:
             dict: A dict containing the processed data and information.
         """
         if len(results['alpha'].shape) == 2:
-            alpha = results['alpha'][..., None].astype(np.float32) / 255.
-        alpha = results['alpha'].astype(np.float32) / 255.
+            alpha = results['alpha_f'][..., None]
+        alpha = results['alpha_f']
         fg = results['fg']
         bg = results['bg']
         merged = fg * alpha + (1. - alpha) * bg
@@ -255,7 +255,8 @@ class CompositeFg:
         if self.file_client is None:
             self.file_client = FileClient(self.io_backend, **self.kwargs)
         fg = results['fg']
-        alpha = results['alpha'].astype(np.float32) / 255.
+        alpha = results['alpha_f']
+        # alpha = results['alpha'].astype(np.float32) / 255.
         h, w = results['fg'].shape[:2]
 
         # randomly select fg
