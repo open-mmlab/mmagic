@@ -107,7 +107,7 @@ def test_load_image_from_file_list():
         image_loader(results)
 
 
-class TestMattingLoading(object):
+class TestMattingLoading:
 
     @staticmethod
     def check_keys_contain(result_keys, target_keys):
@@ -140,7 +140,7 @@ class TestMattingLoading(object):
             "(bg_dir='tests/data/bg')")
 
 
-class TestInpaintLoading(object):
+class TestInpaintLoading:
 
     @classmethod
     def setup_class(cls):
@@ -229,7 +229,7 @@ class TestInpaintLoading(object):
             results = loader(results)
 
 
-class TestGenerationLoading(object):
+class TestGenerationLoading:
 
     @staticmethod
     def check_keys_contain(result_keys, target_keys):

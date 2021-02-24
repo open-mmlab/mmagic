@@ -280,7 +280,7 @@ def ssim(img1, img2, crop_border=0, input_order='HWC'):
     return np.array(ssims).mean()
 
 
-class L1Evaluation(object):
+class L1Evaluation:
     """L1 evaluation metric.
 
     Args:

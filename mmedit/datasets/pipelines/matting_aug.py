@@ -18,7 +18,7 @@ def add_gaussian_noise(img, mu, sigma):
 
 
 @PIPELINES.register_module()
-class MergeFgAndBg(object):
+class MergeFgAndBg:
     """Composite foreground image and background image with alpha.
 
     Required keys are "alpha", "fg" and "bg", added key is "merged".
@@ -43,7 +43,7 @@ class MergeFgAndBg(object):
 
 
 @PIPELINES.register_module()
-class GenerateTrimap(object):
+class GenerateTrimap:
     """Using random erode/dilate to generate trimap from alpha matte.
 
     Required key is "alpha", added key is "trimap".
@@ -138,7 +138,7 @@ class GenerateTrimap(object):
 
 
 @PIPELINES.register_module()
-class GenerateTrimapWithDistTransform(object):
+class GenerateTrimapWithDistTransform:
     """Generate trimap with distance transform function.
 
     Args:
@@ -190,7 +190,7 @@ class GenerateTrimapWithDistTransform(object):
 
 
 @PIPELINES.register_module()
-class CompositeFg(object):
+class CompositeFg:
     """Composite foreground with a random foreground.
 
     This class composites the current training sample with additional data
@@ -292,7 +292,7 @@ class CompositeFg(object):
 
 
 @PIPELINES.register_module()
-class GenerateSeg(object):
+class GenerateSeg:
     """Generate segmentation mask from alpha matte.
 
     Args:
@@ -399,7 +399,7 @@ class GenerateSeg(object):
 
 
 @PIPELINES.register_module()
-class PerturbBg(object):
+class PerturbBg:
     """Randomly add gaussian noise or gamma change to background image.
 
     Required key is "bg", added key is "noisy_bg".
@@ -441,7 +441,7 @@ class PerturbBg(object):
 
 
 @PIPELINES.register_module()
-class GenerateSoftSeg(object):
+class GenerateSoftSeg:
     """Generate soft segmentation mask from input segmentation mask.
 
     Required key is "seg", added key is "soft_seg".

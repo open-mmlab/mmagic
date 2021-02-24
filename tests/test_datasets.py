@@ -31,7 +31,7 @@ def check_keys_contain(result_keys, target_keys):
     return set(target_keys).issubset(set(result_keys))
 
 
-class TestMattingDatasets(object):
+class TestMattingDatasets:
 
     @classmethod
     def setup_class(cls):
@@ -78,7 +78,7 @@ class TestMattingDatasets(object):
         assert eval_result['MSE'] == 0.005
 
 
-class TestSRDatasets(object):
+class TestSRDatasets:
 
     @classmethod
     def setup_class(cls):
@@ -312,7 +312,7 @@ class TestSRDatasets(object):
                 scale=1)
 
 
-class TestGenerationDatasets(object):
+class TestGenerationDatasets:
 
     @classmethod
     def setup_class(cls):

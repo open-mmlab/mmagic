@@ -8,7 +8,7 @@ from mmedit.datasets.pipelines import (Crop, CropAroundCenter, CropAroundFg,
                                        PairedRandomCrop)
 
 
-class TestAugmentations(object):
+class TestAugmentations:
 
     @classmethod
     def setup_class(cls):

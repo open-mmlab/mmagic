@@ -5,7 +5,7 @@ from ..registry import PIPELINES
 
 
 @PIPELINES.register_module()
-class Normalize(object):
+class Normalize:
     """Normalize images with the given mean and std value.
 
     Required keys are the keys in attribute "keys", added or modified keys are
@@ -58,7 +58,7 @@ class Normalize(object):
 
 
 @PIPELINES.register_module()
-class RescaleToZeroOne(object):
+class RescaleToZeroOne:
     """Transform the images into a range between 0 and 1.
 
     Required keys are the keys in attribute "keys", added or modified keys are

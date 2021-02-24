@@ -8,7 +8,7 @@ from mmedit.datasets.samplers import DistributedSampler
 
 
 @DATASETS.register_module()
-class ToyDataset(object):
+class ToyDataset:
 
     def __init__(self, ann_file=None, cnt=0):
         self.ann_file = ann_file
@@ -22,7 +22,7 @@ class ToyDataset(object):
 
 
 @DATASETS.register_module()
-class ToyDatasetWithAnnFile(object):
+class ToyDatasetWithAnnFile:
 
     def __init__(self, ann_file):
         self.ann_file = ann_file

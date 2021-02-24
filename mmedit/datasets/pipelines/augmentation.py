@@ -11,7 +11,7 @@ from ..registry import PIPELINES
 
 
 @PIPELINES.register_module()
-class Resize(object):
+class Resize:
     """Resize data to a specific size for training or resize the images to fit
     the network input regulation for testing.
 
@@ -147,7 +147,7 @@ class Resize(object):
 
 
 @PIPELINES.register_module()
-class Flip(object):
+class Flip:
     """Flip the input data with a probability.
 
     Reverse the order of elements in the given data with a specific direction.
@@ -205,7 +205,7 @@ class Flip(object):
 
 
 @PIPELINES.register_module()
-class Pad(object):
+class Pad:
     """Pad the images to align with network downsample factor for testing.
 
     See `Reshape` for more explanation. `numpy.pad` is used for the pad
@@ -263,7 +263,7 @@ class Pad(object):
 
 
 @PIPELINES.register_module()
-class RandomAffine(object):
+class RandomAffine:
     """Apply random affine to input images.
 
     This class is adopted from
@@ -475,7 +475,7 @@ class RandomAffine(object):
 
 
 @PIPELINES.register_module()
-class RandomJitter(object):
+class RandomJitter:
     """Randomly jitter the foreground in hsv space.
 
     The jitter range of hue is adjustable while the jitter ranges of saturation
@@ -545,7 +545,7 @@ class RandomJitter(object):
         return self.__class__.__name__ + f'hue_range={self.hue_range}'
 
 
-class BinarizeImage(object):
+class BinarizeImage:
     """Binarize image.
 
     Args:
@@ -590,7 +590,7 @@ class BinarizeImage(object):
 
 
 @PIPELINES.register_module()
-class RandomMaskDilation(object):
+class RandomMaskDilation:
     """Randomly dilate binary masks.
 
     Args:
@@ -646,7 +646,7 @@ class RandomMaskDilation(object):
 
 
 @PIPELINES.register_module()
-class RandomTransposeHW(object):
+class RandomTransposeHW:
     """Randomly transpose images in H and W dimensions with a probability.
 
     (TransposeHW = horizontal flip + anti-clockwise rotatation by 90 degrees)
@@ -697,7 +697,7 @@ class RandomTransposeHW(object):
 
 
 @PIPELINES.register_module()
-class GenerateFrameIndiceswithPadding(object):
+class GenerateFrameIndiceswithPadding:
     """Generate frame index with padding for REDS dataset and Vid4 dataset
     during testing.
 
@@ -787,7 +787,7 @@ class GenerateFrameIndiceswithPadding(object):
 
 
 @PIPELINES.register_module()
-class GenerateFrameIndices(object):
+class GenerateFrameIndices:
     """Generate frame index for REDS datasets. It also performs
     temporal augmention with random interval.
 
@@ -855,7 +855,7 @@ class GenerateFrameIndices(object):
 
 
 @PIPELINES.register_module()
-class TemporalReverse(object):
+class TemporalReverse:
     """Reverse frame lists for temporal augmentation.
 
     Required keys are the keys in attributes "lq" and "gt",

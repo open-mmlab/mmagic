@@ -6,7 +6,7 @@ from ..registry import PIPELINES
 
 
 @PIPELINES.register_module()
-class Compose(object):
+class Compose:
     """Compose a data pipeline with a sequence of transforms.
 
     Args:

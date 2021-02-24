@@ -53,7 +53,7 @@ def generation_init_weights(module, init_type='normal', init_gain=0.02):
     module.apply(init_func)
 
 
-class GANImageBuffer(object):
+class GANImageBuffer:
     """This class implements an image buffer that stores previously
     generated images.
 
