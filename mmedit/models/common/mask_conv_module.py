@@ -83,5 +83,5 @@ class MaskConvModule(ConvModule):
 
         if return_mask:
             return x, updated_mask
-        else:
-            return x
+
+        return x

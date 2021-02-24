@@ -31,7 +31,8 @@ class ASPP(nn.Module):
     """ASPP module from DeepLabV3.
 
     The code is adopted from
-    https://github.com/pytorch/vision/blob/master/torchvision/models/segmentation/deeplabv3.py  # noqa
+    https://github.com/pytorch/vision/blob/master/torchvision/models/
+    segmentation/deeplabv3.py
 
     For more information about the module:
     `"Rethinking Atrous Convolution for Semantic Image Segmentation"

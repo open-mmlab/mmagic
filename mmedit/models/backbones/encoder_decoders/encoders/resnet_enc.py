@@ -439,10 +439,8 @@ class ResGCAEncoder(ResShortcutEnc):
                  with_spectral_norm=False,
                  late_downsample=False,
                  order=('conv', 'act', 'norm')):
-        super(ResGCAEncoder,
-              self).__init__(block, layers, in_channels, conv_cfg, norm_cfg,
-                             act_cfg, with_spectral_norm, late_downsample,
-                             order)
+        super().__init__(block, layers, in_channels, conv_cfg, norm_cfg,
+                         act_cfg, with_spectral_norm, late_downsample, order)
 
         assert in_channels == 4 or in_channels == 6, (
             f'in_channels must be 4 or 6, but got {in_channels}')

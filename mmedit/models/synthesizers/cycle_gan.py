@@ -144,8 +144,8 @@ class CycleGAN(BaseModel):
         """
         if isinstance(module, MMDistributedDataParallel):
             return module.module
-        else:
-            return module
+
+        return module
 
     def setup(self, img_a, img_b, meta):
         """Perform necessary pre-processing steps.
@@ -305,10 +305,10 @@ class CycleGAN(BaseModel):
             test_mode (bool): Whether in test mode or not. Default: False.
             kwargs (dict): Other arguments.
         """
-        if not test_mode:
-            return self.forward_train(img_a, img_b, meta)
-        else:
+        if test_mode:
             return self.forward_test(img_a, img_b, meta, **kwargs)
+
+        return self.forward_train(img_a, img_b, meta)
 
     def backward_discriminators(self, outputs):
         """Backward function for the discriminators.

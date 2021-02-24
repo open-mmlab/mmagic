@@ -97,5 +97,5 @@ class PartialConv2d(nn.Conv2d):
 
         if return_mask and mask is not None:
             return output, updated_mask
-        else:
-            return output
+
+        return output

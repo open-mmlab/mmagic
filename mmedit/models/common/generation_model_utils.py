@@ -223,9 +223,9 @@ class UnetSkipConnectionBlock(nn.Module):
         """
         if self.is_outermost:
             return self.model(x)
-        else:
-            # add skip connections
-            return torch.cat([x, self.model(x)], 1)
+
+        # add skip connections
+        return torch.cat([x, self.model(x)], 1)
 
 
 class ResidualBlockWithDropout(nn.Module):
