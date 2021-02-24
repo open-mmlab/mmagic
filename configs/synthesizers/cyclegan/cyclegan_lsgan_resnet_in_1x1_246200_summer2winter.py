@@ -85,7 +85,7 @@ test_pipeline = [
         keys=['img_a', 'img_b'],
         meta_keys=['img_a_path', 'img_b_path'])
 ]
-data_root = './data/unpaired/summer2winter_yosemite'
+data_root = 'data/unpaired/summer2winter_yosemite'
 data = dict(
     samples_per_gpu=1,
     workers_per_gpu=4,

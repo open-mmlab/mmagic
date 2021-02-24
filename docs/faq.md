@@ -50,8 +50,8 @@ data = dict(
     val_dataloader = dict(samples_per_gpu=1, workers_per_gpu=1),
     val=dict(
         type=val_dataset_type,
-        lq_folder='./data/val_set5/Set5_bicLRx2',
-        gt_folder='./data/val_set5/Set5_mod12',
+        lq_folder='data/val_set5/Set5_bicLRx2',
+        gt_folder='data/val_set5/Set5_mod12',
         pipeline=test_pipeline,
         scale=scale,
         filename_tmpl='{}'),

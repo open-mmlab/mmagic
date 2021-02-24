@@ -21,7 +21,7 @@ test_cfg = dict(metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
 
 # dataset settings
 dataset_type = 'AdobeComp1kDataset'
-data_root = './data/adobe_composition-1k/'
+data_root = 'data/adobe_composition-1k'
 bg_dir = './data/coco/train2017'
 img_norm_cfg = dict(
     mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
@@ -32,12 +32,12 @@ train_pipeline = [
     dict(
         type='CompositeFg',
         fg_dirs=[
-            data_root + 'Training_set/Adobe-licensed images/fg',
-            data_root + 'Training_set/Other/fg'
+            f'{data_root}/Training_set/Adobe-licensed images/fg',
+            f'{data_root}/Training_set/Other/fg'
         ],
         alpha_dirs=[
-            data_root + 'Training_set/Adobe-licensed images/alpha',
-            data_root + 'Training_set/Other/alpha'
+            f'{data_root}/Training_set/Adobe-licensed images/alpha',
+            f'{data_root}/Training_set/Other/alpha'
         ]),
     dict(
         type='RandomAffine',
@@ -87,17 +87,17 @@ data = dict(
     test_dataloader=dict(samples_per_gpu=1),
     train=dict(
         type=dataset_type,
-        ann_file=data_root + 'training_list.json',
+        ann_file=f'{data_root}/training_list.json',
         data_prefix=data_root,
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'test_list.json',
+        ann_file=f'{data_root}/test_list.json',
         data_prefix=data_root,
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'test_list.json',
+        ann_file=f'{data_root}/test_list.json',
         data_prefix=data_root,
         pipeline=test_pipeline))
 
