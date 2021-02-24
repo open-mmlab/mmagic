@@ -19,8 +19,8 @@ def sad(alpha, trimap, pred_alpha):
     assert (pred_alpha[trimap == 255] == 255).all()
     alpha = alpha.astype(np.float64) / 255
     pred_alpha = pred_alpha.astype(np.float64) / 255
-    sad = np.abs(pred_alpha - alpha).sum() / 1000
-    return sad
+    sad_result = np.abs(pred_alpha - alpha).sum() / 1000
+    return sad_result
 
 
 def mse(alpha, trimap, pred_alpha):
@@ -35,10 +35,10 @@ def mse(alpha, trimap, pred_alpha):
     pred_alpha = pred_alpha.astype(np.float64) / 255
     weight_sum = (trimap == 128).sum()
     if weight_sum != 0:
-        mse = ((pred_alpha - alpha)**2).sum() / weight_sum
+        mse_result = ((pred_alpha - alpha)**2).sum() / weight_sum
     else:
-        mse = 0
-    return mse
+        mse_result = 0
+    return mse_result
 
 
 def gradient_error(alpha, trimap, pred_alpha, sigma=1.4):
@@ -100,7 +100,6 @@ def connectivity(alpha, trimap, pred_alpha, step=0.1):
     alpha = alpha.astype(np.float32) / 255
     pred_alpha = pred_alpha.astype(np.float32) / 255
 
-    height, width = alpha.shape
     thresh_steps = np.arange(0, 1 + step, step)
     round_down_map = -np.ones_like(alpha)
     for i in range(1, len(thresh_steps)):

@@ -46,11 +46,12 @@ def build_optimizers(model, cfgs):
     for key, cfg in cfgs.items():
         if not isinstance(cfg, dict):
             is_dict_of_dict = False
+
     if is_dict_of_dict:
         for key, cfg in cfgs.items():
             cfg_ = cfg.copy()
             module = getattr(model, key)
             optimizers[key] = build_optimizer(module, cfg_)
         return optimizers
-    else:
-        return build_optimizer(model, cfgs)
+
+    return build_optimizer(model, cfgs)

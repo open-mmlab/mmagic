@@ -20,16 +20,12 @@ class BaseModel(nn.Module, metaclass=ABCMeta):
         ``train_step``, supporting to train one step when training.
     """
 
-    def __init__(self):
-        super().__init__()
-
     @abstractmethod
     def init_weights(self):
         """Abstract method for initializing weight.
 
         All subclass should overwrite it.
         """
-        pass
 
     @abstractmethod
     def forward_train(self, imgs, labels):
@@ -37,7 +33,6 @@ class BaseModel(nn.Module, metaclass=ABCMeta):
 
         All subclass should overwrite it.
         """
-        pass
 
     @abstractmethod
     def forward_test(self, imgs):
@@ -45,7 +40,6 @@ class BaseModel(nn.Module, metaclass=ABCMeta):
 
         All subclass should overwrite it.
         """
-        pass
 
     def forward(self, imgs, labels, test_mode, **kwargs):
         """Forward function for base model.
@@ -71,7 +65,6 @@ class BaseModel(nn.Module, metaclass=ABCMeta):
 
         All subclass should overwrite it.
         """
-        pass
 
     def val_step(self, data_batch, **kwargs):
         """Abstract method for one validation step.

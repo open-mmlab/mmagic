@@ -207,13 +207,11 @@ class BaseMattor(BaseModel):
             trimap (Tensor): Trimap of the input image.
             alpha (Tensor): Ground-truth alpha matte.
         """
-        pass
 
     @abstractmethod
     def forward_test(self, merged, trimap, meta, **kwargs):
         """Defines the computation performed at every test call.
         """
-        pass
 
     def train_step(self, data_batch, optimizer):
         """Defines the computation and network update at every training call.
