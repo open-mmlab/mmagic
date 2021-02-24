@@ -14,7 +14,7 @@ model = dict(
     # loss_fb_compo=dict(type='FBACompLoss', loss_weight=0.25),
     # loss_fb_lap=dict(type='LapLoss', channels=3, loss_weight=0.25),
     # loss_exclusion=dict(type='ExclLoss', channels=3, loss_weight=0.25)
-)
+    pretrained='torchvision://resnet50')
 train_cfg = dict(train_backbone=True)
 test_cfg = dict(metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
 
@@ -171,7 +171,7 @@ log_config = dict(
 total_iters = 800000
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/fba'
+work_dir = './work_dirs/fba_test'
 load_from = None
 revise_keys = [(r'^', 'backbone.')]
 resume_from = None

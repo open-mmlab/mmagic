@@ -1,7 +1,9 @@
 import torch.nn as nn
 from mmcv.cnn import ConvWS2d, build_norm_layer
+from mmcv.runner import load_checkpoint
 
 from mmedit.models.registry import COMPONENTS
+from mmedit.utils import get_root_logger
 
 
 class BasicBlock(nn.Module):
@@ -213,7 +215,15 @@ class FBAResnetDilated(nn.Module):
                     m.padding = (dilate, dilate)
 
     def init_weights(self, pretrained=None):
-        pass
+        """Init weights for the model.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+        """
+        if isinstance(pretrained, str):
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=False, logger=logger)
 
     def forward(self, x, return_feature_maps=False):
         # x cat(image_n, trimap_transformed, two_chan_trimap,img)
