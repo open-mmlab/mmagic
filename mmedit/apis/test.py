@@ -216,8 +216,7 @@ def collect_results_gpu(result_part, size):
 
     part_list = []
     for recv, shape in zip(part_recv_list, shape_list):
-        part_list.append(
-            pickle.loads(recv[:shape[0]].cpu().numpy().tobytes()))
+        part_list.append(pickle.loads(recv[:shape[0]].cpu().numpy().tobytes()))
     # sort the results
     ordered_results = []
     for res in zip(*part_list):
