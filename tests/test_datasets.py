@@ -90,7 +90,7 @@ class TestSRDatasets(object):
             """Toy dataset for testing SRDataset."""
 
             def __init__(self, pipeline, test_mode=False):
-                super(ToyDataset, self).__init__(pipeline, test_mode)
+                super().__init__(pipeline, test_mode)
 
             def load_annotations(self):
                 pass
@@ -566,7 +566,7 @@ def test_repeat_dataset():
     class ToyDataset(Dataset):
 
         def __init__(self):
-            super(ToyDataset, self).__init__()
+            super().__init__()
             self.members = [1, 2, 3, 4, 5]
 
         def __len__(self):

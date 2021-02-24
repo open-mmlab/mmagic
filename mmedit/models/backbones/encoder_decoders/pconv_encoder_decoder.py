@@ -16,7 +16,7 @@ class PConvEncoderDecoder(nn.Module):
     """
 
     def __init__(self, encoder, decoder):
-        super(PConvEncoderDecoder, self).__init__()
+        super().__init__()
         self.encoder = build_component(encoder)
         self.decoder = build_component(decoder)
 

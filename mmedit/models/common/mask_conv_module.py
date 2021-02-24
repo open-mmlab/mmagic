@@ -35,7 +35,7 @@ class MaskConvModule(ConvModule):
     supported_conv_list = ['PConv']
 
     def __init__(self, *args, **kwargs):
-        super(MaskConvModule, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         assert self.conv_cfg['type'] in self.supported_conv_list
 
         self.init_weights()

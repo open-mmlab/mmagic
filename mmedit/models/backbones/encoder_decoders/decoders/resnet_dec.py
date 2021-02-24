@@ -112,7 +112,7 @@ class ResNetDec(nn.Module):
                      type='LeakyReLU', negative_slope=0.2, inplace=True),
                  with_spectral_norm=False,
                  late_downsample=False):
-        super(ResNetDec, self).__init__()
+        super().__init__()
         if block == 'BasicBlockDec':
             block = BasicBlockDec
         else:

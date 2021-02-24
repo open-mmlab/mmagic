@@ -49,7 +49,7 @@ class Pix2Pix(BaseModel):
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
-        super(Pix2Pix, self).__init__()
+        super().__init__()
 
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg

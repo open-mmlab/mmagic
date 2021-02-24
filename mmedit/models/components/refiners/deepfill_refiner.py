@@ -38,7 +38,7 @@ class DeepFillRefiner(nn.Module):
                  contextual_attention=dict(
                      type='ContextualAttentionNeck', in_channels=128),
                  decoder=dict(type='DeepFillDecoder', in_channels=256)):
-        super(DeepFillRefiner, self).__init__()
+        super().__init__()
         self.encoder_attention = build_component(encoder_attention)
         self.encoder_conv = build_component(encoder_conv)
         self.contextual_attention_neck = build_component(contextual_attention)

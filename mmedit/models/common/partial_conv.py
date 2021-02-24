@@ -20,7 +20,7 @@ class PartialConv2d(nn.Conv2d):
     """
 
     def __init__(self, *args, multi_channel=False, eps=1e-8, **kwargs):
-        super(PartialConv2d, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # whether the mask is multi-channel or not
         self.multi_channel = multi_channel
@@ -82,7 +82,7 @@ class PartialConv2d(nn.Conv2d):
         # standard conv2d
         if mask is not None:
             input = input * mask
-        raw_out = super(PartialConv2d, self).forward(input)
+        raw_out = super().forward(input)
 
         if mask is not None:
             if self.bias is None:

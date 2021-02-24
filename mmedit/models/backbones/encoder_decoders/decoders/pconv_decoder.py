@@ -27,7 +27,7 @@ class PConvDecoder(nn.Module):
                  interpolation='nearest',
                  conv_cfg=dict(type='PConv', multi_channel=True),
                  norm_cfg=dict(type='BN')):
-        super(PConvDecoder, self).__init__()
+        super().__init__()
         self.num_layers = num_layers
         self.interpolation = interpolation
 

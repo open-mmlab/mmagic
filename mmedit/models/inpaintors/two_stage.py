@@ -39,7 +39,7 @@ class TwoStageInpaintor(OneStageInpaintor):
                  input_with_ones=True,
                  disc_input_with_mask=False,
                  **kwargs):
-        super(TwoStageInpaintor, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.stage1_loss_type = stage1_loss_type
         self.stage2_loss_type = stage2_loss_type

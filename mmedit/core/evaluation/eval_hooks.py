@@ -80,7 +80,7 @@ class DistEvalIterHook(EvalIterHook):
                  interval=1,
                  gpu_collect=False,
                  **eval_kwargs):
-        super(DistEvalIterHook, self).__init__(dataloader, interval,
+        super().__init__(dataloader, interval,
                                                **eval_kwargs)
         self.gpu_collect = gpu_collect
 

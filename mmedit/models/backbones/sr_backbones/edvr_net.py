@@ -32,7 +32,7 @@ class ModulatedDCNPack(ModulatedDeformConv2d):
     """
 
     def __init__(self, *args, **kwargs):
-        super(ModulatedDCNPack, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.conv_offset = nn.Conv2d(
             self.in_channels,
@@ -73,7 +73,7 @@ class PCDAlignment(nn.Module):
                  mid_channels=64,
                  deform_groups=8,
                  act_cfg=dict(type='LeakyReLU', negative_slope=0.1)):
-        super(PCDAlignment, self).__init__()
+        super().__init__()
 
         # Pyramid has three levels:
         # L3: level 3, 1/4 spatial size
@@ -203,7 +203,7 @@ class TSAFusion(nn.Module):
                  num_frames=5,
                  center_frame_idx=2,
                  act_cfg=dict(type='LeakyReLU', negative_slope=0.1)):
-        super(TSAFusion, self).__init__()
+        super().__init__()
         self.center_frame_idx = center_frame_idx
         # temporal attention (before fusion conv)
         self.temporal_attn1 = nn.Conv2d(
@@ -329,7 +329,7 @@ class EDVRNet(nn.Module):
                  num_blocks_reconstruction=10,
                  center_frame_idx=2,
                  with_tsa=True):
-        super(EDVRNet, self).__init__()
+        super().__init__()
         self.center_frame_idx = center_frame_idx
         self.with_tsa = with_tsa
         act_cfg = dict(type='LeakyReLU', negative_slope=0.1)

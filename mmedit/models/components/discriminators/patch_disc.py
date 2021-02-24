@@ -31,7 +31,7 @@ class PatchDiscriminator(nn.Module):
                  num_conv=3,
                  norm_cfg=dict(type='BN'),
                  init_cfg=dict(type='normal', gain=0.02)):
-        super(PatchDiscriminator, self).__init__()
+        super().__init__()
         assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"
                                             f'got {type(norm_cfg)}')
         assert 'type' in norm_cfg, "'norm_cfg' must have key 'type'"

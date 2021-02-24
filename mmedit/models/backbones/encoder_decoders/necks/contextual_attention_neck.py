@@ -33,7 +33,7 @@ class ContextualAttentionNeck(nn.Module):
                  act_cfg=dict(type='ELU'),
                  contextual_attention_args=dict(softmax_scale=10.),
                  **kwargs):
-        super(ContextualAttentionNeck, self).__init__()
+        super().__init__()
         self.contextual_attention = ContextualAttentionModule(
             **contextual_attention_args)
         conv_module = self._conv_type[conv_type]

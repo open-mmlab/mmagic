@@ -28,7 +28,7 @@ class SRCNN(nn.Module):
                  channels=(3, 64, 32, 3),
                  kernel_sizes=(9, 1, 5),
                  upscale_factor=4):
-        super(SRCNN, self).__init__()
+        super().__init__()
         assert len(channels) == 4, ('The length of channel tuple should be 4, '
                                     f'but got {len(channels)}')
         assert len(kernel_sizes) == 3, (

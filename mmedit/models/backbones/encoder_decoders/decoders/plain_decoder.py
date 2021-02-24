@@ -13,7 +13,7 @@ class PlainDecoder(nn.Module):
     """
 
     def __init__(self, in_channels):
-        super(PlainDecoder, self).__init__()
+        super().__init__()
 
         self.deconv6_1 = nn.Conv2d(in_channels, 512, kernel_size=1)
         self.deconv5_1 = nn.Conv2d(512, 512, kernel_size=5, padding=2)

@@ -45,7 +45,7 @@ class SRAnnotationDataset(BaseSRDataset):
                  data_prefix=None,
                  test_mode=False,
                  filename_tmpl='{}'):
-        super(SRAnnotationDataset, self).__init__(pipeline, scale, test_mode)
+        super().__init__(pipeline, scale, test_mode)
         self.lq_folder = str(lq_folder)
         self.gt_folder = str(gt_folder)
         self.ann_file = str(ann_file)

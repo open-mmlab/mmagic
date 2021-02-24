@@ -7,7 +7,7 @@ from mmedit.core import build_optimizers
 class ExampleModel(nn.Module):
 
     def __init__(self):
-        super(ExampleModel, self).__init__()
+        super().__init__()
         self.model1 = nn.Conv2d(3, 8, kernel_size=3)
         self.model2 = nn.Conv2d(3, 4, kernel_size=3)
 

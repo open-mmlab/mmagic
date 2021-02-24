@@ -17,7 +17,7 @@ class GLEncoder(nn.Module):
     """
 
     def __init__(self, norm_cfg=None, act_cfg=dict(type='ReLU')):
-        super(GLEncoder, self).__init__()
+        super().__init__()
 
         channel_list = [64, 128, 128, 256, 256, 256]
         kernel_size_list = [5, 3, 3, 3, 3, 3]

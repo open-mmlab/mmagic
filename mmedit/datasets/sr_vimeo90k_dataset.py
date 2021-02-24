@@ -41,7 +41,7 @@ class SRVimeo90KDataset(BaseSRDataset):
                  pipeline,
                  scale,
                  test_mode=False):
-        super(SRVimeo90KDataset, self).__init__(pipeline, scale, test_mode)
+        super().__init__(pipeline, scale, test_mode)
         assert num_input_frames % 2 == 1, (
             f'num_input_frames should be odd numbers, '
             f'but received {num_input_frames}.')

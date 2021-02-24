@@ -60,7 +60,7 @@ class OneStageInpaintor(BaseModel):
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
-        super(OneStageInpaintor, self).__init__()
+        super().__init__()
         self.with_l1_hole_loss = loss_l1_hole is not None
         self.with_l1_valid_loss = loss_l1_valid is not None
         self.with_tv_loss = loss_tv is not None

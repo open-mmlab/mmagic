@@ -22,7 +22,7 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
     """
 
     def __init__(self, pipeline, test_mode=False):
-        super(BaseDataset, self).__init__()
+        super().__init__()
         self.test_mode = test_mode
         self.pipeline = Compose(pipeline)
 

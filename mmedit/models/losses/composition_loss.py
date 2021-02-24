@@ -22,7 +22,7 @@ class L1CompositionLoss(nn.Module):
     """
 
     def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
-        super(L1CompositionLoss, self).__init__()
+        super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
                              f'Supported ones are: {_reduction_modes}')
@@ -69,7 +69,7 @@ class MSECompositionLoss(nn.Module):
     """
 
     def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
-        super(MSECompositionLoss, self).__init__()
+        super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
                              f'Supported ones are: {_reduction_modes}')
@@ -122,7 +122,7 @@ class CharbonnierCompLoss(nn.Module):
                  reduction='mean',
                  sample_wise=False,
                  eps=1e-12):
-        super(CharbonnierCompLoss, self).__init__()
+        super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
                              f'Supported ones are: {_reduction_modes}')

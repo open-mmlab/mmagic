@@ -17,7 +17,7 @@ class PlainRefiner(nn.Module):
     """
 
     def __init__(self, conv_channels=64, pretrained=None):
-        super(PlainRefiner, self).__init__()
+        super().__init__()
 
         self.refine_conv1 = nn.Conv2d(
             4, conv_channels, kernel_size=3, padding=1)

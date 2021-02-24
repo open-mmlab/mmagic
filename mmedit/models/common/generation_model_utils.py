@@ -139,7 +139,7 @@ class UnetSkipConnectionBlock(nn.Module):
                  is_innermost=False,
                  norm_cfg=dict(type='BN'),
                  use_dropout=False):
-        super(UnetSkipConnectionBlock, self).__init__()
+        super().__init__()
         # cannot be both outermost and innermost
         assert not (is_outermost and is_innermost), (
             "'is_outermost' and 'is_innermost' cannot be True"
@@ -251,7 +251,7 @@ class ResidualBlockWithDropout(nn.Module):
                  padding_mode,
                  norm_cfg=dict(type='BN'),
                  use_dropout=True):
-        super(ResidualBlockWithDropout, self).__init__()
+        super().__init__()
         assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"
                                             f'got {type(norm_cfg)}')
         assert 'type' in norm_cfg, "'norm_cfg' must have key 'type'"

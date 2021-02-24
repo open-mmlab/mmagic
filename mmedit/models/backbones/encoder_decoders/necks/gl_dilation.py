@@ -29,7 +29,7 @@ class GLDilationNeck(nn.Module):
                  norm_cfg=None,
                  act_cfg=dict(type='ReLU'),
                  **kwargs):
-        super(GLDilationNeck, self).__init__()
+        super().__init__()
         conv_module = self._conv_type[conv_type]
         dilation_convs_ = []
         for i in range(4):

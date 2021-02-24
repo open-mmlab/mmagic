@@ -58,7 +58,7 @@ class CycleGAN(BaseModel):
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
-        super(CycleGAN, self).__init__()
+        super().__init__()
 
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg

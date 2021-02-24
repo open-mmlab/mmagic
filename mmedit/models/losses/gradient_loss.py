@@ -19,7 +19,7 @@ class GradientLoss(nn.Module):
     """
 
     def __init__(self, loss_weight=1.0, reduction='mean'):
-        super(GradientLoss, self).__init__()
+        super().__init__()
         self.loss_weight = loss_weight
         self.reduction = reduction
         if self.reduction not in ['none', 'mean', 'sum']:

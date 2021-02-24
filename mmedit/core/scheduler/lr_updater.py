@@ -19,7 +19,7 @@ class LinearLrUpdaterHook(LrUpdaterHook):
     """
 
     def __init__(self, target_lr=0, start=0, interval=1, **kwargs):
-        super(LinearLrUpdaterHook, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.target_lr = target_lr
         self.start = start
         self.interval = interval

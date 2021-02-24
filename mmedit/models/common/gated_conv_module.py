@@ -35,7 +35,7 @@ class SimpleGatedConvModule(nn.Module):
                  feat_act_cfg=dict(type='ELU'),
                  gate_act_cfg=dict(type='Sigmoid'),
                  **kwargs):
-        super(SimpleGatedConvModule, self).__init__()
+        super().__init__()
         # the activation function should specified outside conv module
         kwargs_ = copy.deepcopy(kwargs)
         kwargs_['act_cfg'] = None

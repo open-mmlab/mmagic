@@ -19,7 +19,7 @@ class ResidualDenseBlock(nn.Module):
     """
 
     def __init__(self, mid_channels=64, growth_channels=32):
-        super(ResidualDenseBlock, self).__init__()
+        super().__init__()
         for i in range(5):
             out_channels = mid_channels if i == 4 else growth_channels
             self.add_module(
@@ -69,7 +69,7 @@ class RRDB(nn.Module):
     """
 
     def __init__(self, mid_channels, growth_channels=32):
-        super(RRDB, self).__init__()
+        super().__init__()
         self.rdb1 = ResidualDenseBlock(mid_channels, growth_channels)
         self.rdb2 = ResidualDenseBlock(mid_channels, growth_channels)
         self.rdb3 = ResidualDenseBlock(mid_channels, growth_channels)
@@ -113,7 +113,7 @@ class RRDBNet(nn.Module):
                  mid_channels=64,
                  num_blocks=23,
                  growth_channels=32):
-        super(RRDBNet, self).__init__()
+        super().__init__()
         self.conv_first = nn.Conv2d(in_channels, mid_channels, 3, 1, 1)
         self.body = make_layer(
             RRDB,

@@ -21,7 +21,7 @@ class GLDiscs(nn.Module):
     """
 
     def __init__(self, global_disc_cfg, local_disc_cfg):
-        super(GLDiscs, self).__init__()
+        super().__init__()
         self.global_disc = MultiLayerDiscriminator(**global_disc_cfg)
         self.local_disc = MultiLayerDiscriminator(**local_disc_cfg)
 

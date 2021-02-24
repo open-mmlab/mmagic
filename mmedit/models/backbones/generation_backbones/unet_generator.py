@@ -37,7 +37,7 @@ class UnetGenerator(nn.Module):
                  norm_cfg=dict(type='BN'),
                  use_dropout=False,
                  init_cfg=dict(type='normal', gain=0.02)):
-        super(UnetGenerator, self).__init__()
+        super().__init__()
         # We use norm layers in the unet generator.
         assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"
                                             f'got {type(norm_cfg)}')

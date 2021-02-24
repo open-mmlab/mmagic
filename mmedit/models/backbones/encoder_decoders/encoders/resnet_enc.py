@@ -37,7 +37,7 @@ class BasicBlock(nn.Module):
                  norm_cfg=dict(type='BN'),
                  act_cfg=dict(type='ReLU'),
                  with_spectral_norm=False):
-        super(BasicBlock, self).__init__()
+        super().__init__()
         assert stride == 1 or stride == 2, (
             f'stride other than 1 and 2 is not implemented, got {stride}')
 
@@ -128,7 +128,7 @@ class ResNetEnc(nn.Module):
                  act_cfg=dict(type='ReLU'),
                  with_spectral_norm=False,
                  late_downsample=False):
-        super(ResNetEnc, self).__init__()
+        super().__init__()
         if block == 'BasicBlock':
             block = BasicBlock
         else:
@@ -477,7 +477,7 @@ class ResGCAEncoder(ResShortcutEnc):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=False, logger=logger)
         elif pretrained is None:
-            super(ResGCAEncoder, self).init_weights()
+            super().init_weights()
         else:
             raise TypeError('"pretrained" must be a str or None. '
                             f'But received {type(pretrained)}.')

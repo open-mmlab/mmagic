@@ -16,7 +16,7 @@ class BaseSRDataset(BaseDataset):
     """
 
     def __init__(self, pipeline, scale, test_mode=False):
-        super(BaseSRDataset, self).__init__(pipeline, test_mode)
+        super().__init__(pipeline, test_mode)
         self.scale = scale
 
     @staticmethod

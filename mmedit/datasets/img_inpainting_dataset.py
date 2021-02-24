@@ -10,7 +10,7 @@ class ImgInpaintingDataset(BaseDataset):
     """
 
     def __init__(self, ann_file, pipeline, data_prefix=None, test_mode=False):
-        super(ImgInpaintingDataset, self).__init__(pipeline, test_mode)
+        super().__init__(pipeline, test_mode)
         self.ann_file = str(ann_file)
         self.data_prefix = str(data_prefix)
         self.data_infos = self.load_annotations()

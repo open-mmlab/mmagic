@@ -9,7 +9,7 @@ from .separable_conv_module import DepthwiseSeparableConvModule
 class ASPPPooling(nn.Sequential):
 
     def __init__(self, in_channels, out_channels, conv_cfg, norm_cfg, act_cfg):
-        super(ASPPPooling, self).__init__(
+        super().__init__(
             nn.AdaptiveAvgPool2d(1),
             ConvModule(
                 in_channels,
@@ -63,7 +63,7 @@ class ASPP(nn.Module):
                  norm_cfg=dict(type='BN'),
                  act_cfg=dict(type='ReLU'),
                  separable_conv=False):
-        super(ASPP, self).__init__()
+        super().__init__()
 
         if separable_conv:
             conv_module = DepthwiseSeparableConvModule

@@ -29,7 +29,7 @@ class VGG16(nn.Module):
                  batch_norm=False,
                  aspp=False,
                  dilations=None):
-        super(VGG16, self).__init__()
+        super().__init__()
         self.batch_norm = batch_norm
         self.aspp = aspp
         self.dilations = dilations

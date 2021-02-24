@@ -27,7 +27,7 @@ class LinearModule(nn.Module):
                  inplace=True,
                  with_spectral_norm=False,
                  order=('linear', 'act')):
-        super(LinearModule, self).__init__()
+        super().__init__()
         assert act_cfg is None or isinstance(act_cfg, dict)
         self.act_cfg = act_cfg
         self.inplace = inplace

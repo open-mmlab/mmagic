@@ -54,7 +54,7 @@ class GCAModule(nn.Module):
                  interpolation='nearest',
                  penalty=-1e4,
                  eps=1e-4):
-        super(GCAModule, self).__init__()
+        super().__init__()
         self.kernel_size = kernel_size
         self.stride = stride
         self.rate = rate

@@ -96,7 +96,7 @@ class HolisticIndexBlock(nn.Module):
                  norm_cfg=dict(type='BN'),
                  use_context=False,
                  use_nonlinear=False):
-        super(HolisticIndexBlock, self).__init__()
+        super().__init__()
 
         if use_context:
             kernel_size, padding = 4, 1
@@ -163,7 +163,7 @@ class DepthwiseIndexBlock(nn.Module):
                  use_context=False,
                  use_nonlinear=False,
                  mode='o2o'):
-        super(DepthwiseIndexBlock, self).__init__()
+        super().__init__()
 
         groups = in_channels if mode == 'o2o' else 1
 
@@ -244,7 +244,7 @@ class InvertedResidual(nn.Module):
                  expand_ratio,
                  norm_cfg,
                  use_res_connect=False):
-        super(InvertedResidual, self).__init__()
+        super().__init__()
         assert stride in [1, 2], 'stride must 1 or 2'
 
         self.use_res_connect = use_res_connect
@@ -351,7 +351,7 @@ class IndexNetEncoder(nn.Module):
                  freeze_bn=False,
                  use_nonlinear=True,
                  use_context=True):
-        super(IndexNetEncoder, self).__init__()
+        super().__init__()
         if out_stride not in [16, 32]:
             raise ValueError(f'out_stride must 16 or 32, got {out_stride}')
 

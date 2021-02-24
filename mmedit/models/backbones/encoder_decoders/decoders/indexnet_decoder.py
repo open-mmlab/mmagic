@@ -29,7 +29,7 @@ class IndexedUpsample(nn.Module):
                  kernel_size=5,
                  norm_cfg=dict(type='BN'),
                  conv_module=ConvModule):
-        super(IndexedUpsample, self).__init__()
+        super().__init__()
 
         self.conv = conv_module(
             in_channels,
@@ -78,7 +78,7 @@ class IndexNetDecoder(nn.Module):
                  norm_cfg=dict(type='BN'),
                  separable_conv=False):
         # TODO: remove in_channels argument
-        super(IndexNetDecoder, self).__init__()
+        super().__init__()
 
         if separable_conv:
             conv_module = DepthwiseSeparableConvModule

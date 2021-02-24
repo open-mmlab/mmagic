@@ -30,7 +30,7 @@ class PConvEncoder(nn.Module):
                  conv_cfg=dict(type='PConv', multi_channel=True),
                  norm_cfg=dict(type='BN', requires_grad=True),
                  norm_eval=False):
-        super(PConvEncoder, self).__init__()
+        super().__init__()
         self.num_layers = num_layers
         self.norm_eval = norm_eval
 
@@ -89,7 +89,7 @@ class PConvEncoder(nn.Module):
                     act_cfg=dict(type='ReLU')))
 
     def train(self, mode=True):
-        super(PConvEncoder, self).train(mode)
+        super().train(mode)
         if mode and self.norm_eval:
             for m in self.modules():
                 # trick: eval have effect on BatchNorm only

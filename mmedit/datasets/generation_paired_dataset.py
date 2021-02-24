@@ -21,7 +21,7 @@ class GenerationPairedDataset(BaseGenerationDataset):
     """
 
     def __init__(self, dataroot, pipeline, test_mode=False):
-        super(GenerationPairedDataset, self).__init__(pipeline, test_mode)
+        super().__init__(pipeline, test_mode)
         phase = 'test' if test_mode else 'train'
         self.dataroot = osp.join(str(dataroot), phase)
         self.data_infos = self.load_annotations()

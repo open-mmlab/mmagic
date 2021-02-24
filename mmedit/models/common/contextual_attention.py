@@ -48,7 +48,7 @@ class ContextualAttentionModule(nn.Module):
                  fuse_kernel_size=3,
                  softmax_scale=10,
                  return_attenion_score=True):
-        super(ContextualAttentionModule, self).__init__()
+        super().__init__()
         self.unfold_raw_kernel_size = unfold_raw_kernel_size
         self.unfold_raw_stride = unfold_raw_stride
         self.unfold_raw_padding = unfold_raw_padding

@@ -75,7 +75,7 @@ class GLInpaintor(OneStageInpaintor):
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
-        super(GLInpaintor, self).__init__(
+        super().__init__(
             encdec,
             disc=disc,
             loss_gan=loss_gan,
