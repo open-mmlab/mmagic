@@ -21,7 +21,7 @@ class BaseModel(nn.Module, metaclass=ABCMeta):
     """
 
     def __init__(self):
-        super(BaseModel, self).__init__()
+        super().__init__()
 
     @abstractmethod
     def init_weights(self):

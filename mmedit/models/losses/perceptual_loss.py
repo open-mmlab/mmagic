@@ -32,7 +32,7 @@ class PerceptualVGG(nn.Module):
                  vgg_type='vgg19',
                  use_input_norm=True,
                  pretrained='torchvision://vgg19'):
-        super(PerceptualVGG, self).__init__()
+        super().__init__()
         if pretrained.startswith('torchvision://'):
             assert vgg_type in pretrained
         self.layer_name_list = layer_name_list
@@ -127,7 +127,7 @@ class PerceptualLoss(nn.Module):
                  norm_img=True,
                  pretrained='torchvision://vgg19',
                  criterion='l1'):
-        super(PerceptualLoss, self).__init__()
+        super().__init__()
         self.norm_img = norm_img
         self.perceptual_weight = perceptual_weight
         self.style_weight = style_weight
