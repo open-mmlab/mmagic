@@ -35,7 +35,7 @@ class TestMattingDatasets(object):
 
     @classmethod
     def setup_class(cls):
-        # creat para for creating a dataset.
+        # create para for creating a dataset.
         cls.data_prefix = Path(__file__).parent / 'data'
         cls.ann_file = osp.join(cls.data_prefix, 'test_list.json')
         cls.pipeline = [

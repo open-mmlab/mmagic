@@ -76,7 +76,7 @@ test_pipeline = [
         keys=['img_a', 'img_b'],
         meta_keys=['img_a_path', 'img_b_path'])
 ]
-data_root = './data/paired/edges2shoes'
+data_root = 'data/paired/edges2shoes'
 data = dict(
     train_dataloader=dict(
         samples_per_gpu=4, workers_per_gpu=4, drop_last=True),

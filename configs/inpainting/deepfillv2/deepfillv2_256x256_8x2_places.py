@@ -128,7 +128,7 @@ train_pipeline = [
 
 test_pipeline = train_pipeline
 
-data_root = './data/places365/'
+data_root = 'data/places365'
 
 data = dict(
     workers_per_gpu=4,
@@ -137,19 +137,19 @@ data = dict(
     test_dataloader=dict(samples_per_gpu=1),
     train=dict(
         type=dataset_type,
-        ann_file=data_root + 'train_places_img_list_total.txt',
+        ann_file=f'{data_root}/train_places_img_list_total.txt',
         data_prefix=data_root,
         pipeline=train_pipeline,
         test_mode=False),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'val_places_img_list.txt',
+        ann_file=f'{data_root}/val_places_img_list.txt',
         data_prefix=data_root,
         pipeline=test_pipeline,
         test_mode=True),
     test=dict(
         type=dataset_type,
-        ann_file=(data_root + 'val_places_img_list.txt'),
+        ann_file=(f'{data_root}/val_places_img_list.txt'),
         data_prefix=data_root,
         pipeline=test_pipeline,
         test_mode=True))

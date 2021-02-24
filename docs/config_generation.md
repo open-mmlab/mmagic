@@ -107,7 +107,7 @@ test_pipeline = [
         keys=['img_a', 'img_b'],  # The keys of images
         meta_keys=['img_a_path', 'img_b_path'])  # The meta keys of images
 ]
-data_root = './data/pix2pix/facades'  # The root path of data
+data_root = 'data/pix2pix/facades'  # The root path of data
 data = dict(
     samples_per_gpu=1,  # Batch size of a single GPU
     workers_per_gpu=4,  # Worker to pre-fetch data for each single GPU
