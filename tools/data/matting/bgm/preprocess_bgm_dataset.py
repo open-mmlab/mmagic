@@ -7,7 +7,7 @@ import mmcv
 
 
 def generate_json(data_root, seg_root, bg_root, all_data):
-    """Generate training json list for Backgroung Matting video dataset.
+    """Generate training json list for Background Matting video dataset.
 
     Args:
         data_root (str): Background Matting video data root.

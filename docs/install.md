@@ -40,7 +40,7 @@ PyTorch 1.3.1., you need to install the prebuilt PyTorch with CUDA 9.2.
 conda install pytorch=1.3.1 cudatoolkit=9.2 torchvision=0.4.2 -c pytorch
 ```
 
-If you build PyTorch from source instead of installing the prebuilt pacakge,
+If you build PyTorch from source instead of installing the prebuilt package,
 you can use more CUDA versions such as 9.0.
 
 c. Clone the mmediting repository.

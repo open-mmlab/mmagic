@@ -127,7 +127,7 @@ if __name__ == '__main__':
     data = dict(merged_path=args.img_path, trimap_path=args.trimap_path)
     data = test_pipeline(data)
 
-    # conver model to onnx file
+    # convert model to onnx file
     pytorch2onnx(
         model,
         data,
