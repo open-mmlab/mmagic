@@ -32,7 +32,7 @@ class ContextualAttentionModule(nn.Module):
             Default: 3.
         softmax_scale (float): The scale factor for softmax function.
             Default: 10.
-        return_attenion_score (bool): If True, the attention score will be
+        return_attention_score (bool): If True, the attention score will be
             returned. Default: True.
     """
 
@@ -47,8 +47,8 @@ class ContextualAttentionModule(nn.Module):
                  scale=0.5,
                  fuse_kernel_size=3,
                  softmax_scale=10,
-                 return_attenion_score=True):
-        super(ContextualAttentionModule, self).__init__()
+                 return_attention_score=True):
+        super().__init__()
         self.unfold_raw_kernel_size = unfold_raw_kernel_size
         self.unfold_raw_stride = unfold_raw_stride
         self.unfold_raw_padding = unfold_raw_padding
@@ -60,7 +60,7 @@ class ContextualAttentionModule(nn.Module):
         self.fuse_kernel_size = fuse_kernel_size
         self.with_fuse_correlation = fuse_kernel_size > 1
         self.softmax_scale = softmax_scale
-        self.return_attention_score = return_attenion_score
+        self.return_attention_score = return_attention_score
 
         if self.with_fuse_correlation:
             assert fuse_kernel_size % 2 == 1
@@ -174,7 +174,7 @@ class ContextualAttentionModule(nn.Module):
         Returns:
             torch.Tensor: Tensor with shape of (n, c, h, w).
         """
-        n, num_context, h, w = attention_score.size()
+        n, _, h, w = attention_score.size()
         attention_score = attention_score.view(1, -1, h, w)
         output = F.conv_transpose2d(
             attention_score,
@@ -258,7 +258,7 @@ class ContextualAttentionModule(nn.Module):
         return h_unfold, w_unfold
 
     def calculate_overlap_factor(self, attention_score):
-        """Calculte the overlap factor after applying deconv.
+        """Calculate the overlap factor after applying deconv.
 
         Args:
             attention_score (torch.Tensor): The attention score with shape of

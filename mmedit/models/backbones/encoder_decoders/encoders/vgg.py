@@ -9,7 +9,7 @@ from mmedit.utils import get_root_logger
 
 @COMPONENTS.register_module()
 class VGG16(nn.Module):
-    """Customed VGG16 Encoder.
+    """Customized VGG16 Encoder.
 
     A 1x1 conv is added after the original VGG16 conv layers. The indices of
     max pooling layers are returned for unpooling layers in decoders.
@@ -29,7 +29,7 @@ class VGG16(nn.Module):
                  batch_norm=False,
                  aspp=False,
                  dilations=None):
-        super(VGG16, self).__init__()
+        super().__init__()
         self.batch_norm = batch_norm
         self.aspp = aspp
         self.dilations = dilations

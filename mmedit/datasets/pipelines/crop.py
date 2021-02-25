@@ -9,7 +9,7 @@ from .utils import random_choose_unknown
 
 
 @PIPELINES.register_module()
-class Crop(object):
+class Crop:
     """Crop data to specific size for training.
 
     Args:
@@ -87,7 +87,7 @@ class Crop(object):
 
 
 @PIPELINES.register_module()
-class FixedCrop(object):
+class FixedCrop:
     """Crop paired data (at a specific position) to specific size for training.
 
     Args:
@@ -165,7 +165,7 @@ class FixedCrop(object):
 
 
 @PIPELINES.register_module()
-class PairedRandomCrop(object):
+class PairedRandomCrop:
     """Paried random crop.
 
     It crops a pair of lq and gt images with corresponding locations.
@@ -241,7 +241,7 @@ class PairedRandomCrop(object):
 
 
 @PIPELINES.register_module()
-class CropAroundCenter(object):
+class CropAroundCenter:
     """Randomly crop the images around unknown area in the center 1/4 images.
 
     This cropping strategy is adopted in GCA matting. The `unknown area` is the
@@ -329,7 +329,7 @@ class CropAroundCenter(object):
 
 
 @PIPELINES.register_module()
-class CropAroundUnknown(object):
+class CropAroundUnknown:
     """Crop around unknown area with a randomly selected scale.
 
     Randomly select the w and h from a list of (w, h).
@@ -372,7 +372,7 @@ class CropAroundUnknown(object):
         if unknown_source not in ['alpha', 'trimap']:
             raise ValueError('unknown_source must be "alpha" or "trimap", '
                              f'but got {unknown_source}')
-        elif unknown_source not in keys:
+        if unknown_source not in keys:
             # it could only be trimap, since alpha is checked before
             raise ValueError(
                 'if unknown_source is "trimap", it must also be set in keys')
@@ -436,7 +436,7 @@ class CropAroundUnknown(object):
 
 
 @PIPELINES.register_module()
-class CropAroundFg(object):
+class CropAroundFg:
     """Crop around the whole foreground in the segmentation mask.
 
     Required keys are "seg" and the keys in argument `keys`.
@@ -507,7 +507,7 @@ class CropAroundFg(object):
 
 
 @PIPELINES.register_module()
-class ModCrop(object):
+class ModCrop:
     """Mod crop gt images, used during testing.
 
     Required keys are "scale" and "gt",

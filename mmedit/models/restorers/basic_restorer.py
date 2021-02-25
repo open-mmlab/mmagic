@@ -35,7 +35,7 @@ class BasicRestorer(BaseModel):
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
-        super(BasicRestorer, self).__init__()
+        super().__init__()
 
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
@@ -70,10 +70,10 @@ class BasicRestorer(BaseModel):
             kwargs (dict): Other arguments.
         """
 
-        if not test_mode:
-            return self.forward_train(lq, gt)
-        else:
+        if test_mode:
             return self.forward_test(lq, gt, **kwargs)
+
+        return self.forward_train(lq, gt)
 
     def forward_train(self, lq, gt):
         """Training forward function.

@@ -46,8 +46,7 @@ class DIM(BaseMattor):
                  loss_alpha=None,
                  loss_comp=None,
                  loss_refine=None):
-        super(DIM, self).__init__(backbone, refiner, train_cfg, test_cfg,
-                                  pretrained)
+        super().__init__(backbone, refiner, train_cfg, test_cfg, pretrained)
 
         if all(v is None for v in (loss_alpha, loss_comp, loss_refine)):
             raise ValueError('Please specify one loss for DIM.')

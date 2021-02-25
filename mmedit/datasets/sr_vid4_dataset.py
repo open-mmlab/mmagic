@@ -46,7 +46,7 @@ class SRVid4Dataset(BaseSRDataset):
                  scale,
                  filename_tmpl='{:08d}',
                  test_mode=False):
-        super(SRVid4Dataset, self).__init__(pipeline, scale, test_mode)
+        super().__init__(pipeline, scale, test_mode)
         assert num_input_frames % 2 == 1, (
             f'num_input_frames should be odd numbers, '
             f'but received {num_input_frames}.')

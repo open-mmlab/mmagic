@@ -90,11 +90,11 @@ class SRGAN(BasicRestorer):
             test_mode (bool): Whether in test mode or not. Default: False.
             kwargs (dict): Other arguments.
         """
-        if not test_mode:
-            raise ValueError(
-                'SRGAN model does not supprot `forward_train` function.')
-        else:
+        if test_mode:
             return self.forward_test(lq, gt, **kwargs)
+
+        raise ValueError(
+            'SRGAN model does not supprot `forward_train` function.')
 
     def train_step(self, data_batch, optimizer):
         """Train step.

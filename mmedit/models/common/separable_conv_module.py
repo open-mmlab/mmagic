@@ -51,7 +51,7 @@ class DepthwiseSeparableConvModule(nn.Module):
                  pw_norm_cfg='default',
                  pw_act_cfg='default',
                  **kwargs):
-        super(DepthwiseSeparableConvModule, self).__init__()
+        super().__init__()
         assert 'groups' not in kwargs, 'groups should not be specified'
 
         # if norm/activation config of depthwise/pointwise ConvModule is not

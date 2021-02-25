@@ -63,17 +63,17 @@ def build_index_block(in_channels,
                 bias=False,
                 norm_cfg=None,
                 act_cfg=None))
-    else:
-        return ConvModule(
-            in_channels,
-            out_channels,
-            kernel_size,
-            stride=stride,
-            padding=padding,
-            groups=groups,
-            bias=False,
-            norm_cfg=None,
-            act_cfg=None)
+
+    return ConvModule(
+        in_channels,
+        out_channels,
+        kernel_size,
+        stride=stride,
+        padding=padding,
+        groups=groups,
+        bias=False,
+        norm_cfg=None,
+        act_cfg=None)
 
 
 class HolisticIndexBlock(nn.Module):
@@ -96,7 +96,7 @@ class HolisticIndexBlock(nn.Module):
                  norm_cfg=dict(type='BN'),
                  use_context=False,
                  use_nonlinear=False):
-        super(HolisticIndexBlock, self).__init__()
+        super().__init__()
 
         if use_context:
             kernel_size, padding = 4, 1
@@ -163,7 +163,7 @@ class DepthwiseIndexBlock(nn.Module):
                  use_context=False,
                  use_nonlinear=False,
                  mode='o2o'):
-        super(DepthwiseIndexBlock, self).__init__()
+        super().__init__()
 
         groups = in_channels if mode == 'o2o' else 1
 
@@ -173,7 +173,7 @@ class DepthwiseIndexBlock(nn.Module):
             kernel_size, padding = 2, 0
 
         self.index_blocks = nn.ModuleList()
-        for i in range(4):
+        for _ in range(4):
             self.index_blocks.append(
                 build_index_block(
                     in_channels,
@@ -220,7 +220,7 @@ class DepthwiseIndexBlock(nn.Module):
 class InvertedResidual(nn.Module):
     """Inverted residual layer for indexnet encoder.
 
-    It basicaly is a depthwise separable conv module. If `expand_ratio` is not
+    It basically is a depthwise separable conv module. If `expand_ratio` is not
     one, then a conv module of kernel_size 1 will be inserted to change the
     input channels to `in_channels * expand_ratio`.
 
@@ -244,7 +244,7 @@ class InvertedResidual(nn.Module):
                  expand_ratio,
                  norm_cfg,
                  use_res_connect=False):
-        super(InvertedResidual, self).__init__()
+        super().__init__()
         assert stride in [1, 2], 'stride must 1 or 2'
 
         self.use_res_connect = use_res_connect
@@ -351,7 +351,7 @@ class IndexNetEncoder(nn.Module):
                  freeze_bn=False,
                  use_nonlinear=True,
                  use_context=True):
-        super(IndexNetEncoder, self).__init__()
+        super().__init__()
         if out_stride not in [16, 32]:
             raise ValueError(f'out_stride must 16 or 32, got {out_stride}')
 
@@ -361,7 +361,7 @@ class IndexNetEncoder(nn.Module):
         # we name the index network in the paper index_block
         if index_mode == 'holistic':
             index_block = HolisticIndexBlock
-        elif index_mode == 'o2o' or index_mode == 'm2o':
+        elif index_mode in ('o2o', 'm2o'):
             index_block = partial(DepthwiseIndexBlock, mode=index_mode)
         else:
             raise NameError('Unknown index block mode {}'.format(index_mode))
@@ -461,7 +461,7 @@ class IndexNetEncoder(nn.Module):
         ]
 
         in_channels = out_channels
-        for i in range(1, num_blocks):
+        for _ in range(1, num_blocks):
             layers.append(
                 InvertedResidual(
                     in_channels,

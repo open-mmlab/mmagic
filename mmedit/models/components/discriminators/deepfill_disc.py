@@ -25,7 +25,7 @@ class DeepFillv1Discriminators(nn.Module):
     """
 
     def __init__(self, global_disc_cfg, local_disc_cfg):
-        super(DeepFillv1Discriminators, self).__init__()
+        super().__init__()
         self.global_disc = build_component(global_disc_cfg)
         self.local_disc = build_component(local_disc_cfg)
 

@@ -40,7 +40,7 @@ class DeepFillDecoder(nn.Module):
                  out_act_cfg=dict(type='clip', min=-1., max=1.),
                  channel_factor=1.,
                  **kwargs):
-        super(DeepFillDecoder, self).__init__()
+        super().__init__()
         self.with_out_activation = out_act_cfg is not None
 
         conv_module = self._conv_type[conv_type]
@@ -91,7 +91,7 @@ class DeepFillDecoder(nn.Module):
             x = input_dict
         for i in range(7):
             x = getattr(self, f'dec{i + 1}')(x)
-            if i == 1 or i == 3:
+            if i in (1, 3):
                 x = F.interpolate(x, scale_factor=2)
 
         if self.with_out_activation:

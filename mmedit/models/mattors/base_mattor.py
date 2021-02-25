@@ -49,7 +49,7 @@ class BaseMattor(BaseModel):
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
-        super(BaseMattor, self).__init__()
+        super().__init__()
 
         self.train_cfg = train_cfg if train_cfg is not None else ConfigDict()
         self.test_cfg = test_cfg if test_cfg is not None else ConfigDict()
@@ -77,7 +77,8 @@ class BaseMattor(BaseModel):
         # validate if test config is proper
         if not hasattr(self.test_cfg, 'metrics'):
             raise KeyError('Missing key "metrics" in test_cfg')
-        elif mmcv.is_list_of(self.test_cfg.metrics, str):
+
+        if mmcv.is_list_of(self.test_cfg.metrics, str):
             for metric in self.test_cfg.metrics:
                 if metric not in self.allowed_metrics:
                     raise KeyError(f'metric {metric} is not supported')
@@ -207,13 +208,11 @@ class BaseMattor(BaseModel):
             trimap (Tensor): Trimap of the input image.
             alpha (Tensor): Ground-truth alpha matte.
         """
-        pass
 
     @abstractmethod
     def forward_test(self, merged, trimap, meta, **kwargs):
         """Defines the computation performed at every test call.
         """
-        pass
 
     def train_step(self, data_batch, optimizer):
         """Defines the computation and network update at every training call.
@@ -262,7 +261,7 @@ class BaseMattor(BaseModel):
                 are set to ``True``. Otherwise return the output of \
                 ``self.forward_train``.
         """
-        if not test_mode:
-            return self.forward_train(merged, trimap, meta, alpha, **kwargs)
-        else:
+        if test_mode:
             return self.forward_test(merged, trimap, meta, **kwargs)
+
+        return self.forward_train(merged, trimap, meta, alpha, **kwargs)

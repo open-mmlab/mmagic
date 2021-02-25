@@ -36,7 +36,7 @@ class DeepFillEncoderDecoder(nn.Module):
                          act_cfg=dict(type='ELU'))),
                  stage2=dict(type='DeepFillRefiner'),
                  return_offset=False):
-        super(DeepFillEncoderDecoder, self).__init__()
+        super().__init__()
         self.stage1 = build_backbone(stage1)
         self.stage2 = build_component(stage2)
 

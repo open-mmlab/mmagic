@@ -26,7 +26,7 @@ class GLEncoderDecoder(nn.Module):
                  encoder=dict(type='GLEncoder'),
                  decoder=dict(type='GLDecoder'),
                  dilation_neck=dict(type='GLDilationNeck')):
-        super(GLEncoderDecoder, self).__init__()
+        super().__init__()
         self.encoder = build_component(encoder)
         self.decoder = build_component(decoder)
         self.dilation_neck = build_component(dilation_neck)

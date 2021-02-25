@@ -17,7 +17,7 @@ class DynamicUpsamplingFilter(nn.Module):
     """
 
     def __init__(self, filter_size=(5, 5)):
-        super(DynamicUpsamplingFilter, self).__init__()
+        super().__init__()
         if not isinstance(filter_size, tuple):
             raise TypeError('The type of filter_size must be tuple, '
                             f'but got type{filter_size}')

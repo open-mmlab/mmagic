@@ -29,7 +29,7 @@ class IndexedUpsample(nn.Module):
                  kernel_size=5,
                  norm_cfg=dict(type='BN'),
                  conv_module=ConvModule):
-        super(IndexedUpsample, self).__init__()
+        super().__init__()
 
         self.conv = conv_module(
             in_channels,
@@ -78,7 +78,7 @@ class IndexNetDecoder(nn.Module):
                  norm_cfg=dict(type='BN'),
                  separable_conv=False):
         # TODO: remove in_channels argument
-        super(IndexNetDecoder, self).__init__()
+        super().__init__()
 
         if separable_conv:
             conv_module = DepthwiseSeparableConvModule
@@ -91,11 +91,11 @@ class IndexNetDecoder(nn.Module):
         blocks_out_channels = [96, 64, 32, 24, 16, 32, 32]
 
         self.decoder_layers = nn.ModuleList()
-        for in_channels, out_channels in zip(blocks_in_channels,
-                                             blocks_out_channels):
+        for in_channel, out_channel in zip(blocks_in_channels,
+                                           blocks_out_channels):
             self.decoder_layers.append(
-                IndexedUpsample(in_channels, out_channels, kernel_size,
-                                norm_cfg, conv_module))
+                IndexedUpsample(in_channel, out_channel, kernel_size, norm_cfg,
+                                conv_module))
 
         self.pred = nn.Sequential(
             conv_module(

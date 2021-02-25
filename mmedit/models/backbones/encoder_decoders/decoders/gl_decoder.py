@@ -27,7 +27,7 @@ class GLDecoder(nn.Module):
                  norm_cfg=None,
                  act_cfg=dict(type='ReLU'),
                  out_act='clip'):
-        super(GLDecoder, self).__init__()
+        super().__init__()
         self.dec1 = ConvModule(
             in_channels,
             256,

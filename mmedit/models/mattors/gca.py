@@ -30,8 +30,7 @@ class GCA(BaseMattor):
                  test_cfg=None,
                  pretrained=None,
                  loss_alpha=None):
-        super(GCA, self).__init__(backbone, None, train_cfg, test_cfg,
-                                  pretrained)
+        super().__init__(backbone, None, train_cfg, test_cfg, pretrained)
         self.loss_alpha = build_loss(loss_alpha)
         # support fp16
         self.fp16_enabled = False

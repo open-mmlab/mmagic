@@ -112,7 +112,7 @@ class ResNetDec(nn.Module):
                      type='LeakyReLU', negative_slope=0.2, inplace=True),
                  with_spectral_norm=False,
                  late_downsample=False):
-        super(ResNetDec, self).__init__()
+        super().__init__()
         if block == 'BasicBlockDec':
             block = BasicBlockDec
         else:
@@ -335,10 +335,9 @@ class ResGCADecoder(ResShortcutDec):
                      type='LeakyReLU', negative_slope=0.2, inplace=True),
                  with_spectral_norm=False,
                  late_downsample=False):
-        super(ResGCADecoder,
-              self).__init__(block, layers, in_channels, kernel_size, conv_cfg,
-                             norm_cfg, act_cfg, with_spectral_norm,
-                             late_downsample)
+        super().__init__(block, layers, in_channels, kernel_size, conv_cfg,
+                         norm_cfg, act_cfg, with_spectral_norm,
+                         late_downsample)
         self.gca = GCAModule(128, 128)
 
     def forward(self, inputs):

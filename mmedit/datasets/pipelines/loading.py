@@ -10,7 +10,7 @@ from ..registry import PIPELINES
 
 
 @PIPELINES.register_module()
-class LoadImageFromFile(object):
+class LoadImageFromFile:
     """Load image from file.
 
     Args:
@@ -132,7 +132,7 @@ class LoadImageFromFileList(LoadImageFromFile):
 
 
 @PIPELINES.register_module()
-class RandomLoadResizeBg(object):
+class RandomLoadResizeBg:
     """Randomly load a background image and resize it.
 
     Required key is "fg", added key is "bg".
@@ -178,7 +178,7 @@ class RandomLoadResizeBg(object):
 
 
 @PIPELINES.register_module()
-class LoadMask(object):
+class LoadMask:
     """Load Mask for multiple types.
 
     For different types of mask, users need to provide the corresponding
@@ -340,7 +340,7 @@ class LoadMask(object):
 
 
 @PIPELINES.register_module()
-class GetSpatialDiscountMask(object):
+class GetSpatialDiscountMask:
     """Get spatial discounting mask constant.
 
     Spatial discounting mask is first introduced in:

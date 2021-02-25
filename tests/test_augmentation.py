@@ -15,7 +15,7 @@ from mmedit.datasets.pipelines import (BinarizeImage, Flip,
 # yapf: enable
 
 
-class TestAugmentations(object):
+class TestAugmentations:
 
     @classmethod
     def setup_class(cls):

@@ -17,7 +17,7 @@ class BasicModule(nn.Module):
     """
 
     def __init__(self):
-        super(BasicModule, self).__init__()
+        super().__init__()
 
         self.basic_module = nn.Sequential(
             ConvModule(
@@ -88,8 +88,8 @@ class SPyNet(nn.Module):
         https://github.com/Coldog2333/pytoflow
     """
 
-    def __init__(self, load_path=None):
-        super(SPyNet, self).__init__()
+    def __init__(self):
+        super().__init__()
 
         self.basic_module = nn.ModuleList([BasicModule() for _ in range(4)])
 
@@ -159,7 +159,7 @@ class TOFlow(nn.Module):
     """
 
     def __init__(self, adapt_official_weights=False):
-        super(TOFlow, self).__init__()
+        super().__init__()
         self.adapt_official_weights = adapt_official_weights
         self.ref_idx = 0 if adapt_official_weights else 3
 

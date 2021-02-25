@@ -5,7 +5,7 @@ from mmcv.cnn import build_activation_layer, kaiming_init
 class LinearModule(nn.Module):
     """A linear block that contains linear/norm/activation layers.
 
-    For low level visioin, we add spectral norm and padding layer.
+    For low level vision, we add spectral norm and padding layer.
 
     Args:
         in_features (int): Same as nn.Linear.
@@ -27,7 +27,7 @@ class LinearModule(nn.Module):
                  inplace=True,
                  with_spectral_norm=False,
                  order=('linear', 'act')):
-        super(LinearModule, self).__init__()
+        super().__init__()
         assert act_cfg is None or isinstance(act_cfg, dict)
         self.act_cfg = act_cfg
         self.inplace = inplace
@@ -69,7 +69,7 @@ class LinearModule(nn.Module):
         kaiming_init(self.linear, a=a, nonlinearity=nonlinearity)
 
     def forward(self, x, activate=True):
-        """Foward Function.
+        """Forward Function.
 
         Args:
             x (torch.Tensor): Input tensor with shape of (n, \*,  # noqa: W605

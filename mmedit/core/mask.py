@@ -282,7 +282,7 @@ def random_irregular_mask(img_shape,
                 angle = 2 * math.pi - angle
             length = length_list[direct_n]
             brush_w = brush_width_list[direct_n]
-            # compute end point accoriding to the random angle
+            # compute end point according to the random angle
             end_x = (start_x + length * np.sin(angle)).astype(np.int32)
             end_y = (start_y + length * np.cos(angle)).astype(np.int32)
 

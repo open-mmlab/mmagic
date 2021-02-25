@@ -66,7 +66,7 @@ class L1Loss(nn.Module):
     """
 
     def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
-        super(L1Loss, self).__init__()
+        super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
                              f'Supported ones are: {_reduction_modes}')
@@ -108,7 +108,7 @@ class MSELoss(nn.Module):
     """
 
     def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
-        super(MSELoss, self).__init__()
+        super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
                              f'Supported ones are: {_reduction_modes}')
@@ -160,7 +160,7 @@ class CharbonnierLoss(nn.Module):
                  reduction='mean',
                  sample_wise=False,
                  eps=1e-12):
-        super(CharbonnierLoss, self).__init__()
+        super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
                              f'Supported ones are: {_reduction_modes}')
@@ -197,7 +197,7 @@ class MaskedTVLoss(L1Loss):
     """
 
     def __init__(self, loss_weight=1.0):
-        super(MaskedTVLoss, self).__init__(loss_weight=loss_weight)
+        super().__init__(loss_weight=loss_weight)
 
     def forward(self, pred, mask=None):
         """Forward function.
@@ -210,9 +210,9 @@ class MaskedTVLoss(L1Loss):
         Returns:
             [type]: [description]
         """
-        y_diff = super(MaskedTVLoss, self).forward(
+        y_diff = super().forward(
             pred[:, :, :-1, :], pred[:, :, 1:, :], weight=mask[:, :, :-1, :])
-        x_diff = super(MaskedTVLoss, self).forward(
+        x_diff = super().forward(
             pred[:, :, :, :-1], pred[:, :, :, 1:], weight=mask[:, :, :, :-1])
 
         loss = x_diff + y_diff

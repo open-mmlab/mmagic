@@ -49,7 +49,7 @@ class Pix2Pix(BaseModel):
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
-        super(Pix2Pix, self).__init__()
+        super().__init__()
 
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
@@ -124,7 +124,7 @@ class Pix2Pix(BaseModel):
             dict: Dict of forward results for training.
         """
         # necessary setup
-        real_a, real_b, image_path = self.setup(img_a, img_b, meta)
+        real_a, real_b, _ = self.setup(img_a, img_b, meta)
         fake_b = self.generator(real_a)
         results = dict(real_a=real_a, fake_b=fake_b, real_b=real_b)
         return results
@@ -216,10 +216,10 @@ class Pix2Pix(BaseModel):
             test_mode (bool): Whether in test mode or not. Default: False.
             kwargs (dict): Other arguments.
         """
-        if not test_mode:
-            return self.forward_train(img_a, img_b, meta)
-        else:
+        if test_mode:
             return self.forward_test(img_a, img_b, meta, **kwargs)
+
+        return self.forward_train(img_a, img_b, meta)
 
     def backward_discriminator(self, outputs):
         """Backward function for the discriminator.

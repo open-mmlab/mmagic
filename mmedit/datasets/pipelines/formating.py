@@ -17,20 +17,20 @@ def to_tensor(data):
     """
     if isinstance(data, torch.Tensor):
         return data
-    elif isinstance(data, np.ndarray):
+    if isinstance(data, np.ndarray):
         return torch.from_numpy(data)
-    elif isinstance(data, Sequence) and not mmcv.is_str(data):
+    if isinstance(data, Sequence) and not mmcv.is_str(data):
         return torch.tensor(data)
-    elif isinstance(data, int):
+    if isinstance(data, int):
         return torch.LongTensor([data])
-    elif isinstance(data, float):
+    if isinstance(data, float):
         return torch.FloatTensor([data])
-    else:
-        raise TypeError(f'type {type(data)} cannot be converted to tensor.')
+
+    raise TypeError(f'type {type(data)} cannot be converted to tensor.')
 
 
 @PIPELINES.register_module()
-class ToTensor(object):
+class ToTensor:
     """Convert some values in results dict to `torch.Tensor` type
     in data loader pipeline.
 
@@ -60,7 +60,7 @@ class ToTensor(object):
 
 
 @PIPELINES.register_module()
-class ImageToTensor(object):
+class ImageToTensor:
     """Convert image type to `torch.Tensor` type.
 
     Args:
@@ -138,7 +138,7 @@ class FramesToTensor(ImageToTensor):
 
 
 @PIPELINES.register_module()
-class GetMaskedImage(object):
+class GetMaskedImage:
     """Get masked image.
 
     Args:
@@ -176,7 +176,7 @@ class GetMaskedImage(object):
 
 
 @PIPELINES.register_module()
-class FormatTrimap(object):
+class FormatTrimap:
     """Convert trimap (tensor) to one-hot representation.
 
     It transforms the trimap label from (0, 128, 255) to (0, 1, 2). If
@@ -219,7 +219,7 @@ class FormatTrimap(object):
 
 
 @PIPELINES.register_module()
-class Collect(object):
+class Collect:
     """Collect data from the loader relevant to the specific task.
 
     This is usually the last stage of the data loader pipeline. Typically keys

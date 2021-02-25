@@ -37,8 +37,8 @@ class BasicBlock(nn.Module):
                  norm_cfg=dict(type='BN'),
                  act_cfg=dict(type='ReLU'),
                  with_spectral_norm=False):
-        super(BasicBlock, self).__init__()
-        assert stride == 1 or stride == 2, (
+        super().__init__()
+        assert stride in (1, 2), (
             f'stride other than 1 and 2 is not implemented, got {stride}')
 
         assert stride != 2 or interpolation is not None, (
@@ -128,7 +128,7 @@ class ResNetEnc(nn.Module):
                  act_cfg=dict(type='ReLU'),
                  with_spectral_norm=False,
                  late_downsample=False):
-        super(ResNetEnc, self).__init__()
+        super().__init__()
         if block == 'BasicBlock':
             block = BasicBlock
         else:
@@ -314,19 +314,18 @@ class ResShortcutEnc(ResNetEnc):
                  with_spectral_norm=False,
                  late_downsample=False,
                  order=('conv', 'act', 'norm')):
-        super(ResShortcutEnc,
-              self).__init__(block, layers, in_channels, conv_cfg, norm_cfg,
-                             act_cfg, with_spectral_norm, late_downsample)
+        super().__init__(block, layers, in_channels, conv_cfg, norm_cfg,
+                         act_cfg, with_spectral_norm, late_downsample)
 
         # TODO: rename self.midplanes to self.mid_channels in ResNetEnc
         self.shortcut_in_channels = [in_channels, self.midplanes, 64, 128, 256]
         self.shortcut_out_channels = [32, self.midplanes, 64, 128, 256]
 
         self.shortcut = nn.ModuleList()
-        for in_channels, out_channels in zip(self.shortcut_in_channels,
-                                             self.shortcut_out_channels):
+        for in_channel, out_channel in zip(self.shortcut_in_channels,
+                                           self.shortcut_out_channels):
             self.shortcut.append(
-                self._make_shortcut(in_channels, out_channels, conv_cfg,
+                self._make_shortcut(in_channel, out_channel, conv_cfg,
                                     norm_cfg, act_cfg, order,
                                     with_spectral_norm))
 
@@ -439,12 +438,10 @@ class ResGCAEncoder(ResShortcutEnc):
                  with_spectral_norm=False,
                  late_downsample=False,
                  order=('conv', 'act', 'norm')):
-        super(ResGCAEncoder,
-              self).__init__(block, layers, in_channels, conv_cfg, norm_cfg,
-                             act_cfg, with_spectral_norm, late_downsample,
-                             order)
+        super().__init__(block, layers, in_channels, conv_cfg, norm_cfg,
+                         act_cfg, with_spectral_norm, late_downsample, order)
 
-        assert in_channels == 4 or in_channels == 6, (
+        assert in_channels in (4, 6), (
             f'in_channels must be 4 or 6, but got {in_channels}')
 
         self.trimap_channels = in_channels - 3
@@ -453,12 +450,12 @@ class ResGCAEncoder(ResShortcutEnc):
         guidance_out_channels = [16, 32, 128]
 
         guidance_head = []
-        for in_channels, out_channels in zip(guidance_in_channels,
-                                             guidance_out_channels):
+        for in_channel, out_channel in zip(guidance_in_channels,
+                                           guidance_out_channels):
             guidance_head += [
                 ConvModule(
-                    in_channels,
-                    out_channels,
+                    in_channel,
+                    out_channel,
                     3,
                     stride=2,
                     padding=1,
@@ -477,7 +474,7 @@ class ResGCAEncoder(ResShortcutEnc):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=False, logger=logger)
         elif pretrained is None:
-            super(ResGCAEncoder, self).init_weights()
+            super().init_weights()
         else:
             raise TypeError('"pretrained" must be a str or None. '
                             f'But received {type(pretrained)}.')

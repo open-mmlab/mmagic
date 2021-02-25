@@ -39,7 +39,7 @@ class ResnetGenerator(nn.Module):
                  num_blocks=9,
                  padding_mode='reflect',
                  init_cfg=dict(type='normal', gain=0.02)):
-        super(ResnetGenerator, self).__init__()
+        super().__init__()
         assert num_blocks >= 0, ('Number of residual blocks must be '
                                  f'non-negative, but got {num_blocks}.')
         assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"

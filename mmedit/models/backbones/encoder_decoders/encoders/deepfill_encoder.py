@@ -35,7 +35,7 @@ class DeepFillEncoder(nn.Module):
                  encoder_type='stage1',
                  channel_factor=1.,
                  **kwargs):
-        super(DeepFillEncoder, self).__init__()
+        super().__init__()
         conv_module = self._conv_type[conv_type]
         channel_list_dict = dict(
             stage1=[32, 64, 64, 128, 128, 128],

@@ -4,7 +4,7 @@ import pytest
 from mmedit.datasets.pipelines import Normalize, RescaleToZeroOne
 
 
-class TestAugmentations(object):
+class TestAugmentations:
 
     @staticmethod
     def assert_img_equal(img, ref_img, ratio_thr=0.999):

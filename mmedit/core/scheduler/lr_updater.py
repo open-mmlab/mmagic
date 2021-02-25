@@ -19,7 +19,7 @@ class LinearLrUpdaterHook(LrUpdaterHook):
     """
 
     def __init__(self, target_lr=0, start=0, interval=1, **kwargs):
-        super(LinearLrUpdaterHook, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.target_lr = target_lr
         self.start = start
         self.interval = interval
@@ -41,10 +41,11 @@ class LinearLrUpdaterHook(LrUpdaterHook):
             progress = runner.iter
             max_progress = runner.max_iters
         assert max_progress >= self.start
+
         if max_progress == self.start:
             return base_lr
-        else:
-            # Before 'start', fix lr; After 'start', linearly update lr.
-            factor = (max(0, progress - self.start) // self.interval) / (
-                (max_progress - self.start) // self.interval)
-            return base_lr + (self.target_lr - base_lr) * factor
+
+        # Before 'start', fix lr; After 'start', linearly update lr.
+        factor = (max(0, progress - self.start) // self.interval) / (
+            (max_progress - self.start) // self.interval)
+        return base_lr + (self.target_lr - base_lr) * factor

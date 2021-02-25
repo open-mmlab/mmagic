@@ -18,7 +18,7 @@ def add_gaussian_noise(img, mu, sigma):
 
 
 @PIPELINES.register_module()
-class MergeFgAndBg(object):
+class MergeFgAndBg:
     """Composite foreground image and background image with alpha.
 
     Required keys are "alpha", "fg" and "bg", added key is "merged".
@@ -43,7 +43,7 @@ class MergeFgAndBg(object):
 
 
 @PIPELINES.register_module()
-class GenerateTrimap(object):
+class GenerateTrimap:
     """Using random erode/dilate to generate trimap from alpha matte.
 
     Required key is "alpha", added key is "trimap".
@@ -138,7 +138,7 @@ class GenerateTrimap(object):
 
 
 @PIPELINES.register_module()
-class GenerateTrimapWithDistTransform(object):
+class GenerateTrimapWithDistTransform:
     """Generate trimap with distance transform function.
 
     Args:
@@ -190,7 +190,7 @@ class GenerateTrimapWithDistTransform(object):
 
 
 @PIPELINES.register_module()
-class CompositeFg(object):
+class CompositeFg:
     """Composite foreground with a random foreground.
 
     This class composites the current training sample with additional data
@@ -292,7 +292,7 @@ class CompositeFg(object):
 
 
 @PIPELINES.register_module()
-class GenerateSeg(object):
+class GenerateSeg:
     """Generate segmentation mask from alpha matte.
 
     Args:
@@ -373,7 +373,7 @@ class GenerateSeg(object):
 
         # generate some holes in segmentation mask
         num_holes = np.random.randint(*self.num_holes_range)
-        for i in range(num_holes):
+        for _ in range(num_holes):
             hole_size = random.choice(self.hole_sizes)
             unknown = trimap == 128
             start_point = random_choose_unknown(unknown, hole_size)
@@ -399,7 +399,7 @@ class GenerateSeg(object):
 
 
 @PIPELINES.register_module()
-class PerturbBg(object):
+class PerturbBg:
     """Randomly add gaussian noise or gamma change to background image.
 
     Required key is "bg", added key is "noisy_bg".
@@ -426,7 +426,7 @@ class PerturbBg(object):
             dict: A dict containing the processed data and information.
         """
         if np.random.rand() >= self.gamma_ratio:
-            # generate gaussian noise with random guassian N([-7, 7), [2, 6))
+            # generate gaussian noise with random gaussian N([-7, 7), [2, 6))
             mu = np.random.randint(-7, 7)
             sigma = np.random.randint(2, 6)
             results['noisy_bg'] = add_gaussian_noise(results['bg'], mu, sigma)
@@ -441,13 +441,13 @@ class PerturbBg(object):
 
 
 @PIPELINES.register_module()
-class GenerateSoftSeg(object):
+class GenerateSoftSeg:
     """Generate soft segmentation mask from input segmentation mask.
 
     Required key is "seg", added key is "soft_seg".
 
     Args:
-        fg_thr (float, optional): Threhold of the foreground in the normalized
+        fg_thr (float, optional): Threshold of the foreground in the normalized
             input segmentation mask. Defaults to 0.2.
         border_width (int, optional): Width of border to be padded to the
             bottom of the mask. Defaults to 25.
@@ -514,7 +514,7 @@ class GenerateSoftSeg(object):
             dict: A dict containing the processed data and information.
         """
         seg = results['seg'].astype(np.float32) / 255
-        height, width = seg.shape[:2]
+        height, _ = seg.shape[:2]
         seg[seg > self.fg_thr] = 1
 
         # to align with the original repo, pad the bottom of the mask

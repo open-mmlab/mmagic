@@ -23,7 +23,7 @@ class GANLoss(nn.Module):
                  real_label_val=1.0,
                  fake_label_val=0.0,
                  loss_weight=1.0):
-        super(GANLoss, self).__init__()
+        super().__init__()
         self.gan_type = gan_type
         self.loss_weight = loss_weight
         self.real_label_val = real_label_val
@@ -104,7 +104,7 @@ def gradient_penalty_loss(discriminator, real_data, fake_data, mask=None):
         discriminator (nn.Module): Network for the discriminator.
         real_data (Tensor): Real input data.
         fake_data (Tensor): Fake input data.
-        mask (Tensor): Masks for inpaitting. Default: None.
+        mask (Tensor): Masks for inpainting. Default: None.
 
     Returns:
         Tensor: A tensor for gradient penalty.
@@ -145,7 +145,7 @@ class GradientPenaltyLoss(nn.Module):
     """
 
     def __init__(self, loss_weight=1.):
-        super(GradientPenaltyLoss, self).__init__()
+        super().__init__()
         self.loss_weight = loss_weight
 
     def forward(self, discriminator, real_data, fake_data, mask=None):
@@ -155,7 +155,7 @@ class GradientPenaltyLoss(nn.Module):
             discriminator (nn.Module): Network for the discriminator.
             real_data (Tensor): Real input data.
             fake_data (Tensor): Fake input data.
-            mask (Tensor): Masks for inpaitting. Default: None.
+            mask (Tensor): Masks for inpainting. Default: None.
 
         Returns:
             Tensor: Loss.
@@ -175,7 +175,7 @@ class DiscShiftLoss(nn.Module):
     """
 
     def __init__(self, loss_weight=0.1):
-        super(DiscShiftLoss, self).__init__()
+        super().__init__()
         self.loss_weight = loss_weight
 
     def forward(self, x):

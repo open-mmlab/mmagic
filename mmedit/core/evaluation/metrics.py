@@ -19,8 +19,8 @@ def sad(alpha, trimap, pred_alpha):
     assert (pred_alpha[trimap == 255] == 255).all()
     alpha = alpha.astype(np.float64) / 255
     pred_alpha = pred_alpha.astype(np.float64) / 255
-    sad = np.abs(pred_alpha - alpha).sum() / 1000
-    return sad
+    sad_result = np.abs(pred_alpha - alpha).sum() / 1000
+    return sad_result
 
 
 def mse(alpha, trimap, pred_alpha):
@@ -35,10 +35,10 @@ def mse(alpha, trimap, pred_alpha):
     pred_alpha = pred_alpha.astype(np.float64) / 255
     weight_sum = (trimap == 128).sum()
     if weight_sum != 0:
-        mse = ((pred_alpha - alpha)**2).sum() / weight_sum
+        mse_result = ((pred_alpha - alpha)**2).sum() / weight_sum
     else:
-        mse = 0
-    return mse
+        mse_result = 0
+    return mse_result
 
 
 def gradient_error(alpha, trimap, pred_alpha, sigma=1.4):
@@ -100,7 +100,6 @@ def connectivity(alpha, trimap, pred_alpha, step=0.1):
     alpha = alpha.astype(np.float32) / 255
     pred_alpha = pred_alpha.astype(np.float32) / 255
 
-    height, width = alpha.shape
     thresh_steps = np.arange(0, 1 + step, step)
     round_down_map = -np.ones_like(alpha)
     for i in range(1, len(thresh_steps)):
@@ -196,10 +195,10 @@ def psnr(img1, img2, crop_border=0, input_order='HWC'):
         img1 = img1[crop_border:-crop_border, crop_border:-crop_border, None]
         img2 = img2[crop_border:-crop_border, crop_border:-crop_border, None]
 
-    mse = np.mean((img1 - img2)**2)
-    if mse == 0:
+    mse_value = np.mean((img1 - img2)**2)
+    if mse_value == 0:
         return float('inf')
-    return 20. * np.log10(255. / np.sqrt(mse))
+    return 20. * np.log10(255. / np.sqrt(mse_value))
 
 
 def _ssim(img1, img2):
@@ -280,7 +279,7 @@ def ssim(img1, img2, crop_border=0, input_order='HWC'):
     return np.array(ssims).mean()
 
 
-class L1Evaluation(object):
+class L1Evaluation:
     """L1 evaluation metric.
 
     Args:
@@ -347,8 +346,8 @@ def compute_feature(block):
     # the products of pairs of adjacent coefficients computed along
     # horizontal, vertical and diagonal orientations.
     shifts = [[0, 1], [1, 0], [1, 1], [1, -1]]
-    for i in range(len(shifts)):
-        shifted_block = np.roll(block, shifts[i], axis=(0, 1))
+    for shift in shifts:
+        shifted_block = np.roll(block, shift, axis=(0, 1))
         alpha, beta_l, beta_r = estimate_aggd_param(block * shifted_block)
         mean = (beta_r - beta_l) * (gamma(2 / alpha) / gamma(1 / alpha))
         feat.extend([alpha, mean, beta_l, beta_r])
@@ -408,7 +407,7 @@ def niqe_core(img,
         feat = []
         for idx_w in range(num_block_w):
             for idx_h in range(num_block_h):
-                # process ecah block
+                # process each block
                 block = img_nomalized[idx_h * block_size_h //
                                       scale:(idx_h + 1) * block_size_h //
                                       scale, idx_w * block_size_w //

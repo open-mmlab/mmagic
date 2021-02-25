@@ -56,7 +56,7 @@ class MultiLayerDiscriminator(nn.Module):
                  with_out_convs=False,
                  with_spectral_norm=False,
                  **kwargs):
-        super(MultiLayerDiscriminator, self).__init__()
+        super().__init__()
         if fc_in_channels is not None:
             assert fc_in_channels > 0
 

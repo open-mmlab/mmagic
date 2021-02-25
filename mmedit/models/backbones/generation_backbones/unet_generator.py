@@ -37,7 +37,7 @@ class UnetGenerator(nn.Module):
                  norm_cfg=dict(type='BN'),
                  use_dropout=False,
                  init_cfg=dict(type='normal', gain=0.02)):
-        super(UnetGenerator, self).__init__()
+        super().__init__()
         # We use norm layers in the unet generator.
         assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"
                                             f'got {type(norm_cfg)}')
@@ -52,7 +52,7 @@ class UnetGenerator(nn.Module):
             norm_cfg=norm_cfg,
             is_innermost=True)
         # add intermediate layers with base_channels * 8 filters
-        for i in range(num_down - 5):
+        for _ in range(num_down - 5):
             unet_block = UnetSkipConnectionBlock(
                 base_channels * 8,
                 base_channels * 8,

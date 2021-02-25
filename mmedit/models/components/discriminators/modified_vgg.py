@@ -18,7 +18,7 @@ class ModifiedVGG(nn.Module):
     """
 
     def __init__(self, in_channels, mid_channels):
-        super(ModifiedVGG, self).__init__()
+        super().__init__()
 
         self.conv0_0 = nn.Conv2d(in_channels, mid_channels, 3, 1, 1, bias=True)
         self.conv0_1 = nn.Conv2d(

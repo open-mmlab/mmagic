@@ -31,8 +31,7 @@ class IndexNet(BaseMattor):
                  pretrained=None,
                  loss_alpha=None,
                  loss_comp=None):
-        super(IndexNet, self).__init__(backbone, None, train_cfg, test_cfg,
-                                       pretrained)
+        super().__init__(backbone, None, train_cfg, test_cfg, pretrained)
 
         self.loss_alpha = (
             build_loss(loss_alpha) if loss_alpha is not None else None)

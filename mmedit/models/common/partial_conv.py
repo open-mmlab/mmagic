@@ -13,14 +13,14 @@ class PartialConv2d(nn.Conv2d):
     [https://arxiv.org/abs/1804.07723]
 
     Args:
-        multi_channel (bool): If True, the mask is multi-channle. Otherwise,
+        multi_channel (bool): If True, the mask is multi-channel. Otherwise,
             the mask is single-channel.
         eps (float): Need to be changed for mixed precision training.
             For mixed precision training, you need change 1e-8 to 1e-6.
     """
 
     def __init__(self, *args, multi_channel=False, eps=1e-8, **kwargs):
-        super(PartialConv2d, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # whether the mask is multi-channel or not
         self.multi_channel = multi_channel
@@ -82,7 +82,7 @@ class PartialConv2d(nn.Conv2d):
         # standard conv2d
         if mask is not None:
             input = input * mask
-        raw_out = super(PartialConv2d, self).forward(input)
+        raw_out = super().forward(input)
 
         if mask is not None:
             if self.bias is None:
@@ -97,5 +97,5 @@ class PartialConv2d(nn.Conv2d):
 
         if return_mask and mask is not None:
             return output, updated_mask
-        else:
-            return output
+
+        return output

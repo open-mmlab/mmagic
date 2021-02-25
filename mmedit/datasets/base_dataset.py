@@ -22,7 +22,7 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
     """
 
     def __init__(self, pipeline, test_mode=False):
-        super(BaseDataset, self).__init__()
+        super().__init__()
         self.test_mode = test_mode
         self.pipeline = Compose(pipeline)
 
@@ -71,7 +71,7 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
         Args:
             idx (int): Index for getting each item.
         """
-        if not self.test_mode:
-            return self.prepare_train_data(idx)
-        else:
+        if self.test_mode:
             return self.prepare_test_data(idx)
+
+        return self.prepare_train_data(idx)

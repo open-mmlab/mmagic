@@ -18,8 +18,8 @@ class GCAModule(nn.Module):
     alpha feature patches could be specified by `rate` (see `rate` below). The
     image feature patches are used to convolve with the image feature itself
     to calculate the contextual attention. Then the attention feature map is
-    convolved by alpha feature patches to obtain the attentioned alpha feature.
-    At last, the attentioned alpah feature is added to the input alpha feature.
+    convolved by alpha feature patches to obtain the attention alpha feature.
+    At last, the attention alpha feature is added to the input alpha feature.
 
     Args:
         in_channels (int): Input channels of the guided contextual attention
@@ -54,7 +54,7 @@ class GCAModule(nn.Module):
                  interpolation='nearest',
                  penalty=-1e4,
                  eps=1e-4):
-        super(GCAModule, self).__init__()
+        super().__init__()
         self.kernel_size = kernel_size
         self.stride = stride
         self.rate = rate
@@ -66,7 +66,7 @@ class GCAModule(nn.Module):
         # reduced the channels of input image feature.
         self.guidance_conv = nn.Conv2d(in_channels, in_channels // 2, 1)
 
-        # convolution after the attentioned alpha feature
+        # convolution after the attention alpha feature
         self.out_conv = ConvModule(
             out_channels,
             out_channels,
@@ -171,7 +171,7 @@ class GCAModule(nn.Module):
                 ``Tensor``: Image feature patches of shape \
                     (N, img_h*img_w, img_c, img_ks, img_ks).
 
-                ``Tensor``: Guided contextual attentioned alpha feature map. \
+                ``Tensor``: Guided contextual attention alpha feature map. \
                     (N, img_h*img_w, alpha_c, alpha_ks, alpha_ks).
 
                 ``Tensor``: Unknown mask of shape (N, img_h*img_w, 1, 1).
@@ -187,7 +187,7 @@ class GCAModule(nn.Module):
 
         # extract unknown mask patches with shape: (N, img_h*img_w, 1, 1)
         unknown_ps = self.extract_patches(unknown, img_ks, self.stride)
-        unknown_ps = unknown_ps.squeeze(dim=2)  # squeezz channel dimention
+        unknown_ps = unknown_ps.squeeze(dim=2)  # squeeze channel dimension
         unknown_ps = unknown_ps.mean(dim=[2, 3], keepdim=True)
 
         return img_ps, alpha_ps, unknown_ps
@@ -256,7 +256,7 @@ class GCAModule(nn.Module):
                 (1, img_h*img_w, alpha_c, alpha_ks, alpha_ks).
 
         Returns:
-            Tensor: Propagted alpha feature map of shape \
+            Tensor: Propagated alpha feature map of shape \
                 (1, alpha_c, alpha_h, alpha_w).
         """
         alpha_ps = alpha_ps[0]  # squeeze dim 0

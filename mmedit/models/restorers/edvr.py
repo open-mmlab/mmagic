@@ -28,8 +28,8 @@ class EDVR(BasicRestorer):
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
-        super(EDVR, self).__init__(generator, pixel_loss, train_cfg, test_cfg,
-                                   pretrained)
+        super().__init__(generator, pixel_loss, train_cfg, test_cfg,
+                         pretrained)
         self.with_tsa = generator.get('with_tsa', False)
         self.step_counter = 0  # count training steps
 

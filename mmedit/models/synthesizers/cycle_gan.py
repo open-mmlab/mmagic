@@ -58,7 +58,7 @@ class CycleGAN(BaseModel):
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
-        super(CycleGAN, self).__init__()
+        super().__init__()
 
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
@@ -144,8 +144,8 @@ class CycleGAN(BaseModel):
         """
         if isinstance(module, MMDistributedDataParallel):
             return module.module
-        else:
-            return module
+
+        return module
 
     def setup(self, img_a, img_b, meta):
         """Perform necessary pre-processing steps.
@@ -179,7 +179,7 @@ class CycleGAN(BaseModel):
             dict: Dict of forward results for training.
         """
         # necessary setup
-        real_a, real_b, image_path = self.setup(img_a, img_b, meta)
+        real_a, real_b, _ = self.setup(img_a, img_b, meta)
 
         generators = self.get_module(self.generators)
 
@@ -305,10 +305,10 @@ class CycleGAN(BaseModel):
             test_mode (bool): Whether in test mode or not. Default: False.
             kwargs (dict): Other arguments.
         """
-        if not test_mode:
-            return self.forward_train(img_a, img_b, meta)
-        else:
+        if test_mode:
             return self.forward_test(img_a, img_b, meta, **kwargs)
+
+        return self.forward_train(img_a, img_b, meta)
 
     def backward_discriminators(self, outputs):
         """Backward function for the discriminators.

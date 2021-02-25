@@ -25,7 +25,7 @@ class GenerationUnpairedDataset(BaseGenerationDataset):
     """
 
     def __init__(self, dataroot, pipeline, test_mode=False):
-        super(GenerationUnpairedDataset, self).__init__(pipeline, test_mode)
+        super().__init__(pipeline, test_mode)
         phase = 'test' if test_mode else 'train'
         self.dataroot_a = osp.join(str(dataroot), phase + 'A')
         self.dataroot_b = osp.join(str(dataroot), phase + 'B')

@@ -33,7 +33,7 @@ class UpsampleModule(nn.Sequential):
             raise ValueError(f'scale {scale} is not supported. '
                              'Supported scales: 2^n and 3.')
 
-        super(UpsampleModule, self).__init__(*modules)
+        super().__init__(*modules)
 
 
 @BACKBONES.register_module()
@@ -68,7 +68,7 @@ class EDSR(nn.Module):
                  res_scale=1,
                  rgb_mean=(0.4488, 0.4371, 0.4040),
                  rgb_std=(1.0, 1.0, 1.0)):
-        super(EDSR, self).__init__()
+        super().__init__()
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.mid_channels = mid_channels
