@@ -558,66 +558,15 @@ class GenerateSoftSeg:
 
 
 @PIPELINES.register_module()
-class CutEdge(object):
-    """Resize the image to shape of multiple of 8.
-
-    Args:
-        keys (list): keys to indicate images to cut.
-    """
-
-    def __init__(self, keys) -> None:
-        self.keys = keys
-
-    def __call__(self, results, scale_type=cv2.INTER_LANCZOS4):
-        """Call function.
-
-        Args:
-            results (dict): A dict containing the necessary information and
-                data for augmentation.
-
-        Returns:
-            dict: A dict containing the processed data and information.
-        """
-        for key in self.keys:
-            if isinstance(results[key], list):
-                results[key] = [
-                    self._cutedge(v, scale_type) for v in results[key]
-                ]
-            else:
-                results[key] = self._cutedge(results[key], scale_type)
-
-        return results
-
-    @staticmethod
-    def _cutedge(img, scale_type):
-        """Cut edge if input to shape of multiple of 8.
-
-        Args:
-            img (ndarray): Image to be processed.
-            scale_type (str): Interpolation method used.
-
-        Returns:
-            np.ndarray:: Image with shape of multiple of 8.
-        """
-        H, W = img.shape[:2]
-        scale = 1.0
-        h = int(np.ceil(scale * H / 8) * 8)
-        w = int(np.ceil(scale * W / 8) * 8)
-        img = cv2.resize(img, (w, h), interpolation=scale_type)
-        return img
-
-
-@PIPELINES.register_module()
 class TransformTrimap(object):
     """Generate two-channel transformed trimap.
 
     Required key is "trimap", added key is "trimap_o" and "transformed_trimap".
 
-    """
+    Adopted from the following repository:
+    https://github.com/MarcoForte/FBA_Matting/blob/master/networks/transforms.py.
 
-    def __init__(self) -> None:
-        super().__init__()
-        pass
+    """
 
     def __call__(self, results):
         """Call function.
@@ -634,18 +583,14 @@ class TransformTrimap(object):
         if len(trimap_o.shape) > 2:
             trimap_o = trimap_o.squeeze(2)
         h, w = trimap_o.shape[:2]
-        trimap = np.zeros((h, w, 2))
+        trimap = np.zeros((h, w, 2), dtype=np.uint8)
         trimap[trimap_o == 0, 0] = 255
         trimap[trimap_o == 255, 1] = 255
-        # original two channel trimap
-        results['trimap_o'] = trimap
-        results['trimap'] = trimap
-
-        trimap = trimap / 255.
         clicks = np.zeros((h, w, 6))
         for k in range(2):
             if (np.count_nonzero(trimap[:, :, k]) > 0):
-                dt_mask = -self._dt(1 - trimap[:, :, k])**2
+                dt_mask = -cv2.distanceTransform(255 - trimap[:, :, k],
+                                                 cv2.DIST_L2, 0)**2
                 L = 320
                 clicks[:, :, 3 * k] = np.exp(dt_mask / (2 * ((0.02 * L)**2)))
                 clicks[:, :,
@@ -653,18 +598,5 @@ class TransformTrimap(object):
                 clicks[:, :,
                        3 * k + 2] = np.exp(dt_mask / (2 * ((0.16 * L)**2)))
 
-        results['transformed_trimap'] = clicks * 255
+        results['transformed_trimap'] = clicks
         return results
-
-    @staticmethod
-    def _dt(img):
-        """Apply distance transform.
-
-        Args:
-            img (np.ndarray:): Image to be processed.
-
-        Returns:
-            np.ndarray:: Image after transformation.
-        """
-        return cv2.distanceTransform((img * 255).astype(np.uint8), cv2.DIST_L2,
-                                     0)
