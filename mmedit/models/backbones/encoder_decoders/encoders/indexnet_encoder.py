@@ -173,7 +173,7 @@ class DepthwiseIndexBlock(nn.Module):
             kernel_size, padding = 2, 0
 
         self.index_blocks = nn.ModuleList()
-        for i in range(4):
+        for _ in range(4):
             self.index_blocks.append(
                 build_index_block(
                     in_channels,
@@ -220,7 +220,7 @@ class DepthwiseIndexBlock(nn.Module):
 class InvertedResidual(nn.Module):
     """Inverted residual layer for indexnet encoder.
 
-    It basicaly is a depthwise separable conv module. If `expand_ratio` is not
+    It basically is a depthwise separable conv module. If `expand_ratio` is not
     one, then a conv module of kernel_size 1 will be inserted to change the
     input channels to `in_channels * expand_ratio`.
 
@@ -461,7 +461,7 @@ class IndexNetEncoder(nn.Module):
         ]
 
         in_channels = out_channels
-        for i in range(1, num_blocks):
+        for _ in range(1, num_blocks):
             layers.append(
                 InvertedResidual(
                     in_channels,

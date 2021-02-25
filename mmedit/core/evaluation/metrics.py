@@ -407,7 +407,7 @@ def niqe_core(img,
         feat = []
         for idx_w in range(num_block_w):
             for idx_h in range(num_block_h):
-                # process ecah block
+                # process each block
                 block = img_nomalized[idx_h * block_size_h //
                                       scale:(idx_h + 1) * block_size_h //
                                       scale, idx_w * block_size_w //

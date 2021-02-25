@@ -267,9 +267,11 @@ class RandomAffine:
     """Apply random affine to input images.
 
     This class is adopted from
-    https://github.com/pytorch/vision/blob/v0.5.0/torchvision/transforms/transforms.py#L1015  # noqa
+    https://github.com/pytorch/vision/blob/v0.5.0/torchvision/transforms/
+    transforms.py#L1015
     It should be noted that in
-    https://github.com/Yaoyi-Li/GCA-Matting/blob/master/dataloader/data_generator.py#L70  # noqa
+    https://github.com/Yaoyi-Li/GCA-Matting/blob/master/dataloader/
+    data_generator.py#L70
     random flip is added. See explanation of `flip_ratio` below.
     Required keys are the keys in attribute "keys", modified keys
     are keys in attribute "keys".
@@ -613,7 +615,6 @@ class RandomMaskDilation:
         kernel = np.ones((kernel_size, kernel_size), dtype=np.uint8)
         dilate_kernel_size = kernel_size
         img_ = cv2.dilate(img, kernel, iterations=1)
-        h, w = img_.shape[:2]
 
         img_ = (img_ > self.binary_thr).astype(np.float32)
 

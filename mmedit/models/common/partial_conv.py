@@ -13,7 +13,7 @@ class PartialConv2d(nn.Conv2d):
     [https://arxiv.org/abs/1804.07723]
 
     Args:
-        multi_channel (bool): If True, the mask is multi-channle. Otherwise,
+        multi_channel (bool): If True, the mask is multi-channel. Otherwise,
             the mask is single-channel.
         eps (float): Need to be changed for mixed precision training.
             For mixed precision training, you need change 1e-8 to 1e-6.

@@ -179,7 +179,7 @@ class CycleGAN(BaseModel):
             dict: Dict of forward results for training.
         """
         # necessary setup
-        real_a, real_b, image_path = self.setup(img_a, img_b, meta)
+        real_a, real_b, _ = self.setup(img_a, img_b, meta)
 
         generators = self.get_module(self.generators)
 

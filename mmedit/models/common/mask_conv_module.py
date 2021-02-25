@@ -26,7 +26,7 @@ class MaskConvModule(ConvModule):
         padding_mode (str): If the `padding_mode` has not been supported by
             current `Conv2d` in Pytorch, we will use our own padding layer
             instead. Currently, we support ['zeros', 'circular'] with official
-            implementation and ['reflect'] with our own implementaion.
+            implementation and ['reflect'] with our own implementation.
             Default: 'zeros'.
         order (tuple[str]): The order of conv/norm/activation layers. It is a
             sequence of "conv", "norm" and "act". Examples are
