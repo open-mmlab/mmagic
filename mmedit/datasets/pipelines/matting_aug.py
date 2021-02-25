@@ -426,7 +426,7 @@ class PerturbBg:
             dict: A dict containing the processed data and information.
         """
         if np.random.rand() >= self.gamma_ratio:
-            # generate gaussian noise with random guassian N([-7, 7), [2, 6))
+            # generate gaussian noise with random gaussian N([-7, 7), [2, 6))
             mu = np.random.randint(-7, 7)
             sigma = np.random.randint(2, 6)
             results['noisy_bg'] = add_gaussian_noise(results['bg'], mu, sigma)
@@ -447,7 +447,7 @@ class GenerateSoftSeg:
     Required key is "seg", added key is "soft_seg".
 
     Args:
-        fg_thr (float, optional): Threhold of the foreground in the normalized
+        fg_thr (float, optional): Threshold of the foreground in the normalized
             input segmentation mask. Defaults to 0.2.
         border_width (int, optional): Width of border to be padded to the
             bottom of the mask. Defaults to 25.

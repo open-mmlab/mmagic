@@ -26,7 +26,7 @@ class PConvInpaintor(OneStageInpaintor):
             mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
             save_image (bool, optional): If True, results will be saved as
                 image. Defaults to False.
-            save_path (str, optional): If given a valid str, the reuslts will
+            save_path (str, optional): If given a valid str, the results will
                 be saved in this path. Defaults to None.
             iteration (int, optional): Iteration number. Defaults to None.
 

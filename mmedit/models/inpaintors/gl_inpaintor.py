@@ -38,7 +38,7 @@ class GLInpaintor(OneStageInpaintor):
             iter_td=100000
         )
 
-    `iter_tc` and `iter_td` correspond to the noation :math:`T_C` and
+    `iter_tc` and `iter_td` correspond to the notation :math:`T_C` and
     :math:`T_D` of theoriginal paper.
 
     Args:
@@ -149,7 +149,7 @@ class GLInpaintor(OneStageInpaintor):
 
         1. get fake res/image
         2. optimize discriminator (if in current schedule)
-        3. optimzie generator (if in current schedule)
+        3. optimize generator (if in current schedule)
 
         If ``self.train_cfg.disc_step > 1``, the train step will contain
         multiple iterations for optimizing discriminator with different input

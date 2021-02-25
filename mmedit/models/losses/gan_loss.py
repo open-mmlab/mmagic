@@ -104,7 +104,7 @@ def gradient_penalty_loss(discriminator, real_data, fake_data, mask=None):
         discriminator (nn.Module): Network for the discriminator.
         real_data (Tensor): Real input data.
         fake_data (Tensor): Fake input data.
-        mask (Tensor): Masks for inpaitting. Default: None.
+        mask (Tensor): Masks for inpainting. Default: None.
 
     Returns:
         Tensor: A tensor for gradient penalty.
@@ -155,7 +155,7 @@ class GradientPenaltyLoss(nn.Module):
             discriminator (nn.Module): Network for the discriminator.
             real_data (Tensor): Real input data.
             fake_data (Tensor): Fake input data.
-            mask (Tensor): Masks for inpaitting. Default: None.
+            mask (Tensor): Masks for inpainting. Default: None.
 
         Returns:
             Tensor: Loss.
