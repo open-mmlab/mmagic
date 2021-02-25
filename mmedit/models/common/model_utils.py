@@ -3,7 +3,7 @@ import torch
 
 
 def set_requires_grad(nets, requires_grad=False):
-    """Set requies_grad for all the networks.
+    """Set requires_grad for all the networks.
 
     Args:
         nets (nn.Module | list[nn.Module]): A list of networks or a single
