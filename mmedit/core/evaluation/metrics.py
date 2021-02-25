@@ -195,10 +195,10 @@ def psnr(img1, img2, crop_border=0, input_order='HWC'):
         img1 = img1[crop_border:-crop_border, crop_border:-crop_border, None]
         img2 = img2[crop_border:-crop_border, crop_border:-crop_border, None]
 
-    mse = np.mean((img1 - img2)**2)
-    if mse == 0:
+    mse_value = np.mean((img1 - img2)**2)
+    if mse_value == 0:
         return float('inf')
-    return 20. * np.log10(255. / np.sqrt(mse))
+    return 20. * np.log10(255. / np.sqrt(mse_value))
 
 
 def _ssim(img1, img2):
