@@ -24,8 +24,8 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
         """
         if isinstance(model, (DataParallel, DistributedDataParallel)):
             return getattr(model.module, module_name)
-        else:
-            return getattr(model, module_name)
+
+        return getattr(model, module_name)
 
     def forward_train_d(self, data_batch, is_real, is_disc):
         """Forward function in discriminator training step.

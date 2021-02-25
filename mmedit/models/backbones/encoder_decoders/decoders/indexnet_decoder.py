@@ -91,11 +91,11 @@ class IndexNetDecoder(nn.Module):
         blocks_out_channels = [96, 64, 32, 24, 16, 32, 32]
 
         self.decoder_layers = nn.ModuleList()
-        for in_channels, out_channels in zip(blocks_in_channels,
-                                             blocks_out_channels):
+        for in_channel, out_channel in zip(blocks_in_channels,
+                                           blocks_out_channels):
             self.decoder_layers.append(
-                IndexedUpsample(in_channels, out_channels, kernel_size,
-                                norm_cfg, conv_module))
+                IndexedUpsample(in_channel, out_channel, kernel_size, norm_cfg,
+                                conv_module))
 
         self.pred = nn.Sequential(
             conv_module(

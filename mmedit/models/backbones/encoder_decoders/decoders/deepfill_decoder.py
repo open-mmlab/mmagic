@@ -91,7 +91,7 @@ class DeepFillDecoder(nn.Module):
             x = input_dict
         for i in range(7):
             x = getattr(self, f'dec{i + 1}')(x)
-            if i == 1 or i == 3:
+            if i in (1, 3):
                 x = F.interpolate(x, scale_factor=2)
 
         if self.with_out_activation:
