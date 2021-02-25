@@ -322,10 +322,10 @@ class ResShortcutEnc(ResNetEnc):
         self.shortcut_out_channels = [32, self.midplanes, 64, 128, 256]
 
         self.shortcut = nn.ModuleList()
-        for in_channels, out_channels in zip(self.shortcut_in_channels,
-                                             self.shortcut_out_channels):
+        for in_channel, out_channel in zip(self.shortcut_in_channels,
+                                           self.shortcut_out_channels):
             self.shortcut.append(
-                self._make_shortcut(in_channels, out_channels, conv_cfg,
+                self._make_shortcut(in_channel, out_channel, conv_cfg,
                                     norm_cfg, act_cfg, order,
                                     with_spectral_norm))
 
