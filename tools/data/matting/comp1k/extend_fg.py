@@ -81,7 +81,7 @@ def parse_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('data_root', help='Adobe composition 1k dataset root')
     parser.add_argument(
-        '--nproc', type=int, default=4, help='number of processer')
+        '--nproc', type=int, default=4, help='number of processor')
     args = parser.parse_args()
     return args
 
