@@ -374,7 +374,7 @@ class EDVRNet(nn.Module):
             mid_channels, 64, 2, upsample_kernel=3)
         # we fix the output channels in the last few layers to 64.
         self.conv_hr = nn.Conv2d(64, 64, 3, 1, 1)
-        self.conv_last = nn.Conv2d(64, 3, 3, 1, 1)
+        self.conv_last = nn.Conv2d(64, out_channels, 3, 1, 1)
         self.img_upsample = nn.Upsample(
             scale_factor=4, mode='bilinear', align_corners=False)
         # activation function
