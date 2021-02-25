@@ -63,17 +63,17 @@ def build_index_block(in_channels,
                 bias=False,
                 norm_cfg=None,
                 act_cfg=None))
-    else:
-        return ConvModule(
-            in_channels,
-            out_channels,
-            kernel_size,
-            stride=stride,
-            padding=padding,
-            groups=groups,
-            bias=False,
-            norm_cfg=None,
-            act_cfg=None)
+
+    return ConvModule(
+        in_channels,
+        out_channels,
+        kernel_size,
+        stride=stride,
+        padding=padding,
+        groups=groups,
+        bias=False,
+        norm_cfg=None,
+        act_cfg=None)
 
 
 class HolisticIndexBlock(nn.Module):
@@ -361,7 +361,7 @@ class IndexNetEncoder(nn.Module):
         # we name the index network in the paper index_block
         if index_mode == 'holistic':
             index_block = HolisticIndexBlock
-        elif index_mode == 'o2o' or index_mode == 'm2o':
+        elif index_mode in ('o2o', 'm2o'):
             index_block = partial(DepthwiseIndexBlock, mode=index_mode)
         else:
             raise NameError('Unknown index block mode {}'.format(index_mode))

@@ -34,7 +34,8 @@ def dtype_limits(image, clip_negative=False):
     """Return intensity limits, i.e. (min, max) tuple, of the image's dtype.
 
     This function is adopted from skimage:
-    https://github.com/scikit-image/scikit-image/blob/7e4840bd9439d1dfb6beaf549998452c99f97fdd/skimage/util/dtype.py#L35  # noqa
+    https://github.com/scikit-image/scikit-image/blob/
+    7e4840bd9439d1dfb6beaf549998452c99f97fdd/skimage/util/dtype.py#L35
 
     Args:
         image (ndarray): Input image.
@@ -55,7 +56,9 @@ def adjust_gamma(image, gamma=1, gain=1):
     """Performs Gamma Correction on the input image.
 
     This function is adopted from skimage:
-    https://github.com/scikit-image/scikit-image/blob/7e4840bd9439d1dfb6beaf549998452c99f97fdd/skimage/exposure/exposure.py#L439-L494  # noqa
+    https://github.com/scikit-image/scikit-image/blob/
+    7e4840bd9439d1dfb6beaf549998452c99f97fdd/skimage/exposure/
+    exposure.py#L439-L494
 
     Also known as Power Law Transform.
     This function transforms the input image pixelwise according to the

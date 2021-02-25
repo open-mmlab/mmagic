@@ -88,7 +88,7 @@ class SPyNet(nn.Module):
         https://github.com/Coldog2333/pytoflow
     """
 
-    def __init__(self, load_path=None):
+    def __init__(self):
         super().__init__()
 
         self.basic_module = nn.ModuleList([BasicModule() for _ in range(4)])

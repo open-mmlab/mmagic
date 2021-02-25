@@ -71,7 +71,7 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
         Args:
             idx (int): Index for getting each item.
         """
-        if not self.test_mode:
-            return self.prepare_train_data(idx)
-        else:
+        if self.test_mode:
             return self.prepare_test_data(idx)
+
+        return self.prepare_train_data(idx)

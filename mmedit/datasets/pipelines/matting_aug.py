@@ -373,7 +373,7 @@ class GenerateSeg:
 
         # generate some holes in segmentation mask
         num_holes = np.random.randint(*self.num_holes_range)
-        for i in range(num_holes):
+        for _ in range(num_holes):
             hole_size = random.choice(self.hole_sizes)
             unknown = trimap == 128
             start_point = random_choose_unknown(unknown, hole_size)
@@ -514,7 +514,7 @@ class GenerateSoftSeg:
             dict: A dict containing the processed data and information.
         """
         seg = results['seg'].astype(np.float32) / 255
-        height, width = seg.shape[:2]
+        height, _ = seg.shape[:2]
         seg[seg > self.fg_thr] = 1
 
         # to align with the original repo, pad the bottom of the mask

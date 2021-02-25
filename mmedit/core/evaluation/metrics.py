@@ -346,8 +346,8 @@ def compute_feature(block):
     # the products of pairs of adjacent coefficients computed along
     # horizontal, vertical and diagonal orientations.
     shifts = [[0, 1], [1, 0], [1, 1], [1, -1]]
-    for i in range(len(shifts)):
-        shifted_block = np.roll(block, shifts[i], axis=(0, 1))
+    for shift in shifts:
+        shifted_block = np.roll(block, shift, axis=(0, 1))
         alpha, beta_l, beta_r = estimate_aggd_param(block * shifted_block)
         mean = (beta_r - beta_l) * (gamma(2 / alpha) / gamma(1 / alpha))
         feat.extend([alpha, mean, beta_l, beta_r])

@@ -17,16 +17,16 @@ def to_tensor(data):
     """
     if isinstance(data, torch.Tensor):
         return data
-    elif isinstance(data, np.ndarray):
+    if isinstance(data, np.ndarray):
         return torch.from_numpy(data)
-    elif isinstance(data, Sequence) and not mmcv.is_str(data):
+    if isinstance(data, Sequence) and not mmcv.is_str(data):
         return torch.tensor(data)
-    elif isinstance(data, int):
+    if isinstance(data, int):
         return torch.LongTensor([data])
-    elif isinstance(data, float):
+    if isinstance(data, float):
         return torch.FloatTensor([data])
-    else:
-        raise TypeError(f'type {type(data)} cannot be converted to tensor.')
+
+    raise TypeError(f'type {type(data)} cannot be converted to tensor.')
 
 
 @PIPELINES.register_module()

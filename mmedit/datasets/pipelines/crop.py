@@ -372,7 +372,7 @@ class CropAroundUnknown:
         if unknown_source not in ['alpha', 'trimap']:
             raise ValueError('unknown_source must be "alpha" or "trimap", '
                              f'but got {unknown_source}')
-        elif unknown_source not in keys:
+        if unknown_source not in keys:
             # it could only be trimap, since alpha is checked before
             raise ValueError(
                 'if unknown_source is "trimap", it must also be set in keys')

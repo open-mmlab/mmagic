@@ -54,10 +54,10 @@ class BaseModel(nn.Module, metaclass=ABCMeta):
             Tensor: Forward results.
         """
 
-        if not test_mode:
-            return self.forward_train(imgs, labels, **kwargs)
-        else:
+        if test_mode:
             return self.forward_test(imgs, **kwargs)
+
+        return self.forward_train(imgs, labels, **kwargs)
 
     @abstractmethod
     def train_step(self, data_batch, optimizer):

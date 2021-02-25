@@ -42,7 +42,6 @@ class SRAnnotationDataset(BaseSRDataset):
                  ann_file,
                  pipeline,
                  scale,
-                 data_prefix=None,
                  test_mode=False,
                  filename_tmpl='{}'):
         super().__init__(pipeline, scale, test_mode)

@@ -38,7 +38,7 @@ class BasicBlock(nn.Module):
                  act_cfg=dict(type='ReLU'),
                  with_spectral_norm=False):
         super().__init__()
-        assert stride == 1 or stride == 2, (
+        assert stride in (1, 2), (
             f'stride other than 1 and 2 is not implemented, got {stride}')
 
         assert stride != 2 or interpolation is not None, (
@@ -314,9 +314,8 @@ class ResShortcutEnc(ResNetEnc):
                  with_spectral_norm=False,
                  late_downsample=False,
                  order=('conv', 'act', 'norm')):
-        super(ResShortcutEnc,
-              self).__init__(block, layers, in_channels, conv_cfg, norm_cfg,
-                             act_cfg, with_spectral_norm, late_downsample)
+        super().__init__(block, layers, in_channels, conv_cfg, norm_cfg,
+                         act_cfg, with_spectral_norm, late_downsample)
 
         # TODO: rename self.midplanes to self.mid_channels in ResNetEnc
         self.shortcut_in_channels = [in_channels, self.midplanes, 64, 128, 256]
@@ -442,7 +441,7 @@ class ResGCAEncoder(ResShortcutEnc):
         super().__init__(block, layers, in_channels, conv_cfg, norm_cfg,
                          act_cfg, with_spectral_norm, late_downsample, order)
 
-        assert in_channels == 4 or in_channels == 6, (
+        assert in_channels in (4, 6), (
             f'in_channels must be 4 or 6, but got {in_channels}')
 
         self.trimap_channels = in_channels - 3
@@ -451,12 +450,12 @@ class ResGCAEncoder(ResShortcutEnc):
         guidance_out_channels = [16, 32, 128]
 
         guidance_head = []
-        for in_channels, out_channels in zip(guidance_in_channels,
-                                             guidance_out_channels):
+        for in_channel, out_channel in zip(guidance_in_channels,
+                                           guidance_out_channels):
             guidance_head += [
                 ConvModule(
-                    in_channels,
-                    out_channels,
+                    in_channel,
+                    out_channel,
                     3,
                     stride=2,
                     padding=1,

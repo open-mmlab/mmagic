@@ -52,7 +52,7 @@ class UnetGenerator(nn.Module):
             norm_cfg=norm_cfg,
             is_innermost=True)
         # add intermediate layers with base_channels * 8 filters
-        for i in range(num_down - 5):
+        for _ in range(num_down - 5):
             unet_block = UnetSkipConnectionBlock(
                 base_channels * 8,
                 base_channels * 8,

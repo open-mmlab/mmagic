@@ -77,7 +77,8 @@ class BaseMattor(BaseModel):
         # validate if test config is proper
         if not hasattr(self.test_cfg, 'metrics'):
             raise KeyError('Missing key "metrics" in test_cfg')
-        elif mmcv.is_list_of(self.test_cfg.metrics, str):
+
+        if mmcv.is_list_of(self.test_cfg.metrics, str):
             for metric in self.test_cfg.metrics:
                 if metric not in self.allowed_metrics:
                     raise KeyError(f'metric {metric} is not supported')
@@ -260,7 +261,7 @@ class BaseMattor(BaseModel):
                 are set to ``True``. Otherwise return the output of \
                 ``self.forward_train``.
         """
-        if not test_mode:
-            return self.forward_train(merged, trimap, meta, alpha, **kwargs)
-        else:
+        if test_mode:
             return self.forward_test(merged, trimap, meta, **kwargs)
+
+        return self.forward_train(merged, trimap, meta, alpha, **kwargs)
