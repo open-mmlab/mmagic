@@ -54,7 +54,8 @@ def test_load_image_from_file():
     assert repr(image_loader) == (
         image_loader.__class__.__name__ +
         ('(io_backend=disk, key=lq, '
-         'flag=color, save_original_img=False)'))
+         'flag=color, save_original_img=False, channel_order=bgr, '
+         'use_cache=False, data_dirs=None)'))
 
     results = dict(lq_path=path_baboon_x4)
     config = dict(
@@ -65,6 +66,26 @@ def test_load_image_from_file():
     assert results['lq_ori_shape'] == (120, 125)
     np.testing.assert_almost_equal(results['ori_lq'], results['lq'])
     assert id(results['ori_lq']) != id(results['lq'])
+
+    # test: use_cache
+    dir_baboon = Path(__file__).parent / 'data' / 'gt'
+    results = dict(gt_path=path_baboon)
+    config = dict(io_backend='disk', key='gt', use_cache=True, data_dirs=None)
+    with pytest.raises(RuntimeError):
+        image_loader = LoadImageFromFile(**config)
+    config = dict(
+        io_backend='disk', key='gt', use_cache=True, data_dirs=[dir_baboon])
+    image_loader = LoadImageFromFile(**config)
+
+    assert repr(image_loader) == (
+        image_loader.__class__.__name__ +
+        ('''(io_backend=disk, key=gt, flag=color, save_original_img=False,'''
+         ''' channel_order=bgr, use_cache=True,'''
+         ''' data_dirs=[PosixPath('tests/data/gt')])'''))
+    results = image_loader(results)
+    assert results['gt'].shape == (480, 500, 3)
+    np.testing.assert_almost_equal(results['gt'], img_baboon)
+    assert results['gt_path'] == str(path_baboon)
 
 
 def test_load_image_from_file_list():

@@ -63,6 +63,8 @@ class LoadImageFromFile(object):
                     flag=self.flag,
                     channel_order=self.channel_order)  # HWC
                 self.cache[key][filepath] = img
+        elif self.use_cache and self.data_dirs is None:
+            raise RuntimeError('Please provide the directory.')
 
     def __call__(self, results):
         """Call function.
@@ -96,9 +98,9 @@ class LoadImageFromFile(object):
         repr_str = self.__class__.__name__
         repr_str += (
             f'(io_backend={self.io_backend}, key={self.key}, '
-            f'flag={self.flag}, save_original_img={self.save_original_img}), '
+            f'flag={self.flag}, save_original_img={self.save_original_img}, '
             f'channel_order={self.channel_order}, use_cache={self.use_cache}, '
-            f'data_dirs={self.data_dirs}')
+            f'data_dirs={self.data_dirs})')
         return repr_str
 
 
