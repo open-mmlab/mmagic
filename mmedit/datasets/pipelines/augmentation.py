@@ -1,7 +1,6 @@
 import math
 import numbers
 import os.path as osp
-import random
 
 import cv2
 import mmcv
@@ -611,7 +610,7 @@ class RandomMaskDilation:
         self.binary_thr = binary_thr
 
     def _random_dilate(self, img):
-        kernel_size = random.randint(self.kernel_min, self.kernel_max)
+        kernel_size = np.random.randint(self.kernel_min, self.kernel_max)
         kernel = np.ones((kernel_size, kernel_size), dtype=np.uint8)
         dilate_kernel_size = kernel_size
         img_ = cv2.dilate(img, kernel, iterations=1)
