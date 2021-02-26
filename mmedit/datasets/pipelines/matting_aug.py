@@ -590,17 +590,15 @@ class TransformTrimap(object):
         trimap2[trimap == 0, 0] = 255
         trimap2[trimap == 255, 1] = 255
         trimap_trans = np.zeros((h, w, 6), dtype=np.float32)
+        factor = np.array([0.02, 0.08, 0.16])[None, None]
         for k in range(2):
-            if (np.any(trimap2[:, :, k])):
+            if np.any(trimap2[:, :, k]):
                 dt_mask = -cv2.distanceTransform(255 - trimap2[:, :, k],
                                                  cv2.DIST_L2, 0)**2
+                dt_mask = dt_mask[..., None]
                 L = 320
-                trimap_trans[:, :,
-                             3 * k] = np.exp(dt_mask / (2 * ((0.02 * L)**2)))
-                trimap_trans[:, :, 3 * k + 1] = np.exp(dt_mask /
-                                                       (2 * ((0.08 * L)**2)))
-                trimap_trans[:, :, 3 * k + 2] = np.exp(dt_mask /
-                                                       (2 * ((0.16 * L)**2)))
+                trimap_trans[..., 3 * k:3 * k + 3] = np.exp(
+                    dt_mask / (2 * ((factor * L)**2)))
 
         results['transformed_trimap'] = trimap_trans
         return results
