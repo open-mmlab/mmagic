@@ -77,11 +77,6 @@ def test_load_image_from_file():
         io_backend='disk', key='gt', use_cache=True, data_dirs=[dir_baboon])
     image_loader = LoadImageFromFile(**config)
 
-    assert repr(image_loader) == (
-        image_loader.__class__.__name__ +
-        ('''(io_backend=disk, key=gt, flag=color, save_original_img=False,'''
-         ''' channel_order=bgr, use_cache=True,'''
-         ''' data_dirs=[PosixPath('tests/data/gt')])'''))
     results = image_loader(results)
     assert results['gt'].shape == (480, 500, 3)
     np.testing.assert_almost_equal(results['gt'], img_baboon)
