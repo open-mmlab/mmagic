@@ -47,13 +47,13 @@ class LoadImageFromFile(object):
         self.file_client = None
         self.use_cache = use_cache
         self.cache = OrderedDict()
-
-        if self.use_cache and data_dirs is not None:
+        self.data_dirs = data_dirs
+        if self.use_cache and self.data_dirs is not None:
             if self.file_client is None:
                 self.file_client = FileClient(self.io_backend, **self.kwargs)
                 self.cache[key] = OrderedDict()
             filepaths = []
-            for dir in data_dirs:
+            for dir in self.data_dirs:
                 filepaths += glob(os.path.join(dir, '*.jpg'))
                 filepaths += glob(os.path.join(dir, '*.png'))
             for filepath in filepaths:
