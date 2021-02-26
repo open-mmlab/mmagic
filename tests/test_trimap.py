@@ -349,3 +349,5 @@ def test_transform_trimap():
     assert results_transformed['trimap'].shape == dummy_trimap.shape
     assert results_transformed[
         'transformed_trimap'].shape[:2] == dummy_trimap.shape
+    repr_str = transform.__class__.__name__
+    assert repr(transform) == repr_str
