@@ -1,3 +1,6 @@
+import os
+from collections import OrderedDict
+from glob import glob
 from pathlib import Path
 
 import mmcv
@@ -10,7 +13,7 @@ from ..registry import PIPELINES
 
 
 @PIPELINES.register_module()
-class LoadImageFromFile:
+class LoadImageFromFile(object):
     """Load image from file.
 
     Args:
@@ -21,6 +24,8 @@ class LoadImageFromFile:
             Default: 'bgr'.
         save_original_img (bool): If True, maintain a copy of the image in
             `results` dict with name of `f'ori_{key}'`. Default: False.
+        use_cache (bool): If True, load all images at once. Default: False.
+        data_dirs (str): Path to the data_dir to be stored. Default: None.
         kwargs (dict): Args for file client.
     """
 
@@ -30,6 +35,8 @@ class LoadImageFromFile:
                  flag='color',
                  channel_order='bgr',
                  save_original_img=False,
+                 use_cache=False,
+                 data_dirs=None,
                  **kwargs):
         self.io_backend = io_backend
         self.key = key
@@ -38,6 +45,24 @@ class LoadImageFromFile:
         self.channel_order = channel_order
         self.kwargs = kwargs
         self.file_client = None
+        self.use_cache = use_cache
+        self.cache = OrderedDict()
+
+        if self.use_cache and data_dirs is not None:
+            if self.file_client is None:
+                self.file_client = FileClient(self.io_backend, **self.kwargs)
+                self.cache[key] = OrderedDict()
+            filepaths = []
+            for dir in data_dirs:
+                filepaths += glob(os.path.join(dir, '*.jpg'))
+                filepaths += glob(os.path.join(dir, '*.png'))
+            for filepath in filepaths:
+                img_bytes = self.file_client.get(filepath)
+                img = mmcv.imfrombytes(
+                    img_bytes,
+                    flag=self.flag,
+                    channel_order=self.channel_order)  # HWC
+                self.cache[key][filepath] = img
 
     def __call__(self, results):
         """Call function.
@@ -49,13 +74,16 @@ class LoadImageFromFile:
         Returns:
             dict: A dict containing the processed data and information.
         """
-        if self.file_client is None:
-            self.file_client = FileClient(self.io_backend, **self.kwargs)
         filepath = str(results[f'{self.key}_path'])
-        img_bytes = self.file_client.get(filepath)
-        img = mmcv.imfrombytes(
-            img_bytes, flag=self.flag, channel_order=self.channel_order)  # HWC
-
+        if self.use_cache:
+            img = self.cache[self.key][filepath]
+        else:
+            if self.file_client is None:
+                self.file_client = FileClient(self.io_backend, **self.kwargs)
+            img_bytes = self.file_client.get(filepath)
+            img = mmcv.imfrombytes(
+                img_bytes, flag=self.flag,
+                channel_order=self.channel_order)  # HWC
         results[self.key] = img
         results[f'{self.key}_path'] = filepath
         results[f'{self.key}_ori_shape'] = img.shape
@@ -68,7 +96,9 @@ class LoadImageFromFile:
         repr_str = self.__class__.__name__
         repr_str += (
             f'(io_backend={self.io_backend}, key={self.key}, '
-            f'flag={self.flag}, save_original_img={self.save_original_img})')
+            f'flag={self.flag}, save_original_img={self.save_original_img}), '
+            f'channel_order={self.channel_order}, use_cache={self.use_cache}, '
+            f'data_dirs={self.data_dirs}')
         return repr_str
 
 
