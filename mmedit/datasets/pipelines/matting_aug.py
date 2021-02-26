@@ -561,7 +561,7 @@ class GenerateSoftSeg:
 class TransformTrimap(object):
     """Generate two-channel transformed trimap.
 
-    Required key is "trimap", added key is "trimap_o" and "transformed_trimap".
+    Required key is "trimap", added key is "transformed_trimap".
 
     Adopted from the following repository:
     https://github.com/MarcoForte/FBA_Matting/blob/master/networks/transforms.py.
@@ -578,25 +578,25 @@ class TransformTrimap(object):
         Returns:
             dict: A dict containing the processed data and information.
         """
-        # generate two channel trimap
-        trimap_o = results['trimap']
-        if len(trimap_o.shape) > 2:
-            trimap_o = trimap_o.squeeze(2)
-        h, w = trimap_o.shape[:2]
-        trimap = np.zeros((h, w, 2), dtype=np.uint8)
-        trimap[trimap_o == 0, 0] = 255
-        trimap[trimap_o == 255, 1] = 255
-        clicks = np.zeros((h, w, 6))
+        trimap = results['trimap']
+        assert len(trimap.shape)==2
+        h, w = trimap.shape[:2]
+        # generate two-channel trimap
+        trimap2 = np.zeros((h, w, 2), dtype=np.uint8)
+        trimap2[trimap == 0, 0] = 255
+        trimap2[trimap == 255, 1] = 255
+        trimap_trans = np.zeros((h, w, 6), dtype=np.uint8)
         for k in range(2):
-            if (np.count_nonzero(trimap[:, :, k]) > 0):
-                dt_mask = -cv2.distanceTransform(255 - trimap[:, :, k],
+            if (np.any(trimap2[:, :, k])):
+                dt_mask = -cv2.distanceTransform(255 - trimap2[:, :, k],
                                                  cv2.DIST_L2, 0)**2
                 L = 320
-                clicks[:, :, 3 * k] = np.exp(dt_mask / (2 * ((0.02 * L)**2)))
-                clicks[:, :,
-                       3 * k + 1] = np.exp(dt_mask / (2 * ((0.08 * L)**2)))
-                clicks[:, :,
-                       3 * k + 2] = np.exp(dt_mask / (2 * ((0.16 * L)**2)))
+                trimap_trans[:, :,
+                             3 * k] = np.exp(dt_mask / (2 * ((0.02 * L)**2)))
+                trimap_trans[:, :, 3 * k + 1] = np.exp(dt_mask /
+                                                       (2 * ((0.08 * L)**2)))
+                trimap_trans[:, :, 3 * k + 2] = np.exp(dt_mask /
+                                                       (2 * ((0.16 * L)**2)))
 
-        results['transformed_trimap'] = clicks
+        results['transformed_trimap'] = trimap_trans
         return results
