@@ -41,6 +41,10 @@ class MergeFgAndBg:
         results['merged'] = merged
         return results
 
+    def __repr__(self) -> str:
+        repr_str = self.__class__.__name__
+        return repr_str
+
 
 @PIPELINES.register_module()
 class GenerateTrimap:
@@ -585,7 +589,7 @@ class TransformTrimap(object):
         trimap2 = np.zeros((h, w, 2), dtype=np.uint8)
         trimap2[trimap == 0, 0] = 255
         trimap2[trimap == 255, 1] = 255
-        trimap_trans = np.zeros((h, w, 6), dtype=np.uint8)
+        trimap_trans = np.zeros((h, w, 6), dtype=np.float32)
         for k in range(2):
             if (np.any(trimap2[:, :, k])):
                 dt_mask = -cv2.distanceTransform(255 - trimap2[:, :, k],
@@ -600,3 +604,7 @@ class TransformTrimap(object):
 
         results['transformed_trimap'] = trimap_trans
         return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        return repr_str
