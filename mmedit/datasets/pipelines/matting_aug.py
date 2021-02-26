@@ -579,7 +579,7 @@ class TransformTrimap(object):
             dict: A dict containing the processed data and information.
         """
         trimap = results['trimap']
-        assert len(trimap.shape)==2
+        assert len(trimap.shape) == 2
         h, w = trimap.shape[:2]
         # generate two-channel trimap
         trimap2 = np.zeros((h, w, 2), dtype=np.uint8)
