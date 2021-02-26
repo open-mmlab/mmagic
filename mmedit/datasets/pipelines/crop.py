@@ -1,5 +1,3 @@
-import random
-
 import mmcv
 import numpy as np
 from torch.nn.modules.utils import _pair
@@ -214,8 +212,8 @@ class PairedRandomCrop:
                 f'{results["lq_path"][0]} and {results["gt_path"][0]}.')
 
         # randomly choose top and left coordinates for lq patch
-        top = random.randint(0, h_lq - lq_patch_size)
-        left = random.randint(0, w_lq - lq_patch_size)
+        top = np.random.randint(h_lq - lq_patch_size + 1)
+        left = np.random.randint(w_lq - lq_patch_size + 1)
         # crop lq patch
         results['lq'] = [
             v[top:top + lq_patch_size, left:left + lq_patch_size, ...]
