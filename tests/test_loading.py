@@ -79,7 +79,7 @@ def test_load_image_from_file():
          'use_cache=True)'))
     results = image_loader(results)
     assert image_loader.cache is not None
-    assert str(path_baboon) in image_loader.cache.keys()
+    assert str(path_baboon) in image_loader.cache
     assert results['gt'].shape == (480, 500, 3)
     assert results['gt_path'] == str(path_baboon)
     np.testing.assert_almost_equal(results['gt'], img_baboon)

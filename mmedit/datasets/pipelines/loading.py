@@ -60,7 +60,7 @@ class LoadImageFromFile:
         if self.use_cache:
             if self.cache is None:
                 self.cache = OrderedDict()
-            if filepath in self.cache.keys():
+            if filepath in self.cache:
                 img = self.cache[filepath]
             else:
                 img_bytes = self.file_client.get(filepath)
