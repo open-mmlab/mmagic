@@ -590,7 +590,7 @@ class TransformTrimap(object):
         trimap2[trimap == 0, 0] = 255
         trimap2[trimap == 255, 1] = 255
         trimap_trans = np.zeros((h, w, 6), dtype=np.float32)
-        factor = np.array([0.02, 0.08, 0.16])[None, None]
+        factor = np.array([[[0.02, 0.08, 0.16]]], dtype=np.float32)
         for k in range(2):
             if np.any(trimap2[:, :, k]):
                 dt_mask = -cv2.distanceTransform(255 - trimap2[:, :, k],
