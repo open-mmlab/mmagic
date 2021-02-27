@@ -354,6 +354,3 @@ def test_dct_mask():
     repr_str = dct_mask.__class__.__name__ + (f'(gamma={dct_mask.gamma}, '
                                               f'beta={dct_mask.beta})')
     assert repr_str == repr(dct_mask)
-
-
-test_load_image_from_file()
