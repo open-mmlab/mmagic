@@ -71,16 +71,18 @@ def test_load_image_from_file():
     results = dict(gt_path=path_baboon)
     config = dict(io_backend='disk', key='gt', use_cache=True)
     image_loader = LoadImageFromFile(**config)
-
+    assert image_loader.cache is None
     assert repr(image_loader) == (
         image_loader.__class__.__name__ +
         ('(io_backend=disk, key=gt, '
          'flag=color, save_original_img=False, channel_order=bgr, '
          'use_cache=True)'))
     results = image_loader(results)
+    assert image_loader.cache is not None
+    assert str(path_baboon) in image_loader.cache.keys()
     assert results['gt'].shape == (480, 500, 3)
-    np.testing.assert_almost_equal(results['gt'], img_baboon)
     assert results['gt_path'] == str(path_baboon)
+    np.testing.assert_almost_equal(results['gt'], img_baboon)
 
 
 def test_load_image_from_file_list():
@@ -352,3 +354,6 @@ def test_dct_mask():
     repr_str = dct_mask.__class__.__name__ + (f'(gamma={dct_mask.gamma}, '
                                               f'beta={dct_mask.beta})')
     assert repr_str == repr(dct_mask)
+
+
+test_load_image_from_file()
