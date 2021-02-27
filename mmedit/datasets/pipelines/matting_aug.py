@@ -563,7 +563,12 @@ class GenerateSoftSeg:
 
 @PIPELINES.register_module()
 class TransformTrimap:
-    """Generate two-channel transformed trimap.
+    """Generate two-channel trimap and encode it into six-channel.
+
+    This calss will generate a two-channel trimap composed of definite
+    foreground and backgroud masks and encode it into a six-channel trimap
+    using Gaussian blurs of the generated two-channel trimap at three
+    different scales. The transformed trimap has 6 channels.
 
     Required key is "trimap", added key is "transformed_trimap".
 
