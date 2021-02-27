@@ -562,7 +562,7 @@ class GenerateSoftSeg:
 
 
 @PIPELINES.register_module()
-class TransformTrimap(object):
+class TransformTrimap:
     """Generate two-channel transformed trimap.
 
     Required key is "trimap", added key is "transformed_trimap".
