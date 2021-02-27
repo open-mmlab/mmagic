@@ -77,8 +77,8 @@ def main():
         samples_per_gpu=1,
         drop_last=False,
         shuffle=False,
-        **cfg.data.get('test_dataloader', {}),
         dist=distributed)
+    loader_cfg.update(cfg.data.get('test_dataloader', {}))
 
     data_loader = build_dataloader(dataset, **loader_cfg)
 
