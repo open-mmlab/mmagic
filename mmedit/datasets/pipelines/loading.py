@@ -33,7 +33,6 @@ class LoadImageFromFile:
                  channel_order='bgr',
                  save_original_img=False,
                  use_cache=False,
-                 data_dirs=None,
                  **kwargs):
         self.io_backend = io_backend
         self.key = key
