@@ -1,6 +1,4 @@
-import os
 from collections import OrderedDict
-from glob import glob
 from pathlib import Path
 
 import mmcv
@@ -25,7 +23,6 @@ class LoadImageFromFile(object):
         save_original_img (bool): If True, maintain a copy of the image in
             `results` dict with name of `f'ori_{key}'`. Default: False.
         use_cache (bool): If True, load all images at once. Default: False.
-        data_dirs (str): Path to the data_dir to be stored. Default: None.
         kwargs (dict): Args for file client.
     """
 
@@ -46,25 +43,7 @@ class LoadImageFromFile(object):
         self.kwargs = kwargs
         self.file_client = None
         self.use_cache = use_cache
-        self.cache = OrderedDict()
-        self.data_dirs = data_dirs
-        if self.use_cache and self.data_dirs is not None:
-            if self.file_client is None:
-                self.file_client = FileClient(self.io_backend, **self.kwargs)
-                self.cache[key] = OrderedDict()
-            filepaths = []
-            for dir in self.data_dirs:
-                filepaths += glob(os.path.join(dir, '*.jpg'))
-                filepaths += glob(os.path.join(dir, '*.png'))
-            for filepath in filepaths:
-                img_bytes = self.file_client.get(filepath)
-                img = mmcv.imfrombytes(
-                    img_bytes,
-                    flag=self.flag,
-                    channel_order=self.channel_order)  # HWC
-                self.cache[key][filepath] = img
-        elif self.use_cache and self.data_dirs is None:
-            raise RuntimeError('Please provide the directory.')
+        self.cache = None
 
     def __call__(self, results):
         """Call function.
@@ -77,11 +56,21 @@ class LoadImageFromFile(object):
             dict: A dict containing the processed data and information.
         """
         filepath = str(results[f'{self.key}_path'])
+        if self.file_client is None:
+            self.file_client = FileClient(self.io_backend, **self.kwargs)
         if self.use_cache:
-            img = self.cache[self.key][filepath]
+            if self.cache is None:
+                self.cache = OrderedDict()
+            if filepath in self.cache.keys():
+                img = self.cache[filepath]
+            else:
+                img_bytes = self.file_client.get(filepath)
+                img = mmcv.imfrombytes(
+                    img_bytes,
+                    flag=self.flag,
+                    channel_order=self.channel_order)  # HWC
+                self.cache[filepath] = img
         else:
-            if self.file_client is None:
-                self.file_client = FileClient(self.io_backend, **self.kwargs)
             img_bytes = self.file_client.get(filepath)
             img = mmcv.imfrombytes(
                 img_bytes, flag=self.flag,
@@ -99,8 +88,7 @@ class LoadImageFromFile(object):
         repr_str += (
             f'(io_backend={self.io_backend}, key={self.key}, '
             f'flag={self.flag}, save_original_img={self.save_original_img}, '
-            f'channel_order={self.channel_order}, use_cache={self.use_cache}, '
-            f'data_dirs={self.data_dirs})')
+            f'channel_order={self.channel_order}, use_cache={self.use_cache})')
         return repr_str
 
 
