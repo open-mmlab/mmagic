@@ -42,6 +42,10 @@ class MergeFgAndBg:
         results['merged'] = merged
         return results
 
+    def __repr__(self) -> str:
+        repr_str = self.__class__.__name__
+        return repr_str
+
 
 @PIPELINES.register_module()
 class GenerateTrimap:
@@ -567,4 +571,56 @@ class GenerateSoftSeg:
                      f'erode_iter_range={self.erode_iter_range}, '
                      f'dilate_iter_range={self.dilate_iter_range}, '
                      f'blur_ksizes={self.blur_ksizes})')
+        return repr_str
+
+
+@PIPELINES.register_module()
+class TransformTrimap:
+    """Generate two-channel trimap and encode it into six-channel.
+
+    This calss will generate a two-channel trimap composed of definite
+    foreground and backgroud masks and encode it into a six-channel trimap
+    using Gaussian blurs of the generated two-channel trimap at three
+    different scales. The transformed trimap has 6 channels.
+
+    Required key is "trimap", added key is "transformed_trimap".
+
+    Adopted from the following repository:
+    https://github.com/MarcoForte/FBA_Matting/blob/master/networks/transforms.py.
+
+    """
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        trimap = results['trimap']
+        assert len(trimap.shape) == 2
+        h, w = trimap.shape[:2]
+        # generate two-channel trimap
+        trimap2 = np.zeros((h, w, 2), dtype=np.uint8)
+        trimap2[trimap == 0, 0] = 255
+        trimap2[trimap == 255, 1] = 255
+        trimap_trans = np.zeros((h, w, 6), dtype=np.float32)
+        factor = np.array([[[0.02, 0.08, 0.16]]], dtype=np.float32)
+        for k in range(2):
+            if np.any(trimap2[:, :, k]):
+                dt_mask = -cv2.distanceTransform(255 - trimap2[:, :, k],
+                                                 cv2.DIST_L2, 0)**2
+                dt_mask = dt_mask[..., None]
+                L = 320
+                trimap_trans[..., 3 * k:3 * k + 3] = np.exp(
+                    dt_mask / (2 * ((factor * L)**2)))
+
+        results['transformed_trimap'] = trimap_trans
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
         return repr_str

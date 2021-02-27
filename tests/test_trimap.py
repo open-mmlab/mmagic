@@ -5,7 +5,8 @@ import pytest
 from mmedit.datasets.pipelines import (CompositeFg, GenerateSeg,
                                        GenerateSoftSeg, GenerateTrimap,
                                        GenerateTrimapWithDistTransform,
-                                       MergeFgAndBg, PerturbBg)
+                                       MergeFgAndBg, PerturbBg,
+                                       TransformTrimap)
 
 
 def check_keys_contain(result_keys, target_keys):
@@ -323,3 +324,30 @@ def test_generate_soft_seg():
         'erode_iter_range=(1, 2), dilate_iter_range=(1, 2), '
         'blur_ksizes=[(11, 11)])')
     assert repr(generate_soft_seg) == repr_str
+
+
+def test_transform_trimap():
+    results = dict()
+    transform = TransformTrimap()
+    target_keys = ['trimap', 'transformed_trimap']
+
+    with pytest.raises(KeyError):
+        results_transformed = transform(results)
+
+    with pytest.raises(AssertionError):
+        dummy_trimap = np.zeros((100, 100, 1), dtype=np.uint8)
+        results['trimap'] = dummy_trimap
+        results_transformed = transform(results)
+
+    results = dict()
+    # generate dummy trimap with shape (100,100)
+    dummy_trimap = np.zeros((100, 100), dtype=np.uint8)
+    dummy_trimap[:50, :50] = 255
+    results['trimap'] = dummy_trimap
+    results_transformed = transform(results)
+    assert check_keys_contain(results_transformed.keys(), target_keys)
+    assert results_transformed['trimap'].shape == dummy_trimap.shape
+    assert results_transformed[
+        'transformed_trimap'].shape[:2] == dummy_trimap.shape
+    repr_str = transform.__class__.__name__
+    assert repr(transform) == repr_str

@@ -12,7 +12,7 @@ from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
                       RandomLoadResizeBg)
 from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, GenerateTrimapWithDistTransform,
-                          MergeFgAndBg, PerturbBg)
+                          MergeFgAndBg, PerturbBg, TransformTrimap)
 from .normalization import Normalize, RescaleToZeroOne
 
 __all__ = [
@@ -25,5 +25,6 @@ __all__ = [
     'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList',
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
     'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
-    'CropAroundFg', 'GetSpatialDiscountMask', 'GenerateTrimapWithDistTransform'
+    'CropAroundFg', 'GetSpatialDiscountMask',
+    'GenerateTrimapWithDistTransform', 'TransformTrimap'
 ]
