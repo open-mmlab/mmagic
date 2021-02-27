@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from pathlib import Path
 
 import mmcv
@@ -59,7 +58,7 @@ class LoadImageFromFile:
             self.file_client = FileClient(self.io_backend, **self.kwargs)
         if self.use_cache:
             if self.cache is None:
-                self.cache = OrderedDict()
+                self.cache = dict()
             if filepath in self.cache:
                 img = self.cache[filepath]
             else:
