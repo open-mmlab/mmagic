@@ -107,7 +107,7 @@ def _dist_train(model,
             drop_last=False,
             dist=True,
         ),
-        **({} if torch.__version__ != 'parrots' else dict(
+        **dict({} if torch.__version__ != 'parrots' else dict(
             prefetch_num=2,
             pin_memory=False,
         )),
@@ -218,12 +218,13 @@ def _non_dist_train(model,
     dataset = dataset if isinstance(dataset, (list, tuple)) else [dataset]
 
     # step 1: give default values and override (if exist) from cfg.data
-    loader_cfg = dict(
-        seed=cfg.get('seed'),
-        drop_last=False,
-        dist=False,
-        num_gpus=cfg.gpus,
-        **({} if torch.__version__ != 'parrots' else dict(
+    loader_cfg = {
+        **dict(seed=cfg.get('seed'),
+            drop_last=False,
+            dist=False,
+            num_gpus=cfg.gpus
+        ),
+        **dict({} if torch.__version__ != 'parrots' else dict(
             prefetch_num=2,
             pin_memory=False,
         )),
@@ -235,7 +236,8 @@ def _non_dist_train(model,
             'drop_last',
             'prefetch_num',
             'pin_memory',
-        ] if k in cfg.data))
+        ] if k in cfg.data)
+    }
 
     # step 2: cfg.data.train_dataloader has highest priority
     train_loader_cfg = dict(loader_cfg, **cfg.data.get('train_dataloader', {}))
