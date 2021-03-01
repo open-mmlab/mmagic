@@ -167,7 +167,8 @@ def _dist_train(model,
                           'https://github.com/open-mmlab/mmediting/pull/201')
 
         val_loader_cfg = {
-            **dict(loader_cfg, shuffle=False, drop_last=False),
+            **loader_cfg,
+            **dict(shuffle=False, drop_last=False),
             **dict((newk, cfg.data[oldk]) for oldk, newk in [
                        ('val_samples_per_gpu', 'samples_per_gpu'),
                        ('val_workers_per_gpu', 'workers_per_gpu'),
@@ -276,7 +277,8 @@ def _non_dist_train(model,
                           'https://github.com/open-mmlab/mmediting/pull/201')
 
         val_loader_cfg = {
-            **dict(loader_cfg, shuffle=False, drop_last=False),
+            **loader_cfg,
+            **dict(shuffle=False, drop_last=False),
             **dict((newk, cfg.data[oldk]) for oldk, newk in [
                        ('val_samples_per_gpu', 'samples_per_gpu'),
                        ('val_workers_per_gpu', 'workers_per_gpu'),
