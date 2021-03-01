@@ -101,23 +101,22 @@ def _dist_train(model,
     dataset = dataset if isinstance(dataset, (list, tuple)) else [dataset]
 
     # step 1: give default values and override (if exist) from cfg.data
-    loader_cfg = dict(
-        seed=cfg.get('seed'),
-        drop_last=False,
-        dist=True,
+    loader_cfg = {
+        **dict(seed=cfg.get('seed'), drop_last=False, dist=True),
         **({} if torch.__version__ != 'parrots' else dict(
-            prefetch_num=2,
-            pin_memory=False,
-        )),
+               prefetch_num=2,
+               pin_memory=False,
+           )),
         **dict((k, cfg.data[k]) for k in [
-            'samples_per_gpu',
-            'workers_per_gpu',
-            'shuffle',
-            'seed',
-            'drop_last',
-            'prefetch_num',
-            'pin_memory',
-        ] if k in cfg.data))
+                   'samples_per_gpu',
+                   'workers_per_gpu',
+                   'shuffle',
+                   'seed',
+                   'drop_last',
+                   'prefetch_num',
+                   'pin_memory',
+               ] if k in cfg.data)
+    }
 
     # step 2: cfg.data.train_dataloader has highest priority
     train_loader_cfg = dict(loader_cfg, **cfg.data.get('train_dataloader', {}))
@@ -167,15 +166,15 @@ def _dist_train(model,
                           'Details see '
                           'https://github.com/open-mmlab/mmediting/pull/201')
 
-        val_loader_cfg = dict(
-            loader_cfg,
-            shuffle=False,
-            drop_last=False,
+        val_loader_cfg = {
+            **loader_cfg,
+            **dict(shuffle=False, drop_last=False),
             **dict((newk, cfg.data[oldk]) for oldk, newk in [
-                ('val_samples_per_gpu', 'samples_per_gpu'),
-                ('val_workers_per_gpu', 'workers_per_gpu'),
-            ] if oldk in cfg.data),
-            **cfg.data.get('val_dataloader', {}))
+                       ('val_samples_per_gpu', 'samples_per_gpu'),
+                       ('val_workers_per_gpu', 'workers_per_gpu'),
+                   ] if oldk in cfg.data),
+            **cfg.data.get('val_dataloader', {})
+        }
 
         data_loader = build_dataloader(dataset, **val_loader_cfg)
         save_path = osp.join(cfg.work_dir, 'val_visuals')
@@ -212,24 +211,26 @@ def _non_dist_train(model,
     dataset = dataset if isinstance(dataset, (list, tuple)) else [dataset]
 
     # step 1: give default values and override (if exist) from cfg.data
-    loader_cfg = dict(
-        seed=cfg.get('seed'),
-        drop_last=False,
-        dist=False,
-        num_gpus=cfg.gpus,
+    loader_cfg = {
+        **dict(
+            seed=cfg.get('seed'),
+            drop_last=False,
+            dist=False,
+            num_gpus=cfg.gpus),
         **({} if torch.__version__ != 'parrots' else dict(
-            prefetch_num=2,
-            pin_memory=False,
-        )),
+               prefetch_num=2,
+               pin_memory=False,
+           )),
         **dict((k, cfg.data[k]) for k in [
-            'samples_per_gpu',
-            'workers_per_gpu',
-            'shuffle',
-            'seed',
-            'drop_last',
-            'prefetch_num',
-            'pin_memory',
-        ] if k in cfg.data))
+                   'samples_per_gpu',
+                   'workers_per_gpu',
+                   'shuffle',
+                   'seed',
+                   'drop_last',
+                   'prefetch_num',
+                   'pin_memory',
+               ] if k in cfg.data)
+    }
 
     # step 2: cfg.data.train_dataloader has highest priority
     train_loader_cfg = dict(loader_cfg, **cfg.data.get('train_dataloader', {}))
@@ -275,15 +276,15 @@ def _non_dist_train(model,
                           'Details see '
                           'https://github.com/open-mmlab/mmediting/pull/201')
 
-        val_loader_cfg = dict(
-            loader_cfg,
-            shuffle=False,
-            drop_last=False,
+        val_loader_cfg = {
+            **loader_cfg,
+            **dict(shuffle=False, drop_last=False),
             **dict((newk, cfg.data[oldk]) for oldk, newk in [
-                ('val_samples_per_gpu', 'samples_per_gpu'),
-                ('val_workers_per_gpu', 'workers_per_gpu'),
-            ] if oldk in cfg.data),
-            **cfg.data.get('val_dataloader', {}))
+                       ('val_samples_per_gpu', 'samples_per_gpu'),
+                       ('val_workers_per_gpu', 'workers_per_gpu'),
+                   ] if oldk in cfg.data),
+            **cfg.data.get('val_dataloader', {})
+        }
 
         data_loader = build_dataloader(dataset, **val_loader_cfg)
         save_path = osp.join(cfg.work_dir, 'val_visuals')
