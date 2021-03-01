@@ -74,11 +74,13 @@ def main():
 
     loader_cfg = {
         **dict((k, cfg.data[k]) for k in ['workers_per_gpu'] if k in cfg.data),
-        **dict(samples_per_gpu=1,
+        **dict(
+            samples_per_gpu=1,
             drop_last=False,
             shuffle=False,
             dist=distributed),
-        **cfg.data.get('test_dataloader', {})}
+        **cfg.data.get('test_dataloader', {})
+    }
 
     data_loader = build_dataloader(dataset, **loader_cfg)
 
