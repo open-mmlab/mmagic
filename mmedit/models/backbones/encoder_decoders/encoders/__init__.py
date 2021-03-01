@@ -1,4 +1,5 @@
 from .deepfill_encoder import DeepFillEncoder
+from .fba_encoder import FBAResnetDilated
 from .gl_encoder import GLEncoder
 from .indexnet_encoder import (DepthwiseIndexBlock, HolisticIndexBlock,
                                IndexNetEncoder)
@@ -9,5 +10,5 @@ from .vgg import VGG16
 __all__ = [
     'GLEncoder', 'VGG16', 'ResNetEnc', 'HolisticIndexBlock',
     'DepthwiseIndexBlock', 'ResShortcutEnc', 'PConvEncoder', 'DeepFillEncoder',
-    'IndexNetEncoder', 'ResGCAEncoder'
+    'IndexNetEncoder', 'ResGCAEncoder', 'FBAResnetDilated'
 ]
