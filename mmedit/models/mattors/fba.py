@@ -63,7 +63,7 @@ class FBA(BaseMattor):
         test_cfg (dict): Config of testing. In ``test_cfg``, If the model has a
             refiner, ``train_refiner`` should be specified.
         pretrained (str): Path of the pretrained model.
-        loss_alpha (dict): Config of the alpha prediction loss. Default: None.
+        loss_* (dict): Config of the alpha prediction loss. Default: None.
     """
 
     def __init__(self,
@@ -79,8 +79,8 @@ class FBA(BaseMattor):
                  loss_fb_compo=None,
                  loss_fb_lap=None,
                  loss_exclusion=None):
-        super(FBA, self).__init__(backbone, None, train_cfg, test_cfg,
-                                  pretrained)
+        super(FBA, self).__init__(backbone, None, train_cfg=train_cfg,  test_cfg=test_cfg,
+                                  pretrained=pretrained)
         self.loss_alpha = build_loss(
             loss_alpha) if loss_alpha is not None else None
         self.loss_alpha_compo = build_loss(
@@ -152,18 +152,24 @@ class FBA(BaseMattor):
         input = torch.cat(
             (merged_transformed, trimap_transformed, trimap, merged), 1)
         pred_alpha, pred_fg, pred_bg = self._forward(input)
-
+        threshold = 0.01
+        mask = alpha>threshold
+        nmask = ~mask
         losses = dict()
         if self.loss_alpha is not None:
             losses['loss_alpha'] = self.loss_alpha(pred_alpha, alpha)
         if self.loss_alpha_compo is not None:
             losses['loss_alpha_compo'] = self.loss_alpha_compo(
-                pred_alpha, ori_fg, bg, merged)
+                pred_alpha, ori_fg, bg, merged,alpha=alpha,threshold=0.01)
+        if self.loss_alpha_grad is not None:
+            losses['loss_alpha_grad'] = self.loss_alpha_grad(
+                pred_alpha,alpha)
         if self.loss_alpha_lap is not None:
             losses['loss_alpha_lap'] = self.loss_alpha_lap(alpha, pred_alpha)
 
         if self.loss_fb is not None:
-            losses['loss_fb'] = self.loss_fb(pred_fg, ori_fg) + self.loss_fb(
+            losses['loss_fb'] = self.loss_fb(pred_fg*nmask, ori_fg*nmask) + self.loss_fb(
+                pred_bg*mask, bg*mask)+self.loss_fb(pred_fg, ori_fg)+self.loss_fb(
                 pred_bg, bg)
         if self.loss_fb_compo is not None:
             losses['loss_fb_compo'] = self.loss_fb_compo(
@@ -210,10 +216,8 @@ class FBA(BaseMattor):
         merged_transformed = groupnorm_normalise_image(
             merged.clone(), format='nchw')
         # for batch size 1
-
         input = torch.cat(
             (merged_transformed, trimap_transformed, trimap, merged), 1)
-
         pred_alpha, pred_fg, pred_bg = self._forward(input)
         # FBA Fusion
         pred_alpha, pred_fg, pred_bg = fba_fusion(pred_alpha, merged, pred_fg,
@@ -224,26 +228,26 @@ class FBA(BaseMattor):
                               (ori_w, ori_h), cv2.INTER_LANCZOS4)
         pred_fba = np2torch(pred_fba)[0]
         pred_a = pred_fba[0, ...]
-        pred_b = pred_fba[1:4, ...]
-        pred_f = pred_fba[4:7, ...]
-        trimap_o = meta[0]['trimap_o']
-        pred_a[trimap_o[..., 0] == 1] = 0
-        pred_a[trimap_o[..., 1] == 1] = 1
+        pred_f = pred_fba[1:4, ...]
+        pred_b = pred_fba[4:7, ...]
+        trimap_o = meta[0]['ori_trimap']
+        pred_a[trimap_o==0] = 0
+        pred_a[trimap_o== 1] = 1
         mask = pred_a[None, ...].repeat(3, 1, 1)
-        pred_f[mask == 1] = np2torch(meta[0]['ori_merged'])[0][mask == 1]
-        pred_b[mask == 0] = np2torch(meta[0]['ori_merged'])[0][mask == 0]
+        ori_merged = np2torch(meta[0]['ori_merged'])[0]
+        pred_f[mask == 1] = ori_merged[mask == 1]
+        pred_b[mask == 0] = ori_merged[mask == 0]
         pred_a = pred_a.detach().cpu().numpy().squeeze()
-        # pred_b = pred_b.detach().cpu().numpy().squeeze()
-        # pred_f = pred_f.detach().cpu().numpy().squeeze()
+        pred_b = pred_b.detach().cpu().numpy().squeeze().transpose((1,2,0))[:,:,::-1]
+        pred_f = pred_f.detach().cpu().numpy().squeeze().transpose((1,2,0))[:,:,::-1]
         eval_result = self.evaluate(pred_a, meta)
-
         if save_image:
             save_a = os.path.join(save_path, 'alpha')
-            # save_b = os.path.join(save_path, 'bg')
-            # save_f = os.path.join(save_path, 'fg')
+            save_b = os.path.join(save_path, 'bg')
+            save_f = os.path.join(save_path, 'fg')
 
             self.save_image(pred_a, meta, save_a, iteration)
-            # self.save_image(pred_f, meta, save_f, iteration)
-            # self.save_image(pred_b, meta, save_b, iteration)
+            self.save_image(pred_f, meta, save_f, iteration)
+            self.save_image(pred_b, meta, save_b, iteration)
 
         return {'pred_alpha': pred_a, 'eval_result': eval_result}

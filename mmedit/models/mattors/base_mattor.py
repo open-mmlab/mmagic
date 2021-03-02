@@ -178,11 +178,11 @@ class BaseMattor(BaseModel):
                 np.round(pred_alpha * 255).astype(np.uint8))
         return eval_result
 
-    def save_image(self, pred_alpha, meta, save_path, iteration):
+    def save_image(self, pred, meta, save_path, iteration):
         """Save predicted alpha to file.
 
         Args:
-            pred_alpha (np.ndarray): The predicted alpha matte of shape (H, W).
+            pred (np.ndarray): The predicted alpha, fg or bg of shape (H, W).
             meta (list[dict]): Meta data about the current data batch.
                 Currently only batch_size 1 is supported. Required keys in the
                 meta dict are ``merged_path``.
@@ -194,11 +194,11 @@ class BaseMattor(BaseModel):
         """
         image_stem = Path(meta[0]['merged_path']).stem
         if iteration is None:
-            save_path = osp.join(save_path, f'{image_stem}.png')
+            save_path = osp.join(save_path, f'{image_stem}.jpg')
         else:
             save_path = osp.join(save_path,
-                                 f'{image_stem}_{iteration + 1:06d}.png')
-        mmcv.imwrite(pred_alpha * 255, save_path)
+                                 f'{image_stem}_{iteration + 1:06d}.jpg')
+        mmcv.imwrite(pred * 255, save_path)
 
     @abstractmethod
     def forward_train(self, merged, trimap, alpha, **kwargs):
