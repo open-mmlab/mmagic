@@ -236,10 +236,18 @@ class FBAResnetDilated(nn.Module):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=False, logger=logger)
 
-    def forward(self, x, return_feature_maps=False):
-        # x cat(image_n, trimap_transformed, two_chan_trimap,img)
+    def forward(self, x):
+        """Forward function.
 
-        two_chan_trimap = x[:, 9:11]
+        Args:
+            x (Tensor): Input tensor with shape (N, C, H, W).
+
+        Returns:
+            Tensor: Output tensor.
+        """
+        # x = cat(merged_t, trimap_t, two_channel_trimap,merged)
+        # t refers to tranformed.
+        two_channel_trimap = x[:, 9:11]
         merged = x[:, 11:14]
         x = x[:, 0:11, ...]
         conv_out = [x]
@@ -257,7 +265,7 @@ class FBAResnetDilated(nn.Module):
         return {
             'conv_out': conv_out,
             'merged': merged,
-            'two_chan_trimap': two_chan_trimap
+            'two_channel_trimap': two_channel_trimap
         }
 
 
