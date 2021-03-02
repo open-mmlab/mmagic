@@ -182,13 +182,25 @@ class ResNet(nn.Module):
 
 @COMPONENTS.register_module()
 class FBAResnetDilated(nn.Module):
+    """ResNet-based encoder for FBA image matting.
+
+    This class is adopted from https://github.com/MarcoForte/FBA_Matting.
+
+    Args:
+        orig_resnet (str): Type of base ResNet. Default: ResNet50.
+        dilate_scale (int): Scale of dilation.
+        norm_cfg (dict): Config dict for normalization layer. "BN" by default.
+        act_cfg (dict): Config dict for activation layer, "ReLU" by default.
+        pre_trained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+    """
 
     def __init__(self,
                  orig_resnet=None,
                  dilate_scale=8,
-                 norm_cfg=None,
-                 pre_trained=None,
-                 act_cfg=dict(type='ReLU')):
+                 norm_cfg=dict(type='BN'),
+                 act_cfg=dict(type='ReLU'),
+                 pre_trained=None):
         super(FBAResnetDilated, self).__init__()
         from functools import partial
         if orig_resnet is None:
