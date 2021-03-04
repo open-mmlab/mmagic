@@ -6,7 +6,6 @@ from mmcv.utils.parrots_wrapper import _BatchNorm
 
 from mmedit.models.registry import COMPONENTS
 from mmedit.utils import get_root_logger
-from ..encoders.resnet import BasicBlock, Bottleneck
 
 
 @COMPONENTS.register_module()
@@ -133,7 +132,8 @@ class FBADecoder(nn.Module):
                 padding=0,
                 kernel_size=1,
                 bias=True,
-                conv_cfg=self.conv_cfg))
+                conv_cfg=self.conv_cfg,
+                act_cfg=None))
 
     def init_weights(self, pretrained=None):
         """Init weights for the model.
