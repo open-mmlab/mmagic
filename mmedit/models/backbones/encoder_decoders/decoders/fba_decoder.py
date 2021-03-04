@@ -1,83 +1,172 @@
 import torch
 import torch.nn as nn
-from mmcv.cnn import ConvWS2d
+from mmcv.cnn import ConvModule, constant_init, kaiming_init
+from mmcv.runner import load_checkpoint
+from mmcv.utils.parrots_wrapper import _BatchNorm
 
 from mmedit.models.registry import COMPONENTS
+from mmedit.utils import get_root_logger
 
 
 @COMPONENTS.register_module()
 class FBADecoder(nn.Module):
+    """Decoder for FBA matting.
+
+        pool_scales (tuple[int]): Pooling scales used in Pooling Pyramid
+            Module.
+        in_channels (int): Input channels.
+        channels (int): Channels after modules, before conv_seg.
+        conv_cfg (dict|None): Config of conv layers.
+        norm_cfg (dict|None): Config of norm layers.
+        act_cfg (dict): Config of activation layers.
+        align_corners (bool): align_corners argument of F.interpolate.
+    """
 
     def __init__(self,
-                 batch_norm=False,
-                 norm_cfg=None,
-                 act_cfg=dict(type='ReLU')):
-        super(FBADecoder, self).__init__()
+                 pool_scales,
+                 in_channels,
+                 channels,
+                 conv_cfg=None,
+                 norm_cfg=dict(type='BN'),
+                 act_cfg=dict(type='ReLU'),
+                 align_corners=False):
+        super().__init__()
 
+        assert isinstance(pool_scales, (list, tuple))
         # Pyramid Pooling Module
-        pool_scales = (1, 2, 3, 6)
-        self.batch_norm = batch_norm
+        self.pool_scales = pool_scales
+        self.in_channels = in_channels
+        self.channels = channels
+        self.conv_cfg = conv_cfg
+        self.norm_cfg = norm_cfg
+        self.act_cfg = act_cfg
+        self.align_corners = align_corners
+        self.batch_norm = False
 
         self.ppm = []
-
-        for scale in pool_scales:
+        for scale in self.pool_scales:
             self.ppm.append(
                 nn.Sequential(
                     nn.AdaptiveAvgPool2d(scale),
-                    ConvWS2d(2048, 256, kernel_size=1, bias=True),
-                    norm(256, self.batch_norm), nn.LeakyReLU()))
+                    *(ConvModule(
+                        self.in_channels,
+                        self.channels,
+                        kernel_size=1,
+                        bias=True,
+                        conv_cfg=self.conv_cfg,
+                        norm_cfg=self.norm_cfg,
+                        act_cfg=self.act_cfg).children())))
         self.ppm = nn.ModuleList(self.ppm)
 
         # Follwed the author's implementation that
         # concatenate conv layers described in the supplementary
         # material between up operations
-        self.conv_up1 = nn.Sequential(
-            ConvWS2d(
-                2048 + len(pool_scales) * 256,
-                256,
-                kernel_size=3,
+        self.conv_up1 = nn.Sequential(*(list(
+            ConvModule(
+                self.in_channels + len(pool_scales) * 256,
+                self.channels,
                 padding=1,
-                bias=True), norm(256, self.batch_norm), nn.LeakyReLU(),
-            ConvWS2d(256, 256, kernel_size=3, padding=1),
-            norm(256, self.batch_norm), nn.LeakyReLU())
+                kernel_size=3,
+                bias=True,
+                conv_cfg=self.conv_cfg,
+                norm_cfg=self.norm_cfg,
+                act_cfg=self.act_cfg).children()) + list(
+                    ConvModule(
+                        self.channels,
+                        self.channels,
+                        padding=1,
+                        bias=True,
+                        kernel_size=3,
+                        conv_cfg=self.conv_cfg,
+                        norm_cfg=self.norm_cfg,
+                        act_cfg=self.act_cfg).children())))
 
-        self.conv_up2 = nn.Sequential(
-            ConvWS2d(256 + 256, 256, kernel_size=3, padding=1, bias=True),
-            norm(256, self.batch_norm), nn.LeakyReLU())
+        self.conv_up2 = nn.Sequential(*(list(
+            ConvModule(
+                self.channels * 2,
+                self.channels,
+                padding=1,
+                kernel_size=3,
+                bias=True,
+                conv_cfg=self.conv_cfg,
+                norm_cfg=self.norm_cfg,
+                act_cfg=self.act_cfg).children())))
 
-        # Keep the batch_norm here in case we may need to modify something
-        if (self.batch_norm):
+        if (self.norm_cfg['type'] == 'BN'):
             d_up3 = 128
         else:
             d_up3 = 64
 
-        self.conv_up3 = nn.Sequential(
-            ConvWS2d(256 + d_up3, 64, kernel_size=3, padding=1, bias=True),
-            norm(64, self.batch_norm), nn.LeakyReLU())
+        self.conv_up3 = nn.Sequential(*(list(
+            ConvModule(
+                self.channels + d_up3,
+                64,
+                padding=1,
+                kernel_size=3,
+                bias=True,
+                conv_cfg=self.conv_cfg,
+                norm_cfg=self.norm_cfg,
+                act_cfg=self.act_cfg).children())))
 
-        self.conv_up4 = nn.Sequential(
-            nn.Conv2d(64 + 3 + 3 + 2, 32, kernel_size=3, padding=1, bias=True),
-            nn.LeakyReLU(),
-            nn.Conv2d(32, 16, kernel_size=3, padding=1, bias=True),
-            nn.LeakyReLU(),
-            nn.Conv2d(16, 7, kernel_size=1, padding=0, bias=True))
+        self.unpool = nn.MaxUnpool2d(2, stride=2)
+
+        self.conv_up4 = nn.Sequential(*(list(
+            ConvModule(
+                64 + 3 + 3 + 2,
+                32,
+                padding=1,
+                kernel_size=3,
+                bias=True,
+                conv_cfg=self.conv_cfg,
+                act_cfg=self.act_cfg).children()) + list(
+                    ConvModule(
+                        32,
+                        16,
+                        padding=1,
+                        kernel_size=3,
+                        bias=True,
+                        conv_cfg=self.conv_cfg,
+                        act_cfg=self.act_cfg).children()) + list(
+                            ConvModule(
+                                16,
+                                7,
+                                padding=0,
+                                kernel_size=1,
+                                bias=True,
+                                conv_cfg=self.conv_cfg,
+                                act_cfg=None).children())))
 
     def init_weights(self, pretrained=None):
-        pass
+        """Init weights for the model.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+        """
+        if isinstance(pretrained, str):
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=False, logger=logger)
+        elif pretrained is None:
+            for m in self.modules():
+                if isinstance(m, nn.Conv2d):
+                    kaiming_init(m)
+                elif isinstance(m, (_BatchNorm, nn.GroupNorm)):
+                    constant_init(m, 1)
+
+        else:
+            raise TypeError('pretrained must be a str or None')
 
     def forward(self, inputs):
         """Forward function.
-
         Args:
             inputs (dict): Output dict of FbaEncoder.
-
         Returns:
             Tensor: Predicted alpha, fg and bg of the current batch.
         """
 
         conv_out = inputs['conv_out']
         img = inputs['merged']
-        two_chan_trimap = inputs['two_chan_trimap']
+        two_channel_trimap = inputs['two_channel_trimap']
         conv5 = conv_out[-1]
         input_size = conv5.size()
         ppm_out = [conv5]
@@ -86,36 +175,38 @@ class FBADecoder(nn.Module):
                 nn.functional.interpolate(
                     pool_scale(conv5), (input_size[2], input_size[3]),
                     mode='bilinear',
-                    align_corners=False))
+                    align_corners=self.align_corners))
         ppm_out = torch.cat(ppm_out, 1)
         x = self.conv_up1(ppm_out)
 
         x = torch.nn.functional.interpolate(
-            x, scale_factor=2, mode='bilinear', align_corners=False)
+            x,
+            scale_factor=2,
+            mode='bilinear',
+            align_corners=self.align_corners)
 
         x = torch.cat((x, conv_out[-4]), 1)
 
         x = self.conv_up2(x)
         x = torch.nn.functional.interpolate(
-            x, scale_factor=2, mode='bilinear', align_corners=False)
+            x,
+            scale_factor=2,
+            mode='bilinear',
+            align_corners=self.align_corners)
 
         x = torch.cat((x, conv_out[-5]), 1)
         x = self.conv_up3(x)
 
         x = torch.nn.functional.interpolate(
-            x, scale_factor=2, mode='bilinear', align_corners=False)
-        x = torch.cat((x, conv_out[-6][:, :3], img, two_chan_trimap), 1)
+            x,
+            scale_factor=2,
+            mode='bilinear',
+            align_corners=self.align_corners)
 
+        x = torch.cat((x, conv_out[-6][:, :3], img, two_channel_trimap), 1)
         output = self.conv_up4(x)
-        alpha = torch.clamp(output[:, 0][:, None], 0, 1)
+        alpha = torch.clamp(output[:, 0:1], 0, 1)
         F = torch.sigmoid(output[:, 1:4])
         B = torch.sigmoid(output[:, 4:7])
 
         return alpha, F, B
-
-
-def norm(dim, bn=False):
-    if (bn):
-        return nn.BatchNorm2d(dim)
-    else:
-        return nn.GroupNorm(32, dim)
