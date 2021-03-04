@@ -30,7 +30,7 @@ class FBADecoder(nn.Module):
                  norm_cfg=dict(type='BN'),
                  act_cfg=dict(type='ReLU'),
                  align_corners=False):
-        super(FBADecoder, self).__init__()
+        super().__init__()
 
         assert isinstance(pool_scales, (list, tuple))
         # Pyramid Pooling Module
@@ -205,7 +205,7 @@ class FBADecoder(nn.Module):
 
         x = torch.cat((x, conv_out[-6][:, :3], img, two_channel_trimap), 1)
         output = self.conv_up4(x)
-        alpha = torch.clamp(output[:, 0][:, None], 0, 1)
+        alpha = torch.clamp(output[:, 0:1], 0, 1)
         F = torch.sigmoid(output[:, 1:4])
         B = torch.sigmoid(output[:, 4:7])
 
