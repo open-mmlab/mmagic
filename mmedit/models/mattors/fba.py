@@ -96,8 +96,9 @@ class FBA(BaseMattor):
         """Forward function for training FBA model.
 
         Args:
-            merged_transformed (Tensor): with shape (N, C, H, W) encoding input images.
-                Typically these should be mean centered and std scaled.
+            merged_transformed (Tensor): with shape (N, C, H, W) encoding
+                input images. Typically these should be mean centered and
+                std scaled.
             trimap_transformed (Tensor): with shape (N, 6, H, W).
                 Tensor of trimap.
             two_channel_trimap (Tensor): with shape (N, 2, H, W).
@@ -158,8 +159,9 @@ class FBA(BaseMattor):
         """Defines the computation performed at every test call.
 
         Args:
-            merged_transformed (Tensor): with shape (N, C, H, W) encoding input images.
-                Typically these should be mean centered and std scaled.
+            merged_transformed (Tensor): with shape (N, C, H, W) encoding
+                input images. Typically these should be mean centered and
+                std scaled.
             trimap_transformed (Tensor): with shape (N, 6, H, W).
                 Tensor of trimap.
             two_channel_trimap (Tensor): with shape (N, 2, H, W).
