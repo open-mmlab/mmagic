@@ -15,7 +15,7 @@ class FBAResnetDilated(ResNet):
         Returns:
             Tensor: Output tensor.
         """
-        # x = cat(merged_t, trimap_t, two_channel_trimap,merged)
+        # x: (merged_t, trimap_t, two_channel_trimap,merged)
         # t refers to tranformed.
         two_channel_trimap = x[:, 9:11]
         merged = x[:, 11:14]
