@@ -115,13 +115,16 @@ class BaseMattor(BaseModel):
 
     def restore_shape(self, pred_alpha, meta):
         """Restore the predicted alpha to the original shape.
+
         The shape of the predicted alpha may not be the same as the shape of
         original input image. This function restores the shape of the predicted
         alpha.
+
         Args:
             pred_alpha (np.ndarray): The predicted alpha.
             meta (list[dict]): Meta data about the current data batch.
                 Currently only batch_size 1 is supported.
+
         Returns:
             np.ndarray: The reshaped predicted alpha.
         """
