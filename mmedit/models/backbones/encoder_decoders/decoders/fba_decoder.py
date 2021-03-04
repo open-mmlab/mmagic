@@ -48,20 +48,20 @@ class FBADecoder(nn.Module):
             self.ppm.append(
                 nn.Sequential(
                     nn.AdaptiveAvgPool2d(scale),
-                    ConvModule(
+                    *(ConvModule(
                         self.in_channels,
                         self.channels,
                         kernel_size=1,
                         bias=True,
                         conv_cfg=self.conv_cfg,
                         norm_cfg=self.norm_cfg,
-                        act_cfg=self.act_cfg)))
+                        act_cfg=self.act_cfg).children())))
         self.ppm = nn.ModuleList(self.ppm)
 
         # Follwed the author's implementation that
         # concatenate conv layers described in the supplementary
         # material between up operations
-        self.conv_up1 = nn.Sequential(
+        self.conv_up1 = nn.Sequential(*(list(
             ConvModule(
                 self.in_channels + len(pool_scales) * 256,
                 self.channels,
@@ -70,17 +70,18 @@ class FBADecoder(nn.Module):
                 bias=True,
                 conv_cfg=self.conv_cfg,
                 norm_cfg=self.norm_cfg,
-                act_cfg=self.act_cfg),
-            ConvModule(
-                self.channels,
-                self.channels,
-                padding=1,
-                kernel_size=3,
-                conv_cfg=self.conv_cfg,
-                norm_cfg=self.norm_cfg,
-                act_cfg=self.act_cfg))
+                act_cfg=self.act_cfg).children()) + list(
+                    ConvModule(
+                        self.channels,
+                        self.channels,
+                        padding=1,
+                        bias=True,
+                        kernel_size=3,
+                        conv_cfg=self.conv_cfg,
+                        norm_cfg=self.norm_cfg,
+                        act_cfg=self.act_cfg).children())))
 
-        self.conv_up2 = nn.Sequential(
+        self.conv_up2 = nn.Sequential(*(list(
             ConvModule(
                 self.channels * 2,
                 self.channels,
@@ -89,14 +90,14 @@ class FBADecoder(nn.Module):
                 bias=True,
                 conv_cfg=self.conv_cfg,
                 norm_cfg=self.norm_cfg,
-                act_cfg=self.act_cfg))
+                act_cfg=self.act_cfg).children())))
 
         if (self.norm_cfg['type'] == 'BN'):
             d_up3 = 128
         else:
             d_up3 = 64
 
-        self.conv_up3 = nn.Sequential(
+        self.conv_up3 = nn.Sequential(*(list(
             ConvModule(
                 self.channels + d_up3,
                 64,
@@ -105,11 +106,11 @@ class FBADecoder(nn.Module):
                 bias=True,
                 conv_cfg=self.conv_cfg,
                 norm_cfg=self.norm_cfg,
-                act_cfg=self.act_cfg))
+                act_cfg=self.act_cfg).children())))
 
         self.unpool = nn.MaxUnpool2d(2, stride=2)
 
-        self.conv_up4 = nn.Sequential(
+        self.conv_up4 = nn.Sequential(*(list(
             ConvModule(
                 64 + 3 + 3 + 2,
                 32,
@@ -117,23 +118,23 @@ class FBADecoder(nn.Module):
                 kernel_size=3,
                 bias=True,
                 conv_cfg=self.conv_cfg,
-                act_cfg=self.act_cfg),
-            ConvModule(
-                32,
-                16,
-                padding=1,
-                kernel_size=3,
-                bias=True,
-                conv_cfg=self.conv_cfg,
-                act_cfg=self.act_cfg),
-            ConvModule(
-                16,
-                7,
-                padding=0,
-                kernel_size=1,
-                bias=True,
-                conv_cfg=self.conv_cfg,
-                act_cfg=None))
+                act_cfg=self.act_cfg).children()) + list(
+                    ConvModule(
+                        32,
+                        16,
+                        padding=1,
+                        kernel_size=3,
+                        bias=True,
+                        conv_cfg=self.conv_cfg,
+                        act_cfg=self.act_cfg).children()) + list(
+                            ConvModule(
+                                16,
+                                7,
+                                padding=0,
+                                kernel_size=1,
+                                bias=True,
+                                conv_cfg=self.conv_cfg,
+                                act_cfg=None).children())))
 
     def init_weights(self, pretrained=None):
         """Init weights for the model.
