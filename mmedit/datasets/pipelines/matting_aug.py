@@ -576,7 +576,7 @@ class GenerateSoftSeg:
 
 @PIPELINES.register_module()
 class TransformTrimap:
-    """Generate two-channel trimap and encode it into six-channel.
+    """Transform trimap into two-channel and six-channel.
 
     This calss will generate a two-channel trimap composed of definite
     foreground and backgroud masks and encode it into a six-channel trimap
@@ -584,7 +584,7 @@ class TransformTrimap:
     different scales. The transformed trimap has 6 channels.
 
     Required key is "trimap", added key is "transformed_trimap" and
-    "two_channel_trimap.
+    "two_channel_trimap".
 
     Adopted from the following repository:
     https://github.com/MarcoForte/FBA_Matting/blob/master/networks/transforms.py.
