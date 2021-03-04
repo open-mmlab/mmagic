@@ -1,8 +1,12 @@
 import torch
 import torch.nn as nn
-from mmcv.cnn import ConvModule
+from mmcv.cnn import ConvModule, constant_init, kaiming_init
+from mmcv.runner import load_checkpoint
+from mmcv.utils.parrots_wrapper import _BatchNorm
 
 from mmedit.models.registry import COMPONENTS
+from mmedit.utils import get_root_logger
+from ..encoders.resnet import BasicBlock, Bottleneck
 
 
 @COMPONENTS.register_module()
@@ -132,7 +136,24 @@ class FBADecoder(nn.Module):
                 conv_cfg=self.conv_cfg))
 
     def init_weights(self, pretrained=None):
-        pass
+        """Init weights for the model.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+        """
+        if isinstance(pretrained, str):
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=False, logger=logger)
+        elif pretrained is None:
+            for m in self.modules():
+                if isinstance(m, nn.Conv2d):
+                    kaiming_init(m)
+                elif isinstance(m, (_BatchNorm, nn.GroupNorm)):
+                    constant_init(m, 1)
+
+        else:
+            raise TypeError('pretrained must be a str or None')
 
     def forward(self, inputs):
         """Forward function.

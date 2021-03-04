@@ -19,7 +19,7 @@ class BasicBlock(nn.Module):
                  stride=1,
                  dilation=1,
                  downsample=None,
-                 act_cfg=dict(type='ReLU', inplace=True),
+                 act_cfg=dict(type='ReLU'),
                  conv_cfg=None,
                  norm_cfg=dict(type='BN'),
                  with_cp=False,
@@ -408,7 +408,13 @@ class ResNet(nn.Module):
                 conv_cfg=self.conv_cfg))
         self.inplanes = planes * block.expansion
         for _ in range(1, blocks):
-            layers.append(block(self.inplanes, planes, norm_cfg=self.norm_cfg))
+            layers.append(
+                block(
+                    self.inplanes,
+                    planes,
+                    norm_cfg=self.norm_cfg,
+                    act_cfg=self.act_cfg,
+                    conv_cfg=self.conv_cfg))
 
         return nn.Sequential(*layers)
 
