@@ -17,7 +17,8 @@ class SimpleEncoderDecoder(nn.Module):
         super().__init__()
 
         self.encoder = build_component(encoder)
-        decoder['in_channels'] = self.encoder.out_channels
+        if hasattr(self.encoder, 'out_channels'):
+            decoder['in_channels'] = self.encoder.out_channels
         self.decoder = build_component(decoder)
 
     def init_weights(self, pretrained=None):

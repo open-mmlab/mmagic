@@ -6,8 +6,11 @@ import torch
 from mmcv.utils.parrots_wrapper import _BatchNorm
 
 from mmedit.models.backbones import (VGG16, DepthwiseIndexBlock,
-                                     HolisticIndexBlock, IndexNetEncoder,
-                                     ResGCAEncoder, ResNetEnc, ResShortcutEnc)
+                                     FBAResnetDilated, HolisticIndexBlock,
+                                     IndexNetEncoder, ResGCAEncoder, ResNetEnc,
+                                     ResShortcutEnc)
+from mmedit.models.backbones.encoder_decoders.encoders.resnet import (
+    BasicBlock, Bottleneck)
 
 
 def check_norm_state(modules, train_state):
@@ -17,6 +20,13 @@ def check_norm_state(modules, train_state):
             if mod.training != train_state:
                 return False
     return True
+
+
+def is_block(modules):
+    """Check if is ResNet building block."""
+    if isinstance(modules, (BasicBlock, Bottleneck)):
+        return True
+    return False
 
 
 def assert_tensor_with_shape(tensor, shape):
@@ -29,6 +39,20 @@ def assert_mid_feat_shape(mid_feat, target_shape):
     assert len(mid_feat) == 5
     for i in range(5):
         assert_tensor_with_shape(mid_feat[i], torch.Size(target_shape[i]))
+
+
+def _demo_inputs(input_shape=(2, 4, 64, 64)):
+    """
+    Create a superset of inputs needed to run encoder.
+
+    Args:
+        input_shape (tuple): input batch dimensions.
+            Default: (1, 4, 64, 64).
+    """
+    img = np.random.random(input_shape).astype(np.float32)
+    img = torch.from_numpy(img)
+
+    return img
 
 
 def test_vgg16_encoder():
@@ -492,15 +516,111 @@ def test_indexnet_encoder():
             assert dec_idx_feat.shape == target_shape
 
 
-def _demo_inputs(input_shape=(2, 4, 64, 64)):
-    """
-    Create a superset of inputs needed to run encoder.
+def test_fba_encoder():
+    """Test FBA encoder."""
 
-    Args:
-        input_shape (tuple): input batch dimensions.
-            Default: (1, 4, 64, 64).
-    """
-    img = np.random.random(input_shape).astype(np.float32)
-    img = torch.from_numpy(img)
+    with pytest.raises(KeyError):
+        # ResNet depth should be in [18, 34, 50, 101, 152]
+        FBAResnetDilated(
+            20,
+            in_channels=11,
+            stem_channels=64,
+            base_channels=64,
+        )
 
-    return img
+    with pytest.raises(AssertionError):
+        # In ResNet: 1 <= num_stages <= 4
+        FBAResnetDilated(
+            50,
+            in_channels=11,
+            stem_channels=64,
+            base_channels=64,
+            num_stages=0)
+
+    with pytest.raises(AssertionError):
+        # In ResNet: 1 <= num_stages <= 4
+        FBAResnetDilated(
+            50,
+            in_channels=11,
+            stem_channels=64,
+            base_channels=64,
+            num_stages=5)
+
+    with pytest.raises(AssertionError):
+        # len(strides) == len(dilations) == num_stages
+        FBAResnetDilated(
+            50,
+            in_channels=11,
+            stem_channels=64,
+            base_channels=64,
+            strides=(1, ),
+            dilations=(1, 1),
+            num_stages=3)
+
+    with pytest.raises(TypeError):
+        # pretrained must be a string path
+        model = FBAResnetDilated(
+            50,
+            in_channels=11,
+            stem_channels=64,
+            base_channels=64,
+        )
+        model.init_weights(pretrained=233)
+
+    model = FBAResnetDilated(
+        depth=50,
+        in_channels=11,
+        stem_channels=64,
+        base_channels=64,
+        conv_cfg=dict(type='ConvWS'),
+        norm_cfg=dict(type='GN', num_groups=32))
+
+    model.init_weights()
+    model.train()
+
+    input = _demo_inputs((1, 14, 320, 320))
+
+    output = model(input)
+
+    assert 'conv_out' in output.keys()
+    assert 'merged' in output.keys()
+    assert 'two_channel_trimap' in output.keys()
+
+    assert isinstance(output['conv_out'], list)
+    assert len(output['conv_out']) == 6
+
+    assert isinstance(output['merged'], torch.Tensor)
+    assert_tensor_with_shape(output['merged'], torch.Size([1, 3, 320, 320]))
+
+    assert isinstance(output['two_channel_trimap'], torch.Tensor)
+    assert_tensor_with_shape(output['two_channel_trimap'],
+                             torch.Size([1, 2, 320, 320]))
+    if torch.cuda.is_available():
+        model = FBAResnetDilated(
+            depth=50,
+            in_channels=11,
+            stem_channels=64,
+            base_channels=64,
+            conv_cfg=dict(type='ConvWS'),
+            norm_cfg=dict(type='GN', num_groups=32))
+        model.init_weights()
+        model.train()
+        model.cuda()
+
+        input = _demo_inputs((1, 14, 320, 320)).cuda()
+        output = model(input)
+
+        assert 'conv_out' in output.keys()
+        assert 'merged' in output.keys()
+        assert 'two_channel_trimap' in output.keys()
+
+        assert isinstance(output['conv_out'], list)
+        assert len(output['conv_out']) == 6
+
+        assert isinstance(output['merged'], torch.Tensor)
+        assert_tensor_with_shape(output['merged'], torch.Size([1, 3, 320,
+                                                               320]))
+
+        assert isinstance(output['two_channel_trimap'], torch.Tensor)
+        assert_tensor_with_shape(output['two_channel_trimap'],
+                                 torch.Size([1, 2, 320, 320]))
