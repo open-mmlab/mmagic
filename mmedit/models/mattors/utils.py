@@ -1,9 +1,5 @@
 import torch
 
-# For RGB !
-group_norm_std = [0.229, 0.224, 0.225]
-group_norm_mean = [0.485, 0.456, 0.406]
-
 
 def get_unknown_tensor(trimap, meta):
     """Get 1-channel unknown area tensor from the 3 or 1-channel trimap tensor.
