@@ -22,10 +22,8 @@ class BasicBlock(nn.Module):
                  act_cfg=dict(type='ReLU'),
                  conv_cfg=None,
                  norm_cfg=dict(type='BN'),
-                 with_cp=False,
-                 plugins=None):
+                 with_cp=False):
         super(BasicBlock, self).__init__()
-        assert plugins is None, 'Not implemented yet.'
 
         self.norm1_name, norm1 = build_norm_layer(norm_cfg, planes, postfix=1)
         self.norm2_name, norm2 = build_norm_layer(norm_cfg, planes, postfix=2)
@@ -104,13 +102,8 @@ class Bottleneck(nn.Module):
                  act_cfg=dict(type='ReLU'),
                  conv_cfg=None,
                  norm_cfg=dict(type='BN'),
-                 with_cp=False,
-                 plugins=None):
+                 with_cp=False):
         super(Bottleneck, self).__init__()
-        assert plugins is None or isinstance(plugins, list)
-        if plugins is not None:
-            allowed_position = ['after_conv1', 'after_conv2', 'after_conv3']
-            assert all(p['position'] in allowed_position for p in plugins)
 
         self.inplanes = inplanes
         self.planes = planes
@@ -122,23 +115,6 @@ class Bottleneck(nn.Module):
         self.conv1_stride = 1
         self.conv2_stride = stride
         self.with_cp = with_cp
-        self.plugins = plugins
-        self.with_plugins = plugins is not None
-
-        if self.with_plugins:
-            # collect plugins for conv1/conv2/conv3
-            self.after_conv1_plugins = [
-                plugin['cfg'] for plugin in plugins
-                if plugin['position'] == 'after_conv1'
-            ]
-            self.after_conv2_plugins = [
-                plugin['cfg'] for plugin in plugins
-                if plugin['position'] == 'after_conv2'
-            ]
-            self.after_conv3_plugins = [
-                plugin['cfg'] for plugin in plugins
-                if plugin['position'] == 'after_conv3'
-            ]
 
         self.norm1_name, norm1 = build_norm_layer(norm_cfg, planes, postfix=1)
         self.norm2_name, norm2 = build_norm_layer(norm_cfg, planes, postfix=2)
@@ -175,14 +151,6 @@ class Bottleneck(nn.Module):
 
         self.activate = build_activation_layer(act_cfg)
         self.downsample = downsample
-
-        if self.with_plugins:
-            self.after_conv1_plugin_names = self.make_block_plugins(
-                planes, self.after_conv1_plugins)
-            self.after_conv2_plugin_names = self.make_block_plugins(
-                planes, self.after_conv2_plugins)
-            self.after_conv3_plugin_names = self.make_block_plugins(
-                planes * self.expansion, self.after_conv3_plugins)
 
     @property
     def norm1(self):
