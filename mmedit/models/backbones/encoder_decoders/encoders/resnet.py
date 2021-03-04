@@ -19,7 +19,7 @@ class BasicBlock(nn.Module):
                  stride=1,
                  dilation=1,
                  downsample=None,
-                 act_cfg=dict(type='ReLU'),
+                 act_cfg=dict(type='ReLU', inplace=True),
                  conv_cfg=None,
                  norm_cfg=dict(type='BN'),
                  with_cp=False,
@@ -44,7 +44,7 @@ class BasicBlock(nn.Module):
             conv_cfg, planes, planes, 3, padding=1, bias=False)
         self.add_module(self.norm2_name, norm2)
 
-        self.activation = build_activation_layer(act_cfg)
+        self.activate = build_activation_layer(act_cfg)
         self.downsample = downsample
         self.stride = stride
         self.dilation = dilation
@@ -68,7 +68,7 @@ class BasicBlock(nn.Module):
 
             out = self.conv1(x)
             out = self.norm1(out)
-            out = self.activation(out)
+            out = self.activate(out)
 
             out = self.conv2(out)
             out = self.norm2(out)
@@ -85,7 +85,7 @@ class BasicBlock(nn.Module):
         else:
             out = _inner_forward(x)
 
-        out = self.activation(out)
+        out = self.activate(out)
 
         return out
 
@@ -173,7 +173,7 @@ class Bottleneck(nn.Module):
             bias=False)
         self.add_module(self.norm3_name, norm3)
 
-        self.activation = build_activation_layer(act_cfg)
+        self.activate = build_activation_layer(act_cfg)
         self.downsample = downsample
 
         if self.with_plugins:
@@ -204,11 +204,11 @@ class Bottleneck(nn.Module):
 
         out = self.conv1(x)
         out = self.norm1(out)
-        out = self.activation(out)
+        out = self.activate(out)
 
         out = self.conv2(out)
         out = self.norm2(out)
-        out = self.activation(out)
+        out = self.activate(out)
 
         out = self.conv3(out)
         out = self.norm3(out)
@@ -217,7 +217,7 @@ class Bottleneck(nn.Module):
             identity = self.downsample(x)
 
         out += identity
-        out = self.activation(out)
+        out = self.activate(out)
 
         return out
 
@@ -341,7 +341,7 @@ class ResNet(nn.Module):
                     padding=1,
                     bias=False),
                 build_norm_layer(self.norm_cfg, stem_channels // 2)[1],
-                nn.ReLU(inplace=True),
+                build_activation_layer(self.act_cfg),
                 build_conv_layer(
                     self.conv_cfg,
                     stem_channels // 2,
@@ -351,7 +351,7 @@ class ResNet(nn.Module):
                     padding=1,
                     bias=False),
                 build_norm_layer(self.norm_cfg, stem_channels // 2)[1],
-                nn.ReLU(inplace=True),
+                build_activation_layer(self.act_cfg),
                 build_conv_layer(
                     self.conv_cfg,
                     stem_channels // 2,
@@ -361,7 +361,7 @@ class ResNet(nn.Module):
                     padding=1,
                     bias=False),
                 build_norm_layer(self.norm_cfg, stem_channels)[1],
-                nn.ReLU(inplace=True))
+                build_activation_layer(self.act_cfg))
         else:
             self.conv1 = build_conv_layer(
                 self.conv_cfg,
@@ -374,7 +374,7 @@ class ResNet(nn.Module):
             self.norm1_name, norm1 = build_norm_layer(
                 self.norm_cfg, stem_channels, postfix=1)
             self.add_module(self.norm1_name, norm1)
-            self.relu = nn.ReLU(inplace=True)
+            self.activate = build_activation_layer(self.act_cfg)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 
     @property
@@ -488,7 +488,7 @@ class ResNet(nn.Module):
         else:
             x = self.conv1(x)
             x = self.norm1(x)
-            x = self.relu(x)
+            x = self.activate(x)
         conv_out.append(x)
         x = self.maxpool(x)
         x = self.layer1(x)
