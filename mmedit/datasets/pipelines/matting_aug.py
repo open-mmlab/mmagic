@@ -583,7 +583,8 @@ class TransformTrimap:
     using Gaussian blurs of the generated two-channel trimap at three
     different scales. The transformed trimap has 6 channels.
 
-    Required key is "trimap", added key is "transformed_trimap" and "two_channel_trimap.
+    Required key is "trimap", added key is "transformed_trimap" and
+    "two_channel_trimap.
 
     Adopted from the following repository:
     https://github.com/MarcoForte/FBA_Matting/blob/master/networks/transforms.py.
