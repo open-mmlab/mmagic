@@ -113,41 +113,39 @@ class BaseMattor(BaseModel):
         if self.with_refiner:
             self.refiner.init_weights()
 
-    def restore_shape(self, pred, meta):
-        """Restore the predicted image to the original shape.
-
-        The shape of the predicted image may not be the same as the shape of
+    def restore_shape(self, pred_alpha, meta):
+        """Restore the predicted alpha to the original shape.
+        The shape of the predicted alpha may not be the same as the shape of
         original input image. This function restores the shape of the predicted
-        image. For predicted alpha, an extra postprocessing will be applied.
-
+        alpha.
         Args:
-            pred (np.ndarray): The predicted image.
+            pred_alpha (np.ndarray): The predicted alpha.
             meta (list[dict]): Meta data about the current data batch.
                 Currently only batch_size 1 is supported.
         Returns:
-            np.ndarray: The reshaped predicted image.
+            np.ndarray: The reshaped predicted alpha.
         """
+        ori_trimap = meta[0]['ori_trimap'].squeeze()
         ori_h, ori_w = meta[0]['merged_ori_shape'][:2]
 
         if 'interpolation' in meta[0]:
             # images have been resized for inference, resize back
-            pred = mmcv.imresize(
-                pred, (ori_w, ori_h), interpolation=meta[0]['interpolation'])
+            pred_alpha = mmcv.imresize(
+                pred_alpha, (ori_w, ori_h),
+                interpolation=meta[0]['interpolation'])
         elif 'pad' in meta[0]:
             # images have been padded for inference, remove the padding
-            pred = pred[:ori_h, :ori_w]
+            pred_alpha = pred_alpha[:ori_h, :ori_w]
 
-        assert pred.shape[:2] == (ori_h, ori_w)
+        assert pred_alpha.shape == (ori_h, ori_w)
 
         # some methods do not have an activation layer after the last conv,
-        # clip to make sure pred range from 0 to 1.
-        if len(pred.shape) == 2:
-            ori_trimap = meta[0]['ori_trimap'].squeeze()
-            pred = np.clip(pred, 0, 1)
-            pred[ori_trimap == 0] = 0.
-            pred[ori_trimap == 255] = 1.
+        # clip to make sure pred_alpha range from 0 to 1.
+        pred_alpha = np.clip(pred_alpha, 0, 1)
+        pred_alpha[ori_trimap == 0] = 0.
+        pred_alpha[ori_trimap == 255] = 1.
 
-        return pred
+        return pred_alpha
 
     def evaluate(self, pred_alpha, meta):
         """Evaluate predicted alpha matte.
