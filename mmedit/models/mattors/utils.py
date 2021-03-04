@@ -57,20 +57,3 @@ def fba_fusion(alpha, img, F, B):
         torch.sum((F - B) * (F - B), 1, keepdim=True) + la)
     alpha = torch.clamp(alpha, 0, 1)
     return alpha, F, B
-
-
-def groupnorm_normalise_image(img, format='nhwc'):
-    """with format: batch, height, width, channel.
-
-    Accept rgb in range 0,1
-    """
-    if (format == 'nhwc'):
-        for i in range(3):
-            img[...,
-                i] = (img[..., i] - group_norm_mean[i]) / group_norm_std[i]
-    else:
-        for i in range(3):
-            img[..., i, :, :] = (img[..., i, :, :] -
-                                 group_norm_mean[i]) / group_norm_std[i]
-
-    return img
