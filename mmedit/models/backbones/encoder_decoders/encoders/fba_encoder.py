@@ -26,7 +26,7 @@ class FBAResnetDilated(ResNet):
         else:
             x = self.conv1(x)
             x = self.norm1(x)
-            x = self.relu(x)
+            x = self.activate(x)
         conv_out.append(x)
         x = self.maxpool(x)
         x = self.layer1(x)

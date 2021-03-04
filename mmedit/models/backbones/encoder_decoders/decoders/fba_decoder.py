@@ -23,12 +23,13 @@ class FBADecoder(nn.Module):
                  pool_scales,
                  in_channels,
                  channels,
-                 conv_cfg,
-                 norm_cfg=None,
+                 conv_cfg=None,
+                 norm_cfg=dict(type='BN'),
                  act_cfg=dict(type='ReLU'),
                  align_corners=False):
         super(FBADecoder, self).__init__()
 
+        assert isinstance(pool_scales, (list, tuple))
         # Pyramid Pooling Module
         self.pool_scales = pool_scales
         self.in_channels = in_channels
