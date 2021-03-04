@@ -6,7 +6,7 @@ from mmcv.runner import auto_fp16
 from ..builder import build_loss
 from ..registry import MODELS
 from .base_mattor import BaseMattor
-from .utils import fba_fusion, groupnorm_normalise_image
+from .utils import fba_fusion
 
 
 @MODELS.register_module()
@@ -91,17 +91,18 @@ class FBA(BaseMattor):
     def forward_dummy(self, inputs):
         return self._forward(inputs)
 
-    def forward_train(self, merged, two_channel_trimap, trimap_transformed,
-                      alpha, fg, bg, ori_fg):
+    def forward_train(self, merged_transformed, trimap_transformed,
+                      two_channel_trimap, merged, alpha, fg, bg, ori_fg):
         """Forward function for training FBA model.
 
         Args:
-            merged (Tensor): with shape (N, C, H, W) encoding input images.
+            merged_transformed (Tensor): with shape (N, C, H, W) encoding input images.
                 Typically these should be mean centered and std scaled.
-            two_channel_trimap (Tensor): with shape (N, 2, H, W).
-                Tensor of trimap.
             trimap_transformed (Tensor): with shape (N, 6, H, W).
                 Tensor of trimap.
+            two_channel_trimap (Tensor): with shape (N, 2, H, W).
+                Tensor of trimap.
+            merged (Tensor): with shape (N, C, H, W) encoding input images.
             alpha (Tensor): with shape (N, 1, H, W). Tensor of alpha.
             fg (Tensor): with shape (N, 3, H, W). Tensor of fg.
                 Fg extended to the whole image.
@@ -111,8 +112,7 @@ class FBA(BaseMattor):
         Returns:
             dict: Contains the loss items and batch infomation.
         """
-        merged_transformed = groupnorm_normalise_image(
-            merged.clone(), format='nchw')
+
         input = torch.cat((merged_transformed, trimap_transformed,
                            two_channel_trimap, merged), 1)
         pred_alpha, pred_fg, pred_bg = self._forward(input)
@@ -147,9 +147,10 @@ class FBA(BaseMattor):
         return {'losses': losses, 'num_samples': merged.size(0)}
 
     def forward_test(self,
-                     merged,
-                     two_channel_trimap,
+                     merged_transformed,
                      trimap_transformed,
+                     two_channel_trimap,
+                     merged,
                      meta,
                      save_image=False,
                      save_path=None,
@@ -157,8 +158,13 @@ class FBA(BaseMattor):
         """Defines the computation performed at every test call.
 
         Args:
-            merged (Tensor): Image to predict alpha matte.
-            two_channel_trimap (Tensor): Trimap of the input image.
+            merged_transformed (Tensor): with shape (N, C, H, W) encoding input images.
+                Typically these should be mean centered and std scaled.
+            trimap_transformed (Tensor): with shape (N, 6, H, W).
+                Tensor of trimap.
+            two_channel_trimap (Tensor): with shape (N, 2, H, W).
+                Tensor of trimap.
+            merged (Tensor): with shape (N, C, H, W) encoding input images.
             meta (list[dict]): Meta data about the current data batch.
                 Currently only batch_size 1 is supported. It may contain
                 information needed to calculate metrics (``ori_alpha`` and
@@ -176,9 +182,6 @@ class FBA(BaseMattor):
         Returns:
             dict: Contains the predicted alpha and evaluation result.
         """
-
-        merged_transformed = groupnorm_normalise_image(
-            merged.clone(), format='nchw')
         # for batch size 1
         input = torch.cat((merged_transformed, trimap_transformed,
                            two_channel_trimap, merged), 1)
