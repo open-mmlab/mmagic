@@ -624,5 +624,3 @@ def test_fba_encoder():
         assert isinstance(output['two_channel_trimap'], torch.Tensor)
         assert_tensor_with_shape(output['two_channel_trimap'],
                                  torch.Size([1, 2, 320, 320]))
-
-test_fba_encoder()
