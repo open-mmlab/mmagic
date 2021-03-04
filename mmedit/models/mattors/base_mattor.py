@@ -113,22 +113,20 @@ class BaseMattor(BaseModel):
         if self.with_refiner:
             self.refiner.init_weights()
 
-    def restore_shape(self, pred, meta, alpha=True):
+    def restore_shape(self, pred, meta):
         """Restore the predicted image to the original shape.
 
         The shape of the predicted image may not be the same as the shape of
         original input image. This function restores the shape of the predicted
-        image.
+        image. For predicted alpha, an extra postprocessing will be applied.
 
         Args:
             pred (np.ndarray): The predicted image.
             meta (list[dict]): Meta data about the current data batch.
                 Currently only batch_size 1 is supported.
-            alpha (bool): The input is pred_alpha or not.
         Returns:
             np.ndarray: The reshaped predicted image.
         """
-        ori_trimap = meta[0]['ori_trimap'].squeeze()
         ori_h, ori_w = meta[0]['merged_ori_shape'][:2]
 
         if 'interpolation' in meta[0]:
@@ -143,7 +141,8 @@ class BaseMattor(BaseModel):
 
         # some methods do not have an activation layer after the last conv,
         # clip to make sure pred range from 0 to 1.
-        if alpha:
+        if len(pred.shape) == 2:
+            ori_trimap = meta[0]['ori_trimap'].squeeze()
             pred = np.clip(pred, 0, 1)
             pred[ori_trimap == 0] = 0.
             pred[ori_trimap == 255] = 1.
