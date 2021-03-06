@@ -51,8 +51,9 @@ class L1CompositionLoss(nn.Module):
                 indicating matrix: weight[trimap == 128] = 1. Default: None.
             alpha (Tensor, optional): of shape (N, 1, H, W). It is an
                 indicating matrix: weight[trimap == 128] = 1. Default: None.
-            threshold (int, optional): integer. When calculating masked loss,
-                positive threshold and alpha are required. Default: -1.
+            threshold (float, optional): float between 0 and 1. When
+                calculating masked loss, positive threshold and alpha are
+                required. Default: -1.
         """
         if weight is not None:
             weight = weight.expand(-1, 3, -1, -1)
@@ -65,6 +66,7 @@ class L1CompositionLoss(nn.Module):
                 reduction=self.reduction,
                 sample_wise=self.sample_wise)
         elif alpha is not None:
+            assert 0 <= threshold <= 1.0
             mask = alpha > threshold
             pred_merged_1 = pred_alpha * fg + (1. - pred_alpha) * bg
             pred_merged_1 = pred_merged_1 * mask
