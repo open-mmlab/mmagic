@@ -19,11 +19,12 @@ class Normalize:
         to_rgb (bool): Whether to convert channels from BGR to RGB.
     """
 
-    def __init__(self, keys, mean, std, to_rgb=False):
+    def __init__(self, keys, mean, std, to_rgb=False, save_original=False):
         self.keys = keys
         self.mean = np.array(mean, dtype=np.float32)
         self.std = np.array(std, dtype=np.float32)
         self.to_rgb = to_rgb
+        self.save_original = save_original
 
     def __call__(self, results):
         """Call function.
@@ -37,11 +38,17 @@ class Normalize:
         """
         for key in self.keys:
             if isinstance(results[key], list):
+                if self.save_original:
+                    results[key + '_unnormalised'] = [
+                        v.copy() for v in results[key]
+                    ]
                 results[key] = [
                     mmcv.imnormalize(v, self.mean, self.std, self.to_rgb)
                     for v in results[key]
                 ]
             else:
+                if self.save_original:
+                    results[key + '_unnormalised'] = results[key].copy()
                 results[key] = mmcv.imnormalize(results[key], self.mean,
                                                 self.std, self.to_rgb)
 
