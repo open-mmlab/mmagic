@@ -66,8 +66,9 @@ class FBA(BaseMattor):
 
     def forward(self,
                 merged,
+                trimap_transformed,
                 two_channel_trimap,
-                transformed_trimap,
+                merged_unnormalized,
                 meta,
                 fg=None,
                 bg=None,
@@ -76,12 +77,13 @@ class FBA(BaseMattor):
                 **kwargs):
 
         if not test_mode:
-            return self.forward_train(merged, two_channel_trimap,
-                                      transformed_trimap, alpha, fg, bg,
-                                      **kwargs)
+            return self.forward_train(merged, trimap_transformed,
+                                      two_channel_trimap, merged_unnormalized,
+                                      alpha, fg, bg, **kwargs)
         else:
-            return self.forward_test(merged, two_channel_trimap,
-                                     transformed_trimap, meta, **kwargs)
+            return self.forward_test(merged, trimap_transformed,
+                                     two_channel_trimap, merged_unnormalized,
+                                     meta, **kwargs)
 
     @auto_fp16(apply_to=('x', ))
     def _forward(self, x):
@@ -91,19 +93,20 @@ class FBA(BaseMattor):
     def forward_dummy(self, inputs):
         return self._forward(inputs)
 
-    def forward_train(self, merged_transformed, trimap_transformed,
-                      two_channel_trimap, merged, alpha, fg, bg, ori_fg):
+    def forward_train(self, merged, trimap_transformed, two_channel_trimap,
+                      merged_unnormalized, alpha, fg, bg, ori_fg):
         """Forward function for training FBA model.
 
         Args:
-            merged_transformed (Tensor): with shape (N, C, H, W) encoding
+            merged (Tensor): with shape (N, C, H, W) encoded
                 input images. Typically these should be mean centered and
                 std scaled.
             trimap_transformed (Tensor): with shape (N, 6, H, W).
                 Tensor of trimap.
             two_channel_trimap (Tensor): with shape (N, 2, H, W).
                 Tensor of trimap.
-            merged (Tensor): with shape (N, C, H, W) encoding input images.
+            merged_unnormalized (Tensor): with shape (N, C, H, W).
+                Tensor of unnormalized merged image.
             alpha (Tensor): with shape (N, 1, H, W). Tensor of alpha.
             fg (Tensor): with shape (N, 3, H, W). Tensor of fg.
                 Fg extended to the whole image.
@@ -114,8 +117,8 @@ class FBA(BaseMattor):
             dict: Contains the loss items and batch infomation.
         """
 
-        input = torch.cat((merged_transformed, trimap_transformed,
-                           two_channel_trimap, merged), 1)
+        input = torch.cat((merged, trimap_transformed, two_channel_trimap,
+                           merged_unnormalized), 1)
         pred_alpha, pred_fg, pred_bg = self._forward(input)
         threshold = 0.01
         mask = alpha > threshold
@@ -125,7 +128,12 @@ class FBA(BaseMattor):
             losses['loss_alpha'] = self.loss_alpha(pred_alpha, alpha)
         if self.loss_alpha_compo is not None:
             losses['loss_alpha_compo'] = self.loss_alpha_compo(
-                pred_alpha, ori_fg, bg, merged, alpha=alpha, threshold=0.01)
+                pred_alpha,
+                ori_fg,
+                bg,
+                merged_unnormalized,
+                alpha=alpha,
+                threshold=0.01)
         if self.loss_alpha_grad is not None:
             losses['loss_alpha_grad'] = self.loss_alpha_grad(pred_alpha, alpha)
         if self.loss_alpha_lap is not None:
@@ -138,7 +146,7 @@ class FBA(BaseMattor):
                         pred_fg, ori_fg) + self.loss_fb(pred_bg, bg)
         if self.loss_fb_compo is not None:
             losses['loss_fb_compo'] = self.loss_fb_compo(
-                pred_fg, pred_bg, alpha, merged)
+                pred_fg, pred_bg, alpha, merged_unnormalized)
         if self.loss_exclusion is not None:
             losses['loss_exclusion'] = self.loss_exclusion(pred_bg, pred_fg)
         if self.loss_fb_lap is not None:
@@ -148,10 +156,10 @@ class FBA(BaseMattor):
         return {'losses': losses, 'num_samples': merged.size(0)}
 
     def forward_test(self,
-                     merged_transformed,
+                     merged,
                      trimap_transformed,
                      two_channel_trimap,
-                     merged,
+                     merged_unnormalized,
                      meta,
                      save_image=False,
                      save_path=None,
@@ -159,14 +167,15 @@ class FBA(BaseMattor):
         """Defines the computation performed at every test call.
 
         Args:
-            merged_transformed (Tensor): with shape (N, C, H, W) encoding
+            merged (Tensor): with shape (N, C, H, W) encoded
                 input images. Typically these should be mean centered and
                 std scaled.
             trimap_transformed (Tensor): with shape (N, 6, H, W).
                 Tensor of trimap.
             two_channel_trimap (Tensor): with shape (N, 2, H, W).
                 Tensor of trimap.
-            merged (Tensor): with shape (N, C, H, W) encoding input images.
+            merged_unnormalized (Tensor): with shape (N, C, H, W).
+                Tensor of unnormalized merged image.
             meta (list[dict]): Meta data about the current data batch.
                 Currently only batch_size 1 is supported. It may contain
                 information needed to calculate metrics (``ori_alpha`` and
@@ -185,11 +194,12 @@ class FBA(BaseMattor):
             dict: Contains the predicted alpha and evaluation result.
         """
         # for batch size 1
-        input = torch.cat((merged_transformed, trimap_transformed,
-                           two_channel_trimap, merged), 1)
+        input = torch.cat((merged, trimap_transformed, two_channel_trimap,
+                           merged_unnormalized), 1)
         pred_alpha, pred_fg, pred_bg = self._forward(input)
         # FBA Fusion
-        pred_alpha, pred_fg, pred_bg = fba_fusion(pred_alpha, merged, pred_fg,
+        pred_alpha, pred_fg, pred_bg = fba_fusion(pred_alpha,
+                                                  merged_unnormalized, pred_fg,
                                                   pred_bg)
         pred_alpha = pred_alpha.detach().cpu().numpy().squeeze()
 
