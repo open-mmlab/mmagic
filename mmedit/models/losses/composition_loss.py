@@ -66,7 +66,7 @@ class L1CompositionLoss(nn.Module):
                 reduction=self.reduction,
                 sample_wise=self.sample_wise)
         elif alpha is not None:
-            assert 0 <= threshold <= 1.0
+            assert threshold <= 1.0
             mask = alpha > threshold
             pred_merged_1 = pred_alpha * fg + (1. - pred_alpha) * bg
             pred_merged_1 = pred_merged_1 * mask
