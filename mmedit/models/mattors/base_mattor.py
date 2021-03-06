@@ -113,42 +113,41 @@ class BaseMattor(BaseModel):
         if self.with_refiner:
             self.refiner.init_weights()
 
-    def restore_shape(self, pred_alpha, meta):
-        """Restore the predicted alpha to the original shape.
+    def restore_shape(self, pred, meta):
+        """Restore the predicted image to the original shape.
 
-        The shape of the predicted alpha may not be the same as the shape of
+        The shape of the predicted image may not be the same as the shape of
         original input image. This function restores the shape of the predicted
-        alpha.
+        image. For predicted alpha, an extra postprocessing will be applied.
 
         Args:
-            pred_alpha (np.ndarray): The predicted alpha.
+            pred (np.ndarray): The predicted image.
             meta (list[dict]): Meta data about the current data batch.
                 Currently only batch_size 1 is supported.
-
         Returns:
-            np.ndarray: The reshaped predicted alpha.
+            np.ndarray: The reshaped predicted image.
         """
-        ori_trimap = meta[0]['ori_trimap'].squeeze()
         ori_h, ori_w = meta[0]['merged_ori_shape'][:2]
 
         if 'interpolation' in meta[0]:
             # images have been resized for inference, resize back
-            pred_alpha = mmcv.imresize(
-                pred_alpha, (ori_w, ori_h),
-                interpolation=meta[0]['interpolation'])
+            pred = mmcv.imresize(
+                pred, (ori_w, ori_h), interpolation=meta[0]['interpolation'])
         elif 'pad' in meta[0]:
             # images have been padded for inference, remove the padding
-            pred_alpha = pred_alpha[:ori_h, :ori_w]
+            pred = pred[:ori_h, :ori_w]
 
-        assert pred_alpha.shape == (ori_h, ori_w)
+        assert pred.shape[:2] == (ori_h, ori_w)
 
         # some methods do not have an activation layer after the last conv,
-        # clip to make sure pred_alpha range from 0 to 1.
-        pred_alpha = np.clip(pred_alpha, 0, 1)
-        pred_alpha[ori_trimap == 0] = 0.
-        pred_alpha[ori_trimap == 255] = 1.
+        # clip to make sure pred range from 0 to 1.
+        if len(pred.shape) == 2:
+            ori_trimap = meta[0]['ori_trimap'].squeeze()
+            pred = np.clip(pred, 0, 1)
+            pred[ori_trimap == 0] = 0.
+            pred[ori_trimap == 255] = 1.
 
-        return pred_alpha
+        return pred
 
     def evaluate(self, pred_alpha, meta):
         """Evaluate predicted alpha matte.
@@ -177,18 +176,18 @@ class BaseMattor(BaseModel):
                 np.round(pred_alpha * 255).astype(np.uint8))
         return eval_result
 
-    def save_image(self, pred_alpha, meta, save_path, iteration):
-        """Save predicted alpha to file.
+    def save_image(self, pred_image, meta, save_path, iteration):
+        """Save predicted image to file.
 
         Args:
-            pred_alpha (np.ndarray): The predicted alpha matte of shape (H, W).
+            pred_image (np.ndarray): The predicted image of shape (H, W).
             meta (list[dict]): Meta data about the current data batch.
                 Currently only batch_size 1 is supported. Required keys in the
                 meta dict are ``merged_path``.
-            save_path (str): The directory to save predicted alpha matte.
-            iteration (int | None): If given as None, the saved alpha matte
+            save_path (str): The directory to save predicted image matte.
+            iteration (int | None): If given as None, the saved image matte
                 will have the same file name with ``merged_path`` in meta dict.
-                If given as an int, the saved alpha matte would named with
+                If given as an int, the saved image would named with
                 postfix ``_{iteration}.png``.
         """
         image_stem = Path(meta[0]['merged_path']).stem
@@ -197,7 +196,7 @@ class BaseMattor(BaseModel):
         else:
             save_path = osp.join(save_path,
                                  f'{image_stem}_{iteration + 1:06d}.png')
-        mmcv.imwrite(pred_alpha * 255, save_path)
+        mmcv.imwrite(pred_image * 255, save_path)
 
     @abstractmethod
     def forward_train(self, merged, trimap, alpha, **kwargs):
