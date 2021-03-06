@@ -39,7 +39,7 @@ class Normalize:
         for key in self.keys:
             if isinstance(results[key], list):
                 if self.save_original:
-                    results[key + '_unnormalised'] = [
+                    results[key + '_unnormalized'] = [
                         v.copy() for v in results[key]
                     ]
                 results[key] = [
@@ -48,7 +48,7 @@ class Normalize:
                 ]
             else:
                 if self.save_original:
-                    results[key + '_unnormalised'] = results[key].copy()
+                    results[key + '_unnormalized'] = results[key].copy()
                 results[key] = mmcv.imnormalize(results[key], self.mean,
                                                 self.std, self.to_rgb)
 
