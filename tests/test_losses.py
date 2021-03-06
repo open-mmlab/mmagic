@@ -6,11 +6,11 @@ import pytest
 import torch
 
 from mmedit.models.losses import (CharbonnierCompLoss, CharbonnierLoss,
-                                  DiscShiftLoss, GANLoss, GradientLoss,
-                                  GradientPenaltyLoss, L1CompositionLoss,
-                                  L1Loss, MaskedTVLoss, MSECompositionLoss,
-                                  MSELoss, PerceptualLoss, PerceptualVGG,
-                                  mask_reduce_loss, reduce_loss)
+                                  DiscShiftLoss, FBACompositionLoss, GANLoss,
+                                  GradientLoss, GradientPenaltyLoss,
+                                  L1CompositionLoss, L1Loss, MaskedTVLoss,
+                                  MSECompositionLoss, MSELoss, PerceptualLoss,
+                                  PerceptualVGG, mask_reduce_loss, reduce_loss)
 
 
 def test_utils():
@@ -172,13 +172,20 @@ def test_composition_losses():
         # only 'none', 'mean' and 'sum' are supported
         CharbonnierCompLoss(reduction='InvalidValue')
 
+    with pytest.raises(ValueError):
+        # only 'none', 'mean' and 'sum' are supported
+        FBACompositionLoss(reduction='InvalidValue')
+
     unknown_h, unknown_w = (32, 32)
     weight = torch.zeros(1, 1, 64, 64)
     weight[0, 0, :unknown_h, :unknown_w] = 1
     pred_alpha = weight.clone() * 0.5
+    alpha = weight.clone()
     ori_merged = torch.ones(1, 3, 64, 64)
     fg = torch.zeros(1, 3, 64, 64)
     bg = torch.ones(1, 3, 64, 64) * 4
+    pred_fg = torch.zeros(1, 3, 64, 64)
+    pred_bg = torch.ones(1, 3, 64, 64)
 
     l1_comp_loss = L1CompositionLoss(loss_weight=1.0, reduction='mean')
     loss = l1_comp_loss(pred_alpha, fg, bg, ori_merged)
@@ -192,6 +199,18 @@ def test_composition_losses():
 
     l1_comp_loss = L1CompositionLoss(loss_weight=0.5, reduction='sum')
     loss = l1_comp_loss(pred_alpha, fg, bg, ori_merged, weight)
+    assert loss.shape == ()
+    assert loss.item() == 1536
+
+    with pytest.raises(ValueError):
+        loss = l1_comp_loss(
+            pred_alpha, fg, bg, ori_merged, weight, threshold=1, alpha=None)
+    with pytest.raises(AssertionError):
+        loss = l1_comp_loss(
+            pred_alpha, fg, bg, ori_merged, weight, threshold=2, alpha=alpha)
+
+    loss = l1_comp_loss(
+        pred_alpha, fg, bg, ori_merged, weight, threshold=0.5, alpha=alpha)
     assert loss.shape == ()
     assert loss.item() == 1536
 
@@ -228,6 +247,22 @@ def test_composition_losses():
     loss = cb_comp_loss(pred_alpha, fg, bg, ori_merged, weight)
     assert loss.shape == ()
     assert math.isclose(loss.item(), 1536, rel_tol=1e-6)
+
+    fba_comp_loss = FBACompositionLoss(loss_weight=0.5, reduction='mean')
+    loss = fba_comp_loss(pred_fg, pred_bg, alpha, ori_merged, weight)
+    assert loss.shape == ()
+    assert loss.item() == 0.5
+
+    fba_comp_loss = FBACompositionLoss(loss_weight=0.5, reduction='none')
+    loss = fba_comp_loss(pred_fg, pred_bg, pred_alpha, ori_merged, weight)
+    assert loss.shape == (1, 3, 64, 64)
+    assert (loss == torch.ones(1, 3, 64, 64) * weight * 0.25).all()
+
+    fba_comp_loss = FBACompositionLoss(loss_weight=0.5, reduction='sum')
+    loss = fba_comp_loss(pred_fg, pred_bg, alpha, ori_merged, weight)
+
+    assert loss.shape == ()
+    assert loss.item() == 1536
 
 
 @patch.object(PerceptualVGG, 'init_weights')
