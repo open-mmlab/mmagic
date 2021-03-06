@@ -583,7 +583,7 @@ class TransformTrimap:
     using Gaussian blurs of the generated two-channel trimap at three
     different scales. The transformed trimap has 6 channels.
 
-    Required key is "trimap", added key is "transformed_trimap" and
+    Required key is "trimap", added key is "trimap_transformed" and
     "two_channel_trimap".
 
     Adopted from the following repository:
@@ -619,7 +619,7 @@ class TransformTrimap:
                 trimap_trans[..., 3 * k:3 * k + 3] = np.exp(
                     dt_mask / (2 * ((factor * L)**2)))
 
-        results['transformed_trimap'] = trimap_trans
+        results['trimap_transformed'] = trimap_trans
         results['two_channel_trimap'] = trimap2
         return results
 

@@ -329,7 +329,7 @@ def test_generate_soft_seg():
 def test_transform_trimap():
     results = dict()
     transform = TransformTrimap()
-    target_keys = ['trimap', 'transformed_trimap']
+    target_keys = ['trimap', 'trimap_transformed']
 
     with pytest.raises(KeyError):
         results_transformed = transform(results)
@@ -348,6 +348,6 @@ def test_transform_trimap():
     assert check_keys_contain(results_transformed.keys(), target_keys)
     assert results_transformed['trimap'].shape == dummy_trimap.shape
     assert results_transformed[
-        'transformed_trimap'].shape[:2] == dummy_trimap.shape
+        'trimap_transformed'].shape[:2] == dummy_trimap.shape
     repr_str = transform.__class__.__name__
     assert repr(transform) == repr_str
