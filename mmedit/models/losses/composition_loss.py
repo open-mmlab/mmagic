@@ -36,8 +36,8 @@ class L1CompositionLoss(nn.Module):
                 fg,
                 bg,
                 ori_merged,
-                alpha=None,
                 weight=None,
+                alpha=None,
                 threshold=-1,
                 **kwargs):
         """
@@ -49,6 +49,10 @@ class L1CompositionLoss(nn.Module):
                 image before normalized by ImageNet mean and std.
             weight (Tensor, optional): of shape (N, 1, H, W). It is an
                 indicating matrix: weight[trimap == 128] = 1. Default: None.
+            alpha (Tensor, optional): of shape (N, 1, H, W). It is an
+                indicating matrix: weight[trimap == 128] = 1. Default: None.
+            threshold (int, optional): integer. When calculating masked loss,
+                positive threshold and alpha are required. Default: -1.
         """
         if weight is not None:
             weight = weight.expand(-1, 3, -1, -1)
