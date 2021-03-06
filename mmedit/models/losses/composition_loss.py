@@ -31,7 +31,15 @@ class L1CompositionLoss(nn.Module):
         self.reduction = reduction
         self.sample_wise = sample_wise
 
-    def forward(self, pred_alpha, fg, bg, ori_merged, weight=None, **kwargs):
+    def forward(self,
+                pred_alpha,
+                fg,
+                bg,
+                ori_merged,
+                alpha=None,
+                weight=None,
+                threshold=-1,
+                **kwargs):
         """
         Args:
             pred_alpha (Tensor): of shape (N, 1, H, W). Predicted alpha matte.
@@ -42,15 +50,38 @@ class L1CompositionLoss(nn.Module):
             weight (Tensor, optional): of shape (N, 1, H, W). It is an
                 indicating matrix: weight[trimap == 128] = 1. Default: None.
         """
-        pred_merged = pred_alpha * fg + (1. - pred_alpha) * bg
         if weight is not None:
             weight = weight.expand(-1, 3, -1, -1)
-        return self.loss_weight * l1_loss(
-            pred_merged,
-            ori_merged,
-            weight,
-            reduction=self.reduction,
-            sample_wise=self.sample_wise)
+        if threshold <= 0:
+            pred_merged = pred_alpha * fg + (1. - pred_alpha) * bg
+            loss = self.loss_weight * l1_loss(
+                pred_merged,
+                ori_merged,
+                weight,
+                reduction=self.reduction,
+                sample_wise=self.sample_wise)
+        elif alpha is not None:
+            mask = alpha > threshold
+            pred_merged_1 = pred_alpha * fg + (1. - pred_alpha) * bg
+            pred_merged_1 = pred_merged_1 * mask
+            nmask = ~mask
+            pred_merged_2 = (1. - pred_alpha) * bg * nmask
+            loss_1 = self.loss_weight * l1_loss(
+                pred_merged_1,
+                ori_merged * mask,
+                weight,
+                reduction=self.reduction,
+                sample_wise=self.sample_wise)
+            loss_2 = self.loss_weight * l1_loss(
+                pred_merged_2,
+                ori_merged * nmask,
+                weight,
+                reduction=self.reduction,
+                sample_wise=self.sample_wise)
+            loss = loss_1 + loss_2
+        else:
+            ValueError
+        return loss
 
 
 @LOSSES.register_module()
@@ -151,5 +182,48 @@ class CharbonnierCompLoss(nn.Module):
             ori_merged,
             weight,
             eps=self.eps,
+            reduction=self.reduction,
+            sample_wise=self.sample_wise)
+
+
+@LOSSES.register_module()
+class FBACompositionLoss(nn.Module):
+
+    def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
+        super().__init__()
+        if reduction not in ['none', 'mean', 'sum']:
+            raise ValueError(f'Unsupported reduction mode: {reduction}. '
+                             f'Supported ones are: {_reduction_modes}')
+
+        self.loss_weight = loss_weight
+        self.reduction = reduction
+        self.sample_wise = sample_wise
+
+    def forward(self,
+                pred_fg,
+                pred_bg,
+                alpha,
+                ori_merged,
+                weight=None,
+                **kwargs):
+        """
+        Args:
+            pred_fg (Tensor): of shape (N, 3, H, W).
+                Tensor of predicted foreground object.
+            pred_bg (Tensor): of shape (N, 3, H, W).
+                Tensor of predicted background object.
+            alpha (Tensor): of shape (N, 1, H, W). Tensor of alpha matte.
+            ori_merged (Tensor): of shape (N, 3, H, W). Tensor of origin merged
+                image before normalized by ImageNet mean and std.
+            weight (Tensor, optional): of shape (N, 1, H, W). It is an
+                indicating matrix: weight[trimap == 128] = 1. Default: None.
+        """
+        pred_merged = pred_fg * alpha + (1. - alpha) * pred_bg
+        if weight is not None:
+            weight = weight.expand(-1, 3, -1, -1)
+        return self.loss_weight * l1_loss(
+            pred_merged,
+            ori_merged,
+            weight,
             reduction=self.reduction,
             sample_wise=self.sample_wise)
