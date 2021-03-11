@@ -110,31 +110,26 @@ class FBADecoder(nn.Module):
 
         self.unpool = nn.MaxUnpool2d(2, stride=2)
 
-        self.conv_up4 = nn.Sequential(*(list(
-            ConvModule(
-                64 + 3 + 3 + 2,
-                32,
-                padding=1,
-                kernel_size=3,
-                bias=True,
-                conv_cfg=self.conv_cfg,
-                act_cfg=self.act_cfg).children()) + list(
-                    ConvModule(
-                        32,
-                        16,
-                        padding=1,
-                        kernel_size=3,
-                        bias=True,
-                        conv_cfg=self.conv_cfg,
-                        act_cfg=self.act_cfg).children()) + list(
-                            ConvModule(
-                                16,
-                                7,
-                                padding=0,
-                                kernel_size=1,
-                                bias=True,
-                                conv_cfg=self.conv_cfg,
-                                act_cfg=None).children())))
+        self.conv_up4 = nn.Sequential(
+            *(list(
+                ConvModule(
+                    64 + 3 + 3 + 2,
+                    32,
+                    padding=1,
+                    kernel_size=3,
+                    bias=True,
+                    act_cfg=self.act_cfg).children()) + list(
+                        ConvModule(
+                            32,
+                            16,
+                            padding=1,
+                            kernel_size=3,
+                            bias=True,
+                            act_cfg=self.act_cfg).children()) +
+              list(
+                  ConvModule(
+                      16, 7, padding=0, kernel_size=1, bias=True,
+                      act_cfg=None).children())))
 
     def init_weights(self, pretrained=None):
         """Init weights for the model.
