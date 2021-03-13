@@ -5,6 +5,7 @@ from .augmentation import (BinarizeImage, Flip, GenerateFrameIndices,
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    FixedCrop, ModCrop, PairedRandomCrop)
+from .down_sampling import DownSampling
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
@@ -25,6 +26,6 @@ __all__ = [
     'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList',
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
     'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
-    'CropAroundFg', 'GetSpatialDiscountMask',
+    'CropAroundFg', 'GetSpatialDiscountMask', 'DownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap'
 ]
