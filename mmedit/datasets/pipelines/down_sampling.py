@@ -57,6 +57,14 @@ class DownSampling:
 
         return results
 
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'scale_min={self.scale_min}, '
+                     f'scale_max={self.scale_max}, '
+                     f'inp_size={self.inp_size}')
+
+        return repr_str
+
 
 def resize_fn(img, size):
     if isinstance(size, int):
