@@ -1,12 +1,13 @@
 import numpy as np
 
-from mmedit.datasets.pipelines import DownSampling
+from mmedit.datasets.pipelines import RandomDownSampling
 
 
 def test_down_sampling():
     img1 = np.uint8(np.random.randn(480, 640, 3) * 255)
     inputs1 = dict(gt=img1)
-    down_sampling1 = DownSampling(scale_min=1, scale_max=4, patch_size=None)
+    down_sampling1 = RandomDownSampling(
+        scale_min=1, scale_max=4, patch_size=None)
     results1 = down_sampling1(inputs1)
     assert set(list(results1.keys())) == set(['gt', 'lq', 'scale'])
     assert repr(down_sampling1) == (
@@ -17,7 +18,8 @@ def test_down_sampling():
 
     img2 = np.uint8(np.random.randn(480, 640, 3) * 255)
     inputs2 = dict(gt=img2)
-    down_sampling2 = DownSampling(scale_min=1, scale_max=4, patch_size=48)
+    down_sampling2 = RandomDownSampling(
+        scale_min=1, scale_max=4, patch_size=48)
     results2 = down_sampling2(inputs2)
     assert set(list(results2.keys())) == set(['gt', 'lq', 'scale'])
     assert repr(down_sampling2) == (
