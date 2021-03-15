@@ -110,10 +110,11 @@ def resize_fn(img, size, interpolation='bicubic', backend='pillow'):
     if isinstance(size, int):
         size = (size, size)
     if isinstance(img, np.ndarray):
-        return imresize(img, size, interpolation='bicubic', backend='pillow')
+        return imresize(
+            img, size, interpolation=interpolation, backend=backend)
     elif isinstance(img, torch.Tensor):
         image = imresize(
-            img.numpy(), size, interpolation='bicubic', backend='pillow')
+            img.numpy(), size, interpolation=interpolation, backend=backend)
         return torch.from_numpy(image)
 
     else:
