@@ -13,7 +13,7 @@ class Coordinate:
         Train or val:
             1. Generate coordinate from GT.
             2. Reshape GT image to (HgWg, 3) and transpose to (3, HgWg).
-                where Hg represents high of GT and Wg represents weight of GT.
+                where `Hg` and `Wg` represent the height and width of GT.
         Test:
             Generate coordinate from LQ and scale or target_size.
     Then generate cell from coordinate.
