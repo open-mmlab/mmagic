@@ -35,9 +35,9 @@ class LIIF(BasicRestorer):
             Default: [0.5].
         data_std (list[float]): Data std.
             Default: [0.5].
-        eval_type (str): Type of eval in LIIF. Default: None.
         eval_bsize (int): Size of batched predict. Default: None.
         pixel_loss (dict): Config for the pixel loss. Default: None.
+        train_cfg (dict): Config for train. Default: None.
         test_cfg (dict): Config for testing. Default: None.
         pretrained (str): Path for pretrained model. Default: None.
     """
@@ -50,13 +50,14 @@ class LIIF(BasicRestorer):
                  cell_decode=True,
                  data_mean=[0.5],
                  data_std=[0.5],
-                 eval_type=None,
                  eval_bsize=None,
                  pixel_loss=None,
+                 train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
         super(BasicRestorer, self).__init__()
 
+        self.train_cfg = train_cfg
         self.test_cfg = test_cfg
         self.local_ensemble = local_ensemble
         self.feat_unfold = feat_unfold
@@ -67,10 +68,10 @@ class LIIF(BasicRestorer):
         # norm
         data_mean = torch.FloatTensor(data_mean)
         data_std = torch.FloatTensor(data_std)
-        self.lq_mean = data_mean.view(1, -1, 1, 1).cuda()
-        self.lq_std = data_std.view(1, -1, 1, 1).cuda()
-        self.gt_mean = data_mean.view(1, 1, -1).cuda()
-        self.gt_std = data_std.view(1, 1, -1).cuda()
+        self.lq_mean = data_mean.view(1, -1, 1, 1)
+        self.lq_std = data_std.view(1, -1, 1, 1)
+        self.gt_mean = data_mean.view(1, 1, -1)
+        self.gt_std = data_std.view(1, 1, -1)
 
         # model
         generator_model = build_backbone(generator)
@@ -116,6 +117,10 @@ class LIIF(BasicRestorer):
         gt = data_batch['gt']
 
         # norm
+        self.lq_mean = self.lq_mean.to(lq)
+        self.lq_std = self.lq_std.to(lq)
+        self.gt_mean = self.gt_mean.to(gt)
+        self.gt_std = self.gt_std.to(gt)
         lq = (lq - self.lq_mean) / self.lq_std
         gt = (gt - self.gt_mean) / self.gt_std
 
@@ -178,6 +183,8 @@ class LIIF(BasicRestorer):
                 3. 'lq', 'pred', 'gt'.
         """
         # norm
+        self.lq_mean = self.lq_mean.to(lq)
+        self.lq_std = self.lq_std.to(lq)
         lq = (lq - self.lq_mean) / self.lq_std
 
         # generator
@@ -187,6 +194,8 @@ class LIIF(BasicRestorer):
                 pred = self.query_rgb(coord, cell)
             else:
                 pred = self.batched_predict(coord, cell)
+            self.gt_mean = self.gt_mean.to(pred)
+            self.gt_std = self.gt_std.to(pred)
             pred = pred * self.gt_std + self.gt_mean
             pred.clamp_(0, 1)
 
@@ -285,9 +294,10 @@ class LIIF(BasicRestorer):
         rx = 2 / feat.shape[-2] / 2
         ry = 2 / feat.shape[-1] / 2
 
-        feat_coord = make_coord(feat.shape[-2:], flatten=False).cuda() \
+        feat_coord = make_coord(feat.shape[-2:], flatten=False) \
             .permute(2, 0, 1) \
             .unsqueeze(0).expand(feat.shape[0], 2, *feat.shape[-2:])
+        feat_coord = feat_coord.to(coord)
 
         preds = []
         areas = []
