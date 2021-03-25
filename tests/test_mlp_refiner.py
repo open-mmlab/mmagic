@@ -4,12 +4,13 @@ import torch.nn as nn
 from mmedit.models.builder import build_component
 
 
-def test_mlp():
-    model_cfg = dict(type='MLP', in_dim=8, out_dim=3, hidden_list=[8, 8, 8, 8])
+def test_mlp_refiner():
+    model_cfg = dict(
+        type='MLPRefiner', in_dim=8, out_dim=3, hidden_list=[8, 8, 8, 8])
     mlp = build_component(model_cfg)
 
     # test attributes
-    assert mlp.__class__.__name__ == 'MLP'
+    assert mlp.__class__.__name__ == 'MLPRefiner'
 
     # prepare data
     inputs = torch.rand(2, 8)

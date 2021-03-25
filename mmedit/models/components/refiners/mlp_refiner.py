@@ -6,8 +6,8 @@ from mmedit.utils import get_root_logger
 
 
 @COMPONENTS.register_module()
-class MLP(nn.Module):
-    """Multilayer perceptrons (MLPs).
+class MLPRefiner(nn.Module):
+    """Multilayer perceptrons (MLPs), refiner used in LIIF.
 
     Args:
         in_dim (int): Input dimension.
