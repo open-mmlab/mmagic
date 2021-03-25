@@ -10,7 +10,7 @@ from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              BaseSRDataset, GenerationPairedDataset,
                              GenerationUnpairedDataset, RepeatDataset,
                              SRAnnotationDataset, SRFolderDataset,
-                             SRFolderDatasetGT, SRLmdbDataset, SRREDSDataset,
+                             SRFolderGTDataset, SRLmdbDataset, SRREDSDataset,
                              SRVid4Dataset, SRVimeo90KDataset)
 
 
@@ -242,7 +242,7 @@ class TestSRDatasets:
         assert (len(sr_folder_dataset) == 1)
         assert check_keys_contain(result.keys(), target_keys)
 
-    def test_sr_folder_dataset_gt(self):
+    def test_sr_folder_gt_dataset(self):
         # setup
         sr_pipeline = [
             dict(type='LoadImageFromFile', io_backend='disk', key='gt'),
@@ -253,7 +253,7 @@ class TestSRDatasets:
         filename_tmpl = '{}_x4'
 
         # input path is Path object
-        sr_folder_dataset = SRFolderDatasetGT(
+        sr_folder_dataset = SRFolderGTDataset(
             gt_folder=gt_folder,
             pipeline=sr_pipeline,
             scale=4,
@@ -264,7 +264,7 @@ class TestSRDatasets:
         assert (len(sr_folder_dataset) == 1)
         assert check_keys_contain(result.keys(), target_keys)
         # input path is str
-        sr_folder_dataset = SRFolderDatasetGT(
+        sr_folder_dataset = SRFolderGTDataset(
             gt_folder=str(gt_folder),
             pipeline=sr_pipeline,
             scale=4,

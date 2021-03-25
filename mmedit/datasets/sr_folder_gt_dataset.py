@@ -3,7 +3,7 @@ from .registry import DATASETS
 
 
 @DATASETS.register_module()
-class SRFolderDatasetGT(BaseSRDataset):
+class SRFolderGTDataset(BaseSRDataset):
     """General ground-truth image folder dataset for image restoration.
 
     The dataset loads gt (Ground-Truth) image only,
