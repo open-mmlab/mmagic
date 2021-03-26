@@ -110,6 +110,7 @@ class FBADecoder(nn.Module):
 
         self.unpool = nn.MaxUnpool2d(2, stride=2)
 
+        # yapf: disable
         self.conv_up4 = nn.Sequential(*(
             list(
                 ConvModule(
@@ -130,6 +131,8 @@ class FBADecoder(nn.Module):
                 ConvModule(
                     16, 7, padding=0, kernel_size=1, bias=True,
                     act_cfg=None).children())))
+
+        # yapf: enable
 
     def init_weights(self, pretrained=None):
         """Init weights for the model.
