@@ -1,4 +1,5 @@
 from .augmentation import (BinarizeImage, Flip, GenerateFrameIndices,
+                           GenerateFrameIndicesForRecurrent,
                            GenerateFrameIndiceswithPadding, Pad, RandomAffine,
                            RandomJitter, RandomMaskDilation, RandomTransposeHW,
                            Resize, TemporalReverse)
@@ -27,5 +28,6 @@ __all__ = [
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
     'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
-    'GenerateTrimapWithDistTransform', 'TransformTrimap'
+    'GenerateTrimapWithDistTransform', 'TransformTrimap',
+    'GenerateFrameIndicesForRecurrent'
 ]

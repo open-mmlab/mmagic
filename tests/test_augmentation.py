@@ -7,6 +7,7 @@ import torch
 # yapf: disable
 from mmedit.datasets.pipelines import (BinarizeImage, Flip,
                                        GenerateFrameIndices,
+                                       GenerateFrameIndicesForRecurrent,
                                        GenerateFrameIndiceswithPadding, Pad,
                                        RandomAffine, RandomJitter,
                                        RandomMaskDilation, RandomTransposeHW,
@@ -596,6 +597,40 @@ class TestAugmentations:
         frame_index_generator = GenerateFrameIndices(interval_list=[2, 3])
         rlt = frame_index_generator(copy.deepcopy(results))
         assert self.check_keys_contain(rlt.keys(), target_keys)
+
+    def test_frame_index_generation_for_recurrent(self):
+        results = dict(
+            lq_path='fake_lq_root',
+            gt_path='fake_gt_root',
+            key='000',
+            num_frames=10,
+            sequence_length=100)
+
+        target_keys = [
+            'lq_path', 'gt_path', 'key', 'interval', 'num_frames',
+            'sequence_length'
+        ]
+        frame_index_generator = GenerateFrameIndicesForRecurrent(
+            interval_list=[1, 5, 9])
+        rlt = frame_index_generator(copy.deepcopy(results))
+        assert self.check_keys_contain(rlt.keys(), target_keys)
+
+        name_ = repr(frame_index_generator)
+        assert name_ == frame_index_generator.__class__.__name__ + (
+            '(interval_list=[1, 5, 9])')
+
+        # interval too large
+        results = dict(
+            lq_path='fake_lq_root',
+            gt_path='fake_gt_root',
+            key='000',
+            num_frames=11,
+            sequence_length=100)
+
+        frame_index_generator = GenerateFrameIndicesForRecurrent(
+            interval_list=[10])
+        with pytest.raises(ValueError):
+            frame_index_generator(copy.deepcopy(results))
 
     def test_temporal_reverse(self):
         img_lq1 = np.random.rand(4, 4, 3).astype(np.float32)
