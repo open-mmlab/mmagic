@@ -1,10 +1,9 @@
-import math
-import numbers
-import os.path as osp
-
 import cv2
+import math
 import mmcv
+import numbers
 import numpy as np
+import os.path as osp
 
 from ..registry import PIPELINES
 
