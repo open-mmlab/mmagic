@@ -1,0 +1,16 @@
+[
+    {
+        "alpha_path": "alpha/GT05.jpg",
+        "trimap_path": "trimap/GT05.jpg",
+        "bg_path": "bg/GT26r.jpg",
+        "fg_path": "fg/GT05.jpg",
+        "merged_path": "merged/GT05.jpg"
+    },
+    {
+        "alpha_path": "alpha/GT05.jpg",
+        "trimap_path": "trimap/GT05.jpg",
+        "bg_path": "bg/GT26r.jpg",
+        "fg_path": "fg/GT05.jpg",
+        "merged_path": "merged/GT05.jpg"
+    }
+]
