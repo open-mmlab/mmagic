@@ -6,7 +6,7 @@ from .utils import make_coord
 
 
 @PIPELINES.register_module()
-class Coordinate:
+class GenerateCoordinateAndCell:
     """Generate coordinate and cell.
 
     Generate coordinate from the desired size of SR image.
@@ -44,7 +44,7 @@ class Coordinate:
         Args:
             results (dict): A dict containing the necessary information and
                 data for augmentation.
-                Require either in results.keys():
+                Require either in results:
                     1. 'lq' (tensor), whose shape is similar as (3, H, W).
                     2. 'gt' (tensor), whose shape is similar as (3, H, W).
                     3. None, the premise is
@@ -53,16 +53,16 @@ class Coordinate:
         Returns:
             dict: A dict containing the processed data and information.
                 Reshape 'gt' to (-1, 3) and transpose to (3, -1) if 'gt'
-                in results.keys().
+                in results.
                 Add 'coord' and 'cell'.
         """
         # generate hr_coord (and hr_rgb)
-        if 'gt' in results.keys():
+        if 'gt' in results:
             crop_hr = results['gt']
             self.target_size = crop_hr.shape
             hr_rgb = crop_hr.contiguous().view(3, -1).permute(1, 0)
             results['gt'] = hr_rgb
-        elif self.scale is not None and 'lq' in results.keys():
+        elif self.scale is not None and 'lq' in results:
             _, h_lr, w_lr = results['lq'].shape
             self.target_size = (round(h_lr * self.scale),
                                 round(w_lr * self.scale))
@@ -71,7 +71,7 @@ class Coordinate:
             assert len(self.target_size) >= 2
         hr_coord = make_coord(self.target_size[-2:])
 
-        if self.sample_quantity is not None and 'gt' in results.keys():
+        if self.sample_quantity is not None and 'gt' in results:
             sample_lst = np.random.choice(
                 len(hr_coord), self.sample_quantity, replace=False)
             hr_coord = hr_coord[sample_lst]

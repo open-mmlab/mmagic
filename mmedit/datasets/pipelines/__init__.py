@@ -3,12 +3,12 @@ from .augmentation import (BinarizeImage, Flip, GenerateFrameIndices,
                            RandomJitter, RandomMaskDilation, RandomTransposeHW,
                            Resize, TemporalReverse)
 from .compose import Compose
-from .coordinate import Coordinate
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    FixedCrop, ModCrop, PairedRandomCrop)
 from .down_sampling import RandomDownSampling
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
+from .generate_coordinate_and_cell import GenerateCoordinateAndCell
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
                       LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
                       RandomLoadResizeBg)
@@ -28,5 +28,6 @@ __all__ = [
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
     'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
-    'GenerateTrimapWithDistTransform', 'TransformTrimap', 'Coordinate'
+    'GenerateTrimapWithDistTransform', 'TransformTrimap',
+    'GenerateCoordinateAndCell'
 ]
