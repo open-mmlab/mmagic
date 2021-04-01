@@ -7,15 +7,15 @@ from mmedit.utils import get_root_logger
 
 
 class DenseLayer(nn.Module):
+    """Dense layer
+
+    Args:
+        in_channels (int): Channel number of inputs.
+        out_channels (int): Channel number of outputs.
+
+    """
 
     def __init__(self, in_channels, out_channels):
-        """Dense layer
-
-        Args:
-            in_channels (int): Channel number of inputs.
-            out_channels (int): Channel number of outputs.
-
-        """
         super(DenseLayer, self).__init__()
         self.conv = nn.Conv2d(
             in_channels, out_channels, kernel_size=3, padding=3 // 2)
@@ -34,14 +34,14 @@ class DenseLayer(nn.Module):
 
 
 class RDB(nn.Module):
+    """Residual Dense Block of Residual Dense Network
+
+    Args:
+        in_channels (int): Channel number of inputs.
+        out_channels (int): Channel number of outputs.
+    """
 
     def __init__(self, in_channels, growth_rate, num_layers):
-        """Residual Dense Block of Residual Dense Network
-
-        Args:
-            in_channels (int): Channel number of inputs.
-            out_channels (int): Channel number of outputs.
-        """
         super(RDB, self).__init__()
         self.layers = nn.Sequential(*[
             DenseLayer(in_channels + growth_rate * i, growth_rate)
@@ -66,6 +66,26 @@ class RDB(nn.Module):
 
 @BACKBONES.register_module()
 class RDN(nn.Module):
+    """RDN model for single image super-resolution.
+
+    Paper: Residual Dense Network for Image Super-Resolution
+    Adapted from:
+        https://github.com/yulunzhang/RDN.git
+        https://github.com/yjn870/RDN-pytorch
+
+    Args:
+        in_channels (int): Channel number of inputs.
+        out_channels (int): Channel number of outputs.
+        mid_channels (int): Channel number of intermediate features.
+            Default: 64.
+        num_blocks (int): Block number in the trunk network. Default: 16.
+        upscale_factor (int): Upsampling factor. Support 2^n and 3.
+            Default: 4.
+        num_layer (int): Layer number in the Residual Dense Block.
+            Default: 8.
+        growth_rate(int): Channels growth in each layer of RDB.
+            Default: 64.
+    """
 
     def __init__(self,
                  in_channels,
@@ -75,24 +95,6 @@ class RDN(nn.Module):
                  upscale_factor=4,
                  num_layers=8,
                  growth_rate=64):
-        """RDN model for single image super-resolution.
-
-        Paper: Residual Dense Network for Image Super-Resolution
-        Ref repo: https://github.com/yulunzhang/RDN.git
-
-        Args:
-            in_channels (int): Channel number of inputs.
-            out_channels (int): Channel number of outputs.
-            mid_channels (int): Channel number of intermediate features.
-                Default: 64.
-            num_blocks (int): Block number in the trunk network. Default: 16.
-            upscale_factor (int): Upsampling factor. Support 2^n and 3.
-                Default: 4.
-            num_layer (int): Layer number in the Residual Dense Block.
-                Default: 8.
-            growth_rate(int): Channels growth in each layer of RDB.
-                Default: 64.
-        """
 
         super(RDN, self).__init__()
         self.G0 = mid_channels
