@@ -10,8 +10,8 @@ from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              BaseSRDataset, GenerationPairedDataset,
                              GenerationUnpairedDataset, RepeatDataset,
                              SRAnnotationDataset, SRFolderDataset,
-                             SRLmdbDataset, SRREDSDataset, SRVid4Dataset,
-                             SRVimeo90KDataset)
+                             SRFolderGTDataset, SRLmdbDataset, SRREDSDataset,
+                             SRVid4Dataset, SRVimeo90KDataset)
 
 
 def mock_open(*args, **kwargs):
@@ -238,6 +238,39 @@ class TestSRDatasets:
                 lq_path=str(lq_folder / 'baboon_x4.png'),
                 gt_path=str(gt_folder / 'baboon.png'))
         ]
+        result = sr_folder_dataset[0]
+        assert (len(sr_folder_dataset) == 1)
+        assert check_keys_contain(result.keys(), target_keys)
+
+    def test_sr_folder_gt_dataset(self):
+        # setup
+        sr_pipeline = [
+            dict(type='LoadImageFromFile', io_backend='disk', key='gt'),
+            dict(type='ImageToTensor', keys=['gt'])
+        ]
+        target_keys = ['gt_path', 'gt']
+        gt_folder = self.data_prefix / 'gt'
+        filename_tmpl = '{}_x4'
+
+        # input path is Path object
+        sr_folder_dataset = SRFolderGTDataset(
+            gt_folder=gt_folder,
+            pipeline=sr_pipeline,
+            scale=4,
+            filename_tmpl=filename_tmpl)
+        data_infos = sr_folder_dataset.data_infos
+        assert data_infos == [dict(gt_path=str(gt_folder / 'baboon.png'))]
+        result = sr_folder_dataset[0]
+        assert (len(sr_folder_dataset) == 1)
+        assert check_keys_contain(result.keys(), target_keys)
+        # input path is str
+        sr_folder_dataset = SRFolderGTDataset(
+            gt_folder=str(gt_folder),
+            pipeline=sr_pipeline,
+            scale=4,
+            filename_tmpl=filename_tmpl)
+        data_infos = sr_folder_dataset.data_infos
+        assert data_infos == [dict(gt_path=str(gt_folder / 'baboon.png'))]
         result = sr_folder_dataset[0]
         assert (len(sr_folder_dataset) == 1)
         assert check_keys_contain(result.keys(), target_keys)
