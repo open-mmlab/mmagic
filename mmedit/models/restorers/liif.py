@@ -240,7 +240,6 @@ class LIIF(BasicRestorer):
         Returns:
             dict: Returned output.
         """
-        # print(data_batch.keys())
         output = self.forward_test(**data_batch, **kwargs)
         return output
 
