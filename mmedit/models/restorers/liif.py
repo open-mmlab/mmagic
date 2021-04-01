@@ -22,7 +22,6 @@ class LIIF(BasicRestorer):
 
     Paper: Learning Continuous Image Representation with
            Local Implicit Image Function
-    Ref repo: https://github.com/yinboc/liif.git
 
     Args:
         generator (dict): Config for the generator.
@@ -95,8 +94,6 @@ class LIIF(BasicRestorer):
         # loss
         self.pixel_loss = build_loss(pixel_loss) if pixel_loss else None
 
-        self.step_counter = 0  # counting training steps
-
         self.init_weights(pretrained)
 
     def train_step(self, data_batch, optimizer):
@@ -142,7 +139,6 @@ class LIIF(BasicRestorer):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        self.step_counter += 1
 
         log_vars.pop('loss')  # remove the unnecessary 'loss'
         outputs = dict(
@@ -263,6 +259,10 @@ class LIIF(BasicRestorer):
     def query_rgb(self, coord, cell=None):
         """Query RGB value of GT.
 
+        Adapted from 'https://github.com/yinboc/liif.git'
+        'liif/models/liif.py'
+        Copyright (c) 2020, Yinbo Chen, under BSD 3-Clause License.
+
         Args:
             coord (Tensor): coord tensor, shape (BHW, 2).
 
@@ -376,17 +376,14 @@ class LIIF(BasicRestorer):
             gt (Tensor): Ground-truth image. Default: None.
             test_mode (bool): Whether in test mode or not. Default: False.
             kwargs (dict): Other arguments.
-
-        Returns:
-            result (Tensor): (part of) output.
         """
-        # result = {**kwargs}
-        # print(result.keys())
+
         if test_mode:
             return self.forward_test(lq, gt, **kwargs)
 
         raise ValueError(
-            'LIIF model does not supprot `forward_train` function.')
+            'LIIF model does not supprot `forward` function in training.',
+            'LIIF should be trained by `train_step`.')
 
     def batched_predict(self, coord, cell):
         """Batched predict.

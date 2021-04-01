@@ -107,8 +107,8 @@ def test_liif():
 
         # val_step
         result = restorer.val_step(data_batch, meta=[{'gt_path': ''}])
-        assert type(result) == dict
-        assert type(result['eval_result']) == dict
+        assert isinstance(result, dict)
+        assert isinstance(result['eval_result'], dict)
         assert result['eval_result'].keys() == set({'PSNR', 'SSIM'})
-        assert type(result['eval_result']['PSNR']) == np.float64
-        assert type(result['eval_result']['SSIM']) == np.float64
+        assert isinstance(result['eval_result']['PSNR'], np.float64)
+        assert isinstance(result['eval_result']['SSIM'], np.float64)
