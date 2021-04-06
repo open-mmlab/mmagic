@@ -42,8 +42,8 @@ def test_liif():
         local_ensemble=True,
         feat_unfold=True,
         cell_decode=True,
-        data_mean=[0.4488, 0.4371, 0.4040],
-        data_std=[1., 1., 1.],
+        rgb_mean=(0.4488, 0.4371, 0.4040),
+        rgb_std=(1., 1., 1.),
         eval_bsize=30000,
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 
