@@ -8,13 +8,13 @@ For installation instructions, please see [install.md](install.md).
 It is recommended to symlink the dataset root to `$MMEditing/data`.
 If your folder structure is different, you may need to change the corresponding paths in config files.
 
-[Inpainting](datasets_inpainting.md)
+[Inpainting](https://mmediting.readthedocs.io/en/latest/inpainting_datasets.html)
 
-[Matting](datasets_matting.md)
+[Matting](https://mmediting.readthedocs.io/en/latest/matting_datasets.html)
 
-[Restoration](datasets_restoration.md)
+[Restoration](https://mmediting.readthedocs.io/en/latest/sr_datasets.html)
 
-[Generation](datasets_generation.md)
+[Generation](https://mmediting.readthedocs.io/en/latest/generation_datasets.html)
 
 ## Inference with pretrained models
 
