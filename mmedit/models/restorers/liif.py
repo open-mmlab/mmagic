@@ -30,10 +30,10 @@ class LIIF(BasicRestorer):
             Default: True.
         feat_unfold (bool): Whether to use feat unfold. Default: True.
         cell_decode (bool): Whether to use cell decode. Default: True.
-        data_mean (list[float]): Data mean.
-            Default: [0.5].
-        data_std (list[float]): Data std.
-            Default: [0.5].
+        rgb_mean (tuple[float]): Data mean.
+            Default: (0.5, 0.5, 0.5).
+        rgb_std (tuple[float]): Data std.
+            Default: (0.5, 0.5, 0.5).
         eval_bsize (int): Size of batched predict. Default: None.
         pixel_loss (dict): Config for the pixel loss. Default: None.
         train_cfg (dict): Config for train. Default: None.
@@ -47,16 +47,15 @@ class LIIF(BasicRestorer):
                  local_ensemble=True,
                  feat_unfold=True,
                  cell_decode=True,
-                 data_mean=[0.5],
-                 data_std=[0.5],
+                 rgb_mean=(0.5, 0.5, 0.5),
+                 rgb_std=(0.5, 0.5, 0.5),
                  eval_bsize=None,
                  pixel_loss=None,
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
 
-        super().__init__(generator, pixel_loss, train_cfg, test_cfg,
-                         pretrained)
+        super(BasicRestorer, self).__init__()
 
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
@@ -67,12 +66,12 @@ class LIIF(BasicRestorer):
         self.feat = None
 
         # norm
-        data_mean = torch.FloatTensor(data_mean)
-        data_std = torch.FloatTensor(data_std)
-        self.lq_mean = data_mean.view(1, -1, 1, 1)
-        self.lq_std = data_std.view(1, -1, 1, 1)
-        self.gt_mean = data_mean.view(1, 1, -1)
-        self.gt_std = data_std.view(1, 1, -1)
+        rgb_mean = torch.FloatTensor(rgb_mean)
+        rgb_std = torch.FloatTensor(rgb_std)
+        self.lq_mean = rgb_mean.view(1, -1, 1, 1)
+        self.lq_std = rgb_std.view(1, -1, 1, 1)
+        self.gt_mean = rgb_mean.view(1, 1, -1)
+        self.gt_std = rgb_std.view(1, 1, -1)
 
         # model
         generator_model = build_backbone(generator)
