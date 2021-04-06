@@ -1,7 +1,9 @@
 import numpy as np
 import pytest
+import torch
 
-from mmedit.datasets.pipelines.utils import adjust_gamma, dtype_range
+from mmedit.datasets.pipelines.utils import (adjust_gamma, dtype_range,
+                                             make_coord)
 
 
 def test_adjust_gamma():
@@ -61,3 +63,18 @@ def test_adjust_gamma():
     image = np.arange(0, 255, 4, np.uint8).reshape((8, 8))
     with pytest.raises(ValueError):
         adjust_gamma(image, -1)
+
+
+def test_make_coord():
+    h, w = 20, 30
+
+    coord = make_coord((h, w), ranges=((10, 20), (-5, 5)))
+    assert type(coord) == torch.Tensor
+    assert coord.shape == (h * w, 2)
+
+    coord = make_coord((h, w), flatten=False)
+    assert type(coord) == torch.Tensor
+    assert coord.shape == (h, w, 2)
+
+
+test_make_coord()

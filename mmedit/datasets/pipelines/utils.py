@@ -129,6 +129,14 @@ def random_choose_unknown(unknown, crop_size):
 
 def make_coord(shape, ranges=None, flatten=True):
     """ Make coordinates at grid centers.
+
+    Args:
+        shape (tuple): shape of image.
+        ranges (tuple): range of coordinate value. Default: None.
+        flatten (bool): flatten to (n, 2) or Not. Default: True.
+
+    return:
+        coord (Tensor): coordinates.
     """
     coord_seqs = []
     for i, n in enumerate(shape):
@@ -139,7 +147,7 @@ def make_coord(shape, ranges=None, flatten=True):
         r = (v1 - v0) / (2 * n)
         seq = v0 + r + (2 * r) * torch.arange(n).float()
         coord_seqs.append(seq)
-    ret = torch.stack(torch.meshgrid(*coord_seqs), dim=-1)
+    coord = torch.stack(torch.meshgrid(*coord_seqs), dim=-1)
     if flatten:
-        ret = ret.view(-1, ret.shape[-1])
-    return ret
+        coord = coord.view(-1, coord.shape[-1])
+    return coord
