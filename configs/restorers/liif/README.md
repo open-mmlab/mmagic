@@ -1,4 +1,4 @@
-# Learning Continuous Image Representation with Local Implicit Image Function
+# Learning Continuous Image Representation with Local Implicit Image Function (LIIF)
 
 ## Introduction
 

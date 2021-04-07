@@ -1,4 +1,4 @@
-exp_name = 'liif_edsr_norm_x2~4_c64b16_g1_1000k_div2k'
+exp_name = 'liif_edsr_norm_x2-4_c64b16_g1_1000k_div2k'
 scale_min, scale_max = 1, 4
 
 # model settings
@@ -18,8 +18,8 @@ model = dict(
     local_ensemble=True,
     feat_unfold=True,
     cell_decode=True,
-    data_mean=[0.4488, 0.4371, 0.4040],
-    data_std=[1., 1., 1.],
+    rgb_mean=(0.4488, 0.4371, 0.4040),
+    rgb_std=(1., 1., 1.),
     eval_bsize=30000,
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
@@ -37,7 +37,7 @@ train_pipeline = [
         type='LoadImageFromFile',
         io_backend='disk',
         key='gt',
-        flag='unchanged',
+        flag='color',
         channel_order='rgb'),
     dict(
         type='RandomDownSampling',
@@ -45,12 +45,6 @@ train_pipeline = [
         scale_max=scale_max,
         inp_size=48),
     dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
-    dict(
-        type='Normalize',
-        keys=['lq', 'gt'],
-        mean=[0, 0, 0],
-        std=[1, 1, 1],
-        to_rgb=True),
     dict(
         type='Flip', keys=['lq', 'gt'], flip_ratio=0.5,
         direction='horizontal'),
@@ -68,16 +62,10 @@ valid_pipeline = [
         type='LoadImageFromFile',
         io_backend='disk',
         key='gt',
-        flag='unchanged',
+        flag='color',
         channel_order='rgb'),
     dict(type='RandomDownSampling', scale_min=scale_max, scale_max=scale_max),
     dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
-    dict(
-        type='Normalize',
-        keys=['lq', 'gt'],
-        mean=[0, 0, 0],
-        std=[1, 1, 1],
-        to_rgb=True),
     dict(type='ImageToTensor', keys=['lq', 'gt']),
     dict(type='GenerateCoordinateAndCell'),
     dict(
@@ -90,24 +78,21 @@ test_pipeline = [
         type='LoadImageFromFile',
         io_backend='disk',
         key='gt',
-        flag='unchanged',
+        flag='color',
         channel_order='rgb'),
     dict(
         type='LoadImageFromFile',
         io_backend='disk',
         key='lq',
-        flag='unchanged',
+        flag='color',
         channel_order='rgb'),
     dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
-    dict(
-        type='Normalize',
-        keys=['lq', 'gt'],
-        mean=[0, 0, 0],
-        std=[1, 1, 1],
-        to_rgb=True),
     dict(type='ImageToTensor', keys=['lq', 'gt']),
     dict(type='GenerateCoordinateAndCell', scale=scale_max),
-    dict(type='Collect', keys=['lq', 'gt', 'coord', 'cell'], meta_keys=[])
+    dict(
+        type='Collect',
+        keys=['lq', 'gt', 'coord', 'cell'],
+        meta_keys=['gt_path'])
 ]
 
 data = dict(
