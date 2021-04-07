@@ -19,7 +19,8 @@ Evaluated on RGB channels, `scale` pixels in each border are cropped before eval
 
 The metrics are `PSNR / SSIM`.
 
-Method: [liif_edsr_norm_c64b16_g1_1000k_div2k](/configs/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py). [model]()|[log]()
+Method: [liif_edsr_norm_c64b16_g1_1000k_div2k](/configs/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py). [model](https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210319-329ce255.pth)|[log](https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210319-329ce255.log.json
+)
 
 Data is normalized according to [EDSR](/configs/restorers/edsr).
 
