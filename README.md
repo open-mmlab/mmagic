@@ -37,13 +37,6 @@ Documentation: https://mmediting.readthedocs.io/en/latest/.
 
 This project is released under the [Apache 2.0 license](LICENSE).
 
-## Changelog
-
-v0.5 was released in 09/07/2020.
-
-Note that **MMSR** has been merged into this repo, as a part of MMEditing.
-With elaborate designs of the new framework and careful implementations,
-hope MMEditing could provide better experience.
 
 ## Benchmark and model zoo
 
