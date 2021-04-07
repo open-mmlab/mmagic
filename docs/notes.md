@@ -1,3 +1,3 @@
 ## Benchmark
 
-Please refer to [model_zoo.md](docs/model_zoo.md) for more details.
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) for more details.
