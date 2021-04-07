@@ -20,7 +20,8 @@
 - Support pt1.6 cpu/gpu in CI ([#138](https://github.com/open-mmlab/mmediting/pull/138))
 - Support fp16 ([139](https://github.com/open-mmlab/mmediting/pull/139), [#144](https://github.com/open-mmlab/mmediting/pull/144))
 - Support publishing to pypi ([#149](https://github.com/open-mmlab/mmediting/pull/149))
-- Add modelzoo statistics ([#171](https://github.com/open-mmlab/mmediting/pull/171))
+- Add and update modelzoo statistics ([#171](https://github.com/open-mmlab/mmediting/pull/171), [#182](https://github.com/open-mmlab/mmediting/pull/182), [#186](https://github.com/open-mmlab/mmediting/pull/186))
+- Add doc of dataset ([194](https://github.com/open-mmlab/mmediting/pull/194))
 
 **Bug Fixes**
 - Fix `_non_dist_train` in train api ([#104](https://github.com/open-mmlab/mmediting/pull/104))
@@ -28,7 +29,9 @@
 - Fix redundant loop bug in Normalize ([#121](https://github.com/open-mmlab/mmediting/pull/121))
 - Fix `get_hash` in `setup.py` ([#124](https://github.com/open-mmlab/mmediting/pull/124))
 - Fix `tool/preprocess_reds_dataset.py` ([#148](https://github.com/open-mmlab/mmediting/pull/148))
-- fix pip install bug ([#173](https://github.com/open-mmlab/mmediting/pull/173))
+- Fix slurm train tutorial in `getting_started.md` ([#162](https://github.com/open-mmlab/mmediting/pull/162))
+- Fix pip install bug ([#173](https://github.com/open-mmlab/mmediting/pull/173))
+- Fix bug in config file ([#185](https://github.com/open-mmlab/mmediting/pull/185))
 
 **Breaking Changes**
 
@@ -40,7 +43,7 @@
 - Update teaser ([#96](https://github.com/open-mmlab/mmediting/pull/96))
 - Updata README ([#93](https://github.com/open-mmlab/mmediting/pull/93), [#97](https://github.com/open-mmlab/mmediting/pull/97), [#98](https://github.com/open-mmlab/mmediting/pull/98), [#152](https://github.com/open-mmlab/mmediting/pull/152))
 - Updata model_zoo ([#101](https://github.com/open-mmlab/mmediting/pull/101))
-- Fix typos ([#102](https://github.com/open-mmlab/mmediting/pull/102))
+- Fix typos ([#102](https://github.com/open-mmlab/mmediting/pull/102), [#188](https://github.com/open-mmlab/mmediting/pull/188), [#191](https://github.com/open-mmlab/mmediting/pull/191))
 - Adopt adjust_gamma from skimage and reduce dependencies ([#112](https://github.com/open-mmlab/mmediting/pull/112))
 - remove `.gitlab-ci.yml` ([#113](https://github.com/open-mmlab/mmediting/pull/113))
 - Update import of first party ([#115](https://github.com/open-mmlab/mmediting/pull/115))
@@ -50,7 +53,11 @@
 - Update `setup.py` ([#150](https://github.com/open-mmlab/mmediting/pull/150))
 - Update the highest version of supported mmcv ([#153](https://github.com/open-mmlab/mmediting/pull/153), [#154](https://github.com/open-mmlab/mmediting/pull/154))
 - modify `Crop` to handle a sequence of video frames ([#164](https://github.com/open-mmlab/mmediting/pull/164))
-- Add links to other mm projects ([#179](https://github.com/open-mmlab/mmediting/pull/179))
+- Add links to other mm projects ([#179](https://github.com/open-mmlab/mmediting/pull/179), [#180](https://github.com/open-mmlab/mmediting/pull/180))
+- Add config type ([#181](https://github.com/open-mmlab/mmediting/pull/181))
+- Refector docs ([#184](https://github.com/open-mmlab/mmediting/pull/184))
+- Add config link ([#187](https://github.com/open-mmlab/mmediting/pull/187))
+- Update file structure ([#192](https://github.com/open-mmlab/mmediting/pull/192))
 
 ## v0.5.0 (09/07/2020).
 
