@@ -47,7 +47,7 @@ hope MMEditing could provide better experience.
 
 ## Benchmark and model zoo
 
-Please refer to [model_zoo.md](docs/model_zoo.md) for more details.
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) for more details.
 
 ## Installation
 
