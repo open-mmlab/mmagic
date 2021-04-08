@@ -4,7 +4,7 @@
 
 **Highlights**
 
-1. Support FBA
+1. Support exporting DIM and GCA from Pytorch to ONNX
 2. Support LIIF
 
 **New Features**
@@ -21,11 +21,11 @@
 - Support pt1.6 cpu/gpu in CI ([#138](https://github.com/open-mmlab/mmediting/pull/138))
 - Support fp16 ([139](https://github.com/open-mmlab/mmediting/pull/139), [#144](https://github.com/open-mmlab/mmediting/pull/144))
 - Support publishing to pypi ([#149](https://github.com/open-mmlab/mmediting/pull/149))
-- Add and update modelzoo statistics ([#171](https://github.com/open-mmlab/mmediting/pull/171), [#182](https://github.com/open-mmlab/mmediting/pull/182), [#186](https://github.com/open-mmlab/mmediting/pull/186))
+- Add modelzoo statistics ([#171](https://github.com/open-mmlab/mmediting/pull/171), [#182](https://github.com/open-mmlab/mmediting/pull/182), [#186](https://github.com/open-mmlab/mmediting/pull/186))
 - Add doc of datasets ([194](https://github.com/open-mmlab/mmediting/pull/194))
 - Support extended foreground option. ([#195](https://github.com/open-mmlab/mmediting/pull/195), [#199](https://github.com/open-mmlab/mmediting/pull/199), [#200](https://github.com/open-mmlab/mmediting/pull/200), [#210](https://github.com/open-mmlab/mmediting/pull/210))
 - Support nn.MaxUnpool2d ([#196](https://github.com/open-mmlab/mmediting/pull/196))
-- Support FBA ([#203](https://github.com/open-mmlab/mmediting/pull/203), [#209](https://github.com/open-mmlab/mmediting/pull/209), [#215](https://github.com/open-mmlab/mmediting/pull/215), [#220](https://github.com/open-mmlab/mmediting/pull/220))
+- Add some FBA components ([#203](https://github.com/open-mmlab/mmediting/pull/203), [#209](https://github.com/open-mmlab/mmediting/pull/209), [#215](https://github.com/open-mmlab/mmediting/pull/215), [#220](https://github.com/open-mmlab/mmediting/pull/220))
 - Support random down sampling in pipeline ([#222](https://github.com/open-mmlab/mmediting/pull/222))
 - Support SR folder GT Dataset ([#223](https://github.com/open-mmlab/mmediting/pull/223))
 - Support LIIF ([#224](https://github.com/open-mmlab/mmediting/pull/224), [#226](https://github.com/open-mmlab/mmediting/pull/226), [#227](https://github.com/open-mmlab/mmediting/pull/227), [#234](https://github.com/open-mmlab/mmediting/pull/234), [#239](https://github.com/open-mmlab/mmediting/pull/239))
