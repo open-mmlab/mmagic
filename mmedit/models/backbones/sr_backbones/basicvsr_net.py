@@ -11,7 +11,7 @@ from mmedit.utils import get_root_logger
 
 
 @BACKBONES.register_module()
-class BasicVSR(nn.Module):
+class BasicVSRNet(nn.Module):
     """BasicVSR network structure for video super-resolution.
 
     Support only x4 upsampling.
@@ -30,7 +30,7 @@ class BasicVSR(nn.Module):
 
     def __init__(self, mid_channels=64, num_blocks=30, spynet_pretrained=None):
 
-        super(BasicVSR, self).__init__()
+        super(BasicVSRNet, self).__init__()
 
         self.mid_channels = mid_channels
 

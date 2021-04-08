@@ -6,7 +6,7 @@ import torch
 from mmcv.runner import obj_from_dict
 
 from mmedit.models import build_model
-from mmedit.models.backbones.sr_backbones import BasicVSR
+from mmedit.models.backbones.sr_backbones import BasicVSRNet
 from mmedit.models.losses import MSELoss
 
 
@@ -15,7 +15,7 @@ def test_basicvsr_model():
     model_cfg = dict(
         type='BasicVSR',
         generator=dict(
-            type='BasicVSR',
+            type='BasicVSRNet',
             mid_channels=64,
             num_blocks=30,
             spynet_pretrained=None),
@@ -31,7 +31,7 @@ def test_basicvsr_model():
 
     # test attributes
     assert restorer.__class__.__name__ == 'BasicVSR'
-    assert isinstance(restorer.generator, BasicVSR)
+    assert isinstance(restorer.generator, BasicVSRNet)
     assert isinstance(restorer.pixel_loss, MSELoss)
 
     # prepare data
