@@ -1,12 +1,13 @@
+import tempfile
+
 import mmcv
 import pytest
-import tempfile
 import torch
 from mmcv.runner import obj_from_dict
 
 from mmedit.models import build_model
 from mmedit.models.backbones.sr_backbones import BasicVSR
-from mmedit.models.losses import L1Loss
+from mmedit.models.losses import MSELoss
 
 
 def test_basicvsr_model():
@@ -18,7 +19,7 @@ def test_basicvsr_model():
             mid_channels=64,
             num_blocks=30,
             spynet_pretrained=None),
-        pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='sum'),
+        pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='sum'),
     )
 
     train_cfg = dict(fix_iter=1)
@@ -31,7 +32,7 @@ def test_basicvsr_model():
     # test attributes
     assert restorer.__class__.__name__ == 'BasicVSR'
     assert isinstance(restorer.generator, BasicVSR)
-    assert isinstance(restorer.pixel_loss, L1Loss)
+    assert isinstance(restorer.pixel_loss, MSELoss)
 
     # prepare data
     inputs = torch.rand(1, 5, 3, 64, 64)

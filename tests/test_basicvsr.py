@@ -25,7 +25,7 @@ def test_basicvsr():
 
     with pytest.raises(AssertionError):
         # The height and width of inputs should be at least 64
-        input_tensor = torch.rand(1, 5, 3, 63, 63)
+        input_tensor = torch.rand(1, 5, 3, 61, 61)
         basicvsr(input_tensor)
 
     with pytest.raises(TypeError):
