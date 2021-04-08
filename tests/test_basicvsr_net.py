@@ -1,10 +1,10 @@
 import pytest
 import torch
 
-from mmedit.models.backbones.sr_backbones.basicvsr import BasicVSR
+from mmedit.models.backbones.sr_backbones.basicvsr_net import BasicVSR
 
 
-def test_basicvsr():
+def test_basicvsr_net():
     """Test BasicVSR."""
 
     # cpu

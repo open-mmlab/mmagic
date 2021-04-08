@@ -1,4 +1,4 @@
-from .basicvsr import BasicVSR
+from .basicvsr_net import BasicVSR
 from .edsr import EDSR
 from .edvr_net import EDVRNet
 from .rrdb_net import RRDBNet
