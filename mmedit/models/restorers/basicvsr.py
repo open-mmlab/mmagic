@@ -41,7 +41,9 @@ class BasicVSR(BasicRestorer):
         self.fix_iter = train_cfg.get('fix_iter', 0) if train_cfg else 0
         self.generator.find_unused_parameters = False
 
-        self.step_counter = 0  # count training steps
+        # count training steps
+        self.step_counter = train_cfg.get('step_counter',
+                                          0) if train_cfg else 0
 
     def train_step(self, data_batch, optimizer):
         """Train step.
