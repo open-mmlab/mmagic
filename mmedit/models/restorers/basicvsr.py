@@ -1,7 +1,8 @@
-import mmcv
 import numbers
-import numpy as np
 import os.path as osp
+
+import mmcv
+import numpy as np
 import torch
 
 from mmedit.core import tensor2img
@@ -134,7 +135,7 @@ class BasicVSR(BasicRestorer):
             output = self.generator(lq)
 
         # Note: For Vimeo-90K, we use mirror extension. Hence, the output
-        # sequence has 14 frames. Only center frame is kept for Vimeo-90K
+        # sequence has 14 frames. Only center frame is kept for Vimeo-90K.
         if output.size(1) == 14:
             output = 0.5 * (output[:, 3] + output[:, 10])
 
