@@ -4,7 +4,8 @@
 
 **Highlights**
 
-1.
+1. Support FBA
+2. Support LIIF
 
 **New Features**
 
