@@ -4,8 +4,8 @@
 
 **Highlights**
 
-1. Support exporting DIM and GCA from Pytorch to ONNX
-2. Support LIIF
+1. Support Local Implicit Image Function (LIIF)
+2. Support exporting DIM and GCA from Pytorch to ONNX
 
 **New Features**
 
@@ -28,7 +28,7 @@
 - Add some FBA components ([#203](https://github.com/open-mmlab/mmediting/pull/203), [#209](https://github.com/open-mmlab/mmediting/pull/209), [#215](https://github.com/open-mmlab/mmediting/pull/215), [#220](https://github.com/open-mmlab/mmediting/pull/220))
 - Support random down sampling in pipeline ([#222](https://github.com/open-mmlab/mmediting/pull/222))
 - Support SR folder GT Dataset ([#223](https://github.com/open-mmlab/mmediting/pull/223))
-- Support LIIF ([#224](https://github.com/open-mmlab/mmediting/pull/224), [#226](https://github.com/open-mmlab/mmediting/pull/226), [#227](https://github.com/open-mmlab/mmediting/pull/227), [#234](https://github.com/open-mmlab/mmediting/pull/234), [#239](https://github.com/open-mmlab/mmediting/pull/239))
+- Support Local Implicit Image Function (LIIF) ([#224](https://github.com/open-mmlab/mmediting/pull/224), [#226](https://github.com/open-mmlab/mmediting/pull/226), [#227](https://github.com/open-mmlab/mmediting/pull/227), [#234](https://github.com/open-mmlab/mmediting/pull/234), [#239](https://github.com/open-mmlab/mmediting/pull/239))
 
 **Bug Fixes**
 - Fix `_non_dist_train` in train api ([#104](https://github.com/open-mmlab/mmediting/pull/104))
