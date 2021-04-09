@@ -4,23 +4,23 @@ We provide some task-specific demo scripts to test a single image.
 
 #### Inpainting
 
-You can use the following commands to test a pair of image and trimap.
+You can use the following commands to test a pair of images for inpainting.
 
 ```shell
-python demo/matting_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${MASKED_IMAGE_FILE} ${MASK_FILE} ${SAVE_FILE} [--imshow] [--device ${GPU_ID}]
+python demo/inpainting_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${MASKED_IMAGE_FILE} ${MASK_FILE} ${SAVE_FILE} [--imshow] [--device ${GPU_ID}]
 ```
 
 If `--imshow` is specified, the demo will also show image with opencv. Examples:
 
 ```shell
-python demo/matting_demo.py configs/inpainting/global_local/gl_256x256_8x12_celeba.py xxx.pth tests/data/image/celeba_test.png tests/data/image/bbox_mask.png tests/data/pred/inpainting_celeba.png
+python demo/inpainting_demo.py configs/inpainting/global_local/gl_256x256_8x12_celeba.py work_dirs/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth tests/data/image/celeba_test.png tests/data/image/bbox_mask.png tests/data/pred/inpainting_celeba.png
 ```
 
 The predicted inpainting result will be save in `tests/data/pred/inpainting_celeba.png`.
 
 #### Matting
 
-You can use the following commands to test a pair of image and trimap.
+You can use the following commands to test a pair of images and trimap.
 
 ```shell
 python demo/matting_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${TRIMAP_FILE} ${SAVE_FILE} [--imshow] [--device ${GPU_ID}]
