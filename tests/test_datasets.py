@@ -6,12 +6,17 @@ import numpy as np
 import pytest
 from torch.utils.data import Dataset
 
+# yapf: disable
 from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              BaseSRDataset, GenerationPairedDataset,
                              GenerationUnpairedDataset, RepeatDataset,
                              SRAnnotationDataset, SRFolderDataset,
                              SRFolderGTDataset, SRLmdbDataset, SRREDSDataset,
-                             SRVid4Dataset, SRVimeo90KDataset)
+                             SRREDSMultipleGTDataset, SRTestMultipleGTDataset,
+                             SRVid4Dataset, SRVimeo90KDataset,
+                             SRVimeo90KMultipleGTDataset)
+
+# yapf: enable
 
 
 def mock_open(*args, **kwargs):
@@ -829,3 +834,141 @@ def test_vid4_dataset():
                 pipeline=[],
                 scale=4,
                 test_mode=False)
+
+
+def test_sr_reds_multiple_gt_dataset():
+    root_path = Path(__file__).parent / 'data'
+
+    # official val partition
+    reds_dataset = SRREDSMultipleGTDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        num_input_frames=15,
+        pipeline=[],
+        scale=4,
+        val_partition='official',
+        test_mode=False)
+
+    assert len(reds_dataset.data_infos) == 240  # 240 training clips
+    assert reds_dataset.data_infos[0] == dict(
+        lq_path=str(root_path),
+        gt_path=str(root_path),
+        key='000',
+        sequence_length=100,
+        num_input_frames=15)
+
+    # REDS4 val partition
+    reds_dataset = SRREDSMultipleGTDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        num_input_frames=20,
+        pipeline=[],
+        scale=4,
+        val_partition='REDS4',
+        test_mode=False)
+
+    assert len(reds_dataset.data_infos) == 266  # 266 training clips
+    assert reds_dataset.data_infos[0] == dict(
+        lq_path=str(root_path),
+        gt_path=str(root_path),
+        key='001',
+        sequence_length=100,
+        num_input_frames=20)  # 000 is been removed
+
+    with pytest.raises(ValueError):
+        # wrong val_partitaion
+        reds_dataset = SRREDSMultipleGTDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            num_input_frames=5,
+            pipeline=[],
+            scale=4,
+            val_partition='wrong_val_partition',
+            test_mode=False)
+
+    # test mode
+    # official val partition
+    reds_dataset = SRREDSMultipleGTDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        num_input_frames=5,
+        pipeline=[],
+        scale=4,
+        val_partition='official',
+        test_mode=True)
+
+    assert len(reds_dataset.data_infos) == 30  # 30 test clips
+    assert reds_dataset.data_infos[0] == dict(
+        lq_path=str(root_path),
+        gt_path=str(root_path),
+        key='240',
+        sequence_length=100,
+        num_input_frames=5)
+
+    # REDS4 val partition
+    reds_dataset = SRREDSMultipleGTDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        num_input_frames=5,
+        pipeline=[],
+        scale=4,
+        val_partition='REDS4',
+        test_mode=True)
+
+    assert len(reds_dataset.data_infos) == 4  # 4 test clips
+    assert reds_dataset.data_infos[1] == dict(
+        lq_path=str(root_path),
+        gt_path=str(root_path),
+        key='011',
+        sequence_length=100,
+        num_input_frames=5)
+
+
+def test_sr_vimeo90k_mutiple_gt_dataset():
+    root_path = Path(__file__).parent / 'data/vimeo90k'
+
+    txt_content = ('00001/0266 (256,448,3)\n')
+    mocked_open_function = mock_open(read_data=txt_content)
+    lq_paths = [
+        str(root_path / '00001' / '0266' / f'im{v}.png') for v in range(1, 8)
+    ]
+    gt_paths = [
+        str(root_path / '00001' / '0266' / f'im{v}.png') for v in range(1, 8)
+    ]
+
+    with patch('builtins.open', mocked_open_function):
+        vimeo90k_dataset = SRVimeo90KMultipleGTDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            ann_file='fake_ann_file',
+            pipeline=[],
+            scale=4,
+            test_mode=False)
+
+        assert vimeo90k_dataset.data_infos == [
+            dict(lq_path=lq_paths, gt_path=gt_paths, key='00001/0266')
+        ]
+
+
+def test_sr_test_multiple_gt_dataset():
+    root_path = Path(__file__).parent / 'data/test_multiple_gt'
+
+    test_dataset = SRTestMultipleGTDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        pipeline=[],
+        scale=4,
+        test_mode=True)
+
+    assert test_dataset.data_infos == [
+        dict(
+            lq_path=str(root_path),
+            gt_path=str(root_path),
+            key='sequence_1',
+            sequence_length=2),
+        dict(
+            lq_path=str(root_path),
+            gt_path=str(root_path),
+            key='sequence_2',
+            sequence_length=1)
+    ]
