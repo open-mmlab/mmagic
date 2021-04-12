@@ -34,16 +34,15 @@ class BasicVSR(BasicRestorer):
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
-        super(BasicVSR, self).__init__(generator, pixel_loss, train_cfg,
-                                       test_cfg, pretrained)
+        super().__init__(generator, pixel_loss, train_cfg, test_cfg,
+                         pretrained)
 
         # fix pre-trained networks
         self.fix_iter = train_cfg.get('fix_iter', 0) if train_cfg else 0
         self.generator.find_unused_parameters = False
 
         # count training steps
-        self.step_counter = train_cfg.get('step_counter',
-                                          0) if train_cfg else 0
+        self.register_buffer('step_counter', torch.zeros(1))
 
     def train_step(self, data_batch, optimizer):
         """Train step.
@@ -136,10 +135,14 @@ class BasicVSR(BasicRestorer):
         with torch.no_grad():
             output = self.generator(lq)
 
-        # Note: For Vimeo-90K, we use mirror extension. Hence, the output
-        # sequence has 14 frames. Only center frame is kept for Vimeo-90K.
-        if output.size(1) == 14:
-            output = 0.5 * (output[:, 3] + output[:, 10])
+        # If the GT is an image (i.e. the cetner frame), the output sequence is
+        # turned to an image.
+        if gt is not None and gt.ndim == 4:
+            t = output.size(1)
+            if self.generator.is_mirror_extended:  # with mirror extension
+                output = 0.5 * (output[:, t // 4] + output[:, -1 - t // 4])
+            else:  # without mirror extension
+                output = output[:, t // 2]
 
         if self.test_cfg is not None and self.test_cfg.get('metrics', None):
             assert gt is not None, (
@@ -152,7 +155,7 @@ class BasicVSR(BasicRestorer):
 
         # save image
         if save_image:
-            if output.ndim == 4:  # an image, key = 000001/0000
+            if output.ndim == 4:  # an image, key = 000001/0000 (Vimeo-90K)
                 img_name = meta[0]['key'].replace('/', '_')
                 if isinstance(iteration, numbers.Number):
                     save_path = osp.join(

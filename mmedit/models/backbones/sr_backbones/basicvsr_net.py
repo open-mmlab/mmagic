@@ -30,7 +30,7 @@ class BasicVSRNet(nn.Module):
 
     def __init__(self, mid_channels=64, num_blocks=30, spynet_pretrained=None):
 
-        super(BasicVSRNet, self).__init__()
+        super().__init__()
 
         self.mid_channels = mid_channels
 
@@ -193,7 +193,7 @@ class ResidualBlocksWithInputConv(nn.Module):
     """
 
     def __init__(self, in_channels, out_channels=64, num_blocks=30):
-        super(ResidualBlocksWithInputConv, self).__init__()
+        super().__init__()
 
         main = []
 
@@ -236,7 +236,8 @@ class SPyNet(nn.Module):
     """
 
     def __init__(self, pretrained):
-        super(SPyNet, self).__init__()
+        super().__init__()
+
         self.basic_module = nn.ModuleList(
             [SPyNetBasicModule() for _ in range(6)])
 
@@ -360,7 +361,7 @@ class SPyNetBasicModule(nn.Module):
     """
 
     def __init__(self):
-        super(SPyNetBasicModule, self).__init__()
+        super().__init__()
 
         self.basic_module = nn.Sequential(
             ConvModule(
