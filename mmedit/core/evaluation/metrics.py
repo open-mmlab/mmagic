@@ -281,7 +281,7 @@ def ssim(img1, img2, crop_border=0, input_order='HWC', color_space=None):
     img1 = reorder_image(img1, input_order=input_order)
     img2 = reorder_image(img2, input_order=input_order)
 
-    if isinstance(color_space, str) and color_space.lower() == 'Y':
+    if isinstance(color_space, str) and color_space.lower() == 'y':
         img1, img2 = img1.astype(np.float32), img2.astype(np.float32)
         img1 = mmcv.bgr2ycbcr(img1 / 255., y_only=True) * 255.
         img2 = mmcv.bgr2ycbcr(img2 / 255., y_only=True) * 255.
