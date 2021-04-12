@@ -93,7 +93,7 @@ class BasicVSR(BasicRestorer):
             dict: Evaluation results.
         """
         crop_border = self.test_cfg.crop_border
-        color_model = self.test_cfg.get('color_model', None)
+        convert_to = self.test_cfg.get('convert_to', None)
 
         eval_result = dict()
         for metric in self.test_cfg.metrics:
@@ -103,13 +103,13 @@ class BasicVSR(BasicRestorer):
                     output_i = tensor2img(output[:, i, :, :, :])
                     gt_i = tensor2img(gt[:, i, :, :, :])
                     avg.append(self.allowed_metrics[metric](
-                        output_i, gt_i, crop_border, color_model=color_model))
+                        output_i, gt_i, crop_border, convert_to=convert_to))
                 eval_result[metric] = np.mean(avg)
             elif output.ndim == 4:  # an image: (n, c, t, w), for Vimeo-90K-T
                 output_img = tensor2img(output)
                 gt_img = tensor2img(gt)
                 value = self.allowed_metrics[metric](
-                    output_img, gt_img, crop_border, color_model=color_model)
+                    output_img, gt_img, crop_border, convert_to=convert_to)
                 eval_result[metric] = value
 
         return eval_result
