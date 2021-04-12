@@ -165,7 +165,7 @@ def reorder_image(img, input_order='HWC'):
     return img
 
 
-def psnr(img1, img2, crop_border=0, input_order='HWC'):
+def psnr(img1, img2, crop_border=0, input_order='HWC', color_space=None):
     """Calculate PSNR (Peak Signal-to-Noise Ratio).
 
     Ref: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
@@ -177,6 +177,8 @@ def psnr(img1, img2, crop_border=0, input_order='HWC'):
             pixels are not involved in the PSNR calculation. Default: 0.
         input_order (str): Whether the input order is 'HWC' or 'CHW'.
             Default: 'HWC'.
+        color_space (str): The color space in which PSNR is computed. If None,
+            the images are not altered. Default: None.
 
     Returns:
         float: psnr result.
@@ -190,6 +192,14 @@ def psnr(img1, img2, crop_border=0, input_order='HWC'):
             '"HWC" and "CHW"')
     img1 = reorder_image(img1, input_order=input_order)
     img2 = reorder_image(img2, input_order=input_order)
+
+    if isinstance(color_space, str) and color_space.lower() == 'y':
+        img1, img2 = img1.astype(np.float32), img2.astype(np.float32)
+        img1 = mmcv.bgr2ycbcr(img1 / 255., y_only=True) * 255.
+        img2 = mmcv.bgr2ycbcr(img2 / 255., y_only=True) * 255.
+    elif color_space is not None:
+        raise ValueError(f'Wrong color space. Supported values are '
+                         '"Y" and None')
 
     if crop_border != 0:
         img1 = img1[crop_border:-crop_border, crop_border:-crop_border, None]
@@ -236,7 +246,7 @@ def _ssim(img1, img2):
     return ssim_map.mean()
 
 
-def ssim(img1, img2, crop_border=0, input_order='HWC'):
+def ssim(img1, img2, crop_border=0, input_order='HWC', color_space=None):
     """Calculate SSIM (structural similarity).
 
     Ref:
@@ -255,6 +265,8 @@ def ssim(img1, img2, crop_border=0, input_order='HWC'):
             pixels are not involved in the SSIM calculation. Default: 0.
         input_order (str): Whether the input order is 'HWC' or 'CHW'.
             Default: 'HWC'.
+        color_space (str): The color space in which SSIM is computed. If None,
+            the images are not altered. Default: None.
 
     Returns:
         float: ssim result.
@@ -268,6 +280,16 @@ def ssim(img1, img2, crop_border=0, input_order='HWC'):
             '"HWC" and "CHW"')
     img1 = reorder_image(img1, input_order=input_order)
     img2 = reorder_image(img2, input_order=input_order)
+
+    if isinstance(color_space, str) and color_space.lower() == 'Y':
+        img1, img2 = img1.astype(np.float32), img2.astype(np.float32)
+        img1 = mmcv.bgr2ycbcr(img1 / 255., y_only=True) * 255.
+        img2 = mmcv.bgr2ycbcr(img2 / 255., y_only=True) * 255.
+        img1 = np.expand_dims(img1, axis=2)
+        img2 = np.expand_dims(img2, axis=2)
+    elif color_space is not None:
+        raise ValueError(f'Wrong color space. Supported values are '
+                         '"Y" and None')
 
     if crop_border != 0:
         img1 = img1[crop_border:-crop_border, crop_border:-crop_border, None]
