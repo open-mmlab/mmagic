@@ -37,7 +37,7 @@ def test_calculate_psnr():
         psnr(img_hw_1, img_hw_2, crop_border=0, input_order='HH')
 
     with pytest.raises(ValueError):
-        psnr(img_hw_1, img_hw_2, crop_border=0, color_space='ABC')
+        psnr(img_hw_1, img_hw_2, crop_border=0, convert_to='ABC')
 
     psnr_result = psnr(img_hw_1, img_hw_2, crop_border=0)
     np.testing.assert_almost_equal(psnr_result, 48.1308036)
@@ -53,7 +53,9 @@ def test_calculate_psnr():
     psnr_result = psnr(img_chw_1, img_chw_2, crop_border=4, input_order='CHW')
     np.testing.assert_almost_equal(psnr_result, 48.1308036)
 
-    psnr_result = psnr(img_hwc_1, img_hwc_2, crop_border=0, color_space='Y')
+    psnr_result = psnr(img_hwc_1, img_hwc_2, crop_border=0, convert_to=None)
+    np.testing.assert_almost_equal(psnr_result, 48.1308036)
+    psnr_result = psnr(img_hwc_1, img_hwc_2, crop_border=0, convert_to='Y')
     np.testing.assert_almost_equal(psnr_result, 49.4527218)
 
     # test float inf
@@ -89,7 +91,9 @@ def test_calculate_ssim():
     ssim_result = ssim(img_chw_1, img_chw_2, crop_border=4, input_order='CHW')
     np.testing.assert_almost_equal(ssim_result, 0.9130623)
 
-    ssim_result = ssim(img_hwc_1, img_hwc_2, crop_border=0, color_space='Y')
+    ssim_result = ssim(img_hwc_1, img_hwc_2, crop_border=0, convert_to=None)
+    np.testing.assert_almost_equal(ssim_result, 0.9130623)
+    ssim_result = ssim(img_hwc_1, img_hwc_2, crop_border=0, convert_to='Y')
     np.testing.assert_almost_equal(ssim_result, 0.9987801)
 
 
