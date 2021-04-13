@@ -14,8 +14,11 @@ from .sr_folder_dataset import SRFolderDataset
 from .sr_folder_gt_dataset import SRFolderGTDataset
 from .sr_lmdb_dataset import SRLmdbDataset
 from .sr_reds_dataset import SRREDSDataset
+from .sr_reds_multiple_gt_dataset import SRREDSMultipleGTDataset
+from .sr_test_multiple_gt_dataset import SRTestMultipleGTDataset
 from .sr_vid4_dataset import SRVid4Dataset
 from .sr_vimeo90k_dataset import SRVimeo90KDataset
+from .sr_vimeo90k_multiple_gt_dataset import SRVimeo90KMultipleGTDataset
 
 __all__ = [
     'DATASETS', 'PIPELINES', 'build_dataset', 'build_dataloader',
@@ -23,5 +26,7 @@ __all__ = [
     'AdobeComp1kDataset', 'SRLmdbDataset', 'SRFolderDataset',
     'SRAnnotationDataset', 'BaseSRDataset', 'RepeatDataset', 'SRREDSDataset',
     'SRVimeo90KDataset', 'BaseGenerationDataset', 'GenerationPairedDataset',
-    'GenerationUnpairedDataset', 'SRVid4Dataset', 'SRFolderGTDataset'
+    'GenerationUnpairedDataset', 'SRVid4Dataset', 'SRFolderGTDataset',
+    'SRREDSMultipleGTDataset', 'SRVimeo90KMultipleGTDataset',
+    'SRTestMultipleGTDataset'
 ]

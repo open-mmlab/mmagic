@@ -1,3 +1,4 @@
+from .basicvsr_net import BasicVSRNet
 from .edsr import EDSR
 from .edvr_net import EDVRNet
 from .rdn import RDN
@@ -6,4 +7,6 @@ from .sr_resnet import MSRResNet
 from .srcnn import SRCNN
 from .tof import TOFlow
 
-__all__ = ['MSRResNet', 'RRDBNet', 'EDSR', 'EDVRNet', 'TOFlow', 'SRCNN', 'RDN']
+__all__ = [
+    'MSRResNet', 'RRDBNet', 'EDSR', 'EDVRNet', 'TOFlow', 'SRCNN', 'BasicVSRNet', 'RDN'
+]
