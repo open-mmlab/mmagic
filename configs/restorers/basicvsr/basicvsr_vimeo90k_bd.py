@@ -140,7 +140,7 @@ checkpoint_config = dict(interval=5, save_optimizer=True, by_epoch=False)
 # remove gpu_collect=True in non distributed training
 evaluation = dict(interval=5000, save_image=False, gpu_collect=True)
 log_config = dict(
-    interval=1,
+    interval=100,
     hooks=[
         dict(type='TextLoggerHook', by_epoch=False),
         dict(type='TensorboardLoggerHook'),
