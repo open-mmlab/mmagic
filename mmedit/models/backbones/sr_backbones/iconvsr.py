@@ -70,8 +70,6 @@ class IconVSR(nn.Module):
             2 * mid_channels + 3, mid_channels, num_blocks)
 
         # upsample
-        self.fusion = nn.Conv2d(
-            mid_channels * 2, mid_channels, 1, 1, 0, bias=True)
         self.upsample1 = PixelShufflePack(
             mid_channels, mid_channels, 2, upsample_kernel=3)
         self.upsample2 = PixelShufflePack(
