@@ -8,5 +8,6 @@ from .srcnn import SRCNN
 from .tof import TOFlow
 
 __all__ = [
-    'MSRResNet', 'RRDBNet', 'EDSR', 'EDVRNet', 'TOFlow', 'SRCNN', 'BasicVSRNet', 'RDN'
+    'MSRResNet', 'RRDBNet', 'EDSR', 'EDVRNet', 'TOFlow', 'SRCNN',
+    'BasicVSRNet', 'RDN'
 ]
