@@ -16,7 +16,7 @@ class DenseLayer(nn.Module):
     """
 
     def __init__(self, in_channels, out_channels):
-        super(DenseLayer, self).__init__()
+        super().__init__()
         self.conv = nn.Conv2d(
             in_channels, out_channels, kernel_size=3, padding=3 // 2)
         self.relu = nn.ReLU(inplace=True)
@@ -25,10 +25,10 @@ class DenseLayer(nn.Module):
         """Forward function.
 
         Args:
-            x (Tensor): Input tensor with shape (n, c, h, w).
+            x (Tensor): Input tensor with shape (n, c_in, h, w).
 
         Returns:
-            Tensor: Forward results, tensor with shape (n, c, h, w).
+            Tensor: Forward results, tensor with shape (n, c_in+c_out, h, w).
         """
         return torch.cat([x, self.relu(self.conv(x))], 1)
 
@@ -38,19 +38,22 @@ class RDB(nn.Module):
 
     Args:
         in_channels (int): Channel number of inputs.
-        out_channels (int): Channel number of outputs.
+        channel_growth (int): Channels growth in each layer.
+        num_layers (int): Layer number in the Residual Dense Block.
     """
 
-    def __init__(self, in_channels, growth_rate, num_layers):
-        super(RDB, self).__init__()
+    def __init__(self, in_channels, channel_growth, num_layers):
+        super().__init__()
         self.layers = nn.Sequential(*[
-            DenseLayer(in_channels + growth_rate * i, growth_rate)
+            DenseLayer(in_channels + channel_growth * i, channel_growth)
             for i in range(num_layers)
         ])
 
         # local feature fusion
         self.lff = nn.Conv2d(
-            in_channels + growth_rate * num_layers, growth_rate, kernel_size=1)
+            in_channels + channel_growth * num_layers,
+            channel_growth,
+            kernel_size=1)
 
     def forward(self, x):
         """Forward function.
@@ -59,7 +62,7 @@ class RDB(nn.Module):
             x (Tensor): Input tensor with shape (n, c, h, w).
 
         Returns:
-            Tensor: Forward results, tensor with shape (n, c, h, w).
+            Tensor: Forward results.
         """
         return x + self.lff(self.layers(x))  # local residual learning
 
@@ -83,7 +86,7 @@ class RDN(nn.Module):
             Default: 4.
         num_layer (int): Layer number in the Residual Dense Block.
             Default: 8.
-        growth_rate(int): Channels growth in each layer of RDB.
+        channel_growth(int): Channels growth in each layer of RDB.
             Default: 64.
     """
 
@@ -94,13 +97,13 @@ class RDN(nn.Module):
                  num_blocks=16,
                  upscale_factor=4,
                  num_layers=8,
-                 growth_rate=64):
+                 channel_growth=64):
 
-        super(RDN, self).__init__()
-        self.G0 = mid_channels
-        self.G = growth_rate
-        self.D = num_blocks
-        self.C = num_layers
+        super().__init__()
+        self.mid_channels = mid_channels
+        self.channel_growth = channel_growth
+        self.num_blocks = num_blocks
+        self.num_layers = num_layers
 
         # shallow feature extraction
         self.sfe1 = nn.Conv2d(
@@ -109,14 +112,23 @@ class RDN(nn.Module):
             mid_channels, mid_channels, kernel_size=3, padding=3 // 2)
 
         # residual dense blocks
-        self.rdbs = nn.ModuleList([RDB(self.G0, self.G, self.C)])
-        for _ in range(self.D - 1):
-            self.rdbs.append(RDB(self.G, self.G, self.C))
+        self.rdbs = nn.ModuleList(
+            [RDB(self.mid_channels, self.channel_growth, self.num_layers)])
+        for _ in range(self.num_blocks - 1):
+            self.rdbs.append(
+                RDB(self.channel_growth, self.channel_growth, self.num_layers))
 
         # global feature fusion
         self.gff = nn.Sequential(
-            nn.Conv2d(self.G * self.D, self.G0, kernel_size=1),
-            nn.Conv2d(self.G0, self.G0, kernel_size=3, padding=3 // 2))
+            nn.Conv2d(
+                self.channel_growth * self.num_blocks,
+                self.mid_channels,
+                kernel_size=1),
+            nn.Conv2d(
+                self.mid_channels,
+                self.mid_channels,
+                kernel_size=3,
+                padding=3 // 2))
 
         # up-sampling
         assert 2 <= upscale_factor <= 4
@@ -125,8 +137,8 @@ class RDN(nn.Module):
             for _ in range(upscale_factor // 2):
                 self.upscale.extend([
                     nn.Conv2d(
-                        self.G0,
-                        self.G0 * (2**2),
+                        self.mid_channels,
+                        self.mid_channels * (2**2),
                         kernel_size=3,
                         padding=3 // 2),
                     nn.PixelShuffle(2)
@@ -135,13 +147,13 @@ class RDN(nn.Module):
         else:
             self.upscale = nn.Sequential(
                 nn.Conv2d(
-                    self.G0,
-                    self.G0 * (upscale_factor**2),
+                    self.mid_channels,
+                    self.mid_channels * (upscale_factor**2),
                     kernel_size=3,
                     padding=3 // 2), nn.PixelShuffle(upscale_factor))
 
         self.output = nn.Conv2d(
-            self.G0, out_channels, kernel_size=3, padding=3 // 2)
+            self.mid_channels, out_channels, kernel_size=3, padding=3 // 2)
 
     def forward(self, x):
         """Forward function.
@@ -150,7 +162,7 @@ class RDN(nn.Module):
             x (Tensor): Input tensor with shape (n, c, h, w).
 
         Returns:
-            Tensor: Forward results, tensor with shape (n, c, h, w).
+            Tensor: Forward results.
         """
 
         sfe1 = self.sfe1(x)
@@ -158,7 +170,7 @@ class RDN(nn.Module):
 
         x = sfe2
         local_features = []
-        for i in range(self.D):
+        for i in range(self.num_blocks):
             x = self.rdbs[i](x)
             local_features.append(x)
 
