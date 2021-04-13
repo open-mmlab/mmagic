@@ -148,9 +148,9 @@ log_config = dict(
 visual_config = None
 
 # runtime settings
-dist_params = dict(backend='nccl', port=29507)
+dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = f'./work_dirs/{exp_name}'
 load_from = None
-resume_from = './experiments/BasicVSR_Vimeo_BD_test/iter_5.pth'
+resume_from = None
 workflow = [('train', 1)]
