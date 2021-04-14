@@ -895,3 +895,42 @@ class TemporalReverse:
         repr_str = self.__class__.__name__
         repr_str += f'(keys={self.keys}, reverse_ratio={self.reverse_ratio})'
         return repr_str
+
+
+@PIPELINES.register_module()
+class MirrorSequence:
+    """Extend short sequences (e.g. Vimeo-90K) by mirroring the sequences
+
+    Given a sequence with N frames (x1, ..., xN), extend the sequence to
+    (x1, ..., xN, xN, ..., x1).
+
+    Args:
+        keys (list[str]): The frame lists to be extended.
+    """
+
+    def __init__(self, keys):
+        self.keys = keys
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        for key in self.keys:
+            if isinstance(results[key], list):
+                results[key] = results[key] + results[key][::-1]
+            else:
+                raise TypeError('The input must be of class list[nparray]. '
+                                f'Got {type(results[key])}.')
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(keys={self.keys})')
+        return repr_str
