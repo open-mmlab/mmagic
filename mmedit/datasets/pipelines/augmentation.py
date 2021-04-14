@@ -898,7 +898,7 @@ class TemporalReverse:
 
 
 @PIPELINES.register_module()
-class MirrorSequenceExtend:
+class MirrorSequence:
     """Extend short sequences (e.g. Vimeo-90K) by mirroring the sequences
 
     Given a sequence with N frames (x1, ..., xN), extend the sequence to

@@ -8,7 +8,7 @@ import torch
 from mmedit.datasets.pipelines import (BinarizeImage, Flip,
                                        GenerateFrameIndices,
                                        GenerateFrameIndiceswithPadding,
-                                       MirrorSequenceExtend, Pad, RandomAffine,
+                                       MirrorSequence, Pad, RandomAffine,
                                        RandomJitter, RandomMaskDilation,
                                        RandomTransposeHW, Resize,
                                        TemporalReverse)
@@ -624,14 +624,14 @@ class TestAugmentations:
         np.testing.assert_almost_equal(results['lq'][1], img_lq2)
         np.testing.assert_almost_equal(results['gt'][0], img_gt)
 
-    def mirror_sequence_extend(self):
+    def mirror_sequence(self):
         lqs = [np.random.rand(4, 4, 3) for _ in range(0, 5)]
         gts = [np.random.rand(16, 16, 3) for _ in range(0, 5)]
 
         target_keys = ['lq', 'gt']
-        mirror_sequence_extend = MirrorSequenceExtend(keys=['lq', 'gt'])
+        mirror_sequence = MirrorSequence(keys=['lq', 'gt'])
         results = dict(lq=lqs, gt=gts)
-        results = mirror_sequence_extend(results)
+        results = mirror_sequence(results)
 
         assert self.check_keys_contain(results.keys(), target_keys)
         for i in range(0, 5):
@@ -640,11 +640,10 @@ class TestAugmentations:
             np.testing.assert_almost_equal(results['gt'][i],
                                            results['gt'][-i - 1])
 
-        assert repr(mirror_sequence_extend
-                    ) == mirror_sequence_extend.__class__.__name__ + (
-                        f"(keys=['lq', 'gt'])")
+        assert repr(mirror_sequence) == mirror_sequence.__class__.__name__ + (
+            f"(keys=['lq', 'gt'])")
 
         # each key should contain a list of nparray
         with pytest.raises(TypeError):
             results = dict(lq=0, gt=gts)
-            mirror_sequence_extend(results)
+            mirror_sequence(results)

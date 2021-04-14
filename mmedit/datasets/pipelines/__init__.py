@@ -1,8 +1,7 @@
 from .augmentation import (BinarizeImage, Flip, GenerateFrameIndices,
-                           GenerateFrameIndiceswithPadding,
-                           MirrorSequenceExtend, Pad, RandomAffine,
-                           RandomJitter, RandomMaskDilation, RandomTransposeHW,
-                           Resize, TemporalReverse)
+                           GenerateFrameIndiceswithPadding, MirrorSequence,
+                           Pad, RandomAffine, RandomJitter, RandomMaskDilation,
+                           RandomTransposeHW, Resize, TemporalReverse)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    FixedCrop, ModCrop, PairedRandomCrop)
@@ -30,5 +29,5 @@ __all__ = [
     'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap',
-    'GenerateCoordinateAndCell', 'MirrorSequenceExtend'
+    'GenerateCoordinateAndCell', 'MirrorSequence'
 ]
