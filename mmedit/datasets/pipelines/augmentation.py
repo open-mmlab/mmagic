@@ -899,8 +899,8 @@ class TemporalReverse:
 
 @PIPELINES.register_module()
 class GenerateSegmentIndices:
-    """Generate frame index for training recurrent networks. It also performs
-    temporal augmention with random interval.
+    """Generate frame indices for a segment. It also performs temporal
+    augmention with random interval.
 
     Required keys: lq_path, gt_path, key, num_input_frames, sequence_length
     Added or modified keys:  lq_path, gt_path, interval, reverse
