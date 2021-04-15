@@ -42,7 +42,7 @@ train_pipeline = [
 ]
 
 val_pipeline = [
-    dict(type='GenerateFrameIndicesForRecurrent', interval_list=[1]),
+    dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(
         type='LoadImageFromFileList',
         io_backend='disk',

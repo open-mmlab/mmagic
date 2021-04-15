@@ -898,6 +898,75 @@ class TemporalReverse:
 
 
 @PIPELINES.register_module()
+class GenerateSegmentIndices:
+    """Generate frame indices for a segment. It also performs temporal
+    augmention with random interval.
+
+    Required keys: lq_path, gt_path, key, num_input_frames, sequence_length
+    Added or modified keys:  lq_path, gt_path, interval, reverse
+
+    Args:
+        interval_list (list[int]): Interval list for temporal augmentation.
+            It will randomly pick an interval from interval_list and sample
+            frame index with the interval.
+    """
+
+    def __init__(self, interval_list):
+        self.interval_list = interval_list
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        # key example: '000', 'calendar' (sequence name)
+        clip_name = results['key']
+        interval = np.random.choice(self.interval_list)
+
+        self.sequence_length = results['sequence_length']
+        num_input_frames = results.get('num_input_frames',
+                                       self.sequence_length)
+
+        # randomly select a frame as start
+        if self.sequence_length - num_input_frames * interval < 0:
+            raise ValueError('The input sequence is not long enough to '
+                             'support the current choice of [interval] or '
+                             '[num_input_frames].')
+        start_frame_idx = np.random.randint(
+            0, self.sequence_length - num_input_frames * interval + 1)
+        end_frame_idx = start_frame_idx + num_input_frames * interval
+        neighbor_list = list(range(start_frame_idx, end_frame_idx, interval))
+
+        # add the corresponding file paths
+        lq_path_root = results['lq_path']
+        gt_path_root = results['gt_path']
+        lq_path = [
+            osp.join(lq_path_root, clip_name, f'{v:08d}.png')
+            for v in neighbor_list
+        ]
+        gt_path = [
+            osp.join(gt_path_root, clip_name, f'{v:08d}.png')
+            for v in neighbor_list
+        ]
+
+        results['lq_path'] = lq_path
+        results['gt_path'] = gt_path
+        results['interval'] = interval
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(interval_list={self.interval_list})')
+        return repr_str
+
+
+@PIPELINES.register_module()
 class MirrorSequence:
     """Extend short sequences (e.g. Vimeo-90K) by mirroring the sequences
 
