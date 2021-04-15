@@ -7,12 +7,11 @@ import torch
 # yapf: disable
 from mmedit.datasets.pipelines import (BinarizeImage, Flip,
                                        GenerateFrameIndices,
-                                       GenerateFrameIndicesForRecurrent,
                                        GenerateFrameIndiceswithPadding,
-                                       MirrorSequence, Pad, RandomAffine,
-                                       RandomJitter, RandomMaskDilation,
-                                       RandomTransposeHW, Resize,
-                                       TemporalReverse)
+                                       GenerateSegmentIndices, MirrorSequence,
+                                       Pad, RandomAffine, RandomJitter,
+                                       RandomMaskDilation, RandomTransposeHW,
+                                       Resize, TemporalReverse)
 
 # yapf: enable
 
@@ -637,8 +636,7 @@ class TestAugmentations:
             'lq_path', 'gt_path', 'key', 'interval', 'num_input_frames',
             'sequence_length'
         ]
-        frame_index_generator = GenerateFrameIndicesForRecurrent(
-            interval_list=[1, 5, 9])
+        frame_index_generator = GenerateSegmentIndices(interval_list=[1, 5, 9])
         rlt = frame_index_generator(copy.deepcopy(results))
         assert self.check_keys_contain(rlt.keys(), target_keys)
 
@@ -654,8 +652,7 @@ class TestAugmentations:
             num_input_frames=11,
             sequence_length=100)
 
-        frame_index_generator = GenerateFrameIndicesForRecurrent(
-            interval_list=[10])
+        frame_index_generator = GenerateSegmentIndices(interval_list=[10])
         with pytest.raises(ValueError):
             frame_index_generator(copy.deepcopy(results))
 

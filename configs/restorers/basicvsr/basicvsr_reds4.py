@@ -18,7 +18,7 @@ train_dataset_type = 'SRREDSMultipleGTDataset'
 val_dataset_type = 'SRREDSMultipleGTDataset'
 
 train_pipeline = [
-    dict(type='GenerateFrameIndicesForRecurrent', interval_list=[1]),
+    dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='TemporalReverse', keys='lq_path', reverse_ratio=0),
     dict(
         type='LoadImageFromFileList',
@@ -42,7 +42,7 @@ train_pipeline = [
 ]
 
 test_pipeline = [
-    dict(type='GenerateFrameIndicesForRecurrent', interval_list=[1]),
+    dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(
         type='LoadImageFromFileList',
         io_backend='disk',
