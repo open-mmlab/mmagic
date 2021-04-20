@@ -27,11 +27,6 @@ def test_iconvsr():
             input_tensor = torch.rand(1, 5, 3, 61, 61)
             iconvsr(input_tensor)
 
-        with pytest.raises(AssertionError):
-            # The height and width of inputs should be a multiple of 4
-            input_tensor = torch.rand(1, 5, 3, 66, 66)
-            iconvsr(input_tensor)
-
         with pytest.raises(TypeError):
             # pretrained should be str or None
             iconvsr.init_weights(pretrained=[1])

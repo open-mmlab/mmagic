@@ -44,6 +44,24 @@ class BasicVSR(BasicRestorer):
         # count training steps
         self.register_buffer('step_counter', torch.zeros(1))
 
+    def check_if_mirror_extended(self, lrs):
+        """Check whether the input is a mirror-extended sequence.
+
+        If mirror-extended, the i-th (i=0, ..., t-1) frame is equal to the
+        (t-1-i)-th frame.
+
+        Args:
+            lrs (tensor): Input LR images with shape (n, t, c, h, w)
+        """
+
+        is_mirror_extended = False
+        if lrs.size(1) % 2 == 0:
+            lrs_1, lrs_2 = torch.chunk(lrs, 2, dim=1)
+            if torch.norm(lrs_1 - lrs_2.flip(1)) == 0:
+                is_mirror_extended = True
+
+        return is_mirror_extended
+
     def train_step(self, data_batch, optimizer):
         """Train step.
 
@@ -141,7 +159,7 @@ class BasicVSR(BasicRestorer):
         # turned to an image.
         if gt is not None and gt.ndim == 4:
             t = output.size(1)
-            if self.generator.is_mirror_extended:  # with mirror extension
+            if self.check_if_mirror_extended(lq):  # with mirror extension
                 output = 0.5 * (output[:, t // 4] + output[:, -1 - t // 4])
             else:  # without mirror extension
                 output = output[:, t // 2]

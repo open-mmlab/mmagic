@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from mmcv.cnn import ConvModule
 from mmcv.runner import load_checkpoint
 
@@ -82,6 +83,31 @@ class IconVSR(nn.Module):
         # activation function
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
 
+    def spatial_padding(self, lrs):
+        """ Apply pdding spatially.
+
+        Since the PCD module in EDVR requires that the resolution is a multiple
+        of 4, we apply padding to the input LR images if their resolution is
+        not divisible by 4.
+
+        Args:
+            lrs (Tensor): Input LR sequence with shape (n, t, c, h, w).
+
+        Returns:
+            Tensor: Padded LR sequence with shape (n, t, c, h_pad, w_pad).
+
+        """
+        n, t, c, h, w = lrs.size()
+
+        pad_h = (4 - h % 4) % 4
+        pad_w = (4 - w % 4) % 4
+
+        # padding
+        lrs = lrs.view(-1, c, h, w)
+        lrs = F.pad(lrs, [0, pad_w, 0, pad_h], mode='reflect')
+
+        return lrs.view(n, t, c, h + pad_h, w + pad_w)
+
     def check_if_mirror_extended(self, lrs):
         """Check whether the input is a mirror-extended sequence.
 
@@ -158,13 +184,16 @@ class IconVSR(nn.Module):
             Tensor: Output HR tensor with shape (n, t, c, 4h, 4w).
         """
 
-        n, t, c, h, w = lrs.size()
-        assert h >= 64 and w >= 64, (
+        n, t, c, h_input, w_input = lrs.size()
+        assert h_input >= 64 and w_input >= 64, (
             'The height and width of inputs should be at least 64, '
-            f'but got {h} and {w}.')
+            f'but got {h_input} and {w_input}.')
 
         # check whether the input is an extended sequence
         self.check_if_mirror_extended(lrs)
+
+        lrs = self.spatial_padding(lrs)
+        h, w = lrs.size(3), lrs.size(4)
 
         # get the keyframe indices for information-refill
         keyframe_idx = list(range(0, t, self.keyframe_stride))
@@ -218,7 +247,7 @@ class IconVSR(nn.Module):
             out += base
             outputs[i] = out
 
-        return torch.stack(outputs, dim=1)
+        return torch.stack(outputs, dim=1)[:, :, :, :4 * h_input, :4 * w_input]
 
     def init_weights(self, pretrained=None, strict=True):
         """Init weights for models.
@@ -238,6 +267,7 @@ class IconVSR(nn.Module):
 
 class EDVRFeatureExtractor(nn.Module):
     """EDVR feature extractor for information-refill in IconVSR.
+
     We use EDVR-M in IconVSR. To adopt pretrained models, please
     specify "pretrained".
 
@@ -324,9 +354,6 @@ class EDVRFeatureExtractor(nn.Module):
         """
 
         n, t, c, h, w = x.size()
-        assert h % 4 == 0 and w % 4 == 0, (
-            'The height and width of inputs should be a multiple of 4, '
-            f'but got {h} and {w}.')
 
         # extract LR features
         # L1
