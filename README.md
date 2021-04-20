@@ -4,10 +4,16 @@
 
 ## Introduction
 
-[![build](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
-[![docs](https://readthedocs.org/projects/mmediting/badge/?version=latest)](https://mmediting.readthedocs.io/en/latest/?badge=latest)
+English | [简体中文](/README_zh-CN.md)
+
+[![Documentation](https://readthedocs.org/projects/mmediting/badge/?version=latest)](https://mmediting.readthedocs.io/en/latest/?badge=latest)
+[![actions](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
+[![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
+[![LICENSE](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
+[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+[![Percentage of issues still open](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+
 
 MMEditing is an open source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://open-mmlab.github.io/) project.
 
@@ -56,6 +62,22 @@ Please refer to [install.md](docs/install.md) for installation.
 ## Get Started
 
 Please see [getting_started.md](docs/getting_started.md) for the basic usage of MMEditing.
+
+
+
+## Citation
+
+If you find this project useful in your research, please consider cite:
+
+```bibtex
+@misc{mmediting2020,
+    title={OpenMMLab Editing Estimation Toolbox and Benchmark},
+    author={MMEditing Contributors},
+    howpublished = {\url{https://github.com/open-mmlab/mmediting}},
+    year={2020}
+}
+```
+```
 
 ## Contributing
 
