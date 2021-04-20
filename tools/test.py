@@ -88,7 +88,7 @@ def main():
     model = build_model(cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
 
     args.save_image = args.save_path is not None
-    limited_gpu = cfg.limited_gpu is not None and cfg.limited_gpu
+    empty_cache = cfg.empty_cache is not None and cfg.empty_cache
     if not distributed:
         _ = load_checkpoint(model, args.checkpoint, map_location='cpu')
         model = MMDataParallel(model, device_ids=[0])
@@ -117,7 +117,7 @@ def main():
             args.gpu_collect,
             save_path=args.save_path,
             save_image=args.save_image,
-            limited_gpu=limited_gpu)
+            empty_cache=empty_cache)
 
     if rank == 0:
         print('')
