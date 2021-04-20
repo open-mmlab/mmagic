@@ -63,7 +63,8 @@ def multi_gpu_test(model,
                    gpu_collect=False,
                    save_image=False,
                    save_path=None,
-                   iteration=None):
+                   iteration=None,
+                   limited_gpu=False):
     """Test model with multiple gpus.
 
     This method tests model with multiple gpus and collects the results
@@ -82,6 +83,8 @@ def multi_gpu_test(model,
         save_path (str): The path to save image. Default: None.
         iteration (int): Iteration number. It is used for the save image name.
             Default: None.
+        limited_gpu (bool): Limited CUDA memory or not. Default: False.
+            If limited_gpu and not gpu_collect, empty cache in every batch.
 
     Returns:
         list: The prediction results.
@@ -105,7 +108,7 @@ def multi_gpu_test(model,
                 iteration=iteration,
                 **data)
         results.append(result)
-        if not gpu_collect:
+        if not gpu_collect and limited_gpu:
             torch.cuda.empty_cache()
         if rank == 0:
             # get batch size
