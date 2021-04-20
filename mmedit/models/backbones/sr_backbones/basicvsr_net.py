@@ -242,7 +242,8 @@ class SPyNet(nn.Module):
             [SPyNetBasicModule() for _ in range(6)])
 
         if isinstance(pretrained, str):
-            self.load_state_dict(torch.load(pretrained), strict=True)
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=True, logger=logger)
         elif pretrained is not None:
             raise TypeError('[pretrained] should be str or None, '
                             f'but got {type(pretrained)}.')

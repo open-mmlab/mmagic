@@ -340,7 +340,8 @@ class EDVRFeatureExtractor(nn.Module):
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
 
         if isinstance(pretrained, str):
-            self.load_state_dict(torch.load(pretrained), strict=True)
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=True, logger=logger)
         elif pretrained is not None:
             raise TypeError(f'"pretrained" must be a str or None. '
                             f'But received {type(pretrained)}.')

@@ -9,8 +9,11 @@ model = dict(
         num_blocks=30,
         keyframe_stride=5,
         padding=3,
-        spynet_pretrained='pretrained_models/spynet.pth',
-        edvr_pretrained='pretrained_models/edvrm_vimeo90k.pth'),
+        spynet_pretrained=  # noqa: E251
+        'https://download.openmmlab.com/mmediting/restorers/basicvsr/spynet_20210409-c6c1bd09.pth',  # noqa: E501
+        edvr_pretrained=  # noqa: E251
+        'https://download.openmmlab.com/mmediting/restorers/iconvsr/edvrm_vimeo90k_20210413-e40e99a8.pth'  # noqa: E501
+    ),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = dict(fix_iter=5000)
