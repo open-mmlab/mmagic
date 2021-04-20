@@ -7,9 +7,8 @@ model = dict(
         type='BasicVSRNet',
         mid_channels=64,
         num_blocks=30,
-        spynet_pretrained=  # noqa: E251
-        'https://download.openmmlab.com/mmediting/restorers/basicvsr/spynet_20210409-c6c1bd09.pth'  # noqa: E501
-    ),
+        spynet_pretrained='https://download.openmmlab.com/mmediting/restorers/'
+        'basicvsr/spynet_20210409-c6c1bd09.pth'),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = dict(fix_iter=5000)
