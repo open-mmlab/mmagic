@@ -6,14 +6,18 @@
 
 [English](/README.md) | 简体中文
 
-[![build](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
-[![docs](https://readthedocs.org/projects/mmediting/badge/?version=latest)](https://mmediting.readthedocs.io/en/latest/?badge=latest)
+
+[![Documentation](https://readthedocs.org/projects/mmediting/badge/?version=latest)](https://mmediting.readthedocs.io/en/latest/?badge=latest)
+[![actions](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
+[![PyPI](https://badge.fury.io/py/mmediting.svg)](https://pypi.org/project/mmediting/)
+[![LICENSE](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
+[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+[![Percentage of issues still open](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-MMEditing是基于PyTorch的图像&视频编辑开源工具箱。是[OpenMMLab](https://open-mmlab.github.io/)项目的成员之一。
+MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://open-mmlab.github.io/) 项目的成员之一。
 
-主分支代码目前支持**PyTorch 1.3~1.6**。
+主分支代码目前支持 **PyTorch 1.3~1.6** 。
 
 文献资料: https://mmediting.readthedocs.io/en/latest/.
 
@@ -25,26 +29,26 @@ MMEditing是基于PyTorch的图像&视频编辑开源工具箱。是[OpenMMLab](
 
 - **模块化设计**
 
-  MMEditing将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。
+  MMEditing 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。
 
 - **支持多种编辑任务**
 
-  MMEditing支持*绘画*、*抠图*、*超分辨率*、*生成*等多种主流编辑任务。
+  MMEditing 支持*绘画*、*抠图*、*超分辨率*、*生成*等多种主流编辑任务。
 
 - **SOTA**
 
-  MMEditing提供绘画/抠图/超分辨率/生成等任务最先进的算法.
+  MMEditing 提供绘画/抠图/超分辨率/生成等任务最先进的算法.
 
 ## 许可证
 
-本项目开源自[Apache 2.0 license](LICENSE)。
+本项目开源自 [Apache 2.0 license](LICENSE)。
 
 ## 更新记录
 
-v0.6.0版本已于2021年3月31日发布.
+v0.6.0 版本已于 2021 年 3 月 31 日发布.
 
-需要注意的是**MMSR**已作为MMEditing的一部分并入本仓库。
-MMEditing缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
+需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
+MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
 
 ## 基准和模型库
 
@@ -58,13 +62,28 @@ MMEditing缜密地设计新的框架并将其精心实现，希望能够为您�
 
 请参考[使用教程](docs/getting_started.md)获取MMEditing的基本用法。
 
-## 贡献
 
-感谢您为改善MMEditing所做的所有贡献。请参阅[MMDetection中的CONTRIBUTING.md]（https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md）以获取贡献准则。
+
+## 引用
+
+如果您觉得 MMEditing 对您的研究有所帮助，请考虑引用它：
+
+```bibtex
+@misc{mmediting2020,
+    title={OpenMMLab Editing Estimation Toolbox and Benchmark},
+    author={MMEditing Contributors},
+    howpublished = {\url{https://github.com/open-mmlab/mmediting}},
+    year={2020}
+}
+```
+
+## 参与贡献
+
+感谢您为改善 MMEditing 所做的所有贡献。请参阅 [CONTRIBUTING.md in MMDetection](https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md) 以获取贡献准则。
 
 ## 致谢
 
-MMAction2 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。 我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
+MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。 我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
 
 ## OpenMMLab 的其他项目
 
