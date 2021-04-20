@@ -44,6 +44,24 @@ class BasicVSR(BasicRestorer):
         # count training steps
         self.register_buffer('step_counter', torch.zeros(1))
 
+    def check_if_mirror_extended(self, lrs):
+        """Check whether the input is a mirror-extended sequence.
+
+        If mirror-extended, the i-th (i=0, ..., t-1) frame is equal to the
+        (t-1-i)-th frame.
+
+        Args:
+            lrs (tensor): Input LR images with shape (n, t, c, h, w)
+        """
+
+        is_mirror_extended = False
+        if lrs.size(1) % 2 == 0:
+            lrs_1, lrs_2 = torch.chunk(lrs, 2, dim=1)
+            if torch.norm(lrs_1 - lrs_2.flip(1)) == 0:
+                is_mirror_extended = True
+
+        return is_mirror_extended
+
     def train_step(self, data_batch, optimizer):
         """Train step.
 
@@ -93,6 +111,8 @@ class BasicVSR(BasicRestorer):
             dict: Evaluation results.
         """
         crop_border = self.test_cfg.crop_border
+        convert_to = self.test_cfg.get('convert_to', None)
+
         eval_result = dict()
         for metric in self.test_cfg.metrics:
             if output.ndim == 5:  # a sequence: (n, t, c, h, w)
@@ -100,14 +120,14 @@ class BasicVSR(BasicRestorer):
                 for i in range(0, output.size(1)):
                     output_i = tensor2img(output[:, i, :, :, :])
                     gt_i = tensor2img(gt[:, i, :, :, :])
-                    avg.append(self.allowed_metrics[metric](output_i, gt_i,
-                                                            crop_border))
+                    avg.append(self.allowed_metrics[metric](
+                        output_i, gt_i, crop_border, convert_to=convert_to))
                 eval_result[metric] = np.mean(avg)
             elif output.ndim == 4:  # an image: (n, c, t, w), for Vimeo-90K-T
                 output_img = tensor2img(output)
                 gt_img = tensor2img(gt)
-                value = self.allowed_metrics[metric](output_img, gt_img,
-                                                     crop_border)
+                value = self.allowed_metrics[metric](
+                    output_img, gt_img, crop_border, convert_to=convert_to)
                 eval_result[metric] = value
 
         return eval_result
@@ -135,11 +155,11 @@ class BasicVSR(BasicRestorer):
         with torch.no_grad():
             output = self.generator(lq)
 
-        # If the GT is an image (i.e. the cetner frame), the output sequence is
+        # If the GT is an image (i.e. the center frame), the output sequence is
         # turned to an image.
         if gt is not None and gt.ndim == 4:
             t = output.size(1)
-            if self.generator.is_mirror_extended:  # with mirror extension
+            if self.check_if_mirror_extended(lq):  # with mirror extension
                 output = 0.5 * (output[:, t // 4] + output[:, -1 - t // 4])
             else:  # without mirror extension
                 output = output[:, t // 2]

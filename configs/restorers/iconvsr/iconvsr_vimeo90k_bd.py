@@ -1,18 +1,22 @@
-exp_name = 'basicvsr_vimeo90k_bd'
+exp_name = 'iconvsr_vimeo90k_bd'
 
 # model settings
 model = dict(
     type='BasicVSR',
     generator=dict(
-        type='BasicVSRNet',
+        type='IconVSR',
         mid_channels=64,
         num_blocks=30,
+        keyframe_stride=5,
+        padding=3,
         spynet_pretrained='https://download.openmmlab.com/mmediting/restorers/'
-        'basicvsr/spynet_20210409-c6c1bd09.pth'),
+        'basicvsr/spynet_20210409-c6c1bd09.pth',
+        edvr_pretrained='https://download.openmmlab.com/mmediting/restorers/'
+        'iconvsr/edvrm_vimeo90k_20210413-e40e99a8.pth'),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = dict(fix_iter=5000)
-test_cfg = dict(metrics=['PSNR'], crop_border=0, convert_to='y')
+test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=0, convert_to='y')
 
 # dataset settings
 train_dataset_type = 'SRVimeo90KMultipleGTDataset'
@@ -96,7 +100,7 @@ data = dict(
             type=train_dataset_type,
             lq_folder='data/vimeo90k/BDx4',
             gt_folder='data/vimeo90k/GT',
-            ann_file='data/vimeo90k/meta_info_Vimeo90K_train_GT.txt',
+            ann_file='data/Vimeo90K/meta_info_Vimeo90K_train_GT.txt',
             pipeline=train_pipeline,
             scale=4,
             test_mode=False)),
@@ -113,7 +117,7 @@ data = dict(
         type=test_dataset_type,
         lq_folder='data/vimeo90k/BDx4',
         gt_folder='data/vimeo90k/GT',
-        ann_file='data/vimeo90k/meta_info_Vimeo90K_test_GT.txt',
+        ann_file='data/Vimeo90K/meta_info_Vimeo90K_test_GT.txt',
         pipeline=test_pipeline,
         scale=4,
         num_input_frames=7,
@@ -137,7 +141,7 @@ lr_config = dict(
     restart_weights=[1],
     min_lr=1e-7)
 
-checkpoint_config = dict(interval=5, save_optimizer=True, by_epoch=False)
+checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
 # remove gpu_collect=True in non distributed training
 evaluation = dict(interval=5000, save_image=False, gpu_collect=True)
 log_config = dict(

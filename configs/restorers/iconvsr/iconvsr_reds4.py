@@ -1,25 +1,29 @@
-exp_name = 'basicvsr_vimeo90k_bd'
+exp_name = 'iconvsr_reds4'
 
 # model settings
 model = dict(
     type='BasicVSR',
     generator=dict(
-        type='BasicVSRNet',
+        type='IconVSR',
         mid_channels=64,
         num_blocks=30,
+        keyframe_stride=5,
+        padding=2,
         spynet_pretrained='https://download.openmmlab.com/mmediting/restorers/'
-        'basicvsr/spynet_20210409-c6c1bd09.pth'),
+        'basicvsr/spynet_20210409-c6c1bd09.pth',
+        edvr_pretrained='https://download.openmmlab.com/mmediting/restorers/'
+        'iconvsr/edvrm_reds_20210413-3867262f.pth'),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = dict(fix_iter=5000)
-test_cfg = dict(metrics=['PSNR'], crop_border=0, convert_to='y')
+test_cfg = dict(metrics=['PSNR'], crop_border=0)
 
 # dataset settings
-train_dataset_type = 'SRVimeo90KMultipleGTDataset'
-val_dataset_type = 'SRTestMultipleGTDataset'
-test_dataset_type = 'SRVimeo90KDataset'
-
+train_dataset_type = 'SRREDSMultipleGTDataset'
+val_dataset_type = 'SRREDSMultipleGTDataset'
 train_pipeline = [
+    dict(type='GenerateSegmentIndices', interval_list=[1]),
+    dict(type='TemporalReverse', keys='lq_path', reverse_ratio=0),
     dict(
         type='LoadImageFromFileList',
         io_backend='disk',
@@ -37,12 +41,11 @@ train_pipeline = [
         direction='horizontal'),
     dict(type='Flip', keys=['lq', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['lq', 'gt'], transpose_ratio=0.5),
-    dict(type='MirrorSequence', keys=['lq', 'gt']),
     dict(type='FramesToTensor', keys=['lq', 'gt']),
     dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'gt_path'])
 ]
 
-val_pipeline = [
+test_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(
         type='LoadImageFromFileList',
@@ -62,29 +65,9 @@ val_pipeline = [
         meta_keys=['lq_path', 'gt_path', 'key'])
 ]
 
-test_pipeline = [
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='lq',
-        channel_order='rgb'),
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='gt',
-        channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
-    dict(type='MirrorSequence', keys=['lq']),
-    dict(type='FramesToTensor', keys=['lq', 'gt']),
-    dict(
-        type='Collect',
-        keys=['lq', 'gt'],
-        meta_keys=['lq_path', 'gt_path', 'key'])
-]
-
 data = dict(
     workers_per_gpu=6,
-    train_dataloader=dict(samples_per_gpu=4, drop_last=True),  # 2 gpus
+    train_dataloader=dict(samples_per_gpu=4, drop_last=True),
     val_dataloader=dict(samples_per_gpu=1),
     test_dataloader=dict(samples_per_gpu=1, workers_per_gpu=1),
 
@@ -94,29 +77,31 @@ data = dict(
         times=1000,
         dataset=dict(
             type=train_dataset_type,
-            lq_folder='data/vimeo90k/BDx4',
-            gt_folder='data/vimeo90k/GT',
-            ann_file='data/vimeo90k/meta_info_Vimeo90K_train_GT.txt',
+            lq_folder='data/REDS/train_sharp_bicubic/X4',
+            gt_folder='data/REDS/train_sharp',
+            num_input_frames=15,
             pipeline=train_pipeline,
             scale=4,
+            val_partition='REDS4',
             test_mode=False)),
     # val
     val=dict(
         type=val_dataset_type,
-        lq_folder='data/Vid4/BDx4',
-        gt_folder='data/Vid4/GT',
-        pipeline=val_pipeline,
-        scale=4,
-        test_mode=True),
-    # test
-    test=dict(
-        type=test_dataset_type,
-        lq_folder='data/vimeo90k/BDx4',
-        gt_folder='data/vimeo90k/GT',
-        ann_file='data/vimeo90k/meta_info_Vimeo90K_test_GT.txt',
+        lq_folder='data/REDS/train_sharp_bicubic/X4',
+        gt_folder='data/REDS/train_sharp',
+        num_input_frames=100,
         pipeline=test_pipeline,
         scale=4,
-        num_input_frames=7,
+        val_partition='REDS4',
+        test_mode=True),
+    test=dict(
+        type=val_dataset_type,
+        lq_folder='data/REDS/train_sharp_bicubic/X4',
+        gt_folder='data/REDS/train_sharp',
+        num_input_frames=100,
+        pipeline=test_pipeline,
+        scale=4,
+        val_partition='REDS4',
         test_mode=True),
 )
 
@@ -137,7 +122,7 @@ lr_config = dict(
     restart_weights=[1],
     min_lr=1e-7)
 
-checkpoint_config = dict(interval=5, save_optimizer=True, by_epoch=False)
+checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
 # remove gpu_collect=True in non distributed training
 evaluation = dict(interval=5000, save_image=False, gpu_collect=True)
 log_config = dict(
