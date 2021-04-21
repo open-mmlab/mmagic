@@ -1,6 +1,6 @@
 # Preparing Paired Dataset for Pix2pix
 
-[DATASET]
+<!-- [DATASET] -->
 
 ```bibtex
 @inproceedings{isola2017image,

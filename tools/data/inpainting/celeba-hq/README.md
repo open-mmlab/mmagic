@@ -1,6 +1,6 @@
 # Preparing CelebA-HQ Dataset
 
-[DATASET]
+<!-- [DATASET] -->
 
 ```bibtex
 @article{karras2017progressive,
