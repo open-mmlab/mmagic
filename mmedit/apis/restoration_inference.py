@@ -17,7 +17,7 @@ def restoration_inference(model, img):
     cfg = model.cfg
     device = next(model.parameters()).device  # model device
     # remove gt from test_pipeline
-    keys_to_remove = ['gt']
+    keys_to_remove = ['gt', 'gt_path']
     for key in keys_to_remove:
         for pipeline in list(cfg.test_pipeline):
             if 'key' in pipeline and key == pipeline['key']:
