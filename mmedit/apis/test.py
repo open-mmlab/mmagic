@@ -83,7 +83,7 @@ def multi_gpu_test(model,
         save_path (str): The path to save image. Default: None.
         iteration (int): Iteration number. It is used for the save image name.
             Default: None.
-        empty_cache (bool): empty cache in every batch. Default: False.
+        empty_cache (bool): empty cache in every iteration. Default: False.
 
     Returns:
         list: The prediction results.
