@@ -1,6 +1,6 @@
 # Preparing Places365 Dataset
 
-[DATASET]
+<!-- [DATASET] -->
 
 ```bibtex
  @article{zhou2017places,

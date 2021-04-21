@@ -1,6 +1,6 @@
 # Preparing DIV2K Dataset
 
-[DATASET]
+<!-- [DATASET] -->
 
 ```bibtex
 @InProceedings{Agustsson_2017_CVPR_Workshops,
