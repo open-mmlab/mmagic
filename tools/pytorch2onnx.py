@@ -1,6 +1,6 @@
 import argparse
 
-import matplotlib.pyplot as plt
+import cv2
 import mmcv
 import numpy as np
 import onnx
@@ -11,20 +11,6 @@ from mmcv.runner import load_checkpoint
 
 from mmedit.datasets.pipelines import Compose
 from mmedit.models import build_model
-
-
-def show_result_pyplot(img, title='', block=True):
-    if isinstance(img, str):
-        img = mmcv.imread(img, channel_order='rgb')
-    cmap = None
-    if len(img.shape) == 3 and img.shape[2] == 1:
-        img = img.squeeze(2)
-        cmap = 'gray'
-    plt.figure()
-    plt.imshow(img, cmap=cmap)
-    plt.title(title)
-    plt.tight_layout()
-    plt.show(block=block)
 
 
 def pytorch2onnx(model,
@@ -117,12 +103,13 @@ def pytorch2onnx(model,
 
         if show:
             pytorch_visualize = pytorch_result[0].transpose(1, 2, 0)
-            pytorch_visualize = np.clip(pytorch_visualize, 0, 1)
+            pytorch_visualize = np.clip(pytorch_visualize, 0, 1)[:, :, ::-1]
             onnx_visualize = onnx_result[0].transpose(1, 2, 0)
-            onnx_visualize = np.clip(onnx_visualize, 0, 1)
+            onnx_visualize = np.clip(onnx_visualize, 0, 1)[:, :, ::-1]
 
-            show_result_pyplot(pytorch_visualize, title='PyTorch', block=False)
-            show_result_pyplot(onnx_visualize, title='ONNXRuntime', block=True)
+            cv2.imshow('PyTorch', pytorch_visualize)
+            cv2.imshow('ONNXRuntime', onnx_visualize)
+            cv2.waitKey()
 
         # check the numerical value
         assert np.allclose(
