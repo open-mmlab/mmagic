@@ -73,7 +73,7 @@ class RDN(nn.Module):
 
     Paper: Residual Dense Network for Image Super-Resolution
 
-    Adapted from 'git@github.com:yjn870/RDN-pytorch.git'
+    Adapted from 'https://github.com/yjn870/RDN-pytorch.git'
     'RDN-pytorch/blob/master/models.py'
     Copyright (c) 2021, JaeYun Yeo, under MIT License.
 
