@@ -55,7 +55,7 @@ def pytorch2onnx(model,
                 3: 'width'
             },
             'output': {
-                1: 'batch',
+                0: 'batch',
                 2: 'height',
                 3: 'width'
             }
