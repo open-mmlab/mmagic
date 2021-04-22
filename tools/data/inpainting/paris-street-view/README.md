@@ -1,6 +1,6 @@
 # Preparing Paris Street View Dataset
 
-[DATASET]
+<!-- [DATASET] -->
 
 ```bibtex
 @inproceedings{pathak2016context,

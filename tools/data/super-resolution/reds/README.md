@@ -1,6 +1,6 @@
 # Preparing REDS Dataset
 
-[DATASET]
+<!-- [DATASET] -->
 
 ```bibtex
 @InProceedings{Nah_2019_CVPR_Workshops_REDS,

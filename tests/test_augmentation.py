@@ -7,8 +7,9 @@ import torch
 # yapf: disable
 from mmedit.datasets.pipelines import (BinarizeImage, Flip,
                                        GenerateFrameIndices,
-                                       GenerateFrameIndiceswithPadding, Pad,
-                                       RandomAffine, RandomJitter,
+                                       GenerateFrameIndiceswithPadding,
+                                       GenerateSegmentIndices, MirrorSequence,
+                                       Pad, RandomAffine, RandomJitter,
                                        RandomMaskDilation, RandomTransposeHW,
                                        Resize, TemporalReverse)
 
@@ -622,3 +623,59 @@ class TestAugmentations:
         np.testing.assert_almost_equal(results['lq'][0], img_lq1)
         np.testing.assert_almost_equal(results['lq'][1], img_lq2)
         np.testing.assert_almost_equal(results['gt'][0], img_gt)
+
+    def test_frame_index_generation_for_recurrent(self):
+        results = dict(
+            lq_path='fake_lq_root',
+            gt_path='fake_gt_root',
+            key='000',
+            num_input_frames=10,
+            sequence_length=100)
+
+        target_keys = [
+            'lq_path', 'gt_path', 'key', 'interval', 'num_input_frames',
+            'sequence_length'
+        ]
+        frame_index_generator = GenerateSegmentIndices(interval_list=[1, 5, 9])
+        rlt = frame_index_generator(copy.deepcopy(results))
+        assert self.check_keys_contain(rlt.keys(), target_keys)
+
+        name_ = repr(frame_index_generator)
+        assert name_ == frame_index_generator.__class__.__name__ + (
+            '(interval_list=[1, 5, 9])')
+
+        # interval too large
+        results = dict(
+            lq_path='fake_lq_root',
+            gt_path='fake_gt_root',
+            key='000',
+            num_input_frames=11,
+            sequence_length=100)
+
+        frame_index_generator = GenerateSegmentIndices(interval_list=[10])
+        with pytest.raises(ValueError):
+            frame_index_generator(copy.deepcopy(results))
+
+    def mirror_sequence(self):
+        lqs = [np.random.rand(4, 4, 3) for _ in range(0, 5)]
+        gts = [np.random.rand(16, 16, 3) for _ in range(0, 5)]
+
+        target_keys = ['lq', 'gt']
+        mirror_sequence = MirrorSequence(keys=['lq', 'gt'])
+        results = dict(lq=lqs, gt=gts)
+        results = mirror_sequence(results)
+
+        assert self.check_keys_contain(results.keys(), target_keys)
+        for i in range(0, 5):
+            np.testing.assert_almost_equal(results['lq'][i],
+                                           results['lq'][-i - 1])
+            np.testing.assert_almost_equal(results['gt'][i],
+                                           results['gt'][-i - 1])
+
+        assert repr(mirror_sequence) == mirror_sequence.__class__.__name__ + (
+            f"(keys=['lq', 'gt'])")
+
+        # each key should contain a list of nparray
+        with pytest.raises(TypeError):
+            results = dict(lq=0, gt=gts)
+            mirror_sequence(results)

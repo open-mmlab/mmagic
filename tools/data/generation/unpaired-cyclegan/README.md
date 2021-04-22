@@ -1,6 +1,6 @@
 # Preparing Unpaired Dataset for CycleGAN
 
-[DATASET]
+<!-- [DATASET] -->
 
 ```bibtex
 @inproceedings{zhu2017unpaired,

@@ -54,5 +54,7 @@ data = dict(
         gt_folder='data/val_set5/Set5_mod12',
         pipeline=test_pipeline,
         scale=scale,
-        filename_tmpl='{}'),
+        filename_tmpl='{}')
+
+empty_cache = True  # empty cache in every iteration.
 ```
