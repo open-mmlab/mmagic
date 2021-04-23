@@ -47,3 +47,35 @@ python tools/publish_model.py work_dirs/example_exp/latest.pth example_model_202
 ```
 
 The final output filename will be `example_model_20200202-{hash id}.pth`.
+
+### Convert to ONNX (experimental)
+
+We provide a script to convert model to [ONNX](https://github.com/onnx/onnx) format. The converted model could be visualized by tools like [Netron](https://github.com/lutzroeder/netron). Besides, we also support comparing the output results between Pytorch and ONNX model.
+
+```bash
+python tools/pytorch2onnx.py
+    ${CFG_PATH} \
+    ${CHECKPOINT_PATH} \
+    ${MODEL_TYPE} \
+    ${IMAGE_PATH} \
+    --trimap-path ${TRIMAP_PATH} \
+    --output-file ${OUTPUT_ONNX} \
+    --show \
+    --verify \
+    --dynamic-export
+```
+
+Description of arguments:
+
+- `config` : The path of a model config file.
+- `checkpoint` : The path of a model checkpoint file.
+- `model_type` :The model type of the config file, options: `inpainting`, `mattor`, `restorer`, `synthesizer`.
+- `image_path` : path to input image file.
+- `--trimap-path` : path to input trimap file, used in mattor model.
+- `--output-file`: The path of output ONNX model. If not specified, it will be set to `tmp.onnx`.
+- `--opset-version` : ONNX opset version, default to 11.
+- `--show`: Determines whether to print the architecture of the exported model. If not specified, it will be set to `False`.
+- `--verify`: Determines whether to verify the correctness of an exported model. If not specified, it will be set to `False`.
+- `--dynamic-export`: Determines whether to export ONNX model with dynamic input and output shapes. If not specified, it will be set to `False`.
+
+**Note**: This tool is still experimental. Some customized operators are not supported for now. And we only support `mattor` and `restorer` for now.
