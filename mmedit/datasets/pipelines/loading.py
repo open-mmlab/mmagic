@@ -132,7 +132,9 @@ class LoadImageFromFileList(LoadImageFromFile):
             ori_imgs = []
         for filepath in filepaths:
             img_bytes = self.file_client.get(filepath)
-            img = mmcv.imfrombytes(img_bytes, flag=self.flag)  # HWC, BGR
+            img = mmcv.imfrombytes(
+                img_bytes, flag=self.flag,
+                channel_order=self.channel_order)  # HWC
             if img.ndim == 2:
                 img = np.expand_dims(img, axis=2)
             imgs.append(img)
@@ -462,7 +464,8 @@ class LoadPairedImageFromFile(LoadImageFromFile):
             self.file_client = FileClient(self.io_backend, **self.kwargs)
         filepath = str(results[f'{self.key}_path'])
         img_bytes = self.file_client.get(filepath)
-        img = mmcv.imfrombytes(img_bytes, flag=self.flag)  # HWC, BGR
+        img = mmcv.imfrombytes(
+            img_bytes, flag=self.flag, channel_order=self.channel_order)  # HWC
         if img.ndim == 2:
             img = np.expand_dims(img, axis=2)
 
