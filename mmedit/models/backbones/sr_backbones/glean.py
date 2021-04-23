@@ -2,25 +2,23 @@ import math
 
 import torch
 import torch.nn as nn
+from mmcv.runner import load_checkpoint
 
 from mmedit.models.backbones.sr_backbones.rrdb_net import RRDB
 from mmedit.models.common import PixelShufflePack, make_layer
 from mmedit.models.components.stylegan2.generator_discriminator import \
     StyleGANv2Generator
 from mmedit.models.registry import BACKBONES
-
-# import torch.nn.functional as F
-
-# from mmcv.cnn import ConvModule
-
-# from mmedit.utils import get_root_logger
-
-# from mmcv.runner import load_checkpoint
+from mmedit.utils import get_root_logger
 
 
 @BACKBONES.register_module()
 class GLEAN(StyleGANv2Generator):
     r"""GLEAN architecture for super-resolution.
+
+    Paper:
+        GLEAN: Generative Latent Bank for Large-Factor Image Super-Resolution,
+        CVPR, 2021
 
     This method makes use of StyleGAN2 and hence the arguments follow that in
     'StyleGAN2v2Generator'.
@@ -225,6 +223,7 @@ class GLEAN(StyleGANv2Generator):
         latent = encoder_features[0].view(lr.size(0), -1, self.style_channels)
         encoder_features = encoder_features[1:]
 
+        # generator
         # 4x4 stage
         out = self.constant_input(latent)
         out = self.conv1(out, latent[:, 0], noise=injected_noise[0])
@@ -238,6 +237,7 @@ class GLEAN(StyleGANv2Generator):
                 self.convs[::2], self.convs[1::2], injected_noise[1::2],
                 injected_noise[2::2], self.to_rgbs):
 
+            # feature fusion by channel-wise concatenation
             if out.size(2) <= self.in_size:
                 fusion_index = (_index - 1) // 2
                 feat = encoder_features[fusion_index]
@@ -248,10 +248,12 @@ class GLEAN(StyleGANv2Generator):
                 skip = torch.cat([skip, feat], dim=1)
                 skip = self.fusion_skip[fusion_index](skip)
 
+            # original StyleGAN operations
             out = up_conv(out, latent[:, _index], noise=noise1)
             out = conv(out, latent[:, _index + 1], noise=noise2)
             skip = to_rgb(out, latent[:, _index + 2], skip)
 
+            # store features for decoder
             if out.size(2) > self.in_size:
                 generator_features.append(out)
 
@@ -266,13 +268,26 @@ class GLEAN(StyleGANv2Generator):
 
         return hr
 
+    def init_weights(self, pretrained=None, strict=True):
+        """Init weights for models.
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+            strict (boo, optional): Whether strictly load the pretrained model.
+                Defaults to True.
+        """
+        if isinstance(pretrained, str):
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=strict, logger=logger)
+        elif pretrained is not None:
+            raise TypeError(f'"pretrained" must be a str or None. '
+                            f'But received {type(pretrained)}.')
+
 
 class RRDBFeatureExtractor(nn.Module):
-    """Networks consisting of Residual in Residual Dense Block, which is used
-    in ESRGAN.
+    """Feature extractor composed of Residual-in-Residual Dense Blocks (RRDBs).
 
-    ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks.
-    Currently, it supports x4 upsampling scale factor.
+    It is equivalent to ESRGAN with the upsampling module removed.
 
     Args:
         in_channels (int): Channel number of inputs.
@@ -299,8 +314,6 @@ class RRDBFeatureExtractor(nn.Module):
             growth_channels=growth_channels)
         self.conv_body = nn.Conv2d(mid_channels, mid_channels, 3, 1, 1)
 
-        self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
-
     def forward(self, x):
         """Forward function.
 
@@ -312,7 +325,4 @@ class RRDBFeatureExtractor(nn.Module):
         """
 
         feat = self.conv_first(x)
-        body_feat = self.conv_body(self.body(feat))
-        feat = feat + body_feat
-
-        return feat
+        return feat + self.conv_body(self.body(feat))
