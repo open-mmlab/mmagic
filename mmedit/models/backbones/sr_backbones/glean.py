@@ -5,15 +5,14 @@ import torch.nn as nn
 from mmcv.runner import load_checkpoint
 
 from mmedit.models.backbones.sr_backbones.rrdb_net import RRDB
+from mmedit.models.builder import build_component
 from mmedit.models.common import PixelShufflePack, make_layer
-from mmedit.models.components.stylegan2.generator_discriminator import \
-    StyleGANv2Generator
 from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 
 @BACKBONES.register_module()
-class GLEAN(StyleGANv2Generator):
+class GLEAN(nn.Module):
     r"""GLEAN architecture for super-resolution.
 
     Paper:
@@ -96,16 +95,28 @@ class GLEAN(StyleGANv2Generator):
                  pretrained=None,
                  bgr2rgb=False):
 
-        super().__init__(out_size, style_channels, num_mlps,
-                         channel_multiplier, blur_kernel, lr_mlp,
-                         default_style_mode, eval_style_mode, mix_prob,
-                         pretrained, bgr2rgb)
+        super().__init__()
+
+        # latent bank (StyleGANv2)
+        self.generator = build_component(
+            dict(
+                type='StyleGANv2Generator',
+                out_size=out_size,
+                style_channels=style_channels,
+                num_mlps=num_mlps,
+                channel_multiplier=channel_multiplier,
+                blur_kernel=blur_kernel,
+                lr_mlp=lr_mlp,
+                default_style_mode=default_style_mode,
+                eval_style_mode=eval_style_mode,
+                mix_prob=mix_prob,
+                pretrained=pretrained,
+                bgr2rgb=bgr2rgb))
+        self.generator.requires_grad_(False)
+        self.generator.eval()
 
         self.in_size = in_size
-
-        # all the StyleGAN modules are fixed and set to eval mode
-        self.requires_grad_(False)
-        self.eval()
+        channels = self.generator.channels
 
         # encoder
         num_styles = int(math.log2(out_size)) * 2 - 2
@@ -114,12 +125,12 @@ class GLEAN(StyleGANv2Generator):
         self.encoder.append(
             nn.Sequential(
                 RRDBFeatureExtractor(3, 64, num_blocks=23),
-                nn.Conv2d(64, self.channels[in_size], 3, 1, 1, bias=True),
+                nn.Conv2d(64, channels[in_size], 3, 1, 1, bias=True),
                 nn.LeakyReLU(negative_slope=0.2, inplace=True)))
         for res in encoder_res:
-            in_channels = self.channels[res]
+            in_channels = channels[res]
             if res > 4:
-                out_channels = self.channels[res // 2]
+                out_channels = channels[res // 2]
                 block = nn.Sequential(
                     nn.Conv2d(in_channels, out_channels, 3, 2, 1, bias=True),
                     nn.LeakyReLU(negative_slope=0.2, inplace=True),
@@ -137,7 +148,7 @@ class GLEAN(StyleGANv2Generator):
         self.fusion_out = nn.ModuleList()
         self.fusion_skip = nn.ModuleList()
         for res in encoder_res[::-1]:
-            num_channels = self.channels[res]
+            num_channels = channels[res]
             self.fusion_out.append(
                 nn.Conv2d(num_channels * 2, num_channels, 3, 1, 1, bias=True))
             self.fusion_skip.append(
@@ -151,12 +162,12 @@ class GLEAN(StyleGANv2Generator):
         self.decoder = nn.ModuleList()
         for res in decoder_res:
             if res == in_size:
-                in_channels = self.channels[res]
+                in_channels = channels[res]
             else:
-                in_channels = 2 * self.channels[res]
+                in_channels = 2 * channels[res]
 
             if res < out_size:
-                out_channels = self.channels[res * 2]
+                out_channels = channels[res * 2]
                 self.decoder.append(
                     PixelShufflePack(
                         in_channels, out_channels, 2, upsample_kernel=3))
@@ -174,43 +185,15 @@ class GLEAN(StyleGANv2Generator):
         refer to the usage of `truncation` and `truncation_latent`.
 
         Args:
-            styles (torch.Tensor | list[torch.Tensor] | callable | None): In
-                StyleGAN2, you can provide noise tensor or latent tensor. Given
-                a list containing more than one noise or latent tensors, style
-                mixing trick will be used in training. Of course, You can
-                directly give a batch of noise through a ``torhc.Tensor`` or
-                offer a callable function to sample a batch of noise data.
-                Otherwise, the ``None`` indicates to use the default noise
-                sampler.
-            num_batches (int, optional): The number of batch size.
-                Defaults to 0.
-            return_noise (bool, optional): If True, ``noise_batch`` will be
-                returned in a dict with ``fake_img``. Defaults to False.
-            return_latents (bool, optional): If True, ``latent`` will be
-                returned in a dict with ``fake_img``. Defaults to False.
-            inject_index (int | None, optional): The index number for mixing
-                style codes. Defaults to None.
-            truncation (float, optional): Truncation factor. Give value less
-                than 1., the truncatioin trick will be adopted. Defaults to 1.
-            truncation_latent (torch.Tensor, optional): Mean truncation latent.
-                Defaults to None.
-            input_is_latent (bool, optional): If `True`, the input tensor is
-                the latent tensor. Defaults to False.
-            injected_noise (torch.Tensor | None, optional): Given a tensor, the
-                random noise will be fixed as this input injected noise.
-                Defaults to None.
-            randomize_noise (bool, optional): If `False`, images are sampled
-                with the buffered noise tensor injected to the style conv
-                block. Defaults to True.
+            lr (Tensor): Input LR image with shape (n, c, h, w).
 
         Returns:
-            torch.Tensor | dict: Generated image tensor or dictionary
-                containing more data.
+            Tensor: Output HR image.
         """
 
         injected_noise = [
             getattr(self, f'injected_noise_{i}')
-            for i in range(self.num_injected_noises)
+            for i in range(self.generator.num_injected_noises)
         ]
 
         # encoder
@@ -225,17 +208,18 @@ class GLEAN(StyleGANv2Generator):
 
         # generator
         # 4x4 stage
-        out = self.constant_input(latent)
-        out = self.conv1(out, latent[:, 0], noise=injected_noise[0])
-        skip = self.to_rgb1(out, latent[:, 1])
+        out = self.generator.constant_input(latent)
+        out = self.generator.conv1(out, latent[:, 0], noise=injected_noise[0])
+        skip = self.generator.to_rgb1(out, latent[:, 1])
 
         _index = 1
 
         # 8x8 ---> higher res
         generator_features = []
         for up_conv, conv, noise1, noise2, to_rgb in zip(
-                self.convs[::2], self.convs[1::2], injected_noise[1::2],
-                injected_noise[2::2], self.to_rgbs):
+                self.generator.convs[::2], self.generator.convs[1::2],
+                injected_noise[1::2], injected_noise[2::2],
+                self.generator.to_rgbs):
 
             # feature fusion by channel-wise concatenation
             if out.size(2) <= self.in_size:
@@ -270,6 +254,7 @@ class GLEAN(StyleGANv2Generator):
 
     def init_weights(self, pretrained=None, strict=True):
         """Init weights for models.
+
         Args:
             pretrained (str, optional): Path for pretrained weights. If given
                 None, pretrained weights will not be loaded. Defaults to None.
