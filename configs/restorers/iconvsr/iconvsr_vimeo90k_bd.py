@@ -16,7 +16,7 @@ model = dict(
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = dict(fix_iter=5000)
-test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=0, convert_to='y')
+test_cfg = dict(metrics=['PSNR'], crop_border=0, convert_to='y')
 
 # dataset settings
 train_dataset_type = 'SRVimeo90KMultipleGTDataset'
@@ -117,7 +117,7 @@ data = dict(
         type=test_dataset_type,
         lq_folder='data/vimeo90k/BDx4',
         gt_folder='data/vimeo90k/GT',
-        ann_file='data/Vimeo90K/meta_info_Vimeo90K_test_GT.txt',
+        ann_file='data/vimeo90k/meta_info_Vimeo90K_test_GT.txt',
         pipeline=test_pipeline,
         scale=4,
         num_input_frames=7,
