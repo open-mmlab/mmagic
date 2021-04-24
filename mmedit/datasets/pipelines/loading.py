@@ -101,6 +101,8 @@ class LoadImageFromFileList(LoadImageFromFile):
         io_backend (str): io backend where images are store. Default: 'disk'.
         key (str): Keys in results to find corresponding path. Default: 'gt'.
         flag (str): Loading flag for images. Default: 'color'.
+        channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
+            Default: 'bgr'.
         save_original_img (bool): If True, maintain a copy of the image in
             `results` dict with name of `f'ori_{key}'`. Default: False.
         kwargs (dict): Args for file client.
@@ -132,7 +134,9 @@ class LoadImageFromFileList(LoadImageFromFile):
             ori_imgs = []
         for filepath in filepaths:
             img_bytes = self.file_client.get(filepath)
-            img = mmcv.imfrombytes(img_bytes, flag=self.flag)  # HWC, BGR
+            img = mmcv.imfrombytes(
+                img_bytes, flag=self.flag,
+                channel_order=self.channel_order)  # HWC
             if img.ndim == 2:
                 img = np.expand_dims(img, axis=2)
             imgs.append(img)
@@ -159,14 +163,22 @@ class RandomLoadResizeBg:
         bg_dir (str): Path of directory to load background images from.
         io_backend (str): io backend where images are store. Default: 'disk'.
         flag (str): Loading flag for images. Default: 'color'.
+        channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
+            Default: 'bgr'.
         kwargs (dict): Args for file client.
     """
 
-    def __init__(self, bg_dir, io_backend='disk', flag='color', **kwargs):
+    def __init__(self,
+                 bg_dir,
+                 io_backend='disk',
+                 flag='color',
+                 channel_order='bgr',
+                 **kwargs):
         self.bg_dir = bg_dir
         self.bg_list = list(mmcv.scandir(bg_dir))
         self.io_backend = io_backend
         self.flag = flag
+        self.channel_order = channel_order
         self.kwargs = kwargs
         self.file_client = None
 
@@ -186,7 +198,8 @@ class RandomLoadResizeBg:
         idx = np.random.randint(len(self.bg_list))
         filepath = Path(self.bg_dir).joinpath(self.bg_list[idx])
         img_bytes = self.file_client.get(filepath)
-        img = mmcv.imfrombytes(img_bytes, flag=self.flag)  # HWC, BGR
+        img = mmcv.imfrombytes(
+            img_bytes, flag=self.flag, channel_order=self.channel_order)  # HWC
         bg = mmcv.imresize(img, (w, h), interpolation='bicubic')
         results['bg'] = bg
         return results
@@ -462,7 +475,8 @@ class LoadPairedImageFromFile(LoadImageFromFile):
             self.file_client = FileClient(self.io_backend, **self.kwargs)
         filepath = str(results[f'{self.key}_path'])
         img_bytes = self.file_client.get(filepath)
-        img = mmcv.imfrombytes(img_bytes, flag=self.flag)  # HWC, BGR
+        img = mmcv.imfrombytes(
+            img_bytes, flag=self.flag, channel_order=self.channel_order)  # HWC
         if img.ndim == 2:
             img = np.expand_dims(img, axis=2)
 
