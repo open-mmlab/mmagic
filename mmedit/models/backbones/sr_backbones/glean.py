@@ -19,8 +19,8 @@ class GLEAN(nn.Module):
         GLEAN: Generative Latent Bank for Large-Factor Image Super-Resolution,
         CVPR, 2021
 
-    This method makes use of StyleGAN2 and hence the arguments follow that in
-    'StyleGAN2v2Generator'.
+    This method makes use of StyleGAN2 and hence the arguments mostly follow
+    that in 'StyleGAN2v2Generator'.
 
     In StyleGAN2, we use a static architecture composing of a style mapping
     module and number of covolutional style blocks. More details can be found
@@ -97,7 +97,7 @@ class GLEAN(nn.Module):
 
         super().__init__()
 
-        # latent bank (StyleGANv2)
+        # latent bank (StyleGANv2), fixed weights and eval mode
         self.generator = build_component(
             dict(
                 type='StyleGANv2Generator',
@@ -180,9 +180,6 @@ class GLEAN(nn.Module):
 
     def forward(self, lr):
         """Forward function.
-
-        This function has been integrated with the truncation trick. Please
-        refer to the usage of `truncation` and `truncation_latent`.
 
         Args:
             lr (Tensor): Input LR image with shape (n, c, h, w).
@@ -276,7 +273,6 @@ class RRDBFeatureExtractor(nn.Module):
 
     Args:
         in_channels (int): Channel number of inputs.
-        out_channels (int): Channel number of outputs.
         mid_channels (int): Channel number of intermediate features.
             Default: 64
         num_blocks (int): Block number in the trunk network. Defaults: 23
