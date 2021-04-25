@@ -12,7 +12,7 @@ from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
                                SimpleEncoderDecoder)
 # yapf: enable
 from .generation_backbones import ResnetGenerator, UnetGenerator
-from .sr_backbones import (EDSR, SRCNN, BasicVSRNet, EDVRNet, IconVSR,
+from .sr_backbones import (EDSR, RDN, SRCNN, BasicVSRNet, EDVRNet, IconVSR,
                            MSRResNet, RRDBNet, TOFlow)
 
 __all__ = [
@@ -21,7 +21,7 @@ __all__ = [
     'PConvEncoderDecoder', 'PConvEncoder', 'PConvDecoder', 'ResNetEnc',
     'ResNetDec', 'ResShortcutEnc', 'ResShortcutDec', 'RRDBNet',
     'DeepFillEncoder', 'HolisticIndexBlock', 'DepthwiseIndexBlock',
-    'ContextualAttentionNeck', 'DeepFillDecoder', 'EDSR',
+    'ContextualAttentionNeck', 'DeepFillDecoder', 'EDSR', 'RDN',
     'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample', 'IndexNetEncoder',
     'IndexNetDecoder', 'TOFlow', 'ResGCAEncoder', 'ResGCADecoder', 'SRCNN',
     'UnetGenerator', 'ResnetGenerator', 'FBAResnetDilated', 'FBADecoder',
