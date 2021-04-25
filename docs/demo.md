@@ -52,7 +52,7 @@ python demo/restoration_demo.py configs/restorer/esrgan/esrgan_x4c64b23g32_1x16_
 You can use the following commands to test a video for restoration.
 
 ```shell
-python demo/restoration_video_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${INPUT_DIR} ${OUT_DIR} [--window_size=$WINDOW_SIZE][--device ${GPU_ID}]
+python demo/restoration_video_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${INPUT_DIR} ${OUTPUT_DIR} [--window_size=$WINDOW_SIZE] [--device ${GPU_ID}]
 ```
 
 It suppots both the sliding-window framework and the recurrent framework. Examples:
