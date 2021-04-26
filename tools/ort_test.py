@@ -1,19 +1,19 @@
 import argparse
-import mmcv
-import onnxruntime as ort
 import os
 import os.path as osp
-import torch
-from torch import nn
 import warnings
+
+import mmcv
+import numpy as np
+import onnxruntime as ort
+import torch
 from mmcv.parallel import MMDataParallel
 from mmcv.runner import get_dist_info
-import numpy as np
+from torch import nn
 
 from mmedit.apis import single_gpu_test
 from mmedit.datasets import build_dataloader, build_dataset
-from mmedit.models import BaseMattor, BasicRestorer
-from mmedit.models import build_model
+from mmedit.models import BaseMattor, BasicRestorer, build_model
 
 
 def inference_with_session(sess, io_binding, output_names, input_tensor):
@@ -46,7 +46,7 @@ class ONNXRuntimeMattor(nn.Module):
                 merged,
                 trimap,
                 meta,
-                test_mode=False, 
+                test_mode=False,
                 save_image=False,
                 save_path=None,
                 iteration=None):
@@ -115,8 +115,10 @@ class ONNXRuntimeEditing(nn.Module):
         options = [{}]
         is_cuda_available = ort.get_device() == 'GPU'
         if is_cuda_available:
-            providers.insert(0, 'CUDAExecutionProvider')
-            options.insert(0, {'device_id': device_id})
+            # providers.insert(0, 'CUDAExecutionProvider')
+            # options.insert(0, {'device_id': device_id})
+            providers.append('CUDAExecutionProvider')
+            options.append({'device_id': device_id})
 
         sess.set_providers(providers, options)
 
@@ -145,10 +147,7 @@ def parse_args():
     parser.add_argument('model', help='Input model file')
     parser.add_argument('--out', help='output result pickle file')
     parser.add_argument(
-        '--save-path',
-        default=None,
-        type=str,
-        help='path to store images and if not given, will not save image')
+        '--save-path', default=None, type=str, help='path to store images')
     parser.add_argument('--local_rank', type=int, default=0)
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:

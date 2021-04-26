@@ -79,3 +79,39 @@ Description of arguments:
 - `--dynamic-export`: Determines whether to export ONNX model with dynamic input and output shapes. If not specified, it will be set to `False`.
 
 **Note**: This tool is still experimental. Some customized operators are not supported for now. And we only support `mattor` and `restorer` for now.
+
+### Evaluate ONNX model with ONNXRuntime
+
+We provide `tools/ort_test.py` to evaluate ONNX model with ONNXRuntime backend.
+
+Install onnxruntime-gpu before you start the test.
+
+  ```bash
+  pip install onnxruntime-gpu
+  ```
+
+Usage:
+
+  ```bash
+  python ${MMEDIT_PATH}/tools/ort_test.py \
+        ${CFG_PATH} \
+        ${ONNX_PATH} \
+        --out ${OUT_PATH} \
+        --save-path ${SHOW_DIR}
+  ```
+
+Description of arguments:
+
+- `config` : The path of a model config file.
+- `model` : Input model file.
+- `--out` : Output result pickle file.
+- `--save-path` : Path to store images.
+
+**Note**: Only support `mattor` and `restorer` for now.
+
+Results and Models
+
+| Model  |               Config                | Dataset |   Metric    |    PyTorch    |  ONNXRuntime  |
+| :----: | :---------------------------------: | :-----: | :---------: | :-----------: | :-----------: |
+| SRCNN  |   srcnn_x4k915_g1_1000k_div2k.py    |  Set5   | PSNR / SSIM | 28.43 / 0.809 | 28.41 / 0.810 |
+| ESRGAN | esrgan_x4c64b23g32_g1_400k_div2k.py |  Set5   | PSNR / SSIM | 28.27 / 0.777 | 28.26 / 0.778 |
