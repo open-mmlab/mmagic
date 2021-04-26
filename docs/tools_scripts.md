@@ -79,3 +79,176 @@ Description of arguments:
 - `--dynamic-export`: Determines whether to export ONNX model with dynamic input and output shapes. If not specified, it will be set to `False`.
 
 **Note**: This tool is still experimental. Some customized operators are not supported for now. And we only support `mattor` and `restorer` for now.
+
+#### List of supported models exportable to ONNX
+
+The table below lists the models that are guaranteed to be exportable to ONNX and runnable in ONNX Runtime.
+
+| Model  |                                                                               Config                                                                                | Dynamic Shape | Batch Inference | Note  |
+| :----: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :-------------: | :---: |
+| ESRGAN |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |       Y       |        Y        |       |
+| ESRGAN | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |       Y       |        Y        |       |
+| SRCNN  |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |       Y       |        Y        |       |
+
+**Notes**:
+
+- *All models above are tested with Pytorch==1.6.0 and onnxruntime==1.5.1*
+- If you meet any problem with the listed models above, please create an issue and it would be taken care of soon. For models not included in the list, please try to solve them by yourself.
+- Because this feature is experimental and may change fast, please always try with the latest `mmcv` and `mmedit`.
+
+### Evaluate ONNX Models with ONNXRuntime (experimental)
+
+We prepare a tool `tools/deploy_test.py` to evaluate ONNX models with ONNX Runtime backend.
+
+#### Prerequisite
+
+- Install onnx and onnxruntime-gpu
+
+  ```shell
+  pip install onnx onnxruntime-gpu
+  ```
+
+#### Usage
+
+```bash
+python tools/deploy_test.py \
+    ${CONFIG_FILE} \
+    ${ONNX_FILE} \
+    ${MODEL_TYPE} \
+    --out ${OUTPUT_FILE} \
+    --save-path ${SAVE_PATH} \
+    ----cfg-options ${CFG_OPTIONS} \
+```
+
+#### Description of all arguments
+
+- `config`: The path of a model config file.
+- `model`: The path of an ONNX model file.
+- `model_type` :The model type of the config file, options: `inpainting`, `mattor`, `restorer`, `synthesizer`.
+- `--out`: The path of output result file in pickle format.
+- `--save-path`: The path to store images and if not given, it will not save image.
+- `--tmpdir`: The temporary directory for writing some results.
+- `--cfg-options`: Override some settings in the used config file, the key-value pair in `xxx=yyy` format will be merged into config file.
+
+#### Results and Models
+
+<table>
+	<tr>
+	    <th>Model</th>
+	    <th>Config</th>
+	    <th>Dataset</th>
+	    <th>Metric</th>
+	    <th>PyTorch</th>
+	    <th>ONNX Runtime</th>
+	</tr>
+    <tr>
+	    <td rowspan="6">ESRGAN</td>
+	    <td rowspan="6">esrgan_x4c64b23g32_g1_400k_div2k.py</td>
+	    <td rowspan="2">Set5</td>
+        <td>PSNR</td>
+        <td>28.2700</td>
+        <td>28.2619</td>
+    </tr>
+    <tr>
+        <td>SSIM</td>
+        <td>0.7778</td>
+        <td>0.7784</td>
+    </tr>
+    <tr>
+        <td rowspan="2">Set14</td>
+        <td>PSNR</td>
+        <td>24.6328</td>
+        <td>24.6290</td>
+    </tr>
+    <tr>
+        <td>SSIM</td>
+        <td>0.6491</td>
+        <td>0.6494</td>
+    </tr>
+    <tr>
+        <td rowspan="2">DIV2K</td>
+        <td>PSNR</td>
+        <td>26.6531</td>
+        <td>26.6532</td>
+    </tr>
+    <tr>
+        <td>SSIM</td>
+        <td>0.7340</td>
+        <td>0.7340</td>
+    </tr>
+    <tr>
+	    <td rowspan="6">ESRGAN</td>
+	    <td rowspan="6">esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py</td>
+	    <td rowspan="2">Set5</td>
+        <td>PSNR</td>
+        <td>30.6428</td>
+        <td>30.6307</td>
+    </tr>
+    <tr>
+        <td>SSIM</td>
+        <td>0.8559</td>
+        <td>0.8565</td>
+    </tr>
+    <tr>
+        <td rowspan="2">Set14</td>
+        <td>PSNR</td>
+        <td>27.0543</td>
+        <td>27.0422</td>
+    </tr>
+    <tr>
+        <td>SSIM</td>
+        <td>0.7447</td>
+        <td>0.7450</td>
+    </tr>
+    <tr>
+        <td rowspan="2">DIV2K</td>
+        <td>PSNR</td>
+        <td>29.3354</td>
+        <td>29.3354</td>
+    </tr>
+    <tr>
+        <td>SSIM</td>
+        <td>0.8263</td>
+        <td>0.8263</td>
+    </tr>
+    <tr>
+	    <td rowspan="6">SRCNN</td>
+	    <td rowspan="6">srcnn_x4k915_g1_1000k_div2k.py</td>
+	    <td rowspan="2">Set5</td>
+        <td>PSNR</td>
+        <td>28.4316</td>
+        <td>28.4120</td>
+    </tr>
+    <tr>
+        <td>SSIM</td>
+        <td>0.8099</td>
+        <td>0.8106</td>
+    </tr>
+    <tr>
+        <td rowspan="2">Set14</td>
+        <td>PSNR</td>
+        <td>25.6486</td>
+        <td>25.6367</td>
+    </tr>
+    <tr>
+        <td>SSIM</td>
+        <td>0.7014</td>
+        <td>0.7015</td>
+    </tr>
+    <tr>
+        <td rowspan="2">DIV2K</td>
+        <td>PSNR</td>
+        <td>27.7460</td>
+        <td>27.7460</td>
+    </tr>
+    <tr>
+        <td>SSIM</td>
+        <td>0.7854</td>
+        <td>0.78543</td>
+    </tr>
+</table>
+
+**Notes**:
+
+- All ONNX models are evaluated with dynamic shape on the datasets and images are preprocessed according to the original config file.
+- This tool is still experimental, and we only support `restorer` for now.
