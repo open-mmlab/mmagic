@@ -114,7 +114,6 @@ We prepare a tool `tools/deploy_test.py` to evaluate ONNX models with ONNX Runti
 python tools/deploy_test.py \
     ${CONFIG_FILE} \
     ${ONNX_FILE} \
-    ${MODEL_TYPE} \
     --out ${OUTPUT_FILE} \
     --save-path ${SAVE_PATH} \
     ----cfg-options ${CFG_OPTIONS} \
