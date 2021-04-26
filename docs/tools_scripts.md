@@ -82,7 +82,7 @@ Description of arguments:
 
 ### Evaluate ONNX model with ONNXRuntime
 
-We provide `tools/ort_test.py` to evaluate ONNX model with ONNXRuntime backend.
+We provide `tools/onnx_runtime_test.py` to evaluate ONNX model with ONNXRuntime backend.
 
 Install onnxruntime-gpu before you start the test.
 
