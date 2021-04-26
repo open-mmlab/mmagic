@@ -1,3 +1,3 @@
-from .wrappers import ONNXRuntimeRestorer
+from .wrappers import ONNXRuntimeEditing
 
-__all__ = ['ONNXRuntimeRestorer']
+__all__ = ['ONNXRuntimeEditing']

@@ -1,21 +1,108 @@
-import numbers
 import os.path as osp
+import warnings
 
-import mmcv
 import numpy as np
 import onnxruntime as ort
 import torch
+from torch import nn
 
-from mmedit.core import psnr, ssim, tensor2img
+from mmedit.models import BaseMattor, BasicRestorer, build_model
 
 
-class ONNXRuntimeRestorer(torch.nn.Module):
+def inference_with_session(sess, io_binding, output_names, input_tensor):
+    device_type = input_tensor.device.type
+    device_id = input_tensor.device.index
+    io_binding.bind_input(
+        name='input',
+        device_type=device_type,
+        device_id=device_id,
+        element_type=np.float32,
+        shape=input_tensor.shape,
+        buffer_ptr=input_tensor.data_ptr())
+    for name in output_names:
+        io_binding.bind_output(name)
+    sess.run_with_iobinding(io_binding)
+    pred = io_binding.copy_outputs_to_cpu()
+    return pred
 
-    allowed_metrics = {'PSNR': psnr, 'SSIM': ssim}
 
-    def __init__(self, onnx_file, test_cfg, device_id):
+class ONNXRuntimeMattor(nn.Module):
+
+    def __init__(self, sess, io_binding, output_names, base_model):
+        super(ONNXRuntimeMattor, self).__init__()
+        self.sess = sess
+        self.io_binding = io_binding
+        self.output_names = output_names
+        self.base_model = base_model
+
+    def forward(self,
+                merged,
+                trimap,
+                meta,
+                test_mode=False,
+                save_image=False,
+                save_path=None,
+                iteration=None):
+        input_tensor = torch.cat((merged, trimap), 1).contiguous()
+        pred_alpha = inference_with_session(self.sess, self.io_binding,
+                                            self.output_names, input_tensor)[0]
+
+        pred_alpha = pred_alpha.squeeze()
+        pred_alpha = self.base_model.restore_shape(pred_alpha, meta)
+        eval_result = self.base_model.evaluate(pred_alpha, meta)
+
+        if save_image:
+            self.base_model.save_image(pred_alpha, meta, save_path, iteration)
+
+        return {'pred_alpha': pred_alpha, 'eval_result': eval_result}
+
+
+class RestorerGenerator(nn.Module):
+
+    def __init__(self, sess, io_binding, output_names):
+        super(RestorerGenerator, self).__init__()
+        self.sess = sess
+        self.io_binding = io_binding
+        self.output_names = output_names
+
+    def forward(self, x):
+        pred = inference_with_session(self.sess, self.io_binding,
+                                      self.output_names, x)[0]
+        pred = torch.from_numpy(pred)
+        return pred
+
+
+class ONNXRuntimeRestorer(nn.Module):
+
+    def __init__(self, sess, io_binding, output_names, base_model):
         super(ONNXRuntimeRestorer, self).__init__()
+        self.sess = sess
+        self.io_binding = io_binding
+        self.output_names = output_names
+        self.base_model = base_model
+        restorer_generator = RestorerGenerator(self.sess, self.io_binding,
+                                               self.output_names)
+        base_model.generator = restorer_generator
+
+    def forward(self, lq, gt=None, test_mode=False, **kwargs):
+        return self.base_model(lq, gt=gt, test_mode=test_mode, **kwargs)
+
+
+class ONNXRuntimeEditing(nn.Module):
+
+    def __init__(self, onnx_file, cfg, device_id):
+        super(ONNXRuntimeEditing, self).__init__()
+        ort_custom_op_path = ''
+        try:
+            from mmcv.ops import get_onnxruntime_op_path
+            ort_custom_op_path = get_onnxruntime_op_path()
+        except (ImportError, ModuleNotFoundError):
+            warnings.warn('If input model has custom op from mmcv, \
+                you may have to build mmcv with ONNXRuntime from source.')
         session_options = ort.SessionOptions()
+        # register custom op for onnxruntime
+        if osp.exists(ort_custom_op_path):
+            session_options.register_custom_ops_library(ort_custom_op_path)
         sess = ort.InferenceSession(onnx_file, session_options)
         providers = ['CPUExecutionProvider']
         options = [{}]
@@ -26,73 +113,20 @@ class ONNXRuntimeRestorer(torch.nn.Module):
 
         sess.set_providers(providers, options)
 
-        self.test_cfg = test_cfg
         self.sess = sess
         self.device_id = device_id
         self.io_binding = sess.io_binding()
         self.output_names = [_.name for _ in sess.get_outputs()]
-        self.is_cuda_available = is_cuda_available
 
-    def evaluate(self, output, gt):
-        crop_border = self.test_cfg.crop_border
-        output = tensor2img(output)
-        gt = tensor2img(gt)
+        base_model = build_model(
+            cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
 
-        eval_result = dict()
-        for metric in self.test_cfg.metrics:
-            eval_result[metric] = self.allowed_metrics[metric](output, gt,
-                                                               crop_border)
-        return eval_result
+        if isinstance(base_model, BaseMattor):
+            WraperClass = ONNXRuntimeMattor
+        elif isinstance(base_model, BasicRestorer):
+            WraperClass = ONNXRuntimeRestorer
+        self.wraper = WraperClass(self.sess, self.io_binding,
+                                  self.output_names, base_model)
 
-    def forward(self,
-                lq,
-                gt=None,
-                test_mode=True,
-                meta=None,
-                save_image=False,
-                save_path=None,
-                iteration=None):
-        assert test_mode, 'Only support test_mode == False'
-        # set io binding for inputs/outputs
-        device_type = 'cuda' if self.is_cuda_available else 'cpu'
-        if not self.is_cuda_available:
-            lq = lq.cpu()
-        self.io_binding.bind_input(
-            name='input',
-            device_type=device_type,
-            device_id=self.device_id,
-            element_type=np.float32,
-            shape=lq.shape,
-            buffer_ptr=lq.data_ptr())
-        for name in self.output_names:
-            self.io_binding.bind_output(name)
-
-        # run session to get outputs
-        self.sess.run_with_iobinding(self.io_binding)
-        output = self.io_binding.copy_outputs_to_cpu()[0]
-        output = torch.from_numpy(output)
-
-        if self.test_cfg is not None and self.test_cfg.get('metrics', None):
-            assert gt is not None, (
-                'evaluation with metrics must have gt images.')
-            results = dict(eval_result=self.evaluate(output, gt))
-        else:
-            results = dict(lq=lq.cpu(), output=output.cpu())
-            if gt is not None:
-                results['gt'] = gt.cpu()
-
-        # save image
-        if save_image:
-            lq_path = meta[0]['lq_path']
-            folder_name = osp.splitext(osp.basename(lq_path))[0]
-            if isinstance(iteration, numbers.Number):
-                save_path = osp.join(save_path, folder_name,
-                                     f'{folder_name}-{iteration + 1:06d}.png')
-            elif iteration is None:
-                save_path = osp.join(save_path, f'{folder_name}.png')
-            else:
-                raise ValueError('iteration should be number or None, '
-                                 f'but got {type(iteration)}')
-            mmcv.imwrite(tensor2img(output), save_path)
-
-        return results
+    def forward(self, **kwargs):
+        return self.wraper(**kwargs)

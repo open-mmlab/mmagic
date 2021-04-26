@@ -124,10 +124,8 @@ python tools/deploy_test.py \
 
 - `config`: The path of a model config file.
 - `model`: The path of an ONNX model file.
-- `model_type` :The model type of the config file, options: `inpainting`, `mattor`, `restorer`, `synthesizer`.
 - `--out`: The path of output result file in pickle format.
 - `--save-path`: The path to store images and if not given, it will not save image.
-- `--tmpdir`: The temporary directory for writing some results.
 - `--cfg-options`: Override some settings in the used config file, the key-value pair in `xxx=yyy` format will be merged into config file.
 
 #### Results and Models
