@@ -24,19 +24,15 @@ train_pipeline = [
         type='LoadImageFromFile',
         io_backend='disk',
         key='lq',
-        flag='unchanged'),
+        flag='color',
+        channel_order='rgb'),
     dict(
         type='LoadImageFromFile',
         io_backend='disk',
         key='gt',
-        flag='unchanged'),
+        flag='color',
+        channel_order='rgb'),
     dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
-    dict(
-        type='Normalize',
-        keys=['lq', 'gt'],
-        mean=[0, 0, 0],
-        std=[1, 1, 1],
-        to_rgb=True),
     dict(type='PairedRandomCrop', gt_patch_size=128),
     dict(
         type='Flip', keys=['lq', 'gt'], flip_ratio=0.5,
@@ -51,19 +47,15 @@ test_pipeline = [
         type='LoadImageFromFile',
         io_backend='disk',
         key='lq',
-        flag='unchanged'),
+        flag='color',
+        channel_order='rgb'),
     dict(
         type='LoadImageFromFile',
         io_backend='disk',
         key='gt',
-        flag='unchanged'),
+        flag='color',
+        channel_order='rgb'),
     dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
-    dict(
-        type='Normalize',
-        keys=['lq', 'gt'],
-        mean=[0, 0, 0],
-        std=[1, 1, 1],
-        to_rgb=True),
     dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'gt_path']),
     dict(type='ImageToTensor', keys=['lq', 'gt'])
 ]
