@@ -136,10 +136,10 @@ def parse_args():
         description='Preprocess Vimeo90K datasets',
         epilog='You can download the Vimeo90K dataset '
         'from：http://toflow.csail.mit.edu/')
-    parser.add_argument('gt-path', help='GT path for Vimeo90K')
-    parser.add_argument('lq-path', help='LQ path for Vimeo90K')
+    parser.add_argument('gt_path', help='GT path for Vimeo90K')
+    parser.add_argument('lq_path', help='LQ path for Vimeo90K')
     parser.add_argument(
-        'train-list', help='official training list path for Vimeo90K')
+        'train_list', help='official training list path for Vimeo90K')
     parser.add_argument(
         '--make-lmdb', action='store_true', help='create lmdb files')
 
