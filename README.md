@@ -91,9 +91,10 @@ Supported algorithms:
 </details>
 
 <details open>
-<summary>Synthesizer</summary>
+<summary>Generation</summary>
 
 - [x] [CycleGAN](configs/synthesizers/cyclegan/README.md) (ICCV'2017)
+- [x] [pix2pix](configs/synthesizers/pix2pix/README.md) (CVPR'2017)
 
 </details>
 
