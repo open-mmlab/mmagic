@@ -4,10 +4,15 @@ import mmcv
 import numpy as np
 import pytest
 import torch
+from packaging import version
 
 from mmedit.models import build_model
 
 
+@pytest.mark.skipif(torch.__version__ == 'parrots', reason='skip parrots.')
+@pytest.mark.skipif(
+    version.parse(torch.__version__) < version.parse('1.4.0'),
+    reason='skip if torch=1.3.x')
 def test_restorer_wraper():
     try:
         import onnxruntime as ort
@@ -55,7 +60,7 @@ def test_restorer_wraper():
             opset_version=11)
 
     wrap_model = ONNXRuntimeEditing(onnx_path, cfg, 0)
-    os.remove(onnx_path)
+    # os.remove(onnx_path)
     assert isinstance(wrap_model.wraper, ONNXRuntimeRestorer)
 
     if ort.get_device() == 'GPU':
@@ -71,6 +76,10 @@ def test_restorer_wraper():
     assert output.shape == targets.shape
 
 
+@pytest.mark.skipif(torch.__version__ == 'parrots', reason='skip parrots.')
+@pytest.mark.skipif(
+    version.parse(torch.__version__) < version.parse('1.4.0'),
+    reason='skip if torch=1.3.x')
 def test_mattor_wraper():
     try:
         import onnxruntime as ort
