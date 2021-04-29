@@ -1,6 +1,7 @@
+import os
+
 import mmcv
 import numpy as np
-import os
 import pytest
 import torch
 
