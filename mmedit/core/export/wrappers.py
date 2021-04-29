@@ -12,6 +12,7 @@ from mmedit.models import BaseMattor, BasicRestorer, build_model
 def inference_with_session(sess, io_binding, output_names, input_tensor):
     device_type = input_tensor.device.type
     device_id = input_tensor.device.index
+    device_id = 0 if device_id is None else device_id
     io_binding.bind_input(
         name='input',
         device_type=device_type,

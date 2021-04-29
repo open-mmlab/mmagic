@@ -5,14 +5,14 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.core.export.wrappers import (ONNXRuntimeEditing, ONNXRuntimeMattor,
-                                         ONNXRuntimeRestorer)
 from mmedit.models import build_model
 
 
 def test_restorer_wraper():
     try:
         import onnxruntime as ort
+        from mmedit.core.export.wrappers import (ONNXRuntimeEditing,
+                                                 ONNXRuntimeRestorer)
     except ImportError:
         pytest.skip('ONNXRuntime is not available.')
 
@@ -58,9 +58,7 @@ def test_restorer_wraper():
     os.remove(onnx_path)
     assert isinstance(wrap_model.wraper, ONNXRuntimeRestorer)
 
-    if torch.cuda.is_available():
-        if ort.get_device() != 'GPU':
-            pytest.skip('ONNXRuntime does not support gpu.')
+    if ort.get_device() == 'GPU':
         data_batch = {'lq': inputs.cuda(), 'gt': targets.cuda()}
 
     with torch.no_grad():
@@ -76,6 +74,8 @@ def test_restorer_wraper():
 def test_mattor_wraper():
     try:
         import onnxruntime as ort
+        from mmedit.core.export.wrappers import (ONNXRuntimeEditing,
+                                                 ONNXRuntimeMattor)
     except ImportError:
         pytest.skip('ONNXRuntime is not available.')
     onnx_path = 'tmp.onnx'
@@ -121,9 +121,7 @@ def test_mattor_wraper():
     os.remove(onnx_path)
     assert isinstance(wrap_model.wraper, ONNXRuntimeMattor)
 
-    if torch.cuda.is_available():
-        if ort.get_device() != 'GPU':
-            pytest.skip('ONNXRuntime does not support gpu.')
+    if ort.get_device() == 'GPU':
         merged = merged.cuda()
         trimap = trimap.cuda()
         data_batch = {'merged': merged, 'trimap': trimap}
