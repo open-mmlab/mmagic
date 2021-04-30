@@ -39,18 +39,6 @@ Documentation: https://mmediting.readthedocs.io/en/latest/.
 
   The toolbox provides state-of-the-art methods in inpainting/matting/super-resolution/generation.
 
-## License
-
-This project is released under the [Apache 2.0 license](LICENSE).
-
-## Changelog
-
-v0.6.0 was released in 2021-3-31.
-
-Note that **MMSR** has been merged into this repo, as a part of MMEditing.
-With elaborate designs of the new framework and careful implementations,
-hope MMEditing could provide better experience.
-
 ## Model Zoo
 
 Supported algorithms:
@@ -101,6 +89,17 @@ Supported algorithms:
 
 Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) for more details.
 
+## License
+
+This project is released under the [Apache 2.0 license](LICENSE).
+
+## Changelog
+
+v0.6.0 was released in 2021-3-31.
+
+Note that **MMSR** has been merged into this repo, as a part of MMEditing.
+With elaborate designs of the new framework and careful implementations,
+hope MMEditing could provide better experience.
 ## Installation
 
 Please refer to [install.md](docs/install.md) for installation.
