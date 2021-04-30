@@ -4,9 +4,11 @@ import random
 import mmcv
 import torch
 import torch.nn as nn
+from mmcv.runner import load_checkpoint
 from mmcv.runner.checkpoint import _load_checkpoint_with_prefix
 
 from mmedit.models.registry import COMPONENTS
+from mmedit.utils import get_root_logger
 from .common import get_mean_latent, get_module_device, style_mixing
 from .modules import (ConstantInput, ConvDownLayer, EqualLinearActModule,
                       ModMBStddevLayer, ModulatedStyleConv, ModulatedToRGB,
@@ -532,3 +534,21 @@ class StyleGAN2Discriminator(nn.Module):
         x = self.final_linear(x)
 
         return x
+
+    def init_weights(self, pretrained=None, strict=True):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+            strict (boo, optional): Whether strictly load the pretrained model.
+                Defaults to True.
+        """
+        if isinstance(pretrained, str):
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=strict, logger=logger)
+        elif pretrained is None:
+            pass  # Use PyTorch default initialization.
+        else:
+            raise TypeError(f'"pretrained" must be a str or None. '
+                            f'But received {type(pretrained)}.')

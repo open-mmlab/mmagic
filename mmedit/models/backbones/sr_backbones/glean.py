@@ -113,9 +113,10 @@ class GLEAN(nn.Module):
                 pretrained=pretrained,
                 bgr2rgb=bgr2rgb))
         self.generator.requires_grad_(False)
-        self.generator.eval()
+        # self.generator.eval()
 
         self.in_size = in_size
+        self.style_channels = style_channels
         channels = self.generator.channels
 
         # encoder
@@ -189,7 +190,7 @@ class GLEAN(nn.Module):
         """
 
         injected_noise = [
-            getattr(self, f'injected_noise_{i}')
+            getattr(self.generator, f'injected_noise_{i}')
             for i in range(self.generator.num_injected_noises)
         ]
 
