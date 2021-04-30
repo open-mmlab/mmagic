@@ -4,9 +4,9 @@
 
 **Highlights**
 
-1. Support BasicVSR
-2. Support IconVSR
-3. Support RDN
+1. Support BasicVSR (CVPR'2021)
+2. Support IconVSR (CVPR'2021)
+3. Support RDN (CVPR'2018)
 
 **New Features**
 
@@ -32,7 +32,7 @@
 
 **Breaking Changes**
 
-- Add zh-CN README ([#262](https://github.com/open-mmlab/mmediting/pull/262))
+
 
 **Improvements**
 
