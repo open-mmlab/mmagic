@@ -33,12 +33,60 @@ MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMML
 
 - **支持多种编辑任务**
 
-  MMEditing 支持*绘画*、*抠图*、*超分辨率*、*生成*等多种主流编辑任务。
+  MMEditing 支持*修复*、*抠图*、*超分辨率*、*生成*等多种主流编辑任务。
 
 - **SOTA**
 
-  MMEditing 提供绘画/抠图/超分辨率/生成等任务最先进的算法.
+  MMEditing 提供修复/抠图/超分辨率/生成等任务最先进的算法.
 
+## 模型库
+
+支持的算法:
+
+<details open>
+<summary>修复</summary>
+
+- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
+- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
+- [x] [Global&Local](configs/inpainting/global_local/README.md) (ToG'2017)
+- [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
+
+</details>
+
+<details open>
+<summary>抠图</summary>
+
+- [x] [DIM](configs/mattors/dim/README.md) (CVPR'2017)
+- [x] [GCA](configs/mattors/gca/README.md) (AAAI'2020)
+- [x] [IndexNet](configs/mattors/indexnet/README.md) (ICCV'2019)
+
+</details>
+
+<details open>
+<summary>超分辨率</summary>
+
+- [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
+- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
+- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
+- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
+- [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
+- [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
+- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
+- [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
+- [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
+- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
+
+</details>
+
+<details open>
+<summary>生成</summary>
+
+- [x] [CycleGAN](configs/synthesizers/cyclegan/README.md) (ICCV'2017)
+- [x] [pix2pix](configs/synthesizers/pix2pix/README.md) (CVPR'2017)
+
+</details>
+
+请参考[模型库](https://mmediting.readthedocs.io/en/latest/modelzoo.html)了解详情。
 ## 许可证
 
 本项目开源自 [Apache 2.0 license](LICENSE)。
@@ -50,9 +98,6 @@ v0.6.0 版本已于 2021 年 3 月 31 日发布.
 需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
 MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
 
-## 基准和模型库
-
-请参考[模型库](https://mmediting.readthedocs.io/en/latest/modelzoo.html)了解详情。
 
 ## 安装
 
@@ -97,6 +142,7 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 - [MMPose](https://github.com/open-mmlab/mmpose): OpenMMLab 姿态估计工具箱与测试基准
 - [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab 图像视频编辑工具箱
 - [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab 全流程文字检测识别理解工具包
+- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab 生成模型工具箱
 
 ## 欢迎加入 OpenMMLab 社区
 

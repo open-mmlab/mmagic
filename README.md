@@ -39,6 +39,56 @@ Documentation: https://mmediting.readthedocs.io/en/latest/.
 
   The toolbox provides state-of-the-art methods in inpainting/matting/super-resolution/generation.
 
+## Model Zoo
+
+Supported algorithms:
+
+<details open>
+<summary>Inpainting</summary>
+
+- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
+- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
+- [x] [Global&Local](configs/inpainting/global_local/README.md) (ToG'2017)
+- [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
+
+</details>
+
+<details open>
+<summary>Matting</summary>
+
+- [x] [DIM](configs/mattors/dim/README.md) (CVPR'2017)
+- [x] [GCA](configs/mattors/gca/README.md) (AAAI'2020)
+- [x] [IndexNet](configs/mattors/indexnet/README.md) (ICCV'2019)
+
+</details>
+
+<details open>
+<summary>Super-Resolution</summary>
+
+- [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
+- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
+- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
+- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
+- [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
+- [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
+- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
+- [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
+- [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
+- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
+
+</details>
+
+<details open>
+<summary>Generation</summary>
+
+- [x] [CycleGAN](configs/synthesizers/cyclegan/README.md) (ICCV'2017)
+- [x] [pix2pix](configs/synthesizers/pix2pix/README.md) (CVPR'2017)
+
+</details>
+
+
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) for more details.
+
 ## License
 
 This project is released under the [Apache 2.0 license](LICENSE).
@@ -50,11 +100,6 @@ v0.6.0 was released in 2021-3-31.
 Note that **MMSR** has been merged into this repo, as a part of MMEditing.
 With elaborate designs of the new framework and careful implementations,
 hope MMEditing could provide better experience.
-
-## Benchmark and model zoo
-
-Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) for more details.
-
 ## Installation
 
 Please refer to [install.md](docs/install.md) for installation.
@@ -99,3 +144,4 @@ MMEditing is an open source project that is contributed by researchers and engin
 - [MMPose](https://github.com/open-mmlab/mmpose): OpenMMLab pose estimation toolbox and benchmark.
 - [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab image and video editing toolbox.
 - [MMOCR](https://github.com/open-mmlab/mmocr): A Comprehensive Toolbox for Text Detection, Recognition and Understanding.
+- [MMGeneration](https://github.com/open-mmlab/mmgeneration): A powerful toolkit for generative models.

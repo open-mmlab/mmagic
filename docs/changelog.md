@@ -1,5 +1,45 @@
 # Changelog
 
+## v0.7.0 (30/04/2021).
+
+**Highlights**
+
+1. Support BasicVSR (CVPR'2021)
+2. Support IconVSR (CVPR'2021)
+3. Support RDN (CVPR'2018)
+4. Add onnx evaluation tool
+
+**New Features**
+
+- Add RDN ([#233](https://github.com/open-mmlab/mmediting/pull/233), [#260](https://github.com/open-mmlab/mmediting/pull/260), [#280](https://github.com/open-mmlab/mmediting/pull/280))
+- Add MultipleGT datasets ([#238](https://github.com/open-mmlab/mmediting/pull/238))
+- Add BasicVSR and IconVSR ([#245](https://github.com/open-mmlab/mmediting/pull/245), [#252](https://github.com/open-mmlab/mmediting/pull/252), [#253](https://github.com/open-mmlab/mmediting/pull/253), [#254](https://github.com/open-mmlab/mmediting/pull/254), [#264](https://github.com/open-mmlab/mmediting/pull/264), [#274](https://github.com/open-mmlab/mmediting/pull/274))
+- Add IconVSR([#252](https://github.com/open-mmlab/mmediting/pull/252), [#264](https://github.com/open-mmlab/mmediting/pull/264))
+- Add 'GenerateFrameIndicesForRecurrent' ([#258](https://github.com/open-mmlab/mmediting/pull/258))
+- Add onnx evaluation tool ([#279](https://github.com/open-mmlab/mmediting/pull/279))
+
+**Bug Fixes**
+
+- Fix fix onnx conversion of maxunpool2d ([#243](https://github.com/open-mmlab/mmediting/pull/243))
+- Fix inprinting in `demo.md` ([#248](https://github.com/open-mmlab/mmediting/pull/248))
+- Tiny fix of config file of EDSR ([#251](https://github.com/open-mmlab/mmediting/pull/251))
+- Fix link in README ([#256](https://github.com/open-mmlab/mmediting/pull/256))
+- Tiny fix of `mmedit/apis/test.py` ([#261](https://github.com/open-mmlab/mmediting/pull/261))
+- Tiny Fix of restoration_inference ([#270](https://github.com/open-mmlab/mmediting/pull/270))
+- Fix usage of channel_order in loading.py ([#271](https://github.com/open-mmlab/mmediting/pull/271))
+- Fix the command of inpainting ([#278](https://github.com/open-mmlab/mmediting/pull/278))
+- Fix `preprocess_vimeo90k_dataset.py` args name ([#281](https://github.com/open-mmlab/mmediting/pull/281))
+
+**Improvements**
+
+- Update projects in README ([#249](https://github.com/open-mmlab/mmediting/pull/249), [#276](https://github.com/open-mmlab/mmediting/pull/276))
+- Support Y-channel PSNR and SSIM ([#250](https://github.com/open-mmlab/mmediting/pull/250))
+- Add zh-CN README ([#262](https://github.com/open-mmlab/mmediting/pull/262))
+- Update pytorch2onnx ([#265](https://github.com/open-mmlab/mmediting/pull/265))
+- Remove extra quotation in English readme ([#268](https://github.com/open-mmlab/mmediting/pull/268))
+- Change tags to comment ([#269](https://github.com/open-mmlab/mmediting/pull/269))
+- List `model zoo` in README ([#284](https://github.com/open-mmlab/mmediting/pull/284), [#285](https://github.com/open-mmlab/mmediting/pull/285), [#286](https://github.com/open-mmlab/mmediting/pull/286))
+
 ## v0.6.0 (08/04/2021).
 
 **Highlights**
