@@ -62,6 +62,12 @@ def test_calculate_psnr():
     psnr_result = psnr(img_hw_1, img_hw_1, crop_border=0)
     assert psnr_result == float('inf')
 
+    # test uint8
+    img_hw_1 = np.zeros((32, 32), dtype=np.uint8)
+    img_hw_2 = np.ones((32, 32), dtype=np.uint8) * 255
+    psnr_result = psnr(img_hw_1, img_hw_2, crop_border=0)
+    assert psnr_result == 0
+
 
 def test_calculate_ssim():
     img_hw_1 = np.ones((32, 32))
