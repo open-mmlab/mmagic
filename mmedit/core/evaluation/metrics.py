@@ -195,12 +195,12 @@ def psnr(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
     img1 = reorder_image(img1, input_order=input_order)
     img2 = reorder_image(img2, input_order=input_order)
 
+    img1, img2 = img1.astype(np.float32), img2.astype(np.float32)
     if isinstance(convert_to, str) and convert_to.lower() == 'y':
-        img1, img2 = img1.astype(np.float32), img2.astype(np.float32)
         img1 = mmcv.bgr2ycbcr(img1 / 255., y_only=True) * 255.
         img2 = mmcv.bgr2ycbcr(img2 / 255., y_only=True) * 255.
     elif convert_to is not None:
-        raise ValueError(f'Wrong color model. Supported values are '
+        raise ValueError('Wrong color model. Supported values are '
                          '"Y" and None.')
 
     if crop_border != 0:
@@ -292,7 +292,7 @@ def ssim(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
         img1 = np.expand_dims(img1, axis=2)
         img2 = np.expand_dims(img2, axis=2)
     elif convert_to is not None:
-        raise ValueError(f'Wrong color model. Supported values are '
+        raise ValueError('Wrong color model. Supported values are '
                          '"Y" and None')
 
     if crop_border != 0:
