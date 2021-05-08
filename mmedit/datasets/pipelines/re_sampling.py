@@ -63,6 +63,16 @@ class ReSampling:
 
         return results
 
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f' scale={self.scale}, '
+                     f'input_key={self.input_key}, '
+                     f'output_key={self.output_key}, '
+                     f'interpolation={self.interpolation}, '
+                     f'backend={self.backend}')
+
+        return repr_str
+
 
 @PIPELINES.register_module()
 class RandomDownSampling:
@@ -138,9 +148,11 @@ class RandomDownSampling:
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (f'scale_min={self.scale_min}, '
+        repr_str += (f' scale_min={self.scale_min}, '
                      f'scale_max={self.scale_max}, '
-                     f'patch_size={self.patch_size}')
+                     f'patch_size={self.patch_size}, '
+                     f'interpolation={self.interpolation}, '
+                     f'backend={self.backend}')
 
         return repr_str
 
