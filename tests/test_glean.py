@@ -18,20 +18,8 @@ def test_glean():
             type='GLEANStyleGANv2',
             in_size=16,
             out_size=256,
-            style_channels=512,
-            pretrained=dict(
-                ckpt_path='http://download.openmmlab.com/mmgen/stylegan2/'
-                'official_weights/stylegan2-cat-config-f-official_20210327'
-                '_172444-15bc485b.pth',
-                prefix='generator_ema')),
-        discriminator=dict(
-            type='StyleGAN2Discriminator',
-            in_size=256,
-            pretrained=dict(
-                ckpt_path='http://download.openmmlab.com/mmgen/stylegan2/'
-                'official_weights/stylegan2-cat-config-f-official_20210327'
-                '_172444-15bc485b.pth',
-                prefix='discriminator')),
+            style_channels=512),
+        discriminator=dict(type='StyleGAN2Discriminator', in_size=256),
         pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean'),
         gan_loss=dict(
             type='GANLoss',
