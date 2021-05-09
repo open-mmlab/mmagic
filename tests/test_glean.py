@@ -13,7 +13,7 @@ from mmedit.models.losses import GANLoss, L1Loss
 def test_glean():
 
     model_cfg = dict(
-        type='SRGAN',
+        type='GLEAN',
         generator=dict(
             type='GLEANStyleGANv2',
             in_size=16,
@@ -35,7 +35,7 @@ def test_glean():
     restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
 
     # test attributes
-    assert restorer.__class__.__name__ == 'SRGAN'
+    assert restorer.__class__.__name__ == 'GLEAN'
     assert isinstance(restorer.generator, GLEANStyleGANv2)
     assert isinstance(restorer.discriminator, StyleGAN2Discriminator)
     assert isinstance(restorer.pixel_loss, L1Loss)
