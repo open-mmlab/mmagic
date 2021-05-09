@@ -507,8 +507,8 @@ class StyleGAN2Discriminator(nn.Module):
                 act_cfg=dict(type='fused_bias')),
             EqualLinearActModule(channels[4], 1),
         )
-        # if pretrained is not None:
-        #     self._load_pretrained_model(**pretrained)
+        if pretrained is not None:
+            self._load_pretrained_model(**pretrained)
 
     def _load_pretrained_model(self,
                                ckpt_path,
