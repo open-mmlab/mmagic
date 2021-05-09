@@ -5,7 +5,7 @@ import torch
 from mmcv.runner import obj_from_dict
 
 from mmedit.models import build_model
-from mmedit.models.backbones import MSRResNet
+from mmedit.models.backbones import GLEANStyleGANv2
 from mmedit.models.components import StyleGAN2Discriminator
 from mmedit.models.losses import GANLoss, L1Loss
 
@@ -15,12 +15,10 @@ def test_glean():
     model_cfg = dict(
         type='SRGAN',
         generator=dict(
-            type='MSRResNet',
-            in_channels=3,
-            out_channels=3,
-            mid_channels=4,
-            num_blocks=1,
-            upscale_factor=4),
+            type='GLEANStyleGANv2',
+            in_size=16,
+            out_size=128,
+            style_channels=512),
         discriminator=dict(type='StyleGAN2Discriminator', in_size=128),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
         gan_loss=dict(
@@ -38,13 +36,13 @@ def test_glean():
 
     # test attributes
     assert restorer.__class__.__name__ == 'SRGAN'
-    assert isinstance(restorer.generator, MSRResNet)
+    assert isinstance(restorer.generator, GLEANStyleGANv2)
     assert isinstance(restorer.discriminator, StyleGAN2Discriminator)
     assert isinstance(restorer.pixel_loss, L1Loss)
     assert isinstance(restorer.gan_loss, GANLoss)
 
     # prepare data
-    inputs = torch.rand(1, 3, 32, 32)
+    inputs = torch.rand(1, 3, 16, 16)
     targets = torch.rand(1, 3, 128, 128)
     data_batch = {'lq': inputs, 'gt': targets}
 
