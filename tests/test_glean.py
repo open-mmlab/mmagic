@@ -235,7 +235,3 @@ def test_glean():
         assert torch.equal(outputs['results']['gt'], data_batch['gt'])
         assert torch.is_tensor(outputs['results']['output'])
         assert outputs['results']['output'].size() == (1, 3, 128, 128)
-
-
-if __name__ == '__main__':
-    test_glean()
