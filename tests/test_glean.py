@@ -5,29 +5,30 @@ import torch
 from mmcv.runner import obj_from_dict
 
 from mmedit.models import build_model
-from mmedit.models.backbones import GLEANStyleGANv2
-from mmedit.models.components import StyleGAN2Discriminator
-from mmedit.models.losses import GANLoss, MSELoss
+from mmedit.models.backbones import MSRResNet
+from mmedit.models.components import ModifiedVGG
+from mmedit.models.losses import GANLoss, L1Loss
 
 
-def test_glean():
+def test_srgan():
 
     model_cfg = dict(
-        type='GLEAN',
+        type='SRGAN',
         generator=dict(
-            type='GLEANStyleGANv2',
-            in_size=16,
-            out_size=256,
-            style_channels=512),
-        discriminator=dict(type='StyleGAN2Discriminator', in_size=256),
-        pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean'),
+            type='MSRResNet',
+            in_channels=3,
+            out_channels=3,
+            mid_channels=4,
+            num_blocks=1,
+            upscale_factor=4),
+        discriminator=dict(type='ModifiedVGG', in_channels=3, mid_channels=2),
+        pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
         gan_loss=dict(
             type='GANLoss',
             gan_type='vanilla',
-            loss_weight=1e-2,
             real_label_val=1.0,
-            fake_label_val=0),
-    )
+            fake_label_val=0,
+            loss_weight=5e-3))
 
     train_cfg = None
     test_cfg = None
@@ -36,14 +37,14 @@ def test_glean():
     restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
 
     # test attributes
-    assert restorer.__class__.__name__ == 'GLEAN'
-    assert isinstance(restorer.generator, GLEANStyleGANv2)
-    assert isinstance(restorer.discriminator, StyleGAN2Discriminator)
-    assert isinstance(restorer.pixel_loss, MSELoss)
+    assert restorer.__class__.__name__ == 'SRGAN'
+    assert isinstance(restorer.generator, MSRResNet)
+    assert isinstance(restorer.discriminator, ModifiedVGG)
+    assert isinstance(restorer.pixel_loss, L1Loss)
     assert isinstance(restorer.gan_loss, GANLoss)
 
     # prepare data
-    inputs = torch.rand(1, 3, 16, 16)
+    inputs = torch.rand(1, 3, 64, 64)
     targets = torch.rand(1, 3, 256, 256)
     data_batch = {'lq': inputs, 'gt': targets}
 
@@ -236,7 +237,3 @@ def test_glean():
         assert torch.equal(outputs['results']['gt'], data_batch['gt'])
         assert torch.is_tensor(outputs['results']['output'])
         assert outputs['results']['output'].size() == (1, 3, 256, 256)
-
-
-if __name__ == '__main__':
-    test_glean()
