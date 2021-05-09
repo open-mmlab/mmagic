@@ -19,6 +19,9 @@ from .modules import (ConstantInput, ConvDownLayer, EqualLinearActModule,
 class StyleGANv2Generator(nn.Module):
     r"""StyleGAN2 Generator.
 
+    This module comes from MMGeneration. In the future, this code will be
+    removed and StyleGANv2 will be directly imported from mmgen.
+
     In StyleGAN2, we use a static architecture composing of a style mapping
     module and number of covolutional style blocks. More details can be found
     in: Analyzing and Improving the Image Quality of StyleGAN CVPR2020.
@@ -199,14 +202,14 @@ class StyleGANv2Generator(nn.Module):
             if self.default_style_mode != self._default_style_mode:
                 mmcv.print_log(
                     f'Switch to train style mode: {self._default_style_mode}',
-                    'mmgan')
+                    'mmgen')
             self.default_style_mode = self._default_style_mode
 
         else:
             if self.default_style_mode != self.eval_style_mode:
                 mmcv.print_log(
                     f'Switch to evaluation style mode: {self.eval_style_mode}',
-                    'mmgan')
+                    'mmgen')
             self.default_style_mode = self.eval_style_mode
 
         return super(StyleGANv2Generator, self).train(mode)
@@ -405,6 +408,9 @@ class StyleGANv2Generator(nn.Module):
 class StyleGAN2Discriminator(nn.Module):
     """StyleGAN2 Discriminator.
 
+    This module comes from MMGeneration. In the future, this code will be
+    removed and StyleGANv2 will be directly imported from mmgen.
+
     The architecture of this discriminator is proposed in StyleGAN2. More
     details can be found in: Analyzing and Improving the Image Quality of
     StyleGAN CVPR2020.
@@ -424,10 +430,10 @@ class StyleGAN2Discriminator(nn.Module):
     .. code-block:: python
 
         # ckpt_http is one of the valid path from http source
-        generator = StyleGANv2Generator(1024, 512,
-                                        pretrained=dict(
-                                            ckpt_path=ckpt_http,
-                                            prefix='discriminator'))
+        discriminator = StyleGAN2Discriminator(1024, 512,
+                                               pretrained=dict(
+                                                   ckpt_path=ckpt_http,
+                                                   prefix='discriminator'))
 
     Of course, you can also download the checkpoint in advance and set
     ``ckpt_path`` with local path.

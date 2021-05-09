@@ -12,8 +12,8 @@ from mmedit.utils import get_root_logger
 
 
 @BACKBONES.register_module()
-class GLEAN(nn.Module):
-    r"""GLEAN architecture for super-resolution.
+class GLEANStyleGANv2(nn.Module):
+    r"""GLEAN (using StyleGANv2) architecture for super-resolution.
 
     Paper:
         GLEAN: Generative Latent Bank for Large-Factor Image Super-Resolution,
@@ -97,7 +97,7 @@ class GLEAN(nn.Module):
 
         super().__init__()
 
-        # latent bank (StyleGANv2), fixed weights and eval mode
+        # latent bank (StyleGANv2), with weights being fixed
         self.generator = build_component(
             dict(
                 type='StyleGANv2Generator',
@@ -113,7 +113,6 @@ class GLEAN(nn.Module):
                 pretrained=pretrained,
                 bgr2rgb=bgr2rgb))
         self.generator.requires_grad_(False)
-        # self.generator.eval()
 
         self.in_size = in_size
         self.style_channels = style_channels
@@ -145,7 +144,7 @@ class GLEAN(nn.Module):
                     nn.Linear(16 * in_channels, num_styles * style_channels))
             self.encoder.append(block)
 
-        # additional modules for StyleGAN
+        # additional modules for StyleGANv2
         self.fusion_out = nn.ModuleList()
         self.fusion_skip = nn.ModuleList()
         for res in encoder_res[::-1]:
@@ -189,22 +188,28 @@ class GLEAN(nn.Module):
             Tensor: Output HR image.
         """
 
-        injected_noise = [
-            getattr(self.generator, f'injected_noise_{i}')
-            for i in range(self.generator.num_injected_noises)
-        ]
+        n, c, h, w = lr.size()
+        if h != self.in_size or w != self.in_size:
+            raise AssertionError(
+                f'Spatial resolution must equal in_size ({self.in_size}).'
+                f' Got ({h}, {w}).')
 
         # encoder
         feat = lr
         encoder_features = []
         for block in self.encoder:
             feat = block(feat)
-            encoder_features.insert(0, feat)
+            encoder_features.append(feat)
+        encoder_features = encoder_features[::-1]
 
         latent = encoder_features[0].view(lr.size(0), -1, self.style_channels)
         encoder_features = encoder_features[1:]
 
         # generator
+        injected_noise = [
+            getattr(self.generator, f'injected_noise_{i}')
+            for i in range(self.generator.num_injected_noises)
+        ]
         # 4x4 stage
         out = self.generator.constant_input(latent)
         out = self.generator.conv1(out, latent[:, 0], noise=injected_noise[0])
@@ -276,7 +281,7 @@ class RRDBFeatureExtractor(nn.Module):
         in_channels (int): Channel number of inputs.
         mid_channels (int): Channel number of intermediate features.
             Default: 64
-        num_blocks (int): Block number in the trunk network. Defaults: 23
+        num_blocks (int): Block number in the trunk network. Default: 23
         growth_channels (int): Channels for each growth. Default: 32.
     """
 
