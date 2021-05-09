@@ -6,11 +6,11 @@ from mmcv.runner import obj_from_dict
 
 from mmedit.models import build_model
 from mmedit.models.backbones import MSRResNet
-from mmedit.models.components import ModifiedVGG
+from mmedit.models.components import StyleGAN2Discriminator
 from mmedit.models.losses import GANLoss, L1Loss
 
 
-def test_srgan():
+def test_glean():
 
     model_cfg = dict(
         type='SRGAN',
@@ -21,7 +21,7 @@ def test_srgan():
             mid_channels=4,
             num_blocks=1,
             upscale_factor=4),
-        discriminator=dict(type='ModifiedVGG', in_channels=3, mid_channels=2),
+        discriminator=dict(type='StyleGAN2Discriminator', in_size=128),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
         gan_loss=dict(
             type='GANLoss',
@@ -39,13 +39,13 @@ def test_srgan():
     # test attributes
     assert restorer.__class__.__name__ == 'SRGAN'
     assert isinstance(restorer.generator, MSRResNet)
-    assert isinstance(restorer.discriminator, ModifiedVGG)
+    assert isinstance(restorer.discriminator, StyleGAN2Discriminator)
     assert isinstance(restorer.pixel_loss, L1Loss)
     assert isinstance(restorer.gan_loss, GANLoss)
 
     # prepare data
-    inputs = torch.rand(1, 3, 64, 64)
-    targets = torch.rand(1, 3, 256, 256)
+    inputs = torch.rand(1, 3, 32, 32)
+    targets = torch.rand(1, 3, 128, 128)
     data_batch = {'lq': inputs, 'gt': targets}
 
     # prepare optimizer
@@ -70,20 +70,20 @@ def test_srgan():
         outputs = restorer(**data_batch, test_mode=True)
     assert torch.equal(outputs['lq'], data_batch['lq'])
     assert torch.is_tensor(outputs['output'])
-    assert outputs['output'].size() == (1, 3, 256, 256)
+    assert outputs['output'].size() == (1, 3, 128, 128)
 
     # test forward_dummy
     with torch.no_grad():
         output = restorer.forward_dummy(data_batch['lq'])
     assert torch.is_tensor(output)
-    assert output.size() == (1, 3, 256, 256)
+    assert output.size() == (1, 3, 128, 128)
 
     # val_step
     with torch.no_grad():
         outputs = restorer.val_step(data_batch)
     assert torch.equal(outputs['lq'], data_batch['lq'])
     assert torch.is_tensor(outputs['output'])
-    assert outputs['output'].size() == (1, 3, 256, 256)
+    assert outputs['output'].size() == (1, 3, 128, 128)
 
     # test train_step
     with patch.object(
@@ -102,7 +102,7 @@ def test_srgan():
         assert torch.equal(outputs['results']['lq'], data_batch['lq'])
         assert torch.equal(outputs['results']['gt'], data_batch['gt'])
         assert torch.is_tensor(outputs['results']['output'])
-        assert outputs['results']['output'].size() == (1, 3, 256, 256)
+        assert outputs['results']['output'].size() == (1, 3, 128, 128)
 
     # test train_step and forward_test (gpu)
     if torch.cuda.is_available():
@@ -124,14 +124,14 @@ def test_srgan():
             outputs = restorer(**data_batch, test_mode=True)
         assert torch.equal(outputs['lq'], data_batch['lq'].cpu())
         assert torch.is_tensor(outputs['output'])
-        assert outputs['output'].size() == (1, 3, 256, 256)
+        assert outputs['output'].size() == (1, 3, 128, 128)
 
         # val_step
         with torch.no_grad():
             outputs = restorer.val_step(data_batch)
         assert torch.equal(outputs['lq'], data_batch['lq'].cpu())
         assert torch.is_tensor(outputs['output'])
-        assert outputs['output'].size() == (1, 3, 256, 256)
+        assert outputs['output'].size() == (1, 3, 128, 128)
 
         # train_step
         with patch.object(
@@ -153,7 +153,7 @@ def test_srgan():
             assert torch.equal(outputs['results']['gt'],
                                data_batch['gt'].cpu())
             assert torch.is_tensor(outputs['results']['output'])
-            assert outputs['results']['output'].size() == (1, 3, 256, 256)
+            assert outputs['results']['output'].size() == (1, 3, 128, 128)
 
     # test disc_steps and disc_init_steps
     data_batch = {'lq': inputs.cpu(), 'gt': targets.cpu()}
@@ -172,7 +172,7 @@ def test_srgan():
         assert torch.equal(outputs['results']['lq'], data_batch['lq'])
         assert torch.equal(outputs['results']['gt'], data_batch['gt'])
         assert torch.is_tensor(outputs['results']['output'])
-        assert outputs['results']['output'].size() == (1, 3, 256, 256)
+        assert outputs['results']['output'].size() == (1, 3, 128, 128)
 
     # test no discriminator (testing mode)
     model_cfg_ = model_cfg.copy()
@@ -182,7 +182,7 @@ def test_srgan():
         outputs = restorer(**data_batch, test_mode=True)
     assert torch.equal(outputs['lq'], data_batch['lq'])
     assert torch.is_tensor(outputs['output'])
-    assert outputs['output'].size() == (1, 3, 256, 256)
+    assert outputs['output'].size() == (1, 3, 128, 128)
 
     # test without pixel loss and perceptual loss
     model_cfg_ = model_cfg.copy()
@@ -198,7 +198,7 @@ def test_srgan():
     assert torch.equal(outputs['results']['lq'], data_batch['lq'])
     assert torch.equal(outputs['results']['gt'], data_batch['gt'])
     assert torch.is_tensor(outputs['results']['output'])
-    assert outputs['results']['output'].size() == (1, 3, 256, 256)
+    assert outputs['results']['output'].size() == (1, 3, 128, 128)
 
     # test train_step w/o loss_percep
     restorer = build_model(model_cfg, train_cfg=None, test_cfg=None)
@@ -217,7 +217,7 @@ def test_srgan():
         assert torch.equal(outputs['results']['lq'], data_batch['lq'])
         assert torch.equal(outputs['results']['gt'], data_batch['gt'])
         assert torch.is_tensor(outputs['results']['output'])
-        assert outputs['results']['output'].size() == (1, 3, 256, 256)
+        assert outputs['results']['output'].size() == (1, 3, 128, 128)
 
     # test train_step w/o loss_style
     restorer = build_model(model_cfg, train_cfg=None, test_cfg=None)
@@ -236,4 +236,8 @@ def test_srgan():
         assert torch.equal(outputs['results']['lq'], data_batch['lq'])
         assert torch.equal(outputs['results']['gt'], data_batch['gt'])
         assert torch.is_tensor(outputs['results']['output'])
-        assert outputs['results']['output'].size() == (1, 3, 256, 256)
+        assert outputs['results']['output'].size() == (1, 3, 128, 128)
+
+
+if __name__ == '__main__':
+    test_glean()
