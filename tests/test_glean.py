@@ -6,7 +6,7 @@ from mmcv.runner import obj_from_dict
 
 from mmedit.models import build_model
 from mmedit.models.backbones import GLEANStyleGANv2
-from mmedit.models.components import ModifiedVGG
+from mmedit.models.components import StyleGAN2Discriminator
 from mmedit.models.losses import GANLoss, MSELoss
 
 
@@ -19,7 +19,7 @@ def test_glean():
             in_size=16,
             out_size=256,
             style_channels=512),
-        discriminator=dict(type='ModifiedVGG', in_channels=3, mid_channels=2),
+        discriminator=dict(type='StyleGAN2Discriminator', in_size=256),
         pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean'),
         gan_loss=dict(
             type='GANLoss',
@@ -38,7 +38,7 @@ def test_glean():
     # test attributes
     assert restorer.__class__.__name__ == 'GLEAN'
     assert isinstance(restorer.generator, GLEANStyleGANv2)
-    assert isinstance(restorer.discriminator, ModifiedVGG)
+    assert isinstance(restorer.discriminator, StyleGAN2Discriminator)
     assert isinstance(restorer.pixel_loss, MSELoss)
     assert isinstance(restorer.gan_loss, GANLoss)
 
