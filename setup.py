@@ -150,6 +150,7 @@ if __name__ == '__main__':
         'super-resolution, generation',
         url='https://github.com/open-mmlab/mmediting',
         packages=find_packages(exclude=('configs', 'tools', 'demo')),
+        include_package_data=True,
         classifiers=[
             'Development Status :: 4 - Beta',
             'License :: OSI Approved :: Apache Software License',

@@ -1,0 +1,11 @@
+include requirements/*.txt
+include mmedit/ops/**/*.cpp mmedit/ops/**/*.cu
+include mmedit/ops/**/*.h mmedit/ops/**/*.cc
+include mmedit/VERSION
+include mmedit/model_zoo.yml
+include mmedit/configs/*/*.py
+include mmedit/configs/*/*.yml
+include mmedit/tools/*.py
+include mmedit/tools/*.sh
+include mmedit/tools/*/*.py
+include mmedit/demo/*/*

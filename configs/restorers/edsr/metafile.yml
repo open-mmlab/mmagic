@@ -1,0 +1,25 @@
+Collections:
+  - Name: EDSR
+    Metadata:
+      Training Data: DIV2K
+      Training Techniques:
+        - Adam
+      Training Resources: 1x TITAN Xp
+      Architecture:
+        - EDSR
+    Paper: http://openaccess.thecvf.com/content_cvpr_2017_workshops/w12/papers/Lim_Enhanced_Deep_Residual_CVPR_2017_paper.pdf
+    README: configs/restorers/edsr/README.md
+
+Models:
+  - Name: edsr_x2c64b16_g1_300k_div2k
+    In Collection: EDSR
+    Config: configs/restorers/edsr/edsr_x2c64b16_g1_300k_div2k.py
+    Metadata:
+      Training Memory (GB): 0.7
+    Results:
+      - Task: x2 Super Resolution
+        Dataset: DIV2K
+        Metrics:
+          PSNR: 34.5896
+          SSIM: 0.9352
+    Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x2c64b16_1x16_300k_div2k_20200604-19fe95ea.pth
