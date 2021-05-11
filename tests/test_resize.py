@@ -45,7 +45,3 @@ def test_generate_by_resize():
         f'output_key={re_size.output_key}, ' +
         f'interpolation={re_size.interpolation}, ' +
         f'backend={re_size.backend}')
-
-
-if __name__ == '__main__':
-    test_generate_by_resize()
