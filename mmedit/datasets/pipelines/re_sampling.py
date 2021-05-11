@@ -9,7 +9,10 @@ from ..registry import PIPELINES
 
 @PIPELINES.register_module()
 class ReSampling:
-    """Resize image.
+    """Re-Sampling image.
+
+        The result will be saved in the same key (output_key == input_key)
+        or another key.
 
     Args:
         scale (float): The resampling scale. scale > 0.
