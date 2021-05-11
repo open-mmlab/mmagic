@@ -1,5 +1,6 @@
 import mmcv
 import numpy as np
+from PIL.Image import NONE
 from torch.nn.modules.utils import _pair
 
 from ..registry import PIPELINES
@@ -535,48 +536,35 @@ class ModCrop:
 
 
 @PIPELINES.register_module()
-class TopLeftCrop:
-    """Modify the size of image by cropping or padding. Align top-left.
+class CropLike:
+    """Crop/pad a key according to the size of another key.
 
     Args:
-        key (str): The key needs to be cropped.
-        source_key (str | None): The source key. Default: None.
-        target_size (Tuple[int] | None): The target size. [h, w]
+        target_key (str): The key needs to be cropped.
+        reference_key (str | None): The reference key, need its size.
             Default: None.
-
-        The priority of getting 'target size' is:
-            1, results[source_key].shape
-            2, target_size
     """
 
-    def __init__(self, key, source_key=None, target_size=None):
+    def __init__(self, target_key, reference_key=NONE):
 
-        assert (source_key or target_size), 'Need source_key or target_size'
-        self.key = key
-        self.source_key = source_key
-        if isinstance(target_size, int):
-            self.target_size = (target_size, target_size)
-        else:
-            self.target_size = target_size
+        assert reference_key and target_key
+        self.target_key = target_key
+        self.reference_key = reference_key
 
     def __call__(self, results):
         """Call function.
 
         Args:
             results (dict): A dict containing the necessary information and
-                data for augmentation. Require self.key.
+                data for augmentation.
+                Require self.target_key and self.reference_key.
 
         Returns:
             dict: A dict containing the processed data and information.
-                Modify self.key.
+                Modify self.target_key.
         """
-        if self.source_key and self.source_key in results:
-            size = results[self.source_key].shape
-        elif self.target_size:
-            size = self.target_size
-        else:
-            raise ValueError('Need effective source_key or target_size')
-        old_image = results[self.key]
+        size = results[self.reference_key].shape
+        old_image = results[self.target_key]
         old_size = old_image.shape
         h, w = old_size[:2]
         new_size = size[:2] + old_size[2:]
@@ -584,11 +572,10 @@ class TopLeftCrop:
 
         format_image = np.zeros(new_size, dtype=old_image.dtype)
         format_image[:h_cover, :w_cover] = old_image[:h_cover, :w_cover]
-        results[self.key] = format_image
+        results[self.target_key] = format_image
 
         return results
 
     def __repr__(self):
-        return self.__class__.__name__ + (f' key={self.key}, ' +
-                                          f'source_key={self.source_key}, ' +
-                                          f'target_size={self.target_size}')
+        return (self.__class__.__name__ + f' target_key={self.target_key}, ' +
+                f'reference_key={self.reference_key}')
