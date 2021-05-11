@@ -5,7 +5,7 @@ import pytest
 
 from mmedit.datasets.pipelines import (Crop, CropAroundCenter, CropAroundFg,
                                        CropAroundUnknown, FixedCrop, ModCrop,
-                                       PairedRandomCrop)
+                                       ModifySize, PairedRandomCrop)
 
 
 class TestAugmentations:
@@ -405,3 +405,45 @@ class TestAugmentations:
             assert v.shape == (32, 32, 3)
         np.testing.assert_almost_equal(results['gt'][0], results['gt'][1])
         np.testing.assert_almost_equal(results['lq'][0], results['lq'][1])
+
+
+def test_generate_by_resize():
+    img = np.uint8(np.random.randn(480, 640, 3) * 255)
+    img_ref = np.uint8(np.random.randn(512, 512, 3) * 255)
+
+    inputs = dict(gt=img, ref=img_ref)
+    modify_size = ModifySize(target_key='gt', source_key='ref')
+    results = modify_size(inputs)
+    assert set(list(results.keys())) == set(['gt', 'ref'])
+    assert repr(modify_size) == (
+        modify_size.__class__.__name__ +
+        f' target_key={modify_size.target_key}, ' +
+        f'source_key={modify_size.source_key}, ' +
+        f'target_size={modify_size.target_size}')
+    assert results['gt'].shape == (512, 512, 3)
+    sum_diff = np.sum(abs(results['gt'][:480, :512] - img[:480, :512]))
+    assert sum_diff < 1e-6
+
+    inputs = dict(gt=img)
+    modify_size = ModifySize(target_key='gt', target_size=(300, 700))
+    results = modify_size(inputs)
+    assert set(list(results.keys())) == set(['gt'])
+    assert results['gt'].shape == (300, 700, 3)
+    sum_diff = np.sum(abs(results['gt'][:300, :640] - img[:300, :640]))
+    assert sum_diff < 1e-6
+
+    inputs = dict(gt=img, ref=img_ref[:, :, 0])
+    modify_size = ModifySize(target_key='gt', source_key='ref')
+    results = modify_size(inputs)
+    assert set(list(results.keys())) == set(['gt', 'ref'])
+    assert results['gt'].shape == (512, 512, 3)
+    sum_diff = np.sum(abs(results['gt'][:480, :512] - img[:480, :512]))
+    assert sum_diff < 1e-6
+
+    inputs = dict(gt=img[:, :, 0], ref=img_ref)
+    modify_size = ModifySize(target_key='gt', source_key='ref')
+    results = modify_size(inputs)
+    assert set(list(results.keys())) == set(['gt', 'ref'])
+    assert results['gt'].shape == (512, 512)
+    sum_diff = np.sum(abs(results['gt'][:480, :512] - img[:480, :512, 0]))
+    assert sum_diff < 1e-6

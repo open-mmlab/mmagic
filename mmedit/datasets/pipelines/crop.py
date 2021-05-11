@@ -532,3 +532,64 @@ class ModCrop:
             raise ValueError(f'Wrong img ndim: {img.ndim}.')
         results['gt'] = img
         return results
+
+
+@PIPELINES.register_module()
+class ModifySize:
+    """Modify size.
+
+        Modify the size of image by cropping or padding. Align upper-left.
+
+    Args:
+        target_key (str): The target key.
+        source_key (str | None): The source key. Default: None.
+        target_size (Tuple[int] | None): The target size. [h, w]
+            Default: None.
+
+        The priority of getting 'target size' is:
+            1, results[source_key].shape
+            2, target_size
+    """
+
+    def __init__(self, target_key, source_key=None, target_size=None):
+
+        assert (source_key or target_size), 'Need source_key or target_size'
+        self.target_key = target_key
+        self.source_key = source_key
+        if isinstance(target_size, int):
+            self.target_size = (target_size, target_size)
+        else:
+            self.target_size = target_size
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        if self.source_key and self.source_key in results:
+            size = results[self.source_key].shape
+        elif self.target_size:
+            size = self.target_size
+        else:
+            raise ValueError('Need effective target_key or target_size')
+        old_image = results[self.target_key]
+        old_size = old_image.shape
+        h, w = old_size[:2]
+        new_size = size[:2] + old_size[2:]
+        h_cover, w_cover = min(h, size[0]), min(w, size[1])
+
+        format_image = np.zeros(new_size, dtype=old_image.dtype)
+        format_image[:h_cover, :w_cover] = old_image[:h_cover, :w_cover]
+        results[self.target_key] = format_image
+
+        return results
+
+    def __repr__(self):
+        return self.__class__.__name__ + (f' target_key={self.target_key}, ' +
+                                          f'source_key={self.source_key}, ' +
+                                          f'target_size={self.target_size}')
