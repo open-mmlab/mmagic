@@ -5,7 +5,7 @@ from .augmentation import (BinarizeImage, Flip, GenerateFrameIndices,
                            RandomTransposeHW, Resize, TemporalReverse)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
-                   FixedCrop, ModCrop, ModifySize, PairedRandomCrop)
+                   FixedCrop, ModCrop, PairedRandomCrop, TopLeftCrop)
 from .down_sampling import RandomDownSampling
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
@@ -31,5 +31,5 @@ __all__ = [
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap',
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
-    'ModifySize'
+    'TopLeftCrop'
 ]
