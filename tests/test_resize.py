@@ -1,6 +1,6 @@
 import numpy as np
 
-from mmedit.datasets.pipelines import RandomDownSampling, ReSampling
+from mmedit.datasets.pipelines import GenerateByResize, RandomDownSampling
 
 
 def test_random_down_sampling():
@@ -33,15 +33,19 @@ def test_random_down_sampling():
         f'backend={down_sampling2.backend}')
 
 
-def test_re_sampling():
+def test_generate_by_resize():
     img = np.uint8(np.random.randn(480, 640, 3) * 255)
     inputs = dict(gt=img)
-    re_sampling = ReSampling(scale=1 / 4, input_key='gt', output_key='lq')
-    results = re_sampling(inputs)
+    re_size = GenerateByResize(scale=1 / 4, input_key='gt', output_key='lq')
+    results = re_size(inputs)
     assert set(list(results.keys())) == set(['gt', 'lq'])
-    assert repr(re_sampling) == (
-        re_sampling.__class__.__name__ + f' scale={re_sampling.scale}, ' +
-        f'input_key={re_sampling.input_key}, ' +
-        f'output_key={re_sampling.output_key}, ' +
-        f'interpolation={re_sampling.interpolation}, ' +
-        f'backend={re_sampling.backend}')
+    assert repr(re_size) == (
+        re_size.__class__.__name__ + f' scale={re_size.scale}, ' +
+        f'input_key={re_size.input_key}, ' +
+        f'output_key={re_size.output_key}, ' +
+        f'interpolation={re_size.interpolation}, ' +
+        f'backend={re_size.backend}')
+
+
+if __name__ == '__main__':
+    test_generate_by_resize()

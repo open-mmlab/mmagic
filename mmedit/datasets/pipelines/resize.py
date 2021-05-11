@@ -8,8 +8,8 @@ from ..registry import PIPELINES
 
 
 @PIPELINES.register_module()
-class ReSampling:
-    """Re-Sampling image.
+class GenerateByResize:
+    """Resize to generate image.
 
         The result will be saved in the same key (output_key == input_key)
         or another key.
