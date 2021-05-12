@@ -6,7 +6,6 @@ from .augmentation import (BinarizeImage, Flip, GenerateFrameIndices,
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    CropLike, FixedCrop, ModCrop, PairedRandomCrop)
-from .down_sampling import RandomDownSampling
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
 from .generate_coordinate_and_cell import GenerateCoordinateAndCell
@@ -17,6 +16,7 @@ from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, GenerateTrimapWithDistTransform,
                           MergeFgAndBg, PerturbBg, TransformTrimap)
 from .normalization import Normalize, RescaleToZeroOne
+from .sr_resize import RandomDownSampling, SRResize
 
 __all__ = [
     'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadMask',
@@ -29,7 +29,7 @@ __all__ = [
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
     'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
-    'GenerateTrimapWithDistTransform', 'TransformTrimap',
+    'GenerateTrimapWithDistTransform', 'TransformTrimap', 'SRResize',
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
     'CropLike'
 ]
