@@ -1,6 +1,5 @@
 import mmcv
 import numpy as np
-from PIL.Image import NONE
 from torch.nn.modules.utils import _pair
 
 from ..registry import PIPELINES
@@ -537,7 +536,8 @@ class ModCrop:
 
 @PIPELINES.register_module()
 class CropLike:
-    """Crop/pad a key according to the size of another key.
+    """Crop/pad the image in the target_key according to the size of image
+        in the reference_key .
 
     Args:
         target_key (str): The key needs to be cropped.
@@ -545,7 +545,7 @@ class CropLike:
             Default: None.
     """
 
-    def __init__(self, target_key, reference_key=NONE):
+    def __init__(self, target_key, reference_key=None):
 
         assert reference_key and target_key
         self.target_key = target_key
