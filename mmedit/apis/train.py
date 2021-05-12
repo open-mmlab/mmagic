@@ -7,10 +7,11 @@ import mmcv
 import numpy as np
 import torch
 from mmcv.parallel import MMDataParallel
-from mmcv.runner import HOOKS, IterBasedRunner
+from mmcv.runner import HOOKS, IterBasedRunner, build_runner
 
 from mmedit.core import DistEvalIterHook, EvalIterHook, build_optimizers
 from mmedit.core.distributed_wrapper import DistributedDataParallelWrapper
+from mmedit.core.runners.apex_amp_utils import apex_amp_initialize
 from mmedit.datasets.builder import build_dataloader, build_dataset
 from mmedit.utils import get_root_logger
 
@@ -133,12 +134,33 @@ def _dist_train(model,
 
     # build runner
     optimizer = build_optimizers(model, cfg.optimizers)
-    runner = IterBasedRunner(
-        model,
-        optimizer=optimizer,
-        work_dir=cfg.work_dir,
-        logger=logger,
-        meta=meta)
+
+    # use apex amp
+    _use_apex_amp = False
+    if cfg.get('apex_amp', None):
+        model, optimizer = apex_amp_initialize(model, optimizer,
+                                               **cfg.apex_amp)
+        _use_apex_amp = True
+
+    # allow users to define the runner
+    if cfg.get('runner', None):
+        runner = build_runner(
+            cfg.runner,
+            dict(
+                model=model,
+                optimizer=optimizer,
+                work_dir=cfg.work_dir,
+                logger=logger,
+                use_apex_amp=_use_apex_amp,
+                meta=meta))
+    else:
+        runner = IterBasedRunner(
+            model,
+            optimizer=optimizer,
+            work_dir=cfg.work_dir,
+            logger=logger,
+            meta=meta)
+
     # an ugly walkaround to make the .log and .log.json filenames the same
     runner.timestamp = timestamp
 
@@ -189,6 +211,7 @@ def _dist_train(model,
     runner.run(data_loaders, cfg.workflow, cfg.total_iters)
 
 
+# TODO: Support fp16 for non-distributed training
 def _non_dist_train(model,
                     dataset,
                     cfg,

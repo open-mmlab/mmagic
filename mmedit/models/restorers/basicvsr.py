@@ -4,6 +4,7 @@ import os.path as osp
 import mmcv
 import numpy as np
 import torch
+import torch.cuda.amp.autocast
 
 from mmedit.core import tensor2img
 from ..registry import MODELS
@@ -62,7 +63,11 @@ class BasicVSR(BasicRestorer):
 
         return is_mirror_extended
 
-    def train_step(self, data_batch, optimizer):
+    def train_step(self,
+                   data_batch,
+                   optimizer,
+                   loss_scaler=None,
+                   use_apex_amp=False):
         """Train step.
 
         Args:
@@ -72,6 +77,7 @@ class BasicVSR(BasicRestorer):
         Returns:
             dict: Returned output.
         """
+
         # fix SPyNet and EDVR at the beginning
         if self.step_counter < self.fix_iter:
             if not self.generator.find_unused_parameters:
@@ -84,13 +90,30 @@ class BasicVSR(BasicRestorer):
             self.generator.find_unused_parameters = False
             self.generator.requires_grad_(True)
 
-        outputs = self(**data_batch, test_mode=False)
-        loss, log_vars = self.parse_losses(outputs.pop('losses'))
+        fp16_enabled = True if loss_scaler is not None else False
+        with torch.cuda.amp.autocast(enabled=fp16_enabled):
+            outputs = self(**data_batch, test_mode=False)
+            loss, log_vars = self.parse_losses(outputs.pop('losses'))
 
         # optimize
         optimizer['generator'].zero_grad()
-        loss.backward()
-        optimizer['generator'].step()
+        if loss_scaler:
+            loss_scaler.scale(loss).backward()
+        elif use_apex_amp:
+            from apex import amp
+            with amp.scale_loss(
+                    loss, optimizer['generator'], loss_id=1) as scaled_loss:
+                scaled_loss.backward()
+        else:
+            loss.backward()
+
+        if loss_scaler:
+            loss_scaler.unscale_(optimizer['generator'])
+            # note that we do not contain clip_grad procedure
+            loss_scaler.step(optimizer['generator'])
+            # loss_scaler.update will be called in runner.train()
+        else:
+            optimizer['generator'].step()
 
         self.step_counter += 1
 
