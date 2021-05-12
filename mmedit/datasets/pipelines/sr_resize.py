@@ -9,10 +9,10 @@ from ..registry import PIPELINES
 
 @PIPELINES.register_module()
 class SRResize:
-    """Resize image, include up sampling and down sampling.
+    """Resize image by a scale, including upsampling and downsampling.
 
-        The result will be saved in the same key (output_key == input_key)
-        or another key.
+        Image will be loaded from the input_key and the result will be saved
+            in the specified output_key (can equal to input_key).
 
     Args:
         scale (float): The resampling scale. scale > 0.
