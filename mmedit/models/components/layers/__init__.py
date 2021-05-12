@@ -1,3 +1,3 @@
-from .mean_shift import MeanShift
+from .feature_shift import FeatureShift
 
-__all__ = ['MeanShift']
+__all__ = ['FeatureShift']
