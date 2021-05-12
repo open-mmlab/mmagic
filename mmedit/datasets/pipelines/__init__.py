@@ -5,7 +5,7 @@ from .augmentation import (BinarizeImage, Flip, GenerateFrameIndices,
                            RandomTransposeHW, Resize, TemporalReverse)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
-                   FixedCrop, ModCrop, PairedRandomCrop)
+                   CropLike, FixedCrop, ModCrop, PairedRandomCrop)
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
 from .generate_coordinate_and_cell import GenerateCoordinateAndCell
@@ -30,5 +30,6 @@ __all__ = [
     'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap', 'SRResize',
-    'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence'
+    'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
+    'CropLike'
 ]
