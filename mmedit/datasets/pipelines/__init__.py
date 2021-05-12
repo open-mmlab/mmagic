@@ -16,7 +16,7 @@ from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, GenerateTrimapWithDistTransform,
                           MergeFgAndBg, PerturbBg, TransformTrimap)
 from .normalization import Normalize, RescaleToZeroOne
-from .resize import GenerateByResize, RandomDownSampling
+from .sr_resize import RandomDownSampling, SRResize
 
 __all__ = [
     'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadMask',
@@ -29,6 +29,6 @@ __all__ = [
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
     'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
-    'GenerateTrimapWithDistTransform', 'TransformTrimap', 'GenerateByResize',
+    'GenerateTrimapWithDistTransform', 'TransformTrimap', 'SRResize',
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence'
 ]
