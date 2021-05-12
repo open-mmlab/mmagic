@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 
 from mmedit.datasets.pipelines import (Crop, CropAroundCenter, CropAroundFg,
-                                       CropAroundUnknown, FixedCrop, ModCrop,
-                                       PairedRandomCrop)
+                                       CropAroundUnknown, CropLike, FixedCrop,
+                                       ModCrop, PairedRandomCrop)
 
 
 class TestAugmentations:
@@ -405,3 +405,36 @@ class TestAugmentations:
             assert v.shape == (32, 32, 3)
         np.testing.assert_almost_equal(results['gt'][0], results['gt'][1])
         np.testing.assert_almost_equal(results['lq'][0], results['lq'][1])
+
+
+def test_crop_like():
+    img = np.uint8(np.random.randn(480, 640, 3) * 255)
+    img_ref = np.uint8(np.random.randn(512, 512, 3) * 255)
+
+    inputs = dict(gt=img, ref=img_ref)
+    crop_like = CropLike(target_key='gt', reference_key='ref')
+    results = crop_like(inputs)
+    assert set(list(results.keys())) == set(['gt', 'ref'])
+    assert repr(crop_like) == (
+        crop_like.__class__.__name__ +
+        f' target_key={crop_like.target_key}, ' +
+        f'reference_key={crop_like.reference_key}')
+    assert results['gt'].shape == (512, 512, 3)
+    sum_diff = np.sum(abs(results['gt'][:480, :512] - img[:480, :512]))
+    assert sum_diff < 1e-6
+
+    inputs = dict(gt=img, ref=img_ref[:, :, 0])
+    crop_like = CropLike(target_key='gt', reference_key='ref')
+    results = crop_like(inputs)
+    assert set(list(results.keys())) == set(['gt', 'ref'])
+    assert results['gt'].shape == (512, 512, 3)
+    sum_diff = np.sum(abs(results['gt'][:480, :512] - img[:480, :512]))
+    assert sum_diff < 1e-6
+
+    inputs = dict(gt=img[:, :, 0], ref=img_ref)
+    crop_like = CropLike(target_key='gt', reference_key='ref')
+    results = crop_like(inputs)
+    assert set(list(results.keys())) == set(['gt', 'ref'])
+    assert results['gt'].shape == (512, 512)
+    sum_diff = np.sum(abs(results['gt'][:480, :512] - img[:480, :512, 0]))
+    assert sum_diff < 1e-6
