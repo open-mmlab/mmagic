@@ -1,14 +1,14 @@
 import torch
 
-from mmedit.models.components.layers import FeatureShift
+from mmedit.models.common import ImgNormalize
 
 
-def test_feature_shift():
+def test_normalize_layer():
     rgb_mean = (1, 2, 3)
     rgb_std = (1, 0.5, 0.25)
-    mean_shift = FeatureShift(1, rgb_mean, rgb_std)
+    layer = ImgNormalize(1, rgb_mean, rgb_std)
     x = torch.randn((2, 3, 64, 64))
-    y = mean_shift(x)
+    y = layer(x)
     x = x.permute((1, 0, 2, 3)).reshape((3, -1))
     y = y.permute((1, 0, 2, 3)).reshape((3, -1))
     rgb_mean = torch.tensor(rgb_mean)
@@ -19,3 +19,7 @@ def test_feature_shift():
     std_y = y.std(dim=1)
     assert sum(torch.div(std_x, std_y) - rgb_std) < 1e-5
     assert sum(torch.div(mean_x - rgb_mean, rgb_std) - mean_y) < 1e-5
+
+
+if __name__ == '__main__':
+    test_normalize_layer()
