@@ -23,7 +23,7 @@ class LoadImageFromFile:
             `results` dict with name of `f'ori_{key}'`. Default: False.
         use_cache (bool): If True, load all images at once. Default: False.
         backend (str): The image loading backend type. Options are `cv2`,
-            `pillow`, and 'turbojpeg'.
+            `pillow`, and 'turbojpeg'. Default: None.
         kwargs (dict): Args for file client.
     """
 
@@ -34,7 +34,7 @@ class LoadImageFromFile:
                  channel_order='bgr',
                  save_original_img=False,
                  use_cache=False,
-                 backend='cv2',
+                 backend=None,
                  **kwargs):
         self.io_backend = io_backend
         self.key = key
