@@ -27,7 +27,7 @@ def main():
         input_shape = (3, args.shape[0], args.shape[0])
     elif len(args.shape) == 2:
         input_shape = (3, ) + tuple(args.shape)
-    elif len(args.shape) == 3:
+    elif len(args.shape) in [3, 4]:  # 4 for video inputs (t, c, h, w)
         input_shape = tuple(args.shape)
     else:
         raise ValueError('invalid input shape')
@@ -45,9 +45,12 @@ def main():
             f'with {model.__class__.__name__}')
 
     flops, params = get_model_complexity_info(model, input_shape)
+
     split_line = '=' * 30
     print(f'{split_line}\nInput shape: {input_shape}\n'
           f'Flops: {flops}\nParams: {params}\n{split_line}')
+    print('!!!If you are testing a recurrent network, please make sure to '
+          'divide the FLOPs by the number of frames.')
     print('!!!Please be cautious if you use the results in papers. '
           'You may need to check if all ops are supported and verify that the '
           'flops computation is correct.')
