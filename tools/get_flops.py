@@ -49,8 +49,8 @@ def main():
     split_line = '=' * 30
     print(f'{split_line}\nInput shape: {input_shape}\n'
           f'Flops: {flops}\nParams: {params}\n{split_line}')
-    print('!!!If you are testing a recurrent network, please make sure to '
-          'divide the FLOPs by the number of frames.')
+    print('!!!If you are testing a recurrent network, please divide the '
+          'FLOPs by the number of frames.')
     print('!!!Please be cautious if you use the results in papers. '
           'You may need to check if all ops are supported and verify that the '
           'flops computation is correct.')
