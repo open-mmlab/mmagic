@@ -1,3 +1,4 @@
+import pytest
 import torch
 
 from mmedit.models import build_component
@@ -16,3 +17,12 @@ def test_lte():
     assert x_lv1.shape == (2, 64, 64, 64)
     assert x_lv2.shape == (2, 128, 32, 32)
     assert x_lv3.shape == (2, 256, 16, 16)
+    lte.init_weights(None)
+    with pytest.raises(IOError):
+        lte.init_weights('')
+    with pytest.raises(TypeError):
+        lte.init_weights(1)
+
+
+if __name__ == '__main__':
+    test_lte()

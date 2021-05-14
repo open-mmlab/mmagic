@@ -12,7 +12,7 @@ from mmedit.utils import get_root_logger
 class LTE(nn.Module):
     """Learnable Texture Extractor
 
-    Based on pretrained VGG19.
+    Based on pretrained VGG19. Generate features in 3 levels.
 
     Args:
         requires_grad (bool): Require grad or not. Default: True.
@@ -56,6 +56,19 @@ class LTE(nn.Module):
             self.init_weights(pretrained)
 
     def forward(self, x):
+        """
+        Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, 3, h, w).
+
+        Returns:
+            Forward results in 3 levels.
+            x_lv1 (Tensor): Forward results in level 1 (n, 64, h, w).
+            x_lv2 (Tensor): Forward results in level 2 (n, 128, h/2, w/2).
+            x_lv3 (Tensor): Forward results in level 3 (n, 256, h/4, w/4).
+        """
+
         tensors = {}
         tensors['x'] = x
         x = self.sub_mean(x)
@@ -82,6 +95,7 @@ class LTE(nn.Module):
             strict (boo, optional): Whether strictly load the pretrained model.
                 Defaults to True.
         """
+
         if isinstance(pretrained, str):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=strict, logger=logger)
