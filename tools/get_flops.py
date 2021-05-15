@@ -49,8 +49,10 @@ def main():
     split_line = '=' * 30
     print(f'{split_line}\nInput shape: {input_shape}\n'
           f'Flops: {flops}\nParams: {params}\n{split_line}')
-    print('!!!If you are testing a recurrent network, please divide the '
-          'FLOPs by the number of frames.')
+    if len(input_shape) == 4:
+        print('!!!If your network computes N frames in one forward pass, you '
+              'may want to divide the FLOPs by N to get the average FLOPs '
+              'for each frame.')
     print('!!!Please be cautious if you use the results in papers. '
           'You may need to check if all ops are supported and verify that the '
           'flops computation is correct.')
