@@ -4,7 +4,7 @@ import os.path as osp
 import mmcv
 import numpy as np
 import torch
-import torch.cuda.amp.autocast
+import torch.cuda.amp
 
 from mmedit.core import tensor2img
 from ..registry import MODELS
@@ -34,16 +34,20 @@ class BasicVSR(BasicRestorer):
                  pixel_loss,
                  train_cfg=None,
                  test_cfg=None,
-                 pretrained=None):
+                 pretrained=None,
+                 fp16_enabled=False):
         super().__init__(generator, pixel_loss, train_cfg, test_cfg,
                          pretrained)
 
         # fix pre-trained networks
         self.fix_iter = train_cfg.get('fix_iter', 0) if train_cfg else 0
-        self.generator.find_unused_parameters = False
+        self.is_weight_fixed = False
 
         # count training steps
         self.register_buffer('step_counter', torch.zeros(1))
+
+        # fp16 settings
+        self.fp16_enabled = fp16_enabled
 
     def check_if_mirror_extended(self, lrs):
         """Check whether the input is a mirror-extended sequence.
@@ -80,18 +84,23 @@ class BasicVSR(BasicRestorer):
 
         # fix SPyNet and EDVR at the beginning
         if self.step_counter < self.fix_iter:
-            if not self.generator.find_unused_parameters:
-                self.generator.find_unused_parameters = True
+            if not self.is_weight_fixed:
+                self.is_weight_fixed = True
                 for k, v in self.generator.named_parameters():
                     if 'spynet' in k or 'edvr' in k:
                         v.requires_grad_(False)
         elif self.step_counter == self.fix_iter:
             # train all the parameters
-            self.generator.find_unused_parameters = False
             self.generator.requires_grad_(True)
 
-        fp16_enabled = True if loss_scaler is not None else False
-        with torch.cuda.amp.autocast(enabled=fp16_enabled):
+        if loss_scaler is None and self.fp16_enabled:
+            raise AssertionError('When loss_scaler is None, fp16_enabled '
+                                 'must be False. But got True.')
+        elif loss_scaler is not None and not self.fp16_enabled:
+            raise AssertionError('When loss_scaler is not None, fp16_enabled '
+                                 'must be True. But got False.')
+
+        with torch.cuda.amp.autocast(enabled=self.fp16_enabled):
             outputs = self(**data_batch, test_mode=False)
             loss, log_vars = self.parse_losses(outputs.pop('losses'))
 

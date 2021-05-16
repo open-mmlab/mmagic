@@ -250,10 +250,10 @@ class SPyNet(nn.Module):
 
         self.register_buffer(
             'mean',
-            torch.Tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1))
+            torch.Tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1).half())
         self.register_buffer(
             'std',
-            torch.Tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1))
+            torch.Tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1).half())
 
     def compute_flow(self, ref, supp):
         """Compute flow from ref to supp.
@@ -348,8 +348,8 @@ class SPyNet(nn.Module):
             align_corners=False)
 
         # adjust the flow values
-        flow[:, 0, :, :] *= float(w) / float(w_up)
-        flow[:, 1, :, :] *= float(h) / float(h_up)
+        flow[:, 0, :, :] *= w / w_up
+        flow[:, 1, :, :] *= h / h_up
 
         return flow
 

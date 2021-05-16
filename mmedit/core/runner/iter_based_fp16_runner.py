@@ -126,7 +126,7 @@ class IterBasedFP16Runner(IterBasedRunner):
 
         # add fp16 grad scaler, using pytorch official GradScaler
         self.loss_scaler = GradScaler(**fp16_loss_scaler)
-        mmcv.print_log('Use FP16 grad scaler in Training', 'edit')
+        mmcv.print_log('Use FP16 grad scaler in Training', 'mmedit')
 
         # flag to use amp in apex (NVIDIA)
         self.use_apex_amp = use_apex_amp

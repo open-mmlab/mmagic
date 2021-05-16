@@ -11,7 +11,7 @@ from mmcv.runner import HOOKS, IterBasedRunner, build_runner
 
 from mmedit.core import DistEvalIterHook, EvalIterHook, build_optimizers
 from mmedit.core.distributed_wrapper import DistributedDataParallelWrapper
-from mmedit.core.runners.apex_amp_utils import apex_amp_initialize
+from mmedit.core.runner.apex_amp_utils import apex_amp_initialize
 from mmedit.datasets.builder import build_dataloader, build_dataset
 from mmedit.utils import get_root_logger
 
