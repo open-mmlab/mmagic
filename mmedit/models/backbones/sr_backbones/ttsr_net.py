@@ -45,7 +45,7 @@ class SFE(nn.Module):
         super().__init__()
 
         self.num_blocks = num_blocks
-        self.first = norm_conv_layer(in_channels, mid_channels)
+        self.conv_first = norm_conv_layer(in_channels, mid_channels)
 
         self.body = make_layer(
             ResidualBlockNoBN,
@@ -53,7 +53,7 @@ class SFE(nn.Module):
             mid_channels=mid_channels,
             res_scale=res_scale)
 
-        self.last = norm_conv_layer(mid_channels, mid_channels)
+        self.conv_last = norm_conv_layer(mid_channels, mid_channels)
 
     def forward(self, x):
         """Forward function.
@@ -65,9 +65,9 @@ class SFE(nn.Module):
             Tensor: Forward results.
         """
 
-        x = F.relu(self.first(x))
+        x = F.relu(self.conv_first(x))
         x1 = x
         x = self.body(x)
-        x = self.last(x)
+        x = self.conv_last(x)
         x = x + x1
         return x
