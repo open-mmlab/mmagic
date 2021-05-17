@@ -12,6 +12,7 @@ class SRFolderRefDataset(BaseSRDataset):
     The dataset loads ref (reference) image pairs
         Must contain: ref (reference)
         Optional: GT (Ground-Truth), LQ (Low Quality), or both
+            Cannot only contain ref.
 
     Applies specified transforms and finally returns a dict containing paired
     data and other information.
@@ -72,6 +73,7 @@ class SRFolderRefDataset(BaseSRDataset):
                  filename_tmp_gt='{}',
                  filename_tmp_lq='{}'):
         super().__init__(pipeline, scale, test_mode)
+        assert gt_folder or lq_folder
         self.scale = scale
         self.ref_folder = str(ref_folder)
         self.gt_folder = str(gt_folder) if gt_folder else None
