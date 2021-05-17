@@ -1,6 +1,7 @@
 import torch
 
-from mmedit.models.backbones.sr_backbones.ttsr_net import CSFI2, CSFI3, SFE
+from mmedit.models.backbones.sr_backbones.ttsr_net import (CSFI2, CSFI3, SFE,
+                                                           MergeFeatures)
 
 
 def test_sfe():
@@ -13,7 +14,7 @@ def test_sfe():
 def test_csfi():
     inputs1 = torch.rand(2, 16, 24, 24)
     inputs2 = torch.rand(2, 16, 48, 48)
-    inputs3 = torch.rand(2, 16, 96, 96)
+    inputs4 = torch.rand(2, 16, 96, 96)
 
     csfi2 = CSFI2(mid_channels=16)
     out1, out2 = csfi2(inputs1, inputs2)
@@ -21,12 +22,17 @@ def test_csfi():
     assert out2.shape == (2, 16, 48, 48)
 
     csfi3 = CSFI3(mid_channels=16)
-    out1, out2, out3 = csfi3(inputs1, inputs2, inputs3)
+    out1, out2, out4 = csfi3(inputs1, inputs2, inputs4)
     assert out1.shape == (2, 16, 24, 24)
     assert out2.shape == (2, 16, 48, 48)
-    assert out3.shape == (2, 16, 96, 96)
+    assert out4.shape == (2, 16, 96, 96)
 
 
-if __name__ == '__main__':
-    test_sfe()
-    test_csfi()
+def test_merge_features():
+    inputs1 = torch.rand(2, 16, 24, 24)
+    inputs2 = torch.rand(2, 16, 48, 48)
+    inputs4 = torch.rand(2, 16, 96, 96)
+
+    merge_features = MergeFeatures(mid_channels=16, out_channels=3)
+    out = merge_features(inputs1, inputs2, inputs4)
+    assert out.shape == (2, 3, 96, 96)

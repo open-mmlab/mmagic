@@ -168,3 +168,45 @@ class CSFI3(nn.Module):
         x4 = F.relu(self.conv_merge4(torch.cat((x4, x14, x24), dim=1)))
 
         return x1, x2, x4
+
+
+class MergeFeatures(nn.Module):
+    """Merge Features. Merge 1x, 2x, and 4x features.
+
+    Final module of Texture Transformer Network for Image Super-Resolution.
+
+    """
+
+    def __init__(self, mid_channels, out_channels):
+        super().__init__()
+        self.conv1to4 = _conv1x1_layer(mid_channels, mid_channels)
+        self.conv2to4 = _conv1x1_layer(mid_channels, mid_channels)
+        self.conv_merge = _conv3x3_layer(mid_channels * 3, mid_channels)
+        self.conv_last1 = _conv3x3_layer(mid_channels, mid_channels // 2)
+        self.conv_last2 = _conv1x1_layer(mid_channels // 2, out_channels)
+
+    def forward(self, x1, x2, x4):
+        """Forward function.
+
+        Args:
+            x1 (Tensor): Input tensor with shape (n, c, h, w).
+            x2 (Tensor): Input tensor with shape (n, c, 2h, 2w).
+            x4 (Tensor): Input tensor with shape (n, c, 4h, 4w).
+
+        Returns:
+            x (Tensor): Output tensor with shape (n, c_out, 4h, 4w).
+        """
+
+        x14 = F.interpolate(
+            x1, scale_factor=4, mode='bicubic', align_corners=False)
+        x14 = F.relu(self.conv1to4(x14))
+        x24 = F.interpolate(
+            x2, scale_factor=2, mode='bicubic', align_corners=False)
+        x24 = F.relu(self.conv2to4(x24))
+
+        x = F.relu(self.conv_merge(torch.cat((x4, x14, x24), dim=1)))
+        x = self.conv_last1(x)
+        x = self.conv_last2(x)
+        x = torch.clamp(x, -1, 1)
+
+        return x
