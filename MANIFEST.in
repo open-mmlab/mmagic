@@ -1,0 +1,5 @@
+include requirements/*.txt
+include mmedit/VERSION
+include mmedit/model_zoo.yml
+recursive-include mmedit/configs *.py *.yml
+recursive-include mmedit/tools *.sh *.py
