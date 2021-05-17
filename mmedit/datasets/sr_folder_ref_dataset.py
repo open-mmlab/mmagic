@@ -43,7 +43,8 @@ class SRFolderRefDataset(BaseSRDataset):
         ref_folder = 'data_root/ref'
         gt_folder = 'data_root/gt'
         lq_folder = 'data_root/lq'
-        filename_tmpl = '{}_x4'
+        filename_tmp_gt='{}'
+        filename_tmp_lq='{}_x4'
 
     Args:
         pipeline (List[dict | callable]): A sequence of data transformations.
@@ -82,10 +83,10 @@ class SRFolderRefDataset(BaseSRDataset):
     def load_annotations(self):
         """Load annoations for SR dataset.
 
-        It loads the ref and GT image path from folders.
+        It loads the ref, LQ and GT image path from folders.
 
         Returns:
-            dict: Returned dict for ref and GT pairs.
+            dict: Returned dict for ref, LQ and GT pairs.
         """
         data_infos = []
         ref_paths = self.scan_folder(self.ref_folder)

@@ -335,6 +335,39 @@ class TestSRDatasets:
         assert len(sr_folder_ref_dataset) == 1
         assert check_keys_contain(result.keys(), target_keys)
 
+        with pytest.raises(AssertionError):
+            sr_folder_ref_dataset = SRFolderRefDataset(
+                lq_folder=str(lq_folder),
+                gt_folder=str(self.data_prefix / 'image'),  # fake gt_folder
+                ref_folder=str(ref_folder),
+                pipeline=sr_pipeline,
+                scale=4,
+                filename_tmp_lq=filename_tmpl)
+        with pytest.raises(AssertionError):
+            sr_folder_ref_dataset = SRFolderRefDataset(
+                lq_folder=str(self.data_prefix / 'image'),  # fake lq_folder
+                gt_folder=str(gt_folder),
+                ref_folder=str(ref_folder),
+                pipeline=sr_pipeline,
+                scale=4,
+                filename_tmp_lq=filename_tmpl)
+        with pytest.raises(AssertionError):
+            sr_folder_ref_dataset = SRFolderRefDataset(
+                lq_folder=str(lq_folder),
+                gt_folder=str(self.data_prefix / 'bg'),  # fake gt_folder
+                ref_folder=str(ref_folder),
+                pipeline=sr_pipeline,
+                scale=4,
+                filename_tmp_lq=filename_tmpl)
+        with pytest.raises(AssertionError):
+            sr_folder_ref_dataset = SRFolderRefDataset(
+                lq_folder=str(self.data_prefix / 'bg'),  # fake lq_folder
+                gt_folder=str(gt_folder),
+                ref_folder=str(ref_folder),
+                pipeline=sr_pipeline,
+                scale=4,
+                filename_tmp_lq=filename_tmpl)
+
     def test_sr_lmdb_dataset(self):
         # setup
         lq_lmdb_folder = self.data_prefix / 'lq.lmdb'
