@@ -1,11 +1,12 @@
 import torch.nn as nn
 import torch.nn.functional as F
+from mmcv.cnn import build_conv_layer
 
 from mmedit.models.common import ResidualBlockNoBN, make_layer
 
 
 def norm_conv_layer(in_channels, out_channels, stride=1):
-    """Norm conv layer with kernal_size=3.
+    """Norm conv layer with kernel_size=3.
 
     Args:
         in_channels (int): Number of channels in the input image
@@ -13,12 +14,13 @@ def norm_conv_layer(in_channels, out_channels, stride=1):
         stride (int or tuple, optional): Stride of the convolution. Default: 1
 
     results:
-        conv_layer (Conv2d): Conv layer with kernal_size=3.
+        conv_layer (nn.Module): Created conv layer.
     """
 
-    conv_layer = nn.Conv2d(
-        in_channels,
-        out_channels,
+    conv_layer = build_conv_layer(
+        dict(type='Conv2d'),
+        in_channels=in_channels,
+        out_channels=out_channels,
         kernel_size=3,
         stride=stride,
         padding=1,
@@ -43,7 +45,7 @@ class SFE(nn.Module):
         super().__init__()
 
         self.num_blocks = num_blocks
-        self.conv_head = norm_conv_layer(in_channels, mid_channels)
+        self.first = norm_conv_layer(in_channels, mid_channels)
 
         self.body = make_layer(
             ResidualBlockNoBN,
@@ -51,7 +53,7 @@ class SFE(nn.Module):
             mid_channels=mid_channels,
             res_scale=res_scale)
 
-        self.conv_tail = norm_conv_layer(mid_channels, mid_channels)
+        self.last = norm_conv_layer(mid_channels, mid_channels)
 
     def forward(self, x):
         """Forward function.
@@ -63,9 +65,9 @@ class SFE(nn.Module):
             Tensor: Forward results.
         """
 
-        x = F.relu(self.conv_head(x))
+        x = F.relu(self.first(x))
         x1 = x
         x = self.body(x)
-        x = self.conv_tail(x)
+        x = self.last(x)
         x = x + x1
         return x

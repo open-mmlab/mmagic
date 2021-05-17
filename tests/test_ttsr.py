@@ -3,7 +3,7 @@ import torch
 from mmedit.models.backbones.sr_backbones.ttsr_net import SFE
 
 
-def test_ttsr():
+def test_sfe():
     inputs = torch.rand(2, 3, 48, 48)
     sfe = SFE(3, 64, 16, 1.)
     outputs = sfe(inputs)
@@ -11,4 +11,4 @@ def test_ttsr():
 
 
 if __name__ == '__main__':
-    test_ttsr()
+    test_sfe()
