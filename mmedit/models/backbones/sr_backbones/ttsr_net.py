@@ -59,10 +59,14 @@ class SFE(nn.Module):
 
 
 class CSFI2(nn.Module):
-    """Cross-Scale Feature Integration, include 2 scales.
+    """Cross-Scale Feature Integration between 1x and 2x features.
 
     Cross-Scale Feature Integration in Texture Transformer Network for
         Image Super-Resolution.
+    It is cross-scale feature integration between 1x and 2x features.
+        For example, `conv2to1` means conv layer from 2x feature to 1x
+        feature. Down-sampling is achieved by conv layer with stride=2,
+        and up-sampling is achieved by bicubic interpolate and conv layer.
 
     Args:
         mid_channels (int): Channel number of intermediate features
@@ -70,8 +74,8 @@ class CSFI2(nn.Module):
 
     def __init__(self, mid_channels):
         super().__init__()
-        self.conv12 = _conv1x1_layer(mid_channels, mid_channels)
-        self.conv21 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
+        self.conv1to2 = _conv1x1_layer(mid_channels, mid_channels)
+        self.conv2to1 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
 
         self.conv_merge1 = _conv3x3_layer(mid_channels * 2, mid_channels)
         self.conv_merge2 = _conv3x3_layer(mid_channels * 2, mid_channels)
@@ -90,8 +94,8 @@ class CSFI2(nn.Module):
 
         x12 = F.interpolate(
             x1, scale_factor=2, mode='bicubic', align_corners=False)
-        x12 = F.relu(self.conv12(x12))
-        x21 = F.relu(self.conv21(x2))
+        x12 = F.relu(self.conv1to2(x12))
+        x21 = F.relu(self.conv2to1(x2))
 
         x1 = F.relu(self.conv_merge1(torch.cat((x1, x21), dim=1)))
         x2 = F.relu(self.conv_merge2(torch.cat((x2, x12), dim=1)))
@@ -100,10 +104,14 @@ class CSFI2(nn.Module):
 
 
 class CSFI3(nn.Module):
-    """Cross-Scale Feature Integration, include 3 scales.
+    """Cross-Scale Feature Integration between 1x, 2x, and 4x features.
 
     Cross-Scale Feature Integration in Texture Transformer Network for
         Image Super-Resolution.
+    It is cross-scale feature integration between 1x and 2x features.
+        For example, `conv2to1` means conv layer from 2x feature to 1x
+        feature. Down-sampling is achieved by conv layer with stride=2,
+        and up-sampling is achieved by bicubic interpolate and conv layer.
 
     Args:
         mid_channels (int): Channel number of intermediate features
@@ -111,52 +119,52 @@ class CSFI3(nn.Module):
 
     def __init__(self, mid_channels):
         super().__init__()
-        self.conv12 = _conv1x1_layer(mid_channels, mid_channels)
-        self.conv13 = _conv1x1_layer(mid_channels, mid_channels)
+        self.conv1to2 = _conv1x1_layer(mid_channels, mid_channels)
+        self.conv1to4 = _conv1x1_layer(mid_channels, mid_channels)
 
-        self.conv21 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
-        self.conv23 = _conv1x1_layer(mid_channels, mid_channels)
+        self.conv2to1 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
+        self.conv2to4 = _conv1x1_layer(mid_channels, mid_channels)
 
-        self.conv31_1 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
-        self.conv31_2 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
-        self.conv32 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
+        self.conv4to1_1 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
+        self.conv4to1_2 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
+        self.conv4to2 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
 
         self.conv_merge1 = _conv3x3_layer(mid_channels * 3, mid_channels)
         self.conv_merge2 = _conv3x3_layer(mid_channels * 3, mid_channels)
-        self.conv_merge3 = _conv3x3_layer(mid_channels * 3, mid_channels)
+        self.conv_merge4 = _conv3x3_layer(mid_channels * 3, mid_channels)
 
-    def forward(self, x1, x2, x3):
+    def forward(self, x1, x2, x4):
         """Forward function.
 
         Args:
             x1 (Tensor): Input tensor with shape (n, c, h, w).
             x2 (Tensor): Input tensor with shape (n, c, 2h, 2w).
-            x3 (Tensor): Input tensor with shape (n, c, 4h, 4w).
+            x4 (Tensor): Input tensor with shape (n, c, 4h, 4w).
 
         Returns:
             x1 (Tensor): Output tensor with shape (n, c, h, w).
             x2 (Tensor): Output tensor with shape (n, c, 2h, 2w).
-            x3 (Tensor): Output tensor with shape (n, c, 4h, 4w).
+            x4 (Tensor): Output tensor with shape (n, c, 4h, 4w).
         """
 
         x12 = F.interpolate(
             x1, scale_factor=2, mode='bicubic', align_corners=False)
-        x12 = F.relu(self.conv12(x12))
-        x13 = F.interpolate(
+        x12 = F.relu(self.conv1to2(x12))
+        x14 = F.interpolate(
             x1, scale_factor=4, mode='bicubic', align_corners=False)
-        x13 = F.relu(self.conv13(x13))
+        x14 = F.relu(self.conv1to4(x14))
 
-        x21 = F.relu(self.conv21(x2))
-        x23 = F.interpolate(
+        x21 = F.relu(self.conv2to1(x2))
+        x24 = F.interpolate(
             x2, scale_factor=2, mode='bicubic', align_corners=False)
-        x23 = F.relu(self.conv23(x23))
+        x24 = F.relu(self.conv2to4(x24))
 
-        x31 = F.relu(self.conv31_1(x3))
-        x31 = F.relu(self.conv31_2(x31))
-        x32 = F.relu(self.conv32(x3))
+        x41 = F.relu(self.conv4to1_1(x4))
+        x41 = F.relu(self.conv4to1_2(x41))
+        x42 = F.relu(self.conv4to2(x4))
 
-        x1 = F.relu(self.conv_merge1(torch.cat((x1, x21, x31), dim=1)))
-        x2 = F.relu(self.conv_merge2(torch.cat((x2, x12, x32), dim=1)))
-        x3 = F.relu(self.conv_merge3(torch.cat((x3, x13, x23), dim=1)))
+        x1 = F.relu(self.conv_merge1(torch.cat((x1, x21, x41), dim=1)))
+        x2 = F.relu(self.conv_merge2(torch.cat((x2, x12, x42), dim=1)))
+        x4 = F.relu(self.conv_merge4(torch.cat((x4, x14, x24), dim=1)))
 
-        return x1, x2, x3
+        return x1, x2, x4
