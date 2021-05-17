@@ -8,9 +8,9 @@ from mmcv.cnn import build_conv_layer
 from mmedit.models.common import ResidualBlockNoBN, make_layer
 
 # Use partial to specify some default arguments
-_norm_conv_layer = partial(
+_conv3x3_layer = partial(
     build_conv_layer, dict(type='Conv2d'), kernel_size=3, padding=1)
-_bottleneck_layer = partial(
+_conv1x1_layer = partial(
     build_conv_layer, dict(type='Conv2d'), kernel_size=1, padding=0)
 
 
@@ -31,7 +31,7 @@ class SFE(nn.Module):
         super().__init__()
 
         self.num_blocks = num_blocks
-        self.conv_first = _norm_conv_layer(in_channels, mid_channels)
+        self.conv_first = _conv3x3_layer(in_channels, mid_channels)
 
         self.body = make_layer(
             ResidualBlockNoBN,
@@ -39,7 +39,7 @@ class SFE(nn.Module):
             mid_channels=mid_channels,
             res_scale=res_scale)
 
-        self.conv_last = _norm_conv_layer(mid_channels, mid_channels)
+        self.conv_last = _conv3x3_layer(mid_channels, mid_channels)
 
     def forward(self, x):
         """Forward function.
@@ -70,11 +70,11 @@ class CSFI2(nn.Module):
 
     def __init__(self, mid_channels):
         super().__init__()
-        self.conv12 = _bottleneck_layer(mid_channels, mid_channels)
-        self.conv21 = _norm_conv_layer(mid_channels, mid_channels, stride=2)
+        self.conv12 = _conv1x1_layer(mid_channels, mid_channels)
+        self.conv21 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
 
-        self.conv_merge1 = _norm_conv_layer(mid_channels * 2, mid_channels)
-        self.conv_merge2 = _norm_conv_layer(mid_channels * 2, mid_channels)
+        self.conv_merge1 = _conv3x3_layer(mid_channels * 2, mid_channels)
+        self.conv_merge2 = _conv3x3_layer(mid_channels * 2, mid_channels)
 
     def forward(self, x1, x2):
         """Forward function.
@@ -111,19 +111,19 @@ class CSFI3(nn.Module):
 
     def __init__(self, mid_channels):
         super().__init__()
-        self.conv12 = _bottleneck_layer(mid_channels, mid_channels)
-        self.conv13 = _bottleneck_layer(mid_channels, mid_channels)
+        self.conv12 = _conv1x1_layer(mid_channels, mid_channels)
+        self.conv13 = _conv1x1_layer(mid_channels, mid_channels)
 
-        self.conv21 = _norm_conv_layer(mid_channels, mid_channels, stride=2)
-        self.conv23 = _bottleneck_layer(mid_channels, mid_channels)
+        self.conv21 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
+        self.conv23 = _conv1x1_layer(mid_channels, mid_channels)
 
-        self.conv31_1 = _norm_conv_layer(mid_channels, mid_channels, stride=2)
-        self.conv31_2 = _norm_conv_layer(mid_channels, mid_channels, stride=2)
-        self.conv32 = _norm_conv_layer(mid_channels, mid_channels, stride=2)
+        self.conv31_1 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
+        self.conv31_2 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
+        self.conv32 = _conv3x3_layer(mid_channels, mid_channels, stride=2)
 
-        self.conv_merge1 = _norm_conv_layer(mid_channels * 3, mid_channels)
-        self.conv_merge2 = _norm_conv_layer(mid_channels * 3, mid_channels)
-        self.conv_merge3 = _norm_conv_layer(mid_channels * 3, mid_channels)
+        self.conv_merge1 = _conv3x3_layer(mid_channels * 3, mid_channels)
+        self.conv_merge2 = _conv3x3_layer(mid_channels * 3, mid_channels)
+        self.conv_merge3 = _conv3x3_layer(mid_channels * 3, mid_channels)
 
     def forward(self, x1, x2, x3):
         """Forward function.
