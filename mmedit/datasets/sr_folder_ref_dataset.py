@@ -73,7 +73,8 @@ class SRFolderRefDataset(BaseSRDataset):
                  filename_tmp_gt='{}',
                  filename_tmp_lq='{}'):
         super().__init__(pipeline, scale, test_mode)
-        assert gt_folder or lq_folder
+        assert gt_folder or lq_folder, 'At least one of gt_folder and' \
+            'lq_folder cannot be None.'
         self.scale = scale
         self.ref_folder = str(ref_folder)
         self.gt_folder = str(gt_folder) if gt_folder else None
