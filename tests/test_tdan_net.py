@@ -18,6 +18,6 @@ def test_tdan_net():
         assert output[0].shape == (1, 3, 256, 256)  # HR center frame
         assert output[1].shape == (1, 5, 3, 64, 64)  # aligned LRs
 
-    with pytest.raises(TypeError):
-        # pretrained should be str or None
-        tdan.init_weights(pretrained=[1])
+        with pytest.raises(TypeError):
+            # pretrained should be str or None
+            tdan.init_weights(pretrained=[1])
