@@ -14,7 +14,7 @@ from mmedit.utils import get_root_logger
 class AugmentedDeformConv2dPack(DeformConv2dPack):
     """Augmented Deformable Convolution Pack.
 
-    Different from the official DCN, which generates offsets from the
+    Different from DeformConv2dPack, which generates offsets from the
     preceeding feature, this AugmentedDeformConv2dPack takes another feature to
     generate the offsets.
 
