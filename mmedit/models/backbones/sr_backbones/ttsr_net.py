@@ -252,7 +252,7 @@ class TTSRNet(nn.Module):
         self.conv_first1 = _conv3x3_layer(4 * texture_channels + mid_channels,
                                           mid_channels)
 
-        self.rb1 = make_layer(
+        self.res_block1 = make_layer(
             ResidualBlockNoBN,
             num_blocks[1],
             mid_channels=mid_channels,
@@ -273,12 +273,12 @@ class TTSRNet(nn.Module):
 
         self.csfi2 = CSFI2(mid_channels)
 
-        self.rb2_1 = make_layer(
+        self.res_block2_1 = make_layer(
             ResidualBlockNoBN,
             num_blocks[2],
             mid_channels=mid_channels,
             res_scale=res_scale)
-        self.rb2_2 = make_layer(
+        self.res_block2_2 = make_layer(
             ResidualBlockNoBN,
             num_blocks[2],
             mid_channels=mid_channels,
@@ -300,17 +300,17 @@ class TTSRNet(nn.Module):
 
         self.csfi3 = CSFI3(mid_channels)
 
-        self.rb3_1 = make_layer(
+        self.res_block3_1 = make_layer(
             ResidualBlockNoBN,
             num_blocks[3],
             mid_channels=mid_channels,
             res_scale=res_scale)
-        self.rb3_2 = make_layer(
+        self.res_block3_2 = make_layer(
             ResidualBlockNoBN,
             num_blocks[3],
             mid_channels=mid_channels,
             res_scale=res_scale)
-        self.rb3_3 = make_layer(
+        self.res_block3_3 = make_layer(
             ResidualBlockNoBN,
             num_blocks[3],
             mid_channels=mid_channels,
@@ -351,7 +351,7 @@ class TTSRNet(nn.Module):
         # soft-attention
         x1 = x1 + x1_res * s
 
-        x1_res = self.rb1(x1)
+        x1_res = self.res_block1(x1)
         x1_res = self.conv_last1(x1_res)
 
         x1 = x1 + x1_res
@@ -371,8 +371,8 @@ class TTSRNet(nn.Module):
 
         x21_res, x22_res = self.csfi2(x21, x22)
 
-        x21_res = self.rb2_1(x21_res)
-        x22_res = self.rb2_2(x22_res)
+        x21_res = self.res_block2_1(x21_res)
+        x22_res = self.res_block2_2(x22_res)
 
         x21_res = self.conv_last2_1(x21_res)
         x22_res = self.conv_last2_2(x22_res)
@@ -396,9 +396,9 @@ class TTSRNet(nn.Module):
 
         x31_res, x32_res, x33_res = self.csfi3(x31, x32, x33)
 
-        x31_res = self.rb3_1(x31_res)
-        x32_res = self.rb3_2(x32_res)
-        x33_res = self.rb3_3(x33_res)
+        x31_res = self.res_block3_1(x31_res)
+        x32_res = self.res_block3_2(x32_res)
+        x33_res = self.res_block3_3(x33_res)
 
         x31_res = self.conv_last3_1(x31_res)
         x32_res = self.conv_last3_2(x32_res)
