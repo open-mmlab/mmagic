@@ -323,26 +323,29 @@ class TTSRNet(nn.Module):
         # end, merge features
         self.merge_features = MergeFeatures(mid_channels, out_channels)
 
-    def forward(self, x, s=None, t_lv3=None, t_lv2=None, t_lv1=None):
+    def forward(self, x, s=None, t_level3=None, t_level2=None, t_level1=None):
         """Forward function.
 
         Args:
             x (Tensor): Input tensor with shape (n, c, h, w).
             s (Tensor): Soft-Attention tensor with shape (n, 1, h, w).
-            t_lv3 (Tensor): Transferred HR texture T in Lv3. (n, 4c, h, w)
-            t_lv2 (Tensor): Transferred HR texture T in Lv2. (n, 2c, 2h, 2w)
-            t_lv1 (Tensor): Transferred HR texture T in Lv1. (n, c, 4h, 4w)
+            t_level3 (Tensor): Transferred HR texture T in level3.
+                (n, 4c, h, w)
+            t_level2 (Tensor): Transferred HR texture T in level2.
+                (n, 2c, 2h, 2w)
+            t_level1 (Tensor): Transferred HR texture T in level1.
+                (n, c, 4h, 4w)
 
         Returns:
             Tensor: Forward results.
         """
 
-        assert t_lv1.shape[1] == self.texture_channels
+        assert t_level1.shape[1] == self.texture_channels
 
         x1 = self.sfe(x)
 
         # stage 1
-        x1_res = torch.cat((x1, t_lv3), dim=1)
+        x1_res = torch.cat((x1, t_level3), dim=1)
         x1_res = self.conv_first1(x1_res)
 
         # soft-attention
@@ -358,7 +361,7 @@ class TTSRNet(nn.Module):
         x22 = self.up1(x1)
         x22 = F.relu(x22)
 
-        x22_res = torch.cat((x22, t_lv2), dim=1)
+        x22_res = torch.cat((x22, t_level2), dim=1)
         x22_res = self.conv_first2(x22_res)
 
         # soft-attention
@@ -383,7 +386,7 @@ class TTSRNet(nn.Module):
         x33 = self.up2(x22)
         x33 = F.relu(x33)
 
-        x33_res = torch.cat((x33, t_lv1), dim=1)
+        x33_res = torch.cat((x33, t_level1), dim=1)
         x33_res = self.conv_first3(x33_res)
 
         # soft-attention
