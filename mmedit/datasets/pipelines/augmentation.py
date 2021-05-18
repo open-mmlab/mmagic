@@ -33,7 +33,7 @@ class Resize:
         keys (list[str]): The images to be resized.
         scale (float | Tuple[int]): If scale is Tuple(int), target spatial
             size (h, w). Otherwise, target spatial size is scaled by input
-            size. If any of scale is -1, we will rescale short edge.
+            size.
             Note that when it is used, `size_factor` and `max_size` are
             useless. Default: None
         keep_ratio (bool): If set to True, images will be resized without
@@ -50,6 +50,12 @@ class Resize:
         interpolation (str): Algorithm used for interpolation:
             "nearest" | "bilinear" | "bicubic" | "area" | "lanczos".
             Default: "bilinear".
+        backend (str | None): The image resize backend type. Options are `cv2`,
+            `pillow`, `None`. If backend is None, the global imread_backend
+            specified by ``mmcv.use_backend()`` will be used.
+            Default: None.
+        output_keys (list[str] | None): The resized images. Default: None
+            Note that if it is not `None`, its length shuld be equal to keys.
     """
 
     def __init__(self,
@@ -58,8 +64,14 @@ class Resize:
                  keep_ratio=False,
                  size_factor=None,
                  max_size=None,
-                 interpolation='bilinear'):
+                 interpolation='bilinear',
+                 backend=None,
+                 output_keys=None):
         assert keys, 'Keys should not be empty.'
+        if output_keys:
+            assert len(output_keys) == len(keys)
+        else:
+            output_keys = keys
         if size_factor:
             assert scale is None, ('When size_factor is used, scale should ',
                                    f'be None. But received {scale}.')
@@ -83,11 +95,13 @@ class Resize:
                 f'Scale must be None, float or tuple of int, but got '
                 f'{type(scale)}.')
         self.keys = keys
+        self.output_keys = output_keys
         self.scale = scale
         self.size_factor = size_factor
         self.max_size = max_size
         self.keep_ratio = keep_ratio
         self.interpolation = interpolation
+        self.backend = backend
 
     def _resize(self, img):
         if self.keep_ratio:
@@ -95,13 +109,15 @@ class Resize:
                 img,
                 self.scale,
                 return_scale=True,
-                interpolation=self.interpolation)
+                interpolation=self.interpolation,
+                backend=self.backend)
         else:
             img, w_scale, h_scale = mmcv.imresize(
                 img,
                 self.scale,
                 return_scale=True,
-                interpolation=self.interpolation)
+                interpolation=self.interpolation,
+                backend=self.backend)
             self.scale_factor = np.array((w_scale, h_scale), dtype=np.float32)
         return img
 
@@ -125,21 +141,23 @@ class Resize:
                 new_w = min(self.max_size - (self.max_size % self.size_factor),
                             new_w)
             self.scale = (new_w, new_h)
-        for key in self.keys:
-            results[key] = self._resize(results[key])
-            if len(results[key].shape) == 2:
-                results[key] = np.expand_dims(results[key], axis=2)
+        for key, out_key in zip(self.keys, self.output_keys):
+            results[out_key] = self._resize(results[key])
+            if len(results[out_key].shape) == 2:
+                results[out_key] = np.expand_dims(results[out_key], axis=2)
 
         results['scale_factor'] = self.scale_factor
         results['keep_ratio'] = self.keep_ratio
         results['interpolation'] = self.interpolation
+        results['backend'] = self.backend
 
         return results
 
     def __repr__(self):
         repr_str = self.__class__.__name__
         repr_str += (
-            f'(keys={self.keys}, scale={self.scale}, '
+            f'(keys={self.keys}, output_keys={self.output_keys}, '
+            f'scale={self.scale}, '
             f'keep_ratio={self.keep_ratio}, size_factor={self.size_factor}, '
             f'max_size={self.max_size},interpolation={self.interpolation})')
         return repr_str
