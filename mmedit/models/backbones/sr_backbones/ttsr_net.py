@@ -249,8 +249,8 @@ class TTSRNet(nn.Module):
         self.sfe = SFE(in_channels, mid_channels, num_blocks[0], res_scale)
 
         # stage 1
-        self.first1 = _conv3x3_layer(4 * texture_channels + mid_channels,
-                                     mid_channels)
+        self.conv_first1 = _conv3x3_layer(4 * texture_channels + mid_channels,
+                                          mid_channels)
 
         self.rb1 = make_layer(
             ResidualBlockNoBN,
@@ -258,7 +258,7 @@ class TTSRNet(nn.Module):
             mid_channels=mid_channels,
             res_scale=res_scale)
 
-        self.last1 = _conv3x3_layer(mid_channels, mid_channels)
+        self.conv_last1 = _conv3x3_layer(mid_channels, mid_channels)
 
         # up-sampling 1 -> 2
         self.up1 = PixelShufflePack(
@@ -268,8 +268,8 @@ class TTSRNet(nn.Module):
             upsample_kernel=3)
 
         # stage 2
-        self.first2 = _conv3x3_layer(2 * texture_channels + mid_channels,
-                                     mid_channels)
+        self.conv_first2 = _conv3x3_layer(2 * texture_channels + mid_channels,
+                                          mid_channels)
 
         self.csfi2 = CSFI2(mid_channels)
 
@@ -284,8 +284,8 @@ class TTSRNet(nn.Module):
             mid_channels=mid_channels,
             res_scale=res_scale)
 
-        self.last2_1 = _conv3x3_layer(mid_channels, mid_channels)
-        self.last2_2 = _conv3x3_layer(mid_channels, mid_channels)
+        self.conv_last2_1 = _conv3x3_layer(mid_channels, mid_channels)
+        self.conv_last2_2 = _conv3x3_layer(mid_channels, mid_channels)
 
         # up-sampling 2 -> 3
         self.up2 = PixelShufflePack(
@@ -295,8 +295,8 @@ class TTSRNet(nn.Module):
             upsample_kernel=3)
 
         # stage 3
-        self.first3 = _conv3x3_layer(texture_channels + mid_channels,
-                                     mid_channels)
+        self.conv_first3 = _conv3x3_layer(texture_channels + mid_channels,
+                                          mid_channels)
 
         self.csfi3 = CSFI3(mid_channels)
 
@@ -316,9 +316,9 @@ class TTSRNet(nn.Module):
             mid_channels=mid_channels,
             res_scale=res_scale)
 
-        self.last3_1 = _conv3x3_layer(mid_channels, mid_channels)
-        self.last3_2 = _conv3x3_layer(mid_channels, mid_channels)
-        self.last3_3 = _conv3x3_layer(mid_channels, mid_channels)
+        self.conv_last3_1 = _conv3x3_layer(mid_channels, mid_channels)
+        self.conv_last3_2 = _conv3x3_layer(mid_channels, mid_channels)
+        self.conv_last3_3 = _conv3x3_layer(mid_channels, mid_channels)
 
         # end, merge features
         self.merge_features = MergeFeatures(mid_channels, out_channels)
@@ -343,13 +343,13 @@ class TTSRNet(nn.Module):
 
         # stage 1
         x1_res = torch.cat((x1, t_lv3), dim=1)
-        x1_res = self.first1(x1_res)
+        x1_res = self.conv_first1(x1_res)
 
         # soft-attention
         x1 = x1 + x1_res * s
 
         x1_res = self.rb1(x1)
-        x1_res = self.last1(x1_res)
+        x1_res = self.conv_last1(x1_res)
 
         x1 = x1 + x1_res
 
@@ -359,7 +359,7 @@ class TTSRNet(nn.Module):
         x22 = F.relu(x22)
 
         x22_res = torch.cat((x22, t_lv2), dim=1)
-        x22_res = self.first2(x22_res)
+        x22_res = self.conv_first2(x22_res)
 
         # soft-attention
         x22_res = x22_res * F.interpolate(
@@ -371,8 +371,8 @@ class TTSRNet(nn.Module):
         x21_res = self.rb2_1(x21_res)
         x22_res = self.rb2_2(x22_res)
 
-        x21_res = self.last2_1(x21_res)
-        x22_res = self.last2_2(x22_res)
+        x21_res = self.conv_last2_1(x21_res)
+        x22_res = self.conv_last2_2(x22_res)
 
         x21 = x21 + x21_res
         x22 = x22 + x22_res
@@ -384,7 +384,7 @@ class TTSRNet(nn.Module):
         x33 = F.relu(x33)
 
         x33_res = torch.cat((x33, t_lv1), dim=1)
-        x33_res = self.first3(x33_res)
+        x33_res = self.conv_first3(x33_res)
 
         # soft-attention
         x33_res = x33_res * F.interpolate(
@@ -397,9 +397,9 @@ class TTSRNet(nn.Module):
         x32_res = self.rb3_2(x32_res)
         x33_res = self.rb3_3(x33_res)
 
-        x31_res = self.last3_1(x31_res)
-        x32_res = self.last3_2(x32_res)
-        x33_res = self.last3_3(x33_res)
+        x31_res = self.conv_last3_1(x31_res)
+        x32_res = self.conv_last3_2(x32_res)
+        x33_res = self.conv_last3_3(x33_res)
 
         x31 = x31 + x31_res
         x32 = x32 + x32_res

@@ -42,9 +42,9 @@ def test_merge_features():
 def test_ttsr_net():
     inputs = torch.rand(2, 3, 24, 24)
     s = torch.rand(2, 1, 24, 24)
-    t_lv3 = torch.rand(2, 64, 24, 24)
-    t_lv2 = torch.rand(2, 32, 48, 48)
-    t_lv1 = torch.rand(2, 16, 96, 96)
+    t_level3 = torch.rand(2, 64, 24, 24)
+    t_level2 = torch.rand(2, 32, 48, 48)
+    t_level1 = torch.rand(2, 16, 96, 96)
 
     ttsr_cfg = dict(
         type='TTSRNet',
@@ -53,6 +53,6 @@ def test_ttsr_net():
         mid_channels=16,
         texture_channels=16)
     ttsr = build_backbone(ttsr_cfg)
-    outputs = ttsr(inputs, s, t_lv3, t_lv2, t_lv1)
+    outputs = ttsr(inputs, s, t_level3, t_level2, t_level1)
 
     assert outputs.shape == (2, 3, 96, 96)
