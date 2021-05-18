@@ -64,27 +64,18 @@ class LTE(nn.Module):
 
         Returns:
             Forward results in 3 levels.
-            x_lv1 (Tensor): Forward results in level 1 (n, 64, h, w).
-            x_lv2 (Tensor): Forward results in level 2 (n, 128, h/2, w/2).
-            x_lv3 (Tensor): Forward results in level 3 (n, 256, h/4, w/4).
+            x_level1 (Tensor): Forward results in level 1 (n, 64, h, w).
+            x_level2 (Tensor): Forward results in level 2 (n, 128, h/2, w/2).
+            x_level3 (Tensor): Forward results in level 3 (n, 256, h/4, w/4).
         """
 
-        tensors = {}
-        tensors['x'] = x
         x = self.sub_mean(x)
-        tensors['sub_mean'] = x
-        x = self.slice1(x)
-        tensors['layer0.w'] = self.slice1.state_dict()['0.weight']
-        x_lv1 = x
-        tensors['x_lv1'] = x_lv1
-        x = self.slice2(x)
-        x_lv2 = x
-        tensors['x_lv2'] = x_lv2
-        x = self.slice3(x)
-        x_lv3 = x
-        tensors['x_lv3'] = x_lv3
 
-        return x_lv1, x_lv2, x_lv3
+        x_level1 = x = self.slice1(x)
+        x_level2 = x = self.slice2(x)
+        x_level3 = x = self.slice3(x)
+
+        return x_level1, x_level2, x_level3
 
     def init_weights(self, pretrained=None, strict=True):
         """Init weights for models.
