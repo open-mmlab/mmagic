@@ -474,7 +474,7 @@ class TestAugmentations:
 
         name_ = str(resize_keep_ratio)
         assert name_ == resize_keep_ratio.__class__.__name__ + (
-            f"(keys={['gt_img']}, output_keys={['gt_img']}, "
+            "(keys=['gt_img'], output_keys=['gt_img'], "
             'scale=(128, 128), '
             f'keep_ratio={False}, size_factor=None, '
             'max_size=None,interpolation=bilinear)')
@@ -686,9 +686,3 @@ class TestAugmentations:
         with pytest.raises(TypeError):
             results = dict(lq=0, gt=gts)
             mirror_sequence(results)
-
-
-if __name__ == '__main__':
-    aug = TestAugmentations()
-    aug.setup_class()
-    aug.test_resize()

@@ -53,7 +53,7 @@ class Resize:
         backend (str | None): The image resize backend type. Options are `cv2`,
             `pillow`, `None`. If backend is None, the global imread_backend
             specified by ``mmcv.use_backend()`` will be used.
-            Default: "pillow".
+            Default: "cv2".
         output_keys (list[str] | None): The resized images. Default: None
             Note that if it is not `None`, its length shuld be equal to keys.
     """
@@ -65,7 +65,7 @@ class Resize:
                  size_factor=None,
                  max_size=None,
                  interpolation='bilinear',
-                 backend=None,
+                 backend='cv2',
                  output_keys=None):
         assert keys, 'Keys should not be empty.'
         if output_keys:
