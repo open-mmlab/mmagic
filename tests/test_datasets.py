@@ -938,7 +938,7 @@ def test_vid4_dataset():
                 lq_folder=root_path,
                 gt_folder=root_path,
                 ann_file='fake_ann_file',
-                num_input_frames=6,
+                num_input_frames=5,
                 pipeline=[],
                 scale=4,
                 metric_average_mode='abc',
