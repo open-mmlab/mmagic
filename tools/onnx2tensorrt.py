@@ -23,6 +23,16 @@ def get_GiB(x: int):
 def _prepare_input_img(config: dict,
                        shape: Optional[Iterable] = None,
                        rescale_shape: Optional[Iterable] = None) -> dict:
+    """Prepare the input image
+
+    Args:
+        config (dict): MMCV config, determined by the inpupt config file.
+        shape (Optional[Iterable]): min shape of the input tensor.
+        rescale_shape (Optional[Iterable]): to rescale the shape of the input tensor.
+    
+    Returns:
+        dict: {'imgs': imgs, 'img_metas': img_metas}
+    """
     # remove alpha from test_pipeline
     model_type = args.model_type
     if model_type == 'mattor':
@@ -65,31 +75,6 @@ def _prepare_input_img(config: dict,
     return mm_inputs
 
 
-def _update_input_img(img_list: Iterable, img_meta_list: Iterable):
-    # update img and its meta list
-    N = img_list[0].size(0)
-    img_meta = img_meta_list[0][0]
-    img_shape = img_meta['img_shape']
-    ori_shape = img_meta['ori_shape']
-    pad_shape = img_meta['pad_shape']
-    new_img_meta_list = [[{
-        'img_shape':
-        img_shape,
-        'ori_shape':
-        ori_shape,
-        'pad_shape':
-        pad_shape,
-        'filename':
-        img_meta['filename'],
-        'scale_factor':
-        (img_shape[1] / ori_shape[1], img_shape[0] / ori_shape[0]) * 2,
-        'flip':
-        False,
-    } for _ in range(N)]]
-
-    return img_list, new_img_meta_list
-
-
 def onnx2tensorrt(onnx_file: str,
                   trt_file: str,
                   config: dict,
@@ -99,6 +84,18 @@ def onnx2tensorrt(onnx_file: str,
                   show: bool = False,
                   workspace_size: int = 1,
                   verbose: bool = False):
+    """Convert ONNX model to TensorRT model
+
+    Args:
+        onnx_file (str): the path of the input ONNX file.
+        trt_file (str): the path to output the TensorRT file.
+        config (dict): MMCV configuration.
+        input_config (dict): contains min_shape, max_shape and input image path.
+        fp16 (bool): whether to enable fp16 mode.
+        verify (bool): whether to verify the ouputs of TensorRT and ONNX are same.
+        show (bool): whether to show the outputs of TensorRT and ONNX.
+        verbose (bool): whether to print the log when generating TensorRT model.
+    """
     import tensorrt as trt
     min_shape = input_config['min_shape']
     max_shape = input_config['max_shape']
@@ -122,11 +119,7 @@ def onnx2tensorrt(onnx_file: str,
             shape=min_shape[2:])
 
         imgs = inputs['imgs']
-        img_metas = inputs['img_metas']
         img_list = [imgs.unsqueeze(0)]
-        img_meta_list = [[img_meta] for img_meta in img_metas]
-        # update img_meta
-        # img_list, img_meta_list = _update_input_img(img_list, img_meta_list)
 
         if max_shape[0] > 1:
             # concate flip image for batch test
@@ -176,7 +169,7 @@ def parse_args():
         help='what kind of model the config belong to.',
         choices=['inpainting', 'mattor', 'restorer', 'synthesizer'])
     parser.add_argument(
-        'img_path', type=str, help='Image for test', nargs='*')
+        'img_path', type=str, help='Image for test')
     parser.add_argument('onnx_file', help='Path to the input ONNX model')
     parser.add_argument(
         '--trt-file', type=str, help='Path to the output TensorRT engine', default='tmp.trt')
