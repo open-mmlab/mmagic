@@ -56,3 +56,8 @@ def test_ttsr_net():
     outputs = ttsr(inputs, s, t_level3, t_level2, t_level1)
 
     assert outputs.shape == (2, 3, 96, 96)
+
+
+def test_ttsr():
+    # TODO wait for ttsr_net, lte, and search_transofrmer.
+    pass
