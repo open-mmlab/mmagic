@@ -921,6 +921,42 @@ def test_vid4_dataset():
                 max_frame_num=2),
         ]
 
+        # test evaluate function ('folder' mode)
+        results = [{
+            'eval_result': {
+                'PSNR': 21,
+                'SSIM': 0.75
+            }
+        }, {
+            'eval_result': {
+                'PSNR': 22,
+                'SSIM': 0.8
+            }
+        }, {
+            'eval_result': {
+                'PSNR': 24,
+                'SSIM': 0.9
+            }
+        }]
+        eval_results = vid4_dataset.evaluate(results)
+        np.testing.assert_almost_equal(eval_results['PSNR'], 22)
+        np.testing.assert_almost_equal(eval_results['SSIM'], 0.8)
+
+        # test evaluate function ('all' mode)
+        vid4_dataset = SRVid4Dataset(
+            lq_folder=root_path / 'lq',
+            gt_folder=root_path / 'gt',
+            ann_file='fake_ann_file',
+            num_input_frames=5,
+            pipeline=[],
+            scale=4,
+            test_mode=False,
+            metric_average_mode='all',
+            filename_tmpl='{:08d}')
+        eval_results = vid4_dataset.evaluate(results)
+        np.testing.assert_almost_equal(eval_results['PSNR'], 22.3333333)
+        np.testing.assert_almost_equal(eval_results['SSIM'], 0.81666666)
+
         with pytest.raises(AssertionError):
             # num_input_frames should be odd numbers
             SRVid4Dataset(
