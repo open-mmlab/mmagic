@@ -20,21 +20,23 @@ def get_GiB(x: int):
     return x * (1 << 30)
 
 
-def _prepare_input_img(config: dict,
-                       shape: Optional[Iterable] = None,
+def _prepare_input_img(model_type: str,
+                       img_path: str,
+                       config: dict,
                        rescale_shape: Optional[Iterable] = None) -> dict:
     """Prepare the input image
 
     Args:
+        model_type (str): which kind of model config belong to, one of ['inpainting', 'mattor', 'restorer', 'synthesizer'].
+        img_path (str): image path to show or verify.
         config (dict): MMCV config, determined by the inpupt config file.
-        shape (Optional[Iterable]): min shape of the input tensor.
         rescale_shape (Optional[Iterable]): to rescale the shape of the input tensor.
     
     Returns:
         dict: {'imgs': imgs, 'img_metas': img_metas}
     """
     # remove alpha from test_pipeline
-    model_type = args.model_type
+    model_type = model_type
     if model_type == 'mattor':
         keys_to_remove = ['alpha', 'ori_alpha']
     elif model_type == 'restorer':
@@ -53,11 +55,11 @@ def _prepare_input_img(config: dict,
     # build the data pipeline
     test_pipeline = Compose(config.test_pipeline)
     # prepare data
-    if model_type == 'mattor':
-        data = dict(merged_path=args.img_path, trimap_path=args.trimap_path)
-    elif model_type == 'restorer':
-        data = dict(lq_path=args.img_path)
-        # data[]
+    # if model_type == 'mattor':
+    #     data = dict(merged_path=args.img_path, trimap_path=args.trimap_path)
+    if model_type == 'restorer':
+        data = dict(lq_path=img_path)
+    
     data = test_pipeline(data)
 
     if model_type == 'restorer':
@@ -79,6 +81,8 @@ def onnx2tensorrt(onnx_file: str,
                   trt_file: str,
                   config: dict,
                   input_config: dict,
+                  model_type: str,
+                  img_path: str,
                   fp16: bool = False,
                   verify: bool = False,
                   show: bool = False,
@@ -115,8 +119,7 @@ def onnx2tensorrt(onnx_file: str,
     print(f'Successfully created TensorRT engine: {trt_file}')
 
     if verify:
-        inputs = _prepare_input_img(config,
-            shape=min_shape[2:])
+        inputs = _prepare_input_img(model_type=model_type, img_path=img_path, config=config)
 
         imgs = inputs['imgs']
         img_list = [imgs.unsqueeze(0)]
@@ -177,13 +180,13 @@ def parse_args():
         '--max-shape',
         type=int,
         nargs=4,
-        default=[1, 3, 126, 126],
+        default=[1, 3, 512, 512],
         help='Maximum shape of model input.')
     parser.add_argument(
         '--min-shape',
         type=int,
         nargs=4,
-        default=[1, 3, 126, 126],
+        default=[1, 3, 32, 32],
         help='Minimum shape of model input.')
     parser.add_argument(
         '--workspace-size',
@@ -234,6 +237,8 @@ if __name__ == '__main__':
         args.trt_file,
         config,
         input_config,
+        model_type=args.model_type,
+        img_path=args.img_path,
         fp16=args.fp16,
         verify=args.verify,
         show=args.show,
