@@ -305,7 +305,7 @@ class TestSRDatasets:
             ref_folder=str(ref_folder),
             pipeline=sr_pipeline,
             scale=4,
-            filename_tmp_lq=filename_tmpl)
+            filename_tmpl_lq=filename_tmpl)
         data_infos = sr_folder_ref_dataset.data_infos
         assert data_infos == [
             dict(
@@ -323,7 +323,7 @@ class TestSRDatasets:
             ref_folder=str(ref_folder),
             pipeline=sr_pipeline,
             scale=4,
-            filename_tmp_lq=filename_tmpl)
+            filename_tmpl_lq=filename_tmpl)
         data_infos = sr_folder_ref_dataset.data_infos
         assert data_infos == [
             dict(
@@ -342,7 +342,7 @@ class TestSRDatasets:
                 ref_folder=str(ref_folder),
                 pipeline=sr_pipeline,
                 scale=4,
-                filename_tmp_lq=filename_tmpl)
+                filename_tmpl_lq=filename_tmpl)
         with pytest.raises(AssertionError):
             sr_folder_ref_dataset = SRFolderRefDataset(
                 lq_folder=str(self.data_prefix / 'image'),  # fake lq_folder
@@ -350,7 +350,7 @@ class TestSRDatasets:
                 ref_folder=str(ref_folder),
                 pipeline=sr_pipeline,
                 scale=4,
-                filename_tmp_lq=filename_tmpl)
+                filename_tmpl_lq=filename_tmpl)
         with pytest.raises(AssertionError):
             sr_folder_ref_dataset = SRFolderRefDataset(
                 lq_folder=str(lq_folder),
@@ -358,7 +358,7 @@ class TestSRDatasets:
                 ref_folder=str(ref_folder),
                 pipeline=sr_pipeline,
                 scale=4,
-                filename_tmp_lq=filename_tmpl)
+                filename_tmpl_lq=filename_tmpl)
         with pytest.raises(AssertionError):
             sr_folder_ref_dataset = SRFolderRefDataset(
                 lq_folder=str(self.data_prefix / 'bg'),  # fake lq_folder
@@ -366,7 +366,7 @@ class TestSRDatasets:
                 ref_folder=str(ref_folder),
                 pipeline=sr_pipeline,
                 scale=4,
-                filename_tmp_lq=filename_tmpl)
+                filename_tmpl_lq=filename_tmpl)
         with pytest.raises(AssertionError):
             sr_folder_ref_dataset = SRFolderRefDataset(
                 lq_folder=None,
@@ -374,7 +374,7 @@ class TestSRDatasets:
                 ref_folder=str(ref_folder),
                 pipeline=sr_pipeline,
                 scale=4,
-                filename_tmp_lq=filename_tmpl)
+                filename_tmpl_lq=filename_tmpl)
 
     def test_sr_lmdb_dataset(self):
         # setup

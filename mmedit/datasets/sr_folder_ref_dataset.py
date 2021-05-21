@@ -44,8 +44,8 @@ class SRFolderRefDataset(BaseSRDataset):
         ref_folder = 'data_root/ref'
         gt_folder = 'data_root/gt'
         lq_folder = 'data_root/lq'
-        filename_tmp_gt='{}'
-        filename_tmp_lq='{}_x4'
+        filename_tmpl_gt='{}'
+        filename_tmpl_lq='{}_x4'
 
     Args:
         pipeline (List[dict | callable]): A sequence of data transformations.
@@ -57,9 +57,9 @@ class SRFolderRefDataset(BaseSRDataset):
             Default: None.
         test_mode (bool): Store `True` when building test dataset.
             Default: `False`.
-        filename_tmp_gt (str): Template for gt filename. Note that the
+        filename_tmpl_gt (str): Template for gt filename. Note that the
             template excludes the file extension. Default: '{}'.
-        filename_tmp_lq (str): Template for lq filename. Note that the
+        filename_tmpl_lq (str): Template for lq filename. Note that the
             template excludes the file extension. Default: '{}'.
     """
 
@@ -70,8 +70,8 @@ class SRFolderRefDataset(BaseSRDataset):
                  gt_folder=None,
                  lq_folder=None,
                  test_mode=False,
-                 filename_tmp_gt='{}',
-                 filename_tmp_lq='{}'):
+                 filename_tmpl_gt='{}',
+                 filename_tmpl_lq='{}'):
         super().__init__(pipeline, scale, test_mode)
         assert gt_folder or lq_folder, 'At least one of gt_folder and' \
             'lq_folder cannot be None.'
@@ -79,8 +79,8 @@ class SRFolderRefDataset(BaseSRDataset):
         self.ref_folder = str(ref_folder)
         self.gt_folder = str(gt_folder) if gt_folder else None
         self.lq_folder = str(lq_folder) if lq_folder else None
-        self.filename_tmp_gt = filename_tmp_gt
-        self.filename_tmp_lq = filename_tmp_lq
+        self.filename_tmpl_gt = filename_tmpl_gt
+        self.filename_tmpl_lq = filename_tmpl_lq
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
@@ -108,14 +108,14 @@ class SRFolderRefDataset(BaseSRDataset):
             data_dict = dict(ref_path=ref_path)
             if self.gt_folder is not None:
                 gt_path = osp.join(self.gt_folder,
-                                   (f'{self.filename_tmp_gt.format(basename)}'
+                                   (f'{self.filename_tmpl_gt.format(basename)}'
                                     f'{ext}'))
                 assert gt_path in gt_paths, \
                     f'{gt_path} is not in gt_paths.'
                 data_dict['gt_path'] = gt_path
             if self.lq_folder is not None:
                 lq_path = osp.join(self.lq_folder,
-                                   (f'{self.filename_tmp_lq.format(basename)}'
+                                   (f'{self.filename_tmpl_lq.format(basename)}'
                                     f'{ext}'))
                 assert lq_path in lq_paths, \
                     f'{lq_path} is not in lq_paths.'
