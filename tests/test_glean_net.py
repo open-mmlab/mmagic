@@ -19,6 +19,10 @@ class TestGLEANNet:
         res = glean(img)
         assert res.shape == (2, 3, 256, 256)
 
+        with pytest.raises(TypeError):
+            # pretrained should be str or None
+            glean.init_weights(pretrained=[1])
+
         # input tensor size must equal self.in_size
         with pytest.raises(AssertionError):
             res = glean(torch.randn(2, 3, 17, 32))
@@ -34,6 +38,10 @@ class TestGLEANNet:
         img = torch.randn(2, 3, 16, 16).cuda()
         res = glean(img)
         assert res.shape == (2, 3, 256, 256)
+
+        with pytest.raises(TypeError):
+            # pretrained should be str or None
+            glean.init_weights(pretrained=[1])
 
         # input tensor size must equal self.in_size
         with pytest.raises(AssertionError):
