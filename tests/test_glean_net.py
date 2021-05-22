@@ -10,6 +10,7 @@ class TestGLEANNet:
     @classmethod
     def setup_class(cls):
         cls.default_cfg = dict(in_size=16, out_size=256, style_channels=512)
+        cls.size_cfg = dict(in_size=16, out_size=16, style_channels=512)
 
     def test_glean_styleganv2_cpu(self):
         # test default config
@@ -18,8 +19,13 @@ class TestGLEANNet:
         res = glean(img)
         assert res.shape == (2, 3, 256, 256)
 
+        # input tensor size must equal self.in_size
         with pytest.raises(AssertionError):
             res = glean(torch.randn(2, 3, 17, 32))
+
+        # input size must be strictly smaller than output size
+        with pytest.raises(ValueError):
+            glean = GLEANStyleGANv2(**self.size_cfg)
 
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_glean_styleganv2_cuda(self):
@@ -29,5 +35,10 @@ class TestGLEANNet:
         res = glean(img)
         assert res.shape == (2, 3, 256, 256)
 
+        # input tensor size must equal self.in_size
         with pytest.raises(AssertionError):
             res = glean(torch.randn(2, 3, 32, 17).cuda())
+
+        # input size must be strictly smaller than output size
+        with pytest.raises(ValueError):
+            glean = GLEANStyleGANv2(**self.size_cfg).cuda()

@@ -23,6 +23,15 @@ def get_module_device(module):
 
 @torch.no_grad()
 def get_mean_latent(generator, num_samples=4096, bs_per_repeat=1024):
+    """Get mean latent of W space in Style-based GANs.
+    Args:
+        generator (nn.Module): Generator of a Style-based GAN.
+        num_samples (int, optional): Number of sample times. Defaults to 4096.
+        bs_per_repeat (int, optional): Batch size of noises per sample.
+            Defaults to 1024.
+    Returns:
+        Tensor: Mean latent of this generator.
+    """
     device = get_module_device(generator)
     mean_style = None
     n_repeat = num_samples // bs_per_repeat

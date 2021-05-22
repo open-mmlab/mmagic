@@ -57,7 +57,13 @@ class GLEANStyleGANv2(nn.Module):
     Args:
         in_size (int): The size of the input image.
         out_size (int): The output size of the StyleGAN2 generator.
+        img_channels (int): Number of channels of the input images. 3 for RGB
+            image and 1 for grayscale image. Default: 3.
+        rrdb_channels (int): Number of channels of the RRDB features.
+            Default: 64.
+        num_rrdbs (int): Number of RRDB blocks in the encoder. Default: 23.
         style_channels (int): The number of channels for style code.
+            Default: 512.
         num_mlps (int, optional): The number of MLP layers. Defaults to 8.
         channel_multiplier (int, optional): The mulitiplier factor for the
             channel number. Defaults to 2.
@@ -84,7 +90,10 @@ class GLEANStyleGANv2(nn.Module):
     def __init__(self,
                  in_size,
                  out_size,
-                 style_channels,
+                 img_channels=3,
+                 rrdb_channels=64,
+                 num_rrdbs=23,
+                 style_channels=512,
                  num_mlps=8,
                  channel_multiplier=2,
                  blur_kernel=[1, 3, 3, 1],
@@ -96,6 +105,11 @@ class GLEANStyleGANv2(nn.Module):
                  bgr2rgb=False):
 
         super().__init__()
+
+        # input size must be strictly smaller than output size
+        if in_size >= out_size:
+            raise ValueError('in_size must be smaller than out_size, but got '
+                             f'{in_size} and {out_size}.')
 
         # latent bank (StyleGANv2), with weights being fixed
         self.generator = build_component(
@@ -124,8 +138,10 @@ class GLEANStyleGANv2(nn.Module):
         self.encoder = nn.ModuleList()
         self.encoder.append(
             nn.Sequential(
-                RRDBFeatureExtractor(3, 64, num_blocks=23),
-                nn.Conv2d(64, channels[in_size], 3, 1, 1, bias=True),
+                RRDBFeatureExtractor(
+                    img_channels, rrdb_channels, num_blocks=num_rrdbs),
+                nn.Conv2d(
+                    rrdb_channels, channels[in_size], 3, 1, 1, bias=True),
                 nn.LeakyReLU(negative_slope=0.2, inplace=True)))
         for res in encoder_res:
             in_channels = channels[res]
@@ -176,33 +192,33 @@ class GLEANStyleGANv2(nn.Module):
                     nn.Sequential(
                         nn.Conv2d(in_channels, 64, 3, 1, 1),
                         nn.LeakyReLU(negative_slope=0.2, inplace=True),
-                        nn.Conv2d(64, 3, 3, 1, 1)))
+                        nn.Conv2d(64, img_channels, 3, 1, 1)))
 
-    def forward(self, lr):
+    def forward(self, lq):
         """Forward function.
 
         Args:
-            lr (Tensor): Input LR image with shape (n, c, h, w).
+            lq (Tensor): Input LR image with shape (n, c, h, w).
 
         Returns:
             Tensor: Output HR image.
         """
 
-        n, c, h, w = lr.size()
+        h, w = lq.shape[2:]
         if h != self.in_size or w != self.in_size:
             raise AssertionError(
                 f'Spatial resolution must equal in_size ({self.in_size}).'
                 f' Got ({h}, {w}).')
 
         # encoder
-        feat = lr
+        feat = lq
         encoder_features = []
         for block in self.encoder:
             feat = block(feat)
             encoder_features.append(feat)
         encoder_features = encoder_features[::-1]
 
-        latent = encoder_features[0].view(lr.size(0), -1, self.style_channels)
+        latent = encoder_features[0].view(lq.size(0), -1, self.style_channels)
         encoder_features = encoder_features[1:]
 
         # generator
