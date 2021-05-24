@@ -23,6 +23,12 @@ def parse_args():
 def main():
     args = parse_args()
 
+    if not args.img_path.endswith(('.jpg', '.png')):
+        raise ValueError('It seems that you did not input a valid '
+                         '"image_path". Please double check your input, or '
+                         'you may want to use "restoration_video_demo.py" '
+                         'for video restoration.')
+
     model = init_model(
         args.config, args.checkpoint, device=torch.device('cuda', args.device))
 
