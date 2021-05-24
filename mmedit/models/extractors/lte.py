@@ -26,7 +26,7 @@ class LTE(nn.Module):
         vgg_mean = (0.485, 0.456, 0.406)
         vgg_std = (0.229 * pixel_range, 0.224 * pixel_range,
                    0.225 * pixel_range)
-        self.sub_mean = ImgNormalize(
+        self.normalize = ImgNormalize(
             pixel_range=pixel_range, img_mean=vgg_mean, img_std=vgg_std)
 
         # use vgg19 weights to initialize
@@ -69,7 +69,7 @@ class LTE(nn.Module):
             x_level3 (Tensor): Forward results in level 3 (n, 256, h/4, w/4).
         """
 
-        x = self.sub_mean(x)
+        x = self.normalize(x)
 
         x_level1 = x = self.slice1(x)
         x_level2 = x = self.slice2(x)
