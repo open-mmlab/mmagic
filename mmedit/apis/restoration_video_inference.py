@@ -18,16 +18,14 @@ def pad_sequence(data, window_size):
     return data
 
 
-def restoration_video_inference(model, img_dir, window_size):
+def restoration_video_inference(model, img_dir, window_size, filename_tmpl):
     """Inference image with the model.
-
     Args:
         model (nn.Module): The loaded model.
         img_dir (str): Directory of the input video.
         window_size (int): The window size used in sliding-window framework.
             This value should be set according to the settings of the network.
             A value smaller than 0 means using recurrent framework.
-
     Returns:
         Tensor: The predicted restoration result.
     """
@@ -35,7 +33,10 @@ def restoration_video_inference(model, img_dir, window_size):
 
     # pipeline
     test_pipeline = [
-        dict(type='GenerateSegmentIndices', interval_list=[1]),
+        dict(
+            type='GenerateSegmentIndices',
+            interval_list=[1],
+            filename_tmpl=filename_tmpl),
         dict(
             type='LoadImageFromFileList',
             io_backend='disk',
