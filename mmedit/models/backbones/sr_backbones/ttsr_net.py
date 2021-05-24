@@ -223,6 +223,12 @@ class MergeFeatures(nn.Module):
 class TTSRNet(nn.Module):
     """TTSR network structure (main-net) for reference-based super-resolution.
 
+    Paper: Learning Texture Transformer Network for Image Super-Resolution
+
+    Adapted from 'https://github.com/researchmm/TTSR.git'
+    'https://github.com/researchmm/TTSR'
+    Copyright permission at 'https://github.com/researchmm/TTSR/issues/38'.
+
     Args:
         in_channels (int): Number of channels in the input image
         out_channels (int): Number of channels in the output image
