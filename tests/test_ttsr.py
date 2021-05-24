@@ -1,5 +1,6 @@
 import torch
 
+from mmedit.models import build_backbone
 from mmedit.models.backbones.sr_backbones.ttsr_net import (CSFI2, CSFI3, SFE,
                                                            MergeFeatures)
 
@@ -36,3 +37,22 @@ def test_merge_features():
     merge_features = MergeFeatures(mid_channels=16, out_channels=3)
     out = merge_features(inputs1, inputs2, inputs4)
     assert out.shape == (2, 3, 96, 96)
+
+
+def test_ttsr_net():
+    inputs = torch.rand(2, 3, 24, 24)
+    s = torch.rand(2, 1, 24, 24)
+    t_level3 = torch.rand(2, 64, 24, 24)
+    t_level2 = torch.rand(2, 32, 48, 48)
+    t_level1 = torch.rand(2, 16, 96, 96)
+
+    ttsr_cfg = dict(
+        type='TTSRNet',
+        in_channels=3,
+        out_channels=3,
+        mid_channels=16,
+        texture_channels=16)
+    ttsr = build_backbone(ttsr_cfg)
+    outputs = ttsr(inputs, s, t_level3, t_level2, t_level1)
+
+    assert outputs.shape == (2, 3, 96, 96)
