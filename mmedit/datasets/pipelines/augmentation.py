@@ -966,12 +966,12 @@ class GenerateSegmentIndices:
         lq_path_root = results['lq_path']
         gt_path_root = results['gt_path']
         lq_path = [
-            osp.join(lq_path_root, clip_name,
-                     f'{self.filename_tmpl.format(v)}') for v in neighbor_list
+            osp.join(lq_path_root, clip_name, self.filename_tmpl.format(v))
+            for v in neighbor_list
         ]
         gt_path = [
-            osp.join(gt_path_root, clip_name,
-                     f'{self.filename_tmpl.format(v)}') for v in neighbor_list
+            osp.join(gt_path_root, clip_name, self.filename_tmpl.format(v))
+            for v in neighbor_list
         ]
 
         results['lq_path'] = lq_path
