@@ -18,7 +18,7 @@ def pad_sequence(data, window_size):
     return data
 
 
-def restoration_video_inference(model, img_dir, window_size):
+def restoration_video_inference(model, img_dir, window_size, filename_tmpl):
     """Inference image with the model.
 
     Args:
@@ -31,11 +31,15 @@ def restoration_video_inference(model, img_dir, window_size):
     Returns:
         Tensor: The predicted restoration result.
     """
+
     device = next(model.parameters()).device  # model device
 
     # pipeline
     test_pipeline = [
-        dict(type='GenerateSegmentIndices', interval_list=[1]),
+        dict(
+            type='GenerateSegmentIndices',
+            interval_list=[1],
+            filename_tmpl=filename_tmpl),
         dict(
             type='LoadImageFromFileList',
             io_backend='disk',
