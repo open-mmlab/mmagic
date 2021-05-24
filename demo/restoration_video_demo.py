@@ -14,7 +14,9 @@ def parse_args():
     parser.add_argument('input_dir', help='directory of the input video')
     parser.add_argument('output_dir', help='directory of the output video')
     parser.add_argument(
-        '--filename_tmpl', default='{:08d}', help='template of the file names')
+        '--filename_tmpl',
+        default='{:08d}.png',
+        help='template of the file names')
     parser.add_argument(
         '--window_size',
         type=int,

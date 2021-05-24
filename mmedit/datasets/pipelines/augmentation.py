@@ -927,10 +927,10 @@ class GenerateSegmentIndices:
         interval_list (list[int]): Interval list for temporal augmentation.
             It will randomly pick an interval from interval_list and sample
             frame index with the interval.
-        filename_tmpl (str): Template for file name. Default: '{:08d}'.
+        filename_tmpl (str): Template for file name. Default: '{:08d}.png'.
     """
 
-    def __init__(self, interval_list, filename_tmpl='{:08d}'):
+    def __init__(self, interval_list, filename_tmpl='{:08d}.png'):
         self.interval_list = interval_list
         self.filename_tmpl = filename_tmpl
 
@@ -967,13 +967,11 @@ class GenerateSegmentIndices:
         gt_path_root = results['gt_path']
         lq_path = [
             osp.join(lq_path_root, clip_name,
-                     f'{self.filename_tmpl.format(v)}.png')
-            for v in neighbor_list
+                     f'{self.filename_tmpl.format(v)}') for v in neighbor_list
         ]
         gt_path = [
             osp.join(gt_path_root, clip_name,
-                     f'{self.filename_tmpl.format(v)}.png')
-            for v in neighbor_list
+                     f'{self.filename_tmpl.format(v)}') for v in neighbor_list
         ]
 
         results['lq_path'] = lq_path

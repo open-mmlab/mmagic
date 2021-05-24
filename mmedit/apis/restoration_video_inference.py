@@ -27,6 +27,7 @@ def restoration_video_inference(model, img_dir, window_size, filename_tmpl):
         window_size (int): The window size used in sliding-window framework.
             This value should be set according to the settings of the network.
             A value smaller than 0 means using recurrent framework.
+
     Returns:
         Tensor: The predicted restoration result.
     """
