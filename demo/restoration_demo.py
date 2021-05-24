@@ -1,4 +1,5 @@
 import argparse
+import os
 
 import mmcv
 import torch
@@ -23,7 +24,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    if not args.img_path.endswith(('.jpg', '.png')):
+    if not os.path.isfile(args.img_path):
         raise ValueError('It seems that you did not input a valid '
                          '"image_path". Please double check your input, or '
                          'you may want to use "restoration_video_demo.py" '
