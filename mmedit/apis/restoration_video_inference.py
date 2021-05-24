@@ -20,6 +20,7 @@ def pad_sequence(data, window_size):
 
 def restoration_video_inference(model, img_dir, window_size, filename_tmpl):
     """Inference image with the model.
+
     Args:
         model (nn.Module): The loaded model.
         img_dir (str): Directory of the input video.
@@ -29,6 +30,7 @@ def restoration_video_inference(model, img_dir, window_size, filename_tmpl):
     Returns:
         Tensor: The predicted restoration result.
     """
+
     device = next(model.parameters()).device  # model device
 
     # pipeline
