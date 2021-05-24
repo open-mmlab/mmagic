@@ -24,13 +24,11 @@ class SearchTransformer(nn.Module):
         results:
             outputs (Tensor): The result tensor. (N, C*k*k, H*W)
         """
-        views = [inputs.size(0)] + [
-            1 if i != dim else -1 for i in range(1, len(inputs.size()))
+        views = [-1 if i in (0, dim) else 1 for i in range(inputs.ndim())]
+        expansion = [
+            -1 if i in (0, dim) else d for i, d in enumerate(inputs.size())
         ]
-        expanse = list(inputs.size())
-        expanse[0] = -1
-        expanse[dim] = -1
-        index = index.view(views).expand(expanse)
+        index = index.view(views).expand(expansion)
         outputs = torch.gather(inputs, dim, index)
 
         return outputs
