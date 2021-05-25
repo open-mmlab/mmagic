@@ -1,10 +1,11 @@
 import argparse
 import warnings
-from typing import Any
+from typing import Any, Iterable
 
 import mmcv
 import torch
 from mmcv import Config, DictAction
+from mmcv.parallel import MMDataParallel
 from torch import nn
 
 from mmedit.apis import single_gpu_test
@@ -20,7 +21,6 @@ class TensorRTRestorerGenerator(nn.Module):
         trt_file (str): The path to the tensorrt file.
         device_id (int): Which device to place the model.
     """
-
     def __init__(self, trt_file: str, device_id: int):
         super(TensorRTRestorerGenerator, self).__init__()
         from mmcv.tensorrt import TRTWraper, load_tensorrt_plugin
@@ -49,7 +49,6 @@ class TensorRTRestorer(nn.Module):
         trt_file (str): The path to the tensorrt file.
         device_id (int): Which device to place the model.
     """
-
     def __init__(self, base_model: Any, trt_file: str, device_id: int):
         super(TensorRTRestorer, self).__init__()
         self.base_model = base_model
@@ -70,7 +69,6 @@ class TensorRTEditing(nn.Module):
             decided by the config file.
         device_id (int): Which device to place the model.
     """
-
     def __init__(self, trt_file: str, cfg: Any, device_id: int):
         super(TensorRTEditing, self).__init__()
         base_model = build_model(
@@ -145,6 +143,7 @@ def main():
         model = TensorRTEditing(args.model, cfg=cfg, device_id=0)
 
     args.save_image = args.save_path is not None
+    # model = MMDataParallel(model, device_ids=[0])
     outputs = single_gpu_test(
         model,
         data_loader,

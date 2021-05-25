@@ -1,6 +1,6 @@
 import argparse
 import warnings
-from typing import Any
+from typing import Any, Iterable
 
 import mmcv
 import torch

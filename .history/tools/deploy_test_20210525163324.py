@@ -1,6 +1,6 @@
 import argparse
 import warnings
-from typing import Any
+from typing import Any, Iterable
 
 import mmcv
 import torch
@@ -145,6 +145,7 @@ def main():
         model = TensorRTEditing(args.model, cfg=cfg, device_id=0)
 
     args.save_image = args.save_path is not None
+    # model = MMDataParallel(model, device_ids=[0])
     outputs = single_gpu_test(
         model,
         data_loader,
