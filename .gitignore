@@ -117,5 +117,9 @@ work_dirs/
 # Pytorch
 *.pth
 
+# onnx and tensorrt
+*.onnx
+*.trt
+
 # local history
-.history
+.history/**
