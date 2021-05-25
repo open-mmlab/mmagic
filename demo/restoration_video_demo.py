@@ -14,6 +14,10 @@ def parse_args():
     parser.add_argument('input_dir', help='directory of the input video')
     parser.add_argument('output_dir', help='directory of the output video')
     parser.add_argument(
+        '--filename_tmpl',
+        default='{:08d}.png',
+        help='template of the file names')
+    parser.add_argument(
         '--window_size',
         type=int,
         default=0,
@@ -30,7 +34,7 @@ def main():
         args.config, args.checkpoint, device=torch.device('cuda', args.device))
 
     output = restoration_video_inference(model, args.input_dir,
-                                         args.window_size)
+                                         args.window_size, args.filename_tmpl)
     for i in range(0, output.size(1)):
         output_i = output[:, i, :, :, :]
         output_i = tensor2img(output_i)
