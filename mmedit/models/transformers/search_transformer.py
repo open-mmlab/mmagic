@@ -35,31 +35,31 @@ class SearchTransformer(nn.Module):
 
         return outputs
 
-    def forward(self, lr_pad_level3, ref_pad_level3, ref_level1, ref_level2,
+    def forward(self, lq_up_level3, ref_downup_level3, ref_level1, ref_level2,
                 ref_level3):
         """Texture transformer
 
-        Q = LTE(lr_pad)
-        K = LTE(ref_pad)
+        Q = LTE(lq_pad)
+        K = LTE(ref_downup)
         V = LTE(ref), from V_level1 to V_level3
 
-        Relevance embedding aims to embed the relevance between the LR and
+        Relevance embedding aims to embed the relevance between the LQ and
             Ref image by estimating the similarity between Q and K.
         Hard-Attention: Only transfer features from the most relevant position
             in V for each query.
         Soft-Attention: synthesize features from the transferred HR texture
-            features T and the LR features F from the backbone.
+            features T and the LQ features F from the backbone.
 
         Args:
             All args are features come from extractor (sucn as LTE).
                 These features contain 3 levels.
                 When upscale_factor=4, the size ratio of these features is
                 level1:level2:level3 = 4:2:1.
-            lr_pad_level3 (Tensor): level3 feature of 4x bicubic-upsampled lq
+            lq_up_level3 (Tensor): level3 feature of 4x bicubic-upsampled lq
                 image. (N, 4C, H, W)
-            ref_pad_level3 (Tensor): level3 feature of ref_pad. Ref_pad is
-                obtained by applying bicubic down-sampling and up-sampling
-                with factor 4x on ref. (N, 4C, H, W)
+            ref_downup_level3 (Tensor): level3 feature of ref_downup.
+                ref_downup is obtained by applying bicubic down-sampling and
+                up-sampling with factor 4x on ref. (N, 4C, H, W)
             ref_level1 (Tensor): level1 feature of ref image. (N, C, 4H, 4W)
             ref_level2 (Tensor): level2 feature of ref image. (N, 2C, 2H, 2W)
             ref_level3 (Tensor): level3 feature of ref image. (N, 4C, H, W)
@@ -74,10 +74,10 @@ class SearchTransformer(nn.Module):
                 (N, C, 4H, 4W)
         """
         # query
-        query = F.unfold(lr_pad_level3, kernel_size=(3, 3), padding=1)
+        query = F.unfold(lq_up_level3, kernel_size=(3, 3), padding=1)
 
         # key
-        key = F.unfold(ref_pad_level3, kernel_size=(3, 3), padding=1)
+        key = F.unfold(ref_downup_level3, kernel_size=(3, 3), padding=1)
         key_t = key.permute(0, 2, 1)
 
         # values
@@ -87,11 +87,11 @@ class SearchTransformer(nn.Module):
         value_level1 = F.unfold(
             ref_level1, kernel_size=(12, 12), padding=4, stride=4)
 
-        key_t = F.normalize(key_t, dim=2)  # [N, Hr*Wr, C*k*k]
+        key_t = F.normalize(key_t, dim=2)  # [N, H*W, C*k*k]
         query = F.normalize(query, dim=1)  # [N, C*k*k, H*W]
 
         # Relevance embedding
-        rel_embedding = torch.bmm(key_t, query)  # [N, Hr*Wr, H*W]
+        rel_embedding = torch.bmm(key_t, query)  # [N, H*W, H*W]
         max_val, max_index = torch.max(rel_embedding, dim=1)  # [N, H*W]
 
         # hard-attention
@@ -102,23 +102,23 @@ class SearchTransformer(nn.Module):
         # to tensor
         t_level3 = F.fold(
             t_level3_unfold,
-            output_size=lr_pad_level3.size()[-2:],
+            output_size=lq_up_level3.size()[-2:],
             kernel_size=(3, 3),
             padding=1) / (3. * 3.)
         t_level2 = F.fold(
             t_level2_unfold,
-            output_size=(lr_pad_level3.size(2) * 2, lr_pad_level3.size(3) * 2),
+            output_size=(lq_up_level3.size(2) * 2, lq_up_level3.size(3) * 2),
             kernel_size=(6, 6),
             padding=2,
             stride=2) / (3. * 3.)
         t_level1 = F.fold(
             t_level1_unfold,
-            output_size=(lr_pad_level3.size(2) * 4, lr_pad_level3.size(3) * 4),
+            output_size=(lq_up_level3.size(2) * 4, lq_up_level3.size(3) * 4),
             kernel_size=(12, 12),
             padding=4,
             stride=4) / (3. * 3.)
 
         s = max_val.view(
-            max_val.size(0), 1, lr_pad_level3.size(2), lr_pad_level3.size(3))
+            max_val.size(0), 1, lq_up_level3.size(2), lq_up_level3.size(3))
 
         return s, t_level3, t_level2, t_level1
