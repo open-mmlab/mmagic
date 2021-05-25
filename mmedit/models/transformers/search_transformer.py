@@ -25,9 +25,8 @@ class SearchTransformer(nn.Module):
             outputs (Tensor): The result tensor. (N, C*k*k, H*W)
         """
 
-        views = [inputs.size(0)] + [
-            1 if i != dim else -1 for i in range(1, len(inputs.size()))
-        ]
+        views = [inputs.size(0)
+                 ] + [1 if i != dim else -1 for i in range(1, inputs.ndim)]
         expansion = [
             -1 if i in (0, dim) else d for i, d in enumerate(inputs.size())
         ]
