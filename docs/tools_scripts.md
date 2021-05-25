@@ -334,7 +334,7 @@ python tools/deploy_test.py \
 #### Description of all arguments
 
 - `config`: The path of a model config file.
-- `model`: The path of an TensorRT model file.
+- `model`: The path of a TensorRT model file.
 - `backend`: The backend for testing, choose tensorrt.
 - `--out`: The path of output result file in pickle format.
 - `--save-path`: The path to store images and if not given, it will not save image.
@@ -342,26 +342,172 @@ python tools/deploy_test.py \
 
 #### Results and Models
 
-|  Model |                              Config                             | Dataset | Metric | PyTorch | ONNX Runtime | TensorRT-FP32 | TensorRT-FP16 |
-|:------:|:---------------------------------------------------------------:|:-------:|:------:|:-------:|:------------:|:-------------:|:-------------:|
-| ESRGAN |                 esrgan_x4c64b23g32_g1_400k_div2k.py             |   Set5  |  PSNR  | 28.2700 |    28.2619   |    28.2619    |    28.2616    |
-|        |                                                                 |         |  SSIM  |  0.7778 |    0.7784    |     0.7784    |     0.7783    |
-|        |                                                                 |  Set14  |  PSNR  | 24.6328 |    24.6290   |    24.6290    |    24.6274    |
-|        |                                                                 |         |  SSIM  |  0.6491 |    0.6494    |     0.6494    |     0.6494    |
-|        |                                                                 |  DIV2K  |  PSNR  | 26.6531 |    26.6532   |    26.6532    |    26.6532    |
-|        |                                                                 |         |  SSIM  |  0.7340 |    0.7340    |     0.7340    |     0.7340    |
-| ESRGAN |              esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py          |   Set5  |  PSNR  | 30.6428 |    30.6307   |    30.6307    |    30.6305    |
-|        |                                                                 |         |  SSIM  |  0.8559 |    0.8565    |     0.8565    |     0.8566    |
-|        |                                                                 |  Set14  |  PSNR  | 27.0543 |    27.0422   |    27.0422    |    27.0411    |
-|        |                                                                 |         |  SSIM  |  0.7447 |    0.7450    |     0.7450    |     0.7449    |
-|        |                                                                 |  DIV2K  |  PSNR  | 29.3354 |    29.3354   |    29.3354    |    29.3339    |
-|        |                                                                 |         |  SSIM  |  0.8263 |    0.8263    |     0.8263    |     0.8263    |
-|  SRCNN |                    srcnn_x4k915_g1_1000k_div2k.py               |   Set5  |  PSNR  | 28.4316 |    28.4120   |    27.2144    |    27.2127    |
-|        |                                                                 |         |  SSIM  |  0.8099 |    0.8106    |     0.7782    |     0.7781    |
-|        |                                                                 |  Set14  |  PSNR  | 25.6486 |    25.6367   |    24.8613    |    24.8599    |
-|        |                                                                 |         |  SSIM  |  0.7014 |    0.7015    |     0.6674    |     0.6673    |
-|        |                                                                 |  DIV2K  |  PSNR  | 27.7460 |    27.7460   |    26.9891    |    26.9862    |
-|        |                                                                 |         |  SSIM  |  0.7854 |    0.7854    |     0.7605    |     0.7604    |
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-9wq8{border-color:inherit;text-align:center;vertical-align:middle}
+.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
+</style>
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-c3ow">Model</th>
+    <th class="tg-c3ow">Config</th>
+    <th class="tg-c3ow">Dataset</th>
+    <th class="tg-c3ow">Metric</th>
+    <th class="tg-c3ow">PyTorch</th>
+    <th class="tg-c3ow">ONNX Runtime</th>
+    <th class="tg-c3ow">TensorRT-FP32</th>
+    <th class="tg-c3ow">TensorRT-FP16</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-9wq8" rowspan="6">ESRGAN</td>
+    <td class="tg-9wq8" rowspan="6">             esrgan_x4c64b23g32_g1_400k_div2k.py         </td>
+    <td class="tg-9wq8" rowspan="2">Set5</td>
+    <td class="tg-c3ow">PSNR</td>
+    <td class="tg-c3ow">28.2700</td>
+    <td class="tg-c3ow">28.2619</td>
+    <td class="tg-c3ow">28.2619</td>
+    <td class="tg-c3ow">28.2616</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">SSIM</td>
+    <td class="tg-c3ow">0.7778</td>
+    <td class="tg-c3ow">0.7784</td>
+    <td class="tg-c3ow">0.7784</td>
+    <td class="tg-c3ow">0.7783</td>
+  </tr>
+  <tr>
+    <td class="tg-9wq8" rowspan="2">Set14</td>
+    <td class="tg-c3ow">PSNR</td>
+    <td class="tg-c3ow">24.6328</td>
+    <td class="tg-c3ow">24.6290</td>
+    <td class="tg-c3ow">24.6290</td>
+    <td class="tg-c3ow">24.6274</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">SSIM</td>
+    <td class="tg-c3ow">0.6491</td>
+    <td class="tg-c3ow">0.6494</td>
+    <td class="tg-c3ow">0.6494</td>
+    <td class="tg-c3ow">0.6494</td>
+  </tr>
+  <tr>
+    <td class="tg-9wq8" rowspan="2">DIV2K</td>
+    <td class="tg-c3ow">PSNR</td>
+    <td class="tg-c3ow">26.6531</td>
+    <td class="tg-c3ow">26.6532</td>
+    <td class="tg-c3ow">26.6532</td>
+    <td class="tg-c3ow">26.6532</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">SSIM</td>
+    <td class="tg-c3ow">0.7340</td>
+    <td class="tg-c3ow">0.7340</td>
+    <td class="tg-c3ow">0.7340</td>
+    <td class="tg-c3ow">0.7340</td>
+  </tr>
+  <tr>
+    <td class="tg-9wq8" rowspan="6">ESRGAN</td>
+    <td class="tg-9wq8" rowspan="6">             esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py         </td>
+    <td class="tg-9wq8" rowspan="2">Set5</td>
+    <td class="tg-c3ow">PSNR</td>
+    <td class="tg-c3ow">30.6428</td>
+    <td class="tg-c3ow">30.6307</td>
+    <td class="tg-c3ow">30.6307</td>
+    <td class="tg-c3ow">30.6305</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">SSIM</td>
+    <td class="tg-c3ow">0.8559</td>
+    <td class="tg-c3ow">0.8565</td>
+    <td class="tg-c3ow">0.8565</td>
+    <td class="tg-c3ow">0.8566</td>
+  </tr>
+  <tr>
+    <td class="tg-9wq8" rowspan="2">Set14</td>
+    <td class="tg-c3ow">PSNR</td>
+    <td class="tg-c3ow">27.0543</td>
+    <td class="tg-c3ow">27.0422</td>
+    <td class="tg-c3ow">27.0422</td>
+    <td class="tg-c3ow">27.0411</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">SSIM</td>
+    <td class="tg-c3ow">0.7447</td>
+    <td class="tg-c3ow">0.7450</td>
+    <td class="tg-c3ow">0.7450</td>
+    <td class="tg-c3ow">0.7449</td>
+  </tr>
+  <tr>
+    <td class="tg-9wq8" rowspan="2">DIV2K</td>
+    <td class="tg-c3ow">PSNR</td>
+    <td class="tg-c3ow">29.3354</td>
+    <td class="tg-c3ow">29.3354</td>
+    <td class="tg-c3ow">29.3354</td>
+    <td class="tg-c3ow">29.3339</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">SSIM</td>
+    <td class="tg-c3ow">0.8263</td>
+    <td class="tg-c3ow">0.8263</td>
+    <td class="tg-c3ow">0.8263</td>
+    <td class="tg-c3ow">0.8263</td>
+  </tr>
+  <tr>
+    <td class="tg-9wq8" rowspan="6">SRCNN</td>
+    <td class="tg-9wq8" rowspan="6">             srcnn_x4k915_g1_1000k_div2k.py         </td>
+    <td class="tg-9wq8" rowspan="2">Set5</td>
+    <td class="tg-c3ow">PSNR</td>
+    <td class="tg-c3ow">28.4316</td>
+    <td class="tg-c3ow">28.4120</td>
+    <td class="tg-c3ow">27.2144</td>
+    <td class="tg-c3ow">27.2127</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">SSIM</td>
+    <td class="tg-c3ow">0.8099</td>
+    <td class="tg-c3ow">0.8106</td>
+    <td class="tg-c3ow">0.7782</td>
+    <td class="tg-c3ow">0.7781</td>
+  </tr>
+  <tr>
+    <td class="tg-9wq8" rowspan="2">Set14</td>
+    <td class="tg-c3ow">PSNR</td>
+    <td class="tg-c3ow">25.6486</td>
+    <td class="tg-c3ow">25.6367</td>
+    <td class="tg-c3ow">24.8613</td>
+    <td class="tg-c3ow">24.8599</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">SSIM</td>
+    <td class="tg-c3ow">0.7014</td>
+    <td class="tg-c3ow">0.7015</td>
+    <td class="tg-c3ow">0.6674</td>
+    <td class="tg-c3ow">0.6673</td>
+  </tr>
+  <tr>
+    <td class="tg-9wq8" rowspan="2">DIV2K</td>
+    <td class="tg-c3ow">PSNR</td>
+    <td class="tg-c3ow">27.7460</td>
+    <td class="tg-c3ow">27.7460</td>
+    <td class="tg-c3ow">26.9891</td>
+    <td class="tg-c3ow">26.9862</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">SSIM</td>
+    <td class="tg-c3ow">0.7854</td>
+    <td class="tg-c3ow">0.7854</td>
+    <td class="tg-c3ow">0.7605</td>
+    <td class="tg-c3ow">0.7604</td>
+  </tr>
+</tbody>
+</table>
 
 **Notes**:
 
