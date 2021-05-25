@@ -47,7 +47,7 @@ class SearchTransformer(nn.Module):
             Ref image by estimating the similarity between Q and K.
         Hard-Attention: Only transfer features from the most relevant position
             in V for each query.
-        Soft-Attention: synthesize features from the transferred HR texture
+        Soft-Attention: synthesize features from the transferred GT texture
             features T and the LQ features F from the backbone.
 
         Args:
@@ -66,11 +66,11 @@ class SearchTransformer(nn.Module):
 
         Returns:
             s (Tensor): Soft-Attention tensor. (N, 1, H, W)
-            t_level3 (Tensor): Transferred HR texture T in level3.
+            t_level3 (Tensor): Transferred GT texture T in level3.
                 (N, 4C, H, W)
-            t_level2 (Tensor): Transferred HR texture T in level2.
+            t_level2 (Tensor): Transferred GT texture T in level2.
                 (N, 2C, 2H, 2W)
-            t_level1 (Tensor): Transferred HR texture T in level1.
+            t_level1 (Tensor): Transferred GT texture T in level1.
                 (N, C, 4H, 4W)
         """
         # query
