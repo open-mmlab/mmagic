@@ -342,15 +342,6 @@ python tools/deploy_test.py \
 
 #### Results and Models
 
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-9wq8{border-color:inherit;text-align:center;vertical-align:middle}
-.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
-</style>
 <table class="tg">
 <thead>
   <tr>
@@ -402,7 +393,7 @@ python tools/deploy_test.py \
     <td class="tg-c3ow">PSNR</td>
     <td class="tg-c3ow">26.6531</td>
     <td class="tg-c3ow">26.6532</td>
-    <td class="tg-c3ow">26.6532</td>
+    <td class="tg-zda1">26.6532</td>
     <td class="tg-c3ow">26.6532</td>
   </tr>
   <tr>
