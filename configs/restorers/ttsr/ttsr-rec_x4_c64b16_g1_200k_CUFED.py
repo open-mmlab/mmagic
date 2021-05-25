@@ -55,9 +55,14 @@ train_pipeline = [
         backend='pillow'),
     dict(
         type='Normalize',
-        keys=['lq', 'gt', 'lq_up', 'ref', 'ref_downup'],
+        keys=['lq', 'gt'],
         mean=[127.5, 127.5, 127.5],
         std=[127.5, 127.5, 127.5]),
+    dict(
+        type='Normalize',
+        keys=['lq_up', 'ref', 'ref_downup'],
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.]),
     dict(
         type='Flip',
         keys=['lq', 'gt', 'lq_up'],
@@ -127,9 +132,14 @@ valid_pipeline = [
         backend='pillow'),
     dict(
         type='Normalize',
-        keys=['lq', 'gt', 'lq_up', 'ref', 'ref_downup'],
+        keys=['lq', 'gt'],
         mean=[127.5, 127.5, 127.5],
         std=[127.5, 127.5, 127.5]),
+    dict(
+        type='Normalize',
+        keys=['lq_up', 'ref', 'ref_downup'],
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.]),
     dict(
         type='ImageToTensor', keys=['lq', 'gt', 'lq_up', 'ref', 'ref_downup']),
     dict(
@@ -170,9 +180,14 @@ test_pipeline = [
         backend='pillow'),
     dict(
         type='Normalize',
-        keys=['lq', 'lq_up', 'ref', 'ref_downup'],
+        keys=['lq'],
         mean=[127.5, 127.5, 127.5],
         std=[127.5, 127.5, 127.5]),
+    dict(
+        type='Normalize',
+        keys=['lq_up', 'ref', 'ref_downup'],
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.]),
     dict(type='ImageToTensor', keys=['lq', 'lq_up', 'ref', 'ref_downup']),
     dict(
         type='Collect',
