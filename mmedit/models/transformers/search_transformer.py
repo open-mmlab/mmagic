@@ -39,7 +39,7 @@ class SearchTransformer(nn.Module):
                 ref_level3):
         """Texture transformer
 
-        Q = LTE(lq_pad)
+        Q = LTE(lq_up)
         K = LTE(ref_downup)
         V = LTE(ref), from V_level1 to V_level3
 
