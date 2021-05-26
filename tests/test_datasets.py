@@ -11,7 +11,8 @@ from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              BaseSRDataset, GenerationPairedDataset,
                              GenerationUnpairedDataset, RepeatDataset,
                              SRAnnotationDataset, SRFolderDataset,
-                             SRFolderGTDataset, SRLmdbDataset, SRREDSDataset,
+                             SRFolderGTDataset, SRFolderRefDataset,
+                             SRLmdbDataset, SRREDSDataset,
                              SRREDSMultipleGTDataset, SRTestMultipleGTDataset,
                              SRVid4Dataset, SRVimeo90KDataset,
                              SRVimeo90KMultipleGTDataset)
@@ -279,6 +280,101 @@ class TestSRDatasets:
         result = sr_folder_dataset[0]
         assert (len(sr_folder_dataset) == 1)
         assert check_keys_contain(result.keys(), target_keys)
+
+    def test_sr_folder_ref_dataset(self):
+        # setup
+        sr_pipeline = [
+            dict(type='LoadImageFromFile', io_backend='disk', key='lq'),
+            dict(type='LoadImageFromFile', io_backend='disk', key='gt'),
+            dict(type='LoadImageFromFile', io_backend='disk', key='ref'),
+            dict(type='PairedRandomCrop', gt_patch_size=128),
+            dict(type='ImageToTensor', keys=['lq', 'gt', 'ref'])
+        ]
+        target_keys = [
+            'lq_path', 'gt_path', 'ref_path', 'scale', 'lq', 'gt', 'ref'
+        ]
+        lq_folder = self.data_prefix / 'lq'
+        gt_folder = self.data_prefix / 'gt'
+        ref_folder = self.data_prefix / 'gt'
+        filename_tmpl = '{}_x4'
+
+        # input path is Path object
+        sr_folder_ref_dataset = SRFolderRefDataset(
+            lq_folder=lq_folder,
+            gt_folder=gt_folder,
+            ref_folder=str(ref_folder),
+            pipeline=sr_pipeline,
+            scale=4,
+            filename_tmpl_lq=filename_tmpl)
+        data_infos = sr_folder_ref_dataset.data_infos
+        assert data_infos == [
+            dict(
+                lq_path=str(lq_folder / 'baboon_x4.png'),
+                gt_path=str(gt_folder / 'baboon.png'),
+                ref_path=str(ref_folder / 'baboon.png'))
+        ]
+        result = sr_folder_ref_dataset[0]
+        assert len(sr_folder_ref_dataset) == 1
+        assert check_keys_contain(result.keys(), target_keys)
+        # input path is str
+        sr_folder_ref_dataset = SRFolderRefDataset(
+            lq_folder=str(lq_folder),
+            gt_folder=str(gt_folder),
+            ref_folder=str(ref_folder),
+            pipeline=sr_pipeline,
+            scale=4,
+            filename_tmpl_lq=filename_tmpl)
+        data_infos = sr_folder_ref_dataset.data_infos
+        assert data_infos == [
+            dict(
+                lq_path=str(lq_folder / 'baboon_x4.png'),
+                gt_path=str(gt_folder / 'baboon.png'),
+                ref_path=str(ref_folder / 'baboon.png'))
+        ]
+        result = sr_folder_ref_dataset[0]
+        assert len(sr_folder_ref_dataset) == 1
+        assert check_keys_contain(result.keys(), target_keys)
+
+        with pytest.raises(AssertionError):
+            sr_folder_ref_dataset = SRFolderRefDataset(
+                lq_folder=str(lq_folder),
+                gt_folder=str(self.data_prefix / 'image'),  # fake gt_folder
+                ref_folder=str(ref_folder),
+                pipeline=sr_pipeline,
+                scale=4,
+                filename_tmpl_lq=filename_tmpl)
+        with pytest.raises(AssertionError):
+            sr_folder_ref_dataset = SRFolderRefDataset(
+                lq_folder=str(self.data_prefix / 'image'),  # fake lq_folder
+                gt_folder=str(gt_folder),
+                ref_folder=str(ref_folder),
+                pipeline=sr_pipeline,
+                scale=4,
+                filename_tmpl_lq=filename_tmpl)
+        with pytest.raises(AssertionError):
+            sr_folder_ref_dataset = SRFolderRefDataset(
+                lq_folder=str(lq_folder),
+                gt_folder=str(self.data_prefix / 'bg'),  # fake gt_folder
+                ref_folder=str(ref_folder),
+                pipeline=sr_pipeline,
+                scale=4,
+                filename_tmpl_lq=filename_tmpl)
+        with pytest.raises(AssertionError):
+            sr_folder_ref_dataset = SRFolderRefDataset(
+                lq_folder=str(self.data_prefix / 'bg'),  # fake lq_folder
+                gt_folder=str(gt_folder),
+                ref_folder=str(ref_folder),
+                pipeline=sr_pipeline,
+                scale=4,
+                filename_tmpl_lq=filename_tmpl)
+        with pytest.raises(AssertionError):
+            sr_folder_ref_dataset = SRFolderRefDataset(
+                lq_folder=None,
+                gt_folder=None,
+                ref_folder=str(ref_folder),
+                pipeline=sr_pipeline,
+                scale=4,
+                filename_tmpl_lq=filename_tmpl)
 
     def test_sr_lmdb_dataset(self):
         # setup

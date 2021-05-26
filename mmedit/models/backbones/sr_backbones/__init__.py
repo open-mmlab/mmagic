@@ -8,8 +8,9 @@ from .sr_resnet import MSRResNet
 from .srcnn import SRCNN
 from .tdan_net import TDANNet
 from .tof import TOFlow
+from .ttsr_net import TTSRNet
 
 __all__ = [
     'MSRResNet', 'RRDBNet', 'EDSR', 'EDVRNet', 'TOFlow', 'SRCNN',
-    'BasicVSRNet', 'IconVSR', 'RDN', 'TDANNet'
+    'BasicVSRNet', 'IconVSR', 'RDN', 'TTSRNet', 'TDANNet'
 ]

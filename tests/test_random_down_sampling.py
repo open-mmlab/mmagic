@@ -1,6 +1,6 @@
 import numpy as np
 
-from mmedit.datasets.pipelines import RandomDownSampling, SRResize
+from mmedit.datasets.pipelines import RandomDownSampling
 
 
 def test_random_down_sampling():
@@ -31,24 +31,3 @@ def test_random_down_sampling():
         f'patch_size={down_sampling2.patch_size}, ' +
         f'interpolation={down_sampling2.interpolation}, ' +
         f'backend={down_sampling2.backend}')
-
-
-def test_sr_resize():
-    img = np.uint8(np.random.randn(480, 640, 3) * 255)
-    inputs = dict(gt=img)
-    re_size = SRResize(scale=1 / 4, input_key='gt', output_key='lq')
-    results = re_size(inputs)
-    assert set(list(results.keys())) == set(['gt', 'lq'])
-    assert results['lq'].shape == (120, 160, 3)
-    assert repr(re_size) == (
-        re_size.__class__.__name__ + f' scale={re_size.scale}, ' +
-        f'input_key={re_size.input_key}, ' +
-        f'output_key={re_size.output_key}, ' +
-        f'interpolation={re_size.interpolation}, ' +
-        f'backend={re_size.backend}')
-
-    inputs = dict(gt=img)
-    re_size = SRResize(scale=2, input_key='gt', output_key='gt')
-    results = re_size(inputs)
-    assert set(list(results.keys())) == set(['gt'])
-    assert results['gt'].shape == (960, 1280, 3)
