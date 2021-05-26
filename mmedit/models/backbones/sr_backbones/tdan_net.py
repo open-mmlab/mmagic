@@ -101,7 +101,7 @@ class TDANNet(nn.Module):
         self.to_rgb = nn.Conv2d(mid_channels, 3, 3, padding=1, bias=True)
 
         self.reconstruct = nn.Sequential(
-            ConvModule(mid_channels * 5, mid_channels, 3, padding=1),
+            ConvModule(in_channels * 5, mid_channels, 3, padding=1),
             make_layer(
                 ResidualBlockNoBN, num_blocks[1], mid_channels=mid_channels),
             PixelShufflePack(mid_channels, mid_channels, 2, upsample_kernel=3),
