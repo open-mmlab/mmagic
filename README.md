@@ -75,6 +75,7 @@ Supported algorithms:
 - [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
 - [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
 - [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
+- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
 
 </details>
 
