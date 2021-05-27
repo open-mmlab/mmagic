@@ -21,6 +21,15 @@ class GLEAN(SRGAN):
 
     """
 
+    def init_weights(self, pretrained=None):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+        """
+        self.generator.init_weights(pretrained=pretrained)
+
     def forward_test(self,
                      lq,
                      gt=None,
