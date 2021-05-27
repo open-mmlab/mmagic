@@ -69,6 +69,7 @@ Supported algorithms:
 - [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
 - [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
 - [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
+- [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
 - [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
 - [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
 - [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
