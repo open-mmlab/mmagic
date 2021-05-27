@@ -12,7 +12,7 @@ from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              GenerationUnpairedDataset, RepeatDataset,
                              SRAnnotationDataset, SRFolderDataset,
                              SRFolderGTDataset, SRFolderRefDataset,
-                             SRLmdbDataset, SRREDSDataset,
+                             SRLandmarkDataset, SRLmdbDataset, SRREDSDataset,
                              SRREDSMultipleGTDataset, SRTestMultipleGTDataset,
                              SRVid4Dataset, SRVimeo90KDataset,
                              SRVimeo90KMultipleGTDataset)
@@ -375,6 +375,45 @@ class TestSRDatasets:
                 pipeline=sr_pipeline,
                 scale=4,
                 filename_tmpl_lq=filename_tmpl)
+
+    def test_sr_landmark_dataset(self):
+        # setup
+        sr_pipeline = [
+            dict(
+                type='LoadImageFromFile',
+                io_backend='disk',
+                key='gt',
+                flag='color',
+                channel_order='rgb',
+                backend='cv2')
+        ]
+
+        target_keys = ['gt_path', 'bbox', 'shape', 'landmark']
+        gt_folder = self.data_prefix / 'face'
+        ann_file = self.data_prefix / 'facemark_ann.npy'
+
+        # input path is Path object
+        sr_landmark_dataset = SRLandmarkDataset(
+            gt_folder=gt_folder,
+            ann_file=ann_file,
+            pipeline=sr_pipeline,
+            scale=4)
+        data_infos = sr_landmark_dataset.data_infos
+        assert len(data_infos) == 1
+        result = sr_landmark_dataset[0]
+        assert len(sr_landmark_dataset) == 1
+        assert check_keys_contain(result.keys(), target_keys)
+        # input path is str
+        sr_landmark_dataset = SRLandmarkDataset(
+            gt_folder=str(gt_folder),
+            ann_file=str(ann_file),
+            pipeline=sr_pipeline,
+            scale=4)
+        data_infos = sr_landmark_dataset.data_infos
+        assert len(data_infos) == 1
+        result = sr_landmark_dataset[0]
+        assert len(sr_landmark_dataset) == 1
+        assert check_keys_contain(result.keys(), target_keys)
 
     def test_sr_lmdb_dataset(self):
         # setup

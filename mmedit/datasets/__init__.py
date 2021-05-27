@@ -13,6 +13,7 @@ from .sr_annotation_dataset import SRAnnotationDataset
 from .sr_folder_dataset import SRFolderDataset
 from .sr_folder_gt_dataset import SRFolderGTDataset
 from .sr_folder_ref_dataset import SRFolderRefDataset
+from .sr_landmark_dataset import SRLandmarkDataset
 from .sr_lmdb_dataset import SRLmdbDataset
 from .sr_reds_dataset import SRREDSDataset
 from .sr_reds_multiple_gt_dataset import SRREDSMultipleGTDataset
@@ -29,5 +30,5 @@ __all__ = [
     'SRVimeo90KDataset', 'BaseGenerationDataset', 'GenerationPairedDataset',
     'GenerationUnpairedDataset', 'SRVid4Dataset', 'SRFolderGTDataset',
     'SRREDSMultipleGTDataset', 'SRVimeo90KMultipleGTDataset',
-    'SRTestMultipleGTDataset', 'SRFolderRefDataset'
+    'SRTestMultipleGTDataset', 'SRFolderRefDataset', 'SRLandmarkDataset'
 ]
