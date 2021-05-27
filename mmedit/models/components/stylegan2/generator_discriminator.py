@@ -1,7 +1,7 @@
-import math
 import random
 
 import mmcv
+import numpy as np
 import torch
 import torch.nn as nn
 from mmcv.runner.checkpoint import _load_checkpoint_with_prefix
@@ -140,7 +140,7 @@ class StyleGANv2Generator(nn.Module):
             self.channels[4], style_channels, upsample=False)
 
         # generator backbone (8x8 --> higher resolutions)
-        self.log_size = int(math.log2(self.out_size))
+        self.log_size = int(np.log2(self.out_size))
 
         self.convs = nn.ModuleList()
         self.upsamples = nn.ModuleList()
@@ -480,7 +480,7 @@ class StyleGAN2Discriminator(nn.Module):
             1024: 16 * channel_multiplier,
         }
 
-        log_size = int(math.log2(in_size))
+        log_size = int(np.log2(in_size))
 
         in_channels = channels[in_size]
 

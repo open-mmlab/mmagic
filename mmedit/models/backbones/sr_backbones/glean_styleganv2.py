@@ -1,5 +1,4 @@
-import math
-
+import numpy as np
 import torch
 import torch.nn as nn
 from mmcv.runner import load_checkpoint
@@ -133,8 +132,8 @@ class GLEANStyleGANv2(nn.Module):
         channels = self.generator.channels
 
         # encoder
-        num_styles = int(math.log2(out_size)) * 2 - 2
-        encoder_res = [2**i for i in range(int(math.log2(in_size)), 1, -1)]
+        num_styles = int(np.log2(out_size)) * 2 - 2
+        encoder_res = [2**i for i in range(int(np.log2(in_size)), 1, -1)]
         self.encoder = nn.ModuleList()
         self.encoder.append(
             nn.Sequential(
@@ -172,8 +171,8 @@ class GLEANStyleGANv2(nn.Module):
 
         # decoder
         decoder_res = [
-            2**i for i in range(
-                int(math.log2(in_size)), int(math.log2(out_size) + 1))
+            2**i
+            for i in range(int(np.log2(in_size)), int(np.log2(out_size) + 1))
         ]
         self.decoder = nn.ModuleList()
         for res in decoder_res:
