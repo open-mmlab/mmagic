@@ -5,6 +5,7 @@ from typing import Any
 import mmcv
 import torch
 from mmcv import Config, DictAction
+from mmcv.parallel import MMDataParallel
 from torch import nn
 
 from mmedit.apis import single_gpu_test
@@ -145,6 +146,7 @@ def main():
         model = TensorRTEditing(args.model, cfg=cfg, device_id=0)
 
     args.save_image = args.save_path is not None
+    model = MMDataParallel(model, device_ids=[0])
     outputs = single_gpu_test(
         model,
         data_loader,
