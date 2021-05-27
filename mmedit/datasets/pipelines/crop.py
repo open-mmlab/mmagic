@@ -532,3 +532,50 @@ class ModCrop:
             raise ValueError(f'Wrong img ndim: {img.ndim}.')
         results['gt'] = img
         return results
+
+
+@PIPELINES.register_module()
+class CropLike:
+    """Crop/pad the image in the target_key according to the size of image
+        in the reference_key .
+
+    Args:
+        target_key (str): The key needs to be cropped.
+        reference_key (str | None): The reference key, need its size.
+            Default: None.
+    """
+
+    def __init__(self, target_key, reference_key=None):
+
+        assert reference_key and target_key
+        self.target_key = target_key
+        self.reference_key = reference_key
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+                Require self.target_key and self.reference_key.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+                Modify self.target_key.
+        """
+        size = results[self.reference_key].shape
+        old_image = results[self.target_key]
+        old_size = old_image.shape
+        h, w = old_size[:2]
+        new_size = size[:2] + old_size[2:]
+        h_cover, w_cover = min(h, size[0]), min(w, size[1])
+
+        format_image = np.zeros(new_size, dtype=old_image.dtype)
+        format_image[:h_cover, :w_cover] = old_image[:h_cover, :w_cover]
+        results[self.target_key] = format_image
+
+        return results
+
+    def __repr__(self):
+        return (self.__class__.__name__ + f' target_key={self.target_key}, ' +
+                f'reference_key={self.reference_key}')

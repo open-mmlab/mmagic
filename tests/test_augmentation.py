@@ -461,14 +461,21 @@ class TestAugmentations:
         assert results['gt_img'].shape[:2] == (128, 128)
 
         # test input with shape (256, 256)
-        results = dict(gt_img=self.results['img'][..., 0].copy())
-        resize = Resize(['gt_img'], scale=(128, 128), keep_ratio=False)
+        results = dict(gt_img=self.results['img'][..., 0].copy(), alpha=alpha)
+        resize = Resize(['gt_img', 'alpha'],
+                        scale=(128, 128),
+                        keep_ratio=False,
+                        output_keys=['lq_img', 'beta'])
         results = resize(results)
-        assert results['gt_img'].shape == (128, 128, 1)
+        assert results['gt_img'].shape == (256, 256)
+        assert results['lq_img'].shape == (128, 128, 1)
+        assert results['alpha'].shape == (240, 320)
+        assert results['beta'].shape == (128, 128, 1)
 
         name_ = str(resize_keep_ratio)
         assert name_ == resize_keep_ratio.__class__.__name__ + (
-            f"(keys={['gt_img']}, scale=(128, 128), "
+            "(keys=['gt_img'], output_keys=['gt_img'], "
+            'scale=(128, 128), '
             f'keep_ratio={False}, size_factor=None, '
             'max_size=None,interpolation=bilinear)')
 
@@ -673,7 +680,7 @@ class TestAugmentations:
                                            results['gt'][-i - 1])
 
         assert repr(mirror_sequence) == mirror_sequence.__class__.__name__ + (
-            f"(keys=['lq', 'gt'])")
+            "(keys=['lq', 'gt'])")
 
         # each key should contain a list of nparray
         with pytest.raises(TypeError):

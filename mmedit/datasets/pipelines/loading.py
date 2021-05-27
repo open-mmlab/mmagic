@@ -22,6 +22,8 @@ class LoadImageFromFile:
         save_original_img (bool): If True, maintain a copy of the image in
             `results` dict with name of `f'ori_{key}'`. Default: False.
         use_cache (bool): If True, load all images at once. Default: False.
+        backend (str): The image loading backend type. Options are `cv2`,
+            `pillow`, and 'turbojpeg'. Default: None.
         kwargs (dict): Args for file client.
     """
 
@@ -32,6 +34,7 @@ class LoadImageFromFile:
                  channel_order='bgr',
                  save_original_img=False,
                  use_cache=False,
+                 backend=None,
                  **kwargs):
         self.io_backend = io_backend
         self.key = key
@@ -42,6 +45,7 @@ class LoadImageFromFile:
         self.file_client = None
         self.use_cache = use_cache
         self.cache = None
+        self.backend = backend
 
     def __call__(self, results):
         """Call function.
@@ -66,13 +70,16 @@ class LoadImageFromFile:
                 img = mmcv.imfrombytes(
                     img_bytes,
                     flag=self.flag,
-                    channel_order=self.channel_order)  # HWC
+                    channel_order=self.channel_order,
+                    backend=self.backend)  # HWC
                 self.cache[filepath] = img
         else:
             img_bytes = self.file_client.get(filepath)
             img = mmcv.imfrombytes(
-                img_bytes, flag=self.flag,
-                channel_order=self.channel_order)  # HWC
+                img_bytes,
+                flag=self.flag,
+                channel_order=self.channel_order,
+                backend=self.backend)  # HWC
         results[self.key] = img
         results[f'{self.key}_path'] = filepath
         results[f'{self.key}_ori_shape'] = img.shape

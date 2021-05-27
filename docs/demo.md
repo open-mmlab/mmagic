@@ -34,7 +34,7 @@ python demo/matting_demo.py configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_com
 
 The predicted alpha matte will be save in `tests/data/pred/GT05.png`.
 
-#### Restoration
+#### Restoration (Image)
 
 You can use the following commands to test an image for restoration.
 
@@ -47,8 +47,28 @@ If `--imshow` is specified, the demo will also show image with opencv. Examples:
 ```shell
 python demo/restoration_demo.py configs/restorer/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k.py work_dirs/esrgan_x4c64b23g32_1x16_400k_div2k/latest.pth tests/data/lq/baboon_x4.png demo/demo_out_baboon.png
 ```
+#### Restoration (Video)
 
-The restored image will be save in `demo/demo_out_baboon.png`.
+You can use the following commands to test a video for restoration.
+
+```shell
+python demo/restoration_video_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${INPUT_DIR} ${OUTPUT_DIR} [--window_size=$WINDOW_SIZE] [--device ${GPU_ID}]
+```
+
+It suppots both the sliding-window framework and the recurrent framework. Examples:
+
+
+EDVR:
+```shell
+python demo/restoration_video_demo.py ./configs/restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth data/Vid4/BIx4/calendar/ ./output --window_size=5
+```
+
+BasicVSR:
+```shell
+python demo/restoration_video_demo.py ./configs/restorers/basicvsr/basicvsr_reds4.py https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth data/Vid4/BIx4/calendar/ ./output
+```
+
+The restored video will be save in `output/`.
 
 #### Generation
 

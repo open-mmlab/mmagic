@@ -1,0 +1,3 @@
+Import:
+  - configs/restorers/edsr/metafile.yml
+  - configs/inpainting/global_local/metafile.yml

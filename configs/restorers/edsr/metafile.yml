@@ -1,0 +1,81 @@
+Collections:
+  - Name: EDSR
+    Metadata:
+      Training Data: DIV2K
+      Training Techniques:
+        - Adam
+      Training Resources: 1x TITAN Xp
+      Architecture:
+        - EDSR
+    Paper: http://openaccess.thecvf.com/content_cvpr_2017_workshops/w12/papers/Lim_Enhanced_Deep_Residual_CVPR_2017_paper.pdf
+    README: configs/restorers/edsr/README.md
+
+Models:
+  - Name: edsr_x2c64b16_g1_300k_div2k
+    In Collection: EDSR
+    Config: configs/restorers/edsr/edsr_x2c64b16_g1_300k_div2k.py
+    Metadata:
+      Training Memory (GB): 0.47
+    Results:
+      - Task: x2 Super Resolution
+        Dataset: Set5
+        Metrics:
+          PSNR: 35.7592
+          SSIM: 0.9372
+      - Task: x2 Super Resolution
+        Dataset: Set14
+        Metrics:
+          PSNR: 31.4290
+          SSIM: 0.8874
+      - Task: x2 Super Resolution
+        Dataset: DIV2K
+        Metrics:
+          PSNR: 34.5896
+          SSIM: 0.9352
+    Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x2c64b16_1x16_300k_div2k_20200604-19fe95ea.pth
+
+  - Name: edsr_x3c64b16_g1_300k_div2k
+    In Collection: EDSR
+    Config: configs/restorers/edsr/edsr_x3c64b16_g1_300k_div2k.py
+    Metadata:
+      Training Memory (GB): 0.63
+    Results:
+      - Task: x3 Super Resolution
+        Dataset: Set5
+        Metrics:
+          PSNR: 32.3301
+          SSIM: 0.8912
+      - Task: x3 Super Resolution
+        Dataset: Set14
+        Metrics:
+          PSNR: 28.4125
+          SSIM: 0.8022
+      - Task: x3 Super Resolution
+        Dataset: DIV2K
+        Metrics:
+          PSNR: 30.9154
+          SSIM: 0.8711
+    Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x3c64b16_1x16_300k_div2k_20200608-36d896f4.pth
+
+  - Name: edsr_x4c64b16_g1_300k_div2k
+    In Collection: EDSR
+    Config: configs/restorers/edsr/edsr_x4c64b16_g1_300k_div2k.py
+    Metadata:
+      Training Memory (GB): 1.0
+    Results:
+      - Task: x3 Super Resolution
+        Dataset: Set5
+        Metrics:
+          PSNR: 30.2223
+          SSIM: 0.8500
+      - Task: x3 Super Resolution
+        Dataset: Set14
+        Metrics:
+          PSNR: 26.7870
+          SSIM: 0.7366
+      - Task: x3 Super Resolution
+        Dataset: DIV2K
+        Metrics:
+          PSNR: 28.9675
+          SSIM: 0.8172
+    Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth

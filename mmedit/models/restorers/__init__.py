@@ -5,7 +5,9 @@ from .esrgan import ESRGAN
 from .glean import GLEAN
 from .liif import LIIF
 from .srgan import SRGAN
+from .ttsr import TTSR
 
 __all__ = [
-    'BasicRestorer', 'SRGAN', 'ESRGAN', 'EDVR', 'LIIF', 'BasicVSR', 'GLEAN'
+    'BasicRestorer', 'SRGAN', 'ESRGAN', 'EDVR', 'LIIF', 'BasicVSR', 'TTSR',
+    'GLEAN'
 ]

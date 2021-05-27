@@ -7,6 +7,7 @@ from .gca_module import GCAModule
 from .generation_model_utils import (GANImageBuffer, ResidualBlockWithDropout,
                                      UnetSkipConnectionBlock,
                                      generation_init_weights)
+from .img_normalize import ImgNormalize
 from .linear_module import LinearModule
 from .mask_conv_module import MaskConvModule
 from .model_utils import (extract_around_bbox, extract_bbox_patch, scale_bbox,
@@ -24,5 +25,5 @@ __all__ = [
     'DepthwiseSeparableConvModule', 'ContextualAttentionModule', 'GCAModule',
     'SimpleGatedConvModule', 'LinearModule', 'flow_warp',
     'generation_init_weights', 'GANImageBuffer', 'UnetSkipConnectionBlock',
-    'ResidualBlockWithDropout'
+    'ResidualBlockWithDropout', 'ImgNormalize'
 ]

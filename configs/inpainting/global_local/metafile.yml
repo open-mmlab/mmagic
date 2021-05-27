@@ -1,0 +1,26 @@
+Collections:
+  - Name: GLInpaintor
+    Metadata:
+      Training Data: CelebA
+      Training Techniques:
+        - Adam
+      Training Resources: 1x TITAN Xp
+      Architecture:
+        - GLEncoderDecoder
+    Paper: https://dl.acm.org/doi/abs/10.1145/3072959.3073659
+    README: configs/inpainting/global_local/README.md
+
+Models:
+  - Name: gl_256x256_8x12_places
+    In Collection: GLInpaintor
+    Config: configs/inpainting/global_local/gl_256x256_8x12_celeba.py
+    Metadata:
+      Training Memory (GB): 3.24
+    Results:
+      - Task: Inpainting
+        Dataset: CelebA-val
+        Metrics:
+          L1 Error: 6.678
+          PSNR: 26.780
+          SSIM: 0.904
+    Weights: https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth
