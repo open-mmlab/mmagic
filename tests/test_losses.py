@@ -262,7 +262,7 @@ def test_perceptual_loss(init_weights):
         loss_percep = PerceptualLoss(
             layer_weights={
                 '0': 1.
-            }, style_weight=0.).cuda()
+            }, style_weight=0., criterion='mse').cuda()
         x = torch.randn(1, 3, 16, 16).cuda()
         gt = torch.randn(1, 3, 16, 16).cuda()
         percep, style = loss_percep(x, gt)
