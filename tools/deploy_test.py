@@ -87,8 +87,7 @@ class TensorRTEditing(nn.Module):
 def parse_args():
     parser = argparse.ArgumentParser(description='mmediting tester')
     parser.add_argument('config', help='test config file path')
-    parser.add_argument(
-        'model', help='input model file', nargs='*', default='tmp.trt')
+    parser.add_argument('model', help='input model file')
     parser.add_argument(
         'backend',
         help='backend of the model.',
