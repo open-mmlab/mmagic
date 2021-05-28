@@ -140,6 +140,8 @@ class PerceptualLoss(nn.Module):
 
         if criterion == 'l1':
             self.criterion = torch.nn.L1Loss()
+        elif criterion == 'mse':
+            self.criterion = torch.nn.MSELoss()
         else:
             raise NotImplementedError(
                 f'{criterion} criterion has not been supported in'
