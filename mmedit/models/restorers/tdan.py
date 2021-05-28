@@ -116,8 +116,8 @@ class TDAN(BasicRestorer):
         if self.test_cfg is not None and self.test_cfg.get('metrics', None):
             assert gt is not None, (
                 'evaluation with metrics must have gt images.')
-            results = dict(eval_result=self.evaluate(output, gt))
             gt += 0.5  # normalize from [-0.5, 0.5] to [0, 1]
+            results = dict(eval_result=self.evaluate(output, gt))
         else:
             results = dict(lq=lq.cpu(), output=output.cpu())
             if gt is not None:
