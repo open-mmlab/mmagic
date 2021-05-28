@@ -8,7 +8,7 @@ from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    CropLike, FixedCrop, ModCrop, PairedRandomCrop)
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
-from .generate_coordinate_and_cell import GenerateCoordinateAndCell
+from .generate_assistant import GenerateCoordinateAndCell, GenerateHeatmap
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
                       LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
                       RandomLoadResizeBg)
@@ -31,5 +31,5 @@ __all__ = [
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap',
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
-    'CropLike'
+    'CropLike', 'GenerateHeatmap'
 ]
