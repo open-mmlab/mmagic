@@ -18,7 +18,7 @@ def pad_sequence(data, window_size):
     return data
 
 
-def restoration_video_inference(model, img_dir, window_size, filename_tmpl):
+def restoration_video_inference(model, img_dir, window_size):
     """Inference image with the model.
 
     Args:
@@ -36,10 +36,7 @@ def restoration_video_inference(model, img_dir, window_size, filename_tmpl):
 
     # pipeline
     test_pipeline = [
-        dict(
-            type='GenerateSegmentIndices',
-            interval_list=[1],
-            filename_tmpl=filename_tmpl),
+        dict(type='GenerateSegmentIndices', interval_list=[1]),
         dict(
             type='LoadImageFromFileList',
             io_backend='disk',

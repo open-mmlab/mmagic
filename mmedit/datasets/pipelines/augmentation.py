@@ -927,12 +927,10 @@ class GenerateSegmentIndices:
         interval_list (list[int]): Interval list for temporal augmentation.
             It will randomly pick an interval from interval_list and sample
             frame index with the interval.
-        filename_tmpl (str): Template for file name. Default: '{:08d}.png'.
     """
 
-    def __init__(self, interval_list, filename_tmpl='{:08d}.png'):
+    def __init__(self, interval_list):
         self.interval_list = interval_list
-        self.filename_tmpl = filename_tmpl
 
     def __call__(self, results):
         """Call function.
@@ -965,15 +963,18 @@ class GenerateSegmentIndices:
         # add the corresponding file paths
         lq_path_root = results['lq_path']
         gt_path_root = results['gt_path']
+
+        # retrieve the file names in the directory
+        filenames = sorted(
+            list(mmcv.utils.scandir(osp.join(lq_path_root, clip_name))))
         lq_path = [
-            osp.join(lq_path_root, clip_name, self.filename_tmpl.format(v))
-            for v in neighbor_list
+            osp.join(lq_path_root, clip_name, filenames[i])
+            for i in neighbor_list
         ]
         gt_path = [
-            osp.join(gt_path_root, clip_name, self.filename_tmpl.format(v))
-            for v in neighbor_list
+            osp.join(gt_path_root, clip_name, filenames[i])
+            for i in neighbor_list
         ]
-
         results['lq_path'] = lq_path
         results['gt_path'] = gt_path
         results['interval'] = interval
