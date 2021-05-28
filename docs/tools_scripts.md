@@ -154,15 +154,10 @@ The table below lists the models that are guaranteed to be exportable to TensorR
 
 ### Evaluate ONNX and TensorRT Models (experimental)
 
-We provide methods to evaluate TensorRT and ONNX models in `tools/deploy_test.py`. To evaluate ONNX models, onnxruntime should be installed first.
+We provide methods to evaluate TensorRT and ONNX models in `tools/deploy_test.py`. 
 
 #### Prerequisite
-
-- Install onnx and onnxruntime-gpu
-
-  ```shell
-  pip install onnx onnxruntime-gpu
-  ```
+To evaluate ONNX and TensorRT models, onnx, onnxruntime and TensorRT should be installed first. Install `mmcv-full` with ONNXRuntime custom ops and TensorRT plugins follow [ONNXRuntime in mmcv](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) and [TensorRT plugin in mmcv](https://github.com/open-mmlab/mmcv/blob/master/docs/tensorrt_plugin.md).
 
 #### Usage
 
