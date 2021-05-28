@@ -18,7 +18,8 @@ def pad_sequence(data, window_size):
     return data
 
 
-def restoration_video_inference(model, img_dir, window_size, filename_tmpl):
+def restoration_video_inference(model, img_dir, window_size, start_idx,
+                                filename_tmpl):
     """Inference image with the model.
 
     Args:
@@ -27,6 +28,9 @@ def restoration_video_inference(model, img_dir, window_size, filename_tmpl):
         window_size (int): The window size used in sliding-window framework.
             This value should be set according to the settings of the network.
             A value smaller than 0 means using recurrent framework.
+        start_idx (int): The index corresponds to the first frame in the
+            sequence.
+        filename_tmpl (str): Template for file name.
 
     Returns:
         Tensor: The predicted restoration result.
@@ -39,6 +43,7 @@ def restoration_video_inference(model, img_dir, window_size, filename_tmpl):
         dict(
             type='GenerateSegmentIndices',
             interval_list=[1],
+            start_idx=start_idx,
             filename_tmpl=filename_tmpl),
         dict(
             type='LoadImageFromFileList',

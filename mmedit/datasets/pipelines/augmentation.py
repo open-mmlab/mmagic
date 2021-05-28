@@ -927,12 +927,15 @@ class GenerateSegmentIndices:
         interval_list (list[int]): Interval list for temporal augmentation.
             It will randomly pick an interval from interval_list and sample
             frame index with the interval.
+        start_idx (int): The index corresponds to the first frame in the
+            sequence. Default: 0.
         filename_tmpl (str): Template for file name. Default: '{:08d}.png'.
     """
 
-    def __init__(self, interval_list, filename_tmpl='{:08d}.png'):
+    def __init__(self, interval_list, start_idx=0, filename_tmpl='{:08d}.png'):
         self.interval_list = interval_list
         self.filename_tmpl = filename_tmpl
+        self.start_idx = start_idx
 
     def __call__(self, results):
         """Call function.
@@ -961,6 +964,7 @@ class GenerateSegmentIndices:
             0, self.sequence_length - num_input_frames * interval + 1)
         end_frame_idx = start_frame_idx + num_input_frames * interval
         neighbor_list = list(range(start_frame_idx, end_frame_idx, interval))
+        neighbor_list = [v + self.start_idx for v in neighbor_list]
 
         # add the corresponding file paths
         lq_path_root = results['lq_path']
