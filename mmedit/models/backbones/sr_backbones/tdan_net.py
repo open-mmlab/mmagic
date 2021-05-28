@@ -71,22 +71,27 @@ class TDANNet(nn.Module):
         mid_channels (int): Number of channels of the intermediate features.
             Default: 64.
         out_channels (int): Number of channels of the output image. Default: 3.
-        num_blocks (list[int]): Number of residual blocks before and after
-            temporal alignment. Default: [5, 10].
+        num_blocks_before_align (int): Number of residual blocks before
+            temporal alignment. Default: 5.
+        num_blocks_before_align (int): Number of residual blocks after
+            temporal alignment. Default: 10.
     """
 
     def __init__(self,
                  in_channels=3,
                  mid_channels=64,
                  out_channels=3,
-                 num_blocks=[5, 10]):
+                 num_blocks_before_align=5,
+                 num_blocks_after_align=10):
 
         super().__init__()
 
         self.feat_extract = nn.Sequential(
             ConvModule(in_channels, mid_channels, 3, padding=1),
             make_layer(
-                ResidualBlockNoBN, num_blocks[0], mid_channels=mid_channels))
+                ResidualBlockNoBN,
+                num_blocks_before_align,
+                mid_channels=mid_channels))
 
         self.feat_aggregate = nn.Sequential(
             nn.Conv2d(mid_channels * 2, mid_channels, 3, padding=1, bias=True),
@@ -103,7 +108,9 @@ class TDANNet(nn.Module):
         self.reconstruct = nn.Sequential(
             ConvModule(in_channels * 5, mid_channels, 3, padding=1),
             make_layer(
-                ResidualBlockNoBN, num_blocks[1], mid_channels=mid_channels),
+                ResidualBlockNoBN,
+                num_blocks_after_align,
+                mid_channels=mid_channels),
             PixelShufflePack(mid_channels, mid_channels, 2, upsample_kernel=3),
             PixelShufflePack(mid_channels, mid_channels, 2, upsample_kernel=3),
             nn.Conv2d(mid_channels, out_channels, 3, 1, 1, bias=False))
