@@ -22,6 +22,7 @@ def test_tdan_model():
             num_blocks_before_align=5,
             num_blocks_after_align=10),
         pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='sum'),
+        lr_pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='sum'),
     )
 
     train_cfg = None
