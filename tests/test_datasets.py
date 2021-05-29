@@ -980,6 +980,13 @@ def test_vid4_dataset():
                 metric_average_mode='abc',
                 test_mode=False)
 
+        with pytest.raises(TypeError):
+            # results must be a list
+            vid4_dataset.evaluate(results=5)
+        with pytest.raises(AssertionError):
+            # The length of results should be equal to the dataset len
+            vid4_dataset.evaluate(results=[results[0]])
+
 
 def test_sr_reds_multiple_gt_dataset():
     root_path = Path(__file__).parent / 'data'
