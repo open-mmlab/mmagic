@@ -45,7 +45,7 @@ class TDAN(BasicRestorer):
             gt (Tensor): GT Tensor with shape (n, c, h, w).
 
         Returns:
-            Tensor: Output tensor.
+            Dict: Output dictionary containing necessary information.
         """
         losses = dict()
         output, aligned_lrs = self.generator(lq)
@@ -55,7 +55,7 @@ class TDAN(BasicRestorer):
         losses['loss_pix'] = loss_pix
         # loss on the aligned LR images
         t = aligned_lrs.size(1)
-        lr_ref = lq[:, t // 2, :, :, :].unsqueeze(1).repeat(1, t, 1, 1, 1)
+        lr_ref = lq[:, t // 2].unsqueeze(1).repeat(1, t, 1, 1, 1)
         loss_pix_lr = self.lr_pixel_loss(aligned_lrs, lr_ref)
         losses['loss_pix_lr'] = loss_pix_lr
 
