@@ -2,6 +2,7 @@ import pytest
 import torch
 
 from mmedit.models import build_component
+from mmedit.models.extractors import HourGlass
 
 
 def test_lte():
@@ -28,5 +29,8 @@ def test_lte():
         lte.init_weights(1)
 
 
-if __name__ == '__main__':
-    test_lte()
+def test_hour_glass():
+    hour_glass = HourGlass(2, 16)
+    x = torch.rand(2, 16, 64, 64)
+    y = hour_glass(x)
+    assert y.shape == x.shape
