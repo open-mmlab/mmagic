@@ -61,7 +61,7 @@ class HourGlass(nn.Module):
     """
 
     def __init__(self, depth, mid_channels):
-        super(HourGlass, self).__init__()
+        super().__init__()
         self.up1 = ResBlock(mid_channels, mid_channels)
         self.pool = nn.MaxPool2d(2, 2)
         self.low1 = ResBlock(mid_channels, mid_channels)
