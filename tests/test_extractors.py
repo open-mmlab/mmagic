@@ -3,6 +3,7 @@ import torch
 
 from mmedit.models import build_component
 from mmedit.models.extractors import HourGlass
+from mmedit.models.extractors.feedback_hour_glass import ResBlock
 
 
 def test_lte():
@@ -27,6 +28,19 @@ def test_lte():
         lte.init_weights('')
     with pytest.raises(TypeError):
         lte.init_weights(1)
+
+
+def test_res_block():
+
+    res_block = ResBlock(16, 32)
+    x = torch.rand(2, 16, 64, 64)
+    y = res_block(x)
+    assert y.shape == (2, 32, 64, 64)
+
+    res_block = ResBlock(16, 16)
+    x = torch.rand(2, 16, 64, 64)
+    y = res_block(x)
+    assert y.shape == (2, 16, 64, 64)
 
 
 def test_hour_glass():
