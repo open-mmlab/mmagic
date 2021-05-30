@@ -49,7 +49,7 @@ class SRLandmarkDataset(BaseSRDataset):
 
         It loads the GT image path and landmark from the annotation file.
         Each dict in the annotation file contains the image names, image
-        shape (usually for gt), bbox and landmark separated by a white space.
+        shape (usually for gt), bbox and landmark.
 
         Returns:
             dict: Returned dict for GT and landmark.
