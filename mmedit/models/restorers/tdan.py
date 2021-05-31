@@ -56,7 +56,7 @@ class TDAN(BasicRestorer):
         losses['loss_pix'] = loss_pix
         # loss on the aligned LR images
         t = aligned_lqs.size(1)
-        lq_ref = lq[:, t // 2:t // 2 + 1, :, :, :]
+        lq_ref = lq[:, t // 2:t // 2 + 1, :, :, :].repeat(1, t, 1, 1, 1)
         loss_pix_lq = self.lq_pixel_loss(aligned_lqs, lq_ref)
         losses['loss_pix_lq'] = loss_pix_lq
 
