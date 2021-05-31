@@ -1,0 +1,25 @@
+# TDAN: Temporally-Deformable Alignment Network for Video Super-Resolution
+
+## Introduction
+
+<!-- [ALGORITHM] -->
+
+```bibtex
+@InProceedings{tian2020tdan,
+  title={TDAN: Temporally-Deformable Alignment Network for Video Super-Resolution},
+  author={Tian, Yapeng and Zhang, Yulun and Fu, Yun and Xu, Chenliang},
+  booktitle = {Proceedings of the IEEE conference on Computer Vision and Pattern Recognition},
+  year = {2020}
+}
+```
+
+## Results and Models
+
+Evaluated on Y-channel. 8 pixels in each border are cropped before evaluation.
+
+The metrics are `PSNR / SSIM`.
+
+|                                Method                               |   Vid4 (BIx4)   | SPMCS-30 (BIx4) |   Vid4 (BDx4)   | SPMCS-30 (BDx4) |                                                                                                         Download                                                                                                        |
+|:-------------------------------------------------------------------:|:---------------:|:---------------:|:---------------:|:---------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| [tdan_vimeo90k_bix4](/configs/restorers/tdan/tdan_vimeo90k_bix4.py) | **26.49/0.792** | **30.42/0.856** |   25.93/0.772   |   29.69/0.842   | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
+| [tdan_vimeo90k_bdx4](/configs/restorers/tdan/tdan_vimeo90k_bdx4.py) |   25.80/0.784   |   29.56/0.851   | **26.87/0.815** | **30.77/0.868** | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
