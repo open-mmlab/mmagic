@@ -33,14 +33,16 @@ You can use the following command to train a model.
 ./tools/dist_train.sh ${CONFIG_FILE} ${GPU_NUM} [optional arguments]
 ```
 
-TDAN is trained with two stages. For example, when training on Bicubic downsampling, you need to use
+TDAN is trained with two stages. For example:
+
+**Stage 1**: Training with a larger learning rate (1e-4)
 
 
 ```shell
 ./tools/dist_train.sh configs/restorers/tdan/tdan_vimeo90k_bix4_lr1e-4_400k.py 8
 ```
 
-followed by
+**Stage 2**: Fine-tune with a smaller learning rate (5e-5)
 
 ```shell
 ./tools/dist_train.sh configs/restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py 8
