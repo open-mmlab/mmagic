@@ -1,18 +1,97 @@
 import argparse
+import warnings
+from typing import Any
 
 import mmcv
+import torch
 from mmcv import Config, DictAction
 from mmcv.parallel import MMDataParallel
+from torch import nn
 
 from mmedit.apis import single_gpu_test
 from mmedit.core.export import ONNXRuntimeEditing
 from mmedit.datasets import build_dataloader, build_dataset
+from mmedit.models import BasicRestorer, build_model
+
+
+class TensorRTRestorerGenerator(nn.Module):
+    """Inner class for tensorrt restorer model inference
+
+    Args:
+        trt_file (str): The path to the tensorrt file.
+        device_id (int): Which device to place the model.
+    """
+
+    def __init__(self, trt_file: str, device_id: int):
+        super().__init__()
+        from mmcv.tensorrt import TRTWraper, load_tensorrt_plugin
+        try:
+            load_tensorrt_plugin()
+        except (ImportError, ModuleNotFoundError):
+            warnings.warn('If input model has custom op from mmcv, \
+                you may have to build mmcv with TensorRT from source.')
+        model = TRTWraper(
+            trt_file, input_names=['input'], output_names=['output'])
+        self.device_id = device_id
+        self.model = model
+
+    def forward(self, x):
+        with torch.cuda.device(self.device_id), torch.no_grad():
+            seg_pred = self.model({'input': x})['output']
+        seg_pred = seg_pred.detach().cpu()
+        return seg_pred
+
+
+class TensorRTRestorer(nn.Module):
+    """A warper class for tensorrt restorer
+
+    Args:
+        base_model (Any): The base model build from config.
+        trt_file (str): The path to the tensorrt file.
+        device_id (int): Which device to place the model.
+    """
+
+    def __init__(self, base_model: Any, trt_file: str, device_id: int):
+        super().__init__()
+        self.base_model = base_model
+        restorer_generator = TensorRTRestorerGenerator(
+            trt_file=trt_file, device_id=device_id)
+        base_model.generator = restorer_generator
+
+    def forward(self, lq, gt=None, test_mode=False, **kwargs):
+        return self.base_model(lq, gt=gt, test_mode=test_mode, **kwargs)
+
+
+class TensorRTEditing(nn.Module):
+    """A class for testing tensorrt deployment
+
+    Args:
+        trt_file (str): The path to the tensorrt file.
+        cfg (Any): The configuration of the testing, \
+            decided by the config file.
+        device_id (int): Which device to place the model.
+    """
+
+    def __init__(self, trt_file: str, cfg: Any, device_id: int):
+        super().__init__()
+        base_model = build_model(
+            cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
+        if isinstance(base_model, BasicRestorer):
+            WraperClass = TensorRTRestorer
+        self.wraper = WraperClass(base_model, trt_file, device_id)
+
+    def forward(self, **kwargs):
+        return self.wraper(**kwargs)
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='mmediting tester')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('model', help='input model file')
+    parser.add_argument(
+        'backend',
+        help='backend of the model.',
+        choices=['onnxruntime', 'tensorrt'])
     parser.add_argument('--out', help='output result pickle file')
     parser.add_argument(
         '--save-path',
@@ -60,7 +139,10 @@ def main():
     data_loader = build_dataloader(dataset, **loader_cfg)
 
     # build the model
-    model = ONNXRuntimeEditing(args.model, cfg=cfg, device_id=0)
+    if args.backend == 'onnxruntime':
+        model = ONNXRuntimeEditing(args.model, cfg=cfg, device_id=0)
+    elif args.backend == 'tensorrt':
+        model = TensorRTEditing(args.model, cfg=cfg, device_id=0)
 
     args.save_image = args.save_path is not None
     model = MMDataParallel(model, device_ids=[0])

@@ -99,168 +99,8 @@ The table below lists the models that are guaranteed to be exportable to ONNX an
 - If you meet any problem with the listed models above, please create an issue and it would be taken care of soon. For models not included in the list, please try to solve them by yourself.
 - Because this feature is experimental and may change fast, please always try with the latest `mmcv` and `mmedit`.
 
-### Evaluate ONNX Models with ONNXRuntime (experimental)
-
-We prepare a tool `tools/deploy_test.py` to evaluate ONNX models with ONNX Runtime backend.
-
-#### Prerequisite
-
-- Install onnx and onnxruntime-gpu
-
-  ```shell
-  pip install onnx onnxruntime-gpu
-  ```
-
-#### Usage
-
-```bash
-python tools/deploy_test.py \
-    ${CONFIG_FILE} \
-    ${ONNX_FILE} \
-    --out ${OUTPUT_FILE} \
-    --save-path ${SAVE_PATH} \
-    ----cfg-options ${CFG_OPTIONS} \
-```
-
-#### Description of all arguments
-
-- `config`: The path of a model config file.
-- `model`: The path of an ONNX model file.
-- `--out`: The path of output result file in pickle format.
-- `--save-path`: The path to store images and if not given, it will not save image.
-- `--cfg-options`: Override some settings in the used config file, the key-value pair in `xxx=yyy` format will be merged into config file.
-
-#### Results and Models
-
-<table border="1" class="docutils">
-	<tr>
-	    <th align="center">Model</th>
-	    <th align="center">Config</th>
-	    <th align="center">Dataset</th>
-	    <th align="center">Metric</th>
-	    <th align="center">PyTorch</th>
-	    <th align="center">ONNX Runtime</th>
-	</tr>
-    <tr>
-	    <td align="center" rowspan="6">ESRGAN</td>
-	    <td align="center" rowspan="6">
-            <code>esrgan_x4c64b23g32_g1_400k_div2k.py</code>
-        </td>
-	    <td align="center" rowspan="2">Set5</td>
-        <td align="center">PSNR</td>
-        <td align="center">28.2700</td>
-        <td align="center">28.2619</td>
-    </tr>
-    <tr>
-        <td align="center">SSIM</td>
-        <td align="center">0.7778</td>
-        <td align="center">0.7784</td>
-    </tr>
-    <tr>
-        <td align="center" rowspan="2">Set14</td>
-        <td align="center">PSNR</td>
-        <td align="center">24.6328</td>
-        <td align="center">24.6290</td>
-    </tr>
-    <tr>
-        <td align="center">SSIM</td>
-        <td align="center">0.6491</td>
-        <td align="center">0.6494</td>
-    </tr>
-    <tr>
-        <td align="center" rowspan="2">DIV2K</td>
-        <td align="center">PSNR</td>
-        <td align="center">26.6531</td>
-        <td align="center">26.6532</td>
-    </tr>
-    <tr>
-        <td align="center">SSIM</td>
-        <td align="center">0.7340</td>
-        <td align="center">0.7340</td>
-    </tr>
-    <tr>
-	    <td align="center" rowspan="6">ESRGAN</td>
-	    <td align="center" rowspan="6">
-            <code>esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py</code>
-        </td>
-	    <td align="center" rowspan="2">Set5</td>
-        <td align="center">PSNR</td>
-        <td align="center">30.6428</td>
-        <td align="center">30.6307</td>
-    </tr>
-    <tr>
-        <td align="center">SSIM</td>
-        <td align="center">0.8559</td>
-        <td align="center">0.8565</td>
-    </tr>
-    <tr>
-        <td align="center" rowspan="2">Set14</td>
-        <td align="center">PSNR</td>
-        <td align="center">27.0543</td>
-        <td align="center">27.0422</td>
-    </tr>
-    <tr>
-        <td align="center">SSIM</td>
-        <td align="center">0.7447</td>
-        <td align="center">0.7450</td>
-    </tr>
-    <tr>
-        <td align="center" rowspan="2">DIV2K</td>
-        <td align="center">PSNR</td>
-        <td align="center">29.3354</td>
-        <td align="center">29.3354</td>
-    </tr>
-    <tr>
-        <td align="center">SSIM</td>
-        <td align="center">0.8263</td>
-        <td align="center">0.8263</td>
-    </tr>
-    <tr>
-	    <td align="center" rowspan="6">SRCNN</td>
-	    <td align="center" rowspan="6">
-            <code>srcnn_x4k915_g1_1000k_div2k.py</code>
-        </td>
-	    <td align="center" rowspan="2">Set5</td>
-        <td align="center">PSNR</td>
-        <td align="center">28.4316</td>
-        <td align="center">28.4120</td>
-    </tr>
-    <tr>
-        <td align="center">SSIM</td>
-        <td align="center">0.8099</td>
-        <td align="center">0.8106</td>
-    </tr>
-    <tr>
-        <td align="center" rowspan="2">Set14</td>
-        <td align="center">PSNR</td>
-        <td align="center">25.6486</td>
-        <td align="center">25.6367</td>
-    </tr>
-    <tr>
-        <td align="center">SSIM</td>
-        <td align="center">0.7014</td>
-        <td align="center">0.7015</td>
-    </tr>
-    <tr>
-        <td align="center" rowspan="2">DIV2K</td>
-        <td align="center">PSNR</td>
-        <td align="center">27.7460</td>
-        <td align="center">27.7460</td>
-    </tr>
-    <tr>
-        <td align="center">SSIM</td>
-        <td align="center">0.7854</td>
-        <td align="center">0.78543</td>
-    </tr>
-</table>
-
-**Notes**:
-
-- All ONNX models are evaluated with dynamic shape on the datasets and images are preprocessed according to the original config file.
-- This tool is still experimental, and we only support `restorer` for now.
-
-
 ### Convert ONNX to TensorRT (experimental)
+
 We also provide a script to convert [ONNX](https://github.com/onnx/onnx) model to [TensorRT](https://github.com/NVIDIA/TensorRT) format. Besides, we support comparing the output results between ONNX and TensorRT model.
 
 
@@ -312,3 +152,198 @@ The table below lists the models that are guaranteed to be exportable to TensorR
 - *All models above are tested with Pytorch==1.8.1,  onnxruntime==1.7.0 and tensorrt==7.2.3.4*
 - If you meet any problem with the listed models above, please create an issue and it would be taken care of soon. For models not included in the list, please try to solve them by yourself.
 - Because this feature is experimental and may change fast, please always try with the latest `mmcv` and `mmedit`.
+
+### Evaluate ONNX and TensorRT Models (experimental)
+
+We provide methods to evaluate TensorRT and ONNX models in `tools/deploy_test.py`.
+
+#### Prerequisite
+To evaluate ONNX and TensorRT models, onnx, onnxruntime and TensorRT should be installed first. Install `mmcv-full` with ONNXRuntime custom ops and TensorRT plugins follow [ONNXRuntime in mmcv](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) and [TensorRT plugin in mmcv](https://github.com/open-mmlab/mmcv/blob/master/docs/tensorrt_plugin.md).
+
+#### Usage
+
+```bash
+python tools/deploy_test.py \
+    ${CONFIG_FILE} \
+    ${MODEL_PATH} \
+    ${BACKEND} \
+    --out ${OUTPUT_FILE} \
+    --save-path ${SAVE_PATH} \
+    ----cfg-options ${CFG_OPTIONS} \
+```
+
+#### Description of all arguments
+
+- `config`: The path of a model config file.
+- `model`: The path of a TensorRT or an ONNX model file.
+- `backend`: The backend for testing, choose tensorrt or onnxruntime.
+- `--out`: The path of output result file in pickle format.
+- `--save-path`: The path to store images and if not given, it will not save image.
+- `--cfg-options`: Override some settings in the used config file, the key-value pair in `xxx=yyy` format will be merged into config file.
+
+#### Results and Models
+
+<table border="1" class="docutils">
+	<tr>
+	    <th align="center">Model</th>
+	    <th align="center">Config</th>
+	    <th align="center">Dataset</th>
+	    <th align="center">Metric</th>
+	    <th align="center">PyTorch</th>
+	    <th align="center">ONNX Runtime</th>
+      <th align="center">TensorRT FP32</th>
+      <th align="center">TensorRT FP16</th>
+	</tr>
+    <tr>
+	    <td align="center" rowspan="6">ESRGAN</td>
+	    <td align="center" rowspan="6">
+            <code>esrgan_x4c64b23g32_g1_400k_div2k.py</code>
+        </td>
+	    <td align="center" rowspan="2">Set5</td>
+        <td align="center">PSNR</td>
+        <td align="center">28.2700</td>
+        <td align="center">28.2619</td>
+        <td align="center">28.2619</td>
+        <td align="center">28.2616</td>
+    </tr>
+    <tr>
+        <td align="center">SSIM</td>
+        <td align="center">0.7778</td>
+        <td align="center">0.7784</td>
+        <td align="center">0.7784</td>
+        <td align="center">0.7783</td>
+    </tr>
+    <tr>
+        <td align="center" rowspan="2">Set14</td>
+        <td align="center">PSNR</td>
+        <td align="center">24.6328</td>
+        <td align="center">24.6290</td>
+        <td align="center">24.6290</td>
+        <td align="center">24.6274</td>
+    </tr>
+    <tr>
+        <td align="center">SSIM</td>
+        <td align="center">0.6491</td>
+        <td align="center">0.6494</td>
+        <td align="center">0.6494</td>
+        <td align="center">0.6494</td>
+    </tr>
+    <tr>
+        <td align="center" rowspan="2">DIV2K</td>
+        <td align="center">PSNR</td>
+        <td align="center">26.6531</td>
+        <td align="center">26.6532</td>
+        <td align="center">26.6532</td>
+        <td align="center">26.6532</td>
+    </tr>
+    <tr>
+        <td align="center">SSIM</td>
+        <td align="center">0.7340</td>
+        <td align="center">0.7340</td>
+        <td align="center">0.7340</td>
+        <td align="center">0.7340</td>
+    </tr>
+    <tr>
+	    <td align="center" rowspan="6">ESRGAN</td>
+	    <td align="center" rowspan="6">
+            <code>esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py</code>
+        </td>
+	    <td align="center" rowspan="2">Set5</td>
+        <td align="center">PSNR</td>
+        <td align="center">30.6428</td>
+        <td align="center">30.6307</td>
+        <td align="center">30.6307</td>
+        <td align="center">30.6305</td>
+    </tr>
+    <tr>
+        <td align="center">SSIM</td>
+        <td align="center">0.8559</td>
+        <td align="center">0.8565</td>
+        <td align="center">0.8565</td>
+        <td align="center">0.8566</td>
+    </tr>
+    <tr>
+        <td align="center" rowspan="2">Set14</td>
+        <td align="center">PSNR</td>
+        <td align="center">27.0543</td>
+        <td align="center">27.0422</td>
+        <td align="center">27.0422</td>
+        <td align="center">27.0411</td>
+    </tr>
+    <tr>
+        <td align="center">SSIM</td>
+        <td align="center">0.7447</td>
+        <td align="center">0.7450</td>
+        <td align="center">0.7450</td>
+        <td align="center">0.7449</td>
+    </tr>
+    <tr>
+        <td align="center" rowspan="2">DIV2K</td>
+        <td align="center">PSNR</td>
+        <td align="center">29.3354</td>
+        <td align="center">29.3354</td>
+        <td align="center">29.3354</td>
+        <td align="center">29.3339</td>
+    </tr>
+    <tr>
+        <td align="center">SSIM</td>
+        <td align="center">0.8263</td>
+        <td align="center">0.8263</td>
+        <td align="center">0.8263</td>
+        <td align="center">0.8263</td>
+    </tr>
+    <tr>
+	    <td align="center" rowspan="6">SRCNN</td>
+	    <td align="center" rowspan="6">
+            <code>srcnn_x4k915_g1_1000k_div2k.py</code>
+        </td>
+	    <td align="center" rowspan="2">Set5</td>
+        <td align="center">PSNR</td>
+        <td align="center">28.4316</td>
+        <td align="center">28.4120</td>
+        <td align="center">27.2144</td>
+        <td align="center">27.2127</td>
+    </tr>
+    <tr>
+        <td align="center">SSIM</td>
+        <td align="center">0.8099</td>
+        <td align="center">0.8106</td>
+        <td align="center">0.7782</td>
+        <td align="center">0.7781</td>
+    </tr>
+    <tr>
+        <td align="center" rowspan="2">Set14</td>
+        <td align="center">PSNR</td>
+        <td align="center">25.6486</td>
+        <td align="center">25.6367</td>
+        <td align="center">24.8613</td>
+        <td align="center">24.8599</td>
+    </tr>
+    <tr>
+        <td align="center">SSIM</td>
+        <td align="center">0.7014</td>
+        <td align="center">0.7015</td>
+        <td align="center">0.6674</td>
+        <td align="center">0.6673</td>
+    </tr>
+    <tr>
+        <td align="center" rowspan="2">DIV2K</td>
+        <td align="center">PSNR</td>
+        <td align="center">27.7460</td>
+        <td align="center">27.7460</td>
+        <td align="center">26.9891</td>
+        <td align="center">26.9862</td>
+    </tr>
+    <tr>
+        <td align="center">SSIM</td>
+        <td align="center">0.7854</td>
+        <td align="center">0.78543</td>
+        <td align="center">0.7605</td>
+        <td align="center">0.7604</td>
+    </tr>
+</table>
+
+**Notes**:
+
+- All ONNX and TensorRT models are evaluated with dynamic shape on the datasets and images are preprocessed according to the original config file.
+- This tool is still experimental, and we only support `restorer` for now.
