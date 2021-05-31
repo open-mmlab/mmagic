@@ -7,8 +7,8 @@ from .registry import DATASETS
 
 
 @DATASETS.register_module()
-class SRLandmarkDataset(BaseSRDataset):
-    """General image and landmark dataset with an annotation file for image
+class SRFacicalLandmarkDataset(BaseSRDataset):
+    """Facical image and landmark dataset with an annotation file for image
     restoration.
 
     The dataset loads gt (Ground-Truth) image, shape of image, face box, and

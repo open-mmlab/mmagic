@@ -10,9 +10,9 @@ from torch.utils.data import Dataset
 from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              BaseSRDataset, GenerationPairedDataset,
                              GenerationUnpairedDataset, RepeatDataset,
-                             SRAnnotationDataset, SRFolderDataset,
-                             SRFolderGTDataset, SRFolderRefDataset,
-                             SRLandmarkDataset, SRLmdbDataset, SRREDSDataset,
+                             SRAnnotationDataset, SRFacicalLandmarkDataset,
+                             SRFolderDataset, SRFolderGTDataset,
+                             SRFolderRefDataset, SRLmdbDataset, SRREDSDataset,
                              SRREDSMultipleGTDataset, SRTestMultipleGTDataset,
                              SRVid4Dataset, SRVimeo90KDataset,
                              SRVimeo90KMultipleGTDataset)
@@ -393,7 +393,7 @@ class TestSRDatasets:
         ann_file = self.data_prefix / 'facemark_ann.npy'
 
         # input path is Path object
-        sr_landmark_dataset = SRLandmarkDataset(
+        sr_landmark_dataset = SRFacicalLandmarkDataset(
             gt_folder=gt_folder,
             ann_file=ann_file,
             pipeline=sr_pipeline,
@@ -404,7 +404,7 @@ class TestSRDatasets:
         assert len(sr_landmark_dataset) == 1
         assert check_keys_contain(result.keys(), target_keys)
         # input path is str
-        sr_landmark_dataset = SRLandmarkDataset(
+        sr_landmark_dataset = SRFacicalLandmarkDataset(
             gt_folder=str(gt_folder),
             ann_file=str(ann_file),
             pipeline=sr_pipeline,
