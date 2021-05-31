@@ -23,7 +23,7 @@ class TensorRTRestorerGenerator(nn.Module):
     """
 
     def __init__(self, trt_file: str, device_id: int):
-        super(TensorRTRestorerGenerator, self).__init__()
+        super().__init__()
         from mmcv.tensorrt import TRTWraper, load_tensorrt_plugin
         try:
             load_tensorrt_plugin()
@@ -52,7 +52,7 @@ class TensorRTRestorer(nn.Module):
     """
 
     def __init__(self, base_model: Any, trt_file: str, device_id: int):
-        super(TensorRTRestorer, self).__init__()
+        super().__init__()
         self.base_model = base_model
         restorer_generator = TensorRTRestorerGenerator(
             trt_file=trt_file, device_id=device_id)
@@ -73,7 +73,7 @@ class TensorRTEditing(nn.Module):
     """
 
     def __init__(self, trt_file: str, cfg: Any, device_id: int):
-        super(TensorRTEditing, self).__init__()
+        super().__init__()
         base_model = build_model(
             cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
         if isinstance(base_model, BasicRestorer):
