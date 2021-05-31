@@ -143,7 +143,8 @@ class FeedbackHourGlass(nn.Module):
                 Default: None.
 
         Returns:
-            Tensor: Forward results.
+            heatmap (Tensor): Heatmap of facial landmark.
+            feedback (Tensor): Feedback Tensor.
         """
 
         feature = self.pre_conv_block(x)
@@ -153,4 +154,5 @@ class FeedbackHourGlass(nn.Module):
             feature = self.first(torch.cat((feature, last_hidden), dim=1))
         feature = self.hg(feature)
         heatmap = self.last(feature[:, :self.mid_channels])  # first half
-        return heatmap, feature[:, self.mid_channels:]  # second half
+        feedback = feature[:, self.mid_channels:]  # second half
+        return heatmap, feedback
