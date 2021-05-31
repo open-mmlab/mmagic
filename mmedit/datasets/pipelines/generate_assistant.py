@@ -65,8 +65,8 @@ class GenerateHeatmap:
         x_range = np.arange(start=0, stop=w, dtype=int)
         y_range = np.arange(start=0, stop=h, dtype=int)
         grid_x, grid_y = np.meshgrid(x_range, y_range)
-        dist = (grid_x - keypoint[0])**2 + (grid_y - keypoint[1])**2
-        exponent = dist / 2.0 / self.sigma / self.sigma
+        dist2 = (grid_x - keypoint[0])**2 + (grid_y - keypoint[1])**2
+        exponent = dist2 / 2.0 / self.sigma / self.sigma
         heatmap = np.exp(-exponent)
         return heatmap
 
