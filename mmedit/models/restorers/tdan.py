@@ -20,6 +20,7 @@ class TDAN(BasicRestorer):
     Args:
         generator (dict): Config for the generator structure.
         pixel_loss (dict): Config for pixel-wise loss.
+        lq_pixel_loss (dict): Config for pixel-wise loss for the LQ images.
         train_cfg (dict): Config for training. Default: None.
         test_cfg (dict): Config for testing. Default: None.
         pretrained (str): Path for pretrained model. Default: None.
@@ -28,14 +29,14 @@ class TDAN(BasicRestorer):
     def __init__(self,
                  generator,
                  pixel_loss,
-                 lr_pixel_loss,
+                 lq_pixel_loss,
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
         super().__init__(generator, pixel_loss, train_cfg, test_cfg,
                          pretrained)
 
-        self.lr_pixel_loss = build_loss(lr_pixel_loss)
+        self.lq_pixel_loss = build_loss(lq_pixel_loss)
 
     def forward_train(self, lq, gt):
         """Training forward function.
@@ -48,16 +49,16 @@ class TDAN(BasicRestorer):
             Dict: Output dictionary containing necessary information.
         """
         losses = dict()
-        output, aligned_lrs = self.generator(lq)
+        output, aligned_lqs = self.generator(lq)
 
         # loss on the HR image
         loss_pix = self.pixel_loss(output, gt)
         losses['loss_pix'] = loss_pix
         # loss on the aligned LR images
-        t = aligned_lrs.size(1)
-        lr_ref = lq[:, t // 2].unsqueeze(1).repeat(1, t, 1, 1, 1)
-        loss_pix_lr = self.lr_pixel_loss(aligned_lrs, lr_ref)
-        losses['loss_pix_lr'] = loss_pix_lr
+        t = aligned_lqs.size(1)
+        lq_ref = lq[:, t // 2:t // 2 + 1, :, :, :]
+        loss_pix_lq = self.lq_pixel_loss(aligned_lqs, lq_ref)
+        losses['loss_pix_lq'] = loss_pix_lq
 
         outputs = dict(
             losses=losses,
@@ -126,15 +127,14 @@ class TDAN(BasicRestorer):
         # save image
         if save_image:
             gt_path = meta[0]['gt_path'][0]
-            folder_name = meta[0]['key'].split('/')[0]
+            clip_name = meta[0]['key'].split('/')[0]
             frame_name = osp.splitext(osp.basename(gt_path))[0]
 
             if isinstance(iteration, numbers.Number):
-                save_path = osp.join(save_path, folder_name,
+                save_path = osp.join(save_path, clip_name,
                                      f'{frame_name}-{iteration + 1:06d}.png')
             elif iteration is None:
-                save_path = osp.join(save_path, folder_name,
-                                     f'{frame_name}.png')
+                save_path = osp.join(save_path, clip_name, f'{frame_name}.png')
             else:
                 raise ValueError('iteration should be number or None, '
                                  f'but got {type(iteration)}')
