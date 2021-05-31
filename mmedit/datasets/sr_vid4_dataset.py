@@ -37,10 +37,10 @@ class SRVid4Dataset(BaseSRDataset):
         scale (int): Upsampling scale ratio.
         filename_tmpl (str): Template for each filename. Note that the
             template excludes the file extension. Default: '{:08d}'.
-        metric_average_mode (str): The way to compite the average metric.
-            If 'folder', we first compute an average value for each folder, and
-            then average the values from different folders. If 'all', we
-            compute the average of all frames. Default: 'folder'.
+        metric_average_mode (str): The way to compute the average metric.
+            If 'clip', we first compute an average value for each clip, and
+            then average the values from different clips. If 'all', we
+            compute the average of all frames. Default: 'clip'.
         test_mode (bool): Store `True` when building test dataset.
             Default: `False`.
     """
@@ -53,7 +53,7 @@ class SRVid4Dataset(BaseSRDataset):
                  pipeline,
                  scale,
                  filename_tmpl='{:08d}',
-                 metric_average_mode='folder',
+                 metric_average_mode='clip',
                  test_mode=False):
         super().__init__(pipeline, scale, test_mode)
         assert num_input_frames % 2 == 1, (
@@ -64,8 +64,8 @@ class SRVid4Dataset(BaseSRDataset):
         self.ann_file = str(ann_file)
         self.num_input_frames = num_input_frames
         self.filename_tmpl = filename_tmpl
-        if metric_average_mode not in ['folder', 'all']:
-            raise ValueError('metric_average_mode can only be "folder" or '
+        if metric_average_mode not in ['clip', 'all']:
+            raise ValueError('metric_average_mode can only be "clip" or '
                              f'"all", but got {metric_average_mode}.')
 
         self.metric_average_mode = metric_average_mode
@@ -73,7 +73,6 @@ class SRVid4Dataset(BaseSRDataset):
 
     def load_annotations(self):
         """Load annoations for Vid4 dataset.
-
         Returns:
             dict: Returned dict for LQ and GT pairs.
         """
@@ -96,10 +95,8 @@ class SRVid4Dataset(BaseSRDataset):
 
     def evaluate(self, results, logger=None):
         """Evaluate with different metrics.
-
         Args:
             results (list[tuple]): The output of forward_test() of the model.
-
         Return:
             dict: Evaluation results dict.
         """
@@ -121,7 +118,7 @@ class SRVid4Dataset(BaseSRDataset):
                 f'should be {len(self)}')
 
         # average the results
-        if self.metric_average_mode == 'folder':
+        if self.metric_average_mode == 'clip':
             for metric, values in eval_results.items():
                 start_idx = 0
                 metric_avg = 0

@@ -897,7 +897,7 @@ def test_vid4_dataset():
             pipeline=[],
             scale=4,
             test_mode=False,
-            metric_average_mode='folder',
+            metric_average_mode='clip',
             filename_tmpl='{:08d}')
 
         assert vid4_dataset.data_infos == [
@@ -921,7 +921,7 @@ def test_vid4_dataset():
                 max_frame_num=2),
         ]
 
-        # test evaluate function ('folder' mode)
+        # test evaluate function ('clip' mode)
         results = [{
             'eval_result': {
                 'PSNR': 21,
