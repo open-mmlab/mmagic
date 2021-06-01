@@ -20,7 +20,7 @@ The training and test datasets can be download from [here](http://toflow.csail.m
 The Vimeo90K dataset has a `clip/sequence/img` folder structure:
 ```text
 ├── GT/LQ
-│   ├── 001
+│   ├── 00001
 │   │   ├── 0001
 │   │   │   ├── im1.png
 │   │   │   ├── im2.png
@@ -28,7 +28,7 @@ The Vimeo90K dataset has a `clip/sequence/img` folder structure:
 │   │   ├── 0002
 │   │   ├── 0003
 │   │   ├── ...
-│   ├── 002
+│   ├── 00002
 │   ├── ...
 ```
 
