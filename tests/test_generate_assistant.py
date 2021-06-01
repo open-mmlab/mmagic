@@ -1,6 +1,26 @@
 import torch
 
-from mmedit.datasets.pipelines import GenerateCoordinateAndCell
+from mmedit.datasets.pipelines import (GenerateCoordinateAndCell,
+                                       GenerateHeatmap)
+
+
+def test_generate_heatmap():
+    inputs = dict(landmark=[(1, 2), (3, 4)])
+    generate_heatmap = GenerateHeatmap('landmark', 4, 16)
+    results = generate_heatmap(inputs)
+    assert set(list(results.keys())) == set(['landmark', 'heatmap'])
+    assert results['heatmap'][:, :, 0].shape == (16, 16)
+    assert repr(generate_heatmap) == (
+        f'{generate_heatmap.__class__.__name__}, '
+        f'keypoint={generate_heatmap.keypoint}, '
+        f'ori_size={generate_heatmap.ori_size}, '
+        f'target_size={generate_heatmap.target_size}, '
+        f'sigma={generate_heatmap.sigma}')
+
+    generate_heatmap = GenerateHeatmap('landmark', (4, 5), (16, 17))
+    results = generate_heatmap(inputs)
+    assert set(list(results.keys())) == set(['landmark', 'heatmap'])
+    assert results['heatmap'][:, :, 0].shape == (17, 16)
 
 
 def test_generate_coordinate_and_cell():

@@ -6,6 +6,80 @@ from .utils import make_coord
 
 
 @PIPELINES.register_module()
+class GenerateHeatmap:
+    """Generate heatmap from keypoint.
+
+    Args:
+        keypoint (str): Key of keypoint in dict.
+        ori_size (int | Tuple[int]): Original image size of keypoint.
+        target_size (int | Tuple[int]): Target size of heatmap.
+        sigma (float): Sigma parameter of heatmap. Default: 1.0
+    """
+
+    def __init__(self, keypoint, ori_size, target_size, sigma=1.0):
+        if isinstance(ori_size, int):
+            ori_size = (ori_size, ori_size)
+        else:
+            ori_size = ori_size[:2]
+        if isinstance(target_size, int):
+            target_size = (target_size, target_size)
+        else:
+            target_size = target_size[:2]
+        self.size_ratio = (target_size[0] / ori_size[0],
+                           target_size[1] / ori_size[1])
+        self.keypoint = keypoint
+        self.sigma = sigma
+        self.target_size = target_size
+        self.ori_size = ori_size
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation. Require keypoint.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+                Add 'heatmap'.
+        """
+        keypoint_list = [(keypoint[0] * self.size_ratio[0],
+                          keypoint[1] * self.size_ratio[1])
+                         for keypoint in results[self.keypoint]]
+        heatmap_list = [
+            self._generate_one_heatmap(keypoint) for keypoint in keypoint_list
+        ]
+        results['heatmap'] = np.stack(heatmap_list, axis=2)
+        return results
+
+    def _generate_one_heatmap(self, keypoint):
+        """Generate One Heatmap.
+
+        Args:
+            landmark (Tuple[float]): Location of a landmark.
+
+        results:
+            heatmap (np.ndarray): A heatmap of landmark.
+        """
+        w, h = self.target_size
+
+        x_range = np.arange(start=0, stop=w, dtype=int)
+        y_range = np.arange(start=0, stop=h, dtype=int)
+        grid_x, grid_y = np.meshgrid(x_range, y_range)
+        dist2 = (grid_x - keypoint[0])**2 + (grid_y - keypoint[1])**2
+        exponent = dist2 / 2.0 / self.sigma / self.sigma
+        heatmap = np.exp(-exponent)
+        return heatmap
+
+    def __repr__(self):
+        return (f'{self.__class__.__name__}, '
+                f'keypoint={self.keypoint}, '
+                f'ori_size={self.ori_size}, '
+                f'target_size={self.target_size}, '
+                f'sigma={self.sigma}')
+
+
+@PIPELINES.register_module()
 class GenerateCoordinateAndCell:
     """Generate coordinate and cell.
 
