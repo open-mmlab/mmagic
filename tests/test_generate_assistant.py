@@ -13,7 +13,7 @@ def test_generate_heatmap():
     assert repr(generate_heatmap) == (
         f'{generate_heatmap.__class__.__name__}, '
         f'keypoint={generate_heatmap.keypoint}, '
-        f'rate={generate_heatmap.rate}, '
+        f'ori_size={generate_heatmap.ori_size}, '
         f'target_size={generate_heatmap.target_size}, '
         f'sigma={generate_heatmap.sigma}')
 

@@ -30,6 +30,7 @@ class GenerateHeatmap:
         self.keypoint = keypoint
         self.sigma = sigma
         self.target_size = target_size
+        self.ori_size = ori_size
 
     def __call__(self, results):
         """Call function.
@@ -73,7 +74,8 @@ class GenerateHeatmap:
     def __repr__(self):
         return (f'{self.__class__.__name__}, '
                 f'keypoint={self.keypoint}, '
-                f'rate={self.rate}, target_size={self.target_size}, '
+                f'ori_size={self.ori_size}, '
+                f'target_size={self.target_size}, '
                 f'sigma={self.sigma}')
 
 
