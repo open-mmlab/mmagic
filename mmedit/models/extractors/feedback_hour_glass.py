@@ -157,3 +157,46 @@ class FeedbackHourglass(nn.Module):
         heatmap = self.last(feature[:, :self.mid_channels])  # first half
         feedback = feature[:, self.mid_channels:]  # second half
         return heatmap, feedback
+
+
+def merge_heatmap_to_5(ori_heatmap, detach):
+    """merge landmark heatmap to 5
+
+    Args:
+        ori_heatmap (Tensor): Input heatmap tensor. B*N*32*32.
+        detach (bool): Detached from the current tensor or not.
+
+    returns:
+        Tensor: New heatmap.
+    """
+    # landmark[36:42], landmark[42:48], landmark[27:36], landmark[48:68]
+    heatmap = ori_heatmap.clone()
+    max_heat = heatmap.max(dim=2, keepdim=True)[0].max(dim=3, keepdim=True)[0]
+    max_heat = torch.max(max_heat, torch.ones_like(max_heat) * 0.05)
+    heatmap /= max_heat
+    if heatmap.size(1) == 5:
+        return heatmap.detach() if detach else heatmap
+    elif heatmap.size(1) == 68:
+        new_heatmap = torch.zeros_like(heatmap[:, :5])
+        new_heatmap[:, 0] = heatmap[:, 36:42].sum(1)  # left eye
+        new_heatmap[:, 1] = heatmap[:, 42:48].sum(1)  # right eye
+        new_heatmap[:, 2] = heatmap[:, 27:36].sum(1)  # nose
+        new_heatmap[:, 3] = heatmap[:, 48:68].sum(1)  # mouse
+        new_heatmap[:, 4] = heatmap[:, :27].sum(1)  # face silhouette
+        return new_heatmap.detach() if detach else new_heatmap
+    elif heatmap.size(1) == 194:  # Helen
+        new_heatmap = torch.zeros_like(heatmap[:, :5])
+        tmp_id = torch.cat((torch.arange(134, 153), torch.arange(174, 193)))
+        new_heatmap[:, 0] = heatmap[:, tmp_id].sum(1)  # left eye
+        tmp_id = torch.cat((torch.arange(114, 133), torch.arange(154, 173)))
+        new_heatmap[:, 1] = heatmap[:, tmp_id].sum(1)  # right eye
+        tmp_id = torch.arange(41, 57)
+        new_heatmap[:, 2] = heatmap[:, tmp_id].sum(1)  # nose
+        tmp_id = torch.arange(58, 113)
+        new_heatmap[:, 3] = heatmap[:, tmp_id].sum(1)  # mouse
+        tmp_id = torch.arange(0, 40)
+        new_heatmap[:, 4] = heatmap[:, tmp_id].sum(1)  # face silhouette
+        return new_heatmap.detach() if detach else new_heatmap
+    else:
+        raise NotImplementedError(
+            f'Face landmark number {heatmap.size(1)} not implemented!')
