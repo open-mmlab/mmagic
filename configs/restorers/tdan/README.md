@@ -33,9 +33,9 @@ You can use the following command to train a model.
 ./tools/dist_train.sh ${CONFIG_FILE} ${GPU_NUM} [optional arguments]
 ```
 
-TDAN is trained with two stages. For example:
+TDAN is trained with two stages.
 
-**Stage 1**: Training with a larger learning rate (1e-4)
+**Stage 1**: Train with a larger learning rate (1e-4)
 
 
 ```shell
