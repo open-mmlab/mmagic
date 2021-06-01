@@ -40,7 +40,7 @@ The Vimeo90K dataset has a `clip/sequence/img` folder structure:
 To prepare the annotation file for training, you need to download the official training list path for Vimeo90K from the official website, and run the following command:
 
 ```shell
-python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py None None ./data/Vimeo90K/official_train_list.txt
+python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt
 ```
 
 The annotation file for test is generated similarly.
@@ -52,5 +52,5 @@ The annotation file for test is generated similarly.
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/GT ./data/Vimeo90K/LQ ./data/Vimeo90K/official_train_list.txt --make-lmdb
+python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt --gt_path ./data/Vimeo90K/GT --lq_path ./data/Vimeo90K/LQ  --make-lmdb
 ```
