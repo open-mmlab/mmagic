@@ -25,8 +25,8 @@ class GenerateHeatmap:
             target_size = (target_size, target_size)
         else:
             target_size = target_size[:2]
-        self.rate = (target_size[0] / ori_size[0],
-                     target_size[1] / ori_size[1])
+        self.size_ratio = (target_size[0] / ori_size[0],
+                           target_size[1] / ori_size[1])
         self.keypoint = keypoint
         self.sigma = sigma
         self.target_size = target_size
@@ -43,8 +43,8 @@ class GenerateHeatmap:
             dict: A dict containing the processed data and information.
                 Add 'heatmap'.
         """
-        keypoint_list = [(keypoint[0] * self.rate[0],
-                          keypoint[1] * self.rate[1])
+        keypoint_list = [(keypoint[0] * self.size_ratio[0],
+                          keypoint[1] * self.size_ratio[1])
                          for keypoint in results[self.keypoint]]
         heatmap_list = [
             self._generate_one_heatmap(keypoint) for keypoint in keypoint_list
