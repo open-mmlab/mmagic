@@ -123,7 +123,8 @@ class FeedbackHourGlass(nn.Module):
             ResBlock(self.mid_channels // 2, self.mid_channels // 2),
             ResBlock(self.mid_channels // 2, self.mid_channels),
         )
-        self.first = nn.Conv2d(2 * self.mid_channels, 2 * self.mid_channels, 1)
+        self.first_conv = nn.Conv2d(2 * self.mid_channels,
+                                    2 * self.mid_channels, 1)
 
         self.hg = HourGlass(4, 2 * self.mid_channels)
         self.last = nn.Sequential(
@@ -149,9 +150,9 @@ class FeedbackHourGlass(nn.Module):
 
         feature = self.pre_conv_block(x)
         if last_hidden is None:
-            feature = self.first(torch.cat((feature, feature), dim=1))
+            feature = self.first_conv(torch.cat((feature, feature), dim=1))
         else:
-            feature = self.first(torch.cat((feature, last_hidden), dim=1))
+            feature = self.first_conv(torch.cat((feature, last_hidden), dim=1))
         feature = self.hg(feature)
         heatmap = self.last(feature[:, :self.mid_channels])  # first half
         feedback = feature[:, self.mid_channels:]  # second half
