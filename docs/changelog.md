@@ -10,23 +10,21 @@
 
 **New Features**
 
-- Support SR Folder Ref Dataset ([#292](https://github.com/open-mmlab/mmediting/pull/292))
-- Support resize by scale-factor ([#295](https://github.com/open-mmlab/mmediting/pull/295), [#310](https://github.com/open-mmlab/mmediting/pull/310))
 - Add GLEAN ([#296](https://github.com/open-mmlab/mmediting/pull/296), [#332](https://github.com/open-mmlab/mmediting/pull/332))
 - Support PWD metafile ([#298](https://github.com/open-mmlab/mmediting/pull/298))
 - Support CropLike in pipeline ([#299](https://github.com/open-mmlab/mmediting/pull/299))
 - Support Image Normalize in GPU ([#301](https://github.com/open-mmlab/mmediting/pull/301))
 - Add Learnable Texture Extractor ([#304](https://github.com/open-mmlab/mmediting/pull/304))
 - Add Search-Transformer ([#307](https://github.com/open-mmlab/mmediting/pull/307))
-- Support FLOPs calculation of video SR models ([#309](https://github.com/open-mmlab/mmediting/pull/309))
 - Add TTSR ([#311](https://github.com/open-mmlab/mmediting/pull/311), [#311](https://github.com/open-mmlab/mmediting/pull/311), [#312](https://github.com/open-mmlab/mmediting/pull/312), [#313](https://github.com/open-mmlab/mmediting/pull/313), [#314](https://github.com/open-mmlab/mmediting/pull/314), [#321](https://github.com/open-mmlab/mmediting/pull/321), [#326](https://github.com/open-mmlab/mmediting/pull/326), [#327](https://github.com/open-mmlab/mmediting/pull/327))
 - Add TDAN ([#316](https://github.com/open-mmlab/mmediting/pull/316), [#334](https://github.com/open-mmlab/mmediting/pull/334), [#347](https://github.com/open-mmlab/mmediting/pull/347))
 - Add onnx2tensorrt ([#317](https://github.com/open-mmlab/mmediting/pull/317))
-- Support different filename templates in GenerateSegmentIndices ([#325](https://github.com/open-mmlab/mmediting/pull/325))
 - Add tensorrt evaluation ([#328](https://github.com/open-mmlab/mmediting/pull/328))
 - Add SRFacicalLandmarkDataset ([#329](https://github.com/open-mmlab/mmediting/pull/329))
 - Add key point auxiliary model for DIC ([#336](https://github.com/open-mmlab/mmediting/pull/336), [#341](https://github.com/open-mmlab/mmediting/pull/341))
-- Support start_index in GenerateSegmentIndices ([#338](https://github.com/open-mmlab/mmediting/pull/338))
+- Add demo for video super-resolution methods ([#275](https://github.com/open-mmlab/mmediting/pull/275))
+- Add SR Folder Ref Dataset ([#292](https://github.com/open-mmlab/mmediting/pull/292))
+- Support FLOPs calculation of video SR models ([#309](https://github.com/open-mmlab/mmediting/pull/309))
 
 **Bug Fixes**
 
@@ -36,12 +34,14 @@
 
 **Improvements**
 
-- Add demo for video super-resolution methods ([#275](https://github.com/open-mmlab/mmediting/pull/275))
-- Update LoadImageFromFile ([#293](https://github.com/open-mmlab/mmediting/pull/293), [#303](https://github.com/open-mmlab/mmediting/pull/303))
+- Support backend in LoadImageFromFile ([#293](https://github.com/open-mmlab/mmediting/pull/293), [#303](https://github.com/open-mmlab/mmediting/pull/303))
 - Update `metric_average_mode` of video SR dataset ([#319](https://github.com/open-mmlab/mmediting/pull/319))
 - Add error message in restoration_demo.py ([324](https://github.com/open-mmlab/mmediting/pull/324))
 - Minor correction in getting_started.md ([#339](https://github.com/open-mmlab/mmediting/pull/339))
 - Update description for Vimeo90K ([#349](https://github.com/open-mmlab/mmediting/pull/349))
+- Support start_index in GenerateSegmentIndices ([#338](https://github.com/open-mmlab/mmediting/pull/338))
+- Support different filename templates in GenerateSegmentIndices ([#325](https://github.com/open-mmlab/mmediting/pull/325))
+- Support resize by scale-factor ([#295](https://github.com/open-mmlab/mmediting/pull/295), [#310](https://github.com/open-mmlab/mmediting/pull/310))
 
 ## v0.7.0 (30/04/2021).
 
