@@ -160,7 +160,16 @@ class FeedbackHourglass(nn.Module):
 
 
 def merge_heatmap_to_5(ori_heatmap, detach):
-    """merge landmark heatmap to 5
+    """merge facial landmark heatmaps to 5
+
+    DIC realizes facial SR with the help of key points of the face.
+    The number of key points in datasets are different from each other.
+    This function can merge facial landmark heatmaps to 5:
+        left eye
+        right eye
+        nose
+        mouse
+        face silhouette
 
     Args:
         ori_heatmap (Tensor): Input heatmap tensor. B*N*32*32.
