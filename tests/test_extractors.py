@@ -3,8 +3,8 @@ import torch
 
 from mmedit.models import build_component
 from mmedit.models.extractors import Hourglass
-from mmedit.models.extractors.feedback_hour_glass import (ResBlock,
-                                                          merge_heatmap_to_5)
+from mmedit.models.extractors.feedback_hour_glass import (
+    ResBlock, reduce_to_five_heatmaps)
 
 
 def test_lte():
@@ -67,25 +67,25 @@ def test_feedback_hour_glass():
     assert last_hidden.shape == (2, 16, 16, 16)
 
 
-def test_merge_heatmap_to_5():
+def test_reduce_to_five_heatmaps():
     heatmap = torch.rand((2, 5, 64, 64))
-    new_heatmap = merge_heatmap_to_5(heatmap, False)
+    new_heatmap = reduce_to_five_heatmaps(heatmap, False)
     assert new_heatmap.shape == (2, 5, 64, 64)
-    new_heatmap = merge_heatmap_to_5(heatmap, True)
+    new_heatmap = reduce_to_five_heatmaps(heatmap, True)
     assert new_heatmap.shape == (2, 5, 64, 64)
 
     heatmap = torch.rand((2, 68, 64, 64))
-    new_heatmap = merge_heatmap_to_5(heatmap, False)
+    new_heatmap = reduce_to_five_heatmaps(heatmap, False)
     assert new_heatmap.shape == (2, 5, 64, 64)
-    new_heatmap = merge_heatmap_to_5(heatmap, True)
+    new_heatmap = reduce_to_five_heatmaps(heatmap, True)
     assert new_heatmap.shape == (2, 5, 64, 64)
 
     heatmap = torch.rand((2, 194, 64, 64))
-    new_heatmap = merge_heatmap_to_5(heatmap, False)
+    new_heatmap = reduce_to_five_heatmaps(heatmap, False)
     assert new_heatmap.shape == (2, 5, 64, 64)
-    new_heatmap = merge_heatmap_to_5(heatmap, True)
+    new_heatmap = reduce_to_five_heatmaps(heatmap, True)
     assert new_heatmap.shape == (2, 5, 64, 64)
 
     with pytest.raises(NotImplementedError):
         heatmap = torch.rand((2, 12, 64, 64))
-        merge_heatmap_to_5(heatmap, False)
+        reduce_to_five_heatmaps(heatmap, False)

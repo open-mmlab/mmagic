@@ -159,12 +159,12 @@ class FeedbackHourglass(nn.Module):
         return heatmap, feedback
 
 
-def merge_heatmap_to_5(ori_heatmap, detach):
-    """merge facial landmark heatmaps to 5
+def reduce_to_five_heatmaps(ori_heatmap, detach):
+    """Reduce facial landmark heatmaps to 5 heatmaps.
 
     DIC realizes facial SR with the help of key points of the face.
     The number of key points in datasets are different from each other.
-    This function can merge facial landmark heatmaps to 5:
+    This function reduces the input heatmaps into 5 heatmaps:
         left eye
         right eye
         nose
@@ -172,16 +172,16 @@ def merge_heatmap_to_5(ori_heatmap, detach):
         face silhouette
 
     Args:
-        ori_heatmap (Tensor): Input heatmap tensor. B*N*32*32.
+        ori_heatmap (Tensor): Input heatmap tensor. (B, N, 32, 32).
         detach (bool): Detached from the current tensor or not.
 
     returns:
-        Tensor: New heatmap.
+        Tensor: New heatmap tensor. (B, 5, 32, 32).
     """
-    # landmark[36:42], landmark[42:48], landmark[27:36], landmark[48:68]
+
     heatmap = ori_heatmap.clone()
     max_heat = heatmap.max(dim=2, keepdim=True)[0].max(dim=3, keepdim=True)[0]
-    max_heat = torch.max(max_heat, torch.ones_like(max_heat) * 0.05)
+    max_heat = max_heat.clamp_min_(0.05)
     heatmap /= max_heat
     if heatmap.size(1) == 5:
         return heatmap.detach() if detach else heatmap
