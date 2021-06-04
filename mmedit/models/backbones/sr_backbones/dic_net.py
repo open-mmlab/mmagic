@@ -84,9 +84,8 @@ class FeedbackBlock(nn.Module):
         x = torch.cat((x, self.last_hidden), dim=1)
         x = self.first(x)
 
-        lr_features = []
+        lr_features = [x]
         hr_features = []
-        lr_features.append(x)
 
         for idx in range(self.num_blocks):
             # when idx == 0, lr_features == [x]
@@ -97,7 +96,7 @@ class FeedbackBlock(nn.Module):
 
             hr_features.append(hr)
 
-            hr = torch.cat(tuple(hr_features), 1)
+            hr = torch.cat(hr_features, 1)
             if idx > 0:
                 hr = self.hr_blocks[idx - 1](hr)
             lr = self.down_blocks[idx](hr)
