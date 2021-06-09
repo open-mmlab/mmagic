@@ -24,7 +24,7 @@ train_pipeline = [
         flag='color',
         channel_order='rgb',
         backend='cv2'),
-    dict(type='Resize', scale=128, keys=['gt']),
+    dict(type='Resize', scale=(128, 128), keys=['gt']),
     dict(type='Resize', scale=1 / 8, keys=['gt'], output_keys=['lq']),
     dict(
         type='GenerateHeatmap',
@@ -51,7 +51,7 @@ valid_pipeline = [
         flag='color',
         channel_order='rgb',
         backend='cv2'),
-    dict(type='Resize', scale=128, keys=['gt']),
+    dict(type='Resize', scale=(128, 128), keys=['gt']),
     dict(type='Resize', scale=1 / 8, keys=['gt'], output_keys=['lq']),
     dict(
         type='Normalize',
