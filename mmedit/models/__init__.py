@@ -4,7 +4,7 @@ from .builder import (build, build_backbone, build_component, build_loss,
                       build_model)
 from .common import *  # noqa: F401, F403
 from .components import *  # noqa: F401, F403
-from .extractors import LTE
+from .extractors import LTE, FeedbackHourglass
 from .inpaintors import (DeepFillv1Inpaintor, GLInpaintor, OneStageInpaintor,
                          PConvInpaintor, TwoStageInpaintor)
 from .losses import *  # noqa: F401, F403
@@ -20,5 +20,5 @@ __all__ = [
     'BACKBONES', 'COMPONENTS', 'LOSSES', 'BaseMattor', 'DIM', 'MODELS',
     'GLInpaintor', 'PConvInpaintor', 'SRGAN', 'ESRGAN', 'GCA',
     'TwoStageInpaintor', 'IndexNet', 'DeepFillv1Inpaintor', 'Pix2Pix',
-    'CycleGAN', 'SearchTransformer', 'LTE'
+    'CycleGAN', 'SearchTransformer', 'LTE', 'FeedbackHourglass'
 ]
