@@ -5,7 +5,7 @@ from mmedit.models.registry import COMPONENTS
 
 
 class ResBlock(nn.Module):
-    """ResBlock for HourGlass.
+    """ResBlock for Hourglass.
 
     It has a style of:
 
@@ -53,13 +53,13 @@ class ResBlock(nn.Module):
         return x + residual
 
 
-class HourGlass(nn.Module):
-    """Hour Glass model for face landmark.
+class Hourglass(nn.Module):
+    """Hourglass model for face landmark.
 
     It is a recursive model.
 
     Args:
-        depth (int): Depth of HourGlass, the number of recursions.
+        depth (int): Depth of Hourglass, the number of recursions.
         mid_channels (int): Number of channels in the intermediate features.
     """
 
@@ -71,7 +71,7 @@ class HourGlass(nn.Module):
         if depth == 1:
             self.low2 = ResBlock(mid_channels, mid_channels)
         else:
-            self.low2 = HourGlass(depth - 1, mid_channels)
+            self.low2 = Hourglass(depth - 1, mid_channels)
         self.low3 = ResBlock(mid_channels, mid_channels)
 
     def forward(self, x):
@@ -94,14 +94,14 @@ class HourGlass(nn.Module):
 
 
 @COMPONENTS.register_module()
-class FeedbackHourGlass(nn.Module):
-    """Feedback Hour Glass model for face landmark.
+class FeedbackHourglass(nn.Module):
+    """Feedback Hourglass model for face landmark.
 
     It has a style of:
 
     ::
 
-        -- preprocessing ----- HourGlass ----->
+        -- preprocessing ----- Hourglass ----->
                            ^               |
                            |_______________|
 
@@ -126,7 +126,7 @@ class FeedbackHourGlass(nn.Module):
         self.first_conv = nn.Conv2d(2 * self.mid_channels,
                                     2 * self.mid_channels, 1)
 
-        self.hg = HourGlass(4, 2 * self.mid_channels)
+        self.hg = Hourglass(4, 2 * self.mid_channels)
         self.last = nn.Sequential(
             ResBlock(self.mid_channels, self.mid_channels),
             nn.Conv2d(self.mid_channels, self.mid_channels, 1),
@@ -138,9 +138,9 @@ class FeedbackHourGlass(nn.Module):
 
         Args:
             x (Tensor): Input tensor with shape (n, c, h, w).
-            last_hidden (Tensor | None): The feedback of FeedbackHourGlass.
+            last_hidden (Tensor | None): The feedback of FeedbackHourglass.
                 In first step, last_hidden=None. Otherwise, last_hidden is
-                the past output of FeedbackHourGlass.
+                the past output of FeedbackHourglass.
                 Default: None.
 
         Returns:
