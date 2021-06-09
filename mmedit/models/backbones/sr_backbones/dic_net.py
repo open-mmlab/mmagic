@@ -128,34 +128,33 @@ class FeedbackBlockCustom(FeedbackBlock):
         super().__init__(mid_channels, num_blocks, upscale_factor)
 
         prelu_init = 0.2
-        self.first = nn.Sequential(
+        self.conv_first = nn.Sequential(
             nn.Conv2d(in_channels, mid_channels, kernel_size=1),
             nn.PReLU(init=prelu_init))
 
     def forward(self, x):
-        x = self.first(x)
+        x = self.conv_first(x)
 
-        lr_features = []
+        lr_features = [x]
         hr_features = []
-        lr_features.append(x)
 
         for idx in range(self.num_blocks):
             # when idx == 0, lr_features == [x]
-            lr = torch.cat(tuple(lr_features), 1)
+            lr = torch.cat(lr_features, 1)
             if idx > 0:
                 lr = self.lr_blocks[idx - 1](lr)
             hr = self.up_blocks[idx](lr)
 
             hr_features.append(hr)
 
-            hr = torch.cat(tuple(hr_features), 1)
+            hr = torch.cat(hr_features, 1)
             if idx > 0:
                 hr = self.hr_blocks[idx - 1](hr)
             lr = self.down_blocks[idx](hr)
 
             lr_features.append(lr)
 
-        output = torch.cat(tuple(lr_features[1:]), 1)
-        output = self.last(output)
+        output = torch.cat(lr_features[1:], 1)
+        output = self.conv_last(output)
 
         return output
