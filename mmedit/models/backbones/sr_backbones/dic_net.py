@@ -19,19 +19,22 @@ class FeedbackBlock(nn.Module):
         upscale_factor (int): upscale factor.
     """
 
-    def __init__(self, mid_channels, num_blocks, upscale_factor):
+    def __init__(self,
+                 mid_channels,
+                 num_blocks,
+                 upscale_factor,
+                 padding=2,
+                 prelu_init=0.2):
         super().__init__()
 
         stride = upscale_factor
-        padding = 2
         kernel_size = upscale_factor + 4
-        prelu_init = 0.2
 
         self.num_blocks = num_blocks
         self.need_reset = True
         self.last_hidden = None
 
-        self.first = nn.Sequential(
+        self.conv_first = nn.Sequential(
             nn.Conv2d(2 * mid_channels, mid_channels, kernel_size=1),
             nn.PReLU(init=prelu_init))
 
@@ -64,7 +67,7 @@ class FeedbackBlock(nn.Module):
                             mid_channels,
                             kernel_size=1), nn.PReLU(init=prelu_init)))
 
-        self.last = nn.Sequential(
+        self.conv_last = nn.Sequential(
             nn.Conv2d(num_blocks * mid_channels, mid_channels, kernel_size=1),
             nn.PReLU(init=prelu_init))
 
@@ -82,7 +85,7 @@ class FeedbackBlock(nn.Module):
             self.need_reset = False
 
         x = torch.cat((x, self.last_hidden), dim=1)
-        x = self.first(x)
+        x = self.conv_first(x)
 
         lr_features = [x]
         hr_features = []
@@ -104,14 +107,8 @@ class FeedbackBlock(nn.Module):
             lr_features.append(lr)
 
         output = torch.cat(lr_features[1:], 1)
-        output = self.last(output)
+        output = self.conv_last(output)
 
         self.last_hidden = output
 
         return output
-
-    def reset_state(self):
-        """Reset 'self.need_reset' to 'True'.
-        """
-
-        self.need_reset = True
