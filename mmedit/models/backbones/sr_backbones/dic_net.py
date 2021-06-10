@@ -112,3 +112,49 @@ class FeedbackBlock(nn.Module):
         self.last_hidden = output
 
         return output
+
+
+class FeedbackBlockCustom(FeedbackBlock):
+    """Custom feedback block, will be used as the first feedback block.
+
+    Args:
+        in_channels (int): Number of channels in the input features.
+        mid_channels (int): Number of channels in the intermediate features.
+        num_blocks (int): Number of blocks.
+        upscale_factor (int): upscale factor.
+    """
+
+    def __init__(self, in_channels, mid_channels, num_blocks, upscale_factor):
+        super().__init__(mid_channels, num_blocks, upscale_factor)
+
+        prelu_init = 0.2
+        self.conv_first = nn.Sequential(
+            nn.Conv2d(in_channels, mid_channels, kernel_size=1),
+            nn.PReLU(init=prelu_init))
+
+    def forward(self, x):
+        x = self.conv_first(x)
+
+        lr_features = [x]
+        hr_features = []
+
+        for idx in range(self.num_blocks):
+            # when idx == 0, lr_features == [x]
+            lr = torch.cat(lr_features, 1)
+            if idx > 0:
+                lr = self.lr_blocks[idx - 1](lr)
+            hr = self.up_blocks[idx](lr)
+
+            hr_features.append(hr)
+
+            hr = torch.cat(hr_features, 1)
+            if idx > 0:
+                hr = self.hr_blocks[idx - 1](hr)
+            lr = self.down_blocks[idx](hr)
+
+            lr_features.append(lr)
+
+        output = torch.cat(lr_features[1:], 1)
+        output = self.conv_last(output)
+
+        return output
