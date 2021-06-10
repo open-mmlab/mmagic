@@ -1,8 +1,11 @@
+import torch
 import torch.nn as nn
+
+from mmedit.models.registry import COMPONENTS
 
 
 class ResBlock(nn.Module):
-    """ResBlock for HourGlass.
+    """ResBlock for Hourglass.
 
     It has a style of:
 
@@ -50,13 +53,13 @@ class ResBlock(nn.Module):
         return x + residual
 
 
-class HourGlass(nn.Module):
-    """Hour Glass model for face landmark.
+class Hourglass(nn.Module):
+    """Hourglass model for face landmark.
 
     It is a recursive model.
 
     Args:
-        depth (int): Depth of HourGlass, the number of recursions.
+        depth (int): Depth of Hourglass, the number of recursions.
         mid_channels (int): Number of channels in the intermediate features.
     """
 
@@ -68,7 +71,7 @@ class HourGlass(nn.Module):
         if depth == 1:
             self.low2 = ResBlock(mid_channels, mid_channels)
         else:
-            self.low2 = HourGlass(depth - 1, mid_channels)
+            self.low2 = Hourglass(depth - 1, mid_channels)
         self.low3 = ResBlock(mid_channels, mid_channels)
 
     def forward(self, x):
@@ -88,3 +91,69 @@ class HourGlass(nn.Module):
         up2 = nn.functional.interpolate(
             low3, scale_factor=2, mode='bilinear', align_corners=True)
         return up1 + up2
+
+
+@COMPONENTS.register_module()
+class FeedbackHourglass(nn.Module):
+    """Feedback Hourglass model for face landmark.
+
+    It has a style of:
+
+    ::
+
+        -- preprocessing ----- Hourglass ----->
+                           ^               |
+                           |_______________|
+
+    Args:
+        mid_channels (int): Number of channels in the intermediate features.
+        num_keypoints (int): Number of keypoints.
+    """
+
+    def __init__(self, mid_channels, num_keypoints):
+        super().__init__()
+        self.mid_channels = mid_channels
+        self.num_keypoints = num_keypoints
+
+        self.pre_conv_block = nn.Sequential(
+            nn.Conv2d(3, self.mid_channels // 4, 7, 2, 3),
+            nn.ReLU(inplace=True),
+            ResBlock(self.mid_channels // 4, self.mid_channels // 2),
+            nn.MaxPool2d(2, 2),
+            ResBlock(self.mid_channels // 2, self.mid_channels // 2),
+            ResBlock(self.mid_channels // 2, self.mid_channels),
+        )
+        self.first_conv = nn.Conv2d(2 * self.mid_channels,
+                                    2 * self.mid_channels, 1)
+
+        self.hg = Hourglass(4, 2 * self.mid_channels)
+        self.last = nn.Sequential(
+            ResBlock(self.mid_channels, self.mid_channels),
+            nn.Conv2d(self.mid_channels, self.mid_channels, 1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(self.mid_channels, self.num_keypoints, 1))
+
+    def forward(self, x, last_hidden=None):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+            last_hidden (Tensor | None): The feedback of FeedbackHourglass.
+                In first step, last_hidden=None. Otherwise, last_hidden is
+                the past output of FeedbackHourglass.
+                Default: None.
+
+        Returns:
+            heatmap (Tensor): Heatmap of facial landmark.
+            feedback (Tensor): Feedback Tensor.
+        """
+
+        feature = self.pre_conv_block(x)
+        if last_hidden is None:
+            feature = self.first_conv(torch.cat((feature, feature), dim=1))
+        else:
+            feature = self.first_conv(torch.cat((feature, last_hidden), dim=1))
+        feature = self.hg(feature)
+        heatmap = self.last(feature[:, :self.mid_channels])  # first half
+        feedback = feature[:, self.mid_channels:]  # second half
+        return heatmap, feedback

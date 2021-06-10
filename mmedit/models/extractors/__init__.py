@@ -1,4 +1,4 @@
-from .feedback_hour_glass import HourGlass
+from .feedback_hour_glass import FeedbackHourglass, Hourglass
 from .lte import LTE
 
-__all__ = ['LTE', 'HourGlass']
+__all__ = ['LTE', 'Hourglass', 'FeedbackHourglass']
