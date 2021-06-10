@@ -3,12 +3,7 @@ import torch.nn as nn
 from mmcv.runner import load_checkpoint
 
 from mmedit.models.common import make_layer
-<<<<<<< HEAD
 from mmedit.models.extractors import FeedbackHourglass, reduce_to_five_heatmaps
-=======
-# from mmedit.models.extractors import FeedbackHourGlass,
-# reduce_to_five_heatmaps
->>>>>>> for rebase
 from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
@@ -89,7 +84,6 @@ class FeedbackBlock(nn.Module):
         if self.need_reset:
             self.last_hidden = x
             self.need_reset = False
-<<<<<<< HEAD
 
         x = torch.cat((x, self.last_hidden), dim=1)
         x = self.conv_first(x)
@@ -97,15 +91,6 @@ class FeedbackBlock(nn.Module):
         lr_features = [x]
         hr_features = []
 
-=======
-
-        x = torch.cat((x, self.last_hidden), dim=1)
-        x = self.conv_first(x)
-
-        lr_features = [x]
-        hr_features = []
-
->>>>>>> for rebase
         for idx in range(self.num_blocks):
             # when idx == 0, lr_features == [x]
             lr = torch.cat(lr_features, 1)
@@ -149,7 +134,6 @@ class FeedbackBlockCustom(FeedbackBlock):
 
     def forward(self, x):
         x = self.conv_first(x)
-<<<<<<< HEAD
 
         lr_features = [x]
         hr_features = []
@@ -168,26 +152,6 @@ class FeedbackBlockCustom(FeedbackBlock):
                 hr = self.hr_blocks[idx - 1](hr)
             lr = self.down_blocks[idx](hr)
 
-=======
-
-        lr_features = [x]
-        hr_features = []
-
-        for idx in range(self.num_blocks):
-            # when idx == 0, lr_features == [x]
-            lr = torch.cat(lr_features, 1)
-            if idx > 0:
-                lr = self.lr_blocks[idx - 1](lr)
-            hr = self.up_blocks[idx](lr)
-
-            hr_features.append(hr)
-
-            hr = torch.cat(hr_features, 1)
-            if idx > 0:
-                hr = self.hr_blocks[idx - 1](hr)
-            lr = self.down_blocks[idx](hr)
-
->>>>>>> for rebase
             lr_features.append(lr)
 
         output = torch.cat(lr_features[1:], 1)
@@ -228,20 +192,11 @@ class GroupResBlock(nn.Module):
         Returns:
             Tensor: Forward results.
         """
-<<<<<<< HEAD
-=======
-
-        res = self.res(x).mul(self.res_scale)
-        return x + res
->>>>>>> for rebase
 
         res = self.res(x).mul(self.res_scale)
         return x + res
 
-<<<<<<< HEAD
 
-=======
->>>>>>> for rebase
 class FeatureHeatmapFusingBlock(nn.Module):
     """ Fusing Feature and Heatmap.
     Args:
@@ -392,8 +347,12 @@ class DICNet(nn.Module):
             of HourGlass. Default: 256
         hg_num_keypoints (int): Keypoint number of HourGlass. Default: 68
         num_steps (int): Number of iterative steps. Default: 4
+        upscale_factor (int): Upsampling factor. Default: 8
         detach_attention (bool): Detached from the current tensor for heatmap
             or not.
+        prelu_init (float): `init` of PReLU. Default: 0.2
+        num_heatmaps (int): Number of heatmaps. Default: 5
+        num_fusion_blocks (int): Number of fusion blocks. Default: 7
     """
 
     def __init__(self,
@@ -405,7 +364,10 @@ class DICNet(nn.Module):
                  hg_num_keypoints=68,
                  num_steps=4,
                  upscale_factor=8,
-                 detach_attention=False):
+                 detach_attention=False,
+                 prelu_init=0.2,
+                 num_heatmaps=5,
+                 num_fusion_blocks=7):
 
         super().__init__()
 
@@ -413,8 +375,8 @@ class DICNet(nn.Module):
         self.detach_attention = detach_attention
 
         self.conv_first = nn.Sequential(
-            nn.Conv2d(in_channels, mid_channels * 4, 3, 1, 1), nn.PReLU(0.2),
-            nn.PixelShuffle(2))
+            nn.Conv2d(in_channels, mid_channels * 4, 3, 1, 1),
+            nn.PReLU(init=prelu_init), nn.PixelShuffle(2))
 
         self.first_block = FeedbackBlockCustom(
             in_channels=mid_channels,
@@ -426,21 +388,17 @@ class DICNet(nn.Module):
             mid_channels=mid_channels,
             num_blocks=num_blocks,
             upscale_factor=upscale_factor,
-            num_heatmaps=5,
-            num_fusion_blocks=7)
+            num_heatmaps=num_heatmaps,
+            num_fusion_blocks=num_fusion_blocks)
         self.block.need_reset = False
 
-<<<<<<< HEAD
         self.hour_glass = FeedbackHourglass(
             mid_channels=hg_mid_channels, num_keypoints=hg_num_keypoints)
-=======
-        # self.hour_glass = FeedbackHourGlass(
-        #     mid_channels=hg_mid_channels, num_keypoints=hg_num_keypoints)
->>>>>>> for rebase
 
         self.conv_last = nn.Sequential(
             nn.ConvTranspose2d(mid_channels, mid_channels, 8, 4, 2),
-            nn.PReLU(0.2), nn.Conv2d(mid_channels, out_channels, 3, 1, 1))
+            nn.PReLU(init=prelu_init),
+            nn.Conv2d(mid_channels, out_channels, 3, 1, 1))
 
     def forward(self, x):
         """Forward function.
@@ -467,8 +425,8 @@ class DICNet(nn.Module):
                 sr_feature = self.first_block(x)
                 self.block.last_hidden = sr_feature
             else:
-                # heatmap = reduce_to_five_heatmaps(heatmap,
-                #                                   self.detach_attention)
+                heatmap = reduce_to_five_heatmaps(heatmap,
+                                                  self.detach_attention)
                 sr_feature = self.block(x, heatmap)
 
             sr = self.conv_last(sr_feature)
