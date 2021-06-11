@@ -10,11 +10,14 @@ from mmedit.utils import get_root_logger
 
 class FeedbackBlock(nn.Module):
     """Feedback Block of DIC
+
     It has a style of:
+
     ::
         ----- Module ----->
           ^            |
           |____________|
+
     Args:
         mid_channels (int): Number of channels in the intermediate features.
         num_blocks (int): Number of blocks.
@@ -75,8 +78,10 @@ class FeedbackBlock(nn.Module):
 
     def forward(self, x):
         """Forward function.
+
         Args:
             x (Tensor): Input tensor with shape (n, c, h, w).
+
         Returns:
             Tensor: Forward results.
         """
@@ -117,6 +122,7 @@ class FeedbackBlock(nn.Module):
 
 class FeedbackBlockCustom(FeedbackBlock):
     """Custom feedback block, will be used as the first feedback block.
+
     Args:
         in_channels (int): Number of channels in the input features.
         mid_channels (int): Number of channels in the intermediate features.
@@ -162,6 +168,7 @@ class FeedbackBlockCustom(FeedbackBlock):
 
 class GroupResBlock(nn.Module):
     """ResBlock with Group Conv.
+
     Args:
         in_channels (int): Channel number of input features.
         out_channels (int): Channel number of output features.
@@ -187,8 +194,10 @@ class GroupResBlock(nn.Module):
 
     def forward(self, x):
         """Forward function.
+
         Args:
             x (Tensor): Input tensor with shape (n, c, h, w).
+
         Returns:
             Tensor: Forward results.
         """
@@ -199,6 +208,7 @@ class GroupResBlock(nn.Module):
 
 class FeatureHeatmapFusingBlock(nn.Module):
     """ Fusing Feature and Heatmap.
+
     Args:
         in_channels (int): Number of channels in the input features.
         num_heatmaps (int): Number of heatmap.
@@ -233,9 +243,11 @@ class FeatureHeatmapFusingBlock(nn.Module):
 
     def forward(self, feature, heatmap):
         """Forward function.
+
         Args:
             feature (Tensor): Input feature tensor.
             heatmap (Tensor): Input heatmap tensor.
+
         Returns:
             Tensor: Forward results.
         """
@@ -258,6 +270,7 @@ class FeatureHeatmapFusingBlock(nn.Module):
 
 class FeedbackBlockHeatmapAttention(FeedbackBlock):
     """Feedback block with HeatmapAttention.
+
     Args:
         in_channels (int): Number of channels in the input features.
         mid_channels (int): Number of channels in the intermediate features.
@@ -286,9 +299,11 @@ class FeedbackBlockHeatmapAttention(FeedbackBlock):
 
     def forward(self, x, heatmap):
         """Forward function.
+
         Args:
             x (Tensor): Input feature tensor.
             heatmap (Tensor): Input heatmap tensor.
+
         Returns:
             Tensor: Forward results.
         """
@@ -334,8 +349,10 @@ class FeedbackBlockHeatmapAttention(FeedbackBlock):
 @BACKBONES.register_module()
 class DICNet(nn.Module):
     """DIC network structure for face super-resolution.
+
     Paper: Deep Face Super-Resolution with Iterative Collaboration between
         Attentive Recovery and Landmark Estimation
+
     Args:
         in_channels (int): Number of channels in the input image
         out_channels (int): Number of channels in the output image
@@ -402,8 +419,10 @@ class DICNet(nn.Module):
 
     def forward(self, x):
         """Forward function.
+
         Args:
             x (Tensor): Input tensor.
+
         Returns:
             Tensor: Forward results.
             sr_outputs (list[Tensor]): forward sr results.
@@ -440,12 +459,14 @@ class DICNet(nn.Module):
 
     def init_weights(self, pretrained=None, strict=True):
         """Init weights for models.
+
         Args:
             pretrained (str, optional): Path for pretrained weights. If given
                 None, pretrained weights will not be loaded. Defaults to None.
             strict (boo, optional): Whether strictly load the pretrained model.
                 Defaults to True.
         """
+
         if isinstance(pretrained, str):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=strict, logger=logger)

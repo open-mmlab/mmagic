@@ -95,7 +95,3 @@ def test_dic_net():
         model.init_weights('')
     with pytest.raises(TypeError):
         model.init_weights(1)
-
-
-if __name__ == '__main__':
-    test_dic_net()
