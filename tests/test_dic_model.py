@@ -7,7 +7,7 @@ from mmcv.utils.config import Config
 from mmedit.models.builder import build_model
 
 
-def test_dic_midel():
+def test_dic_model():
 
     model_cfg = dict(
         type='DIC',
@@ -93,3 +93,7 @@ def test_dic_midel():
         with pytest.raises(AssertionError):
             # evaluation with metrics must have gt images
             restorer(lq=inputs.cuda(), test_mode=True)
+
+
+if __name__ == '__main__':
+    test_dic_model()

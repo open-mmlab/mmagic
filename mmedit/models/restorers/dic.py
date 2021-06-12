@@ -90,7 +90,7 @@ class DIC(BasicRestorer):
         gt_heatmap = data_batch['heatmap']
 
         # generate
-        sr_list, heatmap_list = self.generator.forward(lq)
+        sr_list, heatmap_list = self(**data_batch, test_mode=False)
 
         # loss
         losses = OrderedDict()
@@ -182,16 +182,3 @@ class DIC(BasicRestorer):
             mmcv.imwrite(tensor2img(pred), save_path)
 
         return results
-
-    def val_step(self, data_batch, **kwargs):
-        """Validation step.
-
-        Args:
-            data_batch (dict): A batch of data.
-            kwargs (dict): Other arguments for ``val_step``.
-
-        Returns:
-            dict: Returned output.
-        """
-        output = self.forward_test(**data_batch, **kwargs)
-        return output
