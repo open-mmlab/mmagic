@@ -30,8 +30,8 @@ class DIC(BasicRestorer):
 
     def __init__(self,
                  generator,
-                 pixel_loss=None,
-                 align_loss=None,
+                 pixel_loss,
+                 align_loss,
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
@@ -42,10 +42,6 @@ class DIC(BasicRestorer):
 
         # model
         self.generator = build_backbone(generator)
-        self.img_normalize = ImgNormalize(
-            pixel_range=1,
-            img_mean=(129.795, 108.12, 96.39),
-            img_std=(255, 255, 255))
         self.img_denormalize = ImgNormalize(
             pixel_range=1,
             img_mean=(0.509, 0.424, 0.378),
@@ -53,8 +49,8 @@ class DIC(BasicRestorer):
             sign=1)
 
         # loss
-        self.pixel_loss = build_loss(pixel_loss) if pixel_loss else None
-        self.align_loss = build_loss(align_loss) if align_loss else None
+        self.pixel_loss = build_loss(pixel_loss)
+        self.align_loss = build_loss(align_loss)
 
         # pretrained
         if pretrained:
@@ -153,7 +149,7 @@ class DIC(BasicRestorer):
         # generator
         with torch.no_grad():
             sr_list, _ = self.generator.forward(lq)
-            pred = sr_list[3]
+            pred = sr_list[-1]
             pred = self.img_denormalize(pred)
 
             if gt is not None:
