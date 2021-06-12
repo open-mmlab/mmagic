@@ -13,7 +13,7 @@ train_cfg = None
 test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=scale)
 
 # dataset settings
-train_dataset_type = 'SRLandmarkDataset'
+train_dataset_type = 'SRFacicalLandmarkDataset'
 val_dataset_type = 'SRFolderGTDataset'
 test_dataset_type = 'SRFolderGTDataset'
 train_pipeline = [
@@ -24,8 +24,20 @@ train_pipeline = [
         flag='color',
         channel_order='rgb',
         backend='cv2'),
-    dict(type='Resize', scale=(128, 128), keys=['gt']),
-    dict(type='Resize', scale=1 / 8, keys=['gt'], output_keys=['lq']),
+    dict(
+        type='Resize',
+        scale=(128, 128),
+        keys=['gt'],
+        interpolation='bicubic',
+        backend='pillow'),
+    dict(
+        type='Resize',
+        scale=1 / 8,
+        keep_ratio=True,
+        keys=['gt'],
+        output_keys=['lq'],
+        interpolation='bicubic',
+        backend='pillow'),
     dict(
         type='GenerateHeatmap',
         keypoint='landmark',
@@ -51,8 +63,20 @@ valid_pipeline = [
         flag='color',
         channel_order='rgb',
         backend='cv2'),
-    dict(type='Resize', scale=(128, 128), keys=['gt']),
-    dict(type='Resize', scale=1 / 8, keys=['gt'], output_keys=['lq']),
+    dict(
+        type='Resize',
+        scale=(128, 128),
+        keys=['gt'],
+        interpolation='bicubic',
+        backend='pillow'),
+    dict(
+        type='Resize',
+        scale=1 / 8,
+        keep_ratio=True,
+        keys=['gt'],
+        output_keys=['lq'],
+        interpolation='bicubic',
+        backend='pillow'),
     dict(
         type='Normalize',
         keys=['lq', 'gt'],
@@ -63,6 +87,7 @@ valid_pipeline = [
 ]
 test_pipeline = valid_pipeline
 
+data_dir = '/mnt/lustre/liyinshuo/00-open-mmlab/01-mmediting/data'
 data = dict(
     workers_per_gpu=4,
     train_dataloader=dict(samples_per_gpu=2, drop_last=True),
@@ -73,23 +98,27 @@ data = dict(
         times=60,
         dataset=dict(
             type=train_dataset_type,
-            gt_folder='data/CelebA-HQ/train_256/all_256/',
-            ann_file='data/CelebA-HQ/train_256/train_info_list_256.npy',
+            # gt_folder='data/CelebA-HQ/train_256/all_256/',
+            # ann_file='data/CelebA-HQ/train_256/train_info_list_256.npy',
+            gt_folder=f'{data_dir}/CelebA-HQ/train_256/all_256/',
+            ann_file=f'{data_dir}/CelebA-HQ/train_256/train_info_list_256.npy',
             pipeline=train_pipeline,
             scale=scale)),
     val=dict(
         type=val_dataset_type,
-        gt_folder='data/CelebA-HQ/test_256/all_256/',
+        # gt_folder='data/CelebA-HQ/test_256/all_256/',
+        gt_folder=f'{data_dir}/CelebA-HQ/test_256/all_256/',
         pipeline=valid_pipeline,
         scale=scale),
     test=dict(
         type=test_dataset_type,
-        gt_folder='data/CelebA-HQ/test_256/all_256/',
+        # gt_folder='data/CelebA-HQ/test_256/all_256/',
+        gt_folder=f'{data_dir}/CelebA-HQ/test_256/all_256/',
         pipeline=valid_pipeline,
         scale=scale))
 
 # optimizer
-optimizers = dict(type='Adam', lr=1.e-4)
+optimizers = dict(generator=dict(type='Adam', lr=1.e-4))
 
 # learning policy
 # itms 11871
@@ -100,7 +129,7 @@ lr_config = dict(
     step=[10000, 20000, 40000, 80000],
     gamma=0.5)
 
-checkpoint_config = dict(interval=2000, save_optimizer=True, by_epoch=False)
+checkpoint_config = dict(interval=100, save_optimizer=True, by_epoch=False)
 evaluation = dict(interval=2000, save_image=True, gpu_collect=True)
 log_config = dict(
     interval=100,
