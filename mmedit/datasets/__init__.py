@@ -10,10 +10,10 @@ from .generation_unpaired_dataset import GenerationUnpairedDataset
 from .img_inpainting_dataset import ImgInpaintingDataset
 from .registry import DATASETS, PIPELINES
 from .sr_annotation_dataset import SRAnnotationDataset
-from .sr_custom_multiple_gt_dataset import SRFolderMultipleGTDataset
 from .sr_facical_landmark_dataset import SRFacicalLandmarkDataset
 from .sr_folder_dataset import SRFolderDataset
 from .sr_folder_gt_dataset import SRFolderGTDataset
+from .sr_folder_multiple_gt_dataset import SRFolderMultipleGTDataset
 from .sr_folder_ref_dataset import SRFolderRefDataset
 from .sr_lmdb_dataset import SRLmdbDataset
 from .sr_reds_dataset import SRREDSDataset
