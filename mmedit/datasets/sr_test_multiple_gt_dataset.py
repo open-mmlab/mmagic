@@ -30,7 +30,7 @@ class SRTestMultipleGTDataset(BaseSRDataset):
 
         warnings.warn('"SRTestMultipleGTDataset" have been deprecated and '
                       'will be removed in future release. Please use '
-                      '"SRCustomMultipleGTDataset" instead.')
+                      '"SRFolderMultipleGTDataset" instead.')
 
         self.lq_folder = str(lq_folder)
         self.gt_folder = str(gt_folder)

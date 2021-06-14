@@ -10,7 +10,7 @@ from .generation_unpaired_dataset import GenerationUnpairedDataset
 from .img_inpainting_dataset import ImgInpaintingDataset
 from .registry import DATASETS, PIPELINES
 from .sr_annotation_dataset import SRAnnotationDataset
-from .sr_custom_multiple_gt_dataset import SRCustomMultipleGTDataset
+from .sr_custom_multiple_gt_dataset import SRFolderMultipleGTDataset
 from .sr_facical_landmark_dataset import SRFacicalLandmarkDataset
 from .sr_folder_dataset import SRFolderDataset
 from .sr_folder_gt_dataset import SRFolderGTDataset
@@ -32,5 +32,5 @@ __all__ = [
     'GenerationUnpairedDataset', 'SRVid4Dataset', 'SRFolderGTDataset',
     'SRREDSMultipleGTDataset', 'SRVimeo90KMultipleGTDataset',
     'SRTestMultipleGTDataset', 'SRFolderRefDataset',
-    'SRFacicalLandmarkDataset', 'SRCustomMultipleGTDataset'
+    'SRFacicalLandmarkDataset', 'SRFolderMultipleGTDataset'
 ]

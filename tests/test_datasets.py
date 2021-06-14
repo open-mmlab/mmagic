@@ -10,9 +10,9 @@ from torch.utils.data import Dataset
 from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              BaseSRDataset, GenerationPairedDataset,
                              GenerationUnpairedDataset, RepeatDataset,
-                             SRAnnotationDataset, SRCustomMultipleGTDataset,
-                             SRFacicalLandmarkDataset, SRFolderDataset,
-                             SRFolderGTDataset, SRFolderRefDataset,
+                             SRAnnotationDataset, SRFacicalLandmarkDataset,
+                             SRFolderDataset, SRFolderGTDataset,
+                             SRFolderMultipleGTDataset, SRFolderRefDataset,
                              SRLmdbDataset, SRREDSDataset,
                              SRREDSMultipleGTDataset, SRTestMultipleGTDataset,
                              SRVid4Dataset, SRVimeo90KDataset,
@@ -1166,11 +1166,11 @@ def test_sr_test_multiple_gt_dataset():
     ]
 
 
-def test_sr_custom_multiple_gt_dataset():
+def test_sr_folder_multiple_gt_dataset():
     root_path = Path(__file__).parent / 'data/test_multiple_gt'
 
     # test without num_input_frames
-    test_dataset = SRCustomMultipleGTDataset(
+    test_dataset = SRFolderMultipleGTDataset(
         lq_folder=root_path,
         gt_folder=root_path,
         pipeline=[],
@@ -1192,7 +1192,7 @@ def test_sr_custom_multiple_gt_dataset():
     ]
 
     # test with num_input_frames
-    test_dataset = SRCustomMultipleGTDataset(
+    test_dataset = SRFolderMultipleGTDataset(
         lq_folder=root_path,
         gt_folder=root_path,
         pipeline=[],
@@ -1216,7 +1216,7 @@ def test_sr_custom_multiple_gt_dataset():
 
     # num_input_frames must be a positive integer
     with pytest.raises(ValueError):
-        SRCustomMultipleGTDataset(
+        SRFolderMultipleGTDataset(
             lq_folder=root_path,
             gt_folder=root_path,
             pipeline=[],
