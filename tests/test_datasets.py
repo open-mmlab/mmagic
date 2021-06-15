@@ -13,10 +13,10 @@ from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              SRAnnotationDataset, SRFacicalLandmarkDataset,
                              SRFolderDataset, SRFolderGTDataset,
                              SRFolderMultipleGTDataset, SRFolderRefDataset,
-                             SRLmdbDataset, SRREDSDataset,
-                             SRREDSMultipleGTDataset, SRTestMultipleGTDataset,
-                             SRVid4Dataset, SRVimeo90KDataset,
-                             SRVimeo90KMultipleGTDataset)
+                             SRFolderVideoDataset, SRLmdbDataset,
+                             SRREDSDataset, SRREDSMultipleGTDataset,
+                             SRTestMultipleGTDataset, SRVid4Dataset,
+                             SRVimeo90KDataset, SRVimeo90KMultipleGTDataset)
 
 # yapf: enable
 
@@ -1223,3 +1223,111 @@ def test_sr_folder_multiple_gt_dataset():
             scale=4,
             num_input_frames=-1,
             test_mode=True)
+
+
+def test_sr_folder_video_dataset():
+    root_path = Path(__file__).parent / 'data/test_multiple_gt'
+
+    test_dataset = SRFolderVideoDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        num_input_frames=5,
+        pipeline=[],
+        scale=4,
+        test_mode=True)
+
+    assert test_dataset.data_infos == [
+        dict(
+            lq_path=str(root_path),
+            gt_path=str(root_path),
+            key='sequence_1/00000000',
+            num_input_frames=5,
+            max_frame_num=2),
+        dict(
+            lq_path=str(root_path),
+            gt_path=str(root_path),
+            key='sequence_1/00000001',
+            num_input_frames=5,
+            max_frame_num=2),
+        dict(
+            lq_path=str(root_path),
+            gt_path=str(root_path),
+            key='sequence_2/00000000',
+            num_input_frames=5,
+            max_frame_num=1),
+    ]
+
+    # test evaluate function ('clip' mode)
+    test_dataset = SRFolderVideoDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        num_input_frames=5,
+        pipeline=[],
+        scale=4,
+        metric_average_mode='clip',
+        test_mode=True)
+    results = [{
+        'eval_result': {
+            'PSNR': 21,
+            'SSIM': 0.75
+        }
+    }, {
+        'eval_result': {
+            'PSNR': 23,
+            'SSIM': 0.85
+        }
+    }, {
+        'eval_result': {
+            'PSNR': 24,
+            'SSIM': 0.9
+        }
+    }]
+    eval_results = test_dataset.evaluate(results)
+    np.testing.assert_almost_equal(eval_results['PSNR'], 23)
+    np.testing.assert_almost_equal(eval_results['SSIM'], 0.85)
+
+    # test evaluate function ('all' mode)
+    test_dataset = SRFolderVideoDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        num_input_frames=5,
+        pipeline=[],
+        scale=4,
+        metric_average_mode='all',
+        test_mode=True)
+    eval_results = test_dataset.evaluate(results)
+    np.testing.assert_almost_equal(eval_results['PSNR'], 22.6666666)
+    np.testing.assert_almost_equal(eval_results['SSIM'], 0.83333333)
+
+    # num_input_frames should be odd numbers
+    with pytest.raises(AssertionError):
+        SRFolderVideoDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            num_input_frames=6,
+            pipeline=[],
+            scale=4,
+            test_mode=True)
+
+    # metric_average_mode can only be either 'folder' or 'all'
+    with pytest.raises(ValueError):
+        SRFolderVideoDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            num_input_frames=5,
+            pipeline=[],
+            scale=4,
+            metric_average_mode='abc',
+            test_mode=False)
+
+    # results must be a list
+    with pytest.raises(TypeError):
+        test_dataset.evaluate(results=5)
+
+    # The length of results should be equal to the dataset len
+    with pytest.raises(AssertionError):
+        test_dataset.evaluate(results=[results[0]])
+
+
+if __name__ == '__main__':
+    test_sr_folder_video_dataset()
