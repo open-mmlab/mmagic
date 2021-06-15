@@ -53,8 +53,7 @@ class DIC(BasicRestorer):
         self.align_loss = build_loss(align_loss)
 
         # pretrained
-        if pretrained:
-            self.init_weights(pretrained)
+        self.init_weights(pretrained)
 
     def forward(self, lq, gt=None, test_mode=False, **kwargs):
         """Forward function.
@@ -167,10 +166,10 @@ class DIC(BasicRestorer):
         # save image
         if save_image:
             if 'gt_path' in meta[0]:
-                the_path = meta[0]['gt_path']
+                pred_path = meta[0]['gt_path']
             else:
-                the_path = meta[0]['lq_path']
-            folder_name = osp.splitext(osp.basename(the_path))[0]
+                pred_path = meta[0]['lq_path']
+            folder_name = osp.splitext(osp.basename(pred_path))[0]
             if isinstance(iteration, numbers.Number):
                 save_path = osp.join(save_path, folder_name,
                                      f'{folder_name}-{iteration + 1:06d}.png')
