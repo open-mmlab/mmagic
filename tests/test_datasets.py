@@ -1327,7 +1327,3 @@ def test_sr_folder_video_dataset():
     # The length of results should be equal to the dataset len
     with pytest.raises(AssertionError):
         test_dataset.evaluate(results=[results[0]])
-
-
-if __name__ == '__main__':
-    test_sr_folder_video_dataset()
