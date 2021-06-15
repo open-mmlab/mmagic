@@ -43,7 +43,7 @@ train_pipeline = [
         type='RandomDownSampling',
         scale_min=scale_min,
         scale_max=scale_max,
-        inp_size=48),
+        patch_size=48),
     dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
     dict(
         type='Flip', keys=['lq', 'gt'], flip_ratio=0.5,
@@ -51,7 +51,7 @@ train_pipeline = [
     dict(type='Flip', keys=['lq', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['lq', 'gt'], transpose_ratio=0.5),
     dict(type='ImageToTensor', keys=['lq', 'gt']),
-    dict(type='GenerateCoordinateAndCell', sample_q=2304),
+    dict(type='GenerateCoordinateAndCell', sample_quantity=2304),
     dict(
         type='Collect',
         keys=['lq', 'gt', 'coord', 'cell'],
@@ -68,6 +68,27 @@ valid_pipeline = [
     dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
     dict(type='ImageToTensor', keys=['lq', 'gt']),
     dict(type='GenerateCoordinateAndCell'),
+    dict(
+        type='Collect',
+        keys=['lq', 'gt', 'coord', 'cell'],
+        meta_keys=['gt_path'])
+]
+test_pipeline = [
+    dict(
+        type='LoadImageFromFile',
+        io_backend='disk',
+        key='gt',
+        flag='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        io_backend='disk',
+        key='lq',
+        flag='color',
+        channel_order='rgb'),
+    dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
+    dict(type='ImageToTensor', keys=['lq', 'gt']),
+    dict(type='GenerateCoordinateAndCell', scale=scale_max),
     dict(
         type='Collect',
         keys=['lq', 'gt', 'coord', 'cell'],
@@ -94,8 +115,9 @@ data = dict(
         scale=scale_max),
     test=dict(
         type=test_dataset_type,
+        lq_folder=f'data/val_set5/Set5_bicLRx{scale_max:d}',
         gt_folder='data/val_set5/Set5',
-        pipeline=valid_pipeline,
+        pipeline=test_pipeline,
         scale=scale_max,
         filename_tmpl='{}'))
 
