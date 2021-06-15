@@ -12,7 +12,8 @@ from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
                              GenerationUnpairedDataset, RepeatDataset,
                              SRAnnotationDataset, SRFacicalLandmarkDataset,
                              SRFolderDataset, SRFolderGTDataset,
-                             SRFolderRefDataset, SRLmdbDataset, SRREDSDataset,
+                             SRFolderMultipleGTDataset, SRFolderRefDataset,
+                             SRLmdbDataset, SRREDSDataset,
                              SRREDSMultipleGTDataset, SRTestMultipleGTDataset,
                              SRVid4Dataset, SRVimeo90KDataset,
                              SRVimeo90KMultipleGTDataset)
@@ -1163,3 +1164,62 @@ def test_sr_test_multiple_gt_dataset():
             key='sequence_2',
             sequence_length=1)
     ]
+
+
+def test_sr_folder_multiple_gt_dataset():
+    root_path = Path(__file__).parent / 'data/test_multiple_gt'
+
+    # test without num_input_frames
+    test_dataset = SRFolderMultipleGTDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        pipeline=[],
+        scale=4,
+        test_mode=True)
+    assert test_dataset.data_infos == [
+        dict(
+            lq_path=str(root_path),
+            gt_path=str(root_path),
+            key='sequence_1',
+            num_input_frames=2,
+            sequence_length=2),
+        dict(
+            lq_path=str(root_path),
+            gt_path=str(root_path),
+            key='sequence_2',
+            num_input_frames=1,
+            sequence_length=1)
+    ]
+
+    # test with num_input_frames
+    test_dataset = SRFolderMultipleGTDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        pipeline=[],
+        scale=4,
+        num_input_frames=1,
+        test_mode=True)
+    assert test_dataset.data_infos == [
+        dict(
+            lq_path=str(root_path),
+            gt_path=str(root_path),
+            key='sequence_1',
+            num_input_frames=1,
+            sequence_length=2),
+        dict(
+            lq_path=str(root_path),
+            gt_path=str(root_path),
+            key='sequence_2',
+            num_input_frames=1,
+            sequence_length=1)
+    ]
+
+    # num_input_frames must be a positive integer
+    with pytest.raises(ValueError):
+        SRFolderMultipleGTDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            pipeline=[],
+            scale=4,
+            num_input_frames=-1,
+            test_mode=True)

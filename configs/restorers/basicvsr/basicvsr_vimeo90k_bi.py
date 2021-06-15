@@ -16,7 +16,7 @@ test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=0, convert_to='y')
 
 # dataset settings
 train_dataset_type = 'SRVimeo90KMultipleGTDataset'
-val_dataset_type = 'SRTestMultipleGTDataset'
+val_dataset_type = 'SRFolderMultipleGTDataset'
 test_dataset_type = 'SRVimeo90KDataset'
 
 train_pipeline = [
