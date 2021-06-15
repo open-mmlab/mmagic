@@ -30,7 +30,8 @@ class SRTestMultipleGTDataset(BaseSRDataset):
 
         warnings.warn('"SRTestMultipleGTDataset" have been deprecated and '
                       'will be removed in future release. Please use '
-                      '"SRFolderMultipleGTDataset" instead.')
+                      '"SRFolderMultipleGTDataset" instead. Details see '
+                      'https://github.com/open-mmlab/mmediting/pull/355')
 
         self.lq_folder = str(lq_folder)
         self.gt_folder = str(gt_folder)
