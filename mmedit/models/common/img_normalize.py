@@ -5,10 +5,10 @@ import torch.nn as nn
 class ImgNormalize(nn.Conv2d):
     """Normalize images with the given mean and std value.
 
-    Based on conv2d layer, can work in GPU.
+    Based on Conv2d layer, can work in GPU.
 
     Args:
-        pixel_range (float): Pixel range of geature.
+        pixel_range (float): Pixel range of feature.
         img_mean (Tuple[float]): Image mean of each channel.
         img_std (Tuple[float]): Image std of each channel.
         sign (int): Sign of bias. Default -1.
