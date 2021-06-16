@@ -13,7 +13,7 @@ train_cfg = None
 test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=scale)
 
 # dataset settings
-train_dataset_type = 'SRFacicalLandmarkDataset'
+train_dataset_type = 'SRFacialLandmarkDataset'
 val_dataset_type = 'SRFolderGTDataset'
 test_dataset_type = 'SRFolderGTDataset'
 train_pipeline = [
@@ -120,7 +120,7 @@ data = dict(
 optimizers = dict(generator=dict(type='Adam', lr=1.e-4))
 
 # learning policy
-# itms 11871
+# items 11871
 total_iters = 150000  # 68588  # 11871*52//9
 lr_config = dict(
     policy='Step',
