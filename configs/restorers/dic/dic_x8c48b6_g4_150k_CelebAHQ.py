@@ -116,8 +116,7 @@ data = dict(
 optimizers = dict(generator=dict(type='Adam', lr=1.e-4))
 
 # learning policy
-# items 11871
-total_iters = 150000  # 68588  # 11871*52//9
+total_iters = 150000
 lr_config = dict(
     policy='Step',
     by_epoch=False,
