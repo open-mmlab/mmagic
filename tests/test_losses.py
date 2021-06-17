@@ -9,8 +9,8 @@ from mmedit.models import (CharbonnierCompLoss, CharbonnierLoss, DiscShiftLoss,
                            GANLoss, GradientLoss, GradientPenaltyLoss,
                            L1CompositionLoss, L1Loss, MaskedTVLoss,
                            MSECompositionLoss, MSELoss, PerceptualLoss,
-                           PerceptualVGG, TPerceptualLoss, mask_reduce_loss,
-                           reduce_loss)
+                           PerceptualVGG, TransferalPerceptualLoss,
+                           mask_reduce_loss, reduce_loss)
 
 
 def test_utils():
@@ -301,6 +301,22 @@ def test_perceptual_loss(init_weights):
 
 
 def test_t_perceptual_loss():
+
+    maps = [
+        torch.rand((2, 8, 8, 8), requires_grad=True),
+        torch.rand((2, 4, 16, 16), requires_grad=True)
+    ]
+    textures = [torch.rand((2, 8, 8, 8)), torch.rand((2, 4, 16, 16))]
+    soft = torch.rand((2, 1, 8, 8))
+
+    loss_t_percep = TransferalPerceptualLoss()
+    t_percep = loss_t_percep(maps, soft, textures)
+    assert t_percep.item() > 0
+
+    loss_t_percep = TransferalPerceptualLoss(use_s=False, criterion='l1')
+    t_percep = loss_t_percep(maps, soft, textures)
+    assert t_percep.item() > 0
+
     if torch.cuda.is_available():
         maps = [
             torch.rand((2, 8, 8, 8)).cuda(),
@@ -311,7 +327,7 @@ def test_t_perceptual_loss():
             torch.rand((2, 4, 16, 16)).cuda()
         ]
         soft = torch.rand((2, 1, 8, 8)).cuda()
-        loss_t_percep = TPerceptualLoss().cuda()
+        loss_t_percep = TransferalPerceptualLoss().cuda()
         maps[0].requires_grad = True
         maps[1].requires_grad = True
 
@@ -326,13 +342,14 @@ def test_t_perceptual_loss():
         t_percep_new = loss_t_percep(maps, soft, textures)
         assert t_percep_new < t_percep
 
-        loss_t_percep = TPerceptualLoss(use_s=False, criterion='l1').cuda()
+        loss_t_percep = TransferalPerceptualLoss(
+            use_s=False, criterion='l1').cuda()
         t_percep = loss_t_percep(maps, soft, textures)
         assert t_percep.item() > 0
 
     # test whether vgg type is valid
     with pytest.raises(ValueError):
-        TPerceptualLoss(criterion='l2')
+        TransferalPerceptualLoss(criterion='l2')
 
 
 def test_gan_losses():

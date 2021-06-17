@@ -209,19 +209,18 @@ class PerceptualLoss(nn.Module):
 
 
 @LOSSES.register_module()
-class TPerceptualLoss(nn.Module):
-    """Texture perceptual loss.
+class TransferalPerceptualLoss(nn.Module):
+    """Transferal perceptual loss.
 
     Args:
         loss_weight (float): Loss weight. Default: 1.0.
-        use_s (bool): If True, use soft-attention tensor in TPerceptualLoss.
-            Default: True.
+        use_s (bool): If True, use soft-attention tensor. Default: True.
         criterion (str): Criterion type. Options are 'l1' and 'mse'.
             Default: 'l1'.
     """
 
     def __init__(self, loss_weight=1.0, use_s=True, criterion='mse'):
-        super(TPerceptualLoss, self).__init__()
+        super().__init__()
         self.use_s = use_s
         self.loss_weight = loss_weight
         criterion = criterion.lower()
