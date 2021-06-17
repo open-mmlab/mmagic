@@ -313,7 +313,8 @@ def test_t_perceptual_loss():
     t_percep = loss_t_percep(maps, soft, textures)
     assert t_percep.item() > 0
 
-    loss_t_percep = TransferalPerceptualLoss(use_s=False, criterion='l1')
+    loss_t_percep = TransferalPerceptualLoss(
+        use_attention=False, criterion='l1')
     t_percep = loss_t_percep(maps, soft, textures)
     assert t_percep.item() > 0
 
@@ -343,7 +344,7 @@ def test_t_perceptual_loss():
         assert t_percep_new < t_percep
 
         loss_t_percep = TransferalPerceptualLoss(
-            use_s=False, criterion='l1').cuda()
+            use_attention=False, criterion='l1').cuda()
         t_percep = loss_t_percep(maps, soft, textures)
         assert t_percep.item() > 0
 

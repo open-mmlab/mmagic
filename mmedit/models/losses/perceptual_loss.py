@@ -214,14 +214,14 @@ class TransferalPerceptualLoss(nn.Module):
 
     Args:
         loss_weight (float): Loss weight. Default: 1.0.
-        use_s (bool): If True, use soft-attention tensor. Default: True.
+        use_attention (bool): If True, use soft-attention tensor. Default: True
         criterion (str): Criterion type. Options are 'l1' and 'mse'.
             Default: 'l1'.
     """
 
-    def __init__(self, loss_weight=1.0, use_s=True, criterion='mse'):
+    def __init__(self, loss_weight=1.0, use_attention=True, criterion='mse'):
         super().__init__()
-        self.use_s = use_s
+        self.use_attention = use_attention
         self.loss_weight = loss_weight
         criterion = criterion.lower()
         if criterion == 'l1':
@@ -232,25 +232,25 @@ class TransferalPerceptualLoss(nn.Module):
             raise ValueError(
                 f"criterion should be 'l1' or 'mse', but got {criterion}")
 
-    def forward(self, maps, soft, textures):
+    def forward(self, maps, soft_attention, textures):
         """Forward function.
 
         Args:
             maps (Tuple[Tensor]): Input tensors.
-            soft (Tensor): Soft-attention tensor.
+            soft_attention (Tensor): Soft-attention tensor.
             textures (Tuple[Tensor]): Ground-truth tensors.
 
         Returns:
             Tensor: Forward results.
         """
 
-        if self.use_s:
-            h, w = soft.shape[-2:]
-            softs = [torch.sigmoid(soft)]
+        if self.use_attention:
+            h, w = soft_attention.shape[-2:]
+            softs = [torch.sigmoid(soft_attention)]
             for i in range(1, len(maps)):
                 softs.append(
                     F.interpolate(
-                        soft,
+                        soft_attention,
                         size=(h * pow(2, i), w * pow(2, i)),
                         mode='bicubic',
                         align_corners=False))
