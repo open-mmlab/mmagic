@@ -15,6 +15,7 @@ from .sr_folder_dataset import SRFolderDataset
 from .sr_folder_gt_dataset import SRFolderGTDataset
 from .sr_folder_multiple_gt_dataset import SRFolderMultipleGTDataset
 from .sr_folder_ref_dataset import SRFolderRefDataset
+from .sr_folder_video_dataset import SRFolderVideoDataset
 from .sr_lmdb_dataset import SRLmdbDataset
 from .sr_reds_dataset import SRREDSDataset
 from .sr_reds_multiple_gt_dataset import SRREDSMultipleGTDataset
@@ -32,5 +33,5 @@ __all__ = [
     'GenerationUnpairedDataset', 'SRVid4Dataset', 'SRFolderGTDataset',
     'SRREDSMultipleGTDataset', 'SRVimeo90KMultipleGTDataset',
     'SRTestMultipleGTDataset', 'SRFolderRefDataset', 'SRFacialLandmarkDataset',
-    'SRFolderMultipleGTDataset'
+    'SRFolderMultipleGTDataset', 'SRFolderVideoDataset'
 ]

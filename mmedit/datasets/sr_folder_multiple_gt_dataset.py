@@ -49,7 +49,7 @@ class SRFolderMultipleGTDataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
-        """Load annoations for the test dataset.
+        """Load annoations for the dataset.
 
         Returns:
             dict: Returned dict for LQ and GT pairs.

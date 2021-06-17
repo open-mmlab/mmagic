@@ -839,12 +839,15 @@ class GenerateFrameIndices:
         center_frame_idx = int(frame_name)
         num_half_frames = results['num_input_frames'] // 2
 
+        max_frame_num = results.get('max_frame_num', self.frames_per_clip + 1)
+        frames_per_clip = min(self.frames_per_clip, max_frame_num - 1)
+
         interval = np.random.choice(self.interval_list)
         # ensure not exceeding the borders
         start_frame_idx = center_frame_idx - num_half_frames * interval
         end_frame_idx = center_frame_idx + num_half_frames * interval
-        while (start_frame_idx < 0) or (end_frame_idx > self.frames_per_clip):
-            center_frame_idx = np.random.randint(0, self.frames_per_clip + 1)
+        while (start_frame_idx < 0) or (end_frame_idx > frames_per_clip):
+            center_frame_idx = np.random.randint(0, frames_per_clip + 1)
             start_frame_idx = center_frame_idx - num_half_frames * interval
             end_frame_idx = center_frame_idx + num_half_frames * interval
         frame_name = f'{center_frame_idx:08d}'
