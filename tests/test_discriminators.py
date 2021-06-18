@@ -7,6 +7,26 @@ import torch
 from mmedit.models import build_component
 
 
+def test_ttsr_dict():
+    cfg = dict(type='TTSRDiscriminator', in_channels=3, in_size=160)
+    net = build_component(cfg)
+    net.init_weights(pretrained=None)
+    # cpu
+    inputs = torch.rand((2, 3, 160, 160))
+    output = net(inputs)
+    assert output.shape == (2, 1)
+    # gpu
+    if torch.cuda.is_available():
+        net.init_weights(pretrained=None)
+        net = net.cuda()
+        output = net(inputs.cuda())
+        assert output.shape == (2, 1)
+
+    # pretrained should be str or None
+    with pytest.raises(TypeError):
+        net.init_weights(pretrained=[1])
+
+
 def test_patch_discriminator():
     # color, BN
     cfg = dict(
