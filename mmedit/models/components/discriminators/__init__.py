@@ -3,8 +3,9 @@ from .gl_disc import GLDiscs
 from .modified_vgg import ModifiedVGG
 from .multi_layer_disc import MultiLayerDiscriminator
 from .patch_disc import PatchDiscriminator
+from .ttsr_disc import TTSRDiscriminator
 
 __all__ = [
-    'GLDiscs', 'ModifiedVGG', 'MultiLayerDiscriminator',
+    'GLDiscs', 'ModifiedVGG', 'MultiLayerDiscriminator', 'TTSRDiscriminator',
     'DeepFillv1Discriminators', 'PatchDiscriminator'
 ]
