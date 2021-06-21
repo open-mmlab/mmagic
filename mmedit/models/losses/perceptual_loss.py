@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision.models.vgg as vgg
 from mmcv.runner import load_checkpoint
+from torch.nn import functional as F
 
 from mmedit.utils import get_root_logger
 from ..registry import LOSSES
@@ -115,7 +116,9 @@ class PerceptualLoss(nn.Module):
             in forward function of vgg according to the statistics of dataset.
             Importantly, the input image must be in range [-1, 1].
         pretrained (str): Path for pretrained weights. Default:
-            'torchvision://vgg19'
+            'torchvision://vgg19'.
+        criterion (str): Criterion type. Options are 'l1' and 'mse'.
+            Default: 'l1'.
     """
 
     def __init__(self,
@@ -138,6 +141,7 @@ class PerceptualLoss(nn.Module):
             use_input_norm=use_input_norm,
             pretrained=pretrained)
 
+        criterion = criterion.lower()
         if criterion == 'l1':
             self.criterion = torch.nn.L1Loss()
         elif criterion == 'mse':
@@ -202,3 +206,59 @@ class PerceptualLoss(nn.Module):
         features_t = features.transpose(1, 2)
         gram = features.bmm(features_t) / (c * h * w)
         return gram
+
+
+@LOSSES.register_module()
+class TransferalPerceptualLoss(nn.Module):
+    """Transferal perceptual loss.
+
+    Args:
+        loss_weight (float): Loss weight. Default: 1.0.
+        use_attention (bool): If True, use soft-attention tensor. Default: True
+        criterion (str): Criterion type. Options are 'l1' and 'mse'.
+            Default: 'l1'.
+    """
+
+    def __init__(self, loss_weight=1.0, use_attention=True, criterion='mse'):
+        super().__init__()
+        self.use_attention = use_attention
+        self.loss_weight = loss_weight
+        criterion = criterion.lower()
+        if criterion == 'l1':
+            self.loss_function = torch.nn.L1Loss()
+        elif criterion == 'mse':
+            self.loss_function = torch.nn.MSELoss()
+        else:
+            raise ValueError(
+                f"criterion should be 'l1' or 'mse', but got {criterion}")
+
+    def forward(self, maps, soft_attention, textures):
+        """Forward function.
+
+        Args:
+            maps (Tuple[Tensor]): Input tensors.
+            soft_attention (Tensor): Soft-attention tensor.
+            textures (Tuple[Tensor]): Ground-truth tensors.
+
+        Returns:
+            Tensor: Forward results.
+        """
+
+        if self.use_attention:
+            h, w = soft_attention.shape[-2:]
+            softs = [torch.sigmoid(soft_attention)]
+            for i in range(1, len(maps)):
+                softs.append(
+                    F.interpolate(
+                        soft_attention,
+                        size=(h * pow(2, i), w * pow(2, i)),
+                        mode='bicubic',
+                        align_corners=False))
+        else:
+            softs = [1., 1., 1.]
+
+        loss_texture = 0
+        for map, soft, texture in zip(maps, softs, textures):
+            loss_texture += self.loss_function(map * soft, texture * soft)
+
+        return loss_texture * self.loss_weight
