@@ -1,7 +1,6 @@
 import copy
 import os
 import tempfile
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -13,9 +12,7 @@ from mmedit.models.backbones import GLEncoderDecoder
 
 
 def test_one_stage_inpaintor():
-    cfg = Config.fromfile(
-        Path(__file__).parent.joinpath(
-            'data/inpaintor_config/one_stage_gl.py'))
+    cfg = Config.fromfile('tests/data/inpaintor_config/one_stage_gl.py')
 
     # mock perceptual loss for test speed
     cfg.model.loss_composed_percep = None

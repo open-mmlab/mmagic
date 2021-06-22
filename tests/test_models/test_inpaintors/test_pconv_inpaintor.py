@@ -1,6 +1,5 @@
 import os
 import tempfile
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -14,8 +13,7 @@ from mmedit.models.losses import PerceptualVGG
 @patch.object(PerceptualVGG, 'init_weights')
 def test_pconv_inpaintor(init_weights):
     cfg = Config.fromfile(
-        Path(__file__).parent.joinpath(
-            'data/inpaintor_config/pconv_inpaintor_test.py'))
+        'tests/data/inpaintor_config/pconv_inpaintor_test.py')
 
     if torch.cuda.is_available():
         pconv_inpaintor = build_model(

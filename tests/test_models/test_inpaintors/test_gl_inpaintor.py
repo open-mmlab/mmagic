@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import torch
 from mmcv import Config
 
@@ -7,8 +5,7 @@ from mmedit.models import build_model
 
 
 def test_gl_inpaintor():
-    cfg = Config.fromfile(
-        Path(__file__).parent.joinpath('data/inpaintor_config/gl_test.py'))
+    cfg = Config.fromfile('tests/data/inpaintor_config/gl_test.py')
 
     gl = build_model(cfg.model, train_cfg=cfg.train_cfg, test_cfg=cfg.test_cfg)
 

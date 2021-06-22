@@ -110,6 +110,9 @@ def test_basicvsr_model():
 
     restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
 
+    if torch.cuda.is_available():
+        restorer = restorer.cuda()
+
     with pytest.raises(AssertionError):
         # evaluation with metrics must have gt images
         restorer(lq=inputs, test_mode=True)
