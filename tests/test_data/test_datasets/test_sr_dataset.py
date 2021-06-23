@@ -3,8 +3,8 @@ from unittest.mock import patch
 
 import numpy as np
 import pytest
+from mmcv.utils.testing import assert_dict_has_keys
 
-# yapf: disable
 from mmedit.datasets import (BaseSRDataset, SRAnnotationDataset,
                              SRFacialLandmarkDataset, SRFolderDataset,
                              SRFolderGTDataset, SRFolderMultipleGTDataset,
@@ -13,13 +13,6 @@ from mmedit.datasets import (BaseSRDataset, SRAnnotationDataset,
                              SRREDSMultipleGTDataset, SRTestMultipleGTDataset,
                              SRVid4Dataset, SRVimeo90KDataset,
                              SRVimeo90KMultipleGTDataset)
-
-# yapf: enable
-
-
-def check_keys_contain(result_keys, target_keys):
-    """Check if all elements in target_keys is in result_keys."""
-    return set(target_keys).issubset(set(result_keys))
 
 
 def mock_open(*args, **kwargs):
@@ -59,9 +52,9 @@ class TestSRDatasets:
         file_paths = [str(self.data_prefix / v) for v in file_paths]
 
         result = toy_dataset.scan_folder(self.data_prefix)
-        assert check_keys_contain(result, file_paths)
+        assert set(file_paths).issubset(set(result))
         result = toy_dataset.scan_folder(str(self.data_prefix))
-        assert check_keys_contain(result, file_paths)
+        assert set(file_paths).issubset(set(result))
 
         with pytest.raises(TypeError):
             toy_dataset.scan_folder(123)
@@ -133,7 +126,7 @@ class TestSRDatasets:
         ]
         result = sr_annotation_dataset[0]
         assert (len(sr_annotation_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_annotation_dataset = SRAnnotationDataset(
             lq_folder=str(self.data_prefix / 'lq'),
@@ -150,7 +143,7 @@ class TestSRDatasets:
         ]
         result = sr_annotation_dataset[0]
         assert (len(sr_annotation_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
     def test_sr_folder_dataset(self):
         # setup
@@ -180,7 +173,7 @@ class TestSRDatasets:
         ]
         result = sr_folder_dataset[0]
         assert (len(sr_folder_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_folder_dataset = SRFolderDataset(
             lq_folder=str(lq_folder),
@@ -196,7 +189,7 @@ class TestSRDatasets:
         ]
         result = sr_folder_dataset[0]
         assert (len(sr_folder_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
     def test_sr_folder_gt_dataset(self):
         # setup
@@ -218,7 +211,7 @@ class TestSRDatasets:
         assert data_infos == [dict(gt_path=str(gt_folder / 'baboon.png'))]
         result = sr_folder_dataset[0]
         assert (len(sr_folder_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_folder_dataset = SRFolderGTDataset(
             gt_folder=str(gt_folder),
@@ -229,7 +222,7 @@ class TestSRDatasets:
         assert data_infos == [dict(gt_path=str(gt_folder / 'baboon.png'))]
         result = sr_folder_dataset[0]
         assert (len(sr_folder_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
     def test_sr_folder_ref_dataset(self):
         # setup
@@ -265,7 +258,7 @@ class TestSRDatasets:
         ]
         result = sr_folder_ref_dataset[0]
         assert len(sr_folder_ref_dataset) == 1
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_folder_ref_dataset = SRFolderRefDataset(
             lq_folder=str(lq_folder),
@@ -283,7 +276,7 @@ class TestSRDatasets:
         ]
         result = sr_folder_ref_dataset[0]
         assert len(sr_folder_ref_dataset) == 1
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
         with pytest.raises(AssertionError):
             sr_folder_ref_dataset = SRFolderRefDataset(
@@ -352,7 +345,7 @@ class TestSRDatasets:
         assert len(data_infos) == 1
         result = sr_landmark_dataset[0]
         assert len(sr_landmark_dataset) == 1
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_landmark_dataset = SRFacialLandmarkDataset(
             gt_folder=str(gt_folder),
@@ -363,7 +356,7 @@ class TestSRDatasets:
         assert len(data_infos) == 1
         result = sr_landmark_dataset[0]
         assert len(sr_landmark_dataset) == 1
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
     def test_sr_lmdb_dataset(self):
         # setup
@@ -396,7 +389,7 @@ class TestSRDatasets:
         assert data_infos == [dict(lq_path='baboon', gt_path='baboon')]
         result = sr_lmdb_dataset[0]
         assert (len(sr_lmdb_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_lmdb_dataset = SRLmdbDataset(
             lq_folder=str(lq_lmdb_folder),
@@ -407,7 +400,7 @@ class TestSRDatasets:
         assert data_infos == [dict(lq_path='baboon', gt_path='baboon')]
         result = sr_lmdb_dataset[0]
         assert (len(sr_lmdb_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
         with pytest.raises(ValueError):
             sr_lmdb_dataset = SRLmdbDataset(

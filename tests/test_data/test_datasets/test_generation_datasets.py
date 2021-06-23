@@ -1,15 +1,10 @@
 from pathlib import Path
 
 import pytest
+from mmcv.utils.testing import assert_dict_has_keys
 
-# yapf: disable
 from mmedit.datasets import (BaseGenerationDataset, GenerationPairedDataset,
                              GenerationUnpairedDataset)
-
-
-def check_keys_contain(result_keys, target_keys):
-    """Check if all elements in target_keys is in result_keys."""
-    return set(target_keys).issubset(set(result_keys))
 
 
 class TestGenerationDatasets:
@@ -34,9 +29,9 @@ class TestGenerationDatasets:
 
         # test scan_folder
         result = toy_dataset.scan_folder(self.data_prefix)
-        assert check_keys_contain(result, file_paths)
+        assert set(file_paths).issubset(set(result))
         result = toy_dataset.scan_folder(str(self.data_prefix))
-        assert check_keys_contain(result, file_paths)
+        assert set(file_paths).issubset(set(result))
 
         with pytest.raises(TypeError):
             toy_dataset.scan_folder(123)
@@ -100,8 +95,8 @@ class TestGenerationDatasets:
         ]
         result = generation_paried_dataset[0]
         assert (len(generation_paried_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert assert_dict_has_keys(result, target_keys)
+        assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(pair_folder / 'test' /
                                                          '3.jpg'))
         assert (result['meta'].data['img_b_path'] == str(pair_folder / 'test' /
@@ -116,8 +111,8 @@ class TestGenerationDatasets:
         ]
         result = generation_paried_dataset[0]
         assert (len(generation_paried_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert assert_dict_has_keys(result, target_keys)
+        assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(pair_folder / 'test' /
                                                          '3.jpg'))
         assert (result['meta'].data['img_b_path'] == str(pair_folder / 'test' /
@@ -133,15 +128,15 @@ class TestGenerationDatasets:
         ]
         assert (len(generation_paried_dataset) == 2)
         result = generation_paried_dataset[0]
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert assert_dict_has_keys(result, target_keys)
+        assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(pair_folder /
                                                          'train' / '1.jpg'))
         assert (result['meta'].data['img_b_path'] == str(pair_folder /
                                                          'train' / '1.jpg'))
         result = generation_paried_dataset[1]
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert assert_dict_has_keys(result, target_keys)
+        assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(pair_folder /
                                                          'train' / '2.jpg'))
         assert (result['meta'].data['img_b_path'] == str(pair_folder /
@@ -202,8 +197,8 @@ class TestGenerationDatasets:
         ]
         result = generation_unpaired_dataset[0]
         assert (len(generation_unpaired_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert assert_dict_has_keys(result, target_keys)
+        assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(unpair_folder /
                                                          'testA' / '5.jpg'))
         assert (result['meta'].data['img_b_path'] == str(unpair_folder /
@@ -222,8 +217,8 @@ class TestGenerationDatasets:
         ]
         result = generation_unpaired_dataset[0]
         assert (len(generation_unpaired_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert assert_dict_has_keys(result, target_keys)
+        assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(unpair_folder /
                                                          'testA' / '5.jpg'))
         assert (result['meta'].data['img_b_path'] == str(unpair_folder /
@@ -248,14 +243,14 @@ class TestGenerationDatasets:
             str(unpair_folder / 'trainB' / '4.jpg')
         ]
         result = generation_unpaired_dataset[0]
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert assert_dict_has_keys(result, target_keys)
+        assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(unpair_folder /
                                                          'trainA' / '1.jpg'))
         assert result['meta'].data['img_b_path'] in img_b_paths
         result = generation_unpaired_dataset[1]
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
+        assert assert_dict_has_keys(result, target_keys)
+        assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(unpair_folder /
                                                          'trainA' / '2.jpg'))
         assert result['meta'].data['img_b_path'] in img_b_paths
