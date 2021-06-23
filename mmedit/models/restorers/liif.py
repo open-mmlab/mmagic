@@ -105,7 +105,7 @@ class LIIF(BasicRestorer):
 
         Returns:
             dict: Returned output, which includes:
-                log_vars, num_samples, results (lq, gt and preq).
+                log_vars, num_samples, results (lq, gt and pred).
 
         """
         # data
@@ -124,12 +124,12 @@ class LIIF(BasicRestorer):
 
         # generator
         self.gen_feat(lq)
-        preq = self.query_rgb(coord, cell)
+        pred = self.query_rgb(coord, cell)
 
         # loss
         losses = dict()
         log_vars = dict()
-        losses['loss_pix'] = self.pixel_loss(preq, gt)
+        losses['loss_pix'] = self.pixel_loss(pred, gt)
 
         # parse loss
         loss, log_vars = self.parse_losses(losses)
@@ -143,9 +143,9 @@ class LIIF(BasicRestorer):
         outputs = dict(
             log_vars=log_vars,
             num_samples=len(gt.data),
-            results=dict(lq=lq.cpu(), gt=gt.cpu(), output=preq.cpu()))
+            results=dict(lq=lq.cpu(), gt=gt.cpu(), output=pred.cpu()))
 
-        preq = None
+        pred = None
         loss = None
 
         return outputs
@@ -380,7 +380,7 @@ class LIIF(BasicRestorer):
             return self.forward_test(lq, gt, **kwargs)
 
         raise ValueError(
-            'LIIF model does not supprot `forward` function in training.',
+            'LIIF model does not support `forward` function in training.',
             'LIIF should be trained by `train_step`.')
 
     def batched_predict(self, coord, cell):
