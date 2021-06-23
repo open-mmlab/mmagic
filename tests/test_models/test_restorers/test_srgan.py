@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+import pytest
 import torch
 from mmcv.runner import obj_from_dict
 
@@ -9,10 +10,10 @@ from mmedit.models.components import ModifiedVGG
 from mmedit.models.losses import GANLoss, L1Loss
 
 
-def test_esrgan():
+def test_srgan():
 
     model_cfg = dict(
-        type='ESRGAN',
+        type='SRGAN',
         generator=dict(
             type='MSRResNet',
             in_channels=3,
@@ -36,7 +37,7 @@ def test_esrgan():
     restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
 
     # test attributes
-    assert restorer.__class__.__name__ == 'ESRGAN'
+    assert restorer.__class__.__name__ == 'SRGAN'
     assert isinstance(restorer.generator, MSRResNet)
     assert isinstance(restorer.discriminator, ModifiedVGG)
     assert isinstance(restorer.pixel_loss, L1Loss)
@@ -51,14 +52,38 @@ def test_esrgan():
     optim_cfg = dict(type='Adam', lr=2e-4, betas=(0.9, 0.999))
     optimizer = {
         'generator':
-        obj_from_dict(
-            optim_cfg, torch.optim,
-            dict(params=getattr(restorer, 'generator').parameters())),
+        obj_from_dict(optim_cfg, torch.optim,
+                      dict(
+                          params=getattr(restorer, 'generator').parameters())),
         'discriminator':
         obj_from_dict(
             optim_cfg, torch.optim,
             dict(params=getattr(restorer, 'discriminator').parameters()))
     }
+
+    # no forward train in GAN models, raise ValueError
+    with pytest.raises(ValueError):
+        restorer(**data_batch, test_mode=False)
+
+    # test forward_test
+    with torch.no_grad():
+        outputs = restorer(**data_batch, test_mode=True)
+    assert torch.equal(outputs['lq'], data_batch['lq'])
+    assert torch.is_tensor(outputs['output'])
+    assert outputs['output'].size() == (1, 3, 128, 128)
+
+    # test forward_dummy
+    with torch.no_grad():
+        output = restorer.forward_dummy(data_batch['lq'])
+    assert torch.is_tensor(output)
+    assert output.size() == (1, 3, 128, 128)
+
+    # val_step
+    with torch.no_grad():
+        outputs = restorer.val_step(data_batch)
+    assert torch.equal(outputs['lq'], data_batch['lq'])
+    assert torch.is_tensor(outputs['output'])
+    assert outputs['output'].size() == (1, 3, 128, 128)
 
     # test train_step
     with patch.object(
@@ -93,6 +118,20 @@ def test_esrgan():
                 dict(params=getattr(restorer, 'discriminator').parameters()))
         }
         data_batch = {'lq': inputs.cuda(), 'gt': targets.cuda()}
+
+        # forward_test
+        with torch.no_grad():
+            outputs = restorer(**data_batch, test_mode=True)
+        assert torch.equal(outputs['lq'], data_batch['lq'].cpu())
+        assert torch.is_tensor(outputs['output'])
+        assert outputs['output'].size() == (1, 3, 128, 128)
+
+        # val_step
+        with torch.no_grad():
+            outputs = restorer.val_step(data_batch)
+        assert torch.equal(outputs['lq'], data_batch['lq'].cpu())
+        assert torch.is_tensor(outputs['output'])
+        assert outputs['output'].size() == (1, 3, 128, 128)
 
         # train_step
         with patch.object(
@@ -134,6 +173,16 @@ def test_esrgan():
         assert torch.equal(outputs['results']['gt'], data_batch['gt'])
         assert torch.is_tensor(outputs['results']['output'])
         assert outputs['results']['output'].size() == (1, 3, 128, 128)
+
+    # test no discriminator (testing mode)
+    model_cfg_ = model_cfg.copy()
+    model_cfg_.pop('discriminator')
+    restorer = build_model(model_cfg_, train_cfg=train_cfg, test_cfg=test_cfg)
+    with torch.no_grad():
+        outputs = restorer(**data_batch, test_mode=True)
+    assert torch.equal(outputs['lq'], data_batch['lq'])
+    assert torch.is_tensor(outputs['output'])
+    assert outputs['output'].size() == (1, 3, 128, 128)
 
     # test without pixel loss and perceptual loss
     model_cfg_ = model_cfg.copy()

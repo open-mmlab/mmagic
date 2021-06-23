@@ -14,9 +14,11 @@ from mmedit.datasets.pipelines import (GetSpatialDiscountMask,
 
 
 def test_load_image_from_file():
-    path_baboon = Path(__file__).parent / 'data' / 'gt' / 'baboon.png'
+    path_baboon = Path(
+        __file__).parent.parent.parent / 'data' / 'gt' / 'baboon.png'
     img_baboon = mmcv.imread(str(path_baboon), flag='color')
-    path_baboon_x4 = Path(__file__).parent / 'data' / 'lq' / 'baboon_x4.png'
+    path_baboon_x4 = Path(
+        __file__).parent.parent.parent / 'data' / 'lq' / 'baboon_x4.png'
     img_baboon_x4 = mmcv.imread(str(path_baboon_x4), flag='color')
 
     # read gt image
@@ -86,9 +88,11 @@ def test_load_image_from_file():
 
 
 def test_load_image_from_file_list():
-    path_baboon = Path(__file__).parent / 'data' / 'gt' / 'baboon.png'
+    path_baboon = Path(
+        __file__).parent.parent.parent / 'data' / 'gt' / 'baboon.png'
     img_baboon = mmcv.imread(str(path_baboon), flag='color')
-    path_baboon_x4 = Path(__file__).parent / 'data' / 'lq' / 'baboon_x4.png'
+    path_baboon_x4 = Path(
+        __file__).parent.parent.parent / 'data' / 'lq' / 'baboon_x4.png'
     img_baboon_x4 = mmcv.imread(str(path_baboon_x4), flag='color')
 
     # input path is Path object
@@ -134,7 +138,7 @@ class TestMattingLoading:
 
     @classmethod
     def setup_class(cls):
-        data_prefix = osp.join(osp.dirname(__file__), 'data')
+        data_prefix = 'tests/data'
         ann_file = osp.join(data_prefix, 'test_list.json')
         data_infos = mmcv.load(ann_file)
         cls.results = dict()
@@ -162,7 +166,8 @@ class TestInpaintLoading:
 
     @classmethod
     def setup_class(cls):
-        cls.img_path = Path(__file__).parent.joinpath('data/image/test.png')
+        cls.img_path = Path(__file__).parent.parent.parent.joinpath(
+            'data/image/test.png')
         cls.results = dict(img_info=dict(filename=cls.img_path))
 
     def test_load_mask(self):
@@ -256,8 +261,7 @@ class TestGenerationLoading:
 
     @classmethod
     def setup_class(cls):
-        cls.pair_path = osp.join(
-            osp.dirname(__file__), 'data/paired/train/1.jpg')
+        cls.pair_path = osp.join('tests', 'data/paired/train/1.jpg')
         cls.results = dict(pair_path=cls.pair_path)
         cls.pair_img = mmcv.imread(str(cls.pair_path), flag='color')
         w = cls.pair_img.shape[1]

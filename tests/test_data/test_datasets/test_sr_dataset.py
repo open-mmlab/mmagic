@@ -1,24 +1,18 @@
-import os.path as osp
 from pathlib import Path
 from unittest.mock import patch
 
 import numpy as np
 import pytest
-from torch.utils.data import Dataset
+from mmcv.utils.testing import assert_dict_has_keys
 
-# yapf: disable
-from mmedit.datasets import (AdobeComp1kDataset, BaseGenerationDataset,
-                             BaseSRDataset, GenerationPairedDataset,
-                             GenerationUnpairedDataset, RepeatDataset,
-                             SRAnnotationDataset, SRFacialLandmarkDataset,
-                             SRFolderDataset, SRFolderGTDataset,
-                             SRFolderMultipleGTDataset, SRFolderRefDataset,
-                             SRFolderVideoDataset, SRLmdbDataset,
-                             SRREDSDataset, SRREDSMultipleGTDataset,
-                             SRTestMultipleGTDataset, SRVid4Dataset,
-                             SRVimeo90KDataset, SRVimeo90KMultipleGTDataset)
-
-# yapf: enable
+from mmedit.datasets import (BaseSRDataset, SRAnnotationDataset,
+                             SRFacialLandmarkDataset, SRFolderDataset,
+                             SRFolderGTDataset, SRFolderMultipleGTDataset,
+                             SRFolderRefDataset, SRFolderVideoDataset,
+                             SRLmdbDataset, SRREDSDataset,
+                             SRREDSMultipleGTDataset, SRTestMultipleGTDataset,
+                             SRVid4Dataset, SRVimeo90KDataset,
+                             SRVimeo90KMultipleGTDataset)
 
 
 def mock_open(*args, **kwargs):
@@ -33,63 +27,11 @@ def mock_open(*args, **kwargs):
     return f_open
 
 
-def check_keys_contain(result_keys, target_keys):
-    """Check if all elements in target_keys is in result_keys."""
-    return set(target_keys).issubset(set(result_keys))
-
-
-class TestMattingDatasets:
-
-    @classmethod
-    def setup_class(cls):
-        # create para for creating a dataset.
-        cls.data_prefix = Path(__file__).parent / 'data'
-        cls.ann_file = osp.join(cls.data_prefix, 'test_list.json')
-        cls.pipeline = [
-            dict(type='LoadImageFromFile', key='alpha', flag='grayscale')
-        ]
-
-    def test_comp1k_dataset(self):
-        comp1k_dataset = AdobeComp1kDataset(self.ann_file, self.pipeline,
-                                            self.data_prefix)
-        first_data = comp1k_dataset[0]
-
-        assert 'alpha' in first_data
-        assert isinstance(first_data['alpha'], np.ndarray)
-        assert first_data['alpha'].shape == (552, 800)
-
-    def test_comp1k_evaluate(self):
-        comp1k_dataset = AdobeComp1kDataset(self.ann_file, self.pipeline,
-                                            self.data_prefix)
-
-        with pytest.raises(TypeError):
-            comp1k_dataset.evaluate('Not a list object')
-
-        results = [{
-            'pred_alpha': None,
-            'eval_result': {
-                'SAD': 26,
-                'MSE': 0.006
-            }
-        }, {
-            'pred_alpha': None,
-            'eval_result': {
-                'SAD': 24,
-                'MSE': 0.004
-            }
-        }]
-
-        eval_result = comp1k_dataset.evaluate(results)
-        assert set(eval_result.keys()) == set(['SAD', 'MSE'])
-        assert eval_result['SAD'] == 25
-        assert eval_result['MSE'] == 0.005
-
-
 class TestSRDatasets:
 
     @classmethod
     def setup_class(cls):
-        cls.data_prefix = Path(__file__).parent / 'data'
+        cls.data_prefix = Path(__file__).parent.parent.parent / 'data'
 
     def test_base_super_resolution_dataset(self):
 
@@ -110,9 +52,9 @@ class TestSRDatasets:
         file_paths = [str(self.data_prefix / v) for v in file_paths]
 
         result = toy_dataset.scan_folder(self.data_prefix)
-        assert check_keys_contain(result, file_paths)
+        assert set(file_paths).issubset(set(result))
         result = toy_dataset.scan_folder(str(self.data_prefix))
-        assert check_keys_contain(result, file_paths)
+        assert set(file_paths).issubset(set(result))
 
         with pytest.raises(TypeError):
             toy_dataset.scan_folder(123)
@@ -184,7 +126,7 @@ class TestSRDatasets:
         ]
         result = sr_annotation_dataset[0]
         assert (len(sr_annotation_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_annotation_dataset = SRAnnotationDataset(
             lq_folder=str(self.data_prefix / 'lq'),
@@ -201,7 +143,7 @@ class TestSRDatasets:
         ]
         result = sr_annotation_dataset[0]
         assert (len(sr_annotation_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
     def test_sr_folder_dataset(self):
         # setup
@@ -231,7 +173,7 @@ class TestSRDatasets:
         ]
         result = sr_folder_dataset[0]
         assert (len(sr_folder_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_folder_dataset = SRFolderDataset(
             lq_folder=str(lq_folder),
@@ -247,7 +189,7 @@ class TestSRDatasets:
         ]
         result = sr_folder_dataset[0]
         assert (len(sr_folder_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
     def test_sr_folder_gt_dataset(self):
         # setup
@@ -269,7 +211,7 @@ class TestSRDatasets:
         assert data_infos == [dict(gt_path=str(gt_folder / 'baboon.png'))]
         result = sr_folder_dataset[0]
         assert (len(sr_folder_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_folder_dataset = SRFolderGTDataset(
             gt_folder=str(gt_folder),
@@ -280,7 +222,7 @@ class TestSRDatasets:
         assert data_infos == [dict(gt_path=str(gt_folder / 'baboon.png'))]
         result = sr_folder_dataset[0]
         assert (len(sr_folder_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
     def test_sr_folder_ref_dataset(self):
         # setup
@@ -316,7 +258,7 @@ class TestSRDatasets:
         ]
         result = sr_folder_ref_dataset[0]
         assert len(sr_folder_ref_dataset) == 1
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_folder_ref_dataset = SRFolderRefDataset(
             lq_folder=str(lq_folder),
@@ -334,7 +276,7 @@ class TestSRDatasets:
         ]
         result = sr_folder_ref_dataset[0]
         assert len(sr_folder_ref_dataset) == 1
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
         with pytest.raises(AssertionError):
             sr_folder_ref_dataset = SRFolderRefDataset(
@@ -403,7 +345,7 @@ class TestSRDatasets:
         assert len(data_infos) == 1
         result = sr_landmark_dataset[0]
         assert len(sr_landmark_dataset) == 1
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_landmark_dataset = SRFacialLandmarkDataset(
             gt_folder=str(gt_folder),
@@ -414,7 +356,7 @@ class TestSRDatasets:
         assert len(data_infos) == 1
         result = sr_landmark_dataset[0]
         assert len(sr_landmark_dataset) == 1
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
     def test_sr_lmdb_dataset(self):
         # setup
@@ -447,7 +389,7 @@ class TestSRDatasets:
         assert data_infos == [dict(lq_path='baboon', gt_path='baboon')]
         result = sr_lmdb_dataset[0]
         assert (len(sr_lmdb_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
         # input path is str
         sr_lmdb_dataset = SRLmdbDataset(
             lq_folder=str(lq_lmdb_folder),
@@ -458,7 +400,7 @@ class TestSRDatasets:
         assert data_infos == [dict(lq_path='baboon', gt_path='baboon')]
         result = sr_lmdb_dataset[0]
         assert (len(sr_lmdb_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
+        assert assert_dict_has_keys(result, target_keys)
 
         with pytest.raises(ValueError):
             sr_lmdb_dataset = SRLmdbDataset(
@@ -486,278 +428,8 @@ class TestSRDatasets:
                 scale=1)
 
 
-class TestGenerationDatasets:
-
-    @classmethod
-    def setup_class(cls):
-        cls.data_prefix = Path(__file__).parent / 'data'
-
-    def test_base_generation_dataset(self):
-
-        class ToyDataset(BaseGenerationDataset):
-            """Toy dataset for testing Generation Dataset."""
-
-            def load_annotations(self):
-                pass
-
-        toy_dataset = ToyDataset(pipeline=[])
-        file_paths = [
-            'paired/test/3.jpg', 'paired/train/1.jpg', 'paired/train/2.jpg'
-        ]
-        file_paths = [str(self.data_prefix / v) for v in file_paths]
-
-        # test scan_folder
-        result = toy_dataset.scan_folder(self.data_prefix)
-        assert check_keys_contain(result, file_paths)
-        result = toy_dataset.scan_folder(str(self.data_prefix))
-        assert check_keys_contain(result, file_paths)
-
-        with pytest.raises(TypeError):
-            toy_dataset.scan_folder(123)
-
-        # test evaluate
-        toy_dataset.data_infos = file_paths
-        with pytest.raises(TypeError):
-            _ = toy_dataset.evaluate(1)
-        test_results = [dict(saved_flag=True), dict(saved_flag=True)]
-        with pytest.raises(AssertionError):
-            _ = toy_dataset.evaluate(test_results)
-        test_results = [
-            dict(saved_flag=True),
-            dict(saved_flag=True),
-            dict(saved_flag=False)
-        ]
-        eval_results = toy_dataset.evaluate(test_results)
-        assert eval_results['val_saved_number'] == 2
-
-    def test_generation_paired_dataset(self):
-        # setup
-        img_norm_cfg = dict(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
-        pipeline = [
-            dict(
-                type='LoadPairedImageFromFile',
-                io_backend='disk',
-                key='pair',
-                flag='color'),
-            dict(
-                type='Resize',
-                keys=['img_a', 'img_b'],
-                scale=(286, 286),
-                interpolation='bicubic'),
-            dict(
-                type='FixedCrop',
-                keys=['img_a', 'img_b'],
-                crop_size=(256, 256)),
-            dict(type='Flip', keys=['img_a', 'img_b'], direction='horizontal'),
-            dict(type='RescaleToZeroOne', keys=['img_a', 'img_b']),
-            dict(
-                type='Normalize',
-                keys=['img_a', 'img_b'],
-                to_rgb=True,
-                **img_norm_cfg),
-            dict(type='ImageToTensor', keys=['img_a', 'img_b']),
-            dict(
-                type='Collect',
-                keys=['img_a', 'img_b'],
-                meta_keys=['img_a_path', 'img_b_path'])
-        ]
-        target_keys = ['img_a', 'img_b', 'meta']
-        target_meta_keys = ['img_a_path', 'img_b_path']
-        pair_folder = self.data_prefix / 'paired'
-
-        # input path is Path object
-        generation_paried_dataset = GenerationPairedDataset(
-            dataroot=pair_folder, pipeline=pipeline, test_mode=True)
-        data_infos = generation_paried_dataset.data_infos
-        assert data_infos == [
-            dict(pair_path=str(pair_folder / 'test' / '3.jpg'))
-        ]
-        result = generation_paried_dataset[0]
-        assert (len(generation_paried_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
-        assert (result['meta'].data['img_a_path'] == str(pair_folder / 'test' /
-                                                         '3.jpg'))
-        assert (result['meta'].data['img_b_path'] == str(pair_folder / 'test' /
-                                                         '3.jpg'))
-
-        # input path is str
-        generation_paried_dataset = GenerationPairedDataset(
-            dataroot=str(pair_folder), pipeline=pipeline, test_mode=True)
-        data_infos = generation_paried_dataset.data_infos
-        assert data_infos == [
-            dict(pair_path=str(pair_folder / 'test' / '3.jpg'))
-        ]
-        result = generation_paried_dataset[0]
-        assert (len(generation_paried_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
-        assert (result['meta'].data['img_a_path'] == str(pair_folder / 'test' /
-                                                         '3.jpg'))
-        assert (result['meta'].data['img_b_path'] == str(pair_folder / 'test' /
-                                                         '3.jpg'))
-
-        # test_mode = False
-        generation_paried_dataset = GenerationPairedDataset(
-            dataroot=str(pair_folder), pipeline=pipeline, test_mode=False)
-        data_infos = generation_paried_dataset.data_infos
-        assert data_infos == [
-            dict(pair_path=str(pair_folder / 'train' / '1.jpg')),
-            dict(pair_path=str(pair_folder / 'train' / '2.jpg'))
-        ]
-        assert (len(generation_paried_dataset) == 2)
-        result = generation_paried_dataset[0]
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
-        assert (result['meta'].data['img_a_path'] == str(pair_folder /
-                                                         'train' / '1.jpg'))
-        assert (result['meta'].data['img_b_path'] == str(pair_folder /
-                                                         'train' / '1.jpg'))
-        result = generation_paried_dataset[1]
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
-        assert (result['meta'].data['img_a_path'] == str(pair_folder /
-                                                         'train' / '2.jpg'))
-        assert (result['meta'].data['img_b_path'] == str(pair_folder /
-                                                         'train' / '2.jpg'))
-
-    def test_generation_unpaired_dataset(self):
-        # setup
-        img_norm_cfg = dict(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
-        pipeline = [
-            dict(
-                type='LoadImageFromFile',
-                io_backend='disk',
-                key='img_a',
-                flag='color'),
-            dict(
-                type='LoadImageFromFile',
-                io_backend='disk',
-                key='img_b',
-                flag='color'),
-            dict(
-                type='Resize',
-                keys=['img_a', 'img_b'],
-                scale=(286, 286),
-                interpolation='bicubic'),
-            dict(
-                type='Crop',
-                keys=['img_a', 'img_b'],
-                crop_size=(256, 256),
-                random_crop=True),
-            dict(type='Flip', keys=['img_a'], direction='horizontal'),
-            dict(type='Flip', keys=['img_b'], direction='horizontal'),
-            dict(type='RescaleToZeroOne', keys=['img_a', 'img_b']),
-            dict(
-                type='Normalize',
-                keys=['img_a', 'img_b'],
-                to_rgb=True,
-                **img_norm_cfg),
-            dict(type='ImageToTensor', keys=['img_a', 'img_b']),
-            dict(
-                type='Collect',
-                keys=['img_a', 'img_b'],
-                meta_keys=['img_a_path', 'img_b_path'])
-        ]
-        target_keys = ['img_a', 'img_b', 'meta']
-        target_meta_keys = ['img_a_path', 'img_b_path']
-        unpair_folder = self.data_prefix / 'unpaired'
-
-        # input path is Path object
-        generation_unpaired_dataset = GenerationUnpairedDataset(
-            dataroot=unpair_folder, pipeline=pipeline, test_mode=True)
-        data_infos_a = generation_unpaired_dataset.data_infos_a
-        data_infos_b = generation_unpaired_dataset.data_infos_b
-        assert data_infos_a == [
-            dict(path=str(unpair_folder / 'testA' / '5.jpg'))
-        ]
-        assert data_infos_b == [
-            dict(path=str(unpair_folder / 'testB' / '6.jpg'))
-        ]
-        result = generation_unpaired_dataset[0]
-        assert (len(generation_unpaired_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
-        assert (result['meta'].data['img_a_path'] == str(unpair_folder /
-                                                         'testA' / '5.jpg'))
-        assert (result['meta'].data['img_b_path'] == str(unpair_folder /
-                                                         'testB' / '6.jpg'))
-
-        # input path is str
-        generation_unpaired_dataset = GenerationUnpairedDataset(
-            dataroot=str(unpair_folder), pipeline=pipeline, test_mode=True)
-        data_infos_a = generation_unpaired_dataset.data_infos_a
-        data_infos_b = generation_unpaired_dataset.data_infos_b
-        assert data_infos_a == [
-            dict(path=str(unpair_folder / 'testA' / '5.jpg'))
-        ]
-        assert data_infos_b == [
-            dict(path=str(unpair_folder / 'testB' / '6.jpg'))
-        ]
-        result = generation_unpaired_dataset[0]
-        assert (len(generation_unpaired_dataset) == 1)
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
-        assert (result['meta'].data['img_a_path'] == str(unpair_folder /
-                                                         'testA' / '5.jpg'))
-        assert (result['meta'].data['img_b_path'] == str(unpair_folder /
-                                                         'testB' / '6.jpg'))
-
-        # test_mode = False
-        generation_unpaired_dataset = GenerationUnpairedDataset(
-            dataroot=str(unpair_folder), pipeline=pipeline, test_mode=False)
-        data_infos_a = generation_unpaired_dataset.data_infos_a
-        data_infos_b = generation_unpaired_dataset.data_infos_b
-        assert data_infos_a == [
-            dict(path=str(unpair_folder / 'trainA' / '1.jpg')),
-            dict(path=str(unpair_folder / 'trainA' / '2.jpg'))
-        ]
-        assert data_infos_b == [
-            dict(path=str(unpair_folder / 'trainB' / '3.jpg')),
-            dict(path=str(unpair_folder / 'trainB' / '4.jpg'))
-        ]
-        assert (len(generation_unpaired_dataset) == 2)
-        img_b_paths = [
-            str(unpair_folder / 'trainB' / '3.jpg'),
-            str(unpair_folder / 'trainB' / '4.jpg')
-        ]
-        result = generation_unpaired_dataset[0]
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
-        assert (result['meta'].data['img_a_path'] == str(unpair_folder /
-                                                         'trainA' / '1.jpg'))
-        assert result['meta'].data['img_b_path'] in img_b_paths
-        result = generation_unpaired_dataset[1]
-        assert check_keys_contain(result.keys(), target_keys)
-        assert check_keys_contain(result['meta'].data.keys(), target_meta_keys)
-        assert (result['meta'].data['img_a_path'] == str(unpair_folder /
-                                                         'trainA' / '2.jpg'))
-        assert result['meta'].data['img_b_path'] in img_b_paths
-
-
-def test_repeat_dataset():
-
-    class ToyDataset(Dataset):
-
-        def __init__(self):
-            super().__init__()
-            self.members = [1, 2, 3, 4, 5]
-
-        def __len__(self):
-            return len(self.members)
-
-        def __getitem__(self, idx):
-            return self.members[idx % 5]
-
-    toy_dataset = ToyDataset()
-    repeat_dataset = RepeatDataset(toy_dataset, 2)
-    assert len(repeat_dataset) == 10
-    assert repeat_dataset[2] == 3
-    assert repeat_dataset[8] == 4
-
-
 def test_reds_dataset():
-    root_path = Path(__file__).parent / 'data'
+    root_path = Path(__file__).parent.parent.parent / 'data'
 
     txt_content = ('000/00000001.png (720, 1280, 3)\n'
                    '001/00000001.png (720, 1280, 3)\n'
@@ -883,7 +555,7 @@ def test_reds_dataset():
 
 
 def test_vimeo90k_dataset():
-    root_path = Path(__file__).parent / 'data'
+    root_path = Path(__file__).parent.parent.parent / 'data'
 
     txt_content = ('00001/0266 (256, 448, 3)\n00002/0268 (256, 448, 3)\n')
     mocked_open_function = mock_open(read_data=txt_content)
@@ -923,7 +595,7 @@ def test_vimeo90k_dataset():
 
 
 def test_vid4_dataset():
-    root_path = Path(__file__).parent / 'data'
+    root_path = Path(__file__).parent.parent.parent / 'data'
 
     txt_content = ('calendar 1 (320,480,3)\ncity 2 (320,480,3)\n')
     mocked_open_function = mock_open(read_data=txt_content)
@@ -1029,7 +701,7 @@ def test_vid4_dataset():
 
 
 def test_sr_reds_multiple_gt_dataset():
-    root_path = Path(__file__).parent / 'data'
+    root_path = Path(__file__).parent.parent.parent / 'data'
 
     # official val partition
     reds_dataset = SRREDSMultipleGTDataset(
@@ -1117,7 +789,7 @@ def test_sr_reds_multiple_gt_dataset():
 
 
 def test_sr_vimeo90k_mutiple_gt_dataset():
-    root_path = Path(__file__).parent / 'data/vimeo90k'
+    root_path = Path(__file__).parent.parent.parent / 'data/vimeo90k'
 
     txt_content = ('00001/0266 (256,448,3)\n')
     mocked_open_function = mock_open(read_data=txt_content)
@@ -1143,7 +815,7 @@ def test_sr_vimeo90k_mutiple_gt_dataset():
 
 
 def test_sr_test_multiple_gt_dataset():
-    root_path = Path(__file__).parent / 'data/test_multiple_gt'
+    root_path = Path(__file__).parent.parent.parent / 'data/test_multiple_gt'
 
     test_dataset = SRTestMultipleGTDataset(
         lq_folder=root_path,
@@ -1167,7 +839,7 @@ def test_sr_test_multiple_gt_dataset():
 
 
 def test_sr_folder_multiple_gt_dataset():
-    root_path = Path(__file__).parent / 'data/test_multiple_gt'
+    root_path = Path(__file__).parent.parent.parent / 'data/test_multiple_gt'
 
     # test without num_input_frames
     test_dataset = SRFolderMultipleGTDataset(
@@ -1226,7 +898,7 @@ def test_sr_folder_multiple_gt_dataset():
 
 
 def test_sr_folder_video_dataset():
-    root_path = Path(__file__).parent / 'data/test_multiple_gt'
+    root_path = Path(__file__).parent.parent.parent / 'data/test_multiple_gt'
 
     test_dataset = SRFolderVideoDataset(
         lq_folder=root_path,

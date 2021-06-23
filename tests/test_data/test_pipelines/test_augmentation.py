@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 import torch
 
-# yapf: disable
 from mmedit.datasets.pipelines import (BinarizeImage, Flip,
                                        GenerateFrameIndices,
                                        GenerateFrameIndiceswithPadding,
@@ -12,8 +11,6 @@ from mmedit.datasets.pipelines import (BinarizeImage, Flip,
                                        Pad, RandomAffine, RandomJitter,
                                        RandomMaskDilation, RandomTransposeHW,
                                        Resize, TemporalReverse)
-
-# yapf: enable
 
 
 class TestAugmentations:
@@ -57,21 +54,17 @@ class TestAugmentations:
         in different flip_types"""
         h, w, c = origin_img.shape
         if flip_type == 'horizontal':
-            # yapf: disable
             for i in range(h):
                 for j in range(w):
                     for k in range(c):
                         if result_img[i, j, k] != origin_img[i, w - 1 - j, k]:
                             return False
-            # yapf: enable
         else:
-            # yapf: disable
             for i in range(h):
                 for j in range(w):
                     for k in range(c):
                         if result_img[i, j, k] != origin_img[h - 1 - i, j, k]:
                             return False
-            # yapf: enable
         return True
 
     def test_binarize(self):
@@ -345,13 +338,11 @@ class TestAugmentations:
     def check_transposehw(origin_img, result_img):
         """Check if the origin_imgs are transposed correctly"""
         h, w, c = origin_img.shape
-        # yapf: disable
         for i in range(c):
             for j in range(h):
                 for k in range(w):
                     if result_img[k, j, i] != origin_img[j, k, i]:  # noqa:E501
                         return False
-            # yapf: enable
         return True
 
     def test_transposehw(self):
