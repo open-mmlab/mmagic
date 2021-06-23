@@ -1,4 +1,3 @@
-# yapf: disable
 from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
                                DeepFillEncoder, DeepFillEncoderDecoder,
                                DepthwiseIndexBlock, FBADecoder,
@@ -10,7 +9,6 @@ from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
                                ResGCADecoder, ResGCAEncoder, ResNetDec,
                                ResNetEnc, ResShortcutDec, ResShortcutEnc,
                                SimpleEncoderDecoder)
-# yapf: enable
 from .generation_backbones import ResnetGenerator, UnetGenerator
 from .sr_backbones import (EDSR, RDN, SRCNN, BasicVSRNet, DICNet, EDVRNet,
                            GLEANStyleGANv2, IconVSR, MSRResNet, RRDBNet,

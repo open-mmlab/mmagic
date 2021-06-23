@@ -380,8 +380,9 @@ class GenerateSeg:
         trimap = results['trimap']
 
         # generete segmentation mask
-        kernel = cv2.getStructuringElement(
-            cv2.MORPH_ELLIPSE, (self.kernel_size, self.kernel_size))
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
+                                           (self.kernel_size,
+                                            self.kernel_size))
         seg = (alpha > 0.5).astype(np.float32)
         seg = cv2.erode(
             seg, kernel, iterations=np.random.randint(*self.erode_iter_range))
@@ -539,10 +540,12 @@ class GenerateSoftSeg:
                                  cv2.BORDER_REPLICATE)
 
         # erode/dilate segmentation mask
-        erode_kernel = cv2.getStructuringElement(
-            cv2.MORPH_ELLIPSE, (self.erode_ksize, self.erode_ksize))
-        dilate_kernel = cv2.getStructuringElement(
-            cv2.MORPH_ELLIPSE, (self.dilate_ksize, self.dilate_ksize))
+        erode_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
+                                                 (self.erode_ksize,
+                                                  self.erode_ksize))
+        dilate_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
+                                                  (self.dilate_ksize,
+                                                   self.dilate_ksize))
         seg = cv2.erode(
             seg,
             erode_kernel,
@@ -616,8 +619,8 @@ class TransformTrimap:
                                                  cv2.DIST_L2, 0)**2
                 dt_mask = dt_mask[..., None]
                 L = 320
-                trimap_trans[..., 3 * k:3 * k + 3] = np.exp(
-                    dt_mask / (2 * ((factor * L)**2)))
+                trimap_trans[..., 3 * k:3 * k +
+                             3] = np.exp(dt_mask / (2 * ((factor * L)**2)))
 
         results['transformed_trimap'] = trimap_trans
         results['two_channel_trimap'] = trimap2

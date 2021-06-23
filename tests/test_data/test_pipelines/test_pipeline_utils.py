@@ -47,14 +47,14 @@ def test_adjust_gamma():
     # Verifying the output with expected results for gamma
     # correction with gamma equal to two.
     image = np.arange(0, 255, 4, np.uint8).reshape((8, 8))
-    expected = np.array(
-        [[0, 0, 0, 0, 1, 1, 2, 3], [4, 5, 6, 7, 9, 10, 12, 14],
-         [16, 18, 20, 22, 25, 27, 30, 33], [36, 39, 42, 45, 49, 52, 56, 60],
-         [64, 68, 72, 76, 81, 85, 90, 95],
-         [100, 105, 110, 116, 121, 127, 132, 138],
-         [144, 150, 156, 163, 169, 176, 182, 189],
-         [196, 203, 211, 218, 225, 233, 241, 249]],
-        dtype=np.uint8)
+    expected = np.array([[0, 0, 0, 0, 1, 1, 2, 3], [4, 5, 6, 7, 9, 10, 12, 14],
+                         [16, 18, 20, 22, 25, 27, 30, 33],
+                         [36, 39, 42, 45, 49, 52, 56, 60],
+                         [64, 68, 72, 76, 81, 85, 90, 95],
+                         [100, 105, 110, 116, 121, 127, 132, 138],
+                         [144, 150, 156, 163, 169, 176, 182, 189],
+                         [196, 203, 211, 218, 225, 233, 241, 249]],
+                        dtype=np.uint8)
 
     result = adjust_gamma(image, 2)
     np.testing.assert_array_equal(result, expected)

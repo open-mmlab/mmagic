@@ -51,9 +51,9 @@ def test_esrgan():
     optim_cfg = dict(type='Adam', lr=2e-4, betas=(0.9, 0.999))
     optimizer = {
         'generator':
-        obj_from_dict(
-            optim_cfg, torch.optim,
-            dict(params=getattr(restorer, 'generator').parameters())),
+        obj_from_dict(optim_cfg, torch.optim,
+                      dict(
+                          params=getattr(restorer, 'generator').parameters())),
         'discriminator':
         obj_from_dict(
             optim_cfg, torch.optim,
