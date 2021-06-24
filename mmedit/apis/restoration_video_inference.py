@@ -75,7 +75,7 @@ def restoration_video_inference(model, img_dir, window_size, start_idx,
         if window_size > 0:  # sliding window framework
             data = pad_sequence(data, window_size)
             result = []
-            for i in range(0, data.size(1) - 2 * window_size):
+            for i in range(0, data.size(1) - 2 * (window_size // 2)):
                 data_i = data[:, i:i + window_size]
                 result.append(model(lq=data_i, test_mode=True)['output'])
             result = torch.stack(result, dim=1)
