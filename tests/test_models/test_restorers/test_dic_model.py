@@ -11,6 +11,13 @@ def test_dic_model():
     pretrained = 'https://download.openmmlab.com/mmediting/' + \
         'restorers/dic/light_cnn_feature.pth'
 
+    model_cfg_pre = dict(
+        type='DIC',
+        generator=dict(
+            type='DICNet', in_channels=3, out_channels=3, mid_channels=48),
+        pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
+        align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean'))
+
     model_cfg = dict(
         type='DIC',
         generator=dict(
@@ -35,6 +42,7 @@ def test_dic_model():
     test_cfg = Config(dict(metrics=['PSNR', 'SSIM'], crop_border=scale))
 
     # build restorer
+    build_model(model_cfg_pre, train_cfg=train_cfg, test_cfg=test_cfg)
     restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
 
     # test attributes
