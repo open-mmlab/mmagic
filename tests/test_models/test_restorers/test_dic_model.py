@@ -103,3 +103,8 @@ def test_dic_model():
         with pytest.raises(AssertionError):
             # evaluation with metrics must have gt images
             restorer(lq=inputs.cuda(), test_mode=True)
+
+        with pytest.raises(TypeError):
+            restorer.init_weights(pretrained=1)
+        with pytest.raises(OSError):
+            restorer.init_weights(pretrained='')
