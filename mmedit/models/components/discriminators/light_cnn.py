@@ -43,7 +43,7 @@ class MaxFeature(nn.Module):
         elif filter_type == 'linear':
             self.filter = nn.Linear(in_channels, 2 * out_channels)
         else:
-            raise ValueError("'filter_type' should be 'conv2d' or 'linear',"
+            raise ValueError("'filter_type' should be 'conv2d' or 'linear', "
                              f'but got {filter_type}')
 
     def forward(self, x):
@@ -57,7 +57,7 @@ class MaxFeature(nn.Module):
         """
 
         x = self.filter(x)
-        out = torch.split(x, self.out_channels, 1)
+        out = torch.chunk(x, chunks=2, dim=1)
         return torch.max(out[0], out[1])
 
 
