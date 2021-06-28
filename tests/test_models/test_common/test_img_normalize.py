@@ -19,7 +19,3 @@ def test_normalize_layer():
     std_y = y.std(dim=1)
     assert sum(torch.div(std_x, std_y) - rgb_std) < 1e-5
     assert sum(torch.div(mean_x - rgb_mean, rgb_std) - mean_y) < 1e-5
-
-
-if __name__ == '__main__':
-    test_normalize_layer()

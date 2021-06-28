@@ -63,10 +63,10 @@ class LTE(nn.Module):
             x (Tensor): Input tensor with shape (n, 3, h, w).
 
         Returns:
-            Forward results in 3 levels.
-            x_level1 (Tensor): Forward results in level 1 (n, 64, h, w).
-            x_level2 (Tensor): Forward results in level 2 (n, 128, h/2, w/2).
-            x_level3 (Tensor): Forward results in level 3 (n, 256, h/4, w/4).
+            Tuple[Tensor]: Forward results in 3 levels.
+                x_level3: Forward results in level 3 (n, 256, h/4, w/4).
+                x_level2: Forward results in level 2 (n, 128, h/2, w/2).
+                x_level1: Forward results in level 1 (n, 64, h, w).
         """
 
         x = self.img_normalize(x)
@@ -75,7 +75,7 @@ class LTE(nn.Module):
         x_level2 = x = self.slice2(x)
         x_level3 = x = self.slice3(x)
 
-        return x_level1, x_level2, x_level3
+        return [x_level3, x_level2, x_level1]
 
     def init_weights(self, pretrained=None, strict=True):
         """Init weights for models.

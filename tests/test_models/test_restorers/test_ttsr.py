@@ -62,6 +62,24 @@ def test_ttsr_net():
 
 
 def test_ttsr():
+    model_cfg = dict(
+        type='TTSR',
+        generator=dict(
+            type='TTSRNet',
+            in_channels=3,
+            out_channels=3,
+            mid_channels=64,
+            num_blocks=(16, 16, 8, 4)),
+        extractor=dict(type='LTE'),
+        transformer=dict(type='SearchTransformer'),
+        pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
+
+    scale = 4
+    train_cfg = None
+    test_cfg = Config(dict(metrics=['PSNR', 'SSIM'], crop_border=scale))
+
+    # build restorer
+    restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
 
     model_cfg = dict(
         type='TTSR',
