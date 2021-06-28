@@ -44,7 +44,7 @@ def test_merge_features():
 
 def test_ttsr_net():
     inputs = torch.rand(2, 3, 24, 24)
-    s = torch.rand(2, 1, 24, 24)
+    soft_attention = torch.rand(2, 1, 24, 24)
     t_level3 = torch.rand(2, 64, 24, 24)
     t_level2 = torch.rand(2, 32, 48, 48)
     t_level1 = torch.rand(2, 16, 96, 96)
@@ -56,7 +56,7 @@ def test_ttsr_net():
         mid_channels=16,
         texture_channels=16)
     ttsr = build_backbone(ttsr_cfg)
-    outputs = ttsr(inputs, s, t_level3, t_level2, t_level1)
+    outputs = ttsr(inputs, soft_attention, (t_level3, t_level2, t_level1))
 
     assert outputs.shape == (2, 3, 96, 96)
 
@@ -73,7 +73,26 @@ def test_ttsr():
             num_blocks=(16, 16, 8, 4)),
         extractor=dict(type='LTE'),
         transformer=dict(type='SearchTransformer'),
-        pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
+        discriminator=dict(type='TTSRDiscriminator', in_size=64),
+        pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
+        perceptual_loss=dict(
+            type='PerceptualLoss',
+            layer_weights={'29': 1.0},
+            vgg_type='vgg19',
+            perceptual_weight=1e-2,
+            style_weight=0.001,
+            criterion='mse'),
+        transferal_perceptual_loss=dict(
+            type='TransferalPerceptualLoss',
+            loss_weight=1e-2,
+            use_attention=False,
+            criterion='mse'),
+        gan_loss=dict(
+            type='GANLoss',
+            gan_type='vanilla',
+            loss_weight=1e-3,
+            real_label_val=1.0,
+            fake_label_val=0))
 
     scale = 4
     train_cfg = None
@@ -98,9 +117,13 @@ def test_ttsr():
     }
 
     # prepare optimizer
-    optim_cfg = dict(type='Adam', lr=1e-4, betas=(0.9, 0.999))
-    optimizer = obj_from_dict(optim_cfg, torch.optim,
-                              dict(params=restorer.parameters()))
+    optim_cfg_g = dict(type='Adam', lr=1e-4, betas=(0.9, 0.999))
+    optim_cfg_d = dict(type='Adam', lr=1e-4, betas=(0.9, 0.999))
+    optimizer = dict(
+        generator=obj_from_dict(optim_cfg_g, torch.optim,
+                                dict(params=restorer.parameters())),
+        discriminator=obj_from_dict(optim_cfg_d, torch.optim,
+                                    dict(params=restorer.parameters())))
 
     # test train_step and forward_test (cpu)
     outputs = restorer.train_step(data_batch, optimizer)
@@ -125,8 +148,11 @@ def test_ttsr():
         }
 
         # train_step
-        optimizer = obj_from_dict(optim_cfg, torch.optim,
-                                  dict(params=restorer.parameters()))
+        optimizer = dict(
+            generator=obj_from_dict(optim_cfg_g, torch.optim,
+                                    dict(params=restorer.parameters())),
+            discriminator=obj_from_dict(optim_cfg_d, torch.optim,
+                                        dict(params=restorer.parameters())))
         outputs = restorer.train_step(data_batch, optimizer)
         assert isinstance(outputs, dict)
         assert isinstance(outputs['log_vars'], dict)
