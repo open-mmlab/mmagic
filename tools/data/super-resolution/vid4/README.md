@@ -1,4 +1,4 @@
-# Download Vid4 Dataset
+# Preparing Vid4 Dataset
 
 <!-- [DATASET] -->
 
