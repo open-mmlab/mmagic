@@ -5,7 +5,7 @@ from mmedit.models.losses import LightCNNFeatureLoss
 
 
 def test_light_cnn_feature_loss():
-  
+
     pretrained = 'https://download.openmmlab.com/mmediting/' + \
         'restorers/dic/light_cnn_feature.pth'
     pred = torch.rand((3, 3, 128, 128))
@@ -40,7 +40,7 @@ def test_light_cnn_feature_loss():
             pretrained=pretrained, criterion='mse').cuda()
         loss = feature_loss(pred, gt)
         assert loss.item() > 0
-        
+
     with pytest.raises(AssertionError):
         feature_loss.model.train()
         feature_loss(pred, gt)
