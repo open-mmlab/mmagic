@@ -18,8 +18,7 @@ class LightCNNFeature(nn.Module):
 
         model = LightCNN(3)
         self.features = nn.Sequential(*list(model.features.children()))
-        for _, v in self.features.named_parameters():
-            v.requires_grad = False
+        self.features.requires_grad_(False)
 
     def forward(self, x):
         """Forward function.
@@ -51,7 +50,7 @@ class LightCNNFeature(nn.Module):
 
 
 @LOSSES.register_module()
-class FeatureLoss(nn.Module):
+class LightCNNFeatureLoss(nn.Module):
     """Feature loss of DICGAN, based on LightCNN.
 
     Args:
@@ -73,7 +72,7 @@ class FeatureLoss(nn.Module):
         elif criterion == 'mse':
             self.criterion = torch.nn.MSELoss()
         else:
-            raise ValueError("'criterion' should be 'l1' or 'mse',"
+            raise ValueError("'criterion' should be 'l1' or 'mse', "
                              f'but got {criterion}')
 
     def forward(self, pred, gt):
@@ -87,6 +86,7 @@ class FeatureLoss(nn.Module):
             Tensor: Forward results.
         """
 
+        assert self.model.training is False
         pred_feature = self.model(pred)
         gt_feature = self.model(gt).detach()
         feature_loss = self.criterion(pred_feature, gt_feature)
