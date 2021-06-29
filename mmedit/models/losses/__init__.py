@@ -10,7 +10,7 @@ from .utils import mask_reduce_loss, reduce_loss
 
 __all__ = [
     'L1Loss', 'MSELoss', 'CharbonnierLoss', 'L1CompositionLoss',
-    'MSECompositionLoss', 'CharbonnierCompLoss', 'GANLoss', 'FeatureLoss',
+    'MSECompositionLoss', 'CharbonnierCompLoss', 'GANLoss',
     'TransferalPerceptualLoss', 'GradientPenaltyLoss', 'PerceptualLoss',
     'PerceptualVGG', 'reduce_loss', 'mask_reduce_loss', 'DiscShiftLoss',
     'MaskedTVLoss', 'GradientLoss', 'LightCNNFeatureLoss'

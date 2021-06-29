@@ -26,7 +26,7 @@ def test_dic_model():
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
         align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean'),
         feature_loss=dict(
-            type='FeatureLoss',
+            type='LightCNNFeatureLoss',
             pretrained=pretrained,
             loss_weight=0.1,
             criterion='l1'),
