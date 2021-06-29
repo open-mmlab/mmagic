@@ -40,6 +40,9 @@ def test_light_cnn_feature_loss():
         loss = feature_loss(pred, gt)
         assert loss.item() > 0
 
+    with pytest.raises(AssertionError):
+        feature_loss.model.train()
+        feature_loss(pred, gt)
     # test criterion value error
     with pytest.raises(ValueError):
         LightCNNFeatureLoss(pretrained=pretrained, criterion='l2')

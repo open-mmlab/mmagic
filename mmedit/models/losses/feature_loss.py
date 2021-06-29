@@ -86,6 +86,7 @@ class LightCNNFeatureLoss(nn.Module):
             Tensor: Forward results.
         """
 
+        assert self.model.training is False
         pred_feature = self.model(pred)
         gt_feature = self.model(gt).detach()
         feature_loss = self.criterion(pred_feature, gt_feature)
