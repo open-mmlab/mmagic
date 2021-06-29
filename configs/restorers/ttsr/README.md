@@ -1,8 +1,8 @@
-# Learning Texture Transformer Network for Image Super-Resolution
-
-## Introduction
+# TTSR (CVPR'2020)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">TTSR (CVPR'2020)</summary>
 
 ```bibtex
 @inproceedings{yang2020learning,
@@ -14,11 +14,12 @@
 }
 ```
 
-## Results
+</details>
+
+<br/>
 
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
-
-The metrics are `PSNR / SSIM`.
+The metrics are `PSNR / SSIM` .
 
 |                                         Method                                                  | scale |       CUFED      |                                                                                                                   Download                                                                                                                                                                                                                                                                                                                  |
 | :---------------------------------------------------------------------------------------------: | :---: | :--------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

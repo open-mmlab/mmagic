@@ -1,8 +1,8 @@
-# TDAN: Temporally-Deformable Alignment Network for Video Super-Resolution
-
-## Introduction
+# TDAN (CVPR'2020)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">TDAN (CVPR'2020)</summary>
 
 ```bibtex
 @InProceedings{tian2020tdan,
@@ -13,17 +13,17 @@
 }
 ```
 
-## Results and Models
+</details>
+
+<br/>
 
 Evaluated on Y-channel. 8 pixels in each border are cropped before evaluation.
-
-The metrics are `PSNR / SSIM`.
+The metrics are `PSNR / SSIM` .
 
 |                                Method                               |   Vid4 (BIx4)   | SPMCS-30 (BIx4) |   Vid4 (BDx4)   | SPMCS-30 (BDx4) |                                                                                                         Download                                                                                                        |
 |:-------------------------------------------------------------------:|:---------------:|:---------------:|:---------------:|:---------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | [tdan_vimeo90k_bix4](/configs/restorers/tdan/tdan_vimeo90k_bix4.py) | **26.49/0.792** | **30.42/0.856** |   25.93/0.772   |   29.69/0.842   | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
 | [tdan_vimeo90k_bdx4](/configs/restorers/tdan/tdan_vimeo90k_bdx4.py) |   25.80/0.784   |   29.56/0.851   | **26.87/0.815** | **30.77/0.868** | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
-
 
 ## Train
 
@@ -36,7 +36,6 @@ You can use the following command to train a model.
 TDAN is trained with two stages.
 
 **Stage 1**: Train with a larger learning rate (1e-4)
-
 
 ```shell
 ./tools/dist_train.sh configs/restorers/tdan/tdan_vimeo90k_bix4_lr1e-4_400k.py 8

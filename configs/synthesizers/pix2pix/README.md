@@ -1,8 +1,8 @@
-# pix2pix: Image-To-Image Translation With Conditional Adversarial Networks
-
-## Introduction
+# Pix2Pix (CVPR'2017)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">Pix2Pix (CVPR'2017)</summary>
 
 ```bibtex
 @inproceedings{isola2017image,
@@ -14,7 +14,9 @@
 }
 ```
 
-## Results and Models
+</details>
+
+<br/>
 
 We use `FID` and `IS` metrics to evaluate the generation performance of pix2pix.
 

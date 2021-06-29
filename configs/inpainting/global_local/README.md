@@ -1,8 +1,8 @@
-# Globally and Locally Consistent Image Completion
-
-## Introduction
+# Global&Local (ToG'2017)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">Global&Local (ToG'2017)</summary>
 
 ```bibtex
 @article{iizuka2017globally,
@@ -17,17 +17,19 @@
 }
 ```
 
+</details>
+
+<br/>
+
 *Note that we do not apply the post-processing module in Global&Local for a fair comparison with current deep inpainting methods.*
 
-## Results and models
-
-### Places365-Challenge
+**Places365-Challenge**
 
 |                                  Method                                   |  Mask Type  | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |                                                                                                                      Download                                                                                                                       |
 | :-----------------------------------------------------------------------: | :---------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | [Global&Local](/configs/inpainting/global_local/gl_256x256_8x12_places.py) | square bbox |  256x256   |    500k     | Places365-val |  11.164  | 23.152 | 0.862 | [model](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.log.json) |
 
-### CelebA-HQ
+**CelebA-HQ**
 
 |                                  Method                                   |  Mask Type  | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  |                                                                                                                      Download                                                                                                                       |
 | :-----------------------------------------------------------------------: | :---------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

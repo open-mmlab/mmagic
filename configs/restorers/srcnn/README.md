@@ -1,8 +1,8 @@
-# Image Super-Resolution Using Deep Convolutional Networks
-
-## Introduction
+# SRCNN (TPAMI'2015)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">SRCNN (TPAMI'2015)</summary>
 
 ```bibtex
 @article{dong2015image,
@@ -17,11 +17,12 @@
 }
 ```
 
-## Results and Models
+</details>
+
+<br/>
 
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
-
-The metrics are `PSNR / SSIM`.
+The metrics are `PSNR / SSIM` .
 
 |                                         Method                                          |       Set5       |       Set14       |      DIV2K       |                                                                                                                    Download                                                                                                                     |
 | :-------------------------------------------------------------------------------------: | :--------------: | :---------------: | :--------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

@@ -1,8 +1,8 @@
-# Indices Matter: Learning to Index for Deep Image Matting
-
-## Introduction
+# IndexNet (ICCV'2019)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">IndexNet (ICCV'2019)</summary>
 
 ```bibtex
 @inproceedings{hao2019indexnet,
@@ -13,7 +13,9 @@
 }
 ```
 
-## Results and Models
+</details>
+
+<br/>
 
 |                                    Method                                    |   SAD    |    MSE    |   GRAD   |   CONN   |                                                                                                                              Download                                                                                                                               |
 | :--------------------------------------------------------------------------: | :------: | :-------: | :------: | :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -22,7 +24,7 @@
 
 > The performance of training (best performance) with different random seeds diverges in a large range. You may need to run several experiments for each setting to obtain the above performance.
 
-### More result
+**More result**
 
 |                                              Method                                               |  SAD  |  MSE  | GRAD  | CONN  |                                                                                                                                     Download                                                                                                                                      |
 | :-----------------------------------------------------------------------------------------------: | :---: | :---: | :---: | :---: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

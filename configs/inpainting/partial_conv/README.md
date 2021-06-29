@@ -1,8 +1,9 @@
-# Image inpainting for Irregular Holes using Partial Convolutions
-
-## Introduction
+# PConv (ECCV'2018)
 
 <!-- [ALGORITHM] -->
+
+<details>
+<summary align="right">PConv (ECCV'2018)</summary>
 
 ```bibtex
 @inproceedings{liu2018image,
@@ -14,15 +15,17 @@
 }
 ```
 
-## Results and models
+</details>
 
-### Places365-Challenge
+<br/>
+
+**Places365-Challenge**
 
 |                                   Method                                    | Mask Type | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |                                                                                                                        Download                                                                                                                         |
 | :-------------------------------------------------------------------------: | :-------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | [PConv](/configs/inpainting/partial_conv/pconv_256x256_stage2_4x2_places.py) | free-form |  256x256   |    500k     | Places365-val |  8.776   | 22.762 | 0.801 | [model](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.log.json) |
 
-### CelebA-HQ
+**CelebA-HQ**
 
 |                                   Method                                    | Mask Type | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  |                                                                                                                        Download                                                                                                                         |
 | :-------------------------------------------------------------------------: | :-------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
