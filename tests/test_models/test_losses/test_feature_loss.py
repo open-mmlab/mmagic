@@ -5,6 +5,7 @@ from mmedit.models.losses import LightCNNFeatureLoss
 
 
 def test_light_cnn_feature_loss():
+
     pretrained = 'https://download.openmmlab.com/mmediting/' + \
         'restorers/dic/light_cnn_feature.pth'
     pred = torch.rand((3, 3, 128, 128))
