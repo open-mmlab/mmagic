@@ -11,6 +11,13 @@ def test_dic_model():
     pretrained = 'https://download.openmmlab.com/mmediting/' + \
         'restorers/dic/light_cnn_feature.pth'
 
+    model_cfg_pre = dict(
+        type='DIC',
+        generator=dict(
+            type='DICNet', in_channels=3, out_channels=3, mid_channels=48),
+        pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
+        align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean'))
+
     model_cfg = dict(
         type='DIC',
         generator=dict(
@@ -19,7 +26,7 @@ def test_dic_model():
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
         align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean'),
         feature_loss=dict(
-            type='FeatureLoss',
+            type='LightCNNFeatureLoss',
             pretrained=pretrained,
             loss_weight=0.1,
             criterion='l1'),
@@ -35,6 +42,7 @@ def test_dic_model():
     test_cfg = Config(dict(metrics=['PSNR', 'SSIM'], crop_border=scale))
 
     # build restorer
+    build_model(model_cfg_pre, train_cfg=train_cfg, test_cfg=test_cfg)
     restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
 
     # test attributes
@@ -103,3 +111,8 @@ def test_dic_model():
         with pytest.raises(AssertionError):
             # evaluation with metrics must have gt images
             restorer(lq=inputs.cuda(), test_mode=True)
+
+        with pytest.raises(TypeError):
+            restorer.init_weights(pretrained=1)
+        with pytest.raises(OSError):
+            restorer.init_weights(pretrained='')

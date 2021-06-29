@@ -244,3 +244,20 @@ class DIC(BasicRestorer):
             mmcv.imwrite(tensor2img(pred), save_path)
 
         return results
+
+    def init_weights(self, pretrained=None, strict=True):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+            strict (boo, optional): Whether strictly load the pretrained model.
+                Defaults to True.
+        """
+        if isinstance(pretrained, str):
+            self.generator.init_weights(pretrained, strict)
+            if self.discriminator:
+                self.discriminator.init_weights(pretrained, strict)
+        elif pretrained is not None:
+            raise TypeError('"pretrained" must be a str or None. '
+                            f'But received {type(pretrained)}.')

@@ -329,33 +329,30 @@ class TTSRNet(nn.Module):
         # end, merge features
         self.merge_features = MergeFeatures(mid_channels, out_channels)
 
-    def forward(self, x, s=None, t_level3=None, t_level2=None, t_level1=None):
+    def forward(self, x, soft_attention, textures):
         """Forward function.
 
         Args:
             x (Tensor): Input tensor with shape (n, c, h, w).
-            s (Tensor): Soft-Attention tensor with shape (n, 1, h, w).
-            t_level3 (Tensor): Transferred HR texture T in level3.
-                (n, 4c, h, w)
-            t_level2 (Tensor): Transferred HR texture T in level2.
-                (n, 2c, 2h, 2w)
-            t_level1 (Tensor): Transferred HR texture T in level1.
-                (n, c, 4h, 4w)
+            soft_attention (Tensor): Soft-Attention tensor with shape
+                (n, 1, h, w).
+            textures (Tuple[Tensor]): Transferred HR texture tensors.
+                [(N, C, H, W), (N, C/2, 2H, 2W), ...]
 
         Returns:
             Tensor: Forward results.
         """
 
-        assert t_level1.shape[1] == self.texture_channels
+        assert textures[-1].shape[1] == self.texture_channels
 
         x1 = self.sfe(x)
 
         # stage 1
-        x1_res = torch.cat((x1, t_level3), dim=1)
+        x1_res = torch.cat((x1, textures[0]), dim=1)
         x1_res = self.conv_first1(x1_res)
 
         # soft-attention
-        x1 = x1 + x1_res * s
+        x1 = x1 + x1_res * soft_attention
 
         x1_res = self.res_block1(x1)
         x1_res = self.conv_last1(x1_res)
@@ -367,12 +364,15 @@ class TTSRNet(nn.Module):
         x22 = self.up1(x1)
         x22 = F.relu(x22)
 
-        x22_res = torch.cat((x22, t_level2), dim=1)
+        x22_res = torch.cat((x22, textures[1]), dim=1)
         x22_res = self.conv_first2(x22_res)
 
         # soft-attention
         x22_res = x22_res * F.interpolate(
-            s, scale_factor=2, mode='bicubic', align_corners=False)
+            soft_attention,
+            scale_factor=2,
+            mode='bicubic',
+            align_corners=False)
         x22 = x22 + x22_res
 
         x21_res, x22_res = self.csfi2(x21, x22)
@@ -392,12 +392,15 @@ class TTSRNet(nn.Module):
         x33 = self.up2(x22)
         x33 = F.relu(x33)
 
-        x33_res = torch.cat((x33, t_level1), dim=1)
+        x33_res = torch.cat((x33, textures[2]), dim=1)
         x33_res = self.conv_first3(x33_res)
 
         # soft-attention
         x33_res = x33_res * F.interpolate(
-            s, scale_factor=4, mode='bicubic', align_corners=False)
+            soft_attention,
+            scale_factor=4,
+            mode='bicubic',
+            align_corners=False)
         x33 = x33 + x33_res
 
         x31_res, x32_res, x33_res = self.csfi3(x31, x32, x33)
