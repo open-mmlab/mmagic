@@ -1,15 +1,29 @@
-exp_name = 'dic_x8c48b6_g4_150k_CelebAHQ'
+exp_name = 'dic_gan_x8c48b6_g4_150k_CelebAHQ'
 scale = 8
 
 # model settings
+pretrained_light_cnn = 'https://download.openmmlab.com/mmediting/' + \
+        'restorers/dic/light_cnn_feature.pth'
 model = dict(
     type='DIC',
     generator=dict(
         type='DICNet', in_channels=3, out_channels=3, mid_channels=48),
+    discriminator=dict(type='LightCNN', in_channels=3),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-    align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean'))
+    align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean'),
+    feature_loss=dict(
+        type='FeatureLoss',
+        pretrained=pretrained_light_cnn,
+        loss_weight=0.1,
+        criterion='l1'),
+    gan_loss=dict(
+        type='GANLoss',
+        gan_type='vanilla',
+        loss_weight=0.005,
+        real_label_val=1.0,
+        fake_label_val=0))
 # model training and testing settings
-train_cfg = None
+train_cfg = dict(fix_iter=10000, disc_steps=2)
 test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=scale)
 
 # dataset settings
@@ -113,14 +127,16 @@ data = dict(
         scale=scale))
 
 # optimizer
-optimizers = dict(generator=dict(type='Adam', lr=1.e-4))
+optimizers = dict(
+    generator=dict(type='Adam', lr=1.e-4),
+    discriminator=dict(type='Adam', lr=1.e-5))
 
 # learning policy
-total_iters = 150000
+total_iters = 500000
 lr_config = dict(
     policy='Step',
     by_epoch=False,
-    step=[10000, 20000, 40000, 80000],
+    step=[100000, 200000, 300000, 400000],
     gamma=0.5)
 
 checkpoint_config = dict(interval=2000, save_optimizer=True, by_epoch=False)
