@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-sed -i '$a\\n' ../configs/inpainting/*/*.md
-sed -i '$a\\n' ../configs/mattors/*/*.md
-sed -i '$a\\n' ../configs/restorers/*/*.md
-sed -i '$a\\n' ../configs/synthesizers/*/*.md
+sed -i '$a\\n<br/><hr/>\n' ../configs/inpainting/*/*.md
+sed -i '$a\\n<br/><hr/>\n' ../configs/mattors/*/*.md
+sed -i '$a\\n<br/><hr/>\n' ../configs/restorers/*/*.md
+sed -i '$a\\n<br/><hr/>\n' ../configs/synthesizers/*/*.md
 
 # gather models
 cat ../configs/inpainting/*/*.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Inpainting Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >inpainting_models.md
