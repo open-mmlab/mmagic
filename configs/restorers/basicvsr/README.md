@@ -1,10 +1,11 @@
-# BasicVSR: The Search for Essential Components in Video Super-Resolution and Beyond
-
-## Introduction
+# BasicVSR (CVPR'2021)
 
 <!-- [ALGORITHM] -->
 
-```
+<details>
+<summary align="right">BasicVSR (CVPR'2021)</summary>
+
+```bibtex
 @InProceedings{chan2021basicvsr,
   author = {Chan, Kelvin CK and Wang, Xintao and Yu, Ke and Dong, Chao and Loy, Chen Change},
   title = {BasicVSR: The Search for Essential Components in Video Super-Resolution and Beyond},
@@ -13,12 +14,12 @@
 }
 ```
 
-## Results and Models
+</details>
 
-Evaluated on RGB channels for REDS4 and Y channel for others. The metrics are `PSNR`/`SSIM`.
+<br/>
 
+Evaluated on RGB channels for REDS4 and Y channel for others. The metrics are `PSNR` / `SSIM` .
 The pretrained weights of SPyNet can be found [here](https://download.openmmlab.com/mmediting/restorers/basicvsr/spynet_20210409-c6c1bd09.pth).
-
 
 |                                                             Method                                                             | REDS4 (BIx4)<br>PSNR/SSIM (RGB) | Vimeo-90K-T (BIx4)<br>PSNR/SSIM (Y) | Vid4 (BIx4)<br>PSNR/SSIM (Y) | UDM10 (BDx4)<br>PSNR/SSIM (Y) | Vimeo-90K-T (BDx4)<br>PSNR/SSIM (Y) | Vid4 (BDx4)<br>PSNR/SSIM (Y) |                                                                                                               Download                                                                                                              |
 |:------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------:|:-----------------------------------:|:----------------------------:|:-----------------------------:|:-----------------------------------:|:----------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|

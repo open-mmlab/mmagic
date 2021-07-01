@@ -1,8 +1,9 @@
-# ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks
-
-## Introduction
+# ESRGAN (ECCVW'2018)
 
 <!-- [ALGORITHM] -->
+
+<details>
+<summary align="right">ESRGAN (ECCVW'2018)</summary>
 
 ```bibtex
 @inproceedings{wang2018esrgan,
@@ -14,11 +15,12 @@
 }
 ```
 
-## Results and Models
+</details>
+
+<br/>
 
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
-
-The metrics are `PSNR / SSIM`.
+The metrics are `PSNR / SSIM` .
 
 |                                                     Method                                                     |       Set5        |      Set14       |      DIV2K       |                                                                                                                                Download                                                                                                                                 |
 | :------------------------------------------------------------------------------------------------------------: | :---------------: | :--------------: | :--------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

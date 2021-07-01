@@ -1,8 +1,8 @@
-# CycleGAN: Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks
-
-## Introduction
+# CycleGAN (ICCV'2017)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">CycleGAN (ICCV'2017)</summary>
 
 ```bibtex
 @inproceedings{zhu2017unpaired,
@@ -14,7 +14,9 @@
 }
 ```
 
-## Results and Models
+</details>
+
+<br/>
 
 We use `FID` and `IS` metrics to 	evaluate the generation performance of CycleGAN.
 
@@ -38,4 +40,4 @@ Model and log downloads:
 | :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | download | [model](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_facades/cyclegan_lsgan_resnet_in_1x1_80k_facades_20200524-0b877c2a.pth) \| [log](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_facades/cyclegan_lsgan_resnet_in_1x1_80k_facades_20200524_211816.log.json) | [model](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_facades_id0/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades_20200524-438aa074.pth) \| [log](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_facades_id0/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades_20200524_212548.log.json) | [model](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_20200524-0baeaff6.pth) \| [log](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_20200524_214809.log.json) | [model](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter_id0/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_20200524-f280ecdd.pth) \| [log](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter_id0/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_20200524_215511.log.json) | [model](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_20200524-1b3d5d3a.pth) \| [log](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_20200524_220040.log.json) | [model](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra_id0/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_20200524-470fb8da.pth) \| [log](https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra_id0/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_20200524_220655.log.json) |
 
-Note: With a larger identity loss, the image-to-image translation becomes more conservative, which makes less changes. The original authors did not say what is the best weight for identity loss. Thus, in addition to the default setting, we also set the weight of identity loss to 0 (denoting `id0`) to make a more comprehensive comparison.
+Note: With a larger identity loss, the image-to-image translation becomes more conservative, which makes less changes. The original authors did not say what is the best weight for identity loss. Thus, in addition to the default setting, we also set the weight of identity loss to 0 (denoting `id0` ) to make a more comprehensive comparison.

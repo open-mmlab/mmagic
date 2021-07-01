@@ -1,8 +1,9 @@
-# Generative Image Inpainting with Contextual Attention
-
-## Introduction
+# DeepFillv1 (CVPR'2018)
 
 <!-- [ALGORITHM] -->
+
+<details>
+<summary align="right">DeepFillv1 (CVPR'2018)</summary>
 
 ```bibtex
 @inproceedings{yu2018generative,
@@ -14,15 +15,17 @@
 }
 ```
 
-## Results and models
+</details>
 
-### Places365-Challenge
+<br/>
+
+**Places365-Challenge**
 
 |                                    Method                                    |  Mask Type  | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |                                                                                                                           Download                                                                                                                            |
 | :--------------------------------------------------------------------------: | :---------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | [DeepFillv1](/configs/inpainting/deepfillv1/deepfillv1_256x256_8x2_places.py) | square bbox |  256x256   |    3500k    | Places365-val |  11.019  | 23.429 | 0.862 | [model](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.log.json) |
 
-### CelebA-HQ
+**CelebA-HQ**
 
 |                                    Method                                    |  Mask Type  | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  |                                                                                                                           Download                                                                                                                            |
 | :--------------------------------------------------------------------------: | :---------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

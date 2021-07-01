@@ -1,8 +1,9 @@
-# EDSR: Enhanced Deep Residual Networks for Single Image Super-Resolution
-
-## Introduction
+# EDSR (CVPR'2017)
 
 <!-- [ALGORITHM] -->
+
+<details>
+<summary align="right">EDSR (CVPR'2017)</summary>
 
 ```bibtex
 @inproceedings{lim2017enhanced,
@@ -14,11 +15,12 @@
 }
 ```
 
-## Results and Models
+</details>
+
+<br/>
 
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
-
-The metrics are `PSNR / SSIM`.
+The metrics are `PSNR / SSIM` .
 
 |                                         Method                                         |       Set5       |      Set14       |      DIV2K       |                                                                                                                   Download                                                                                                                    |
 | :------------------------------------------------------------------------------------: | :--------------: | :--------------: | :--------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

@@ -1,8 +1,8 @@
-# Free-form Image Inpainting with Gated Convolution
-
-## Introduction
+# DeepFillv2 (CVPR'2019)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">DeepFillv2 (CVPR'2019)</summary>
 
 ```bibtex
 @inproceedings{yu2019free,
@@ -14,15 +14,17 @@
 }
 ```
 
-## Results and models
+</details>
 
-### Places365-Challenge
+<br/>
+
+**Places365-Challenge**
 
 |                                    Method                                    | Mask Type | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |                                                                                                                           Download                                                                                                                            |
 | :--------------------------------------------------------------------------: | :-------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | [DeepFillv2](/configs/inpainting/deepfillv2/deepfillv2_256x256_8x2_places.py) | free-form |  256x256   |    100k     | Places365-val |  8.635   | 22.398 | 0.815 | [model](https://download.openmmlab.com/mmediting/inpainting/deepfillv2/deepfillv2_256x256_8x2_places_20200619-10d15793.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/deepfillv2/deepfillv2_256x256_8x2_places_20200619-10d15793.log.json) |
 
-### CelebA-HQ
+**CelebA-HQ**
 
 |                                    Method                                    | Mask Type | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  |                                                                                                                           Download                                                                                                                            |
 | :--------------------------------------------------------------------------: | :-------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

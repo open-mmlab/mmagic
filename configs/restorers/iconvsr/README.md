@@ -1,10 +1,11 @@
-# BasicVSR: The Search for Essential Components in Video Super-Resolution and Beyond
-
-## Introduction
+# IconVSR (CVPR'2021)
 
 <!-- [ALGORITHM] -->
 
-```
+<details>
+<summary align="right">IconVSR (CVPR'2021)</summary>
+
+```bibtex
 @InProceedings{chan2021basicvsr,
   author = {Chan, Kelvin CK and Wang, Xintao and Yu, Ke and Dong, Chao and Loy, Chen Change},
   title = {BasicVSR: The Search for Essential Components in Video Super-Resolution and Beyond},
@@ -13,12 +14,12 @@
 }
 ```
 
-## Results and Models
+</details>
 
-Evaluated on RGB channels for REDS4 and Y channel for others. The metrics are `PSNR`/`SSIM`.
+<br/>
 
+Evaluated on RGB channels for REDS4 and Y channel for others. The metrics are `PSNR` / `SSIM` .
 The pretrained weights of the IconVSR components can be found here: [SPyNet](https://download.openmmlab.com/mmediting/restorers/basicvsr/spynet_20210409-c6c1bd09.pth), [EDVR-M for REDS](https://download.openmmlab.com/mmediting/restorers/iconvsr/edvrm_reds_20210413-3867262f.pth), and [EDVR-M for Vimeo-90K](https://download.openmmlab.com/mmediting/restorers/iconvsr/edvrm_vimeo90k_20210413-e40e99a8.pth).
-
 
 |                                                            Method                                                           | REDS4 (BIx4)<br>PSNR/SSIM (RGB) | Vimeo-90K-T (BIx4)<br>PSNR/SSIM (Y) | Vid4 (BIx4)<br>PSNR/SSIM (Y) | UDM10 (BDx4)<br>PSNR/SSIM (Y) | Vimeo-90K-T (BDx4)<br>PSNR/SSIM (Y) | Vid4 (BDx4)<br>PSNR/SSIM (Y) |                                                                                                             Download                                                                                                            |
 |:---------------------------------------------------------------------------------------------------------------------------:|:-------------------------------:|:-----------------------------------:|:----------------------------:|:-----------------------------:|:-----------------------------------:|:----------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|

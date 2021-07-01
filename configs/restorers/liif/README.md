@@ -1,19 +1,23 @@
-# Learning Continuous Image Representation with Local Implicit Image Function
-
-## Introduction
+# LIIF (CVPR'2021)
 
 <!-- [ALGORITHM] -->
 
+<details>
+<summary align="right">LIIF (CVPR'2021)</summary>
+
 ```bibtex
-@article{chen2020learning,
-  title={Learning Continuous Image Representation with Local Implicit Image Function},
+@inproceedings{chen2021learning,
+  title={Learning continuous image representation with local implicit image function},
   author={Chen, Yinbo and Liu, Sifei and Wang, Xiaolong},
-  journal={arXiv preprint arXiv:2012.09161},
-  year={2020}
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={8628--8638},
+  year={2021}
 }
 ```
 
-## Results
+</details>
+
+<br/>
 
 |                                                      method                                                      | scale | Set5<br>PSNR / SSIM | Set14<br>PSNR / SSIM | DIV2K <br>PSNR / SSIM |                                                                                                                           Download                                                                                                                            |
 | :--------------------------------------------------------------------------------------------------------------: | :---: | :-----------------: | :------------------: | :-------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -30,8 +34,7 @@
 |                                                        △                                                         |  x30  |  18.6646 / 0.4818   |   18.0210 / 0.3905   |   20.5022 / 0.5568    |                                                                                                                               △                                                                                                                               |
 
 Note:
-
--   △ refers to ditto.
--   The two configs only differs in _testing pipeline_. So they use the same checkpoint.
--   Data is normalized according to [EDSR](/configs/restorers/edsr).
--   Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
+*   △ refers to ditto.
+*   The two configs only differs in _testing pipeline_. So they use the same checkpoint.
+*   Data is normalized according to [EDSR](/configs/restorers/edsr).
+*   Evaluated on RGB channels,  `scale` pixels in each border are cropped before evaluation.

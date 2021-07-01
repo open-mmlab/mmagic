@@ -1,8 +1,8 @@
-# Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network
-
-## Introduction
+# SRGAN (CVPR'2016)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">SRGAN (CVPR'2016)</summary>
 
 ```bibtex
 @inproceedings{ledig2016photo,
@@ -13,11 +13,13 @@
 }
 ```
 
-## Results and Models
+</details>
+
+<br/>
 
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 
-The metrics are `PSNR / SSIM`.
+The metrics are `PSNR / SSIM` .
 
 |                                                   Method                                                    |       Set5        |      Set14       |      DIV2K       |                                                                                                                                  Download                                                                                                                                   |
 | :---------------------------------------------------------------------------------------------------------: | :---------------: | :--------------: | :--------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

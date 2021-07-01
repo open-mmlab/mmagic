@@ -1,8 +1,8 @@
-# Natural Image Matting via Guided Contextual Attention
-
-## Introduction
+# GCA (AAAI'2020)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">GCA (AAAI'2020)</summary>
 
 ```bibtex
 @inproceedings{li2020natural,
@@ -13,7 +13,9 @@
 }
 ```
 
-## Results and Models
+</details>
+
+<br/>
 
 |                                 Method                                 |    SAD    |    MSE     |   GRAD    |   CONN    |                                                                                                                         Download                                                                                                                         |
 | :--------------------------------------------------------------------: | :-------: | :--------: | :-------: | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -22,7 +24,7 @@
 | [baseline (our)](/configs/mattors/gca/baseline_r34_4x10_200k_comp1k.py) |   36.50   |   0.0090   |   17.40   |   34.33   | [model](https://download.openmmlab.com/mmediting/mattors/gca/baseline_r34_4x10_200k_comp1k_SAD-36.50_20200614_105701-95be1750.pth) \| [log](https://download.openmmlab.com/mmediting/mattors/gca/baseline_r34_4x10_200k_comp1k_20200614_105701.log.json) |
 |      [GCA (our)](/configs/mattors/gca/gca_r34_4x10_200k_comp1k.py)      | **34.77** | **0.0080** | **16.33** | **32.20** |      [model](https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-34.77_20200604_213848-4369bea0.pth) \| [log](https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_20200604_213848.log.json)      |
 
-### More results
+**More results**
 
 |                                           Method                                            |  SAD  |  MSE   | GRAD  | CONN  |                                                                                                                                Download                                                                                                                                |
 | :-----------------------------------------------------------------------------------------: | :---: | :----: | :---: | :---: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

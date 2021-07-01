@@ -1,8 +1,8 @@
-# Video Enhancement with Task-oriented Flow
-
-## Introduction
+# TOFlow (IJCV'2019)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">TOFlow (IJCV'2019)</summary>
 
 ```bibtex
 @article{xue2019video,
@@ -17,11 +17,12 @@
 }
 ```
 
-## Results and Models
+</details>
+
+<br/>
 
 Evaluated on RGB channels.
-
-The metrics are `PSNR / SSIM`.
+The metrics are `PSNR / SSIM` .
 
 |                                    Method                                     |       Vid4       |                                               Download                                                |
 | :---------------------------------------------------------------------------: | :--------------: | :---------------------------------------------------------------------------------------------------: |

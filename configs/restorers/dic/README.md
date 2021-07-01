@@ -1,8 +1,9 @@
-# Learning Texture Transformer Network for Image Super-Resolution
-
-## Introduction
+# DIC (CVPR'2020)
 
 <!-- [ALGORITHM] -->
+<details>
+
+<summary align="right">DIC (CVPR'2020)</summary>
 
 ```bibtex
 @inproceedings{ma2020deep,
@@ -14,11 +15,12 @@
 }
 ```
 
-## Results
+</details>
+
+<br/>
 
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
-
-The metrics are `PSNR / SSIM`.
+The metrics are `PSNR / SSIM` .
 
 In the log data of `dic_gan_x8c48b6_g4_150k_CelebAHQ`, DICGAN is verified on the first 9 pictures of the test set of CelebA-HQ, so `PSNR/SSIM` shown in the follow table is different from the log data.
 

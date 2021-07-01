@@ -1,8 +1,8 @@
-# GLEAN: Generative Latent Bank for Large-Factor Image Super-Resolution
-
-## Introduction
+# GLEAN (CVPR'2021)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">GLEAN (CVPR'2021)</summary>
 
 ```bibtex
 @InProceedings{chan2021glean,
@@ -13,12 +13,11 @@
 }
 ```
 
-## Meta info
-For the meta info used in training and test, please refer to [here](https://github.com/ckkelvinchan/GLEAN).
+</details>
 
-## Results
-The results are evaluated on RGB channels.
+<br/>
 
+For the meta info used in training and test, please refer to [here](https://github.com/ckkelvinchan/GLEAN). The results are evaluated on RGB channels.
 
 |                                                      Method                                                     |  PSNR |                                                                                                         Download                                                                                                         |
 |:---------------------------------------------------------------------------------------------------------------:|:-----:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|

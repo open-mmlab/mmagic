@@ -1,8 +1,8 @@
-# Residual Dense Network for Image Super-Resolution
-
-## Introduction
+# RDN (CVPR'2018)
 
 <!-- [ALGORITHM] -->
+<details>
+<summary align="right">RDN (CVPR'2018)</summary>
 
 ```bibtex
 @inproceedings{zhang2018residual,
@@ -14,11 +14,12 @@
 }
 ```
 
-## Results
+</details>
+
+<br/>
 
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
-
-The metrics are `PSNR / SSIM`.
+The metrics are `PSNR / SSIM` .
 
 |                                         Method                                         |       Set5       |      Set14       |      DIV2K       |                                                                                                                   Download                                                                                                                    |
 | :------------------------------------------------------------------------------------: | :--------------: | :--------------: | :--------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

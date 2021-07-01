@@ -1,8 +1,9 @@
-# EDVR: Video Restoration with Enhanced Deformable Convolutional Networks
-
-## Introduction
+# EDVR (CVPRW'2019)
 
 <!-- [ALGORITHM] -->
+
+<details>
+<summary align="right">EDVR (CVPRW'2019)</summary>
 
 ```bibtex
 @InProceedings{wang2019edvr,
@@ -14,11 +15,12 @@
 }
 ```
 
-## Results and Models
+</details>
+
+<br/>
 
 Evaluated on RGB channels.
-
-The metrics are `PSNR / SSIM`.
+The metrics are `PSNR / SSIM` .
 
 |                                        Method                                         |       REDS4       |                                                                                                                  Download                                                                                                                   |
 | :-----------------------------------------------------------------------------------: | :---------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
