@@ -10,7 +10,7 @@ import titlecase
 
 def anchor(name):
     return re.sub(r'-+', '-', re.sub(r'[^a-zA-Z0-9]', '-',
-                                     name.strip().lower()))
+                                     name.strip().lower())).strip('-')
 
 
 # Count algorithms
