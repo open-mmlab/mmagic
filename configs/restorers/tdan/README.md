@@ -25,7 +25,7 @@ The metrics are `PSNR / SSIM` .
 | [tdan_vimeo90k_bix4](/configs/restorers/tdan/tdan_vimeo90k_bix4.py) | **26.49/0.792** | **30.42/0.856** |   25.93/0.772   |   29.69/0.842   | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
 | [tdan_vimeo90k_bdx4](/configs/restorers/tdan/tdan_vimeo90k_bdx4.py) |   25.80/0.784   |   29.56/0.851   | **26.87/0.815** | **30.77/0.868** | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
 
-## Train
+**Train**
 
 <details>
 <summary>Train Instructions</summary>
@@ -53,7 +53,7 @@ TDAN is trained with two stages.
 For more details, you can refer to **Train a model** part in [getting_started](/docs/getting_started.md#train-a-model).
 </details>
 
-## Test
+**Test**
 
 <details>
 <summary>Test Instructions</summary>
