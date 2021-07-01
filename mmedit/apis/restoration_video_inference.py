@@ -51,9 +51,19 @@ def restoration_video_inference(model, img_dir, window_size, start_idx,
             key='lq',
             channel_order='rgb'),
         dict(type='RescaleToZeroOne', keys=['lq']),
+    ]
+
+    # add normalize if it is used in the model
+    for op in model.cfg.train_pipeline:
+        if op['type'] == 'Normalize':
+            if 'gt' in op['keys']:  # remove 'gt' in keys
+                op['keys'].remove('gt')
+            test_pipeline.append(op)
+
+    test_pipeline.extend([
         dict(type='FramesToTensor', keys=['lq']),
         dict(type='Collect', keys=['lq'], meta_keys=['lq_path', 'key'])
-    ]
+    ])
 
     # build the data pipeline
     test_pipeline = Compose(test_pipeline)
