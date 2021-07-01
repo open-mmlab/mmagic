@@ -16,18 +16,6 @@ Models:
     Config: configs/inpainting/global_local/gl_256x256_8x12_celeba.py
     Metadata:
       inference time (ms/im):
-        - value: 0.15
-          hardware: TITAN Xp
-          backend: PyTorch
-          batch size: 128
-          mode: FP32/FP16/INT8
-          resolution: (256, 256)
-        - value: 0.15
-          hardware: TITAN Xp
-          backend: PyTorch
-          batch size: 128
-          mode: FP16
-          resolution: (256, 256)
       train time (s/iter): 0.322
       Training Memory (GB): 3.24
     Results:
