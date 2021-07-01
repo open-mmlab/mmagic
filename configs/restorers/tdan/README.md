@@ -27,6 +27,9 @@ The metrics are `PSNR / SSIM` .
 
 ## Train
 
+<details>
+<summary>Train Instructions</summary>
+
 You can use the following command to train a model.
 
 ```shell
@@ -48,8 +51,12 @@ TDAN is trained with two stages.
 ```
 
 For more details, you can refer to **Train a model** part in [getting_started](/docs/getting_started.md#train-a-model).
+</details>
 
 ## Test
+
+<details>
+<summary>Test Instructions</summary>
 
 You can use the following command to test a model.
 
@@ -64,3 +71,4 @@ python tools/test.py configs/restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py
 ```
 
 For more details, you can refer to **Inference with pretrained models** part in [getting_started](/docs/getting_started.md#inference-with-pretrained-models).
+</details>
