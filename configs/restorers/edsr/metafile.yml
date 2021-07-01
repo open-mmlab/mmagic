@@ -15,6 +15,20 @@ Models:
     In Collection: EDSR
     Config: configs/restorers/edsr/edsr_x2c64b16_g1_300k_div2k.py
     Metadata:
+      inference time (ms/im):
+        - value: 0.66
+          hardware: TITAN Xp
+          backend: PyTorch
+          batch size: 1
+          mode: FP32/FP16/INT8
+          resolution: (1020, 678)
+        - value: 0.66
+          hardware: TITAN Xp
+          backend: PyTorch
+          batch size: 1
+          mode: FP16
+          resolution: (1020, 678)
+      train time (s/iter): 0.060
       Training Memory (GB): 0.47
     Results:
       - Task: x2 Super Resolution
@@ -38,6 +52,20 @@ Models:
     In Collection: EDSR
     Config: configs/restorers/edsr/edsr_x3c64b16_g1_300k_div2k.py
     Metadata:
+      inference time (ms/im):
+        - value: 1.43
+          hardware: TITAN Xp
+          backend: PyTorch
+          batch size: 1
+          mode: FP32/FP16/INT8
+          resolution: (680, 452)
+        - value: 1.43
+          hardware: TITAN Xp
+          backend: PyTorch
+          batch size: 1
+          mode: FP16
+          resolution: (680, 452)
+      train time (s/iter): 0.052
       Training Memory (GB): 0.63
     Results:
       - Task: x3 Super Resolution
@@ -61,6 +89,20 @@ Models:
     In Collection: EDSR
     Config: configs/restorers/edsr/edsr_x4c64b16_g1_300k_div2k.py
     Metadata:
+      inference time (ms/im):
+        - value: 1.43
+          hardware: TITAN Xp
+          backend: PyTorch
+          batch size: 1
+          mode: FP32/FP16/INT8
+          resolution: (510, 339)
+        - value: 1.43
+          hardware: TITAN Xp
+          backend: PyTorch
+          batch size: 1
+          mode: FP16
+          resolution: (510, 339)
+      train time (s/iter): 0.076
       Training Memory (GB): 1.0
     Results:
       - Task: x3 Super Resolution
