@@ -63,6 +63,19 @@ val_pipeline = [
     dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'gt_path'])
 ]
 
+demo_pipeline = [
+    dict(type='GenerateSegmentIndices', interval_list=[1]),
+    dict(
+        type='LoadImageFromFileList',
+        io_backend='disk',
+        key='lq',
+        channel_order='rgb'),
+    dict(type='RescaleToZeroOne', keys=['lq']),
+    dict(type='Normalize', keys=['lq'], mean=[0.5, 0.5, 0.5], std=[1, 1, 1]),
+    dict(type='FramesToTensor', keys=['lq']),
+    dict(type='Collect', keys=['lq'], meta_keys=['lq_path', 'key'])
+]
+
 data = dict(
     workers_per_gpu=8,
     train_dataloader=dict(samples_per_gpu=16, drop_last=True),  # 8 gpus
