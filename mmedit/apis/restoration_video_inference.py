@@ -39,7 +39,25 @@ def restoration_video_inference(model, img_dir, window_size, start_idx,
     device = next(model.parameters()).device  # model device
 
     # build the data pipeline
-    test_pipeline = Compose(model.cfg.demo_pipeline)
+    if model.cfg.get('demo_pipeline', None):
+        test_pipeline = model.cfg.demo_pipeline
+    elif model.cfg.get('test_pipeline', None):
+        test_pipeline = model.cfg.test_pipeline
+    else:
+        test_pipeline = model.cfg.val_pipeline
+
+    # the first element in the pipeline must be 'GenerateSegmentIndices'
+    if test_pipeline[0]['type'] != 'GenerateSegmentIndices':
+        raise TypeError('The first element in the pipeline must be '
+                        f'"GenerateSegmentIndices", but got '
+                        f'"{test_pipeline[0]["type"]}".')
+
+    # specify start_idx and filename_tmpl
+    test_pipeline[0]['start_idx'] = start_idx
+    test_pipeline[0]['filename_tmpl'] = filename_tmpl
+
+    # compose the pipeline
+    test_pipeline = Compose(test_pipeline)
 
     # prepare data
     sequence_length = len(glob.glob(f'{img_dir}/*'))
