@@ -15,7 +15,6 @@ Models:
     In Collection: EDSR
     Config: configs/restorers/edsr/edsr_x2c64b16_g1_300k_div2k.py
     Metadata:
-      inference time (ms/im):
       train time (s/iter): 0.060
       Training Memory (GB): 0.47
     Results:
