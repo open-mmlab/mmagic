@@ -78,6 +78,7 @@ MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMML
 - [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
 - [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
 - [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
+- [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
 
 </details>
 
@@ -96,7 +97,7 @@ MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMML
 
 ## 更新记录
 
-v0.8.0 版本已于 2021 年 5 月 31 日发布.
+v0.9.0 版本已于 2021 年 6 月 31 日发布.
 
 需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
 MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
