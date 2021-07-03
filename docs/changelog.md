@@ -4,10 +4,10 @@
 
 **Highlights**
 
-1. Support DIC (CVPR'2020)
+1. Support DIC and DIC-GAN (CVPR'2020)
 2. Support GLEAN Cat 8x (CVPR'2021)
-1. Support TTSR-GAN (CVPR'2020)
-2. Support DIC-GAN (CVPR'2020)
+3. Support TTSR-GAN (CVPR'2020)
+4. Add basic tutorial for SR models
 
 **New Features**
 
@@ -15,9 +15,9 @@
 - Add SRFolderMultipleGTDataset ([#355](https://github.com/open-mmlab/mmediting/pull/355))
 - Add GLEAN Cat 8x ([#367](https://github.com/open-mmlab/mmediting/pull/367))
 - Add SRFolderVideoDataset ([#370](https://github.com/open-mmlab/mmediting/pull/370))
+- Add basic tutorial for SR models ([#380](https://github.com/open-mmlab/mmediting/pull/380))
 - Add TTSR-GAN ([#372](https://github.com/open-mmlab/mmediting/pull/372), [#381](https://github.com/open-mmlab/mmediting/pull/381), [#383](https://github.com/open-mmlab/mmediting/pull/383), [#398](https://github.com/open-mmlab/mmediting/pull/398))
 - Add DIC-GAN ([#392](https://github.com/open-mmlab/mmediting/pull/392), [#393](https://github.com/open-mmlab/mmediting/pull/393), [#394](https://github.com/open-mmlab/mmediting/pull/394))
-- Add basic tutorial for SR models ([#380](https://github.com/open-mmlab/mmediting/pull/380))
 
 **Bug Fixes**
 
