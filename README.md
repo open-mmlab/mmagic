@@ -78,6 +78,7 @@ Supported algorithms:
 - [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
 - [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
 - [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
+- [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
 
 </details>
 
@@ -98,7 +99,7 @@ This project is released under the [Apache 2.0 license](LICENSE).
 
 ## Changelog
 
-v0.8.0 was released in 2021-5-31.
+v0.9.0 was released in 2021-6-31.
 
 Note that **MMSR** has been merged into this repo, as a part of MMEditing.
 With elaborate designs of the new framework and careful implementations,
