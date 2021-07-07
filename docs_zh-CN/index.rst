@@ -10,7 +10,7 @@ Welcome to MMEditing's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Model Zoo
+   :caption: 模型库
 
    modelzoo.md
    inpainting_models.md
