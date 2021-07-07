@@ -1,6 +1,7 @@
 Welcome to MMEditing's documentation!
 =====================================
 
+You can switch between Chinese and English documents in the bottom-left corner of the layout.
 .. toctree::
    :maxdepth: 2
    :caption: Get Started

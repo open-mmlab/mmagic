@@ -27,10 +27,10 @@ sed -i 's=(div2k/README_zh-CN.md)=(#div2k-dataset)=g' sr_datasets.md
 sed -i 's=(reds/README_zh-CN.md)=(#reds-dataset)=g' sr_datasets.md
 sed -i 's=(vimeo90k/README_zh-CN.md)=(#vimeo90k-dataset)=g' sr_datasets.md
 
-cat ../tools/data/generation/*/*_zh-CN.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> generation_datasets.md
-cat ../tools/data/inpainting/*/*_zh-CN.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> inpainting_datasets.md
-cat ../tools/data/matting/*/*_zh-CN.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> matting_datasets.md
-cat ../tools/data/super-resolution/*/*_zh-CN.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> sr_datasets.md
+cat ../tools/data/generation/*/*_zh-CN.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs_zh_CN\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> generation_datasets.md
+cat ../tools/data/inpainting/*/*_zh-CN.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs_zh_CN\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> inpainting_datasets.md
+cat ../tools/data/matting/*/*_zh-CN.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs_zh_CN\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> matting_datasets.md
+cat ../tools/data/super-resolution/*/*_zh-CN.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs_zh_CN\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> sr_datasets.md
 
 # merge configs
 cat config_*.md | sed "s/#/#&/" >> config.md

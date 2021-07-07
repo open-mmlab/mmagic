@@ -1,6 +1,8 @@
 Welcome to MMEditing's documentation!
 =====================================
 
+您可以在页面左下角切换中英文文档。
+
 .. toctree::
    :maxdepth: 2
    :caption: 开始你的第一步
