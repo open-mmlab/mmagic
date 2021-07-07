@@ -60,6 +60,11 @@ Welcome to MMEditing's documentation!
    faq.md
 
 .. toctree::
+   :caption: 语言切换
+
+   switch_language.md
+
+.. toctree::
    :maxdepth: 2
    :caption: API Reference
 
