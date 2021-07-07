@@ -1,3 +1,3 @@
-## English
+## <a href='https://mmediting.readthedocs.io/en/latest/'>English</a>
 
-## 简体中文
+## <a href='https://mmediting.readthedocs.io/zh_CN/latest/'>简体中文</a>
