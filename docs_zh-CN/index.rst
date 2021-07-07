@@ -3,14 +3,14 @@ Welcome to MMEditing's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Get Started
+   :caption: 开始你的第一步
 
    install.md
    demo.md
 
 .. toctree::
    :maxdepth: 2
-   :caption: Model Zoo
+   :caption: 模型库
 
    modelzoo.md
    inpainting_models.md
@@ -20,7 +20,7 @@ Welcome to MMEditing's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Datasets
+   :caption: 数据集
 
    datasets.md
    inpainting_datasets.md
@@ -30,26 +30,25 @@ Welcome to MMEditing's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Quick Run
+   :caption: 快速启动
 
    quick_run.md
 
-
 .. toctree::
    :maxdepth: 2
-   :caption: Tutorials
+   :caption: 教程
 
    config.md
 
 .. toctree::
    :maxdepth: 2
-   :caption: Useful Tools and Scripts
+   :caption: 实用工具与脚本
 
    tools_scripts.md
 
 .. toctree::
    :maxdepth: 2
-   :caption: Notes
+   :caption: 说明
 
    notes.md
 
@@ -60,15 +59,15 @@ Welcome to MMEditing's documentation!
    faq.md
 
 .. toctree::
-   :maxdepth: 2
-   :caption: API Reference
-
-   api.rst
-
-.. toctree::
    :caption: 语言切换
 
    switch_language.md
+
+.. toctree::
+   :maxdepth: 2
+   :caption: 接口文档
+
+   api.rst
 
 Indices and tables
 ==================
