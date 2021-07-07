@@ -65,11 +65,6 @@ Welcome to MMEditing's documentation!
 
    api.rst
 
-.. toctree::
-   :caption: 语言切换
-
-   switch_language.md
-
 Indices and tables
 ==================
 
