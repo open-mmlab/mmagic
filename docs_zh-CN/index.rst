@@ -1,4 +1,4 @@
-Welcome to MMEditing's documentation!
+欢迎来到 MMEditing 的中文文档！
 =====================================
 
 您可以在页面左下角切换中英文文档。
