@@ -58,9 +58,9 @@ for f in files:
     statsmsg = f"""
 ## [{title}]({f})
 
-* Number of checkpoints: {len(ckpts)}
-* Number of configs: {len(configs)}
-* Number of papers: {len(papers)}
+* 模型权重文件数量: {len(ckpts)}
+* 配置文件数量: {len(configs)}
+* 论文数量: {len(papers)}
 {paperlist}
 
     """
@@ -80,14 +80,14 @@ countstr = '\n'.join(
     [f'   - {t}: {c}' for t, c in zip(papertypes, papercounts)])
 
 modelzoo = f"""
-# 概述
+# 总览
 
 * 模型权重文件数量: {len(allckpts)}
 * 配置文件数量: {len(allconfigs)}
 * 论文数量: {len(allpapers)}
 {countstr}
 
-有关支持的数据集，请参阅 [数据集](datasets.md).
+有关支持的数据集，可参见 [数据集总览](datasets.md).
 
 {msglist}
 
@@ -160,12 +160,12 @@ countstr = '\n'.join(
     [f'   - {t}: {c}' for t, c in zip(papertypes, papercounts)])
 
 modelzoo = f"""
-# 概述
+# 总览
 
 * 论文数量: {len(alldatapapers)}
 {countstr}
 
-有关支持的算法, 请参阅 [模型库](modelzoo.md).
+有关支持的算法, 可参见 [模型总览](modelzoo.md).
 
 {datamsglist}
 """
