@@ -165,7 +165,7 @@ modelzoo = f"""
 * 论文数量: {len(alldatapapers)}
 {countstr}
 
-有关支持的算法, 可参见[模型总览](modelzoo.md).
+有关支持的算法, 可参见 [模型总览](modelzoo.md).
 
 {datamsglist}
 """
