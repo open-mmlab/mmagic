@@ -2,6 +2,7 @@ Welcome to MMEditing's documentation!
 =====================================
 
 You can switch between Chinese and English documents in the bottom-left corner of the layout.
+
 .. toctree::
    :maxdepth: 2
    :caption: Get Started
@@ -67,7 +68,7 @@ You can switch between Chinese and English documents in the bottom-left corner o
    api.rst
 
 .. toctree::
-   :caption: 语言切换
+   :caption: Switch Language
 
    switch_language.md
 
