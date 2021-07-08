@@ -1,4 +1,3 @@
-import glob
 import os.path as osp
 
 from .base_sr_dataset import BaseSRDataset
@@ -57,10 +56,14 @@ class SRVimeo90KMultipleGTDataset(BaseSRDataset):
 
         data_infos = []
         for key in keys:
-            lq_paths = sorted(
-                glob.glob(osp.join(self.lq_folder, key, '*.png')))
-            gt_paths = sorted(
-                glob.glob(osp.join(self.gt_folder, key, '*.png')))
+            lq_paths = [
+                osp.join(self.lq_folder, key, f'im{i}.png')
+                for i in range(1, 8)
+            ]
+            gt_paths = [
+                osp.join(self.gt_folder, key, f'im{i}.png')
+                for i in range(1, 8)
+            ]
 
             data_infos.append(
                 dict(lq_path=lq_paths, gt_path=gt_paths, key=key))
