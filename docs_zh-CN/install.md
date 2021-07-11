@@ -1,6 +1,6 @@
 ## 依赖
 
-- Linux (目前Windows不是官方支持)
+- Linux (目前 Windows 不是官方支持)
 - Python 3.6+
 - PyTorch 1.3 或更高
 - CUDA 9.0 或更高
@@ -15,7 +15,7 @@ a. 创建并激活 conda 虚拟环境，如：
 conda create -n open-mmlab python=3.7 -y
 conda activate open-mmlab
 ```
-b. 安装[PyTorch官方文档](https://pytorch.org/)安装PyTorch和torchvision，如：
+b. 按照 [PyTorch官方文档](https://pytorch.org/) 安装 PyTorch 和 torchvision，如：
 
 ```shell script
 conda install pytorch torchvision -c pytorch
@@ -26,53 +26,53 @@ conda install pytorch torchvision -c pytorch
 ```shell script
 conda install pytorch cudatoolkit=10.1 torchvision -c pytorch
 ```
-`例2`：如果你在 /usr/local/cuda 文件夹下已安装 CUDA 9.2 版本，并且想要安装 PyTorch 1.3.1 版本，则需要安装 CUDA 9.2 下预编译的 PyTorch。
+`例2`：如果你在 `/usr/local/cuda` 文件夹下已安装 CUDA 9.2 版本，并且想要安装 PyTorch 1.3.1 版本，则需要安装 CUDA 9.2 下预编译的 PyTorch。
 ```shell script
 conda install pytorch=1.3.1 cudatoolkit=9.2 torchvision=0.4.2 -c pytorch
 ```
-如果你从源码编译PyTorch而不是安装的预编译版本的话，你可以使用更多CUDA版本（例如9.0）。
+如果你从源码编译 PyTorch 而不是安装的预编译版本的话，你可以使用更多 CUDA 版本（例如9.0）。
 
-c. 克隆MMEditing仓库
+c. 克隆 MMEditing 仓库
 ```shell script
 git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
 ```
 
-d. 安装相关依赖和MMEditing
+d. 安装相关依赖和 MMEditing
 ```shell script
 pip install -r requirements.txt
 pip install -v -e .  # or "python setup.py develop"
 ```
-如果你是在 macOS 环境安装，则需将上述命令的最后一行替换为：
+如果你是在 macOS 环境下安装，则需将上述命令的最后一行替换为：
 ```shell script
 CC=clang CXX=clang++ CFLAGS='-stdlib=libc++' pip install -e .
 ```
 注意：
 1. git commit 的 id 将会被写到版本号中，如 0.6.0+2e7045c。这个版本号也会被保存到训练好的模型中。 推荐用户每次在对本地代码和 github 上的源码进行同步后，执行一次步骤 b。如果 C++/CUDA 代码被修改，就必须进行这一步骤。
-> 重要：如果你在一个新的 CUDA/PyTorch 版本下重新安装了mmedit，请确保删除了`./build`文件夹
+> 重要：如果你在一个新的 CUDA/PyTorch 版本下重新安装了 mmedit ，请确保删除了`./build`文件夹
 ```shell script
 pip uninstall mmedit
 rm -rf ./build
 find . -name "*.so" | xargs rm
 ```
-2. 根据上述步骤，MMEditing 就会以 `dev` 模式被安装，任何本地的代码修改都会立刻生效，不需要再重新安装一遍（除非用户提交了 commits，并且想更新版本号）。
+2. 根据上述步骤， MMEditing 就会以 `dev` 模式被安装，任何本地的代码修改都会立刻生效，不需要再重新安装一遍（除非用户提交了 commits，并且想更新版本号）。
 
 3. 如果用户想使用 `opencv-python-headless` 而不是 `opencv-python`，可在安装 `MMCV` 前安装 `opencv-python-headless`。
 
-4. 有些模型（例如图像修复任务中的`EDVR`）依赖于`mmcv-full`中的一些CUDA算子，具体的依赖可在`requirements.txt`中找到。
-使用默认的命令`pip install -r requirements.txt`安装过程中，会在本地编译CUDA算子，这个过程大概需要10分钟。
-另一种方案是安装预编译版本的`mmcv-full`，请参考[MMCV主页](https://github.com/open-mmlab/mmcv#install-with-pip)获取具体的安装指令。
-此外，如果你要使用的模型不依赖于CUDA算子，那么你也可以使用`pip install mmcv`来安装轻量版本的mmcv，其中CUDA算子被移除了。
+4. 有些模型（例如图像修复任务中的 `EDVR`）依赖于`mmcv-full`中的一些 CUDA 算子，具体的依赖可在`requirements.txt`中找到。
+如需要，请通过 `pip install -r requirements.txt`命令来安装`mmcv-full`，安装过程中会在本地编译 CUDA 算子，这个过程大概需要10分钟。
+另一种方案是安装预编译版本的`mmcv-full`，请参考 [MMCV主页](https://github.com/open-mmlab/mmcv#install-with-pip) 获取具体的安装指令。
+此外，如果你要使用的模型不依赖于 CUDA 算子，那么也可以使用`pip install mmcv`来安装轻量版本的 mmcv，其中 CUDA 算子被移除了。
 ## CPU 环境下的安装步骤
 MMEditing 也可以在只有 CPU 的环境下安装（即无法使用 GPU 的环境）。
 
-然而在这种环境下，有些功能将被移除：
+然而在该环境下，有些功能将被移除，例如：
 - Deformable Convolution（可变形卷积）
 
 因此，如果您尝试使用一些包含可变形卷积的模型进行推理，则会出现错误。
 
 ## 利用 Docker 镜像安装 MMEditing
-MMEditing 提供了一个[Dockerfile](https://github.com/open-mmlab/mmediting/blob/master/docker/Dockerfile)来创建docker镜像
+MMEditing 提供了一个 [Dockerfile](https://github.com/open-mmlab/mmediting/blob/master/docker/Dockerfile) 来创建 docker 镜像
 ```shell script
 # build an image with PyTorch 1.5, CUDA 10.1
 docker build -t mmediting docker/

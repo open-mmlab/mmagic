@@ -15,11 +15,11 @@
 - 训练集: [REDS 数据集](https://seungjunnah.github.io/Datasets/reds.html).
 - 验证集: [REDS 数据集](https://seungjunnah.github.io/Datasets/reds.html) 和 Vid4.
 
-请注意，我们合并了 REDS 的训练集和验证集，以便在 REDS4划分（在`EDVR`中使用到）和 官方验证集划分 之间切换。
+请注意，我们合并了 REDS 的训练集和验证集，以便在 REDS4 划分（在`EDVR`中会使用到）和官方验证集划分之间切换。
 
-原始的验证集名称被修改了（clip 000 到 029），以避免与训练集发生冲突（总共 240 个clip）。具体而言，验证集中的clips被改名为 240、241、... 269。
+原始验证集的名称被修改了（clip 000 到 029），以避免与训练集发生冲突（总共 240 个clip）。具体而言，验证集中的 clips 被改名为 240、241、... 269。
 
-可通过运行以下命令来准备REDS数据集:
+可通过运行以下命令来准备 REDS 数据集:
 
 ```shell
 python tools/data/super-resolution/reds/preprocess_reds_dataset.py ./data/REDS
@@ -45,9 +45,9 @@ mmediting
 │   │   ├── sharp_bicubic
 ```
 
-## 准备LMDB格式的REDS数据集
+## 准备 LMDB 格式的 REDS 数据集
 
-如果你想使用`LMDB`以获得更快的IO速度，可以通过以下脚本来构建LMDB文件：
+如果你想使用 `LMDB` 以获得更快的 IO 速度，可以通过以下脚本来构建 LMDB 文件：
 ```shell
 python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```

@@ -43,11 +43,11 @@ mmediting
 ```
 
 ## 裁剪子图
-为了加快IO，建议将DIV2K中的图片裁剪为一系列子图，为此，我们提供了一个脚本：
+为了加快 IO，建议将 DIV2K 中的图片裁剪为一系列子图，为此，我们提供了一个脚本：
 ```shell
 python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
 ```
-生成的数据保存在`DIV2K`目录下，其文件结构如下所示，其中`_sub` 表示子图:
+生成的数据保存在 `DIV2K` 目录下，其文件结构如下所示，其中 `_sub` 表示子图:
 
 ```text
 mmediting
@@ -73,7 +73,7 @@ mmediting
 ## 准备标注列表文件
 如果你想使用`标注模式`来处理数据集，你需要先准备一个 `txt` 格式的标注文件。
 
-标准文件中的每一行包含了图片名以及图片尺寸（这些通常是ground-truth图片），这两个字段用空格间隔开。
+标准文件中的每一行包含了图片名以及图片尺寸（这些通常是 ground-truth 图片），这两个字段用空格间隔开。
 
 标注文件示例:
 
@@ -82,9 +82,9 @@ mmediting
 0001_s002.png (480,480,3)
 ```
 
-## 准备LMDB格式的DIV2K数据集
+## 准备 LMDB 格式的 DIV2K 数据集
 
-如果你想使用`LMDB`以获得更快的IO速度，可以通过以下脚本来构建LMDB文件
+如果你想使用 `LMDB` 以获得更快的 IO 速度，可以通过以下脚本来构建 LMDB 文件
 
 ```shell
 python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
