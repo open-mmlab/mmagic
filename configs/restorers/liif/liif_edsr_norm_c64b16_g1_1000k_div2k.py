@@ -31,7 +31,7 @@ scale_min, scale_max = 1, 4
 # dataset settings
 train_dataset_type = 'SRFolderGTDataset'
 val_dataset_type = 'SRFolderGTDataset'
-test_dataset_type = 'SRFolderGTDataset'
+test_dataset_type = 'SRFolderDataset'
 train_pipeline = [
     dict(
         type='LoadImageFromFile',
