@@ -16,7 +16,7 @@
 ```
 训练集和测试集可以从 [此处](http://toflow.csail.mit.edu/) 下载。
 
-Vimeo90K 数据集包含了如下所示的`clip/sequence/img`目录结构：
+Vimeo90K 数据集包含了如下所示的 `clip/sequence/img` 目录结构：
 ```text
 ├── GT/LQ
 │   ├── 00001

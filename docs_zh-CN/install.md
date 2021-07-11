@@ -15,12 +15,12 @@ a. 创建并激活 conda 虚拟环境，如：
 conda create -n open-mmlab python=3.7 -y
 conda activate open-mmlab
 ```
-b. 按照 [PyTorch官方文档](https://pytorch.org/) 安装 PyTorch 和 torchvision，如：
+b. 按照 [PyTorch 官方文档](https://pytorch.org/) 安装 PyTorch 和 torchvision，如：
 
 ```shell script
 conda install pytorch torchvision -c pytorch
 ```
-注意：确保你的 CUDA 编译版本和 CUDA 运行版本相匹配。 用户可以参照 [PyTorch官网](https://pytorch.org/) 对预编译包所支持的 CUDA 版本进行核对。
+注意：确保你的 CUDA 编译版本和 CUDA 运行版本相匹配。 用户可以参照 [PyTorch 官网](https://pytorch.org/) 对预编译包所支持的 CUDA 版本进行核对。
 
 `例1`：如果你在 `/usr/local/cuda` 文件夹下已安装了 CUDA 10.1 版本，并且想要安装 PyTorch 1.5 版本，则需要安装 CUDA 10.1 下预编译的 PyTorch。
 ```shell script
@@ -59,10 +59,10 @@ find . -name "*.so" | xargs rm
 
 3. 如果用户想使用 `opencv-python-headless` 而不是 `opencv-python`，可在安装 `MMCV` 前安装 `opencv-python-headless`。
 
-4. 有些模型（例如图像修复任务中的 `EDVR`）依赖于`mmcv-full`中的一些 CUDA 算子，具体的依赖可在`requirements.txt`中找到。
-如需要，请通过 `pip install -r requirements.txt`命令来安装`mmcv-full`，安装过程中会在本地编译 CUDA 算子，这个过程大概需要10分钟。
-另一种方案是安装预编译版本的`mmcv-full`，请参考 [MMCV主页](https://github.com/open-mmlab/mmcv#install-with-pip) 获取具体的安装指令。
-此外，如果你要使用的模型不依赖于 CUDA 算子，那么也可以使用`pip install mmcv`来安装轻量版本的 mmcv，其中 CUDA 算子被移除了。
+4. 有些模型（例如图像修复任务中的 `EDVR`）依赖于 `mmcv-full` 中的一些 CUDA 算子，具体的依赖可在 `requirements.txt` 中找到。
+如需要，请通过 `pip install -r requirements.txt` 命令来安装 `mmcv-full`，安装过程中会在本地编译 CUDA 算子，这个过程大概需要10分钟。
+另一种方案是安装预编译版本的 `mmcv-full`，请参考 [MMCV 主页](https://github.com/open-mmlab/mmcv#install-with-pip) 获取具体的安装指令。
+此外，如果你要使用的模型不依赖于 CUDA 算子，那么也可以使用 `pip install mmcv`来安装轻量版本的 mmcv，其中 CUDA 算子被移除了。
 ## CPU 环境下的安装步骤
 MMEditing 也可以在只有 CPU 的环境下安装（即无法使用 GPU 的环境）。
 

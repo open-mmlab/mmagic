@@ -15,9 +15,9 @@
 - 训练集: [REDS 数据集](https://seungjunnah.github.io/Datasets/reds.html).
 - 验证集: [REDS 数据集](https://seungjunnah.github.io/Datasets/reds.html) 和 Vid4.
 
-请注意，我们合并了 REDS 的训练集和验证集，以便在 REDS4 划分（在`EDVR`中会使用到）和官方验证集划分之间切换。
+请注意，我们合并了 REDS 的训练集和验证集，以便在 REDS4 划分（在 `EDVR` 中会使用到）和官方验证集划分之间切换。
 
-原始验证集的名称被修改了（clip 000 到 029），以避免与训练集发生冲突（总共 240 个clip）。具体而言，验证集中的 clips 被改名为 240、241、... 269。
+原始验证集的名称被修改了（clip 000 到 029），以避免与训练集发生冲突（总共 240 个 clip）。具体而言，验证集中的 clips 被改名为 240、241、... 269。
 
 可通过运行以下命令来准备 REDS 数据集:
 
