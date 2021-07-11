@@ -10,6 +10,19 @@ from mmedit.utils import get_root_logger
 
 
 class LIIFNet(nn.Module):
+    """LIIF net for single image super-resolution.
+
+    Paper: Learning Continuous Image Representation with
+           Local Implicit Image Function
+
+    Args:
+        encoder (dict): Config for the generator.
+        imnet (dict): Config for the imnet.
+        local_ensemble (bool): Whether to use local ensemble. Default: True.
+        feat_unfold (bool): Whether to use feat unfold. Default: True.
+        cell_decode (bool): Whether to use cell decode. Default: True.
+        eval_bsize (int): Size of batched predict. Default: None.
+    """
 
     def __init__(self,
                  encoder,
@@ -36,8 +49,20 @@ class LIIFNet(nn.Module):
         imnet['in_dim'] = imnet_in_dim
         self.imnet = build_component(imnet)
 
-    def forward(self, lq, coord, cell, test_mode=False):
-        feature = self.gen_feature(lq)
+    def forward(self, x, coord, cell, test_mode=False):
+        """Forward function.
+
+        Args:
+            x: input tensor.
+            coord (Tensor): coord tensor.
+            cell (Tensor): cell tensor.
+            test_mode (bool): Whether in test mode or not. Default: False.
+
+        Returns:
+            pred (Tensor): output of model.
+        """
+
+        feature = self.gen_feature(x)
         if self.eval_bsize is None or not test_mode:
             pred = self.query_rgb(feature, coord, cell)
         else:
@@ -53,7 +78,9 @@ class LIIFNet(nn.Module):
         Copyright (c) 2020, Yinbo Chen, under BSD 3-Clause License.
 
         Args:
+            feature (Tensor): encoded feature.
             coord (Tensor): coord tensor, shape (BHW, 2).
+            cell (Tensor | None): cell tensor. Default: None.
 
         Returns:
             result (Tensor): (part of) output.
@@ -138,10 +165,11 @@ class LIIFNet(nn.Module):
 
         return result
 
-    def batched_predict(self, feature, coord, cell):
+    def batched_predict(self, x, coord, cell):
         """Batched predict.
 
         Args:
+            x (Tensor): Input tensor.
             coord (Tensor): coord tensor.
             cell (Tensor): cell tensor.
 
@@ -154,8 +182,7 @@ class LIIFNet(nn.Module):
             preds = []
             while ql < n:
                 qr = min(ql + self.eval_bsize, n)
-                pred = self.query_rgb(feature, coord[:, ql:qr, :],
-                                      cell[:, ql:qr, :])
+                pred = self.query_rgb(x, coord[:, ql:qr, :], cell[:, ql:qr, :])
                 preds.append(pred)
                 ql = qr
             pred = torch.cat(preds, dim=1)
@@ -180,6 +207,19 @@ class LIIFNet(nn.Module):
 
 @BACKBONES.register_module()
 class LIIFEDSR(LIIFNet):
+    """LIIF net based on EDSR.
+
+    Paper: Learning Continuous Image Representation with
+           Local Implicit Image Function
+
+    Args:
+        encoder (dict): Config for the generator.
+        imnet (dict): Config for the imnet.
+        local_ensemble (bool): Whether to use local ensemble. Default: True.
+        feat_unfold (bool): Whether to use feat unfold. Default: True.
+        cell_decode (bool): Whether to use cell decode. Default: True.
+        eval_bsize (int): Size of batched predict. Default: None.
+    """
 
     def __init__(self,
                  encoder,
@@ -202,7 +242,7 @@ class LIIFEDSR(LIIFNet):
         del self.encoder
 
     def gen_feature(self, x):
-        """Forward function.
+        """Generate feature.
 
         Args:
             x (Tensor): Input tensor with shape (n, c, h, w).
@@ -210,14 +250,10 @@ class LIIFEDSR(LIIFNet):
         Returns:
             Tensor: Forward results.
         """
-        tensors = dict(x=x)
+
         x = self.conv_first(x)
-        tensors['cf'] = x
         res = self.body(x)
         res = self.conv_after_body(res)
-        tensors['cab'] = res
         res += x
-        tensors['out'] = res
-        torch.save(tensors, 'work_dirs/liif_edsr/tensors_g.pth')
 
         return res

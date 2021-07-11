@@ -19,17 +19,11 @@ class LIIF(BasicRestorer):
 
     Args:
         generator (dict): Config for the generator.
-        imnet (dict): Config for the imnet.
-        local_ensemble (bool): Whether to use local ensemble.
-            Default: True.
-        feat_unfold (bool): Whether to use feat unfold. Default: True.
-        cell_decode (bool): Whether to use cell decode. Default: True.
+        pixel_loss (dict): Config for the pixel loss.
         rgb_mean (tuple[float]): Data mean.
             Default: (0.5, 0.5, 0.5).
         rgb_std (tuple[float]): Data std.
             Default: (0.5, 0.5, 0.5).
-        eval_bsize (int): Size of batched predict. Default: None.
-        pixel_loss (dict): Config for the pixel loss. Default: None.
         train_cfg (dict): Config for train. Default: None.
         test_cfg (dict): Config for testing. Default: None.
         pretrained (str): Path for pretrained model. Default: None.
@@ -138,23 +132,19 @@ class LIIF(BasicRestorer):
                 2. 'lq', 'pred'.
                 3. 'lq', 'pred', 'gt'.
         """
+
         # norm
-        tensors = dict(lq=lq)
         self.lq_mean = self.lq_mean.to(lq)
         self.lq_std = self.lq_std.to(lq)
         lq = (lq - self.lq_mean) / self.lq_std
-        tensors['lq_norm'] = lq
 
         # generator
         with torch.no_grad():
             pred = self.generator(lq, coord, cell, test_mode=False)
-            tensors['pred'] = pred
             self.gt_mean = self.gt_mean.to(pred)
             self.gt_std = self.gt_std.to(pred)
             pred = pred * self.gt_std + self.gt_mean
             pred.clamp_(0, 1)
-            tensors['pred_real'] = pred
-        torch.save(tensors, 'work_dirs/liif_edsr/tensors.pth')
 
         # reshape for eval
         ih, iw = lq.shape[-2:]
