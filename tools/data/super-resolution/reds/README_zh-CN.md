@@ -51,4 +51,3 @@ mmediting
 ```shell
 python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
-

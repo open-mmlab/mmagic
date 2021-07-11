@@ -89,4 +89,3 @@ mmediting
 ```shell
 python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
 ```
-
