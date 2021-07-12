@@ -18,14 +18,14 @@ class StyleGANv2Generator(nn.Module):
     r"""StyleGAN2 Generator.
 
     This module comes from MMGeneration. In the future, this code will be
-    removed and StyleGANv2 will be directly imported from mmgen.
+    removed and StyleGANv2 will be directly imported from mmgeneration.
 
     In StyleGAN2, we use a static architecture composing of a style mapping
-    module and number of covolutional style blocks. More details can be found
+    module and number of convolutional style blocks. More details can be found
     in: Analyzing and Improving the Image Quality of StyleGAN CVPR2020.
 
     You can load pretrained model through passing information into
-    ``pretrained`` argument. We have already offered offical weights as
+    ``pretrained`` argument. We have already offered official weights as
     follows:
 
     - styelgan2-ffhq-config-f: http://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth  # noqa
@@ -56,7 +56,7 @@ class StyleGANv2Generator(nn.Module):
         out_size (int): The output size of the StyleGAN2 generator.
         style_channels (int): The number of channels for style code.
         num_mlps (int, optional): The number of MLP layers. Defaults to 8.
-        channel_multiplier (int, optional): The mulitiplier factor for the
+        channel_multiplier (int, optional): The multiplier factor for the
             channel number. Defaults to 2.
         blur_kernel (list, optional): The blurry kernel. Defaults
             to [1, 3, 3, 1].
@@ -68,7 +68,7 @@ class StyleGANv2Generator(nn.Module):
             currently supported. Defaults to 'mix'.
         eval_style_mode (str, optional): The evaluation mode of style mixing.
             Defaults to 'single'.
-        mix_prob (float, optional): Mixing probabilty. The value should be
+        mix_prob (float, optional): Mixing probability. The value should be
             in range of [0, 1]. Defaults to 0.9.
         pretrained (dict | None, optional): Information for pretained models.
             The necessary key is 'ckpt_path'. Besides, you can also provide
@@ -262,7 +262,7 @@ class StyleGANv2Generator(nn.Module):
                 StyleGAN2, you can provide noise tensor or latent tensor. Given
                 a list containing more than one noise or latent tensors, style
                 mixing trick will be used in training. Of course, You can
-                directly give a batch of noise through a ``torhc.Tensor`` or
+                directly give a batch of noise through a ``torch.Tensor`` or
                 offer a callable function to sample a batch of noise data.
                 Otherwise, the ``None`` indicates to use the default noise
                 sampler.
@@ -275,7 +275,7 @@ class StyleGANv2Generator(nn.Module):
             inject_index (int | None, optional): The index number for mixing
                 style codes. Defaults to None.
             truncation (float, optional): Truncation factor. Give value less
-                than 1., the truncatioin trick will be adopted. Defaults to 1.
+                than 1., the truncation trick will be adopted. Defaults to 1.
             truncation_latent (torch.Tensor, optional): Mean truncation latent.
                 Defaults to None.
             input_is_latent (bool, optional): If `True`, the input tensor is
@@ -407,14 +407,14 @@ class StyleGAN2Discriminator(nn.Module):
     """StyleGAN2 Discriminator.
 
     This module comes from MMGeneration. In the future, this code will be
-    removed and StyleGANv2 will be directly imported from mmgen.
+    removed and StyleGANv2 will be directly imported from mmgeneration.
 
     The architecture of this discriminator is proposed in StyleGAN2. More
     details can be found in: Analyzing and Improving the Image Quality of
     StyleGAN CVPR2020.
 
     You can load pretrained model through passing information into
-    ``pretrained`` argument. We have already offered offical weights as
+    ``pretrained`` argument. We have already offered official weights as
     follows:
 
     - styelgan2-ffhq-config-f: http://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth  # noqa
@@ -443,7 +443,7 @@ class StyleGAN2Discriminator(nn.Module):
 
     Args:
         in_size (int): The input size of images.
-        channel_multiplier (int, optional): The mulitiplier factor for the
+        channel_multiplier (int, optional): The multiplier factor for the
             channel number. Defaults to 2.
         blur_kernel (list, optional): The blurry kernel. Defaults
             to [1, 3, 3, 1].
