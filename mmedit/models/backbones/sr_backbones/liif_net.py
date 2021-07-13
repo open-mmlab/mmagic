@@ -253,3 +253,65 @@ class LIIFEDSR(LIIFNet):
         res += x
 
         return res
+
+
+@BACKBONES.register_module()
+class LIIFRDN(LIIFNet):
+    """LIIF net based on RDN.
+
+    Paper: Learning Continuous Image Representation with
+           Local Implicit Image Function
+
+    Args:
+        encoder (dict): Config for the generator.
+        imnet (dict): Config for the imnet.
+        local_ensemble (bool): Whether to use local ensemble. Default: True.
+        feat_unfold (bool): Whether to use feat unfold. Default: True.
+        cell_decode (bool): Whether to use cell decode. Default: True.
+        eval_bsize (int): Size of batched predict. Default: None.
+    """
+
+    def __init__(self,
+                 encoder,
+                 imnet,
+                 local_ensemble=True,
+                 feat_unfold=True,
+                 cell_decode=True,
+                 eval_bsize=None):
+        super().__init__(
+            encoder=encoder,
+            imnet=imnet,
+            local_ensemble=local_ensemble,
+            feat_unfold=feat_unfold,
+            cell_decode=cell_decode,
+            eval_bsize=eval_bsize)
+
+        self.sfe1 = self.encoder.sfe1
+        self.sfe2 = self.encoder.sfe2
+        self.rdbs = self.encoder.rdbs
+        self.gff = self.encoder.gff
+        self.num_blocks = self.encoder.num_blocks
+        del self.encoder
+
+    def gen_feature(self, x):
+        """Generate feature.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
+
+        sfe1 = self.sfe1(x)
+        sfe2 = self.sfe2(sfe1)
+
+        x = sfe2
+        local_features = []
+        for i in range(self.num_blocks):
+            x = self.rdbs[i](x)
+            local_features.append(x)
+
+        x = self.gff(torch.cat(local_features, 1)) + sfe1
+
+        return x
