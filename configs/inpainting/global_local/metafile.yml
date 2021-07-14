@@ -15,6 +15,7 @@ Models:
     In Collection: GLInpaintor
     Config: configs/inpainting/global_local/gl_256x256_8x12_celeba.py
     Metadata:
+      train time (s/iter): 0.322
       Training Memory (GB): 3.24
     Results:
       - Task: Inpainting

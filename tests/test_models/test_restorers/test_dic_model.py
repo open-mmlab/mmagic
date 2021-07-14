@@ -8,28 +8,41 @@ from mmedit.models.builder import build_model
 
 
 def test_dic_model():
+    pretrained = 'https://download.openmmlab.com/mmediting/' + \
+        'restorers/dic/light_cnn_feature.pth'
+
+    model_cfg_pre = dict(
+        type='DIC',
+        generator=dict(
+            type='DICNet', in_channels=3, out_channels=3, mid_channels=48),
+        pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
+        align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean'))
 
     model_cfg = dict(
         type='DIC',
         generator=dict(
-            type='DICNet',
-            in_channels=3,
-            out_channels=3,
-            mid_channels=48,
-            num_blocks=6,
-            hg_mid_channels=256,
-            hg_num_keypoints=68,
-            num_steps=4,
-            upscale_factor=8,
-            detach_attention=False),
+            type='DICNet', in_channels=3, out_channels=3, mid_channels=48),
+        discriminator=dict(type='LightCNN', in_channels=3),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-        align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean'))
+        align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean'),
+        feature_loss=dict(
+            type='LightCNNFeatureLoss',
+            pretrained=pretrained,
+            loss_weight=0.1,
+            criterion='l1'),
+        gan_loss=dict(
+            type='GANLoss',
+            gan_type='vanilla',
+            loss_weight=0.005,
+            real_label_val=1.0,
+            fake_label_val=0))
 
     scale = 8
     train_cfg = None
     test_cfg = Config(dict(metrics=['PSNR', 'SSIM'], crop_border=scale))
 
     # build restorer
+    build_model(model_cfg_pre, train_cfg=train_cfg, test_cfg=test_cfg)
     restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
 
     # test attributes
@@ -43,9 +56,11 @@ def test_dic_model():
 
     # prepare optimizer
     optim_cfg = dict(type='Adam', lr=1e-4, betas=(0.9, 0.999))
-    optimizer = dict(
-        generator=obj_from_dict(optim_cfg, torch.optim,
-                                dict(params=restorer.parameters())))
+    generator = obj_from_dict(optim_cfg, torch.optim,
+                              dict(params=restorer.parameters()))
+    discriminator = obj_from_dict(optim_cfg, torch.optim,
+                                  dict(params=restorer.parameters()))
+    optimizer = dict(generator=generator, discriminator=discriminator)
 
     # test train_step and forward_test (cpu)
     outputs = restorer.train_step(data_batch, optimizer)
@@ -68,9 +83,12 @@ def test_dic_model():
         }
 
         # train_step
-        optimizer = dict(
-            generator=obj_from_dict(optim_cfg, torch.optim,
-                                    dict(params=restorer.parameters())))
+        optim_cfg = dict(type='Adam', lr=1e-4, betas=(0.9, 0.999))
+        generator = obj_from_dict(optim_cfg, torch.optim,
+                                  dict(params=restorer.parameters()))
+        discriminator = obj_from_dict(optim_cfg, torch.optim,
+                                      dict(params=restorer.parameters()))
+        optimizer = dict(generator=generator, discriminator=discriminator)
         outputs = restorer.train_step(data_batch, optimizer)
         assert isinstance(outputs, dict)
         assert isinstance(outputs['log_vars'], dict)
@@ -93,3 +111,8 @@ def test_dic_model():
         with pytest.raises(AssertionError):
             # evaluation with metrics must have gt images
             restorer(lq=inputs.cuda(), test_mode=True)
+
+        with pytest.raises(TypeError):
+            restorer.init_weights(pretrained=1)
+        with pytest.raises(OSError):
+            restorer.init_weights(pretrained='')

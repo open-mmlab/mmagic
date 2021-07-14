@@ -1,25 +1,16 @@
+import pytest
 import torch
 
-from mmedit.apis import restoration_video_inference
-from mmedit.models import build_model
+from mmedit.apis import init_model, restoration_video_inference
 
 
 def test_restoration_video_inference():
     if torch.cuda.is_available():
         # recurrent framework (BasicVSR)
-        model = build_model(
-            dict(
-                type='BasicVSR',
-                generator=dict(
-                    type='BasicVSRNet',
-                    mid_channels=64,
-                    num_blocks=30,
-                    spynet_pretrained='https://download.openmmlab.com/'
-                    'mmediting/restorers/basicvsr/spynet_20210409-c6c1bd09.pth'
-                ),
-                pixel_loss=dict(
-                    type='CharbonnierLoss', loss_weight=1.0,
-                    reduction='mean'))).cuda()
+        model = init_model(
+            './configs/restorers/basicvsr/basicvsr_reds4.py',
+            None,
+            device='cuda')
         img_dir = './tests/data/vimeo90k/00001/0266'
         window_size = 0
         start_idx = 1
@@ -31,23 +22,30 @@ def test_restoration_video_inference():
 
         # sliding-window framework (EDVR)
         window_size = 5
-        model = build_model(
-            dict(
-                type='EDVR',
-                generator=dict(
-                    type='EDVRNet',
-                    in_channels=3,
-                    out_channels=3,
-                    mid_channels=64,
-                    num_frames=5,
-                    deform_groups=8,
-                    num_blocks_extraction=5,
-                    num_blocks_reconstruction=10,
-                    center_frame_idx=2,
-                    with_tsa=False),
-                pixel_loss=dict(
-                    type='CharbonnierLoss', loss_weight=1.0,
-                    reduction='sum'))).cuda()
+        model = init_model(
+            './configs/restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py',
+            None,
+            device='cuda')
         output = restoration_video_inference(model, img_dir, window_size,
                                              start_idx, filename_tmpl)
         assert output.shape == (1, 7, 3, 256, 448)
+
+        # without demo_pipeline
+        model.cfg.test_pipeline = model.cfg.demo_pipeline
+        model.cfg.pop('demo_pipeline')
+        output = restoration_video_inference(model, img_dir, window_size,
+                                             start_idx, filename_tmpl)
+        assert output.shape == (1, 7, 3, 256, 448)
+
+        # without test_pipeline and demo_pipeline
+        model.cfg.val_pipeline = model.cfg.test_pipeline
+        model.cfg.pop('test_pipeline')
+        output = restoration_video_inference(model, img_dir, window_size,
+                                             start_idx, filename_tmpl)
+        assert output.shape == (1, 7, 3, 256, 448)
+
+        # the first element in the pipeline must be 'GenerateSegmentIndices'
+        with pytest.raises(TypeError):
+            model.cfg.val_pipeline = model.cfg.val_pipeline[1:]
+            output = restoration_video_inference(model, img_dir, window_size,
+                                                 start_idx, filename_tmpl)

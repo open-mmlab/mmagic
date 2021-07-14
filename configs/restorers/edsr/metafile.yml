@@ -15,6 +15,7 @@ Models:
     In Collection: EDSR
     Config: configs/restorers/edsr/edsr_x2c64b16_g1_300k_div2k.py
     Metadata:
+      train time (s/iter): 0.060
       Training Memory (GB): 0.47
     Results:
       - Task: x2 Super Resolution
@@ -38,6 +39,7 @@ Models:
     In Collection: EDSR
     Config: configs/restorers/edsr/edsr_x3c64b16_g1_300k_div2k.py
     Metadata:
+      train time (s/iter): 0.052
       Training Memory (GB): 0.63
     Results:
       - Task: x3 Super Resolution
@@ -61,6 +63,7 @@ Models:
     In Collection: EDSR
     Config: configs/restorers/edsr/edsr_x4c64b16_g1_300k_div2k.py
     Metadata:
+      train time (s/iter): 0.076
       Training Memory (GB): 1.0
     Results:
       - Task: x3 Super Resolution

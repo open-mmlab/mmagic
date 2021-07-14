@@ -1,5 +1,45 @@
 # Changelog
 
+## v0.9.0 (30/06/2021).
+
+**Highlights**
+
+1. Support DIC and DIC-GAN (CVPR'2020)
+2. Support GLEAN Cat 8x (CVPR'2021)
+3. Support TTSR-GAN (CVPR'2020)
+4. Add colab tutorial for super-resolution
+
+**New Features**
+
+- Add DIC ([#342](https://github.com/open-mmlab/mmediting/pull/342), [#345](https://github.com/open-mmlab/mmediting/pull/345), [#348](https://github.com/open-mmlab/mmediting/pull/348), [#350](https://github.com/open-mmlab/mmediting/pull/350), [#351](https://github.com/open-mmlab/mmediting/pull/351), [#357](https://github.com/open-mmlab/mmediting/pull/357), [#363](https://github.com/open-mmlab/mmediting/pull/363), [#365](https://github.com/open-mmlab/mmediting/pull/365), [#366](https://github.com/open-mmlab/mmediting/pull/366))
+- Add SRFolderMultipleGTDataset ([#355](https://github.com/open-mmlab/mmediting/pull/355))
+- Add GLEAN Cat 8x ([#367](https://github.com/open-mmlab/mmediting/pull/367))
+- Add SRFolderVideoDataset ([#370](https://github.com/open-mmlab/mmediting/pull/370))
+- Add colab tutorial for super-resolution ([#380](https://github.com/open-mmlab/mmediting/pull/380))
+- Add TTSR-GAN ([#372](https://github.com/open-mmlab/mmediting/pull/372), [#381](https://github.com/open-mmlab/mmediting/pull/381), [#383](https://github.com/open-mmlab/mmediting/pull/383), [#398](https://github.com/open-mmlab/mmediting/pull/398))
+- Add DIC-GAN ([#392](https://github.com/open-mmlab/mmediting/pull/392), [#393](https://github.com/open-mmlab/mmediting/pull/393), [#394](https://github.com/open-mmlab/mmediting/pull/394))
+
+**Bug Fixes**
+
+- Fix bug in restoration_video_inference.py ([#379](https://github.com/open-mmlab/mmediting/pull/379))
+- Fix Config of LIIF ([#368](https://github.com/open-mmlab/mmediting/pull/368))
+- Change the path to pre-trained EDVR-M ([#396](https://github.com/open-mmlab/mmediting/pull/396))
+- Fix normalization in restoration_video_inference ([#406](https://github.com/open-mmlab/mmediting/pull/406))
+- Fix [brush_stroke_mask] error in unittest ([#409](https://github.com/open-mmlab/mmediting/pull/409))
+
+**Breaking Changes**
+
+- Change mmcv minimum version to v1.3 ([#378](https://github.com/open-mmlab/mmediting/pull/378))
+
+**Improvements**
+
+- Correct Typos in code ([#371](https://github.com/open-mmlab/mmediting/pull/371))
+- Add Custom_hooks ([#362](https://github.com/open-mmlab/mmediting/pull/362))
+- Refactor unittest folder structure ([#386](https://github.com/open-mmlab/mmediting/pull/386))
+- Add documents and download link for Vid4 ([#399](https://github.com/open-mmlab/mmediting/pull/399))
+- Update model zoo for documents ([#400](https://github.com/open-mmlab/mmediting/pull/400))
+- Update metafile ([407](https://github.com/open-mmlab/mmediting/pull/407))
+
 ## v0.8.0 (31/05/2021).
 
 **Highlights**

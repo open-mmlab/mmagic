@@ -6,6 +6,7 @@ import torch
 
 from mmedit.core import tensor2img
 from ..builder import build_backbone, build_component, build_loss
+from ..common import set_requires_grad
 from ..registry import MODELS
 from .basic_restorer import BasicRestorer
 
@@ -21,6 +22,11 @@ class TTSR(BasicRestorer):
         extractor (dict): Config for the extractor.
         transformer (dict): Config for the transformer.
         pixel_loss (dict): Config for the pixel loss.
+        discriminator (dict): Config for the discriminator. Default: None.
+        perceptual_loss (dict): Config for the perceptual loss. Default: None.
+        transferal_perceptual_loss (dict): Config for the transferal perceptual
+            loss. Default: None.
+        gan_loss (dict): Config for the GAN loss. Default: None
         train_cfg (dict): Config for train. Default: None.
         test_cfg (dict): Config for testing. Default: None.
         pretrained (str): Path for pretrained model. Default: None.
@@ -31,6 +37,10 @@ class TTSR(BasicRestorer):
                  extractor,
                  transformer,
                  pixel_loss,
+                 discriminator=None,
+                 perceptual_loss=None,
+                 transferal_perceptual_loss=None,
+                 gan_loss=None,
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
@@ -43,12 +53,30 @@ class TTSR(BasicRestorer):
         self.generator = build_backbone(generator)
         self.transformer = build_component(transformer)
         self.extractor = build_component(extractor)
+        # discriminator
+        if discriminator and gan_loss:
+            self.discriminator = build_component(discriminator)
+            self.gan_loss = build_loss(gan_loss)
+        else:
+            self.discriminator = None
+            self.gan_loss = None
 
         # loss
         self.pixel_loss = build_loss(pixel_loss)
-
+        self.perceptual_loss = build_loss(
+            perceptual_loss) if perceptual_loss else None
+        if transferal_perceptual_loss:
+            self.transferal_perceptual_loss = build_loss(
+                transferal_perceptual_loss)
+        else:
+            self.transferal_perceptual_loss = None
         # pretrained
         self.init_weights(pretrained)
+
+        # fix pre-trained networks
+        self.register_buffer('step_counter', torch.zeros(1))
+        self.fix_iter = train_cfg.get('fix_iter', 0) if train_cfg else 0
+        self.disc_steps = train_cfg.get('disc_steps', 1) if train_cfg else 1
 
     def forward_dummy(self, lq, lq_up, ref, ref_downup, only_pred=True):
         """Forward of networks.
@@ -64,28 +92,23 @@ class TTSR(BasicRestorer):
 
         Returns:
             pred (Tensor): Predicted super-resolution results (n, 3, 4h, 4w).
-            s (Tensor): Soft-Attention tensor with shape (n, 1, h, w).
-            t_level3 (Tensor): Transformed HR texture T in level3.
-                (n, 4c, h, w)
-            t_level2 (Tensor): Transformed HR texture T in level2.
-                (n, 2c, 2h, 2w)
-            t_level1 (Tensor): Transformed HR texture T in level1.
-                (n, c, 4h, 4w)
+            soft_attention (Tensor): Soft-Attention tensor with shape
+                (n, 1, h, w).
+            textures (Tuple[Tensor]): Transferred GT textures.
+                [(N, C, H, W), (N, C/2, 2H, 2W), ...]
         """
 
-        _, _, lq_up_level3 = self.extractor(lq_up)
-        _, _, ref_downup_level3 = self.extractor(ref_downup)
-        ref_level1, ref_level2, ref_level3 = self.extractor(ref)
+        lq_up, _, _ = self.extractor(lq_up)
+        ref_downup, _, _ = self.extractor(ref_downup)
+        refs = self.extractor(ref)
 
-        s, t_level3, t_level2, t_level1 = self.transformer(
-            lq_up_level3, ref_downup_level3, ref_level1, ref_level2,
-            ref_level3)
+        soft_attention, textures = self.transformer(lq_up, ref_downup, refs)
 
-        pred = self.generator(lq, s, t_level3, t_level2, t_level1)
+        pred = self.generator(lq, soft_attention, textures)
 
         if only_pred:
             return pred
-        return pred, s, t_level3, t_level2, t_level1
+        return pred, soft_attention, textures
 
     def forward(self, lq, gt=None, test_mode=False, **kwargs):
         """Forward function.
@@ -123,20 +146,68 @@ class TTSR(BasicRestorer):
         ref_downup = data_batch['ref_downup']
 
         # generate
-        pred = self.forward_dummy(lq, lq_up, ref, ref_downup)
+        pred, soft_attention, textures = self(
+            lq, lq_up=lq_up, ref=ref, ref_downup=ref_downup, only_pred=False)
 
         # loss
         losses = dict()
+        log_vars = dict()
+
+        # no updates to discriminator parameters.
+        set_requires_grad(self.discriminator, False)
 
         losses['loss_pix'] = self.pixel_loss(pred, gt)
+        if self.step_counter >= self.fix_iter:
+            # perceptual loss
+            if self.perceptual_loss:
+                loss_percep, loss_style = self.perceptual_loss(pred, gt)
+                if loss_percep is not None:
+                    losses['loss_perceptual'] = loss_percep
+                if loss_style is not None:
+                    losses['loss_style'] = loss_style
+            if self.transferal_perceptual_loss:
+                set_requires_grad(self.extractor, False)
+                sr_textures = self.extractor((pred + 1.) / 2.)
+                losses['loss_transferal'] = self.transferal_perceptual_loss(
+                    sr_textures, soft_attention, textures)
+            # gan loss for generator
+            if self.gan_loss:
+                fake_g_pred = self.discriminator(pred)
+                losses['loss_gan'] = self.gan_loss(
+                    fake_g_pred, target_is_real=True, is_disc=False)
 
         # parse loss
-        loss, log_vars = self.parse_losses(losses)
+        loss_g, log_vars_g = self.parse_losses(losses)
+        log_vars.update(log_vars_g)
 
         # optimize
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        optimizer['generator'].zero_grad()
+        loss_g.backward()
+        optimizer['generator'].step()
+
+        if self.discriminator and self.step_counter >= self.fix_iter:
+            # discriminator
+            set_requires_grad(self.discriminator, True)
+            for _ in range(self.disc_steps):
+                # real
+                real_d_pred = self.discriminator(gt)
+                loss_d_real = self.gan_loss(
+                    real_d_pred, target_is_real=True, is_disc=True)
+                loss_d, log_vars_d = self.parse_losses(
+                    dict(loss_d_real=loss_d_real))
+                optimizer['discriminator'].zero_grad()
+                loss_d.backward()
+                log_vars.update(log_vars_d)
+                # fake
+                fake_d_pred = self.discriminator(pred.detach())
+                loss_d_fake = self.gan_loss(
+                    fake_d_pred, target_is_real=False, is_disc=True)
+                loss_d, log_vars_d = self.parse_losses(
+                    dict(loss_d_fake=loss_d_fake))
+                loss_d.backward()
+                log_vars.update(log_vars_d)
+
+                optimizer['discriminator'].step()
 
         log_vars.pop('loss')  # remove the unnecessary 'loss'
         outputs = dict(
@@ -144,6 +215,8 @@ class TTSR(BasicRestorer):
             num_samples=len(gt.data),
             results=dict(
                 lq=lq.cpu(), gt=gt.cpu(), ref=ref.cpu(), output=pred.cpu()))
+
+        self.step_counter += 1
 
         return outputs
 

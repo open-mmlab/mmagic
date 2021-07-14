@@ -8,16 +8,11 @@ import torch
 from mmcv.parallel import collate
 from mmcv.runner import get_dist_info
 from mmcv.utils import build_from_cfg
-from torch.utils.data import ConcatDataset
+from torch.utils.data import ConcatDataset, DataLoader
 
 from .dataset_wrappers import RepeatDataset
 from .registry import DATASETS
 from .samplers import DistributedSampler
-
-if torch.__version__ == 'parrots':
-    from torch.utils.data import PoolDataLoader as DataLoader
-else:
-    from torch.utils.data import DataLoader
 
 if platform.system() != 'Windows':
     # https://github.com/pytorch/pytorch/issues/973
@@ -91,6 +86,7 @@ def build_dataloader(dataset,
                      seed=None,
                      drop_last=False,
                      pin_memory=True,
+                     persistent_workers=True,
                      **kwargs):
     """Build PyTorch DataLoader.
 
@@ -112,6 +108,11 @@ def build_dataloader(dataset,
         drop_last (bool): Whether to drop the last incomplete batch in epoch.
             Default: False
         pin_memory (bool): Whether to use pin_memory in DataLoader.
+            Default: True
+        persistent_workers (bool): If True, the data loader will not shutdown
+            the worker processes after a dataset has been consumed once.
+            This allows to maintain the workers Dataset instances alive.
+            The argument also has effect in PyTorch>=1.7.0.
             Default: True
         kwargs (dict, optional): Any keyword argument to be used to initialize
             DataLoader.
@@ -138,6 +139,9 @@ def build_dataloader(dataset,
     init_fn = partial(
         worker_init_fn, num_workers=num_workers, rank=rank,
         seed=seed) if seed is not None else None
+
+    if torch.__version__ >= '1.7.0':
+        kwargs['persistent_workers'] = persistent_workers
 
     data_loader = DataLoader(
         dataset,

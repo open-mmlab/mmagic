@@ -97,18 +97,18 @@ data = dict(
         times=60,
         dataset=dict(
             type=train_dataset_type,
-            gt_folder='data/CelebA-HQ/train_256/all_256/',
-            ann_file='data/CelebA-HQ/train_256/train_info_list_256.npy',
+            gt_folder='data/celeba-hq/train/',
+            ann_file='data/celeba-hq/train_info_list_256.npy',
             pipeline=train_pipeline,
             scale=scale)),
     val=dict(
         type=val_dataset_type,
-        gt_folder='data/CelebA-HQ/test_256/all_256/',
+        gt_folder='data/celeba-hq/val/',
         pipeline=valid_pipeline,
         scale=scale),
     test=dict(
         type=test_dataset_type,
-        gt_folder='data/CelebA-HQ/test_256/all_256/',
+        gt_folder='data/celeba-hq/val/',
         pipeline=valid_pipeline,
         scale=scale))
 
@@ -123,7 +123,7 @@ lr_config = dict(
     step=[10000, 20000, 40000, 80000],
     gamma=0.5)
 
-checkpoint_config = dict(interval=100, save_optimizer=True, by_epoch=False)
+checkpoint_config = dict(interval=2000, save_optimizer=True, by_epoch=False)
 evaluation = dict(interval=2000, save_image=True, gpu_collect=True)
 log_config = dict(
     interval=100,
