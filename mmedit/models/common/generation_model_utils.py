@@ -70,7 +70,7 @@ class GANImageBuffer:
 
     def __init__(self, buffer_size, buffer_ratio=0.5):
         self.buffer_size = buffer_size
-        # create an empty buffer
+        # create an empty bufferb
         if self.buffer_size > 0:
             self.img_num = 0
             self.image_buffer = []

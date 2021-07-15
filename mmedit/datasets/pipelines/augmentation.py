@@ -5,7 +5,7 @@ import os.path as osp
 import cv2
 import mmcv
 import numpy as np
-
+import torch
 from ..registry import PIPELINES
 
 
@@ -200,7 +200,6 @@ class Flip:
             dict: A dict containing the processed data and information.
         """
         flip = np.random.random() < self.flip_ratio
-
         if flip:
             for key in self.keys:
                 if isinstance(results[key], list):
@@ -1029,4 +1028,49 @@ class MirrorSequence:
     def __repr__(self):
         repr_str = self.__class__.__name__
         repr_str += (f'(keys={self.keys})')
+        return repr_str
+
+@PIPELINES.register_module()
+class AddNoiseMap:
+    """Extend short sequences (e.g. Vimeo-90K) by mirroring the sequences
+
+    Given a sequence with N frames (x1, ..., xN), extend the sequence to
+    (x1, ..., xN, xN, ..., x1).
+
+    Args:
+        keys (list[str]): The frame lists to be extended.
+    """
+
+    def __init__(self, keys, generate_type, nc =4):
+        self.keys = keys
+        self.gtype = generate_type
+        self.nc = 4
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        nc = self.nc if self.nc else 4
+        for key in self.keys:
+            if isinstance(results[key], list):
+                #TODO
+                results['noise_map'] = []
+                for v  in results[key]:
+                    h, w, c = v.shape
+                    noise = torch.rand(h,w,n,c).numpy()
+                    results['noise_map'] +=[noise]
+            else:
+                h, w, c = results[key].shape
+                noise = torch.rand(h,w, nc).numpy()
+                results['noise_map'] = noise
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(nosie_keys={self.keys})')
         return repr_str

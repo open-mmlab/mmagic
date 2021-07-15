@@ -5,8 +5,8 @@ from .base_sr_dataset import BaseSRDataset
 from .builder import build_dataloader, build_dataset
 from .comp1k_dataset import AdobeComp1kDataset
 from .dataset_wrappers import RepeatDataset
-from .generation_paired_dataset import GenerationPairedDataset
-from .generation_unpaired_dataset import GenerationUnpairedDataset
+from .generation_paired_dataset import GenerationPairedDataset, GenerationPairedBlurSharpDataset
+from .generation_unpaired_dataset import GenerationUnpairedDataset,GenerationUnpairedBlurSharpDataset
 from .img_inpainting_dataset import ImgInpaintingDataset
 from .registry import DATASETS, PIPELINES
 from .sr_annotation_dataset import SRAnnotationDataset
