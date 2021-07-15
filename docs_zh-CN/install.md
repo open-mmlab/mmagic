@@ -9,6 +9,7 @@
 - [mmcv](https://github.com/open-mmlab/mmcv)
 
 ## 安装
+
 a. 创建并激活 conda 虚拟环境，如：
 
 ```shell script
@@ -64,6 +65,7 @@ find . -name "*.so" | xargs rm
 另一种方案是安装预编译版本的 `mmcv-full`，请参考 [MMCV 主页](https://github.com/open-mmlab/mmcv#install-with-pip) 获取具体的安装指令。
 此外，如果你要使用的模型不依赖于 CUDA 算子，那么也可以使用 `pip install mmcv`来安装轻量版本的 mmcv，其中 CUDA 算子被移除了。
 ## CPU 环境下的安装步骤
+
 MMEditing 也可以在只有 CPU 的环境下安装（即无法使用 GPU 的环境）。
 
 然而在该环境下，有些功能将被移除，例如：
@@ -72,6 +74,7 @@ MMEditing 也可以在只有 CPU 的环境下安装（即无法使用 GPU 的环
 因此，如果您尝试使用一些包含可变形卷积的模型进行推理，则会出现错误。
 
 ## 利用 Docker 镜像安装 MMEditing
+
 MMEditing 提供了一个 [Dockerfile](https://github.com/open-mmlab/mmediting/blob/master/docker/Dockerfile) 来创建 docker 镜像
 ```shell script
 # build an image with PyTorch 1.5, CUDA 10.1
@@ -83,6 +86,7 @@ docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmediting/data mmediting
 ```
 
 ## 完整的安装脚本
+
 ```shell script
 conda create -n open-mmlab python=3.7 -y
 conda activate open-mmlab
