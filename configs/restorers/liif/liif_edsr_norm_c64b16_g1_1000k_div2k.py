@@ -113,13 +113,18 @@ data = dict(
         gt_folder='data/val_set5/Set5',
         pipeline=valid_pipeline,
         scale=scale_max),
+    # test=dict(
+    #     type=test_dataset_type,
+    #     lq_folder=f'data/val_set5/Set5_bicLRx{scale_max:d}',
+    #     gt_folder='data/val_set5/Set5',
+    #     pipeline=test_pipeline,
+    #     scale=scale_max,
+    #     filename_tmpl='{}'),
     test=dict(
-        type=test_dataset_type,
-        lq_folder=f'data/val_set5/Set5_bicLRx{scale_max:d}',
+        type=val_dataset_type,
         gt_folder='data/val_set5/Set5',
-        pipeline=test_pipeline,
-        scale=scale_max,
-        filename_tmpl='{}'))
+        pipeline=valid_pipeline,
+        scale=scale_max))
 
 # optimizer
 optimizers = dict(type='Adam', lr=1.e-4)
