@@ -10,7 +10,7 @@ from mmedit.utils import get_root_logger
 
 
 class LIIFNet(nn.Module):
-    """LIIF net for single image super-resolution.
+    """LIIF net for single image super-resolution, CVPR, 2021.
 
     Paper: Learning Continuous Image Representation with
            Local Implicit Image Function
@@ -19,7 +19,7 @@ class LIIFNet(nn.Module):
         encoder (dict): Config for the generator.
         imnet (dict): Config for the imnet.
         local_ensemble (bool): Whether to use local ensemble. Default: True.
-        feat_unfold (bool): Whether to use feat unfold. Default: True.
+        feat_unfold (bool): Whether to use feature unfold. Default: True.
         cell_decode (bool): Whether to use cell decode. Default: True.
         eval_bsize (int): Size of batched predict. Default: None.
     """
@@ -43,7 +43,7 @@ class LIIFNet(nn.Module):
         imnet_in_dim = self.encoder.mid_channels
         if self.feat_unfold:
             imnet_in_dim *= 9
-        imnet_in_dim += 2  # attach coord
+        imnet_in_dim += 2  # attach coordinates
         if self.cell_decode:
             imnet_in_dim += 2
         imnet['in_dim'] = imnet_in_dim
@@ -54,7 +54,7 @@ class LIIFNet(nn.Module):
 
         Args:
             x: input tensor.
-            coord (Tensor): coord tensor.
+            coord (Tensor): coordinates tensor.
             cell (Tensor): cell tensor.
             test_mode (bool): Whether in test mode or not. Default: False.
 
@@ -85,11 +85,10 @@ class LIIFNet(nn.Module):
         Returns:
             result (Tensor): (part of) output.
         """
-        feat = feature
 
         if self.imnet is None:
             result = F.grid_sample(
-                feat,
+                feature,
                 coord.flip(-1).unsqueeze(1),
                 mode='nearest',
                 align_corners=False)
@@ -97,9 +96,10 @@ class LIIFNet(nn.Module):
             return result
 
         if self.feat_unfold:
-            feat = F.unfold(
-                feat, 3, padding=1).view(feat.shape[0], feat.shape[1] * 9,
-                                         feat.shape[2], feat.shape[3])
+            feature = F.unfold(
+                feature, 3,
+                padding=1).view(feature.shape[0], feature.shape[1] * 9,
+                                feature.shape[2], feature.shape[3])
 
         if self.local_ensemble:
             vx_lst = [-1, 1]
@@ -109,12 +109,12 @@ class LIIFNet(nn.Module):
             vx_lst, vy_lst, eps_shift = [0], [0], 0
 
         # field radius (global: [-1, 1])
-        rx = 2 / feat.shape[-2] / 2
-        ry = 2 / feat.shape[-1] / 2
+        radius_x = 2 / feature.shape[-2] / 2
+        radius_y = 2 / feature.shape[-1] / 2
 
-        feat_coord = make_coord(feat.shape[-2:], flatten=False) \
+        feat_coord = make_coord(feature.shape[-2:], flatten=False) \
             .permute(2, 0, 1) \
-            .unsqueeze(0).expand(feat.shape[0], 2, *feat.shape[-2:])
+            .unsqueeze(0).expand(feature.shape[0], 2, *feature.shape[-2:])
         feat_coord = feat_coord.to(coord)
 
         preds = []
@@ -122,11 +122,11 @@ class LIIFNet(nn.Module):
         for vx in vx_lst:
             for vy in vy_lst:
                 coord_ = coord.clone()
-                coord_[:, :, 0] += vx * rx + eps_shift
-                coord_[:, :, 1] += vy * ry + eps_shift
+                coord_[:, :, 0] += vx * radius_x + eps_shift
+                coord_[:, :, 1] += vy * radius_y + eps_shift
                 coord_.clamp_(-1 + 1e-6, 1 - 1e-6)
                 query_feat = F.grid_sample(
-                    feat, coord_.flip(-1).unsqueeze(1),
+                    feature, coord_.flip(-1).unsqueeze(1),
                     mode='nearest', align_corners=False)[:, :, 0, :] \
                     .permute(0, 2, 1)
                 query_coord = F.grid_sample(
@@ -134,14 +134,14 @@ class LIIFNet(nn.Module):
                     mode='nearest', align_corners=False)[:, :, 0, :] \
                     .permute(0, 2, 1)
                 rel_coord = coord - query_coord
-                rel_coord[:, :, 0] *= feat.shape[-2]
-                rel_coord[:, :, 1] *= feat.shape[-1]
+                rel_coord[:, :, 0] *= feature.shape[-2]
+                rel_coord[:, :, 1] *= feature.shape[-1]
                 mid_tensor = torch.cat([query_feat, rel_coord], dim=-1)
 
                 if self.cell_decode:
                     rel_cell = cell.clone()
-                    rel_cell[:, :, 0] *= feat.shape[-2]
-                    rel_cell[:, :, 1] *= feat.shape[-1]
+                    rel_cell[:, :, 0] *= feature.shape[-2]
+                    rel_cell[:, :, 1] *= feature.shape[-1]
                     mid_tensor = torch.cat([mid_tensor, rel_cell], dim=-1)
 
                 bs, q = coord.shape[:2]
@@ -151,17 +151,12 @@ class LIIFNet(nn.Module):
                 area = torch.abs(rel_coord[:, :, 0] * rel_coord[:, :, 1])
                 areas.append(area + 1e-9)
 
-        tot_area = torch.stack(areas).sum(dim=0)
+        total_area = torch.stack(areas).sum(dim=0)
         if self.local_ensemble:
-            t = areas[0]
-            areas[0] = areas[3]
-            areas[3] = t
-            t = areas[1]
-            areas[1] = areas[2]
-            areas[2] = t
+            areas = areas[::-1]
         result = 0
         for pred, area in zip(preds, areas):
-            result = result + pred * (area / tot_area).unsqueeze(-1)
+            result = result + pred * (area / total_area).unsqueeze(-1)
 
         return result
 
@@ -178,13 +173,14 @@ class LIIFNet(nn.Module):
         """
         with torch.no_grad():
             n = coord.shape[1]
-            ql = 0
+            left = 0
             preds = []
-            while ql < n:
-                qr = min(ql + self.eval_bsize, n)
-                pred = self.query_rgb(x, coord[:, ql:qr, :], cell[:, ql:qr, :])
+            while left < n:
+                right = min(left + self.eval_bsize, n)
+                pred = self.query_rgb(x, coord[:, left:right, :],
+                                      cell[:, left:right, :])
                 preds.append(pred)
-                ql = qr
+                left = right
             pred = torch.cat(preds, dim=1)
         return pred
 
@@ -216,7 +212,7 @@ class LIIFEDSR(LIIFNet):
         encoder (dict): Config for the generator.
         imnet (dict): Config for the imnet.
         local_ensemble (bool): Whether to use local ensemble. Default: True.
-        feat_unfold (bool): Whether to use feat unfold. Default: True.
+        feat_unfold (bool): Whether to use feature unfold. Default: True.
         cell_decode (bool): Whether to use cell decode. Default: True.
         eval_bsize (int): Size of batched predict. Default: None.
     """
