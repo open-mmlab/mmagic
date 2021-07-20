@@ -140,7 +140,7 @@ class LIIF(BasicRestorer):
 
         # generator
         with torch.no_grad():
-            pred = self.generator(lq, coord, cell, test_mode=False)
+            pred = self.generator(lq, coord, cell, test_mode=True)
             self.gt_mean = self.gt_mean.to(pred)
             self.gt_std = self.gt_std.to(pred)
             pred = pred * self.gt_std + self.gt_mean
