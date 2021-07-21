@@ -1,6 +1,5 @@
 # 教程 1: 了解配置文件
 mmediting 采用基于 python 文件的配置系统，您可以在 `$MMEditing/configs` 下查看预置的配置文件。
-
 ## 配置文件命名风格
 
 配置文件按照下面的风格命名。我们建议社区贡献者使用同样的风格。
@@ -8,6 +7,7 @@ mmediting 采用基于 python 文件的配置系统，您可以在 `$MMEditing/c
 ```bash
 {model}_[model setting]_{backbone}_[refiner]_[norm setting]_[misc]_[gpu x batch_per_gpu]_{schedule}_{dataset}
 ```
+
 `{xxx}` 是必填字段，`[yyy]` 是可选的。
 
 - `{model}`: 模型种类，例如 `srcnn`, `dim` 等等。
