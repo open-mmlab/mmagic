@@ -23,7 +23,7 @@ def pixel_norm(x, eps=1e-6):
 
     Args:
         x (torch.Tensor): Tensor to be normalized.
-        eps (float, optional): Epsilon to avoid divising zero.
+        eps (float, optional): Epsilon to avoid dividing zero.
             Defaults to 1e-6.
 
     Returns:
@@ -190,7 +190,7 @@ class EqualizedLRConvModule(ConvModule):
     equalized lr in convolution. The equalized learning rate is proposed in:
     Progressive Growing of GANs for Improved Quality, Stability, and Variation
 
-    Note that, the initialization of ``self.conv`` will be overwrited as
+    Note that, the initialization of ``self.conv`` will be overwritten as
     :math:`\mathcal{N}(0, 1)`.
 
     Args:
@@ -219,7 +219,7 @@ class EqualizedLRLinearModule(nn.Linear):
     learning rate is proposed in:
     Progressive Growing of GANs for Improved Quality, Stability, and Variation
 
-    Note that, the initialization of ``self.weight`` will be overwrited as
+    Note that, the initialization of ``self.weight`` will be overwritten as
     :math:`\mathcal{N}(0, 1)`.
 
     Args:
@@ -387,8 +387,8 @@ class ModulatedConv2d(nn.Module):
 
     #. ``style_bias`` is provided to check the difference between official TF
        implementation and other PyTorch implementation.
-       In TF, Tero explicitly add the ``1.`` after style code, while unoffiical
-       implementation adopts bias initalization with ``1.``.
+       In TF, Tero explicitly add the ``1.`` after style code, while unofficial
+       implementation adopts bias initialization with ``1.``.
        Details can be found in:
        https://github.com/rosinality/stylegan2-pytorch/blob/master/model.py#L214
        https://github.com/NVlabs/stylegan2/blob/master/training/networks_stylegan2.py#L99
@@ -542,7 +542,7 @@ class ModulatedPEConv2d(nn.Module):
 
     #. ``style_bias`` is provided to check the difference between official TF
        implementation and other PyTorch implementation.
-       In TF, Tero explicitly add the ``1.`` after style code, while unoffiical
+       In TF, Tero explicitly add the ``1.`` after style code, while unofficial
        implementation adopts bias initalization with ``1.``.
        Details can be found in:
        https://github.com/rosinality/stylegan2-pytorch/blob/master/model.py#L214
