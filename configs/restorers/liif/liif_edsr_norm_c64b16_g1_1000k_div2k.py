@@ -5,33 +5,33 @@ scale_min, scale_max = 1, 4
 model = dict(
     type='LIIF',
     generator=dict(
-        type='EDSR',
-        in_channels=3,
-        out_channels=3,
-        mid_channels=64,
-        num_blocks=16),
-    imnet=dict(
-        type='MLPRefiner',
-        in_dim=64,
-        out_dim=3,
-        hidden_list=[256, 256, 256, 256]),
-    local_ensemble=True,
-    feat_unfold=True,
-    cell_decode=True,
+        type='LIIFEDSR',
+        encoder=dict(
+            type='EDSR',
+            in_channels=3,
+            out_channels=3,
+            mid_channels=64,
+            num_blocks=16),
+        imnet=dict(
+            type='MLPRefiner',
+            in_dim=64,
+            out_dim=3,
+            hidden_list=[256, 256, 256, 256]),
+        local_ensemble=True,
+        feat_unfold=True,
+        cell_decode=True,
+        eval_bsize=30000),
     rgb_mean=(0.4488, 0.4371, 0.4040),
     rgb_std=(1., 1., 1.),
-    eval_bsize=30000,
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = None
 test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=scale_max)
 
 # dataset settings
-scale_min, scale_max = 1, 4
-# dataset settings
 train_dataset_type = 'SRFolderGTDataset'
 val_dataset_type = 'SRFolderGTDataset'
-test_dataset_type = 'SRFolderGTDataset'
+test_dataset_type = 'SRFolderDataset'
 train_pipeline = [
     dict(
         type='LoadImageFromFile',
@@ -151,3 +151,4 @@ work_dir = f'./work_dirs/{exp_name}'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
+find_unused_parameters = True

@@ -5,7 +5,6 @@ from mmcv.runner import obj_from_dict
 from mmcv.utils.config import Config
 
 from mmedit.models import build_model
-from mmedit.models.losses import L1Loss
 from mmedit.models.registry import COMPONENTS
 
 
@@ -33,18 +32,24 @@ def test_liif():
     model_cfg = dict(
         type='LIIF',
         generator=dict(
-            type='EDSR',
-            in_channels=3,
-            out_channels=3,
-            mid_channels=8,
-            num_blocks=1),
-        imnet=dict(type='BP', in_dim=8, out_dim=3),
-        local_ensemble=True,
-        feat_unfold=True,
-        cell_decode=True,
+            type='LIIFEDSR',
+            encoder=dict(
+                type='EDSR',
+                in_channels=3,
+                out_channels=3,
+                mid_channels=64,
+                num_blocks=16),
+            imnet=dict(
+                type='MLPRefiner',
+                in_dim=64,
+                out_dim=3,
+                hidden_list=[256, 256, 256, 256]),
+            local_ensemble=True,
+            feat_unfold=True,
+            cell_decode=True,
+            eval_bsize=30000),
         rgb_mean=(0.4488, 0.4371, 0.4040),
         rgb_std=(1., 1., 1.),
-        eval_bsize=30000,
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 
     scale_max = 4
@@ -56,8 +61,6 @@ def test_liif():
 
     # test attributes
     assert restorer.__class__.__name__ == 'LIIF'
-    assert isinstance(restorer.imnet, BP)
-    assert isinstance(restorer.pixel_loss, L1Loss)
 
     # prepare data
     inputs = torch.rand(1, 3, 22, 11)

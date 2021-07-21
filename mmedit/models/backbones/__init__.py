@@ -10,9 +10,9 @@ from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
                                ResNetEnc, ResShortcutDec, ResShortcutEnc,
                                SimpleEncoderDecoder)
 from .generation_backbones import ResnetGenerator, UnetGenerator
-from .sr_backbones import (EDSR, RDN, SRCNN, BasicVSRNet, DICNet, EDVRNet,
-                           GLEANStyleGANv2, IconVSR, MSRResNet, RRDBNet,
-                           TDANNet, TOFlow, TTSRNet)
+from .sr_backbones import (EDSR, LIIFEDSR, RDN, SRCNN, BasicVSRNet, DICNet,
+                           EDVRNet, GLEANStyleGANv2, IconVSR, MSRResNet,
+                           RRDBNet, TDANNet, TOFlow, TTSRNet)
 
 __all__ = [
     'MSRResNet', 'VGG16', 'PlainDecoder', 'SimpleEncoderDecoder',
@@ -24,5 +24,6 @@ __all__ = [
     'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample', 'IndexNetEncoder',
     'IndexNetDecoder', 'TOFlow', 'ResGCAEncoder', 'ResGCADecoder', 'SRCNN',
     'UnetGenerator', 'ResnetGenerator', 'FBAResnetDilated', 'FBADecoder',
-    'BasicVSRNet', 'IconVSR', 'TTSRNet', 'GLEANStyleGANv2', 'TDANNet'
+    'BasicVSRNet', 'IconVSR', 'TTSRNet', 'GLEANStyleGANv2', 'TDANNet',
+    'LIIFEDSR'
 ]
