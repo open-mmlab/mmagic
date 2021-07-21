@@ -47,7 +47,8 @@ mmediting
 
 ## 准备 LMDB 格式的 REDS 数据集
 
-如果你想使用 `LMDB` 以获得更快的 IO 速度，可以通过以下脚本来构建 LMDB 文件：
+如果您想使用 `LMDB` 以获得更快的 IO 速度，可以通过以下脚本来构建 LMDB 文件：
+
 ```shell
 python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
