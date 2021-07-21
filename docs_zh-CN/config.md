@@ -1,5 +1,7 @@
 # 教程 1: 了解配置文件
-mmediting 采用基于 python 文件的配置系统，您可以在 `$MMEditing/configs` 下查看预置的配置文件。
+
+mmedit 采用基于 python 文件的配置系统，您可以在 `$MMEditing/configs` 下查看预置的配置文件。
+
 ## 配置文件命名风格
 
 配置文件按照下面的风格命名。我们建议社区贡献者使用同样的风格。
