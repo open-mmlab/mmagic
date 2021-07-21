@@ -26,8 +26,7 @@ conda install pytorch torchvision -c pytorch
 Note: Make sure that your compilation CUDA version and runtime CUDA version match.
 You can check the supported CUDA version for precompiled packages on the [PyTorch website](https://pytorch.org/).
 
-`E.g. 1` If you have CUDA 10.1 installed under `/usr/local/cuda` and would like to install
-PyTorch 1.5, you need to install the prebuilt PyTorch with CUDA 10.1.
+`E.g. 1` If you have CUDA 10.1 installed under `/usr/local/cuda`, you need to install the prebuilt PyTorch with CUDA 10.1.
 
 ```python
 conda install pytorch cudatoolkit=10.1 torchvision -c pytorch
