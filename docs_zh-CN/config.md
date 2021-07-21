@@ -1,5 +1,4 @@
 # 教程 1: 了解配置文件
-
 mmediting 采用基于 python 文件的配置系统，您可以在 `$MMEditing/configs` 下查看预置的配置文件。
 
 ## 配置文件命名风格
@@ -20,4 +19,3 @@ mmediting 采用基于 python 文件的配置系统，您可以在 `$MMEditing/c
 - `[gpu x batch_per_gpu]`: GPU数目 和每个 GPU 的样本数， 默认为 `8x2 `。
 - `{schedule}`: 训练策略，如 `20k`, `100k` 等，意思是 `20k` 或 `100k` 迭代轮数。
 - `{dataset}`: 数据集，如 `places`（图像补全）、`comp1k`（抠图）、`div2k`（图像恢复）和 `paired`（图像生成）。
-
