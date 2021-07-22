@@ -1,17 +1,20 @@
-exp_name = 'liif_edsr_norm_c64b16_g1_1000k_div2k'
+exp_name = 'liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k'
 scale_min, scale_max = 1, 4
 
 # model settings
 model = dict(
     type='LIIF',
     generator=dict(
-        type='LIIFEDSR',
+        type='LIIFRDN',
         encoder=dict(
-            type='EDSR',
+            type='RDN',
             in_channels=3,
             out_channels=3,
             mid_channels=64,
-            num_blocks=16),
+            num_blocks=16,
+            upscale_factor=4,
+            num_layers=8,
+            channel_growth=64),
         imnet=dict(
             type='MLPRefiner',
             in_dim=64,
@@ -21,13 +24,15 @@ model = dict(
         feat_unfold=True,
         cell_decode=True,
         eval_bsize=30000),
-    rgb_mean=(0.4488, 0.4371, 0.4040),
-    rgb_std=(1., 1., 1.),
+    rgb_mean=(0.5, 0.5, 0.5),
+    rgb_std=(0.5, 0.5, 0.5),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = None
 test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=scale_max)
 
+# dataset settings
+scale_min, scale_max = 1, 4
 # dataset settings
 train_dataset_type = 'SRFolderGTDataset'
 val_dataset_type = 'SRFolderGTDataset'
@@ -113,18 +118,13 @@ data = dict(
         gt_folder='data/val_set5/Set5',
         pipeline=valid_pipeline,
         scale=scale_max),
-    # test=dict(
-    #     type=test_dataset_type,
-    #     lq_folder=f'data/val_set5/Set5_bicLRx{scale_max:d}',
-    #     gt_folder='data/val_set5/Set5',
-    #     pipeline=test_pipeline,
-    #     scale=scale_max,
-    #     filename_tmpl='{}'),
     test=dict(
-        type=val_dataset_type,
+        type=test_dataset_type,
+        lq_folder=f'data/val_set5/Set5_bicLRx{scale_max:d}',
         gt_folder='data/val_set5/Set5',
-        pipeline=valid_pipeline,
-        scale=scale_max))
+        pipeline=test_pipeline,
+        scale=scale_max,
+        filename_tmpl='{}'))
 
 # optimizer
 optimizers = dict(type='Adam', lr=1.e-4)
