@@ -13,12 +13,30 @@ from .registry import DATASETS
 class SRFolderVideoDataset(BaseSRDataset):
     """General dataset for video SR, used for sliding-window framework.
 
-    It assumes all video sequences under the root directory are used for
-    training or test.
-
     The dataset loads several LQ (Low-Quality) frames and one GT (Ground-Truth)
     frames. Then it applies specified transforms and finally returns a dict
     containing paired data and other information.
+
+    This dataset takes an annotation file specifying the sequences used in
+    training or test. If no annotation file is provided, it assumes all video
+    sequences under the root directory are used for training or test.
+
+    In the annotation file (.txt), each line contains:
+
+        1. image name (no file extension);
+        2. number of frames in the sequence (in the same folder)
+
+    Examples:
+
+    ::
+
+        calendar/00000000 41
+        calendar/00000001 41
+        ...
+        calendar/00000040 41
+        city/00000000 34
+        ...
+
 
     Args:
         lq_folder (str | :obj:`Path`): Path to a lq folder.
@@ -26,6 +44,8 @@ class SRFolderVideoDataset(BaseSRDataset):
         num_input_frames (int): Window size for input frames.
         pipeline (list[dict | callable]): A sequence of data transformations.
         scale (int): Upsampling scale ratio.
+        ann_file (str): The path to the annotation file. If None, we assume
+            that all sequences in the folder is used. Default: None.
         filename_tmpl (str): Template for each filename. Note that the
             template excludes the file extension. Default: '{:08d}'.
         metric_average_mode (str): The way to compute the average metric.
@@ -42,6 +62,7 @@ class SRFolderVideoDataset(BaseSRDataset):
                  num_input_frames,
                  pipeline,
                  scale,
+                 ann_file=None,
                  filename_tmpl='{:08d}',
                  metric_average_mode='clip',
                  test_mode=True):
@@ -57,10 +78,32 @@ class SRFolderVideoDataset(BaseSRDataset):
         self.lq_folder = str(lq_folder)
         self.gt_folder = str(gt_folder)
         self.num_input_frames = num_input_frames
+        self.ann_file = ann_file
         self.filename_tmpl = filename_tmpl
         self.metric_average_mode = metric_average_mode
 
         self.data_infos = self.load_annotations()
+
+    def _load_annotations_from_file(self):
+        self.folders = {}
+        data_infos = []
+
+        ann_list = mmcv.list_from_file(self.ann_file)
+        for ann in ann_list:
+            key, max_frame_num = ann.strip().rsplit(' ', 1)
+            sequence = osp.basename(key)
+            if sequence not in self.folders:
+                self.folders[sequence] = int(max_frame_num)
+
+            data_infos.append(
+                dict(
+                    lq_path=self.lq_folder,
+                    gt_path=self.gt_folder,
+                    key=key,
+                    num_input_frames=self.num_input_frames,
+                    max_frame_num=int(max_frame_num)))
+
+        return data_infos
 
     def load_annotations(self):
         """Load annoations for the dataset.
@@ -68,6 +111,9 @@ class SRFolderVideoDataset(BaseSRDataset):
         Returns:
             dict: Returned dict for LQ and GT pairs.
         """
+
+        if self.ann_file:
+            return self._load_annotations_from_file()
 
         self.folders = {}
         data_infos = []
