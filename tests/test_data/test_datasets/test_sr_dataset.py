@@ -793,11 +793,15 @@ def test_sr_vimeo90k_mutiple_gt_dataset():
 
     txt_content = ('00001/0266 (256,448,3)\n')
     mocked_open_function = mock_open(read_data=txt_content)
+
+    num_input_frames = 5
     lq_paths = [
-        str(root_path / '00001' / '0266' / f'im{v}.png') for v in range(1, 8)
+        str(root_path / '00001' / '0266' / f'im{v}.png')
+        for v in range(1, num_input_frames + 1)
     ]
     gt_paths = [
-        str(root_path / '00001' / '0266' / f'im{v}.png') for v in range(1, 8)
+        str(root_path / '00001' / '0266' / f'im{v}.png')
+        for v in range(1, num_input_frames + 1)
     ]
 
     with patch('builtins.open', mocked_open_function):
@@ -807,8 +811,8 @@ def test_sr_vimeo90k_mutiple_gt_dataset():
             ann_file='fake_ann_file',
             pipeline=[],
             scale=4,
+            num_input_frames=num_input_frames,
             test_mode=False)
-
         assert vimeo90k_dataset.data_infos == [
             dict(lq_path=lq_paths, gt_path=gt_paths, key='00001/0266')
         ]

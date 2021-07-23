@@ -1,6 +1,8 @@
 import glob
 import os.path as osp
 
+import mmcv
+
 from .base_sr_dataset import BaseSRDataset
 from .registry import DATASETS
 
@@ -70,20 +72,20 @@ class SRFolderMultipleGTDataset(BaseSRDataset):
     def _load_annotations_from_file(self):
         data_infos = []
 
-        with open(self.ann_file, 'r') as fin:
-            for line in fin:
-                key, sequence_length = line.strip().split(' ')
-                if self.num_input_frames is None:
-                    num_input_frames = sequence_length
-                else:
-                    num_input_frames = self.num_input_frames
-                data_infos.append(
-                    dict(
-                        lq_path=self.lq_folder,
-                        gt_path=self.gt_folder,
-                        key=key,
-                        num_input_frames=int(num_input_frames),
-                        sequence_length=int(sequence_length)))
+        ann_list = mmcv.list_from_file(self.ann_file)
+        for ann in ann_list:
+            key, sequence_length = ann.strip().split(' ')
+            if self.num_input_frames is None:
+                num_input_frames = sequence_length
+            else:
+                num_input_frames = self.num_input_frames
+            data_infos.append(
+                dict(
+                    lq_path=self.lq_folder,
+                    gt_path=self.gt_folder,
+                    key=key,
+                    num_input_frames=int(num_input_frames),
+                    sequence_length=int(sequence_length)))
 
         return data_infos
 

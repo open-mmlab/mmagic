@@ -88,20 +88,20 @@ class SRFolderVideoDataset(BaseSRDataset):
         self.folders = {}
         data_infos = []
 
-        with open(self.ann_file, 'r') as fin:
-            for line in fin:
-                key, max_frame_num = line.strip().split(' ')
-                sequence = key.split('/')[0]
-                if sequence not in self.folders:
-                    self.folders[sequence] = int(max_frame_num)
+        ann_list = mmcv.list_from_file(self.ann_file)
+        for ann in ann_list:
+            key, max_frame_num = ann.strip().rsplit(' ', 1)
+            sequence = osp.basename(key)
+            if sequence not in self.folders:
+                self.folders[sequence] = int(max_frame_num)
 
-                data_infos.append(
-                    dict(
-                        lq_path=self.lq_folder,
-                        gt_path=self.gt_folder,
-                        key=key,
-                        num_input_frames=self.num_input_frames,
-                        max_frame_num=int(max_frame_num)))
+            data_infos.append(
+                dict(
+                    lq_path=self.lq_folder,
+                    gt_path=self.gt_folder,
+                    key=key,
+                    num_input_frames=self.num_input_frames,
+                    max_frame_num=int(max_frame_num)))
 
         return data_infos
 
