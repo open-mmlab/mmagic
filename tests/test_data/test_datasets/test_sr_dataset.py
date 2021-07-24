@@ -793,11 +793,15 @@ def test_sr_vimeo90k_mutiple_gt_dataset():
 
     txt_content = ('00001/0266 (256,448,3)\n')
     mocked_open_function = mock_open(read_data=txt_content)
+
+    num_input_frames = 5
     lq_paths = [
-        str(root_path / '00001' / '0266' / f'im{v}.png') for v in range(1, 8)
+        str(root_path / '00001' / '0266' / f'im{v}.png')
+        for v in range(1, num_input_frames + 1)
     ]
     gt_paths = [
-        str(root_path / '00001' / '0266' / f'im{v}.png') for v in range(1, 8)
+        str(root_path / '00001' / '0266' / f'im{v}.png')
+        for v in range(1, num_input_frames + 1)
     ]
 
     with patch('builtins.open', mocked_open_function):
@@ -807,8 +811,8 @@ def test_sr_vimeo90k_mutiple_gt_dataset():
             ann_file='fake_ann_file',
             pipeline=[],
             scale=4,
+            num_input_frames=num_input_frames,
             test_mode=False)
-
         assert vimeo90k_dataset.data_infos == [
             dict(lq_path=lq_paths, gt_path=gt_paths, key='00001/0266')
         ]
@@ -886,6 +890,45 @@ def test_sr_folder_multiple_gt_dataset():
             sequence_length=1)
     ]
 
+    # with annotation file (without num_input_frames)
+    txt_content = ('sequence_1 2\n')
+    mocked_open_function = mock_open(read_data=txt_content)
+    with patch('builtins.open', mocked_open_function):
+        # test without num_input_frames
+        test_dataset = SRFolderMultipleGTDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            pipeline=[],
+            scale=4,
+            ann_file='fake_ann_file',
+            test_mode=True)
+        assert test_dataset.data_infos == [
+            dict(
+                lq_path=str(root_path),
+                gt_path=str(root_path),
+                key='sequence_1',
+                num_input_frames=2,
+                sequence_length=2),
+        ]
+
+        # with annotation file (with num_input_frames)
+        test_dataset = SRFolderMultipleGTDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            pipeline=[],
+            scale=4,
+            ann_file='fake_ann_file',
+            num_input_frames=1,
+            test_mode=True)
+        assert test_dataset.data_infos == [
+            dict(
+                lq_path=str(root_path),
+                gt_path=str(root_path),
+                key='sequence_1',
+                num_input_frames=1,
+                sequence_length=2),
+        ]
+
     # num_input_frames must be a positive integer
     with pytest.raises(ValueError):
         SRFolderMultipleGTDataset(
@@ -928,6 +971,27 @@ def test_sr_folder_video_dataset():
             num_input_frames=5,
             max_frame_num=1),
     ]
+
+    # with annotation file
+    txt_content = ('sequence_1/00000000 2\n')
+    mocked_open_function = mock_open(read_data=txt_content)
+    with patch('builtins.open', mocked_open_function):
+        test_dataset = SRFolderVideoDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            num_input_frames=5,
+            pipeline=[],
+            scale=4,
+            ann_file='fake_ann_file',
+            test_mode=True)
+        assert test_dataset.data_infos == [
+            dict(
+                lq_path=str(root_path),
+                gt_path=str(root_path),
+                key='sequence_1/00000000',
+                num_input_frames=5,
+                max_frame_num=2),
+        ]
 
     # test evaluate function ('clip' mode)
     test_dataset = SRFolderVideoDataset(

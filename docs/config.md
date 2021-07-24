@@ -6,7 +6,7 @@ We use python files as our config system. You can find all the provided configs 
 
 We follow the below style to name config files. Contributors are advised to follow the same style.
 
-```
+```bash
 {model}_[model setting]_{backbone}_[refiner]_[norm setting]_[misc]_[gpu x batch_per_gpu]_{schedule}_{dataset}
 ```
 

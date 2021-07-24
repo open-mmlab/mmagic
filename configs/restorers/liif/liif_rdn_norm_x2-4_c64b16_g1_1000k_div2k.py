@@ -1,26 +1,31 @@
-exp_name = 'liif_edsr_norm_x2-4_c64b16_g1_1000k_div2k'
+exp_name = 'liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k'
 scale_min, scale_max = 1, 4
 
 # model settings
 model = dict(
     type='LIIF',
     generator=dict(
-        type='EDSR',
-        in_channels=3,
-        out_channels=3,
-        mid_channels=64,
-        num_blocks=16),
-    imnet=dict(
-        type='MLPRefiner',
-        in_dim=64,
-        out_dim=3,
-        hidden_list=[256, 256, 256, 256]),
-    local_ensemble=True,
-    feat_unfold=True,
-    cell_decode=True,
-    rgb_mean=(0.4488, 0.4371, 0.4040),
-    rgb_std=(1., 1., 1.),
-    eval_bsize=30000,
+        type='LIIFRDN',
+        encoder=dict(
+            type='RDN',
+            in_channels=3,
+            out_channels=3,
+            mid_channels=64,
+            num_blocks=16,
+            upscale_factor=4,
+            num_layers=8,
+            channel_growth=64),
+        imnet=dict(
+            type='MLPRefiner',
+            in_dim=64,
+            out_dim=3,
+            hidden_list=[256, 256, 256, 256]),
+        local_ensemble=True,
+        feat_unfold=True,
+        cell_decode=True,
+        eval_bsize=30000),
+    rgb_mean=(0.5, 0.5, 0.5),
+    rgb_std=(0.5, 0.5, 0.5),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = None
@@ -133,9 +138,8 @@ lr_config = dict(
     step=[200000, 400000, 600000, 800000],
     gamma=0.5)
 
-checkpoint_config = dict(
-    interval=iter_per_epoch, save_optimizer=True, by_epoch=False)
-evaluation = dict(interval=iter_per_epoch, save_image=True, gpu_collect=True)
+checkpoint_config = dict(interval=3000, save_optimizer=True, by_epoch=False)
+evaluation = dict(interval=3000, save_image=True, gpu_collect=True)
 log_config = dict(
     interval=100,
     hooks=[
@@ -151,3 +155,4 @@ work_dir = f'./work_dirs/{exp_name}'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
+find_unused_parameters = True
