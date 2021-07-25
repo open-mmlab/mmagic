@@ -16,45 +16,48 @@ from mmedit.utils import get_root_logger
 class BasicVSRPlusPlus(nn.Module):
     """BasicVSR++ network structure.
 
-    Support either x4 upsampling or same size output.
+    Support either x4 upsampling or same size output. Since DCN is used in this
+    model, it can only be used with CUDA enabled.
+
     Paper:
         BasicVSR++: Improving Video Super-Resolution with Enhanced Propagation
         and Alignment
 
     Args:
-        mid_channels (int): Channel number of the intermediate features.
-            Default: 64.
-        num_blocks (int): Number of residual blocks in each propagation branch.
-            Default: 7.
-        low_res_input (bool): Whether the input is low-resolution or not. If
-            False, the output resolution is equal to the input resolution.
-            Default: True.
-        spynet_pretrained (str): Pre-trained model path of SPyNet.
+        mid_channels (int, optional): Channel number of the intermediate
+            features. Default: 64.
+        num_blocks (int, optional): The number of residual blocks in each
+            propagation branch. Default: 7.
+        is_low_res_input (bool, optional): Whether the input is low-resolution
+            or not. If False, the output resolution is equal to the input
+            resolution. Default: True.
+        spynet_pretrained (str, optional): Pre-trained model path of SPyNet.
             Default: None.
-        cpu_cache_length (int): When the length of sequence is larger than
-            this value, the intermediate features are sent to CPU. This saves
-            GPU memory, but slows down the inference speed. You can increase
-            this number if you have a GPU with large memory. Default: 100.
+        cpu_cache_length (int, optional): When the length of sequence is larger
+            than this value, the intermediate features are sent to CPU. This
+            saves GPU memory, but slows down the inference speed. You can
+            increase this number if you have a GPU with large memory.
+            Default: 100.
     """
 
     def __init__(self,
                  mid_channels=64,
                  num_blocks=7,
-                 low_res_input=True,
+                 is_low_res_input=True,
                  spynet_pretrained=None,
                  cpu_cache_length=100):
 
         super().__init__()
 
         self.mid_channels = mid_channels
-        self.low_res_input = low_res_input
+        self.is_low_res_input = is_low_res_input
         self.cpu_cache_length = cpu_cache_length
 
         # optical flow
         self.spynet = SPyNet(pretrained=spynet_pretrained)
 
         # feature extraction module
-        if low_res_input:
+        if is_low_res_input:
             self.feat_extract = ResidualBlocksWithInputConv(3, mid_channels, 5)
         else:
             self.feat_extract = nn.Sequential(
@@ -142,14 +145,14 @@ class BasicVSRPlusPlus(nn.Module):
         """Propagate the latent features throughout the sequence.
 
         Args:
-            feats dict(list(tensor))): Features from previous branches. Each
+            feats dict(list[tensor]): Features from previous branches. Each
                 component is a list of tensors with shape (n, c, h, w).
             flows (tensor): Optical flows with shape (n, t - 1, 2, h, w)
             module (str): The name of the propgation branches. Can either be
                 'backward_1', 'forward_1', 'backward_2', 'forward_2'.
 
         Return:
-            dict(list(tensor))): A dictionary containing all the propgated
+            dict(list[tensor]): A dictionary containing all the propgated
                 features. Each key in the dictionary corresponds to a
                 propagation branch, which is represented by a list of tensors.
         """
@@ -253,7 +256,7 @@ class BasicVSRPlusPlus(nn.Module):
             hr = self.lrelu(self.upsample2(hr))
             hr = self.lrelu(self.conv_hr(hr))
             hr = self.conv_last(hr)
-            if self.low_res_input:
+            if self.is_low_res_input:
                 hr += self.img_upsample(lqs[:, i, :, :, :])
             else:
                 hr += lqs[:, i, :, :, :]
@@ -281,7 +284,7 @@ class BasicVSRPlusPlus(nn.Module):
         # whether to cache the features in CPU
         self.cpu_cache = True if t > self.cpu_cache_length else False
 
-        if self.low_res_input:
+        if self.is_low_res_input:
             lqs_downsample = lqs.clone()
         else:
             lqs_downsample = F.interpolate(
