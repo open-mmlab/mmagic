@@ -33,4 +33,4 @@ cat ../tools/data/matting/*/README.md | sed 's/# Preparing/# /g' | sed "s/#/#&/"
 cat ../tools/data/super-resolution/*/README.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> sr_datasets.md
 
 # merge configs
-cat config_*.md | sed "s/#/#&/" >> config.md
+cat configs/config_*.md | sed "s/#/#&/" >> config.md
