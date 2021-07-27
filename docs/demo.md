@@ -45,7 +45,7 @@ python demo/restoration_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} 
 If `--imshow` is specified, the demo will also show image with opencv. Examples:
 
 ```shell
-python demo/restoration_demo.py configs/restorer/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k.py work_dirs/esrgan_x4c64b23g32_1x16_400k_div2k/latest.pth tests/data/lq/baboon_x4.png demo/demo_out_baboon.png
+python demo/restoration_demo.py configs/restorer/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py work_dirs/esrgan_x4c64b23g32_g1_400k_div2k/latest.pth tests/data/lq/baboon_x4.png demo/demo_out_baboon.png
 ```
 #### Restoration (Video)
 
