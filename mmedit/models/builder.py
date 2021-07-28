@@ -1,24 +1,11 @@
-import torch.nn as nn
-from mmcv import build_from_cfg
+from mmcv.cnn import build_model_from_cfg
+from mmcv.utils import Registry
 
-from .registry import BACKBONES, COMPONENTS, LOSSES, MODELS
+MODELS = Registry('models', build_func=build_model_from_cfg)
 
-
-def build(cfg, registry, default_args=None):
-    """Build module function.
-
-    Args:
-        cfg (dict): Configuration for building modules.
-        registry (obj): ``registry`` object.
-        default_args (dict, optional): Default arguments. Defaults to None.
-    """
-    if isinstance(cfg, list):
-        modules = [
-            build_from_cfg(cfg_, registry, default_args) for cfg_ in cfg
-        ]
-        return nn.Sequential(*modules)
-
-    return build_from_cfg(cfg, registry, default_args)
+BACKBONES = MODELS
+COMPONENTS = MODELS
+LOSSES = MODELS
 
 
 def build_backbone(cfg):
@@ -27,7 +14,7 @@ def build_backbone(cfg):
     Args:
         cfg (dict): Configuration for building backbone.
     """
-    return build(cfg, BACKBONES)
+    return BACKBONES.build(cfg)
 
 
 def build_component(cfg):
@@ -36,7 +23,7 @@ def build_component(cfg):
     Args:
         cfg (dict): Configuration for building component.
     """
-    return build(cfg, COMPONENTS)
+    return COMPONENTS.build(cfg)
 
 
 def build_loss(cfg):
@@ -45,7 +32,7 @@ def build_loss(cfg):
     Args:
         cfg (dict): Configuration for building loss.
     """
-    return build(cfg, LOSSES)
+    return LOSSES.build(cfg)
 
 
 def build_model(cfg, train_cfg=None, test_cfg=None):
@@ -56,4 +43,5 @@ def build_model(cfg, train_cfg=None, test_cfg=None):
         train_cfg (dict): Training configuration. Default: None.
         test_cfg (dict): Testing configuration. Default: None.
     """
-    return build(cfg, MODELS, dict(train_cfg=train_cfg, test_cfg=test_cfg))
+    cfg.update(dict(train_cfg=train_cfg, test_cfg=test_cfg))
+    return MODELS.build(cfg)

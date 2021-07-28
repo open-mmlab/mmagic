@@ -1,4 +1,4 @@
-from mmedit.models.registry import COMPONENTS
+from mmedit.models.builder import COMPONENTS
 from .resnet import ResNet
 
 

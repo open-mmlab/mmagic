@@ -8,9 +8,8 @@ from torchvision.utils import save_image
 
 from mmedit.core import L1Evaluation, psnr, ssim, tensor2img
 from ..base import BaseModel
-from ..builder import build_backbone, build_component, build_loss
+from ..builder import MODELS, build_backbone, build_component, build_loss
 from ..common import set_requires_grad
-from ..registry import MODELS
 
 
 @MODELS.register_module()

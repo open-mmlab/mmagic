@@ -6,9 +6,8 @@ import torch
 
 from mmedit.core import tensor2img
 from mmedit.models.common import ImgNormalize
-from ..builder import build_backbone, build_component, build_loss
+from ..builder import MODELS, build_backbone, build_component, build_loss
 from ..common import set_requires_grad
-from ..registry import MODELS
 from .basic_restorer import BasicRestorer
 
 

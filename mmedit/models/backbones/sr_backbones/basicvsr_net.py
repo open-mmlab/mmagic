@@ -4,9 +4,9 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule
 from mmcv.runner import load_checkpoint
 
+from mmedit.models.builder import BACKBONES
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   flow_warp, make_layer)
-from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 
@@ -113,7 +113,7 @@ class BasicVSRNet(nn.Module):
             Tensor: Output HR sequence with shape (n, t, c, 4h, 4w).
         """
 
-        n, t, c, h, w = lrs.size()
+        n, t, _, h, w = lrs.size()
         assert h >= 64 and w >= 64, (
             'The height and width of inputs should be at least 64, '
             f'but got {h} and {w}.')

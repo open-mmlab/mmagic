@@ -1,9 +1,9 @@
 import torch.nn as nn
 from mmcv.runner import load_checkpoint
 
+from mmedit.models.builder import BACKBONES
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   default_init_weights, make_layer)
-from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 

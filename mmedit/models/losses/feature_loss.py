@@ -4,7 +4,7 @@ from mmcv.runner import load_checkpoint
 
 from mmedit.models.components.discriminators import LightCNN
 from mmedit.utils import get_root_logger
-from ..registry import LOSSES
+from ..builder import LOSSES
 
 
 class LightCNNFeature(nn.Module):

@@ -6,7 +6,7 @@ import cv2
 import mmcv
 import numpy as np
 
-from ..registry import PIPELINES
+from ..builder import PIPELINES
 
 
 @PIPELINES.register_module()

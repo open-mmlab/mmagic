@@ -1,7 +1,7 @@
 import torch
 
+from ..builder import MODELS
 from ..common import set_requires_grad
-from ..registry import MODELS
 from .srgan import SRGAN
 
 

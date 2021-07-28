@@ -6,7 +6,7 @@ from torch.autograd import Function
 from torch.nn.modules.pooling import _MaxUnpoolNd
 from torch.nn.modules.utils import _pair
 
-from mmedit.models.registry import COMPONENTS
+from mmedit.models.builder import COMPONENTS
 
 
 class MaxUnpool2dop(Function):

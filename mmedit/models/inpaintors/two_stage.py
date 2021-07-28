@@ -6,8 +6,8 @@ import torch
 from torchvision.utils import save_image
 
 from mmedit.core import tensor2img
+from ..builder import MODELS
 from ..common.model_utils import set_requires_grad
-from ..registry import MODELS
 from .one_stage import OneStageInpaintor
 
 

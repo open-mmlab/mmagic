@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from .base_dataset import BaseDataset
-from .registry import DATASETS
+from .builder import DATASETS
 
 
 @DATASETS.register_module()
@@ -15,7 +15,7 @@ class BaseMattingDataset(BaseDataset):
         self.data_prefix = str(data_prefix)
         self.data_infos = self.load_annotations()
 
-    def evaluate(self, results, logger=None):
+    def evaluate(self, results):
         """Evaluating with different metrics.
 
         Args:

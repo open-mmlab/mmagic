@@ -5,9 +5,9 @@ from mmcv.ops import ModulatedDeformConv2d, modulated_deform_conv2d
 from mmcv.runner import load_checkpoint
 from torch.nn.modules.utils import _pair
 
+from mmedit.models.builder import BACKBONES
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   make_layer)
-from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 

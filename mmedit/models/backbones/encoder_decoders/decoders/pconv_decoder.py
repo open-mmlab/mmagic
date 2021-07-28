@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from mmedit.models.builder import COMPONENTS
 from mmedit.models.common import MaskConvModule
-from mmedit.models.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()
