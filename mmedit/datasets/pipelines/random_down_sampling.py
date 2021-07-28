@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from mmcv import imresize
 
-from ..registry import PIPELINES
+from ..builder import PIPELINES
 
 
 @PIPELINES.register_module()

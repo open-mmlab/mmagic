@@ -2,7 +2,7 @@ import torch
 import torch.autograd as autograd
 import torch.nn as nn
 
-from ..registry import LOSSES
+from ..builder import LOSSES
 
 
 @LOSSES.register_module()

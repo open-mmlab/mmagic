@@ -1,8 +1,7 @@
 import torch.nn as nn
 from mmcv.runner import auto_fp16, load_checkpoint
 
-from mmedit.models.builder import build_component
-from mmedit.models.registry import BACKBONES
+from mmedit.models.builder import BACKBONES, build_component
 from mmedit.utils import get_root_logger
 
 

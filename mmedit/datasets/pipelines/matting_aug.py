@@ -6,7 +6,7 @@ import mmcv
 import numpy as np
 from mmcv.fileio import FileClient
 
-from ..registry import PIPELINES
+from ..builder import PIPELINES
 from .utils import adjust_gamma, random_choose_unknown
 
 

@@ -4,8 +4,8 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule
 from mmcv.runner import load_checkpoint
 
+from mmedit.models.builder import BACKBONES
 from mmedit.models.common import flow_warp
-from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 

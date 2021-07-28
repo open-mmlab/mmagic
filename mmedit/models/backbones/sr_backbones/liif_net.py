@@ -4,8 +4,7 @@ import torch.nn.functional as F
 from mmcv.runner import load_checkpoint
 
 from mmedit.datasets.pipelines.utils import make_coord
-from mmedit.models.builder import build_backbone, build_component
-from mmedit.models.registry import BACKBONES
+from mmedit.models.builder import BACKBONES, build_backbone, build_component
 from mmedit.utils import get_root_logger
 
 

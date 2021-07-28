@@ -4,9 +4,9 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule
 from mmcv.runner import load_checkpoint
 
+from mmedit.models.builder import BACKBONES
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   flow_warp, make_layer)
-from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 from .basicvsr_net import ResidualBlocksWithInputConv, SPyNet
 from .edvr_net import PCDAlignment, TSAFusion

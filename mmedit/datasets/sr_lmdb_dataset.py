@@ -1,7 +1,7 @@
 import os.path as osp
 
 from .base_sr_dataset import BaseSRDataset
-from .registry import DATASETS
+from .builder import DATASETS
 
 
 @DATASETS.register_module()

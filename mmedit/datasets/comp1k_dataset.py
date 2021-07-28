@@ -3,7 +3,7 @@ import os.path as osp
 import mmcv
 
 from .base_matting_dataset import BaseMattingDataset
-from .registry import DATASETS
+from .builder import DATASETS
 
 
 @DATASETS.register_module()

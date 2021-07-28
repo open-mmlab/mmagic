@@ -1,6 +1,6 @@
 import torch.nn as nn
 
-from ..registry import LOSSES
+from ..builder import LOSSES
 from .pixelwise_loss import charbonnier_loss, l1_loss, mse_loss
 
 _reduction_modes = ['none', 'mean', 'sum']

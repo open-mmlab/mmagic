@@ -6,7 +6,7 @@ import torch
 from mmcv.parallel import DataContainer as DC
 from torch.nn import functional as F
 
-from ..registry import PIPELINES
+from ..builder import PIPELINES
 
 
 def to_tensor(data):

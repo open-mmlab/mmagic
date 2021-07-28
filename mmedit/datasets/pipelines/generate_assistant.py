@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-from ..registry import PIPELINES
+from ..builder import PIPELINES
 from .utils import make_coord
 
 

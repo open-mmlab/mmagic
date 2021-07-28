@@ -2,7 +2,7 @@ import mmcv
 import numpy as np
 from torch.nn.modules.utils import _pair
 
-from ..registry import PIPELINES
+from ..builder import PIPELINES
 from .utils import random_choose_unknown
 
 

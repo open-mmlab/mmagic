@@ -3,7 +3,7 @@ import os.path as osp
 import numpy as np
 
 from .base_generation_dataset import BaseGenerationDataset
-from .registry import DATASETS
+from .builder import DATASETS
 
 
 @DATASETS.register_module()
