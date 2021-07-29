@@ -28,6 +28,8 @@ class BasicVSRPlusPlus(nn.Module):
             features. Default: 64.
         num_blocks (int, optional): The number of residual blocks in each
             propagation branch. Default: 7.
+        max_residue_magnitude (int): The maximum magnitude of the offset
+            residue (Eq. 6 in paper). Default: 10.
         is_low_res_input (bool, optional): Whether the input is low-resolution
             or not. If False, the output resolution is equal to the input
             resolution. Default: True.
@@ -43,6 +45,7 @@ class BasicVSRPlusPlus(nn.Module):
     def __init__(self,
                  mid_channels=64,
                  num_blocks=7,
+                 max_residue_magnitude=10,
                  is_low_res_input=True,
                  spynet_pretrained=None,
                  cpu_cache_length=100):
@@ -73,7 +76,12 @@ class BasicVSRPlusPlus(nn.Module):
         modules = ['backward_1', 'forward_1', 'backward_2', 'forward_2']
         for i, module in enumerate(modules):
             self.deform_align[module] = SecondOrderDeformableAlignment(
-                2 * mid_channels, mid_channels, 3, padding=1, deform_groups=16)
+                2 * mid_channels,
+                mid_channels,
+                3,
+                padding=1,
+                deform_groups=16,
+                max_residue_magnitude=max_residue_magnitude)
             self.backbone[module] = ResidualBlocksWithInputConv(
                 (2 + i) * mid_channels, mid_channels, num_blocks)
 
@@ -92,6 +100,9 @@ class BasicVSRPlusPlus(nn.Module):
         # activation function
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
 
+        # check if the sequence is augmented by flipping
+        self.is_mirror_extended = False
+
     def check_if_mirror_extended(self, lqs):
         """Check whether the input is a mirror-extended sequence.
 
@@ -99,10 +110,10 @@ class BasicVSRPlusPlus(nn.Module):
         (t-1-i)-th frame.
 
         Args:
-            lqs (tensor): Input LR images with shape (n, t, c, h, w)
+            lqs (tensor): Input low quality (LQ) sequence with
+                shape (n, t, c, h, w).
         """
 
-        self.is_mirror_extended = False
         if lqs.size(1) % 2 == 0:
             lqs_1, lqs_2 = torch.chunk(lqs, 2, dim=1)
             if torch.norm(lqs_1 - lqs_2.flip(1)) == 0:
@@ -115,7 +126,8 @@ class BasicVSRPlusPlus(nn.Module):
         is not needed, since it is equal to 'flows_backward.flip(1)'.
 
         Args:
-            lqs (tensor): Input LR images with shape (n, t, c, h, w)
+            lqs (tensor): Input low quality (LQ) sequence with
+                shape (n, t, c, h, w).
 
         Return:
             tuple(Tensor): Optical flow. 'flows_forward' corresponds to the
@@ -141,15 +153,15 @@ class BasicVSRPlusPlus(nn.Module):
 
         return flows_forward, flows_backward
 
-    def propagate(self, feats, flows, module):
+    def propagate(self, feats, flows, module_name):
         """Propagate the latent features throughout the sequence.
 
         Args:
             feats dict(list[tensor]): Features from previous branches. Each
                 component is a list of tensors with shape (n, c, h, w).
-            flows (tensor): Optical flows with shape (n, t - 1, 2, h, w)
-            module (str): The name of the propgation branches. Can either be
-                'backward_1', 'forward_1', 'backward_2', 'forward_2'.
+            flows (tensor): Optical flows with shape (n, t - 1, 2, h, w).
+            module_name (str): The name of the propgation branches. Can either
+                be 'backward_1', 'forward_1', 'backward_2', 'forward_2'.
 
         Return:
             dict(list[tensor]): A dictionary containing all the propgated
@@ -164,7 +176,7 @@ class BasicVSRPlusPlus(nn.Module):
         mapping_idx = list(range(0, len(feats['spatial'])))
         mapping_idx += mapping_idx[::-1]
 
-        if 'backward' in module:
+        if 'backward' in module_name:
             frame_idx = frame_idx[::-1]
             flow_idx = frame_idx
 
@@ -188,7 +200,7 @@ class BasicVSRPlusPlus(nn.Module):
                 cond_n2 = torch.zeros_like(cond_n1)
 
                 if i > 1:  # second-order features
-                    feat_n2 = feats[module][-2]
+                    feat_n2 = feats[module_name][-2]
                     if self.cpu_cache:
                         feat_n2 = feat_n2.cuda()
 
@@ -203,26 +215,27 @@ class BasicVSRPlusPlus(nn.Module):
                 # flow-guided deformable convolution
                 cond = torch.cat([cond_n1, feat_current, cond_n2], dim=1)
                 feat_prop = torch.cat([feat_prop, feat_n2], dim=1)
-                feat_prop = self.deform_align[module](feat_prop, cond, flow_n1,
-                                                      flow_n2)
+                feat_prop = self.deform_align[module_name](feat_prop, cond,
+                                                           flow_n1, flow_n2)
 
             # concatenate and residual blocks
             feat = [feat_current] + [
-                feats[k][idx] for k in feats if k not in ['spatial', module]
+                feats[k][idx]
+                for k in feats if k not in ['spatial', module_name]
             ] + [feat_prop]
             if self.cpu_cache:
                 feat = [f.cuda() for f in feat]
 
             feat = torch.cat(feat, dim=1)
-            feat_prop = feat_prop + self.backbone[module](feat)
-            feats[module].append(feat_prop)
+            feat_prop = feat_prop + self.backbone[module_name](feat)
+            feats[module_name].append(feat_prop)
 
             if self.cpu_cache:
-                feats[module][-1] = feats[module][-1].cpu()
+                feats[module_name][-1] = feats[module_name][-1].cpu()
                 torch.cuda.empty_cache()
 
-        if 'backward' in module:
-            feats[module] = feats[module][::-1]
+        if 'backward' in module_name:
+            feats[module_name] = feats[module_name][::-1]
 
         return feats
 
@@ -230,7 +243,8 @@ class BasicVSRPlusPlus(nn.Module):
         """Compute the output image given the features.
 
         Args:
-            lqs (tensor): Input LR images with shape (n, t, c, h, w).
+            lqs (tensor): Input low quality (LQ) sequence with
+                shape (n, t, c, h, w).
             feats (dict): The features from the propgation branches.
 
         Returns:
@@ -273,7 +287,8 @@ class BasicVSRPlusPlus(nn.Module):
         """Forward function for BasicVSR++.
 
         Args:
-            lqs (Tensor): Input LR sequence with shape (n, t, c, h, w).
+            lqs (tensor): Input low quality (LQ) sequence with
+                shape (n, t, c, h, w).
 
         Returns:
             Tensor: Output HR sequence with shape (n, t, c, 4h, 4w).
@@ -366,10 +381,14 @@ class SecondOrderDeformableAlignment(ModulatedDeformConv2d):
         bias (bool or str): If specified as `auto`, it will be decided by the
             norm_cfg. Bias will be set as True if norm_cfg is None, otherwise
             False.
+        max_residue_magnitude (int): The maximum magnitude of the offset
+            residue (Eq. 6 in paper). Default: 10.
 
     """
 
     def __init__(self, *args, **kwargs):
+        self.max_residue_magnitude = kwargs.pop('max_residue_magnitude', 10)
+
         super(SecondOrderDeformableAlignment, self).__init__(*args, **kwargs)
 
         self.conv_offset = nn.Sequential(
@@ -393,7 +412,8 @@ class SecondOrderDeformableAlignment(ModulatedDeformConv2d):
         o1, o2, mask = torch.chunk(out, 3, dim=1)
 
         # offset
-        offset = 10 * torch.tanh(torch.cat((o1, o2), dim=1))
+        offset = self.max_residue_magnitude * torch.tanh(
+            torch.cat((o1, o2), dim=1))
         offset_1, offset_2 = torch.chunk(offset, 2, dim=1)
         offset_1 = offset_1 + flow_1.flip(1).repeat(1,
                                                     offset_1.size(1) // 2, 1,
