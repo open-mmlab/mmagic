@@ -1,3 +1,4 @@
+import face_alignment
 import numpy as np
 import torch
 
@@ -165,4 +166,140 @@ class GenerateCoordinateAndCell:
         repr_str = self.__class__.__name__
         repr_str += (f'sample_quantity={self.sample_quantity}, '
                      f'scale={self.scale}, target_size={self.target_size}')
+        return repr_str
+
+
+@PIPELINES.register_module()
+class DetectFaceLandmark:
+    """Detect Face Landmark.
+
+    Detect Face Landmark from image.
+    If detect more than one faces, only handle the largest one.
+
+    Args:
+        image_key (str): The key of image.
+        landmark_key (str): The key of landmark.
+        device (str): Device of face alignment.
+    """
+
+    def __init__(self, image_key, landmark_key, device='cuda'):
+
+        self.image_key = image_key
+        self.landmark_key = landmark_key
+        self.fd = face_alignment.FaceAlignment(
+            face_alignment.LandmarksType._2D, device=device, flip_input=False)
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation. Require self.image_key.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+                Require self.image_key, add self.landmark.
+        """
+
+        image = results[self.image_key]
+        faces = self.fd.get_landmarks(image)
+        index = 0
+        if len(faces) > 1:
+            # Detected too many face, only handle the largest one
+            hights = []
+            for face in faces:
+                hights.append(face[8, 1] - face[19, 1])
+            index = hights.index(max(hights))
+        landmark = faces[index]
+        results[self.landmark_key] = landmark[:, 0:2]
+
+        return results
+
+    def __repr__(self):
+        repr_str = (f'{self.__class__.__name__}: '
+                    f'image_key={self.image_key}'
+                    f'landmark_key={self.landmark_key}')
+        return repr_str
+
+
+@PIPELINES.register_module()
+class FacialFeaturesLocation:
+    """Facial Features Location
+
+    Generate facial features location from landmark,
+        include eyes, nose and mouth.
+
+    Args:
+        landmark_key (str): The key of landmark.
+        location_key (str): The key of location.
+    """
+
+    def __init__(self, landmark_key, location_key):
+        self.landmark_key = landmark_key
+        self.location_key = location_key
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation. Require self.image_key.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+                Require self.landmark_key, add self.location_key.
+                result[self.location_key] is a dict contains
+                    'left_eye', 'right_eye', 'nose' and 'mouth'.
+        """
+
+        landmarks = np.array(results[self.landmark_key])
+        assert landmarks.shape == (68, 2), 'Only support 68 points now.'
+        map_left_eye = list(np.hstack((range(17, 22), range(36, 42))))
+        map_right_eye = list(np.hstack((range(22, 27), range(42, 48))))
+        map_nose = list(range(29, 36))
+        map_mouth = list(range(48, 68))
+        # left eye
+        mean_left_eye = np.mean(landmarks[map_left_eye], 0)
+        len_left_eye = np.max((np.max(
+            np.max(landmarks[map_left_eye], 0) -
+            np.min(landmarks[map_left_eye], 0)) / 2, 16))
+        location_left_eye = np.hstack(
+            (mean_left_eye - len_left_eye + 1,
+             mean_left_eye + len_left_eye)).astype(int)
+        # right eye
+        mean_right_eye = np.mean(landmarks[map_right_eye], 0)
+        len_right_eye = np.max((np.max(
+            np.max(landmarks[map_right_eye], 0) -
+            np.min(landmarks[map_right_eye], 0)) / 2, 16))
+        location_right_eye = np.hstack(
+            (mean_right_eye - len_right_eye + 1,
+             mean_right_eye + len_right_eye)).astype(int)
+        # nose
+        mean_nose = np.mean(landmarks[map_nose], 0)
+        len_nose = np.max((np.max(
+            np.max(landmarks[map_nose], 0) - np.min(landmarks[map_nose], 0)) /
+                           2, 16))
+        location_nose = np.hstack(
+            (mean_nose - len_nose + 1, mean_nose + len_nose)).astype(int)
+        # mouth
+        mean_mouth = np.mean(landmarks[map_mouth], 0)
+        len_mouth = np.max((np.max(
+            np.max(landmarks[map_mouth], 0) - np.min(landmarks[map_mouth], 0))
+                            / 2, 16))
+        location_mouth = np.hstack(
+            (mean_mouth - len_mouth + 1, mean_mouth + len_mouth)).astype(int)
+
+        location = dict(
+            left_eye=torch.from_numpy(location_left_eye).unsqueeze(0),
+            right_eye=torch.from_numpy(location_right_eye).unsqueeze(0),
+            nose=torch.from_numpy(location_nose).unsqueeze(0),
+            mouth=torch.from_numpy(location_mouth).unsqueeze(0))
+        results[self.location_key] = location
+
+        return results
+
+    def __repr__(self):
+        repr_str = (f'{self.__class__.__name__}: '
+                    f'landmark_key={self.landmark_key}'
+                    f'location_key={self.location_key}')
         return repr_str
