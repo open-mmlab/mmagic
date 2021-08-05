@@ -26,7 +26,8 @@ The pretrained weights of SPyNet can be found [here](https://download.openmmlab.
 | [basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi](/configs/restorers/basicvsr/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi.py) |        31.0126/0.8804        |        **37.7864/0.9500**        |     **27.7882/0.8401**    |       33.1211/0.9270       |          33.8972/0.9195          |       23.6086/0.7033      | [model](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305-4ef437e2.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305_141254.log.json) |
 | [basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd](/configs/restorers/basicvsr/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd.py) |        29.2041/0.8528        |          34.7248/0.9351          |       26.4377/0.8074      |     **40.7216/0.9722**     |        **38.2054/0.9550**        |     **29.0400/0.8753**    | [model](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd_20210305-ab315ab1.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd_20210305_140921.log.json) |
 
-## NTIRE 2021 checkpoints
+<details>
+<summary align="left">NTIRE 2021 checkpoints</summary>
 
 Note that the following models are finetuned from smaller models. The training schemes of these models will be released when MMEditing reaches 5k stars. We provide the pre-trained models here.
 
@@ -37,3 +38,5 @@ Note that the following models are finetuned from smaller models. The training s
 [NTIRE 2021 Quality Enhancement of Compressed Video - Track 2](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track2_20210314-eeae05e6.pth)
 
 [NTIRE 2021 Quality Enhancement of Compressed Video - Track 3](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track3_20210304-6daf4a40.pth)
+
+</details>
