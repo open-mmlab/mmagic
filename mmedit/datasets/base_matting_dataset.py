@@ -15,7 +15,7 @@ class BaseMattingDataset(BaseDataset):
         self.data_prefix = str(data_prefix)
         self.data_infos = self.load_annotations()
 
-    def evaluate(self, results):
+    def evaluate(self, results, logger=None):
         """Evaluating with different metrics.
 
         Args:
