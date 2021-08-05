@@ -266,17 +266,6 @@ def test_two_stage_inpaintor():
                 loss_weight=1.0,
             ),
             loss_disc_shift=dict(type='DiscShiftLoss'),
-            loss_composed_percep=dict(
-                type='PerceptualLoss',
-                vgg_type='vgg16',
-                layer_weights={
-                    '4': 1.,
-                    '9': 1.,
-                    '16': 1.,
-                },
-                perceptual_weight=0.05,
-                style_weight=120,
-                pretrained='torchvision://vgg16'),
             pretrained=None)
         tsinpaintor = DeepFillv1Inpaintor(
             **model_, train_cfg=train_cfg, test_cfg=test_cfg).cuda()
