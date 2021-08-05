@@ -30,7 +30,7 @@ class LTE(nn.Module):
             pixel_range=pixel_range, img_mean=vgg_mean, img_std=vgg_std)
 
         # use vgg19 weights to initialize
-        vgg_pretrained_features = models.vgg19(pretrained=True).features
+        vgg_pretrained_features = models.vgg19(pretrained=False).features
 
         self.slice1 = torch.nn.Sequential()
         self.slice2 = torch.nn.Sequential()
