@@ -113,6 +113,7 @@ venv.bak/
 work_dirs/
 /data/
 /data
+mmmedit/.mim
 
 # Pytorch
 *.pth
