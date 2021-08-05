@@ -7,17 +7,39 @@ from mmedit.models.backbones.sr_backbones.basicvsr_pp import BasicVSRPlusPlus
 def test_basicvsr_plusplus():
     """Test BasicVSR++."""
 
-    if not torch.cuda.is_available():
-        # raise error about DCN if CUDA is not available
-        with pytest.raises(AssertionError):
-            model = BasicVSRPlusPlus(
-                mid_channels=64,
-                num_blocks=7,
-                is_low_res_input=True,
-                spynet_pretrained=None,
-                cpu_cache_length=100)
+    # cpu
+    model = BasicVSRPlusPlus(
+        mid_channels=64,
+        num_blocks=7,
+        is_low_res_input=True,
+        spynet_pretrained=None,
+        cpu_cache_length=100)
+    input_tensor = torch.rand(1, 5, 3, 64, 64)
+    model.init_weights(pretrained=None)
+    output = model(input_tensor)
+    assert output.shape == (1, 5, 3, 256, 256)
 
-    # gpu (DCN can only be tested in GPUs)
+    with pytest.raises(AssertionError):
+        # The height and width of inputs should be at least 64
+        input_tensor = torch.rand(1, 5, 3, 61, 61)
+        model(input_tensor)
+
+    with pytest.raises(TypeError):
+        # pretrained should be str or None
+        model.init_weights(pretrained=[1])
+
+    # output has the same size as input
+    model = BasicVSRPlusPlus(
+        mid_channels=64,
+        num_blocks=7,
+        is_low_res_input=False,
+        spynet_pretrained=None,
+        cpu_cache_length=100)
+    input_tensor = torch.rand(1, 5, 3, 256, 256)
+    output = model(input_tensor)
+    assert output.shape == (1, 5, 3, 256, 256)
+
+    # gpu
     if torch.cuda.is_available():
         model = BasicVSRPlusPlus(
             mid_channels=64,
@@ -59,7 +81,3 @@ def test_basicvsr_plusplus():
         input_tensor = torch.rand(1, 5, 3, 256, 256).cuda()
         output = model(input_tensor)
         assert output.shape == (1, 5, 3, 256, 256)
-
-
-if __name__ == '__main__':
-    test_basicvsr_plusplus()
