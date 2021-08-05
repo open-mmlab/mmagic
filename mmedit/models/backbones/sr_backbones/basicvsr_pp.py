@@ -51,7 +51,6 @@ class BasicVSRPlusPlus(nn.Module):
                  cpu_cache_length=100):
 
         super().__init__()
-
         self.mid_channels = mid_channels
         self.is_low_res_input = is_low_res_input
         self.cpu_cache_length = cpu_cache_length
@@ -75,13 +74,14 @@ class BasicVSRPlusPlus(nn.Module):
         self.backbone = nn.ModuleDict()
         modules = ['backward_1', 'forward_1', 'backward_2', 'forward_2']
         for i, module in enumerate(modules):
-            self.deform_align[module] = SecondOrderDeformableAlignment(
-                2 * mid_channels,
-                mid_channels,
-                3,
-                padding=1,
-                deform_groups=16,
-                max_residue_magnitude=max_residue_magnitude)
+            if torch.cuda.is_available():
+                self.deform_align[module] = SecondOrderDeformableAlignment(
+                    2 * mid_channels,
+                    mid_channels,
+                    3,
+                    padding=1,
+                    deform_groups=16,
+                    max_residue_magnitude=max_residue_magnitude)
             self.backbone[module] = ResidualBlocksWithInputConv(
                 (2 + i) * mid_channels, mid_channels, num_blocks)
 
@@ -102,6 +102,12 @@ class BasicVSRPlusPlus(nn.Module):
 
         # check if the sequence is augmented by flipping
         self.is_mirror_extended = False
+
+        if len(self.deform_align) == 0:
+            raise AssertionError(
+                'Deformable alignment module is not added. '
+                'Probably CUDA is not configured correctly. DCNs can only be '
+                'used with CUDA available.')
 
     def check_if_mirror_extended(self, lqs):
         """Check whether the input is a mirror-extended sequence.

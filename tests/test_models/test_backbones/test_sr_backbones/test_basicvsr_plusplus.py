@@ -7,6 +7,16 @@ from mmedit.models.backbones.sr_backbones.basicvsr_pp import BasicVSRPlusPlus
 def test_basicvsr_plusplus():
     """Test BasicVSR++."""
 
+    if not torch.cuda.is_available():
+        # raise error about DCN if CUDA is not available
+        with pytest.raises(AssertionError):
+            model = BasicVSRPlusPlus(
+                mid_channels=64,
+                num_blocks=7,
+                is_low_res_input=True,
+                spynet_pretrained=None,
+                cpu_cache_length=100)
+
     # gpu (DCN can only be tested in GPUs)
     if torch.cuda.is_available():
         model = BasicVSRPlusPlus(
@@ -49,3 +59,7 @@ def test_basicvsr_plusplus():
         input_tensor = torch.rand(1, 5, 3, 256, 256).cuda()
         output = model(input_tensor)
         assert output.shape == (1, 5, 3, 256, 256)
+
+
+if __name__ == '__main__':
+    test_basicvsr_plusplus()
