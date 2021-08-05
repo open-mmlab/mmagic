@@ -28,7 +28,7 @@ The pretrained weights of SPyNet can be found [here](https://download.openmmlab.
 
 ## NTIRE 2021 checkpoints
 
-Note that the following models are finetuned from smaller models. The training schemes of these models are temporarily unavailable. We provide the pre-trained models here.
+Note that the following models are finetuned from smaller models. The training schemes of these models will be released when MMEditing reaches 5k stars. We provide the pre-trained models here.
 
 [NTIRE 2021 Video Super-Resolution](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_vsr_20210311-1ff35292.pth)
 
