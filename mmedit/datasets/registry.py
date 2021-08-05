@@ -8,5 +8,6 @@ warnings.simplefilter('once', DeprecationWarning)
 warnings.warn(
     'Registries (DATASETS, PIPELINES) have been moved to '
     'mmedit.datasets.builder. Importing from '
-    'mmedit.models.registry will be deprecated in the future.',
+    'mmedit.models.registry will be deprecated in the future. '
+    'Details see https://github.com/open-mmlab/mmediting/pull/446.',
     DeprecationWarning)
