@@ -1,25 +1,29 @@
 # 配置文件 - 复原
 
 ## 示例-EDSR
+
 为了帮助用户理解mmediting的配置文件结构，这里以EDSR为例，给出其配置文件的注释。对于每个模块的详细用法以及对应参数的选择，请参照 API 文档。
-```
+
+```python
 exp_name = 'edsr_x2c64b16_1x16_300k_div2k'  # 实验名称
 
 scale = 2  # 上采样放大因子
+
 # 模型设置
 model = dict(
-    type='BasicRestorer',  # 图像恢复模型的类型
-    generator=dict(  # 生成器的配置
-        type='EDSR',  # 生成器的类型
+    type='BasicRestorer',  # 图像恢复模型类型
+    generator=dict(  # 生成器配置
+        type='EDSR',  # 生成器类型
         in_channels=3,  # 输入通道数
         out_channels=3,  # 输出通道数
         mid_channels=64,  # 中间特征通道数
         num_blocks=16,  # 残差块数目
         upscale_factor=scale, # 上采样因子
         res_scale=1,  # 残差缩放因子
-        rgb_mean=(0.4488, 0.4371, 0.4040),  # 输入图像RGB通道的平均值
-        rgb_std=(1.0, 1.0, 1.0)),  # 输入图像RGB通道的方差
+        rgb_mean=(0.4488, 0.4371, 0.4040),  # 输入图像 RGB 通道的平均值
+        rgb_std=(1.0, 1.0, 1.0)),  # 输入图像 RGB 通道的方差
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))  # 像素损失函数的配置
+
 # 模型训练和测试设置
 train_cfg = None  # 训练的配置
 test_cfg = dict(  # 测试的配置
@@ -31,7 +35,7 @@ train_dataset_type = 'SRAnnotationDataset'  # 用于训练的数据集类型
 val_dataset_type = 'SRFolderDataset'  #  用于验证的数据集类型
 train_pipeline = [  # 训练数据前处理流水线步骤组成的列表
     dict(type='LoadImageFromFile',  # 从文件加载图像
-        io_backend='disk',  # 读取图像时使用的io类型
+        io_backend='disk',  # 读取图像时使用的 io 类型
         key='lq',  # 设置LR图像的键来找到相应的路径
         flag='unchanged'),  # 读取图像的标识
     dict(type='LoadImageFromFile',  # 从文件加载图像
@@ -43,8 +47,8 @@ train_pipeline = [  # 训练数据前处理流水线步骤组成的列表
         keys=['lq', 'gt'],  # 执行正则化图像的键
         mean=[0, 0, 0],  # 平均值
         std=[1, 1, 1],  # 标准差
-        to_rgb=True),  # 更改为RGB通道
-    dict(type='PairedRandomCrop', gt_patch_size=96),  # LR和HR成对随机裁剪
+        to_rgb=True),  # 更改为 RGB 通道
+    dict(type='PairedRandomCrop', gt_patch_size=96),  # LR 和 HR 成对随机裁剪
     dict(type='Flip',  # 图像翻转
         keys=['lq', 'gt'],  # 执行翻转图像的键
         flip_ratio=0.5,  # 执行翻转的几率
@@ -57,7 +61,7 @@ train_pipeline = [  # 训练数据前处理流水线步骤组成的列表
         keys=['lq', 'gt'],  # 执行转置图像的键
         transpose_ratio=0.5  # 执行转置的几率
         ),
-    dict(type='Collect',  # Collect类决定哪些键会被传递到生成器中
+    dict(type='Collect',  # Collect 类决定哪些键会被传递到生成器中
         keys=['lq', 'gt'],  # 传入模型的键
         meta_keys=['lq_path', 'gt_path']), # 元信息键。在训练中，不需要元信息
     dict(type='ImageToTensor',  # 将图像转换为张量
@@ -103,21 +107,23 @@ data = dict(
             ann_file='data/DIV2K/meta_info_DIV2K800sub_GT.txt',  # 批注文件的路径
             pipeline=train_pipeline,  # 训练流水线，如上所示
             scale=scale)),  # 上采样放大因子
+
     # 验证
     val_samples_per_gpu=1,  # 验证时单个 GPU 的批大小
     val_workers_per_gpu=1,  # 验证时单个 GPU 的 dataloader 的进程
     val=dict(
         type=val_dataset_type,  # 数据集类型
-        lq_folder='data/val_set5/Set5_bicLRx2',  # lq文件夹的路径
-        gt_folder='data/val_set5/Set5_mod12',  # gt文件夹的路径
+        lq_folder='data/val_set5/Set5_bicLRx2',  # lq 文件夹的路径
+        gt_folder='data/val_set5/Set5_mod12',  # gt 文件夹的路径
         pipeline=test_pipeline,  # 测试流水线，如上所示
         scale=scale,  # 上采样放大因子
         filename_tmpl='{}'),  # 文件名模板
+
     # 测试
     test=dict(
         type=val_dataset_type,  # 数据集类型
-        lq_folder='data/val_set5/Set5_bicLRx2',  # lq文件夹的路径
-        gt_folder='data/val_set5/Set5_mod12',  # gt文件夹的路径
+        lq_folder='data/val_set5/Set5_bicLRx2',  # lq 文件夹的路径
+        gt_folder='data/val_set5/Set5_mod12',  # gt 文件夹的路径
         pipeline=test_pipeline,  # 测试流水线，如上所示
         scale=scale,  # 上采样放大因子
         filename_tmpl='{}'))  # 文件名模板
