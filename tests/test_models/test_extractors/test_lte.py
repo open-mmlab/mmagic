@@ -6,7 +6,11 @@ from mmedit.models import build_component
 
 def test_lte():
     model_cfg = dict(
-        type='LTE', requires_grad=False, pixel_range=1., pretrained=None)
+        type='LTE',
+        requires_grad=False,
+        pixel_range=1.,
+        pretrained=None,
+        load_pretrained_vgg=False)
 
     lte = build_component(model_cfg)
     assert lte.__class__.__name__ == 'LTE'

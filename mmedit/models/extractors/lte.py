@@ -18,9 +18,18 @@ class LTE(nn.Module):
         requires_grad (bool): Require grad or not. Default: True.
         pixel_range (float): Pixel range of geature. Default: 1.
         pretrained (str): Path for pretrained model. Default: None.
+        load_pretrained_vgg (bool): Load pretrained VGG from torchvision.
+            Default: True.
+            Train: must load pretrained VGG
+            Eval: needn't load pretrained VGG, because we will load pretrained
+                LTE.
     """
 
-    def __init__(self, requires_grad=True, pixel_range=1., pretrained=None):
+    def __init__(self,
+                 requires_grad=True,
+                 pixel_range=1.,
+                 pretrained=None,
+                 load_pretrained_vgg=True):
         super().__init__()
 
         vgg_mean = (0.485, 0.456, 0.406)
@@ -30,7 +39,8 @@ class LTE(nn.Module):
             pixel_range=pixel_range, img_mean=vgg_mean, img_std=vgg_std)
 
         # use vgg19 weights to initialize
-        vgg_pretrained_features = models.vgg19(pretrained=False).features
+        vgg_pretrained_features = models.vgg19(
+            pretrained=load_pretrained_vgg).features
 
         self.slice1 = torch.nn.Sequential()
         self.slice2 = torch.nn.Sequential()
