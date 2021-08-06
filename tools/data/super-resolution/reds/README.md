@@ -21,7 +21,7 @@ The original val dataset (clip names from 000 to 029) are modified to avoid conf
 You can prepare the REDS dataset by running:
 
 ```shell
-python tools/data/super-resolution/reds/preprocess_reds_dataset.py ./data/REDS
+python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS
 ```
 
 ```text
