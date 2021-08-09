@@ -1,6 +1,7 @@
 from .aspp import ASPP
 from .contextual_attention import ContextualAttentionModule
 from .conv import *  # noqa: F401, F403
+from .dan_preprocess import SRMDPreprocessing
 from .flow_warp import flow_warp
 from .gated_conv_module import SimpleGatedConvModule
 from .gca_module import GCAModule
@@ -17,7 +18,6 @@ from .separable_conv_module import DepthwiseSeparableConvModule
 from .sr_backbone_utils import (ResidualBlockNoBN, default_init_weights,
                                 make_layer)
 from .upsample import PixelShufflePack
-from .dan_preprocess import SRMDPreprocessing
 
 __all__ = [
     'ASPP', 'PartialConv2d', 'PixelShufflePack', 'default_init_weights',
@@ -26,5 +26,5 @@ __all__ = [
     'DepthwiseSeparableConvModule', 'ContextualAttentionModule', 'GCAModule',
     'SimpleGatedConvModule', 'LinearModule', 'flow_warp',
     'generation_init_weights', 'GANImageBuffer', 'UnetSkipConnectionBlock',
-    'ResidualBlockWithDropout', 'ImgNormalize' , 'SRMDPreprocessing'
+    'ResidualBlockWithDropout', 'ImgNormalize', 'SRMDPreprocessing'
 ]

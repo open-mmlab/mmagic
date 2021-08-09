@@ -1,5 +1,6 @@
 from .basic_restorer import BasicRestorer
 from .basicvsr import BasicVSR
+from .dan import DAN
 from .dic import DIC
 from .edvr import EDVR
 from .esrgan import ESRGAN
@@ -8,9 +9,8 @@ from .liif import LIIF
 from .srgan import SRGAN
 from .tdan import TDAN
 from .ttsr import TTSR
-from .dan import DAN
 
 __all__ = [
     'BasicRestorer', 'SRGAN', 'ESRGAN', 'EDVR', 'LIIF', 'BasicVSR', 'TTSR',
-    'GLEAN', 'TDAN', 'DIC' , 'DAN'
+    'GLEAN', 'TDAN', 'DIC', 'DAN'
 ]

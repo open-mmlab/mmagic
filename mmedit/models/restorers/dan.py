@@ -6,10 +6,10 @@ import torch
 from mmcv.runner import auto_fp16
 
 from mmedit.core import psnr, ssim, tensor2img
-from .basic_restorer import BasicRestorer
 from ..builder import build_backbone, build_loss
-from ..registry import MODELS
 from ..common import SRMDPreprocessing
+from ..registry import MODELS
+from .basic_restorer import BasicRestorer
 
 
 @MODELS.register_module()
@@ -47,9 +47,15 @@ class DAN(BasicRestorer):
 
         # load PCA matrix of enough kernel
         if train_cfg:
-            pca_matrix = torch.load(train_cfg['pca_matrix_path'], map_location=lambda storage, loc: storage)
+            pca_matrix = torch.load(
+                train_cfg['pca_matrix_path'],
+                map_location=lambda storage, loc: storage)
             print('PCA matrix shape:{}'.format(pca_matrix.shape))
-            self.prepro = SRMDPreprocessing(train_cfg['scale'], pca_matrix=pca_matrix, cuda=True, **train_cfg['degradation'])
+            self.prepro = SRMDPreprocessing(
+                train_cfg['scale'],
+                pca_matrix=pca_matrix,
+                cuda=True,
+                **train_cfg['degradation'])
 
         # generator
         self.generator = build_backbone(generator)

@@ -151,12 +151,8 @@ def make_lmdb_for_div2k(data_root):
         Remember to modify opt configurations according to your settings.
     """
 
-    folder_paths = [
-        osp.join(data_root, 'DF2K_train_HR_sub')
-    ]
-    lmdb_paths = [
-        osp.join(data_root, 'DF2K_train_HR_sub.lmdb')
-    ]
+    folder_paths = [osp.join(data_root, 'DF2K_train_HR_sub')]
+    lmdb_paths = [osp.join(data_root, 'DF2K_train_HR_sub.lmdb')]
 
     for folder_path, lmdb_path in zip(folder_paths, lmdb_paths):
         img_path_list, keys = prepare_keys_div2k(folder_path)

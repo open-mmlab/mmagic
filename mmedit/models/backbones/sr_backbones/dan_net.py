@@ -1,14 +1,13 @@
-import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-
 from mmcv.runner import load_checkpoint
+
 from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 
 class CALayer(nn.Module):
+
     def __init__(self, nf, reduction=16):
         super(CALayer, self).__init__()
         self.body = nn.Sequential(
@@ -26,6 +25,7 @@ class CALayer(nn.Module):
 
 
 class CRB_Layer(nn.Module):
+
     def __init__(self, nf1, nf2):
         super(CRB_Layer, self).__init__()
 
@@ -45,6 +45,7 @@ class CRB_Layer(nn.Module):
 
 
 class Estimator(nn.Module):
+
     def __init__(self, in_nc=3, nf=64, num_blocks=5, scale=4, kernel_size=4):
         super(Estimator, self).__init__()
 
@@ -74,9 +75,16 @@ class Estimator(nn.Module):
 
 
 class Restorer(nn.Module):
-    def __init__(
-        self, in_nc=3, out_nc=3, nf=64, nb=8, scale=4, input_para=10, min=0.0, max=1.0
-    ):
+
+    def __init__(self,
+                 in_nc=3,
+                 out_nc=3,
+                 nf=64,
+                 nb=8,
+                 scale=4,
+                 input_para=10,
+                 min=0.0,
+                 max=1.0):
         super(Restorer, self).__init__()
         self.min = min
         self.max = max
@@ -116,7 +124,7 @@ class Restorer(nn.Module):
             self.upscale = nn.Sequential(
                 nn.Conv2d(
                     in_channels=nf,
-                    out_channels=nf * scale ** 2,
+                    out_channels=nf * scale**2,
                     kernel_size=3,
                     stride=1,
                     padding=1,
@@ -130,8 +138,7 @@ class Restorer(nn.Module):
         B, C, H, W = input.size()  # I_LR batch
         B_h, C_h = ker_code.size()  # Batch, Len=10
         ker_code_exp = ker_code.view((B_h, C_h, 1, 1)).expand(
-            (B_h, C_h, H, W)
-        )  # kernel_map stretch
+            (B_h, C_h, H, W))  # kernel_map stretch
 
         f = self.head(input)
         inputs = [f, ker_code_exp]
@@ -144,6 +151,7 @@ class Restorer(nn.Module):
 
 @BACKBONES.register_module()
 class DAN(nn.Module):
+
     def __init__(
         self,
         nf=64,
@@ -160,19 +168,19 @@ class DAN(nn.Module):
         self.loop = loop
         self.scale = upscale
 
-        self.Restorer = Restorer(nf=nf, nb=nb, scale=self.scale, input_para=input_para)
+        self.Restorer = Restorer(
+            nf=nf, nb=nb, scale=self.scale, input_para=input_para)
         self.Estimator = Estimator(kernel_size=kernel_size, scale=self.scale)
 
-        self.register_buffer("encoder", torch.load(pca_matrix_path)[None])
+        self.register_buffer('encoder', torch.load(pca_matrix_path)[None])
 
         kernel = torch.zeros(1, self.ksize, self.ksize)
         kernel[:, self.ksize // 2, self.ksize // 2] = 1
 
-        self.register_buffer("init_kernel", kernel)
-        init_ker_map = self.init_kernel.view(1, 1, self.ksize ** 2).matmul(
-            self.encoder
-        )[:, 0]
-        self.register_buffer("init_ker_map", init_ker_map)
+        self.register_buffer('init_kernel', kernel)
+        init_ker_map = self.init_kernel.view(1, 1, self.ksize**2).matmul(
+            self.encoder)[:, 0]
+        self.register_buffer('init_ker_map', init_ker_map)
 
     def forward(self, lr):
 
