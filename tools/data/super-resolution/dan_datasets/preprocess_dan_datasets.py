@@ -1,6 +1,5 @@
 import os
 import random
-import sys
 
 import cv2
 import numpy as np
@@ -22,13 +21,13 @@ def generate_mod_LR_bic():
     up_scale = 2
     mod_scale = 4
     # set data dir
-    sourcedir = '/media/lab216/dbf4a469-6c52-4371-95c4-c24c882bc23b/data/benchmark/Set5/HR'
-    savedir = '/media/lab216/dbf4a469-6c52-4371-95c4-c24c882bc23b/data/benchmark/Set5/generate/'
+    sourcedir = 'data/benchmark/Set5/HR'
+    savedir = 'data/benchmark/Set5/generate/'
 
     # load PCA matrix of enough kernel
     print('load PCA matrix')
     pca_matrix = torch.load(
-        '/home/lab216/Desktop/mmediting/tools/data/super-resolution/div2k/pca_matrix/pca_matrix_x2.pth',
+        '/pca_matrix/pca_matrix_x2.pth',
         map_location=lambda storage, loc: storage)
     print('PCA matrix shape: {}'.format(pca_matrix.shape))
 
@@ -90,7 +89,8 @@ def generate_mod_LR_bic():
     print(filepaths)
     num_files = len(filepaths)
 
-    # kernel_map_tensor = torch.zeros((num_files, 1, 10)) # each kernel map: 1*10
+    # kernel_map_tensor = torch.zeros((num_files, 1, 10))
+    # each kernel map: 1*10
 
     # prepare data with augementation
 

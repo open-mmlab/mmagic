@@ -12,16 +12,13 @@ model = dict(
         loop=4,
         kernel_size=21,
         # Your pca matrix path
-        pca_matrix_path=
-        'mmediting/tools/data/super-resolution/div2k/pca_matrix/pca_aniso_matrix_x4.pth'
-    ),
+        pca_matrix_path='pca_aniso_matrix_x4.pth'),
     pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 
 train_cfg = dict(
     # Your pca matrix path
-    pca_matrix_path=
-    'mmediting/tools/data/super-resolution/div2k/pca_matrix/pca_aniso_matrix_x4.pth',
+    pca_matrix_path='pca_aniso_matrix_x4.pth',
     scale=scale,
     degradation=dict(
         random_kernel=True,

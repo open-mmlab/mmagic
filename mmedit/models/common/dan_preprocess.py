@@ -1,5 +1,4 @@
 import math
-import os
 
 import numpy as np
 import torch
@@ -45,9 +44,7 @@ def tensor2img(tensor, out_type=np.uint8, min_max=(0, 1)):
     elif n_dim == 2:
         img_np = tensor.numpy()
     else:
-        raise TypeError(
-            'Only support 4D, 3D and 2D tensor. But received with dimension: {:d}'
-            .format(n_dim))
+        raise TypeError('Only support 4D, 3D and 2D tensor.')
     if out_type == np.uint8:
         img_np = (img_np * 255.0).round()
         # Important. Unlike matlab, numpy.unit8() WILL NOT round by default.
@@ -69,7 +66,7 @@ def cubic(x):
 def calculate_weights_indices(in_length, out_length, scale, kernel,
                               kernel_width, antialiasing):
     if (scale < 1) and (antialiasing):
-        # Use a modified kernel to simultaneously interpolate and antialias- larger kernel width
+        # Use a modified kernel to simultaneously interpolate
         kernel_width = kernel_width / scale
 
     # Output-space coordinates
@@ -106,7 +103,7 @@ def calculate_weights_indices(in_length, out_length, scale, kernel,
     weights_sum = torch.sum(weights, 1).view(out_length, 1)
     weights = weights / weights_sum.expand(out_length, P)
 
-    # If a column in weights is all zero, get rid of it. only consider the first and last column.
+    # If a column in weights is all zero, get rid of it.
     weights_zero_tmp = torch.sum((weights == 0), 0)
     if not math.isclose(weights_zero_tmp[0], 0, rel_tol=1e-6):
         indices = indices.narrow(1, 1, P - 2)
@@ -228,7 +225,8 @@ def DUF_downsample(x, scale=4):
 
     B, T, C, H, W = x.size()
     x = x.view(-1, 1, H, W)
-    pad_w, pad_h = 6 + scale * 2, 6 + scale * 2  # 6 is the pad of the gaussian filter
+    # 6 is the pad of the gaussian filter
+    pad_w, pad_h = 6 + scale * 2, 6 + scale * 2
     r_h, r_w = 0, 0
     if scale == 3:
         r_h = 3 - (H % 3)
@@ -254,7 +252,7 @@ def PCA(data, k=2):
 
 def random_batch_kernel(
     batch,
-    l=21,
+    kernel_size=21,
     sig_min=0.2,
     sig_max=4.0,
     rate_iso=1.0,
@@ -264,7 +262,7 @@ def random_batch_kernel(
     if rate_iso == 1:
 
         sigma = np.random.uniform(sig_min, sig_max, (batch, 1, 1))
-        ax = np.arange(-l // 2 + 1.0, l // 2 + 1.0)
+        ax = np.arange(-kernel_size // 2 + 1.0, kernel_size // 2 + 1.0)
         xx, yy = np.meshgrid(ax, ax)
         xx = xx[None].repeat(batch, 0)
         yy = yy[None].repeat(batch, 0)
@@ -292,26 +290,27 @@ def random_batch_kernel(
         U[:, 1, 0] = np.sin(radians)
         U[:, 1, 1] = np.cos(radians)
         sigma = np.matmul(U, np.matmul(D, U.transpose(0, 2, 1)))
-        ax = np.arange(-l // 2 + 1.0, l // 2 + 1.0)
+        ax = np.arange(-kernel_size // 2 + 1.0, kernel_size // 2 + 1.0)
         xx, yy = np.meshgrid(ax, ax)
-        xy = np.hstack((xx.reshape(
-            (l * l, 1)), yy.reshape(l * l, 1))).reshape(l, l, 2)
+        xy = np.hstack((xx.reshape((kernel_size * kernel_size, 1)),
+                        yy.reshape(kernel_size * kernel_size,
+                                   1))).reshape(kernel_size, kernel_size, 2)
         xy = xy[None].repeat(batch, 0)
         inverse_sigma = np.linalg.inv(sigma)[:, None, None]
         kernel = np.exp(-0.5 * np.matmul(
             np.matmul(xy[:, :, :, None], inverse_sigma), xy[:, :, :, :, None]))
-        kernel = kernel.reshape(batch, l, l)
+        kernel = kernel.reshape(batch, kernel_size, kernel_size)
         if random_disturb:
-            kernel = kernel + np.random.uniform(0, 0.25,
-                                                (batch, l, l)) * kernel
+            kernel = kernel + np.random.uniform(
+                0, 0.25, (batch, kernel_size, kernel_size)) * kernel
         kernel = kernel / np.sum(kernel, (1, 2), keepdims=True)
 
         return torch.FloatTensor(kernel) if tensor else kernel
 
 
-def stable_batch_kernel(batch, l=21, sig=2.6, tensor=True):
+def stable_batch_kernel(batch, kernel_size=21, sig=2.6, tensor=True):
     sigma = sig
-    ax = np.arange(-l // 2 + 1.0, l // 2 + 1.0)
+    ax = np.arange(-kernel_size // 2 + 1.0, kernel_size // 2 + 1.0)
     xx, yy = np.meshgrid(ax, ax)
     xx = xx[None].repeat(batch, 0)
     yy = yy[None].repeat(batch, 0)
@@ -322,8 +321,8 @@ def stable_batch_kernel(batch, l=21, sig=2.6, tensor=True):
 
 def b_Bicubic(variable, scale):
     B, C, H, W = variable.size()
-    H_new = int(H / scale)
-    W_new = int(W / scale)
+    # H_new = int(H / scale)
+    # W_new = int(W / scale)
     tensor_v = variable.view((B, C, H, W))
     re_tensor = imresize(tensor_v, 1 / scale)
     return re_tensor
@@ -354,34 +353,18 @@ def b_GaussianNoising(tensor,
     return torch.clamp(noise + tensor, min=min, max=max)
 
 
-def b_GaussianNoising(tensor,
-                      noise_high,
-                      mean=0.0,
-                      noise_size=None,
-                      min=0.0,
-                      max=1.0):
-    if noise_size is None:
-        size = tensor.size()
-    else:
-        size = noise_size
-    noise = torch.FloatTensor(
-        np.random.normal(loc=mean, scale=noise_high,
-                         size=size)).to(tensor.device)
-    return torch.clamp(noise + tensor, min=min, max=max)
-
-
 class BatchSRKernel(object):
 
     def __init__(
         self,
-        l=21,
+        kernel_size=21,
         sig=2.6,
         sig_min=0.2,
         sig_max=4.0,
         rate_iso=1.0,
         random_disturb=False,
     ):
-        self.l = l
+        self.kernel_size = kernel_size
         self.sig = sig
         self.sig_min = sig_min
         self.sig_max = sig_max
@@ -389,10 +372,10 @@ class BatchSRKernel(object):
         self.random_disturb = random_disturb
 
     def __call__(self, random, batch, tensor=False):
-        if random == True:  # random kernel
+        if random:  # random kernel
             return random_batch_kernel(
                 batch,
-                l=self.l,
+                kernel_size=self.kernel_size,
                 sig_min=self.sig_min,
                 sig_max=self.sig_max,
                 rate_iso=self.rate,
@@ -401,7 +384,10 @@ class BatchSRKernel(object):
             )
         else:  # stable kernel
             return stable_batch_kernel(
-                batch, l=self.l, sig=self.sig, tensor=tensor)
+                batch,
+                kernel_size=self.kernel_size,
+                sig=self.sig,
+                tensor=tensor)
 
 
 class BatchBlurKernel(object):
@@ -433,12 +419,14 @@ class PCAEncoder(nn.Module):
 
 class BatchBlur(object):
 
-    def __init__(self, l=15):
-        self.l = l
-        if l % 2 == 1:
-            self.pad = (l // 2, l // 2, l // 2, l // 2)
+    def __init__(self, kernel_size=15):
+        self.kernel_size = kernel_size
+        if kernel_size % 2 == 1:
+            self.pad = (kernel_size // 2, kernel_size // 2, kernel_size // 2,
+                        kernel_size // 2)
         else:
-            self.pad = (l // 2, l // 2 - 1, l // 2, l // 2 - 1)
+            self.pad = (kernel_size // 2, kernel_size // 2 - 1,
+                        kernel_size // 2, kernel_size // 2 - 1)
         # self.pad = nn.ZeroPad2d(l // 2)
 
     def __call__(self, input, kernel):
@@ -448,15 +436,17 @@ class BatchBlur(object):
 
         if len(kernel.size()) == 2:
             input_CBHW = pad.view((C * B, 1, H_p, W_p))
-            kernel_var = kernel.contiguous().view((1, 1, self.l, self.l))
+            kernel_var = kernel.contiguous().view(
+                (1, 1, self.kernel_size, self.kernel_size))
             return F.conv2d(
                 input_CBHW, kernel_var, padding=0).view((B, C, H, W))
         else:
             input_CBHW = pad.view((1, C * B, H_p, W_p))
             kernel_var = (
                 kernel.contiguous().view(
-                    (B, 1, self.l, self.l)).repeat(1, C, 1, 1).view(
-                        (B * C, 1, self.l, self.l)))
+                    (B, 1, self.kernel_size,
+                     self.kernel_size)).repeat(1, C, 1, 1).view(
+                         (B * C, 1, self.kernel_size, self.kernel_size)))
             return F.conv2d(
                 input_CBHW, kernel_var, groups=B * C).view((B, C, H, W))
 
@@ -485,7 +475,7 @@ class SRMDPreprocessing(object):
 
         self.kernel_gen = (
             BatchSRKernel(
-                l=ksize,
+                kernel_size=ksize,
                 sig=sig,
                 sig_min=sig_min,
                 sig_max=sig_max,
@@ -493,9 +483,9 @@ class SRMDPreprocessing(object):
                 random_disturb=random_disturb,
             ) if not stored_kernel else BatchBlurKernel(pre_kernel_path))
 
-        self.blur = BatchBlur(l=ksize)
+        self.blur = BatchBlur(kernel_size=ksize)
         self.para_in = code_length
-        self.l = ksize
+        self.kernel_size = ksize
         self.noise = noise
         self.scale = scale
         self.cuda = cuda
