@@ -158,12 +158,12 @@ def generate_kernels(kernel_size,
                      sigma,
                      sigma_min,
                      sigma_max,
-                     isotropic_rate,
+                     isotropic,
                      random_disturb):
     l = int((kernel_size - 1) / 2)
     K = np.zeros([kernel_size, kernel_size])
 
-    if isotropic_rate:
+    if isotropic:
         sigma = np.random.uniform(sigma_min, sigma_max) if random else sigma
         for i in range(-l, l + 1):
             for j in range(-l, l + 1):
@@ -270,7 +270,7 @@ def worker(path, opt):
                                       sigma=opt['kernel_sigma'],
                                       sigma_min=opt['kernel_sigma_min'],
                                       sigma_max=opt['kernel_sigma_max'],
-                                      isotropic_rate=opt['isotropic'],
+                                      isotropic=opt['isotropic'],
                                       random_disturb=opt['random_disturb']).reshape(opt['kernel_size'],
                                                                                     opt['kernel_size'])
             # blur image
