@@ -17,6 +17,7 @@ from .separable_conv_module import DepthwiseSeparableConvModule
 from .sr_backbone_utils import (ResidualBlockNoBN, default_init_weights,
                                 make_layer)
 from .upsample import PixelShufflePack
+from .dan_preprocess import SRMDPreprocessing
 
 __all__ = [
     'ASPP', 'PartialConv2d', 'PixelShufflePack', 'default_init_weights',
@@ -25,5 +26,5 @@ __all__ = [
     'DepthwiseSeparableConvModule', 'ContextualAttentionModule', 'GCAModule',
     'SimpleGatedConvModule', 'LinearModule', 'flow_warp',
     'generation_init_weights', 'GANImageBuffer', 'UnetSkipConnectionBlock',
-    'ResidualBlockWithDropout', 'ImgNormalize'
+    'ResidualBlockWithDropout', 'ImgNormalize' , 'SRMDPreprocessing'
 ]
