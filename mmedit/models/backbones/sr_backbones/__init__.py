@@ -13,9 +13,10 @@ from .srcnn import SRCNN
 from .tdan_net import TDANNet
 from .tof import TOFlow
 from .ttsr_net import TTSRNet
+from .dan_net import DAN
 
 __all__ = [
     'MSRResNet', 'RRDBNet', 'EDSR', 'EDVRNet', 'TOFlow', 'SRCNN', 'DICNet',
     'BasicVSRNet', 'IconVSR', 'RDN', 'TTSRNet', 'GLEANStyleGANv2', 'TDANNet',
-    'LIIFEDSR', 'LIIFRDN', 'BasicVSRPlusPlus'
+    'LIIFEDSR', 'LIIFRDN', 'BasicVSRPlusPlus', 'DAN'
 ]
