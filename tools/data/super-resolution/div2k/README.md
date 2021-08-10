@@ -72,8 +72,6 @@ mmediting
 │   │   ├── ...
 ...
 ```
-In particular, if you set ```--custom-degradation``` to `True`, it will no longer process the `DIV2K_train_LR_bicubic` 
-folder because you may specify your degradation during training.
 
 ## Prepare annotation list
 

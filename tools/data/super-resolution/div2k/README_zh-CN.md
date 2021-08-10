@@ -72,8 +72,7 @@ mmediting
 │   │   ├── ...
 ...
 ```
-特别地，如果你将 ```--custom-degradation``` 设置为 `True`，该脚本将不再处理 `DIV2K_train_LR_bicubic` 文件夹，因为
-您可以在训练期间自定义您的退化过程。
+
 ## 准备标注列表文件
 
 如果您想使用`标注模式`来处理数据集，需要先准备一个 `txt` 格式的标注文件。
@@ -94,3 +93,4 @@ mmediting
 ```shell
 python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
 ```
+
