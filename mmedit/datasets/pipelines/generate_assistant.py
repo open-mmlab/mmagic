@@ -1,9 +1,13 @@
-import face_alignment
 import numpy as np
 import torch
 
 from ..registry import PIPELINES
 from .utils import make_coord
+
+try:
+    import face_alignment
+except Exception:
+    raise ImportError('please import face-alignment.')
 
 
 @PIPELINES.register_module()
