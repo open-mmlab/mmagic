@@ -21,6 +21,7 @@ def main_extract_subimages(args):
         compression_level (int):  CV_IMWRITE_PNG_COMPRESSION from 0 to 9.
             A higher value means a smaller size and longer compression time.
             Use 0 for faster CPU decompression. Default: 3, same in cv2.
+        custom_degradation (boolean): whether use diverse degradation process instead of one down-sampling
 
         input_folder (str): Path to the input folder.
         save_folder (str): Path to save folder.
@@ -31,11 +32,12 @@ def main_extract_subimages(args):
 
     Usage:
         For each folder, run this script.
-        Typically, there are four folders to be processed for DIV2K dataset.
+        Typically, there are four folders to be processed for DIV2K dataset if not use custom degradation
             DIV2K_train_HR
             DIV2K_train_LR_bicubic/X2
             DIV2K_train_LR_bicubic/X3
             DIV2K_train_LR_bicubic/X4
+        Otherwise, only HR folder will be processed
         After process, each sub_folder should have the same number of
         subimages.
         Remember to modify opt configurations according to your settings.
@@ -53,15 +55,16 @@ def main_extract_subimages(args):
     opt['thresh_size'] = args.thresh_size
     extract_subimages(opt)
 
-    for scale in [2, 3, 4]:
-        opt['input_folder'] = osp.join(args.data_root,
-                                       f'DIV2K_train_LR_bicubic/X{scale}')
-        opt['save_folder'] = osp.join(args.data_root,
-                                      f'DIV2K_train_LR_bicubic/X{scale}_sub')
-        opt['crop_size'] = args.crop_size // scale
-        opt['step'] = args.step // scale
-        opt['thresh_size'] = args.thresh_size // scale
-        extract_subimages(opt)
+    if not args.custom_degradtion:
+        for scale in [2, 3, 4]:
+            opt['input_folder'] = osp.join(args.data_root,
+                                           f'DIV2K_train_LR_bicubic/X{scale}')
+            opt['save_folder'] = osp.join(args.data_root,
+                                          f'DIV2K_train_LR_bicubic/X{scale}_sub')
+            opt['crop_size'] = args.crop_size // scale
+            opt['step'] = args.step // scale
+            opt['thresh_size'] = args.thresh_size // scale
+            extract_subimages(opt)
 
 
 def extract_subimages(opt):
@@ -344,6 +347,9 @@ def parse_args():
         description='Prepare DIV2K dataset',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--data-root', help='dataset root')
+    parser.add_argument('--custom-degradation',
+                        default=False,
+                        help='whether to crop LR images')
     parser.add_argument(
         '--crop-size',
         nargs='?',
