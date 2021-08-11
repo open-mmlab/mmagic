@@ -304,7 +304,8 @@ def _non_dist_train(model,
         data_loader = build_dataloader(dataset, **val_loader_cfg)
         save_path = osp.join(cfg.work_dir, 'val_visuals')
         runner.register_hook(
-            EvalIterHook(data_loader, save_path=save_path, **cfg.evaluation))
+            EvalIterHook(data_loader, save_path=save_path, **cfg.evaluation),
+            priority='LOW')
 
     # user-defined hooks
     if cfg.get('custom_hooks', None):
