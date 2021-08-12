@@ -1,5 +1,44 @@
 # Changelog
 
+## v0.10.0 (12/08/2021).
+
+**Highlights**
+
+1. Support LIIF-RDN (CVPR'2021)
+2. Support BasicVSR++ (NTIRE'2021)
+
+**New Features**
+
+- Support loading annotation from file for video SR datasets ([#423](https://github.com/open-mmlab/mmediting/pull/423))
+- Support persistent worker ([#426](https://github.com/open-mmlab/mmediting/pull/426))
+- Support LIIF-RDN ([#428](https://github.com/open-mmlab/mmediting/pull/428), [#440](https://github.com/open-mmlab/mmediting/pull/440))
+- Support BasicVSR++ ([#451](https://github.com/open-mmlab/mmediting/pull/451), [#467](https://github.com/open-mmlab/mmediting/pull/467))
+- Support mim ([#455](https://github.com/open-mmlab/mmediting/pull/455))
+
+**Bug Fixes**
+
+- Fix bug in stat.py ([#420](https://github.com/open-mmlab/mmediting/pull/420))
+- Fix typo of StyleGAN modules ([#427](https://github.com/open-mmlab/mmediting/pull/427))
+- Fix astype error in function tensor2img ([#429](https://github.com/open-mmlab/mmediting/pull/429))
+- Fix typo in docs/demo.md ([#453](https://github.com/open-mmlab/mmediting/pull/453), [#454](https://github.com/open-mmlab/mmediting/pull/454))
+- Fix device error caused by torch.new_tensor when pytorch >= 1.7 ([#465](https://github.com/open-mmlab/mmediting/pull/465))
+- Fix typo in tools/data/super-resolution/reds/README.md ([#469](https://github.com/open-mmlab/mmediting/pull/469))
+- Fix _non_dist_train in .mmedit/apis/train.py ([#473](https://github.com/open-mmlab/mmediting/pull/473))
+- Fix multi-node distributed test ([#478](https://github.com/open-mmlab/mmediting/pull/478))
+
+**Breaking Changes**
+
+- Refactor LIIF for pytorch2onnx ([#425](https://github.com/open-mmlab/mmediting/pull/425))
+
+**Improvements**
+
+- Update Chinese docs ([#415](https://github.com/open-mmlab/mmediting/pull/415), [#416](https://github.com/open-mmlab/mmediting/pull/416), [#418](https://github.com/open-mmlab/mmediting/pull/418), [#421](https://github.com/open-mmlab/mmediting/pull/421), [#424](https://github.com/open-mmlab/mmediting/pull/424), [#431](https://github.com/open-mmlab/mmediting/pull/431), [#442](https://github.com/open-mmlab/mmediting/pull/442))
+- Add CI of pytorch 1.9.0 ([#444](https://github.com/open-mmlab/mmediting/pull/444))
+- Refactor README.md of configs ([#452](https://github.com/open-mmlab/mmediting/pull/452))
+- Avoid loading pretrained VGG in unittest ([#466](https://github.com/open-mmlab/mmediting/pull/466))
+- Support specifying scales in preprocessing div2k dataset ([#472](https://github.com/open-mmlab/mmediting/pull/472))
+- Support all formats in readthedocs ([#479](https://github.com/open-mmlab/mmediting/pull/479))
+
 ## v0.9.0 (30/06/2021).
 
 **Highlights**
