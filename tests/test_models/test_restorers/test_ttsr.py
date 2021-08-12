@@ -70,7 +70,7 @@ def test_ttsr():
             out_channels=3,
             mid_channels=64,
             num_blocks=(16, 16, 8, 4)),
-        extractor=dict(type='LTE'),
+        extractor=dict(type='LTE', load_pretrained_vgg=False),
         transformer=dict(type='SearchTransformer'),
         discriminator=dict(type='TTSRDiscriminator', in_size=64),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
