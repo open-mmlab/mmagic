@@ -41,8 +41,6 @@ def main():
     output = restoration_video_inference(model, args.input_dir,
                                          args.window_size, args.start_idx,
                                          args.filename_tmpl)
-    args.start_idx = 1
-    args.filename_tmpl = '{:03d}.png'
     for i in range(args.start_idx, args.start_idx + output.size(1)):
         output_i = output[:, i - args.start_idx, :, :, :]
         output_i = tensor2img(output_i)
