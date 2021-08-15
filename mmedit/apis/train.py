@@ -181,7 +181,8 @@ def _dist_train(model,
         save_path = osp.join(cfg.work_dir, 'val_visuals')
         runner.register_hook(
             DistEvalIterHook(
-                data_loader, save_path=save_path, **cfg.evaluation))
+                data_loader, save_path=save_path, **cfg.evaluation),
+            priority='LOW')
 
     # user-defined hooks
     if cfg.get('custom_hooks', None):
