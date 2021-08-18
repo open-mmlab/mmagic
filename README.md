@@ -100,7 +100,7 @@ This project is released under the [Apache 2.0 license](LICENSE).
 
 ## Changelog
 
-v0.9.0 was released in 2021-6-31.
+v0.10.0 was released in 2021-8-12.
 
 Note that **MMSR** has been merged into this repo, as a part of MMEditing.
 With elaborate designs of the new framework and careful implementations,
