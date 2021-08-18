@@ -33,8 +33,8 @@ extensions = [
 ]
 
 autodoc_mock_imports = [
-    'mmedit.version', 'skimage', 'mmcv.ops.ModulatedDeformConv2d',
-    'mmcv.ops.modulated_deform_conv2d', 'mmcv._ext'
+    'myst_parser', 'recommonmark', 'sphinx.ext.autodoc', 'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode', 'sphinx_markdown_tables'
 ]
 
 source_suffix = {
