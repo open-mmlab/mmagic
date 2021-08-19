@@ -28,14 +28,21 @@ author = 'MMEditing Authors'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'sphinx.ext.viewcode',
-    'recommonmark', 'sphinx_markdown_tables'
-]
+    'myst_parser',
+    'recommonmark',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode',
+    'sphinx_markdown_tables'
+]  # yapf: disable
 
 autodoc_mock_imports = [
-    'mmedit.version', 'skimage', 'mmcv.ops.ModulatedDeformConv2d',
-    'mmcv.ops.modulated_deform_conv2d', 'mmcv._ext'
-]
+    'mmcv._ext',
+    'mmcv.ops.modulated_deform_conv2d',
+    'mmcv.ops.ModulatedDeformConv2d',
+    'mmedit.version',
+    'skimage'
+]  # yapf: disable
 
 source_suffix = {
     '.rst': 'restructuredtext',
