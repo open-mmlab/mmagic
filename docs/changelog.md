@@ -18,11 +18,8 @@
 **Bug Fixes**
 
 - Fix bug in stat.py ([#420](https://github.com/open-mmlab/mmediting/pull/420))
-- Fix typo of StyleGAN modules ([#427](https://github.com/open-mmlab/mmediting/pull/427))
 - Fix astype error in function tensor2img ([#429](https://github.com/open-mmlab/mmediting/pull/429))
-- Fix typo in docs/demo.md ([#453](https://github.com/open-mmlab/mmediting/pull/453), [#454](https://github.com/open-mmlab/mmediting/pull/454))
 - Fix device error caused by torch.new_tensor when pytorch >= 1.7 ([#465](https://github.com/open-mmlab/mmediting/pull/465))
-- Fix typo in tools/data/super-resolution/reds/README.md ([#469](https://github.com/open-mmlab/mmediting/pull/469))
 - Fix _non_dist_train in .mmedit/apis/train.py ([#473](https://github.com/open-mmlab/mmediting/pull/473))
 - Fix multi-node distributed test ([#478](https://github.com/open-mmlab/mmediting/pull/478))
 
@@ -45,6 +42,9 @@
 - Update QQ QR code in README_CN.md ([#494](https://github.com/open-mmlab/mmediting/pull/494))
 - Add `myst_parser` ([#495](https://github.com/open-mmlab/mmediting/pull/495))
 - Add license header ([#496](https://github.com/open-mmlab/mmediting/pull/496))
+- Fix typo of StyleGAN modules ([#427](https://github.com/open-mmlab/mmediting/pull/427))
+- Fix typo in docs/demo.md ([#453](https://github.com/open-mmlab/mmediting/pull/453), [#454](https://github.com/open-mmlab/mmediting/pull/454))
+- Fix typo in tools/data/super-resolution/reds/README.md ([#469](https://github.com/open-mmlab/mmediting/pull/469))
 
 ## v0.9.0 (30/06/2021).
 
