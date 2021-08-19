@@ -38,6 +38,13 @@
 - Avoid loading pretrained VGG in unittest ([#466](https://github.com/open-mmlab/mmediting/pull/466))
 - Support specifying scales in preprocessing div2k dataset ([#472](https://github.com/open-mmlab/mmediting/pull/472))
 - Support all formats in readthedocs ([#479](https://github.com/open-mmlab/mmediting/pull/479))
+- Use version_info of mmcv ([#480](https://github.com/open-mmlab/mmediting/pull/480))
+- Remove unnecessary codes in restoration_video_demo.py ([#484](https://github.com/open-mmlab/mmediting/pull/484))
+- Change priority of DistEvalIterHook to 'LOW' ([#489](https://github.com/open-mmlab/mmediting/pull/489))
+- Reset resource limit ([#491](https://github.com/open-mmlab/mmediting/pull/491))
+- Update QQ QR code in README_CN.md ([#494](https://github.com/open-mmlab/mmediting/pull/494))
+- Add `myst_parser` ([#495](https://github.com/open-mmlab/mmediting/pull/495))
+- Add license header ([#496](https://github.com/open-mmlab/mmediting/pull/496))
 
 ## v0.9.0 (30/06/2021).
 
