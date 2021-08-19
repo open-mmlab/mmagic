@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .aspp import ASPP
 from .contextual_attention import ContextualAttentionModule
 from .conv import *  # noqa: F401, F403

@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .base_dataset import BaseDataset
 from .base_generation_dataset import BaseGenerationDataset
 from .base_matting_dataset import BaseMattingDataset

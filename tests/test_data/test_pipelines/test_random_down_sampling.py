@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 
 from mmedit.datasets.pipelines import RandomDownSampling

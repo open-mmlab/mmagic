@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from mmedit.models.registry import COMPONENTS
 from .resnet import ResNet
 

@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
 from .base_generation_dataset import BaseGenerationDataset

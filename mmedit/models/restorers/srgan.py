@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from mmcv.runner import auto_fp16
 
 from ..builder import build_backbone, build_component, build_loss

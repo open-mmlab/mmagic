@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .base_sr_dataset import BaseSRDataset
 from .registry import DATASETS
 
