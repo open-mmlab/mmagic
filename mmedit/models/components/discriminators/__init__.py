@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .deepfill_disc import DeepFillv1Discriminators
 from .gl_disc import GLDiscs
 from .light_cnn import LightCNN

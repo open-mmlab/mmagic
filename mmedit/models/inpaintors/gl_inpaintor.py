@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
 from ..common import extract_around_bbox, extract_bbox_patch, set_requires_grad

@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import glob
 import os.path as osp
 import warnings

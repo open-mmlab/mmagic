@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
 from mmedit.datasets.pipelines import (GenerateCoordinateAndCell,

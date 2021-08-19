@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from pathlib import Path
 from unittest.mock import patch
 

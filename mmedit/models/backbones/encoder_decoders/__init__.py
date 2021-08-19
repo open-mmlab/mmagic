@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .decoders import (DeepFillDecoder, FBADecoder, GLDecoder, IndexedUpsample,
                        IndexNetDecoder, PConvDecoder, PlainDecoder,
                        ResGCADecoder, ResNetDec, ResShortcutDec)

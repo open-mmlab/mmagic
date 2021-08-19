@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from collections.abc import Iterable
 
 import numpy as np

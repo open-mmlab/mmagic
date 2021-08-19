@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .composition_loss import (CharbonnierCompLoss, L1CompositionLoss,
                                MSECompositionLoss)
 from .feature_loss import LightCNNFeatureLoss

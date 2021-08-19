@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .generation_inference import generation_inference
 from .inpainting_inference import inpainting_inference
 from .matting_inference import init_model, matting_inference

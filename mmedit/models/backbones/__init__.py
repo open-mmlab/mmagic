@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
                                DeepFillEncoder, DeepFillEncoderDecoder,
                                DepthwiseIndexBlock, FBADecoder,
