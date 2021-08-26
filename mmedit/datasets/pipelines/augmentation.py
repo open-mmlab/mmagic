@@ -1098,15 +1098,15 @@ class AddRandomDegradations:
 
         # determine blurring kernel
         kernel = blur_kernels.random_mixed_kernels(
-            [kernel],
-            [1],
+            (kernel),
+            (1),
             kernel_size,
-            [sigma_x, sigma_x],
-            [sigma_y, sigma_y],
-            [rotate_angle, rotate_angle],
-            [beta_gau, beta_gau],
-            [beta_pla, beta_pla],
-            [omega, omega],
+            (sigma_x, sigma_x),
+            (sigma_y, sigma_y),
+            (rotate_angle, rotate_angle),
+            (beta_gau, beta_gau),
+            (beta_pla, beta_pla),
+            (omega, omega),
             None,
         )
 
