@@ -2,13 +2,11 @@
 import math
 import numbers
 import os.path as osp
-import random
 
 import cv2
 import mmcv
 import numpy as np
 
-from mmedit.datasets.pipelines import blur_kernels as blur_kernels
 from ..registry import PIPELINES
 
 
@@ -1036,232 +1034,58 @@ class MirrorSequence:
 
 
 @PIPELINES.register_module()
-class AddRandomDegradations:
-    """Add random degradations to images or videos.
+class CopyValueFromKey:
+    """Copy the value of a source key to a destination key.
 
-    Given an input, random degradations are added according to a dictionary
-    specifying the degradations. Shuffling of degradations is supported.
+    It does the following: results[dst_key] = results[src_key].
 
     Args:
-        src_key (str): The values corresponding to this key will be used to
-            produce the low-quality images or videos.
-        degradations (dict): A dictionary specifying the degradations.
-        shuffle_idx (list[int] | None): A list specifying which operations
-            will be shuffled. If None, all operations are shuffled.
-            Default: [].
+        src_key (str): The source key.
+        dst_key (str): The destination key.
     """
 
-    def __init__(self, src_key, degradations, shuffle_idx=[]):
+    def __init__(self, src_key, dst_key):
 
         self.src_key = src_key
-        self.degradations = degradations
+        self.dst_key = dst_key
 
-        if shuffle_idx is None:
-            self.shuffle_idx = list(len(self.degradations))
-        else:
-            self.shuffle_idx = shuffle_idx
+    def __call__(self, results):
+        """Call function.
 
-        self.resize_dict = dict(
-            bilinear=cv2.INTER_LINEAR,
-            bicubic=cv2.INTER_CUBIC,
-            area=cv2.INTER_AREA,
-            lanczos=cv2.INTER_LANCZOS4)
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
 
-    def _add_random_blur(self, input_, params):
-        kernel = random.choices(params['kernel_list'],
-                                params['kernel_prob'])[0]
-        kernel_size = random.choice(params['kernel_size'])
+        Returns:
+            dict: A dict with a key added/modified.
+        """
 
-        sigma_x = params.get('sigma_x', [0, 0])
-        sigma_x = np.random.uniform(sigma_x[0], sigma_x[1])
+        results[self.dst_key] = results[self.src_key].copy()
+        return results
 
-        sigma_y = params.get('sigma_y', [0, 0])
-        sigma_y = np.random.uniform(sigma_y[0], sigma_y[1])
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(src_key={self.src_key})')
+        repr_str += (f'(dst_key={self.dst_key})')
+        return repr_str
 
-        rotate_angle = params.get('rotate_angle', [-np.pi, np.pi])
-        rotate_angle = np.random.uniform(rotate_angle[0], rotate_angle[1])
 
-        beta_gau = params.get('beta_gaussian', [0.5, 4])
-        beta_gau = np.random.uniform(beta_gau[0], beta_gau[1])
+@PIPELINES.register_module()
+class RoundClipZeroOne:
+    """Round off and clip the image to [0, 1].
 
-        beta_pla = params.get('beta_plateau', [1, 2])
-        beta_pla = np.random.uniform(beta_pla[0], beta_pla[1])
+    It is assumed that the the input has range [0, 1].
 
-        omega = params.get('omega', None)
-        if omega is not None:
-            omega = np.random.uniform(omega[0], omega[1])
-        else:  # follow Real-ESRGAN
-            if kernel_size < 13:
-                omega = np.random.uniform(np.pi / 3, np.pi)
-            else:
-                omega = np.random.uniform(np.pi / 5, np.pi)
+    Args:
+        keys (str): The keys whose values are clipped.
+    """
 
-        # determine blurring kernel
-        kernel = blur_kernels.random_mixed_kernels(
-            (kernel),
-            (1),
-            kernel_size,
-            (sigma_x, sigma_x),
-            (sigma_y, sigma_y),
-            (rotate_angle, rotate_angle),
-            (beta_gau, beta_gau),
-            (beta_pla, beta_pla),
-            (omega, omega),
-            None,
-        )
+    def __init__(self, keys):
+        self.keys = keys
 
-        return [cv2.filter2D(img, -1, kernel) for img in input_]
-
-    def _random_resize(self, input_, params, target_size=None):
-        resize_opt = params['resize_opt']
-        resize_prob = params['resize_prob']
-        resize_opt = random.choices(resize_opt, resize_prob)[0].lower()
-
-        if resize_opt not in self.resize_dict:
-            raise NotImplementedError(f'resize_opt [{resize_opt}] is not '
-                                      'implemented')
-        resize_opt = self.resize_dict[resize_opt]
-
-        # determine the target size, if not provided
-        target_size = params.get('target_size', None)
-        if target_size is None:
-            h, w = input_[0].shape[:2]
-            resize_mode = random.choices(['up', 'down', 'keep'],
-                                         params['resize_mode_prob'])[0]
-            resize_scale = params['resize_scale']
-            if resize_mode == 'up':
-                scale_factor = np.random.uniform(1, resize_scale[1])
-            elif resize_mode == 'down':
-                scale_factor = np.random.uniform(resize_scale[0], 1)
-            else:
-                scale_factor = 1
-            target_size = (int(h * scale_factor), int(w * scale_factor))
-
-        # resize the input
-        output_ = [
-            cv2.resize(img, target_size, interpolation=resize_opt)
-            for img in input_
-        ]
-        return output_
-
-    def _add_gaussian_noise(self, input_, params):
-        sigma_range = params['gaussian_sigma']
-        sigma = np.random.uniform(sigma_range[0], sigma_range[1]) / 255.
-
-        gray_noise_prob = params['gaussian_gray_noise_prob']
-        is_gray_noise = np.random.uniform() < gray_noise_prob
-
-        output_ = []
-        for img in input_:
-            noise = np.float32(np.random.randn(*(img.shape))) * sigma
-            if is_gray_noise:
-                noise = noise[:, :, :1]
-            output_.append(img + noise)
-        return output_
-
-    def _add_poisson_noise(self, input_, params):
-        scale_range = params['poisson_scale']
-        scale = np.random.uniform(scale_range[0], scale_range[1])
-
-        gray_noise_prob = params['poisson_gray_noise_prob']
-        is_gray_noise = np.random.uniform() < gray_noise_prob
-
-        output_ = []
-        for img in input_:
-            noise = img.copy()
-            if is_gray_noise:
-                noise = cv2.cvtColor(noise[..., [2, 1, 0]], cv2.COLOR_BGR2GRAY)
-                noise = noise[..., np.newaxis]
-            noise = np.clip((noise * 255.0).round(), 0, 255) / 255.
-            unique_val = 2**np.ceil(np.log2(len(np.unique(noise))))
-            noise = np.random.poisson(noise * unique_val) / unique_val - noise
-
-            output_.append(img + noise * scale)
-
-        return output_
-
-    def _add_random_noise(self, input_, params):
-        noise_type = random.choices(params['noise_type'],
-                                    params['noise_prob'])[0]
-        if noise_type.lower() == 'gaussian':
-            return self._add_gaussian_noise(input_, params)
-        elif noise_type.lower() == 'poisson':
-            return self._add_poisson_noise(input_, params)
-        else:
-            raise NotImplementedError(f'"noise_type" [{noise_type}] is '
-                                      'not implemented.')
-
-    def _add_random_jpeg_compression(self, input_, params):
-        # determine compression level
-        quality = params['quality']
-        jpeg_param = np.random.uniform(quality[0], quality[1])
-        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), jpeg_param]
-
-        # add jpeg compression
-        output_ = []
-        for img in input_:
-            _, img_encoded = cv2.imencode('.jpg', img * 255., encode_param)
-            output_.append(np.float32(cv2.imdecode(img_encoded, 1)) / 255.)
-
-        return output_
-
-    def _shuffle_sequence(self):
-        sequence = [self.degradations[i] for i in self.shuffle_idx]
-        np.random.shuffle(sequence)
-        for i, idx in enumerate(self.shuffle_idx):
-            self.degradations[idx] = sequence[i]
-
-    def _degrade(self, input_):
+    def _round_clip(self, input_):
         if isinstance(input_, np.ndarray):
             input_ = [input_]
-
-        # 'resize_to_desire' must come after 'random_resize' if
-        # 'random_resize' exists, or else stacking along batch dimension
-        # is not possible
-        opt = [v['type'].lower() for v in self.degradations]
-        if 'random_resize' in opt:
-            idx_1 = opt.index('random_resize')
-            if 'resize_to_desire' not in opt:
-                raise ValueError(
-                    '"resize_to_desire" must exist if '
-                    '"random_resize" exists, or else stacking along batch '
-                    'dimension is not possible.')
-
-        if len(self.shuffle_idx) > 0:
-            self._shuffle_sequence()
-
-            opt = [v['type'].lower() for v in self.degradations]
-            idx_1, idx_2 = 0, 1
-            if 'random_resize' in opt:
-                idx_1 = opt.index('random_resize')
-                idx_2 = opt.index('resize_to_desire')
-
-            while idx_1 > idx_2:
-                self._shuffle_sequence()
-                opt = [v['type'].lower() for v in self.degradations]
-                idx_1 = opt.index('random_resize')
-                idx_2 = opt.index('resize_to_desire')
-
-        for degradation in self.degradations:
-            if np.random.uniform() > degradation.get('prob', 1):
-                continue
-
-            degradation_type = degradation['type'].lower()
-            params = degradation['params']
-            if degradation_type in ['random_resize', 'resize_to_desire']:
-                if params.get('with_sinc', False):
-                    if np.random.uniform() < params.get('sinc_prob', 1):
-                        input_ = self._add_random_blur(input_, params)
-                input_ = self._random_resize(input_, params)
-            elif degradation_type == 'random_noise':
-                input_ = self._add_random_noise(input_, params)
-            elif degradation_type == 'random_blur':
-                input_ = self._add_random_blur(input_, params)
-            elif degradation_type == 'random_jpeg':
-                input_ = self._add_random_jpeg_compression(input_, params)
-            else:
-                raise NotImplementedError(f'Degradation [{degradation_type}] '
-                                          'is not implemented.')
 
         # round and clip
         input_ = [np.clip((v * 255.0).round(), 0, 255) / 255. for v in input_]
@@ -1273,18 +1097,20 @@ class AddRandomDegradations:
 
     def __call__(self, results):
         """Call function.
+
         Args:
             results (dict): A dict containing the necessary information and
                 data for augmentation.
+
         Returns:
-            dict: A dict containing the processed data and information.
+            dict: A dict with the values of the specified keys are rounded
+                and clipped.
         """
-        results['lq'] = self._degrade(results[self.src_key])
+
+        for key in self.keys:
+            results[key] = self._round_clip(results[key])
 
         return results
 
     def __repr__(self):
-        repr_str = self.__class__.__name__
-        repr_str += (f'(src_key={self.src_key}, degradations='
-                     f'{self.degradations}, shuffle_idx={self.shuffle_idx})')
-        return repr_str
+        return self.__class__.__name__

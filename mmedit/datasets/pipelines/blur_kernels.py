@@ -47,7 +47,7 @@ def mesh_grid(kernel_size):
                                         1))).reshape(kernel_size, kernel_size,
                                                      2)
 
-    return x_grid, y_grid, xy_grid
+    return xy_grid, x_grid, y_grid
 
 
 def calculate_pdf(sigma_matrix, grid):
@@ -434,25 +434,25 @@ def random_mixed_kernels(kernel_list,
 
 
     Args:
-        kernel_list (tuple): A list of kenrel types. Choices are
+        kernel_list (list): A list of kenrel types. Choices are
             'iso', 'aniso', 'skew', 'generalized', 'plateau_iso',
             'plateau_aniso'.
-        kernel_prob (tuple): The probability of choosing of the corresponding
+        kernel_prob (list): The probability of choosing of the corresponding
             kernel.
         kernel_size (int): The size of the kernel.
-        sigma_x_range (tuple, optional): The range of the standard deviation
+        sigma_x_range (list, optional): The range of the standard deviation
             along  the horizontal direction. Default: (0.6, 5).
-        sigma_y_range (tuple, optional): The range of the standard deviation
+        sigma_y_range (list, optional): The range of the standard deviation
             along the vertical direction. Default: (0.6, 5).
-        rotation_range (tuple, optional): Range of rotation in radian.
+        rotation_range (list, optional): Range of rotation in radian.
             Default: (-np.pi, np.pi).
-        beta_gaussian_range (tuple, optional): The range of the shape parameter
+        beta_gaussian_range (list, optional): The range of the shape parameter
             for generalized Gaussian. Default: (0.5, 8).
-        beta_plateau_range (tuple, optional): The range of the shape parameter
+        beta_plateau_range (list, optional): The range of the shape parameter
             for plateau kernel. Default: (1, 2).
-        omega_range (tuple, optional): The range of omega used in Sinc kernel.
+        omega_range (list, optional): The range of omega used in Sinc kernel.
             Default: (0, np.pi).
-        noise_range (tuple, optional): Multiplicative kernel noise.
+        noise_range (list, optional): Multiplicative kernel noise.
             Default: None.
 
     Returns:
@@ -468,7 +468,7 @@ def random_mixed_kernels(kernel_list,
             sigma_y_range,
             rotation_range,
             noise_range=noise_range,
-            isotropic=True)
+            is_isotropic=True)
     elif kernel_type == 'aniso':
         kernel = random_bivariate_gaussian(
             kernel_size,

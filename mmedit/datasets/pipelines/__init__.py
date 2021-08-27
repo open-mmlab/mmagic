@@ -1,9 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .augmentation import (BinarizeImage, Flip, GenerateFrameIndices,
+from .augmentation import (BinarizeImage, CopyValueFromKey, Flip,
+                           GenerateFrameIndices,
                            GenerateFrameIndiceswithPadding,
                            GenerateSegmentIndices, MirrorSequence, Pad,
                            RandomAffine, RandomJitter, RandomMaskDilation,
-                           RandomTransposeHW, Resize, TemporalReverse)
+                           RandomTransposeHW, Resize, RoundClipZeroOne,
+                           TemporalReverse)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    CropLike, FixedCrop, ModCrop, PairedRandomCrop)
@@ -17,6 +19,9 @@ from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, GenerateTrimapWithDistTransform,
                           MergeFgAndBg, PerturbBg, TransformTrimap)
 from .normalization import Normalize, RescaleToZeroOne
+from .random_degradations import (AddRandomBlur, AddRandomJPEGCompression,
+                                  AddRandomNoise, DegradationsWithShuffle,
+                                  RandomResize)
 from .random_down_sampling import RandomDownSampling
 
 __all__ = [
@@ -32,5 +37,7 @@ __all__ = [
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap',
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
-    'CropLike', 'GenerateHeatmap'
+    'CropLike', 'GenerateHeatmap', 'CopyValueFromKey', 'RoundClipZeroOne',
+    'AddRandomBlur', 'AddRandomJPEGCompression', 'AddRandomNoise',
+    'DegradationsWithShuffle', 'RandomResize'
 ]
