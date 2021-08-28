@@ -19,8 +19,8 @@ from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, GenerateTrimapWithDistTransform,
                           MergeFgAndBg, PerturbBg, TransformTrimap)
 from .normalization import Normalize, RescaleToZeroOne
-from .random_degradations import (AddRandomBlur, AddRandomJPEGCompression,
-                                  AddRandomNoise, DegradationsWithShuffle,
+from .random_degradations import (DegradationsWithShuffle, RandomBlur,
+                                  RandomJPEGCompression, RandomNoise,
                                   RandomResize)
 from .random_down_sampling import RandomDownSampling
 
@@ -38,6 +38,6 @@ __all__ = [
     'GenerateTrimapWithDistTransform', 'TransformTrimap',
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
     'CropLike', 'GenerateHeatmap', 'CopyValueFromKey', 'RoundClipZeroOne',
-    'AddRandomBlur', 'AddRandomJPEGCompression', 'AddRandomNoise',
+    'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
     'DegradationsWithShuffle', 'RandomResize'
 ]

@@ -50,7 +50,7 @@ def mesh_grid(kernel_size):
     return xy_grid, x_grid, y_grid
 
 
-def calculate_pdf(sigma_matrix, grid):
+def calculate_gaussian_pdf(sigma_matrix, grid):
     """Calculate PDF of the bivariate Gaussian distribution.
 
     Args:
@@ -101,7 +101,7 @@ def bivariate_gaussian(kernel_size,
     else:
         sigma_matrix = sigma_matrix2(sig_x, sig_y, theta)
 
-    kernel = calculate_pdf(sigma_matrix, grid)
+    kernel = calculate_gaussian_pdf(sigma_matrix, grid)
     kernel = kernel / np.sum(kernel)
 
     return kernel
@@ -435,8 +435,8 @@ def random_mixed_kernels(kernel_list,
 
     Args:
         kernel_list (list): A list of kenrel types. Choices are
-            'iso', 'aniso', 'skew', 'generalized', 'plateau_iso',
-            'plateau_aniso'.
+            'iso', 'aniso', 'skew', 'generalized_iso', 'generalized_aniso',
+            'plateau_iso', 'plateau_aniso', 'sinc'.
         kernel_prob (list): The probability of choosing of the corresponding
             kernel.
         kernel_size (int): The size of the kernel.
