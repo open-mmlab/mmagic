@@ -2,6 +2,8 @@ from math import ceil
 
 import numpy as np
 
+from ..registry import PIPELINES
+
 
 def get_size_from_scale(input_size, scale_factor):
     """Get the output size given input size and scale factor.
@@ -52,7 +54,7 @@ def cubic(x):
 
     """
 
-    x = np.array(x).astype(np.float64)
+    x = np.array(x).astype(np.float32)
     x_abs = np.absolute(x)
     x_abs_sq = np.multiply(x_abs, x_abs)
     x_abs_cu = np.multiply(x_abs_sq, x_abs)
@@ -76,7 +78,7 @@ def get_weights_indices(input_length, output_length, scale, kernel,
         kernel_width (int): The width of the kernel.
 
     Returns:
-        list[ndarry]: The weights and the indices for interpolation.
+        list[ndarray]: The weights and the indices for interpolation.
 
 
     """
@@ -91,7 +93,7 @@ def get_weights_indices(input_length, output_length, scale, kernel,
         kernel_width = kernel_width
 
     # coordinates of output
-    x = np.arange(1, output_length + 1).astype(np.float64)
+    x = np.arange(1, output_length + 1).astype(np.float32)
 
     # coordinates of input
     u = x / scale + 0.5 * (1 - 1 / scale)
@@ -134,7 +136,7 @@ def resize_along_dim(img_in, weights, indices, dim):
         ndarray: Interpolated (along one dimension) image.
     """
 
-    img_in = img_in.astype(np.float64)
+    img_in = img_in.astype(np.float32)
     w_shape = weights.shape
     output_shape = list(img_in.shape)
     output_shape[dim] = w_shape[0]
@@ -162,72 +164,107 @@ def resize_along_dim(img_in, weights, indices, dim):
         return img_out
 
 
-def imresize(img,
-             scale=None,
-             output_shape=None,
-             kernel='cubic',
-             kernel_width=4.0):
+@PIPELINES.register_module()
+class MATLABResize:
     """Resize the input image using MATLAB downsampling.
 
-    Currently support bicubic interpolation only. Note that the output of this
-    function is slightly different from the official MATLAB function.
+        Currently support bicubic interpolation only. Note that the output of
+        this function is slightly different from the official MATLAB function.
 
-    Args:
-        img (ndarray): The input image to be resized.
-        scale (float | None, optional): The scale factor of the resize
-            operation. If None, it will be determined by output_shape.
-            Default: None.
-        output_shape (tuple(int) | None, optional): The size of the output
-            image. If None, it will be determined by scale. Note that if scale
-            is provided, output_shape will not be used. Default: None.
-        kernel (str, optional): The kernel for the resize operation. Currently
-            support 'cubic' only. Default: 'cubic'.
-        kernel_width (float): The kernel width. Currently support 4.0 only.
-            Default: 4.0.
-
-    Returns:
-        ndarray: The output image.
+        Args:
+            keys (list[str]): A list of keys whose values are modified.
+            scale (float | None, optional): The scale factor of the resize
+                operation. If None, it will be determined by output_shape.
+                Default: None.
+            output_shape (tuple(int) | None, optional): The size of the output
+                image. If None, it will be determined by scale. Note that if
+                scale is provided, output_shape will not be used.
+                Default: None.
+            kernel (str, optional): The kernel for the resize operation.
+                Currently support 'bicubic' only. Default: 'bicubic'.
+            kernel_width (float): The kernel width. Currently support 4.0 only.
+                Default: 4.0.
     """
 
-    if kernel.lower() != 'cubic':
-        raise ValueError('Currently support bicubic kernel only.')
-    else:
-        kernel = cubic
+    def __init__(self,
+                 keys,
+                 scale=None,
+                 output_shape=None,
+                 kernel='bicubic',
+                 kernel_width=4.0):
 
-    if float(kernel_width) != 4.0:
-        raise ValueError('Current support only width=4 only.')
+        if kernel.lower() != 'bicubic':
+            raise ValueError('Currently support bicubic kernel only.')
+        else:
+            self.kernel_func = cubic
 
-    weights = {}
-    indices = {}
+        if float(kernel_width) != 4.0:
+            raise ValueError('Current support only width=4 only.')
 
-    # compute scale and output_size
-    if scale is not None:
-        scale = float(scale)
-        scale = [scale, scale]
-        output_size = get_size_from_scale(img.shape, scale)
-    elif output_shape is not None:
-        scale = get_scale_from_size(img.shape, output_shape)
-        output_size = list(output_shape)
-    else:
-        raise ValueError('"scale" and "output_shape" cannot be both None')
+        if scale is None and output_shape is None:
+            raise ValueError('"scale" and "output_shape" cannot be both None')
 
-    # apply cubic interpolation along two dimensions
-    order = np.argsort(np.array(scale))
-    for k in range(2):
-        key = (img.shape[k], output_size[k], scale[k], kernel, kernel_width)
-        weight, index = get_weights_indices(img.shape[k], output_size[k],
-                                            scale[k], kernel, kernel_width)
-        weights[key] = weight
-        indices[key] = index
+        self.keys = keys
+        self.scale = scale
+        self.output_shape = output_shape
+        self.kernel = kernel
+        self.kernel_width = kernel_width
 
-    output = np.copy(img)
-    if output.ndim == 2:  # grayscale image
-        output = np.expand_dims(output, axis=2)
+    def _resize(self, img):
+        weights = {}
+        indices = {}
 
-    for k in range(2):
-        dim = order[k]
-        key = (img.shape[dim], output_size[dim], scale[dim], kernel,
-               kernel_width)
-        output = resize_along_dim(output, weights[key], indices[key], dim)
+        # compute scale and output_size
+        if self.scale is not None:
+            scale = float(self.scale)
+            scale = [scale, scale]
+            output_size = get_size_from_scale(img.shape, scale)
+        else:
+            scale = get_scale_from_size(img.shape, self.output_shape)
+            output_size = list(self.output_shape)
 
-    return output.squeeze(2)
+        # apply cubic interpolation along two dimensions
+        order = np.argsort(np.array(scale))
+        for k in range(2):
+            key = (img.shape[k], output_size[k], scale[k], self.kernel_func,
+                   self.kernel_width)
+            weight, index = get_weights_indices(img.shape[k], output_size[k],
+                                                scale[k], self.kernel_func,
+                                                self.kernel_width)
+            weights[key] = weight
+            indices[key] = index
+
+        output = np.copy(img)
+        if output.ndim == 2:  # grayscale image
+            output = np.expand_dims(output, axis=2)
+
+        for k in range(2):
+            dim = order[k]
+            key = (img.shape[dim], output_size[dim], scale[dim],
+                   self.kernel_func, self.kernel_width)
+            output = resize_along_dim(output, weights[key], indices[key], dim)
+
+        if output.shape[2] == 1:
+            output = output.squeeze(2)
+
+        return output
+
+    def __call__(self, results):
+        for key in self.keys:
+            if isinstance(results[key], np.ndarray):
+                results[key] = [results[key]]
+
+            results[key] = [self._resize(img) for img in results[key]]
+
+            if len(results[key]) == 1:
+                results[key] = results[key][0]
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (
+            f'(keys={self.keys}, scale={self.scale}, '
+            f'output_shape={self.output_shape}, '
+            f'kernel={self.kernel}, kernel_width={self.kernel_width})')
+        return repr_str
