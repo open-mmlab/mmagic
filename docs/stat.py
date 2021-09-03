@@ -24,6 +24,7 @@ stats = []
 for f in files:
     with open(f, 'r') as content_file:
         content = content_file.read()
+    content = content.replace('+', '\\+')
 
     # title
     title = content.split('\n')[0].replace('#', '')
