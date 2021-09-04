@@ -1,0 +1,8 @@
+cff-version: 0.10.0
+message: "If you use this software, please cite it as below."
+authors:
+  - name: "MMEditing Contributors"
+title: "OpenMMLab Editing Estimation Toolbox and Benchmark"
+date-released: 2020-08-31
+url: "https://github.com/open-mmlab/mmediting"
+license: Apache-2.0
