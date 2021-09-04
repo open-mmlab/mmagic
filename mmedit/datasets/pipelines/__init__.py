@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .augmentation import (BinarizeImage, CopyValueFromKey, Flip,
+from .augmentation import (BinarizeImage, CopyValues, Flip,
                            GenerateFrameIndices,
                            GenerateFrameIndiceswithPadding,
                            GenerateSegmentIndices, MirrorSequence, Pad,
@@ -37,7 +37,7 @@ __all__ = [
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap',
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
-    'CropLike', 'GenerateHeatmap', 'CopyValueFromKey', 'RoundClipZeroOne',
+    'CropLike', 'GenerateHeatmap', 'CopyValues', 'RoundClipZeroOne',
     'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
     'DegradationsWithShuffle', 'RandomResize'
 ]

@@ -269,7 +269,9 @@ class RandomJPEGCompression:
         self.params = params
 
     def _apply_random_compression(self, input_):
+        is_single_image = False
         if isinstance(input_, np.ndarray):
+            is_single_image = True
             input_ = [input_]
 
         # determine compression level
@@ -285,7 +287,7 @@ class RandomJPEGCompression:
 
         input_ = output_
 
-        if len(input_) == 1:
+        if is_single_image:
             input_ = input_[0]
 
         return input_

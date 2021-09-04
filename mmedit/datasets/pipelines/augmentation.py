@@ -1034,20 +1034,28 @@ class MirrorSequence:
 
 
 @PIPELINES.register_module()
-class CopyValueFromKey:
+class CopyValues:
     """Copy the value of a source key to a destination key.
 
-    It does the following: results[dst_key] = results[src_key].
+
+    It does the following: results[dst_key] = results[src_key] for
+    (src_key, dst_key) in zip(src_keys, dst_keys).
+
+    Added keys are the keys in the attribute "dst_keys".
 
     Args:
-        src_key (str): The source key.
-        dst_key (str): The destination key.
+        src_keys (list[str]): The source keys.
+        dst_keys (list[str]): The destination keys.
     """
 
-    def __init__(self, src_key, dst_key):
+    def __init__(self, src_keys, dst_keys):
 
-        self.src_key = src_key
-        self.dst_key = dst_key
+        if len(src_keys) != len(dst_keys):
+            raise ValueError('"src_keys" and "dst_keys" should have the same'
+                             'number of elements.')
+
+        self.src_keys = src_keys
+        self.dst_keys = dst_keys
 
     def __call__(self, results):
         """Call function.
@@ -1059,14 +1067,15 @@ class CopyValueFromKey:
         Returns:
             dict: A dict with a key added/modified.
         """
+        for (src_key, dst_key) in zip(self.src_keys, self.dst_keys):
+            results[dst_key] = results[src_key].copy()
 
-        results[self.dst_key] = results[self.src_key].copy()
         return results
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (f'(src_key={self.src_key})')
-        repr_str += (f'(dst_key={self.dst_key})')
+        repr_str += (f'(src_keys={self.src_keys})')
+        repr_str += (f'(dst_keys={self.dst_keys})')
         return repr_str
 
 
@@ -1084,13 +1093,15 @@ class RoundClipZeroOne:
         self.keys = keys
 
     def _round_clip(self, input_):
+        is_single_image = False
         if isinstance(input_, np.ndarray):
+            is_single_image = True
             input_ = [input_]
 
         # round and clip
         input_ = [np.clip((v * 255.0).round(), 0, 255) / 255. for v in input_]
 
-        if len(input_) == 1:
+        if is_single_image:
             input_ = input_[0]
 
         return input_
