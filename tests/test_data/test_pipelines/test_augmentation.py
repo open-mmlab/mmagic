@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.datasets.pipelines import (BinarizeImage, CopyValueFromKey, Flip,
+from mmedit.datasets.pipelines import (BinarizeImage, CopyValues, Flip,
                                        GenerateFrameIndices,
                                        GenerateFrameIndiceswithPadding,
                                        GenerateSegmentIndices, MirrorSequence,
@@ -709,5 +709,5 @@ class TestAugmentations:
         results = {}
         results['gt'] = np.zeros((1)).astype(np.float32)
 
-        copy_ = CopyValueFromKey(src_key='gt', dst_key='lq')
+        copy_ = CopyValues(src_key='gt', dst_key='lq')
         assert np.array_equal(copy_(results)['lq'], results['gt'])
