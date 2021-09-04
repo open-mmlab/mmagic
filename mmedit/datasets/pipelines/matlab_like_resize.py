@@ -1,5 +1,5 @@
-from math import ceil
-
+# This code is referenced from NLRN_v0 with modifications
+# Reference: https://github.com/Ding-Liu/NLRN_v0/blob/master/imresize.py  # noqa
 import numpy as np
 
 from ..registry import PIPELINES
@@ -17,7 +17,7 @@ def get_size_from_scale(input_size, scale_factor):
     """
 
     output_shape = [
-        int(ceil(scale * shape))
+        int(np.ceil(scale * shape))
         for (scale, shape) in zip(scale_factor, input_size)
     ]
 
@@ -43,7 +43,7 @@ def get_scale_from_size(input_size, output_size):
     return scale
 
 
-def cubic(x):
+def _cubic(x):
     """ Cubic function.
 
     Args:
@@ -54,14 +54,16 @@ def cubic(x):
 
     """
 
-    x = np.array(x).astype(np.float32)
-    x_abs = np.absolute(x)
-    x_abs_sq = np.multiply(x_abs, x_abs)
-    x_abs_cu = np.multiply(x_abs_sq, x_abs)
-    f = np.multiply(1.5 * x_abs_cu - 2.5 * x_abs_sq + 1,
-                    x_abs <= 1) + np.multiply(
-                        -0.5 * x_abs_cu + 2.5 * x_abs_sq - 4 * x_abs + 2,
-                        (1 < x_abs) & (x_abs <= 2))
+    x = np.array(x, dtype=np.float32)
+    x_abs = np.abs(x)
+    x_abs_sq = x_abs**2
+    x_abs_cu = x_abs_sq * x_abs
+
+    # if |x| <= 1: y = 1.5|x|^3 - 2.5|x|^2 + 1
+    # if 1 < |x| <= 2: -0.5|x|^3 + 2.5|x|^2 - 4|x| + 2
+    f = 1.5 * (x_abs_cu - 2.5 * x_abs_sq + 1) * (x_abs <= 1) + (
+        -0.5 * x_abs_cu + 2.5 * x_abs_sq - 4 * x_abs + 2) * ((1 < x_abs) &
+                                                             (x_abs <= 2))
 
     return f
 
@@ -98,16 +100,16 @@ def get_weights_indices(input_length, output_length, scale, kernel,
     # coordinates of input
     u = x / scale + 0.5 * (1 - 1 / scale)
     left = np.floor(u - kernel_width / 2)  # leftmost pixel
-    p = int(ceil(kernel_width)) + 2  # maximum number of pixels
+    p = int(np.ceil(kernel_width)) + 2  # maximum number of pixels
 
     # indices of input pixels
-    ind = np.expand_dims(left, axis=1) + np.arange(p) - 1
+    ind = left[:, np.newaxis, ...] + np.arange(p)
     indices = ind.astype(np.int32)
 
     # weights of input pixels
-    weights = h(np.expand_dims(u, axis=1) - indices - 1)
-    weights = np.divide(weights,
-                        np.expand_dims(np.sum(weights, axis=1), axis=1))
+    weights = h(u[:, np.newaxis, ...] - indices - 1)
+
+    weights = weights / np.sum(weights, axis=1)[:, np.newaxis, ...]
 
     # remove all-zero columns
     aux = np.concatenate(
@@ -144,18 +146,16 @@ def resize_along_dim(img_in, weights, indices, dim):
 
     if dim == 0:
         for i in range(w_shape[0]):
-            w = np.expand_dims(weights[i, :], 0)
+            w = weights[i, :][np.newaxis, ...]
             ind = indices[i, :]
             img_slice = img_in[ind, :]
-            img_out[i] = np.sum(
-                np.multiply(np.squeeze(img_slice, axis=0), w.T), axis=0)
+            img_out[i] = np.sum(np.squeeze(img_slice, axis=0) * w.T, axis=0)
     elif dim == 1:
         for i in range(w_shape[0]):
-            w = np.expand_dims(weights[i, :], 2)
+            w = weights[i, :][:, :, np.newaxis]
             ind = indices[i, :]
             img_slice = img_in[:, ind]
-            img_out[:, i] = np.sum(
-                np.multiply(np.squeeze(img_slice, axis=1), w.T), axis=1)
+            img_out[:, i] = np.sum(np.squeeze(img_slice, axis=1) * w.T, axis=1)
 
     if img_in.dtype == np.uint8:
         img_out = np.clip(img_out, 0, 255)
@@ -165,11 +165,14 @@ def resize_along_dim(img_in, weights, indices, dim):
 
 
 @PIPELINES.register_module()
-class MATLABResize:
-    """Resize the input image using MATLAB downsampling.
+class MATLABLikeResize:
+    """Resize the input image using MATLAB-like downsampling.
 
         Currently support bicubic interpolation only. Note that the output of
         this function is slightly different from the official MATLAB function.
+
+        Required keys are the keys in attribute "keys". Added or modified keys
+        are "scale" and "output_shape", and the keys in attribute "keys".
 
         Args:
             keys (list[str]): A list of keys whose values are modified.
@@ -195,8 +198,6 @@ class MATLABResize:
 
         if kernel.lower() != 'bicubic':
             raise ValueError('Currently support bicubic kernel only.')
-        else:
-            self.kernel_func = cubic
 
         if float(kernel_width) != 4.0:
             raise ValueError('Current support only width=4 only.')
@@ -204,6 +205,7 @@ class MATLABResize:
         if scale is None and output_shape is None:
             raise ValueError('"scale" and "output_shape" cannot be both None')
 
+        self.kernel_func = _cubic
         self.keys = keys
         self.scale = scale
         self.output_shape = output_shape
@@ -236,7 +238,7 @@ class MATLABResize:
 
         output = np.copy(img)
         if output.ndim == 2:  # grayscale image
-            output = np.expand_dims(output, axis=2)
+            output = output[:, :, np.newaxis]
 
         for k in range(2):
             dim = order[k]
@@ -244,20 +246,22 @@ class MATLABResize:
                    self.kernel_func, self.kernel_width)
             output = resize_along_dim(output, weights[key], indices[key], dim)
 
-        if output.shape[2] == 1:
-            output = output.squeeze(2)
-
         return output
 
     def __call__(self, results):
         for key in self.keys:
+            is_single_image = False
             if isinstance(results[key], np.ndarray):
+                is_single_image = True
                 results[key] = [results[key]]
 
             results[key] = [self._resize(img) for img in results[key]]
 
-            if len(results[key]) == 1:
+            if is_single_image:
                 results[key] = results[key][0]
+
+        results['scale'] = self.scale
+        results['output_shape'] = self.output_shape
 
         return results
 
