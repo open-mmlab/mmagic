@@ -1,5 +1,6 @@
 # This code is referenced from BasicSR with modifications.
 # Reference: https://github.com/xinntao/BasicSR/blob/master/basicsr/data/degradations.py  # noqa
+# Original licence: Copyright (c) 2020 xinntao, under the Apache 2.0 license.
 import random
 
 import numpy as np
