@@ -1,5 +1,6 @@
-# This code is referenced from NLRN_v0 with modifications
-# Reference: https://github.com/Ding-Liu/NLRN_v0/blob/master/imresize.py  # noqa
+# This code is referenced from matlab_imresize with modifications
+# Reference: https://github.com/fatheral/matlab_imresize/blob/master/imresize.py  # noqa
+# Original licence: Copyright (c) 2020 fatheral, under the MIT License.
 import numpy as np
 
 from ..registry import PIPELINES
