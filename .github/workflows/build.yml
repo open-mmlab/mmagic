@@ -99,6 +99,12 @@ jobs:
             python-version: 3.8
           - torch: 1.8.0
             torchvision: 0.9.0
+          - torch: 1.8.0
+            torchvision: 0.9.0
+            python-version: 3.8
+          - torch: 1.8.0
+            torchvision: 0.9.0
+            python-version: 3.9
 
     steps:
       - uses: actions/checkout@v2
@@ -121,6 +127,9 @@ jobs:
           export CUDA_HOME=/usr/local/cuda-${CUDA_SHORT}
           export LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${CUDA_HOME}/include:${LD_LIBRARY_PATH}
           export PATH=${CUDA_HOME}/bin:${PATH}
+      - name: Install dependencies for compiling onnx when python=3.9
+        run: pip install protobuf && sudo apt-get install libprotobuf-dev protobuf-compiler
+        if: ${{matrix.python-version == '3.9'}}
       - name: Install Pillow
         run: pip install Pillow==6.2.2
         if: ${{matrix.torchvision < 0.5}}
@@ -147,6 +156,7 @@ jobs:
           coverage xml
           coverage report -m
       - name: Upload coverage to Codecov
+        if: ${{matrix.torch == '1.6.0+cu101' && matrix.python-version == '3.7'}}
         uses: codecov/codecov-action@v1.0.10
         with:
           file: ./coverage.xml
