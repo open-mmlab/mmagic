@@ -10,8 +10,9 @@ import titlecase
 
 
 def anchor(name):
-    return re.sub(r'-+', '-', re.sub(r'[^a-zA-Z0-9]', '-',
-                                     name.strip().lower())).strip('-')
+    return re.sub(r'-+', '-',
+                  re.sub(r'[^a-zA-Z0-9\+]', '-',
+                         name.strip().lower())).strip('-')
 
 
 # Count algorithms
@@ -30,7 +31,8 @@ for f in files:
 
     # count papers
     papers = set(
-        (papertype, titlecase.titlecase(paper.lower().strip()))
+        (papertype,
+         titlecase.titlecase(paper.lower().strip()).replace('+', r'\+'))
         for (papertype, paper) in re.findall(
             r'<!--\s*\[([A-Z]*?)\]\s*-->\s*\n.*?\btitle\s*=\s*{(.*?)}',
             content, re.DOTALL))
@@ -112,7 +114,8 @@ for f in files:
 
     # count papers
     papers = set(
-        (papertype, titlecase.titlecase(paper.lower().strip()))
+        (papertype,
+         titlecase.titlecase(paper.lower().strip()).replace('+', r'\+'))
         for (papertype, paper) in re.findall(
             r'<!--\s*\[([A-Z]*?)\]\s*-->\s*\n.*?\btitle\s*=\s*{(.*?)}',
             content, re.DOTALL))
