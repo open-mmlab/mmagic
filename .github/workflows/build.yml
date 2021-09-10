@@ -56,6 +56,8 @@ jobs:
         run: pip install pip --upgrade
       - name: Install Pillow
         run: pip install Pillow==6.2.2
+      - name: Install dlib
+        run: pip install dlib
         if: ${{matrix.torchvision == '0.4.1'}}
       - name: Install PyTorch
         run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html
@@ -132,6 +134,8 @@ jobs:
         if: ${{matrix.python-version == '3.9'}}
       - name: Install Pillow
         run: pip install Pillow==6.2.2
+      - name: Install dlib
+        run: pip install dlib
         if: ${{matrix.torchvision < 0.5}}
       - name: Install PyTorch
         run: |
@@ -204,6 +208,8 @@ jobs:
           export PATH=${CUDA_HOME}/bin:${PATH}
       - name: Install Pillow
         run: pip install Pillow==6.2.2
+      - name: Install dlib
+        run: pip install dlib
         if: ${{matrix.torchvision < 0.5}}
       - name: Install PyTorch
         run: pip install torch==${{matrix.torch}}+cu102 torchvision==${{matrix.torchvision}}+cu102 -f https://download.pytorch.org/whl/torch_stable.html
