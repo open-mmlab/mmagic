@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import copy
 import math
 import numbers
 import os.path as osp
@@ -1050,6 +1051,9 @@ class CopyValues:
 
     def __init__(self, src_keys, dst_keys):
 
+        if not isinstance(src_keys, list) or not isinstance(dst_keys, list):
+            raise AssertionError('"src_keys" and "dst_keys" must be lists.')
+
         if len(src_keys) != len(dst_keys):
             raise ValueError('"src_keys" and "dst_keys" should have the same'
                              'number of elements.')
@@ -1068,7 +1072,7 @@ class CopyValues:
             dict: A dict with a key added/modified.
         """
         for (src_key, dst_key) in zip(self.src_keys, self.dst_keys):
-            results[dst_key] = results[src_key].copy()
+            results[dst_key] = copy.deepcopy(results[src_key])
 
         return results
 
@@ -1080,25 +1084,27 @@ class CopyValues:
 
 
 @PIPELINES.register_module()
-class RoundClipZeroOne:
-    """Round off and clip the image to [0, 1].
+class Quantize:
+    """Quantize and clip the image to [0, 1].
 
     It is assumed that the the input has range [0, 1].
 
+    Modified keys are the attributes specified in "keys".
+
     Args:
-        keys (str): The keys whose values are clipped.
+        keys (list[str]): The keys whose values are clipped.
     """
 
     def __init__(self, keys):
         self.keys = keys
 
-    def _round_clip(self, input_):
+    def _quantize_clip(self, input_):
         is_single_image = False
         if isinstance(input_, np.ndarray):
             is_single_image = True
             input_ = [input_]
 
-        # round and clip
+        # quantize and clip
         input_ = [np.clip((v * 255.0).round(), 0, 255) / 255. for v in input_]
 
         if is_single_image:
@@ -1119,7 +1125,7 @@ class RoundClipZeroOne:
         """
 
         for key in self.keys:
-            results[key] = self._round_clip(results[key])
+            results[key] = self._quantize_clip(results[key])
 
         return results
 

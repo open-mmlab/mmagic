@@ -11,6 +11,8 @@ from ..registry import PIPELINES
 class RandomBlur:
     """Apply random blur to the input.
 
+    Modified keys are the attributed specified in "keys".
+
     Args:
         params (dict): A dictionary specifying the degradation settings.
         keys (list[str]): A list specifying the keys whose values are
@@ -22,8 +24,8 @@ class RandomBlur:
         self.params = params
 
     def get_kernel(self):
-        kernel = random.choices(self.params['kernel_list'],
-                                self.params['kernel_prob'])[0]
+        kernel = np.random.choice(
+            self.params['kernel_list'], p=self.params['kernel_prob'])
         kernel_size = random.choice(self.params['kernel_size'])
 
         sigma_x = self.params.get('sigma_x', [0, 0])
@@ -66,17 +68,20 @@ class RandomBlur:
 
         return kernel
 
-    def _apply_random_blur(self, input_):
-        if isinstance(input_, np.ndarray):
-            input_ = [input_]
+    def _apply_random_blur(self, imgs):
+        is_single_image = False
+        if isinstance(imgs, np.ndarray):
+            is_single_image = True
+            imgs = [imgs]
+
         # get kernel and blur the input
         kernel = self.get_kernel()
-        input_ = [cv2.filter2D(im, -1, kernel) for im in input_]
+        imgs = [cv2.filter2D(im, -1, kernel) for im in imgs]
 
-        if len(input_) == 1:
-            input_ = input_[0]
+        if is_single_image:
+            imgs = imgs[0]
 
-        return input_
+        return imgs
 
     def __call__(self, results):
         if np.random.uniform() > self.params.get('prob', 1):
@@ -97,6 +102,8 @@ class RandomBlur:
 class RandomResize:
     """Randomly resize the input.
 
+    Modified keys are the attributed specified in "keys".
+
     Args:
         params (dict): A dictionary specifying the degradation settings.
         keys (list[str]): A list specifying the keys whose values are
@@ -113,15 +120,17 @@ class RandomResize:
             area=cv2.INTER_AREA,
             lanczos=cv2.INTER_LANCZOS4)
 
-    def _random_resize(self, input_):
-        if isinstance(input_, np.ndarray):
-            input_ = [input_]
+    def _random_resize(self, imgs):
+        is_single_image = False
+        if isinstance(imgs, np.ndarray):
+            is_single_image = True
+            imgs = [imgs]
 
-        h, w = input_[0].shape[:2]
+        h, w = imgs[0].shape[:2]
 
         resize_opt = self.params['resize_opt']
         resize_prob = self.params['resize_prob']
-        resize_opt = random.choices(resize_opt, resize_prob)[0].lower()
+        resize_opt = np.random.choice(resize_opt, p=resize_prob).lower()
         if resize_opt not in self.resize_dict:
             raise NotImplementedError(f'resize_opt [{resize_opt}] is not '
                                       'implemented')
@@ -130,8 +139,8 @@ class RandomResize:
         # determine the target size, if not provided
         target_size = self.params.get('target_size', None)
         if target_size is None:
-            resize_mode = random.choices(['up', 'down', 'keep'],
-                                         self.params['resize_mode_prob'])[0]
+            resize_mode = np.random.choice(['up', 'down', 'keep'],
+                                           self.params['resize_mode_prob'])
             resize_scale = self.params['resize_scale']
             if resize_mode == 'up':
                 scale_factor = np.random.uniform(1, resize_scale[1])
@@ -141,15 +150,15 @@ class RandomResize:
                 scale_factor = 1
             target_size = (int(h * scale_factor), int(w * scale_factor))
         # resize the input
-        input_ = [
+        imgs = [
             cv2.resize(img, target_size[::-1], interpolation=resize_opt)
-            for img in input_
+            for img in imgs
         ]
 
-        if len(input_) == 1:
-            input_ = input_[0]
+        if is_single_image:
+            imgs = imgs[0]
 
-        return input_
+        return imgs
 
     def __call__(self, results):
         if np.random.uniform() > self.params.get('prob', 1):
@@ -172,6 +181,8 @@ class RandomNoise:
 
     Currently support Gaussian noise and Poisson noise.
 
+    Modified keys are the attributed specified in "keys".
+
     Args:
         params (dict): A dictionary specifying the degradation settings.
         keys (list[str]): A list specifying the keys whose values are
@@ -182,31 +193,31 @@ class RandomNoise:
         self.keys = keys
         self.params = params
 
-    def _apply_gaussian_noise(self, input_):
+    def _apply_gaussian_noise(self, imgs):
         sigma_range = self.params['gaussian_sigma']
         sigma = np.random.uniform(sigma_range[0], sigma_range[1]) / 255.
 
         gray_noise_prob = self.params['gaussian_gray_noise_prob']
         is_gray_noise = np.random.uniform() < gray_noise_prob
 
-        output_ = []
-        for img in input_:
+        outputs = []
+        for img in imgs:
             noise = np.float32(np.random.randn(*(img.shape))) * sigma
             if is_gray_noise:
                 noise = noise[:, :, :1]
-            output_.append(img + noise)
+            outputs.append(img + noise)
 
-        return output_
+        return outputs
 
-    def _apply_poisson_noise(self, input_):
+    def _apply_poisson_noise(self, imgs):
         scale_range = self.params['poisson_scale']
         scale = np.random.uniform(scale_range[0], scale_range[1])
 
         gray_noise_prob = self.params['poisson_gray_noise_prob']
         is_gray_noise = np.random.uniform() < gray_noise_prob
 
-        output_ = []
-        for img in input_:
+        outputs = []
+        for img in imgs:
             noise = img.copy()
             if is_gray_noise:
                 noise = cv2.cvtColor(noise[..., [2, 1, 0]], cv2.COLOR_BGR2GRAY)
@@ -215,29 +226,31 @@ class RandomNoise:
             unique_val = 2**np.ceil(np.log2(len(np.unique(noise))))
             noise = np.random.poisson(noise * unique_val) / unique_val - noise
 
-            output_.append(img + noise * scale)
+            outputs.append(img + noise * scale)
 
-        return output_
+        return outputs
 
-    def _apply_random_noise(self, input_):
-        noise_type = random.choices(self.params['noise_type'],
-                                    self.params['noise_prob'])[0]
+    def _apply_random_noise(self, imgs):
+        noise_type = np.random.choice(
+            self.params['noise_type'], p=self.params['noise_prob'])
 
-        if isinstance(input_, np.ndarray):
-            input_ = [input_]
+        is_single_image = False
+        if isinstance(imgs, np.ndarray):
+            is_single_image = True
+            imgs = [imgs]
 
         if noise_type.lower() == 'gaussian':
-            input_ = self._apply_gaussian_noise(input_)
+            imgs = self._apply_gaussian_noise(imgs)
         elif noise_type.lower() == 'poisson':
-            input_ = self._apply_poisson_noise(input_)
+            imgs = self._apply_poisson_noise(imgs)
         else:
             raise NotImplementedError(f'"noise_type" [{noise_type}] is '
                                       'not implemented.')
 
-        if len(input_) == 1:
-            input_ = input_[0]
+        if is_single_image:
+            imgs = imgs[0]
 
-        return input_
+        return imgs
 
     def __call__(self, results):
         if np.random.uniform() > self.params.get('prob', 1):
@@ -258,6 +271,8 @@ class RandomNoise:
 class RandomJPEGCompression:
     """Apply random JPEG compression to the input.
 
+    Modified keys are the attributed specified in "keys".
+
     Args:
         params (dict): A dictionary specifying the degradation settings.
         keys (list[str]): A list specifying the keys whose values are
@@ -268,11 +283,11 @@ class RandomJPEGCompression:
         self.keys = keys
         self.params = params
 
-    def _apply_random_compression(self, input_):
+    def _apply_random_compression(self, imgs):
         is_single_image = False
-        if isinstance(input_, np.ndarray):
+        if isinstance(imgs, np.ndarray):
             is_single_image = True
-            input_ = [input_]
+            imgs = [imgs]
 
         # determine compression level
         quality = self.params['quality']
@@ -280,17 +295,17 @@ class RandomJPEGCompression:
         encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), jpeg_param]
 
         # apply jpeg compression
-        output_ = []
-        for img in input_:
+        outputs = []
+        for img in imgs:
             _, img_encoded = cv2.imencode('.jpg', img * 255., encode_param)
-            output_.append(np.float32(cv2.imdecode(img_encoded, 1)) / 255.)
+            outputs.append(np.float32(cv2.imdecode(img_encoded, 1)) / 255.)
 
-        input_ = output_
+        imgs = outputs
 
         if is_single_image:
-            input_ = input_[0]
+            imgs = imgs[0]
 
-        return input_
+        return imgs
 
     def __call__(self, results):
         if np.random.uniform() > self.params.get('prob', 1):
@@ -331,6 +346,8 @@ class DegradationsWithShuffle:
         [b, [c, d], a]
         [[c, d], a, b]
         [[c, d], b, a]
+
+    Modified keys are the attributed specified in "keys".
 
     Args:
         degradations (list[dict]): The list of degradations.

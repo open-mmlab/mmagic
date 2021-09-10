@@ -1,7 +1,6 @@
 # This code is referenced from BasicSR with modifications.
 # Reference: https://github.com/xinntao/BasicSR/blob/master/basicsr/data/degradations.py  # noqa
 # Original licence: Copyright (c) 2020 xinntao, under the Apache 2.0 license.
-import random
 
 import numpy as np
 from scipy import special
@@ -19,9 +18,9 @@ def get_rotated_sigma_matrix(sig_x, sig_y, theta):
         ndarray: Rotated sigma matrix.
     """
 
-    diag = np.array([[sig_x**2, 0], [0, sig_y**2]])
+    diag = np.array([[sig_x**2, 0], [0, sig_y**2]]).astype(np.float32)
     rot = np.array([[np.cos(theta), -np.sin(theta)],
-                    [np.sin(theta), np.cos(theta)]])
+                    [np.sin(theta), np.cos(theta)]]).astype(np.float32)
 
     return np.matmul(rot, np.matmul(diag, rot.T))
 
@@ -80,7 +79,7 @@ def bivariate_gaussian(kernel_size,
 
     Args:
         kernel_size (int): The size of the kernel
-        sig_x (float): Standard deviation along horizontal direction
+        sig_x (float): Standard deviation along horizontal direction.
         sig_y (float | None, optional): Standard deviation along the vertical
             direction. If it is None, 'is_isotropic' must be set to True.
             Default: None.
@@ -99,8 +98,13 @@ def bivariate_gaussian(kernel_size,
         grid, _, _ = _mesh_grid(kernel_size)
 
     if is_isotropic:
-        sigma_matrix = np.array([[sig_x**2, 0], [0, sig_x**2]])
+        sigma_matrix = np.array([[sig_x**2, 0], [0,
+                                                 sig_x**2]]).astype(np.float32)
     else:
+        if sig_y is None:
+            raise ValueError('"sig_y" cannot be None if "is_isotropic" is '
+                             'False.')
+
         sigma_matrix = get_rotated_sigma_matrix(sig_x, sig_y, theta)
 
     kernel = calculate_gaussian_pdf(sigma_matrix, grid)
@@ -146,7 +150,8 @@ def bivariate_generalized_gaussian(kernel_size,
         grid, _, _ = _mesh_grid(kernel_size)
 
     if is_isotropic:
-        sigma_matrix = np.array([[sig_x**2, 0], [0, sig_x**2]])
+        sigma_matrix = np.array([[sig_x**2, 0], [0,
+                                                 sig_x**2]]).astype(np.float32)
     else:
         sigma_matrix = get_rotated_sigma_matrix(sig_x, sig_y, theta)
 
@@ -189,7 +194,8 @@ def bivariate_plateau(kernel_size,
         grid, _, _ = _mesh_grid(kernel_size)
 
     if is_isotropic:
-        sigma_matrix = np.array([[sig_x**2, 0], [0, sig_x**2]])
+        sigma_matrix = np.array([[sig_x**2, 0], [0,
+                                                 sig_x**2]]).astype(np.float32)
     else:
         sigma_matrix = get_rotated_sigma_matrix(sig_x, sig_y, theta)
 
@@ -471,7 +477,7 @@ def random_mixed_kernels(kernel_list,
             specified range.
     """
 
-    kernel_type = random.choices(kernel_list, kernel_prob)[0]
+    kernel_type = np.random.choice(kernel_list, p=kernel_prob)
     if kernel_type == 'iso':
         kernel = random_bivariate_gaussian_kernel(
             kernel_size,

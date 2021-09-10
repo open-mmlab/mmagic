@@ -9,9 +9,9 @@ from mmedit.datasets.pipelines import (BinarizeImage, CopyValues, Flip,
                                        GenerateFrameIndices,
                                        GenerateFrameIndiceswithPadding,
                                        GenerateSegmentIndices, MirrorSequence,
-                                       Pad, RandomAffine, RandomJitter,
-                                       RandomMaskDilation, RandomTransposeHW,
-                                       Resize, RoundClipZeroOne,
+                                       Pad, Quantize, RandomAffine,
+                                       RandomJitter, RandomMaskDilation,
+                                       RandomTransposeHW, Resize,
                                        TemporalReverse)
 
 
@@ -685,14 +685,14 @@ class TestAugmentations:
 
         # clip (>1)
         results['gt'] = 1.1 * np.ones((1, 1, 3)).astype(np.float32)
-        model = RoundClipZeroOne(keys=['gt'])
+        model = Quantize(keys=['gt'])
         assert np.array_equal(
             model(results)['gt'],
             np.ones((1, 1, 3)).astype(np.float32))
 
         # clip (<0)
         results['gt'] = -0.1 * np.ones((1, 1, 3)).astype(np.float32)
-        model = RoundClipZeroOne(keys=['gt'])
+        model = Quantize(keys=['gt'])
         assert np.array_equal(
             model(results)['gt'],
             np.zeros((1, 1, 3)).astype(np.float32))
@@ -700,7 +700,7 @@ class TestAugmentations:
         # round
         results['gt'] = (1 / 255. + 1e-8) * np.ones(
             (1, 1, 3)).astype(np.float32)
-        model = RoundClipZeroOne(keys=['gt'])
+        model = Quantize(keys=['gt'])
         assert np.array_equal(
             model(results)['gt'], (1 / 255.) * np.ones(
                 (1, 1, 3)).astype(np.float32))

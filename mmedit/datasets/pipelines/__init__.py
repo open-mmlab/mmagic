@@ -3,8 +3,8 @@ from .augmentation import (BinarizeImage, CopyValues, Flip,
                            GenerateFrameIndices,
                            GenerateFrameIndiceswithPadding,
                            GenerateSegmentIndices, MirrorSequence, Pad,
-                           RandomAffine, RandomJitter, RandomMaskDilation,
-                           RandomTransposeHW, Resize, RoundClipZeroOne,
+                           Quantize, RandomAffine, RandomJitter,
+                           RandomMaskDilation, RandomTransposeHW, Resize,
                            TemporalReverse)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
@@ -15,6 +15,7 @@ from .generate_assistant import GenerateCoordinateAndCell, GenerateHeatmap
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
                       LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
                       RandomLoadResizeBg)
+from .matlab_like_resize import MATLABLikeResize
 from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, GenerateTrimapWithDistTransform,
                           MergeFgAndBg, PerturbBg, TransformTrimap)
@@ -37,7 +38,7 @@ __all__ = [
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap',
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
-    'CropLike', 'GenerateHeatmap', 'CopyValues', 'RoundClipZeroOne',
-    'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
+    'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
+    'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
     'DegradationsWithShuffle', 'RandomResize'
 ]
