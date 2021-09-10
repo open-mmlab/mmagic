@@ -1,4 +1,4 @@
-exp_name = 'basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd'
+exp_name = 'basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd'
 
 # model settings
 model = dict(
@@ -97,7 +97,7 @@ demo_pipeline = [
 
 data = dict(
     workers_per_gpu=6,
-    train_dataloader=dict(samples_per_gpu=4, drop_last=True),  # 2 gpus
+    train_dataloader=dict(samples_per_gpu=2, drop_last=True),  # 4 gpus
     val_dataloader=dict(samples_per_gpu=1),
     test_dataloader=dict(samples_per_gpu=1, workers_per_gpu=1),
 
@@ -150,7 +150,7 @@ lr_config = dict(
     restart_weights=[1],
     min_lr=1e-7)
 
-checkpoint_config = dict(interval=5, save_optimizer=True, by_epoch=False)
+checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
 # remove gpu_collect=True in non distributed training
 evaluation = dict(interval=5000, save_image=False, gpu_collect=True)
 log_config = dict(

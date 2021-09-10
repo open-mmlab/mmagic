@@ -76,7 +76,7 @@ demo_pipeline = [
 
 data = dict(
     workers_per_gpu=6,
-    train_dataloader=dict(samples_per_gpu=4, drop_last=True),  # 2 gpus
+    train_dataloader=dict(samples_per_gpu=1, drop_last=True),  # 8 gpus
     val_dataloader=dict(samples_per_gpu=1),
     test_dataloader=dict(samples_per_gpu=1, workers_per_gpu=1),
 
