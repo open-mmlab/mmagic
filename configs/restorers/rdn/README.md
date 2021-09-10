@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">RDN (CVPR'2018)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1802.08797">RDN (CVPR'2018)</a></summary>
 
 ```bibtex
 @inproceedings{zhang2018residual,

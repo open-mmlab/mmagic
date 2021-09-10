@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">TTSR (CVPR'2020)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/2006.04139">TTSR (CVPR'2020)</a></summary>
 
 ```bibtex
 @inproceedings{yang2020learning,

@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">SRCNN (TPAMI'2015)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1501.00092">SRCNN (TPAMI'2015)</a></summary>
 
 ```bibtex
 @article{dong2015image,
