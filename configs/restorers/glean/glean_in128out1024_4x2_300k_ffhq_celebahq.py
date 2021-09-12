@@ -131,6 +131,24 @@ test_pipeline = [
     dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'lq_path'])
 ]
 
+demo_pipeline = [
+    dict(
+        type='RandomResize',
+        params=dict(
+            target_size=[128, 128], resize_opt=['area'], resize_prob=[1]),
+        keys=['lq'],
+    ),
+    dict(type='RescaleToZeroOne', keys=['lq']),
+    dict(
+        type='Normalize',
+        keys=['lq'],
+        mean=[0.5, 0.5, 0.5],
+        std=[0.5, 0.5, 0.5],
+        to_rgb=True),
+    dict(type='ImageToTensor', keys=['lq']),
+    dict(type='Collect', keys=['lq'], meta_keys=[])
+]
+
 data = dict(
     workers_per_gpu=6,
     train_dataloader=dict(samples_per_gpu=2, drop_last=True),  # 4 gpus
