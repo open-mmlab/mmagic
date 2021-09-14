@@ -140,7 +140,7 @@ class RandomResize:
         target_size = self.params.get('target_size', None)
         if target_size is None:
             resize_mode = np.random.choice(['up', 'down', 'keep'],
-                                           self.params['resize_mode_prob'])
+                                           p=self.params['resize_mode_prob'])
             resize_scale = self.params['resize_scale']
             if resize_mode == 'up':
                 scale_factor = np.random.uniform(1, resize_scale[1])
