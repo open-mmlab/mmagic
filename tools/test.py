@@ -120,7 +120,7 @@ def main():
             save_image=args.save_image,
             empty_cache=empty_cache)
 
-    if rank == 0:
+    if rank == 0 and 'eval_result' in outputs:
         print('')
         # print metrics
         stats = dataset.evaluate(outputs)
