@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">IndexNet (ICCV'2019)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1908.00672">IndexNet (ICCV'2019)</a></summary>
 
 ```bibtex
 @inproceedings{hao2019indexnet,

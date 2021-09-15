@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">DeepFillv2 (CVPR'2019)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1806.03589">DeepFillv2 (CVPR'2019)</a></summary>
 
 ```bibtex
 @inproceedings{yu2019free,

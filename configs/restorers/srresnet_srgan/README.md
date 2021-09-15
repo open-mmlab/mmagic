@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">SRGAN (CVPR'2016)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1609.04802">SRGAN (CVPR'2016)</a></summary>
 
 ```bibtex
 @inproceedings{ledig2016photo,

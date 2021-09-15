@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">Global&Local (ToG'2017)</summary>
+<summary align="right"><a href="http://iizuka.cs.tsukuba.ac.jp/projects/completion/data/completion_sig2017.pdf">Global&Local (ToG'2017)</a></summary>
 
 ```bibtex
 @article{iizuka2017globally,

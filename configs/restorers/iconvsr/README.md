@@ -3,7 +3,7 @@
 <!-- [ALGORITHM] -->
 
 <details>
-<summary align="right">IconVSR (CVPR'2021)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/2012.02181">IconVSR (CVPR'2021)</a></summary>
 
 ```bibtex
 @InProceedings{chan2021basicvsr,

@@ -3,7 +3,7 @@
 <!-- [ALGORITHM] -->
 
 <details>
-<summary align="right">DeepFillv1 (CVPR'2018)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1801.07892">DeepFillv1 (CVPR'2018)</a></summary>
 
 ```bibtex
 @inproceedings{yu2018generative,

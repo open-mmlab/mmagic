@@ -3,7 +3,7 @@
 <!-- [ALGORITHM] -->
 
 <details>
-<summary align="right">EDSR (CVPR'2017)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1707.02921">EDSR (CVPR'2017)</a></summary>
 
 ```bibtex
 @inproceedings{lim2017enhanced,
