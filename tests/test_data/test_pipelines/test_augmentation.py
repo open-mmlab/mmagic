@@ -5,13 +5,14 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.datasets.pipelines import (BinarizeImage, Flip,
+from mmedit.datasets.pipelines import (BinarizeImage, CopyValues, Flip,
                                        GenerateFrameIndices,
                                        GenerateFrameIndiceswithPadding,
                                        GenerateSegmentIndices, MirrorSequence,
-                                       Pad, RandomAffine, RandomJitter,
-                                       RandomMaskDilation, RandomTransposeHW,
-                                       Resize, TemporalReverse)
+                                       Pad, Quantize, RandomAffine,
+                                       RandomJitter, RandomMaskDilation,
+                                       RandomTransposeHW, Resize,
+                                       TemporalReverse)
 
 
 class TestAugmentations:
@@ -678,3 +679,35 @@ class TestAugmentations:
         with pytest.raises(TypeError):
             results = dict(lq=0, gt=gts)
             mirror_sequence(results)
+
+    def round_clip_zero_one(self):
+        results = {}
+
+        # clip (>1)
+        results['gt'] = 1.1 * np.ones((1, 1, 3)).astype(np.float32)
+        model = Quantize(keys=['gt'])
+        assert np.array_equal(
+            model(results)['gt'],
+            np.ones((1, 1, 3)).astype(np.float32))
+
+        # clip (<0)
+        results['gt'] = -0.1 * np.ones((1, 1, 3)).astype(np.float32)
+        model = Quantize(keys=['gt'])
+        assert np.array_equal(
+            model(results)['gt'],
+            np.zeros((1, 1, 3)).astype(np.float32))
+
+        # round
+        results['gt'] = (1 / 255. + 1e-8) * np.ones(
+            (1, 1, 3)).astype(np.float32)
+        model = Quantize(keys=['gt'])
+        assert np.array_equal(
+            model(results)['gt'], (1 / 255.) * np.ones(
+                (1, 1, 3)).astype(np.float32))
+
+    def copy_value_from_key(self):
+        results = {}
+        results['gt'] = np.zeros((1)).astype(np.float32)
+
+        copy_ = CopyValues(src_key='gt', dst_key='lq')
+        assert np.array_equal(copy_(results)['lq'], results['gt'])

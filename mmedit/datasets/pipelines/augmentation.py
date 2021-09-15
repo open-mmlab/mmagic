@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import copy
 import math
 import numbers
 import os.path as osp
@@ -1031,3 +1032,102 @@ class MirrorSequence:
         repr_str = self.__class__.__name__
         repr_str += (f'(keys={self.keys})')
         return repr_str
+
+
+@PIPELINES.register_module()
+class CopyValues:
+    """Copy the value of a source key to a destination key.
+
+
+    It does the following: results[dst_key] = results[src_key] for
+    (src_key, dst_key) in zip(src_keys, dst_keys).
+
+    Added keys are the keys in the attribute "dst_keys".
+
+    Args:
+        src_keys (list[str]): The source keys.
+        dst_keys (list[str]): The destination keys.
+    """
+
+    def __init__(self, src_keys, dst_keys):
+
+        if not isinstance(src_keys, list) or not isinstance(dst_keys, list):
+            raise AssertionError('"src_keys" and "dst_keys" must be lists.')
+
+        if len(src_keys) != len(dst_keys):
+            raise ValueError('"src_keys" and "dst_keys" should have the same'
+                             'number of elements.')
+
+        self.src_keys = src_keys
+        self.dst_keys = dst_keys
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict with a key added/modified.
+        """
+        for (src_key, dst_key) in zip(self.src_keys, self.dst_keys):
+            results[dst_key] = copy.deepcopy(results[src_key])
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(src_keys={self.src_keys})')
+        repr_str += (f'(dst_keys={self.dst_keys})')
+        return repr_str
+
+
+@PIPELINES.register_module()
+class Quantize:
+    """Quantize and clip the image to [0, 1].
+
+    It is assumed that the the input has range [0, 1].
+
+    Modified keys are the attributes specified in "keys".
+
+    Args:
+        keys (list[str]): The keys whose values are clipped.
+    """
+
+    def __init__(self, keys):
+        self.keys = keys
+
+    def _quantize_clip(self, input_):
+        is_single_image = False
+        if isinstance(input_, np.ndarray):
+            is_single_image = True
+            input_ = [input_]
+
+        # quantize and clip
+        input_ = [np.clip((v * 255.0).round(), 0, 255) / 255. for v in input_]
+
+        if is_single_image:
+            input_ = input_[0]
+
+        return input_
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict with the values of the specified keys are rounded
+                and clipped.
+        """
+
+        for key in self.keys:
+            results[key] = self._quantize_clip(results[key])
+
+        return results
+
+    def __repr__(self):
+        return self.__class__.__name__
