@@ -62,10 +62,8 @@ jobs:
       - name: Install MMCV
         run: pip install mmcv-full==1.3.0 -f https://download.openmmlab.com/mmcv/dist/cpu/torch${{matrix.torch}}/index.html
       - name: Install FaceXLib
-        run:
-          if [ ${{matrix.torch}} >= '1.7.0' ]
-          then
-            pip install facexlib
+        run: pip install facexlib
+        if: ${{matrix.torch >= 1.7.0}}
       - name: Install unittest dependencies
         run: pip install -r requirements/tests.txt
       - name: Build and install
@@ -149,10 +147,8 @@ jobs:
       - name: Install MMCV
         run: pip install mmcv-full==1.3.0 -f https://download.openmmlab.com/mmcv/dist/cu101/torch${{matrix.torch}}/index.html
       - name: Install FaceXLib
-        run:
-          if [ ${{matrix.torch}} >= '1.7.0' ]
-          then
-            pip install facexlib
+        run: pip install facexlib
+        if: ${{matrix.torch >= 1.7.0}}
       - name: Install other dependencies
         run: pip install -r requirements.txt
       - name: Build and install
@@ -220,10 +216,8 @@ jobs:
       - name: Install MMCV
         run: pip install mmcv-full==1.3.0 -f https://download.openmmlab.com/mmcv/dist/cu101/torch${{matrix.torch}}/index.html
       - name: Install FaceXLib
-        run:
-          if [ ${{matrix.torch}} >= '1.7.0' ]
-          then
-            pip install facexlib
+        run: pip install facexlib
+        if: ${{matrix.torch >= 1.7.0}}
       - name: Install other dependencies
         run: pip install -r requirements.txt
       - name: Build and install
