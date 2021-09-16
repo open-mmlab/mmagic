@@ -129,7 +129,7 @@ log_config = dict(  # config to register logger hook
     hooks=[
         dict(type='TextLoggerHook', by_epoch=False),
         # dict(type='TensorboardLoggerHook'),  # The Tensorboard logger is also supported
-        dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
     ])  # The logger used to record the training process.
 
 visual_config = dict(  # config to register logger hook
