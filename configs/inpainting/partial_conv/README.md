@@ -3,7 +3,7 @@
 <!-- [ALGORITHM] -->
 
 <details>
-<summary align="right">PConv (ECCV'2018)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1804.07723">PConv (ECCV'2018)</a></summary>
 
 ```bibtex
 @inproceedings{liu2018image,

@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">GLEAN (CVPR'2021)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/2012.00739">GLEAN (CVPR'2021)</a></summary>
 
 ```bibtex
 @InProceedings{chan2021glean,

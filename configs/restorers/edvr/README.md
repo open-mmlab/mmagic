@@ -3,7 +3,7 @@
 <!-- [ALGORITHM] -->
 
 <details>
-<summary align="right">EDVR (CVPRW'2019)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1905.02716?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%253A+arxiv%252FQSXk+%2528ExcitingAds%2521+cs+updates+on+arXiv.org%2529">EDVR (CVPRW'2019)</a></summary>
 
 ```bibtex
 @InProceedings{wang2019edvr,

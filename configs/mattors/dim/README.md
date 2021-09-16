@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">DIM (CVPR'2017)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1703.03872">DIM (CVPR'2017)</a></summary>
 
 ```bibtex
 @inproceedings{xu2017deep,

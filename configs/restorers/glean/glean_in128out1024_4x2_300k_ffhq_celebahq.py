@@ -98,6 +98,7 @@ train_pipeline = [
             resize_prob=[1 / 3., 1 / 3., 1 / 3.]),
         keys=['lq'],
     ),
+    dict(type='Quantize', keys=['lq']),
     dict(
         type='RandomResize',
         params=dict(
