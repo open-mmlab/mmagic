@@ -57,6 +57,8 @@ jobs:
       - name: Install Pillow
         run: pip install Pillow==6.2.2
         if: ${{matrix.torchvision == '0.4.1'}}
+      - name: Install FaceXLib
+        run: pip install facexlib
       - name: Install PyTorch
         run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install MMCV
@@ -132,6 +134,8 @@ jobs:
         if: ${{matrix.python-version == '3.9'}}
       - name: Install Pillow
         run: pip install Pillow==6.2.2
+      - name: Install FaceXLib
+        run: pip install facexlib
         if: ${{matrix.torchvision < 0.5}}
       - name: Install PyTorch
         run: |
@@ -205,6 +209,8 @@ jobs:
       - name: Install Pillow
         run: pip install Pillow==6.2.2
         if: ${{matrix.torchvision < 0.5}}
+      - name: Install FaceXLib
+        run: pip install facexlib
       - name: Install PyTorch
         run: pip install torch==${{matrix.torch}}+cu102 torchvision==${{matrix.torchvision}}+cu102 -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install MMCV
