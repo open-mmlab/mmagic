@@ -2,10 +2,11 @@
 import numpy as np
 import torch
 from mmcv.parallel import collate, scatter
+from mmcv.utils import digit_version
 
 from mmedit.datasets.pipelines import Compose
 
-if torch.__version__ >= '1.7.0':
+if digit_version(torch.__version__) >= digit_version('1.7.0'):
     from facexlib.utils.face_restoration_helper import FaceRestoreHelper
 
 
