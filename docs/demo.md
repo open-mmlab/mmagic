@@ -47,6 +47,21 @@ If `--imshow` is specified, the demo will also show image with opencv. Examples:
 ```shell
 python demo/restoration_demo.py configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py work_dirs/esrgan_x4c64b23g32_g1_400k_div2k/latest.pth tests/data/lq/baboon_x4.png demo/demo_out_baboon.png
 ```
+
+#### Restoration (Face Image)
+
+You can use the following commands to test an face image for restoration.
+
+```shell
+python demo/restoration_face_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${SAVE_FILE} [--upscale_factor] [--face_size] [--imshow] [--device ${GPU_ID}]
+```
+
+If `--imshow` is specified, the demo will also show image with opencv. Examples:
+
+```shell
+python demo/restoration_face_demo.py configs/restorers/glean/glean_in128out1024_2x4_300k_ffhq_celebahq.py https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth tests/data/face/000001.png results/000001.png --upscale_factor 4
+```
+
 #### Restoration (Video)
 
 You can use the following commands to test a video for restoration.
@@ -55,7 +70,7 @@ You can use the following commands to test a video for restoration.
 python demo/restoration_video_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${INPUT_DIR} ${OUTPUT_DIR} [--window_size=$WINDOW_SIZE] [--device ${GPU_ID}]
 ```
 
-It suppots both the sliding-window framework and the recurrent framework. Examples:
+It supports both the sliding-window framework and the recurrent framework. Examples:
 
 
 EDVR:
