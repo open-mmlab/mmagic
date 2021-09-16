@@ -1,27 +1,35 @@
 Collections:
-  - Name: GLInpaintor
-    Metadata:
-      Training Data: CelebA
-      Training Techniques:
-        - Adam
-      Training Resources: 1x TITAN Xp
-      Architecture:
-        - GLEncoderDecoder
-    Paper: https://dl.acm.org/doi/abs/10.1145/3072959.3073659
-    README: configs/inpainting/global_local/README.md
-
+- Metadata:
+    Architecture:
+    - Global&Local
+  Name: README
+  Paper:
+  - http://iizuka.cs.tsukuba.ac.jp/projects/completion/data/completion_sig2017.pdf
+  README: configs/inpainting/global_local/README.md
 Models:
-  - Name: gl_256x256_8x12_places
-    In Collection: GLInpaintor
-    Config: configs/inpainting/global_local/gl_256x256_8x12_celeba.py
-    Metadata:
-      train time (s/iter): 0.322
-      Training Memory (GB): 3.24
-    Results:
-      - Task: Inpainting
-        Dataset: CelebA-val
-        Metrics:
-          L1 Error: 6.678
-          PSNR: 26.780
-          SSIM: 0.904
-    Weights: https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth
+- Config: configs/inpainting/global_local/gl_256x256_8x12_places.py
+  In Collection: README
+  Metadata:
+    Training Data: PLACES
+  Name: inpainting--global_local--gl_256x256_8x12_places
+  Results:
+  - Dataset: PLACES
+    Metrics:
+      PSNR: 23.152
+      SSIM: 0.862
+      l1 error: 11.164
+    Task: inpainting squarebbox 256x256 500k Places365-val
+  Weights: https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth
+- Config: configs/inpainting/global_local/gl_256x256_8x12_celeba.py
+  In Collection: README
+  Metadata:
+    Training Data: CELEBA
+  Name: inpainting--global_local--gl_256x256_8x12_celeba
+  Results:
+  - Dataset: CELEBA
+    Metrics:
+      PSNR: 26.78
+      SSIM: 0.904
+      l1 error: 6.678
+    Task: inpainting squarebbox 256x256 500k CelebA-val
+  Weights: https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth

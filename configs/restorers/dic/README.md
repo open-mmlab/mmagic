@@ -3,7 +3,7 @@
 <!-- [ALGORITHM] -->
 <details>
 
-<summary align="right">DIC (CVPR'2020)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/2003.13063">DIC (CVPR'2020)</a></summary>
 
 ```bibtex
 @inproceedings{ma2020deep,

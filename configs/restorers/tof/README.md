@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">TOFlow (IJCV'2019)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1711.09078">TOFlow (IJCV'2019)</a></summary>
 
 ```bibtex
 @article{xue2019video,

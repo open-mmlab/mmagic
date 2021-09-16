@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">GCA (AAAI'2020)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/2001.04069">GCA (AAAI'2020)</a></summary>
 
 ```bibtex
 @inproceedings{li2020natural,

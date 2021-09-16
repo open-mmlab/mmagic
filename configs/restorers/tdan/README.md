@@ -2,7 +2,7 @@
 
 <!-- [ALGORITHM] -->
 <details>
-<summary align="right">TDAN (CVPR'2020)</summary>
+<summary align="right"><a href="https://arxiv.org/abs/1812.02898">TDAN (CVPR'2020)</a></summary>
 
 ```bibtex
 @InProceedings{tian2020tdan,
