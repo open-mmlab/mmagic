@@ -17,7 +17,8 @@ English | [简体中文](/README_zh-CN.md)
 
 MMEditing is an open source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://open-mmlab.github.io/) project.
 
-The master branch works with **PyTorch 1.3 to 1.6**.
+The master branch works with **PyTorch 1.3+**.
+Please kindly note that MMEditing will switch to **PyTorch 1.5+** from Oct. 2021. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
 
 Documentation: https://mmediting.readthedocs.io/en/latest/.
 

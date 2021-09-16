@@ -17,7 +17,8 @@
 
 MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://open-mmlab.github.io/) 项目的成员之一。
 
-主分支代码目前支持 **PyTorch 1.3~1.6** 。
+主分支代码目前支持 **PyTorch 1.3+** 。
+请注意，MMEditing将在2021年10月后仅支持**PyTorch 1.5 以上**的版本，并不再保证对较早版本的兼容性。
 
 文献资料: https://mmediting.readthedocs.io/en/latest/.
 
