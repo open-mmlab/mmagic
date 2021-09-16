@@ -1,10 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 import torch
-from facexlib.utils.face_restoration_helper import FaceRestoreHelper
 from mmcv.parallel import collate, scatter
 
 from mmedit.datasets.pipelines import Compose
+
+if torch.__version__ >= '1.7.0':
+    from facexlib.utils.face_restoration_helper import FaceRestoreHelper
 
 
 def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
