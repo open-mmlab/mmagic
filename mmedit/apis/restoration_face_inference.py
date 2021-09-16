@@ -2,12 +2,14 @@
 import numpy as np
 import torch
 from mmcv.parallel import collate, scatter
-from mmcv.utils import digit_version
 
 from mmedit.datasets.pipelines import Compose
 
-if digit_version(torch.__version__) >= digit_version('1.7.0'):
+try:
     from facexlib.utils.face_restoration_helper import FaceRestoreHelper
+    has_facexlib = True
+except ImportError:
+    has_facexlib = False
 
 
 def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
@@ -50,6 +52,7 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
     test_pipeline = Compose(test_pipeline)
 
     # face helper for detecting and aligning faces
+    assert has_facexlib, 'Please install FaceXLib to use the demo.'
     face_helper = FaceRestoreHelper(
         upscale_factor,
         face_size=face_size,
