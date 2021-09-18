@@ -41,19 +41,19 @@ class PConvInpaintor(OneStageInpaintor):
         fake_img = fake_res * mask + masked_img * (1. - mask)
 
         output = dict()
-        eval_results = {}
+        eval_result = {}
         if self.eval_with_metrics:
             gt_img = kwargs['gt_img']
             data_dict = dict(gt_img=gt_img, fake_res=fake_res, mask=mask)
             for metric_name in self.test_cfg['metrics']:
                 if metric_name in ['ssim', 'psnr']:
-                    eval_results[metric_name] = self._eval_metrics[
-                        metric_name](tensor2img(fake_img, min_max=(-1, 1)),
-                                     tensor2img(gt_img, min_max=(-1, 1)))
+                    eval_result[metric_name] = self._eval_metrics[metric_name](
+                        tensor2img(fake_img, min_max=(-1, 1)),
+                        tensor2img(gt_img, min_max=(-1, 1)))
                 else:
-                    eval_results[metric_name] = self._eval_metrics[
-                        metric_name]()(data_dict).item()
-            output['eval_results'] = eval_results
+                    eval_result[metric_name] = self._eval_metrics[metric_name](
+                    )(data_dict).item()
+            output['eval_result'] = eval_result
         else:
             output['fake_res'] = fake_res
             output['fake_img'] = fake_img
