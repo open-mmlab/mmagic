@@ -162,7 +162,7 @@ log_config = dict(
 visual_config = None
 
 # runtime settings
-dist_params = dict(backend='nccl', port=29501)
+dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = f'./work_dirs/{exp_name}'
 load_from = 'experiments/basicvsr_plusplus_c64n7_8x1_600k_reds4/iter_600000.pth'  # noqa
