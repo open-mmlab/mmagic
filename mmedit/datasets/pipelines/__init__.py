@@ -11,7 +11,8 @@ from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    CropLike, FixedCrop, ModCrop, PairedRandomCrop)
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
-from .generate_assistant import GenerateCoordinateAndCell, GenerateHeatmap
+from .generate_assistant import (GenerateCoordinateAndCell, GenerateHeatmap,
+                                 GenerateLandmark)
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
                       LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
                       RandomLoadResizeBg)
@@ -40,5 +41,5 @@ __all__ = [
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
     'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
     'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
-    'DegradationsWithShuffle', 'RandomResize'
+    'DegradationsWithShuffle', 'RandomResize', 'GenerateLandmark'
 ]

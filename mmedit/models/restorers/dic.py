@@ -125,7 +125,7 @@ class DIC(BasicRestorer):
         for step, (sr, heatmap) in enumerate(zip(sr_list, heatmap_list)):
             losses[f'loss_pixel_v{step}'] = self.pixel_loss(sr, gt)
             loss_pix += losses[f'loss_pixel_v{step}']
-            losses[f'loss_align_v{step}'] = self.pixel_loss(
+            losses[f'loss_align_v{step}'] = self.align_loss(
                 heatmap, gt_heatmap)
             loss_align += losses[f'loss_align_v{step}']
 

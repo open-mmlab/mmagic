@@ -1,8 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import cv2
 import torch
 
 from mmedit.datasets.pipelines import (GenerateCoordinateAndCell,
-                                       GenerateHeatmap)
+                                       GenerateHeatmap, GenerateLandmark)
 
 
 def test_generate_heatmap():
@@ -49,3 +50,11 @@ def test_generate_coordinate_and_cell():
         sample_quantity=64 * 48, scale=3.1, target_size=(128, 96))
     results3 = coordinate3(inputs3)
     assert set(list(results3.keys())) == set(['coord', 'cell'])
+
+
+def test_generate_landmark():
+    image = cv2.imread('tests/data/face/000001.png')
+    results = dict(lq=image)
+    gl = GenerateLandmark('lq', device='cpu')
+    results = gl(results)
+    assert results['landmark'].shape == (68, 2)

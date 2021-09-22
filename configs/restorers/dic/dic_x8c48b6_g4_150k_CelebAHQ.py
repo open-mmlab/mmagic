@@ -13,7 +13,7 @@ train_cfg = None
 test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=scale)
 
 # dataset settings
-train_dataset_type = 'SRFacialLandmarkDataset'
+train_dataset_type = 'SRFolderGTDataset'
 val_dataset_type = 'SRFolderGTDataset'
 test_dataset_type = 'SRFolderGTDataset'
 train_pipeline = [
@@ -24,6 +24,7 @@ train_pipeline = [
         flag='color',
         channel_order='rgb',
         backend='cv2'),
+    dict(type='GenerateLandmark', image_key='gt', device='cpu'),
     dict(
         type='Resize',
         scale=(128, 128),
@@ -41,7 +42,7 @@ train_pipeline = [
     dict(
         type='GenerateHeatmap',
         keypoint='landmark',
-        ori_size=256,
+        ori_size=128,
         target_size=32,
         sigma=1.),
     dict(
@@ -97,18 +98,17 @@ data = dict(
         times=60,
         dataset=dict(
             type=train_dataset_type,
-            gt_folder='data/celeba-hq/train/',
-            ann_file='data/celeba-hq/train_info_list_256.npy',
+            gt_folder='data/CelebA-HQ/train_256/all_256',
             pipeline=train_pipeline,
             scale=scale)),
     val=dict(
         type=val_dataset_type,
-        gt_folder='data/celeba-hq/val/',
+        gt_folder='data/CelebA-HQ/valid_256',
         pipeline=valid_pipeline,
         scale=scale),
     test=dict(
         type=test_dataset_type,
-        gt_folder='data/celeba-hq/val/',
+        gt_folder='data/CelebA-HQ/test_256/all_256',
         pipeline=valid_pipeline,
         scale=scale))
 

@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import face_alignment
 import numpy as np
 import torch
 
@@ -166,4 +167,72 @@ class GenerateCoordinateAndCell:
         repr_str = self.__class__.__name__
         repr_str += (f'sample_quantity={self.sample_quantity}, '
                      f'scale={self.scale}, target_size={self.target_size}')
+        return repr_str
+
+
+@PIPELINES.register_module()
+class GenerateLandmark:
+    """Generate face landmark.
+
+    Args:
+        image_key (str): Key of face image.
+        device (str): Device of face alignment. Default: 'cpu'.
+    """
+
+    def __init__(self, image_key, device='cpu'):
+        self.image_key = image_key
+        self.fd = None
+        self.init = False
+        self.device = device
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation. Require image_key.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+                Add 'landmark'.
+        """
+
+        image = results[self.image_key]
+        landmark = self._face_alignment_detector(image)
+        results['landmark'] = landmark
+
+        return results
+
+    def _face_alignment_detector(self, image):
+        """Generate face landmark by face_alignment.
+
+        Args:
+            image (numpy.ndarray): Face image.
+
+        Returns:
+            landmark (Tuple[float]): Location of landmark.
+        """
+
+        if not self.init:
+            self.fd = face_alignment.FaceAlignment(
+                face_alignment.LandmarksType._2D,
+                device=self.device,
+                flip_input=False)
+            self.init = True
+        faces = self.fd.get_landmarks(image)
+        index = 0
+        max_size = 0
+        for i, face in enumerate(faces):
+            size = face[8, 1] - face[19, 1]
+            if size > max_size:
+                max_size = size
+                index = i
+        landmark = faces[index]
+
+        return landmark
+
+    def __repr__(self):
+        repr_str = (f'{self.__class__.__name__}: '
+                    f'image_key={self.image_key}, '
+                    f'device={self.device}')
         return repr_str

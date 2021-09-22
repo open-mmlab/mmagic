@@ -3,7 +3,7 @@ scale = 8
 
 # model settings
 pretrained_light_cnn = 'https://download.openmmlab.com/mmediting/' + \
-        'restorers/dic/light_cnn_feature.pth'
+    'restorers/dic/light_cnn_feature.pth'
 model = dict(
     type='DIC',
     generator=dict(
@@ -12,7 +12,7 @@ model = dict(
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean'),
     feature_loss=dict(
-        type='FeatureLoss',
+        type='LightCNNFeatureLoss',
         pretrained=pretrained_light_cnn,
         loss_weight=0.1,
         criterion='l1'),
@@ -27,7 +27,7 @@ train_cfg = dict(fix_iter=10000, disc_steps=2)
 test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=scale)
 
 # dataset settings
-train_dataset_type = 'SRFacialLandmarkDataset'
+train_dataset_type = 'SRFolderGTDataset'
 val_dataset_type = 'SRFolderGTDataset'
 test_dataset_type = 'SRFolderGTDataset'
 train_pipeline = [
@@ -44,6 +44,7 @@ train_pipeline = [
         keys=['gt'],
         interpolation='bicubic',
         backend='pillow'),
+    dict(type='GenerateLandmark', image_key='gt', device='cpu'),
     dict(
         type='Resize',
         scale=1 / 8,
@@ -55,7 +56,7 @@ train_pipeline = [
     dict(
         type='GenerateHeatmap',
         keypoint='landmark',
-        ori_size=256,
+        ori_size=128,
         target_size=32,
         sigma=1.),
     dict(
@@ -111,18 +112,17 @@ data = dict(
         times=60,
         dataset=dict(
             type=train_dataset_type,
-            gt_folder='data/celeba-hq/train/',
-            ann_file='data/celeba-hq/train_info_list_256.npy',
+            gt_folder='data/CelebA-HQ/train_256/all_256',
             pipeline=train_pipeline,
             scale=scale)),
     val=dict(
         type=val_dataset_type,
-        gt_folder='data/celeba-hq/val/',
+        gt_folder='data/CelebA-HQ/valid_256',
         pipeline=valid_pipeline,
         scale=scale),
     test=dict(
         type=test_dataset_type,
-        gt_folder='data/celeba-hq/val/',
+        gt_folder='data/CelebA-HQ/test_256/all_256',
         pipeline=valid_pipeline,
         scale=scale))
 
