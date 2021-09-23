@@ -169,13 +169,13 @@ def test_real_esrgan():
             assert torch.is_tensor(outputs['results']['output'])
             assert outputs['results']['output'].size() == (1, 3, 128, 128)
 
-    # test disc_steps and disc_init_steps
+    # test disc_steps and disc_init_steps and start_iter
     data_batch = {
         'lq': inputs.cpu(),
         'gt': targets.cpu(),
         'gt_unsharp': targets.cpu()
     }
-    train_cfg = dict(disc_steps=2, disc_init_steps=2)
+    train_cfg = dict(disc_steps=2, disc_init_steps=2, start_iter=0)
     restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
     with patch.object(
             restorer,
