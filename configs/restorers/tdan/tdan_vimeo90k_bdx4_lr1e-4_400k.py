@@ -60,7 +60,10 @@ val_pipeline = [
         mean=[0.5, 0.5, 0.5],
         std=[1, 1, 1]),
     dict(type='FramesToTensor', keys=['lq', 'gt']),
-    dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'gt_path'])
+    dict(
+        type='Collect',
+        keys=['lq', 'gt'],
+        meta_keys=['lq_path', 'gt_path', 'key'])
 ]
 
 demo_pipeline = [
