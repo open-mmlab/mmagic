@@ -105,8 +105,6 @@ class RealESRGAN(SRGAN):
             else:
                 self.generator.load_state_dict(self.generator_ema.state_dict())
 
-            # self.generator = deepcopy(self.generator_ema)
-
         # data
         lq = data_batch['lq']
         gt = data_batch['gt']
