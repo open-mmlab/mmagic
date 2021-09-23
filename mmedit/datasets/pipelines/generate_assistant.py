@@ -1,5 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import face_alignment
+try:
+    import face_alignment
+except Exception:
+    raise ImportError('please import face-alignment.')
 import numpy as np
 import torch
 
