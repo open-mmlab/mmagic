@@ -43,7 +43,7 @@ For example,
 python tools/test.py configs/example_config.py work_dirs/example_exp/example_model_20200202.pth --out work_dirs/example_exp/results.pkl
 
 # multi-gpu testing
-./tools/dist_test.sh configs/example_config.py work_dirs/example_exp/example_model_20200202.pth --save-path work_dirs/example_exp/results/
+./tools/dist_test.sh configs/example_config.py work_dirs/example_exp/example_model_20200202.pth 2 --save-path work_dirs/example_exp/results/
 ```
 
 #### Test with Slurm
