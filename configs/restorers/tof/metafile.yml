@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - TOFlow
-  Name: README
+  Name: TOFlow
   Paper:
   - https://arxiv.org/abs/1711.09078
   README: configs/restorers/tof/README.md

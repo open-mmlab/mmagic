@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - SRGAN
-  Name: README
+  Name: SRGAN
   Paper:
   - https://arxiv.org/abs/1609.04802
   README: configs/restorers/srresnet_srgan/README.md

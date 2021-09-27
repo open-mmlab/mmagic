@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - LIIF
-  Name: README
+  Name: LIIF
   Paper:
   - https://arxiv.org/abs/2012.09161
   README: configs/restorers/liif/README.md

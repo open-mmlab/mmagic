@@ -117,6 +117,7 @@ def parse_md(md_file):
                 # get architecture
                 if 'ALGORITHM' in lines[i] or 'BACKBONE' in lines[i]:
                     collection['Metadata']['Architecture'].append(name)
+                    collection['Name'] = name
                 # get paper url
                 collection['Paper'].append(url)
                 i = j + 1
@@ -155,10 +156,8 @@ def parse_md(md_file):
                         right = line[checkpoint_idx].index(')', left)
                         checkpoint = line[checkpoint_idx][left:right]
 
-                    if len(collection['Metadata']['Architecture']) > 0:
-                        model_name = collection['Metadata']['Architecture'][-1]
-                    else:
-                        model_name = 'None'
+                    model_name = osp.splitext(config)[0].replace(
+                        'configs/', '', 1).replace('/', '--')
 
                     # find dataset in config file
                     dataset = 'Others'

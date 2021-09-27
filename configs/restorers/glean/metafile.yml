@@ -2,41 +2,8 @@ Collections:
 - Metadata:
     Architecture:
     - GLEAN
-  Name: README
+  Name: GLEAN
   Paper:
   - https://arxiv.org/abs/2012.00739
   README: configs/restorers/glean/README.md
-Models:
-- Config: configs/restorers/glean/glean_cat_8x.py
-  In Collection: README
-  Metadata:
-    Training Data: CAT
-  Name: restorers--glean--glean_cat_8x
-  Results:
-  - Dataset: CAT
-    Metrics:
-      PSNR: 23.98
-    Task: restorers
-  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth
-- Config: configs/restorers/glean/glean_ffhq_16x.py
-  In Collection: README
-  Metadata:
-    Training Data: FFHQ
-  Name: restorers--glean--glean_ffhq_16x
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      PSNR: 26.91
-    Task: restorers
-  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527-61a3afad.pth
-- Config: configs/restorers/glean/glean_cat_16x.py
-  In Collection: README
-  Metadata:
-    Training Data: CAT
-  Name: restorers--glean--glean_cat_16x
-  Results:
-  - Dataset: CAT
-    Metrics:
-      PSNR: 20.88
-    Task: restorers
-  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_16x_20210527-68912543.pth
+Models: []

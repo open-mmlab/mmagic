@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - ESRGAN
-  Name: README
+  Name: ESRGAN
   Paper:
   - https://arxiv.org/abs/1809.00219
   README: configs/restorers/esrgan/README.md

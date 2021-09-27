@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - CycleGAN
-  Name: README
+  Name: CycleGAN
   Paper:
   - https://arxiv.org/abs/1703.10593
   README: configs/synthesizers/cyclegan/README.md

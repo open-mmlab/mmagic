@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - DIM
-  Name: README
+  Name: DIM
   Paper:
   - https://arxiv.org/abs/1703.03872
   README: configs/mattors/dim/README.md
