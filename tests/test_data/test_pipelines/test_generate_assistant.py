@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import cv2
+import pytest
 import torch
 
 from mmedit.datasets.pipelines import (GenerateCoordinateAndCell,
@@ -53,6 +54,12 @@ def test_generate_coordinate_and_cell():
 
 
 def test_generate_landmark():
+    try:
+        import face_alignment
+        fd = face_alignment.FaceAlignment(face_alignment.LandmarksType._2D)
+        assert fd is not None
+    except ImportError:
+        pytest.skip('ONNXRuntime is not available.')
     image = cv2.imread('tests/data/face/000001.png')
     results = dict(lq=image)
     gl = GenerateLandmark('lq', device='cpu')

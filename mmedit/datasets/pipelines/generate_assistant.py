@@ -1,8 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-try:
-    import face_alignment
-except Exception:
-    raise ImportError('please import face-alignment.')
 import numpy as np
 import torch
 
@@ -184,7 +180,7 @@ class GenerateLandmark:
 
     def __init__(self, image_key, device='cpu'):
         self.image_key = image_key
-        self.fd = None
+        self.face_alignment_model = None
         self.init = False
         self.device = device
 
@@ -216,13 +212,17 @@ class GenerateLandmark:
             landmark (Tuple[float]): Location of landmark.
         """
 
+        try:
+            import face_alignment
+        except ImportError:
+            raise ImportError('please import face-alignment.')
         if not self.init:
-            self.fd = face_alignment.FaceAlignment(
+            self.face_alignment_model = face_alignment.FaceAlignment(
                 face_alignment.LandmarksType._2D,
                 device=self.device,
                 flip_input=False)
             self.init = True
-        faces = self.fd.get_landmarks(image)
+        faces = self.face_alignment_model.get_landmarks(image)
         index = 0
         max_size = 0
         for i, face in enumerate(faces):
