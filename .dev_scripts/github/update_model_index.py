@@ -155,8 +155,10 @@ def parse_md(md_file):
                         right = line[checkpoint_idx].index(')', left)
                         checkpoint = line[checkpoint_idx][left:right]
 
-                    model_name = osp.splitext(config)[0].replace(
-                        'configs/', '', 1).replace('/', '--')
+                    if len(collection['Metadata']['Architecture']) > 0:
+                        model_name = collection['Metadata']['Architecture'][-1]
+                    else:
+                        model_name = 'None'
 
                     # find dataset in config file
                     dataset = 'Others'
