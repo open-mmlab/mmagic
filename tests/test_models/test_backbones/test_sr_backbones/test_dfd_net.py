@@ -7,7 +7,7 @@ from mmedit.models import build_backbone
 
 def test_dfd_net():
 
-    model_cfg = dict(type='DFDNet', mid_channels=64)
+    model_cfg = dict(type='DFDNet', mid_channels=4)
 
     # build model
     model = build_backbone(model_cfg)
@@ -32,7 +32,7 @@ def test_dfd_net():
     for j, size in enumerate([256, 128, 64, 32]):
         dictionary[size] = dict()
         for i, part in enumerate(parts):
-            dictionary[size][part] = torch.rand(512, channel_sizes[j],
+            dictionary[size][part] = torch.rand(32, channel_sizes[j],
                                                 part_sizes[i] // (2**(j + 1)),
                                                 part_sizes[i] // (2**(j + 1)))
 

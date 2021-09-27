@@ -496,23 +496,20 @@ class DFDNet(nn.Module):
         self.mouth_32 = BasicBlock(512)
 
         self.vgg_extract = VGGFeat(vgg_load_path)
-
+        vgg_mid_channels = 64  # locked by VGG
         self.ms_dilate = MSDilateBlock(
-            mid_channels * 8, dilations=[4, 3, 2, 1])
+            vgg_mid_channels * 8, dilations=[4, 3, 2, 1])
 
-        self.up0 = StyledUpBlock(mid_channels * 8, mid_channels * 8)
-        self.up1 = StyledUpBlock(mid_channels * 8, mid_channels * 4)
-        self.up2 = StyledUpBlock(mid_channels * 4, mid_channels * 2)
-        self.up3 = StyledUpBlock(mid_channels * 2, mid_channels)
+        self.up0 = StyledUpBlock(vgg_mid_channels * 8, vgg_mid_channels * 8)
+        self.up1 = StyledUpBlock(vgg_mid_channels * 8, vgg_mid_channels * 4)
+        self.up2 = StyledUpBlock(vgg_mid_channels * 4, vgg_mid_channels * 2)
+        self.up3 = StyledUpBlock(vgg_mid_channels * 2, vgg_mid_channels)
         self.up4 = nn.Sequential(
-            spectral_norm(nn.Conv2d(mid_channels, mid_channels, 3, 1, 1)),
-            nn.LeakyReLU(0.2), ResBlock(mid_channels), ResBlock(mid_channels),
-            nn.Conv2d(mid_channels, 3, kernel_size=3, stride=1, padding=1),
-            nn.Tanh())
-        self.to_rgb0 = BasicBlock(mid_channels * 8, out_channels=3)
-        self.to_rgb1 = BasicBlock(mid_channels * 4, out_channels=3)
-        self.to_rgb2 = BasicBlock(mid_channels * 2, out_channels=3)
-        self.to_rgb3 = BasicBlock(mid_channels * 1, out_channels=3)
+            spectral_norm(
+                nn.Conv2d(vgg_mid_channels, vgg_mid_channels, 3, 1, 1)),
+            nn.LeakyReLU(0.2), ResBlock(vgg_mid_channels),
+            ResBlock(vgg_mid_channels),
+            nn.Conv2d(vgg_mid_channels, 3, 3, stride=1, padding=1), nn.Tanh())
 
     def forward(self, input, locations, dictionary):
         """Forward function.
