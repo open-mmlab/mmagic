@@ -86,6 +86,7 @@ def test_dfd_model():
     assert outputs['results']['gt'].shape == data_batch['gt'].shape
     assert torch.is_tensor(outputs['results']['output'])
     assert outputs['results']['output'].size() == targets.shape
+    restorer(lq=inputs, gt=targets, location=part_locations, test_mode=True)
 
     # test train_step and forward_test (gpu)
     if torch.cuda.is_available():
@@ -121,11 +122,12 @@ def test_dfd_model():
         assert isinstance(result['eval_result']['PSNR'], np.float64)
         assert isinstance(result['eval_result']['SSIM'], np.float64)
 
+        restorer(
+            lq=inputs.cuda(),
+            gt=targets.cuda(),
+            location=part_locations,
+            test_mode=True)
+
         with pytest.raises(AssertionError):
             # evaluation with metrics must have gt images
             restorer(lq=inputs.cuda(), location=part_locations, test_mode=True)
-
-        with pytest.raises(TypeError):
-            restorer.init_weights(pretrained=1)
-        with pytest.raises(OSError):
-            restorer.init_weights(pretrained='')
