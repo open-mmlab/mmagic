@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .basic_restorer import BasicRestorer
 from .basicvsr import BasicVSR
+from .dfd import DFD
 from .dic import DIC
 from .edvr import EDVR
 from .esrgan import ESRGAN
@@ -12,5 +13,5 @@ from .ttsr import TTSR
 
 __all__ = [
     'BasicRestorer', 'SRGAN', 'ESRGAN', 'EDVR', 'LIIF', 'BasicVSR', 'TTSR',
-    'GLEAN', 'TDAN', 'DIC'
+    'GLEAN', 'TDAN', 'DIC', 'DFD'
 ]

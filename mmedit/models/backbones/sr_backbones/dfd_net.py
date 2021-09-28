@@ -1,12 +1,14 @@
 import numpy as np
 import torch
 import torch.nn as nn
+from mmcv.runner import load_checkpoint
 from torch.autograd import Function
 from torch.nn import functional as F
 from torch.nn.utils import spectral_norm
 from torchvision import models
 
 from mmedit.models.registry import BACKBONES
+from mmedit.utils import get_root_logger
 
 
 def get_mean_std(feat, eps=1e-5):
@@ -669,3 +671,20 @@ class DFDNet(nn.Module):
         output = self.up4(feature_up3)
 
         return output
+
+    def init_weights(self, pretrained=None, strict=True):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+            strict (boo, optional): Whether strictly load the pretrained model.
+                Defaults to True.
+        """
+
+        if isinstance(pretrained, str):
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=strict, logger=logger)
+        elif pretrained is not None:
+            raise TypeError('"pretrained" must be a str or None. '
+                            f'But received {type(pretrained)}.')
