@@ -464,39 +464,42 @@ class DFDNet(nn.Module):
     Paper: Blind Face Restoration via Deep Multi-scale Component Dictionaries.
 
     Args:
-        dictionary (dict): Facial features dictionary.
-        mid_channels (int):  Number of channels in the intermediate features.
-            Default: 64
+        dictionary (dict): Facial features dictionary or facial features path.
+            Default: None.
+        vgg_load_path (int):  Pretrained VGG path. Default: None.
     """
 
-    def __init__(self, mid_channels=64, vgg_load_path=None):
+    def __init__(self, dictionary=None, vgg_load_path=None):
         super().__init__()
+        if isinstance(dictionary, str):
+            self.dictionary = np.load(dictionary, allow_pickle=True).item()
+        else:
+            self.dictionary = dictionary
 
-        self.part_sizes = np.array([80, 80, 50, 110])  # size for 512
         self.feature_sizes = [256, 128, 64, 32]
-
-        self.left_eye_256 = BasicBlock(128)
-        self.left_eye_128 = BasicBlock(256)
-        self.left_eye_64 = BasicBlock(512)
-        self.left_eye_32 = BasicBlock(512)
-
-        self.right_eye_256 = BasicBlock(128)
-        self.right_eye_128 = BasicBlock(256)
-        self.right_eye_64 = BasicBlock(512)
-        self.right_eye_32 = BasicBlock(512)
-
-        self.nose_256 = BasicBlock(128)
-        self.nose_128 = BasicBlock(256)
-        self.nose_64 = BasicBlock(512)
-        self.nose_32 = BasicBlock(512)
-
-        self.mouth_256 = BasicBlock(128)
-        self.mouth_128 = BasicBlock(256)
-        self.mouth_64 = BasicBlock(512)
-        self.mouth_32 = BasicBlock(512)
-
         self.vgg_extract = VGGFeat(vgg_load_path)
         vgg_mid_channels = 64  # locked by VGG
+
+        self.left_eye_256 = BasicBlock(vgg_mid_channels * 2)
+        self.left_eye_128 = BasicBlock(vgg_mid_channels * 4)
+        self.left_eye_64 = BasicBlock(vgg_mid_channels * 8)
+        self.left_eye_32 = BasicBlock(vgg_mid_channels * 8)
+
+        self.right_eye_256 = BasicBlock(vgg_mid_channels * 2)
+        self.right_eye_128 = BasicBlock(vgg_mid_channels * 4)
+        self.right_eye_64 = BasicBlock(vgg_mid_channels * 8)
+        self.right_eye_32 = BasicBlock(vgg_mid_channels * 8)
+
+        self.nose_256 = BasicBlock(vgg_mid_channels * 2)
+        self.nose_128 = BasicBlock(vgg_mid_channels * 4)
+        self.nose_64 = BasicBlock(vgg_mid_channels * 8)
+        self.nose_32 = BasicBlock(vgg_mid_channels * 8)
+
+        self.mouth_256 = BasicBlock(vgg_mid_channels * 2)
+        self.mouth_128 = BasicBlock(vgg_mid_channels * 4)
+        self.mouth_64 = BasicBlock(vgg_mid_channels * 8)
+        self.mouth_32 = BasicBlock(vgg_mid_channels * 8)
+
         self.ms_dilate = MSDilateBlock(
             vgg_mid_channels * 8, dilations=[4, 3, 2, 1])
 
@@ -511,7 +514,7 @@ class DFDNet(nn.Module):
             ResBlock(vgg_mid_channels),
             nn.Conv2d(vgg_mid_channels, 3, 3, stride=1, padding=1), nn.Tanh())
 
-    def forward(self, input, locations, dictionary):
+    def forward(self, input, locations):
         """Forward function.
 
         Args:
@@ -531,7 +534,7 @@ class DFDNet(nn.Module):
             feature = vgg_features[i]
             update_feature = feature.clone()
 
-            dict_features = dictionary[feature_size]
+            dict_features = self.dictionary[feature_size]
             left_eye_dict_feature = dict_features['left_eye'].to(input)
             right_eye_dict_feature = dict_features['right_eye'].to(input)
             nose_dict_feature = dict_features['nose'].to(input)

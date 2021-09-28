@@ -6,8 +6,18 @@ from mmedit.models import build_backbone
 
 
 def test_dfd_net():
+    dictionary = dict()
+    parts = ['left_eye', 'right_eye', 'nose', 'mouth']
+    part_sizes = np.array([80, 80, 50, 110])
+    channel_sizes = np.array([128, 256, 512, 512])
+    for j, size in enumerate([256, 128, 64, 32]):
+        dictionary[size] = dict()
+        for i, part in enumerate(parts):
+            dictionary[size][part] = torch.rand(32, channel_sizes[j],
+                                                part_sizes[i] // (2**(j + 1)),
+                                                part_sizes[i] // (2**(j + 1)))
 
-    model_cfg = dict(type='DFDNet', mid_channels=4)
+    model_cfg = dict(type='DFDNet', dictionary=dictionary)
 
     # build model
     model = build_backbone(model_cfg)
@@ -24,18 +34,6 @@ def test_dfd_net():
         mouth=torch.tensor([[229, 296, 282, 349]]))
     targets = torch.rand(1, 3, 512, 512)
 
-    dictionary = dict()
-    parts = ['left_eye', 'right_eye', 'nose', 'mouth']
-    part_sizes = np.array([80, 80, 50, 110])
-    channel_sizes = np.array([128, 256, 512, 512])
-
-    for j, size in enumerate([256, 128, 64, 32]):
-        dictionary[size] = dict()
-        for i, part in enumerate(parts):
-            dictionary[size][part] = torch.rand(32, channel_sizes[j],
-                                                part_sizes[i] // (2**(j + 1)),
-                                                part_sizes[i] // (2**(j + 1)))
-
     # prepare loss
     loss_function = nn.L1Loss()
 
@@ -43,7 +41,7 @@ def test_dfd_net():
     optimizer = torch.optim.Adam(model.parameters())
 
     # test on cpu
-    output = model(inputs, part_locations, dictionary)
+    output = model(inputs, part_locations)
     optimizer.zero_grad()
     loss = loss_function(output, targets)
     loss.backward()
@@ -57,7 +55,7 @@ def test_dfd_net():
         optimizer = torch.optim.Adam(model.parameters())
         inputs = inputs.cuda()
         targets = targets.cuda()
-        output = model(inputs, part_locations, dictionary)
+        output = model(inputs, part_locations)
         optimizer.zero_grad()
         loss = loss_function(output, targets)
         loss.backward()
