@@ -170,7 +170,7 @@
 **主要更新**
 
 1. 支持 Local Implicit Image Function (LIIF)
-2. 支持将 DIM 和 GCA 从 Pytorch 导出到 ONNX 
+2. 支持将 DIM 和 GCA 从 Pytorch 导出到 ONNX
 
 **新功能**
 
@@ -242,5 +242,3 @@
 ## v0.5.0 (09/07/2020).
 
 请注意，作为MMEdit的一部分，**MMSR** 已经被合并到此代码库中。我们希望通过对新框架的精心设计和细致实现，MMEditing 能够为您提供更好的体验。
-
-
