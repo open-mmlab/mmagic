@@ -1152,7 +1152,8 @@ class UnsharpMasking:
 
     def __init__(self, kernel_size, sigma, weight, threshold, keys):
         if kernel_size % 2 == 0:
-            kernel_size += 1
+            raise ValueError('kernel_size must be an odd number, but '
+                             f'got {kernel_size}.')
 
         self.kernel_size = kernel_size
         self.sigma = sigma
@@ -1161,7 +1162,7 @@ class UnsharpMasking:
         self.keys = keys
 
         kernel = cv2.getGaussianKernel(kernel_size, sigma)
-        self.kernel = np.dot(kernel, kernel.transpose())
+        self.kernel = np.matmul(kernel, kernel.transpose())
 
     def _unsharp_masking(self, imgs):
         is_single_image = False
@@ -1192,6 +1193,6 @@ class UnsharpMasking:
     def __repr__(self):
         repr_str = self.__class__.__name__
         repr_str += (f'(keys={self.keys}, kernel_size={self.kernel_size}, '
-                     f'sigma={self.sigma}, weight={self.weight},  '
+                     f'sigma={self.sigma}, weight={self.weight}, '
                      f'threshold={self.threshold})')
         return repr_str
