@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - DeepFillv2
-  Name: README
+  Name: DeepFillv2
   Paper:
   - https://arxiv.org/abs/1806.03589
   README: configs/inpainting/deepfillv2/README.md

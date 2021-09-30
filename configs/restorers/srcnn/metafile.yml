@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - SRCNN
-  Name: README
+  Name: SRCNN
   Paper:
   - https://arxiv.org/abs/1501.00092
   README: configs/restorers/srcnn/README.md

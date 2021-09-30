@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - TDAN
-  Name: README
+  Name: TDAN
   Paper:
   - https://arxiv.org/abs/1812.02898
   README: configs/restorers/tdan/README.md

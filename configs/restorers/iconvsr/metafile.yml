@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - IconVSR
-  Name: README
+  Name: IconVSR
   Paper:
   - https://arxiv.org/abs/2012.02181
   README: configs/restorers/iconvsr/README.md

@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - IndexNet
-  Name: README
+  Name: IndexNet
   Paper:
   - https://arxiv.org/abs/1908.00672
   README: configs/mattors/indexnet/README.md

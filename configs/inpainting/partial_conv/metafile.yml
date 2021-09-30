@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - PConv
-  Name: README
+  Name: PConv
   Paper:
   - https://arxiv.org/abs/1804.07723
   README: configs/inpainting/partial_conv/README.md

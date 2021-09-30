@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - DIC
-  Name: README
+  Name: DIC
   Paper:
   - https://arxiv.org/abs/2003.13063
   README: configs/restorers/dic/README.md

@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - TTSR
-  Name: README
+  Name: TTSR
   Paper:
   - https://arxiv.org/abs/2006.04139
   README: configs/restorers/ttsr/README.md

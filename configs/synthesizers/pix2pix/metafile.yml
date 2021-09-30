@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - Pix2Pix
-  Name: README
+  Name: Pix2Pix
   Paper:
   - https://arxiv.org/abs/1611.07004
   README: configs/synthesizers/pix2pix/README.md
