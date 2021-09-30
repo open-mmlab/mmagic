@@ -9,7 +9,7 @@
 
 **新功能**
 
-- 支持从文件加载对 video SR datasets 的标注 ([#423](https://github.com/open-mmlab/mmediting/pull/423))
+- Video SR datasets 支持加载文件列表 ([#423](https://github.com/open-mmlab/mmediting/pull/423))
 - 支持 persistent worker ([#426](https://github.com/open-mmlab/mmediting/pull/426))
 - 支持 LIIF-RDN ([#428](https://github.com/open-mmlab/mmediting/pull/428), [#440](https://github.com/open-mmlab/mmediting/pull/440))
 - 支持 BasicVSR++ ([#451](https://github.com/open-mmlab/mmediting/pull/451), [#467](https://github.com/open-mmlab/mmediting/pull/467))
