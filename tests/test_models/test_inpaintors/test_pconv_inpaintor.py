@@ -45,10 +45,10 @@ def test_pconv_inpaintor(init_weights):
         # test forward test w/o save image
         outputs = pconv_inpaintor.forward_test(
             masked_img[0:1], mask[0:1], gt_img=gt_img[0:1, ...])
-        assert 'eval_results' in outputs
-        assert outputs['eval_results']['l1'] > 0
-        assert outputs['eval_results']['psnr'] > 0
-        assert outputs['eval_results']['ssim'] > 0
+        assert 'eval_result' in outputs
+        assert outputs['eval_result']['l1'] > 0
+        assert outputs['eval_result']['psnr'] > 0
+        assert outputs['eval_result']['ssim'] > 0
 
         # test forward test w/o eval metrics
         pconv_inpaintor.test_cfg = dict()

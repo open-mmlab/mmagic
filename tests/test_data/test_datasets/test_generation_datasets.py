@@ -49,8 +49,8 @@ class TestGenerationDatasets:
             dict(saved_flag=True),
             dict(saved_flag=False)
         ]
-        eval_results = toy_dataset.evaluate(test_results)
-        assert eval_results['val_saved_number'] == 2
+        eval_result = toy_dataset.evaluate(test_results)
+        assert eval_result['val_saved_number'] == 2
 
     def test_generation_paired_dataset(self):
         # setup
