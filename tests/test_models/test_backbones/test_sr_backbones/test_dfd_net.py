@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 import torch
 import torch.nn as nn
 
@@ -62,3 +63,8 @@ def test_dfd_net():
         optimizer.step()
         assert torch.is_tensor(output)
         assert output.shape == targets.shape
+
+        with pytest.raises(TypeError):
+            model.init_weights(pretrained=1)
+        with pytest.raises(OSError):
+            model.init_weights(pretrained='')

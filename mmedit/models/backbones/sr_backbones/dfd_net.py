@@ -1,12 +1,14 @@
 import numpy as np
 import torch
 import torch.nn as nn
+from mmcv.runner import load_checkpoint
 from torch.autograd import Function
 from torch.nn import functional as F
 from torch.nn.utils import spectral_norm
 from torchvision import models
 
 from mmedit.models.registry import BACKBONES
+from mmedit.utils import get_root_logger
 
 
 def get_mean_std(feat, eps=1e-5):
@@ -276,9 +278,6 @@ class BlurFunction(Function):
         return grad_input, None, None
 
 
-blur = BlurFunction.apply
-
-
 class Blur(nn.Module):
     """Blur Layer.
 
@@ -309,7 +308,7 @@ class Blur(nn.Module):
         returns:
             Tensor: Forward results.
         """
-        return blur(input, self.weight, self.weight_flip)
+        return BlurFunction.apply(input, self.weight, self.weight_flip)
 
 
 class StyledUpBlock(nn.Module):
@@ -430,8 +429,7 @@ class VGGFeat(torch.nn.Module):
         Results:
             Tensor: Processed tensor.
         """
-        # print('save')
-        # torch.save(self.state_dict(), 'work_dirs/vgg_load.pth')
+
         x = (x + 1) / 2
         x = (x - self.rgb_mean) / self.rgb_std
         if x.shape[3] < 224:
@@ -462,6 +460,7 @@ class DFDNet(nn.Module):
     """DIC network structure for face super-resolution.
 
     Paper: Blind Face Restoration via Deep Multi-scale Component Dictionaries.
+    Ref repo: https://github.com/csxmli2016/DFDNet
 
     Args:
         dictionary (dict): Facial features dictionary or facial features path.
@@ -669,3 +668,20 @@ class DFDNet(nn.Module):
         output = self.up4(feature_up3)
 
         return output
+
+    def init_weights(self, pretrained=None, strict=True):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+            strict (boo, optional): Whether strictly load the pretrained model.
+                Defaults to True.
+        """
+
+        if isinstance(pretrained, str):
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=strict, logger=logger)
+        elif pretrained is not None:
+            raise TypeError('"pretrained" must be a str or None. '
+                            f'But received {type(pretrained)}.')
