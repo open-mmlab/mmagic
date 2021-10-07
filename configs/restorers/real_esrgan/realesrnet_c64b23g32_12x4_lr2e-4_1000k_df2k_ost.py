@@ -1,4 +1,4 @@
-exp_name = 'realesrnet_c64b23g32_12x4_lr2e-4_1000k_dfo'
+exp_name = 'realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost'
 
 scale = 4
 # model settings
@@ -201,22 +201,22 @@ data = dict(
         times=1,
         dataset=dict(
             type=train_dataset_type,
-            lq_folder='data/DFO_dataset/GT_sub',
-            gt_folder='data/DFO_dataset/GT_sub',
-            ann_file='data/DFO_dataset/meta_info_DFO.txt',
+            lq_folder='data/df2k_ost/GT_sub',
+            gt_folder='data/df2k_ost/GT_sub',
+            ann_file='data/df2k_ost/meta_info_df2k_ost.txt',
             pipeline=train_pipeline,
             scale=scale)),
     val=dict(
         type=val_dataset_type,
-        lq_folder='data/Set5/bicLRx4',
-        gt_folder='data/Set5/HR',
+        lq_folder='data/set5/bicLRx4',
+        gt_folder='data/set5/HR',
         pipeline=val_pipeline,
         scale=scale,
         filename_tmpl='{}'),
     test=dict(
         type=val_dataset_type,
-        lq_folder='data/RealSRSet',
-        gt_folder='data/RealSRSet',
+        lq_folder='data/realsrset',
+        gt_folder='data/realsrset',
         pipeline=test_pipeline,
         scale=scale,
         filename_tmpl='{}'))
@@ -225,13 +225,13 @@ data = dict(
 optimizers = dict(generator=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99)))
 
 # learning policy
-total_iters = 10
+total_iters = 1000000
 lr_config = dict(policy='Step', by_epoch=False, step=[1000000], gamma=1)
 
 checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
-evaluation = dict(interval=5, save_image=True, gpu_collect=True)
+evaluation = dict(interval=5000, save_image=True, gpu_collect=True)
 log_config = dict(
-    interval=1,
+    interval=100,
     hooks=[
         dict(type='TextLoggerHook', by_epoch=False),
         dict(type='TensorboardLoggerHook'),
