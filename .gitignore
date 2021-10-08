@@ -124,3 +124,6 @@ mmmedit/.mim
 
 # local history
 .history/**
+
+# Pytorch Server
+*.mar
