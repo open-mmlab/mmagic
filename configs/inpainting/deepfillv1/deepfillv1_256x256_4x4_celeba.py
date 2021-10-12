@@ -123,7 +123,7 @@ train_pipeline = [
 
 test_pipeline = train_pipeline
 
-data_root = 'data/CelebA-HQ'
+data_root = 'data/celeba-hq'
 data = dict(
     workers_per_gpu=8,
     train_dataloader=dict(samples_per_gpu=4, drop_last=True),

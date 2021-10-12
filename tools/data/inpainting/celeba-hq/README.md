@@ -19,7 +19,7 @@ mmediting
 ├── tools
 ├── configs
 ├── data
-│   ├── CelebA-HQ
+│   ├── celeba-hq
 │   │   ├── train
 |   |   ├── val
 
