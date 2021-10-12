@@ -7,29 +7,29 @@ Collections:
   - https://arxiv.org/abs/2003.13063
   README: configs/restorers/dic/README.md
 Models:
-- Config: configs/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ.py
+- Config: configs/restorers/dic/dic_x8c48b6_g4_150k_celeba.py
   In Collection: README
   Metadata:
     Training Data: CELEBA
-  Name: restorers--dic--dic_x8c48b6_g4_150k_CelebAHQ
+  Name: restorers--dic--dic_x8c48b6_g4_150k_celeba
   Results:
   - Dataset: CELEBA
     Metrics:
       CelebA-HQ:
-        PSNR: 25.2319
-        SSIM: 0.7422
+        PSNR: 25.0673
+        SSIM: 0.7341
     Task: restorers x8
-  Weights: https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.pth
-- Config: configs/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ.py
+  Weights: https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_celeba_20211010-2fc30d24.pth
+- Config: configs/restorers/dic/dic_gan_x8c48b6_g4_500k_celeba.py
   In Collection: README
   Metadata:
     Training Data: CELEBA
-  Name: restorers--dic--dic_gan_x8c48b6_g4_500k_CelebAHQ
+  Name: restorers--dic--dic_gan_x8c48b6_g4_500k_celeba
   Results:
   - Dataset: CELEBA
     Metrics:
       CelebA-HQ:
-        PSNR: 23.6241
-        SSIM: 0.6721
+        PSNR: 24.0153
+        SSIM: 0.6883
     Task: restorers x8
-  Weights: https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.pth
+  Weights: https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_celeba_20211010-f5178387.pth
