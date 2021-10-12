@@ -308,7 +308,7 @@ class Blur(nn.Module):
         returns:
             Tensor: Forward results.
         """
-        return BlurFunction.apply(input, self.weight, self.weight_flip)
+        return self.blur(input, self.weight, self.weight_flip)
 
 
 class StyledUpBlock(nn.Module):
