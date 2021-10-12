@@ -18,7 +18,6 @@ def mmedit2torchserve(
     output_folder: str,
     model_name: str,
     model_version: str = '1.0',
-    model_type: str = 'unconditional',
     force: bool = False,
 ):
     """Converts MMEditing model (config + checkpoint) to TorchServe `.mar`.
@@ -38,8 +37,6 @@ def mmedit2torchserve(
             If None, `{Path(checkpoint_file).stem}` will be used.
         model_version:
             Model's version.
-        model_type:
-            Model's type.
         force:
             If True, if there is an existing `{model_name}.mar`
             file under `output_folder` it will be overwritten.
@@ -54,11 +51,8 @@ def mmedit2torchserve(
         args_ = Namespace(
             **{
                 'model_file': f'{tmpdir}/config.py',
-                'model_path': output_folder,
-                'convert': True,
                 'serialized_file': checkpoint_file,
-                'handler':
-                f'{Path(__file__).parent}/mmedit_{model_type}_handler.py',
+                'handler': f'{Path(__file__).parent}/mmedit_handler.py',
                 'model_name': model_name or Path(checkpoint_file).stem,
                 'version': model_version,
                 'export_path': output_folder,
@@ -90,11 +84,6 @@ def parse_args():
         'file that will be created under `output_folder`.'
         'If None, `{Path(checkpoint_file).stem}` will be used.')
     parser.add_argument(
-        '--model-type',
-        type=str,
-        default='unconditional',
-        help='Which model type and handler to be used.')
-    parser.add_argument(
         '--model-version',
         type=str,
         default='1.0',
@@ -117,5 +106,4 @@ if __name__ == '__main__':
                           'Try: pip install torch-model-archiver')
 
     mmedit2torchserve(args.config, args.checkpoint, args.output_folder,
-                      args.model_name, args.model_version, args.model_type,
-                      args.force)
+                      args.model_name, args.model_version, args.force)

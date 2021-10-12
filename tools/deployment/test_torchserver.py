@@ -6,6 +6,7 @@ from PIL import Image
 
 def parse_args():
     parser = ArgumentParser()
+    parser.add_argument('img', help='Image file')
     parser.add_argument('model_name', help='The model name in the server')
     parser.add_argument(
         '--inference-addr',
@@ -17,21 +18,25 @@ def parse_args():
         default='demo.png',
         help='Path to save generated image.')
     parser.add_argument(
-        '--img-size', type=int, default=128, help='Size of the output image.')
+        '--img-size',
+        type=list,
+        default=(256, 256),
+        help='Size of the output image.')
     args = parser.parse_args()
     return args
 
 
 def save_results(content, img_path, img_size):
-    img = Image.frombytes('RGB', (img_size, img_size), content)
+    print(content)
+    img = Image.frombytes('RGB', img_size, content)
     img.save(img_path)
 
 
 def main(args):
     url = 'http://' + args.inference_addr + '/predictions/' + args.model_name
 
-    # just post a meanless dict
-    response = requests.post(url, {'key': 'value'})
+    with open(args.img, 'rb') as image:
+        response = requests.post(url, image)
     save_results(response.content, args.img_path, args.img_size)
 
 

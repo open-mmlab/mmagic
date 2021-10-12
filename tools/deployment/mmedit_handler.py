@@ -1,11 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
 
-import numpy as np
 import torch
 from ts.torch_handler.base_handler import BaseHandler
 
 from mmedit.apis import init_model, restoration_inference
+from mmedit.core import tensor2img
 
 
 class MMEditHandler(BaseHandler):
@@ -38,10 +38,7 @@ class MMEditHandler(BaseHandler):
         # convert torch tensor to numpy and then covert to bytes
         output_list = []
         for data_ in data:
-            data_ = data_[[2, 1, 0], ...]  # RGB to BGR
-            data_ = data_.clamp_(0, 1)
-            data_ = (data_ * 255).permute(1, 2, 0)
-            data_np = data_.detach().cpu().numpy().astype(np.uint8)
+            data_np = tensor2img(data_)
             data_byte = data_np.tobytes()
             output_list.append(data_byte)
 
