@@ -12,7 +12,7 @@ except ImportError:
     package_model = None
 
 
-def mmedit2torchserver(
+def mmedit2torchserve(
     config_file: str,
     checkpoint_file: str,
     output_folder: str,
@@ -54,6 +54,8 @@ def mmedit2torchserver(
         args_ = Namespace(
             **{
                 'model_file': f'{tmpdir}/config.py',
+                'model_path': output_folder,
+                'convert': True,
                 'serialized_file': checkpoint_file,
                 'handler':
                 f'{Path(__file__).parent}/mmedit_{model_type}_handler.py',
@@ -114,6 +116,6 @@ if __name__ == '__main__':
         raise ImportError('`torch-model-archiver` is required.'
                           'Try: pip install torch-model-archiver')
 
-    mmedit2torchserver(args.config, args.checkpoint, args.output_folder,
-                       args.model_name, args.model_version, args.model_type,
-                       args.force)
+    mmedit2torchserve(args.config, args.checkpoint, args.output_folder,
+                      args.model_name, args.model_version, args.model_type,
+                      args.force)

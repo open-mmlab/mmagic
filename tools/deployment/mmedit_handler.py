@@ -5,10 +5,10 @@ import numpy as np
 import torch
 from ts.torch_handler.base_handler import BaseHandler
 
-from mmedit.apis import init_model
+from mmedit.apis import init_model, restoration_inference
 
 
-class MMEditUnconditionalHandler(BaseHandler):
+class MMEditHandler(BaseHandler):
 
     def initialize(self, context):
         properties = context.system_properties
@@ -27,20 +27,18 @@ class MMEditUnconditionalHandler(BaseHandler):
         self.initialized = True
 
     def preprocess(self, data, *args, **kwargs):
-        # we do not need any input data for unconditional models
-        return None
+        # data preprocess is in inference.
+        return data
 
     def inference(self, data, *args, **kwargs):
-        results = self.model.sample_from_noise(
-            data, num_batches=1, sample_model='orig', **kwargs)
+        results = restoration_inference(self.model, data)
         return results
 
     def postprocess(self, data):
         # convert torch tensor to numpy and then covert to bytes
         output_list = []
         for data_ in data:
-            data_ = (data_ + 1) / 2
-            data_ = data_[[2, 1, 0], ...]
+            data_ = data_[[2, 1, 0], ...]  # RGB to BGR
             data_ = data_.clamp_(0, 1)
             data_ = (data_ * 255).permute(1, 2, 0)
             data_np = data_.detach().cpu().numpy().astype(np.uint8)
