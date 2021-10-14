@@ -10,7 +10,7 @@ import numpy as np
 import onnxruntime as ort
 import torch
 from mmcv.ops import get_onnxruntime_op_path
-from mmcv.tensorrt import (TRTWraper, is_tensorrt_plugin_loaded, onnx2trt,
+from mmcv.tensorrt import (TRTWrapper, is_tensorrt_plugin_loaded, onnx2trt,
                            save_trt_engine)
 
 from mmedit.datasets.pipelines import Compose
@@ -100,7 +100,7 @@ def onnx2tensorrt(onnx_file: str,
         input_config (dict): contains min_shape, max_shape and \
             input image path.
         fp16 (bool): whether to enable fp16 mode.
-        verify (bool): whether to verify the ouputs of TensorRT \
+        verify (bool): whether to verify the outputs of TensorRT \
             and ONNX are same.
         show (bool): whether to show the outputs of TensorRT and ONNX.
         verbose (bool): whether to print the log when generating \
@@ -109,7 +109,7 @@ def onnx2tensorrt(onnx_file: str,
     import tensorrt as trt
     min_shape = input_config['min_shape']
     max_shape = input_config['max_shape']
-    # create trt engine and wraper
+    # create trt engine and wrapper
     opt_shape_dict = {'input': [min_shape, min_shape, max_shape]}
     max_workspace_size = get_GiB(workspace_size)
     trt_engine = onnx2trt(
@@ -150,7 +150,7 @@ def onnx2tensorrt(onnx_file: str,
                                {'input': img_list[0].detach().numpy()})[0][0]
 
         # Get results from TensorRT
-        trt_model = TRTWraper(trt_file, ['input'], ['output'])
+        trt_model = TRTWrapper(trt_file, ['input'], ['output'])
         with torch.no_grad():
             trt_outputs = trt_model({'input': img_list[0].contiguous().cuda()})
         trt_output = trt_outputs['output'][0].cpu().detach().numpy()
@@ -230,7 +230,7 @@ if __name__ == '__main__':
     assert args.workspace_size >= 0, 'Workspace size less than 0.'
     for max_value, min_value in zip(args.max_shape, args.min_shape):
         assert max_value >= min_value, \
-            'max_shape sould be larger than min shape'
+            'max_shape should be larger than min shape'
 
     config = mmcv.Config.fromfile(args.config)
     config.model.pretrained = None

@@ -15,7 +15,7 @@
 }
 ```
 
-The Vid4 dataset can be downloded from [here](https://drive.google.com/file/d/1ZuvNNLgR85TV_whJoHM7uVb-XW1y70DW/view?usp=sharing). There are two degradations in the dataset.
+The Vid4 dataset can be downloaded from [here](https://drive.google.com/file/d/1ZuvNNLgR85TV_whJoHM7uVb-XW1y70DW/view?usp=sharing). There are two degradations in the dataset.
 
 1. BIx4 contains images downsampled by bicubic interpolation
 2. BDx4 contains images blurred by Gaussian kernel with σ=1.6, followed by a subsampling every four pixels.

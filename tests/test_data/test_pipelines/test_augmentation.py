@@ -38,7 +38,7 @@ class TestAugmentations:
 
     @staticmethod
     def assert_img_equal(img, ref_img, ratio_thr=0.999):
-        """Check if img and ref_img are matched approximatively."""
+        """Check if img and ref_img are matched approximately."""
         assert img.shape == ref_img.shape
         assert img.dtype == ref_img.dtype
         area = ref_img.shape[-1] * ref_img.shape[-2]
@@ -195,12 +195,12 @@ class TestAugmentations:
 
         Supported modes for checking are 'constant' (with 'constant_values' of
         0) and 'reflect'.
-        Supported images should be 2 dimentional.
+        Supported images should be 2 dimensional.
         """
         if mode not in ['constant', 'reflect']:
             raise NotImplementedError(
                 f'Pad checking of mode {mode} is not implemented.')
-        assert len(origin_img.shape) == 2, 'Image should be 2 dimentional.'
+        assert len(origin_img.shape) == 2, 'Image should be 2 dimensional.'
 
         h, w = origin_img.shape
         new_h = ds_factor * (h - 1) // ds_factor + 1

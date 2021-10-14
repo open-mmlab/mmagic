@@ -57,7 +57,7 @@ class Resize:
             specified by ``mmcv.use_backend()`` will be used.
             Default: None.
         output_keys (list[str] | None): The resized images. Default: None
-            Note that if it is not `None`, its length shuld be equal to keys.
+            Note that if it is not `None`, its length should be equal to keys.
     """
 
     def __init__(self,

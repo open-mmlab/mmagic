@@ -90,21 +90,21 @@ def test_deepfill_contextual_attention_neck():
     mask = torch.zeros((2, 1, 64, 64))
     mask[..., 20:100, 23:90] = 1.
 
-    res, offest = neck(x, mask)
+    res, offset = neck(x, mask)
 
     assert res.shape == (2, 128, 64, 64)
-    assert offest.shape == (2, 32, 32, 32, 32)
+    assert offset.shape == (2, 32, 32, 32, 32)
 
     if torch.cuda.is_available():
         neck.cuda()
-        res, offest = neck(x.cuda(), mask.cuda())
+        res, offset = neck(x.cuda(), mask.cuda())
 
         assert res.shape == (2, 128, 64, 64)
-        assert offest.shape == (2, 32, 32, 32, 32)
+        assert offset.shape == (2, 32, 32, 32, 32)
 
         neck = ContextualAttentionNeck(
             in_channels=128, conv_type='gated_conv').cuda()
-        res, offest = neck(x.cuda(), mask.cuda())
+        res, offset = neck(x.cuda(), mask.cuda())
         assert res.shape == (2, 128, 64, 64)
-        assert offest.shape == (2, 32, 32, 32, 32)
+        assert offset.shape == (2, 32, 32, 32, 32)
         assert isinstance(neck.conv1, SimpleGatedConvModule)

@@ -451,7 +451,7 @@ def random_mixed_kernels(kernel_list,
 
 
     Args:
-        kernel_list (list): A list of kenrel types. Choices are
+        kernel_list (list): A list of kernel types. Choices are
             'iso', 'aniso', 'skew', 'generalized_iso', 'generalized_aniso',
             'plateau_iso', 'plateau_aniso', 'sinc'.
         kernel_prob (list): The probability of choosing of the corresponding
