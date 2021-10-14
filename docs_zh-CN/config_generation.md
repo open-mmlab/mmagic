@@ -1,6 +1,6 @@
 # 配置文件 - 生成
 
-与[MMDetection](https://github.com/open-mmlab/mmdetection)一样，我们将模块化和继承设计融入我们的配置系统，方便进行各种实验。
+与 [MMDetection](https://github.com/open-mmlab/mmdetection) 一样，我们将模块化和继承设计融入我们的配置系统，方便进行各种实验。
 
 ## 示例 - pix2pix
 
