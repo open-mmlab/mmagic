@@ -62,6 +62,7 @@ def mmedit2torchserve(
                 'runtime': 'python',
                 'archive_format': 'default'
             })
+        print(args_.model_name)
         manifest = ModelExportUtils.generate_manifest_json(args_)
         package_model(args_, manifest)
 
