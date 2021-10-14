@@ -32,7 +32,7 @@ repos:
     rev: v2.1.0
     hooks:
       - id: codespell
-        args: ["--skip", "*.ipynb,tools/data/hvu/label_map.json", "-L", "formating,te,nd,thre,Gool,gool"]
+        args: ["--skip", "*.ipynb,tools/data/hvu/label_map.json,configs/restorers/srresnet_srgan/*.md", "-L", "formating,te,nd,thre,Gool,gool"]
   - repo: local
     hooks:
       - id: update-model-index
