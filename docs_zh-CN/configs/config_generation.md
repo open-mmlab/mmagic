@@ -36,9 +36,9 @@ model = dict(
     pixel_loss=dict(type='L1Loss', loss_weight=100.0, reduction='mean'))
 # 模型训练和测试设置
 train_cfg = dict(
-    direction='b2a')  # pix2pix 的图像到图像的翻译方向 (模型的方向，和测试方向一致)。模型默认: a2b
+    direction='b2a')  # pix2pix 的图像到图像的迁移方向 (模型的方向，和测试方向一致)。模型默认: a2b
 test_cfg = dict(
-    direction='b2a',   # pix2pix 的图像到图像的翻译方向 (模型测试的方向，和训练方向一致)。模型默认: a2b
+    direction='b2a',   # pix2pix 的图像到图像的迁移方向 (模型测试的方向，和训练方向一致)。模型默认: a2b
     show_input=True)  # 保存 pix2pix 的测试图像时是否显示输入的真实图像
 
 # 数据设置
