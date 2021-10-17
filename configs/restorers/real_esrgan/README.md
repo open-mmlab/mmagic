@@ -1,9 +1,9 @@
-# ESRGAN (ECCVW'2018)
+# Real-ESRGAN (ICCVW'2021)
 
 <!-- [ALGORITHM] -->
 
 <details>
-<summary align="right"><a href="https://arxiv.org/abs/1809.00219">ESRGAN (ECCVW'2018)</a></summary>
+<summary align="right"><a href="https://arxiv.org/abs/1809.00219">Real-ESRGAN (ICCVW'2021)</a></summary>
 
 ```bibtex
 @inproceedings{wang2021real,
