@@ -3,7 +3,7 @@
 <!-- [ALGORITHM] -->
 
 <details>
-<summary align="right"><a href="https://arxiv.org/abs/1809.00219">Real-ESRGAN (ICCVW'2021)</a></summary>
+<summary align="right"><a href="https://arxiv.org/abs/2107.10833">Real-ESRGAN (ICCVW'2021)</a></summary>
 
 ```bibtex
 @inproceedings{wang2021real,
