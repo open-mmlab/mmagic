@@ -137,8 +137,8 @@ def test_two_stage_inpaintor():
         # test forward test w/o save image
         outputs = tsinpaintor.forward_test(
             masked_img[0:1], mask[0:1], gt_img=gt_img[0:1, ...])
-        assert 'eval_results' in outputs
-        assert outputs['eval_results']['l1'] > 0
+        assert 'eval_result' in outputs
+        assert outputs['eval_result']['l1'] > 0
 
         # test forward test w/o eval metrics
         tsinpaintor.test_cfg = dict()
@@ -285,8 +285,8 @@ def test_two_stage_inpaintor():
 
         outputs = tsinpaintor.forward_test(
             masked_img[0:1], mask[0:1], gt_img=gt_img[0:1, ...])
-        assert 'eval_results' in outputs
-        assert outputs['eval_results']['l1'] > 0
+        assert 'eval_result' in outputs
+        assert outputs['eval_result']['l1'] > 0
 
         # test w/o stage1 loss
         model_ = copy.deepcopy(model)

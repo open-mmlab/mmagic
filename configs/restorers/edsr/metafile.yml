@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - EDSR
-  Name: README
+  Name: EDSR
   Paper:
   - https://arxiv.org/abs/1707.02921
   README: configs/restorers/edsr/README.md

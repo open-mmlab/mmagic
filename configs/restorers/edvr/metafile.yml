@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - EDVR
-  Name: README
+  Name: EDVR
   Paper:
   - https://arxiv.org/abs/1905.02716?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%253A+arxiv%252FQSXk+%2528ExcitingAds%2521+cs+updates+on+arXiv.org%2529
   README: configs/restorers/edvr/README.md

@@ -28,3 +28,13 @@ repos:
         args: ["--remove"]
       - id: mixed-line-ending
         args: ["--fix=lf"]
+  - repo: local
+    hooks:
+      - id: update-model-index
+        name: update-model-index
+        description: Collect model information and update model-index.yml
+        entry: .dev_scripts/github/update_model_index.py
+        additional_dependencies: [mmcv]
+        language: python
+        files: ^configs/.*\.md$
+        require_serial: true

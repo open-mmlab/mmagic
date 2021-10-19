@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - Global&Local
-  Name: README
+  Name: Global&Local
   Paper:
   - http://iizuka.cs.tsukuba.ac.jp/projects/completion/data/completion_sig2017.pdf
   README: configs/inpainting/global_local/README.md

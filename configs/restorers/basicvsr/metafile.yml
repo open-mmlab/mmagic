@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - BasicVSR
-  Name: README
+  Name: BasicVSR
   Paper:
   - https://arxiv.org/abs/2012.02181
   README: configs/restorers/basicvsr/README.md

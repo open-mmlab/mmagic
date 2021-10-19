@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - GCA
-  Name: README
+  Name: GCA
   Paper:
   - https://arxiv.org/abs/2001.04069
   README: configs/mattors/gca/README.md

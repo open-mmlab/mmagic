@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - BasicVSR++
-  Name: README
+  Name: BasicVSR++
   Paper:
   - https://arxiv.org/abs/2104.13371
   README: configs/restorers/basicvsr_plusplus/README.md
@@ -35,11 +35,11 @@ Models:
         SSIM: 0.9411
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
-- Config: configs/restorers/basicvsr/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi.py
+- Config: configs/restorers/basicvsr/basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bi.py
   In Collection: README
   Metadata:
     Training Data: VIMEO90K
-  Name: restorers--basicvsr--basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi
+  Name: restorers--basicvsr--basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bi
   Results:
   - Dataset: VIMEO90K
     Metrics:
@@ -63,11 +63,11 @@ Models:
         SSIM: 0.95
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305-4ef437e2.pth
-- Config: configs/restorers/basicvsr/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd.py
+- Config: configs/restorers/basicvsr/basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd.py
   In Collection: README
   Metadata:
     Training Data: VIMEO90K
-  Name: restorers--basicvsr--basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd
+  Name: restorers--basicvsr--basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd
   Results:
   - Dataset: VIMEO90K
     Metrics:

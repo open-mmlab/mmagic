@@ -2,7 +2,7 @@ Collections:
 - Metadata:
     Architecture:
     - RDN
-  Name: README
+  Name: RDN
   Paper:
   - https://arxiv.org/abs/1802.08797
   README: configs/restorers/rdn/README.md

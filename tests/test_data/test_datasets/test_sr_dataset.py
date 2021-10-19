@@ -80,8 +80,8 @@ class TestSRDatasets:
             # The length of results should be equal to the dataset len
             toy_dataset.evaluate(results=[results[0]])
 
-        eval_results = toy_dataset.evaluate(results=results)
-        assert eval_results == {'PSNR': 25, 'SSIM': 0.7}
+        eval_result = toy_dataset.evaluate(results=results)
+        assert eval_result == {'PSNR': 25, 'SSIM': 0.7}
 
         with pytest.raises(AssertionError):
             results = [{
@@ -651,9 +651,9 @@ def test_vid4_dataset():
                 'SSIM': 0.9
             }
         }]
-        eval_results = vid4_dataset.evaluate(results)
-        np.testing.assert_almost_equal(eval_results['PSNR'], 22)
-        np.testing.assert_almost_equal(eval_results['SSIM'], 0.8)
+        eval_result = vid4_dataset.evaluate(results)
+        np.testing.assert_almost_equal(eval_result['PSNR'], 22)
+        np.testing.assert_almost_equal(eval_result['SSIM'], 0.8)
 
         # test evaluate function ('all' mode)
         vid4_dataset = SRVid4Dataset(
@@ -666,9 +666,9 @@ def test_vid4_dataset():
             test_mode=False,
             metric_average_mode='all',
             filename_tmpl='{:08d}')
-        eval_results = vid4_dataset.evaluate(results)
-        np.testing.assert_almost_equal(eval_results['PSNR'], 22.3333333)
-        np.testing.assert_almost_equal(eval_results['SSIM'], 0.81666666)
+        eval_result = vid4_dataset.evaluate(results)
+        np.testing.assert_almost_equal(eval_result['PSNR'], 22.3333333)
+        np.testing.assert_almost_equal(eval_result['SSIM'], 0.81666666)
 
         with pytest.raises(AssertionError):
             # num_input_frames should be odd numbers
@@ -1019,9 +1019,9 @@ def test_sr_folder_video_dataset():
             'SSIM': 0.9
         }
     }]
-    eval_results = test_dataset.evaluate(results)
-    np.testing.assert_almost_equal(eval_results['PSNR'], 23)
-    np.testing.assert_almost_equal(eval_results['SSIM'], 0.85)
+    eval_result = test_dataset.evaluate(results)
+    np.testing.assert_almost_equal(eval_result['PSNR'], 23)
+    np.testing.assert_almost_equal(eval_result['SSIM'], 0.85)
 
     # test evaluate function ('all' mode)
     test_dataset = SRFolderVideoDataset(
@@ -1032,9 +1032,9 @@ def test_sr_folder_video_dataset():
         scale=4,
         metric_average_mode='all',
         test_mode=True)
-    eval_results = test_dataset.evaluate(results)
-    np.testing.assert_almost_equal(eval_results['PSNR'], 22.6666666)
-    np.testing.assert_almost_equal(eval_results['SSIM'], 0.83333333)
+    eval_result = test_dataset.evaluate(results)
+    np.testing.assert_almost_equal(eval_result['PSNR'], 22.6666666)
+    np.testing.assert_almost_equal(eval_result['SSIM'], 0.83333333)
 
     # num_input_frames should be odd numbers
     with pytest.raises(AssertionError):
