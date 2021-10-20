@@ -8,7 +8,7 @@ Collections:
   README: configs/restorers/srcnn/README.md
 Models:
 - Config: configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py
-  In Collection: README
+  In Collection: SRCNN
   Metadata:
     Training Data: DIV2K
   Name: restorers--srcnn--srcnn_x4k915_g1_1000k_div2k
