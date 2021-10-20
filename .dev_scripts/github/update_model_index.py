@@ -183,7 +183,6 @@ def parse_md(md_file):
                                 metrics[key] = float(metrics_data)
                             except ValueError:
                                 metrics_data = metrics_data.replace(' ', '')
-                                task += ' ' + metrics_data
                         else:
                             metrics_data = [
                                 float(d) for d in metrics_data.split('/')
