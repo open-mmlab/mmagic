@@ -8,7 +8,7 @@ Collections:
   README: configs/restorers/rdn/README.md
 Models:
 - Config: configs/restorers/rdn/rdn_x2c64b16_g1_1000k_div2k.py
-  In Collection: README
+  In Collection: RDN
   Metadata:
     Training Data: DIV2K
   Name: restorers--rdn--rdn_x2c64b16_g1_1000k_div2k
@@ -27,7 +27,7 @@ Models:
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x2c64b16_g1_1000k_div2k_20210419-dc146009.pth?versionId=CAEQJxiBgMC774LGyBciIGU3ZGRkZWM3Y2Y0ZjQ2OTliZTc2NmM5ZWY0MDA1MDU3
 - Config: configs/restorers/rdn/rdn_x3c64b16_g1_1000k_div2k.py
-  In Collection: README
+  In Collection: RDN
   Metadata:
     Training Data: DIV2K
   Name: restorers--rdn--rdn_x3c64b16_g1_1000k_div2k
@@ -46,7 +46,7 @@ Models:
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x3c64b16_g1_1000k_div2k_20210419-b93cb6aa.pth?versionId=CAEQJxiBgMC3v9LFyBciIGExYWY0NTI0YWVkODQxZDRiYWNlYjViY2E5MzQ4OTc1
 - Config: configs/restorers/rdn/rdn_x4c64b16_g1_1000k_div2k.py
-  In Collection: README
+  In Collection: RDN
   Metadata:
     Training Data: DIV2K
   Name: restorers--rdn--rdn_x4c64b16_g1_1000k_div2k

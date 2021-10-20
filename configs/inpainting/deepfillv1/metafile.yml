@@ -8,7 +8,7 @@ Collections:
   README: configs/inpainting/deepfillv1/README.md
 Models:
 - Config: configs/inpainting/deepfillv1/deepfillv1_256x256_8x2_places.py
-  In Collection: README
+  In Collection: DeepFillv1
   Metadata:
     Training Data: PLACES
   Name: inpainting--deepfillv1--deepfillv1_256x256_8x2_places
@@ -21,7 +21,7 @@ Models:
     Task: inpainting squarebbox 256x256 3500k Places365-val
   Weights: https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth
 - Config: configs/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba.py
-  In Collection: README
+  In Collection: DeepFillv1
   Metadata:
     Training Data: CELEBA
   Name: inpainting--deepfillv1--deepfillv1_256x256_4x4_celeba

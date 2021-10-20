@@ -8,7 +8,7 @@ Collections:
   README: configs/inpainting/global_local/README.md
 Models:
 - Config: configs/inpainting/global_local/gl_256x256_8x12_places.py
-  In Collection: README
+  In Collection: Global&Local
   Metadata:
     Training Data: PLACES
   Name: inpainting--global_local--gl_256x256_8x12_places
@@ -21,7 +21,7 @@ Models:
     Task: inpainting squarebbox 256x256 500k Places365-val
   Weights: https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth
 - Config: configs/inpainting/global_local/gl_256x256_8x12_celeba.py
-  In Collection: README
+  In Collection: Global&Local
   Metadata:
     Training Data: CELEBA
   Name: inpainting--global_local--gl_256x256_8x12_celeba

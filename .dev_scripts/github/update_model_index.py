@@ -118,6 +118,7 @@ def parse_md(md_file):
                 if 'ALGORITHM' in lines[i] or 'BACKBONE' in lines[i]:
                     collection['Metadata']['Architecture'].append(name)
                     collection['Name'] = name
+                    collection_name = name
                 # get paper url
                 collection['Paper'].append(url)
                 i = j + 1

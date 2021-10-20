@@ -8,7 +8,7 @@ Collections:
   README: configs/synthesizers/cyclegan/README.md
 Models:
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_resnet_in_1x1_80k_facades.py
-  In Collection: README
+  In Collection: CycleGAN
   Metadata:
     Training Data: FACADES
   Name: synthesizers--cyclegan--cyclegan_lsgan_resnet_in_1x1_80k_facades
@@ -20,7 +20,7 @@ Models:
     Task: synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_facades/cyclegan_lsgan_resnet_in_1x1_80k_facades_20200524-0b877c2a.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades.py
-  In Collection: README
+  In Collection: CycleGAN
   Metadata:
     Training Data: FACADES
   Name: synthesizers--cyclegan--cyclegan_lsgan_id0_resnet_in_1x1_80k_facades
@@ -32,7 +32,7 @@ Models:
     Task: synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_facades_id0/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades_20200524-438aa074.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter.py
-  In Collection: README
+  In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
   Name: synthesizers--cyclegan--cyclegan_lsgan_resnet_in_1x1_246200_summer2winter
@@ -44,7 +44,7 @@ Models:
     Task: synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_20200524-0baeaff6.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter.py
-  In Collection: README
+  In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
   Name: synthesizers--cyclegan--cyclegan_lsgan_resnet_in_1x1_246200_summer2winter
@@ -56,7 +56,7 @@ Models:
     Task: synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_20200524-0baeaff6.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter.py
-  In Collection: README
+  In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
   Name: synthesizers--cyclegan--cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter
@@ -68,7 +68,7 @@ Models:
     Task: synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter_id0/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_20200524-f280ecdd.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter.py
-  In Collection: README
+  In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
   Name: synthesizers--cyclegan--cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter
@@ -80,7 +80,7 @@ Models:
     Task: synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter_id0/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_20200524-f280ecdd.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra.py
-  In Collection: README
+  In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
   Name: synthesizers--cyclegan--cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra
@@ -92,7 +92,7 @@ Models:
     Task: synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_20200524-1b3d5d3a.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra.py
-  In Collection: README
+  In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
   Name: synthesizers--cyclegan--cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra
@@ -104,7 +104,7 @@ Models:
     Task: synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra_id0/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_20200524-470fb8da.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra.py
-  In Collection: README
+  In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
   Name: synthesizers--cyclegan--cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra
@@ -116,7 +116,7 @@ Models:
     Task: synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_20200524-1b3d5d3a.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra.py
-  In Collection: README
+  In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
   Name: synthesizers--cyclegan--cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra
