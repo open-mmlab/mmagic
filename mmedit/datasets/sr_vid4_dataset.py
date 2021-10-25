@@ -20,7 +20,7 @@ class SRVid4Dataset(BaseSRDataset):
 
         1. folder name;
         2. number of frames in this clip (in the same folder);
-        3. image shape, seperated by a white space.
+        3. image shape, separated by a white space.
 
     Examples:
 

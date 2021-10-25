@@ -81,7 +81,7 @@ class RealESRGAN(SRGAN):
         del self.step_counter
         self.register_buffer('step_counter', torch.zeros(1))
 
-        if train_cfg is not None:  # used for initializeing from ema model
+        if train_cfg is not None:  # used for initializing from ema model
             self.start_iter = train_cfg.get('start_iter', -1)
         else:
             self.start_iter = -1

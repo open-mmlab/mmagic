@@ -165,7 +165,7 @@ def collect_results_cpu(result_part, size, tmpdir=None):
     dist.barrier()
     # dump the part result to the dir
     mmcv.dump(result_part, osp.join(tmpdir, 'part_{}.pkl'.format(rank)))
-    # synchronizes all processes for loding pickle file
+    # synchronizes all processes for loading pickle file
     dist.barrier()
     # collect all parts
     if rank != 0:

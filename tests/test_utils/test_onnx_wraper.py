@@ -14,7 +14,7 @@ from mmedit.models import build_model
 @pytest.mark.skipif(
     version.parse(torch.__version__) < version.parse('1.4.0'),
     reason='skip if torch=1.3.x')
-def test_restorer_wraper():
+def test_restorer_wrapper():
     try:
         import onnxruntime as ort
         from mmedit.core.export.wrappers import (ONNXRuntimeEditing,
@@ -62,7 +62,7 @@ def test_restorer_wraper():
 
     wrap_model = ONNXRuntimeEditing(onnx_path, cfg, 0)
     # os.remove(onnx_path)
-    assert isinstance(wrap_model.wraper, ONNXRuntimeRestorer)
+    assert isinstance(wrap_model.wrapper, ONNXRuntimeRestorer)
 
     if ort.get_device() == 'GPU':
         data_batch = {'lq': inputs.cuda(), 'gt': targets.cuda()}
@@ -81,7 +81,7 @@ def test_restorer_wraper():
 @pytest.mark.skipif(
     version.parse(torch.__version__) < version.parse('1.4.0'),
     reason='skip if torch=1.3.x')
-def test_mattor_wraper():
+def test_mattor_wrapper():
     try:
         import onnxruntime as ort
         from mmedit.core.export.wrappers import (ONNXRuntimeEditing,
@@ -129,7 +129,7 @@ def test_mattor_wraper():
 
     wrap_model = ONNXRuntimeEditing(onnx_path, cfg, 0)
     os.remove(onnx_path)
-    assert isinstance(wrap_model.wraper, ONNXRuntimeMattor)
+    assert isinstance(wrap_model.wrapper, ONNXRuntimeMattor)
 
     if ort.get_device() == 'GPU':
         merged = merged.cuda()

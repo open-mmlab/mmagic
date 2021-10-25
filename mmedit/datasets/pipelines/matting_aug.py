@@ -582,8 +582,8 @@ class GenerateSoftSeg:
 class TransformTrimap:
     """Transform trimap into two-channel and six-channel.
 
-    This calss will generate a two-channel trimap composed of definite
-    foreground and backgroud masks and encode it into a six-channel trimap
+    This class will generate a two-channel trimap composed of definite
+    foreground and background masks and encode it into a six-channel trimap
     using Gaussian blurs of the generated two-channel trimap at three
     different scales. The transformed trimap has 6 channels.
 

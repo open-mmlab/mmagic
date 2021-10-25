@@ -51,7 +51,7 @@ def test_free_form_mask():
         assert mask.shape == (256, 256, 1)
 
     img_shape = (256, 256, 3)
-    mask = brush_stroke_mask(img_shape, num_vertexes=8)
+    mask = brush_stroke_mask(img_shape, num_vertices=8)
     assert mask.shape == (256, 256, 1)
     zero_area = np.sum((mask == 0).astype(np.uint8))
     ones_area = np.sum((mask == 1).astype(np.uint8))
@@ -63,7 +63,7 @@ def test_free_form_mask():
     assert mask.shape == (256, 256, 1)
 
     with pytest.raises(TypeError):
-        mask = brush_stroke_mask(img_shape, num_vertexes=dict())
+        mask = brush_stroke_mask(img_shape, num_vertices=dict())
 
     with pytest.raises(TypeError):
         mask = brush_stroke_mask(img_shape, brush_width=dict())
@@ -87,7 +87,7 @@ def test_irregular_mask():
         mask = get_irregular_mask(img_shape, length_range=dict())
 
     with pytest.raises(TypeError):
-        mask = get_irregular_mask(img_shape, num_vertexes=dict())
+        mask = get_irregular_mask(img_shape, num_vertices=dict())
 
     mask = get_irregular_mask(img_shape, brush_width=10)
     assert mask.shape == (256, 256, 1)
@@ -95,5 +95,5 @@ def test_irregular_mask():
     mask = get_irregular_mask(img_shape, length_range=10)
     assert mask.shape == (256, 256, 1)
 
-    mask = get_irregular_mask(img_shape, num_vertexes=10)
+    mask = get_irregular_mask(img_shape, num_vertices=10)
     assert mask.shape == (256, 256, 1)
