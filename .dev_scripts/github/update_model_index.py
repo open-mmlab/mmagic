@@ -118,6 +118,7 @@ def parse_md(md_file):
                 if 'ALGORITHM' in lines[i] or 'BACKBONE' in lines[i]:
                     collection['Metadata']['Architecture'].append(name)
                     collection['Name'] = name
+                    collection_name = name
                 # get paper url
                 collection['Paper'].append(url)
                 i = j + 1
@@ -182,7 +183,6 @@ def parse_md(md_file):
                                 metrics[key] = float(metrics_data)
                             except ValueError:
                                 metrics_data = metrics_data.replace(' ', '')
-                                task += ' ' + metrics_data
                         else:
                             metrics_data = [
                                 float(d) for d in metrics_data.split('/')
