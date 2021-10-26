@@ -49,7 +49,7 @@ class MMEditHandler(BaseHandler):
         return results
 
     def postprocess(self, data):
-        # convert torch tensor to numpy and then covert to bytes
+        # convert torch tensor to numpy and then convert to bytes
         output_list = []
         for data_ in data:
             data_np = tensor2img(data_)
