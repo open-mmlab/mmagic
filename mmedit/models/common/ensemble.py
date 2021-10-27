@@ -31,11 +31,11 @@ class SpatialTemporalEnsemble(nn.Module):
             imgs = imgs.unsqueeze(1)
 
         if mode == 'vertical':
-            imgs = imgs[:, :, :, :, ::-1].clone()
+            imgs = imgs.flip(4).clone()
         elif mode == 'horizontal':
-            imgs = imgs[:, :, :, ::-1, :].clone()
+            imgs = imgs.flip(3).clone()
         elif mode == 'transpose':
-            imgs = imgs.transpose((0, 1, 2, 4, 3)).clone()
+            imgs = imgs.permute(0, 1, 2, 4, 3).clone()
 
         if is_single_image:
             imgs = imgs.squeeze(1)
@@ -50,7 +50,7 @@ class SpatialTemporalEnsemble(nn.Module):
         output_list = [model(t.cuda()).cpu() for t in img_list]
         for i in range(len(output_list)):
             if i > 3:
-                output_list[i] = self._transform(output_list[i], 'temporal')
+                output_list[i] = self._transform(output_list[i], 'transpose')
             if i % 4 > 1:
                 output_list[i] = self._transform(output_list[i], 'horizontal')
             if (i % 4) % 2 == 1:
@@ -64,7 +64,7 @@ class SpatialTemporalEnsemble(nn.Module):
     def forward(self, imgs, model):
         outputs = self.spatial_ensemble(imgs, model)
         if self.is_temporal_ensemble:
-            outputs += self.spatial_ensemble(imgs[:, ::-1], model)[:, ::-1]
+            outputs += self.spatial_ensemble(imgs.flip(1), model).flip(1)
             outputs *= 0.5
 
         return outputs
