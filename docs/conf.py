@@ -30,7 +30,7 @@ author = 'MMEditing Authors'
 # ones.
 extensions = [
     'sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'sphinx.ext.viewcode',
-    'recommonmark', 'sphinx_markdown_tables'
+    'myst_parser', 'sphinx_markdown_tables'
 ]
 
 autodoc_mock_imports = [
