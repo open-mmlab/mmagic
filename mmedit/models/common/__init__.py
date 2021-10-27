@@ -2,6 +2,7 @@
 from .aspp import ASPP
 from .contextual_attention import ContextualAttentionModule
 from .conv import *  # noqa: F401, F403
+from .ensemble import SpatialTemporalEnsemble
 from .flow_warp import flow_warp
 from .gated_conv_module import SimpleGatedConvModule
 from .gca_module import GCAModule
@@ -26,5 +27,5 @@ __all__ = [
     'DepthwiseSeparableConvModule', 'ContextualAttentionModule', 'GCAModule',
     'SimpleGatedConvModule', 'LinearModule', 'flow_warp',
     'generation_init_weights', 'GANImageBuffer', 'UnetSkipConnectionBlock',
-    'ResidualBlockWithDropout', 'ImgNormalize'
+    'ResidualBlockWithDropout', 'ImgNormalize', 'SpatialTemporalEnsemble'
 ]

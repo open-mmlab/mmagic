@@ -44,7 +44,7 @@ class SpatialTemporalEnsemble(nn.Module):
 
     def spatial_ensemble(self, imgs, model):
         img_list = [imgs.cpu()]
-        for mode in self.ensemble_mode:
+        for mode in ['vertical', 'horizontal', 'transpose']:
             img_list.extend([self._transform(t, mode) for t in img_list])
 
         output_list = [model(t.cuda()).cpu() for t in img_list]

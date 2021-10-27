@@ -1,0 +1,63 @@
+# Copyright (c) OpenMMLab. All rights reserved.
+import numpy as np
+import pytest
+import torch
+import torch.nn as nn
+
+from mmedit.models.common import SpatialTemporalEnsemble
+
+
+def test_ensemble_cpu():
+    model = nn.Identity()
+
+    # spatial ensemble of an image
+    ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=False)
+    inputs = torch.rand(1, 3, 4, 4)
+    outputs = ensemble(inputs, model)
+    np.testing.assert_almost_equal(inputs.numpy(), outputs.numpy())
+
+    # spatial ensemble of a sqeuence
+    ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=False)
+    inputs = torch.rand(1, 2, 3, 4, 4)
+    outputs = ensemble(inputs, model)
+    np.testing.assert_almost_equal(inputs.numpy(), outputs.numpy())
+
+    # spatial and temporal ensemble of a sqeuence
+    ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=True)
+    inputs = torch.rand(1, 2, 3, 4, 4)
+    outputs = ensemble(inputs, model)
+    np.testing.assert_almost_equal(inputs.numpy(), outputs.numpy())
+
+    # spatial and temporal ensemble of an image
+    with pytest.raises(ValueError):
+        ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=True)
+        inputs = torch.rand(1, 3, 4, 4)
+        outputs = ensemble(inputs, model)
+
+
+def test_ensemble_cuda():
+    model = nn.Identity().cuda()
+
+    # spatial ensemble of an image
+    ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=False)
+    inputs = torch.rand(1, 3, 4, 4).cuda()
+    outputs = ensemble(inputs, model)
+    np.testing.assert_almost_equal(inputs.cpu().numpy(), outputs.numpy())
+
+    # spatial ensemble of a sqeuence
+    ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=False)
+    inputs = torch.rand(1, 2, 3, 4, 4).cuda()
+    outputs = ensemble(inputs, model)
+    np.testing.assert_almost_equal(inputs.cpu().numpy(), outputs.numpy())
+
+    # spatial and temporal ensemble of a sqeuence
+    ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=True)
+    inputs = torch.rand(1, 2, 3, 4, 4).cuda()
+    outputs = ensemble(inputs, model)
+    np.testing.assert_almost_equal(inputs.cpu().numpy(), outputs.numpy())
+
+    # spatial and temporal ensemble of an image
+    with pytest.raises(ValueError):
+        ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=True)
+        inputs = torch.rand(1, 3, 4, 4).cuda()
+        outputs = ensemble(inputs, model)
