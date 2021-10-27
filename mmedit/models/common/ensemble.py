@@ -7,9 +7,10 @@ class SpatialTemporalEnsemble(nn.Module):
     """ Apply spatial and temporal ensemble and compute outputs
 
     Args:
-        is_temporal (bool, optional): Whether to apply ensemble temporally. If
-            True, the sequence would be flipped temporally. If the input is an
-            image, this argument must be set to False. Default: False.
+        is_temporal_ensemble (bool, optional): Whether to apply ensemble
+            temporally. If True, the sequence will also be flipped temporally.
+            If the input is an image, this argument must be set to False.
+            Default: False.
 
     Returns:
         Tensor: Model outputs given the ensembles.
@@ -59,7 +60,7 @@ class SpatialTemporalEnsemble(nn.Module):
         outputs = torch.stack(output_list, dim=0)
         outputs = outputs.mean(dim=0, keepdim=False)
 
-        return outputs
+        return outputs.to(imgs.device)
 
     def forward(self, imgs, model):
         outputs = self.spatial_ensemble(imgs, model)
