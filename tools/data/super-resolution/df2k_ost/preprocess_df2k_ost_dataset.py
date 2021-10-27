@@ -53,14 +53,14 @@ def extract_subimages(opt):
     """
     input_folder = opt['input_folder']
     save_folder = opt['save_folder']
-    if not osp.exists(save_folder):
+    if not mmcv.mkdir_or_exist(save_folder):
         os.makedirs(save_folder)
         print(f'mkdir {save_folder} ...')
     else:
         print(f'Folder {save_folder} already exists. Exit.')
         sys.exit(1)
 
-    img_list = list(mmcv.scandir(input_folder))
+    img_list = list(mmcv.scandir(input_folder), suffix='png')
     img_list = [osp.join(input_folder, v) for v in img_list]
 
     prog_bar = mmcv.ProgressBar(len(img_list))
