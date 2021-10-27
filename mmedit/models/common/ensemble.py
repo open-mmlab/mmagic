@@ -47,7 +47,7 @@ class SpatialTemporalEnsemble(nn.Module):
         for mode in ['vertical', 'horizontal', 'transpose']:
             img_list.extend([self._transform(t, mode) for t in img_list])
 
-        output_list = [model(t.to(model.device)).cpu() for t in img_list]
+        output_list = [model(t.to(imgs.device)).cpu() for t in img_list]
         for i in range(len(output_list)):
             if i > 3:
                 output_list[i] = self._transform(output_list[i], 'transpose')
