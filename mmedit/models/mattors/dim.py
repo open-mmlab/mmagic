@@ -96,7 +96,7 @@ class DIM(BaseMattor):
             bg (Tensor): of shape (N, C, H, W). Tensor of bg read by opencv.
 
         Returns:
-            dict: Contains the loss items and batch infomation.
+            dict: Contains the loss items and batch information.
         """
         pred_alpha, pred_refine = self._forward(
             torch.cat((merged, trimap), 1), self.train_cfg.train_refiner)

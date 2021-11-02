@@ -291,7 +291,7 @@ class RandomJPEGCompression:
 
         # determine compression level
         quality = self.params['quality']
-        jpeg_param = np.random.uniform(quality[0], quality[1])
+        jpeg_param = round(np.random.uniform(quality[0], quality[1]))
         encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), jpeg_param]
 
         # apply jpeg compression

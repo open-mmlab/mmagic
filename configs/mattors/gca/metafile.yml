@@ -8,7 +8,7 @@ Collections:
   README: configs/mattors/gca/README.md
 Models:
 - Config: configs/mattors/gca/baseline_r34_4x10_200k_comp1k.py
-  In Collection: README
+  In Collection: GCA
   Metadata:
     Training Data: COMP1K
   Name: mattors--gca--baseline_r34_4x10_200k_comp1k
@@ -22,7 +22,7 @@ Models:
     Task: mattors
   Weights: https://download.openmmlab.com/mmediting/mattors/gca/baseline_r34_4x10_200k_comp1k_SAD-36.50_20200614_105701-95be1750.pth
 - Config: configs/mattors/gca/gca_r34_4x10_200k_comp1k.py
-  In Collection: README
+  In Collection: GCA
   Metadata:
     Training Data: COMP1K
   Name: mattors--gca--gca_r34_4x10_200k_comp1k
@@ -36,7 +36,7 @@ Models:
     Task: mattors
   Weights: https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-34.77_20200604_213848-4369bea0.pth
 - Config: configs/mattors/gca/baseline_dimaug_r34_4x10_200k_comp1k.py
-  In Collection: README
+  In Collection: GCA
   Metadata:
     Training Data: COMP1K
   Name: mattors--gca--baseline_dimaug_r34_4x10_200k_comp1k
@@ -50,7 +50,7 @@ Models:
     Task: mattors
   Weights: https://download.openmmlab.com/mmediting/mattors/gca/baseline_dimaug_r34_4x10_200k_comp1k_SAD-49.95_20200626_231612-535c9a11.pth
 - Config: configs/mattors/gca/gca_dimaug_r34_4x10_200k_comp1k.py
-  In Collection: README
+  In Collection: GCA
   Metadata:
     Training Data: COMP1K
   Name: mattors--gca--gca_dimaug_r34_4x10_200k_comp1k

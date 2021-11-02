@@ -95,7 +95,7 @@ class SRGAN(BasicRestorer):
             return self.forward_test(lq, gt, **kwargs)
 
         raise ValueError(
-            'SRGAN model does not supprot `forward_train` function.')
+            'SRGAN model does not support `forward_train` function.')
 
     def train_step(self, data_batch, optimizer):
         """Train step.

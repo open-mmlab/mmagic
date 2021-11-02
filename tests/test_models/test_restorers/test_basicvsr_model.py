@@ -53,7 +53,7 @@ def test_basicvsr_model():
                       dict(params=getattr(restorer, 'generator').parameters()))
     }
 
-    # train_step (wihout updating spynet)
+    # train_step (without updating spynet)
     outputs = restorer.train_step(data_batch, optimizer)
     assert isinstance(outputs, dict)
     assert isinstance(outputs['log_vars'], dict)

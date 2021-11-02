@@ -30,7 +30,6 @@ author = 'MMEditing Authors'
 # ones.
 extensions = [
     'myst_parser',
-    'recommonmark',
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',

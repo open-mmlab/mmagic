@@ -150,7 +150,7 @@ def test_sad():
         sad(alpha, trimap, pred_alpha)
 
     with pytest.raises(ValueError):
-        # input should all be two dimentional
+        # input should all be two dimensional
         sad(alpha[..., None], trimap, pred_alpha)
 
     # mask pred_alpha
@@ -173,7 +173,7 @@ def test_mse():
         mse(alpha, trimap, pred_alpha)
 
     with pytest.raises(ValueError):
-        # input should all be two dimentional
+        # input should all be two dimensional
         mse(alpha[..., None], trimap, pred_alpha)
 
     # mask pred_alpha
@@ -197,7 +197,7 @@ def test_gradient_error():
         gradient_error(alpha, trimap, pred_alpha)
 
     with pytest.raises(ValueError):
-        # input should all be two dimentional
+        # input should all be two dimensional
         gradient_error(alpha[..., None], trimap, pred_alpha)
 
     # mask pred_alpha
@@ -221,7 +221,7 @@ def test_connectivity():
         connectivity(alpha, trimap, pred_alpha)
 
     with pytest.raises(ValueError):
-        # input should all be two dimentional
+        # input should all be two dimensional
         connectivity(alpha[..., None], trimap, pred_alpha)
 
     # mask pred_alpha

@@ -188,7 +188,7 @@ def psnr(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
     """
 
     assert img1.shape == img2.shape, (
-        f'Image shapes are differnet: {img1.shape}, {img2.shape}.')
+        f'Image shapes are different: {img1.shape}, {img2.shape}.')
     if input_order not in ['HWC', 'CHW']:
         raise ValueError(
             f'Wrong input_order {input_order}. Supported input_orders are '
@@ -278,7 +278,7 @@ def ssim(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
     """
 
     assert img1.shape == img2.shape, (
-        f'Image shapes are differnet: {img1.shape}, {img2.shape}.')
+        f'Image shapes are different: {img1.shape}, {img2.shape}.')
     if input_order not in ['HWC', 'CHW']:
         raise ValueError(
             f'Wrong input_order {input_order}. Supported input_orders are '
@@ -326,7 +326,7 @@ class L1Evaluation:
 
 
 def estimate_aggd_param(block):
-    """Estimate AGGD (Asymmetric Generalized Gaussian Distribution) paramters.
+    """Estimate AGGD (Asymmetric Generalized Gaussian Distribution) parameters.
 
     Args:
         block (ndarray): 2D Image block.
@@ -396,7 +396,7 @@ def niqe_core(img,
     Note that we do not include block overlap height and width, since they are
     always 0 in the official implementation.
 
-    For good performance, it is advisable by the official implemtation to
+    For good performance, it is advisable by the official implementation to
     divide the distorted image in to the same size patched as used for the
     construction of multivariate Gaussian model.
 
@@ -488,7 +488,7 @@ def niqe(img, crop_border, input_order='HWC', convert_to='y'):
             pixels are not involved in the metric calculation.
         input_order (str): Whether the input order is 'HW', 'HWC' or 'CHW'.
             Default: 'HWC'.
-        convert_to (str): Whether coverted to 'y' (of MATLAB YCbCr) or 'gray'.
+        convert_to (str): Whether converted to 'y' (of MATLAB YCbCr) or 'gray'.
             Default: 'y'.
 
     Returns:

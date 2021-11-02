@@ -102,7 +102,7 @@ class ImageToTensor:
 class FramesToTensor(ImageToTensor):
     """Convert frames type to `torch.Tensor` type.
 
-    It accpets a list of frames, converts each to `torch.Tensor` type and then
+    It accepts a list of frames, converts each to `torch.Tensor` type and then
     concatenates in a new dimension (dim=0).
 
     Args:
