@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.11.0 (03/11/2021)
+
+**Highlights**
+
+- GLEAN for blind face image restoration #530
+- Real-ESRGAN model #546
+
+**New Features**
+
+- Exponential Moving Average Hook #542
+- Support DF2K_OST dataset #566
+
+**Improvements**
+
+- Add MATLAB-like bicubic interpolation #507
+- Support random degradations during training #504
+- Support torchserve #568
+
 ## v0.10.0 (12/08/2021).
 
 **Highlights**
