@@ -36,10 +36,10 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
-    'myst_parser',
     'sphinx_markdown_tables',
     'sphinx.ext.autosectionlabel',
     'sphinx_copybutton',
+    'myst_parser',
 ]
 
 autodoc_mock_imports = [
@@ -154,7 +154,10 @@ html_theme_options = {
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = []
+html_static_path = ['_static']
+html_css_files = ['css/readthedocs.css']
+
+myst_enable_extensions = ['colon_fence']
 
 language = 'en'
 

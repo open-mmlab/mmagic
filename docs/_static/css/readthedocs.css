@@ -1,0 +1,6 @@
+.header-logo {
+    background-image: url("https://github.com/open-mmlab/mmediting/blob/master/resources/mmediting-logo.png");
+    background-size: 173px 40px;
+    height: 40px;
+    width: 173px;
+}
