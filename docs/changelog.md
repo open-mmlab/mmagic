@@ -4,7 +4,7 @@
 
 **Highlights**
 
-- GLEAN for blind face image restoration # 530
+- GLEAN for blind face image restoration #530
 - Real-ESRGAN model #546
 
 **New Features**
