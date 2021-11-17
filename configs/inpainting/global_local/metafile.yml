@@ -11,7 +11,7 @@ Models:
   In Collection: Global&Local
   Metadata:
     Training Data: PLACES
-  Name: inpainting--global_local--gl_256x256_8x12_places
+  Name: global_local
   Results:
   - Dataset: PLACES
     Metrics:
@@ -24,7 +24,7 @@ Models:
   In Collection: Global&Local
   Metadata:
     Training Data: CELEBA
-  Name: inpainting--global_local--gl_256x256_8x12_celeba
+  Name: global_local
   Results:
   - Dataset: CELEBA
     Metrics:

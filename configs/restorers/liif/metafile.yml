@@ -11,7 +11,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -30,7 +30,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -49,7 +49,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -68,7 +68,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -87,7 +87,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -106,7 +106,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -125,7 +125,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -144,7 +144,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -163,7 +163,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -182,7 +182,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -201,7 +201,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -220,7 +220,7 @@ Models:
   In Collection: LIIF
   Metadata:
     Training Data: DIV2K
-  Name: restorers--liif--liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Name: liif
   Results:
   - Dataset: DIV2K
     Metrics:

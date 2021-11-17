@@ -11,7 +11,7 @@ Models:
   In Collection: Real-ESRGAN
   Metadata:
     Training Data: Others
-  Name: restorers--real_esrgan--realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost
+  Name: real_esrgan
   Results:
   - Dataset: Others
     Metrics:

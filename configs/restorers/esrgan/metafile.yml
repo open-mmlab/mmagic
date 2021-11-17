@@ -11,7 +11,7 @@ Models:
   In Collection: ESRGAN
   Metadata:
     Training Data: DIV2K
-  Name: restorers--esrgan--esrgan_psnr_x4c64b23g32_g1_1000k_div2k
+  Name: esrgan
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -30,7 +30,7 @@ Models:
   In Collection: ESRGAN
   Metadata:
     Training Data: DIV2K
-  Name: restorers--esrgan--esrgan_x4c64b23g32_g1_400k_div2k
+  Name: esrgan
   Results:
   - Dataset: DIV2K
     Metrics:

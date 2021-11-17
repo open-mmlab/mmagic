@@ -11,7 +11,7 @@ Models:
   In Collection: DIM
   Metadata:
     Training Data: COMP1K
-  Name: mattors--dim--dim_stage1_v16_1x1_1000k_comp1k
+  Name: dim
   Results:
   - Dataset: COMP1K
     Metrics:
@@ -25,7 +25,7 @@ Models:
   In Collection: DIM
   Metadata:
     Training Data: COMP1K
-  Name: mattors--dim--dim_stage2_v16_pln_1x1_1000k_comp1k
+  Name: dim
   Results:
   - Dataset: COMP1K
     Metrics:
@@ -39,7 +39,7 @@ Models:
   In Collection: DIM
   Metadata:
     Training Data: COMP1K
-  Name: mattors--dim--dim_stage3_v16_pln_1x1_1000k_comp1k
+  Name: dim
   Results:
   - Dataset: COMP1K
     Metrics:
