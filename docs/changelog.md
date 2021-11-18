@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.11.0 (03/11/2021)
+
+**Highlights**
+
+- GLEAN for blind face image restoration #530
+- Real-ESRGAN model #546
+
+**New Features**
+
+- Exponential Moving Average Hook #542
+- Support DF2K_OST dataset #566
+
+**Improvements**
+
+- Add MATLAB-like bicubic interpolation #507
+- Support random degradations during training #504
+- Support torchserve #568
+
 ## v0.10.0 (12/08/2021).
 
 **Highlights**
@@ -228,7 +246,7 @@
 - modify `Crop` to handle a sequence of video frames ([#164](https://github.com/open-mmlab/mmediting/pull/164))
 - Add links to other mm projects ([#179](https://github.com/open-mmlab/mmediting/pull/179), [#180](https://github.com/open-mmlab/mmediting/pull/180))
 - Add config type ([#181](https://github.com/open-mmlab/mmediting/pull/181))
-- Refector docs ([#184](https://github.com/open-mmlab/mmediting/pull/184))
+- Refactor docs ([#184](https://github.com/open-mmlab/mmediting/pull/184))
 - Add config link ([#187](https://github.com/open-mmlab/mmediting/pull/187))
 - Update file structure ([#192](https://github.com/open-mmlab/mmediting/pull/192))
 - Update config doc ([#202](https://github.com/open-mmlab/mmediting/pull/202))

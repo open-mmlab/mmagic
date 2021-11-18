@@ -9,7 +9,7 @@ from mmcv import scandir
 from .base_dataset import BaseDataset
 
 IMG_EXTENSIONS = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.ppm',
-                  '.PPM', '.bmp', '.BMP')
+                  '.PPM', '.bmp', '.BMP', '.tif', '.TIF', '.tiff', '.TIFF')
 
 
 class BaseSRDataset(BaseDataset):

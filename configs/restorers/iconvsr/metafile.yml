@@ -8,7 +8,7 @@ Collections:
   README: configs/restorers/iconvsr/README.md
 Models:
 - Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/iconvsr/iconvsr_reds.py
-  In Collection: README
+  In Collection: IconVSR
   Metadata:
     Training Data: REDS
   Name: https:----github.com--open-mmlab--mmediting--blob--master--restorers--iconvsr--iconvsr_reds
@@ -36,7 +36,7 @@ Models:
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
 - Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/iconvsr/iconvsr_vimeo90k_bi.py
-  In Collection: README
+  In Collection: IconVSR
   Metadata:
     Training Data: VIMEO90K
   Name: https:----github.com--open-mmlab--mmediting--blob--master--restorers--iconvsr--iconvsr_vimeo90k_bi
@@ -64,7 +64,7 @@ Models:
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413-7c7418dc.pth
 - Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/iconvsr/iconvsr_vimeo90k_bd.py
-  In Collection: README
+  In Collection: IconVSR
   Metadata:
     Training Data: VIMEO90K
   Name: https:----github.com--open-mmlab--mmediting--blob--master--restorers--iconvsr--iconvsr_vimeo90k_bd

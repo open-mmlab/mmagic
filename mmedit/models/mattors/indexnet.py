@@ -61,7 +61,7 @@ class IndexNet(BaseMattor):
             bg (Tensor): Tensor of background with shape (N, C, H, W).
 
         Returns:
-            dict: Contains the loss items and batch infomation.
+            dict: Contains the loss items and batch information.
         """
         pred_alpha = self.backbone(torch.cat((merged, trimap), 1))
 

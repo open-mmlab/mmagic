@@ -22,7 +22,7 @@ class SimpleGatedConvModule(nn.Module):
         in_channels (int): Same as nn.Conv2d.
         out_channels (int): The number of channels of the output feature. Note
             that `out_channels` in the conv module is doubled since this module
-            contains two convolutions for feature and gate seperately.
+            contains two convolutions for feature and gate separately.
         kernel_size (int or tuple[int]): Same as nn.Conv2d.
         feat_act_cfg (dict): Config dict for feature activation layer.
         gate_act_cfg (dict): Config dict for gate activation layer.

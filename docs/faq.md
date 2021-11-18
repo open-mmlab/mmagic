@@ -5,6 +5,7 @@
 Some intermediate variables are used in the configs files, like `train_pipeline`/`test_pipeline` in datasets.
 
 For example, we would like to first define the `train_pipeline`/`test_pipeline` and pass them into `data`. Thus, `train_pipeline`/`test_pipeline` are intermediate variable.
+
 ```python
 ...
 train_dataset_type = 'SRAnnotationDataset'

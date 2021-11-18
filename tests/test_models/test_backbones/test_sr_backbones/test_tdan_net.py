@@ -8,7 +8,7 @@ from mmedit.models.backbones.sr_backbones.tdan_net import TDANNet
 def test_tdan_net():
     """Test TDANNet."""
 
-    # gpu (DCN is avaialble only on GPU)
+    # gpu (DCN is available only on GPU)
     if torch.cuda.is_available():
         tdan = TDANNet().cuda()
         input_tensor = torch.rand(1, 5, 3, 64, 64).cuda()

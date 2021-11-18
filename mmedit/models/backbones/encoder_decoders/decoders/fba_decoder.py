@@ -59,7 +59,7 @@ class FBADecoder(nn.Module):
                         act_cfg=self.act_cfg).children())))
         self.ppm = nn.ModuleList(self.ppm)
 
-        # Follwed the author's implementation that
+        # Followed the author's implementation that
         # concatenate conv layers described in the supplementary
         # material between up operations
         self.conv_up1 = nn.Sequential(*(list(

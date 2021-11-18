@@ -177,7 +177,7 @@ class BasicVSRPlusPlus(nn.Module):
                 be 'backward_1', 'forward_1', 'backward_2', 'forward_2'.
 
         Return:
-            dict(list[tensor]): A dictionary containing all the propgated
+            dict(list[tensor]): A dictionary containing all the propagated
                 features. Each key in the dictionary corresponds to a
                 propagation branch, which is represented by a list of tensors.
         """

@@ -16,7 +16,7 @@ class AugmentedDeformConv2dPack(DeformConv2d):
     """Augmented Deformable Convolution Pack.
 
     Different from DeformConv2dPack, which generates offsets from the
-    preceeding feature, this AugmentedDeformConv2dPack takes another feature to
+    preceding feature, this AugmentedDeformConv2dPack takes another feature to
     generate the offsets.
 
     Args:
