@@ -11,7 +11,7 @@ Models:
   In Collection: GCA
   Metadata:
     Training Data: COMP1K
-  Name: gca
+  Name: baseline
   Results:
   - Dataset: COMP1K
     Metrics:
@@ -39,7 +39,7 @@ Models:
   In Collection: GCA
   Metadata:
     Training Data: COMP1K
-  Name: gca
+  Name: baseline_dimaug
   Results:
   - Dataset: COMP1K
     Metrics:
@@ -53,7 +53,7 @@ Models:
   In Collection: GCA
   Metadata:
     Training Data: COMP1K
-  Name: gca
+  Name: gca_dimaug
   Results:
   - Dataset: COMP1K
     Metrics:

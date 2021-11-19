@@ -11,7 +11,7 @@ Models:
   In Collection: ESRGAN
   Metadata:
     Training Data: DIV2K
-  Name: esrgan
+  Name: esrgan_psnr
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -30,7 +30,7 @@ Models:
   In Collection: ESRGAN
   Metadata:
     Training Data: DIV2K
-  Name: esrgan
+  Name: esrgan_400k
   Results:
   - Dataset: DIV2K
     Metrics:

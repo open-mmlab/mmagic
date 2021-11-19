@@ -11,7 +11,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: FACADES
-  Name: cyclegan
+  Name: cyclegan_80k
   Results:
   - Dataset: FACADES
     Metrics:
@@ -23,7 +23,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: FACADES
-  Name: cyclegan
+  Name: cyclegan_id0
   Results:
   - Dataset: FACADES
     Metrics:
@@ -35,7 +35,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
-  Name: cyclegan
+  Name: cyclegan_246200
   Results:
   - Dataset: SUMMER2WINTER
     Metrics:
@@ -47,7 +47,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
-  Name: cyclegan
+  Name: cyclegan_246200
   Results:
   - Dataset: SUMMER2WINTER
     Metrics:
@@ -59,7 +59,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
-  Name: cyclegan
+  Name: cyclegan_summer2winter
   Results:
   - Dataset: SUMMER2WINTER
     Metrics:
@@ -71,7 +71,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
-  Name: cyclegan
+  Name: cyclegan_summer2winter
   Results:
   - Dataset: SUMMER2WINTER
     Metrics:
@@ -83,7 +83,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
-  Name: cyclegan
+  Name: cyclegan_266800
   Results:
   - Dataset: HORSE2ZEBRA
     Metrics:
@@ -95,7 +95,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
-  Name: cyclegan
+  Name: cyclegan_horse2zebra
   Results:
   - Dataset: HORSE2ZEBRA
     Metrics:
@@ -107,7 +107,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
-  Name: cyclegan
+  Name: cyclegan_266800
   Results:
   - Dataset: HORSE2ZEBRA
     Metrics:
@@ -119,7 +119,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
-  Name: cyclegan
+  Name: cyclegan_horse2zebra
   Results:
   - Dataset: HORSE2ZEBRA
     Metrics:

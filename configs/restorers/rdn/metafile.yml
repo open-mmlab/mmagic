@@ -11,7 +11,7 @@ Models:
   In Collection: RDN
   Metadata:
     Training Data: DIV2K
-  Name: rdn
+  Name: rdn_x2c64b16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -30,7 +30,7 @@ Models:
   In Collection: RDN
   Metadata:
     Training Data: DIV2K
-  Name: rdn
+  Name: rdn_x3c64b16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -49,7 +49,7 @@ Models:
   In Collection: RDN
   Metadata:
     Training Data: DIV2K
-  Name: rdn
+  Name: rdn_x4c64b16
   Results:
   - Dataset: DIV2K
     Metrics:

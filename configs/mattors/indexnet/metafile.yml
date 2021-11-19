@@ -25,7 +25,7 @@ Models:
   In Collection: IndexNet
   Metadata:
     Training Data: COMP1K
-  Name: indexnet
+  Name: indexnet_dimaug
   Results:
   - Dataset: COMP1K
     Metrics:

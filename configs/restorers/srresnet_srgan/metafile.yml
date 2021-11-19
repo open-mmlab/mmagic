@@ -11,7 +11,7 @@ Models:
   In Collection: SRGAN
   Metadata:
     Training Data: DIV2K
-  Name: srresnet_srgan
+  Name: msrresnet
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -30,7 +30,7 @@ Models:
   In Collection: SRGAN
   Metadata:
     Training Data: DIV2K
-  Name: srresnet_srgan
+  Name: srgan
   Results:
   - Dataset: DIV2K
     Metrics:

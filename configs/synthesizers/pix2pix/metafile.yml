@@ -11,7 +11,7 @@ Models:
   In Collection: Pix2Pix
   Metadata:
     Training Data: FACADES
-  Name: pix2pix
+  Name: pix2pix_1x1
   Results:
   - Dataset: FACADES
     Metrics:
@@ -23,7 +23,7 @@ Models:
   In Collection: Pix2Pix
   Metadata:
     Training Data: MAPS
-  Name: pix2pix
+  Name: pix2pix_a2b
   Results:
   - Dataset: MAPS
     Metrics:
@@ -35,7 +35,7 @@ Models:
   In Collection: Pix2Pix
   Metadata:
     Training Data: MAPS
-  Name: pix2pix
+  Name: pix2pix_b2a
   Results:
   - Dataset: MAPS
     Metrics:
@@ -47,7 +47,7 @@ Models:
   In Collection: Pix2Pix
   Metadata:
     Training Data: EDGES2SHOES
-  Name: pix2pix
+  Name: pix2pix_wo
   Results:
   - Dataset: EDGES2SHOES
     Metrics:

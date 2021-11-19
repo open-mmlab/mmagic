@@ -11,7 +11,7 @@ Models:
   In Collection: EDVR
   Metadata:
     Training Data: REDS
-  Name: edvr
+  Name: edvrm_wotsa
   Results:
   - Dataset: REDS
     Metrics:
@@ -24,7 +24,7 @@ Models:
   In Collection: EDVR
   Metadata:
     Training Data: REDS
-  Name: edvr
+  Name: edvrm
   Results:
   - Dataset: REDS
     Metrics:

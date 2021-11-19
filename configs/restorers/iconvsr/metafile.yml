@@ -7,11 +7,11 @@ Collections:
   - https://arxiv.org/abs/2012.02181
   README: configs/restorers/iconvsr/README.md
 Models:
-- Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/iconvsr/iconvsr_reds.py
+- Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/iconvsr/iconvsr_reds4.py
   In Collection: IconVSR
   Metadata:
     Training Data: REDS
-  Name: ''
+  Name: iconvsr_reds4
   Results:
   - Dataset: REDS
     Metrics:
@@ -39,7 +39,7 @@ Models:
   In Collection: IconVSR
   Metadata:
     Training Data: VIMEO90K
-  Name: ''
+  Name: iconvsr_vimeo90k
   Results:
   - Dataset: VIMEO90K
     Metrics:
@@ -67,7 +67,7 @@ Models:
   In Collection: IconVSR
   Metadata:
     Training Data: VIMEO90K
-  Name: ''
+  Name: iconvsr_bd
   Results:
   - Dataset: VIMEO90K
     Metrics:

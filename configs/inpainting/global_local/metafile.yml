@@ -11,7 +11,7 @@ Models:
   In Collection: Global&Local
   Metadata:
     Training Data: PLACES
-  Name: global_local
+  Name: gl_places
   Results:
   - Dataset: PLACES
     Metrics:
@@ -24,7 +24,7 @@ Models:
   In Collection: Global&Local
   Metadata:
     Training Data: CELEBA
-  Name: global_local
+  Name: gl_celeba
   Results:
   - Dataset: CELEBA
     Metrics:

@@ -11,7 +11,7 @@ Models:
   In Collection: DIM
   Metadata:
     Training Data: COMP1K
-  Name: dim
+  Name: dim_stage1
   Results:
   - Dataset: COMP1K
     Metrics:
@@ -25,7 +25,7 @@ Models:
   In Collection: DIM
   Metadata:
     Training Data: COMP1K
-  Name: dim
+  Name: dim_stage2
   Results:
   - Dataset: COMP1K
     Metrics:
@@ -39,7 +39,7 @@ Models:
   In Collection: DIM
   Metadata:
     Training Data: COMP1K
-  Name: dim
+  Name: dim_stage3
   Results:
   - Dataset: COMP1K
     Metrics:

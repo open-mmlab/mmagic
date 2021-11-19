@@ -11,7 +11,7 @@ Models:
   In Collection: DIC
   Metadata:
     Training Data: CELEBA
-  Name: dic
+  Name: dic_150k
   Results:
   - Dataset: CELEBA
     Metrics:
@@ -24,7 +24,7 @@ Models:
   In Collection: DIC
   Metadata:
     Training Data: CELEBA
-  Name: dic
+  Name: dic_gan
   Results:
   - Dataset: CELEBA
     Metrics:

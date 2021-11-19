@@ -11,7 +11,7 @@ Models:
   In Collection: Real-ESRGAN
   Metadata:
     Training Data: Others
-  Name: real_esrgan
+  Name: realesrnet
   Results:
   - Dataset: Others
     Metrics:

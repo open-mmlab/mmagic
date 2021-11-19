@@ -7,10 +7,12 @@
 # detected before a commit.
 
 import glob
+import os
 import os.path as osp
 import re
 import sys
 import warnings
+from functools import reduce
 
 import mmcv
 
@@ -76,7 +78,7 @@ def get_task_name(md_file):
     """Get task name from README.md".
 
     Args:
-        md_file: Path to .md file.
+        md_file (str): Path to .md file.
 
     Returns:
         Str: Task name.
@@ -88,14 +90,49 @@ def get_task_name(md_file):
     return 'Unknown'
 
 
+def generate_unique_name(md_file):
+    """Search config files and return the unique name of them.
+    For Confin.Name.
+
+    Args:
+        md_file (str): Path to .md file.
+    Returns:
+        dict: dict of unique name for each config file.
+    """
+    files = os.listdir(osp.dirname(md_file))
+    config_files = [f[:-3] for f in files if f[-3:] == '.py']
+    config_files.sort(key=lambda x: len(x))
+    split_names = [f.split('_') for f in config_files]
+    config_sets = [set(f.split('_')) for f in config_files]
+    common_set = reduce(lambda x, y: x & y, config_sets)
+    unique_lists = [[n for n in name if n not in common_set]
+                    for name in split_names]
+
+    unique_dict = dict()
+    name_list = []
+    for i, f in enumerate(config_files):
+        base = split_names[i][0]
+        unique_dict[f] = base
+        if len(unique_lists[i]) > 0:
+            for unique in unique_lists[i]:
+                candidate_name = f'{base}_{unique}'
+                if candidate_name not in name_list and base != unique:
+                    unique_dict[f] = candidate_name
+                    name_list.append(candidate_name)
+                    break
+    return unique_dict
+
+
 def parse_md(md_file):
     """Parse .md file and convert it to a .yml file which can be used for MIM.
 
     Args:
-        md_file: Path to .md file.
+        md_file (str): Path to .md file.
     Returns:
         Bool: If the target YAML file is different from the original.
     """
+    unique_dict = generate_unique_name(md_file)
+
     collection_name = osp.splitext(osp.basename(md_file))[0]
     collection = dict(
         Name=collection_name,
@@ -125,7 +162,8 @@ def parse_md(md_file):
 
             # parse table
             elif lines[i][0] == '|' and i + 1 < len(lines) and \
-                    (lines[i + 1][:3] == '| :' or lines[i + 1][:2] == '|:'):
+                    (lines[i + 1][:3] == '| :' or lines[i + 1][:2] == '|:'
+                        or lines[i + 1][:2] == '|-'):
                 cols = [col.strip() for col in lines[i].split('|')][1:-1]
                 config_idx = cols.index('Method')
                 checkpoint_idx = cols.index('Download')
@@ -157,8 +195,14 @@ def parse_md(md_file):
                         right = line[checkpoint_idx].index(')', left)
                         checkpoint = line[checkpoint_idx][left:right]
 
-                    model_name = osp.splitext(config)[0].replace(
-                        'configs/', '', 1).split('/')[1]
+                    name_key = osp.splitext(osp.basename(config))[0]
+                    if name_key in unique_dict:
+                        model_name = unique_dict[name_key]
+                    else:
+                        model_name = name_key
+                        warnings.warn(
+                            f'Config file of {model_name} is not found,'
+                            'please check it again.')
 
                     # find dataset in config file
                     dataset = 'Others'
