@@ -7,7 +7,7 @@
 为了帮助用户对一个完整的配置有一个基本的了解，我们对我们实现的原始 DIM 模型的配置做一个简短的评论，如下所示。 更详细的用法和各个模块对应的替代方案，请参考 API 文档。
 
 ```python
-# model settings
+# 模型配置
 model = dict(
     type='DIM',  # 模型的名称（我们称之为抠图器）
     backbone=dict(  # 主干网络的配置
@@ -30,7 +30,7 @@ test_cfg = dict(  # 测试 DIM 模型的配置
     refine=False,  # 是否使用精炼器输出作为输出，在 stage 1 中，我们不使用它
     metrics=['SAD', 'MSE', 'GRAD', 'CONN'])  # 测试时使用的指标
 
-# data settings
+# 数据配置
 dataset_type = 'AdobeComp1kDataset'  # 数据集类型，这将用于定义数据集
 data_root = 'data/adobe_composition-1k'  # 数据的根目录
 img_norm_cfg = dict(  # 归一化输入图像的配置
@@ -143,7 +143,7 @@ optimizers = dict(type='Adam', lr=0.00001)  # 用于构建优化器的配置，�
 lr_config = dict(  # 用于注册 LrUpdater 钩子的学习率调度程序配置
     policy='Fixed')  # 调度器的策略，支持 CosineAnnealing、Cyclic 等。支持的 LrUpdater 详情请参考 https://github.com/open-mmlab/mmcv/blob/master/mmcv/runner/hooks/lr_updater.py#L9。
 
-# checkpoint saving
+# 检查点保存
 checkpoint_config = dict(  # 配置检查点钩子，实现参考 https://github.com/open-mmlab/mmcv/blob/master/mmcv/runner/hooks/checkpoint.py
     interval=40000,  # 保存间隔为 40000 次迭代
     by_epoch=False)  # 按迭代计数
