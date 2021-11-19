@@ -6,9 +6,9 @@
 
 MMEditing 使用 `MMDistributedDataParallel` 实现 **分布式**测试。
 
-#### 在单/多 GPU 上进行测试
+#### 在单/多个 GPU 上进行测试
 
-您可以使用以下命令在单/多 GPU 上测试预训练模型。
+您可以使用以下命令在单/多个 GPU 上测试预训练模型。
 
 ```shell
 # 单 GPU 测试
@@ -36,7 +36,7 @@ python tools/test.py configs/example_config.py work_dirs/example_exp/example_mod
 [GPUS=${GPUS}] ./tools/slurm_test.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${CHECKPOINT_FILE}
 ```
 
-以下是使用 8 个 GPU 在作业名称为 “test” 的 “dev” 分区上测试示例模型的例子。
+以下是使用 8 个 GPU 在作业名称为 `test` 的 `dev` 分区上测试示例模型的例子。
 
 ```shell
 GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/example_exp/example_model_20200202.pth
@@ -58,7 +58,7 @@ GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/exampl
 MMEditing 使用 `MMDistributedDataParallel` 实现 **分布式**测试。
 
 所有输出（日志文件和模型权重文件）都将保存到工作目录中，
-工作目录由配置文件中的“work_dir”指定。
+工作目录由配置文件中的 `work_dir` 指定。
 
 默认情况下，我们在多次迭代后评估验证集上的模型，您可以通过在训练配置中添加 `interval` 参数来更改评估间隔。
 
@@ -66,7 +66,7 @@ MMEditing 使用 `MMDistributedDataParallel` 实现 **分布式**测试。
 evaluation = dict(interval=1e4, by_epoch=False)  # 每一万次迭代进行一次评估。
 ```
 
-### 在单/多 GPU 上训练
+### 在单/多个 GPU 上训练
 
 ```shell
 ./tools/dist_train.sh ${CONFIG_FILE} ${GPU_NUM} [optional arguments]
@@ -90,7 +90,7 @@ evaluation = dict(interval=1e4, by_epoch=False)  # 每一万次迭代进行一�
 [GPUS=${GPUS}] ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${WORK_DIR}
 ```
 
-以下是使用 8 个 GPU 在 dev 分区上训练*修复*模型的示例。
+以下是使用 8 个 GPU 在 `dev` 分区上训练*修复*模型的示例。
 
 ```shell
 GPUS=8 ./tools/slurm_train.sh dev configs/inpainting/gl_places.py /nfs/xxxx/gl_places_256
