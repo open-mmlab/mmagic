@@ -18,20 +18,20 @@
 
 <br/>
 
-|                                   Method                                   |   SAD    |    MSE    |   GRAD   |   CONN   |                                                                                                                              Download                                                                                                                               |
+|                                   算法                                   |   SAD    |    MSE    |   GRAD   |   CONN   |                                                                                                                              下载                                                                                                                               |
 | :------------------------------------------------------------------------: | :------: | :-------: | :------: | :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                               stage1 (paper)                               |   54.6   |   0.017   |   36.7   |   55.3   |                                                                                                                                  -                                                                                                                                  |
-|                               stage3 (paper)                               | **50.4** | **0.014** |   31.0   |   50.8   |                                                                                                                                  -                                                                                                                                  |
-|   [stage1 (our)](/configs/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k.py)   |   53.8   |   0.017   |   32.7   |   54.5   |     [model](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_SAD-53.8_20200605_140257-979a420f.pth) \| [log](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_20200605_140257.log.json)     |
-| [stage2 (our)](/configs/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k.py) |   52.3   |   0.016   |   29.4   |   52.4   | [model](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_SAD-52.3_20200607_171909-d83c4775.pth) \| [log](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_20200607_171909.log.json) |
-| [stage3 (our)](/configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py) |   50.6   |   0.015   | **29.0** | **50.7** | [model](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth) \| [log](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_20200609_111851.log.json) |
+|                               第一阶段 (原文)                               |   54.6   |   0.017   |   36.7   |   55.3   |                                                                                                                                  -                                                                                                                                  |
+|                               第三阶段 (原文)                               | **50.4** | **0.014** |   31.0   |   50.8   |                                                                                                                                  -                                                                                                                                  |
+|   [第一阶段 (复现)](/configs/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k.py)   |   53.8   |   0.017   |   32.7   |   54.5   |     [模型](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_SAD-53.8_20200605_140257-979a420f.pth) \| [日志](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_20200605_140257.log.json)     |
+| [第二阶段 (复现)](/configs/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k.py) |   52.3   |   0.016   |   29.4   |   52.4   | [模型](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_SAD-52.3_20200607_171909-d83c4775.pth) \| [日志](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_20200607_171909.log.json) |
+| [第三阶段 (复现)](/configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py) |   50.6   |   0.015   | **29.0** | **50.7** | [模型](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth) \| [日志](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_20200609_111851.log.json) |
 
-**NOTE**
+**注**
 
-* stage1: train the encoder-decoder part without the refinement part. \
-* stage2: fix the encoder-decoder part and train the refinement part. \
-* stage3: fine-tune the whole network.
+* 第一阶段：训练不带精炼器的编码器-解码器部分。 \
+* 第二阶段：固定编码器-解码器部分，训练精炼器部分。 \
+* 第三阶段：微调整个网络模型。
 
-> The performance of the model is not stable during the training. Thus, the reported performance is not from the last checkpoint. Instead, it is the best performance of all validations during training.
+> 模型在训练过程中的性能不稳定。因此，展示的性能并非来自最后一个模型权重文件，而是训练期间在验证集上取得的最佳性能。
 
-> The performance of training (best performance) with different random seeds diverges in a large range. You may need to run several experiments for each setting to obtain the above performance.
+> 不同随机种子的训练性能（最佳性能）的发散程度很大，您可能需要为每个设置运行多个实验以获得上述性能。
