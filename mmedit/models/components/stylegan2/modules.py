@@ -544,7 +544,7 @@ class ModulatedPEConv2d(nn.Module):
     #. ``style_bias`` is provided to check the difference between official TF
        implementation and other PyTorch implementation.
        In TF, Tero explicitly add the ``1.`` after style code, while unofficial
-       implementation adopts bias initalization with ``1.``.
+       implementation adopts bias initialization with ``1.``.
        Details can be found in:
        https://github.com/rosinality/stylegan2-pytorch/blob/master/model.py#L214
        https://github.com/NVlabs/stylegan2/blob/master/training/networks_stylegan2.py#L99

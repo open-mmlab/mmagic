@@ -1,15 +1,15 @@
-## Inference with pretrained models
+## Inference with pre-trained models
 
-We provide testing scripts to evaluate a whole dataset,
+We provide testing scripts to evaluate pre-trained models on a whole dataset,
 as well as some task-specific image demos.
 
-### Test a dataset
+### Test a pre-trained model
 
 MMEditing implements **distributed** testing with `MMDistributedDataParallel`.
 
 #### Test with single/multiple GPUs
 
-You can use the following commands to test a dataset with single/multiple GPUs.
+You can use the following commands to test a pre-trained model with single/multiple GPUs.
 
 ```shell
 # single-gpu testing
@@ -80,7 +80,7 @@ Optional arguments are:
 
 Difference between `resume-from` and `load-from`:
 `resume-from` loads both the model weights and optimizer status, and the iteration is also inherited from the specified checkpoint. It is usually used for resuming the training process that is interrupted accidentally.
-`load-from` only loads the model weights and the training iteration starts from 0. It is usually used for finetuning.
+`load-from` only loads the model weights and the training iteration starts from 0. It is usually used for fine-tuning.
 
 ### Train with Slurm
 

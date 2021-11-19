@@ -8,7 +8,7 @@ Collections:
   README: configs/restorers/edvr/README.md
 Models:
 - Config: configs/restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py
-  In Collection: README
+  In Collection: EDVR
   Metadata:
     Training Data: REDS
   Name: restorers--edvr--edvrm_wotsa_x4_g8_600k_reds
@@ -21,7 +21,7 @@ Models:
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth
 - Config: configs/restorers/edvr/edvrm_x4_g8_600k_reds.py
-  In Collection: README
+  In Collection: EDVR
   Metadata:
     Training Data: REDS
   Name: restorers--edvr--edvrm_x4_g8_600k_reds

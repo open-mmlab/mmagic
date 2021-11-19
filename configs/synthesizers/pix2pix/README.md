@@ -33,8 +33,12 @@ We use `FID` and `IS` metrics to evaluate the generation performance of pix2pix.
 | official average | 111.678 | 2.624 | - |
 | ours average | **106.139** | **2.664** | - |
 
-Note: we strictly follow the [paper](http://openaccess.thecvf.com/content_cvpr_2017/papers/Isola_Image-To-Image_Translation_With_CVPR_2017_paper.pdf) setting in Section 3.3: "*At inference time, we run the generator net in exactly
+Note: we strictly follow the [paper](http://openaccess.thecvf.com/content_cvpr_2017/papers/Isola_Image-To-Image_Translation_With_CVPR_2017_paper.pdf) setting in Section 3.3:
+
+"*At inference time, we run the generator net in exactly
 the same manner as during the training phase. This differs
 from the usual protocol in that we apply dropout at test time,
 and we apply batch normalization using the statistics of
-the test batch, rather than aggregated statistics of the training batch.*" (i.e., use model.train() mode), thus may lead to slightly different inference results every time.
+the test batch, rather than aggregated statistics of the training batch.*"
+
+i.e., `use model.train()` mode, thus may lead to slightly different inference results every time.

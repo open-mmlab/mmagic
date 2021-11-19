@@ -8,7 +8,7 @@ Collections:
   README: configs/mattors/indexnet/README.md
 Models:
 - Config: configs/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k.py
-  In Collection: README
+  In Collection: IndexNet
   Metadata:
     Training Data: COMP1K
   Name: mattors--indexnet--indexnet_mobv2_1x16_78k_comp1k
@@ -22,7 +22,7 @@ Models:
     Task: mattors
   Weights: https://download.openmmlab.com/mmediting/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k_SAD-45.6_20200618_173817-26dd258d.pth
 - Config: configs/mattors/indexnet/indexnet_dimaug_mobv2_1x16_78k_comp1k.py
-  In Collection: README
+  In Collection: IndexNet
   Metadata:
     Training Data: COMP1K
   Name: mattors--indexnet--indexnet_dimaug_mobv2_1x16_78k_comp1k

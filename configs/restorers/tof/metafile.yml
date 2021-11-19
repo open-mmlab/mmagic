@@ -8,7 +8,7 @@ Collections:
   README: configs/restorers/tof/README.md
 Models:
 - Config: configs/restorers/tof/tof_x4_vimeo90k_official.py
-  In Collection: README
+  In Collection: TOFlow
   Metadata:
     Training Data: VIMEO90K
   Name: restorers--tof--tof_x4_vimeo90k_official

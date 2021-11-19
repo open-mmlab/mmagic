@@ -27,7 +27,7 @@ class GLEANStyleGANv2(nn.Module):
     in: Analyzing and Improving the Image Quality of StyleGAN CVPR2020.
 
     You can load pretrained model through passing information into
-    ``pretrained`` argument. We have already offered offical weights as
+    ``pretrained`` argument. We have already offered official weights as
     follows:
 
     - styelgan2-ffhq-config-f: http://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth  # noqa
@@ -77,7 +77,7 @@ class GLEANStyleGANv2(nn.Module):
             currently supported. Defaults to 'mix'.
         eval_style_mode (str, optional): The evaluation mode of style mixing.
             Defaults to 'single'.
-        mix_prob (float, optional): Mixing probabilty. The value should be
+        mix_prob (float, optional): Mixing probability. The value should be
             in range of [0, 1]. Defaults to 0.9.
         pretrained (dict | None, optional): Information for pretained models.
             The necessary key is 'ckpt_path'. Besides, you can also provide

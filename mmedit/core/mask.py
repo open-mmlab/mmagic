@@ -102,7 +102,7 @@ def bbox2mask(img_shape, bbox, dtype='uint8'):
 
 
 def brush_stroke_mask(img_shape,
-                      num_vertexes=(4, 12),
+                      num_vertices=(4, 12),
                       mean_angle=2 * math.pi / 5,
                       angle_range=2 * math.pi / 15,
                       brush_width=(12, 40),
@@ -123,8 +123,8 @@ def brush_stroke_mask(img_shape,
 
     Args:
         img_shape (tuple[int]): Size of the image.
-        num_vertexes (int | tuple[int]): Min and max number of vertexes. If
-            only give an integer, we will fix the number of vertexes.
+        num_vertices (int | tuple[int]): Min and max number of vertices. If
+            only give an integer, we will fix the number of vertices.
             Default: (4, 12).
         mean_angle (float): Mean value of the angle in each vertex. The angle
             is measured in radians. Default: 2 * math.pi / 5.
@@ -141,13 +141,13 @@ def brush_stroke_mask(img_shape,
     """
 
     img_h, img_w = img_shape[:2]
-    if isinstance(num_vertexes, int):
-        min_num_vertexes, max_num_vertexes = num_vertexes, num_vertexes + 1
-    elif isinstance(num_vertexes, tuple):
-        min_num_vertexes, max_num_vertexes = num_vertexes
+    if isinstance(num_vertices, int):
+        min_num_vertices, max_num_vertices = num_vertices, num_vertices + 1
+    elif isinstance(num_vertices, tuple):
+        min_num_vertices, max_num_vertices = num_vertices
     else:
-        raise TypeError('The type of num_vertexes should be int'
-                        f'or tuple[int], but got type: {num_vertexes}')
+        raise TypeError('The type of num_vertices should be int'
+                        f'or tuple[int], but got type: {num_vertices}')
 
     if isinstance(brush_width, tuple):
         min_width, max_width = brush_width
@@ -162,7 +162,7 @@ def brush_stroke_mask(img_shape,
 
     loop_num = np.random.randint(1, max_loops)
     num_vertex_list = np.random.randint(
-        min_num_vertexes, max_num_vertexes, size=loop_num)
+        min_num_vertices, max_num_vertices, size=loop_num)
     angle_min_list = np.random.uniform(0, angle_range, size=loop_num)
     angle_max_list = np.random.uniform(0, angle_range, size=loop_num)
 
@@ -180,7 +180,7 @@ def brush_stroke_mask(img_shape,
 
         h, w = mask.size
 
-        # set random vertexes
+        # set random vertices
         vertex.append((np.random.randint(0, w), np.random.randint(0, h)))
         r_list = np.random.normal(
             loc=average_radius, scale=average_radius // 2, size=num_vertex)
@@ -208,7 +208,7 @@ def brush_stroke_mask(img_shape,
 
 
 def random_irregular_mask(img_shape,
-                          num_vertexes=(4, 8),
+                          num_vertices=(4, 8),
                           max_angle=4,
                           length_range=(10, 100),
                           brush_width=(10, 40),
@@ -225,8 +225,8 @@ def random_irregular_mask(img_shape,
 
     Args:
         img_shape (tuple[int]): Size of the image.
-        num_vertexes (int | tuple[int]): Min and max number of vertexes. If
-            only give an integer, we will fix the number of vertexes.
+        num_vertices (int | tuple[int]): Min and max number of vertices. If
+            only give an integer, we will fix the number of vertices.
             Default: (4, 8).
         max_angle (float): Max value of angle at each vertex. Default 4.0.
         length_range (int | tuple[int]): (min_length, max_length). If only give
@@ -249,13 +249,13 @@ def random_irregular_mask(img_shape,
     else:
         raise TypeError('The type of length_range should be int'
                         f'or tuple[int], but got type: {length_range}')
-    if isinstance(num_vertexes, int):
-        min_num_vertexes, max_num_vertexes = num_vertexes, num_vertexes + 1
-    elif isinstance(num_vertexes, tuple):
-        min_num_vertexes, max_num_vertexes = num_vertexes
+    if isinstance(num_vertices, int):
+        min_num_vertices, max_num_vertices = num_vertices, num_vertices + 1
+    elif isinstance(num_vertices, tuple):
+        min_num_vertices, max_num_vertices = num_vertices
     else:
-        raise TypeError('The type of num_vertexes should be int'
-                        f'or tuple[int], but got type: {num_vertexes}')
+        raise TypeError('The type of num_vertices should be int'
+                        f'or tuple[int], but got type: {num_vertices}')
 
     if isinstance(brush_width, int):
         min_brush_width, max_brush_width = brush_width, brush_width + 1
@@ -265,7 +265,7 @@ def random_irregular_mask(img_shape,
         raise TypeError('The type of brush_width should be int'
                         f'or tuple[int], but got type: {brush_width}')
 
-    num_v = np.random.randint(min_num_vertexes, max_num_vertexes)
+    num_v = np.random.randint(min_num_vertices, max_num_vertices)
 
     for i in range(num_v):
         start_x = np.random.randint(w)

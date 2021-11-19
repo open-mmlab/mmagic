@@ -5,7 +5,7 @@ from .augmentation import (BinarizeImage, CopyValues, Flip,
                            GenerateSegmentIndices, MirrorSequence, Pad,
                            Quantize, RandomAffine, RandomJitter,
                            RandomMaskDilation, RandomTransposeHW, Resize,
-                           TemporalReverse)
+                           TemporalReverse, UnsharpMasking)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    CropLike, FixedCrop, ModCrop, PairedRandomCrop)
@@ -40,5 +40,5 @@ __all__ = [
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
     'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
     'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
-    'DegradationsWithShuffle', 'RandomResize'
+    'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking'
 ]

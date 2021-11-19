@@ -235,7 +235,7 @@ class LoadMask:
 
         config = dict(
             img_shape=(256, 256),
-            num_vertexes=(4, 12),
+            num_vertices=(4, 12),
             max_angle=4.,
             length_range=(10, 100),
             brush_width=(10, 40),
@@ -247,7 +247,7 @@ class LoadMask:
 
         config = dict(
             img_shape=(256, 256),
-            num_vertexes=(4, 12),
+            num_vertices=(4, 12),
             mean_angle=1.2,
             angle_range=0.4,
             brush_width=(12, 40))
