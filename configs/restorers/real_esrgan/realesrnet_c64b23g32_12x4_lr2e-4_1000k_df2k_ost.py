@@ -126,7 +126,7 @@ train_pipeline = [
                 dict(
                     type='RandomResize',
                     params=dict(
-                        target_size=[100, 100],
+                        target_size=(100, 100),
                         resize_opt=['bilinear', 'area', 'bicubic'],
                         resize_prob=[1 / 3., 1 / 3., 1 / 3.]),
                 ),
