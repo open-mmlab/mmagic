@@ -53,7 +53,7 @@ def extract_subimages(opt):
     """
     input_folder = opt['input_folder']
     save_folder = opt['save_folder']
-    if not mmcv.mkdir_or_exist(save_folder):
+    if not osp.exists(save_folder):
         os.makedirs(save_folder)
         print(f'mkdir {save_folder} ...')
     else:
