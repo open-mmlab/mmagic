@@ -111,7 +111,7 @@ def test_random_resize():
             resize_scale=[0.5, 1.5],
             resize_opt=['bilinear', 'area', 'bicubic'],
             resize_prob=[1 / 3., 1 / 3., 1 / 3.],
-            target_size=[16, 16]),
+            target_size=(16, 16)),
         keys=['lq'])
     results = model(results)
     assert results['lq'].shape == (16, 16, 3)
@@ -302,7 +302,7 @@ def test_degradations_with_shuffle():
                     resize_scale=[0.5, 1.5],
                     resize_opt=['bilinear', 'area', 'bicubic'],
                     resize_prob=[1 / 3., 1 / 3., 1 / 3.],
-                    target_size=[16, 16])),
+                    target_size=(16, 16))),
             [
                 dict(
                     type='RandomJPEGCompression',
@@ -335,7 +335,7 @@ def test_degradations_with_shuffle():
                 resize_scale=[0.5, 1.5],
                 resize_opt=['bilinear', 'area', 'bicubic'],
                 resize_prob=[1 / 3., 1 / 3., 1 / 3.],
-                target_size=[16, 16])),
+                target_size=(16, 16))),
         [
             dict(type='RandomJPEGCompression', params=dict(quality=[5, 10])),
             dict(type='RandomJPEGCompression', params=dict(quality=[15, 20]))
