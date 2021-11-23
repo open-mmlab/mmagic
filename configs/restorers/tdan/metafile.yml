@@ -7,11 +7,11 @@ Collections:
   - https://arxiv.org/abs/1812.02898
   README: configs/restorers/tdan/README.md
 Models:
-- Config: configs/restorers/tdan/tdan_vimeo90k_bix4.py
+- Config: configs/restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py
   In Collection: TDAN
   Metadata:
     Training Data: VIMEO90K
-  Name: restorers--tdan--tdan_vimeo90k_bix4
+  Name: restorers--tdan--tdan_vimeo90k_bix4_ft_lr5e-5_400k
   Results:
   - Dataset: VIMEO90K
     Metrics:
@@ -29,11 +29,11 @@ Models:
         SSIM: 0.792
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
-- Config: configs/restorers/tdan/tdan_vimeo90k_bdx4.py
+- Config: configs/restorers/tdan/tdan_vimeo90k_bdx4_ft_lr5e-5_800k.py
   In Collection: TDAN
   Metadata:
     Training Data: VIMEO90K
-  Name: restorers--tdan--tdan_vimeo90k_bdx4
+  Name: restorers--tdan--tdan_vimeo90k_bdx4_ft_lr5e-5_800k
   Results:
   - Dataset: VIMEO90K
     Metrics:
