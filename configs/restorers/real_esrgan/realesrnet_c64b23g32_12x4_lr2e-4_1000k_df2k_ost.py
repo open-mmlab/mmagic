@@ -33,7 +33,7 @@ train_pipeline = [
     dict(
         type='UnsharpMasking',
         keys=['gt'],
-        radius=50,
+        kernel_size=50,
         sigma=0,
         weight=0.5,
         threshold=10),
@@ -153,7 +153,7 @@ train_pipeline = [
     dict(
         type='UnsharpMasking',
         keys=['gt'],
-        radius=50,
+        kernel_size=50,
         sigma=0,
         weight=0.5,
         threshold=10),
