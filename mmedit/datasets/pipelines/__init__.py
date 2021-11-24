@@ -1,8 +1,8 @@
 from .augmentation import (BinarizeImage, Flip, GenerateFrameIndices,
                            GenerateFrameIndiceswithPadding,
                            GenerateSegmentIndices, MirrorSequence, Pad,
-                           RandomAffine, RandomJitter, RandomMaskDilation,
-                           RandomTransposeHW, Resize, TemporalReverse)
+                           RandomAffine, RandomJitter, ColorJitter, RandomMaskDilation,
+                           RandomTransposeHW, Resize, RandomResizedCrop, TemporalReverse)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    FixedCrop, ModCrop, PairedRandomCrop)
@@ -22,8 +22,8 @@ __all__ = [
     'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadMask',
     'RandomLoadResizeBg', 'Compose', 'ImageToTensor', 'ToTensor',
     'GetMaskedImage', 'BinarizeImage', 'Flip', 'Pad', 'RandomAffine',
-    'RandomJitter', 'RandomMaskDilation', 'RandomTransposeHW', 'Resize',
-    'Crop', 'CropAroundCenter', 'CropAroundUnknown', 'ModCrop',
+    'RandomJitter', 'ColorJitter', 'RandomMaskDilation', 'RandomTransposeHW', 'Resize',
+    'RandomResizedCrop', 'Crop', 'CropAroundCenter', 'CropAroundUnknown', 'ModCrop',
     'PairedRandomCrop', 'Normalize', 'RescaleToZeroOne', 'GenerateTrimap',
     'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList',
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
