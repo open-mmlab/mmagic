@@ -39,6 +39,7 @@ def dump_yaml_and_check_difference(obj, file):
 
     if osp.isfile(file):
         file_exists = True
+        print(f'    exist {file}')
         with open(file, 'r', encoding='utf-8') as f:
             str_orig = f.read()
     else:
@@ -49,6 +50,7 @@ def dump_yaml_and_check_difference(obj, file):
         is_different = False
     else:
         is_different = True
+        print(f'    update {file}')
         with open(file, 'w', encoding='utf-8') as f:
             f.write(str_dump)
 
@@ -303,6 +305,7 @@ if __name__ == '__main__':
 
     file_modified = False
     for fn in file_list:
+        print(f'process {fn}')
         file_modified |= parse_md(fn)
 
     file_modified |= update_model_index()
