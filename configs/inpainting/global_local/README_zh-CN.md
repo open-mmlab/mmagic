@@ -21,16 +21,16 @@
 
 <br/>
 
-*Note that we do not apply the post-processing module in Global&Local for a fair comparison with current deep inpainting methods.*
+*请注意，为了与当前的深度图像修复方法进行公平比较，我们没有在 Global&Local 中使用后处理模块。*
 
 **Places365-Challenge**
 
-|                                  Method                                   |  Mask Type  | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |                                                                                                                      Download                                                                                                                       |
+|                                    算法                                    |  掩膜类型  | 分辨率 | 训练集容量 |   测试集    | l1 损失 |  PSNR  | SSIM  |                                                                                                                           下载                                                                                                                            |
 | :-----------------------------------------------------------------------: | :---------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [Global&Local](/configs/inpainting/global_local/gl_256x256_8x12_places.py) | square bbox |  256x256   |    500k     | Places365-val |  11.164  | 23.152 | 0.862 | [model](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.log.json) |
+| [Global&Local](/configs/inpainting/global_local/gl_256x256_8x12_places.py) | square bbox |  256x256   |    500k     | Places365-val |  11.164  | 23.152 | 0.862 | [模型](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.log.json) |
 
 **CelebA-HQ**
 
-|                                  Method                                   |  Mask Type  | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  |                                                                                                                      Download                                                                                                                       |
+|                                    算法                                    |  掩膜类型  | 分辨率 | 训练集容量 |   测试集    | l1 损失 |  PSNR  | SSIM  |                                                                                                                           下载                                                                                                                            |
 | :-----------------------------------------------------------------------: | :---------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [Global&Local](/configs/inpainting/global_local/gl_256x256_8x12_celeba.py) | square bbox |  256x256   |    500k     | CelebA-val |  6.678   | 26.780 | 0.904 | [model](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.log.json) |
+| [Global&Local](/configs/inpainting/global_local/gl_256x256_8x12_celeba.py) | square bbox |  256x256   |    500k     | CelebA-val |  6.678   | 26.780 | 0.904 | [模型](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.log.json) |

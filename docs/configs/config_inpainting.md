@@ -132,7 +132,7 @@ log_config = dict(  # config to register logger hook
         # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
     ])  # The logger used to record the training process.
 
-visual_config = dict(  # config to register logger hook
+visual_config = dict(  # config to register visualization hook
     type='VisualizationHook',
     output_dir='visual',
     interval=1000,

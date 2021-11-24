@@ -93,7 +93,7 @@ train_pipeline = [
     dict(
         type='RandomResize',
         params=dict(
-            target_size=[1024, 1024],
+            target_size=(1024, 1024),
             resize_opt=['bilinear', 'area', 'bicubic'],
             resize_prob=[1 / 3., 1 / 3., 1 / 3.]),
         keys=['lq'],
@@ -102,7 +102,7 @@ train_pipeline = [
     dict(
         type='RandomResize',
         params=dict(
-            target_size=[128, 128], resize_opt=['area'], resize_prob=[1]),
+            target_size=(128, 128), resize_opt=['area'], resize_prob=[1]),
         keys=['lq'],
     ),
     dict(
@@ -136,7 +136,7 @@ demo_pipeline = [
     dict(
         type='RandomResize',
         params=dict(
-            target_size=[128, 128], resize_opt=['area'], resize_prob=[1]),
+            target_size=(128, 128), resize_opt=['area'], resize_prob=[1]),
         keys=['lq'],
     ),
     dict(type='RescaleToZeroOne', keys=['lq']),

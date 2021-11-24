@@ -33,7 +33,7 @@ train_pipeline = [
     dict(
         type='UnsharpMasking',
         keys=['gt'],
-        radius=50,
+        kernel_size=51,
         sigma=0,
         weight=0.5,
         threshold=10),
@@ -126,7 +126,7 @@ train_pipeline = [
                 dict(
                     type='RandomResize',
                     params=dict(
-                        target_size=[100, 100],
+                        target_size=(100, 100),
                         resize_opt=['bilinear', 'area', 'bicubic'],
                         resize_prob=[1 / 3., 1 / 3., 1 / 3.]),
                 ),
@@ -153,7 +153,7 @@ train_pipeline = [
     dict(
         type='UnsharpMasking',
         keys=['gt'],
-        radius=50,
+        kernel_size=51,
         sigma=0,
         weight=0.5,
         threshold=10),
