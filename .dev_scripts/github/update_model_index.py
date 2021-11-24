@@ -101,6 +101,7 @@ def generate_unique_name(md_file):
     """
     files = os.listdir(osp.dirname(md_file))
     config_files = [f[:-3] for f in files if f[-3:] == '.py']
+    config_files.sort()
     config_files.sort(key=lambda x: len(x))
     split_names = [f.split('_') for f in config_files]
     config_sets = [set(f.split('_')) for f in config_files]
