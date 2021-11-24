@@ -5,7 +5,6 @@ import os.path as osp
 import cv2
 import mmcv
 import numpy as np
-import torch
 import torchvision.transforms as transforms
 from PIL import Image
 
@@ -147,15 +146,15 @@ class Resize:
             f'max_size={self.max_size},interpolation={self.interpolation})')
         return repr_str
 
+
 @PIPELINES.register_module()
 class RandomResizedCrop:
-    def __init__(self,
-                 keys,
-                 crop_size):
+
+    def __init__(self, keys, crop_size):
         assert keys, 'Keys should not be empty.'
         self.keys = keys
         self.crop_size = crop_size
-    
+
     def __call__(self, results):
         """Call function.
 
@@ -171,27 +170,26 @@ class RandomResizedCrop:
                 results[k] = transforms.ToPILImage()(results[k]).convert('RGB')
             elif k == 'mask':
                 results[k] = transforms.ToPILImage()(results[k]).convert('L')
-            results[k] = transforms.RandomResizedCrop(self.crop_size)(results[k])
+            results[k] = transforms.RandomResizedCrop(self.crop_size)(
+                results[k])
             results[k] = np.array(results[k])
         results['crop_size'] = self.crop_size
         return results
-        
+
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (
-            f'(keys={self.keys}, crop_size={self.crop_size}, '
-            )
+        repr_str += (f'(keys={self.keys}, crop_size={self.crop_size}, ')
         return repr_str
+
 
 @PIPELINES.register_module()
 class RandomRotation:
-    def __init__(self,
-                 keys,
-                 degrees):
+
+    def __init__(self, keys, degrees):
         assert keys, 'Keys should not be empty.'
         self.keys = keys
         self.degrees = degrees
-    
+
     def __call__(self, results):
         """Call function.
 
@@ -202,25 +200,24 @@ class RandomRotation:
         Returns:
             dict: A dict containing the processed data and information.
         """
-        import torchvision.transforms.functional as F
         for k in self.keys:
             if k == 'gt_img':
                 results[k] = transforms.ToPILImage()(results[k]).convert('RGB')
             elif k == 'mask':
                 results[k] = transforms.ToPILImage()(results[k]).convert('L')
-            results[k] = transforms.RandomRotation(degrees=self.degrees)(results[k])
+            results[k] = transforms.RandomRotation(degrees=self.degrees)(
+                results[k])
             results[k] = np.array(results[k])
             if results[k].ndim == 2:
                 results[k] = np.expand_dims(results[k], axis=2)
         results['degrees'] = self.degrees
         return results
-        
+
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (
-            f'(keys={self.keys}, degrees={self.degrees}, '
-            )
+        repr_str += (f'(keys={self.keys}, degrees={self.degrees}, ')
         return repr_str
+
 
 @PIPELINES.register_module()
 class Flip:
@@ -644,6 +641,7 @@ class ColorJitter:
     def __repr__(self):
         repr_str = self.__class__.__name__
         return repr_str
+
 
 class BinarizeImage:
     """Binarize image.

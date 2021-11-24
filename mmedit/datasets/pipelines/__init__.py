@@ -1,8 +1,8 @@
-from .augmentation import (BinarizeImage, Flip, GenerateFrameIndices,
-                           GenerateFrameIndiceswithPadding,
-                           GenerateSegmentIndices, MirrorSequence, Pad,
-                           RandomAffine, RandomJitter, ColorJitter, RandomMaskDilation,
-                           RandomTransposeHW, Resize, RandomResizedCrop, TemporalReverse)
+from .augmentation import (
+    BinarizeImage, ColorJitter, Flip, GenerateFrameIndices,
+    GenerateFrameIndiceswithPadding, GenerateSegmentIndices, MirrorSequence,
+    Pad, RandomAffine, RandomJitter, RandomMaskDilation, RandomResizedCrop,
+    RandomTransposeHW, Resize, TemporalReverse)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    FixedCrop, ModCrop, PairedRandomCrop)
@@ -22,13 +22,14 @@ __all__ = [
     'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadMask',
     'RandomLoadResizeBg', 'Compose', 'ImageToTensor', 'ToTensor',
     'GetMaskedImage', 'BinarizeImage', 'Flip', 'Pad', 'RandomAffine',
-    'RandomJitter', 'ColorJitter', 'RandomMaskDilation', 'RandomTransposeHW', 'Resize',
-    'RandomResizedCrop', 'Crop', 'CropAroundCenter', 'CropAroundUnknown', 'ModCrop',
-    'PairedRandomCrop', 'Normalize', 'RescaleToZeroOne', 'GenerateTrimap',
-    'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList',
-    'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
-    'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
-    'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
+    'RandomJitter', 'ColorJitter', 'RandomMaskDilation', 'RandomTransposeHW',
+    'Resize', 'RandomResizedCrop', 'Crop', 'CropAroundCenter',
+    'CropAroundUnknown', 'ModCrop', 'PairedRandomCrop', 'Normalize',
+    'RescaleToZeroOne', 'GenerateTrimap', 'MergeFgAndBg', 'CompositeFg',
+    'TemporalReverse', 'LoadImageFromFileList', 'GenerateFrameIndices',
+    'GenerateFrameIndiceswithPadding', 'FixedCrop', 'LoadPairedImageFromFile',
+    'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg', 'CropAroundFg',
+    'GetSpatialDiscountMask', 'RandomDownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap',
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence'
 ]
