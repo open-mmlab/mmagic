@@ -17,8 +17,10 @@
 
 </details>
 
-<br/>
+## Abstract
+Though many attempts have been made in blind super-resolution to restore low-resolution images with unknown and complex degradations, they are still far from addressing general real-world degraded images. In this work, we extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data. Specifically, a high-order degradation modeling process is introduced to better simulate complex real-world degradations. We also consider the common ringing and overshoot artifacts in the synthesis process. In addition, we employ a U-Net discriminator with spectral normalization to increase discriminator capability and stabilize the training dynamics. Extensive comparisons have shown its superior visual performance than prior works on various real datasets. We also provide efficient implementations to synthesize training pairs on the fly.
 
+## Results and Models
 Evaluated on RGB channels. The metrics are `PSNR/SSIM`.
 
 |                                                                Method                                                                |      Set5      |                                                                      Download                                                                     |
