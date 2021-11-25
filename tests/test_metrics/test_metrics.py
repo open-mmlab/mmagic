@@ -110,7 +110,7 @@ def test_calculate_niqe():
     result = niqe(img[:, :, 0], crop_border=0, input_order='HW')
     np.testing.assert_almost_equal(result, 5.62525, decimal=5)
     result = niqe(img, crop_border=0, input_order='HWC', convert_to='y')
-    np.testing.assert_almost_equal(result, 5.85182, decimal=5)
+    np.testing.assert_almost_equal(result, 5.72957, decimal=5)
     result = niqe(img, crop_border=0, input_order='HWC', convert_to='gray')
     np.testing.assert_almost_equal(result, 5.89766, decimal=5)
     result = niqe(
@@ -118,7 +118,7 @@ def test_calculate_niqe():
         crop_border=0,
         input_order='CHW',
         convert_to='y')
-    np.testing.assert_almost_equal(result, 5.85182, decimal=5)
+    np.testing.assert_almost_equal(result, 5.72957, decimal=5)
     result = niqe(
         img.transpose(2, 0, 1),
         crop_border=0,
