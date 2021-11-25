@@ -108,7 +108,7 @@ def test_calculate_niqe():
     img = mmcv.imread('tests/data/gt/baboon.png')
 
     result = niqe(img[:, :, 0], crop_border=0, input_order='HW')
-    np.testing.assert_almost_equal(result, 6.15902, decimal=5)
+    np.testing.assert_almost_equal(result, 5.62525, decimal=5)
     result = niqe(img, crop_border=0, input_order='HWC', convert_to='y')
     np.testing.assert_almost_equal(result, 5.85182, decimal=5)
     result = niqe(img, crop_border=0, input_order='HWC', convert_to='gray')
