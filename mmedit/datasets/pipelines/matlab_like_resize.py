@@ -62,7 +62,7 @@ def _cubic(x):
 
     # if |x| <= 1: y = 1.5|x|^3 - 2.5|x|^2 + 1
     # if 1 < |x| <= 2: -0.5|x|^3 + 2.5|x|^2 - 4|x| + 2
-    f = 1.5 * (x_abs_cu - 2.5 * x_abs_sq + 1) * (x_abs <= 1) + (
+    f = (1.5 * x_abs_cu - 2.5 * x_abs_sq + 1) * (x_abs <= 1) + (
         -0.5 * x_abs_cu + 2.5 * x_abs_sq - 4 * x_abs + 2) * ((1 < x_abs) &
                                                              (x_abs <= 2))
 

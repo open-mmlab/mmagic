@@ -16,8 +16,14 @@
 
 </details>
 
-<br/>
+## Abstract
+A recurrent structure is a popular framework choice for the task of video super-resolution. The state-of-the-art method BasicVSR adopts bidirectional propagation with feature alignment to effectively exploit information from the entire input video. In this study, we redesign BasicVSR by proposing second-order grid propagation and flow-guided deformable alignment. We show that by empowering the recurrent framework with the enhanced propagation and alignment, one can exploit spatiotemporal information across misaligned video frames more effectively. The new components lead to an improved performance under a similar computational constraint. In particular, our model BasicVSR++ surpasses BasicVSR by 0.82 dB in PSNR with similar number of parameters. In addition to video super-resolution, BasicVSR++ generalizes well to other video restoration tasks such as compressed video enhancement. In NTIRE 2021, BasicVSR++ obtains three champions and one runner-up in the Video Super-Resolution and Compressed Video Enhancement Challenges. Codes and models will be released to MMEditing.
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/7676947/144017685-9354df55-aa6d-445f-a946-116f0d6c38d7.png" />
+</p>
+
+## Results and Models
 The pretrained weights of SPyNet can be found [here](https://download.openmmlab.com/mmediting/restorers/basicvsr/spynet_20210409-c6c1bd09.pth).
 
 |                                                 Method                                                                      | REDS4 (BIx4) PSNR/SSIM (RGB) | Vimeo-90K-T (BIx4) PSNR/SSIM (Y) | Vid4 (BIx4) PSNR/SSIM (Y) | UDM10 (BDx4) PSNR/SSIM (Y) | Vimeo-90K-T (BDx4) PSNR/SSIM (Y) | Vid4 (BDx4) PSNR/SSIM (Y) |                                                                                                                                                Download                                                                                                                                               |

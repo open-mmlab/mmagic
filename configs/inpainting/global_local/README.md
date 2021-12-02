@@ -21,6 +21,17 @@
 
 <br/>
 
+## Abstract
+
+We present a novel approach for image completion that results in images that are both locally and globally consistent. With a fully-convolutional neural network, we can complete images of arbitrary resolutions by flling in missing regions of any shape. To train this image completion network to be consistent, we use global and local context discriminators that are trained to distinguish real images from completed ones. The global discriminator looks at the entire image to assess if it is coherent as a whole, while the local discriminator looks only at a small area centered at the completed region to ensure the local consistency of the generated patches. The image completion network is then trained to fool the both context discriminator networks, which requires it to generate images that are indistinguishable from real ones with regard to overall consistency as well as in details. We show that our approach can be used to complete a wide variety of scenes. Furthermore, in contrast with the patch-based approaches such as PatchMatch, our approach can generate fragments that do not appear elsewhere in the image, which allows us to naturally complete the image.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/12726765/144175196-51dfda11-f7e1-4c7e-abed-42799f757bef.png" />
+</p>
+
+
+## Results
+
 *Note that we do not apply the post-processing module in Global&Local for a fair comparison with current deep inpainting methods.*
 
 **Places365-Challenge**
