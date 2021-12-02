@@ -7,6 +7,7 @@ import numpy as np
 from scipy.ndimage.filters import convolve
 from scipy.special import gamma
 
+from mmedit.datasets.pipelines.matlab_like_resize import MATLABLikeResize
 from .metric_utils import gauss_gradient
 
 
@@ -421,9 +422,10 @@ def niqe_core(img,
     num_block_w = math.floor(w / block_size_w)
     img = img[0:num_block_h * block_size_h, 0:num_block_w * block_size_w]
 
-    distparam = []  # dist param is actually the multiscale features.
+    distparam = []  # dist param is actually the multiscale features
     for scale in (1, 2):  # perform on two scales (1, 2)
         mu = convolve(img, gaussian_window, mode='nearest')
+
         sigma = np.sqrt(
             np.abs(
                 convolve(np.square(img), gaussian_window, mode='nearest') -
@@ -443,29 +445,26 @@ def niqe_core(img,
                 feat.append(compute_feature(block))
 
         distparam.append(np.array(feat))
-        # matlab bicubic downsample with anti-aliasing
-        # for simplicity, now we use opencv instead, which will result in
-        # a slight difference.
+
+        # matlab-like bicubic downsample with anti-aliasing
         if scale == 1:
-            h, w = img.shape
-            img = cv2.resize(
-                img / 255., (w // 2, h // 2), interpolation=cv2.INTER_LINEAR)
-            img = img * 255.
+            resize = MATLABLikeResize(keys=None, scale=0.5)
+            img = resize._resize(img[:, :, np.newaxis] / 255.)[:, :, 0] * 255.
 
     distparam = np.concatenate(distparam, axis=1)
 
     # fit a MVG (multivariate Gaussian) model to distorted patch features
     mu_distparam = np.nanmean(distparam, axis=0)
-    cov_distparam = np.cov(distparam, rowvar=False)  # TODO: use nancov
+    distparam_no_nan = distparam[~np.isnan(distparam).any(axis=1)]
+    cov_distparam = np.cov(distparam_no_nan, rowvar=False)
 
     # compute niqe quality, Eq. 10 in the paper
     invcov_param = np.linalg.pinv((cov_pris_param + cov_distparam) / 2)
     quality = np.matmul(
         np.matmul((mu_pris_param - mu_distparam), invcov_param),
         np.transpose((mu_pris_param - mu_distparam)))
-    quality = np.sqrt(quality)
 
-    return quality
+    return np.squeeze(np.sqrt(quality))
 
 
 def niqe(img, crop_border, input_order='HWC', convert_to='y'):
@@ -512,6 +511,9 @@ def niqe(img, crop_border, input_order='HWC', convert_to='y'):
 
     if crop_border != 0:
         img = img[crop_border:-crop_border, crop_border:-crop_border]
+
+    # round to follow official implementation
+    img = img.round()
 
     niqe_result = niqe_core(img, mu_pris_param, cov_pris_param,
                             gaussian_window)

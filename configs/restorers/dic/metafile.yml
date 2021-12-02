@@ -11,7 +11,7 @@ Models:
   In Collection: DIC
   Metadata:
     Training Data: CELEBA
-  Name: restorers--dic--dic_x8c48b6_g4_150k_CelebAHQ
+  Name: dic_150k
   Results:
   - Dataset: CELEBA
     Metrics:
@@ -24,7 +24,7 @@ Models:
   In Collection: DIC
   Metadata:
     Training Data: CELEBA
-  Name: restorers--dic--dic_gan_x8c48b6_g4_500k_CelebAHQ
+  Name: dic_gan
   Results:
   - Dataset: CELEBA
     Metrics:
