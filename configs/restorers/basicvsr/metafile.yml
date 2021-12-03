@@ -11,7 +11,7 @@ Models:
   In Collection: BasicVSR
   Metadata:
     Training Data: REDS
-  Name: https:----github.com--open-mmlab--mmediting--blob--master--restorers--basicvsr--basicvsr_reds4
+  Name: basicvsr_reds4
   Results:
   - Dataset: REDS
     Metrics:
@@ -39,7 +39,7 @@ Models:
   In Collection: BasicVSR
   Metadata:
     Training Data: VIMEO90K
-  Name: https:----github.com--open-mmlab--mmediting--blob--master--restorers--basicvsr--basicvsr_vimeo90k_bi
+  Name: basicvsr_bi
   Results:
   - Dataset: VIMEO90K
     Metrics:
@@ -67,7 +67,7 @@ Models:
   In Collection: BasicVSR
   Metadata:
     Training Data: VIMEO90K
-  Name: https:----github.com--open-mmlab--mmediting--blob--master--restorers--basicvsr--basicvsr_vimeo90k_bd
+  Name: basicvsr_vimeo90k
   Results:
   - Dataset: VIMEO90K
     Metrics:
