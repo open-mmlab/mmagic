@@ -11,7 +11,7 @@ Models:
   In Collection: Real-ESRGAN
   Metadata:
     Training Data: Others
-  Name: realesrnet
+  Name: realesrnet_lr2e-4
   Results:
   - Dataset: Others
     Metrics:
@@ -24,7 +24,7 @@ Models:
   In Collection: Real-ESRGAN
   Metadata:
     Training Data: Others
-  Name: restorers--real_esrgan--realesrgan_c64b23g32_12x4_lr1e-4_400k_df2k_ost
+  Name: realesrgan_lr1e-4
   Results:
   - Dataset: Others
     Metrics:
