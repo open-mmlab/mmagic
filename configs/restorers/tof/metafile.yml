@@ -11,7 +11,7 @@ Models:
   In Collection: TOFlow
   Metadata:
     Training Data: VIMEO90K
-  Name: restorers--tof--tof_x4_vimeo90k_official
+  Name: tof
   Results:
   - Dataset: VIMEO90K
     Metrics:
