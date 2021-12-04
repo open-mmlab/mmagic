@@ -8,6 +8,7 @@ from .glean_styleganv2 import GLEANStyleGANv2
 from .iconvsr import IconVSR
 from .liif_net import LIIFEDSR, LIIFRDN
 from .rdn import RDN
+from .real_basicvsr_net import RealBasicVSRNet
 from .rrdb_net import RRDBNet
 from .sr_resnet import MSRResNet
 from .srcnn import SRCNN
@@ -18,5 +19,5 @@ from .ttsr_net import TTSRNet
 __all__ = [
     'MSRResNet', 'RRDBNet', 'EDSR', 'EDVRNet', 'TOFlow', 'SRCNN', 'DICNet',
     'BasicVSRNet', 'IconVSR', 'RDN', 'TTSRNet', 'GLEANStyleGANv2', 'TDANNet',
-    'LIIFEDSR', 'LIIFRDN', 'BasicVSRPlusPlus'
+    'LIIFEDSR', 'LIIFRDN', 'BasicVSRPlusPlus', 'RealBasicVSRNet'
 ]
