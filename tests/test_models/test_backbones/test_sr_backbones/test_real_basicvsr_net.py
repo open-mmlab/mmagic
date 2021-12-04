@@ -21,11 +21,12 @@ def test_real_basicvsr_net():
     output = real_basicvsr(input_tensor)
     assert output.shape == (1, 5, 3, 256, 256)
 
-    # is_sequential_cleaning = True
+    # is_sequential_cleaning = True, return_lq = True
     real_basicvsr = RealBasicVSRNet(
         is_fix_cleaning=True, is_sequential_cleaning=True)
-    output = real_basicvsr(input_tensor)
+    output, lq = real_basicvsr(input_tensor, return_lqs=True)
     assert output.shape == (1, 5, 3, 256, 256)
+    assert lq.shape == (1, 5, 3, 64, 64)
 
     with pytest.raises(TypeError):
         # pretrained should be str or None
@@ -44,11 +45,12 @@ def test_real_basicvsr_net():
         output = real_basicvsr(input_tensor)
         assert output.shape == (1, 5, 3, 256, 256)
 
-        # is_sequential_cleaning = True
+        # is_sequential_cleaning = True, return_lq = True
         real_basicvsr = RealBasicVSRNet(
             is_fix_cleaning=True, is_sequential_cleaning=True).cuda()
-        output = real_basicvsr(input_tensor)
+        output, lq = real_basicvsr(input_tensor, return_lqs=True)
         assert output.shape == (1, 5, 3, 256, 256)
+        assert lq.shape == (1, 5, 3, 64, 64)
 
         with pytest.raises(TypeError):
             # pretrained should be str or None
