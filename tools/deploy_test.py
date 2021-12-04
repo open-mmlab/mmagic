@@ -25,13 +25,13 @@ class TensorRTRestorerGenerator(nn.Module):
 
     def __init__(self, trt_file: str, device_id: int):
         super().__init__()
-        from mmcv.tensorrt import TRTWraper, load_tensorrt_plugin
+        from mmcv.tensorrt import TRTWrapper, load_tensorrt_plugin
         try:
             load_tensorrt_plugin()
         except (ImportError, ModuleNotFoundError):
             warnings.warn('If input model has custom op from mmcv, \
                 you may have to build mmcv with TensorRT from source.')
-        model = TRTWraper(
+        model = TRTWrapper(
             trt_file, input_names=['input'], output_names=['output'])
         self.device_id = device_id
         self.model = model
@@ -78,11 +78,11 @@ class TensorRTEditing(nn.Module):
         base_model = build_model(
             cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
         if isinstance(base_model, BasicRestorer):
-            WraperClass = TensorRTRestorer
-        self.wraper = WraperClass(base_model, trt_file, device_id)
+            WrapperClass = TensorRTRestorer
+        self.wrapper = WrapperClass(base_model, trt_file, device_id)
 
     def forward(self, **kwargs):
-        return self.wraper(**kwargs)
+        return self.wrapper(**kwargs)
 
 
 def parse_args():

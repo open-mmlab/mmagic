@@ -19,6 +19,18 @@
 
 <br/>
 
+## Abstract
+
+Existing deep learning based image inpainting methods use a standard convolutional network over the corrupted image, using convolutional filter responses conditioned on both valid pixels as well as the substitute values in the masked holes (typically the mean value). This often leads to artifacts such as color discrepancy and blurriness. Post-processing is usually used to reduce such artifacts, but are expensive and may fail. We propose the use of partial convolutions, where the convolution is masked and renormalized to be conditioned on only valid pixels. We further include a mechanism to automatically generate an updated mask for the next layer as part of the forward pass. Our model outperforms other methods for irregular masks. We show qualitative and quantitative comparisons with other methods to validate our approach.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/12726765/144175613-1bc9ad1b-072d-4c1f-a97d-1af5be2590bd.png" />
+</p>
+
+
+## Results
+
+
 **Places365-Challenge**
 
 |                                   Method                                    | Mask Type | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |                                                                                                                        Download                                                                                                                         |

@@ -60,7 +60,7 @@ def test_adjust_gamma():
     result = adjust_gamma(image, 2)
     np.testing.assert_array_equal(result, expected)
 
-    # Test unvalid image input
+    # Test invalid image input
     image = np.arange(0, 255, 4, np.uint8).reshape((8, 8))
     with pytest.raises(ValueError):
         adjust_gamma(image, -1)

@@ -8,10 +8,10 @@ Collections:
   README: configs/restorers/basicvsr/README.md
 Models:
 - Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/basicvsr/basicvsr_reds4.py
-  In Collection: README
+  In Collection: BasicVSR
   Metadata:
     Training Data: REDS
-  Name: https:----github.com--open-mmlab--mmediting--blob--master--restorers--basicvsr--basicvsr_reds4
+  Name: basicvsr_reds4
   Results:
   - Dataset: REDS
     Metrics:
@@ -36,10 +36,10 @@ Models:
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth
 - Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/basicvsr/basicvsr_vimeo90k_bi.py
-  In Collection: README
+  In Collection: BasicVSR
   Metadata:
     Training Data: VIMEO90K
-  Name: https:----github.com--open-mmlab--mmediting--blob--master--restorers--basicvsr--basicvsr_vimeo90k_bi
+  Name: basicvsr_bi
   Results:
   - Dataset: VIMEO90K
     Metrics:
@@ -64,10 +64,10 @@ Models:
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_vimeo90k_bi_20210409-d2d8f760.pth
 - Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/basicvsr/basicvsr_vimeo90k_bd.py
-  In Collection: README
+  In Collection: BasicVSR
   Metadata:
     Training Data: VIMEO90K
-  Name: https:----github.com--open-mmlab--mmediting--blob--master--restorers--basicvsr--basicvsr_vimeo90k_bd
+  Name: basicvsr_vimeo90k
   Results:
   - Dataset: VIMEO90K
     Metrics:

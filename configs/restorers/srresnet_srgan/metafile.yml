@@ -8,10 +8,10 @@ Collections:
   README: configs/restorers/srresnet_srgan/README.md
 Models:
 - Config: configs/restorers/srresnet_srgan/msrresnet_x4c64b16_g1_1000k_div2k.py
-  In Collection: README
+  In Collection: SRGAN
   Metadata:
     Training Data: DIV2K
-  Name: restorers--srresnet_srgan--msrresnet_x4c64b16_g1_1000k_div2k
+  Name: msrresnet
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -27,10 +27,10 @@ Models:
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/srresnet_srgan/msrresnet_x4c64b16_1x16_300k_div2k_20200521-61556be5.pth
 - Config: configs/restorers/srresnet_srgan/srgan_x4c64b16_g1_1000k_div2k.py
-  In Collection: README
+  In Collection: SRGAN
   Metadata:
     Training Data: DIV2K
-  Name: restorers--srresnet_srgan--srgan_x4c64b16_g1_1000k_div2k
+  Name: srgan
   Results:
   - Dataset: DIV2K
     Metrics:

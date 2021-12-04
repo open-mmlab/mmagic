@@ -18,6 +18,16 @@
 
 <br/>
 
+## Abstract
+
+We investigate conditional adversarial networks as a general-purpose solution to image-to-image translation problems. These networks not only learn the mapping from input image to output image, but also learn a loss function to train this mapping. This makes it possible to apply the same generic approach to problems that traditionally would require very different loss formulations. We demonstrate that this approach is effective at synthesizing photos from label maps, reconstructing objects from edge maps, and colorizing images, among other tasks. As a community, we no longer hand-engineer our mapping functions, and this work suggests we can achieve reasonable results without hand-engineering our loss functions either.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/12726765/144200620-8715c40b-e9eb-4f98-b8b9-cff28167655a.png" />
+</p>
+
+## Results
+
 We use `FID` and `IS` metrics to evaluate the generation performance of pix2pix.
 
 | Method | FID | IS  | Download |
@@ -33,8 +43,12 @@ We use `FID` and `IS` metrics to evaluate the generation performance of pix2pix.
 | official average | 111.678 | 2.624 | - |
 | ours average | **106.139** | **2.664** | - |
 
-Note: we strictly follow the [paper](http://openaccess.thecvf.com/content_cvpr_2017/papers/Isola_Image-To-Image_Translation_With_CVPR_2017_paper.pdf) setting in Section 3.3: "*At inference time, we run the generator net in exactly
+Note: we strictly follow the [paper](http://openaccess.thecvf.com/content_cvpr_2017/papers/Isola_Image-To-Image_Translation_With_CVPR_2017_paper.pdf) setting in Section 3.3:
+
+"*At inference time, we run the generator net in exactly
 the same manner as during the training phase. This differs
 from the usual protocol in that we apply dropout at test time,
 and we apply batch normalization using the statistics of
-the test batch, rather than aggregated statistics of the training batch.*" (i.e., use model.train() mode), thus may lead to slightly different inference results every time.
+the test batch, rather than aggregated statistics of the training batch.*"
+
+i.e., `use model.train()` mode, thus may lead to slightly different inference results every time.

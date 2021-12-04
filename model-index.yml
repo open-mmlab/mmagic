@@ -16,6 +16,7 @@ Import:
 - configs/restorers/iconvsr/metafile.yml
 - configs/restorers/liif/metafile.yml
 - configs/restorers/rdn/metafile.yml
+- configs/restorers/real_esrgan/metafile.yml
 - configs/restorers/srcnn/metafile.yml
 - configs/restorers/srresnet_srgan/metafile.yml
 - configs/restorers/tdan/metafile.yml
