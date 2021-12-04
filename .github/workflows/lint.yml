@@ -1,0 +1,25 @@
+name: lint
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Install pre-commit hook
+        run: |
+          pip install pre-commit
+          pre-commit install
+      - name: Linting
+        run: pre-commit run --all-files
+      - name: Format c/cuda codes with clang-format
+        uses: DoozyX/clang-format-lint-action@v0.11
+        with:
+          source: mmcv/ops/csrc
+          extensions: h,c,cpp,hpp,cu,cuh
+          style: google
