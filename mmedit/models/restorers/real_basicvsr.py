@@ -5,7 +5,7 @@ from mmcv.parallel import is_module_wrapper
 from ..builder import build_loss
 from ..common import set_requires_grad
 from ..registry import MODELS
-from .srgan import RealESRGAN
+from .real_esrgan import RealESRGAN
 
 
 @MODELS.register_module()
