@@ -79,7 +79,11 @@ def test_random_video_compression():
     assert len(results['lq']) == 5
 
     # skip degradations with prob < 1
-    params = dict(quality=[5, 50], prob=0)
+    params = dict(
+        codec=['libx264', 'h264', 'mpeg4'],
+        codec_prob=[1 / 3., 1 / 3., 1 / 3.],
+        bitrate=[1e4, 1e5],
+        prob=0)
     model = RandomVideoCompression(params=params, keys=['lq'])
     assert model(results) == results
 
