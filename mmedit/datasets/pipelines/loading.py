@@ -496,8 +496,6 @@ class LoadPairedImageFromFile(LoadImageFromFile):
         flag (str): Loading flag for images. Default: 'color'.
         channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
             Default: 'bgr'.
-        convert_to (str | None): The color space of the output image. If None,
-            no conversion is conducted. Default: None.
         save_original_img (bool): If True, maintain a copy of the image in
             `results` dict with name of `f'ori_{key}'`. Default: False.
         kwargs (dict): Args for file client.
