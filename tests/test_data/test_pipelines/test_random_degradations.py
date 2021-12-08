@@ -372,7 +372,3 @@ def test_degradations_with_shuffle():
         + f'(degradations={degradations}, ' \
         + "keys=['lq'], " \
         + 'shuffle_idx=(1, 2))'
-
-
-if __name__ == '__main__':
-    test_random_video_compression()
