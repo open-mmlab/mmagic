@@ -10,7 +10,7 @@ from .real_esrgan import RealESRGAN
 
 @MODELS.register_module()
 class RealBasicVSR(RealESRGAN):
-    """RealBasicVSR model for single image super-resolution.
+    """RealBasicVSR model for real-world video super-resolution.
 
     Ref:
     Investigating Tradeoffs in Real-World Video Super-Resolution, arXiv
