@@ -8,7 +8,8 @@ from .augmentation import (BinarizeImage, CopyValues, Flip,
                            TemporalReverse, UnsharpMasking)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
-                   CropLike, FixedCrop, ModCrop, PairedRandomCrop)
+                   CropLike, CropSequence, FixedCrop, ModCrop,
+                   PairedRandomCrop)
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
 from .generate_assistant import GenerateCoordinateAndCell, GenerateHeatmap
@@ -40,5 +41,5 @@ __all__ = [
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
     'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
     'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
-    'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking'
+    'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking', 'CropSequence'
 ]

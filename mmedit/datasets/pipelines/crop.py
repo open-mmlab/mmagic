@@ -86,6 +86,64 @@ class Crop:
 
 
 @PIPELINES.register_module()
+class CropSequence(Crop):
+    """Crop a sequence to specific size for training.
+
+    The main difference to 'Crop' is that the region to be cropped is the same
+    for every images in the sequence.
+
+    Args:
+        keys (Sequence[str]): The images to be cropped.
+        crop_size (Tuple[int]): Target spatial size (h, w).
+        random_crop (bool): If set to True, it will random crop
+            image. Otherwise, it will work as center crop.
+    """
+
+    def _crop(self, data):
+        if not isinstance(data, list):
+            raise TypeError(f'Input must be a list, but got {type(data)}.')
+
+        # determine crop location. Must be the same for all images
+        data_h, data_w = data[0].shape[:2]
+        crop_h, crop_w = self.crop_size
+        crop_h = min(data_h, crop_h)
+        crop_w = min(data_w, crop_w)
+
+        if self.random_crop:
+            x_offset = np.random.randint(0, data_w - crop_w + 1)
+            y_offset = np.random.randint(0, data_h - crop_h + 1)
+        else:
+            x_offset = max(0, (data_w - crop_w)) // 2
+            y_offset = max(0, (data_h - crop_h)) // 2
+        crop_bbox = [x_offset, y_offset, crop_w, crop_h]
+
+        data_list = []
+        for item in data:
+            item = item[y_offset:y_offset + crop_h, x_offset:x_offset + crop_w,
+                        ...]
+            data_list.append(item)
+
+        return data_list, crop_bbox
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        for k in self.keys:
+            data_, crop_bbox = self._crop(results[k])
+            results[k] = data_
+            results[k + '_crop_bbox'] = crop_bbox
+        results['crop_size'] = self.crop_size
+        return results
+
+
+@PIPELINES.register_module()
 class FixedCrop:
     """Crop paired data (at a specific position) to specific size for training.
 
