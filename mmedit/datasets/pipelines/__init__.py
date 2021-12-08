@@ -22,7 +22,7 @@ from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
 from .normalization import Normalize, RescaleToZeroOne
 from .random_degradations import (DegradationsWithShuffle, RandomBlur,
                                   RandomJPEGCompression, RandomNoise,
-                                  RandomResize)
+                                  RandomResize, RandomVideoCompression)
 from .random_down_sampling import RandomDownSampling
 
 __all__ = [
@@ -40,5 +40,6 @@ __all__ = [
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
     'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
     'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
-    'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking'
+    'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking',
+    'RandomVideoCompression'
 ]

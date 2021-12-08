@@ -1,3 +1,5 @@
+import io
+import logging
 import random
 
 import cv2
@@ -5,6 +7,12 @@ import numpy as np
 
 from mmedit.datasets.pipelines import blur_kernels as blur_kernels
 from ..registry import PIPELINES
+
+try:
+    import av
+    has_av = True
+except ImportError:
+    has_av = False
 
 
 @PIPELINES.register_module()
@@ -322,11 +330,80 @@ class RandomJPEGCompression:
         return repr_str
 
 
+@PIPELINES.register_module()
+class RandomVideoCompression:
+    """Apply random video compression to the input.
+
+    Modified keys are the attributed specified in "keys".
+
+    Args:
+        params (dict): A dictionary specifying the degradation settings.
+        keys (list[str]): A list specifying the keys whose values are
+            modified.
+    """
+
+    def __init__(self, params, keys):
+        assert has_av, 'Please install av to use video compression.'
+
+        self.keys = keys
+        self.params = params
+        logging.getLogger('libav').setLevel(50)
+
+    def _apply_random_compression(self, imgs):
+        codec = random.choices(self.params['codec'],
+                               self.params['codec_prob'])[0]
+        bitrate = self.params['bitrate']
+        bitrate = np.random.randint(bitrate[0], bitrate[1] + 1)
+
+        buf = io.BytesIO()
+        with av.open(buf, 'w', 'mp4') as container:
+            stream = container.add_stream(codec, rate=1)
+            stream.height = imgs[0].shape[0]
+            stream.width = imgs[0].shape[1]
+            stream.pix_fmt = 'yuv420p'
+            stream.bit_rate = bitrate
+
+            for img in imgs:
+                img = (255 * img).astype(np.uint8)
+                frame = av.VideoFrame.from_ndarray(img, format='rgb24')
+                frame.pict_type = 'NONE'
+                for packet in stream.encode(frame):
+                    container.mux(packet)
+
+            # Flush stream
+            for packet in stream.encode():
+                container.mux(packet)
+
+        outputs = []
+        with av.open(buf, 'r', 'mp4') as container:
+            if container.streams.video:
+                for frame in container.decode(**{'video': 0}):
+                    outputs.append(
+                        frame.to_rgb().to_ndarray().astype(np.float32) / 255.)
+
+        return outputs
+
+    def __call__(self, results):
+        if np.random.uniform() > self.params.get('prob', 1):
+            return results
+
+        for key in self.keys:
+            results[key] = self._apply_random_compression(results[key])
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(params={self.params}, keys={self.keys})')
+        return repr_str
+
+
 allowed_degradations = {
     'RandomBlur': RandomBlur,
     'RandomResize': RandomResize,
     'RandomNoise': RandomNoise,
     'RandomJPEGCompression': RandomJPEGCompression,
+    'RandomVideoCompression': RandomVideoCompression,
 }
 
 
