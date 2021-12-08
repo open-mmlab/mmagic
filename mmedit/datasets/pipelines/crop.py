@@ -125,23 +125,6 @@ class CropSequence(Crop):
 
         return data_list, crop_bbox
 
-    def __call__(self, results):
-        """Call function.
-
-        Args:
-            results (dict): A dict containing the necessary information and
-                data for augmentation.
-
-        Returns:
-            dict: A dict containing the processed data and information.
-        """
-        for k in self.keys:
-            data_, crop_bbox = self._crop(results[k])
-            results[k] = data_
-            results[k + '_crop_bbox'] = crop_bbox
-        results['crop_size'] = self.crop_size
-        return results
-
 
 @PIPELINES.register_module()
 class FixedCrop:
