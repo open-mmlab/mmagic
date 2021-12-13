@@ -130,7 +130,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 参与贡献
 
-感谢您为改善 MMEditing 所做的所有贡献。请参阅 [CONTRIBUTING.md in MMDetection](https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md) 以获取贡献准则。
+感谢您为改善 MMEditing 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/blob/master/CONTRIBUTING.md) 以获取贡献指南。
 
 ## 致谢
 
