@@ -286,6 +286,7 @@ class RandomNoise:
 
             # update noise level
             scale += np.random.uniform(-scale_step, scale_step)
+            scale = np.clip(scale, scale_range[0], scale_range[1])
 
         return outputs
 
