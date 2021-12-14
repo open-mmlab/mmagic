@@ -73,24 +73,24 @@ class RandomBlur:
                 [omega, omega],
                 None,
             )
-        kernels.append(kernel)
+            kernels.append(kernel)
 
-        # update kernel parameters
-        sigma_x += np.random.uniform(-sigma_x_step, sigma_x_step)
-        sigma_y += np.random.uniform(-sigma_y_step, sigma_y_step)
-        rotate_angle += np.random.uniform(-rotate_angle_step,
-                                          rotate_angle_step)
-        beta_gau += np.random.uniform(-beta_gau_step, beta_gau_step)
-        beta_pla += np.random.uniform(-beta_pla_step, beta_pla_step)
-        omega += np.random.uniform(-omega_step, omega_step)
+            # update kernel parameters
+            sigma_x += np.random.uniform(-sigma_x_step, sigma_x_step)
+            sigma_y += np.random.uniform(-sigma_y_step, sigma_y_step)
+            rotate_angle += np.random.uniform(-rotate_angle_step,
+                                              rotate_angle_step)
+            beta_gau += np.random.uniform(-beta_gau_step, beta_gau_step)
+            beta_pla += np.random.uniform(-beta_pla_step, beta_pla_step)
+            omega += np.random.uniform(-omega_step, omega_step)
 
-        sigma_x = np.clip(sigma_x, sigma_x_range[0], sigma_x_range[1])
-        sigma_y = np.clip(sigma_y, sigma_y_range[0], sigma_y_range[1])
-        rotate_angle = np.clip(rotate_angle, rotate_angle_range[0],
-                               rotate_angle_range[1])
-        beta_gau = np.clip(beta_gau, beta_gau_range[0], beta_gau_range[1])
-        beta_pla = np.clip(beta_pla, beta_pla_range[0], beta_pla_range[1])
-        omega = np.clip(omega, omega_range[0], omega_range[1])
+            sigma_x = np.clip(sigma_x, sigma_x_range[0], sigma_x_range[1])
+            sigma_y = np.clip(sigma_y, sigma_y_range[0], sigma_y_range[1])
+            rotate_angle = np.clip(rotate_angle, rotate_angle_range[0],
+                                   rotate_angle_range[1])
+            beta_gau = np.clip(beta_gau, beta_gau_range[0], beta_gau_range[1])
+            beta_pla = np.clip(beta_pla, beta_pla_range[0], beta_pla_range[1])
+            omega = np.clip(omega, omega_range[0], omega_range[1])
 
         return kernels
 
