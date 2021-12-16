@@ -1,5 +1,5 @@
 from .augmentation import (
-    BinarizeImage, ColorJitter, Flip, GenerateFrameIndices,
+    BinarizeImage, CenterCrop, ColorJitter, Flip, GenerateFrameIndices,
     GenerateFrameIndiceswithPadding, GenerateSegmentIndices, MirrorSequence,
     Pad, RandomAffine, RandomJitter, RandomMaskDilation, RandomResizedCrop,
     RandomTransposeHW, Resize, TemporalReverse)
@@ -23,7 +23,7 @@ __all__ = [
     'RandomLoadResizeBg', 'Compose', 'ImageToTensor', 'ToTensor',
     'GetMaskedImage', 'BinarizeImage', 'Flip', 'Pad', 'RandomAffine',
     'RandomJitter', 'ColorJitter', 'RandomMaskDilation', 'RandomTransposeHW',
-    'Resize', 'RandomResizedCrop', 'Crop', 'CropAroundCenter',
+    'Resize', 'RandomResizedCrop', 'CenterCrop', 'Crop', 'CropAroundCenter',
     'CropAroundUnknown', 'ModCrop', 'PairedRandomCrop', 'Normalize',
     'RescaleToZeroOne', 'GenerateTrimap', 'MergeFgAndBg', 'CompositeFg',
     'TemporalReverse', 'LoadImageFromFileList', 'GenerateFrameIndices',

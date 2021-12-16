@@ -1,11 +1,11 @@
-import torch
 import os.path as osp
 from pathlib import Path
 
 import mmcv
+import torch
 
-from ..common import set_requires_grad
 from mmedit.core import tensor2img
+from ..common import set_requires_grad
 from ..registry import MODELS
 from .one_stage import OneStageInpaintor
 
@@ -70,15 +70,14 @@ class AOTInpaintor(OneStageInpaintor):
                 training step. Otherwise, this function is called in generator
                 training step. This will help us to compute different types of
                 adversarial loss, like LSGAN.
-            **kwargs (keyword arguments). 
+            **kwargs (keyword arguments).
 
         Returns:
             dict: Contains the loss items computed in this function.
         """
-        
+
         pred = self.disc(data_batch)
         loss_ = self.loss_gan(pred, is_real, is_disc, **kwargs)
-        
 
         loss = dict(real_loss=loss_) if is_real else dict(fake_loss=loss_)
 
@@ -113,24 +112,23 @@ class AOTInpaintor(OneStageInpaintor):
         masked_img = data_batch['masked_img']
 
         loss = dict()
-        
+
         if self.with_gan:
             pred = self.disc(fake_img)
             loss_g_fake = self.loss_gan(pred, True, False, mask=mask)
             loss['loss_g_fake'] = loss_g_fake
-        
+
         if self.with_l1_valid_loss:
-            loss_loss_l1_valid = self.loss_l1_valid(
-                fake_res, gt)
+            loss_loss_l1_valid = self.loss_l1_valid(fake_res, gt)
             loss['loss_l1_valid'] = loss_loss_l1_valid
-        
+
         if self.with_out_percep_loss:
             loss_out_percep, loss_out_style = self.loss_percep(fake_res, gt)
             if loss_out_percep is not None:
                 loss['loss_out_percep'] = loss_out_percep
             if loss_out_style is not None:
                 loss['loss_out_style'] = loss_out_style
-        
+
         res = dict(
             gt_img=gt.cpu(),
             masked_img=masked_img.cpu(),
@@ -161,7 +159,6 @@ class AOTInpaintor(OneStageInpaintor):
             dict: Contain output results and eval metrics (if have).
         """
 
-        
         masked_img = masked_img.float() + mask
         input_x = torch.cat([masked_img, mask], dim=1)
 
@@ -206,7 +203,7 @@ class AOTInpaintor(OneStageInpaintor):
                 [masked_img,
                  mask.expand_as(masked_img), fake_res, fake_img])
             img = torch.cat(img_list, dim=3).cpu()
-            self.save_visualization(fake_img, osp.join(save_path, filename))
+            self.save_visualization(img, osp.join(save_path, filename))
             output['save_img_path'] = osp.abspath(
                 osp.join(save_path, filename))
 
@@ -221,7 +218,7 @@ class AOTInpaintor(OneStageInpaintor):
         1. get fake res/image
         2. compute reconstruction losses for generator
         3. compute adversarial loss for discriminator
-        4. optimize generator 
+        4. optimize generator
         5. optimize discriminator
 
         Args:
@@ -257,7 +254,8 @@ class AOTInpaintor(OneStageInpaintor):
             real_data, True, True, mask=mask)
         disc_losses_fake = self.forward_train_d(
             fake_data, False, True, mask=mask)
-        disc_losses_ = disc_losses_real['real_loss'] + disc_losses_fake['fake_loss']
+        disc_losses_ = disc_losses_real['real_loss'] + disc_losses_fake[
+            'fake_loss']
         disc_losses = dict(disc_losses=disc_losses_)
         print(disc_losses)
         loss_disc, log_vars_d = self.parse_losses(disc_losses)

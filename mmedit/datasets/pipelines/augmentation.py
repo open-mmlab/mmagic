@@ -220,6 +220,40 @@ class RandomRotation:
 
 
 @PIPELINES.register_module()
+class CenterCrop:
+
+    def __init__(self, keys, crop_size):
+        assert keys, 'Keys should not be empty.'
+        self.keys = keys
+        self.crop_size = crop_size
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        for k in self.keys:
+            if k == 'gt_img':
+                results[k] = transforms.ToPILImage()(results[k]).convert('RGB')
+            elif k == 'mask':
+                results[k] = transforms.ToPILImage()(results[k]).convert('L')
+            results[k] = transforms.CenterCrop(self.crop_size)(results[k])
+            results[k] = np.array(results[k])
+        results['crop_size'] = self.crop_size
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(keys={self.keys}, crop_size={self.crop_size}, ')
+        return repr_str
+
+
+@PIPELINES.register_module()
 class Flip:
     """Flip the input data with a probability.
 

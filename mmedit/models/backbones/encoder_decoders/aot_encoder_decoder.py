@@ -1,5 +1,3 @@
-import torch.nn as nn
-
 from mmedit.models.builder import build_component
 from mmedit.models.registry import BACKBONES
 from .gl_encoder_decoder import GLEncoderDecoder
@@ -10,7 +8,7 @@ class AOTEncoderDecoder(GLEncoderDecoder):
     """Encoder-Decoder used in AOT-GAN model.
 
     This implementation follows:
-    Aggregated Contextual Transformations for High-Resolution Image Inpainting 
+    Aggregated Contextual Transformations for High-Resolution Image Inpainting
 
     The architecture of the encoder-decoder is:\
         (conv2d x 3) --> (dilated conv2d x 8) --> (conv2d or deconv2d x 3)
