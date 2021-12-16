@@ -9,7 +9,7 @@ from mmedit.utils import get_root_logger
 
 @COMPONENTS.register_module()
 class SoftMaskPatchDiscriminator(nn.Module):
-    """A PatchGAN discriminator.
+    """A Soft Mask-Guided PatchGAN discriminator.
 
     Args:
         in_channels (int): Number of channels in input images.
@@ -17,28 +17,23 @@ class SoftMaskPatchDiscriminator(nn.Module):
             Default: 64.
         num_conv (int): Number of stacked intermediate convs (excluding input
             and output conv). Default: 3.
-        norm_cfg (dict): Config dict to build norm layer. Default:
-            `dict(type='BN')`.
+        norm_cfg (dict): Config dict to build norm layer.
         init_cfg (dict): Config dict for initialization.
             `type`: The name of our initialization method. Default: 'normal'.
             `gain`: Scaling factor for normal, xavier and orthogonal.
             Default: 0.02.
+        with_spectral_norm (bool): Whether use spectral norm after the conv
+            layers. Default to False.
     """
 
     def __init__(self,
                  in_channels,
                  base_channels=64,
                  num_conv=3,
-                 norm_cfg=dict(type='BN'),
+                 norm_cfg=None,
                  init_cfg=dict(type='normal', gain=0.02),
                  with_spectral_norm=False):
         super().__init__()
-        assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"
-                                            f'got {type(norm_cfg)}')
-        assert 'type' in norm_cfg, "'norm_cfg' must have key 'type'"
-        # We use norm layers in the patch discriminator.
-        # Only for IN, use bias since it does not have affine parameters.
-        use_bias = norm_cfg['type'] == 'IN'
 
         kernel_size = 4
         padding = 1
@@ -52,7 +47,7 @@ class SoftMaskPatchDiscriminator(nn.Module):
                 stride=2,
                 padding=padding,
                 bias=False,
-                norm_cfg=None,
+                norm_cfg=norm_cfg,
                 act_cfg=dict(type='LeakyReLU', negative_slope=0.2),
                 with_spectral_norm=with_spectral_norm)
         ]
@@ -72,7 +67,7 @@ class SoftMaskPatchDiscriminator(nn.Module):
                     stride=2,
                     padding=padding,
                     bias=False,
-                    norm_cfg=None,
+                    norm_cfg=norm_cfg,
                     act_cfg=dict(type='LeakyReLU', negative_slope=0.2),
                     with_spectral_norm=with_spectral_norm)
             ]
@@ -86,7 +81,7 @@ class SoftMaskPatchDiscriminator(nn.Module):
                 stride=1,
                 padding=padding,
                 bias=False,
-                norm_cfg=None,
+                norm_cfg=norm_cfg,
                 act_cfg=dict(type='LeakyReLU', negative_slope=0.2),
                 with_spectral_norm=with_spectral_norm)
         ]
