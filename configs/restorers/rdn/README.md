@@ -29,6 +29,7 @@ A very deep convolutional neural network (CNN) has recently achieved great succe
 ```
 
 ## Results and models
+
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 

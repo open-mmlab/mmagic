@@ -29,6 +29,7 @@ We study on image super-resolution (SR), which aims to recover realistic texture
 ```
 
 ## Results and models
+
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 

@@ -30,8 +30,6 @@ Recent deep learning based approaches have shown promising results for the chall
 
 ## Results and models
 
-
-
 **Places365-Challenge**
 
 |                                    Method                                    |  Mask Type  | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |                                                                                                                           Download                                                                                                                            |

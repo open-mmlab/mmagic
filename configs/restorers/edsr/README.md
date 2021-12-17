@@ -29,6 +29,7 @@ Recent research on super-resolution has progressed with the development of deep 
 ```
 
 ## Results and models
+
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 

@@ -28,6 +28,7 @@ Video super-resolution (VSR) approaches tend to have more components than the im
 ```
 
 ## Results and models
+
 Evaluated on RGB channels for REDS4 and Y channel for others. The metrics are `PSNR` / `SSIM` .
 The pretrained weights of SPyNet can be found [here](https://download.openmmlab.com/mmediting/restorers/basicvsr/spynet_20210409-c6c1bd09.pth).
 

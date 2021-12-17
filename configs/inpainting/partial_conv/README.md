@@ -30,7 +30,6 @@ Existing deep learning based image inpainting methods use a standard convolution
 
 ## Results and models
 
-
 **Places365-Challenge**
 
 |                                   Method                                    | Mask Type | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |                                                                                                                        Download                                                                                                                         |

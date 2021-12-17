@@ -29,6 +29,7 @@ The Super-Resolution Generative Adversarial Network (SRGAN) is a seminal work th
 ```
 
 ## Results and models
+
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 

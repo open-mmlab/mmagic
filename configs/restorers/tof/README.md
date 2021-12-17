@@ -32,6 +32,7 @@ Many video enhancement algorithms rely on optical flow to register frames in a v
 ```
 
 ## Results and models
+
 Evaluated on RGB channels.
 The metrics are `PSNR / SSIM` .
 

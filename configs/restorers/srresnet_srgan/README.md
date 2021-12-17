@@ -28,6 +28,7 @@ Despite the breakthroughs in accuracy and speed of single image super-resolution
 ```
 
 ## Results and models
+
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 
 The metrics are `PSNR / SSIM` .

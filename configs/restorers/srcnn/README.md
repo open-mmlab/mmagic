@@ -32,6 +32,7 @@ We propose a deep learning method for single image super-resolution (SR). Our me
 ```
 
 ## Results and models
+
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 

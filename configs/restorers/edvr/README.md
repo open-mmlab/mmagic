@@ -29,6 +29,7 @@ Video restoration tasks, including super-resolution, deblurring, etc, are drawin
 ```
 
 ## Results and models
+
 Evaluated on RGB channels.
 The metrics are `PSNR / SSIM` .
 

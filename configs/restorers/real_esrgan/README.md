@@ -29,6 +29,7 @@ Though many attempts have been made in blind super-resolution to restore low-res
 ```
 
 ## Results and models
+
 Evaluated on RGB channels. The metrics are `PSNR/SSIM`.
 
 |                                                                Method                                                                |      Set5      |                                                                                                                                           Download                                                                                                                                          |

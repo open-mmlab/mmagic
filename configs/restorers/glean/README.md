@@ -28,6 +28,7 @@ We show that pre-trained Generative Adversarial Networks (GANs), e.g., StyleGAN,
 ```
 
 ## Results and models
+
 For the meta info used in training and test, please refer to [here](https://github.com/ckkelvinchan/GLEAN). The results are evaluated on RGB channels.
 
 | Method                                                                                                             | PSNR  | Download                                                                                                                                                                                                                                                                |

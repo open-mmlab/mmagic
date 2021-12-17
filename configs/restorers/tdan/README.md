@@ -28,6 +28,7 @@ Video super-resolution (VSR) aims to restore a photo-realistic high-resolution (
 ```
 
 ## Results and models
+
 Evaluated on Y-channel. 8 pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 

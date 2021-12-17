@@ -29,6 +29,7 @@ How to represent an image? While the visual world is presented in a continuous m
 ```
 
 ## Results and models
+
 |                                                      Method                                                      | scale | Set5<br>PSNR / SSIM | Set14<br>PSNR / SSIM | DIV2K <br>PSNR / SSIM |                                                                                                                           Download                                                                                                                            |
 | :--------------------------------------------------------------------------------------------------------------: | :---: | :-----------------: | :------------------: | :-------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |     [liif_edsr_norm_c64b16_g1_1000k_div2k](/configs/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py)      |  x2   |  35.7131 / 0.9366   |   31.5579 / 0.8889   |   34.6647 / 0.9355    | [model](https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.log.json) |
