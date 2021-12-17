@@ -1,6 +1,7 @@
 import math
 import numbers
 import os.path as osp
+import random
 
 import cv2
 import mmcv
@@ -33,7 +34,7 @@ class Resize:
 
     Args:
         keys (list[str]): The images to be resized.
-        scale (float | Tuple[int]): If scale is Tuple(int), target spatial
+        scale (float | tuple[int]): If scale is Tuple(int), target spatial
             size (h, w). Otherwise, target spatial size is scaled by input
             size. If any of scale is -1, we will rescale short edge.
             Note that when it is used, `size_factor` and `max_size` are
@@ -148,12 +149,114 @@ class Resize:
 
 
 @PIPELINES.register_module()
-class RandomResizedCrop:
+class RandomResizedCrop(object):
+    """Crop the given numpy array to random size and aspect ratio.
 
-    def __init__(self, keys, crop_size):
+    A crop of random size (default: of 0.08 to 1.0) of the original size and a
+    random aspect ratio (default: of 3/4 to 4/3) of the original aspect ratio
+    is made. This crop is finally resized to given size.
+
+    This code is partially adopted from
+    torchvision.transforms.RandomResizedCrop:
+    [https://pytorch.org/vision/stable/_modules/torchvision/transforms/\
+        transforms.html#RandomResizedCrop].
+
+    Args:
+        keys (list[str]): The images to be resized and random-cropped.
+        crop_size (int | tuple[int]): Target spatial size (h, w).
+        scale (tuple[float]): Range of size of the origin size cropped.
+                              Default: (0.08, 1.0)
+        ratio (tuple[float]): Range of aspect ratio of the origin aspect ratio
+                              cropped. Default (3./4., 4./3.)
+        interpolation (str): Algorithm used for interpolation:
+            "nearest" | "bilinear" | "bicubic" | "area" | "lanczos".
+            Default: "bilinear".
+    """
+
+    def __init__(self,
+                 keys,
+                 crop_size,
+                 scale=(0.08, 1.0),
+                 ratio=(3. / 4., 4. / 3.),
+                 interpolation='bilinear'):
         assert keys, 'Keys should not be empty.'
+        if mmcv.is_tuple_of(crop_size, int):
+            crop_size = crop_size
+        elif isinstance(crop_size, int):
+            crop_size = (crop_size, crop_size)
+        else:
+            raise TypeError('Elements of crop_size must be int and crop_size '
+                            'must be either tuple or int, but got'
+                            f'{type(crop_size[0])} in {type(crop_size)}')
+        if not mmcv.is_tuple_of(scale, float):
+            raise TypeError('Elements of scale must be float and scale '
+                            'must be tuple, but got '
+                            f'{type(scale[0])} in {type(scale)}')
+        if not mmcv.is_tuple_of(ratio, float):
+            raise TypeError(
+                'Elements of ratio must be float and ratio must be'
+                f' tuple, but got {type(ratio[0])} in {type(ratio)}')
+
         self.keys = keys
         self.crop_size = crop_size
+        self.scale = scale
+        self.ratio = ratio
+        self.interpolation = interpolation
+
+    @staticmethod
+    def get_params(data, scale, ratio):
+        """Get parameters for ``crop`` for a random sized crop.
+
+        Args:
+            data (np.array): Image of type numpy array to be cropped.
+            scale (tuple[float]): Range of size of the origin size cropped.
+            ratio (tuple[float]): Range of aspect ratio of the origin aspect
+                                  ratio cropped.
+
+        Returns:
+            tuple: params (top, left, crop_h, crop_w) to be passed to ``crop``
+                   for a random sized crop.
+                top (int): Vertical coordinate of the top left
+                           corner of the crop box.
+                left (int): Horizontal coordinate of the top left
+                            corner of the crop box.
+                crop_h (int): Height of the crop box.
+                crop_w (int): Width of the crop box.
+        """
+        data_h, data_w = data.shape[:2]
+        area = data_h * data_w
+
+        for _ in range(10):
+            target_area = random.uniform(*scale) * area
+            log_ratio = (math.log(ratio[0]), math.log(ratio[1]))
+            aspect_ratio = math.exp(random.uniform(*log_ratio))
+
+            crop_w = int(round(math.sqrt(target_area * aspect_ratio)))
+            crop_h = int(round(math.sqrt(target_area / aspect_ratio)))
+
+            if 0 < crop_w <= data_w and 0 < crop_h <= data_h:
+                top = random.randint(0, data_h - crop_h)
+                left = random.randint(0, data_w - crop_w)
+                return top, left, crop_h, crop_w
+
+        # Fallback to central crop
+        in_ratio = float(data_w) / float(data_h)
+        if (in_ratio < min(ratio)):
+            crop_w = data_w
+            crop_h = int(round(crop_w / min(ratio)))
+        elif (in_ratio > max(ratio)):
+            crop_h = data_h
+            crop_w = int(round(crop_h * max(ratio)))
+        else:  # whole image
+            crop_w = data_w
+            crop_h = data_h
+        top = (data_h - crop_h) // 2
+        left = (data_w - crop_w) // 2
+        return top, left, crop_h, crop_w
+
+    def _crop(self, data, top, left, height, width):
+        data = data[top:top + height, left:left + width, ...]
+        return data
 
     def __call__(self, results):
         """Call function.
@@ -166,14 +269,14 @@ class RandomResizedCrop:
             dict: A dict containing the processed data and information.
         """
         for k in self.keys:
-            if k == 'gt_img':
-                results[k] = transforms.ToPILImage()(results[k]).convert('RGB')
-            elif k == 'mask':
-                results[k] = transforms.ToPILImage()(results[k]).convert('L')
-            results[k] = transforms.RandomResizedCrop(self.crop_size)(
-                results[k])
-            results[k] = np.array(results[k])
-        results['crop_size'] = self.crop_size
+            top, left, crop_h, crop_w = self.get_params(
+                results[k], self.scale, self.ratio)
+            results[k] = self._crop(results[k], top, left, crop_h, crop_w)
+            results[k], _, _ = mmcv.imresize(
+                results[k],
+                self.crop_size,
+                return_scale=True,
+                interpolation=self.interpolation)
         return results
 
     def __repr__(self):
@@ -184,72 +287,48 @@ class RandomResizedCrop:
 
 @PIPELINES.register_module()
 class RandomRotation:
+    """Rotate the image by angle.
+
+    Args:
+        keys (list[str]): The images to be rotated.
+        degrees (sequence or number): Range of degrees to select from.
+            If degrees is a number instead of sequence like (min, max),
+            the range of degrees will be (-degrees, +degrees).
+    """
 
     def __init__(self, keys, degrees):
-        assert keys, 'Keys should not be empty.'
+        if isinstance(degrees, numbers.Number):
+            if degrees < 0:
+                raise ValueError(
+                    'If degrees is a single number, it must be positive.')
+            self.degrees = (-degrees, degrees)
+        else:
+            if len(degrees) != 2:
+                raise ValueError(
+                    'If degrees is a sequence, it must be of len 2.')
+            self.degrees = degrees
+
         self.keys = keys
         self.degrees = degrees
 
+    def _rotate(self, img, angle):
+        img = mmcv.imrotate(img, angle)
+        return img
+
     def __call__(self, results):
-        """Call function.
+        angle = random.uniform(self.degrees[0], self.degrees[1])
 
-        Args:
-            results (dict): A dict containing the necessary information and
-                data for augmentation.
-
-        Returns:
-            dict: A dict containing the processed data and information.
-        """
         for k in self.keys:
-            if k == 'gt_img':
-                results[k] = transforms.ToPILImage()(results[k]).convert('RGB')
-            elif k == 'mask':
-                results[k] = transforms.ToPILImage()(results[k]).convert('L')
-            results[k] = transforms.RandomRotation(degrees=self.degrees)(
-                results[k])
-            results[k] = np.array(results[k])
+            results[k] = self._rotate(results[k], angle)
             if results[k].ndim == 2:
                 results[k] = np.expand_dims(results[k], axis=2)
         results['degrees'] = self.degrees
+
         return results
 
     def __repr__(self):
         repr_str = self.__class__.__name__
         repr_str += (f'(keys={self.keys}, degrees={self.degrees}, ')
-        return repr_str
-
-
-@PIPELINES.register_module()
-class CenterCrop:
-
-    def __init__(self, keys, crop_size):
-        assert keys, 'Keys should not be empty.'
-        self.keys = keys
-        self.crop_size = crop_size
-
-    def __call__(self, results):
-        """Call function.
-
-        Args:
-            results (dict): A dict containing the necessary information and
-                data for augmentation.
-
-        Returns:
-            dict: A dict containing the processed data and information.
-        """
-        for k in self.keys:
-            if k == 'gt_img':
-                results[k] = transforms.ToPILImage()(results[k]).convert('RGB')
-            elif k == 'mask':
-                results[k] = transforms.ToPILImage()(results[k]).convert('L')
-            results[k] = transforms.CenterCrop(self.crop_size)(results[k])
-            results[k] = np.array(results[k])
-        results['crop_size'] = self.crop_size
-        return results
-
-    def __repr__(self):
-        repr_str = self.__class__.__name__
-        repr_str += (f'(keys={self.keys}, crop_size={self.crop_size}, ')
         return repr_str
 
 
