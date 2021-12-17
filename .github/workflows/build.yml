@@ -11,6 +11,7 @@ on:
       - 'docs_zh-CN/**'
       - 'examples/**'
       - '.dev_scripts/**'
+      - '.pre-commit-config.yaml'
 
   pull_request:
     paths-ignore:
@@ -20,6 +21,7 @@ on:
       - 'docs_zh-CN/**'
       - 'examples/**'
       - '.dev_scripts/**'
+      - '.pre-commit-config.yaml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
