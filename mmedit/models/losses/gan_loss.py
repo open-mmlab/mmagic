@@ -261,47 +261,6 @@ def gaussian_blur(input, kernel_size, sigma):
     return GaussianBlur(kernel_size, sigma)(input)
 
 
-@LOSSES.register_module()
-class SMGANLoss():
-
-    def __init__(self, loss_weight, ksize=71):
-        self.ksize = ksize
-        self.loss_fn = nn.MSELoss()
-        self.loss_weight = loss_weight
-
-    def __call__(self, netD, fake, real, masks, is_real=False):
-        fake_detach = fake.detach()
-
-        g_fake = netD(fake)
-        d_fake = netD(fake_detach)
-        d_real = netD(real)
-
-        _, _, h, w = g_fake.size()
-        b, c, ht, wt = masks.size()
-
-        # Handle inconsistent size between outputs and masks
-        if h != ht or w != wt:
-            g_fake = F.interpolate(
-                g_fake, size=(ht, wt), mode='bilinear', align_corners=True)
-            d_fake = F.interpolate(
-                d_fake, size=(ht, wt), mode='bilinear', align_corners=True)
-            d_real = F.interpolate(
-                d_real, size=(ht, wt), mode='bilinear', align_corners=True)
-        d_fake_label = gaussian_blur(masks, (self.ksize, self.ksize),
-                                     (10, 10)).detach().cuda()
-        d_real_label = torch.zeros_like(d_real).cuda()
-        g_fake_label = torch.ones_like(g_fake).cuda()
-
-        dis_loss = self.loss_fn(d_fake, d_fake_label) + self.loss_fn(
-            d_real, d_real_label)
-        gen_loss = self.loss_fn(g_fake,
-                                g_fake_label) * masks / torch.mean(masks)
-
-        if is_real:
-            return self.loss_weight * gen_loss.mean()
-        return self.loss_weight * dis_loss.mean()
-
-
 def gradient_penalty_loss(discriminator, real_data, fake_data, mask=None):
     """Calculate gradient penalty for wgan-gp.
 
