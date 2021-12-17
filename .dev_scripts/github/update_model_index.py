@@ -144,7 +144,17 @@ def parse_md(md_file):
     with open(md_file, 'r') as md:
         lines = md.readlines()
         i = 0
+        name = lines[0][2:]
+        name = name.split('(', 1)[0].strip()
+        collection['Metadata']['Architecture'].append(name)
+        collection['Name'] = name
+        collection_name = name
         while i < len(lines):
+            # parse reference
+            if lines[i].startswith('<!-- [PAPER_URL:'):
+                url = re.findall(r'<!-- [PAPER_URL: (.*)] -->', lines[i])[0]
+                collection['Paper'].append(url)
+
             # parse reference
             if lines[i][:2] == '<!':
                 j = i + 1
