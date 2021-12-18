@@ -19,7 +19,7 @@ A recurrent structure is a popular framework choice for the task of video super-
 <!-- [ALGORITHM] -->
 
 ```bibtex
-@article{chan2021basicvsr++,
+@article{chan2021basicvsrplusplus,
   author = {Chan, Kelvin C.K. and Zhou, Shangchen and Xu, Xiangyu and Loy, Chen Change},
   title = {BasicVSR++: Improving Video Super-Resolution with Enhanced Propagation and Alignment},
   booktitle = {arXiv preprint arXiv:2104.13371},
