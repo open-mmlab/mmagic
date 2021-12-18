@@ -158,7 +158,8 @@ python tools/onnx2tensorrt.py
 我们在 `tools/deploy_test.py` 中提供了评估 TensorRT 和 ONNX 模型的方法。
 
 #### 先决条件
-要评估 ONNX 和 TensorRT 模型，应先安装 onnx、onnxruntime 和 TensorRT。遵循 [mmcv 中的 ONNXRuntime](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) 和 [mmcv 中的 TensorRT 插件](https:// github.com/open-mmlab/mmcv/blob/master/docs/tensorrt_plugin.md）使用 ONNXRuntime 自定义操作和 TensorRT 插件安装 `mmcv-full`。
+
+要评估 ONNX 和 TensorRT 模型，应先安装 onnx、onnxruntime 和 TensorRT。遵循 [mmcv 中的 ONNXRuntime](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) 和 [mmcv 中的 TensorRT 插件](https://github.com/open-mmlab/mmcv/blob/master/docs/tensorrt_plugin.md）使用 ONNXRuntime 自定义操作和 TensorRT 插件安装 `mmcv-full`。
 
 #### 用法
 
