@@ -61,9 +61,9 @@ for f in files:
     statsmsg = f"""
 ## [{title}]({f})
 
-* 模型权重文件数量: {len(ckpts)}
-* 配置文件数量: {len(configs)}
-* 论文数量: {len(papers)}
+* Number of checkpoints: {len(ckpts)}
+* Number of configs: {len(configs)}
+* Number of papers: {len(papers)}
 {paperlist}
 
     """
@@ -83,14 +83,14 @@ countstr = '\n'.join(
     [f'   - {t}: {c}' for t, c in zip(papertypes, papercounts)])
 
 modelzoo = f"""
-# 总览
+# Overview
 
-* 模型权重文件数量: {len(allckpts)}
-* 配置文件数量: {len(allconfigs)}
-* 论文数量: {len(allpapers)}
+* Number of checkpoints: {len(allckpts)}
+* Number of configs: {len(allconfigs)}
+* Number of papers: {len(allpapers)}
 {countstr}
 
-有关支持的数据集，可参见 [数据集总览](datasets.md).
+For supported datasets, see [datasets overview](datasets.md).
 
 {msglist}
 
@@ -144,7 +144,7 @@ for f in files:
     statsmsg = f"""
 ## [{title}]({f})
 
-* 论文数量: {len(papers)}
+* Number of papers: {len(papers)}
 {paperlist}
 
     """
@@ -164,12 +164,12 @@ countstr = '\n'.join(
     [f'   - {t}: {c}' for t, c in zip(papertypes, papercounts)])
 
 modelzoo = f"""
-# 总览
+# Overview
 
-* 论文数量: {len(alldatapapers)}
+* Number of papers: {len(alldatapapers)}
 {countstr}
 
-有关支持的算法, 可参见 [模型总览](modelzoo.md).
+For supported editing algorithms, see [modelzoo overview](modelzoo.md).
 
 {datamsglist}
 """
