@@ -12,7 +12,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-import subprocess
+# import subprocess
 import sys
 
 import pytorch_sphinx_theme
@@ -163,8 +163,9 @@ master_doc = 'index'
 
 
 def builder_inited_handler(app):
-    subprocess.run(['./merge_docs.sh'])
-    subprocess.run(['./stat.py'])
+    pass
+    # subprocess.run(['./merge_docs.sh'])
+    # subprocess.run(['./stat.py'])
 
 
 def setup(app):
