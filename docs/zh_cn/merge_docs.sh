@@ -6,10 +6,10 @@ sed -i '$a\\n<br/><hr/>\n' ../../configs/restorers/*/README_zh-CN.md
 sed -i '$a\\n<br/><hr/>\n' ../../configs/synthesizers/*/README_zh-CN.md
 
 # gather models
-cat ../../configs/inpainting/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Inpainting Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >inpainting_models.md
-cat ../../configs/mattors/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Matting Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >mattors_models.md
-cat ../../configs/restorers/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Super-Resolution Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >restorers_models.md
-cat ../../configs/synthesizers/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Generation Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >synthesizers_models.md
+cat ../../configs/inpainting/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# 补全模型' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >inpainting_models.md
+cat ../../configs/mattors/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# 抠图模型' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >mattors_models.md
+cat ../../configs/restorers/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# 超分辨率模型' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >restorers_models.md
+cat ../../configs/synthesizers/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# 生成模型' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >synthesizers_models.md
 
 # gather datasets
 cat ../../tools/data/generation/README_zh-CN.md > generation_datasets.md
