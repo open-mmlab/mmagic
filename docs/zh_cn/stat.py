@@ -90,7 +90,7 @@ modelzoo = f"""
 * 论文数量: {len(allpapers)}
 {countstr}
 
-For supported datasets, see [datasets overview](datasets.md).
+有关支持的数据集，请参阅 [数据集总览](datasets.md)。
 
 {msglist}
 
