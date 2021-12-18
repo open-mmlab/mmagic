@@ -11,11 +11,9 @@ python tools/get_flops.py ${CONFIG_FILE} [--shape ${INPUT_SHAPE}]
 ```
 
 例如，
-
 ```shell
 python tools/get_flops.py configs/resotorer/srresnet.py --shape 40 40
 ```
-
 你会得到以下的结果。
 
 ```
@@ -30,7 +28,7 @@ Params: 1.52 M
 
 (1) FLOP 与输入形状有关，而参数量与输入形状无关。默认输入形状为 (1, 3, 250, 250)。
 (2) 一些运算符不计入 FLOP，如 GN 和自定义运算符。
-你可以通过修改 [ `mmcv/cnn/utils/flops_counter.py` ](https://github.com/open-mmlab/mmcv/blob/master/mmcv/cnn/utils/flops_counter.py`) 来添加对新运算符的支持。
+你可以通过修改 [`mmcv/cnn/utils/flops_counter.py`](https://github.com/open-mmlab/mmcv/blob/master/mmcv/cnn/utils/flops_counter.py`) 来添加对新运算符的支持。
 
 ### 发布模型
 
@@ -48,7 +46,7 @@ python tools/publish_model.py ${INPUT_FILENAME} ${OUTPUT_FILENAME}
 python tools/publish_model.py work_dirs/example_exp/latest.pth example_model_20200202.pth
 ```
 
-最终输出文件名将是 `example_model_20200202-{hash id}.pth` .
+最终输出文件名将是 `example_model_20200202-{hash id}.pth`.
 
 ### 转换为 ONNX（实验性）
 
@@ -69,18 +67,18 @@ python tools/pytorch2onnx.py
 
 参数说明：
 
-* `config` : 模型配置文件的路径。
-* `checkpoint` : 模型模型权重文件的路径。
-* `model_type` : 配置文件的模型类型，选项： `inpainting`, `mattor`, `restorer`, `synthesizer`。
-* `image_path` : 输入图像文件的路径。
-* `--trimap-path` : 输入三元图文件的路径，用于 mattor 模型。
-* `--output-file`: 输出 ONNX 模型的路径。默认为 `tmp.onnx`。
-* `--opset-version` : ONNX opset 版本。默认为 11。
-* `--show`: 确定是否打印导出模型的架构。默认为 `False`。
-* `--verify`: 确定是否验证导出模型的正确性。默认为 `False`。
-* `--dynamic-export`: 确定是否导出具有动态输入和输出形状的 ONNX 模型。默认为 `False`。
+- `config` : 模型配置文件的路径。
+- `checkpoint` : 模型模型权重文件的路径。
+- `model_type` : 配置文件的模型类型，选项： `inpainting`, `mattor`, `restorer`, `synthesizer`。
+- `image_path` : 输入图像文件的路径。
+- `--trimap-path` : 输入三元图文件的路径，用于 mattor 模型。
+- `--output-file`: 输出 ONNX 模型的路径。默认为 `tmp.onnx`。
+- `--opset-version` : ONNX opset 版本。默认为 11。
+- `--show`: 确定是否打印导出模型的架构。默认为 `False`。
+- `--verify`: 确定是否验证导出模型的正确性。默认为 `False`。
+- `--dynamic-export`: 确定是否导出具有动态输入和输出形状的 ONNX 模型。默认为 `False`。
 
-**注**：此工具仍处于试验阶段。目前不支持某些自定义运算符。我们现在只支持 `mattor` 和 `restorer` 。
+**注**：此工具仍处于试验阶段。目前不支持某些自定义运算符。我们现在只支持 `mattor` 和 `restorer`。
 
 #### 支持导出到 ONNX 的模型列表
 
@@ -97,13 +95,14 @@ python tools/pytorch2onnx.py
 
 **注**：
 
-* *以上所有模型均使用 Pytorch==1.6.0 和 onnxruntime==1.5.1*
-* 如果您遇到上面列出的模型的任何问题，请创建一个 issue，我们会尽快处理。对于列表中未包含的型号，请尝试自行解决。
-* 由于此功能是实验性的并且可能会快速更改，请始终尝试使用最新的 `mmcv` 和 `mmedit`。
+- *以上所有模型均使用 Pytorch==1.6.0 和 onnxruntime==1.5.1*
+- 如果您遇到上面列出的模型的任何问题，请创建一个 issue，我们会尽快处理。对于列表中未包含的型号，请尝试自行解决。
+- 由于此功能是实验性的并且可能会快速更改，请始终尝试使用最新的 `mmcv` 和 `mmedit`。
 
 ### 将 ONNX 转换为 TensorRT（实验性）
 
 我们还提供了将 [ONNX](https://github.com/onnx/onnx) 模型转换为 [TensorRT](https://github.com/NVIDIA/TensorRT) 格式的脚本。 此外，我们支持比较 ONNX 和 TensorRT 模型之间的输出结果。
+
 
 ```bash
 python tools/onnx2tensorrt.py
@@ -123,20 +122,20 @@ python tools/onnx2tensorrt.py
 
 参数说明：
 
-* `config` : 模型配置文件的路径。
-* `model_type` : 配置文件的模型类型，选项： `inpainting`, `mattor`, `restorer`, `synthesizer`。
-* `img_path` : 输入图像文件的路径。
-* `onnx_file` : 输入 ONNX 文件的路径。
-* `--trt-file` : 输出 TensorRT 模型的路径。默认为 `tmp.trt`。
-* `--max-shape` : 模型输入的最大形状。
-* `--min-shape` : 模型输入的最小形状。
-* `--workspace-size`: 以 GiB 为单位的最大工作空间大小。默认为 1 GiB。
-* `--fp16`: 确定是否以 fp16 模式导出 TensorRT。默认为 `False`。
-* `--show`: 确定是否显示 ONNX 和 TensorRT 的输出。默认为 `False`。
-* `--verify`: 确定是否验证导出模型的正确性。默认为 `False`。
-* `--verbose`: 确定在创建 TensorRT 引擎时是否详细记录日志消息。默认为 `False`。
+- `config` : 模型配置文件的路径。
+- `model_type` :配置文件的模型类型，选项： `inpainting`, `mattor`, `restorer`, `synthesizer`。
+- `img_path` : 输入图像文件的路径。
+- `onnx_file` : 输入 ONNX 文件的路径。
+- `--trt-file` : 输出 TensorRT 模型的路径。默认为 `tmp.trt`。
+- `--max-shape` : 模型输入的最大形状。
+- `--min-shape` : 模型输入的最小形状。
+- `--workspace-size`: 以 GiB 为单位的最大工作空间大小。默认为 1 GiB。
+- `--fp16`: 确定是否以 fp16 模式导出 TensorRT。默认为 `False`。
+- `--show`: 确定是否显示 ONNX 和 TensorRT 的输出。默认为 `False`。
+- `--verify`: 确定是否验证导出模型的正确性。默认为 `False`。
+- `--verbose`: 确定在创建 TensorRT 引擎时是否详细记录日志消息。默认为 `False`。
 
-**注**：此工具仍处于试验阶段。 目前不支持某些自定义运算符。 我们现在只支持 `restorer` 。 在生成 SRCNN 的 ONNX 文件时，将 SCRNN 模型中的 'bicubic' 替换为 'bilinear' [此处](https://github.com/open-mmlab/mmediting/blob/764e6065e315b7d0033762038fcbf0bb1c570d4d/mmedit.bones/modelsrnn py#L40）。 因为 TensorRT 目前不支持 bicubic 插值，最终性能将下降约 4%。
+**注**：此工具仍处于试验阶段。 目前不支持某些自定义运算符。 我们现在只支持 `restorer`。 在生成 SRCNN 的 ONNX 文件时，将 SCRNN 模型中的 'bicubic' 替换为 'bilinear' [此处](https://github.com/open-mmlab/mmediting/blob/764e6065e315b7d0033762038fcbf0bb1c570d4d/mmedit.bones/modelsrnn py#L40）。 因为 TensorRT 目前不支持 bicubic 插值，最终性能将下降约 4%。
 
 #### 支持导出到 TensorRT 的模型列表
 
@@ -150,17 +149,16 @@ python tools/onnx2tensorrt.py
 
 **注**：
 
-* *以上所有模型均使用 Pytorch==1.8.1、onnxruntime==1.7.0 和 tensorrt==7.2.3.4 进行测试*
-* 如果您遇到上面列出的模型的任何问题，请创建一个问题，我们会尽快处理。 对于列表中未包含的型号，请尝试自行解决。
-* 由于此功能是实验性的并且可能会快速更改，因此请始终尝试使用最新的 `mmcv` 和 `mmedit`。
+- *以上所有模型均使用 Pytorch==1.8.1、onnxruntime==1.7.0 和 tensorrt==7.2.3.4 进行测试*
+- 如果您遇到上面列出的模型的任何问题，请创建一个问题，我们会尽快处理。 对于列表中未包含的型号，请尝试自行解决。
+- 由于此功能是实验性的并且可能会快速更改，因此请始终尝试使用最新的 `mmcv` 和 `mmedit`。
 
 ### 评估 ONNX 和 TensorRT 模型（实验性）
 
 我们在 `tools/deploy_test.py` 中提供了评估 TensorRT 和 ONNX 模型的方法。
 
 #### 先决条件
-
-要评估 ONNX 和 TensorRT 模型，应先安装 onnx、onnxruntime 和 TensorRT。遵循 [mmcv 中的 ONNXRuntime](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) 和 [mmcv 中的 TensorRT 插件](https:// github.com/open-mmlab/mmcv/blob/master/docs/en/tensorrt_plugin.md）使用 ONNXRuntime 自定义操作和 TensorRT 插件安装 `mmcv-full` 。
+要评估 ONNX 和 TensorRT 模型，应先安装 onnx、onnxruntime 和 TensorRT。遵循 [mmcv 中的 ONNXRuntime](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) 和 [mmcv 中的 TensorRT 插件](https:// github.com/open-mmlab/mmcv/blob/master/docs/tensorrt_plugin.md）使用 ONNXRuntime 自定义操作和 TensorRT 插件安装 `mmcv-full`。
 
 #### 用法
 
@@ -176,17 +174,16 @@ python tools/deploy_test.py \
 
 #### 参数说明：
 
-* `config`: 模型配置文件的路径。
-* `model`: TensorRT 或 ONNX 模型文件的路径。
-* `backend`: 用于测试的后端，选择 tensorrt 或 onnxruntime。
-* `--out`: pickle 格式的输出结果文件的路径。
-* `--save-path`: 存储图像的路径，如果没有给出，则不会保存图像。
-* `--cfg-options`: 覆盖使用的配置文件中的一些设置，`xxx=yyy` 格式的键值对将被合并到配置文件中。
+- `config`: 模型配置文件的路径。
+- `model`: TensorRT 或 ONNX 模型文件的路径。
+- `backend`: 用于测试的后端，选择 tensorrt 或 onnxruntime。
+- `--out`: pickle 格式的输出结果文件的路径。
+- `--save-path`: 存储图像的路径，如果没有给出，则不会保存图像。
+- `--cfg-options`: 覆盖使用的配置文件中的一些设置，`xxx=yyy` 格式的键值对将被合并到配置文件中。
 
 #### 结果和模型
 
 <table border="1" class="docutils">
-
 	<tr>
 	    <th align="center">Model</th>
 	    <th align="center">Config</th>
@@ -344,10 +341,9 @@ python tools/deploy_test.py \
         <td align="center">0.7605</td>
         <td align="center">0.7604</td>
     </tr>
-
 </table>
 
 **注**：
 
-* 所有 ONNX 和 TensorRT 模型都使用数据集上的动态形状进行评估，图像根据原始配置文件进行预处理。
-* 此工具仍处于试验阶段，我们目前仅支持 `restorer`。
+- 所有 ONNX 和 TensorRT 模型都使用数据集上的动态形状进行评估，图像根据原始配置文件进行预处理。
+- 此工具仍处于试验阶段，我们目前仅支持 `restorer`。

@@ -11,11 +11,9 @@ python tools/get_flops.py ${CONFIG_FILE} [--shape ${INPUT_SHAPE}]
 ```
 
 For example,
-
 ```shell
 python tools/get_flops.py configs/resotorer/srresnet.py --shape 40 40
 ```
-
 You will get the result like this.
 
 ```
@@ -30,7 +28,7 @@ Params: 1.52 M
 
 (1) FLOPs are related to the input shape while parameters are not. The default input shape is (1, 3, 250, 250).
 (2) Some operators are not counted into FLOPs like GN and custom operators.
-You can add support for new operators by modifying [ `mmcv/cnn/utils/flops_counter.py` ](https://github.com/open-mmlab/mmcv/blob/master/mmcv/cnn/utils/flops_counter.py).
+You can add support for new operators by modifying [`mmcv/cnn/utils/flops_counter.py`](https://github.com/open-mmlab/mmcv/blob/master/mmcv/cnn/utils/flops_counter.py).
 
 ### Publish a model
 
@@ -48,7 +46,7 @@ E.g.,
 python tools/publish_model.py work_dirs/example_exp/latest.pth example_model_20200202.pth
 ```
 
-The final output filename will be `example_model_20200202-{hash id}.pth` .
+The final output filename will be `example_model_20200202-{hash id}.pth`.
 
 ### Convert to ONNX (experimental)
 
@@ -69,16 +67,16 @@ python tools/pytorch2onnx.py
 
 Description of arguments:
 
-* `config` : The path of a model config file.
-* `checkpoint` : The path of a model checkpoint file.
-* `model_type` : The model type of the config file, options: `inpainting`, `mattor`, `restorer`, `synthesizer`.
-* `image_path` : path to input image file.
-* `--trimap-path` : path to input trimap file, used in mattor model.
-* `--output-file`: The path of output ONNX model. If not specified, it will be set to `tmp.onnx`.
-* `--opset-version` : ONNX opset version, default to 11.
-* `--show`: Determines whether to print the architecture of the exported model. If not specified, it will be set to `False`.
-* `--verify`: Determines whether to verify the correctness of an exported model. If not specified, it will be set to `False`.
-* `--dynamic-export`: Determines whether to export ONNX model with dynamic input and output shapes. If not specified, it will be set to `False`.
+- `config` : The path of a model config file.
+- `checkpoint` : The path of a model checkpoint file.
+- `model_type` :The model type of the config file, options: `inpainting`, `mattor`, `restorer`, `synthesizer`.
+- `image_path` : path to input image file.
+- `--trimap-path` : path to input trimap file, used in mattor model.
+- `--output-file`: The path of output ONNX model. If not specified, it will be set to `tmp.onnx`.
+- `--opset-version` : ONNX opset version, default to 11.
+- `--show`: Determines whether to print the architecture of the exported model. If not specified, it will be set to `False`.
+- `--verify`: Determines whether to verify the correctness of an exported model. If not specified, it will be set to `False`.
+- `--dynamic-export`: Determines whether to export ONNX model with dynamic input and output shapes. If not specified, it will be set to `False`.
 
 **Note**: This tool is still experimental. Some customized operators are not supported for now. And we only support `mattor` and `restorer` for now.
 
@@ -97,13 +95,14 @@ The table below lists the models that are guaranteed to be exportable to ONNX an
 
 **Notes**:
 
-* *All models above are tested with Pytorch==1.6.0 and onnxruntime==1.5.1*
-* If you meet any problem with the listed models above, please create an issue and it would be taken care of soon. For models not included in the list, please try to solve them by yourself.
-* Because this feature is experimental and may change fast, please always try with the latest `mmcv` and `mmedit`.
+- *All models above are tested with Pytorch==1.6.0 and onnxruntime==1.5.1*
+- If you meet any problem with the listed models above, please create an issue and it would be taken care of soon. For models not included in the list, please try to solve them by yourself.
+- Because this feature is experimental and may change fast, please always try with the latest `mmcv` and `mmedit`.
 
 ### Convert ONNX to TensorRT (experimental)
 
 We also provide a script to convert [ONNX](https://github.com/onnx/onnx) model to [TensorRT](https://github.com/NVIDIA/TensorRT) format. Besides, we support comparing the output results between ONNX and TensorRT model.
+
 
 ```bash
 python tools/onnx2tensorrt.py
@@ -123,18 +122,18 @@ python tools/onnx2tensorrt.py
 
 Description of arguments:
 
-* `config` : The path of a model config file.
-* `model_type` : The model type of the config file, options: `inpainting`, `mattor`, `restorer`, `synthesizer`.
-* `img_path` : The path to input image file.
-* `onnx_file` : The path to input ONNX file.
-* `--trt-file` : The path of output TensorRT model. If not specified, it will be set to `tmp.trt`.
-* `--max-shape` : Maximum shape of model input.
-* `--min-shape` : Minimum shape of model input.
-* `--workspace-size`: Max workspace size in GiB. If not specified, it will be set to 1 GiB.
-* `--fp16`: Determines whether to export TensorRT with fp16 mode. If not specified, it will be set to `False`.
-* `--show`: Determines whether to show the output of ONNX and TensorRT. If not specified, it will be set to `False`.
-* `--verify`: Determines whether to verify the correctness of an exported model. If not specified, it will be set to `False`.
-* `--verbose`: Determines whether to verbose logging messages while creating TensorRT engine. If not specified, it will be set to `False`.
+- `config` : The path of a model config file.
+- `model_type` :The model type of the config file, options: `inpainting`, `mattor`, `restorer`, `synthesizer`.
+- `img_path` : The path to input image file.
+- `onnx_file` : The path to input ONNX file.
+- `--trt-file` : The path of output TensorRT model. If not specified, it will be set to `tmp.trt`.
+- `--max-shape` : Maximum shape of model input.
+- `--min-shape` : Minimum shape of model input.
+- `--workspace-size`: Max workspace size in GiB. If not specified, it will be set to 1 GiB.
+- `--fp16`: Determines whether to export TensorRT with fp16 mode. If not specified, it will be set to `False`.
+- `--show`: Determines whether to show the output of ONNX and TensorRT. If not specified, it will be set to `False`.
+- `--verify`: Determines whether to verify the correctness of an exported model. If not specified, it will be set to `False`.
+- `--verbose`: Determines whether to verbose logging messages while creating TensorRT engine. If not specified, it will be set to `False`.
 
 **Note**: This tool is still experimental. Some customized operators are not supported for now. We only support `restorer` for now. While generating ONNX file of SRCNN, replace 'bicubic' with 'bilinear' in SCRNN model [here](https://github.com/open-mmlab/mmediting/blob/764e6065e315b7d0033762038fcbf0bb1c570d4d/mmedit/models/backbones/sr_backbones/srcnn.py#L40). For TensorRT does not support bicubic interpolation by now and final performance will be weaken by about 4%.
 
@@ -150,17 +149,16 @@ The table below lists the models that are guaranteed to be exportable to TensorR
 
 **Notes**:
 
-* *All models above are tested with Pytorch==1.8.1, onnxruntime==1.7.0 and tensorrt==7.2.3.4*
-* If you meet any problem with the listed models above, please create an issue and it would be taken care of soon. For models not included in the list, please try to solve them by yourself.
-* Because this feature is experimental and may change fast, please always try with the latest `mmcv` and `mmedit`.
+- *All models above are tested with Pytorch==1.8.1,  onnxruntime==1.7.0 and tensorrt==7.2.3.4*
+- If you meet any problem with the listed models above, please create an issue and it would be taken care of soon. For models not included in the list, please try to solve them by yourself.
+- Because this feature is experimental and may change fast, please always try with the latest `mmcv` and `mmedit`.
 
 ### Evaluate ONNX and TensorRT Models (experimental)
 
-We provide methods to evaluate TensorRT and ONNX models in `tools/deploy_test.py` .
+We provide methods to evaluate TensorRT and ONNX models in `tools/deploy_test.py`.
 
 #### Prerequisite
-
-To evaluate ONNX and TensorRT models, onnx, onnxruntime and TensorRT should be installed first. Install `mmcv-full` with ONNXRuntime custom ops and TensorRT plugins follow [ONNXRuntime in mmcv](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) and [TensorRT plugin in mmcv](https://github.com/open-mmlab/mmcv/blob/master/docs/en/tensorrt_plugin.md).
+To evaluate ONNX and TensorRT models, onnx, onnxruntime and TensorRT should be installed first. Install `mmcv-full` with ONNXRuntime custom ops and TensorRT plugins follow [ONNXRuntime in mmcv](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) and [TensorRT plugin in mmcv](https://github.com/open-mmlab/mmcv/blob/master/docs/tensorrt_plugin.md).
 
 #### Usage
 
@@ -176,17 +174,16 @@ python tools/deploy_test.py \
 
 #### Description of all arguments
 
-* `config`: The path of a model config file.
-* `model`: The path of a TensorRT or an ONNX model file.
-* `backend`: The backend for testing, choose tensorrt or onnxruntime.
-* `--out`: The path of output result file in pickle format.
-* `--save-path`: The path to store images and if not given, it will not save image.
-* `--cfg-options`: Override some settings in the used config file, the key-value pair in `xxx=yyy` format will be merged into config file.
+- `config`: The path of a model config file.
+- `model`: The path of a TensorRT or an ONNX model file.
+- `backend`: The backend for testing, choose tensorrt or onnxruntime.
+- `--out`: The path of output result file in pickle format.
+- `--save-path`: The path to store images and if not given, it will not save image.
+- `--cfg-options`: Override some settings in the used config file, the key-value pair in `xxx=yyy` format will be merged into config file.
 
 #### Results and Models
 
 <table border="1" class="docutils">
-
 	<tr>
 	    <th align="center">Model</th>
 	    <th align="center">Config</th>
@@ -344,10 +341,9 @@ python tools/deploy_test.py \
         <td align="center">0.7605</td>
         <td align="center">0.7604</td>
     </tr>
-
 </table>
 
 **Notes**:
 
-* All ONNX and TensorRT models are evaluated with dynamic shape on the datasets and images are preprocessed according to the original config file.
-* This tool is still experimental, and we only support `restorer` for now.
+- All ONNX and TensorRT models are evaluated with dynamic shape on the datasets and images are preprocessed according to the original config file.
+- This tool is still experimental, and we only support `restorer` for now.
