@@ -27,12 +27,12 @@ conda install pytorch torchvision -c pytorch
 
 `例1`：如果 `/usr/local/cuda` 文件夹下已安装了 CUDA 10.1 版本，则需要安装 CUDA 10.1 下预编译的 PyTorch。
 
-```python
+```shell
 conda install pytorch cudatoolkit=10.1 torchvision -c pytorch
 ```
 
 `例2`：如果你在 `/usr/local/cuda` 文件夹下已安装 CUDA 9.2 版本，并且想要安装 PyTorch 1.3.1 版本，则需要安装 CUDA 9.2 下预编译的 PyTorch。
-```python
+```shell
 conda install pytorch=1.3.1 cudatoolkit=9.2 torchvision=0.4.2 -c pytorch
 ```
 
