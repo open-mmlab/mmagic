@@ -89,7 +89,6 @@ modelzoo = f"""
 * 配置文件数量: {len(allconfigs)}
 * 论文数量: {len(allpapers)}
 {countstr}
-{countstr}
 
 For supported datasets, see [datasets overview](datasets.md).
 
