@@ -26,9 +26,9 @@ Params: 1.52 M
 
 **注**：此工具仍处于实验阶段，我们不保证数字正确。 您可以将结果用于简单的比较，但在技术报告或论文中采用它之前，请仔细检查它。
 
-(1) FLOP 与输入形状有关，而参数量与输入形状无关。默认输入形状为 (1, 3, 250, 250)。
+(1) FLOPs 与输入形状有关，而参数量与输入形状无关。默认输入形状为 (1, 3, 250, 250)。
 (2) 一些运算符不计入 FLOP，如 GN 和自定义运算符。
-你可以通过修改 [`mmcv/cnn/utils/flops_counter.py`](https://github.com/open-mmlab/mmcv/blob/master/mmcv/cnn/utils/flops_counter.py`) 来添加对新运算符的支持。
+你可以通过修改 [`mmcv/cnn/utils/flops_counter.py`](https://github.com/open-mmlab/mmcv/blob/master/mmcv/cnn/utils/flops_counter.py) 来添加对新运算符的支持。
 
 ### 发布模型
 
@@ -84,7 +84,7 @@ python tools/pytorch2onnx.py
 
 下表列出了保证可导出到 ONNX 并可在 ONNX Runtime 中运行的模型。
 
-|  Model   |                                                                               Config                                                                                | Dynamic Shape | Batch Inference | Note  |
+|  模型   |                                                                               配置                                                                                | 动态形状 | 批量推理 | 备注  |
 | :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :-------------: | :---: |
 |  ESRGAN  |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |       Y       |        Y        |       |
 |  ESRGAN  | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |       Y       |        Y        |       |
