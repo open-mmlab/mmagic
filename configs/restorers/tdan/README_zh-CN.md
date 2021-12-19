@@ -50,7 +50,7 @@ TDAN 训练有两个阶段。
 ./tools/dist_train.sh configs/restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py 8
 ```
 
-更多细节可以参考 [getting_started](/docs/en/getting_started.md#train-a-model) 中的 **Train a model** 部分。
+更多细节可以参考 [getting_started](/docs/zh_cn/getting_started.md#train-a-model) 中的 **Train a model** 部分。
 </details>
 
 **测试**
@@ -70,5 +70,5 @@ python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [-
 python tools/test.py configs/restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py  checkpoints/SOME_CHECKPOINT.pth --save_path outputs/
 ```
 
-更多细节可以参考 [getting_started](/docs/en/getting_started.md#inference-with-pretrained-models) 中的 **Inference with pretrained models** 部分。
+更多细节可以参考 [getting_started](/docs/zh_cn/getting_started.md#inference-with-pretrained-models) 中的 **Inference with pretrained models** 部分。
 </details>
