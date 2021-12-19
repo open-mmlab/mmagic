@@ -144,22 +144,18 @@ def parse_md(md_file):
     with open(md_file, 'r') as md:
         lines = md.readlines()
         i = 0
+        name = lines[0][2:]
+        name = name.split('(', 1)[0].strip()
+        collection['Metadata']['Architecture'].append(name)
+        collection['Name'] = name
+        collection_name = name
         while i < len(lines):
             # parse reference
-            if lines[i][:2] == '<!':
-                j = i + 1
-                while len(lines[j]) < 8 or lines[j][:8] != '<summary':
-                    j += 1
-                url, name = re.findall(r'<a href="(.*)">(.*)</a>', lines[j])[0]
-                name = name.split('(', 1)[0].strip()
-                # get architecture
-                if 'ALGORITHM' in lines[i] or 'BACKBONE' in lines[i]:
-                    collection['Metadata']['Architecture'].append(name)
-                    collection['Name'] = name
-                    collection_name = name
-                # get paper url
+            if lines[i].startswith('<!-- [PAPER_URL:'):
+                url = re.match(r'<!-- \[PAPER_URL: (.*?)] -->', lines[i])
+                url = url.groups()[0]
                 collection['Paper'].append(url)
-                i = j + 1
+                i += 1
 
             # parse table
             elif lines[i][0] == '|' and i + 1 < len(lines) and \

@@ -59,7 +59,7 @@ python demo/restoration_face_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_F
 If `--imshow` is specified, the demo will also show image with opencv. Examples:
 
 ```shell
-python demo/restoration_face_demo.py configs/restorers/glean/glean_in128out1024_2x4_300k_ffhq_celebahq.py https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth tests/data/face/000001.png results/000001.png --upscale_factor 4
+python demo/restoration_face_demo.py configs/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq.py https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth tests/data/face/000001.png results/000001.png --upscale_factor 4
 ```
 
 #### Restoration (Video)
