@@ -31,50 +31,76 @@ class RandomBlur:
         self.keys = keys
         self.params = params
 
-    def get_kernel(self):
+    def get_kernel(self, num_kernels):
         kernel = np.random.choice(
             self.params['kernel_list'], p=self.params['kernel_prob'])
         kernel_size = random.choice(self.params['kernel_size'])
 
-        sigma_x = self.params.get('sigma_x', [0, 0])
-        sigma_x = np.random.uniform(sigma_x[0], sigma_x[1])
+        sigma_x_range = self.params.get('sigma_x', [0, 0])
+        sigma_x = np.random.uniform(sigma_x_range[0], sigma_x_range[1])
+        sigma_x_step = self.params.get('sigma_x_step', 0)
 
-        sigma_y = self.params.get('sigma_y', [0, 0])
-        sigma_y = np.random.uniform(sigma_y[0], sigma_y[1])
+        sigma_y_range = self.params.get('sigma_y', [0, 0])
+        sigma_y = np.random.uniform(sigma_y_range[0], sigma_y_range[1])
+        sigma_y_step = self.params.get('sigma_y_step', 0)
 
-        rotate_angle = self.params.get('rotate_angle', [-np.pi, np.pi])
-        rotate_angle = np.random.uniform(rotate_angle[0], rotate_angle[1])
+        rotate_angle_range = self.params.get('rotate_angle', [-np.pi, np.pi])
+        rotate_angle = np.random.uniform(rotate_angle_range[0],
+                                         rotate_angle_range[1])
+        rotate_angle_step = self.params.get('rotate_angle_step', 0)
 
-        beta_gau = self.params.get('beta_gaussian', [0.5, 4])
-        beta_gau = np.random.uniform(beta_gau[0], beta_gau[1])
+        beta_gau_range = self.params.get('beta_gaussian', [0.5, 4])
+        beta_gau = np.random.uniform(beta_gau_range[0], beta_gau_range[1])
+        beta_gau_step = self.params.get('beta_gaussian_step', 0)
 
-        beta_pla = self.params.get('beta_plateau', [1, 2])
-        beta_pla = np.random.uniform(beta_pla[0], beta_pla[1])
+        beta_pla_range = self.params.get('beta_plateau', [1, 2])
+        beta_pla = np.random.uniform(beta_pla_range[0], beta_pla_range[1])
+        beta_pla_step = self.params.get('beta_plateau_step', 0)
 
-        omega = self.params.get('omega', None)
-        if omega is not None:
-            omega = np.random.uniform(omega[0], omega[1])
-        else:  # follow Real-ESRGAN
+        omega_range = self.params.get('omega', None)
+        omega_step = self.params.get('omega_step', 0)
+        if omega_range is None:  # follow Real-ESRGAN settings if not specified
             if kernel_size < 13:
-                omega = np.random.uniform(np.pi / 3, np.pi)
+                omega_range = [np.pi / 3., np.pi]
             else:
-                omega = np.random.uniform(np.pi / 5, np.pi)
+                omega_range = [np.pi / 5., np.pi]
+        omega = np.random.uniform(omega_range[0], omega_range[1])
 
         # determine blurring kernel
-        kernel = blur_kernels.random_mixed_kernels(
-            [kernel],
-            [1],
-            kernel_size,
-            [sigma_x, sigma_x],
-            [sigma_y, sigma_y],
-            [rotate_angle, rotate_angle],
-            [beta_gau, beta_gau],
-            [beta_pla, beta_pla],
-            [omega, omega],
-            None,
-        )
+        kernels = []
+        for _ in range(0, num_kernels):
+            kernel = blur_kernels.random_mixed_kernels(
+                [kernel],
+                [1],
+                kernel_size,
+                [sigma_x, sigma_x],
+                [sigma_y, sigma_y],
+                [rotate_angle, rotate_angle],
+                [beta_gau, beta_gau],
+                [beta_pla, beta_pla],
+                [omega, omega],
+                None,
+            )
+            kernels.append(kernel)
 
-        return kernel
+            # update kernel parameters
+            sigma_x += np.random.uniform(-sigma_x_step, sigma_x_step)
+            sigma_y += np.random.uniform(-sigma_y_step, sigma_y_step)
+            rotate_angle += np.random.uniform(-rotate_angle_step,
+                                              rotate_angle_step)
+            beta_gau += np.random.uniform(-beta_gau_step, beta_gau_step)
+            beta_pla += np.random.uniform(-beta_pla_step, beta_pla_step)
+            omega += np.random.uniform(-omega_step, omega_step)
+
+            sigma_x = np.clip(sigma_x, sigma_x_range[0], sigma_x_range[1])
+            sigma_y = np.clip(sigma_y, sigma_y_range[0], sigma_y_range[1])
+            rotate_angle = np.clip(rotate_angle, rotate_angle_range[0],
+                                   rotate_angle_range[1])
+            beta_gau = np.clip(beta_gau, beta_gau_range[0], beta_gau_range[1])
+            beta_pla = np.clip(beta_pla, beta_pla_range[0], beta_pla_range[1])
+            omega = np.clip(omega, omega_range[0], omega_range[1])
+
+        return kernels
 
     def _apply_random_blur(self, imgs):
         is_single_image = False
@@ -83,8 +109,11 @@ class RandomBlur:
             imgs = [imgs]
 
         # get kernel and blur the input
-        kernel = self.get_kernel()
-        imgs = [cv2.filter2D(im, -1, kernel) for im in imgs]
+        kernels = self.get_kernel(num_kernels=len(imgs))
+        imgs = [
+            cv2.filter2D(img, -1, kernel)
+            for img, kernel in zip(imgs, kernels)
+        ]
 
         if is_single_image:
             imgs = imgs[0]
@@ -144,6 +173,8 @@ class RandomResize:
                                       'implemented')
         resize_opt = self.resize_dict[resize_opt]
 
+        resize_step = self.params.get('resize_step', 0)
+
         # determine the target size, if not provided
         target_size = self.params.get('target_size', None)
         if target_size is None:
@@ -157,16 +188,32 @@ class RandomResize:
             else:
                 scale_factor = 1
             target_size = (int(h * scale_factor), int(w * scale_factor))
+        else:
+            resize_step = 0
+
         # resize the input
-        imgs = [
-            cv2.resize(img, target_size[::-1], interpolation=resize_opt)
-            for img in imgs
-        ]
+        if resize_step == 0:  # same target_size for all input images
+            outputs = [
+                cv2.resize(img, target_size[::-1], interpolation=resize_opt)
+                for img in imgs
+            ]
+        else:  # different target_size for each input image
+            outputs = []
+            for img in imgs:
+                img = cv2.resize(
+                    img, target_size[::-1], interpolation=resize_opt)
+                outputs.append(img)
+
+                # update scale
+                scale_factor += np.random.uniform(-resize_step, resize_step)
+                scale_factor = np.clip(scale_factor, resize_scale[0],
+                                       resize_scale[1])
+                target_size = (int(h * scale_factor), int(w * scale_factor))
 
         if is_single_image:
-            imgs = imgs[0]
+            outputs = outputs[0]
 
-        return imgs
+        return outputs
 
     def __call__(self, results):
         if np.random.uniform() > self.params.get('prob', 1):
@@ -205,6 +252,8 @@ class RandomNoise:
         sigma_range = self.params['gaussian_sigma']
         sigma = np.random.uniform(sigma_range[0], sigma_range[1]) / 255.
 
+        sigma_step = self.params.get('gaussian_sigma_step', 0)
+
         gray_noise_prob = self.params['gaussian_gray_noise_prob']
         is_gray_noise = np.random.uniform() < gray_noise_prob
 
@@ -215,11 +264,18 @@ class RandomNoise:
                 noise = noise[:, :, :1]
             outputs.append(img + noise)
 
+            # update noise level
+            sigma += np.random.uniform(-sigma_step, sigma_step) / 255.
+            sigma = np.clip(sigma, sigma_range[0] / 255.,
+                            sigma_range[1] / 255.)
+
         return outputs
 
     def _apply_poisson_noise(self, imgs):
         scale_range = self.params['poisson_scale']
         scale = np.random.uniform(scale_range[0], scale_range[1])
+
+        scale_step = self.params.get('poisson_scale_step', 0)
 
         gray_noise_prob = self.params['poisson_gray_noise_prob']
         is_gray_noise = np.random.uniform() < gray_noise_prob
@@ -235,6 +291,10 @@ class RandomNoise:
             noise = np.random.poisson(noise * unique_val) / unique_val - noise
 
             outputs.append(img + noise * scale)
+
+            # update noise level
+            scale += np.random.uniform(-scale_step, scale_step)
+            scale = np.clip(scale, scale_range[0], scale_range[1])
 
         return outputs
 
@@ -297,23 +357,26 @@ class RandomJPEGCompression:
             is_single_image = True
             imgs = [imgs]
 
-        # determine compression level
+        # determine initial compression level and the step size
         quality = self.params['quality']
+        quality_step = self.params.get('quality_step', 0)
         jpeg_param = round(np.random.uniform(quality[0], quality[1]))
-        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), jpeg_param]
 
         # apply jpeg compression
         outputs = []
         for img in imgs:
+            encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), jpeg_param]
             _, img_encoded = cv2.imencode('.jpg', img * 255., encode_param)
             outputs.append(np.float32(cv2.imdecode(img_encoded, 1)) / 255.)
 
-        imgs = outputs
+            # update compression level
+            jpeg_param += np.random.uniform(-quality_step, quality_step)
+            jpeg_param = round(np.clip(jpeg_param, quality[0], quality[1]))
 
         if is_single_image:
-            imgs = imgs[0]
+            outputs = outputs[0]
 
-        return imgs
+        return outputs
 
     def __call__(self, results):
         if np.random.uniform() > self.params.get('prob', 1):
