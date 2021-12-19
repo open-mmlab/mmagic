@@ -17,7 +17,7 @@ import sys
 
 import pytorch_sphinx_theme
 
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
@@ -165,3 +165,7 @@ master_doc = 'index'
 def builder_inited_handler(app):
     subprocess.run(['./merge_docs.sh'])
     subprocess.run(['./stat.py'])
+
+
+def setup(app):
+    app.connect('builder-inited', builder_inited_handler)
