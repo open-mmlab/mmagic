@@ -130,7 +130,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 参与贡献
 
-感谢您为改善 MMEditing 所做的所有贡献。请参阅 [CONTRIBUTING.md in MMDetection](https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md) 以获取贡献准则。
+感谢您为改善 MMEditing 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/blob/master/CONTRIBUTING.md) 以获取贡献指南。
 
 ## 致谢
 
@@ -150,6 +150,9 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 - [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab 图像视频编辑工具箱
 - [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab 全流程文字检测识别理解工具包
 - [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab 生成模型工具箱
+- [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab 光流估计工具箱与测试基准
+- [MMFewShot](https://github.com/open-mmlab/mmfewshot): OpenMMLab 少样本学习工具箱与测试基准
+- [MMHuman3D](https://github.com/open-mmlab/mmhuman3d): OpenMMLab 人体参数化模型工具箱与测试基准
 
 ## 欢迎加入 OpenMMLab 社区
 

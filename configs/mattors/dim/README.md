@@ -1,8 +1,22 @@
 # DIM (CVPR'2017)
 
+## Abstract
+
+<!-- [ABSTRACT] -->
+
+Image matting is a fundamental computer vision problem and has many applications. Previous algorithms have poor performance when an image has similar foreground and background colors or complicated textures. The main reasons are prior methods 1) only use low-level features and 2) lack high-level context. In this paper, we propose a novel deep learning based algorithm that can tackle both these problems. Our deep model has two parts. The first part is a deep convolutional encoder-decoder network that takes an image and the corresponding trimap as inputs and predict the alpha matte of the image. The second part is a small convolutional network that refines the alpha matte predictions of the first network to have more accurate alpha values and sharper edges. In addition, we also create a large-scale image matting dataset including 49300 training images and 1000 testing images. We evaluate our algorithm on the image matting benchmark, our testing set, and a wide variety of real images. Experimental results clearly demonstrate the superiority of our algorithm over previous methods.
+
+<!-- [IMAGE] -->
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/12726765/144175771-05b4d8f5-1abc-48ee-a5f1-8cc89a156e27.png" />
+</p>
+
+<!-- [PAPER_TITLE: Deep Image Matting] -->
+<!-- [PAPER_URL: https://arxiv.org/abs/1703.03872] -->
+
+## Citation
+
 <!-- [ALGORITHM] -->
-<details>
-<summary align="right"><a href="https://arxiv.org/abs/1703.03872">DIM (CVPR'2017)</a></summary>
 
 ```bibtex
 @inproceedings{xu2017deep,
@@ -14,9 +28,7 @@
 }
 ```
 
-</details>
-
-<br/>
+## Results and models
 
 |                                   Method                                   |   SAD    |    MSE    |   GRAD   |   CONN   |                                                                                                                              Download                                                                                                                               |
 | :------------------------------------------------------------------------: | :------: | :-------: | :------: | :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

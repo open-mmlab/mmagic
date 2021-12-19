@@ -4,7 +4,7 @@ import pytest
 
 from mmedit.datasets.pipelines import (DegradationsWithShuffle, RandomBlur,
                                        RandomJPEGCompression, RandomNoise,
-                                       RandomResize)
+                                       RandomResize, RandomVideoCompression)
 
 
 def test_random_noise():
@@ -64,6 +64,33 @@ def test_random_jpeg_compression():
         + "keys=['lq'])"
 
 
+def test_random_video_compression():
+    results = {}
+    results['lq'] = [np.ones((8, 8, 3)).astype(np.float32)] * 5
+
+    model = RandomVideoCompression(
+        params=dict(
+            codec=['libx264', 'h264', 'mpeg4'],
+            codec_prob=[1 / 3., 1 / 3., 1 / 3.],
+            bitrate=[1e4, 1e5]),
+        keys=['lq'])
+    results = model(results)
+    assert results['lq'][0].shape == (8, 8, 3)
+    assert len(results['lq']) == 5
+
+    # skip degradations with prob < 1
+    params = dict(
+        codec=['libx264', 'h264', 'mpeg4'],
+        codec_prob=[1 / 3., 1 / 3., 1 / 3.],
+        bitrate=[1e4, 1e5],
+        prob=0)
+    model = RandomVideoCompression(params=params, keys=['lq'])
+    assert model(results) == results
+
+    assert repr(model) == model.__class__.__name__ + f'(params={params}, ' \
+        + "keys=['lq'])"
+
+
 def test_random_resize():
     results = {}
     results['lq'] = np.ones((8, 8, 3)).astype(np.float32)
@@ -111,7 +138,7 @@ def test_random_resize():
             resize_scale=[0.5, 1.5],
             resize_opt=['bilinear', 'area', 'bicubic'],
             resize_prob=[1 / 3., 1 / 3., 1 / 3.],
-            target_size=[16, 16]),
+            target_size=(16, 16)),
         keys=['lq'])
     results = model(results)
     assert results['lq'].shape == (16, 16, 3)
@@ -302,7 +329,7 @@ def test_degradations_with_shuffle():
                     resize_scale=[0.5, 1.5],
                     resize_opt=['bilinear', 'area', 'bicubic'],
                     resize_prob=[1 / 3., 1 / 3., 1 / 3.],
-                    target_size=[16, 16])),
+                    target_size=(16, 16))),
             [
                 dict(
                     type='RandomJPEGCompression',
@@ -335,7 +362,7 @@ def test_degradations_with_shuffle():
                 resize_scale=[0.5, 1.5],
                 resize_opt=['bilinear', 'area', 'bicubic'],
                 resize_prob=[1 / 3., 1 / 3., 1 / 3.],
-                target_size=[16, 16])),
+                target_size=(16, 16))),
         [
             dict(type='RandomJPEGCompression', params=dict(quality=[5, 10])),
             dict(type='RandomJPEGCompression', params=dict(quality=[15, 20]))

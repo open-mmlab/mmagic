@@ -150,7 +150,7 @@ class OneStageInpaintor(BaseModel):
 
         In this function, we compute the prediction for each data batch (real
         or fake). Meanwhile, the standard gan loss will be computed with
-        several proposed losses fro stable training.
+        several proposed losses for stable training.
 
         Args:
             data (torch.Tensor): Batch of real data or fake data.

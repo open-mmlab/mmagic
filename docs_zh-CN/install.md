@@ -5,7 +5,7 @@
 - PyTorch 1.3 或更高
 - CUDA 9.0 或更高
 - NCCL 2
-- GCC 4.9 或更高
+- GCC 5.4 或更高
 - [mmcv](https://github.com/open-mmlab/mmcv)
 
 ## 安装

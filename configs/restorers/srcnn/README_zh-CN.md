@@ -21,9 +21,9 @@
 
 <br/>
 
-Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
-The metrics are `PSNR / SSIM` .
+在 RGB 通道上进行评估，在评估之前裁剪每个边界中的 `scale` 像素。
+我们使用 `PSNR` 和 `SSIM` 作为指标。
 
-|                                         Method                                          |       Set5       |       Set14       |      DIV2K       |                                                                                                                    Download                                                                                                                     |
+|                                         算法                                          |       Set5       |       Set14       |      DIV2K       |                                                                                                                    下载                                                                                                                     |
 | :-------------------------------------------------------------------------------------: | :--------------: | :---------------: | :--------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [srcnn_x4k915_1x16_1000k_div2k](/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py) | 28.4316 / 0.8099 | 25.6486 /  0.7014 | 27.7460 / 0.7854 | [model](https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608_120159.log.json) |
+| [srcnn_x4k915_1x16_1000k_div2k](/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py) | 28.4316 / 0.8099 | 25.6486 /  0.7014 | 27.7460 / 0.7854 | [模型](https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608_120159.log.json) |

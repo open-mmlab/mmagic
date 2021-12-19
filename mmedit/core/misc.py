@@ -11,7 +11,7 @@ def tensor2img(tensor, out_type=np.uint8, min_max=(0, 1)):
 
     After clamping to (min, max), image values will be normalized to [0, 1].
 
-    For differnet tensor shapes, this function will have different behaviors:
+    For different tensor shapes, this function will have different behaviors:
 
         1. 4D mini-batch Tensor of shape (N x 3/1 x H x W):
             Use `make_grid` to stitch images in the batch dimension, and then

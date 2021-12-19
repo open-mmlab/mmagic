@@ -20,6 +20,8 @@ class LoadImageFromFile:
         flag (str): Loading flag for images. Default: 'color'.
         channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
             Default: 'bgr'.
+        convert_to (str | None): The color space of the output image. If None,
+            no conversion is conducted. Default: None.
         save_original_img (bool): If True, maintain a copy of the image in
             `results` dict with name of `f'ori_{key}'`. Default: False.
         use_cache (bool): If True, load all images at once. Default: False.
@@ -33,15 +35,18 @@ class LoadImageFromFile:
                  key='gt',
                  flag='color',
                  channel_order='bgr',
+                 convert_to=None,
                  save_original_img=False,
                  use_cache=False,
                  backend=None,
                  **kwargs):
+
         self.io_backend = io_backend
         self.key = key
         self.flag = flag
         self.save_original_img = save_original_img
         self.channel_order = channel_order
+        self.convert_to = convert_to
         self.kwargs = kwargs
         self.file_client = None
         self.use_cache = use_cache
@@ -81,6 +86,18 @@ class LoadImageFromFile:
                 flag=self.flag,
                 channel_order=self.channel_order,
                 backend=self.backend)  # HWC
+
+        if self.convert_to is not None:
+            if self.channel_order == 'bgr' and self.convert_to.lower() == 'y':
+                img = mmcv.bgr2ycbcr(img, y_only=True)
+            elif self.channel_order == 'rgb':
+                img = mmcv.rgb2ycbcr(img, y_only=True)
+            else:
+                raise ValueError('Currently support only "bgr2ycbcr" or '
+                                 '"bgr2ycbcr".')
+            if img.ndim == 2:
+                img = np.expand_dims(img, axis=2)
+
         results[self.key] = img
         results[f'{self.key}_path'] = filepath
         results[f'{self.key}_ori_shape'] = img.shape
@@ -111,6 +128,8 @@ class LoadImageFromFileList(LoadImageFromFile):
         flag (str): Loading flag for images. Default: 'color'.
         channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
             Default: 'bgr'.
+        convert_to (str | None): The color space of the output image. If None,
+            no conversion is conducted. Default: None.
         save_original_img (bool): If True, maintain a copy of the image in
             `results` dict with name of `f'ori_{key}'`. Default: False.
         kwargs (dict): Args for file client.
@@ -145,8 +164,21 @@ class LoadImageFromFileList(LoadImageFromFile):
             img = mmcv.imfrombytes(
                 img_bytes, flag=self.flag,
                 channel_order=self.channel_order)  # HWC
+
+            # convert to y-channel, if specified
+            if self.convert_to is not None:
+                if self.channel_order == 'bgr' and self.convert_to.lower(
+                ) == 'y':
+                    img = mmcv.bgr2ycbcr(img, y_only=True)
+                elif self.channel_order == 'rgb':
+                    img = mmcv.rgb2ycbcr(img, y_only=True)
+                else:
+                    raise ValueError('Currently support only "bgr2ycbcr" or '
+                                     '"bgr2ycbcr".')
+
             if img.ndim == 2:
                 img = np.expand_dims(img, axis=2)
+
             imgs.append(img)
             shapes.append(img.shape)
             if self.save_original_img:
@@ -235,7 +267,7 @@ class LoadMask:
 
         config = dict(
             img_shape=(256, 256),
-            num_vertexes=(4, 12),
+            num_vertices=(4, 12),
             max_angle=4.,
             length_range=(10, 100),
             brush_width=(10, 40),
@@ -247,7 +279,7 @@ class LoadMask:
 
         config = dict(
             img_shape=(256, 256),
-            num_vertexes=(4, 12),
+            num_vertices=(4, 12),
             mean_angle=1.2,
             angle_range=0.4,
             brush_width=(12, 40))

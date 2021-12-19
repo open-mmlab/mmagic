@@ -1,9 +1,22 @@
 # DIC (CVPR'2020)
 
-<!-- [ALGORITHM] -->
-<details>
+## Abstract
 
-<summary align="right"><a href="https://arxiv.org/abs/2003.13063">DIC (CVPR'2020)</a></summary>
+<!-- [ABSTRACT] -->
+
+Recent works based on deep learning and facial priors have succeeded in super-resolving severely degraded facial images. However, the prior knowledge is not fully exploited in existing methods, since facial priors such as landmark and component maps are always estimated by low-resolution or coarsely super-resolved images, which may be inaccurate and thus affect the recovery performance. In this paper, we propose a deep face super-resolution (FSR) method with iterative collaboration between two recurrent networks which focus on facial image recovery and landmark estimation respectively. In each recurrent step, the recovery branch utilizes the prior knowledge of landmarks to yield higher-quality images which facilitate more accurate landmark estimation in turn. Therefore, the iterative information interaction between two processes boosts the performance of each other progressively. Moreover, a new attentive fusion module is designed to strengthen the guidance of landmark maps, where facial components are generated individually and aggregated attentively for better restoration. Quantitative and qualitative experimental results show the proposed method significantly outperforms state-of-the-art FSR methods in recovering high-quality face images.
+
+<!-- [IMAGE] -->
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/7676947/144017838-63e31123-1b59-4743-86bb-737bd32a9209.png" />
+</p>
+
+<!-- [PAPER_TITLE: Deep Face Super-Resolution with Iterative Collaboration between Attentive Recovery and Landmark Estimation] -->
+<!-- [PAPER_URL: https://arxiv.org/abs/2003.13063] -->
+
+## Citation
+
+<!-- [ALGORITHM] -->
 
 ```bibtex
 @inproceedings{ma2020deep,
@@ -15,9 +28,7 @@
 }
 ```
 
-</details>
-
-<br/>
+## Results and models
 
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .

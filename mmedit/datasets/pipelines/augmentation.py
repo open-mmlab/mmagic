@@ -57,7 +57,7 @@ class Resize:
             specified by ``mmcv.use_backend()`` will be used.
             Default: None.
         output_keys (list[str] | None): The resized images. Default: None
-            Note that if it is not `None`, its length shuld be equal to keys.
+            Note that if it is not `None`, its length should be equal to keys.
     """
 
     def __init__(self,
@@ -1131,3 +1131,68 @@ class Quantize:
 
     def __repr__(self):
         return self.__class__.__name__
+
+
+@PIPELINES.register_module()
+class UnsharpMasking:
+    """Apply unsharp masking to an image or a sequence of images.
+
+    Args:
+        kernel_size (int): The kernel_size of the Gaussian kernel.
+        sigma (float): The standard deviation of the Gaussian.
+        weight (float): The weight of the "details" in the final output.
+        threshold (float): Pixel differences larger than this value are
+            regarded as "details".
+        keys (list[str]): The keys whose values are processed.
+
+    Added keys are "xxx_unsharp", where "xxx" are the attributes specified
+    in "keys".
+
+    """
+
+    def __init__(self, kernel_size, sigma, weight, threshold, keys):
+        if kernel_size % 2 == 0:
+            raise ValueError('kernel_size must be an odd number, but '
+                             f'got {kernel_size}.')
+
+        self.kernel_size = kernel_size
+        self.sigma = sigma
+        self.weight = weight
+        self.threshold = threshold
+        self.keys = keys
+
+        kernel = cv2.getGaussianKernel(kernel_size, sigma)
+        self.kernel = np.matmul(kernel, kernel.transpose())
+
+    def _unsharp_masking(self, imgs):
+        is_single_image = False
+        if isinstance(imgs, np.ndarray):
+            is_single_image = True
+            imgs = [imgs]
+
+        outputs = []
+        for img in imgs:
+            residue = img - cv2.filter2D(img, -1, self.kernel)
+            mask = np.float32(np.abs(residue) * 255 > self.threshold)
+            soft_mask = cv2.filter2D(mask, -1, self.kernel)
+            sharpened = np.clip(img + self.weight * residue, 0, 1)
+
+            outputs.append(soft_mask * sharpened + (1 - soft_mask) * img)
+
+        if is_single_image:
+            outputs = outputs[0]
+
+        return outputs
+
+    def __call__(self, results):
+        for key in self.keys:
+            results[f'{key}_unsharp'] = self._unsharp_masking(results[key])
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(keys={self.keys}, kernel_size={self.kernel_size}, '
+                     f'sigma={self.sigma}, weight={self.weight}, '
+                     f'threshold={self.threshold})')
+        return repr_str

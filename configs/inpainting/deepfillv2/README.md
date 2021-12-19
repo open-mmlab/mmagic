@@ -1,8 +1,22 @@
 # DeepFillv2 (CVPR'2019)
 
+## Abstract
+
+<!-- [ABSTRACT] -->
+
+We present a generative image inpainting system to complete images with free-form mask and guidance. The system is based on gated convolutions learned from millions of images without additional labelling efforts. The proposed gated convolution solves the issue of vanilla convolution that treats all input pixels as valid ones, generalizes partial convolution by providing a learnable dynamic feature selection mechanism for each channel at each spatial location across all layers. Moreover, as free-form masks may appear anywhere in images with any shape, global and local GANs designed for a single rectangular mask are not applicable. Thus, we also present a patch-based GAN loss, named SN-PatchGAN, by applying spectral-normalized discriminator on dense image patches. SN-PatchGAN is simple in formulation, fast and stable in training. Results on automatic image inpainting and user-guided extension demonstrate that our system generates higher-quality and more flexible results than previous methods. Our system helps user quickly remove distracting objects, modify image layouts, clear watermarks and edit faces.
+
+<!-- [IMAGE] -->
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/12726765/144175160-75473789-924f-490b-ab25-4c4f252fa55f.png" />
+</p>
+
+<!-- [PAPER_TITLE: Free-Form Image Inpainting with Gated Convolution] -->
+<!-- [PAPER_URL: https://arxiv.org/abs/1806.03589] -->
+
+## Citation
+
 <!-- [ALGORITHM] -->
-<details>
-<summary align="right"><a href="https://arxiv.org/abs/1806.03589">DeepFillv2 (CVPR'2019)</a></summary>
 
 ```bibtex
 @inproceedings{yu2019free,
@@ -14,9 +28,7 @@
 }
 ```
 
-</details>
-
-<br/>
+## Results and models
 
 **Places365-Challenge**
 

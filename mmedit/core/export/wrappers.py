@@ -124,11 +124,11 @@ class ONNXRuntimeEditing(nn.Module):
             cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
 
         if isinstance(base_model, BaseMattor):
-            WraperClass = ONNXRuntimeMattor
+            WrapperClass = ONNXRuntimeMattor
         elif isinstance(base_model, BasicRestorer):
-            WraperClass = ONNXRuntimeRestorer
-        self.wraper = WraperClass(self.sess, self.io_binding,
-                                  self.output_names, base_model)
+            WrapperClass = ONNXRuntimeRestorer
+        self.wrapper = WrapperClass(self.sess, self.io_binding,
+                                    self.output_names, base_model)
 
     def forward(self, **kwargs):
-        return self.wraper(**kwargs)
+        return self.wrapper(**kwargs)

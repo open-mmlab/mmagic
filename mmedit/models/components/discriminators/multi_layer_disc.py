@@ -161,7 +161,7 @@ class MultiLayerDiscriminator(nn.Module):
         elif pretrained is None:
             for m in self.modules():
                 # Here, we only initialize the module with fc layer since the
-                # conv and norm layers has been intialized in `ConvModule`.
+                # conv and norm layers has been initialized in `ConvModule`.
                 if isinstance(m, nn.Linear):
                     nn.init.normal_(m.weight.data, 0.0, 0.02)
                     nn.init.constant_(m.bias.data, 0.0)

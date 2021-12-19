@@ -2,30 +2,32 @@ name: build
 
 on:
   push:
-   branches:
-    - master
+    branches:
+      - master
+    paths-ignore:
+      - 'README.md'
+      - 'README_zh-CN.md'
+      - 'docs/**'
+      - 'docs_zh-CN/**'
+      - 'examples/**'
+      - '.dev_scripts/**'
+      - '.pre-commit-config.yaml'
 
   pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'README_zh-CN.md'
+      - 'docs/**'
+      - 'docs_zh-CN/**'
+      - 'examples/**'
+      - '.dev_scripts/**'
+      - '.pre-commit-config.yaml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  lint:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
-      - name: Install pre-commit hook
-        run: |
-          pip install pre-commit
-          pre-commit install
-      - name: Linting
-        run: pre-commit run --all-files
-      - name: Check docstring coverage
-        run: |
-          pip install interrogate
-          interrogate -v --ignore-init-method --ignore-module --ignore-nested-functions --exclude mmedit/ops --ignore-regex "__repr__" --fail-under 80 mmedit
   build_cpu:
     runs-on: ubuntu-18.04
     strategy:
@@ -60,11 +62,13 @@ jobs:
         run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install MMCV
         run: |
-          pip install mmcv-full==1.3.0 -f https://download.openmmlab.com/mmcv/dist/cpu/torch${{matrix.torch}}/index.html
+          pip install mmcv-full==1.3.1 -f https://download.openmmlab.com/mmcv/dist/cpu/torch${{matrix.torch}}/index.html
           python -c 'import mmcv; print(mmcv.__version__)'
       - name: Install FaceXLib
         run: pip install facexlib
         if: ${{matrix.torch > '1.7'}}
+      - name: Install av
+        run: python -m pip install av
       - name: Install unittest dependencies
         run: |
           pip install -r requirements.txt
@@ -116,7 +120,7 @@ jobs:
             torch_version: torch1.8.0
             torchvision: 0.9.0+cu101
             mmcv_link: "torch1.8.0"
-            python-version: 3.9-dev
+            python-version: 3.9
 
     steps:
       - uses: actions/checkout@v2
@@ -126,7 +130,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install python-dev
         run: apt-get update && apt-get install -y python${{matrix.python-version}}-dev
-        if: ${{matrix.python-version != '3.9-dev'}}
+        if: ${{matrix.python-version != '3.9'}}
       - name: Install system dependencies
         run: |
           apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6
@@ -140,11 +144,13 @@ jobs:
       - name: Install MMCV
         run: |
           python -V
-          python -m pip install mmcv-full==1.3.0 -f https://download.openmmlab.com/mmcv/dist/cu101/${{matrix.mmcv_link}}/index.html
+          python -m pip install mmcv-full==1.3.1 -f https://download.openmmlab.com/mmcv/dist/cu101/${{matrix.mmcv_link}}/index.html
           python -c 'import mmcv; print(mmcv.__version__)'
       - name: Install FaceXLib
         run: python -m pip install facexlib
         if: ${{matrix.torch > '1.7'}}
+      - name: Install av
+        run: python -m pip install av
       - name: Install unittest dependencies
         run: |
           python -m pip install -r requirements.txt
@@ -159,7 +165,7 @@ jobs:
           coverage xml
           coverage report -m
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1.0.10
+        uses: codecov/codecov-action@v2
         with:
           file: ./coverage.xml
           flags: unittests
@@ -190,7 +196,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install python-dev
         run: apt-get update && apt-get install -y python${{matrix.python-version}}-dev
-        if: ${{matrix.python-version != '3.9-dev'}}
+        if: ${{matrix.python-version != '3.9'}}
       - name: Upgrade pip
         run: python -m pip install pip --upgrade
       - name: Install system dependencies
@@ -206,11 +212,13 @@ jobs:
       - name: Install MMCV
         run: |
           python -V
-          python -m pip install mmcv-full==1.3.0 -f https://download.openmmlab.com/mmcv/dist/cu102/${{matrix.mmcv_link}}/index.html
+          python -m pip install mmcv-full==1.3.1 -f https://download.openmmlab.com/mmcv/dist/cu102/${{matrix.mmcv_link}}/index.html
           python -c 'import mmcv; print(mmcv.__version__)'
       - name: Install FaceXLib
         run: python -m pip install facexlib
         if: ${{matrix.torch > '1.7'}}
+      - name: Install av
+        run: python -m pip install av
       - name: Install unittest dependencies
         run: |
           python -m pip install -r requirements.txt
@@ -225,7 +233,7 @@ jobs:
           coverage xml
           coverage report -m
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1.0.10
+        uses: codecov/codecov-action@v2
         with:
           file: ./coverage.xml
           flags: unittests

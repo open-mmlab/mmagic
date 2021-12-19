@@ -1,8 +1,22 @@
 # CycleGAN (ICCV'2017)
 
+## Abstract
+
+<!-- [ABSTRACT] -->
+
+Image-to-image translation is a class of vision and graphics problems where the goal is to learn the mapping between an input image and an output image using a training set of aligned image pairs. However, for many tasks, paired training data will not be available. We present an approach for learning to translate an image from a source domain X to a target domain Y in the absence of paired examples. Our goal is to learn a mapping G:X→Y such that the distribution of images from G(X) is indistinguishable from the distribution Y using an adversarial loss. Because this mapping is highly under-constrained, we couple it with an inverse mapping F:Y→X and introduce a cycle consistency loss to push F(G(X))≈X (and vice versa). Qualitative results are presented on several tasks where paired training data does not exist, including collection style transfer, object transfiguration, season transfer, photo enhancement, etc. Quantitative comparisons against several prior methods demonstrate the superiority of our approach.
+
+<!-- [IMAGE] -->
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/12726765/144200449-cc2777da-3112-4024-aaa6-c6be5c8220bc.png" />
+</p>
+
+<!-- [PAPER_TITLE: Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks] -->
+<!-- [PAPER_URL: https://arxiv.org/abs/1703.10593] -->
+
+## Citation
+
 <!-- [ALGORITHM] -->
-<details>
-<summary align="right"><a href="https://arxiv.org/abs/1703.10593">CycleGAN (ICCV'2017)</a></summary>
 
 ```bibtex
 @inproceedings{zhu2017unpaired,
@@ -14,11 +28,9 @@
 }
 ```
 
-</details>
+## Results and models
 
-<br/>
-
-We use `FID` and `IS` metrics to 	evaluate the generation performance of CycleGAN.
+We use `FID` and `IS` metrics to evaluate the generation performance of CycleGAN.
 
 | Method | FID | IS  | Download |
 | :----: | :-: | :-: | :------: |

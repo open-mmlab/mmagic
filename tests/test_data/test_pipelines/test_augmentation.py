@@ -12,7 +12,7 @@ from mmedit.datasets.pipelines import (BinarizeImage, CopyValues, Flip,
                                        Pad, Quantize, RandomAffine,
                                        RandomJitter, RandomMaskDilation,
                                        RandomTransposeHW, Resize,
-                                       TemporalReverse)
+                                       TemporalReverse, UnsharpMasking)
 
 
 class TestAugmentations:
@@ -38,7 +38,7 @@ class TestAugmentations:
 
     @staticmethod
     def assert_img_equal(img, ref_img, ratio_thr=0.999):
-        """Check if img and ref_img are matched approximatively."""
+        """Check if img and ref_img are matched approximately."""
         assert img.shape == ref_img.shape
         assert img.dtype == ref_img.dtype
         area = ref_img.shape[-1] * ref_img.shape[-2]
@@ -195,12 +195,12 @@ class TestAugmentations:
 
         Supported modes for checking are 'constant' (with 'constant_values' of
         0) and 'reflect'.
-        Supported images should be 2 dimentional.
+        Supported images should be 2 dimensional.
         """
         if mode not in ['constant', 'reflect']:
             raise NotImplementedError(
                 f'Pad checking of mode {mode} is not implemented.')
-        assert len(origin_img.shape) == 2, 'Image should be 2 dimentional.'
+        assert len(origin_img.shape) == 2, 'Image should be 2 dimensional.'
 
         h, w = origin_img.shape
         new_h = ds_factor * (h - 1) // ds_factor + 1
@@ -680,7 +680,7 @@ class TestAugmentations:
             results = dict(lq=0, gt=gts)
             mirror_sequence(results)
 
-    def round_clip_zero_one(self):
+    def quantize(self):
         results = {}
 
         # clip (>1)
@@ -705,9 +705,33 @@ class TestAugmentations:
             model(results)['gt'], (1 / 255.) * np.ones(
                 (1, 1, 3)).astype(np.float32))
 
-    def copy_value_from_key(self):
+    def copy_value(self):
         results = {}
         results['gt'] = np.zeros((1)).astype(np.float32)
 
         copy_ = CopyValues(src_key='gt', dst_key='lq')
         assert np.array_equal(copy_(results)['lq'], results['gt'])
+
+    def unsharp_masking(self):
+        results = {}
+
+        unsharp_masking = UnsharpMasking(
+            kernel_size=15, sigma=0, weight=0.5, threshold=10, keys=['gt'])
+
+        # single image
+        results['gt'] = np.zeros((8, 8, 3)).astype(np.float32)
+        results = unsharp_masking(results)
+        assert isinstance(results['gt_unsharp'], np.ndarray)
+
+        # sequence of images
+        results['gt'] = [np.zeros((8, 8, 3)).astype(np.float32)] * 2
+        results = unsharp_masking(results)
+        assert isinstance(results['gt_unsharp'], list)
+
+        assert repr(unsharp_masking) == unsharp_masking.__class__.__name__ + (
+            "(keys=['gt'], kernel_size=15, sigma=0, weight=0.5, threshold=10)")
+
+        # kernel_size must be odd
+        with pytest.raises(ValueError):
+            unsharp_masking = UnsharpMasking(
+                kernel_size=10, sigma=0, weight=0.5, threshold=10, keys=['gt'])

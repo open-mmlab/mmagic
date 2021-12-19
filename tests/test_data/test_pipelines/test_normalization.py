@@ -9,7 +9,7 @@ class TestAugmentations:
 
     @staticmethod
     def assert_img_equal(img, ref_img, ratio_thr=0.999):
-        """Check if img and ref_img are matched approximatively."""
+        """Check if img and ref_img are matched approximately."""
         assert img.shape == ref_img.shape
         assert img.dtype == ref_img.dtype
         area = ref_img.shape[-1] * ref_img.shape[-2]

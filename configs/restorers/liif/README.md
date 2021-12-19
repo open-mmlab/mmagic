@@ -1,9 +1,22 @@
 # LIIF (CVPR'2021)
 
-<!-- [ALGORITHM] -->
+## Abstract
 
-<details>
-<summary align="right"><a href="https://arxiv.org/abs/2012.09161">LIIF (CVPR'2021)</a></summary>
+<!-- [ABSTRACT] -->
+
+How to represent an image? While the visual world is presented in a continuous manner, machines store and see the images in a discrete way with 2D arrays of pixels. In this paper, we seek to learn a continuous representation for images. Inspired by the recent progress in 3D reconstruction with implicit neural representation, we propose Local Implicit Image Function (LIIF), which takes an image coordinate and the 2D deep features around the coordinate as inputs, predicts the RGB value at a given coordinate as an output. Since the coordinates are continuous, LIIF can be presented in arbitrary resolution. To generate the continuous representation for images, we train an encoder with LIIF representation via a self-supervised task with super-resolution. The learned continuous representation can be presented in arbitrary resolution even extrapolate to x30 higher resolution, where the training tasks are not provided. We further show that LIIF representation builds a bridge between discrete and continuous representation in 2D, it naturally supports the learning tasks with size-varied image ground-truths and significantly outperforms the method with resizing the ground-truths.
+
+<!-- [IMAGE] -->
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/7676947/144032669-da59d683-9c4f-4598-a680-32770a369b74.png" />
+</p>
+
+<!-- [PAPER_TITLE: Learning Continuous Image Representation with Local Implicit Image Function] -->
+<!-- [PAPER_URL: https://arxiv.org/abs/2012.09161] -->
+
+## Citation
+
+<!-- [ALGORITHM] -->
 
 ```bibtex
 @inproceedings{chen2021learning,
@@ -15,9 +28,7 @@
 }
 ```
 
-</details>
-
-<br/>
+## Results and models
 
 |                                                      Method                                                      | scale | Set5<br>PSNR / SSIM | Set14<br>PSNR / SSIM | DIV2K <br>PSNR / SSIM |                                                                                                                           Download                                                                                                                            |
 | :--------------------------------------------------------------------------------------------------------------: | :---: | :-----------------: | :------------------: | :-------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |

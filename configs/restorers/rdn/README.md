@@ -1,8 +1,22 @@
 # RDN (CVPR'2018)
 
+## Abstract
+
+<!-- [ABSTRACT] -->
+
+A very deep convolutional neural network (CNN) has recently achieved great success for image super-resolution (SR) and offered hierarchical features as well. However, most deep CNN based SR models do not make full use of the hierarchical features from the original low-resolution (LR) images, thereby achieving relatively-low performance. In this paper, we propose a novel residual dense network (RDN) to address this problem in image SR. We fully exploit the hierarchical features from all the convolutional layers. Specifically, we propose residual dense block (RDB) to extract abundant local features via dense connected convolutional layers. RDB further allows direct connections from the state of preceding RDB to all the layers of current RDB, leading to a contiguous memory (CM) mechanism. Local feature fusion in RDB is then used to adaptively learn more effective features from preceding and current local features and stabilizes the training of wider network. After fully obtaining dense local features, we use global feature fusion to jointly and adaptively learn global hierarchical features in a holistic way. Extensive experiments on benchmark datasets with different degradation models show that our RDN achieves favorable performance against state-of-the-art methods.
+
+<!-- [IMAGE] -->
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/7676947/144034203-c3a4ac55-d815-4180-a345-f80ab5ca68b6.png" />
+</p>
+
+<!-- [PAPER_TITLE: Residual Dense Network for Image Super-Resolution] -->
+<!-- [PAPER_URL: https://arxiv.org/abs/1802.08797] -->
+
+## Citation
+
 <!-- [ALGORITHM] -->
-<details>
-<summary align="right"><a href="https://arxiv.org/abs/1802.08797">RDN (CVPR'2018)</a></summary>
 
 ```bibtex
 @inproceedings{zhang2018residual,
@@ -14,9 +28,7 @@
 }
 ```
 
-</details>
-
-<br/>
+## Results and models
 
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .

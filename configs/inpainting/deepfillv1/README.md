@@ -1,9 +1,22 @@
 # DeepFillv1 (CVPR'2018)
 
-<!-- [ALGORITHM] -->
+## Abstract
 
-<details>
-<summary align="right"><a href="https://arxiv.org/abs/1801.07892">DeepFillv1 (CVPR'2018)</a></summary>
+<!-- [ABSTRACT] -->
+
+Recent deep learning based approaches have shown promising results for the challenging task of inpainting large missing regions in an image. These methods can generate visually plausible image structures and textures, but often create distorted structures or blurry textures inconsistent with surrounding areas. This is mainly due to ineffectiveness of convolutional neural networks in explicitly borrowing or copying information from distant spatial locations. On the other hand, traditional texture and patch synthesis approaches are particularly suitable when it needs to borrow textures from the surrounding regions. Motivated by these observations, we propose a new deep generative model-based approach which can not only synthesize novel image structures but also explicitly utilize surrounding image features as references during network training to make better predictions. The model is a feed-forward, fully convolutional neural network which can process images with multiple holes at arbitrary locations and with variable sizes during the test time. Experiments on multiple datasets including faces (CelebA, CelebA-HQ), textures (DTD) and natural images (ImageNet, Places2) demonstrate that our proposed approach generates higher-quality inpainting results than existing ones.
+
+<!-- [IMAGE] -->
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/12726765/144174665-9675931f-e448-4475-a659-99b65e7d4a64.png" />
+</p>
+
+<!-- [PAPER_TITLE: Generative Image Inpainting with Contextual Attention] -->
+<!-- [PAPER_URL: https://arxiv.org/abs/1801.07892] -->
+
+## Citation
+
+<!-- [ALGORITHM] -->
 
 ```bibtex
 @inproceedings{yu2018generative,
@@ -15,9 +28,7 @@
 }
 ```
 
-</details>
-
-<br/>
+## Results and models
 
 **Places365-Challenge**
 
