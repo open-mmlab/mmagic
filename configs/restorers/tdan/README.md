@@ -62,7 +62,7 @@ TDAN is trained with two stages.
 ./tools/dist_train.sh configs/restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py 8
 ```
 
-For more details, you can refer to **Train a model** part in [getting_started](/docs/getting_started.md#train-a-model).
+For more details, you can refer to **Train a model** part in [getting_started](/docs/en/getting_started.md#train-a-model).
 </details>
 
 **Test**
@@ -82,5 +82,5 @@ Example: Test TDAN on SPMCS-30 using Bicubic downsampling.
 python tools/test.py configs/restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py  checkpoints/SOME_CHECKPOINT.pth --save_path outputs/
 ```
 
-For more details, you can refer to **Inference with pretrained models** part in [getting_started](/docs/getting_started.md#inference-with-pretrained-models).
+For more details, you can refer to **Inference with pretrained models** part in [getting_started](/docs/en/getting_started.md#inference-with-pretrained-models).
 </details>

@@ -1,6 +1,3 @@
-API Reference
-=================
-
 mmedit.core
 --------------
 .. automodule:: mmedit.core

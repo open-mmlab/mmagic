@@ -6,7 +6,7 @@
 <summary align="right"><a href="https://arxiv.org/abs/2104.13371">BasicVSR++</a></summary>
 
 ```bibtex
-@article{chan2021basicvsr++,
+@article{chan2021basicvsrplusplus,
   author = {Chan, Kelvin C.K. and Zhou, Shangchen and Xu, Xiangyu and Loy, Chen Change},
   title = {BasicVSR++: Improving Video Super-Resolution with Enhanced Propagation and Alignment},
   booktitle = {arXiv preprint arXiv:2104.13371},

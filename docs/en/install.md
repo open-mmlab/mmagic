@@ -28,14 +28,14 @@ You can check the supported CUDA version for precompiled packages on the [PyTorc
 
 `E.g. 1` If you have CUDA 10.1 installed under `/usr/local/cuda`, you need to install the prebuilt PyTorch with CUDA 10.1.
 
-```python
+```shell
 conda install pytorch cudatoolkit=10.1 torchvision -c pytorch
 ```
 
 `E.g. 2` If you have CUDA 9.2 installed under `/usr/local/cuda` and would like to install
 PyTorch 1.3.1., you need to install the prebuilt PyTorch with CUDA 9.2.
 
-```python
+```shell
 conda install pytorch=1.3.1 cudatoolkit=9.2 torchvision=0.4.2 -c pytorch
 ```
 
