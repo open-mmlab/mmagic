@@ -127,3 +127,4 @@ mmedit/.mim
 
 # Pytorch Server
 *.mar
+.DS_Store
