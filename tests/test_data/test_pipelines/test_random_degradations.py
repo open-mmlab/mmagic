@@ -138,12 +138,24 @@ def test_random_resize():
             resize_scale=[0.5, 1.5],
             resize_opt=['bilinear', 'area', 'bicubic'],
             resize_prob=[1 / 3., 1 / 3., 1 / 3.],
-            target_size=(16, 16)),
+            target_size=(16, 32)),
         keys=['lq'])
     results = model(results)
-    assert results['lq'].shape == (16, 16, 3)
+    assert results['lq'].shape == (16, 32, 3)
 
-    # skip degrdation
+    # step_size > 0
+    results['lq'] = np.ones((8, 8, 3)).astype(np.float32)
+    model = RandomResize(
+        params=dict(
+            resize_mode_prob=[0, 0, 1],
+            resize_scale=[0.5, 1.5],
+            resize_opt=['bilinear', 'area', 'bicubic'],
+            resize_prob=[1 / 3., 1 / 3., 1 / 3.],
+            resize_step=0.05),
+        keys=['lq'])
+    results = model(results)
+
+    # skip degradation
     model = RandomResize(
         params=dict(
             resize_mode_prob=[1, 0, 0],
