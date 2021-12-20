@@ -32,7 +32,7 @@ class RandomBlur:
         self.params = params
 
     def get_kernel(self, num_kernels):
-        kernel = np.random.choice(
+        kernel_type = np.random.choice(
             self.params['kernel_list'], p=self.params['kernel_prob'])
         kernel_size = random.choice(self.params['kernel_size'])
 
@@ -70,7 +70,7 @@ class RandomBlur:
         kernels = []
         for _ in range(0, num_kernels):
             kernel = blur_kernels.random_mixed_kernels(
-                [kernel],
+                [kernel_type],
                 [1],
                 kernel_size,
                 [sigma_x, sigma_x],
@@ -451,6 +451,12 @@ class RandomVideoCompression:
             return results
 
         for key in self.keys:
+            # Shape must be divisible by 2
+            h, w = results[key][0].shape[:2]
+            h, w = (h // 2) * 2, (w // 2) * 2
+            results[key] = [v[:h, :w, :] for v in results[key]]
+
+            # Apply video compression
             results[key] = self._apply_random_compression(results[key])
 
         return results
