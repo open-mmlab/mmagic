@@ -33,7 +33,7 @@ Models:
       Vimeo-90K-T (BIx4)<br>PSNR/SSIM (Y):
         PSNR: 36.4983
         SSIM: 0.9416
-    Task: restorers
+    Task: Restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
 - Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/iconvsr/iconvsr_vimeo90k_bi.py
   In Collection: IconVSR
@@ -61,7 +61,7 @@ Models:
       Vimeo-90K-T (BIx4)<br>PSNR/SSIM (Y):
         PSNR: 37.3729
         SSIM: 0.9467
-    Task: restorers
+    Task: Restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413-7c7418dc.pth
 - Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/iconvsr/iconvsr_vimeo90k_bd.py
   In Collection: IconVSR
@@ -89,5 +89,5 @@ Models:
       Vimeo-90K-T (BIx4)<br>PSNR/SSIM (Y):
         PSNR: 34.678
         SSIM: 0.9339
-    Task: restorers
+    Task: Restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bd_20210414-5f38cb34.pth
