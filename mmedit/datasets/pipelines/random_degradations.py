@@ -187,7 +187,12 @@ class RandomResize:
                 scale_factor = np.random.uniform(resize_scale[0], 1)
             else:
                 scale_factor = 1
-            target_size = (int(h * scale_factor), int(w * scale_factor))
+
+            # determine output size
+            h_out, w_out = h * scale_factor, w * scale_factor
+            if self.params.get('is_size_even', False):
+                h_out, w_out = 2 * (h_out // 2), 2 * (w_out // 2)
+            target_size = (int(h_out), int(w_out))
         else:
             resize_step = 0
 
@@ -208,7 +213,12 @@ class RandomResize:
                 scale_factor += np.random.uniform(-resize_step, resize_step)
                 scale_factor = np.clip(scale_factor, resize_scale[0],
                                        resize_scale[1])
-                target_size = (int(h * scale_factor), int(w * scale_factor))
+
+                # determine output size
+                h_out, w_out = h * scale_factor, w * scale_factor
+                if self.params.get('is_size_even', False):
+                    h_out, w_out = 2 * (h_out // 2), 2 * (w_out // 2)
+                target_size = (int(h_out), int(w_out))
 
         if is_single_image:
             outputs = outputs[0]
@@ -451,12 +461,6 @@ class RandomVideoCompression:
             return results
 
         for key in self.keys:
-            # Shape must be divisible by 2
-            h, w = results[key][0].shape[:2]
-            h, w = (h // 2) * 2, (w // 2) * 2
-            results[key] = [v[:h, :w, :] for v in results[key]]
-
-            # Apply video compression
             results[key] = self._apply_random_compression(results[key])
 
         return results
