@@ -807,8 +807,9 @@ def test_sr_reds_multiple_gt_dataset():
         sequence_length=100,
         num_input_frames=5)
 
+    # REDS4 val partition (repeat != int)
     with pytest.raises(TypeError):
-        reds_dataset = SRREDSMultipleGTDataset(
+        SRREDSMultipleGTDataset(
             lq_folder=root_path,
             gt_folder=root_path,
             num_input_frames=5,
@@ -1094,3 +1095,7 @@ def test_sr_folder_video_dataset():
     # The length of results should be equal to the dataset len
     with pytest.raises(AssertionError):
         test_dataset.evaluate(results=[results[0]])
+
+
+if __name__ == '__main__':
+    test_sr_reds_multiple_gt_dataset()

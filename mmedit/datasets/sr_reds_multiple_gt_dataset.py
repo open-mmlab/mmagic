@@ -35,17 +35,18 @@ class SRREDSMultipleGTDataset(BaseSRDataset):
                  val_partition='official',
                  repeat=1,
                  test_mode=False):
+
+        self.repeat = repeat
+        if not isinstance(repeat, int):
+            raise TypeError('"repeat" must be an integer, but got '
+                            f'{type(repeat)}.')
+
         super().__init__(pipeline, scale, test_mode)
         self.lq_folder = str(lq_folder)
         self.gt_folder = str(gt_folder)
         self.num_input_frames = num_input_frames
         self.val_partition = val_partition
-        self.repeat = repeat
         self.data_infos = self.load_annotations()
-
-        if not isinstance(repeat, int):
-            raise TypeError('"repeat" must be an integer, but got '
-                            f'{type(repeat)}.')
 
     def load_annotations(self):
         """Load annoations for REDS dataset.
