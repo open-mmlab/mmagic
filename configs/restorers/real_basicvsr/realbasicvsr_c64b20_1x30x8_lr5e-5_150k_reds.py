@@ -333,6 +333,6 @@ custom_hooks = [
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = f'./experiments/{exp_name}'
-load_from = None
+load_from = 'https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_wogan_c64b20_2x30x8_lr1e-4_300k_reds_20211027-0e2ff207.pth'  # noqa
 resume_from = None
 workflow = [('train', 1)]
