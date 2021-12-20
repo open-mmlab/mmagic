@@ -44,8 +44,8 @@ class SRREDSMultipleGTDataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
         if not isinstance(repeat, int):
-            raise ValueError('"repeat" must be an integer, but got '
-                             f'{type(repeat)}.')
+            raise TypeError('"repeat" must be an integer, but got '
+                            f'{type(repeat)}.')
 
     def load_annotations(self):
         """Load annoations for REDS dataset.
