@@ -13,7 +13,7 @@
 
 ```
 
-请从 [Places365](http://places2.csail.mit.edu/download.html) 准备数据。
+请从 [Places365](http://places2.csail.mit.edu/download.html) 下载并准备数据。
 
 ```text
 mmediting
