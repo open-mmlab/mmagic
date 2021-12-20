@@ -27,9 +27,11 @@ class GANLoss(nn.Module):
                  loss_weight=1.0):
         super().__init__()
         self.gan_type = gan_type
-        self.loss_weight = loss_weight
         self.real_label_val = real_label_val
         self.fake_label_val = fake_label_val
+        self.loss_weight = loss_weight
+
+        self.gaussian_blur = GaussianBlur()
 
         if self.gan_type == 'vanilla':
             self.loss = nn.BCEWithLogitsLoss()
@@ -53,6 +55,7 @@ class GANLoss(nn.Module):
         Returns:
             Tensor: wgan loss.
         """
+
         return -input.mean() if target else input.mean()
 
     def get_target_label(self, input, target_is_real):
@@ -85,6 +88,7 @@ class GANLoss(nn.Module):
         Returns:
             Tensor: GAN loss value.
         """
+
         target_label = self.get_target_label(input, target_is_real)
         if self.gan_type == 'hinge':
             if is_disc:  # for discriminators in hinge-gan
@@ -112,9 +116,7 @@ class GANLoss(nn.Module):
                 if target_is_real:
                     target_label = target_label
                 else:
-                    target_label = gaussian_blur(
-                        mask, kernel_size=(71, 71),
-                        sigma=(10, 10)).detach().cuda()
+                    target_label = self.gaussian_blur(mask).detach().cuda()
                 loss = self.loss(input, target_label)
             else:
                 loss = self.loss(input, target_label) * mask / mask.mean()
@@ -128,38 +130,133 @@ class GANLoss(nn.Module):
 
 @LOSSES.register_module()
 class GaussianBlur(nn.Module):
-    r"""Creates an operator that blurs a tensor using a Gaussian filter.
-    The operator smooths the given tensor with a gaussian kernel by convolving
-    it to each channel. It suports batched operation.
-    Arguments:
-      kernel_size (Tuple[int, int]): the size of the kernel.
-      sigma (Tuple[float, float]): the standard deviation of the kernel.
-    Returns:
-      Tensor: the blurred tensor.
-    Shape:
-      - Input: :math:`(B, C, H, W)`
-      - Output: :math:`(B, C, H, W)`
+    """A Gaussian filter which blurs a given tensor with a two-dimensional
+    gaussian kernel by convolving it along each channel. Batch operation
+    is supported.
 
-    Examples::
+    This function is modified from kornia.filters.gaussian:
+    `<https://kornia.readthedocs.io/en/latest/_modules/kornia/filters/gaussian.html>`.
+
+    Args:
+        kernel_size (tuple[int]): The size of the kernel. Default: (71, 71).
+        sigma (tuple[float]): The standard deviation of the kernel.
+        Default (10.0, 10.0)
+
+    Returns:
+        Tensor: The Gaussian-blurred tensor.
+
+    Shape:
+        - input: Tensor with shape of (n, c, h, w)
+        - output: Tensor with shape of (n, c, h, w)
+
+    Examples:
+
       >>> input = torch.rand(2, 4, 5, 5)
       >>> gauss = kornia.filters.GaussianBlur((3, 3), (1.5, 1.5))
-      >>> output = gauss(input)  # 2x4x5x5
+      >>> output = gauss(input) # 2 x 4 x 5 x 5
     """
 
-    def __init__(self, kernel_size, sigma):
+    def __init__(self, kernel_size=(71, 71), sigma=(10.0, 10.0)):
         super(GaussianBlur, self).__init__()
         self.kernel_size = kernel_size
         self.sigma = sigma
-        self._padding = self.compute_zero_padding(kernel_size)
-        self.kernel = get_gaussian_kernel2d(kernel_size, sigma)
+        self.padding = self.compute_zero_padding(kernel_size)
+        self.kernel = self.get_2d_gaussian_kernel(kernel_size, sigma)
 
     @staticmethod
     def compute_zero_padding(kernel_size):
-        """Computes zero padding tuple."""
-        computed = [(k - 1) // 2 for k in kernel_size]
-        return computed[0], computed[1]
+        """Compute zero padding tuple."""
 
-    def forward(self, x):  # type: ignore
+        padding = [(ks - 1) // 2 for ks in kernel_size]
+
+        return padding[0], padding[1]
+
+    def get_2d_gaussian_kernel(self, kernel_size, sigma):
+        """Get the two-dimensional Gaussian filter matrix coefficients.
+
+        Args:
+            kernel_size (tuple[int]): Kernel filter size in the x and y
+                                      direction. The kernel sizes
+                                      should be odd and positive.
+            sigma (tuple[int]): Gaussian standard deviation in
+                                the x and y direction.
+
+        Returns:
+            kernel_2d (Tensor): A 2D torch tensor with gaussian filter
+                                matrix coefficients.
+
+        Examples:
+
+        >>> kornia.image.get_gaussian_kernel2d((3, 3), (1.5, 1.5))
+        tensor([[0.0947, 0.1183, 0.0947],
+                [0.1183, 0.1478, 0.1183],
+                [0.0947, 0.1183, 0.0947]])
+
+        >>> kornia.image.get_gaussian_kernel2d((3, 5), (1.5, 1.5))
+        tensor([[0.0370, 0.0720, 0.0899, 0.0720, 0.0370],
+                [0.0462, 0.0899, 0.1123, 0.0899, 0.0462],
+                [0.0370, 0.0720, 0.0899, 0.0720, 0.0370]])
+        """
+
+        if not isinstance(kernel_size, tuple) or len(kernel_size) != 2:
+            raise TypeError(
+                'kernel_size must be a tuple of length two. Got {}'.format(
+                    kernel_size))
+        if not isinstance(sigma, tuple) or len(sigma) != 2:
+            raise TypeError(
+                'sigma must be a tuple of length two. Got {}'.format(sigma))
+
+        kernel_size_x, kernel_size_y = kernel_size
+        sigma_x, sigma_y = sigma
+
+        kernel_x = self.get_1d_gaussian_kernel(kernel_size_x, sigma_x)
+        kernel_y = self.get_1d_gaussian_kernel(kernel_size_y, sigma_y)
+        kernel_2d = torch.matmul(
+            kernel_x.unsqueeze(-1),
+            kernel_y.unsqueeze(-1).t())
+
+        return kernel_2d
+
+    def get_1d_gaussian_kernel(self, kernel_size, sigma):
+        """Get the Gaussian filter coefficients in one dimension (x or y direction).
+
+        Args:
+            kernel_size (int): Kernel filter size in x or y direction.
+                               Should be odd and positive.
+            sigma (float): Gaussian standard deviation in x or y direction.
+
+        Returns:
+            kernel_1d (Tensor): A 1D torch tensor with gaussian filter
+                                coefficients in x or y direction.
+
+        Examples:
+
+        >>> kornia.image.get_gaussian_kernel(3, 2.5)
+        tensor([0.3243, 0.3513, 0.3243])
+        >>> kornia.image.get_gaussian_kernel(5, 1.5)
+        tensor([0.1201, 0.2339, 0.2921, 0.2339, 0.1201])
+        """
+
+        if not isinstance(kernel_size,
+                          int) or kernel_size % 2 == 0 or kernel_size <= 0:
+            raise TypeError(
+                'kernel_size must be an odd positive integer. Got {}'.format(
+                    kernel_size))
+
+        kernel_1d = self.gaussian(kernel_size, sigma)
+        return kernel_1d
+
+    def gaussian(self, kernel_size, sigma):
+
+        def gauss_arg(x):
+            return -(x - kernel_size // 2)**2 / float(2 * sigma**2)
+
+        gauss = torch.stack([
+            torch.exp(torch.tensor(gauss_arg(x))) for x in range(kernel_size)
+        ])
+        return gauss / gauss.sum()
+
+    def forward(self, x):
         if not torch.is_tensor(x):
             raise TypeError(
                 'Input x type is not a torch.Tensor. Got {}'.format(type(x)))
@@ -167,98 +264,11 @@ class GaussianBlur(nn.Module):
             raise ValueError(
                 'Invalid input shape, we expect BxCxHxW. Got: {}'.format(
                     x.shape))
-        # prepare kernel
-        b, c, h, w = x.shape
-        tmp_kernel: torch.Tensor = self.kernel.to(x.device).to(x.dtype)
-        kernel: torch.Tensor = tmp_kernel.repeat(c, 1, 1, 1)
+        _, c, _, _ = x.shape
+        tmp_kernel = self.kernel.to(x.device).to(x.dtype)
+        kernel = tmp_kernel.repeat(c, 1, 1, 1)
 
-        # TODO: explore solution when using jit.trace since it raises a warning
-        # because the shape is converted to a tensor instead to a int.
-        # convolve tensor with gaussian kernel
-        return conv2d(x, kernel, padding=self._padding, stride=1, groups=c)
-
-
-def gaussian(window_size, sigma):
-
-    def gauss_fcn(x):
-        return -(x - window_size // 2)**2 / float(2 * sigma**2)
-
-    gauss = torch.stack(
-        [torch.exp(torch.tensor(gauss_fcn(x))) for x in range(window_size)])
-    return gauss / gauss.sum()
-
-
-def get_gaussian_kernel(kernel_size: int, sigma: float) -> torch.Tensor:
-    r"""Function that returns Gaussian filter coefficients.
-    Args:
-      kernel_size (int): filter size. It should be odd and positive.
-      sigma (float): gaussian standard deviation.
-    Returns:
-      Tensor: 1D tensor with gaussian filter coefficients.
-    Shape:
-      - Output: :math:`(\text{kernel_size})`
-
-    Examples::
-      >>> kornia.image.get_gaussian_kernel(3, 2.5)
-      tensor([0.3243, 0.3513, 0.3243])
-      >>> kornia.image.get_gaussian_kernel(5, 1.5)
-      tensor([0.1201, 0.2339, 0.2921, 0.2339, 0.1201])
-    """
-    if not isinstance(kernel_size,
-                      int) or kernel_size % 2 == 0 or kernel_size <= 0:
-        raise TypeError(
-            'kernel_size must be an odd positive integer. Got {}'.format(
-                kernel_size))
-    window_1d: torch.Tensor = gaussian(kernel_size, sigma)
-    return window_1d
-
-
-def get_gaussian_kernel2d(kernel_size, sigma):
-    r"""Function that returns Gaussian filter matrix coefficients.
-    Args:
-      kernel_size (Tuple[int, int]): filter sizes in the x and y direction.
-        Sizes should be odd and positive.
-      sigma (Tuple[int, int]): gaussian standard deviation in the x and y
-        direction.
-    Returns:
-      Tensor: 2D tensor with gaussian filter matrix coefficients.
-
-    Shape:
-      - Output: :math:`(\text{kernel_size}_x, \text{kernel_size}_y)`
-
-    Examples::
-      >>> kornia.image.get_gaussian_kernel2d((3, 3), (1.5, 1.5))
-      tensor([[0.0947, 0.1183, 0.0947],
-              [0.1183, 0.1478, 0.1183],
-              [0.0947, 0.1183, 0.0947]])
-
-      >>> kornia.image.get_gaussian_kernel2d((3, 5), (1.5, 1.5))
-      tensor([[0.0370, 0.0720, 0.0899, 0.0720, 0.0370],
-              [0.0462, 0.0899, 0.1123, 0.0899, 0.0462],
-              [0.0370, 0.0720, 0.0899, 0.0720, 0.0370]])
-    """
-    if not isinstance(kernel_size, tuple) or len(kernel_size) != 2:
-        raise TypeError(
-            'kernel_size must be a tuple of length two. Got {}'.format(
-                kernel_size))
-    if not isinstance(sigma, tuple) or len(sigma) != 2:
-        raise TypeError(
-            'sigma must be a tuple of length two. Got {}'.format(sigma))
-    ksize_x, ksize_y = kernel_size
-    sigma_x, sigma_y = sigma
-    kernel_x: torch.Tensor = get_gaussian_kernel(ksize_x, sigma_x)
-    kernel_y: torch.Tensor = get_gaussian_kernel(ksize_y, sigma_y)
-    kernel_2d: torch.Tensor = torch.matmul(
-        kernel_x.unsqueeze(-1),
-        kernel_y.unsqueeze(-1).t())
-    return kernel_2d
-
-
-def gaussian_blur(input, kernel_size, sigma):
-    r"""Function that blurs a tensor using a Gaussian filter.
-    See :class:`~kornia.filters.GaussianBlur` for details.
-    """
-    return GaussianBlur(kernel_size, sigma)(input)
+        return conv2d(x, kernel, padding=self.padding, stride=1, groups=c)
 
 
 def gradient_penalty_loss(discriminator, real_data, fake_data, mask=None):
