@@ -18,5 +18,5 @@ Models:
       Vid4:
         PSNR: 24.4377
         SSIM: 0.7433
-    Task: restorers
+    Task: Restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth

@@ -86,7 +86,7 @@ def get_task_name(md_file):
     layers = md_file.split('/')
     for i in range(len(layers) - 1):
         if layers[i] == 'configs':
-            return layers[i + 1]
+            return layers[i + 1].capitalize()
     return 'Unknown'
 
 

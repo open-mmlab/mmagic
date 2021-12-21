@@ -17,7 +17,7 @@ Models:
     Metrics:
       FID: 118.297
       IS: 1.584
-    Task: synthesizers
+    Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_facades/cyclegan_lsgan_resnet_in_1x1_80k_facades_20200524-0b877c2a.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades.py
   In Collection: CycleGAN
@@ -29,7 +29,7 @@ Models:
     Metrics:
       FID: 126.316
       IS: 1.957
-    Task: synthesizers
+    Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_facades_id0/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades_20200524-438aa074.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter.py
   In Collection: CycleGAN
@@ -41,7 +41,7 @@ Models:
     Metrics:
       FID: 76.959
       IS: 2.768
-    Task: synthesizers
+    Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_20200524-0baeaff6.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter.py
   In Collection: CycleGAN
@@ -53,7 +53,7 @@ Models:
     Metrics:
       FID: 72.803
       IS: 3.069
-    Task: synthesizers
+    Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_20200524-0baeaff6.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter.py
   In Collection: CycleGAN
@@ -65,7 +65,7 @@ Models:
     Metrics:
       FID: 76.018
       IS: 2.735
-    Task: synthesizers
+    Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter_id0/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_20200524-f280ecdd.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter.py
   In Collection: CycleGAN
@@ -77,7 +77,7 @@ Models:
     Metrics:
       FID: 73.498
       IS: 3.13
-    Task: synthesizers
+    Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter_id0/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_20200524-f280ecdd.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra.py
   In Collection: CycleGAN
@@ -89,7 +89,7 @@ Models:
     Metrics:
       FID: 63.81
       IS: 1.43
-    Task: synthesizers
+    Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_20200524-1b3d5d3a.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra.py
   In Collection: CycleGAN
@@ -101,7 +101,7 @@ Models:
     Metrics:
       FID: 71.675
       IS: 1.542
-    Task: synthesizers
+    Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra_id0/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_20200524-470fb8da.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra.py
   In Collection: CycleGAN
@@ -113,7 +113,7 @@ Models:
     Metrics:
       FID: 139.279
       IS: 3.093
-    Task: synthesizers
+    Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_20200524-1b3d5d3a.pth
 - Config: configs/synthesizers/cyclegan/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra.py
   In Collection: CycleGAN
@@ -125,5 +125,5 @@ Models:
     Metrics:
       FID: 132.369
       IS: 2.958
-    Task: synthesizers
+    Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra_id0/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_20200524-470fb8da.pth
