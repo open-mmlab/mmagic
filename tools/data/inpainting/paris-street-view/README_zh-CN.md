@@ -11,3 +11,17 @@
   year={2016}
 }
 ```
+
+请从[此处](https://github.com/pathak22/context-encoder/issues/24)获取数据集。
+
+```text
+mmediting
+├── mmedit
+├── tools
+├── configs
+├── data
+│   ├── paris_street_view
+│   │   ├── train
+|   |   ├── val
+
+```
