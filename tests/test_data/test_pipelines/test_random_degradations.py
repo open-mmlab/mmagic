@@ -155,7 +155,7 @@ def test_random_resize():
         keys=['lq'])
     results = model(results)
 
-    # is_even_size is True
+    # is_size_even is True
     results['lq'] = np.ones((8, 8, 3)).astype(np.float32)
     model = RandomResize(
         params=dict(
@@ -164,9 +164,11 @@ def test_random_resize():
             resize_opt=['bilinear', 'area', 'bicubic'],
             resize_prob=[1 / 3., 1 / 3., 1 / 3.],
             resize_step=0.05,
-            is_even_size=True),
+            is_size_even=True),
         keys=['lq'])
     results = model(results)
+    assert results['lq'].shape[0] % 2 == 0
+    assert results['lq'].shape[1] % 2 == 0
 
     # skip degradation
     model = RandomResize(
