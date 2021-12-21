@@ -166,8 +166,6 @@ class RandomRotation:
             else:
                 degrees = (-degrees, degrees)
         elif not mmcv.is_tuple_of(degrees, (int, float)):
-            raise TypeError(f'Wrong type of "degrees": {type(degrees)}.')
-        else:
             raise TypeError(f'Degrees must be float | int or tuple of float | '
                             'int, but got '
                             f'{type(degrees)}.')
@@ -608,6 +606,7 @@ class ColorJitter:
         self.transform = transforms.ColorJitter(**kwargs)
 
     def __call__(self, results):
+        img = results['gt_img']
         if self.to_rgb is True:
             img = results['gt_img'][..., ::-1]
         img = Image.fromarray(img)
