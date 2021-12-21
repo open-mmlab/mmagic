@@ -168,7 +168,11 @@ class FixedCrop:
         Returns:
             dict: A dict containing the processed data and information.
         """
-        data_h, data_w = results[self.keys[0]].shape[:2]
+
+        if isinstance(results[self.keys[0]], list):
+            data_h, data_w = results[self.keys[0]][0].shape[:2]
+        else:
+            data_h, data_w = results[self.keys[0]].shape[:2]
         crop_h, crop_w = self.crop_size
         crop_h = min(data_h, crop_h)
         crop_w = min(data_w, crop_w)
@@ -183,16 +187,26 @@ class FixedCrop:
 
         for k in self.keys:
             # In fixed crop for paired images, sizes should be the same
-            if (results[k].shape[0] != data_h
-                    or results[k].shape[1] != data_w):
-                raise ValueError(
-                    'The sizes of paired images should be the same. Expected '
-                    f'({data_h}, {data_w}), but got ({results[k].shape[0]}, '
-                    f'{results[k].shape[1]}).')
-            data_, crop_bbox = self._crop(results[k], x_offset, y_offset,
-                                          crop_w, crop_h)
-            results[k] = data_
+            images = results[k]
+            is_list = isinstance(images, list)
+            if not is_list:
+                images = [images]
+            cropped_images = []
+            crop_bbox = None
+            for image in images:
+                if (image.shape[0] != data_h or image.shape[1] != data_w):
+                    raise ValueError(
+                        'The sizes of paired images should be the same. '
+                        f'Expected ({data_h}, {data_w}), '
+                        f'but got ({image.shape[0]}, '
+                        f'{image.shape[1]}).')
+                data_, crop_bbox = self._crop(image, x_offset, y_offset,
+                                              crop_w, crop_h)
+                cropped_images.append(data_)
             results[k + '_crop_bbox'] = crop_bbox
+            if not is_list:
+                cropped_images = cropped_images[0]
+            results[k] = cropped_images
         results['crop_size'] = self.crop_size
         results['crop_pos'] = self.crop_pos
         return results
