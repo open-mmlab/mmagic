@@ -1,11 +1,13 @@
-from .augmentation import (
-    BinarizeImage, ColorJitter, Flip, GenerateFrameIndices,
-    GenerateFrameIndiceswithPadding, GenerateSegmentIndices, MirrorSequence,
-    Pad, RandomAffine, RandomJitter, RandomMaskDilation, RandomResizedCrop,
-    RandomTransposeHW, Resize, TemporalReverse)
+from .augmentation import (BinarizeImage, ColorJitter, Flip,
+                           GenerateFrameIndices,
+                           GenerateFrameIndiceswithPadding,
+                           GenerateSegmentIndices, MirrorSequence, Pad,
+                           RandomAffine, RandomJitter, RandomMaskDilation,
+                           RandomTransposeHW, Resize, TemporalReverse)
 from .compose import Compose
 from .crop import (CenterCrop, Crop, CropAroundCenter, CropAroundFg,
-                   CropAroundUnknown, FixedCrop, ModCrop, PairedRandomCrop)
+                   CropAroundUnknown, FixedCrop, ModCrop, PairedRandomCrop,
+                   RandomResizedCrop)
 from .down_sampling import RandomDownSampling
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)

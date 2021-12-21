@@ -1,4 +1,6 @@
+import math
 import numbers
+import random
 
 import mmcv
 import numpy as np
@@ -17,6 +19,9 @@ class Crop:
         crop_size (Tuple[int]): Target spatial size (h, w).
         random_crop (bool): If set to True, it will random crop
             image. Otherwise, it will work as center crop.
+            For center crop, If image size is smaller than output
+            size along any edge, image is padded with 0 and
+            then center cropped.
     """
 
     def __init__(self, keys, crop_size, random_crop=True):
@@ -41,15 +46,25 @@ class Crop:
         for item in data_list:
             data_h, data_w = item.shape[:2]
             crop_h, crop_w = self.crop_size
-            crop_h = min(data_h, crop_h)
-            crop_w = min(data_w, crop_w)
 
             if self.random_crop:
+                crop_h = min(data_h, crop_h)
+                crop_w = min(data_w, crop_w)
                 x_offset = np.random.randint(0, data_w - crop_w + 1)
                 y_offset = np.random.randint(0, data_h - crop_h + 1)
             else:
-                x_offset = max(0, (data_w - crop_w)) // 2
-                y_offset = max(0, (data_h - crop_h)) // 2
+
+                x_offset = abs(data_w - crop_w) // 2
+                y_offset = abs(data_h - crop_h) // 2
+
+                if crop_h > data_h:
+                    pad_width = ((2 * y_offset, 2 * y_offset), (0, 0), (0, 0))
+                    data = np.pad(
+                        data, pad_width, mode='constant', constant_values=0)
+                elif crop_w > data_w:
+                    pad_width = ((0, 0), (2 * x_offset, 2 * x_offset), (0, 0))
+                    data = np.pad(
+                        data, pad_width, mode='constant', constant_values=0)
 
             crop_bbox = [x_offset, y_offset, crop_w, crop_h]
             item_ = item[y_offset:y_offset + crop_h,
@@ -83,6 +98,131 @@ class Crop:
         repr_str += (f'keys={self.keys}, crop_size={self.crop_size}, '
                      f'random_crop={self.random_crop}')
 
+        return repr_str
+
+
+@PIPELINES.register_module()
+class RandomResizedCrop(object):
+    """Crop data to random size and aspect ratio. Modified keys are
+       the attributes specified in "keys".
+
+    A crop of a random proportion of the original image
+    and a random aspect ratio of the original aspect ratio is made.
+    The cropped image is finally resized to a given size specified
+    by 'crop_size'.
+
+    This code is partially adopted from
+    torchvision.transforms.RandomResizedCrop:
+    [https://pytorch.org/vision/stable/_modules/torchvision/transforms/\
+        transforms.html#RandomResizedCrop].
+
+    Args:
+        keys (list[str]): The images to be resized and random-cropped.
+        crop_size (int | tuple[int]): Target spatial size (h, w).
+        scale (tuple[float], optional): Range of the proportion of the original
+                                        image to be cropped. Default:
+                                        (0.08, 1.0).
+        ratio (tuple[float], optional): Range of aspect ratio of the crop.
+                                        Default: (3. / 4., 4. / 3.).
+        interpolation (str, optional): Algorithm used for interpolation.
+                             It can be only either one of the following:
+                            "nearest" | "bilinear" | "bicubic" | "area" |
+                            "lanczos".
+                            Default: "bilinear".
+    """
+
+    def __init__(self,
+                 keys,
+                 crop_size,
+                 scale=(0.08, 1.0),
+                 ratio=(3. / 4., 4. / 3.),
+                 interpolation='bilinear'):
+        assert keys, 'Keys should not be empty.'
+        if mmcv.is_tuple_of(crop_size, int):
+            crop_size = crop_size
+        elif isinstance(crop_size, int):
+            crop_size = (crop_size, crop_size)
+        else:
+            raise TypeError('"crop_size" must be an integer '
+                            'or a tuple of integers, but got '
+                            f'{type(crop_size)}')
+        if not mmcv.is_tuple_of(scale, float):
+            raise TypeError(f'"scale" must be a tuple, but got {type(scale)}')
+        if not mmcv.is_tuple_of(ratio, float):
+            raise TypeError(f'"ratio" must be a tuple, but got {type(ratio)}')
+
+        self.keys = keys
+        self.crop_size = crop_size
+        self.scale = scale
+        self.ratio = ratio
+        self.interpolation = interpolation
+
+    def get_params(self, data):
+        """Get parameters for a random sized crop.
+
+        Args:
+            data (np.ndarray): Image of type numpy array to be cropped.
+
+        Returns:
+            A tuple containing the coordinates of the top left corner
+            and the chosen crop size.
+        """
+        data_h, data_w = data.shape[:2]
+        area = data_h * data_w
+
+        for _ in range(10):
+            target_area = random.uniform(*self.scale) * area
+            log_ratio = (math.log(self.ratio[0]), math.log(self.ratio[1]))
+            aspect_ratio = math.exp(random.uniform(*log_ratio))
+
+            crop_w = int(round(math.sqrt(target_area * aspect_ratio)))
+            crop_h = int(round(math.sqrt(target_area / aspect_ratio)))
+
+            if 0 < crop_w <= data_w and 0 < crop_h <= data_h:
+                top = random.randint(0, data_h - crop_h)
+                left = random.randint(0, data_w - crop_w)
+                return top, left, crop_h, crop_w
+
+        # Fall back to central crop
+        in_ratio = float(data_w) / float(data_h)
+        if (in_ratio < min(self.ratio)):
+            crop_w = data_w
+            crop_h = int(round(crop_w / min(self.ratio)))
+        elif (in_ratio > max(self.ratio)):
+            crop_h = data_h
+            crop_w = int(round(crop_h * max(self.ratio)))
+        else:  # whole image
+            crop_w = data_w
+            crop_h = data_h
+        top = (data_h - crop_h) // 2
+        left = (data_w - crop_w) // 2
+        return top, left, crop_h, crop_w
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        for k in self.keys:
+            top, left, crop_h, crop_w = self.get_params(results[k])
+            results[k] = results[k][top:top + crop_h, left:left + crop_w, ...]
+            results[k], w_scale, h_scale = mmcv.imresize(
+                results[k],
+                self.crop_size,
+                return_scale=True,
+                interpolation=self.interpolation)
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(keys={self.keys}, crop_size={self.crop_size}, '
+                     f'scale={self.scale}, ratio={self.ratio}, '
+                     f'interpolation={self.interpolation})')
         return repr_str
 
 
