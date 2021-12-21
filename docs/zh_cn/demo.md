@@ -10,7 +10,7 @@
 python demo/inpainting_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${MASKED_IMAGE_FILE} ${MASK_FILE} ${SAVE_FILE} [--imshow] [--device ${GPU_ID}]
 ```
 
-如果指定了 --imshow，演示程序将使用opencv 显示图像。例子：
+如果指定了 --imshow ，演示程序将使用 opencv 显示图像。例子：
 
 ```shell
 python demo/inpainting_demo.py configs/inpainting/global_local/gl_256x256_8x12_celeba.py work_dirs/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth tests/data/image/celeba_test.png tests/data/image/bbox_mask.png tests/data/pred/inpainting_celeba.png
@@ -26,7 +26,7 @@ python demo/inpainting_demo.py configs/inpainting/global_local/gl_256x256_8x12_c
 python demo/matting_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${TRIMAP_FILE} ${SAVE_FILE} [--imshow] [--device ${GPU_ID}]
 ```
 
-如果指定了 --imshow，演示程序将使用opencv 显示图像。例子：
+如果指定了 --imshow ，演示程序将使用 opencv 显示图像。例子：
 
 ```shell
 python demo/matting_demo.py configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py work_dirs/dim_stage3/latest.pth tests/data/merged/GT05.jpg tests/data/trimap/GT05.png tests/data/pred/GT05.png
@@ -42,7 +42,7 @@ python demo/matting_demo.py configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_com
 python demo/restoration_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${SAVE_FILE} [--imshow] [--device ${GPU_ID}]
 ```
 
-如果指定了 --imshow，演示程序将使用opencv 显示图像。例子：
+如果指定了 --imshow ，演示程序将使用 opencv 显示图像。例子：
 
 ```shell
 python demo/restoration_demo.py configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py work_dirs/esrgan_x4c64b23g32_g1_400k_div2k/latest.pth tests/data/lq/baboon_x4.png demo/demo_out_baboon.png
@@ -56,7 +56,7 @@ python demo/restoration_demo.py configs/restorers/esrgan/esrgan_x4c64b23g32_g1_4
 python demo/restoration_face_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${SAVE_FILE} [--upscale_factor] [--face_size] [--imshow] [--device ${GPU_ID}]
 ```
 
-如果指定了 --imshow，演示程序将使用opencv 显示图像。例子：
+如果指定了 --imshow ，演示程序将使用 opencv 显示图像。例子：
 
 ```shell
 python demo/restoration_face_demo.py configs/restorers/glean/glean_in128out1024_2x4_300k_ffhq_celebahq.py https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth tests/data/face/000001.png results/000001.png --upscale_factor 4
