@@ -154,7 +154,7 @@ class RandomRotation:
 
     Args:
         keys (list[str]): The images to be rotated.
-        degrees (tuple[float] | typle[int I float | int): If it is a tuple,
+        degrees (tuple[float] | tuple[int] | float | int): If it is a tuple,
         it represents a range (min, max). If it is a float or int,
         the range is constructed as (-degrees, degrees).
     """
