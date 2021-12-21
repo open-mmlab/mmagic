@@ -46,24 +46,29 @@ class Crop:
             data_h, data_w = item.shape[:2]
             crop_h, crop_w = self.crop_size
 
+            if crop_h > data_h:
+                crop_y_offset = abs(data_h - crop_h) // 2
+                pad_width = ((2 * crop_y_offset, 2 * crop_y_offset), (0, 0),
+                             (0, 0))
+                item = np.pad(
+                    item, pad_width, mode='constant', constant_values=0)
+            elif crop_w > data_w:
+                crop_x_offset = abs(data_w - crop_w) // 2
+                pad_width = ((0, 0), (2 * crop_x_offset, 2 * crop_x_offset),
+                             (0, 0))
+                item = np.pad(
+                    item, pad_width, mode='constant', constant_values=0)
+
+            data_h, data_w = item.shape[:2]
+            crop_h = min(data_h, crop_h)
+            crop_w = min(data_w, crop_w)
+
             if self.random_crop:
-                crop_h = min(data_h, crop_h)
-                crop_w = min(data_w, crop_w)
                 x_offset = np.random.randint(0, data_w - crop_w + 1)
                 y_offset = np.random.randint(0, data_h - crop_h + 1)
             else:
-
-                x_offset = abs(data_w - crop_w) // 2
-                y_offset = abs(data_h - crop_h) // 2
-
-                if crop_h > data_h:
-                    pad_width = ((2 * y_offset, 2 * y_offset), (0, 0), (0, 0))
-                    data = np.pad(
-                        data, pad_width, mode='constant', constant_values=0)
-                elif crop_w > data_w:
-                    pad_width = ((0, 0), (2 * x_offset, 2 * x_offset), (0, 0))
-                    data = np.pad(
-                        data, pad_width, mode='constant', constant_values=0)
+                x_offset = max(0, (data_w - crop_w)) // 2
+                y_offset = max(0, (data_h - crop_h)) // 2
 
             crop_bbox = [x_offset, y_offset, crop_w, crop_h]
             item_ = item[y_offset:y_offset + crop_h,
@@ -102,8 +107,9 @@ class Crop:
 
 @PIPELINES.register_module()
 class RandomResizedCrop(object):
-    """Crop data to random size and aspect ratio. Modified keys are
-       the attributes specified in "keys".
+    """Crop data to random size and aspect ratio.
+
+    Modified keys are the attributes specified in "keys".
 
     A crop of a random proportion of the original image
     and a random aspect ratio of the original aspect ratio is made.
@@ -119,15 +125,13 @@ class RandomResizedCrop(object):
         keys (list[str]): The images to be resized and random-cropped.
         crop_size (int | tuple[int]): Target spatial size (h, w).
         scale (tuple[float], optional): Range of the proportion of the original
-                                        image to be cropped. Default:
-                                        (0.08, 1.0).
+            image to be cropped. Default: (0.08, 1.0).
         ratio (tuple[float], optional): Range of aspect ratio of the crop.
-                                        Default: (3. / 4., 4. / 3.).
+            Default: (3. / 4., 4. / 3.).
         interpolation (str, optional): Algorithm used for interpolation.
-                             It can be only either one of the following:
-                            "nearest" | "bilinear" | "bicubic" | "area" |
-                            "lanczos".
-                            Default: "bilinear".
+            It can be only either one of the following:
+            "nearest" | "bilinear" | "bicubic" | "area" | "lanczos".
+            Default: "bilinear".
     """
 
     def __init__(self,
@@ -182,7 +186,7 @@ class RandomResizedCrop(object):
                 left = random.randint(0, data_w - crop_w)
                 return top, left, crop_h, crop_w
 
-        # Fall back to central crop
+        # Fall back to center crop
         in_ratio = float(data_w) / float(data_h)
         if (in_ratio < min(self.ratio)):
             crop_w = data_w
@@ -210,10 +214,10 @@ class RandomResizedCrop(object):
         for k in self.keys:
             top, left, crop_h, crop_w = self.get_params(results[k])
             results[k] = results[k][top:top + crop_h, left:left + crop_w, ...]
-            results[k], w_scale, h_scale = mmcv.imresize(
+            results[k] = mmcv.imresize(
                 results[k],
                 self.crop_size,
-                return_scale=True,
+                return_scale=False,
                 interpolation=self.interpolation)
         return results
 

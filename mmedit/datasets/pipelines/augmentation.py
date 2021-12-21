@@ -155,22 +155,19 @@ class RandomRotation:
     Args:
         keys (list[str]): The images to be rotated.
         degrees (tuple[float] | tuple[int] | float | int): If it is a tuple,
-        it represents a range (min, max). If it is a float or int,
-        the range is constructed as (-degrees, degrees).
+            it represents a range (min, max). If it is a float or int,
+            the range is constructed as (-degrees, degrees).
     """
 
     def __init__(self, keys, degrees):
-        if isinstance(degrees, float) or isinstance(degrees, int):
+        if isinstance(degrees, (int, float)):
             if degrees < 0.0:
-                raise ValueError(
-                    'If degrees is a single float number, it must be positive.'
-                )
+                raise ValueError('Degrees must be positive if it is a number.')
             else:
                 degrees = (-degrees, degrees)
-        elif mmcv.is_tuple_of(degrees, float) or mmcv.is_tuple_of(
-                degrees, int):
-            degrees = degrees
-        elif degrees is not None:
+        elif not mmcv.is_tuple_of(degrees, (int, float)):
+            raise TypeError(f'Wrong type of "degrees": {type(degrees)}.')
+        else:
             raise TypeError(f'Degrees must be float | int or tuple of float | '
                             'int, but got '
                             f'{type(degrees)}.')
@@ -191,7 +188,7 @@ class RandomRotation:
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (f'(keys={self.keys}, degrees={self.degrees}, ')
+        repr_str += (f'(keys={self.keys}, degrees={self.degrees})')
         return repr_str
 
 
@@ -599,14 +596,20 @@ class RandomJitter:
 @PIPELINES.register_module()
 class ColorJitter:
     """An interface for torch color jitter so that it can be invoked in
-    mmediting pipeline."""
+    mmediting pipeline.
 
-    def __init__(self, **kwargs):
+    Args:
+        to_rgb (bool): Whether to convert channels from BGR to RGB.
+            Default: False.
+    """
+
+    def __init__(self, to_rgb=False, **kwargs):
+        self.to_rgb = to_rgb
         self.transform = transforms.ColorJitter(**kwargs)
 
     def __call__(self, results):
-        # img is bgr
-        img = results['gt_img'][..., ::-1]
+        if self.to_rgb is True:
+            img = results['gt_img'][..., ::-1]
         img = Image.fromarray(img)
         img = self.transform(img)
         img = np.asarray(img)
@@ -616,6 +619,8 @@ class ColorJitter:
 
     def __repr__(self):
         repr_str = self.__class__.__name__
+        repr_str += (f'(to_rgb={self.to_rgb})')
+
         return repr_str
 
 
