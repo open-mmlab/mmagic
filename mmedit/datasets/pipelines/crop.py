@@ -1,5 +1,4 @@
 import math
-import numbers
 import random
 
 import mmcv
@@ -223,66 +222,6 @@ class RandomResizedCrop(object):
         repr_str += (f'(keys={self.keys}, crop_size={self.crop_size}, '
                      f'scale={self.scale}, ratio={self.ratio}, '
                      f'interpolation={self.interpolation})')
-        return repr_str
-
-
-@PIPELINES.register_module()
-class CenterCrop:
-    """Crops the given image at the center.
-
-    If image size is smaller than output size along any edge,
-    image is padded with 0 and then center cropped.
-
-    Args:
-        keys (Sequence[str]): The images to be cropped.
-        crop_size (Tuple[int]): Target spatial size (h, w).
-    """
-
-    def __init__(self, keys, crop_size):
-        assert keys, 'Keys should not be empty.'
-        self.keys = keys
-        if isinstance(crop_size, numbers.Number):
-            self.crop_size = (int(crop_size), int(crop_size))
-        else:
-            self.crop_size = crop_size
-
-    def _crop(self, data):
-        data_h, data_w = data.shape[:2]
-        crop_h, crop_w = self.crop_size
-
-        x_offset = abs(data_w - crop_w) // 2
-        y_offset = abs(data_h - crop_h) // 2
-
-        if crop_h > data_h:
-            pad_width = ((2 * y_offset, 2 * y_offset), (0, 0), (0, 0))
-            data = np.pad(data, pad_width, mode='constant', constant_values=0)
-        elif crop_w > data_w:
-            pad_width = ((0, 0), (2 * x_offset, 2 * x_offset), (0, 0))
-            data = np.pad(data, pad_width, mode='constant', constant_values=0)
-
-        data = data[y_offset:y_offset + crop_h, x_offset:x_offset + crop_w,
-                    ...]
-
-        return data
-
-    def __call__(self, results):
-        """Call function.
-
-        Args:
-            results (dict): A dict containing the necessary information and
-                data for augmentation.
-
-        Returns:
-            dict: A dict containing the processed data and information.
-        """
-        for k in self.keys:
-            results[k] = self._crop(results[k])
-        results['crop_size'] = self.crop_size
-        return results
-
-    def __repr__(self):
-        repr_str = self.__class__.__name__
-        repr_str += (f'(keys={self.keys}, crop_size={self.crop_size}, ')
         return repr_str
 
 

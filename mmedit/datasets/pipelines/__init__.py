@@ -5,9 +5,8 @@ from .augmentation import (BinarizeImage, ColorJitter, Flip,
                            RandomAffine, RandomJitter, RandomMaskDilation,
                            RandomTransposeHW, Resize, TemporalReverse)
 from .compose import Compose
-from .crop import (CenterCrop, Crop, CropAroundCenter, CropAroundFg,
-                   CropAroundUnknown, FixedCrop, ModCrop, PairedRandomCrop,
-                   RandomResizedCrop)
+from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
+                   FixedCrop, ModCrop, PairedRandomCrop, RandomResizedCrop)
 from .down_sampling import RandomDownSampling
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
@@ -25,7 +24,7 @@ __all__ = [
     'RandomLoadResizeBg', 'Compose', 'ImageToTensor', 'ToTensor',
     'GetMaskedImage', 'BinarizeImage', 'Flip', 'Pad', 'RandomAffine',
     'RandomJitter', 'ColorJitter', 'RandomMaskDilation', 'RandomTransposeHW',
-    'Resize', 'RandomResizedCrop', 'CenterCrop', 'Crop', 'CropAroundCenter',
+    'Resize', 'RandomResizedCrop', 'Crop', 'CropAroundCenter',
     'CropAroundUnknown', 'ModCrop', 'PairedRandomCrop', 'Normalize',
     'RescaleToZeroOne', 'GenerateTrimap', 'MergeFgAndBg', 'CompositeFg',
     'TemporalReverse', 'LoadImageFromFileList', 'GenerateFrameIndices',
