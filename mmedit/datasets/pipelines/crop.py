@@ -46,18 +46,20 @@ class Crop:
             data_h, data_w = item.shape[:2]
             crop_h, crop_w = self.crop_size
 
+            crop_y_offset, crop_x_offset = 0, 0
+
             if crop_h > data_h:
-                crop_y_offset = abs(data_h - crop_h) // 2
-                pad_width = ((2 * crop_y_offset, 2 * crop_y_offset), (0, 0),
-                             (0, 0))
-                item = np.pad(
-                    item, pad_width, mode='constant', constant_values=0)
+                crop_y_offset = (crop_h - data_h) // 2
             elif crop_w > data_w:
-                crop_x_offset = abs(data_w - crop_w) // 2
-                pad_width = ((0, 0), (2 * crop_x_offset, 2 * crop_x_offset),
-                             (0, 0))
+                crop_x_offset = (crop_w - data_w) // 2
+
+            if crop_y_offset > 0 or crop_x_offset > 0:
+                pad_width = [2 * crop_y_offset, 2 * crop_x_offset]
+                if item.ndim == 3:
+                    pad_width.append(0)
                 item = np.pad(
-                    item, pad_width, mode='constant', constant_values=0)
+                    item, tuple(pad_width), mode='constant', constant_values=0)
+                data_h, data_w = item.shape[:2]
 
             data_h, data_w = item.shape[:2]
             crop_h = min(data_h, crop_h)
@@ -109,12 +111,10 @@ class Crop:
 class RandomResizedCrop(object):
     """Crop data to random size and aspect ratio.
 
-    Modified keys are the attributes specified in "keys".
-
     A crop of a random proportion of the original image
     and a random aspect ratio of the original aspect ratio is made.
     The cropped image is finally resized to a given size specified
-    by 'crop_size'.
+    by 'crop_size'. Modified keys are the attributes specified in "keys".
 
     This code is partially adopted from
     torchvision.transforms.RandomResizedCrop:
@@ -141,11 +141,9 @@ class RandomResizedCrop(object):
                  ratio=(3. / 4., 4. / 3.),
                  interpolation='bilinear'):
         assert keys, 'Keys should not be empty.'
-        if mmcv.is_tuple_of(crop_size, int):
-            crop_size = crop_size
-        elif isinstance(crop_size, int):
+        if isinstance(crop_size, int):
             crop_size = (crop_size, crop_size)
-        else:
+        elif not mmcv.is_tuple_of(crop_size, int):
             raise TypeError('"crop_size" must be an integer '
                             'or a tuple of integers, but got '
                             f'{type(crop_size)}')

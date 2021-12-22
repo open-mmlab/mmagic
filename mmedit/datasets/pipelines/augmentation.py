@@ -596,29 +596,35 @@ class ColorJitter:
     """An interface for torch color jitter so that it can be invoked in
     mmediting pipeline.
 
+    Randomly change the brightness, contrast and saturation of an image.
+    Modified keys are the attributes specified in "keys".
+
     Args:
+        keys (list[str]): The images to be resized.
         to_rgb (bool): Whether to convert channels from BGR to RGB.
             Default: False.
     """
 
-    def __init__(self, to_rgb=False, **kwargs):
+    def __init__(self, keys, to_rgb=False, **kwargs):
+        assert keys, 'Keys should not be empty.'
+
+        self.keys = keys
         self.to_rgb = to_rgb
         self.transform = transforms.ColorJitter(**kwargs)
 
     def __call__(self, results):
-        img = results['gt_img']
-        if self.to_rgb is True:
-            img = results['gt_img'][..., ::-1]
-        img = Image.fromarray(img)
-        img = self.transform(img)
-        img = np.asarray(img)
-        img = img[..., ::-1]
-        results['gt_img'] = img
+        for k in self.keys:
+            if self.to_rgb:
+                results[k] = results[k][..., ::-1]
+            results[k] = Image.fromarray(results[k])
+            results[k] = self.transform(results[k])
+            results[k] = np.asarray(results[k])
+            results[k] = results[k][..., ::-1]
         return results
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (f'(to_rgb={self.to_rgb})')
+        repr_str += (f'(keys={self.keys}, to_rgb={self.to_rgb})')
 
         return repr_str
 
