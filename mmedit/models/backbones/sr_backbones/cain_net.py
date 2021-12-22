@@ -66,16 +66,17 @@ def get_padding_functions(x, padding=7):
     return padding_input, padding_output
 
 
-class ConvNorm(nn.Module):
-    """ReflectionPad2d, Conv2d (and Norm).
+class ConvNormWithReflectionPad(nn.Module):
+    """Apply reflection padding, followed by a convolution,
+        which can be followed by an optional normalization.
 
     Args:
         in_channels (int): Channel number of input features.
-        out_channels (int): Channel number of input features.
+        out_channels (int): Channel number of output features.
         kernel_size (int): Kernel size of convolution layer.
         stride (int): Stride of size of convolution layer. Default: 1.
-        norm (None | function): Norm layer. If None, no norm layer.
-            Default: None.
+        norm (str | None): Normalization layer. If it is None, no
+            normalization is performed. Default: None.
     """
 
     def __init__(self,
@@ -86,8 +87,7 @@ class ConvNorm(nn.Module):
                  norm=None):
         super().__init__()
 
-        reflection_padding = kernel_size // 2
-        self.reflection_pad = nn.ReflectionPad2d(reflection_padding)
+        self.reflection_pad = nn.ReflectionPad2d(kernel_size // 2)
         self.conv = nn.Conv2d(
             in_channels,
             out_channels,
@@ -95,15 +95,18 @@ class ConvNorm(nn.Module):
             kernel_size=kernel_size,
             bias=True)
 
-        self.norm = norm
-        if norm == 'IN':
+        if norm.lower() == 'in':
             self.norm = nn.InstanceNorm2d(
                 out_channels, track_running_stats=True)
-        elif norm == 'BN':
+        elif norm.lower() == 'bn':
             self.norm = nn.BatchNorm2d(out_channels)
+        elif norm is None:
+            self.norm = None
+        else:
+            raise ValueError(f"Invalid value for 'norm': {norm}")
 
     def forward(self, x):
-        """Forward function for ConvNorm.
+        """Forward function for ConvNormWithReflectionPad.
 
         Args:
             x (Tensor): Input tensor with shape (n, c, h, w).
@@ -119,8 +122,8 @@ class ConvNorm(nn.Module):
         return out
 
 
-class CALayer(nn.Module):
-    """Channel Attention Layer.
+class ChannelAttentionLayer(nn.Module):
+    """Channel Attention (CA) Layer.
 
     Args:
         mid_channels (int): Channel number of the intermediate features.
@@ -130,9 +133,9 @@ class CALayer(nn.Module):
     def __init__(self, mid_channels, reduction=16):
         super().__init__()
 
-        # global average pooling: feature --> point
+        # global average pooling: (n, c, h, w) --> (n, c, 1, 1)
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        # feature channel downscale and upscale --> channel weight
+        # channel reduction.
         self.channel_attention = nn.Sequential(
             nn.Conv2d(
                 mid_channels,
@@ -148,7 +151,7 @@ class CALayer(nn.Module):
                 bias=True), nn.Sigmoid())
 
     def forward(self, x):
-        """Forward function for CALayer.
+        """Forward function for ChannelAttentionLayer.
 
         Args:
             x (Tensor): Input tensor with shape (n, c, h, w).
@@ -163,18 +166,18 @@ class CALayer(nn.Module):
         return x * y, y
 
 
-class RCA(nn.Module):
+class ResidualChannelAttention(nn.Module):
     """Residual Channel Attention Module.
 
     Args:
         mid_channels (int): Channel number of the intermediate features.
-        kernel_size (int): Kernel size of RCA. Default: 3.
-        downscale (bool): Down scale or not. Default: False. Default: False.
-        reduction (int): Channel reduction of CA. Default: 16.
+        kernel_size (int): Kernel size of convolution layers. Default: 3.
+        downscale (bool): Down scale or not. Default: False.
+        reduction (int): Channel reduction. Default: 16.
         return_ca (bool): Return CA tensor or not. Default: False.
         norm (None | function): Norm layer. If None, no norm layer.
             Default: None.
-        act (function): activate function. Default: nn.ReLU(True).
+        act (function): activation function. Default: nn.ReLU(True).
     """
 
     def __init__(self,
@@ -188,15 +191,15 @@ class RCA(nn.Module):
         super().__init__()
 
         self.body = nn.Sequential(
-            ConvNorm(
+            ConvNormWithReflectionPad(
                 mid_channels,
                 mid_channels,
                 kernel_size,
                 stride=2 if downscale else 1,
                 norm=norm), act,
-            ConvNorm(
+            ConvNormWithReflectionPad(
                 mid_channels, mid_channels, kernel_size, stride=1, norm=norm),
-            CALayer(mid_channels, reduction))
+            ChannelAttentionLayer(mid_channels, reduction))
         self.return_ca = return_ca
         self.down_scale = downscale
         if self.down_scale:
@@ -204,7 +207,7 @@ class RCA(nn.Module):
                 mid_channels, mid_channels, kernel_size=3, stride=2, padding=1)
 
     def forward(self, x):
-        """Forward function for RCA.
+        """Forward function for ResidualChannelAttention.
 
         Args:
             x (Tensor): Input tensor with shape (n, c, h, w).
@@ -231,10 +234,11 @@ class RCA(nn.Module):
 
 
 class ResidualGroup(nn.Module):
-    """Residual Group.
+    """Residual Group, consisting of a stack of residual channel attention,
+        followed by a convolution.
 
     Args:
-        block_layer (nn.module): nn.module class for basic block.
+        block_layer (nn.Module): nn.module class for basic block.
         num_block_layers (int): number of blocks.
         mid_channels (int): Channel number of the intermediate features.
         kernel_size (int): Kernel size of ResidualGroup.
@@ -262,7 +266,7 @@ class ResidualGroup(nn.Module):
             reduction=reduction,
             norm=norm,
             act=act)
-        self.conv_after_body = ConvNorm(
+        self.conv_after_body = ConvNormWithReflectionPad(
             mid_channels, mid_channels, kernel_size, stride=1, norm=norm)
 
     def forward(self, x):
@@ -320,7 +324,7 @@ class CAINNet(nn.Module):
         self.body = make_layer(
             ResidualGroup,
             num_block_groups,
-            block_layer=RCA,
+            block_layer=ResidualChannelAttention,
             num_block_layers=num_block_layers,
             mid_channels=mid_channels,
             kernel_size=3,
@@ -328,19 +332,19 @@ class CAINNet(nn.Module):
             act=act)
         self.conv_last = nn.Conv2d(mid_channels, mid_channels, 3, 1, 1)
 
-    def forward(self, xs, padding_flag=False):
+    def forward(self, imgs, padding_flag=False):
         """Forward function.
 
         Args:
-            xs (Tensor): Input tensor with shape (n, 2, c, h, w).
+            imgs (Tensor): Input tensor with shape (n, 2, c, h, w).
             padding_flag (bool): Padding or not. Default: False.
 
         Returns:
             Tensor: Forward results.
         """
 
-        assert xs.shape[1] == 2
-        x1, x2 = xs[:, 0], xs[:, 1]
+        assert imgs.shape[1] == 2
+        x1, x2 = imgs[:, 0], imgs[:, 1]
 
         mean1 = x1.mean(2, keepdim=True).mean(3, keepdim=True)
         mean2 = x2.mean(2, keepdim=True).mean(3, keepdim=True)
