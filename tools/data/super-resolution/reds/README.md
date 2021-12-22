@@ -52,7 +52,7 @@ If you want to use LMDB datasets for faster IO speed, you can make LMDB files by
 python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
 
-## Crop sub-images
+## Crop to sub-images
 
 MMEditing also support cropping REDS images to sub-images for faster IO. We provide such a script:
 

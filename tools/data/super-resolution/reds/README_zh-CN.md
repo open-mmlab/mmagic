@@ -53,7 +53,7 @@ mmediting
 python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
 
-## 裁剪子图
+## 裁剪为子图
 
 MMEditing 支持将 REDS 图像裁剪为子图像以加快 IO。我们提供了这样一个脚本：
 

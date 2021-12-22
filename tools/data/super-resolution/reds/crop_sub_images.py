@@ -137,7 +137,6 @@ def main_extract_subimages(args):
     extract_subimages(opt)
 
     for scale in args.scales:
-        # scale = int(scale)
         opt['input_folder'] = osp.join(args.data_root,
                                        f'train_sharp_bicubic/X{scale}')
         opt['save_folder'] = osp.join(args.data_root,
