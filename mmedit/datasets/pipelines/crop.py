@@ -186,7 +186,6 @@ class FixedCrop:
             crop_h = min(data_h - y_offset, crop_h)
 
         for k in self.keys:
-            # In fixed crop for paired images, sizes should be the same
             images = results[k]
             is_list = isinstance(images, list)
             if not is_list:
@@ -194,6 +193,7 @@ class FixedCrop:
             cropped_images = []
             crop_bbox = None
             for image in images:
+                # In fixed crop for paired images, sizes should be the same
                 if (image.shape[0] != data_h or image.shape[1] != data_w):
                     raise ValueError(
                         'The sizes of paired images should be the same. '
