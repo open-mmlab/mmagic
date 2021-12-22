@@ -54,9 +54,10 @@ class Crop:
                 crop_x_offset = (crop_w - data_w) // 2
 
             if crop_y_offset > 0 or crop_x_offset > 0:
-                pad_width = [2 * crop_y_offset, 2 * crop_x_offset]
+                pad_width = [(2 * crop_y_offset, 2 * crop_y_offset),
+                             (2 * crop_x_offset, 2 * crop_x_offset)]
                 if item.ndim == 3:
-                    pad_width.append(0)
+                    pad_width.append((0, 0))
                 item = np.pad(
                     item, tuple(pad_width), mode='constant', constant_values=0)
                 data_h, data_w = item.shape[:2]
