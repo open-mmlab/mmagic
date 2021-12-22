@@ -77,6 +77,7 @@ train_pipeline = [
     dict(type='RandomRotation', keys=['mask'], degrees=(0.0, 45.0)),
     dict(
         type='ColorJitter',
+        keys=['gt_img'],
         brightness=0.5,
         contrast=0.5,
         saturation=0.5,
