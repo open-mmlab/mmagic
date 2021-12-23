@@ -6,7 +6,7 @@ def pixel_unshuffle(x, scale):
         scale (int): Scale factor.
 
     Returns:
-        y (Tensor): Output tensor.
+        Tensor: Output tensor.
     """
 
     b, c, h, w = x.shape
