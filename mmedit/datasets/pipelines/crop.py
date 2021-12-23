@@ -18,12 +18,11 @@ class Crop:
         crop_size (Tuple[int]): Target spatial size (h, w).
         random_crop (bool): If set to True, it will random crop
             image. Otherwise, it will work as center crop.
-            For center crop, If image size is smaller than output
-            size along any edge, image is padded with 0 and
-            then center cropped.
+        is_pad_zeros (bool, optional): Whether to pad the image with 0 if
+            crop_size is greater than image size. Default: False.
     """
 
-    def __init__(self, keys, crop_size, random_crop=True):
+    def __init__(self, keys, crop_size, random_crop=True, is_pad_zeros=False):
         if not mmcv.is_tuple_of(crop_size, int):
             raise TypeError(
                 'Elements of crop_size must be int and crop_size must be'
@@ -32,6 +31,7 @@ class Crop:
         self.keys = keys
         self.crop_size = crop_size
         self.random_crop = random_crop
+        self.is_pad_zeros = is_pad_zeros
 
     def _crop(self, data):
         if not isinstance(data, list):
@@ -46,23 +46,28 @@ class Crop:
             data_h, data_w = item.shape[:2]
             crop_h, crop_w = self.crop_size
 
-            crop_y_offset, crop_x_offset = 0, 0
+            if self.is_pad_zeros:
 
-            if crop_h > data_h:
-                crop_y_offset = (crop_h - data_h) // 2
-            elif crop_w > data_w:
-                crop_x_offset = (crop_w - data_w) // 2
+                crop_y_offset, crop_x_offset = 0, 0
 
-            if crop_y_offset > 0 or crop_x_offset > 0:
-                pad_width = [(2 * crop_y_offset, 2 * crop_y_offset),
-                             (2 * crop_x_offset, 2 * crop_x_offset)]
-                if item.ndim == 3:
-                    pad_width.append((0, 0))
-                item = np.pad(
-                    item, tuple(pad_width), mode='constant', constant_values=0)
+                if crop_h > data_h:
+                    crop_y_offset = (crop_h - data_h) // 2
+                if crop_w > data_w:
+                    crop_x_offset = (crop_w - data_w) // 2
+
+                if crop_y_offset > 0 or crop_x_offset > 0:
+                    pad_width = [(2 * crop_y_offset, 2 * crop_y_offset),
+                                 (2 * crop_x_offset, 2 * crop_x_offset)]
+                    if item.ndim == 3:
+                        pad_width.append((0, 0))
+                    item = np.pad(
+                        item,
+                        tuple(pad_width),
+                        mode='constant',
+                        constant_values=0)
+
                 data_h, data_w = item.shape[:2]
 
-            data_h, data_w = item.shape[:2]
             crop_h = min(data_h, crop_h)
             crop_w = min(data_w, crop_w)
 
@@ -212,12 +217,14 @@ class RandomResizedCrop(object):
         """
         for k in self.keys:
             top, left, crop_h, crop_w = self.get_params(results[k])
+            crop_bbox = [top, left, crop_w, crop_h]
             results[k] = results[k][top:top + crop_h, left:left + crop_w, ...]
             results[k] = mmcv.imresize(
                 results[k],
                 self.crop_size,
                 return_scale=False,
                 interpolation=self.interpolation)
+            results[k + '_crop_bbox'] = crop_bbox
         return results
 
     def __repr__(self):

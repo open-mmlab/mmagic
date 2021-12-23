@@ -144,7 +144,7 @@ class Resize:
         repr_str += (
             f'(keys={self.keys}, scale={self.scale}, '
             f'keep_ratio={self.keep_ratio}, size_factor={self.size_factor}, '
-            f'max_size={self.max_size},interpolation={self.interpolation})')
+            f'max_size={self.max_size}, interpolation={self.interpolation})')
         return repr_str
 
 

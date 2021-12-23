@@ -5,7 +5,7 @@ import pytest
 import torch
 
 # yapf: disable
-from mmedit.datasets.pipelines import (BinarizeImage, Flip,
+from mmedit.datasets.pipelines import (BinarizeImage, ColorJitter, Flip,
                                        GenerateFrameIndices,
                                        GenerateFrameIndiceswithPadding,
                                        GenerateSegmentIndices, MirrorSequence,
@@ -341,6 +341,23 @@ class TestAugmentations:
         assert repr(random_jitter) == random_jitter.__class__.__name__ + (
             'hue_range=(-50, 50)')
 
+    def test_color_jitter(self):
+
+        results = copy.deepcopy(self.results)
+        results['gt'] = (results['gt'] * 255).astype(np.uint8)
+
+        target_keys = ['gt']
+
+        color_jitter = ColorJitter(
+            keys=['gt'], brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5)
+        color_jitter_results = color_jitter(results)
+        assert self.check_keys_contain(color_jitter_results.keys(),
+                                       target_keys)
+        assert color_jitter_results['gt'].shape == self.img_gt.shape
+
+        assert repr(color_jitter) == color_jitter.__class__.__name__ + (
+            f"(keys=['gt'], to_rgb=False)")
+
     @staticmethod
     def check_transposehw(origin_img, result_img):
         """Check if the origin_imgs are transposed correctly"""
@@ -470,7 +487,7 @@ class TestAugmentations:
         assert name_ == resize_keep_ratio.__class__.__name__ + (
             f"(keys={['gt_img']}, scale=(128, 128), "
             f'keep_ratio={False}, size_factor=None, '
-            'max_size=None,interpolation=bilinear)')
+            'max_size=None, interpolation=bilinear)')
 
     def test_frame_index_generation_with_padding(self):
         with pytest.raises(ValueError):
