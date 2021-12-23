@@ -10,9 +10,13 @@ def pixel_unshuffle(x, scale):
     """
 
     b, c, h, w = x.shape
+    if h % scale != 0 or w % scale != 0:
+        raise AssertionError(
+            f'Invalid scale ({scale}) of pixel unshuffle for tensor '
+            f'with shape: {x.shape}')
     h = int(h / scale)
     w = int(w / scale)
     x = x.view(b, c, h, scale, w, scale)
-    shuffle_out = x.permute(0, 1, 3, 5, 2, 4).contiguous()
-    y = shuffle_out.view(b, c * scale * scale, h, w)
+    shuffle_out = x.permute(0, 1, 3, 5, 2, 4)
+    y = shuffle_out.reshape(b, -1, h, w)
     return y

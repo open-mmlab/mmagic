@@ -1,3 +1,4 @@
+import pytest
 import torch
 
 from mmedit.models.common import PixelShufflePack, pixel_unshuffle
@@ -22,12 +23,15 @@ def test_pixel_shuffle():
 
 def test_pixel_unshuffle():
     # test on cpu
-    x = torch.rand(1, 3, 16, 16)
+    x = torch.rand(1, 3, 20, 20)
     y = pixel_unshuffle(x, scale=2)
-    assert y.shape == (1, 12, 8, 8)
+    assert y.shape == (1, 12, 10, 10)
 
     # test on gpu
     if torch.cuda.is_available():
         x = x.cuda()
         y = pixel_unshuffle(x, scale=2)
-        assert y.shape == (1, 12, 8, 8)
+        assert y.shape == (1, 12, 10, 10)
+
+        with pytest.raises(AssertionError):
+            y = pixel_unshuffle(x, scale=3)

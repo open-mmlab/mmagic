@@ -18,7 +18,7 @@ from .partial_conv import PartialConv2d
 from .separable_conv_module import DepthwiseSeparableConvModule
 from .sr_backbone_utils import (ResidualBlockNoBN, default_init_weights,
                                 make_layer)
-from .upsample import PixelShufflePack, pixel_shuffle
+from .upsample import PixelShufflePack
 
 __all__ = [
     'ASPP', 'PartialConv2d', 'PixelShufflePack', 'default_init_weights',
@@ -27,5 +27,5 @@ __all__ = [
     'DepthwiseSeparableConvModule', 'ContextualAttentionModule', 'GCAModule',
     'SimpleGatedConvModule', 'LinearModule', 'flow_warp', 'ImgNormalize',
     'generation_init_weights', 'GANImageBuffer', 'UnetSkipConnectionBlock',
-    'ResidualBlockWithDropout', 'pixel_shuffle', 'pixel_unshuffle'
+    'ResidualBlockWithDropout', 'pixel_unshuffle'
 ]
