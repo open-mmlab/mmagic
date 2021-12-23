@@ -62,7 +62,7 @@ def main():
                                          args.filename_tmpl, args.max_seq_len)
 
     file_extension = os.path.splitext(args.output_dir)[1]
-    if file_extension in VIDEO_EXTENSIONS:  # save as mp4
+    if file_extension in VIDEO_EXTENSIONS:  # save as video
         h, w = output.shape[-2:]
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         video_writer = cv2.VideoWriter(args.output_dir, fourcc, 25, (w, h))
