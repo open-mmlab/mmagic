@@ -87,6 +87,36 @@ def test_load_image_from_file():
     assert results['gt_path'] == str(path_baboon)
     np.testing.assert_almost_equal(results['gt'], img_baboon)
 
+    # convert to y-channel (bgr2y)
+    results = dict(gt_path=path_baboon)
+    config = dict(io_backend='disk', key='gt', convert_to='y')
+    image_loader = LoadImageFromFile(**config)
+    results = image_loader(results)
+    assert results['gt'].shape == (480, 500, 1)
+    img_baboon_y = mmcv.bgr2ycbcr(img_baboon, y_only=True)
+    img_baboon_y = np.expand_dims(img_baboon_y, axis=2)
+    np.testing.assert_almost_equal(results['gt'], img_baboon_y)
+    assert results['gt_path'] == str(path_baboon)
+
+    # convert to y-channel (rgb2y)
+    results = dict(gt_path=path_baboon)
+    config = dict(
+        io_backend='disk', key='gt', channel_order='rgb', convert_to='y')
+    image_loader = LoadImageFromFile(**config)
+    results = image_loader(results)
+    assert results['gt'].shape == (480, 500, 1)
+    img_baboon_y = mmcv.bgr2ycbcr(img_baboon, y_only=True)
+    img_baboon_y = np.expand_dims(img_baboon_y, axis=2)
+    np.testing.assert_almost_equal(results['gt'], img_baboon_y)
+    assert results['gt_path'] == str(path_baboon)
+
+    # convert to y-channel (ValueError)
+    results = dict(gt_path=path_baboon)
+    config = dict(io_backend='disk', key='gt', convert_to='abc')
+    image_loader = LoadImageFromFile(**config)
+    with pytest.raises(ValueError):
+        results = image_loader(results)
+
 
 def test_load_image_from_file_list():
     path_baboon = Path(
@@ -128,6 +158,36 @@ def test_load_image_from_file_list():
         # filepath should be list
         results = dict(lq_path=path_baboon_x4)
         image_loader(results)
+
+    # convert to y-channel (bgr2y)
+    results = dict(lq_path=[str(path_baboon_x4), str(path_baboon)])
+    config = dict(io_backend='disk', key='lq', convert_to='y')
+    image_loader = LoadImageFromFileList(**config)
+    results = image_loader(results)
+    img_baboon_x4_y = mmcv.bgr2ycbcr(img_baboon_x4, y_only=True)
+    img_baboon_y = mmcv.bgr2ycbcr(img_baboon, y_only=True)
+    img_baboon_x4_y = np.expand_dims(img_baboon_x4_y, axis=2)
+    img_baboon_y = np.expand_dims(img_baboon_y, axis=2)
+    np.testing.assert_almost_equal(results['lq'][0], img_baboon_x4_y)
+    np.testing.assert_almost_equal(results['lq'][1], img_baboon_y)
+    assert results['lq_path'] == [str(path_baboon_x4), str(path_baboon)]
+
+    # convert to y-channel (rgb2y)
+    results = dict(lq_path=[str(path_baboon_x4), str(path_baboon)])
+    config = dict(
+        io_backend='disk', key='lq', channel_order='rgb', convert_to='y')
+    image_loader = LoadImageFromFileList(**config)
+    results = image_loader(results)
+    np.testing.assert_almost_equal(results['lq'][0], img_baboon_x4_y)
+    np.testing.assert_almost_equal(results['lq'][1], img_baboon_y)
+    assert results['lq_path'] == [str(path_baboon_x4), str(path_baboon)]
+
+    # convert to y-channel (ValueError)
+    results = dict(lq_path=[str(path_baboon_x4), str(path_baboon)])
+    config = dict(io_backend='disk', key='lq', convert_to='abc')
+    image_loader = LoadImageFromFileList(**config)
+    with pytest.raises(ValueError):
+        results = image_loader(results)
 
 
 class TestMattingLoading:

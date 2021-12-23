@@ -5,8 +5,9 @@ import numpy as np
 import pytest
 
 from mmedit.datasets.pipelines import (Crop, CropAroundCenter, CropAroundFg,
-                                       CropAroundUnknown, CropLike, FixedCrop,
-                                       ModCrop, PairedRandomCrop)
+                                       CropAroundUnknown, CropLike,
+                                       CropSequence, FixedCrop, ModCrop,
+                                       PairedRandomCrop)
 
 
 class TestAugmentations:
@@ -76,6 +77,40 @@ class TestAugmentations:
             random_crop.__class__.__name__ +
             "keys=['img'], crop_size=(512, 512), random_crop=True")
 
+    def test_crop_sequence(self):
+        # input must be a list
+        crop = CropSequence(['gt'], (4, 8), False)
+        results = {'gt': np.random.rand(16, 16, 1)}
+        with pytest.raises(TypeError):
+            crop(results)
+
+        # test center crop
+        results = {'gt': [np.random.rand(16, 16, 1)] * 5}
+        inputs = copy.deepcopy(results)
+        results = crop(results)
+        for i, output in enumerate(results['gt']):
+            assert np.array_equal(inputs['gt'][i][6:10, 4:12, :], output)
+
+        # test random crop
+        crop = CropSequence(['gt'], (4, 8), True)
+        results = {'gt': [np.random.rand(16, 16, 1)] * 5}
+        inputs = copy.deepcopy(results)
+        results = crop(results)
+        assert 0 <= results['gt_crop_bbox'][0] <= 9
+        assert 0 <= results['gt_crop_bbox'][1] <= 13
+        assert results['gt_crop_bbox'][2] == 8
+        assert results['gt_crop_bbox'][3] == 4
+
+        # test random crop for lager size than the original shape
+        crop = CropSequence(['gt'], (19, 31), True)
+        results = {'gt': [np.random.rand(16, 16, 1)] * 5}
+        inputs = copy.deepcopy(results)
+        results = crop(results)
+        assert np.array_equal(inputs['gt'], results['gt'])
+        assert str(crop) == (
+            crop.__class__.__name__ +
+            "keys=['gt'], crop_size=(19, 31), random_crop=True")
+
     def test_fixed_crop(self):
         with pytest.raises(TypeError):
             FixedCrop(['img_a', 'img_b'], (0.23, 0.1))
@@ -87,6 +122,17 @@ class TestAugmentations:
         fixed_crop = FixedCrop(['img_a', 'img'], crop_size=(128, 128))
         with pytest.raises(ValueError):
             results = fixed_crop(results)
+
+        # test sequence
+        results = copy.deepcopy(self.results)
+        results['img_a'] = [results['img_a'], results['img_a']]
+        results['img_b'] = [results['img_b'], results['img_b']]
+        fixed_crop = FixedCrop(['img_a', 'img_b'], crop_size=(128, 128))
+        results = fixed_crop(results)
+        for img in results['img_a']:
+            assert img.shape == (128, 128, 3)
+        for img in results['img_b']:
+            assert img.shape == (128, 128, 3)
 
         # test given pos crop
         results = copy.deepcopy(self.results)

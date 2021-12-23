@@ -24,5 +24,5 @@ Models:
       Set5:
         PSNR: 28.4316
         SSIM: 0.8099
-    Task: restorers
+    Task: Restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth

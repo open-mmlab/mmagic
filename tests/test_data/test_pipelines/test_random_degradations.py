@@ -4,7 +4,7 @@ import pytest
 
 from mmedit.datasets.pipelines import (DegradationsWithShuffle, RandomBlur,
                                        RandomJPEGCompression, RandomNoise,
-                                       RandomResize)
+                                       RandomResize, RandomVideoCompression)
 
 
 def test_random_noise():
@@ -64,6 +64,33 @@ def test_random_jpeg_compression():
         + "keys=['lq'])"
 
 
+def test_random_video_compression():
+    results = {}
+    results['lq'] = [np.ones((8, 8, 3)).astype(np.float32)] * 5
+
+    model = RandomVideoCompression(
+        params=dict(
+            codec=['libx264', 'h264', 'mpeg4'],
+            codec_prob=[1 / 3., 1 / 3., 1 / 3.],
+            bitrate=[1e4, 1e5]),
+        keys=['lq'])
+    results = model(results)
+    assert results['lq'][0].shape == (8, 8, 3)
+    assert len(results['lq']) == 5
+
+    # skip degradations with prob < 1
+    params = dict(
+        codec=['libx264', 'h264', 'mpeg4'],
+        codec_prob=[1 / 3., 1 / 3., 1 / 3.],
+        bitrate=[1e4, 1e5],
+        prob=0)
+    model = RandomVideoCompression(params=params, keys=['lq'])
+    assert model(results) == results
+
+    assert repr(model) == model.__class__.__name__ + f'(params={params}, ' \
+        + "keys=['lq'])"
+
+
 def test_random_resize():
     results = {}
     results['lq'] = np.ones((8, 8, 3)).astype(np.float32)
@@ -111,12 +138,39 @@ def test_random_resize():
             resize_scale=[0.5, 1.5],
             resize_opt=['bilinear', 'area', 'bicubic'],
             resize_prob=[1 / 3., 1 / 3., 1 / 3.],
-            target_size=(16, 16)),
+            target_size=(16, 32)),
         keys=['lq'])
     results = model(results)
-    assert results['lq'].shape == (16, 16, 3)
+    assert results['lq'].shape == (16, 32, 3)
 
-    # skip degrdation
+    # step_size > 0
+    results['lq'] = np.ones((8, 8, 3)).astype(np.float32)
+    model = RandomResize(
+        params=dict(
+            resize_mode_prob=[0, 0, 1],
+            resize_scale=[0.5, 1.5],
+            resize_opt=['bilinear', 'area', 'bicubic'],
+            resize_prob=[1 / 3., 1 / 3., 1 / 3.],
+            resize_step=0.05),
+        keys=['lq'])
+    results = model(results)
+
+    # is_size_even is True
+    results['lq'] = np.ones((8, 8, 3)).astype(np.float32)
+    model = RandomResize(
+        params=dict(
+            resize_mode_prob=[0, 1, 0],
+            resize_scale=[0.5, 1.5],
+            resize_opt=['bilinear', 'area', 'bicubic'],
+            resize_prob=[1 / 3., 1 / 3., 1 / 3.],
+            resize_step=0.05,
+            is_size_even=True),
+        keys=['lq'])
+    results = model(results)
+    assert results['lq'].shape[0] % 2 == 0
+    assert results['lq'].shape[1] % 2 == 0
+
+    # skip degradation
     model = RandomResize(
         params=dict(
             resize_mode_prob=[1, 0, 0],

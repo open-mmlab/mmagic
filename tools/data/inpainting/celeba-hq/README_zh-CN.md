@@ -10,3 +10,17 @@
   year={2017}
 }
 ```
+
+请按照[此处](https://github.com/tkarras/progressive_growing_of_gans#preparing-datasets-for-training)准备数据集。
+
+```text
+mmediting
+├── mmedit
+├── tools
+├── configs
+├── data
+│   ├── celeba-hq
+│   │   ├── train
+|   |   ├── val
+
+```

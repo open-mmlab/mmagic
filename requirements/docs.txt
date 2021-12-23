@@ -1,5 +1,4 @@
 docutils==0.16.0
-m2r
 mmcls==0.10.0
 myst_parser
 -e git+https://github.com/open-mmlab/pytorch_sphinx_theme.git#egg=pytorch_sphinx_theme
