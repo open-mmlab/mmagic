@@ -18,7 +18,7 @@ Models:
       REDS4:
         PSNR: 30.343
         SSIM: 0.8664
-    Task: restorers
+    Task: Restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth
 - Config: configs/restorers/edvr/edvrm_x4_g8_600k_reds.py
   In Collection: EDVR
@@ -31,5 +31,5 @@ Models:
       REDS4:
         PSNR: 30.4194
         SSIM: 0.8684
-    Task: restorers
+    Task: Restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth
