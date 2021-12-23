@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .base_sr_dataset import BaseSRDataset
 from .registry import DATASETS
 
@@ -12,7 +13,7 @@ class SRREDSDataset(BaseSRDataset):
 
     It reads REDS keys from the txt file.
     Each line contains:
-    1. image name; 2, image shape, seperated by a white space.
+    1. image name; 2, image shape, separated by a white space.
     Examples:
 
     ::

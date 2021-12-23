@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import glob
 import os
@@ -198,7 +199,7 @@ def parse_args():
 
 
 if __name__ == '__main__':
-    """You can first download datasets using the scipts:
+    """You can first download datasets using the scripts:
     https://gist.github.com/SeungjunNah/b10d369b92840cb8dd2118dd4f41d643
 
     The folder structure should be like:

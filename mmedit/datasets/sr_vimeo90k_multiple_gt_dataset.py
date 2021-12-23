@@ -1,4 +1,4 @@
-import glob
+# Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
 from .base_sr_dataset import BaseSRDataset
@@ -31,17 +31,26 @@ class SRVimeo90KMultipleGTDataset(BaseSRDataset):
         ann_file (str | :obj:`Path`): Path to the annotation file.
         pipeline (list[dict | callable]): A sequence of data transformations.
         scale (int): Upsampling scale ratio.
+       num_input_frames (int): Number of frames in each training sequence.
+            Default: 7.
         test_mode (bool): Store `True` when building test dataset.
             Default: `False`.
     """
 
-    def __init__(self, lq_folder, gt_folder, ann_file, pipeline, scale,
-                 test_mode):
+    def __init__(self,
+                 lq_folder,
+                 gt_folder,
+                 ann_file,
+                 pipeline,
+                 scale,
+                 num_input_frames=7,
+                 test_mode=False):
         super().__init__(pipeline, scale, test_mode)
 
         self.lq_folder = str(lq_folder)
         self.gt_folder = str(gt_folder)
         self.ann_file = str(ann_file)
+        self.num_input_frames = num_input_frames
 
         self.data_infos = self.load_annotations()
 
@@ -57,10 +66,14 @@ class SRVimeo90KMultipleGTDataset(BaseSRDataset):
 
         data_infos = []
         for key in keys:
-            lq_paths = sorted(
-                glob.glob(osp.join(self.lq_folder, key, '*.png')))
-            gt_paths = sorted(
-                glob.glob(osp.join(self.gt_folder, key, '*.png')))
+            lq_paths = [
+                osp.join(self.lq_folder, key, f'im{i}.png')
+                for i in range(1, self.num_input_frames + 1)
+            ]
+            gt_paths = [
+                osp.join(self.gt_folder, key, f'im{i}.png')
+                for i in range(1, self.num_input_frames + 1)
+            ]
 
             data_infos.append(
                 dict(lq_path=lq_paths, gt_path=gt_paths, key=key))

@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from mmedit.models.registry import COMPONENTS
 from .resnet import ResNet
 
@@ -16,7 +17,7 @@ class FBAResnetDilated(ResNet):
             Tensor: Output tensor.
         """
         # x: (merged_t, trimap_t, two_channel_trimap,merged)
-        # t refers to tranformed.
+        # t refers to transformed.
         two_channel_trimap = x[:, 9:11]
         merged = x[:, 11:14]
         x = x[:, 0:11, ...]

@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .contextual_attention_neck import ContextualAttentionNeck
 from .gl_dilation import GLDilationNeck
 

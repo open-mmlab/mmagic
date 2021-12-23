@@ -2,22 +2,28 @@ from .augmentation import (BinarizeImage, ColorJitter, Flip,
                            GenerateFrameIndices,
                            GenerateFrameIndiceswithPadding,
                            GenerateSegmentIndices, MirrorSequence, Pad,
-                           RandomAffine, RandomJitter, RandomMaskDilation,
-                           RandomTransposeHW, Resize, TemporalReverse)
+                           Quantize, RandomAffine, RandomJitter,
+                           RandomMaskDilation, RandomTransposeHW, Resize,
+                           TemporalReverse, UnsharpMasking, CopyValues)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
-                   FixedCrop, ModCrop, PairedRandomCrop, RandomResizedCrop)
-from .down_sampling import RandomDownSampling
+                   FixedCrop, ModCrop, PairedRandomCrop, RandomResizedCrop, CropLike)
+from . import RandomDownSampling
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
-from .generate_coordinate_and_cell import GenerateCoordinateAndCell
+from .generate_assistant import GenerateCoordinateAndCell, GenerateHeatmap
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
                       LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
                       RandomLoadResizeBg)
+from .matlab_like_resize import MATLABLikeResize
 from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, GenerateTrimapWithDistTransform,
                           MergeFgAndBg, PerturbBg, TransformTrimap)
 from .normalization import Normalize, RescaleToZeroOne
+from .random_degradations import (DegradationsWithShuffle, RandomBlur,
+                                  RandomJPEGCompression, RandomNoise,
+                                  RandomResize, RandomVideoCompression)
+from .random_down_sampling import RandomDownSampling
 
 __all__ = [
     'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadMask',
@@ -32,5 +38,9 @@ __all__ = [
     'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg', 'CropAroundFg',
     'GetSpatialDiscountMask', 'RandomDownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap',
-    'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence'
+    'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
+    'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
+    'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
+    'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking',
+    'RandomVideoCompression', 'CropSequence'
 ]

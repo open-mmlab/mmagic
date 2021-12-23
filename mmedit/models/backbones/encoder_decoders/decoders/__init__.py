@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .deepfill_decoder import DeepFillDecoder
 from .fba_decoder import FBADecoder
 from .gl_decoder import GLDecoder
