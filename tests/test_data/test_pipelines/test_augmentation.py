@@ -6,14 +6,14 @@ import pytest
 import torch
 
 # yapf: disable
-from mmedit.datasets.pipelines import (BinarizeImage, ColorJitter, Flip,
-                                       GenerateFrameIndices,
+from mmedit.datasets.pipelines import (BinarizeImage, ColorJitter, CopyValues,
+                                       Flip, GenerateFrameIndices,
                                        GenerateFrameIndiceswithPadding,
                                        GenerateSegmentIndices, MirrorSequence,
                                        Pad, Quantize, RandomAffine,
                                        RandomJitter, RandomMaskDilation,
                                        RandomTransposeHW, Resize,
-                                       TemporalReverse, UnsharpMasking, CopyValues)
+                                       TemporalReverse, UnsharpMasking)
 
 
 class TestAugmentations:

@@ -5,8 +5,9 @@ import numpy as np
 import pytest
 
 from mmedit.datasets.pipelines import (Crop, CropAroundCenter, CropAroundFg,
-                                       CropAroundUnknown, FixedCrop, ModCrop,
-                                       PairedRandomCrop, RandomResizedCrop, CropLike)
+                                       CropAroundUnknown, CropLike, FixedCrop,
+                                       ModCrop, PairedRandomCrop,
+                                       RandomResizedCrop)
 
 
 class TestAugmentations:
