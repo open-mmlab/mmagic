@@ -123,6 +123,17 @@ class TestAugmentations:
         with pytest.raises(ValueError):
             results = fixed_crop(results)
 
+        # test sequence
+        results = copy.deepcopy(self.results)
+        results['img_a'] = [results['img_a'], results['img_a']]
+        results['img_b'] = [results['img_b'], results['img_b']]
+        fixed_crop = FixedCrop(['img_a', 'img_b'], crop_size=(128, 128))
+        results = fixed_crop(results)
+        for img in results['img_a']:
+            assert img.shape == (128, 128, 3)
+        for img in results['img_b']:
+            assert img.shape == (128, 128, 3)
+
         # test given pos crop
         results = copy.deepcopy(self.results)
         given_pos_crop = FixedCrop(['img_a', 'img_b'],
