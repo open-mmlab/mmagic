@@ -43,4 +43,4 @@ The training is divided into two stages:
 2. Finetune the model with perceptual loss and adversarial loss using [realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds.py](realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds.py).
 
 **Note:**
-1. You may want to crop the images into sub-images for faster IO. Please refer to [here]() for more details.
+1. You may want to crop the images into sub-images for faster IO. Please refer to [here](/tools/data/super-resolution/reds/preprocess_reds_dataset.py) for more details.

@@ -30,4 +30,4 @@
 2. 使用感知损失和对抗性损失 [realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds.py](realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds.py) 微调模型。
 
 **注:**
-1. 您可能希望将图像裁剪为子图像以加快 IO。请参阅[此处]()了解更多详情。
+1. 您可能希望将图像裁剪为子图像以加快 IO。请参阅[此处](/tools/data/super-resolution/reds/preprocess_reds_dataset.py)了解更多详情。
