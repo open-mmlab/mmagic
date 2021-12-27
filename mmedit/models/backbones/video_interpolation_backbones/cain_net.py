@@ -8,30 +8,6 @@ from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 
-def pixel_shuffle(x, scale=8, up=True):
-    """Up-scale or down-scale by pixel shuffle.
-
-    Args:
-        x (Tensor): Input tensor.
-        scale (int): Scale factor.
-        up (bool): Up-scale or down-scale.
-
-    Returns:
-        y (Tensor): Output tensor.
-    """
-
-    b, c, h, w = x.shape
-    if up:
-        y = F.pixel_shuffle(x, scale)
-    else:
-        h = int(h / scale)
-        w = int(w / scale)
-        x = x.view(b, c, h, scale, w, scale)
-        shuffle_out = x.permute(0, 1, 3, 5, 2, 4).contiguous()
-        y = shuffle_out.view(b, c * scale * scale, h, w)
-    return y
-
-
 def get_padding_functions(x, padding=7):
     """Generate padding function.
 
