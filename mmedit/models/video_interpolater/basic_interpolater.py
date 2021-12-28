@@ -1,0 +1,223 @@
+# Copyright (c) OpenMMLab. All rights reserved.
+import numbers
+import os.path as osp
+
+import mmcv
+from mmcv.runner import auto_fp16
+
+from mmedit.core import psnr, ssim, tensor2img
+from ..base import BaseModel
+from ..builder import build_backbone, build_loss
+from ..registry import MODELS
+
+
+@MODELS.register_module()
+class BasicInterpolater(BaseModel):
+    """Basic model for video interpolation.
+
+    It must contain a generator that takes frames as inputs and outputs a
+    interpolated frame. It also has a pixel-wise loss for training.
+
+    The subclasses should overwrite the function `forward_train`,
+    `forward_test` and `train_step`.
+
+    Args:
+        generator (dict): Config for the generator structure.
+        pixel_loss (dict): Config for pixel-wise loss.
+        train_cfg (dict): Config for training. Default: None.
+        test_cfg (dict): Config for testing. Default: None.
+        pretrained (str): Path for pretrained model. Default: None.
+    """
+    allowed_metrics = {'PSNR': psnr, 'SSIM': ssim}
+
+    def __init__(self,
+                 generator,
+                 pixel_loss,
+                 train_cfg=None,
+                 test_cfg=None,
+                 pretrained=None):
+        super().__init__()
+
+        self.train_cfg = train_cfg
+        self.test_cfg = test_cfg
+
+        # support fp16
+        self.fp16_enabled = False
+
+        # generator
+        self.generator = build_backbone(generator)
+        self.init_weights(pretrained)
+
+        # loss
+        self.pixel_loss = build_loss(pixel_loss)
+
+    def init_weights(self, pretrained=None):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+        """
+        self.generator.init_weights(pretrained)
+
+    @auto_fp16(apply_to=('inputs', ))
+    def forward(self, inputs, target=None, test_mode=False, **kwargs):
+        """Forward function.
+
+        Args:
+            inputs (Tensor): Tensor of inputs frames.
+            target (Tensor): Tensor of target frame. Default: None.
+            test_mode (bool): Whether in test mode or not. Default: False.
+            kwargs (dict): Other arguments.
+        """
+
+        if test_mode:
+            return self.forward_test(inputs, target, **kwargs)
+
+        return self.forward_train(inputs, target)
+
+    def forward_train(self, inputs, target):
+        """Training forward function.
+
+        Args:
+            inputs (Tensor): Tensor of inputs frames with shape (n, c, h, w).
+            target (Tensor): Tensor of target frame with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Output tensor.
+        """
+        losses = dict()
+        output = self.generator(inputs)
+        loss_pix = self.pixel_loss(output, target)
+        losses['loss_pix'] = loss_pix
+        outputs = dict(
+            losses=losses,
+            num_samples=len(target.data),
+            results=dict(
+                inputs=inputs.cpu(), target=target.cpu(), output=output.cpu()))
+        return outputs
+
+    def evaluate(self, output, target):
+        """Evaluation function.
+
+        Args:
+            output (Tensor): Model output with shape (n, c, h, w).
+            target (Tensor): GT Tensor with shape (n, c, h, w).
+
+        Returns:
+            dict: Evaluation results.
+        """
+        crop_border = self.test_cfg.crop_border
+
+        output = tensor2img(output)
+        target = tensor2img(target)
+
+        eval_result = dict()
+        for metric in self.test_cfg.metrics:
+            eval_result[metric] = self.allowed_metrics[metric](output, target,
+                                                               crop_border)
+        return eval_result
+
+    def forward_test(self,
+                     inputs,
+                     target=None,
+                     meta=None,
+                     save_image=False,
+                     save_path=None,
+                     iteration=None):
+        """Testing forward function.
+
+        Args:
+            inputs (Tensor): Tensor of inputs frames with shape (n, c, h, w).
+            target (Tensor): Tensor of target frame with shape (n, c, h, w).
+                Default: None.
+            save_image (bool): Whether to save image. Default: False.
+            save_path (str): Path to save image. Default: None.
+            iteration (int): Iteration for the saving image name.
+                Default: None.
+
+        Returns:
+            dict: Output results.
+        """
+        output = self.generator(inputs)
+        if self.test_cfg is not None and self.test_cfg.get('metrics', None):
+            assert target is not None, (
+                'evaluation with metrics must have target images.')
+            results = dict(eval_result=self.evaluate(output, target))
+        else:
+            results = dict(inputs=inputs.cpu(), output=output.cpu())
+            if target is not None:
+                results['target'] = target.cpu()
+
+        # save image
+        if save_image:
+            self._save_image(meta, iteration, save_path, output)
+
+        return results
+
+    @staticmethod
+    def _save_image(meta, iteration, save_path, pred):
+        if 'target_path' in meta[0]:
+            pred_path = meta[0]['target_path']
+            folder_name = osp.splitext(osp.basename(pred_path))[0]
+        else:
+            pred_path1 = osp.splitext(osp.basename(
+                meta[0]['inputs_path'][0]))[0]
+            pred_path2 = osp.splitext(osp.basename(
+                meta[0]['inputs_path'][1]))[0]
+            folder_name = f'{pred_path1}_{pred_path2}'
+        if isinstance(iteration, numbers.Number):
+            save_path = osp.join(save_path, folder_name,
+                                 f'{folder_name}-{iteration + 1:06d}.png')
+        elif iteration is None:
+            save_path = osp.join(save_path, f'{folder_name}.png')
+        else:
+            raise ValueError('iteration should be number or None, '
+                             f'but got {type(iteration)}')
+        mmcv.imwrite(tensor2img(pred), save_path)
+
+    def forward_dummy(self, img):
+        """Used for computing network FLOPs.
+
+        Args:
+            img (Tensor): Input image.
+
+        Returns:
+            Tensor: Output image.
+        """
+        out = self.generator(img)
+        return out
+
+    def train_step(self, data_batch, optimizer):
+        """Train step.
+
+        Args:
+            data_batch (dict): A batch of data.
+            optimizer (obj): Optimizer.
+
+        Returns:
+            dict: Returned output.
+        """
+        outputs = self(**data_batch, test_mode=False)
+        loss, log_vars = self.parse_losses(outputs.pop('losses'))
+
+        # optimize
+        optimizer['generator'].zero_grad()
+        loss.backward()
+        optimizer['generator'].step()
+
+        outputs.update({'log_vars': log_vars})
+        return outputs
+
+    def val_step(self, data_batch, **kwargs):
+        """Validation step.
+
+        Args:
+            data_batch (dict): A batch of data.
+            kwargs (dict): Other arguments for ``val_step``.
+
+        Returns:
+            dict: Returned output.
+        """
+        output = self.forward_test(**data_batch, **kwargs)
+        return output
