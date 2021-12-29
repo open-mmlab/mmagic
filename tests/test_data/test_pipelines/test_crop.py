@@ -112,6 +112,20 @@ class TestAugmentations:
         assert results['img_crop_bbox'][3] <= 256
         assert results['img'].shape == (128, 128, 3)
 
+        # test random crop with integer crop size
+        results = copy.deepcopy(self.results)
+        random_resized_crop = RandomResizedCrop(['img'], crop_size=128)
+        results = random_resized_crop(results)
+        assert 0 <= results['img_crop_bbox'][0] <= 128
+        assert 0 <= results['img_crop_bbox'][1] <= 128
+        assert results['img_crop_bbox'][2] <= 256
+        assert results['img_crop_bbox'][3] <= 256
+        assert results['img'].shape == (128, 128, 3)
+        assert str(random_resized_crop) == (
+            random_resized_crop.__class__.__name__ +
+            "(keys=['img'], crop_size=(128, 128), scale=(0.08, 1.0), "
+            f'ratio={(3. / 4., 4. / 3.)}, interpolation=bilinear)')
+
         # test random crop for larger size than the original shape
         results = copy.deepcopy(self.results)
         random_resized_crop = RandomResizedCrop(['img'], crop_size=(512, 512))

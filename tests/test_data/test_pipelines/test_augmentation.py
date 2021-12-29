@@ -499,13 +499,23 @@ class TestAugmentations:
 
         target_keys = ['degrees']
         results = copy.deepcopy(self.results)
+
         random_rotation = RandomRotation(['img'], degrees=(0, 45))
         random_rotation_results = random_rotation(results)
         assert self.check_keys_contain(
             random_rotation_results.keys(), target_keys)
         assert random_rotation_results['img'].shape == (256, 256, 3)
+        assert random_rotation_results['degrees'] == (0, 45)
         assert repr(random_rotation) == random_rotation.__class__.__name__ + (
             "(keys=['img'], degrees=(0, 45))")
+
+        # test single degree integer
+        random_rotation = RandomRotation(['img'], degrees=45)
+        random_rotation_results = random_rotation(results)
+        assert self.check_keys_contain(
+            random_rotation_results.keys(), target_keys)
+        assert random_rotation_results['img'].shape == (256, 256, 3)
+        assert random_rotation_results['degrees'] == (-45, 45)
 
         # test image dim == 2
         grey_scale_img = np.random.rand(256, 256).astype(np.float32)
@@ -700,7 +710,7 @@ class TestAugmentations:
         with pytest.raises(ValueError):
             frame_index_generator(copy.deepcopy(results))
 
-    def mirror_sequence(self):
+    def test_mirror_sequence(self):
         lqs = [np.random.rand(4, 4, 3) for _ in range(0, 5)]
         gts = [np.random.rand(16, 16, 3) for _ in range(0, 5)]
 
@@ -724,7 +734,7 @@ class TestAugmentations:
             results = dict(lq=0, gt=gts)
             mirror_sequence(results)
 
-    def quantize(self):
+    def test_quantize(self):
         results = {}
 
         # clip (>1)
@@ -749,14 +759,22 @@ class TestAugmentations:
             model(results)['gt'], (1 / 255.) * np.ones(
                 (1, 1, 3)).astype(np.float32))
 
-    def copy_value(self):
+    def test_copy_value(self):
+        with pytest.raises(AssertionError):
+            CopyValues(src_keys='gt', dst_keys='lq')
+        with pytest.raises(ValueError):
+            CopyValues(src_keys=['gt', 'mask'], dst_keys=['lq'])
+
         results = {}
         results['gt'] = np.zeros((1)).astype(np.float32)
 
-        copy_ = CopyValues(src_key='gt', dst_key='lq')
+        copy_ = CopyValues(src_keys=['gt'], dst_keys=['lq'])
         assert np.array_equal(copy_(results)['lq'], results['gt'])
+        assert repr(copy_) == copy_.__class__.__name__ + (
+            f"(src_keys=['gt'])"
+            f"(dst_keys=['lq'])")
 
-    def unsharp_masking(self):
+    def test_unsharp_masking(self):
         results = {}
 
         unsharp_masking = UnsharpMasking(
