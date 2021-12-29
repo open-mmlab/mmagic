@@ -710,7 +710,7 @@ class TestAugmentations:
         with pytest.raises(ValueError):
             frame_index_generator(copy.deepcopy(results))
 
-    def test_mirror_sequence(self):
+    def mirror_sequence(self):
         lqs = [np.random.rand(4, 4, 3) for _ in range(0, 5)]
         gts = [np.random.rand(16, 16, 3) for _ in range(0, 5)]
 
@@ -734,7 +734,7 @@ class TestAugmentations:
             results = dict(lq=0, gt=gts)
             mirror_sequence(results)
 
-    def test_quantize(self):
+    def quantize(self):
         results = {}
 
         # clip (>1)
@@ -759,7 +759,7 @@ class TestAugmentations:
             model(results)['gt'], (1 / 255.) * np.ones(
                 (1, 1, 3)).astype(np.float32))
 
-    def test_copy_value(self):
+    def copy_value(self):
         with pytest.raises(AssertionError):
             CopyValues(src_keys='gt', dst_keys='lq')
         with pytest.raises(ValueError):
@@ -774,7 +774,7 @@ class TestAugmentations:
             f"(src_keys=['gt'])"
             f"(dst_keys=['lq'])")
 
-    def test_unsharp_masking(self):
+    def unsharp_masking(self):
         results = {}
 
         unsharp_masking = UnsharpMasking(

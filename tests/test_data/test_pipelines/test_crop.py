@@ -106,8 +106,8 @@ class TestAugmentations:
         results = copy.deepcopy(self.results)
         random_resized_crop = RandomResizedCrop(['img'], crop_size=(128, 128))
         results = random_resized_crop(results)
-        assert 0 <= results['img_crop_bbox'][0] <= 128
-        assert 0 <= results['img_crop_bbox'][1] <= 128
+        assert 0 <= results['img_crop_bbox'][0] <= 256
+        assert 0 <= results['img_crop_bbox'][1] <= 256
         assert results['img_crop_bbox'][2] <= 256
         assert results['img_crop_bbox'][3] <= 256
         assert results['img'].shape == (128, 128, 3)
@@ -116,8 +116,8 @@ class TestAugmentations:
         results = copy.deepcopy(self.results)
         random_resized_crop = RandomResizedCrop(['img'], crop_size=128)
         results = random_resized_crop(results)
-        assert 0 <= results['img_crop_bbox'][0] <= 128
-        assert 0 <= results['img_crop_bbox'][1] <= 128
+        assert 0 <= results['img_crop_bbox'][0] <= 256
+        assert 0 <= results['img_crop_bbox'][1] <= 256
         assert results['img_crop_bbox'][2] <= 256
         assert results['img_crop_bbox'][3] <= 256
         assert results['img'].shape == (128, 128, 3)
