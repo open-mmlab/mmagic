@@ -52,3 +52,45 @@ mmediting
 ```shell
 python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
+
+## 裁剪为子图
+
+MMEditing 支持将 REDS 图像裁剪为子图像以加快 IO。我们提供了这样一个脚本：
+
+```shell
+python tools/data/super-resolution/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
+```
+
+生成的数据存储在 `REDS` 下，数据结构如下，其中`_sub`表示子图像。
+
+```text
+mmediting
+├── mmedit
+├── tools
+├── configs
+├── data
+│   ├── REDS
+│   │   ├── train_sharp
+│   │   │   ├── 000
+│   │   │   ├── 001
+│   │   │   ├── ...
+│   │   ├── train_sharp_sub
+│   │   │   ├── 000_s001
+│   │   │   ├── 000_s002
+│   │   │   ├── ...
+│   │   │   ├── 001_s001
+│   │   │   ├── ...
+│   │   ├── train_sharp_bicubic
+│   │   │   ├── X4
+│   │   │   │   ├── 000
+│   │   │   │   ├── 001
+│   │   │   │   ├── ...
+│   │   │   ├── X4_sub
+│   │   │   ├── 000_s001
+│   │   │   ├── 000_s002
+│   │   │   ├── ...
+│   │   │   ├── 001_s001
+│   │   │   ├── ...
+```
+
+请注意，默认情况下，`preprocess_reds_dataset.py` 不会为裁剪后的数据集制作 lmdb 和注释文件。您可能需要为此类操作稍微修改脚本。
