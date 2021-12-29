@@ -154,9 +154,11 @@ class RandomResizedCrop(object):
                             'or a tuple of integers, but got '
                             f'{type(crop_size)}')
         if not mmcv.is_tuple_of(scale, float):
-            raise TypeError(f'"scale" must be a tuple, but got {type(scale)}')
+            raise TypeError('"scale" must be a tuple of float, '
+                            f'but got {type(scale)}')
         if not mmcv.is_tuple_of(ratio, float):
-            raise TypeError(f'"ratio" must be a tuple, but got {type(ratio)}')
+            raise TypeError('"ratio" must be a tuple of float, '
+                            f'but got {type(ratio)}')
 
         self.keys = keys
         self.crop_size = crop_size

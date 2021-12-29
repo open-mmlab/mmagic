@@ -64,6 +64,7 @@ class LoadImageFromFile:
             dict: A dict containing the processed data and information.
         """
         filepath = str(results[f'{self.key}_path'])
+        # print(filepath)
         if self.file_client is None:
             self.file_client = FileClient(self.io_backend, **self.kwargs)
         if self.use_cache:
@@ -352,7 +353,7 @@ class LoadMask:
                                           **self.file_client_kwargs)
         # minus 1 to avoid out of range error
         mask_idx = np.random.randint(0, self.mask_set_size)
-
+        # print(self.mask_list[mask_idx])
         mask_bytes = self.file_client.get(self.mask_list[mask_idx])
         mask = mmcv.imfrombytes(mask_bytes, flag=self.flag)  # HWC, BGR
         if mask.ndim == 2:

@@ -14,6 +14,7 @@ from mmedit.datasets.pipelines import (BinarizeImage, ColorJitter, CopyValues,
                                        RandomJitter, RandomMaskDilation,
                                        RandomTransposeHW, Resize,
                                        TemporalReverse, UnsharpMasking)
+from mmedit.datasets.pipelines.augmentation import RandomRotation
 
 
 class TestAugmentations:
@@ -489,6 +490,31 @@ class TestAugmentations:
             'scale=(128, 128), '
             f'keep_ratio={False}, size_factor=None, '
             'max_size=None, interpolation=bilinear)')
+
+    def test_random_rotation(self):
+        with pytest.raises(ValueError):
+            RandomRotation(None, degrees=-10.0)
+        with pytest.raises(TypeError):
+            RandomRotation(None, degrees=('0.0', '45.0'))
+
+        target_keys = ['degrees']
+        results = copy.deepcopy(self.results)
+        random_rotation = RandomRotation(['img'], degrees=(0, 45))
+        random_rotation_results = random_rotation(results)
+        assert self.check_keys_contain(
+            random_rotation_results.keys(), target_keys)
+        assert random_rotation_results['img'].shape == (256, 256, 3)
+        assert repr(random_rotation) == random_rotation.__class__.__name__ + (
+            "(keys=['img'], degrees=(0, 45))")
+
+        # test image dim == 2
+        grey_scale_img = np.random.rand(256, 256).astype(np.float32)
+        results = dict(img=grey_scale_img.copy())
+        random_rotation = RandomRotation(['img'], degrees=(0, 45))
+        random_rotation_results = random_rotation(results)
+        assert self.check_keys_contain(
+            random_rotation_results.keys(), target_keys)
+        assert random_rotation_results['img'].shape == (256, 256, 1)
 
     def test_frame_index_generation_with_padding(self):
         with pytest.raises(ValueError):
