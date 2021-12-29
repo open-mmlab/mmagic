@@ -31,7 +31,7 @@ def read_image(filepath):
 
 
 def video_interpolation_inference(model,
-                                  img_dir,
+                                  input_dir,
                                   start_idx=0,
                                   end_idx=None,
                                   batch_size=4):
@@ -39,7 +39,7 @@ def video_interpolation_inference(model,
 
     Args:
         model (nn.Module): The loaded model.
-        img_dir (str): Directory of the input video.
+        input_dir (str): Directory of the input video.
         start_idx (int): The index corresponds to the first frame in the
             sequence. Default: 0.
         end_idx (int | None): The index corresponds to the last interpolated
@@ -48,7 +48,10 @@ def video_interpolation_inference(model,
         batch_size (int): Batch size. Default: 4.
 
     Returns:
-        Tensor: The predicted restoration result.
+        output (list[numpy.array]): The predicted interpolation result.
+            It is an image sequence: [ori, pred, ori, pred, ori, ...]
+        input_fps (float): The fps of input video. If the input is an image
+            sequence, input_fps=0.0
     """
 
     device = next(model.parameters()).device  # model device
@@ -62,18 +65,18 @@ def video_interpolation_inference(model,
         test_pipeline = model.cfg.val_pipeline
 
     # check if the input is a video
-    input_fps = 0
-    file_extension = os.path.splitext(img_dir)[1]
+    input_fps = 0.0
+    file_extension = os.path.splitext(input_dir)[1]
     if file_extension in VIDEO_EXTENSIONS:
-        video_reader = mmcv.VideoReader(img_dir)
+        video_reader = mmcv.VideoReader(input_dir)
         input_fps = video_reader.fps
         images = []
         # load the images
         for img in video_reader[start_idx:end_idx]:
             images.append(np.flip(img, axis=2))  # BGR --> RGB
     else:
-        files = os.listdir(img_dir)
-        files = [osp.join(img_dir, f) for f in files]
+        files = os.listdir(input_dir)
+        files = [osp.join(input_dir, f) for f in files]
         files.sort()
         files = files[start_idx:end_idx]
         images = [read_image(f) for f in files]
@@ -84,7 +87,7 @@ def video_interpolation_inference(model,
             dict(
                 inputs=[images[i], images[i + 1]],
                 inputs_path=None,
-                key=img_dir))
+                key=input_dir))
 
     # remove the data loading pipeline
     tmp_pipeline = []
@@ -100,7 +103,7 @@ def video_interpolation_inference(model,
     test_pipeline = Compose(test_pipeline)
     data = [test_pipeline(d) for d in data]
     data = scatter(collate(data, samples_per_gpu=1), [device])[0]['inputs']
-    print(data.shape)
+
     # forward the model
     result = [np.flip(images[0], axis=2)]
     index = 1
@@ -108,7 +111,6 @@ def video_interpolation_inference(model,
         length = data.shape[0]
         for i in range(0, length, batch_size):
             start, end = i, i + batch_size
-            print(start, end)
             output = model(data[start:end], test_mode=True)['output'].cpu()
             for j in range(output.shape[0]):
                 new_image = tensor2img(output[j])
@@ -116,4 +118,5 @@ def video_interpolation_inference(model,
                 result.append(new_image)
                 result.append(np.flip(images[index], axis=2))
                 index += 1
+
     return result, input_fps
