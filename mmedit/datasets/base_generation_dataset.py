@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 from pathlib import Path
 
@@ -56,6 +57,6 @@ class BaseGenerationDataset(BaseDataset):
                 saved_num += 1
 
         # make a dict to show
-        eval_results = {'val_saved_number': saved_num}
+        eval_result = {'val_saved_number': saved_num}
 
-        return eval_results
+        return eval_result

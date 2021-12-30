@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import os
 import os.path as osp
@@ -22,6 +23,9 @@ def main_extract_subimages(args):
             A higher value means a smaller size and longer compression time.
             Use 0 for faster CPU decompression. Default: 3, same in cv2.
 
+        scales (list[int]): The downsampling factors corresponding to the
+            LR folders you want to process.
+            Default: [2, 3, 4].
         input_folder (str): Path to the input folder.
         save_folder (str): Path to save folder.
         crop_size (int): Crop size.
@@ -31,14 +35,16 @@ def main_extract_subimages(args):
 
     Usage:
         For each folder, run this script.
-        Typically, there are four folders to be processed for DIV2K dataset.
+        By default, there are four folders to be processed for DIV2K dataset
+            according to scale factor list ([2,3,4])
             DIV2K_train_HR
             DIV2K_train_LR_bicubic/X2
             DIV2K_train_LR_bicubic/X3
             DIV2K_train_LR_bicubic/X4
         After process, each sub_folder should have the same number of
-        subimages.
-        Remember to modify opt configurations according to your settings.
+        subimages. You can also specify scales by modifying the argument
+        'scales'. Remember to modify opt configurations according to your
+        settings.
     """
 
     opt = {}
@@ -53,7 +59,7 @@ def main_extract_subimages(args):
     opt['thresh_size'] = args.thresh_size
     extract_subimages(opt)
 
-    for scale in [2, 3, 4]:
+    for scale in args.scales:
         opt['input_folder'] = osp.join(args.data_root,
                                        f'DIV2K_train_LR_bicubic/X{scale}')
         opt['save_folder'] = osp.join(args.data_root,
@@ -344,6 +350,8 @@ def parse_args():
         description='Prepare DIV2K dataset',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--data-root', help='dataset root')
+    parser.add_argument(
+        '--scales', nargs='*', default=[2, 3, 4], help='scale factor list')
     parser.add_argument(
         '--crop-size',
         nargs='?',

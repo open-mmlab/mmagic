@@ -16,7 +16,7 @@ test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=0, convert_to='y')
 
 # dataset settings
 train_dataset_type = 'SRVimeo90KMultipleGTDataset'
-val_dataset_type = 'SRTestMultipleGTDataset'
+val_dataset_type = 'SRFolderMultipleGTDataset'
 test_dataset_type = 'SRVimeo90KDataset'
 
 train_pipeline = [
@@ -60,6 +60,18 @@ val_pipeline = [
         type='Collect',
         keys=['lq', 'gt'],
         meta_keys=['lq_path', 'gt_path', 'key'])
+]
+
+demo_pipeline = [
+    dict(type='GenerateSegmentIndices', interval_list=[1]),
+    dict(
+        type='LoadImageFromFileList',
+        io_backend='disk',
+        key='lq',
+        channel_order='rgb'),
+    dict(type='RescaleToZeroOne', keys=['lq']),
+    dict(type='FramesToTensor', keys=['lq']),
+    dict(type='Collect', keys=['lq'], meta_keys=['lq_path', 'key'])
 ]
 
 test_pipeline = [
@@ -155,3 +167,4 @@ work_dir = f'./work_dirs/{exp_name}'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
+find_unused_parameters = True

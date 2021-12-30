@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 global_disc_cfg = dict(
     in_channels=3,
     max_channels=512,

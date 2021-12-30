@@ -1,3 +1,5 @@
+# Copyright (c) OpenMMLab. All rights reserved.
+import copy
 import math
 import numbers
 import os.path as osp
@@ -33,7 +35,7 @@ class Resize:
         keys (list[str]): The images to be resized.
         scale (float | Tuple[int]): If scale is Tuple(int), target spatial
             size (h, w). Otherwise, target spatial size is scaled by input
-            size. If any of scale is -1, we will rescale short edge.
+            size.
             Note that when it is used, `size_factor` and `max_size` are
             useless. Default: None
         keep_ratio (bool): If set to True, images will be resized without
@@ -50,6 +52,12 @@ class Resize:
         interpolation (str): Algorithm used for interpolation:
             "nearest" | "bilinear" | "bicubic" | "area" | "lanczos".
             Default: "bilinear".
+        backend (str | None): The image resize backend type. Options are `cv2`,
+            `pillow`, `None`. If backend is None, the global imread_backend
+            specified by ``mmcv.use_backend()`` will be used.
+            Default: None.
+        output_keys (list[str] | None): The resized images. Default: None
+            Note that if it is not `None`, its length should be equal to keys.
     """
 
     def __init__(self,
@@ -58,8 +66,14 @@ class Resize:
                  keep_ratio=False,
                  size_factor=None,
                  max_size=None,
-                 interpolation='bilinear'):
+                 interpolation='bilinear',
+                 backend=None,
+                 output_keys=None):
         assert keys, 'Keys should not be empty.'
+        if output_keys:
+            assert len(output_keys) == len(keys)
+        else:
+            output_keys = keys
         if size_factor:
             assert scale is None, ('When size_factor is used, scale should ',
                                    f'be None. But received {scale}.')
@@ -83,11 +97,13 @@ class Resize:
                 f'Scale must be None, float or tuple of int, but got '
                 f'{type(scale)}.')
         self.keys = keys
+        self.output_keys = output_keys
         self.scale = scale
         self.size_factor = size_factor
         self.max_size = max_size
         self.keep_ratio = keep_ratio
         self.interpolation = interpolation
+        self.backend = backend
 
     def _resize(self, img):
         if self.keep_ratio:
@@ -95,13 +111,15 @@ class Resize:
                 img,
                 self.scale,
                 return_scale=True,
-                interpolation=self.interpolation)
+                interpolation=self.interpolation,
+                backend=self.backend)
         else:
             img, w_scale, h_scale = mmcv.imresize(
                 img,
                 self.scale,
                 return_scale=True,
-                interpolation=self.interpolation)
+                interpolation=self.interpolation,
+                backend=self.backend)
             self.scale_factor = np.array((w_scale, h_scale), dtype=np.float32)
         return img
 
@@ -125,21 +143,23 @@ class Resize:
                 new_w = min(self.max_size - (self.max_size % self.size_factor),
                             new_w)
             self.scale = (new_w, new_h)
-        for key in self.keys:
-            results[key] = self._resize(results[key])
-            if len(results[key].shape) == 2:
-                results[key] = np.expand_dims(results[key], axis=2)
+        for key, out_key in zip(self.keys, self.output_keys):
+            results[out_key] = self._resize(results[key])
+            if len(results[out_key].shape) == 2:
+                results[out_key] = np.expand_dims(results[out_key], axis=2)
 
         results['scale_factor'] = self.scale_factor
         results['keep_ratio'] = self.keep_ratio
         results['interpolation'] = self.interpolation
+        results['backend'] = self.backend
 
         return results
 
     def __repr__(self):
         repr_str = self.__class__.__name__
         repr_str += (
-            f'(keys={self.keys}, scale={self.scale}, '
+            f'(keys={self.keys}, output_keys={self.output_keys}, '
+            f'scale={self.scale}, '
             f'keep_ratio={self.keep_ratio}, size_factor={self.size_factor}, '
             f'max_size={self.max_size},interpolation={self.interpolation})')
         return repr_str
@@ -821,12 +841,15 @@ class GenerateFrameIndices:
         center_frame_idx = int(frame_name)
         num_half_frames = results['num_input_frames'] // 2
 
+        max_frame_num = results.get('max_frame_num', self.frames_per_clip + 1)
+        frames_per_clip = min(self.frames_per_clip, max_frame_num - 1)
+
         interval = np.random.choice(self.interval_list)
         # ensure not exceeding the borders
         start_frame_idx = center_frame_idx - num_half_frames * interval
         end_frame_idx = center_frame_idx + num_half_frames * interval
-        while (start_frame_idx < 0) or (end_frame_idx > self.frames_per_clip):
-            center_frame_idx = np.random.randint(0, self.frames_per_clip + 1)
+        while (start_frame_idx < 0) or (end_frame_idx > frames_per_clip):
+            center_frame_idx = np.random.randint(0, frames_per_clip + 1)
             start_frame_idx = center_frame_idx - num_half_frames * interval
             end_frame_idx = center_frame_idx + num_half_frames * interval
         frame_name = f'{center_frame_idx:08d}'
@@ -909,10 +932,15 @@ class GenerateSegmentIndices:
         interval_list (list[int]): Interval list for temporal augmentation.
             It will randomly pick an interval from interval_list and sample
             frame index with the interval.
+        start_idx (int): The index corresponds to the first frame in the
+            sequence. Default: 0.
+        filename_tmpl (str): Template for file name. Default: '{:08d}.png'.
     """
 
-    def __init__(self, interval_list):
+    def __init__(self, interval_list, start_idx=0, filename_tmpl='{:08d}.png'):
         self.interval_list = interval_list
+        self.filename_tmpl = filename_tmpl
+        self.start_idx = start_idx
 
     def __call__(self, results):
         """Call function.
@@ -941,16 +969,17 @@ class GenerateSegmentIndices:
             0, self.sequence_length - num_input_frames * interval + 1)
         end_frame_idx = start_frame_idx + num_input_frames * interval
         neighbor_list = list(range(start_frame_idx, end_frame_idx, interval))
+        neighbor_list = [v + self.start_idx for v in neighbor_list]
 
         # add the corresponding file paths
         lq_path_root = results['lq_path']
         gt_path_root = results['gt_path']
         lq_path = [
-            osp.join(lq_path_root, clip_name, f'{v:08d}.png')
+            osp.join(lq_path_root, clip_name, self.filename_tmpl.format(v))
             for v in neighbor_list
         ]
         gt_path = [
-            osp.join(gt_path_root, clip_name, f'{v:08d}.png')
+            osp.join(gt_path_root, clip_name, self.filename_tmpl.format(v))
             for v in neighbor_list
         ]
 
@@ -1002,4 +1031,168 @@ class MirrorSequence:
     def __repr__(self):
         repr_str = self.__class__.__name__
         repr_str += (f'(keys={self.keys})')
+        return repr_str
+
+
+@PIPELINES.register_module()
+class CopyValues:
+    """Copy the value of a source key to a destination key.
+
+
+    It does the following: results[dst_key] = results[src_key] for
+    (src_key, dst_key) in zip(src_keys, dst_keys).
+
+    Added keys are the keys in the attribute "dst_keys".
+
+    Args:
+        src_keys (list[str]): The source keys.
+        dst_keys (list[str]): The destination keys.
+    """
+
+    def __init__(self, src_keys, dst_keys):
+
+        if not isinstance(src_keys, list) or not isinstance(dst_keys, list):
+            raise AssertionError('"src_keys" and "dst_keys" must be lists.')
+
+        if len(src_keys) != len(dst_keys):
+            raise ValueError('"src_keys" and "dst_keys" should have the same'
+                             'number of elements.')
+
+        self.src_keys = src_keys
+        self.dst_keys = dst_keys
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict with a key added/modified.
+        """
+        for (src_key, dst_key) in zip(self.src_keys, self.dst_keys):
+            results[dst_key] = copy.deepcopy(results[src_key])
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(src_keys={self.src_keys})')
+        repr_str += (f'(dst_keys={self.dst_keys})')
+        return repr_str
+
+
+@PIPELINES.register_module()
+class Quantize:
+    """Quantize and clip the image to [0, 1].
+
+    It is assumed that the the input has range [0, 1].
+
+    Modified keys are the attributes specified in "keys".
+
+    Args:
+        keys (list[str]): The keys whose values are clipped.
+    """
+
+    def __init__(self, keys):
+        self.keys = keys
+
+    def _quantize_clip(self, input_):
+        is_single_image = False
+        if isinstance(input_, np.ndarray):
+            is_single_image = True
+            input_ = [input_]
+
+        # quantize and clip
+        input_ = [np.clip((v * 255.0).round(), 0, 255) / 255. for v in input_]
+
+        if is_single_image:
+            input_ = input_[0]
+
+        return input_
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict with the values of the specified keys are rounded
+                and clipped.
+        """
+
+        for key in self.keys:
+            results[key] = self._quantize_clip(results[key])
+
+        return results
+
+    def __repr__(self):
+        return self.__class__.__name__
+
+
+@PIPELINES.register_module()
+class UnsharpMasking:
+    """Apply unsharp masking to an image or a sequence of images.
+
+    Args:
+        kernel_size (int): The kernel_size of the Gaussian kernel.
+        sigma (float): The standard deviation of the Gaussian.
+        weight (float): The weight of the "details" in the final output.
+        threshold (float): Pixel differences larger than this value are
+            regarded as "details".
+        keys (list[str]): The keys whose values are processed.
+
+    Added keys are "xxx_unsharp", where "xxx" are the attributes specified
+    in "keys".
+
+    """
+
+    def __init__(self, kernel_size, sigma, weight, threshold, keys):
+        if kernel_size % 2 == 0:
+            raise ValueError('kernel_size must be an odd number, but '
+                             f'got {kernel_size}.')
+
+        self.kernel_size = kernel_size
+        self.sigma = sigma
+        self.weight = weight
+        self.threshold = threshold
+        self.keys = keys
+
+        kernel = cv2.getGaussianKernel(kernel_size, sigma)
+        self.kernel = np.matmul(kernel, kernel.transpose())
+
+    def _unsharp_masking(self, imgs):
+        is_single_image = False
+        if isinstance(imgs, np.ndarray):
+            is_single_image = True
+            imgs = [imgs]
+
+        outputs = []
+        for img in imgs:
+            residue = img - cv2.filter2D(img, -1, self.kernel)
+            mask = np.float32(np.abs(residue) * 255 > self.threshold)
+            soft_mask = cv2.filter2D(mask, -1, self.kernel)
+            sharpened = np.clip(img + self.weight * residue, 0, 1)
+
+            outputs.append(soft_mask * sharpened + (1 - soft_mask) * img)
+
+        if is_single_image:
+            outputs = outputs[0]
+
+        return outputs
+
+    def __call__(self, results):
+        for key in self.keys:
+            results[f'{key}_unsharp'] = self._unsharp_masking(results[key])
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(keys={self.keys}, kernel_size={self.kernel_size}, '
+                     f'sigma={self.sigma}, weight={self.weight}, '
+                     f'threshold={self.threshold})')
         return repr_str

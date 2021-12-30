@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import mmcv
 import numpy as np
 from torch.nn.modules.utils import _pair
@@ -85,6 +86,47 @@ class Crop:
 
 
 @PIPELINES.register_module()
+class CropSequence(Crop):
+    """Crop a sequence to specific size for training.
+
+    The main difference to 'Crop' is that the region to be cropped is the same
+    for every images in the sequence.
+
+    Args:
+        keys (Sequence[str]): The images to be cropped.
+        crop_size (Tuple[int]): Target spatial size (h, w).
+        random_crop (bool): If set to True, it will random crop
+            image. Otherwise, it will work as center crop.
+    """
+
+    def _crop(self, data):
+        if not isinstance(data, list):
+            raise TypeError(f'Input must be a list, but got {type(data)}.')
+
+        # determine crop location. Must be the same for all images
+        data_h, data_w = data[0].shape[:2]
+        crop_h, crop_w = self.crop_size
+        crop_h = min(data_h, crop_h)
+        crop_w = min(data_w, crop_w)
+
+        if self.random_crop:
+            x_offset = np.random.randint(0, data_w - crop_w + 1)
+            y_offset = np.random.randint(0, data_h - crop_h + 1)
+        else:
+            x_offset = max(0, (data_w - crop_w)) // 2
+            y_offset = max(0, (data_h - crop_h)) // 2
+        crop_bbox = [x_offset, y_offset, crop_w, crop_h]
+
+        data_list = []
+        for item in data:
+            item = item[y_offset:y_offset + crop_h, x_offset:x_offset + crop_w,
+                        ...]
+            data_list.append(item)
+
+        return data_list, crop_bbox
+
+
+@PIPELINES.register_module()
 class FixedCrop:
     """Crop paired data (at a specific position) to specific size for training.
 
@@ -126,7 +168,11 @@ class FixedCrop:
         Returns:
             dict: A dict containing the processed data and information.
         """
-        data_h, data_w = results[self.keys[0]].shape[:2]
+
+        if isinstance(results[self.keys[0]], list):
+            data_h, data_w = results[self.keys[0]][0].shape[:2]
+        else:
+            data_h, data_w = results[self.keys[0]].shape[:2]
         crop_h, crop_w = self.crop_size
         crop_h = min(data_h, crop_h)
         crop_w = min(data_w, crop_w)
@@ -140,17 +186,27 @@ class FixedCrop:
             crop_h = min(data_h - y_offset, crop_h)
 
         for k in self.keys:
-            # In fixed crop for paired images, sizes should be the same
-            if (results[k].shape[0] != data_h
-                    or results[k].shape[1] != data_w):
-                raise ValueError(
-                    'The sizes of paired images should be the same. Expected '
-                    f'({data_h}, {data_w}), but got ({results[k].shape[0]}, '
-                    f'{results[k].shape[1]}).')
-            data_, crop_bbox = self._crop(results[k], x_offset, y_offset,
-                                          crop_w, crop_h)
-            results[k] = data_
+            images = results[k]
+            is_list = isinstance(images, list)
+            if not is_list:
+                images = [images]
+            cropped_images = []
+            crop_bbox = None
+            for image in images:
+                # In fixed crop for paired images, sizes should be the same
+                if (image.shape[0] != data_h or image.shape[1] != data_w):
+                    raise ValueError(
+                        'The sizes of paired images should be the same. '
+                        f'Expected ({data_h}, {data_w}), '
+                        f'but got ({image.shape[0]}, '
+                        f'{image.shape[1]}).')
+                data_, crop_bbox = self._crop(image, x_offset, y_offset,
+                                              crop_w, crop_h)
+                cropped_images.append(data_)
             results[k + '_crop_bbox'] = crop_bbox
+            if not is_list:
+                cropped_images = cropped_images[0]
+            results[k] = cropped_images
         results['crop_size'] = self.crop_size
         results['crop_pos'] = self.crop_pos
         return results
@@ -532,3 +588,50 @@ class ModCrop:
             raise ValueError(f'Wrong img ndim: {img.ndim}.')
         results['gt'] = img
         return results
+
+
+@PIPELINES.register_module()
+class CropLike:
+    """Crop/pad the image in the target_key according to the size of image
+        in the reference_key .
+
+    Args:
+        target_key (str): The key needs to be cropped.
+        reference_key (str | None): The reference key, need its size.
+            Default: None.
+    """
+
+    def __init__(self, target_key, reference_key=None):
+
+        assert reference_key and target_key
+        self.target_key = target_key
+        self.reference_key = reference_key
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+                Require self.target_key and self.reference_key.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+                Modify self.target_key.
+        """
+        size = results[self.reference_key].shape
+        old_image = results[self.target_key]
+        old_size = old_image.shape
+        h, w = old_size[:2]
+        new_size = size[:2] + old_size[2:]
+        h_cover, w_cover = min(h, size[0]), min(w, size[1])
+
+        format_image = np.zeros(new_size, dtype=old_image.dtype)
+        format_image[:h_cover, :w_cover] = old_image[:h_cover, :w_cover]
+        results[self.target_key] = format_image
+
+        return results
+
+    def __repr__(self):
+        return (self.__class__.__name__ + f' target_key={self.target_key}, ' +
+                f'reference_key={self.reference_key}')

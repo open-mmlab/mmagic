@@ -28,3 +28,28 @@ repos:
         args: ["--remove"]
       - id: mixed-line-ending
         args: ["--fix=lf"]
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.11.0
+    hooks:
+      - id: markdownlint
+        args: ["-r", "~MD002,~MD013,~MD029,~MD033,~MD034",
+              "-t", "allow_different_nesting"]
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.1.0
+    hooks:
+      - id: codespell
+        args: ["--skip", "*.ipynb,tools/data/hvu/label_map.json,configs/restorers/srresnet_srgan/*.md", "-L", "formating,te,nd,thre,Gool,gool"]
+  - repo: local
+    hooks:
+      - id: update-model-index
+        name: update-model-index
+        description: Collect model information and update model-index.yml
+        entry: .dev_scripts/github/update_model_index.py
+        additional_dependencies: [mmcv]
+        language: python
+        files: ^configs/.*\.md$
+        require_serial: true
+  - repo: https://github.com/open-mmlab/pre-commit-hooks
+    rev: v0.1.0  # Use the ref you want to point at
+    hooks:
+      - id: check-algo-readme

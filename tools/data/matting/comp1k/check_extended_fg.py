@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Copyright (c) OpenMMLab. All rights reserved.
 # This script checks the alpha-foreground difference between
 # the extended fg and the original fg
 

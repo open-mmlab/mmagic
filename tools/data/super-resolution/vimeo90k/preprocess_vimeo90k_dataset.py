@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import os.path as osp
 import sys
@@ -136,10 +137,10 @@ def parse_args():
         description='Preprocess Vimeo90K datasets',
         epilog='You can download the Vimeo90K dataset '
         'from：http://toflow.csail.mit.edu/')
-    parser.add_argument('gt-path', help='GT path for Vimeo90K')
-    parser.add_argument('lq-path', help='LQ path for Vimeo90K')
     parser.add_argument(
-        'train-list', help='official training list path for Vimeo90K')
+        'train_list', help='official training list path for Vimeo90K')
+    parser.add_argument('--gt_path', default=None, help='GT path for Vimeo90K')
+    parser.add_argument('--lq_path', default=None, help='LQ path for Vimeo90K')
     parser.add_argument(
         '--make-lmdb', action='store_true', help='create lmdb files')
 
@@ -155,6 +156,9 @@ if __name__ == '__main__':
 
     # create lmdb files
     if args.make_lmdb:
+        if args.gt_path is None or args.lq_path is None:
+            raise ValueError('gt_path and lq_path cannot be None when '
+                             'when creating lmdb files.')
         # create lmdb for gt
         lmdb_path = osp.join(
             osp.dirname(args.gt_path), 'vimeo90k_train_GT.lmdb')

@@ -1,22 +1,30 @@
-from .augmentation import (BinarizeImage, Flip, GenerateFrameIndices,
+# Copyright (c) OpenMMLab. All rights reserved.
+from .augmentation import (BinarizeImage, CopyValues, Flip,
+                           GenerateFrameIndices,
                            GenerateFrameIndiceswithPadding,
                            GenerateSegmentIndices, MirrorSequence, Pad,
-                           RandomAffine, RandomJitter, RandomMaskDilation,
-                           RandomTransposeHW, Resize, TemporalReverse)
+                           Quantize, RandomAffine, RandomJitter,
+                           RandomMaskDilation, RandomTransposeHW, Resize,
+                           TemporalReverse, UnsharpMasking)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
-                   FixedCrop, ModCrop, PairedRandomCrop)
-from .down_sampling import RandomDownSampling
+                   CropLike, CropSequence, FixedCrop, ModCrop,
+                   PairedRandomCrop)
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
-from .generate_coordinate_and_cell import GenerateCoordinateAndCell
+from .generate_assistant import GenerateCoordinateAndCell, GenerateHeatmap
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
                       LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
                       RandomLoadResizeBg)
+from .matlab_like_resize import MATLABLikeResize
 from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, GenerateTrimapWithDistTransform,
                           MergeFgAndBg, PerturbBg, TransformTrimap)
 from .normalization import Normalize, RescaleToZeroOne
+from .random_degradations import (DegradationsWithShuffle, RandomBlur,
+                                  RandomJPEGCompression, RandomNoise,
+                                  RandomResize, RandomVideoCompression)
+from .random_down_sampling import RandomDownSampling
 
 __all__ = [
     'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadMask',
@@ -30,5 +38,9 @@ __all__ = [
     'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
     'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap',
-    'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence'
+    'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
+    'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
+    'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
+    'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking',
+    'RandomVideoCompression', 'CropSequence'
 ]

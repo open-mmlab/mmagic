@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import copy
 import os.path as osp
 from collections import defaultdict
@@ -8,7 +9,7 @@ from mmcv import scandir
 from .base_dataset import BaseDataset
 
 IMG_EXTENSIONS = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.ppm',
-                  '.PPM', '.bmp', '.BMP')
+                  '.PPM', '.bmp', '.BMP', '.tif', '.TIF', '.tiff', '.TIFF')
 
 
 class BaseSRDataset(BaseDataset):
@@ -67,20 +68,20 @@ class BaseSRDataset(BaseDataset):
             f'{len(results)} != {len(self)}')
 
         results = [res['eval_result'] for res in results]  # a list of dict
-        eval_results = defaultdict(list)  # a dict of list
+        eval_result = defaultdict(list)  # a dict of list
 
         for res in results:
             for metric, val in res.items():
-                eval_results[metric].append(val)
-        for metric, val_list in eval_results.items():
+                eval_result[metric].append(val)
+        for metric, val_list in eval_result.items():
             assert len(val_list) == len(self), (
                 f'Length of evaluation result of {metric} is {len(val_list)}, '
                 f'should be {len(self)}')
 
         # average the results
-        eval_results = {
+        eval_result = {
             metric: sum(values) / len(self)
-            for metric, values in eval_results.items()
+            for metric, values in eval_result.items()
         }
 
-        return eval_results
+        return eval_result

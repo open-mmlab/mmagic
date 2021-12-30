@@ -1,4 +1,4 @@
-# yapf: disable
+# Copyright (c) OpenMMLab. All rights reserved.
 from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
                                DeepFillEncoder, DeepFillEncoderDecoder,
                                DepthwiseIndexBlock, FBADecoder,
@@ -10,10 +10,11 @@ from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
                                ResGCADecoder, ResGCAEncoder, ResNetDec,
                                ResNetEnc, ResShortcutDec, ResShortcutEnc,
                                SimpleEncoderDecoder)
-# yapf: enable
 from .generation_backbones import ResnetGenerator, UnetGenerator
-from .sr_backbones import (EDSR, RDN, SRCNN, BasicVSRNet, EDVRNet, IconVSR,
-                           MSRResNet, RRDBNet, TOFlow)
+from .sr_backbones import (EDSR, LIIFEDSR, LIIFRDN, RDN, SRCNN, BasicVSRNet,
+                           BasicVSRPlusPlus, DICNet, EDVRNet, GLEANStyleGANv2,
+                           IconVSR, MSRResNet, RealBasicVSRNet, RRDBNet,
+                           TDANNet, TOFlow, TTSRNet)
 
 __all__ = [
     'MSRResNet', 'VGG16', 'PlainDecoder', 'SimpleEncoderDecoder',
@@ -21,9 +22,10 @@ __all__ = [
     'PConvEncoderDecoder', 'PConvEncoder', 'PConvDecoder', 'ResNetEnc',
     'ResNetDec', 'ResShortcutEnc', 'ResShortcutDec', 'RRDBNet',
     'DeepFillEncoder', 'HolisticIndexBlock', 'DepthwiseIndexBlock',
-    'ContextualAttentionNeck', 'DeepFillDecoder', 'EDSR', 'RDN',
+    'ContextualAttentionNeck', 'DeepFillDecoder', 'EDSR', 'RDN', 'DICNet',
     'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample', 'IndexNetEncoder',
     'IndexNetDecoder', 'TOFlow', 'ResGCAEncoder', 'ResGCADecoder', 'SRCNN',
     'UnetGenerator', 'ResnetGenerator', 'FBAResnetDilated', 'FBADecoder',
-    'BasicVSRNet', 'IconVSR'
+    'BasicVSRNet', 'IconVSR', 'TTSRNet', 'GLEANStyleGANv2', 'TDANNet',
+    'LIIFEDSR', 'LIIFRDN', 'BasicVSRPlusPlus', 'RealBasicVSRNet'
 ]

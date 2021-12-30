@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import os
 
@@ -119,7 +120,7 @@ def main():
             save_image=args.save_image,
             empty_cache=empty_cache)
 
-    if rank == 0:
+    if rank == 0 and 'eval_result' in outputs[0]:
         print('')
         # print metrics
         stats = dataset.evaluate(outputs)

@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .evaluation import (DistEvalIterHook, EvalIterHook, L1Evaluation, mse,
                          psnr, reorder_image, sad, ssim)
 from .hooks import VisualizationHook
