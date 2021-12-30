@@ -15,10 +15,11 @@ class AOTBlockNeck(nn.Module):
     Args:
         in_channels (int, optional): Channel number of input feature.
             Default: 256.
-        dilation_rates (Tuple[int]): The dilation rates used
+        dilation_rates (Tuple[int], optional): The dilation rates used
         for AOT block. Default: (1, 2, 4, 8).
-        num_aotblock (int): Number of AOT blocks. Default: 8.
-        act_cfg (dict): Config dict for activation layer, "relu" by default.
+        num_aotblock (int, optional): Number of AOT blocks. Default: 8.
+        act_cfg (dict, optional): Config dict for activation layer,
+            "relu" by default.
         kwargs (keyword arguments).
     """
 
@@ -31,13 +32,12 @@ class AOTBlockNeck(nn.Module):
         super().__init__()
 
         self.dilation_rates = list(dilation_rates)
-        self.num_aotblock = num_aotblock
 
         self.model = nn.ModuleList([(AOTBlock(
             in_channels=in_channels,
             dilation_rates=self.dilation_rates,
             act_cfg=act_cfg,
-        )) for _ in range(0, self.num_aotblock)])
+        )) for _ in range(0, num_aotblock)])
 
     def forward(self, x):
         for i in range(0, len(self.model)):
@@ -59,7 +59,8 @@ class AOTBlock(nn.Module):
     Splitting: Sub-kernels with different receptive fields are merged.
 
     Args:
-        in_channels (int): Channel number of input feature. Default: 256.
+        in_channels (int, optional): Channel number of input feature.
+            Default: 256.
         dilation_rates (Tuple[int]): The dilation rates used for AOT block.
             Default (1, 2, 4, 8).
         act_cfg (dict, optional): Config dict for activation layer,

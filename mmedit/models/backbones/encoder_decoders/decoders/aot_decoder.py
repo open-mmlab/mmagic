@@ -15,8 +15,10 @@ class AOTDecoder(nn.Module):
     Args:
         in_channels (int, optional): Channel number of input feature.
             Default: 256.
-        mid_channels (int, optional): Channel number of middle features.
+        mid_channels (int, optional): Channel number of middle feature.
             Default: 128.
+        out_channels (int, optional): Channel number of output feature.
+            Default 3.
         act_cfg (dict, optional): Config dict for activation layer,
             "relu" by default.
     """
@@ -24,6 +26,7 @@ class AOTDecoder(nn.Module):
     def __init__(self,
                  in_channels=256,
                  mid_channels=128,
+                 out_channels=3,
                  act_cfg=dict(type='ReLU')):
         super().__init__()
 
@@ -44,7 +47,7 @@ class AOTDecoder(nn.Module):
                 act_cfg=act_cfg),
             ConvModule(
                 mid_channels // 2,
-                3,
+                out_channels,
                 kernel_size=3,
                 stride=1,
                 padding=1,

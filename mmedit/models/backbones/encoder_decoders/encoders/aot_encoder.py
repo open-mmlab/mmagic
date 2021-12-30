@@ -58,6 +58,7 @@ class AOTEncoder(nn.Module):
 
         Args:
             x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+
         Returns:
             torch.Tensor: Output tensor with shape of (n, c, h', w').
         """
