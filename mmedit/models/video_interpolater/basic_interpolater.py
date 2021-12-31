@@ -131,6 +131,8 @@ class BasicInterpolater(BaseModel):
             inputs (Tensor): Tensor of inputs frames with shape (n, c, h, w).
             target (Tensor): Tensor of target frame with shape (n, c, h, w).
                 Default: None.
+            meta (list[dict]): Meta data, such as path of target file.
+                Default: None.
             save_image (bool): Whether to save image. Default: False.
             save_path (str): Path to save image. Default: None.
             iteration (int): Iteration for the saving image name.
@@ -157,6 +159,18 @@ class BasicInterpolater(BaseModel):
 
     @staticmethod
     def _save_image(meta, iteration, save_path, pred):
+        """Save the image.
+
+        Args:
+            meta (list[dict]): Meta data, such as path of target file.
+                Default: None. These dictionaries should contain
+                'target_path' (str of a path) or 'inputs_path' (list of str)
+            iteration (int): Iteration for the saving image name.
+                Default: None.
+            save_path (str): Path to save image. Default: None.
+            pred (Tensor): Output image.
+        """
+
         if 'target_path' in meta[0]:
             pred_path = meta[0]['target_path']
             folder_name = osp.splitext(osp.basename(pred_path))[0]
