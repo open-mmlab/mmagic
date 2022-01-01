@@ -71,7 +71,7 @@ def test_basic_interpolater():
 
     # test forward_test
     with torch.no_grad():
-        restorer.val_step(**data_batch)
+        restorer.val_step(data_batch)
         outputs = restorer(**data_batch, test_mode=True)
     assert torch.equal(outputs['inputs'], data_batch['inputs'])
     assert torch.is_tensor(outputs['output'])
@@ -117,7 +117,7 @@ def test_basic_interpolater():
 
         # forward_test
         with torch.no_grad():
-            restorer.val_step(**data_batch)
+            restorer.val_step(data_batch)
             outputs = restorer(**data_batch, test_mode=True)
         assert torch.equal(outputs['inputs'], data_batch['inputs'].cpu())
         assert torch.is_tensor(outputs['output'])
