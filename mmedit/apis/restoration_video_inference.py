@@ -48,6 +48,8 @@ def restoration_video_inference(model,
 
     Returns:
         Tensor: The predicted restoration result.
+        Float | None: The frame rate of the input video. Return None if the
+            input is a sequence of images.
     """
 
     device = next(model.parameters()).device  # model device
@@ -64,6 +66,8 @@ def restoration_video_inference(model,
     file_extension = os.path.splitext(img_dir)[1]
     if file_extension in VIDEO_EXTENSIONS:
         video_reader = mmcv.VideoReader(img_dir)
+        fps = video_reader.fps
+
         # load the images
         data = dict(lq=[], lq_path=None, key=img_dir)
         for frame in video_reader:
@@ -78,6 +82,8 @@ def restoration_video_inference(model,
                 tmp_pipeline.append(pipeline)
         test_pipeline = tmp_pipeline
     else:
+        fps = None
+
         # the first element in the pipeline must be 'GenerateSegmentIndices'
         if test_pipeline[0]['type'] != 'GenerateSegmentIndices':
             raise TypeError('The first element in the pipeline must be '
@@ -121,4 +127,5 @@ def restoration_video_inference(model,
                         model(lq=data[:, i:i + max_seq_len],
                               test_mode=True)['output'].cpu())
                 result = torch.cat(result, dim=1)
-    return result
+
+    return result, fps

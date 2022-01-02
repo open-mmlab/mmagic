@@ -34,6 +34,11 @@ def parse_args():
         default=0,
         help='window size if sliding-window framework is used')
     parser.add_argument(
+        '--fps',
+        type=int,
+        default=None,
+        help='frame rate of the output video.')
+    parser.add_argument(
         '--max_seq_len',
         type=int,
         default=None,
@@ -57,15 +62,23 @@ def main():
     model = init_model(
         args.config, args.checkpoint, device=torch.device('cuda', args.device))
 
-    output = restoration_video_inference(model, args.input_dir,
-                                         args.window_size, args.start_idx,
-                                         args.filename_tmpl, args.max_seq_len)
+    output, fps = restoration_video_inference(model, args.input_dir,
+                                              args.window_size, args.start_idx,
+                                              args.filename_tmpl,
+                                              args.max_seq_len)
 
     file_extension = os.path.splitext(args.output_dir)[1]
+    if args.fps is None:
+        if fps is None and file_extension in VIDEO_EXTENSIONS:
+            raise ValueError('If the input is not a video, you must specify '
+                             'the frame rate of the output video.')
+    else:
+        fps = args.fps
+
     if file_extension in VIDEO_EXTENSIONS:  # save as video
         h, w = output.shape[-2:]
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        video_writer = cv2.VideoWriter(args.output_dir, fourcc, 25, (w, h))
+        video_writer = cv2.VideoWriter(args.output_dir, fourcc, fps, (w, h))
         for i in range(0, output.size(1)):
             img = tensor2img(output[:, i, :, :, :])
             video_writer.write(img.astype(np.uint8))
