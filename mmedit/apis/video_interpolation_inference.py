@@ -56,6 +56,8 @@ def video_interpolation_inference(model,
 
     device = next(model.parameters()).device  # model device
 
+    io_sequence = getattr(model.cfg['model'], 'io_sequence', [1, 1])
+
     # build the data pipeline
     if model.cfg.get('demo_pipeline', None):
         test_pipeline = model.cfg.demo_pipeline
@@ -82,10 +84,13 @@ def video_interpolation_inference(model,
         images = [read_image(f) for f in files]
 
     data = []
-    for i in range(len(images) - 1):
+    before, after = io_sequence[0], io_sequence[1]
+
+    for i in range(0, len(images) - before - after + 1, before):
         data.append(
             dict(
-                inputs=[images[i], images[i + 1]],
+                inputs=images[i:i + before] +
+                images[i + before:i + before + after],
                 inputs_path=None,
                 key=input_dir))
 
@@ -105,18 +110,31 @@ def video_interpolation_inference(model,
     data = scatter(collate(data, samples_per_gpu=1), [device])[0]['inputs']
 
     # forward the model
-    result = [np.flip(images[0], axis=2)]
-    index = 1
+    result = []
+    index = 0
     with torch.no_grad():
         length = data.shape[0]
-        for i in range(0, length, batch_size):
-            start, end = i, i + batch_size
+        for start in range(0, length, batch_size):
+            end = start + batch_size
             output = model(data[start:end], test_mode=True)['output'].cpu()
             for j in range(output.shape[0]):
-                new_image = tensor2img(output[j])
-                new_image = tensor2img(output[j])
-                result.append(new_image)
-                result.append(np.flip(images[index], axis=2))
-                index += 1
+                input_sequence = [
+                    np.flip(img, axis=2)
+                    for img in images[index:index + before]
+                ]
+                result.extend(input_sequence)
+                if len(output.shape) == 4:
+                    new_image = tensor2img(output[j])
+                    result.append(new_image)
+                else:
+                    for k in range(output.shape[1]):
+                        new_image = tensor2img(output[j][k])
+                        result.append(new_image)
+                if index + before + after >= len(images):
+                    result.extend(images[index + before:])
+                    break
+                index += before
+            if index + before + after >= len(images):
+                break
 
     return result, input_fps
