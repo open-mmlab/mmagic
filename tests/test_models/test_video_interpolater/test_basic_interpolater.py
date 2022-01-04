@@ -223,6 +223,15 @@ def test_basic_interpolater():
         assert isinstance(outputs['eval_result']['PSNR'], float)
         assert isinstance(outputs['eval_result']['SSIM'], float)
 
+        with pytest.raises(ValueError):
+            # iteration should be number or None
+            restorer(
+                **data_batch,
+                test_mode=True,
+                save_image=True,
+                save_path=tmpdir,
+                iteration='100')
+
         # test forward_test when output.shape==5
         model_cfg = dict(
             type='BasicInterpolater',
@@ -245,6 +254,19 @@ def test_basic_interpolater():
             save_image=True,
             save_path=tmpdir,
             iteration=100)
+        outputs = restorer(
+            inputs=inputs,
+            target=target.unsqueeze(1),
+            meta=[{
+                'key':
+                '000001/0000',
+                'inputs_path':
+                ['fake_path/fake_name.png', 'fake_path/fake_name.png']
+            }],
+            test_mode=True,
+            save_image=True,
+            save_path=tmpdir,
+            iteration=None)
 
         with pytest.raises(ValueError):
             # iteration should be number or None
@@ -254,7 +276,3 @@ def test_basic_interpolater():
                 save_image=True,
                 save_path=tmpdir,
                 iteration='100')
-
-
-if __name__ == '__main__':
-    test_basic_interpolater()
