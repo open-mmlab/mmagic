@@ -27,6 +27,7 @@
 - 修复 'flow_warp' 注释 ([#655](https://github.com/open-mmlab/mmediting/pull/655))
 - 修复文档中 Model Zoo 和 Datasets 的错误 ([#664](https://github.com/open-mmlab/mmediting/pull/664))
 - 修复 'random_degradations' 中的错误 ([#673](https://github.com/open-mmlab/mmediting/pull/673))
+- 限制 opencv-python 版本 ([#689](https://github.com/open-mmlab/mmediting/pull/689))
 
 **改进**
 

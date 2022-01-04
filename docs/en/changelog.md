@@ -27,6 +27,7 @@
 - Fix 'flow_warp' comment ([#655](https://github.com/open-mmlab/mmediting/pull/655))
 - Fix the error of Model Zoo and Datasets in docs ([#664](https://github.com/open-mmlab/mmediting/pull/664))
 - Fix bug in 'random_degradations' ([#673](https://github.com/open-mmlab/mmediting/pull/673))
+- Limit opencv-python version ([#689](https://github.com/open-mmlab/mmediting/pull/689))
 
 **Improvements**
 
