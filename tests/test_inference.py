@@ -50,3 +50,17 @@ def test_restoration_video_inference():
             model.cfg.val_pipeline = model.cfg.val_pipeline[1:]
             output = restoration_video_inference(model, img_dir, window_size,
                                                  start_idx, filename_tmpl)
+
+        # video (mp4) input
+        model = init_model(
+            './configs/restorers/basicvsr/basicvsr_reds4.py',
+            None,
+            device='cuda')
+        img_dir = './tests/data/test_inference.mp4'
+        window_size = 0
+        start_idx = 1
+        filename_tmpl = 'im{}.png'
+
+        output = restoration_video_inference(model, img_dir, window_size,
+                                             start_idx, filename_tmpl)
+        assert output.shape == (1, 5, 3, 256, 256)
