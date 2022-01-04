@@ -158,7 +158,7 @@ class BasicInterpolater(BaseModel):
         return results
 
     @staticmethod
-    def _save_image(meta, iteration, save_path, pred):
+    def _save_image(meta, iteration, save_path, output):
         """Save the image.
 
         Args:
@@ -168,27 +168,33 @@ class BasicInterpolater(BaseModel):
             iteration (int): Iteration for the saving image name.
                 Default: None.
             save_path (str): Path to save image. Default: None.
-            pred (Tensor): Output image.
+            output (Tensor): Output image.
         """
 
-        if 'target_path' in meta[0]:
-            pred_path = meta[0]['target_path']
-            folder_name = osp.splitext(osp.basename(pred_path))[0]
-        else:
-            pred_path1 = osp.splitext(osp.basename(
-                meta[0]['inputs_path'][0]))[0]
-            pred_path2 = osp.splitext(osp.basename(
-                meta[0]['inputs_path'][1]))[0]
-            folder_name = f'{pred_path1}_{pred_path2}'
-        if isinstance(iteration, numbers.Number):
-            save_path = osp.join(save_path, folder_name,
-                                 f'{folder_name}-{iteration + 1:06d}.png')
-        elif iteration is None:
-            save_path = osp.join(save_path, f'{folder_name}.png')
-        else:
-            raise ValueError('iteration should be number or None, '
-                             f'but got {type(iteration)}')
-        mmcv.imwrite(tensor2img(pred), save_path)
+        if output.ndim == 4:  # an image, key = 000001/0000 (Vimeo-90K)
+            img_name = meta[0]['key'].replace('/', '_')
+            if isinstance(iteration, numbers.Number):
+                save_path = osp.join(save_path,
+                                     f'{img_name}-{iteration + 1:06d}.png')
+            elif iteration is None:
+                save_path = osp.join(save_path, f'{img_name}.png')
+            else:
+                raise ValueError('iteration should be number or None, '
+                                 f'but got {type(iteration)}')
+            mmcv.imwrite(tensor2img(output), save_path)
+        elif output.ndim == 5:  # a sequence, key = 000
+            folder_name = meta[0]['key'].split('/')[0]
+            for i in range(0, output.size(1)):
+                if isinstance(iteration, numbers.Number):
+                    save_path_i = osp.join(save_path, folder_name,
+                                           f'{i:08d}-{iteration + 1:06d}.png')
+                elif iteration is None:
+                    save_path_i = osp.join(save_path, folder_name,
+                                           f'{i:08d}.png')
+                else:
+                    raise ValueError('iteration should be number or None, '
+                                     f'but got {type(iteration)}')
+                mmcv.imwrite(tensor2img(output[:, i, :, :, :]), save_path_i)
 
     def forward_dummy(self, img):
         """Used for computing network FLOPs.

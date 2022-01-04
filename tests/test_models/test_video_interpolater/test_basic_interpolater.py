@@ -28,6 +28,22 @@ class InterpolateExample(nn.Module):
         pass
 
 
+@COMPONENTS.register_module()
+class InterpolateExample2(nn.Module):
+    """An example of interpolate network for testing BasicInterpolater.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.layer = nn.Conv2d(3, 3, 3, 1, 1)
+
+    def forward(self, x):
+        return self.layer(x[:, 0]).unsqueeze(1)
+
+    def init_weights(self, pretrained=None):
+        pass
+
+
 def test_basic_interpolater():
     model_cfg = dict(
         type='BasicInterpolater',
@@ -76,6 +92,17 @@ def test_basic_interpolater():
     assert torch.equal(outputs['inputs'], data_batch['inputs'])
     assert torch.is_tensor(outputs['output'])
     assert outputs['output'].size() == (1, 3, 8, 8)
+
+    # # test forward_test when output.shape==5
+    # model_cfg = dict(
+    #     type='BasicInterpolater',
+    #     generator=dict(type='InterpolateExample2'),
+    #     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
+    # train_cfg = None
+    # test_cfg = None
+    # restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
+    # with torch.no_grad():
+    #     outputs = restorer(**data_batch, test_mode=True)
 
     # test forward_dummy
     with torch.no_grad():
@@ -144,6 +171,7 @@ def test_basic_interpolater():
         'inputs': inputs,
         'target': target,
         'meta': [{
+            'key': '000001/0000',
             'target_path': 'fake_path/fake_name.png'
         }]
     }
@@ -181,6 +209,8 @@ def test_basic_interpolater():
             inputs=inputs,
             target=target,
             meta=[{
+                'key':
+                '000001/0000',
                 'inputs_path':
                 ['fake_path/fake_name.png', 'fake_path/fake_name.png']
             }],
@@ -193,6 +223,29 @@ def test_basic_interpolater():
         assert isinstance(outputs['eval_result']['PSNR'], float)
         assert isinstance(outputs['eval_result']['SSIM'], float)
 
+        # test forward_test when output.shape==5
+        model_cfg = dict(
+            type='BasicInterpolater',
+            generator=dict(type='InterpolateExample2'),
+            pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
+        train_cfg = None
+        test_cfg = None
+        restorer = build_model(
+            model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
+        outputs = restorer(
+            inputs=inputs,
+            target=target.unsqueeze(1),
+            meta=[{
+                'key':
+                '000001/0000',
+                'inputs_path':
+                ['fake_path/fake_name.png', 'fake_path/fake_name.png']
+            }],
+            test_mode=True,
+            save_image=True,
+            save_path=tmpdir,
+            iteration=100)
+
         with pytest.raises(ValueError):
             # iteration should be number or None
             restorer(
@@ -201,3 +254,7 @@ def test_basic_interpolater():
                 save_image=True,
                 save_path=tmpdir,
                 iteration='100')
+
+
+if __name__ == '__main__':
+    test_basic_interpolater()
