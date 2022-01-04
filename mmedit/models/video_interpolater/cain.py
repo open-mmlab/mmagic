@@ -38,7 +38,7 @@ class CAIN(BasicInterpolater):
         target = data_batch['target']
 
         # generator
-        pred = self.generator(inputs, padding_flag=True)
+        pred = self.generator(inputs, padding_flag=False)
 
         # loss
         losses = dict()
