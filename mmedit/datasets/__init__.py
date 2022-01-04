@@ -3,6 +3,7 @@ from .base_dataset import BaseDataset
 from .base_generation_dataset import BaseGenerationDataset
 from .base_matting_dataset import BaseMattingDataset
 from .base_sr_dataset import BaseSRDataset
+from .base_vi_dataset import BaseVIDataset
 from .builder import build_dataloader, build_dataset
 from .comp1k_dataset import AdobeComp1kDataset
 from .dataset_wrappers import RepeatDataset
@@ -34,5 +35,5 @@ __all__ = [
     'GenerationUnpairedDataset', 'SRVid4Dataset', 'SRFolderGTDataset',
     'SRREDSMultipleGTDataset', 'SRVimeo90KMultipleGTDataset',
     'SRTestMultipleGTDataset', 'SRFolderRefDataset', 'SRFacialLandmarkDataset',
-    'SRFolderMultipleGTDataset', 'SRFolderVideoDataset'
+    'SRFolderMultipleGTDataset', 'SRFolderVideoDataset', 'BaseVIDataset'
 ]
