@@ -1,10 +1,10 @@
 import pytest
 from mmcv.utils.testing import assert_dict_has_keys
 
-from mmedit.datasets import BaseVIDataset
+from mmedit.datasets import BaseVFIDataset
 
 
-class TestVIDataset:
+class TestVFIDataset:
 
     def __init__(self):
         self.pipeline = [
@@ -15,11 +15,11 @@ class TestVIDataset:
             dict(type='ImageToTensor', keys=['target']),
         ]
         self.folder = 'tests/data/vimeo90k'
-        self.ann_file = 'tests/data/vimeo90k/vi_ann.txt'
+        self.ann_file = 'tests/data/vimeo90k/vfi_ann.txt'
 
-    def test_base_vi_dataset(self):
+    def test_base_vfi_dataset(self):
 
-        dataset = BaseVIDataset(self.pipeline, self.folder, self.ann_file)
+        dataset = BaseVFIDataset(self.pipeline, self.folder, self.ann_file)
         setattr(dataset, 'data_infos', [
             dict(
                 inputs_path=[

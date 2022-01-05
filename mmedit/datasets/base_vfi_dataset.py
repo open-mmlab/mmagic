@@ -8,7 +8,7 @@ IMG_EXTENSIONS = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.ppm',
                   '.PPM', '.bmp', '.BMP', '.tif', '.TIF', '.tiff', '.TIFF')
 
 
-class BaseVIDataset(BaseDataset):
+class BaseVFIDataset(BaseDataset):
     """Base class for video interpolation datasets.
     """
 
