@@ -9,7 +9,11 @@ from mmedit.utils import get_root_logger
 
 
 def get_padding_functions(x, padding=7):
-    """Generate padding function.
+    """Generate padding function for CAIN.
+
+    This function produces two functions to pad and depad a tensor, given the
+    number of pixels to be padded. When applying padding and depadding
+    sequentially, the original tensor is obtained.
 
     tensor --padding_function--> padded tensor
     padded tensor --depadding_function--> original tensor
@@ -50,26 +54,16 @@ class ConvNormWithReflectionPad(nn.Module):
         in_channels (int): Channel number of input features.
         out_channels (int): Channel number of output features.
         kernel_size (int): Kernel size of convolution layer.
-        stride (int): Stride of size of convolution layer. Default: 1.
         norm (str | None): Normalization layer. If it is None, no
             normalization is performed. Default: None.
     """
 
-    def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 stride=1,
-                 norm=None):
+    def __init__(self, in_channels, out_channels, kernel_size, norm=None):
         super().__init__()
 
         self.reflection_pad = nn.ReflectionPad2d(kernel_size // 2)
         self.conv = nn.Conv2d(
-            in_channels,
-            out_channels,
-            stride=stride,
-            kernel_size=kernel_size,
-            bias=True)
+            in_channels, out_channels, kernel_size=kernel_size, bias=True)
 
         if norm is None:
             self.norm = None
@@ -157,16 +151,15 @@ class ResidualChannelAttention(nn.Module):
                  mid_channels,
                  kernel_size=3,
                  reduction=16,
-                 norm=False,
+                 norm=None,
                  act=nn.LeakyReLU(0.2, True)):
         super().__init__()
 
         self.body = nn.Sequential(
             ConvNormWithReflectionPad(
-                mid_channels, mid_channels, kernel_size, stride=1, norm=norm),
-            act,
+                mid_channels, mid_channels, kernel_size, norm=norm), act,
             ConvNormWithReflectionPad(
-                mid_channels, mid_channels, kernel_size, stride=1, norm=norm),
+                mid_channels, mid_channels, kernel_size, norm=norm),
             ChannelAttentionLayer(mid_channels, reduction))
 
     def forward(self, x):
@@ -217,7 +210,7 @@ class ResidualGroup(nn.Module):
             norm=norm,
             act=act)
         self.conv_after_body = ConvNormWithReflectionPad(
-            mid_channels, mid_channels, kernel_size, stride=1, norm=norm)
+            mid_channels, mid_channels, kernel_size, norm=norm)
 
     def forward(self, x):
         """Forward function for ResidualGroup.
@@ -268,8 +261,8 @@ class CAINNet(nn.Module):
                  act=nn.LeakyReLU(0.2, True)):
         super().__init__()
 
-        mid_channels = in_channels * pow(4, depth)
-        self.scale = pow(2, depth)
+        mid_channels = in_channels * (4**depth)
+        self.scale = 2**depth
         self.padding = padding
 
         self.conv_first = nn.Conv2d(mid_channels * 2, mid_channels, 3, 1, 1)

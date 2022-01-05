@@ -16,8 +16,8 @@ def test_cain_net():
     assert model.__class__.__name__ == 'CAINNet'
 
     # prepare data
-    inputs0 = torch.rand(1, 2, 3, 160, 160)
-    target0 = torch.rand(1, 3, 160, 160)
+    inputs0 = torch.rand(1, 2, 3, 5, 5)
+    target0 = torch.rand(1, 3, 5, 5)
     inputs = torch.rand(1, 2, 3, 256, 248)
     target = torch.rand(1, 3, 256, 248)
 
