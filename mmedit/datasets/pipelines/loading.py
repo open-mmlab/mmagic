@@ -352,7 +352,6 @@ class LoadMask:
                                           **self.file_client_kwargs)
         # minus 1 to avoid out of range error
         mask_idx = np.random.randint(0, self.mask_set_size)
-
         mask_bytes = self.file_client.get(self.mask_list[mask_idx])
         mask = mmcv.imfrombytes(mask_bytes, flag=self.flag)  # HWC, BGR
         if mask.ndim == 2:
