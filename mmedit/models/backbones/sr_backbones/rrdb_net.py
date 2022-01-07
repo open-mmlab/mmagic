@@ -3,8 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.runner import load_checkpoint
-
-from mmedit.models.common import default_init_weights, make_layer
+from mmedit.models.common import default_init_weights, make_layer, pixel_unshuffle
 from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
@@ -111,10 +110,17 @@ class RRDBNet(nn.Module):
     def __init__(self,
                  in_channels,
                  out_channels,
+                 scale=4,
                  mid_channels=64,
                  num_blocks=23,
                  growth_channels=32):
         super().__init__()
+        if scale in [1, 2, 4]:
+            in_channels = in_channels * ((4 // scale)**2)
+        else:
+            raise ValueError('Currently support (1x, 2x, 4x) upsampling only')
+
+        self.scale = scale
         self.conv_first = nn.Conv2d(in_channels, mid_channels, 3, 1, 1)
         self.body = make_layer(
             RRDB,
@@ -139,15 +145,19 @@ class RRDBNet(nn.Module):
         Returns:
             Tensor: Forward results.
         """
+        if self.scale in [1, 2]:
+            feat = pixel_unshuffle(x, scale=4 // self.scale)
+        else:
+            feat = x
 
-        feat = self.conv_first(x)
+        feat = self.conv_first(feat)
         body_feat = self.conv_body(self.body(feat))
         feat = feat + body_feat
+
         # upsample
-        feat = self.lrelu(
-            self.conv_up1(F.interpolate(feat, scale_factor=2, mode='nearest')))
-        feat = self.lrelu(
-            self.conv_up2(F.interpolate(feat, scale_factor=2, mode='nearest')))
+        feat = self.lrelu(self.conv_up1(F.interpolate(feat, scale_factor=2, mode='nearest')))
+        feat = self.lrelu(self.conv_up2(F.interpolate(feat, scale_factor=2, mode='nearest')))
+
         out = self.conv_last(self.lrelu(self.conv_hr(feat)))
         return out
 

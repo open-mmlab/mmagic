@@ -1,6 +1,8 @@
 exp_name = 'realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost'
 
 scale = 4
+gt_crop_size = 400
+
 # model settings
 model = dict(
     type='RealESRGAN',
@@ -8,6 +10,7 @@ model = dict(
         type='RRDBNet',
         in_channels=3,
         out_channels=3,
+        scale=scale,
         mid_channels=64,
         num_blocks=23,
         growth_channels=32),
@@ -28,7 +31,7 @@ train_pipeline = [
         io_backend='disk',
         key='gt',
         channel_order='rgb'),
-    dict(type='Crop', keys=['gt'], crop_size=(400, 400), random_crop=True),
+    dict(type='Crop', keys=['gt'], crop_size=(gt_crop_size, gt_crop_size), random_crop=True),
     dict(type='RescaleToZeroOne', keys=['gt']),
     dict(
         type='UnsharpMasking',
@@ -126,7 +129,7 @@ train_pipeline = [
                 dict(
                     type='RandomResize',
                     params=dict(
-                        target_size=(100, 100),
+                        target_size=(gt_crop_size//scale, gt_crop_size//scale),
                         resize_opt=['bilinear', 'area', 'bicubic'],
                         resize_prob=[1 / 3., 1 / 3., 1 / 3.]),
                 ),

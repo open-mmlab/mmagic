@@ -1,5 +1,8 @@
 exp_name = 'realesrgan_c64b23g32_12x4_lr1e-4_400k_df2k_ost'
+
 scale = 4
+gt_crop_size = 400
+
 # model settings
 model = dict(
     type='RealESRGAN',
@@ -7,6 +10,7 @@ model = dict(
         type='RRDBNet',
         in_channels=3,
         out_channels=3,
+        scale=scale,
         mid_channels=64,
         num_blocks=23,
         growth_channels=32),
@@ -53,12 +57,12 @@ train_pipeline = [
         io_backend='disk',
         key='gt',
         channel_order='rgb'),
-    dict(type='Crop', keys=['gt'], crop_size=(400, 400), random_crop=True),
+    dict(type='Crop', keys=['gt'], crop_size=(gt_crop_size, gt_crop_size), random_crop=True),
     dict(type='RescaleToZeroOne', keys=['gt']),
     dict(
         type='UnsharpMasking',
         keys=['gt'],
-        radius=50,
+        kernel_size=51,
         sigma=0,
         weight=0.5,
         threshold=10),
@@ -151,7 +155,7 @@ train_pipeline = [
                 dict(
                     type='RandomResize',
                     params=dict(
-                        target_size=(100, 100),
+                        target_size=(gt_crop_size//scale, gt_crop_size//scale),
                         resize_opt=['bilinear', 'area', 'bicubic'],
                         resize_prob=[1 / 3., 1 / 3., 1 / 3.]),
                 ),
@@ -178,7 +182,7 @@ train_pipeline = [
     dict(
         type='UnsharpMasking',
         keys=['gt'],
-        radius=50,
+        kernel_size=51,
         sigma=0,
         weight=0.5,
         threshold=10),
@@ -283,3 +287,5 @@ work_dir = f'./work_dirs/{exp_name}'
 load_from = 'https://download.openmmlab.com/mmediting/restorers/real_esrgan/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth'  # noqa
 resume_from = None
 workflow = [('train', 1)]
+
+
