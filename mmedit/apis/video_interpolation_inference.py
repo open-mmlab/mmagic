@@ -84,9 +84,9 @@ def video_interpolation_inference(model,
         images = [read_image(f) for f in files]
 
     data = []
-    before, after = io_sequence[0], io_sequence[1]
+    before, after, step = io_sequence[0], io_sequence[1], io_sequence[2]
 
-    for i in range(0, len(images) - before - after + 1, before):
+    for i in range(0, len(images) - before - after + 1, step):
         data.append(
             dict(
                 inputs=images[i:i + before] +
@@ -110,7 +110,7 @@ def video_interpolation_inference(model,
     data = scatter(collate(data, samples_per_gpu=1), [device])[0]['inputs']
 
     # forward the model
-    result = []
+    result = [np.flip(img, axis=2) for img in images[:before]]
     index = 0
     with torch.no_grad():
         length = data.shape[0]
@@ -118,11 +118,6 @@ def video_interpolation_inference(model,
             end = start + batch_size
             output = model(data[start:end], test_mode=True)['output'].cpu()
             for j in range(output.shape[0]):
-                input_sequence = [
-                    np.flip(img, axis=2)
-                    for img in images[index:index + before]
-                ]
-                result.extend(input_sequence)
                 if len(output.shape) == 4:
                     new_image = tensor2img(output[j])
                     result.append(new_image)
@@ -133,7 +128,12 @@ def video_interpolation_inference(model,
                 if index + before + after >= len(images):
                     result.extend(images[index + before:])
                     break
-                index += before
+                input_sequence = [
+                    np.flip(img, axis=2)
+                    for img in images[index + before:index + before + step]
+                ]
+                result.extend(input_sequence)
+                index += step
             if index + before + after >= len(images):
                 break
 

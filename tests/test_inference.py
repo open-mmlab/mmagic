@@ -92,8 +92,7 @@ def test_video_interpolation_inference():
                 meta_keys=['inputs_path', 'key'])
         ]
 
-        model.cfg['model']['io_sequence'] = [1, 3]
-        print(model.cfg['model'].keys())
+        model.cfg['model']['io_sequence'] = [1, 3, 1]
 
         input_dir = './tests/data/vimeo90k/00001/0266'
         output, fps = video_interpolation_inference(
@@ -105,3 +104,7 @@ def test_video_interpolation_inference():
         output, fps = video_interpolation_inference(model, input_dir)
         assert isinstance(output, list)
         assert isinstance(fps, float)
+
+
+if __name__ == '__main__':
+    test_video_interpolation_inference()

@@ -22,17 +22,19 @@ def parse_args():
         '--fps',
         type=Number,
         default=0,
-        help='frames-per-second in the output video, which is needed when'
-        'the input is image sequence and want to get an output video.')
+        help='frame rate of the output video, which is needed when '
+        '`fps_multiplier` is 0 and a video is desired as output.')
     parser.add_argument(
-        '--multiply_fps',
-        action='store_true',
-        help='whether to multiply the fps based on the input video.')
+        '--fps_multiplier',
+        type=Number,
+        default=0,
+        help='multiply the fps based on the input video, if `fps_multiplier` '
+        'is 0, `fps` will be utilized.')
     parser.add_argument(
         '--start_idx',
         type=int,
         default=0,
-        help='index corresponds to the first frame of the sequence')
+        help='the index of the first frame to be processed in the sequence')
     parser.add_argument(
         '--end_idx',
         type=int,
@@ -68,9 +70,9 @@ def main():
                                                 args.start_idx, args.end_idx,
                                                 args.batch_size)
 
-    if args.multiply_fps:
-        assert fps > 0, 'multiply_fps=True but the input is not a video'
-        fps = args.fps * fps
+    if args.fps_multiplier:
+        assert fps > 0, 'the input is not a video'
+        fps = args.fps_multiplier * fps
     else:
         fps = args.fps if args.fps > 0 else fps
 
@@ -80,7 +82,6 @@ def main():
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         video_writer = cv2.VideoWriter(args.output_dir, fourcc, fps, (w, h))
         for img in output:
-            print(img.shape)
             video_writer.write(img)
         cv2.destroyAllWindows()
         video_writer.release()
