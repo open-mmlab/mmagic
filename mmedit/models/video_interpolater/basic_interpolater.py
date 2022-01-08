@@ -15,7 +15,7 @@ from ..registry import MODELS
 class BasicInterpolater(BaseModel):
     """Basic model for video interpolation.
 
-    It must contain a generator that takes frames as inputs and outputs a
+    It must contain a generator that takes frames as inputs and outputs an
     interpolated frame. It also has a pixel-wise loss for training.
 
     The subclasses should overwrite the function `forward_train`,
@@ -107,7 +107,7 @@ class BasicInterpolater(BaseModel):
         Returns:
             dict: Evaluation results.
         """
-        crop_border = self.test_cfg.crop_border
+        crop_border = self.test_cfg.get('crop_border', 0)
 
         output = tensor2img(output)
         target = tensor2img(target)
@@ -128,7 +128,8 @@ class BasicInterpolater(BaseModel):
         """Testing forward function.
 
         Args:
-            inputs (Tensor): Tensor of inputs frames with shape (n, c, h, w).
+            inputs (Tensor): Tensor of inputs frames with shape
+                (n, 2, c, h, w).
             target (Tensor): Tensor of target frame with shape (n, c, h, w).
                 Default: None.
             meta (list[dict]): Meta data, such as path of target file.
