@@ -15,6 +15,9 @@ def get_padding_functions(x, padding=7):
     number of pixels to be padded. When applying padding and depadding
     sequentially, the original tensor is obtained.
 
+    The generated padding function will pad the given tensor to the 'padding'
+        power of 2, i.e., pow(2, 'padding').
+
     tensor --padding_function--> padded tensor
     padded tensor --depadding_function--> original tensor
 
