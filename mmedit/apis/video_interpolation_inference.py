@@ -84,6 +84,7 @@ def video_interpolation_inference(model,
         images = [read_image(f) for f in files]
 
     data = []
+
     before, after, step = io_sequence[0], io_sequence[1], io_sequence[2]
 
     for i in range(0, len(images) - before - after + 1, step):
