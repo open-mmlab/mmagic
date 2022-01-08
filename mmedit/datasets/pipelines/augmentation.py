@@ -3,10 +3,13 @@ import copy
 import math
 import numbers
 import os.path as osp
+import random
 
 import cv2
 import mmcv
 import numpy as np
+import torchvision.transforms as transforms
+from PIL import Image
 
 from ..registry import PIPELINES
 
@@ -33,7 +36,7 @@ class Resize:
 
     Args:
         keys (list[str]): The images to be resized.
-        scale (float | Tuple[int]): If scale is Tuple(int), target spatial
+        scale (float | tuple[int]): If scale is tuple[int], target spatial
             size (h, w). Otherwise, target spatial size is scaled by input
             size.
             Note that when it is used, `size_factor` and `max_size` are
@@ -161,7 +164,49 @@ class Resize:
             f'(keys={self.keys}, output_keys={self.output_keys}, '
             f'scale={self.scale}, '
             f'keep_ratio={self.keep_ratio}, size_factor={self.size_factor}, '
-            f'max_size={self.max_size},interpolation={self.interpolation})')
+            f'max_size={self.max_size}, interpolation={self.interpolation})')
+        return repr_str
+
+
+@PIPELINES.register_module()
+class RandomRotation:
+    """Rotate the image by a randomly-chosen angle, measured in degree.
+
+    Args:
+        keys (list[str]): The images to be rotated.
+        degrees (tuple[float] | tuple[int] | float | int): If it is a tuple,
+            it represents a range (min, max). If it is a float or int,
+            the range is constructed as (-degrees, degrees).
+    """
+
+    def __init__(self, keys, degrees):
+        if isinstance(degrees, (int, float)):
+            if degrees < 0.0:
+                raise ValueError('Degrees must be positive if it is a number.')
+            else:
+                degrees = (-degrees, degrees)
+        elif not mmcv.is_tuple_of(degrees, (int, float)):
+            raise TypeError(f'Degrees must be float | int or tuple of float | '
+                            'int, but got '
+                            f'{type(degrees)}.')
+
+        self.keys = keys
+        self.degrees = degrees
+
+    def __call__(self, results):
+        angle = random.uniform(self.degrees[0], self.degrees[1])
+
+        for k in self.keys:
+            results[k] = mmcv.imrotate(results[k], angle)
+            if results[k].ndim == 2:
+                results[k] = np.expand_dims(results[k], axis=2)
+        results['degrees'] = self.degrees
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(keys={self.keys}, degrees={self.degrees})')
         return repr_str
 
 
@@ -564,6 +609,44 @@ class RandomJitter:
 
     def __repr__(self):
         return self.__class__.__name__ + f'hue_range={self.hue_range}'
+
+
+@PIPELINES.register_module()
+class ColorJitter:
+    """An interface for torch color jitter so that it can be invoked in
+    mmediting pipeline.
+
+    Randomly change the brightness, contrast and saturation of an image.
+    Modified keys are the attributes specified in "keys".
+
+    Args:
+        keys (list[str]): The images to be resized.
+        to_rgb (bool): Whether to convert channels from BGR to RGB.
+            Default: False.
+    """
+
+    def __init__(self, keys, to_rgb=False, **kwargs):
+        assert keys, 'Keys should not be empty.'
+
+        self.keys = keys
+        self.to_rgb = to_rgb
+        self.transform = transforms.ColorJitter(**kwargs)
+
+    def __call__(self, results):
+        for k in self.keys:
+            if self.to_rgb:
+                results[k] = results[k][..., ::-1]
+            results[k] = Image.fromarray(results[k])
+            results[k] = self.transform(results[k])
+            results[k] = np.asarray(results[k])
+            results[k] = results[k][..., ::-1]
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(keys={self.keys}, to_rgb={self.to_rgb})')
+
+        return repr_str
 
 
 class BinarizeImage:
