@@ -80,7 +80,8 @@ class BasicInterpolater(BaseModel):
         """Training forward function.
 
         Args:
-            inputs (Tensor): Tensor of inputs frames with shape (n, c, h, w).
+            inputs (Tensor): Tensor of inputs frames with shape
+                (n, 2, c, h, w).
             target (Tensor): Tensor of target frame with shape (n, c, h, w).
 
         Returns:
