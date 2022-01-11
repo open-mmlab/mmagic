@@ -32,16 +32,15 @@ class AOTBlockNeck(nn.Module):
         super().__init__()
 
         self.dilation_rates = list(dilation_rates)
-
-        self.model = nn.ModuleList([(AOTBlock(
+        
+        self.model = nn.Sequential(*[(AOTBlock(
             in_channels=in_channels,
             dilation_rates=self.dilation_rates,
             act_cfg=act_cfg,
         )) for _ in range(0, num_aotblock)])
 
     def forward(self, x):
-        for i in range(0, len(self.model)):
-            x = self.model[i](x)
+        x = self.model(x)
         return x
 
 
@@ -102,6 +101,7 @@ class AOTBlock(nn.Module):
         return x
 
     def forward(self, x):
+        
         dilate_x = [
             self.blocks[i](x) for i in range(0, len(self.dilation_rates))
         ]

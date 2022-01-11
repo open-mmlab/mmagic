@@ -28,10 +28,8 @@ class AOTEncoder(nn.Module):
                  out_channels=256,
                  act_cfg=dict(type='ReLU')):
         super().__init__()
-
-        self.reflectionpad2d = nn.ReflectionPad2d(3)
-        self.encoder = nn.ModuleList([
-            ConvModule(
+        self.encoder = nn.Sequential(nn.ReflectionPad2d(3),
+        ConvModule(
                 in_channels,
                 mid_channels,
                 kernel_size=7,
@@ -50,8 +48,7 @@ class AOTEncoder(nn.Module):
                 kernel_size=4,
                 stride=2,
                 padding=1,
-                act_cfg=act_cfg)
-        ])
+                act_cfg=act_cfg))
 
     def forward(self, x):
         """Forward Function.
@@ -62,9 +59,4 @@ class AOTEncoder(nn.Module):
         Returns:
             torch.Tensor: Output tensor with shape of (n, c, h', w').
         """
-
-        x = self.reflectionpad2d(x)
-        for i in range(0, len(self.encoder)):
-            x = self.encoder[i](x)
-
-        return x
+        return self.encoder(x)
