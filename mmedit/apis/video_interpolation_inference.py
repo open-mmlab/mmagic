@@ -37,6 +37,7 @@ def default_generate_frames(input_images, output_images):
     Args:
         input_images (list[np.array]): The input frames.
         output_images (list[np.array]): The output frames.
+
     Returns:
         list[np.array]: The final frames.
     """
