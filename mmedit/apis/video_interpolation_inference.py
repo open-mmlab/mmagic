@@ -30,6 +30,19 @@ def read_image(filepath):
     return image
 
 
+def default_generate_frames(input_images, output_images):
+    """The default generate_frames function, merge input frames and output
+        frames.
+
+        input_images (list[np.array]): The input frames.
+        output_images (list[np.array] | list[list[np.array]]): The output
+            frames.
+    """
+    if isinstance(output_images[0], list):
+        output_images = sum(output_images, [])
+    return input_images + output_images
+
+
 def video_interpolation_inference(model,
                                   input_dir,
                                   start_idx=0,
@@ -111,8 +124,8 @@ def video_interpolation_inference(model,
     data = scatter(collate(data, samples_per_gpu=1), [device])[0]['inputs']
 
     # forward the model
-    result = [np.flip(img, axis=2) for img in images[:before]]
-    index = 0
+    output_images = []
+    input_images = [np.flip(img, axis=2) for img in images]
     with torch.no_grad():
         length = data.shape[0]
         for start in range(0, length, batch_size):
@@ -121,21 +134,16 @@ def video_interpolation_inference(model,
             for j in range(output.shape[0]):
                 if len(output.shape) == 4:
                     new_image = tensor2img(output[j])
-                    result.append(new_image)
+                    output_images.append(new_image)
                 else:
+                    new_images = []
                     for k in range(output.shape[1]):
                         new_image = tensor2img(output[j][k])
-                        result.append(new_image)
-                if index + before + after >= len(images):
-                    result.extend(images[index + before:])
-                    break
-                input_sequence = [
-                    np.flip(img, axis=2)
-                    for img in images[index + before:index + before + step]
-                ]
-                result.extend(input_sequence)
-                index += step
-            if index + before + after >= len(images):
-                break
+                        new_images.append(new_image)
+                    output_images.append(new_images)
+
+    generate_frames = getattr(model.cfg['model'], 'generate_frames',
+                              default_generate_frames)
+    result = generate_frames(input_images, output_images)
 
     return result, input_fps

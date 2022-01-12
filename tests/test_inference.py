@@ -1,11 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import pytest
 import torch
-import torch.nn as nn
 
 from mmedit.apis import (init_model, restoration_video_inference,
                          video_interpolation_inference)
-from mmedit.models.registry import MODELS
 
 
 def test_restoration_video_inference():
@@ -67,22 +65,6 @@ def test_restoration_video_inference():
         output = restoration_video_inference(model, img_dir, window_size,
                                              start_idx, filename_tmpl)
         assert output.shape == (1, 5, 3, 256, 256)
-
-
-@MODELS.register_module()
-class InterpolateExample(nn.Module):
-    """An example of interpolate network for testing BasicInterpolater.
-    """
-
-    def __init__(self):
-        super().__init__()
-        self.layer = nn.Conv2d(3, 3, 3, 1, 1)
-
-    def forward(self, x):
-        return self.layer(x[:, 0])
-
-    def init_weights(self, pretrained=None):
-        pass
 
 
 def test_video_interpolation_inference():
