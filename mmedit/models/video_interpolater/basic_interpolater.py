@@ -263,3 +263,26 @@ class BasicInterpolater(BaseModel):
         """
         output = self.forward_test(**data_batch, **kwargs)
         return output
+
+    @staticmethod
+    def generate_frames(input_images, output_images):
+        """merge input frames and output frames.
+
+        This is a basic function, interpolate a frame between the given two
+        frames.
+
+        Args:
+            input_images (list[np.array]): The input frames.
+            output_images (list[np.array]): The output frames.
+        Returns:
+            list[np.array]: The final frames.
+                in_frame, out_frame, in_frame, out_frame, in_frame ...
+        """
+
+        result = []
+        for i in range(len(output_images)):
+            result.append(input_images[i])
+            result.append(output_images[i])
+        result.append(input_images[-1])
+
+        return result
