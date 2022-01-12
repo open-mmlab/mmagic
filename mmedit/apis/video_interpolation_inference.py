@@ -34,9 +34,11 @@ def default_generate_frames(input_images, output_images):
     """The default generate_frames function, merge input frames and output
         frames.
 
+    Args:
         input_images (list[np.array]): The input frames.
-        output_images (list[np.array] | list[list[np.array]]): The output
-            frames.
+        output_images (list[np.array]): The output frames.
+    Returns:
+        list[np.array]: The final frames.
     """
     if isinstance(output_images[0], list):
         output_images = sum(output_images, [])
