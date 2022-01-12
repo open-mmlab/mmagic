@@ -3,6 +3,7 @@ import numbers
 import os.path as osp
 
 import mmcv
+import numpy as np
 from mmcv.runner import auto_fp16
 
 from mmedit.core import psnr, ssim, tensor2img
@@ -79,6 +80,9 @@ class BasicInterpolater(BaseModel):
     def forward_train(self, inputs, target):
         """Training forward function.
 
+        This is a basic function, interpolate a frame between the given two
+        frames.
+
         Args:
             inputs (Tensor): Tensor of inputs frames with shape
                 (n, 2, c, h, w).
@@ -102,21 +106,34 @@ class BasicInterpolater(BaseModel):
         """Evaluation function.
 
         Args:
-            output (Tensor): Model output with shape (n, c, h, w).
-            target (Tensor): GT Tensor with shape (n, c, h, w).
+            output (Tensor): Model output with shape (n, c, h, w) or
+                (n, t, c, h, w).
+            target (Tensor): GT Tensor with shape (n, c, h, w) or
+                (n, t, c, h, w).
 
         Returns:
             dict: Evaluation results.
         """
         crop_border = self.test_cfg.get('crop_border', 0)
-
-        output = tensor2img(output)
-        target = tensor2img(target)
+        convert_to = self.test_cfg.get('convert_to', None)
 
         eval_result = dict()
         for metric in self.test_cfg.metrics:
-            eval_result[metric] = self.allowed_metrics[metric](output, target,
-                                                               crop_border)
+            if output.ndim == 5:  # a sequence: (n, t, c, h, w)
+                avg = []
+                for i in range(0, output.size(1)):
+                    output_i = tensor2img(output[:, i, :, :, :])
+                    target_i = tensor2img(target[:, i, :, :, :])
+                    avg.append(self.allowed_metrics[metric](
+                        output_i, target_i, crop_border,
+                        convert_to=convert_to))
+                eval_result[metric] = np.mean(avg)
+            elif output.ndim == 4:  # an image: (n, c, t, w), for Vimeo-90K-T
+                output_img = tensor2img(output)
+                target_img = tensor2img(target)
+                value = self.allowed_metrics[metric](
+                    output_img, target_img, crop_border, convert_to=convert_to)
+                eval_result[metric] = value
         return eval_result
 
     def forward_test(self,
@@ -127,6 +144,9 @@ class BasicInterpolater(BaseModel):
                      save_path=None,
                      iteration=None):
         """Testing forward function.
+
+        This is a basic function, interpolate a frame between the given two
+        frames.
 
         Args:
             inputs (Tensor): Tensor of inputs frames with shape

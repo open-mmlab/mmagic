@@ -93,17 +93,6 @@ def test_basic_interpolater():
     assert torch.is_tensor(outputs['output'])
     assert outputs['output'].size() == (1, 3, 8, 8)
 
-    # # test forward_test when output.shape==5
-    # model_cfg = dict(
-    #     type='BasicInterpolater',
-    #     generator=dict(type='InterpolateExample2'),
-    #     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
-    # train_cfg = None
-    # test_cfg = None
-    # restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
-    # with torch.no_grad():
-    #     outputs = restorer(**data_batch, test_mode=True)
-
     # test forward_dummy
     with torch.no_grad():
         output = restorer.forward_dummy(data_batch['inputs'])
