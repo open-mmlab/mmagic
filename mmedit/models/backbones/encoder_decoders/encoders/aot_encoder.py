@@ -28,8 +28,9 @@ class AOTEncoder(nn.Module):
                  out_channels=256,
                  act_cfg=dict(type='ReLU')):
         super().__init__()
-        self.encoder = nn.Sequential(nn.ReflectionPad2d(3),
-        ConvModule(
+        self.encoder = nn.Sequential(
+            nn.ReflectionPad2d(3),
+            ConvModule(
                 in_channels,
                 mid_channels,
                 kernel_size=7,
