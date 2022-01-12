@@ -274,6 +274,7 @@ class BasicInterpolater(BaseModel):
         Args:
             input_images (list[np.array]): The input frames.
             output_images (list[np.array]): The output frames.
+
         Returns:
             list[np.array]: The final frames.
                 in_frame, out_frame, in_frame, out_frame, in_frame ...
