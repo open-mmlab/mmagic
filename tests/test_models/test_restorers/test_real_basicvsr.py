@@ -9,6 +9,7 @@ from mmedit.models import build_model
 from mmedit.models.backbones import RealBasicVSRNet
 from mmedit.models.components import UNetDiscriminatorWithSpectralNorm
 from mmedit.models.losses import GANLoss, L1Loss
+from mmedit.utils.testing import dict_to_cuda
 
 
 def test_real_basicvsr():
@@ -103,11 +104,7 @@ def test_real_basicvsr():
                 optim_cfg, torch.optim,
                 dict(params=getattr(restorer, 'discriminator').parameters()))
         }
-        data_batch = {
-            'lq': inputs.cuda(),
-            'gt': targets.cuda(),
-            'gt_unsharp': targets.cuda()
-        }
+        data_batch = dict_to_cuda(data_batch)
 
         # train_step
         with patch.object(

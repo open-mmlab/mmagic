@@ -8,6 +8,7 @@ from mmedit.models import build_model
 from mmedit.models.backbones import MSRResNet
 from mmedit.models.components import ModifiedVGG
 from mmedit.models.losses import GANLoss, L1Loss
+from mmedit.utils.testing import dict_to_cuda
 
 
 def test_esrgan():
@@ -93,7 +94,7 @@ def test_esrgan():
                 optim_cfg, torch.optim,
                 dict(params=getattr(restorer, 'discriminator').parameters()))
         }
-        data_batch = {'lq': inputs.cuda(), 'gt': targets.cuda()}
+        data_batch = dict_to_cuda(data_batch)
 
         # train_step
         with patch.object(

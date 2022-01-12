@@ -4,6 +4,7 @@ import pytest
 import torch
 
 from mmedit.models import build_model
+from mmedit.utils.testing import dict_to_cuda
 
 
 def test_glean():
@@ -54,7 +55,7 @@ def test_glean():
 
     # test forward_test (gpu)
     if torch.cuda.is_available():
-        data_batch = {'lq': inputs.cuda(), 'gt': targets.cuda()}
+        data_batch = dict_to_cuda(data_batch)
         restorer = restorer.cuda()
         with pytest.raises(ValueError):  # iteration is not None or number
             with torch.no_grad():

@@ -7,6 +7,7 @@ from mmcv.utils.config import Config
 from mmedit.models import build_backbone, build_model
 from mmedit.models.backbones.sr_backbones.ttsr_net import (CSFI2, CSFI3, SFE,
                                                            MergeFeatures)
+from mmedit.utils.testing import dict_to_cuda
 
 
 def test_sfe():
@@ -177,13 +178,7 @@ def test_ttsr():
     # test train_step and forward_test (gpu)
     if torch.cuda.is_available():
         restorer = restorer.cuda()
-        data_batch = {
-            'lq': inputs.cuda(),
-            'gt': targets.cuda(),
-            'ref': ref.cuda(),
-            'lq_up': ref.cuda(),
-            'ref_downup': ref.cuda()
-        }
+        data_batch = dict_to_cuda(data_batch)
 
         # train_step
         optimizer = dict(

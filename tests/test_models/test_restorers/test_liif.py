@@ -7,6 +7,7 @@ from mmcv.utils.config import Config
 
 from mmedit.models import build_model
 from mmedit.models.registry import COMPONENTS
+from mmedit.utils.testing import dict_to_cuda
 
 
 @COMPONENTS.register_module()
@@ -89,12 +90,7 @@ def test_liif():
     # test train_step and forward_test (gpu)
     if torch.cuda.is_available():
         restorer = restorer.cuda()
-        data_batch = {
-            'lq': inputs.cuda(),
-            'gt': targets.cuda(),
-            'coord': coord.cuda(),
-            'cell': cell.cuda()
-        }
+        data_batch = dict_to_cuda(data_batch)
 
         # train_step
         optimizer = obj_from_dict(optim_cfg, torch.optim,

@@ -6,6 +6,7 @@ from mmcv.runner import obj_from_dict
 from mmcv.utils.config import Config
 
 from mmedit.models.builder import build_model
+from mmedit.utils.testing import dict_to_cuda
 
 
 def test_dic_model():
@@ -77,11 +78,7 @@ def test_dic_model():
     # test train_step and forward_test (gpu)
     if torch.cuda.is_available():
         restorer = restorer.cuda()
-        data_batch = {
-            'lq': inputs.cuda(),
-            'gt': targets.cuda(),
-            'heatmap': heatmap.cuda()
-        }
+        data_batch = dict_to_cuda(data_batch)
 
         # train_step
         optim_cfg = dict(type='Adam', lr=1e-4, betas=(0.9, 0.999))
