@@ -87,8 +87,6 @@ def test_video_interpolation_inference():
                 meta_keys=['inputs_path', 'key'])
         ]
 
-        model.cfg['model']['io_sequence'] = [1, 3, 1]
-
         input_dir = './tests/data/vimeo90k/00001/0266'
         output, fps = video_interpolation_inference(
             model, input_dir, batch_size=10)

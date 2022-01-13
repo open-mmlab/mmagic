@@ -72,7 +72,8 @@ def video_interpolation_inference(model,
 
     device = next(model.parameters()).device  # model device
 
-    io_sequence = getattr(model.cfg['model'], 'io_sequence', [1, 1])
+    num_inputs = getattr(model.cfg['model'], 'num_inputs', 2)
+    step = getattr(model.cfg['model'], 'step', 1)
 
     # build the data pipeline
     if model.cfg.get('demo_pipeline', None):
@@ -101,13 +102,10 @@ def video_interpolation_inference(model,
 
     data = []
 
-    before, after, step = io_sequence[0], io_sequence[1], io_sequence[2]
-
-    for i in range(0, len(images) - before - after + 1, step):
+    for i in range(0, len(images) - num_inputs + 1, step):
         data.append(
             dict(
-                inputs=images[i:i + before] +
-                images[i + before:i + before + after],
+                inputs=images[i:i + num_inputs],
                 inputs_path=None,
                 key=input_dir))
 
