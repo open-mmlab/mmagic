@@ -20,6 +20,10 @@ class TestVFIDataset:
     def test_base_vfi_dataset(self):
 
         dataset = BaseVFIDataset(self.pipeline, self.folder, self.ann_file)
+        dataset.__init__(self.pipeline, self.folder, self.ann_file)
+        dataset.load_annotations()
+        assert dataset.folder == self.folder
+        assert dataset.ann_file == self.ann_file
         setattr(dataset, 'data_infos', [
             dict(
                 inputs_path=[
@@ -29,7 +33,8 @@ class TestVFIDataset:
                 target_path='tests/data/vimeo90k/00001/0266/im2.png',
                 key='00001/0266')
         ])
-        dataset.__getitem__(0)
+        data = dataset.__getitem__(0)
+        assert_dict_has_keys(data, ['folder', 'ann_file'])
         results = [dict(eval_result=dict(psnr=1.1, ssim=0.3))]
         eval_result = dataset.evaluate(results)
         assert_dict_has_keys(eval_result, ['psnr', 'ssim'])
@@ -38,3 +43,8 @@ class TestVFIDataset:
             dataset.evaluate(results[0])
         with pytest.raises(AssertionError):
             dataset.evaluate(results + results)
+
+
+def test_base_vfi_dataset():
+    test_ = TestVFIDataset()
+    test_.test_base_vfi_dataset()
