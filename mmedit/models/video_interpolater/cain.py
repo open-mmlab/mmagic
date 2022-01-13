@@ -20,46 +20,26 @@ class CAIN(BasicInterpolater):
         pretrained (str): Path for pretrained model. Default: None.
     """
 
-    def train_step(self, data_batch, optimizer):
-        """Train step.
+    def forward_train(self, inputs, target):
+        """Training forward function.
 
         Args:
-            data_batch (dict): A batch of data, which requires
-                'inputs' (b, 2, c, h, w), 'target' (b, c, h, w)
-            optimizer (obj): Optimizer.
+            inputs (Tensor): Tensor of inputs frames with shape
+                (n, 2, c, h, w).
+            target (Tensor): Tensor of target frame with shape (n, c, h, w).
 
         Returns:
-            dict: Returned output, which includes:
-                log_vars, num_samples, results (inputs, target and pred).
-
+            Tensor: Output tensor.
         """
-        # data
-        inputs = data_batch['inputs']
-        target = data_batch['target']
-
-        # generator
-        pred = self.generator(inputs, padding_flag=False)
-
-        # loss
         losses = dict()
-        log_vars = dict()
-        losses['loss_pix'] = self.pixel_loss(pred, target)
-
-        # parse loss
-        loss, log_vars = self.parse_losses(losses)
-
-        # optimize
-        optimizer['generator'].zero_grad()
-        loss.backward()
-        optimizer['generator'].step()
-
-        log_vars.pop('loss')  # remove the unnecessary 'loss'
+        output = self.generator(inputs, padding_flag=False)
+        loss_pix = self.pixel_loss(output, target)
+        losses['loss_pix'] = loss_pix
         outputs = dict(
-            log_vars=log_vars,
+            losses=losses,
             num_samples=len(target.data),
             results=dict(
-                inputs=inputs.cpu(), target=target.cpu(), output=pred.cpu()))
-
+                inputs=inputs.cpu(), target=target.cpu(), output=output.cpu()))
         return outputs
 
     def forward_test(self,
