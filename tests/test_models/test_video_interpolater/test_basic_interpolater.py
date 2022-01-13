@@ -114,6 +114,11 @@ def test_basic_interpolater():
     result = restorer.generate_frames([1, 3, 5], [102, 104])
     assert result == [1, 102, 3, 104, 5]
 
+    # test evaluate 5d output
+    output = torch.rand(1, 2, 3, 8, 8)
+    target = torch.rand(1, 2, 3, 8, 8)
+    restorer.evaluate(output, target)
+
     # test train_step and forward_test (gpu)
     if torch.cuda.is_available():
         restorer = restorer.cuda()
