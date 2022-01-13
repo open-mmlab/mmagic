@@ -5,6 +5,7 @@ import os
 import os.path as osp
 import time
 
+import cv2
 import mmcv
 import torch
 from mmcv import Config
@@ -15,6 +16,8 @@ from mmedit.apis import set_random_seed, train_model
 from mmedit.datasets import build_dataset
 from mmedit.models import build_model
 from mmedit.utils import collect_env, get_root_logger
+
+cv2.setNumThreads(0)
 
 
 def parse_args():
