@@ -46,6 +46,8 @@ class BasicInterpolater(BaseModel):
 
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
+
+        # 'num_inputs' and 'step' is required in interpolation demo.
         self.num_inputs = num_inputs
         self.step = step
 
@@ -91,9 +93,8 @@ class BasicInterpolater(BaseModel):
         frames.
 
         Args:
-            inputs (Tensor): Tensor of inputs frames with shape
-                (n, 2, c, h, w).
-            target (Tensor): Tensor of target frame with shape (n, c, h, w).
+            inputs (Tensor): Tensor of inputs frame(s).
+            target (Tensor): Tensor of target frame(s).
 
         Returns:
             Tensor: Output tensor.
@@ -113,10 +114,8 @@ class BasicInterpolater(BaseModel):
         """Evaluation function.
 
         Args:
-            output (Tensor): Model output with shape (n, c, h, w) or
-                (n, t, c, h, w).
-            target (Tensor): GT Tensor with shape (n, c, h, w) or
-                (n, t, c, h, w).
+            output (Tensor): Model output.
+            target (Tensor): GT Tensor.
 
         Returns:
             dict: Evaluation results.
@@ -135,7 +134,7 @@ class BasicInterpolater(BaseModel):
                         output_i, target_i, crop_border,
                         convert_to=convert_to))
                 eval_result[metric] = np.mean(avg)
-            elif output.ndim == 4:  # an image: (n, c, t, w), for Vimeo-90K-T
+            elif output.ndim == 4:  # an image: (n, c, h, w)
                 output_img = tensor2img(output)
                 target_img = tensor2img(target)
                 value = self.allowed_metrics[metric](
@@ -200,7 +199,7 @@ class BasicInterpolater(BaseModel):
             output (Tensor): Output image.
         """
 
-        if output.ndim == 4:  # an image, key = 000001/0000 (Vimeo-90K)
+        if output.ndim == 4:  # an image
             img_name = meta[0]['key'].replace('/', '_')
             if isinstance(iteration, numbers.Number):
                 save_path = osp.join(save_path,
@@ -211,7 +210,7 @@ class BasicInterpolater(BaseModel):
                 raise ValueError('iteration should be number or None, '
                                  f'but got {type(iteration)}')
             mmcv.imwrite(tensor2img(output), save_path)
-        elif output.ndim == 5:  # a sequence, key = 000
+        elif output.ndim == 5:  # a sequence
             folder_name = meta[0]['key'].split('/')[0]
             for i in range(0, output.size(1)):
                 if isinstance(iteration, numbers.Number):
