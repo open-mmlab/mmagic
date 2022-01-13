@@ -55,9 +55,9 @@ class AOTEncoder(nn.Module):
         """Forward Function.
 
         Args:
-            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+            x (Tensor): Input tensor with shape of (n, c, h, w).
 
         Returns:
-            torch.Tensor: Output tensor with shape of (n, c, h', w').
+            Tensor: Output tensor with shape of (n, c, h', w').
         """
         return self.encoder(x)

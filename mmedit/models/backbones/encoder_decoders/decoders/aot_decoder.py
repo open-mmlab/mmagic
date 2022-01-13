@@ -59,10 +59,10 @@ class AOTDecoder(nn.Module):
         """Forward Function.
 
         Args:
-            x (torch.Tensor): Input tensor with shape of (n, c, h, w).
+            x (Tensor): Input tensor with shape of (n, c, h, w).
 
         Returns:
-            torch.Tensor: Output tensor with shape of (n, c, h', w').
+            Tensor: Output tensor with shape of (n, c, h', w').
         """
         for i in range(0, len(self.decoder)):
             if i <= 1:
