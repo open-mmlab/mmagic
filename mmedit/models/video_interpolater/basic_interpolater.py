@@ -271,7 +271,29 @@ class BasicInterpolater(BaseModel):
         return output
 
     @staticmethod
-    def generate_frames(input_images, output_images):
+    def split_frames(input_tensors):
+        """split input tensors for inference.
+
+        This is a basic function, interpolate a frame between the given two
+        frames.
+
+        Args:
+            input_tensors (Tensor): Tensor of input frames.
+
+        Returns:
+            list[Tensor]: Splided tensors.
+        """
+
+        num_frames = input_tensors.shape[0]
+
+        result = []
+        for i in range(0, num_frames - 1, 1):
+            result.append(input_tensors[i:i + 2])
+
+        return result
+
+    @staticmethod
+    def merge_frames(input_images, output_images):
         """merge input frames and output frames.
 
         This is a basic function, interpolate a frame between the given two

@@ -266,9 +266,16 @@ def test_basic_interpolater():
                 save_path=tmpdir,
                 iteration='100')
 
-    # test generate_frames
-    result = restorer.generate_frames([1, 3, 5], [102, 104])
+    # test merge_frames
+    result = restorer.merge_frames([1, 3, 5], [102, 104])
     assert result == [1, 102, 3, 104, 5]
+
+    # test split_frames
+    tensors = torch.rand(10, 3, 256, 256)
+    result = restorer.split_frames(tensors)
+    assert isinstance(result, list)
+    assert len(result) == 9
+    assert result[0].shape == (2, 3, 256, 256)
 
     # test evaluate 5d output
     test_cfg = dict(metrics=('PSNR', 'SSIM'), crop_border=0)
