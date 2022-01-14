@@ -66,7 +66,7 @@ class Basicinterpolator(BaseModel):
         """Forward function.
 
         Args:
-            inputs (Tensor): Tensor of inputs frames.
+            inputs (Tensor): Tensor of input frames.
             target (Tensor): Tensor of target frame. Default: None.
             test_mode (bool): Whether in test mode or not. Default: False.
             kwargs (dict): Other arguments.
@@ -84,7 +84,7 @@ class Basicinterpolator(BaseModel):
         frames.
 
         Args:
-            inputs (Tensor): Tensor of inputs frame(s).
+            inputs (Tensor): Tensor of input frame(s).
             target (Tensor): Tensor of target frame(s).
 
         Returns:
@@ -146,7 +146,7 @@ class Basicinterpolator(BaseModel):
         frames.
 
         Args:
-            inputs (Tensor): Tensor of inputs frames.
+            inputs (Tensor): Tensor of input frames.
             target (Tensor): Tensor of target frame(s).
                 Default: None.
             meta (list[dict]): Meta data, such as path of target file.
@@ -271,7 +271,7 @@ class Basicinterpolator(BaseModel):
             input_tensors (Tensor): Tensor of input frames.
 
         Returns:
-            list[Tensor]: Splided tensors.
+            list[Tensor]: A list of split tensors.
         """
 
         num_frames = input_tensors.shape[0]
