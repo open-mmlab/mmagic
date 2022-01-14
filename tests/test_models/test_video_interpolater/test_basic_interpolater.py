@@ -110,10 +110,6 @@ def test_basic_interpolater():
     assert torch.is_tensor(outputs['results']['output'])
     assert outputs['results']['output'].size() == (1, 3, 8, 8)
 
-    # test generate_frames
-    result = restorer.generate_frames([1, 3, 5], [102, 104])
-    assert result == [1, 102, 3, 104, 5]
-
     # test train_step and forward_test (gpu)
     if torch.cuda.is_available():
         restorer = restorer.cuda()
@@ -269,3 +265,15 @@ def test_basic_interpolater():
                 save_image=True,
                 save_path=tmpdir,
                 iteration='100')
+
+    # test generate_frames
+    result = restorer.generate_frames([1, 3, 5], [102, 104])
+    assert result == [1, 102, 3, 104, 5]
+
+    # test evaluate 5d output
+    test_cfg = dict(metrics=('PSNR', 'SSIM'), crop_border=0)
+    test_cfg = mmcv.Config(test_cfg)
+    restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
+    output = torch.rand(1, 2, 3, 256, 256)
+    target = torch.rand(1, 2, 3, 256, 256)
+    restorer.evaluate(output, target)
