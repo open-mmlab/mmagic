@@ -5,14 +5,16 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.datasets.pipelines import (BinarizeImage, CopyValues, Flip,
-                                       GenerateFrameIndices,
+# yapf: disable
+from mmedit.datasets.pipelines import (BinarizeImage, ColorJitter, CopyValues,
+                                       Flip, GenerateFrameIndices,
                                        GenerateFrameIndiceswithPadding,
                                        GenerateSegmentIndices, MirrorSequence,
                                        Pad, Quantize, RandomAffine,
                                        RandomJitter, RandomMaskDilation,
                                        RandomTransposeHW, Resize,
                                        TemporalReverse, UnsharpMasking)
+from mmedit.datasets.pipelines.augmentation import RandomRotation
 
 
 class TestAugmentations:
@@ -336,6 +338,23 @@ class TestAugmentations:
         assert repr(random_jitter) == random_jitter.__class__.__name__ + (
             'hue_range=(-50, 50)')
 
+    def test_color_jitter(self):
+
+        results = copy.deepcopy(self.results)
+        results['gt'] = (results['gt'] * 255).astype(np.uint8)
+
+        target_keys = ['gt']
+
+        color_jitter = ColorJitter(
+            keys=['gt'], brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5)
+        color_jitter_results = color_jitter(results)
+        assert self.check_keys_contain(color_jitter_results.keys(),
+                                       target_keys)
+        assert color_jitter_results['gt'].shape == self.img_gt.shape
+
+        assert repr(color_jitter) == color_jitter.__class__.__name__ + (
+            f"(keys=['gt'], to_rgb=False)")
+
     @staticmethod
     def check_transposehw(origin_img, result_img):
         """Check if the origin_imgs are transposed correctly"""
@@ -470,7 +489,42 @@ class TestAugmentations:
             "(keys=['gt_img'], output_keys=['gt_img'], "
             'scale=(128, 128), '
             f'keep_ratio={False}, size_factor=None, '
-            'max_size=None,interpolation=bilinear)')
+            'max_size=None, interpolation=bilinear)')
+
+    def test_random_rotation(self):
+        with pytest.raises(ValueError):
+            RandomRotation(None, degrees=-10.0)
+        with pytest.raises(TypeError):
+            RandomRotation(None, degrees=('0.0', '45.0'))
+
+        target_keys = ['degrees']
+        results = copy.deepcopy(self.results)
+
+        random_rotation = RandomRotation(['img'], degrees=(0, 45))
+        random_rotation_results = random_rotation(results)
+        assert self.check_keys_contain(
+            random_rotation_results.keys(), target_keys)
+        assert random_rotation_results['img'].shape == (256, 256, 3)
+        assert random_rotation_results['degrees'] == (0, 45)
+        assert repr(random_rotation) == random_rotation.__class__.__name__ + (
+            "(keys=['img'], degrees=(0, 45))")
+
+        # test single degree integer
+        random_rotation = RandomRotation(['img'], degrees=45)
+        random_rotation_results = random_rotation(results)
+        assert self.check_keys_contain(
+            random_rotation_results.keys(), target_keys)
+        assert random_rotation_results['img'].shape == (256, 256, 3)
+        assert random_rotation_results['degrees'] == (-45, 45)
+
+        # test image dim == 2
+        grey_scale_img = np.random.rand(256, 256).astype(np.float32)
+        results = dict(img=grey_scale_img.copy())
+        random_rotation = RandomRotation(['img'], degrees=(0, 45))
+        random_rotation_results = random_rotation(results)
+        assert self.check_keys_contain(
+            random_rotation_results.keys(), target_keys)
+        assert random_rotation_results['img'].shape == (256, 256, 1)
 
     def test_frame_index_generation_with_padding(self):
         with pytest.raises(ValueError):
@@ -656,7 +710,7 @@ class TestAugmentations:
         with pytest.raises(ValueError):
             frame_index_generator(copy.deepcopy(results))
 
-    def mirror_sequence(self):
+    def test_mirror_sequence(self):
         lqs = [np.random.rand(4, 4, 3) for _ in range(0, 5)]
         gts = [np.random.rand(16, 16, 3) for _ in range(0, 5)]
 
@@ -680,7 +734,7 @@ class TestAugmentations:
             results = dict(lq=0, gt=gts)
             mirror_sequence(results)
 
-    def quantize(self):
+    def test_quantize(self):
         results = {}
 
         # clip (>1)
@@ -705,14 +759,22 @@ class TestAugmentations:
             model(results)['gt'], (1 / 255.) * np.ones(
                 (1, 1, 3)).astype(np.float32))
 
-    def copy_value(self):
+    def test_copy_value(self):
+        with pytest.raises(AssertionError):
+            CopyValues(src_keys='gt', dst_keys='lq')
+        with pytest.raises(ValueError):
+            CopyValues(src_keys=['gt', 'mask'], dst_keys=['lq'])
+
         results = {}
         results['gt'] = np.zeros((1)).astype(np.float32)
 
-        copy_ = CopyValues(src_key='gt', dst_key='lq')
+        copy_ = CopyValues(src_keys=['gt'], dst_keys=['lq'])
         assert np.array_equal(copy_(results)['lq'], results['gt'])
+        assert repr(copy_) == copy_.__class__.__name__ + (
+            f"(src_keys=['gt'])"
+            f"(dst_keys=['lq'])")
 
-    def unsharp_masking(self):
+    def test_unsharp_masking(self):
         results = {}
 
         unsharp_masking = UnsharpMasking(

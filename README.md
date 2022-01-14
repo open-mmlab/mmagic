@@ -109,11 +109,11 @@ hope MMEditing could provide better experience.
 
 ## Installation
 
-Please refer to [install.md](docs/install.md) for installation.
+Please refer to [install.md](docs/en/install.md) for installation.
 
 ## Get Started
 
-Please see [getting_started.md](docs/getting_started.md) for the basic usage of MMEditing.
+Please see [getting_started.md](docs/en/getting_started.md) for the basic usage of MMEditing.
 
 
 
