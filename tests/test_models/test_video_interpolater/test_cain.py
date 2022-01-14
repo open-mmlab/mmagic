@@ -4,34 +4,17 @@ import tempfile
 import mmcv
 import pytest
 import torch
-import torch.nn as nn
 from mmcv.runner import obj_from_dict
 
 from mmedit.models import build_model
+from mmedit.models.backbones import CAINNet
 from mmedit.models.losses import L1Loss
-from mmedit.models.registry import COMPONENTS
-
-
-@COMPONENTS.register_module()
-class CAINExample(nn.Module):
-    """An example of interpolate network for testing CAIN.
-    """
-
-    def __init__(self):
-        super().__init__()
-        self.layer = nn.Conv2d(3, 3, 3, 1, 1)
-
-    def forward(self, x, padding_flag):
-        return self.layer(x[:, 0])
-
-    def init_weights(self, pretrained=None):
-        pass
 
 
 def test_cain():
     model_cfg = dict(
         type='CAIN',
-        generator=dict(type='CAINExample'),
+        generator=dict(type='CAINNet'),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 
     train_cfg = None
@@ -42,13 +25,13 @@ def test_cain():
 
     # test attributes
     assert restorer.__class__.__name__ == 'CAIN'
-    assert isinstance(restorer.generator, CAINExample)
+    assert isinstance(restorer.generator, CAINNet)
     assert isinstance(restorer.pixel_loss, L1Loss)
 
     # prepare data
-    inputs = torch.rand(1, 2, 3, 8, 8)
-    target = torch.rand(1, 3, 8, 8)
-    data_batch = {'inputs': inputs, 'target': target}
+    inputs = torch.rand(1, 2, 3, 128, 128)
+    target = torch.rand(1, 3, 128, 128)
+    data_batch = {'inputs': inputs, 'target': target, 'meta': [{'key': '001'}]}
 
     # prepare optimizer
     optim_cfg = dict(type='Adam', lr=2e-4, betas=(0.9, 0.999))
@@ -63,7 +46,7 @@ def test_cain():
         outputs = restorer.forward_test(**data_batch)
     assert torch.equal(outputs['inputs'], data_batch['inputs'])
     assert torch.is_tensor(outputs['output'])
-    assert outputs['output'].size() == (1, 3, 8, 8)
+    assert outputs['output'].size() == (1, 3, 128, 128)
 
     # test train_step
     outputs = restorer.train_step(data_batch, optimizer)
@@ -74,21 +57,27 @@ def test_cain():
     assert torch.equal(outputs['results']['inputs'], data_batch['inputs'])
     assert torch.equal(outputs['results']['target'], data_batch['target'])
     assert torch.is_tensor(outputs['results']['output'])
-    assert outputs['results']['output'].size() == (1, 3, 8, 8)
+    assert outputs['results']['output'].size() == (1, 3, 128, 128)
 
     # test train_step and forward_test (gpu)
     if torch.cuda.is_available():
         restorer = restorer.cuda()
         optimizer['generator'] = obj_from_dict(
             optim_cfg, torch.optim, dict(params=restorer.parameters()))
-        data_batch = {'inputs': inputs.cuda(), 'target': target.cuda()}
+        data_batch = {
+            'inputs': inputs.cuda(),
+            'target': target.cuda(),
+            'meta': [{
+                'key': '001'
+            }]
+        }
 
         # forward_test
         with torch.no_grad():
             outputs = restorer.forward_test(**data_batch)
         assert torch.equal(outputs['inputs'], data_batch['inputs'].cpu())
         assert torch.is_tensor(outputs['output'])
-        assert outputs['output'].size() == (1, 3, 8, 8)
+        assert outputs['output'].size() == (1, 3, 128, 128)
 
         # train_step
         outputs = restorer.train_step(data_batch, optimizer)
@@ -101,7 +90,7 @@ def test_cain():
         assert torch.equal(outputs['results']['target'],
                            data_batch['target'].cpu())
         assert torch.is_tensor(outputs['results']['output'])
-        assert outputs['results']['output'].size() == (1, 3, 8, 8)
+        assert outputs['results']['output'].size() == (1, 3, 128, 128)
 
     # test with metric and save image
     test_cfg = dict(metrics=('PSNR', 'SSIM'), crop_border=0)
@@ -111,7 +100,7 @@ def test_cain():
         'inputs': inputs,
         'target': target,
         'meta': [{
-            'target_path': 'fake_path/fake_name.png'
+            'key': 'fake_path/fake_name'
         }]
     }
 
