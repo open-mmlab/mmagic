@@ -146,9 +146,8 @@ class BasicInterpolater(BaseModel):
         frames.
 
         Args:
-            inputs (Tensor): Tensor of inputs frames with shape
-                (n, 2, c, h, w).
-            target (Tensor): Tensor of target frame with shape (n, c, h, w).
+            inputs (Tensor): Tensor of inputs frames.
+            target (Tensor): Tensor of target frame(s).
                 Default: None.
             meta (list[dict]): Meta data, such as path of target file.
                 Default: None.
@@ -284,15 +283,15 @@ class BasicInterpolater(BaseModel):
         return result
 
     @staticmethod
-    def merge_frames(input_images, output_images):
+    def merge_frames(input_tensors, output_tensors):
         """merge input frames and output frames.
 
         This is a basic function, interpolate a frame between the given two
         frames.
 
         Args:
-            input_images (list[np.array]): The input frames.
-            output_images (list[np.array]): The output frames.
+            input_tensors (list[Tensor]): The input frames.
+            output_tensors (list[Tensor]): The output frames.
 
         Returns:
             list[np.array]: The final frames.
@@ -300,9 +299,9 @@ class BasicInterpolater(BaseModel):
         """
 
         result = []
-        for i in range(len(output_images)):
-            result.append(input_images[i])
-            result.append(output_images[i])
-        result.append(input_images[-1])
+        for i in range(len(input_tensors)):
+            result.append(tensor2img(input_tensors[i][:1]))
+            result.append(tensor2img(output_tensors[i][:1]))
+        result.append(tensor2img(input_tensors[-1][1:]))
 
         return result

@@ -267,8 +267,12 @@ def test_basic_interpolater():
                 iteration='100')
 
     # test merge_frames
-    result = restorer.merge_frames([1, 3, 5], [102, 104])
-    assert result == [1, 102, 3, 104, 5]
+    input_tensors = [torch.rand(2, 3, 256, 256)]
+    output_tensors = [torch.rand(1, 3, 256, 256)]
+    result = restorer.merge_frames(input_tensors, output_tensors)
+    assert isinstance(result, list)
+    assert len(result) == 3
+    assert result[0].shape == (256, 256, 3)
 
     # test split_frames
     tensors = torch.rand(10, 3, 256, 256)
@@ -284,3 +288,7 @@ def test_basic_interpolater():
     output = torch.rand(1, 2, 3, 256, 256)
     target = torch.rand(1, 2, 3, 256, 256)
     restorer.evaluate(output, target)
+
+
+if __name__ == '__main__':
+    test_basic_interpolater()
