@@ -25,9 +25,6 @@ class BasicInterpolater(BaseModel):
     Args:
         generator (dict): Config for the generator structure.
         pixel_loss (dict): Config for pixel-wise loss.
-        num_inputs (int): The number of input frames. Default: 2.
-        step (int): The step of splitting a video into multiple inputs in
-            inference. Default: 1.
         train_cfg (dict): Config for training. Default: None.
         test_cfg (dict): Config for testing. Default: None.
         pretrained (str): Path for pretrained model. Default: None.
@@ -37,8 +34,6 @@ class BasicInterpolater(BaseModel):
     def __init__(self,
                  generator,
                  pixel_loss,
-                 num_inputs=2,
-                 step=1,
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
@@ -46,10 +41,6 @@ class BasicInterpolater(BaseModel):
 
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
-
-        # 'num_inputs' and 'step' is required in interpolation demo.
-        self.num_inputs = num_inputs
-        self.step = step
 
         # support fp16
         self.fp16_enabled = False
