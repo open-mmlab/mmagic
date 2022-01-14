@@ -288,7 +288,3 @@ def test_basic_interpolater():
     output = torch.rand(1, 2, 3, 256, 256)
     target = torch.rand(1, 2, 3, 256, 256)
     restorer.evaluate(output, target)
-
-
-if __name__ == '__main__':
-    test_basic_interpolater()
