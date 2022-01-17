@@ -56,6 +56,7 @@ class TestVFIDataset:
         assert_dict_has_keys(data_infos, ['inputs_path', 'target_path', 'key'])
 
 
-def test_base_vfi_dataset():
+def test_vfi_dataset():
     test_ = TestVFIDataset()
     test_.test_base_vfi_dataset()
+    test_.test_vfi_vimeo90k_dataset()
