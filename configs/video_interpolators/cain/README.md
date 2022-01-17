@@ -8,7 +8,7 @@ Prevailing video frame interpolation techniques rely heavily on optical flow est
 
 <!-- [IMAGE] -->
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/7676947/146704029-58bc4db4-267f-4158-8129-e49ab6652249.png" />
+  <img src="https://user-images.githubusercontent.com/56712176/149734064-1da0cebf-6953-4106-a29a-43acd7386a80.png" />
 </p>
 
 <!-- [PAPER_TITLE: Channel Attention Is All You Need for Video Frame Interpolation] -->
@@ -35,6 +35,6 @@ Prevailing video frame interpolation techniques rely heavily on optical flow est
 Evaluated on RGB channels.
 The metrics are `PSNR / SSIM` .
 
-|                                            Method                                           | vimeo-90k-triple |                                                                                                                                         Download                                                                                                                                         |
-|:-------------------------------------------------------------------------------------------:|:----------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| [cain_b5_320k_vimeo-triple](/configs/video_interpolators/cain/cain_b5_320k_vimeo-triple.py) |   34.49/0.9565   | [model](https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104-52f77c2c.pth)/[log](https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104_183640.log.json) |
+|                                            Method                                           | vimeo-90k-triple |                                                                                                                     Download                                                                                                                             |
+|:-------------------------------------------------------------------------------------------:|:----------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| [cain_b5_320k_vimeo-triple](/configs/video_interpolators/cain/cain_b5_320k_vimeo-triple.py) |   34.49/0.9565   | [model](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth)/[log](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.log.json) |
