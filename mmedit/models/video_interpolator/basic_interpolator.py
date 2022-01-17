@@ -13,7 +13,7 @@ from ..registry import MODELS
 
 
 @MODELS.register_module()
-class Basicinterpolator(BaseModel):
+class BasicInterpolator(BaseModel):
     """Basic model for video interpolation.
 
     It must contain a generator that takes frames as inputs and outputs an
