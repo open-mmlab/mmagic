@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .base_sr_dataset import BaseSRDataset
 from .registry import DATASETS
 
@@ -18,6 +19,9 @@ class SRREDSMultipleGTDataset(BaseSRDataset):
         scale (int): Upsampling scale ratio.
         val_partition (str): Validation partition mode. Choices ['official' or
         'REDS4']. Default: 'official'.
+        repeat (int): Number of replication of the validation set. This is used
+            to allow training REDS4 with more than 4 GPUs. For example, if
+            8 GPUs are used, this number can be set to 2. Default: 1.
         test_mode (bool): Store `True` when building test dataset.
             Default: `False`.
     """
@@ -29,7 +33,14 @@ class SRREDSMultipleGTDataset(BaseSRDataset):
                  pipeline,
                  scale,
                  val_partition='official',
+                 repeat=1,
                  test_mode=False):
+
+        self.repeat = repeat
+        if not isinstance(repeat, int):
+            raise TypeError('"repeat" must be an integer, but got '
+                            f'{type(repeat)}.')
+
         super().__init__(pipeline, scale, test_mode)
         self.lq_folder = str(lq_folder)
         self.gt_folder = str(gt_folder)
@@ -57,6 +68,7 @@ class SRREDSMultipleGTDataset(BaseSRDataset):
 
         if self.test_mode:
             keys = [v for v in keys if v in val_partition]
+            keys *= self.repeat
         else:
             keys = [v for v in keys if v not in val_partition]
 

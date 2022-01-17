@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from mmcv.runner import auto_fp16
 
 from ..builder import build_backbone, build_component, build_loss
@@ -94,7 +95,7 @@ class SRGAN(BasicRestorer):
             return self.forward_test(lq, gt, **kwargs)
 
         raise ValueError(
-            'SRGAN model does not supprot `forward_train` function.')
+            'SRGAN model does not support `forward_train` function.')
 
     def train_step(self, data_batch, optimizer):
         """Train step.

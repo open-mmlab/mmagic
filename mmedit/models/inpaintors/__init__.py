@@ -1,4 +1,4 @@
-from .aot_inpaintor import AOTInpaintor
+# Copyright (c) OpenMMLab. All rights reserved.
 from .deepfillv1 import DeepFillv1Inpaintor
 from .gl_inpaintor import GLInpaintor
 from .one_stage import OneStageInpaintor
@@ -7,5 +7,5 @@ from .two_stage import TwoStageInpaintor
 
 __all__ = [
     'OneStageInpaintor', 'GLInpaintor', 'PConvInpaintor', 'TwoStageInpaintor',
-    'DeepFillv1Inpaintor', 'AOTInpaintor'
+    'DeepFillv1Inpaintor'
 ]

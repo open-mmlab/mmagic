@@ -46,7 +46,7 @@ train_pipeline = [
         type='LoadMask',
         mask_mode='irregular',
         mask_config=dict(
-            num_vertexes=(4, 10),
+            num_vertices=(4, 10),
             max_angle=6.0,
             length_range=(20, 128),
             brush_width=(10, 45),
@@ -116,7 +116,7 @@ log_config = dict(
     hooks=[
         dict(type='TextLoggerHook', by_epoch=False),
         # dict(type='TensorboardLoggerHook'),
-        dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
     ])
 
 visual_config = dict(

@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import os
 import os.path as osp
 import random
@@ -8,6 +9,7 @@ import numpy as np
 import torch
 from mmcv.parallel import MMDataParallel
 from mmcv.runner import HOOKS, IterBasedRunner
+from mmcv.utils import build_from_cfg
 
 from mmedit.core import DistEvalIterHook, EvalIterHook, build_optimizers
 from mmedit.core.distributed_wrapper import DistributedDataParallelWrapper
@@ -180,7 +182,22 @@ def _dist_train(model,
         save_path = osp.join(cfg.work_dir, 'val_visuals')
         runner.register_hook(
             DistEvalIterHook(
-                data_loader, save_path=save_path, **cfg.evaluation))
+                data_loader, save_path=save_path, **cfg.evaluation),
+            priority='LOW')
+
+    # user-defined hooks
+    if cfg.get('custom_hooks', None):
+        custom_hooks = cfg.custom_hooks
+        assert isinstance(custom_hooks, list), \
+            f'custom_hooks expect list type, but got {type(custom_hooks)}'
+        for hook_cfg in cfg.custom_hooks:
+            assert isinstance(hook_cfg, dict), \
+                'Each item in custom_hooks expects dict type, but got ' \
+                f'{type(hook_cfg)}'
+            hook_cfg = hook_cfg.copy()
+            priority = hook_cfg.pop('priority', 'NORMAL')
+            hook = build_from_cfg(hook_cfg, HOOKS)
+            runner.register_hook(hook, priority=priority)
 
     if cfg.resume_from:
         runner.resume(cfg.resume_from)
@@ -289,7 +306,22 @@ def _non_dist_train(model,
         data_loader = build_dataloader(dataset, **val_loader_cfg)
         save_path = osp.join(cfg.work_dir, 'val_visuals')
         runner.register_hook(
-            EvalIterHook(data_loader, save_path=save_path, **cfg.evaluation))
+            EvalIterHook(data_loader, save_path=save_path, **cfg.evaluation),
+            priority='LOW')
+
+    # user-defined hooks
+    if cfg.get('custom_hooks', None):
+        custom_hooks = cfg.custom_hooks
+        assert isinstance(custom_hooks, list), \
+            f'custom_hooks expect list type, but got {type(custom_hooks)}'
+        for hook_cfg in cfg.custom_hooks:
+            assert isinstance(hook_cfg, dict), \
+                'Each item in custom_hooks expects dict type, but got ' \
+                f'{type(hook_cfg)}'
+            hook_cfg = hook_cfg.copy()
+            priority = hook_cfg.pop('priority', 'NORMAL')
+            hook = build_from_cfg(hook_cfg, HOOKS)
+            runner.register_hook(hook, priority=priority)
 
     if cfg.resume_from:
         runner.resume(cfg.resume_from)

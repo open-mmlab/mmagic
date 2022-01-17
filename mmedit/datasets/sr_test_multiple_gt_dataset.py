@@ -1,5 +1,7 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import glob
 import os.path as osp
+import warnings
 
 from .base_sr_dataset import BaseSRDataset
 from .registry import DATASETS
@@ -26,6 +28,11 @@ class SRTestMultipleGTDataset(BaseSRDataset):
 
     def __init__(self, lq_folder, gt_folder, pipeline, scale, test_mode=True):
         super().__init__(pipeline, scale, test_mode)
+
+        warnings.warn('"SRTestMultipleGTDataset" have been deprecated and '
+                      'will be removed in future release. Please use '
+                      '"SRFolderMultipleGTDataset" instead. Details see '
+                      'https://github.com/open-mmlab/mmediting/pull/355')
 
         self.lq_folder = str(lq_folder)
         self.gt_folder = str(gt_folder)
