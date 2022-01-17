@@ -13,50 +13,16 @@ from .one_stage import OneStageInpaintor
 @MODELS.register_module()
 class AOTInpaintor(OneStageInpaintor):
     """Inpaintor for AOT-GAN method.
+
     This inpaintor is implemented according to the paper:
     Aggregated Contextual Transformations for High-Resolution Image Inpainting
-    Args:
-        encdec (dict): Config for encoder-decoder style generator.
-        disc (dict): Config for discriminator.
-        loss_gan (dict): Config for adversarial loss.
-        loss_composed_percep (dict): Config for perceptural and style loss with
-            composed image as input.
-        loss_out_percep (dict): Config for perceptural and style loss with
-            direct output as input.
-        loss_l1_valid (dict): Config for l1 loss in the valid region.
-        train_cfg (dict): Configs for training scheduler. `disc_step` must be
-            contained for indicates the discriminator updating steps in each
-            training step.
-        test_cfg (dict): Configs for testing scheduler.
-        pretrained (str): Path for pretrained model. Default None.
     """
-
-    def __init__(self,
-                 encdec,
-                 disc=None,
-                 loss_gan=None,
-                 loss_composed_percep=None,
-                 loss_out_percep=False,
-                 loss_l1_valid=None,
-                 train_cfg=None,
-                 test_cfg=None,
-                 pretrained=None):
-        super().__init__(
-            encdec,
-            disc=disc,
-            loss_gan=loss_gan,
-            loss_composed_percep=loss_composed_percep,
-            loss_out_percep=loss_out_percep,
-            loss_l1_valid=loss_l1_valid,
-            train_cfg=train_cfg,
-            test_cfg=test_cfg,
-            pretrained=pretrained)
 
     def forward_train_d(self, data_batch, is_real, is_disc, **kwargs):
         """Forward function in discriminator training step.
         In this function, we compute the prediction for each data batch (real
         or fake). Meanwhile, the standard gan loss will be computed with
-        several proposed losses fro stable training.
+        several proposed losses for stable training.
         Args:
             data (torch.Tensor): Batch of real data or fake data.
             is_real (bool): If True, the gan loss will regard this batch as
@@ -85,10 +51,12 @@ class AOTInpaintor(OneStageInpaintor):
 
     def generator_loss(self, fake_res, fake_img, data_batch):
         """Forward function in generator training step.
+
         In this function, we mainly compute the loss items for generator with
         the given (fake_res, fake_img). In general, the `fake_res` is the
         direct output of the generator and the `fake_img` is the composition of
         direct output and ground-truth image.
+
         Args:
             fake_res (torch.Tensor): Direct output of the generator.
             fake_img (torch.Tensor): Composition of `fake_res` and
@@ -137,6 +105,7 @@ class AOTInpaintor(OneStageInpaintor):
                      iteration=None,
                      **kwargs):
         """Forward function for testing.
+
         Args:
             masked_img (torch.Tensor): Tensor with shape of (n, 3, h, w).
             mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
@@ -145,6 +114,7 @@ class AOTInpaintor(OneStageInpaintor):
             save_path (str, optional): If given a valid str, the reuslts will
                 be saved in this path. Defaults to None.
             iteration (int, optional): Iteration number. Defaults to None.
+
         Returns:
             dict: Contain output results and eval metrics (if have).
         """
@@ -201,6 +171,7 @@ class AOTInpaintor(OneStageInpaintor):
 
     def train_step(self, data_batch, optimizer):
         """Train step function.
+
         In this function, the inpaintor will finish the train step following
         the pipeline:
         1. get fake res/image
@@ -208,6 +179,7 @@ class AOTInpaintor(OneStageInpaintor):
         3. compute adversarial loss for discriminator
         4. optimize generator
         5. optimize discriminator
+
         Args:
             data_batch (torch.Tensor): Batch of data as input.
             optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
@@ -245,7 +217,6 @@ class AOTInpaintor(OneStageInpaintor):
         disc_losses = dict(disc_losses=disc_losses_)
         print(disc_losses)
         loss_disc, log_vars_d = self.parse_losses(disc_losses)
-        # log_vars.update(log_vars_d)
 
         # backprop
         optimizer['generator'].zero_grad()

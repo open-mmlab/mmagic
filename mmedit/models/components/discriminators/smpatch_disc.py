@@ -1,5 +1,5 @@
 import torch.nn as nn
-from mmcv.cnn import ConvModule, build_conv_layer
+from mmcv.cnn import ConvModule
 from mmcv.runner import load_checkpoint
 
 from mmedit.models.common import generation_init_weights
@@ -10,6 +10,7 @@ from mmedit.utils import get_root_logger
 @COMPONENTS.register_module()
 class SoftMaskPatchDiscriminator(nn.Module):
     """A Soft Mask-Guided PatchGAN discriminator.
+
     Args:
         in_channels (int): Number of channels in input images.
         base_channels (int): Number of channels at the first conv layer.
@@ -53,15 +54,15 @@ class SoftMaskPatchDiscriminator(nn.Module):
 
         # stacked intermediate layers,
         # gradually increasing the number of filters
-        multiple_now = 1
-        multiple_prev = 1
+        multiplier_in = 1
+        multiplier_out = 1
         for n in range(1, num_conv):
-            multiple_prev = multiple_now
-            multiple_now = min(2**n, 8)
+            multiplier_in = multiplier_out
+            multiplier_out = min(2**n, 8)
             sequence += [
                 ConvModule(
-                    in_channels=base_channels * multiple_prev,
-                    out_channels=base_channels * multiple_now,
+                    in_channels=base_channels * multiplier_in,
+                    out_channels=base_channels * multiplier_out,
                     kernel_size=kernel_size,
                     stride=2,
                     padding=padding,
@@ -70,12 +71,12 @@ class SoftMaskPatchDiscriminator(nn.Module):
                     act_cfg=dict(type='LeakyReLU', negative_slope=0.2),
                     with_spectral_norm=with_spectral_norm)
             ]
-        multiple_prev = multiple_now
-        multiple_now = min(2**num_conv, 8)
+        multiplier_in = multiplier_out
+        multiplier_out = min(2**num_conv, 8)
         sequence += [
             ConvModule(
-                in_channels=base_channels * multiple_prev,
-                out_channels=base_channels * multiple_now,
+                in_channels=base_channels * multiplier_in,
+                out_channels=base_channels * multiplier_out,
                 kernel_size=kernel_size,
                 stride=1,
                 padding=padding,
@@ -87,9 +88,8 @@ class SoftMaskPatchDiscriminator(nn.Module):
 
         # output one-channel prediction map
         sequence += [
-            build_conv_layer(
-                dict(type='Conv2d'),
-                base_channels * multiple_now,
+            nn.Conv2d(
+                base_channels * multiplier_out,
                 1,
                 kernel_size=kernel_size,
                 stride=1,
@@ -104,6 +104,7 @@ class SoftMaskPatchDiscriminator(nn.Module):
 
     def forward(self, x):
         """Forward function.
+
         Args:
             x (Tensor): Input tensor with shape (n, c, h, w).
         Returns:
@@ -113,6 +114,7 @@ class SoftMaskPatchDiscriminator(nn.Module):
 
     def init_weights(self, pretrained=None):
         """Initialize weights for the model.
+
         Args:
             pretrained (str, optional): Path for pretrained weights. If given
                 None, pretrained weights will not be loaded. Default: None.

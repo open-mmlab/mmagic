@@ -8,7 +8,6 @@ from .perceptual_loss import (PerceptualLoss, PerceptualVGG,
                               TransferalPerceptualLoss)
 from .pixelwise_loss import CharbonnierLoss, L1Loss, MaskedTVLoss, MSELoss
 from .utils import mask_reduce_loss, reduce_loss
-from .feature_loss import LightCNNFeature, LightCNNFeatureLoss
 
 __all__ = [
     'L1Loss', 'MSELoss', 'CharbonnierLoss', 'L1CompositionLoss',
