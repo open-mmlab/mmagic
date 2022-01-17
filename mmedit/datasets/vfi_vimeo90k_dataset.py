@@ -9,9 +9,9 @@ from .registry import DATASETS
 class VFIVimeo90KDataset(BaseVFIDataset):
     """Vimeo90K dataset for video frame interpolation.
 
-    The dataset loads several triple frames. Then it applies specified
-    transforms and finally returns a dict containing paired data
-    and other information.
+    The dataset loads two input frames and a center GT (Ground-Truth) frame.
+    Then it applies specified transforms and finally returns a dict containing
+    paired data and other information.
 
     It reads Vimeo90K keys from the txt file.
     Each line contains:
@@ -20,15 +20,18 @@ class VFIVimeo90KDataset(BaseVFIDataset):
 
     ::
 
+        00001/0389
+        00001/0402
+
     Args:
+        pipeline (list[dict | callable]): A sequence of data transformations.
         folder (str | :obj:`Path`): Path to the folder.
         ann_file (str | :obj:`Path`): Path to the annotation file.
-        pipeline (list[dict | callable]): A sequence of data transformations.
         test_mode (bool): Store `True` when building test dataset.
             Default: `False`.
     """
 
-    def __init__(self, folder, ann_file, pipeline, test_mode=False):
+    def __init__(self, pipeline, folder, ann_file, test_mode=False):
         super().__init__(pipeline, folder, ann_file, test_mode)
         self.data_infos = self.load_annotations()
 
