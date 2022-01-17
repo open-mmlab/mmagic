@@ -239,7 +239,6 @@ class CAINNet(nn.Module):
 
     Args:
         in_channels (int): Channel number of inputs. Default: 3.
-        out_channels (int): Channel number of outputs. Default: 3.
         kernel_size (int): Kernel size of CAINNet. Default: 3.
         num_block_groups (int): Number of block groups. Default: 5.
         num_block_layers (int): Number of blocks in a group. Default: 12.
@@ -253,7 +252,6 @@ class CAINNet(nn.Module):
 
     def __init__(self,
                  in_channels=3,
-                 out_channels=3,
                  kernel_size=3,
                  num_block_groups=5,
                  num_block_layers=12,
@@ -268,18 +266,20 @@ class CAINNet(nn.Module):
         self.scale = 2**depth
         self.padding = padding
 
-        self.conv_first = nn.Conv2d(mid_channels * 2, mid_channels, 3, 1, 1)
+        self.conv_first = nn.Conv2d(mid_channels * 2, mid_channels,
+                                    kernel_size, 1, 1)
         self.body = make_layer(
             ResidualGroup,
             num_block_groups,
             block_layer=ResidualChannelAttention,
             num_block_layers=num_block_layers,
             mid_channels=mid_channels,
-            kernel_size=3,
+            kernel_size=kernel_size,
             reduction=reduction,
             norm=norm,
             act=act)
-        self.conv_last = nn.Conv2d(mid_channels, mid_channels, 3, 1, 1)
+        self.conv_last = nn.Conv2d(mid_channels, mid_channels, kernel_size, 1,
+                                   1)
 
     def forward(self, imgs, padding_flag=False):
         """Forward function.
