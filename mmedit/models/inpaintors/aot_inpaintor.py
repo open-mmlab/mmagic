@@ -18,11 +18,13 @@ class AOTInpaintor(OneStageInpaintor):
     Aggregated Contextual Transformations for High-Resolution Image Inpainting
     """
 
-    def forward_train_d(self, data_batch, is_real, is_disc, **kwargs):
+    def forward_train_d(self, data_batch, is_real, is_disc, mask=None):
         """Forward function in discriminator training step.
+
         In this function, we compute the prediction for each data batch (real
         or fake). Meanwhile, the standard gan loss will be computed with
         several proposed losses for stable training.
+
         Args:
             data (torch.Tensor): Batch of real data or fake data.
             is_real (bool): If True, the gan loss will regard this batch as
@@ -32,13 +34,13 @@ class AOTInpaintor(OneStageInpaintor):
                 training step. Otherwise, this function is called in generator
                 training step. This will help us to compute different types of
                 adversarial loss, like LSGAN.
-            **kwargs (keyword arguments).
+            mask (torch.Tensor): Mask of data. Default: None.
         Returns:
             dict: Contains the loss items computed in this function.
         """
 
         pred = self.disc(data_batch)
-        loss_ = self.loss_gan(pred, is_real, is_disc, **kwargs)
+        loss_ = self.loss_gan(pred, is_real, is_disc, mask)
 
         loss = dict(real_loss=loss_) if is_real else dict(fake_loss=loss_)
 
