@@ -1,7 +1,7 @@
 import pytest
 from mmcv.utils.testing import assert_dict_has_keys
 
-from mmedit.datasets import BaseVFIDataset
+from mmedit.datasets import BaseVFIDataset, build_dataset
 
 
 class TestVFIDataset:
@@ -44,7 +44,19 @@ class TestVFIDataset:
         with pytest.raises(AssertionError):
             dataset.evaluate(results + results)
 
+    def test_vfi_vimeo90k_dataset(self):
 
-def test_base_vfi_dataset():
+        dataset_cfg = dict(
+            type='VFIVimeo90KDataset',
+            folder=self.folder,
+            ann_file=self.ann_file,
+            pipeline=self.pipeline)
+        dataset = build_dataset(dataset_cfg)
+        data_infos = dataset.data_infos[0]
+        assert_dict_has_keys(data_infos, ['inputs_path', 'target_path', 'key'])
+
+
+def test_vfi_dataset():
     test_ = TestVFIDataset()
     test_.test_base_vfi_dataset()
+    test_.test_vfi_vimeo90k_dataset()
