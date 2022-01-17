@@ -14,7 +14,7 @@ from .registry import BACKBONES, COMPONENTS, LOSSES, MODELS
 from .restorers import ESRGAN, SRGAN, BasicRestorer
 from .synthesizers import CycleGAN, Pix2Pix
 from .transformers import SearchTransformer
-from .video_interpolator import Basicinterpolator, CAIN
+from .video_interpolator import CAIN, BasicInterpolator
 
 __all__ = [
     'BaseModel', 'BasicRestorer', 'OneStageInpaintor', 'build',
@@ -23,5 +23,5 @@ __all__ = [
     'GLInpaintor', 'PConvInpaintor', 'SRGAN', 'ESRGAN', 'GCA',
     'TwoStageInpaintor', 'IndexNet', 'DeepFillv1Inpaintor', 'Pix2Pix',
     'CycleGAN', 'SearchTransformer', 'LTE', 'FeedbackHourglass',
-    'Basicinterpolator', 'CAIN'
+    'BasicInterpolator', 'CAIN'
 ]

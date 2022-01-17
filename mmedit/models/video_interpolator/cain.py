@@ -2,11 +2,11 @@
 import torch
 
 from ..registry import MODELS
-from .basic_interpolater import BasicInterpolater
+from .basic_interpolator import BasicInterpolator
 
 
 @MODELS.register_module()
-class CAIN(BasicInterpolater):
+class CAIN(BasicInterpolator):
     """CAIN model for Video Interpolation.
 
     Paper: Channel Attention Is All You Need for Video Frame Interpolation

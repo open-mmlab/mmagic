@@ -14,7 +14,7 @@ from mmedit.models.registry import COMPONENTS
 
 @COMPONENTS.register_module()
 class InterpolateExample(nn.Module):
-    """An example of interpolate network for testing Basicinterpolator.
+    """An example of interpolate network for testing BasicInterpolator.
     """
 
     def __init__(self):
@@ -30,7 +30,7 @@ class InterpolateExample(nn.Module):
 
 @COMPONENTS.register_module()
 class InterpolateExample2(nn.Module):
-    """An example of interpolate network for testing Basicinterpolator.
+    """An example of interpolate network for testing BasicInterpolator.
     """
 
     def __init__(self):
@@ -46,7 +46,7 @@ class InterpolateExample2(nn.Module):
 
 def test_basic_interpolator():
     model_cfg = dict(
-        type='Basicinterpolator',
+        type='BasicInterpolator',
         generator=dict(type='InterpolateExample'),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 
@@ -57,7 +57,7 @@ def test_basic_interpolator():
     restorer = build_model(model_cfg, train_cfg=train_cfg, test_cfg=test_cfg)
 
     # test attributes
-    assert restorer.__class__.__name__ == 'Basicinterpolator'
+    assert restorer.__class__.__name__ == 'BasicInterpolator'
     assert isinstance(restorer.generator, InterpolateExample)
     assert isinstance(restorer.pixel_loss, L1Loss)
 
@@ -223,7 +223,7 @@ def test_basic_interpolator():
 
         # test forward_test when output.shape==5
         model_cfg = dict(
-            type='Basicinterpolator',
+            type='BasicInterpolator',
             generator=dict(type='InterpolateExample2'),
             pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
         train_cfg = None
