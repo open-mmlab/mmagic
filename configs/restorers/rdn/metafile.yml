@@ -25,7 +25,7 @@ Models:
         PSNR: 35.9883
         SSIM: 0.9385
     Task: Restorers
-  Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x2c64b16_g1_1000k_div2k_20210419-dc146009.pth?versionId=CAEQJxiBgMC774LGyBciIGU3ZGRkZWM3Y2Y0ZjQ2OTliZTc2NmM5ZWY0MDA1MDU3
+  Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x2c64b16_g1_1000k_div2k_20210419-dc146009.pth
 - Config: configs/restorers/rdn/rdn_x3c64b16_g1_1000k_div2k.py
   In Collection: RDN
   Metadata:
@@ -44,7 +44,7 @@ Models:
         PSNR: 32.6051
         SSIM: 0.8943
     Task: Restorers
-  Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x3c64b16_g1_1000k_div2k_20210419-b93cb6aa.pth?versionId=CAEQJxiBgMC3v9LFyBciIGExYWY0NTI0YWVkODQxZDRiYWNlYjViY2E5MzQ4OTc1
+  Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x3c64b16_g1_1000k_div2k_20210419-b93cb6aa.pth
 - Config: configs/restorers/rdn/rdn_x4c64b16_g1_1000k_div2k.py
   In Collection: RDN
   Metadata:
@@ -63,4 +63,4 @@ Models:
         PSNR: 30.4922
         SSIM: 0.8548
     Task: Restorers
-  Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x4c64b16_g1_1000k_div2k_20210419-3577d44f.pth?versionId=CAEQJxiBgICwxdLFyBciIGFlMzVhNTBlOGEyNDQwMGI5OGJjOTJkMDQ1ZDJjOTM2
+  Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x4c64b16_g1_1000k_div2k_20210419-3577d44f.pth
