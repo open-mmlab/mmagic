@@ -125,7 +125,7 @@ class RRDBNet(nn.Module):
             in_channels = in_channels * ((4 // upscale_factor)**2)
         else:
             raise ValueError(
-                f'Unsupported scale factor {self.upscale_factor}. '
+                f'Unsupported scale factor {upscale_factor}. '
                 f'Currently supported ones are '
                 f'{self._supported_upscale_factors}.')
 
