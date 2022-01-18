@@ -3,7 +3,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.runner import load_checkpoint
-from mmedit.models.common import default_init_weights, make_layer
+
+from mmedit.models.common import (default_init_weights, make_layer,
+                                  pixel_unshuffle)
 from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
@@ -93,9 +95,10 @@ class RRDB(nn.Module):
 @BACKBONES.register_module()
 class RRDBNet(nn.Module):
     """Networks consisting of Residual in Residual Dense Block, which is used
-    in Real-ESRGAN.
+    in ESRGAN and Real-ESRGAN.
 
-    Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
+    ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks.
+    Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data. # noqa: E501
     Currently, it supports [x1/x2/x4] upsampling scale factor.
 
     Args:
@@ -161,8 +164,10 @@ class RRDBNet(nn.Module):
         feat = feat + body_feat
 
         # upsample
-        feat = self.lrelu(self.conv_up1(F.interpolate(feat, scale_factor=2, mode='nearest')))
-        feat = self.lrelu(self.conv_up2(F.interpolate(feat, scale_factor=2, mode='nearest')))
+        feat = self.lrelu(
+            self.conv_up1(F.interpolate(feat, scale_factor=2, mode='nearest')))
+        feat = self.lrelu(
+            self.conv_up2(F.interpolate(feat, scale_factor=2, mode='nearest')))
 
         out = self.conv_last(self.lrelu(self.conv_hr(feat)))
         return out
@@ -191,4 +196,3 @@ class RRDBNet(nn.Module):
         else:
             raise TypeError(f'"pretrained" must be a str or None. '
                             f'But received {type(pretrained)}.')
-

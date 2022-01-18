@@ -31,7 +31,11 @@ train_pipeline = [
         io_backend='disk',
         key='gt',
         channel_order='rgb'),
-    dict(type='Crop', keys=['gt'], crop_size=(gt_crop_size, gt_crop_size), random_crop=True),
+    dict(
+        type='Crop',
+        keys=['gt'],
+        crop_size=(gt_crop_size, gt_crop_size),
+        random_crop=True),
     dict(type='RescaleToZeroOne', keys=['gt']),
     dict(
         type='UnsharpMasking',
@@ -129,7 +133,8 @@ train_pipeline = [
                 dict(
                     type='RandomResize',
                     params=dict(
-                        target_size=(gt_crop_size//scale, gt_crop_size//scale),
+                        target_size=(gt_crop_size // scale,
+                                     gt_crop_size // scale),
                         resize_opt=['bilinear', 'area', 'bicubic'],
                         resize_prob=[1 / 3., 1 / 3., 1 / 3.]),
                 ),
