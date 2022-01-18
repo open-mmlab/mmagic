@@ -25,3 +25,4 @@ Import:
 - configs/restorers/ttsr/metafile.yml
 - configs/synthesizers/cyclegan/metafile.yml
 - configs/synthesizers/pix2pix/metafile.yml
+- configs/video_interpolators/cain/metafile.yml
