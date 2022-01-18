@@ -8,7 +8,6 @@ import torch
 from mmcv.fileio import FileClient
 from mmcv.parallel import collate, scatter
 
-from mmedit.core import tensor2img
 from mmedit.datasets.pipelines import Compose
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
@@ -72,9 +71,6 @@ def video_interpolation_inference(model,
 
     device = next(model.parameters()).device  # model device
 
-    num_inputs = getattr(model.cfg['model'], 'num_inputs', 2)
-    step = getattr(model.cfg['model'], 'step', 1)
-
     # build the data pipeline
     if model.cfg.get('demo_pipeline', None):
         test_pipeline = model.cfg.demo_pipeline
@@ -100,14 +96,7 @@ def video_interpolation_inference(model,
         files = files[start_idx:end_idx]
         images = [read_image(f) for f in files]
 
-    data = []
-
-    for i in range(0, len(images) - num_inputs + 1, step):
-        data.append(
-            dict(
-                inputs=images[i:i + num_inputs],
-                inputs_path=None,
-                key=input_dir))
+    data = dict(inputs=images, inputs_path=None, key=input_dir)
 
     # remove the data loading pipeline
     tmp_pipeline = []
@@ -121,30 +110,26 @@ def video_interpolation_inference(model,
 
     # compose the pipeline
     test_pipeline = Compose(test_pipeline)
-    data = [test_pipeline(d) for d in data]
+    data = [test_pipeline(data)]
     data = scatter(collate(data, samples_per_gpu=1), [device])[0]['inputs']
+    # data.shape: [1, t, c, h, w]
 
     # forward the model
-    output_images = []
-    input_images = [np.flip(img, axis=2) for img in images]
+    output_tensors = None
+    data = model.split_frames(data)
+    input_tensors = data.clone().detach()
     with torch.no_grad():
         length = data.shape[0]
         for start in range(0, length, batch_size):
             end = start + batch_size
-            output = model(data[start:end], test_mode=True)['output'].cpu()
-            for j in range(output.shape[0]):
-                if len(output.shape) == 4:
-                    new_image = tensor2img(output[j])
-                    output_images.append(new_image)
-                else:
-                    new_images = []
-                    for k in range(output.shape[1]):
-                        new_image = tensor2img(output[j][k])
-                        new_images.append(new_image)
-                    output_images.append(new_images)
+            output = model(data[start:end], test_mode=True)['output']
+            if len(output.shape) == 4:
+                output = output.unsqueeze(1)
+            if output_tensors is None:
+                output_tensors = output
+            else:
+                output_tensors = torch.cat([output_tensors, output], dim=0)
 
-    generate_frames = getattr(model.cfg['model'], 'generate_frames',
-                              default_generate_frames)
-    result = generate_frames(input_images, output_images)
+    result = model.merge_frames(input_tensors, output_tensors)
 
     return result, input_fps

@@ -70,7 +70,7 @@ def test_restoration_video_inference():
 def test_video_interpolation_inference():
     if torch.cuda.is_available():
         model = init_model(
-            './configs/restorers/basicvsr/basicvsr_reds4.py',
+            './configs/video_interpolators/cain/cain_b5_320k_vimeo-triple.py',
             None,
             device='cuda')
         model.cfg['demo_pipeline'] = [

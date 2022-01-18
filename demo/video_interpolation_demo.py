@@ -1,7 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import os
-from numbers import Number
 
 import cv2
 import mmcv
@@ -20,13 +19,13 @@ def parse_args():
     parser.add_argument('output_dir', help='directory of the output video')
     parser.add_argument(
         '--fps',
-        type=Number,
+        type=float,
         default=0,
         help='frame rate of the output video, which is needed when '
         '`fps_multiplier` is 0 and a video is desired as output.')
     parser.add_argument(
         '--fps_multiplier',
-        type=Number,
+        type=float,
         default=0,
         help='multiply the fps based on the input video, if `fps_multiplier` '
         'is 0, `fps` will be utilized.')
@@ -47,6 +46,10 @@ def parse_args():
         type=int,
         default=4,
         help='batch size of video interpolation model')
+    parser.add_argument(
+        '--filename_tmpl',
+        default='{:08d}.png',
+        help='template of the file names')
     parser.add_argument('--device', type=int, default=0, help='CUDA device id')
     args = parser.parse_args()
     return args

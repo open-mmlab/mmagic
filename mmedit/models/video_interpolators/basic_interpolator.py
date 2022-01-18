@@ -4,6 +4,7 @@ import os.path as osp
 
 import mmcv
 import numpy as np
+import torch
 from mmcv.runner import auto_fp16
 
 from mmedit.core import psnr, ssim, tensor2img
@@ -268,17 +269,18 @@ class BasicInterpolator(BaseModel):
         frames.
 
         Args:
-            input_tensors (Tensor): Tensor of input frames.
+            input_tensors (Tensor): Tensor of input frames with shape
+                [1, t, c, h, w]
 
         Returns:
-            list[Tensor]: A list of split tensors.
+            Tensor: Split tensor with shape [t-1, 2, c, h, w]
         """
 
-        num_frames = input_tensors.shape[0]
+        num_frames = input_tensors.shape[1]
 
-        result = []
-        for i in range(0, num_frames - 1, 1):
-            result.append(input_tensors[i:i + 2])
+        result = input_tensors[:, :2]  # the first tensor
+        for i in range(1, num_frames - 1, 1):
+            result = torch.cat([result, input_tensors[:, i:i + 2]], dim=0)
 
         return result
 
@@ -290,18 +292,20 @@ class BasicInterpolator(BaseModel):
         frames.
 
         Args:
-            input_tensors (list[Tensor]): The input frames.
-            output_tensors (list[Tensor]): The output frames.
+            input_tensors (Tensor): The input frames with shape [n, 2, c, h, w]
+            output_tensors (Tensor): The output frames with shape
+                [n, 1, c, h, w].
 
         Returns:
             list[np.array]: The final frames.
                 in_frame, out_frame, in_frame, out_frame, in_frame ...
         """
 
+        num_frames = input_tensors.shape[0]
         result = []
-        for i in range(len(input_tensors)):
-            result.append(tensor2img(input_tensors[i][:1]))
-            result.append(tensor2img(output_tensors[i][:1]))
-        result.append(tensor2img(input_tensors[-1][1:]))
+        for i in range(num_frames):
+            result.append(tensor2img(input_tensors[i, 0]))
+            result.append(tensor2img(output_tensors[i, 0]))
+        result.append(tensor2img(input_tensors[-1, 1]))
 
         return result
