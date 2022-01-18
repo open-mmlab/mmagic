@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.runner import load_checkpoint
-from mmedit.models.common import default_init_weights, make_layer, pixel_unshuffle
+from mmedit.models.common import default_init_weights, make_layer
 from mmedit.models.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
@@ -93,10 +93,10 @@ class RRDB(nn.Module):
 @BACKBONES.register_module()
 class RRDBNet(nn.Module):
     """Networks consisting of Residual in Residual Dense Block, which is used
-    in ESRGAN.
+    in Real-ESRGAN.
 
-    ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks.
-    Currently, it supports x4 upsampling scale factor.
+    Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
+    Currently, it supports [x1/x2/x4] upsampling scale factor.
 
     Args:
         in_channels (int): Channel number of inputs.
@@ -105,22 +105,28 @@ class RRDBNet(nn.Module):
             Default: 64
         num_blocks (int): Block number in the trunk network. Defaults: 23
         growth_channels (int): Channels for each growth. Default: 32.
+        upscale_factor (int): Upsampling factor. Support x1, x2 and x4.
+            Default: 4.
     """
+    _supported_upscale_factors = [1, 2, 4]
 
     def __init__(self,
                  in_channels,
                  out_channels,
-                 scale=4,
                  mid_channels=64,
                  num_blocks=23,
-                 growth_channels=32):
+                 growth_channels=32,
+                 upscale_factor=4):
         super().__init__()
-        if scale in [1, 2, 4]:
-            in_channels = in_channels * ((4 // scale)**2)
+        if upscale_factor in self._supported_upscale_factors:
+            in_channels = in_channels * ((4 // upscale_factor)**2)
         else:
-            raise ValueError('Currently support (1x, 2x, 4x) upsampling only')
+            raise ValueError(
+                f'Unsupported scale factor {self.upscale_factor}. '
+                f'Currently supported ones are '
+                f'{self._supported_upscale_factors}.')
 
-        self.scale = scale
+        self.upscale_factor = upscale_factor
         self.conv_first = nn.Conv2d(in_channels, mid_channels, 3, 1, 1)
         self.body = make_layer(
             RRDB,
@@ -145,8 +151,8 @@ class RRDBNet(nn.Module):
         Returns:
             Tensor: Forward results.
         """
-        if self.scale in [1, 2]:
-            feat = pixel_unshuffle(x, scale=4 // self.scale)
+        if self.upscale_factor in [1, 2]:
+            feat = pixel_unshuffle(x, scale=4 // self.upscale_factor)
         else:
             feat = x
 
@@ -185,3 +191,4 @@ class RRDBNet(nn.Module):
         else:
             raise TypeError(f'"pretrained" must be a str or None. '
                             f'But received {type(pretrained)}.')
+

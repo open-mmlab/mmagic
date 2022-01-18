@@ -10,10 +10,10 @@ model = dict(
         type='RRDBNet',
         in_channels=3,
         out_channels=3,
-        scale=scale,
         mid_channels=64,
         num_blocks=23,
-        growth_channels=32),
+        growth_channels=32,
+        upscale_factor=scale),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     is_use_sharpened_gt_in_pixel=True,
     is_use_ema=True)
