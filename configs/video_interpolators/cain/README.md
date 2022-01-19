@@ -32,7 +32,7 @@ Prevailing video frame interpolation techniques rely heavily on optical flow est
 
 ## Results and models
 
-Evaluated on RGB channels.
+Evaluated on Y channels.
 The metrics are `PSNR / SSIM` .
 
 |                                            Method                                           | vimeo-90k-triple |                                                                                                                     Download                                                                                                                             |

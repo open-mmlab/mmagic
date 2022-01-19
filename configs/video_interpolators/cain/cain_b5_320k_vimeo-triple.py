@@ -6,7 +6,6 @@ model = dict(
     generator=dict(type='CAINNet'),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
-train_cfg = dict(fix_iter=5000)
 test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=0, convert_to='y')
 
 # dataset settings
