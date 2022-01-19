@@ -124,10 +124,9 @@ class RRDBNet(nn.Module):
         if upscale_factor in self._supported_upscale_factors:
             in_channels = in_channels * ((4 // upscale_factor)**2)
         else:
-            raise ValueError(
-                f'Unsupported scale factor {upscale_factor}. '
-                f'Currently supported ones are '
-                f'{self._supported_upscale_factors}.')
+            raise ValueError(f'Unsupported scale factor {upscale_factor}. '
+                             f'Currently supported ones are '
+                             f'{self._supported_upscale_factors}.')
 
         self.upscale_factor = upscale_factor
         self.conv_first = nn.Conv2d(in_channels, mid_channels, 3, 1, 1)
