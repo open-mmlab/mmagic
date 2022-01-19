@@ -13,17 +13,18 @@ class SoftMaskPatchDiscriminator(nn.Module):
 
     Args:
         in_channels (int): Number of channels in input images.
-        base_channels (int): Number of channels at the first conv layer.
-            Default: 64.
-        num_conv (int): Number of stacked intermediate convs (excluding input
-            and output conv). Default: 3.
-        norm_cfg (dict): Config dict to build norm layer.
-        init_cfg (dict): Config dict for initialization.
+        base_channels (int, optional): Number of channels at the
+            first conv layer. Default: 64.
+        num_conv (int, optional): Number of stacked intermediate convs
+            (excluding input and output conv). Default: 3.
+        norm_cfg (dict, optional): Config dict to build norm layer.
+            Default: None.
+        init_cfg (dict, optional): Config dict for initialization.
             `type`: The name of our initialization method. Default: 'normal'.
             `gain`: Scaling factor for normal, xavier and orthogonal.
             Default: 0.02.
-        with_spectral_norm (bool): Whether use spectral norm after the conv
-            layers. Default to False.
+        with_spectral_norm (bool, optional): Whether use spectral norm
+            after the conv layers. Default: False.
     """
 
     def __init__(self,
@@ -107,6 +108,7 @@ class SoftMaskPatchDiscriminator(nn.Module):
 
         Args:
             x (Tensor): Input tensor with shape (n, c, h, w).
+
         Returns:
             Tensor: Forward results.
         """

@@ -35,6 +35,7 @@ class AOTInpaintor(OneStageInpaintor):
                 training step. This will help us to compute different types of
                 adversarial loss, like LSGAN.
             mask (torch.Tensor): Mask of data.
+
         Returns:
             dict: Contains the loss items computed in this function.
         """
@@ -64,9 +65,10 @@ class AOTInpaintor(OneStageInpaintor):
             fake_img (torch.Tensor): Composition of `fake_res` and
                 ground-truth image.
             data_batch (dict): Contain other elements for computing losses.
+
         Returns:
-            tuple(dict): Dict contains the results computed within this \
-                function for visualization and dict contains the loss items \
+            tuple(dict): Dict contains the results computed within this
+                function for visualization and dict contains the loss items
                 computed in this function.
         """
         gt = data_batch['gt_img']
@@ -118,7 +120,7 @@ class AOTInpaintor(OneStageInpaintor):
             iteration (int, optional): Iteration number. Defaults to None.
 
         Returns:
-            dict: Contain output results and eval metrics (if have).
+            dict: Contain output results and eval metrics (if exist).
         """
 
         masked_img = masked_img.float() + mask
@@ -201,48 +203,47 @@ class AOTInpaintor(OneStageInpaintor):
         fake_res = self.generator(input_x)
         fake_img = gt_img * (1. - mask) + fake_res * mask
 
-        # reconstruction losses
+        if self.train_cfg.disc_step > 0:
+            set_requires_grad(self.disc, True)
+            disc_losses_real = self.forward_train_d(
+                gt_img, True, True, mask=mask)
+            disc_losses_fake = self.forward_train_d(
+                fake_img.detach(), False, True, mask=mask)
+            disc_losses_ = disc_losses_real['real_loss'] + disc_losses_fake[
+                'fake_loss']
+            disc_losses = dict(disc_losses=disc_losses_)
+            loss_disc, log_vars_d = self.parse_losses(disc_losses)
+            log_vars.update(log_vars_d)
+            optimizer['disc'].zero_grad()
+            loss_disc.backward()
+
+            optimizer['disc'].step()
+
+            self.disc_step_count = (self.disc_step_count +
+                                    1) % self.train_cfg.disc_step
+            if self.disc_step_count != 0:
+                # results contain the data for visualization
+                results = dict(
+                    gt_img=gt_img.cpu(),
+                    masked_img=masked_img.cpu(),
+                    fake_res=fake_res.cpu(),
+                    fake_img=fake_img.cpu())
+                outputs = dict(
+                    log_vars=log_vars,
+                    num_samples=len(data_batch['gt_img'].data),
+                    results=results)
+
+                return outputs
+
+        # reconstruction losses from generator
+        if self.with_gan:
+            set_requires_grad(self.disc, False)
         results, g_losses = self.generator_loss(fake_res, fake_img, data_batch)
         loss_g, log_vars_g = self.parse_losses(g_losses)
         log_vars.update(log_vars_g)
-
-        # adversarial loss
-        set_requires_grad(self.disc, True)
-        fake_data = fake_img.detach()
-        real_data = gt_img
-        disc_losses_real = self.forward_train_d(
-            real_data, True, True, mask=mask)
-        disc_losses_fake = self.forward_train_d(
-            fake_data, False, True, mask=mask)
-        disc_losses_ = disc_losses_real['real_loss'] + disc_losses_fake[
-            'fake_loss']
-        disc_losses = dict(disc_losses=disc_losses_)
-        print(disc_losses)
-        loss_disc, log_vars_d = self.parse_losses(disc_losses)
-
-        # backprop
         optimizer['generator'].zero_grad()
-        optimizer['disc'].zero_grad()
         loss_g.backward()
-        loss_disc.backward()
         optimizer['generator'].step()
-        optimizer['disc'].step()
-
-        self.disc_step_count = (self.disc_step_count +
-                                1) % self.train_cfg.disc_step
-        if self.disc_step_count != 0:
-            # results contain the data for visualization
-            results = dict(
-                gt_img=gt_img.cpu(),
-                masked_img=masked_img.cpu(),
-                fake_res=fake_res.cpu(),
-                fake_img=fake_img.cpu())
-            outputs = dict(
-                log_vars=log_vars,
-                num_samples=len(data_batch['gt_img'].data),
-                results=results)
-
-            return outputs
 
         outputs = dict(
             log_vars=log_vars,
