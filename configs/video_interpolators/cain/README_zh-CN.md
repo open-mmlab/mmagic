@@ -21,7 +21,7 @@
 
 <br/>
 
-在 RGB 通道上评估.
+在 Y 通道上评估.
 我们使用 `PSNR` 和 `SSIM` 作为指标。
 
 |                                             算法                                             | vimeo-90k-triple |                                                                                                                                         下载                                                                                                            |
