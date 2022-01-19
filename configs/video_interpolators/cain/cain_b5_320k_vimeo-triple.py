@@ -83,10 +83,8 @@ demo_pipeline = [
 
 root_dir = 'data/vimeo_triple'
 data = dict(
-    # workers_per_gpu=16,
-    # train_dataloader=dict(samples_per_gpu=32, drop_last=True),
-    workers_per_gpu=1,
-    train_dataloader=dict(samples_per_gpu=2, drop_last=True),
+    workers_per_gpu=4,
+    train_dataloader=dict(samples_per_gpu=32, drop_last=True),
     val_dataloader=dict(samples_per_gpu=1),
     test_dataloader=dict(samples_per_gpu=1),
 
