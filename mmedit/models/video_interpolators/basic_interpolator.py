@@ -278,9 +278,8 @@ class BasicInterpolator(BaseModel):
 
         num_frames = input_tensors.shape[1]
 
-        result = input_tensors[:, :2]  # the first tensor
-        for i in range(1, num_frames - 1, 1):
-            result = torch.cat([result, input_tensors[:, i:i + 2]], dim=0)
+        result = [input_tensors[:, i:i + 2] for i in range(0, num_frames - 1)]
+        result = torch.cat(result, dim=0)
 
         return result
 

@@ -115,7 +115,7 @@ def video_interpolation_inference(model,
     # data.shape: [1, t, c, h, w]
 
     # forward the model
-    output_tensors = None
+    output_list = []
     data = model.split_frames(data)
     input_tensors = data.clone().detach()
     with torch.no_grad():
@@ -125,10 +125,9 @@ def video_interpolation_inference(model,
             output = model(data[start:end], test_mode=True)['output']
             if len(output.shape) == 4:
                 output = output.unsqueeze(1)
-            if output_tensors is None:
-                output_tensors = output
-            else:
-                output_tensors = torch.cat([output_tensors, output], dim=0)
+            output_list.append(output)
+
+    output_tensors = torch.cat(output_list, dim=0)
 
     result = model.merge_frames(input_tensors, output_tensors)
 

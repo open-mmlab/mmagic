@@ -74,6 +74,7 @@ def main():
                                                 args.batch_size)
 
     if args.fps_multiplier:
+        assert args.fps_multiplier > 0, '`fps_multiplier` can not be negative'
         assert fps > 0, 'the input is not a video'
         fps = args.fps_multiplier * fps
     else:
