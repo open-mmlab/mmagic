@@ -29,22 +29,6 @@ def read_image(filepath):
     return image
 
 
-def default_generate_frames(input_images, output_images):
-    """The default generate_frames function, merge input frames and output
-        frames.
-
-    Args:
-        input_images (list[np.array]): The input frames.
-        output_images (list[np.array]): The output frames.
-
-    Returns:
-        list[np.array]: The final frames.
-    """
-    if isinstance(output_images[0], list):
-        output_images = sum(output_images, [])
-    return input_images + output_images
-
-
 def video_interpolation_inference(model,
                                   input_dir,
                                   start_idx=0,
@@ -55,16 +39,16 @@ def video_interpolation_inference(model,
     Args:
         model (nn.Module): The loaded model.
         input_dir (str): Directory of the input video.
-        start_idx (int): The index corresponds to the first frame in the
+        start_idx (int): The index corresponding to the first frame in the
             sequence. Default: 0.
-        end_idx (int | None): The index corresponds to the last interpolated
+        end_idx (int | None): The index corresponding to the last interpolated
             frame in the sequence. If it is None, interpolate to the last
             frame of video or sequence. Default: None.
         batch_size (int): Batch size. Default: 4.
 
     Returns:
         output (list[numpy.array]): The predicted interpolation result.
-            It is an image sequence: [ori, pred, ori, pred, ori, ...]
+            It is an image sequence.
         input_fps (float): The fps of input video. If the input is an image
             sequence, input_fps=0.0
     """
