@@ -2,7 +2,6 @@
 import copy
 import os
 import tempfile
-from unittest.mock import patch
 
 import pytest
 import torch
@@ -28,7 +27,6 @@ def test_aot_inpaintor():
     assert inpaintor.is_train
     assert inpaintor.train_cfg['disc_step'] == 1
     assert inpaintor.disc_step_count == 0
-
 
     input_x = torch.randn(1, 3, 256, 256)
     with pytest.raises(NotImplementedError):
