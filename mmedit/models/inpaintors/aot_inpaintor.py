@@ -83,8 +83,8 @@ class AOTInpaintor(OneStageInpaintor):
             loss['loss_g_fake'] = loss_g_fake
 
         if self.with_l1_valid_loss:
-            loss_loss_l1_valid = self.loss_l1_valid(fake_res, gt)
-            loss['loss_l1_valid'] = loss_loss_l1_valid
+            loss_l1_valid = self.loss_l1_valid(fake_res, gt)
+            loss['loss_l1_valid'] = loss_l1_valid
 
         if self.with_out_percep_loss:
             loss_out_percep, loss_out_style = self.loss_percep(fake_res, gt)
@@ -114,10 +114,10 @@ class AOTInpaintor(OneStageInpaintor):
             masked_img (torch.Tensor): Tensor with shape of (n, 3, h, w).
             mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
             save_image (bool, optional): If True, results will be saved as
-                image. Defaults to False.
+                image. Default: False.
             save_path (str, optional): If given a valid str, the reuslts will
-                be saved in this path. Defaults to None.
-            iteration (int, optional): Iteration number. Defaults to None.
+                be saved in this path. Default: None.
+            iteration (int, optional): Iteration number. Default: None.
 
         Returns:
             dict: Contain output results and eval metrics (if exist).
@@ -133,7 +133,8 @@ class AOTInpaintor(OneStageInpaintor):
         eval_results = {}
         if self.eval_with_metrics:
             gt_img = kwargs['gt_img']
-            data_dict = dict(gt_img=gt_img, fake_img=fake_img, mask=None)
+            data_dict = dict(
+                gt_img=gt_img, fake_res=fake_res, fake_img=fake_img, mask=None)
             for metric_name in self.test_cfg['metrics']:
                 if metric_name in ['ssim', 'psnr']:
                     eval_results[metric_name] = self._eval_metrics[
@@ -187,9 +188,10 @@ class AOTInpaintor(OneStageInpaintor):
         Args:
             data_batch (torch.Tensor): Batch of data as input.
             optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
-                generator and discriminator (if have).
+                generator and discriminator (if exist).
+
         Returns:
-            dict: Dict with loss, information for logger, the number of \
+            dict: Dict with loss, information for logger, the number of
                 samples and results for visualization.
         """
         log_vars = {}
@@ -199,10 +201,12 @@ class AOTInpaintor(OneStageInpaintor):
         masked_img = data_batch['masked_img']
         masked_img = masked_img.float() + mask
 
+        # get common output from encdec
         input_x = torch.cat([masked_img, mask], dim=1)
         fake_res = self.generator(input_x)
         fake_img = gt_img * (1. - mask) + fake_res * mask
 
+        # discriminator training step
         if self.train_cfg.disc_step > 0:
             set_requires_grad(self.disc, True)
             disc_losses_real = self.forward_train_d(
@@ -235,7 +239,8 @@ class AOTInpaintor(OneStageInpaintor):
 
                 return outputs
 
-        # reconstruction losses from generator
+        # generator (encdec) training step, results contain the data
+        # for visualization
         if self.with_gan:
             set_requires_grad(self.disc, False)
         results, g_losses = self.generator_loss(fake_res, fake_img, data_batch)
