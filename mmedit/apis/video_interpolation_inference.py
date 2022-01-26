@@ -6,7 +6,7 @@ import mmcv
 import numpy as np
 import torch
 from mmcv.fileio import FileClient
-from mmcv.parallel import collate, scatter
+from mmcv.parallel import collate
 
 from mmedit.datasets.pipelines import Compose
 
@@ -95,7 +95,8 @@ def video_interpolation_inference(model,
     # compose the pipeline
     test_pipeline = Compose(test_pipeline)
     data = [test_pipeline(data)]
-    data = scatter(collate(data, samples_per_gpu=1), [device])[0]['inputs']
+    data = collate(data, samples_per_gpu=1)['inputs']
+    print(data.shape)
     # data.shape: [1, t, c, h, w]
 
     # forward the model
@@ -106,10 +107,11 @@ def video_interpolation_inference(model,
         length = data.shape[0]
         for start in range(0, length, batch_size):
             end = start + batch_size
-            output = model(data[start:end], test_mode=True)['output']
+            output = model(
+                data[start:end].to(device), test_mode=True)['output']
             if len(output.shape) == 4:
                 output = output.unsqueeze(1)
-            output_list.append(output)
+            output_list.append(output.cpu())
 
     output_tensors = torch.cat(output_list, dim=0)
 
