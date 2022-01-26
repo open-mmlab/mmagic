@@ -15,7 +15,7 @@ from .sr_backbones import (EDSR, LIIFEDSR, LIIFRDN, RDN, SRCNN, BasicVSRNet,
                            BasicVSRPlusPlus, DICNet, EDVRNet, GLEANStyleGANv2,
                            IconVSR, MSRResNet, RealBasicVSRNet, RRDBNet,
                            TDANNet, TOFlow, TTSRNet)
-from .video_interpolation_backbones import CAINNet
+from .vfi_backbones import CAINNet
 
 __all__ = [
     'MSRResNet', 'VGG16', 'PlainDecoder', 'SimpleEncoderDecoder',

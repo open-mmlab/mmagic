@@ -14,7 +14,7 @@ from .registry import BACKBONES, COMPONENTS, LOSSES, MODELS
 from .restorers import ESRGAN, SRGAN, BasicRestorer
 from .synthesizers import CycleGAN, Pix2Pix
 from .transformers import SearchTransformer
-from .video_interpolator import CAIN, BasicInterpolator
+from .video_interpolators import CAIN, BasicInterpolator
 
 __all__ = [
     'AOTInpaintor', 'BaseModel', 'BasicRestorer', 'OneStageInpaintor', 'build',
