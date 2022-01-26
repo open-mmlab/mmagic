@@ -69,7 +69,7 @@ def test_restoration_video_inference():
 
 def test_video_interpolation_inference():
     model = init_model(
-        './configs/video_interpolators/cain/cain_b5_320k_vimeo-triple.py',
+        './configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py',
         None,
         device='cpu')
     model.cfg['demo_pipeline'] = [
@@ -96,7 +96,7 @@ def test_video_interpolation_inference():
     assert isinstance(fps, float)
     if torch.cuda.is_available():
         model = init_model(
-            './configs/video_interpolators/cain/cain_b5_320k_vimeo-triple.py',
+            './configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py',
             None,
             device='cuda')
         model.cfg['demo_pipeline'] = [
