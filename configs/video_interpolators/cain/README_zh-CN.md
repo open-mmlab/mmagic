@@ -21,10 +21,10 @@
 
 <br/>
 
-在 RGB 通道上评估。
+在 Y 通道上进行评估.
 我们使用 `PSNR` 和 `SSIM` 作为指标。
 学习率调整策略是等间隔调整策略。
 
 |                                             算法                                             | vimeo-90k-triple |                                                                                                                                         下载                                                                                                            |
 |:-------------------------------------------------------------------------------------------:|:----------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| [cain_b5_320k_vimeo-triple](/configs/video_interpolators/cain/cain_b5_320k_vimeo-triple.py) |   34.49/0.9565   | [模型](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth)/[日志](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.log.json) |
+| [cain_b5_320k_vimeo-triplet](/configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py) |   34.49/0.9565   | [模型](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth)/[日志](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.log.json) |
