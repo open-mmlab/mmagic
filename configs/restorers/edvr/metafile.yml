@@ -24,7 +24,7 @@ Models:
   In Collection: EDVR
   Metadata:
     Training Data: REDS
-  Name: edvrm
+  Name: edvrm_x4
   Results:
   - Dataset: REDS
     Metrics:
@@ -33,3 +33,29 @@ Models:
         SSIM: 0.8684
     Task: restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth
+- Config: configs/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4.py
+  In Collection: EDVR
+  Metadata:
+    Training Data: REDS
+  Name: edvrl_lr2e-4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4:
+        PSNR: 31.001
+        SSIM: 0.8784
+    Task: restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth
+- Config: configs/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4.py
+  In Collection: EDVR
+  Metadata:
+    Training Data: REDS
+  Name: edvrl_c128b40_8x8_lr2e-4_600k_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4:
+        PSNR: 31.0467
+        SSIM: 0.8793
+    Task: restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104-4509865f.pth

@@ -158,7 +158,7 @@ visual_config = None
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = f'./work_dirs/{exp_name}'
-load_from = 'experiments/edvrl_wotsa_c128b40_8x8_lr2e-4_400k_reds4/iter_600000.pth'  # noqa: E501
+load_from = 'https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth'  # noqa: E501
 resume_from = None
 workflow = [('train', 1)]
 find_unused_parameters = True
