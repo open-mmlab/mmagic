@@ -1,5 +1,22 @@
 <div align="center">
   <img src="resources/mmediting-logo.png" width="500px"/>
+  <div>&nbsp;</div>
+  <div align="center">
+    <b><font size="5">OpenMMLab 官网</font></b>
+    <sup>
+      <a href="https://openmmlab.com">
+        <i><font size="4">HOT</font></i>
+      </a>
+    </sup>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <b><font size="5">OpenMMLab 开放平台</font></b>
+    <sup>
+      <a href="https://platform.openmmlab.com">
+        <i><font size="4">TRY IT OUT</font></i>
+      </a>
+    </sup>
+  </div>
+  <div>&nbsp;</div>
 </div>
 
 ## Introduction
@@ -107,11 +124,11 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 安装
 
-请参考[安装指南](docs/install.md)进行安装。
+请参考[安装指南](docs/zh_cn/install.md)进行安装。
 
 ## 开始使用
 
-请参考[使用教程](docs/getting_started.md)获取MMEditing的基本用法。
+请参考[使用教程](docs/zh_cn/getting_started.md)获取MMEditing的基本用法。
 
 
 

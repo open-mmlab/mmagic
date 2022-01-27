@@ -86,7 +86,7 @@ def get_task_name(md_file):
     layers = md_file.split('/')
     for i in range(len(layers) - 1):
         if layers[i] == 'configs':
-            return layers[i + 1]
+            return layers[i + 1].capitalize()
     return 'Unknown'
 
 
@@ -151,8 +151,8 @@ def parse_md(md_file):
         collection_name = name
         while i < len(lines):
             # parse reference
-            if lines[i].startswith('<!-- [PAPER_URL:'):
-                url = re.match(r'<!-- \[PAPER_URL: (.*?)] -->', lines[i])
+            if lines[i].startswith('> ['):
+                url = re.match(r'> \[.*]\((.*)\)', lines[i])
                 url = url.groups()[0]
                 collection['Paper'].append(url)
                 i += 1

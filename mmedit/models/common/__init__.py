@@ -2,6 +2,7 @@
 from .aspp import ASPP
 from .contextual_attention import ContextualAttentionModule
 from .conv import *  # noqa: F401, F403
+from .downsample import pixel_unshuffle
 from .flow_warp import flow_warp
 from .gated_conv_module import SimpleGatedConvModule
 from .gca_module import GCAModule
@@ -24,7 +25,7 @@ __all__ = [
     'ResidualBlockNoBN', 'make_layer', 'MaskConvModule', 'extract_bbox_patch',
     'extract_around_bbox', 'set_requires_grad', 'scale_bbox',
     'DepthwiseSeparableConvModule', 'ContextualAttentionModule', 'GCAModule',
-    'SimpleGatedConvModule', 'LinearModule', 'flow_warp',
+    'SimpleGatedConvModule', 'LinearModule', 'flow_warp', 'ImgNormalize',
     'generation_init_weights', 'GANImageBuffer', 'UnetSkipConnectionBlock',
-    'ResidualBlockWithDropout', 'ImgNormalize'
+    'ResidualBlockWithDropout', 'pixel_unshuffle'
 ]

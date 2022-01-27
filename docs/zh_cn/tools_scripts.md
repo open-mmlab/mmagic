@@ -26,9 +26,9 @@ Params: 1.52 M
 
 **注**：此工具仍处于实验阶段，我们不保证数字正确。 您可以将结果用于简单的比较，但在技术报告或论文中采用它之前，请仔细检查它。
 
-(1) FLOP 与输入形状有关，而参数量与输入形状无关。默认输入形状为 (1, 3, 250, 250)。
+(1) FLOPs 与输入形状有关，而参数量与输入形状无关。默认输入形状为 (1, 3, 250, 250)。
 (2) 一些运算符不计入 FLOP，如 GN 和自定义运算符。
-你可以通过修改 [`mmcv/cnn/utils/flops_counter.py`](https://github.com/open-mmlab/mmcv/blob/master/mmcv/cnn/utils/flops_counter.py`) 来添加对新运算符的支持。
+你可以通过修改 [`mmcv/cnn/utils/flops_counter.py`](https://github.com/open-mmlab/mmcv/blob/master/mmcv/cnn/utils/flops_counter.py) 来添加对新运算符的支持。
 
 ### 发布模型
 
@@ -158,7 +158,8 @@ python tools/onnx2tensorrt.py
 我们在 `tools/deploy_test.py` 中提供了评估 TensorRT 和 ONNX 模型的方法。
 
 #### 先决条件
-要评估 ONNX 和 TensorRT 模型，应先安装 onnx、onnxruntime 和 TensorRT。遵循 [mmcv 中的 ONNXRuntime](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) 和 [mmcv 中的 TensorRT 插件](https:// github.com/open-mmlab/mmcv/blob/master/docs/tensorrt_plugin.md）使用 ONNXRuntime 自定义操作和 TensorRT 插件安装 `mmcv-full`。
+
+要评估 ONNX 和 TensorRT 模型，应先安装 onnx、onnxruntime 和 TensorRT。遵循 [mmcv 中的 ONNXRuntime](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) 和 [mmcv 中的 TensorRT 插件](https://github.com/open-mmlab/mmcv/blob/master/docs/tensorrt_plugin.md）使用 ONNXRuntime 自定义操作和 TensorRT 插件安装 `mmcv-full`。
 
 #### 用法
 

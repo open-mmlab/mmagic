@@ -51,3 +51,45 @@ If you want to use LMDB datasets for faster IO speed, you can make LMDB files by
 ```shell
 python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
+
+## Crop to sub-images
+
+MMEditing also support cropping REDS images to sub-images for faster IO. We provide such a script:
+
+```shell
+python tools/data/super-resolution/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
+```
+
+The generated data is stored under `REDS` and the data structure is as follows, where `_sub` indicates the sub-images.
+
+```text
+mmediting
+├── mmedit
+├── tools
+├── configs
+├── data
+│   ├── REDS
+│   │   ├── train_sharp
+│   │   │   ├── 000
+│   │   │   ├── 001
+│   │   │   ├── ...
+│   │   ├── train_sharp_sub
+│   │   │   ├── 000_s001
+│   │   │   ├── 000_s002
+│   │   │   ├── ...
+│   │   │   ├── 001_s001
+│   │   │   ├── ...
+│   │   ├── train_sharp_bicubic
+│   │   │   ├── X4
+│   │   │   │   ├── 000
+│   │   │   │   ├── 001
+│   │   │   │   ├── ...
+│   │   │   ├── X4_sub
+│   │   │   ├── 000_s001
+│   │   │   ├── 000_s002
+│   │   │   ├── ...
+│   │   │   ├── 001_s001
+│   │   │   ├── ...
+```
+
+Note that by default `preprocess_reds_dataset.py` does not make lmdb and annotation file for the cropped dataset. You may need to modify the scripts a little bit for such operations.

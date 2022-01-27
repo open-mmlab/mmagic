@@ -6,7 +6,8 @@ import pytest
 
 from mmedit.datasets.pipelines import (Crop, CropAroundCenter, CropAroundFg,
                                        CropAroundUnknown, CropLike, FixedCrop,
-                                       ModCrop, PairedRandomCrop)
+                                       ModCrop, PairedRandomCrop,
+                                       RandomResizedCrop)
 
 
 class TestAugmentations:
@@ -67,7 +68,7 @@ class TestAugmentations:
         assert results['img_crop_bbox'][2] == 128
         assert results['img_crop_bbox'][3] == 128
 
-        # test random crop for lager size than the original shape
+        # test random crop for larger size than the original shape
         results = copy.deepcopy(self.results)
         random_crop = Crop(['img'], crop_size=(512, 512), random_crop=True)
         results = random_crop(results)
@@ -75,6 +76,83 @@ class TestAugmentations:
         assert str(random_crop) == (
             random_crop.__class__.__name__ +
             "keys=['img'], crop_size=(512, 512), random_crop=True")
+
+        # test center crop for size larger than original shape
+        results = copy.deepcopy(self.results)
+        center_crop = Crop(['img'],
+                           crop_size=(512, 512),
+                           random_crop=False,
+                           is_pad_zeros=True)
+        gt_pad = np.pad(
+            self.results['img'], ((128, 128), (128, 128), (0, 0)),
+            mode='constant',
+            constant_values=0)
+        results = center_crop(results)
+        assert results['img_crop_bbox'] == [128, 128, 512, 512]
+        assert np.array_equal(gt_pad, results['img'])
+
+    def test_random_resized_crop(self):
+        with pytest.raises(TypeError):
+            RandomResizedCrop(['img'], crop_size=(0.23, 0.1))
+        with pytest.raises(TypeError):
+            RandomResizedCrop(['img'], crop_size=(128, 128), scale=(1, 1))
+        with pytest.raises(TypeError):
+            RandomResizedCrop(['img'],
+                              crop_size=(128, 128),
+                              scale=(0.5, 0.5),
+                              ratio=(1, 2))
+
+        # test random crop
+        results = copy.deepcopy(self.results)
+        random_resized_crop = RandomResizedCrop(['img'], crop_size=(128, 128))
+        results = random_resized_crop(results)
+        assert 0 <= results['img_crop_bbox'][0] <= 256
+        assert 0 <= results['img_crop_bbox'][1] <= 256
+        assert results['img_crop_bbox'][2] <= 256
+        assert results['img_crop_bbox'][3] <= 256
+        assert results['img'].shape == (128, 128, 3)
+
+        # test random crop with integer crop size
+        results = copy.deepcopy(self.results)
+        random_resized_crop = RandomResizedCrop(['img'], crop_size=128)
+        results = random_resized_crop(results)
+        assert 0 <= results['img_crop_bbox'][0] <= 256
+        assert 0 <= results['img_crop_bbox'][1] <= 256
+        assert results['img_crop_bbox'][2] <= 256
+        assert results['img_crop_bbox'][3] <= 256
+        assert results['img'].shape == (128, 128, 3)
+        assert str(random_resized_crop) == (
+            random_resized_crop.__class__.__name__ +
+            "(keys=['img'], crop_size=(128, 128), scale=(0.08, 1.0), "
+            f'ratio={(3. / 4., 4. / 3.)}, interpolation=bilinear)')
+
+        # test random crop for larger size than the original shape
+        results = copy.deepcopy(self.results)
+        random_resized_crop = RandomResizedCrop(['img'], crop_size=(512, 512))
+        results = random_resized_crop(results)
+        assert results['img'].shape == (512, 512, 3)
+        assert str(random_resized_crop) == (
+            random_resized_crop.__class__.__name__ +
+            "(keys=['img'], crop_size=(512, 512), scale=(0.08, 1.0), "
+            f'ratio={(3. / 4., 4. / 3.)}, interpolation=bilinear)')
+
+        # test center crop for in_ratio < min(self.ratio)
+        results = copy.deepcopy(self.results)
+        center_crop = RandomResizedCrop(['img'],
+                                        crop_size=(128, 128),
+                                        ratio=(100.0, 200.0))
+        results = center_crop(results)
+        assert results['img_crop_bbox'] == [126, 0, 256, 3]
+        assert results['img'].shape == (128, 128, 3)
+
+        # test center crop for in_ratio > max(self.ratio)
+        results = copy.deepcopy(self.results)
+        center_crop = RandomResizedCrop(['img'],
+                                        crop_size=(128, 128),
+                                        ratio=(0.01, 0.02))
+        results = center_crop(results)
+        assert results['img_crop_bbox'] == [0, 125, 5, 256]
+        assert results['img'].shape == (128, 128, 3)
 
     def test_fixed_crop(self):
         with pytest.raises(TypeError):
@@ -87,6 +165,17 @@ class TestAugmentations:
         fixed_crop = FixedCrop(['img_a', 'img'], crop_size=(128, 128))
         with pytest.raises(ValueError):
             results = fixed_crop(results)
+
+        # test sequence
+        results = copy.deepcopy(self.results)
+        results['img_a'] = [results['img_a'], results['img_a']]
+        results['img_b'] = [results['img_b'], results['img_b']]
+        fixed_crop = FixedCrop(['img_a', 'img_b'], crop_size=(128, 128))
+        results = fixed_crop(results)
+        for img in results['img_a']:
+            assert img.shape == (128, 128, 3)
+        for img in results['img_b']:
+            assert img.shape == (128, 128, 3)
 
         # test given pos crop
         results = copy.deepcopy(self.results)

@@ -36,6 +36,7 @@
 
    quick_run.md
 
+
 .. toctree::
    :maxdepth: 2
    :caption: 教程
@@ -61,15 +62,15 @@
    faq.md
 
 .. toctree::
-   :caption: 语言切换
-
-   switch_language.md
-
-.. toctree::
    :maxdepth: 2
    :caption: 接口文档
 
    api.rst
+
+.. toctree::
+   :caption: 语言切换
+
+   switch_language.md
 
 Indices and tables
 ==================

@@ -12,3 +12,19 @@
  }
 
 ```
+
+请从 [Places365](http://places2.csail.mit.edu/download.html) 下载并准备数据。
+
+```text
+mmediting
+├── mmedit
+├── tools
+├── configs
+├── data
+│   ├── places
+│   │   ├── test_set
+│   │   ├── train_set
+|   |   ├── meta
+|   |   |    ├── Places365_train.txt
+|   |   |    ├── Places365_val.txt
+```

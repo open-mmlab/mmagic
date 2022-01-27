@@ -15,7 +15,9 @@ import os
 import subprocess
 import sys
 
-sys.path.insert(0, os.path.abspath('..'))
+import pytorch_sphinx_theme
+
+sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
@@ -29,25 +31,27 @@ author = 'MMEditing Authors'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'myst_parser',
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
-    'sphinx_markdown_tables'
-]  # yapf: disable
+    'sphinx_markdown_tables',
+    'sphinx_copybutton',
+    'myst_parser',
+]
 
 autodoc_mock_imports = [
-    'mmcv._ext',
-    'mmcv.ops.modulated_deform_conv2d',
-    'mmcv.ops.ModulatedDeformConv2d',
-    'mmedit.version',
-    'skimage'
-]  # yapf: disable
+    'mmedit.version', 'skimage', 'mmcv.ops.ModulatedDeformConv2d',
+    'mmcv.ops.modulated_deform_conv2d', 'mmcv._ext'
+]
 
 source_suffix = {
     '.rst': 'restructuredtext',
     '.md': 'markdown',
 }
+
+# Ignore >>> when copying code
+copybutton_prompt_text = r'>>> |\.\.\. '
+copybutton_prompt_is_regexp = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -62,12 +66,29 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+# html_theme = 'sphinx_rtd_theme'
+html_theme = 'pytorch_sphinx_theme'
+html_theme_path = [pytorch_sphinx_theme.get_html_theme_path()]
+
+html_theme_options = {
+    # 'logo_url': 'https://mmocr.readthedocs.io/en/latest/',
+    'menu': [
+        {
+            'name': 'GitHub',
+            'url': 'https://github.com/open-mmlab/mmediting',
+        },
+    ],
+    'menu_lang':
+    'cn'
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = []
+html_static_path = ['_static']
+html_css_files = ['css/readthedocs.css']
+
+myst_enable_extensions = ['colon_fence']
 
 language = 'zh_CN'
 
