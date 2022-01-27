@@ -63,7 +63,7 @@ Models:
   In Collection: EDVR
   Metadata:
     Training Data: REDS
-  Name: edvrl_lr2e-4
+  Name: edvrl_8x8
   Results:
   - Dataset: REDS
     Metrics:
