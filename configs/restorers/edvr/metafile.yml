@@ -76,7 +76,7 @@ Models:
   In Collection: EDVR
   Metadata:
     Training Data: REDS
-  Name: edvrl_c128b40_8x8_lr2e-4_600k_reds4
+  Name: edvrl_c128b40
   Results:
   - Dataset: REDS
     Metrics:
