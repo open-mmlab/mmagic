@@ -20,10 +20,13 @@ Video restoration tasks, including super-resolution, deblurring, etc, are drawin
 Evaluated on RGB channels.
 The metrics are `PSNR / SSIM` .
 
-|                                        Method                                         |       REDS4       |                                                                                                                  Download                                                                                                                   |
-| :-----------------------------------------------------------------------------------: | :---------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [edvrm_wotsa_x4_8x4_600k_reds](/configs/restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py) | 30.3430 /  0.8664 | [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522_141644.log.json) |
-|       [edvrm_x4_8x4_600k_reds](/configs/restorers/edvr/edvrm_x4_g8_600k_reds.py)       | 30.4194 / 0.8684  |       [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20200622_102544.log.json)       |
+|                                                       Method                                                      |       REDS4      |                                                                                                                                Download                                                                                                                               |
+|:-----------------------------------------------------------------------------------------------------------------:|:----------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|               [edvrm_wotsa_x4_8x4_600k_reds](/configs/restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py)              | 30.3430 / 0.8664 |              [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522_141644.log.json)              |
+|                     [edvrm_x4_8x4_600k_reds](/configs/restorers/edvr/edvrm_x4_g8_600k_reds.py)                    | 30.4194 / 0.8684 |                    [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20200622_102544.log.json)                    |
+| [edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4](/configs/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4.py) | 31.0010 / 0.8784 | [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228_144658.log.json) |
+|       [edvrl_c128b40_8x8_lr2e-4_600k_reds4](/configs/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4.py)       | 31.0467 / 0.8793 |       [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104-4509865f.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104_171823.log.json)       |
+
 
 
 ## Citation
@@ -37,15 +40,3 @@ The metrics are `PSNR / SSIM` .
   year      = {2019},
 }
 ```
-
-## Results and models
-
-Evaluated on RGB channels.
-The metrics are `PSNR / SSIM` .
-
-| Method                                                                                                            | REDS4            | Download                                                                                                                                                                                                                                                              |
-|-------------------------------------------------------------------------------------------------------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [edvrm_wotsa_x4_8x4_600k_reds](/configs/restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py)                            | 30.3430 / 0.8664 | [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522_141644.log.json)                           |
-| [edvrm_x4_8x4_600k_reds](/configs/restorers/edvr/edvrm_x4_g8_600k_reds.py)                                        | 30.4194 / 0.8684 | [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20200622_102544.log.json)                                       |
-| [edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4](/configs/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4.py) | 31.0010 / 0.8784 | [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228_144658.log.json) |
-| [edvrl_c128b40_8x8_lr2e-4_600k_reds4](/configs/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4.py)             | 31.0467 / 0.8793 | [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104-4509865f.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104_171823.log.json)             |
