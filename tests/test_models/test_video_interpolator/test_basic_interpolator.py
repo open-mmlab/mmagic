@@ -267,19 +267,18 @@ def test_basic_interpolator():
                 iteration='100')
 
     # test merge_frames
-    input_tensors = [torch.rand(2, 3, 256, 256)]
-    output_tensors = [torch.rand(1, 3, 256, 256)]
+    input_tensors = torch.rand(2, 2, 3, 256, 256)
+    output_tensors = torch.rand(2, 1, 3, 256, 256)
     result = restorer.merge_frames(input_tensors, output_tensors)
     assert isinstance(result, list)
-    assert len(result) == 3
+    assert len(result) == 5
     assert result[0].shape == (256, 256, 3)
 
     # test split_frames
-    tensors = torch.rand(10, 3, 256, 256)
+    tensors = torch.rand(1, 10, 3, 256, 256)
     result = restorer.split_frames(tensors)
-    assert isinstance(result, list)
-    assert len(result) == 9
-    assert result[0].shape == (2, 3, 256, 256)
+    assert isinstance(result, torch.Tensor)
+    assert result.shape == (9, 2, 3, 256, 256)
 
     # test evaluate 5d output
     test_cfg = dict(metrics=('PSNR', 'SSIM'), crop_border=0)
