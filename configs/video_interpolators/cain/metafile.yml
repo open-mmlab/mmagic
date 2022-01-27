@@ -3,7 +3,8 @@ Collections:
     Architecture:
     - CAIN
   Name: CAIN
-  Paper: []
+  Paper:
+  - https://aaai.org/ojs/index.php/AAAI/article/view/6693/6547
   README: configs/video_interpolators/cain/README.md
 Models:
 - Config: configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py

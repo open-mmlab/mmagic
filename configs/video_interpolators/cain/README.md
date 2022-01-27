@@ -21,8 +21,8 @@ Evaluated on Y channels.
 The metrics are `PSNR / SSIM` .
 The learning rate adjustment strategy is `Step LR scheduler with min_lr clipping`.
 
-|                                            Method                                           | vimeo-90k-triple |                                                                                                                     Download                                                                                                                             |
-|:-------------------------------------------------------------------------------------------:|:----------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|                                             Method                                           | vimeo-90k-triple |                                                                                                                     Download                                                                                                                             |
+|:--------------------------------------------------------------------------------------------:|:----------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | [cain_b5_320k_vimeo-triple](/configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py) |   34.49/0.9565   | [model](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth)/[log](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.log.json) |
 
 ## Citation
