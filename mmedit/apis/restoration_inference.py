@@ -11,7 +11,7 @@ def restoration_inference(model, img, ref=None):
     Args:
         model (nn.Module): The loaded model.
         img (str): File path of input image.
-        ref (str | None): File path of reference image. Default:None.
+        ref (str | None): File path of reference image. Default: None.
 
     Returns:
         Tensor: The predicted restoration result.
