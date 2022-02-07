@@ -13,6 +13,7 @@ from mmcv.cnn.utils import normal_init
 from mmcv.ops.fused_bias_leakyrelu import (FusedBiasLeakyReLU,
                                            fused_bias_leakyrelu)
 from mmcv.ops.upfirdn2d import upfirdn2d
+from packaging import version
 from torch.nn.init import _calculate_correct_fan
 
 
@@ -30,7 +31,7 @@ def pixel_norm(x, eps=1e-6):
     Returns:
         torch.Tensor: Normalized tensor.
     """
-    if torch.__version__ >= '1.7.0':
+    if version.parse(torch.__version__) >= version.parse('1.7.0'):
         norm = torch.linalg.norm(x, ord=2, dim=1, keepdim=True)
     # support older pytorch version
     else:
