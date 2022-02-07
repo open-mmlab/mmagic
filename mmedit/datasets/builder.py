@@ -9,8 +9,8 @@ import torch
 from mmcv.parallel import collate
 from mmcv.runner import get_dist_info
 from mmcv.utils import build_from_cfg
-from torch.utils.data import ConcatDataset, DataLoader
 from packaging import version
+from torch.utils.data import ConcatDataset, DataLoader
 
 from .dataset_wrappers import RepeatDataset
 from .registry import DATASETS
