@@ -24,7 +24,7 @@ jobs:
         run: |
           # markdownlint requires ruby >= 2.7
           sudo apt-get update
-          sudo apt install ruby-full
+          sudo apt install ruby
       - name: Install pre-commit hook
         run: |
           pip install pre-commit
