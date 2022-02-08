@@ -97,12 +97,14 @@ jobs:
         run: pip install pip --upgrade --user
       - name: Install PyTorch
         run: pip install torch==1.8.2+cpu torchvision==0.9.2+cpu -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html
+      - name: Install OpenCV 
+        run: pip install opencv-python-headless
       - name: Install MMCV
         run: |
           pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.8/index.html
           python -c 'import mmcv; print(mmcv.__version__)'
-      - name: Install FaceXLib OpenCV libav
-        run: pip install facexlib opencv-python-headless av
+      - name: Install FaceXLib libav
+        run: pip install facexlib av
       - name: Install unittest dependencies
         run: |
           pip install -r requirements.txt
