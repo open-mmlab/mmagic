@@ -25,27 +25,27 @@ jobs:
         include:
           - torch: 1.5.0
             torchvision: 0.6.0
-            torch_mmcv: 1.5
+            mmcv_link: 1.5
             python-version: 3.7
           - torch: 1.6.0
             torchvision: 0.7.0
-            torch_mmcv: 1.6
+            mmcv_link: 1.6
             python-version: 3.7
           - torch: 1.7.1
             torchvision: 0.8.2
-            torch_mmcv: 1.7
+            mmcv_link: 1.7
             python-version: 3.7
           - torch: 1.8.1
             torchvision: 0.9.1
-            torch_mmcv: 1.8
+            mmcv_link: 1.8
             python-version: 3.8
           - torch: 1.9.0
             torchvision: 0.10.0
-            torch_mmcv: 1.9
+            mmcv_link: 1.9
             python-version: 3.8
           - torch: 1.10.2
             torchvision: 0.11.3
-            torch_mmcv: 1.10
+            mmcv_link: 1.10
             python-version: 3.9
     steps:
       - uses: actions/checkout@v2
@@ -62,7 +62,7 @@ jobs:
         run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install MMCV
         run: |
-          pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch${{matrix.torch}}/index.html
+          pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch${{matrix.mmcv_link}}/index.html
           python -c 'import mmcv; print(mmcv.__version__)'
       - name: Install FaceXLib
         run: pip install facexlib
