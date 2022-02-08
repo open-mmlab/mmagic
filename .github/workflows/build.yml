@@ -81,3 +81,38 @@ jobs:
           coverage run --branch --source mmedit -m pytest tests/
           coverage xml
           coverage report -m
+  test_cpu_windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Upgrade pip
+        run: pip install pip --upgrade
+      - name: Install PyTorch
+        run: pip install torch==1.8.2+cpu torchvision==0.9.2+cpu -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html
+      - name: Install MMCV
+        run: |
+          pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch${{matrix.mmcv_link}}/index.html
+          python -c 'import mmcv; print(mmcv.__version__)'
+      - name: Install FaceXLib
+        run: pip install facexlib
+      - name: Install av
+        run: python -m pip install av
+      - name: Install unittest dependencies
+        run: |
+          pip install -r requirements.txt
+      - name: Show pip list and install
+        run: pip list
+      - name: Build and install
+        run: rm -rf .eggs && pip install -e .
+      - name: Run unittests and generate coverage report
+        run: |
+          coverage run --branch --source mmedit -m pytest tests/
+          coverage xml
+          coverage report -m
