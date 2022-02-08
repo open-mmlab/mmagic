@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build_cpu_linux:
+  test_cpu_linux:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
