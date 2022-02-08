@@ -4,22 +4,13 @@ on:
   push:
     branches:
       - master
-    paths-ignore:
-      - 'README.md'
-      - 'README_zh-CN.md'
-      - 'docs/**'
-      - 'examples/**'
-      - '.dev_scripts/**'
-      - '.pre-commit-config.yaml'
 
   pull_request:
-    paths-ignore:
-      - 'README.md'
-      - 'README_zh-CN.md'
-      - 'docs/**'
-      - 'examples/**'
-      - '.dev_scripts/**'
-      - '.pre-commit-config.yaml'
+    paths:
+      - '**.py'
+      - '.github/**'
+      - 'requirements/**'
+      - 'tests/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -30,28 +21,32 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: [3.7]
-        torch: [1.5.0, 1.8.1, 1.9.0, 1.10.2]
-        # torch: [1.5.0, 1.6.0, 1.7.1, 1.8.1, 1.9.0, 1.10.2]
+        torch: [1.5.0, 1.6.0, 1.7.1, 1.8.1, 1.9.0, 1.10.2]
         include:
           - torch: 1.5.0
             torchvision: 0.6.0
             torch_mmcv: 1.5
-          # - torch: 1.6.0
-          #   torchvision: 0.7.0
-          #   torch_mmcv: 1.6
-          # - torch: 1.7.1
-          #   torchvision: 0.8.2
-          #   torch_mmcv: 1.7
+            python-version: 3.7
+          - torch: 1.6.0
+            torchvision: 0.7.0
+            torch_mmcv: 1.6
+            python-version: 3.7
+          - torch: 1.7.1
+            torchvision: 0.8.2
+            torch_mmcv: 1.7
+            python-version: 3.7
           - torch: 1.8.1
             torchvision: 0.9.1
             torch_mmcv: 1.8
+            python-version: 3.8
           - torch: 1.9.0
             torchvision: 0.10.0
             torch_mmcv: 1.9
+            python-version: 3.8
           - torch: 1.10.2
             torchvision: 0.11.3
             torch_mmcv: 1.10
+            python-version: 3.9
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
