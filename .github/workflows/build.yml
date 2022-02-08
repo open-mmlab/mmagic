@@ -101,10 +101,8 @@ jobs:
         run: |
           pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.8/index.html
           python -c 'import mmcv; print(mmcv.__version__)'
-      - name: Install FaceXLib
-        run: pip install facexlib
-      - name: Install av
-        run: python -m pip install av
+      - name: Install FaceXLib OpenCV libav
+        run: pip install facexlib opencv-python-headless av
       - name: Install unittest dependencies
         run: |
           pip install -r requirements.txt
