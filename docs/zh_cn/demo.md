@@ -39,19 +39,13 @@ python demo/matting_demo.py configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_com
 您可以使用以下命令来测试要恢复的图像。
 
 ```shell
-python demo/restoration_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${SAVE_FILE} [--imshow] [--device ${GPU_ID}] [--ref_path ${REF_PATH}]
+python demo/restoration_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${SAVE_FILE} [--imshow] [--device ${GPU_ID}]
 ```
 
-如果指定了 `--imshow` ，演示程序将使用 opencv 显示图像。例子：
+如果指定了 --imshow ，演示程序将使用 opencv 显示图像。例子：
 
 ```shell
 python demo/restoration_demo.py configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py work_dirs/esrgan_x4c64b23g32_g1_400k_div2k/latest.pth tests/data/lq/baboon_x4.png demo/demo_out_baboon.png
-```
-
-您可以通过提供 `--ref_path` 参数来测试基于参考的超分辨率算法。例子：
-
-```shell
-python demo/restoration_demo.py configs/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth tests/data/test_multiple_gt/sequence_1/00000000.png work_dirs/demo_out.png --ref_path tests/data/test_multiple_gt/sequence_1/00000001.png
 ```
 
 #### 人脸图像超分辨率
@@ -73,7 +67,7 @@ python demo/restoration_face_demo.py configs/restorers/glean/glean_in128out1024_
 您可以使用以下命令来测试视频以进行恢复。
 
 ```shell
-python demo/restoration_video_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${INPUT_DIR} ${OUTPUT_DIR} [--window_size=${WINDOW_SIZE}] [--device ${GPU_ID}]
+python demo/restoration_video_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${INPUT_DIR} ${OUTPUT_DIR} [--window_size=$WINDOW_SIZE] [--device ${GPU_ID}]
 ```
 
 它同时支持滑动窗口框架和循环框架。 例子：
@@ -87,33 +81,10 @@ python demo/restoration_video_demo.py ./configs/restorers/edvr/edvrm_wotsa_x4_g8
 BasicVSR:
 
 ```shell
-python demo/restoration_video_demo.py ./configs/restorers/2basicvsr/basicvsr_reds4.py https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth data/Vid4/BIx4/calendar/ ./output
+python demo/restoration_video_demo.py ./configs/restorers/basicvsr/basicvsr_reds4.py https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth data/Vid4/BIx4/calendar/ ./output
 ```
 
 复原的视频将保存在 `output/` 中。
-
-#### 视频插帧
-
-您可以使用以下命令来测试视频插帧。
-
-```shell
-python demo/video_interpolation_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${INPUT_DIR} ${OUTPUT_DIR} [--fps_multiplier ${FPS_MULTIPLIER}] [--fps ${FPS}]
-```
-
-`${INPUT_DIR}` 和 `${OUTPUT_DIR}` 可以是视频文件路径或存放一系列有序图像的文件夹。
-若 `${OUTPUT_DIR}` 是视频文件地址，其帧率可由输入视频帧率和 `fps_multiplier` 共同决定，也可由 `fps` 直接给定(其中前者优先级更高）。例子：
-
-由输入视频帧率和 `fps_multiplier` 共同决定输出视频的帧率：
-
-```shell
-python demo/video_interpolation_demo.py configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth tests/data/test_inference.mp4 tests/data/test_inference_vfi_out.mp4 --fps_multiplier 2.0
-```
-
-由 `fps` 直接给定输出视频的帧率：
-
-```shell
-python demo/video_interpolation_demo.py configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth tests/data/test_inference.mp4 tests/data/test_inference_vfi_out.mp4 --fps 60.0
-```
 
 #### 图像生成
 
