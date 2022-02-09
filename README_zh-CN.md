@@ -17,25 +17,31 @@
     </sup>
   </div>
   <div>&nbsp;</div>
+
+[![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/latest/)
+[![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
+[![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
+[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
+[![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+[![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+
+[📘使用文档](https://mmediting.readthedocs.io/zh_CN/latest/) |
+[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/latest/install.html) |
+[👀模型库](https://mmediting.readthedocs.io/zh_CN/latest/modelzoo.html) |
+[🆕更新记录](https://github.com/open-mmlab/mmediting/blob/master/docs/zh_cn/changelog.md) |
+[🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
+[🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
+
 </div>
 
 ## Introduction
 
 [English](/README.md) | 简体中文
 
-[![Documentation](https://readthedocs.org/projects/mmediting/badge/?version=latest)](https://mmediting.readthedocs.io/en/latest/?badge=latest)
-[![actions](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
-[![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![LICENSE](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
-[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
-[![Percentage of issues still open](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
-
 MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://open-mmlab.github.io/) 项目的成员之一。
 
 主分支代码目前支持 **PyTorch 1.5 以上**的版本。
-
-📘 文献资料: https://mmediting.readthedocs.io/en/latest/.
 
 <div align="left">
   <img src="resources/mmediting-demo.jpg"/>
@@ -57,10 +63,6 @@ https://user-images.githubusercontent.com/56712176/153137446-1f4ee309-d231-4c0e-
 
   MMEditing 提供修复/抠图/超分辨率/生成等任务最先进的算法。
 
-## 许可证
-
-本项目开源自 [Apache 2.0 license](LICENSE)。
-
 ## 更新记录
 
 v0.10.0 版本已于 2021 年 8 月 12 日发布.
@@ -75,10 +77,10 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 <details open>
 <summary>修复</summary>
 
-- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
-- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
 - [x] [Global&Local](configs/inpainting/global_local/README.md) (ToG'2017)
+- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
 - [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
+- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
 
 </details>
 
@@ -86,29 +88,29 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 <summary>抠图</summary>
 
 - [x] [DIM](configs/mattors/dim/README.md) (CVPR'2017)
-- [x] [GCA](configs/mattors/gca/README.md) (AAAI'2020)
 - [x] [IndexNet](configs/mattors/indexnet/README.md) (ICCV'2019)
+- [x] [GCA](configs/mattors/gca/README.md) (AAAI'2020)
 
 </details>
 
 <details open>
 <summary>超分辨率</summary>
 
+- [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
+- [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
+- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
+- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
+- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
+- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
+- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
+- [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
+- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
+- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
 - [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
 - [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (NTIRE'2021)
-- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
-- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
-- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
 - [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
 - [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
 - [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
-- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
-- [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
-- [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
-- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
-- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
-- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
-- [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
 
 </details>
 
@@ -157,6 +159,10 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
     year={2020}
 }
 ```
+
+## 许可证
+
+本项目开源自 [Apache 2.0 license](LICENSE)。
 
 ## OpenMMLab 的其他项目
 

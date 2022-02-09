@@ -17,25 +17,31 @@
     </sup>
   </div>
   <div>&nbsp;</div>
+
+[![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/latest/)
+[![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
+[![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
+[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
+[![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+[![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+
+[📘Documentation](https://mmediting.readthedocs.io/en/latest/) |
+[🛠️Installation](https://mmediting.readthedocs.io/en/latest/install.html) |
+[👀Model Zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) |
+[🆕Update News](https://github.com/open-mmlab/mmediting/blob/master/docs/en/changelog.md) |
+[🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
+[🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
+
 </div>
 
 ## Introduction
 
 English | [简体中文](/README_zh-CN.md)
 
-[![Documentation](https://readthedocs.org/projects/mmediting/badge/?version=latest)](https://mmediting.readthedocs.io/en/latest/?badge=latest)
-[![actions](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
-[![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![LICENSE](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
-[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
-[![Percentage of issues still open](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
-
 MMEditing is an open source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://open-mmlab.github.io/) project.
 
 The master branch works with **PyTorch 1.5+**.
-
-📘 Documentation: https://mmediting.readthedocs.io/en/latest/.
 
 <div align="left">
   <img src="resources/mmediting-demo.jpg"/>
@@ -57,11 +63,7 @@ https://user-images.githubusercontent.com/56712176/153137446-1f4ee309-d231-4c0e-
 
   The toolbox provides state-of-the-art methods in inpainting/matting/super-resolution/generation.
 
-## License
-
-This project is released under the [Apache 2.0 license](LICENSE).
-
-## Changelog
+## News
 
 v0.12.0 was released in 2021-12-31.
 
@@ -81,10 +83,10 @@ Supported algorithms:
 <details open>
 <summary>Inpainting</summary>
 
-- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
-- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
 - [x] [Global&Local](configs/inpainting/global_local/README.md) (ToG'2017)
+- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
 - [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
+- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
 
 </details>
 
@@ -92,29 +94,29 @@ Supported algorithms:
 <summary>Matting</summary>
 
 - [x] [DIM](configs/mattors/dim/README.md) (CVPR'2017)
-- [x] [GCA](configs/mattors/gca/README.md) (AAAI'2020)
 - [x] [IndexNet](configs/mattors/indexnet/README.md) (ICCV'2019)
+- [x] [GCA](configs/mattors/gca/README.md) (AAAI'2020)
 
 </details>
 
 <details open>
 <summary>Super-Resolution</summary>
 
+- [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
+- [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
+- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
+- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
+- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
+- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
+- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
+- [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
+- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
+- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
 - [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
 - [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (NTIRE'2021)
-- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
-- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
-- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
 - [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
 - [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
 - [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
-- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
-- [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
-- [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
-- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
-- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
-- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
-- [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
 
 </details>
 
@@ -163,6 +165,10 @@ If you find this project useful in your research, please consider cite:
     year={2020}
 }
 ```
+
+## License
+
+This project is released under the [Apache 2.0 license](LICENSE).
 
 ## Projects in OpenMMLab
 
