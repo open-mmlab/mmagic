@@ -42,7 +42,7 @@ def gauss_filter(sigma, epsilon=1e-2):
     """
     half_size = np.ceil(
         sigma * np.sqrt(-2 * np.log(np.sqrt(2 * np.pi) * sigma * epsilon)))
-    size = np.int(2 * half_size + 1)
+    size = int(2 * half_size + 1)
 
     # create filter in x axis
     filter_x = np.zeros((size, size))
