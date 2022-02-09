@@ -79,6 +79,14 @@ jobs:
           coverage run --branch --source mmedit -m pytest tests/
           coverage xml
           coverage report -m
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          env_vars: OS,PYTHON
+          name: codecov-umbrella
+          fail_ci_if_error: false
   test_cpu_windows:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -117,3 +125,11 @@ jobs:
         run:
           coverage xml
           coverage report -m
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          env_vars: OS,PYTHON
+          name: codecov-umbrella
+          fail_ci_if_error: false
