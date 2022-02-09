@@ -93,15 +93,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Test exit
         run: |
-          python -c 'exit(0)'
           python -c 'exit(1)'
-          python -c 'exit(2)'
-          python -c 'exit(3)'
-          python -c 'exit(4)'
-          python -c 'exit(10)'
-          python -c 'exit(100)'
-          python -c 'exit(1000)'
-          python -c 'exit(-1)'
       - name: Upgrade pip
         run: pip install pip --upgrade --user
       - name: Install PyTorch
