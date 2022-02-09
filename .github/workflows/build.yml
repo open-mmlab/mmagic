@@ -91,9 +91,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Test exit
-        run: |
-          python -c 'import sys; sys.exit(1)'
       - name: Upgrade pip
         run: pip install pip --upgrade --user
       - name: Install PyTorch
@@ -115,6 +112,7 @@ jobs:
         run: pip install -e .
       - name: Run unittests and generate coverage report
         run: |
+          gcm coverage
           coverage run --branch --source mmedit -m pytest tests/test_data
           echo $LASTEXITCODE
           python -c 'import sys; sys.exit(1)'
