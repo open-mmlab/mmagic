@@ -17,68 +17,68 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test_cpu_linux:
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        torch: [1.5.0, 1.6.0, 1.7.1, 1.8.1, 1.9.0, 1.10.2]
-        include:
-          - torch: 1.5.0
-            torchvision: 0.6.0
-            mmcv_link: "1.5"
-            python-version: "3.7"
-          - torch: 1.6.0
-            torchvision: 0.7.0
-            mmcv_link: "1.6"
-            python-version: "3.7"
-          - torch: 1.7.1
-            torchvision: 0.8.2
-            mmcv_link: "1.7"
-            python-version: "3.7"
-          - torch: 1.8.1
-            torchvision: 0.9.1
-            mmcv_link: "1.8"
-            python-version: "3.8"
-          - torch: 1.9.0
-            torchvision: 0.10.0
-            mmcv_link: "1.9"
-            python-version: "3.8"
-          - torch: 1.10.2
-            torchvision: 0.11.3
-            mmcv_link: "1.10"
-            python-version: "3.9"
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Upgrade pip
-        run: pip install pip --upgrade
-      - name: Install PyTorch
-        run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html
-      - name: Install MMCV
-        run: |
-          echo "https://download.openmmlab.com/mmcv/dist/cpu/torch${{matrix.mmcv_link}}/index.html"
-          pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch${{matrix.mmcv_link}}/index.html --only-binary mmcv-full
-          python -c 'import mmcv; print(mmcv.__version__)'
-      - name: Install FaceXLib
-        run: pip install facexlib
-        if: ${{ matrix.torch != '1.5.0' && matrix.torch != '1.6.0' }}
-      - name: Install av
-        run: python -m pip install av
-      - name: Install unittest dependencies
-        run: |
-          pip install -r requirements.txt
-      - name: Show pip list and install
-        run: pip list
-      - name: Build and install
-        run: rm -rf .eggs && pip install -e .
-      - name: Run unittests and generate coverage report
-        run: |
-          coverage run --branch --source mmedit -m pytest tests/
-          coverage xml
-          coverage report -m
+  # test_cpu_linux:
+  #   runs-on: ubuntu-20.04
+  #   strategy:
+  #     matrix:
+  #       torch: [1.5.0, 1.6.0, 1.7.1, 1.8.1, 1.9.0, 1.10.2]
+  #       include:
+  #         - torch: 1.5.0
+  #           torchvision: 0.6.0
+  #           mmcv_link: "1.5"
+  #           python-version: "3.7"
+  #         - torch: 1.6.0
+  #           torchvision: 0.7.0
+  #           mmcv_link: "1.6"
+  #           python-version: "3.7"
+  #         - torch: 1.7.1
+  #           torchvision: 0.8.2
+  #           mmcv_link: "1.7"
+  #           python-version: "3.7"
+  #         - torch: 1.8.1
+  #           torchvision: 0.9.1
+  #           mmcv_link: "1.8"
+  #           python-version: "3.8"
+  #         - torch: 1.9.0
+  #           torchvision: 0.10.0
+  #           mmcv_link: "1.9"
+  #           python-version: "3.8"
+  #         - torch: 1.10.2
+  #           torchvision: 0.11.3
+  #           mmcv_link: "1.10"
+  #           python-version: "3.9"
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Set up Python ${{ matrix.python-version }}
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #     - name: Upgrade pip
+  #       run: pip install pip --upgrade
+  #     - name: Install PyTorch
+  #       run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html
+  #     - name: Install MMCV
+  #       run: |
+  #         echo "https://download.openmmlab.com/mmcv/dist/cpu/torch${{matrix.mmcv_link}}/index.html"
+  #         pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch${{matrix.mmcv_link}}/index.html --only-binary mmcv-full
+  #         python -c 'import mmcv; print(mmcv.__version__)'
+  #     - name: Install FaceXLib
+  #       run: pip install facexlib
+  #       if: ${{ matrix.torch != '1.5.0' && matrix.torch != '1.6.0' }}
+  #     - name: Install av
+  #       run: python -m pip install av
+  #     - name: Install unittest dependencies
+  #       run: |
+  #         pip install -r requirements.txt
+  #     - name: Show pip list and install
+  #       run: pip list
+  #     - name: Build and install
+  #       run: rm -rf .eggs && pip install -e .
+  #     - name: Run unittests and generate coverage report
+  #       run: |
+  #         coverage run --branch --source mmedit -m pytest tests/
+  #         coverage xml
+  #         coverage report -m
   test_cpu_windows:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -122,5 +122,6 @@ jobs:
           coverage run --branch --source mmedit -m pytest tests/test_data
         shell: cmd
       - name: Run unittests and generate coverage report
+        run:
           coverage xml
           coverage report -m
