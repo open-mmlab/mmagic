@@ -31,17 +31,17 @@ English | [简体中文](/README_zh-CN.md)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![Percentage of issues still open](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-
 MMEditing is an open source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://open-mmlab.github.io/) project.
 
-The master branch works with **PyTorch 1.3+**.
-Please kindly note that MMEditing will switch to **PyTorch 1.5+** from Oct. 2021. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
+The master branch works with **PyTorch 1.5+**.
 
-Documentation: https://mmediting.readthedocs.io/en/latest/.
+📘 Documentation: https://mmediting.readthedocs.io/en/latest/.
 
 <div align="left">
   <img src="resources/mmediting-demo.jpg"/>
 </div>
+
+https://user-images.githubusercontent.com/56712176/153137446-1f4ee309-d231-4c0e-b8c9-c10f79f45826.mp4
 
 ### Major features
 
@@ -56,6 +56,23 @@ Documentation: https://mmediting.readthedocs.io/en/latest/.
 - **State of the art**
 
   The toolbox provides state-of-the-art methods in inpainting/matting/super-resolution/generation.
+
+## License
+
+This project is released under the [Apache 2.0 license](LICENSE).
+
+## Changelog
+
+v0.12.0 was released in 2021-12-31.
+
+- Support RealBasicVSR
+- Support Real-ESRGAN
+
+Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
+
+Note that **MMSR** has been merged into this repo, as a part of MMEditing.
+With elaborate designs of the new framework and careful implementations,
+hope MMEditing could provide better experience.
 
 ## Model Zoo
 
@@ -109,30 +126,30 @@ Supported algorithms:
 
 </details>
 
+<details open>
+<summary>Video Interpolation</summary>
+
+- [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
+
+</details>
 
 Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) for more details.
-
-## License
-
-This project is released under the [Apache 2.0 license](LICENSE).
-
-## Changelog
-
-v0.10.0 was released in 2021-8-12.
-
-Note that **MMSR** has been merged into this repo, as a part of MMEditing.
-With elaborate designs of the new framework and careful implementations,
-hope MMEditing could provide better experience.
 
 ## Installation
 
 Please refer to [install.md](docs/en/install.md) for installation.
 
-## Get Started
+## Getting Started
 
 Please see [getting_started.md](docs/en/getting_started.md) for the basic usage of MMEditing.
 
+## Contributing
 
+We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md) in MMCV for the contributing guideline.
+
+## Acknowledgement
+
+MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
 
 ## Citation
 
@@ -146,15 +163,6 @@ If you find this project useful in your research, please consider cite:
     year={2020}
 }
 ```
-
-
-## Contributing
-
-We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md) in MMCV for the contributing guideline.
-
-## Acknowledgement
-
-MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
 
 ## Projects in OpenMMLab
 
