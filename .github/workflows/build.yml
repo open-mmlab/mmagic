@@ -90,7 +90,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2022, windows-2019, windows-2016]
+        os: [windows-2022]
         python-version: [3.8]
     steps:
       - uses: actions/checkout@v2
@@ -100,13 +100,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Upgrade pip
         run: pip install pip --upgrade --user
-      # - name: test exit
-      #   run: |
-      #     python -c 'import sys; sys.exit(1)'
-      #     python -c 'import sys; sys.exit(0)'
-      # - name: test exit
-      #   run:
-      #     python -c 'import sys; sys.exit(1)'
       - name: Install PyTorch
         run: pip install torch==1.8.2+cpu torchvision==0.9.2+cpu -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html
       - name: Install OpenCV
@@ -126,7 +119,7 @@ jobs:
         run: pip install -e .
       - name: Run unittests
         run:
-          coverage run --branch --source mmedit -m pytest tests/test_data
+          coverage run --branch --source mmedit -m pytest tests
       - name: Generate coverage report
         run:
           coverage xml
