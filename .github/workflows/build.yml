@@ -116,6 +116,6 @@ jobs:
           coverage run --branch --source mmedit -m pytest tests/test_data
           echo $LASTEXITCODE
           python -c 'import sys; sys.exit(1)'
-          echo $LASTEXITCODE
+          echo $LASTEXITCODE and $?
           coverage xml
           coverage report -m
