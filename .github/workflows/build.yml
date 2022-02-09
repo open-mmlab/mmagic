@@ -53,13 +53,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: test exit
-        run: |
-          python -c 'import sys; sys.exit(1)'
-          python -c 'import sys; sys.exit(0)'
-      - name: test exit
-        run:
-          python -c 'import sys; sys.exit(1)'
       - name: Upgrade pip
         run: pip install pip --upgrade
       - name: Install PyTorch
