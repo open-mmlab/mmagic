@@ -116,7 +116,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
 - [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
 - [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
-- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)(NTIRE'2021)
+- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
 - [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
 - [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
 
@@ -128,7 +128,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
 - [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
 - [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md)
+- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (NTIRE'2021)
 - [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
 
 </details>
