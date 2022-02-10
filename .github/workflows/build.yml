@@ -14,7 +14,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   test_linux:
@@ -86,7 +86,7 @@ jobs:
           python -c 'import mmcv; print(mmcv.__version__)'
       - name: Install FaceXLib
         run: pip install facexlib
-        if: ${{ matrix.torch != '1.5.0+cpu' && matrix.torch != '1.5.0+cu92' && matrix.torch != '1.6.0+cpu' }}
+        if: ${{ matrix.torch != '1.5.1+cpu' && matrix.torch != '1.5.1+cu92' && matrix.torch != '1.6.0+cpu' }}
       - name: Install av
         run: python -m pip install av
       - name: Install unittest dependencies
