@@ -77,6 +77,14 @@ Note that **MMSR** has been merged into this repo, as a part of MMEditing.
 With elaborate designs of the new framework and careful implementations,
 hope MMEditing could provide better experience.
 
+## Installation
+
+Please refer to [install.md](docs/en/install.md) for installation.
+
+## Getting Started
+
+Please see [getting_started.md](docs/en/getting_started.md) for the basic usage of MMEditing.
+
 ## Model Zoo
 
 Supported algorithms:
@@ -143,14 +151,6 @@ Supported algorithms:
 </details>
 
 Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) for more details.
-
-## Installation
-
-Please refer to [install.md](docs/en/install.md) for installation.
-
-## Getting Started
-
-Please see [getting_started.md](docs/en/getting_started.md) for the basic usage of MMEditing.
 
 ## Contributing
 
