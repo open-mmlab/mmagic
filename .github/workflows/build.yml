@@ -131,7 +131,7 @@ jobs:
         run: pip install opencv-python-headless # will remove if mmcv add this dependency for windows
       - name: Install MMCV
         run: |
-          pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.8/index.html
+          pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.8/index.html --only-binary mmcv-full
           python -c 'import mmcv; print(mmcv.__version__)'
       - name: Install FaceXLib
         run: pip install facexlib
