@@ -65,7 +65,12 @@ https://user-images.githubusercontent.com/56712176/153137446-1f4ee309-d231-4c0e-
 
 ## 更新记录
 
-v0.10.0 版本已于 2021 年 8 月 12 日发布.
+- 支持视频插帧算法：CAIN
+- v0.12.0 版本已于 2021 年 12 月 31 日发布.
+  - 支持 RealBasicVSR
+  - 支持 Real-ESRGAN
+
+请查看 [changelog.md](docs/en/changelog.md) 以获取更多细节与发版记录
 
 需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
 MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
@@ -75,7 +80,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 支持的算法:
 
 <details open>
-<summary>修复</summary>
+<summary>图像修复</summary>
 
 - [x] [Global&Local](configs/inpainting/global_local/README.md) (ToG'2017)
 - [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
@@ -85,7 +90,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 </details>
 
 <details open>
-<summary>抠图</summary>
+<summary>图像抠图</summary>
 
 - [x] [DIM](configs/mattors/dim/README.md) (CVPR'2017)
 - [x] [IndexNet](configs/mattors/indexnet/README.md) (ICCV'2019)
@@ -94,7 +99,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 </details>
 
 <details open>
-<summary>超分辨率</summary>
+<summary>图像超分辨率</summary>
 
 - [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
 - [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
@@ -102,20 +107,26 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
 - [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
 - [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
-- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
 - [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
-- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
-- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
-- [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (NTIRE'2021)
+- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)(NTIRE'2021)
 - [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
-- [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
 - [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
 
 </details>
 
 <details open>
-<summary>生成</summary>
+<summary>视频超分辨率</summary>
+
+- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
+- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
+- [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
+- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md)
+- [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
+
+</details>
+
+<details open>
+<summary>图像生成</summary>
 
 - [x] [CycleGAN](configs/synthesizers/cyclegan/README.md) (ICCV'2017)
 - [x] [pix2pix](configs/synthesizers/pix2pix/README.md) (CVPR'2017)
