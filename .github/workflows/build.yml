@@ -14,7 +14,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   test_linux:
@@ -89,7 +89,7 @@ jobs:
         if: ${{ matrix.torch != '1.5.1+cpu' && matrix.torch != '1.5.1+cu92' && matrix.torch != '1.6.0+cpu' }}
       - name: Install unittest dependencies
         run: |
-          pip install -r requirements.txt opencv-python-headless<=4.5.4.60 # opencv-python will cause memory error on CI
+          pip install -r requirements.txt
       - name: Show pip list
         run: pip list
       - name: Build and install
