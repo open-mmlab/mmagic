@@ -49,8 +49,8 @@ repos:
         language: python
         files: ^configs/.*\.md$
         require_serial: true
-  - repo: https://github.com/zhouzaida/pre-commit-hooks-1
-    rev: fix-error-on-windows
+  - repo: https://github.com/open-mmlab/pre-commit-hooks
+    rev: master
     hooks:
       - id: check-algo-readme
       - id: check-copyright
