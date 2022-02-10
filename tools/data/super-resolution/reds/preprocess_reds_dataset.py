@@ -162,8 +162,8 @@ def unzip(zip_path):
         list: unzip folder names.
     """
     zip_files = mmcv.scandir(zip_path, suffix='zip', recursive=False)
-    import zipfile
     import shutil
+    import zipfile
     unzip_folders = []
     for zip_file in zip_files:
         zip_file = osp.join(zip_path, zip_file)
