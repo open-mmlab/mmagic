@@ -91,6 +91,58 @@ def test_patch_discriminator():
         _ = build_component(bad_cfg)
 
 
+def test_smpatch_discriminator():
+    # color, BN
+    cfg = dict(
+        type='SoftMaskPatchDiscriminator',
+        in_channels=3,
+        base_channels=64,
+        num_conv=3,
+        with_spectral_norm=True)
+    net = build_component(cfg)
+    net.init_weights(pretrained=None)
+    # cpu
+    input_shape = (1, 3, 64, 64)
+    img = _demo_inputs(input_shape)
+    output = net(img)
+    assert output.shape == (1, 1, 6, 6)
+    # gpu
+    if torch.cuda.is_available():
+        net.init_weights(pretrained=None)
+        net = net.cuda()
+        output = net(img.cuda())
+        assert output.shape == (1, 1, 6, 6)
+
+    # pretrained should be str or None
+    with pytest.raises(TypeError):
+        net.init_weights(pretrained=[1])
+
+    # gray, IN
+    cfg = dict(
+        type='SoftMaskPatchDiscriminator',
+        in_channels=1,
+        base_channels=64,
+        num_conv=3,
+        with_spectral_norm=True)
+    net = build_component(cfg)
+    net.init_weights(pretrained=None)
+    # cpu
+    input_shape = (1, 1, 64, 64)
+    img = _demo_inputs(input_shape)
+    output = net(img)
+    assert output.shape == (1, 1, 6, 6)
+    # gpu
+    if torch.cuda.is_available():
+        net.init_weights(pretrained=None)
+        net = net.cuda()
+        output = net(img.cuda())
+        assert output.shape == (1, 1, 6, 6)
+
+    # pretrained should be str or None
+    with pytest.raises(TypeError):
+        net.init_weights(pretrained=[1])
+
+
 def _demo_inputs(input_shape=(1, 3, 64, 64)):
     """Create a superset of inputs needed to run backbone.
 

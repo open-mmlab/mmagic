@@ -1,5 +1,22 @@
 <div align="center">
   <img src="resources/mmediting-logo.png" width="500px"/>
+  <div>&nbsp;</div>
+  <div align="center">
+    <b><font size="5">OpenMMLab website</font></b>
+    <sup>
+      <a href="https://openmmlab.com">
+        <i><font size="4">HOT</font></i>
+      </a>
+    </sup>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <b><font size="5">OpenMMLab platform</font></b>
+    <sup>
+      <a href="https://platform.openmmlab.com">
+        <i><font size="4">TRY IT OUT</font></i>
+      </a>
+    </sup>
+  </div>
+  <div>&nbsp;</div>
 </div>
 
 ## Introduction
@@ -109,11 +126,11 @@ hope MMEditing could provide better experience.
 
 ## Installation
 
-Please refer to [install.md](docs/install.md) for installation.
+Please refer to [install.md](docs/en/install.md) for installation.
 
 ## Get Started
 
-Please see [getting_started.md](docs/getting_started.md) for the basic usage of MMEditing.
+Please see [getting_started.md](docs/en/getting_started.md) for the basic usage of MMEditing.
 
 
 
