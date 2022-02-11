@@ -6,16 +6,14 @@ from mmedit.datasets import BaseVFIDataset, build_dataset
 
 class TestVFIDataset:
 
-    def __init__(self):
-        self.pipeline = [
-            dict(
-                type='LoadImageFromFileList', io_backend='disk', key='inputs'),
-            dict(type='LoadImageFromFile', io_backend='disk', key='target'),
-            dict(type='FramesToTensor', keys=['inputs']),
-            dict(type='ImageToTensor', keys=['target']),
-        ]
-        self.folder = 'tests/data/vimeo90k'
-        self.ann_file = 'tests/data/vimeo90k/vfi_ann.txt'
+    pipeline = [
+        dict(type='LoadImageFromFileList', io_backend='disk', key='inputs'),
+        dict(type='LoadImageFromFile', io_backend='disk', key='target'),
+        dict(type='FramesToTensor', keys=['inputs']),
+        dict(type='ImageToTensor', keys=['target']),
+    ]
+    folder = 'tests/data/vimeo90k'
+    ann_file = 'tests/data/vimeo90k/vfi_ann.txt'
 
     def test_base_vfi_dataset(self):
 

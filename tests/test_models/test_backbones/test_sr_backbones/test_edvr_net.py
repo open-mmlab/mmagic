@@ -10,7 +10,21 @@ from mmedit.models.backbones.sr_backbones.edvr_net import (EDVRNet,
 def test_pcd_alignment():
     """Test PCDAlignment."""
 
-    # gpu (since it has dcn, only supports gpu testing)
+    # cpu
+    pcd_alignment = PCDAlignment(mid_channels=4, deform_groups=2)
+    input_list = []
+    for i in range(3, 0, -1):
+        input_list.append(torch.rand(1, 4, 2**i, 2**i))
+
+    pcd_alignment = pcd_alignment
+    input_list = [v for v in input_list]
+    output = pcd_alignment(input_list, input_list)
+    assert output.shape == (1, 4, 8, 8)
+
+    with pytest.raises(AssertionError):
+        pcd_alignment(input_list[0:2], input_list)
+
+    # gpu
     if torch.cuda.is_available():
         pcd_alignment = PCDAlignment(mid_channels=4, deform_groups=2)
         input_list = []
@@ -46,6 +60,48 @@ def test_tsa_fusion():
 
 def test_edvrnet():
     """Test EDVRNet."""
+
+    # cpu
+
+    # with tsa
+    edvrnet = EDVRNet(
+        3,
+        3,
+        mid_channels=8,
+        num_frames=5,
+        deform_groups=2,
+        num_blocks_extraction=1,
+        num_blocks_reconstruction=1,
+        center_frame_idx=2,
+        with_tsa=True)
+    input_tensor = torch.rand(1, 5, 3, 8, 8)
+    edvrnet.init_weights(pretrained=None)
+    output = edvrnet(input_tensor)
+    assert output.shape == (1, 3, 32, 32)
+
+    # without tsa
+    edvrnet = EDVRNet(
+        3,
+        3,
+        mid_channels=8,
+        num_frames=5,
+        deform_groups=2,
+        num_blocks_extraction=1,
+        num_blocks_reconstruction=1,
+        center_frame_idx=2,
+        with_tsa=False)
+
+    output = edvrnet(input_tensor)
+    assert output.shape == (1, 3, 32, 32)
+
+    with pytest.raises(AssertionError):
+        # The height and width of inputs should be a multiple of 4
+        input_tensor = torch.rand(1, 5, 3, 3, 3)
+        edvrnet(input_tensor)
+
+    with pytest.raises(TypeError):
+        # pretrained should be str or None
+        edvrnet.init_weights(pretrained=[1])
 
     # gpu
     if torch.cuda.is_available():
