@@ -43,11 +43,15 @@ MMEditing is an open source image and video editing toolbox based on PyTorch. It
 
 The master branch works with **PyTorch 1.5+**.
 
-<div align="left">
+<div align="center">
   <img src="resources/mmediting-demo.jpg"/>
 </div>
 
-https://user-images.githubusercontent.com/56712176/153137446-1f4ee309-d231-4c0e-b8c9-c10f79f45826.mp4
+<center>
+<div align="center" style="width:240px">
+https://user-images.githubusercontent.com/56712176/153542704-54092659-1cfb-4ed9-b7e0-5a0a565d5693.mp4
+</div>
+</center>
 
 ### Major features
 
