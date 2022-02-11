@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .aot_decoder import AOTDecoder
 from .deepfill_decoder import DeepFillDecoder
 from .fba_decoder import FBADecoder

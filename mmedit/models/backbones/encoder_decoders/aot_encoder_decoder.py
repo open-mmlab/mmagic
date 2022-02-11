@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from mmedit.models.builder import build_component
 from mmedit.models.registry import BACKBONES
 from .gl_encoder_decoder import GLEncoderDecoder

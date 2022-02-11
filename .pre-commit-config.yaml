@@ -49,3 +49,5 @@ repos:
     rev: v0.2.0
     hooks:
       - id: check-algo-readme
+      - id: check-copyright
+        args: ["mmedit"]
