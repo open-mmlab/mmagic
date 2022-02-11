@@ -85,7 +85,7 @@ jobs:
           pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/${{ matrix.mmcv_link }}/index.html --only-binary mmcv-full
           python -c 'import mmcv; print(mmcv.__version__)'
       - name: Install FaceXLib (with opencv <= 4.5.4.60)
-        run: pip install facexlib opencv-python<=4.5.4.60
+        run: pip install facexlib "opencv-python<=4.5.4.60"
         if: ${{ matrix.torch != '1.5.1+cpu' && matrix.torch != '1.5.1+cu92' && matrix.torch != '1.6.0+cpu' }}
       - name: Install av
         run: python -m pip install av
@@ -130,7 +130,7 @@ jobs:
       - name: Install MMCV
         run: pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.8/index.html --only-binary mmcv-full
       - name: Install FaceXLib (with opencv <= 4.5.4.60)
-        run: pip install facexlib opencv-python<=4.5.4.60
+        run: pip install facexlib "opencv-python<=4.5.4.60"
       - name: Install unittest dependencies
         run: pip install -r requirements.txt
       - name: Show pip list
