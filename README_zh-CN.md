@@ -65,8 +65,9 @@ https://user-images.githubusercontent.com/56712176/153137446-1f4ee309-d231-4c0e-
 
 ## 更新记录
 
-- 支持视频插帧算法：CAIN
-- v0.12.0 版本已于 2021 年 12 月 31 日发布.
+- [2022-02-11] 切换到 **PyTorch 1.5+**. 将不再保证与早期版本的 PyTorch 的兼容性。
+- [2022-01-21] 支持视频插帧算法：CAIN
+- [2021-12-31] v0.12.0 版本发布
   - 支持 RealBasicVSR
   - 支持 Real-ESRGAN
 
