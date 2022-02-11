@@ -65,8 +65,9 @@ https://user-images.githubusercontent.com/56712176/153137446-1f4ee309-d231-4c0e-
 
 ## News
 
-- Support video frame interplation: CAIN
-- v0.12.0 was released in 2021-12-31.
+- [2022-02-11] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
+- [2022-01-21] Support video frame interplation: CAIN
+- [2021-12-31] v0.12.0 was released.
 
   - Support RealBasicVSR
   - Support Real-ESRGAN
