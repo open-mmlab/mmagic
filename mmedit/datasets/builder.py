@@ -9,6 +9,7 @@ import torch
 from mmcv.parallel import collate
 from mmcv.runner import get_dist_info
 from mmcv.utils import build_from_cfg
+from packaging import version
 from torch.utils.data import ConcatDataset, DataLoader
 
 from .dataset_wrappers import RepeatDataset
@@ -142,7 +143,7 @@ def build_dataloader(dataset,
         worker_init_fn, num_workers=num_workers, rank=rank,
         seed=seed) if seed is not None else None
 
-    if torch.__version__ >= '1.7.0':
+    if version.parse(torch.__version__) >= version.parse('1.7.0'):
         kwargs['persistent_workers'] = persistent_workers
 
     data_loader = DataLoader(

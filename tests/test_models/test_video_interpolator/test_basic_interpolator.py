@@ -62,8 +62,8 @@ def test_basic_interpolator():
     assert isinstance(restorer.pixel_loss, L1Loss)
 
     # prepare data
-    inputs = torch.rand(1, 2, 3, 8, 8)
-    target = torch.rand(1, 3, 8, 8)
+    inputs = torch.rand(1, 2, 3, 20, 20)
+    target = torch.rand(1, 3, 20, 20)
     data_batch = {'inputs': inputs, 'target': target}
 
     # prepare optimizer
@@ -83,7 +83,7 @@ def test_basic_interpolator():
     assert torch.equal(outputs['results']['inputs'], data_batch['inputs'])
     assert torch.equal(outputs['results']['target'], data_batch['target'])
     assert torch.is_tensor(outputs['results']['output'])
-    assert outputs['results']['output'].size() == (1, 3, 8, 8)
+    assert outputs['results']['output'].size() == (1, 3, 20, 20)
 
     # test forward_test
     with torch.no_grad():
@@ -91,13 +91,13 @@ def test_basic_interpolator():
         outputs = restorer(**data_batch, test_mode=True)
     assert torch.equal(outputs['inputs'], data_batch['inputs'])
     assert torch.is_tensor(outputs['output'])
-    assert outputs['output'].size() == (1, 3, 8, 8)
+    assert outputs['output'].size() == (1, 3, 20, 20)
 
     # test forward_dummy
     with torch.no_grad():
         output = restorer.forward_dummy(data_batch['inputs'])
     assert torch.is_tensor(output)
-    assert output.size() == (1, 3, 8, 8)
+    assert output.size() == (1, 3, 20, 20)
 
     # test train_step
     outputs = restorer.train_step(data_batch, optimizer)
@@ -108,7 +108,7 @@ def test_basic_interpolator():
     assert torch.equal(outputs['results']['inputs'], data_batch['inputs'])
     assert torch.equal(outputs['results']['target'], data_batch['target'])
     assert torch.is_tensor(outputs['results']['output'])
-    assert outputs['results']['output'].size() == (1, 3, 8, 8)
+    assert outputs['results']['output'].size() == (1, 3, 20, 20)
 
     # test train_step and forward_test (gpu)
     if torch.cuda.is_available():
@@ -129,7 +129,7 @@ def test_basic_interpolator():
         assert torch.equal(outputs['results']['target'],
                            data_batch['target'].cpu())
         assert torch.is_tensor(outputs['results']['output'])
-        assert outputs['results']['output'].size() == (1, 3, 8, 8)
+        assert outputs['results']['output'].size() == (1, 3, 20, 20)
 
         # forward_test
         with torch.no_grad():
@@ -137,7 +137,7 @@ def test_basic_interpolator():
             outputs = restorer(**data_batch, test_mode=True)
         assert torch.equal(outputs['inputs'], data_batch['inputs'].cpu())
         assert torch.is_tensor(outputs['output'])
-        assert outputs['output'].size() == (1, 3, 8, 8)
+        assert outputs['output'].size() == (1, 3, 20, 20)
 
         # train_step
         outputs = restorer.train_step(data_batch, optimizer)
@@ -150,7 +150,7 @@ def test_basic_interpolator():
         assert torch.equal(outputs['results']['target'],
                            data_batch['target'].cpu())
         assert torch.is_tensor(outputs['results']['output'])
-        assert outputs['results']['output'].size() == (1, 3, 8, 8)
+        assert outputs['results']['output'].size() == (1, 3, 20, 20)
 
     # test with metric and save image
     test_cfg = dict(metrics=('PSNR', 'SSIM'), crop_border=0)
