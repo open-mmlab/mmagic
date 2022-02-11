@@ -65,6 +65,10 @@ The master branch works with **PyTorch 1.5+**.
 
   The toolbox provides state-of-the-art methods in inpainting/matting/super-resolution/generation.
 
+Note that **MMSR** has been merged into this repo, as a part of MMEditing.
+With elaborate designs of the new framework and careful implementations,
+hope MMEditing could provide better experience.
+
 ## News
 
 - [2022-02-11] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
@@ -75,10 +79,6 @@ The master branch works with **PyTorch 1.5+**.
   - Support Real-ESRGAN
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
-
-Note that **MMSR** has been merged into this repo, as a part of MMEditing.
-With elaborate designs of the new framework and careful implementations,
-hope MMEditing could provide better experience.
 
 ## Installation
 

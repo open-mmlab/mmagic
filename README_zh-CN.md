@@ -65,7 +65,10 @@ MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMML
 
   MMEditing 提供修复/抠图/超分辨率/生成等任务最先进的算法。
 
-## 更新记录
+需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
+MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
+
+## 最新消息
 
 - [2022-02-11] 切换到 **PyTorch 1.5+**. 将不再保证与早期版本的 PyTorch 的兼容性
 - [2022-01-21] 支持视频插帧算法：CAIN
@@ -74,9 +77,6 @@ MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMML
   - 支持 Real-ESRGAN
 
 请查看 [changelog.md](docs/en/changelog.md) 以获取更多细节与发版记录
-
-需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
-MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
 
 ## 安装
 
