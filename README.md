@@ -48,8 +48,8 @@ The master branch works with **PyTorch 1.5+**.
 </div>
 
 <center>
-<div align="center" style="width:480px;height:320px">
-  <video width="480" height="320" controls="controls" src="https://user-images.githubusercontent.com/56712176/153542704-54092659-1cfb-4ed9-b7e0-5a0a565d5693.mp4"/>
+<div align="center" style="width:48px;height:32px">
+  <video width="48" height="32" controls="controls" src="https://user-images.githubusercontent.com/56712176/153542704-54092659-1cfb-4ed9-b7e0-5a0a565d5693.mp4"/>
 </div>
 </center>
 
