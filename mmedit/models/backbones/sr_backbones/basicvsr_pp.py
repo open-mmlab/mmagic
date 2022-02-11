@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import warnings
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -19,9 +17,7 @@ from mmedit.utils import get_root_logger
 class BasicVSRPlusPlus(nn.Module):
     """BasicVSR++ network structure.
 
-    Support either x4 upsampling or same size output. Since DCN is used in this
-    model, it can only be used with CUDA enabled. If CUDA is not enabled,
-    feature alignment will be skipped.
+    Support either x4 upsampling or same size output.
 
     Paper:
         BasicVSR++: Improving Video Super-Resolution with Enhanced Propagation
@@ -78,14 +74,13 @@ class BasicVSRPlusPlus(nn.Module):
         self.backbone = nn.ModuleDict()
         modules = ['backward_1', 'forward_1', 'backward_2', 'forward_2']
         for i, module in enumerate(modules):
-            if torch.cuda.is_available():
-                self.deform_align[module] = SecondOrderDeformableAlignment(
-                    2 * mid_channels,
-                    mid_channels,
-                    3,
-                    padding=1,
-                    deform_groups=16,
-                    max_residue_magnitude=max_residue_magnitude)
+            self.deform_align[module] = SecondOrderDeformableAlignment(
+                2 * mid_channels,
+                mid_channels,
+                3,
+                padding=1,
+                deform_groups=16,
+                max_residue_magnitude=max_residue_magnitude)
             self.backbone[module] = ResidualBlocksWithInputConv(
                 (2 + i) * mid_channels, mid_channels, num_blocks)
 
@@ -106,15 +101,6 @@ class BasicVSRPlusPlus(nn.Module):
 
         # check if the sequence is augmented by flipping
         self.is_mirror_extended = False
-
-        if len(self.deform_align) > 0:
-            self.is_with_alignment = True
-        else:
-            self.is_with_alignment = False
-            warnings.warn(
-                'Deformable alignment module is not added. '
-                'Probably your CUDA is not configured correctly. DCN can only '
-                'be used with CUDA enabled. Alignment is skipped now.')
 
     def check_if_mirror_extended(self, lqs):
         """Check whether the input is a mirror-extended sequence.
@@ -200,7 +186,7 @@ class BasicVSRPlusPlus(nn.Module):
                 feat_current = feat_current.cuda()
                 feat_prop = feat_prop.cuda()
             # second-order deformable alignment
-            if i > 0 and self.is_with_alignment:
+            if i > 0:
                 flow_n1 = flows[:, flow_idx[i], :, :, :]
                 if self.cpu_cache:
                     flow_n1 = flow_n1.cuda()
@@ -309,8 +295,11 @@ class BasicVSRPlusPlus(nn.Module):
 
         n, t, c, h, w = lqs.size()
 
-        # whether to cache the features in CPU
-        self.cpu_cache = True if t > self.cpu_cache_length else False
+        # whether to cache the features in CPU (no effect if using CPU)
+        if t > self.cpu_cache_length and lqs.is_cuda:
+            self.cpu_cache = True
+        else:
+            self.cpu_cache = False
 
         if self.is_low_res_input:
             lqs_downsample = lqs.clone()
