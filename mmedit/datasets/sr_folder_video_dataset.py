@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import glob
+import os
 import os.path as osp
+import re
 from collections import defaultdict
 
 import mmcv
@@ -120,7 +122,9 @@ class SRFolderVideoDataset(BaseSRDataset):
         data_infos = []
 
         sequences = sorted(glob.glob(osp.join(self.lq_folder, '*')))
-        sequences = [s.split('/')[-1] for s in sequences]
+        sequences = [
+            re.split(f'{os.sep}|{os.altsep}', s)[-1] for s in sequences
+        ]
 
         for sequence in sequences:
             seq_dir = osp.join(self.lq_folder, sequence)
@@ -133,7 +137,7 @@ class SRFolderVideoDataset(BaseSRDataset):
                     dict(
                         lq_path=self.lq_folder,
                         gt_path=self.gt_folder,
-                        key=f'{sequence}/{self.filename_tmpl.format(i)}',
+                        key=osp.join(sequence, self.filename_tmpl.format(i)),
                         num_input_frames=self.num_input_frames,
                         max_frame_num=max_frame_num))
 
