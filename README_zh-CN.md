@@ -43,15 +43,13 @@ MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMML
 
 主分支代码目前支持 **PyTorch 1.5 以上**的版本。
 
-<div align="left">
+<div align="center">
   <img src="resources/mmediting-demo.jpg"/>
 </div>
 
-<center>
-<div align="center" style="width:240px">
-https://user-images.githubusercontent.com/56712176/153542704-54092659-1cfb-4ed9-b7e0-5a0a565d5693.mp4
+<div align="center">
+<video src="https://user-images.githubusercontent.com/56712176/153550102-fdbd3ac8-cd20-416c-a5dc-4dbfbb97fdaa.mp4" width="520px" height="220px"/>
 </div>
-</center>
 
 ### 主要特性
 
