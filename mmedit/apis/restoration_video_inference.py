@@ -3,6 +3,7 @@ import glob
 import os
 import os.path as osp
 import re
+from functools import reduce
 
 import mmcv
 import numpy as np
@@ -94,7 +95,7 @@ def restoration_video_inference(model,
         sequence_length = len(glob.glob(osp.join(img_dir, '*')))
         img_dir_split = re.split(f'{os.sep}|{os.altsep}', img_dir)
         key = img_dir_split[-1]
-        lq_folder = osp.join(img_dir_split[:-1])
+        lq_folder = reduce(osp.join, img_dir_split[:-1])
         data = dict(
             lq_path=lq_folder,
             gt_path='',
