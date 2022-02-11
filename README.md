@@ -49,7 +49,7 @@ The master branch works with **PyTorch 1.5+**.
 
 <center>
 <div align="center" style="width:240px">
-https://user-images.githubusercontent.com/56712176/153542704-54092659-1cfb-4ed9-b7e0-5a0a565d5693.mp4
+  <video src="https://user-images.githubusercontent.com/56712176/153542704-54092659-1cfb-4ed9-b7e0-5a0a565d5693.mp4"/>
 </div>
 </center>
 
