@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .aot_encoder import AOTEncoder
 from .deepfill_encoder import DeepFillEncoder
 from .fba_encoder import FBAResnetDilated
