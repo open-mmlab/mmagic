@@ -48,7 +48,7 @@ The master branch works with **PyTorch 1.5+**.
 </div>
 
 <div align="center">
-<video src="https://user-images.githubusercontent.com/56712176/153542704-54092659-1cfb-4ed9-b7e0-5a0a565d5693.mp4" width="480px" height="320px"/>
+<video src="https://user-images.githubusercontent.com/56712176/153542704-54092659-1cfb-4ed9-b7e0-5a0a565d5693.mp4" width="320px" height="180px"/>
 </div>
 
 ### Major features
