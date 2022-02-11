@@ -14,7 +14,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   test_linux:
@@ -97,52 +97,6 @@ jobs:
       - name: Run unittests and generate coverage report
         run: |
           coverage run --branch --source mmedit -m pytest tests/
-          coverage xml
-          coverage report -m
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          file: ./coverage.xml
-          flags: unittests
-          env_vars: OS,PYTHON
-          name: codecov-umbrella
-          fail_ci_if_error: false
-  test_windows:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-2022]
-        python: [3.8]
-        platform: [cpu, cu111]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python }}
-      - name: Upgrade pip
-        run: pip install pip --upgrade --user
-      - name: Install PyTorch
-        run: pip install torch==1.8.2+${{ matrix.platform }} torchvision==0.9.2+${{ matrix.platform }} -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html
-      - name: Install OpenCV
-        run: pip install opencv-python-headless<=4.5.4.60 # will remove if mmcv add this dependency for windows
-      - name: Install MMCV
-        run: |
-          pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.8/index.html
-          python -c 'import mmcv; print(mmcv.__version__)'
-      - name: Install FaceXLib
-        run: pip install facexlib
-      - name: Install unittest dependencies
-        run: |
-          pip install -r requirements.txt
-      - name: Show pip list
-        run: pip list
-      - name: Build and install
-        run: pip install -e .
-      - name: Run unittests
-        run: coverage run --branch --source mmedit -m pytest tests
-      - name: Generate coverage report
-        run: |
           coverage xml
           coverage report -m
       - name: Upload coverage to Codecov
