@@ -98,7 +98,7 @@ jobs:
         run: rm -rf .eggs && pip install -e .
       - name: Run unittests and generate coverage report
         run: |
-          coverage run --branch --source mmedit -m pytest tests/
+          coverage run --branch --source mmedit -m pytest tests/ -sv
           coverage xml
           coverage report -m
       - name: Upload coverage to Codecov
@@ -127,22 +127,18 @@ jobs:
       - name: Install PyTorch
         # As a complement to Linux CI, we test on PyTorch LTS version
         run: pip install torch==1.8.2+${{ matrix.platform }} torchvision==0.9.2+${{ matrix.platform }} -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html
-      - name: Install OpenCV
-        run: pip install opencv-python-headless # will remove if mmcv add this dependency for windows
       - name: Install MMCV
-        run: |
-          pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.8/index.html --only-binary mmcv-full
-          python -c 'import mmcv; print(mmcv.__version__)'
+        run: pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.8/index.html --only-binary mmcv-full
       - name: Install FaceXLib
         run: pip install facexlib
       - name: Install unittest dependencies
-        run: pip install -r requirements.txt opencv-python-headless
+        run: pip install -r requirements.txt
       - name: Show pip list
         run: pip list
       - name: Build and install
         run: pip install -e .
       - name: Run unittests
-        run: coverage run --branch --source mmedit -m pytest tests
+        run: coverage run --branch --source mmedit -m pytest tests -sv
       - name: Generate coverage report
         run: |
           coverage xml
