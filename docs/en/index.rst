@@ -19,6 +19,7 @@ You can switch between Chinese and English documents in the bottom-left corner o
    mattors_models.md
    restorers_models.md
    synthesizers_models.md
+   video_interpolators_models.md
 
 .. toctree::
    :maxdepth: 2
