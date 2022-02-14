@@ -7,6 +7,7 @@ import numpy as np
 import torch
 
 from mmedit.core import tensor2img
+from mmedit.models.common.ensemble import SpatialTemporalEnsemble
 from ..registry import MODELS
 from .basic_restorer import BasicRestorer
 
@@ -32,6 +33,7 @@ class BasicVSR(BasicRestorer):
     def __init__(self,
                  generator,
                  pixel_loss,
+                 ensemble=None,
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
@@ -44,6 +46,12 @@ class BasicVSR(BasicRestorer):
 
         # count training steps
         self.register_buffer('step_counter', torch.zeros(1))
+
+        # ensemble
+        self.forward_ensemble = None
+        if ensemble is not None:
+            is_temporal = ensemble.get('is_temporal_ensemble', False)
+            self.forward_ensemble = SpatialTemporalEnsemble(is_temporal)
 
     def check_if_mirror_extended(self, lrs):
         """Check whether the input is a mirror-extended sequence.
@@ -153,7 +161,10 @@ class BasicVSR(BasicRestorer):
             dict: Output results.
         """
         with torch.no_grad():
-            output = self.generator(lq)
+            if self.forward_ensemble is not None:
+                output = self.forward_ensemble(lq, self.generator)
+            else:
+                output = self.generator(lq)
 
         # If the GT is an image (i.e. the center frame), the output sequence is
         # turned to an image.
