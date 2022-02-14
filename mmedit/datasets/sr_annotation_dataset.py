@@ -60,7 +60,7 @@ class SRAnnotationDataset(BaseSRDataset):
         image shape (usually for gt), separated by a white space.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list [dict]: Returned list of dicts for LQ and GT pairs.
         """
         data_infos = []
         with open(self.ann_file, 'r') as fin:

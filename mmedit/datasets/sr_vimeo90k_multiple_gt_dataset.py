@@ -58,7 +58,7 @@ class SRVimeo90KMultipleGTDataset(BaseSRDataset):
         """Load annoations for Vimeo-90K dataset.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list [dict]: Returned list of dicts for LQ and GT pairs.
         """
         # get keys
         with open(self.ann_file, 'r') as fin:

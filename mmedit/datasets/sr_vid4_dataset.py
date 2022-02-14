@@ -75,7 +75,7 @@ class SRVid4Dataset(BaseSRDataset):
     def load_annotations(self):
         """Load annoations for Vid4 dataset.
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list [dict]: Returned list of dicts for LQ and GT pairs.
         """
         self.folders = {}
         data_infos = []

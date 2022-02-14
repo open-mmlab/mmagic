@@ -42,7 +42,7 @@ class SRTestMultipleGTDataset(BaseSRDataset):
         """Load annoations for the test dataset.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list [dict]: Returned list of dicts for LQ and GT pairs.
         """
 
         sequences = sorted(glob.glob(osp.join(self.lq_folder, '*')))

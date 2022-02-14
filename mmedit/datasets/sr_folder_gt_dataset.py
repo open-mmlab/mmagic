@@ -55,7 +55,7 @@ class SRFolderGTDataset(BaseSRDataset):
         It loads the GT image path from folder.
 
         Returns:
-            dict: Returned dict for GT.
+            list [dict]: Returned list of dicts for GT.
         """
         data_infos = []
         gt_paths = self.scan_folder(self.gt_folder)

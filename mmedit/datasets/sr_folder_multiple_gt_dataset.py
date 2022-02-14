@@ -94,7 +94,7 @@ class SRFolderMultipleGTDataset(BaseSRDataset):
         """Load annoations for the dataset.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list [dict]: Returned list of dicts for LQ and GT pairs.
         """
 
         if self.ann_file:
