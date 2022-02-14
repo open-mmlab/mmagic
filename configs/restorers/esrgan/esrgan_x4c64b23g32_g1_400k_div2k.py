@@ -10,7 +10,8 @@ model = dict(
         out_channels=3,
         mid_channels=64,
         num_blocks=23,
-        growth_channels=32),
+        growth_channels=32,
+        upscale_factor=scale),
     discriminator=dict(type='ModifiedVGG', in_channels=3, mid_channels=64),
     pixel_loss=dict(type='L1Loss', loss_weight=1e-2, reduction='mean'),
     perceptual_loss=dict(

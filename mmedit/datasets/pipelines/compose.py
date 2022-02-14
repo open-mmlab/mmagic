@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from collections.abc import Sequence
 
 from mmcv.utils import build_from_cfg

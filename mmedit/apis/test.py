@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 import pickle
 import shutil
@@ -151,7 +152,8 @@ def collect_results_cpu(result_part, size, tmpdir=None):
                                 dtype=torch.uint8,
                                 device='cuda')
         if rank == 0:
-            tmpdir = tempfile.mkdtemp()
+            mmcv.mkdir_or_exist('.dist_test')
+            tmpdir = tempfile.mkdtemp(dir='.dist_test')
             tmpdir = torch.tensor(
                 bytearray(tmpdir.encode()), dtype=torch.uint8, device='cuda')
             dir_tensor[:len(tmpdir)] = tmpdir
@@ -159,8 +161,11 @@ def collect_results_cpu(result_part, size, tmpdir=None):
         tmpdir = dir_tensor.cpu().numpy().tobytes().decode().rstrip()
     else:
         mmcv.mkdir_or_exist(tmpdir)
+    # synchronizes all processes to make sure tmpdir exist
+    dist.barrier()
     # dump the part result to the dir
     mmcv.dump(result_part, osp.join(tmpdir, 'part_{}.pkl'.format(rank)))
+    # synchronizes all processes for loading pickle file
     dist.barrier()
     # collect all parts
     if rank != 0:

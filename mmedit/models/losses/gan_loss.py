@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.autograd as autograd
 import torch.nn as nn
@@ -285,7 +286,7 @@ def gradient_penalty_loss(discriminator, real_data, fake_data, mask=None):
     """
 
     batch_size = real_data.size(0)
-    alpha = real_data.new_tensor(torch.rand(batch_size, 1, 1, 1))
+    alpha = torch.rand(batch_size, 1, 1, 1).to(real_data)
 
     # interpolate between real_data and fake_data
     interpolates = alpha * real_data + (1. - alpha) * fake_data

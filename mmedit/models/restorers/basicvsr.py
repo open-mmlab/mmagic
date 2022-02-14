@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import numbers
 import os.path as osp
 
@@ -39,7 +40,7 @@ class BasicVSR(BasicRestorer):
 
         # fix pre-trained networks
         self.fix_iter = train_cfg.get('fix_iter', 0) if train_cfg else 0
-        self.generator.find_unused_parameters = False
+        self.is_weight_fixed = False
 
         # count training steps
         self.register_buffer('step_counter', torch.zeros(1))
@@ -74,14 +75,13 @@ class BasicVSR(BasicRestorer):
         """
         # fix SPyNet and EDVR at the beginning
         if self.step_counter < self.fix_iter:
-            if not self.generator.find_unused_parameters:
-                self.generator.find_unused_parameters = True
+            if not self.is_weight_fixed:
+                self.is_weight_fixed = True
                 for k, v in self.generator.named_parameters():
                     if 'spynet' in k or 'edvr' in k:
                         v.requires_grad_(False)
         elif self.step_counter == self.fix_iter:
             # train all the parameters
-            self.generator.find_unused_parameters = False
             self.generator.requires_grad_(True)
 
         outputs = self(**data_batch, test_mode=False)

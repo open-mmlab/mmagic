@@ -62,6 +62,18 @@ test_pipeline = [
         meta_keys=['lq_path', 'gt_path', 'key'])
 ]
 
+demo_pipeline = [
+    dict(type='GenerateSegmentIndices', interval_list=[1]),
+    dict(
+        type='LoadImageFromFileList',
+        io_backend='disk',
+        key='lq',
+        channel_order='rgb'),
+    dict(type='RescaleToZeroOne', keys=['lq']),
+    dict(type='FramesToTensor', keys=['lq']),
+    dict(type='Collect', keys=['lq'], meta_keys=['lq_path', 'key'])
+]
+
 data = dict(
     workers_per_gpu=6,
     train_dataloader=dict(samples_per_gpu=4, drop_last=True),  # 2 gpus
@@ -138,3 +150,4 @@ work_dir = f'./work_dirs/{exp_name}'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
+find_unused_parameters = True

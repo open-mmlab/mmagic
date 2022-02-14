@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import os
 
@@ -10,6 +11,7 @@ from mmedit.apis import multi_gpu_test, set_random_seed, single_gpu_test
 from mmedit.core.distributed_wrapper import DistributedDataParallelWrapper
 from mmedit.datasets import build_dataloader, build_dataset
 from mmedit.models import build_model
+from mmedit.utils import setup_multi_processes
 
 
 def parse_args():
@@ -48,6 +50,10 @@ def main():
     args = parse_args()
 
     cfg = mmcv.Config.fromfile(args.config)
+
+    # set multi-process settings
+    setup_multi_processes(cfg)
+
     # set cudnn_benchmark
     if cfg.get('cudnn_benchmark', False):
         torch.backends.cudnn.benchmark = True
@@ -119,7 +125,7 @@ def main():
             save_image=args.save_image,
             empty_cache=empty_cache)
 
-    if rank == 0:
+    if rank == 0 and 'eval_result' in outputs[0]:
         print('')
         # print metrics
         stats = dataset.evaluate(outputs)

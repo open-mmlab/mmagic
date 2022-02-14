@@ -5,33 +5,33 @@ scale_min, scale_max = 1, 4
 model = dict(
     type='LIIF',
     generator=dict(
-        type='EDSR',
-        in_channels=3,
-        out_channels=3,
-        mid_channels=64,
-        num_blocks=16),
-    imnet=dict(
-        type='MLPRefiner',
-        in_dim=64,
-        out_dim=3,
-        hidden_list=[256, 256, 256, 256]),
-    local_ensemble=True,
-    feat_unfold=True,
-    cell_decode=True,
+        type='LIIFEDSR',
+        encoder=dict(
+            type='EDSR',
+            in_channels=3,
+            out_channels=3,
+            mid_channels=64,
+            num_blocks=16),
+        imnet=dict(
+            type='MLPRefiner',
+            in_dim=64,
+            out_dim=3,
+            hidden_list=[256, 256, 256, 256]),
+        local_ensemble=True,
+        feat_unfold=True,
+        cell_decode=True,
+        eval_bsize=30000),
     rgb_mean=(0.4488, 0.4371, 0.4040),
     rgb_std=(1., 1., 1.),
-    eval_bsize=30000,
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = None
 test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=scale_max)
 
 # dataset settings
-scale_min, scale_max = 1, 4
-# dataset settings
 train_dataset_type = 'SRFolderGTDataset'
 val_dataset_type = 'SRFolderGTDataset'
-test_dataset_type = 'SRFolderGTDataset'
+test_dataset_type = 'SRFolderDataset'
 train_pipeline = [
     dict(
         type='LoadImageFromFile',
@@ -43,7 +43,7 @@ train_pipeline = [
         type='RandomDownSampling',
         scale_min=scale_min,
         scale_max=scale_max,
-        inp_size=48),
+        patch_size=48),
     dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
     dict(
         type='Flip', keys=['lq', 'gt'], flip_ratio=0.5,
@@ -51,7 +51,7 @@ train_pipeline = [
     dict(type='Flip', keys=['lq', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['lq', 'gt'], transpose_ratio=0.5),
     dict(type='ImageToTensor', keys=['lq', 'gt']),
-    dict(type='GenerateCoordinateAndCell', sample_q=2304),
+    dict(type='GenerateCoordinateAndCell', sample_quantity=2304),
     dict(
         type='Collect',
         keys=['lq', 'gt', 'coord', 'cell'],
@@ -68,6 +68,27 @@ valid_pipeline = [
     dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
     dict(type='ImageToTensor', keys=['lq', 'gt']),
     dict(type='GenerateCoordinateAndCell'),
+    dict(
+        type='Collect',
+        keys=['lq', 'gt', 'coord', 'cell'],
+        meta_keys=['gt_path'])
+]
+test_pipeline = [
+    dict(
+        type='LoadImageFromFile',
+        io_backend='disk',
+        key='gt',
+        flag='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        io_backend='disk',
+        key='lq',
+        flag='color',
+        channel_order='rgb'),
+    dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
+    dict(type='ImageToTensor', keys=['lq', 'gt']),
+    dict(type='GenerateCoordinateAndCell', scale=scale_max),
     dict(
         type='Collect',
         keys=['lq', 'gt', 'coord', 'cell'],
@@ -92,12 +113,18 @@ data = dict(
         gt_folder='data/val_set5/Set5',
         pipeline=valid_pipeline,
         scale=scale_max),
+    # test=dict(
+    #     type=test_dataset_type,
+    #     lq_folder=f'data/val_set5/Set5_bicLRx{scale_max:d}',
+    #     gt_folder='data/val_set5/Set5',
+    #     pipeline=test_pipeline,
+    #     scale=scale_max,
+    #     filename_tmpl='{}'),
     test=dict(
-        type=test_dataset_type,
+        type=val_dataset_type,
         gt_folder='data/val_set5/Set5',
         pipeline=valid_pipeline,
-        scale=scale_max,
-        filename_tmpl='{}'))
+        scale=scale_max))
 
 # optimizer
 optimizers = dict(type='Adam', lr=1.e-4)
@@ -111,9 +138,8 @@ lr_config = dict(
     step=[200000, 400000, 600000, 800000],
     gamma=0.5)
 
-checkpoint_config = dict(
-    interval=iter_per_epoch, save_optimizer=True, by_epoch=False)
-evaluation = dict(interval=iter_per_epoch, save_image=True, gpu_collect=True)
+checkpoint_config = dict(interval=3000, save_optimizer=True, by_epoch=False)
+evaluation = dict(interval=3000, save_image=True, gpu_collect=True)
 log_config = dict(
     interval=100,
     hooks=[
@@ -129,3 +155,4 @@ work_dir = f'./work_dirs/{exp_name}'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
+find_unused_parameters = True
