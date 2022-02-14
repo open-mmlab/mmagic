@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from .aot_decoder import AOTDecoder
 from .deepfill_decoder import DeepFillDecoder
 from .fba_decoder import FBADecoder
 from .gl_decoder import GLDecoder
@@ -10,5 +11,5 @@ from .resnet_dec import ResGCADecoder, ResNetDec, ResShortcutDec
 __all__ = [
     'GLDecoder', 'PlainDecoder', 'PConvDecoder', 'ResNetDec', 'ResShortcutDec',
     'DeepFillDecoder', 'IndexedUpsample', 'IndexNetDecoder', 'ResGCADecoder',
-    'FBADecoder'
+    'FBADecoder', 'AOTDecoder'
 ]

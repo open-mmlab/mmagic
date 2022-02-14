@@ -1,32 +1,21 @@
 # Pix2Pix (CVPR'2017)
 
+> [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/abs/1611.07004)
+
 <!-- [ALGORITHM] -->
-<details>
-<summary align="right"><a href="https://arxiv.org/abs/1611.07004">Pix2Pix (CVPR'2017)</a></summary>
-
-```bibtex
-@inproceedings{isola2017image,
-  title={Image-to-image translation with conditional adversarial networks},
-  author={Isola, Phillip and Zhu, Jun-Yan and Zhou, Tinghui and Efros, Alexei A},
-  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
-  pages={1125--1134},
-  year={2017}
-}
-```
-
-</details>
-
-<br/>
 
 ## Abstract
 
+<!-- [ABSTRACT] -->
+
 We investigate conditional adversarial networks as a general-purpose solution to image-to-image translation problems. These networks not only learn the mapping from input image to output image, but also learn a loss function to train this mapping. This makes it possible to apply the same generic approach to problems that traditionally would require very different loss formulations. We demonstrate that this approach is effective at synthesizing photos from label maps, reconstructing objects from edge maps, and colorizing images, among other tasks. As a community, we no longer hand-engineer our mapping functions, and this work suggests we can achieve reasonable results without hand-engineering our loss functions either.
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/12726765/144200620-8715c40b-e9eb-4f98-b8b9-cff28167655a.png" />
-</p>
+<!-- [IMAGE] -->
+<div align=center >
+ <img src="https://user-images.githubusercontent.com/12726765/144200620-8715c40b-e9eb-4f98-b8b9-cff28167655a.png" width="400"/>
+</div >
 
-## Results
+## Results and models
 
 We use `FID` and `IS` metrics to evaluate the generation performance of pix2pix.
 
@@ -52,3 +41,16 @@ and we apply batch normalization using the statistics of
 the test batch, rather than aggregated statistics of the training batch.*"
 
 i.e., `use model.train()` mode, thus may lead to slightly different inference results every time.
+
+
+## Citation
+
+```bibtex
+@inproceedings{isola2017image,
+  title={Image-to-image translation with conditional adversarial networks},
+  author={Isola, Phillip and Zhu, Jun-Yan and Zhou, Tinghui and Efros, Alexei A},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={1125--1134},
+  year={2017}
+}
+```

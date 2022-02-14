@@ -19,7 +19,7 @@ except ImportError:
         return digit_ver
 
 
-MMCV_MIN = '1.3'
+MMCV_MIN = '1.3.1'
 MMCV_MAX = '1.5'
 
 mmcv_min_version = digit_version(MMCV_MIN)

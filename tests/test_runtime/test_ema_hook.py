@@ -1,8 +1,10 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from copy import deepcopy
 
 import pytest
 import torch
 import torch.nn as nn
+from packaging import version
 from torch.nn.parallel import DataParallel
 
 from mmedit.core.hooks import ExponentialMovingAverageHook
@@ -13,7 +15,7 @@ class SimpleModule(nn.Module):
     def __init__(self):
         super().__init__()
         self.a = nn.Parameter(torch.tensor([1., 2.]))
-        if torch.__version__ >= '1.7.0':
+        if version.parse(torch.__version__) >= version.parse('1.7.0'):
             self.register_buffer('b', torch.tensor([2., 3.]), persistent=True)
             self.register_buffer('c', torch.tensor([0., 1.]), persistent=False)
         else:

@@ -18,7 +18,7 @@ Models:
       Set5:
         PSNR: 28.0297
         SSIM: 0.8236
-    Task: restorers
+    Task: Restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/real_esrgan/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth
 - Config: configs/restorers/real_esrgan/realesrgan_c64b23g32_12x4_lr1e-4_400k_df2k_ost.py
   In Collection: Real-ESRGAN
@@ -31,5 +31,5 @@ Models:
       Set5:
         PSNR: 26.2204
         SSIM: 0.7655
-    Task: restorers
+    Task: Restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/real_esrgan/realesrgan_c64b23g32_12x4_lr1e-4_400k_df2k_ost_20211010-34798885.pth

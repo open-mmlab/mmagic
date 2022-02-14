@@ -788,6 +788,37 @@ def test_sr_reds_multiple_gt_dataset():
         sequence_length=100,
         num_input_frames=5)
 
+    # REDS4 val partition (repeat > 1)
+    reds_dataset = SRREDSMultipleGTDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        num_input_frames=5,
+        pipeline=[],
+        scale=4,
+        val_partition='REDS4',
+        repeat=2,
+        test_mode=True)
+
+    assert len(reds_dataset.data_infos) == 8  # 4 test clips
+    assert reds_dataset.data_infos[5] == dict(
+        lq_path=str(root_path),
+        gt_path=str(root_path),
+        key='011',
+        sequence_length=100,
+        num_input_frames=5)
+
+    # REDS4 val partition (repeat != int)
+    with pytest.raises(TypeError):
+        SRREDSMultipleGTDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            num_input_frames=5,
+            pipeline=[],
+            scale=4,
+            val_partition='REDS4',
+            repeat=1.5,
+            test_mode=True)
+
 
 def test_sr_vimeo90k_mutiple_gt_dataset():
     root_path = Path(__file__).parent.parent.parent / 'data/vimeo90k'

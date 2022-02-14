@@ -20,6 +20,16 @@ def test_basicvsr_plusplus():
     output = model(input_tensor)
     assert output.shape == (1, 5, 3, 256, 256)
 
+    # with cpu_cache (no effect on cpu)
+    model = BasicVSRPlusPlus(
+        mid_channels=64,
+        num_blocks=7,
+        is_low_res_input=True,
+        spynet_pretrained=None,
+        cpu_cache_length=3)
+    output = model(input_tensor)
+    assert output.shape == (1, 5, 3, 256, 256)
+
     with pytest.raises(AssertionError):
         # The height and width of inputs should be at least 64
         input_tensor = torch.rand(1, 5, 3, 61, 61)

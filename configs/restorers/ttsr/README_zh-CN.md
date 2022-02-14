@@ -18,10 +18,10 @@
 
 <br/>
 
-Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
-The metrics are `PSNR / SSIM` .
+在 RGB 通道上进行评估，在评估之前裁剪每个边界中的 `scale` 像素。
+我们使用 `PSNR` 和 `SSIM` 作为指标。
 
-|                                         Method                                                  | scale |       CUFED      |                                                                                                                   Download                                                                                                                            |
+|                                         算法                                                  | scale |       CUFED      |                                                                                                                   下载                                                                                                                            |
 | :---------------------------------------------------------------------------------------------: | :---: | :--------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [ttsr-rec_x4_c64b16_g1_200k_CUFED](/configs/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED.py) |   x4  | 25.2433 / 0.7491 | [model](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.log.json) |
-| [ttsr-gan_x4_c64b16_g1_500k_CUFED](/configs/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py) |   x4  | 24.6075 / 0.7234 | [model](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.log.json) |
+| [ttsr-rec_x4_c64b16_g1_200k_CUFED](/configs/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED.py) |   x4  | 25.2433 / 0.7491 | [模型](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.log.json) |
+| [ttsr-gan_x4_c64b16_g1_500k_CUFED](/configs/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py) |   x4  | 24.6075 / 0.7234 | [模型](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.log.json) |

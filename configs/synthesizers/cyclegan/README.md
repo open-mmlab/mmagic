@@ -1,32 +1,21 @@
 # CycleGAN (ICCV'2017)
 
+> [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/abs/1703.10593)
+
 <!-- [ALGORITHM] -->
-<details>
-<summary align="right"><a href="https://arxiv.org/abs/1703.10593">CycleGAN (ICCV'2017)</a></summary>
-
-```bibtex
-@inproceedings{zhu2017unpaired,
-  title={Unpaired image-to-image translation using cycle-consistent adversarial networks},
-  author={Zhu, Jun-Yan and Park, Taesung and Isola, Phillip and Efros, Alexei A},
-  booktitle={Proceedings of the IEEE international conference on computer vision},
-  pages={2223--2232},
-  year={2017}
-}
-```
-
-</details>
-
-<br/>
 
 ## Abstract
+
+<!-- [ABSTRACT] -->
+
 Image-to-image translation is a class of vision and graphics problems where the goal is to learn the mapping between an input image and an output image using a training set of aligned image pairs. However, for many tasks, paired training data will not be available. We present an approach for learning to translate an image from a source domain X to a target domain Y in the absence of paired examples. Our goal is to learn a mapping G:X→Y such that the distribution of images from G(X) is indistinguishable from the distribution Y using an adversarial loss. Because this mapping is highly under-constrained, we couple it with an inverse mapping F:Y→X and introduce a cycle consistency loss to push F(G(X))≈X (and vice versa). Qualitative results are presented on several tasks where paired training data does not exist, including collection style transfer, object transfiguration, season transfer, photo enhancement, etc. Quantitative comparisons against several prior methods demonstrate the superiority of our approach.
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/12726765/144200449-cc2777da-3112-4024-aaa6-c6be5c8220bc.png" />
-</p>
+<!-- [IMAGE] -->
+<div align=center >
+ <img src="https://user-images.githubusercontent.com/12726765/144200449-cc2777da-3112-4024-aaa6-c6be5c8220bc.png" width="400"/>
+</div >
 
-
-## Results
+## Results and models
 
 We use `FID` and `IS` metrics to evaluate the generation performance of CycleGAN.
 
@@ -56,3 +45,16 @@ We use `FID` and `IS` metrics to evaluate the generation performance of CycleGAN
 | ours average | **95.102** | 2.427 | - |
 
 Note: With a larger identity loss, the image-to-image translation becomes more conservative, which makes less changes. The original authors did not say what is the best weight for identity loss. Thus, in addition to the default setting, we also set the weight of identity loss to 0 (denoting `id0` ) to make a more comprehensive comparison.
+
+
+## Citation
+
+```bibtex
+@inproceedings{zhu2017unpaired,
+  title={Unpaired image-to-image translation using cycle-consistent adversarial networks},
+  author={Zhu, Jun-Yan and Park, Taesung and Isola, Phillip and Efros, Alexei A},
+  booktitle={Proceedings of the IEEE international conference on computer vision},
+  pages={2223--2232},
+  year={2017}
+}
+```

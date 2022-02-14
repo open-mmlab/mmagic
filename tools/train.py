@@ -14,7 +14,7 @@ from mmedit import __version__
 from mmedit.apis import set_random_seed, train_model
 from mmedit.datasets import build_dataset
 from mmedit.models import build_model
-from mmedit.utils import collect_env, get_root_logger
+from mmedit.utils import collect_env, get_root_logger, setup_multi_processes
 
 
 def parse_args():
@@ -59,6 +59,10 @@ def main():
     args = parse_args()
 
     cfg = Config.fromfile(args.config)
+
+    # set multi-process settings
+    setup_multi_processes(cfg)
+
     # set cudnn_benchmark
     if cfg.get('cudnn_benchmark', False):
         torch.backends.cudnn.benchmark = True

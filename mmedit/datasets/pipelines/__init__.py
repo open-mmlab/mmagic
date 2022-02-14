@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .augmentation import (BinarizeImage, CopyValues, Flip,
+from .augmentation import (BinarizeImage, ColorJitter, CopyValues, Flip,
                            GenerateFrameIndices,
                            GenerateFrameIndiceswithPadding,
                            GenerateSegmentIndices, MirrorSequence, Pad,
@@ -8,7 +8,8 @@ from .augmentation import (BinarizeImage, CopyValues, Flip,
                            TemporalReverse, UnsharpMasking)
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
-                   CropLike, FixedCrop, ModCrop, PairedRandomCrop)
+                   CropLike, FixedCrop, ModCrop, PairedRandomCrop,
+                   RandomResizedCrop)
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
 from .generate_assistant import GenerateCoordinateAndCell, GenerateHeatmap
@@ -22,23 +23,25 @@ from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
 from .normalization import Normalize, RescaleToZeroOne
 from .random_degradations import (DegradationsWithShuffle, RandomBlur,
                                   RandomJPEGCompression, RandomNoise,
-                                  RandomResize)
+                                  RandomResize, RandomVideoCompression)
 from .random_down_sampling import RandomDownSampling
 
 __all__ = [
     'Collect', 'FormatTrimap', 'LoadImageFromFile', 'LoadMask',
     'RandomLoadResizeBg', 'Compose', 'ImageToTensor', 'ToTensor',
     'GetMaskedImage', 'BinarizeImage', 'Flip', 'Pad', 'RandomAffine',
-    'RandomJitter', 'RandomMaskDilation', 'RandomTransposeHW', 'Resize',
-    'Crop', 'CropAroundCenter', 'CropAroundUnknown', 'ModCrop',
-    'PairedRandomCrop', 'Normalize', 'RescaleToZeroOne', 'GenerateTrimap',
-    'MergeFgAndBg', 'CompositeFg', 'TemporalReverse', 'LoadImageFromFileList',
-    'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding', 'FixedCrop',
-    'LoadPairedImageFromFile', 'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg',
-    'CropAroundFg', 'GetSpatialDiscountMask', 'RandomDownSampling',
+    'RandomJitter', 'ColorJitter', 'RandomMaskDilation', 'RandomTransposeHW',
+    'Resize', 'RandomResizedCrop', 'CenterCrop', 'Crop', 'CropAroundCenter',
+    'CropAroundUnknown', 'ModCrop', 'PairedRandomCrop', 'Normalize',
+    'RescaleToZeroOne', 'GenerateTrimap', 'MergeFgAndBg', 'CompositeFg',
+    'TemporalReverse', 'LoadImageFromFileList', 'GenerateFrameIndices',
+    'GenerateFrameIndiceswithPadding', 'FixedCrop', 'LoadPairedImageFromFile',
+    'GenerateSoftSeg', 'GenerateSeg', 'PerturbBg', 'CropAroundFg',
+    'GetSpatialDiscountMask', 'RandomDownSampling',
     'GenerateTrimapWithDistTransform', 'TransformTrimap',
     'GenerateCoordinateAndCell', 'GenerateSegmentIndices', 'MirrorSequence',
     'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
     'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
-    'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking'
+    'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking',
+    'RandomVideoCompression', 'CropSequence'
 ]
