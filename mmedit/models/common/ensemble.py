@@ -12,8 +12,6 @@ class SpatialTemporalEnsemble(nn.Module):
             If the input is an image, this argument must be set to False.
             Default: False.
 
-    Returns:
-        Tensor: Model outputs given the ensembles.
     """
 
     def __init__(self, is_temporal_ensemble=False):
@@ -23,6 +21,19 @@ class SpatialTemporalEnsemble(nn.Module):
         self.is_temporal_ensemble = is_temporal_ensemble
 
     def _transform(self, imgs, mode):
+        """Apply spatial transform (flip, rotate) to the images.
+
+        Args:
+            imgs (torch.Tensor): The images to be transformed/
+            mode (str): The mode of transform. Supported values are 'vertical',
+                'horizontal', and 'transpose', corresponding to vertical flip,
+                horizontal flip, and rotation, respectively.
+
+        Returns:
+            torch.Tensor: Output of the model with spatial ensemble applied.
+
+        """
+
         is_single_image = False
         if imgs.ndim == 4:
             if self.is_temporal_ensemble:
@@ -44,6 +55,18 @@ class SpatialTemporalEnsemble(nn.Module):
         return imgs
 
     def spatial_ensemble(self, imgs, model):
+        """Apply spatial ensemble.
+
+        Args:
+            imgs (torch.Tensor): The images to be processed by the model. Its
+                size should be either (n, t, c, h, w) or (n, c, h, w).
+            model (nn.Module): The model to process the images.
+
+        Returns:
+            torch.Tensor: Output of the model with spatial ensemble applied.
+
+        """
+
         img_list = [imgs.cpu()]
         for mode in ['vertical', 'horizontal', 'transpose']:
             img_list.extend([self._transform(t, mode) for t in img_list])
@@ -63,6 +86,17 @@ class SpatialTemporalEnsemble(nn.Module):
         return outputs.to(imgs.device)
 
     def forward(self, imgs, model):
+        """Apply spatial and temporal ensemble.
+
+        Args:
+            imgs (torch.Tensor): The images to be processed by the model. Its
+                size should be either (n, t, c, h, w) or (n, c, h, w).
+            model (nn.Module): The model to process the images.
+
+        Returns:
+            torch.Tensor: Output of the model with spatial ensemble applied.
+
+        """
         outputs = self.spatial_ensemble(imgs, model)
         if self.is_temporal_ensemble:
             outputs += self.spatial_ensemble(imgs.flip(1), model).flip(1)

@@ -7,7 +7,6 @@ import numpy as np
 import torch
 
 from mmedit.core import tensor2img
-from mmedit.models.common.ensemble import SpatialTemporalEnsemble
 from ..registry import MODELS
 from .basic_restorer import BasicRestorer
 
@@ -25,6 +24,7 @@ class BasicVSR(BasicRestorer):
     Args:
         generator (dict): Config for the generator structure.
         pixel_loss (dict): Config for pixel-wise loss.
+        ensemble (dict): Config for ensemble. Default: None.
         train_cfg (dict): Config for training. Default: None.
         test_cfg (dict): Config for testing. Default: None.
         pretrained (str): Path for pretrained model. Default: None.
@@ -50,8 +50,16 @@ class BasicVSR(BasicRestorer):
         # ensemble
         self.forward_ensemble = None
         if ensemble is not None:
-            is_temporal = ensemble.get('is_temporal_ensemble', False)
-            self.forward_ensemble = SpatialTemporalEnsemble(is_temporal)
+            if ensemble['type'] == 'SpatialTemporalEnsemble':
+                from mmedit.models.common.ensemble import \
+                    SpatialTemporalEnsemble
+                is_temporal = ensemble.get('is_temporal_ensemble', False)
+                self.forward_ensemble = SpatialTemporalEnsemble(is_temporal)
+            else:
+                raise NotImplementedError(
+                    'Currently support only '
+                    '"SpatialTemporalEnsemble", but got type '
+                    f'[{ensemble["type"]}]')
 
     def check_if_mirror_extended(self, lrs):
         """Check whether the input is a mirror-extended sequence.
