@@ -53,7 +53,7 @@ class SRFacialLandmarkDataset(BaseSRDataset):
         shape (usually for gt), bbox and landmark.
 
         Returns:
-            list [dict]: Returned list of dicts for GT and landmark.
+            list[dict]: A list of dicts for GT path and landmark.
                 Contains: gt_path, bbox, shape, landmark.
         """
         data_infos = np.load(self.ann_file, allow_pickle=True)
