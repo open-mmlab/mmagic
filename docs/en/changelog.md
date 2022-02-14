@@ -1,5 +1,38 @@
 # Changelog
 
+## v0.13.0 (Wait for publish, update from last release to 31/01/2022)
+
+**Highlights**
+
+1. Support CAIN.
+2. Support EDVR-L
+
+**New Features**
+
+- Support AOT-GAN ([#674](https://github.com/open-mmlab/mmediting/pull/674), [#675](https://github.com/open-mmlab/mmediting/pull/675), [#676](https://github.com/open-mmlab/mmediting/pull/676))
+- Support CAIN ([#683](https://github.com/open-mmlab/mmediting/pull/683), [#691](https://github.com/open-mmlab/mmediting/pull/691), [#709](https://github.com/open-mmlab/mmediting/pull/709), [#713](https://github.com/open-mmlab/mmediting/pull/713))
+- Add basic interpolater ([#687](https://github.com/open-mmlab/mmediting/pull/687))
+- Add BaseVFIDataset and VFIVimeo90KDataset ([#695](https://github.com/open-mmlab/mmediting/pull/695), [#697](https://github.com/open-mmlab/mmediting/pull/697))
+- Add video interpolation demo ([#688](https://github.com/open-mmlab/mmediting/pull/688), [#717](https://github.com/open-mmlab/mmediting/pull/717))
+- Support various scales in RRDBNet ([#699](https://github.com/open-mmlab/mmediting/pull/699))
+- Support Ref-SR inference ([#716](https://github.com/open-mmlab/mmediting/pull/716))
+- Support EDVR-L on REDS ([#719](https://github.com/open-mmlab/mmediting/pull/719))
+
+**Bug Fixes**
+
+- Fix link address in docs ([#703](https://github.com/open-mmlab/mmediting/pull/703), [#704](https://github.com/open-mmlab/mmediting/pull/704))
+- Fix ARG `MMCV` in Dockerfile ([#708](https://github.com/open-mmlab/mmediting/pull/708))
+- Fix file permission of non-executable files ([#718](https://github.com/open-mmlab/mmediting/pull/718))
+
+**Improvements**
+
+- Update Pillow from 6.2.2 to 8.4 in CI ([#693](https://github.com/open-mmlab/mmediting/pull/693))
+- Add argument 'repeat' to SRREDSMultipleGTDataset ([#672](https://github.com/open-mmlab/mmediting/pull/672))
+
+**Contributors**
+
+@wangruohui @ckkelvinchan @Yshuo-Li @quincylin1 @Juggernaut93 @anse3832
+
 ## v0.12.0 (31/12/2021)
 
 **Highlights**
