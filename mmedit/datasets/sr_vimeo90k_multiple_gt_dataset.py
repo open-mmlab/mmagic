@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os
 import os.path as osp
 
 from .base_sr_dataset import BaseSRDataset
@@ -66,6 +67,7 @@ class SRVimeo90KMultipleGTDataset(BaseSRDataset):
 
         data_infos = []
         for key in keys:
+            key = key.replace('/', os.sep)
             lq_paths = [
                 osp.join(self.lq_folder, key, f'im{i}.png')
                 for i in range(1, self.num_input_frames + 1)

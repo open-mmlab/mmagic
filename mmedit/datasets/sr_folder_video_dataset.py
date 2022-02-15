@@ -94,6 +94,7 @@ class SRFolderVideoDataset(BaseSRDataset):
         ann_list = mmcv.list_from_file(self.ann_file)
         for ann in ann_list:
             key, max_frame_num = ann.strip().rsplit(' ', 1)
+            key = key.replace('/', os.sep)
             sequence = osp.basename(key)
             if sequence not in self.folders:
                 self.folders[sequence] = int(max_frame_num)
@@ -122,9 +123,7 @@ class SRFolderVideoDataset(BaseSRDataset):
         data_infos = []
 
         sequences = sorted(glob.glob(osp.join(self.lq_folder, '*')))
-        sequences = [
-            re.split(f'{os.sep}|{os.altsep}', s)[-1] for s in sequences
-        ]
+        sequences = [re.split(r'[\\/]', s)[-1] for s in sequences]
 
         for sequence in sequences:
             seq_dir = osp.join(self.lq_folder, sequence)

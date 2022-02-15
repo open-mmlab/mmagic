@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os
 import os.path as osp
 
 from .base_vfi_dataset import BaseVFIDataset
@@ -50,6 +51,7 @@ class VFIVimeo90KDataset(BaseVFIDataset):
 
         data_infos = []
         for key in keys:
+            key = key.replace('/', os.sep)
             key_folder = osp.join(self.folder, key)
             inputs_path = [
                 osp.join(key_folder, 'im1.png'),

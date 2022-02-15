@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
+import os.path as osp
 
 import numpy as np
 import pytest
@@ -534,7 +535,7 @@ class TestAugmentations:
         results = dict(
             lq_path='fake_lq_root',
             gt_path='fake_gt_root',
-            key='000/00000000',
+            key=osp.join('000', '00000000'),
             max_frame_num=100,
             num_input_frames=5)
         target_keys = ['lq_path', 'gt_path', 'key']
@@ -544,8 +545,9 @@ class TestAugmentations:
         circle_idx = [3, 4, 0, 1, 2]
 
         # replicate
-        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in replicate_idx]
-        gt_paths = ['fake_gt_root/000/00000000.png']
+        lq_paths = [osp.join('fake_lq_root', '000',
+                             f'{v:08d}.png') for v in replicate_idx]
+        gt_paths = [osp.join('fake_gt_root', '000', '00000000.png')]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='replicate')
         rlt = frame_index_generator(copy.deepcopy(results))
@@ -553,7 +555,8 @@ class TestAugmentations:
         assert rlt['lq_path'] == lq_paths
         assert rlt['gt_path'] == gt_paths
         # reflection
-        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in reflection_idx]
+        lq_paths = [osp.join('fake_lq_root', '000',
+                             f'{v:08d}.png') for v in reflection_idx]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='reflection')
         rlt = frame_index_generator(copy.deepcopy(results))
@@ -561,7 +564,8 @@ class TestAugmentations:
         assert rlt['gt_path'] == gt_paths
         # reflection_circle
         lq_paths = [
-            f'fake_lq_root/000/{v:08d}.png' for v in reflection_circle_idx
+            osp.join('fake_lq_root', '000',
+                     f'{v:08d}.png') for v in reflection_circle_idx
         ]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='reflection_circle')
@@ -569,7 +573,8 @@ class TestAugmentations:
         assert rlt['lq_path'] == lq_paths
         assert rlt['gt_path'] == gt_paths
         # circle
-        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in circle_idx]
+        lq_paths = [osp.join('fake_lq_root', '000',
+                             f'{v:08d}.png') for v in circle_idx]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='circle')
         rlt = frame_index_generator(copy.deepcopy(results))
@@ -579,7 +584,7 @@ class TestAugmentations:
         results = dict(
             lq_path='fake_lq_root',
             gt_path='fake_gt_root',
-            key='000/00000099',
+            key=osp.join('000', '00000099'),
             max_frame_num=100,
             num_input_frames=5)
         target_keys = ['lq_path', 'gt_path', 'key']
@@ -589,8 +594,10 @@ class TestAugmentations:
         circle_idx = [97, 98, 99, 95, 96]
 
         # replicate
-        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in replicate_idx]
-        gt_paths = ['fake_gt_root/000/00000099.png']
+        lq_paths = [osp.join('fake_lq_root', '000',
+                             f'{v:08d}.png') for v in replicate_idx]
+        osp.join('fake_gt_root', '000', '/00000099.png')
+        gt_paths = [osp.join('fake_gt_root', '000', '/00000099.png')]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='replicate')
         rlt = frame_index_generator(copy.deepcopy(results))
@@ -598,7 +605,8 @@ class TestAugmentations:
         assert rlt['lq_path'] == lq_paths
         assert rlt['gt_path'] == gt_paths
         # reflection
-        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in reflection_idx]
+        lq_paths = [osp.join('fake_lq_root', '000',
+                             f'{v:08d}.png') for v in reflection_idx]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='reflection')
         rlt = frame_index_generator(copy.deepcopy(results))
@@ -606,7 +614,8 @@ class TestAugmentations:
         assert rlt['gt_path'] == gt_paths
         # reflection_circle
         lq_paths = [
-            f'fake_lq_root/000/{v:08d}.png' for v in reflection_circle_idx
+            osp.join('fake_lq_root', '000',
+                     f'{v:08d}.png') for v in reflection_circle_idx
         ]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='reflection_circle')
@@ -614,7 +623,8 @@ class TestAugmentations:
         assert rlt['lq_path'] == lq_paths
         assert rlt['gt_path'] == gt_paths
         # circle
-        lq_paths = [f'fake_lq_root/000/{v:08d}.png' for v in circle_idx]
+        lq_paths = [osp.join('fake_lq_root', '000',
+                             f'{v:08d}.png') for v in circle_idx]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='circle')
         rlt = frame_index_generator(copy.deepcopy(results))
@@ -629,7 +639,7 @@ class TestAugmentations:
         results = dict(
             lq_path='fake_lq_root',
             gt_path='fake_gt_root',
-            key='000/00000010',
+            key=osp.join('000', '00000010'),
             num_input_frames=3)
         target_keys = ['lq_path', 'gt_path', 'key', 'interval']
         frame_index_generator = GenerateFrameIndices(
@@ -647,7 +657,7 @@ class TestAugmentations:
         assert self.check_keys_contain(rlt.keys(), target_keys)
 
         # index out of range
-        results['key'] = '000/00000099'
+        results['key'] = osp.join('000', '00000099')
         frame_index_generator = GenerateFrameIndices(interval_list=[2, 3])
         rlt = frame_index_generator(copy.deepcopy(results))
         assert self.check_keys_contain(rlt.keys(), target_keys)
