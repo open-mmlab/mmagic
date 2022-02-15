@@ -596,8 +596,7 @@ class TestAugmentations:
         # replicate
         lq_paths = [osp.join('fake_lq_root', '000',
                              f'{v:08d}.png') for v in replicate_idx]
-        osp.join('fake_gt_root', '000', '/00000099.png')
-        gt_paths = [osp.join('fake_gt_root', '000', '/00000099.png')]
+        gt_paths = [osp.join('fake_gt_root', '000', '00000099.png')]
         frame_index_generator = GenerateFrameIndiceswithPadding(
             padding='replicate')
         rlt = frame_index_generator(copy.deepcopy(results))

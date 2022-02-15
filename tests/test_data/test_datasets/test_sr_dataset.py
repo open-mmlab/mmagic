@@ -463,7 +463,7 @@ def test_reds_dataset():
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
-                key=osp.join('000', '00000001'),
+                key=osp.join('001', '00000001'),
                 max_frame_num=100,
                 num_input_frames=5)
         ]

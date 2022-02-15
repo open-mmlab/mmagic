@@ -228,10 +228,11 @@ def test_composite_fg():
     assert check_keys_contain(composite_fg_results.keys(), target_keys)
     assert composite_fg_results['fg'].shape == (32, 32, 3)
 
-    assert repr(composite_fg) == composite_fg.__class__.__name__ + (
-        f"(fg_dirs=['tests{os.sep}data{os.sep}fg'], "
-        f"alpha_dirs=['tests{os.sep}data{os.sep}alpha'], "
-        "interpolation='bilinear')").replace('\\\\', '\\')
+    strs = (f"(fg_dirs=['tests{os.sep}data{os.sep}fg'], "
+            f"alpha_dirs=['tests{os.sep}data{os.sep}alpha'], "
+            "interpolation='bilinear')")
+    assert repr(composite_fg) == composite_fg.__class__.__name__ + \
+        strs.replace('\\', '\\\\')
 
 
 def test_generate_seg():
