@@ -231,7 +231,7 @@ def test_composite_fg():
     assert repr(composite_fg) == composite_fg.__class__.__name__ + (
         f"(fg_dirs=['tests{os.sep}data{os.sep}fg'], "
         f"alpha_dirs=['tests{os.sep}data{os.sep}alpha'], "
-        "interpolation='bilinear')")
+        "interpolation='bilinear')").replace('\\\\', '\\')
 
 
 def test_generate_seg():

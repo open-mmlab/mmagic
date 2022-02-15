@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os
+
 from .base_sr_dataset import BaseSRDataset
 from .registry import DATASETS
 
@@ -64,6 +66,8 @@ class SRREDSDataset(BaseSRDataset):
         with open(self.ann_file, 'r') as fin:
             keys = [v.strip().split('.')[0] for v in fin]
 
+        keys = [key.replace('/', os.sep) for key in keys]
+
         if self.val_partition == 'REDS4':
             val_partition = ['000', '011', '015', '020']
         elif self.val_partition == 'official':
@@ -74,9 +78,9 @@ class SRREDSDataset(BaseSRDataset):
                 f'Supported ones are ["official", "REDS4"]')
 
         if self.test_mode:
-            keys = [v for v in keys if v.split('/')[0] in val_partition]
+            keys = [v for v in keys if v.split(os.sep)[0] in val_partition]
         else:
-            keys = [v for v in keys if v.split('/')[0] not in val_partition]
+            keys = [v for v in keys if v.split(os.sep)[0] not in val_partition]
 
         data_infos = []
         for key in keys:
