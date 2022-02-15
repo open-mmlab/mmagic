@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .augmentation import (BinarizeImage, ColorJitter, CopyValues, Flip,
                            GenerateFrameIndices,
                            GenerateFrameIndiceswithPadding,
