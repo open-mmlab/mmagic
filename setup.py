@@ -17,6 +17,7 @@ version_file = 'mmedit/version.py'
 
 
 def get_git_hash():
+    # Deprecated
 
     def _minimal_ext_cmd(cmd):
         # construct minimal environment
@@ -43,6 +44,7 @@ def get_git_hash():
 
 
 def get_hash():
+    # Deprecated
     if os.path.exists('.git'):
         sha = get_git_hash()[:7]
     elif os.path.exists(version_file):
@@ -57,10 +59,10 @@ def get_hash():
     return sha
 
 
-def get_version():
+def get_versions():
     with open(version_file, 'r') as f:
         exec(compile(f.read(), version_file, 'exec'))
-    return locals()['__version__']
+    return locals()['__version__'], locals()['__local_version__']
 
 
 def parse_requirements(fname='requirements.txt', with_version=True):
@@ -204,7 +206,7 @@ if __name__ == '__main__':
     add_mim_extention()
     setup(
         name='mmedit',
-        version=get_version(),
+        version=get_versions()[1],  # use local version with git hash
         description='OpenMMLab Image and Video Editing Toolbox and Benchmark',
         long_description=readme(),
         long_description_content_type='text/markdown',
