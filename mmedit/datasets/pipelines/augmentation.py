@@ -446,7 +446,7 @@ class RandomAffine:
         else:
             shear = 0.0
 
-        flip = (np.random.rand(2) < flip_ratio).astype(np.int) * 2 - 1
+        flip = (np.random.rand(2) < flip_ratio).astype(np.int32) * 2 - 1
 
         return angle, translations, scale, shear, flip
 

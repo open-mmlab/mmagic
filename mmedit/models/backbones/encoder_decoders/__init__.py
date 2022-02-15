@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .aot_encoder_decoder import AOTEncoderDecoder
 from .decoders import (DeepFillDecoder, FBADecoder, GLDecoder, IndexedUpsample,
                        IndexNetDecoder, PConvDecoder, PlainDecoder,
