@@ -37,7 +37,7 @@ def _minimal_ext_cmd(cmd):
     return out
 
 
-def get_local_version_with_git_hash(force_public=False):
+def get_public_or_local_version(force_public=False):
     """Get PEP440 compatible public or local version identifier.
 
     Returns:
@@ -62,6 +62,35 @@ def get_local_version_with_git_hash(force_public=False):
         version = public_match.group(1)
     elif local_match:
         version = F'{local_match.group(1)}+{local_match.group(2)}'
+
+    return version
+
+
+def get_local_version_with_git_hash(fallback_to_public=True):
+    """Get PEP440 compatible local version identifier.
+
+    Returns:
+        str: Local version identifier, like 0.12.0+ge9f4097, g means git
+    """
+    import re
+
+    try:
+        git_output = _minimal_ext_cmd(['git', 'describe', '--tags',
+                                       '--long']).decode()
+        # will output v0.12.0-35-ge9f4097 when not on tags
+        # and v0.12.0-0-gbf53426 when on tags
+    except OSError as e:
+        if fallback_to_public:
+            return __version__
+        else:
+            raise e
+
+    local_match = re.match(r'v([\d+](?:\.\d+)+)-\d+-(\w+)', git_output)
+
+    if local_match:
+        version = F'{local_match.group(1)}+{local_match.group(2)}'
+    else:
+        raise RuntimeError
 
     return version
 
