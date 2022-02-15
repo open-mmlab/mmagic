@@ -97,7 +97,7 @@ def parse_requirements(fname='requirements.txt', with_version=True):
                 info['package'] = line
             else:
                 # Remove versioning from the package
-                pat = '(' + '|'.join(['>=', '==', '>']) + ')'
+                pat = '(' + '|'.join(['>=', '<=', '==', '>', '<']) + ')'
                 parts = re.split(pat, line, maxsplit=1)
                 parts = [p.strip() for p in parts]
 
@@ -211,7 +211,7 @@ if __name__ == '__main__':
         maintainer='MMEditing Contributors',
         maintainer_email='openmmlab@gmail.com',
         keywords='computer vision, inpainting, matting, '
-        'super-resolution, generation',
+        'super-resolution, generation, video frame interpolation',
         url='https://github.com/open-mmlab/mmediting',
         packages=find_packages(exclude=('configs', 'tools', 'demo')),
         include_package_data=True,
