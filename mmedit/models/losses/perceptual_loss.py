@@ -98,10 +98,13 @@ class PerceptualLoss(nn.Module):
     """Perceptual loss with commonly used style loss.
 
     Args:
-        layers_weights (dict): The weight for each layer of vgg feature.
-            Here is an example: {'4': 1., '9': 1., '18': 1.}, which means the
-            5th, 10th and 18th feature layer will be extracted with weight 1.0
-            in calculating losses.
+        layers_weights (dict): The weight for each layer of vgg feature for
+            perceptual loss. Here is an example: {'4': 1., '9': 1., '18': 1.},
+            which means the 5th, 10th and 18th feature layer will be
+            extracted with weight 1.0 in calculating losses.
+        layers_weights_style (dict): The weight for each layer of vgg feature
+            for style loss. If set to 'None', the weights are set equal to
+            the weights for perceptual loss. Default: None.
         vgg_type (str): The type of vgg network used as feature extractor.
             Default: 'vgg19'.
         use_input_norm (bool):  If True, normalize the input image in vgg.
@@ -123,8 +126,8 @@ class PerceptualLoss(nn.Module):
     """
 
     def __init__(self,
-                 layer_weights_perceptual,
-                 layer_weights_style,
+                 layer_weights,
+                 layer_weights_style=None,
                  vgg_type='vgg19',
                  use_input_norm=True,
                  perceptual_weight=1.0,
@@ -133,21 +136,26 @@ class PerceptualLoss(nn.Module):
                  pretrained='torchvision://vgg19',
                  criterion='l1'):
         super().__init__()
+        self.layer_weights = layer_weights
         self.norm_img = norm_img
         self.perceptual_weight = perceptual_weight
         self.style_weight = style_weight
-        self.layer_weights_perceptual = layer_weights_perceptual
         self.layer_weights_style = layer_weights_style
+
         self.vgg_perceptual = PerceptualVGG(
-            layer_name_list=list(layer_weights_perceptual.keys()),
+            layer_name_list=list(self.layer_weights.keys()),
             vgg_type=vgg_type,
             use_input_norm=use_input_norm,
             pretrained=pretrained)
-        self.vgg_style = PerceptualVGG(
-            layer_name_list=list(layer_weights_style.keys()),
-            vgg_type=vgg_type,
-            use_input_norm=use_input_norm,
-            pretrained=pretrained)
+
+        if self.layer_weights_style is None:
+            self.layer_weights_style = self.layer_weights
+        else:
+            self.vgg_style = PerceptualVGG(
+                layer_name_list=list(self.layer_weights_style.keys()),
+                vgg_type=vgg_type,
+                use_input_norm=use_input_norm,
+                pretrained=pretrained)
 
         criterion = criterion.lower()
         if criterion == 'l1':
@@ -180,19 +188,24 @@ class PerceptualLoss(nn.Module):
         # calculate perceptual loss
         if self.perceptual_weight > 0:
             percep_loss = 0
-            for k in list(self.layer_weights_perceptual.keys()):
+            for k in list(self.layer_weights.keys()):
                 percep_loss += self.criterion(
-                    x_features_perceptual[k], gt_features_perceptual[k]
-                ) * self.layer_weights_perceptual[k]
+                    x_features_perceptual[k],
+                    gt_features_perceptual[k]) * self.layer_weights[k]
             percep_loss *= self.perceptual_weight
         else:
             percep_loss = None
 
-        x_features_style = self.vgg_style(x)
-        gt_features_style = self.vgg_style(gt.detach())
-
         # calculate style loss
         if self.style_weight > 0:
+            if self.layer_weights_style != self.layer_weights:
+                x_features_style = self.vgg_style(x)
+                gt_features_style = self.vgg_style(gt.detach())
+
+            else:
+                x_features_style = x_features_perceptual
+                gt_features_style = gt_features_perceptual
+
             style_loss = 0
             for k in list(self.layer_weights_style.keys()):
                 style_loss += self.criterion(

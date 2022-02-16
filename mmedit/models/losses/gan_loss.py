@@ -31,8 +31,8 @@ class GANLoss(nn.Module):
         self.real_label_val = real_label_val
         self.fake_label_val = fake_label_val
         self.loss_weight = loss_weight
-
-        self.gaussian_blur = GaussianBlur()
+        if self.gan_type == 'smgan':
+            self.gaussian_blur = GaussianBlur()
 
         if self.gan_type == 'vanilla':
             self.loss = nn.BCEWithLogitsLoss()
@@ -77,12 +77,12 @@ class GANLoss(nn.Module):
             self.real_label_val if target_is_real else self.fake_label_val)
         return input.new_ones(input.size()) * target_val
 
-    def forward(self, input, target_is_real, is_disc=False, **kwargs):
+    def forward(self, input, target_is_real, is_disc=False, mask=None):
         """
         Args:
             input (Tensor): The input for the loss module, i.e., the network
                 prediction.
-            target_is_real (bool): Whether the targe is real or fake.
+            target_is_real (bool): Whether the target is real or fake.
             is_disc (bool): Whether the loss for discriminators or not.
                 Default: False.
 
@@ -98,7 +98,6 @@ class GANLoss(nn.Module):
             else:  # for generators in hinge-gan
                 loss = -input.mean()
         elif self.gan_type == 'smgan':
-            mask = kwargs['mask']
 
             input_height, input_width = input.shape[2:]
             mask_height, mask_width = mask.shape[2:]
@@ -111,7 +110,7 @@ class GANLoss(nn.Module):
                     mode='bilinear',
                     align_corners=True)
 
-            target_label = self.get_target_label(input, target_is_real)
+                target_label = self.get_target_label(input, target_is_real)
 
             if is_disc:
                 if target_is_real:
@@ -149,12 +148,6 @@ class GaussianBlur(nn.Module):
     Shape:
         - input: Tensor with shape of (n, c, h, w)
         - output: Tensor with shape of (n, c, h, w)
-
-    Examples:
-
-      >>> input = torch.rand(2, 4, 5, 5)
-      >>> gauss = kornia.filters.GaussianBlur((3, 3), (1.5, 1.5))
-      >>> output = gauss(input) # 2 x 4 x 5 x 5
     """
 
     def __init__(self, kernel_size=(71, 71), sigma=(10.0, 10.0)):
@@ -185,18 +178,6 @@ class GaussianBlur(nn.Module):
         Returns:
             kernel_2d (Tensor): A 2D torch tensor with gaussian filter
                                 matrix coefficients.
-
-        Examples:
-
-        >>> kornia.image.get_gaussian_kernel2d((3, 3), (1.5, 1.5))
-        tensor([[0.0947, 0.1183, 0.0947],
-                [0.1183, 0.1478, 0.1183],
-                [0.0947, 0.1183, 0.0947]])
-
-        >>> kornia.image.get_gaussian_kernel2d((3, 5), (1.5, 1.5))
-        tensor([[0.0370, 0.0720, 0.0899, 0.0720, 0.0370],
-                [0.0462, 0.0899, 0.1123, 0.0899, 0.0462],
-                [0.0370, 0.0720, 0.0899, 0.0720, 0.0370]])
         """
 
         if not isinstance(kernel_size, tuple) or len(kernel_size) != 2:
@@ -229,13 +210,6 @@ class GaussianBlur(nn.Module):
         Returns:
             kernel_1d (Tensor): A 1D torch tensor with gaussian filter
                                 coefficients in x or y direction.
-
-        Examples:
-
-        >>> kornia.image.get_gaussian_kernel(3, 2.5)
-        tensor([0.3243, 0.3513, 0.3243])
-        >>> kornia.image.get_gaussian_kernel(5, 1.5)
-        tensor([0.1201, 0.2339, 0.2921, 0.2339, 0.1201])
         """
 
         if not isinstance(kernel_size,
