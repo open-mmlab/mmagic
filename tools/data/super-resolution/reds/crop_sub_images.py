@@ -30,7 +30,7 @@ def worker(path, opt):
     crop_size = opt['crop_size']
     step = opt['step']
     thresh_size = opt['thresh_size']
-    sequence, img_name = re.split(f'{os.sep}|{os.altsep}', path)[-2:]
+    sequence, img_name = re.split(r'[\\/]', path)[-2:]
     img_name, extension = osp.splitext(osp.basename(path))
 
     img = mmcv.imread(path, flag='unchanged')
