@@ -4,7 +4,7 @@ import math
 import cv2
 import mmcv
 import numpy as np
-from scipy.ndimage.filters import convolve
+from scipy.ndimage import convolve
 from scipy.special import gamma
 
 from mmedit.datasets.pipelines.matlab_like_resize import MATLABLikeResize

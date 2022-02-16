@@ -1,5 +1,77 @@
 # 变更日志
 
+## v0.12.0 (31/12/2021)
+
+**主要更新**
+
+1. 支持 RealBasicVSR
+2. 支持 Real-ESRGAN 预训练模型
+
+**新功能**
+
+- 支持视频恢复演示中的视频输入和输出 ([#622](https://github.com/open-mmlab/mmediting/pull/622))
+- 支持 RealBasicVSR ([#632](https://github.com/open-mmlab/mmediting/pull/632), [#633](https://github.com/open-mmlab/mmediting/pull/633), [#647](https://github.com/open-mmlab/mmediting/pull/647), [#680](https://github.com/open-mmlab/mmediting/pull/680))
+- 支持 Real-ESRGAN 预训练模型 ([#635](https://github.com/open-mmlab/mmediting/pull/635))
+- 加载图片时支持转化到 Y 通道 ([643](https://github.com/open-mmlab/mmediting/pull/643))
+- 训练时支持随机视频压缩Support random video compression during training ([#646](https://github.com/open-mmlab/mmediting/pull/646))
+- 支持裁剪序列 ([#648](https://github.com/open-mmlab/mmediting/pull/648))
+- 支持 pixel_unshuffle ([#684](https://github.com/open-mmlab/mmediting/pull/684))
+
+**Bug 修复**
+
+- 将 RandomResize 的 'target_size' 从列表更改为元组 ([#617](https://github.com/open-mmlab/mmediting/pull/617))
+- 修复 preprocess_df2k_ost_dataset.py 中的文件夹创建问题 ([#623](https://github.com/open-mmlab/mmediting/pull/623))
+- 在 README 中更改 TDAN 配置路径 ([#625](https://github.com/open-mmlab/mmediting/pull/625))
+- 在 Real-ESRNet 配置中将 UnsharpMasking 的 'radius' 更改为 'kernel_size' ([#626](https://github.com/open-mmlab/mmediting/pull/626))
+- 修复 MATLABLikeResize 中的 Bug ([#630](https://github.com/open-mmlab/mmediting/pull/630))
+- 修复 'flow_warp' 注释 ([#655](https://github.com/open-mmlab/mmediting/pull/655))
+- 修复文档中 Model Zoo 和 Datasets 的错误 ([#664](https://github.com/open-mmlab/mmediting/pull/664))
+- 修复 'random_degradations' 中的错误 ([#673](https://github.com/open-mmlab/mmediting/pull/673))
+- 限制 opencv-python 版本 ([#689](https://github.com/open-mmlab/mmediting/pull/689))
+
+**改进**
+
+- 将文档翻译成中文 ([#576](https://github.com/open-mmlab/mmediting/pull/576), [#577](https://github.com/open-mmlab/mmediting/pull/577), [#578](https://github.com/open-mmlab/mmediting/pull/578), [#579](https://github.com/open-mmlab/mmediting/pull/579), [#581](https://github.com/open-mmlab/mmediting/pull/581), [#582](https://github.com/open-mmlab/mmediting/pull/582), [#584](https://github.com/open-mmlab/mmediting/pull/584), [#587](https://github.com/open-mmlab/mmediting/pull/587), [#588](https://github.com/open-mmlab/mmediting/pull/588), [#589](https://github.com/open-mmlab/mmediting/pull/589), [#590](https://github.com/open-mmlab/mmediting/pull/590), [#591](https://github.com/open-mmlab/mmediting/pull/591), [#592](https://github.com/open-mmlab/mmediting/pull/592), [#593](https://github.com/open-mmlab/mmediting/pull/593), [#594](https://github.com/open-mmlab/mmediting/pull/594), [#595](https://github.com/open-mmlab/mmediting/pull/595), [#596](https://github.com/open-mmlab/mmediting/pull/596), [#641](https://github.com/open-mmlab/mmediting/pull/641), [#647](https://github.com/open-mmlab/mmediting/pull/647), [#656](https://github.com/open-mmlab/mmediting/pull/656), [#665](https://github.com/open-mmlab/mmediting/pull/665), [#666](https://github.com/open-mmlab/mmediting/pull/666))
+- 添加 UNetDiscriminatorWithSpectralNorm ([#605](https://github.com/open-mmlab/mmediting/pull/605))
+- 使用 PyTorch sphinx 主题 ([#607](https://github.com/open-mmlab/mmediting/pull/607), [#608](https://github.com/open-mmlab/mmediting/pull/608))
+- 在文本文档中更新 mmcv ([#609](https://github.com/open-mmlab/mmediting/pull/609)), mmflow ([#621](https://github.com/open-mmlab/mmediting/pull/621)), mmfewshot ([#634](https://github.com/open-mmlab/mmediting/pull/634)) and mmhuman3d ([#649](https://github.com/open-mmlab/mmediting/pull/649)) 的信息
+- 将最低 GCC 版本转换为 5.4 ([#612](https://github.com/open-mmlab/mmediting/pull/612))
+- 在 SRDataset IMG_EXTENSIONS 中添加 tiff ([#614](https://github.com/open-mmlab/mmediting/pull/614))
+- 更新 metafile 和 update_model_index.py ([#615](https://github.com/open-mmlab/mmediting/pull/615))
+- 更新 preprocess_df2k_ost_dataset.py ([#624](https://github.com/open-mmlab/mmediting/pull/624))
+- 将摘要添加到README ([#628](https://github.com/open-mmlab/mmediting/pull/628), [#636](https://github.com/open-mmlab/mmediting/pull/636))
+- 将 NIQE 与 MATLAB 结果对齐 ([#631](https://github.com/open-mmlab/mmediting/pull/631))
+- 添加官方 Markdown lint 钩子 ([#639](https://github.com/open-mmlab/mmediting/pull/639))
+- 更改某些特定文件时跳过 CI ([#640](https://github.com/open-mmlab/mmediting/pull/640))
+- 更新 docs/conf.py ([#644](https://github.com/open-mmlab/mmediting/pull/644), [#651](https://github.com/open-mmlab/mmediting/pull/651))
+- 尝试在 Windows 上创建软链接 ([#645](https://github.com/open-mmlab/mmediting/pull/645))
+- 取消之前未完成的运行 ([#650](https://github.com/open-mmlab/mmediting/pull/650))
+- 更新 demo.md 和 getting_started.md 中 config 的路径 ([#658](https://github.com/open-mmlab/mmediting/pull/658), [#659](https://github.com/open-mmlab/mmediting/pull/659))
+- 使用 mmcv 根模型注册表 ([#660](https://github.com/open-mmlab/mmediting/pull/660))
+- 更新 README.md ([#654](https://github.com/open-mmlab/mmediting/pull/654), [#663](https://github.com/open-mmlab/mmediting/pull/663))
+- 重构文档结构 ([#668](https://github.com/open-mmlab/mmediting/pull/668))
+- 添加脚本以将 REDS 图像裁剪为子图像以加快 IO ([#669](https://github.com/open-mmlab/mmediting/pull/669))
+- 将 metafile 中任务名称的第一个字母大写 ([#678](https://github.com/open-mmlab/mmediting/pull/678))
+- 更新 FixedCrop 以支持裁剪图像序列 ([#682](https://github.com/open-mmlab/mmediting/pull/682))
+
+## v0.11.0 (03/11/2021)
+
+**亮点**
+
+1. 支持使用 GLEAN 处理人脸图像的盲超分辨率
+2. 支持 Real-ESRGAN 模型 #546
+
+**新功能**
+
+- 指数移动平均线钩子 #542
+- 支持 DF2K_OST 数据 #566
+
+**改进**
+
+- 增加与 MATLAB 相似的双线性插值算法 #507
+- 在训练期间支持随机退化 #504
+- 支持 torchserve #568
+
 ## v0.10.0 (12/08/2021).
 
 **亮点**

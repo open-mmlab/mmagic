@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 def pixel_unshuffle(x, scale):
     """Down-sample by pixel unshuffle.
 

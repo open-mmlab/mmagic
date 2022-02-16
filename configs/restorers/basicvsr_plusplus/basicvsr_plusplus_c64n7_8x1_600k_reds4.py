@@ -102,6 +102,7 @@ data = dict(
         pipeline=test_pipeline,
         scale=4,
         val_partition='REDS4',
+        repeat=2,
         test_mode=True),
     # test
     test=dict(

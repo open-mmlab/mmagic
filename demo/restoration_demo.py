@@ -18,6 +18,8 @@ def parse_args():
     parser.add_argument(
         '--imshow', action='store_true', help='whether show image with opencv')
     parser.add_argument('--device', type=int, default=0, help='CUDA device id')
+    parser.add_argument(
+        '--ref_path', default=None, help='path to reference image file')
     args = parser.parse_args()
     return args
 
@@ -30,11 +32,19 @@ def main():
                          '"image_path". Please double check your input, or '
                          'you may want to use "restoration_video_demo.py" '
                          'for video restoration.')
+    if args.ref_path and not os.path.isfile(args.ref_path):
+        raise ValueError('It seems that you did not input a valid '
+                         '"ref_path". Please double check your input, or '
+                         'you may want to use "ref_path=None" '
+                         'for single restoration.')
 
     model = init_model(
         args.config, args.checkpoint, device=torch.device('cuda', args.device))
 
-    output = restoration_inference(model, args.img_path)
+    if args.ref_path:  # Ref-SR
+        output = restoration_inference(model, args.img_path, args.ref_path)
+    else:  # SISR
+        output = restoration_inference(model, args.img_path)
     output = tensor2img(output)
 
     mmcv.imwrite(output, args.save_path)
