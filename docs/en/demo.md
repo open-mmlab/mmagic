@@ -16,7 +16,7 @@ If `--imshow` is specified, the demo will also show image with opencv. Examples:
 python demo/inpainting_demo.py configs/inpainting/global_local/gl_256x256_8x12_celeba.py work_dirs/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth tests/data/image/celeba_test.png tests/data/image/bbox_mask.png tests/data/pred/inpainting_celeba.png
 ```
 
-The predicted inpainting result will be save in `tests/data/pred/inpainting_celeba.png`.
+The predicted inpainting result will be save in `tests/data/pred/inpainting_celeba.png` .
 
 #### Matting
 
@@ -32,7 +32,7 @@ If `--imshow` is specified, the demo will also show image with opencv. Examples:
 python demo/matting_demo.py configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py work_dirs/dim_stage3/latest.pth tests/data/merged/GT05.jpg tests/data/trimap/GT05.png tests/data/pred/GT05.png
 ```
 
-The predicted alpha matte will be save in `tests/data/pred/GT05.png`.
+The predicted alpha matte will be save in `tests/data/pred/GT05.png` .
 
 #### Restoration (Image)
 
@@ -67,23 +67,57 @@ python demo/restoration_face_demo.py configs/restorers/glean/glean_in128out1024_
 You can use the following commands to test a video for restoration.
 
 ```shell
-python demo/restoration_video_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${INPUT_DIR} ${OUTPUT_DIR} [--window_size=$WINDOW_SIZE] [--device ${GPU_ID}]
+python demo/restoration_video_demo.py \
+${CONFIG_FILE} \
+${CHECKPOINT_FILE} \
+${INPUT_DIR} \
+${OUTPUT_DIR} \
+[--window_size=$WINDOW_SIZE] \
+[--fps=$FPS] \
+[--max_seq_len=$MAX_SEQ_LEN] \
+[--device ${GPU_ID}]
 ```
 
 It supports both the sliding-window framework and the recurrent framework. Examples:
 
-
 EDVR:
+
 ```shell
-python demo/restoration_video_demo.py ./configs/restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth data/Vid4/BIx4/calendar/ ./output --window_size=5
+python demo/restoration_video_demo.py \
+./configs/restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py \
+https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth \
+data/Vid4/BIx4/calendar/ \
+./output \
+--window_size=5
 ```
 
 BasicVSR:
+
 ```shell
-python demo/restoration_video_demo.py ./configs/restorers/basicvsr/basicvsr_reds4.py https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth data/Vid4/BIx4/calendar/ ./output
+python demo/restoration_video_demo.py \
+./configs/restorers/basicvsr/basicvsr_reds4.py \
+https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth \
+data/Vid4/BIx4/calendar/ \
+./output
 ```
 
-The restored video will be save in `output/`.
+The restored video will be save in `output/` .
+
+If you want to use an input video and output video, you can use the following command:
+
+```shell
+python demo/restoration_video_demo.py \
+./configs/restorers/basicvsr/basicvsr_reds4.py \
+https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth \
+data/your_input.mp4 \
+output/your_output.mp4 \
+--fps=25 \
+--max_seq_len=50
+```
+
+Here
+* `fps` refers to the frame rate of the output video you prefer. If it is not specified, the output frame rate is set to the input frame rate.
+* `max_seq_len` denotes the maximum number of frames in each sequence. For example, if `max_seq_len=50`, a 200-frame sequence will be divided into 4 50-frame sequence and processed independently.
 
 #### Generation
 
