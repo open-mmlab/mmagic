@@ -59,10 +59,64 @@ def get_hash():
     return sha
 
 
-def get_versions():
+def get_version():
     with open(version_file, 'r') as f:
         exec(compile(f.read(), version_file, 'exec'))
-    return locals()['__version__'], locals()['__local_version__']
+    return locals()['__version__']
+
+
+def get_local_version_with_git_hash(fallback_to_public=True):
+    """Get PEP440 compatible local version identifier.
+
+    Returns:
+        str: Local version identifier, like 0.12.0+ge9f4097, g means git
+    """
+    import os
+    import re
+    import subprocess
+
+    def _minimal_ext_cmd(cmd):
+
+        # construct minimal environment
+        env = {}
+        for k in ['SYSTEMROOT', 'PATH', 'HOME']:
+            v = os.environ.get(k)
+            if v is not None:
+                env[k] = v
+        # LANGUAGE is used on win32
+        env['LANGUAGE'] = 'C'
+        env['LANG'] = 'C'
+        env['LC_ALL'] = 'C'
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, env=env)
+        out = p.communicate()[0].decode()
+
+        return out, p.returncode
+
+    try:
+        git_output, code = _minimal_ext_cmd(
+            ['git', 'describe', '--tags', '--long'])
+        # will output v0.12.0-35-ge9f4097 when not on tags
+        # and v0.12.0-0-gbf53426 when on tags
+        if code != 0:
+            if fallback_to_public:
+                return get_version()
+            else:
+                raise RuntimeError('Git command failure')
+
+    except (OSError, FileNotFoundError) as e:
+        if fallback_to_public:
+            return get_version()
+        else:
+            raise e
+
+    local_match = re.match(r'v([\d+](?:\.\d+)+)-\d+-(\w+)', git_output)
+
+    if local_match:
+        version = F'{local_match.group(1)}+{local_match.group(2)}'
+    else:
+        raise RuntimeError('Invalid git describe.')
+
+    return version
 
 
 def parse_requirements(fname='requirements.txt', with_version=True):
@@ -206,7 +260,8 @@ if __name__ == '__main__':
     add_mim_extention()
     setup(
         name='mmedit',
-        version=get_versions()[1],  # use local version with git hash
+        version=get_local_version_with_git_hash(
+        ),  # use local version with git hash
         description='OpenMMLab Image and Video Editing Toolbox and Benchmark',
         long_description=readme(),
         long_description_content_type='text/markdown',
