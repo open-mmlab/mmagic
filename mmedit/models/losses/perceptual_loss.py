@@ -136,26 +136,28 @@ class PerceptualLoss(nn.Module):
                  pretrained='torchvision://vgg19',
                  criterion='l1'):
         super().__init__()
-        self.layer_weights = layer_weights
         self.norm_img = norm_img
         self.perceptual_weight = perceptual_weight
         self.style_weight = style_weight
+        self.layer_weights = layer_weights
         self.layer_weights_style = layer_weights_style
 
-        self.vgg_perceptual = PerceptualVGG(
+        self.vgg = PerceptualVGG(
             layer_name_list=list(self.layer_weights.keys()),
             vgg_type=vgg_type,
             use_input_norm=use_input_norm,
             pretrained=pretrained)
 
-        if self.layer_weights_style is None:
-            self.layer_weights_style = self.layer_weights
-        else:
+        if self.layer_weights_style is not None and \
+                self.layer_weights_style != self.layer_weights:
             self.vgg_style = PerceptualVGG(
                 layer_name_list=list(self.layer_weights_style.keys()),
                 vgg_type=vgg_type,
                 use_input_norm=use_input_norm,
                 pretrained=pretrained)
+        else:
+            self.layer_weights_style = self.layer_weights
+            self.vgg_style = None
 
         criterion = criterion.lower()
         if criterion == 'l1':
@@ -182,36 +184,31 @@ class PerceptualLoss(nn.Module):
             x = (x + 1.) * 0.5
             gt = (gt + 1.) * 0.5
         # extract vgg features
-        x_features_perceptual = self.vgg_perceptual(x)
-        gt_features_perceptual = self.vgg_perceptual(gt.detach())
+        x_features = self.vgg(x)
+        gt_features = self.vgg(gt.detach())
 
         # calculate perceptual loss
         if self.perceptual_weight > 0:
             percep_loss = 0
-            for k in list(self.layer_weights.keys()):
+            for k in list(x_features.keys()):
                 percep_loss += self.criterion(
-                    x_features_perceptual[k],
-                    gt_features_perceptual[k]) * self.layer_weights[k]
+                    x_features[k], gt_features[k]) * self.layer_weights[k]
             percep_loss *= self.perceptual_weight
         else:
             percep_loss = None
 
         # calculate style loss
         if self.style_weight > 0:
-            if self.layer_weights_style != self.layer_weights:
-                x_features_style = self.vgg_style(x)
-                gt_features_style = self.vgg_style(gt.detach())
-
-            else:
-                x_features_style = x_features_perceptual
-                gt_features_style = gt_features_perceptual
+            if self.vgg_style is not None:
+                x_features = self.vgg_style(x)
+                gt_features = self.vgg_style(gt.detach())
 
             style_loss = 0
-            for k in list(self.layer_weights_style.keys()):
+            for k in list(x_features.keys()):
                 style_loss += self.criterion(
-                    self._gram_mat(x_features_style[k]),
+                    self._gram_mat(x_features[k]),
                     self._gram_mat(
-                        gt_features_style[k])) * self.layer_weights_style[k]
+                        gt_features[k])) * self.layer_weights_style[k]
             style_loss *= self.style_weight
         else:
             style_loss = None
