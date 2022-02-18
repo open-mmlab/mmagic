@@ -81,7 +81,7 @@ class SRLmdbDataset(BaseSRDataset):
         LMDB files.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list[dict]: A list of dicts for paired paths of LQ and GT.
         """
         data_infos = []
         # read keys from meta_info.txt in the gt folder
