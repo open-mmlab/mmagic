@@ -40,7 +40,7 @@ class VFIVimeo90KDataset(BaseVFIDataset):
         """Load annoations for VimeoK dataset.
 
         Returns:
-            dict: Returned dict for inputs and target pairs.
+            list[dict]: A list of dicts for paired paths and other information.
         """
         # get keys
         with open(self.ann_file, 'r') as f:

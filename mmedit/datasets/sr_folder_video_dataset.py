@@ -113,7 +113,7 @@ class SRFolderVideoDataset(BaseSRDataset):
         """Load annoations for the dataset.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list[dict]: A list of dicts for paired paths and other information.
         """
 
         if self.ann_file:

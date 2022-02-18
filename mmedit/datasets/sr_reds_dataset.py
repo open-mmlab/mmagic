@@ -60,7 +60,7 @@ class SRREDSDataset(BaseSRDataset):
         """Load annoations for REDS dataset.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list[dict]: A list of dicts for paired paths and other information.
         """
         # get keys
         with open(self.ann_file, 'r') as fin:
