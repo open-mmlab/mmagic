@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import glob
+import os
 import os.path as osp
 import warnings
 
@@ -42,7 +43,7 @@ class SRTestMultipleGTDataset(BaseSRDataset):
         """Load annoations for the test dataset.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list[dict]: A list of dicts for paired paths and other information.
         """
 
         sequences = sorted(glob.glob(osp.join(self.lq_folder, '*')))
@@ -54,7 +55,7 @@ class SRTestMultipleGTDataset(BaseSRDataset):
                 dict(
                     lq_path=self.lq_folder,
                     gt_path=self.gt_folder,
-                    key=sequence.replace(f'{self.lq_folder}/', ''),
+                    key=sequence.replace(f'{self.lq_folder}{os.sep}', ''),
                     sequence_length=int(sequence_length)))
 
         return data_infos

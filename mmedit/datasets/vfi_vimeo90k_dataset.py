@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os
 import os.path as osp
 
 from .base_vfi_dataset import BaseVFIDataset
@@ -39,7 +40,7 @@ class VFIVimeo90KDataset(BaseVFIDataset):
         """Load annoations for VimeoK dataset.
 
         Returns:
-            dict: Returned dict for inputs and target pairs.
+            list[dict]: A list of dicts for paired paths and other information.
         """
         # get keys
         with open(self.ann_file, 'r') as f:
@@ -50,6 +51,7 @@ class VFIVimeo90KDataset(BaseVFIDataset):
 
         data_infos = []
         for key in keys:
+            key = key.replace('/', os.sep)
             key_folder = osp.join(self.folder, key)
             inputs_path = [
                 osp.join(key_folder, 'im1.png'),

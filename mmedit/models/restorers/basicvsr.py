@@ -24,6 +24,7 @@ class BasicVSR(BasicRestorer):
     Args:
         generator (dict): Config for the generator structure.
         pixel_loss (dict): Config for pixel-wise loss.
+        ensemble (dict): Config for ensemble. Default: None.
         train_cfg (dict): Config for training. Default: None.
         test_cfg (dict): Config for testing. Default: None.
         pretrained (str): Path for pretrained model. Default: None.
@@ -32,6 +33,7 @@ class BasicVSR(BasicRestorer):
     def __init__(self,
                  generator,
                  pixel_loss,
+                 ensemble=None,
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
@@ -44,6 +46,20 @@ class BasicVSR(BasicRestorer):
 
         # count training steps
         self.register_buffer('step_counter', torch.zeros(1))
+
+        # ensemble
+        self.forward_ensemble = None
+        if ensemble is not None:
+            if ensemble['type'] == 'SpatialTemporalEnsemble':
+                from mmedit.models.common.ensemble import \
+                    SpatialTemporalEnsemble
+                is_temporal = ensemble.get('is_temporal_ensemble', False)
+                self.forward_ensemble = SpatialTemporalEnsemble(is_temporal)
+            else:
+                raise NotImplementedError(
+                    'Currently support only '
+                    '"SpatialTemporalEnsemble", but got type '
+                    f'[{ensemble["type"]}]')
 
     def check_if_mirror_extended(self, lrs):
         """Check whether the input is a mirror-extended sequence.
@@ -153,7 +169,10 @@ class BasicVSR(BasicRestorer):
             dict: Output results.
         """
         with torch.no_grad():
-            output = self.generator(lq)
+            if self.forward_ensemble is not None:
+                output = self.forward_ensemble(lq, self.generator)
+            else:
+                output = self.generator(lq)
 
         # If the GT is an image (i.e. the center frame), the output sequence is
         # turned to an image.

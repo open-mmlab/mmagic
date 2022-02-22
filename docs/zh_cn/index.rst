@@ -19,6 +19,7 @@
    mattors_models.md
    restorers_models.md
    synthesizers_models.md
+   video_interpolators_models.md
 
 .. toctree::
    :maxdepth: 2
