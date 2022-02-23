@@ -87,11 +87,8 @@ jobs:
       - name: Install FaceXLib (with opencv <= 4.5.4.60)
         run: pip install facexlib "opencv-python<=4.5.4.60"
         if: ${{ matrix.torch != '1.5.1+cpu' && matrix.torch != '1.5.1+cu92' && matrix.torch != '1.6.0+cpu' }}
-#       - name: Install unittest dependencies
-#         run: |
-#           pip install -r requirements.txt
       - name: Build and install
-        run: rm -rf .eggs && pip install -e .[all]
+        run: pip install -e .[all]
       - name: Show pip list
         run: pip list
       - name: Run unittests and generate coverage report
