@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import pytest
 from mmcv.utils.testing import assert_dict_has_keys
 
