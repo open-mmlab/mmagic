@@ -2,6 +2,7 @@
 import copy
 import math
 import numbers
+import os
 import os.path as osp
 import random
 
@@ -841,7 +842,7 @@ class GenerateFrameIndiceswithPadding:
         Returns:
             dict: A dict containing the processed data and information.
         """
-        clip_name, frame_name = results['key'].split('/')
+        clip_name, frame_name = results['key'].split(os.sep)
         current_idx = int(frame_name)
         max_frame_num = results['max_frame_num'] - 1  # start from 0
         num_input_frames = results['num_input_frames']
@@ -920,7 +921,7 @@ class GenerateFrameIndices:
             dict: A dict containing the processed data and information.
         """
         clip_name, frame_name = results['key'].split(
-            '/')  # key example: 000/00000000
+            os.sep)  # key example: 000/00000000
         center_frame_idx = int(frame_name)
         num_half_frames = results['num_input_frames'] // 2
 

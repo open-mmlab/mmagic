@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os
+
 import cv2
 import numpy as np
 import pytest
@@ -197,11 +199,16 @@ def test_composite_fg():
     alpha = np.random.rand(32, 32).astype(np.float32)
     results = dict(alpha=alpha, fg=fg, bg=bg)
     # use merged dir as fake fg dir, trimap dir as fake alpha dir for unittest
-    composite_fg = CompositeFg(['tests/data/fg', 'tests/data/merged'],
-                               ['tests/data/alpha', 'tests/data/trimap'])
-    correct_fg_list = ['tests/data/fg/GT05.jpg', 'tests/data/merged/GT05.jpg']
+    composite_fg = CompositeFg([
+        f'tests{os.sep}data{os.sep}fg', f'tests{os.sep}data{os.sep}merged'
+    ], [f'tests{os.sep}data{os.sep}alpha', f'tests{os.sep}data{os.sep}trimap'])
+    correct_fg_list = [
+        f'tests{os.sep}data{os.sep}fg{os.sep}GT05.jpg',
+        f'tests{os.sep}data{os.sep}merged{os.sep}GT05.jpg'
+    ]
     correct_alpha_list = [
-        'tests/data/alpha/GT05.jpg', 'tests/data/trimap/GT05.png'
+        f'tests{os.sep}data{os.sep}alpha{os.sep}GT05.jpg',
+        f'tests{os.sep}data{os.sep}trimap{os.sep}GT05.png'
     ]
     assert composite_fg.fg_list == correct_fg_list
     assert composite_fg.alpha_list == correct_alpha_list
@@ -214,14 +221,18 @@ def test_composite_fg():
     alpha = np.random.rand(32, 32).astype(np.float32)
     results = dict(alpha=alpha, fg=fg, bg=bg)
     composite_fg = CompositeFg(
-        'tests/data/fg', 'tests/data/alpha', interpolation='bilinear')
+        f'tests{os.sep}data{os.sep}fg',
+        f'tests{os.sep}data{os.sep}alpha',
+        interpolation='bilinear')
     composite_fg_results = composite_fg(results)
     assert check_keys_contain(composite_fg_results.keys(), target_keys)
     assert composite_fg_results['fg'].shape == (32, 32, 3)
 
-    assert repr(composite_fg) == composite_fg.__class__.__name__ + (
-        "(fg_dirs=['tests/data/fg'], alpha_dirs=['tests/data/alpha'], "
-        "interpolation='bilinear')")
+    strs = (f"(fg_dirs=['tests{os.sep}data{os.sep}fg'], "
+            f"alpha_dirs=['tests{os.sep}data{os.sep}alpha'], "
+            "interpolation='bilinear')")
+    assert repr(composite_fg) == composite_fg.__class__.__name__ + \
+        strs.replace('\\', '\\\\')
 
 
 def test_generate_seg():

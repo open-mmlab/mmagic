@@ -46,7 +46,6 @@ def test_load_image_from_file():
     results = image_loader(results)
     assert results['lq'].shape == (120, 125, 3)
     np.testing.assert_almost_equal(results['lq'], img_baboon_x4)
-    assert np.sum(np.abs(results['lq'] - img_baboon_x4)) < 0.001
     assert results['lq_path'] == str(path_baboon_x4)
     # input path is str
     results = dict(lq_path=str(path_baboon_x4))
