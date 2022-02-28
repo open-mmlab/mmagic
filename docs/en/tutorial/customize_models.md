@@ -79,7 +79,7 @@ This is the part we need to be careful. We need to add the following line to `mm
 from .basicvsr_net import BasicVSRNet
 ```
 
-## Specifying in Configuration File
+## Specification in Configuration File
 
 Given the above model, the specification in the configuration file is straightforward. We see that the argument `type` is just the name of the backbone, and other arguments correspond to that in the backbone.
 
@@ -157,20 +157,11 @@ self.fix_iter = train_cfg.get('fix_iter', 0) if train_cfg else 0
 
 ## Model Functions
 
-The model functions are used to control the training and test. In this tutorial, we will highlight a few important ones. For more details of functions, you may refer to [here](https://github.com/open-mmlab/mmediting/blob/master/mmedit/models/restorers/basic_restorer.py).
-
-### init_weights
-
-This function is used to initialize the model from `pretrained` , if it is provided. In case there are more than one networks in this model, you can modify this function accordingly.
-
-```python
-def init_weights(self, pretrained=None):
-    self.generator.init_weights(pretrained)
-```
+The model functions are used to control the training and test. In this tutorial, we will highlight a few important ones. For more details of the functions, you may refer to [here](https://github.com/open-mmlab/mmediting/blob/master/mmedit/models/restorers/basic_restorer.py).
 
 ### train_step
 
-This corresponds to the pipeline of each iteration. In this example, the output and losses are computed. They are then used for backpropagation. More details of the forward process is discussed below.
+This corresponds to the pipeline of each iteration, including forward and backward. In this example, the output and losses are computed. They are then used for backpropagation. More details of the forward process is discussed below.
 
 ```python
 def train_step(self, data_batch, optimizer):
@@ -205,7 +196,7 @@ def forward_train(self, lq, gt):
 
 ### forward_test
 
-This corresponds to the validation and test. For example, you need to specify the evaluation, and image-saving.
+This corresponds to the validation and test. For example, you need to specify how you perform evaluation (i.e. calculation of metrics) and how you save the outputs.
 
 ```python
 def forward_test(self,
