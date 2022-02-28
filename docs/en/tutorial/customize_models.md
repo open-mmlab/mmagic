@@ -205,7 +205,7 @@ def forward_train(self, lq, gt):
 
 ### forward_test
 
-This corresponds to the validation and test. For example, you need to sepcify the evaluation, and image-saving.
+This corresponds to the validation and test. For example, you need to specify the evaluation, and image-saving.
 
 ```python
 def forward_test(self,
