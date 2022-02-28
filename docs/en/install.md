@@ -1,8 +1,8 @@
 ## Prerequisites
 
-- Linux (Windows is not officially supported)
+- Linux / Windows / Mac
 - Python 3.6+
-- PyTorch 1.3 or higher
+- PyTorch 1.5 or higher
 - CUDA 9.0 or higher
 - NCCL 2
 - GCC 5.4 or higher
