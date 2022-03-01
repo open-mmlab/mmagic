@@ -1,15 +1,17 @@
 # 变更日志
 
-## v0.13.0 (等待发版，上次发版到 31/01/2022 的更新内容)
+## v0.13.0 (01/03/2022)
 
 **Highlights主更新要**
 
-1. 支持 CAIN.
+1. 支持 CAIN
 2. 支持 EDVR-L
+3. 支持在 Windows 系统中运行
 
 **New Features**
 
-- 支持 AOT-GAN ([#674](https://github.com/open-mmlab/mmediting/pull/674), [#675](https://github.com/open-mmlab/mmediting/pull/675), [#676](https://github.com/open-mmlab/mmediting/pull/676))
+- 为图像和视频添加测试时间 ensemble，并支持 BasicVSR 系列中的 ensemble ([#585](https://github.com/open-mmlab/mmediting/pull/585))
+- 支持 AOT-GAN (正在进行中的工作) ([#674](https://github.com/open-mmlab/mmediting/pull/674), [#675](https://github.com/open-mmlab/mmediting/pull/675), [#676](https://github.com/open-mmlab/mmediting/pull/676))
 - 支持 CAIN ([#683](https://github.com/open-mmlab/mmediting/pull/683), [#691](https://github.com/open-mmlab/mmediting/pull/691), [#709](https://github.com/open-mmlab/mmediting/pull/709), [#713](https://github.com/open-mmlab/mmediting/pull/713))
 - 新增 basic interpolater ([#687](https://github.com/open-mmlab/mmediting/pull/687))
 - 新增 BaseVFIDataset and VFIVimeo90KDataset ([#695](https://github.com/open-mmlab/mmediting/pull/695), [#697](https://github.com/open-mmlab/mmediting/pull/697))
@@ -17,21 +19,42 @@
 - 在 RDDBNet 中支持多种 scale ([#699](https://github.com/open-mmlab/mmediting/pull/699))
 - 在 demo 中支持 Ref-SR 推理 ([#716](https://github.com/open-mmlab/mmediting/pull/716))
 - 在 REDS 数据集上支持 EDVR-L ([#719](https://github.com/open-mmlab/mmediting/pull/719))
+- 支持 CPU 训练 ([#720](https://github.com/open-mmlab/mmediting/pull/720))
+- 支持在 Windows 中运行 ([#732](https://github.com/open-mmlab/mmediting/pull/732), [#738](https://github.com/open-mmlab/mmediting/pull/738))
+- 支持 CPU 中的 DCN ([#735](https://github.com/open-mmlab/mmediting/pull/735))
 
 **Bug 修复**
 
 - 修复文档中的链接问题 ([#703](https://github.com/open-mmlab/mmediting/pull/703), [#704](https://github.com/open-mmlab/mmediting/pull/704))
 - 修复 Dockerfile 中的 `MMCV` 参数 ([#708](https://github.com/open-mmlab/mmediting/pull/708))
 - 修复不可执行文件的文件权限 ([#718](https://github.com/open-mmlab/mmediting/pull/718))
+- 修复一些与 numpy 相关的弃用警告 ([#728](https://github.com/open-mmlab/mmediting/pull/728))
+- 删除 `TestVFIDataset` 中的 `__init__` ([#731](https://github.com/open-mmlab/mmediting/pull/731))
+- 修复数据集说明文档中的数据类型 ([#739](https://github.com/open-mmlab/mmediting/pull/739))
+- 修复说明文档中的数学符号 ([#741](https://github.com/open-mmlab/mmediting/pull/741))
+- 修复 copyright commit hook 中忽略的文件夹 ([#754](https://github.com/open-mmlab/mmediting/pull/754))
+- 删除加载中的重复测试 ([#756](https://github.com/open-mmlab/mmediting/pull/756))
 
 **改进**
 
 - 将 CI 中的 Pillow 版本从 6.2.2 to更新至 8.4 ([#693](https://github.com/open-mmlab/mmediting/pull/693))
 - 在 SRREDSMultipleGTDataset 中增加 'repeat' 参数 ([#672](https://github.com/open-mmlab/mmediting/pull/672))
+- 弃用对 "python setup.py test" 的支持 ([#701](https://github.com/open-mmlab/mmediting/pull/701))
+- 在训练和测试中添加 `multi-processing` 设置 ([#707](https://github.com/open-mmlab/mmediting/pull/707))
+- 添加 OpenMMLab 网站和平台链接 ([#710](https://github.com/open-mmlab/mmediting/pull/710))
+- 重构各模型的 README 文件 ([#712](https://github.com/open-mmlab/mmediting/pull/712))
+- 使用 `package.version.parse` 替代字符串版本比较 ([#723](https://github.com/open-mmlab/mmediting/pull/723))
+- 添加 Ref-SR 演示和视频帧插值演示的文档 ([#724](https://github.com/open-mmlab/mmediting/pull/724))
+- 重构 README.md 并增加插帧算法相关内容 ([#726](https://github.com/open-mmlab/mmediting/pull/726))
+- 更新 pre-commit hook 中的 isort 版本 ([#727](https://github.com/open-mmlab/mmediting/pull/727))
+- 重新设计 Linux 的 CI ([#734](https://github.com/open-mmlab/mmediting/pull/734))
+- 更新 install.md ([#763](https://github.com/open-mmlab/mmediting/pull/763))
+- 在 README 文件中重新组织 OpenMMLab 项目 ([#764](https://github.com/open-mmlab/mmediting/pull/764))
+- 为部署工具添加弃用消息 ([#765](https://github.com/open-mmlab/mmediting/pull/765))
 
 **贡献者**
 
-@wangruohui @ckkelvinchan @Yshuo-Li @quincylin1 @Juggernaut93 @anse3832
+@wangruohui @ckkelvinchan @Yshuo-Li @quincylin1 @Juggernaut93 @anse3832 @nijkah
 
 ## v0.12.0 (31/12/2021)
 

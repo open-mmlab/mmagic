@@ -71,12 +71,12 @@ hope MMEditing could provide better experience.
 
 ## News
 
+- [2022-03-01] v0.13.0 was released.
+  - Support CAIN
+  - Support EDVR-L
+  - Support running in Windows
 - [2022-02-11] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
 - [2022-01-21] Support video frame interplation: CAIN
-- [2021-12-31] v0.12.0 was released.
-
-  - Support RealBasicVSR
-  - Support Real-ESRGAN
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
