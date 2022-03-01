@@ -13,17 +13,22 @@
 a. Create a conda virtual environment and activate it.
 
 ```shell
-conda create -n open-mmlab python=3.7 -y
+conda create -n open-mmlab python=3.8 -y
 conda activate open-mmlab
 ```
 
-b. Install PyTorch and torchvision following the [official instructions](https://pytorch.org/), e.g.,
+b. Install PyTorch and torchvision following the [official instructions](https://pytorch.org/), then install mmcv-full
+
+e.g. `cuda 10.1` & `pytorch 1.7`,
 
 ```shell
-conda install pytorch torchvision -c pytorch
+conda install pytorch==1.7.1 torchvision cudatoolkit=10.1 -c pytorch
+pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7/index.html "opencv-python<=4.5.4.60"
 ```
 
-Note: Make sure that your compilation CUDA version and runtime CUDA version match.
+Note 1: Higher version `opencv-python` is not supported.
+
+Note 2: Make sure that your compilation CUDA version and runtime CUDA version match.
 You can check the supported CUDA version for precompiled packages on the [PyTorch website](https://pytorch.org/).
 
 `E.g. 1` If you have CUDA 10.1 installed under `/usr/local/cuda`, you need to install the prebuilt PyTorch with CUDA 10.1.
@@ -38,9 +43,6 @@ PyTorch 1.3.1., you need to install the prebuilt PyTorch with CUDA 9.2.
 ```shell
 conda install pytorch=1.3.1 cudatoolkit=9.2 torchvision=0.4.2 -c pytorch
 ```
-
-If you build PyTorch from source instead of installing the prebuilt package,
-you can use more CUDA versions such as 9.0.
 
 c. Clone the mmediting repository.
 
@@ -60,6 +62,18 @@ If you build mmediting on macOS, replace the last command with
 
 ```
 CC=clang CXX=clang++ CFLAGS='-stdlib=libc++' pip install -e .
+```
+
+e. Verify installation
+
+After the installation is complete, you can switch to another directory (such as `/home`) and try to import mmedit in python. If the import is successful, the installation is successful.
+
+```shell
+$ cd ~
+$ python
+>>> import mmedit
+>>> mmedit.__version__
+'0.12.0'
 ```
 
 Note:
@@ -84,6 +98,13 @@ you can install it before installing MMCV.
 
 ### Install with CPU only
 The code can be built for CPU only environment (where CUDA isn't available).
+
+Accordingly, install the CPU version of PyTorch and MMCV.
+
+```shell
+conda install pytorch==1.7.1 torchvision cudatoolkit=10.1 -c pytorch
+pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7/index.html "opencv-python<=4.5.4.60"
+```
 
 <!-- In CPU mode you can run the demo/webcam_demo.py for example. -->
 However some functionality is gone in this mode:
