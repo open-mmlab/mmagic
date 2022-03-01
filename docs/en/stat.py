@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Copyright (c) OpenMMLab. All rights reserved.
+
 import functools as func
 import glob
 import re
@@ -17,7 +18,7 @@ def anchor(name):
 
 # Count algorithms
 
-files = sorted(glob.glob('*_models.md'))
+files = sorted(glob.glob('_tmp/*_models.md'))
 # files = sorted(glob.glob('docs/*_models.md'))
 
 stats = []
@@ -90,18 +91,18 @@ modelzoo = f"""
 * Number of papers: {len(allpapers)}
 {countstr}
 
-For supported datasets, see [datasets overview](datasets.md).
+For supported datasets, see [datasets overview](_tmp/datasets.md).
 
 {msglist}
 
 """
 
-with open('modelzoo.md', 'w') as f:
+with open('_tmp/modelzoo.md', 'w') as f:
     f.write(modelzoo)
 
 # Count datasets
 
-files = sorted(glob.glob('*_datasets.md'))
+files = sorted(glob.glob('_tmp/*_datasets.md'))
 
 datastats = []
 
@@ -169,10 +170,10 @@ modelzoo = f"""
 * Number of papers: {len(alldatapapers)}
 {countstr}
 
-For supported editing algorithms, see [modelzoo overview](modelzoo.md).
+For supported editing algorithms, see [modelzoo overview](_tmp/modelzoo.md).
 
 {datamsglist}
 """
 
-with open('datasets.md', 'w') as f:
+with open('_tmp/datasets.md', 'w') as f:
     f.write(modelzoo)
