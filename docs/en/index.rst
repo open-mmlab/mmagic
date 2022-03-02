@@ -20,7 +20,7 @@ It supports various tasks, including:
 It is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab project <https://openmmlab.com/>`_.
 Codes are available on `GitHub <https://github.com/open-mmlab/mmediting>`_.
 
-Documentations
+Documentation
 ==============
 
 .. toctree::
@@ -77,7 +77,9 @@ Documentations
    api.rst
 
 .. toctree::
+   :maxdepth: 2
    :caption: Miscellaneous
+
    faq.md
    changelog.md
    notes.md
