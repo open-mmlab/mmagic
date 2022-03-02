@@ -1,5 +1,61 @@
 # Changelog
 
+## v0.13.0 (01/03/2022)
+
+**Highlights**
+
+1. Support CAIN
+2. Support EDVR-L
+3. Support running in Windows
+
+**New Features**
+
+- Add test-time ensemble for images and videos and support ensemble in BasicVSR series ([#585](https://github.com/open-mmlab/mmediting/pull/585))
+- Support AOT-GAN (work in progress) ([#674](https://github.com/open-mmlab/mmediting/pull/674), [#675](https://github.com/open-mmlab/mmediting/pull/675), [#676](https://github.com/open-mmlab/mmediting/pull/676))
+- Support CAIN ([#683](https://github.com/open-mmlab/mmediting/pull/683), [#691](https://github.com/open-mmlab/mmediting/pull/691), [#709](https://github.com/open-mmlab/mmediting/pull/709), [#713](https://github.com/open-mmlab/mmediting/pull/713))
+- Add basic interpolater ([#687](https://github.com/open-mmlab/mmediting/pull/687))
+- Add BaseVFIDataset and VFIVimeo90KDataset ([#695](https://github.com/open-mmlab/mmediting/pull/695), [#697](https://github.com/open-mmlab/mmediting/pull/697))
+- Add video interpolation demo ([#688](https://github.com/open-mmlab/mmediting/pull/688), [#717](https://github.com/open-mmlab/mmediting/pull/717))
+- Support various scales in RRDBNet ([#699](https://github.com/open-mmlab/mmediting/pull/699))
+- Support Ref-SR inference ([#716](https://github.com/open-mmlab/mmediting/pull/716))
+- Support EDVR-L on REDS ([#719](https://github.com/open-mmlab/mmediting/pull/719))
+- Support CPU training ([#720](https://github.com/open-mmlab/mmediting/pull/720))
+- Support running in Windows ([#732](https://github.com/open-mmlab/mmediting/pull/732), [#738](https://github.com/open-mmlab/mmediting/pull/738))
+- Support DCN on CPU ([#735](https://github.com/open-mmlab/mmediting/pull/735))
+
+**Bug Fixes**
+
+- Fix link address in docs ([#703](https://github.com/open-mmlab/mmediting/pull/703), [#704](https://github.com/open-mmlab/mmediting/pull/704))
+- Fix ARG `MMCV` in Dockerfile ([#708](https://github.com/open-mmlab/mmediting/pull/708))
+- Fix file permission of non-executable files ([#718](https://github.com/open-mmlab/mmediting/pull/718))
+- Fix some deprecation warning related to numpy ([#728](https://github.com/open-mmlab/mmediting/pull/728))
+- Delete `__init__` in `TestVFIDataset` ([#731](https://github.com/open-mmlab/mmediting/pull/731))
+- Fix data type in docstring of several Datasets ([#739](https://github.com/open-mmlab/mmediting/pull/739))
+- Fix math notation in docstring ([#741](https://github.com/open-mmlab/mmediting/pull/741))
+- Fix missing folders in copyright commit hook ([#754](https://github.com/open-mmlab/mmediting/pull/754))
+- Delete duplicate test in loading ([#756](https://github.com/open-mmlab/mmediting/pull/756))
+
+**Improvements**
+
+- Update Pillow from 6.2.2 to 8.4 in CI ([#693](https://github.com/open-mmlab/mmediting/pull/693))
+- Add argument 'repeat' to SRREDSMultipleGTDataset ([#672](https://github.com/open-mmlab/mmediting/pull/672))
+- Deprecate the support for "python setup.py test" ([#701](https://github.com/open-mmlab/mmediting/pull/701))
+- Add setup multi-processing both in train and test ([#707](https://github.com/open-mmlab/mmediting/pull/707))
+- Add OpenMMLab website and platform links ([#710](https://github.com/open-mmlab/mmediting/pull/710))
+- Refact README files of all methods ([#712](https://github.com/open-mmlab/mmediting/pull/712))
+- Replace string version comparison with `package.version.parse` ([#723](https://github.com/open-mmlab/mmediting/pull/723))
+- Add docs of Ref-SR demo and video frame interpolation demo ([#724](https://github.com/open-mmlab/mmediting/pull/724))
+- Add interpolation and refact README.md ([#726](https://github.com/open-mmlab/mmediting/pull/726))
+- Update isort version in pre-commit hook ([#727](https://github.com/open-mmlab/mmediting/pull/727))
+- Redesign CI for Linux ([#734](https://github.com/open-mmlab/mmediting/pull/734))
+- Update install.md ([#763](https://github.com/open-mmlab/mmediting/pull/763))
+- Reorganizing OpenMMLab projects in readme ([#764](https://github.com/open-mmlab/mmediting/pull/764))
+- Add deprecation message for deploy tools ([#765](https://github.com/open-mmlab/mmediting/pull/765))
+
+**Contributors**
+
+@wangruohui @ckkelvinchan @Yshuo-Li @quincylin1 @Juggernaut93 @anse3832 @nijkah
+
 ## v0.12.0 (31/12/2021)
 
 **Highlights**
