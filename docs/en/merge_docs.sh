@@ -1,9 +1,8 @@
-#!/usr/bin/env bash -x
+#!/usr/bin/env bash
 
 mkdir -p _tmp
-cp -r ../../configs/ _tmp
+cp -r ../../configs/ _tmp/
 find _tmp/configs -name README_zh-CN.md | xargs rm
-# find ../../configs -name README.md | xargs -i cp {} _tmp
 
 sed -i '$a\\n<br/><hr/>\n' _tmp/configs/inpainting/*/README.md
 sed -i '$a\\n<br/><hr/>\n' _tmp/configs/mattors/*/README.md
