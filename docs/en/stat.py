@@ -60,7 +60,7 @@ for f in files:
                 if 'mmedit' in x)
 
     statsmsg = f"""
-## [{title}]({f})
+## [{title}]({basename(f)})
 
 * Number of checkpoints: {len(ckpts)}
 * Number of configs: {len(configs)}
@@ -143,7 +143,7 @@ for f in files:
                 if 'mmedit' in x)
 
     statsmsg = f"""
-## [{title}]({f})
+## [{title}]({basename(f)})
 
 * Number of papers: {len(papers)}
 {paperlist}

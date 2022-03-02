@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 mkdir -p _tmp
+rm -r _tmp/*
 cp -r ../../configs/ _tmp/
 find _tmp/configs -name README_zh-CN.md | xargs rm
 
