@@ -5,7 +5,7 @@ MMEditing is a Python toolbox based on `PyTorch`_ and `MMCV`_.
 These packages can be installed in various ways.
 Here we describe some best practices.
 
-If you have difficulties installing MMEditing, please feel free to `open a discussion <https://github.com/open-mmlab/mmediting/discussions>`_ and describe your situations. The community are happy to help.
+If you have difficulties installing MMEditing, please feel free to `open a discussion <https://github.com/open-mmlab/mmediting/discussions>`_ and describe the error and the steps you have tried. The community are happy to help.
 
 
 Prerequisites
@@ -30,7 +30,7 @@ Compared to GPU versions, the CPU version is much more lightweight and easy to c
 So if you want to perform a quick run, the CPU version is good enough.
 
 
-Step 1.
+**Step 1**.
 Create and activate a conda virtual environment
 
 .. code-block:: sh
@@ -39,7 +39,7 @@ Create and activate a conda virtual environment
    conda activate mmedit
 
 
-Step 2.
+**Step 2**.
 Install the CPU version of PyTorch and torchvision
 
 .. code-block:: sh
@@ -55,7 +55,7 @@ OR
 See `PyTorch installation guide <https://pytorch.org/get-started/locally/>`_ for more information.
 
 
-Step 3.
+**Step 3**.
 Install pre-compiled MMCV for CPU environment
 
 .. code-block:: sh
@@ -73,7 +73,7 @@ Install pre-compiled MMCV for CPU environment
 
 .. note::
 
-   Precompiled package are available for Windows and Linux only.
+   Precompiled packages are available for Windows and Linux only.
    On macOS, you need to compile MMCV from source.
    See `instructions <https://mmcv.readthedocs.io/en/latest/get_started/build.html#build-on-linux-or-macos>`_.
 
@@ -85,7 +85,7 @@ Install pre-compiled MMCV for CPU environment
 See `MMCV documentations <https://mmcv.readthedocs.io/en/latest/get_started/installation.html>`_ for more information.
 
 
-Step 4.
+**Step 4**.
 Clone the MMEditing repository
 
 .. code-block:: sh
@@ -94,7 +94,7 @@ Clone the MMEditing repository
    cd mmediting
 
 
-Step 5.
+**Step 5**.
 Install MMEditing from source codes
 
 .. code-block:: sh
@@ -104,7 +104,7 @@ Install MMEditing from source codes
    # to install full dependencies to enable more features
 
 
-Step 6.
+**Step 6**.
 Verify installation
 
 As a simple test, you can switch to another directory (such as ``/home``) and import ``mmedit`` in Python. For example:
@@ -119,19 +119,19 @@ As a simple test, you can switch to another directory (such as ``/home``) and im
    >>> mmedit.__version__
    '0.13.0'
 
-The installation is successful if the version number is correctly output.
-For comprehensive unit tests, you can run ``pytest .``
+If the version outputs correctly, the installation is successful.
+For comprehensive unit tests, run ``pytest .``
 
 
 Install CUDA Version
 ====================
 
 To enable the full power of MMEditing, we recommend installing the GPU version.
-Differences on installation lies at PyTorch and MMCV.
+Differences on installation only lies at PyTorch and MMCV.
 Please pay more attention to the version and the CUDA version of PyTorch and MMCV.
 
 
-Step 1.
+**Step 1**.
 Create and activate a conda virtual environment
 
 .. code-block:: sh
@@ -140,12 +140,12 @@ Create and activate a conda virtual environment
    conda activate mmedit
 
 
-Step 2.
+**Step 2**.
 Install the GPU version of PyTorch and torchvision
 
 .. code-block:: sh
 
-   conda install pytorch torchvision cudatoolkit=10.2 -c pytorch
+   conda install pytorch=1.10 torchvision cudatoolkit=10.2 -c pytorch
 
 or
 
@@ -163,7 +163,7 @@ See `PyTorch installation guide <https://pytorch.org/get-started/locally/>`_ for
    Usually, the latest GPU driver works well.
 
 
-Step 3.
+**Step 3**.
 Install pre-compiled MMCV for GPU environment
 
 .. code-block:: sh
@@ -181,7 +181,7 @@ Install pre-compiled MMCV for GPU environment
 See `MMCV documentations <https://mmcv.readthedocs.io/en/latest/get_started/installation.html>`_ for more information.
 
 
-Step 4.
+**Step 4**.
 Clone the MMEditing repository
 
 .. code-block:: sh
@@ -190,7 +190,7 @@ Clone the MMEditing repository
    cd mmediting
 
 
-Step 5.
+**Step 5**.
 Install MMEditing from source codes
 
 .. code-block:: sh
@@ -200,7 +200,7 @@ Install MMEditing from source codes
    # to install full dependencies for more features
 
 
-Step 6.
+**Step 6**.
 Verify installation
 
 As a simple test, you can switch to another directory (such as ``/home``) and import ``mmedit`` in Python.
@@ -215,8 +215,8 @@ As a simple test, you can switch to another directory (such as ``/home``) and im
    >>> mmedit.__version__
    '0.13.0'
 
-If the version number is correctly printed, the installation is successful.
-For comprehensive unittests, you can run ``pytest .``
+If the version outputs correctly, the installation is successful.
+For comprehensive unit tests, run :code:`pytest .`.
 
 
 Install via MIM
