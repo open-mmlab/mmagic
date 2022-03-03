@@ -2,8 +2,8 @@ Installation
 ############
 
 MMEditing is a Python toolbox based on `PyTorch`_ and `MMCV`_.
-Currently, MMEditing works on Linux, Windows, and macOS.
-This page describes some best practices for installing MMEditing.
+Currently, MMEditing works on Linux, Windows, macOS, and on both CPUs and GPUs.
+This page describes some best practices for installing the software stack.
 
 If you have difficulties installing MMEditing, please feel free to `open a discussion <https://github.com/open-mmlab/mmediting/discussions>`_ and describe the error as well as the steps you have tried.
 The community are happy to help.
@@ -12,16 +12,16 @@ The community are happy to help.
 Prerequisites
 =============
 
-* Linux for best experience, Windows and macOS are also supported.
 * `Python`_ >= 3.6
 * `pip`_ and/or `conda`_
 * `Git`_
-* (Recommended) NVIDIA GPU with driver version >= 440.33 (Linux) or >= 441.22 (Windows)
-* (Optional) CUDA and C++ (GCC / Clang / MSVC) compilers if you hope to compile `MMCV`_ from source codes
+* (Only for GPU) NVIDIA GPU with `driver`_ version >= 440.33 (Linux) or >= 441.22 (Windows)
+* (Only for macOS) Clang compiler, can be installed with ``xcode-select –install``
+.. * (Optional) CUDA and C++ (GCC / Clang / MSVC) compilers if you hope to compile `MMCV`_ from source codes
 
 .. warning::
 
-   As Python 3.6 has reached end-of-life on 23-Dec-2021, we will drop its support in the future.
+   As Python 3.6 has reached `end-of-life`_ on 23-Dec-2021, we will drop support for it in the future.
 
 
 Install CPU Version
@@ -29,7 +29,7 @@ Install CPU Version
 
 MMEditing is fully supported on CPUs, despite the slow running speed.
 Nevertheless, the CPU version is much more lightweight and easier to configure compared to GPU versions.
-
+For macOS users, this is the only choice.
 
 **Step 1**.
 Create and activate a conda virtual environment
@@ -53,7 +53,7 @@ OR
 
    pip install torch torchvision
 
-See `PyTorch installation guide <https://pytorch.org/get-started/locally/>`_ for more installation options.
+See `PyTorch installation guide <https://pytorch.org/get-started/locally/>`_ for more installation commands.
 
 If PyTorch is already installed, check its version in Python:
 
@@ -65,7 +65,7 @@ If PyTorch is already installed, check its version in Python:
 
 
 **Step 3**.
-Install pre-compiled MMCV for CPU environment
+Install pre-compiled MMCV for CPUs
 
 .. code-block:: sh
 
@@ -82,16 +82,21 @@ Install pre-compiled MMCV for CPU environment
 
 .. note::
 
-   Precompiled packages are available for Windows and Linux only.
-   On macOS, you need to compile MMCV from the source.
-   See `instructions <https://mmcv.readthedocs.io/en/latest/get_started/build.html#build-on-linux-or-macos>`_.
+   Precompiled packages are available for Linux and Windows only.
+   On macOS, the installation command should be
 
-   A fallback option is to install the lite version of MMCV.
-   But *deformable convolution* becomes unavailable.
-   Several models in MMEditnig won't run correctly.
+   .. code-block::
+
+      CC=clang CXX=clang++ CFLAGS='-stdlib=libc++' MMCV_WITH_OPS=1 pip install -e .
+
+   See `this instructions <https://mmcv.readthedocs.io/en/latest/get_started/build.html#build-on-linux-or-macos>`_
+   for more information.
+
+   A fallback option is to install the lite version of MMCV via `pip install mmcv`.
+   However, it makes *deformable convolution* unavailable, and several models won't get run.
 
 
-See `MMCV documentations <https://mmcv.readthedocs.io/en/latest/get_started/installation.html>`_ for more installation instructions.
+See `MMCV installation guide <https://mmcv.readthedocs.io/en/latest/get_started/installation.html>`_ for detailed information.
 
 
 **Step 4**.
@@ -110,9 +115,7 @@ Install MMEditing from source codes
 
    pip install -v -e .
    # or "pip install -v -e .[all]"
-   # to install full dependencies to enable more features
-
-CC=clang CXX=clang++ CFLAGS='-stdlib=libc++' MMCV_WITH_OPS=1 pip install -e .
+   # to install full dependencies and enable more features
 
 **Step 6**.
 Verify installation
@@ -131,14 +134,14 @@ For example:
    '0.13.0'
 
 If the version outputs correctly, the installation is successful.
-For comprehensive unit tests, run ``pytest .``
+For comprehensive unit tests, run ``pytest .``.
 
 
 Install CUDA Version
 ====================
 
-To enable the full power of MMEditing, we recommend installing the GPU version.
-Differences in installation only lie at PyTorch and MMCV.
+To enable the full power of MMEditing, we recommend the GPU version.
+Differences lie only in PyTorch and MMCV parts.
 Please pay more attention to the version of and the CUDA version of PyTorch.
 
 .. note::
@@ -168,11 +171,11 @@ or
    pip3 install torch==1.10.2+cu102 torchvision==0.11.3+cu102 -f https://download.pytorch.org/whl/cu102/torch_stable.html
 
 Here, CUDA 10.2 is just an example. Other versions work too.
-See `PyTorch installation guide <https://pytorch.org/get-started/locally/>`_ for more installation options.
+See `PyTorch installation guide <https://pytorch.org/get-started/locally/>`_ for more installation commands.
 
 .. note::
 
-   Make sure the version of GPU driver is sufficnet enough to support the specific CUDA version.
+   Make sure the GPU driver is of sufficient version to support the specific CUDA version.
    See `CUDA driver version`_ for more information.
    Usually, the latest GPU driver works well.
 
@@ -188,7 +191,7 @@ If PyTorch is already installed, check its version and CUDA version in Python:
 
 
 **Step 3**.
-Install pre-compiled MMCV for GPU environment
+Install pre-compiled MMCV for GPUs
 
 .. code-block:: sh
 
@@ -202,7 +205,7 @@ Install pre-compiled MMCV for GPU environment
 
    E.g. ``https://download.openmmlab.com/mmcv/dist/`` **cu101** ``/`` **torch1.8** ``/index.html`` for **PyTorch 1.8.x** with CUDA 10.1.
 
-See `MMCV documentations <https://mmcv.readthedocs.io/en/latest/get_started/installation.html>`_ for more installation instructions.
+See `MMCV documentations <https://mmcv.readthedocs.io/en/latest/get_started/installation.html>`_ for more information.
 
 
 **Step 4**.
@@ -241,7 +244,7 @@ For example:
    '0.13.0'
 
 If the version outputs correctly, the installation is successful.
-For comprehensive unit tests, run :code:`pytest .`.
+For comprehensive unit tests, run ``pytest .``.
 
 
 
@@ -259,16 +262,18 @@ We provide a `Dockerfile <https://github.com/open-mmlab/mmediting/blob/master/do
 
 To build the image:
 
-```shell
-# build an image with PyTorch 1.5, CUDA 10.1
-docker build -t mmediting docker/
-```
+.. code-block::
+
+   # build an image with PyTorch 1.5, CUDA 10.1
+   docker build -t mmediting docker/
+
 
 Run with:
 
-```shell
-docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmediting/data mmediting
-```
+.. code-block::
+
+   docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmediting/data mmediting
+
 
 .. _Git: https://git-scm.com/
 .. _Python: https://www.python.org/
@@ -278,3 +283,4 @@ docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmediting/data mmediting
 .. _PyTorch: https://pytorch.org/
 .. _CUDA driver version: https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html#cuda-major-component-versions__table-cuda-toolkit-driver-versions
 .. _end-of-life: https://endoflife.date/python
+.. _driver: https://www.nvidia.com/download/index.aspx
