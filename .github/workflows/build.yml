@@ -37,11 +37,11 @@ jobs:
           - torch: 1.5.1+cpu
             torchvision: 0.6.1+cpu
             mmcv_link: cpu/torch1.5
-            python: "3.7"
+            python: "3.6.7"
           - torch: 1.5.1+cu92
             torchvision: 0.6.1+cu92
             mmcv_link: cu92/torch1.5
-            python: "3.7"
+            python: "3.6.7"
           - torch: 1.6.0+cpu
             torchvision: 0.7.0+cpu
             mmcv_link: cpu/torch1.6
