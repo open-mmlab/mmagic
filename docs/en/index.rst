@@ -28,7 +28,6 @@ Documentation
    :caption: Get Started
 
    install.rst
-   old-install.md
    demo.md
 
 .. toctree::
