@@ -97,7 +97,7 @@ See `MMCV installation guide`_ for more information.
 **Step 4**.
 Install MMEditing
 
-To make full utilization of configuration files and useful tools,
+To make full utilization of configuration files and tools,
 we recommend installing MMEditing from source codes.
 
 .. code-block:: sh
@@ -197,7 +197,7 @@ See `MMCV installation guide`_ for more information.
 **Step 4**.
 Install MMEditing
 
-To make full utilization of configuration files and useful tools,
+To make full utilization of configuration files and tools,
 we recommend installing MMEditing from source codes.
 
 .. code-block:: sh
