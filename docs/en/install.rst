@@ -56,6 +56,7 @@ If PyTorch is already installed, check its version with:
 .. code-block:: sh
 
    python -c "import torch; print(torch.__version__)"
+   # Output: 1.10.2
 
 
 **Step 3**.
@@ -166,13 +167,13 @@ See `PyTorch installation guide`_ for more information.
 
 If PyTorch is already installed, check its *version* and *CUDA version* in Python:
 
-.. code-block:: python
+.. code-block:: sh
 
-   >>> import torch
-   >>> torch.__version__
-   '1.10.2'
-   >>> torch.version.cuda
-   '10.2'
+
+   python -c "import torch; print(torch.__version__)"
+   # Output: 1.10.2
+   python -c "import torch; print(torch.version.cuda)"
+   # Output: 10.2
 
 
 **Step 3**.
