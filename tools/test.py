@@ -8,6 +8,7 @@ from mmcv.parallel import MMDataParallel
 from mmcv.runner import get_dist_info, init_dist, load_checkpoint
 
 from mmedit.apis import multi_gpu_test, set_random_seed, single_gpu_test
+from mmedit.core import build_metric
 from mmedit.core.distributed_wrapper import DistributedDataParallelWrapper
 from mmedit.datasets import build_dataloader, build_dataset
 from mmedit.models import build_model
@@ -126,9 +127,18 @@ def main():
             empty_cache=empty_cache)
 
     if rank == 0 and 'eval_result' in outputs[0]:
+        stats = dataset.evaluate(outputs)
+
+        # evaluate feature based metrics
+        metrics = build_metric(cfg.evaluation.metrics)
+        features = stats.pop('InceptionV3', None)
+        for metric in metrics:
+            assert features is not None
+            X, Y = features
+            stats[metric.__class__.__name__] = metric(X, Y)
+
         print('')
         # print metrics
-        stats = dataset.evaluate(outputs)
         for stat in stats:
             print('Eval-{}: {}'.format(stat, stats[stat]))
 

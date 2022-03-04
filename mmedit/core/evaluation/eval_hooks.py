@@ -4,6 +4,8 @@ import os.path as osp
 from mmcv.runner import Hook
 from torch.utils.data import DataLoader
 
+from ..registry import build_metric
+
 
 class EvalIterHook(Hook):
     """Non-Distributed evaluation hook for iteration-based runner.
@@ -14,17 +16,20 @@ class EvalIterHook(Hook):
     Args:
         dataloader (DataLoader): A PyTorch dataloader.
         interval (int): Evaluation interval. Default: 1.
+        metrics (dict | list[dict], optional): Configs for metrics that will be
+            used in feature based evaluation hook. Default: None.
         eval_kwargs (dict): Other eval kwargs. It contains:
             save_image (bool): Whether to save image.
             save_path (str): The path to save image.
     """
 
-    def __init__(self, dataloader, interval=1, **eval_kwargs):
+    def __init__(self, dataloader, interval=1, metrics=None, **eval_kwargs):
         if not isinstance(dataloader, DataLoader):
             raise TypeError('dataloader must be a pytorch DataLoader, '
                             f'but got { type(dataloader)}')
         self.dataloader = dataloader
         self.interval = interval
+        self.metrics = build_metric(metrics or [])
         self.eval_kwargs = eval_kwargs
         self.save_image = self.eval_kwargs.pop('save_image', False)
         self.save_path = self.eval_kwargs.pop('save_path', None)
@@ -56,6 +61,14 @@ class EvalIterHook(Hook):
         """
         eval_res = self.dataloader.dataset.evaluate(
             results, logger=runner.logger, **self.eval_kwargs)
+
+        # evaluate feature based metrics
+        features = eval_res.pop('InceptionV3', None)
+        for metric in self.metrics:
+            assert features is not None
+            X, Y = features
+            eval_res[metric.__class__.__name__] = metric(X, Y)
+
         for name, val in eval_res.items():
             runner.log_buffer.output[name] = val
         runner.log_buffer.ready = True
@@ -67,6 +80,8 @@ class DistEvalIterHook(EvalIterHook):
     Args:
         dataloader (DataLoader): A PyTorch dataloader.
         interval (int): Evaluation interval. Default: 1.
+        metrics (dict | list[dict], optional): Configs for metrics that will be
+            used in feature based evaluation hook. Default: None.
         tmpdir (str | None): Temporary directory to save the results of all
             processes. Default: None.
         gpu_collect (bool): Whether to use gpu or cpu to collect results.
@@ -79,9 +94,10 @@ class DistEvalIterHook(EvalIterHook):
     def __init__(self,
                  dataloader,
                  interval=1,
+                 metrics=None,
                  gpu_collect=False,
                  **eval_kwargs):
-        super().__init__(dataloader, interval, **eval_kwargs)
+        super().__init__(dataloader, interval, metrics, **eval_kwargs)
         self.gpu_collect = gpu_collect
 
     def after_train_iter(self, runner):

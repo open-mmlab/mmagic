@@ -4,6 +4,7 @@ import os.path as osp
 from collections import defaultdict
 from pathlib import Path
 
+import numpy as np
 from mmcv import scandir
 
 from .base_dataset import BaseDataset
@@ -79,9 +80,20 @@ class BaseSRDataset(BaseDataset):
                 f'should be {len(self)}')
 
         # average the results
-        eval_result = {
+        eval_result.update({
             metric: sum(values) / len(self)
             for metric, values in eval_result.items()
-        }
+            if metric != 'InceptionV3'
+        })
+
+        # concatenate the features
+        if 'InceptionV3' in eval_result:
+            feat1, feat2 = [], []
+            for f1, f2 in eval_result['InceptionV3']:
+                feat1.append(f1)
+                feat2.append(f2)
+            feat1 = np.concatenate(feat1, 0)
+            feat2 = np.concatenate(feat2, 0)
+            eval_result['InceptionV3'] = feat1, feat2
 
         return eval_result
