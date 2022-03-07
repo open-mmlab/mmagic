@@ -14,22 +14,22 @@ You can switch between Chinese and English documents in the bottom-left corner o
    :maxdepth: 2
    :caption: Model Zoo
 
-   modelzoo.md
-   inpainting_models.md
-   mattors_models.md
-   restorers_models.md
-   synthesizers_models.md
-   video_interpolators_models.md
+   _tmp/modelzoo.md
+   _tmp/inpainting_models.md
+   _tmp/mattors_models.md
+   _tmp/restorers_models.md
+   _tmp/synthesizers_models.md
+   _tmp/video_interpolators_models.md
 
 .. toctree::
    :maxdepth: 2
    :caption: Datasets
 
-   datasets.md
-   inpainting_datasets.md
-   matting_datasets.md
-   sr_datasets.md
-   generation_datasets.md
+   _tmp/datasets.md
+   _tmp/inpainting_datasets.md
+   _tmp/matting_datasets.md
+   _tmp/sr_datasets.md
+   _tmp/generation_datasets.md
 
 .. toctree::
    :maxdepth: 2
@@ -42,7 +42,7 @@ You can switch between Chinese and English documents in the bottom-left corner o
    :maxdepth: 2
    :caption: Tutorials
 
-   config.md
+   _tmp/config.md
 
 .. toctree::
    :maxdepth: 2
