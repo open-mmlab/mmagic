@@ -85,6 +85,7 @@ Documentation
    notes.md
 
 .. toctree::
+   :caption: Switch Language
 
    switch_language.md
 
