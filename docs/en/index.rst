@@ -83,6 +83,9 @@ Documentation
    faq.md
    changelog.md
    notes.md
+
+.. toctree::
+
    switch_language.md
 
 Indices and tables
