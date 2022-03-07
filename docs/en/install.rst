@@ -56,7 +56,7 @@ If PyTorch is already installed, check its version with:
 .. code-block:: sh
 
    python -c "import torch; print(torch.__version__)"
-   # Output: 1.10.2
+   # Example output: 1.10.2
 
 
 **Step 3**.
@@ -119,7 +119,7 @@ For example,
 
    cd ~
    python -c "import mmedit; print(mmedit.__version__)"
-   # Output: 0.13.0
+   # Example output: 0.13.0
 
 Make sure the version outputs correctly.
 For comprehensive unit tests, run ``pytest .``.
@@ -169,11 +169,10 @@ If PyTorch is already installed, check its *version* and *CUDA version* in Pytho
 
 .. code-block:: sh
 
-
    python -c "import torch; print(torch.__version__)"
-   # Output: 1.10.2
+   # Example output: 1.10.2
    python -c "import torch; print(torch.version.cuda)"
-   # Output: 10.2
+   # Example output: 10.2
 
 
 **Step 3**.
@@ -219,7 +218,7 @@ For example,
 
    cd ~
    python -c "import mmedit; print(mmedit.__version__)"
-   # Output: 0.13.0
+   # Example output: 0.13.0
 
 Make sure the version outputs correctly.
 For comprehensive unit tests, run ``pytest .``.
