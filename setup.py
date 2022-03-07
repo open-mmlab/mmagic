@@ -97,7 +97,7 @@ def parse_requirements(fname='requirements.txt', with_version=True):
                 info['package'] = line
             else:
                 # Remove versioning from the package
-                pat = '(' + '|'.join(['>=', '==', '>']) + ')'
+                pat = '(' + '|'.join(['>=', '<=', '==', '>', '<']) + ')'
                 parts = re.split(pat, line, maxsplit=1)
                 parts = [p.strip() for p in parts]
 
