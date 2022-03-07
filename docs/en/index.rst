@@ -21,7 +21,7 @@ It is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab 
 Codes are available on `GitHub <https://github.com/open-mmlab/mmediting>`_.
 
 Documentation
-==============
+=============
 
 .. toctree::
    :maxdepth: 2
