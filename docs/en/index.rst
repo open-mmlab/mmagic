@@ -37,6 +37,11 @@ You can switch between Chinese and English documents in the bottom-left corner o
 
    quick_run.md
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials
+
+   tutorials/index.rst
 
 .. toctree::
    :maxdepth: 2
