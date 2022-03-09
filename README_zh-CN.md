@@ -133,6 +133,8 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
 - [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (NTIRE'2021)
 - [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
+- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (CVPR'2022)
+- [x] [RealBasicVSR](configs/restorers/real_basicvsr/README.md) (CVPR'2022)
 
 </details>
 
