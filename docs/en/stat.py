@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Copyright (c) OpenMMLab. All rights reserved.
+
 import functools as func
 import glob
 import re
@@ -17,7 +18,7 @@ def anchor(name):
 
 # Count algorithms
 
-files = sorted(glob.glob('*_models.md'))
+files = sorted(glob.glob('_tmp/*_models.md'))
 # files = sorted(glob.glob('docs/*_models.md'))
 
 stats = []
@@ -59,7 +60,7 @@ for f in files:
                 if 'mmedit' in x)
 
     statsmsg = f"""
-## [{title}]({f})
+## [{title}]({basename(f)})
 
 * Number of checkpoints: {len(ckpts)}
 * Number of configs: {len(configs)}
@@ -96,12 +97,12 @@ For supported datasets, see [datasets overview](datasets.md).
 
 """
 
-with open('modelzoo.md', 'w') as f:
+with open('_tmp/modelzoo.md', 'w') as f:
     f.write(modelzoo)
 
 # Count datasets
 
-files = sorted(glob.glob('*_datasets.md'))
+files = sorted(glob.glob('_tmp/*_datasets.md'))
 
 datastats = []
 
@@ -142,7 +143,7 @@ for f in files:
                 if 'mmedit' in x)
 
     statsmsg = f"""
-## [{title}]({f})
+## [{title}]({basename(f)})
 
 * Number of papers: {len(papers)}
 {paperlist}
@@ -174,5 +175,5 @@ For supported editing algorithms, see [modelzoo overview](modelzoo.md).
 {datamsglist}
 """
 
-with open('datasets.md', 'w') as f:
+with open('_tmp/datasets.md', 'w') as f:
     f.write(modelzoo)
