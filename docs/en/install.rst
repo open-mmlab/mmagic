@@ -166,6 +166,7 @@ Install the GPU version of PyTorch and torchvision
    .. code-block:: sh
 
       conda install pytorch torchvision cudatoolkit=11.3 -c pytorch
+
       # or pip install torch==1.10.2+cu113 torchvision==0.11.3+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
 
    Please check `this table`_ for minimum driver versions required for specific CUDA versions.
