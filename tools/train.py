@@ -7,11 +7,12 @@ import time
 
 import mmcv
 import torch
+import torch.distributed as dist
 from mmcv import Config
 from mmcv.runner import init_dist
 
 from mmedit import __version__
-from mmedit.apis import set_random_seed, train_model
+from mmedit.apis import init_random_seed, set_random_seed, train_model
 from mmedit.datasets import build_dataset
 from mmedit.models import build_model
 from mmedit.utils import collect_env, get_root_logger, setup_multi_processes
@@ -34,6 +35,10 @@ def parse_args():
         help='number of gpus to use '
         '(only applicable to non-distributed training)')
     parser.add_argument('--seed', type=int, default=None, help='random seed')
+    parser.add_argument(
+        '--diff_seed',
+        action='store_true',
+        help='Whether or not set different seeds for different ranks')
     parser.add_argument(
         '--deterministic',
         action='store_true',
@@ -104,10 +109,11 @@ def main():
     logger.info('Config:\n{}'.format(cfg.text))
 
     # set random seeds
-    if args.seed is not None:
-        logger.info('Set random seed to {}, deterministic: {}'.format(
-            args.seed, args.deterministic))
-        set_random_seed(args.seed, deterministic=args.deterministic)
+    seed = init_random_seed(args.seed)
+    seed = seed + dist.get_rank() if args.diff_seed else seed
+    logger.info('Set random seed to {}, deterministic: {}'.format(
+        args.seed, args.deterministic))
+    set_random_seed(args.seed, deterministic=args.deterministic)
     cfg.seed = args.seed
 
     model = build_model(
