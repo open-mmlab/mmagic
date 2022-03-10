@@ -214,6 +214,7 @@ we recommend installing MMEditing from source codes.
    git clone https://github.com/open-mmlab/mmediting.git
    cd mmediting
    pip install -v -e .
+
    # or "pip install -v -e .[all]" to install full dependencies and enable more features
 
 
@@ -222,7 +223,6 @@ Verify installation
 
 As a simple test, switch to another directory (such as ``/home``) and import ``mmedit`` in Python.
 For example,
-
 
 .. code-block:: sh
 
