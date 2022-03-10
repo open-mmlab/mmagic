@@ -15,13 +15,14 @@ It supports various tasks, including:
 * Image inpainting
 * Image matting
 * Image generation
-* and possibly more in the future
+
+and possibly more in the future.
 
 It is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab project <https://openmmlab.com/>`_.
 Codes are available on `GitHub <https://github.com/open-mmlab/mmediting>`_.
 
 Documentation
-==============
+=============
 
 .. toctree::
    :maxdepth: 2
@@ -83,6 +84,10 @@ Documentation
    faq.md
    changelog.md
    notes.md
+
+.. toctree::
+   :caption: Switch Language
+
    switch_language.md
 
 Indices and tables
