@@ -12,8 +12,9 @@ The community are happy to help.
 Prerequisites
 =============
 
-* Linux / Windows (native or `WSL`_) / macOS
+* Linux (recommended) / Windows / macOS
 * `Python`_ >= 3.6
+* `PyTorch`_ >= 1.5
 * `pip`_ and `conda`_
 * `Git`_
 * (Only for GPU) NVIDIA GPU with `driver`_ version >= 440.33 (Linux) or >= 441.22 (Windows native)
@@ -52,6 +53,8 @@ Install the CPU version of PyTorch and torchvision
    # or "pip install torch torchvision"
 
 
+If you prefer to install previous versions of PyTorch, follow `this guide <https://pytorch.org/get-started/previous-versions/>`_.
+
 If PyTorch is already installed, check its version with:
 
 .. code-block:: sh
@@ -85,7 +88,7 @@ Install pre-compiled MMCV for CPUs
 
       CC=clang CXX=clang++ CFLAGS='-stdlib=libc++' MMCV_WITH_OPS=1 pip install -e .
 
-   See `this instruction <https://mmcv.readthedocs.io/en/latest/get_started/build.html#build-on-linux-or-macos>`_
+   See `MMCV documentation <https://mmcv.readthedocs.io/en/latest/get_started/build.html#build-on-linux-or-macos>`_
    for more information.
 
    A fallback option is to install the lite version of MMCV via ``pip install mmcv``.
@@ -131,7 +134,7 @@ Install CUDA Version
 
 To enable the full power of MMEditing, we recommend the GPU version.
 The only difference lies at PyTorch and MMCV.
-Please pay attention to the *version* of and the *CUDA version* of PyTorch.
+Please pay attention to the **version** of and the **CUDA version** of PyTorch.
 
 .. note::
 
@@ -151,19 +154,25 @@ Install the GPU version of PyTorch and torchvision
 
 .. code-block:: sh
 
-   conda install pytorch torchvision cudatoolkit=11.3 -c pytorch
+   conda install pytorch torchvision cudatoolkit=10.2 -c pytorch
 
-   # or "pip3 install torch==1.10.2+cu113 torchvision==0.11.3+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html"
+   # or "pip install torch==1.10.2+cu102 torchvision==0.11.3+cu102 -f https://download.pytorch.org/whl/cu102/torch_stable.html"
 
 
 .. note::
 
-To support new GPU models such as GTX 30 series, CUDA 11 is required.
-Please check `this table`_ to make sure `NVIDIA driver`_ version is sufficient.
-Usually, the latest driver works well.
+   To support new GPU models such as GTX 30 series, CUDA 11 is required. Install CUDA-11 based PyTorch with:
 
-You can install different CUDA versions.
-See `PyTorch installation guide`_ for more information.
+   .. code-block:: sh
+
+      conda install pytorch torchvision cudatoolkit=11.3 -c pytorch
+      # or pip install torch==1.10.2+cu113 torchvision==0.11.3+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
+
+   Please check `this table`_ for minimum driver versions required for specific CUDA versions.
+   Usually, the latest driver works well.
+
+
+If you prefer to install previous versions of PyTorch, follow `this guide <https://pytorch.org/get-started/previous-versions/>`_.
 
 
 If PyTorch is already installed, check its *version* and *CUDA version* in Python:
@@ -181,15 +190,15 @@ Install pre-compiled MMCV for GPUs
 
 .. code-block:: sh
 
-   pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10/index.html
+   pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.10/index.html
 
 .. note::
 
    The link to MMCV depends on the *version* of PyTorch and the *CUDA version* of PyTorch.
-   The above link is for **PyTorch 1.10.x** and **CUDA 11.3**.
-   If you use a different version and CUDA version of PyTorch, you need to change the link accordingly.
+   The above link is for **PyTorch 1.10.x** and **CUDA 10.2**.
+   If you use a different version of PyTorch, you need to change the link accordingly.
 
-   E.g. ``https://download.openmmlab.com/mmcv/dist/`` **cu102** ``/`` **torch1.8** ``/index.html`` for **PyTorch 1.8.x** with CUDA 10.2.
+   E.g. ``https://download.openmmlab.com/mmcv/dist/`` **cu101** ``/`` **torch1.8** ``/index.html`` for **PyTorch 1.8.x** with CUDA 10.1.
 
 See `MMCV installation guide`_ for more information.
 
