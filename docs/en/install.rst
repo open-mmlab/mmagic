@@ -12,10 +12,11 @@ The community are happy to help.
 Prerequisites
 =============
 
+* Linux / Windows (native or `WSL`_) / macOS
 * `Python`_ >= 3.6
 * `pip`_ and `conda`_
 * `Git`_
-* (Only for GPU) NVIDIA GPU with `driver`_ version >= 440.33 (Linux) or >= 441.22 (Windows)
+* (Only for GPU) NVIDIA GPU with `driver`_ version >= 440.33 (Linux) or >= 441.22 (Windows native)
 * (Only for macOS) Clang compiler, can be installed with ``xcode-select -–install``
 
 
@@ -269,3 +270,5 @@ After installation, you can run some demos, click next.
 .. _MMCV installation guide: https://mmcv.readthedocs.io/en/latest/get_started/installation.html
 .. _MIM: https://github.com/open-mmlab/mim
 .. _MIM documentations: https://openmim.readthedocs.io/en/latest/index.html
+.. _WSL_CUDA: https://docs.nvidia.com/cuda/wsl-user-guide/index.html
+.. _WSL: https://docs.microsoft.com/en-us/windows/wsl/install
