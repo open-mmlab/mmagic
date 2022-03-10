@@ -37,11 +37,11 @@ jobs:
           - torch: 1.5.1+cpu
             torchvision: 0.6.1+cpu
             mmcv_link: cpu/torch1.5
-            python: "3.7"
+            python: "3.6.7"
           - torch: 1.5.1+cu92
             torchvision: 0.6.1+cu92
             mmcv_link: cu92/torch1.5
-            python: "3.7"
+            python: "3.6.7"
           - torch: 1.6.0+cpu
             torchvision: 0.7.0+cpu
             mmcv_link: cpu/torch1.6
@@ -78,24 +78,16 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Upgrade pip
         run: pip install pip --upgrade
-      - name: Install PyTorch
+      - name: Install PyTorch ${{ matrix.torch }} and torchvision ${{ matrix.torchvision }}
         run: pip install torch==${{ matrix.torch }} torchvision==${{ matrix.torchvision }} -f https://download.pytorch.org/whl/torch_stable.html
-      - name: Install MMCV
+      - name: Install MMCV ${{ matrix.mmcv_link }}
         run: |
           pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/${{ matrix.mmcv_link }}/index.html --only-binary mmcv-full "opencv-python<=4.5.4.60"
           python -c 'import mmcv; print(mmcv.__version__)'
-      - name: Install FaceXLib (with opencv <= 4.5.4.60)
-        run: pip install facexlib "opencv-python<=4.5.4.60"
-        if: ${{ matrix.torch != '1.5.1+cpu' && matrix.torch != '1.5.1+cu92' && matrix.torch != '1.6.0+cpu' }}
-      - name: Install av
-        run: python -m pip install av
-      - name: Install unittest dependencies
-        run: |
-          pip install -r requirements.txt
+      - name: Build and install
+        run: pip install -e .[all]
       - name: Show pip list
         run: pip list
-      - name: Build and install
-        run: rm -rf .eggs && pip install -e .
       - name: Run unittests and generate coverage report
         run: |
           coverage run --branch --source mmedit -m pytest tests/ -sv
