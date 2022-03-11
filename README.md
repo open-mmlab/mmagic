@@ -82,11 +82,11 @@ Please refer to [changelog.md](docs/en/changelog.md) for details and release his
 
 ## Installation
 
-Please refer to [install.md](docs/en/install.md) for installation.
+Please refer to [install.rst](docs/en/install.rst) for installation.
 
 ## Getting Started
 
-Please see [getting_started.md](docs/en/getting_started.md) for the basic usage of MMEditing.
+Please see [getting_started.md](docs/en/getting_started.md) and [demo.md](docs/en/demo.md) for the basic usage of MMEditing.
 
 ## Model Zoo
 
