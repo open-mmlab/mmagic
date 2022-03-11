@@ -80,7 +80,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 安装
 
-请参考[安装指南](docs/zh_cn/install.rst)进行安装。
+请参考[安装指南](docs/zh_cn/install.md)进行安装。
 
 ## 开始使用
 
