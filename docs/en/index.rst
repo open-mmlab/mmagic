@@ -38,7 +38,6 @@ Documentation
    quick_run.md
    _tmp/config.md
    faq.md
-   tools_scripts.md
 
 
 .. toctree::
@@ -69,6 +68,13 @@ Documentation
    _tmp/matting_datasets.md
    _tmp/sr_datasets.md
    _tmp/generation_datasets.md
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Useful Tools and Scripts
+
+   tools_scripts.md
 
 
 .. toctree::
