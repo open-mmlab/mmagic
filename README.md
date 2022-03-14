@@ -166,7 +166,7 @@ MMEditing is an open source project that is contributed by researchers and engin
 
 ## Citation
 
-If MMEditing is helpful to your research, please cite it in your publication.
+If MMEditing is helpful to your research, please cite it as below.
 
 ```bibtex
 @misc{mmediting2022,
