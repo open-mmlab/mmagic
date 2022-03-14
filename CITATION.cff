@@ -4,17 +4,17 @@ authors:
   - name: "MMEditing Contributors"
 # title: "{MMEditing}: {OpenMMLab} Low-level Vision Toolbox
 title: "{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox"
-version: 0.13.0
+# version: 0.13.0
 date-released: 2022-03-01
 url: "https://github.com/open-mmlab/mmediting"
 license: Apache-2.0
-keywords:
-  - inpainting
-  - image matting
-  - super resolution
-  - video interpolation
-  - image generation
-abstract: >-
-  MMEditing is an open-source image and video editing
-  toolbox based on PyTorch. It is a part of the
-  OpenMMLab project.
+# keywords:
+#   - inpainting
+#   - image matting
+#   - super resolution
+#   - video interpolation
+#   - image generation
+# abstract: >-
+#   MMEditing is an open-source image and video editing
+#   toolbox based on PyTorch. It is a part of the
+#   OpenMMLab project.
