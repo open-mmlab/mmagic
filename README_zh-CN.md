@@ -168,10 +168,10 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ```bibtex
 @misc{mmediting2022,
-    title={{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
-    author={MMEditing Contributors},
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {MMEditing, Contributors},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year={2022}
+    year = {2022}
 }
 ```
 

@@ -1,7 +1,8 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-  - name: "MMEditing Contributors"
+  - family-names: MMEditing
+    given-names: Contributors
 # title: "{MMEditing}: {OpenMMLab} Low-level Vision Toolbox
 title: "MMEditing: OpenMMLab Image and Video Editing Toolbox"
 version: 0.13.0

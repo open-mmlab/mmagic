@@ -170,10 +170,10 @@ If MMEditing is helpful to your research, please cite it as below.
 
 ```bibtex
 @misc{mmediting2022,
-    title={{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
-    author={MMEditing Contributors},
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {MMEditing, Contributors},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year={2022}
+    year = {2022}
 }
 ```
 
