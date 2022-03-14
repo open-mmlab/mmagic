@@ -164,14 +164,14 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## 引用
 
-如果您觉得 MMEditing 对您的研究有所帮助，请考虑引用它：
+如果 MMEditing 对您的研究有所帮助，请按照如下 bibtex 引用它。
 
 ```bibtex
-@misc{mmediting2020,
-    title={OpenMMLab Editing Estimation Toolbox and Benchmark},
-    author={MMEditing Contributors},
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {MMEditing, Contributors},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year={2020}
+    year = {2022}
 }
 ```
 

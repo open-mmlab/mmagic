@@ -166,14 +166,14 @@ MMEditing is an open source project that is contributed by researchers and engin
 
 ## Citation
 
-If you find this project useful in your research, please consider cite:
+If MMEditing is helpful to your research, please cite it as below.
 
 ```bibtex
-@misc{mmediting2020,
-    title={OpenMMLab Editing Estimation Toolbox and Benchmark},
-    author={MMEditing Contributors},
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {MMEditing, Contributors},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year={2020}
+    year = {2022}
 }
 ```
 
