@@ -164,7 +164,7 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## 引用
 
-如果 MMEditing 对您的研究有所帮助，请按照如下 bibtext 引用它。
+如果 MMEditing 对您的研究有所帮助，请按照如下 bibtex 引用它。
 
 ```bibtex
 @misc{mmediting2022,
