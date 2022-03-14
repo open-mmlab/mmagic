@@ -37,6 +37,7 @@ Documentation
 
    quick_run.md
    _tmp/config.md
+   faq.md
    tools_scripts.md
 
 
@@ -81,9 +82,9 @@ Documentation
    :maxdepth: 2
    :caption: Miscellaneous
 
-   faq.md
    changelog.md
-   notes.md
+
+   .. notes.md
 
 
 .. toctree::
