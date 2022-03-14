@@ -3,3 +3,4 @@
 
    customize_dataset.md
    customize_pipeline.md
+   customize_models.md
