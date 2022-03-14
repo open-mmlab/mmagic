@@ -1,4 +1,4 @@
-# Tutorial 1: Learn about Configs
+# Learn about Configs
 
 We use python files as our config system. You can find all the provided configs under `$MMEditing/configs`.
 

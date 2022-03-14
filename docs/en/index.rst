@@ -30,6 +30,23 @@ Documentation
    install.rst
    demo.md
 
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Learn MMEditing
+
+   quick_run.md
+   _tmp/config.md
+   tools_scripts.md
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Customize MMEditing
+
+   tutorials/index.rst
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Model Zoo
@@ -41,6 +58,7 @@ Documentation
    _tmp/synthesizers_models.md
    _tmp/video_interpolators_models.md
 
+
 .. toctree::
    :maxdepth: 2
    :caption: Datasets
@@ -51,35 +69,13 @@ Documentation
    _tmp/sr_datasets.md
    _tmp/generation_datasets.md
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Quick Run
-
-   quick_run.md
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Tutorials
-
-   tutorials/index.rst
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Tutorials
-
-   _tmp/config.md
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Useful Tools and Scripts
-
-   tools_scripts.md
 
 .. toctree::
    :maxdepth: 2
    :caption: API Reference
 
    api.rst
+
 
 .. toctree::
    :maxdepth: 2
@@ -89,10 +85,12 @@ Documentation
    changelog.md
    notes.md
 
+
 .. toctree::
    :caption: Switch Language
 
    switch_language.md
+
 
 Indices and tables
 ==================
