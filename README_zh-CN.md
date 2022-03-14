@@ -70,11 +70,11 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 最新消息
 
+- [2022-03-01] v0.13.0 版本发布
+  - 支持 CAIN
+  - 支持 EDVR-L
+  - 支持在 Windows 系统中运行
 - [2022-02-11] 切换到 **PyTorch 1.5+**. 将不再保证与早期版本的 PyTorch 的兼容性
-- [2022-01-21] 支持视频插帧算法：CAIN
-- [2021-12-31] v0.12.0 版本发布
-  - 支持 RealBasicVSR
-  - 支持 Real-ESRGAN
 
 请查看 [changelog.md](docs/en/changelog.md) 以获取更多细节与发版记录
 
@@ -84,7 +84,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 开始使用
 
-请参考[使用教程](docs/zh_cn/getting_started.md)获取MMEditing的基本用法。
+请参考[使用教程](docs/zh_cn/getting_started.md)和[功能演示](docs/zh_cn/demo.md)获取MMEditing的基本用法。
 
 ## 模型库
 
@@ -131,8 +131,9 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
 - [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
 - [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (NTIRE'2021)
 - [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
+- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (CVPR'2022)
+- [x] [RealBasicVSR](configs/restorers/real_basicvsr/README.md) (CVPR'2022)
 
 </details>
 
@@ -163,14 +164,14 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## 引用
 
-如果您觉得 MMEditing 对您的研究有所帮助，请考虑引用它：
+如果 MMEditing 对您的研究有所帮助，请按照如下 bibtex 引用它。
 
 ```bibtex
-@misc{mmediting2020,
-    title={OpenMMLab Editing Estimation Toolbox and Benchmark},
-    author={MMEditing Contributors},
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {MMEditing, Contributors},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year={2020}
+    year = {2022}
 }
 ```
 
@@ -181,20 +182,24 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 ## OpenMMLab 的其他项目
 
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab 计算机视觉基础库
-- [MIM](https://github.com/open-mmlab/mim): OpenMMlab 项目、算法、模型的统一入口
-- [MMClassification](https://github.com/open-mmlab/mmclassification): 图像分类工具箱与测试基准
-- [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab 检测工具箱与测试基准
-- [MMDetection3D](https://github.com/open-mmlab/mmdetection3d): OpenMMLab 新一代通用3D目标检测平台
-- [MMSegmentation](https://github.com/open-mmlab/mmsegmentation): 语义分割工具箱与测试基准
-- [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab 新一代视频理解工具箱与测试基准
-- [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab 一体化视频目标感知平台
-- [MMPose](https://github.com/open-mmlab/mmpose): OpenMMLab 姿态估计工具箱与测试基准
-- [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab 图像视频编辑工具箱
-- [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab 全流程文字检测识别理解工具包
-- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab 生成模型工具箱
-- [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab 光流估计工具箱与测试基准
-- [MMFewShot](https://github.com/open-mmlab/mmfewshot): OpenMMLab 少样本学习工具箱与测试基准
+- [MIM](https://github.com/open-mmlab/mim): MIM 是 OpenMMlab 项目、算法、模型的统一入口
+- [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab 图像分类工具箱
+- [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab 目标检测工具箱
+- [MMDetection3D](https://github.com/open-mmlab/mmdetection3d): OpenMMLab 新一代通用 3D 目标检测平台
+- [MMRotate](https://github.com/open-mmlab/mmrotate): OpenMMLab 旋转框检测工具箱与测试基准
+- [MMSegmentation](https://github.com/open-mmlab/mmsegmentation): OpenMMLab 语义分割工具箱
+- [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab 全流程文字检测识别理解工具箱
+- [MMPose](https://github.com/open-mmlab/mmpose): OpenMMLab 姿态估计工具箱
 - [MMHuman3D](https://github.com/open-mmlab/mmhuman3d): OpenMMLab 人体参数化模型工具箱与测试基准
+- [MMSelfSup](https://github.com/open-mmlab/mmselfsup): OpenMMLab 自监督学习工具箱与测试基准
+- [MMRazor](https://github.com/open-mmlab/mmrazor): OpenMMLab 模型压缩工具箱与测试基准
+- [MMFewShot](https://github.com/open-mmlab/mmfewshot): OpenMMLab 少样本学习工具箱与测试基准
+- [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab 新一代视频理解工具箱
+- [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab 一体化视频目标感知平台
+- [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab 光流估计工具箱与测试基准
+- [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab 图像视频编辑工具箱
+- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab 图片视频生成模型工具箱
+- [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab 模型部署框架
 
 ## 欢迎加入 OpenMMLab 社区
 

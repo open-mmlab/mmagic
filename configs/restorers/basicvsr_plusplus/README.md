@@ -1,4 +1,4 @@
-# BasicVSR++
+# BasicVSR++ (CVPR'2022)
 
 > [BasicVSR++: Improving Video Super-Resolution with Enhanced Propagation and Alignment](https://arxiv.org/abs/2104.13371)
 
@@ -44,10 +44,10 @@ Note that the following models are finetuned from smaller models. The training s
 ## Citation
 
 ```bibtex
-@article{chan2021basicvsrplusplus,
+@InProceedings{chan2022basicvsrplusplus,
   author = {Chan, Kelvin C.K. and Zhou, Shangchen and Xu, Xiangyu and Loy, Chen Change},
   title = {BasicVSR++: Improving Video Super-Resolution with Enhanced Propagation and Alignment},
-  booktitle = {arXiv preprint arXiv:2104.13371},
-  year = {2021}
+  booktitle = {Proceedings of the IEEE conference on computer vision and pattern recognition},
+  year = {2022}
 }
 ```

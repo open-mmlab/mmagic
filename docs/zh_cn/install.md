@@ -1,8 +1,8 @@
 ## 依赖
 
-- Linux (目前 Windows 暂无官方支持)
+- Linux / Windows / Mac
 - Python 3.6+
-- PyTorch 1.3 或更高
+- PyTorch 1.5 或更高
 - CUDA 9.0 或更高
 - NCCL 2
 - GCC 5.4 或更高
@@ -10,20 +10,25 @@
 
 ## 安装
 
-a. 创建并激活 conda 虚拟环境，如：
+a. 创建并激活 conda 虚拟环境，如 `python 3.8`：
 
 ```shell
-conda create -n open-mmlab python=3.7 -y
-conda activate open-mmlab
+conda create -n mmedit python=3.8 -y
+conda activate mmedit
 ```
 
-b. 按照 [PyTorch 官方文档](https://pytorch.org/) 安装 PyTorch 和 torchvision，如：
+b. 按照 [PyTorch 官方文档](https://pytorch.org/) 安装 PyTorch 和 torchvision，然后安装对应路径下的 `mmcv-full`
+
+如 `cuda 10.1` & `pytorch 1.7`：
 
 ```shell
-conda install pytorch torchvision -c pytorch
+conda install pytorch==1.7.1 torchvision cudatoolkit=10.1 -c pytorch
+pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7/index.html "opencv-python<=4.5.4.60"
 ```
 
-注：确保 CUDA 编译版本和 CUDA 运行版本相匹配。 用户可以参照 [PyTorch 官网](https://pytorch.org/) 对预编译包所支持的 CUDA 版本进行核对。
+注 1：过高版本的 `opencv-python` 在使用中存在一些问题，因此在安装时限制其版本。
+
+注 2：确保 CUDA 编译版本和 CUDA 运行版本相匹配。 用户可以参照 [PyTorch 官网](https://pytorch.org/) 对预编译包所支持的 CUDA 版本进行核对。
 
 `例1`：如果 `/usr/local/cuda` 文件夹下已安装了 CUDA 10.1 版本，则需要安装 CUDA 10.1 下预编译的 PyTorch。
 
@@ -35,8 +40,6 @@ conda install pytorch cudatoolkit=10.1 torchvision -c pytorch
 ```shell
 conda install pytorch=1.3.1 cudatoolkit=9.2 torchvision=0.4.2 -c pytorch
 ```
-
-如果你从源码编译 PyTorch 而不是安装的预编译版本的话，你可以使用更多 CUDA 版本（例如9.0）。
 
 c. 克隆 MMEditing 仓库
 
@@ -56,6 +59,19 @@ pip install -v -e .  # or "python setup.py develop"
 
 ```shell
 CC=clang CXX=clang++ CFLAGS='-stdlib=libc++' pip install -e .
+```
+
+e. 验证安装
+
+安装完成后，可以切换到其他目录（例如 `/home` 目录），并尝试在 python 中导入 mmedit，导入成功则证明安装成功
+
+```shell
+$ cd ~
+$ python
+
+>>> import mmedit
+>>> mmedit.__version__
+'0.12.0'
 ```
 
 注：
@@ -80,6 +96,13 @@ CC=clang CXX=clang++ CFLAGS='-stdlib=libc++' pip install -e .
 ### CPU 环境下的安装步骤
 
 MMEditing 也可以在只有 CPU 的环境下安装（即无法使用 GPU 的环境）。
+
+相应的，安装 CPU 版本的 PyTorch 和 MMCV
+
+```shell
+conda install pytorch==1.7.1 torchvision cudatoolkit=10.1 -c pytorch
+pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7/index.html "opencv-python<=4.5.4.60"
+```
 
 然而在该环境下，有些功能将被移除，例如：
 - Deformable Convolution（可变形卷积）
