@@ -99,7 +99,7 @@ NNODES=2 NODE_RANK=1 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train
 ```
 
 To speed up network communication, high speed network hardware, such as Infiniband, is recommended.
-
+Please refer to [PyTorch docs](https://pytorch.org/docs/1.11/distributed.html#launch-utility) for more information.
 
 ### Train with Slurm
 
@@ -116,7 +116,6 @@ GPUS=8 ./tools/slurm_train.sh dev configs/inpainting/gl_places.py /nfs/xxxx/gl_p
 ```
 
 You can check [slurm_train.sh](https://github.com/open-mmlab/mmediting/blob/master/tools/slurm_train.sh) for full arguments and environment variables.
-Please refer to [PyTorch docs](https://pytorch.org/docs/1.6.0/distributed.html?highlight=launch#module-torch.distributed.launch) for more information.
 
 ### Launch multiple jobs on a single machine
 
