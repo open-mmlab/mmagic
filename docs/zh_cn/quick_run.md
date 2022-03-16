@@ -99,6 +99,7 @@ NNODES=2 NODE_RANK=1 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train
 ```
 
 为提高网络通信速度，推荐使用高速网络设备，如 Infiniband 等。
+更多信息可参照[PyTorch 文档](https://pytorch.org/docs/1.6.0/distributed.html?highlight=launch#module-torch.distributed.launch).
 
 
 ### 在 slurm 上训练

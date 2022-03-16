@@ -116,6 +116,7 @@ GPUS=8 ./tools/slurm_train.sh dev configs/inpainting/gl_places.py /nfs/xxxx/gl_p
 ```
 
 You can check [slurm_train.sh](https://github.com/open-mmlab/mmediting/blob/master/tools/slurm_train.sh) for full arguments and environment variables.
+Please refer to [PyTorch docs](https://pytorch.org/docs/1.6.0/distributed.html?highlight=launch#module-torch.distributed.launch) for more information.
 
 ### Launch multiple jobs on a single machine
 
