@@ -126,7 +126,7 @@ def video_interpolation_inference(model,
             assert fps_multiplier > 0, '`fps_multiplier` cannot be negative'
             output_fps = fps_multiplier * input_fps
         else:
-            output_fps = fps if fps > 0 else input_fps
+            output_fps = fps if fps > 0 else input_fps * 2
     else:
         files = os.listdir(input_dir)
         files = [osp.join(input_dir, f) for f in files]

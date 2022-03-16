@@ -48,7 +48,7 @@ def parse_args():
         default='{:08d}.png',
         help='template of the file names')
     parser.add_argument(
-        '--device', type=str, default='cuda', help='device of torch')
+        '--device', type=int, default=None, help='CUDA device id')
     args = parser.parse_args()
     return args
 
@@ -64,10 +64,10 @@ def main():
 
     args = parse_args()
 
-    if isinstance(args.device, int):
-        device = torch.device('cuda', args.device)
+    if args.device < 0:
+        device = torch.device('cpu')
     else:
-        device = torch.device(args.device)
+        device = torch.device('cuda', args.device)
     model = init_model(args.config, args.checkpoint, device=device)
 
     video_interpolation_inference(
