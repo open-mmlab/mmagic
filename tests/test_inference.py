@@ -138,7 +138,3 @@ def test_video_interpolation_inference():
 
     shutil.rmtree('./tests/data/vimeo90k/00001/out')
     os.remove('./tests/data/test_inference_out.mp4')
-
-
-if __name__ == '__main__':
-    test_video_interpolation_inference()
