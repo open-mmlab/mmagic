@@ -82,7 +82,34 @@ Please refer to [changelog.md](docs/en/changelog.md) for details and release his
 
 ## Installation
 
-Please refer to [install.rst](docs/en/install.rst) for installation.
+MMEditing depends on [PyTorch](https://pytorch.org/) and [MMCV](https://github.com/open-mmlab/mmcv).
+Here are brief steps for installation.
+
+**Step 1.**
+Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/), e.g.
+
+```
+pip3 install torch torchvision
+```
+
+**Step 2.**
+Install MMCV with [MIM](https://github.com/open-mmlab/mim).
+
+```
+pip3 install openmim
+mim install mmcv-full
+```
+
+**Step 3.**
+Install MMEditing from source.
+
+```
+git clone https://github.com/open-mmlab/mmediting.git
+cd mmediting
+pip3 install -e .[all]
+```
+
+Please refer to [install.md](docs/en/install.rst) for more detailed instruction.
 
 ## Getting Started
 
