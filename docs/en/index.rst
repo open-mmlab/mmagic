@@ -32,7 +32,7 @@ Documentation
 
 .. toctree::
    :maxdepth: 2
-   :caption: Learn MMEditing
+   :caption: Basic Usage
 
    quick_run.md
    _tmp/config.md
