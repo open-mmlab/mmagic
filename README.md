@@ -83,7 +83,7 @@ Please refer to [changelog.md](docs/en/changelog.md) for details and release his
 ## Installation
 
 MMEditing depends on [PyTorch](https://pytorch.org/) and [MMCV](https://github.com/open-mmlab/mmcv).
-Here are brief steps for installation.
+Below are quick steps for installation.
 
 **Step 1.**
 Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/), e.g.
