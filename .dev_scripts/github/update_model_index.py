@@ -134,7 +134,7 @@ def parse_md(md_file):
     Returns:
         Bool: If the target YAML file is different from the original.
     """
-    # See #798 for these comments
+    # See https://github.com/open-mmlab/mmediting/pull/798 for these comments
     # unique_dict = generate_unique_name(md_file)
 
     collection_name = osp.splitext(osp.basename(md_file))[0]
@@ -200,7 +200,7 @@ def parse_md(md_file):
 
                     name_key = osp.splitext(osp.basename(config))[0]
                     model_name = name_key
-                    # See #798 for these comments
+                    # See https://github.com/open-mmlab/mmediting/pull/798 for these comments
                     # if name_key in unique_dict:
                     #     model_name = unique_dict[name_key]
                     # else:
