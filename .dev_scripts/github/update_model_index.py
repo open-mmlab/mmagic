@@ -134,6 +134,7 @@ def parse_md(md_file):
     Returns:
         Bool: If the target YAML file is different from the original.
     """
+    # To generate short names, uncomment this and line 204-210 are 
     # unique_dict = generate_unique_name(md_file)
 
     collection_name = osp.splitext(osp.basename(md_file))[0]
@@ -199,6 +200,7 @@ def parse_md(md_file):
 
                     name_key = osp.splitext(osp.basename(config))[0]
                     model_name = name_key
+                    # To generate short names, uncomment this and line 138
                     # if name_key in unique_dict:
                     #     model_name = unique_dict[name_key]
                     # else:
