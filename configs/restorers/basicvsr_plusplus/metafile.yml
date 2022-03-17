@@ -11,7 +11,7 @@ Models:
   In Collection: BasicVSR++
   Metadata:
     Training Data: REDS
-  Name: basicvsr_c64n7
+  Name: basicvsr_plusplus_c64n7_8x1_600k_reds4
   Results:
   - Dataset: REDS
     Metrics:
@@ -39,7 +39,7 @@ Models:
   In Collection: BasicVSR++
   Metadata:
     Training Data: VIMEO90K
-  Name: basicvsr_300k
+  Name: basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bi
   Results:
   - Dataset: VIMEO90K
     Metrics:
@@ -67,7 +67,7 @@ Models:
   In Collection: BasicVSR++
   Metadata:
     Training Data: VIMEO90K
-  Name: basicvsr_4x2
+  Name: basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd
   Results:
   - Dataset: VIMEO90K
     Metrics:

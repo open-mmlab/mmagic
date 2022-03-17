@@ -39,7 +39,7 @@ Models:
   In Collection: BasicVSR
   Metadata:
     Training Data: VIMEO90K
-  Name: basicvsr_bi
+  Name: basicvsr_vimeo90k_bi
   Results:
   - Dataset: VIMEO90K
     Metrics:
@@ -67,7 +67,7 @@ Models:
   In Collection: BasicVSR
   Metadata:
     Training Data: VIMEO90K
-  Name: basicvsr_vimeo90k
+  Name: basicvsr_vimeo90k_bd
   Results:
   - Dataset: VIMEO90K
     Metrics:

@@ -134,13 +134,16 @@ def parse_md(md_file):
     Returns:
         Bool: If the target YAML file is different from the original.
     """
-    unique_dict = generate_unique_name(md_file)
+    # See https://github.com/open-mmlab/mmediting/pull/798 for these comments
+    # unique_dict = generate_unique_name(md_file)
 
     collection_name = osp.splitext(osp.basename(md_file))[0]
+    readme = osp.relpath(md_file, MMEditing_ROOT)
+    readme = readme.replace('\\', '/')  # for windows
     collection = dict(
         Name=collection_name,
         Metadata={'Architecture': []},
-        README=osp.relpath(md_file, MMEditing_ROOT),
+        README=readme,
         Paper=[])
     models = []
     # force utf-8 instead of system defined
@@ -196,13 +199,16 @@ def parse_md(md_file):
                         checkpoint = line[checkpoint_idx][left:right]
 
                     name_key = osp.splitext(osp.basename(config))[0]
-                    if name_key in unique_dict:
-                        model_name = unique_dict[name_key]
-                    else:
-                        model_name = name_key
-                        warnings.warn(
-                            f'Config file of {model_name} is not found,'
-                            'please check it again.')
+                    model_name = name_key
+                    # See https://github.com/open-mmlab/mmediting/pull/798
+                    # for these comments
+                    # if name_key in unique_dict:
+                    #     model_name = unique_dict[name_key]
+                    # else:
+                    #     model_name = name_key
+                    #     warnings.warn(
+                    #         f'Config file of {model_name} is not found,'
+                    #         'please check it again.')
 
                     # find dataset in config file
                     dataset = 'Others'

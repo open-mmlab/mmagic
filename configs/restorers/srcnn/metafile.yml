@@ -11,7 +11,7 @@ Models:
   In Collection: SRCNN
   Metadata:
     Training Data: DIV2K
-  Name: srcnn
+  Name: srcnn_x4k915_g1_1000k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
