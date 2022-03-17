@@ -11,7 +11,7 @@ Models:
   In Collection: EDSR
   Metadata:
     Training Data: DIV2K
-  Name: edsr_x2c64b16
+  Name: edsr_x2c64b16_g1_300k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -30,7 +30,7 @@ Models:
   In Collection: EDSR
   Metadata:
     Training Data: DIV2K
-  Name: edsr_x3c64b16
+  Name: edsr_x3c64b16_g1_300k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -49,7 +49,7 @@ Models:
   In Collection: EDSR
   Metadata:
     Training Data: DIV2K
-  Name: edsr_x4c64b16
+  Name: edsr_x4c64b16_g1_300k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:

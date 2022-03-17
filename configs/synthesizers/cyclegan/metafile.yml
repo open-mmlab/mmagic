@@ -11,7 +11,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: FACADES
-  Name: cyclegan_80k
+  Name: cyclegan_lsgan_resnet_in_1x1_80k_facades
   Results:
   - Dataset: FACADES
     Metrics:
@@ -23,7 +23,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: FACADES
-  Name: cyclegan_id0
+  Name: cyclegan_lsgan_id0_resnet_in_1x1_80k_facades
   Results:
   - Dataset: FACADES
     Metrics:
@@ -35,7 +35,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
-  Name: cyclegan_246200
+  Name: cyclegan_lsgan_resnet_in_1x1_246200_summer2winter
   Results:
   - Dataset: SUMMER2WINTER
     Metrics:
@@ -47,7 +47,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
-  Name: cyclegan_246200
+  Name: cyclegan_lsgan_resnet_in_1x1_246200_summer2winter
   Results:
   - Dataset: SUMMER2WINTER
     Metrics:
@@ -59,7 +59,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
-  Name: cyclegan_summer2winter
+  Name: cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter
   Results:
   - Dataset: SUMMER2WINTER
     Metrics:
@@ -71,7 +71,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: SUMMER2WINTER
-  Name: cyclegan_summer2winter
+  Name: cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter
   Results:
   - Dataset: SUMMER2WINTER
     Metrics:
@@ -83,7 +83,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
-  Name: cyclegan_266800
+  Name: cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra
   Results:
   - Dataset: HORSE2ZEBRA
     Metrics:
@@ -95,7 +95,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
-  Name: cyclegan_horse2zebra
+  Name: cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra
   Results:
   - Dataset: HORSE2ZEBRA
     Metrics:
@@ -107,7 +107,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
-  Name: cyclegan_266800
+  Name: cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra
   Results:
   - Dataset: HORSE2ZEBRA
     Metrics:
@@ -119,7 +119,7 @@ Models:
   In Collection: CycleGAN
   Metadata:
     Training Data: HORSE2ZEBRA
-  Name: cyclegan_horse2zebra
+  Name: cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra
   Results:
   - Dataset: HORSE2ZEBRA
     Metrics:

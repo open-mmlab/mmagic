@@ -11,7 +11,7 @@ Models:
   In Collection: Pix2Pix
   Metadata:
     Training Data: FACADES
-  Name: pix2pix_1x1
+  Name: pix2pix_vanilla_unet_bn_1x1_80k_facades
   Results:
   - Dataset: FACADES
     Metrics:
@@ -23,7 +23,7 @@ Models:
   In Collection: Pix2Pix
   Metadata:
     Training Data: MAPS
-  Name: pix2pix_a2b
+  Name: pix2pix_vanilla_unet_bn_a2b_1x1_219200_maps
   Results:
   - Dataset: MAPS
     Metrics:
@@ -35,7 +35,7 @@ Models:
   In Collection: Pix2Pix
   Metadata:
     Training Data: MAPS
-  Name: pix2pix_b2a
+  Name: pix2pix_vanilla_unet_bn_b2a_1x1_219200_maps
   Results:
   - Dataset: MAPS
     Metrics:
@@ -47,7 +47,7 @@ Models:
   In Collection: Pix2Pix
   Metadata:
     Training Data: EDGES2SHOES
-  Name: pix2pix_wo
+  Name: pix2pix_vanilla_unet_bn_wo_jitter_flip_1x4_186840_edges2shoes
   Results:
   - Dataset: EDGES2SHOES
     Metrics:

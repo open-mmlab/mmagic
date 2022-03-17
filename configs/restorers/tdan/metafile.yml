@@ -11,7 +11,7 @@ Models:
   In Collection: TDAN
   Metadata:
     Training Data: VIMEO90K
-  Name: tdan_lr5e-5
+  Name: tdan_vimeo90k_bix4_ft_lr5e-5_400k
   Results:
   - Dataset: VIMEO90K
     Metrics:
@@ -33,7 +33,7 @@ Models:
   In Collection: TDAN
   Metadata:
     Training Data: VIMEO90K
-  Name: tdan_ft
+  Name: tdan_vimeo90k_bdx4_ft_lr5e-5_800k
   Results:
   - Dataset: VIMEO90K
     Metrics:
