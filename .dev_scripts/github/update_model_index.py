@@ -200,7 +200,8 @@ def parse_md(md_file):
 
                     name_key = osp.splitext(osp.basename(config))[0]
                     model_name = name_key
-                    # See https://github.com/open-mmlab/mmediting/pull/798 for these comments
+                    # See https://github.com/open-mmlab/mmediting/pull/798
+                    # for these comments
                     # if name_key in unique_dict:
                     #     model_name = unique_dict[name_key]
                     # else:
