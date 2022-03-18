@@ -41,10 +41,10 @@
 
 MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
 
-目前 MMEditing 支持以下任务：
+目前 MMEditing 支持下图中的任务：
 
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/12756472/158957011-52cc95fd-9c3e-4ea2-92c6-ce1206d2d103.png"/>
+  <img src="https://user-images.githubusercontent.com/12756472/158962104-48ca7ee5-dffd-44d1-ae35-7796da78ce2e.png"/>
 </div>
 
 https://user-images.githubusercontent.com/12756472/158956122-fad6aebb-9aad-4b2c-a725-dacc7328d42b.mp4
