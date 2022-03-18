@@ -43,13 +43,6 @@ MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMML
 
 目前 MMEditing 支持以下任务：
 
-* 图像超分辨率
-* 视频超分辨率
-* 视频插帧
-* 抠图
-* 图像修复
-* 图像生成
-
 <div align="center">
   <img src="https://user-images.githubusercontent.com/12756472/158957011-52cc95fd-9c3e-4ea2-92c6-ce1206d2d103.png"/>
 </div>

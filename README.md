@@ -43,13 +43,6 @@ MMEditing is an open-source image and video editing toolbox based on PyTorch. It
 
 Currently, MMEditing support the following tasks:
 
-* Image super-resolution
-* Video super-resolution
-* Video frame interpolation
-* Image matting
-* Image inpainting
-* Image generation
-
 <div align="center">
   <img src="https://user-images.githubusercontent.com/12756472/158957011-52cc95fd-9c3e-4ea2-92c6-ce1206d2d103.png"/>
 </div>
