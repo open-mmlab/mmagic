@@ -39,17 +39,26 @@
 
 English | [简体中文](/README_zh-CN.md)
 
-MMEditing is an open source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://open-mmlab.github.io/) project.
+MMEditing is an open-source low-level vision toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+
+Currently, MMEditing support the following tasks:
+
+* Image super-resolution
+* Video super-resolution
+* Video frame interpolation
+* Image matting
+* Image inpainting
+* Image generation
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/12756472/158957011-52cc95fd-9c3e-4ea2-92c6-ce1206d2d103.png"/>
+</div>
+
+https://user-images.githubusercontent.com/12756472/158956122-fad6aebb-9aad-4b2c-a725-dacc7328d42b.mp4
+
+https://user-images.githubusercontent.com/12756472/158956128-861a45ff-7660-45e6-b3d4-63f369e3d43c.mp4
 
 The master branch works with **PyTorch 1.5+**.
-
-<div align="center">
-  <img src="resources/mmediting-demo.jpg"/>
-</div>
-
-<div align="center">
-<video src="https://user-images.githubusercontent.com/56712176/153550102-fdbd3ac8-cd20-416c-a5dc-4dbfbb97fdaa.mp4" width="520px" height="220px"/>
-</div>
 
 ### Major features
 

@@ -39,17 +39,26 @@
 
 [English](/README.md) | 简体中文
 
-MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://open-mmlab.github.io/) 项目的成员之一。
+MMEditing 是基于 PyTorch 的底层视觉开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
+
+目前 MMEditing 支持以下任务：
+
+* 图像超分辨率
+* 视频超分辨率
+* 视频插帧
+* 抠图
+* 图像修复
+* 图像生成
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/12756472/158957011-52cc95fd-9c3e-4ea2-92c6-ce1206d2d103.png"/>
+</div>
+
+https://user-images.githubusercontent.com/12756472/158956122-fad6aebb-9aad-4b2c-a725-dacc7328d42b.mp4
+
+https://user-images.githubusercontent.com/12756472/158956128-861a45ff-7660-45e6-b3d4-63f369e3d43c.mp4
 
 主分支代码目前支持 **PyTorch 1.5 以上**的版本。
-
-<div align="center">
-  <img src="resources/mmediting-demo.jpg"/>
-</div>
-
-<div align="center">
-<video src="https://user-images.githubusercontent.com/56712176/153550102-fdbd3ac8-cd20-416c-a5dc-4dbfbb97fdaa.mp4" width="520px" height="220px"/>
-</div>
 
 ### 主要特性
 
