@@ -47,9 +47,9 @@ Currently, MMEditing support tasks in the following image:
   <img src="https://user-images.githubusercontent.com/12756472/158975757-15178a5e-1efe-447f-9997-dee0e9c58a9a.jpg"/>
 </div>
 
-https://user-images.githubusercontent.com/12756472/158956122-fad6aebb-9aad-4b2c-a725-dacc7328d42b.mp4
+https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
 
-https://user-images.githubusercontent.com/12756472/158956128-861a45ff-7660-45e6-b3d4-63f369e3d43c.mp4
+https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4
 
 The master branch works with **PyTorch 1.5+**.
 
