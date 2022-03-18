@@ -39,7 +39,7 @@
 
 [English](/README.md) | 简体中文
 
-MMEditing 是基于 PyTorch 的底层视觉开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
+MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
 
 目前 MMEditing 支持以下任务：
 

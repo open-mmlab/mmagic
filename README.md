@@ -39,7 +39,7 @@
 
 English | [简体中文](/README_zh-CN.md)
 
-MMEditing is an open-source low-level vision toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+MMEditing is an open-source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
 Currently, MMEditing support the following tasks:
 
