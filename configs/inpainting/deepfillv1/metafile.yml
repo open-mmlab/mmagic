@@ -11,7 +11,7 @@ Models:
   In Collection: DeepFillv1
   Metadata:
     Training Data: PLACES
-  Name: deepfillv1_8x2
+  Name: deepfillv1_256x256_8x2_places
   Results:
   - Dataset: PLACES
     Metrics:
@@ -24,7 +24,7 @@ Models:
   In Collection: DeepFillv1
   Metadata:
     Training Data: CELEBA
-  Name: deepfillv1_4x4
+  Name: deepfillv1_256x256_4x4_celeba
   Results:
   - Dataset: CELEBA
     Metrics:

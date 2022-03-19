@@ -12,8 +12,8 @@ model = dict(
         num_blocks=16,
         upscale_factor=scale,
         res_scale=1,
-        rgb_mean=(0.4488, 0.4371, 0.4040),
-        rgb_std=(1.0, 1.0, 1.0)),
+        rgb_mean=[0.4488, 0.4371, 0.4040],
+        rgb_std=[1.0, 1.0, 1.0]),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = None
