@@ -32,6 +32,20 @@ Documentation
 
 .. toctree::
    :maxdepth: 2
+   :caption: Basic Usage
+
+   quick_run.md
+   _tmp/config.md
+   faq.md
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Customize MMEditing
+
+   tutorials/index.rst
+
+.. toctree::
+   :maxdepth: 2
    :caption: Model Zoo
 
    _tmp/modelzoo.md
@@ -53,24 +67,6 @@ Documentation
 
 .. toctree::
    :maxdepth: 2
-   :caption: Quick Run
-
-   quick_run.md
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Tutorials
-
-   tutorials/index.rst
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Tutorials
-
-   _tmp/config.md
-
-.. toctree::
-   :maxdepth: 2
    :caption: Useful Tools and Scripts
 
    tools_scripts.md
@@ -85,14 +81,15 @@ Documentation
    :maxdepth: 2
    :caption: Miscellaneous
 
-   faq.md
    changelog.md
-   notes.md
+
+   .. notes.md
 
 .. toctree::
    :caption: Switch Language
 
    switch_language.md
+
 
 Indices and tables
 ==================
