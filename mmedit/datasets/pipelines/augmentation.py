@@ -447,6 +447,10 @@ class RandomAffine:
         else:
             shear = 0.0
 
+        # Because `flip` is used as a multiplier in line 479 and 480,
+        # so -1 stands for flip and 1 stands for no flip. Thus `flip`
+        # should be an 'inverse' flag as the result of the comparison.
+        # See https://github.com/open-mmlab/mmediting/pull/799 for more detail
         flip = (np.random.rand(2) > flip_ratio).astype(np.int32) * 2 - 1
 
         return angle, translations, scale, shear, flip
