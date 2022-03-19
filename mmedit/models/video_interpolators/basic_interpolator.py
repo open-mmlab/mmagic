@@ -53,6 +53,11 @@ class BasicInterpolator(BaseModel):
         # loss
         self.pixel_loss = build_loss(pixel_loss)
 
+        # Required frames in each process
+        self.required_frames = 2
+        # Step size of video frame interpolation
+        self.step_frames = 1
+
     def init_weights(self, pretrained=None):
         """Init weights for models.
 
