@@ -39,17 +39,22 @@
 
 [English](/README.md) | 简体中文
 
-MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://open-mmlab.github.io/) 项目的成员之一。
+MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
+
+目前 MMEditing 支持下列任务：
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/12756472/158984079-c4754015-c1f6-48c5-ac46-62e79448c372.jpg"/>
+</div>
 
 主分支代码目前支持 **PyTorch 1.5 以上**的版本。
 
-<div align="center">
-  <img src="resources/mmediting-demo.jpg"/>
-</div>
+一些示例:
 
-<div align="center">
-<video src="https://user-images.githubusercontent.com/56712176/153550102-fdbd3ac8-cd20-416c-a5dc-4dbfbb97fdaa.mp4" width="520px" height="220px"/>
-</div>
+https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4
+
+https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
+
 
 ### 主要特性
 
@@ -80,7 +85,33 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 安装
 
-请参考[安装指南](docs/zh_cn/install.md)进行安装。
+MMEditing 依赖 [PyTorch](https://pytorch.org/) 和 [MMCV](https://github.com/open-mmlab/mmcv)，以下是安装的简要步骤。
+
+**步骤 1.**
+依照[官方教程](https://pytorch.org/get-started/locally/)安装PyTorch，例如
+
+```
+pip3 install torch torchvision
+```
+
+**步骤 2.**
+使用 [MIM](https://github.com/open-mmlab/mim) 安装 MMCV
+
+```
+pip3 install openmim
+mim install mmcv-full
+```
+
+**步骤 3.**
+从源码安装 MMEditing
+
+```
+git clone https://github.com/open-mmlab/mmediting.git
+cd mmediting
+pip3 install -e .[all]
+```
+
+更详细的安装指南请参考 [install.md](docs/en/install.rst) .
 
 ## 开始使用
 
