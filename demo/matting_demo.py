@@ -12,8 +12,8 @@ def parse_args():
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
     parser.add_argument('img_path', help='path to input image file')
-    parser.add_argument('trimap_path', help='path to input trimap file')
-    parser.add_argument('save_path', help='path to save alpha matte result')
+    parser.add_argument('trimap-path', help='path to input trimap file')
+    parser.add_argument('save-path', help='path to save alpha matte result')
     parser.add_argument(
         '--imshow', action='store_true', help='whether show image with opencv')
     parser.add_argument('--device', type=int, default=0, help='CUDA device id')
