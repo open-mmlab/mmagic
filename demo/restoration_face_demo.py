@@ -6,9 +6,11 @@ import mmcv
 import torch
 
 from mmedit.apis import init_model, restoration_face_inference
+from mmedit.utils import modify_args
 
 
 def parse_args():
+    modify_args()
     parser = argparse.ArgumentParser(description='Restoration demo')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
@@ -16,13 +18,11 @@ def parse_args():
     parser.add_argument('save-path', help='path to save restoration result')
     parser.add_argument(
         '--upscale-factor',
-        '--upscale_factor',
         type=int,
         default=1,
         help='the number of times the input image is upsampled.')
     parser.add_argument(
         '--face-size',
-        '--face_size',
         type=int,
         default=1024,
         help='the size of the cropped and aligned faces..')

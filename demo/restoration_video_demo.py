@@ -9,11 +9,13 @@ import torch
 
 from mmedit.apis import init_model, restoration_video_inference
 from mmedit.core import tensor2img
+from mmedit.utils import modify_args
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov')
 
 
 def parse_args():
+    modify_args()
     parser = argparse.ArgumentParser(description='Restoration demo')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
@@ -21,24 +23,20 @@ def parse_args():
     parser.add_argument('output-dir', help='directory of the output video')
     parser.add_argument(
         '--start-idx',
-        '--start_idx',
         type=int,
         default=0,
         help='index corresponds to the first frame of the sequence')
     parser.add_argument(
         '--filename-tmpl',
-        '--filename_tmpl',
         default='{:08d}.png',
         help='template of the file names')
     parser.add_argument(
         '--window-size',
-        '--window_size',
         type=int,
         default=0,
         help='window size if sliding-window framework is used')
     parser.add_argument(
         '--max-seq-len',
-        '--max_seq_len',
         type=int,
         default=None,
         help='maximum sequence length if recurrent framework is used')
