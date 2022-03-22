@@ -1,12 +1,17 @@
 exp_name = 'tof_vfi_vimeo90k_noBN_spynet_chair'
 
+# pretrained SPyNet
+source = 'https://download.openmmlab.com/mmediting/video_interpolators/toflow'
+spynet_file = 'pretrained_spynet_chair_20220321-4d82e91b.pth'
+load_pretrained_spynet = f'{source}/{spynet_file}'
+
 # model settings
 model = dict(
     type='BasicInterpolator',
     generator=dict(
         type='TOFlowVFI',
         norm_cfg=None,
-        load_pretrained_spynet='work_dirs/tof_vfi/spynet_chairs_final.pth'),
+        load_pretrained_spynet=load_pretrained_spynet),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = None
