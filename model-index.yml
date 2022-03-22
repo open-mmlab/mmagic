@@ -20,6 +20,7 @@ Import:
 - configs/restorers/real_esrgan/metafile.yml
 - configs/restorers/srcnn/metafile.yml
 - configs/restorers/srresnet_srgan/metafile.yml
+- configs/restorers/swinir/metafile.yml
 - configs/restorers/tdan/metafile.yml
 - configs/restorers/tof/metafile.yml
 - configs/restorers/ttsr/metafile.yml

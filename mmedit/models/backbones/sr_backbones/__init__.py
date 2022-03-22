@@ -12,12 +12,13 @@ from .real_basicvsr_net import RealBasicVSRNet
 from .rrdb_net import RRDBNet
 from .sr_resnet import MSRResNet
 from .srcnn import SRCNN
+from .swinir import SwinIR
 from .tdan_net import TDANNet
 from .tof import TOFlow
 from .ttsr_net import TTSRNet
 
 __all__ = [
     'MSRResNet', 'RRDBNet', 'EDSR', 'EDVRNet', 'TOFlow', 'SRCNN', 'DICNet',
-    'BasicVSRNet', 'IconVSR', 'RDN', 'TTSRNet', 'GLEANStyleGANv2', 'TDANNet',
-    'LIIFEDSR', 'LIIFRDN', 'BasicVSRPlusPlus', 'RealBasicVSRNet'
+    'BasicVSRNet', 'IconVSR', 'RDN', 'SwinIR', 'TTSRNet', 'GLEANStyleGANv2',
+    'TDANNet', 'LIIFEDSR', 'LIIFRDN', 'BasicVSRPlusPlus', 'RealBasicVSRNet'
 ]
