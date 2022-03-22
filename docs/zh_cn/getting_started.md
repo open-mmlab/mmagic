@@ -125,10 +125,10 @@ python demo/restoration_demo.py configs/restorers/esrgan/esrgan_x4c64b23g32_1x16
 #### Generation
 
 ```shell
-python demo/generation_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${SAVE_FILE} [--unpaired_path ${UNPAIRED_IMAGE_FILE}] [--imshow] [--device ${GPU_ID}]
+python demo/generation_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${SAVE_FILE} [--unpaired-path ${UNPAIRED_IMAGE_FILE}] [--imshow] [--device ${GPU_ID}]
 ```
 
-如果 `--unpaired_path` 被指定了（适用于 CycleGAN），模型将会进行图片到图片的变换。如果 `--imshow` 被指定，这个脚本也能通过 opencv 展示图片。比如：
+如果 `--unpaired-path` 被指定了（适用于 CycleGAN），模型将会进行图片到图片的变换。如果 `--imshow` 被指定，这个脚本也能通过 opencv 展示图片。比如：
 
 成对的模型:
 
@@ -139,7 +139,7 @@ python demo/generation_demo.py configs/example_config.py work_dirs/example_exp/e
 非成对的模型 (使用 opencv 展示图片):
 
 ```shell
-python demo/generation_demo.py configs/example_config.py work_dirs/example_exp/example_model_20200202.pth demo/demo.jpg demo/demo_out.jpg --unpaired_path demo/demo_unpaired.jpg --imshow
+python demo/generation_demo.py configs/example_config.py work_dirs/example_exp/example_model_20200202.pth demo/demo.jpg demo/demo_out.jpg --unpaired-path demo/demo_unpaired.jpg --imshow
 ```
 
 

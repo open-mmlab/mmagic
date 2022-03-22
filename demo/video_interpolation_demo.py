@@ -21,30 +21,30 @@ def parse_args():
         help='frame rate of the output video, which is needed when '
         '`fps-multiplier` is 0 and a video is desired as output.')
     parser.add_argument(
-        '--fps-multiplier',
+        '--fps-multiplier', '--fps_multiplier',
         type=float,
         default=0,
         help='multiply the fps based on the input video, if `fps-multiplier` '
         'is 0, `fps` will be utilized.')
     parser.add_argument(
-        '--start-idx',
+        '--start-idx', '--start_idx',
         type=int,
         default=0,
         help='the index of the first frame to be processed in the sequence')
     parser.add_argument(
-        '--end-idx',
+        '--end-idx', '--end_idx',
         type=int,
         default=None,
         help='The index corresponds to the last interpolated frame in the'
         'sequence. If it is None, interpolate to the last frame of video'
         'or sequence. Default: None.')
     parser.add_argument(
-        '--batch-size',
+        '--batch-size', '--batch_size',
         type=int,
         default=4,
         help='batch size of video interpolation model')
     parser.add_argument(
-        '--filename-tmpl',
+        '--filename-tmpl', '--filename_tmpl',
         default='{:08d}.png',
         help='template of the file names')
     parser.add_argument(
