@@ -139,8 +139,10 @@ def parse_args():
         'from：http://toflow.csail.mit.edu/')
     parser.add_argument(
         'train_list', help='official training list path for Vimeo90K')
-    parser.add_argument('--gt-path', '--gt_path', default=None, help='GT path for Vimeo90K')
-    parser.add_argument('--lq-path', '--lq_path', default=None, help='LQ path for Vimeo90K')
+    parser.add_argument(
+        '--gt-path', '--gt_path', default=None, help='GT path for Vimeo90K')
+    parser.add_argument(
+        '--lq-path', '--lq_path', default=None, help='LQ path for Vimeo90K')
     parser.add_argument(
         '--make-lmdb', action='store_true', help='create lmdb files')
 

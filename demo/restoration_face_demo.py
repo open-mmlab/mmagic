@@ -15,12 +15,14 @@ def parse_args():
     parser.add_argument('img-path', help='path to input image file')
     parser.add_argument('save-path', help='path to save restoration result')
     parser.add_argument(
-        '--upscale-factor', '--upscale_factor',
+        '--upscale-factor',
+        '--upscale_factor',
         type=int,
         default=1,
         help='the number of times the input image is upsampled.')
     parser.add_argument(
-        '--face-size', '--face_size',
+        '--face-size',
+        '--face_size',
         type=int,
         default=1024,
         help='the size of the cropped and aligned faces..')

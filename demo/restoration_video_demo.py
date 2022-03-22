@@ -20,21 +20,25 @@ def parse_args():
     parser.add_argument('input-dir', help='directory of the input video')
     parser.add_argument('output-dir', help='directory of the output video')
     parser.add_argument(
-        '--start-idx', '--start_idx',
+        '--start-idx',
+        '--start_idx',
         type=int,
         default=0,
         help='index corresponds to the first frame of the sequence')
     parser.add_argument(
-        '--filename-tmpl', '--filename_tmpl',
+        '--filename-tmpl',
+        '--filename_tmpl',
         default='{:08d}.png',
         help='template of the file names')
     parser.add_argument(
-        '--window-size', '--window_size',
+        '--window-size',
+        '--window_size',
         type=int,
         default=0,
         help='window size if sliding-window framework is used')
     parser.add_argument(
-        '--max-seq-len', '--max_seq_len',
+        '--max-seq-len',
+        '--max_seq_len',
         type=int,
         default=None,
         help='maximum sequence length if recurrent framework is used')

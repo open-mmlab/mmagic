@@ -235,7 +235,8 @@ def parse_args():
     parser.add_argument(
         '--nproc', type=int, default=4, help='number of processer')
     parser.add_argument(
-        '--skip-train', '--skip_train', 
+        '--skip-train',
+        '--skip_train',
         action='store_true',
         help='whether to skip the training data')
     args = parser.parse_args()

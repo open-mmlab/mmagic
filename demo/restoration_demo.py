@@ -19,7 +19,10 @@ def parse_args():
         '--imshow', action='store_true', help='whether show image with opencv')
     parser.add_argument('--device', type=int, default=0, help='CUDA device id')
     parser.add_argument(
-        '--ref-path', '--ref_path', default=None, help='path to reference image file')
+        '--ref-path',
+        '--ref_path',
+        default=None,
+        help='path to reference image file')
     args = parser.parse_args()
     return args
 
