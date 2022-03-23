@@ -55,7 +55,7 @@ class DistributedSampler(_DistributedSampler):
             # use a different random ordering for each epoch.
             # Otherwise, the next iteration of this sampler will
             # yield the same ordering.
-            g.manual_seed(self.epoch)
+            g.manual_seed(self.epoch + self.seed)
             indices = torch.randperm(len(self.dataset), generator=g).tolist()
         else:
             indices = torch.arange(len(self.dataset)).tolist()
