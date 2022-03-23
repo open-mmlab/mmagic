@@ -31,9 +31,13 @@ class DistributedSampler(_DistributedSampler):
                 len(self.dataset) * 1.0 / self.num_replicas / samples_per_gpu))
         self.num_samples = self.num_samples_per_replica * self.samples_per_gpu
         self.total_size = self.num_samples * self.num_replicas
-        #  Must be the same across all workers. If None, will use a
-        #  random seed shared among workers
-        #  (require synchronization among all workers)
+
+        # In distributed sampling, different ranks should sample
+        # non-overlapped data in the dataset. Therefore, this function
+        # is used to make sure that each rank shuffles the data indices
+        # in the same order based on the same seed. Then different ranks
+        # could use different indices to select non-overlapped data from the
+        # same data list.
         self.seed = sync_random_seed(seed)
 
         # to avoid padding bug when meeting too small dataset
