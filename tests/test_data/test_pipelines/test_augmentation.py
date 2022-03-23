@@ -279,12 +279,9 @@ class TestAugmentations:
         alpha = np.random.rand(4, 4).astype(np.float32)
         fg = np.random.rand(4, 4).astype(np.float32)
         results = dict(alpha=alpha, fg=fg)
-        # print(results)
         random_affine = RandomAffine(['fg', 'alpha'],
                                      degrees=0, flip_ratio=1.0)
         random_affine_results = random_affine(results)
-        # print(random_affine_results)
-        # print(results)
         assert np.allclose(alpha[::-1, ::-1], random_affine_results['alpha'])
         assert np.allclose(fg[::-1, ::-1], random_affine_results['fg'])
 
