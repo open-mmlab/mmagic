@@ -11,7 +11,7 @@ Models:
   In Collection: TTSR
   Metadata:
     Training Data: CUFED
-  Name: ttsr-rec_200k
+  Name: ttsr-rec_x4_c64b16_g1_200k_CUFED
   Results:
   - Dataset: CUFED
     Metrics:
@@ -24,7 +24,7 @@ Models:
   In Collection: TTSR
   Metadata:
     Training Data: CUFED
-  Name: ttsr-gan_500k
+  Name: ttsr-gan_x4_c64b16_g1_500k_CUFED
   Results:
   - Dataset: CUFED
     Metrics:

@@ -1,4 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os
+import shutil
+
 import pytest
 import torch
 
@@ -85,15 +88,20 @@ def test_video_interpolation_inference():
     ]
 
     input_dir = './tests/data/vimeo90k/00001/0266'
-    output, fps = video_interpolation_inference(
-        model, input_dir, batch_size=10)
-    assert isinstance(output, list)
-    assert isinstance(fps, float)
+    output_dir = './tests/data/vimeo90k/00001/out'
+    os.mkdir(output_dir)
+    video_interpolation_inference(model, input_dir, output_dir, batch_size=10)
 
     input_dir = './tests/data/test_inference.mp4'
-    output, fps = video_interpolation_inference(model, input_dir)
-    assert isinstance(output, list)
-    assert isinstance(fps, float)
+    output_dir = './tests/data/test_inference_out.mp4'
+    video_interpolation_inference(model, input_dir, output_dir)
+
+    with pytest.raises(AssertionError):
+        input_dir = './tests/data/test_inference.mp4'
+        output_dir = './tests/data/test_inference_out.mp4'
+        video_interpolation_inference(
+            model, input_dir, output_dir, fps_multiplier=-1)
+
     if torch.cuda.is_available():
         model = init_model(
             './configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py',
@@ -114,12 +122,19 @@ def test_video_interpolation_inference():
         ]
 
         input_dir = './tests/data/vimeo90k/00001/0266'
-        output, fps = video_interpolation_inference(
-            model, input_dir, batch_size=10)
-        assert isinstance(output, list)
-        assert isinstance(fps, float)
+        output_dir = './tests/data/vimeo90k/00001'
+        video_interpolation_inference(
+            model, input_dir, output_dir, batch_size=10)
 
         input_dir = './tests/data/test_inference.mp4'
-        output, fps = video_interpolation_inference(model, input_dir)
-        assert isinstance(output, list)
-        assert isinstance(fps, float)
+        output_dir = './tests/data/test_inference_out.mp4'
+        video_interpolation_inference(model, input_dir, output_dir)
+
+        with pytest.raises(AssertionError):
+            input_dir = './tests/data/test_inference.mp4'
+            output_dir = './tests/data/test_inference_out.mp4'
+            video_interpolation_inference(
+                model, input_dir, output_dir, fps_multiplier=-1)
+
+    shutil.rmtree('./tests/data/vimeo90k/00001/out')
+    os.remove('./tests/data/test_inference_out.mp4')

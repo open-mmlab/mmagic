@@ -11,7 +11,7 @@ Models:
   In Collection: CAIN
   Metadata:
     Training Data: Others
-  Name: cain
+  Name: cain_b5_320k_vimeo-triplet
   Results:
   - Dataset: Others
     Metrics:

@@ -92,6 +92,8 @@ def test_basic_interpolator():
     assert torch.equal(outputs['inputs'], data_batch['inputs'])
     assert torch.is_tensor(outputs['output'])
     assert outputs['output'].size() == (1, 3, 20, 20)
+    assert outputs['output'].max() <= 1.
+    assert outputs['output'].min() >= 0.
 
     # test forward_dummy
     with torch.no_grad():
@@ -138,6 +140,8 @@ def test_basic_interpolator():
         assert torch.equal(outputs['inputs'], data_batch['inputs'].cpu())
         assert torch.is_tensor(outputs['output'])
         assert outputs['output'].size() == (1, 3, 20, 20)
+        assert outputs['output'].max() <= 1.
+        assert outputs['output'].min() >= 0.
 
         # train_step
         outputs = restorer.train_step(data_batch, optimizer)

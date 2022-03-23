@@ -39,17 +39,22 @@
 
 English | [简体中文](/README_zh-CN.md)
 
-MMEditing is an open source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://open-mmlab.github.io/) project.
+MMEditing is an open-source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+
+Currently, MMEditing support the following tasks:
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/12756472/158984079-c4754015-c1f6-48c5-ac46-62e79448c372.jpg"/>
+</div>
 
 The master branch works with **PyTorch 1.5+**.
 
-<div align="center">
-  <img src="resources/mmediting-demo.jpg"/>
-</div>
+Some Demos:
 
-<div align="center">
-<video src="https://user-images.githubusercontent.com/56712176/153550102-fdbd3ac8-cd20-416c-a5dc-4dbfbb97fdaa.mp4" width="520px" height="220px"/>
-</div>
+https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4
+
+https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
+
 
 ### Major features
 
@@ -82,11 +87,38 @@ Please refer to [changelog.md](docs/en/changelog.md) for details and release his
 
 ## Installation
 
-Please refer to [install.md](docs/en/install.md) for installation.
+MMEditing depends on [PyTorch](https://pytorch.org/) and [MMCV](https://github.com/open-mmlab/mmcv).
+Below are quick steps for installation.
+
+**Step 1.**
+Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/), e.g.
+
+```
+pip3 install torch torchvision
+```
+
+**Step 2.**
+Install MMCV with [MIM](https://github.com/open-mmlab/mim).
+
+```
+pip3 install openmim
+mim install mmcv-full
+```
+
+**Step 3.**
+Install MMEditing from source.
+
+```
+git clone https://github.com/open-mmlab/mmediting.git
+cd mmediting
+pip3 install -e .[all]
+```
+
+Please refer to [install.md](docs/en/install.rst) for more detailed instruction.
 
 ## Getting Started
 
-Please see [getting_started.md](docs/en/getting_started.md) for the basic usage of MMEditing.
+Please see [getting_started.md](docs/en/getting_started.md) and [demo.md](docs/en/demo.md) for the basic usage of MMEditing.
 
 ## Model Zoo
 
@@ -133,8 +165,9 @@ Supported algorithms:
 - [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
 - [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
 - [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (NTIRE'2021)
 - [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
+- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (CVPR'2022)
+- [x] [RealBasicVSR](configs/restorers/real_basicvsr/README.md) (CVPR'2022)
 
 </details>
 
@@ -165,14 +198,14 @@ MMEditing is an open source project that is contributed by researchers and engin
 
 ## Citation
 
-If you find this project useful in your research, please consider cite:
+If MMEditing is helpful to your research, please cite it as below.
 
 ```bibtex
-@misc{mmediting2020,
-    title={OpenMMLab Editing Estimation Toolbox and Benchmark},
-    author={MMEditing Contributors},
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {MMEditing, Contributors},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year={2020}
+    year = {2022}
 }
 ```
 

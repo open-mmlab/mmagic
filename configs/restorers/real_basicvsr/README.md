@@ -1,6 +1,6 @@
-# RealBasicVSR (arXiv'2021)
+# RealBasicVSR (CVPR'2022)
 
-> [Investigating Tradeoffs in Real-World Video Super-Resolution](https://arxiv.org/abs/2111.12704)
+> [RealBasicVSR: Investigating Tradeoffs in Real-World Video Super-Resolution](https://arxiv.org/abs/2111.12704)
 
 <!-- [ALGORITHM] -->
 
@@ -23,16 +23,13 @@ Evaluated on Y channel. The code for computing NRQM, NIQE, and PI can be found [
 |:------------------------------------------------------------------------------------------------------------------------------:|:--------:|:--------:|:------:|:-----------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | [realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds](/configs/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds.py) |  6.0477  |  3.7662  | 3.8593 |    29.030   | [model](https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104-52f77c2c.pth)/[log](https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104_183640.log.json) |
 
-
-
-
 ## Citation
 
 ```bibtex
-@article{chan2021investigating,
+@InProceedings{chan2022investigating,
   author = {Chan, Kelvin C.K. and Zhou, Shangchen and Xu, Xiangyu and Loy, Chen Change},
-  title = {Investigating Tradeoffs in Real-World Video Super-Resolution},
-  journal = {arXiv preprint arXiv:2111.12704},
-  year = {2021}
+  title = {RealBasicVSR: Investigating Tradeoffs in Real-World Video Super-Resolution},
+  booktitle = {Proceedings of the IEEE conference on computer vision and pattern recognition},
+  year = {2022}
 }
 ```

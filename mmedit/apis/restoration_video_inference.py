@@ -7,7 +7,6 @@ from functools import reduce
 import mmcv
 import numpy as np
 import torch
-from mmcv.parallel import collate, scatter
 
 from mmedit.datasets.pipelines import Compose
 
@@ -104,24 +103,27 @@ def restoration_video_inference(model,
     # compose the pipeline
     test_pipeline = Compose(test_pipeline)
     data = test_pipeline(data)
-    data = scatter(collate([data], samples_per_gpu=1), [device])[0]['lq']
+    data = data['lq'].unsqueeze(0)  # in cpu
+
     # forward the model
     with torch.no_grad():
         if window_size > 0:  # sliding window framework
             data = pad_sequence(data, window_size)
             result = []
             for i in range(0, data.size(1) - 2 * (window_size // 2)):
-                data_i = data[:, i:i + window_size]
+                data_i = data[:, i:i + window_size].to(device)
                 result.append(model(lq=data_i, test_mode=True)['output'].cpu())
             result = torch.stack(result, dim=1)
         else:  # recurrent framework
             if max_seq_len is None:
-                result = model(lq=data, test_mode=True)['output'].cpu()
+                result = model(
+                    lq=data.to(device), test_mode=True)['output'].cpu()
             else:
                 result = []
                 for i in range(0, data.size(1), max_seq_len):
                     result.append(
-                        model(lq=data[:, i:i + max_seq_len],
-                              test_mode=True)['output'].cpu())
+                        model(
+                            lq=data[:, i:i + max_seq_len].to(device),
+                            test_mode=True)['output'].cpu())
                 result = torch.cat(result, dim=1)
     return result

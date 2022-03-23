@@ -1,17 +1,19 @@
-# BasicVSR++
+# BasicVSR++ (CVPR'2022)
 
 <!-- [ALGORITHM] -->
 
 <details>
-<summary align="right"><a href="https://arxiv.org/abs/2104.13371">BasicVSR++</a></summary>
+<summary align="right"><a href="https://arxiv.org/abs/2104.13371">BasicVSR++ (CVPR'2022)</a></summary>
 
 ```bibtex
-@article{chan2021basicvsrplusplus,
+@InProceedings{chan2022basicvsrplusplus,
   author = {Chan, Kelvin C.K. and Zhou, Shangchen and Xu, Xiangyu and Loy, Chen Change},
   title = {BasicVSR++: Improving Video Super-Resolution with Enhanced Propagation and Alignment},
-  booktitle = {arXiv preprint arXiv:2104.13371},
-  year = {2021}
+  booktitle = {Proceedings of the IEEE conference on computer vision and pattern recognition},
+  year = {2022}
 }
+```
+
 ```
 
 </details>

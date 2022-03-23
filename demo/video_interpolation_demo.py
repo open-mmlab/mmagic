@@ -1,9 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
-import os
 
-import cv2
-import mmcv
 import torch
 
 from mmedit.apis import init_model, video_interpolation_inference
@@ -50,7 +47,8 @@ def parse_args():
         '--filename_tmpl',
         default='{:08d}.png',
         help='template of the file names')
-    parser.add_argument('--device', type=int, default=0, help='CUDA device id')
+    parser.add_argument(
+        '--device', type=int, default=None, help='CUDA device id')
     args = parser.parse_args()
     return args
 
@@ -66,33 +64,22 @@ def main():
 
     args = parse_args()
 
-    model = init_model(
-        args.config, args.checkpoint, device=torch.device('cuda', args.device))
-
-    output, fps = video_interpolation_inference(model, args.input_dir,
-                                                args.start_idx, args.end_idx,
-                                                args.batch_size)
-
-    if args.fps_multiplier:
-        assert args.fps_multiplier > 0, '`fps_multiplier` cannot be negative'
-        assert fps > 0, 'the input is not a video'
-        fps = args.fps_multiplier * fps
+    if args.device < 0:
+        device = torch.device('cpu')
     else:
-        fps = args.fps if args.fps > 0 else fps
+        device = torch.device('cuda', args.device)
+    model = init_model(args.config, args.checkpoint, device=device)
 
-    file_extension = os.path.splitext(args.output_dir)[1]
-    if file_extension in VIDEO_EXTENSIONS:  # save as video
-        h, w = output[0].shape[:2]
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        video_writer = cv2.VideoWriter(args.output_dir, fourcc, fps, (w, h))
-        for img in output:
-            video_writer.write(img)
-        cv2.destroyAllWindows()
-        video_writer.release()
-    else:  # save as images
-        for i, img in enumerate(output):
-            save_path = f'{args.output_dir}/{args.filename_tmpl.format(i)}'
-            mmcv.imwrite(img, save_path)
+    video_interpolation_inference(
+        model=model,
+        input_dir=args.input_dir,
+        start_idx=args.start_idx,
+        end_idx=args.end_idx,
+        batch_size=args.batch_size,
+        fps_multiplier=args.fps_multiplier,
+        fps=args.fps,
+        output_dir=args.output_dir,
+        filename_tmpl=args.filename_tmpl)
 
 
 if __name__ == '__main__':
