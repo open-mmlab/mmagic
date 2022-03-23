@@ -5,7 +5,7 @@ import torch.distributed as dist
 from mmcv.runner import get_dist_info
 
 
-def sync_random_seed(seed=None, device='cuda'):
+def sync_random_seed(seed=None, device='cpu'):
     """Make sure different ranks share the same seed.
     All workers must call this function, otherwise it will deadlock.
     This method is generally used in `DistributedSampler`,
@@ -14,7 +14,7 @@ def sync_random_seed(seed=None, device='cuda'):
     Args:
         seed (int, Optional): The seed. Default to None.
         device (str): The device where the seed will be put on.
-            Default to 'cuda'.
+            Default to 'cpu'.
     Returns:
         int: Seed to be used.
     """

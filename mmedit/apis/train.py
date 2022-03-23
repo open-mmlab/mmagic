@@ -18,14 +18,14 @@ from mmedit.datasets.builder import build_dataloader, build_dataset
 from mmedit.utils import get_root_logger
 
 
-def init_random_seed(seed=None, device='cuda'):
+def init_random_seed(seed=None, device='cpu'):
     """Initialize random seed.
     If the seed is not set, the seed will be automatically randomized,
     and then broadcast to all processes to prevent some potential bugs.
     Args:
         seed (int, Optional): The seed. Default to None.
         device (str): The device where the seed will be put on.
-            Default to 'cuda'.
+            Default to 'cpu'.
     Returns:
         int: Seed to be used.
     """
