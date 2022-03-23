@@ -480,7 +480,6 @@ class RandomAffine:
 
         angle = math.radians(angle)
         shear = math.radians(shear)
-        # print(flip)
         scale_x = 1.0 / scale[0] * flip[0]
         scale_y = 1.0 / scale[1] * flip[1]
 
@@ -531,8 +530,6 @@ class RandomAffine:
         M = np.array(M).reshape((2, 3))
 
         for key in self.keys:
-            # print(key)
-            # print(M)
             results[key] = cv2.warpAffine(
                 results[key],
                 M, (w, h),
