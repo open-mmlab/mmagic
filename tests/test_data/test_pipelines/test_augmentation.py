@@ -265,7 +265,28 @@ class TestAugmentations:
 
         target_keys = ['fg', 'alpha']
 
+        # Test identical transformation
+        alpha = np.random.rand(4, 4).astype(np.float32)
+        fg = np.random.rand(4, 4).astype(np.float32)
+        results = dict(alpha=alpha, fg=fg)
+        random_affine = RandomAffine(['fg', 'alpha'],
+                                     degrees=0, flip_ratio=0.0)
+        random_affine_results = random_affine(results)
+        assert np.allclose(alpha, random_affine_results['alpha'])
+        assert np.allclose(fg, random_affine_results['fg'])
+
+        # Test flip in both direction
+        alpha = np.random.rand(4, 4).astype(np.float32)
+        fg = np.random.rand(4, 4).astype(np.float32)
+        results = dict(alpha=alpha, fg=fg)
+        random_affine = RandomAffine(['fg', 'alpha'],
+                                     degrees=0, flip_ratio=1.0)
+        random_affine_results = random_affine(results)
+        assert np.allclose(alpha[::-1, ::-1], random_affine_results['alpha'])
+        assert np.allclose(fg[::-1, ::-1], random_affine_results['fg'])
+
         # test random affine with different valid setting combinations
+        # only shape are tested
         alpha = np.random.rand(240, 320).astype(np.float32)
         fg = np.random.rand(240, 320).astype(np.float32)
         results = dict(alpha=alpha, fg=fg)
