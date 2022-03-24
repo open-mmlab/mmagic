@@ -7,6 +7,4 @@ opencv-python<=4.5.4.60
 # https://github.com/opencv/opencv/issues/21366
 # It seems to be fixed in https://github.com/opencv/opencv/pull/21382
 # But our test is negative.
-scikit-image
 tensorboard
-yapf
