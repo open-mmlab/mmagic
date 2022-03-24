@@ -91,7 +91,7 @@ MMEditing depends on [PyTorch](https://pytorch.org/) and [MMCV](https://github.c
 Below are quick steps for installation.
 
 **Step 1.**
-Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/), e.g.
+Create a conda environment with PyTorch installed.
 
 ```
 conda create -n mmedit python=3.8 pytorch=1.10 cudatoolkit=11.3 torchvision -c pytorch -y
