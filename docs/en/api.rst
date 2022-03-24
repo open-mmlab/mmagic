@@ -6,13 +6,12 @@ mmedit.core
 mmedit.datasets
 ---------------
 
-datasets
-^^^^^^^^^^
 .. automodule:: mmedit.datasets
     :members:
 
-pipelines
-^^^^^^^^^^
+mmedit.datasets.pipelines
+-------------------------
+
 .. automodule:: mmedit.datasets.pipelines
     :members:
 
