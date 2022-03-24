@@ -94,7 +94,7 @@ Below are quick steps for installation.
 Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/), e.g.
 
 ```
-pip3 install torch torchvision
+conda create -n mmedit python=3.8 pytorch=1.10 cudatoolkit=11.3 torchvision -c pytorch
 ```
 
 **Step 2.**
