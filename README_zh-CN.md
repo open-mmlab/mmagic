@@ -92,6 +92,7 @@ MMEditing 依赖 [PyTorch](https://pytorch.org/) 和 [MMCV](https://github.com/o
 
 ```
 conda create -n mmedit python=3.8 pytorch=1.10 cudatoolkit=11.3 torchvision -c pytorch
+conda activate mmedit
 ```
 
 **步骤 2.**
