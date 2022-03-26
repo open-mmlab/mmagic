@@ -53,6 +53,11 @@ class BasicInterpolator(BaseModel):
         # loss
         self.pixel_loss = build_loss(pixel_loss)
 
+        # Required frames in each process
+        self.required_frames = 2
+        # Step size of video frame interpolation
+        self.step_frames = 1
+
     def init_weights(self, pretrained=None):
         """Init weights for models.
 
@@ -160,7 +165,7 @@ class BasicInterpolator(BaseModel):
         Returns:
             dict: Output results.
         """
-        output = self.generator(inputs)
+        output = self.generator(inputs).clamp(0, 1)
         if self.test_cfg is not None and self.test_cfg.get('metrics', None):
             assert target is not None, (
                 'evaluation with metrics must have target images.')

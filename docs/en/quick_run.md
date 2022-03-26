@@ -82,6 +82,25 @@ Difference between `resume-from` and `load-from`:
 `resume-from` loads both the model weights and optimizer status, and the iteration is also inherited from the specified checkpoint. It is usually used for resuming the training process that is interrupted accidentally.
 `load-from` only loads the model weights and the training iteration starts from 0. It is usually used for fine-tuning.
 
+#### Train with multiple nodes
+
+To launch distributed training on multiple machines, which can be accessed via IPs, run following commands:
+
+On the first machine:
+
+```shell
+NNODES=2 NODE_RANK=0 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train.sh $CONFIG $GPUS
+```
+
+On the second machine:
+
+```shell
+NNODES=2 NODE_RANK=1 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train.sh $CONFIG $GPUS
+```
+
+To speed up network communication, high speed network hardware, such as Infiniband, is recommended.
+Please refer to [PyTorch docs](https://pytorch.org/docs/1.11/distributed.html#launch-utility) for more information.
+
 ### Train with Slurm
 
 If you run MMEditing on a cluster managed with [slurm](https://slurm.schedmd.com/), you can use the script `slurm_train.sh`. (This script also supports single machine training.)

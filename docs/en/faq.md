@@ -1,5 +1,3 @@
-## FAQ
-
 ### Use intermediate variables in configs
 
 Some intermediate variables are used in the configs files, like `train_pipeline`/`test_pipeline` in datasets.

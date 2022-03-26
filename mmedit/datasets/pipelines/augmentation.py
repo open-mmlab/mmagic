@@ -2,6 +2,7 @@
 import copy
 import math
 import numbers
+import os
 import os.path as osp
 import random
 
@@ -446,7 +447,11 @@ class RandomAffine:
         else:
             shear = 0.0
 
-        flip = (np.random.rand(2) < flip_ratio).astype(np.int) * 2 - 1
+        # Because `flip` is used as a multiplier in line 479 and 480,
+        # so -1 stands for flip and 1 stands for no flip. Thus `flip`
+        # should be an 'inverse' flag as the result of the comparison.
+        # See https://github.com/open-mmlab/mmediting/pull/799 for more detail
+        flip = (np.random.rand(2) > flip_ratio).astype(np.int32) * 2 - 1
 
         return angle, translations, scale, shear, flip
 
@@ -520,7 +525,7 @@ class RandomAffine:
             params = self._get_params(self.degrees, self.translate, self.scale,
                                       self.shear, self.flip_ratio, (h, w))
 
-        center = (w * 0.5 + 0.5, h * 0.5 + 0.5)
+        center = (w * 0.5 - 0.5, h * 0.5 - 0.5)
         M = self._get_inverse_affine_matrix(center, *params)
         M = np.array(M).reshape((2, 3))
 
@@ -841,7 +846,7 @@ class GenerateFrameIndiceswithPadding:
         Returns:
             dict: A dict containing the processed data and information.
         """
-        clip_name, frame_name = results['key'].split('/')
+        clip_name, frame_name = results['key'].split(os.sep)
         current_idx = int(frame_name)
         max_frame_num = results['max_frame_num'] - 1  # start from 0
         num_input_frames = results['num_input_frames']
@@ -920,7 +925,7 @@ class GenerateFrameIndices:
             dict: A dict containing the processed data and information.
         """
         clip_name, frame_name = results['key'].split(
-            '/')  # key example: 000/00000000
+            os.sep)  # key example: 000/00000000
         center_frame_idx = int(frame_name)
         num_half_frames = results['num_input_frames'] // 2
 

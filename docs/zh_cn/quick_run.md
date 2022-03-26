@@ -82,6 +82,26 @@ evaluation = dict(interval=1e4, by_epoch=False)  # 每一万次迭代进行一�
 `resume-from` 加载模型权重和优化器状态，迭代也从指定的检查点继承。 它通常用于恢复意外中断的训练过程。
 `load-from` 只加载模型权重，训练迭代从 0 开始，通常用于微调。
 
+#### 使用多节点训练
+
+如果您有多个计算节点，而且他们可以通过 IP 互相访问，可以使用以下命令启动分布式训练：
+
+在第一个节点：
+
+```shell
+NNODES=2 NODE_RANK=0 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train.sh $CONFIG $GPUS
+```
+
+在第二个节点：
+
+```shell
+NNODES=2 NODE_RANK=1 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train.sh $CONFIG $GPUS
+```
+
+为提高网络通信速度，推荐使用高速网络设备，如 Infiniband 等。
+更多信息可参照[PyTorch 文档](https://pytorch.org/docs/1.11/distributed.html#launch-utility).
+
+
 ### 在 slurm 上训练
 
 如果您在使用 [slurm](https://slurm.schedmd.com/) 管理的集群上运行 MMEditing，则可以使用脚本 `slurm_train.sh`。（此脚本也支持单机训练。）

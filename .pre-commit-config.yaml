@@ -50,4 +50,4 @@ repos:
     hooks:
       - id: check-algo-readme
       - id: check-copyright
-        args: ["mmedit"]
+        args: ["demo", "mmedit", "tests", "tools"]

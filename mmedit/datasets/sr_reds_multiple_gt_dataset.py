@@ -52,7 +52,7 @@ class SRREDSMultipleGTDataset(BaseSRDataset):
         """Load annoations for REDS dataset.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list[dict]: A list of dicts for paired paths and other information.
         """
         # generate keys
         keys = [f'{i:03d}' for i in range(0, 270)]

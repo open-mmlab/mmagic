@@ -11,7 +11,7 @@ Models:
   In Collection: PConv
   Metadata:
     Training Data: PLACES
-  Name: pconv_4x2
+  Name: pconv_256x256_stage2_4x2_places
   Results:
   - Dataset: PLACES
     Metrics:
@@ -24,7 +24,7 @@ Models:
   In Collection: PConv
   Metadata:
     Training Data: CELEBA
-  Name: pconv_stage2
+  Name: pconv_256x256_stage2_4x2_celeba
   Results:
   - Dataset: CELEBA
     Metrics:

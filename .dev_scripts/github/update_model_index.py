@@ -8,7 +8,7 @@
 
 import glob
 import os
-import os.path as osp
+import posixpath as osp  # Even on windows, use posixpath
 import re
 import sys
 import warnings
@@ -35,7 +35,9 @@ def dump_yaml_and_check_difference(obj, file):
         Bool: If the target YAML file is different from the original.
     """
 
-    str_dump = mmcv.dump(obj, None, file_format='yaml', sort_keys=True)
+    str_dump = mmcv.dump(
+        obj, None, file_format='yaml', sort_keys=True,
+        line_break='\n')  # force use LF
 
     if osp.isfile(file):
         file_exists = True
@@ -83,7 +85,7 @@ def get_task_name(md_file):
     Returns:
         Str: Task name.
     """
-    layers = md_file.split('/')
+    layers = re.split(r'[\\/]', md_file)
     for i in range(len(layers) - 1):
         if layers[i] == 'configs':
             return layers[i + 1].capitalize()
@@ -132,16 +134,20 @@ def parse_md(md_file):
     Returns:
         Bool: If the target YAML file is different from the original.
     """
-    unique_dict = generate_unique_name(md_file)
+    # See https://github.com/open-mmlab/mmediting/pull/798 for these comments
+    # unique_dict = generate_unique_name(md_file)
 
     collection_name = osp.splitext(osp.basename(md_file))[0]
+    readme = osp.relpath(md_file, MMEditing_ROOT)
+    readme = readme.replace('\\', '/')  # for windows
     collection = dict(
         Name=collection_name,
         Metadata={'Architecture': []},
-        README=osp.relpath(md_file, MMEditing_ROOT),
+        README=readme,
         Paper=[])
     models = []
-    with open(md_file, 'r') as md:
+    # force utf-8 instead of system defined
+    with open(md_file, 'r', encoding='utf-8') as md:
         lines = md.readlines()
         i = 0
         name = lines[0][2:]
@@ -193,13 +199,16 @@ def parse_md(md_file):
                         checkpoint = line[checkpoint_idx][left:right]
 
                     name_key = osp.splitext(osp.basename(config))[0]
-                    if name_key in unique_dict:
-                        model_name = unique_dict[name_key]
-                    else:
-                        model_name = name_key
-                        warnings.warn(
-                            f'Config file of {model_name} is not found,'
-                            'please check it again.')
+                    model_name = name_key
+                    # See https://github.com/open-mmlab/mmediting/pull/798
+                    # for these comments
+                    # if name_key in unique_dict:
+                    #     model_name = unique_dict[name_key]
+                    # else:
+                    #     model_name = name_key
+                    #     warnings.warn(
+                    #         f'Config file of {model_name} is not found,'
+                    #         'please check it again.')
 
                     # find dataset in config file
                     dataset = 'Others'
@@ -276,8 +285,11 @@ def update_model_index():
     yml_files.sort()
 
     model_index = {
-        'Import':
-        [osp.relpath(yml_file, MMEditing_ROOT) for yml_file in yml_files]
+        'Import': [
+            osp.relpath(yml_file, MMEditing_ROOT).replace(
+                '\\', '/')  # force using / as path separators
+            for yml_file in yml_files
+        ]
     }
     model_index_file = osp.join(MMEditing_ROOT, 'model-index.yml')
     is_different = dump_yaml_and_check_difference(model_index,
