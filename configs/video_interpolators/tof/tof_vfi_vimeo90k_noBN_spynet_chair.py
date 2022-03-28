@@ -1,4 +1,5 @@
 exp_name = 'tof_vfi_vimeo90k_noBN_spynet_chair'
+# This config is trained on a single GPU.
 
 # pretrained SPyNet
 source = 'https://download.openmmlab.com/mmediting/video_interpolators/toflow'
@@ -57,7 +58,7 @@ demo_pipeline = [
 root_dir = 'data/vimeo_triplet'
 data = dict(
     workers_per_gpu=1,
-    train_dataloader=dict(samples_per_gpu=1, drop_last=True),
+    train_dataloader=dict(samples_per_gpu=1, drop_last=True),  # 1 gpu
     val_dataloader=dict(samples_per_gpu=1),
     test_dataloader=dict(samples_per_gpu=1),
 
