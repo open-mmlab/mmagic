@@ -130,7 +130,8 @@ def build_dataloader(dataset,
             world_size,
             rank,
             shuffle=shuffle,
-            samples_per_gpu=samples_per_gpu)
+            samples_per_gpu=samples_per_gpu,
+            seed=seed)
         shuffle = False
         batch_size = samples_per_gpu
         num_workers = workers_per_gpu
