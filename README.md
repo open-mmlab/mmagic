@@ -28,7 +28,7 @@
 
 [📘Documentation](https://mmediting.readthedocs.io/en/latest/) |
 [🛠️Installation](https://mmediting.readthedocs.io/en/latest/install.html) |
-[👀Model Zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) |
+[👀Model Zoo](https://mmediting.readthedocs.io/en/latest/tmp_/modelzoo.html) |
 [🆕Update News](https://github.com/open-mmlab/mmediting/blob/master/docs/en/changelog.md) |
 [🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
 [🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
@@ -186,7 +186,7 @@ Supported algorithms:
 
 </details>
 
-Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) for more details.
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/_tmp/modelzoo.html) for more details.
 
 ## Contributing
 
