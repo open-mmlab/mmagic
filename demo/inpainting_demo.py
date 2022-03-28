@@ -12,9 +12,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Inpainting demo')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
-    parser.add_argument('masked_img_path', help='path to input image file')
-    parser.add_argument('mask_path', help='path to input mask file')
-    parser.add_argument('save_path', help='path to save inpainting result')
+    parser.add_argument('masked-img-path', help='path to input image file')
+    parser.add_argument('mask-path', help='path to input mask file')
+    parser.add_argument('save-path', help='path to save inpainting result')
     parser.add_argument(
         '--imshow', action='store_true', help='whether show image with opencv')
     parser.add_argument('--device', type=int, default=0, help='CUDA device id')

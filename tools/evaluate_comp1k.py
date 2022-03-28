@@ -7,6 +7,7 @@ import mmcv
 import numpy as np
 
 from mmedit.core.evaluation import connectivity, gradient_error, mse, sad
+from mmedit.utils import modify_args
 
 
 def evaluate_one(args):
@@ -96,14 +97,15 @@ def evaluate(pred_root, gt_root, trimap_root, verbose, nproc):
 
 
 def parse_args():
+    modify_args()
     parser = argparse.ArgumentParser(
         description='evaluate composition-1k prediction result')
     parser.add_argument(
-        'pred_root', help='Path to the predicted alpha matte folder')
+        'pred-root', help='Path to the predicted alpha matte folder')
     parser.add_argument(
-        'gt_root', help='Path to the ground truth alpha matte folder')
+        'gt-root', help='Path to the ground truth alpha matte folder')
     parser.add_argument(
-        '--trimap_root',
+        '--trimap-root',
         help='Path to trimap folder. If not specified, '
         'results are calculated on the full image.')
     parser.add_argument(
