@@ -28,7 +28,6 @@ def parse_args():
 
 def main():
     args = parse_args()
-    print(args)
 
     if not os.path.isfile(args.img_path):
         raise ValueError('It seems that you did not input a valid '
