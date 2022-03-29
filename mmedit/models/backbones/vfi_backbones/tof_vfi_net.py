@@ -219,8 +219,8 @@ class TOFlowVFINet(nn.Module):
         super().__init__()
 
         # The mean and std are for img with range (0, 1)
-        self.register_buffer('mean', torch.Tensor(rgb_mean).view(1, 3, 1, 1))
-        self.register_buffer('std', torch.Tensor(rgb_std).view(1, 3, 1, 1))
+        self.register_buffer('mean', torch.Tensor(rgb_mean).view(1, -1, 1, 1))
+        self.register_buffer('std', torch.Tensor(rgb_std).view(1, -1, 1, 1))
 
         # flow estimation module
         self.spynet = SPyNet(**flow_cfg)
