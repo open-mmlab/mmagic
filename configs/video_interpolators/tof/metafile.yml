@@ -7,11 +7,11 @@ Collections:
   - https://arxiv.org/abs/1711.09078
   README: configs/video_interpolators/tof/README.md
 Models:
-- Config: configs/video_interpolators/tof/tof_vfi_vimeo90k_noBN_spynet_chair.py
+- Config: configs/video_interpolators/tof/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k.py
   In Collection: TOFlow
   Metadata:
     Training Data: VIMEO90K
-  Name: tof_vfi_vimeo90k_noBN_spynet_chair
+  Name: tof_vfi_spynet_chair_nobn_1xb1_vimeo90k
   Results:
   - Dataset: VIMEO90K
     Metrics:

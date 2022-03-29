@@ -1,5 +1,4 @@
-exp_name = 'tof_vfi_vimeo90k_noBN_spynet_chair'
-# This config is trained on a single GPU.
+exp_name = 'tof_vfi_spynet_chair_nobn_1xb1_vimeo90k'
 
 # pretrained SPyNet
 source = 'https://download.openmmlab.com/mmediting/video_interpolators/toflow'
