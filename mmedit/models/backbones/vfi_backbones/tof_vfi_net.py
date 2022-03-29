@@ -204,25 +204,26 @@ class TOFlowVFINet(nn.Module):
     2. https://github.com/Coldog2333/pytoflow
 
     Args:
-        norm_cfg (dict | None): Config of normalization in SPyNet.
-            Default: dict(type='BN')
-        load_pretrained_spynet (str | None): Load pretrained SPyNet.
-            Default: None
+        rgb_mean (list[float]):  Image mean in RGB orders.
+            Default: [0.485, 0.456, 0.406]
+        rgb_std (list[float]):  Image std in RGB orders.
+            Default: [0.229, 0.224, 0.225]
+        flow_cfg (dict): Config of SPyNet.
+            Default: dict(norm_cfg=None, pretrained=None)
     """
 
-    def __init__(self, norm_cfg=dict(type='BN'), load_pretrained_spynet=None):
+    def __init__(self,
+                 rgb_mean=[0.485, 0.456, 0.406],
+                 rgb_std=[0.229, 0.224, 0.225],
+                 flow_cfg=dict(norm_cfg=None, pretrained=None)):
         super().__init__()
 
         # The mean and std are for img with range (0, 1)
-        self.register_buffer(
-            'mean',
-            torch.Tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1))
-        self.register_buffer(
-            'std',
-            torch.Tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1))
+        self.register_buffer('mean', torch.Tensor(rgb_mean).view(1, 3, 1, 1))
+        self.register_buffer('std', torch.Tensor(rgb_std).view(1, 3, 1, 1))
 
         # flow estimation module
-        self.spynet = SPyNet(norm_cfg, load_pretrained_spynet)
+        self.spynet = SPyNet(**flow_cfg)
 
         # reconstruction module
         self.resnet = ResNet()

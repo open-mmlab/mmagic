@@ -7,8 +7,7 @@ from mmedit.models import build_backbone
 
 def test_tof_vfi_net():
 
-    model_cfg = dict(
-        type='TOFlowVFINet', norm_cfg=None, load_pretrained_spynet=None)
+    model_cfg = dict(type='TOFlowVFINet')
 
     # build model
     model = build_backbone(model_cfg)
