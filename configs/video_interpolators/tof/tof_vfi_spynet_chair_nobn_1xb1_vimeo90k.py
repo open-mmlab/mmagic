@@ -10,8 +10,9 @@ model = dict(
     type='BasicInterpolator',
     generator=dict(
         type='TOFlowVFI',
-        norm_cfg=None,
-        load_pretrained_spynet=load_pretrained_spynet),
+        rgb_mean=[0.485, 0.456, 0.406],
+        rgb_std=[0.229, 0.224, 0.225],
+        flow_cfg=dict(norm_cfg=None, pretrained=load_pretrained_spynet)),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = None
