@@ -101,9 +101,9 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description='evaluate composition-1k prediction result')
     parser.add_argument(
-        'pred-root', help='Path to the predicted alpha matte folder')
+        'pred_root', help='Path to the predicted alpha matte folder')
     parser.add_argument(
-        'gt-root', help='Path to the ground truth alpha matte folder')
+        'gt_root', help='Path to the ground truth alpha matte folder')
     parser.add_argument(
         '--trimap-root',
         help='Path to trimap folder. If not specified, '

@@ -19,8 +19,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Restoration demo')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
-    parser.add_argument('input-dir', help='directory of the input video')
-    parser.add_argument('output-dir', help='directory of the output video')
+    parser.add_argument('input_dir', help='directory of the input video')
+    parser.add_argument('output_dir', help='directory of the output video')
     parser.add_argument(
         '--start-idx',
         type=int,
