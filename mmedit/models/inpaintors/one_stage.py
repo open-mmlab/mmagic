@@ -116,7 +116,7 @@ class OneStageInpaintor(BaseModel):
         """
         self.generator.init_weights(pretrained=pretrained)
         if self.with_gan:
-            self.disc.init_weights(pretrained='./D0000000.pt')
+            self.disc.init_weights(pretrained=pretrained)
 
     @auto_fp16(apply_to=('masked_img', 'mask'))
     def forward(self, masked_img, mask, test_mode=True, **kwargs):
