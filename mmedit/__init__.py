@@ -19,7 +19,7 @@ except ImportError:
         return digit_ver
 
 
-MMCV_MIN = '1.3.1'
+MMCV_MIN = '1.3.13'
 MMCV_MAX = '1.5'
 
 mmcv_min_version = digit_version(MMCV_MIN)
@@ -28,7 +28,7 @@ mmcv_version = digit_version(mmcv.__version__)
 
 
 assert (mmcv_min_version <= mmcv_version <= mmcv_max_version), \
-    f'MMCV=={mmcv.__version__} is used but incompatible. ' \
-    f'Please install mmcv>={mmcv_min_version}, <={mmcv_max_version}.'
+    f'mmcv=={mmcv.__version__} is used but incompatible. ' \
+    f'Please install mmcv-full>={mmcv_min_version}, <={mmcv_max_version}.'
 
 __all__ = ['__version__', 'version_info']
