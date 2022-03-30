@@ -456,7 +456,7 @@ def test_gan_losses():
         loss = gan_loss(input_2, True, is_disc=True, mask=mask)
         npt.assert_almost_equal(loss.item(), 1.0)
         loss = gan_loss(input_2, False, is_disc=True, mask=mask)
-        npt.assert_almost_equal(loss.item(), 3.7863233)
+        npt.assert_almost_equal(loss.item(), 3.7863, decimal=4)
 
     # test GaussianBlur for smgan
     with pytest.raises(TypeError):
