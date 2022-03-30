@@ -116,7 +116,10 @@ class GANLoss(nn.Module):
                 if target_is_real:
                     target_label = target_label
                 else:
-                    target_label = self.gaussian_blur(mask).detach().cuda()
+                    target_label = self.gaussian_blur(mask).detach().cuda(
+                    ) if mask.is_cuda else self.gaussian_blur(
+                        mask).detach().cpu()
+                    # target_label = self.gaussian_blur(mask).detach().cpu()
                 loss = self.loss(input, target_label)
             else:
                 loss = self.loss(input, target_label) * mask / mask.mean()
