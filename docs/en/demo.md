@@ -70,7 +70,7 @@ python demo/restoration_demo.py \
     ${SAVE_FILE} \
     [--imshow] \
     [--device ${GPU_ID}] \
-    [--ref_path ${REF_PATH}]
+    [--ref-path ${REF_PATH}]
 ```
 
 If `--imshow` is specified, the demo will also show image with opencv. Examples:
@@ -83,7 +83,7 @@ python demo/restoration_demo.py \
     demo/demo_out_baboon.png
 ```
 
-You can test Ref-SR by providing `--ref_path`. Examples:
+You can test Ref-SR by providing `--ref-path`. Examples:
 
 ```shell
 python demo/restoration_demo.py \
@@ -91,7 +91,7 @@ python demo/restoration_demo.py \
     https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth \
     tests/data/test_multiple_gt/sequence_1/00000000.png \
     work_dirs/demo_out.png \
-    --ref_path tests/data/test_multiple_gt/sequence_1/00000001.png
+    --ref-path tests/data/test_multiple_gt/sequence_1/00000001.png
 ```
 
 #### Restoration (Face Image)
@@ -104,8 +104,8 @@ python demo/restoration_face_demo.py \
     ${CHECKPOINT_FILE} \
     ${IMAGE_FILE} \
     ${SAVE_FILE} \
-    [--upscale_factor] \
-    [--face_size] \
+    [--upscale-factor] \
+    [--face-size] \
     [--imshow] \
     [--device ${GPU_ID}]
 ```
@@ -118,7 +118,7 @@ python demo/restoration_face_demo.py \
     https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth \
     tests/data/face/000001.png \
     results/000001.png \
-    --upscale_factor 4
+    --upscale-factor 4
 ```
 
 #### Restoration (Video)
@@ -131,7 +131,7 @@ python demo/restoration_video_demo.py \
     ${CHECKPOINT_FILE} \
     ${INPUT_DIR} \
     ${OUTPUT_DIR} \
-    [--window_size=${WINDOW_SIZE}] \
+    [--window-size=${WINDOW_SIZE}] \
     [--device ${GPU_ID}]
 ```
 
@@ -145,7 +145,7 @@ python demo/restoration_video_demo.py \
     https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth \
     data/Vid4/BIx4/calendar/ \
     ./output \
-    --window_size=5
+    --window-size=5
 ```
 
 BasicVSR:
@@ -170,7 +170,7 @@ python demo/video_interpolation_demo.py \
     ${CHECKPOINT_FILE} \
     ${INPUT_DIR} \
     ${OUTPUT_DIR} \
-    [--fps_multiplier ${FPS_MULTIPLIER}] \
+    [--fps-multiplier ${FPS_MULTIPLIER}] \
     [--fps ${FPS}]
 ```
 
@@ -185,7 +185,7 @@ python demo/video_interpolation_demo.py \
     https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth \
     tests/data/test_inference.mp4 \
     tests/data/test_inference_vfi_out.mp4 \
-    --fps_multiplier 2.0
+    --fps-multiplier 2.0
 ```
 
 The frame rate of output video is determined by `fps`:
@@ -207,12 +207,12 @@ python demo/generation_demo.py \
     ${CHECKPOINT_FILE} \
     ${IMAGE_FILE} \
     ${SAVE_FILE} \
-    [--unpaired_path ${UNPAIRED_IMAGE_FILE}] \
+    [--unpaired-path ${UNPAIRED_IMAGE_FILE}] \
     [--imshow] \
     [--device ${GPU_ID}]
 ```
 
-If `--unpaired_path` is specified (used for CycleGAN), the model will perform unpaired image-to-image translation. If `--imshow` is specified, the demo will also show image with opencv. Examples:
+If `--unpaired-path` is specified (used for CycleGAN), the model will perform unpaired image-to-image translation. If `--imshow` is specified, the demo will also show image with opencv. Examples:
 
 Paired:
 
@@ -232,6 +232,6 @@ python demo/generation_demo.py 、
     work_dirs/example_exp/example_model_20200202.pth \
     demo/demo.jpg \
     demo/demo_out.jpg \
-    --unpaired_path demo/demo_unpaired.jpg \
+    --unpaired-path demo/demo_unpaired.jpg \
     --imshow
 ```

@@ -48,5 +48,5 @@ python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./dat
 如果您想使用 `LMDB` 以获得更快的 IO 速度，可以通过以下脚本来构建 LMDB 文件
 
 ```shell
-python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt --gt_path ./data/Vimeo90K/GT --lq_path ./data/Vimeo90K/LQ  --make-lmdb
+python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt --gt-path ./data/Vimeo90K/GT --lq-path ./data/Vimeo90K/LQ  --make-lmdb
 ```
