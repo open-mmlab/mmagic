@@ -190,7 +190,7 @@ class PerceptualLoss(nn.Module):
         # calculate perceptual loss
         if self.perceptual_weight > 0:
             percep_loss = 0
-            for k in list(x_features.keys()):
+            for k in x_features.keys():
                 percep_loss += self.criterion(
                     x_features[k], gt_features[k]) * self.layer_weights[k]
             percep_loss *= self.perceptual_weight
@@ -204,7 +204,7 @@ class PerceptualLoss(nn.Module):
                 gt_features = self.vgg_style(gt.detach())
 
             style_loss = 0
-            for k in list(x_features.keys()):
+            for k in x_features.keys():
                 style_loss += self.criterion(
                     self._gram_mat(x_features[k]),
                     self._gram_mat(
