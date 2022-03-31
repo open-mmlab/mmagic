@@ -43,19 +43,22 @@ def test_ensemble_cuda():
         ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=False)
         inputs = torch.rand(1, 3, 4, 4).cuda()
         outputs = ensemble(inputs, model)
-        np.testing.assert_almost_equal(inputs.cpu().numpy(), outputs.numpy())
+        np.testing.assert_almost_equal(inputs.cpu().numpy(),
+                                       outputs.cpu().numpy())
 
         # spatial ensemble of a sequence
         ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=False)
         inputs = torch.rand(1, 2, 3, 4, 4).cuda()
         outputs = ensemble(inputs, model)
-        np.testing.assert_almost_equal(inputs.cpu().numpy(), outputs.numpy())
+        np.testing.assert_almost_equal(inputs.cpu().numpy(),
+                                       outputs.cpu().numpy())
 
         # spatial and temporal ensemble of a sequence
         ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=True)
         inputs = torch.rand(1, 2, 3, 4, 4).cuda()
         outputs = ensemble(inputs, model)
-        np.testing.assert_almost_equal(inputs.cpu().numpy(), outputs.numpy())
+        np.testing.assert_almost_equal(inputs.cpu().numpy(),
+                                       outputs.cpu().numpy())
 
         # spatial and temporal ensemble of an image
         with pytest.raises(ValueError):

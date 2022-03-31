@@ -317,7 +317,10 @@ class L1Evaluation:
 
     def __call__(self, data_dict):
         gt = data_dict['gt_img']
-        pred = data_dict['fake_res']
+        if 'fake_img' in data_dict:
+            pred = data_dict.get('fake_img')
+        else:
+            pred = data_dict.get('fake_res')
         mask = data_dict.get('mask', None)
 
         from mmedit.models.losses.pixelwise_loss import l1_loss
