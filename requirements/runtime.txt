@@ -1,5 +1,6 @@
 lmdb
-mmcv-full>=1.3.1
+mmcv-full>=1.3.13 # To support DCN on CPU
+numpy
 opencv-python<=4.5.4.60
 # MMCV depends opencv-python instead of headless, thus we install opencv-python
 # Due to a binary compatibility bug, we limit its version before 4.5.5
@@ -7,6 +8,7 @@ opencv-python<=4.5.4.60
 # https://github.com/opencv/opencv/issues/21366
 # It seems to be fixed in https://github.com/opencv/opencv/pull/21382
 # But our test is negative.
-scikit-image
+Pillow
 tensorboard
-yapf
+torch>=1.5.0
+torchvision

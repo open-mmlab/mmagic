@@ -130,7 +130,8 @@ def build_dataloader(dataset,
             world_size,
             rank,
             shuffle=shuffle,
-            samples_per_gpu=samples_per_gpu)
+            samples_per_gpu=samples_per_gpu,
+            seed=seed)
         shuffle = False
         batch_size = samples_per_gpu
         num_workers = workers_per_gpu
@@ -177,3 +178,4 @@ def worker_init_fn(worker_id, num_workers, rank, seed):
     worker_seed = num_workers * rank + worker_id + seed
     np.random.seed(worker_seed)
     random.seed(worker_seed)
+    torch.manual_seed(worker_seed)

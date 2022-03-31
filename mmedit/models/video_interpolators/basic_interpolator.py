@@ -165,7 +165,7 @@ class BasicInterpolator(BaseModel):
         Returns:
             dict: Output results.
         """
-        output = self.generator(inputs)
+        output = self.generator(inputs).clamp(0, 1)
         if self.test_cfg is not None and self.test_cfg.get('metrics', None):
             assert target is not None, (
                 'evaluation with metrics must have target images.')

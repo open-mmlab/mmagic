@@ -2,16 +2,18 @@
 import math
 from unittest.mock import patch
 
+import numpy
 import numpy.testing as npt
 import pytest
 import torch
 
 from mmedit.models import (CharbonnierCompLoss, CharbonnierLoss, DiscShiftLoss,
-                           GANLoss, GradientLoss, GradientPenaltyLoss,
-                           L1CompositionLoss, L1Loss, MaskedTVLoss,
-                           MSECompositionLoss, MSELoss, PerceptualLoss,
-                           PerceptualVGG, TransferalPerceptualLoss,
-                           mask_reduce_loss, reduce_loss)
+                           GANLoss, GaussianBlur, GradientLoss,
+                           GradientPenaltyLoss, L1CompositionLoss, L1Loss,
+                           MaskedTVLoss, MSECompositionLoss, MSELoss,
+                           PerceptualLoss, PerceptualVGG,
+                           TransferalPerceptualLoss, mask_reduce_loss,
+                           reduce_loss)
 
 
 def test_utils():
@@ -268,6 +270,18 @@ def test_perceptual_loss(init_weights):
         gt = torch.randn(1, 3, 16, 16).cuda()
         percep, style = loss_percep(x, gt)
         assert style is None and percep > 0
+
+        loss_percep = PerceptualLoss(
+            layer_weights={
+                '0': 1.
+            }, layer_weights_style={
+                '1': 1.
+            }).cuda()
+        x = torch.randn(1, 3, 16, 16).cuda()
+        gt = torch.randn(1, 3, 16, 16).cuda()
+        percep, style = loss_percep(x, gt)
+        assert percep > 0 and style > 0
+
     # test whether vgg type is valid
     with pytest.raises(AssertionError):
         loss_percep = PerceptualLoss(layer_weights={'0': 1.}, vgg_type='igccc')
@@ -413,6 +427,55 @@ def test_gan_losses():
     npt.assert_almost_equal(loss.item(), 0.0)
     loss = gan_loss(input_2, False, is_disc=True)
     npt.assert_almost_equal(loss.item(), 3.0)
+
+    # smgan
+    mask = torch.ones(1, 3, 6, 6)
+    gan_loss = GANLoss(
+        'smgan', loss_weight=2.0, real_label_val=1.0, fake_label_val=0.0)
+    loss = gan_loss(input_2, True, is_disc=False, mask=mask)
+    npt.assert_almost_equal(loss.item(), 2.0)
+    loss = gan_loss(input_2, False, is_disc=False, mask=mask)
+    npt.assert_almost_equal(loss.item(), 8.0)
+    loss = gan_loss(input_2, True, is_disc=True, mask=mask)
+    npt.assert_almost_equal(loss.item(), 1.0)
+    loss = gan_loss(input_2, False, is_disc=True, mask=mask)
+    npt.assert_almost_equal(loss.item(), 3.786323, decimal=6)
+    mask = torch.ones(1, 3, 6, 5)
+    loss = gan_loss(input_2, True, is_disc=False, mask=mask)
+    npt.assert_almost_equal(loss.item(), 2.0)
+
+    if torch.cuda.is_available():
+        input_2 = input_2.cuda()
+        mask = torch.ones(1, 3, 6, 6).cuda()
+        gan_loss = GANLoss(
+            'smgan', loss_weight=2.0, real_label_val=1.0, fake_label_val=0.0)
+        loss = gan_loss(input_2, True, is_disc=False, mask=mask)
+        npt.assert_almost_equal(loss.item(), 2.0)
+        loss = gan_loss(input_2, False, is_disc=False, mask=mask)
+        npt.assert_almost_equal(loss.item(), 8.0)
+        loss = gan_loss(input_2, True, is_disc=True, mask=mask)
+        npt.assert_almost_equal(loss.item(), 1.0)
+        loss = gan_loss(input_2, False, is_disc=True, mask=mask)
+        npt.assert_almost_equal(loss.item(), 3.786323, decimal=6)
+
+    # test GaussianBlur for smgan
+    with pytest.raises(TypeError):
+        gausian_blur = GaussianBlur(kernel_size=71, sigma=2)
+        gausian_blur(mask).detach().cpu()
+
+    with pytest.raises(TypeError):
+        gausian_blur = GaussianBlur(kernel_size=(70, 70))
+        gausian_blur(mask).detach().cpu()
+
+    with pytest.raises(TypeError):
+        mask = numpy.ones((1, 3, 6, 6))
+        gausian_blur = GaussianBlur()
+        gausian_blur(mask).detach().cpu()
+
+    with pytest.raises(ValueError):
+        mask = torch.ones(1, 3)
+        gausian_blur = GaussianBlur()
+        gausian_blur(mask).detach().cpu()
 
 
 def test_gradient_penalty_losses():
