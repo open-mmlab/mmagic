@@ -19,4 +19,4 @@ Models:
         PSNR: 33.3294
         SSIM: 0.9465
     Task: Video_interpolators
-  Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k-4a7a1951.pth
+  Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k_20220321-2fc9e258.pth
