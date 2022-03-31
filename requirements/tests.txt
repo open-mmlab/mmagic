@@ -5,3 +5,4 @@ isort==5.10.1
 onnxruntime
 pytest
 pytest-runner
+yapf
