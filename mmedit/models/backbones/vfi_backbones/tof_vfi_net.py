@@ -164,7 +164,6 @@ class ResNet(nn.Module):
     """ResNet architecture.
 
     Three-layers ResNet/ResBlock
-    reference: https://blog.csdn.net/chenyuping333/article/details/82344334
     """
 
     def __init__(self):
