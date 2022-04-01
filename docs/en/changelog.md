@@ -4,10 +4,12 @@
 
 **Highlights**
 
-1. Support TOFlow in video frame interpolation
+1. Support AOT-GAN
+2. Support TOFlow in video frame interpolation
 
 **New Features**
 
+- Support AOT-GAN ([#677](https://github.com/open-mmlab/mmediting/pull/677), [#681](https://github.com/open-mmlab/mmediting/pull/681))
 - Use `--diff-seed` to set different torch seed on different rank ([#781](https://github.com/open-mmlab/mmediting/pull/781))
 - Support streaming reading of frames in video interpolation demo ([#790](https://github.com/open-mmlab/mmediting/pull/790))
 - Support dist_train without slurm ([#791](https://github.com/open-mmlab/mmediting/pull/791))
@@ -29,7 +31,7 @@
 **Improvements**
 
 - Update CI ([#650](https://github.com/open-mmlab/mmediting/pull/650))
-- Update requirements.txt ([#725](https://github.com/open-mmlab/mmediting/pull/725))
+- Update requirements.txt ([#725](https://github.com/open-mmlab/mmediting/pull/725), [#817](https://github.com/open-mmlab/mmediting/pull/817))
 - Add Tutorial of dataset ([#758](https://github.com/open-mmlab/mmediting/pull/758)), pipeline ([#779](https://github.com/open-mmlab/mmediting/pull/779)), model ([#766](https://github.com/open-mmlab/mmediting/pull/758))
 - Update index and TOC tree ([#767](https://github.com/open-mmlab/mmediting/pull/767))
 - Make update_model_index.py compatible on windows ([#768](https://github.com/open-mmlab/mmediting/pull/768))
@@ -48,7 +50,7 @@
 
 **Contributors**
 
-@wangruohui @ckkelvinchan @Yshuo-Li @nijkah @wdmwhh @freepoet
+@wangruohui @ckkelvinchan @Yshuo-Li @nijkah @wdmwhh @freepoet @quincylin1
 
 ## v0.13.0 (01/03/2022)
 

@@ -4,10 +4,12 @@
 
 **Highlights主要更新**
 
-1. 支持视频插帧算法 TOFlow
+1. 支持 AOT-GAN
+2. 支持视频插帧算法 TOFlow
 
 **新功能**
 
+- 支持 AOT-GAN ([#677](https://github.com/open-mmlab/mmediting/pull/677), [#681](https://github.com/open-mmlab/mmediting/pull/681))
 - 使用 `--diff-seed` 在多卡训练中为 torch 设置不同的初始化种子 ([#781](https://github.com/open-mmlab/mmediting/pull/781))
 - 在视频插帧 demo 中支持流帧读取 ([#790](https://github.com/open-mmlab/mmediting/pull/790))
 - 支持非 slurm 的 dist_train ([#791](https://github.com/open-mmlab/mmediting/pull/791))
@@ -29,7 +31,7 @@
 **改进**
 
 - 更新 CI ([#650](https://github.com/open-mmlab/mmediting/pull/650))
-- 更新 requirements.txt ([#725](https://github.com/open-mmlab/mmediting/pull/725))
+- 更新 requirements.txt ([#725](https://github.com/open-mmlab/mmediting/pull/725), [#817](https://github.com/open-mmlab/mmediting/pull/817))
 - 增加 dataset ([#758](https://github.com/open-mmlab/mmediting/pull/758)), pipeline ([#779](https://github.com/open-mmlab/mmediting/pull/779)), model ([#766](https://github.com/open-mmlab/mmediting/pull/758)) 教程
 - 更新 index 和 TOC 结构树 ([#767](https://github.com/open-mmlab/mmediting/pull/767))
 - 更新 update_model_index.py 以兼容 Windows ([#768](https://github.com/open-mmlab/mmediting/pull/768))
@@ -48,7 +50,7 @@
 
 **贡献者**
 
-@wangruohui @ckkelvinchan @Yshuo-Li @nijkah @wdmwhh @freepoet
+@wangruohui @ckkelvinchan @Yshuo-Li @nijkah @wdmwhh @freepoet @quincylin1
 
 ## v0.13.0 (01/03/2022)
 
