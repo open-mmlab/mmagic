@@ -76,12 +76,14 @@ hope MMEditing could provide better experience.
 
 ## News
 
+- [2022-04-01] v0.14.0 was released.
+  - Support AOT-GAN
+  - Support TOFlow in video frame interpolation
 - [2022-03-01] v0.13.0 was released.
   - Support CAIN
   - Support EDVR-L
   - Support running in Windows
 - [2022-02-11] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
-- [2022-01-21] Support video frame interplation: CAIN
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
