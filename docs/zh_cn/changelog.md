@@ -8,7 +8,7 @@
 
 **新功能**
 
-- 支持 AOT-GAN ([#677](https://github.com/open-mmlab/mmediting/pull/677), [#681](https://github.com/open-mmlab/mmediting/pull/681))
+- 支持 AOT-GAN ([#677](https://github.com/open-mmlab/mmediting/pull/677))
 - 使用 `--diff-seed` 在多卡训练中为 torch 设置不同的初始化种子 ([#781](https://github.com/open-mmlab/mmediting/pull/781))
 - 在视频插帧 demo 中支持流帧读取 ([#790](https://github.com/open-mmlab/mmediting/pull/790))
 - 支持非 slurm 的 dist_train ([#791](https://github.com/open-mmlab/mmediting/pull/791))
