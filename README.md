@@ -77,7 +77,6 @@ hope MMEditing could provide better experience.
 ## News
 
 - [2022-04-01] v0.14.0 was released.
-  - Support AOT-GAN
   - Support TOFlow in video frame interpolation
 - [2022-03-01] v0.13.0 was released.
   - Support CAIN
