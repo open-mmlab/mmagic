@@ -8,7 +8,7 @@
 
 **New Features**
 
-- Support AOT-GAN ([#677](https://github.com/open-mmlab/mmediting/pull/677), [#681](https://github.com/open-mmlab/mmediting/pull/681))
+- Support AOT-GAN ([#677](https://github.com/open-mmlab/mmediting/pull/677))
 - Use `--diff-seed` to set different torch seed on different rank ([#781](https://github.com/open-mmlab/mmediting/pull/781))
 - Support streaming reading of frames in video interpolation demo ([#790](https://github.com/open-mmlab/mmediting/pull/790))
 - Support dist_train without slurm ([#791](https://github.com/open-mmlab/mmediting/pull/791))
