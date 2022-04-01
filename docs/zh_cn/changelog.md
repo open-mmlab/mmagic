@@ -4,8 +4,7 @@
 
 **Highlights主要更新**
 
-1. 支持 AOT-GAN
-2. 支持视频插帧算法 TOFlow
+1. 支持视频插帧算法 TOFlow
 
 **新功能**
 
