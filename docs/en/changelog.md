@@ -4,8 +4,7 @@
 
 **Highlights**
 
-1. Support AOT-GAN
-2. Support TOFlow in video frame interpolation
+1. Support TOFlow in video frame interpolation
 
 **New Features**
 
