@@ -234,11 +234,14 @@ def parse_md(md_file):
                             except ValueError:
                                 metrics_data = metrics_data.replace(' ', '')
                         else:
-                            metrics_data = [
-                                float(d) for d in metrics_data.split('/')
-                            ]
-                            metrics[key] = dict(
-                                PSNR=metrics_data[0], SSIM=metrics_data[1])
+                            try:
+                                metrics_data = [
+                                    float(d) for d in metrics_data.split('/')
+                                ]
+                                metrics[key] = dict(
+                                    PSNR=metrics_data[0], SSIM=metrics_data[1])
+                            except ValueError:
+                                pass
 
                     model = {
                         'Name':
