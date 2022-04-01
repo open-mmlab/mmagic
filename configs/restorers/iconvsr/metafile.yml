@@ -1,0 +1,93 @@
+Collections:
+- Metadata:
+    Architecture:
+    - IconVSR
+  Name: IconVSR
+  Paper:
+  - https://arxiv.org/abs/2012.02181
+  README: configs/restorers/iconvsr/README.md
+Models:
+- Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/iconvsr/iconvsr_reds4.py
+  In Collection: IconVSR
+  Metadata:
+    Training Data: REDS
+  Name: iconvsr_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4 (BIx4)<br>PSNR/SSIM (RGB):
+        PSNR: 31.6926
+        SSIM: 0.8951
+      UDM10 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 35.3377
+        SSIM: 0.9471
+      Vid4 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 25.211
+        SSIM: 0.7732
+      Vid4 (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 27.4809
+        SSIM: 0.8354
+      Vimeo-90K-T (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 34.4299
+        SSIM: 0.9287
+      Vimeo-90K-T (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 36.4983
+        SSIM: 0.9416
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
+- Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/iconvsr/iconvsr_vimeo90k_bi.py
+  In Collection: IconVSR
+  Metadata:
+    Training Data: VIMEO90K
+  Name: iconvsr_vimeo90k_bi
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4)<br>PSNR/SSIM (RGB):
+        PSNR: 30.3452
+        SSIM: 0.8659
+      UDM10 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 34.2595
+        SSIM: 0.9398
+      Vid4 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 24.6666
+        SSIM: 0.7491
+      Vid4 (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 27.4238
+        SSIM: 0.8297
+      Vimeo-90K-T (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 34.5548
+        SSIM: 0.9295
+      Vimeo-90K-T (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 37.3729
+        SSIM: 0.9467
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413-7c7418dc.pth
+- Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/iconvsr/iconvsr_vimeo90k_bd.py
+  In Collection: IconVSR
+  Metadata:
+    Training Data: VIMEO90K
+  Name: iconvsr_vimeo90k_bd
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4)<br>PSNR/SSIM (RGB):
+        PSNR: 29.015
+        SSIM: 0.8465
+      UDM10 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 40.064
+        SSIM: 0.9697
+      Vid4 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 28.2464
+        SSIM: 0.8612
+      Vid4 (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 26.3109
+        SSIM: 0.8028
+      Vimeo-90K-T (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 37.7573
+        SSIM: 0.9517
+      Vimeo-90K-T (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 34.678
+        SSIM: 0.9339
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bd_20210414-5f38cb34.pth

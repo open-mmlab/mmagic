@@ -1,0 +1,61 @@
+Collections:
+- Metadata:
+    Architecture:
+    - EDVR
+  Name: EDVR
+  Paper:
+  - https://arxiv.org/abs/1905.02716?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%253A+arxiv%252FQSXk+%2528ExcitingAds%2521+cs+updates+on+arXiv.org%2529
+  README: configs/restorers/edvr/README.md
+Models:
+- Config: configs/restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py
+  In Collection: EDVR
+  Metadata:
+    Training Data: REDS
+  Name: edvrm_wotsa_x4_g8_600k_reds
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4:
+        PSNR: 30.343
+        SSIM: 0.8664
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth
+- Config: configs/restorers/edvr/edvrm_x4_g8_600k_reds.py
+  In Collection: EDVR
+  Metadata:
+    Training Data: REDS
+  Name: edvrm_x4_g8_600k_reds
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4:
+        PSNR: 30.4194
+        SSIM: 0.8684
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth
+- Config: configs/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4.py
+  In Collection: EDVR
+  Metadata:
+    Training Data: REDS
+  Name: edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4:
+        PSNR: 31.001
+        SSIM: 0.8784
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth
+- Config: configs/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4.py
+  In Collection: EDVR
+  Metadata:
+    Training Data: REDS
+  Name: edvrl_c128b40_8x8_lr2e-4_600k_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4:
+        PSNR: 31.0467
+        SSIM: 0.8793
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104-4509865f.pth

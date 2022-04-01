@@ -1,0 +1,93 @@
+Collections:
+- Metadata:
+    Architecture:
+    - BasicVSR
+  Name: BasicVSR
+  Paper:
+  - https://arxiv.org/abs/2012.02181
+  README: configs/restorers/basicvsr/README.md
+Models:
+- Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/basicvsr/basicvsr_reds4.py
+  In Collection: BasicVSR
+  Metadata:
+    Training Data: REDS
+  Name: basicvsr_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4 (BIx4)<br>PSNR/SSIM (RGB):
+        PSNR: 31.417
+        SSIM: 0.8909
+      UDM10 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 33.4478
+        SSIM: 0.9306
+      Vid4 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 24.4541
+        SSIM: 0.7455
+      Vid4 (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 27.2694
+        SSIM: 0.8318
+      Vimeo-90K-T (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 34.47
+        SSIM: 0.9286
+      Vimeo-90K-T (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 36.2848
+        SSIM: 0.9395
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth
+- Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/basicvsr/basicvsr_vimeo90k_bi.py
+  In Collection: BasicVSR
+  Metadata:
+    Training Data: VIMEO90K
+  Name: basicvsr_vimeo90k_bi
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4)<br>PSNR/SSIM (RGB):
+        PSNR: 30.3128
+        SSIM: 0.866
+      UDM10 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 34.5554
+        SSIM: 0.9434
+      Vid4 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 25.0517
+        SSIM: 0.7636
+      Vid4 (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 27.2755
+        SSIM: 0.8248
+      Vimeo-90K-T (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 34.8097
+        SSIM: 0.9316
+      Vimeo-90K-T (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 37.2026
+        SSIM: 0.9451
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_vimeo90k_bi_20210409-d2d8f760.pth
+- Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/basicvsr/basicvsr_vimeo90k_bd.py
+  In Collection: BasicVSR
+  Metadata:
+    Training Data: VIMEO90K
+  Name: basicvsr_vimeo90k_bd
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4)<br>PSNR/SSIM (RGB):
+        PSNR: 29.0376
+        SSIM: 0.8481
+      UDM10 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 39.9953
+        SSIM: 0.9695
+      Vid4 (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 27.9791
+        SSIM: 0.8556
+      Vid4 (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 26.2708
+        SSIM: 0.8022
+      Vimeo-90K-T (BDx4)<br>PSNR/SSIM (Y):
+        PSNR: 37.5501
+        SSIM: 0.9499
+      Vimeo-90K-T (BIx4)<br>PSNR/SSIM (Y):
+        PSNR: 34.6427
+        SSIM: 0.9335
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_vimeo90k_bd_20210409-0154dd64.pth

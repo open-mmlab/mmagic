@@ -1,3 +1,5 @@
+# Copyright (c) OpenMMLab. All rights reserved.
+import os
 import os.path as osp
 
 from .base_sr_dataset import BaseSRDataset
@@ -14,7 +16,7 @@ class SRVimeo90KDataset(BaseSRDataset):
 
     It reads Vimeo90K keys from the txt file.
     Each line contains:
-    1. image name; 2, image shape, seperated by a white space.
+    1. image name; 2, image shape, separated by a white space.
     Examples:
 
     ::
@@ -55,7 +57,7 @@ class SRVimeo90KDataset(BaseSRDataset):
         """Load annoations for VimeoK dataset.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list[dict]: A list of dicts for paired paths and other information.
         """
         # get keys
         with open(self.ann_file, 'r') as fin:
@@ -74,7 +76,8 @@ class SRVimeo90KDataset(BaseSRDataset):
 
         data_infos = []
         for key in keys:
-            folder, subfolder = key.split('/')
+            key = key.replace('/', os.sep)
+            folder, subfolder = key.split(os.sep)
             lq_paths = []
             for i in frame_index_list:
                 lq_paths.append(

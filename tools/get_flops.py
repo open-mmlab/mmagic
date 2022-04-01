@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 
 from mmcv import Config
@@ -27,7 +28,7 @@ def main():
         input_shape = (3, args.shape[0], args.shape[0])
     elif len(args.shape) == 2:
         input_shape = (3, ) + tuple(args.shape)
-    elif len(args.shape) == 3:
+    elif len(args.shape) in [3, 4]:  # 4 for video inputs (t, c, h, w)
         input_shape = tuple(args.shape)
     else:
         raise ValueError('invalid input shape')
@@ -45,9 +46,14 @@ def main():
             f'with {model.__class__.__name__}')
 
     flops, params = get_model_complexity_info(model, input_shape)
+
     split_line = '=' * 30
     print(f'{split_line}\nInput shape: {input_shape}\n'
           f'Flops: {flops}\nParams: {params}\n{split_line}')
+    if len(input_shape) == 4:
+        print('!!!If your network computes N frames in one forward pass, you '
+              'may want to divide the FLOPs by N to get the average FLOPs '
+              'for each frame.')
     print('!!!Please be cautious if you use the results in papers. '
           'You may need to check if all ops are supported and verify that the '
           'flops computation is correct.')

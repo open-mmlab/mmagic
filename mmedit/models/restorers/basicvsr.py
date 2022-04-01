@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import numbers
 import os.path as osp
 
@@ -23,6 +24,7 @@ class BasicVSR(BasicRestorer):
     Args:
         generator (dict): Config for the generator structure.
         pixel_loss (dict): Config for pixel-wise loss.
+        ensemble (dict): Config for ensemble. Default: None.
         train_cfg (dict): Config for training. Default: None.
         test_cfg (dict): Config for testing. Default: None.
         pretrained (str): Path for pretrained model. Default: None.
@@ -31,6 +33,7 @@ class BasicVSR(BasicRestorer):
     def __init__(self,
                  generator,
                  pixel_loss,
+                 ensemble=None,
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
@@ -39,10 +42,24 @@ class BasicVSR(BasicRestorer):
 
         # fix pre-trained networks
         self.fix_iter = train_cfg.get('fix_iter', 0) if train_cfg else 0
-        self.generator.find_unused_parameters = False
+        self.is_weight_fixed = False
 
         # count training steps
         self.register_buffer('step_counter', torch.zeros(1))
+
+        # ensemble
+        self.forward_ensemble = None
+        if ensemble is not None:
+            if ensemble['type'] == 'SpatialTemporalEnsemble':
+                from mmedit.models.common.ensemble import \
+                    SpatialTemporalEnsemble
+                is_temporal = ensemble.get('is_temporal_ensemble', False)
+                self.forward_ensemble = SpatialTemporalEnsemble(is_temporal)
+            else:
+                raise NotImplementedError(
+                    'Currently support only '
+                    '"SpatialTemporalEnsemble", but got type '
+                    f'[{ensemble["type"]}]')
 
     def check_if_mirror_extended(self, lrs):
         """Check whether the input is a mirror-extended sequence.
@@ -74,14 +91,13 @@ class BasicVSR(BasicRestorer):
         """
         # fix SPyNet and EDVR at the beginning
         if self.step_counter < self.fix_iter:
-            if not self.generator.find_unused_parameters:
-                self.generator.find_unused_parameters = True
+            if not self.is_weight_fixed:
+                self.is_weight_fixed = True
                 for k, v in self.generator.named_parameters():
                     if 'spynet' in k or 'edvr' in k:
                         v.requires_grad_(False)
         elif self.step_counter == self.fix_iter:
             # train all the parameters
-            self.generator.find_unused_parameters = False
             self.generator.requires_grad_(True)
 
         outputs = self(**data_batch, test_mode=False)
@@ -153,7 +169,10 @@ class BasicVSR(BasicRestorer):
             dict: Output results.
         """
         with torch.no_grad():
-            output = self.generator(lq)
+            if self.forward_ensemble is not None:
+                output = self.forward_ensemble(lq, self.generator)
+            else:
+                output = self.generator(lq)
 
         # If the GT is an image (i.e. the center frame), the output sequence is
         # turned to an image.

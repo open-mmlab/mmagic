@@ -1,0 +1,23 @@
+Collections:
+- Metadata:
+    Architecture:
+    - RealBasicVSR
+  Name: RealBasicVSR
+  Paper:
+  - https://arxiv.org/abs/2111.12704
+  README: configs/restorers/real_basicvsr/README.md
+Models:
+- Config: configs/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds.py
+  In Collection: RealBasicVSR
+  Metadata:
+    Training Data: REDS
+  Name: realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds
+  Results:
+  - Dataset: REDS
+    Metrics:
+      BRISQUE (Y): 29.03
+      NIQE (Y): 3.7662
+      NRQM (Y): 6.0477
+      PI (Y): 3.8593
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104-52f77c2c.pth

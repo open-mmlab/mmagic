@@ -1,0 +1,35 @@
+Collections:
+- Metadata:
+    Architecture:
+    - DeepFillv2
+  Name: DeepFillv2
+  Paper:
+  - https://arxiv.org/abs/1806.03589
+  README: configs/inpainting/deepfillv2/README.md
+Models:
+- Config: configs/inpainting/deepfillv2/deepfillv2_256x256_8x2_places.py
+  In Collection: DeepFillv2
+  Metadata:
+    Training Data: PLACES
+  Name: deepfillv2_256x256_8x2_places
+  Results:
+  - Dataset: PLACES
+    Metrics:
+      PSNR: 22.398
+      SSIM: 0.815
+      l1 error: 8.635
+    Task: Inpainting
+  Weights: https://download.openmmlab.com/mmediting/inpainting/deepfillv2/deepfillv2_256x256_8x2_places_20200619-10d15793.pth
+- Config: configs/inpainting/deepfillv2/deepfillv2_256x256_8x2_celeba.py
+  In Collection: DeepFillv2
+  Metadata:
+    Training Data: CELEBA
+  Name: deepfillv2_256x256_8x2_celeba
+  Results:
+  - Dataset: CELEBA
+    Metrics:
+      PSNR: 25.721
+      SSIM: 0.871
+      l1 error: 5.411
+    Task: Inpainting
+  Weights: https://download.openmmlab.com/mmediting/inpainting/deepfillv2/deepfillv2_256x256_8x2_celeba_20200619-c96e5f12.pth

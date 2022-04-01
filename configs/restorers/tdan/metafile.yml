@@ -1,0 +1,53 @@
+Collections:
+- Metadata:
+    Architecture:
+    - TDAN
+  Name: TDAN
+  Paper:
+  - https://arxiv.org/abs/1812.02898
+  README: configs/restorers/tdan/README.md
+Models:
+- Config: configs/restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py
+  In Collection: TDAN
+  Metadata:
+    Training Data: VIMEO90K
+  Name: tdan_vimeo90k_bix4_ft_lr5e-5_400k
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      SPMCS-30 (BDx4):
+        PSNR: 29.69
+        SSIM: 0.842
+      SPMCS-30 (BIx4):
+        PSNR: 30.42
+        SSIM: 0.856
+      Vid4 (BDx4):
+        PSNR: 25.93
+        SSIM: 0.772
+      Vid4 (BIx4):
+        PSNR: 26.49
+        SSIM: 0.792
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
+- Config: configs/restorers/tdan/tdan_vimeo90k_bdx4_ft_lr5e-5_800k.py
+  In Collection: TDAN
+  Metadata:
+    Training Data: VIMEO90K
+  Name: tdan_vimeo90k_bdx4_ft_lr5e-5_800k
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      SPMCS-30 (BDx4):
+        PSNR: 30.77
+        SSIM: 0.868
+      SPMCS-30 (BIx4):
+        PSNR: 29.56
+        SSIM: 0.851
+      Vid4 (BDx4):
+        PSNR: 26.87
+        SSIM: 0.815
+      Vid4 (BIx4):
+        PSNR: 25.8
+        SSIM: 0.784
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth

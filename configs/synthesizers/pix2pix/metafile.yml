@@ -1,0 +1,57 @@
+Collections:
+- Metadata:
+    Architecture:
+    - Pix2Pix
+  Name: Pix2Pix
+  Paper:
+  - https://arxiv.org/abs/1611.07004
+  README: configs/synthesizers/pix2pix/README.md
+Models:
+- Config: configs/synthesizers/pix2pix/pix2pix_vanilla_unet_bn_1x1_80k_facades.py
+  In Collection: Pix2Pix
+  Metadata:
+    Training Data: FACADES
+  Name: pix2pix_vanilla_unet_bn_1x1_80k_facades
+  Results:
+  - Dataset: FACADES
+    Metrics:
+      FID: 127.792
+      IS: 1.745
+    Task: Synthesizers
+  Weights: https://download.openmmlab.com/mmediting/synthesizers/pix2pix/pix2pix_facades/pix2pix_vanilla_unet_bn_1x1_80k_facades_20200524-6206de67.pth
+- Config: configs/synthesizers/pix2pix/pix2pix_vanilla_unet_bn_a2b_1x1_219200_maps.py
+  In Collection: Pix2Pix
+  Metadata:
+    Training Data: MAPS
+  Name: pix2pix_vanilla_unet_bn_a2b_1x1_219200_maps
+  Results:
+  - Dataset: MAPS
+    Metrics:
+      FID: 118.552
+      IS: 2.689
+    Task: Synthesizers
+  Weights: https://download.openmmlab.com/mmediting/synthesizers/pix2pix/pix2pix_maps_a2b/pix2pix_vanilla_unet_bn_a2b_1x1_219200_maps_20200524-b29c4538.pth
+- Config: configs/synthesizers/pix2pix/pix2pix_vanilla_unet_bn_b2a_1x1_219200_maps.py
+  In Collection: Pix2Pix
+  Metadata:
+    Training Data: MAPS
+  Name: pix2pix_vanilla_unet_bn_b2a_1x1_219200_maps
+  Results:
+  - Dataset: MAPS
+    Metrics:
+      FID: 92.798
+      IS: 3.473
+    Task: Synthesizers
+  Weights: https://download.openmmlab.com/mmediting/synthesizers/pix2pix/pix2pix_maps_b2a/pix2pix_vanilla_unet_bn_b2a_1x1_219200_maps_20200524-17882ec8.pth
+- Config: configs/synthesizers/pix2pix/pix2pix_vanilla_unet_bn_wo_jitter_flip_1x4_186840_edges2shoes.py
+  In Collection: Pix2Pix
+  Metadata:
+    Training Data: EDGES2SHOES
+  Name: pix2pix_vanilla_unet_bn_wo_jitter_flip_1x4_186840_edges2shoes
+  Results:
+  - Dataset: EDGES2SHOES
+    Metrics:
+      FID: 85.413
+      IS: 2.747
+    Task: Synthesizers
+  Weights: https://download.openmmlab.com/mmediting/synthesizers/pix2pix/pix2pix_edges2shoes_wo_jitter_flip/pix2pix_vanilla_unet_bn_wo_jitter_flip_1x4_186840_edges2shoes_20200524-b35fa9c0.pth

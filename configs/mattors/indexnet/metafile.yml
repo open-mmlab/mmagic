@@ -1,0 +1,37 @@
+Collections:
+- Metadata:
+    Architecture:
+    - IndexNet
+  Name: IndexNet
+  Paper:
+  - https://arxiv.org/abs/1908.00672
+  README: configs/mattors/indexnet/README.md
+Models:
+- Config: configs/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k.py
+  In Collection: IndexNet
+  Metadata:
+    Training Data: COMP1K
+  Name: indexnet_mobv2_1x16_78k_comp1k
+  Results:
+  - Dataset: COMP1K
+    Metrics:
+      CONN: 44.8
+      GRAD: 25.5
+      MSE: 0.012
+      SAD: 45.6
+    Task: Mattors
+  Weights: https://download.openmmlab.com/mmediting/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k_SAD-45.6_20200618_173817-26dd258d.pth
+- Config: configs/mattors/indexnet/indexnet_dimaug_mobv2_1x16_78k_comp1k.py
+  In Collection: IndexNet
+  Metadata:
+    Training Data: COMP1K
+  Name: indexnet_dimaug_mobv2_1x16_78k_comp1k
+  Results:
+  - Dataset: COMP1K
+    Metrics:
+      CONN: 49.5
+      GRAD: 30.8
+      MSE: 0.016
+      SAD: 50.1
+    Task: Mattors
+  Weights: https://download.openmmlab.com/mmediting/mattors/indexnet/indexnet_dimaug_mobv2_1x16_78k_comp1k_SAD-50.1_20200626_231857-af359436.pth

@@ -1,0 +1,93 @@
+Collections:
+- Metadata:
+    Architecture:
+    - BasicVSR++
+  Name: BasicVSR++
+  Paper:
+  - https://arxiv.org/abs/2104.13371
+  README: configs/restorers/basicvsr_plusplus/README.md
+Models:
+- Config: configs/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4.py
+  In Collection: BasicVSR++
+  Metadata:
+    Training Data: REDS
+  Name: basicvsr_plusplus_c64n7_8x1_600k_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4 (BIx4) PSNR/SSIM (RGB):
+        PSNR: 32.3855
+        SSIM: 0.9069
+      UDM10 (BDx4) PSNR/SSIM (Y):
+        PSNR: 34.6868
+        SSIM: 0.9417
+      Vid4 (BDx4) PSNR/SSIM (Y):
+        PSNR: 24.6209
+        SSIM: 0.754
+      Vid4 (BIx4) PSNR/SSIM (Y):
+        PSNR: 27.7674
+        SSIM: 0.8444
+      Vimeo-90K-T (BDx4) PSNR/SSIM (Y):
+        PSNR: 34.0372
+        SSIM: 0.9244
+      Vimeo-90K-T (BIx4) PSNR/SSIM (Y):
+        PSNR: 36.4445
+        SSIM: 0.9411
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
+- Config: configs/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bi.py
+  In Collection: BasicVSR++
+  Metadata:
+    Training Data: VIMEO90K
+  Name: basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bi
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4) PSNR/SSIM (RGB):
+        PSNR: 31.0126
+        SSIM: 0.8804
+      UDM10 (BDx4) PSNR/SSIM (Y):
+        PSNR: 33.1211
+        SSIM: 0.927
+      Vid4 (BDx4) PSNR/SSIM (Y):
+        PSNR: 23.6086
+        SSIM: 0.7033
+      Vid4 (BIx4) PSNR/SSIM (Y):
+        PSNR: 27.7882
+        SSIM: 0.8401
+      Vimeo-90K-T (BDx4) PSNR/SSIM (Y):
+        PSNR: 33.8972
+        SSIM: 0.9195
+      Vimeo-90K-T (BIx4) PSNR/SSIM (Y):
+        PSNR: 37.7864
+        SSIM: 0.95
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305-4ef437e2.pth
+- Config: configs/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd.py
+  In Collection: BasicVSR++
+  Metadata:
+    Training Data: VIMEO90K
+  Name: basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4) PSNR/SSIM (RGB):
+        PSNR: 29.2041
+        SSIM: 0.8528
+      UDM10 (BDx4) PSNR/SSIM (Y):
+        PSNR: 40.7216
+        SSIM: 0.9722
+      Vid4 (BDx4) PSNR/SSIM (Y):
+        PSNR: 29.04
+        SSIM: 0.8753
+      Vid4 (BIx4) PSNR/SSIM (Y):
+        PSNR: 26.4377
+        SSIM: 0.8074
+      Vimeo-90K-T (BDx4) PSNR/SSIM (Y):
+        PSNR: 38.2054
+        SSIM: 0.955
+      Vimeo-90K-T (BIx4) PSNR/SSIM (Y):
+        PSNR: 34.7248
+        SSIM: 0.9351
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd_20210305-ab315ab1.pth

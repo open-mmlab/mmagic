@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: MMEditing
+    given-names: Contributors
+title: "MMEditing: OpenMMLab Image and Video Editing Toolbox"
+version: 0.13.0
+date-released: 2022-03-01
+url: "https://github.com/open-mmlab/mmediting"
+license: Apache-2.0

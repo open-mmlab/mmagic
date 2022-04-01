@@ -1,0 +1,40 @@
+dele_rules:
+  issue:
+    create:
+      - name: "english needs"
+        conditions:
+          - "issue.title ~= ANSI"
+        actions:
+          - comment:
+            message: "@{{ issue.author.name }}, english-please."
+
+      - name: "add assignee"
+        conditions:
+          - "issue.assignees.count == 0"
+        actions:
+          - assign_with_owners
+
+      - name: "set stale"
+        conditions:
+          - "issue.status.inactive_time >= 30d"
+        actions:
+          - label:
+            add: ["stale"]
+          - comment:
+            message: "This issue will be closed in 5 days because it has been open 30 days with no activity, comment it or remove stale label to avoid it."
+
+  pull_request:
+    create:
+      - name: "add size label"
+        conditions:
+          - "pr.labels ~= size/*"
+        actions:
+          - label:
+            add: ["size"]
+
+      - name: "welcome new contributor"
+        conditions:
+          - "pr.author.login ~= first_pr"
+        actions:
+          - comment:
+            message: "Welcome @{{ pr.author.login }}! Thanks for your contribution to {{ pr.org }}/{{ .pr.repo }} 🎉"

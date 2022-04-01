@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import torch
 from mmcv.runner import auto_fp16
 
@@ -56,7 +57,7 @@ class GCA(BaseMattor):
             alpha (Tensor): with shape (N, 1, H, W). Tensor of alpha.
 
         Returns:
-            dict: Contains the loss items and batch infomation.
+            dict: Contains the loss items and batch information.
         """
         pred_alpha = self._forward(torch.cat((merged, trimap), 1))
 

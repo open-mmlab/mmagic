@@ -1,0 +1,53 @@
+Collections:
+- Metadata:
+    Architecture:
+    - GLEAN
+  Name: GLEAN
+  Paper:
+  - https://arxiv.org/abs/2012.00739
+  README: configs/restorers/glean/README.md
+Models:
+- Config: configs/restorers/glean/glean_cat_8x.py
+  In Collection: GLEAN
+  Metadata:
+    Training Data: CAT
+  Name: glean_cat_8x
+  Results:
+  - Dataset: CAT
+    Metrics:
+      PSNR: 23.98
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth
+- Config: configs/restorers/glean/glean_ffhq_16x.py
+  In Collection: GLEAN
+  Metadata:
+    Training Data: FFHQ
+  Name: glean_ffhq_16x
+  Results:
+  - Dataset: FFHQ
+    Metrics:
+      PSNR: 26.91
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527-61a3afad.pth
+- Config: configs/restorers/glean/glean_cat_16x.py
+  In Collection: GLEAN
+  Metadata:
+    Training Data: CAT
+  Name: glean_cat_16x
+  Results:
+  - Dataset: CAT
+    Metrics:
+      PSNR: 20.88
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_16x_20210527-68912543.pth
+- Config: configs/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq.py
+  In Collection: GLEAN
+  Metadata:
+    Training Data: CELEBA
+  Name: glean_in128out1024_4x2_300k_ffhq_celebahq
+  Results:
+  - Dataset: CELEBA
+    Metrics:
+      PSNR: 27.94
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth

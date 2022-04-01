@@ -1,0 +1,35 @@
+Collections:
+- Metadata:
+    Architecture:
+    - PConv
+  Name: PConv
+  Paper:
+  - https://arxiv.org/abs/1804.07723
+  README: configs/inpainting/partial_conv/README.md
+Models:
+- Config: configs/inpainting/partial_conv/pconv_256x256_stage2_4x2_places.py
+  In Collection: PConv
+  Metadata:
+    Training Data: PLACES
+  Name: pconv_256x256_stage2_4x2_places
+  Results:
+  - Dataset: PLACES
+    Metrics:
+      PSNR: 22.762
+      SSIM: 0.801
+      l1 error: 8.776
+    Task: Inpainting
+  Weights: https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.pth
+- Config: configs/inpainting/partial_conv/pconv_256x256_stage2_4x2_celeba.py
+  In Collection: PConv
+  Metadata:
+    Training Data: CELEBA
+  Name: pconv_256x256_stage2_4x2_celeba
+  Results:
+  - Dataset: CELEBA
+    Metrics:
+      PSNR: 25.404
+      SSIM: 0.853
+      l1 error: 5.99
+    Task: Inpainting
+  Weights: https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.pth

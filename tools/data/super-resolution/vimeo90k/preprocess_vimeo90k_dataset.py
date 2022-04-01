@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import os.path as osp
 import sys
@@ -5,6 +6,8 @@ import sys
 import cv2
 import lmdb
 import mmcv
+
+from mmedit.utils import modify_args
 
 
 def make_lmdb(mode,
@@ -132,14 +135,15 @@ def generate_anno_file(train_list, file_name='meta_info_Vimeo90K_GT.txt'):
 
 
 def parse_args():
+    modify_args()
     parser = argparse.ArgumentParser(
         description='Preprocess Vimeo90K datasets',
         epilog='You can download the Vimeo90K dataset '
         'from：http://toflow.csail.mit.edu/')
-    parser.add_argument('gt-path', help='GT path for Vimeo90K')
-    parser.add_argument('lq-path', help='LQ path for Vimeo90K')
     parser.add_argument(
-        'train-list', help='official training list path for Vimeo90K')
+        'train_list', help='official training list path for Vimeo90K')
+    parser.add_argument('--gt-path', default=None, help='GT path for Vimeo90K')
+    parser.add_argument('--lq-path', default=None, help='LQ path for Vimeo90K')
     parser.add_argument(
         '--make-lmdb', action='store_true', help='create lmdb files')
 
@@ -155,6 +159,9 @@ if __name__ == '__main__':
 
     # create lmdb files
     if args.make_lmdb:
+        if args.gt_path is None or args.lq_path is None:
+            raise ValueError('gt_path and lq_path cannot be None when '
+                             'when creating lmdb files.')
         # create lmdb for gt
         lmdb_path = osp.join(
             osp.dirname(args.gt_path), 'vimeo90k_train_GT.lmdb')

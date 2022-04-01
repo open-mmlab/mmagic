@@ -65,7 +65,10 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+docs/en/_build/
+docs/en/_tmp/
+docs/zh_cn/_build/
+docs/zh_cn/_tmp/
 
 # PyBuilder
 target/
@@ -113,6 +116,20 @@ venv.bak/
 work_dirs/
 /data/
 /data
+mmedit/.mim
 
 # Pytorch
 *.pth
+
+# onnx and tensorrt
+*.onnx
+*.trt
+
+# local history
+.history/**
+
+# Pytorch Server
+*.mar
+
+# MacOS
+.DS_Store

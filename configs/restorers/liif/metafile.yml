@@ -1,0 +1,237 @@
+Collections:
+- Metadata:
+    Architecture:
+    - LIIF
+  Name: LIIF
+  Paper:
+  - https://arxiv.org/abs/2012.09161
+  README: configs/restorers/liif/README.md
+Models:
+- Config: configs/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 34.6647
+        SSIM: 0.9355
+      Set14<br>PSNR / SSIM:
+        PSNR: 31.5579
+        SSIM: 0.8889
+      Set5<br>PSNR / SSIM:
+        PSNR: 35.7131
+        SSIM: 0.9366
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
+- Config: configs/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 30.9808
+        SSIM: 0.8724
+      Set14<br>PSNR / SSIM:
+        PSNR: 28.4605
+        SSIM: 0.8039
+      Set5<br>PSNR / SSIM:
+        PSNR: 32.3805
+        SSIM: 0.8915
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
+- Config: configs/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 29.0245
+        SSIM: 0.8187
+      Set14<br>PSNR / SSIM:
+        PSNR: 26.8415
+        SSIM: 0.7381
+      Set5<br>PSNR / SSIM:
+        PSNR: 30.2748
+        SSIM: 0.8509
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
+- Config: configs/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 26.777
+        SSIM: 0.7425
+      Set14<br>PSNR / SSIM:
+        PSNR: 24.7461
+        SSIM: 0.6444
+      Set5<br>PSNR / SSIM:
+        PSNR: 27.1187
+        SSIM: 0.7774
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
+- Config: configs/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 22.1987
+        SSIM: 0.5955
+      Set14<br>PSNR / SSIM:
+        PSNR: 20.0096
+        SSIM: 0.4525
+      Set5<br>PSNR / SSIM:
+        PSNR: 20.8516
+        SSIM: 0.5406
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
+- Config: configs/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 20.505
+        SSIM: 0.5577
+      Set14<br>PSNR / SSIM:
+        PSNR: 18.1321
+        SSIM: 0.3963
+      Set5<br>PSNR / SSIM:
+        PSNR: 18.8467
+        SSIM: 0.501
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
+- Config: configs/restorers/liif/liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 34.7548
+        SSIM: 0.9356
+      Set14<br>PSNR / SSIM:
+        PSNR: 31.6866
+        SSIM: 0.8896
+      Set5<br>PSNR / SSIM:
+        PSNR: 35.7874
+        SSIM: 0.9366
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth
+- Config: configs/restorers/liif/liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 31.0744
+        SSIM: 0.8731
+      Set14<br>PSNR / SSIM:
+        PSNR: 28.4905
+        SSIM: 0.8037
+      Set5<br>PSNR / SSIM:
+        PSNR: 32.4992
+        SSIM: 0.8923
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth
+- Config: configs/restorers/liif/liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 29.1101
+        SSIM: 0.8197
+      Set14<br>PSNR / SSIM:
+        PSNR: 26.8734
+        SSIM: 0.7373
+      Set5<br>PSNR / SSIM:
+        PSNR: 30.3835
+        SSIM: 0.8513
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth
+- Config: configs/restorers/liif/liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 26.8693
+        SSIM: 0.7437
+      Set14<br>PSNR / SSIM:
+        PSNR: 24.7824
+        SSIM: 0.6434
+      Set5<br>PSNR / SSIM:
+        PSNR: 27.1914
+        SSIM: 0.7751
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth
+- Config: configs/restorers/liif/liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 22.2972
+        SSIM: 0.595
+      Set14<br>PSNR / SSIM:
+        PSNR: 20.1077
+        SSIM: 0.4537
+      Set5<br>PSNR / SSIM:
+        PSNR: 20.8913
+        SSIM: 0.5329
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth
+- Config: configs/restorers/liif/liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    Training Data: DIV2K
+  Name: liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K <br>PSNR / SSIM:
+        PSNR: 20.5663
+        SSIM: 0.556
+      Set14<br>PSNR / SSIM:
+        PSNR: 18.1448
+        SSIM: 0.3942
+      Set5<br>PSNR / SSIM:
+        PSNR: 18.9354
+        SSIM: 0.4864
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth

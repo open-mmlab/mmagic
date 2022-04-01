@@ -1,0 +1,66 @@
+Collections:
+- Metadata:
+    Architecture:
+    - RDN
+  Name: RDN
+  Paper:
+  - https://arxiv.org/abs/1802.08797
+  README: configs/restorers/rdn/README.md
+Models:
+- Config: configs/restorers/rdn/rdn_x2c64b16_g1_1000k_div2k.py
+  In Collection: RDN
+  Metadata:
+    Training Data: DIV2K
+  Name: rdn_x2c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K:
+        PSNR: 34.9392
+        SSIM: 0.938
+      Set14:
+        PSNR: 31.8366
+        SSIM: 0.892
+      Set5:
+        PSNR: 35.9883
+        SSIM: 0.9385
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x2c64b16_g1_1000k_div2k_20210419-dc146009.pth
+- Config: configs/restorers/rdn/rdn_x3c64b16_g1_1000k_div2k.py
+  In Collection: RDN
+  Metadata:
+    Training Data: DIV2K
+  Name: rdn_x3c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K:
+        PSNR: 31.2153
+        SSIM: 0.8763
+      Set14:
+        PSNR: 28.6338
+        SSIM: 0.8077
+      Set5:
+        PSNR: 32.6051
+        SSIM: 0.8943
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x3c64b16_g1_1000k_div2k_20210419-b93cb6aa.pth
+- Config: configs/restorers/rdn/rdn_x4c64b16_g1_1000k_div2k.py
+  In Collection: RDN
+  Metadata:
+    Training Data: DIV2K
+  Name: rdn_x4c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K:
+        PSNR: 29.1925
+        SSIM: 0.8233
+      Set14:
+        PSNR: 26.957
+        SSIM: 0.7423
+      Set5:
+        PSNR: 30.4922
+        SSIM: 0.8548
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x4c64b16_g1_1000k_div2k_20210419-3577d44f.pth

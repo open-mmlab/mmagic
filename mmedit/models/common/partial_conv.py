@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 import torch
 import torch.nn as nn
@@ -37,7 +38,7 @@ class PartialConv2d(nn.Conv2d):
                        self.kernel_size[1]))
 
         self.mask_kernel_numel = np.prod(self.weight_mask_updater.shape[1:4])
-        self.mask_kernel_numel = np.asscalar(self.mask_kernel_numel)
+        self.mask_kernel_numel = (self.mask_kernel_numel).item()
 
     def forward(self, input, mask=None, return_mask=True):
         """Forward function for partial conv2d.

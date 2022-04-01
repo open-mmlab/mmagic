@@ -1,0 +1,66 @@
+Collections:
+- Metadata:
+    Architecture:
+    - EDSR
+  Name: EDSR
+  Paper:
+  - https://arxiv.org/abs/1707.02921
+  README: configs/restorers/edsr/README.md
+Models:
+- Config: configs/restorers/edsr/edsr_x2c64b16_g1_300k_div2k.py
+  In Collection: EDSR
+  Metadata:
+    Training Data: DIV2K
+  Name: edsr_x2c64b16_g1_300k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K:
+        PSNR: 34.5896
+        SSIM: 0.9352
+      Set14:
+        PSNR: 31.429
+        SSIM: 0.8874
+      Set5:
+        PSNR: 35.7592
+        SSIM: 0.9372
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x2c64b16_1x16_300k_div2k_20200604-19fe95ea.pth
+- Config: configs/restorers/edsr/edsr_x3c64b16_g1_300k_div2k.py
+  In Collection: EDSR
+  Metadata:
+    Training Data: DIV2K
+  Name: edsr_x3c64b16_g1_300k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K:
+        PSNR: 30.9154
+        SSIM: 0.8711
+      Set14:
+        PSNR: 28.4125
+        SSIM: 0.8022
+      Set5:
+        PSNR: 32.3301
+        SSIM: 0.8912
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x3c64b16_1x16_300k_div2k_20200608-36d896f4.pth
+- Config: configs/restorers/edsr/edsr_x4c64b16_g1_300k_div2k.py
+  In Collection: EDSR
+  Metadata:
+    Training Data: DIV2K
+  Name: edsr_x4c64b16_g1_300k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K:
+        PSNR: 28.9675
+        SSIM: 0.8172
+      Set14:
+        PSNR: 26.787
+        SSIM: 0.7366
+      Set5:
+        PSNR: 30.2223
+        SSIM: 0.85
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth

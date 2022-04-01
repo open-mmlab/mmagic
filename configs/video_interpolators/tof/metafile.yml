@@ -1,0 +1,74 @@
+Collections:
+- Metadata:
+    Architecture:
+    - TOFlow
+  Name: TOFlow
+  Paper:
+  - https://arxiv.org/abs/1711.09078
+  README: configs/video_interpolators/tof/README.md
+Models:
+- Config: configs/video_interpolators/tof/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k.py
+  In Collection: TOFlow
+  Metadata:
+    Training Data: VIMEO90K
+  Name: tof_vfi_spynet_chair_nobn_1xb1_vimeo90k
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      Vimeo90k-triplet:
+        PSNR: 33.3294
+        SSIM: 0.9465
+    Task: Video_interpolators
+  Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k_20220321-2fc9e258.pth
+- Config: configs/video_interpolators/tof/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k.py
+  In Collection: TOFlow
+  Metadata:
+    Training Data: VIMEO90K
+  Name: tof_vfi_spynet_chair_nobn_1xb1_vimeo90k
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      Vimeo90k-triplet:
+        PSNR: 33.3339
+        SSIM: 0.9466
+    Task: Video_interpolators
+  Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_kitti_nobn_1xb1_vimeo90k_20220321-3f7ca4cd.pth
+- Config: configs/video_interpolators/tof/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k.py
+  In Collection: TOFlow
+  Metadata:
+    Training Data: VIMEO90K
+  Name: tof_vfi_spynet_chair_nobn_1xb1_vimeo90k
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      Vimeo90k-triplet:
+        PSNR: 33.317
+        SSIM: 0.9464
+    Task: Video_interpolators
+  Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_sintel_clean_nobn_1xb1_vimeo90k_20220321-6e52a6fd.pth
+- Config: configs/video_interpolators/tof/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k.py
+  In Collection: TOFlow
+  Metadata:
+    Training Data: VIMEO90K
+  Name: tof_vfi_spynet_chair_nobn_1xb1_vimeo90k
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      Vimeo90k-triplet:
+        PSNR: 33.3237
+        SSIM: 0.9465
+    Task: Video_interpolators
+  Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_sintel_final_nobn_1xb1_vimeo90k_20220321-8ab70dbb.pth
+- Config: configs/video_interpolators/tof/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k.py
+  In Collection: TOFlow
+  Metadata:
+    Training Data: VIMEO90K
+  Name: tof_vfi_spynet_chair_nobn_1xb1_vimeo90k
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      Vimeo90k-triplet:
+        PSNR: 33.3426
+        SSIM: 0.9467
+    Task: Video_interpolators
+  Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_pytoflow_nobn_1xb1_vimeo90k_20220321-5f4b243e.pth

@@ -1,0 +1,35 @@
+Collections:
+- Metadata:
+    Architecture:
+    - DIC
+  Name: DIC
+  Paper:
+  - https://arxiv.org/abs/2003.13063
+  README: configs/restorers/dic/README.md
+Models:
+- Config: configs/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ.py
+  In Collection: DIC
+  Metadata:
+    Training Data: CELEBA
+  Name: dic_x8c48b6_g4_150k_CelebAHQ
+  Results:
+  - Dataset: CELEBA
+    Metrics:
+      CelebA-HQ:
+        PSNR: 25.2319
+        SSIM: 0.7422
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.pth
+- Config: configs/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ.py
+  In Collection: DIC
+  Metadata:
+    Training Data: CELEBA
+  Name: dic_gan_x8c48b6_g4_500k_CelebAHQ
+  Results:
+  - Dataset: CELEBA
+    Metrics:
+      CelebA-HQ:
+        PSNR: 23.6241
+        SSIM: 0.6721
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.pth

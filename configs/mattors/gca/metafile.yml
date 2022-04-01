@@ -1,0 +1,65 @@
+Collections:
+- Metadata:
+    Architecture:
+    - GCA
+  Name: GCA
+  Paper:
+  - https://arxiv.org/abs/2001.04069
+  README: configs/mattors/gca/README.md
+Models:
+- Config: configs/mattors/gca/baseline_r34_4x10_200k_comp1k.py
+  In Collection: GCA
+  Metadata:
+    Training Data: COMP1K
+  Name: baseline_r34_4x10_200k_comp1k
+  Results:
+  - Dataset: COMP1K
+    Metrics:
+      CONN: 34.33
+      GRAD: 17.4
+      MSE: 0.009
+      SAD: 36.5
+    Task: Mattors
+  Weights: https://download.openmmlab.com/mmediting/mattors/gca/baseline_r34_4x10_200k_comp1k_SAD-36.50_20200614_105701-95be1750.pth
+- Config: configs/mattors/gca/gca_r34_4x10_200k_comp1k.py
+  In Collection: GCA
+  Metadata:
+    Training Data: COMP1K
+  Name: gca_r34_4x10_200k_comp1k
+  Results:
+  - Dataset: COMP1K
+    Metrics:
+      CONN: 32.2
+      GRAD: 16.33
+      MSE: 0.008
+      SAD: 34.77
+    Task: Mattors
+  Weights: https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-34.77_20200604_213848-4369bea0.pth
+- Config: configs/mattors/gca/baseline_dimaug_r34_4x10_200k_comp1k.py
+  In Collection: GCA
+  Metadata:
+    Training Data: COMP1K
+  Name: baseline_dimaug_r34_4x10_200k_comp1k
+  Results:
+  - Dataset: COMP1K
+    Metrics:
+      CONN: 49.67
+      GRAD: 30.21
+      MSE: 0.0144
+      SAD: 49.95
+    Task: Mattors
+  Weights: https://download.openmmlab.com/mmediting/mattors/gca/baseline_dimaug_r34_4x10_200k_comp1k_SAD-49.95_20200626_231612-535c9a11.pth
+- Config: configs/mattors/gca/gca_dimaug_r34_4x10_200k_comp1k.py
+  In Collection: GCA
+  Metadata:
+    Training Data: COMP1K
+  Name: gca_dimaug_r34_4x10_200k_comp1k
+  Results:
+  - Dataset: COMP1K
+    Metrics:
+      CONN: 49.47
+      GRAD: 28.07
+      MSE: 0.0129
+      SAD: 49.42
+    Task: Mattors
+  Weights: https://download.openmmlab.com/mmediting/mattors/gca/gca_dimaug_r34_4x10_200k_comp1k_SAD-49.42_20200626_231422-8e9cc127.pth

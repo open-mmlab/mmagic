@@ -1,0 +1,47 @@
+Collections:
+- Metadata:
+    Architecture:
+    - SRGAN
+  Name: SRGAN
+  Paper:
+  - https://arxiv.org/abs/1609.04802
+  README: configs/restorers/srresnet_srgan/README.md
+Models:
+- Config: configs/restorers/srresnet_srgan/msrresnet_x4c64b16_g1_1000k_div2k.py
+  In Collection: SRGAN
+  Metadata:
+    Training Data: DIV2K
+  Name: msrresnet_x4c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K:
+        PSNR: 28.9748
+        SSIM: 0.8178
+      Set14:
+        PSNR: 26.7762
+        SSIM: 0.7369
+      Set5:
+        PSNR: 30.2252
+        SSIM: 0.8491
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/srresnet_srgan/msrresnet_x4c64b16_1x16_300k_div2k_20200521-61556be5.pth
+- Config: configs/restorers/srresnet_srgan/srgan_x4c64b16_g1_1000k_div2k.py
+  In Collection: SRGAN
+  Metadata:
+    Training Data: DIV2K
+  Name: srgan_x4c64b16_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K:
+        PSNR: 26.5697
+        SSIM: 0.7365
+      Set14:
+        PSNR: 24.7383
+        SSIM: 0.6491
+      Set5:
+        PSNR: 27.9499
+        SSIM: 0.7846
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/srresnet_srgan/srgan_x4c64b16_1x16_1000k_div2k_20200606-a1f0810e.pth

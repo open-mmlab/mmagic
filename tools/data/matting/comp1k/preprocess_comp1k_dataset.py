@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import math
 import os.path as osp
@@ -7,6 +8,8 @@ from itertools import chain, repeat
 import mmcv
 import numpy as np
 from PIL import Image
+
+from mmedit.utils import modify_args
 
 
 def fix_png_files(directory):
@@ -221,6 +224,7 @@ def generate_json(data_root, source_bg_dir, composite, nproc, mode):
 
 
 def parse_args():
+    modify_args()
     parser = argparse.ArgumentParser(
         description='Prepare Adobe composition 1k dataset',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -234,7 +238,7 @@ def parse_args():
     parser.add_argument(
         '--nproc', type=int, default=4, help='number of processer')
     parser.add_argument(
-        '--skip_train',
+        '--skip-train',
         action='store_true',
         help='whether to skip the training data')
     args = parser.parse_args()

@@ -1,0 +1,6 @@
+include requirements/*.txt
+include mmedit/.mim/VERSION
+include mmedit/.mim/model-index.yml
+recursive-include mmedit/.mim/configs *.py *.yml
+recursive-include mmedit/.mim/tools *.sh *.py
+recursive-include mmedit/.mim/demo *.py

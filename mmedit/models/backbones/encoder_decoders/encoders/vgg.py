@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
 from mmcv.cnn.utils.weight_init import constant_init, xavier_init
 from mmcv.runner import load_checkpoint

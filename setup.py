@@ -1,5 +1,9 @@
 import os
+import os.path as osp
+import shutil
 import subprocess
+import sys
+import warnings
 from setuptools import find_packages, setup
 
 
@@ -73,9 +77,9 @@ def parse_requirements(fname='requirements.txt', with_version=True):
     CommandLine:
         python -c "import setup; print(setup.parse_requirements())"
     """
+    import re
     import sys
     from os.path import exists
-    import re
     require_fpath = fname
 
     def parse_line(line):
@@ -93,7 +97,7 @@ def parse_requirements(fname='requirements.txt', with_version=True):
                 info['package'] = line
             else:
                 # Remove versioning from the package
-                pat = '(' + '|'.join(['>=', '==', '>']) + ')'
+                pat = '(' + '|'.join(['>=', '<=', '==', '>', '<']) + ')'
                 parts = re.split(pat, line, maxsplit=1)
                 parts = [p.strip() for p in parts]
 
@@ -137,30 +141,97 @@ def parse_requirements(fname='requirements.txt', with_version=True):
     return packages
 
 
+def add_mim_extention():
+    """Add extra files that are required to support MIM into the package.
+
+    These files will be added by creating a symlink to the originals if the
+    package is installed in `editable` mode (e.g. pip install -e .), or by
+    copying from the originals otherwise.
+    """
+
+    # parse installment mode
+    if 'develop' in sys.argv:
+        # installed by `pip install -e .`
+        mode = 'symlink'
+    elif 'sdist' in sys.argv or 'bdist_wheel' in sys.argv:
+        # installed by `pip install .`
+        # or create source distribution by `python setup.py sdist`
+        mode = 'copy'
+    else:
+        return
+
+    filenames = ['tools', 'configs', 'demo', 'model-index.yml']
+    repo_path = osp.dirname(__file__)
+    mim_path = osp.join(repo_path, 'mmedit', '.mim')
+    os.makedirs(mim_path, exist_ok=True)
+
+    for filename in filenames:
+        if osp.exists(filename):
+            src_path = osp.join(repo_path, filename)
+            tar_path = osp.join(mim_path, filename)
+
+            if osp.isfile(tar_path) or osp.islink(tar_path):
+                os.remove(tar_path)
+            elif osp.isdir(tar_path):
+                shutil.rmtree(tar_path)
+
+            if mode == 'symlink':
+                src_relpath = osp.relpath(src_path, osp.dirname(tar_path))
+                try:
+                    os.symlink(src_relpath, tar_path)
+                except OSError:
+                    # Creating a symbolic link on windows may raise an
+                    # `OSError: [WinError 1314]` due to privilege. If
+                    # the error happens, the src file will be copied
+                    mode = 'copy'
+                    warnings.warn(
+                        f'Failed to create a symbolic link for {src_relpath}, '
+                        f'and it will be copied to {tar_path}')
+                else:
+                    continue
+            if mode == 'copy':
+                if osp.isfile(src_path):
+                    shutil.copyfile(src_path, tar_path)
+                elif osp.isdir(src_path):
+                    shutil.copytree(src_path, tar_path)
+                else:
+                    warnings.warn(f'Cannot copy file {src_path}.')
+            else:
+                raise ValueError(f'Invalid mode {mode}')
+
+
 if __name__ == '__main__':
+    add_mim_extention()
     setup(
         name='mmedit',
         version=get_version(),
         description='OpenMMLab Image and Video Editing Toolbox and Benchmark',
         long_description=readme(),
         long_description_content_type='text/markdown',
-        maintainer='MMEditing Authors',
+        maintainer='MMEditing Contributors',
         maintainer_email='openmmlab@gmail.com',
-        keywords='computer vision, inpainting, matting, '
-        'super-resolution, generation',
+        keywords='computer vision, super resolution, video interpolation, '
+        'inpainting, matting, SISR, RefSR, VSR, GAN, VFI',
         url='https://github.com/open-mmlab/mmediting',
         packages=find_packages(exclude=('configs', 'tools', 'demo')),
+        include_package_data=True,
         classifiers=[
             'Development Status :: 4 - Beta',
+            'Intended Audience :: Developers',
+            'Intended Audience :: Education',
+            'Intended Audience :: Science/Research',
             'License :: OSI Approved :: Apache Software License',
             'Operating System :: OS Independent',
             'Programming Language :: Python :: 3',
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
+            'Programming Language :: Python :: 3.8',
+            'Programming Language :: Python :: 3.9',
+            'Programming Language :: Python :: 3.10',
+            'Topic :: Scientific/Engineering :: Artificial Intelligence',
+            'Topic :: Scientific/Engineering :: Image Processing',
         ],
         license='Apache License 2.0',
-        setup_requires=['pytest-runner'],
-        tests_require=parse_requirements('requirements/tests.txt'),
         install_requires=parse_requirements('requirements/runtime.txt'),
         extras_require={
             'all': parse_requirements('requirements.txt'),

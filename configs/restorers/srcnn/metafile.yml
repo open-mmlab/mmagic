@@ -1,0 +1,28 @@
+Collections:
+- Metadata:
+    Architecture:
+    - SRCNN
+  Name: SRCNN
+  Paper:
+  - https://arxiv.org/abs/1501.00092
+  README: configs/restorers/srcnn/README.md
+Models:
+- Config: configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py
+  In Collection: SRCNN
+  Metadata:
+    Training Data: DIV2K
+  Name: srcnn_x4k915_g1_1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K:
+        PSNR: 27.746
+        SSIM: 0.7854
+      Set14:
+        PSNR: 25.6486
+        SSIM: 0.7014
+      Set5:
+        PSNR: 28.4316
+        SSIM: 0.8099
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth

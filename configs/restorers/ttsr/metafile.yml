@@ -1,0 +1,35 @@
+Collections:
+- Metadata:
+    Architecture:
+    - TTSR
+  Name: TTSR
+  Paper:
+  - https://arxiv.org/abs/2006.04139
+  README: configs/restorers/ttsr/README.md
+Models:
+- Config: configs/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED.py
+  In Collection: TTSR
+  Metadata:
+    Training Data: CUFED
+  Name: ttsr-rec_x4_c64b16_g1_200k_CUFED
+  Results:
+  - Dataset: CUFED
+    Metrics:
+      CUFED:
+        PSNR: 25.2433
+        SSIM: 0.7491
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.pth
+- Config: configs/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py
+  In Collection: TTSR
+  Metadata:
+    Training Data: CUFED
+  Name: ttsr-gan_x4_c64b16_g1_500k_CUFED
+  Results:
+  - Dataset: CUFED
+    Metrics:
+      CUFED:
+        PSNR: 24.6075
+        SSIM: 0.7234
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth

@@ -1,0 +1,51 @@
+Collections:
+- Metadata:
+    Architecture:
+    - DIM
+  Name: DIM
+  Paper:
+  - https://arxiv.org/abs/1703.03872
+  README: configs/mattors/dim/README.md
+Models:
+- Config: configs/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k.py
+  In Collection: DIM
+  Metadata:
+    Training Data: COMP1K
+  Name: dim_stage1_v16_1x1_1000k_comp1k
+  Results:
+  - Dataset: COMP1K
+    Metrics:
+      CONN: 54.5
+      GRAD: 32.7
+      MSE: 0.017
+      SAD: 53.8
+    Task: Mattors
+  Weights: https://download.openmmlab.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_SAD-53.8_20200605_140257-979a420f.pth
+- Config: configs/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k.py
+  In Collection: DIM
+  Metadata:
+    Training Data: COMP1K
+  Name: dim_stage2_v16_pln_1x1_1000k_comp1k
+  Results:
+  - Dataset: COMP1K
+    Metrics:
+      CONN: 52.4
+      GRAD: 29.4
+      MSE: 0.016
+      SAD: 52.3
+    Task: Mattors
+  Weights: https://download.openmmlab.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_SAD-52.3_20200607_171909-d83c4775.pth
+- Config: configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py
+  In Collection: DIM
+  Metadata:
+    Training Data: COMP1K
+  Name: dim_stage3_v16_pln_1x1_1000k_comp1k
+  Results:
+  - Dataset: COMP1K
+    Metrics:
+      CONN: 50.7
+      GRAD: 29.0
+      MSE: 0.015
+      SAD: 50.6
+    Task: Mattors
+  Weights: https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth

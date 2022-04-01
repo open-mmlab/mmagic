@@ -1,0 +1,22 @@
+Collections:
+- Metadata:
+    Architecture:
+    - TOFlow
+  Name: TOFlow
+  Paper:
+  - https://arxiv.org/abs/1711.09078
+  README: configs/restorers/tof/README.md
+Models:
+- Config: configs/restorers/tof/tof_x4_vimeo90k_official.py
+  In Collection: TOFlow
+  Metadata:
+    Training Data: VIMEO90K
+  Name: tof_x4_vimeo90k_official
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      Vid4:
+        PSNR: 24.4377
+        SSIM: 0.7433
+    Task: Restorers
+  Weights: https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth
