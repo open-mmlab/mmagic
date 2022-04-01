@@ -1,8 +1,59 @@
 # 变更日志
 
+## v0.14.0 (01/04/2022)
+
+**Highlights主要更新**
+
+1. 支持视频插帧算法 TOFlow
+
+**新功能**
+
+- 支持 AOT-GAN ([#677](https://github.com/open-mmlab/mmediting/pull/677))
+- 使用 `--diff-seed` 在多卡训练中为 torch 设置不同的初始化种子 ([#781](https://github.com/open-mmlab/mmediting/pull/781))
+- 在视频插帧 demo 中支持流帧读取 ([#790](https://github.com/open-mmlab/mmediting/pull/790))
+- 支持非 slurm 的 dist_train ([#791](https://github.com/open-mmlab/mmediting/pull/791))
+- 在 restoration_video_demo 中将 LQ 存放在 CPU ([#792](https://github.com/open-mmlab/mmediting/pull/792))
+- 在 EDSR 中支持处理灰度数据 ([#793](https://github.com/open-mmlab/mmediting/pull/793))
+- 支持视频插帧算法 TOFlow ([#806](https://github.com/open-mmlab/mmediting/pull/806), [#811](https://github.com/open-mmlab/mmediting/pull/811))
+- 支持在 DistributedSampler 中为不同的 rank 设置不同的随机种子 ([#815](https://github.com/open-mmlab/mmediting/pull/815))
+
+**Bug 修复**
+
+- 修复 README 文件中的失效链接 ([#782](https://github.com/open-mmlab/mmediting/pull/782), [#786](https://github.com/open-mmlab/mmediting/pull/786), [#819](https://github.com/open-mmlab/mmediting/pull/819), [#820](https://github.com/open-mmlab/mmediting/pull/820))
+- 修复抠图教程 ([#795](https://github.com/open-mmlab/mmediting/pull/795))
+- 翻转 `RandomAffine` 中的 `flip_ratio` ([#799](https://github.com/open-mmlab/mmediting/pull/799))
+- 修复 preprocess_div2k_dataset.py ([#801](https://github.com/open-mmlab/mmediting/pull/801))
+- 修复 SR Colab Demo Installation 方法和 Set5 链接 ([#807](https://github.com/open-mmlab/mmediting/pull/807))
+- 修正EDSR README 中的 Y/GRB 错误 ([#812](https://github.com/open-mmlab/mmediting/pull/812))
+- 将 `README(_zh-CN).md` 中的 pytorch 安装命令替换为 conda ([#816](https://github.com/open-mmlab/mmediting/pull/816))
+
+**改进**
+
+- 更新 CI ([#650](https://github.com/open-mmlab/mmediting/pull/650))
+- 更新 requirements.txt ([#725](https://github.com/open-mmlab/mmediting/pull/725), [#817](https://github.com/open-mmlab/mmediting/pull/817))
+- 增加 dataset ([#758](https://github.com/open-mmlab/mmediting/pull/758)), pipeline ([#779](https://github.com/open-mmlab/mmediting/pull/779)), model ([#766](https://github.com/open-mmlab/mmediting/pull/758)) 教程
+- 更新 index 和 TOC 结构树 ([#767](https://github.com/open-mmlab/mmediting/pull/767))
+- 更新 update_model_index.py 以兼容 Windows ([#768](https://github.com/open-mmlab/mmediting/pull/768))
+- 更新文档构建系统 ([#769](https://github.com/open-mmlab/mmediting/pull/769))
+- 更新 setuptools 的关键字和分类器 ([#773](https://github.com/open-mmlab/mmediting/pull/773))
+- 更新安装文档 ([#776](https://github.com/open-mmlab/mmediting/pull/776), [#800](https://github.com/open-mmlab/mmediting/pull/800))
+- 更新 BasicVSR++ 和 RealBasicVSR 文档 ([#778](https://github.com/open-mmlab/mmediting/pull/778))
+- 更新 citation ([#785](https://github.com/open-mmlab/mmediting/pull/785), [#787](https://github.com/open-mmlab/mmediting/pull/787))
+- 重组文档 ([#788](https://github.com/open-mmlab/mmediting/pull/788))
+- 在 metafile 中使用 config 的全名作为 'Name'，以支持 mim 下载 ([#798](https://github.com/open-mmlab/mmediting/pull/798))
+- 更新 README 中的图片和视频示例 ([#802](https://github.com/open-mmlab/mmediting/pull/802))
+- 在视频插帧测试时使用 `clamp(0, 1)` ([#805](https://github.com/open-mmlab/mmediting/pull/805))
+- 在演示和工具中的命令行参数中使用连字符 ([#808](https://github.com/open-mmlab/mmediting/pull/808)), 在python文件中为必选参数保留下划线 ([#822](https://github.com/open-mmlab/mmediting/pull/822))
+- 将 `dataset.pipeline` 作为文档的单列内容 ([#813](https://github.com/open-mmlab/mmediting/pull/813))
+- 更新 mmcv-full>=1.3.13 以在 CPU 中支持 DCN ([#823](https://github.com/open-mmlab/mmediting/pull/823))
+
+**贡献者**
+
+@wangruohui @ckkelvinchan @Yshuo-Li @nijkah @wdmwhh @freepoet @quincylin1
+
 ## v0.13.0 (01/03/2022)
 
-**Highlights主更新要**
+**Highlights主要更新**
 
 1. 支持 CAIN
 2. 支持 EDVR-L
