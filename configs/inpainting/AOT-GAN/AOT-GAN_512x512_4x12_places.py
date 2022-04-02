@@ -184,5 +184,5 @@ work_dir = './workdirs/aotgan_places'
 load_from = None
 resume_from = None
 workflow = [('train', 10000)]
-exp_name = 'AOT-GAN_512x512_places'
+exp_name = 'AOT-GAN_512x512_4x12_places'
 find_unused_parameters = False
