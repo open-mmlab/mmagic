@@ -28,11 +28,11 @@ def test_tof_vfi_net():
         model = model.cuda()
         inputs = inputs.cuda()
         output = model(inputs)
-        output = model(inputs, True)
         assert torch.is_tensor(output)
-        assert output.shape == (1, 3, 256, 256)
+        assert output.shape == (1, 3, 256, 248)
 
-    inputs = torch.rand(1, 2, 3, 256, 256)
+    inputs = torch.rand(1, 2, 3, 256, 256).cpu()
+    model = model.cpu()
     output = model(inputs)
     assert torch.is_tensor(output)
 
