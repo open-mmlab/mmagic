@@ -51,10 +51,6 @@ class BasicRestorer(BaseModel):
         # loss
         self.pixel_loss = build_loss(pixel_loss)
 
-        # lazy initialization for evaluation
-        if self.test_cfg and 'InceptionV3' in self.test_cfg.get('metrics', []):
-            self.allowed_metrics['InceptionV3'] = InceptionV3()
-
     def init_weights(self, pretrained=None):
         """Init weights for models.
 
@@ -110,6 +106,11 @@ class BasicRestorer(BaseModel):
         Returns:
             dict: Evaluation results.
         """
+        # lazy initialization for evaluation
+        if 'InceptionV3' not in self.allowed_metrics and (
+                'InceptionV3' in self.test_cfg.metrics):
+            self.allowed_metrics['InceptionV3'] = InceptionV3()
+
         crop_border = self.test_cfg.crop_border
 
         output = tensor2img(output)
