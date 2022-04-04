@@ -5,7 +5,6 @@ import torch.nn.functional as F
 import torchvision.models.inception as inception
 from mmcv.runner import load_checkpoint
 from scipy import linalg
-from sklearn.metrics.pairwise import polynomial_kernel
 
 from mmedit.utils import get_root_logger
 from ..registry import METRICS
@@ -110,6 +109,15 @@ def frechet_distance(x, y):
     frechet_distance = diff.dot(diff) + np.trace(sigma1) + np.trace(
         sigma2) - 2 * np.trace(covmean)
     return frechet_distance
+
+
+def polynomial_kernel(X, Y=None, degree=3, gamma=None, coef=1):
+    if Y is None:
+        Y = X.copy()
+    if gamma is None:
+        gamma = 1.0 / X.shape[1]
+    K = (np.matmul(X, Y.T) * gamma + coef)**degree
+    return K
 
 
 def mmd2(x, y):
