@@ -28,11 +28,7 @@ class BasicRestorer(BaseModel):
         test_cfg (dict): Config for testing. Default: None.
         pretrained (str): Path for pretrained model. Default: None.
     """
-    allowed_metrics = {
-        'PSNR': psnr,
-        'SSIM': ssim,
-        'InceptionV3': InceptionV3()
-    }
+    allowed_metrics = {'PSNR': psnr, 'SSIM': ssim}
 
     def __init__(self,
                  generator,
@@ -54,6 +50,10 @@ class BasicRestorer(BaseModel):
 
         # loss
         self.pixel_loss = build_loss(pixel_loss)
+
+        # lazy initialization for evaluation
+        if self.test_cfg and 'InceptionV3' in self.test_cfg.get('metrics', []):
+            self.allowed_metrics['InceptionV3'] = InceptionV3()
 
     def init_weights(self, pretrained=None):
         """Init weights for models.
