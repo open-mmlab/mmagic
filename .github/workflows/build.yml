@@ -82,7 +82,7 @@ jobs:
         run: pip install torch==${{ matrix.torch }} torchvision==${{ matrix.torchvision }} -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install MMCV ${{ matrix.mmcv_link }}
         run: |
-          pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/${{ matrix.mmcv_link }}/index.html --only-binary mmcv-full "opencv-python<=4.5.4.60"
+          pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/${{ matrix.mmcv_link }}/index.html --only-binary mmcv-full
           python -c 'import mmcv; print(mmcv.__version__)'
       - name: Build and install
         run: pip install -e .[all]
