@@ -50,6 +50,7 @@ GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/exampl
 - `--save-path`: 指定存储编辑图像的路径。 如果没有给出，图像将不会被保存。
 - `--seed`: 测试期间的随机种子。 此参数用于固定某些任务中的结果，例如*修复*。
 - `--deterministic`: 与 `--seed` 相关，此参数决定是否为 CUDNN 后端设置确定性的选项。如果指定该参数，会将 `torch.backends.cudnn.deterministic` 设置为 `True`，将 `torch.backends.cudnn.benchmark` 设置为 `False`。
+- `--cfg-options`:  如果指明，这里的键值对将会被合并到配置文件中。
 
 注：目前，我们不使用像 [MMDetection](https://github.com/open-mmlab/mmdetection) 那样的 `--eval` 参数来指定评估指标。 评估指标在配置文件中给出（参见 [config.md](config.md)）。
 
@@ -77,6 +78,7 @@ evaluation = dict(interval=1e4, by_epoch=False)  # 每一万次迭代进行一�
 - `--no-validate` (**不建议**): 默认情况下，代码库将在训练期间每 k 次迭代执行一次评估。若要禁用此行为，请使用 `--no-validate`。
 - `--work-dir ${WORK_DIR}`: 覆盖配置文件中指定的工作目录。
 - `--resume-from ${CHECKPOINT_FILE}`: 从已有的模型权重文件恢复。
+- `--cfg-options`:  如果指明，这里的键值对将会被合并到配置文件中。
 
 `resume-from` 和 `load-from` 之间的区别：
 `resume-from` 加载模型权重和优化器状态，迭代也从指定的检查点继承。 它通常用于恢复意外中断的训练过程。
