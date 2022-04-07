@@ -88,11 +88,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 MMEditing 依赖 [PyTorch](https://pytorch.org/) 和 [MMCV](https://github.com/open-mmlab/mmcv)，以下是安装的简要步骤。
 
 **步骤 1.**
-依照[官方教程](https://pytorch.org/get-started/locally/)安装PyTorch，例如
-
-```
-pip3 install torch torchvision
-```
+依照[官方教程](https://pytorch.org/get-started/locally/)安装PyTorch
 
 **步骤 2.**
 使用 [MIM](https://github.com/open-mmlab/mim) 安装 MMCV
@@ -108,7 +104,7 @@ mim install mmcv-full
 ```
 git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
-pip3 install -e .[all]
+pip3 install -e .
 ```
 
 更详细的安装指南请参考 [install.md](docs/en/install.rst) .
