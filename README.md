@@ -89,18 +89,32 @@ Please refer to [changelog.md](docs/en/changelog.md) for details and release his
 
 MMEditing depends on [PyTorch](https://pytorch.org/) and [MMCV](https://github.com/open-mmlab/mmcv).
 Below are quick steps for installation.
-Please refer to [install.md](docs/en/install.rst) for more detailed instruction.
 
-```shell
-conda create -n open-mmlab python=3.8 pytorch=1.10 cudatoolkit=11.3 torchvision -c pytorch -y
-conda activate open-mmlab
-pip3 install openmim
-mim install mmcv-full
-git clone https://github.com/open-mmlab/mmediting.git
-cd mmediting
-pip3 install -e .
+**Step 1.**
+Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/), e.g.
+
+```
+pip3 install torch torchvision
 ```
 
+**Step 2.**
+Install MMCV with [MIM](https://github.com/open-mmlab/mim).
+
+```
+pip3 install openmim
+mim install mmcv-full
+```
+
+**Step 3.**
+Install MMEditing from source.
+
+```
+git clone https://github.com/open-mmlab/mmediting.git
+cd mmediting
+pip3 install -e .[all]
+```
+
+Please refer to [install.md](docs/en/install.rst) for more detailed instruction.
 
 ## Getting Started
 
