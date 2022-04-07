@@ -169,6 +169,7 @@ Supported algorithms:
 <details open>
 <summary>Video Interpolation</summary>
 
+- [x] [TOFlow](configs/video_interpolators/tof/README.md) (IJCV'2019)
 - [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
 
 </details>
