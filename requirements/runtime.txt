@@ -13,5 +13,5 @@ opencv-python<=4.5.4.60
 # But our test is negative.
 Pillow
 tensorboard
-torch>=1.5.0
+torch
 torchvision
