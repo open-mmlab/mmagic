@@ -1,3 +1,0 @@
-av
-av==8.0.3; python_version < '3.7'
-facexlib
