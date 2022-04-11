@@ -197,4 +197,4 @@ class KID:
                 Y[np.random.choice(
                     num_samples, self.sample_size, replace=False)],
             )
-        return kids.mean(), kids.std()
+        return dict(KID_MEAN=kids.mean(), KID_STD=kids.std())

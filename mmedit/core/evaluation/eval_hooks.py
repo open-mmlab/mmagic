@@ -70,6 +70,9 @@ class EvalIterHook(Hook):
             eval_res[metric.__class__.__name__] = metric(X, Y)
 
         for name, val in eval_res.items():
+            if isinstance(val, dict):
+                runner.log_buffer.output.update(val)
+                continue
             runner.log_buffer.output[name] = val
         runner.log_buffer.ready = True
 
