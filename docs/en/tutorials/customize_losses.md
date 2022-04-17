@@ -1,6 +1,6 @@
 # Tutorial 4: Customize Losses
 
-`losses` are registered as `LOSSES` in `MMEditing`. Customizing losses is similar to customizing any other models. This section is mainly for clarifying the design of loss modules in our repo. Importantly, when writing your own loss modules, you should follow the same design, so that the new loss module can be adopted in our framework without extra efforts.
+`losses` are registered as `LOSSES` in `MMEditing`. Customizing losses is similar to customizing any other model. This section is mainly for clarifying the design of loss modules in our repo. Importantly, when writing your own loss modules, you should follow the same design, so that the new loss module can be adopted in our framework without extra effort.
 
 ## Design of loss modules
 
