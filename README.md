@@ -111,7 +111,7 @@ cd mmediting
 pip3 install -e .
 ```
 
-Please refer to [install.md](docs/en/install.rst) for more detailed instruction.
+Please refer to [install.md](../../wiki/1.-Installation) for more detailed instruction.
 
 ## Getting Started
 

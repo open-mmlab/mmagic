@@ -109,7 +109,7 @@ cd mmediting
 pip3 install -e .
 ```
 
-更详细的安装指南请参考 [install.md](docs/en/install.rst) .
+更详细的安装指南请参考 [install.md](../../wiki/1.-Installation) 。
 
 ## 开始使用
 
@@ -199,7 +199,7 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 ```bibtex
 @misc{mmediting2022,
     title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
-    author = {MMEditing, Contributors},
+    author = {{MMEditing Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
     year = {2022}
 }
