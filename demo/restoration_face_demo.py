@@ -42,7 +42,7 @@ def main():
                          'you may want to use "restoration_video_demo.py" '
                          'for video restoration.')
 
-    if args.device < 0:
+    if args.device < 0 or not torch.cuda.is_available():
         device = torch.device('cpu')
     else:
         device = torch.device('cuda', args.device)

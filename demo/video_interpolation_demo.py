@@ -66,7 +66,7 @@ def main():
 
     args = parse_args()
 
-    if args.device < 0:
+    if args.device < 0 or not torch.cuda.is_available():
         device = torch.device('cpu')
     else:
         device = torch.device('cuda', args.device)

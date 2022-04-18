@@ -40,7 +40,7 @@ def main():
                          'you may want to use "ref_path=None" '
                          'for single restoration.')
 
-    if args.device < 0:
+    if args.device < 0 or not torch.cuda.is_available():
         device = torch.device('cpu')
     else:
         device = torch.device('cuda', args.device)
