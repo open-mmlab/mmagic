@@ -70,6 +70,7 @@ def main():
         device = torch.device('cpu')
     else:
         device = torch.device('cuda', args.device)
+
     model = init_model(args.config, args.checkpoint, device=device)
 
     video_interpolation_inference(

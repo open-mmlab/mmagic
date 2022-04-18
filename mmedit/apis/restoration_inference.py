@@ -38,7 +38,9 @@ def restoration_inference(model, img, ref=None):
     else:  # SISR
         data = dict(lq_path=img)
     data = test_pipeline(data)
-    data = scatter(collate([data], samples_per_gpu=1), [device])[0]
+    data = collate([data], samples_per_gpu=1)
+    if 'cuda' in str(device):
+        data = scatter(data, [device])[0]
     # forward the model
     with torch.no_grad():
         result = model(test_mode=True, **data)
