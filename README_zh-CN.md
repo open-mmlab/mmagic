@@ -146,7 +146,6 @@ pip3 install -e .
 - [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
 - [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
 - [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
-- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
 - [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
 - [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
 - [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
@@ -157,6 +156,7 @@ pip3 install -e .
 <details open>
 <summary>视频超分辨率</summary>
 
+- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
 - [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
 - [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
 - [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)

@@ -148,7 +148,6 @@ Supported algorithms:
 - [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
 - [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
 - [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
-- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
 - [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
 - [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
 - [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
@@ -159,6 +158,7 @@ Supported algorithms:
 <details open>
 <summary>Video-Super-Resolution</summary>
 
+- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
 - [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
 - [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
 - [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
