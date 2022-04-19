@@ -40,8 +40,12 @@ def main():
                          'you may want to use "ref_path=None" '
                          'for single restoration.')
 
-    model = init_model(
-        args.config, args.checkpoint, device=torch.device('cuda', args.device))
+    if args.device < 0 or not torch.cuda.is_available():
+        device = torch.device('cpu')
+    else:
+        device = torch.device('cuda', args.device)
+
+    model = init_model(args.config, args.checkpoint, device=device)
 
     if args.ref_path:  # Ref-SR
         output = restoration_inference(model, args.img_path, args.ref_path)

@@ -73,7 +73,9 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
         # prepare data
         data = dict(lq=img.astype(np.float32))
         data = test_pipeline(data)
-        data = scatter(collate([data], samples_per_gpu=1), [device])[0]
+        data = collate([data], samples_per_gpu=1)
+        if 'cuda' in str(device):
+            data = scatter(data, [device])[0]
 
         with torch.no_grad():
             output = model(test_mode=True, **data)['output'].clip_(0, 1)

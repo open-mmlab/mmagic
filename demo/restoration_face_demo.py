@@ -42,8 +42,12 @@ def main():
                          'you may want to use "restoration_video_demo.py" '
                          'for video restoration.')
 
-    model = init_model(
-        args.config, args.checkpoint, device=torch.device('cuda', args.device))
+    if args.device < 0 or not torch.cuda.is_available():
+        device = torch.device('cpu')
+    else:
+        device = torch.device('cuda', args.device)
+
+    model = init_model(args.config, args.checkpoint, device=device)
 
     output = restoration_face_inference(model, args.img_path,
                                         args.upscale_factor, args.face_size)
