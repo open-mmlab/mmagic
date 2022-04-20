@@ -67,6 +67,7 @@ class SRFolderVideoDataset(BaseSRDataset):
                  scale,
                  ann_file=None,
                  filename_tmpl='{:08d}',
+                 start_idx=0,
                  metric_average_mode='clip',
                  test_mode=True):
         super().__init__(pipeline, scale, test_mode)
@@ -83,6 +84,7 @@ class SRFolderVideoDataset(BaseSRDataset):
         self.num_input_frames = num_input_frames
         self.ann_file = ann_file
         self.filename_tmpl = filename_tmpl
+        self.start_idx = start_idx
         self.metric_average_mode = metric_average_mode
 
         self.data_infos = self.load_annotations()
@@ -131,7 +133,7 @@ class SRFolderVideoDataset(BaseSRDataset):
             max_frame_num = len(list(mmcv.utils.scandir(seq_dir)))
             self.folders[sequence] = max_frame_num
 
-            for i in range(0, max_frame_num):
+            for i in range(self.start_idx, max_frame_num + self.start_idx):
                 data_infos.append(
                     dict(
                         lq_path=self.lq_folder,
