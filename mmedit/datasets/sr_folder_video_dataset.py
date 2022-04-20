@@ -110,7 +110,7 @@ class SRFolderVideoDataset(BaseSRDataset):
         return data_infos
 
     def load_annotations(self):
-        """Load annoations for the dataset.
+        """Load annotations for the dataset.
 
         Returns:
             list[dict]: A list of dicts for paired paths and other information.

@@ -92,7 +92,7 @@ class SRFolderMultipleGTDataset(BaseSRDataset):
         return data_infos
 
     def load_annotations(self):
-        """Load annoations for the dataset.
+        """Load annotations for the dataset.
 
         Returns:
             list[dict]: Returned list of dicts for paired paths of LQ and GT.
