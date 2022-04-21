@@ -17,4 +17,4 @@ docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmediting/data mmediting
 
 Versions defined in this [Dockerfile](Dockerfile) is not up-to-dated.
 If you use this Dockerfile in your project, you probably want to make some update.
-Fell free to submit a issue or PR for the update.
+Feel free to submit a issue or PR for the update.
