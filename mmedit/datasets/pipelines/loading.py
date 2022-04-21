@@ -132,6 +132,9 @@ class LoadImageFromFileList(LoadImageFromFile):
             no conversion is conducted. Default: None.
         save_original_img (bool): If True, maintain a copy of the image in
             `results` dict with name of `f'ori_{key}'`. Default: False.
+        use_cache (bool): If True, load all images at once. Default: False.
+        backend (str): The image loading backend type. Options are `cv2`,
+            `pillow`, and 'turbojpeg'. Default: None.
         kwargs (dict): Args for file client.
     """
 
@@ -160,10 +163,26 @@ class LoadImageFromFileList(LoadImageFromFile):
         if self.save_original_img:
             ori_imgs = []
         for filepath in filepaths:
-            img_bytes = self.file_client.get(filepath)
-            img = mmcv.imfrombytes(
-                img_bytes, flag=self.flag,
-                channel_order=self.channel_order)  # HWC
+            if self.use_cache:
+                if self.cache is None:
+                    self.cache = dict()
+                if filepath in self.cache:
+                    img = self.cache[filepath]
+                else:
+                    img_bytes = self.file_client.get(filepath)
+                    img = mmcv.imfrombytes(
+                        img_bytes,
+                        flag=self.flag,
+                        channel_order=self.channel_order,
+                        backend=self.backend)  # HWC
+                    self.cache[filepath] = img
+            else:
+                img_bytes = self.file_client.get(filepath)
+                img = mmcv.imfrombytes(
+                    img_bytes,
+                    flag=self.flag,
+                    channel_order=self.channel_order,
+                    backend=self.backend)  # HWC
 
             # convert to y-channel, if specified
             if self.convert_to is not None:
