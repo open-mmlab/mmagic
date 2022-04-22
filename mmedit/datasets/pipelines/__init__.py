@@ -43,5 +43,5 @@ __all__ = [
     'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
     'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
     'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking',
-    'RandomVideoCompression',
+    'RandomVideoCompression'
 ]
