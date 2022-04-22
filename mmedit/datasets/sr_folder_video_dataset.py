@@ -51,6 +51,8 @@ class SRFolderVideoDataset(BaseSRDataset):
             that all sequences in the folder is used. Default: None.
         filename_tmpl (str): Template for each filename. Note that the
             template excludes the file extension. Default: '{:08d}'.
+        start_idx (int): The index corresponds to the first frame
+            in the sequence. Default: 0.
         metric_average_mode (str): The way to compute the average metric.
             If 'clip', we first compute an average value for each clip, and
             then average the values from different clips. If 'all', we
