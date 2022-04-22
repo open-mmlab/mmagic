@@ -626,30 +626,52 @@ class ColorJitter:
 
     Args:
         keys (list[str]): The images to be resized.
-        to_rgb (bool): Whether to convert channels from BGR to RGB.
+        bgr_input (bool): Whether the input channels are ordered in 'bgr'.
             Default: False.
+        seed (int): Random seed. Default: False.
     """
 
-    def __init__(self, keys, to_rgb=False, **kwargs):
+    def __init__(self, keys, bgr_input=False, seed=0, **kwargs):
         assert keys, 'Keys should not be empty.'
 
         self.keys = keys
-        self.to_rgb = to_rgb
+        self.bgr_input = bgr_input
         self.transform = transforms.ColorJitter(**kwargs)
+        self.seed = seed
+        random.seed(seed)
+
+    def _color_jitter(self, image):
+
+        if self.bgr_input:
+            image = image[..., ::-1]
+
+        image = Image.fromarray(image)
+        np.random.seed(self.this_seed)
+        random.seed(self.this_seed)
+        image = self.transform(image)
+        image = np.asarray(image)
+
+        if self.bgr_input:
+            image = image[..., ::-1]
+
+        return image
 
     def __call__(self, results):
+
+        self.this_seed = random.randint(0, 2**32)
+
         for k in self.keys:
-            if self.to_rgb:
-                results[k] = results[k][..., ::-1]
-            results[k] = Image.fromarray(results[k])
-            results[k] = self.transform(results[k])
-            results[k] = np.asarray(results[k])
-            results[k] = results[k][..., ::-1]
+            if isinstance(results[k], list):
+                results[k] = [self._color_jitter(v) for v in results[k]]
+            else:
+                results[k] = self._color_jitter(results[k])
         return results
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (f'(keys={self.keys}, to_rgb={self.to_rgb})')
+        repr_str += (
+            f'(keys={self.keys}, bgr_input={self.bgr_input}, seed={self.seed})'
+        )
 
         return repr_str
 

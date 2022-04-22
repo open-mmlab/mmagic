@@ -364,18 +364,20 @@ class TestAugmentations:
 
         results = copy.deepcopy(self.results)
         results['gt'] = (results['gt'] * 255).astype(np.uint8)
+        results['lq'] = [results['gt'], results['gt']]
 
-        target_keys = ['gt']
+        target_keys = ['gt', 'lq']
 
         color_jitter = ColorJitter(
-            keys=['gt'], brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5)
+            keys=['gt', 'lq'], brightness=0.5, contrast=0.5, saturation=0.5,
+            hue=0.5)
         color_jitter_results = color_jitter(results)
         assert self.check_keys_contain(color_jitter_results.keys(),
                                        target_keys)
         assert color_jitter_results['gt'].shape == self.img_gt.shape
 
         assert repr(color_jitter) == color_jitter.__class__.__name__ + (
-            f"(keys=['gt'], to_rgb=False)")
+            "(keys=['gt', 'lq'], bgr_input=False, seed=0)")
 
     @staticmethod
     def check_transposehw(origin_img, result_img):
@@ -801,8 +803,8 @@ class TestAugmentations:
         copy_ = CopyValues(src_keys=['gt'], dst_keys=['lq'])
         assert np.array_equal(copy_(results)['lq'], results['gt'])
         assert repr(copy_) == copy_.__class__.__name__ + (
-            f"(src_keys=['gt'])"
-            f"(dst_keys=['lq'])")
+            "(src_keys=['gt'])"
+            "(dst_keys=['lq'])")
 
     def test_unsharp_masking(self):
         results = {}
