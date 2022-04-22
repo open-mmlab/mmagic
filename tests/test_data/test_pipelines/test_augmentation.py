@@ -369,7 +369,18 @@ class TestAugmentations:
         target_keys = ['gt', 'lq']
 
         color_jitter = ColorJitter(
-            keys=['gt', 'lq'], brightness=0.5, contrast=0.5, saturation=0.5,
+            keys=['gt', 'lq'],
+            brightness=0.5,
+            contrast=0.5,
+            saturation=0.5,
+            hue=0.5)
+        color_jitter_results = color_jitter(results)
+        color_jitter = ColorJitter(
+            keys=['gt', 'lq'],
+            bgr_input=True,
+            brightness=0.5,
+            contrast=0.5,
+            saturation=0.5,
             hue=0.5)
         color_jitter_results = color_jitter(results)
         assert self.check_keys_contain(color_jitter_results.keys(),
