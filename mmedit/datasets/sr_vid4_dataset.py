@@ -74,7 +74,7 @@ class SRVid4Dataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
-        """Load annoations for Vid4 dataset.
+        """Load annotations for Vid4 dataset.
         Returns:
             list[dict]: A list of dicts for paired paths and other information.
         """
