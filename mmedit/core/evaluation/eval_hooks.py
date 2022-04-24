@@ -59,6 +59,8 @@ class EvalIterHook(Hook):
         for name, val in eval_res.items():
             runner.log_buffer.output[name] = val
         runner.log_buffer.ready = True
+        # call `after_val_epoch` after evaluation.
+        runner.call_hook('after_val_epoch')
 
 
 class DistEvalIterHook(EvalIterHook):
