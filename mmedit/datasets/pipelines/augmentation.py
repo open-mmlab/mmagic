@@ -626,23 +626,26 @@ class ColorJitter:
 
     Args:
         keys (list[str]): The images to be resized.
-        bgr_input (bool): Whether the input channels are ordered in 'bgr'.
-            Default: False.
+        channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
+            Default: 'rgb'.
         seed (int): Random seed. Default: False.
     """
 
-    def __init__(self, keys, bgr_input=False, seed=0, **kwargs):
+    def __init__(self, keys, channel_order='rgb', seed=0, **kwargs):
         assert keys, 'Keys should not be empty.'
+        assert 'to_rgb' not in kwargs, (
+            '`to_rgb` is not support in ColorJitter, '
+            "which is replaced by `channel_order` ('rgb' or 'bgr')")
 
         self.keys = keys
-        self.bgr_input = bgr_input
+        self.channel_order = channel_order
         self.transform = transforms.ColorJitter(**kwargs)
         self.seed = seed
         random.seed(seed)
 
     def _color_jitter(self, image):
 
-        if self.bgr_input:
+        if self.channel_order.lower() == 'bgr':
             image = image[..., ::-1]
 
         image = Image.fromarray(image)
@@ -651,7 +654,7 @@ class ColorJitter:
         image = self.transform(image)
         image = np.asarray(image)
 
-        if self.bgr_input:
+        if self.channel_order.lower() == 'bgr':
             image = image[..., ::-1]
 
         return image
@@ -669,9 +672,8 @@ class ColorJitter:
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (
-            f'(keys={self.keys}, bgr_input={self.bgr_input}, seed={self.seed})'
-        )
+        repr_str += (f'(keys={self.keys}, channel_order={self.channel_order}, '
+                     f'seed={self.seed})')
 
         return repr_str
 
