@@ -17,6 +17,7 @@ from mmedit.models import build_model
 def test_restorer_wrapper():
     try:
         import onnxruntime as ort
+
         from mmedit.core.export.wrappers import (ONNXRuntimeEditing,
                                                  ONNXRuntimeRestorer)
     except ImportError:
@@ -84,6 +85,7 @@ def test_restorer_wrapper():
 def test_mattor_wrapper():
     try:
         import onnxruntime as ort
+
         from mmedit.core.export.wrappers import (ONNXRuntimeEditing,
                                                  ONNXRuntimeMattor)
     except ImportError:

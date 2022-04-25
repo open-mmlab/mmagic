@@ -29,7 +29,9 @@ def generation_inference(model, img, img_unpaired=None):
     else:
         data = dict(img_a_path=img, img_b_path=img_unpaired)
     data = test_pipeline(data)
-    data = scatter(collate([data], samples_per_gpu=1), [device])[0]
+    data = collate([data], samples_per_gpu=1)
+    if 'cuda' in str(device):
+        data = scatter(data, [device])[0]
     # forward the model
     with torch.no_grad():
         results = model(test_mode=True, **data)

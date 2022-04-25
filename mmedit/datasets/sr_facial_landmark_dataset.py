@@ -44,7 +44,7 @@ class SRFacialLandmarkDataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
-        """Load annoations for SR dataset.
+        """Load annotations for SR dataset.
 
         Annotation file is a `npy` file, which contains a list of dict.
 
@@ -53,7 +53,7 @@ class SRFacialLandmarkDataset(BaseSRDataset):
         shape (usually for gt), bbox and landmark.
 
         Returns:
-            dict: Returned dict for GT and landmark.
+            list[dict]: A list of dicts for GT path and landmark.
                 Contains: gt_path, bbox, shape, landmark.
         """
         data_infos = np.load(self.ann_file, allow_pickle=True)

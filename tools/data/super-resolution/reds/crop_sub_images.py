@@ -2,6 +2,7 @@
 import argparse
 import os
 import os.path as osp
+import re
 import sys
 from multiprocessing import Pool
 
@@ -29,7 +30,7 @@ def worker(path, opt):
     crop_size = opt['crop_size']
     step = opt['step']
     thresh_size = opt['thresh_size']
-    sequence, img_name = path.split('/')[-2:]
+    sequence, img_name = re.split(r'[\\/]', path)[-2:]
     img_name, extension = osp.splitext(osp.basename(path))
 
     img = mmcv.imread(path, flag='unchanged')

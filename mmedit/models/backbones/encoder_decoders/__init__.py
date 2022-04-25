@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from .aot_encoder_decoder import AOTEncoderDecoder
 from .decoders import (DeepFillDecoder, FBADecoder, GLDecoder, IndexedUpsample,
                        IndexNetDecoder, PConvDecoder, PlainDecoder,
                        ResGCADecoder, ResNetDec, ResShortcutDec)
@@ -20,5 +21,5 @@ __all__ = [
     'DeepFillEncoder', 'DeepFillEncoderDecoder', 'DeepFillDecoder',
     'ContextualAttentionNeck', 'IndexedUpsample', 'IndexNetEncoder',
     'IndexNetDecoder', 'ResGCAEncoder', 'ResGCADecoder', 'FBAResnetDilated',
-    'FBADecoder'
+    'FBADecoder', 'AOTEncoderDecoder'
 ]

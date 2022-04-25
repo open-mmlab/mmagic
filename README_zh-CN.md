@@ -1,30 +1,60 @@
 <div align="center">
   <img src="resources/mmediting-logo.png" width="500px"/>
+  <div>&nbsp;</div>
+  <div align="center">
+    <b><font size="5">OpenMMLab 官网</font></b>
+    <sup>
+      <a href="https://openmmlab.com">
+        <i><font size="4">HOT</font></i>
+      </a>
+    </sup>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <b><font size="5">OpenMMLab 开放平台</font></b>
+    <sup>
+      <a href="https://platform.openmmlab.com">
+        <i><font size="4">TRY IT OUT</font></i>
+      </a>
+    </sup>
+  </div>
+  <div>&nbsp;</div>
+
+[![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/latest/)
+[![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
+[![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
+[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
+[![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+[![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+
+[📘使用文档](https://mmediting.readthedocs.io/zh_CN/latest/) |
+[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/latest/install.html) |
+[👀模型库](https://mmediting.readthedocs.io/zh_CN/latest/modelzoo.html) |
+[🆕更新记录](https://github.com/open-mmlab/mmediting/blob/master/docs/zh_cn/changelog.md) |
+[🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
+[🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
+
 </div>
 
 ## Introduction
 
 [English](/README.md) | 简体中文
 
+MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
 
-[![Documentation](https://readthedocs.org/projects/mmediting/badge/?version=latest)](https://mmediting.readthedocs.io/en/latest/?badge=latest)
-[![actions](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
-[![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![LICENSE](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
-[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
-[![Percentage of issues still open](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+目前 MMEditing 支持下列任务：
 
-MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://open-mmlab.github.io/) 项目的成员之一。
-
-主分支代码目前支持 **PyTorch 1.3+**。
-请注意，MMEditing 将在2021年10月后仅支持 **PyTorch 1.5 以上**的版本，并不再保证对较早版本的兼容性。
-
-文献资料: https://mmediting.readthedocs.io/en/latest/.
-
-<div align="left">
-  <img src="resources/mmediting-demo.jpg"/>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/12756472/158984079-c4754015-c1f6-48c5-ac46-62e79448c372.jpg"/>
 </div>
+
+主分支代码目前支持 **PyTorch 1.5 以上**的版本。
+
+一些示例:
+
+https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4
+
+https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
+
 
 ### 主要特性
 
@@ -38,95 +68,121 @@ MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMML
 
 - **SOTA**
 
-  MMEditing 提供修复/抠图/超分辨率/生成等任务最先进的算法.
+  MMEditing 提供修复/抠图/超分辨率/生成等任务最先进的算法。
+
+需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
+MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
+
+## 最新消息
+
+- [2022-04-01] v0.14.0 版本发布
+  - 支持视频插帧算法 TOFlow
+- [2022-03-01] v0.13.0 版本发布
+  - 支持 CAIN
+  - 支持 EDVR-L
+  - 支持在 Windows 系统中运行
+- [2022-02-11] 切换到 **PyTorch 1.5+**. 将不再保证与早期版本的 PyTorch 的兼容性
+
+请查看 [changelog.md](docs/en/changelog.md) 以获取更多细节与发版记录
+
+## 安装
+
+MMEditing 依赖 [PyTorch](https://pytorch.org/) 和 [MMCV](https://github.com/open-mmlab/mmcv)，以下是安装的简要步骤。
+
+**步骤 1.**
+依照[官方教程](https://pytorch.org/get-started/locally/)安装PyTorch
+
+**步骤 2.**
+使用 [MIM](https://github.com/open-mmlab/mim) 安装 MMCV
+
+```
+pip3 install openmim
+mim install mmcv-full
+```
+
+**步骤 3.**
+从源码安装 MMEditing
+
+```
+git clone https://github.com/open-mmlab/mmediting.git
+cd mmediting
+pip3 install -e .
+```
+
+更详细的安装指南请参考 [install.md](../../wiki/1.-Installation) 。
+
+## 开始使用
+
+请参考[使用教程](docs/zh_cn/getting_started.md)和[功能演示](docs/zh_cn/demo.md)获取MMEditing的基本用法。
 
 ## 模型库
 
 支持的算法:
 
 <details open>
-<summary>修复</summary>
+<summary>图像修复</summary>
 
-- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
-- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
 - [x] [Global&Local](configs/inpainting/global_local/README.md) (ToG'2017)
+- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
 - [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
+- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
 
 </details>
 
 <details open>
-<summary>抠图</summary>
+<summary>图像抠图</summary>
 
 - [x] [DIM](configs/mattors/dim/README.md) (CVPR'2017)
-- [x] [GCA](configs/mattors/gca/README.md) (AAAI'2020)
 - [x] [IndexNet](configs/mattors/indexnet/README.md) (ICCV'2019)
+- [x] [GCA](configs/mattors/gca/README.md) (AAAI'2020)
 
 </details>
 
 <details open>
-<summary>超分辨率</summary>
+<summary>图像超分辨率</summary>
 
-- [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (NTIRE'2021)
-- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
-- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
-- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
-- [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
-- [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
-- [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
-- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
 - [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
 - [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
-- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
-- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
-- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
+- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
+- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
+- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
 - [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
+- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
+- [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
+- [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
 
 </details>
 
 <details open>
-<summary>生成</summary>
+<summary>视频超分辨率</summary>
+
+- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
+- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
+- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
+- [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
+- [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
+- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (CVPR'2022)
+- [x] [RealBasicVSR](configs/restorers/real_basicvsr/README.md) (CVPR'2022)
+
+</details>
+
+<details open>
+<summary>图像生成</summary>
 
 - [x] [CycleGAN](configs/synthesizers/cyclegan/README.md) (ICCV'2017)
 - [x] [pix2pix](configs/synthesizers/pix2pix/README.md) (CVPR'2017)
 
 </details>
 
+<details open>
+<summary>视频插帧</summary>
+
+- [x] [TOFlow](configs/video_interpolators/tof/README.md) (IJCV'2019)
+- [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
+
+</details>
+
 请参考[模型库](https://mmediting.readthedocs.io/en/latest/modelzoo.html)了解详情。
-## 许可证
-
-本项目开源自 [Apache 2.0 license](LICENSE)。
-
-## 更新记录
-
-v0.10.0 版本已于 2021 年 8 月 12 日发布.
-
-需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
-MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
-
-
-## 安装
-
-请参考[安装指南](docs/install.md)进行安装。
-
-## 开始使用
-
-请参考[使用教程](docs/getting_started.md)获取MMEditing的基本用法。
-
-
-
-## 引用
-
-如果您觉得 MMEditing 对您的研究有所帮助，请考虑引用它：
-
-```bibtex
-@misc{mmediting2020,
-    title={OpenMMLab Editing Estimation Toolbox and Benchmark},
-    author={MMEditing Contributors},
-    howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year={2020}
-}
-```
 
 ## 参与贡献
 
@@ -136,23 +192,44 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。 我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
 
+## 引用
+
+如果 MMEditing 对您的研究有所帮助，请按照如下 bibtex 引用它。
+
+```bibtex
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {{MMEditing Contributors}},
+    howpublished = {\url{https://github.com/open-mmlab/mmediting}},
+    year = {2022}
+}
+```
+
+## 许可证
+
+本项目开源自 [Apache 2.0 license](LICENSE)。
+
 ## OpenMMLab 的其他项目
 
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab 计算机视觉基础库
-- [MIM](https://github.com/open-mmlab/mim): OpenMMlab 项目、算法、模型的统一入口
-- [MMClassification](https://github.com/open-mmlab/mmclassification): 图像分类工具箱与测试基准
-- [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab 检测工具箱与测试基准
-- [MMDetection3D](https://github.com/open-mmlab/mmdetection3d): OpenMMLab 新一代通用3D目标检测平台
-- [MMSegmentation](https://github.com/open-mmlab/mmsegmentation): 语义分割工具箱与测试基准
-- [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab 新一代视频理解工具箱与测试基准
-- [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab 一体化视频目标感知平台
-- [MMPose](https://github.com/open-mmlab/mmpose): OpenMMLab 姿态估计工具箱与测试基准
-- [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab 图像视频编辑工具箱
-- [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab 全流程文字检测识别理解工具包
-- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab 生成模型工具箱
-- [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab 光流估计工具箱与测试基准
-- [MMFewShot](https://github.com/open-mmlab/mmfewshot): OpenMMLab 少样本学习工具箱与测试基准
+- [MIM](https://github.com/open-mmlab/mim): MIM 是 OpenMMlab 项目、算法、模型的统一入口
+- [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab 图像分类工具箱
+- [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab 目标检测工具箱
+- [MMDetection3D](https://github.com/open-mmlab/mmdetection3d): OpenMMLab 新一代通用 3D 目标检测平台
+- [MMRotate](https://github.com/open-mmlab/mmrotate): OpenMMLab 旋转框检测工具箱与测试基准
+- [MMSegmentation](https://github.com/open-mmlab/mmsegmentation): OpenMMLab 语义分割工具箱
+- [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab 全流程文字检测识别理解工具箱
+- [MMPose](https://github.com/open-mmlab/mmpose): OpenMMLab 姿态估计工具箱
 - [MMHuman3D](https://github.com/open-mmlab/mmhuman3d): OpenMMLab 人体参数化模型工具箱与测试基准
+- [MMSelfSup](https://github.com/open-mmlab/mmselfsup): OpenMMLab 自监督学习工具箱与测试基准
+- [MMRazor](https://github.com/open-mmlab/mmrazor): OpenMMLab 模型压缩工具箱与测试基准
+- [MMFewShot](https://github.com/open-mmlab/mmfewshot): OpenMMLab 少样本学习工具箱与测试基准
+- [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab 新一代视频理解工具箱
+- [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab 一体化视频目标感知平台
+- [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab 光流估计工具箱与测试基准
+- [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab 图像视频编辑工具箱
+- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab 图片视频生成模型工具箱
+- [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab 模型部署框架
 
 ## 欢迎加入 OpenMMLab 社区
 

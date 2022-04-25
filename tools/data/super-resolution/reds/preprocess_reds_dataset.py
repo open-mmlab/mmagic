@@ -3,6 +3,7 @@ import argparse
 import glob
 import os
 import os.path as osp
+import re
 import shutil
 import sys
 
@@ -71,7 +72,7 @@ def make_lmdb(mode, data_path, lmdb_path, batch=5000, compress_level=1):
         list(mmcv.scandir(data_path, suffix='png', recursive=True)))
     keys = []
     for img_path in img_path_list:
-        parts = img_path.split('/')
+        parts = re.split(r'[\\/]', img_path)
         folder = parts[-2]
         img_name = parts[-1].split('.png')[0]
         keys.append(folder + '_' + img_name)  # example: 000_00000000
@@ -130,8 +131,8 @@ def merge_train_val(train_path, val_path):
     print(f'Move {val_path} to {train_path}...')
     val_folders = glob.glob(osp.join(val_path, '*'))
     for folder in val_folders:
-        new_folder_idx = f"{int(folder.split('/')[-1]) + 240:03d}"
-        new_folder_idx = f"{int(folder.split('/')[-1]) + 240:03d}"
+        index = int(re.split(r'[\\/]', folder)[-1])
+        new_folder_idx = f'{index + 240:03d}'
         shutil.move(folder, osp.join(train_path, new_folder_idx))
 
 
@@ -162,8 +163,8 @@ def unzip(zip_path):
         list: unzip folder names.
     """
     zip_files = mmcv.scandir(zip_path, suffix='zip', recursive=False)
-    import zipfile
     import shutil
+    import zipfile
     unzip_folders = []
     for zip_file in zip_files:
         zip_file = osp.join(zip_path, zip_file)

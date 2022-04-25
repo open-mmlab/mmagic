@@ -5,12 +5,13 @@ from mmcv.parallel import collate, scatter
 from mmedit.datasets.pipelines import Compose
 
 
-def restoration_inference(model, img):
+def restoration_inference(model, img, ref=None):
     """Inference image with the model.
 
     Args:
         model (nn.Module): The loaded model.
         img (str): File path of input image.
+        ref (str | None): File path of reference image. Default: None.
 
     Returns:
         Tensor: The predicted restoration result.
@@ -32,9 +33,14 @@ def restoration_inference(model, img):
     # build the data pipeline
     test_pipeline = Compose(cfg.test_pipeline)
     # prepare data
-    data = dict(lq_path=img)
+    if ref:  # Ref-SR
+        data = dict(lq_path=img, ref_path=ref)
+    else:  # SISR
+        data = dict(lq_path=img)
     data = test_pipeline(data)
-    data = scatter(collate([data], samples_per_gpu=1), [device])[0]
+    data = collate([data], samples_per_gpu=1)
+    if 'cuda' in str(device):
+        data = scatter(data, [device])[0]
     # forward the model
     with torch.no_grad():
         result = model(test_mode=True, **data)

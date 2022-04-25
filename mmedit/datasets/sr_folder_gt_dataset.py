@@ -50,12 +50,12 @@ class SRFolderGTDataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
-        """Load annoations for SR dataset.
+        """Load annotations for SR dataset.
 
         It loads the GT image path from folder.
 
         Returns:
-            dict: Returned dict for GT.
+            list[dict]: A list of dicts for path of GT.
         """
         data_infos = []
         gt_paths = self.scan_folder(self.gt_folder)

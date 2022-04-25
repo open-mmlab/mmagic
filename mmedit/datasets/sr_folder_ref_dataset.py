@@ -85,12 +85,12 @@ class SRFolderRefDataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
-        """Load annoations for SR dataset.
+        """Load annotations for SR dataset.
 
         It loads the ref, LQ and GT image path from folders.
 
         Returns:
-            dict: Returned dict for ref, LQ and GT pairs.
+            list[dict]: A list of dicts for paired paths of ref, LQ and GT.
         """
         data_infos = []
         ref_paths = self.scan_folder(self.ref_folder)

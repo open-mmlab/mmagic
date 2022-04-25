@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os.path as osp
 from pathlib import Path
 from unittest.mock import patch
 
@@ -49,7 +50,10 @@ class TestSRDatasets:
                 return 2
 
         toy_dataset = ToyDataset(pipeline=[])
-        file_paths = ['gt/baboon.png', 'lq/baboon_x4.png']
+        file_paths = [
+            osp.join('gt', 'baboon.png'),
+            osp.join('lq', 'baboon_x4.png')
+        ]
         file_paths = [str(self.data_prefix / v) for v in file_paths]
 
         result = toy_dataset.scan_folder(self.data_prefix)
@@ -453,13 +457,13 @@ def test_reds_dataset():
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
-                key='000/00000001',
+                key=osp.join('000', '00000001'),
                 max_frame_num=100,
                 num_input_frames=5),
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
-                key='001/00000001',
+                key=osp.join('001', '00000001'),
                 max_frame_num=100,
                 num_input_frames=5)
         ]
@@ -479,13 +483,13 @@ def test_reds_dataset():
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
-                key='001/00000001',
+                key=osp.join('001', '00000001'),
                 max_frame_num=100,
                 num_input_frames=5),
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
-                key='250/00000001',
+                key=osp.join('250', '00000001'),
                 max_frame_num=100,
                 num_input_frames=5)
         ]
@@ -530,7 +534,7 @@ def test_reds_dataset():
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
-                key='250/00000001',
+                key=osp.join('250', '00000001'),
                 max_frame_num=100,
                 num_input_frames=5)
         ]
@@ -549,7 +553,7 @@ def test_reds_dataset():
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
-                key='000/00000001',
+                key=osp.join('000', '00000001'),
                 max_frame_num=100,
                 num_input_frames=5)
         ]
@@ -579,8 +583,14 @@ def test_vimeo90k_dataset():
             test_mode=False)
 
         assert vimeo90k_dataset.data_infos == [
-            dict(lq_path=lq_paths_1, gt_path=gt_paths_1, key='00001/0266'),
-            dict(lq_path=lq_paths_2, gt_path=gt_paths_2, key='00002/0268')
+            dict(
+                lq_path=lq_paths_1,
+                gt_path=gt_paths_1,
+                key=osp.join('00001', '0266')),
+            dict(
+                lq_path=lq_paths_2,
+                gt_path=gt_paths_2,
+                key=osp.join('00002', '0268'))
         ]
 
         with pytest.raises(AssertionError):
@@ -617,19 +627,19 @@ def test_vid4_dataset():
             dict(
                 lq_path=str(root_path / 'lq'),
                 gt_path=str(root_path / 'gt'),
-                key='calendar/00000000',
+                key=osp.join('calendar', '00000000'),
                 num_input_frames=5,
                 max_frame_num=1),
             dict(
                 lq_path=str(root_path / 'lq'),
                 gt_path=str(root_path / 'gt'),
-                key='city/00000000',
+                key=osp.join('city', '00000000'),
                 num_input_frames=5,
                 max_frame_num=2),
             dict(
                 lq_path=str(root_path / 'lq'),
                 gt_path=str(root_path / 'gt'),
-                key='city/00000001',
+                key=osp.join('city', '00000001'),
                 num_input_frames=5,
                 max_frame_num=2),
         ]
@@ -788,9 +798,40 @@ def test_sr_reds_multiple_gt_dataset():
         sequence_length=100,
         num_input_frames=5)
 
+    # REDS4 val partition (repeat > 1)
+    reds_dataset = SRREDSMultipleGTDataset(
+        lq_folder=root_path,
+        gt_folder=root_path,
+        num_input_frames=5,
+        pipeline=[],
+        scale=4,
+        val_partition='REDS4',
+        repeat=2,
+        test_mode=True)
+
+    assert len(reds_dataset.data_infos) == 8  # 4 test clips
+    assert reds_dataset.data_infos[5] == dict(
+        lq_path=str(root_path),
+        gt_path=str(root_path),
+        key='011',
+        sequence_length=100,
+        num_input_frames=5)
+
+    # REDS4 val partition (repeat != int)
+    with pytest.raises(TypeError):
+        SRREDSMultipleGTDataset(
+            lq_folder=root_path,
+            gt_folder=root_path,
+            num_input_frames=5,
+            pipeline=[],
+            scale=4,
+            val_partition='REDS4',
+            repeat=1.5,
+            test_mode=True)
+
 
 def test_sr_vimeo90k_mutiple_gt_dataset():
-    root_path = Path(__file__).parent.parent.parent / 'data/vimeo90k'
+    root_path = Path(__file__).parent.parent.parent / 'data' / 'vimeo90k'
 
     txt_content = ('00001/0266 (256,448,3)\n')
     mocked_open_function = mock_open(read_data=txt_content)
@@ -815,12 +856,16 @@ def test_sr_vimeo90k_mutiple_gt_dataset():
             num_input_frames=num_input_frames,
             test_mode=False)
         assert vimeo90k_dataset.data_infos == [
-            dict(lq_path=lq_paths, gt_path=gt_paths, key='00001/0266')
+            dict(
+                lq_path=lq_paths,
+                gt_path=gt_paths,
+                key=osp.join('00001', '0266'))
         ]
 
 
 def test_sr_test_multiple_gt_dataset():
-    root_path = Path(__file__).parent.parent.parent / 'data/test_multiple_gt'
+    root_path = Path(
+        __file__).parent.parent.parent / 'data' / 'test_multiple_gt'
 
     test_dataset = SRTestMultipleGTDataset(
         lq_folder=root_path,
@@ -844,7 +889,8 @@ def test_sr_test_multiple_gt_dataset():
 
 
 def test_sr_folder_multiple_gt_dataset():
-    root_path = Path(__file__).parent.parent.parent / 'data/test_multiple_gt'
+    root_path = Path(
+        __file__).parent.parent.parent / 'data' / 'test_multiple_gt'
 
     # test without num_input_frames
     test_dataset = SRFolderMultipleGTDataset(
@@ -942,7 +988,8 @@ def test_sr_folder_multiple_gt_dataset():
 
 
 def test_sr_folder_video_dataset():
-    root_path = Path(__file__).parent.parent.parent / 'data/test_multiple_gt'
+    root_path = Path(
+        __file__).parent.parent.parent / 'data' / 'test_multiple_gt'
 
     test_dataset = SRFolderVideoDataset(
         lq_folder=root_path,
@@ -956,19 +1003,19 @@ def test_sr_folder_video_dataset():
         dict(
             lq_path=str(root_path),
             gt_path=str(root_path),
-            key='sequence_1/00000000',
+            key=osp.join('sequence_1', '00000000'),
             num_input_frames=5,
             max_frame_num=2),
         dict(
             lq_path=str(root_path),
             gt_path=str(root_path),
-            key='sequence_1/00000001',
+            key=osp.join('sequence_1', '00000001'),
             num_input_frames=5,
             max_frame_num=2),
         dict(
             lq_path=str(root_path),
             gt_path=str(root_path),
-            key='sequence_2/00000000',
+            key=osp.join('sequence_2', '00000000'),
             num_input_frames=5,
             max_frame_num=1),
     ]
@@ -989,7 +1036,7 @@ def test_sr_folder_video_dataset():
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
-                key='sequence_1/00000000',
+                key=osp.join('sequence_1', '00000000'),
                 num_input_frames=5,
                 max_frame_num=2),
         ]

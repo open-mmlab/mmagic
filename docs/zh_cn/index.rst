@@ -3,6 +3,9 @@
 
 您可以在页面左下角切换中英文文档。
 
+.. note::
+   目前英文版有更多的内容，如果您希望帮助我们翻译一部分文档，可以通过issue联系我们。
+
 .. toctree::
    :maxdepth: 2
    :caption: 开始你的第一步
@@ -19,6 +22,7 @@
    mattors_models.md
    restorers_models.md
    synthesizers_models.md
+   video_interpolators_models.md
 
 .. toctree::
    :maxdepth: 2

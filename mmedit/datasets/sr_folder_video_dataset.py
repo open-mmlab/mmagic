@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import glob
+import os
 import os.path as osp
+import re
 from collections import defaultdict
 
 import mmcv
@@ -49,6 +51,8 @@ class SRFolderVideoDataset(BaseSRDataset):
             that all sequences in the folder is used. Default: None.
         filename_tmpl (str): Template for each filename. Note that the
             template excludes the file extension. Default: '{:08d}'.
+        start_idx (int): The index corresponds to the first frame
+            in the sequence. Default: 0.
         metric_average_mode (str): The way to compute the average metric.
             If 'clip', we first compute an average value for each clip, and
             then average the values from different clips. If 'all', we
@@ -65,6 +69,7 @@ class SRFolderVideoDataset(BaseSRDataset):
                  scale,
                  ann_file=None,
                  filename_tmpl='{:08d}',
+                 start_idx=0,
                  metric_average_mode='clip',
                  test_mode=True):
         super().__init__(pipeline, scale, test_mode)
@@ -81,6 +86,7 @@ class SRFolderVideoDataset(BaseSRDataset):
         self.num_input_frames = num_input_frames
         self.ann_file = ann_file
         self.filename_tmpl = filename_tmpl
+        self.start_idx = start_idx
         self.metric_average_mode = metric_average_mode
 
         self.data_infos = self.load_annotations()
@@ -92,6 +98,7 @@ class SRFolderVideoDataset(BaseSRDataset):
         ann_list = mmcv.list_from_file(self.ann_file)
         for ann in ann_list:
             key, max_frame_num = ann.strip().rsplit(' ', 1)
+            key = key.replace('/', os.sep)
             sequence = osp.basename(key)
             if sequence not in self.folders:
                 self.folders[sequence] = int(max_frame_num)
@@ -107,10 +114,10 @@ class SRFolderVideoDataset(BaseSRDataset):
         return data_infos
 
     def load_annotations(self):
-        """Load annoations for the dataset.
+        """Load annotations for the dataset.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list[dict]: A list of dicts for paired paths and other information.
         """
 
         if self.ann_file:
@@ -120,7 +127,7 @@ class SRFolderVideoDataset(BaseSRDataset):
         data_infos = []
 
         sequences = sorted(glob.glob(osp.join(self.lq_folder, '*')))
-        sequences = [s.split('/')[-1] for s in sequences]
+        sequences = [re.split(r'[\\/]', s)[-1] for s in sequences]
 
         for sequence in sequences:
             seq_dir = osp.join(self.lq_folder, sequence)
@@ -128,12 +135,12 @@ class SRFolderVideoDataset(BaseSRDataset):
             max_frame_num = len(list(mmcv.utils.scandir(seq_dir)))
             self.folders[sequence] = max_frame_num
 
-            for i in range(0, max_frame_num):
+            for i in range(self.start_idx, max_frame_num + self.start_idx):
                 data_infos.append(
                     dict(
                         lq_path=self.lq_folder,
                         gt_path=self.gt_folder,
-                        key=f'{sequence}/{self.filename_tmpl.format(i)}',
+                        key=osp.join(sequence, self.filename_tmpl.format(i)),
                         num_input_frames=self.num_input_frames,
                         max_frame_num=max_frame_num))
 

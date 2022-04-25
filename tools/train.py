@@ -7,14 +7,15 @@ import time
 
 import mmcv
 import torch
-from mmcv import Config
+import torch.distributed as dist
+from mmcv import Config, DictAction
 from mmcv.runner import init_dist
 
 from mmedit import __version__
-from mmedit.apis import set_random_seed, train_model
+from mmedit.apis import init_random_seed, set_random_seed, train_model
 from mmedit.datasets import build_dataset
 from mmedit.models import build_model
-from mmedit.utils import collect_env, get_root_logger
+from mmedit.utils import collect_env, get_root_logger, setup_multi_processes
 
 
 def parse_args():
@@ -35,9 +36,23 @@ def parse_args():
         '(only applicable to non-distributed training)')
     parser.add_argument('--seed', type=int, default=None, help='random seed')
     parser.add_argument(
+        '--diff_seed',
+        action='store_true',
+        help='Whether or not set different seeds for different ranks')
+    parser.add_argument(
         '--deterministic',
         action='store_true',
         help='whether to set deterministic options for CUDNN backend.')
+    parser.add_argument(
+        '--cfg-options',
+        nargs='+',
+        action=DictAction,
+        help='override some settings in the used config, the key-value pair '
+        'in xxx=yyy format will be merged into config file. If the value to '
+        'be overwritten is a list, it should be like key="[a,b]" or key=a,b '
+        'It also allows nested list/tuple values, e.g. key="[(a,b),(c,d)]" '
+        'Note that the quotation marks are necessary and that no white space '
+        'is allowed.')
     parser.add_argument(
         '--launcher',
         choices=['none', 'pytorch', 'slurm', 'mpi'],
@@ -59,6 +74,13 @@ def main():
     args = parse_args()
 
     cfg = Config.fromfile(args.config)
+
+    if args.cfg_options is not None:
+        cfg.merge_from_dict(args.cfg_options)
+
+    # set multi-process settings
+    setup_multi_processes(cfg)
+
     # set cudnn_benchmark
     if cfg.get('cudnn_benchmark', False):
         torch.backends.cudnn.benchmark = True
@@ -100,11 +122,12 @@ def main():
     logger.info('Config:\n{}'.format(cfg.text))
 
     # set random seeds
-    if args.seed is not None:
-        logger.info('Set random seed to {}, deterministic: {}'.format(
-            args.seed, args.deterministic))
-        set_random_seed(args.seed, deterministic=args.deterministic)
-    cfg.seed = args.seed
+    seed = init_random_seed(args.seed)
+    seed = seed + dist.get_rank() if args.diff_seed else seed
+    logger.info('Set random seed to {}, deterministic: {}'.format(
+        seed, args.deterministic))
+    set_random_seed(seed, deterministic=args.deterministic)
+    cfg.seed = seed
 
     model = build_model(
         cfg.model, train_cfg=cfg.train_cfg, test_cfg=cfg.test_cfg)
@@ -128,7 +151,7 @@ def main():
         cfg['exp_name'] = osp.splitext(osp.basename(cfg.work_dir))[0]
     meta['exp_name'] = cfg.exp_name
     meta['mmedit Version'] = __version__
-    meta['seed'] = args.seed
+    meta['seed'] = seed
     meta['env_info'] = env_info
 
     # add an attribute for visualization convenience

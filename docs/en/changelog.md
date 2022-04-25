@@ -1,5 +1,166 @@
 # Changelog
 
+## v0.14.0 (01/04/2022)
+
+**Highlights**
+
+1. Support TOFlow in video frame interpolation
+
+**New Features**
+
+- Support AOT-GAN ([#677](https://github.com/open-mmlab/mmediting/pull/677))
+- Use `--diff-seed` to set different torch seed on different rank ([#781](https://github.com/open-mmlab/mmediting/pull/781))
+- Support streaming reading of frames in video interpolation demo ([#790](https://github.com/open-mmlab/mmediting/pull/790))
+- Support dist_train without slurm ([#791](https://github.com/open-mmlab/mmediting/pull/791))
+- Put LQ into CPU for restoration_video_demo ([#792](https://github.com/open-mmlab/mmediting/pull/792))
+- Support gray normalization constant in EDSR ([#793](https://github.com/open-mmlab/mmediting/pull/793))
+- Support TOFlow in video frame interpolation ([#806](https://github.com/open-mmlab/mmediting/pull/806), [#811](https://github.com/open-mmlab/mmediting/pull/811))
+- Support seed in DistributedSampler and sync seed across ranks ([#815](https://github.com/open-mmlab/mmediting/pull/815))
+
+**Bug Fixes**
+
+- Update link in README files ([#782](https://github.com/open-mmlab/mmediting/pull/782), [#786](https://github.com/open-mmlab/mmediting/pull/786), [#819](https://github.com/open-mmlab/mmediting/pull/819), [#820](https://github.com/open-mmlab/mmediting/pull/820))
+- Fix matting tutorial, and fix links to colab ([#795](https://github.com/open-mmlab/mmediting/pull/795))
+- Invert `flip_ratio` in `RandomAffine` pipeline ([#799](https://github.com/open-mmlab/mmediting/pull/799))
+- Update preprocess_div2k_dataset.py ([#801](https://github.com/open-mmlab/mmediting/pull/801))
+- Update SR Colab Demo Installation Method and Set5 link ([#807](https://github.com/open-mmlab/mmediting/pull/807))
+- Fix Y/GRB mistake in EDSR README ([#812](https://github.com/open-mmlab/mmediting/pull/812))
+- Replace pytorch install command to conda in README(_zh-CN).md ([#816](https://github.com/open-mmlab/mmediting/pull/816))
+
+**Improvements**
+
+- Update CI ([#650](https://github.com/open-mmlab/mmediting/pull/650))
+- Update requirements.txt ([#725](https://github.com/open-mmlab/mmediting/pull/725), [#817](https://github.com/open-mmlab/mmediting/pull/817))
+- Add Tutorial of dataset ([#758](https://github.com/open-mmlab/mmediting/pull/758)), pipeline ([#779](https://github.com/open-mmlab/mmediting/pull/779)), model ([#766](https://github.com/open-mmlab/mmediting/pull/758))
+- Update index and TOC tree ([#767](https://github.com/open-mmlab/mmediting/pull/767))
+- Make update_model_index.py compatible on windows ([#768](https://github.com/open-mmlab/mmediting/pull/768))
+- Update doc build system ([#769](https://github.com/open-mmlab/mmediting/pull/769))
+- Update keyword and classifier for setuptools ([#773](https://github.com/open-mmlab/mmediting/pull/773))
+- Renovate installation ([#776](https://github.com/open-mmlab/mmediting/pull/776), [#800](https://github.com/open-mmlab/mmediting/pull/800))
+- Update BasicVSR++ and RealBasicVSR docs ([#778](https://github.com/open-mmlab/mmediting/pull/778))
+- Update citation ([#785](https://github.com/open-mmlab/mmediting/pull/785), [#787](https://github.com/open-mmlab/mmediting/pull/787))
+- Regroup docs ([#788](https://github.com/open-mmlab/mmediting/pull/788))
+- Use full name of config as 'Name' in metafile ([#798](https://github.com/open-mmlab/mmediting/pull/798))
+- Update figure and video demo in README ([#802](https://github.com/open-mmlab/mmediting/pull/802))
+- Add `clamp(0, 1)` in test of video frame interpolation ([#805](https://github.com/open-mmlab/mmediting/pull/805))
+- Use hyphen for command line args in demo & tools ([#808](https://github.com/open-mmlab/mmediting/pull/808)), and keep underline for required arguments in python files ([#822](https://github.com/open-mmlab/mmediting/pull/822))
+- Make dataset.pipeline a dedicated section in doc ([#813](https://github.com/open-mmlab/mmediting/pull/813))
+- Update mmcv-full>=1.3.13 to support DCN on CPU ([#823](https://github.com/open-mmlab/mmediting/pull/823))
+
+**Contributors**
+
+@wangruohui @ckkelvinchan @Yshuo-Li @nijkah @wdmwhh @freepoet @quincylin1
+
+## v0.13.0 (01/03/2022)
+
+**Highlights**
+
+1. Support CAIN
+2. Support EDVR-L
+3. Support running in Windows
+
+**New Features**
+
+- Add test-time ensemble for images and videos and support ensemble in BasicVSR series ([#585](https://github.com/open-mmlab/mmediting/pull/585))
+- Support AOT-GAN (work in progress) ([#674](https://github.com/open-mmlab/mmediting/pull/674), [#675](https://github.com/open-mmlab/mmediting/pull/675), [#676](https://github.com/open-mmlab/mmediting/pull/676))
+- Support CAIN ([#683](https://github.com/open-mmlab/mmediting/pull/683), [#691](https://github.com/open-mmlab/mmediting/pull/691), [#709](https://github.com/open-mmlab/mmediting/pull/709), [#713](https://github.com/open-mmlab/mmediting/pull/713))
+- Add basic interpolater ([#687](https://github.com/open-mmlab/mmediting/pull/687))
+- Add BaseVFIDataset and VFIVimeo90KDataset ([#695](https://github.com/open-mmlab/mmediting/pull/695), [#697](https://github.com/open-mmlab/mmediting/pull/697))
+- Add video interpolation demo ([#688](https://github.com/open-mmlab/mmediting/pull/688), [#717](https://github.com/open-mmlab/mmediting/pull/717))
+- Support various scales in RRDBNet ([#699](https://github.com/open-mmlab/mmediting/pull/699))
+- Support Ref-SR inference ([#716](https://github.com/open-mmlab/mmediting/pull/716))
+- Support EDVR-L on REDS ([#719](https://github.com/open-mmlab/mmediting/pull/719))
+- Support CPU training ([#720](https://github.com/open-mmlab/mmediting/pull/720))
+- Support running in Windows ([#732](https://github.com/open-mmlab/mmediting/pull/732), [#738](https://github.com/open-mmlab/mmediting/pull/738))
+- Support DCN on CPU ([#735](https://github.com/open-mmlab/mmediting/pull/735))
+
+**Bug Fixes**
+
+- Fix link address in docs ([#703](https://github.com/open-mmlab/mmediting/pull/703), [#704](https://github.com/open-mmlab/mmediting/pull/704))
+- Fix ARG `MMCV` in Dockerfile ([#708](https://github.com/open-mmlab/mmediting/pull/708))
+- Fix file permission of non-executable files ([#718](https://github.com/open-mmlab/mmediting/pull/718))
+- Fix some deprecation warning related to numpy ([#728](https://github.com/open-mmlab/mmediting/pull/728))
+- Delete `__init__` in `TestVFIDataset` ([#731](https://github.com/open-mmlab/mmediting/pull/731))
+- Fix data type in docstring of several Datasets ([#739](https://github.com/open-mmlab/mmediting/pull/739))
+- Fix math notation in docstring ([#741](https://github.com/open-mmlab/mmediting/pull/741))
+- Fix missing folders in copyright commit hook ([#754](https://github.com/open-mmlab/mmediting/pull/754))
+- Delete duplicate test in loading ([#756](https://github.com/open-mmlab/mmediting/pull/756))
+
+**Improvements**
+
+- Update Pillow from 6.2.2 to 8.4 in CI ([#693](https://github.com/open-mmlab/mmediting/pull/693))
+- Add argument 'repeat' to SRREDSMultipleGTDataset ([#672](https://github.com/open-mmlab/mmediting/pull/672))
+- Deprecate the support for "python setup.py test" ([#701](https://github.com/open-mmlab/mmediting/pull/701))
+- Add setup multi-processing both in train and test ([#707](https://github.com/open-mmlab/mmediting/pull/707))
+- Add OpenMMLab website and platform links ([#710](https://github.com/open-mmlab/mmediting/pull/710))
+- Refact README files of all methods ([#712](https://github.com/open-mmlab/mmediting/pull/712))
+- Replace string version comparison with `package.version.parse` ([#723](https://github.com/open-mmlab/mmediting/pull/723))
+- Add docs of Ref-SR demo and video frame interpolation demo ([#724](https://github.com/open-mmlab/mmediting/pull/724))
+- Add interpolation and refact README.md ([#726](https://github.com/open-mmlab/mmediting/pull/726))
+- Update isort version in pre-commit hook ([#727](https://github.com/open-mmlab/mmediting/pull/727))
+- Redesign CI for Linux ([#734](https://github.com/open-mmlab/mmediting/pull/734))
+- Update install.md ([#763](https://github.com/open-mmlab/mmediting/pull/763))
+- Reorganizing OpenMMLab projects in readme ([#764](https://github.com/open-mmlab/mmediting/pull/764))
+- Add deprecation message for deploy tools ([#765](https://github.com/open-mmlab/mmediting/pull/765))
+
+**Contributors**
+
+@wangruohui @ckkelvinchan @Yshuo-Li @quincylin1 @Juggernaut93 @anse3832 @nijkah
+
+## v0.12.0 (31/12/2021)
+
+**Highlights**
+
+1. Support RealBasicVSR
+2. Support Real-ESRGAN checkpoint
+
+**New Features**
+
+- Support video input and output in restoration demo ([#622](https://github.com/open-mmlab/mmediting/pull/622))
+- Support RealBasicVSR ([#632](https://github.com/open-mmlab/mmediting/pull/632), [#633](https://github.com/open-mmlab/mmediting/pull/633), [#647](https://github.com/open-mmlab/mmediting/pull/647), [#680](https://github.com/open-mmlab/mmediting/pull/680))
+- Support Real-ESRGAN checkpoint ([#635](https://github.com/open-mmlab/mmediting/pull/635))
+- Support conversion to y-channel when loading images ([643](https://github.com/open-mmlab/mmediting/pull/643))
+- Support random video compression during training ([#646](https://github.com/open-mmlab/mmediting/pull/646))
+- Support crop sequence ([#648](https://github.com/open-mmlab/mmediting/pull/648))
+- Support pixel_unshuffle ([#684](https://github.com/open-mmlab/mmediting/pull/684))
+
+**Bug Fixes**
+
+- Change 'target_size' for RandomResize from list to tuple ([#617](https://github.com/open-mmlab/mmediting/pull/617))
+- Fix folder creation in preprocess_df2k_ost_dataset.py ([#623](https://github.com/open-mmlab/mmediting/pull/623))
+- Change TDAN config path in README ([#625](https://github.com/open-mmlab/mmediting/pull/625))
+- Change 'radius' to 'kernel_size' for UnsharpMasking in Real-ESRNet config ([#626](https://github.com/open-mmlab/mmediting/pull/626))
+- Fix bug in MATLABLikeResize ([#630](https://github.com/open-mmlab/mmediting/pull/630))
+- Fix 'flow_warp' comment ([#655](https://github.com/open-mmlab/mmediting/pull/655))
+- Fix the error of Model Zoo and Datasets in docs ([#664](https://github.com/open-mmlab/mmediting/pull/664))
+- Fix bug in 'random_degradations' ([#673](https://github.com/open-mmlab/mmediting/pull/673))
+- Limit opencv-python version ([#689](https://github.com/open-mmlab/mmediting/pull/689))
+
+**Improvements**
+
+- Translate docs to Chinese ([#576](https://github.com/open-mmlab/mmediting/pull/576), [#577](https://github.com/open-mmlab/mmediting/pull/577), [#578](https://github.com/open-mmlab/mmediting/pull/578), [#579](https://github.com/open-mmlab/mmediting/pull/579), [#581](https://github.com/open-mmlab/mmediting/pull/581), [#582](https://github.com/open-mmlab/mmediting/pull/582), [#584](https://github.com/open-mmlab/mmediting/pull/584), [#587](https://github.com/open-mmlab/mmediting/pull/587), [#588](https://github.com/open-mmlab/mmediting/pull/588), [#589](https://github.com/open-mmlab/mmediting/pull/589), [#590](https://github.com/open-mmlab/mmediting/pull/590), [#591](https://github.com/open-mmlab/mmediting/pull/591), [#592](https://github.com/open-mmlab/mmediting/pull/592), [#593](https://github.com/open-mmlab/mmediting/pull/593), [#594](https://github.com/open-mmlab/mmediting/pull/594), [#595](https://github.com/open-mmlab/mmediting/pull/595), [#596](https://github.com/open-mmlab/mmediting/pull/596), [#641](https://github.com/open-mmlab/mmediting/pull/641), [#647](https://github.com/open-mmlab/mmediting/pull/647), [#656](https://github.com/open-mmlab/mmediting/pull/656), [#665](https://github.com/open-mmlab/mmediting/pull/665), [#666](https://github.com/open-mmlab/mmediting/pull/666))
+- Add UNetDiscriminatorWithSpectralNorm ([#605](https://github.com/open-mmlab/mmediting/pull/605))
+- Use PyTorch sphinx theme ([#607](https://github.com/open-mmlab/mmediting/pull/607), [#608](https://github.com/open-mmlab/mmediting/pull/608))
+- Update mmcv ([#609](https://github.com/open-mmlab/mmediting/pull/609)), mmflow ([#621](https://github.com/open-mmlab/mmediting/pull/621)), mmfewshot ([#634](https://github.com/open-mmlab/mmediting/pull/634)) and mmhuman3d ([#649](https://github.com/open-mmlab/mmediting/pull/649)) in docs
+- Convert minimum GCC version to 5.4 ([#612](https://github.com/open-mmlab/mmediting/pull/612))
+- Add tiff in SRDataset IMG_EXTENSIONS ([#614](https://github.com/open-mmlab/mmediting/pull/614))
+- Update metafile and update_model_index.py ([#615](https://github.com/open-mmlab/mmediting/pull/615))
+- Update preprocess_df2k_ost_dataset.py ([#624](https://github.com/open-mmlab/mmediting/pull/624))
+- Add Abstract to README ([#628](https://github.com/open-mmlab/mmediting/pull/628), [#636](https://github.com/open-mmlab/mmediting/pull/636))
+- Align NIQE to MATLAB results ([#631](https://github.com/open-mmlab/mmediting/pull/631))
+- Add official markdown lint hook ([#639](https://github.com/open-mmlab/mmediting/pull/639))
+- Skip CI when some specific files were changed ([#640](https://github.com/open-mmlab/mmediting/pull/640))
+- Update docs/conf.py ([#644](https://github.com/open-mmlab/mmediting/pull/644), [#651](https://github.com/open-mmlab/mmediting/pull/651))
+- Try to create a symbolic link on windows ([#645](https://github.com/open-mmlab/mmediting/pull/645))
+- Cancel previous runs that are not completed ([#650](https://github.com/open-mmlab/mmediting/pull/650))
+- Update path of configs in demo.md and getting_started.md ([#658](https://github.com/open-mmlab/mmediting/pull/658), [#659](https://github.com/open-mmlab/mmediting/pull/659))
+- Use mmcv root model registry ([#660](https://github.com/open-mmlab/mmediting/pull/660))
+- Update README.md ([#654](https://github.com/open-mmlab/mmediting/pull/654), [#663](https://github.com/open-mmlab/mmediting/pull/663))
+- Refactor the structure of documentation ([#668](https://github.com/open-mmlab/mmediting/pull/668))
+- Add script to crop REDS images into sub-images for faster IO ([#669](https://github.com/open-mmlab/mmediting/pull/669))
+- Capitalize the first letter of the task name in the metafile ([#678](https://github.com/open-mmlab/mmediting/pull/678))
+- Update FixedCrop for cropping image sequence ([#682](https://github.com/open-mmlab/mmediting/pull/682))
+
 ## v0.11.0 (03/11/2021)
 
 **Highlights**

@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import glob
+import os
 import os.path as osp
 
 import mmcv
@@ -91,10 +92,10 @@ class SRFolderMultipleGTDataset(BaseSRDataset):
         return data_infos
 
     def load_annotations(self):
-        """Load annoations for the dataset.
+        """Load annotations for the dataset.
 
         Returns:
-            dict: Returned dict for LQ and GT pairs.
+            list[dict]: Returned list of dicts for paired paths of LQ and GT.
         """
 
         if self.ann_file:
@@ -112,7 +113,7 @@ class SRFolderMultipleGTDataset(BaseSRDataset):
                 dict(
                     lq_path=self.lq_folder,
                     gt_path=self.gt_folder,
-                    key=sequence.replace(f'{self.lq_folder}/', ''),
+                    key=sequence.replace(f'{self.lq_folder}{os.sep}', ''),
                     num_input_frames=num_input_frames,
                     sequence_length=sequence_length))
 

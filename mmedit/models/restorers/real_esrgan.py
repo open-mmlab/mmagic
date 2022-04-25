@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import numbers
 import os.path as osp
 from copy import deepcopy
