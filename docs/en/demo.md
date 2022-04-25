@@ -28,7 +28,7 @@ python demo/inpainting_demo.py \
     tests/data/pred/inpainting_celeba.png
 ```
 
-The predicted inpainting result will be save in `tests/data/pred/inpainting_celeba.png`.
+The predicted inpainting result will be save in `tests/data/pred/inpainting_celeba.png` .
 
 #### Matting
 
@@ -56,7 +56,7 @@ python demo/matting_demo.py \
     tests/data/pred/GT05.png
 ```
 
-The predicted alpha matte will be save in `tests/data/pred/GT05.png`.
+The predicted alpha matte will be save in `tests/data/pred/GT05.png` .
 
 #### Restoration (Image)
 
@@ -152,13 +152,29 @@ BasicVSR:
 
 ```shell
 python demo/restoration_video_demo.py \
-    ./configs/restorers/basicvsr/basicvsr_reds4.py \
-    https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth \
-    data/Vid4/BIx4/calendar/ \
-    ./output
+./configs/restorers/basicvsr/basicvsr_reds4.py \
+https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth \
+data/Vid4/BIx4/calendar/ \
+./output
 ```
 
-The restored video will be save in `output/`.
+The restored video will be save in `output/` .
+
+If you want to use an input video and output video, you can use the following command:
+
+```shell
+python demo/restoration_video_demo.py \
+./configs/restorers/basicvsr/basicvsr_reds4.py \
+https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth \
+data/your_input.mp4 \
+output/your_output.mp4 \
+--fps=25 \
+--max_seq_len=50
+```
+
+Here
+* `fps` refers to the frame rate of the output video you prefer. If it is not specified, the output frame rate is set to the input frame rate.
+* `max_seq_len` denotes the maximum number of frames in each sequence. For example, if `max_seq_len=50`, a 200-frame sequence will be divided into 4 50-frame sequence and processed independently.
 
 #### video frame interpolation
 
@@ -175,9 +191,9 @@ python demo/video_interpolation_demo.py \
 ```
 
 `${INPUT_DIR}` / `${OUTPUT_DIR}` can be a path of video file or the folder of a sequence of ordered images.
-If `${OUTPUT_DIR}` is a path of video file, its frame rate can be determined by the frame rate of input video and `fps_multiplier`, or be determined by `fps` directly (the former has higher priority). Examples:
+If `${OUTPUT_DIR}` is a path of video file, its frame rate can be determined by the frame rate of input video and `fps_multiplier` , or be determined by `fps` directly (the former has higher priority). Examples:
 
-The frame rate of output video is determined by the frame rate of input video and `fps_multiplier`：
+The frame rate of output video is determined by the frame rate of input video and `fps_multiplier` ：
 
 ```shell
 python demo/video_interpolation_demo.py \
@@ -188,7 +204,7 @@ python demo/video_interpolation_demo.py \
     --fps-multiplier 2.0
 ```
 
-The frame rate of output video is determined by `fps`:
+The frame rate of output video is determined by `fps` :
 
 ```shell
 python demo/video_interpolation_demo.py \
