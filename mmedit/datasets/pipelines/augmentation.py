@@ -9,6 +9,7 @@ import random
 import cv2
 import mmcv
 import numpy as np
+import torch
 import torchvision.transforms as transforms
 from PIL import Image
 
@@ -628,10 +629,9 @@ class ColorJitter:
         keys (list[str]): The images to be resized.
         channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
             Default: 'rgb'.
-        seed (int): Random seed. Default: False.
     """
 
-    def __init__(self, keys, channel_order='rgb', seed=0, **kwargs):
+    def __init__(self, keys, channel_order='rgb', **kwargs):
         assert keys, 'Keys should not be empty.'
         assert 'to_rgb' not in kwargs, (
             '`to_rgb` is not support in ColorJitter, '
@@ -640,17 +640,14 @@ class ColorJitter:
         self.keys = keys
         self.channel_order = channel_order
         self.transform = transforms.ColorJitter(**kwargs)
-        self.seed = seed
-        random.seed(seed)
 
-    def _color_jitter(self, image):
+    def _color_jitter(self, image, this_seed):
 
         if self.channel_order.lower() == 'bgr':
             image = image[..., ::-1]
 
         image = Image.fromarray(image)
-        np.random.seed(self.this_seed)
-        random.seed(self.this_seed)
+        torch.manual_seed(this_seed)
         image = self.transform(image)
         image = np.asarray(image)
 
@@ -661,13 +658,15 @@ class ColorJitter:
 
     def __call__(self, results):
 
-        self.this_seed = random.randint(0, 2**32)
+        this_seed = random.randint(0, 2**32)
 
         for k in self.keys:
             if isinstance(results[k], list):
-                results[k] = [self._color_jitter(v) for v in results[k]]
+                results[k] = [
+                    self._color_jitter(v, this_seed) for v in results[k]
+                ]
             else:
-                results[k] = self._color_jitter(results[k])
+                results[k] = self._color_jitter(results[k], this_seed)
         return results
 
     def __repr__(self):

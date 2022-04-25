@@ -388,7 +388,7 @@ class TestAugmentations:
         assert color_jitter_results['gt'].shape == self.img_gt.shape
 
         assert repr(color_jitter) == color_jitter.__class__.__name__ + (
-            "(keys=['gt', 'lq'], channel_order=bgr, seed=0)")
+            "(keys=['gt', 'lq'], channel_order=bgr)")
 
     @staticmethod
     def check_transposehw(origin_img, result_img):
