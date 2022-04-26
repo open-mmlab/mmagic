@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from collections.abc import Sequence
+import random
 
 from mmcv.utils import build_from_cfg
 
@@ -50,4 +51,55 @@ class Compose:
             format_string += '\n'
             format_string += f'    {t}'
         format_string += '\n)'
+        return format_string
+
+@PIPELINES.register_module()
+class RandomSelect:
+    """Compose a data pipeline with a sequence of transforms.
+
+    Args:
+        transforms (list[dict | callable]):
+            Either config dicts of transforms or transform objects.
+    """
+
+    def __init__(self, transforms, num_samples=1):
+        assert isinstance(transforms, Sequence)
+        assert len(transforms) >= num_samples
+
+        self.transforms = []
+        self.num_samples = num_samples
+        transforms = random.sample(transforms, num_samples)
+        for transform in transforms:
+            if isinstance(transform, dict):
+                transform = build_from_cfg(transform, PIPELINES)
+                self.transforms.append(transform)
+            elif callable(transform):
+                self.transforms.append(transform)
+            else:
+                raise TypeError(f'transform must be callable or a dict, '
+                                f'but got {type(transform)}')
+
+    def __call__(self, data):
+        """Call function.
+
+        Args:
+            data (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        for t in self.transforms:
+            data = t(data)
+            if data is None:
+                return None
+        return data
+
+    def __repr__(self):
+        format_string = self.__class__.__name__ + '('
+        for t in self.transforms:
+            format_string += '\n'
+            format_string += f'    {t}'
+        format_string += '\n'
+        format_string += f'num_samples={self.num_samples})'
         return format_string

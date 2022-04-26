@@ -6,7 +6,7 @@ from .augmentation import (BinarizeImage, ColorJitter, CopyValues, Flip,
                            Quantize, RandomAffine, RandomJitter,
                            RandomMaskDilation, RandomTransposeHW, Resize,
                            TemporalReverse, UnsharpMasking)
-from .compose import Compose
+from .compose import Compose, RandomSelect
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    CropLike, FixedCrop, ModCrop, PairedRandomCrop,
                    RandomResizedCrop)
@@ -43,5 +43,5 @@ __all__ = [
     'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
     'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
     'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking',
-    'RandomVideoCompression', 'CropSequence'
+    'RandomVideoCompression', 'CropSequence', 'RandomSelect',
 ]

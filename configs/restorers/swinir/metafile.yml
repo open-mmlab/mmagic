@@ -1,23 +1,20 @@
 Collections:
 - Metadata:
     Architecture:
-    - ESRGAN
-  Name: ESRGAN
+    - SwinIR
+  Name: SwinIR
   Paper:
-  - https://arxiv.org/abs/1809.00219
+  - https://arxiv.org/abs/2108.10257
   README: configs/restorers/swinir/README.md
 Models:
 - Config: configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py
-  In Collection: ESRGAN
+  In Collection: SwinIR
   Metadata:
     Training Data: DIV2K
   Name: esrgan_psnr_x4c64b23g32_g1_1000k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
-      DIV2K:
-        PSNR: 29.3354
-        SSIM: 0.8263
       Set14:
         PSNR: 27.0543
         SSIM: 0.7447
@@ -27,16 +24,13 @@ Models:
     Task: Restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth
 - Config: configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py
-  In Collection: ESRGAN
+  In Collection: SwinIR
   Metadata:
     Training Data: DIV2K
   Name: esrgan_x4c64b23g32_g1_400k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
-      DIV2K:
-        PSNR: 26.6531
-        SSIM: 0.734
       Set14:
         PSNR: 24.6328
         SSIM: 0.6491

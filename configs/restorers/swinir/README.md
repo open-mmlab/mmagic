@@ -20,10 +20,10 @@ Image restoration is a long-standing low-level vision problem that aims to resto
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 
-|                            Method                            |       Set5        |      Set14       |      DIV2K       |                           Download                           |
-| :----------------------------------------------------------: | :---------------: | :--------------: | :--------------: | :----------------------------------------------------------: |
-| [swinir_classical_patch48_2x](/configs/restorers/swinir/swinir_psnr_patch48.py) | - / - | - / - | - / - | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420_112550.log.json) |
-| [-](/configs/restorers/swinir/-.py) | - /  - | - / - | - / - | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508_191042.log.json) |
+|                            Method                            |       Set5        |      Set14       |                           Download                           |
+| :----------------------------------------------------------: | :---------------: | :--------------: | :----------------------------------------------------------: |
+| [swinir_classical_patch48_2x](/configs/restorers/swinir/swinir_psnr_patch48.py) | - / - | - / - | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420_112550.log.json) |
+| [-](/configs/restorers/swinir/-.py) | - /  - | - / - | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508_191042.log.json) |
 
 
 ## Citation
