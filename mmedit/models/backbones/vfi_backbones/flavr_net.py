@@ -93,6 +93,7 @@ class FLAVRNet(nn.Module):
         out = self.feature_fuse(dx_out)
         out = self.conv_last(out)
 
+        print(out.shape)
         out = torch.split(out, dim=1, split_size_or_sections=3)
         mean_ = mean_.squeeze(2)
         out = [o + mean_ for o in out]
