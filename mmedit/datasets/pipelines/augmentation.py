@@ -629,6 +629,26 @@ class ColorJitter:
         keys (list[str]): The images to be resized.
         channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
             Default: 'rgb'.
+
+    Notes: ``**kwards`` follows the args list of
+        ``torchvision.transforms.ColorJitter``.
+
+        brightness (float or tuple of float (min, max)): How much to jitter
+            brightness. brightness_factor is chosen uniformly from
+            [max(0, 1 - brightness), 1 + brightness] or the given [min, max].
+            Should be non negative numbers.
+        contrast (float or tuple of float (min, max)): How much to jitter
+            contrast. contrast_factor is chosen uniformly from
+            [max(0, 1 - contrast), 1 + contrast] or the given [min, max].
+            Should be non negative numbers.
+        saturation (float or tuple of float (min, max)): How much to jitter
+            saturation. saturation_factor is chosen uniformly from
+            [max(0, 1 - saturation), 1 + saturation] or the given [min, max].
+            Should be non negative numbers.
+        hue (float or tuple of float (min, max)): How much to jitter hue.
+            hue_factor is chosen uniformly from [-hue, hue] or the given
+            [min, max].
+            Should have 0<= hue <= 0.5 or -0.5 <= min <= max <= 0.5.
     """
 
     def __init__(self, keys, channel_order='rgb', **kwargs):
@@ -671,7 +691,11 @@ class ColorJitter:
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (f'(keys={self.keys}, channel_order={self.channel_order})')
+        repr_str += (f'(keys={self.keys}, channel_order={self.channel_order}, '
+                     f'brightness={self.transform.brightness}, '
+                     f'contrast={self.transform.contrast}, '
+                     f'saturation={self.transform.saturation}, '
+                     f'hue={self.transform.hue})')
 
         return repr_str
 

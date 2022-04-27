@@ -375,6 +375,9 @@ class TestAugmentations:
             saturation=0.5,
             hue=0.5)
         color_jitter_results = color_jitter(results)
+        assert self.check_keys_contain(color_jitter_results.keys(),
+                                       target_keys)
+        assert color_jitter_results['gt'].shape == self.img_gt.shape
         color_jitter = ColorJitter(
             keys=['gt', 'lq'],
             channel_order='bgr',
@@ -386,9 +389,16 @@ class TestAugmentations:
         assert self.check_keys_contain(color_jitter_results.keys(),
                                        target_keys)
         assert color_jitter_results['gt'].shape == self.img_gt.shape
+        assert np.abs(color_jitter_results['gt']-self.img_gt.shape).mean() > 0
 
         assert repr(color_jitter) == color_jitter.__class__.__name__ + (
-            "(keys=['gt', 'lq'], channel_order=bgr)")
+            f'(keys={color_jitter.keys}, '
+            f'channel_order={color_jitter.channel_order}, '
+            f'brightness={color_jitter.transform.brightness}, '
+            f'contrast={color_jitter.transform.contrast}, '
+            f'saturation={color_jitter.transform.saturation}, '
+            f'hue={color_jitter.transform.hue})')
+
         with pytest.raises(AssertionError):
             color_jitter = ColorJitter(
                 keys=['gt', 'lq'],
