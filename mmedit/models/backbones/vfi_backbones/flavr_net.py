@@ -12,6 +12,10 @@ from mmedit.utils import get_root_logger
 class FLAVRNet(nn.Module):
     """PyTorch implementation of FLAVR for video frame interpolation.
 
+    Paper:
+        FLAVR: Flow-Agnostic Video Representations for Fast Frame Interpolation
+    Ref repo: https://github.com/tarun005/FLAVR
+
     Args:
         input_frames (int): Number of input frames.
         output_frames (int): Number of output frames.
@@ -79,10 +83,7 @@ class FLAVRNet(nn.Module):
 
         # Batch mean normalization works slightly better than global mean
         # normalization, Refer to https://github.com/myungsub/CAIN
-        mean_ = images.mean(
-            2, keepdim=True).mean(
-                3, keepdim=True).mean(
-                    4, keepdim=True)
+        mean_ = images.mean((2, 3, 4), keepdim=True)
         images = images - mean_
 
         xs = self.encoder(images)
