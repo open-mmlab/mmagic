@@ -93,16 +93,16 @@ class FLAVRNet(nn.Module):
         out = self.feature_fuse(dx_out)
         out = self.conv_last(out)
 
-        print(out.shape)
-        out = torch.split(out, dim=1, split_size_or_sections=3)
-        mean_ = mean_.squeeze(2)
-        out = [o + mean_ for o in out]
-        if len(out) == 1:
-            out_tensor = out[0]
-        else:
-            out_tensor = torch.stack(out, dim=1)
+        b, c_all, h, w = out.shape
+        t = c_all // 3
+        mean_ = mean_.view(b, 1, 3, 1, 1)
+        out = out.view(b, t, 3, h, w)
+        out = out + mean_
 
-        return out_tensor
+        # if t==1, which means the output only contains one frame.
+        out = out.squeeze(1)
+
+        return out
 
     def init_weights(self, pretrained=None, strict=True):
         """Init weights for models.
