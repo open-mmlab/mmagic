@@ -389,6 +389,15 @@ class TestAugmentations:
 
         assert repr(color_jitter) == color_jitter.__class__.__name__ + (
             "(keys=['gt', 'lq'], channel_order=bgr)")
+        with pytest.raises(AssertionError):
+            color_jitter = ColorJitter(
+                keys=['gt', 'lq'],
+                channel_order='bgr',
+                to_rgb=True,
+                brightness=0.5,
+                contrast=0.5,
+                saturation=0.5,
+                hue=0.5)
 
     @staticmethod
     def check_transposehw(origin_img, result_img):
