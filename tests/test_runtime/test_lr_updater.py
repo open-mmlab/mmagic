@@ -12,9 +12,9 @@ class FakeLogBuffer(object):
 class FakeRunner(object):
 
     def __init__(self) -> None:
-        self.epoch = 0
+        self.epoch = 1
         self.max_epochs = 10
-        self.iter = 0
+        self.iter = 1
         self.max_iters = 100
         self.optimizer = 1
         self.outputs = dict(log_vars=dict(loss=1))
@@ -26,7 +26,8 @@ def test_linear_lr_updater_hook():
     fake_runner = FakeRunner()
 
     lr_updater = LinearLrUpdaterHook(by_epoch=False)
-    lr_updater.get_lr(fake_runner, 1)
+    lr = lr_updater.get_lr(fake_runner, 1)
+    assert lr == 0.99
 
     lr_updater = LinearLrUpdaterHook(by_epoch=True)
     lr_updater.get_lr(fake_runner, 1)

@@ -118,8 +118,8 @@ class ReduceLrUpdaterHook(LrUpdaterHook):
                 'mode must be one of "min" or "max", instead got {mode}')
         self.mode = mode
 
-        if factor >= 1.0:
-            raise ValueError('Factor should be < 1.0')
+        if factor >= 1.0 or factor < 0:
+            raise ValueError('Factor should be < 1.0 and >=0')
         self.factor = factor
 
         self.patience = patience
@@ -215,6 +215,8 @@ class ReduceLrUpdaterHook(LrUpdaterHook):
         if self.warmup is not None and self.warmup_by_epoch:
             if cur_epoch <= self.warmup_epochs:
                 return
+        # If val_metric is None, we check training loss to reduce learning
+        # rate.
         if self.val_metric is None:
             current = runner.outputs['log_vars']['loss']
             if self.is_better(current, self.best):
@@ -236,6 +238,8 @@ class ReduceLrUpdaterHook(LrUpdaterHook):
         cur_iter = runner.iter
         if self.warmup_epochs is not None and cur_iter <= self.warmup_iters:
             return
+        # If val_metric is None, we check training loss to reduce learning
+        # rate.
         if self.val_metric is None:
             current = runner.outputs['log_vars']['loss']
             if self.is_better(current, self.best):
@@ -258,6 +262,8 @@ class ReduceLrUpdaterHook(LrUpdaterHook):
         if self.warmup is not None and self.warmup_by_epoch:
             if cur_epoch <= self.warmup_epochs:
                 return
+        # If val_metric is not None, we check its value to reduce learning
+        # rate.
         if self.val_metric is not None:
             current = runner.log_buffer.output[self.val_metric]
             if self.is_better(current, self.best):
@@ -279,6 +285,8 @@ class ReduceLrUpdaterHook(LrUpdaterHook):
         cur_iter = runner.iter
         if self.warmup_epochs is not None and cur_iter <= self.warmup_iters:
             return
+        # If val_metric is not None, we check its value to reduce learning
+        # rate.
         if self.val_metric is not None:
             current = runner.eval_result[self.val_metric]
             if self.is_better(current, self.best):
