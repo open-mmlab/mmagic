@@ -10,8 +10,8 @@ def test_flavr_net():
 
     model_cfg = dict(
         type='FLAVRNet',
-        input_frames=4,
-        output_frames=1,
+        num_input_frames=4,
+        num_output_frames=1,
         mid_channels_list=[64, 32, 16, 8],
         encoder_layers_list=[1, 1, 1, 1],
         bias=False,

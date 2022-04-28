@@ -17,8 +17,8 @@ class FLAVRNet(nn.Module):
     Ref repo: https://github.com/tarun005/FLAVR
 
     Args:
-        input_frames (int): Number of input frames.
-        output_frames (int): Number of output frames.
+        num_input_frames (int): Number of input frames.
+        num_output_frames (int): Number of output frames.
         mid_channels_list (list[int]): List of number of mid channels.
             Default: [512, 256, 128, 64]
         encoder_layers_list (list[int]): List of number of layers in encoder.
@@ -34,8 +34,8 @@ class FLAVRNet(nn.Module):
     """
 
     def __init__(self,
-                 input_frames,
-                 output_frames,
+                 num_input_frames,
+                 num_output_frames,
                  mid_channels_list=[512, 256, 128, 64],
                  encoder_layers_list=[2, 2, 2, 2],
                  bias=False,
@@ -59,7 +59,7 @@ class FLAVRNet(nn.Module):
             batchnorm=norm_cfg)
 
         self.feature_fuse = ConvModule(
-            mid_channels_list[3] * input_frames,
+            mid_channels_list[3] * num_input_frames,
             mid_channels_list[3],
             kernel_size=1,
             stride=1,
@@ -67,7 +67,7 @@ class FLAVRNet(nn.Module):
             norm_cfg=norm_cfg,
             act_cfg=dict(type='LeakyReLU', negative_slope=0.2, inplace=True))
 
-        out_channels = 3 * output_frames
+        out_channels = 3 * num_output_frames
         self.conv_last = nn.Sequential(
             nn.ReflectionPad2d(3),
             nn.Conv2d(
