@@ -50,7 +50,7 @@ class LoadImageFromFile:
         self.kwargs = kwargs
         self.file_client = None
         self.use_cache = use_cache
-        self.cache = None
+        self.cache = dict() if use_cache else None
         self.backend = backend
 
     def __call__(self, results):
@@ -67,8 +67,6 @@ class LoadImageFromFile:
         if self.file_client is None:
             self.file_client = FileClient(self.io_backend, **self.kwargs)
         if self.use_cache:
-            if self.cache is None:
-                self.cache = dict()
             if filepath in self.cache:
                 img = self.cache[filepath]
             else:
@@ -164,8 +162,6 @@ class LoadImageFromFileList(LoadImageFromFile):
             ori_imgs = []
         for filepath in filepaths:
             if self.use_cache:
-                if self.cache is None:
-                    self.cache = dict()
                 if filepath in self.cache:
                     img = self.cache[filepath]
                 else:
