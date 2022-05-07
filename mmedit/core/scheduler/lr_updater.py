@@ -174,12 +174,13 @@ class ReduceLrUpdaterHook(LrUpdaterHook):
                     for _regular_lr in self.regular_lr[k]
                 ]
                 lr_groups.update({k: _lr_group})
-            return lr_groups
         else:
-            return [
+            lr_groups = [
                 self.get_lr(_regular_lr, 'generator')
                 for _regular_lr in self.regular_lr
             ]
+        self.regular_lr = lr_groups
+        return lr_groups
 
     def _init_is_better(self, mode):
         if mode == 'min':
