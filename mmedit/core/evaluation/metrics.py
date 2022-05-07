@@ -226,9 +226,8 @@ def mae(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
         input_order (str): Whether the input order is 'HWC' or 'CHW'.
             Default: 'HWC'.
         convert_to (str): Whether to convert the images to other color models.
-            If None, the images are not altered. When computing for 'Y',
-            the images are assumed to be in BGR order. Options are 'Y' and
-            None. Default: None.
+            If None, the images are not altered. Options are 'RGB2Y', 'BGR2Y'
+            and None. Default: None.
 
     Returns:
         float: mae result.
@@ -245,12 +244,15 @@ def mae(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
 
     img1, img2 = img1.astype(np.float32), img2.astype(np.float32)
     img1, img2 = img1 / 255., img2 / 255.
-    if isinstance(convert_to, str) and convert_to.lower() == 'y':
+    if isinstance(convert_to, str) and convert_to.lower() == 'rgb2y':
+        img1 = mmcv.rgb2ycbcr(img1, y_only=True)
+        img2 = mmcv.rgb2ycbcr(img2, y_only=True)
+    elif isinstance(convert_to, str) and convert_to.lower() == 'bgr2y':
         img1 = mmcv.bgr2ycbcr(img1, y_only=True)
         img2 = mmcv.bgr2ycbcr(img2, y_only=True)
     elif convert_to is not None:
         raise ValueError('Wrong color model. Supported values are '
-                         '"Y" and None.')
+                         '"RGB2Y", "BGR2Y" and None.')
 
     if crop_border != 0:
         img1 = img1[crop_border:-crop_border, crop_border:-crop_border, None]

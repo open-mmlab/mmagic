@@ -98,10 +98,13 @@ def test_calculate_mae():
     mae_result = mae(img_chw_1, img_chw_2, crop_border=4, input_order='CHW')
     np.testing.assert_almost_equal(mae_result, 0.003921569)
 
+    img_hwc_1[0, 0, 0] = 0
     mae_result = mae(img_hwc_1, img_hwc_2, crop_border=0, convert_to=None)
-    np.testing.assert_almost_equal(mae_result, 0.003921569)
-    mae_result = mae(img_hwc_1, img_hwc_2, crop_border=0, convert_to='Y')
-    np.testing.assert_almost_equal(mae_result, 0.003367938)
+    np.testing.assert_almost_equal(mae_result, 0.0039228457)
+    mae_result = mae(img_hwc_1, img_hwc_2, crop_border=0, convert_to='RGB2Y')
+    np.testing.assert_almost_equal(mae_result, 0.0033689216)
+    mae_result = mae(img_hwc_1, img_hwc_2, crop_border=0, convert_to='BGR2Y')
+    np.testing.assert_almost_equal(mae_result, 0.003368313)
 
     # test 0
     mae_result = mae(img_hw_1, img_hw_1, crop_border=0)
