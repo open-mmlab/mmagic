@@ -11,7 +11,7 @@ def test_flavr_net():
     model_cfg = dict(
         type='FLAVRNet',
         num_input_frames=4,
-        num_output_frames=1,
+        num_output_frames=2,
         mid_channels_list=[64, 32, 16, 8],
         encoder_layers_list=[1, 1, 1, 1],
         bias=False,
@@ -26,8 +26,8 @@ def test_flavr_net():
     assert model.__class__.__name__ == 'FLAVRNet'
 
     # prepare data
-    inputs = torch.rand(1, 4, 3, 256, 248)
-    target = torch.rand(1, 3, 256, 248)
+    inputs = torch.rand(1, 4, 3, 256, 256)
+    target = torch.rand(1, 2, 3, 256, 256)
 
     # test on cpu
     output = model(inputs)
@@ -39,11 +39,12 @@ def test_flavr_net():
     with pytest.raises(TypeError):
         model.init_weights(1)
 
-    model.decoder._join_tensors(inputs, inputs)
+    out = model.decoder._join_tensors(inputs, inputs)
+    assert out.shape == (1, 8, 3, 256, 256)
 
-    UpConv3d(4, 4, 1, 1, 1)
     conv3d = UpConv3d(4, 4, 1, 1, 1, up_mode='trilinear', batchnorm=True)
-    conv3d(inputs)
+    out = conv3d(inputs)
+    assert out.shape == (1, 4, 3, 512, 512)
 
     # test on gpu
     if torch.cuda.is_available():

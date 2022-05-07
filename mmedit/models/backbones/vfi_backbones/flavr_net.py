@@ -92,6 +92,7 @@ class FLAVRNet(nn.Module):
 
         out = self.feature_fuse(dx_out)
         out = self.conv_last(out)
+        # b, t*c, h, w
 
         b, c_all, h, w = out.shape
         t = c_all // 3
