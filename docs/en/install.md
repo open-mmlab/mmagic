@@ -7,6 +7,7 @@ See [Customize Installation](#customize-installation) section for more informati
 ## Best Practices
 
 The following steps work on Linux, Windows, and macOS.
+If you have already set up a PyTorch environment, using either conda or pip, you can start from **step 3**.
 
 **Step 0.**
 Download and install Miniconda from [official website](https://docs.conda.io/en/latest/miniconda.html).
