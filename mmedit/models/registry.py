@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+# TODO: remove this file
 from mmcv.cnn import MODELS as MMCV_MODELS
 from mmcv.utils import Registry
 
