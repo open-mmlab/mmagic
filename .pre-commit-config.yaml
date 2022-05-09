@@ -1,6 +1,9 @@
+default_language_version:
+  ruby: 2.7.1
+
 repos:
-  - repo: https://github.com/PyCQA/flake8
-    rev: 3.7.9
+  - repo: https://gitlab.com/pycqa/flake8.git
+    rev: 3.8.3
     hooks:
       - id: flake8
   - repo: https://github.com/PyCQA/isort
@@ -8,7 +11,7 @@ repos:
     hooks:
       - id: isort
   - repo: https://github.com/pre-commit/mirrors-yapf
-    rev: v0.29.0
+    rev: v0.30.0
     hooks:
       - id: yapf
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -48,6 +51,11 @@ repos:
         language: python
         files: ^configs/.*\.md$
         require_serial: true
+  # - repo: https://github.com/myint/docformatter
+  #   rev: v1.3.1
+  #   hooks:
+  #     - id: docformatter
+  #       args: ["--in-place", "--wrap-descriptions", "79"]
   - repo: https://github.com/open-mmlab/pre-commit-hooks
     rev: v0.2.0
     hooks:
