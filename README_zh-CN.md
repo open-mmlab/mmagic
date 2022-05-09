@@ -233,10 +233,10 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## 欢迎加入 OpenMMLab 社区
 
-扫描下方的二维码可关注 OpenMMLab 团队的 [知乎官方账号](https://www.zhihu.com/people/openmmlab)，加入 OpenMMLab 团队的 [官方交流 QQ 群](https://jq.qq.com/?_wv=1027&k=GJP18SjI)
+扫描下方的二维码可关注 OpenMMLab 团队的 [知乎官方账号](https://www.zhihu.com/people/openmmlab)，加入 OpenMMLab 团队的 [官方交流 QQ 群](https://jq.qq.com/?_wv=1027&k=GJP18SjI)，或通过群主小喵加入微信官方交流群。
 
 <div align="center">
-<img src="resources/zhihu_qrcode.jpg" height="400" />  <img src="resources/qq_group2_qrcode.jpg" height="400" />
+<img src="docs/zh_cn/_static/image/zhihu_qrcode.jpg" height="500" />  <img src="https://raw.githubusercontent.com/open-mmlab/mmcv/master/docs/en/_static/qq_group_qrcode.jpg" height="500" /> <img src="https://raw.githubusercontent.com/open-mmlab/mmcv/master/docs/en/_static/wechat_qrcode.jpg" height="500" />
 </div>
 
 我们会在 OpenMMLab 社区为大家

@@ -205,7 +205,7 @@ class IconVSR(nn.Module):
         flows_forward, flows_backward = self.compute_flow(lrs)
         feats_refill = self.compute_refill_features(lrs, keyframe_idx)
 
-        # backward-time propgation
+        # backward-time propagation
         outputs = []
         feat_prop = lrs.new_zeros(n, self.mid_channels, h, w)
         for i in range(t - 1, -1, -1):

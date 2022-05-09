@@ -57,7 +57,7 @@ class SRREDSDataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
-        """Load annoations for REDS dataset.
+        """Load annotations for REDS dataset.
 
         Returns:
             list[dict]: A list of dicts for paired paths and other information.

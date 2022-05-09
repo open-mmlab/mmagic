@@ -81,7 +81,7 @@ test_pipeline = [
         mean=[0, 0, 0],
         std=[1, 1, 1],
         to_rgb=True),
-    dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'lq_path']),
+    dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'gt_path']),
     dict(type='ImageToTensor', keys=['lq', 'gt'])
 ]
 
