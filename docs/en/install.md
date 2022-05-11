@@ -7,7 +7,7 @@ See [Customize Installation](#customize-installation) section for more informati
 ## Best Practices
 
 The following steps work on Linux, Windows, and macOS.
-If you have already set up a PyTorch environment, using either conda or pip, you can start from **step 3**.
+If you have already set up a PyTorch environment, no matter using conda or pip, you can start from **step 3**.
 
 **Step 0.**
 Download and install Miniconda from [official website](https://docs.conda.io/en/latest/miniconda.html).
@@ -40,7 +40,7 @@ Install pre-built [MMCV](https://github.com/open-mmlab/mmcv) using [MIM](https:/
 
 ```shell
 pip3 install openmim
-mim install mmcv-full==1.4.5
+mim install mmcv-full==1.5.0
 ```
 
 **Step 4.**
@@ -58,7 +58,7 @@ Verification.
 ```shell
 cd ~
 python -c "import mmedit; print(mmedit.__version__)"
-# Example output: 0.13.0
+# Example output: 0.14.0
 ```
 
 The installation is successful if the version number is output correctly.
@@ -130,7 +130,7 @@ Online machine learning platform such as [Google Colab](https://research.google.
 Thus we only need to install MMCV and MMEditing with the following commands.
 
 **Step 1.**
-Install [MMCV](https://github.com/open-mmlab/mmcv) using [MIM](https://github.com/open-mmlab/mim).
+Install pre-built [MMCV](https://github.com/open-mmlab/mmcv) using [MIM](https://github.com/open-mmlab/mim).
 
 ```ipython
 !pip3 install openmim
