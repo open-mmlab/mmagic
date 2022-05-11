@@ -175,7 +175,7 @@ See the below links (in Chinese) for details：
 You may be curious about what `-e .` means when supplied with `pip install`.
 Here is the description:
 
-- `-e` means [editable mode](https://pip.pypa.io/en/latest/cli/pip_install/#cmdoption-e). When `import mmedit`, modules imported are ones located under the current directory. This method is particularly convenient for developers. If some codes are modified, new codes will be imported next time without reinstallation. If `pip install` without `-e`, pip installer will copy codes in the current directory to somewhere like `lib/python/site-package`. Consequently, code modification in the current directory takes no effect unless `pip install` again.
+- `-e` means [editable mode](https://pip.pypa.io/en/latest/cli/pip_install/#cmdoption-e). When `import mmedit`, modules under the cloned directory are imported. If `pip install` without `-e`, pip will copy cloned codes to somewhere like `lib/python/site-package`. Consequently, modified code under the cloned directory takes no effect unless `pip install` again. This is particularly convenient for developers. If some codes are modified, new codes will be imported next time without reinstallation.
 - `.` means code in this directory
 
 You can also use `pip -e .[all]`, which will install more dependencies, especially for pre-commit hooks and unittests.
