@@ -1,4 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+
+# TODO: remove this after all dataset and metrics are refactored.
+
 import copy
 from abc import ABCMeta, abstractmethod
 

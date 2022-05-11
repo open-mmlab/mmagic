@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+# TODO: Remove this after Adobe-1K works and evluation is refactored
 from collections import defaultdict
 
 from .base_dataset import BaseDataset
