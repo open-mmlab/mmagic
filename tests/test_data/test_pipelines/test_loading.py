@@ -70,16 +70,22 @@ def test_load_image_from_file():
     assert id(results['ori_lq']) != id(results['lq'])
 
     # test: use_cache
-    results = dict(gt_path=path_baboon)
+    results_ori = dict(gt_path=path_baboon)
     config = dict(io_backend='disk', key='gt', use_cache=True)
     image_loader = LoadImageFromFile(**config)
-    assert image_loader.cache is None
     assert repr(image_loader) == (
         image_loader.__class__.__name__ +
         ('(io_backend=disk, key=gt, '
          'flag=color, save_original_img=False, channel_order=bgr, '
          'use_cache=True)'))
-    results = image_loader(results)
+    assert not image_loader.cache
+    results = image_loader(results_ori)
+    assert image_loader.cache is not None
+    assert str(path_baboon) in image_loader.cache
+    assert results['gt'].shape == (480, 500, 3)
+    assert results['gt_path'] == str(path_baboon)
+    np.testing.assert_almost_equal(results['gt'], img_baboon)
+    results = image_loader(results_ori)
     assert image_loader.cache is not None
     assert str(path_baboon) in image_loader.cache
     assert results['gt'].shape == (480, 500, 3)
@@ -187,6 +193,28 @@ def test_load_image_from_file_list():
     image_loader = LoadImageFromFileList(**config)
     with pytest.raises(ValueError):
         results = image_loader(results)
+
+    # convert to use_cache
+    results_ori = dict(gt_path=[str(path_baboon_x4), str(path_baboon)])
+    config = dict(io_backend='disk', key='gt', use_cache=True)
+    image_loader = LoadImageFromFileList(**config)
+    assert not image_loader.cache
+    assert repr(image_loader) == (
+        image_loader.__class__.__name__ +
+        ('(io_backend=disk, key=gt, '
+         'flag=color, save_original_img=False, channel_order=bgr, '
+         'use_cache=True)'))
+    results = image_loader(results_ori)
+    assert str(path_baboon) in image_loader.cache
+    assert len(results['gt']) == 2
+    assert results['gt'][1].shape == (480, 500, 3)
+    assert results['gt_path'] == [str(path_baboon_x4), str(path_baboon)]
+    results = image_loader(results_ori)
+    assert image_loader.cache is not None
+    assert str(path_baboon) in image_loader.cache
+    assert len(results['gt']) == 2
+    assert results['gt'][1].shape == (480, 500, 3)
+    assert results['gt_path'] == [str(path_baboon_x4), str(path_baboon)]
 
 
 class TestMattingLoading:
