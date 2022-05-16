@@ -1,4 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+
+# TODO: remove this if no longer support 1.0.
+
 import glob
 import os
 import os.path as osp

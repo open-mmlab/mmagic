@@ -7,6 +7,8 @@ import warnings
 from .base_sr_dataset import BaseSRDataset
 from .registry import DATASETS
 
+# TODO Remove
+
 
 @DATASETS.register_module()
 class SRTestMultipleGTDataset(BaseSRDataset):

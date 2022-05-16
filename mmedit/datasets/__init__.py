@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .base_dataset import BaseDataset
+from .base_frames_dataset import BaseFramesDataset
 from .base_generation_dataset import BaseGenerationDataset
+from .base_image_dataset import BaseImageDataset
 from .base_matting_dataset import BaseMattingDataset
 from .base_sr_dataset import BaseSRDataset
 from .base_vfi_dataset import BaseVFIDataset
@@ -29,14 +31,36 @@ from .vfi_vimeo90k_7frames_dataset import VFIVimeo90K7FramesDataset
 from .vfi_vimeo90k_dataset import VFIVimeo90KDataset
 
 __all__ = [
-    'DATASETS', 'PIPELINES', 'build_dataset', 'build_dataloader',
-    'BaseDataset', 'BaseMattingDataset', 'ImgInpaintingDataset',
-    'AdobeComp1kDataset', 'SRLmdbDataset', 'SRFolderDataset',
-    'SRAnnotationDataset', 'BaseSRDataset', 'RepeatDataset', 'SRREDSDataset',
-    'SRVimeo90KDataset', 'BaseGenerationDataset', 'GenerationPairedDataset',
-    'GenerationUnpairedDataset', 'SRVid4Dataset', 'SRFolderGTDataset',
-    'SRREDSMultipleGTDataset', 'SRVimeo90KMultipleGTDataset',
-    'SRTestMultipleGTDataset', 'SRFolderRefDataset', 'SRFacialLandmarkDataset',
-    'SRFolderMultipleGTDataset', 'SRFolderVideoDataset', 'BaseVFIDataset',
-    'VFIVimeo90KDataset', 'VFIVimeo90K7FramesDataset'
+    'DATASETS',
+    'PIPELINES',
+    'build_dataset',
+    'build_dataloader',
+    'BaseDataset',
+    'BaseMattingDataset',
+    'ImgInpaintingDataset',
+    'AdobeComp1kDataset',
+    'SRLmdbDataset',
+    'SRFolderDataset',
+    'SRAnnotationDataset',
+    'BaseSRDataset',
+    'RepeatDataset',
+    'SRREDSDataset',
+    'SRVimeo90KDataset',
+    'BaseGenerationDataset',
+    'GenerationPairedDataset',
+    'GenerationUnpairedDataset',
+    'SRVid4Dataset',
+    'SRFolderGTDataset',
+    'SRREDSMultipleGTDataset',
+    'SRVimeo90KMultipleGTDataset',
+    'SRTestMultipleGTDataset',
+    'SRFolderRefDataset',
+    'SRFacialLandmarkDataset',
+    'SRFolderMultipleGTDataset',
+    'SRFolderVideoDataset',
+    'BaseVFIDataset',
+    'VFIVimeo90KDataset',
+    'VFIVimeo90K7FramesDataset'
+    'BaseImageDataset',
+    'BaseFramesDataset',
 ]
