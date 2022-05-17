@@ -54,8 +54,8 @@ class BaseImageDataset(BaseDataset):
         pipeline (list, optional): Processing pipeline. Defaults to [].
         test_mode (bool, optional): ``test_mode=True`` means in test phase.
             Defaults to False.
-        filename_tmpl (str): Template for each filename. Note that the
-            template excludes the file extension. Default: '{}'.
+        filename_tmpl (dict): Template for each filename. Note that the
+            template excludes the file extension. Default: dict().
         search_key (str): The key used for searching the folder to get
             data_list. Default: 'gt'.
         file_client_args (dict, optional): Arguments to instantiate a
@@ -144,7 +144,9 @@ class BaseImageDataset(BaseDataset):
                  **kwards):
 
         assert set(filename_tmpl).issubset(set(data_prefix)), (
-            'the key in ``filename_tmpl`` should be also in ``data_prefix``')
+            'the key in ``filename_tmpl`` should be also in ``data_prefix``.'
+            f'However, filename_tmpl={filename_tmpl}, '
+            f'while data_prefix={data_prefix}')
         for key in data_prefix:
             if key not in filename_tmpl:
                 filename_tmpl[key] = '{}'
