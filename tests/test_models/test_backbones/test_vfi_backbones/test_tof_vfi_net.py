@@ -29,7 +29,7 @@ def test_tof_vfi_net():
         inputs = inputs.cuda()
         output = model(inputs)
         assert torch.is_tensor(output)
-        assert output.shape == (1, 3, 256, 248)
+        assert output.shape == (1, 3, 256, 256)
 
     with pytest.raises(OSError):
         model.init_weights('')
