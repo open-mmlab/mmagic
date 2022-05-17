@@ -56,8 +56,12 @@ def main():
 
     args = parse_args()
 
-    model = init_model(
-        args.config, args.checkpoint, device=torch.device('cuda', args.device))
+    if args.device < 0 or not torch.cuda.is_available():
+        device = torch.device('cpu')
+    else:
+        device = torch.device('cuda', args.device)
+
+    model = init_model(args.config, args.checkpoint, device=device)
 
     output = restoration_video_inference(model, args.input_dir,
                                          args.window_size, args.start_idx,

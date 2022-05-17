@@ -25,8 +25,12 @@ def parse_args():
 def main():
     args = parse_args()
 
-    model = init_model(
-        args.config, args.checkpoint, device=torch.device('cuda', args.device))
+    if args.device < 0 or not torch.cuda.is_available():
+        device = torch.device('cpu')
+    else:
+        device = torch.device('cuda', args.device)
+
+    model = init_model(args.config, args.checkpoint, device=device)
 
     result = inpainting_inference(model, args.masked_img_path, args.mask_path)
     result = tensor2img(result, min_max=(-1, 1))[..., ::-1]

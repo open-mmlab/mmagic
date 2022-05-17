@@ -1,4 +1,4 @@
-# Tutorial: Customize Models
+# Tutorial 3: Customize Models
 
 MMEditing supports multiple tasks, each of which has different settings. Fortunately, their customization is similar. Here, we use a super-resolution model, BasicVSR, as an example in this tutorial. You will be able to define your model based on your own needs after this tutorial.
 

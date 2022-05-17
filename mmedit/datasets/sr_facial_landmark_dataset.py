@@ -44,7 +44,7 @@ class SRFacialLandmarkDataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
-        """Load annoations for SR dataset.
+        """Load annotations for SR dataset.
 
         Annotation file is a `npy` file, which contains a list of dict.
 

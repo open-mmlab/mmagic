@@ -41,7 +41,11 @@ def inpainting_inference(model, masked_img, mask):
     # prepare data
     data = dict(masked_img_path=masked_img, mask_path=mask)
     data = test_pipeline(data)
-    data = scatter(collate([data], samples_per_gpu=1), [device])[0]
+    data = collate([data], samples_per_gpu=1)
+    if 'cuda' in str(device):
+        data = scatter(data, [device])[0]
+    else:
+        data.pop('meta')
     # forward the model
     with torch.no_grad():
         result = model(test_mode=True, **data)

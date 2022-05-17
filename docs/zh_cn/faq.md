@@ -27,7 +27,7 @@ test_pipeline = [
         key='lq',
         flag='unchanged'),
     ...
-    dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'lq_path']),
+    dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'gt_path']),
     dict(type='ImageToTensor', keys=['lq', 'gt'])
 ]
 

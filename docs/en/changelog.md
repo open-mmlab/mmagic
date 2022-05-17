@@ -1,5 +1,56 @@
 # Changelog
 
+## v0.14.0 (01/04/2022)
+
+**Highlights**
+
+1. Support TOFlow in video frame interpolation
+
+**New Features**
+
+- Support AOT-GAN ([#677](https://github.com/open-mmlab/mmediting/pull/677))
+- Use `--diff-seed` to set different torch seed on different rank ([#781](https://github.com/open-mmlab/mmediting/pull/781))
+- Support streaming reading of frames in video interpolation demo ([#790](https://github.com/open-mmlab/mmediting/pull/790))
+- Support dist_train without slurm ([#791](https://github.com/open-mmlab/mmediting/pull/791))
+- Put LQ into CPU for restoration_video_demo ([#792](https://github.com/open-mmlab/mmediting/pull/792))
+- Support gray normalization constant in EDSR ([#793](https://github.com/open-mmlab/mmediting/pull/793))
+- Support TOFlow in video frame interpolation ([#806](https://github.com/open-mmlab/mmediting/pull/806), [#811](https://github.com/open-mmlab/mmediting/pull/811))
+- Support seed in DistributedSampler and sync seed across ranks ([#815](https://github.com/open-mmlab/mmediting/pull/815))
+
+**Bug Fixes**
+
+- Update link in README files ([#782](https://github.com/open-mmlab/mmediting/pull/782), [#786](https://github.com/open-mmlab/mmediting/pull/786), [#819](https://github.com/open-mmlab/mmediting/pull/819), [#820](https://github.com/open-mmlab/mmediting/pull/820))
+- Fix matting tutorial, and fix links to colab ([#795](https://github.com/open-mmlab/mmediting/pull/795))
+- Invert `flip_ratio` in `RandomAffine` pipeline ([#799](https://github.com/open-mmlab/mmediting/pull/799))
+- Update preprocess_div2k_dataset.py ([#801](https://github.com/open-mmlab/mmediting/pull/801))
+- Update SR Colab Demo Installation Method and Set5 link ([#807](https://github.com/open-mmlab/mmediting/pull/807))
+- Fix Y/GRB mistake in EDSR README ([#812](https://github.com/open-mmlab/mmediting/pull/812))
+- Replace pytorch install command to conda in README(_zh-CN).md ([#816](https://github.com/open-mmlab/mmediting/pull/816))
+
+**Improvements**
+
+- Update CI ([#650](https://github.com/open-mmlab/mmediting/pull/650))
+- Update requirements.txt ([#725](https://github.com/open-mmlab/mmediting/pull/725), [#817](https://github.com/open-mmlab/mmediting/pull/817))
+- Add Tutorial of dataset ([#758](https://github.com/open-mmlab/mmediting/pull/758)), pipeline ([#779](https://github.com/open-mmlab/mmediting/pull/779)), model ([#766](https://github.com/open-mmlab/mmediting/pull/758))
+- Update index and TOC tree ([#767](https://github.com/open-mmlab/mmediting/pull/767))
+- Make update_model_index.py compatible on windows ([#768](https://github.com/open-mmlab/mmediting/pull/768))
+- Update doc build system ([#769](https://github.com/open-mmlab/mmediting/pull/769))
+- Update keyword and classifier for setuptools ([#773](https://github.com/open-mmlab/mmediting/pull/773))
+- Renovate installation ([#776](https://github.com/open-mmlab/mmediting/pull/776), [#800](https://github.com/open-mmlab/mmediting/pull/800))
+- Update BasicVSR++ and RealBasicVSR docs ([#778](https://github.com/open-mmlab/mmediting/pull/778))
+- Update citation ([#785](https://github.com/open-mmlab/mmediting/pull/785), [#787](https://github.com/open-mmlab/mmediting/pull/787))
+- Regroup docs ([#788](https://github.com/open-mmlab/mmediting/pull/788))
+- Use full name of config as 'Name' in metafile ([#798](https://github.com/open-mmlab/mmediting/pull/798))
+- Update figure and video demo in README ([#802](https://github.com/open-mmlab/mmediting/pull/802))
+- Add `clamp(0, 1)` in test of video frame interpolation ([#805](https://github.com/open-mmlab/mmediting/pull/805))
+- Use hyphen for command line args in demo & tools ([#808](https://github.com/open-mmlab/mmediting/pull/808)), and keep underline for required arguments in python files ([#822](https://github.com/open-mmlab/mmediting/pull/822))
+- Make dataset.pipeline a dedicated section in doc ([#813](https://github.com/open-mmlab/mmediting/pull/813))
+- Update mmcv-full>=1.3.13 to support DCN on CPU ([#823](https://github.com/open-mmlab/mmediting/pull/823))
+
+**Contributors**
+
+@wangruohui @ckkelvinchan @Yshuo-Li @nijkah @wdmwhh @freepoet @quincylin1
+
 ## v0.13.0 (01/03/2022)
 
 **Highlights**

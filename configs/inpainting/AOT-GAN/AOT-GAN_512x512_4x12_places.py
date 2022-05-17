@@ -5,7 +5,7 @@ model = dict(
         encoder=dict(type='AOTEncoder'),
         decoder=dict(type='AOTDecoder'),
         dilation_neck=dict(
-            type='AOTBlockNeck', dilation_rates='1+2+4+8', num_aotblock=8)),
+            type='AOTBlockNeck', dilation_rates=(1, 2, 4, 8), num_aotblock=8)),
     disc=dict(
         type='SoftMaskPatchDiscriminator',
         in_channels=3,
@@ -21,7 +21,7 @@ model = dict(
     loss_composed_percep=dict(
         type='PerceptualLoss',
         vgg_type='vgg19',
-        layer_weights_perceptual={
+        layer_weights={
             '1': 1.,
             '6': 1.,
             '11': 1.,
@@ -102,16 +102,15 @@ test_pipeline = [
         type='LoadMask',
         mask_mode='set',
         mask_config=dict(
-            mask_list_file=f'{mask_root}/val_places_mask_list.txt',
-            prefix=mask_root,
+            mask_list_file=f'{mask_root}/mask_0.5-0.6_list.txt',
+            prefix=mask_root + '/mask_512',
             io_backend='disk',
             flag='unchanged',
             file_client_kwargs=dict())),
     dict(
-        type='Crop',
+        type='RandomResizedCrop',
         keys=['gt_img'],
         crop_size=(512, 512),
-        random_crop=False,
     ),
     dict(
         type='Normalize',

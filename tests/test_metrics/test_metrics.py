@@ -3,9 +3,9 @@ import mmcv
 import numpy as np
 import pytest
 
-from mmedit.core.evaluation.metrics import (connectivity, gradient_error, mse,
-                                            niqe, psnr, reorder_image, sad,
-                                            ssim)
+from mmedit.core.evaluation.metrics import (connectivity, gradient_error, mae,
+                                            mse, niqe, psnr, reorder_image,
+                                            sad, ssim)
 
 
 def test_reorder_image():
@@ -68,6 +68,53 @@ def test_calculate_psnr():
     img_hw_2 = np.ones((32, 32), dtype=np.uint8) * 255
     psnr_result = psnr(img_hw_1, img_hw_2, crop_border=0)
     assert psnr_result == 0
+
+
+def test_calculate_mae():
+    img_hw_1 = np.ones((32, 32))
+    img_hwc_1 = np.ones((32, 32, 3))
+    img_chw_1 = np.ones((3, 32, 32))
+    img_hw_2 = np.ones((32, 32)) * 2
+    img_hwc_2 = np.ones((32, 32, 3)) * 2
+    img_chw_2 = np.ones((3, 32, 32)) * 2
+
+    with pytest.raises(ValueError):
+        mae(img_hw_1, img_hw_2, crop_border=0, input_order='HH')
+
+    with pytest.raises(ValueError):
+        mae(img_hw_1, img_hw_2, crop_border=0, convert_to='ABC')
+
+    mae_result = mae(img_hw_1, img_hw_2, crop_border=0)
+    np.testing.assert_almost_equal(mae_result, 0.003921569)
+    mae_result = mae(img_hwc_1, img_hwc_2, crop_border=0, input_order='HWC')
+    np.testing.assert_almost_equal(mae_result, 0.003921569)
+    mae_result = mae(img_chw_1, img_chw_2, crop_border=0, input_order='CHW')
+    np.testing.assert_almost_equal(mae_result, 0.003921569)
+
+    mae_result = mae(img_hw_1, img_hw_2, crop_border=2)
+    np.testing.assert_almost_equal(mae_result, 0.003921569)
+    mae_result = mae(img_hwc_1, img_hwc_2, crop_border=3, input_order='HWC')
+    np.testing.assert_almost_equal(mae_result, 0.003921569)
+    mae_result = mae(img_chw_1, img_chw_2, crop_border=4, input_order='CHW')
+    np.testing.assert_almost_equal(mae_result, 0.003921569)
+
+    img_hwc_1[0, 0, 0] = 0
+    mae_result = mae(img_hwc_1, img_hwc_2, crop_border=0, convert_to=None)
+    np.testing.assert_almost_equal(mae_result, 0.0039228457)
+    mae_result = mae(img_hwc_1, img_hwc_2, crop_border=0, convert_to='RGB2Y')
+    np.testing.assert_almost_equal(mae_result, 0.0033689216)
+    mae_result = mae(img_hwc_1, img_hwc_2, crop_border=0, convert_to='BGR2Y')
+    np.testing.assert_almost_equal(mae_result, 0.003368313)
+
+    # test 0
+    mae_result = mae(img_hw_1, img_hw_1, crop_border=0)
+    assert mae_result == 0
+
+    # test uint8
+    img_hw_1 = np.zeros((32, 32), dtype=np.uint8)
+    img_hw_2 = np.ones((32, 32), dtype=np.uint8) * 255
+    mae_result = mae(img_hw_1, img_hw_2, crop_border=0)
+    assert mae_result == 1
 
 
 def test_calculate_ssim():

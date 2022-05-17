@@ -54,8 +54,31 @@ class TestVFIDataset:
         data_infos = dataset.data_infos[0]
         assert_dict_has_keys(data_infos, ['inputs_path', 'target_path', 'key'])
 
+    def test_vfi_vimeo90k_7frames_dataset(self):
 
-def test_vfi_dataset():
-    test_ = TestVFIDataset()
-    test_.test_base_vfi_dataset()
-    test_.test_vfi_vimeo90k_dataset()
+        pipeline = [
+            dict(
+                type='LoadImageFromFileList', io_backend='disk', key='inputs'),
+            dict(
+                type='LoadImageFromFileList', io_backend='disk', key='target'),
+            dict(type='FramesToTensor', keys=['inputs', 'target']),
+        ]
+
+        dataset_cfg = dict(
+            type='VFIVimeo90K7FramesDataset',
+            folder=self.folder,
+            ann_file=self.ann_file,
+            pipeline=pipeline,
+            input_frames=[1, 3, 5, 7],
+            target_frames=[4])
+        dataset = build_dataset(dataset_cfg)
+        assert_dict_has_keys(dataset[0], [
+            'inputs_path', 'target_path', 'key', 'folder', 'ann_file',
+            'inputs', 'inputs_ori_shape', 'target', 'target_ori_shape'
+        ])
+        data_infos = dataset.data_infos[0]
+        assert_dict_has_keys(data_infos, ['inputs_path', 'target_path', 'key'])
+        inputs_path_key = [data[-7:] for data in data_infos['inputs_path']]
+        assert inputs_path_key == ['im1.png', 'im3.png', 'im5.png', 'im7.png']
+        target_path_key = [data[-7:] for data in data_infos['target_path']]
+        assert target_path_key == ['im4.png']

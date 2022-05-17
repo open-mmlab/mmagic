@@ -75,6 +75,8 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 最新消息
 
+- [2022-04-01] v0.14.0 版本发布
+  - 支持视频插帧算法 TOFlow
 - [2022-03-01] v0.13.0 版本发布
   - 支持 CAIN
   - 支持 EDVR-L
@@ -86,18 +88,28 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 ## 安装
 
 MMEditing 依赖 [PyTorch](https://pytorch.org/) 和 [MMCV](https://github.com/open-mmlab/mmcv)，以下是安装的简要步骤。
-更详细的安装指南请参考 [install.md](docs/en/install.rst)。
 
-```shell
-conda create -n open-mmlab python=3.8 pytorch=1.10 cudatoolkit=11.3 torchvision -c pytorch -y
-conda activate open-mmlab
+**步骤 1.**
+依照[官方教程](https://pytorch.org/get-started/locally/)安装PyTorch
+
+**步骤 2.**
+使用 [MIM](https://github.com/open-mmlab/mim) 安装 MMCV
+
+```
 pip3 install openmim
 mim install mmcv-full
+```
+
+**步骤 3.**
+从源码安装 MMEditing
+
+```
 git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
 pip3 install -e .
 ```
 
+更详细的安装指南请参考 [install.md](../../wiki/1.-Installation) 。
 
 ## 开始使用
 
@@ -134,7 +146,6 @@ pip3 install -e .
 - [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
 - [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
 - [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
-- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
 - [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
 - [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
 - [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
@@ -145,6 +156,7 @@ pip3 install -e .
 <details open>
 <summary>视频超分辨率</summary>
 
+- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
 - [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
 - [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
 - [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
@@ -165,6 +177,7 @@ pip3 install -e .
 <details open>
 <summary>视频插帧</summary>
 
+- [x] [TOFlow](configs/video_interpolators/tof/README.md) (IJCV'2019)
 - [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
 
 </details>
@@ -186,7 +199,7 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 ```bibtex
 @misc{mmediting2022,
     title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
-    author = {MMEditing, Contributors},
+    author = {{MMEditing Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
     year = {2022}
 }
@@ -220,10 +233,10 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## 欢迎加入 OpenMMLab 社区
 
-扫描下方的二维码可关注 OpenMMLab 团队的 [知乎官方账号](https://www.zhihu.com/people/openmmlab)，加入 OpenMMLab 团队的 [官方交流 QQ 群](https://jq.qq.com/?_wv=1027&k=GJP18SjI)
+扫描下方的二维码可关注 OpenMMLab 团队的 [知乎官方账号](https://www.zhihu.com/people/openmmlab)，加入 OpenMMLab 团队的 [官方交流 QQ 群](https://jq.qq.com/?_wv=1027&k=GJP18SjI)，或通过群主小喵加入微信官方交流群。
 
 <div align="center">
-<img src="resources/zhihu_qrcode.jpg" height="400" />  <img src="resources/qq_group2_qrcode.jpg" height="400" />
+<img src="docs/zh_cn/_static/image/zhihu_qrcode.jpg" height="500" />  <img src="https://raw.githubusercontent.com/open-mmlab/mmcv/master/docs/en/_static/qq_group_qrcode.jpg" height="500" /> <img src="https://raw.githubusercontent.com/open-mmlab/mmcv/master/docs/en/_static/wechat_qrcode.jpg" height="500" />
 </div>
 
 我们会在 OpenMMLab 社区为大家
