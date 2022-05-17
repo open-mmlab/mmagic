@@ -55,7 +55,6 @@ https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-
 
 https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
 
-
 ### 主要特性
 
 - **模块化设计**
@@ -75,13 +74,13 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 最新消息
 
-- [2022-04-01] v0.14.0 版本发布
+- \[2022-04-01\] v0.14.0 版本发布
   - 支持视频插帧算法 TOFlow
-- [2022-03-01] v0.13.0 版本发布
+- \[2022-03-01\] v0.13.0 版本发布
   - 支持 CAIN
   - 支持 EDVR-L
   - 支持在 Windows 系统中运行
-- [2022-02-11] 切换到 **PyTorch 1.5+**. 将不再保证与早期版本的 PyTorch 的兼容性
+- \[2022-02-11\] 切换到 **PyTorch 1.5+**. 将不再保证与早期版本的 PyTorch 的兼容性
 
 请查看 [changelog.md](docs/en/changelog.md) 以获取更多细节与发版记录
 

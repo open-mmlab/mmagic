@@ -4,9 +4,9 @@
 
 MMEditing 支持的补全数据集：
 
-* [Paris Street View](paris-street-view/README.md) \[ [主页](https://github.com/pathak22/context-encoder/issues/24) \]
-* [CelebA-HQ](celeba-hq/README.md) \[ [主页](https://github.com/tkarras/progressive_growing_of_gans#preparing-datasets-for-training) \]
-* [Places365](places365/README.md) \[ [主页](http://places2.csail.mit.edu/) \]
+- [Paris Street View](paris-street-view/README.md) \[ [主页](https://github.com/pathak22/context-encoder/issues/24) \]
+- [CelebA-HQ](celeba-hq/README.md) \[ [主页](https://github.com/tkarras/progressive_growing_of_gans#preparing-datasets-for-training) \]
+- [Places365](places365/README.md) \[ [主页](http://places2.csail.mit.edu/) \]
 
 由于在图像补全任务中，我们只需要使用图像，因此我们不需要对数据集进行额外的预处理操作，文件目录的结构也可以和本例有所不同。您可以利用原始数据集提供的信息，如 `Place365` （例如 `meta`）。或者，您可以直接遍历数据集文件夹，并将所有图像文件的路径罗列在一个文本文件中。下面的例子节选自 Places365 数据集中的 `Places365_val.txt`，针对图像补全任务，我们只需要使用其中的文件名信息。
 

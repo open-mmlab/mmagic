@@ -11,6 +11,7 @@
 Prevailing video frame interpolation techniques rely heavily on optical flow estimation and require additional model complexity and computational cost; it is also susceptible to error propagation in challenging scenarios with large motion and heavy occlusion. To alleviate the limitation, we propose a simple but effective deep neural network for video frame interpolation, which is end-to-end trainable and is free from a motion estimation network component. Our algorithm employs a special feature reshaping operation, referred to as PixelShuffle, with a channel attention, which replaces the optical flow computation module. The main idea behind the design is to distribute the information in a feature map into multiple channels and extract motion information by attending the channels for pixel-level frame synthesis. The model given by this principle turns out to be effective in the presence of challenging motion and occlusion. We construct a comprehensive evaluation benchmark and demonstrate that the proposed approach achieves outstanding performance compared to the existing models with a component for optical flow computation.
 
 <!-- [IMAGE] -->
+
 <div align=center >
  <img src="https://user-images.githubusercontent.com/56712176/149734064-1da0cebf-6953-4106-a29a-43acd7386a80.png" width="400"/>
 </div >
@@ -21,8 +22,8 @@ Evaluated on Y channels.
 The metrics are `PSNR / SSIM` .
 The learning rate adjustment strategy is `Step LR scheduler with min_lr clipping`.
 
-|                                             Method                                           | vimeo-90k-triple |                                                                                                                     Download                                                                                                                             |
-|:--------------------------------------------------------------------------------------------:|:----------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|                                            Method                                            | vimeo-90k-triple |                                                                                                                         Download                                                                                                                         |
+| :------------------------------------------------------------------------------------------: | :--------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | [cain_b5_320k_vimeo-triple](/configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py) |   34.49/0.9565   | [model](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth)/[log](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.log.json) |
 
 ## Citation

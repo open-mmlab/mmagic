@@ -18,6 +18,7 @@ python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [-
 # multi-gpu testing
 ./tools/dist_test.sh ${CONFIG_FILE} ${CHECKPOINT_FILE} ${GPU_NUM} [--out ${RESULT_FILE}] [--save-path ${IMAGE_SAVE_PATH}]
 ```
+
 For example,
 
 ```shell
@@ -35,6 +36,7 @@ If you run MMEditing on a cluster managed with [slurm](https://slurm.schedmd.com
 ```shell
 [GPUS=${GPUS}] ./tools/slurm_test.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${CHECKPOINT_FILE}
 ```
+
 Here is an example of using 8 GPUs to test an example model on the 'dev' partition with job name 'test'.
 
 ```shell
@@ -53,8 +55,6 @@ You can check [slurm_test.sh](https://github.com/open-mmlab/mmediting/blob/maste
 
 Note: Currently, we do NOT use `--eval` argument like [MMDetection](https://github.com/open-mmlab/mmdetection) to specify evaluation metrics. The evaluation metrics are given in the config files (see [config.md](config.md)).
 
-
-
 ## Train a model
 
 MMEditing implements **distributed** training with `MMDistributedDataParallel`.
@@ -63,6 +63,7 @@ All outputs (log files and checkpoints) will be saved to the working directory,
 which is specified by `work_dir` in the config file.
 
 By default we evaluate the model on the validation set after several iterations, you can change the evaluation interval by adding the interval argument in the training config.
+
 ```python
 evaluation = dict(interval=1e4, by_epoch=False)  # This evaluates the model per 1e4 iterations.
 ```
@@ -134,11 +135,13 @@ CUDA_VISIBLE_DEVICES=4,5,6,7 PORT=29501 ./tools/dist_train.sh ${CONFIG_FILE} 4
 If you launch training jobs with Slurm, you need to modify the config files (usually the 6th line from the bottom in config files) to set different communication ports.
 
 In `config1.py`,
+
 ```python
 dist_params = dict(backend='nccl', port=29500)
 ```
 
 In `config2.py`,
+
 ```python
 dist_params = dict(backend='nccl', port=29501)
 ```

@@ -79,6 +79,7 @@ mmediting
 │   ├── VOCdevkit
 │   │   ├── VOC2012
 ```
+
 ## 为 FBA 准备数据集
 
 FBA采用 [Learning-base Sampling for Natural Image Matting](https://openaccess.thecvf.com/content_CVPR_2019/papers/Tang_Learning-Based_Sampling_for_Natural_Image_Matting_CVPR_2019_paper.pdf) 中提出的动态数据集增强。此外，为了减少增强过程中的伪影，它使用前景的扩展版本作为前景。我们提供脚本来估计前景。

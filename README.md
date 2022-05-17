@@ -55,7 +55,6 @@ https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-
 
 https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
 
-
 ### Major features
 
 - **Modular design**
@@ -76,13 +75,13 @@ hope MMEditing could provide better experience.
 
 ## News
 
-- [2022-04-01] v0.14.0 was released.
+- \[2022-04-01\] v0.14.0 was released.
   - Support TOFlow in video frame interpolation
-- [2022-03-01] v0.13.0 was released.
+- \[2022-03-01\] v0.13.0 was released.
   - Support CAIN
   - Support EDVR-L
   - Support running in Windows
-- [2022-02-11] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
+- \[2022-02-11\] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
