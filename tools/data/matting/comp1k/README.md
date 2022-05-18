@@ -83,6 +83,7 @@ mmediting
 │   ├── VOCdevkit
 │   │   ├── VOC2012
 ```
+
 ## Prepare the dataset for FBA
 
 FBA adopts dynamic dataset augmentation proposed in [Learning-base Sampling for Natural Image Matting](https://openaccess.thecvf.com/content_CVPR_2019/papers/Tang_Learning-Based_Sampling_for_Natural_Image_Matting_CVPR_2019_paper.pdf).

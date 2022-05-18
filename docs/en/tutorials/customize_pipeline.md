@@ -77,17 +77,17 @@ test_pipeline = [
 ]
 ```
 
-For each operation, we list the related dict fields that are added/updated/removed, the dict fields marked by '*' are optional.
+For each operation, we list the related dict fields that are added/updated/removed, the dict fields marked by '\*' are optional.
 
 ### Data loading
 
 `LoadImageFromFile`
 
-- add: img, img_path, img_ori_shape, *ori_img
+- add: img, img_path, img_ori_shape, \*ori_img
 
 `LoadImageFromFileList`
 
-- add: imgs, img_paths, img_ori_shapes, *ori_imgs
+- add: imgs, img_paths, img_ori_shapes, \*ori_imgs
 
 `RandomLoadResizeBg`
 
@@ -103,7 +103,7 @@ For each operation, we list the related dict fields that are added/updated/remov
 
 `LoadPairedImageFromFile`
 
-- add: img, img_a, img_b, img_path, img_a_path, img_b_path, img_ori_shape, img_a_ori_shape, img_b_ori_shape, *ori_img, *ori_img_a, *ori_img_b
+- add: img, img_a, img_b, img_path, img_a_path, img_b_path, img_ori_shape, img_a_ori_shape, img_b_ori_shape, \*ori_img, \*ori_img_a, \*ori_img_b
 
 ### Pre-processing
 

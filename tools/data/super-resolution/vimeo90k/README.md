@@ -18,6 +18,7 @@
 The training and test datasets can be download from [here](http://toflow.csail.mit.edu/).
 
 The Vimeo90K dataset has a `clip/sequence/img` folder structure:
+
 ```text
 ├── GT/LQ
 │   ├── 00001
@@ -32,9 +33,6 @@ The Vimeo90K dataset has a `clip/sequence/img` folder structure:
 │   ├── ...
 ```
 
-
-
-
 ## Prepare the annotation files for Vimeo90K dataset
 
 To prepare the annotation file for training, you need to download the official training list path for Vimeo90K from the official website, and run the following command:
@@ -44,8 +42,6 @@ python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./dat
 ```
 
 The annotation file for test is generated similarly.
-
-
 
 ## Prepare LMDB dataset for Vimeo90K
 
