@@ -27,7 +27,7 @@ Documentation
    :maxdepth: 2
    :caption: Get Started
 
-   install.rst
+   install.md
    demo.md
 
 .. toctree::

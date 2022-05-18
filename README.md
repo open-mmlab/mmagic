@@ -97,7 +97,7 @@ Install PyTorch following [official instructions](https://pytorch.org/get-starte
 **Step 2.**
 Install MMCV with [MIM](https://github.com/open-mmlab/mim).
 
-```
+```shell
 pip3 install openmim
 mim install mmcv-full
 ```
@@ -105,13 +105,13 @@ mim install mmcv-full
 **Step 3.**
 Install MMEditing from source.
 
-```
+```shell
 git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
 pip3 install -e .
 ```
 
-Please refer to [install.md](../../wiki/1.-Installation) for more detailed instruction.
+Please refer to [install.md](docs/en/install.md) for more detailed instruction.
 
 ## Getting Started
 
