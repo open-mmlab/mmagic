@@ -13,8 +13,7 @@ Run it with
 docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmediting/data mmediting
 ```
 
-**Note**
-
-Versions defined in this [Dockerfile](Dockerfile) is not up-to-dated.
-If you use this Dockerfile in your project, you probably want to make some update.
-Feel free to submit a issue or PR for the update.
+**Note**:
+Versions defined in this [Dockerfile](Dockerfile) is not up-to-date.
+If you use this Dockerfile in your project, you probably want to make some updates.
+Feel free to submit an issue or PR for the update.
