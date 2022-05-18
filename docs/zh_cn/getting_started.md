@@ -35,6 +35,7 @@ python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [-
 # 多GPU测试
 ./tools/dist_test.sh ${CONFIG_FILE} ${CHECKPOINT_FILE} ${GPU_NUM} [--out ${RESULT_FILE}] [--save-path ${IMAGE_SAVE_PATH}]
 ```
+
 具体来说，比如：
 
 ```shell
@@ -52,6 +53,7 @@ python tools/test.py configs/example_config.py work_dirs/example_exp/example_mod
 ```shell
 [GPUS=${GPUS}] ./tools/slurm_test.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${CHECKPOINT_FILE}
 ```
+
 这里有一个使用8个 GPU 进行测是的样例，我们使用 `dev` 分区，同时设置任务名字为 `test`：
 
 ```shell
@@ -69,7 +71,6 @@ GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/exampl
 - `--cfg-options`:  如果指明，这里的键值对将会被合并到配置文件中。
 
 注：当前，我们不支持像 MMDetection 一样用 --eval 参数来指定评测指标。在 MMEditing 中，我们在配置文件中指定评测指标（详情参考：[config.md](config.md)）。
-
 
 ### 图像样例
 
@@ -143,7 +144,6 @@ python demo/generation_demo.py configs/example_config.py work_dirs/example_exp/e
 python demo/generation_demo.py configs/example_config.py work_dirs/example_exp/example_model_20200202.pth demo/demo.jpg demo/demo_out.jpg --unpaired-path demo/demo_unpaired.jpg --imshow
 ```
 
-
 ## 训练一个模型
 
 MMEditing 基于 `MMDistributedDataParallel` 实现了分布式训练。
@@ -151,6 +151,7 @@ MMEditing 基于 `MMDistributedDataParallel` 实现了分布式训练。
 所有的输出（日志文件和模型权重文件）将会被存储到工作目录下面，工作目录可以通过 `work_dir` 参数在配置文件中指定。
 
 我们默认地会在训练几个 iteration 之后在验证集测试自己的模型，你可以在训练配置文件中设置测试间隔：
+
 ```python
 evaluation = dict(interval=1e4, by_epoch=False)  # 这样的话模型就会每 10,000 次迭代就进行评测
 ```
@@ -202,11 +203,13 @@ CUDA_VISIBLE_DEVICES=4,5,6,7 PORT=29501 ./tools/dist_train.sh ${CONFIG_FILE} 4
 如果你在 slurm 系统上启动训练任务，你需要修改配置文件来设定不同的信息交互端口：
 
 在 `config1.py` 中：
+
 ```python
 dist_params = dict(backend='nccl', port=29500)
 ```
 
 在 `config2.py` 中,
+
 ```python
 dist_params = dict(backend='nccl', port=29501)
 ```
@@ -217,7 +220,6 @@ dist_params = dict(backend='nccl', port=29501)
 CUDA_VISIBLE_DEVICES=0,1,2,3 GPUS=4 ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} config1.py ${WORK_DIR}
 CUDA_VISIBLE_DEVICES=4,5,6,7 GPUS=4 ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} config2.py ${WORK_DIR}
 ```
-
 
 ## 有用的工具
 
@@ -232,9 +234,11 @@ python tools/get_flops.py ${CONFIG_FILE} [--shape ${INPUT_SHAPE}]
 ```
 
 具体来说：
+
 ```shell
 python tools/get_flops.py configs/resotorer/srresnet.py --shape 40 40
 ```
+
 你将会得到如下输出：
 
 ```
@@ -266,4 +270,5 @@ python tools/publish_model.py ${INPUT_FILENAME} ${OUTPUT_FILENAME}
 ```shell
 python tools/publish_model.py work_dirs/example_exp/latest.pth example_model_20200202.pth
 ```
+
 最终的输出文件名将会是 `example_model_20200202-{hash id}.pth`。

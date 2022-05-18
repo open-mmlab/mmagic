@@ -4,4 +4,4 @@
 
 MMEditing 支持的抠图数据集：
 
-* [Composition-1k](comp1k/README.md) \[ [Homepage](https://sites.google.com/view/deepimagematting) \]
+- [Composition-1k](comp1k/README.md) \[ [Homepage](https://sites.google.com/view/deepimagematting) \]

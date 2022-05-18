@@ -20,6 +20,6 @@ We follow the below style to name config files. Contributors are advised to foll
 - `[misc]`: miscellaneous setting/plugins of model, e.g. `dconv`, `gcb`, `attention`, `albu`, `mstrain`.
 - `[gpu x batch_per_gpu]`: GPUs and samples per GPU, `8x2` is used by default.
 - `{schedule}`: training schedule, `20k`, `100k`, etc.
-`20k` means 20,000 iterations.
-`100k` means 100,000 iterations.
+  `20k` means 20,000 iterations.
+  `100k` means 100,000 iterations.
 - `{dataset}`: dataset like `places` (for inpainting), `comp1k` (for matting), `div2k` (for restoration) and `paired` (for generation).

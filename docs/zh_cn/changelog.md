@@ -199,7 +199,7 @@
 - 修复了 stat.py 中的 bug ([#420](https://github.com/open-mmlab/mmediting/pull/420))
 - 修复了 tensor2img 函数中的 astype 错误 ([#429](https://github.com/open-mmlab/mmediting/pull/429))
 - 修复了当 pytorch >= 1.7 时由  torch.new_tensor 导致的 device 错误 ([#465](https://github.com/open-mmlab/mmediting/pull/465))
-- 修复了 .mmedit/apis/train.py 中的 _non_dist_train ([#473](https://github.com/open-mmlab/mmediting/pull/473))
+- 修复了 .mmedit/apis/train.py 中的 \_non_dist_train ([#473](https://github.com/open-mmlab/mmediting/pull/473))
 - 修复了多节点分布式测试函数 ([#478](https://github.com/open-mmlab/mmediting/pull/478))
 
 **兼容性更新**
@@ -224,7 +224,6 @@
 - 修正了 StyleGAN modules 中的拼写错误 ([#427](https://github.com/open-mmlab/mmediting/pull/427))
 - 修正了 docs/demo.md 中的拼写错误 ([#453](https://github.com/open-mmlab/mmediting/pull/453), [#454](https://github.com/open-mmlab/mmediting/pull/454))
 - 修复了 tools/data/super-resolution/reds/README.md 中的拼写错误 ([#469](https://github.com/open-mmlab/mmediting/pull/469))
-
 
 ## v0.9.0 (30/06/2021).
 
@@ -251,7 +250,7 @@
 - 修复了 LIIF 的配置文件 ([#368](https://github.com/open-mmlab/mmediting/pull/368))
 - 修改了 pre-trained EDVR-M 的路径 ([#396](https://github.com/open-mmlab/mmediting/pull/396))
 - 修复了 restoration_video_inference 中的 normalization ([#406](https://github.com/open-mmlab/mmediting/pull/406))
-- 修复了单元测试中的 [brush_stroke_mask] 错误 ([#409](https://github.com/open-mmlab/mmediting/pull/409))
+- 修复了单元测试中的 \[brush_stroke_mask\] 错误 ([#409](https://github.com/open-mmlab/mmediting/pull/409))
 
 **兼容性更新**
 
@@ -375,6 +374,7 @@
 - 支持 Local Implicit Image Function (LIIF) ([#224](https://github.com/open-mmlab/mmediting/pull/224), [#226](https://github.com/open-mmlab/mmediting/pull/226), [#227](https://github.com/open-mmlab/mmediting/pull/227), [#234](https://github.com/open-mmlab/mmediting/pull/234), [#239](https://github.com/open-mmlab/mmediting/pull/239))
 
 **Bug 修复**
+
 - 修复了 train api 中的 `_non_dist_train` ([#104](https://github.com/open-mmlab/mmediting/pull/104))
 - 修复了 setup 和 CI ([#109](https://github.com/open-mmlab/mmediting/pull/109))
 - 修复了 Normalize 中会导致多余循环的 bug ([#121](https://github.com/open-mmlab/mmediting/pull/121))

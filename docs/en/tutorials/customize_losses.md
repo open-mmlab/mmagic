@@ -22,6 +22,7 @@ class MSELoss(nn.Module):
 ```
 
 Given the definition of the loss, we can now use the loss by simply defining it in the configuration file:
+
 ```python
 pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean')
 ```

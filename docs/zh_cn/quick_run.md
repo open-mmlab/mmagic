@@ -103,7 +103,6 @@ NNODES=2 NODE_RANK=1 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train
 为提高网络通信速度，推荐使用高速网络设备，如 Infiniband 等。
 更多信息可参照[PyTorch 文档](https://pytorch.org/docs/1.11/distributed.html#launch-utility).
 
-
 ### 在 slurm 上训练
 
 如果您在使用 [slurm](https://slurm.schedmd.com/) 管理的集群上运行 MMEditing，则可以使用脚本 `slurm_train.sh`。（此脚本也支持单机训练。）
@@ -133,11 +132,13 @@ CUDA_VISIBLE_DEVICES=4,5,6,7 PORT=29501 ./tools/dist_train.sh ${CONFIG_FILE} 4
 如果您使用 Slurm 启动训练作业，则需要修改配置文件（通常是配置文件的倒数第 6 行）以设置不同的通信端口。
 
 在 `config1.py` 中,
+
 ```python
 dist_params = dict(backend='nccl', port=29500)
 ```
 
 在 `config2.py` 中,
+
 ```python
 dist_params = dict(backend='nccl', port=29501)
 ```

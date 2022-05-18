@@ -11,9 +11,11 @@ python tools/get_flops.py ${CONFIG_FILE} [--shape ${INPUT_SHAPE}]
 ```
 
 For example,
+
 ```shell
 python tools/get_flops.py configs/resotorer/srresnet.py --shape 40 40
 ```
+
 You will get the result like this.
 
 ```
@@ -84,14 +86,14 @@ Description of arguments:
 
 The table below lists the models that are guaranteed to be exportable to ONNX and runnable in ONNX Runtime.
 
-|  Model   |                                                                               Config                                                                                | Dynamic Shape | Batch Inference | Note  |
-| :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :-------------: | :---: |
-|  ESRGAN  |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |       Y       |        Y        |       |
-|  ESRGAN  | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |       Y       |        Y        |       |
-|  SRCNN   |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |       Y       |        Y        |       |
-|   DIM    |      [dim_stage3_v16_pln_1x1_1000k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py)       |       Y       |        Y        |       |
-|   GCA    |                 [gca_r34_4x10_200k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/gca/gca_r34_4x10_200k_comp1k.py)                  |       N       |        Y        |       |
-| IndexNet |         [indexnet_mobv2_1x16_78k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k.py)         |       Y       |        Y        |       |
+|  Model   |                                                                               Config                                                                                | Dynamic Shape | Batch Inference | Note |
+| :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :-------------: | :--: |
+|  ESRGAN  |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |       Y       |        Y        |      |
+|  ESRGAN  | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |       Y       |        Y        |      |
+|  SRCNN   |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |       Y       |        Y        |      |
+|   DIM    |      [dim_stage3_v16_pln_1x1_1000k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py)       |       Y       |        Y        |      |
+|   GCA    |                 [gca_r34_4x10_200k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/gca/gca_r34_4x10_200k_comp1k.py)                  |       N       |        Y        |      |
+| IndexNet |         [indexnet_mobv2_1x16_78k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k.py)         |       Y       |        Y        |      |
 
 **Notes**:
 
@@ -102,7 +104,6 @@ The table below lists the models that are guaranteed to be exportable to ONNX an
 ### Convert ONNX to TensorRT (experimental)
 
 We also provide a script to convert [ONNX](https://github.com/onnx/onnx) model to [TensorRT](https://github.com/NVIDIA/TensorRT) format. Besides, we support comparing the output results between ONNX and TensorRT model.
-
 
 ```bash
 python tools/onnx2tensorrt.py
@@ -141,11 +142,11 @@ Description of arguments:
 
 The table below lists the models that are guaranteed to be exportable to TensorRT engine and runnable in TensorRT.
 
-|  Model   |                                                                               Config                                                                                | Dynamic Shape | Batch Inference | Note  |
-| :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :-------------: | :---: |
-|  ESRGAN  |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |       Y       |        Y        |       |
-|  ESRGAN  | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |       Y       |        Y        |       |
-|  SRCNN   |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |       Y       |        Y        |  'bicubic' upsampling must be replaced with 'bilinear'     |
+| Model  |                                                                               Config                                                                                | Dynamic Shape | Batch Inference |                         Note                          |
+| :----: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :-------------: | :---------------------------------------------------: |
+| ESRGAN |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |       Y       |        Y        |                                                       |
+| ESRGAN | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |       Y       |        Y        |                                                       |
+| SRCNN  |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |       Y       |        Y        | 'bicubic' upsampling must be replaced with 'bilinear' |
 
 **Notes**:
 
@@ -158,6 +159,7 @@ The table below lists the models that are guaranteed to be exportable to TensorR
 We provide methods to evaluate TensorRT and ONNX models in `tools/deploy_test.py`.
 
 #### Prerequisite
+
 To evaluate ONNX and TensorRT models, onnx, onnxruntime and TensorRT should be installed first. Install `mmcv-full` with ONNXRuntime custom ops and TensorRT plugins follow [ONNXRuntime in mmcv](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) and [TensorRT plugin in mmcv](https://github.com/open-mmlab/mmcv/blob/master/docs/tensorrt_plugin.md).
 
 #### Usage

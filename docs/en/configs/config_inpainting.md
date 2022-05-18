@@ -1,9 +1,11 @@
 # Config System for Inpainting
 
 ## Config Name Style
+
 Same as [MMDetection](https://github.com/open-mmlab/mmdetection), we incorporate modular and inheritance design into our config system, which is convenient to conduct various experiments.
 
 ## Config Field Description
+
 To help the users have a basic idea of a complete config and the modules in a inpainting system,
 we make brief comments on the config of Global&Local as the following.
 For more detailed usage and the corresponding alternative for each modules, please refer to the API documentation.

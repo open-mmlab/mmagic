@@ -17,6 +17,7 @@
 - The OST dataset can be downloaded [here](https://openmmlab.oss-cn-hangzhou.aliyuncs.com/datasets/OST_dataset.zip) (We use the training set only).
 
 Please first put all the images into the `GT` folder (naming does not need to be in order):
+
 ```text
 mmediting
 ├── mmedit

@@ -17,6 +17,7 @@
 - OST 数据集可以在 [这里](https://openmmlab.oss-cn-hangzhou.aliyuncs.com/datasets/OST_dataset.zip) 下载 (我们只使用训练集)。
 
 请先将所有图片放入 `GT` 文件夹（命名不需要按顺序）：
+
 ```text
 mmediting
 ├── mmedit
