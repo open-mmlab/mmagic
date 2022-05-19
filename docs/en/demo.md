@@ -22,7 +22,7 @@ If `--imshow` is specified, the demo will also show image with opencv. Examples:
 ```shell
 python demo/inpainting_demo.py \
     configs/inpainting/global_local/gl_256x256_8x12_celeba.py \
-    work_dirs/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth \
+    https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth \
     tests/data/image/celeba_test.png \
     tests/data/image/bbox_mask.png \
     tests/data/pred/inpainting_celeba.png
