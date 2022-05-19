@@ -40,7 +40,7 @@ extensions = [
 ]
 
 autodoc_mock_imports = [
-    'mmedit.version', 'skimage', 'mmcv.ops.ModulatedDeformConv2d',
+    'mmedit.version', 'mmcv.ops.ModulatedDeformConv2d',
     'mmcv.ops.modulated_deform_conv2d', 'mmcv._ext'
 ]
 
@@ -89,6 +89,7 @@ html_static_path = ['_static']
 html_css_files = ['css/readthedocs.css']
 
 myst_enable_extensions = ['colon_fence']
+myst_heading_anchors = 3
 
 language = 'en'
 

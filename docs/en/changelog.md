@@ -25,7 +25,7 @@
 - Update preprocess_div2k_dataset.py ([#801](https://github.com/open-mmlab/mmediting/pull/801))
 - Update SR Colab Demo Installation Method and Set5 link ([#807](https://github.com/open-mmlab/mmediting/pull/807))
 - Fix Y/GRB mistake in EDSR README ([#812](https://github.com/open-mmlab/mmediting/pull/812))
-- Replace pytorch install command to conda in README(_zh-CN).md ([#816](https://github.com/open-mmlab/mmediting/pull/816))
+- Replace pytorch install command to conda in README(\_zh-CN).md ([#816](https://github.com/open-mmlab/mmediting/pull/816))
 
 **Improvements**
 
@@ -199,7 +199,7 @@
 - Fix bug in stat.py ([#420](https://github.com/open-mmlab/mmediting/pull/420))
 - Fix astype error in function tensor2img ([#429](https://github.com/open-mmlab/mmediting/pull/429))
 - Fix device error caused by torch.new_tensor when pytorch >= 1.7 ([#465](https://github.com/open-mmlab/mmediting/pull/465))
-- Fix _non_dist_train in .mmedit/apis/train.py ([#473](https://github.com/open-mmlab/mmediting/pull/473))
+- Fix \_non_dist_train in .mmedit/apis/train.py ([#473](https://github.com/open-mmlab/mmediting/pull/473))
 - Fix multi-node distributed test ([#478](https://github.com/open-mmlab/mmediting/pull/478))
 
 **Breaking Changes**
@@ -250,7 +250,7 @@
 - Fix Config of LIIF ([#368](https://github.com/open-mmlab/mmediting/pull/368))
 - Change the path to pre-trained EDVR-M ([#396](https://github.com/open-mmlab/mmediting/pull/396))
 - Fix normalization in restoration_video_inference ([#406](https://github.com/open-mmlab/mmediting/pull/406))
-- Fix [brush_stroke_mask] error in unittest ([#409](https://github.com/open-mmlab/mmediting/pull/409))
+- Fix \[brush_stroke_mask\] error in unittest ([#409](https://github.com/open-mmlab/mmediting/pull/409))
 
 **Breaking Changes**
 
@@ -374,6 +374,7 @@
 - Support Local Implicit Image Function (LIIF) ([#224](https://github.com/open-mmlab/mmediting/pull/224), [#226](https://github.com/open-mmlab/mmediting/pull/226), [#227](https://github.com/open-mmlab/mmediting/pull/227), [#234](https://github.com/open-mmlab/mmediting/pull/234), [#239](https://github.com/open-mmlab/mmediting/pull/239))
 
 **Bug Fixes**
+
 - Fix `_non_dist_train` in train api ([#104](https://github.com/open-mmlab/mmediting/pull/104))
 - Fix setup and CI ([#109](https://github.com/open-mmlab/mmediting/pull/109))
 - Fix redundant loop bug in Normalize ([#121](https://github.com/open-mmlab/mmediting/pull/121))

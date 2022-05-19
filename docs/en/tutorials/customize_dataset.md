@@ -63,6 +63,7 @@ You can reorganize new data formats to existing format.
 Or create a new dataset in [mmedit/datasets](/mmedit/datasets) to load the data.
 
 Inheriting from the base class of datasets will make it easier to create a new dataset
+
 - [BaseSRDataset](/mmedit/datasets/base_sr_dataset.py)
 - [BaseVFIDataset](/mmedit/datasets/base_vfi_dataset.py)
 - [BaseMattingDataset](/mmedit/datasets/base_matting_dataset.py)
