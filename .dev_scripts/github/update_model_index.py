@@ -164,9 +164,11 @@ def parse_md(md_file):
                 i += 1
 
             # parse table
-            elif lines[i][0] == '|' and i + 1 < len(lines) and \
-                    (lines[i + 1][:3] == '| :' or lines[i + 1][:2] == '|:'
-                        or lines[i + 1][:2] == '|-'):
+            elif (lines[i][0] == '|') and (i + 1 < len(lines)) and (
+                    lines[i + 1][:3] == '| :' or lines[i + 1][:2] == '|:'
+                    or lines[i + 1][:2] == '|-') and (
+                        'SKIP THIS TABLE' not in lines[i - 2]  # for aot-gan
+                    ):
                 cols = [col.strip() for col in lines[i].split('|')][1:-1]
                 config_idx = cols.index('Method')
                 checkpoint_idx = cols.index('Download')
