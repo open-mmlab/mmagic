@@ -1,11 +1,19 @@
-exp_name = 'flavr_8xb4_vimeo7frames'
+exp_name = 'flavr_in4out1_g8b4_vimeo90k_septuplet'
 
 # model settings
 model = dict(
     type='BasicInterpolator',
-    generator=dict(type='FLAVRNet', input_frames=4, output_frames=1),
-    pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-    selected_metrics=['PSNR', 'SSIM', 'MAE'])
+    generator=dict(
+        type='FLAVRNet',
+        num_input_frames=4,
+        num_output_frames=1,
+        mid_channels_list=[512, 256, 128, 64],
+        encoder_layers_list=[2, 2, 2, 2],
+        bias=False,
+        norm_cfg=None,
+        join_type='concat',
+        up_mode='transpose'),
+    pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = None
 test_cfg = dict(metrics=['PSNR', 'SSIM', 'MAE'], crop_border=0)
