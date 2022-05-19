@@ -1,0 +1,19 @@
+Collections:
+- Metadata:
+    Architecture:
+    - AOT-GAN
+  Name: AOT-GAN
+  Paper:
+  - https://arxiv.org/pdf/2104.01431.pdf
+  README: configs/inpainting/AOT-GAN/README.md
+Models:
+- Config: C:\Users\wangruohui\Desktop\mmediting\configs\inpainting\AOT-GAN\AOT-GAN_512x512_4x12_places.py
+  In Collection: AOT-GAN
+  Metadata:
+    Training Data: PLACES
+  Name: C:\Users\wangruohui\Desktop\mmediting\configs\inpainting\AOT-GAN\AOT-GAN_512x512_4x12_places
+  Results:
+  - Dataset: PLACES
+    Metrics: {}
+    Task: Inpainting
+  Weights: https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth

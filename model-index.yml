@@ -1,4 +1,5 @@
 Import:
+- configs/inpainting/AOT-GAN/metafile.yml
 - configs/inpainting/deepfillv1/metafile.yml
 - configs/inpainting/deepfillv2/metafile.yml
 - configs/inpainting/global_local/metafile.yml

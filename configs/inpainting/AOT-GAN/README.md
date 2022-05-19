@@ -1,0 +1,40 @@
+# AOT-GAN (TVCG'2021)
+
+> [AOT-GAN: Aggregated Contextual Transformations for High-Resolution Image Inpainting](https://arxiv.org/pdf/2104.01431.pdf)
+
+<!-- [ALGORITHM] -->
+
+## Abstract
+
+<!-- [ABSTRACT] -->
+
+State-of-the-art image inpainting approaches can suffer from generating distorted structures and blurry textures in high-resolution images (e.g., 512x512). The challenges mainly drive from (1) image content reasoning from distant contexts, and (2) fine-grained texture synthesis for a large missing region. To overcome these two challenges, we propose an enhanced GAN-based model, named Aggregated COntextual-Transformation GAN (AOT-GAN), for high-resolution image inpainting. Specifically, to enhance context reasoning, we construct the generator of AOT-GAN by stacking multiple layers of a proposed AOT block. The AOT blocks aggregate contextual transformations from various receptive fields, allowing to capture both informative distant image contexts and rich patterns of interest for context reasoning. For improving texture synthesis, we enhance the discriminator of AOT-GAN by training it with a tailored mask-prediction task. Such a training objective forces the discriminator to distinguish the detailed appearances of real and synthesized patches, and in turn, facilitates the generator to synthesize clear textures. Extensive comparisons on Places2, the most challenging benchmark with 1.8 million high-resolution images of 365 complex scenes, show that our model outperforms the state-of-the-art by a significant margin in terms of FID with 38.60% relative improvement. A user study including more than 30 subjects further validates the superiority of AOT-GAN. We further evaluate the proposed AOT-GAN in practical applications, e.g., logo removal, face editing, and object removal. Results show that our model achieves promising completions in the real world. We release code and models in [this https URL](https://github.com/researchmm/AOT-GAN-for-Inpainting).
+
+<!-- [IMAGE] -->
+<div align=center >
+ <img src="https://user-images.githubusercontent.com/12756472/169230414-3ca7fb6b-cf2a-401f-8696-71df75a08c32.png"/>
+</div >
+
+## Results and models
+
+**Places365-Challenge**
+
+
+|                                   Method                                    | Mask Type | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |                                                                                                                        Download                                                                                                                         |
+| :-------------------------------------------------------------------------: | :-------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [AOT-GAN](C:\Users\wangruohui\Desktop\mmediting\configs\inpainting\AOT-GAN\AOT-GAN_512x512_4x12_places.py) | free-form |  512x512   |    500k     | Places365-val |  See below   | See below  | See below  | [model](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [log](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
+
+
+
+
+## Citation
+
+```bibtex
+@inproceedings{yan2021agg,
+  author = {Zeng, Yanhong and Fu, Jianlong and Chao, Hongyang and Guo, Baining},
+  title = {Aggregated Contextual Transformations for High-Resolution Image Inpainting},
+  booktitle = {Arxiv},
+  pages={-},
+  year = {2020}
+}
+```
