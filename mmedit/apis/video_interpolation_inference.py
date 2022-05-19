@@ -181,7 +181,7 @@ def video_interpolation_inference(model,
                 output_tensors = output_tensors.unsqueeze(1)
             result = model.merge_frames(input_tensors, output_tensors)
         if not start_idx == start_index:
-            result = result[0 - repeat_frame:]
+            result = result[repeat_frame:]
         prog_bar.update()
 
         # save frames
