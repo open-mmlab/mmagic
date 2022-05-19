@@ -7,11 +7,11 @@ Collections:
   - https://arxiv.org/pdf/2104.01431.pdf
   README: configs/inpainting/AOT-GAN/README.md
 Models:
-- Config: C:\Users\wangruohui\Desktop\mmediting\configs\inpainting\AOT-GAN\AOT-GAN_512x512_4x12_places.py
+- Config: configs/inpainting/AOT-GAN/AOT-GAN_512x512_4x12_places.py
   In Collection: AOT-GAN
   Metadata:
     Training Data: PLACES
-  Name: C:\Users\wangruohui\Desktop\mmediting\configs\inpainting\AOT-GAN\AOT-GAN_512x512_4x12_places
+  Name: AOT-GAN_512x512_4x12_places
   Results:
   - Dataset: PLACES
     Metrics: {}
