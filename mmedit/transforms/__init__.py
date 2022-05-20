@@ -11,6 +11,8 @@ from .generate_frame_indices import (GenerateFrameIndices,
                                      GenerateFrameIndiceswithPadding,
                                      GenerateSegmentIndices)
 from .loading import LoadImageFromFile
+from .matlab_like_resize import MATLABLikeResize
+from .random_down_sampling import RandomDownSampling
 from .values import CopyValues
 
 __all__ = [
@@ -29,11 +31,13 @@ __all__ = [
     'GenerateFrameIndices',
     'GenerateFrameIndiceswithPadding',
     'GenerateSegmentIndices',
+    'MATLABLikeResize',
     'MirrorSequence',
     'ModCrop',
     'PackEditInputs',
     'PairedRandomCrop',
     'RandomAffine',
+    'RandomDownSampling',
     'RandomJitter',
     'RandomMaskDilation',
     'RandomResizedCrop',

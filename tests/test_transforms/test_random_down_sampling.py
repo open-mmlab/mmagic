@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 
-from mmedit.datasets.pipelines import RandomDownSampling
+from mmedit.transforms import RandomDownSampling
 
 
 def test_random_down_sampling():
