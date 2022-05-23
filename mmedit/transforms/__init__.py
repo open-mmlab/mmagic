@@ -6,6 +6,7 @@ from .aug_shape import Flip, RandomRotation, RandomTransposeHW, Resize
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    CropLike, FixedCrop, ModCrop, PairedRandomCrop,
                    RandomResizedCrop)
+from .formatting import PackEditInputs, ToTensor
 from .generate_frame_indices import (GenerateFrameIndices,
                                      GenerateFrameIndiceswithPadding,
                                      GenerateSegmentIndices)
@@ -30,6 +31,7 @@ __all__ = [
     'GenerateSegmentIndices',
     'MirrorSequence',
     'ModCrop',
+    'PackEditInputs',
     'PairedRandomCrop',
     'RandomAffine',
     'RandomJitter',
@@ -39,5 +41,6 @@ __all__ = [
     'RandomTransposeHW',
     'Resize',
     'TemporalReverse',
+    'ToTensor',
     'UnsharpMasking',
 ]
