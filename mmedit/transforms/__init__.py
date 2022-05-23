@@ -1,5 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .aug_frames import MirrorSequence, TemporalReverse
+from .aug_matting import (CompositeFg, GenerateSeg, GenerateSoftSeg,
+                          GenerateTrimap, GenerateTrimapWithDistTransform,
+                          MergeFgAndBg, PerturbBg, TransformTrimap)
 from .aug_pixel import (BinarizeImage, Clip, ColorJitter, RandomAffine,
                         RandomJitter, RandomMaskDilation, UnsharpMasking)
 from .aug_shape import Flip, RandomRotation, RandomTransposeHW, Resize
@@ -47,4 +50,13 @@ __all__ = [
     'TemporalReverse',
     'ToTensor',
     'UnsharpMasking',
+    # matting
+    'CompositeFg',
+    'GenerateSeg',
+    'GenerateSoftSeg',
+    'GenerateTrimap',
+    'GenerateTrimapWithDistTransform',
+    'MergeFgAndBg',
+    'PerturbBg',
+    'TransformTrimap'
 ]

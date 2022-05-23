@@ -17,9 +17,9 @@ from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
                       LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
                       RandomLoadResizeBg)
 from .matlab_like_resize import MATLABLikeResize
-from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
-                          GenerateTrimap, GenerateTrimapWithDistTransform,
-                          MergeFgAndBg, PerturbBg, TransformTrimap)
+# from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
+#                           GenerateTrimap, GenerateTrimapWithDistTransform,
+#                           MergeFgAndBg, PerturbBg, TransformTrimap)
 from .normalization import Normalize, RescaleToZeroOne
 from .random_degradations import (DegradationsWithShuffle, RandomBlur,
                                   RandomJPEGCompression, RandomNoise,
