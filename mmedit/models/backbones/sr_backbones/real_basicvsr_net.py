@@ -1,16 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
-from mmcv.runner import load_checkpoint
 
+from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.backbones.sr_backbones.basicvsr_net import (
     BasicVSRNet, ResidualBlocksWithInputConv)
-from mmedit.models.registry import BACKBONES
-from mmedit.utils import get_root_logger
+from mmedit.registry import BACKBONES
 
 
 @BACKBONES.register_module()
-class RealBasicVSRNet(nn.Module):
+class RealBasicVSRNet(BaseBackbone):
     """RealBasicVSR network structure for real-world video super-resolution.
 
     Support only x4 upsampling.
@@ -90,19 +89,3 @@ class RealBasicVSRNet(nn.Module):
             return outputs, lqs
         else:
             return outputs
-
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults: None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is not None:
-            raise TypeError(f'"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')

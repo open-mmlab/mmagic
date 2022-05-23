@@ -5,7 +5,7 @@ from mmcv.runner import load_checkpoint
 
 from mmedit.models.common import (ResidualBlockWithDropout,
                                   generation_init_weights)
-from mmedit.models.registry import BACKBONES
+from mmedit.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 

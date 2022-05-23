@@ -2,7 +2,7 @@
 import torch
 import torch.nn as nn
 
-from mmedit.models.registry import COMPONENTS
+from mmedit.registry import COMPONENTS
 
 
 class ResBlock(nn.Module):

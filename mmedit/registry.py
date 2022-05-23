@@ -28,6 +28,9 @@ TRANSFORMS = Registry('transform', parent=registry.TRANSFORMS)
 
 # mangage all kinds of modules inheriting `nn.Module`
 MODELS = Registry('model', parent=registry.MODELS)
+BACKBONES = MODELS
+COMPONENTS = MODELS
+LOSSES = MODELS
 # mangage all kinds of model wrappers like 'MMDistributedDataParallel'
 MODEL_WRAPPERS = Registry('model_wrapper', parent=registry.MODEL_WRAPPERS)
 # mangage all kinds of weight initialization modules like `Uniform`

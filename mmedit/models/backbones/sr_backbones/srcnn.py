@@ -1,13 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
-from mmcv.runner import load_checkpoint
 
-from mmedit.models.registry import BACKBONES
-from mmedit.utils import get_root_logger
+from mmedit.models.backbones.base_backbone import BaseBackbone
+from mmedit.registry import BACKBONES
 
 
 @BACKBONES.register_module()
-class SRCNN(nn.Module):
+class SRCNN(BaseBackbone):
     """SRCNN network structure for image super resolution.
 
     SRCNN has three conv layers. For each layer, we can define the
@@ -74,21 +73,3 @@ class SRCNN(nn.Module):
         out = self.relu(self.conv2(out))
         out = self.conv3(out)
         return out
-
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is None:
-            pass
-        else:
-            raise TypeError(f'"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')

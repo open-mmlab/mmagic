@@ -5,7 +5,7 @@ from mmcv.runner import load_checkpoint
 from torchvision import models
 
 from mmedit.models.common import ImgNormalize
-from mmedit.models.registry import COMPONENTS
+from mmedit.registry import COMPONENTS
 from mmedit.utils import get_root_logger
 
 

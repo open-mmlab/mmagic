@@ -3,63 +3,16 @@ import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule, constant_init
 from mmcv.ops import DeformConv2d, DeformConv2dPack, deform_conv2d
-from mmcv.runner import load_checkpoint
 from torch.nn.modules.utils import _pair
 
+from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   make_layer)
-from mmedit.models.registry import BACKBONES
-from mmedit.utils import get_root_logger
-
-
-class AugmentedDeformConv2dPack(DeformConv2d):
-    """Augmented Deformable Convolution Pack.
-
-    Different from DeformConv2dPack, which generates offsets from the
-    preceding feature, this AugmentedDeformConv2dPack takes another feature to
-    generate the offsets.
-
-    Args:
-        in_channels (int): Number of channels in the input feature.
-        out_channels (int): Number of channels produced by the convolution.
-        kernel_size (int or tuple[int]): Size of the convolving kernel.
-        stride (int or tuple[int]): Stride of the convolution. Default: 1.
-        padding (int or tuple[int]): Zero-padding added to both sides of the
-            input. Default: 0.
-        dilation (int or tuple[int]): Spacing between kernel elements.
-            Default: 1.
-        groups (int): Number of blocked connections from input channels to
-            output channels. Default: 1.
-        deform_groups (int): Number of deformable group partitions.
-        bias (bool or str): If specified as `auto`, it will be decided by the
-            norm_cfg. Bias will be set as True if norm_cfg is None, otherwise
-            False.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.conv_offset = nn.Conv2d(
-            self.in_channels,
-            self.deform_groups * 2 * self.kernel_size[0] * self.kernel_size[1],
-            kernel_size=self.kernel_size,
-            stride=_pair(self.stride),
-            padding=_pair(self.padding),
-            bias=True)
-
-        self.init_offset()
-
-    def init_offset(self):
-        constant_init(self.conv_offset, val=0, bias=0)
-
-    def forward(self, x, extra_feat):
-        offset = self.conv_offset(extra_feat)
-        return deform_conv2d(x, offset, self.weight, self.stride, self.padding,
-                             self.dilation, self.groups, self.deform_groups)
+from mmedit.registry import BACKBONES
 
 
 @BACKBONES.register_module()
-class TDANNet(nn.Module):
+class TDANNet(BaseBackbone):
     """TDAN network structure for video super-resolution.
 
     Support only x4 upsampling.
@@ -151,18 +104,48 @@ class TDANNet(nn.Module):
         # output HR center frame and the aligned LR frames
         return self.reconstruct(aligned_lrs), aligned_lrs.view(n, t, c, h, w)
 
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
 
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults: None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is not None:
-            raise TypeError(f'"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')
+class AugmentedDeformConv2dPack(DeformConv2d):
+    """Augmented Deformable Convolution Pack.
+
+    Different from DeformConv2dPack, which generates offsets from the
+    preceding feature, this AugmentedDeformConv2dPack takes another feature to
+    generate the offsets.
+
+    Args:
+        in_channels (int): Number of channels in the input feature.
+        out_channels (int): Number of channels produced by the convolution.
+        kernel_size (int or tuple[int]): Size of the convolving kernel.
+        stride (int or tuple[int]): Stride of the convolution. Default: 1.
+        padding (int or tuple[int]): Zero-padding added to both sides of the
+            input. Default: 0.
+        dilation (int or tuple[int]): Spacing between kernel elements.
+            Default: 1.
+        groups (int): Number of blocked connections from input channels to
+            output channels. Default: 1.
+        deform_groups (int): Number of deformable group partitions.
+        bias (bool or str): If specified as `auto`, it will be decided by the
+            norm_cfg. Bias will be set as True if norm_cfg is None, otherwise
+            False.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.conv_offset = nn.Conv2d(
+            self.in_channels,
+            self.deform_groups * 2 * self.kernel_size[0] * self.kernel_size[1],
+            kernel_size=self.kernel_size,
+            stride=_pair(self.stride),
+            padding=_pair(self.padding),
+            bias=True)
+
+        self.init_offset()
+
+    def init_offset(self):
+        constant_init(self.conv_offset, val=0, bias=0)
+
+    def forward(self, x, extra_feat):
+        offset = self.conv_offset(extra_feat)
+        return deform_conv2d(x, offset, self.weight, self.stride, self.padding,
+                             self.dilation, self.groups, self.deform_groups)

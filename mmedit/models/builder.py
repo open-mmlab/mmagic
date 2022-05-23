@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
-from mmcv import build_from_cfg
+from mmengine.registry import build_from_cfg
 
-from .registry import BACKBONES, COMPONENTS, LOSSES, MODELS
+from ..registry import BACKBONES, COMPONENTS, LOSSES, MODELS
 
 
 def build(cfg, registry, default_args=None):

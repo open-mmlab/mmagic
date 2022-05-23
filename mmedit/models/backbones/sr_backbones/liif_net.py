@@ -1,15 +1,13 @@
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
-from mmcv.runner import load_checkpoint
 
 from mmedit.datasets.pipelines.utils import make_coord
+from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.builder import build_backbone, build_component
-from mmedit.models.registry import BACKBONES
-from mmedit.utils import get_root_logger
+from mmedit.registry import BACKBONES
 
 
-class LIIFNet(nn.Module):
+class LIIFNet(BaseBackbone):
     """LIIF net for single image super-resolution, CVPR, 2021.
 
     Paper: Learning Continuous Image Representation with
@@ -188,22 +186,6 @@ class LIIFNet(nn.Module):
                 left = right
             pred = torch.cat(preds, dim=1)
         return pred
-
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is not None:
-            raise TypeError('"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')
 
 
 @BACKBONES.register_module()

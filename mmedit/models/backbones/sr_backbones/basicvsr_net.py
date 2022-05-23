@@ -5,14 +5,15 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule
 from mmcv.runner import load_checkpoint
 
+from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   flow_warp, make_layer)
-from mmedit.models.registry import BACKBONES
+from mmedit.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 
 @BACKBONES.register_module()
-class BasicVSRNet(nn.Module):
+class BasicVSRNet(BaseBackbone):
     """BasicVSR network structure for video super-resolution.
 
     Support only x4 upsampling.
@@ -165,22 +166,6 @@ class BasicVSRNet(nn.Module):
             outputs[i] = out
 
         return torch.stack(outputs, dim=1)
-
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults: None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is not None:
-            raise TypeError(f'"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')
 
 
 class ResidualBlocksWithInputConv(nn.Module):

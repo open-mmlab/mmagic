@@ -4,17 +4,16 @@ import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import constant_init
 from mmcv.ops import ModulatedDeformConv2d, modulated_deform_conv2d
-from mmcv.runner import load_checkpoint
 
+from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.backbones.sr_backbones.basicvsr_net import (
     ResidualBlocksWithInputConv, SPyNet)
 from mmedit.models.common import PixelShufflePack, flow_warp
-from mmedit.models.registry import BACKBONES
-from mmedit.utils import get_root_logger
+from mmedit.registry import BACKBONES
 
 
 @BACKBONES.register_module()
-class BasicVSRPlusPlus(nn.Module):
+class BasicVSRPlusPlus(BaseBackbone):
     """BasicVSR++ network structure.
 
     Support either x4 upsampling or same size output.
@@ -351,22 +350,6 @@ class BasicVSRPlusPlus(nn.Module):
                     torch.cuda.empty_cache()
 
         return self.upsample(lqs, feats)
-
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Default: None.
-            strict (bool, optional): Whether strictly load the pretrained
-                model. Default: True.
-        """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is not None:
-            raise TypeError(f'"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')
 
 
 class SecondOrderDeformableAlignment(ModulatedDeformConv2d):

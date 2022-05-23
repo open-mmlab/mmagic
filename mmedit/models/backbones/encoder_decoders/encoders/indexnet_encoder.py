@@ -9,7 +9,7 @@ from mmcv.runner import load_checkpoint
 from mmcv.utils.parrots_wrapper import SyncBatchNorm
 
 from mmedit.models.common import ASPP, DepthwiseSeparableConvModule
-from mmedit.models.registry import COMPONENTS
+from mmedit.registry import COMPONENTS
 from mmedit.utils import get_root_logger
 
 

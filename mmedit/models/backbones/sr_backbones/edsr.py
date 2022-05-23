@@ -3,42 +3,15 @@ import math
 
 import torch
 import torch.nn as nn
-from mmcv.runner import load_checkpoint
 
+from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   make_layer)
-from mmedit.models.registry import BACKBONES
-from mmedit.utils import get_root_logger
-
-
-class UpsampleModule(nn.Sequential):
-    """Upsample module used in EDSR.
-
-    Args:
-        scale (int): Scale factor. Supported scales: 2^n and 3.
-        mid_channels (int): Channel number of intermediate features.
-    """
-
-    def __init__(self, scale, mid_channels):
-        modules = []
-        if (scale & (scale - 1)) == 0:  # scale = 2^n
-            for _ in range(int(math.log(scale, 2))):
-                modules.append(
-                    PixelShufflePack(
-                        mid_channels, mid_channels, 2, upsample_kernel=3))
-        elif scale == 3:
-            modules.append(
-                PixelShufflePack(
-                    mid_channels, mid_channels, scale, upsample_kernel=3))
-        else:
-            raise ValueError(f'scale {scale} is not supported. '
-                             'Supported scales: 2^n and 3.')
-
-        super().__init__(*modules)
+from mmedit.registry import BACKBONES
 
 
 @BACKBONES.register_module()
-class EDSR(nn.Module):
+class EDSR(BaseBackbone):
     """EDSR network structure.
 
     Paper: Enhanced Deep Residual Networks for Single Image Super-Resolution.
@@ -113,20 +86,28 @@ class EDSR(nn.Module):
 
         return x
 
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
 
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is None:
-            pass  # use default initialization
+class UpsampleModule(nn.Sequential):
+    """Upsample module used in EDSR.
+
+    Args:
+        scale (int): Scale factor. Supported scales: 2^n and 3.
+        mid_channels (int): Channel number of intermediate features.
+    """
+
+    def __init__(self, scale, mid_channels):
+        modules = []
+        if (scale & (scale - 1)) == 0:  # scale = 2^n
+            for _ in range(int(math.log(scale, 2))):
+                modules.append(
+                    PixelShufflePack(
+                        mid_channels, mid_channels, 2, upsample_kernel=3))
+        elif scale == 3:
+            modules.append(
+                PixelShufflePack(
+                    mid_channels, mid_channels, scale, upsample_kernel=3))
         else:
-            raise TypeError('"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')
+            raise ValueError(f'scale {scale} is not supported. '
+                             'Supported scales: 2^n and 3.')
+
+        super().__init__(*modules)

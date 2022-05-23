@@ -4,7 +4,7 @@ from mmcv.runner import load_checkpoint
 
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   default_init_weights, make_layer)
-from mmedit.models.registry import BACKBONES
+from mmedit.registry import BACKBONES
 from mmedit.utils import get_root_logger
 
 

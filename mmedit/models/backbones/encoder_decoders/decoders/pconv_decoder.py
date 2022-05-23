@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from mmedit.models.common import MaskConvModule
-from mmedit.models.registry import COMPONENTS
+from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()

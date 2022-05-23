@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule, kaiming_init, normal_init
 
 from mmedit.models.common import DepthwiseSeparableConvModule
-from mmedit.models.registry import COMPONENTS
+from mmedit.registry import COMPONENTS
 
 
 class IndexedUpsample(nn.Module):

@@ -1,74 +1,12 @@
 import torch
-from mmcv.runner import load_checkpoint
 from torch import nn
 
-from mmedit.models.registry import BACKBONES
-from mmedit.utils import get_root_logger
-
-
-class DenseLayer(nn.Module):
-    """Dense layer
-
-    Args:
-        in_channels (int): Channel number of inputs.
-        out_channels (int): Channel number of outputs.
-
-    """
-
-    def __init__(self, in_channels, out_channels):
-        super().__init__()
-        self.conv = nn.Conv2d(
-            in_channels, out_channels, kernel_size=3, padding=3 // 2)
-        self.relu = nn.ReLU(inplace=True)
-
-    def forward(self, x):
-        """Forward function.
-
-        Args:
-            x (Tensor): Input tensor with shape (n, c_in, h, w).
-
-        Returns:
-            Tensor: Forward results, tensor with shape (n, c_in+c_out, h, w).
-        """
-        return torch.cat([x, self.relu(self.conv(x))], 1)
-
-
-class RDB(nn.Module):
-    """Residual Dense Block of Residual Dense Network
-
-    Args:
-        in_channels (int): Channel number of inputs.
-        channel_growth (int): Channels growth in each layer.
-        num_layers (int): Layer number in the Residual Dense Block.
-    """
-
-    def __init__(self, in_channels, channel_growth, num_layers):
-        super().__init__()
-        self.layers = nn.Sequential(*[
-            DenseLayer(in_channels + channel_growth * i, channel_growth)
-            for i in range(num_layers)
-        ])
-
-        # local feature fusion
-        self.lff = nn.Conv2d(
-            in_channels + channel_growth * num_layers,
-            channel_growth,
-            kernel_size=1)
-
-    def forward(self, x):
-        """Forward function.
-
-        Args:
-            x (Tensor): Input tensor with shape (n, c, h, w).
-
-        Returns:
-            Tensor: Forward results.
-        """
-        return x + self.lff(self.layers(x))  # local residual learning
+from mmedit.models.backbones.base_backbone import BaseBackbone
+from mmedit.registry import BACKBONES
 
 
 @BACKBONES.register_module()
-class RDN(nn.Module):
+class RDN(BaseBackbone):
     """RDN model for single image super-resolution.
 
     Paper: Residual Dense Network for Image Super-Resolution
@@ -181,20 +119,63 @@ class RDN(nn.Module):
         x = self.output(x)
         return x
 
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
+
+class DenseLayer(nn.Module):
+    """Dense layer
+
+    Args:
+        in_channels (int): Channel number of inputs.
+        out_channels (int): Channel number of outputs.
+
+    """
+
+    def __init__(self, in_channels, out_channels):
+        super().__init__()
+        self.conv = nn.Conv2d(
+            in_channels, out_channels, kernel_size=3, padding=3 // 2)
+        self.relu = nn.ReLU(inplace=True)
+
+    def forward(self, x):
+        """Forward function.
 
         Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
+            x (Tensor): Input tensor with shape (n, c_in, h, w).
+
+        Returns:
+            Tensor: Forward results, tensor with shape (n, c_in+c_out, h, w).
         """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is None:
-            pass  # use default initialization
-        else:
-            raise TypeError('"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')
+        return torch.cat([x, self.relu(self.conv(x))], 1)
+
+
+class RDB(nn.Module):
+    """Residual Dense Block of Residual Dense Network
+
+    Args:
+        in_channels (int): Channel number of inputs.
+        channel_growth (int): Channels growth in each layer.
+        num_layers (int): Layer number in the Residual Dense Block.
+    """
+
+    def __init__(self, in_channels, channel_growth, num_layers):
+        super().__init__()
+        self.layers = nn.Sequential(*[
+            DenseLayer(in_channels + channel_growth * i, channel_growth)
+            for i in range(num_layers)
+        ])
+
+        # local feature fusion
+        self.lff = nn.Conv2d(
+            in_channels + channel_growth * num_layers,
+            channel_growth,
+            kernel_size=1)
+
+    def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
+        return x + self.lff(self.layers(x))  # local residual learning

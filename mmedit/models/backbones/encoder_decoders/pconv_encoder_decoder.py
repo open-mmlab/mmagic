@@ -1,14 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch.nn as nn
-from mmcv.runner import auto_fp16, load_checkpoint
+from mmcv.runner import auto_fp16
 
+from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.builder import build_component
-from mmedit.models.registry import BACKBONES
-from mmedit.utils import get_root_logger
+from mmedit.registry import BACKBONES
 
 
 @BACKBONES.register_module()
-class PConvEncoderDecoder(nn.Module):
+class PConvEncoderDecoder(BaseBackbone):
     """Encoder-Decoder with partial conv module.
 
     Args:
@@ -39,19 +38,3 @@ class PConvEncoderDecoder(nn.Module):
         x, final_mask = self.decoder(enc_outputs)
 
         return x, final_mask
-
-    def init_weights(self, pretrained=None):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-        """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=False, logger=logger)
-        elif pretrained is None:
-            # Here, we just use the default initialization in `ConvModule`.
-            pass
-        else:
-            raise TypeError('pretrained must be a str or None')

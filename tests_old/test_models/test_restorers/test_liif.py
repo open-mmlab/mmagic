@@ -6,7 +6,7 @@ from mmcv.runner import obj_from_dict
 from mmcv.utils.config import Config
 
 from mmedit.models import build_model
-from mmedit.models.registry import COMPONENTS
+from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()

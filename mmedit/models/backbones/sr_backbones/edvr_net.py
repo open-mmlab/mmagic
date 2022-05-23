@@ -8,8 +8,187 @@ from torch.nn.modules.utils import _pair
 
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   make_layer)
-from mmedit.models.registry import BACKBONES
+from mmedit.registry import BACKBONES
 from mmedit.utils import get_root_logger
+
+
+@BACKBONES.register_module()
+class EDVRNet(nn.Module):
+    """EDVR network structure for video super-resolution.
+
+    Now only support X4 upsampling factor.
+    Paper:
+    EDVR: Video Restoration with Enhanced Deformable Convolutional Networks.
+
+    Args:
+        in_channels (int): Channel number of inputs.
+        out_channels (int): Channel number of outputs.
+        mid_channels (int): Channel number of intermediate features.
+            Default: 64.
+        num_frames (int): Number of input frames. Default: 5.
+        deform_groups (int): Deformable groups. Defaults: 8.
+        num_blocks_extraction (int): Number of blocks for feature extraction.
+            Default: 5.
+        num_blocks_reconstruction (int): Number of blocks for reconstruction.
+            Default: 10.
+        center_frame_idx (int): The index of center frame. Frame counting from
+            0. Default: 2.
+        with_tsa (bool): Whether to use TSA module. Default: True.
+    """
+
+    def __init__(self,
+                 in_channels,
+                 out_channels,
+                 mid_channels=64,
+                 num_frames=5,
+                 deform_groups=8,
+                 num_blocks_extraction=5,
+                 num_blocks_reconstruction=10,
+                 center_frame_idx=2,
+                 with_tsa=True):
+        super().__init__()
+        self.center_frame_idx = center_frame_idx
+        self.with_tsa = with_tsa
+        act_cfg = dict(type='LeakyReLU', negative_slope=0.1)
+
+        self.conv_first = nn.Conv2d(in_channels, mid_channels, 3, 1, 1)
+        self.feature_extraction = make_layer(
+            ResidualBlockNoBN,
+            num_blocks_extraction,
+            mid_channels=mid_channels)
+
+        # generate pyramid features
+        self.feat_l2_conv1 = ConvModule(
+            mid_channels, mid_channels, 3, 2, 1, act_cfg=act_cfg)
+        self.feat_l2_conv2 = ConvModule(
+            mid_channels, mid_channels, 3, 1, 1, act_cfg=act_cfg)
+        self.feat_l3_conv1 = ConvModule(
+            mid_channels, mid_channels, 3, 2, 1, act_cfg=act_cfg)
+        self.feat_l3_conv2 = ConvModule(
+            mid_channels, mid_channels, 3, 1, 1, act_cfg=act_cfg)
+        # pcd alignment
+        self.pcd_alignment = PCDAlignment(
+            mid_channels=mid_channels, deform_groups=deform_groups)
+        # fusion
+        if self.with_tsa:
+            self.fusion = TSAFusion(
+                mid_channels=mid_channels,
+                num_frames=num_frames,
+                center_frame_idx=self.center_frame_idx)
+        else:
+            self.fusion = nn.Conv2d(num_frames * mid_channels, mid_channels, 1,
+                                    1)
+
+        # reconstruction
+        self.reconstruction = make_layer(
+            ResidualBlockNoBN,
+            num_blocks_reconstruction,
+            mid_channels=mid_channels)
+        # upsample
+        self.upsample1 = PixelShufflePack(
+            mid_channels, mid_channels, 2, upsample_kernel=3)
+        self.upsample2 = PixelShufflePack(
+            mid_channels, 64, 2, upsample_kernel=3)
+        # we fix the output channels in the last few layers to 64.
+        self.conv_hr = nn.Conv2d(64, 64, 3, 1, 1)
+        self.conv_last = nn.Conv2d(64, out_channels, 3, 1, 1)
+        self.img_upsample = nn.Upsample(
+            scale_factor=4, mode='bilinear', align_corners=False)
+        # activation function
+        self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
+
+    def forward(self, x):
+        """Forward function for EDVRNet.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, t, c, h, w).
+
+        Returns:
+            Tensor: SR center frame with shape (n, c, h, w).
+        """
+        n, t, c, h, w = x.size()
+        assert h % 4 == 0 and w % 4 == 0, (
+            'The height and width of inputs should be a multiple of 4, '
+            f'but got {h} and {w}.')
+
+        x_center = x[:, self.center_frame_idx, :, :, :].contiguous()
+
+        # extract LR features
+        # L1
+        l1_feat = self.lrelu(self.conv_first(x.view(-1, c, h, w)))
+        l1_feat = self.feature_extraction(l1_feat)
+        # L2
+        l2_feat = self.feat_l2_conv2(self.feat_l2_conv1(l1_feat))
+        # L3
+        l3_feat = self.feat_l3_conv2(self.feat_l3_conv1(l2_feat))
+
+        l1_feat = l1_feat.view(n, t, -1, h, w)
+        l2_feat = l2_feat.view(n, t, -1, h // 2, w // 2)
+        l3_feat = l3_feat.view(n, t, -1, h // 4, w // 4)
+
+        # pcd alignment
+        ref_feats = [  # reference feature list
+            l1_feat[:, self.center_frame_idx, :, :, :].clone(),
+            l2_feat[:, self.center_frame_idx, :, :, :].clone(),
+            l3_feat[:, self.center_frame_idx, :, :, :].clone()
+        ]
+        aligned_feat = []
+        for i in range(t):
+            neighbor_feats = [
+                l1_feat[:, i, :, :, :].clone(), l2_feat[:, i, :, :, :].clone(),
+                l3_feat[:, i, :, :, :].clone()
+            ]
+            aligned_feat.append(self.pcd_alignment(neighbor_feats, ref_feats))
+        aligned_feat = torch.stack(aligned_feat, dim=1)  # (n, t, c, h, w)
+
+        if self.with_tsa:
+            feat = self.fusion(aligned_feat)
+        else:
+            aligned_feat = aligned_feat.view(n, -1, h, w)
+            feat = self.fusion(aligned_feat)
+
+        # reconstruction
+        out = self.reconstruction(feat)
+        out = self.lrelu(self.upsample1(out))
+        out = self.lrelu(self.upsample2(out))
+        out = self.lrelu(self.conv_hr(out))
+        out = self.conv_last(out)
+        base = self.img_upsample(x_center)
+        out += base
+        return out
+
+    def init_weights(self, pretrained=None, strict=True):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+            strict (boo, optional): Whether strictly load the pretrained model.
+                Defaults to True.
+        """
+        if isinstance(pretrained, str):
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=strict, logger=logger)
+        elif pretrained is None:
+            if self.with_tsa:
+                for module in [
+                        self.fusion.feat_fusion, self.fusion.spatial_attn1,
+                        self.fusion.spatial_attn2, self.fusion.spatial_attn3,
+                        self.fusion.spatial_attn4, self.fusion.spatial_attn_l1,
+                        self.fusion.spatial_attn_l2,
+                        self.fusion.spatial_attn_l3,
+                        self.fusion.spatial_attn_add1
+                ]:
+                    kaiming_init(
+                        module.conv,
+                        a=0.1,
+                        mode='fan_out',
+                        nonlinearity='leaky_relu',
+                        bias=0,
+                        distribution='uniform')
+        else:
+            raise TypeError(f'"pretrained" must be a str or None. '
+                            f'But received {type(pretrained)}.')
 
 
 class ModulatedDCNPack(ModulatedDeformConv2d):
@@ -294,182 +473,3 @@ class TSAFusion(nn.Module):
         # after initialization, * 2 makes (attn * 2) to be close to 1.
         feat = feat * attn * 2 + attn_add
         return feat
-
-
-@BACKBONES.register_module()
-class EDVRNet(nn.Module):
-    """EDVR network structure for video super-resolution.
-
-    Now only support X4 upsampling factor.
-    Paper:
-    EDVR: Video Restoration with Enhanced Deformable Convolutional Networks.
-
-    Args:
-        in_channels (int): Channel number of inputs.
-        out_channels (int): Channel number of outputs.
-        mid_channels (int): Channel number of intermediate features.
-            Default: 64.
-        num_frames (int): Number of input frames. Default: 5.
-        deform_groups (int): Deformable groups. Defaults: 8.
-        num_blocks_extraction (int): Number of blocks for feature extraction.
-            Default: 5.
-        num_blocks_reconstruction (int): Number of blocks for reconstruction.
-            Default: 10.
-        center_frame_idx (int): The index of center frame. Frame counting from
-            0. Default: 2.
-        with_tsa (bool): Whether to use TSA module. Default: True.
-    """
-
-    def __init__(self,
-                 in_channels,
-                 out_channels,
-                 mid_channels=64,
-                 num_frames=5,
-                 deform_groups=8,
-                 num_blocks_extraction=5,
-                 num_blocks_reconstruction=10,
-                 center_frame_idx=2,
-                 with_tsa=True):
-        super().__init__()
-        self.center_frame_idx = center_frame_idx
-        self.with_tsa = with_tsa
-        act_cfg = dict(type='LeakyReLU', negative_slope=0.1)
-
-        self.conv_first = nn.Conv2d(in_channels, mid_channels, 3, 1, 1)
-        self.feature_extraction = make_layer(
-            ResidualBlockNoBN,
-            num_blocks_extraction,
-            mid_channels=mid_channels)
-
-        # generate pyramid features
-        self.feat_l2_conv1 = ConvModule(
-            mid_channels, mid_channels, 3, 2, 1, act_cfg=act_cfg)
-        self.feat_l2_conv2 = ConvModule(
-            mid_channels, mid_channels, 3, 1, 1, act_cfg=act_cfg)
-        self.feat_l3_conv1 = ConvModule(
-            mid_channels, mid_channels, 3, 2, 1, act_cfg=act_cfg)
-        self.feat_l3_conv2 = ConvModule(
-            mid_channels, mid_channels, 3, 1, 1, act_cfg=act_cfg)
-        # pcd alignment
-        self.pcd_alignment = PCDAlignment(
-            mid_channels=mid_channels, deform_groups=deform_groups)
-        # fusion
-        if self.with_tsa:
-            self.fusion = TSAFusion(
-                mid_channels=mid_channels,
-                num_frames=num_frames,
-                center_frame_idx=self.center_frame_idx)
-        else:
-            self.fusion = nn.Conv2d(num_frames * mid_channels, mid_channels, 1,
-                                    1)
-
-        # reconstruction
-        self.reconstruction = make_layer(
-            ResidualBlockNoBN,
-            num_blocks_reconstruction,
-            mid_channels=mid_channels)
-        # upsample
-        self.upsample1 = PixelShufflePack(
-            mid_channels, mid_channels, 2, upsample_kernel=3)
-        self.upsample2 = PixelShufflePack(
-            mid_channels, 64, 2, upsample_kernel=3)
-        # we fix the output channels in the last few layers to 64.
-        self.conv_hr = nn.Conv2d(64, 64, 3, 1, 1)
-        self.conv_last = nn.Conv2d(64, out_channels, 3, 1, 1)
-        self.img_upsample = nn.Upsample(
-            scale_factor=4, mode='bilinear', align_corners=False)
-        # activation function
-        self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
-
-    def forward(self, x):
-        """Forward function for EDVRNet.
-
-        Args:
-            x (Tensor): Input tensor with shape (n, t, c, h, w).
-
-        Returns:
-            Tensor: SR center frame with shape (n, c, h, w).
-        """
-        n, t, c, h, w = x.size()
-        assert h % 4 == 0 and w % 4 == 0, (
-            'The height and width of inputs should be a multiple of 4, '
-            f'but got {h} and {w}.')
-
-        x_center = x[:, self.center_frame_idx, :, :, :].contiguous()
-
-        # extract LR features
-        # L1
-        l1_feat = self.lrelu(self.conv_first(x.view(-1, c, h, w)))
-        l1_feat = self.feature_extraction(l1_feat)
-        # L2
-        l2_feat = self.feat_l2_conv2(self.feat_l2_conv1(l1_feat))
-        # L3
-        l3_feat = self.feat_l3_conv2(self.feat_l3_conv1(l2_feat))
-
-        l1_feat = l1_feat.view(n, t, -1, h, w)
-        l2_feat = l2_feat.view(n, t, -1, h // 2, w // 2)
-        l3_feat = l3_feat.view(n, t, -1, h // 4, w // 4)
-
-        # pcd alignment
-        ref_feats = [  # reference feature list
-            l1_feat[:, self.center_frame_idx, :, :, :].clone(),
-            l2_feat[:, self.center_frame_idx, :, :, :].clone(),
-            l3_feat[:, self.center_frame_idx, :, :, :].clone()
-        ]
-        aligned_feat = []
-        for i in range(t):
-            neighbor_feats = [
-                l1_feat[:, i, :, :, :].clone(), l2_feat[:, i, :, :, :].clone(),
-                l3_feat[:, i, :, :, :].clone()
-            ]
-            aligned_feat.append(self.pcd_alignment(neighbor_feats, ref_feats))
-        aligned_feat = torch.stack(aligned_feat, dim=1)  # (n, t, c, h, w)
-
-        if self.with_tsa:
-            feat = self.fusion(aligned_feat)
-        else:
-            aligned_feat = aligned_feat.view(n, -1, h, w)
-            feat = self.fusion(aligned_feat)
-
-        # reconstruction
-        out = self.reconstruction(feat)
-        out = self.lrelu(self.upsample1(out))
-        out = self.lrelu(self.upsample2(out))
-        out = self.lrelu(self.conv_hr(out))
-        out = self.conv_last(out)
-        base = self.img_upsample(x_center)
-        out += base
-        return out
-
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is None:
-            if self.with_tsa:
-                for module in [
-                        self.fusion.feat_fusion, self.fusion.spatial_attn1,
-                        self.fusion.spatial_attn2, self.fusion.spatial_attn3,
-                        self.fusion.spatial_attn4, self.fusion.spatial_attn_l1,
-                        self.fusion.spatial_attn_l2,
-                        self.fusion.spatial_attn_l3,
-                        self.fusion.spatial_attn_add1
-                ]:
-                    kaiming_init(
-                        module.conv,
-                        a=0.1,
-                        mode='fan_out',
-                        nonlinearity='leaky_relu',
-                        bias=0,
-                        distribution='uniform')
-        else:
-            raise TypeError(f'"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')

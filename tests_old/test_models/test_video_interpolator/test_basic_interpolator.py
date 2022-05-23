@@ -9,7 +9,7 @@ from mmcv.runner import obj_from_dict
 
 from mmedit.models import build_model
 from mmedit.models.losses import L1Loss
-from mmedit.models.registry import COMPONENTS
+from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()

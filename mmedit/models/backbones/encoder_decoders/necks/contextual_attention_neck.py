@@ -4,7 +4,7 @@ from mmcv.cnn import ConvModule
 
 from mmedit.models.common import SimpleGatedConvModule
 from mmedit.models.common.contextual_attention import ContextualAttentionModule
-from mmedit.models.registry import COMPONENTS
+from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()
