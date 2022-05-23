@@ -51,3 +51,15 @@ class GLEncoderDecoder(BaseBackbone):
         x = self.decoder(x)
 
         return x
+
+    def init_weights(self, pretrained=None, strict=False):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults: None.
+            strict (boo, optional): Whether strictly load the pretrained model.
+                Defaults to False.
+        """
+
+        return super().init_weights(pretrained, strict)
