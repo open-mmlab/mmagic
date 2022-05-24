@@ -7,8 +7,7 @@ from functools import reduce
 import mmcv
 import numpy as np
 import torch
-
-from mmedit.datasets.pipelines import Compose
+from mmengine.dataset import Compose
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov')
 

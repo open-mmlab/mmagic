@@ -15,6 +15,9 @@ from .generate_frame_indices import (GenerateFrameIndices,
                                      GenerateSegmentIndices)
 from .loading import LoadImageFromFile
 from .matlab_like_resize import MATLABLikeResize
+from .random_degradations import (DegradationsWithShuffle, RandomBlur,
+                                  RandomJPEGCompression, RandomNoise,
+                                  RandomResize, RandomVideoCompression)
 from .random_down_sampling import RandomDownSampling
 from .values import CopyValues
 
@@ -28,6 +31,7 @@ __all__ = [
     'CropAroundFg',
     'CropAroundUnknown',
     'CropLike',
+    'DegradationsWithShuffle',
     'LoadImageFromFile',
     'Flip',
     'FixedCrop',
@@ -40,12 +44,17 @@ __all__ = [
     'PackEditInputs',
     'PairedRandomCrop',
     'RandomAffine',
+    'RandomBlur',
     'RandomDownSampling',
     'RandomJitter',
+    'RandomJPEGCompression',
     'RandomMaskDilation',
+    'RandomNoise',
+    'RandomResize',
     'RandomResizedCrop',
     'RandomRotation',
     'RandomTransposeHW',
+    'RandomVideoCompression',
     'Resize',
     'TemporalReverse',
     'ToTensor',

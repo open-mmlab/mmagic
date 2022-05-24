@@ -2,9 +2,9 @@
 import numpy as np
 import pytest
 
-from mmedit.datasets.pipelines import (DegradationsWithShuffle, RandomBlur,
-                                       RandomJPEGCompression, RandomNoise,
-                                       RandomResize, RandomVideoCompression)
+from mmedit.transforms import (DegradationsWithShuffle, RandomBlur,
+                               RandomJPEGCompression, RandomNoise,
+                               RandomResize, RandomVideoCompression)
 
 
 def test_random_noise():

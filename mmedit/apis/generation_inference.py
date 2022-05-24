@@ -2,9 +2,9 @@
 import numpy as np
 import torch
 from mmcv.parallel import collate, scatter
+from mmengine.dataset import Compose
 
 from mmedit.core import tensor2img
-from mmedit.datasets.pipelines import Compose
 
 
 def generation_inference(model, img, img_unpaired=None):

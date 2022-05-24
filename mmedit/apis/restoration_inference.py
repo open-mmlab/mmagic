@@ -1,8 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 from mmcv.parallel import collate, scatter
-
-from mmedit.datasets.pipelines import Compose
+from mmengine.dataset import Compose
 
 
 def restoration_inference(model, img, ref=None):

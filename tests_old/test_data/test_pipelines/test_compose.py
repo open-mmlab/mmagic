@@ -1,8 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 import pytest
+from mmengine.dataset import Compose
 
-from mmedit.datasets.pipelines import Compose, ImageToTensor
+from mmedit.datasets.pipelines.formating import ImageToTensor
 
 
 def check_keys_equal(result_keys, target_keys):

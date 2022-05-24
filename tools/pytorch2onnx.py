@@ -10,8 +10,8 @@ import onnxruntime as rt
 import torch
 from mmcv.onnx import register_extra_symbolics
 from mmcv.runner import load_checkpoint
+from mmengine.dataset import Compose
 
-from mmedit.datasets.pipelines import Compose
 from mmedit.models import build_model
 
 

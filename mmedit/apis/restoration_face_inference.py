@@ -2,8 +2,7 @@
 import numpy as np
 import torch
 from mmcv.parallel import collate, scatter
-
-from mmedit.datasets.pipelines import Compose
+from mmengine.dataset import Compose
 
 try:
     from facexlib.utils.face_restoration_helper import FaceRestoreHelper

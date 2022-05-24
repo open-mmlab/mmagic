@@ -5,9 +5,8 @@
 import copy
 from abc import ABCMeta, abstractmethod
 
+from mmengine.dataset import Compose
 from torch.utils.data import Dataset
-
-from .pipelines import Compose
 
 
 class BaseDataset(Dataset, metaclass=ABCMeta):
