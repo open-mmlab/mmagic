@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.functional import conv2d
 
-from ..registry import LOSSES
+from mmedit.registry import LOSSES
 
 
 @LOSSES.register_module()

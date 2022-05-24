@@ -5,8 +5,8 @@ import torchvision.models.vgg as vgg
 from mmcv.runner import load_checkpoint
 from torch.nn import functional as F
 
+from mmedit.registry import LOSSES
 from mmedit.utils import get_root_logger
-from ..registry import LOSSES
 
 
 class PerceptualVGG(nn.Module):

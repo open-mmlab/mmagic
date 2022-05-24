@@ -2,8 +2,8 @@
 import torch
 from mmcv.runner import auto_fp16
 
+from mmedit.registry import MODELS
 from ..builder import build_loss
-from ..registry import MODELS
 from .base_mattor import BaseMattor
 from .utils import get_unknown_tensor
 

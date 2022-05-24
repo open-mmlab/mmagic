@@ -8,8 +8,8 @@ import torch
 from mmcv.parallel import is_module_wrapper
 
 from mmedit.core import tensor2img
+from mmedit.registry import MODELS
 from ..common import set_requires_grad
-from ..registry import MODELS
 from .srgan import SRGAN
 
 

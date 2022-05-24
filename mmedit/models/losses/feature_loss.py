@@ -4,8 +4,8 @@ import torch.nn as nn
 from mmcv.runner import load_checkpoint
 
 from mmedit.models.components.discriminators import LightCNN
+from mmedit.registry import LOSSES
 from mmedit.utils import get_root_logger
-from ..registry import LOSSES
 
 
 class LightCNNFeature(nn.Module):

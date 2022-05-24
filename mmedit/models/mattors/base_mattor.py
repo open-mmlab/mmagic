@@ -10,9 +10,9 @@ from mmcv import ConfigDict
 from mmcv.utils import print_log
 
 from mmedit.core.evaluation import connectivity, gradient_error, mse, sad
+from mmedit.registry import MODELS
 from ..base import BaseModel
 from ..builder import build_backbone, build_component
-from ..registry import MODELS
 
 
 @MODELS.register_module()

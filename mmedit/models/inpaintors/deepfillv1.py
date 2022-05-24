@@ -2,8 +2,8 @@
 import torch
 from torch.nn.parallel import DataParallel, DistributedDataParallel
 
+from mmedit.registry import MODELS
 from ..common import extract_around_bbox, extract_bbox_patch, set_requires_grad
-from ..registry import MODELS
 from .two_stage import TwoStageInpaintor
 
 

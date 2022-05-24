@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from mmcv.runner import auto_fp16
 
+from mmedit.registry import MODELS
 from ..builder import build_backbone, build_component, build_loss
 from ..common import set_requires_grad
-from ..registry import MODELS
 from .basic_restorer import BasicRestorer
 
 

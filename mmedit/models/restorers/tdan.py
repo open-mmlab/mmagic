@@ -5,8 +5,8 @@ import os.path as osp
 import mmcv
 
 from mmedit.core import tensor2img
+from mmedit.registry import MODELS
 from ..builder import build_loss
-from ..registry import MODELS
 from .basic_restorer import BasicRestorer
 
 

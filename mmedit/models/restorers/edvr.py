@@ -5,7 +5,7 @@ import os.path as osp
 import mmcv
 
 from mmedit.core import tensor2img
-from ..registry import MODELS
+from mmedit.registry import MODELS
 from .basic_restorer import BasicRestorer
 
 

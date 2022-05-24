@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
+from mmedit.registry import MODELS
 from ..common import set_requires_grad
-from ..registry import MODELS
 from .srgan import SRGAN
 
 

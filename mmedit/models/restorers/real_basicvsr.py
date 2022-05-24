@@ -2,9 +2,9 @@
 import torch.nn.functional as F
 from mmcv.parallel import is_module_wrapper
 
+from mmedit.registry import MODELS
 from ..builder import build_loss
 from ..common import set_requires_grad
-from ..registry import MODELS
 from .real_esrgan import RealESRGAN
 
 

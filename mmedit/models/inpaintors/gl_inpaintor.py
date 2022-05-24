@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
+from mmedit.registry import MODELS
 from ..common import extract_around_bbox, extract_bbox_patch, set_requires_grad
-from ..registry import MODELS
 from .one_stage import OneStageInpaintor
 
 

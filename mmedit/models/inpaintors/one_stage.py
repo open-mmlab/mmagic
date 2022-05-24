@@ -8,10 +8,10 @@ from mmcv.runner import auto_fp16
 from torchvision.utils import save_image
 
 from mmedit.core import L1Evaluation, psnr, ssim, tensor2img
+from mmedit.registry import MODELS
 from ..base import BaseModel
 from ..builder import build_backbone, build_component, build_loss
 from ..common import set_requires_grad
-from ..registry import MODELS
 
 
 @MODELS.register_module()

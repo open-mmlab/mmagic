@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from ..registry import MODELS
+from mmedit.registry import MODELS
 from .basic_interpolator import BasicInterpolator
 
 
