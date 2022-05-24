@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from mmedit.datasets import BaseFramesDataset
+from mmedit.datasets import BasicFramesDataset
 
 
 class TestFramesDatasets:
@@ -19,7 +19,7 @@ class TestFramesDatasets:
 
         # test SRREDSDataset and SRREDSMultipleGTDataset
         # need to split the data set ahead of schedule
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann2.txt',
             metainfo=dict(dataset_type='SRREDSDataset', task_name='vsr'),
             data_root=self.data_root,
@@ -47,7 +47,7 @@ class TestFramesDatasets:
         # 5 | 2,3,4,5,6
         # 7 | 1,2,3,4,5,6,7
         # In Version 2.0, we load the list of frames directly
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann3.txt',
             metainfo=dict(dataset_type='SRVimeo90KDataset', task_name='vsr'),
             data_root=self.data_root,
@@ -76,7 +76,7 @@ class TestFramesDatasets:
             sample_idx=0)
 
         # test SRVid4Dataset
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann1.txt',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -97,7 +97,7 @@ class TestFramesDatasets:
             sample_idx=0)
 
         # test SRTestMultipleGTDataset and SRFolderMultipleGTDataset
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -114,7 +114,7 @@ class TestFramesDatasets:
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann1.txt',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -133,7 +133,7 @@ class TestFramesDatasets:
             sample_idx=0)
 
         # test SRFolderVideoDataset
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -150,7 +150,7 @@ class TestFramesDatasets:
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann2.txt',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -169,7 +169,7 @@ class TestFramesDatasets:
             sample_idx=0)
 
         # test VFIVimeo90KDataset
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann3.txt',
             metainfo=dict(dataset_type='vfi_folder_dataset', task_name='vfi'),
             data_root=self.data_root,
@@ -201,7 +201,7 @@ class TestFramesDatasets:
 
     def test_vsr_folder_dataset(self):
         # case 1: deep_path
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -245,7 +245,7 @@ class TestFramesDatasets:
             sample_idx=2)
 
         # case 2: not deep_path
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -281,7 +281,7 @@ class TestFramesDatasets:
             sample_idx=1)
 
         # case 3: no fixed_seq_len
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -317,7 +317,7 @@ class TestFramesDatasets:
             sample_idx=1)
 
         # case 4: not deep_path, load_frames_list
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -372,7 +372,7 @@ class TestFramesDatasets:
             sample_idx=1)
 
         # case 5: deep_path, load_frames_list
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -427,7 +427,7 @@ class TestFramesDatasets:
 
     def test_vsr_ann_dataset(self):
         # case 1: deep_path, not deep_ann
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann1.txt',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -472,7 +472,7 @@ class TestFramesDatasets:
             sample_idx=2)
 
         # case 2: deep_path, deep_ann
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann2.txt',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -517,7 +517,7 @@ class TestFramesDatasets:
             sample_idx=2)
 
         # case 3: not deep_path, not deep_ann
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann1.txt',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -554,7 +554,7 @@ class TestFramesDatasets:
             sample_idx=1)
 
         # case 4: not deep_path, deep_ann
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann2.txt',
             metainfo=dict(dataset_type='vsr_folder_dataset', task_name='vsr'),
             data_root=self.data_root,
@@ -592,7 +592,7 @@ class TestFramesDatasets:
 
     def test_vfi_ann_dataset(self):
         # case 1: not deep_path
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann1.txt',
             metainfo=dict(dataset_type='vfi_folder_dataset', task_name='vfi'),
             data_root=self.data_root,
@@ -647,7 +647,7 @@ class TestFramesDatasets:
             sample_idx=1)
 
         # case 2: deep_path
-        dataset = BaseFramesDataset(
+        dataset = BasicFramesDataset(
             ann_file='ann3.txt',
             metainfo=dict(dataset_type='vfi_folder_dataset', task_name='vfi'),
             data_root=self.data_root,
@@ -703,6 +703,6 @@ class TestFramesDatasets:
     def test_assert(self):
 
         with pytest.raises(AssertionError):
-            BaseFramesDataset(
+            BasicFramesDataset(
                 data_prefix=dict(img='', gt=''),
                 filename_tmpl=dict(img='{}', ggt='{}'))

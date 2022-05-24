@@ -13,8 +13,8 @@ IMG_EXTENSIONS = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.ppm',
 
 
 @DATASETS.register_module()
-class BaseImageDataset(BaseDataset):
-    """BaseImageDataset for open source projects in OpenMMLab/MMEditing.
+class BasicImageDataset(BaseDataset):
+    """BasicImageDataset for open source projects in OpenMMLab/MMEditing.
 
     This dataset is designed for low-level vision tasks with image,
     such as super-resolution and inpainting.
@@ -101,7 +101,7 @@ class BaseImageDataset(BaseDataset):
 
         .. code-block:: python
 
-            dataset = BaseImageDataset(
+            dataset = BasicImageDataset(
                 ann_file='',
                 metainfo=dict(
                     dataset_type='div2k',
@@ -116,7 +116,7 @@ class BaseImageDataset(BaseDataset):
 
         .. code-block:: python
 
-            dataset = BaseImageDataset(
+            dataset = BasicImageDataset(
                 ann_file='meta/Places365_train.txt',
                 metainfo=dict(
                     dataset_type='places365',

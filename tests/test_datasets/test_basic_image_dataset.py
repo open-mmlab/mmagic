@@ -5,7 +5,7 @@ from pathlib import Path
 import mmcv
 import pytest
 
-from mmedit.datasets import BaseImageDataset
+from mmedit.datasets import BasicImageDataset
 from mmedit.transforms import LoadImageFromFile
 
 
@@ -18,7 +18,7 @@ class TestImageDatasets:
     def test_version_1_method(self):
 
         # test SRAnnotationDataset
-        dataset = BaseImageDataset(
+        dataset = BasicImageDataset(
             ann_file='train.txt',
             metainfo=dict(
                 dataset_type='sr_annotation_dataset', task_name='sisr'),
@@ -32,7 +32,7 @@ class TestImageDatasets:
             sample_idx=0)
 
         # test SRFolderDataset
-        dataset = BaseImageDataset(
+        dataset = BasicImageDataset(
             metainfo=dict(dataset_type='sr_folder_dataset', task_name='sisr'),
             data_root=self.data_root,
             data_prefix=dict(img='lq', gt='gt'),
@@ -44,7 +44,7 @@ class TestImageDatasets:
             sample_idx=0)
 
         # test SRFolderGTDataset
-        dataset = BaseImageDataset(
+        dataset = BasicImageDataset(
             metainfo=dict(dataset_type='sr_folder_dataset', task_name='sisr'),
             data_root=self.data_root,
             data_prefix=dict(gt='gt'),
@@ -64,7 +64,7 @@ class TestImageDatasets:
                     backend='lmdb',
                     db_path=Path(__file__).parent.parent / 'data' / 'lq.lmdb'))
         ]
-        dataset = BaseImageDataset(
+        dataset = BasicImageDataset(
             ann_file=f'lq.lmdb{os.sep}meta_info.txt',
             metainfo=dict(
                 dataset_type='sr_annotation_dataset', task_name='sisr'),
@@ -84,7 +84,7 @@ class TestImageDatasets:
 
         # test ImgInpaintingDataset
         # test SRFacialLandmarkDataset i.e. SRAnnGTDataset
-        dataset = BaseImageDataset(
+        dataset = BasicImageDataset(
             ann_file='train.txt',
             metainfo=dict(
                 dataset_type='ImgInpaintingDataset', task_name='inpainting'),
@@ -97,7 +97,7 @@ class TestImageDatasets:
 
     def test_sisr_annotation_dataset(self):
         # setup
-        dataset = BaseImageDataset(
+        dataset = BasicImageDataset(
             ann_file='train.txt',
             metainfo=dict(
                 dataset_type='sisr_annotation_dataset', task_name='sisr'),
@@ -118,7 +118,7 @@ class TestImageDatasets:
 
     def test_sisr_folder_dataset(self):
         # setup
-        dataset = BaseImageDataset(
+        dataset = BasicImageDataset(
             metainfo=dict(
                 dataset_type='sisr_folder_dataset', task_name='sisr'),
             data_root=self.data_root,
@@ -137,7 +137,7 @@ class TestImageDatasets:
 
     def test_refsr_folder_dataset(self):
         # setup
-        dataset = BaseImageDataset(
+        dataset = BasicImageDataset(
             metainfo=dict(
                 dataset_type='refsr_folder_dataset', task_name='refsr'),
             data_root=self.data_root,
@@ -160,6 +160,6 @@ class TestImageDatasets:
     def test_assert(self):
 
         with pytest.raises(AssertionError):
-            BaseImageDataset(
+            BasicImageDataset(
                 data_prefix=dict(img='', gt=''),
                 filename_tmpl=dict(img='{}', ggt='{}'))

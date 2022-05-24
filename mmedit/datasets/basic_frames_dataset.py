@@ -10,8 +10,8 @@ from ..registry import DATASETS
 
 
 @DATASETS.register_module()
-class BaseFramesDataset(BaseDataset):
-    """BaseFramesDataset for open source projects in OpenMMLab/MMEditing.
+class BasicFramesDataset(BaseDataset):
+    """BasicFramesDataset for open source projects in OpenMMLab/MMEditing.
 
     This dataset is designed for low-level vision tasks with frames,
     such as video super-resolution and video frame interpolation.
@@ -61,7 +61,8 @@ class BaseFramesDataset(BaseDataset):
         num_input_frames (None | int): Number of input frames. Default: None.
         num_output_frames (None | int): Number of output frames. Default: None.
         fixed_seq_len (None | int): The fixed sequence length.
-            If None, BaseFramesDataset will obtain the length of each sequence.
+            If None, BasicFramesDataset will obtain the length of each
+                sequence.
             Default: None.
         load_frames_list (dict): Load frames list for each key.
             Default: dict().
@@ -96,7 +97,7 @@ class BaseFramesDataset(BaseDataset):
 
         .. code-block:: python
 
-            dataset = BaseFramesDataset(
+            dataset = BasicFramesDataset(
                 ann_file='meta_info_Vid4_GT.txt',
                 metainfo=dict(dataset_type='vid4', task_name='vsr'),
                 data_root='data/Vid4',
@@ -109,7 +110,7 @@ class BaseFramesDataset(BaseDataset):
 
         .. code-block:: python
 
-            dataset = BaseFramesDataset(
+            dataset = BasicFramesDataset(
                 ann_file='tri_trainlist.txt',
                 metainfo=dict(dataset_type='vimeo90k', task_name='vfi'),
                 data_root='data/vimeo-triplet',
