@@ -20,9 +20,11 @@ State-of-the-art image inpainting approaches can suffer from generating distorte
 
 **Places365-Challenge**
 
-|                                Method                                 | Mask Type | Resolution | Train Iters |   Test Set    | l1 error  |   PSNR    |   SSIM    |                                                                                                                                          Download                                                                                                                                           |
-| :-------------------------------------------------------------------: | :-------: | :--------: | :---------: | :-----------: | :-------: | :-------: | :-------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [AOT-GAN](/configs/inpainting/AOT-GAN/AOT-GAN_512x512_4x12_places.py) | free-form |  512x512   |    500k     | Places365-val | See below | See below | See below | [model](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [log](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
+|                                Method                                 |     Mask Type      | Resolution | Train Iters |   Test Set    | l1 error | PSNR  | SSIM  |                                                                                                                                          Download                                                                                                                                           |
+| :-------------------------------------------------------------------: | :----------------: | :--------: | :---------: | :-----------: | :------: | :---: | :---: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [AOT-GAN](/configs/inpainting/AOT-GAN/AOT-GAN_512x512_4x12_places.py) | free-form (50-60%) |  512x512   |    500k     | Places365-val |   7.07   | 19.01 | 0.682 | [model](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [log](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
+
+More results for different mask area:
 
 <!-- SKIP THIS TABLE -->
 
