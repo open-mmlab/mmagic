@@ -75,6 +75,7 @@ hope MMEditing could provide better experience.
 
 ## News
 
+- \[2022-05-20\] Support FLAVR.
 - \[2022-04-01\] v0.14.0 was released.
   - Support TOFlow in video frame interpolation
 - \[2022-03-01\] v0.13.0 was released.
@@ -180,6 +181,7 @@ Supported algorithms:
 
 - [x] [TOFlow](configs/video_interpolators/tof/README.md) (IJCV'2019)
 - [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
+- [x] [FLAVR](configs/video_interpolators/flavr/README.md) (CVPR'2021)
 
 </details>
 
