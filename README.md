@@ -35,9 +35,9 @@
 
 </div>
 
-## Introduction
-
 English | [简体中文](/README_zh-CN.md)
+
+## Introduction
 
 MMEditing is an open-source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
