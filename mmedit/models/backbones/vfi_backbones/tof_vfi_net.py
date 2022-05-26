@@ -68,7 +68,7 @@ class TOFlowVFINet(BaseBackbone):
         """
         return img * self.std + self.mean
 
-    def spatial_padding(self, inputs):
+    def spatial_padding(self, imgs):
         """ Apply pdding spatially.
 
         Since the SPyNet module in TOFlow requires that the resolution is a
@@ -76,46 +76,46 @@ class TOFlowVFINet(BaseBackbone):
         resolution is not divisible by 16.
 
         Args:
-            inputs (Tensor): Input sequence with shape (n, 2, c, h, w).
+            imgs (Tensor): Input sequence with shape (n, 2, c, h, w).
 
         Returns:
             Tensor: Padded sequence with shape (n, 2, c, h_pad, w_pad).
 
         """
-        n, t, c, h, w = inputs.size()
+        n, t, c, h, w = imgs.size()
 
         pad_h = (16 - h % 16) % 16
         pad_w = (16 - w % 16) % 16
 
         if pad_h != 0 or pad_w != 0:
             # padding
-            inputs = inputs.view(-1, c, h, w)
-            inputs = F.pad(inputs, [0, pad_w, 0, pad_h], mode='reflect')
-            return inputs.view(n, t, c, h + pad_h, w + pad_w)
+            imgs = imgs.view(-1, c, h, w)
+            imgs = F.pad(imgs, [0, pad_w, 0, pad_h], mode='reflect')
+            return imgs.view(n, t, c, h + pad_h, w + pad_w)
         else:
-            return inputs
+            return imgs
 
-    def forward(self, inputs):
+    def forward(self, imgs):
         """
         Args:
-            inputs: Input frames with shape of (b, 2, 3, h, w).
+            imgs: Input frames with shape of (b, 2, 3, h, w).
 
         Returns:
             Tensor: Interpolated frame with shape of (b, 3, h, w).
         """
 
-        h_ori, w_ori = inputs.shape[-2:]
-        inputs = self.spatial_padding(inputs=inputs)
-        num_batches, num_frames, c, h, w = inputs.size()
+        h_ori, w_ori = imgs.shape[-2:]
+        imgs = self.spatial_padding(imgs=imgs)
+        num_batches, num_frames, c, h, w = imgs.size()
 
-        inputs = self.normalize(inputs.view(-1, c, h, w))
-        inputs = inputs.view(num_batches, num_frames, c, h, w)
+        imgs = self.normalize(imgs.view(-1, c, h, w))
+        imgs = imgs.view(num_batches, num_frames, c, h, w)
 
-        flow_10 = self.spynet(inputs[:, 0], inputs[:, 1]).permute(0, 2, 3, 1)
-        flow_01 = self.spynet(inputs[:, 1], inputs[:, 0]).permute(0, 2, 3, 1)
+        flow_10 = self.spynet(imgs[:, 0], imgs[:, 1]).permute(0, 2, 3, 1)
+        flow_01 = self.spynet(imgs[:, 1], imgs[:, 0]).permute(0, 2, 3, 1)
 
-        wrap_frame0 = flow_warp(inputs[:, 0], flow_01 / 2)
-        wrap_frame1 = flow_warp(inputs[:, 1], flow_10 / 2)
+        wrap_frame0 = flow_warp(imgs[:, 0], flow_01 / 2)
+        wrap_frame1 = flow_warp(imgs[:, 1], flow_10 / 2)
 
         wrap_frames = torch.stack([wrap_frame0, wrap_frame1], dim=1)
         output = self.resnet(wrap_frames)
