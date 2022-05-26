@@ -187,7 +187,7 @@ Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/_tmp/mode
 
 ## Contributing
 
-We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md) in MMCV for the contributing guideline.
+We appreciate all contributions to improve MMEditing. Please refer to our [contributing guidelines](https://github.com/open-mmlab/mmediting/wiki/A.-Contribution-Guidelines).
 
 ## Acknowledgement
 
