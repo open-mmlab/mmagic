@@ -74,6 +74,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 最新消息
 
+- \[2022-05-20\] 支持 FLAVR.
 - \[2022-04-01\] v0.14.0 版本发布
   - 支持视频插帧算法 TOFlow
 - \[2022-03-01\] v0.13.0 版本发布
@@ -178,6 +179,7 @@ pip3 install -e .
 
 - [x] [TOFlow](configs/video_interpolators/tof/README.md) (IJCV'2019)
 - [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
+- [x] [FLAVR](configs/video_interpolators/flavr/README.md) (CVPR'2021)
 
 </details>
 
