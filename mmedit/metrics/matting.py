@@ -25,18 +25,16 @@ def _assert_masked(pred_alpha, trimap):
 
 
 def _fetch_data_and_check(data_batch, predictions):
-    trimap = data_batch['data_sample']['trimap']
-    gt_alpha = data_batch['data_sample']['gt_alpha']
-    pred_alpha = predictions['data_sample']['pred_alpha']
+    ori_trimap = data_batch['data_sample']['ori_trimap']
+    ori_alpha = data_batch['data_sample']['ori_alpha']
+    pred_alpha = predictions['pred_alpha']
 
-    n = len(gt_alpha)
+    _assert_ndim(ori_trimap, 'trimap', 2, 'HxW')
+    _assert_ndim(ori_alpha, 'gt_alpha', 2, 'HxW')
+    _assert_ndim(pred_alpha, 'pred_alpha', 2, 'HxW')
+    _assert_masked(pred_alpha, ori_trimap)
 
-    _assert_ndim(trimap, 'trimap', 3, 'NxHxW')
-    _assert_ndim(gt_alpha, 'gt_alpha', 3, 'NxHxW')
-    _assert_ndim(pred_alpha, 'pred_alpha', 3, 'NxHxW')
-    _assert_masked(pred_alpha, trimap)
-
-    return n, pred_alpha, gt_alpha, trimap
+    return pred_alpha, ori_alpha, ori_trimap
 
 
 def _average(results, key):
@@ -111,21 +109,21 @@ class SAD(BaseMetric):
             predictions (Sequence[dict]): A batch of outputs from
                 the model.
         """
-        n, pred_alpha, gt_alpha, _ = _fetch_data_and_check(
-            data_batch, predictions)
+        for data, prediction in zip(data_batch, predictions):
+            pred_alpha, gt_alpha, _ = _fetch_data_and_check(data, prediction)
 
-        pred_alpha = pred_alpha / 255.0  # promote from uint8 to float64
-        gt_alpha = gt_alpha / 255.0  # promote from uint8 to float64
-        # V1.0 implementation
-        # gt_alpha = gt_alpha.astype(np.float64) / 255
-        # pred_alpha = pred_alpha.astype(np.float64) / 255
+            pred_alpha = pred_alpha / 255.0  # promote from uint8 to float64
+            gt_alpha = gt_alpha / 255.0  # promote from uint8 to float64
+            # V1.0 implementation
+            # gt_alpha = gt_alpha.astype(np.float64) / 255
+            # pred_alpha = pred_alpha.astype(np.float64) / 255
 
-        # divide by 1000 to reduce the magnitude of the result
-        sad_sum = np.abs(pred_alpha - gt_alpha).sum() / self.norm_const
+            # divide by 1000 to reduce the magnitude of the result
+            sad_sum = np.abs(pred_alpha - gt_alpha).sum() / self.norm_const
 
-        result = {'sad_sum': sad_sum, 'n': n}
+            result = {'sad': sad_sum}
 
-        self.results.append(result)
+            self.results.append(result)
 
     def compute_metrics(self, results: List):
         """Compute the metrics from processed results.
@@ -138,7 +136,7 @@ class SAD(BaseMetric):
             and the values are corresponding results.
         """
 
-        sad = _weighted_average(results, 'sad_sum')
+        sad = _average(results, 'sad')
 
         return {'SAD': sad}
 
@@ -191,20 +189,19 @@ class MSE(BaseMetric):
             predictions (Sequence[dict]): A batch of outputs from
                 the model.
         """
-        _, pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
-            data_batch, predictions)
+        for data, prediction in zip(data_batch, predictions):
+            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
+                data, prediction)
 
-        pred_alpha = pred_alpha / 255.0  # promote from uint8 to float64
-        gt_alpha = gt_alpha / 255.0  # promote from uint8 to float64
-        # V1.0 implementation
-        # gt_alpha = gt_alpha.astype(np.float64) / 255
-        # pred_alpha = pred_alpha.astype(np.float64) / 255
+            pred_alpha = pred_alpha / 255.0  # promote from uint8 to float64
+            gt_alpha = gt_alpha / 255.0  # promote from uint8 to float64
+            # V1.0 implementation
+            # gt_alpha = gt_alpha.astype(np.float64) / 255
+            # pred_alpha = pred_alpha.astype(np.float64) / 255
 
-        for t, pa, ga in zip(trimap, pred_alpha, gt_alpha):
-            assert t.ndim == pa.ndim == ga.ndim == 2
-            weight_sum = (t == 128).sum()
+            weight_sum = (trimap == 128).sum()
             if weight_sum != 0:
-                mse_result = ((pa - ga)**2).sum() / weight_sum
+                mse_result = ((pred_alpha - gt_alpha)**2).sum() / weight_sum
             else:
                 mse_result = 0
 
@@ -274,15 +271,12 @@ class GradientError(BaseMetric):
                 the model.
         """
 
-        _, _pred_alpha, _gt_alpha, _trimap = _fetch_data_and_check(
-            data_batch, predictions)
+        for data, prediction in zip(data_batch, predictions):
+            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
+                data, prediction)
 
-        _gt_alpha = _gt_alpha / 255.0  # promote from uint8 to float64
-        _pred_alpha = _pred_alpha / 255.0  # promote from uint8 to float64
-
-        for trimap, pred_alpha, gt_alpha in zip(_trimap, _pred_alpha,
-                                                _gt_alpha):
-            assert trimap.ndim == pred_alpha.ndim == gt_alpha.ndim == 2
+            gt_alpha = gt_alpha / 255.0  # promote from uint8 to float64
+            pred_alpha = pred_alpha / 255.0  # promote from uint8 to float64
 
             gt_alpha_normed = np.zeros_like(gt_alpha)
             pred_alpha_normed = np.zeros_like(pred_alpha)
@@ -369,18 +363,16 @@ class ConnectivityError(BaseMetric):
                 the model.
         """
 
-        _, _pred_alpha, _gt_alpha, _trimap = _fetch_data_and_check(
-            data_batch, predictions)
+        for data, prediction in zip(data_batch, predictions):
+            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
+                data, prediction)
 
-        _gt_alpha = _gt_alpha.astype(np.float32) / 255.0
-        _pred_alpha = _pred_alpha.astype(np.float32) / 255.0
-        # TODO, maybe we can modify to use float64, but need check on real data
-        # _gt_alpha = _gt_alpha / 255.0
-        # _pred_alpha = _pred_alpha / 255.0
-
-        for trimap, pred_alpha, gt_alpha in zip(_trimap, _pred_alpha,
-                                                _gt_alpha):
-            assert trimap.ndim == pred_alpha.ndim == gt_alpha.ndim == 2
+            gt_alpha = gt_alpha.astype(np.float32) / 255.0
+            pred_alpha = pred_alpha.astype(np.float32) / 255.0
+            # TODO, maybe we can modify to use float64, but need check
+            # on real data
+            # _gt_alpha = _gt_alpha / 255.0
+            # _pred_alpha = _pred_alpha / 255.0
 
             thresh_steps = np.arange(0, 1 + self.step, self.step)
             round_down_map = -np.ones_like(gt_alpha)
