@@ -9,7 +9,7 @@ from mmedit.transforms import (BinarizeImage, Clip, ColorJitter, CopyValues,
                                Flip, GenerateFrameIndices,
                                GenerateFrameIndiceswithPadding,
                                GenerateSegmentIndices, MirrorSequence,
-                               RandomAffine, RandomJitter, RandomMaskDilation,
+                               RandomAffine, RandomMaskDilation,
                                RandomRotation, RandomTransposeHW, Resize,
                                TemporalReverse, UnsharpMasking)
 
@@ -591,36 +591,6 @@ class TestAugmentations:
         assert str(dilation) == (
             dilation.__class__.__name__ +
             f"(keys={['mask']}, kernel_min=3, kernel_max=3)")
-
-    def test_random_jitter(self):
-        with pytest.raises(AssertionError):
-            RandomJitter(-40)
-
-        with pytest.raises(AssertionError):
-            RandomJitter((-40, 40, 40))
-
-        target_keys = ['fg']
-
-        fg = np.random.rand(240, 320, 3).astype(np.float32)
-        alpha = np.random.rand(240, 320).astype(np.float32)
-        results = dict(fg=fg.copy(), alpha=alpha)
-        random_jitter = RandomJitter(40)
-        random_jitter_results = random_jitter(results)
-        assert self.check_keys_contain(random_jitter_results.keys(),
-                                       target_keys)
-        assert random_jitter_results['fg'].shape == (240, 320, 3)
-
-        fg = np.random.rand(240, 320, 3).astype(np.float32)
-        alpha = np.random.rand(240, 320).astype(np.float32)
-        results = dict(fg=fg.copy(), alpha=alpha)
-        random_jitter = RandomJitter((-50, 50))
-        random_jitter_results = random_jitter(results)
-        assert self.check_keys_contain(random_jitter_results.keys(),
-                                       target_keys)
-        assert random_jitter_results['fg'].shape == (240, 320, 3)
-
-        assert repr(random_jitter) == random_jitter.__class__.__name__ + (
-            'hue_range=(-50, 50)')
 
     def test_random_rotation(self):
         with pytest.raises(ValueError):

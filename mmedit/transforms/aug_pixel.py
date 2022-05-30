@@ -5,7 +5,6 @@ import random
 from typing import Dict
 
 import cv2
-import mmcv
 import numpy as np
 import torch
 import torchvision.transforms as transforms
@@ -467,80 +466,6 @@ class RandomAffine(BaseTransform):
                      f'shear={self.shear}, flip_ratio={self.flip_ratio})')
 
         return repr_str
-
-
-@TRANSFORMS.register_module()
-class RandomJitter(BaseTransform):
-    """Randomly jitter the foreground in hsv space.
-
-    The jitter range of hue is adjustable while the jitter ranges of saturation
-    and value are adaptive to the images. Side effect: the "fg" image will be
-    converted to `np.float32`.
-    Required keys are "fg" and "alpha", modified key is "fg".
-
-    Args:
-        hue_range (float | tuple[float]): Range of hue jittering. If it is a
-            float instead of a tuple like (min, max), the range of hue
-            jittering will be (-hue_range, +hue_range). Default: 40.
-    """
-
-    def __init__(self, hue_range=40):
-
-        if isinstance(hue_range, numbers.Number):
-            assert hue_range >= 0, ('If hue_range is a single number, '
-                                    'it must be positive.')
-            self.hue_range = (-hue_range, hue_range)
-        else:
-            assert isinstance(hue_range, tuple) and len(hue_range) == 2, \
-                'hue_range should be a tuple and it must be of length 2.'
-            self.hue_range = hue_range
-
-    def transform(self, results):
-        """transform function.
-
-        Args:
-            results (dict): A dict containing the necessary information and
-                data for augmentation.
-
-        Returns:
-            dict: A dict containing the processed data and information.
-        """
-
-        fg, alpha = results['fg'], results['alpha']
-
-        # convert to HSV space;
-        # convert to float32 image to keep precision during space conversion.
-        fg = mmcv.bgr2hsv(fg.astype(np.float32) / 255)
-        # Hue noise
-        hue_jitter = np.random.randint(self.hue_range[0], self.hue_range[1])
-        fg[:, :, 0] = np.remainder(fg[:, :, 0] + hue_jitter, 360)
-
-        # Saturation noise
-        sat_mean = fg[:, :, 1][alpha > 0].mean()
-        # jitter saturation within range (1.1 - sat_mean) * [-0.1, 0.1]
-        sat_jitter = (1.1 - sat_mean) * (np.random.rand() * 0.2 - 0.1)
-        sat = fg[:, :, 1]
-        sat = np.abs(sat + sat_jitter)
-        sat[sat > 1] = 2 - sat[sat > 1]
-        fg[:, :, 1] = sat
-
-        # Value noise
-        val_mean = fg[:, :, 2][alpha > 0].mean()
-        # jitter value within range (1.1 - val_mean) * [-0.1, 0.1]
-        val_jitter = (1.1 - val_mean) * (np.random.rand() * 0.2 - 0.1)
-        val = fg[:, :, 2]
-        val = np.abs(val + val_jitter)
-        val[val > 1] = 2 - val[val > 1]
-        fg[:, :, 2] = val
-        # convert back to BGR space
-        fg = mmcv.hsv2bgr(fg)
-        results['fg'] = fg * 255
-
-        return results
-
-    def __repr__(self):
-
-        return self.__class__.__name__ + f'hue_range={self.hue_range}'
 
 
 @TRANSFORMS.register_module()

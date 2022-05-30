@@ -1,143 +1,17 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from pathlib import Path
 
 import cv2
 import numpy as np
 import pytest
 
-from mmedit.transforms import (CompositeFg, GenerateSeg, GenerateSoftSeg,
-                               GenerateTrimap, GenerateTrimapWithDistTransform,
-                               MergeFgAndBg, PerturbBg, TransformTrimap)
-
-data_root = Path(__file__).parent.parent / 'data' / 'matting_dataset'
+from mmedit.transforms.matting import (GenerateTrimap,
+                                       GenerateTrimapWithDistTransform,
+                                       TransformTrimap)
 
 
 def assert_keys_contain(result_keys, target_keys):
     """Check if all elements in target_keys is in result_keys."""
     assert set(target_keys).issubset(set(result_keys))
-
-
-def test_composite_fg():
-    target_keys = ['alpha', 'fg', 'bg']
-
-    np.random.seed(0)
-    fg = np.random.rand(32, 32, 3).astype(np.float32)
-    bg = np.random.rand(32, 32, 3).astype(np.float32)
-    alpha = np.random.rand(32, 32).astype(np.float32)
-    results = dict(alpha=alpha, fg=fg, bg=bg)
-    # use merged dir as fake fg dir, trimap dir as fake alpha dir for unittest
-    composite_fg = CompositeFg(
-        [str(data_root / 'fg'),
-         str(data_root / 'merged')],
-        [str(data_root / 'alpha'),
-         str(data_root / 'trimap')])
-    correct_fg_list = [
-        str(data_root / 'fg' / 'GT05.jpg'),
-        str(data_root / 'merged' / 'GT05.jpg')
-    ]
-    correct_alpha_list = [
-        str(data_root / 'alpha' / 'GT05.jpg'),
-        str(data_root / 'trimap' / 'GT05.png')
-    ]
-    assert composite_fg.fg_list == correct_fg_list
-    assert composite_fg.alpha_list == correct_alpha_list
-    composite_fg_results = composite_fg(results)
-    assert_keys_contain(composite_fg_results.keys(), target_keys)
-    assert composite_fg_results['fg'].shape == (32, 32, 3)
-
-    fg = np.random.rand(32, 32, 3).astype(np.float32)
-    bg = np.random.rand(32, 32, 3).astype(np.float32)
-    alpha = np.random.rand(32, 32).astype(np.float32)
-    results = dict(alpha=alpha, fg=fg, bg=bg)
-    composite_fg = CompositeFg(
-        str(data_root / 'fg'),
-        str(data_root / 'alpha'),
-        interpolation='bilinear')
-    composite_fg_results = composite_fg(results)
-    assert_keys_contain(composite_fg_results.keys(), target_keys)
-    assert composite_fg_results['fg'].shape == (32, 32, 3)
-
-    _fg_dirs = str(data_root / 'fg')
-    _alpha_dirs = str(data_root / 'alpha')
-    strs = (f"(fg_dirs=['{_fg_dirs}'], "
-            f"alpha_dirs=['{_alpha_dirs}'], "
-            "interpolation='bilinear')")
-
-    print(repr(composite_fg))
-    print('CompositeFg' + strs.replace('\\', '\\\\'))
-    assert repr(composite_fg) == 'CompositeFg' + strs.replace('\\', '\\\\')
-
-
-def test_generate_seg():
-    with pytest.raises(ValueError):
-        # crop area should not exceed the image size
-        img = np.random.rand(32, 32, 3)
-        GenerateSeg._crop_hole(img, (0, 0), (64, 64))
-
-    target_keys = ['alpha', 'trimap', 'seg', 'num_holes']
-    alpha = np.random.randint(0, 255, (32, 32))
-    trimap = np.zeros_like(alpha)
-    trimap[(alpha > 0) & (alpha < 255)] = 128
-    trimap[alpha == 255] = 255
-    results = dict(alpha=alpha, trimap=trimap)
-    generate_seg = GenerateSeg()
-    generate_seg_results = generate_seg(results)
-    assert_keys_contain(generate_seg_results.keys(), target_keys)
-    assert generate_seg_results['seg'].shape == alpha.shape
-    assert isinstance(generate_seg_results['num_holes'], int)
-    assert generate_seg_results['num_holes'] < 3
-
-    # check repr string and the default setting
-    assert repr(generate_seg) == generate_seg.__class__.__name__ + (
-        '(kernel_size=5, erode_iter_range=(10, 20), '
-        'dilate_iter_range=(15, 30), num_holes_range=(0, 3), '
-        'hole_sizes=[(15, 15), (25, 25), (35, 35), (45, 45)], '
-        'blur_ksizes=[(21, 21), (31, 31), (41, 41)]')
-
-
-def test_generate_soft_seg():
-    with pytest.raises(TypeError):
-        # fg_thr must be a float
-        GenerateSoftSeg(fg_thr=[0.2])
-    with pytest.raises(TypeError):
-        # border_width must be an int
-        GenerateSoftSeg(border_width=25.)
-    with pytest.raises(TypeError):
-        # erode_ksize must be an int
-        GenerateSoftSeg(erode_ksize=5.)
-    with pytest.raises(TypeError):
-        # dilate_ksize must be an int
-        GenerateSoftSeg(dilate_ksize=5.)
-    with pytest.raises(TypeError):
-        # erode_iter_range must be a tuple of 2 int
-        GenerateSoftSeg(erode_iter_range=(3, 5, 7))
-    with pytest.raises(TypeError):
-        # dilate_iter_range must be a tuple of 2 int
-        GenerateSoftSeg(dilate_iter_range=(3, 5, 7))
-    with pytest.raises(TypeError):
-        # blur_ksizes must be a list of tuple
-        GenerateSoftSeg(blur_ksizes=[21, 21])
-
-    target_keys = ['seg', 'soft_seg']
-
-    seg = np.random.randint(0, 255, (512, 512))
-    results = dict(seg=seg)
-
-    generate_soft_seg = GenerateSoftSeg(
-        erode_ksize=3,
-        dilate_ksize=3,
-        erode_iter_range=(1, 2),
-        dilate_iter_range=(1, 2),
-        blur_ksizes=[(11, 11)])
-    generate_soft_seg_results = generate_soft_seg(results)
-    assert_keys_contain(generate_soft_seg_results.keys(), target_keys)
-    assert generate_soft_seg_results['soft_seg'].shape == seg.shape
-
-    repr_str = generate_soft_seg.__class__.__name__ + (
-        '(fg_thr=0.2, border_width=25, erode_ksize=3, dilate_ksize=3, '
-        'erode_iter_range=(1, 2), dilate_iter_range=(1, 2), '
-        'blur_ksizes=[(11, 11)])')
-    assert repr(generate_soft_seg) == repr_str
 
 
 def generate_ref_trimap(alpha, kernel_size, iterations, random):
@@ -298,51 +172,6 @@ def test_generate_trimap_with_dist_transform():
 
     assert repr(generate_trimap) == (
         generate_trimap.__class__.__name__ + '(dist_thr=3, random=True)')
-
-
-def test_merge_fg_and_bg():
-    target_keys = ['fg', 'bg', 'alpha', 'merged']
-
-    fg = np.random.randn(32, 32, 3)
-    bg = np.random.randn(32, 32, 3)
-    alpha = np.random.randn(32, 32)
-    results = dict(fg=fg, bg=bg, alpha=alpha)
-    merge_fg_and_bg = MergeFgAndBg()
-    merge_fg_and_bg_results = merge_fg_and_bg(results)
-
-    assert_keys_contain(merge_fg_and_bg_results.keys(), target_keys)
-    assert merge_fg_and_bg_results['merged'].shape == fg.shape
-
-
-def test_perturb_bg():
-    with pytest.raises(ValueError):
-        # gammma_ratio must be a float between [0, 1]
-        PerturbBg(-0.5)
-
-    with pytest.raises(ValueError):
-        # gammma_ratio must be a float between [0, 1]
-        PerturbBg(1.1)
-
-    target_keys = ['bg', 'noisy_bg']
-    # set a random seed to make sure the test goes through every branch
-    np.random.seed(123)
-
-    img_shape = (32, 32, 3)
-    results = dict(bg=np.random.randint(0, 255, img_shape))
-    perturb_bg = PerturbBg(0.6)
-    perturb_bg_results = perturb_bg(results)
-    assert_keys_contain(perturb_bg_results.keys(), target_keys)
-    assert perturb_bg_results['noisy_bg'].shape == img_shape
-
-    img_shape = (32, 32, 3)
-    results = dict(bg=np.random.randint(0, 255, img_shape))
-    perturb_bg = PerturbBg(0.6)
-    perturb_bg_results = perturb_bg(results)
-    assert_keys_contain(perturb_bg_results.keys(), target_keys)
-    assert perturb_bg_results['noisy_bg'].shape == img_shape
-
-    repr_str = perturb_bg.__class__.__name__ + '(gamma_ratio=0.6)'
-    assert repr(perturb_bg) == repr_str
 
 
 def test_transform_trimap():
