@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="resources/mmediting-logo.png" width="500px"/>
+  <img src="docs/en/_static/image/mmediting-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
     <b><font size="5">OpenMMLab website</font></b>
@@ -35,9 +35,9 @@
 
 </div>
 
-## Introduction
-
 English | [简体中文](/README_zh-CN.md)
+
+## Introduction
 
 MMEditing is an open-source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
@@ -190,7 +190,7 @@ Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/_tmp/mode
 
 ## Contributing
 
-We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md) in MMCV for the contributing guideline.
+We appreciate all contributions to improve MMEditing. Please refer to our [contributing guidelines](https://github.com/open-mmlab/mmediting/wiki/A.-Contribution-Guidelines).
 
 ## Acknowledgement
 
