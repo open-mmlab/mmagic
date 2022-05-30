@@ -144,7 +144,7 @@ class AOTInpaintor(OneStageInpaintor):
                 else:
                     eval_results[metric_name] = self._eval_metrics[
                         metric_name]()(data_dict).item()
-            output['eval_results'] = eval_results
+            output['eval_result'] = eval_results
         else:
             output['fake_res'] = fake_res
             output['fake_img'] = fake_img
