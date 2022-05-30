@@ -1,0 +1,22 @@
+Collections:
+- Metadata:
+    Architecture:
+    - AOT-GAN
+  Name: AOT-GAN
+  Paper:
+  - https://arxiv.org/pdf/2104.01431.pdf
+  README: configs/inpainting/AOT-GAN/README.md
+Models:
+- Config: configs/inpainting/AOT-GAN/AOT-GAN_512x512_4x12_places.py
+  In Collection: AOT-GAN
+  Metadata:
+    Training Data: PLACES
+  Name: AOT-GAN_512x512_4x12_places
+  Results:
+  - Dataset: PLACES
+    Metrics:
+      PSNR: 19.01
+      SSIM: 0.682
+      l1 error: 7.07
+    Task: Inpainting
+  Weights: https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth

@@ -128,6 +128,7 @@ Supported algorithms:
 - [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
 - [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
 - [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
+- [x] [AOT-GAN](configs/inpainting/AOT-GAN/README.md) (TVCG'2021)
 
 </details>
 
