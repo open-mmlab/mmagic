@@ -51,6 +51,7 @@
 - Move wiki/installation to docs ([#883](https://github.com/open-mmlab/mmediting/pull/883))
 - Add `myst_heading_anchors` ([#887](https://github.com/open-mmlab/mmediting/pull/887))
 - Use checkpoint link in inpainting demo ([#892](https://github.com/open-mmlab/mmediting/pull/892))
+- Update config and README of CAIN ([#906](https://github.com/open-mmlab/mmediting/pull/906))
 
 **Contributors**
 
