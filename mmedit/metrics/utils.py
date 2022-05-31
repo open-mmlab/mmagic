@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import mmcv
 import numpy as np
+import torch
 
 
 def average(results, key):
@@ -55,6 +56,7 @@ def img_transform(img, crop_border=0, input_order='HWC', convert_to=None):
 
     if isinstance(convert_to, str) and convert_to.lower() == 'y':
         img = mmcv.bgr2ycbcr(img / 255., y_only=True) * 255.
+        img = np.expand_dims(img, axis=2)
     elif convert_to is not None:
         raise ValueError('Wrong color model. Supported values are '
                          '"Y" and None.')
@@ -106,4 +108,17 @@ def reorder_image(img, input_order='HWC'):
         return img
     if input_order == 'CHW':
         img = img.transpose(1, 2, 0)
+    return img
+
+
+def to_numpy(img, dtype=np.float64):
+
+    if isinstance(img, torch.Tensor):
+        img = img.cpu().numpy()
+    elif not isinstance(img, np.ndarray):
+        raise TypeError('Only support torch.tensor and np.ndarray, '
+                        f'but got type {type(img)}')
+
+    img = img.astype(dtype)
+
     return img
