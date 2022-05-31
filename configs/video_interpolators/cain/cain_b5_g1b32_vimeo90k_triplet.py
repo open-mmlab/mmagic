@@ -1,4 +1,4 @@
-exp_name = 'cain_b5_320k_vimeo-triplet'
+exp_name = 'cain_b5_g1b32_vimeo90k_triplet'
 
 # model settings
 model = dict(
@@ -7,7 +7,7 @@ model = dict(
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 # model training and testing settings
 train_cfg = None
-test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=0, convert_to='y')
+test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=0)
 
 # dataset settings
 train_dataset_type = 'VFIVimeo90KDataset'
@@ -26,7 +26,6 @@ train_pipeline = [
         key='target',
         channel_order='rgb',
         backend='pillow'),
-    dict(type='RescaleToZeroOne', keys=['inputs', 'target']),
     dict(type='FixedCrop', keys=['inputs', 'target'], crop_size=(256, 256)),
     dict(
         type='Flip',
@@ -38,7 +37,16 @@ train_pipeline = [
         keys=['inputs', 'target'],
         flip_ratio=0.5,
         direction='vertical'),
+    dict(
+        type='ColorJitter',
+        keys=['inputs', 'target'],
+        channel_order='rgb',
+        brightness=0.05,
+        contrast=0.05,
+        saturation=0.05,
+        hue=0.05),
     dict(type='TemporalReverse', keys=['inputs'], reverse_ratio=0.5),
+    dict(type='RescaleToZeroOne', keys=['inputs', 'target']),
     dict(type='FramesToTensor', keys=['inputs']),
     dict(type='ImageToTensor', keys=['target']),
     dict(
@@ -81,9 +89,9 @@ demo_pipeline = [
     dict(type='Collect', keys=['inputs'], meta_keys=['inputs_path', 'key'])
 ]
 
-root_dir = 'data/vimeo_triple'
+root_dir = 'data/vimeo_triplet'
 data = dict(
-    workers_per_gpu=4,
+    workers_per_gpu=32,
     train_dataloader=dict(samples_per_gpu=32, drop_last=True),
     val_dataloader=dict(samples_per_gpu=1),
     test_dataloader=dict(samples_per_gpu=1),
@@ -114,20 +122,33 @@ data = dict(
         test_mode=True),
 )
 
-# optimizer
-optimizers = dict(generator=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99)))
-
 # learning policy
-total_iters = 320000
+# 1604 iters == 1 epoch
+total_iters = 288700
 lr_config = dict(
-    policy='Step', by_epoch=False, step=[80000, 160000, 240000], gamma=0.5)
+    policy='Reduce',
+    by_epoch=False,
+    mode='max',
+    val_metric='PSNR',
+    epoch_base_valid=True,  # Support epoch base valid in iter base runner.
+    factor=0.5,
+    patience=5,
+    cooldown=0,
+    verbose=True)
 
-checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
-# remove gpu_collect=True in non distributed training
-evaluation = dict(interval=500, save_image=True, gpu_collect=True)
+checkpoint_config = dict(interval=1604, save_optimizer=True, by_epoch=False)
+evaluation = dict(interval=1604, save_image=False)
 log_config = dict(
-    interval=100, hooks=[
+    interval=100,
+    hooks=[
         dict(type='TextLoggerHook', by_epoch=False),
+        dict(
+            type='TensorboardLoggerHook',
+            log_dir=f'work_dirs/{exp_name}/tb_log/',
+            interval=100,
+            ignore_last=False,
+            reset_flag=False,
+            by_epoch=False),
     ])
 visual_config = None
 
