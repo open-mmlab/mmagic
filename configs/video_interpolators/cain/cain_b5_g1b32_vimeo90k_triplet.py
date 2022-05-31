@@ -1,4 +1,4 @@
-exp_name = 'cain_b5_g1b32_vimeo_triplet'
+exp_name = 'cain_b5_g1b32_vimeo90k_triplet'
 
 # model settings
 model = dict(

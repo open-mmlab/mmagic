@@ -72,7 +72,7 @@ def test_restoration_video_inference():
 
 def test_video_interpolation_inference():
     model = init_model(
-        './configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py',
+        './configs/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet.py',
         None,
         device='cpu')
     model.cfg['demo_pipeline'] = [

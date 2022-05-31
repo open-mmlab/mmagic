@@ -22,9 +22,9 @@ Evaluated on RGB channels.
 The metrics are `PSNR / SSIM` .
 The learning rate adjustment strategy is `Step LR scheduler with min_lr clipping`.
 
-|                                            Method                                            | vimeo-90k-triplet |                                                                                                                           Download                                                                                                                           |
-| :------------------------------------------------------------------------------------------: | :---------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [cain_b5_320k_vimeo-triple](/configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py) | 34.6010 / 0.9578  | [model](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo_triplet_20220530-3520b00c.pth)/[log](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo_triplet_20220530-3520b00c.log.json) |
+|                                               Method                                                | vimeo-90k-triplet |                                                                                                                              Download                                                                                                                              |
+| :-------------------------------------------------------------------------------------------------: | :---------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [cain_b5_320k_vimeo90k_triple](/configs/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet.py) | 34.6010 / 0.9578  | [model](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth)/[log](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.log.json) |
 
 ## Citation
 
