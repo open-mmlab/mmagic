@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from mmedit.metrics import MSE, SAD, ConnectivityError, GradientError
+from mmedit.metrics import SAD, ConnectivityError, GradientError, MattingMSE
 
 
 class TestMattingMetrics:
@@ -74,7 +74,7 @@ class TestMattingMetrics:
         np.testing.assert_almost_equal(res['SAD'], 0.768)
 
     def test_mse(self):
-        """Test MSE for evaluating predicted alpha matte."""
+        """Test MattingMSE for evaluating predicted alpha matte."""
 
         data_batch, bad_pred1, bad_pred2, good_pred = (
             self.data_batch,
@@ -83,7 +83,7 @@ class TestMattingMetrics:
             self.good_preds,
         )
 
-        mse = MSE()
+        mse = MattingMSE()
 
         with pytest.raises(ValueError):
             mse.process(data_batch, bad_pred1)
@@ -106,8 +106,8 @@ class TestMattingMetrics:
 
         res = mse.compute_metrics(mse.results)
 
-        assert list(res.keys()) == ['MSE']
-        np.testing.assert_almost_equal(res['MSE'], 3.0)
+        assert list(res.keys()) == ['MattingMSE']
+        np.testing.assert_almost_equal(res['MattingMSE'], 3.0)
 
     def test_gradient_error(self):
         """Test gradient error for evaluating predicted alpha matte."""

@@ -11,7 +11,7 @@ model = dict(
     pretrained='open-mmlab://mmedit/mobilenet_v2')
 # model training and testing settings
 train_cfg = dict(train_backbone=True)
-test_cfg = dict(metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
+test_cfg = dict(metrics=['SAD', 'MattingMSE', 'GRAD', 'CONN'])
 
 # dataset settings
 dataset_type = 'AdobeComp1kDataset'

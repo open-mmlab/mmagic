@@ -38,7 +38,7 @@ def test_base_mattor():
     refiner = dict(type='PlainRefiner')
     train_cfg = mmcv.ConfigDict(train_backbone=True, train_refiner=True)
     test_cfg = mmcv.ConfigDict(
-        refine=True, metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
+        refine=True, metrics=['SAD', 'MattingMSE', 'GRAD', 'CONN'])
 
     with pytest.raises(KeyError):
         # metrics should be specified in test_cfg
@@ -49,7 +49,7 @@ def test_base_mattor():
             test_cfg=mmcv.ConfigDict(refine=True))
 
     with pytest.raises(KeyError):
-        # supported metric should be one of {'SAD', 'MSE'}
+        # supported metric should be one of {'SAD', 'MattingMSE'}
         BaseMattor(
             backbone,
             refiner,
@@ -126,7 +126,7 @@ def test_dim():
         output_test = model(**input_test, test_mode=True)
         assert isinstance(output_test['pred_alpha'], np.ndarray)
         assert_dict_keys_equal(output_test['eval_result'],
-                               ['SAD', 'MSE', 'GRAD', 'CONN'])
+                               ['SAD', 'MattingMSE', 'GRAD', 'CONN'])
 
         # test model forward in test mode with gpu
         if torch.cuda.is_available():
@@ -136,7 +136,7 @@ def test_dim():
             output_test = model(**input_test, test_mode=True)
             assert isinstance(output_test['pred_alpha'], np.ndarray)
             assert_dict_keys_equal(output_test['eval_result'],
-                                   ['SAD', 'MSE', 'GRAD', 'CONN'])
+                                   ['SAD', 'MattingMSE', 'GRAD', 'CONN'])
 
     # 2. test dim model without refiner
     model_cfg['refiner'] = None
@@ -196,7 +196,7 @@ def test_indexnet():
         assert isinstance(output_test['pred_alpha'], np.ndarray)
         assert output_test['pred_alpha'].shape == (64, 64)
         assert_dict_keys_equal(output_test['eval_result'],
-                               ['SAD', 'MSE', 'GRAD', 'CONN'])
+                               ['SAD', 'MattingMSE', 'GRAD', 'CONN'])
 
         # test inference with gpu
         if torch.cuda.is_available():
@@ -208,7 +208,7 @@ def test_indexnet():
             assert isinstance(output_test['pred_alpha'], np.ndarray)
             assert output_test['pred_alpha'].shape == (64, 64)
             assert_dict_keys_equal(output_test['eval_result'],
-                                   ['SAD', 'MSE', 'GRAD', 'CONN'])
+                                   ['SAD', 'MattingMSE', 'GRAD', 'CONN'])
 
     # test forward train though we do not guarantee the training for present
     model_cfg.loss_alpha = None
@@ -273,7 +273,7 @@ def test_gca():
         inputs = _demo_input_test((64, 64))
         outputs = model(**inputs, test_mode=True)
         assert_dict_keys_equal(outputs['eval_result'],
-                               ['SAD', 'MSE', 'GRAD', 'CONN'])
+                               ['SAD', 'MattingMSE', 'GRAD', 'CONN'])
 
         if torch.cuda.is_available():
             model = build_model(model_cfg, train_cfg=None, test_cfg=test_cfg)
@@ -281,7 +281,7 @@ def test_gca():
             inputs = _demo_input_test((64, 64), cuda=True)
             outputs = model(**inputs, test_mode=True)
             assert_dict_keys_equal(outputs['eval_result'],
-                                   ['SAD', 'MSE', 'GRAD', 'CONN'])
+                                   ['SAD', 'MattingMSE', 'GRAD', 'CONN'])
 
     # test forward_dummy
     model.cpu().eval()

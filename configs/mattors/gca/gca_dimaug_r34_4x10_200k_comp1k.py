@@ -17,7 +17,7 @@ model = dict(
     loss_alpha=dict(type='L1Loss'),
     pretrained='open-mmlab://mmedit/res34_en_nomixup')
 train_cfg = dict(train_backbone=True)
-test_cfg = dict(metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
+test_cfg = dict(metrics=['SAD', 'MattingMSE', 'GRAD', 'CONN'])
 
 # dataset settings
 dataset_type = 'AdobeComp1kDataset'

@@ -92,7 +92,8 @@ def test_mattor_wrapper():
         pytest.skip('ONNXRuntime is not available.')
     onnx_path = 'tmp.onnx'
     train_cfg = None
-    test_cfg = dict(refine=False, metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
+    test_cfg = dict(
+        refine=False, metrics=['SAD', 'MattingMSE', 'GRAD', 'CONN'])
     cfg = dict(
         model=dict(
             type='DIM',

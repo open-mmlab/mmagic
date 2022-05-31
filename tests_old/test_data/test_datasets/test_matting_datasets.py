@@ -39,17 +39,17 @@ class TestMattingDatasets:
             'pred_alpha': None,
             'eval_result': {
                 'SAD': 26,
-                'MSE': 0.006
+                'MattingMSE': 0.006
             }
         }, {
             'pred_alpha': None,
             'eval_result': {
                 'SAD': 24,
-                'MSE': 0.004
+                'MattingMSE': 0.004
             }
         }]
 
         eval_result = comp1k_dataset.evaluate(results)
-        assert set(eval_result.keys()) == set(['SAD', 'MSE'])
+        assert set(eval_result.keys()) == set(['SAD', 'MattingMSE'])
         assert eval_result['SAD'] == 25
-        assert eval_result['MSE'] == 0.005
+        assert eval_result['MattingMSE'] == 0.005

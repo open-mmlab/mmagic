@@ -39,7 +39,7 @@ class BaseMattor(BaseModel):
     """
     allowed_metrics = {
         'SAD': sad,
-        'MSE': mse,
+        'MattingMSE': mse,
         'GRAD': gradient_error,
         'CONN': connectivity
     }

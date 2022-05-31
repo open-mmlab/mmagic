@@ -9,7 +9,7 @@ model = dict(
     loss_alpha=dict(type='CharbonnierLoss', loss_weight=0.5),
     loss_comp=dict(type='CharbonnierCompLoss', loss_weight=0.5))
 train_cfg = dict(train_backbone=True, train_refiner=False)
-test_cfg = dict(refine=False, metrics=['SAD', 'MSE', 'GRAD', 'CONN'])
+test_cfg = dict(refine=False, metrics=['SAD', 'MattingMSE', 'GRAD', 'CONN'])
 
 # dataset settings
 dataset_type = 'AdobeComp1kDataset'

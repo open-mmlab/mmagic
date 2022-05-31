@@ -9,6 +9,7 @@ from mmengine.evaluator import BaseMetric
 
 from ..registry import METRICS
 from .gaussian_funcs import gauss_gradient
+from .utils import average
 
 
 def _assert_ndim(input, name, ndim, shape_hint):
@@ -35,30 +36,6 @@ def _fetch_data_and_check(data_batch, predictions):
     _assert_masked(pred_alpha, ori_trimap)
 
     return pred_alpha, ori_alpha, ori_trimap
-
-
-def _average(results, key):
-    total = 0
-    n = 0
-    for batch_result in results:
-        total += batch_result[key]
-        n += 1
-
-    err = total / n
-
-    return err
-
-
-def _weighted_average(results, key):
-    total = 0
-    n = 0
-    for batch_result in results:
-        total += batch_result[key]
-        n += batch_result['n']
-
-    err = total / n
-
-    return err
 
 
 @METRICS.register_module()
@@ -136,13 +113,13 @@ class SAD(BaseMetric):
             and the values are corresponding results.
         """
 
-        sad = _average(results, 'sad')
+        sad = average(results, 'sad')
 
         return {'SAD': sad}
 
 
 @METRICS.register_module()
-class MSE(BaseMetric):
+class MattingMSE(BaseMetric):
     """Mean Squared Error metric for image matting.
 
     This metric compute per-pixel squared error average across all
@@ -166,7 +143,7 @@ class MSE(BaseMetric):
             Default to 1000.
 
     Metrics:
-        - MSE (float): Sum of Absolute Differences
+        - MattingMSE (float): Mean of Squared Error
     """
 
     default_prefix = ''
@@ -218,9 +195,9 @@ class MSE(BaseMetric):
             and the values are corresponding results.
         """
 
-        mse = _average(results, 'mse')
+        mse = average(results, 'mse')
 
-        return {'MSE': mse}
+        return {'MattingMSE': mse}
 
 
 @METRICS.register_module()
@@ -310,7 +287,7 @@ class GradientError(BaseMetric):
             and the values are corresponding results.
         """
 
-        grad_err = _average(results, 'grad_err')
+        grad_err = average(results, 'grad_err')
 
         return {'GradientError': grad_err}
 
@@ -424,6 +401,6 @@ class ConnectivityError(BaseMetric):
             and the values are corresponding results.
         """
 
-        conn_err = _average(results, 'conn_err')
+        conn_err = average(results, 'conn_err')
 
         return {'ConnectivityError': conn_err}

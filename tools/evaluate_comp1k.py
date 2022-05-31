@@ -88,11 +88,11 @@ def evaluate(pred_root, gt_root, trimap_root, verbose, nproc):
         # for sad_result, mse_result, grad_result, conn_result in results:
         for i, img in enumerate(images):
             sad_result, mse_result, grad_result, conn_result = results[i]
-            print(f'{img} SAD: {sad_result:.6g} MSE: {mse_result:.6g} '
+            print(f'{img} SAD: {sad_result:.6g} MattingMSE: {mse_result:.6g} '
                   f'GRAD: {grad_result:.6g} CONN: {conn_result:.6g}')
 
     sad_mean, mse_mean, grad_mean, conn_mean = np.mean(results, axis=0)
-    print(f'MEAN:  SAD: {sad_mean:.6g} MSE: {mse_mean:.6g} '
+    print(f'MEAN:  SAD: {sad_mean:.6g} MattingMSE: {mse_mean:.6g} '
           f'GRAD: {grad_mean:.6g} CONN: {conn_mean:.6g}')
 
 
