@@ -8,6 +8,15 @@ from mmedit.transforms import PackEditInputs, ToTensor
 from mmedit.transforms.formatting import images_to_tensor
 
 
+def assert_tensor_equal(img, ref_img, ratio_thr=0.999):
+    """Check if img and ref_img are matched approximately."""
+    assert img.shape == ref_img.shape
+    assert img.dtype == ref_img.dtype
+    area = ref_img.shape[-1] * ref_img.shape[-2]
+    diff = torch.abs(img - ref_img)
+    assert torch.sum(diff <= 1) / float(area) > ratio_thr
+
+
 def test_images_to_tensor():
 
     data = [np.random.rand(64, 64, 3), np.random.rand(64, 64, 3)]
@@ -21,15 +30,6 @@ def test_images_to_tensor():
     data = 1
     tensor = images_to_tensor(data)
     assert tensor == torch.tensor(1)
-
-
-def assert_tensor_equal(img, ref_img, ratio_thr=0.999):
-    """Check if img and ref_img are matched approximately."""
-    assert img.shape == ref_img.shape
-    assert img.dtype == ref_img.dtype
-    area = ref_img.shape[-1] * ref_img.shape[-2]
-    diff = torch.abs(img - ref_img)
-    assert torch.sum(diff <= 1) / float(area) > ratio_thr
 
 
 def test_pack_edit_inputs():

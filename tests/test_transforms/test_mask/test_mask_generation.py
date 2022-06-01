@@ -2,8 +2,8 @@
 import numpy as np
 import pytest
 
-from mmedit.core.mask import (bbox2mask, brush_stroke_mask, get_irregular_mask,
-                              random_bbox)
+from mmedit.transforms.mask.utils import (bbox2mask, brush_stroke_mask,
+                                          get_irregular_mask, random_bbox)
 
 
 def test_bbox_mask():

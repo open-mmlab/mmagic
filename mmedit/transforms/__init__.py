@@ -10,6 +10,7 @@ from .generate_frame_indices import (GenerateFrameIndices,
                                      GenerateFrameIndiceswithPadding,
                                      GenerateSegmentIndices)
 from .loading import LoadImageFromFile
+from .mask import GetMaskedImage, GetSpatialDiscountMask, LoadMask
 from .matlab_like_resize import MATLABLikeResize
 from .matting import *  # noqa F403
 from .random_degradations import (DegradationsWithShuffle, RandomBlur,
@@ -27,11 +28,14 @@ __all__ = [
     'CropLike',
     'DegradationsWithShuffle',
     'LoadImageFromFile',
+    'LoadMask',
     'Flip',
     'FixedCrop',
     'GenerateFrameIndices',
     'GenerateFrameIndiceswithPadding',
     'GenerateSegmentIndices',
+    'GetMaskedImage',
+    'GetSpatialDiscountMask',
     'MATLABLikeResize',
     'MirrorSequence',
     'ModCrop',

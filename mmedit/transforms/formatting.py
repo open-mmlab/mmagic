@@ -77,57 +77,6 @@ def images_to_tensor(value):
 
 
 @TRANSFORMS.register_module()
-class ToTensor(BaseTransform):
-    """Convert some values in results dict to `torch.Tensor` type
-    in data loader pipeline.
-
-    Args:
-        keys (Sequence[str]): Required keys to be converted.
-        to_float32 (bool): Whether convert tensors of images to float32.
-    """
-
-    def __init__(self, keys, to_float32=True):
-
-        self.keys = keys
-        self.to_float32 = to_float32
-
-    def _data_to_tensor(self, value):
-
-        is_image = check_if_image(value)
-
-        if is_image:
-            tensor = images_to_tensor(value)
-            if self.to_float32:
-                tensor = tensor.float()
-
-        else:
-            tensor = to_tensor(value)
-
-        return tensor
-
-    def transform(self, results):
-        """transform function.
-
-        Args:
-            results (dict): A dict containing the necessary information and
-                data for augmentation.
-
-        Returns:
-            dict: A dict containing the processed data and information.
-        """
-
-        for key in self.keys:
-            results[key] = self._data_to_tensor(results[key])
-
-        return results
-
-    def __repr__(self):
-
-        return self.__class__.__name__ + (
-            f'(keys={self.keys}, to_float32={self.to_float32})')
-
-
-@TRANSFORMS.register_module()
 class PackEditInputs(BaseTransform):
     """Pack the inputs data for SR, VFI, matting and inpainting.
 
@@ -215,3 +164,54 @@ class PackEditInputs(BaseTransform):
         repr_str = self.__class__.__name__
 
         return repr_str
+
+
+@TRANSFORMS.register_module()
+class ToTensor(BaseTransform):
+    """Convert some values in results dict to `torch.Tensor` type
+    in data loader pipeline.
+
+    Args:
+        keys (Sequence[str]): Required keys to be converted.
+        to_float32 (bool): Whether convert tensors of images to float32.
+    """
+
+    def __init__(self, keys, to_float32=True):
+
+        self.keys = keys
+        self.to_float32 = to_float32
+
+    def _data_to_tensor(self, value):
+
+        is_image = check_if_image(value)
+
+        if is_image:
+            tensor = images_to_tensor(value)
+            if self.to_float32:
+                tensor = tensor.float()
+
+        else:
+            tensor = to_tensor(value)
+
+        return tensor
+
+    def transform(self, results):
+        """transform function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+
+        for key in self.keys:
+            results[key] = self._data_to_tensor(results[key])
+
+        return results
+
+    def __repr__(self):
+
+        return self.__class__.__name__ + (
+            f'(keys={self.keys}, to_float32={self.to_float32})')

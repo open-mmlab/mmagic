@@ -7,74 +7,6 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 
-def random_bbox(img_shape, max_bbox_shape, max_bbox_delta=40, min_margin=20):
-    """Generate a random bbox for the mask on a given image.
-
-    In our implementation, the max value cannot be obtained since we use
-    `np.random.randint`. And this may be different with other standard scripts
-    in the community.
-
-    Args:
-        img_shape (tuple[int]): The size of a image, in the form of (h, w).
-        max_bbox_shape (int | tuple[int]): Maximum shape of the mask box,
-            in the form of (h, w). If it is an integer, the mask box will be
-            square.
-        max_bbox_delta (int | tuple[int]): Maximum delta of the mask box,
-            in the form of (delta_h, delta_w). If it is an integer, delta_h
-            and delta_w will be the same. Mask shape will be randomly sampled
-            from the range of `max_bbox_shape - max_bbox_delta` and
-            `max_bbox_shape`. Default: (40, 40).
-        min_margin (int | tuple[int]): The minimum margin size from the
-            edges of mask box to the image boarder, in the form of
-            (margin_h, margin_w). If it is an integer, margin_h and margin_w
-            will be the same. Default: (20, 20).
-
-    Returns:
-        tuple[int]: The generated box, (top, left, h, w).
-    """
-    if not isinstance(max_bbox_shape, tuple):
-        max_bbox_shape = (max_bbox_shape, max_bbox_shape)
-    if not isinstance(max_bbox_delta, tuple):
-        max_bbox_delta = (max_bbox_delta, max_bbox_delta)
-    if not isinstance(min_margin, tuple):
-        min_margin = (min_margin, min_margin)
-    assert mmcv.is_tuple_of(max_bbox_shape, int)
-    assert mmcv.is_tuple_of(max_bbox_delta, int)
-    assert mmcv.is_tuple_of(min_margin, int)
-
-    img_h, img_w = img_shape[:2]
-    max_mask_h, max_mask_w = max_bbox_shape
-    max_delta_h, max_delta_w = max_bbox_delta
-    margin_h, margin_w = min_margin
-
-    if max_mask_h > img_h or max_mask_w > img_w:
-        raise ValueError(f'mask shape {max_bbox_shape} should be smaller than '
-                         f'image shape {img_shape}')
-    if (max_delta_h // 2 * 2 >= max_mask_h
-            or max_delta_w // 2 * 2 >= max_mask_w):
-        raise ValueError(f'mask delta {max_bbox_delta} should be smaller than'
-                         f'mask shape {max_bbox_shape}')
-    if img_h - max_mask_h < 2 * margin_h or img_w - max_mask_w < 2 * margin_w:
-        raise ValueError(f'Margin {min_margin} cannot be satisfied for img'
-                         f'shape {img_shape} and mask shape {max_bbox_shape}')
-
-    # get the max value of (top, left)
-    max_top = img_h - margin_h - max_mask_h
-    max_left = img_w - margin_w - max_mask_w
-    # randomly select a (top, left)
-    top = np.random.randint(margin_h, max_top)
-    left = np.random.randint(margin_w, max_left)
-    # randomly shrink the shape of mask box according to `max_bbox_delta`
-    # the center of box is fixed
-    delta_top = np.random.randint(0, max_delta_h // 2 + 1)
-    delta_left = np.random.randint(0, max_delta_w // 2 + 1)
-    top = top + delta_top
-    left = left + delta_left
-    h = max_mask_h - delta_top
-    w = max_mask_w - delta_left
-    return (top, left, h, w)
-
-
 def bbox2mask(img_shape, bbox, dtype='uint8'):
     """Generate mask in ndarray from bbox.
 
@@ -205,6 +137,74 @@ def brush_stroke_mask(img_shape,
     mask = np.array(mask).astype(dtype=getattr(np, dtype))
     mask = mask[:, :, None]
     return mask
+
+
+def random_bbox(img_shape, max_bbox_shape, max_bbox_delta=40, min_margin=20):
+    """Generate a random bbox for the mask on a given image.
+
+    In our implementation, the max value cannot be obtained since we use
+    `np.random.randint`. And this may be different with other standard scripts
+    in the community.
+
+    Args:
+        img_shape (tuple[int]): The size of a image, in the form of (h, w).
+        max_bbox_shape (int | tuple[int]): Maximum shape of the mask box,
+            in the form of (h, w). If it is an integer, the mask box will be
+            square.
+        max_bbox_delta (int | tuple[int]): Maximum delta of the mask box,
+            in the form of (delta_h, delta_w). If it is an integer, delta_h
+            and delta_w will be the same. Mask shape will be randomly sampled
+            from the range of `max_bbox_shape - max_bbox_delta` and
+            `max_bbox_shape`. Default: (40, 40).
+        min_margin (int | tuple[int]): The minimum margin size from the
+            edges of mask box to the image boarder, in the form of
+            (margin_h, margin_w). If it is an integer, margin_h and margin_w
+            will be the same. Default: (20, 20).
+
+    Returns:
+        tuple[int]: The generated box, (top, left, h, w).
+    """
+    if not isinstance(max_bbox_shape, tuple):
+        max_bbox_shape = (max_bbox_shape, max_bbox_shape)
+    if not isinstance(max_bbox_delta, tuple):
+        max_bbox_delta = (max_bbox_delta, max_bbox_delta)
+    if not isinstance(min_margin, tuple):
+        min_margin = (min_margin, min_margin)
+    assert mmcv.is_tuple_of(max_bbox_shape, int)
+    assert mmcv.is_tuple_of(max_bbox_delta, int)
+    assert mmcv.is_tuple_of(min_margin, int)
+
+    img_h, img_w = img_shape[:2]
+    max_mask_h, max_mask_w = max_bbox_shape
+    max_delta_h, max_delta_w = max_bbox_delta
+    margin_h, margin_w = min_margin
+
+    if max_mask_h > img_h or max_mask_w > img_w:
+        raise ValueError(f'mask shape {max_bbox_shape} should be smaller than '
+                         f'image shape {img_shape}')
+    if (max_delta_h // 2 * 2 >= max_mask_h
+            or max_delta_w // 2 * 2 >= max_mask_w):
+        raise ValueError(f'mask delta {max_bbox_delta} should be smaller than'
+                         f'mask shape {max_bbox_shape}')
+    if img_h - max_mask_h < 2 * margin_h or img_w - max_mask_w < 2 * margin_w:
+        raise ValueError(f'Margin {min_margin} cannot be satisfied for img'
+                         f'shape {img_shape} and mask shape {max_bbox_shape}')
+
+    # get the max value of (top, left)
+    max_top = img_h - margin_h - max_mask_h
+    max_left = img_w - margin_w - max_mask_w
+    # randomly select a (top, left)
+    top = np.random.randint(margin_h, max_top)
+    left = np.random.randint(margin_w, max_left)
+    # randomly shrink the shape of mask box according to `max_bbox_delta`
+    # the center of box is fixed
+    delta_top = np.random.randint(0, max_delta_h // 2 + 1)
+    delta_left = np.random.randint(0, max_delta_w // 2 + 1)
+    top = top + delta_top
+    left = left + delta_left
+    h = max_mask_h - delta_top
+    w = max_mask_w - delta_left
+    return (top, left, h, w)
 
 
 def random_irregular_mask(img_shape,
