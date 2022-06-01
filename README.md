@@ -75,7 +75,10 @@ hope MMEditing could provide better experience.
 
 ## News
 
-- \[2022-05-20\] Support FLAVR.
+- \[2022-06-01\] v0.15.0 was released.
+  - Support FLAVR
+  - Support AOT-GAN
+  - Support CAIN with ReduceLROnPlateau Scheduler
 - \[2022-04-01\] v0.14.0 was released.
   - Support TOFlow in video frame interpolation
 - \[2022-03-01\] v0.13.0 was released.

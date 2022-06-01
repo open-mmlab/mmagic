@@ -4,8 +4,9 @@
 
 **Highlights**
 
-1. Support AOT-GAN
-2. Support FLAVR
+1. Support FLAVR
+2. Support AOT-GAN
+3. Support CAIN with ReduceLROnPlateau Scheduler
 
 **New Features**
 
@@ -20,7 +21,8 @@
 - Support `after_val_epoch` in IterBaseRunner ([#861](https://github.com/open-mmlab/mmediting/pull/861))
 - Support FLAVR Net ([#866](https://github.com/open-mmlab/mmediting/pull/866), [#867](https://github.com/open-mmlab/mmediting/pull/867), [#897](https://github.com/open-mmlab/mmediting/pull/897))
 - Support MAE metric ([#871](https://github.com/open-mmlab/mmediting/pull/871))
-- use mdformat ([#888](https://github.com/open-mmlab/mmediting/pull/888))
+- Use mdformat ([#888](https://github.com/open-mmlab/mmediting/pull/888))
+- Support CAIN with ReduceLROnPlateau Scheduler ([#906](https://github.com/open-mmlab/mmediting/pull/906))
 
 **Bug Fixes**
 
@@ -51,7 +53,6 @@
 - Move wiki/installation to docs ([#883](https://github.com/open-mmlab/mmediting/pull/883))
 - Add `myst_heading_anchors` ([#887](https://github.com/open-mmlab/mmediting/pull/887))
 - Use checkpoint link in inpainting demo ([#892](https://github.com/open-mmlab/mmediting/pull/892))
-- Update config and README of CAIN ([#906](https://github.com/open-mmlab/mmediting/pull/906))
 
 **Contributors**
 
