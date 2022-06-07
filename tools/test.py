@@ -1,40 +1,23 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import os
+import os.path as osp
 
-import mmcv
-import torch
-from mmcv import Config, DictAction
-from mmcv.parallel import MMDataParallel
-from mmcv.runner import get_dist_info, init_dist, load_checkpoint
+from mmengine.config import Config, DictAction
+from mmengine.logging import MMLogger
+from mmengine.runner import Runner
 
-from mmedit.apis import multi_gpu_test, set_random_seed, single_gpu_test
-from mmedit.core.distributed_wrapper import DistributedDataParallelWrapper
-from mmedit.datasets import build_dataloader, build_dataset
-from mmedit.models import build_model
-from mmedit.utils import setup_multi_processes
+from mmedit.utils import register_all_modules
 
 
+# TODO: support fuse_conv_bn, visualization, and format_only
 def parse_args():
-    parser = argparse.ArgumentParser(description='mmediting tester')
+    parser = argparse.ArgumentParser(description='Test (and eval) a model')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
-    parser.add_argument('--seed', type=int, default=None, help='random seed')
     parser.add_argument(
-        '--deterministic',
-        action='store_true',
-        help='whether to set deterministic options for CUDNN backend.')
-    parser.add_argument('--out', help='output result pickle file')
-    parser.add_argument(
-        '--gpu-collect',
-        action='store_true',
-        help='whether to use gpu to collect results')
-    parser.add_argument(
-        '--save-path',
-        default=None,
-        type=str,
-        help='path to store images and if not given, will not save image')
-    parser.add_argument('--tmpdir', help='tmp dir for writing some results')
+        '--work-dir',
+        help='the directory to save the file containing evaluation metrics')
     parser.add_argument(
         '--cfg-options',
         nargs='+',
@@ -60,96 +43,38 @@ def parse_args():
 def main():
     args = parse_args()
 
-    cfg = Config.fromfile(args.config)
+    # register all modules in mmedit into the registries
+    # do not init the default scope here because it will be init in the runner
+    register_all_modules(init_default_scope=False)
 
+    # load config
+    cfg = Config.fromfile(args.config)
+    cfg.launcher = args.launcher
     if args.cfg_options is not None:
         cfg.merge_from_dict(args.cfg_options)
 
-    # set multi-process settings
-    setup_multi_processes(cfg)
+    # work_dir is determined in this priority: CLI > segment in file > filename
+    if args.work_dir is not None:
+        # update configs according to CLI args if args.work_dir is not None
+        cfg.work_dir = args.work_dir
+    elif cfg.get('work_dir', None) is None:
+        # use config filename as default work_dir if cfg.work_dir is None
+        cfg.work_dir = osp.join('./work_dirs',
+                                osp.splitext(osp.basename(args.config))[0])
 
-    # set cudnn_benchmark
-    if cfg.get('cudnn_benchmark', False):
-        torch.backends.cudnn.benchmark = True
-    cfg.model.pretrained = None
+    cfg.load_from = args.checkpoint
+    if cfg.load_from:
+        # No need to initialize pretrainded model if checkpoint is provided
+        cfg.model.pretrained = None
 
-    # init distributed env first, since logger depends on the dist info.
-    if args.launcher == 'none':
-        distributed = False
-    else:
-        distributed = True
-        init_dist(args.launcher, **cfg.dist_params)
+    # Create mmedit logger
+    MMLogger.get_instance(name='mmedit', logger_name='mmedit')
 
-    rank, _ = get_dist_info()
+    # build the runner from config
+    runner = Runner.from_cfg(cfg)
 
-    # set random seeds
-    if args.seed is not None:
-        if rank == 0:
-            print('set random seed to', args.seed)
-        set_random_seed(args.seed, deterministic=args.deterministic)
-
-    # build the dataloader
-    # TODO: support multiple images per gpu (only minor changes are needed)
-    dataset = build_dataset(cfg.data.test)
-
-    loader_cfg = {
-        **dict((k, cfg.data[k]) for k in ['workers_per_gpu'] if k in cfg.data),
-        **dict(
-            samples_per_gpu=1,
-            drop_last=False,
-            shuffle=False,
-            dist=distributed),
-        **cfg.data.get('test_dataloader', {})
-    }
-
-    data_loader = build_dataloader(dataset, **loader_cfg)
-
-    # build the model and load checkpoint
-    model = build_model(cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
-
-    args.save_image = args.save_path is not None
-    empty_cache = cfg.get('empty_cache', False)
-    if not distributed:
-        _ = load_checkpoint(model, args.checkpoint, map_location='cpu')
-        model = MMDataParallel(model, device_ids=[0])
-        outputs = single_gpu_test(
-            model,
-            data_loader,
-            save_path=args.save_path,
-            save_image=args.save_image)
-    else:
-        find_unused_parameters = cfg.get('find_unused_parameters', False)
-        model = DistributedDataParallelWrapper(
-            model,
-            device_ids=[torch.cuda.current_device()],
-            broadcast_buffers=False,
-            find_unused_parameters=find_unused_parameters)
-
-        device_id = torch.cuda.current_device()
-        _ = load_checkpoint(
-            model,
-            args.checkpoint,
-            map_location=lambda storage, loc: storage.cuda(device_id))
-        outputs = multi_gpu_test(
-            model,
-            data_loader,
-            args.tmpdir,
-            args.gpu_collect,
-            save_path=args.save_path,
-            save_image=args.save_image,
-            empty_cache=empty_cache)
-
-    if rank == 0 and 'eval_result' in outputs[0]:
-        print('')
-        # print metrics
-        stats = dataset.evaluate(outputs)
-        for stat in stats:
-            print('Eval-{}: {}'.format(stat, stats[stat]))
-
-        # save result pickle
-        if args.out:
-            print('writing results to {}'.format(args.out))
-            mmcv.dump(outputs, args.out)
+    # start testing
+    runner.test()
 
 
 if __name__ == '__main__':
