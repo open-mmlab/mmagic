@@ -28,8 +28,8 @@ Image matting is a fundamental computer vision problem and has many applications
 
 **NOTE**
 
-- stage1: train the encoder-decoder part without the refinement part. \\
-- stage2: fix the encoder-decoder part and train the refinement part. \\
+- stage1: train the encoder-decoder part without the refinement part.
+- stage2: fix the encoder-decoder part and train the refinement part.
 - stage3: fine-tune the whole network.
 
 > The performance of the model is not stable during the training. Thus, the reported performance is not from the last checkpoint. Instead, it is the best performance of all validations during training.
