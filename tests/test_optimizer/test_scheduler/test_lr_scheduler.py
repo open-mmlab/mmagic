@@ -1,13 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from unittest import TestCase
 
+import pytest
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
+from mmengine import MessageHub
 from mmengine.optim import _ParamScheduler
 from mmengine.testing import assert_allclose
 
-from mmedit.optimizer import LinearLRWithInterval
+from mmedit.optimizer import LinearLRWithInterval, ReduceLR
 
 
 class ToyModel(torch.nn.Module):
@@ -121,3 +123,76 @@ class TestLRScheduler(TestCase):
             start_factor=start_factor,
             epoch_length=epoch_length)
         self._test_scheduler_value(scheduler, targets, epochs)
+
+    def test_reduce_lr_scheduler(self):
+
+        message_hub = MessageHub.get_instance('reduce_lr')
+
+        scheduler = ReduceLR(self.optimizer, patience=1)
+        scheduler.last_step = 0
+        results = scheduler._get_value()
+        assert results == [0.05]
+        assert scheduler.num_bad_epochs == 0
+        scheduler.last_step = 1
+        message_hub.update_scalar('value', 1)
+        results = scheduler._get_value()
+        assert results == [0.05]
+        assert scheduler.num_bad_epochs == 0
+        message_hub.update_scalar('value', 1)
+        results = scheduler._get_value()
+        assert results == [0.05]
+        assert scheduler.num_bad_epochs == 1
+        message_hub.update_scalar('value', 1)
+        results = scheduler._get_value()
+        assert abs(results[0] - 0.005) < 1e-8
+        assert scheduler.num_bad_epochs == 0
+
+        scheduler = ReduceLR(self.optimizer, patience=1, mode='max')
+        scheduler.last_step = 0
+        results = scheduler._get_value()
+        assert results == [0.05]
+        assert scheduler.num_bad_epochs == 0
+        scheduler.last_step = 1
+        message_hub.update_scalar('value', 1)
+        results = scheduler._get_value()
+        assert results == [0.05]
+        assert scheduler.num_bad_epochs == 0
+        message_hub.update_scalar('value', 1)
+        results = scheduler._get_value()
+        assert results == [0.05]
+        assert scheduler.num_bad_epochs == 1
+        message_hub.update_scalar('value', 1)
+        results = scheduler._get_value()
+        assert abs(results[0] - 0.005) < 1e-8
+        assert scheduler.num_bad_epochs == 0
+
+        scheduler = ReduceLR(
+            self.optimizer, patience=1, mode='max', threshold_mode='abs')
+        scheduler.last_step = 1
+        message_hub.update_scalar('value', 1)
+        results = scheduler._get_value()
+        assert results == [0.05]
+        assert scheduler.num_bad_epochs == 0
+        message_hub.update_scalar('value', 1)
+        results = scheduler._get_value()
+        assert results == [0.05]
+        assert scheduler.num_bad_epochs == 1
+
+        scheduler = ReduceLR(
+            self.optimizer, patience=1, mode='min', threshold_mode='abs')
+        scheduler.last_step = 1
+        message_hub.update_scalar('value', 1)
+        results = scheduler._get_value()
+        assert results == [0.05]
+        assert scheduler.num_bad_epochs == 0
+        message_hub.update_scalar('value', 1)
+        results = scheduler._get_value()
+        assert results == [0.05]
+        assert scheduler.num_bad_epochs == 1
+
+        with pytest.raises(ValueError):
+            ReduceLR(self.optimizer, mode='ysli')
+        with pytest.raises(ValueError):
+            ReduceLR(self.optimizer, threshold_mode='ysli')
+        with pytest.raises(ValueError):
+            ReduceLR(self.optimizer, factor=1.5)
