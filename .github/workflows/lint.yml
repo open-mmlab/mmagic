@@ -20,11 +20,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
-      - name: Install ruby
-        run: |
-          # markdownlint requires ruby >= 2.7
-          sudo apt-get update
-          sudo apt install ruby
       - name: Install pre-commit hook
         run: |
           pip install pre-commit

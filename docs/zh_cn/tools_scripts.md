@@ -86,14 +86,14 @@ python tools/pytorch2onnx.py
 
 下表列出了保证可导出到 ONNX 并可在 ONNX Runtime 中运行的模型。
 
-|    模型    |                                                                                 配置                                                                                  | 动态形状 | 批量推理 | 备注  |
-| :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--: | :--: | :-: |
-|  ESRGAN  |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |  Y   |  Y   |     |
-|  ESRGAN  | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |  Y   |  Y   |     |
-|  SRCNN   |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |  Y   |  Y   |     |
-|   DIM    |      [dim_stage3_v16_pln_1x1_1000k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py)       |  Y   |  Y   |     |
-|   GCA    |                 [gca_r34_4x10_200k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/gca/gca_r34_4x10_200k_comp1k.py)                  |  N   |  Y   |     |
-| IndexNet |         [indexnet_mobv2_1x16_78k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k.py)         |  Y   |  Y   |     |
+|   模型   |                                                                                配置                                                                                 | 动态形状 | 批量推理 | 备注 |
+| :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------: | :------: | :--: |
+|  ESRGAN  |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |    Y     |    Y     |      |
+|  ESRGAN  | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |    Y     |    Y     |      |
+|  SRCNN   |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |    Y     |    Y     |      |
+|   DIM    |      [dim_stage3_v16_pln_1x1_1000k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py)       |    Y     |    Y     |      |
+|   GCA    |                 [gca_r34_4x10_200k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/gca/gca_r34_4x10_200k_comp1k.py)                  |    N     |    Y     |      |
+| IndexNet |         [indexnet_mobv2_1x16_78k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k.py)         |    Y     |    Y     |      |
 
 **注**：
 
@@ -142,11 +142,11 @@ python tools/onnx2tensorrt.py
 
 下表列出了保证可导出到 TensorRT 引擎并可在 TensorRT 中运行的模型。
 
-|   模型   |                                                                                 配置                                                                                  | 动态形状 | 批量推理 |              备注               |
-| :----: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--: | :--: | :---------------------------: |
-| ESRGAN |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |  Y   |  Y   |                               |
-| ESRGAN | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |  Y   |  Y   |                               |
-| SRCNN  |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |  Y   |  Y   | 'bicubic' 上采样必须替换为 'bilinear' |
+|  模型  |                                                                                配置                                                                                 | 动态形状 | 批量推理 |                 备注                  |
+| :----: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------: | :------: | :-----------------------------------: |
+| ESRGAN |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |    Y     |    Y     |                                       |
+| ESRGAN | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |    Y     |    Y     |                                       |
+| SRCNN  |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |    Y     |    Y     | 'bicubic' 上采样必须替换为 'bilinear' |
 
 **注**：
 
