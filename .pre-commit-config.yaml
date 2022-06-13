@@ -30,12 +30,12 @@ repos:
       - id: codespell
         args: ["--skip", "*.ipynb", "-L", "formating,theis"]
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.14
+    rev: 0.7.9
     hooks:
       - id: mdformat
         args: ["--number"]
         additional_dependencies:
-          - mdformat-gfm
+          - mdformat-openmmlab
           - mdformat_frontmatter
           - linkify-it-py
   - repo: local
