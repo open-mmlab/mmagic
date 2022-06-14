@@ -7,7 +7,7 @@ from mmengine.config import Config, DictAction
 from mmengine.logging import MMLogger
 from mmengine.runner import Runner
 
-from mmedit.utils import register_all_modules
+from mmedit.registry import register_all_modules
 
 
 def parse_args():

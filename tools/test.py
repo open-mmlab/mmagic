@@ -7,7 +7,7 @@ from mmengine.config import Config, DictAction
 from mmengine.logging import MMLogger
 from mmengine.runner import Runner
 
-from mmedit.utils import register_all_modules
+from mmedit.registry import register_all_modules
 
 
 # TODO: support fuse_conv_bn, visualization, and format_only
