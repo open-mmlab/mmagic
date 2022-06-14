@@ -19,4 +19,4 @@ Models:
         PSNR: 36.334
         SSIM: 0.96015
     Task: Video_interpolators
-  Weights: https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995-c2468995.pth
+  Weights: https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth
