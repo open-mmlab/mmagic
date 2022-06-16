@@ -90,13 +90,13 @@ jobs:
       - name: Show pip list
         run: pip list
       - name: Run unittests and generate coverage report
-        if: ${{ contains( ${{ matrix.torch }}, 'cu' ) }}
+        if: ${{ contains( matrix.torch , 'cu' ) }}
         run: |
           coverage run --branch --source mmedit -m pytest tests/ -sv
           coverage xml
           coverage report -m
       - name: Upload coverage to Codecov
-        if: ${{ contains( ${{ matrix.torch }}, 'cu' ) }}
+        if: ${{ contains( matrix.torch , 'cu' ) }}
         uses: codecov/codecov-action@v2
         with:
           file: ./coverage.xml
