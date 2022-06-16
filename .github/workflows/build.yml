@@ -83,7 +83,7 @@ jobs:
       - name: Install MMCV ${{ matrix.mmcv_link }}
         run: |
           pip install openmim
-          mim install mmcv-full --only-binary
+          mim install mmcv-full
           python -c 'import mmcv; import mmcv._ext; print(mmcv.__version__)'
       - name: Build and install
         run: pip install -e .[all]
