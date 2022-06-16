@@ -47,8 +47,10 @@ jobs:
       - name: Show systeminfo
         run: systeminfo
       - name: Run unittests
+        if: ${{ contains( matrix.torch , 'cpu' ) }}
         run: coverage run --branch --source mmedit -m pytest tests -sv
       - name: Generate coverage report
+        if: ${{ contains( matrix.torch , 'cpu' ) }}
         run: |
           coverage xml
           coverage report -m
