@@ -129,23 +129,35 @@ class PackEditInputs(BaseTransform):
             gt_heatmap_tensor = images_to_tensor(gt_heatmap)
             data_sample.gt_heatmap = PixelData(data=gt_heatmap_tensor)
 
+        if 'merged' in results:
+            # image in matting annotation is named merged
+            img = results.pop('merged')
+            img_tensor = images_to_tensor(img)
+            # used for model inputs
+            packed_results['inputs'] = img_tensor
+            # used as ground truth for composition losses
+            data_sample.gt_merged = PixelData(data=img_tensor.clone())
+
         if 'trimap' in results:
             trimap = results.pop('trimap')
             trimap_tensor = images_to_tensor(trimap)
             data_sample.trimap = PixelData(data=trimap_tensor)
 
-        if 'gt_alpha' in results:
-            gt_alpha = results.pop('gt_alpha')
+        if 'alpha' in results:
+            # gt_alpha in matting annotation is named alpha
+            gt_alpha = results.pop('alpha')
             gt_alpha_tensor = images_to_tensor(gt_alpha)
             data_sample.gt_alpha = PixelData(data=gt_alpha_tensor)
 
-        if 'gt_fg' in results:
-            gt_fg = results.pop('gt_fg')
+        if 'fg' in results:
+            # gt_fg in matting annotation is named fg
+            gt_fg = results.pop('fg')
             gt_fg_tensor = images_to_tensor(gt_fg)
             data_sample.gt_fg = PixelData(data=gt_fg_tensor)
 
-        if 'gt_bg' in results:
-            gt_bg = results.pop('gt_bg')
+        if 'bg' in results:
+            # gt_bg in matting annotation is named bg
+            gt_bg = results.pop('bg')
             gt_bg_tensor = images_to_tensor(gt_bg)
             data_sample.gt_bg = PixelData(data=gt_bg_tensor)
 

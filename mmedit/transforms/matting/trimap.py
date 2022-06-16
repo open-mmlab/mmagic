@@ -4,21 +4,19 @@
 import cv2
 import mmcv
 import numpy as np
-import torch
-import torch.nn.functional as F
 from mmcv.transforms import BaseTransform
 
 from mmedit.registry import TRANSFORMS
 
 
 @TRANSFORMS.register_module()
-class FormatTrimap:
+class FormatTrimap(BaseTransform):
     """Convert trimap (tensor) to one-hot representation.
 
     It transforms the trimap label from (0, 128, 255) to (0, 1, 2). If
     ``to_onehot`` is set to True, the trimap will convert to one-hot tensor of
     shape (3, H, W). Required key is "trimap", added or modified key are
-    "trimap" and "to_onehot".
+    "trimap" and "format_trimap_to_onehot".
 
     Args:
         to_onehot (bool): whether convert trimap to one-hot tensor. Default:
@@ -39,15 +37,20 @@ class FormatTrimap:
             dict: A dict containing the processed data and information.
         """
         trimap = results['trimap'].squeeze()
-        trimap[trimap == 128] = 1
-        trimap[trimap == 255] = 2
+        assert trimap.ndim == 2
+
         if self.to_onehot:
-            trimap = F.one_hot(trimap.to(torch.long), num_classes=3)
-            trimap = trimap.permute(2, 0, 1)
+            trimap_one_hot = np.zeros((*trimap.shape, 3), dtype=np.uint8)
+            trimap_one_hot[..., 0][trimap == 0] = 1
+            trimap_one_hot[..., 1][trimap == 128] = 1
+            trimap_one_hot[..., 2][trimap == 255] = 1
+            results['trimap'] = trimap_one_hot
         else:
-            trimap = trimap[None, ...]  # expand the channels dimension
-        results['trimap'] = trimap.float()
-        results['meta'].data['to_onehot'] = self.to_onehot
+            trimap[trimap == 128] = 1
+            trimap[trimap == 255] = 2
+            results['trimap'] = trimap
+
+        results['format_trimap_to_onehot'] = self.to_onehot
         return results
 
     def __repr__(self):
@@ -139,7 +142,7 @@ class GenerateTrimap(BaseTransform):
         trimap.fill(128)
         trimap[eroded >= 255] = 255
         trimap[dilated <= 0] = 0
-        results['trimap'] = trimap.astype(np.float32)
+        results['trimap'] = trimap
         return results
 
     def __repr__(self):
@@ -190,9 +193,9 @@ class GenerateTrimapWithDistTransform(BaseTransform):
             1, self.dist_thr) if self.random else self.dist_thr
         unknown = dist_to_unknown <= dist_thr
 
-        trimap = (alpha == 255) * 255
+        trimap = (alpha == 255).astype(np.uint8) * 255
         trimap[unknown] = 128
-        results['trimap'] = trimap.astype(np.uint8)
+        results['trimap'] = trimap
         return results
 
     def __repr__(self):

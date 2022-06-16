@@ -44,10 +44,11 @@ def test_pack_edit_inputs():
         ref=np.random.rand(64, 62, 3),
         mask=np.random.rand(64, 63, 3),
         gt_heatmap=np.random.rand(64, 65, 3),
+        merged=np.random.rand(64, 64, 3),
         trimap=np.random.rand(64, 66, 3),
-        gt_alpha=np.random.rand(64, 67, 3),
-        gt_fg=np.random.rand(64, 68, 3),
-        gt_bg=np.random.rand(64, 69, 3),
+        alpha=np.random.rand(64, 67, 3),
+        fg=np.random.rand(64, 68, 3),
+        bg=np.random.rand(64, 69, 3),
         img_shape=(64, 64),
         a='b')
 
@@ -78,19 +79,23 @@ def test_pack_edit_inputs():
     gt_heatmap_tensor = gt_heatmap_tensor.permute(2, 0, 1)
     assert_tensor_equal(data_sample.gt_heatmap.data, gt_heatmap_tensor)
 
+    gt_merged_tensor = to_tensor(ori_results['merged'])
+    gt_merged_tensor = gt_merged_tensor.permute(2, 0, 1)
+    assert_tensor_equal(data_sample.gt_merged.data, gt_merged_tensor)
+
     trimap_tensor = to_tensor(ori_results['trimap'])
     trimap_tensor = trimap_tensor.permute(2, 0, 1)
     assert_tensor_equal(data_sample.trimap.data, trimap_tensor)
 
-    gt_alpha_tensor = to_tensor(ori_results['gt_alpha'])
+    gt_alpha_tensor = to_tensor(ori_results['alpha'])
     gt_alpha_tensor = gt_alpha_tensor.permute(2, 0, 1)
     assert_tensor_equal(data_sample.gt_alpha.data, gt_alpha_tensor)
 
-    gt_fg_tensor = to_tensor(ori_results['gt_fg'])
+    gt_fg_tensor = to_tensor(ori_results['fg'])
     gt_fg_tensor = gt_fg_tensor.permute(2, 0, 1)
     assert_tensor_equal(data_sample.gt_fg.data, gt_fg_tensor)
 
-    gt_bg_tensor = to_tensor(ori_results['gt_bg'])
+    gt_bg_tensor = to_tensor(ori_results['bg'])
     gt_bg_tensor = gt_bg_tensor.permute(2, 0, 1)
     assert_tensor_equal(data_sample.gt_bg.data, gt_bg_tensor)
 

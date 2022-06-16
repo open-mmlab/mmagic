@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import pytest
 
-from mmedit.transforms.matting import (GenerateTrimap,
+from mmedit.transforms.matting import (FormatTrimap, GenerateTrimap,
                                        GenerateTrimapWithDistTransform,
                                        TransformTrimap)
 
@@ -79,6 +79,36 @@ def generate_ref_trimap(alpha, kernel_size, iterations, random):
     ref_trimap[eroded >= 255] = 255
     ref_trimap[dilated <= 0] = 0
     return ref_trimap
+
+
+def test_format_trimap():
+    ori_trimap = np.random.randint(3, size=(64, 64))
+    ori_trimap[ori_trimap == 1] = 128
+    ori_trimap[ori_trimap == 2] = 255
+
+    results = dict(trimap=ori_trimap.copy())
+    format_trimap = FormatTrimap(to_onehot=False)
+    results = format_trimap(results)
+    result_trimap = results['trimap']
+    assert repr(format_trimap) == format_trimap.__class__.__name__ + (
+        '(to_onehot=False)')
+    assert result_trimap.shape == (64, 64)
+    assert ((result_trimap == 0) == (ori_trimap == 0)).all()
+    assert ((result_trimap == 1) == (ori_trimap == 128)).all()
+    assert ((result_trimap == 2) == (ori_trimap == 255)).all()
+    assert results['format_trimap_to_onehot'] is False
+
+    results = dict(trimap=ori_trimap.copy())
+    format_trimap = FormatTrimap(to_onehot=True)
+    results = format_trimap(results)
+    result_trimap = results['trimap']
+    assert repr(format_trimap) == format_trimap.__class__.__name__ + (
+        '(to_onehot=True)')
+    assert result_trimap.shape == (64, 64, 3)
+    assert ((result_trimap[..., 0] == 1) == (ori_trimap == 0)).all()
+    assert ((result_trimap[..., 1] == 1) == (ori_trimap == 128)).all()
+    assert ((result_trimap[..., 2] == 1) == (ori_trimap == 255)).all()
+    assert results['format_trimap_to_onehot'] is True
 
 
 def test_generate_trimap():
