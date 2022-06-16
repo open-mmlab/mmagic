@@ -41,7 +41,7 @@ jobs:
           mim install mmcv-full
           python -c 'import mmcv; import mmcv._ext; print(mmcv.__version__)'
       - name: Build and install
-        run: pip install -e .
+        run: pip install -e .[all]
       - name: Show pip list
         run: pip list
       - name: Show systeminfo
