@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import copy
+from copy import deepcopy
+from typing import Dict
 
 from mmcv.transforms import BaseTransform
 
@@ -54,7 +55,7 @@ class CopyValues(BaseTransform):
         """
 
         for (src_key, dst_key) in zip(self.src_keys, self.dst_keys):
-            results[dst_key] = copy.deepcopy(results[src_key])
+            results[dst_key] = deepcopy(results[src_key])
 
         return results
 
@@ -63,5 +64,53 @@ class CopyValues(BaseTransform):
         repr_str = self.__class__.__name__
         repr_str += (f'(src_keys={self.src_keys})')
         repr_str += (f'(dst_keys={self.dst_keys})')
+
+        return repr_str
+
+
+@TRANSFORMS.register_module()
+class SetValues(BaseTransform):
+    """Set value to destination keys.
+
+    It does the following: results[key] = value
+
+    Added keys are the keys in the dictionary.
+
+    Required Keys:
+
+    - None
+
+    Added or Modifyed Keys:
+
+    - keys in the dictionary
+
+    Args:
+        dictionary (dict): The dictionary to update.
+    """
+
+    def __init__(self, dictionary):
+
+        self.dictionary = dictionary
+
+    def transform(self, results: Dict):
+        """transform function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict with a key added/modified.
+        """
+
+        dictionary = deepcopy(self.dictionary)
+        results.update(dictionary)
+
+        return results
+
+    def __repr__(self):
+
+        repr_str = self.__class__.__name__
+        repr_str += (f'(dictionary={self.dictionary})')
 
         return repr_str

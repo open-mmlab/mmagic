@@ -17,7 +17,7 @@ from .random_degradations import (DegradationsWithShuffle, RandomBlur,
                                   RandomJPEGCompression, RandomNoise,
                                   RandomResize, RandomVideoCompression)
 from .random_down_sampling import RandomDownSampling
-from .values import CopyValues
+from .values import CopyValues, SetValues
 
 __all__ = [
     'BinarizeImage',
@@ -53,6 +53,7 @@ __all__ = [
     'RandomTransposeHW',
     'RandomVideoCompression',
     'Resize',
+    'SetValues',
     'TemporalReverse',
     'ToTensor',
     'UnsharpMasking',

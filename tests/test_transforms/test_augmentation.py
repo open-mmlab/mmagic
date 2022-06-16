@@ -11,7 +11,7 @@ from mmedit.transforms import (BinarizeImage, Clip, ColorJitter, CopyValues,
                                GenerateSegmentIndices, MirrorSequence,
                                RandomAffine, RandomMaskDilation,
                                RandomRotation, RandomTransposeHW, Resize,
-                               TemporalReverse, UnsharpMasking)
+                               SetValues, TemporalReverse, UnsharpMasking)
 
 
 class TestAugmentations:
@@ -429,8 +429,12 @@ class TestAugmentations:
             sequence_length=100)
 
         target_keys = [
-            'img_path', 'gt_path', 'key', 'interval', 'num_input_frames',
-            'sequence_length'
+            'img_path',
+            'gt_path',
+            'key',
+            'interval',
+            'num_input_frames',
+            'sequence_length',
         ]
         frame_index_generator = GenerateSegmentIndices(interval_list=[1, 5, 9])
         rlt = frame_index_generator(copy.deepcopy(results))
@@ -737,29 +741,23 @@ class TestAugmentations:
             f'keep_ratio={False}, size_factor=None, '
             'max_size=None, interpolation=bilinear)')
 
-    def test_unsharp_masking(self):
-        results = {}
+    def test_set_value(self):
 
-        unsharp_masking = UnsharpMasking(
-            kernel_size=15, sigma=0, weight=0.5, threshold=10, keys=['gt'])
-
-        # single image
-        results['gt'] = np.zeros((8, 8, 3)).astype(np.float32)
-        results = unsharp_masking(results)
-        assert isinstance(results['gt_unsharp'], np.ndarray)
-
-        # sequence of images
-        results['gt'] = [np.zeros((8, 8, 3)).astype(np.float32)] * 2
-        results = unsharp_masking(results)
-        assert isinstance(results['gt_unsharp'], list)
-
-        assert repr(unsharp_masking) == unsharp_masking.__class__.__name__ + (
-            "(keys=['gt'], kernel_size=15, sigma=0, weight=0.5, threshold=10)")
-
-        # kernel_size must be odd
+        with pytest.raises(AssertionError):
+            CopyValues(src_keys='gt', dst_keys='img')
         with pytest.raises(ValueError):
-            unsharp_masking = UnsharpMasking(
-                kernel_size=10, sigma=0, weight=0.5, threshold=10, keys=['gt'])
+            CopyValues(src_keys=['gt', 'gt'], dst_keys=['img'])
+
+        results = {}
+        results['gt'] = np.zeros((1)).astype(np.float32)
+        dictionary = dict(a='b')
+
+        set_values = SetValues(dictionary=dictionary)
+        new_results = set_values(results)
+        for key in dictionary.keys():
+            assert new_results[key] == dictionary[key]
+        assert repr(set_values) == (
+            set_values.__class__.__name__ + f'(dictionary={dictionary})')
 
     def test_temporal_reverse(self):
         img_lq1 = np.random.rand(4, 4, 3).astype(np.float32)
@@ -786,3 +784,27 @@ class TestAugmentations:
         np.testing.assert_almost_equal(results['lq'][0], img_lq1)
         np.testing.assert_almost_equal(results['lq'][1], img_lq2)
         np.testing.assert_almost_equal(results['gt'][0], img_gt)
+
+    def test_unsharp_masking(self):
+        results = {}
+
+        unsharp_masking = UnsharpMasking(
+            kernel_size=15, sigma=0, weight=0.5, threshold=10, keys=['gt'])
+
+        # single image
+        results['gt'] = np.zeros((8, 8, 3)).astype(np.float32)
+        results = unsharp_masking(results)
+        assert isinstance(results['gt_unsharp'], np.ndarray)
+
+        # sequence of images
+        results['gt'] = [np.zeros((8, 8, 3)).astype(np.float32)] * 2
+        results = unsharp_masking(results)
+        assert isinstance(results['gt_unsharp'], list)
+
+        assert repr(unsharp_masking) == unsharp_masking.__class__.__name__ + (
+            "(keys=['gt'], kernel_size=15, sigma=0, weight=0.5, threshold=10)")
+
+        # kernel_size must be odd
+        with pytest.raises(ValueError):
+            unsharp_masking = UnsharpMasking(
+                kernel_size=10, sigma=0, weight=0.5, threshold=10, keys=['gt'])
