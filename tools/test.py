@@ -4,10 +4,10 @@ import os
 import os.path as osp
 
 from mmengine.config import Config, DictAction
-from mmengine.logging import MMLogger
 from mmengine.runner import Runner
 
 from mmedit.registry import register_all_modules
+from mmedit.utils import print_colored_log
 
 
 # TODO: support fuse_conv_bn, visualization, and format_only
@@ -63,15 +63,12 @@ def main():
                                 osp.splitext(osp.basename(args.config))[0])
 
     cfg.load_from = args.checkpoint
-    if cfg.load_from:
-        # No need to initialize pretrainded model if checkpoint is provided
-        cfg.model.pretrained = None
-
-    # Create mmedit logger
-    MMLogger.get_instance(name='mmedit', logger_name='mmedit')
 
     # build the runner from config
     runner = Runner.from_cfg(cfg)
+
+    print_colored_log(f'Working directory: {cfg.work_dir}')
+    print_colored_log(f'Log directiry: {runner._log_dir}')
 
     # start testing
     runner.test()

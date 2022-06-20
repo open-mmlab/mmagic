@@ -4,10 +4,10 @@ import os
 import os.path as osp
 
 from mmengine.config import Config, DictAction
-from mmengine.logging import MMLogger
 from mmengine.runner import Runner
 
 from mmedit.registry import register_all_modules
+from mmedit.utils import print_colored_log
 
 
 def parse_args():
@@ -51,7 +51,7 @@ def main():
         cfg.merge_from_dict(args.cfg_options)
 
     # work_dir is determined in this priority: CLI > segment in file > filename
-    if args.work_dir is not None:
+    if args.work_dir:  # none or empty str
         # update configs according to CLI args if args.work_dir is not None
         cfg.work_dir = args.work_dir
     elif cfg.get('work_dir', None) is None:
@@ -59,14 +59,17 @@ def main():
         cfg.work_dir = osp.join('./work_dirs',
                                 osp.splitext(osp.basename(args.config))[0])
 
-    # Create mmedit logger
-    MMLogger.get_instance(name='mmedit', logger_name='mmedit')
-
     # build the runner from config
     runner = Runner.from_cfg(cfg)
 
+    print_colored_log(f'Working directory: {cfg.work_dir}')
+    print_colored_log(f'Log directiry: {runner._log_dir}')
+
     # start training
     runner.train()
+
+    print_colored_log(f'Log saved under {runner._log_dir}')
+    print_colored_log(f'Checkpoint saved under {cfg.work_dir}')
 
 
 if __name__ == '__main__':
