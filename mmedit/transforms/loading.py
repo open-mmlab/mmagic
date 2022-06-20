@@ -1,11 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 import mmcv
 import numpy as np
-from mmcv.fileio import FileClient
 from mmcv.transforms import BaseTransform
+from mmengine.fileio import FileClient
 
 from ..registry import TRANSFORMS
 
@@ -43,8 +43,9 @@ class LoadImageFromFile(BaseTransform):
             Only support 'rgb2ycbcr' and 'rgb2ycbcr'
             Defaults to False.
         file_client_args (dict): Arguments to instantiate a FileClient.
-            See :class:`mmcv.fileio.FileClient` for details.
-            Defaults to ``dict(backend='disk')``.
+            If not specified, will infer from file uri.
+            See :class:`mmengine.fileio.FileClient` for details.
+            Defaults to ``None``.
     """
 
     def __init__(
@@ -57,7 +58,7 @@ class LoadImageFromFile(BaseTransform):
         to_float32: bool = False,
         to_y_channel: bool = False,
         save_original_img: bool = False,
-        file_client_args: dict = dict(backend='disk')
+        file_client_args: Optional[dict] = None,
     ) -> None:
 
         self.key = key
@@ -66,8 +67,13 @@ class LoadImageFromFile(BaseTransform):
         self.imdecode_backend = imdecode_backend
         self.save_original_img = save_original_img
 
-        self.file_client_args = file_client_args.copy()
-        self.file_client = FileClient(**self.file_client_args)
+        if file_client_args is None:
+            # lasy init at loading
+            self.file_client_args = dict()
+            self.file_client = None
+        else:
+            self.file_client_args = file_client_args.copy()
+            self.file_client = FileClient(**self.file_client_args)
 
         # cache
         self.use_cache = use_cache
@@ -131,8 +137,11 @@ class LoadImageFromFile(BaseTransform):
         Returns:
             np.ndarray: Image.
         """
+        if self.file_client is None:
+            self.file_client = FileClient.infer_client(
+                uri=filename, file_client_args=self.file_client_args)
 
-        if self.file_client_args.get('backend', 'disk') == 'lmdb':
+        if self.file_client_args.get('backend', None) == 'lmdb':
             filename, _ = osp.splitext(osp.basename(filename))
 
         if filename in self.cache:

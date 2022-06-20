@@ -4,6 +4,7 @@ from pathlib import Path
 import mmcv
 import numpy as np
 import pytest
+from mmengine.fileio.file_client import HardDiskBackend
 
 from mmedit.transforms import LoadImageFromFile
 
@@ -57,7 +58,8 @@ def test_load_image_from_file():
         ('(key=img, color_type=color, channel_order=bgr, '
          'imdecode_backend=cv2, use_cache=False, to_float32=False, '
          'to_y_channel=False, save_original_img=False, '
-         "file_client_args={'backend': 'disk'})"))
+         'file_client_args={})'))
+    assert isinstance(image_loader.file_client.client, HardDiskBackend)
 
     # test save_original_img
     results = dict(img_path=path_baboon)
@@ -79,13 +81,14 @@ def test_load_image_from_file():
         ('(key=gt, color_type=color, channel_order=bgr, '
          'imdecode_backend=cv2, use_cache=True, to_float32=False, '
          'to_y_channel=False, save_original_img=False, '
-         "file_client_args={'backend': 'disk'})"))
+         'file_client_args={})'))
     results = image_loader(results)
     assert image_loader.cache is not None
     assert str(path_baboon) in image_loader.cache
     assert results['gt'].shape == (h, w, 3)
     assert results['gt_path'] == path_baboon
     np.testing.assert_almost_equal(results['gt'], img_baboon)
+    assert isinstance(image_loader.file_client.client, HardDiskBackend)
 
     # convert to y-channel (bgr2y)
     results = dict(gt_path=path_baboon)
