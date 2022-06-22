@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from unittest.mock import Mock
 
+import pytest
 import torch
 import torch.nn.functional as F
 from mmengine import MessageHub
@@ -69,25 +70,6 @@ def test_reduce_lr_scheduler_hook():
     hook.after_val_iter(runner, 0, data_batch=[dict(a=1)] * 2)
     hook.after_val_epoch(runner)
 
-    hook = ReduceLRSchedulerHook(val_metric='PSNR', by_epoch=False, interval=2)
-    scheduler[0].by_epoch = False
-    hook.after_train_iter(runner, 0)
-    hook.after_train_epoch(runner)
-    runner.epoch = 0
-    hook.after_val_epoch(runner, metrics=dict(PSNR=40))
-    scheduler[0].step.assert_called()
-    value = hook.message_hub.get_scalar('value').current()
-    assert abs(value - 40) < 1e-8
-    assert abs(hook.sum_value - 0) < 1e-8, hook.sum_value
-    assert hook.count == 0
-    runner.epoch = 1
-    hook.after_val_epoch(runner, metrics=dict(PSNR=50))
-    scheduler[0].step.assert_called()
-    value = hook.message_hub.get_scalar('value').current()
-    assert abs(value - 50) < 1e-8
-    assert abs(hook.sum_value - 0) < 1e-8, hook.sum_value
-    assert hook.count == 0
-
     hook = ReduceLRSchedulerHook(val_metric='PSNR', by_epoch=True, interval=2)
     scheduler[0].by_epoch = False
     hook.after_train_iter(runner, 0)
@@ -103,3 +85,31 @@ def test_reduce_lr_scheduler_hook():
     assert abs(value - 45) < 1e-8
     assert abs(hook.sum_value - 0) < 1e-8, hook.sum_value
     assert hook.count == 0
+
+    hook = ReduceLRSchedulerHook(val_metric='PSNR', by_epoch=False, interval=2)
+    scheduler[0].by_epoch = False
+    hook.after_train_iter(runner, 0)
+    hook.after_train_epoch(runner)
+    runner.epoch = 0
+    hook.after_val_epoch(runner, metrics=dict(PSNR=40))
+    scheduler[0].step.assert_called()
+    value = hook.message_hub.get_scalar('value').current()
+    assert abs(value - 40) < 1e-8
+    assert abs(hook.sum_value - 0) < 1e-8, hook.sum_value
+    assert hook.count == 0
+    runner.epoch = 1
+    runner.param_schedulers = dict(scheduler=scheduler)
+    hook.after_val_epoch(runner, metrics=dict(PSNR=50))
+    scheduler[0].step.assert_called()
+    value = hook.message_hub.get_scalar('value').current()
+    assert abs(value - 50) < 1e-8
+    assert abs(hook.sum_value - 0) < 1e-8, hook.sum_value
+    assert hook.count == 0
+
+    with pytest.raises(AssertionError):
+        runner.param_schedulers = dict(a='')
+        hook.after_val_epoch(runner, metrics=dict(PSNR=50))
+
+    with pytest.raises(TypeError):
+        runner.param_schedulers = ''
+        hook.after_val_epoch(runner, metrics=dict(PSNR=50))

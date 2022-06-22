@@ -103,4 +103,19 @@ class ReduceLRSchedulerHook(ParamSchedulerHook):
             # call val after several iter
             # and update LR in each ``after_val_epoch``
             self._calculate_average_value()
-            self.after_train_epoch(runner=runner)
+
+            def step(param_schedulers):
+                assert isinstance(param_schedulers, list)
+                for scheduler in param_schedulers:
+                    scheduler.step()
+
+            if isinstance(runner.param_schedulers, list):
+                step(runner.param_schedulers)
+            elif isinstance(runner.param_schedulers, dict):
+                for param_schedulers in runner.param_schedulers.values():
+                    step(param_schedulers)
+            else:
+                raise TypeError(
+                    'runner.param_schedulers should be list of ParamScheduler '
+                    'or a dict containing list of ParamScheduler, '
+                    f'but got {runner.param_schedulers}')
