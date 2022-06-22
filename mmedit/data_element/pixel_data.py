@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import warnings
 from typing import Union
 
 import mmengine
@@ -75,10 +74,6 @@ class PixelData(mmengine.PixelData):
             assert value.ndim in [
                 2, 3, 4
             ], f'The dim of value must be 2, 3 or 4, but got {value.ndim}'
-            if value.ndim == 2:
-                value = value[None]
-                warnings.warn(f'The shape of value will convert from '
-                              f'{value.shape[-2:]} to {value.shape}')
 
             # call BaseDataElement.__setattr__
             super(mmengine.PixelData, self).__setattr__(name, value)

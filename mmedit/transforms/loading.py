@@ -179,8 +179,8 @@ class LoadImageFromFile(BaseTransform):
                 raise ValueError('Currently support only "bgr2ycbcr" or '
                                  '"bgr2ycbcr".')
 
-            if img.ndim == 2:
-                img = np.expand_dims(img, axis=2)
+        if img.ndim == 2:
+            img = np.expand_dims(img, axis=2)
 
         if self.to_float32:
             img = img.astype(np.float32)

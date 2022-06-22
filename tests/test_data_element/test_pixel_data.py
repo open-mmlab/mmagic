@@ -38,9 +38,3 @@ def test_pixel_data():
         # only 2,3,4 dim
         img_data = dict(tensor=torch.rand((3, 3, 3, 256, 256)))
         gt_img = PixelData(**img_data)
-
-    # test 2 dims, will cause warning
-    # UserWarning: The shape of value will convert from
-    # torch.Size([256, 256]) to torch.Size([1, 256, 256])
-    img_data = dict(tensor=torch.rand((256, 256)))
-    gt_img = PixelData(**img_data)

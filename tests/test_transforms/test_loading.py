@@ -66,8 +66,8 @@ def test_load_image_from_file():
     config = dict(key='img', color_type='grayscale', save_original_img=True)
     image_loader = LoadImageFromFile(**config)
     results = image_loader(results)
-    assert results['img'].shape == (h, w)
-    assert results['ori_img_shape'] == (h, w)
+    assert results['img'].shape == (h, w, 1)
+    assert results['ori_img_shape'] == (h, w, 1)
     np.testing.assert_almost_equal(results['ori_img'], results['img'])
     assert id(results['ori_img']) != id(results['img'])
 
