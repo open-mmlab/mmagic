@@ -10,10 +10,10 @@ from mmedit.metrics import SSIM, ssim
 
 def test_ssim():
 
-    mask = np.ones((32, 32, 3)) * 2
+    mask = np.ones((3, 32, 32)) * 2
     mask[:16] *= 0
-    data_batch = [dict(gt_img=np.ones((32, 32, 3)) * 2, mask=mask)]
-    predictions = [dict(pred_img=np.ones((32, 32, 3)))]
+    data_batch = [dict(gt_img=np.ones((3, 32, 32)) * 2, mask=mask)]
+    predictions = [dict(pred_img=np.ones((3, 32, 32)))]
 
     data_batch.append(
         {k: torch.from_numpy(deepcopy(v))

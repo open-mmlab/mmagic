@@ -34,15 +34,15 @@ class TestPixelMetrics:
         mae = MAE()
         mae.process(self.data_batch, self.predictions)
         result = mae.compute_metrics(mae.results)
-        assert 'SingleMAE' in result
-        np.testing.assert_almost_equal(result['SingleMAE'], 0.003921568627)
+        assert 'MAE' in result
+        np.testing.assert_almost_equal(result['MAE'], 0.003921568627)
 
         # Masked MAE
-        mae = MAE(mask_key='mask', prefix='MaskedMAE')
+        mae = MAE(mask_key='mask', prefix='MAE')
         mae.process(self.data_batch, self.predictions)
         result = mae.compute_metrics(mae.results)
-        assert 'MaskedMAE' in result
-        np.testing.assert_almost_equal(result['MaskedMAE'], 0.003921568627)
+        assert 'MAE' in result
+        np.testing.assert_almost_equal(result['MAE'], 0.003921568627)
 
     def test_mse(self):
 
@@ -50,15 +50,15 @@ class TestPixelMetrics:
         mae = MSE()
         mae.process(self.data_batch, self.predictions)
         result = mae.compute_metrics(mae.results)
-        assert 'SingleMSE' in result
-        np.testing.assert_almost_equal(result['SingleMSE'], 0.000015378700496)
+        assert 'MSE' in result
+        np.testing.assert_almost_equal(result['MSE'], 0.000015378700496)
 
         # Masked MSE
-        mae = MSE(mask_key='mask', prefix='MaskedMSE')
+        mae = MSE(mask_key='mask', prefix='MSE')
         mae.process(self.data_batch, self.predictions)
         result = mae.compute_metrics(mae.results)
-        assert 'MaskedMSE' in result
-        np.testing.assert_almost_equal(result['MaskedMSE'], 0.000015378700496)
+        assert 'MSE' in result
+        np.testing.assert_almost_equal(result['MSE'], 0.000015378700496)
 
     def test_psnr(self):
 

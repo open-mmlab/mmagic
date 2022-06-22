@@ -107,7 +107,10 @@ def reorder_image(img, input_order='HWC'):
         img = img[..., None]
         return img
     if input_order == 'CHW':
-        img = img.transpose(1, 2, 0)
+        if isinstance(img, np.ndarray):
+            img = img.transpose(1, 2, 0)
+        elif isinstance(img, torch.Tensor):
+            img = img.permute(1, 2, 0)
     return img
 
 

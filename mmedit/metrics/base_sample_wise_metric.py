@@ -30,7 +30,7 @@ class BaseSampleWiseMetric(BaseMetric):
             will be used instead. Default: None
     """
 
-    default_prefix = 'BaseEditMetric'
+    metric = None
 
     def __init__(self,
                  gt_key: str = 'gt_img',
@@ -55,6 +55,6 @@ class BaseSampleWiseMetric(BaseMetric):
             and the values are corresponding results.
         """
 
-        result = average(results, self.prefix)
+        result = average(results, self.metric)
 
-        return {self.prefix: result}
+        return {self.metric: result}

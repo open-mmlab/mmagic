@@ -46,7 +46,7 @@ class SSIM(BaseSampleWiseMetric):
         - SSIM (float): Structural similarity
     """
 
-    default_prefix = 'SSIM'
+    metric = 'SSIM'
 
     def __init__(self,
                  gt_key: str = 'gt_img',
@@ -54,7 +54,7 @@ class SSIM(BaseSampleWiseMetric):
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None,
                  crop_border=0,
-                 input_order='HWC',
+                 input_order='CHW',
                  convert_to=None) -> None:
         super().__init__(
             gt_key=gt_key,
@@ -90,7 +90,7 @@ class SSIM(BaseSampleWiseMetric):
                 input_order=self.input_order,
                 convert_to=self.convert_to)
 
-            self.results.append({self.prefix: result})
+            self.results.append({self.metric: result})
 
 
 def _ssim(img1, img2):

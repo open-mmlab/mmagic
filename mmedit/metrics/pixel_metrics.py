@@ -34,7 +34,7 @@ class MAE(BaseSampleWiseMetric):
         - MAE (float): Mean of Absolute Error
     """
 
-    default_prefix = 'SingleMAE'
+    metric = 'MAE'
 
     def process(self, data_batch: Sequence[dict],
                 predictions: Sequence[dict]) -> None:
@@ -66,7 +66,7 @@ class MAE(BaseSampleWiseMetric):
             else:
                 result = diff.mean()
 
-            self.results.append({self.prefix: result})
+            self.results.append({self.metric: result})
 
 
 @METRICS.register_module()
@@ -93,7 +93,7 @@ class MSE(BaseSampleWiseMetric):
         - MSE (float): Mean of Squared Error
     """
 
-    default_prefix = 'SingleMSE'
+    metric = 'MSE'
 
     def process(self, data_batch: Sequence[dict],
                 predictions: Sequence[dict]) -> None:
@@ -125,7 +125,7 @@ class MSE(BaseSampleWiseMetric):
             else:
                 result = diff.mean()
 
-            self.results.append({self.prefix: result})
+            self.results.append({self.metric: result})
 
 
 @METRICS.register_module()
@@ -148,7 +148,7 @@ class PSNR(BaseSampleWiseMetric):
         crop_border (int): Cropped pixels in each edges of an image. These
             pixels are not involved in the PSNR calculation. Default: 0.
         input_order (str): Whether the input order is 'HWC' or 'CHW'.
-            Default: 'HWC'.
+            Default: 'CHW'.
         convert_to (str): Whether to convert the images to other color models.
             If None, the images are not altered. When computing for 'Y',
             the images are assumed to be in BGR order. Options are 'Y' and
@@ -158,7 +158,7 @@ class PSNR(BaseSampleWiseMetric):
         - PSNR (float): Peak Signal-to-Noise Ratio
     """
 
-    default_prefix = 'PSNR'
+    metric = 'PSNR'
 
     def __init__(self,
                  gt_key: str = 'gt_img',
@@ -166,7 +166,7 @@ class PSNR(BaseSampleWiseMetric):
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None,
                  crop_border=0,
-                 input_order='HWC',
+                 input_order='CHW',
                  convert_to=None) -> None:
         super().__init__(
             gt_key=gt_key,
@@ -202,7 +202,7 @@ class PSNR(BaseSampleWiseMetric):
                 input_order=self.input_order,
                 convert_to=self.convert_to)
 
-            self.results.append({self.prefix: result})
+            self.results.append({self.metric: result})
 
 
 @METRICS.register_module()
@@ -225,7 +225,7 @@ class SNR(BaseSampleWiseMetric):
         crop_border (int): Cropped pixels in each edges of an image. These
             pixels are not involved in the PSNR calculation. Default: 0.
         input_order (str): Whether the input order is 'HWC' or 'CHW'.
-            Default: 'HWC'.
+            Default: 'CHW'.
         convert_to (str): Whether to convert the images to other color models.
             If None, the images are not altered. When computing for 'Y',
             the images are assumed to be in BGR order. Options are 'Y' and
@@ -235,7 +235,7 @@ class SNR(BaseSampleWiseMetric):
         - SNR (float): Signal-to-Noise Ratio
     """
 
-    default_prefix = 'SNR'
+    metric = 'SNR'
 
     def __init__(self,
                  gt_key: str = 'gt_img',
@@ -243,7 +243,7 @@ class SNR(BaseSampleWiseMetric):
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None,
                  crop_border=0,
-                 input_order='HWC',
+                 input_order='CHW',
                  convert_to=None) -> None:
         super().__init__(
             gt_key=gt_key,
@@ -279,7 +279,7 @@ class SNR(BaseSampleWiseMetric):
                 input_order=self.input_order,
                 convert_to=self.convert_to)
 
-            self.results.append({self.prefix: result})
+            self.results.append({self.metric: result})
 
 
 def psnr(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
