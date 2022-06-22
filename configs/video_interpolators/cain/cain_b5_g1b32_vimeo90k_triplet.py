@@ -122,6 +122,8 @@ data = dict(
         test_mode=True),
 )
 
+optimizers = dict(generator=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99)))
+
 # learning policy
 # 1604 iters == 1 epoch
 total_iters = 288700
