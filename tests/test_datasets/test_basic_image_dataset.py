@@ -27,6 +27,7 @@ class TestImageDatasets:
             filename_tmpl=dict(img='{}_x4'),
             pipeline=[])
         assert dataset[0] == dict(
+            key='baboon',
             img_path=str(self.data_root / 'lq' / 'baboon_x4.png'),
             gt_path=str(self.data_root / 'gt' / 'baboon.png'),
             sample_idx=0)
@@ -39,6 +40,7 @@ class TestImageDatasets:
             filename_tmpl=dict(img='{}_x4'),
             pipeline=[])
         assert dataset[0] == dict(
+            key='baboon',
             img_path=str(self.data_root / 'lq' / 'baboon_x4.png'),
             gt_path=str(self.data_root / 'gt' / 'baboon.png'),
             sample_idx=0)
@@ -48,9 +50,12 @@ class TestImageDatasets:
             metainfo=dict(dataset_type='sr_folder_dataset', task_name='sisr'),
             data_root=self.data_root,
             data_prefix=dict(gt='gt'),
+            filename_tmpl=dict(),
             pipeline=[])
         assert dataset[0] == dict(
-            gt_path=str(self.data_root / 'gt' / 'baboon.png'), sample_idx=0)
+            key='baboon',
+            gt_path=str(self.data_root / 'gt' / 'baboon.png'),
+            sample_idx=0)
 
         # test SRLmdbDataset
         # The reconstructed LoadImageFromFile supports process images in LMDB
@@ -93,7 +98,9 @@ class TestImageDatasets:
             filename_tmpl=dict(),
             pipeline=[])
         assert dataset[0] == dict(
-            gt_path=str(self.data_root / 'gt' / 'baboon.png'), sample_idx=0)
+            key='baboon',
+            gt_path=str(self.data_root / 'gt' / 'baboon.png'),
+            sample_idx=0)
 
     def test_sisr_annotation_dataset(self):
         # setup
@@ -112,9 +119,10 @@ class TestImageDatasets:
         # Serialize ``self.data_list`` to save memory
         assert dataset.data_list == []
         assert dataset[0] == dict(
+            key='baboon',
             img_path=str(self.data_root / 'lq' / 'baboon_x4.png'),
             gt_path=str(self.data_root / 'gt' / 'baboon.png'),
-            sample_idx=0)
+            sample_idx=0), dataset[0]
 
     def test_sisr_folder_dataset(self):
         # setup
@@ -131,6 +139,7 @@ class TestImageDatasets:
         # Serialize ``self.data_list`` to save memory
         assert dataset.data_list == []
         assert dataset[0] == dict(
+            key='baboon',
             img_path=str(self.data_root / 'lq' / 'baboon_x4.png'),
             gt_path=str(self.data_root / 'gt' / 'baboon.png'),
             sample_idx=0)
@@ -152,6 +161,7 @@ class TestImageDatasets:
         # Serialize ``self.data_list`` to save memory
         assert dataset.data_list == []
         assert dataset[0] == dict(
+            key='baboon',
             img_path=str(self.data_root / 'lq' / 'baboon_x4.png'),
             gt_path=str(self.data_root / 'gt' / 'baboon.png'),
             ref_path=str(self.data_root / 'gt' / 'baboon.png'),

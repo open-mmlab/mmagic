@@ -184,7 +184,7 @@ class BasicImageDataset(BaseDataset):
         data_list = []
         for file in path_list:
             basename, ext = osp.splitext(osp.basename(file))
-            data = dict()
+            data = dict(key=basename)
             for key in self.data_prefix:
                 path = osp.join(self.data_prefix[key],
                                 (f'{self.filename_tmpl[key].format(basename)}'
@@ -217,6 +217,8 @@ class BasicImageDataset(BaseDataset):
             self.ann_file, file_client_args=self.file_client_args)
         path_list = []
         for ann in ann_list:
+            if ann.isspace() or ann == '':
+                continue
             path = ann.split(' ')[0]
             # Compatible with Windows file systems
             path = path.replace('/', os.sep)

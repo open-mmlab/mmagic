@@ -239,6 +239,8 @@ class BasicFramesDataset(BaseDataset):
             self.ann_file, file_client_args=self.file_client_args)
         path_list = []
         for ann in ann_list:
+            if ann.isspace() or ann == '':
+                continue
             path = ann.split(' ')[0]
             # Compatible with Windows file systems
             path = path.replace('/', os.sep)
