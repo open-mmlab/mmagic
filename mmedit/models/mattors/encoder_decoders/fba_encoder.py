@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 from .resnet import ResNet
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class FBAResnetDilated(ResNet):
     """ResNet-based encoder for FBA image matting."""
 

@@ -5,11 +5,11 @@ from mmcv.cnn import ConvModule, constant_init, kaiming_init
 from mmcv.runner import load_checkpoint
 from mmcv.utils.parrots_wrapper import _BatchNorm
 
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 from mmedit.utils import get_root_logger
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class FBADecoder(nn.Module):
     """Decoder for FBA matting.
 

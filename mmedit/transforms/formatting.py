@@ -143,6 +143,13 @@ class PackEditInputs(BaseTransform):
             trimap_tensor = images_to_tensor(trimap)
             data_sample.trimap = PixelData(data=trimap_tensor)
 
+        if 'merged' in results:
+            # image in matting annotation is named merged
+            img = results.pop('merged')
+            img_tensor = images_to_tensor(img)
+            packed_results['inputs'] = img_tensor
+            data_sample.gt_merged = PixelData(data=img_tensor.clone())
+
         if 'alpha' in results:
             # gt_alpha in matting annotation is named alpha
             gt_alpha = results.pop('alpha')

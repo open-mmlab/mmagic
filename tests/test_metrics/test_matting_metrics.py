@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 import pytest
+import torch
 
 from mmedit.metrics import SAD, ConnectivityError, GradientError, MattingMSE
 
@@ -15,11 +16,13 @@ class TestMattingMetrics:
         trimap[:16, :16] = 128
         trimap[16:, 16:] = 255
         # non-masked pred_alpha
-        pred_alpha = np.zeros((32, 32), dtype=np.uint8)
+        pred_alpha = torch.zeros((32, 32), dtype=torch.uint8)
         # masked pred_alpha
-        masked_pred_alpha = pred_alpha.copy()
+        masked_pred_alpha = pred_alpha.clone()
         masked_pred_alpha[trimap == 0] = 0
         masked_pred_alpha[trimap == 255] = 255
+        pred_alpha = pred_alpha.unsqueeze(0)
+        masked_pred_alpha = masked_pred_alpha.unsqueeze(0)
 
         cls.data_batch = [{
             'inputs': [],
@@ -29,13 +32,13 @@ class TestMattingMetrics:
             },
         }]
 
-        cls.bad_preds1 = [{'pred_alpha': pred_alpha}]
+        cls.bad_preds1 = [{'pred_alpha': dict(data=pred_alpha)}]
         # pred_alpha should be masked by trimap before evaluation
 
-        cls.bad_preds2 = [{'pred_alpha': pred_alpha[None]}]
-        # pred_alpha should be 2 dimensional
+        cls.bad_preds2 = [{'pred_alpha': dict(data=pred_alpha[0])}]
+        # pred_alpha should be 3 dimensional
 
-        cls.good_preds = [{'pred_alpha': masked_pred_alpha}]
+        cls.good_preds = [{'pred_alpha': dict(data=masked_pred_alpha)}]
 
     def test_sad(self):
         """Test SAD for evaluating predicted alpha matte."""

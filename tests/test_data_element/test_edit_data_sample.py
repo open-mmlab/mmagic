@@ -138,7 +138,7 @@ class TestEditDataSample(TestCase):
         assert 'pred_bg' in edit_data_sample
         assert _equal(edit_data_sample.pred_bg.img, pred_bg_data['img'])
 
-        # test ignored_data
+        # test gt_merged
         ignored_data_data = dict(bboxes=torch.rand(4, 4), labels=torch.rand(4))
         ignored_data = BaseDataElement(**ignored_data_data)
         edit_data_sample.ignored_data = ignored_data
@@ -242,9 +242,8 @@ class TestEditDataSample(TestCase):
         del edit_data_sample.pred_bg
         assert 'pred_bg' not in edit_data_sample
 
-        ignored_data_data = dict(bboxes=torch.rand(4, 4), labels=torch.rand(4))
-        ignored_data = BaseDataElement(**ignored_data_data)
-        edit_data_sample.ignored_data = ignored_data
-        assert 'ignored_data' in edit_data_sample
-        del edit_data_sample.ignored_data
-        assert 'ignored_data' not in edit_data_sample
+        gt_merged = PixelData(**img_data)
+        edit_data_sample.gt_merged = gt_merged
+        assert 'gt_merged' in edit_data_sample
+        del edit_data_sample.gt_merged
+        assert 'gt_merged' not in edit_data_sample

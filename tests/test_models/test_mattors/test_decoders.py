@@ -3,11 +3,11 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.models.backbones import (VGG16, FBADecoder, IndexedUpsample,
-                                     IndexNetDecoder, IndexNetEncoder,
-                                     PlainDecoder, ResGCADecoder,
-                                     ResGCAEncoder, ResNetDec, ResNetEnc,
-                                     ResShortcutDec, ResShortcutEnc)
+from mmedit.models.mattors import (VGG16, FBADecoder, IndexedUpsample,
+                                   IndexNetDecoder, IndexNetEncoder,
+                                   PlainDecoder, ResGCADecoder, ResGCAEncoder,
+                                   ResNetDec, ResNetEnc, ResShortcutDec,
+                                   ResShortcutEnc)
 
 
 def assert_tensor_with_shape(tensor, shape):

@@ -6,12 +6,12 @@ import pytest
 import torch
 from mmcv.utils.parrots_wrapper import _BatchNorm
 
-from mmedit.models.backbones import (VGG16, DepthwiseIndexBlock,
-                                     FBAResnetDilated, HolisticIndexBlock,
-                                     IndexNetEncoder, ResGCAEncoder, ResNetEnc,
-                                     ResShortcutEnc)
-from mmedit.models.backbones.encoder_decoders.encoders.resnet import (
-    BasicBlock, Bottleneck)
+from mmedit.models.mattors import (VGG16, DepthwiseIndexBlock,
+                                   FBAResnetDilated, HolisticIndexBlock,
+                                   IndexNetEncoder, ResGCAEncoder, ResNetEnc,
+                                   ResShortcutEnc)
+from mmedit.models.mattors.encoder_decoders.resnet import (BasicBlock,
+                                                           Bottleneck)
 
 
 def check_norm_state(modules, train_state):

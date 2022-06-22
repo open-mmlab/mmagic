@@ -1,15 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
+from .encoder_decoders import (ContextualAttentionNeck, DeepFillDecoder,
                                DeepFillEncoder, DeepFillEncoderDecoder,
-                               DepthwiseIndexBlock, FBADecoder,
-                               FBAResnetDilated, GLDecoder, GLDilationNeck,
-                               GLEncoder, GLEncoderDecoder, HolisticIndexBlock,
-                               IndexedUpsample, IndexNetDecoder,
-                               IndexNetEncoder, PConvDecoder, PConvEncoder,
-                               PConvEncoderDecoder, PlainDecoder,
-                               ResGCADecoder, ResGCAEncoder, ResNetDec,
-                               ResNetEnc, ResShortcutDec, ResShortcutEnc,
-                               SimpleEncoderDecoder)
+                               GLDecoder, GLDilationNeck, GLEncoder,
+                               GLEncoderDecoder, PConvDecoder, PConvEncoder,
+                               PConvEncoderDecoder)
 from .generation_backbones import ResnetGenerator, UnetGenerator
 from .sr_backbones import (EDSR, LIIFEDSR, LIIFRDN, RDN, SRCNN, BasicVSRNet,
                            BasicVSRPlusPlus, DICNet, EDVRNet, GLEANStyleGANv2,
@@ -18,16 +12,12 @@ from .sr_backbones import (EDSR, LIIFEDSR, LIIFRDN, RDN, SRCNN, BasicVSRNet,
 from .vfi_backbones import CAINNet, FLAVRNet, TOFlowVFINet
 
 __all__ = [
-    'MSRResNet', 'VGG16', 'PlainDecoder', 'SimpleEncoderDecoder',
-    'GLEncoderDecoder', 'GLEncoder', 'GLDecoder', 'GLDilationNeck',
-    'PConvEncoderDecoder', 'PConvEncoder', 'PConvDecoder', 'ResNetEnc',
-    'ResNetDec', 'ResShortcutEnc', 'ResShortcutDec', 'RRDBNet',
-    'DeepFillEncoder', 'HolisticIndexBlock', 'DepthwiseIndexBlock',
-    'ContextualAttentionNeck', 'DeepFillDecoder', 'EDSR', 'RDN', 'DICNet',
-    'DeepFillEncoderDecoder', 'EDVRNet', 'IndexedUpsample', 'IndexNetEncoder',
-    'IndexNetDecoder', 'TOFlow', 'ResGCAEncoder', 'ResGCADecoder', 'SRCNN',
-    'UnetGenerator', 'ResnetGenerator', 'FBAResnetDilated', 'FBADecoder',
-    'BasicVSRNet', 'IconVSR', 'TTSRNet', 'GLEANStyleGANv2', 'TDANNet',
-    'LIIFEDSR', 'LIIFRDN', 'BasicVSRPlusPlus', 'RealBasicVSRNet', 'CAINNet',
-    'TOFlowVFINet', 'FLAVRNet'
+    'MSRResNet', 'GLEncoderDecoder', 'GLEncoder', 'GLDecoder',
+    'GLDilationNeck', 'PConvEncoderDecoder', 'PConvEncoder', 'PConvDecoder',
+    'RRDBNet', 'DeepFillEncoder', 'ContextualAttentionNeck', 'DeepFillDecoder',
+    'EDSR', 'RDN', 'DICNet', 'DeepFillEncoderDecoder', 'EDVRNet', 'SRCNN',
+    'UnetGenerator', 'ResnetGenerator', 'BasicVSRNet', 'IconVSR', 'TTSRNet',
+    'GLEANStyleGANv2', 'TDANNet', 'TOFlow', 'LIIFEDSR', 'LIIFRDN',
+    'BasicVSRPlusPlus', 'RealBasicVSRNet', 'CAINNet', 'TOFlowVFINet',
+    'FLAVRNet'
 ]

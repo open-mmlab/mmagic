@@ -21,8 +21,7 @@ class EditDataSample(BaseDataElement):
         - ``pred_fg``: Predicted foreground image in Matting.
         - ``gt_bg``: Ground truth background image in Matting.
         - ``pred_bg``: Predicted background image in Matting.
-        - ``ignored_data``: Data to be ignored during
-            training/testing.
+        - ``gt_merged``: Ground truth merged image in Matting.
 
     Examples:
          >>> import torch
@@ -223,13 +222,13 @@ class EditDataSample(BaseDataElement):
         del self._pred_bg
 
     @property
-    def ignored_data(self) -> BaseDataElement:
-        return self._ignored_data
+    def gt_merged(self) -> PixelData:
+        return self._gt_merged
 
-    @ignored_data.setter
-    def ignored_data(self, value: BaseDataElement):
-        self.set_field(value, '_ignored_data', dtype=BaseDataElement)
+    @gt_merged.setter
+    def gt_merged(self, value: PixelData):
+        self.set_field(value, '_gt_merged', dtype=PixelData)
 
-    @ignored_data.deleter
-    def ignored_data(self):
-        del self._ignored_data
+    @gt_merged.deleter
+    def gt_merged(self):
+        del self._gt_merged

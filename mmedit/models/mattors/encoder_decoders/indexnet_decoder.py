@@ -1,16 +1,18 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
+from typing import Optional
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule, kaiming_init, normal_init
+from mmengine.model import BaseModule
 
-from mmedit.models.common import DepthwiseSeparableConvModule
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
+from ..modules import DepthwiseSeparableConvModule
 
 
-class IndexedUpsample(nn.Module):
+class IndexedUpsample(BaseModule):
     """Indexed upsample module.
 
     Args:
@@ -29,8 +31,9 @@ class IndexedUpsample(nn.Module):
                  out_channels,
                  kernel_size=5,
                  norm_cfg=dict(type='BN'),
-                 conv_module=ConvModule):
-        super().__init__()
+                 conv_module=ConvModule,
+                 init_cfg: Optional[dict] = None):
+        super().__init__(init_cfg=init_cfg)
 
         self.conv = conv_module(
             in_channels,
@@ -40,14 +43,15 @@ class IndexedUpsample(nn.Module):
             norm_cfg=norm_cfg,
             act_cfg=dict(type='ReLU6'))
 
-        self.init_weights()
-
     def init_weights(self):
         """Init weights for the module.
         """
-        for m in self.modules():
-            if isinstance(m, nn.Conv2d):
-                kaiming_init(m, mode='fan_in', nonlinearity='leaky_relu')
+        if self.init_cfg is not None:
+            super().init_weights()
+        else:
+            for m in self.modules():
+                if isinstance(m, nn.Conv2d):
+                    kaiming_init(m, mode='fan_in', nonlinearity='leaky_relu')
 
     def forward(self, x, shortcut, dec_idx_feat=None):
         """Forward function.
@@ -70,16 +74,17 @@ class IndexedUpsample(nn.Module):
         return self.conv(out)
 
 
-@COMPONENTS.register_module()
-class IndexNetDecoder(nn.Module):
+@MODELS.register_module()
+class IndexNetDecoder(BaseModule):
 
     def __init__(self,
                  in_channels,
                  kernel_size=5,
                  norm_cfg=dict(type='BN'),
-                 separable_conv=False):
+                 separable_conv=False,
+                 init_cfg: Optional[dict] = None):
         # TODO: remove in_channels argument
-        super().__init__()
+        super().__init__(init_cfg=init_cfg)
 
         if separable_conv:
             conv_module = DepthwiseSeparableConvModule
@@ -112,10 +117,14 @@ class IndexNetDecoder(nn.Module):
     def init_weights(self):
         """Init weights for the module.
         """
-        for m in self.modules():
-            if isinstance(m, nn.Conv2d):
-                std = math.sqrt(2. / (m.out_channels * m.kernel_size[0]**2))
-                normal_init(m, mean=0, std=std)
+        if self.init_cfg is not None:
+            super().init_weights()
+        else:
+            for m in self.modules():
+                if isinstance(m, nn.Conv2d):
+                    std = math.sqrt(2. /
+                                    (m.out_channels * m.kernel_size[0]**2))
+                    normal_init(m, mean=0, std=std)
 
     def forward(self, inputs):
         """Forward function.

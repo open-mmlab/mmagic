@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 
-from mmedit.models import PlainRefiner
+from mmedit.models.mattors import PlainRefiner
 
 
 def assert_dict_keys_equal(dictionary, target_keys):

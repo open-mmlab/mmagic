@@ -28,12 +28,19 @@ def _assert_masked(pred_alpha, trimap):
 def _fetch_data_and_check(data_batch, predictions):
     ori_trimap = data_batch['data_sample']['ori_trimap']
     ori_alpha = data_batch['data_sample']['ori_alpha']
-    pred_alpha = predictions['pred_alpha']
+    pred_alpha = predictions['pred_alpha']['data'][0]  # tensor
+    pred_alpha = pred_alpha.cpu().numpy()
 
     _assert_ndim(ori_trimap, 'trimap', 2, 'HxW')
     _assert_ndim(ori_alpha, 'gt_alpha', 2, 'HxW')
     _assert_ndim(pred_alpha, 'pred_alpha', 2, 'HxW')
     _assert_masked(pred_alpha, ori_trimap)
+
+    # dtype uint8 -> float64
+    pred_alpha = pred_alpha / 255.0
+    ori_alpha = ori_alpha / 255.0
+    # test shows that using float32 vs float64 differs final results at 1e-4
+    # speed are comparable, so we choose float64 for accuracy
 
     return pred_alpha, ori_alpha, ori_trimap
 
@@ -88,12 +95,6 @@ class SAD(BaseMetric):
         """
         for data, prediction in zip(data_batch, predictions):
             pred_alpha, gt_alpha, _ = _fetch_data_and_check(data, prediction)
-
-            pred_alpha = pred_alpha / 255.0  # promote from uint8 to float64
-            gt_alpha = gt_alpha / 255.0  # promote from uint8 to float64
-            # V1.0 implementation
-            # gt_alpha = gt_alpha.astype(np.float64) / 255
-            # pred_alpha = pred_alpha.astype(np.float64) / 255
 
             # divide by 1000 to reduce the magnitude of the result
             sad_sum = np.abs(pred_alpha - gt_alpha).sum() / self.norm_const
@@ -169,12 +170,6 @@ class MattingMSE(BaseMetric):
         for data, prediction in zip(data_batch, predictions):
             pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
                 data, prediction)
-
-            pred_alpha = pred_alpha / 255.0  # promote from uint8 to float64
-            gt_alpha = gt_alpha / 255.0  # promote from uint8 to float64
-            # V1.0 implementation
-            # gt_alpha = gt_alpha.astype(np.float64) / 255
-            # pred_alpha = pred_alpha.astype(np.float64) / 255
 
             weight_sum = (trimap == 128).sum()
             if weight_sum != 0:
@@ -252,9 +247,6 @@ class GradientError(BaseMetric):
             pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
                 data, prediction)
 
-            gt_alpha = gt_alpha / 255.0  # promote from uint8 to float64
-            pred_alpha = pred_alpha / 255.0  # promote from uint8 to float64
-
             gt_alpha_normed = np.zeros_like(gt_alpha)
             pred_alpha_normed = np.zeros_like(pred_alpha)
 
@@ -262,11 +254,8 @@ class GradientError(BaseMetric):
             cv2.normalize(pred_alpha, pred_alpha_normed, 1.0, 0.0,
                           cv2.NORM_MINMAX)
 
-            gt_alpha_grad = gauss_gradient(gt_alpha_normed,
-                                           self.sigma).astype(np.float32)
-            pred_alpha_grad = gauss_gradient(pred_alpha_normed,
-                                             self.sigma).astype(np.float32)
-
+            gt_alpha_grad = gauss_gradient(gt_alpha_normed, self.sigma)
+            pred_alpha_grad = gauss_gradient(pred_alpha_normed, self.sigma)
             # this is the sum over n samples
             grad_loss = ((gt_alpha_grad - pred_alpha_grad)**2 *
                          (trimap == 128)).sum()
@@ -343,13 +332,6 @@ class ConnectivityError(BaseMetric):
         for data, prediction in zip(data_batch, predictions):
             pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
                 data, prediction)
-
-            gt_alpha = gt_alpha.astype(np.float32) / 255.0
-            pred_alpha = pred_alpha.astype(np.float32) / 255.0
-            # TODO, maybe we can modify to use float64, but need check
-            # on real data
-            # _gt_alpha = _gt_alpha / 255.0
-            # _pred_alpha = _pred_alpha / 255.0
 
             thresh_steps = np.arange(0, 1 + self.step, self.step)
             round_down_map = -np.ones_like(gt_alpha)

@@ -1,15 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch.nn as nn
 from mmcv.cnn.utils.weight_init import constant_init, xavier_init
-from mmcv.runner import load_checkpoint
+from mmengine.model import BaseModule
 
-from mmedit.models.common import ASPP
-from mmedit.registry import COMPONENTS
-from mmedit.utils import get_root_logger
+from mmedit.registry import MODELS
+from ..modules import ASPP
 
 
-@COMPONENTS.register_module()
-class VGG16(nn.Module):
+@MODELS.register_module()
+class VGG16(BaseModule):
     """Customized VGG16 Encoder.
 
     A 1x1 conv is added after the original VGG16 conv layers. The indices of
@@ -29,8 +30,9 @@ class VGG16(nn.Module):
                  in_channels,
                  batch_norm=False,
                  aspp=False,
-                 dilations=None):
-        super().__init__()
+                 dilations=None,
+                 init_cfg: Optional[dict] = None):
+        super().__init__(init_cfg=init_cfg)
         self.batch_norm = batch_norm
         self.aspp = aspp
         self.dilations = dilations
@@ -65,11 +67,11 @@ class VGG16(nn.Module):
         layers += [nn.MaxPool2d(kernel_size=2, stride=2, return_indices=True)]
         return nn.Sequential(*layers)
 
-    def init_weights(self, pretrained=None):
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=False, logger=logger)
-        elif pretrained is None:
+    def init_weights(self):
+        if self.init_cfg is not None:
+            super().init_weights()
+        else:
+            # Default initialization
             for m in self.modules():
                 if isinstance(m, nn.Conv2d):
                     xavier_init(m)

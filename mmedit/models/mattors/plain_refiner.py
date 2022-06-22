@@ -2,12 +2,13 @@
 import torch
 import torch.nn as nn
 from mmcv.cnn.utils.weight_init import xavier_init
+from mmengine.model import BaseModule
 
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
-class PlainRefiner(nn.Module):
+@MODELS.register_module()
+class PlainRefiner(BaseModule):
     """Simple refiner from Deep Image Matting.
 
     Args:
@@ -17,10 +18,10 @@ class PlainRefiner(nn.Module):
         pretrained (str): Name of pretrained model. Default: None.
     """
 
-    def __init__(self, conv_channels=64, pretrained=None):
-        super().__init__()
+    def __init__(self, conv_channels=64, init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
 
-        assert pretrained is None, 'pretrained not supported yet'
+        # assert pretrained is None, 'pretrained not supported yet'
 
         self.refine_conv1 = nn.Conv2d(
             4, conv_channels, kernel_size=3, padding=1)

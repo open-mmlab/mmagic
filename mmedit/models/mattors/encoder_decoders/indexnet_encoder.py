@@ -1,16 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from functools import partial
+from typing import Optional
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule, constant_init, xavier_init
-from mmcv.runner import load_checkpoint
 from mmcv.utils.parrots_wrapper import SyncBatchNorm
+from mmengine.model import BaseModule
 
-from mmedit.models.common import ASPP, DepthwiseSeparableConvModule
-from mmedit.registry import COMPONENTS
-from mmedit.utils import get_root_logger
+from mmedit.registry import MODELS
+from ..modules import ASPP, DepthwiseSeparableConvModule
 
 
 def build_index_block(in_channels,
@@ -304,8 +304,8 @@ class InvertedResidual(nn.Module):
         return out
 
 
-@COMPONENTS.register_module()
-class IndexNetEncoder(nn.Module):
+@MODELS.register_module()
+class IndexNetEncoder(BaseModule):
     """Encoder for IndexNet.
 
     Please refer to https://arxiv.org/abs/1908.00672.
@@ -351,8 +351,9 @@ class IndexNetEncoder(nn.Module):
                  norm_cfg=dict(type='BN'),
                  freeze_bn=False,
                  use_nonlinear=True,
-                 use_context=True):
-        super().__init__()
+                 use_context=True,
+                 init_cfg: Optional[dict] = None):
+        super().__init__(init_cfg=init_cfg)
         if out_stride not in [16, 32]:
             raise ValueError(f'out_stride must 16 or 32, got {out_stride}')
 
@@ -414,8 +415,7 @@ class IndexNetEncoder(nn.Module):
             self.layers.append(self._make_layer(layer_setting, norm_cfg))
 
         # freeze encoder batch norm layers
-        if freeze_bn:
-            self.freeze_bn()
+        self.freeze_bn = freeze_bn
 
         # build index blocks
         self.index_layers = nn.ModuleList()
@@ -474,24 +474,27 @@ class IndexNetEncoder(nn.Module):
                     use_res_connect=True))
         return nn.Sequential(*layers)
 
-    def freeze_bn(self):
-        """Set BatchNorm modules in the model to evaluation mode.
-        """
-        for m in self.modules():
-            if isinstance(m, (nn.BatchNorm2d, SyncBatchNorm)):
-                m.eval()
+    def train(self, mode=True):
+        """Set BatchNorm modules in the model to evaluation mode."""
+        super().train(mode)
+        if mode and self.freeze_bn:
+            for m in self.modules():
+                if isinstance(m, (nn.BatchNorm2d, SyncBatchNorm)):
+                    m.eval()
 
-    def init_weights(self, pretrained=None):
+    def init_weights(self):
         """Init weights for the model.
+
+        Initialization is based on self._init_cfg
 
         Args:
             pretrained (str, optional): Path for pretrained weights. If given
                 None, pretrained weights will not be loaded. Defaults to None.
         """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=False, logger=logger)
-        elif pretrained is None:
+        if self.init_cfg is not None:
+            super().init_weights()
+        else:
+            # Default initialization
             for m in self.modules():
                 if isinstance(m, nn.Conv2d):
                     xavier_init(m)

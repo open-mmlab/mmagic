@@ -1,10 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch.nn as nn
 from mmcv.cnn import ConvModule, constant_init
+from mmengine.model import BaseModule
 
-from mmedit.models.common import GCAModule
-from mmedit.registry import COMPONENTS
-from ..encoders.resnet_enc import BasicBlock
+from mmedit.registry import MODELS
+from ..modules import GCAModule
+from .resnet_enc import BasicBlock
 
 
 class BasicBlockDec(BasicBlock):
@@ -80,8 +83,8 @@ class BasicBlockDec(BasicBlock):
             with_spectral_norm=with_spectral_norm)
 
 
-@COMPONENTS.register_module()
-class ResNetDec(nn.Module):
+@MODELS.register_module()
+class ResNetDec(BaseModule):
     """ResNet decoder for image matting.
 
     This class is adopted from https://github.com/Yaoyi-Li/GCA-Matting.
@@ -112,8 +115,9 @@ class ResNetDec(nn.Module):
                  act_cfg=dict(
                      type='LeakyReLU', negative_slope=0.2, inplace=True),
                  with_spectral_norm=False,
-                 late_downsample=False):
-        super().__init__()
+                 late_downsample=False,
+                 init_cfg: Optional[dict] = None):
+        super().__init__(init_cfg=init_cfg)
         if block == 'BasicBlockDec':
             block = BasicBlockDec
         else:
@@ -154,10 +158,13 @@ class ResNetDec(nn.Module):
     def init_weights(self):
         """Init weights for the module.
         """
-        for m in self.modules():
-            if isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
-                constant_init(m.weight, 1)
-                constant_init(m.bias, 0)
+        if self.init_cfg is not None:
+            super().init_weights()
+        else:
+            for m in self.modules():
+                if isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
+                    constant_init(m.weight, 1)
+                    constant_init(m.bias, 0)
 
         # Zero-initialize the last BN in each residual branch, so that the
         # residual branch starts with zeros, and each residual block behaves
@@ -225,7 +232,7 @@ class ResNetDec(nn.Module):
         return x
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class ResShortcutDec(ResNetDec):
     """ResNet decoder for image matting with shortcut connection.
 
@@ -290,7 +297,7 @@ class ResShortcutDec(ResNetDec):
         return x
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class ResGCADecoder(ResShortcutDec):
     """ResNet decoder with shortcut connection and gca module.
 

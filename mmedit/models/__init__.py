@@ -20,6 +20,7 @@ __all__ = [
     'AOTInpaintor', 'BaseModel', 'BasicRestorer', 'OneStageInpaintor', 'build',
     'build_backbone', 'build_component', 'build_loss', 'build_model',
     'BACKBONES', 'COMPONENTS', 'LOSSES', 'BaseMattor', 'DIM', 'MODELS',
+    'AOTInpaintor', 'BasicRestorer', 'OneStageInpaintor', 'BaseMattor', 'DIM',
     'GLInpaintor', 'PConvInpaintor', 'SRGAN', 'ESRGAN', 'GCA',
     'TwoStageInpaintor', 'IndexNet', 'DeepFillv1Inpaintor', 'Pix2Pix',
     'CycleGAN', 'SearchTransformer', 'LTE', 'FeedbackHourglass',

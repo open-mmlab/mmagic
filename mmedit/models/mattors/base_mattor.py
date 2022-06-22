@@ -1,120 +1,128 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import logging
-import os.path as osp
-from abc import abstractmethod
-from pathlib import Path
+from abc import ABCMeta
+from typing import Dict, List, Optional, Tuple, Union
 
-import mmcv
-import numpy as np
+import torch
+import torch.nn.functional as F
 from mmcv import ConfigDict
-from mmcv.utils import print_log
+from mmengine.config import Config
+from mmengine.model import BaseModel
 
-from mmedit.core.evaluation import connectivity, gradient_error, mse, sad
+from mmedit.data_element import EditDataSample, PixelData
 from mmedit.registry import MODELS
-from ..base import BaseModel
-from ..builder import build_backbone, build_component
+
+DataSamples = Optional[Union[list, torch.Tensor]]
+ForwardResults = Union[Dict[str, torch.Tensor], List[EditDataSample],
+                       Tuple[torch.Tensor], torch.Tensor]
 
 
-@MODELS.register_module()
-class BaseMattor(BaseModel):
-    """Base class for matting model.
+def _pad(batch_image, ds_factor, mode='reflect'):
+    """Pad image to a multiple of give down-sampling factor."""
 
-    A matting model must contain a backbone which produces `alpha`, a dense
-    prediction with the same height and width of input image. In some cases,
-    the model will has a refiner which refines the prediction of the backbone.
+    h, w = batch_image.shape[-2:]  # NCHW
 
-    The subclasses should overwrite the function ``forward_train`` and
-    ``forward_test`` which define the output of the model and maybe the
-    connection between the backbone and the refiner.
+    new_h = ds_factor * ((h - 1) // ds_factor + 1)
+    new_w = ds_factor * ((w - 1) // ds_factor + 1)
+
+    pad_h = new_h - h
+    pad_w = new_w - w
+    pad = (pad_h, pad_w)
+    if new_h != h or new_w != w:
+        pad_width = (0, pad_w, 0, pad_h)  # torch.pad in reverse order
+        batch_image = F.pad(batch_image, pad_width, mode)
+
+    return batch_image, pad
+
+
+def _interpolate(batch_image, ds_factor, mode='bicubic'):
+    """Resize image to multiple of give down-sampling factor."""
+
+    h, w = batch_image.shape[-2:]  # NCHW
+
+    new_h = h - (h % ds_factor)
+    new_w = w - (w % ds_factor)
+
+    size = (new_h, new_w)
+    if new_h != h or new_w != w:
+        batch_image = F.interpolate(batch_image, size=size, mode=mode)
+
+    return batch_image, size
+
+
+class BaseMattor(BaseModel, metaclass=ABCMeta):
+    """Base class for trimap-based matting models.
+
+    A matting model must contain a backbone which produces `pred_alpha`,
+    a dense prediction with the same height and width of input image.
+    In some cases (such as DIM), the model has a refiner which refines
+    the prediction of the backbone.
+
+    Subclasses should overwrite the following functions:
+
+    - :meth:`_forward_train`, to return a loss
+    - :meth:`_forward_test`, to return a prediction
+    - :meth:`_forward`, to return raw tensors
+
+    For test, this base class provides functions to resize inputs and
+    post-process pred_alphas to get predictions
 
     Args:
         backbone (dict): Config of backbone.
-        refiner (dict): Config of refiner.
-        train_cfg (dict): Config of training. In ``train_cfg``,
+        data_preprocessor (dict): Config of data_preprocessor.
+            See :class:`MattorPreprocessor` for details.
+        train_cfg (dict): Config of training.
+            Customized by subclassesCustomized bu In ``train_cfg``,
             ``train_backbone`` should be specified. If the model has a refiner,
             ``train_refiner`` should be specified.
-        test_cfg (dict): Config of testing. In ``test_cfg``, If the model has a
+        test_cfg (dict): Config of testing.
+            In ``test_cfg``, If the model has a
             refiner, ``train_refiner`` should be specified.
         pretrained (str): Path of pretrained model.
     """
-    allowed_metrics = {
-        'SAD': sad,
-        'MattingMSE': mse,
-        'GRAD': gradient_error,
-        'CONN': connectivity
-    }
 
     def __init__(self,
-                 backbone,
-                 refiner=None,
-                 train_cfg=None,
-                 test_cfg=None,
-                 pretrained=None):
-        super().__init__()
+                 data_preprocessor: Union[dict, Config],
+                 backbone: dict,
+                 init_cfg: Optional[dict] = None,
+                 train_cfg: Optional[dict] = None,
+                 test_cfg: Optional[dict] = None):
+        # Build data_preprocessor in BaseModel
+        # Initialize weights in BaseModule
+        super().__init__(
+            data_preprocessor=data_preprocessor, init_cfg=init_cfg)
 
-        self.train_cfg = train_cfg if train_cfg is not None else ConfigDict()
-        self.test_cfg = test_cfg if test_cfg is not None else ConfigDict()
+        self.train_cfg = ConfigDict(
+            train_cfg) if train_cfg is not None else ConfigDict()
+        self.test_cfg = ConfigDict(
+            test_cfg) if test_cfg is not None else ConfigDict()
 
-        self.backbone = build_backbone(backbone)
-        # build refiner if it's not None.
-        if refiner is None:
-            self.train_cfg['train_refiner'] = False
-            self.test_cfg['refine'] = False
+        self.backbone = MODELS.build(backbone)
+
+    def resize_inputs(self, batch_inputs):
+        """Pad or interpolate images and trimaps to multiple of given factor.
+        """
+
+        resize_method = self.test_cfg['resize_method']
+        resize_mode = self.test_cfg['resize_mode']
+        size_divisor = self.test_cfg['size_divisor']
+
+        batch_images = batch_inputs[:, :3, :, :]
+        batch_trimaps = batch_inputs[:, 3:, :, :]
+
+        if resize_method == 'pad':
+            batch_images, _ = _pad(batch_images, size_divisor, resize_mode)
+            batch_trimaps, _ = _pad(batch_trimaps, size_divisor, resize_mode)
+        elif resize_method == 'interp':
+            batch_images, _ = _interpolate(batch_images, size_divisor,
+                                           resize_mode)
+            batch_trimaps, _ = _interpolate(batch_trimaps, size_divisor,
+                                            'nearest')
         else:
-            self.refiner = build_component(refiner)
+            raise NotImplementedError
 
-        # if argument train_cfg is not None, validate if the config is proper.
-        if train_cfg is not None:
-            assert hasattr(self.train_cfg, 'train_refiner')
-            assert hasattr(self.test_cfg, 'refine')
-            if self.test_cfg.refine and not self.train_cfg.train_refiner:
-                print_log(
-                    'You are not training the refiner, but it is used for '
-                    'model forwarding.', 'root', logging.WARNING)
+        return torch.cat((batch_images, batch_trimaps), dim=1)
 
-            if not self.train_cfg.train_backbone:
-                self.freeze_backbone()
-
-        # validate if test config is proper
-        if not hasattr(self.test_cfg, 'metrics'):
-            raise KeyError('Missing key "metrics" in test_cfg')
-
-        if mmcv.is_list_of(self.test_cfg.metrics, str):
-            for metric in self.test_cfg.metrics:
-                if metric not in self.allowed_metrics:
-                    raise KeyError(f'metric {metric} is not supported')
-        elif self.test_cfg.metrics is not None:
-            raise TypeError('metrics must be None or a list of str')
-
-        self.init_weights(pretrained)
-
-    @property
-    def with_refiner(self):
-        """Whether the matting model has a refiner.
-        """
-        return hasattr(self, 'refiner') and self.refiner is not None
-
-    def freeze_backbone(self):
-        """Freeze the backbone and only train the refiner.
-        """
-        self.backbone.eval()
-        for param in self.backbone.parameters():
-            param.requires_grad = False
-
-    def init_weights(self, pretrained=None):
-        """Initialize the model network weights.
-
-        Args:
-            pretrained (str, optional): Path to the pretrained weight.
-                Defaults to None.
-        """
-        if pretrained is not None:
-            print_log(f'load model from: {pretrained}', logger='root')
-        self.backbone.init_weights(pretrained)
-        if self.with_refiner:
-            self.refiner.init_weights()
-
-    def restore_shape(self, pred_alpha, meta):
+    def restore_size(self, pred_alpha, data_sample):
         """Restore the predicted alpha to the original shape.
 
         The shape of the predicted alpha may not be the same as the shape of
@@ -122,147 +130,116 @@ class BaseMattor(BaseModel):
         alpha.
 
         Args:
-            pred_alpha (np.ndarray): The predicted alpha.
-            meta (list[dict]): Meta data about the current data batch.
-                Currently only batch_size 1 is supported.
+            pred_alpha (torch.Tensor): A single predicted alpha of
+                shape (1, H, W).
+            data_sample (EditDataSample): Data sample containing
+                original shape as meta data.
 
         Returns:
-            np.ndarray: The reshaped predicted alpha.
+            torch.Tensor: The reshaped predicted alpha.
         """
-        ori_trimap = meta[0]['ori_trimap'].squeeze()
-        ori_h, ori_w = meta[0]['merged_ori_shape'][:2]
+        resize_method = self.test_cfg['resize_method']
+        resize_mode = self.test_cfg['resize_mode']
 
-        if 'interpolation' in meta[0]:
-            # images have been resized for inference, resize back
-            pred_alpha = mmcv.imresize(
-                pred_alpha, (ori_w, ori_h),
-                interpolation=meta[0]['interpolation'])
-        elif 'pad' in meta[0]:
-            # images have been padded for inference, remove the padding
-            pred_alpha = pred_alpha[:ori_h, :ori_w]
-
-        assert pred_alpha.shape == (ori_h, ori_w)
-
-        # some methods do not have an activation layer after the last conv,
-        # clip to make sure pred_alpha range from 0 to 1.
-        pred_alpha = np.clip(pred_alpha, 0, 1)
-        pred_alpha[ori_trimap == 0] = 0.
-        pred_alpha[ori_trimap == 255] = 1.
+        ori_h, ori_w = data_sample.ori_merged_shape[:2]
+        # print(ds.ori_merged_shape)
+        if resize_method == 'pad':
+            pred_alpha = pred_alpha[:, :ori_h, :ori_w]
+        elif resize_method == 'interp':
+            pred_alpha = F.interpolate(
+                pred_alpha.unsqueeze(0), size=(ori_h, ori_w), mode=resize_mode)
+            pred_alpha = pred_alpha[0]  # 1,H,W
 
         return pred_alpha
 
-    def evaluate(self, pred_alpha, meta):
-        """Evaluate predicted alpha matte.
+    def postprocess(
+        self,
+        batch_pred_alpha: torch.Tensor,  # N, 1, H, W, float32
+        data_samples: List[EditDataSample],
+    ) -> List[EditDataSample]:
+        """Post-process alpha predictions.
 
-        The evaluation metrics are determined by ``self.test_cfg.metrics``.
+        This function contains the following steps:
+            1. Restore padding or interpolation
+            2. Mask alpha prediction with trimap
+            3. Clamp alpha prediction to 0-1
+            4. Convert alpha prediction to uint8
+            5. Pack alpha prediction into EditDataSample
+
+        Currently only batch_size 1 is actually supported.
 
         Args:
-            pred_alpha (np.ndarray): The predicted alpha matte of shape (H, W).
-            meta (list[dict]): Meta data about the current data batch.
-                Currently only batch_size 1 is supported. Required keys in the
-                meta dict are ``ori_alpha`` and ``ori_trimap``.
+            batch_pred_alpha (torch.Tensor): A batch of predicted alpha
+                of shape (N, 1, H, W).
+            data_samples (List[EditDataSample]): List of data samples.
 
         Returns:
-            dict: The evaluation result.
-        """
-        if self.test_cfg.metrics is None:
-            return None
-
-        ori_alpha = meta[0]['ori_alpha'].squeeze()
-        ori_trimap = meta[0]['ori_trimap'].squeeze()
-
-        eval_result = dict()
-        for metric in self.test_cfg.metrics:
-            eval_result[metric] = self.allowed_metrics[metric](
-                ori_alpha, ori_trimap,
-                np.round(pred_alpha * 255).astype(np.uint8))
-        return eval_result
-
-    def save_image(self, pred_alpha, meta, save_path, iteration):
-        """Save predicted alpha to file.
-
-        Args:
-            pred_alpha (np.ndarray): The predicted alpha matte of shape (H, W).
-            meta (list[dict]): Meta data about the current data batch.
-                Currently only batch_size 1 is supported. Required keys in the
-                meta dict are ``merged_path``.
-            save_path (str): The directory to save predicted alpha matte.
-            iteration (int | None): If given as None, the saved alpha matte
-                will have the same file name with ``merged_path`` in meta dict.
-                If given as an int, the saved alpha matte would named with
-                postfix ``_{iteration}.png``.
-        """
-        image_stem = Path(meta[0]['merged_path']).stem
-        if iteration is None:
-            save_path = osp.join(save_path, f'{image_stem}.png')
-        else:
-            save_path = osp.join(save_path,
-                                 f'{image_stem}_{iteration + 1:06d}.png')
-        mmcv.imwrite(pred_alpha * 255, save_path)
-
-    @abstractmethod
-    def forward_train(self, merged, trimap, alpha, **kwargs):
-        """Defines the computation performed at every training call.
-
-        Args:
-            merged (Tensor): Image to predict alpha matte.
-            trimap (Tensor): Trimap of the input image.
-            alpha (Tensor): Ground-truth alpha matte.
+            List[EditDataSample]: A list of predictions.
+                Each data sample contains a pred_alpha,
+                which is a torch.Tensor with dtype=uint8, device=cuda:0
         """
 
-    @abstractmethod
-    def forward_test(self, merged, trimap, meta, **kwargs):
-        """Defines the computation performed at every test call.
-        """
+        assert batch_pred_alpha.ndim == 4  # N, 1, H, W, float32
+        assert len(batch_pred_alpha) == len(data_samples) == 1
 
-    def train_step(self, data_batch, optimizer):
-        """Defines the computation and network update at every training call.
+        predictions = []
+        for pa, ds in zip(batch_pred_alpha, data_samples):
+            pa = self.restore_size(pa, ds)  # 1, H, W
+            pa = pa[0]  # H, W
 
-        Args:
-            data_batch (torch.Tensor): Batch of data as input.
-            optimizer (torch.optim.Optimizer): Optimizer of the model.
+            pa.clamp_(min=0, max=1)
+            ori_trimap = ds.ori_trimap
+            pa[ori_trimap == 255] = 1
+            pa[ori_trimap == 0] = 0
 
-        Returns:
-            dict: Output of ``train_step`` containing the logging variables \
-                of the current data batch.
-        """
-        outputs = self(**data_batch, test_mode=False)
-        loss, log_vars = self.parse_losses(outputs.pop('losses'))
+            pa *= 255
+            pa.round_()
+            pa = pa.to(dtype=torch.uint8)
+            # pa = pa.cpu().numpy()
+            pa_sample = EditDataSample(pred_alpha=PixelData(data=pa))
+            predictions.append(pa_sample)
 
-        # optimize
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-        outputs.update({'log_vars': log_vars})
-        return outputs
+        return predictions
 
     def forward(self,
-                merged,
-                trimap,
-                meta,
-                alpha=None,
-                test_mode=False,
-                **kwargs):
-        """Defines the computation performed at every call.
+                batch_inputs: torch.Tensor,
+                data_samples: DataSamples = None,
+                mode: str = 'tensor') -> List[EditDataSample]:
+        """General forward function.
 
         Args:
-            merged (Tensor): Image to predict alpha matte.
-            trimap (Tensor): Trimap of the input image.
-            meta (list[dict]): Meta data about the current data batch.
-                Defaults to None.
-            alpha (Tensor, optional): Ground-truth alpha matte.
-                Defaults to None.
-            test_mode (bool, optional): Whether in test mode. If ``True``, it
-                will call ``forward_test`` of the model. Otherwise, it will
-                call ``forward_train`` of the model. Defaults to False.
+            batch_inputs (torch.Tensor): A batch of inputs.
+                with image and trimap concatenated alone channel dimension.
+            data_samples (List[EditDataSample], optional):
+                A list of data samples, containing:
+                - Ground-truth alpha / foreground / background to compute loss
+                - other meta information
+            mode (str): mode should be one of ``loss``, ``predict`` and
+                ``tensor``
+
+                - ``loss``: Called by ``train_step`` and return loss ``dict``
+                  used for logging
+                - ``predict``: Called by ``val_step`` and ``test_step``
+                  and return list of ``BaseDataElement`` results used for
+                  computing metric.
+                - ``tensor``: Called by custom use to get ``Tensor`` type
+                  results.
 
         Returns:
-            dict: Return the output of ``self.forward_test`` if ``test_mode`` \
-                are set to ``True``. Otherwise return the output of \
-                ``self.forward_train``.
+            List[EditDataElement]:
+                Sequence of predictions packed into EditDataElement
         """
-        if test_mode:
-            return self.forward_test(merged, trimap, meta, **kwargs)
-
-        return self.forward_train(merged, trimap, meta, alpha, **kwargs)
+        if mode == 'tensor':
+            raw = self._forward(batch_inputs)
+            return raw
+        elif mode == 'predict':
+            # Pre-process runs in runner
+            batch_inputs = self.resize_inputs(batch_inputs)
+            batch_pred_alpha = self._forward_test(batch_inputs)
+            predictions = self.postprocess(batch_pred_alpha, data_samples)
+            return predictions
+        elif mode == 'loss':
+            loss = self._forward_train(batch_inputs, data_samples)
+            return loss
+        else:
+            raise ValueError('Invalid forward mode.')

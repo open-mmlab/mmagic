@@ -1,9 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
-from mmcv.runner import auto_fp16
 
 from mmedit.registry import MODELS
-from ..builder import build_loss
 from .base_mattor import BaseMattor
 from .utils import get_unknown_tensor
 
@@ -26,27 +24,33 @@ class IndexNet(BaseMattor):
     """
 
     def __init__(self,
+                 data_preprocessor,
                  backbone,
-                 train_cfg=None,
-                 test_cfg=None,
-                 pretrained=None,
                  loss_alpha=None,
-                 loss_comp=None):
-        super().__init__(backbone, None, train_cfg, test_cfg, pretrained)
+                 loss_comp=None,
+                 init_cfg=None,
+                 train_cfg=None,
+                 test_cfg=None):
+        super().__init__(
+            backbone=backbone,
+            data_preprocessor=data_preprocessor,
+            init_cfg=init_cfg,
+            train_cfg=train_cfg,
+            test_cfg=test_cfg)
 
         self.loss_alpha = (
-            build_loss(loss_alpha) if loss_alpha is not None else None)
+            MODELS.build(loss_alpha) if loss_alpha is not None else None)
         self.loss_comp = (
-            build_loss(loss_comp) if loss_comp is not None else None)
+            MODELS.build(loss_comp) if loss_comp is not None else None)
 
-        # support fp16
-        self.fp16_enabled = False
+    def _forward(self, inputs):
+        pred_alpha = self.backbone(inputs)
+        return pred_alpha
 
-    def forward_dummy(self, inputs):
-        return self.backbone(inputs)
+    def _forward_test(self, inputs):
+        return self._forward(inputs)
 
-    @auto_fp16(apply_to=('merged', 'trimap'))
-    def forward_train(self, merged, trimap, meta, alpha, ori_merged, fg, bg):
+    def _forward_train(self, inputs, data_samples):
         """Forward function for training IndexNet model.
 
         Args:
@@ -63,53 +67,24 @@ class IndexNet(BaseMattor):
         Returns:
             dict: Contains the loss items and batch information.
         """
-        pred_alpha = self.backbone(torch.cat((merged, trimap), 1))
+        trimap = inputs[:, 3:, :, :]
+        gt_alpha = torch.stack(tuple(ds.gt_alpha.data for ds in data_samples))
+        gt_fg = torch.stack(tuple(ds.gt_fg.data for ds in data_samples))
+        gt_bg = torch.stack(tuple(ds.gt_bg.data for ds in data_samples))
+        gt_merged = torch.stack(
+            tuple(ds.gt_merged.data for ds in data_samples))
+
+        pred_alpha = self.backbone(inputs)
+
+        weight = get_unknown_tensor(trimap, unknown_value=128 / 255)
 
         losses = dict()
-        weight = get_unknown_tensor(trimap, meta)
+
         if self.loss_alpha is not None:
-            losses['loss_alpha'] = self.loss_alpha(pred_alpha, alpha, weight)
+            losses['loss_alpha'] = self.loss_alpha(pred_alpha, gt_alpha,
+                                                   weight)
         if self.loss_comp is not None:
-            losses['loss_comp'] = self.loss_comp(pred_alpha, fg, bg,
-                                                 ori_merged, weight)
-        return {'losses': losses, 'num_samples': merged.size(0)}
+            losses['loss_comp'] = self.loss_comp(pred_alpha, gt_fg, gt_bg,
+                                                 gt_merged, weight)
 
-    def forward_test(self,
-                     merged,
-                     trimap,
-                     meta,
-                     save_image=False,
-                     save_path=None,
-                     iteration=None):
-        """Defines the computation performed at every test call.
-
-        Args:
-            merged (Tensor): Image to predict alpha matte.
-            trimap (Tensor): Trimap of the input image.
-            meta (list[dict]): Meta data about the current data batch.
-                Currently only batch_size 1 is supported. It may contain
-                information needed to calculate metrics (``ori_alpha`` and
-                ``ori_trimap``) or save predicted alpha matte
-                (``merged_path``).
-            save_image (bool, optional): Whether save predicted alpha matte.
-                Defaults to False.
-            save_path (str, optional): The directory to save predicted alpha
-                matte. Defaults to None.
-            iteration (int, optional): If given as None, the saved alpha matte
-                will have the same file name with ``merged_path`` in meta dict.
-                If given as an int, the saved alpha matte would named with
-                postfix ``_{iteration}.png``. Defaults to None.
-
-        Returns:
-            dict: Contains the predicted alpha and evaluation result.
-        """
-        pred_alpha = self.backbone(torch.cat((merged, trimap), 1))
-
-        pred_alpha = pred_alpha.cpu().numpy().squeeze()
-        pred_alpha = self.restore_shape(pred_alpha, meta)
-        eval_result = self.evaluate(pred_alpha, meta)
-
-        if save_image:
-            self.save_image(pred_alpha, meta, save_path, iteration)
-
-        return {'pred_alpha': pred_alpha, 'eval_result': eval_result}
+        return losses
