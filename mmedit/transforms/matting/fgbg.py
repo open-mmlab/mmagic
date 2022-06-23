@@ -74,7 +74,7 @@ class CompositeFg(BaseTransform):
         if self.file_client is None:
             self.file_client = FileClient(self.io_backend, **self.kwargs)
         fg = results['fg']
-        alpha = results['alpha'].astype(np.float32) / 255.
+        alpha = results['alpha'] / 255.0  # float64, H, W, 1
         h, w = results['fg'].shape[:2]
 
         # randomly select fg
@@ -84,24 +84,22 @@ class CompositeFg(BaseTransform):
             fg2 = mmcv.imfrombytes(fg2_bytes)
             alpha2_bytes = self.file_client.get(self.alpha_list[idx])
             alpha2 = mmcv.imfrombytes(alpha2_bytes, flag='grayscale')
-            alpha2 = alpha2.astype(np.float32) / 255.
-
+            alpha2 = alpha2 / 255.0  # float64
             fg2 = mmcv.imresize(fg2, (w, h), interpolation=self.interpolation)
             alpha2 = mmcv.imresize(
                 alpha2, (w, h), interpolation=self.interpolation)
+            alpha2 = alpha2[..., None]
 
             # the overlap of two 50% transparency will be 75%
             alpha_tmp = 1 - (1 - alpha) * (1 - alpha2)
             # if the result alpha is all-one, then we avoid composition
             if np.any(alpha_tmp < 1):
                 # composite fg with fg2
-                fg = fg.astype(np.float32) * alpha[..., None] \
-                     + fg2.astype(np.float32) * (1 - alpha[..., None])
+                fg = fg * alpha + fg2 * (1 - alpha)
                 alpha = alpha_tmp
-                fg.astype(np.uint8)
 
         results['fg'] = fg
-        results['alpha'] = (alpha * 255).astype(np.uint8)
+        results['alpha'] = alpha * 255
         return results
 
     @staticmethod
@@ -147,7 +145,7 @@ class MergeFgAndBg(BaseTransform):
         Returns:
             dict: A dict containing the processed data and information.
         """
-        alpha = results['alpha'][..., None].astype(np.float32) / 255.
+        alpha = results['alpha'].astype(np.float32) / 255.
         fg = results['fg']
         bg = results['bg']
         merged = fg * alpha + (1. - alpha) * bg
@@ -239,6 +237,7 @@ class RandomJitter(BaseTransform):
         """
 
         fg, alpha = results['fg'], results['alpha']
+        alpha = alpha[:, :, 0]
 
         # convert to HSV space;
         # convert to float32 image to keep precision during space conversion.

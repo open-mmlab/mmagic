@@ -1,6 +1,17 @@
+_base_ = ['../comp1k.py', '../default_runtime.py']
+
 # model settings
 model = dict(
     type='GCA',
+    data_preprocessor=dict(
+        type='MattorPreprocessor',
+        mean=[123.675, 116.28, 103.53],
+        std=[58.395, 57.12, 57.375],
+        bgr_to_rgb=True,
+        proc_inputs='normalize',
+        proc_trimap='as_is',
+        proc_gt='rescale_to_zero_one',
+    ),
     backbone=dict(
         type='SimpleEncoderDecoder',
         encoder=dict(
@@ -8,25 +19,27 @@ model = dict(
             block='BasicBlock',
             layers=[3, 4, 4, 2],
             in_channels=6,
-            with_spectral_norm=True),
+            with_spectral_norm=True,
+            init_cfg=dict(
+                type='Pretrained',
+                checkpoint='open-mmlab://mmedit/res34_en_nomixup')),
         decoder=dict(
             type='ResGCADecoder',
             block='BasicBlockDec',
             layers=[2, 3, 3, 2],
             with_spectral_norm=True)),
     loss_alpha=dict(type='L1Loss'),
-    pretrained='open-mmlab://mmedit/res34_en_nomixup')
-train_cfg = dict(train_backbone=True)
-test_cfg = dict(metrics=['SAD', 'MattingMSE', 'GRAD', 'CONN'])
+    test_cfg=dict(
+        resize_method='pad',
+        resize_mode='reflect',
+        size_divisor=32,
+    ))
 
 # dataset settings
-dataset_type = 'AdobeComp1kDataset'
 data_root = 'data/adobe_composition-1k'
-bg_dir = './data/coco/train2017'
-img_norm_cfg = dict(
-    mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], to_rgb=True)
+bg_dir = 'data/coco/train2017'
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='alpha', flag='grayscale'),
+    dict(type='LoadImageFromFile', key='alpha', color_type='grayscale'),
     dict(type='LoadImageFromFile', key='fg'),
     dict(type='RandomLoadResizeBg', bg_dir=bg_dir),
     dict(
@@ -50,84 +63,70 @@ train_pipeline = [
     dict(type='CropAroundCenter', crop_size=512),
     dict(type='RandomJitter'),
     dict(type='MergeFgAndBg'),
-    dict(type='RescaleToZeroOne', keys=['merged', 'alpha']),
-    dict(type='Normalize', keys=['merged'], **img_norm_cfg),
-    dict(type='Collect', keys=['merged', 'alpha', 'trimap'], meta_keys=[]),
-    dict(type='ImageToTensor', keys=['merged', 'alpha', 'trimap']),
     dict(type='FormatTrimap', to_onehot=True),
+    dict(type='PackEditInputs'),
 ]
+
 test_pipeline = [
     dict(
         type='LoadImageFromFile',
         key='alpha',
-        flag='grayscale',
+        color_type='grayscale',
         save_original_img=True),
     dict(
         type='LoadImageFromFile',
         key='trimap',
-        flag='grayscale',
+        color_type='grayscale',
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
-    dict(type='Pad', keys=['trimap', 'merged'], mode='reflect'),
-    dict(type='RescaleToZeroOne', keys=['merged']),
-    dict(type='Normalize', keys=['merged'], **img_norm_cfg),
-    dict(
-        type='Collect',
-        keys=['merged', 'trimap'],
-        meta_keys=[
-            'merged_path', 'pad', 'merged_ori_shape', 'ori_alpha', 'ori_trimap'
-        ]),
-    dict(type='ImageToTensor', keys=['merged', 'trimap']),
     dict(type='FormatTrimap', to_onehot=True),
+    dict(type='PackEditInputs'),
 ]
-data = dict(
-    workers_per_gpu=8,
-    train_dataloader=dict(samples_per_gpu=10, drop_last=True),
-    val_dataloader=dict(samples_per_gpu=1),
-    test_dataloader=dict(samples_per_gpu=1),
-    train=dict(
-        type=dataset_type,
-        ann_file=f'{data_root}/training_list.json',
-        data_prefix=data_root,
-        pipeline=train_pipeline),
-    val=dict(
-        type=dataset_type,
-        ann_file=f'{data_root}/test_list.json',
-        data_prefix=data_root,
-        pipeline=test_pipeline),
-    test=dict(
-        type=dataset_type,
-        ann_file=f'{data_root}/test_list.json',
-        data_prefix=data_root,
-        pipeline=test_pipeline))
+
+train_dataloader = dict(
+    batch_size=10,
+    num_workers=8,
+    dataset=dict(pipeline=train_pipeline),
+)
+
+val_dataloader = dict(
+    batch_size=1,
+    dataset=dict(pipeline=test_pipeline),
+)
+
+test_dataloader = val_dataloader
+
+train_cfg = dict(
+    type='IterBasedTrainLoop',
+    max_iters=200_000,
+    val_interval=10_000,
+)
+val_cfg = dict(type='ValLoop')
+test_cfg = dict(type='TestLoop')
 
 # optimizer
-optimizers = dict(type='Adam', lr=4e-4, betas=[0.5, 0.999])
+optim_wrapper = dict(optimizer=dict(type='Adam', lr=4e-4, betas=[0.5, 0.999]))
 # learning policy
-lr_config = dict(
-    policy='CosineAnnealing',
-    min_lr=0,
-    by_epoch=False,
-    warmup='linear',
-    warmup_iters=5000,
-    warmup_ratio=0.001)
+param_scheduler = [
+    dict(
+        type='LinearLR',
+        start_factor=0.001,
+        begin=0,
+        end=5000,
+        by_epoch=False,
+    ),
+    dict(
+        type='CosineAnnealingLR',
+        T_max=200_000,  # TODO, need more check
+        eta_min=0,
+        begin=0,
+        end=200_000,
+        by_epoch=False,
+    )
+]
 
 # checkpoint saving
-checkpoint_config = dict(interval=2000, by_epoch=False)
-evaluation = dict(interval=2000, save_image=False, gpu_collect=False)
-log_config = dict(
-    interval=10,
-    hooks=[
-        dict(type='TextLoggerHook', by_epoch=False),
-        # dict(type='TensorboardLoggerHook'),
-        # dict(type='PaviLoggerHook', init_kwargs=dict(project='gca'))
-    ])
+# inheritate from _base_
 
 # runtime settings
-total_iters = 200000
-dist_params = dict(backend='nccl')
-log_level = 'INFO'
-work_dir = './work_dirs/gca'
-load_from = None
-resume_from = None
-workflow = [('train', 1)]
+# inheritate from _base_

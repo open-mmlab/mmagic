@@ -525,8 +525,8 @@ class TestAugmentations:
         assert np.allclose(fg, random_affine_results['fg'])
 
         # Test flip in both direction
-        alpha = np.random.rand(4, 4).astype(np.float32)
         fg = np.random.rand(4, 4).astype(np.float32)
+        alpha = np.random.rand(4, 4).astype(np.float32)
         results = dict(alpha=alpha, fg=fg)
         random_affine = RandomAffine(['fg', 'alpha'],
                                      degrees=0,
@@ -537,8 +537,8 @@ class TestAugmentations:
 
         # test random affine with different valid setting combinations
         # only shape are tested
-        alpha = np.random.rand(240, 320).astype(np.float32)
-        fg = np.random.rand(240, 320).astype(np.float32)
+        alpha = np.random.rand(240, 320, 1).astype(np.float32)
+        fg = np.random.rand(240, 320, 3).astype(np.float32)
         results = dict(alpha=alpha, fg=fg)
         random_affine = RandomAffine(['fg', 'alpha'],
                                      degrees=30,
@@ -548,11 +548,11 @@ class TestAugmentations:
         random_affine_results = random_affine(results)
         assert self.check_keys_contain(random_affine_results.keys(),
                                        target_keys)
-        assert random_affine_results['fg'].shape == (240, 320)
-        assert random_affine_results['alpha'].shape == (240, 320)
+        assert random_affine_results['fg'].shape == (240, 320, 3)
+        assert random_affine_results['alpha'].shape == (240, 320, 1)
 
-        alpha = np.random.rand(240, 320).astype(np.float32)
-        fg = np.random.rand(240, 320).astype(np.float32)
+        alpha = np.random.rand(240, 320, 1).astype(np.float32)
+        fg = np.random.rand(240, 320, 3).astype(np.float32)
         results = dict(alpha=alpha, fg=fg)
         random_affine = RandomAffine(['fg', 'alpha'],
                                      degrees=(-30, 30),
@@ -562,18 +562,18 @@ class TestAugmentations:
         random_affine_results = random_affine(results)
         assert self.check_keys_contain(random_affine_results.keys(),
                                        target_keys)
-        assert random_affine_results['fg'].shape == (240, 320)
-        assert random_affine_results['alpha'].shape == (240, 320)
+        assert random_affine_results['fg'].shape == (240, 320, 3)
+        assert random_affine_results['alpha'].shape == (240, 320, 1)
 
-        alpha = np.random.rand(240, 320).astype(np.float32)
-        fg = np.random.rand(240, 320).astype(np.float32)
+        alpha = np.random.rand(240, 320, 1).astype(np.float32)
+        fg = np.random.rand(240, 320, 3).astype(np.float32)
         results = dict(alpha=alpha, fg=fg)
         random_affine = RandomAffine(['fg', 'alpha'], degrees=30)
         random_affine_results = random_affine(results)
         assert self.check_keys_contain(random_affine_results.keys(),
                                        target_keys)
-        assert random_affine_results['fg'].shape == (240, 320)
-        assert random_affine_results['alpha'].shape == (240, 320)
+        assert random_affine_results['fg'].shape == (240, 320, 3)
+        assert random_affine_results['alpha'].shape == (240, 320, 1)
 
         assert repr(random_affine) == random_affine.__class__.__name__ + (
             f'(keys={target_keys}, degrees={(-30, 30)}, '

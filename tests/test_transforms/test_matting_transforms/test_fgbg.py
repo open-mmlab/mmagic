@@ -19,10 +19,9 @@ def assert_keys_contain(result_keys, target_keys):
 def test_composite_fg():
     target_keys = ['alpha', 'fg', 'bg']
 
-    np.random.seed(0)
     fg = np.random.rand(32, 32, 3).astype(np.float32)
     bg = np.random.rand(32, 32, 3).astype(np.float32)
-    alpha = np.random.rand(32, 32).astype(np.float32)
+    alpha = np.random.rand(32, 32, 1).astype(np.float32)
     results = dict(alpha=alpha, fg=fg, bg=bg)
     # use merged dir as fake fg dir, trimap dir as fake alpha dir for unittest
     composite_fg = CompositeFg(
@@ -40,21 +39,25 @@ def test_composite_fg():
     ]
     assert composite_fg.fg_list == correct_fg_list
     assert composite_fg.alpha_list == correct_alpha_list
-    composite_fg_results = composite_fg(results)
-    assert_keys_contain(composite_fg_results.keys(), target_keys)
-    assert composite_fg_results['fg'].shape == (32, 32, 3)
+    for _ in range(3):  # to test randomness
+        composite_fg_results = composite_fg(results)
+        assert_keys_contain(composite_fg_results.keys(), target_keys)
+        assert composite_fg_results['fg'].shape == (32, 32, 3)
+        assert composite_fg_results['alpha'].shape == (32, 32, 1)
 
     fg = np.random.rand(32, 32, 3).astype(np.float32)
     bg = np.random.rand(32, 32, 3).astype(np.float32)
-    alpha = np.random.rand(32, 32).astype(np.float32)
+    alpha = np.random.rand(32, 32, 1).astype(np.float32)
     results = dict(alpha=alpha, fg=fg, bg=bg)
     composite_fg = CompositeFg(
         str(data_root / 'fg'),
         str(data_root / 'alpha'),
         interpolation='bilinear')
-    composite_fg_results = composite_fg(results)
-    assert_keys_contain(composite_fg_results.keys(), target_keys)
-    assert composite_fg_results['fg'].shape == (32, 32, 3)
+    for _ in range(3):  # to test randomness
+        composite_fg_results = composite_fg(results)
+        assert_keys_contain(composite_fg_results.keys(), target_keys)
+        assert composite_fg_results['fg'].shape == (32, 32, 3)
+        assert composite_fg_results['alpha'].shape == (32, 32, 1)
 
     _fg_dirs = str(data_root / 'fg')
     _alpha_dirs = str(data_root / 'alpha')
@@ -70,13 +73,14 @@ def test_merge_fg_and_bg():
 
     fg = np.random.randn(32, 32, 3)
     bg = np.random.randn(32, 32, 3)
-    alpha = np.random.randn(32, 32)
+    alpha = np.random.randn(32, 32, 1)
     results = dict(fg=fg, bg=bg, alpha=alpha)
     merge_fg_and_bg = MergeFgAndBg()
     merge_fg_and_bg_results = merge_fg_and_bg(results)
 
     assert_keys_contain(merge_fg_and_bg_results.keys(), target_keys)
     assert merge_fg_and_bg_results['merged'].shape == fg.shape
+    assert merge_fg_and_bg_results['alpha'].shape == (32, 32, 1)
 
 
 def test_perturb_bg():
@@ -109,35 +113,34 @@ def test_perturb_bg():
     repr_str = perturb_bg.__class__.__name__ + '(gamma_ratio=0.6)'
     assert repr(perturb_bg) == repr_str
 
-    def test_random_jitter(self):
-        with pytest.raises(AssertionError):
-            RandomJitter(-40)
 
-        with pytest.raises(AssertionError):
-            RandomJitter((-40, 40, 40))
+def test_random_jitter():
+    with pytest.raises(AssertionError):
+        RandomJitter(-40)
 
-        target_keys = ['fg']
+    with pytest.raises(AssertionError):
+        RandomJitter((-40, 40, 40))
 
-        fg = np.random.rand(240, 320, 3).astype(np.float32)
-        alpha = np.random.rand(240, 320).astype(np.float32)
-        results = dict(fg=fg.copy(), alpha=alpha)
-        random_jitter = RandomJitter(40)
-        random_jitter_results = random_jitter(results)
-        assert self.check_keys_contain(random_jitter_results.keys(),
-                                       target_keys)
-        assert random_jitter_results['fg'].shape == (240, 320, 3)
+    target_keys = ['fg']
 
-        fg = np.random.rand(240, 320, 3).astype(np.float32)
-        alpha = np.random.rand(240, 320).astype(np.float32)
-        results = dict(fg=fg.copy(), alpha=alpha)
-        random_jitter = RandomJitter((-50, 50))
-        random_jitter_results = random_jitter(results)
-        assert self.check_keys_contain(random_jitter_results.keys(),
-                                       target_keys)
-        assert random_jitter_results['fg'].shape == (240, 320, 3)
+    fg = np.random.rand(240, 320, 3).astype(np.float32)
+    alpha = np.random.rand(240, 320, 1).astype(np.float32)
+    results = dict(fg=fg.copy(), alpha=alpha)
+    random_jitter = RandomJitter(40)
+    random_jitter_results = random_jitter(results)
+    assert_keys_contain(random_jitter_results.keys(), target_keys)
+    assert random_jitter_results['fg'].shape == (240, 320, 3)
 
-        assert repr(random_jitter) == random_jitter.__class__.__name__ + (
-            'hue_range=(-50, 50)')
+    fg = np.random.rand(240, 320, 3).astype(np.float32)
+    alpha = np.random.rand(240, 320, 1).astype(np.float32)
+    results = dict(fg=fg.copy(), alpha=alpha)
+    random_jitter = RandomJitter((-50, 50))
+    random_jitter_results = random_jitter(results)
+    assert_keys_contain(random_jitter_results.keys(), target_keys)
+    assert random_jitter_results['fg'].shape == (240, 320, 3)
+
+    assert repr(random_jitter) == random_jitter.__class__.__name__ + (
+        'hue_range=(-50, 50)')
 
 
 def test_random_load_resize_bg():

@@ -451,10 +451,14 @@ class RandomAffine(BaseTransform):
         M = np.array(M).reshape((2, 3))
 
         for key in self.keys:
+            ori_ndim = results[key].ndim
             results[key] = cv2.warpAffine(
                 results[key],
                 M, (w, h),
                 flags=cv2.INTER_NEAREST + cv2.WARP_INVERSE_MAP)
+
+            if ori_ndim == 3 and results[key].ndim == 2:
+                results[key] = results[key][..., None]
 
         return results
 
