@@ -41,9 +41,12 @@ def test_pack_edit_inputs():
         img=np.random.rand(64, 64, 3),
         gt=[np.random.rand(64, 61, 3),
             np.random.rand(64, 61, 3)],
+        img_lq=np.random.rand(64, 64, 3),
         ref=np.random.rand(64, 62, 3),
+        ref_lq=np.random.rand(64, 62, 3),
         mask=np.random.rand(64, 63, 3),
         gt_heatmap=np.random.rand(64, 65, 3),
+        gt_unsharp=np.random.rand(64, 65, 3),
         merged=np.random.rand(64, 64, 3),
         trimap=np.random.rand(64, 66, 3),
         alpha=np.random.rand(64, 67, 3),
@@ -67,6 +70,14 @@ def test_pack_edit_inputs():
     gt_tensor = torch.stack(gt_tensors, dim=0)
     assert_tensor_equal(data_sample.gt_img.data, gt_tensor)
 
+    img_lq_tensor = to_tensor(ori_results['ref'])
+    img_lq_tensor = img_lq_tensor.permute(2, 0, 1)
+    assert_tensor_equal(data_sample.ref_img.data, img_lq_tensor)
+
+    ref_lq_tensor = to_tensor(ori_results['ref'])
+    ref_lq_tensor = ref_lq_tensor.permute(2, 0, 1)
+    assert_tensor_equal(data_sample.ref_img.data, ref_lq_tensor)
+
     ref_tensor = to_tensor(ori_results['ref'])
     ref_tensor = ref_tensor.permute(2, 0, 1)
     assert_tensor_equal(data_sample.ref_img.data, ref_tensor)
@@ -78,6 +89,10 @@ def test_pack_edit_inputs():
     gt_heatmap_tensor = to_tensor(ori_results['gt_heatmap'])
     gt_heatmap_tensor = gt_heatmap_tensor.permute(2, 0, 1)
     assert_tensor_equal(data_sample.gt_heatmap.data, gt_heatmap_tensor)
+
+    gt_unsharp_tensor = to_tensor(ori_results['gt_heatmap'])
+    gt_unsharp_tensor = gt_unsharp_tensor.permute(2, 0, 1)
+    assert_tensor_equal(data_sample.gt_heatmap.data, gt_unsharp_tensor)
 
     gt_merged_tensor = to_tensor(ori_results['merged'])
     gt_merged_tensor = gt_merged_tensor.permute(2, 0, 1)
@@ -109,9 +124,10 @@ def test_to_tensor():
         img=np.random.rand(64, 64, 3),
         gt=[np.random.rand(64, 64, 3),
             np.random.rand(64, 64, 3)],
+        gt1=[np.random.rand(64, 64, 3)],
         a=1)
 
-    keys = ['img', 'gt', 'a']
+    keys = ['img', 'gt', 'gt1', 'a']
     to_tensor = ToTensor(keys=keys, to_float32=True)
     assert repr(to_tensor) == f'ToTensor(keys={keys}, to_float32=True)'
 

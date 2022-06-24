@@ -53,6 +53,13 @@ class TestEditDataSample(TestCase):
         assert 'gt_img' in edit_data_sample
         assert _equal(edit_data_sample.gt_img.img, gt_img_data['img'])
 
+        # test img_lq
+        img_lq_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
+        img_lq = PixelData(**img_lq_data)
+        edit_data_sample.img_lq = img_lq
+        assert 'img_lq' in edit_data_sample
+        assert _equal(edit_data_sample.img_lq.img, img_lq_data['img'])
+
         # test pred_img
         pred_img_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
         pred_img = PixelData(**pred_img_data)
@@ -67,12 +74,26 @@ class TestEditDataSample(TestCase):
         assert 'ref_img' in edit_data_sample
         assert _equal(edit_data_sample.ref_img.img, ref_img_data['img'])
 
+        # test ref_lq
+        ref_lq_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
+        ref_lq = PixelData(**ref_lq_data)
+        edit_data_sample.ref_lq = ref_lq
+        assert 'ref_lq' in edit_data_sample
+        assert _equal(edit_data_sample.ref_lq.img, ref_lq_data['img'])
+
         # test mask
         mask_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
         mask = PixelData(**mask_data)
         edit_data_sample.mask = mask
         assert 'mask' in edit_data_sample
         assert _equal(edit_data_sample.mask.img, mask_data['img'])
+
+        # test gt_unsharp
+        gt_unsharp_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
+        gt_unsharp = PixelData(**gt_unsharp_data)
+        edit_data_sample.gt_unsharp = gt_unsharp
+        assert 'gt_unsharp' in edit_data_sample
+        assert _equal(edit_data_sample.gt_unsharp.img, gt_unsharp_data['img'])
 
         # test gt_heatmap
         gt_heatmap_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))

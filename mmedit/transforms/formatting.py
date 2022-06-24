@@ -24,7 +24,7 @@ def check_if_image(value: Any) -> bool:
     """
 
     if isinstance(value, (List, Tuple)):
-        is_image = True
+        is_image = (len(value) > 0)
         for v in value:
             is_image = is_image and check_if_image(v)
 
@@ -114,10 +114,20 @@ class PackEditInputs(BaseTransform):
             gt_tensor = images_to_tensor(gt)
             data_sample.gt_img = PixelData(data=gt_tensor)
 
+        if 'img_lq' in results:
+            img_lq = results.pop('img_lq')
+            img_lq_tensor = images_to_tensor(img_lq)
+            data_sample.img_lq = PixelData(data=img_lq_tensor)
+
         if 'ref' in results:
             ref = results.pop('ref')
             ref_tensor = images_to_tensor(ref)
             data_sample.ref_img = PixelData(data=ref_tensor)
+
+        if 'ref_lq' in results:
+            ref_lq = results.pop('ref_lq')
+            ref_lq_tensor = images_to_tensor(ref_lq)
+            data_sample.ref_lq = PixelData(data=ref_lq_tensor)
 
         if 'mask' in results:
             mask = results.pop('mask')
@@ -128,6 +138,11 @@ class PackEditInputs(BaseTransform):
             gt_heatmap = results.pop('gt_heatmap')
             gt_heatmap_tensor = images_to_tensor(gt_heatmap)
             data_sample.gt_heatmap = PixelData(data=gt_heatmap_tensor)
+
+        if 'gt_unsharp' in results:
+            gt_unsharp = results.pop('gt_unsharp')
+            gt_unsharp_tensor = images_to_tensor(gt_unsharp)
+            data_sample.gt_unsharp = PixelData(data=gt_unsharp_tensor)
 
         if 'merged' in results:
             # image in matting annotation is named merged
@@ -142,13 +157,6 @@ class PackEditInputs(BaseTransform):
             trimap = results.pop('trimap')
             trimap_tensor = images_to_tensor(trimap)
             data_sample.trimap = PixelData(data=trimap_tensor)
-
-        if 'merged' in results:
-            # image in matting annotation is named merged
-            img = results.pop('merged')
-            img_tensor = images_to_tensor(img)
-            packed_results['inputs'] = img_tensor
-            data_sample.gt_merged = PixelData(data=img_tensor.clone())
 
         if 'alpha' in results:
             # gt_alpha in matting annotation is named alpha
@@ -208,6 +216,8 @@ class ToTensor(BaseTransform):
             tensor = images_to_tensor(value)
             if self.to_float32:
                 tensor = tensor.float()
+            if len(tensor.shape) > 3 and tensor.size(0) == 1:
+                tensor.squeeze_(0)
 
         else:
             tensor = to_tensor(value)

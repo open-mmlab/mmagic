@@ -90,6 +90,18 @@ class EditDataSample(BaseDataElement):
         del self._pred_img
 
     @property
+    def img_lq(self) -> PixelData:
+        return self._img_lq
+
+    @img_lq.setter
+    def img_lq(self, value: PixelData):
+        self.set_field(value, '_img_lq', dtype=PixelData)
+
+    @img_lq.deleter
+    def img_lq(self):
+        del self._img_lq
+
+    @property
     def ref_img(self) -> PixelData:
         return self._ref_img
 
@@ -100,6 +112,30 @@ class EditDataSample(BaseDataElement):
     @ref_img.deleter
     def ref_img(self):
         del self._ref_img
+
+    @property
+    def ref_lq(self) -> PixelData:
+        return self._ref_lq
+
+    @ref_lq.setter
+    def ref_lq(self, value: PixelData):
+        self.set_field(value, '_ref_lq', dtype=PixelData)
+
+    @ref_lq.deleter
+    def ref_lq(self):
+        del self._ref_lq
+
+    @property
+    def gt_unsharp(self) -> PixelData:
+        return self._gt_unsharp
+
+    @gt_unsharp.setter
+    def gt_unsharp(self, value: PixelData):
+        self.set_field(value, '_gt_unsharp', dtype=PixelData)
+
+    @gt_unsharp.deleter
+    def gt_unsharp(self):
+        del self._gt_unsharp
 
     @property
     def mask(self) -> PixelData:
