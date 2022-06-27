@@ -82,18 +82,21 @@ jobs:
         run: pip install torch==${{ matrix.torch }} torchvision==${{ matrix.torchvision }} -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install MMCV ${{ matrix.mmcv_link }}
         run: |
-          pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/${{ matrix.mmcv_link }}/index.html --only-binary mmcv-full
-          python -c 'import mmcv; print(mmcv.__version__)'
+          pip install openmim
+          mim install mmcv-full
+          python -c 'import mmcv; import mmcv._ext; print(mmcv.__version__)'
       - name: Build and install
         run: pip install -e .[all]
       - name: Show pip list
         run: pip list
       - name: Run unittests and generate coverage report
+        if: ${{ contains( matrix.torch , 'cpu' ) }}
         run: |
           coverage run --branch --source mmedit -m pytest tests/ -sv
           coverage xml
           coverage report -m
       - name: Upload coverage to Codecov
+        if: ${{ contains( matrix.torch , 'cpu' ) }}
         uses: codecov/codecov-action@v2
         with:
           file: ./coverage.xml
