@@ -51,7 +51,7 @@ The master branch works with **PyTorch 1.5+**.
 
 Some Demos:
 
-https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4
+https://user-images.githubusercontent.com/12756472/175944645-cabe8c2b-9f25-440b-91cc-cdac4e752c5a.mp4
 
 https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
 
