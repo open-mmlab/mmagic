@@ -152,6 +152,43 @@ def generate_anno_file(root_path, file_name='meta_info_REDS_GT.txt'):
                 f.write(f'{i:03d}/{j:08d}.png (720, 1280, 3)\n')
 
 
+def split_anno_file(root_path, val_partition='REDS4'):
+    """Split anno file for REDS datasets from the ground-truth folder.
+
+    Args:
+        root_path (str): Root path for REDS datasets.
+        val_partition (str): The way of split.
+            Selected from `RED4` and `official`. Default: 'REDS4'
+    """
+
+    print(f'Split annotation files in {val_partition} mode...')
+    if val_partition == 'official':
+        val_partition = [f'{v:03d}' for v in range(240, 270)]
+        train_txt_file = osp.join(root_path, 'meta_info_official_train.txt')
+        val_txt_file = osp.join(root_path, 'meta_info_official_val.txt')
+    else:
+        val_partition = ['000', '011', '015', '020']
+        train_txt_file = osp.join(root_path, 'meta_info_reds4_train.txt')
+        val_txt_file = osp.join(root_path, 'meta_info_reds4_val.txt')
+
+    train_list = []
+    val_list = []
+    for i in range(270):
+        for j in range(100):
+            if f'{i:03d}' in val_partition:
+                val_list.append(f'{i:03d}/{j:08d}.png (720, 1280, 3)')
+            else:
+                train_list.append(f'{i:03d}/{j:08d}.png (720, 1280, 3)')
+
+    mmcv.utils.mkdir_or_exist(osp.dirname(train_txt_file))
+    with open(train_txt_file, 'w') as f:
+        f.write('\n'.join(train_list))
+
+    mmcv.utils.mkdir_or_exist(osp.dirname(val_txt_file))
+    with open(val_txt_file, 'w') as f:
+        f.write('\n'.join(val_list))
+
+
 def unzip(zip_path):
     """Unzip zip files. It will scan all zip files in zip_path and return unzip
     folder names.
@@ -254,6 +291,8 @@ if __name__ == '__main__':
 
     # generate image list anno file
     generate_anno_file(root_path)
+    split_anno_file(root_path, val_partition='RED4')
+    split_anno_file(root_path, val_partition='official')
 
     # create lmdb file
     if args.make_lmdb:
