@@ -108,23 +108,23 @@ class BaseEditModel(BaseModel):
         """
 
         if mode == 'tensor':
-            return self.tensor_forward(batch_inputs, data_samples, **kwargs)
+            return self.forward_tensor(batch_inputs, data_samples, **kwargs)
 
         elif mode == 'predict':
-            return self.inference_forward(batch_inputs, data_samples, **kwargs)
+            return self.forward_inference(batch_inputs, data_samples, **kwargs)
 
         elif mode == 'loss':
-            return self.train_forward(batch_inputs, data_samples, **kwargs)
+            return self.forward_train(batch_inputs, data_samples, **kwargs)
 
-    def tensor_forward(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_tensor(self, batch_inputs, data_samples=None, **kwargs):
 
         feats = self.generator(batch_inputs, **kwargs)
 
         return feats
 
-    def inference_forward(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_inference(self, batch_inputs, data_samples=None, **kwargs):
 
-        feats = self.tensor_forward(batch_inputs, data_samples, **kwargs)
+        feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
         feats = self.data_preprocessor.destructor(feats)
         predictions = []
         for idx in range(feats.shape[0]):
@@ -135,9 +135,9 @@ class BaseEditModel(BaseModel):
 
         return predictions
 
-    def train_forward(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_train(self, batch_inputs, data_samples=None, **kwargs):
 
-        feats = self.tensor_forward(batch_inputs, data_samples, **kwargs)
+        feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
         gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
         batch_gt_data = torch.stack(gt_imgs)
 

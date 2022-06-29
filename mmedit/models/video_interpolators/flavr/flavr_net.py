@@ -2,14 +2,13 @@
 import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule
-from mmcv.runner import load_checkpoint
+from mmengine.model import BaseModule
 
-from mmedit.registry import BACKBONES
-from mmedit.utils import get_root_logger
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class FLAVRNet(nn.Module):
+@MODELS.register_module()
+class FLAVRNet(BaseModule):
     """PyTorch implementation of FLAVR for video frame interpolation.
 
     Paper:
@@ -31,6 +30,7 @@ class FLAVRNet(nn.Module):
             Candidates are ``concat`` and ``add``. Default: ``concat``
         up_mode (str): Up-mode UpConv3d, candidates are ``transpose`` and
             ``trilinear``. Default: ``transpose``
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,
@@ -41,8 +41,9 @@ class FLAVRNet(nn.Module):
                  bias=False,
                  norm_cfg=None,
                  join_type='concat',
-                 up_mode='transpose'):
-        super().__init__()
+                 up_mode='transpose',
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
 
         self.encoder = Encoder(
             block=BasicBlock,
@@ -104,22 +105,6 @@ class FLAVRNet(nn.Module):
         out = out.squeeze(1)
 
         return out
-
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is not None:
-            raise TypeError('"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')
 
 
 class Encoder(nn.Module):

@@ -62,7 +62,3 @@ def test_base_edit_model():
     # feat
     output = model(torch.rand(1, 3, 20, 20), mode='tensor')
     assert output.shape == (1, 3, 20, 20)
-
-
-t = ToyBaseModel()
-test_base_edit_model()

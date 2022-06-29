@@ -30,9 +30,17 @@ def flow_warp(x,
     _, _, h, w = x.size()
     # create mesh grid
     device = flow.device
-    grid_y, grid_x = torch.meshgrid(
-        torch.arange(0, h, device=device, dtype=x.dtype),
-        torch.arange(0, w, device=device, dtype=x.dtype))
+    # torch.meshgrid has been modified in 1.10.0 (compatibility with previous
+    # versions), and will be further modified in 1.12 (Breaking Change)
+    if 'indexing' in torch.meshgrid.__code__.co_varnames:
+        grid_y, grid_x = torch.meshgrid(
+            torch.arange(0, h, device=device, dtype=x.dtype),
+            torch.arange(0, w, device=device, dtype=x.dtype),
+            indexing='ij')
+    else:
+        grid_y, grid_x = torch.meshgrid(
+            torch.arange(0, h, device=device, dtype=x.dtype),
+            torch.arange(0, w, device=device, dtype=x.dtype))
     grid = torch.stack((grid_x, grid_y), 2)  # h, w, 2
     grid.requires_grad = False
 

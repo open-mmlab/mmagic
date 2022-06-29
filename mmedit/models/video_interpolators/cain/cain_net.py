@@ -2,14 +2,14 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule
 
-from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.common import make_layer, pixel_unshuffle
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class CAINNet(BaseBackbone):
+@MODELS.register_module()
+class CAINNet(BaseModule):
     """CAIN network structure.
 
     Paper: Channel Attention Is All You Need for Video Frame Interpolation.
@@ -26,6 +26,7 @@ class CAINNet(BaseBackbone):
             normalization is performed. Default: None.
         padding (int): Padding of CAINNet. Default: 7.
         act (function): activate function. Default: nn.LeakyReLU(0.2, True).
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,
@@ -37,8 +38,9 @@ class CAINNet(BaseBackbone):
                  reduction=16,
                  norm=None,
                  padding=7,
-                 act=nn.LeakyReLU(0.2, True)):
-        super().__init__()
+                 act=nn.LeakyReLU(0.2, True),
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
 
         mid_channels = in_channels * (4**depth)
         self.scale = 2**depth
@@ -73,8 +75,8 @@ class CAINNet(BaseBackbone):
         assert imgs.shape[1] == 2
         x1, x2 = imgs[:, 0], imgs[:, 1]
 
-        mean1 = x1.mean(2, keepdim=True).mean(3, keepdim=True)
-        mean2 = x2.mean(2, keepdim=True).mean(3, keepdim=True)
+        mean1 = x1.mean((2, 3), keepdim=True)
+        mean2 = x2.mean((2, 3), keepdim=True)
         x1 -= mean1
         x2 -= mean2
 
@@ -129,16 +131,18 @@ def get_padding_functions(x, padding=7):
         padding_width = (((w >> padding) + 1) << padding) - w
     if h != ((h >> padding) << padding):
         padding_height = (((h >> padding) + 1) << padding) - h
+
     left, right = padding_width // 2, padding_width - padding_width // 2
     up, down = padding_height // 2, padding_height - padding_height // 2
-    # print(up, down, left, right)
     if down >= h or right >= w:
         function = nn.ReplicationPad2d
     else:
         function = nn.ReflectionPad2d
+
     padding_function = function(padding=[left, right, up, down])
     depadding_function = function(
         padding=[0 - left, 0 - right, 0 - up, 0 - down])
+
     return padding_function, depadding_function
 
 

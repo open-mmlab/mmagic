@@ -55,6 +55,3 @@ def test_edit_data_preprocessor():
         EditDataPreprocessor(mean=(1, 1))
     with pytest.raises(AssertionError):
         EditDataPreprocessor(std=(1, 1))
-
-
-test_edit_data_preprocessor()

@@ -4,15 +4,15 @@ import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule
 from mmcv.runner import load_checkpoint
+from mmengine.model import BaseModule
 
-from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.common import flow_warp
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 from mmedit.utils import get_root_logger
 
 
-@BACKBONES.register_module()
-class TOFlowVFINet(BaseBackbone):
+@MODELS.register_module()
+class TOFlowVFINet(BaseModule):
     """PyTorch implementation of TOFlow for video frame interpolation.
 
     Paper: Xue et al., Video Enhancement with Task-Oriented Flow, IJCV 2018
@@ -28,13 +28,15 @@ class TOFlowVFINet(BaseBackbone):
             Default: [0.229, 0.224, 0.225]
         flow_cfg (dict): Config of SPyNet.
             Default: dict(norm_cfg=None, pretrained=None)
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,
                  rgb_mean=[0.485, 0.456, 0.406],
                  rgb_std=[0.229, 0.224, 0.225],
-                 flow_cfg=dict(norm_cfg=None, pretrained=None)):
-        super().__init__()
+                 flow_cfg=dict(norm_cfg=None, pretrained=None),
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
 
         # The mean and std are for img with range (0, 1)
         self.register_buffer('mean', torch.Tensor(rgb_mean).view(1, -1, 1, 1))
@@ -46,55 +48,6 @@ class TOFlowVFINet(BaseBackbone):
         # reconstruction module
         self.resnet = ResNet()
 
-    def normalize(self, img):
-        """Normalize the input image.
-
-        Args:
-            img (Tensor): Input image.
-
-        Returns:
-            Tensor: Normalized image.
-        """
-        return (img - self.mean) / self.std
-
-    def denormalize(self, img):
-        """Denormalize the output image.
-
-        Args:
-            img (Tensor): Output image.
-
-        Returns:
-            Tensor: Denormalized image.
-        """
-        return img * self.std + self.mean
-
-    def spatial_padding(self, imgs):
-        """ Apply pdding spatially.
-
-        Since the SPyNet module in TOFlow requires that the resolution is a
-        multiple of 16, we apply padding to the input LR images if their
-        resolution is not divisible by 16.
-
-        Args:
-            imgs (Tensor): Input sequence with shape (n, 2, c, h, w).
-
-        Returns:
-            Tensor: Padded sequence with shape (n, 2, c, h_pad, w_pad).
-
-        """
-        n, t, c, h, w = imgs.size()
-
-        pad_h = (16 - h % 16) % 16
-        pad_w = (16 - w % 16) % 16
-
-        if pad_h != 0 or pad_w != 0:
-            # padding
-            imgs = imgs.view(-1, c, h, w)
-            imgs = F.pad(imgs, [0, pad_w, 0, pad_h], mode='reflect')
-            return imgs.view(n, t, c, h + pad_h, w + pad_w)
-        else:
-            return imgs
-
     def forward(self, imgs):
         """
         Args:
@@ -104,13 +57,6 @@ class TOFlowVFINet(BaseBackbone):
             Tensor: Interpolated frame with shape of (b, 3, h, w).
         """
 
-        h_ori, w_ori = imgs.shape[-2:]
-        imgs = self.spatial_padding(imgs=imgs)
-        num_batches, num_frames, c, h, w = imgs.size()
-
-        imgs = self.normalize(imgs.view(-1, c, h, w))
-        imgs = imgs.view(num_batches, num_frames, c, h, w)
-
         flow_10 = self.spynet(imgs[:, 0], imgs[:, 1]).permute(0, 2, 3, 1)
         flow_01 = self.spynet(imgs[:, 1], imgs[:, 0]).permute(0, 2, 3, 1)
 
@@ -119,9 +65,8 @@ class TOFlowVFINet(BaseBackbone):
 
         wrap_frames = torch.stack([wrap_frame0, wrap_frame1], dim=1)
         output = self.resnet(wrap_frames)
-        output = self.denormalize(output)
 
-        return output[..., :h_ori, :w_ori]
+        return output
 
 
 class BasicModule(nn.Module):

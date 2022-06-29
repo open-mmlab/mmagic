@@ -16,11 +16,18 @@ from .mattors import DIM, GCA, BaseMattor, IndexNet
 from .restorers import ESRGAN, SRGAN, BasicRestorer
 from .synthesizers import CycleGAN, Pix2Pix
 from .transformers import SearchTransformer
-from .video_interpolators import CAIN, BasicInterpolator
+from .video_interpolators import (CAIN, FLAVR, BasicInterpolator, CAINNet,
+                                  FLAVRNet, TOFlowVFINet)
 
 __all__ = [
     'BaseEditModel',
     'EditDataPreprocessor',
+    'BasicInterpolator',
+    'CAIN',
+    'CAINNet',
+    'FLAVR',
+    'FLAVRNet',
+    'TOFlowVFINet',
     'AOTInpaintor',
     'BaseModel',
     'BasicRestorer',

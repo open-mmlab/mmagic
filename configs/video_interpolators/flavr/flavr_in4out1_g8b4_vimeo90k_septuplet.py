@@ -1,4 +1,7 @@
+_base_ = '../../default_runtime.py'
+
 exp_name = 'flavr_in4out1_g8b4_vimeo90k_septuplet'
+work_dir = f'./work_dirs/{exp_name}'
 
 # model settings
 model = dict(
@@ -13,162 +16,160 @@ model = dict(
         norm_cfg=None,
         join_type='concat',
         up_mode='transpose'),
-    pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
-# model training and testing settings
-train_cfg = None
-test_cfg = dict(metrics=['PSNR', 'SSIM', 'MAE'], crop_border=0)
-
-# dataset settings
-train_dataset_type = 'VFIVimeo90K7FramesDataset'
-val_dataset_type = 'VFIVimeo90K7FramesDataset'
+    pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
+    train_cfg=None,
+    test_cfg=None,
+    required_frames=4,
+    step_frames=1,
+    init_cfg=None,
+    data_preprocessor=dict(
+        type='EditDataPreprocessor',
+        input_view=(1, -1, 1, 1),
+        output_view=(-1, 1, 1),
+    ))
 
 train_pipeline = [
     dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='inputs',
+        type='LoadImageFromFile',
+        key='img',
         channel_order='rgb',
-        backend='pillow'),
+        imdecode_backend='pillow'),
     dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='target',
+        type='LoadImageFromFile',
+        key='gt',
         channel_order='rgb',
-        backend='pillow'),
-    dict(type='FixedCrop', keys=['inputs', 'target'], crop_size=(256, 256)),
+        imdecode_backend='pillow'),
+    dict(type='FixedCrop', keys=['img', 'gt'], crop_size=(256, 256)),
     dict(
         type='Flip',
-        keys=['inputs', 'target'],
+        keys=['img', 'gt'],
         flip_ratio=0.5,
         direction='horizontal'),
     dict(
-        type='Flip',
-        keys=['inputs', 'target'],
-        flip_ratio=0.5,
-        direction='vertical'),
+        type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(
         type='ColorJitter',
-        keys=['inputs', 'target'],
+        keys=['img', 'gt'],
         channel_order='rgb',
         brightness=0.05,
         contrast=0.05,
         saturation=0.05,
         hue=0.05),
-    dict(type='TemporalReverse', keys=['inputs'], reverse_ratio=0.5),
-    dict(type='RescaleToZeroOne', keys=['inputs', 'target']),
-    dict(type='FramesToTensor', keys=['inputs', 'target']),
-    dict(
-        type='Collect',
-        keys=['inputs', 'target'],
-        meta_keys=['inputs_path', 'target_path', 'key'])
+    dict(type='TemporalReverse', keys=['img'], reverse_ratio=0.5),
+    dict(type='ToTensor', keys=['img', 'gt']),
+    dict(type='PackEditInputs')
 ]
 
-valid_pipeline = [
+val_pipeline = [
     dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='inputs',
+        type='LoadImageFromFile',
+        key='img',
         channel_order='rgb',
-        backend='pillow'),
+        imdecode_backend='pillow'),
     dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='target',
+        type='LoadImageFromFile',
+        key='gt',
         channel_order='rgb',
-        backend='pillow'),
-    dict(type='RescaleToZeroOne', keys=['inputs', 'target']),
-    dict(type='FramesToTensor', keys=['inputs', 'target']),
-    dict(
-        type='Collect',
-        keys=['inputs', 'target'],
-        meta_keys=['inputs_path', 'target_path', 'key'])
+        imdecode_backend='pillow'),
+    dict(type='ToTensor', keys=['img', 'gt']),
+    dict(type='PackEditInputs')
 ]
 
 demo_pipeline = [
     dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='inputs',
+        type='LoadImageFromFile',
+        key='img',
         channel_order='rgb',
-        backend='pillow'),
-    dict(type='RescaleToZeroOne', keys=['inputs']),
-    dict(type='FramesToTensor', keys=['inputs']),
-    dict(type='Collect', keys=['inputs'], meta_keys=['inputs_path', 'key'])
+        imdecode_backend='pillow'),
+    dict(type='ToTensor', keys=['img']),
+    dict(type='PackEditInputs')
 ]
 
-root_dir = 'data/vimeo90k'
-data = dict(
-    workers_per_gpu=16,
-    train_dataloader=dict(samples_per_gpu=4),  # 8 gpu
-    val_dataloader=dict(samples_per_gpu=1),
-    test_dataloader=dict(samples_per_gpu=1),
+# dataset settings
+train_dataset_type = 'BasicFramesDataset'
+val_dataset_type = 'BasicFramesDataset'
+data_root = 'data/vimeo90k_septenary'
 
-    # train
-    train=dict(
+train_dataloader = dict(
+    num_workers=16,
+    batch_size=4,  # 8 gpu
+    persistent_workers=False,
+    sampler=dict(type='InfiniteSampler', shuffle=True),
+    dataset=dict(
         type=train_dataset_type,
-        folder=f'{root_dir}/GT',
-        ann_file=f'{root_dir}/sep_trainlist.txt',
+        ann_file='txt/sep_trainlist.txt',
+        metainfo=dict(dataset_type='vimeo90k_septenary', task_name='vfi'),
+        data_root=data_root,
+        data_prefix=dict(img='GT', gt='GT'),
         pipeline=train_pipeline,
-        input_frames=[1, 3, 5, 7],
-        target_frames=[4],
-        test_mode=False),
-    # val
-    val=dict(
-        type=train_dataset_type,
-        folder=f'{root_dir}/GT',
-        ann_file=f'{root_dir}/sep_testlist.txt',
-        pipeline=valid_pipeline,
-        input_frames=[1, 3, 5, 7],
-        target_frames=[4],
-        test_mode=True),
-    # test
-    test=dict(
-        type=train_dataset_type,
-        folder=f'{root_dir}/GT',
-        ann_file=f'{root_dir}/sep_testlist.txt',
-        pipeline=valid_pipeline,
-        input_frames=[1, 3, 5, 7],
-        target_frames=[4],
-        test_mode=True),
-)
+        depth=2,
+        load_frames_list=dict(
+            img=['im1.png', 'im3.png', 'im5.png', 'im7.png'], gt=['im4.png'])))
+
+val_dataloader = dict(
+    num_workers=4,
+    persistent_workers=False,
+    drop_last=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type=val_dataset_type,
+        ann_file='txt/sep_testlist.txt',
+        metainfo=dict(dataset_type='vimeo90k_septenary', task_name='vfi'),
+        data_root=data_root,
+        data_prefix=dict(img='GT', gt='GT'),
+        pipeline=val_pipeline,
+        depth=2,
+        load_frames_list=dict(
+            img=['im1.png', 'im3.png', 'im5.png', 'im7.png'], gt=['im4.png'])))
+
+test_dataloader = val_dataloader
+
+val_evaluator = [
+    dict(type='MAE'),
+    dict(type='PSNR'),
+    dict(type='SSIM'),
+]
+test_evaluator = val_evaluator
+
+epoch_length = 2020
+
+train_cfg = dict(
+    type='IterBasedTrainLoop', max_iters=1_000_000, val_interval=epoch_length)
+val_cfg = dict(type='ValLoop')
+test_cfg = dict(type='TestLoop')
 
 # optimizer
-optimizers = dict(generator=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99)))
+optim_wrapper = dict(
+    dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99)),
+    ))
 
 # learning policy
-total_iters = 1000000  # >=200*64612/64
+# 1604 iters == 1 epoch
+total_iters = 1000000
 lr_config = dict(
-    policy='Reduce',
+    type='ReduceLR',
     by_epoch=False,
-    mode='max',
-    val_metric='PSNR',
-    epoch_base_valid=True,  # Support epoch base valid in iter base runner.
+    mode='min',
     factor=0.5,
     patience=10,
     cooldown=20,
     verbose=True)
 
-checkpoint_config = dict(interval=2020, save_optimizer=True, by_epoch=False)
-
-evaluation = dict(interval=2020, save_image=False, gpu_collect=True)
-log_config = dict(
-    interval=100,
-    hooks=[
-        dict(type='TextLoggerHook', by_epoch=False),
-        dict(
-            type='TensorboardLoggerHook',
-            log_dir=f'work_dirs/{exp_name}/tb_log/',
-            interval=100,
-            ignore_last=False,
-            reset_flag=False,
-            by_epoch=False),
-    ])
-visual_config = None
-
-# runtime settings
-dist_params = dict(backend='nccl')
-log_level = 'INFO'
-work_dir = f'./work_dirs/{exp_name}'
-load_from = None
-resume_from = None
-workflow = [('train', 1)]
+default_hooks = dict(
+    checkpoint=dict(
+        type='CheckpointHook',
+        interval=epoch_length * 2,
+        save_optimizer=True,
+        by_epoch=False),
+    timer=dict(type='IterTimerHook'),
+    logger=dict(type='LoggerHook', interval=100),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+    # visualization=dict(type='EditVisualizationHook'),
+    param_scheduler=dict(
+        type='ReduceLRSchedulerHook',
+        by_epoch=False,
+        interval=epoch_length,
+        val_metric='MAE'),
+)

@@ -14,15 +14,8 @@ env_cfg = dict(
     dist_cfg=dict(backend='nccl'),
 )
 
-# vis_backends = [dict(type='LocalVisBackend')]
-# visualizer = dict(
-#     type='DetLocalVisualizer', vis_backends=vis_backends, name='visualizer')
-# custom_hooks = [dict(type='DetVisualizationHook', interval=10)]
-
 log_level = 'INFO'
 log_processor = dict(type='LogProcessor', window_size=100, by_epoch=False)
 
 load_from = None
 resume = False
-
-# TODO: support auto scaling lr
