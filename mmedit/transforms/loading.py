@@ -69,7 +69,7 @@ class LoadImageFromFile(BaseTransform):
 
         if file_client_args is None:
             # lasy init at loading
-            self.file_client_args = dict()
+            self.file_client_args = None
             self.file_client = None
         else:
             self.file_client_args = file_client_args.copy()
@@ -141,7 +141,8 @@ class LoadImageFromFile(BaseTransform):
             self.file_client = FileClient.infer_client(
                 uri=filename, file_client_args=self.file_client_args)
 
-        if self.file_client_args.get('backend', None) == 'lmdb':
+        if (self.file_client_args is not None) and (self.file_client_args.get(
+                'backend', None) == 'lmdb'):
             filename, _ = osp.splitext(osp.basename(filename))
 
         if filename in self.cache:

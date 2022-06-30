@@ -58,7 +58,7 @@ def test_load_image_from_file():
         ('(key=img, color_type=color, channel_order=bgr, '
          'imdecode_backend=cv2, use_cache=False, to_float32=False, '
          'to_y_channel=False, save_original_img=False, '
-         'file_client_args={})'))
+         'file_client_args=None)'))
     assert isinstance(image_loader.file_client.client, HardDiskBackend)
 
     # test save_original_img
@@ -81,7 +81,7 @@ def test_load_image_from_file():
         ('(key=gt, color_type=color, channel_order=bgr, '
          'imdecode_backend=cv2, use_cache=True, to_float32=False, '
          'to_y_channel=False, save_original_img=False, '
-         'file_client_args={})'))
+         'file_client_args=None)'))
     results = image_loader(results)
     assert image_loader.cache is not None
     assert str(path_baboon) in image_loader.cache
@@ -149,3 +149,21 @@ def test_load_image_from_file():
     image_loader = LoadImageFromFile(**config)
     with pytest.raises(ValueError):
         results = image_loader(results)
+
+    # test infer from s3
+    from mmengine.fileio import PetrelBackend
+    PetrelBackend.get = lambda self, filepath: filepath
+    results = dict(img_path='openmmlab:s3://abcd/efg/')
+    config = dict(key='img')
+    image_loader = LoadImageFromFile(**config)
+
+    try:
+        import petrel_client  # noqa: F401
+    except ImportError:
+        with pytest.raises(ImportError) as excinfo:
+            results = image_loader(results)
+        assert 'Please install petrel_client to enable PetrelBackend.' in str(
+            excinfo.value)
+    else:
+        results = image_loader(results)
+        assert results['img'] == 'openmmlab:s3://abcd/efg/'
