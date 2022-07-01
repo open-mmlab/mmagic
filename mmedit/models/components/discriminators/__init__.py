@@ -10,7 +10,13 @@ from .ttsr_disc import TTSRDiscriminator
 from .unet_disc import UNetDiscriminatorWithSpectralNorm
 
 __all__ = [
-    'GLDiscs', 'ModifiedVGG', 'MultiLayerDiscriminator', 'TTSRDiscriminator',
-    'DeepFillv1Discriminators', 'PatchDiscriminator', 'LightCNN',
-    'UNetDiscriminatorWithSpectralNorm', 'SoftMaskPatchDiscriminator'
+    'GLDiscs',
+    'ModifiedVGG',
+    'MultiLayerDiscriminator',
+    'TTSRDiscriminator',
+    'DeepFillv1Discriminators',
+    'PatchDiscriminator',
+    'LightCNN',
+    'UNetDiscriminatorWithSpectralNorm',
+    'SoftMaskPatchDiscriminator',
 ]

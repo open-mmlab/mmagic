@@ -9,6 +9,7 @@ from .common import *  # noqa: F401, F403
 from .components import *  # noqa: F401, F403
 from .data_processor import EditDataPreprocessor
 from .extractors import LTE, FeedbackHourglass
+from .image_restorers import *  # noqa: F401, F403
 from .inpaintors import (AOTInpaintor, DeepFillv1Inpaintor, GLInpaintor,
                          OneStageInpaintor, PConvInpaintor, TwoStageInpaintor)
 from .losses import *  # noqa: F401, F403

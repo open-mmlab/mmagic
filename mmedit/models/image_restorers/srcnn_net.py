@@ -1,12 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
+from mmengine.model import BaseModule
 
-from mmedit.models.backbones.base_backbone import BaseBackbone
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class SRCNN(BaseBackbone):
+@MODELS.register_module()
+class SRCNNNet(BaseModule):
     """SRCNN network structure for image super resolution.
 
     SRCNN has three conv layers. For each layer, we can define the

@@ -1,12 +1,12 @@
 import torch
+from mmengine.model import BaseModule
 from torch import nn
 
-from mmedit.models.backbones.base_backbone import BaseBackbone
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class RDN(BaseBackbone):
+@MODELS.register_module()
+class RDNNet(BaseModule):
     """RDN model for single image super-resolution.
 
     Paper: Residual Dense Network for Image Super-Resolution

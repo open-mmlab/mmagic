@@ -9,7 +9,7 @@ def test_liif_edsr():
     model_cfg = dict(
         type='LIIFEDSR',
         encoder=dict(
-            type='EDSR',
+            type='EDSRNet',
             in_channels=3,
             out_channels=3,
             mid_channels=64,
@@ -60,7 +60,7 @@ def test_liif_rdn():
     model_cfg = dict(
         type='LIIFRDN',
         encoder=dict(
-            type='RDN',
+            type='RDNNet',
             in_channels=3,
             out_channels=3,
             mid_channels=64,

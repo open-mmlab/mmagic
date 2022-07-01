@@ -5,10 +5,10 @@ from .encoder_decoders import (ContextualAttentionNeck, DeepFillDecoder,
                                GLEncoderDecoder, PConvDecoder, PConvEncoder,
                                PConvEncoderDecoder)
 from .generation_backbones import ResnetGenerator, UnetGenerator
-from .sr_backbones import (EDSR, LIIFEDSR, LIIFRDN, RDN, SRCNN, BasicVSRNet,
-                           BasicVSRPlusPlus, DICNet, EDVRNet, GLEANStyleGANv2,
-                           IconVSR, MSRResNet, RealBasicVSRNet, RRDBNet,
-                           TDANNet, TOFlow, TTSRNet)
+from .sr_backbones import (LIIFEDSR, LIIFRDN, BasicVSRNet, BasicVSRPlusPlus,
+                           DICNet, EDVRNet, GLEANStyleGANv2, IconVSR,
+                           MSRResNet, RealBasicVSRNet, RRDBNet, TDANNet,
+                           TOFlow, TTSRNet)
 
 __all__ = [
     'MSRResNet',
@@ -23,12 +23,9 @@ __all__ = [
     'DeepFillEncoder',
     'ContextualAttentionNeck',
     'DeepFillDecoder',
-    'EDSR',
-    'RDN',
     'DICNet',
     'DeepFillEncoderDecoder',
     'EDVRNet',
-    'SRCNN',
     'UnetGenerator',
     'ResnetGenerator',
     'BasicVSRNet',

@@ -5,7 +5,7 @@ Collections:
   Name: SRCNN
   Paper:
   - https://arxiv.org/abs/1501.00092
-  README: configs/restorers/srcnn/README.md
+  README: configs/image_restorers/srcnn/README.md
 Models:
 - Config: configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py
   In Collection: SRCNN
@@ -24,5 +24,5 @@ Models:
       Set5:
         PSNR: 28.4316
         SSIM: 0.8099
-    Task: Restorers
+    Task: Image_restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth

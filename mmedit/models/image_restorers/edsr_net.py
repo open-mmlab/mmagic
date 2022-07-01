@@ -3,15 +3,15 @@ import math
 
 import torch
 import torch.nn as nn
+from mmengine.model import BaseModule
 
-from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   make_layer)
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class EDSR(BaseBackbone):
+@MODELS.register_module()
+class EDSRNet(BaseModule):
     """EDSR network structure.
 
     Paper: Enhanced Deep Residual Networks for Single Image Super-Resolution.
