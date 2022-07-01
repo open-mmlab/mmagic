@@ -6,6 +6,8 @@ from .aug_shape import Flip, RandomRotation, RandomTransposeHW, Resize
 from .crop import (Crop, CropLike, FixedCrop, ModCrop, PairedRandomCrop,
                    RandomResizedCrop)
 from .formatting import PackEditInputs, ToTensor
+from .generate_assistant import (GenerateCoordinateAndCell,
+                                 GenerateFacialHeatmap)
 from .generate_frame_indices import (GenerateFrameIndices,
                                      GenerateFrameIndiceswithPadding,
                                      GenerateSegmentIndices)
@@ -31,6 +33,8 @@ __all__ = [
     'LoadMask',
     'Flip',
     'FixedCrop',
+    'GenerateCoordinateAndCell',
+    'GenerateFacialHeatmap',
     'GenerateFrameIndices',
     'GenerateFrameIndiceswithPadding',
     'GenerateSegmentIndices',
