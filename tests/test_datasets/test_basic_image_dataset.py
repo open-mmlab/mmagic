@@ -101,6 +101,10 @@ class TestImageDatasets:
             key='baboon',
             gt_path=str(self.data_root / 'gt' / 'baboon.png'),
             sample_idx=0)
+        assert dataset[1] == dict(
+            key='baboon',
+            gt_path=str(self.data_root / 'gt' / 'baboon.png'),
+            sample_idx=1)
 
     def test_sisr_annotation_dataset(self):
         # setup

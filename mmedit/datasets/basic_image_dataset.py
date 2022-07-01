@@ -183,7 +183,10 @@ class BasicImageDataset(BaseDataset):
 
         data_list = []
         for file in path_list:
-            basename, ext = osp.splitext(osp.basename(file))
+            basename, ext = osp.splitext(file)
+            if basename.startswith(os.sep):
+                # Avoid absolute-path-like annotations
+                basename = basename[1:]
             data = dict(key=basename)
             for key in self.data_prefix:
                 path = osp.join(self.data_prefix[key],
