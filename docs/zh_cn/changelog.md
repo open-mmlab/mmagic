@@ -1,5 +1,28 @@
 # 变更日志
 
+## v0.15.1 (04/07/2022)
+
+**Bug 修复**
+
+- \[修复\] 更新 cain_b5_g1b32_vimeo90k_triplet.py 配置文件 ([#929](https://github.com/open-mmlab/mmediting/pull/929))
+- \[文档\] 修复 OST 数据集的链接 ([#933](https://github.com/open-mmlab/mmediting/pull/933))
+
+**改进**
+
+- \[文档\] 更新 OST 数据集指令 ([#937](https://github.com/open-mmlab/mmediting/pull/937))
+- \[测试\] 在 CUDA 环境中没有实际执行 ([#921](https://github.com/open-mmlab/mmediting/pull/921))
+- \[文档\] 首页演示视频添加水印 ([#935](https://github.com/open-mmlab/mmediting/pull/935))
+- \[测试\] 添加 mim ci ([#928](https://github.com/open-mmlab/mmediting/pull/928))
+- \[文档\] 更新 FLAVR 的 README.md ([#919](https://github.com/open-mmlab/mmediting/pull/919))
+- \[改进\] 更新 .pre-commit-config.yaml 中的 md-format ([#917](https://github.com/open-mmlab/mmediting/pull/917))
+- \[改进\] 在 setup.py 中添加 miminstall.txt ([#916](https://github.com/open-mmlab/mmediting/pull/916))
+- \[修复\] 修复 dim/README.md 中的混乱问题 ([#913](https://github.com/open-mmlab/mmediting/pull/913))
+- \[改进\] 跳过有问题的 opencv-python 版本 ([#833](https://github.com/open-mmlab/mmediting/pull/833))
+
+**贡献者**
+
+@wangruohui @Yshuo-Li
+
 ## v0.15.0 (01/06/2022)
 
 **Highlights主要更新**

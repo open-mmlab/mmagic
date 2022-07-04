@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.15.1 (04/07/2022)
+
+**Bug Fixes**
+
+- \[Fix\] Update cain_b5_g1b32_vimeo90k_triplet.py ([#929](https://github.com/open-mmlab/mmediting/pull/929))
+- \[Docs\] Fix link to OST dataset ([#933](https://github.com/open-mmlab/mmediting/pull/933))
+
+**Improvements**
+
+- \[Docs\] Update instruction to OST dataset ([#937](https://github.com/open-mmlab/mmediting/pull/937))
+- \[CI\] No actual execution in CUDA envs ([#921](https://github.com/open-mmlab/mmediting/pull/921))
+- \[Docs\] Add watermark to demo video ([#935](https://github.com/open-mmlab/mmediting/pull/935))
+- \[Tests\] Add mim ci ([#928](https://github.com/open-mmlab/mmediting/pull/928))
+- \[Docs\] Update README.md of FLAVR ([#919](https://github.com/open-mmlab/mmediting/pull/919))
+- \[Improve\] Update md-format in .pre-commit-config.yaml ([#917](https://github.com/open-mmlab/mmediting/pull/917))
+- \[Improve\] Add miminstall.txt in setup.py ([#916](https://github.com/open-mmlab/mmediting/pull/916))
+- \[Fix\] Fix clutter in dim/README.md ([#913](https://github.com/open-mmlab/mmediting/pull/913))
+- \[Improve\] Skip problematic opencv-python versions ([#833](https://github.com/open-mmlab/mmediting/pull/833))
+
+**Contributors**
+
+@wangruohui @Yshuo-Li
+
 ## v0.15.0 (01/06/2022)
 
 **Highlights**
