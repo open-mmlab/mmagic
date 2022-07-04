@@ -47,8 +47,6 @@ class ReduceLR(_ParamScheduler):
         eps (float, optional): Minimal decay applied to lr. If the difference
             between new and old lr is smaller than eps, the update is
             ignored. Default: 1e-8.
-        verbose (bool): If ``True``, prints a message to stdout for
-            each update. Default: ``False``.
         begin (int): Step at which to start updating the learning rate.
             Defaults to 0.
         end (int): Step at which to stop updating the learning rate.
@@ -68,7 +66,6 @@ class ReduceLR(_ParamScheduler):
                  cooldown: int = 0,
                  min_lr: float = 0.,
                  eps: float = 1e-8,
-                 verbose: bool = False,
                  **kwargs):
 
         super().__init__(optimizer=optimizer, param_name='lr', **kwargs)
@@ -99,7 +96,6 @@ class ReduceLR(_ParamScheduler):
         self.mode_worse = None  # the worse value for the chosen mode
         self.min_lr = min_lr
         self.eps = eps
-        self.verbose = verbose
         self.last_epoch = 0
         self._init_is_better(self.mode)
         self._reset()
@@ -130,11 +126,7 @@ class ReduceLR(_ParamScheduler):
             for group in self.optimizer.param_groups:
                 regular_lr = group[self.param_name]
                 if regular_lr - regular_lr * self.factor > self.eps:
-                    new_lr = max(regular_lr * self.factor, self.min_lr)
-                    if self.verbose:
-                        print(f'Reducing learning rate of {group} from '
-                              f'{regular_lr:.4e} to {new_lr:.4e}.')
-                    regular_lr = new_lr
+                    regular_lr = max(regular_lr * self.factor, self.min_lr)
                 results.append(regular_lr)
             return results
 

@@ -89,7 +89,7 @@ optim_wrapper = dict(
     ))
 
 # learning policy
-lr_config = dict(
+param_scheduler = dict(
     type='StepLR',
     by_epoch=False,
     gamma=0.5,

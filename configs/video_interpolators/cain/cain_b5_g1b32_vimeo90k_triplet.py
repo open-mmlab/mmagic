@@ -120,11 +120,7 @@ val_evaluator = [
 ]
 test_evaluator = val_evaluator
 
-# 1604 iters == 1 epoch
-epoch_length = 1604
-
-train_cfg = dict(
-    type='IterBasedTrainLoop', max_iters=300_000, val_interval=epoch_length)
+train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=500)
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
@@ -138,23 +134,24 @@ optim_wrapper = dict(
 # learning policy
 param_scheduler = dict(
     type='ReduceLR',
-    by_epoch=False,
+    by_epoch=True,
     mode='min',
     factor=0.5,
     patience=5,
-    cooldown=0,
-    verbose=True)
+    cooldown=0)
 
 default_hooks = dict(
     checkpoint=dict(
-        type='CheckpointHook',
-        interval=epoch_length * 4,
-        save_optimizer=True,
-        by_epoch=False),
+        type='CheckpointHook', interval=1, save_optimizer=True, by_epoch=True),
     timer=dict(type='IterTimerHook'),
-    logger=dict(type='LoggerHook', interval=1),
+    logger=dict(type='LoggerHook', interval=100),
     sampler_seed=dict(type='DistSamplerSeedHook'),
     # visualization=dict(type='EditVisualizationHook'),
     param_scheduler=dict(
-        type='ReduceLRSchedulerHook', by_epoch=False, val_metric='MAE'),
+        type='ReduceLRSchedulerHook',
+        by_epoch=True,
+        interval=1,
+        val_metric='MAE'),
 )
+
+log_processor = dict(type='LogProcessor', by_epoch=True)
