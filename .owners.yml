@@ -4,8 +4,8 @@ assign:
   pull_requests: enabled # or disabled
   # assign strategy, both issues and pull requests follow the same strategy
   strategy:
-    random
-    # round-robin (not impl currently.)
+    # random
+    round-robin
     # daily-shift-based
   scedule:
     '*/1 * * * *'
@@ -13,3 +13,4 @@ assign:
   assignees:
     - wangruohui
     - Yshuo-Li
+    - 1900zyh
