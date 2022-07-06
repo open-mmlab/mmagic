@@ -83,6 +83,7 @@ def register_all_modules(init_default_scope: bool = True) -> None:
     import mmedit.models  # noqa: F401,F403
     import mmedit.optimizer  # noqa: F401,F403
     import mmedit.transforms  # noqa: F401,F403
+    import mmedit.visualizer  # noqa: F401,F403
 
     if init_default_scope:
         never_created = DefaultScope.get_current_instance() is None \

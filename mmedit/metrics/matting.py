@@ -26,9 +26,9 @@ def _assert_masked(pred_alpha, trimap):
 
 
 def _fetch_data_and_check(data_batch, predictions):
-    ori_trimap = data_batch['data_sample']['ori_trimap']
-    ori_alpha = data_batch['data_sample']['ori_alpha']
-    pred_alpha = predictions['pred_alpha']['data'][0]  # tensor
+    ori_trimap = data_batch['data_sample']['ori_trimap'][:, :, 0]
+    ori_alpha = data_batch['data_sample']['ori_alpha'][:, :, 0]
+    pred_alpha = predictions['pred_alpha']['data']  # 2D tensor
     pred_alpha = pred_alpha.cpu().numpy()
 
     _assert_ndim(ori_trimap, 'trimap', 2, 'HxW')

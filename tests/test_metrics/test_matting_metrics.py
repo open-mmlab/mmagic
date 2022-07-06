@@ -1,16 +1,32 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from pathlib import Path
+
 import numpy as np
 import pytest
 import torch
 
 from mmedit.metrics import SAD, ConnectivityError, GradientError, MattingMSE
+from mmedit.transforms import LoadImageFromFile
 
 
 class TestMattingMetrics:
 
     @classmethod
     def setup_class(cls):
-        """Make sure these values are immutable across different test cases."""
+        # Make sure these values are immutable across different test cases.
+
+        # This test depends on the interface of loading
+        # if loading is changed, data should be change accordingly.
+        alpha_path = Path(
+            __file__
+        ).parent.parent / 'data' / 'matting_dataset' / 'alpha' / 'GT05.jpg'
+
+        results = dict(alpha_path=alpha_path)
+        config = dict(key='alpha')
+        image_loader = LoadImageFromFile(**config)
+        results = image_loader(results)
+        assert results['alpha'].ndim == 3
+
         gt_alpha = np.ones((32, 32), dtype=np.uint8) * 255
         trimap = np.zeros((32, 32), dtype=np.uint8)
         trimap[:16, :16] = 128
@@ -21,8 +37,11 @@ class TestMattingMetrics:
         masked_pred_alpha = pred_alpha.clone()
         masked_pred_alpha[trimap == 0] = 0
         masked_pred_alpha[trimap == 255] = 255
-        pred_alpha = pred_alpha.unsqueeze(0)
-        masked_pred_alpha = masked_pred_alpha.unsqueeze(0)
+
+        gt_alpha = gt_alpha[..., None]
+        trimap = trimap[..., None]
+        # pred_alpha = pred_alpha.unsqueeze(0)
+        # masked_pred_alpha = masked_pred_alpha.unsqueeze(0)
 
         cls.data_batch = [{
             'inputs': [],

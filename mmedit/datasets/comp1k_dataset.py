@@ -7,7 +7,7 @@ from mmengine.dataset import BaseDataset
 from mmengine.fileio import load
 from mmengine.utils import check_file_exist
 
-from .registry import DATASETS
+from mmedit.registry import DATASETS
 
 
 @DATASETS.register_module()

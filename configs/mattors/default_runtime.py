@@ -14,10 +14,14 @@ env_cfg = dict(
     dist_cfg=dict(backend='nccl'),
 )
 
-# vis_backends = [dict(type='LocalVisBackend')]
-# visualizer = dict(
-#     type='DetLocalVisualizer', vis_backends=vis_backends, name='visualizer')
-# custom_hooks = [dict(type='DetVisualizationHook', interval=10)]
+vis_backends = [dict(type='LocalVisBackend')]
+visualizer = dict(
+    type='ConcatImageVisualizer',
+    vis_backends=vis_backends,
+    fn_key='trimap_path',
+    img_keys=['pred_alpha', 'trimap', 'gt_merged', 'gt_alpha'],
+    bgr2rgb=True)
+custom_hooks = [dict(type='BasicVisualizationHook', interval=1)]
 
 log_level = 'INFO'
 log_processor = dict(type='LogProcessor', by_epoch=False)

@@ -83,11 +83,12 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
     """
     color_shape = (batch_size, 3, img_shape[0], img_shape[1])
     gray_shape = (batch_size, 1, img_shape[0], img_shape[1])
+    ori_shape = (img_shape[0], img_shape[1], 1)
     merged = torch.from_numpy(np.random.random(color_shape).astype(np.float32))
     trimap = torch.from_numpy(
         np.random.randint(255, size=gray_shape).astype(np.float32))
-    ori_alpha = np.random.random(img_shape).astype(np.float32)
-    ori_trimap = np.random.randint(256, size=img_shape).astype(np.float32)
+    ori_alpha = np.random.random(ori_shape).astype(np.float32)
+    ori_trimap = np.random.randint(256, size=ori_shape).astype(np.float32)
     if cuda:
         merged = merged.cuda()
         trimap = trimap.cuda()
@@ -95,6 +96,7 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
         ori_alpha=ori_alpha,
         ori_trimap=ori_trimap,
         ori_merged_shape=img_shape,
+        # ori_merged_shape=ori_shape,
         **meta)
 
     inputs = torch.cat((merged, trimap), dim=1)
