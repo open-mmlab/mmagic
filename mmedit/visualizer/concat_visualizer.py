@@ -7,6 +7,7 @@ import numpy as np
 import torch
 from mmengine.visualization import Visualizer
 
+from mmedit.data_element import EditDataSample
 from mmedit.registry import VISUALIZERS
 from mmedit.utils import print_colored_log
 
@@ -26,10 +27,10 @@ class ConcatImageVisualizer(Visualizer):
         - Single-channel image of shape (C, H, W)
 
     Args:
-        filename_key (str): key used to determine file name for saving image.
+        fn_key (str): key used to determine file name for saving image.
             Usually it is the path of some input image. If the value is
             `dir/basename.ext`, the name used for saving will be basename.
-        image_keys (str): keys, values of which are images to visualize.
+        img_keys (str): keys, values of which are images to visualize.
         denorm (tuple): mean and std used to denormalize images,
             note that only float array or tensor will be denormalized,
             uint8 arrays are assumed to be unnormalized.
@@ -53,11 +54,18 @@ class ConcatImageVisualizer(Visualizer):
 
     def add_datasample(self,
                        input: torch.Tensor,
-                       data_sample: dict,
-                       output: dict,
+                       data_sample: EditDataSample,
+                       output: EditDataSample,
                        step=0) -> None:
-        """Draw datasample."""
-        # With LocalVisBackend and default arguments, we have:
+        """Concatenate image and draw.
+
+        Args:
+            input (torch.Tensor): Single input tensor from data_batch
+            data_sample (EditDataSample): Single data_sample from data_batch
+            output (EditDataSample): Single prediction output by model
+        """
+        # Note:
+        # with LocalVisBackend and default arguments, we have:
         # self.save_dir == runner._log_dir / 'vis_data'
 
         merged_dict = {

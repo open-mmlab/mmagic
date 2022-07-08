@@ -25,7 +25,7 @@ def test_concatimagevisualizer():
         fn_key='path_rgb',
         img_keys=['tensor3d', 'array3d', 'pixdata', 'outpixdata', 'tensor4d'],
         vis_backends=[dict(type='LocalVisBackend')],
-        save_dir='.')
+        save_dir='work_dirs')
     vis.add_datasample(
         input=input, data_sample=data_sample, output=output, step=1)
 
@@ -33,11 +33,11 @@ def test_concatimagevisualizer():
         fn_key='path_bgr',
         img_keys=['tensor3d', 'array3d', 'pixdata', 'outpixdata', 'tensor4d'],
         vis_backends=[dict(type='LocalVisBackend')],
-        save_dir='.',
+        save_dir='work_dirs',
         bgr2rgb=True)
     vis.add_datasample(
         input=input, data_sample=data_sample, output=output, step=2)
 
     for fn in 'rgb_1.png', 'bgr_2.png':
-        img = mmcv.imread(f'vis_data/vis_image/{fn}')
+        img = mmcv.imread(f'work_dirs/vis_data/vis_image/{fn}')
         assert img.shape == (64, 160, 3)
