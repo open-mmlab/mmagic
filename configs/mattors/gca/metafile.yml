@@ -15,12 +15,12 @@ Models:
   Results:
   - Dataset: COMP1K
     Metrics:
-      CONN: 34.33
-      GRAD: 17.4
-      MSE: 0.009
-      SAD: 36.5
+      CONN: 32.12
+      GRAD: 16.21
+      MSE: 0.0083
+      SAD: 34.61
     Task: Mattors
-  Weights: https://download.openmmlab.com/mmediting/mattors/gca/baseline_r34_4x10_200k_comp1k_SAD-36.50_20200614_105701-95be1750.pth
+  Weights: https://download.openmmlab.com/mmediting/mattors/gca/baseline_r34_4x10_200k_comp1k_SAD-34.61_20220620-96f85d56.pth
 - Config: configs/mattors/gca/gca_r34_4x10_200k_comp1k.py
   In Collection: GCA
   Metadata:
@@ -29,12 +29,12 @@ Models:
   Results:
   - Dataset: COMP1K
     Metrics:
-      CONN: 32.2
-      GRAD: 16.33
-      MSE: 0.008
-      SAD: 34.77
+      CONN: 30.59
+      GRAD: 14.96
+      MSE: 0.0081
+      SAD: 33.38
     Task: Mattors
-  Weights: https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-34.77_20200604_213848-4369bea0.pth
+  Weights: https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth
 - Config: configs/mattors/gca/baseline_dimaug_r34_4x10_200k_comp1k.py
   In Collection: GCA
   Metadata:

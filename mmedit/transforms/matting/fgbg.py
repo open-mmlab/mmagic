@@ -7,8 +7,8 @@ from pathlib import Path
 
 import mmcv
 import numpy as np
-from mmcv.fileio import FileClient
 from mmcv.transforms import BaseTransform
+from mmengine.fileio import FileClient
 
 from mmedit.registry import TRANSFORMS
 from .utils import add_gaussian_noise, adjust_gamma
@@ -43,23 +43,17 @@ class CompositeFg(BaseTransform):
             the randomly loaded images.
     """
 
-    def __init__(self,
-                 fg_dirs,
-                 alpha_dirs,
-                 interpolation='nearest',
-                 io_backend='disk',
-                 **kwargs):
+    def __init__(self, fg_dirs, alpha_dirs, interpolation='nearest'):
         # TODO try fetch the path from dataset
         self.fg_dirs = fg_dirs if isinstance(fg_dirs, list) else [fg_dirs]
         self.alpha_dirs = alpha_dirs if isinstance(alpha_dirs,
                                                    list) else [alpha_dirs]
         self.interpolation = interpolation
 
+        self.file_client = FileClient.infer_client(uri=fg_dirs[0])
+
         self.fg_list, self.alpha_list = self._get_file_list(
             self.fg_dirs, self.alpha_dirs)
-        self.io_backend = io_backend
-        self.file_client = None
-        self.kwargs = kwargs
 
     def transform(self, results: dict) -> dict:
         """Transform function.
@@ -71,8 +65,6 @@ class CompositeFg(BaseTransform):
         Returns:
             dict: A dict containing the processed data and information.
         """
-        if self.file_client is None:
-            self.file_client = FileClient(self.io_backend, **self.kwargs)
         fg = results['fg']
         alpha = results['alpha'] / 255.0  # float64, H, W, 1
         h, w = results['fg'].shape[:2]
@@ -102,13 +94,14 @@ class CompositeFg(BaseTransform):
         results['alpha'] = alpha * 255
         return results
 
-    @staticmethod
-    def _get_file_list(fg_dirs, alpha_dirs):
+    def _get_file_list(self, fg_dirs, alpha_dirs):
         all_fg_list = list()
         all_alpha_list = list()
         for fg_dir, alpha_dir in zip(fg_dirs, alpha_dirs):
-            fg_list = sorted(mmcv.scandir(fg_dir))
-            alpha_list = sorted(mmcv.scandir(alpha_dir))
+            fg_list = sorted(
+                self.file_client.list_dir_or_file(fg_dir, list_dir=False))
+            alpha_list = sorted(
+                self.file_client.list_dir_or_file(alpha_dir, list_dir=False))
             # we assume the file names for fg and alpha are the same
             assert len(fg_list) == len(alpha_list), (
                 f'{fg_dir} and {alpha_dir} should have the same number of '
@@ -289,19 +282,16 @@ class RandomLoadResizeBg(BaseTransform):
         kwargs (dict): Args for file client.
     """
 
-    def __init__(self,
-                 bg_dir,
-                 io_backend='disk',
-                 flag='color',
-                 channel_order='bgr',
-                 **kwargs):
+    def __init__(self, bg_dir, flag='color', channel_order='bgr'):
         self.bg_dir = bg_dir
-        self.bg_list = list(mmcv.scandir(bg_dir))
-        self.io_backend = io_backend
+
+        file_client = FileClient.infer_client(uri=bg_dir)
+        self.bg_list = list(
+            file_client.list_dir_or_file(bg_dir, list_dir=False))
+
+        self.file_client = file_client
         self.flag = flag
         self.channel_order = channel_order
-        self.kwargs = kwargs
-        self.file_client = None
 
     def transform(self, results: dict) -> dict:
         """Transform function.
@@ -313,8 +303,6 @@ class RandomLoadResizeBg(BaseTransform):
         Returns:
             dict: A dict containing the processed data and information.
         """
-        if self.file_client is None:
-            self.file_client = FileClient(self.io_backend, **self.kwargs)
         h, w = results['fg'].shape[:2]
         idx = np.random.randint(len(self.bg_list))
         filepath = Path(self.bg_dir).joinpath(self.bg_list[idx])
