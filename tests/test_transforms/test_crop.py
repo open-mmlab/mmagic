@@ -17,7 +17,7 @@ class TestAugmentations:
         cls.img_lq = np.random.rand(64, 32, 3).astype(np.float32)
 
         cls.results = dict(
-            lq=cls.img_lq,
+            img=cls.img_lq,
             gt=cls.img_gt,
             scale=4,
             lq_path='fake_lq_path',
@@ -65,7 +65,8 @@ class TestAugmentations:
                            random_crop=False,
                            is_pad_zeros=True)
         gt_pad = np.pad(
-            self.results['img'], ((128, 128), (128, 128), (0, 0)),
+            copy.deepcopy(self.results)['img'],
+            ((128, 128), (128, 128), (0, 0)),
             mode='constant',
             constant_values=0)
         results = center_crop(results)
@@ -260,18 +261,26 @@ class TestAugmentations:
             results = dict(gt=np.random.randn(1, 257, 258, 3), scale=4)
             results = modcrop(results)
 
+        assert repr(modcrop) == (
+            modcrop.__class__.__name__ + f'(key={modcrop.key})')
+
     def test_paired_random_crop(self):
-        results = self.results.copy()
+        results = dict(
+            gt=np.random.randn(256, 128, 3),
+            img=np.random.randn(64, 32, 3),
+            scale=4,
+            gt_path='fake_gt_path',
+            lq_path='fake_lq_path')
         pairedrandomcrop = PairedRandomCrop(128)
         results = pairedrandomcrop(results)
         assert results['gt'].shape == (128, 128, 3)
-        assert results['lq'].shape == (32, 32, 3)
+        assert results['img'].shape == (32, 32, 3)
 
         # Scale mismatches. GT (h, w) is not {scale} multiplication of LQ's.
         with pytest.raises(ValueError):
             results = dict(
                 gt=np.random.randn(128, 128, 3),
-                lq=np.random.randn(64, 64, 3),
+                img=np.random.randn(64, 64, 3),
                 scale=4,
                 gt_path='fake_gt_path',
                 lq_path='fake_lq_path')
@@ -281,18 +290,21 @@ class TestAugmentations:
         with pytest.raises(ValueError):
             results = dict(
                 gt=np.random.randn(32, 32, 3),
-                lq=np.random.randn(8, 8, 3),
+                img=np.random.randn(8, 8, 3),
                 scale=4,
                 gt_path='fake_gt_path',
                 lq_path='fake_lq_path')
             results = pairedrandomcrop(results)
 
         assert repr(pairedrandomcrop) == (
-            pairedrandomcrop.__class__.__name__ + '(gt_patch_size=128)')
+            pairedrandomcrop.__class__.__name__ +
+            (f'(gt_patch_size={pairedrandomcrop.gt_patch_size}, '
+             f'lq_key={pairedrandomcrop.lq_key}, '
+             f'gt_key={pairedrandomcrop.gt_key})'))
 
         # for image list
         results = dict(
-            lq=[self.img_lq, self.img_lq],
+            img=[self.img_lq, self.img_lq],
             gt=[self.img_gt, self.img_gt],
             scale=4,
             lq_path='fake_lq_path',
@@ -301,10 +313,10 @@ class TestAugmentations:
         results = pairedrandomcrop(results)
         for v in results['gt']:
             assert v.shape == (128, 128, 3)
-        for v in results['lq']:
+        for v in results['img']:
             assert v.shape == (32, 32, 3)
         np.testing.assert_almost_equal(results['gt'][0], results['gt'][1])
-        np.testing.assert_almost_equal(results['lq'][0], results['lq'][1])
+        np.testing.assert_almost_equal(results['img'][0], results['img'][1])
 
 
 def test_crop_like():

@@ -266,11 +266,19 @@ class FixedCrop(BaseTransform):
 
 @TRANSFORMS.register_module()
 class ModCrop(BaseTransform):
-    """Mod crop gt images, used during testing.
+    """Mod crop images, used during testing.
 
-    Required keys are "scale" and "gt",
-    added or modified keys are "gt".
+    Required keys are "scale" and "KEY",
+    added or modified keys are "KEY".
+
+    Args:
+        key (str): The key of image. Default: 'gt'
     """
+
+    def __init__(self, key='gt') -> None:
+        super().__init__()
+
+        self.key = key
 
     def transform(self, results):
         """Transform function.
@@ -283,7 +291,7 @@ class ModCrop(BaseTransform):
             dict: A dict containing the processed data and information.
         """
 
-        img = results['gt'].copy()
+        img = results[self.key].copy()
         scale = results['scale']
         if img.ndim in [2, 3]:
             h, w = img.shape[0], img.shape[1]
@@ -291,27 +299,38 @@ class ModCrop(BaseTransform):
             img = img[:h - h_remainder, :w - w_remainder, ...]
         else:
             raise ValueError(f'Wrong img ndim: {img.ndim}.')
-        results['gt'] = img
+        results[self.key] = img
 
         return results
+
+    def __repr__(self):
+
+        repr_str = self.__class__.__name__
+        repr_str += f'(key={self.key})'
+
+        return repr_str
 
 
 @TRANSFORMS.register_module()
 class PairedRandomCrop(BaseTransform):
     """Paried random crop.
 
-    It crops a pair of lq and gt images with corresponding locations.
-    It also supports accepting lq list and gt list.
-    Required keys are "scale", "lq", and "gt",
-    added or modified keys are "lq" and "gt".
+    It crops a pair of img and gt images with corresponding locations.
+    It also supports accepting img list and gt list.
+    Required keys are "scale", "lq_key", and "gt_key",
+    added or modified keys are "lq_key" and "gt_key".
 
     Args:
         gt_patch_size (int): cropped gt patch size.
+        lq_key (str): Key of LQ img. Default: 'img'.
+        gt_key (str): Key of GT img. Default: 'gt'.
     """
 
-    def __init__(self, gt_patch_size):
+    def __init__(self, gt_patch_size, lq_key='img', gt_key='gt'):
 
         self.gt_patch_size = gt_patch_size
+        self.lq_key = lq_key
+        self.gt_key = gt_key
 
     def transform(self, results):
         """Transform function.
@@ -327,15 +346,15 @@ class PairedRandomCrop(BaseTransform):
         scale = results['scale']
         lq_patch_size = self.gt_patch_size // scale
 
-        lq_is_list = isinstance(results['lq'], list)
+        lq_is_list = isinstance(results[self.lq_key], list)
         if not lq_is_list:
-            results['lq'] = [results['lq']]
-        gt_is_list = isinstance(results['gt'], list)
+            results[self.lq_key] = [results[self.lq_key]]
+        gt_is_list = isinstance(results[self.gt_key], list)
         if not gt_is_list:
-            results['gt'] = [results['gt']]
+            results[self.gt_key] = [results[self.gt_key]]
 
-        h_lq, w_lq, _ = results['lq'][0].shape
-        h_gt, w_gt, _ = results['gt'][0].shape
+        h_lq, w_lq, _ = results[self.lq_key][0].shape
+        h_gt, w_gt, _ = results[self.gt_key][0].shape
 
         if h_gt != h_lq * scale or w_gt != w_lq * scale:
             raise ValueError(
@@ -347,32 +366,35 @@ class PairedRandomCrop(BaseTransform):
                 f'({lq_patch_size}, {lq_patch_size}). Please check '
                 f'{results["lq_path"][0]} and {results["gt_path"][0]}.')
 
-        # randomly choose top and left coordinates for lq patch
+        # randomly choose top and left coordinates for img patch
         top = np.random.randint(h_lq - lq_patch_size + 1)
         left = np.random.randint(w_lq - lq_patch_size + 1)
-        # crop lq patch
-        results['lq'] = [
+        # crop img patch
+        results[self.lq_key] = [
             v[top:top + lq_patch_size, left:left + lq_patch_size, ...]
-            for v in results['lq']
+            for v in results[self.lq_key]
         ]
         # crop corresponding gt patch
         top_gt, left_gt = int(top * scale), int(left * scale)
-        results['gt'] = [
+        results[self.gt_key] = [
             v[top_gt:top_gt + self.gt_patch_size,
-              left_gt:left_gt + self.gt_patch_size, ...] for v in results['gt']
+              left_gt:left_gt + self.gt_patch_size, ...]
+            for v in results[self.gt_key]
         ]
 
         if not lq_is_list:
-            results['lq'] = results['lq'][0]
+            results[self.lq_key] = results[self.lq_key][0]
         if not gt_is_list:
-            results['gt'] = results['gt'][0]
+            results[self.gt_key] = results[self.gt_key][0]
 
         return results
 
     def __repr__(self):
 
         repr_str = self.__class__.__name__
-        repr_str += f'(gt_patch_size={self.gt_patch_size})'
+        repr_str += (f'(gt_patch_size={self.gt_patch_size}, '
+                     f'lq_key={self.lq_key}, '
+                     f'gt_key={self.gt_key})')
 
         return repr_str
 

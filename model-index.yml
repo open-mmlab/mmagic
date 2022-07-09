@@ -1,7 +1,14 @@
 Import:
+- configs/image_restorers/dic/metafile.yml
 - configs/image_restorers/edsr/metafile.yml
+- configs/image_restorers/esrgan/metafile.yml
+- configs/image_restorers/glean/metafile.yml
+- configs/image_restorers/liif/metafile.yml
 - configs/image_restorers/rdn/metafile.yml
+- configs/image_restorers/real_esrgan/metafile.yml
 - configs/image_restorers/srcnn/metafile.yml
+- configs/image_restorers/srgan_resnet/metafile.yml
+- configs/image_restorers/ttsr/metafile.yml
 - configs/inpainting/AOT-GAN/metafile.yml
 - configs/inpainting/deepfillv1/metafile.yml
 - configs/inpainting/deepfillv2/metafile.yml
@@ -12,18 +19,11 @@ Import:
 - configs/mattors/indexnet/metafile.yml
 - configs/restorers/basicvsr/metafile.yml
 - configs/restorers/basicvsr_plusplus/metafile.yml
-- configs/restorers/dic/metafile.yml
 - configs/restorers/edvr/metafile.yml
-- configs/restorers/esrgan/metafile.yml
-- configs/restorers/glean/metafile.yml
 - configs/restorers/iconvsr/metafile.yml
-- configs/restorers/liif/metafile.yml
 - configs/restorers/real_basicvsr/metafile.yml
-- configs/restorers/real_esrgan/metafile.yml
-- configs/restorers/srresnet_srgan/metafile.yml
 - configs/restorers/tdan/metafile.yml
 - configs/restorers/tof/metafile.yml
-- configs/restorers/ttsr/metafile.yml
 - configs/synthesizers/cyclegan/metafile.yml
 - configs/synthesizers/pix2pix/metafile.yml
 - configs/video_interpolators/cain/metafile.yml

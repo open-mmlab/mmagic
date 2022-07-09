@@ -1,7 +1,7 @@
 _base_ = './base_tof_vfi_nobn_1xb1_vimeo90k_triplet.py'
 
-exp_name = 'tof_vfi_spynet_clean_nobn_1xb1_vimeo90k'
-work_dir = f'./work_dirs/{exp_name}'
+experiment_name = 'tof_vfi_spynet_clean_nobn_1xb1_vimeo90k'
+work_dir = f'./work_dirs/{experiment_name}'
 
 # pretrained SPyNet
 source = 'https://download.openmmlab.com/mmediting/video_interpolators/toflow'
@@ -15,8 +15,8 @@ model = dict(
         type='TOFlowVFINet',
         flow_cfg=dict(norm_cfg=None, pretrained=load_pretrained_spynet)),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean'),
-    train_cfg=None,
-    test_cfg=None,
+    train_cfg=dict(),
+    test_cfg=dict(),
     required_frames=2,
     step_frames=1,
     init_cfg=None,

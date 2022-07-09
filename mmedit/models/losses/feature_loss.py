@@ -1,9 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import warnings
+
 import torch
 import torch.nn as nn
 from mmcv.runner import load_checkpoint
 
-from mmedit.models.components.discriminators import LightCNN
+from mmedit.models.image_restorers.dic import LightCNN
 from mmedit.registry import LOSSES
 from mmedit.utils import get_root_logger
 
@@ -64,7 +66,9 @@ class LightCNNFeatureLoss(nn.Module):
     def __init__(self, pretrained, loss_weight=1.0, criterion='l1'):
         super().__init__()
         self.model = LightCNNFeature()
-        assert isinstance(pretrained, str), 'Model must be pretrained'
+        if not isinstance(pretrained, str):
+            warnings.warn('`LightCNNFeature` model in FeatureLoss ' +
+                          'should be pretrained')
         self.model.init_weights(pretrained)
         self.model.eval()
         self.loss_weight = loss_weight
@@ -87,7 +91,7 @@ class LightCNNFeatureLoss(nn.Module):
             Tensor: Forward results.
         """
 
-        assert self.model.training is False
+        self.model.eval()
         pred_feature = self.model(pred)
         gt_feature = self.model(gt).detach()
         feature_loss = self.criterion(pred_feature, gt_feature)

@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
 import os.path as osp
+import re
 from typing import Callable, List, Optional, Tuple, Union
 
 from mmengine import BaseDataset
@@ -214,6 +215,9 @@ class BasicImageDataset(BaseDataset):
 
     def _get_path_list_from_ann(self):
         """Get list of paths from annotation file.
+
+        Returns:
+            List: List of paths.
         """
 
         ann_list = list_from_file(
@@ -230,20 +234,25 @@ class BasicImageDataset(BaseDataset):
         return path_list
 
     def _get_path_list_from_folder(self):
-        """Get list of paths from annotation file.
+        """Get list of paths from folder.
+
+        Returns:
+            List: List of paths.
         """
 
         path_list = []
         folder = self.data_prefix[self.search_key]
         tmpl = self.filename_tmpl[self.search_key].format('')
+        virtual_path = self.filename_tmpl[self.search_key].format('.*')
         for img_path in self.file_client.list_dir_or_file(
                 dir_path=folder,
                 list_dir=False,
                 suffix=self.img_suffix,
                 recursive=self.recursive,
         ):
-            _, ext = osp.splitext(img_path)
-            img_path = img_path.replace(tmpl + ext, ext)
-            path_list.append(img_path)
+            basename, ext = osp.splitext(img_path)
+            if re.match(virtual_path, basename):
+                img_path = img_path.replace(tmpl + ext, ext)
+                path_list.append(img_path)
 
         return path_list

@@ -1,15 +1,15 @@
 _base_ = '../../default_runtime.py'
 
-exp_name = 'cain_b5_g1b32_vimeo90k_triplet'
-work_dir = f'./work_dirs/{exp_name}'
+experiment_name = 'cain_b5_g1b32_vimeo90k_triplet'
+work_dir = f'./work_dirs/{experiment_name}'
 
 # model settings
 model = dict(
     type='CAIN',
     generator=dict(type='CAINNet'),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-    train_cfg=None,
-    test_cfg=None,
+    train_cfg=dict(),
+    test_cfg=dict(),
     required_frames=2,
     step_frames=1,
     init_cfg=None,
