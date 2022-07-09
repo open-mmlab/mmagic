@@ -8,7 +8,7 @@ from torchvision.utils import save_image
 
 from mmedit.core import tensor2img
 from mmedit.registry import MODELS
-from ..common.model_utils import set_requires_grad
+from ..common import set_requires_grad
 from .one_stage import OneStageInpaintor
 
 

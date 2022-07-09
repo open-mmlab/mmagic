@@ -7,7 +7,7 @@ from typing import Callable, List, Optional, Tuple, Union
 from mmengine import BaseDataset
 from mmengine.fileio import FileClient, list_from_file
 
-from ..registry import DATASETS
+from mmedit.registry import DATASETS
 
 IMG_EXTENSIONS = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.ppm',
                   '.PPM', '.bmp', '.BMP', '.tif', '.TIF', '.tiff', '.TIFF')

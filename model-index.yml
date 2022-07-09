@@ -9,11 +9,11 @@ Import:
 - configs/image_restorers/srcnn/metafile.yml
 - configs/image_restorers/srgan_resnet/metafile.yml
 - configs/image_restorers/ttsr/metafile.yml
-- configs/inpainting/AOT-GAN/metafile.yml
-- configs/inpainting/deepfillv1/metafile.yml
-- configs/inpainting/deepfillv2/metafile.yml
-- configs/inpainting/global_local/metafile.yml
-- configs/inpainting/partial_conv/metafile.yml
+- configs/inpaintors/AOT-GAN/metafile.yml
+- configs/inpaintors/deepfillv1/metafile.yml
+- configs/inpaintors/deepfillv2/metafile.yml
+- configs/inpaintors/global_local/metafile.yml
+- configs/inpaintors/partial_conv/metafile.yml
 - configs/mattors/dim/metafile.yml
 - configs/mattors/gca/metafile.yml
 - configs/mattors/indexnet/metafile.yml
