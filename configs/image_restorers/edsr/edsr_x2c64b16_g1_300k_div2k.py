@@ -1,7 +1,7 @@
 _base_ = '../../default_runtime.py'
 
-exp_name = 'edsr_x2c64b16_g1_300k_div2k'
-work_dir = f'./work_dirs/{exp_name}'
+experiment_name = 'edsr_x2c64b16_g1_300k_div2k'
+work_dir = f'./work_dirs/{experiment_name}'
 
 scale = 2
 # model settings
@@ -18,8 +18,8 @@ model = dict(
         rgb_mean=[0.4488, 0.4371, 0.4040],
         rgb_std=[1.0, 1.0, 1.0]),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-    train_cfg=None,
-    test_cfg=None,
+    train_cfg=dict(),
+    test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
                                                              255.]))
@@ -37,6 +37,7 @@ train_pipeline = [
         color_type='unchanged',
         channel_order='bgr',
         imdecode_backend='cv2'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='PairedRandomCrop', gt_patch_size=96),
     dict(
         type='Flip',
@@ -117,7 +118,8 @@ optim_wrapper = dict(
         optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99))))
 
 # learning policy
-param_scheduler = dict(type='Step', by_epoch=False, step=[200000], gamma=0.5)
+param_scheduler = dict(
+    type='MultiStepLR', by_epoch=False, milestones=[200000], gamma=0.5)
 
 default_hooks = dict(
     checkpoint=dict(

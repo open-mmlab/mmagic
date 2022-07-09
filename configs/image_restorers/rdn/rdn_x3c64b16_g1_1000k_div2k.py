@@ -1,7 +1,7 @@
 _base_ = '../../default_runtime.py'
 
-exp_name = 'rdn_x3c64b16_g1_1000k_div2k'
-work_dir = f'./work_dirs/{exp_name}'
+experiment_name = 'rdn_x3c64b16_g1_1000k_div2k'
+work_dir = f'./work_dirs/{experiment_name}'
 
 scale = 3
 # model settings
@@ -15,7 +15,7 @@ model = dict(
         num_blocks=16,
         upscale_factor=scale),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-    train_cfg=None,
+    train_cfg=dict(),
     test_cfg=dict(metrics=['PSNR'], crop_border=scale),
     data_preprocessor=dict(
         type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
@@ -34,6 +34,7 @@ train_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='cv2'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='PairedRandomCrop', gt_patch_size=64),
     dict(
         type='Flip',
@@ -115,9 +116,9 @@ optim_wrapper = dict(
 
 # learning policy
 param_scheduler = dict(
-    type='Step',
+    type='MultiStepLR',
     by_epoch=False,
-    step=[200000, 400000, 600000, 800000],
+    milestones=[200000, 400000, 600000, 800000],
     gamma=0.5)
 
 default_hooks = dict(

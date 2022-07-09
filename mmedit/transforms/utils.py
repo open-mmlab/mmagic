@@ -23,11 +23,12 @@ def make_coord(shape, ranges=None, flatten=True):
         r = (v1 - v0) / (2 * n)
         seq = v0 + r + (2 * r) * torch.arange(n).float()
         coord_seqs.append(seq)
+
     if 'indexing' in torch.meshgrid.__code__.co_varnames:
-        grids = torch.meshgrid(*coord_seqs, indexing='ij')
+        coord = torch.meshgrid(*coord_seqs, indexing='ij')
     else:
-        grids = torch.meshgrid(*coord_seqs)
-    coord = torch.stack(grids, dim=-1)
+        coord = torch.meshgrid(*coord_seqs)
+    coord = torch.stack(coord, dim=-1)
     if flatten:
         coord = coord.view(-1, coord.shape[-1])
     return coord

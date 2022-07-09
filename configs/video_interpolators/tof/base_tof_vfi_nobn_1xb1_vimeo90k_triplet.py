@@ -90,10 +90,10 @@ optim_wrapper = dict(
 
 # learning policy
 param_scheduler = dict(
-    type='StepLR',
+    type='milestones',
     by_epoch=False,
     gamma=0.5,
-    step=[200000, 400000, 600000, 800000])
+    milestones=[200000, 400000, 600000, 800000])
 
 default_hooks = dict(
     checkpoint=dict(

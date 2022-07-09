@@ -1,7 +1,7 @@
 _base_ = '../../default_runtime.py'
 
-exp_name = 'flavr_in4out1_g8b4_vimeo90k_septuplet'
-work_dir = f'./work_dirs/{exp_name}'
+experiment_name = 'flavr_in4out1_g8b4_vimeo90k_septuplet'
+work_dir = f'./work_dirs/{experiment_name}'
 
 # model settings
 model = dict(
@@ -17,8 +17,8 @@ model = dict(
         join_type='concat',
         up_mode='transpose'),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-    train_cfg=None,
-    test_cfg=None,
+    train_cfg=dict(),
+    test_cfg=dict(),
     required_frames=4,
     step_frames=1,
     init_cfg=None,

@@ -15,6 +15,7 @@ from .loading import LoadImageFromFile
 from .mask import GetMaskedImage, GetSpatialDiscountMask, LoadMask
 from .matlab_like_resize import MATLABLikeResize
 from .matting import *  # noqa F403
+from .normalization import Normalize, RescaleToZeroOne
 from .random_degradations import (DegradationsWithShuffle, RandomBlur,
                                   RandomJPEGCompression, RandomNoise,
                                   RandomResize, RandomVideoCompression)
@@ -43,6 +44,7 @@ __all__ = [
     'MATLABLikeResize',
     'MirrorSequence',
     'ModCrop',
+    'Normalize',
     'PackEditInputs',
     'PairedRandomCrop',
     'RandomAffine',
@@ -56,6 +58,7 @@ __all__ = [
     'RandomRotation',
     'RandomTransposeHW',
     'RandomVideoCompression',
+    'RescaleToZeroOne',
     'Resize',
     'SetValues',
     'TemporalReverse',

@@ -2,8 +2,8 @@ _base_ = [
     '../../default_runtime.py',
 ]
 
-exp_name = 'srcnn_x4k915_g1_1000k_div2k'
-work_dir = f'./work_dirs/{exp_name}'
+experiment_name = 'srcnn_x4k915_g1_1000k_div2k'
+work_dir = f'./work_dirs/{experiment_name}'
 
 scale = 4
 # model settings
@@ -15,7 +15,7 @@ model = dict(
         kernel_sizes=(9, 1, 5),
         upscale_factor=scale),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-    train_cfg=None,
+    train_cfg=dict(),
     test_cfg=dict(metrics=['PSNR'], crop_border=scale),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
@@ -36,6 +36,7 @@ train_pipeline = [
         color_type='unchanged',
         channel_order='bgr',
         imdecode_backend='cv2'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='PairedRandomCrop', gt_patch_size=128),
     dict(
         type='Flip',
