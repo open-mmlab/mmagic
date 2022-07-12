@@ -23,9 +23,10 @@ Import:
 - configs/restorers/iconvsr/metafile.yml
 - configs/restorers/real_basicvsr/metafile.yml
 - configs/restorers/tdan/metafile.yml
-- configs/restorers/tof/metafile.yml
 - configs/synthesizers/cyclegan/metafile.yml
 - configs/synthesizers/pix2pix/metafile.yml
 - configs/video_interpolators/cain/metafile.yml
 - configs/video_interpolators/flavr/metafile.yml
 - configs/video_interpolators/tof/metafile.yml
+- configs/video_restorers/edvr/metafile.yml
+- configs/video_restorers/tof/metafile.yml

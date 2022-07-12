@@ -5,7 +5,7 @@ Collections:
   Name: TOFlow
   Paper:
   - https://arxiv.org/abs/1711.09078
-  README: configs/restorers/tof/README.md
+  README: configs/video_restorers/tof/README.md
 Models:
 - Config: configs/restorers/tof/tof_x4_vimeo90k_official.py
   In Collection: TOFlow
@@ -18,5 +18,5 @@ Models:
       Vid4:
         PSNR: 24.4377
         SSIM: 0.7433
-    Task: Restorers
+    Task: Video_restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth

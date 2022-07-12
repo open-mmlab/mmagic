@@ -3,14 +3,14 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
-from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.common import flow_warp
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class TOFlow(BaseBackbone):
+@MODELS.register_module()
+class TOFlowVSRNet(BaseModule):
     """PyTorch implementation of TOFlow.
 
     In TOFlow, the LR frames are pre-upsampled and have the same size with
