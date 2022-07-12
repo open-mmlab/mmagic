@@ -2,7 +2,7 @@ exp_name = 'flavr_in4out1_g8b4_vimeo90k_septuplet'
 
 # model settings
 model = dict(
-    type='BasicInterpolator',
+    type='FLAVR',
     generator=dict(
         type='FLAVRNet',
         num_input_frames=4,
