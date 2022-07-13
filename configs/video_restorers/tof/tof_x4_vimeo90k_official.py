@@ -5,7 +5,7 @@ _base_ = [
     '../../default_runtime.py',
 ]
 
-exp_name = 'tof_x4_vimeo90k_official'
+experiment_name = 'tof_x4_vimeo90k_official'
 
 # model settings
 model = dict(

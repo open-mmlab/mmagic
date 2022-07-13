@@ -17,7 +17,6 @@ Import:
 - configs/mattors/dim/metafile.yml
 - configs/mattors/gca/metafile.yml
 - configs/mattors/indexnet/metafile.yml
-- configs/restorers/basicvsr/metafile.yml
 - configs/restorers/basicvsr_plusplus/metafile.yml
 - configs/restorers/edvr/metafile.yml
 - configs/restorers/iconvsr/metafile.yml
@@ -27,6 +26,7 @@ Import:
 - configs/video_interpolators/cain/metafile.yml
 - configs/video_interpolators/flavr/metafile.yml
 - configs/video_interpolators/tof/metafile.yml
+- configs/video_restorers/basicvsr/metafile.yml
 - configs/video_restorers/edvr/metafile.yml
 - configs/video_restorers/tdan/metafile.yml
 - configs/video_restorers/tof/metafile.yml

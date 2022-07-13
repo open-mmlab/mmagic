@@ -1,4 +1,4 @@
-exp_name = 'basicvsr_vimeo90k_bd'
+experiment_name = 'basicvsr_vimeo90k_bi'
 
 # model settings
 model = dict(
@@ -62,6 +62,18 @@ val_pipeline = [
         meta_keys=['lq_path', 'gt_path', 'key'])
 ]
 
+demo_pipeline = [
+    dict(type='GenerateSegmentIndices', interval_list=[1]),
+    dict(
+        type='LoadImageFromFileList',
+        io_backend='disk',
+        key='lq',
+        channel_order='rgb'),
+    dict(type='RescaleToZeroOne', keys=['lq']),
+    dict(type='FramesToTensor', keys=['lq']),
+    dict(type='Collect', keys=['lq'], meta_keys=['lq_path', 'key'])
+]
+
 test_pipeline = [
     dict(
         type='LoadImageFromFileList',
@@ -82,18 +94,6 @@ test_pipeline = [
         meta_keys=['lq_path', 'gt_path', 'key'])
 ]
 
-demo_pipeline = [
-    dict(type='GenerateSegmentIndices', interval_list=[1]),
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='lq',
-        channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['lq']),
-    dict(type='FramesToTensor', keys=['lq']),
-    dict(type='Collect', keys=['lq'], meta_keys=['lq_path', 'key'])
-]
-
 data = dict(
     workers_per_gpu=6,
     train_dataloader=dict(samples_per_gpu=4, drop_last=True),  # 2 gpus
@@ -106,7 +106,7 @@ data = dict(
         times=1000,
         dataset=dict(
             type=train_dataset_type,
-            lq_folder='data/vimeo90k/BDx4',
+            lq_folder='data/vimeo90k/BIx4',
             gt_folder='data/vimeo90k/GT',
             ann_file='data/vimeo90k/meta_info_Vimeo90K_train_GT.txt',
             pipeline=train_pipeline,
@@ -115,7 +115,7 @@ data = dict(
     # val
     val=dict(
         type=val_dataset_type,
-        lq_folder='data/Vid4/BDx4',
+        lq_folder='data/Vid4/BIx4',
         gt_folder='data/Vid4/GT',
         pipeline=val_pipeline,
         scale=4,
@@ -123,7 +123,7 @@ data = dict(
     # test
     test=dict(
         type=test_dataset_type,
-        lq_folder='data/vimeo90k/BDx4',
+        lq_folder='data/vimeo90k/BIx4',
         gt_folder='data/vimeo90k/GT',
         ann_file='data/vimeo90k/meta_info_Vimeo90K_test_GT.txt',
         pipeline=test_pipeline,
@@ -149,7 +149,7 @@ lr_config = dict(
     restart_weights=[1],
     min_lr=1e-7)
 
-checkpoint_config = dict(interval=5, save_optimizer=True, by_epoch=False)
+checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
 # remove gpu_collect=True in non distributed training
 evaluation = dict(interval=5000, save_image=False, gpu_collect=True)
 log_config = dict(
@@ -163,7 +163,7 @@ visual_config = None
 # runtime settings
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = f'./work_dirs/{exp_name}'
+work_dir = f'./work_dirs/{experiment_name}'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]

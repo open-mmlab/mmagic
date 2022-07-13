@@ -3,19 +3,20 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule
-from mmcv.runner import load_checkpoint
+from mmengine.model import BaseModule
+from mmengine.runner import load_checkpoint
 
-from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   flow_warp, make_layer)
-from mmedit.registry import BACKBONES
+from mmedit.models.video_restorers.basicvsr.basicvsr_net import (
+    ResidualBlocksWithInputConv, SPyNet)
+from mmedit.models.video_restorers.edvr.edvr_net import PCDAlignment, TSAFusion
+from mmedit.registry import MODELS
 from mmedit.utils import get_root_logger
-from .basicvsr_net import ResidualBlocksWithInputConv, SPyNet
-from .edvr_net import PCDAlignment, TSAFusion
 
 
-@BACKBONES.register_module()
-class IconVSR(BaseBackbone):
+@MODELS.register_module()
+class IconVSRNet(BaseModule):
     """IconVSR network structure for video super-resolution.
 
     Support only x4 upsampling.

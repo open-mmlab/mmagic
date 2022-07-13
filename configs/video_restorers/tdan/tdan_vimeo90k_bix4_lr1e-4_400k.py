@@ -5,8 +5,8 @@ _base_ = [
     '../dataset/val_spmcs_bix4.py',
 ]
 
-exp_name = 'tdan_vimeo90k_bix4_lr1e-4_400k'
-work_dir = f'./work_dirs/{exp_name}'
+experiment_name = 'tdan_vimeo90k_bix4_lr1e-4_400k'
+work_dir = f'./work_dirs/{experiment_name}'
 
 # model settings
 model = dict(

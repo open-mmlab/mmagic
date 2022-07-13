@@ -1,7 +1,7 @@
 _base_ = './tdan_vimeo90k_bix4_lr1e-4_400k.py'
 
-exp_name = 'tdan_vimeo90k_bix4_ft_lr5e-5_400k'
-work_dir = f'./work_dirs/{exp_name}'
+experiment_name = 'tdan_vimeo90k_bix4_ft_lr5e-5_400k'
+work_dir = f'./work_dirs/{experiment_name}'
 
 load_from = './experiments/tdan_vimeo90k_bix4_lr1e-4_400k/iter_400000.pth'
 

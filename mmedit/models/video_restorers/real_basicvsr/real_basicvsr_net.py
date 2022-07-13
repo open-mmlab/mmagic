@@ -1,15 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
+from mmengine.model import BaseModule
 
-from mmedit.models.backbones.base_backbone import BaseBackbone
-from mmedit.models.backbones.sr_backbones.basicvsr_net import (
+from mmedit.models.video_restorers.basicvsr.basicvsr_net import (
     BasicVSRNet, ResidualBlocksWithInputConv)
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class RealBasicVSRNet(BaseBackbone):
+@MODELS.register_module()
+class RealBasicVSRNet(BaseModule):
     """RealBasicVSR network structure for real-world video super-resolution.
 
     Support only x4 upsampling.

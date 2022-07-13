@@ -1,11 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule
 
 
-class DynamicUpsamplingFilter(nn.Module):
+class DynamicUpsamplingFilter(BaseModule):
     """Dynamic upsampling filter used in DUF.
 
     Ref: https://github.com/yhjo09/VSR-DUF.

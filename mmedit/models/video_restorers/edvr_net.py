@@ -34,6 +34,7 @@ class EDVRNet(nn.Module):
         center_frame_idx (int): The index of center frame. Frame counting from
             0. Default: 2.
         with_tsa (bool): Whether to use TSA module. Default: True.
+        init_cfg (dict, optional): Initialization config dict.
     """
 
     def __init__(self,
@@ -45,8 +46,15 @@ class EDVRNet(nn.Module):
                  num_blocks_extraction=5,
                  num_blocks_reconstruction=10,
                  center_frame_idx=2,
+<<<<<<< HEAD:mmedit/models/backbones/sr_backbones/edvr_net.py
                  with_tsa=True):
         super().__init__()
+=======
+                 with_tsa=True,
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
+
+>>>>>>> 0580d444 (Update other methods):mmedit/models/video_restorers/edvr/edvr_net.py
         self.center_frame_idx = center_frame_idx
         self.with_tsa = with_tsa
         act_cfg = dict(type='LeakyReLU', negative_slope=0.1)
@@ -166,6 +174,7 @@ class EDVRNet(nn.Module):
             strict (boo, optional): Whether strictly load the pretrained model.
                 Defaults to True.
         """
+<<<<<<< HEAD:mmedit/models/backbones/sr_backbones/edvr_net.py
         if isinstance(pretrained, str):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=strict, logger=logger)
@@ -189,6 +198,28 @@ class EDVRNet(nn.Module):
         else:
             raise TypeError(f'"pretrained" must be a str or None. '
                             f'But received {type(pretrained)}.')
+=======
+
+        super().init_weights()
+
+        init_type = None if self.init_cfg is None else self.init_cfg.get(
+            'type', None)
+        if init_type != 'Pretrained' and self.with_tsa:
+            for module in [
+                    self.fusion.feat_fusion, self.fusion.spatial_attn1,
+                    self.fusion.spatial_attn2, self.fusion.spatial_attn3,
+                    self.fusion.spatial_attn4, self.fusion.spatial_attn_l1,
+                    self.fusion.spatial_attn_l2, self.fusion.spatial_attn_l3,
+                    self.fusion.spatial_attn_add1
+            ]:
+                kaiming_init(
+                    module.conv,
+                    a=0.1,
+                    mode='fan_out',
+                    nonlinearity='leaky_relu',
+                    bias=0,
+                    distribution='uniform')
+>>>>>>> 0580d444 (Update other methods):mmedit/models/video_restorers/edvr/edvr_net.py
 
 
 class ModulatedDCNPack(ModulatedDeformConv2d):
