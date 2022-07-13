@@ -1,7 +1,8 @@
 # only testing the official model is supported
+from ..dataset.val_vid4_bix4_up import val_dataloader
+
 _base_ = [
     '../../default_runtime.py',
-    '../dataset/vid4_val.py',
 ]
 
 exp_name = 'tof_x4_vimeo90k_official'
@@ -18,20 +19,14 @@ model = dict(
         input_view=(1, -1, 1, 1),
         output_view=(-1, 1, 1)))
 
-test_pipeline = [
-    dict(type='GenerateFrameIndiceswithPadding', padding='reflection_circle'),
-    dict(type='LoadImageFromFile', key='img', imdecode_backend='unchanged'),
-    dict(type='LoadImageFromFile', key='gt', imdecode_backend='unchanged'),
-    dict(type='ToTensor', keys=['img', 'gt']),
-    dict(type='PackEditInputs')
-]
-
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', imdecode_backend='unchanged'),
     dict(type='ToTensor', keys=['img']),
     dict(type='PackEditInputs')
 ]
+
+test_dataloader = val_dataloader
 
 default_hooks = dict(
     checkpoint=dict(

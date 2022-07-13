@@ -3,16 +3,16 @@ import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule, constant_init
 from mmcv.ops import DeformConv2d, DeformConv2dPack, deform_conv2d
+from mmengine.model import BaseModule
 from torch.nn.modules.utils import _pair
 
-from mmedit.models.backbones.base_backbone import BaseBackbone
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   make_layer)
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class TDANNet(BaseBackbone):
+@MODELS.register_module()
+class TDANNet(BaseModule):
     """TDAN network structure for video super-resolution.
 
     Support only x4 upsampling.

@@ -1,36 +1,12 @@
+from ..dataset.val_reds_reds4 import val_dataloader
+
 _base_ = [
     '../../default_runtime.py',
-    '../dataset/reds_reds4_train.py',
-    '../dataset/reds_reds4_val.py',
+    '../dataset/train_reds_reds4.py',
+    '../dataset/val_reds_reds.py',
 ]
 
 scale = 4
-
-train_pipeline = [
-    dict(type='GenerateFrameIndices', interval_list=[1], frames_per_clip=99),
-    dict(type='TemporalReverse', keys='img_path', reverse_ratio=0),
-    dict(type='LoadImageFromFile', key='img', color_type='unchanged'),
-    dict(type='LoadImageFromFile', key='gt', color_type='unchanged'),
-    dict(type='PairedRandomCrop', gt_patch_size=256),
-    dict(
-        type='Flip',
-        keys=['img', 'gt'],
-        flip_ratio=0.5,
-        direction='horizontal'),
-    dict(
-        type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
-    dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    dict(type='ToTensor', keys=['img', 'gt']),
-    dict(type='PackEditInputs')
-]
-
-val_pipeline = [
-    dict(type='GenerateFrameIndiceswithPadding', padding='reflection_circle'),
-    dict(type='LoadImageFromFile', key='img', color_type='unchanged'),
-    dict(type='LoadImageFromFileList', key='gt', color_type='unchanged'),
-    dict(type='ToTensor', keys=['img', 'gt']),
-    dict(type='PackEditInputs')
-]
 
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
@@ -39,8 +15,6 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-train_dataloader = dict(dataset=dict(pipeline=train_pipeline))
-val_dataloader = dict(dataset=dict(pipeline=val_pipeline))
 test_dataloader = val_dataloader
 
 val_evaluator = [

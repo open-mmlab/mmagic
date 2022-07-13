@@ -30,16 +30,9 @@ class TOFlowVSRNet(BaseModule):
 
     def __init__(self, adapt_official_weights=False):
         super().__init__()
+
         self.adapt_official_weights = adapt_official_weights
         self.ref_idx = 0 if adapt_official_weights else 3
-
-        # The mean and std are for img with range (0, 1)
-        self.register_buffer(
-            'mean',
-            torch.Tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1))
-        self.register_buffer(
-            'std',
-            torch.Tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1))
 
         # flow estimation module
         self.spynet = SPyNet()
@@ -53,28 +46,6 @@ class TOFlowVSRNet(BaseModule):
         # activation function
         self.relu = nn.ReLU(inplace=True)
 
-    def normalize(self, img):
-        """Normalize the input image.
-
-        Args:
-            img (Tensor): Input image.
-
-        Returns:
-            Tensor: Normalized image.
-        """
-        return (img - self.mean) / self.std
-
-    def denormalize(self, img):
-        """Denormalize the output image.
-
-        Args:
-            img (Tensor): Output image.
-
-        Returns:
-            Tensor: Denormalized image.
-        """
-        return img * self.std + self.mean
-
     def forward(self, lrs):
         """
         Args:
@@ -87,10 +58,7 @@ class TOFlowVSRNet(BaseModule):
         if self.adapt_official_weights:
             lrs = lrs[:, [3, 0, 1, 2, 4, 5, 6], :, :, :]
 
-        num_batches, num_lrs, _, h, w = lrs.size()
-
-        lrs = self.normalize(lrs.view(-1, 3, h, w))
-        lrs = lrs.view(num_batches, num_lrs, 3, h, w)
+        num_batches, _, _, h, w = lrs.size()
 
         lr_ref = lrs[:, self.ref_idx, :, :, :]
         lr_aligned = []
@@ -110,7 +78,7 @@ class TOFlowVSRNet(BaseModule):
         hr = self.relu(self.conv3(hr))
         hr = self.conv4(hr) + lr_ref
 
-        return self.denormalize(hr)
+        return hr
 
 
 class BasicModule(nn.Module):
