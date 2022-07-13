@@ -7,7 +7,8 @@ from mmedit.models.video_interpolators.flavr import FLAVR
 def test_flavr():
 
     model = FLAVR(
-        generator=dict(type='FLAVRNet'),
+        generator=dict(
+            type='FLAVRNet', num_input_frames=4, num_output_frames=1),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 
     input_tensors = torch.rand(3, 4, 3, 16, 16)
