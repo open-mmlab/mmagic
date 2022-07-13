@@ -7,7 +7,6 @@ from mmedit.models.video_interpolators.flavr import FLAVR
 def test_flavr():
 
     model = FLAVR(
-        type='BasicInterpolator',
         generator=dict(type='FLAVRNet'),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'))
 
