@@ -1,9 +1,4 @@
-_base_ = [
-    '../../default_runtime.py',
-    '../dataset/train_vimeo_seq_bdx4.py',
-    '../dataset/val_vid4_bdx4.py',
-    '../dataset/val_spmcs_bdx4.py',
-]
+_base_ = '../../default_runtime.py'
 
 experiment_name = 'tdan_vimeo90k_bdx4_lr1e-4_400k'
 work_dir = f'./work_dirs/{experiment_name}'
@@ -36,12 +31,81 @@ val_evaluator = [
 ]
 test_evaluator = val_evaluator
 
+train_pipeline = [
+    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='PairedRandomCrop', gt_patch_size=192),
+    dict(
+        type='Flip',
+        keys=['img', 'gt'],
+        flip_ratio=0.5,
+        direction='horizontal'),
+    dict(
+        type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
+    dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
+    dict(type='ToTensor', keys=['img', 'gt']),
+    dict(type='PackEditInputs')
+]
+
+val_pipeline = [
+    dict(type='GenerateFrameIndiceswithPadding', padding='reflection'),
+    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='ToTensor', keys=['img', 'gt']),
+    dict(type='PackEditInputs')
+]
+
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='ToTensor', keys=['img']),
     dict(type='PackEditInputs')
 ]
+
+train_dataloader = dict(
+    num_workers=8,
+    batch_size=16,
+    persistent_workers=False,
+    sampler=dict(type='InfiniteSampler', shuffle=True),
+    dataset=dict(
+        type='BasicFramesDataset',
+        metainfo=dict(dataset_type='vimeo_seq', task_name='vsr'),
+        data_root='data/Vimeo-90K',
+        data_prefix=dict(img='BDx4', gt='GT'),
+        ann_file='meta_info_Vimeo90K_train_GT.txt',
+        depth=2,
+        num_input_frames=5,
+        pipeline=train_pipeline))
+
+val_dataloader = dict(
+    num_workers=1,
+    batch_size=1,
+    persistent_workers=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='BasicFramesDataset',
+        metainfo=dict(dataset_type='vid4', task_name='vsr'),
+        data_root='data/Vid4',
+        data_prefix=dict(img='BDx4', gt='GT'),
+        ann_file='meta_info_Vid4_GT.txt',
+        depth=2,
+        num_input_frames=7,
+        pipeline=val_pipeline))
+
+test_dataloader = dict(
+    num_workers=1,
+    batch_size=1,
+    persistent_workers=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='BasicFramesDataset',
+        metainfo=dict(dataset_type='spmcs', task_name='vsr'),
+        data_root='data/SPMCS',
+        data_prefix=dict(img='BDx4', gt='GT'),
+        ann_file='meta_info_SPMCS_GT.txt',
+        depth=1,
+        num_input_frames=5,
+        pipeline=val_pipeline))
 
 # optimizer
 optim_wrapper = dict(

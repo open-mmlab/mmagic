@@ -1,4 +1,4 @@
-_base_ = ['./base_edvr_config.py']
+_base_ = './base_edvr_config.py'
 
 experiment_name = 'edvrl_c128b40_8x8_lr2e-4_600k_reds4'
 load_from = 'https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth'  # noqa: E501
@@ -18,4 +18,11 @@ model = dict(
         center_frame_idx=2,
         with_tsa=True),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='sum'),
-    train_cfg=dict(tsa_iter=5000))
+    train_cfg=dict(tsa_iter=5000),
+    data_preprocessor=dict(
+        type='EditDataPreprocessor',
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.],
+        input_view=(1, -1, 1, 1),
+        output_view=(1, -1, 1, 1),
+    ))

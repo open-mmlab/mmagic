@@ -1,4 +1,7 @@
-exp_name = 'realbasicvsr_wogan_c64b20_2x30x8_lr1e-4_300k_reds'
+_base_ = '../../default_runtime.py'
+
+experiment_name = 'realbasicvsr_wogan_c64b20_2x30x8_lr1e-4_300k_reds'
+work_dir = f'./work_dirs/{experiment_name}'
 
 scale = 4
 
@@ -18,23 +21,18 @@ model = dict(
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     cleaning_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     is_use_sharpened_gt_in_pixel=True,
-    is_use_ema=True,
-)
+    data_preprocessor=dict(
+        type='EditDataPreprocessor',
+        mean=[0., 0., 0.],
+        std=[1., 1., 1.],
+        input_view=(1, -1, 1, 1),
+        output_view=(1, -1, 1, 1),
+    ))
 
-# model training and testing settings
-train_cfg = dict()
-test_cfg = dict(metrics=['PSNR'], crop_border=0)  # change to [] for test
-
-# dataset settings
-train_dataset_type = 'SRFolderMultipleGTDataset'
-val_dataset_type = 'SRFolderMultipleGTDataset'
 train_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='gt',
-        channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='FixedCrop', keys=['gt'], crop_size=(256, 256)),
     dict(type='RescaleToZeroOne', keys=['gt']),
     dict(type='Flip', keys=['gt'], flip_ratio=0.5, direction='horizontal'),
@@ -48,7 +46,7 @@ train_pipeline = [
         sigma=0,
         weight=0.5,
         threshold=10),
-    dict(type='CopyValues', src_keys=['gt_unsharp'], dst_keys=['lq']),
+    dict(type='CopyValues', src_keys=['gt_unsharp'], dst_keys=['img']),
     dict(
         type='RandomBlur',
         params=dict(
@@ -69,7 +67,7 @@ train_pipeline = [
             beta_gaussian_step=0.05,
             beta_plateau_step=0.1,
             omega_step=0.0628),
-        keys=['lq'],
+        keys=['img'],
     ),
     dict(
         type='RandomResize',
@@ -80,7 +78,7 @@ train_pipeline = [
             resize_prob=[1 / 3.0, 1 / 3.0, 1 / 3.0],
             resize_step=0.015,
             is_size_even=True),
-        keys=['lq'],
+        keys=['img'],
     ),
     dict(
         type='RandomNoise',
@@ -93,12 +91,12 @@ train_pipeline = [
             poisson_gray_noise_prob=0.4,
             gaussian_sigma_step=0.1,
             poisson_scale_step=0.005),
-        keys=['lq'],
+        keys=['img'],
     ),
     dict(
         type='RandomJPEGCompression',
         params=dict(quality=[30, 95], quality_step=3),
-        keys=['lq'],
+        keys=['img'],
     ),
     dict(
         type='RandomVideoCompression',
@@ -106,7 +104,7 @@ train_pipeline = [
             codec=['libx264', 'h264', 'mpeg4'],
             codec_prob=[1 / 3., 1 / 3., 1 / 3.],
             bitrate=[1e4, 1e5]),
-        keys=['lq'],
+        keys=['img'],
     ),
     dict(
         type='RandomBlur',
@@ -129,7 +127,7 @@ train_pipeline = [
             beta_gaussian_step=0.05,
             beta_plateau_step=0.1,
             omega_step=0.0628),
-        keys=['lq'],
+        keys=['img'],
     ),
     dict(
         type='RandomResize',
@@ -140,7 +138,7 @@ train_pipeline = [
             resize_prob=[1 / 3., 1 / 3., 1 / 3.],
             resize_step=0.03,
             is_size_even=True),
-        keys=['lq'],
+        keys=['img'],
     ),
     dict(
         type='RandomNoise',
@@ -153,12 +151,12 @@ train_pipeline = [
             poisson_gray_noise_prob=0.4,
             gaussian_sigma_step=0.1,
             poisson_scale_step=0.005),
-        keys=['lq'],
+        keys=['img'],
     ),
     dict(
         type='RandomJPEGCompression',
         params=dict(quality=[30, 95], quality_step=3),
-        keys=['lq'],
+        keys=['img'],
     ),
     dict(
         type='DegradationsWithShuffle',
@@ -169,7 +167,7 @@ train_pipeline = [
                     codec=['libx264', 'h264', 'mpeg4'],
                     codec_prob=[1 / 3., 1 / 3., 1 / 3.],
                     bitrate=[1e4, 1e5]),
-                keys=['lq'],
+                keys=['img'],
             ),
             [
                 dict(
@@ -191,32 +189,20 @@ train_pipeline = [
                 ),
             ]
         ],
-        keys=['lq'],
+        keys=['img'],
     ),
-    dict(type='Quantize', keys=['lq']),
-    dict(type='FramesToTensor', keys=['lq', 'gt', 'gt_unsharp']),
-    dict(
-        type='Collect', keys=['lq', 'gt', 'gt_unsharp'], meta_keys=['gt_path'])
+    dict(type='Clip', keys=['img']),
+    dict(type='ToTensor', keys=['img', 'gt', 'gt_unsharp']),
+    dict(type='PackEditInputs')
 ]
 
 val_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='lq',
-        channel_order='rgb'),
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='gt',
-        channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
-    dict(type='FramesToTensor', keys=['lq', 'gt']),
-    dict(
-        type='Collect',
-        keys=['lq', 'gt'],
-        meta_keys=['lq_path', 'gt_path', 'key'])
+    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='RescaleToZeroOne', keys=['img', 'gt']),
+    dict(type='ToTensor', keys=['img', 'gt']),
+    dict(type='PackEditInputs')
 ]
 
 test_pipeline = [
@@ -224,85 +210,82 @@ test_pipeline = [
         type='GenerateSegmentIndices',
         interval_list=[1],
         filename_tmpl='{:08d}.png'),
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='lq',
-        channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['lq']),
-    dict(type='FramesToTensor', keys=['lq']),
-    dict(type='Collect', keys=['lq'], meta_keys=['lq_path', 'key'])
+    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
+    dict(type='RescaleToZeroOne', keys=['img']),
+    dict(type='ToTensor', keys=['img']),
+    dict(type='PackEditInputs')
 ]
 
-data = dict(
-    workers_per_gpu=10,
-    train_dataloader=dict(
-        samples_per_gpu=2, drop_last=True, persistent_workers=False),
-    val_dataloader=dict(samples_per_gpu=1, persistent_workers=False),
-    test_dataloader=dict(samples_per_gpu=1, workers_per_gpu=1),
+train_dataloader = dict(
+    num_workers=10,
+    batch_size=1,
+    persistent_workers=False,
+    sampler=dict(type='InfiniteSampler', shuffle=True),
+    dataset=dict(
+        type='BasicFramesDataset',
+        metainfo=dict(dataset_type='reds', task_name='vsr'),
+        data_root='data/REDS',
+        data_prefix=dict(img='train_sharp_sub', gt='train_sharp_sub'),
+        depth=1,
+        num_input_frames=15,
+        pipeline=train_pipeline))
 
-    # train
-    train=dict(
-        type='RepeatDataset',
-        times=150,
-        dataset=dict(
-            type=train_dataset_type,
-            lq_folder='data/REDS/train_sharp_sub',
-            gt_folder='data/REDS/train_sharp_sub',
-            num_input_frames=15,
-            pipeline=train_pipeline,
-            scale=4,
-            test_mode=False)),
-    # val
-    val=dict(
-        type=val_dataset_type,
-        lq_folder='data/UDM10/BIx4',
-        gt_folder='data/UDM10/GT',
-        pipeline=val_pipeline,
-        scale=4,
-        test_mode=True),
-    # test
-    test=dict(
-        type=val_dataset_type,
-        lq_folder='data/VideoLQ',
-        gt_folder='data/VideoLQ',
-        pipeline=test_pipeline,
-        scale=4,
-        test_mode=True),
-)
+val_dataloader = dict(
+    num_workers=1,
+    batch_size=1,
+    persistent_workers=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='BasicFramesDataset',
+        metainfo=dict(dataset_type='udm10', task_name='vsr'),
+        data_root='data/UDM10',
+        data_prefix=dict(img='BIx4', gt='GT'),
+        pipeline=val_pipeline))
+
+test_dataloader = dict(
+    num_workers=1,
+    batch_size=1,
+    persistent_workers=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='BasicFramesDataset',
+        metainfo=dict(dataset_type='video_lq', task_name='vsr'),
+        data_root='data/VideoLQ',
+        data_prefix=dict(img='', gt=''),
+        pipeline=val_pipeline))
+
+val_evaluator = [
+    dict(type='PSNR'),
+    dict(type='SSIM'),
+]
+test_evaluator = val_evaluator
+
+train_cfg = dict(
+    type='IterBasedTrainLoop', max_iters=300_000, val_interval=5000)
+val_cfg = dict(type='ValLoop')
+test_cfg = dict(type='TestLoop')
 
 # optimizer
-optimizers = dict(generator=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99)))
-
-# learning policy
-total_iters = 300000
-lr_config = dict(policy='Step', by_epoch=False, step=[400000], gamma=1)
-
-checkpoint_config = dict(interval=5000, save_optimizer=True, by_epoch=False)
-
-# remove gpu_collect=True in non distributed training
-evaluation = dict(interval=5000, save_image=False, gpu_collect=True)
-log_config = dict(
-    interval=100,
-    hooks=[
-        dict(type='TextLoggerHook', by_epoch=False),
-        dict(type='TensorboardLoggerHook'),
-    ])
-visual_config = None
-
-# custom hook
-custom_hooks = [
+optim_wrapper = dict(
     dict(
-        type='ExponentialMovingAverageHook',
-        module_keys=('generator_ema', ),
-        interval=1,
-        interp_cfg=dict(momentum=0.999),
-    )
-]
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99))))
 
-dist_params = dict(backend='nccl')
-log_level = 'INFO'
-work_dir = f'./experiments/{exp_name}'
-load_from = None
-resume_from = None
-workflow = [('train', 1)]
+# NO learning policy
+
+default_hooks = dict(
+    checkpoint=dict(
+        type='CheckpointHook',
+        interval=5000,
+        save_optimizer=True,
+        out_dir='s3://ysli/real_basicvsr/',
+        max_keep_ckpts=10,
+        save_best='PSNR',
+        rule='greater',
+        by_epoch=False),
+    timer=dict(type='IterTimerHook'),
+    logger=dict(type='LoggerHook', interval=100),
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+    # visualization=dict(type='EditVisualizationHook', bgr_order=True),
+)

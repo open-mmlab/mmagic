@@ -14,18 +14,18 @@ model = dict(
         num_blocks=30,
         spynet_pretrained='https://download.openmmlab.com/mmediting/restorers/'
         'basicvsr/spynet_20210409-c6c1bd09.pth'),
-    pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean'))
-# model training and testing settings
-train_cfg = dict(fix_iter=5000)
-test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=0)
-
-# dataset settings
-train_dataset_type = 'SRREDSMultipleGTDataset'
-val_dataset_type = 'SRREDSMultipleGTDataset'
+    pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean'),
+    train_cfg=dict(fix_iter=5000),
+    data_preprocessor=dict(
+        type='EditDataPreprocessor',
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.],
+        input_view=(1, -1, 1, 1),
+        output_view=(1, -1, 1, 1),
+    ))
 
 train_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
-    dict(type='TemporalReverse', keys='lq_path', reverse_ratio=0),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
@@ -42,7 +42,7 @@ train_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-test_pipeline = [
+val_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
@@ -68,7 +68,7 @@ train_dataloader = dict(
         data_root='data/REDS',
         data_prefix=dict(img='train_sharp_bicubic/X4', gt='train_sharp'),
         ann_file='meta_info_reds4_train.txt',
-        depth=2,
+        depth=1,
         num_input_frames=15,
         pipeline=train_pipeline))
 
@@ -76,7 +76,7 @@ val_dataloader = dict(
     num_workers=1,
     batch_size=1,
     persistent_workers=False,
-    sampler=dict(type='InfiniteSampler', shuffle=True),
+    sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='reds_reds4', task_name='vsr'),
@@ -85,12 +85,11 @@ val_dataloader = dict(
         ann_file='meta_info_reds4_val.txt',
         depth=2,
         num_input_frames=100,
-        pipeline=train_pipeline))
+        pipeline=val_pipeline))
 
 test_dataloader = val_dataloader
 
 val_evaluator = [
-    dict(type='MAE'),
     dict(type='PSNR'),
     dict(type='SSIM'),
 ]
@@ -107,7 +106,7 @@ optim_wrapper = dict(
     optimizer=dict(
         type='OptimWrapper',
         optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99))),
-    paramwise_cfg=dict(custom_keys={'.extractor': dict(lr_mult=0.125)}))
+    paramwise_cfg=dict(custom_keys={'spynet': dict(lr_mult=0.125)}))
 
 # # learning policy
 # total_iters = 300000
