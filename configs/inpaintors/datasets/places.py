@@ -36,7 +36,10 @@ val_dataloader = dict(
 test_dataloader = val_dataloader
 
 val_evaluator = [
-    dict(type='MAE'),  # L1Loss
+    dict(type='MAE', mask_key='mask', scaling=100),
+    # By default, compute with pixel value from 0-1
+    # scale=2 to align with 1.0
+    # scale=100 seems to align with readme
     dict(type='PSNR'),
     dict(type='SSIM'),
 ]

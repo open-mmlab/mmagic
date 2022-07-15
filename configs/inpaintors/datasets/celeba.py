@@ -13,9 +13,8 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
-        data_prefix=dict(gt='data_large'),
+        data_prefix=dict(gt=''),
         ann_file='train_celeba_img_list.txt',
-        # Place365-challenge (8M images) use different image lists.
         test_mode=False,
     ))
 
@@ -27,7 +26,7 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
-        data_prefix=dict(gt='val_large'),
+        data_prefix=dict(gt=''),
         ann_file='val_celeba_img_list.txt',
         test_mode=True,
     ))
@@ -35,7 +34,10 @@ val_dataloader = dict(
 test_dataloader = val_dataloader
 
 val_evaluator = [
-    dict(type='MAE'),  # L1Loss
+    dict(type='MAE', mask_key='mask', scaling=100),
+    # By default, compute with pixel value from 0-1
+    # scale=2 to align with 1.0
+    # scale=100 seems to align with readme
     dict(type='PSNR'),
     dict(type='SSIM'),
 ]

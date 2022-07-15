@@ -80,8 +80,8 @@ class SSIM(BaseSampleWiseMetric):
 
         for data, prediction in zip(data_batch, predictions):
 
-            gt = obtain_data(data, self.gt_key)
-            pred = obtain_data(prediction, self.pred_key)
+            gt = obtain_data(data, self.gt_key, self.device)
+            pred = obtain_data(prediction, self.pred_key, self.device)
 
             result = ssim(
                 img1=gt,

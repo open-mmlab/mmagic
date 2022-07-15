@@ -1,6 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 model = dict(
     type='OneStageInpaintor',
+    data_preprocessor=dict(
+        type='EditDataPreprocessor',
+        mean=[127.5],
+        std=[127.5],
+    ),
     encdec=dict(
         type='GLEncoderDecoder',
         encoder=dict(type='GLEncoder'),
@@ -35,7 +40,4 @@ model = dict(
     loss_l1_hole=dict(type='L1Loss', loss_weight=1.0),
     loss_l1_valid=dict(type='L1Loss', loss_weight=1.0),
     loss_tv=dict(type='MaskedTVLoss', loss_weight=0.01),
-    pretrained=None)
-
-train_cfg = dict(disc_step=1)
-test_cfg = dict(metrics=['l1', 'psnr', 'ssim'])
+    train_cfg=dict(disc_step=1))

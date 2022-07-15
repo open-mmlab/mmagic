@@ -11,6 +11,7 @@ from mmedit.models import build_model
 from mmedit.models.losses import PerceptualVGG
 
 
+@pytest.mark.skip
 @patch.object(PerceptualVGG, 'init_weights')
 def test_pconv_inpaintor(init_weights):
     cfg = Config.fromfile(

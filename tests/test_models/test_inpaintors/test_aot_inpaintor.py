@@ -11,6 +11,7 @@ from mmedit.models import build_model
 from mmedit.models.inpaintors import AOTEncoderDecoder
 
 
+@pytest.mark.skip
 def test_aot_inpaintor():
     cfg = Config.fromfile('tests/data/inpaintor_config/aot_test.py')
 

@@ -67,7 +67,7 @@ def img_transform(img, crop_border=0, input_order='HWC', convert_to=None):
     return img
 
 
-def obtain_data(data_sample, key):
+def obtain_data(data_sample, key, device='cpu'):
 
     candidates = ['data_sample', key, 'data']
 
@@ -75,8 +75,10 @@ def obtain_data(data_sample, key):
         if k in data_sample:
             result = data_sample[k]
             if isinstance(result, dict):
-                return obtain_data(result, key)
+                return obtain_data(result, key, device)
             else:
+                if isinstance(result, torch.Tensor):
+                    result = result.to(device)
                 return result
 
     raise KeyError('Mapping key was not found')

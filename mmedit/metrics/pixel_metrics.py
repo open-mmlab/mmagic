@@ -49,8 +49,8 @@ class MAE(BaseSampleWiseMetric):
 
         for data, prediction in zip(data_batch, predictions):
 
-            gt = obtain_data(data, self.gt_key)
-            pred = obtain_data(prediction, self.pred_key)
+            gt = obtain_data(data, self.gt_key, self.device)
+            pred = obtain_data(prediction, self.pred_key, self.device)
 
             gt = gt / 255.
             pred = pred / 255.
@@ -59,10 +59,11 @@ class MAE(BaseSampleWiseMetric):
             diff = abs(diff)
 
             if self.mask_key is not None:
-                mask = obtain_data(data, self.mask_key)
+                mask = obtain_data(data, self.mask_key, self.device)
                 mask[mask != 0] = 1
-                diff *= mask
-                result = diff.sum() / mask.sum()
+                diff *= mask  # broadcast for channel dimension
+                scale = np.prod(diff.shape) / np.prod(mask.shape)
+                result = diff.sum() / (mask.sum() * scale + 1e-12)
             else:
                 result = diff.mean()
 
@@ -108,8 +109,8 @@ class MSE(BaseSampleWiseMetric):
 
         for data, prediction in zip(data_batch, predictions):
 
-            gt = obtain_data(data, self.gt_key)
-            pred = obtain_data(prediction, self.pred_key)
+            gt = obtain_data(data, self.gt_key, self.device)
+            pred = obtain_data(prediction, self.pred_key, self.device)
 
             gt = gt / 255.
             pred = pred / 255.
@@ -192,9 +193,8 @@ class PSNR(BaseSampleWiseMetric):
 
         for data, prediction in zip(data_batch, predictions):
 
-            gt = obtain_data(data, self.gt_key)
-            pred = obtain_data(prediction, self.pred_key)
-
+            gt = obtain_data(data, self.gt_key, self.device)
+            pred = obtain_data(prediction, self.pred_key, self.device)
             result = psnr(
                 img1=gt,
                 img2=pred,
@@ -269,8 +269,8 @@ class SNR(BaseSampleWiseMetric):
 
         for data, prediction in zip(data_batch, predictions):
 
-            gt = obtain_data(data, self.gt_key)
-            pred = obtain_data(prediction, self.pred_key)
+            gt = obtain_data(data, self.gt_key, self.device)
+            pred = obtain_data(prediction, self.pred_key, self.device)
 
             result = snr(
                 gt=gt,
