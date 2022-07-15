@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import List, Optional
+
 import torch
 
 from mmedit.registry import MODELS
@@ -64,7 +66,8 @@ class GLInpaintor(OneStageInpaintor):
     """
 
     def __init__(self,
-                 encdec,
+                 data_preprocessor: dict,
+                 encdec: dict,
                  disc=None,
                  loss_gan=None,
                  loss_gp=None,
@@ -76,9 +79,10 @@ class GLInpaintor(OneStageInpaintor):
                  loss_tv=None,
                  train_cfg=None,
                  test_cfg=None,
-                 pretrained=None):
+                 init_cfg: Optional[dict] = None):
         super().__init__(
-            encdec,
+            data_preprocessor=data_preprocessor,
+            encdec=encdec,
             disc=disc,
             loss_gan=loss_gan,
             loss_gp=loss_gp,
@@ -90,12 +94,13 @@ class GLInpaintor(OneStageInpaintor):
             loss_tv=loss_tv,
             train_cfg=train_cfg,
             test_cfg=test_cfg,
-            pretrained=pretrained)
+            init_cfg=init_cfg)
 
         if self.train_cfg is not None:
             self.cur_iter = self.train_cfg.start_iter
 
-    def generator_loss(self, fake_res, fake_img, fake_local, data_batch):
+    def generator_loss(self, fake_res, fake_img, fake_local, gt, mask,
+                       masked_img):
         """Forward function in generator training step.
 
         In this function, we mainly compute the loss items for generator with
@@ -115,10 +120,6 @@ class GLInpaintor(OneStageInpaintor):
                 within this function for visualization. The second one is the \
                 loss dict, containing loss items computed in this function.
         """
-        gt = data_batch['gt_img']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
-
         loss = dict()
 
         # if cur_iter <= iter_td, do not calculate adversarial loss
@@ -143,7 +144,7 @@ class GLInpaintor(OneStageInpaintor):
 
         return res, loss
 
-    def train_step(self, data_batch, optimizer):
+    def train_step(self, data: List[dict], optim_wrapper):
         """Train step function.
 
         In this function, the inpaintor will finish the train step following
@@ -167,12 +168,21 @@ class GLInpaintor(OneStageInpaintor):
             dict: Dict with loss, information for logger, the number of \
                 samples and results for visualization.
         """
+        batch_inputs, data_samples = self.data_preprocessor(data, True)
         log_vars = {}
 
-        gt_img = data_batch['gt_img']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
-        bbox_tensor = data_batch['mask_bbox']
+        masked_img = batch_inputs  # float
+        gt_img = torch.stack([d.gt_img.data
+                              for d in data_samples])  # float, [-1,1]
+        # print(gt_img.min(), gt_img.max(), gt_img.dtype)
+        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        mask = mask.float()
+        # print(mask.min(), mask.max(), mask.dtype, mask.unique())
+
+        bbox_tensor = torch.tensor([d.mask_bbox for d in data_samples])  # int
+        # mask = data_samples['mask']
+        # bbox_tensor = data_samples['mask_bbox']
+        # print(mask)
 
         input_x = torch.cat([masked_img, mask], dim=1)
         fake_res = self.generator(input_x)
@@ -194,14 +204,14 @@ class GLInpaintor(OneStageInpaintor):
             disc_losses = self.forward_train_d(fake_data, False, True)
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
-            optimizer['disc'].zero_grad()
+            optim_wrapper['disc'].zero_grad()
             loss_disc.backward()
 
             disc_losses = self.forward_train_d(real_data, True, True)
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
             loss_disc.backward()
-            optimizer['disc'].step()
+            optim_wrapper['disc'].step()
             self.disc_step_count = (self.disc_step_count +
                                     1) % self.train_cfg.disc_step
 
@@ -214,13 +224,10 @@ class GLInpaintor(OneStageInpaintor):
                     fake_res=fake_res.cpu(),
                     fake_img=fake_img.cpu(),
                     fake_gt_local=fake_gt_local.cpu())
-                outputs = dict(
-                    log_vars=log_vars,
-                    num_samples=len(data_batch['gt_img'].data),
-                    results=results)
+                # outputs = dict(**log_vars,**results)
 
                 self.cur_iter += 1
-                return outputs
+                return log_vars
 
         # set discriminators requires_grad as False to avoid extra computation.
         set_requires_grad(self.disc, False)
@@ -228,19 +235,17 @@ class GLInpaintor(OneStageInpaintor):
         if (self.cur_iter <= self.train_cfg.iter_tc
                 or self.cur_iter > self.train_cfg.iter_td):
             results, g_losses = self.generator_loss(fake_res, fake_img,
-                                                    fake_local, data_batch)
+                                                    fake_local, gt_img, mask,
+                                                    masked_img)
             loss_g, log_vars_g = self.parse_losses(g_losses)
             log_vars.update(log_vars_g)
-            optimizer['generator'].zero_grad()
+            optim_wrapper['generator'].zero_grad()
             loss_g.backward()
-            optimizer['generator'].step()
+            optim_wrapper['generator'].step()
 
             results.update(fake_gt_local=fake_gt_local.cpu())
-            outputs = dict(
-                log_vars=log_vars,
-                num_samples=len(data_batch['gt_img'].data),
-                results=results)
+            # outputs = dict(**log_vars,**results)
 
         self.cur_iter += 1
 
-        return outputs
+        return log_vars

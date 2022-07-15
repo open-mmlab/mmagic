@@ -16,6 +16,11 @@ local_disc_cfg = dict(
 
 model = dict(
     type='GLInpaintor',
+    data_preprocessor=dict(
+        type='EditDataPreprocessor',
+        mean=[127.5],
+        std=[127.5],
+    ),
     encdec=dict(
         type='GLEncoderDecoder',
         encoder=dict(type='GLEncoder'),
@@ -32,14 +37,17 @@ model = dict(
     ),
     loss_l1_hole=dict(type='L1Loss', loss_weight=1.0),
     loss_l1_valid=dict(type='L1Loss', loss_weight=1.0),
-    pretrained=None)
-
-train_cfg = dict(
-    disc_step=1, start_iter=0, iter_tc=2, iter_td=3, local_size=(128, 128))
-test_cfg = dict()
+    train_cfg=dict(
+        disc_step=1, start_iter=0, iter_tc=2, iter_td=3,
+        local_size=(128, 128)))
 
 model_dirty = dict(
     type='GLInpaintor',
+    data_preprocessor=dict(
+        type='EditDataPreprocessor',
+        mean=[127.5],
+        std=[127.5],
+    ),
     encdec=dict(
         type='GLEncoderDecoder',
         encoder=dict(type='GLEncoder'),
@@ -51,5 +59,4 @@ model_dirty = dict(
         local_disc_cfg=local_disc_cfg),
     loss_gan=None,
     loss_l1_hole=None,
-    loss_l1_valid=None,
-    pretrained=None)
+    loss_l1_valid=None)

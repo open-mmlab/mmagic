@@ -11,6 +11,7 @@ from mmedit.core import build_optimizers
 from mmedit.models import TwoStageInpaintor
 
 
+@pytest.mark.skip
 def test_two_stage_inpaintor():
     model = dict(
         disc_input_with_mask=True,

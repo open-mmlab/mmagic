@@ -31,7 +31,7 @@ class ConcatImageVisualizer(Visualizer):
             Usually it is the path of some input image. If the value is
             `dir/basename.ext`, the name used for saving will be basename.
         img_keys (str): keys, values of which are images to visualize.
-        denorm (tuple): mean and std used to denormalize images,
+        pixel_range (dict): min and max pixel value used to denormalize images,
             note that only float array or tensor will be denormalized,
             uint8 arrays are assumed to be unnormalized.
         bgr2rgb (bool): whether to convert the image from BGR to RGB.
@@ -41,7 +41,7 @@ class ConcatImageVisualizer(Visualizer):
     def __init__(self,
                  fn_key: str,
                  img_keys: Sequence[str],
-                 denorm=(0, 255),
+                 pixel_range={},
                  bgr2rgb=False,
                  name: str = 'visualizer',
                  *args,
@@ -49,7 +49,7 @@ class ConcatImageVisualizer(Visualizer):
         super().__init__(name, *args, **kwargs)
         self.fn_key = fn_key
         self.img_keys = img_keys
-        self.denorm = denorm
+        self.pixel_range = pixel_range
         self.bgr2rgb = bgr2rgb
 
     def add_datasample(self,
@@ -116,8 +116,9 @@ class ConcatImageVisualizer(Visualizer):
 
             if img.dtype != np.uint8:
                 # We assume uint8 type are not normalized
-                mean, std = self.denorm
-                img = (img * std + mean)
+                if k in self.pixel_range:
+                    min_, max_ = self.pixel_range.get(k)
+                    img = ((img - min_) / (max_ - min_)) * 255
                 img = img.clip(0, 255).round().astype(np.uint8)
 
             img_list.append(img)

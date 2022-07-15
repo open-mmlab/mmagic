@@ -24,10 +24,15 @@ class BaseSampleWiseMetric(BaseMetric):
         collect_device (str): Device name used for collecting results from
             different ranks during distributed training. Must be 'cpu' or
             'gpu'. Defaults to 'cpu'.
+        device (str): Device used to place torch tensors to compute metrics.
+            Defaults to 'cpu'.
         prefix (str, optional): The prefix that will be added in the metric
             names to disambiguate homonymous metrics of different evaluators.
             If prefix is not provided in the argument, self.default_prefix
             will be used instead. Default: None
+        scaling (float, optional): Scaling factor for final metric.
+            E.g. scaling=100 means the final metric will be amplified by 100
+            for output. Default: 1
     """
 
     metric = None
@@ -36,6 +41,8 @@ class BaseSampleWiseMetric(BaseMetric):
                  gt_key: str = 'gt_img',
                  pred_key: str = 'pred_img',
                  mask_key: Optional[str] = None,
+                 scaling=1,
+                 device='cpu',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None) -> None:
         super().__init__(collect_device, prefix)
@@ -43,6 +50,8 @@ class BaseSampleWiseMetric(BaseMetric):
         self.gt_key = gt_key
         self.pred_key = pred_key
         self.mask_key = mask_key
+        self.scaling = scaling
+        self.device = device
 
     def compute_metrics(self, results: List):
         """Compute the metrics from processed results.
@@ -55,6 +64,6 @@ class BaseSampleWiseMetric(BaseMetric):
             and the values are corresponding results.
         """
 
-        result = average(results, self.metric)
+        result = average(results, self.metric) * self.scaling
 
         return {self.metric: result}

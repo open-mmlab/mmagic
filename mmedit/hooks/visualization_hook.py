@@ -17,10 +17,15 @@ class BasicVisualizationHook(Hook):
     """
     priority = 'NORMAL'
 
-    def __init__(self, interval: int = 1, on_val=True, on_test=True):
+    def __init__(self,
+                 interval: dict = {},
+                 on_train=False,
+                 on_val=True,
+                 on_test=True):
         self._interval = interval
         self._sample_counter = 0
         self._vis_dir = None
+        self._on_train = on_train
         self._on_val = on_val
         self._on_test = on_test
 
@@ -42,17 +47,22 @@ class BasicVisualizationHook(Hook):
             outputs (Sequence[BaseDataElement], optional): Outputs from model.
                 Defaults to None.
         """
-        if mode == 'train':
+        if mode == 'train' and (not self._on_train):
             return
         elif mode == 'val' and (not self._on_val):
             return
         elif mode == 'test' and (not self._on_test):
             return
 
+        if isinstance(self._interval, int):
+            interval = self._interval
+        else:
+            interval = self._interval.get(mode, 1)
+
         assert len(data_batch) == len(outputs)
-        if self.every_n_inner_iters(batch_idx, self._interval):
+        if self.every_n_inner_iters(batch_idx, interval):
             for data, output in zip(data_batch, outputs):
                 input = data['inputs']
                 data_sample = data['data_sample']
                 runner.visualizer.add_datasample(
-                    input, data_sample, output, step=runner.iter)
+                    input, data_sample, output, step=f'{mode}_{runner.iter}')

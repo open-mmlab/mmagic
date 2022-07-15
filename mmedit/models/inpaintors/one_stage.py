@@ -1,16 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os.path as osp
-from pathlib import Path
+from typing import List, Optional, Union
 
-import mmcv
 import torch
-from mmcv.runner import auto_fp16
-from torchvision.utils import save_image
+from mmengine.config import Config
+from mmengine.model import BaseModel
 
-from mmedit.core import L1Evaluation, psnr, ssim, tensor2img
+from mmedit.data_element import EditDataSample, PixelData
 from mmedit.registry import MODELS
-from ..base import BaseModel
-from ..builder import build_backbone, build_component, build_loss
 from ..common import set_requires_grad
 
 
@@ -45,9 +41,9 @@ class OneStageInpaintor(BaseModel):
         test_cfg (dict): Configs for testing scheduler.
         pretrained (str): Path for pretrained model. Default None.
     """
-    _eval_metrics = dict(l1=L1Evaluation, psnr=psnr, ssim=ssim)
 
     def __init__(self,
+                 data_preprocessor: Union[dict, Config],
                  encdec,
                  disc=None,
                  loss_gan=None,
@@ -60,8 +56,9 @@ class OneStageInpaintor(BaseModel):
                  loss_tv=None,
                  train_cfg=None,
                  test_cfg=None,
-                 pretrained=None):
-        super().__init__()
+                 init_cfg: Optional[dict] = None):
+        super().__init__(
+            data_preprocessor=data_preprocessor, init_cfg=init_cfg)
         self.with_l1_hole_loss = loss_l1_hole is not None
         self.with_l1_valid_loss = loss_l1_valid is not None
         self.with_tv_loss = loss_tv is not None
@@ -73,53 +70,35 @@ class OneStageInpaintor(BaseModel):
         self.is_train = train_cfg is not None
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
-        self.eval_with_metrics = ('metrics' in self.test_cfg) and (
-            self.test_cfg['metrics'] is not None)
 
-        self.generator = build_backbone(encdec)
-
-        # support fp16
-        self.fp16_enabled = False
+        self.generator = MODELS.build(encdec)
 
         # build loss modules
         if self.with_gan:
-            self.disc = build_component(disc)
-            self.loss_gan = build_loss(loss_gan)
+            self.disc = MODELS.build(disc)
+            self.loss_gan = MODELS.build(loss_gan)
 
         if self.with_l1_hole_loss:
-            self.loss_l1_hole = build_loss(loss_l1_hole)
+            self.loss_l1_hole = MODELS.build(loss_l1_hole)
 
         if self.with_l1_valid_loss:
-            self.loss_l1_valid = build_loss(loss_l1_valid)
+            self.loss_l1_valid = MODELS.build(loss_l1_valid)
 
         if self.with_composed_percep_loss:
-            self.loss_percep = build_loss(loss_composed_percep)
+            self.loss_percep = MODELS.build(loss_composed_percep)
 
         if self.with_gp_loss:
-            self.loss_gp = build_loss(loss_gp)
+            self.loss_gp = MODELS.build(loss_gp)
 
         if self.with_disc_shift_loss:
-            self.loss_disc_shift = build_loss(loss_disc_shift)
+            self.loss_disc_shift = MODELS.build(loss_disc_shift)
 
         if self.with_tv_loss:
-            self.loss_tv = build_loss(loss_tv)
+            self.loss_tv = MODELS.build(loss_tv)
 
         self.disc_step_count = 0
-        self.init_weights(pretrained=pretrained)
 
-    def init_weights(self, pretrained=None):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-        """
-        self.generator.init_weights(pretrained=pretrained)
-        if self.with_gan:
-            self.disc.init_weights(pretrained=pretrained)
-
-    @auto_fp16(apply_to=('masked_img', 'mask'))
-    def forward(self, masked_img, mask, test_mode=True, **kwargs):
+    def forward(self, inputs, data_samples, mode='tensor'):
         """Forward function.
 
         Args:
@@ -131,10 +110,118 @@ class OneStageInpaintor(BaseModel):
         Returns:
             dict: Dict contains output results.
         """
-        if test_mode:
-            return self.forward_test(masked_img, mask, **kwargs)
+        if mode == 'tensor':
+            raw = self.forward_tensor(inputs, data_samples)
+            return raw
+        elif mode == 'predict':
+            # Pre-process runs in BaseModel.val_step / test_step
+            predictions = self.forward_test(inputs, data_samples)
+            return predictions
+        elif mode == 'loss':
+            raise NotImplementedError('This mode should not be used in '
+                                      'current training schedule. Please use '
+                                      '`train_step` for training.')
+        else:
+            raise ValueError('Invalid forward mode.')
 
-        return self.forward_train(masked_img, mask, **kwargs)
+    def train_step(self, data: List[dict], optim_wrapper):
+        """Train step function.
+
+        In this function, the inpaintor will finish the train step following
+        the pipeline:
+
+            1. get fake res/image
+            2. optimize discriminator (if have)
+            3. optimize generator
+
+        If `self.train_cfg.disc_step > 1`, the train step will contain multiple
+        iterations for optimizing discriminator with different input data and
+        only one iteration for optimizing gerator after `disc_step` iterations
+        for discriminator.
+
+        Args:
+            data_batch (torch.Tensor): Batch of data as input.
+            optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
+                generator and discriminator (if have).
+
+        Returns:
+            dict: Dict with loss, information for logger, the number of
+            samples and results for visualization.
+        """
+        batch_inputs, data_samples = self.data_preprocessor(data, True)
+        log_vars = {}
+
+        masked_img = batch_inputs  # float
+        gt_img = torch.stack([d.gt_img.data
+                              for d in data_samples])  # float, [-1,1]
+        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        mask = mask.float()
+
+        # get common output from encdec
+        input_x = torch.cat([masked_img, mask], dim=1)
+        fake_res = self.generator(input_x)
+        fake_img = gt_img * (1. - mask) + fake_res * mask
+
+        # discriminator training step
+        if self.train_cfg.disc_step > 0:
+            set_requires_grad(self.disc, True)
+            disc_losses = self.forward_train_d(
+                fake_img.detach(), False, is_disc=True)
+            loss_disc, log_vars_d = self.parse_losses(disc_losses)
+            log_vars.update(log_vars_d)
+            optim_wrapper['disc'].zero_grad()
+            loss_disc.backward()
+
+            disc_losses = self.forward_train_d(gt_img, True, is_disc=True)
+            loss_disc, log_vars_d = self.parse_losses(disc_losses)
+            log_vars.update(log_vars_d)
+            loss_disc.backward()
+
+            if self.with_gp_loss:
+                loss_d_gp = self.loss_gp(
+                    self.disc, gt_img, fake_img, mask=mask)
+                loss_disc, log_vars_d = self.parse_losses(
+                    dict(loss_gp=loss_d_gp))
+                log_vars.update(log_vars_d)
+                loss_disc.backward()
+
+            optim_wrapper['disc'].step()
+
+            self.disc_step_count = (self.disc_step_count +
+                                    1) % self.train_cfg.disc_step
+            if self.disc_step_count != 0:
+                # results contain the data for visualization
+                results = dict(
+                    gt_img=gt_img.cpu(),
+                    masked_img=masked_img.cpu(),
+                    fake_res=fake_res.cpu(),
+                    fake_img=fake_img.cpu())
+
+                # outputs = dict(
+                #     log_vars=log_vars,
+                #     num_samples=len(data_batch['gt_img'].data),
+                #     results=results)
+
+                return log_vars
+
+        # generator (encdec) training step, results contain the data
+        # for visualization
+        if self.with_gan:
+            set_requires_grad(self.disc, False)
+        results, g_losses = self.generator_loss(fake_res, fake_img, gt_img,
+                                                mask, masked_img)
+        loss_g, log_vars_g = self.parse_losses(g_losses)
+        log_vars.update(log_vars_g)
+        optim_wrapper['generator'].zero_grad()
+        loss_g.backward()
+        optim_wrapper['generator'].step()
+
+        # outputs = dict(
+        #     log_vars=log_vars,
+        #     num_samples=len(data_batch['gt_img'].data),
+        #     results=results)
+
+        return log_vars
 
     def forward_train(self, *args, **kwargs):
         """Forward function for training.
@@ -177,7 +264,7 @@ class OneStageInpaintor(BaseModel):
 
         return loss
 
-    def generator_loss(self, fake_res, fake_img, data_batch):
+    def generator_loss(self, fake_res, fake_img, gt, mask, masked_img):
         """Forward function in generator training step.
 
         In this function, we mainly compute the loss items for generator with
@@ -196,10 +283,6 @@ class OneStageInpaintor(BaseModel):
                 function for visualization and dict contains the loss items \
                 computed in this function.
         """
-        gt = data_batch['gt_img']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
-
         loss = dict()
 
         if self.with_gan:
@@ -242,13 +325,27 @@ class OneStageInpaintor(BaseModel):
 
         return res, loss
 
-    def forward_test(self,
-                     masked_img,
-                     mask,
-                     save_image=False,
-                     save_path=None,
-                     iteration=None,
-                     **kwargs):
+    def forward_tensor(self, inputs, data_samples):
+        """Forward function in tensor mode.
+
+        Args:
+            inputs (torch.Tensor): Input tensor.
+            data_sample (dict): Dict contains data sample.
+
+        Returns:
+            dict: Dict contains output results.
+        """
+        # Pre-process runs in BaseModel.val_step / test_step
+        masked_imgs = inputs  # N,3,H,W
+
+        masks = torch.stack(
+            list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
+        input_xs = torch.cat([masked_imgs, masks], dim=1)  # N,4,H,W
+        fake_reses = self.generator(input_xs)
+        fake_imgs = fake_reses * masks + masked_imgs * (1. - masks)
+        return fake_reses, fake_imgs
+
+    def forward_test(self, inputs, data_samples):
         """Forward function for testing.
 
         Args:
@@ -263,173 +360,16 @@ class OneStageInpaintor(BaseModel):
         Returns:
             dict: Contain output results and eval metrics (if have).
         """
-        input_x = torch.cat([masked_img, mask], dim=1)
-        fake_res = self.generator(input_x)
-        fake_img = fake_res * mask + masked_img * (1. - mask)
+        fake_reses, fake_imgs = self.forward_tensor(inputs, data_samples)
 
-        output = dict()
-        eval_result = {}
-        if self.eval_with_metrics:
-            gt_img = kwargs['gt_img']
-            data_dict = dict(gt_img=gt_img, fake_res=fake_res, mask=mask)
-            for metric_name in self.test_cfg['metrics']:
-                if metric_name in ['ssim', 'psnr']:
-                    eval_result[metric_name] = self._eval_metrics[metric_name](
-                        tensor2img(fake_img, min_max=(-1, 1)),
-                        tensor2img(gt_img, min_max=(-1, 1)))
-                else:
-                    eval_result[metric_name] = self._eval_metrics[metric_name](
-                    )(data_dict).item()
-            output['eval_result'] = eval_result
-        else:
-            output['fake_res'] = fake_res
-            output['fake_img'] = fake_img
-
-        output['meta'] = None if 'meta' not in kwargs else kwargs['meta'][0]
-
-        if save_image:
-            assert save_image and save_path is not None, (
-                'Save path should been given')
-            assert output['meta'] is not None, (
-                'Meta information should be given to save image.')
-
-            tmp_filename = output['meta']['gt_img_path']
-            filestem = Path(tmp_filename).stem
-            if iteration is not None:
-                filename = f'{filestem}_{iteration}.png'
-            else:
-                filename = f'{filestem}.png'
-            mmcv.mkdir_or_exist(save_path)
-            img_list = [kwargs['gt_img']] if 'gt_img' in kwargs else []
-            img_list.extend(
-                [masked_img,
-                 mask.expand_as(masked_img), fake_res, fake_img])
-            img = torch.cat(img_list, dim=3).cpu()
-            self.save_visualization(img, osp.join(save_path, filename))
-            output['save_img_path'] = osp.abspath(
-                osp.join(save_path, filename))
-
-        return output
-
-    def save_visualization(self, img, filename):
-        """Save visualization results.
-
-        Args:
-            img (torch.Tensor): Tensor with shape of (n, 3, h, w).
-            filename (str): Path to save visualization.
-        """
-        if self.test_cfg.get('img_rerange', True):
-            img = (img + 1) / 2
-        if self.test_cfg.get('img_bgr2rgb', True):
-            img = img[:, [2, 1, 0], ...]
-        save_image(img, filename, nrow=1, padding=0)
-
-    def train_step(self, data_batch, optimizer):
-        """Train step function.
-
-        In this function, the inpaintor will finish the train step following
-        the pipeline:
-
-            1. get fake res/image
-            2. optimize discriminator (if have)
-            3. optimize generator
-
-        If `self.train_cfg.disc_step > 1`, the train step will contain multiple
-        iterations for optimizing discriminator with different input data and
-        only one iteration for optimizing gerator after `disc_step` iterations
-        for discriminator.
-
-        Args:
-            data_batch (torch.Tensor): Batch of data as input.
-            optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
-                generator and discriminator (if have).
-
-        Returns:
-            dict: Dict with loss, information for logger, the number of \
-                samples and results for visualization.
-        """
-        log_vars = {}
-
-        gt_img = data_batch['gt_img']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
-
-        # get common output from encdec
-        input_x = torch.cat([masked_img, mask], dim=1)
-        fake_res = self.generator(input_x)
-        fake_img = gt_img * (1. - mask) + fake_res * mask
-
-        # discriminator training step
-        if self.train_cfg.disc_step > 0:
-            set_requires_grad(self.disc, True)
-            disc_losses = self.forward_train_d(
-                fake_img.detach(), False, is_disc=True)
-            loss_disc, log_vars_d = self.parse_losses(disc_losses)
-            log_vars.update(log_vars_d)
-            optimizer['disc'].zero_grad()
-            loss_disc.backward()
-
-            disc_losses = self.forward_train_d(gt_img, True, is_disc=True)
-            loss_disc, log_vars_d = self.parse_losses(disc_losses)
-            log_vars.update(log_vars_d)
-            loss_disc.backward()
-
-            if self.with_gp_loss:
-                loss_d_gp = self.loss_gp(
-                    self.disc, gt_img, fake_img, mask=mask)
-                loss_disc, log_vars_d = self.parse_losses(
-                    dict(loss_gp=loss_d_gp))
-                log_vars.update(log_vars_d)
-                loss_disc.backward()
-
-            optimizer['disc'].step()
-
-            self.disc_step_count = (self.disc_step_count +
-                                    1) % self.train_cfg.disc_step
-            if self.disc_step_count != 0:
-                # results contain the data for visualization
-                results = dict(
-                    gt_img=gt_img.cpu(),
-                    masked_img=masked_img.cpu(),
-                    fake_res=fake_res.cpu(),
-                    fake_img=fake_img.cpu())
-                outputs = dict(
-                    log_vars=log_vars,
-                    num_samples=len(data_batch['gt_img'].data),
-                    results=results)
-
-                return outputs
-
-        # generator (encdec) training step, results contain the data
-        # for visualization
-        if self.with_gan:
-            set_requires_grad(self.disc, False)
-        results, g_losses = self.generator_loss(fake_res, fake_img, data_batch)
-        loss_g, log_vars_g = self.parse_losses(g_losses)
-        log_vars.update(log_vars_g)
-        optimizer['generator'].zero_grad()
-        loss_g.backward()
-        optimizer['generator'].step()
-
-        outputs = dict(
-            log_vars=log_vars,
-            num_samples=len(data_batch['gt_img'].data),
-            results=results)
-
-        return outputs
-
-    def val_step(self, data_batch, **kwargs):
-        """Forward function for evaluation.
-
-        Args:
-            data_batch (dict): Contain data for forward.
-
-        Returns:
-            dict: Contain the results from model.
-        """
-        output = self.forward_test(**data_batch, **kwargs)
-
-        return output
+        predictions = []
+        for (fr, fi) in zip(fake_reses, fake_imgs):
+            fi = (fi * 127.5 + 127.5)
+            fr = (fr * 127.5 + 127.5)
+            pred = EditDataSample(
+                fake_res=fr, fake_img=fi, pred_img=PixelData(data=fi))
+            predictions.append(pred)
+        return predictions
 
     def forward_dummy(self, x):
         """Forward dummy function for getting flops.
