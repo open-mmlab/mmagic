@@ -14,7 +14,10 @@ from .one_stage import OneStageInpaintor
 
 @MODELS.register_module()
 class TwoStageInpaintor(OneStageInpaintor):
-    """Two-Stage Inpaintor.
+    """Standard two-stage inpaintor with commonly used losses.
+
+    A two-stage inpaintor contains two encoder-decoder style generators to
+    inpaint masked regions. 
 
     Currently, we support these loss types in each of two stage inpaintors:
     ['loss_gan', 'loss_l1_hole', 'loss_l1_valid', 'loss_composed_percep',\
@@ -34,14 +37,40 @@ class TwoStageInpaintor(OneStageInpaintor):
     """
 
     def __init__(self,
-                 *args,
+                 data_preprocessor: Union[dict, Config],
+                 encdec: dict,
+                 disc=None,
+                 loss_gan=None,
+                 loss_gp=None,
+                 loss_disc_shift=None,
+                 loss_composed_percep=None,
+                 loss_out_percep=False,
+                 loss_l1_hole=None,
+                 loss_l1_valid=None,
+                 loss_tv=None,
+                 train_cfg=None,
+                 test_cfg=None,
+                 init_cfg: Optional[dict] = None
                  stage1_loss_type=('loss_l1_hole', ),
                  stage2_loss_type=('loss_l1_hole', 'loss_gan'),
                  input_with_ones=True,
-                 disc_input_with_mask=False,
-                 **kwargs):
-        super().__init__(*args, **kwargs)
-
+                 disc_input_with_mask=False):
+        super().__init__(
+            data_preprocessor=data_preprocessor,
+            encdec=encdec,
+            disc=disc,
+            loss_gan=loss_gan,
+            loss_gp=loss_gp,
+            loss_disc_shift=loss_disc_shift,
+            loss_composed_percep=loss_composed_percep,
+            loss_out_percep=loss_out_percep,
+            loss_l1_hole=loss_l1_hole,
+            loss_l1_valid=loss_l1_valid,
+            loss_tv=loss_tv,
+            train_cfg=train_cfg,
+            test_cfg=test_cfg,
+            init_cfg=init_cfg)
+            
         self.stage1_loss_type = stage1_loss_type
         self.stage2_loss_type = stage2_loss_type
         self.input_with_ones = input_with_ones
