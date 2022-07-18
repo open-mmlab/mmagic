@@ -13,10 +13,10 @@ from .inpaintors import (AOTInpaintor, DeepFillv1Inpaintor, GLInpaintor,
                          OneStageInpaintor, PConvInpaintor, TwoStageInpaintor)
 from .losses import *  # noqa: F401, F403
 from .mattors import DIM, GCA, BaseMattor, IndexNet
-from .restorers import BasicRestorer
 from .synthesizers import CycleGAN, Pix2Pix
 from .video_interpolators import (CAIN, FLAVR, BasicInterpolator, CAINNet,
                                   FLAVRNet, TOFlowVFINet)
+from .video_restorers import *  # noqa: F401, F403
 
 __all__ = [
     'BaseEditModel',
@@ -29,7 +29,6 @@ __all__ = [
     'TOFlowVFINet',
     'AOTInpaintor',
     'BaseModel',
-    'BasicRestorer',
     'OneStageInpaintor',
     'build',
     'build_backbone',
