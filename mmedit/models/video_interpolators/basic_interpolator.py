@@ -28,6 +28,8 @@ class BasicInterpolator(BaseModel):
         pixel_loss (dict): Config for pixel-wise loss.
         train_cfg (dict): Config for training. Default: None.
         test_cfg (dict): Config for testing. Default: None.
+        required_frames (int): Required frames in each process. Default: 2
+        step_frames (int): Step size of video frame interpolation. Default: 1
         pretrained (str): Path for pretrained model. Default: None.
     """
     allowed_metrics = {'PSNR': psnr, 'SSIM': ssim}
@@ -37,6 +39,8 @@ class BasicInterpolator(BaseModel):
                  pixel_loss,
                  train_cfg=None,
                  test_cfg=None,
+                 required_frames=2,
+                 step_frames=1,
                  pretrained=None):
         super().__init__()
 
@@ -54,9 +58,9 @@ class BasicInterpolator(BaseModel):
         self.pixel_loss = build_loss(pixel_loss)
 
         # Required frames in each process
-        self.required_frames = 2
+        self.required_frames = required_frames
         # Step size of video frame interpolation
-        self.step_frames = 1
+        self.step_frames = step_frames
 
     def init_weights(self, pretrained=None):
         """Init weights for models.
@@ -266,12 +270,8 @@ class BasicInterpolator(BaseModel):
         output = self.forward_test(**data_batch, **kwargs)
         return output
 
-    @staticmethod
-    def split_frames(input_tensors):
+    def split_frames(self, input_tensors):
         """split input tensors for inference.
-
-        This is a basic function, interpolate a frame between the given two
-        frames.
 
         Args:
             input_tensors (Tensor): Tensor of input frames with shape
@@ -283,7 +283,11 @@ class BasicInterpolator(BaseModel):
 
         num_frames = input_tensors.shape[1]
 
-        result = [input_tensors[:, i:i + 2] for i in range(0, num_frames - 1)]
+        result = [
+            input_tensors[:, i:i + self.required_frames]
+            for i in range(0, num_frames - self.required_frames +
+                           1, self.step_frames)
+        ]
         result = torch.cat(result, dim=0)
 
         return result
