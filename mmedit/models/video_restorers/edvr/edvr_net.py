@@ -3,17 +3,16 @@ import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule, constant_init, kaiming_init
 from mmcv.ops import ModulatedDeformConv2d, modulated_deform_conv2d
-from mmcv.runner import load_checkpoint
+from mmengine.model import BaseModule
 from torch.nn.modules.utils import _pair
 
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   make_layer)
-from mmedit.registry import BACKBONES
-from mmedit.utils import get_root_logger
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class EDVRNet(nn.Module):
+@MODELS.register_module()
+class EDVRNet(BaseModule):
     """EDVR network structure for video super-resolution.
 
     Now only support X4 upsampling factor.
@@ -46,15 +45,10 @@ class EDVRNet(nn.Module):
                  num_blocks_extraction=5,
                  num_blocks_reconstruction=10,
                  center_frame_idx=2,
-<<<<<<< HEAD:mmedit/models/backbones/sr_backbones/edvr_net.py
-                 with_tsa=True):
-        super().__init__()
-=======
                  with_tsa=True,
                  init_cfg=None):
         super().__init__(init_cfg=init_cfg)
 
->>>>>>> 0580d444 (Update other methods):mmedit/models/video_restorers/edvr/edvr_net.py
         self.center_frame_idx = center_frame_idx
         self.with_tsa = with_tsa
         act_cfg = dict(type='LeakyReLU', negative_slope=0.1)
@@ -165,40 +159,9 @@ class EDVRNet(nn.Module):
         out += base
         return out
 
-    def init_weights(self, pretrained=None, strict=True):
+    def init_weights(self):
         """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
         """
-<<<<<<< HEAD:mmedit/models/backbones/sr_backbones/edvr_net.py
-        if isinstance(pretrained, str):
-            logger = get_root_logger()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is None:
-            if self.with_tsa:
-                for module in [
-                        self.fusion.feat_fusion, self.fusion.spatial_attn1,
-                        self.fusion.spatial_attn2, self.fusion.spatial_attn3,
-                        self.fusion.spatial_attn4, self.fusion.spatial_attn_l1,
-                        self.fusion.spatial_attn_l2,
-                        self.fusion.spatial_attn_l3,
-                        self.fusion.spatial_attn_add1
-                ]:
-                    kaiming_init(
-                        module.conv,
-                        a=0.1,
-                        mode='fan_out',
-                        nonlinearity='leaky_relu',
-                        bias=0,
-                        distribution='uniform')
-        else:
-            raise TypeError(f'"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')
-=======
 
         super().init_weights()
 
@@ -219,7 +182,6 @@ class EDVRNet(nn.Module):
                     nonlinearity='leaky_relu',
                     bias=0,
                     distribution='uniform')
->>>>>>> 0580d444 (Update other methods):mmedit/models/video_restorers/edvr/edvr_net.py
 
 
 class ModulatedDCNPack(ModulatedDeformConv2d):
