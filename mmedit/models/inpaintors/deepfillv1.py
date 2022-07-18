@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import List, Optional
+
 import torch
-from torch.nn.parallel import DataParallel, DistributedDataParallel
 
 from mmedit.registry import MODELS
 from ..common import set_requires_grad
@@ -10,24 +11,93 @@ from .utils import extract_around_bbox, extract_bbox_patch
 
 @MODELS.register_module()
 class DeepFillv1Inpaintor(TwoStageInpaintor):
+    """Inpaintor for deepfillv1 method.
 
-    def get_module(self, model, module_name):
-        """Get an inner module from model.
+    This inpaintor is implemented according to the paper:
+    Generative image inpainting with contextual attention
 
-        Since we will wrapper DDP for some model, we have to judge whether the
-        module can be indexed directly.
+    Importantly, this inpaintor is an example for using custom training
+    schedule based on `TwoStageInpaintor`.
 
-        Args:
-            model (nn.Module): This model may wrapped with DDP or not.
-            module_name (str): The name of specific module.
+    The training pipeline of global&local is as following:
 
-        Return:
-            nn.Module: Returned sub module.
-        """
-        if isinstance(model, (DataParallel, DistributedDataParallel)):
-            return getattr(model.module, module_name)
+    .. code-block:: python
 
-        return getattr(model, module_name)
+        if cur_iter < iter_tc:
+            update generator with only l1 loss
+        else:
+            update discriminator
+            if cur_iter > iter_td:
+                update generator with l1 loss and adversarial loss
+
+    The new attribute `cur_iter` is added for recording current number of
+    iteration. The `train_cfg` contains the setting of the training schedule:
+
+    .. code-block:: python
+
+        train_cfg = dict(
+            start_iter=0,
+            disc_step=1,
+            iter_tc=90000,
+            iter_td=100000
+        )
+
+    `iter_tc` and `iter_td` correspond to the notation :math:`T_C` and
+    :math:`T_D` of theoriginal paper.
+
+    Args:
+        generator (dict): Config for encoder-decoder style generator.
+        disc (dict): Config for discriminator.
+        loss_gan (dict): Config for adversarial loss.
+        loss_gp (dict): Config for gradient penalty loss.
+        loss_disc_shift (dict): Config for discriminator shift loss.
+        loss_composed_percep (dict): Config for perceptural and style loss with
+            composed image as input.
+        loss_out_percep (dict): Config for perceptural and style loss with
+            direct output as input.
+        loss_l1_hole (dict): Config for l1 loss in the hole.
+        loss_l1_valid (dict): Config for l1 loss in the valid region.
+        loss_tv (dict): Config for total variation loss.
+        train_cfg (dict): Configs for training scheduler. `disc_step` must be
+            contained for indicates the discriminator updating steps in each
+            training step.
+        test_cfg (dict): Configs for testing scheduler.
+        pretrained (str): Path for pretrained model. Default None.
+    """
+
+    def __init__(self,
+                 data_preprocessor: dict,
+                 encdec: dict,
+                 disc=None,
+                 loss_gan=None,
+                 loss_gp=None,
+                 loss_disc_shift=None,
+                 loss_composed_percep=None,
+                 loss_out_percep=False,
+                 loss_l1_hole=None,
+                 loss_l1_valid=None,
+                 loss_tv=None,
+                 train_cfg=None,
+                 test_cfg=None,
+                 init_cfg: Optional[dict] = None):
+        super().__init__(
+            data_preprocessor=data_preprocessor,
+            encdec=encdec,
+            disc=disc,
+            loss_gan=loss_gan,
+            loss_gp=loss_gp,
+            loss_disc_shift=loss_disc_shift,
+            loss_composed_percep=loss_composed_percep,
+            loss_out_percep=loss_out_percep,
+            loss_l1_hole=loss_l1_hole,
+            loss_l1_valid=loss_l1_valid,
+            loss_tv=loss_tv,
+            train_cfg=train_cfg,
+            test_cfg=test_cfg,
+            init_cfg=init_cfg)
+
+        if self.train_cfg is not None:
+            self.cur_iter = self.train_cfg.start_iter
 
     def forward_train_d(self, data_batch, is_real, is_disc):
         """Forward function in discriminator training step.

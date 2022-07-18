@@ -1,3 +1,5 @@
+_base_ = ['deepfillv1_base.py', '../default_runtime.py', '../datasets/celeba.py']
+
 model = dict(
     type='DeepFillv1Inpaintor',
     encdec=dict(
