@@ -23,7 +23,7 @@ train_pipeline = [
 val_pipeline = [
     dict(type='GenerateFrameIndiceswithPadding', padding='reflection_circle'),
     dict(type='LoadImageFromFile', key='img', color_type='unchanged'),
-    dict(type='LoadImageFromFileList', key='gt', color_type='unchanged'),
+    dict(type='LoadImageFromFile', key='gt', color_type='unchanged'),
     dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
