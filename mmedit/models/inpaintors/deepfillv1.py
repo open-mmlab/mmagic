@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Optional
+from typing import Optional
 
 import torch
 
@@ -19,7 +19,7 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
     Importantly, this inpaintor is an example for using custom training
     schedule based on `TwoStageInpaintor`.
 
-    The training pipeline of global&local is as following:
+    The training pipeline of deepfillv1 is as following:
 
     .. code-block:: python
 
@@ -43,7 +43,7 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
         )
 
     `iter_tc` and `iter_td` correspond to the notation :math:`T_C` and
-    :math:`T_D` of theoriginal paper.
+    :math:`T_D` of the original paper.
 
     Args:
         generator (dict): Config for encoder-decoder style generator.
@@ -77,6 +77,8 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
                  loss_l1_hole=None,
                  loss_l1_valid=None,
                  loss_tv=None,
+                 stage1_loss_type=None,
+                 stage2_loss_type=None,
                  train_cfg=None,
                  test_cfg=None,
                  init_cfg: Optional[dict] = None):
@@ -92,6 +94,8 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
             loss_l1_hole=loss_l1_hole,
             loss_l1_valid=loss_l1_valid,
             loss_tv=loss_tv,
+            stage1_loss_type=stage1_loss_type,
+            stage2_loss_type=stage2_loss_type,
             train_cfg=train_cfg,
             test_cfg=test_cfg,
             init_cfg=init_cfg)

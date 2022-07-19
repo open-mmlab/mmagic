@@ -83,13 +83,14 @@ model = dict(
         loss_weight=1.0,
     ),
     loss_gp=dict(type='GradientPenaltyLoss', loss_weight=10.),
-    loss_disc_shift=dict(type='DiscShiftLoss', loss_weight=0.001),
-    pretrained=None)
-
+    loss_disc_shift=dict(type='DiscShiftLoss', loss_weight=0.001))
 
 # optimizer
-optimizers = dict(
-    generator=dict(type='Adam', lr=0.0001), disc=dict(type='Adam', lr=0.0001))
+optim_wrapper = dict(
+    constructor='MultiOptimWrapperConstructor',
+    generator=dict(
+        type='OptimWrapper', optimizer=dict(type='Adam', lr=0.0001)),
+    disc=dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=0.0001)))
 
 # learning policy
 # Fixed
