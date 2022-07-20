@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/1802.08797
   README: configs/image_restorers/rdn/README.md
 Models:
-- Config: configs/restorers/rdn/rdn_x2c64b16_g1_1000k_div2k.py
+- Config: configs/image_restorers/rdn/rdn_x2c64b16_g1_1000k_div2k.py
   In Collection: RDN
   Metadata:
     Training Data: DIV2K
@@ -26,7 +26,7 @@ Models:
         SSIM: 0.9385
     Task: Image_restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x2c64b16_g1_1000k_div2k_20210419-dc146009.pth
-- Config: configs/restorers/rdn/rdn_x3c64b16_g1_1000k_div2k.py
+- Config: configs/image_restorers/rdn/rdn_x3c64b16_g1_1000k_div2k.py
   In Collection: RDN
   Metadata:
     Training Data: DIV2K
@@ -45,7 +45,7 @@ Models:
         SSIM: 0.8943
     Task: Image_restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x3c64b16_g1_1000k_div2k_20210419-b93cb6aa.pth
-- Config: configs/restorers/rdn/rdn_x4c64b16_g1_1000k_div2k.py
+- Config: configs/image_restorers/rdn/rdn_x4c64b16_g1_1000k_div2k.py
   In Collection: RDN
   Metadata:
     Training Data: DIV2K
