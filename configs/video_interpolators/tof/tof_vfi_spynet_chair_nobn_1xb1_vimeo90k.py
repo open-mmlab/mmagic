@@ -4,9 +4,8 @@ experiment_name = 'tof_vfi_spynet_chair_nobn_1xb1_vimeo90k'
 work_dir = f'./work_dirs/{experiment_name}'
 
 # pretrained SPyNet
-source = 'https://download.openmmlab.com/mmediting/video_interpolators/toflow'
-spynet_file = 'pretrained_spynet_chair_20220321-4d82e91b.pth'
-load_pretrained_spynet = f'{source}/{spynet_file}'
+load_pretrained_spynet = 'https://download.openmmlab.com/mmediting/' +\
+    'video_interpolators/toflow/pretrained_spynet_chair_20220321-4d82e91b.pth'
 
 # model settings
 model = dict(
