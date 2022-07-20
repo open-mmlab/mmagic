@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 import torch
 from mmengine.config import Config
@@ -126,7 +126,7 @@ class TwoStageInpaintor(OneStageInpaintor):
 
     #     return output
 
-    def two_stage_loss(self, stage1_data, stage2_data, data_batch):
+    def two_stage_loss(self, stage1_data, stage2_data, gt, mask, masked_img):
         """Calculate two-stage loss.
 
         Args:
@@ -137,9 +137,6 @@ class TwoStageInpaintor(OneStageInpaintor):
         Returns:
             dict: Contain losses with name.
         """
-        gt = data_batch['gt_img']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
 
         loss = dict()
         results = dict(
@@ -223,7 +220,7 @@ class TwoStageInpaintor(OneStageInpaintor):
 
         return loss_dict
 
-    def train_step(self, data_batch, optimizer):
+    def train_step(self, data: List[dict], optim_wrapper):
         """Train step function.
 
         In this function, the inpaintor will finish the train step following
@@ -247,11 +244,14 @@ class TwoStageInpaintor(OneStageInpaintor):
             dict: Dict with loss, information for logger, the number of \
                 samples and results for visualization.
         """
+        batch_inputs, data_samples = self.data_preprocessor(data, True)
         log_vars = {}
 
-        gt_img = data_batch['gt_img']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
+        masked_img = batch_inputs  # float
+        gt_img = torch.stack([d.gt_img.data
+                              for d in data_samples])  # float, [-1,1]
+        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        mask = mask.float()
 
         # get common output from encdec
         if self.input_with_ones:
@@ -278,7 +278,7 @@ class TwoStageInpaintor(OneStageInpaintor):
                 disc_input_x, False, is_disc=True)
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
-            optimizer['disc'].zero_grad()
+            optim_wrapper['disc'].step()
             loss_disc.backward()
 
             if self.disc_input_with_mask:
@@ -301,7 +301,7 @@ class TwoStageInpaintor(OneStageInpaintor):
                 log_vars.update(log_vars_d)
                 loss_disc.backward()
 
-            optimizer['disc'].step()
+            optim_wrapper['disc'].step()
 
             self.disc_step_count = (self.disc_step_count +
                                     1) % self.train_cfg.disc_step
@@ -314,7 +314,7 @@ class TwoStageInpaintor(OneStageInpaintor):
                     fake_img=stage2_fake_img.cpu())
                 outputs = dict(
                     log_vars=log_vars,
-                    num_samples=len(data_batch['gt_img'].data),
+                    num_samples=len(gt_img.data),
                     results=results)
 
                 return outputs
@@ -330,17 +330,15 @@ class TwoStageInpaintor(OneStageInpaintor):
         if self.with_gan:
             set_requires_grad(self.disc, False)
         results, two_stage_losses = self.two_stage_loss(
-            stage1_results, stage2_results, data_batch)
+            stage1_results, stage2_results, gt_img, mask, masked_img)
         loss_two_stage, log_vars_two_stage = self.parse_losses(
             two_stage_losses)
         log_vars.update(log_vars_two_stage)
-        optimizer['generator'].zero_grad()
+        optim_wrapper['generator'].zero_grad()
         loss_two_stage.backward()
-        optimizer['generator'].step()
+        optim_wrapper['generator'].step()
 
         outputs = dict(
-            log_vars=log_vars,
-            num_samples=len(data_batch['gt_img'].data),
-            results=results)
+            log_vars=log_vars, num_samples=len(gt_img.data), results=results)
 
         return outputs
