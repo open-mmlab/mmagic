@@ -348,12 +348,8 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
                     fake_gt_local=fake_gt_local.cpu(),
                     fake_res=stage2_fake_res.cpu(),
                     fake_img=stage2_fake_img.cpu())
-                outputs = dict(
-                    log_vars=log_vars,
-                    num_samples=len(gt_img.data),
-                    results=results)
 
-                return outputs
+                return log_vars
 
         # prepare stage1 results and stage2 results dict for calculating losses
         stage1_results = dict(
@@ -377,7 +373,5 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
         optim_wrapper['generator'].step()
 
         results['fake_gt_local'] = fake_gt_local.cpu()
-        outputs = dict(
-            log_vars=log_vars, num_samples=len(gt_img.data), results=results)
 
-        return outputs
+        return log_vars
