@@ -134,7 +134,7 @@ class FramesToTensor(ImageToTensor):
                 results[key][idx] = to_tensor(v.transpose(2, 0, 1))
             results[key] = torch.stack(results[key], dim=0)
             if results[key].size(0) == 1:
-                results[key].squeeze_()
+                results[key].squeeze_(dim=0)
         return results
 
 
