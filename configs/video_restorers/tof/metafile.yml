@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/1711.09078
   README: configs/video_restorers/tof/README.md
 Models:
-- Config: configs/restorers/tof/tof_x4_vimeo90k_official.py
+- Config: configs/video_restorers/tof/tof_x4_vimeo90k_official.py
   In Collection: TOFlow
   Metadata:
     Training Data: VIMEO90K

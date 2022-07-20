@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/pdf/2104.01431.pdf
   README: configs/inpaintors/AOT-GAN/README.md
 Models:
-- Config: configs/inpainting/AOT-GAN/AOT-GAN_512x512_4x12_places.py
+- Config: configs/inpaintors/AOT-GAN/AOT-GAN_512x512_4x12_places.py
   In Collection: AOT-GAN
   Metadata:
     Training Data: PLACES

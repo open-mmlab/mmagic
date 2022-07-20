@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2006.04139
   README: configs/image_restorers/ttsr/README.md
 Models:
-- Config: configs/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED.py
+- Config: configs/image_restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED.py
   In Collection: TTSR
   Metadata:
     Training Data: CUFED
@@ -20,7 +20,7 @@ Models:
         SSIM: 0.7491
     Task: Image_restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.pth
-- Config: configs/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py
+- Config: configs/image_restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py
   In Collection: TTSR
   Metadata:
     Training Data: CUFED

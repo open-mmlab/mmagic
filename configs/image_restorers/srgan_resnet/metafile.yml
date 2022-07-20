@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/1609.04802
   README: configs/image_restorers/srgan_resnet/README.md
 Models:
-- Config: configs/restorers/srresnet_srgan/msrresnet_x4c64b16_g1_1000k_div2k.py
+- Config: configs/image_restorers/srgan_resnet/msrresnet_x4c64b16_g1_1000k_div2k.py
   In Collection: SRGAN
   Metadata:
     Training Data: DIV2K
@@ -26,7 +26,7 @@ Models:
         SSIM: 0.8491
     Task: Image_restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/srresnet_srgan/msrresnet_x4c64b16_1x16_300k_div2k_20200521-61556be5.pth
-- Config: configs/restorers/srresnet_srgan/srgan_x4c64b16_g1_1000k_div2k.py
+- Config: configs/image_restorers/srgan_resnet/srgan_x4c64b16_g1_1000k_div2k.py
   In Collection: SRGAN
   Metadata:
     Training Data: DIV2K

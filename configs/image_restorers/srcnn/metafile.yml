@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/1501.00092
   README: configs/image_restorers/srcnn/README.md
 Models:
-- Config: configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py
+- Config: configs/image_restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py
   In Collection: SRCNN
   Metadata:
     Training Data: DIV2K
