@@ -49,7 +49,7 @@ def slurm_test(info: dict, thread_num):
     base_cmd = 'bash tools/slurm_test.sh'
     task_cmd = f'{PARTITION} {basename}'
     out_file = osp.join(LOG_DIR, basename)
-    cmd = f'{gpu_cmd} {base_cmd} {task_cmd} {config} {weights} > {out_file}'
+    cmd = f'{gpu_cmd} {base_cmd} {task_cmd} {config} {weights} &> {out_file}'
 
     print(f'RUN {thread_num:03d}: {cmd}')
     os.system(cmd)
