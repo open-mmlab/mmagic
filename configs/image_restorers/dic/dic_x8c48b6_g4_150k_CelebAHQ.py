@@ -78,7 +78,8 @@ test_pipeline = valid_pipeline
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 'data/celeba-hq'
+data_root = 'openmmlab:s3://openmmlab/datasets/editing/CelebA-HQ'
+save_dir = 'sh1984:s3://ysli/dic'
 
 train_dataloader = dict(
     num_workers=4,
@@ -89,7 +90,7 @@ train_dataloader = dict(
         type=dataset_type,
         metainfo=dict(dataset_type='celeba', task_name='fsr'),
         data_root=data_root,
-        data_prefix=dict(gt='train'),
+        data_prefix=dict(gt='train_256/all_256'),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -101,15 +102,15 @@ val_dataloader = dict(
         type=dataset_type,
         metainfo=dict(dataset_type='celeba', task_name='fsr'),
         data_root=data_root,
-        data_prefix=dict(gt='val'),
+        data_prefix=dict(gt='test_256/all_256'),
         pipeline=test_pipeline))
 
 test_dataloader = val_dataloader
 
 val_evaluator = [
     dict(type='MAE'),
-    dict(type='PSNR'),
-    dict(type='SSIM'),
+    dict(type='PSNR', crop_border=scale),
+    dict(type='SSIM', crop_border=scale),
 ]
 test_evaluator = val_evaluator
 
@@ -134,10 +135,11 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=2000,
         save_optimizer=True,
-        by_epoch=False),
+        by_epoch=False,
+        out_dir=save_dir,
+    ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
-    # visualization=dict(type='EditVisualizationHook', bgr_order=True),
 )

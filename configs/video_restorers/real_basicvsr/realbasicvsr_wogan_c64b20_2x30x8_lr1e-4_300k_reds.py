@@ -216,6 +216,9 @@ test_pipeline = [
     dict(type='PackEditInputs')
 ]
 
+data_root = 'openmmlab:s3://openmmlab/datasets/editing'
+save_dir = 'sh1984:s3://ysli/real_basicvsr'
+
 train_dataloader = dict(
     num_workers=10,
     batch_size=1,
@@ -224,7 +227,7 @@ train_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='reds', task_name='vsr'),
-        data_root='data/REDS',
+        data_root=f'{data_root}/REDS',
         data_prefix=dict(img='train_sharp_sub', gt='train_sharp_sub'),
         depth=1,
         num_input_frames=15,
@@ -238,7 +241,7 @@ val_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='udm10', task_name='vsr'),
-        data_root='data/UDM10',
+        data_root=f'{data_root}/UDM10',
         data_prefix=dict(img='BIx4', gt='GT'),
         pipeline=val_pipeline))
 
@@ -250,7 +253,7 @@ test_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='video_lq', task_name='vsr'),
-        data_root='data/VideoLQ',
+        data_root=f'{data_root}/VideoLQ',
         data_prefix=dict(img='', gt=''),
         pipeline=val_pipeline))
 
@@ -278,7 +281,7 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=5000,
         save_optimizer=True,
-        out_dir='s3://ysli/real_basicvsr/',
+        out_dir=save_dir,
         max_keep_ckpts=10,
         save_best='PSNR',
         rule='greater',

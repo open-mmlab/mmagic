@@ -71,7 +71,8 @@ test_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 'data/'
+data_root = 'openmmlab:s3://openmmlab/datasets/editing/DIV2K'
+save_dir = 'sh1984:s3://ysli/edsr'
 
 train_dataloader = dict(
     num_workers=4,
@@ -81,7 +82,7 @@ train_dataloader = dict(
         type=dataset_type,
         ann_file='meta_info_DIV2K800sub_GT.txt',
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
-        data_root='data/DIV2K',
+        data_root=data_root,
         data_prefix=dict(
             img='DIV2K_train_LR_bicubic/x3_sub', gt='DIV2K_train_HR_sub'),
         filename_tmpl=dict(img='{}_x3', gt='{}'),
@@ -97,15 +98,14 @@ val_dataloader = dict(
         metainfo=dict(dataset_type='set5', task_name='sisr'),
         data_root='data/Set5',
         data_prefix=dict(img='LRbicx3', gt='GTmod12'),
-        # filename_tmpl=dict(img='{}_x3', gt='{}'),
         pipeline=test_pipeline))
 
 test_dataloader = val_dataloader
 
 val_evaluator = [
     dict(type='MAE'),
-    dict(type='PSNR'),
-    dict(type='SSIM'),
+    dict(type='PSNR', crop_border=scale),
+    dict(type='SSIM', crop_border=scale),
 ]
 test_evaluator = val_evaluator
 
@@ -129,7 +129,9 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=5000,
         save_optimizer=True,
-        by_epoch=False),
+        by_epoch=False,
+        out_dir=save_dir,
+    ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),

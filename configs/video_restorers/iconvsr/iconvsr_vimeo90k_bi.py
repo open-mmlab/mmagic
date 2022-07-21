@@ -26,3 +26,5 @@ model = dict(
         input_view=(1, -1, 1, 1),
         output_view=(1, -1, 1, 1),
     ))
+
+default_hooks = dict(checkpoint=dict(out_dir='sh1984:s3://ysli/iconvsr'))

@@ -188,6 +188,7 @@ test_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
+save_dir = 'sh1984:s3://ysli/real_esrgan'
 
 train_dataloader = dict(
     num_workers=12,
@@ -244,25 +245,32 @@ optim_wrapper = dict(
         type='OptimWrapper',
         optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99))))
 
-# learning policy
-param_scheduler = dict(
-    type='StepLR', by_epoch=False, step=[1_000_000], gamma=1)
+# NO learning policy
 
 default_hooks = dict(
     checkpoint=dict(
         type='CheckpointHook',
         interval=5000,
         save_optimizer=True,
-        by_epoch=False),
+        by_epoch=False,
+        out_dir=save_dir,
+    ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
-    # visualization=dict(type='EditVisualizationHook', bgr_order=True),
 )
 
 # custom hook
+vis_backends = [dict(type='LocalVisBackend')]
+visualizer = dict(
+    type='ConcatImageVisualizer',
+    vis_backends=vis_backends,
+    fn_key='gt_path',
+    img_keys=['gt_img', 'input', 'pred_img'],
+    bgr2rgb=True)
 custom_hooks = [
+    dict(type='BasicVisualizationHook', interval=1),
     dict(
         type='EMAHook',
         ema_type='ExponentialMovingAverage',
