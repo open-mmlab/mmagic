@@ -1,11 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os.path as osp
-from pathlib import Path
+from typing import List
 
-import mmcv
 import torch
 
-from mmedit.core import tensor2img
 from mmedit.registry import MODELS
 from ..common import set_requires_grad
 from .one_stage import OneStageInpaintor
@@ -72,7 +69,7 @@ class AOTInpaintor(OneStageInpaintor):
                 function for visualization and dict contains the loss items
                 computed in this function.
         """
-        gt = data_batch['gt_img']
+        gt = data_batch['gt']
         mask = data_batch['mask']
         masked_img = data_batch['masked_img']
 
@@ -102,80 +99,31 @@ class AOTInpaintor(OneStageInpaintor):
 
         return res, loss
 
-    def forward_test(self,
-                     masked_img,
-                     mask,
-                     save_image=False,
-                     save_path=None,
-                     iteration=None,
-                     **kwargs):
-        """Forward function for testing.
+    def forward_tensor(self, inputs, data_samples):
+        """Forward function in tensor mode.
 
         Args:
-            masked_img (torch.Tensor): Tensor with shape of (n, 3, h, w).
-            mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
-            save_image (bool, optional): If True, results will be saved as
-                image. Default: False.
-            save_path (str, optional): If given a valid str, the reuslts will
-                be saved in this path. Default: None.
-            iteration (int, optional): Iteration number. Default: None.
+            inputs (torch.Tensor): Input tensor.
+            data_sample (dict): Dict contains data sample.
 
         Returns:
-            dict: Contain output results and eval metrics (if exist).
+            dict: Dict contains output results.
         """
+        # Pre-process runs in BaseModel.val_step / test_step
+        masks = torch.stack(
+            list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
 
-        masked_img = masked_img.float() + mask
-        input_x = torch.cat([masked_img, mask], dim=1)
+        masked_imgs = inputs  # N,3,H,W
+        print(type(masked_imgs), masked_imgs)
+        print(type(masks), masks)
+        masked_imgs = masked_imgs.float() + masks
 
-        fake_res = self.generator(input_x)
-        fake_img = fake_res * mask + masked_img * (1. - mask)
+        input_xs = torch.cat([masked_imgs, masks], dim=1)  # N,4,H,W
+        fake_reses = self.generator(input_xs)
+        fake_imgs = fake_reses * masks + masked_imgs * (1. - masks)
+        return fake_reses, fake_imgs
 
-        output = dict()
-        eval_results = {}
-        if self.eval_with_metrics:
-            gt_img = kwargs['gt_img']
-            data_dict = dict(
-                gt_img=gt_img, fake_res=fake_res, fake_img=fake_img, mask=None)
-            for metric_name in self.test_cfg['metrics']:
-                if metric_name in ['ssim', 'psnr']:
-                    eval_results[metric_name] = self._eval_metrics[
-                        metric_name](tensor2img(fake_img, min_max=(-1, 1)),
-                                     tensor2img(gt_img, min_max=(-1, 1)))
-                else:
-                    eval_results[metric_name] = self._eval_metrics[
-                        metric_name]()(data_dict).item()
-            output['eval_result'] = eval_results
-        else:
-            output['fake_res'] = fake_res
-            output['fake_img'] = fake_img
-
-        output['meta'] = None if 'meta' not in kwargs else kwargs['meta'][0]
-
-        if save_image:
-            assert save_image and save_path is not None, (
-                'Save path should been given')
-            assert output['meta'] is not None, (
-                'Meta information should be given to save image.')
-
-            tmp_filename = output['meta']['gt_img_path']
-            filestem = Path(tmp_filename).stem
-            if iteration is not None:
-                filename = f'{filestem}_{iteration}.png'
-            else:
-                filename = f'{filestem}.png'
-            mmcv.mkdir_or_exist(save_path)
-            img_list = [kwargs['gt_img']] if 'gt_img' in kwargs else []
-            img_list.extend(
-                [masked_img,
-                 mask.expand_as(masked_img), fake_res, fake_img])
-            img = torch.cat(img_list, dim=3).cpu()
-            self.save_visualization(img, osp.join(save_path, filename))
-            output['save_img_path'] = osp.abspath(
-                osp.join(save_path, filename))
-
-        return output
-
-    def train_step(self, data_batch, optimizer):
+    def train_step(self, data: List[dict], optim_wrapper):
         """Train step function.
 
         In this function, the inpaintor will finish the train step following
@@ -197,9 +145,9 @@ class AOTInpaintor(OneStageInpaintor):
         """
         log_vars = {}
 
-        gt_img = data_batch['gt_img']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
+        gt_img = data['gt']
+        mask = data['mask']
+        masked_img = data['masked_img']
         masked_img = masked_img.float() + mask
 
         # get common output from encdec
@@ -219,10 +167,10 @@ class AOTInpaintor(OneStageInpaintor):
             disc_losses = dict(disc_losses=disc_losses_)
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
-            optimizer['disc'].zero_grad()
+            optim_wrapper['disc'].zero_grad()
             loss_disc.backward()
 
-            optimizer['disc'].step()
+            optim_wrapper['disc'].step()
 
             self.disc_step_count = (self.disc_step_count +
                                     1) % self.train_cfg.disc_step
@@ -235,7 +183,7 @@ class AOTInpaintor(OneStageInpaintor):
                     fake_img=fake_img.cpu())
                 outputs = dict(
                     log_vars=log_vars,
-                    num_samples=len(data_batch['gt_img'].data),
+                    num_samples=len(data['gt'].data),
                     results=results)
 
                 return outputs
@@ -244,16 +192,11 @@ class AOTInpaintor(OneStageInpaintor):
         # for visualization
         if self.with_gan:
             set_requires_grad(self.disc, False)
-        results, g_losses = self.generator_loss(fake_res, fake_img, data_batch)
+        results, g_losses = self.generator_loss(fake_res, fake_img, data)
         loss_g, log_vars_g = self.parse_losses(g_losses)
         log_vars.update(log_vars_g)
-        optimizer['generator'].zero_grad()
+        optim_wrapper['generator'].zero_grad()
         loss_g.backward()
-        optimizer['generator'].step()
+        optim_wrapper['generator'].step()
 
-        outputs = dict(
-            log_vars=log_vars,
-            num_samples=len(data_batch['gt_img'].data),
-            results=results)
-
-        return outputs
+        return log_vars
