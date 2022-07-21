@@ -12,16 +12,13 @@ from .one_stage import OneStageInpaintor
 @MODELS.register_module()
 class TwoStageInpaintor(OneStageInpaintor):
     """Standard two-stage inpaintor with commonly used losses.
-
     A two-stage inpaintor contains two encoder-decoder style generators to
     inpaint masked regions.
-
     Currently, we support these loss types in each of two stage inpaintors:
     ['loss_gan', 'loss_l1_hole', 'loss_l1_valid', 'loss_composed_percep',\
      'loss_out_percep', 'loss_tv']
     The `stage1_loss_type` and `stage2_loss_type` should be chosen from these
     loss types.
-
     Args:
         stage1_loss_type (tuple[str]): Contains the loss names used in the
             first stage model.
@@ -73,13 +70,14 @@ class TwoStageInpaintor(OneStageInpaintor):
         self.input_with_ones = input_with_ones
         self.disc_input_with_mask = disc_input_with_mask
 
+        if self.train_cfg is not None:
+            self.cur_iter = self.train_cfg.start_iter
+
     def forward_tensor(self, inputs, data_samples):
         """Forward function in tensor mode.
-
         Args:
             inputs (torch.Tensor): Input tensor.
             data_sample (dict): Dict contains data sample.
-
         Returns:
             dict: Dict contains output results.
         """
@@ -128,12 +126,10 @@ class TwoStageInpaintor(OneStageInpaintor):
 
     def two_stage_loss(self, stage1_data, stage2_data, gt, mask, masked_img):
         """Calculate two-stage loss.
-
         Args:
             stage1_data (dict): Contain stage1 results.
             stage2_data (dict): Contain stage2 results.
             data_batch (dict): Contain data needed to calculate loss.
-
         Returns:
             dict: Contain losses with name.
         """
@@ -177,7 +173,6 @@ class TwoStageInpaintor(OneStageInpaintor):
                                  mask,
                                  prefix='stage1_'):
         """Calculate multiple types of losses.
-
         Args:
             loss_type (str): Type of the loss.
             fake_res (torch.Tensor): Direct results from model.
@@ -186,7 +181,6 @@ class TwoStageInpaintor(OneStageInpaintor):
             mask (torch.Tensor): Mask tensor.
             prefix (str, optional): Prefix for loss name.
                 Defaults to 'stage1_'.
-
         Returns:
             dict: Contain loss value with its name.
         """
@@ -222,24 +216,19 @@ class TwoStageInpaintor(OneStageInpaintor):
 
     def train_step(self, data: List[dict], optim_wrapper):
         """Train step function.
-
         In this function, the inpaintor will finish the train step following
         the pipeline:
-
             1. get fake res/image
             2. optimize discriminator (if have)
             3. optimize generator
-
         If `self.train_cfg.disc_step > 1`, the train step will contain multiple
         iterations for optimizing discriminator with different input data and
         only one iteration for optimizing gerator after `disc_step` iterations
         for discriminator.
-
         Args:
             data_batch (torch.Tensor): Batch of data as input.
             optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
                 generator and discriminator (if have).
-
         Returns:
             dict: Dict with loss, information for logger, the number of \
                 samples and results for visualization.
@@ -278,7 +267,7 @@ class TwoStageInpaintor(OneStageInpaintor):
                 disc_input_x, False, is_disc=True)
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
-            optim_wrapper['disc'].step()
+            optim_wrapper['disc'].zero_grad()
             loss_disc.backward()
 
             if self.disc_input_with_mask:
@@ -312,12 +301,8 @@ class TwoStageInpaintor(OneStageInpaintor):
                     masked_img=masked_img.cpu(),
                     fake_res=stage2_fake_res.cpu(),
                     fake_img=stage2_fake_img.cpu())
-                outputs = dict(
-                    log_vars=log_vars,
-                    num_samples=len(gt_img.data),
-                    results=results)
 
-                return outputs
+                return log_vars
 
         # prepare stage1 results and stage2 results dict for calculating losses
         stage1_results = dict(
@@ -338,7 +323,4 @@ class TwoStageInpaintor(OneStageInpaintor):
         loss_two_stage.backward()
         optim_wrapper['generator'].step()
 
-        outputs = dict(
-            log_vars=log_vars, num_samples=len(gt_img.data), results=results)
-
-        return outputs
+        return log_vars
