@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2012.02181
   README: configs/video_restorers/basicvsr/README.md
 Models:
-- Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/basicvsr/basicvsr_reds4.py
+- Config: configs/video_restorers/basicvsr/basicvsr_reds4.py
   In Collection: BasicVSR
   Metadata:
     Training Data: REDS
@@ -35,7 +35,7 @@ Models:
         SSIM: 0.9395
     Task: Video_restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth
-- Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/basicvsr/basicvsr_vimeo90k_bi.py
+- Config: configs/video_restorers/basicvsr/basicvsr_vimeo90k_bi.py
   In Collection: BasicVSR
   Metadata:
     Training Data: VIMEO90K
@@ -63,7 +63,7 @@ Models:
         SSIM: 0.9451
     Task: Video_restorers
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_vimeo90k_bi_20210409-d2d8f760.pth
-- Config: https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/basicvsr/basicvsr_vimeo90k_bd.py
+- Config: configs/video_restorers/basicvsr/basicvsr_vimeo90k_bd.py
   In Collection: BasicVSR
   Metadata:
     Training Data: VIMEO90K
