@@ -1,9 +1,18 @@
 _base_ = ['pconv_base.py', '../default_runtime.py', '../datasets/places.py']
 
-model = dict(train_cfg=dict(
-    disc_step=0,
-    start_iter=0,
-))
+model = dict(
+    train_cfg=dict(
+        disc_step=0,
+        start_iter=0,
+    ),
+    encdec=dict(
+        type='PConvEncoderDecoder',
+        encoder=dict(
+            type='PConvEncoder',
+            norm_cfg=dict(type='SyncBN', requires_grad=False),
+            norm_eval=True),
+        decoder=dict(type='PConvDecoder', norm_cfg=dict(type='SyncBN'))),
+)
 
 input_shape = (256, 256)
 
@@ -55,6 +64,11 @@ train_cfg = dict(
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
+# optimizer
+optim_wrapper = dict(
+    constructor='OptimWrapperConstructor',
+    generator=dict(
+        type='OptimWrapper', optimizer=dict(type='Adam', lr=0.00005)))
 lr_config = dict(policy='Fixed', by_epoch=False)
 
 checkpoint_config = dict(type='CheckpointHook', by_epoch=False, interval=50000)

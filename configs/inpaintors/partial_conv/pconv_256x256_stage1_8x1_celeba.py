@@ -6,12 +6,13 @@ model = dict(
         start_iter=0,
     ),
     encdec=dict(
-        type='PConvEncoder',
+        type='PConvEncoderDecoder',
         encoder=dict(
             type='PConvEncoder',
-            norm_cfg=dict(type='SyncBN', requires_grad=False),
-            norm_eval=True),
-    ))
+            norm_cfg=dict(type='SyncBN', requires_grad=True),
+            norm_eval=False),
+        decoder=dict(type='PConvDecoder', norm_cfg=dict(type='SyncBN'))),
+)
 
 input_shape = (256, 256)
 
@@ -60,12 +61,17 @@ test_dataloader = val_dataloader
 
 train_cfg = dict(
     type='IterBasedTrainLoop',
-    max_iters=500000,
+    max_iters=800002,
     val_interval=50000,
 )
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
+# optimizer
+optim_wrapper = dict(
+    constructor='OptimWrapperConstructor',
+    generator=dict(
+        type='OptimWrapper', optimizer=dict(type='Adam', lr=0.0002)))
 lr_config = dict(policy='Fixed', by_epoch=False)
 
 checkpoint = dict(type='CheckpointHook', interval=50000, by_epoch=False)
