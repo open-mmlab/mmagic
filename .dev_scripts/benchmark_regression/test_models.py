@@ -19,6 +19,16 @@ PARTITION = 'mm_research'
 sem = threading.Semaphore(8)  # The maximum number of restricted threads
 
 
+def filter():
+    """Filter the models you want to test.
+
+    Returns:
+        Bool: If this model should be tested.
+    """
+
+    return True
+
+
 def slurm_test(info: dict, thread_num):
     """Slurm test.
 
@@ -61,10 +71,11 @@ def test_models(meta_file):
     yaml_data = yaml.load(data, yaml.FullLoader)
 
     for i in range(len(yaml_data['Models'])):
-        threading.Thread(
-            target=slurm_test,
-            args=(yaml_data['Models'][i], thread_num)).start()
-        thread_num += 1
+        if filter():
+            threading.Thread(
+                target=slurm_test,
+                args=(yaml_data['Models'][i], thread_num)).start()
+            thread_num += 1
 
 
 if __name__ == '__main__':
