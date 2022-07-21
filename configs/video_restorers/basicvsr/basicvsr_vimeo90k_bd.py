@@ -45,6 +45,8 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
+data_root = 'openmmlab:s3://openmmlab/datasets/editing'
+
 train_dataloader = dict(
     num_workers=6,
     batch_size=4,
@@ -53,7 +55,7 @@ train_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='vimeo90k_seq', task_name='vsr'),
-        data_root='data/vimeo90k',
+        data_root=f'{data_root}/vimeo90k',
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_reds4_train.txt',
         depth=2,
@@ -68,7 +70,7 @@ val_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='vid4', task_name='vsr'),
-        data_root='data/REDS',
+        data_root=f'{data_root}/Vid4',
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
         depth=2,
@@ -84,7 +86,7 @@ test_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='vimeo90k_seq', task_name='vsr'),
-        data_root='data/vimeo90k',
+        data_root=f'{data_root}/vimeo90k',
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_Vimeo90K_test_GT.txt',
         depth=2,

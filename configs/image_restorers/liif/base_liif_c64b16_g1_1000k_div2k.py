@@ -59,6 +59,8 @@ test_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
+data_root = 'openmmlab:s3://openmmlab/datasets/editing/DIV2K'
+save_dir = 'sh1984:s3://ysli/liif'
 
 train_dataloader = dict(
     num_workers=8,
@@ -67,15 +69,9 @@ train_dataloader = dict(
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(dataset_type='set5', task_name='sisr'),
-        data_root='data/Set5',
-        data_prefix=dict(img='LRbicx2', gt='GTmod12'),
-        # ann_file='meta_info_DIV2K800sub_GT.txt',
-        # metainfo=dict(dataset_type='div2k', task_name='sisr'),
-        # data_root='data/DIV2K',
-        # data_prefix=dict(
-        #     img='DIV2K_train_LR_bicubic/X2_sub', gt='DIV2K_train_HR_sub'),
-        # filename_tmpl=dict(img='{}_x2', gt='{}'),
+        metainfo=dict(dataset_type='div2k', task_name='sisr'),
+        data_root=data_root,
+        data_prefix=dict(gt='DIV2K_train_HR'),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -88,15 +84,14 @@ val_dataloader = dict(
         metainfo=dict(dataset_type='set5', task_name='sisr'),
         data_root='data/Set5',
         data_prefix=dict(img='LRbicx4', gt='GTmod12'),
-        # filename_tmpl=dict(img='{}_x2', gt='{}'),
         pipeline=test_pipeline))
 
 test_dataloader = val_dataloader
 
 val_evaluator = [
     dict(type='MAE'),
-    dict(type='PSNR'),
-    dict(type='SSIM'),
+    dict(type='PSNR', crop_border=scale_max),
+    dict(type='SSIM', crop_border=scale_max),
 ]
 test_evaluator = val_evaluator
 
@@ -121,10 +116,11 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=3000,
         save_optimizer=True,
-        by_epoch=False),
+        by_epoch=False,
+        out_dir=save_dir,
+    ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
-    # visualization=dict(type='EditVisualizationHook', bgr_order=True),
 )

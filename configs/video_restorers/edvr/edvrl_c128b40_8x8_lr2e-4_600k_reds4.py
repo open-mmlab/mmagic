@@ -26,3 +26,10 @@ model = dict(
         input_view=(1, -1, 1, 1),
         output_view=(1, -1, 1, 1),
     ))
+
+lr_config = dict(
+    policy='CosineRestart',
+    by_epoch=False,
+    periods=[150000, 150000, 150000, 150000],
+    restart_weights=[1, 0.5, 0.5, 0.5],
+    min_lr=1e-7)

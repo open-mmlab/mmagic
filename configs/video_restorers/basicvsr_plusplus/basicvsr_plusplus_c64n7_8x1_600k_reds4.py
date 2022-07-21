@@ -34,6 +34,9 @@ optim_wrapper = dict(
         optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99))),
     paramwise_cfg=dict(custom_keys={'spynet': dict(lr_mult=0.25)}))
 
+default_hooks = dict(
+    checkpoint=dict(out_dir='sh1984:s3://ysli/basicvsr_plusplus'))
+
 # # learning policy
 # total_iters = 600000
 # lr_config = dict(

@@ -57,6 +57,8 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
+data_root = 'openmmlab:s3://openmmlab/datasets/editing/REDS'
+
 train_dataloader = dict(
     num_workers=6,
     batch_size=4,
@@ -65,7 +67,7 @@ train_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='reds_reds4', task_name='vsr'),
-        data_root='data/REDS',
+        data_root=data_root,
         data_prefix=dict(img='train_sharp_bicubic/X4', gt='train_sharp'),
         ann_file='meta_info_reds4_train.txt',
         depth=1,
@@ -107,6 +109,8 @@ optim_wrapper = dict(
         type='OptimWrapper',
         optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99))),
     paramwise_cfg=dict(custom_keys={'spynet': dict(lr_mult=0.125)}))
+
+default_hooks = dict(checkpoint=dict(out_dir='sh1984:s3://ysli/basicvsr'))
 
 # # learning policy
 # total_iters = 300000

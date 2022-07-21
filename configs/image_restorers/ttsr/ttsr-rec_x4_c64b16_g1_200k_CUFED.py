@@ -155,7 +155,8 @@ test_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 's3://openmmlab/datasets/editing/CUFED'
+data_root = 'openmmlab:s3://openmmlab/datasets/editing/CUFED'
+save_dir = 'sh1984:s3://ysli/ttsr'
 
 train_dataloader = dict(
     num_workers=9,
@@ -186,8 +187,8 @@ test_dataloader = val_dataloader
 
 val_evaluator = [
     dict(type='MAE'),
-    dict(type='PSNR'),
-    dict(type='SSIM'),
+    dict(type='PSNR', crop_border=scale),
+    dict(type='SSIM', crop_border=scale),
 ]
 test_evaluator = val_evaluator
 
@@ -200,7 +201,7 @@ test_cfg = dict(type='TestLoop')
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
     optimizer=dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=1e-4)),
-    paramwise_cfg=dict(custom_keys={'.extractor': dict(lr_mult=1e-5)}))
+    paramwise_cfg=dict(custom_keys={'.extractor': dict(lr_mult=0.1)}))
 
 # learning policy
 param_scheduler = dict(type='StepLR', by_epoch=False, step=[100000], gamma=0.5)
@@ -210,10 +211,11 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=5000,
         save_optimizer=True,
-        by_epoch=False),
+        by_epoch=False,
+        out_dir=save_dir,
+    ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
-    # visualization=dict(type='EditVisualizationHook', bgr_order=True),
 )

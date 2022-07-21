@@ -35,6 +35,9 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
+data_root = 'openmmlab:s3://openmmlab/datasets/editing/REDS'
+save_dir = 'sh1984:s3://ysli/edvr'
+
 train_dataloader = dict(
     num_workers=8,
     batch_size=8,
@@ -43,7 +46,7 @@ train_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='reds_reds4', task_name='vsr'),
-        data_root='data/REDS',
+        data_root=data_root,
         data_prefix=dict(img='train_sharp_bicubic/X4', gt='train_sharp'),
         ann_file='meta_info_reds4_train.txt',
         depth=1,
@@ -58,7 +61,7 @@ val_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='reds_reds4', task_name='vsr'),
-        data_root='data/REDS',
+        data_root=data_root,
         data_prefix=dict(img='train_sharp_bicubic/X4', gt='train_sharp'),
         ann_file='meta_info_reds4_val.txt',
         depth=1,
@@ -98,5 +101,5 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=5000,
         save_optimizer=True,
-        out_dir='s3://ysli/edvr/',
+        out_dir=save_dir,
         by_epoch=False))

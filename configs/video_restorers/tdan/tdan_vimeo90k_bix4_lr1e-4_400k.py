@@ -15,11 +15,3 @@ val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
 # No learning policy
-
-default_hooks = dict(
-    checkpoint=dict(
-        type='CheckpointHook',
-        interval=50000,
-        save_optimizer=True,
-        out_dir='s3://ysli/edvr/',
-        by_epoch=False))

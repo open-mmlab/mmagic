@@ -30,6 +30,8 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
+data_root = 'openmmlab:s3://openmmlab/datasets/editing/Vid4'
+
 val_dataloader = dict(
     num_workers=1,
     batch_size=1,
@@ -38,7 +40,7 @@ val_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='vid4', task_name='vsr'),
-        data_root='data/Vid4',
+        data_root=data_root,
         data_prefix=dict(img='BIx4up_direct', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
         depth=2,
@@ -46,11 +48,3 @@ val_dataloader = dict(
         pipeline=val_pipeline))
 
 test_dataloader = val_dataloader
-
-default_hooks = dict(
-    checkpoint=dict(
-        type='CheckpointHook',
-        interval=5000,
-        save_optimizer=True,
-        out_dir='s3://ysli/tof/',
-        by_epoch=False))
