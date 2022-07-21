@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/1801.07892
   README: configs/inpaintors/deepfillv1/README.md
 Models:
-- Config: configs/inpainting/deepfillv1/deepfillv1_256x256_8x2_places.py
+- Config: configs/inpaintors/deepfillv1/deepfillv1_256x256_8x2_places.py
   In Collection: DeepFillv1
   Metadata:
     Training Data: PLACES
@@ -20,7 +20,7 @@ Models:
       l1 error: 11.019
     Task: Inpaintors
   Weights: https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth
-- Config: configs/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba.py
+- Config: configs/inpaintors/deepfillv1/deepfillv1_256x256_4x4_celeba.py
   In Collection: DeepFillv1
   Metadata:
     Training Data: CELEBA

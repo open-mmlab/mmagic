@@ -21,10 +21,10 @@ Video super-resolution (VSR) aims to restore a photo-realistic high-resolution (
 Evaluated on Y-channel. 8 pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 
-|                                              Method                                               |   Vid4 (BIx4)   | SPMCS-30 (BIx4) |   Vid4 (BDx4)   | SPMCS-30 (BDx4) |                                                                                                        Download                                                                                                         |
-| :-----------------------------------------------------------------------------------------------: | :-------------: | :-------------: | :-------------: | :-------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [tdan_vimeo90k_bix4_ft_lr5e-5_400k](/configs/restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py) | **26.49/0.792** | **30.42/0.856** |   25.93/0.772   |   29.69/0.842   | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
-| [tdan_vimeo90k_bdx4_ft_lr5e-5_800k](/configs/restorers/tdan/tdan_vimeo90k_bdx4_ft_lr5e-5_800k.py) |   25.80/0.784   |   29.56/0.851   | **26.87/0.815** | **30.77/0.868** | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
+|                                                 Method                                                  |   Vid4 (BIx4)   | SPMCS-30 (BIx4) |   Vid4 (BDx4)   | SPMCS-30 (BDx4) |                                                                                                        Download                                                                                                         |
+| :-----------------------------------------------------------------------------------------------------: | :-------------: | :-------------: | :-------------: | :-------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [tdan_vimeo90k_bix4_ft_lr5e-5_400k](/configs/video_restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py) | **26.49/0.792** | **30.42/0.856** |   25.93/0.772   |   29.69/0.842   | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
+| [tdan_vimeo90k_bdx4_ft_lr5e-5_800k](/configs/video_restorers/tdan/tdan_vimeo90k_bdx4_ft_lr5e-5_800k.py) |   25.80/0.784   |   29.56/0.851   | **26.87/0.815** | **30.77/0.868** | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
 
 **Train**
 
@@ -42,13 +42,13 @@ TDAN is trained with two stages.
 **Stage 1**: Train with a larger learning rate (1e-4)
 
 ```shell
-./tools/dist_train.sh configs/restorers/tdan/tdan_vimeo90k_bix4_lr1e-4_400k.py 8
+./tools/dist_train.sh configs/video_restorers/tdan/tdan_vimeo90k_bix4_lr1e-4_400k.py 8
 ```
 
 **Stage 2**: Fine-tune with a smaller learning rate (5e-5)
 
 ```shell
-./tools/dist_train.sh configs/restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py 8
+./tools/dist_train.sh configs/video_restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py 8
 ```
 
 For more details, you can refer to **Train a model** part in [getting_started](/docs/en/getting_started.md#train-a-model).
@@ -69,7 +69,7 @@ python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [-
 Example: Test TDAN on SPMCS-30 using Bicubic downsampling.
 
 ```shell
-python tools/test.py configs/restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py  checkpoints/SOME_CHECKPOINT.pth --save_path outputs/
+python tools/test.py configs/video_restorers/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py  checkpoints/SOME_CHECKPOINT.pth --save_path outputs/
 ```
 
 For more details, you can refer to **Inference with pretrained models** part in [getting_started](/docs/en/getting_started.md#inference-with-pretrained-models).
