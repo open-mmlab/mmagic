@@ -5,11 +5,10 @@
 
 import glob
 import os
+import platform
 import posixpath as osp  # Even on windows, use posixpath
 import re
 import sys
-
-import wget
 
 MMEditing_ROOT = osp.dirname(osp.dirname(osp.dirname(__file__)))
 DOWNLOAD_DIR = osp.join(MMEditing_ROOT, 'work_dirs', 'download')
@@ -31,8 +30,11 @@ def find_pth_files(file: str):
     if file.endswith('md'):
         pth_files = re.findall(r'\[model\]\((https://.*?\.pth)\)', data)
     else:
-        pth_files = re.findall(r'\=.?\'(https://.*?\.pth)\'', data, re.S)
+        pth_files = re.findall(r'=.?\'(https?://.*?\.pth)\'', data, re.S)
 
+        if 'glean_cat_8x' in file:
+            print(re.findall(r'(https?://.*?\.pth)\'', data, re.S))
+            input(pth_files)
     return (pth_files)
 
 
@@ -80,14 +82,20 @@ def download_pth(pth_files):
     pth_files = [clear_path(file) for file in pth_files]
     pth_files.sort()
     pth_files = set(pth_files)
+    is_windows = (platform.system() == 'Windows')
 
     if not osp.exists(DOWNLOAD_DIR):
         os.makedirs(DOWNLOAD_DIR)
+
     for url in pth_files:
         path = osp.join(DOWNLOAD_DIR, osp.basename(url))
         print()
         print(f'download {path} from {url}')
-        wget.download(url, path)
+        if is_windows:
+            import wget
+            wget.download(url, path)
+        else:
+            os.system(f'wget -N {url} {path}')
 
 
 if __name__ == '__main__':
