@@ -69,7 +69,6 @@ test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
-    constructor='OptimWrapperConstructor',
     generator=dict(
         type='OptimWrapper', optimizer=dict(type='Adam', lr=0.00005)))
 lr_config = dict(policy='Fixed', by_epoch=False)

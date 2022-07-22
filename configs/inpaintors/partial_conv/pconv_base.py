@@ -43,7 +43,6 @@ model = dict(
 
 # optimizer
 optim_wrapper = dict(
-    constructor='OptimWrapperConstructor',
     generator=dict(
         type='OptimWrapper', optimizer=dict(type='Adam', lr=0.00005)))
 

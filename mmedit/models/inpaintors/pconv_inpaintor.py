@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import List
+
 import torch
 
 from mmedit.data_element import EditDataSample, PixelData
@@ -55,7 +57,7 @@ class PConvInpaintor(OneStageInpaintor):
         fake_imgs = fake_reses * (1. - masks) + masked_img * masks
         return fake_reses, fake_imgs
 
-    def train_step(self, data_batch, optimizer):
+    def train_step(self, data: List[dict], optim_wrapper):
         """Train step function.
 
         In this function, the inpaintor will finish the train step following
@@ -79,11 +81,15 @@ class PConvInpaintor(OneStageInpaintor):
             dict: Dict with loss, information for logger, the number of \
                 samples and results for visualization.
         """
+        batch_inputs, data_samples = self.data_preprocessor(data, True)
         log_vars = {}
 
-        gt_img = data_batch['gt_img']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
+        masked_img = batch_inputs  # float
+        gt_img = torch.stack([d.gt_img.data
+                              for d in data_samples])  # float, [-1,1]
+        # print(gt_img.min(), gt_img.max(), gt_img.dtype)
+        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        mask = mask.float()
 
         mask_input = mask.expand_as(gt_img)
         mask_input = 1. - mask_input
@@ -91,20 +97,14 @@ class PConvInpaintor(OneStageInpaintor):
         fake_res, final_mask = self.generator(masked_img, mask_input)
         fake_img = gt_img * (1. - mask) + fake_res * mask
 
-        results, g_losses = self.generator_loss(fake_res, fake_img, data_batch)
+        results, g_losses = self.generator_loss(fake_res, fake_img, data)
         loss_g_, log_vars_g = self.parse_losses(g_losses)
         log_vars.update(log_vars_g)
-        optimizer['generator'].zero_grad()
+        optim_wrapper['generator'].zero_grad()
         loss_g_.backward()
-        optimizer['generator'].step()
+        optim_wrapper['generator'].step()
 
-        results.update(dict(final_mask=final_mask))
-        outputs = dict(
-            log_vars=log_vars,
-            num_samples=len(data_batch['gt_img'].data),
-            results=results)
-
-        return outputs
+        return log_vars
 
     def forward_dummy(self, x):
         mask = x[:, -3:, ...].clone()
