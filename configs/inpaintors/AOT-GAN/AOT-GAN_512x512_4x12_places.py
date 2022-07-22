@@ -7,17 +7,18 @@ model = dict(train_cfg=dict(
 
 input_shape = (512, 512)
 
-mask_root = 'data/mask'
+mask_root = 'data/pconv_mask'
 train_pipeline = [
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(
         type='LoadMask',
         mask_mode='set',
         mask_config=dict(
-            mask_list_file=f'{mask_root}/train_places_mask_list.txt',
+            mask_list_file=f'{mask_root}/train_mask_list.txt',
             prefix=mask_root,
             io_backend='disk',
             flag='unchanged',
+            color_type='unchanged',
             file_client_kwargs=dict())),
     dict(
         type='RandomResizedCrop',
@@ -47,14 +48,14 @@ test_pipeline = [
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(
         type='LoadMask',
-        mask_mode='irregular',
+        mask_mode='set',
         mask_config=dict(
-            num_vertices=(4, 10),
-            max_angle=6.0,
-            length_range=(20, 128),
-            brush_width=(10, 45),
-            area_ratio_range=(0.15, 0.65),
-            img_shape=input_shape)),
+            mask_list_file=f'{mask_root}/mask_0.5-0.6_list.txt',
+            prefix=mask_root,
+            io_backend='disk',
+            color_type='unchanged',
+            flag='unchanged',
+            file_client_kwargs=dict())),
     dict(
         type='RandomResizedCrop',
         keys=['gt'],
