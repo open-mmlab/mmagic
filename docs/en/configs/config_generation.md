@@ -73,7 +73,7 @@ train_pipeline = [
         to_rgb=True,  # Whether to convert image channels from BGR to RGB
         **img_norm_cfg),  # Image normalization config (see above for the definition of `img_norm_cfg`)
     dict(
-       type='ImageToTensor',  # Image to tensor pipeline
+       type='ToTensor',  # Image to tensor pipeline
        keys=['img_a', 'img_b']),  # The keys of images to be converted from image to tensor
     dict(
         type='Collect',  # Pipeline that decides which keys in the data should be passed to the synthesizer
@@ -100,7 +100,7 @@ test_pipeline = [
         to_rgb=True,  # Whether to convert image channels from BGR to RGB
         **img_norm_cfg),  # Image normalization config (see above for the definition of `img_norm_cfg`)
     dict(
-       type='ImageToTensor',  # Image to tensor pipeline
+       type='ToTensor',  # Image to tensor pipeline
        keys=['img_a', 'img_b']),  # The keys of images to be converted from image to tensor
     dict(
         type='Collect',  # Pipeline that decides which keys in the data should be passed to the synthesizer

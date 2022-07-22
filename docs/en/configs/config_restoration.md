@@ -62,7 +62,7 @@ train_pipeline = [  # Training data processing pipeline
     dict(type='Collect',  # Pipeline that decides which keys in the data should be passed to the model
         keys=['lq', 'gt'],  # Keys to pass to the model
         meta_keys=['lq_path', 'gt_path']), # Meta information keys. In training, meta information is not needed
-    dict(type='ImageToTensor',  # Convert images to tensor
+    dict(type='ToTensor',  # Convert images to tensor
         keys=['lq', 'gt'])  # Images to be converted to Tensor
 ]
 test_pipeline = [  # Test pipeline
@@ -86,7 +86,7 @@ test_pipeline = [  # Test pipeline
     dict(type='Collect',  # Pipeline that decides which keys in the data should be passed to the model
         keys=['lq', 'gt'],  # Keys to pass to the model
         meta_keys=['lq_path', 'gt_path']),  # Meta information keys
-    dict(type='ImageToTensor',  # Convert images to tensor
+    dict(type='ToTensor',  # Convert images to tensor
         keys=['lq', 'gt'])  # Images to be converted to Tensor
 ]
 

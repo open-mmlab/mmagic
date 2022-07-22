@@ -144,10 +144,6 @@ class BasicImageDataset(BaseDataset):
                  recursive: bool = False,
                  **kwards):
 
-        assert set(filename_tmpl).issubset(set(data_prefix)), (
-            'the key in ``filename_tmpl`` should be also in ``data_prefix``.'
-            f'However, filename_tmpl={filename_tmpl}, '
-            f'while data_prefix={data_prefix}')
         for key in data_prefix:
             if key not in filename_tmpl:
                 filename_tmpl[key] = '{}'
