@@ -141,11 +141,15 @@ class AOTInpaintor(OneStageInpaintor):
             dict: Dict with loss, information for logger, the number of
                 samples and results for visualization.
         """
+        batch_inputs, data_samples = self.data_preprocessor(data, True)
         log_vars = {}
 
-        gt_img = data['gt']
-        mask = data['mask']
-        masked_img = data['masked_img']
+        gt_img = torch.stack([d.gt_img.data
+                              for d in data_samples])  # float, [-1,1]
+        # print(gt_img.min(), gt_img.max(), gt_img.dtype)
+        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        mask = mask.float()
+        masked_img = batch_inputs
         masked_img = masked_img.float() + mask
 
         # get common output from encdec
