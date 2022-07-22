@@ -43,8 +43,7 @@ model = dict(
 
 # optimizer
 optim_wrapper = dict(
-    generator=dict(
-        type='OptimWrapper', optimizer=dict(type='Adam', lr=0.00005)))
+    dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=0.00005)))
 
 # learning policy
 # Fixed

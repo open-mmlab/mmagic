@@ -66,8 +66,7 @@ test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
-    generator=dict(
-        type='OptimWrapper', optimizer=dict(type='Adam', lr=0.00005)))
+    dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=0.00005)))
 lr_config = dict(policy='Fixed', by_epoch=False)
 
 checkpoint_config = dict(type='CheckpointHook', by_epoch=False, interval=50000)
