@@ -119,7 +119,7 @@ valid_pipeline = [
     dict(type='ToTensor', keys=['img', 'gt', 'img_lq', 'ref', 'ref_lq']),
     dict(type='PackEditInputs')
 ]
-test_pipeline = [
+demo_pipeline = [
     dict(
         type='LoadImageFromFile',
         key='img',
@@ -181,7 +181,7 @@ val_dataloader = dict(
         data_root=data_root,
         data_prefix=dict(ref='CUFED5', gt='CUFED5'),
         filename_tmpl=dict(ref='{}_1', gt='{}_0'),
-        pipeline=test_pipeline))
+        pipeline=valid_pipeline))
 
 test_dataloader = val_dataloader
 

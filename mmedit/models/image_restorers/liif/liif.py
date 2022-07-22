@@ -26,10 +26,12 @@ class LIIF(BaseEditModel):
 
     def forward_tensor(self, batch_inputs, data_samples=None, **kwargs):
 
-        coord = torch.stack(
-            [data_sample.metainfo['coord'] for data_sample in data_samples])
-        cell = torch.stack(
-            [data_sample.metainfo['cell'] for data_sample in data_samples])
+        coord = torch.stack([
+            data_sample.metainfo['coord'] for data_sample in data_samples
+        ]).to(batch_inputs)
+        cell = torch.stack([
+            data_sample.metainfo['cell'] for data_sample in data_samples
+        ]).to(batch_inputs)
 
         feats = self.generator(batch_inputs, coord, cell, **kwargs)
 

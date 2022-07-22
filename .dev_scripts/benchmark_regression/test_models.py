@@ -17,7 +17,7 @@ DOWNLOAD_DIR = osp.join(MMEditing_ROOT, 'work_dirs', 'download')
 LOG_DIR = osp.join(
     MMEditing_ROOT, 'work_dirs',
     'benchmark_test_' + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
-PARTITION = 'mm_research'
+PARTITION = 'mm_lol'
 START_PORT = 50000
 
 sem = threading.Semaphore(8)  # The maximum number of restricted threads
