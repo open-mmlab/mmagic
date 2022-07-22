@@ -71,7 +71,7 @@ train_dataloader = dict(
         type=dataset_type,
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
         data_root=data_root,
-        data_prefix=dict(gt='DIV2K_train_HR'),
+        data_prefix=dict(gt='DIV2K_train_HR_sub'),
         pipeline=train_pipeline))
 
 val_dataloader = dict(

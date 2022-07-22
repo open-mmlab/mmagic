@@ -93,7 +93,7 @@ train_pipeline = [
         type='Collect',  # The type of collecting data from current pipeline
         keys=['gt_img', 'masked_img', 'mask', 'mask_bbox'],  # The keys of data to be collected
         meta_keys=['gt_img_path']),  # The meta keys of data to be collected
-    dict(type='ImageToTensor', keys=['gt_img', 'masked_img', 'mask']),  # The config dict of image to tensor pipeline
+    dict(type='ToTensor', keys=['gt_img', 'masked_img', 'mask']),  # The config dict of image to tensor pipeline
     dict(type='ToTensor', keys=['mask_bbox'])  # The config dict of ToTensor pipeline
 ]
 

@@ -132,7 +132,7 @@ demo_pipeline = [
             target_size=(128, 128), resize_opt=['area'], resize_prob=[1]),
         keys=['img'],
     ),
-    dict(type='ImageToTensor', keys=['img']),
+    dict(type='ToTensor', keys=['img']),
     dict(type='Collect', keys=['img'], meta_keys=[])
 ]
 

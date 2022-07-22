@@ -78,7 +78,7 @@ train_pipeline = [  # 训练数据处理流程
         keys=['merged', 'alpha', 'trimap', 'ori_merged', 'fg', 'bg'],  # 图像的关键词
         meta_keys=[]),  # 图片的元关键词，这里不需要元信息。
     dict(
-        type='ImageToTensor',  # 将图像转化为 Tensor
+        type='ToTensor',  # 将图像转化为 Tensor
         keys=['merged', 'alpha', 'trimap', 'ori_merged', 'fg', 'bg']),  # 要转换为 Tensor 的图像
 ]
 test_pipeline = [
@@ -114,7 +114,7 @@ test_pipeline = [
             'ori_trimap'
         ]),
     dict(
-        type='ImageToTensor',  # 与 train_pipeline 相同
+        type='ToTensor',  # 与 train_pipeline 相同
         keys=['merged', 'trimap']),
 ]
 data = dict(

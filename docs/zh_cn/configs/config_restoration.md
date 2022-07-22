@@ -64,7 +64,7 @@ train_pipeline = [  # 训练数据前处理流水线步骤组成的列表
     dict(type='Collect',  # Collect 类决定哪些键会被传递到生成器中
         keys=['lq', 'gt'],  # 传入模型的键
         meta_keys=['lq_path', 'gt_path']), # 元信息键。在训练中，不需要元信息
-    dict(type='ImageToTensor',  # 将图像转换为张量
+    dict(type='ToTensor',  # 将图像转换为张量
         keys=['lq', 'gt'])  # 执行图像转换为张量的键
 ]
 test_pipeline = [  # 测试数据前处理流水线步骤组成的列表
@@ -88,7 +88,7 @@ test_pipeline = [  # 测试数据前处理流水线步骤组成的列表
     dict(type='Collect',  # Collect类决定哪些键会被传递到生成器中
         keys=['lq', 'gt'],  # 传入模型的键
         meta_keys=['lq_path', 'gt_path']),  # 元信息键
-    dict(type='ImageToTensor',  # 将图像转换为张量
+    dict(type='ToTensor',  # 将图像转换为张量
         keys=['lq', 'gt'])  # 执行图像转换为张量的键
 ]
 

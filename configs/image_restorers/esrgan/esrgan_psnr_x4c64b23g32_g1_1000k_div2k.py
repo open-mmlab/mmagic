@@ -61,10 +61,10 @@ train_dataloader = dict(
         type=dataset_type,
         ann_file='meta_info_DIV2K800sub_GT.txt',
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
-        data_root='data_root',
+        data_root=data_root,
         data_prefix=dict(
-            img='DIV2K_train_LR_bicubic/X2_sub', gt='DIV2K_train_HR_sub'),
-        filename_tmpl=dict(img='{}_x2', gt='{}'),
+            img='DIV2K_train_LR_bicubic/X4_sub', gt='DIV2K_train_HR_sub'),
+        filename_tmpl=dict(img='{}_x4', gt='{}'),
         pipeline=train_pipeline))
 
 val_dataloader = dict(

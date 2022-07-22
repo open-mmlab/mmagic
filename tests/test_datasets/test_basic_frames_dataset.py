@@ -2,8 +2,6 @@
 import os
 from pathlib import Path
 
-import pytest
-
 from mmedit.datasets import BasicFramesDataset
 
 
@@ -699,10 +697,3 @@ class TestFramesDatasets:
                     '00000000.png')
             ],
             sample_idx=1)
-
-    def test_assert(self):
-
-        with pytest.raises(AssertionError):
-            BasicFramesDataset(
-                data_prefix=dict(img='', gt=''),
-                filename_tmpl=dict(img='{}', ggt='{}'))

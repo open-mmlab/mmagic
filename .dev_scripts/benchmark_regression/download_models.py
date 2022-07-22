@@ -12,6 +12,28 @@ import sys
 
 MMEditing_ROOT = osp.dirname(osp.dirname(osp.dirname(__file__)))
 DOWNLOAD_DIR = osp.join(MMEditing_ROOT, 'work_dirs', 'download')
+IS_WINDOWS = (platform.system() == 'Windows')
+
+
+def additional_download():
+    """Download additional weights file used in this repo, such as VGG.
+    """
+
+    url_path = [
+        'https://www.adrianbulat.com/downloads/python-fan/2DFAN4-cd938726ad.zip',  # noqa
+        'https://www.adrianbulat.com/downloads/python-fan/s3fd-619a316812.pth',
+        'https://download.pytorch.org/models/vgg19-dcbb9e9d.pth'
+    ]
+
+    for url in url_path:
+        path = osp.join(DOWNLOAD_DIR, 'hub', 'checkpoints', osp.basename(url))
+        print()
+        print(f'download {path} from {url}')
+        if IS_WINDOWS:
+            import wget
+            wget.download(url, path)
+        else:
+            os.system(f'wget -N {url} {path}')
 
 
 def find_pth_files(file: str):
@@ -82,16 +104,15 @@ def download_pth(pth_files):
     pth_files = [clear_path(file) for file in pth_files]
     pth_files.sort()
     pth_files = set(pth_files)
-    is_windows = (platform.system() == 'Windows')
 
     if not osp.exists(DOWNLOAD_DIR):
         os.makedirs(DOWNLOAD_DIR)
 
     for url in pth_files:
-        path = osp.join(DOWNLOAD_DIR, osp.basename(url))
+        path = osp.join(DOWNLOAD_DIR, 'hub', 'checkpoints', osp.basename(url))
         print()
         print(f'download {path} from {url}')
-        if is_windows:
+        if IS_WINDOWS:
             import wget
             wget.download(url, path)
         else:
@@ -117,3 +138,4 @@ if __name__ == '__main__':
         pth_files.extend(find_all_pth(fn))
 
     download_pth(pth_files)
+    additional_download()
