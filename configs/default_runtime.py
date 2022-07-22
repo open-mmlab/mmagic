@@ -27,11 +27,11 @@ log_processor = dict(type='LogProcessor', window_size=100, by_epoch=False)
 load_from = None
 resume = False
 
-vis_backends = [dict(type='LocalVisBackend')]
-visualizer = dict(
-    type='ConcatImageVisualizer',
-    vis_backends=vis_backends,
-    fn_key='gt_path',
-    img_keys=['gt_img', 'input', 'pred_img'],
-    bgr2rgb=True)
-custom_hooks = [dict(type='BasicVisualizationHook', interval=1)]
+# vis_backends = [dict(type='LocalVisBackend')]
+# visualizer = dict(
+#     type='ConcatImageVisualizer',
+#     vis_backends=vis_backends,
+#     fn_key='gt_path',
+#     img_keys=['gt_img', 'input', 'pred_img'],
+#     bgr2rgb=True)
+# custom_hooks = [dict(type='BasicVisualizationHook', interval=1)]
