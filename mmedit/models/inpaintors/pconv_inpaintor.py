@@ -97,7 +97,8 @@ class PConvInpaintor(OneStageInpaintor):
         fake_res, final_mask = self.generator(masked_img, mask_input)
         fake_img = gt_img * (1. - mask) + fake_res * mask
 
-        results, g_losses = self.generator_loss(fake_res, fake_img, data)
+        results, g_losses = self.generator_loss(fake_res, fake_img, data,
+                                                gt_img, mask, masked_img)
         loss_g_, log_vars_g = self.parse_losses(g_losses)
         log_vars.update(log_vars_g)
         optim_wrapper['generator'].zero_grad()
