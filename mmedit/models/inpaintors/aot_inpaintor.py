@@ -50,7 +50,7 @@ class AOTInpaintor(OneStageInpaintor):
 
         return loss
 
-    def generator_loss(self, fake_res, fake_img, data_batch):
+    def generator_loss(self, fake_res, fake_img, gt, mask, masked_img):
         """Forward function in generator training step.
 
         In this function, we mainly compute the loss items for generator with
@@ -69,10 +69,6 @@ class AOTInpaintor(OneStageInpaintor):
                 function for visualization and dict contains the loss items
                 computed in this function.
         """
-        gt = data_batch['gt']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
-
         loss = dict()
 
         if self.with_gan:
@@ -194,7 +190,8 @@ class AOTInpaintor(OneStageInpaintor):
         # for visualization
         if self.with_gan:
             set_requires_grad(self.disc, False)
-        results, g_losses = self.generator_loss(fake_res, fake_img, data)
+        results, g_losses = self.generator_loss(fake_res, fake_img, gt_img,
+                                                mask, masked_img)
         loss_g, log_vars_g = self.parse_losses(g_losses)
         log_vars.update(log_vars_g)
         optim_wrapper['generator'].zero_grad()
