@@ -57,7 +57,7 @@ train_dataloader = dict(
         metainfo=dict(dataset_type='vimeo90k_seq', task_name='vsr'),
         data_root=f'{data_root}/vimeo90k',
         data_prefix=dict(img='BDx4', gt='GT'),
-        ann_file='meta_info_reds4_train.txt',
+        ann_file='meta_info_Vimeo90K_train_GT.txt',
         depth=2,
         fixed_seq_len=7,
         pipeline=train_pipeline))

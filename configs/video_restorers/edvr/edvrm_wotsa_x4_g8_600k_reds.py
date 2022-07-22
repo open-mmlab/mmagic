@@ -1,4 +1,7 @@
+_base_ = './base_edvr_config.py'
+
 experiment_name = 'edvrm_wotsa_x4_g8_600k_reds'
+work_dir = f'./work_dirs/{experiment_name}'
 
 # model settings
 model = dict(
