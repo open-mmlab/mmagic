@@ -56,10 +56,10 @@ optim_wrapper = dict(
     constructor='MultiOptimWrapperConstructor',
     generator=dict(
         type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=0.0001, betas=(0.0, 0.9)),
-        disc=dict(
-            type='OptimWrapper',
-            optimizer=dict(type='Adam', lr=0.0001, betas=(0.0, 0.9)))))
+        optimizer=dict(type='Adam', lr=0.0001, betas=(0.0, 0.9))),
+    disc=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=0.0001, betas=(0.0, 0.9))))
 
 # learning policy
 # Fixed
