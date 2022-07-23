@@ -38,6 +38,7 @@ train_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='pillow'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='ModCrop', key='gt'),
     dict(type='CropLike', target_key='ref', reference_key='gt'),
     dict(
@@ -98,6 +99,7 @@ valid_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='pillow'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='ModCrop', key='gt'),
     dict(type='CropLike', target_key='ref', reference_key='gt'),
     dict(
@@ -132,7 +134,8 @@ demo_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='pillow'),
-    dict(type='ModCrop'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
+    dict(type='ModCrop', key='img'),
     dict(
         type='Resize',
         scale=1 / scale,
