@@ -2,10 +2,10 @@
 
 # dataset settings
 dataset_type = 'AdobeComp1kDataset'
-# data_root = 'openmmlab:s3://openmmlab/datasets/editing/adobe_composition-1k'
+data_root = 'openmmlab:s3://openmmlab/datasets/editing/adobe_composition-1k'
 # OR configure cluster=openmmlab in ~/petreloss.conf
 # data_root = 's3://openmmlab/datasets/editing/adobe_composition-1k'
-data_root = 'data/adobe_composition-1k'
+# data_root = 'data/adobe_composition-1k'
 
 train_dataloader = dict(
     num_workers=4,

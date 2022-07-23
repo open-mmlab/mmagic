@@ -36,8 +36,8 @@ model = dict(
     ))
 
 # dataset settings
-data_root = 'data/adobe_composition-1k'
-# data_root = 'openmmlab:s3://openmmlab/datasets/editing/adobe_composition-1k'
+# data_root = 'data/adobe_composition-1k'
+data_root = 'openmmlab:s3://openmmlab/datasets/editing/adobe_composition-1k'
 bg_dir = 'data/coco/train2017'
 # bg_dir = 's3://openmmlab/datasets/detection/coco/train2017'
 train_pipeline = [
