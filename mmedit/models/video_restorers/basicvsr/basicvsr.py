@@ -118,6 +118,7 @@ class BasicVSR(BaseEditModel):
             else:
                 # without mirror extension
                 feats = feats[:, t // 2]
+        print(feats.shape)
 
         feats = self.data_preprocessor.destructor(feats)
 
