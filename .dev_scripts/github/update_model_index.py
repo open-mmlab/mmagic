@@ -70,7 +70,7 @@ def collate_metrics(keys):
     """
     used_metrics = dict()
     for idx, key in enumerate(keys):
-        if key in ['Method', 'Download']:
+        if key in ['Method', 'Download', 'GPU Info']:
             continue
         used_metrics[key] = idx
     return used_metrics
@@ -140,6 +140,7 @@ def parse_md(md_file):
     collection_name = osp.splitext(osp.basename(md_file))[0]
     readme = osp.relpath(md_file, MMEditing_ROOT)
     readme = readme.replace('\\', '/')  # for windows
+    last_gpu_info = None
     collection = dict(
         Name=collection_name,
         Metadata={'Architecture': []},
@@ -230,6 +231,10 @@ def parse_md(md_file):
                         metadata['Parameters'] = float(line[params_idx])
                     if gpu_idx != -1:
                         metadata['GPUs'] = line[gpu_idx].strip()
+                        if '△' in metadata['GPUs']:
+                            metadata['GPUs'] = last_gpu_info
+                        else:
+                            last_gpu_info = metadata['GPUs']
 
                     metrics = {}
 

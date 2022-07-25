@@ -16,7 +16,6 @@ Models:
   Results:
   - Dataset: PLACES
     Metrics:
-      GPU Info: 8.0
       PSNR: 22.398
       SSIM: 0.815
       l1 error: 8.635
@@ -31,7 +30,6 @@ Models:
   Results:
   - Dataset: CELEBA
     Metrics:
-      GPU Info: 8.0
       PSNR: 25.721
       SSIM: 0.871
       l1 error: 5.411

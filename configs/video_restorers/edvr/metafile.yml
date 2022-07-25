@@ -16,7 +16,6 @@ Models:
   Results:
   - Dataset: REDS
     Metrics:
-      GPU Info: 8.0
       REDS4:
         PSNR: 30.343
         SSIM: 0.8664
@@ -31,7 +30,6 @@ Models:
   Results:
   - Dataset: REDS
     Metrics:
-      GPU Info: 8.0
       REDS4:
         PSNR: 30.4194
         SSIM: 0.8684

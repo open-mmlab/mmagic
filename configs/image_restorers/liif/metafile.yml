@@ -30,7 +30,7 @@ Models:
 - Config: configs/image_restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
   In Collection: LIIF
   Metadata:
-    GPUs: "\u25B3"
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: liif_edsr_norm_c64b16_g1_1000k_div2k
   Results:
@@ -50,7 +50,7 @@ Models:
 - Config: configs/image_restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
   In Collection: LIIF
   Metadata:
-    GPUs: "\u25B3"
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: liif_edsr_norm_c64b16_g1_1000k_div2k
   Results:
@@ -70,7 +70,7 @@ Models:
 - Config: configs/image_restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
   In Collection: LIIF
   Metadata:
-    GPUs: "\u25B3"
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: liif_edsr_norm_c64b16_g1_1000k_div2k
   Results:
@@ -90,7 +90,7 @@ Models:
 - Config: configs/image_restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
   In Collection: LIIF
   Metadata:
-    GPUs: "\u25B3"
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: liif_edsr_norm_c64b16_g1_1000k_div2k
   Results:
@@ -110,7 +110,7 @@ Models:
 - Config: configs/image_restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
   In Collection: LIIF
   Metadata:
-    GPUs: "\u25B3"
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: liif_edsr_norm_c64b16_g1_1000k_div2k
   Results:
@@ -150,7 +150,7 @@ Models:
 - Config: configs/image_restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k.py
   In Collection: LIIF
   Metadata:
-    GPUs: "\u25B3"
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: liif_rdn_norm_c64b16_g1_1000k_div2k
   Results:
@@ -170,7 +170,7 @@ Models:
 - Config: configs/image_restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k.py
   In Collection: LIIF
   Metadata:
-    GPUs: "\u25B3"
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: liif_rdn_norm_c64b16_g1_1000k_div2k
   Results:
@@ -190,7 +190,7 @@ Models:
 - Config: configs/image_restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k.py
   In Collection: LIIF
   Metadata:
-    GPUs: "\u25B3"
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: liif_rdn_norm_c64b16_g1_1000k_div2k
   Results:
@@ -210,7 +210,7 @@ Models:
 - Config: configs/image_restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k.py
   In Collection: LIIF
   Metadata:
-    GPUs: "\u25B3"
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: liif_rdn_norm_c64b16_g1_1000k_div2k
   Results:
@@ -230,7 +230,7 @@ Models:
 - Config: configs/image_restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k.py
   In Collection: LIIF
   Metadata:
-    GPUs: "\u25B3"
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: liif_rdn_norm_c64b16_g1_1000k_div2k
   Results:

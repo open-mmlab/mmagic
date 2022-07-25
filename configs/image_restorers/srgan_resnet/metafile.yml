@@ -19,7 +19,6 @@ Models:
       DIV2K:
         PSNR: 28.9748
         SSIM: 0.8178
-      GPU Info: 1.0
       Set14:
         PSNR: 26.7762
         SSIM: 0.7369
@@ -40,7 +39,6 @@ Models:
       DIV2K:
         PSNR: 26.5697
         SSIM: 0.7365
-      GPU Info: 1.0
       Set14:
         PSNR: 24.7383
         SSIM: 0.6491

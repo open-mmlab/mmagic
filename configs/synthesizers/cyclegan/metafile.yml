@@ -17,7 +17,6 @@ Models:
   - Dataset: FACADES
     Metrics:
       FID: 118.297
-      GPU Info: 1.0
       IS: 1.584
     Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_facades/cyclegan_lsgan_resnet_in_1x1_80k_facades_20200524-0b877c2a.pth
@@ -31,7 +30,6 @@ Models:
   - Dataset: FACADES
     Metrics:
       FID: 126.316
-      GPU Info: 1.0
       IS: 1.957
     Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_facades_id0/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades_20200524-438aa074.pth
@@ -45,7 +43,6 @@ Models:
   - Dataset: SUMMER2WINTER
     Metrics:
       FID: 76.959
-      GPU Info: 1.0
       IS: 2.768
     Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_20200524-0baeaff6.pth
@@ -59,7 +56,6 @@ Models:
   - Dataset: SUMMER2WINTER
     Metrics:
       FID: 72.803
-      GPU Info: 1.0
       IS: 3.069
     Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_20200524-0baeaff6.pth
@@ -73,7 +69,6 @@ Models:
   - Dataset: SUMMER2WINTER
     Metrics:
       FID: 76.018
-      GPU Info: 1.0
       IS: 2.735
     Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter_id0/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_20200524-f280ecdd.pth
@@ -87,7 +82,6 @@ Models:
   - Dataset: SUMMER2WINTER
     Metrics:
       FID: 73.498
-      GPU Info: 1.0
       IS: 3.13
     Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_summer2winter_id0/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_20200524-f280ecdd.pth
@@ -101,7 +95,6 @@ Models:
   - Dataset: HORSE2ZEBRA
     Metrics:
       FID: 63.81
-      GPU Info: 1.0
       IS: 1.43
     Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_20200524-1b3d5d3a.pth
@@ -115,7 +108,6 @@ Models:
   - Dataset: HORSE2ZEBRA
     Metrics:
       FID: 71.675
-      GPU Info: 1.0
       IS: 1.542
     Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra_id0/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_20200524-470fb8da.pth
@@ -129,7 +121,6 @@ Models:
   - Dataset: HORSE2ZEBRA
     Metrics:
       FID: 139.279
-      GPU Info: 1.0
       IS: 3.093
     Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_20200524-1b3d5d3a.pth
@@ -143,7 +134,6 @@ Models:
   - Dataset: HORSE2ZEBRA
     Metrics:
       FID: 132.369
-      GPU Info: 1.0
       IS: 2.958
     Task: Synthesizers
   Weights: https://download.openmmlab.com/mmediting/synthesizers/cyclegan/cyclegan_horse2zebra_id0/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_20200524-470fb8da.pth
