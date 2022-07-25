@@ -287,6 +287,10 @@ class GenerateSegmentIndices(BaseTransform):
         results['gt_path'] = gt_path
         results['interval'] = interval
 
+        print('key', results['key'])
+        print('img', results['img_path'])
+        print('gt', results['gt_path'])
+
         return results
 
     def __repr__(self):
