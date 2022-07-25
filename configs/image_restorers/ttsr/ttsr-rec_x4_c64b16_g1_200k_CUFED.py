@@ -207,7 +207,8 @@ optim_wrapper = dict(
     paramwise_cfg=dict(custom_keys={'.extractor': dict(lr_mult=0.1)}))
 
 # learning policy
-param_scheduler = dict(type='StepLR', by_epoch=False, step=[100000], gamma=0.5)
+param_scheduler = dict(
+    type='MultiStepLR', by_epoch=False, milestones=[100000], gamma=0.5)
 
 default_hooks = dict(
     checkpoint=dict(
