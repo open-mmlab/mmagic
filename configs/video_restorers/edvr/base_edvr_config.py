@@ -37,6 +37,7 @@ demo_pipeline = [
 
 data_root = 'openmmlab:s3://openmmlab/datasets/editing/REDS'
 save_dir = 'sh1984:s3://ysli/edvr'
+tmp_root = '/mnt/lustre/liyinshuo.vendor/00-openmmlab/mmediting2.0/data/REDS/'
 
 train_dataloader = dict(
     num_workers=8,
@@ -48,7 +49,7 @@ train_dataloader = dict(
         metainfo=dict(dataset_type='reds_reds4', task_name='vsr'),
         data_root=data_root,
         data_prefix=dict(img='train_sharp_bicubic/X4', gt='train_sharp'),
-        ann_file='meta_info_reds4_train.txt',
+        ann_file=tmp_root + 'meta_info_reds4_train.txt',
         depth=1,
         num_input_frames=5,
         pipeline=train_pipeline))
@@ -63,7 +64,7 @@ val_dataloader = dict(
         metainfo=dict(dataset_type='reds_reds4', task_name='vsr'),
         data_root=data_root,
         data_prefix=dict(img='train_sharp_bicubic/X4', gt='train_sharp'),
-        ann_file='meta_info_reds4_val.txt',
+        ann_file=tmp_root + 'meta_info_reds4_val.txt',
         depth=1,
         num_input_frames=5,
         pipeline=val_pipeline))
