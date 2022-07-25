@@ -204,7 +204,7 @@ test_cfg = dict(type='TestLoop')
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
     optimizer=dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=1e-4)),
-    paramwise_cfg=dict(custom_keys={'.extractor': dict(lr_mult=0.1)}))
+    paramwise_cfg=dict(custom_keys={'.extractor': dict(bias_lr_mult=0.1)}))
 
 # learning policy
 param_scheduler = dict(
