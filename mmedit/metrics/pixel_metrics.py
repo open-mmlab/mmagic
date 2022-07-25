@@ -267,7 +267,6 @@ def psnr(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
         float: psnr result.
     """
 
-    print('psnr', img1.shape, img2.shape)
     assert img1.shape == img2.shape, (
         f'Image shapes are different: {img1.shape}, {img2.shape}.')
 
