@@ -253,6 +253,9 @@ class GenerateSegmentIndices(BaseTransform):
         """
 
         # key example: '000', 'calendar' (sequence name)
+        print('key', results['key'])
+        print('img', results['img_path'])
+        print('gt', results['gt_path'])
         clip_name = results['key']
         interval = np.random.choice(self.interval_list)
 
@@ -286,10 +289,6 @@ class GenerateSegmentIndices(BaseTransform):
         results['img_path'] = img_path
         results['gt_path'] = gt_path
         results['interval'] = interval
-
-        print('key', results['key'])
-        print('img', results['img_path'])
-        print('gt', results['gt_path'])
 
         return results
 
