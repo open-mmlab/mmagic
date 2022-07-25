@@ -88,7 +88,7 @@ class SRGAN(BaseEditModel):
         """Calculates whether need to run the discriminator step.
         """
 
-        return True
+        return self.discriminator and self.gan_loss
 
     def g_step(self, batch_outputs: torch.Tensor, batch_gt_data: torch.Tensor):
         """G step of GAN: Calculate losses of generator.

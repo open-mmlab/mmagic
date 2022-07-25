@@ -205,7 +205,6 @@ test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
-    _delete_=True,
     constructor='MultiOptimWrapperConstructor',
     generator=dict(
         type='OptimWrapper',
