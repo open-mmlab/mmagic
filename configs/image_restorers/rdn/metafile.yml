@@ -10,6 +10,7 @@ Models:
 - Config: configs/image_restorers/rdn/rdn_x2c64b16_g1_1000k_div2k.py
   In Collection: RDN
   Metadata:
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: rdn_x2c64b16_g1_1000k_div2k
   Results:
@@ -29,6 +30,7 @@ Models:
 - Config: configs/image_restorers/rdn/rdn_x3c64b16_g1_1000k_div2k.py
   In Collection: RDN
   Metadata:
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: rdn_x3c64b16_g1_1000k_div2k
   Results:
@@ -48,6 +50,7 @@ Models:
 - Config: configs/image_restorers/rdn/rdn_x4c64b16_g1_1000k_div2k.py
   In Collection: RDN
   Metadata:
+    GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
   Name: rdn_x4c64b16_g1_1000k_div2k
   Results:

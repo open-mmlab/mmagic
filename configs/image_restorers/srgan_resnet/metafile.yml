@@ -10,6 +10,7 @@ Models:
 - Config: configs/image_restorers/srgan_resnet/msrresnet_x4c64b16_g1_1000k_div2k.py
   In Collection: SRGAN
   Metadata:
+    GPUs: '1'
     Training Data: DIV2K
   Name: msrresnet_x4c64b16_g1_1000k_div2k
   Results:
@@ -18,6 +19,7 @@ Models:
       DIV2K:
         PSNR: 28.9748
         SSIM: 0.8178
+      GPU Info: 1.0
       Set14:
         PSNR: 26.7762
         SSIM: 0.7369
@@ -29,6 +31,7 @@ Models:
 - Config: configs/image_restorers/srgan_resnet/srgan_x4c64b16_g1_1000k_div2k.py
   In Collection: SRGAN
   Metadata:
+    GPUs: '1'
     Training Data: DIV2K
   Name: srgan_x4c64b16_g1_1000k_div2k
   Results:
@@ -37,6 +40,7 @@ Models:
       DIV2K:
         PSNR: 26.5697
         SSIM: 0.7365
+      GPU Info: 1.0
       Set14:
         PSNR: 24.7383
         SSIM: 0.6491
