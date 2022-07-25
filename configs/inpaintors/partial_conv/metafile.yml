@@ -10,11 +10,13 @@ Models:
 - Config: configs/inpaintors/partial_conv/pconv_256x256_stage2_4x2_places.py
   In Collection: PConv
   Metadata:
+    GPUs: '4'
     Training Data: PLACES
   Name: pconv_256x256_stage2_4x2_places
   Results:
   - Dataset: PLACES
     Metrics:
+      GPU Info: 4.0
       PSNR: 22.762
       SSIM: 0.801
       l1 error: 8.776
@@ -23,11 +25,13 @@ Models:
 - Config: configs/inpaintors/partial_conv/pconv_256x256_stage2_4x2_celeba.py
   In Collection: PConv
   Metadata:
+    GPUs: '4'
     Training Data: CELEBA
   Name: pconv_256x256_stage2_4x2_celeba
   Results:
   - Dataset: CELEBA
     Metrics:
+      GPU Info: 4.0
       PSNR: 25.404
       SSIM: 0.853
       l1 error: 5.99

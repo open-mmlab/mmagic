@@ -10,6 +10,7 @@ Models:
 - Config: configs/video_restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4.py
   In Collection: BasicVSR++
   Metadata:
+    GPUs: 8 (Tesla V100-PCIE-32GB)
     Training Data: REDS
   Name: basicvsr_plusplus_c64n7_8x1_600k_reds4
   Results:
@@ -38,6 +39,7 @@ Models:
 - Config: configs/video_restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bi.py
   In Collection: BasicVSR++
   Metadata:
+    GPUs: 4 (Tesla V100-PCIE-32GB)
     Training Data: VIMEO90K
   Name: basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bi
   Results:
@@ -66,6 +68,7 @@ Models:
 - Config: configs/video_restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd.py
   In Collection: BasicVSR++
   Metadata:
+    GPUs: 4 (Tesla V100-PCIE-32GB)
     Training Data: VIMEO90K
   Name: basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd
   Results:
