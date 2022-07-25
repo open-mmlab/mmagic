@@ -101,12 +101,12 @@ def test_models(meta_file, available_ports):
     yaml_data = yaml.load(data, yaml.FullLoader)
 
     for i in range(len(yaml_data['Models'])):
-        if filter(yaml_data['Models']):
+        info = yaml_data['Models'][i]
+        if filter(info=info):
             alloted_port = next(available_ports)
             threading.Thread(
                 target=slurm_test,
-                args=(yaml_data['Models'][i], thread_num,
-                      alloted_port)).start()
+                args=(info, thread_num, alloted_port)).start()
             thread_num += 1
 
 
