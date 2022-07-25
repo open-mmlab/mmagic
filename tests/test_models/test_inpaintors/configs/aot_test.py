@@ -53,8 +53,3 @@ model = dict(
     ),
     loss_disc_shift=dict(type='DiscShiftLoss', loss_weight=0.001),
 )
-
-# optimizer
-optim_wrapper = dict(
-    generator=dict(type='Adam', lr=0.0001, betas=(0.0, 0.9)),
-    disc=dict(type='Adam', lr=0.0001, betas=(0.0, 0.9)))

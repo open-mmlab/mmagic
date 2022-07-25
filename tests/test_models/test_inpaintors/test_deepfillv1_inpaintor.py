@@ -4,7 +4,6 @@ from os.path import dirname, join
 import torch
 from mmcv import Config
 
-from mmedit.core import build_optimizers
 from mmedit.data_element import EditDataSample, PixelData
 from mmedit.registry import MODELS, register_all_modules
 
@@ -51,11 +50,9 @@ def test_deepfillv1_inpaintor():
     }]
 
     # prepare model and optimizer
-    optimizers_config = dict(
-        generator=dict(type='Adam', lr=0.0001),
-        disc=dict(type='Adam', lr=0.0001))
-
-    optims = build_optimizers(deepfillv1, optimizers_config)
+    optim_g = torch.optim.Adam(deepfillv1.generator.parameters(), lr=0.0001)
+    optim_d = torch.optim.Adam(deepfillv1.disc.parameters(), lr=0.0001)
+    optims = dict(generator=optim_g, disc=optim_d)
 
     # check train_step with standard deepfillv1 model
     for i in range(5):

@@ -4,7 +4,6 @@ from os.path import dirname, join
 import torch
 from mmcv import Config
 
-from mmedit.core import build_optimizers
 from mmedit.data_element import EditDataSample, PixelData
 from mmedit.registry import MODELS, register_all_modules
 
@@ -38,11 +37,10 @@ def test_pconv_inpaintor():
         )
     }]
 
-    optimizers_config = dict(dict(type='Adam', lr=0.0001))
-    optims = build_optimizers(inpaintor, optimizers_config)
+    optim_g = torch.optim.Adam(inpaintor.generator.parameters(), lr=0.0001)
 
     for i in range(5):
-        log_vars = inpaintor.train_step(data_batch, optims)
+        log_vars = inpaintor.train_step(data_batch, optim_g)
         assert 'loss_l1_hole' in log_vars
         assert 'loss_l1_valid' in log_vars
         assert 'loss_tv' in log_vars
