@@ -5,6 +5,9 @@ work_dir = f'./work_dirs/{experiment_name}'
 
 scale = 4
 
+# DistributedDataParallel
+model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
+
 # model settings
 model = dict(
     type='TTSR',
@@ -202,9 +205,17 @@ test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
-    constructor='DefaultOptimWrapperConstructor',
-    optimizer=dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=1e-4)),
-    paramwise_cfg=dict(custom_keys={'.extractor': dict(bias_lr_mult=0.1)}))
+    _delete_=True,
+    constructor='MultiOptimWrapperConstructor',
+    generator=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999))),
+    extractor=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=1e-5, betas=(0.9, 0.999))),
+    discriminator=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999))))
 
 # learning policy
 param_scheduler = dict(

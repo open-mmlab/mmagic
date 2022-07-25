@@ -5,6 +5,9 @@ work_dir = f'./work_dirs/{experiment_name}'
 
 scale = 8
 
+# DistributedDataParallel
+model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
+
 # model settings
 model = dict(
     type='DIC',
