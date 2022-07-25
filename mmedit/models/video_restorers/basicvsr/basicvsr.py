@@ -118,8 +118,8 @@ class BasicVSR(BaseEditModel):
             else:
                 # without mirror extension
                 feats = feats[:, t // 2]
-        print(feats.shape)
 
+        # feats.shape = [1, 100, 3, 720, 1280]
         feats = self.data_preprocessor.destructor(feats)
 
         predictions = []
