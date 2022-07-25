@@ -10,11 +10,13 @@ Models:
 - Config: configs/inpaintors/global_local/gl_256x256_8x12_places.py
   In Collection: Global&Local
   Metadata:
+    GPUs: '8'
     Training Data: PLACES
   Name: gl_256x256_8x12_places
   Results:
   - Dataset: PLACES
     Metrics:
+      GPU Info: 8.0
       PSNR: 23.152
       SSIM: 0.862
       l1 error: 11.164
@@ -23,11 +25,13 @@ Models:
 - Config: configs/inpaintors/global_local/gl_256x256_8x12_celeba.py
   In Collection: Global&Local
   Metadata:
+    GPUs: '8'
     Training Data: CELEBA
   Name: gl_256x256_8x12_celeba
   Results:
   - Dataset: CELEBA
     Metrics:
+      GPU Info: 8.0
       PSNR: 26.78
       SSIM: 0.904
       l1 error: 6.678

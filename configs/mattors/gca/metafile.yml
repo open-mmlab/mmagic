@@ -10,12 +10,14 @@ Models:
 - Config: configs/mattors/gca/baseline_r34_4x10_200k_comp1k.py
   In Collection: GCA
   Metadata:
+    GPUs: '4'
     Training Data: COMP1K
   Name: baseline_r34_4x10_200k_comp1k
   Results:
   - Dataset: COMP1K
     Metrics:
       CONN: 32.12
+      GPU Info: 4.0
       GRAD: 16.21
       MSE: 0.0083
       SAD: 34.61
@@ -24,12 +26,14 @@ Models:
 - Config: configs/mattors/gca/gca_r34_4x10_200k_comp1k.py
   In Collection: GCA
   Metadata:
+    GPUs: '4'
     Training Data: COMP1K
   Name: gca_r34_4x10_200k_comp1k
   Results:
   - Dataset: COMP1K
     Metrics:
       CONN: 30.59
+      GPU Info: 4.0
       GRAD: 14.96
       MSE: 0.0081
       SAD: 33.38
@@ -38,12 +42,14 @@ Models:
 - Config: configs/mattors/gca/baseline_dimaug_r34_4x10_200k_comp1k.py
   In Collection: GCA
   Metadata:
+    GPUs: '4'
     Training Data: COMP1K
   Name: baseline_dimaug_r34_4x10_200k_comp1k
   Results:
   - Dataset: COMP1K
     Metrics:
       CONN: 49.67
+      GPU Info: 4.0
       GRAD: 30.21
       MSE: 0.0144
       SAD: 49.95
@@ -52,12 +58,14 @@ Models:
 - Config: configs/mattors/gca/gca_dimaug_r34_4x10_200k_comp1k.py
   In Collection: GCA
   Metadata:
+    GPUs: '4'
     Training Data: COMP1K
   Name: gca_dimaug_r34_4x10_200k_comp1k
   Results:
   - Dataset: COMP1K
     Metrics:
       CONN: 49.47
+      GPU Info: 4.0
       GRAD: 28.07
       MSE: 0.0129
       SAD: 49.42

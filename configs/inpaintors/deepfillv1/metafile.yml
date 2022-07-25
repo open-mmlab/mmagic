@@ -10,11 +10,13 @@ Models:
 - Config: configs/inpaintors/deepfillv1/deepfillv1_256x256_8x2_places.py
   In Collection: DeepFillv1
   Metadata:
+    GPUs: '8'
     Training Data: PLACES
   Name: deepfillv1_256x256_8x2_places
   Results:
   - Dataset: PLACES
     Metrics:
+      GPU Info: 8.0
       PSNR: 23.429
       SSIM: 0.862
       l1 error: 11.019
@@ -23,11 +25,13 @@ Models:
 - Config: configs/inpaintors/deepfillv1/deepfillv1_256x256_4x4_celeba.py
   In Collection: DeepFillv1
   Metadata:
+    GPUs: '4'
     Training Data: CELEBA
   Name: deepfillv1_256x256_4x4_celeba
   Results:
   - Dataset: CELEBA
     Metrics:
+      GPU Info: 4.0
       PSNR: 26.878
       SSIM: 0.911
       l1 error: 6.677
