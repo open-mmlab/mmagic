@@ -10,6 +10,7 @@ Models:
 - Config: configs/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet.py
   In Collection: FLAVR
   Metadata:
+    GPUs: 8 (Tesla PG503-216)
     Training Data: VIMEO90K
   Name: flavr_in4out1_g8b4_vimeo90k_septuplet
   Results:

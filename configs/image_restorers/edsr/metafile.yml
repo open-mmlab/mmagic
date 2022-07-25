@@ -10,6 +10,7 @@ Models:
 - Config: configs/image_restorers/edsr/edsr_x2c64b16_g1_300k_div2k.py
   In Collection: EDSR
   Metadata:
+    GPUs: '1'
     Training Data: DIV2K
   Name: edsr_x2c64b16_g1_300k_div2k
   Results:
@@ -18,6 +19,7 @@ Models:
       DIV2K:
         PSNR: 34.5896
         SSIM: 0.9352
+      GPU Info: 1.0
       Set14:
         PSNR: 31.429
         SSIM: 0.8874
@@ -29,6 +31,7 @@ Models:
 - Config: configs/image_restorers/edsr/edsr_x3c64b16_g1_300k_div2k.py
   In Collection: EDSR
   Metadata:
+    GPUs: '1'
     Training Data: DIV2K
   Name: edsr_x3c64b16_g1_300k_div2k
   Results:
@@ -37,6 +40,7 @@ Models:
       DIV2K:
         PSNR: 30.9154
         SSIM: 0.8711
+      GPU Info: 1.0
       Set14:
         PSNR: 28.4125
         SSIM: 0.8022
@@ -48,6 +52,7 @@ Models:
 - Config: configs/image_restorers/edsr/edsr_x4c64b16_g1_300k_div2k.py
   In Collection: EDSR
   Metadata:
+    GPUs: '1'
     Training Data: DIV2K
   Name: edsr_x4c64b16_g1_300k_div2k
   Results:
@@ -56,6 +61,7 @@ Models:
       DIV2K:
         PSNR: 28.9675
         SSIM: 0.8172
+      GPU Info: 1.0
       Set14:
         PSNR: 26.787
         SSIM: 0.7366

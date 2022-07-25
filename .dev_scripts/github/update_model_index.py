@@ -180,6 +180,10 @@ def parse_md(md_file):
                     params_idx = cols.index('Params')
                 except ValueError:
                     params_idx = -1
+                try:
+                    gpu_idx = cols.index('GPU Info')
+                except ValueError:
+                    gpu_idx = -1
                 used_metrics = collate_metrics(cols)
 
                 j = i + 2
@@ -224,6 +228,8 @@ def parse_md(md_file):
                         metadata['FLOPs'] = float(line[flops_idx])
                     if params_idx != -1:
                         metadata['Parameters'] = float(line[params_idx])
+                    if gpu_idx != -1:
+                        metadata['GPUs'] = line[gpu_idx].strip()
 
                     metrics = {}
 

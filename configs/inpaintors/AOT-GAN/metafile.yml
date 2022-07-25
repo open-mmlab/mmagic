@@ -10,6 +10,7 @@ Models:
 - Config: configs/inpaintors/AOT-GAN/AOT-GAN_512x512_4x12_places.py
   In Collection: AOT-GAN
   Metadata:
+    GPUs: 4 (GeForce GTX 1080 Ti)
     Training Data: PLACES
   Name: AOT-GAN_512x512_4x12_places
   Results:

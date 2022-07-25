@@ -10,6 +10,7 @@ Models:
 - Config: configs/video_interpolators/tof/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k.py
   In Collection: TOFlow
   Metadata:
+    GPUs: 1 (Tesla PG503-216)
     Training Data: VIMEO90K
   Name: tof_vfi_spynet_chair_nobn_1xb1_vimeo90k
   Results:
@@ -23,6 +24,7 @@ Models:
 - Config: configs/video_interpolators/tof/tof_vfi_spynet_kitti_nobn_1xb1_vimeo90k.py
   In Collection: TOFlow
   Metadata:
+    GPUs: 1 (Tesla PG503-216)
     Training Data: VIMEO90K
   Name: tof_vfi_spynet_kitti_nobn_1xb1_vimeo90k
   Results:
@@ -36,6 +38,7 @@ Models:
 - Config: configs/video_interpolators/tof/tof_vfi_spynet_sintel_clean_nobn_1xb1_vimeo90k.py
   In Collection: TOFlow
   Metadata:
+    GPUs: 1 (Tesla PG503-216)
     Training Data: VIMEO90K
   Name: tof_vfi_spynet_sintel_clean_nobn_1xb1_vimeo90k
   Results:
@@ -49,6 +52,7 @@ Models:
 - Config: configs/video_interpolators/tof/tof_vfi_spynet_sintel_final_nobn_1xb1_vimeo90k.py
   In Collection: TOFlow
   Metadata:
+    GPUs: 1 (Tesla PG503-216)
     Training Data: VIMEO90K
   Name: tof_vfi_spynet_sintel_final_nobn_1xb1_vimeo90k
   Results:
@@ -62,6 +66,7 @@ Models:
 - Config: configs/video_interpolators/tof/tof_vfi_spynet_pytoflow_nobn_1xb1_vimeo90k.py
   In Collection: TOFlow
   Metadata:
+    GPUs: 1 (Tesla PG503-216)
     Training Data: VIMEO90K
   Name: tof_vfi_spynet_pytoflow_nobn_1xb1_vimeo90k
   Results:

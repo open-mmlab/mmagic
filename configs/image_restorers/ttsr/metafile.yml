@@ -10,6 +10,7 @@ Models:
 - Config: configs/image_restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED.py
   In Collection: TTSR
   Metadata:
+    GPUs: 1 (TITAN Xp)
     Training Data: CUFED
   Name: ttsr-rec_x4_c64b16_g1_200k_CUFED
   Results:
@@ -23,6 +24,7 @@ Models:
 - Config: configs/image_restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py
   In Collection: TTSR
   Metadata:
+    GPUs: 1 (TITAN Xp)
     Training Data: CUFED
   Name: ttsr-gan_x4_c64b16_g1_500k_CUFED
   Results:

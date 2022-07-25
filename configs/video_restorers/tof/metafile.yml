@@ -10,6 +10,7 @@ Models:
 - Config: configs/video_restorers/tof/tof_x4_vimeo90k_official.py
   In Collection: TOFlow
   Metadata:
+    GPUs: '-'
     Training Data: VIMEO90K
   Name: tof_x4_vimeo90k_official
   Results:
