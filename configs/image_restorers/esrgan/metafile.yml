@@ -10,6 +10,7 @@ Models:
 - Config: configs/image_restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py
   In Collection: ESRGAN
   Metadata:
+    GPUs: '1'
     Training Data: DIV2K
   Name: esrgan_psnr_x4c64b23g32_g1_1000k_div2k
   Results:
@@ -18,6 +19,7 @@ Models:
       DIV2K:
         PSNR: 29.3354
         SSIM: 0.8263
+      GPU Info: 1.0
       Set14:
         PSNR: 27.0543
         SSIM: 0.7447
@@ -29,6 +31,7 @@ Models:
 - Config: configs/image_restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py
   In Collection: ESRGAN
   Metadata:
+    GPUs: '1'
     Training Data: DIV2K
   Name: esrgan_x4c64b23g32_g1_400k_div2k
   Results:
@@ -37,6 +40,7 @@ Models:
       DIV2K:
         PSNR: 26.6531
         SSIM: 0.734
+      GPU Info: 1.0
       Set14:
         PSNR: 24.6328
         SSIM: 0.6491

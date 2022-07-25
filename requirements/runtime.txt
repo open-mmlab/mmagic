@@ -13,5 +13,3 @@ opencv-python!=4.5.5.62,!=4.5.5.64
 # It seems to be fixed in https://github.com/opencv/opencv/pull/21382
 Pillow
 tensorboard
-torch
-torchvision

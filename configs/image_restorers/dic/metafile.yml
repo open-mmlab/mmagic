@@ -10,6 +10,7 @@ Models:
 - Config: configs/image_restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ.py
   In Collection: DIC
   Metadata:
+    GPUs: 4 (Tesla PG503-216)
     Training Data: CELEBA
   Name: dic_x8c48b6_g4_150k_CelebAHQ
   Results:
@@ -23,6 +24,7 @@ Models:
 - Config: configs/image_restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ.py
   In Collection: DIC
   Metadata:
+    GPUs: 4 (Tesla PG503-216)
     Training Data: CELEBA
   Name: dic_gan_x8c48b6_g4_500k_CelebAHQ
   Results:

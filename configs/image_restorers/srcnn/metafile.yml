@@ -10,6 +10,7 @@ Models:
 - Config: configs/image_restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py
   In Collection: SRCNN
   Metadata:
+    GPUs: '1'
     Training Data: DIV2K
   Name: srcnn_x4k915_g1_1000k_div2k
   Results:
@@ -18,6 +19,7 @@ Models:
       DIV2K:
         PSNR: 27.746
         SSIM: 0.7854
+      GPU Info: 1.0
       Set14:
         PSNR: 25.6486
         SSIM: 0.7014
