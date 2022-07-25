@@ -86,7 +86,7 @@ val_dataloader = dict(
         data_root=data_root,
         data_prefix=dict(img='train_sharp_bicubic/X4', gt='train_sharp'),
         ann_file=tmp_root + 'meta_info_reds4_val.txt',
-        depth=2,
+        depth=1,
         num_input_frames=100,
         fixed_seq_len=100,
         pipeline=val_pipeline))
