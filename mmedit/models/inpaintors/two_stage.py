@@ -1,12 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os.path as osp
-from pathlib import Path
+from typing import List, Optional, Union
 
-import mmcv
 import torch
-from torchvision.utils import save_image
+from mmengine.config import Config
 
-from mmedit.core import tensor2img
 from mmedit.registry import MODELS
 from ..common import set_requires_grad
 from .one_stage import OneStageInpaintor
@@ -14,14 +11,14 @@ from .one_stage import OneStageInpaintor
 
 @MODELS.register_module()
 class TwoStageInpaintor(OneStageInpaintor):
-    """Two-Stage Inpaintor.
-
+    """Standard two-stage inpaintor with commonly used losses.
+    A two-stage inpaintor contains two encoder-decoder style generators to
+    inpaint masked regions.
     Currently, we support these loss types in each of two stage inpaintors:
     ['loss_gan', 'loss_l1_hole', 'loss_l1_valid', 'loss_composed_percep',\
      'loss_out_percep', 'loss_tv']
     The `stage1_loss_type` and `stage2_loss_type` should be chosen from these
     loss types.
-
     Args:
         stage1_loss_type (tuple[str]): Contains the loss names used in the
             first stage model.
@@ -34,125 +31,108 @@ class TwoStageInpaintor(OneStageInpaintor):
     """
 
     def __init__(self,
-                 *args,
+                 data_preprocessor: Union[dict, Config],
+                 encdec: dict,
+                 disc=None,
+                 loss_gan=None,
+                 loss_gp=None,
+                 loss_disc_shift=None,
+                 loss_composed_percep=None,
+                 loss_out_percep=False,
+                 loss_l1_hole=None,
+                 loss_l1_valid=None,
+                 loss_tv=None,
+                 train_cfg=None,
+                 test_cfg=None,
+                 init_cfg: Optional[dict] = None,
                  stage1_loss_type=('loss_l1_hole', ),
                  stage2_loss_type=('loss_l1_hole', 'loss_gan'),
                  input_with_ones=True,
-                 disc_input_with_mask=False,
-                 **kwargs):
-        super().__init__(*args, **kwargs)
+                 disc_input_with_mask=False):
+        super().__init__(
+            data_preprocessor=data_preprocessor,
+            encdec=encdec,
+            disc=disc,
+            loss_gan=loss_gan,
+            loss_gp=loss_gp,
+            loss_disc_shift=loss_disc_shift,
+            loss_composed_percep=loss_composed_percep,
+            loss_out_percep=loss_out_percep,
+            loss_l1_hole=loss_l1_hole,
+            loss_l1_valid=loss_l1_valid,
+            loss_tv=loss_tv,
+            train_cfg=train_cfg,
+            test_cfg=test_cfg,
+            init_cfg=init_cfg)
 
         self.stage1_loss_type = stage1_loss_type
         self.stage2_loss_type = stage2_loss_type
         self.input_with_ones = input_with_ones
         self.disc_input_with_mask = disc_input_with_mask
-        self.eval_with_metrics = ('metrics' in self.test_cfg) and (
-            self.test_cfg['metrics'] is not None)
 
-    def forward_test(self,
-                     masked_img,
-                     mask,
-                     save_image=False,
-                     save_path=None,
-                     iteration=None,
-                     **kwargs):
-        """Forward function for testing.
+        if self.train_cfg is not None:
+            self.cur_iter = self.train_cfg.start_iter
 
+    def forward_tensor(self, inputs, data_samples):
+        """Forward function in tensor mode.
         Args:
-            masked_img (torch.Tensor): Tensor with shape of (n, 3, h, w).
-            mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
-            save_image (bool, optional): If True, results will be saved as
-                image. Defaults to False.
-            save_path (str, optional): If given a valid str, the results will
-                be saved in this path. Defaults to None.
-            iteration (int, optional): Iteration number. Defaults to None.
-
+            inputs (torch.Tensor): Input tensor.
+            data_sample (dict): Dict contains data sample.
         Returns:
-            dict: Contain output results and eval metrics (if have).
+            dict: Dict contains output results.
         """
+        # Pre-process runs in BaseModel.val_step / test_step
+        masked_imgs = inputs  # N,3,H,W
+
+        masks = torch.stack(
+            list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
         if self.input_with_ones:
-            tmp_ones = torch.ones_like(mask)
-            input_x = torch.cat([masked_img, tmp_ones, mask], dim=1)
+            tmp_ones = torch.ones_like(masks)
+            input_xs = torch.cat([masked_imgs, tmp_ones, masks], dim=1)
         else:
-            input_x = torch.cat([masked_img, mask], dim=1)
-        stage1_fake_res, stage2_fake_res = self.generator(input_x)
-        fake_img = stage2_fake_res * mask + masked_img * (1. - mask)
-        output = dict()
-        eval_result = {}
-        if self.eval_with_metrics:
-            gt_img = kwargs['gt_img']
-            data_dict = dict(
-                gt_img=gt_img, fake_res=stage2_fake_res, mask=mask)
-            for metric_name in self.test_cfg['metrics']:
-                if metric_name in ['ssim', 'psnr']:
-                    eval_result[metric_name] = self._eval_metrics[metric_name](
-                        tensor2img(fake_img, min_max=(-1, 1)),
-                        tensor2img(gt_img, min_max=(-1, 1)))
-                else:
-                    eval_result[metric_name] = self._eval_metrics[metric_name](
-                    )(data_dict).item()
-            output['eval_result'] = eval_result
-        else:
-            output['stage1_fake_res'] = stage1_fake_res
-            output['stage2_fake_res'] = stage2_fake_res
-            output['fake_res'] = stage2_fake_res
-            output['fake_img'] = fake_img
+            input_xs = torch.cat([masked_imgs, masks], dim=1)  # N,4,H,W
+        stage1_fake_res, stage2_fake_res = self.generator(input_xs)
+        fake_imgs = stage2_fake_res * masks + masked_imgs * (1. - masks)
+        return stage2_fake_res, fake_imgs
 
-        output['meta'] = None if 'meta' not in kwargs else kwargs['meta'][0]
+    # def forward_test(self, inputs, data_samples):
+    #     """Forward function for testing.
 
-        if save_image:
-            assert save_image and save_path is not None, (
-                'Save path should be given')
-            assert output['meta'] is not None, (
-                'Meta information should be given to save image.')
+    #     Args:
+    #         masked_img (torch.Tensor): Tensor with shape of (n, 3, h, w).
+    #         mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
+    #         save_image (bool, optional): If True, results will be saved as
+    #             image. Defaults to False.
+    #         save_path (str, optional): If given a valid str, the results will
+    #             be saved in this path. Defaults to None.
+    #         iteration (int, optional): Iteration number. Defaults to None.
 
-            tmp_filename = output['meta']['gt_img_path']
-            filestem = Path(tmp_filename).stem
-            if iteration is not None:
-                filename = f'{filestem}_{iteration}.png'
-            else:
-                filename = f'{filestem}.png'
-            mmcv.mkdir_or_exist(save_path)
-            img_list = [kwargs['gt_img']] if 'gt_img' in kwargs else []
-            img_list.extend([
-                masked_img,
-                mask.expand_as(masked_img), stage1_fake_res, stage2_fake_res,
-                fake_img
-            ])
-            img = torch.cat(img_list, dim=3).cpu()
-            self.save_visualization(img, osp.join(save_path, filename))
-            output['save_img_path'] = osp.abspath(
-                osp.join(save_path, filename))
+    #     Returns:
+    #         dict: Contain output results and eval metrics (if have).
+    #     """
+    #     if self.input_with_ones:
+    #         tmp_ones = torch.ones_like(mask)
+    #         input_x = torch.cat([masked_img, tmp_ones, mask], dim=1)
+    #     else:
+    #         input_x = torch.cat([masked_img, mask], dim=1)
+    #     stage1_fake_res, stage2_fake_res = self.generator(input_x)
+    #     fake_img = stage2_fake_res * mask + masked_img * (1. - mask)
+    #     output = dict()
+    #     eval_result = {}
 
-        return output
+    #     output['meta'] = None if 'meta' not in kwargs else kwargs['meta'][0]
 
-    def save_visualization(self, img, filename):
-        """Save visualization results.
+    #     return output
 
-        Args:
-            img (torch.Tensor): Tensor with shape of (n, 3, h, w).
-            filename (str): Path to save visualization.
-        """
-        if self.test_cfg.get('img_rerange', True):
-            img = (img + 1) / 2
-        if self.test_cfg.get('img_bgr2rgb', True):
-            img = img[:, [2, 1, 0], ...]
-        save_image(img, filename, nrow=1, padding=0)
-
-    def two_stage_loss(self, stage1_data, stage2_data, data_batch):
+    def two_stage_loss(self, stage1_data, stage2_data, gt, mask, masked_img):
         """Calculate two-stage loss.
-
         Args:
             stage1_data (dict): Contain stage1 results.
             stage2_data (dict): Contain stage2 results.
             data_batch (dict): Contain data needed to calculate loss.
-
         Returns:
             dict: Contain losses with name.
         """
-        gt = data_batch['gt_img']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
 
         loss = dict()
         results = dict(
@@ -193,7 +173,6 @@ class TwoStageInpaintor(OneStageInpaintor):
                                  mask,
                                  prefix='stage1_'):
         """Calculate multiple types of losses.
-
         Args:
             loss_type (str): Type of the loss.
             fake_res (torch.Tensor): Direct results from model.
@@ -202,7 +181,6 @@ class TwoStageInpaintor(OneStageInpaintor):
             mask (torch.Tensor): Mask tensor.
             prefix (str, optional): Prefix for loss name.
                 Defaults to 'stage1_'.
-
         Returns:
             dict: Contain loss value with its name.
         """
@@ -236,35 +214,33 @@ class TwoStageInpaintor(OneStageInpaintor):
 
         return loss_dict
 
-    def train_step(self, data_batch, optimizer):
+    def train_step(self, data: List[dict], optim_wrapper):
         """Train step function.
-
         In this function, the inpaintor will finish the train step following
         the pipeline:
-
             1. get fake res/image
             2. optimize discriminator (if have)
             3. optimize generator
-
         If `self.train_cfg.disc_step > 1`, the train step will contain multiple
         iterations for optimizing discriminator with different input data and
         only one iteration for optimizing gerator after `disc_step` iterations
         for discriminator.
-
         Args:
             data_batch (torch.Tensor): Batch of data as input.
             optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
                 generator and discriminator (if have).
-
         Returns:
             dict: Dict with loss, information for logger, the number of \
                 samples and results for visualization.
         """
+        batch_inputs, data_samples = self.data_preprocessor(data, True)
         log_vars = {}
 
-        gt_img = data_batch['gt_img']
-        mask = data_batch['mask']
-        masked_img = data_batch['masked_img']
+        masked_img = batch_inputs  # float
+        gt_img = torch.stack([d.gt_img.data
+                              for d in data_samples])  # float, [-1,1]
+        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        mask = mask.float()
 
         # get common output from encdec
         if self.input_with_ones:
@@ -291,7 +267,7 @@ class TwoStageInpaintor(OneStageInpaintor):
                 disc_input_x, False, is_disc=True)
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
-            optimizer['disc'].zero_grad()
+            optim_wrapper['disc'].zero_grad()
             loss_disc.backward()
 
             if self.disc_input_with_mask:
@@ -314,7 +290,7 @@ class TwoStageInpaintor(OneStageInpaintor):
                 log_vars.update(log_vars_d)
                 loss_disc.backward()
 
-            optimizer['disc'].step()
+            optim_wrapper['disc'].step()
 
             self.disc_step_count = (self.disc_step_count +
                                     1) % self.train_cfg.disc_step
@@ -325,12 +301,8 @@ class TwoStageInpaintor(OneStageInpaintor):
                     masked_img=masked_img.cpu(),
                     fake_res=stage2_fake_res.cpu(),
                     fake_img=stage2_fake_img.cpu())
-                outputs = dict(
-                    log_vars=log_vars,
-                    num_samples=len(data_batch['gt_img'].data),
-                    results=results)
 
-                return outputs
+                return log_vars
 
         # prepare stage1 results and stage2 results dict for calculating losses
         stage1_results = dict(
@@ -343,17 +315,12 @@ class TwoStageInpaintor(OneStageInpaintor):
         if self.with_gan:
             set_requires_grad(self.disc, False)
         results, two_stage_losses = self.two_stage_loss(
-            stage1_results, stage2_results, data_batch)
+            stage1_results, stage2_results, gt_img, mask, masked_img)
         loss_two_stage, log_vars_two_stage = self.parse_losses(
             two_stage_losses)
         log_vars.update(log_vars_two_stage)
-        optimizer['generator'].zero_grad()
+        optim_wrapper['generator'].zero_grad()
         loss_two_stage.backward()
-        optimizer['generator'].step()
+        optim_wrapper['generator'].step()
 
-        outputs = dict(
-            log_vars=log_vars,
-            num_samples=len(data_batch['gt_img'].data),
-            results=results)
-
-        return outputs
+        return log_vars

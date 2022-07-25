@@ -1,10 +1,8 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+# DistributedDataParallel
+model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
+
 model = dict(
     type='AOTInpaintor',
-    train_cfg=dict(
-        disc_step=1,
-        start_iter=0,
-    ),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
         mean=[127.5],
@@ -51,5 +49,17 @@ model = dict(
         type='L1Loss',
         loss_weight=1.,
     ),
-    loss_disc_shift=dict(type='DiscShiftLoss', loss_weight=0.001),
 )
+
+# optimizer
+optim_wrapper = dict(
+    constructor='MultiOptimWrapperConstructor',
+    generator=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=0.0001, betas=(0.0, 0.9))),
+    disc=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=0.0001, betas=(0.0, 0.9))))
+
+# learning policy
+# Fixed

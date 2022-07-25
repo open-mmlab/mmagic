@@ -1,104 +1,56 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os
-import tempfile
-from unittest.mock import patch
+from os.path import dirname, join
 
-import pytest
 import torch
 from mmcv import Config
 
-from mmedit.models import build_model
-from mmedit.models.losses import PerceptualVGG
+from mmedit.data_element import EditDataSample, PixelData
+from mmedit.registry import MODELS, register_all_modules
 
 
-@pytest.mark.skip
-@patch.object(PerceptualVGG, 'init_weights')
-def test_pconv_inpaintor(init_weights):
-    cfg = Config.fromfile(
-        'tests/data/inpaintor_config/pconv_inpaintor_test.py')
+def test_pconv_inpaintor():
+    register_all_modules()
+
+    config_file = join(dirname(__file__), 'configs', 'pconv_test.py')
+    cfg = Config.fromfile(config_file)
+
+    inpaintor = MODELS.build(cfg.model)
+
+    assert inpaintor.__class__.__name__ == 'PConvInpaintor'
 
     if torch.cuda.is_available():
-        pconv_inpaintor = build_model(
-            cfg.model, train_cfg=cfg.train_cfg, test_cfg=cfg.test_cfg)
-        assert pconv_inpaintor.__class__.__name__ == 'PConvInpaintor'
-        pconv_inpaintor.cuda()
-        gt_img = torch.randn((1, 3, 256, 256)).cuda()
-        mask = torch.zeros_like(gt_img)
-        mask[..., 50:160, 100:210] = 1.
-        masked_img = gt_img * (1. - mask)
-        data_batch = dict(gt_img=gt_img, mask=mask, masked_img=masked_img)
-        optim_g = torch.optim.SGD(
-            pconv_inpaintor.generator.parameters(), lr=0.1)
-        optim_dict = dict(generator=optim_g)
+        inpaintor = inpaintor.cuda()
 
-        outputs = pconv_inpaintor.train_step(data_batch, optim_dict)
-        assert outputs['results']['fake_res'].shape == (1, 3, 256, 256)
-        assert outputs['results']['final_mask'].shape == (1, 3, 256, 256)
-        assert 'loss_l1_hole' in outputs['log_vars']
-        assert 'loss_l1_valid' in outputs['log_vars']
-        assert 'loss_tv' in outputs['log_vars']
+    gt_img = torch.randn(3, 256, 256)
+    mask = torch.zeros_like(gt_img)[0:1, ...]
+    mask[..., 100:210, 100:210] = 1.
+    masked_img = gt_img * (1. - mask)
+    mask_bbox = [100, 100, 110, 110]
+    data_batch = [{
+        'inputs':
+        masked_img,
+        'data_sample':
+        EditDataSample(
+            mask=PixelData(data=mask),
+            mask_bbox=mask_bbox,
+            gt_img=PixelData(data=gt_img),
+        )
+    }]
 
-        # test forward dummy
-        res = pconv_inpaintor.forward_dummy(
-            torch.cat([masked_img, mask], dim=1))
-        assert res.shape == (1, 3, 256, 256)
+    optim_g = torch.optim.Adam(inpaintor.generator.parameters(), lr=0.0001)
 
-        # test forward test w/o save image
-        outputs = pconv_inpaintor.forward_test(
-            masked_img[0:1], mask[0:1], gt_img=gt_img[0:1, ...])
-        assert 'eval_result' in outputs
-        assert outputs['eval_result']['l1'] > 0
-        assert outputs['eval_result']['psnr'] > 0
-        assert outputs['eval_result']['ssim'] > 0
+    for i in range(5):
+        log_vars = inpaintor.train_step(data_batch, optim_g)
+        assert 'loss_l1_hole' in log_vars
+        assert 'loss_l1_valid' in log_vars
+        assert 'loss_tv' in log_vars
 
-        # test forward test w/o eval metrics
-        pconv_inpaintor.test_cfg = dict()
-        pconv_inpaintor.eval_with_metrics = False
-        outputs = pconv_inpaintor.forward_test(masked_img[0:1], mask[0:1])
-        for key in ['fake_res', 'fake_img']:
-            assert outputs[key].size() == (1, 3, 256, 256)
-
-        # test forward test w/ save image
-        with tempfile.TemporaryDirectory() as tmpdir:
-            outputs = pconv_inpaintor.forward_test(
-                masked_img[0:1],
-                mask[0:1],
-                save_image=True,
-                save_path=tmpdir,
-                iteration=4396,
-                meta=[dict(gt_img_path='igccc.png')])
-
-            assert os.path.exists(os.path.join(tmpdir, 'igccc_4396.png'))
-
-        # test forward test w/ save image w/ gt_img
-        with tempfile.TemporaryDirectory() as tmpdir:
-            outputs = pconv_inpaintor.forward_test(
-                masked_img[0:1],
-                mask[0:1],
-                save_image=True,
-                save_path=tmpdir,
-                meta=[dict(gt_img_path='igccc.png')],
-                gt_img=gt_img[0:1, ...])
-
-            assert os.path.exists(os.path.join(tmpdir, 'igccc.png'))
-
-            with pytest.raises(AssertionError):
-                outputs = pconv_inpaintor.forward_test(
-                    masked_img[0:1],
-                    mask[0:1],
-                    save_image=True,
-                    save_path=tmpdir,
-                    iteration=4396,
-                    gt_img=gt_img[0:1, ...])
-            with pytest.raises(AssertionError):
-                outputs = pconv_inpaintor.forward_test(
-                    masked_img[0:1],
-                    mask[0:1],
-                    save_image=True,
-                    save_path=None,
-                    iteration=4396,
-                    meta=[dict(gt_img_path='igccc.png')],
-                    gt_img=gt_img[0:1, ...])
-
-    # reset mock to clear some memory usage
-    init_weights.reset_mock()
+    # check for forward_test
+    data_inputs, data_sample = inpaintor.data_preprocessor(data_batch, True)
+    output = inpaintor.forward_test(data_inputs, data_sample)
+    prediction = output[0]
+    assert 'fake_res' in prediction
+    assert '_pred_img' in prediction
+    assert 'fake_img' in prediction
+    assert 'pred_img' in prediction
+    assert prediction.pred_img.shape == (256, 256)
