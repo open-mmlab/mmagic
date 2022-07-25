@@ -6,6 +6,7 @@ from mmcv.runner import load_checkpoint
 from mmengine.dataset import Compose
 
 from mmedit.models import build_model
+from mmedit.registry import register_all_modules
 
 
 def init_model(config, checkpoint=None, device='cuda:0'):
@@ -21,12 +22,14 @@ def init_model(config, checkpoint=None, device='cuda:0'):
     Returns:
         nn.Module: The constructed model.
     """
+    register_all_modules(init_default_scope=True)
     if isinstance(config, str):
         config = mmcv.Config.fromfile(config)
     elif not isinstance(config, mmcv.Config):
         raise TypeError('config must be a filename or Config object, '
                         f'but got {type(config)}')
-    config.model.pretrained = None
+    if 'pretrained' in config.model:
+        config.model.pretrained = None
     config.test_cfg.metrics = None
     model = build_model(config.model, test_cfg=config.test_cfg)
     if checkpoint is not None:
