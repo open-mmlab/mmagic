@@ -173,18 +173,7 @@ class AOTInpaintor(OneStageInpaintor):
             self.disc_step_count = (self.disc_step_count +
                                     1) % self.train_cfg.disc_step
             if self.disc_step_count != 0:
-                # results contain the data for visualization
-                results = dict(
-                    gt_img=gt_img.cpu(),
-                    masked_img=masked_img.cpu(),
-                    fake_res=fake_res.cpu(),
-                    fake_img=fake_img.cpu())
-                outputs = dict(
-                    log_vars=log_vars,
-                    num_samples=len(data['gt'].data),
-                    results=results)
-
-                return outputs
+                return log_vars
 
         # generator (encdec) training step, results contain the data
         # for visualization

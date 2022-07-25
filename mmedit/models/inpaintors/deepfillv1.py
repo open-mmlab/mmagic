@@ -288,11 +288,9 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
         # print(mask)
 
         # get common output from encdec
-        if self.input_with_ones:
-            tmp_ones = torch.ones_like(mask)
-            input_x = torch.cat([masked_img, tmp_ones, mask], dim=1)
-        else:
-            input_x = torch.cat([masked_img, mask], dim=1)
+        # input with ones
+        tmp_ones = torch.ones_like(mask)
+        input_x = torch.cat([masked_img, tmp_ones, mask], dim=1)
         stage1_fake_res, stage2_fake_res = self.generator(input_x)
         stage1_fake_img = masked_img * (1. - mask) + stage1_fake_res * mask
         stage2_fake_img = masked_img * (1. - mask) + stage2_fake_res * mask

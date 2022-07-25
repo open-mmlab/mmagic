@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List
+from typing import List, Optional
 
 import torch
 
@@ -10,6 +10,40 @@ from .one_stage import OneStageInpaintor
 
 @MODELS.register_module()
 class PConvInpaintor(OneStageInpaintor):
+
+    def __init__(self,
+                 data_preprocessor: dict,
+                 encdec: dict,
+                 disc=None,
+                 loss_gan=None,
+                 loss_gp=None,
+                 loss_disc_shift=None,
+                 loss_composed_percep=None,
+                 loss_out_percep=False,
+                 loss_l1_hole=None,
+                 loss_l1_valid=None,
+                 loss_tv=None,
+                 train_cfg=None,
+                 test_cfg=None,
+                 init_cfg: Optional[dict] = None):
+        super().__init__(
+            data_preprocessor=data_preprocessor,
+            encdec=encdec,
+            disc=disc,
+            loss_gan=loss_gan,
+            loss_gp=loss_gp,
+            loss_disc_shift=loss_disc_shift,
+            loss_composed_percep=loss_composed_percep,
+            loss_out_percep=loss_out_percep,
+            loss_l1_hole=loss_l1_hole,
+            loss_l1_valid=loss_l1_valid,
+            loss_tv=loss_tv,
+            train_cfg=train_cfg,
+            test_cfg=test_cfg,
+            init_cfg=init_cfg)
+
+        if self.train_cfg is not None:
+            self.cur_iter = self.train_cfg.start_iter
 
     def forward_test(self, inputs, data_samples):
         """Forward function for testing.
@@ -106,10 +140,3 @@ class PConvInpaintor(OneStageInpaintor):
         optim_wrapper.step()
 
         return log_vars
-
-    def forward_dummy(self, x):
-        mask = x[:, -3:, ...].clone()
-        x = x[:, :-3, ...]
-        res, _ = self.generator(x, mask)
-
-        return res
