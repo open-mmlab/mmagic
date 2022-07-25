@@ -1,12 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Optional, Sequence
+from typing import Optional
 
 import cv2
 import numpy as np
 
 from mmedit.registry import METRICS
 from .base_sample_wise_metric import BaseSampleWiseMetric
-from .utils import img_transform, obtain_data, to_numpy
+from .utils import img_transform, to_numpy
 
 
 @METRICS.register_module()
@@ -67,30 +67,21 @@ class SSIM(BaseSampleWiseMetric):
         self.input_order = input_order
         self.convert_to = convert_to
 
-    def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
-        """Process one batch of data and predictions
+    def process_image(self, gt, pred, mask):
+        """Process an image.
 
         Args:
-            data_batch (Sequence[Tuple[Any, dict]]): A batch of data
-                from the dataloader.
-            predictions (Sequence[dict]): A batch of outputs from
-                the model.
+            gt (Torch | np.ndarray): GT image.
+            pred (Torch | np.ndarray): Pred image.
+            mask (Torch | np.ndarray): Mask of evaluation.
         """
 
-        for data, prediction in zip(data_batch, predictions):
-
-            gt = obtain_data(data, self.gt_key, self.device)
-            pred = obtain_data(prediction, self.pred_key, self.device)
-
-            result = ssim(
-                img1=gt,
-                img2=pred,
-                crop_border=self.crop_border,
-                input_order=self.input_order,
-                convert_to=self.convert_to)
-
-            self.results.append({self.metric: result})
+        return ssim(
+            img1=gt,
+            img2=pred,
+            crop_border=self.crop_border,
+            input_order=self.input_order,
+            convert_to=self.convert_to)
 
 
 def _ssim(img1, img2):
