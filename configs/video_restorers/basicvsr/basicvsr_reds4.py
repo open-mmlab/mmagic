@@ -88,6 +88,7 @@ val_dataloader = dict(
         ann_file=tmp_root + 'meta_info_reds4_val.txt',
         depth=2,
         num_input_frames=100,
+        fixed_seq_len=100,
         pipeline=val_pipeline))
 
 test_dataloader = val_dataloader
