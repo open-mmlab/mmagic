@@ -125,8 +125,7 @@ test_cfg = dict(type='TestLoop')
 # optimizer
 optim_wrapper = dict(
     constructor='MultiOptimWrapperConstructor',
-    generator=dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=1e-4)),
-    discriminator=None)
+    generator=dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=1e-4)))
 
 # learning policy
 param_scheduler = dict(
