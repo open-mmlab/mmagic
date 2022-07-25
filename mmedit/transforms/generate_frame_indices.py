@@ -289,6 +289,8 @@ class GenerateSegmentIndices(BaseTransform):
         results['img_path'] = img_path
         results['gt_path'] = gt_path
         results['interval'] = interval
+        print('img_out', results['img_path'])
+        print('gt_out', results['gt_path'])
 
         return results
 
