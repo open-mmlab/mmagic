@@ -195,6 +195,7 @@ class PSNR(BaseSampleWiseMetric):
 
             gt = obtain_data(data, self.gt_key, self.device)
             pred = obtain_data(prediction, self.pred_key, self.device)
+            print('PSNR', gt.shape, pred.shape)
             result = psnr(
                 img1=gt,
                 img2=pred,
@@ -303,6 +304,7 @@ def psnr(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
         float: psnr result.
     """
 
+    print('psnr', img1.shape, img2.shape)
     assert img1.shape == img2.shape, (
         f'Image shapes are different: {img1.shape}, {img2.shape}.')
 
