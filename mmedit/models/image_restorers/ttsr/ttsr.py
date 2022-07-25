@@ -113,7 +113,7 @@ class TTSR(SRGAN):
         """Calculates whether need to run the discriminator step.
         """
 
-        return self.step_counter >= self.pixel_init
+        return self.step_counter >= self.pixel_init and super().if_run_d()
 
     def g_step(self, batch_outputs, batch_gt_data: EditDataSample):
         """G step of GAN: Calculate losses of generator.
