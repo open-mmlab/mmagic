@@ -34,7 +34,7 @@ def filter(info):
         Bool: If this model should be tested.
     """
 
-    # return 'liif' in info['Config']
+    return 'video' in info['Config'] or 'mattors' in info['Config']
     return True
 
 
