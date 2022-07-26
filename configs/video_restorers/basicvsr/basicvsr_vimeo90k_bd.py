@@ -60,6 +60,7 @@ train_dataloader = dict(
         ann_file='meta_info_Vimeo90K_train_GT.txt',
         depth=2,
         fixed_seq_len=7,
+        load_frames_list=['all'],
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -92,6 +93,7 @@ test_dataloader = dict(
         depth=2,
         num_input_frames=7,
         fixed_seq_len=7,
+        load_frames_list=['all'],
         pipeline=test_pipeline))
 
 val_evaluator = [
