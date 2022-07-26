@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import mmcv
+import numpy as np
 import torch
 from mmcv.parallel import collate, scatter
 from mmcv.runner import load_checkpoint
@@ -70,12 +71,16 @@ def matting_inference(model, img, trimap):
     test_pipeline = Compose(cfg.test_pipeline)
     # prepare data
     data = dict(merged_path=img, trimap_path=trimap)
-    data = test_pipeline(data)
+    _data = test_pipeline(data)
+    trimap = _data['data_sample'].trimap.data
+    data = dict()
+    data['batch_inputs'] = torch.cat([_data['inputs'], trimap], dim=0).float()
     data = collate([data], samples_per_gpu=1)
+    data['data_samples'] = [_data['data_sample']]
     if 'cuda' in str(device):
         data = scatter(data, [device])[0]
     # forward the model
     with torch.no_grad():
-        result = model(test_mode=True, **data)
-
-    return result['pred_alpha']
+        result = model(mode='predict', **data)
+    result = result[0].pred_alpha.data
+    return np.array(result)

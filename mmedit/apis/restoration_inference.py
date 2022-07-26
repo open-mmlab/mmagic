@@ -33,15 +33,17 @@ def restoration_inference(model, img, ref=None):
     test_pipeline = Compose(cfg.test_pipeline)
     # prepare data
     if ref:  # Ref-SR
-        data = dict(lq_path=img, ref_path=ref)
+        data = dict(img_path=img, ref_path=ref)
     else:  # SISR
-        data = dict(lq_path=img)
-    data = test_pipeline(data)
+        data = dict(img_path=img)
+    _data = test_pipeline(data)
+    data = dict()
+    data['batch_inputs'] = _data['inputs'] / 255.0
     data = collate([data], samples_per_gpu=1)
     if 'cuda' in str(device):
         data = scatter(data, [device])[0]
     # forward the model
     with torch.no_grad():
-        result = model(test_mode=True, **data)
-
-    return result['output']
+        result = model(mode='tensor', **data)
+    result = torch.stack([result[0][2], result[0][1], result[0][0]], dim=0)
+    return result
