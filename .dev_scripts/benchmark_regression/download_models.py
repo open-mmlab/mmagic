@@ -111,8 +111,8 @@ def download_pth(pth_urls):
         return path
 
     pth_urls = [clear_path(file) for file in pth_urls]
-    pth_urls.sort()
     pth_urls = list(set(pth_urls))
+    pth_urls.sort()
 
     download_from_url(pth_urls)
 
