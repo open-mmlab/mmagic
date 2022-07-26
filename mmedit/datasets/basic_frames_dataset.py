@@ -209,6 +209,8 @@ class BasicFramesDataset(BaseDataset):
                 else:
                     data[f'{key}_path'] = self.data_prefix[key]
             data_list.append(data)
+        if 'test' in self.ann_file:
+            print(data_list)
 
         return data_list
 
