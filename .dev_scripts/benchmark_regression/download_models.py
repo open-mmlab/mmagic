@@ -58,7 +58,7 @@ def find_pth_files(file: str):
 
 
 def find_all_pth(md_file):
-    """Find all pretrained checkpoints of a method (pth).
+    """Find all pre-trained checkpoints of a method (pth).
 
     Args:
         md_file (str): Path to .md file.

@@ -88,7 +88,7 @@ def slurm_test(info: dict, thread_num, alloted_port):
 
 
 def test_models(meta_file, available_ports):
-    """Download all pth files.
+    """Test all models in a metafile.
 
     Args:
         pth_files (List[str]): List of pth files.
