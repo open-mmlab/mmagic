@@ -6,8 +6,15 @@ from mmcv.parallel import collate, scatter
 from mmcv.runner import load_checkpoint
 from mmengine.dataset import Compose
 
-from mmedit.models import build_model
-from mmedit.registry import register_all_modules
+from mmedit.registry import MODELS, register_all_modules
+
+
+def delete_cfg(cfg, key='init_cfg'):
+    if key in cfg:
+        cfg[key] = None
+    for _key in cfg.keys():
+        if isinstance(cfg[_key], mmcv.utils.config.ConfigDict):
+            delete_cfg(cfg[_key], key)
 
 
 def init_model(config, checkpoint=None, device='cuda:0'):
@@ -29,10 +36,9 @@ def init_model(config, checkpoint=None, device='cuda:0'):
     elif not isinstance(config, mmcv.Config):
         raise TypeError('config must be a filename or Config object, '
                         f'but got {type(config)}')
-    if 'pretrained' in config.model:
-        config.model.pretrained = None
-    config.test_cfg.metrics = None
-    model = build_model(config.model, test_cfg=config.test_cfg)
+    # config.test_cfg.metrics = None
+    delete_cfg(config.model, 'init_cfg')
+    model = MODELS.build(config.model)
     if checkpoint is not None:
         checkpoint = load_checkpoint(model, checkpoint)
 
