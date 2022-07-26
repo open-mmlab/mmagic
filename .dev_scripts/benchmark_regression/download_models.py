@@ -12,31 +12,43 @@ import sys
 
 MMEditing_ROOT = osp.dirname(osp.dirname(osp.dirname(__file__)))
 DOWNLOAD_DIR = osp.join(MMEditing_ROOT, 'work_dirs', 'download')
-IS_WINDOWS = (platform.system() == 'Windows')
 
 
 def additional_download():
     """Download additional weights file used in this repo, such as VGG.
     """
 
-    url_path = [
+    urls = [
         'https://www.adrianbulat.com/downloads/python-fan/2DFAN4-cd938726ad.zip',  # noqa
         'https://www.adrianbulat.com/downloads/python-fan/s3fd-619a316812.pth',
         'https://download.pytorch.org/models/vgg19-dcbb9e9d.pth'
     ]
+    download_from_url(urls[0:1])
 
-    for url in url_path:
-        path = osp.join(DOWNLOAD_DIR, 'hub', 'checkpoints', osp.basename(url))
+
+def download_from_url(urls):
+    """Download additional weights file used in this repo, such as VGG.
+
+    Args:
+        urls (list[str]): Link address of urls.
+    """
+
+    download_path = osp.join(DOWNLOAD_DIR, 'hub', 'checkpoints')
+    if not osp.exists(download_path):
+        os.makedirs(download_path)
+
+    for url in urls:
+        path = osp.join(download_path, osp.basename(url))
         print()
         print(f'download {path} from {url}')
-        if IS_WINDOWS:
+        if platform.system() == 'Windows':
             import wget
             wget.download(url, path)
         else:
-            os.system(f'wget -N {url} {path}')
+            os.system(f'wget -N -P {download_path} {url}')
 
 
-def find_pth_files(file: str):
+def find_pth_urls(file: str):
     """Find all strs of pth files from a file.
 
     Args:
@@ -50,11 +62,11 @@ def find_pth_files(file: str):
         data = f.read()
 
     if file.endswith('md'):
-        pth_files = re.findall(r'\[model\]\((https://.*?\.pth)\)', data)
+        pth_urls = re.findall(r'\[model\]\((https://.*?\.pth)\)', data)
     else:
-        pth_files = re.findall(r'=.?\'(https?://.*?\.pth)\'', data, re.S)
+        pth_urls = re.findall(r'=.?\'(https?://.*?\.pth)\'', data, re.S)
 
-    return (pth_files)
+    return (pth_urls)
 
 
 def find_all_pth(md_file):
@@ -74,19 +86,19 @@ def find_all_pth(md_file):
         osp.join(config_dir, file) for file in files if file.endswith('.py')
     ]
     all_files = config_files + [md_file]
-    pth_files = []
+    pth_urls = []
     for file in all_files:
-        sub_list = find_pth_files(file)
+        sub_list = find_pth_urls(file)
         if len(sub_list) > 0:
-            pth_files.extend(sub_list)
-    return pth_files
+            pth_urls.extend(sub_list)
+    return pth_urls
 
 
-def download_pth(pth_files):
+def download_pth(pth_urls):
     """Download all pth files.
 
     Args:
-        pth_files (List[str]): List of pth files.
+        pth_urls (List[str]): List of pth files.
     """
 
     # clear
@@ -98,23 +110,11 @@ def download_pth(pth_files):
         path = path.replace('\n', '')
         return path
 
-    pth_files = [clear_path(file) for file in pth_files]
-    pth_files.sort()
-    pth_files = set(pth_files)
+    pth_urls = [clear_path(file) for file in pth_urls]
+    pth_urls.sort()
+    pth_urls = list(set(pth_urls))
 
-    download_path = osp.join(DOWNLOAD_DIR, 'hub', 'checkpoints')
-    if not osp.exists(download_path):
-        os.makedirs(download_path)
-
-    for url in pth_files:
-        path = osp.join(download_path, osp.basename(url))
-        print()
-        print(f'download {path} from {url}')
-        if IS_WINDOWS:
-            import wget
-            wget.download(url, path)
-        else:
-            os.system(f'wget -N {url} {path}')
+    download_from_url(pth_urls)
 
 
 if __name__ == '__main__':
@@ -131,9 +131,9 @@ if __name__ == '__main__':
     if not file_list:
         sys.exit(0)
 
-    pth_files = []
+    pth_urls = []
     for fn in file_list:
-        pth_files.extend(find_all_pth(fn))
+        pth_urls.extend(find_all_pth(fn))
 
-    download_pth(pth_files)
+    download_pth(pth_urls[0:1])
     additional_download()

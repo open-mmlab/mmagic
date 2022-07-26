@@ -19,7 +19,6 @@ LOG_DIR = osp.join(
     MMEditing_ROOT, 'work_dirs',
     'benchmark_test_' + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
 PARTITION = 'mm_lol'
-IS_WINDOWS = (platform.system() == 'Windows')
 
 sem = threading.Semaphore(8)  # The maximum number of restricted threads
 
@@ -44,7 +43,7 @@ def find_available_port():
 
     port = 65535
     while True:
-        if IS_WINDOWS:
+        if platform.system() == 'Windows':
             port_inuse = os.popen('netstat -an | findstr :' +
                                   str(port)).readlines()
         else:
@@ -70,9 +69,9 @@ def slurm_test(info: dict, thread_num, alloted_port):
     weights = info['Weights']
     basename, _ = osp.splitext(osp.basename(config))
 
-    if osp.exists(DOWNLOAD_DIR):
-        weights = osp.join(DOWNLOAD_DIR, 'hub', 'checkpoints',
-                           osp.basename(weights))
+    weights = osp.join(DOWNLOAD_DIR, 'hub', 'checkpoints',
+                       osp.basename(weights))
+    assert osp.exists(weights), f'ERROR: {weights} is not found'
 
     env_cmd = f'TORCH_HOME={DOWNLOAD_DIR} MASTER_PORT={alloted_port} '
     env_cmd += 'GPUS=1 GPUS_PER_NODE=1'
