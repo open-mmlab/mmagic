@@ -102,11 +102,12 @@ def download_pth(pth_files):
     pth_files.sort()
     pth_files = set(pth_files)
 
-    if not osp.exists(DOWNLOAD_DIR):
-        os.makedirs(DOWNLOAD_DIR)
+    download_path = osp.join(DOWNLOAD_DIR, 'hub', 'checkpoints')
+    if not osp.exists(download_path):
+        os.makedirs(download_path)
 
     for url in pth_files:
-        path = osp.join(DOWNLOAD_DIR, 'hub', 'checkpoints', osp.basename(url))
+        path = osp.join(download_path, osp.basename(url))
         print()
         print(f'download {path} from {url}')
         if IS_WINDOWS:
