@@ -17,7 +17,6 @@ Models:
   - Dataset: COMP1K
     Metrics:
       CONN: 54.5
-      GPU Info: 1.0
       GRAD: 32.7
       MSE: 0.017
       SAD: 53.8
@@ -33,7 +32,6 @@ Models:
   - Dataset: COMP1K
     Metrics:
       CONN: 52.4
-      GPU Info: 1.0
       GRAD: 29.4
       MSE: 0.016
       SAD: 52.3
@@ -49,7 +47,6 @@ Models:
   - Dataset: COMP1K
     Metrics:
       CONN: 50.7
-      GPU Info: 1.0
       GRAD: 29.0
       MSE: 0.015
       SAD: 50.6
