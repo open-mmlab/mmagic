@@ -45,5 +45,5 @@ def restoration_inference(model, img, ref=None):
     # forward the model
     with torch.no_grad():
         result = model(mode='tensor', **data)
-    result = torch.stack([result[0][2], result[0][1], result[0][0]], dim=0)
+    result = result[0][[2, 1, 0], :, :]
     return result

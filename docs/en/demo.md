@@ -89,9 +89,9 @@ You can test Ref-SR by providing `--ref-path`. Examples:
 python demo/restoration_demo.py \
     configs/image_restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py \
     https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth \
-    tests/data/image/test_multiple_gt/sequence_1/00000000.png \
+    tests/data/frames/sequence/gt/sequence_1/00000000.png \
     demo/demo_out.png \
-    --ref-path tests/data/test_multiple_gt/sequence_1/00000001.png
+    --ref-path tests/data/frames/sequence/gt/sequence_1/00000001.png
 ```
 
 #### Restoration (Face Image)
@@ -117,7 +117,7 @@ python demo/restoration_face_demo.py \
     configs/image_restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq.py \
     https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth \
     tests/data/image/face/000001.png \
-    results/000001.png \
+    tests/data/pred/000001.png \
     --upscale-factor 4
 ```
 
@@ -144,7 +144,7 @@ python demo/restoration_video_demo.py \
     configs/video_restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py \
     https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth \
     data/Vid4/BIx4/calendar/ \
-    ./output \
+    demo/output \
     --window-size=5
 ```
 
@@ -155,7 +155,7 @@ python demo/restoration_video_demo.py \
     configs/video_restorers/basicvsr/basicvsr_reds4.py \
     https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth \
     data/Vid4/BIx4/calendar/ \
-    ./output
+    demo/output
 ```
 
 The restored video will be save in `output/`.
