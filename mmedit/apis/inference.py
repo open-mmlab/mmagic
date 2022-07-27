@@ -34,7 +34,7 @@ def init_model(config, checkpoint=None, device='cuda:0'):
                         f'but got {type(config)}')
     # config.test_cfg.metrics = None
     delete_cfg(config.model, 'init_cfg')
-    print(config.model)
+
     register_all_modules()
     model = MODELS.build(config.model)
 
