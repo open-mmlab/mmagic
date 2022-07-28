@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import numpy as np
 import torch
 from mmcv.parallel import collate, scatter
 from mmengine.dataset import Compose
@@ -46,4 +45,4 @@ def matting_inference(model, img, trimap):
     with torch.no_grad():
         result = model(mode='predict', **data)
     result = result[0].pred_alpha.data
-    return np.array(result.cpu())
+    return result.cpu().numpy()
