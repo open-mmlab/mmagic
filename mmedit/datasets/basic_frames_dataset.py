@@ -179,11 +179,8 @@ class BasicFramesDataset(BaseDataset):
             list[dict]: A list of annotation.
         """
 
-        print('start dataset')
         path_list = self._get_path_list()
-        print('got path_list')
         self._set_seq_lens()
-        print('got seq_lens')
 
         data_list = []
         for path in path_list:
@@ -212,9 +209,6 @@ class BasicFramesDataset(BaseDataset):
                 else:
                     data[f'{key}_path'] = self.data_prefix[key]
             data_list.append(data)
-        print('got data_list')
-        if 'test' in self.ann_file:
-            print(data_list)
 
         return data_list
 
@@ -338,17 +332,15 @@ class BasicFramesDataset(BaseDataset):
             list[str]: The paths list of frames.
         """
 
-        files = list(self.file_client.list_dir_or_file(dir_path=folder))
+        if 'all' in self.load_frames_list[key]:
+            # load all
+            files = list(self.file_client.list_dir_or_file(dir_path=folder))
+        else:
+            files = self.load_frames_list[key]
+
         files.sort()
         tmpl = self.filename_tmpl[key]
         files = [tmpl.format(file) for file in files]
-        if 'all' in self.load_frames_list[key]:
-            # load all
-            paths = [osp.join(folder, file) for file in files]
-        else:
-            paths = [
-                osp.join(folder, file) for file in self.load_frames_list[key]
-                if file in files
-            ]
+        paths = [osp.join(folder, file) for file in files]
 
         return paths

@@ -81,7 +81,8 @@ class SSIM(BaseSampleWiseMetric):
             img2=pred,
             crop_border=self.crop_border,
             input_order=self.input_order,
-            convert_to=self.convert_to)
+            convert_to=self.convert_to,
+            channel_order=self.channel_order)
 
 
 def _ssim(img1, img2):
@@ -118,7 +119,12 @@ def _ssim(img1, img2):
     return ssim_map.mean()
 
 
-def ssim(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
+def ssim(img1,
+         img2,
+         crop_border=0,
+         input_order='HWC',
+         convert_to=None,
+         channel_order='rgb'):
     """Calculate SSIM (structural similarity).
 
     Ref:
@@ -141,6 +147,7 @@ def ssim(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
             If None, the images are not altered. When computing for 'Y',
             the images are assumed to be in BGR order. Options are 'Y' and
             None. Default: None.
+        channel_order (str): The channel order of image. Default: 'rgb'
 
     Returns:
         float: ssim result.
@@ -153,12 +160,14 @@ def ssim(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
         img1,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
     img2 = img_transform(
         img2,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
 
     img1 = to_numpy(img1)
     img2 = to_numpy(img2)

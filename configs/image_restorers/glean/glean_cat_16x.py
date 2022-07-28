@@ -53,8 +53,16 @@ model = dict(
 )
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
-    dict(type='LoadImageFromFile', key='gt'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb'),
     dict(
         type='Flip',
         keys=['img', 'gt'],
@@ -64,8 +72,16 @@ train_pipeline = [
     dict(type='PackEditInputs')
 ]
 test_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
-    dict(type='LoadImageFromFile', key='gt'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]

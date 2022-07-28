@@ -5,8 +5,16 @@ scale = 4
 train_pipeline = [
     dict(type='GenerateFrameIndices', interval_list=[1], frames_per_clip=99),
     dict(type='TemporalReverse', keys='img_path', reverse_ratio=0),
-    dict(type='LoadImageFromFile', key='img', color_type='unchanged'),
-    dict(type='LoadImageFromFile', key='gt', color_type='unchanged'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='PairedRandomCrop', gt_patch_size=256),
     dict(
         type='Flip',
@@ -22,15 +30,27 @@ train_pipeline = [
 
 val_pipeline = [
     dict(type='GenerateFrameIndiceswithPadding', padding='reflection_circle'),
-    dict(type='LoadImageFromFile', key='img', color_type='unchanged'),
-    dict(type='LoadImageFromFile', key='gt', color_type='unchanged'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
-    dict(type='LoadImageFromFile', key='img', color_type='unchanged'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='ToTensor', keys=['img']),
     dict(type='PackEditInputs')
 ]
@@ -50,8 +70,9 @@ train_dataloader = dict(
         data_root=data_root,
         data_prefix=dict(img='train_sharp_bicubic/X4', gt='train_sharp'),
         ann_file=tmp_root + 'meta_info_reds4_train.txt',
-        depth=1,
+        depth=2,
         num_input_frames=5,
+        num_output_frames=1,
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -65,8 +86,9 @@ val_dataloader = dict(
         data_root=data_root,
         data_prefix=dict(img='train_sharp_bicubic/X4', gt='train_sharp'),
         ann_file=tmp_root + 'meta_info_reds4_val.txt',
-        depth=1,
+        depth=2,
         num_input_frames=5,
+        num_output_frames=1,
         pipeline=val_pipeline))
 
 test_dataloader = val_dataloader

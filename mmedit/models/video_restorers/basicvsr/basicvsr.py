@@ -106,6 +106,8 @@ class BasicVSR(BaseEditModel):
     def forward_inference(self, batch_inputs, data_samples=None, **kwargs):
 
         feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
+        # feats.shape = [b, t, c, h, w]
+        feats = self.data_preprocessor.destructor(feats)
 
         # If the GT is an image (i.e. the center frame), the output sequence is
         # turned to an image.
@@ -118,9 +120,6 @@ class BasicVSR(BaseEditModel):
             else:
                 # without mirror extension
                 feats = feats[:, t // 2]
-
-        # feats.shape = [1, 100, 3, 720, 1280]
-        feats = self.data_preprocessor.destructor(feats)
 
         predictions = []
         for idx in range(feats.shape[0]):

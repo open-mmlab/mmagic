@@ -46,6 +46,9 @@ demo_pipeline = [
 ]
 
 data_root = 'openmmlab:s3://openmmlab/datasets/editing'
+file_list = [
+    'im1.png', 'im2.png', 'im3.png', 'im4.png', 'im5.png', 'im6.png', 'im7.png'
+]
 
 train_dataloader = dict(
     num_workers=6,
@@ -60,7 +63,7 @@ train_dataloader = dict(
         ann_file='meta_info_Vimeo90K_train_GT.txt',
         depth=2,
         fixed_seq_len=7,
-        load_frames_list=dict(img=['all'], gt=['all']),
+        load_frames_list=dict(img=file_list, gt=file_list),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -93,7 +96,7 @@ test_dataloader = dict(
         depth=2,
         num_input_frames=7,
         fixed_seq_len=7,
-        load_frames_list=dict(img=['all'], gt=['all']),
+        load_frames_list=dict(img=file_list, gt=['im4.png']),
         pipeline=test_pipeline))
 
 val_evaluator = [

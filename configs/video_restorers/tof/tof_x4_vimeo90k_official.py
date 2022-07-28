@@ -6,7 +6,7 @@ experiment_name = 'tof_x4_vimeo90k_official'
 # model settings
 model = dict(
     type='EDVR',  # use the shared model with EDVR
-    generator=dict(type='TOFlow', adapt_official_weights=True),
+    generator=dict(type='TOFlowVSRNet', adapt_official_weights=True),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='sum'),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
@@ -17,15 +17,27 @@ model = dict(
 
 val_pipeline = [
     dict(type='GenerateFrameIndiceswithPadding', padding='reflection_circle'),
-    dict(type='LoadImageFromFile', key='img', imdecode_backend='unchanged'),
-    dict(type='LoadImageFromFile', key='gt', imdecode_backend='unchanged'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
-    dict(type='LoadImageFromFile', key='img', imdecode_backend='unchanged'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='ToTensor', keys=['img']),
     dict(type='PackEditInputs')
 ]
@@ -48,3 +60,13 @@ val_dataloader = dict(
         pipeline=val_pipeline))
 
 test_dataloader = val_dataloader
+
+val_evaluator = [
+    dict(type='MAE'),
+    dict(type='PSNR'),
+    dict(type='SSIM'),
+]
+test_evaluator = val_evaluator
+
+val_cfg = dict(type='ValLoop')
+test_cfg = dict(type='TestLoop')

@@ -28,14 +28,14 @@ train_pipeline = [
     dict(
         type='LoadImageFromFile',
         key='img',
-        color_type='unchanged',
-        channel_order='bgr',
+        color_type='color',
+        channel_order='rgb',
         imdecode_backend='cv2'),
     dict(
         type='LoadImageFromFile',
         key='gt',
-        color_type='unchanged',
-        channel_order='bgr',
+        color_type='color',
+        channel_order='rgb',
         imdecode_backend='cv2'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='PairedRandomCrop', gt_patch_size=96),
@@ -54,14 +54,14 @@ test_pipeline = [
     dict(
         type='LoadImageFromFile',
         key='img',
-        color_type='unchanged',
-        channel_order='bgr',
+        color_type='color',
+        channel_order='rgb',
         imdecode_backend='cv2'),
     dict(
         type='LoadImageFromFile',
         key='gt',
-        color_type='unchanged',
-        channel_order='bgr',
+        color_type='color',
+        channel_order='rgb',
         imdecode_backend='cv2'),
     dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')

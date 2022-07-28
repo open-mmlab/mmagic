@@ -81,6 +81,7 @@ class EditDataPreprocessor(BaseDataPreprocessor):
         self.pad_size_divisor = pad_size_divisor
         self.pad_args = pad_args
         self.padded_sizes = None
+        self.norm_input_flag = None  # If input is normalized to [0, 1]
 
     def forward(
         self,
@@ -103,6 +104,9 @@ class EditDataPreprocessor(BaseDataPreprocessor):
         """
 
         inputs, batch_data_samples = self.collate_data(data)
+
+        # Check if input is normalized to [0, 1]
+        self.norm_input_flag = (inputs[0].max() <= 1)
 
         # Normalization.
         inputs = [(_input - self.input_mean) / self.input_std
@@ -143,5 +147,11 @@ class EditDataPreprocessor(BaseDataPreprocessor):
         padded_w = int(padded_w)
         h, w = batch_tensor.shape[-2:]
         batch_tensor = batch_tensor[..., :h - padded_h, :w - padded_w]
+
+        assert self.norm_input_flag is not None, (
+            'Please kindly run `forward` before running `destructor`')
+        if self.norm_input_flag:
+            batch_tensor *= 255
+        batch_tensor = batch_tensor.clamp_(0, 255)
 
         return batch_tensor

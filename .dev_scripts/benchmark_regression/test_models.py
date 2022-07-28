@@ -34,7 +34,7 @@ def filter(info):
         Bool: If this model should be tested.
     """
 
-    return 'video_restorers' in info['Config'] or 'mattors' in info['Config']
+    # return 'global_local' in info['Config']
     return True
 
 
@@ -45,12 +45,12 @@ def find_available_port():
     port = 65535
     while True:
         if IS_WINDOWS:
-            port_inuse = os.popen('netstat -an | findstr :' +
-                                  str(port)).readlines()
+            port_is_occupied = os.popen('netstat -an | findstr :' +
+                                        str(port)).readlines()
         else:
-            port_inuse = os.popen('netstat -antu | grep :' +
-                                  str(port)).readlines()
-        if not port_inuse:
+            port_is_occupied = os.popen('netstat -antu | grep :' +
+                                        str(port)).readlines()
+        if not port_is_occupied:
             yield port
         port -= 1
         if port < 1024:
@@ -75,7 +75,7 @@ def slurm_test(info: dict, thread_num, alloted_port):
                            osp.basename(weights))
 
     env_cmd = f'TORCH_HOME={DOWNLOAD_DIR} MASTER_PORT={alloted_port} '
-    env_cmd += 'GPUS=1 GPUS_PER_NODE=1'
+    env_cmd += 'GPUS=2 GPUS_PER_NODE=2 CPUS_PER_TASK=8'
     base_cmd = 'bash tools/slurm_test.sh'
     task_cmd = f'{PARTITION} {basename}'
     out_file = osp.join(LOG_DIR, f'{thread_num:03d}_{basename}.log')
@@ -99,9 +99,9 @@ def test_models(meta_file, available_ports):
     with open(meta_file, 'r', encoding='utf-8') as f:
         data = f.read()
     yaml_data = yaml.load(data, yaml.FullLoader)
+    infos = yaml_data['Models']
 
-    for i in range(len(yaml_data['Models'])):
-        info = yaml_data['Models'][i]
+    for info in infos:
         if filter(info=info):
             alloted_port = next(available_ports)
             threading.Thread(
