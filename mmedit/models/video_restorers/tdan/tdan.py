@@ -44,6 +44,18 @@ class TDAN(BaseEditModel):
         self.lq_pixel_loss = MODELS.build(lq_pixel_loss)
 
     def forward_train(self, batch_inputs, data_samples=None, **kwargs):
+        """Forward training.
+            Returns dict of losses of training.
+
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            dict: Dict of losses.
+        """
 
         feats, aligned_img = self.forward_tensor(
             batch_inputs, data_samples, training=True, **kwargs)
@@ -67,6 +79,19 @@ class TDAN(BaseEditModel):
                        data_samples=None,
                        training=False,
                        **kwargs):
+        """Forward tensor.
+            Returns result of simple forward.
+
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            (Tensor | List[Tensor]): results of forward inference and
+                forward train.
+        """
 
         outputs = self.generator(batch_inputs, **kwargs)
 

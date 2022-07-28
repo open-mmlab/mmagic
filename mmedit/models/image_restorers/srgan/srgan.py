@@ -74,8 +74,21 @@ class SRGAN(BaseEditModel):
             self.disc_repeat = 0
 
     def forward_train(self, batch_inputs, data_samples=None, **kwargs):
+        """Forward training.
+            Losses of training is calculated in train_step.
 
-        return self.forward_tensor(batch_inputs, data_samples, **kwargs)
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            Tensor: Result of ``forward_tensor`` with ``training=True``.
+        """
+
+        return self.forward_tensor(
+            batch_inputs, data_samples, training=True, **kwargs)
 
     def if_run_g(self):
         """Calculates whether need to run the generator step.
