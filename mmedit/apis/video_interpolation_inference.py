@@ -163,16 +163,16 @@ def video_interpolation_inference(model,
             source, start_index, lenth_per_step, from_video, end_index=end_idx)
 
         # data prepare
-        data = dict(inputs=images, inputs_path=None, key=input_dir)
-        data = [test_pipeline(data)]
-        data = collate(data, samples_per_gpu=1)['inputs']
+        data = dict(img=images, inputs_path=None, key=input_dir)
+        data = test_pipeline(data)['inputs'] / 255.0
+        data = collate([data], samples_per_gpu=1)
         # data.shape: [1, t, c, h, w]
 
         # forward the model
         data = model.split_frames(data)
         input_tensors = data.clone().detach()
         with torch.no_grad():
-            output = model(data.to(device), test_mode=True)['output']
+            output = model(data.to(device), mode='tensor')
             if len(output.shape) == 4:
                 output = output.unsqueeze(1)
             output_tensors = output.cpu()

@@ -65,9 +65,9 @@ def restoration_video_inference(model,
     if file_extension in VIDEO_EXTENSIONS:
         video_reader = mmcv.VideoReader(img_dir)
         # load the images
-        data = dict(lq=[], lq_path=None, key=img_dir)
+        data = dict(img=[], img_path=None, key=img_dir)
         for frame in video_reader:
-            data['lq'].append(np.flip(frame, axis=2))
+            data['img'].append(np.flip(frame, axis=2))
 
         # remove the data loading pipeline
         tmp_pipeline = []
@@ -94,7 +94,7 @@ def restoration_video_inference(model,
         key = img_dir_split[-1]
         lq_folder = reduce(osp.join, img_dir_split[:-1])
         data = dict(
-            lq_path=lq_folder,
+            img_path=lq_folder,
             gt_path='',
             key=key,
             sequence_length=sequence_length)
@@ -102,7 +102,7 @@ def restoration_video_inference(model,
     # compose the pipeline
     test_pipeline = Compose(test_pipeline)
     data = test_pipeline(data)
-    data = data['lq'].unsqueeze(0)  # in cpu
+    data = data['inputs'].unsqueeze(0) / 255.0  # in cpu
 
     # forward the model
     with torch.no_grad():
@@ -111,18 +111,20 @@ def restoration_video_inference(model,
             result = []
             for i in range(0, data.size(1) - 2 * (window_size // 2)):
                 data_i = data[:, i:i + window_size].to(device)
-                result.append(model(lq=data_i, test_mode=True)['output'].cpu())
+                result.append(
+                    model(batch_inputs=data_i,
+                          mode='tensor')[:, [2, 1, 0], :, :].cpu())
             result = torch.stack(result, dim=1)
         else:  # recurrent framework
             if max_seq_len is None:
                 result = model(
-                    lq=data.to(device), test_mode=True)['output'].cpu()
+                    batch_inputs=data.to(device), mode='tensor').cpu()
             else:
                 result = []
                 for i in range(0, data.size(1), max_seq_len):
                     result.append(
                         model(
-                            lq=data[:, i:i + max_seq_len].to(device),
-                            test_mode=True)['output'].cpu())
+                            batch_inputs=data[:, i:i + max_seq_len].to(device),
+                            mode='tensor').cpu())
                 result = torch.cat(result, dim=1)
     return result

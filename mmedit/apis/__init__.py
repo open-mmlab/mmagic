@@ -1,7 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .generation_inference import generation_inference
+from .inference import init_model
 from .inpainting_inference import inpainting_inference
-from .matting_inference import init_model, matting_inference
+from .matting_inference import matting_inference
 from .restoration_face_inference import restoration_face_inference
 from .restoration_inference import restoration_inference
 from .restoration_video_inference import restoration_video_inference
