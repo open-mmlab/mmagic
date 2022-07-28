@@ -25,7 +25,11 @@ def average(results, key):
     return total / n
 
 
-def img_transform(img, crop_border=0, input_order='HWC', convert_to=None):
+def img_transform(img,
+                  crop_border=0,
+                  input_order='HWC',
+                  convert_to=None,
+                  channel_order='rgb'):
     """Image transform.
 
     Ref: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
@@ -40,6 +44,7 @@ def img_transform(img, crop_border=0, input_order='HWC', convert_to=None):
             If None, the images are not altered. When computing for 'Y',
             the images are assumed to be in BGR order. Options are 'Y' and
             None. Default: None.
+        channel_order (str): The channel order of image. Default: 'rgb'
 
     Returns:
         float: psnr result.
@@ -51,11 +56,19 @@ def img_transform(img, crop_border=0, input_order='HWC', convert_to=None):
             '"HWC" and "CHW"')
 
     img = reorder_image(img, input_order=input_order)
-    if isinstance(img, np.ndarray):
-        img = img.astype(np.float32)
+    if isinstance(img, torch.Tensor):
+        img = img.numpy()
+    img = img.astype(np.float32)
 
     if isinstance(convert_to, str) and convert_to.lower() == 'y':
-        img = mmcv.bgr2ycbcr(img / 255., y_only=True) * 255.
+        if channel_order == 'rgb':
+            img = mmcv.rgb2ycbcr(img / 255., y_only=True) * 255.
+        elif channel_order == 'bgr':
+            img = mmcv.bgr2ycbcr(img / 255., y_only=True) * 255.
+        else:
+            raise ValueError(
+                'Only support `rgb2y` and `bgr2`, but the channel_order '
+                f'is {channel_order}')
         img = np.expand_dims(img, axis=2)
     elif convert_to is not None:
         raise ValueError('Wrong color model. Supported values are '

@@ -81,6 +81,13 @@ class BaseSampleWiseMetric(BaseMetric):
 
         for data, prediction in zip(data_batch, predictions):
 
+            self.channel_order = 'rgb'
+            metainfo = data['data_sample']
+            if 'gt_channel_order' in metainfo:
+                self.channel_order = metainfo['gt_channel_order']
+            elif 'img_channel_order' in metainfo:
+                self.channel_order = metainfo['img_channel_order']
+
             gt = obtain_data(data, self.gt_key, self.device)
             pred = obtain_data(prediction, self.pred_key, self.device)
             if self.mask_key is not None:
@@ -88,6 +95,7 @@ class BaseSampleWiseMetric(BaseMetric):
                 mask[mask != 0] = 1
             else:
                 mask = 1 - pred * 0
+
             if len(gt.shape) <= 3:
                 result = self.process_image(gt, pred, mask)
             else:

@@ -52,8 +52,8 @@ class LoadImageFromFile(BaseTransform):
         self,
         key: str,
         color_type: str = 'color',
-        channel_order='bgr',
-        imdecode_backend: str = 'cv2',
+        channel_order: str = 'bgr',
+        imdecode_backend: Optional[str] = None,
         use_cache: bool = False,
         to_float32: bool = False,
         to_y_channel: bool = False,
@@ -123,6 +123,7 @@ class LoadImageFromFile(BaseTransform):
 
         results[self.key] = images
         results[f'ori_{self.key}_shape'] = shapes
+        results[f'{self.key}_channel_order'] = self.channel_order
         if self.save_original_img:
             results[f'ori_{self.key}'] = ori_imgs
 

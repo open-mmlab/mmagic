@@ -25,8 +25,16 @@ model = dict(
     ))
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img', color_type='unchanged'),
-    dict(type='LoadImageFromFile', key='gt', color_type='unchanged'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='PairedRandomCrop', gt_patch_size=128),
     dict(
@@ -41,8 +49,16 @@ train_pipeline = [
     dict(type='PackEditInputs')
 ]
 test_pipeline = [
-    dict(type='LoadImageFromFile', key='img', color_type='unchanged'),
-    dict(type='LoadImageFromFile', key='gt', color_type='unchanged'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]

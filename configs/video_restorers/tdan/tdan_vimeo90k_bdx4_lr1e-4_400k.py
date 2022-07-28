@@ -26,8 +26,8 @@ model = dict(
 # test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=8, convert_to='y')
 
 val_evaluator = [
-    dict(type='PSNR'),
-    dict(type='SSIM'),
+    dict(type='PSNR', crop_border=8, convert_to='Y'),
+    dict(type='SSIM', crop_border=8, convert_to='Y'),
 ]
 test_evaluator = val_evaluator
 
@@ -78,6 +78,10 @@ train_dataloader = dict(
         ann_file='meta_info_Vimeo90K_train_GT.txt',
         depth=2,
         num_input_frames=5,
+        fixed_seq_len=7,
+        load_frames_list=dict(
+            img=['im2.png', 'im3.png', 'im4.png', 'im5.png', 'im6.png'],
+            gt=['im2.png', 'im3.png', 'im4.png', 'im5.png', 'im6.png']),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -92,7 +96,7 @@ val_dataloader = dict(
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
         depth=2,
-        num_input_frames=7,
+        num_input_frames=5,
         pipeline=val_pipeline))
 
 test_dataloader = dict(
@@ -106,7 +110,7 @@ test_dataloader = dict(
         data_root=f'{data_root}/SPMCS',
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_SPMCS_GT.txt',
-        depth=1,
+        depth=2,
         num_input_frames=5,
         pipeline=val_pipeline))
 

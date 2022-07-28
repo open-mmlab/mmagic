@@ -175,7 +175,8 @@ class PSNR(BaseSampleWiseMetric):
             img2=pred,
             crop_border=self.crop_border,
             input_order=self.input_order,
-            convert_to=self.convert_to)
+            convert_to=self.convert_to,
+            channel_order=self.channel_order)
 
 
 @METRICS.register_module()
@@ -196,7 +197,7 @@ class SNR(BaseSampleWiseMetric):
             If prefix is not provided in the argument, self.default_prefix
             will be used instead. Default: None
         crop_border (int): Cropped pixels in each edges of an image. These
-            pixels are not involved in the PSNR calculation. Default: 0.
+            pixels are not involved in the SNR calculation. Default: 0.
         input_order (str): Whether the input order is 'HWC' or 'CHW'.
             Default: 'CHW'.
         convert_to (str): Whether to convert the images to other color models.
@@ -243,10 +244,16 @@ class SNR(BaseSampleWiseMetric):
             img2=pred,
             crop_border=self.crop_border,
             input_order=self.input_order,
-            convert_to=self.convert_to)
+            convert_to=self.convert_to,
+            channel_order=self.channel_order)
 
 
-def psnr(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
+def psnr(img1,
+         img2,
+         crop_border=0,
+         input_order='HWC',
+         convert_to=None,
+         channel_order='rgb'):
     """Calculate PSNR (Peak Signal-to-Noise Ratio).
 
     Ref: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
@@ -274,12 +281,14 @@ def psnr(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
         img1,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
     img2 = img_transform(
         img2,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
 
     mse_value = ((img1 - img2)**2).mean()
     if mse_value == 0:
@@ -290,7 +299,12 @@ def psnr(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
     return result
 
 
-def snr(gt, pred, crop_border=0, input_order='HWC', convert_to=None):
+def snr(gt,
+        pred,
+        crop_border=0,
+        input_order='HWC',
+        convert_to=None,
+        channel_order='rgb'):
     """Calculate PSNR (Peak Signal-to-Noise Ratio).
 
     Ref: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
@@ -318,12 +332,14 @@ def snr(gt, pred, crop_border=0, input_order='HWC', convert_to=None):
         gt,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
     pred = img_transform(
         pred,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
 
     signal = ((gt)**2).mean()
     noise = ((gt - pred)**2).mean()
