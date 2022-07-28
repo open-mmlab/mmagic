@@ -117,12 +117,36 @@ class BaseEditModel(BaseModel):
             return self.forward_train(batch_inputs, data_samples, **kwargs)
 
     def forward_tensor(self, batch_inputs, data_samples=None, **kwargs):
+        """Forward tensor.
+            Returns result of simple forward.
+
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            Tensor: result of simple forward.
+        """
 
         feats = self.generator(batch_inputs, **kwargs)
 
         return feats
 
     def forward_inference(self, batch_inputs, data_samples=None, **kwargs):
+        """Forward inference.
+            Returns predictions of validation, testing, and simple inference.
+
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            List[EditDataSample]: predictions.
+        """
 
         feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
         feats = self.data_preprocessor.destructor(feats)
@@ -136,6 +160,18 @@ class BaseEditModel(BaseModel):
         return predictions
 
     def forward_train(self, batch_inputs, data_samples=None, **kwargs):
+        """Forward training.
+            Returns dict of losses of training.
+
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            dict: Dict of losses.
+        """
 
         feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
         gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
