@@ -26,8 +26,8 @@ model = dict(
 # test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=8, convert_to='y')
 
 val_evaluator = [
-    dict(type='PSNR'),
-    dict(type='SSIM'),
+    dict(type='PSNR', crop_border=8, convert_to='Y'),
+    dict(type='SSIM', crop_border=8, convert_to='Y'),
 ]
 test_evaluator = val_evaluator
 
@@ -62,6 +62,9 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
+data_root = 'openmmlab:s3://openmmlab/datasets/editing'
+save_dir = 'sh1984:s3://ysli/tdan'
+
 train_dataloader = dict(
     num_workers=8,
     batch_size=16,
@@ -70,11 +73,15 @@ train_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='vimeo_seq', task_name='vsr'),
-        data_root='data/Vimeo-90K',
+        data_root=f'{data_root}/vimeo90k',
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_Vimeo90K_train_GT.txt',
         depth=2,
         num_input_frames=5,
+        fixed_seq_len=7,
+        load_frames_list=dict(
+            img=['im2.png', 'im3.png', 'im4.png', 'im5.png', 'im6.png'],
+            gt=['im2.png', 'im3.png', 'im4.png', 'im5.png', 'im6.png']),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -85,11 +92,11 @@ val_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='vid4', task_name='vsr'),
-        data_root='data/Vid4',
+        data_root=f'{data_root}/Vid4',
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
         depth=2,
-        num_input_frames=7,
+        num_input_frames=5,
         pipeline=val_pipeline))
 
 test_dataloader = dict(
@@ -100,10 +107,10 @@ test_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset',
         metainfo=dict(dataset_type='spmcs', task_name='vsr'),
-        data_root='data/SPMCS',
+        data_root=f'{data_root}/SPMCS',
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_SPMCS_GT.txt',
-        depth=1,
+        depth=2,
         num_input_frames=5,
         pipeline=val_pipeline))
 
@@ -126,5 +133,5 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=50000,
         save_optimizer=True,
-        out_dir='s3://ysli/edvr/',
+        out_dir=save_dir,
         by_epoch=False))

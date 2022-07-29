@@ -1,12 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Optional, Sequence
+from typing import Optional
 
 import cv2
 import numpy as np
 
 from mmedit.registry import METRICS
 from .base_sample_wise_metric import BaseSampleWiseMetric
-from .utils import img_transform, obtain_data, to_numpy
+from .utils import img_transform, to_numpy
 
 
 @METRICS.register_module()
@@ -67,30 +67,22 @@ class SSIM(BaseSampleWiseMetric):
         self.input_order = input_order
         self.convert_to = convert_to
 
-    def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
-        """Process one batch of data and predictions
+    def process_image(self, gt, pred, mask):
+        """Process an image.
 
         Args:
-            data_batch (Sequence[Tuple[Any, dict]]): A batch of data
-                from the dataloader.
-            predictions (Sequence[dict]): A batch of outputs from
-                the model.
+            gt (Torch | np.ndarray): GT image.
+            pred (Torch | np.ndarray): Pred image.
+            mask (Torch | np.ndarray): Mask of evaluation.
         """
 
-        for data, prediction in zip(data_batch, predictions):
-
-            gt = obtain_data(data, self.gt_key, self.device)
-            pred = obtain_data(prediction, self.pred_key, self.device)
-
-            result = ssim(
-                img1=gt,
-                img2=pred,
-                crop_border=self.crop_border,
-                input_order=self.input_order,
-                convert_to=self.convert_to)
-
-            self.results.append({self.metric: result})
+        return ssim(
+            img1=gt,
+            img2=pred,
+            crop_border=self.crop_border,
+            input_order=self.input_order,
+            convert_to=self.convert_to,
+            channel_order=self.channel_order)
 
 
 def _ssim(img1, img2):
@@ -127,7 +119,12 @@ def _ssim(img1, img2):
     return ssim_map.mean()
 
 
-def ssim(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
+def ssim(img1,
+         img2,
+         crop_border=0,
+         input_order='HWC',
+         convert_to=None,
+         channel_order='rgb'):
     """Calculate SSIM (structural similarity).
 
     Ref:
@@ -150,6 +147,7 @@ def ssim(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
             If None, the images are not altered. When computing for 'Y',
             the images are assumed to be in BGR order. Options are 'Y' and
             None. Default: None.
+        channel_order (str): The channel order of image. Default: 'rgb'
 
     Returns:
         float: ssim result.
@@ -162,12 +160,14 @@ def ssim(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
         img1,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
     img2 = img_transform(
         img2,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
 
     img1 = to_numpy(img1)
     img2 = to_numpy(img2)

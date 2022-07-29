@@ -1,13 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 """Evaluation metrics based on pixels"""
 
-from typing import Optional, Sequence
+from typing import Optional
 
 import numpy as np
 
 from mmedit.registry import METRICS
 from .base_sample_wise_metric import BaseSampleWiseMetric
-from .utils import img_transform, obtain_data
+from .utils import img_transform
 
 
 @METRICS.register_module()
@@ -36,38 +36,28 @@ class MAE(BaseSampleWiseMetric):
 
     metric = 'MAE'
 
-    def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
-        """Process one batch of data and predictions
+    def process_image(self, gt, pred, mask):
+        """Process an image.
 
         Args:
-            data_batch (Sequence[Tuple[Any, dict]]): A batch of data
-                from the dataloader.
-            predictions (Sequence[dict]): A batch of outputs from
-                the model.
+            gt (Torch | np.ndarray): GT image.
+            pred (Torch | np.ndarray): Pred image.
         """
 
-        for data, prediction in zip(data_batch, predictions):
+        gt = gt / 255.
+        pred = pred / 255.
 
-            gt = obtain_data(data, self.gt_key, self.device)
-            pred = obtain_data(prediction, self.pred_key, self.device)
+        diff = gt - pred
+        diff = abs(diff)
 
-            gt = gt / 255.
-            pred = pred / 255.
+        if self.mask_key is not None:
+            diff *= mask  # broadcast for channel dimension
+            scale = np.prod(diff.shape) / np.prod(mask.shape)
+            result = diff.sum() / (mask.sum() * scale + 1e-12)
+        else:
+            result = diff.mean()
 
-            diff = gt - pred
-            diff = abs(diff)
-
-            if self.mask_key is not None:
-                mask = obtain_data(data, self.mask_key, self.device)
-                mask[mask != 0] = 1
-                diff *= mask  # broadcast for channel dimension
-                scale = np.prod(diff.shape) / np.prod(mask.shape)
-                result = diff.sum() / (mask.sum() * scale + 1e-12)
-            else:
-                result = diff.mean()
-
-            self.results.append({self.metric: result})
+        return result
 
 
 @METRICS.register_module()
@@ -96,37 +86,28 @@ class MSE(BaseSampleWiseMetric):
 
     metric = 'MSE'
 
-    def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
-        """Process one batch of data and predictions
+    def process_image(self, gt, pred, mask):
+        """Process an image.
 
         Args:
-            data_batch (Sequence[Tuple[Any, dict]]): A batch of data
-                from the dataloader.
-            predictions (Sequence[dict]): A batch of outputs from
-                the model.
+            gt (Torch | np.ndarray): GT image.
+            pred (Torch | np.ndarray): Pred image.
+            mask (Torch | np.ndarray): Mask of evaluation.
         """
 
-        for data, prediction in zip(data_batch, predictions):
+        gt = gt / 255.
+        pred = pred / 255.
 
-            gt = obtain_data(data, self.gt_key, self.device)
-            pred = obtain_data(prediction, self.pred_key, self.device)
+        diff = gt - pred
+        diff *= diff
 
-            gt = gt / 255.
-            pred = pred / 255.
+        if self.mask_key is not None:
+            diff *= mask
+            result = diff.sum() / mask.sum()
+        else:
+            result = diff.mean()
 
-            diff = gt - pred
-            diff *= diff
-
-            if self.mask_key is not None:
-                mask = obtain_data(data, self.mask_key)
-                mask[mask != 0] = 1
-                diff *= mask
-                result = diff.sum() / mask.sum()
-            else:
-                result = diff.mean()
-
-            self.results.append({self.metric: result})
+        return result
 
 
 @METRICS.register_module()
@@ -180,29 +161,22 @@ class PSNR(BaseSampleWiseMetric):
         self.input_order = input_order
         self.convert_to = convert_to
 
-    def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
-        """Process one batch of data and predictions
+    def process_image(self, gt, pred, mask):
+        """Process an image.
 
         Args:
-            data_batch (Sequence[Tuple[Any, dict]]): A batch of data
-                from the dataloader.
-            predictions (Sequence[dict]): A batch of outputs from
-                the model.
+            gt (Torch | np.ndarray): GT image.
+            pred (Torch | np.ndarray): Pred image.
+            mask (Torch | np.ndarray): Mask of evaluation.
         """
 
-        for data, prediction in zip(data_batch, predictions):
-
-            gt = obtain_data(data, self.gt_key, self.device)
-            pred = obtain_data(prediction, self.pred_key, self.device)
-            result = psnr(
-                img1=gt,
-                img2=pred,
-                crop_border=self.crop_border,
-                input_order=self.input_order,
-                convert_to=self.convert_to)
-
-            self.results.append({self.metric: result})
+        return psnr(
+            img1=gt,
+            img2=pred,
+            crop_border=self.crop_border,
+            input_order=self.input_order,
+            convert_to=self.convert_to,
+            channel_order=self.channel_order)
 
 
 @METRICS.register_module()
@@ -223,7 +197,7 @@ class SNR(BaseSampleWiseMetric):
             If prefix is not provided in the argument, self.default_prefix
             will be used instead. Default: None
         crop_border (int): Cropped pixels in each edges of an image. These
-            pixels are not involved in the PSNR calculation. Default: 0.
+            pixels are not involved in the SNR calculation. Default: 0.
         input_order (str): Whether the input order is 'HWC' or 'CHW'.
             Default: 'CHW'.
         convert_to (str): Whether to convert the images to other color models.
@@ -256,33 +230,30 @@ class SNR(BaseSampleWiseMetric):
         self.input_order = input_order
         self.convert_to = convert_to
 
-    def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
-        """Process one batch of data and predictions
+    def process_image(self, gt, pred, mask):
+        """Process an image.
 
         Args:
-            data_batch (Sequence[Tuple[Any, dict]]): A batch of data
-                from the dataloader.
-            predictions (Sequence[dict]): A batch of outputs from
-                the model.
+            gt (Torch | np.ndarray): GT image.
+            pred (Torch | np.ndarray): Pred image.
+            mask (Torch | np.ndarray): Mask of evaluation.
         """
 
-        for data, prediction in zip(data_batch, predictions):
-
-            gt = obtain_data(data, self.gt_key, self.device)
-            pred = obtain_data(prediction, self.pred_key, self.device)
-
-            result = snr(
-                gt=gt,
-                pred=pred,
-                crop_border=self.crop_border,
-                input_order=self.input_order,
-                convert_to=self.convert_to)
-
-            self.results.append({self.metric: result})
+        return snr(
+            img1=gt,
+            img2=pred,
+            crop_border=self.crop_border,
+            input_order=self.input_order,
+            convert_to=self.convert_to,
+            channel_order=self.channel_order)
 
 
-def psnr(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
+def psnr(img1,
+         img2,
+         crop_border=0,
+         input_order='HWC',
+         convert_to=None,
+         channel_order='rgb'):
     """Calculate PSNR (Peak Signal-to-Noise Ratio).
 
     Ref: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
@@ -310,12 +281,14 @@ def psnr(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
         img1,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
     img2 = img_transform(
         img2,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
 
     mse_value = ((img1 - img2)**2).mean()
     if mse_value == 0:
@@ -326,7 +299,12 @@ def psnr(img1, img2, crop_border=0, input_order='HWC', convert_to=None):
     return result
 
 
-def snr(gt, pred, crop_border=0, input_order='HWC', convert_to=None):
+def snr(gt,
+        pred,
+        crop_border=0,
+        input_order='HWC',
+        convert_to=None,
+        channel_order='rgb'):
     """Calculate PSNR (Peak Signal-to-Noise Ratio).
 
     Ref: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
@@ -354,12 +332,14 @@ def snr(gt, pred, crop_border=0, input_order='HWC', convert_to=None):
         gt,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
     pred = img_transform(
         pred,
         crop_border=crop_border,
         input_order=input_order,
-        convert_to=convert_to)
+        convert_to=convert_to,
+        channel_order=channel_order)
 
     signal = ((gt)**2).mean()
     noise = ((gt - pred)**2).mean()

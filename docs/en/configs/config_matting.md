@@ -78,7 +78,7 @@ train_pipeline = [  # Training data processing pipeline.
         keys=['merged', 'alpha', 'trimap', 'ori_merged', 'fg', 'bg'],  # Keys to pass to the model
         meta_keys=[]),  # Meta information keys. In training, meta information is not needed.
     dict(
-        type='ImageToTensor',  # Convert images to tensor.
+        type='ToTensor',  # Convert images to tensor.
         keys=['merged', 'alpha', 'trimap', 'ori_merged', 'fg', 'bg']),  # Images to be converted to Tensor.
 ]
 test_pipeline = [
@@ -114,7 +114,7 @@ test_pipeline = [
             'ori_trimap'
         ]),
     dict(
-        type='ImageToTensor',  # Same as it in train_pipeline.
+        type='ToTensor',  # Same as it in train_pipeline.
         keys=['merged', 'trimap']),
 ]
 data = dict(

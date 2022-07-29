@@ -25,17 +25,43 @@ class LIIF(BaseEditModel):
     """
 
     def forward_tensor(self, batch_inputs, data_samples=None, **kwargs):
+        """Forward tensor.
+            Returns result of simple forward.
 
-        coord = torch.stack(
-            [data_sample.metainfo['coord'] for data_sample in data_samples])
-        cell = torch.stack(
-            [data_sample.metainfo['cell'] for data_sample in data_samples])
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            Tensor: result of simple forward.
+        """
+
+        coord = torch.stack([
+            data_sample.metainfo['coord'] for data_sample in data_samples
+        ]).to(batch_inputs)
+        cell = torch.stack([
+            data_sample.metainfo['cell'] for data_sample in data_samples
+        ]).to(batch_inputs)
 
         feats = self.generator(batch_inputs, coord, cell, **kwargs)
 
         return feats
 
     def forward_inference(self, batch_inputs, data_samples=None, **kwargs):
+        """Forward inference.
+            Returns predictions of validation, testing, and simple inference.
+
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            List[EditDataSample]: predictions.
+        """
 
         feats = self.forward_tensor(batch_inputs, data_samples, test_mode=True)
         feats = self.data_preprocessor.destructor(feats)

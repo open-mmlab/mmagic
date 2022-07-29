@@ -3,7 +3,6 @@ import os
 from pathlib import Path
 
 import mmcv
-import pytest
 
 from mmedit.datasets import BasicImageDataset
 from mmedit.transforms import LoadImageFromFile
@@ -170,10 +169,3 @@ class TestImageDatasets:
             gt_path=str(self.data_root / 'gt' / 'baboon.png'),
             ref_path=str(self.data_root / 'gt' / 'baboon.png'),
             sample_idx=0)
-
-    def test_assert(self):
-
-        with pytest.raises(AssertionError):
-            BasicImageDataset(
-                data_prefix=dict(img='', gt=''),
-                filename_tmpl=dict(img='{}', ggt='{}'))

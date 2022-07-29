@@ -29,6 +29,7 @@ demo_pipeline = [
 train_dataset_type = 'BasicFramesDataset'
 val_dataset_type = 'BasicFramesDataset'
 data_root = 'data/vimeo_triplet'
+save_dir = 'sh1984:s3://ysli/tof_vfi'
 
 train_dataloader = dict(
     num_workers=4,
@@ -100,7 +101,9 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=epoch_length,
         save_optimizer=True,
-        by_epoch=False),
+        by_epoch=False,
+        out_dir=save_dir,
+    ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),

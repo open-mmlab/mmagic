@@ -1,8 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.data_element import EditDataSample
-from mmedit.data_element.pixel_data import PixelData
 from mmedit.registry import MODELS
 from ..srgan import SRGAN
 
@@ -180,17 +178,3 @@ class RealESRGAN(SRGAN):
             gt_gan = gt_unsharp
 
         return gt_pixel, gt_percep, gt_gan
-
-    def forward_inference(self, batch_inputs, data_samples=None, **kwargs):
-
-        feats = self.generator(batch_inputs)
-        feats = self.data_preprocessor.destructor(feats)
-
-        predictions = []
-        for idx in range(feats.shape[0]):
-            predictions.append(
-                EditDataSample(
-                    pred_img=PixelData(data=feats[idx].to('cpu')),
-                    metainfo=data_samples[idx].metainfo))
-
-        return predictions

@@ -256,7 +256,7 @@ class GenerateSegmentIndices(BaseTransform):
         clip_name = results['key']
         interval = np.random.choice(self.interval_list)
 
-        self.sequence_length = results['sequence_length']
+        self.sequence_length = results['max_frame_num']
         num_input_frames = results.get('num_input_frames',
                                        self.sequence_length)
 

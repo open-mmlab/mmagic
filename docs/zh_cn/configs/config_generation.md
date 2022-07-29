@@ -73,7 +73,7 @@ train_pipeline = [
         to_rgb=True,  # 是否将图像通道从 BGR 转换为 RGB
         **img_norm_cfg),  # 图像归一化配置（`img_norm_cfg` 的定义见上文）
     dict(
-       type='ImageToTensor',  # 将图像转化为 Tensor
+       type='ToTensor',  # 将图像转化为 Tensor
        keys=['img_a', 'img_b']),  # 要从图像转换为 Tensor 的图像的关键词
     dict(
         type='Collect',  # 决定数据中哪些键应该传递给合成器
@@ -100,7 +100,7 @@ test_pipeline = [
         to_rgb=True,  # 是否将图像通道从 BGR 转换为 RGB
         **img_norm_cfg),  # 图像归一化配置（`img_norm_cfg` 的定义见上文）
     dict(
-       type='ImageToTensor',  # 将图像转化为 Tensor
+       type='ToTensor',  # 将图像转化为 Tensor
        keys=['img_a', 'img_b']),  # 要从图像转换为 Tensor 的图像的关键词
     dict(
         type='Collect',  # 决定数据中哪些键应该传递给合成器

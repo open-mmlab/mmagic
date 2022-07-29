@@ -1,4 +1,7 @@
+_base_ = './base_edvr_config.py'
+
 experiment_name = 'edvrm_x4_g8_600k_reds'
+work_dir = f'./work_dirs/{experiment_name}'
 
 # model settings
 model = dict(
@@ -21,7 +24,7 @@ model = dict(
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
         input_view=(1, -1, 1, 1),
-        output_view=(1, -1, 1, 1),
+        output_view=(-1, 1, 1),
     ))
 
 # learning policy

@@ -144,8 +144,6 @@ class BasicFramesDataset(BaseDataset):
                  load_frames_list: dict = dict(),
                  **kwargs):
 
-        assert set(filename_tmpl).issubset(set(data_prefix)), (
-            'the key in ``filename_tmpl`` should be also in ``data_prefix``')
         for key in data_prefix:
             if key not in filename_tmpl:
                 filename_tmpl[key] = '{}'
@@ -334,17 +332,15 @@ class BasicFramesDataset(BaseDataset):
             list[str]: The paths list of frames.
         """
 
-        files = list(self.file_client.list_dir_or_file(dir_path=folder))
+        if 'all' in self.load_frames_list[key]:
+            # load all
+            files = list(self.file_client.list_dir_or_file(dir_path=folder))
+        else:
+            files = self.load_frames_list[key]
+
         files.sort()
         tmpl = self.filename_tmpl[key]
         files = [tmpl.format(file) for file in files]
-        if 'all' in self.load_frames_list[key]:
-            # load all
-            paths = [osp.join(folder, file) for file in files]
-        else:
-            paths = [
-                osp.join(folder, file) for file in self.load_frames_list[key]
-                if file in files
-            ]
+        paths = [osp.join(folder, file) for file in files]
 
         return paths

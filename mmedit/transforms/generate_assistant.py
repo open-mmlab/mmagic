@@ -152,7 +152,7 @@ class GenerateFacialHeatmap(BaseTransform):
             self.cache = dict()
 
         assert has_face_alignment, 'please import face-alignment.'
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        device = 'cpu'
         self.face_alignment_model = face_alignment.FaceAlignment(
             face_alignment.LandmarksType._2D, device=device, flip_input=False)
 

@@ -44,6 +44,18 @@ class EDVR(BaseEditModel):
         self.register_buffer('step_counter', torch.tensor(0), False)
 
     def forward_train(self, batch_inputs, data_samples=None):
+        """Forward training.
+            Returns dict of losses of training.
+
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            dict: Dict of losses.
+        """
 
         if self.step_counter == 0 and self.with_tsa:
             if self.tsa_iter is None:

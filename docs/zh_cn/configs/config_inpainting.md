@@ -91,7 +91,7 @@ train_pipeline = [
         type='Collect',  # 决定数据中哪些键应该传递给合成器
         keys=['gt_img', 'masked_img', 'mask', 'mask_bbox'],  # 要收集的数据的关键词
         meta_keys=['gt_img_path']),  # 要收集的数据的元关键词
-    dict(type='ImageToTensor', keys=['gt_img', 'masked_img', 'mask']),  # 将图像转化为 Tensor
+    dict(type='ToTensor', keys=['gt_img', 'masked_img', 'mask']),  # 将图像转化为 Tensor
     dict(type='ToTensor', keys=['mask_bbox'])  # 转化为 Tensor
 ]
 

@@ -53,7 +53,11 @@ model = dict(
 )
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='RescaleToZeroOne', keys=['gt']),
     dict(type='CopyValues', src_keys=['gt'], dst_keys=['img']),
@@ -116,15 +120,27 @@ train_pipeline = [
 ]
 
 test_pipeline = [
-    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='RescaleToZeroOne', keys=['gt', 'img']),
     dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
 demo_pipeline = [
-    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='RescaleToZeroOne', keys=['img']),
     dict(
         type='RandomResize',
@@ -132,7 +148,7 @@ demo_pipeline = [
             target_size=(128, 128), resize_opt=['area'], resize_prob=[1]),
         keys=['img'],
     ),
-    dict(type='ImageToTensor', keys=['img']),
+    dict(type='ToTensor', keys=['img']),
     dict(type='Collect', keys=['img'], meta_keys=[])
 ]
 

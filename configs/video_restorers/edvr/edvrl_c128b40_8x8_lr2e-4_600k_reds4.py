@@ -1,6 +1,7 @@
 _base_ = './base_edvr_config.py'
 
 experiment_name = 'edvrl_c128b40_8x8_lr2e-4_600k_reds4'
+work_dir = f'./work_dirs/{experiment_name}'
 load_from = 'https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth'  # noqa: E501
 
 # model settings
@@ -24,5 +25,12 @@ model = dict(
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
         input_view=(1, -1, 1, 1),
-        output_view=(1, -1, 1, 1),
+        output_view=(-1, 1, 1),
     ))
+
+lr_config = dict(
+    policy='CosineRestart',
+    by_epoch=False,
+    periods=[150000, 150000, 150000, 150000],
+    restart_weights=[1, 0.5, 0.5, 0.5],
+    min_lr=1e-7)

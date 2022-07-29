@@ -7,7 +7,7 @@ work_dir = f'./work_dirs/{experiment_name}'
 model = dict(
     type='BasicVSR',
     generator=dict(
-        type='IconVSR',
+        type='IconVSRNet',
         mid_channels=64,
         num_blocks=30,
         keyframe_stride=5,
@@ -25,3 +25,5 @@ model = dict(
         input_view=(1, -1, 1, 1),
         output_view=(1, -1, 1, 1),
     ))
+
+default_hooks = dict(checkpoint=dict(out_dir='sh1984:s3://ysli/iconvsr'))

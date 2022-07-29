@@ -49,7 +49,7 @@ train_pipeline = [
     dict(
         type='Normalize', keys=['img_a', 'img_b'], to_rgb=True,
         **img_norm_cfg),
-    dict(type='ImageToTensor', keys=['img_a', 'img_b']),
+    dict(type='ToTensor', keys=['img_a', 'img_b']),
     dict(
         type='Collect',
         keys=['img_a', 'img_b'],
@@ -70,7 +70,7 @@ test_pipeline = [
     dict(
         type='Normalize', keys=['img_a', 'img_b'], to_rgb=True,
         **img_norm_cfg),
-    dict(type='ImageToTensor', keys=['img_a', 'img_b']),
+    dict(type='ToTensor', keys=['img_a', 'img_b']),
     dict(
         type='Collect',
         keys=['img_a', 'img_b'],

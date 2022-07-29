@@ -24,8 +24,16 @@ model = dict(
     ))
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img', color_type='unchanged'),
-    dict(type='LoadImageFromFile', key='gt', color_type='unchanged'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='PairedRandomCrop', gt_patch_size=128),
     dict(
@@ -40,14 +48,24 @@ train_pipeline = [
     dict(type='PackEditInputs')
 ]
 test_pipeline = [
-    dict(type='LoadImageFromFile', key='img', color_type='unchanged'),
-    dict(type='LoadImageFromFile', key='gt', color_type='unchanged'),
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb'),
     dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
+data_root = 'openmmlab:s3://openmmlab/datasets/editing/DIV2K'
+save_dir = 'sh1984:s3://ysli/srgan_resnet'
 
 train_dataloader = dict(
     num_workers=8,
@@ -58,10 +76,10 @@ train_dataloader = dict(
         type=dataset_type,
         ann_file='meta_info_DIV2K800sub_GT.txt',
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
-        data_root='data/DIV2K',
+        data_root=data_root,
         data_prefix=dict(
-            img='DIV2K_train_LR_bicubic/X2_sub', gt='DIV2K_train_HR_sub'),
-        filename_tmpl=dict(img='{}_x2', gt='{}'),
+            img='DIV2K_train_LR_bicubic/X4_sub', gt='DIV2K_train_HR_sub'),
+        filename_tmpl=dict(img='{}_x4', gt='{}'),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -74,7 +92,6 @@ val_dataloader = dict(
         metainfo=dict(dataset_type='set5', task_name='sisr'),
         data_root='data/Set5',
         data_prefix=dict(img='LRbicx4', gt='GTmod12'),
-        # filename_tmpl=dict(img='{}_x2', gt='{}'),
         pipeline=test_pipeline))
 
 test_dataloader = val_dataloader
@@ -106,10 +123,11 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=5000,
         save_optimizer=True,
-        by_epoch=False),
+        by_epoch=False,
+        out_dir=save_dir,
+    ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
-    # visualization=dict(type='EditVisualizationHook', bgr_order=True),
 )

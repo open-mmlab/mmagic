@@ -1,12 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 """Evaluation metrics based on each sample"""
 
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 from mmengine.evaluator import BaseMetric
 
 from mmedit.registry import METRICS
-from .utils import average
+from .utils import average, obtain_data
 
 
 @METRICS.register_module()
@@ -67,3 +67,44 @@ class BaseSampleWiseMetric(BaseMetric):
         result = average(results, self.metric) * self.scaling
 
         return {self.metric: result}
+
+    def process(self, data_batch: Sequence[dict],
+                predictions: Sequence[dict]) -> None:
+        """Process one batch of data and predictions
+
+        Args:
+            data_batch (Sequence[Tuple[Any, dict]]): A batch of data
+                from the dataloader.
+            predictions (Sequence[dict]): A batch of outputs from
+                the model.
+        """
+
+        for data, prediction in zip(data_batch, predictions):
+
+            self.channel_order = 'rgb'
+            metainfo = data['data_sample']
+            if 'gt_channel_order' in metainfo:
+                self.channel_order = metainfo['gt_channel_order']
+            elif 'img_channel_order' in metainfo:
+                self.channel_order = metainfo['img_channel_order']
+
+            gt = obtain_data(data, self.gt_key, self.device)
+            pred = obtain_data(prediction, self.pred_key, self.device)
+            if self.mask_key is not None:
+                mask = obtain_data(data, self.mask_key)
+                mask[mask != 0] = 1
+            else:
+                mask = 1 - pred * 0
+
+            if len(gt.shape) <= 3:
+                result = self.process_image(gt, pred, mask)
+            else:
+                result_sum = 0
+                for i in range(gt.shape[0]):
+                    result_sum += self.process_image(gt[i], pred[i], mask[i])
+                result = result_sum / gt.shape[0]
+
+            self.results.append({self.metric: result})
+
+    def process_image(self, gt, pred, mask):
+        return 0

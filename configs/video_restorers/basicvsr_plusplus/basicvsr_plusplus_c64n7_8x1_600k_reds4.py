@@ -7,7 +7,7 @@ work_dir = f'./work_dirs/{experiment_name}'
 model = dict(
     type='BasicVSR',
     generator=dict(
-        type='BasicVSRPlusPlus',
+        type='BasicVSRPlusPlusNet',
         mid_channels=64,
         num_blocks=7,
         is_low_res_input=True,
@@ -33,6 +33,9 @@ optim_wrapper = dict(
         type='OptimWrapper',
         optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99))),
     paramwise_cfg=dict(custom_keys={'spynet': dict(lr_mult=0.25)}))
+
+default_hooks = dict(
+    checkpoint=dict(out_dir='sh1984:s3://ysli/basicvsr_plusplus'))
 
 # # learning policy
 # total_iters = 600000

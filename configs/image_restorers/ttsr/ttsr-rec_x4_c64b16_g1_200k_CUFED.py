@@ -5,6 +5,9 @@ work_dir = f'./work_dirs/{experiment_name}'
 
 scale = 4
 
+# DistributedDataParallel
+model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
+
 # model settings
 model = dict(
     type='TTSR',
@@ -38,6 +41,7 @@ train_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='pillow'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='ModCrop', key='gt'),
     dict(type='CropLike', target_key='ref', reference_key='gt'),
     dict(
@@ -98,6 +102,7 @@ valid_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='pillow'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='ModCrop', key='gt'),
     dict(type='CropLike', target_key='ref', reference_key='gt'),
     dict(
@@ -119,7 +124,7 @@ valid_pipeline = [
     dict(type='ToTensor', keys=['img', 'gt', 'img_lq', 'ref', 'ref_lq']),
     dict(type='PackEditInputs')
 ]
-test_pipeline = [
+demo_pipeline = [
     dict(
         type='LoadImageFromFile',
         key='img',
@@ -132,7 +137,8 @@ test_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='pillow'),
-    dict(type='ModCrop'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
+    dict(type='ModCrop', key='img'),
     dict(
         type='Resize',
         scale=1 / scale,
@@ -155,7 +161,8 @@ test_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 's3://openmmlab/datasets/editing/CUFED'
+data_root = 'openmmlab:s3://openmmlab/datasets/editing/CUFED'
+save_dir = 'sh1984:s3://ysli/ttsr'
 
 train_dataloader = dict(
     num_workers=9,
@@ -180,14 +187,14 @@ val_dataloader = dict(
         data_root=data_root,
         data_prefix=dict(ref='CUFED5', gt='CUFED5'),
         filename_tmpl=dict(ref='{}_1', gt='{}_0'),
-        pipeline=test_pipeline))
+        pipeline=valid_pipeline))
 
 test_dataloader = val_dataloader
 
 val_evaluator = [
     dict(type='MAE'),
-    dict(type='PSNR'),
-    dict(type='SSIM'),
+    dict(type='PSNR', crop_border=scale),
+    dict(type='SSIM', crop_border=scale),
 ]
 test_evaluator = val_evaluator
 
@@ -198,22 +205,28 @@ test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
-    constructor='DefaultOptimWrapperConstructor',
-    optimizer=dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=1e-4)),
-    paramwise_cfg=dict(custom_keys={'.extractor': dict(lr_mult=1e-5)}))
+    constructor='MultiOptimWrapperConstructor',
+    generator=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999))),
+    extractor=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=1e-5, betas=(0.9, 0.999))))
 
 # learning policy
-param_scheduler = dict(type='StepLR', by_epoch=False, step=[100000], gamma=0.5)
+param_scheduler = dict(
+    type='MultiStepLR', by_epoch=False, milestones=[100000], gamma=0.5)
 
 default_hooks = dict(
     checkpoint=dict(
         type='CheckpointHook',
         interval=5000,
         save_optimizer=True,
-        by_epoch=False),
+        by_epoch=False,
+        out_dir=save_dir,
+    ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
-    # visualization=dict(type='EditVisualizationHook', bgr_order=True),
 )

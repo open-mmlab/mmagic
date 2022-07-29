@@ -82,6 +82,18 @@ class BasicVSR(BaseEditModel):
         return is_mirror_extended
 
     def forward_train(self, batch_inputs, data_samples=None, **kwargs):
+        """Forward training.
+            Returns dict of losses of training.
+
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            dict: Dict of losses.
+        """
 
         # fix SPyNet and EDVR at the beginning
         if self.step_counter < self.fix_iter:
@@ -104,8 +116,22 @@ class BasicVSR(BaseEditModel):
         return dict(loss=loss)
 
     def forward_inference(self, batch_inputs, data_samples=None, **kwargs):
+        """Forward inference.
+            Returns predictions of validation, testing.
+
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            List[EditDataSample]: predictions.
+        """
 
         feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
+        # feats.shape = [b, t, c, h, w]
+        feats = self.data_preprocessor.destructor(feats)
 
         # If the GT is an image (i.e. the center frame), the output sequence is
         # turned to an image.
@@ -118,8 +144,6 @@ class BasicVSR(BaseEditModel):
             else:
                 # without mirror extension
                 feats = feats[:, t // 2]
-
-        feats = self.data_preprocessor.destructor(feats)
 
         predictions = []
         for idx in range(feats.shape[0]):
