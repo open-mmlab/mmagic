@@ -2,7 +2,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
-**/*.pyc
 
 # C extensions
 *.so
@@ -11,7 +10,6 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -66,9 +64,8 @@ instance/
 
 # Sphinx documentation
 docs/en/_build/
-docs/en/_tmp/
 docs/zh_cn/_build/
-docs/zh_cn/_tmp/
+src/
 
 # PyBuilder
 target/
@@ -107,29 +104,22 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# custom
 .vscode
 .idea
+.DS_Store
+
+# custom
 *.pkl
 *.pkl.json
 *.log.json
+docs/modelzoo_statistics.md
+work_dirs
 work_dirs/
-/data/
-/data
-mmedit/.mim
+configs_ceph/
+data
+data/
 
 # Pytorch
 *.pth
-
-# onnx and tensorrt
-*.onnx
-*.trt
-
-# local history
-.history/**
-
-# Pytorch Server
-*.mar
-
-# MacOS
-.DS_Store
+*.py~
+*.sh~
