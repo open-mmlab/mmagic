@@ -122,7 +122,7 @@ optim_wrapper = dict(
 
 # learning policy
 param_scheduler = dict(
-    type='MultiStepLR', by_epoch=False, MultiStepLR=[200000], gamma=0.5)
+    type='MultiStepLR', by_epoch=False, milestones=[200000], gamma=0.5)
 
 default_hooks = dict(
     checkpoint=dict(
