@@ -57,6 +57,9 @@ class CropAroundCenter(BaseTransform):
         # Make sure h >= crop_h, w >= crop_w. If not, rescale imgs
         rescale_ratio = max(crop_h / h, crop_w / w)
         if rescale_ratio > 1:
+            assert alpha.ndim == trimap.ndim
+            ext_dim = (alpha.ndim == 3)
+
             new_h = max(int(h * rescale_ratio), crop_h)
             new_w = max(int(w * rescale_ratio), crop_w)
             fg = mmcv.imresize(fg, (new_w, new_h), interpolation='nearest')
@@ -67,9 +70,15 @@ class CropAroundCenter(BaseTransform):
             bg = mmcv.imresize(bg, (new_w, new_h), interpolation='bicubic')
             h, w = new_h, new_w
 
+            if ext_dim:
+                # mmcv.imresize will squeeze
+                alpha = alpha[..., None]
+                trimap = trimap[..., None]
+
         # resize to 1/4 to ignore small unknown patches
         small_trimap = mmcv.imresize(
             trimap, (w // 4, h // 4), interpolation='nearest')
+        assert small_trimap.ndim == 2
         # find unknown area in center 1/4 region
         margin_h, margin_w = crop_h // 2, crop_w // 2
         sample_area = small_trimap[margin_h // 4:(h - margin_h) // 4,
@@ -253,11 +262,16 @@ class CropAroundUnknown(BaseTransform):
         # Make sure h >= crop_h, w >= crop_w. If not, rescale imgs
         rescale_ratio = max(crop_h / h, crop_w / w)
         if rescale_ratio > 1:
+            print('rescale')
             h = max(int(h * rescale_ratio), crop_h)
             w = max(int(w * rescale_ratio), crop_w)
             for key, interpolation in zip(self.keys, self.interpolations):
+                ext_dim = (results[key].ndim == 3) and (results[key].shape[-1]
+                                                        == 1)
                 results[key] = mmcv.imresize(
                     results[key], (w, h), interpolation=interpolation)
+                if ext_dim:
+                    results[key] = results[key][..., None]
 
         # Select the cropping top-left point which is an unknown pixel
         if self.unknown_source == 'alpha':
