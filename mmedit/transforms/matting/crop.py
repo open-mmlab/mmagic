@@ -262,7 +262,7 @@ class CropAroundUnknown(BaseTransform):
         # Make sure h >= crop_h, w >= crop_w. If not, rescale imgs
         rescale_ratio = max(crop_h / h, crop_w / w)
         if rescale_ratio > 1:
-            print('rescale')
+
             h = max(int(h * rescale_ratio), crop_h)
             w = max(int(w * rescale_ratio), crop_w)
             for key, interpolation in zip(self.keys, self.interpolations):
