@@ -62,8 +62,7 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-data_root = 'openmmlab:s3://openmmlab/datasets/editing'
-save_dir = 'sh1984:s3://ysli/tdan'
+data_root = './data/editing'
 
 train_dataloader = dict(
     num_workers=8,
@@ -133,5 +132,5 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=50000,
         save_optimizer=True,
-        out_dir=save_dir,
+        out_dir=work_dir,
         by_epoch=False))

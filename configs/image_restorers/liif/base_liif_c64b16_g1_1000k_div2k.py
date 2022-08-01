@@ -1,4 +1,5 @@
 _base_ = '../../default_runtime.py'
+work_dir = 'work_dirs/base_liif_c64b16_g1_1000k_div2k'
 
 scale_min, scale_max = 1, 4
 scale_test = 4
@@ -59,8 +60,7 @@ test_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 'openmmlab:s3://openmmlab/datasets/editing/DIV2K'
-save_dir = 'sh1984:s3://ysli/liif'
+data_root = 'data/DIV2K'
 
 train_dataloader = dict(
     num_workers=8,
@@ -117,7 +117,7 @@ default_hooks = dict(
         interval=3000,
         save_optimizer=True,
         by_epoch=False,
-        out_dir=save_dir,
+        out_dir=work_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),

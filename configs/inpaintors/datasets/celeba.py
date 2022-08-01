@@ -2,7 +2,7 @@
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 'openmmlab:s3://openmmlab/datasets/editing/CelebA-HQ'
+data_root = 'data/CelebA-HQ'
 # data_root = 's3://openmmlab/datasets/editing/CelebA-HQ'
 # data_root = 'data/CelebA-HQ'
 

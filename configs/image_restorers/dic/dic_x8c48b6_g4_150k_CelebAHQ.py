@@ -81,8 +81,7 @@ test_pipeline = valid_pipeline
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 'openmmlab:s3://openmmlab/datasets/editing/CelebA-HQ'
-save_dir = 'sh1984:s3://ysli/dic'
+data_root = 'data/CelebA-HQ'
 
 train_dataloader = dict(
     num_workers=4,
@@ -140,7 +139,7 @@ default_hooks = dict(
         interval=2000,
         save_optimizer=True,
         by_epoch=False,
-        out_dir=save_dir,
+        out_dir=work_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
