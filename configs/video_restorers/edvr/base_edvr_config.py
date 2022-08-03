@@ -56,7 +56,9 @@ demo_pipeline = [
 ]
 
 data_root = 'data/REDS'
-tmp_root = '/mnt/lustre/liyinshuo.vendor/00-openmmlab/mmediting2.0/data/REDS/'
+save_dir = 'work_dirs/edvr'
+# data_root = 'openmmlab:s3://openmmlab/datasets/editing/REDS'
+# save_dir = 'sh1984:s3://ysli/edvr'
 
 train_dataloader = dict(
     num_workers=8,
@@ -68,7 +70,7 @@ train_dataloader = dict(
         metainfo=dict(dataset_type='reds_reds4', task_name='vsr'),
         data_root=data_root,
         data_prefix=dict(img='train_sharp_bicubic/X4', gt='train_sharp'),
-        ann_file=tmp_root + 'meta_info_reds4_train.txt',
+        ann_file='meta_info_reds4_train.txt',
         depth=2,
         num_input_frames=5,
         num_output_frames=1,
@@ -84,7 +86,7 @@ val_dataloader = dict(
         metainfo=dict(dataset_type='reds_reds4', task_name='vsr'),
         data_root=data_root,
         data_prefix=dict(img='train_sharp_bicubic/X4', gt='train_sharp'),
-        ann_file=tmp_root + 'meta_info_reds4_val.txt',
+        ann_file='meta_info_reds4_val.txt',
         depth=2,
         num_input_frames=5,
         num_output_frames=1,
@@ -123,5 +125,5 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=5000,
         save_optimizer=True,
-        out_dir='work_dirs/base_edvr',
+        out_dir=save_dir,
         by_epoch=False))

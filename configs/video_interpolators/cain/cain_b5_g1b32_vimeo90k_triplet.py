@@ -80,6 +80,9 @@ demo_pipeline = [
 train_dataset_type = 'BasicFramesDataset'
 val_dataset_type = 'BasicFramesDataset'
 data_root = 'data/vimeo_triplet'
+save_dir = work_dir
+# data_root = 'openmmlab:s3://openmmlab/datasets/editing/vimeo_triplet'
+# save_dir = 'sh1984:s3://openmmlab/editing'
 
 train_dataloader = dict(
     num_workers=32,
@@ -146,7 +149,7 @@ default_hooks = dict(
         interval=1,
         save_optimizer=True,
         by_epoch=True,
-        out_dir=work_dir,
+        out_dir=save_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),

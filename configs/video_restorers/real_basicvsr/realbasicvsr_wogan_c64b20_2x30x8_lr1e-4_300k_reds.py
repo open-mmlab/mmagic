@@ -217,6 +217,9 @@ test_pipeline = [
 ]
 
 data_root = 'data'
+save_dir = work_dir
+# data_root = 'openmmlab:s3://openmmlab/datasets/editing'
+# save_dir = 'sh1984:s3://openmmlab/editing'
 
 train_dataloader = dict(
     num_workers=10,
@@ -280,7 +283,7 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=5000,
         save_optimizer=True,
-        out_dir=work_dir,
+        out_dir=save_dir,
         max_keep_ckpts=10,
         save_best='PSNR',
         rule='greater',

@@ -81,7 +81,10 @@ test_pipeline = valid_pipeline
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 'data/CelebA-HQ'
+data_root = 'data'
+save_dir = work_dir
+# data_root = 'openmmlab:s3://openmmlab/datasets/editing'
+# save_dir = 'sh1984:s3://openmmlab/editing'
 
 train_dataloader = dict(
     num_workers=4,
@@ -91,7 +94,7 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='celeba', task_name='fsr'),
-        data_root=data_root,
+        data_root=data_root + '/CelebA-HQ',
         data_prefix=dict(gt='train_256/all_256'),
         pipeline=train_pipeline))
 
@@ -103,7 +106,7 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='celeba', task_name='fsr'),
-        data_root=data_root,
+        data_root=data_root + '/CelebA-HQ',
         data_prefix=dict(gt='test_256/all_256'),
         pipeline=test_pipeline))
 
@@ -139,7 +142,7 @@ default_hooks = dict(
         interval=2000,
         save_optimizer=True,
         by_epoch=False,
-        out_dir=work_dir,
+        out_dir=save_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),

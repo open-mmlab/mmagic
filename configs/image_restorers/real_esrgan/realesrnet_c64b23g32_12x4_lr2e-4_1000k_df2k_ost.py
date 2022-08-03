@@ -188,6 +188,7 @@ test_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
+save_dir = work_dir
 
 train_dataloader = dict(
     num_workers=12,
@@ -252,7 +253,7 @@ default_hooks = dict(
         interval=5000,
         save_optimizer=True,
         by_epoch=False,
-        out_dir=work_dir,
+        out_dir=save_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
