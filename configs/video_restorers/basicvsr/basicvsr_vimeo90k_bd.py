@@ -45,7 +45,7 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-data_root = 'openmmlab:s3://openmmlab/datasets/editing'
+data_root = 'data'
 file_list = [
     'im1.png', 'im2.png', 'im3.png', 'im4.png', 'im5.png', 'im6.png', 'im7.png'
 ]

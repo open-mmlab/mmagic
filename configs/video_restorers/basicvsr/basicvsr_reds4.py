@@ -57,7 +57,7 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-data_root = 'openmmlab:s3://openmmlab/datasets/editing/REDS'
+data_root = 'data/REDS'
 tmp_root = '/mnt/lustre/liyinshuo.vendor/00-openmmlab/mmediting2.0/data/REDS/'
 
 train_dataloader = dict(
@@ -112,7 +112,7 @@ optim_wrapper = dict(
         optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99))),
     paramwise_cfg=dict(custom_keys={'spynet': dict(lr_mult=0.125)}))
 
-default_hooks = dict(checkpoint=dict(out_dir='sh1984:s3://ysli/basicvsr'))
+default_hooks = dict(checkpoint=dict(out_dir=work_dir))
 
 # # learning policy
 # total_iters = 300000

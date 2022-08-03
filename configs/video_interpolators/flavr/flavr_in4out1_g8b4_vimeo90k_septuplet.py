@@ -88,8 +88,7 @@ demo_pipeline = [
 # dataset settings
 train_dataset_type = 'BasicFramesDataset'
 val_dataset_type = 'BasicFramesDataset'
-data_root = 'openmmlab:s3://openmmlab/datasets/editing/vimeo90k'
-save_dir = 'sh1984:s3://ysli/flavr'
+data_root = 'data/vimeo90k'
 
 train_dataloader = dict(
     num_workers=16,
@@ -158,7 +157,7 @@ default_hooks = dict(
         interval=1,
         save_optimizer=True,
         by_epoch=True,
-        out_dir=save_dir,
+        out_dir=work_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),

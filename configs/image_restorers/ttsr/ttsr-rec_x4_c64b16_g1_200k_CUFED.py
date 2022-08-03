@@ -161,8 +161,7 @@ demo_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 'openmmlab:s3://openmmlab/datasets/editing/CUFED'
-save_dir = 'sh1984:s3://ysli/ttsr'
+data_root = 'data/CUFED'
 
 train_dataloader = dict(
     num_workers=9,
@@ -223,7 +222,7 @@ default_hooks = dict(
         interval=5000,
         save_optimizer=True,
         by_epoch=False,
-        out_dir=save_dir,
+        out_dir=work_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),

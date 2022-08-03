@@ -42,7 +42,7 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-data_root = 'openmmlab:s3://openmmlab/datasets/editing/Vid4'
+data_root = './data/Vid4'
 
 val_dataloader = dict(
     num_workers=1,

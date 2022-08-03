@@ -55,8 +55,7 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-data_root = 'openmmlab:s3://openmmlab/datasets/editing/REDS'
-save_dir = 'sh1984:s3://ysli/edvr'
+data_root = 'data/REDS'
 tmp_root = '/mnt/lustre/liyinshuo.vendor/00-openmmlab/mmediting2.0/data/REDS/'
 
 train_dataloader = dict(
@@ -124,5 +123,5 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=5000,
         save_optimizer=True,
-        out_dir=save_dir,
+        out_dir='work_dirs/base_edvr',
         by_epoch=False))

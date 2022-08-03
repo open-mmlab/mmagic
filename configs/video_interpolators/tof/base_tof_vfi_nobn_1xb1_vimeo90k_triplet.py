@@ -1,4 +1,5 @@
 _base_ = '../../default_runtime.py'
+work_dir = 'work_dirs/base_tof_vfi_nobn_1xb1_vimeo90k_triplet'
 
 train_pipeline = [
     dict(
@@ -29,7 +30,6 @@ demo_pipeline = [
 train_dataset_type = 'BasicFramesDataset'
 val_dataset_type = 'BasicFramesDataset'
 data_root = 'data/vimeo_triplet'
-save_dir = 'sh1984:s3://ysli/tof_vfi'
 
 train_dataloader = dict(
     num_workers=4,
@@ -102,7 +102,7 @@ default_hooks = dict(
         interval=epoch_length,
         save_optimizer=True,
         by_epoch=False,
-        out_dir=save_dir,
+        out_dir=work_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
