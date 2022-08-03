@@ -17,8 +17,6 @@ Import:
 - configs/mattors/dim/metafile.yml
 - configs/mattors/gca/metafile.yml
 - configs/mattors/indexnet/metafile.yml
-- configs/synthesizers/cyclegan/metafile.yml
-- configs/synthesizers/pix2pix/metafile.yml
 - configs/video_interpolators/cain/metafile.yml
 - configs/video_interpolators/flavr/metafile.yml
 - configs/video_interpolators/tof/metafile.yml

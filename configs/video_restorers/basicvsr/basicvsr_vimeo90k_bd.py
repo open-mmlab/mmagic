@@ -46,6 +46,7 @@ demo_pipeline = [
 ]
 
 data_root = 'data'
+# data_root = 'openmmlab:s3://openmmlab/datasets/editing'
 file_list = [
     'im1.png', 'im2.png', 'im3.png', 'im4.png', 'im5.png', 'im6.png', 'im7.png'
 ]

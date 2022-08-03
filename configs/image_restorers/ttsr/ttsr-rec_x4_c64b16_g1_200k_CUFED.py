@@ -161,7 +161,10 @@ demo_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 'data/CUFED'
+data_root = 'data'
+save_dir = work_dir
+# data_root = 'openmmlab:s3://openmmlab/datasets/editing'
+# save_dir = 'sh1984:s3://openmmlab/editing'
 
 train_dataloader = dict(
     num_workers=9,
@@ -171,7 +174,7 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='cufed', task_name='refsr'),
-        data_root=data_root,
+        data_root=data_root + '/CUFED',
         data_prefix=dict(ref='ref', gt='input'),
         pipeline=train_pipeline))
 
@@ -183,7 +186,7 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='cufed', task_name='refsr'),
-        data_root=data_root,
+        data_root=data_root + '/CUFED',
         data_prefix=dict(ref='CUFED5', gt='CUFED5'),
         filename_tmpl=dict(ref='{}_1', gt='{}_0'),
         pipeline=valid_pipeline))
@@ -222,7 +225,7 @@ default_hooks = dict(
         interval=5000,
         save_optimizer=True,
         by_epoch=False,
-        out_dir=work_dir,
+        out_dir=save_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),

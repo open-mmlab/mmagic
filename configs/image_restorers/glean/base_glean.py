@@ -2,7 +2,8 @@ _base_ = '../../default_runtime.py'
 
 # DistributedDataParallel
 model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
-work_dir = 'work_dirs/base_glean'
+
+save_dir = 'sh1984:s3://ysli/glean'
 
 val_evaluator = [
     dict(type='MAE'),
@@ -37,7 +38,7 @@ default_hooks = dict(
         interval=5000,
         save_optimizer=True,
         by_epoch=False,
-        out_dir=work_dir,
+        out_dir=save_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),

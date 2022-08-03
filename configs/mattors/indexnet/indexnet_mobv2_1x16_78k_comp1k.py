@@ -32,8 +32,6 @@ model = dict(
     ),
 )
 
-# dataset settings
-data_root = 'data/adobe_composition-1k'
 train_pipeline = [
     dict(type='LoadImageFromFile', key='alpha', color_type='grayscale'),
     dict(type='LoadImageFromFile', key='fg'),

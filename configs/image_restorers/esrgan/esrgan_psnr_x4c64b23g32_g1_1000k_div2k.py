@@ -65,7 +65,10 @@ test_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 'data/DIV2K'
+data_root = 'data'
+save_dir = work_dir
+# data_root = 'openmmlab:s3://openmmlab/datasets/editing'
+# save_dir = 'sh1984:s3://openmmlab/editing'
 
 train_dataloader = dict(
     num_workers=8,
@@ -76,21 +79,21 @@ train_dataloader = dict(
         type=dataset_type,
         ann_file='meta_info_DIV2K800sub_GT.txt',
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
-        data_root=data_root,
+        data_root=data_root + '/DIV2K',
         data_prefix=dict(
-            img='DIV2K_train_LR_bicubic/X4_sub', gt='DIV2K_train_HR_sub'),
+            img='DIV2K_train_LR_bicubic/x4_sub', gt='DIV2K_train_HR_sub'),
         filename_tmpl=dict(img='{}_x4', gt='{}'),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
-    num_workers=8,
+    num_workers=4,
     persistent_workers=False,
     drop_last=False,
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='set5', task_name='sisr'),
-        data_root='data/Set5',
+        data_root=data_root + '/Set5',
         data_prefix=dict(img='LRbicx4', gt='GTmod12'),
         pipeline=test_pipeline))
 
@@ -124,7 +127,7 @@ default_hooks = dict(
         interval=5000,
         save_optimizer=True,
         by_epoch=False,
-        out_dir=work_dir,
+        out_dir=save_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),

@@ -66,7 +66,10 @@ test_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-data_root = 'data/DIV2K'
+data_root = 'data'
+save_dir = work_dir
+# data_root = 'openmmlab:s3://openmmlab/datasets/editing'
+# save_dir = 'sh1984:s3://openmmlab/editing'
 
 train_dataloader = dict(
     num_workers=4,
@@ -76,7 +79,7 @@ train_dataloader = dict(
         type=dataset_type,
         ann_file='meta_info_DIV2K800sub_GT.txt',
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
-        data_root=data_root,
+        data_root=data_root + '/DIV2K',
         data_prefix=dict(
             img='DIV2K_train_LR_bicubic/X4_sub', gt='DIV2K_train_HR_sub'),
         filename_tmpl=dict(img='{}_x4', gt='{}'),
@@ -90,7 +93,7 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='set5', task_name='sisr'),
-        data_root='data/Set5',
+        data_root=data_root + '/Set5',
         data_prefix=dict(img='LRbicx4', gt='GTmod12'),
         pipeline=test_pipeline))
 
@@ -115,8 +118,15 @@ optim_wrapper = dict(
         optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99))))
 
 # learning policy
-param_scheduler = dict(
-    type='CosineAnnealingLR', by_epoch=False, T_max=250000, eta_min=1e-7)
+# TODO CosineRestart
+# param_scheduler = dict(
+#     type='CosineAnnealingLR', by_epoch=False, T_max=250000, eta_min=1e-7)
+# lr_config = dict(
+#     policy='CosineRestart',
+#     by_epoch=False,
+#     periods=[250000, 250000, 250000, 250000],
+#     restart_weights=[1, 1, 1, 1],
+#     min_lr=1e-7)
 
 default_hooks = dict(
     checkpoint=dict(
@@ -124,7 +134,7 @@ default_hooks = dict(
         interval=5000,
         save_optimizer=True,
         by_epoch=False,
-        out_dir=work_dir,
+        out_dir=save_dir,
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
