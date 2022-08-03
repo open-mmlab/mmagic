@@ -3,7 +3,6 @@
 
 import numbers
 import os.path as osp
-from pathlib import Path
 
 import mmcv
 import numpy as np
@@ -305,7 +304,7 @@ class RandomLoadResizeBg(BaseTransform):
         """
         h, w = results['fg'].shape[:2]
         idx = np.random.randint(len(self.bg_list))
-        filepath = Path(self.bg_dir).joinpath(self.bg_list[idx])
+        filepath = f'{self.bg_dir}/{self.bg_list[idx]}'
         img_bytes = self.file_client.get(filepath)
         img = mmcv.imfrombytes(
             img_bytes, flag=self.flag, channel_order=self.channel_order)  # HWC

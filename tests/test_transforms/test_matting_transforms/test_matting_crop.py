@@ -1,19 +1,46 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from pathlib import Path
+
 import numpy as np
 import pytest
 
-from mmedit.transforms import CropAroundCenter, CropAroundFg, CropAroundUnknown
+from mmedit.transforms import (CropAroundCenter, CropAroundFg,
+                               CropAroundUnknown, LoadImageFromFile)
 
 
 class TestCrop:
 
-    @staticmethod
-    def check_crop(result_img_shape, result_bbox):
+    @classmethod
+    def setup_class(cls):
+        """Check the dimension of gray scale images read by LoadImageFromFile.
+        """
+        image_loader = LoadImageFromFile(key='img')
+        path_alpha = Path(
+            __file__
+        ).parent.parent.parent / 'data' / 'matting_dataset' / 'alpha' / 'GT05.jpg'  # noqa: E501
+        result = image_loader({'img_path': path_alpha})
+        if result['img'].ndim == 3:
+            cls.ext_dim = (1, )
+        elif result['img'].ndim == 2:
+            cls.ext_dim = ()
+        else:
+            raise ValueError('invalid ndim')
+
+    @classmethod
+    def check_ndim(cls, result_img_shape):
+        if cls.ext_dim:
+            return len(result_img_shape) == 3
+        else:
+            return not (len(result_img_shape.ndim) == 3
+                        and result_img_shape[-1] == 1)
+
+    @classmethod
+    def check_crop(cls, result_img_shape, result_bbox):
         crop_w = result_bbox[2] - result_bbox[0]
         """Check if the result_bbox is in correspond to result_img_shape."""
         crop_h = result_bbox[3] - result_bbox[1]
         crop_shape = (crop_h, crop_w)
-        return result_img_shape == crop_shape
+        return result_img_shape[:2] == crop_shape
 
     @staticmethod
     def check_crop_around_semi(alpha):
@@ -35,16 +62,19 @@ class TestCrop:
 
         fg = np.random.rand(240, 320, 3)
         bg = np.random.rand(240, 320, 3)
-        trimap = np.random.rand(240, 320)
-        alpha = np.random.rand(240, 320)
+        trimap = np.random.rand(240, 320, *self.ext_dim)
+        alpha = np.random.rand(240, 320, *self.ext_dim)
 
         # make sure there would be semi-transparent area
         trimap[128, 128] = 128
         results = dict(fg=fg, bg=bg, trimap=trimap, alpha=alpha)
-        crop_around_center = CropAroundCenter(crop_size=320)
+        crop_around_center = CropAroundCenter(
+            crop_size=330)  # this will trigger rescale
         crop_around_center_results = crop_around_center(results)
         assert self.check_keys_contain(crop_around_center_results.keys(),
                                        target_keys)
+        assert self.check_ndim(crop_around_center_results['alpha'].shape)
+        assert self.check_ndim(crop_around_center_results['trimap'].shape)
         assert self.check_crop(crop_around_center_results['alpha'].shape,
                                crop_around_center_results['crop_bbox'])
         assert self.check_crop_around_semi(crop_around_center_results['alpha'])
@@ -56,6 +86,8 @@ class TestCrop:
         crop_around_center_results = crop_around_center(results)
         assert self.check_keys_contain(crop_around_center_results.keys(),
                                        target_keys)
+        assert self.check_ndim(crop_around_center_results['alpha'].shape)
+        assert self.check_ndim(crop_around_center_results['trimap'].shape)
         assert self.check_crop(crop_around_center_results['alpha'].shape,
                                crop_around_center_results['crop_bbox'])
         assert self.check_crop_around_semi(crop_around_center_results['alpha'])
@@ -124,7 +156,7 @@ class TestCrop:
         bg = np.random.rand(240, 320, 3)
         merged = np.random.rand(240, 320, 3)
         ori_merged = merged.copy()
-        alpha = np.zeros((240, 320))
+        alpha = np.zeros((240, 320, *self.ext_dim))
         # make sure there would be unknown area
         alpha[:16, -16:] = 128
         trimap = np.zeros_like(alpha)
@@ -142,6 +174,8 @@ class TestCrop:
         crop_around_semi_trans_results = crop_around_semi_trans(results)
         assert self.check_keys_contain(crop_around_semi_trans_results.keys(),
                                        target_keys)
+        assert self.check_ndim(crop_around_semi_trans_results['alpha'].shape)
+        assert self.check_ndim(crop_around_semi_trans_results['trimap'].shape)
         assert self.check_crop(crop_around_semi_trans_results['alpha'].shape,
                                crop_around_semi_trans_results['crop_bbox'])
         assert self.check_crop_around_semi(
@@ -157,7 +191,7 @@ class TestCrop:
         bg = np.random.rand(240, 320, 3)
         merged = np.random.rand(240, 320, 3)
         ori_merged = merged.copy()
-        alpha = np.random.rand(240, 320)
+        alpha = np.random.rand(240, 320, *self.ext_dim)
         # make sure there would be unknown area
         alpha[120:160, 120:160] = 128
         results = dict(
@@ -167,6 +201,7 @@ class TestCrop:
         crop_around_semi_trans_results = crop_around_semi_trans(results)
         assert self.check_keys_contain(crop_around_semi_trans_results.keys(),
                                        target_keys)
+        assert self.check_ndim(crop_around_semi_trans_results['alpha'].shape)
         assert self.check_crop(crop_around_semi_trans_results['alpha'].shape,
                                crop_around_semi_trans_results['crop_bbox'])
         assert self.check_crop_around_semi(
@@ -177,7 +212,7 @@ class TestCrop:
         bg = np.random.rand(240, 320, 3)
         merged = np.random.rand(240, 320, 3)
         ori_merged = merged.copy()
-        alpha = np.zeros((240, 320))
+        alpha = np.zeros((240, 320, *self.ext_dim))
         results = dict(
             fg=fg, bg=bg, merged=merged, ori_merged=ori_merged, alpha=alpha)
         crop_around_semi_trans = CropAroundUnknown(
@@ -185,6 +220,7 @@ class TestCrop:
         crop_around_semi_trans_results = crop_around_semi_trans(results)
         assert self.check_keys_contain(crop_around_semi_trans_results.keys(),
                                        target_keys)
+        assert self.check_ndim(crop_around_semi_trans_results['alpha'].shape)
         assert self.check_crop(crop_around_semi_trans_results['alpha'].shape,
                                crop_around_semi_trans_results['crop_bbox'])
 
