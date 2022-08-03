@@ -240,8 +240,8 @@ class SNR(BaseSampleWiseMetric):
         """
 
         return snr(
-            img1=gt,
-            img2=pred,
+            gt=gt,
+            pred=pred,
             crop_border=self.crop_border,
             input_order=self.input_order,
             convert_to=self.convert_to,
