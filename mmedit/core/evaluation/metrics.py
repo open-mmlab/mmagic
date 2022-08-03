@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os
 import math
 
 import cv2
@@ -546,7 +547,9 @@ def niqe(img, crop_border, input_order='HWC', convert_to='y'):
     """
 
     # we use the official params estimated from the pristine dataset.
-    niqe_pris_params = np.load('mmedit/core/evaluation/niqe_pris_params.npz')
+    niqe_pris_params = np.load(
+        os.path.join(os.path.dirname(__file__), 'niqe_pris_params.npz')
+    )
     mu_pris_param = niqe_pris_params['mu_pris_param']
     cov_pris_param = niqe_pris_params['cov_pris_param']
     gaussian_window = niqe_pris_params['gaussian_window']
