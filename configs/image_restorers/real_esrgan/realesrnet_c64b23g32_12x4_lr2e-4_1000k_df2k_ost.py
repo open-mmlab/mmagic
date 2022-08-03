@@ -188,7 +188,7 @@ test_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-save_dir = 'sh1984:s3://ysli/real_esrgan'
+save_dir = work_dir
 
 train_dataloader = dict(
     num_workers=12,
