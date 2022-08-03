@@ -16,13 +16,17 @@ class TestPixelMetrics:
 
         mask = np.ones((32, 32, 3)) * 2
         mask[:16] *= 0
-        cls.data_batch = [dict(gt_img=np.ones((32, 32, 3)) * 2, mask=mask)]
+        gt = np.ones((32, 32, 3)) * 2
+        data_sample = dict(gt_img=gt, mask=mask, gt_channel_order='bgr')
+        cls.data_batch = [dict(data_sample=data_sample)]
         cls.predictions = [dict(pred_img=np.ones((32, 32, 3)))]
 
-        cls.data_batch.append({
-            k: torch.from_numpy(deepcopy(v))
-            for (k, v) in cls.data_batch[0].items()
-        })
+        cls.data_batch.append(
+            dict(
+                data_sample=dict(
+                    gt_img=torch.from_numpy(gt),
+                    mask=torch.from_numpy(mask),
+                    img_channel_order='bgr')))
         cls.predictions.append({
             k: torch.from_numpy(deepcopy(v))
             for (k, v) in cls.predictions[0].items()
@@ -74,7 +78,7 @@ class TestPixelMetrics:
         snr_.process(self.data_batch, self.predictions)
         result = snr_.compute_metrics(snr_.results)
         assert 'SNR' in result
-        np.testing.assert_almost_equal(result['SNR'], 6.0205999132796)
+        np.testing.assert_almost_equal(result['SNR'], 6.0206001996994)
 
 
 def test_reorder_image():
