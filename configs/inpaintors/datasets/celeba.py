@@ -4,7 +4,6 @@
 dataset_type = 'BasicImageDataset'
 data_root = 'data/CelebA-HQ'
 # data_root = 's3://openmmlab/datasets/editing/CelebA-HQ'
-# data_root = 'data/CelebA-HQ'
 
 train_dataloader = dict(
     num_workers=4,

@@ -4,7 +4,6 @@
 dataset_type = 'BasicImageDataset'
 data_root = 'data/Places'
 # data_root = 's3://openmmlab/datasets/editing/Places'
-# data_root = 'data/Places'
 
 train_dataloader = dict(
     num_workers=4,
