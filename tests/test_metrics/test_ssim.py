@@ -12,12 +12,19 @@ def test_ssim():
 
     mask = np.ones((3, 32, 32)) * 2
     mask[:16] *= 0
-    data_batch = [dict(gt_img=np.ones((3, 32, 32)) * 2, mask=mask)]
+    gt_img = np.ones((3, 32, 32)) * 2
+    data_batch = [
+        dict(
+            data_sample=dict(gt_img=gt_img, mask=mask, gt_channel_order='bgr'))
+    ]
     predictions = [dict(pred_img=np.ones((3, 32, 32)))]
 
     data_batch.append(
-        {k: torch.from_numpy(deepcopy(v))
-         for (k, v) in data_batch[0].items()})
+        dict(
+            data_sample=dict(
+                gt_img=torch.from_numpy(gt_img),
+                mask=torch.from_numpy(mask),
+                img_channel_order='bgr')))
     predictions.append({
         k: torch.from_numpy(deepcopy(v))
         for (k, v) in predictions[0].items()

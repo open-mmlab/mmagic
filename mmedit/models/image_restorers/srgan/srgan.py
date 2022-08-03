@@ -90,6 +90,24 @@ class SRGAN(BaseEditModel):
         return self.forward_tensor(
             batch_inputs, data_samples, training=True, **kwargs)
 
+    def forward_tensor(self, batch_inputs, data_samples=None, training=False):
+        """Forward tensor.
+            Returns result of simple forward.
+
+        Args:
+            batch_inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            Tensor: result of simple forward.
+        """
+
+        feats = self.generator(batch_inputs)
+
+        return feats
+
     def if_run_g(self):
         """Calculates whether need to run the generator step.
         """
