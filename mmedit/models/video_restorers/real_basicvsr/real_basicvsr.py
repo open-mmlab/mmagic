@@ -160,7 +160,7 @@ class RealBasicVSR(RealESRGAN):
     def forward_train(self, batch_inputs, data_samples=None):
         """Forward Train.
 
-        Run forward with ``return_lqs=True``
+        Run forward of generator with ``return_lqs=True``
 
         Args:
             batch_inputs (Tensor): Batch inputs.
@@ -172,4 +172,4 @@ class RealBasicVSR(RealESRGAN):
                 (outputs, lqs)
         """
 
-        return self.forward_tensor(batch_inputs, data_samples, return_lqs=True)
+        return self.generator(batch_inputs, return_lqs=True)
