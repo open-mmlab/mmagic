@@ -59,8 +59,9 @@ class GenerateFrameIndices(BaseTransform):
         center_frame_idx = int(frame_name)
         num_half_frames = results['num_input_frames'] // 2
 
-        max_frame_num = results.get('max_frame_num', self.frames_per_clip + 1)
-        frames_per_clip = min(self.frames_per_clip, max_frame_num - 1)
+        sequence_length = results.get('sequence_length',
+                                      self.frames_per_clip + 1)
+        frames_per_clip = min(self.frames_per_clip, sequence_length - 1)
 
         interval = np.random.choice(self.interval_list)
         # ensure not exceeding the borders
@@ -109,7 +110,7 @@ class GenerateFrameIndiceswithPadding(BaseTransform):
     - gt_path
     - key
     - num_input_frames
-    - max_frame_num
+    - sequence_length
 
     Modified Keys:
 
@@ -154,7 +155,7 @@ class GenerateFrameIndiceswithPadding(BaseTransform):
 
         clip_name, frame_name = results['key'].split(os.sep)
         current_idx = int(frame_name)
-        max_frame_num = results['max_frame_num'] - 1  # start from 0
+        sequence_length = results['sequence_length'] - 1  # start from 0
         num_input_frames = results['num_input_frames']
         num_pad = num_input_frames // 2
 
@@ -169,13 +170,13 @@ class GenerateFrameIndiceswithPadding(BaseTransform):
                     pad_idx = current_idx + num_pad - i
                 else:
                     pad_idx = num_input_frames + i
-            elif i > max_frame_num:
+            elif i > sequence_length:
                 if self.padding == 'replicate':
-                    pad_idx = max_frame_num
+                    pad_idx = sequence_length
                 elif self.padding == 'reflection':
-                    pad_idx = max_frame_num * 2 - i
+                    pad_idx = sequence_length * 2 - i
                 elif self.padding == 'reflection_circle':
-                    pad_idx = (current_idx - num_pad) - (i - max_frame_num)
+                    pad_idx = (current_idx - num_pad) - (i - sequence_length)
                 else:
                     pad_idx = i - num_input_frames
             else:
@@ -256,7 +257,7 @@ class GenerateSegmentIndices(BaseTransform):
         clip_name = results['key']
         interval = np.random.choice(self.interval_list)
 
-        self.sequence_length = results['max_frame_num']
+        self.sequence_length = results['sequence_length']
         num_input_frames = results.get('num_input_frames',
                                        self.sequence_length)
 

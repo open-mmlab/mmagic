@@ -43,21 +43,27 @@ def test_generate_facial_heatmap():
     generate_heatmap = GenerateFacialHeatmap('gt', 256, 32)
     results1 = generate_heatmap(results)
     results1 = generate_heatmap(results)
-    assert set(list(results1.keys())) == set(
-        ['gt_path', 'gt', 'ori_gt_shape', 'gt_heatmap', 'key'])
+    assert set(list(results1.keys())) == set([
+        'gt_path', 'gt', 'ori_gt_shape', 'gt_heatmap', 'key',
+        'gt_channel_order'
+    ])
     assert results1['gt_heatmap'].shape == (32, 32, 68)
 
     generate_heatmap = GenerateFacialHeatmap('gt', (256, 256), (32, 64))
     results2 = generate_heatmap(results)
-    assert set(list(results2.keys())) == set(
-        ['gt_path', 'gt', 'ori_gt_shape', 'gt_heatmap', 'key'])
+    assert set(list(results2.keys())) == set([
+        'gt_path', 'gt', 'ori_gt_shape', 'gt_heatmap', 'key',
+        'gt_channel_order'
+    ])
     assert results2['gt_heatmap'].shape == (32, 64, 68)
 
     generate_heatmap = GenerateFacialHeatmap(
         'gt', (256, 256), (32, 64), use_cache=False)
     results2 = generate_heatmap(results)
-    assert set(list(results2.keys())) == set(
-        ['gt_path', 'gt', 'ori_gt_shape', 'gt_heatmap', 'key'])
+    assert set(list(results2.keys())) == set([
+        'gt_path', 'gt', 'ori_gt_shape', 'gt_heatmap', 'key',
+        'gt_channel_order'
+    ])
     assert results2['gt_heatmap'].shape == (32, 64, 68)
 
     assert repr(generate_heatmap) == (

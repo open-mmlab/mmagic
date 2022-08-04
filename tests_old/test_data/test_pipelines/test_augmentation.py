@@ -589,7 +589,7 @@ class TestAugmentations:
             lq_path='fake_lq_root',
             gt_path='fake_gt_root',
             key=osp.join('000', '00000000'),
-            max_frame_num=100,
+            sequence_length=100,
             num_input_frames=5)
         target_keys = ['lq_path', 'gt_path', 'key']
         replicate_idx = [0, 0, 0, 1, 2]
@@ -638,7 +638,7 @@ class TestAugmentations:
             lq_path='fake_lq_root',
             gt_path='fake_gt_root',
             key=osp.join('000', '00000099'),
-            max_frame_num=100,
+            sequence_length=100,
             num_input_frames=5)
         target_keys = ['lq_path', 'gt_path', 'key']
         replicate_idx = [97, 98, 99, 99, 99]

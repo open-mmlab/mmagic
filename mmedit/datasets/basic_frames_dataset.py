@@ -185,22 +185,22 @@ class BasicFramesDataset(BaseDataset):
         data_list = []
         for path in path_list:
             basename, _ = osp.splitext(path)
-            max_frame_num = self.seq_lens['fixed_seq_len']
-            if max_frame_num is None:
-                max_frame_num = self.seq_lens[path.split(os.sep)[0]]
+            sequence_length = self.seq_lens['fixed_seq_len']
+            if sequence_length is None:
+                sequence_length = self.seq_lens[path.split(os.sep)[0]]
             data = dict(
                 key=basename,
                 num_input_frames=self.num_input_frames,
                 num_output_frames=self.num_output_frames,
-                max_frame_num=max_frame_num)
+                sequence_length=sequence_length)
             for key in self.data_prefix:
                 if key in self.load_frames_list:
                     folder = osp.join(self.data_prefix[key], path)
                     data[f'{key}_path'] = self._get_frames_list(key, folder)
                     # The list of frames has been loaded,
-                    # ``max_frame_num`` is useless
-                    # Avoid loading frames by ``max_frame_num`` in pipeline
-                    data['max_frame_num'] = None
+                    # ``sequence_length`` is useless
+                    # Avoid loading frames by ``sequence_length`` in pipeline
+                    data['sequence_length'] = None
                     # overwrite ``num_input_frames`` and ``num_output_frames``
                     if key == 'img':
                         data['num_input_frames'] = len(data[f'{key}_path'])

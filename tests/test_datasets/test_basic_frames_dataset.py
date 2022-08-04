@@ -7,7 +7,7 @@ from mmedit.datasets import BasicFramesDataset
 
 class TestFramesDatasets:
 
-    # TODO add a param for depth of file (for max_frame_num).
+    # TODO add a param for depth of file (for sequence_length).
 
     @classmethod
     def setup_class(cls):
@@ -31,7 +31,7 @@ class TestFramesDatasets:
             key='sequence_1',
             num_input_frames=5,
             num_output_frames=None,
-            max_frame_num=100,
+            sequence_length=100,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -58,7 +58,7 @@ class TestFramesDatasets:
             key=f'gt{os.sep}sequence_1',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=None,
+            sequence_length=None,
             img_path=[
                 str(self.data_root / f'sequence{os.sep}gt' / 'sequence_1' /
                     '00000000.png'),
@@ -89,7 +89,7 @@ class TestFramesDatasets:
             key=f'sequence_1{os.sep}00000000',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -108,7 +108,7 @@ class TestFramesDatasets:
             key='sequence_1',
             num_input_frames=1,
             num_output_frames=None,
-            max_frame_num=2,
+            sequence_length=2,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -125,7 +125,7 @@ class TestFramesDatasets:
             key='sequence_1',
             num_input_frames=1,
             num_output_frames=None,
-            max_frame_num=2,
+            sequence_length=2,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -144,7 +144,7 @@ class TestFramesDatasets:
             key=f'sequence_1{os.sep}00000000',
             num_input_frames=5,
             num_output_frames=None,
-            max_frame_num=2,
+            sequence_length=2,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -161,7 +161,7 @@ class TestFramesDatasets:
             key=f'sequence_1{os.sep}00000000',
             num_input_frames=5,
             num_output_frames=None,
-            max_frame_num=2,
+            sequence_length=2,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -184,7 +184,7 @@ class TestFramesDatasets:
             key=f'gt{os.sep}sequence_1',
             num_input_frames=2,
             num_output_frames=1,
-            max_frame_num=None,
+            sequence_length=None,
             img_path=[
                 str(self.data_root / f'sequence{os.sep}gt' / 'sequence_1' /
                     '00000000.png'),
@@ -221,7 +221,7 @@ class TestFramesDatasets:
             key=f'sequence_1{os.sep}00000000',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -229,7 +229,7 @@ class TestFramesDatasets:
             key=f'sequence_1{os.sep}00000001',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=1)
@@ -237,7 +237,7 @@ class TestFramesDatasets:
             key=f'sequence_2{os.sep}00000000',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=2)
@@ -265,7 +265,7 @@ class TestFramesDatasets:
             key='sequence_1',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -273,7 +273,7 @@ class TestFramesDatasets:
             key='sequence_2',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=1)
@@ -301,7 +301,7 @@ class TestFramesDatasets:
             key='sequence_1',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=2,
+            sequence_length=2,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -309,7 +309,7 @@ class TestFramesDatasets:
             key='sequence_2',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=1)
@@ -338,7 +338,7 @@ class TestFramesDatasets:
             key='sequence_1',
             num_input_frames=2,
             num_output_frames=1,
-            max_frame_num=None,
+            sequence_length=None,
             img_path=[
                 str(self.data_root / f'sequence{os.sep}gt' / 'sequence_1' /
                     '00000000.png'),
@@ -354,7 +354,7 @@ class TestFramesDatasets:
             key='sequence_2',
             num_input_frames=3,
             num_output_frames=1,
-            max_frame_num=None,
+            sequence_length=None,
             img_path=[
                 str(self.data_root / f'sequence{os.sep}gt' / 'sequence_2' /
                     '00000000.png'),
@@ -392,7 +392,7 @@ class TestFramesDatasets:
             key=f'gt{os.sep}sequence_1',
             num_input_frames=1,
             num_output_frames=2,
-            max_frame_num=None,
+            sequence_length=None,
             img_path=[
                 str(self.data_root / f'sequence{os.sep}gt' / 'sequence_1' /
                     '00000000.png')
@@ -408,7 +408,7 @@ class TestFramesDatasets:
             key=f'gt{os.sep}sequence_2',
             num_input_frames=1,
             num_output_frames=3,
-            max_frame_num=None,
+            sequence_length=None,
             img_path=[
                 str(self.data_root / f'sequence{os.sep}gt' / 'sequence_2' /
                     '00000000.png')
@@ -448,7 +448,7 @@ class TestFramesDatasets:
             key=f'sequence_1{os.sep}00000000',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -456,7 +456,7 @@ class TestFramesDatasets:
             key=f'sequence_1{os.sep}00000001',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=1)
@@ -464,7 +464,7 @@ class TestFramesDatasets:
             key=f'sequence_2{os.sep}00000000',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=2)
@@ -493,7 +493,7 @@ class TestFramesDatasets:
             key=f'sequence_1{os.sep}00000000',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -501,7 +501,7 @@ class TestFramesDatasets:
             key=f'sequence_1{os.sep}00000001',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=1)
@@ -509,7 +509,7 @@ class TestFramesDatasets:
             key=f'sequence_2{os.sep}00000000',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=2)
@@ -538,7 +538,7 @@ class TestFramesDatasets:
             key='sequence_1',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -546,7 +546,7 @@ class TestFramesDatasets:
             key='sequence_2',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=1)
@@ -575,7 +575,7 @@ class TestFramesDatasets:
             key='sequence_1',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=0)
@@ -583,7 +583,7 @@ class TestFramesDatasets:
             key='sequence_2',
             num_input_frames=2,
             num_output_frames=2,
-            max_frame_num=3,
+            sequence_length=3,
             img_path=str(self.data_root / f'sequence{os.sep}gt'),
             gt_path=str(self.data_root / f'sequence{os.sep}gt'),
             sample_idx=1)
@@ -615,7 +615,7 @@ class TestFramesDatasets:
             key='sequence_1',
             num_input_frames=2,
             num_output_frames=1,
-            max_frame_num=None,
+            sequence_length=None,
             img_path=[
                 str(self.data_root / f'sequence{os.sep}gt' / 'sequence_1' /
                     '00000000.png'),
@@ -631,7 +631,7 @@ class TestFramesDatasets:
             key='sequence_2',
             num_input_frames=2,
             num_output_frames=1,
-            max_frame_num=None,
+            sequence_length=None,
             img_path=[
                 str(self.data_root / f'sequence{os.sep}gt' / 'sequence_2' /
                     '00000000.png'),
@@ -669,7 +669,7 @@ class TestFramesDatasets:
             key=f'gt{os.sep}sequence_1',
             num_input_frames=2,
             num_output_frames=1,
-            max_frame_num=None,
+            sequence_length=None,
             img_path=[
                 str(self.data_root / f'sequence{os.sep}gt' / 'sequence_1' /
                     '00000000.png'),
@@ -685,7 +685,7 @@ class TestFramesDatasets:
             key=f'gt{os.sep}sequence_2',
             num_input_frames=2,
             num_output_frames=1,
-            max_frame_num=None,
+            sequence_length=None,
             img_path=[
                 str(self.data_root / f'sequence{os.sep}gt' / 'sequence_2' /
                     '00000000.png'),
