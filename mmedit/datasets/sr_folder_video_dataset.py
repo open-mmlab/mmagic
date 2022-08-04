@@ -97,11 +97,11 @@ class SRFolderVideoDataset(BaseSRDataset):
 
         ann_list = mmcv.list_from_file(self.ann_file)
         for ann in ann_list:
-            key, max_frame_num = ann.strip().rsplit(' ', 1)
+            key, sequence_length = ann.strip().rsplit(' ', 1)
             key = key.replace('/', os.sep)
             sequence = osp.basename(key)
             if sequence not in self.folders:
-                self.folders[sequence] = int(max_frame_num)
+                self.folders[sequence] = int(sequence_length)
 
             data_infos.append(
                 dict(
@@ -109,7 +109,7 @@ class SRFolderVideoDataset(BaseSRDataset):
                     gt_path=self.gt_folder,
                     key=key,
                     num_input_frames=self.num_input_frames,
-                    max_frame_num=int(max_frame_num)))
+                    sequence_length=int(sequence_length)))
 
         return data_infos
 
@@ -132,17 +132,17 @@ class SRFolderVideoDataset(BaseSRDataset):
         for sequence in sequences:
             seq_dir = osp.join(self.lq_folder, sequence)
 
-            max_frame_num = len(list(mmcv.utils.scandir(seq_dir)))
-            self.folders[sequence] = max_frame_num
+            sequence_length = len(list(mmcv.utils.scandir(seq_dir)))
+            self.folders[sequence] = sequence_length
 
-            for i in range(self.start_idx, max_frame_num + self.start_idx):
+            for i in range(self.start_idx, sequence_length + self.start_idx):
                 data_infos.append(
                     dict(
                         lq_path=self.lq_folder,
                         gt_path=self.gt_folder,
                         key=osp.join(sequence, self.filename_tmpl.format(i)),
                         num_input_frames=self.num_input_frames,
-                        max_frame_num=max_frame_num))
+                        sequence_length=sequence_length))
 
         return data_infos
 

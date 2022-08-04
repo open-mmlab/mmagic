@@ -93,7 +93,7 @@ class SRVid4Dataset(BaseSRDataset):
                             key=os.path.join(folder,
                                              self.filename_tmpl.format(i)),
                             num_input_frames=self.num_input_frames,
-                            max_frame_num=int(frame_num)))
+                            sequence_length=int(frame_num)))
         return data_infos
 
     def evaluate(self, results, logger=None):

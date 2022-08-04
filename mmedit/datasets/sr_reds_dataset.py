@@ -89,7 +89,7 @@ class SRREDSDataset(BaseSRDataset):
                     lq_path=self.lq_folder,
                     gt_path=self.gt_folder,
                     key=key,
-                    max_frame_num=100,  # REDS has 100 frames for each clip
+                    sequence_length=100,  # REDS has 100 frames for each clip
                     num_input_frames=self.num_input_frames))
 
         return data_infos

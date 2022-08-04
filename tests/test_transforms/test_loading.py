@@ -56,7 +56,7 @@ def test_load_image_from_file():
     assert repr(image_loader) == (
         image_loader.__class__.__name__ +
         ('(key=img, color_type=color, channel_order=bgr, '
-         'imdecode_backend=cv2, use_cache=False, to_float32=False, '
+         'imdecode_backend=None, use_cache=False, to_float32=False, '
          'to_y_channel=False, save_original_img=False, '
          'file_client_args=None)'))
     assert isinstance(image_loader.file_client.client, HardDiskBackend)
@@ -79,7 +79,7 @@ def test_load_image_from_file():
     assert repr(image_loader) == (
         image_loader.__class__.__name__ +
         ('(key=gt, color_type=color, channel_order=bgr, '
-         'imdecode_backend=cv2, use_cache=True, to_float32=False, '
+         'imdecode_backend=None, use_cache=True, to_float32=False, '
          'to_y_channel=False, save_original_img=False, '
          'file_client_args=None)'))
     results = image_loader(results)

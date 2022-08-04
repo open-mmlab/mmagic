@@ -458,13 +458,13 @@ def test_reds_dataset():
                 lq_path=str(root_path),
                 gt_path=str(root_path),
                 key=osp.join('000', '00000001'),
-                max_frame_num=100,
+                sequence_length=100,
                 num_input_frames=5),
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
                 key=osp.join('001', '00000001'),
-                max_frame_num=100,
+                sequence_length=100,
                 num_input_frames=5)
         ]
 
@@ -484,13 +484,13 @@ def test_reds_dataset():
                 lq_path=str(root_path),
                 gt_path=str(root_path),
                 key=osp.join('001', '00000001'),
-                max_frame_num=100,
+                sequence_length=100,
                 num_input_frames=5),
             dict(
                 lq_path=str(root_path),
                 gt_path=str(root_path),
                 key=osp.join('250', '00000001'),
-                max_frame_num=100,
+                sequence_length=100,
                 num_input_frames=5)
         ]
 
@@ -535,7 +535,7 @@ def test_reds_dataset():
                 lq_path=str(root_path),
                 gt_path=str(root_path),
                 key=osp.join('250', '00000001'),
-                max_frame_num=100,
+                sequence_length=100,
                 num_input_frames=5)
         ]
         # REDS4 val partition
@@ -554,7 +554,7 @@ def test_reds_dataset():
                 lq_path=str(root_path),
                 gt_path=str(root_path),
                 key=osp.join('000', '00000001'),
-                max_frame_num=100,
+                sequence_length=100,
                 num_input_frames=5)
         ]
 
@@ -629,19 +629,19 @@ def test_vid4_dataset():
                 gt_path=str(root_path / 'gt'),
                 key=osp.join('calendar', '00000000'),
                 num_input_frames=5,
-                max_frame_num=1),
+                sequence_length=1),
             dict(
                 lq_path=str(root_path / 'lq'),
                 gt_path=str(root_path / 'gt'),
                 key=osp.join('city', '00000000'),
                 num_input_frames=5,
-                max_frame_num=2),
+                sequence_length=2),
             dict(
                 lq_path=str(root_path / 'lq'),
                 gt_path=str(root_path / 'gt'),
                 key=osp.join('city', '00000001'),
                 num_input_frames=5,
-                max_frame_num=2),
+                sequence_length=2),
         ]
 
         # test evaluate function ('clip' mode)
@@ -1005,19 +1005,19 @@ def test_sr_folder_video_dataset():
             gt_path=str(root_path),
             key=osp.join('sequence_1', '00000000'),
             num_input_frames=5,
-            max_frame_num=2),
+            sequence_length=2),
         dict(
             lq_path=str(root_path),
             gt_path=str(root_path),
             key=osp.join('sequence_1', '00000001'),
             num_input_frames=5,
-            max_frame_num=2),
+            sequence_length=2),
         dict(
             lq_path=str(root_path),
             gt_path=str(root_path),
             key=osp.join('sequence_2', '00000000'),
             num_input_frames=5,
-            max_frame_num=1),
+            sequence_length=1),
     ]
 
     # with annotation file
@@ -1038,7 +1038,7 @@ def test_sr_folder_video_dataset():
                 gt_path=str(root_path),
                 key=osp.join('sequence_1', '00000000'),
                 num_input_frames=5,
-                max_frame_num=2),
+                sequence_length=2),
         ]
 
     # test evaluate function ('clip' mode)
