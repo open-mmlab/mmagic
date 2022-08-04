@@ -57,7 +57,7 @@ class PConvInpaintor(OneStageInpaintor):
         masks = torch.stack(
             list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
         masks = 1. - masks
-        masks = masks.tile(1, 3, 1, 1)
+        masks = masks.repeat(1, 3, 1, 1)
         fake_reses, _ = self.generator(masked_img, masks)
         fake_imgs = fake_reses * (1. - masks) + masked_img * masks
         return fake_reses, fake_imgs
