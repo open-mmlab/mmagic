@@ -20,7 +20,7 @@ except ImportError:
 
 
 MMCV_MIN = '1.3.13'
-MMCV_MAX = '1.6'
+MMCV_MAX = '1.7'
 
 mmcv_min_version = digit_version(MMCV_MIN)
 mmcv_max_version = digit_version(MMCV_MAX)
