@@ -1,0 +1,292 @@
+# Copyright (c) OpenMMLab. All rights reserved.
+from pathlib import Path
+
+import numpy as np
+import pytest
+
+from mmedit.datasets.pipelines.utils import adjust_gamma, dtype_range
+from mmedit.transforms import (CropAroundCenter, CropAroundFg,
+                               CropAroundUnknown, LoadImageFromFile)
+
+
+class TestCrop:
+
+    @classmethod
+    def setup_class(cls):
+        """Check the dimension of gray scale images read by LoadImageFromFile.
+        """
+        image_loader = LoadImageFromFile(key='img')
+        path_alpha = Path(
+            __file__
+        ).parent.parent.parent / 'data' / 'matting_dataset' / 'alpha' / 'GT05.jpg'  # noqa: E501
+        result = image_loader({'img_path': path_alpha})
+        if result['img'].ndim == 3:
+            cls.ext_dim = (1, )
+        elif result['img'].ndim == 2:
+            cls.ext_dim = ()
+        else:
+            raise ValueError('invalid ndim')
+
+    @classmethod
+    def check_ndim(cls, result_img_shape):
+        if cls.ext_dim:
+            return len(result_img_shape) == 3
+        else:
+            return not (len(result_img_shape.ndim) == 3
+                        and result_img_shape[-1] == 1)
+
+    @classmethod
+    def check_crop(cls, result_img_shape, result_bbox):
+        crop_w = result_bbox[2] - result_bbox[0]
+        """Check if the result_bbox is in correspond to result_img_shape."""
+        crop_h = result_bbox[3] - result_bbox[1]
+        crop_shape = (crop_h, crop_w)
+        return result_img_shape[:2] == crop_shape
+
+    @staticmethod
+    def check_crop_around_semi(alpha):
+        return ((alpha > 0) & (alpha < 255)).any()
+
+    @staticmethod
+    def check_keys_contain(result_keys, target_keys):
+        """Check if all elements in target_keys is in result_keys."""
+        return set(target_keys).issubset(set(result_keys))
+
+    def test_crop_around_center(self):
+
+        with pytest.raises(TypeError):
+            CropAroundCenter(320.)
+        with pytest.raises(AssertionError):
+            CropAroundCenter((320, 320, 320))
+
+        target_keys = ['fg', 'bg', 'alpha', 'trimap', 'crop_bbox']
+
+        fg = np.random.rand(240, 320, 3)
+        bg = np.random.rand(240, 320, 3)
+        trimap = np.random.rand(240, 320, *self.ext_dim)
+        alpha = np.random.rand(240, 320, *self.ext_dim)
+
+        # make sure there would be semi-transparent area
+        trimap[128, 128] = 128
+        results = dict(fg=fg, bg=bg, trimap=trimap, alpha=alpha)
+        crop_around_center = CropAroundCenter(
+            crop_size=330)  # this will trigger rescale
+        crop_around_center_results = crop_around_center(results)
+        assert self.check_keys_contain(crop_around_center_results.keys(),
+                                       target_keys)
+        assert self.check_ndim(crop_around_center_results['alpha'].shape)
+        assert self.check_ndim(crop_around_center_results['trimap'].shape)
+        assert self.check_crop(crop_around_center_results['alpha'].shape,
+                               crop_around_center_results['crop_bbox'])
+        assert self.check_crop_around_semi(crop_around_center_results['alpha'])
+
+        # make sure there would be semi-transparent area
+        trimap[:, :] = 128
+        results = dict(fg=fg, bg=bg, trimap=trimap, alpha=alpha)
+        crop_around_center = CropAroundCenter(crop_size=200)
+        crop_around_center_results = crop_around_center(results)
+        assert self.check_keys_contain(crop_around_center_results.keys(),
+                                       target_keys)
+        assert self.check_ndim(crop_around_center_results['alpha'].shape)
+        assert self.check_ndim(crop_around_center_results['trimap'].shape)
+        assert self.check_crop(crop_around_center_results['alpha'].shape,
+                               crop_around_center_results['crop_bbox'])
+        assert self.check_crop_around_semi(crop_around_center_results['alpha'])
+
+        repr_str = crop_around_center.__class__.__name__ + (
+            f'(crop_size={(200, 200)})')
+        assert repr(crop_around_center) == repr_str
+
+    def test_crop_around_fg(self):
+        with pytest.raises(ValueError):
+            # keys must contain 'seg'
+            CropAroundFg(['fg', 'bg'])
+        with pytest.raises(TypeError):
+            # bd_ratio_range must be a tuple of 2 float
+            CropAroundFg(['seg', 'merged'], bd_ratio_range=0.1)
+
+        keys = ['bg', 'merged', 'seg']
+        target_keys = ['bg', 'merged', 'seg', 'crop_bbox']
+
+        bg = np.random.rand(60, 60, 3)
+        merged = np.random.rand(60, 60, 3)
+        seg = np.random.rand(60, 60)
+        results = dict(bg=bg, merged=merged, seg=seg)
+
+        crop_around_fg = CropAroundFg(keys)
+        crop_around_fg_results = crop_around_fg(results)
+        assert self.check_keys_contain(crop_around_fg_results.keys(),
+                                       target_keys)
+        assert self.check_crop(crop_around_fg_results['seg'].shape,
+                               crop_around_fg_results['crop_bbox'])
+
+        crop_around_fg = CropAroundFg(keys, test_mode=True)
+        crop_around_fg_results = crop_around_fg(results)
+        result_img_shape = crop_around_fg_results['seg'].shape
+        assert self.check_keys_contain(crop_around_fg_results.keys(),
+                                       target_keys)
+        assert self.check_crop(result_img_shape,
+                               crop_around_fg_results['crop_bbox'])
+        # it should be a square in test mode
+        assert result_img_shape[0] == result_img_shape[1]
+
+    def test_crop_around_unknown(self):
+        with pytest.raises(ValueError):
+            # keys must contain 'alpha'
+            CropAroundUnknown(['fg', 'bg'], [320])
+        with pytest.raises(TypeError):
+            # crop_size must be a list
+            CropAroundUnknown(['alpha'], 320)
+        with pytest.raises(TypeError):
+            # crop_size must be a list of int
+            CropAroundUnknown(['alpha'], [320.])
+        with pytest.raises(ValueError):
+            # unknown_source must be either 'alpha' or 'trimap'
+            CropAroundUnknown(['alpha', 'fg'], [320], unknown_source='fg')
+        with pytest.raises(ValueError):
+            # if unknown_source is 'trimap', then keys must contain it
+            CropAroundUnknown(['alpha', 'fg'], [320], unknown_source='trimap')
+
+        keys = ['fg', 'bg', 'merged', 'alpha', 'trimap', 'ori_merged']
+        target_keys = [
+            'fg', 'bg', 'merged', 'alpha', 'trimap', 'ori_merged', 'crop_bbox'
+        ]
+
+        # test cropping using trimap to decide unknown area
+        fg = np.random.rand(240, 320, 3)
+        bg = np.random.rand(240, 320, 3)
+        merged = np.random.rand(240, 320, 3)
+        ori_merged = merged.copy()
+        alpha = np.zeros((240, 320, *self.ext_dim))
+        # make sure there would be unknown area
+        alpha[:16, -16:] = 128
+        trimap = np.zeros_like(alpha)
+        trimap[alpha > 0] = 128
+        trimap[alpha == 255] = 255
+        results = dict(
+            fg=fg,
+            bg=bg,
+            merged=merged,
+            ori_merged=ori_merged,
+            alpha=alpha,
+            trimap=trimap)
+        crop_around_semi_trans = CropAroundUnknown(
+            keys, crop_sizes=[320], unknown_source='trimap')
+        crop_around_semi_trans_results = crop_around_semi_trans(results)
+        assert self.check_keys_contain(crop_around_semi_trans_results.keys(),
+                                       target_keys)
+        assert self.check_ndim(crop_around_semi_trans_results['alpha'].shape)
+        assert self.check_ndim(crop_around_semi_trans_results['trimap'].shape)
+        assert self.check_crop(crop_around_semi_trans_results['alpha'].shape,
+                               crop_around_semi_trans_results['crop_bbox'])
+        assert self.check_crop_around_semi(
+            crop_around_semi_trans_results['alpha'])
+
+        keys = ['fg', 'bg', 'merged', 'alpha', 'ori_merged']
+        target_keys = [
+            'fg', 'bg', 'merged', 'alpha', 'ori_merged', 'crop_bbox'
+        ]
+
+        # test cropping using alpha to decide unknown area
+        fg = np.random.rand(240, 320, 3)
+        bg = np.random.rand(240, 320, 3)
+        merged = np.random.rand(240, 320, 3)
+        ori_merged = merged.copy()
+        alpha = np.random.rand(240, 320, *self.ext_dim)
+        # make sure there would be unknown area
+        alpha[120:160, 120:160] = 128
+        results = dict(
+            fg=fg, bg=bg, merged=merged, ori_merged=ori_merged, alpha=alpha)
+        crop_around_semi_trans = CropAroundUnknown(
+            keys, crop_sizes=[160], unknown_source='alpha')
+        crop_around_semi_trans_results = crop_around_semi_trans(results)
+        assert self.check_keys_contain(crop_around_semi_trans_results.keys(),
+                                       target_keys)
+        assert self.check_ndim(crop_around_semi_trans_results['alpha'].shape)
+        assert self.check_crop(crop_around_semi_trans_results['alpha'].shape,
+                               crop_around_semi_trans_results['crop_bbox'])
+        assert self.check_crop_around_semi(
+            crop_around_semi_trans_results['alpha'])
+
+        # test cropping when there is no unknown area
+        fg = np.random.rand(240, 320, 3)
+        bg = np.random.rand(240, 320, 3)
+        merged = np.random.rand(240, 320, 3)
+        ori_merged = merged.copy()
+        alpha = np.zeros((240, 320, *self.ext_dim))
+        results = dict(
+            fg=fg, bg=bg, merged=merged, ori_merged=ori_merged, alpha=alpha)
+        crop_around_semi_trans = CropAroundUnknown(
+            keys, crop_sizes=[240], unknown_source='alpha')
+        crop_around_semi_trans_results = crop_around_semi_trans(results)
+        assert self.check_keys_contain(crop_around_semi_trans_results.keys(),
+                                       target_keys)
+        assert self.check_ndim(crop_around_semi_trans_results['alpha'].shape)
+        assert self.check_crop(crop_around_semi_trans_results['alpha'].shape,
+                               crop_around_semi_trans_results['crop_bbox'])
+
+        repr_str = (
+            crop_around_semi_trans.__class__.__name__ +
+            f"(keys={keys}, crop_sizes={[(240, 240)]}, unknown_source='alpha',"
+            " interpolations=['bilinear', 'bilinear', 'bilinear', 'bilinear', "
+            "'bilinear'])")
+        assert crop_around_semi_trans.__repr__() == repr_str
+
+
+def test_adjust_gamma():
+    """Test Gamma Correction
+
+    Adpted from
+    # https://github.com/scikit-image/scikit-image/blob/7e4840bd9439d1dfb6beaf549998452c99f97fdd/skimage/exposure/tests/test_exposure.py#L534  # noqa
+    """
+    # Check that the shape is maintained.
+    img = np.ones([1, 1])
+    result = adjust_gamma(img, 1.5)
+    assert img.shape == result.shape
+
+    # Same image should be returned for gamma equal to one.
+    image = np.random.uniform(0, 255, (8, 8))
+    result = adjust_gamma(image, 1)
+    np.testing.assert_array_equal(result, image)
+
+    # White image should be returned for gamma equal to zero.
+    image = np.random.uniform(0, 255, (8, 8))
+    result = adjust_gamma(image, 0)
+    dtype = image.dtype.type
+    np.testing.assert_array_equal(result, dtype_range[dtype][1])
+
+    # Verifying the output with expected results for gamma
+    # correction with gamma equal to half.
+    image = np.arange(0, 255, 4, np.uint8).reshape((8, 8))
+    expected = np.array([[0, 31, 45, 55, 63, 71, 78, 84],
+                         [90, 95, 100, 105, 110, 115, 119, 123],
+                         [127, 131, 135, 139, 142, 146, 149, 153],
+                         [156, 159, 162, 165, 168, 171, 174, 177],
+                         [180, 183, 186, 188, 191, 194, 196, 199],
+                         [201, 204, 206, 209, 211, 214, 216, 218],
+                         [221, 223, 225, 228, 230, 232, 234, 236],
+                         [238, 241, 243, 245, 247, 249, 251, 253]],
+                        dtype=np.uint8)
+
+    result = adjust_gamma(image, 0.5)
+    np.testing.assert_array_equal(result, expected)
+
+    # Verifying the output with expected results for gamma
+    # correction with gamma equal to two.
+    image = np.arange(0, 255, 4, np.uint8).reshape((8, 8))
+    expected = np.array([[0, 0, 0, 0, 1, 1, 2, 3], [4, 5, 6, 7, 9, 10, 12, 14],
+                         [16, 18, 20, 22, 25, 27, 30, 33],
+                         [36, 39, 42, 45, 49, 52, 56, 60],
+                         [64, 68, 72, 76, 81, 85, 90, 95],
+                         [100, 105, 110, 116, 121, 127, 132, 138],
+                         [144, 150, 156, 163, 169, 176, 182, 189],
+                         [196, 203, 211, 218, 225, 233, 241, 249]],
+                        dtype=np.uint8)
+
+    result = adjust_gamma(image, 2)
+    np.testing.assert_array_equal(result, expected)
+
+    # Test invalid image input
+    image = np.arange(0, 255, 4, np.uint8).reshape((8, 8))
+    with pytest.raises(ValueError):
+        adjust_gamma(image, -1)

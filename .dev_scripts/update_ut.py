@@ -23,6 +23,7 @@ def update_ut():
             if osp.splitext(osp.basename(f))[0] != '__init__':
 
                 dirname = osp.dirname(f)
+                dirname = dirname.replace('__', '')
                 dirname = dirname.replace('mmedit', 'tests')
                 dirname = dirname.replace('/', '/test_')
                 os.makedirs(dirname, exist_ok=True)
@@ -35,10 +36,13 @@ def update_ut():
                 fp = open(dst_path, 'a')
                 fp.close()
 
-    existing_ut = glob('tests/**/*.py', recursive=True)
-    print('Additional UT:')
-    for f in set(existing_ut) - set(target_ut):
-        print(f)
+    existing_ut = glob('tests/test_*/**/*.py', recursive=True)
+    additional_ut = list(set(existing_ut) - set(target_ut))
+
+    if len(additional_ut) > 0:
+        print('Additional UT:')
+        for f in additional_ut:
+            print(f)
 
 
 if __name__ == '__main__':
