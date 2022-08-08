@@ -117,8 +117,12 @@ optim_wrapper = dict(
         optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.999))))
 
 # learning policy
-# param_scheduler = dict(
-#     type='CosineAnnealingLR', by_epoch=False, T_max=250000, eta_min=1e-7)
+param_scheduler = dict(
+    type='CosineRestartLR',
+    by_epoch=False,
+    periods=[250000, 250000, 250000, 250000],
+    restart_weights=[1, 1, 1, 1],
+    eta_min=1e-7)
 
 default_hooks = dict(
     checkpoint=dict(

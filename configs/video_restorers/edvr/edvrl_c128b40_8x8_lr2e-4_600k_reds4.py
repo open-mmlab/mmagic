@@ -29,7 +29,7 @@ model = dict(
     ))
 
 lr_config = dict(
-    policy='CosineRestart',
+    policy='CosineRestartLR',
     by_epoch=False,
     periods=[150000, 150000, 150000, 150000],
     restart_weights=[1, 0.5, 0.5, 0.5],

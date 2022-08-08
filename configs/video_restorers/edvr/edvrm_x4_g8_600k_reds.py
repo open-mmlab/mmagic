@@ -28,9 +28,8 @@ model = dict(
     ))
 
 # learning policy
-total_iters = 600000
 lr_config = dict(
-    policy='CosineRestart',
+    policy='CosineRestartLR',
     by_epoch=False,
     periods=[50000, 100000, 150000, 150000, 150000],
     restart_weights=[1, 1, 1, 1, 1],

@@ -27,10 +27,10 @@ model = dict(
         output_view=(-1, 1, 1),
     ))
 
-# # learning policy
-# lr_config = dict(
-#     policy='CosineRestart',
-#     by_epoch=False,
-#     periods=[150000, 150000, 150000, 150000],
-#     restart_weights=[1, 1, 1, 1],
-#     min_lr=1e-7)
+# learning policy
+lr_config = dict(
+    policy='CosineRestartLR',
+    by_epoch=False,
+    periods=[150000, 150000, 150000, 150000],
+    restart_weights=[1, 1, 1, 1],
+    min_lr=1e-7)
