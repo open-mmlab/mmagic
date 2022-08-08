@@ -17,7 +17,7 @@ def update_ut():
     target_ut = []
 
     for subf in folders:
-        if subf == '.mim': 
+        if subf == '.mim' or subf == '__pycache__': 
             continue 
         
         file_list = glob(f'mmedit/{subf}/**/*.py', recursive=True)
