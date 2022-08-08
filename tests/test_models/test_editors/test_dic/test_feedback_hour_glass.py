@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.image_restorers.dic.feedback_hour_glass import (
+from mmedit.models.editors.dic.feedback_hour_glass import (
     Hourglass, ResBlock, reduce_to_five_heatmaps)
 from mmedit.registry import MODELS
 

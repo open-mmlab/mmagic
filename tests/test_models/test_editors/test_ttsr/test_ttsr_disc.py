@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.image_restorers import TTSRDiscriminator
+from mmedit.models import TTSRDiscriminator
 
 
 def test_ttsr_dict():

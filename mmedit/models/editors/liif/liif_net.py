@@ -4,9 +4,9 @@ import torch
 import torch.nn.functional as F
 from mmengine.model import BaseModule
 
+from mmedit.datasets.transforms.utils import make_coord
 from mmedit.models.builder import build_backbone, build_component
 from mmedit.registry import MODELS
-from mmedit.transforms.utils import make_coord
 
 
 class LIIFNet(BaseModule):

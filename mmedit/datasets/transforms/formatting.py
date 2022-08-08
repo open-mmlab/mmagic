@@ -6,8 +6,8 @@ import torch
 from mmcv.transforms import to_tensor
 from mmcv.transforms.base import BaseTransform
 
-from mmedit.data_element import EditDataSample, PixelData
 from mmedit.registry import TRANSFORMS
+from mmedit.structures import EditDataSample, PixelData
 
 
 def check_if_image(value: Any) -> bool:

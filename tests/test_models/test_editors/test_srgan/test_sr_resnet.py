@@ -6,9 +6,9 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.data_element import EditDataSample, PixelData
 from mmedit.models import SRGAN, EditDataPreprocessor, ModifiedVGG, MSRResNet
 from mmedit.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
+from mmedit.structures import EditDataSample, PixelData
 
 
 @patch.object(PerceptualVGG, 'init_weights')

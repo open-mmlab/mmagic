@@ -2,7 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models.image_restorers.dic.light_cnn import MaxFeature
+# from mmedit.models.image_restorers.dic.light_cnn import MaxFeature
+from mmedit.models.editors import MaxFeature
 from mmedit.registry import MODELS
 
 

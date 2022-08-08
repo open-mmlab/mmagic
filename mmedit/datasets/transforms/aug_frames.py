@@ -2,7 +2,7 @@
 import numpy as np
 from mmcv.transforms import BaseTransform
 
-from ..registry import TRANSFORMS
+from mmedit.registry import TRANSFORMS
 
 
 @TRANSFORMS.register_module()

@@ -5,8 +5,8 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.data_element import EditDataSample, PixelData
 from mmedit.models import LIIF, EditDataPreprocessor, build_backbone
+from mmedit.structures import EditDataSample, PixelData
 
 
 def test_liif():

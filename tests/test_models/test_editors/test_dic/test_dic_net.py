@@ -2,8 +2,8 @@
 import torch
 import torch.nn as nn
 
-from mmedit.models.image_restorers.dic.dic_net import (
-    FeedbackBlock, FeedbackBlockCustom, FeedbackBlockHeatmapAttention)
+from mmedit.models.editors import (FeedbackBlock, FeedbackBlockCustom,
+                                   FeedbackBlockHeatmapAttention)
 from mmedit.registry import MODELS
 
 

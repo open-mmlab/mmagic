@@ -3,9 +3,8 @@ from __future__ import division
 import math
 
 import torch
+from mmengine.dist import sync_random_seed
 from torch.utils.data import DistributedSampler as _DistributedSampler
-
-from mmedit.core.utils import sync_random_seed
 
 
 class DistributedSampler(_DistributedSampler):
