@@ -3,9 +3,9 @@ import numpy as np
 import torch
 from mmcv.transforms import to_tensor
 
-from mmedit.data_element.edit_data_sample import EditDataSample
-from mmedit.transforms import PackEditInputs, ToTensor
-from mmedit.transforms.formatting import images_to_tensor
+from mmedit.structures.edit_data_sample import EditDataSample
+from mmedit.datasets.transforms import PackEditInputs, ToTensor
+from mmedit.datasets.transforms.formatting import images_to_tensor
 
 
 def assert_tensor_equal(img, ref_img, ratio_thr=0.999):

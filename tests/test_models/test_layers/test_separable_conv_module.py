@@ -3,7 +3,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models.mattors.modules import DepthwiseSeparableConvModule
+from mmedit.models.layers import DepthwiseSeparableConvModule
 
 
 def test_depthwise_separable_conv():

@@ -5,7 +5,7 @@ import mmcv
 import numpy as np
 import pytest
 
-from mmedit.transforms import GetSpatialDiscountMask, LoadMask
+from mmedit.datasets.transforms import GetSpatialDiscountMask, LoadMask
 
 
 def test_dct_mask():

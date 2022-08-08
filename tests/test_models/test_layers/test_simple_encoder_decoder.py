@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 
-from mmedit.models.mattors import SimpleEncoderDecoder
+from mmedit.models.layers import SimpleEncoderDecoder
 
 
 def assert_dict_keys_equal(dictionary, target_keys):

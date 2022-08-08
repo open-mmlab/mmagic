@@ -1,13 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import imp
 import pytest
 import torch
 
-from mmedit.registry import MODELS, register_all_modules
+from mmedit.registry import MODELS
+from mmedit.utils import register_all_modules
 
-register_all_modules()
 
 
 def test_gl_encdec():
+    register_all_modules()
     input_x = torch.randn(1, 4, 256, 256)
     template_cfg = dict(type='GLEncoderDecoder')
 

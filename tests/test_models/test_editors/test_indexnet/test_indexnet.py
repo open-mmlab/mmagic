@@ -4,10 +4,10 @@ import torch
 from mmengine import ConfigDict
 
 from mmedit.models.editors import IndexedUpsample
-from mmedit.registry import MODELS, register_all_modules
+from mmedit.registry import MODELS
+from mmedit.utils import register_all_modules
 from mmedit.structures import EditDataSample, PixelData
 
-register_all_modules()
 
 
 def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
@@ -124,6 +124,7 @@ def _demo_inputs(input_shape=(1, 4, 64, 64)):
 
 
 def test_indexnet():
+    register_all_modules()
     model_cfg = ConfigDict(
         type='IndexNet',
         data_preprocessor=dict(

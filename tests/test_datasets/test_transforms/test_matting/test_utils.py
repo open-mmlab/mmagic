@@ -4,8 +4,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from mmedit.datasets.pipelines.utils import adjust_gamma, dtype_range
-from mmedit.transforms import (CropAroundCenter, CropAroundFg,
+from mmedit.datasets.transforms import (CropAroundCenter, CropAroundFg,
                                CropAroundUnknown, LoadImageFromFile)
 
 

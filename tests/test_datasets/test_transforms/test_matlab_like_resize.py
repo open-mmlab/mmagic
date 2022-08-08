@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from mmedit.transforms import MATLABLikeResize
+from mmedit.datasets.transforms import MATLABLikeResize
 
 
 def test_matlab_like_resize():

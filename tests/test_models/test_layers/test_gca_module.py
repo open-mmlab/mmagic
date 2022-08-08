@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.models import GCAModule, ResGCAEncoder
+from mmedit.models.layers import GCAModule, ResGCAEncoder
 
 
 def _demo_inputs(input_shape=(1, 4, 64, 64)):

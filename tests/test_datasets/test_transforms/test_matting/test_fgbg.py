@@ -5,7 +5,7 @@ import mmcv
 import numpy as np
 import pytest
 
-from mmedit.transforms.matting import (CompositeFg, MergeFgAndBg, PerturbBg,
+from mmedit.datasets.transforms.matting import (CompositeFg, MergeFgAndBg, PerturbBg,
                                        RandomJitter, RandomLoadResizeBg)
 
 data_root = Path(__file__).parent.parent.parent / 'data' / 'matting_dataset'

@@ -5,7 +5,7 @@ import os.path as osp
 import numpy as np
 import pytest
 
-from mmedit.transforms import (BinarizeImage, Clip, ColorJitter, CopyValues,
+from mmedit.datasets.transforms import (BinarizeImage, Clip, ColorJitter, CopyValues,
                                Flip, GenerateFrameIndices,
                                GenerateFrameIndiceswithPadding,
                                GenerateSegmentIndices, MirrorSequence,

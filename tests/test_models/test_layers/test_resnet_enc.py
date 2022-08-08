@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.models import ResNetEnc, ResShortcutEnc
+from mmedit.models.layers import ResNetEnc, ResShortcutEnc
 
 
 def _demo_inputs(input_shape=(1, 4, 64, 64)):

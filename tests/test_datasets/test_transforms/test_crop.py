@@ -4,7 +4,7 @@ import copy
 import numpy as np
 import pytest
 
-from mmedit.transforms import (Crop, CropLike, FixedCrop, ModCrop,
+from mmedit.datasets.transforms import (Crop, CropLike, FixedCrop, ModCrop,
                                PairedRandomCrop, RandomResizedCrop)
 
 

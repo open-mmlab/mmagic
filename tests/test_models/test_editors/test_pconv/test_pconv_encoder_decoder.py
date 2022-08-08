@@ -3,7 +3,7 @@ import pytest
 import torch
 from mmcv.utils.parrots_wrapper import _BatchNorm
 
-from mmedit.models.inpaintors import PConvEncoder, PConvEncoderDecoder
+from mmedit.models.editors import PConvEncoder, PConvEncoderDecoder
 
 
 def test_pconv_encdec():

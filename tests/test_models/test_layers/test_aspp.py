@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models import ASPP
+from mmedit.models.layers import ASPP
 
 
 def test_aspp():

@@ -3,8 +3,8 @@ import mmcv
 import numpy as np
 import torch
 
-from mmedit.data_element import EditDataSample, PixelData
-from mmedit.visualizer import ConcatImageVisualizer
+from mmedit.structures import EditDataSample, PixelData
+from mmedit.visualization import ConcatImageVisualizer
 
 
 def test_concatimagevisualizer():

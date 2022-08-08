@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from mmengine.fileio.file_client import HardDiskBackend
 
-from mmedit.transforms import LoadImageFromFile
+from mmedit.datasets.transforms import LoadImageFromFile
 
 
 def test_load_image_from_file():

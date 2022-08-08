@@ -4,7 +4,8 @@ from os.path import dirname, join
 import torch
 from mmcv import Config
 
-from mmedit.registry import MODELS, register_all_modules
+from mmedit.registry import MODELS
+from mmedit.utils import register_all_modules
 from mmedit.structures import EditDataSample, PixelData
 
 

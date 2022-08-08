@@ -6,7 +6,7 @@ from os.path import dirname, join
 import torch
 from mmcv import Config
 
-from mmedit.data_element import EditDataSample, PixelData
+from mmedit.structures import EditDataSample, PixelData
 from mmedit.registry import MODELS, register_all_modules
 
 

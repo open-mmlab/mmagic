@@ -6,7 +6,7 @@ import pytest
 import torch
 
 from mmedit.metrics import SAD, ConnectivityError, GradientError, MattingMSE
-from mmedit.transforms import LoadImageFromFile
+from mmedit.datasets.transforms import LoadImageFromFile
 
 
 class TestMattingMetrics:

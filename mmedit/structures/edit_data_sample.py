@@ -26,7 +26,7 @@ class EditDataSample(BaseDataElement):
     Examples:
          >>> import torch
          >>> import numpy as np
-         >>> from mmedit.data_element import EditDataSample, PixelData
+         >>> from mmedit.structures import EditDataSample, PixelData
          >>> data_sample = EditDataSample()
          >>> img_meta = dict(img_shape=(800, 1196, 3))
          >>> img = torch.rand((3, 800, 1196))
