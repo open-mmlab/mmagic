@@ -17,6 +17,9 @@ def update_ut():
     target_ut = []
 
     for subf in folders:
+        if subf == '.mim': 
+            continue 
+        
         file_list = glob(f'mmedit/{subf}/**/*.py', recursive=True)
 
         for f in tqdm(file_list, desc=f'mmedit/{subf}'):
