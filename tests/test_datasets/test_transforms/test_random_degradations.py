@@ -3,8 +3,8 @@ import numpy as np
 import pytest
 
 from mmedit.datasets.transforms import (DegradationsWithShuffle, RandomBlur,
-                               RandomJPEGCompression, RandomNoise,
-                               RandomResize, RandomVideoCompression)
+                                        RandomJPEGCompression, RandomNoise,
+                                        RandomResize, RandomVideoCompression)
 
 
 def test_random_noise():

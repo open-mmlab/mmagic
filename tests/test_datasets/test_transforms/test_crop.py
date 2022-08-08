@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 
 from mmedit.datasets.transforms import (Crop, CropLike, FixedCrop, ModCrop,
-                               PairedRandomCrop, RandomResizedCrop)
+                                        PairedRandomCrop, RandomResizedCrop)
 
 
 class TestAugmentations:

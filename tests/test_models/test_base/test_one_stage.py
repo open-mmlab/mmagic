@@ -7,7 +7,7 @@ import pytest
 import torch
 from mmcv import Config
 
-from mmedit.models.editors import GLEncoderDecoder
+from mmedit.models import GLEncoderDecoder
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import register_all_modules
@@ -17,7 +17,7 @@ def test_one_stage_inpaintor():
     register_all_modules()
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    config_file = join(dirname(__file__), 'configs', 'one_stage_gl.py')
+    config_file = join(dirname(__file__), '..', 'configs', 'one_stage_gl.py')
     cfg = Config.fromfile(config_file)
 
     # mock perceptual loss for test speed

@@ -4,8 +4,7 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models.data_preprocessors import EditDataPreprocessor
-from mmedit.models.editors import BasicVSR, BasicVSRNet
+from mmedit.models import BasicVSR, BasicVSRNet, EditDataPreprocessor
 from mmedit.models.losses import CharbonnierLoss
 from mmedit.structures import EditDataSample, PixelData
 

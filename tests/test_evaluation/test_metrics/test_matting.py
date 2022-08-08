@@ -18,9 +18,9 @@ class TestMattingMetrics:
 
         # This test depends on the interface of loading
         # if loading is changed, data should be change accordingly.
-        alpha_path = Path(
-            __file__
-        ).parent.parent / 'data' / 'matting_dataset' / 'alpha' / 'GT05.jpg'
+        test_path = Path(__file__).parent.parent.parent
+        alpha_path = (
+            test_path / 'data' / 'matting_dataset' / 'alpha' / 'GT05.jpg')
 
         results = dict(alpha_path=alpha_path)
         config = dict(key='alpha')
