@@ -1,5 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import Iterable
+try:
+    import Iterable
+except ImportError:
+    from collections.abc import Iterable
 import pytest
 import torch
 

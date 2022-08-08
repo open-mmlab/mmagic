@@ -6,7 +6,7 @@ from mmcv.cnn.utils.weight_init import constant_init, xavier_init
 from mmengine.model import BaseModule
 
 from mmedit.registry import MODELS
-from ..modules import ASPP
+from .aspp import ASPP
 
 
 @MODELS.register_module()

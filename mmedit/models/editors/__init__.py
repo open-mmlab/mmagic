@@ -8,6 +8,7 @@ from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
 from .deepfillv2 import DeepFillEncoderDecoder, SimpleGatedConvModule
 from .dic import (DIC, DICNet, FeedbackBlock, FeedbackBlockCustom,
                   FeedbackBlockHeatmapAttention, LightCNN, MaxFeature)
+from .dim import DIM
 from .edsr import EDSRNet
 from .esrgan import ESRGAN, RRDBNet
 from .flavr import FLAVR, FLAVRNet
@@ -15,10 +16,13 @@ from .gca import GCA
 from .glean import GLEANStyleGANv2
 from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
                            GLEncoderDecoder)
-from .indexnet import IndexNet
+from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
+                       IndexedUpsample, IndexNet, IndexNetDecoder,
+                       IndexNetEncoder)
 from .liif import LIIF
 from .pconv import (PConvDecoder, PConvEncoder, PConvEncoderDecoder,
                     PConvInpaintor)
+from .plain import PlainDecoder, PlainRefiner
 from .rdn import RDNNet
 from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
@@ -33,6 +37,7 @@ __all__ = [
     'ContextualAttentionModule',
     'CAIN',
     'CAINNet',
+    'DIM',
     'DIC',
     'DICNet',
     'LightCNN',
@@ -50,7 +55,12 @@ __all__ = [
     'DeepFillv1Inpaintor',
     'EDSRNet',
     'ESRGAN',
+    'DepthwiseIndexBlock',
+    'HolisticIndexBlock',
     'IndexNet',
+    'IndexNetEncoder',
+    'IndexedUpsample',
+    'IndexNetDecoder',
     'GCA',
     'GLEncoderDecoder',
     'GLEncoder',
@@ -76,4 +86,6 @@ __all__ = [
     'SearchTransformer',
     'GLEANStyleGANv2',
     'LIIF',
+    'PlainRefiner',
+    'PlainDecoder',
 ]

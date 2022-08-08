@@ -7,7 +7,7 @@ from mmcv.cnn import ConvModule, build_activation_layer, constant_init
 from mmengine.model import BaseModule
 
 from mmedit.registry import MODELS
-from ..modules import GCAModule
+from .gca_module import GCAModule
 
 
 class BasicBlock(nn.Module):
