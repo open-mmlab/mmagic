@@ -2,12 +2,13 @@
 import pytest
 import torch
 
-from mmedit.registry import MODELS, register_all_modules
+from mmedit.registry import MODELS
+from mmedit.utils import register_all_modules
 
-register_all_modules()
 
 
 def test_gl_decoder():
+    register_all_modules()
     input_x = torch.randn(1, 256, 64, 64)
     template_cfg = dict(type='GLDecoder')
 
