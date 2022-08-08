@@ -1,4 +1,4 @@
-_base_ = '../basicvsr/basicvsr_vimeo90k_bd.py'
+_base_ = './basicvsr/basicvsr_vimeo90k_bd.py'
 
 experiment_name = 'basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd'
 work_dir = f'./work_dirs/{experiment_name}'

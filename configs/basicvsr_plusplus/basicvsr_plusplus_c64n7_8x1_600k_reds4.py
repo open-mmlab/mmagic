@@ -1,4 +1,4 @@
-_base_ = '../basicvsr/basicvsr_reds4.py'
+_base_ = './basicvsr/basicvsr_reds4.py'
 
 experiment_name = 'basicvsr_plusplus_c64n7_8x1_600k_reds4'
 work_dir = f'./work_dirs/{experiment_name}'
