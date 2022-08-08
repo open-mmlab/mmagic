@@ -4,9 +4,9 @@ import torch.nn as nn
 from mmcv.cnn import ConvModule, constant_init, kaiming_init
 from mmcv.runner import load_checkpoint
 from mmcv.utils.parrots_wrapper import _BatchNorm
+from mmengine import MMLogger
 
 from mmedit.registry import MODELS
-from mmedit.utils import get_root_logger
 
 
 @MODELS.register_module()
@@ -141,7 +141,7 @@ class FBADecoder(nn.Module):
                 None, pretrained weights will not be loaded. Defaults to None.
         """
         if isinstance(pretrained, str):
-            logger = get_root_logger()
+            logger = MMLogger.get_current_instance()
             load_checkpoint(self, pretrained, strict=False, logger=logger)
         elif pretrained is None:
             for m in self.modules():

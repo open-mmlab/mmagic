@@ -2,12 +2,12 @@
 import torch
 import torch.nn as nn
 from mmcv.cnn import constant_init, normal_init
-from mmcv.runner import auto_fp16, load_checkpoint
+from mmcv.runner import load_checkpoint
 from mmcv.utils.parrots_wrapper import _BatchNorm
+from mmengine import MMLogger
 
 from mmedit.models.builder import build_backbone, build_component
 from mmedit.registry import BACKBONES
-from mmedit.utils import get_root_logger
 
 
 @BACKBONES.register_module()
@@ -46,7 +46,6 @@ class DeepFillEncoderDecoder(nn.Module):
         # support fp16
         self.fp16_enabled = False
 
-    @auto_fp16()
     def forward(self, x):
         """Forward function.
 
@@ -83,7 +82,7 @@ class DeepFillEncoderDecoder(nn.Module):
                 None, pretrained weights will not be loaded. Defaults to None.
         """
         if isinstance(pretrained, str):
-            logger = get_root_logger()
+            logger = MMLogger.get_current_instance()
             load_checkpoint(self, pretrained, strict=False, logger=logger)
         elif pretrained is None:
             for m in self.modules():

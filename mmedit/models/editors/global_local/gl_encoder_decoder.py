@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmcv.runner import auto_fp16
-
 from mmedit.models.__base__ import BaseBackbone
 from mmedit.models.builder import build_component
 from mmedit.registry import BACKBONES
@@ -34,7 +32,6 @@ class GLEncoderDecoder(BaseBackbone):
         # support fp16
         self.fp16_enabled = False
 
-    @auto_fp16()
     def forward(self, x):
         """Forward Function.
 

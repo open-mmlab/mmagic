@@ -11,11 +11,11 @@ import torch.distributed as dist
 from mmcv.parallel import MMDataParallel
 from mmcv.runner import HOOKS, IterBasedRunner, get_dist_info
 from mmcv.utils import build_from_cfg
+from mmengine import MMLogger
 
 from mmedit.core import DistEvalIterHook, EvalIterHook, build_optimizers
 from mmedit.core.distributed_wrapper import DistributedDataParallelWrapper
 from mmedit.datasets.builder import build_dataloader, build_dataset
-from mmedit.utils import get_root_logger
 
 
 def init_random_seed(seed=None, device='cuda'):
@@ -89,7 +89,7 @@ def train_model(model,
         meta (dict | None): Meta dict to record some important information.
             Default: None
     """
-    logger = get_root_logger(log_level=cfg.log_level)
+    logger = MMLogger.get_current_instance()
 
     # start training
     if distributed:
