@@ -55,7 +55,7 @@ demo_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-data_root = 'openmmlab:s3://openmmlab/datasets/editing/REDS'
+data_root = 'data/REDS'
 save_dir = 'work_dirs/edvr'
 
 train_dataloader = dict(
