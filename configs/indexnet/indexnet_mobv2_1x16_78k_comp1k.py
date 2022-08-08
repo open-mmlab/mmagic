@@ -1,4 +1,6 @@
-_base_ = ['../comp1k.py', '../default_runtime.py']
+_base_ = [
+    '../__base__/datasets/comp1k.py', '../__base__/matting_default_runtime.py'
+]
 
 # model settings
 model = dict(

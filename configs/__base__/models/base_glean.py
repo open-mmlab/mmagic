@@ -1,4 +1,4 @@
-_base_ = '../../default_runtime.py'
+_base_ = '../default_runtime.py'
 
 # DistributedDataParallel
 model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')

@@ -1,4 +1,4 @@
-_base_ = '../../default_runtime.py'
+_base_ = '../default_runtime.py'
 
 train_pipeline = [
     dict(

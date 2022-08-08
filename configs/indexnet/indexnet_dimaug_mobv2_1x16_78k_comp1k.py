@@ -1,4 +1,4 @@
-_base_ = ['indexnet_mobv2_1x16_78k_comp1k.py']
+_base_ = ['./indexnet_mobv2_1x16_78k_comp1k.py']
 
 # model settings
 model = dict(

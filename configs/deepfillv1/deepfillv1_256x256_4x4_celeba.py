@@ -1,5 +1,6 @@
 _base_ = [
-    'deepfillv1_base.py', '../default_runtime.py', '../datasets/celeba.py'
+    '../__base__/models/deepfillv1_base.py',
+    '../__base__/inpaint_default_runtime.py', '../__base__/datasets/celeba.py'
 ]
 
 model = dict(
