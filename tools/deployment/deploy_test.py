@@ -5,12 +5,12 @@ from typing import Any
 
 import mmcv
 import torch
+from deploy_test import ONNXRuntimeEditing
 from mmcv import Config, DictAction
 from mmcv.parallel import MMDataParallel
 from torch import nn
 
 from mmedit.apis import single_gpu_test
-from mmedit.core.export import ONNXRuntimeEditing
 from mmedit.datasets import build_dataloader, build_dataset
 from mmedit.models import BasicRestorer, build_model
 

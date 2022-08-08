@@ -11,7 +11,7 @@ import torchvision.transforms as transforms
 from mmcv.transforms import BaseTransform
 from PIL import Image
 
-from ..registry import TRANSFORMS
+from mmedit.registry import TRANSFORMS
 
 
 class BinarizeImage(BaseTransform):

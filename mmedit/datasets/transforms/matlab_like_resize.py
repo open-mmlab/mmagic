@@ -5,7 +5,7 @@
 import numpy as np
 from mmcv.transforms import BaseTransform
 
-from ..registry import TRANSFORMS
+from mmedit.registry import TRANSFORMS
 
 
 def get_size_from_scale(input_size, scale_factor):

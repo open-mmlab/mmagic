@@ -5,12 +5,13 @@ from .builder import (build, build_backbone, build_component, build_loss,
                       build_model)
 from .common import *  # noqa: F401, F403
 from .components import *  # noqa: F401, F403
-from .data_preprocessors import EditDataPreprocessor
+from .data_preprocessors import EditDataPreprocessor, MattorPreprocessor
 from .editors import *  # noqa: F401, F403
 from .losses import *  # noqa: F401, F403
 
 __all__ = [
     'BaseEditModel',
+    'MattorPreprocessor',
     'EditDataPreprocessor',
     'BasicInterpolator',
     'build',

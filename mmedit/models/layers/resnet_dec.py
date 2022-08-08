@@ -6,7 +6,7 @@ from mmcv.cnn import ConvModule, constant_init
 from mmengine.model import BaseModule
 
 from mmedit.registry import MODELS
-from ..modules import GCAModule
+from .gca_module import GCAModule
 from .resnet_enc import BasicBlock
 
 

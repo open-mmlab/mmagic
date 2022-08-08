@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.image_restorers.ttsr.ttsr_net import (CSFI2, CSFI3, SFE,
-                                                         MergeFeatures)
+from mmedit.models.editors.ttsr.ttsr_net import (CSFI2, CSFI3, SFE,
+                                                 MergeFeatures)
 from mmedit.registry import MODELS
 
 

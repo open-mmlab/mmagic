@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models import EDSRNet
+from mmedit.models.editors import EDSRNet
 
 
 def test_edsr():

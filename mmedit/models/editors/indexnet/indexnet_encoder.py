@@ -9,8 +9,8 @@ from mmcv.cnn import ConvModule, constant_init, xavier_init
 from mmcv.utils.parrots_wrapper import SyncBatchNorm
 from mmengine.model import BaseModule
 
+from mmedit.models.layers import ASPP, DepthwiseSeparableConvModule
 from mmedit.registry import MODELS
-from ..modules import ASPP, DepthwiseSeparableConvModule
 
 
 def build_index_block(in_channels,
