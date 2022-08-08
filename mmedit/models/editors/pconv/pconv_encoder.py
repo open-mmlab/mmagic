@@ -2,8 +2,8 @@
 import torch.nn as nn
 from mmcv.utils.parrots_wrapper import _BatchNorm
 
+from mmedit.models.editors.pconv.mask_conv_module import MaskConvModule
 from mmedit.registry import COMPONENTS
-from ...modules import MaskConvModule
 
 
 @COMPONENTS.register_module()

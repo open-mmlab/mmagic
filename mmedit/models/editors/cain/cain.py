@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from mmedit.models.__base__ import BasicInterpolator
 from mmedit.registry import MODELS
-from ..basic_interpolator import BasicInterpolator
 
 
 @MODELS.register_module()

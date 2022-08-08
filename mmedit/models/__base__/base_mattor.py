@@ -8,8 +8,8 @@ from mmcv import ConfigDict
 from mmengine.config import Config
 from mmengine.model import BaseModel
 
-from mmedit.data_element import EditDataSample, PixelData
 from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample, PixelData
 
 DataSamples = Optional[Union[list, torch.Tensor]]
 ForwardResults = Union[Dict[str, torch.Tensor], List[EditDataSample],

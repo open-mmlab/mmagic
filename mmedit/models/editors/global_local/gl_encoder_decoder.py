@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from mmcv.runner import auto_fp16
 
-from mmedit.models.backbones.base_backbone import BaseBackbone
+from mmedit.models.__base__ import BaseBackbone
 from mmedit.models.builder import build_component
 from mmedit.registry import BACKBONES
 

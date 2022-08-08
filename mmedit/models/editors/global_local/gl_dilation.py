@@ -2,8 +2,8 @@
 import torch.nn as nn
 from mmcv.cnn import ConvModule
 
+from mmedit.models.editors.deepfillv2 import SimpleGatedConvModule
 from mmedit.registry import COMPONENTS
-from ...modules import SimpleGatedConvModule
 
 
 @COMPONENTS.register_module()

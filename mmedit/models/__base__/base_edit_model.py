@@ -4,9 +4,8 @@ from typing import List, Optional
 import torch
 from mmengine.model import BaseModel
 
-from mmedit.data_element import EditDataSample
-from mmedit.data_element.pixel_data import PixelData
 from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample, PixelData
 
 # from .builder import build_backbone, build_loss
 
