@@ -37,11 +37,10 @@ optim_wrapper = dict(
 default_hooks = dict(
     checkpoint=dict(out_dir='sh1984:s3://ysli/basicvsr_plusplus'))
 
-# # learning policy
-# total_iters = 600000
-# lr_config = dict(
-#     policy='CosineRestart',
-#     by_epoch=False,
-#     periods=[600000],
-#     restart_weights=[1],
-#     min_lr=1e-7)
+# learning policy
+lr_config = dict(
+    policy='CosineRestartLR',
+    by_epoch=False,
+    periods=[600000],
+    restart_weights=[1],
+    min_lr=1e-7)
