@@ -61,9 +61,7 @@ test_pipeline = [
 # dataset settings
 dataset_type = 'BasicImageDataset'
 data_root = 'data'
-# data_root = 'openmmlab:s3://openmmlab/datasets/editing'
 save_dir = work_dir
-# save_dir = 'sh1984:s3://openmmlab/editing'
 
 train_dataloader = dict(
     num_workers=8,

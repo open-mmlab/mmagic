@@ -90,8 +90,6 @@ train_dataset_type = 'BasicFramesDataset'
 val_dataset_type = 'BasicFramesDataset'
 data_root = 'data/vimeo90k'
 save_dir = work_dir
-# data_root = 'openmmlab:s3://openmmlab/datasets/editing/vimeo90k'
-# save_dir = 'sh1984:s3://openmmlab/editing'
 
 train_dataloader = dict(
     num_workers=16,

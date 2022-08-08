@@ -57,8 +57,6 @@ demo_pipeline = [
 
 data_root = 'data/REDS'
 save_dir = 'work_dirs/edvr'
-# data_root = 'openmmlab:s3://openmmlab/datasets/editing/REDS'
-# save_dir = 'sh1984:s3://ysli/edvr'
 
 train_dataloader = dict(
     num_workers=8,

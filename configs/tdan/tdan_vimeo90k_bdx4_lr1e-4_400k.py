@@ -64,8 +64,6 @@ demo_pipeline = [
 
 data_root = 'data'
 save_dir = work_dir
-# data_root = 'openmmlab:s3://openmmlab/datasets/editing'
-# save_dir = 'sh1984:s3://openmmlab/editing'
 
 train_dataloader = dict(
     num_workers=8,

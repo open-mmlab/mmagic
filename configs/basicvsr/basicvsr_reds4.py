@@ -58,7 +58,6 @@ demo_pipeline = [
 ]
 
 data_root = 'data/REDS'
-# data_root = 'openmmlab:s3://openmmlab/datasets/editing/REDS'
 
 train_dataloader = dict(
     num_workers=6,
