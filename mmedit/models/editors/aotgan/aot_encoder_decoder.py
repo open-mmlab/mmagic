@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.models.builder import build_component
-from mmedit.registry import BACKBONES
+from mmedit.registry import BACKBONES, COMPONENTS
 from ..global_local import GLEncoderDecoder
 
 
@@ -24,6 +23,6 @@ class AOTEncoderDecoder(GLEncoderDecoder):
                  decoder=dict(type='AOTDecoder'),
                  dilation_neck=dict(type='AOTBlockNeck')):
         super().__init__()
-        self.encoder = build_component(encoder)
-        self.decoder = build_component(decoder)
-        self.dilation_neck = build_component(dilation_neck)
+        self.encoder = COMPONENTS.build(encoder)
+        self.decoder = COMPONENTS.build(decoder)
+        self.dilation_neck = COMPONENTS.build(dilation_neck)

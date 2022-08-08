@@ -4,9 +4,8 @@ import torch
 import torch.nn as nn
 from mmengine.model import BaseModule
 
-from mmedit.models.builder import build_component
 from mmedit.models.common import PixelShufflePack, make_layer
-from mmedit.registry import MODELS
+from mmedit.registry import MODELS, COMPONENTS
 from ..esrgan.rrdb_net import RRDB
 
 
@@ -108,7 +107,7 @@ class GLEANStyleGANv2(BaseModule):
                              f'{in_size} and {out_size}.')
 
         # latent bank (StyleGANv2), with weights being fixed
-        self.generator = build_component(
+        self.generator = COMPONENTS.build(
             dict(
                 type='StyleGANv2Generator',
                 out_size=out_size,

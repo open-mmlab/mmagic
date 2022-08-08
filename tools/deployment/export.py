@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import imp
 import os.path as osp
 import warnings
 
@@ -7,7 +8,8 @@ import onnxruntime as ort
 import torch
 from torch import nn
 
-from mmedit.models import BaseMattor, BasicRestorer, build_model
+from mmedit.models import BaseMattor, BasicRestorer
+from mmedit.registry import MODELS
 
 
 def inference_with_session(sess, io_binding, output_names, input_tensor):
@@ -120,7 +122,7 @@ class ONNXRuntimeEditing(nn.Module):
         self.io_binding = sess.io_binding()
         self.output_names = [_.name for _ in sess.get_outputs()]
 
-        base_model = build_model(
+        base_model = MODELS.build(
             cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
 
         if isinstance(base_model, BaseMattor):

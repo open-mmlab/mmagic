@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
+import imp
 import warnings
 
 import cv2
@@ -11,8 +12,7 @@ import torch
 from mmcv.onnx import register_extra_symbolics
 from mmcv.runner import load_checkpoint
 from mmengine.dataset import Compose
-
-from mmedit.models import build_model
+from mmedit.registry import MODELS
 
 
 def pytorch2onnx(model,
@@ -167,7 +167,7 @@ if __name__ == '__main__':
         config.test_cfg.metrics = None
 
     # build the model
-    model = build_model(config.model, test_cfg=config.test_cfg)
+    model = MODELS.build(config.model, test_cfg=config.test_cfg)
     checkpoint = load_checkpoint(model, args.checkpoint, map_location='cpu')
 
     # remove alpha from test_pipeline

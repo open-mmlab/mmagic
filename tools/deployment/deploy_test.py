@@ -12,7 +12,8 @@ from torch import nn
 
 from mmedit.apis import single_gpu_test
 from mmedit.datasets import build_dataloader, build_dataset
-from mmedit.models import BasicRestorer, build_model
+from mmedit.models import BasicRestorer
+from mmedit.registry import MODELS
 
 
 class TensorRTRestorerGenerator(nn.Module):
@@ -75,7 +76,7 @@ class TensorRTEditing(nn.Module):
 
     def __init__(self, trt_file: str, cfg: Any, device_id: int):
         super().__init__()
-        base_model = build_model(
+        base_model = MODELS.build(
             cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
         if isinstance(base_model, BasicRestorer):
             WrapperClass = TensorRTRestorer

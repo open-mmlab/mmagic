@@ -1,10 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
+import imp
 
 from mmcv import Config
 from mmcv.cnn.utils import get_model_complexity_info
-
-from mmedit.models import build_model
+from mmedit.registry import MODELS
 
 
 def parse_args():
@@ -34,7 +34,7 @@ def main():
         raise ValueError('invalid input shape')
 
     cfg = Config.fromfile(args.config)
-    model = build_model(
+    model = MODELS.build(
         cfg.model, train_cfg=cfg.train_cfg, test_cfg=cfg.test_cfg).cuda()
     model.eval()
 

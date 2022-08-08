@@ -5,8 +5,7 @@ import torch.nn.functional as F
 from mmengine.model import BaseModule
 
 from mmedit.datasets.transforms.utils import make_coord
-from mmedit.models.builder import build_backbone, build_component
-from mmedit.registry import MODELS
+from mmedit.registry import COMPONENTS, MODELS, BACKBONES
 
 
 class LIIFNet(BaseModule):
@@ -44,7 +43,7 @@ class LIIFNet(BaseModule):
         self.eval_bsize = eval_bsize
 
         # model
-        self.encoder = build_backbone(encoder)
+        self.encoder = BACKBONES.build(encoder)
         imnet_in_dim = self.encoder.mid_channels
         if self.feat_unfold:
             imnet_in_dim *= 9
@@ -52,7 +51,7 @@ class LIIFNet(BaseModule):
         if self.cell_decode:
             imnet_in_dim += 2
         imnet['in_dim'] = imnet_in_dim
-        self.imnet = build_component(imnet)
+        self.imnet = COMPONENTS.build(imnet)
 
     def forward(self, x, coord, cell, test_mode=False):
         """Forward function.

@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models import build_backbone
+from mmedit.registry import BACKBONES
 
 
 def test_liif_edsr_net():
@@ -25,7 +25,7 @@ def test_liif_edsr_net():
         eval_bsize=30000)
 
     # build model
-    model = build_backbone(model_cfg)
+    model = BACKBONES.build(model_cfg)
 
     # test attributes
     assert model.__class__.__name__ == 'LIIFEDSRNet'
@@ -79,7 +79,7 @@ def test_liif_rdn_net():
         eval_bsize=30000)
 
     # build model
-    model = build_backbone(model_cfg)
+    model = BACKBONES.build(model_cfg)
 
     # test attributes
     assert model.__class__.__name__ == 'LIIFRDNNet'

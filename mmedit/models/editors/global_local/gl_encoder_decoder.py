@@ -1,7 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from mmedit.models.__base__ import BaseBackbone
-from mmedit.models.builder import build_component
-from mmedit.registry import BACKBONES
+from mmedit.registry import BACKBONES, COMPONENTS
 
 
 @BACKBONES.register_module()
@@ -25,9 +24,9 @@ class GLEncoderDecoder(BaseBackbone):
                  decoder=dict(type='GLDecoder'),
                  dilation_neck=dict(type='GLDilationNeck')):
         super().__init__()
-        self.encoder = build_component(encoder)
-        self.decoder = build_component(decoder)
-        self.dilation_neck = build_component(dilation_neck)
+        self.encoder = COMPONENTS.build(encoder)
+        self.decoder = COMPONENTS.build(decoder)
+        self.dilation_neck = COMPONENTS.build(dilation_neck)
 
         # support fp16
         self.fp16_enabled = False

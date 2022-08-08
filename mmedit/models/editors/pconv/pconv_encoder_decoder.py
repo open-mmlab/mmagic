@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from mmedit.models.__base__ import BaseBackbone
-from mmedit.models.builder import build_component
 from mmedit.registry import BACKBONES
 
 
@@ -15,8 +14,8 @@ class PConvEncoderDecoder(BaseBackbone):
 
     def __init__(self, encoder, decoder):
         super().__init__()
-        self.encoder = build_component(encoder)
-        self.decoder = build_component(decoder)
+        self.encoder = BACKBONES.build(encoder)
+        self.decoder = BACKBONES.build(decoder)
 
         # support fp16
         self.fp16_enabled = False

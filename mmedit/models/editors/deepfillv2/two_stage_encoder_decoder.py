@@ -6,7 +6,6 @@ from mmcv.runner import load_checkpoint
 from mmcv.utils.parrots_wrapper import _BatchNorm
 from mmengine import MMLogger
 
-from mmedit.models.builder import build_backbone, build_component
 from mmedit.registry import BACKBONES
 
 
@@ -38,8 +37,8 @@ class DeepFillEncoderDecoder(nn.Module):
                  stage2=dict(type='DeepFillRefiner'),
                  return_offset=False):
         super().__init__()
-        self.stage1 = build_backbone(stage1)
-        self.stage2 = build_component(stage2)
+        self.stage1 = BACKBONES.build(stage1)
+        self.stage2 = BACKBONES.build(stage2)
 
         self.return_offset = return_offset
 

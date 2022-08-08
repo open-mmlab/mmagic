@@ -7,8 +7,6 @@ from mmengine.model import BaseModel
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 
-# from .builder import build_backbone, build_loss
-
 
 @MODELS.register_module()
 class BaseEditModel(BaseModel):
