@@ -1,9 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.video_interpolators import FLAVRNet
-from mmedit.models.video_interpolators.flavr.flavr import FLAVR
-from mmedit.models.video_interpolators.flavr.flavr_net import UpConv3d
+from mmedit.models.editors import FLAVR, FLAVRNet
+from mmedit.models.editors.flavr.flavr_net import UpConv3d
 from mmedit.registry import MODELS
 
 

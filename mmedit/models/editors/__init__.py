@@ -22,7 +22,7 @@ from .pconv import (PConvDecoder, PConvEncoder, PConvEncoderDecoder,
 from .rdn import RDNNet
 from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
-from .tof import TOFlowVFINet
+from .tof import TOFlowVFINet, TOFlowVSRNet
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
 
 __all__ = [
@@ -43,6 +43,7 @@ __all__ = [
     'FLAVR',
     'FLAVRNet',
     'TOFlowVFINet',
+    'TOFlowVSRNet',
     'DeepFillEncoder',
     'DeepFillEncoderDecoder',
     'DeepFillDecoder',
