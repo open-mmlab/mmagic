@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.video_restorers import TDANNet
+from mmedit.models.editors import TDANNet
 
 
 def test_tdan_net():
