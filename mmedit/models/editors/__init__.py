@@ -19,7 +19,7 @@ from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
 from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
                        IndexNetEncoder)
-from .liif import LIIF
+from .liif import LIIF, MLPRefiner
 from .pconv import (PConvDecoder, PConvEncoder, PConvEncoderDecoder,
                     PConvInpaintor)
 from .plain import PlainDecoder, PlainRefiner
@@ -86,6 +86,7 @@ __all__ = [
     'SearchTransformer',
     'GLEANStyleGANv2',
     'LIIF',
+    'MLPRefiner',
     'PlainRefiner',
     'PlainDecoder',
 ]
