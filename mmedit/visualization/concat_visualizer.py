@@ -7,8 +7,8 @@ import numpy as np
 import torch
 from mmengine.visualization import Visualizer
 
-from mmedit.data_element import EditDataSample
 from mmedit.registry import VISUALIZERS
+from mmedit.structures import EditDataSample
 from mmedit.utils import print_colored_log
 
 

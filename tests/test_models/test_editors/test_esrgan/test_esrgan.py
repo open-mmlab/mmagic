@@ -1,14 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from unittest.mock import patch
 
-import pytest
 import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.data_element import EditDataSample, PixelData
 from mmedit.models import ESRGAN, EditDataPreprocessor, ModifiedVGG, RRDBNet
 from mmedit.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
+from mmedit.structures import EditDataSample, PixelData
 
 
 @patch.object(PerceptualVGG, 'init_weights')
@@ -80,50 +79,3 @@ def test_esrgan(init_weights):
 
     # reset mock to clear some memory usage
     init_weights.reset_mock()
-
-
-def test_rrdbnet_backbone():
-    """Test RRDBNet backbone."""
-
-    # model, initialization and forward (cpu)
-    # x4 model
-    net = RRDBNet(
-        in_channels=3,
-        out_channels=3,
-        mid_channels=8,
-        num_blocks=2,
-        growth_channels=4,
-        upscale_factor=4)
-    input_shape = (1, 3, 12, 12)
-    img = torch.rand(input_shape)
-    output = net(img)
-    assert output.shape == (1, 3, 48, 48)
-
-    # x3 model
-    with pytest.raises(ValueError):
-        net = RRDBNet(
-            in_channels=3,
-            out_channels=3,
-            mid_channels=8,
-            num_blocks=2,
-            growth_channels=4,
-            upscale_factor=3)
-
-    # x2 model
-    net = RRDBNet(
-        in_channels=3,
-        out_channels=3,
-        mid_channels=8,
-        num_blocks=2,
-        growth_channels=4,
-        upscale_factor=2)
-    input_shape = (1, 3, 12, 12)
-    img = torch.rand(input_shape)
-    output = net(img)
-    assert output.shape == (1, 3, 24, 24)
-
-    # model forward (gpu)
-    if torch.cuda.is_available():
-        net = net.cuda()
-        output = net(img.cuda())
-        assert output.shape == (1, 3, 24, 24)

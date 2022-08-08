@@ -5,11 +5,11 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.data_element import EditDataSample, PixelData
-from mmedit.models import (SRGAN, EditDataPreprocessor, GLEANStyleGANv2,
-                           StyleGANv2Discriminator)
+from mmedit.models import SRGAN, EditDataPreprocessor, GLEANStyleGANv2
+from mmedit.models.editors.glean import StyleGANv2Discriminator
 from mmedit.models.losses import (GANLoss, MSELoss, PerceptualLoss,
                                   PerceptualVGG)
+from mmedit.structures import EditDataSample, PixelData
 
 
 @patch.object(PerceptualVGG, 'init_weights')

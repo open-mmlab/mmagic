@@ -6,8 +6,8 @@ import random
 import cv2
 import numpy as np
 
-from mmedit.transforms import blur_kernels
-from ..registry import TRANSFORMS
+from mmedit.datasets.transforms import blur_kernels
+from mmedit.registry import TRANSFORMS
 
 try:
     import av

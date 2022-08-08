@@ -4,11 +4,11 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.data_element import EditDataSample, PixelData
-from mmedit.models.data_processor import EditDataPreprocessor
+from mmedit.models import EditDataPreprocessor
+from mmedit.models.editors import CAIN, CAINNet
 from mmedit.models.losses import L1Loss
-from mmedit.models.video_interpolators import CAIN, CAINNet
 from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample, PixelData
 
 
 def test_cain_net():
