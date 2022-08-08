@@ -5,7 +5,7 @@ MMEditing supports multiple tasks, each of which has different settings. Fortuna
 We first need to create BasicVSR in `mmedit/models/restorers/basicvsr.py` .
 
 ```python
-from ..registry import MODELS
+from mmedit.registry import MODELS
 from .basic_restorer import BasicRestorer
 
 @MODELS.register_module()
@@ -101,7 +101,7 @@ generator=dict(
 Let's use Charbonnier loss as an example. We first define the loss in `mmedit/models/losses/pixelwise_loss.py` . The decorator `masked_loss` enables the loss to be weighted and masked for each element. Again, do make sure that the line `@LOSSES.register_module()` is included.
 
 ```python
-from ..registry import LOSSES
+from mmedit.registry import LOSSES
 from .utils import masked_loss
 
 @masked_loss
