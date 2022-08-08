@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.video_restorers import RealBasicVSRNet
+from mmedit.models.editors import RealBasicVSRNet
 
 
 def test_real_basicvsr_net():

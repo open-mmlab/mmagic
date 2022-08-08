@@ -1,4 +1,4 @@
-_base_ = ['dim_stage1_v16_1x1_1000k_comp1k.py']
+_base_ = ['./dim_stage1_v16_1x1_1000k_comp1k.py']
 
 # model settings
 model = dict(

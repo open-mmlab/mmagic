@@ -1,4 +1,4 @@
-_base_ = '../../default_runtime.py'
+_base_ = '../__base__/default_runtime.py'
 
 experiment_name = 'dic_x8c48b6_g4_150k_CelebAHQ'
 work_dir = f'./work_dirs/{experiment_name}'

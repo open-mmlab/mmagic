@@ -7,8 +7,8 @@ import cv2
 import numpy as np
 from mmengine.evaluator import BaseMetric
 
-from ..registry import METRICS
-from .gaussian_funcs import gauss_gradient
+from mmedit.registry import METRICS
+from ..functional import gauss_gradient
 from .utils import average
 
 

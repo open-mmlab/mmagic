@@ -3,10 +3,10 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.data_element import EditDataSample, PixelData
-from mmedit.models.data_processor import EditDataPreprocessor
+from mmedit.models.data_preprocessors import EditDataPreprocessor
+from mmedit.models.editors import TDAN, TDANNet
 from mmedit.models.losses import MSELoss
-from mmedit.models.video_restorers import TDAN, TDANNet
+from mmedit.structures import EditDataSample, PixelData
 
 
 def test_tdan():

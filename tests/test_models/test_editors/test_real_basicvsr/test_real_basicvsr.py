@@ -5,10 +5,11 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.data_element import EditDataSample, PixelData
-from mmedit.models import (EditDataPreprocessor, RealBasicVSR, RealBasicVSRNet,
-                           UNetDiscriminatorWithSpectralNorm)
+from mmedit.models.data_preprocessors import EditDataPreprocessor
+from mmedit.models.editors import (RealBasicVSR, RealBasicVSRNet,
+                                   UNetDiscriminatorWithSpectralNorm)
 from mmedit.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
+from mmedit.structures import EditDataSample, PixelData
 
 
 @patch.object(PerceptualVGG, 'init_weights')

@@ -1,4 +1,4 @@
-_base_ = ['gca_r34_4x10_200k_comp1k.py']
+_base_ = ['./gca_r34_4x10_200k_comp1k.py']
 
 # model settings
 model = dict(backbone=dict(encoder=dict(in_channels=4)))

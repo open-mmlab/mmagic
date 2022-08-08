@@ -1,4 +1,7 @@
-_base_ = ['AOT-GAN_base.py', '../default_runtime.py', '../datasets/places.py']
+_base_ = [
+    '../__base__/models/AOT-GAN_base.py',
+    '../__base__/inpaint_default_runtime.py', '../__base__/datasets/places.py'
+]
 
 model = dict(train_cfg=dict(
     disc_step=1,

@@ -4,9 +4,9 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.data_element import EditDataSample, PixelData
+from mmedit.models.editors import EDVR, EDVRNet
 from mmedit.models.losses import CharbonnierLoss
-from mmedit.models.video_restorers import EDVR, EDVRNet
+from mmedit.structures import EditDataSample, PixelData
 
 
 def test_edvr():

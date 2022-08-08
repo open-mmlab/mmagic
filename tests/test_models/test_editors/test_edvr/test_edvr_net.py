@@ -2,8 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models.video_restorers.edvr.edvr_net import (EDVRNet, PCDAlignment,
-                                                         TSAFusion)
+from mmedit.models.editors.edvr.edvr_net import (EDVRNet, PCDAlignment,
+                                                 TSAFusion)
 
 
 def test_pcd_alignment():

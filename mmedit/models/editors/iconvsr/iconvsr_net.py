@@ -8,11 +8,10 @@ from mmengine.runner import load_checkpoint
 
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   flow_warp, make_layer)
-from mmedit.models.video_restorers.basicvsr.basicvsr_net import (
-    ResidualBlocksWithInputConv, SPyNet)
-from mmedit.models.video_restorers.edvr.edvr_net import PCDAlignment, TSAFusion
 from mmedit.registry import MODELS
 from mmedit.utils import get_root_logger
+from ..basicvsr.basicvsr_net import ResidualBlocksWithInputConv, SPyNet
+from ..edvr.edvr_net import PCDAlignment, TSAFusion
 
 
 @MODELS.register_module()

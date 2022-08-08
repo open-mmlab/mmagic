@@ -1,4 +1,7 @@
-_base_ = ['gl_base.py', '../default_runtime.py', '../datasets/celeba.py']
+_base_ = [
+    '../__base__/models/gl_base.py', '../__base__/inpaint_default_runtime.py',
+    '../__base__/datasets/celeba.py'
+]
 
 model = dict(
     train_cfg=dict(

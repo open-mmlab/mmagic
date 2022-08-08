@@ -3,9 +3,8 @@ import torch
 import torch.nn as nn
 from mmengine.model import BaseModule
 
-from mmedit.models.video_restorers.basicvsr.basicvsr_net import (
-    BasicVSRNet, ResidualBlocksWithInputConv)
 from mmedit.registry import MODELS
+from ..basicvsr.basicvsr_net import BasicVSRNet, ResidualBlocksWithInputConv
 
 
 @MODELS.register_module()

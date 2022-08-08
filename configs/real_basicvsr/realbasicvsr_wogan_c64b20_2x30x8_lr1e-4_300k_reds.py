@@ -1,4 +1,4 @@
-_base_ = '../../default_runtime.py'
+_base_ = '../__base__/default_runtime.py'
 
 experiment_name = 'realbasicvsr_wogan_c64b20_2x30x8_lr1e-4_300k_reds'
 work_dir = f'./work_dirs/{experiment_name}'

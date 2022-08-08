@@ -1,10 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.data_element import EditDataSample
-from mmedit.data_element.pixel_data import PixelData
-from mmedit.models.base_edit_model import BaseEditModel
+from mmedit.models import BaseEditModel
 from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample, PixelData
 
 
 @MODELS.register_module()

@@ -9,8 +9,8 @@ from mmengine.evaluator import BaseMetric
 from scipy.ndimage import convolve
 from scipy.special import gamma
 
+from mmedit.datasets.transforms import MATLABLikeResize
 from mmedit.registry import METRICS
-from mmedit.transforms import MATLABLikeResize
 from .utils import average, obtain_data, reorder_image, to_numpy
 
 

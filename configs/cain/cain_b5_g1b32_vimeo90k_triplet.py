@@ -1,4 +1,4 @@
-_base_ = '../../default_runtime.py'
+_base_ = '../__base__/default_runtime.py'
 
 experiment_name = 'cain_b5_g1b32_vimeo90k_triplet'
 work_dir = f'./work_dirs/{experiment_name}'

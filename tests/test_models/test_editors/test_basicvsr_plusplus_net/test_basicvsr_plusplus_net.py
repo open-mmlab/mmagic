@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.video_restorers import BasicVSRPlusPlusNet
+from mmedit.models.editors import BasicVSRPlusPlusNet
 
 
 def test_basicvsr_plusplus():

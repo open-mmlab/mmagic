@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.base_edit_model import BaseEditModel
+from mmedit.models import BaseEditModel
 from mmedit.registry import MODELS
 
 
