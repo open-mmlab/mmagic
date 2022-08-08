@@ -13,12 +13,13 @@ from mmedit.datasets.transforms import (GetSpatialDiscountMask,
 def test_load_image_from_file():
 
     path_baboon = Path(
-        __file__).parent.parent / 'data' / 'image' / 'gt' / 'baboon.png'
+        __file__).parent.parent.parent / 'data' / 'image' / 'gt' / 'baboon.png'
     img_baboon = mmcv.imread(str(path_baboon), flag='color')
     h, w, _ = img_baboon.shape
 
     path_baboon_x4 = Path(
-        __file__).parent.parent / 'data' / 'image' / 'lq' / 'baboon_x4.png'
+        __file__
+    ).parent.parent.parent / 'data' / 'image' / 'lq' / 'baboon_x4.png'
     img_baboon_x4 = mmcv.imread(str(path_baboon_x4), flag='color')
 
     # read gt image
