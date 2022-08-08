@@ -6,7 +6,6 @@ from .base_sr_dataset import BaseSRDataset
 from .base_vfi_dataset import BaseVFIDataset
 from .basic_frames_dataset import BasicFramesDataset
 from .basic_image_dataset import BasicImageDataset
-from .builder import build_dataloader, build_dataset
 from .comp1k_dataset import AdobeComp1kDataset
 from .dataset_wrappers import RepeatDataset
 from .generation_paired_dataset import GenerationPairedDataset
@@ -33,8 +32,6 @@ from .vfi_vimeo90k_dataset import VFIVimeo90KDataset
 __all__ = [
     'DATASETS',
     'PIPELINES',
-    'build_dataset',
-    'build_dataloader',
     'BaseDataset',
     'BaseMattingDataset',
     'ImgInpaintingDataset',

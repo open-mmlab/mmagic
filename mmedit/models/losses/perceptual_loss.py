@@ -3,10 +3,10 @@ import torch
 import torch.nn as nn
 import torchvision.models.vgg as vgg
 from mmcv.runner import load_checkpoint
+from mmengine import MMLogger
 from torch.nn import functional as F
 
 from mmedit.registry import LOSSES
-from mmedit.utils import get_root_logger
 
 
 class PerceptualVGG(nn.Module):
@@ -89,7 +89,7 @@ class PerceptualVGG(nn.Module):
             model (nn.Module): Models to be inited.
             pretrained (str): Path for pretrained weights.
         """
-        logger = get_root_logger()
+        logger = MMLogger.get_current_instance()
         load_checkpoint(model, pretrained, logger=logger)
 
 

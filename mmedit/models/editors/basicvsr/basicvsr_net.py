@@ -3,13 +3,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule
+from mmengine import MMLogger
 from mmengine.model import BaseModule
 from mmengine.runner import load_checkpoint
 
 from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
                                   flow_warp, make_layer)
 from mmedit.registry import MODELS
-from mmedit.utils import get_root_logger
 
 
 @MODELS.register_module()
@@ -228,7 +228,7 @@ class SPyNet(nn.Module):
             [SPyNetBasicModule() for _ in range(6)])
 
         if isinstance(pretrained, str):
-            logger = get_root_logger()
+            logger = MMLogger.get_current_instance()
             load_checkpoint(self, pretrained, strict=True, logger=logger)
         elif pretrained is not None:
             raise TypeError('[pretrained] should be str or None, '

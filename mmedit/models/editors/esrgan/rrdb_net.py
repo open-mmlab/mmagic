@@ -3,12 +3,12 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.runner import load_checkpoint
+from mmengine import MMLogger
 from mmengine.model import BaseModule
 
 from mmedit.models.common import (default_init_weights, make_layer,
                                   pixel_unshuffle)
 from mmedit.registry import BACKBONES
-from mmedit.utils import get_root_logger
 
 
 @BACKBONES.register_module()
@@ -100,7 +100,7 @@ class RRDBNet(BaseModule):
                 Defaults to True.
         """
         if isinstance(pretrained, str):
-            logger = get_root_logger()
+            logger = MMLogger.get_current_instance()
             load_checkpoint(self, pretrained, strict=strict, logger=logger)
         elif pretrained is None:
             # Use smaller std for better stability and performance. We

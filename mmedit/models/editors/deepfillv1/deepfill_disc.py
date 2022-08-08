@@ -2,10 +2,10 @@
 import torch.nn as nn
 from mmcv.cnn import normal_init
 from mmcv.runner import load_checkpoint
+from mmengine import MMLogger
 
 from mmedit.models import build_component
 from mmedit.registry import COMPONENTS
-from mmedit.utils import get_root_logger
 
 
 @COMPONENTS.register_module()
@@ -56,7 +56,7 @@ class DeepFillv1Discriminators(nn.Module):
                 None, pretrained weights will not be loaded. Defaults to None.
         """
         if isinstance(pretrained, str):
-            logger = get_root_logger()
+            logger = MMLogger.get_current_instance()
             load_checkpoint(self, pretrained, strict=False, logger=logger)
         elif pretrained is None:
             for m in self.modules():

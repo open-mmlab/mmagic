@@ -2,9 +2,9 @@
 import torch
 import torch.nn as nn
 from mmcv.runner import load_checkpoint
+from mmengine import MMLogger
 
 from mmedit.registry import COMPONENTS
-from mmedit.utils import get_root_logger
 from .multi_layer_disc import MultiLayerDiscriminator
 
 
@@ -55,7 +55,7 @@ class GLDiscs(nn.Module):
                 None, pretrained weights will not be loaded. Defaults to None.
         """
         if isinstance(pretrained, str):
-            logger = get_root_logger()
+            logger = MMLogger.get_current_instance()
             load_checkpoint(self, pretrained, strict=False, logger=logger)
         elif pretrained is None:
             for m in self.modules():
