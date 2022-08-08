@@ -5,8 +5,8 @@ import torch
 from mmengine.config import Config
 from mmengine.model import BaseModel
 
-from mmedit.data_element import EditDataSample, PixelData
 from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample, PixelData
 from ..common import set_requires_grad
 
 

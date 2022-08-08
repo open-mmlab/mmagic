@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.core.misc import tensor2img
+from mmedit.engine.misc import tensor2img
 from mmedit.registry import MODELS
-from ..base_edit_model import BaseEditModel
+from .base_edit_model import BaseEditModel
 
 # TODO tensor2img will be move
 

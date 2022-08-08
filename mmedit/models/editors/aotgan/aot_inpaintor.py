@@ -3,9 +3,9 @@ from typing import List
 
 import torch
 
+from mmedit.models.__base__ import OneStageInpaintor
 from mmedit.registry import MODELS
-from ..common import set_requires_grad
-from .one_stage import OneStageInpaintor
+from ...common import set_requires_grad
 
 
 @MODELS.register_module()

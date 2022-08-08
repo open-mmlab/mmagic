@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.core.misc import tensor2img
+from mmedit.engine.misc import tensor2img
+from mmedit.models.__base__ import BasicInterpolator
 from mmedit.registry import MODELS
-from ..basic_interpolator import BasicInterpolator
 
 # TODO tensor2img will be move
 

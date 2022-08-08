@@ -4,7 +4,7 @@ from typing import Dict, List
 import torch
 from mmengine.optim import OptimWrapperDict
 
-from mmedit.models.base_edit_model import BaseEditModel
+from mmedit.models.__base__ import BaseEditModel
 from mmedit.models.common import set_requires_grad
 from mmedit.registry import MODELS
 

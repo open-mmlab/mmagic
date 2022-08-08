@@ -1,19 +1,38 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .aot_encoder_decoder import AOTEncoderDecoder
-from .decoders import DeepFillDecoder, GLDecoder, PConvDecoder
-from .encoders import DeepFillEncoder, GLEncoder, PConvEncoder
-from .gl_encoder_decoder import GLEncoderDecoder
-from .necks import AOTBlockNeck, ContextualAttentionNeck, GLDilationNeck
-from .pconv_encoder_decoder import PConvEncoderDecoder
-from .two_stage_encoder_decoder import DeepFillEncoderDecoder
+# from deepfillv2 import DeepFillEncoderDecoder
+
+from .aotgan import AOTBlockNeck, AOTEncoderDecoder, AOTInpaintor
+from .cain import CAIN, CAINNet
+from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
+                         DeepFillDecoder, DeepFillEncoder, DeepFillv1Inpaintor)
+from .deepfillv2 import DeepFillEncoderDecoder, SimpleGatedConvModule
+from .flavr import FLAVR, FLAVRNet
+from .gca import GCA
+from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
+                           GLEncoderDecoder)
+from .indexnet import IndexNet
+from .pconv import (PConvDecoder, PConvEncoder, PConvEncoderDecoder,
+                    PConvInpaintor)
+from .srcnn import SRCNNNet
+from .tof import TOFlowVFINet
 
 __all__ = [
     'AOTEncoderDecoder',
     'AOTBlockNeck',
+    'AOTInpaintor',
     'ContextualAttentionNeck',
+    'ContextualAttentionModule',
+    'CAIN',
+    'CAINNet',
+    'FLAVR',
+    'FLAVRNet',
+    'TOFlowVFINet',
     'DeepFillEncoder',
     'DeepFillEncoderDecoder',
     'DeepFillDecoder',
+    'DeepFillv1Inpaintor',
+    'IndexNet',
+    'GCA',
     'GLEncoderDecoder',
     'GLEncoder',
     'GLDecoder',
@@ -21,4 +40,7 @@ __all__ = [
     'PConvEncoderDecoder',
     'PConvEncoder',
     'PConvDecoder',
+    'PConvInpaintor',
+    'SimpleGatedConvModule',
+    'SRCNNNet',
 ]

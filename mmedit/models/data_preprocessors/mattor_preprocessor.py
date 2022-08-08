@@ -6,8 +6,8 @@ import torch
 # import torch.nn.functional as F
 from mmengine.model import BaseDataPreprocessor
 
-from mmedit.data_element import EditDataSample, PixelData
 from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample, PixelData
 
 DataSamples = Optional[Union[list, torch.Tensor]]
 ForwardResults = Union[Dict[str, torch.Tensor], List[EditDataSample],

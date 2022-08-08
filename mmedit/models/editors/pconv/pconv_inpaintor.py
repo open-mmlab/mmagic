@@ -3,9 +3,9 @@ from typing import List
 
 import torch
 
-from mmedit.data_element import EditDataSample, PixelData
+from mmedit.models.__base__ import OneStageInpaintor
 from mmedit.registry import MODELS
-from .one_stage import OneStageInpaintor
+from mmedit.structures import EditDataSample, PixelData
 
 
 @MODELS.register_module()

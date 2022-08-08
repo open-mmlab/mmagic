@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from mmcv.runner import load_checkpoint
 
-from mmedit.models.image_restorers.dic import LightCNN
+from mmedit.models.editors.dic import LightCNN
 from mmedit.registry import LOSSES
 from mmedit.utils import get_root_logger
 
