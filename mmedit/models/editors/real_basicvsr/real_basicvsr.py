@@ -3,8 +3,8 @@ import torch
 import torch.nn.functional as F
 from mmengine.optim import OptimWrapperDict
 
-from mmedit.models.image_restorers import RealESRGAN
 from mmedit.registry import MODELS
+from ..real_esrgan import RealESRGAN
 
 
 @MODELS.register_module()
