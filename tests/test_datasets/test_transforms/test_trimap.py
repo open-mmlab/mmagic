@@ -4,9 +4,9 @@ import cv2
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms.matting import (
-    FormatTrimap, GenerateTrimap, GenerateTrimapWithDistTransform,
-    TransformTrimap)
+from mmedit.datasets.transforms import (FormatTrimap, GenerateTrimap,
+                                        GenerateTrimapWithDistTransform,
+                                        TransformTrimap)
 
 
 def assert_keys_contain(result_keys, target_keys):

@@ -6,11 +6,9 @@ import pytest
 
 from mmedit.datasets.transforms import (CropAroundCenter, CropAroundFg,
                                         CropAroundUnknown, LoadImageFromFile,
-                                        adjust_gamma)
-from mmedit.datasets.transforms.mask.utils import (bbox2mask,
-                                                   brush_stroke_mask,
-                                                   get_irregular_mask,
-                                                   random_bbox)
+                                        adjust_gamma, bbox2mask,
+                                        brush_stroke_mask, get_irregular_mask,
+                                        random_bbox)
 
 dtype_range = {
     np.bool_: (False, True),

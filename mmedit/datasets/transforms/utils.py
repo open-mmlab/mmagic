@@ -4,12 +4,11 @@ import logging
 import math
 
 import cv2
-import ImageDraw
 import mmcv
 import numpy as np
 import torch
 from mmcv.utils import print_log
-from PIL import Image
+from PIL import Image, ImageDraw
 
 
 def make_coord(shape, ranges=None, flatten=True):
