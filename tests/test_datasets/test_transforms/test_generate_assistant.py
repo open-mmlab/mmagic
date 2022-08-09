@@ -2,7 +2,8 @@
 import torch
 
 from mmedit.datasets.transforms import (GenerateCoordinateAndCell,
-                               GenerateFacialHeatmap, LoadImageFromFile)
+                                        GenerateFacialHeatmap,
+                                        LoadImageFromFile)
 
 
 def test_generate_coordinate_and_cell():

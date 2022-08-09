@@ -5,13 +5,14 @@ import os.path as osp
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import (BinarizeImage, Clip, ColorJitter, CopyValues,
-                               Flip, GenerateFrameIndices,
-                               GenerateFrameIndiceswithPadding,
-                               GenerateSegmentIndices, MirrorSequence,
-                               RandomAffine, RandomMaskDilation,
-                               RandomRotation, RandomTransposeHW, Resize,
-                               SetValues, TemporalReverse, UnsharpMasking)
+from mmedit.datasets.transforms import (BinarizeImage, Clip, ColorJitter,
+                                        CopyValues, Flip, GenerateFrameIndices,
+                                        GenerateFrameIndiceswithPadding,
+                                        GenerateSegmentIndices, MirrorSequence,
+                                        RandomAffine, RandomMaskDilation,
+                                        RandomRotation, RandomTransposeHW,
+                                        Resize, SetValues, TemporalReverse,
+                                        UnsharpMasking)
 
 
 class TestAugmentations:

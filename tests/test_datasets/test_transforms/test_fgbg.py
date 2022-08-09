@@ -5,10 +5,12 @@ import mmcv
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import (CompositeFg, MergeFgAndBg, PerturbBg,
-                                        RandomJitter, RandomLoadResizeBg)
+from mmedit.datasets.transforms.matting import (CompositeFg, MergeFgAndBg,
+                                                PerturbBg, RandomJitter,
+                                                RandomLoadResizeBg)
 
-data_root = Path(__file__).parent.parent.parent / 'data' / 'matting_dataset'
+test_root = Path(__file__).parent.parent.parent.parent
+data_root = test_root / 'data' / 'matting_dataset'
 
 
 def assert_keys_contain(result_keys, target_keys):

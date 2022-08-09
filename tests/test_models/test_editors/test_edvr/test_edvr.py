@@ -4,7 +4,7 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models.editors import EDVR, EDVRNet
+from mmedit.models import EDVR, EDVRNet
 from mmedit.models.losses import CharbonnierLoss
 from mmedit.structures import EditDataSample, PixelData
 
