@@ -10,7 +10,7 @@ import numpy as np
 from mmcv.transforms import BaseTransform
 
 from mmedit.registry import TRANSFORMS
-from .utils import random_choose_unknown
+from .trans_utils import random_choose_unknown
 
 
 @TRANSFORMS.register_module()

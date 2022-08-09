@@ -23,10 +23,10 @@ from .random_degradations import (DegradationsWithShuffle, RandomBlur,
                                   RandomJPEGCompression, RandomNoise,
                                   RandomResize, RandomVideoCompression)
 from .random_down_sampling import RandomDownSampling
+from .trans_utils import (adjust_gamma, bbox2mask, brush_stroke_mask,
+                          get_irregular_mask, random_bbox)
 from .trimap import (FormatTrimap, GenerateTrimap,
                      GenerateTrimapWithDistTransform, TransformTrimap)
-from .utils import (adjust_gamma, bbox2mask, brush_stroke_mask,
-                    get_irregular_mask, random_bbox)
 from .values import CopyValues, SetValues
 
 __all__ = [
