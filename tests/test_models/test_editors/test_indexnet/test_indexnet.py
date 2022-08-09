@@ -5,9 +5,8 @@ from mmengine import ConfigDict
 
 from mmedit.models.editors import IndexedUpsample
 from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
 from mmedit.structures import EditDataSample, PixelData
-
+from mmedit.utils import register_all_modules
 
 
 def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):

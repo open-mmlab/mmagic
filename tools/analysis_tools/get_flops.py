@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
-import imp
 
 from mmcv import Config
 from mmcv.cnn.utils import get_model_complexity_info
+
 from mmedit.registry import MODELS
 
 

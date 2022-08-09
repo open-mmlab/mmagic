@@ -5,7 +5,6 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models.data_preprocessors import EditDataPreprocessor
 from mmedit.models import (EditDataPreprocessor, RealESRGAN, RRDBNet,
                            UNetDiscriminatorWithSpectralNorm)
 from mmedit.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG

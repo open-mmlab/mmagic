@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
-import imp
 import warnings
 
 import cv2
@@ -12,6 +11,7 @@ import torch
 from mmcv.onnx import register_extra_symbolics
 from mmcv.runner import load_checkpoint
 from mmengine.dataset import Compose
+
 from mmedit.registry import MODELS
 
 

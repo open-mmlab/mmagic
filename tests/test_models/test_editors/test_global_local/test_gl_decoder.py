@@ -6,7 +6,6 @@ from mmedit.registry import COMPONENTS
 from mmedit.utils import register_all_modules
 
 
-
 def test_gl_decoder():
     register_all_modules()
     input_x = torch.randn(1, 256, 64, 64)
