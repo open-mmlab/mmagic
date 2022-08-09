@@ -11,7 +11,7 @@ from scipy.special import gamma
 
 from mmedit.datasets.transforms import MATLABLikeResize
 from mmedit.registry import METRICS
-from .utils import average, obtain_data, reorder_image, to_numpy
+from .metrics_utils import average, obtain_data, reorder_image, to_numpy
 
 
 @METRICS.register_module()

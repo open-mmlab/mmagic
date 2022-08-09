@@ -7,7 +7,8 @@ import torch.nn as nn
 
 from mmedit.models.editors.glean.stylegan2 import (StyleGANv2Discriminator,
                                                    StyleGANv2Generator)
-from mmedit.models.editors.glean.stylegan2.common import get_module_device
+from mmedit.models.editors.glean.stylegan2.stylegan2_utils import \
+    get_module_device
 
 
 class TestStyleGAN2Generator:

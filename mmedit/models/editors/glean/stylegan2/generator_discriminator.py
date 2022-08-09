@@ -8,10 +8,11 @@ import torch.nn as nn
 from mmcv.runner.checkpoint import _load_checkpoint_with_prefix
 
 from mmedit.registry import COMPONENTS
-from .common import get_mean_latent, get_module_device, style_mixing
-from .modules import (ConstantInput, ConvDownLayer, EqualLinearActModule,
-                      ModMBStddevLayer, ModulatedStyleConv, ModulatedToRGB,
-                      PixelNorm, ResBlock)
+from .stylegan2_modules import (ConstantInput, ConvDownLayer,
+                                EqualLinearActModule, ModMBStddevLayer,
+                                ModulatedStyleConv, ModulatedToRGB, PixelNorm,
+                                ResBlock)
+from .stylegan2_utils import get_mean_latent, get_module_device, style_mixing
 
 
 @COMPONENTS.register_module()

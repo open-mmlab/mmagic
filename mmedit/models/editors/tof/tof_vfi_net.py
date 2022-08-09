@@ -7,7 +7,7 @@ from mmcv.runner import load_checkpoint
 from mmengine import MMLogger
 from mmengine.model import BaseModule
 
-from mmedit.models.common import flow_warp
+from mmedit.models.utils import flow_warp
 from mmedit.registry import MODELS
 
 

@@ -6,8 +6,7 @@ from mmcv.ops import DeformConv2d, DeformConv2dPack, deform_conv2d
 from mmengine.model import BaseModule
 from torch.nn.modules.utils import _pair
 
-from mmedit.models.common import (PixelShufflePack, ResidualBlockNoBN,
-                                  make_layer)
+from mmedit.models.utils import PixelShufflePack, ResidualBlockNoBN, make_layer
 from mmedit.registry import MODELS
 
 

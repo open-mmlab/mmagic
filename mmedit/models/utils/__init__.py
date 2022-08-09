@@ -9,7 +9,6 @@ from .generation_model_utils import (GANImageBuffer, ResidualBlockWithDropout,
                                      generation_init_weights)
 from .grad_utils import set_requires_grad
 from .img_normalize import ImgNormalize
-from .linear_module import LinearModule
 from .sr_backbone_utils import (ResidualBlockNoBN, default_init_weights,
                                 make_layer)
 from .tensor_utils import get_unknown_tensor
@@ -20,7 +19,6 @@ __all__ = [
     'default_init_weights',
     'ResidualBlockNoBN',
     'make_layer',
-    'LinearModule',
     'flow_warp',
     'ImgNormalize',
     'generation_init_weights',

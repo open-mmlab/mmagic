@@ -4,7 +4,7 @@ from mmcv.cnn import ConvModule
 from mmcv.runner import load_checkpoint
 from mmengine import MMLogger
 
-from mmedit.models.common import generation_init_weights
+from mmedit.models.utils import generation_init_weights
 from mmedit.registry import COMPONENTS
 
 

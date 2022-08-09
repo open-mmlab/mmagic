@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule
 from mmengine.model import BaseModule
 
-from mmedit.models.common import flow_warp
+from mmedit.models.utils import flow_warp
 from mmedit.registry import MODELS
 
 

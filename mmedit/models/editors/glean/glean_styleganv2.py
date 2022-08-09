@@ -4,8 +4,8 @@ import torch
 import torch.nn as nn
 from mmengine.model import BaseModule
 
-from mmedit.models.common import PixelShufflePack, make_layer
-from mmedit.registry import MODELS, COMPONENTS
+from mmedit.models.utils import PixelShufflePack, make_layer
+from mmedit.registry import COMPONENTS, MODELS
 from ..esrgan.rrdb_net import RRDB
 
 

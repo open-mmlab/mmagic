@@ -5,7 +5,7 @@ import torch
 from mmengine.config import Config
 
 from mmedit.registry import MODELS
-from ..common import set_requires_grad
+from ..utils import set_requires_grad
 from .one_stage import OneStageInpaintor
 
 

@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models import flow_warp
+from mmedit.models.utils import flow_warp
 
 
 def tensor_shift(x, shift=(1, 1), fill_val=0):

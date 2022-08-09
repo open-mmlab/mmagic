@@ -25,7 +25,7 @@ models
 
 common
 ^^^^^^^
-.. automodule:: mmedit.models.common
+.. automodule:: mmedit.models.utils
     :members:
 
 backbones

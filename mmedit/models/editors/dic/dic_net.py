@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from mmengine.model import BaseModule
 
-from mmedit.models.common import make_layer
+from mmedit.models.utils import make_layer
 from mmedit.registry import MODELS
 from .feedback_hour_glass import FeedbackHourglass, reduce_to_five_heatmaps
 

@@ -8,8 +8,7 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule, build_activation_layer
 
 # from ...modules import SimpleGatedConvModule
-from mmedit.models.editors.deepfillv2.gated_conv_module import \
-    SimpleGatedConvModule
+from mmedit.models.layers import SimpleGatedConvModule
 from mmedit.registry import COMPONENTS
 
 

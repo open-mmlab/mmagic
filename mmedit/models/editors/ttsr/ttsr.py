@@ -2,7 +2,7 @@
 import torch
 from mmengine.optim import OptimWrapperDict
 
-from mmedit.models.common import set_requires_grad
+from mmedit.models.utils import set_requires_grad
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample
 from ..srgan import SRGAN

@@ -3,7 +3,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models.editors.modules import SimpleGatedConvModule
+from mmedit.models.layers import SimpleGatedConvModule
 
 
 def test_gated_conv():

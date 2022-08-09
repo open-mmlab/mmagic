@@ -5,7 +5,7 @@ import torch
 from mmengine.optim import OptimWrapperDict
 
 from mmedit.models.__base__ import BaseEditModel
-from mmedit.models.common import set_requires_grad
+from mmedit.models.utils import set_requires_grad
 from mmedit.registry import MODELS
 
 

@@ -6,7 +6,7 @@ import torch
 from mmedit.models.__base__ import TwoStageInpaintor
 from mmedit.models.utils import extract_around_bbox, extract_bbox_patch
 from mmedit.registry import MODELS
-from ...common import set_requires_grad
+from ...utils import set_requires_grad
 
 
 @MODELS.register_module()

@@ -1,7 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.glean.stylegan2 import StyleGANv2Generator, common
+from mmedit.models.editors.glean.stylegan2 import (StyleGANv2Generator,
+                                                   stylegan2_utils)
 
 
 def test_get_module_device():
@@ -11,7 +12,7 @@ def test_get_module_device():
     res = g(None, num_batches=2)
     assert res.shape == (2, 3, 64, 64)
 
-    truncation_mean = common.get_mean_latent(g, 4096)
+    truncation_mean = stylegan2_utils.get_mean_latent(g, 4096)
     res = g(
         None,
         num_batches=2,
@@ -20,11 +21,11 @@ def test_get_module_device():
         truncation_latent=truncation_mean)
 
     # res = g.style_mixing(2, 2, truncation_latent=truncation_mean)
-    res = common.style_mixing(
+    res = stylegan2_utils.style_mixing(
         g,
         n_source=2,
         n_target=2,
         truncation_latent=truncation_mean,
         style_channels=g.style_channels)
 
-    assert common.get_module_device(g) == torch.device('cpu')
+    assert stylegan2_utils.get_module_device(g) == torch.device('cpu')

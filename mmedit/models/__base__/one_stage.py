@@ -7,7 +7,7 @@ from mmengine.model import BaseModel
 
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
-from ..common import set_requires_grad
+from ..utils import set_requires_grad
 
 
 @MODELS.register_module()

@@ -6,7 +6,7 @@ from .cain import CAIN, CAINNet
 from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
                          DeepFillDecoder, DeepFillEncoder, DeepFillRefiner,
                          DeepFillv1Discriminators, DeepFillv1Inpaintor)
-from .deepfillv2 import DeepFillEncoderDecoder, SimpleGatedConvModule
+from .deepfillv2 import DeepFillEncoderDecoder
 from .dic import (DIC, DICNet, FeedbackBlock, FeedbackBlockCustom,
                   FeedbackBlockHeatmapAttention, LightCNN, MaxFeature)
 from .dim import DIM
@@ -48,12 +48,12 @@ __all__ = [
     'IndexNet', 'IndexNetEncoder', 'IndexedUpsample', 'IndexNetDecoder', 'GCA',
     'GLEncoderDecoder', 'GLEncoder', 'GLDecoder', 'GLDilationNeck',
     'PartialConv2d', 'PConvEncoderDecoder', 'PConvEncoder', 'PConvDecoder',
-    'PConvInpaintor', 'MaskConvModule', 'RRDBNet', 'SimpleGatedConvModule',
-    'SRCNNNet', 'RRDBNet', 'RealESRGAN', 'UNetDiscriminatorWithSpectralNorm',
-    'EDVR', 'EDVRNet', 'TDAN', 'TDANNet', 'BasicVSR', 'BasicVSRNet',
-    'BasicVSRPlusPlusNet', 'IconVSRNet', 'RealBasicVSR', 'RealBasicVSRNet',
-    'SRGAN', 'MaxFeature', 'ModifiedVGG', 'MSRResNet', 'RDNNet', 'LTE', 'TTSR',
-    'TTSRNet', 'TTSRDiscriminator', 'TTSRNet', 'SearchTransformer',
-    'GLEANStyleGANv2', 'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder',
-    'FBAResnetDilated', 'FBADecoder'
+    'PConvInpaintor', 'MaskConvModule', 'RRDBNet', 'SRCNNNet', 'RRDBNet',
+    'RealESRGAN', 'UNetDiscriminatorWithSpectralNorm', 'EDVR', 'EDVRNet',
+    'TDAN', 'TDANNet', 'BasicVSR', 'BasicVSRNet', 'BasicVSRPlusPlusNet',
+    'IconVSRNet', 'RealBasicVSR', 'RealBasicVSRNet', 'SRGAN', 'MaxFeature',
+    'ModifiedVGG', 'MSRResNet', 'RDNNet', 'LTE', 'TTSR', 'TTSRNet',
+    'TTSRDiscriminator', 'TTSRNet', 'SearchTransformer', 'GLEANStyleGANv2',
+    'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
+    'FBADecoder'
 ]
