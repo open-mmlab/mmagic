@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
-import os
 import logging
+import os
 import os.path as osp
 
 from mmengine.config import Config, DictAction
@@ -71,7 +71,7 @@ def main():
         cfg.work_dir = osp.join('./work_dirs',
                                 osp.splitext(osp.basename(args.config))[0])
 
-     # enable automatic-mixed-precision training
+    # enable automatic-mixed-precision training
     if args.amp is True:
         optim_wrapper = cfg.optim_wrapper.type
         if optim_wrapper == 'AmpOptimWrapper':
@@ -86,20 +86,20 @@ def main():
             cfg.optim_wrapper.type = 'AmpOptimWrapper'
             cfg.optim_wrapper.loss_scale = 'dynamic'
 
-    # enable automatically scaling LR
-    if args.auto_scale_lr:
-        if 'auto_scale_lr' in cfg and \
-                'enable' in cfg.auto_scale_lr and \
-                'base_batch_size' in cfg.auto_scale_lr:
-            cfg.auto_scale_lr.enable = True
-        else:
-            raise RuntimeError('Can not find "auto_scale_lr" or '
-                               '"auto_scale_lr.enable" or '
-                               '"auto_scale_lr.base_batch_size" in your'
-                               ' configuration file.')
+    # # enable automatically scaling LR
+    # if args.auto_scale_lr:
+    #     if 'auto_scale_lr' in cfg and \
+    #             'enable' in cfg.auto_scale_lr and \
+    #             'base_batch_size' in cfg.auto_scale_lr:
+    #         cfg.auto_scale_lr.enable = True
+    #     else:
+    #         raise RuntimeError('Can not find "auto_scale_lr" or '
+    #                            '"auto_scale_lr.enable" or '
+    #                            '"auto_scale_lr.base_batch_size" in your'
+    #                            ' configuration file.')
 
-    if args.resume: 
-        cfg.resume = True 
+    if args.resume:
+        cfg.resume = True
 
     # build the runner from config
     runner = Runner.from_cfg(cfg)
