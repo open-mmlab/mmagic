@@ -138,7 +138,7 @@ def test_load_image_from_file():
         key='img',
         file_client_args=dict(
             backend='lmdb',
-            db_path=Path(__file__).parent.parent / 'data' / 'lq.lmdb'))
+            db_path=Path(__file__).parent.parent.parent / 'data' / 'lq.lmdb'))
     image_loader = LoadImageFromFile(**config)
     results = image_loader(results)
     assert results['img'].shape == (h // 4, w // 4, 3)

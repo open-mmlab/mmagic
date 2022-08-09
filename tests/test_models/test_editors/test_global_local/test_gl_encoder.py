@@ -11,13 +11,11 @@ def test_gl_encoder():
     template_cfg = dict(type='GLEncoder')
 
     gl_encoder = MODELS.build(template_cfg)
-    gl_encoder.init_weights()
     output = gl_encoder(input_x)
     assert output.shape == (1, 256, 64, 64)
 
     if torch.cuda.is_available():
         gl_encoder = MODELS.build(template_cfg)
-        gl_encoder.init_weights()
         gl_encoder = gl_encoder.cuda()
         output = gl_encoder(input_x.cuda())
         assert output.shape == (1, 256, 64, 64)

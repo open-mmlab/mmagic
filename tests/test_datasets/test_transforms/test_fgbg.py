@@ -8,7 +8,7 @@ import pytest
 from mmedit.datasets.transforms import (CompositeFg, MergeFgAndBg, PerturbBg,
                                         RandomJitter, RandomLoadResizeBg)
 
-test_root = Path(__file__).parent.parent.parent.parent
+test_root = Path(__file__).parent.parent.parent
 data_root = test_root / 'data' / 'matting_dataset'
 
 

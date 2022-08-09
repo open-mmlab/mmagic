@@ -12,7 +12,7 @@ from mmedit.utils import register_all_modules
 def test_gl_inpaintor():
     register_all_modules()
 
-    config_file = join(dirname(__file__), 'configs', 'gl_test.py')
+    config_file = join(dirname(__file__), '..', 'configs', 'gl_test.py')
     cfg = Config.fromfile(config_file)
 
     gl = MODELS.build(cfg.model)

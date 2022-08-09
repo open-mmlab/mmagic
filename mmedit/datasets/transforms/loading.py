@@ -5,8 +5,8 @@ from typing import List, Optional, Tuple
 
 import mmcv
 import numpy as np
-from mmcv.fileio import FileClient
 from mmcv.transforms import BaseTransform
+from mmengine.fileio import FileClient
 
 from mmedit.registry import TRANSFORMS
 from .trans_utils import (bbox2mask, brush_stroke_mask, get_irregular_mask,
@@ -16,17 +16,12 @@ from .trans_utils import (bbox2mask, brush_stroke_mask, get_irregular_mask,
 @TRANSFORMS.register_module()
 class LoadImageFromFile(BaseTransform):
     """Load a single image or image frames from corresponding paths.
-
     Required Keys:
-
     - [Key]_path
-
     New Keys:
-
     - [KEY]
     - ori_[KEY]_shape
     - ori_[KEY]
-
     Args:
         key (str): Keys in results to find corresponding path.
         color_type (str): The flag argument for :func:``mmcv.imfrombytes``.
@@ -88,10 +83,8 @@ class LoadImageFromFile(BaseTransform):
 
     def transform(self, results: dict) -> dict:
         """Functions to load image or frames.
-
         Args:
             results (dict): Result dict from :obj:``mmcv.BaseDataset``.
-
         Returns:
             dict: The dict contains loaded image and meta information.
         """
@@ -134,10 +127,8 @@ class LoadImageFromFile(BaseTransform):
 
     def _load_image(self, filename):
         """Load an image from file.
-
         Args:
             filename (str): Path of image file.
-
         Returns:
             np.ndarray: Image.
         """
@@ -166,10 +157,8 @@ class LoadImageFromFile(BaseTransform):
 
     def _convert(self, img: np.ndarray):
         """Convert an image to the require format.
-
         Args:
             img (np.ndarray): The original image.
-
         Returns:
             np.ndarray: The converted image.
         """
