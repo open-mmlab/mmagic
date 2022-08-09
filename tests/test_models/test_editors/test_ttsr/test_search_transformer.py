@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
+
 from mmedit.registry import COMPONENTS
 
 

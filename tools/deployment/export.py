@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import imp
 import os.path as osp
 import warnings
 
