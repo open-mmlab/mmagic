@@ -4,9 +4,10 @@ from os.path import dirname, join
 import torch
 from mmcv import Config
 
-from mmedit.data_element import EditDataSample, PixelData
-from mmedit.models.inpaintors import AOTEncoderDecoder
-from mmedit.registry import MODELS, register_all_modules
+from mmedit.models import AOTEncoderDecoder
+from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample, PixelData
+from mmedit.utils import register_all_modules
 
 
 def test_aot_inpaintor():
