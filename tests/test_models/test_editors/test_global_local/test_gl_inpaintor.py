@@ -5,8 +5,8 @@ import torch
 from mmcv import Config
 
 from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
 from mmedit.structures import EditDataSample, PixelData
+from mmedit.utils import register_all_modules
 
 
 def test_gl_inpaintor():
