@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.metrics import SSIM, ssim
+from mmedit.evaluation.metrics import SSIM, ssim
 
 
 def test_ssim():

@@ -4,8 +4,9 @@ import numpy as np
 import torch
 from mmengine import ConfigDict
 
-from mmedit.registry import MODELS, register_all_modules
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
+from mmedit.utils import register_all_modules
 
 register_all_modules()
 

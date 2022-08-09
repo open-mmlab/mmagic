@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.video_restorers.duf import DynamicUpsamplingFilter
+from mmedit.models.editors.duf import DynamicUpsamplingFilter
 
 
 def test_dynamic_upsampling_filter():

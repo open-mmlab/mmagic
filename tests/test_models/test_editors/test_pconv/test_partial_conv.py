@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.inpaintors.modules import PartialConv2d
+from mmedit.models.editors import PartialConv2d
 
 
 def test_pconv2d():

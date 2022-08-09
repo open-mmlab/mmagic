@@ -2,7 +2,8 @@
 import numpy as np
 import torch
 
-from mmedit.models import VGG16, PlainDecoder
+from mmedit.models.editors import PlainDecoder
+from mmedit.models.layers import VGG16
 
 
 def assert_tensor_with_shape(tensor, shape):

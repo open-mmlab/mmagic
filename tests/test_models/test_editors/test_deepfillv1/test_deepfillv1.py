@@ -1,14 +1,14 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os.path.dirname as dirname
-import os.path.join as join
+from os import path as osp
 
 import torch
 from mmengine import Config
 
-from mmedit.models import EditDataSample, PixelData
-from mmedit.models.inpaintors import (DeepFillEncoderDecoder, DeepFillRefiner,
-                                      GLEncoderDecoder)
-from mmedit.registry import MODELS, register_all_modules
+from mmedit.models.editors import (DeepFillEncoderDecoder, DeepFillRefiner,
+                                   GLEncoderDecoder)
+from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample, PixelData
+from mmedit.utils import register_all_modules
 
 
 def test_deepfill_encdec():
@@ -33,7 +33,8 @@ def test_deepfill_encdec():
 def test_deepfillv1_inpaintor():
     register_all_modules()
 
-    config_file = join(dirname(__file__), 'configs', 'deepfillv1_test.py')
+    config_file = osp.join(
+        osp.dirname(__file__), 'configs', 'deepfillv1_test.py')
     cfg = Config.fromfile(config_file)
 
     deepfillv1 = MODELS.build(cfg.model)

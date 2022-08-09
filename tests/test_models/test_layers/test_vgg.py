@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from mmcv.utils.parrots_wrapper import _BatchNorm
 
-from mmedit.models import VGG16, BasicBlock, Bottleneck
+from mmedit.models.layers import VGG16
 
 
 def check_norm_state(modules, train_state):
@@ -13,13 +13,6 @@ def check_norm_state(modules, train_state):
             if mod.training != train_state:
                 return False
     return True
-
-
-def is_block(modules):
-    """Check if is ResNet building block."""
-    if isinstance(modules, (BasicBlock, Bottleneck)):
-        return True
-    return False
 
 
 def assert_tensor_with_shape(tensor, shape):

@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.models.mattors import FBADecoder
+from mmedit.models.editors import FBADecoder
 
 
 def assert_tensor_with_shape(tensor, shape):

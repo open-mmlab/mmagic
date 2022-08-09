@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.inpaintors import (ContextualAttentionNeck, DeepFillDecoder,
-                                      DeepFillEncoder, DeepFillRefiner,
-                                      GLDilationNeck)
+from mmedit.models.editors import (ContextualAttentionNeck, DeepFillDecoder,
+                                   DeepFillEncoder, DeepFillRefiner,
+                                   GLDilationNeck)
 
 
 def test_deepfill_refiner():

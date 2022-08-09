@@ -46,7 +46,7 @@ class TOFlowVFINet(BaseModule):
         self.spynet = SPyNet(**flow_cfg)
 
         # reconstruction module
-        self.resnet = ResNet()
+        self.resnet = ToFResBlock()
 
     def forward(self, imgs):
         """
@@ -219,7 +219,7 @@ class SPyNet(nn.Module):
         return flow
 
 
-class ResNet(nn.Module):
+class ToFResBlock(nn.Module):
     """ResNet architecture.
 
     Three-layers ResNet/ResBlock

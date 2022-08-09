@@ -9,7 +9,7 @@ from mmengine import MessageHub
 from mmengine.optim import _ParamScheduler
 from mmengine.testing import assert_allclose
 
-from mmedit.optimizer import LinearLRWithInterval, ReduceLR
+from mmedit.engine.schedulers import LinearLRWithInterval, ReduceLR
 
 
 class ToyModel(torch.nn.Module):

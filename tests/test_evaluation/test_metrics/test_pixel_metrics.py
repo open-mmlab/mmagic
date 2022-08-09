@@ -5,8 +5,8 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.metrics import MAE, MSE, PSNR, SNR, psnr
-from mmedit.metrics.utils import reorder_image
+from mmedit.evaluation.metrics import MAE, MSE, PSNR, SNR, psnr
+from mmedit.evaluation.metrics.utils import reorder_image
 
 
 class TestPixelMetrics:

@@ -10,9 +10,8 @@ from torch import set_requires_grad
 from mmedit.models import GANImageBuffer
 from mmedit.models.common import (PixelShufflePack, generation_init_weights,
                                   pixel_unshuffle)
-from mmedit.models.inpaintors.utils import (extract_around_bbox,
-                                            extract_bbox_patch)
-from mmedit.models.mattors import PlainRefiner
+from mmedit.models.editors import PlainRefiner
+from mmedit.models.editors.utils import extract_around_bbox, extract_bbox_patch
 
 
 def test_pixel_shuffle():

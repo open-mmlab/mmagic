@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.models.utils.batch_process import split_batch, stack_batch
 from .conv import *  # noqa: F401, F403
 from .downsample import pixel_unshuffle
 from .ensemble import SpatialTemporalEnsemble
@@ -13,13 +12,24 @@ from .linear_module import LinearModule
 from .sr_backbone_utils import (ResidualBlockNoBN, default_init_weights,
                                 make_layer)
 from .upsample import PixelShufflePack
-from .utils import extract_around_bbox, extract_bbox_patch, get_unknown_tensorm, split_batch, stack_batch
+from .utils import extract_around_bbox, extract_bbox_patch, get_unknown_tensor
 
 __all__ = [
-    'PixelShufflePack', 'default_init_weights', 'ResidualBlockNoBN',
-    'make_layer', 'LinearModule', 'flow_warp', 'ImgNormalize',
-    'generation_init_weights', 'GANImageBuffer', 'UnetSkipConnectionBlock',
-    'ResidualBlockWithDropout', 'pixel_unshuffle', 'SpatialTemporalEnsemble',
-    'set_requires_grad', 'extract_bbox_patch', 'extract_around_bbox',
-    'get_unknown_tensor', 'split_batch', 'stack_batch'
+    'PixelShufflePack',
+    'default_init_weights',
+    'ResidualBlockNoBN',
+    'make_layer',
+    'LinearModule',
+    'flow_warp',
+    'ImgNormalize',
+    'generation_init_weights',
+    'GANImageBuffer',
+    'UnetSkipConnectionBlock',
+    'ResidualBlockWithDropout',
+    'pixel_unshuffle',
+    'SpatialTemporalEnsemble',
+    'set_requires_grad',
+    'extract_bbox_patch',
+    'extract_around_bbox',
+    'get_unknown_tensor',
 ]

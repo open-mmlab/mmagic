@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from mmedit.models.layers.resnet import ResNet
 from mmedit.registry import MODELS
-from .resnet import ResNet
 
 
 @MODELS.register_module()

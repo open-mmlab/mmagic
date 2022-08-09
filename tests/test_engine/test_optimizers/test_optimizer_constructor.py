@@ -2,7 +2,7 @@
 import pytest
 import torch.nn as nn
 
-from mmedit.optimizer import MultiOptimWrapperConstructor
+from mmedit.engine.optimizers import MultiOptimWrapperConstructor
 
 
 class ToyModel(nn.Module):

@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.inpaintors import ContextualAttentionNeck, DeepFillEncoder
-from mmedit.models.inpaintors.modules import SimpleGatedConvModule
+from mmedit.models.editors import ContextualAttentionNeck, DeepFillEncoder
+from mmedit.models.layers import SimpleGatedConvModule
 
 
 def test_deepfill_enc():

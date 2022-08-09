@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.metrics import NIQE, niqe
+from mmedit.evaluation.metrics import NIQE, niqe
 
 
 def test_niqe():

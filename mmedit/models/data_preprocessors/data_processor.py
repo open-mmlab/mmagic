@@ -5,7 +5,7 @@ import torch
 from mmengine.model import BaseDataPreprocessor
 
 from mmedit.registry import MODELS
-from .utils import stack_batch
+from .batch_process import stack_batch
 
 
 @MODELS.register_module()

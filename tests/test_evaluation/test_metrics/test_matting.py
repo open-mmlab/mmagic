@@ -5,8 +5,9 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.metrics import SAD, ConnectivityError, GradientError, MattingMSE
 from mmedit.datasets.transforms import LoadImageFromFile
+from mmedit.evaluation.metrics import (SAD, ConnectivityError, GradientError,
+                                       MattingMSE)
 
 
 class TestMattingMetrics:

@@ -3,7 +3,8 @@ import torch
 
 from mmedit.models.editors.global_local import GLDilationNeck
 from mmedit.models.layers import SimpleGatedConvModule
-from mmedit.registry import MODELS, register_all_modules
+from mmedit.registry import MODELS
+from mmedit.utils import register_all_modules
 
 register_all_modules()
 

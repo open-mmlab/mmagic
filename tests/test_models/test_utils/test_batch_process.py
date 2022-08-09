@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.utils import split_batch, stack_batch
+from mmedit.models.data_preprocessors import split_batch, stack_batch
 
 
 def test_batch_process():

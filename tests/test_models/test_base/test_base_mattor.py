@@ -7,9 +7,11 @@ import numpy as np
 import torch
 from mmcv import ConfigDict
 
+from mmedit.models.__base__ import BaseMattor
+from mmedit.models.editors import DIM
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
-from mmedit.models.mattors import DIM, BaseMattor
-from mmedit.registry import MODELS, register_all_modules
+from mmedit.utils import register_all_modules
 
 register_all_modules()
 
