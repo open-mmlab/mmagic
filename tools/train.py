@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import os
+import logging
 import os.path as osp
 
 from mmengine.config import Config, DictAction
@@ -14,6 +15,17 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train a model')
     parser.add_argument('config', help='train config file path')
     parser.add_argument('--work-dir', help='the dir to save logs and models')
+    parser.add_argument(
+        '--resume', action='store_true', help='Whether to resume checkpoint.')
+    parser.add_argument(
+        '--amp',
+        action='store_true',
+        default=False,
+        help='enable automatic-mixed-precision training')
+    parser.add_argument(
+        '--auto-scale-lr',
+        action='store_true',
+        help='enable automatically scaling LR.')
     parser.add_argument(
         '--cfg-options',
         nargs='+',
@@ -58,6 +70,36 @@ def main():
         # use config filename as default work_dir if cfg.work_dir is None
         cfg.work_dir = osp.join('./work_dirs',
                                 osp.splitext(osp.basename(args.config))[0])
+
+     # enable automatic-mixed-precision training
+    if args.amp is True:
+        optim_wrapper = cfg.optim_wrapper.type
+        if optim_wrapper == 'AmpOptimWrapper':
+            print_colored_log(
+                'AMP training is already enabled in your config.',
+                logger='current',
+                level=logging.WARNING)
+        else:
+            assert optim_wrapper == 'OptimWrapper', (
+                '`--amp` is only supported when the optimizer wrapper type is '
+                f'`OptimWrapper` but got {optim_wrapper}.')
+            cfg.optim_wrapper.type = 'AmpOptimWrapper'
+            cfg.optim_wrapper.loss_scale = 'dynamic'
+
+    # enable automatically scaling LR
+    if args.auto_scale_lr:
+        if 'auto_scale_lr' in cfg and \
+                'enable' in cfg.auto_scale_lr and \
+                'base_batch_size' in cfg.auto_scale_lr:
+            cfg.auto_scale_lr.enable = True
+        else:
+            raise RuntimeError('Can not find "auto_scale_lr" or '
+                               '"auto_scale_lr.enable" or '
+                               '"auto_scale_lr.base_batch_size" in your'
+                               ' configuration file.')
+
+    if args.resume: 
+        cfg.resume = True 
 
     # build the runner from config
     runner = Runner.from_cfg(cfg)
