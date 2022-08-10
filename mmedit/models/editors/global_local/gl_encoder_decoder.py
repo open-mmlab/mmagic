@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.models.__base__ import BaseBackbone
+from mmedit.models.base_models import BaseBackbone
 from mmedit.registry import BACKBONES, COMPONENTS
 
 

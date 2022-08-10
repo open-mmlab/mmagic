@@ -7,7 +7,7 @@ from mmengine.model import BaseModule
 
 from mmedit.registry import MODELS
 from .gca_module import GCAModule
-from .resnet_enc import BasicBlock
+from .resgca_enc import BasicBlock
 
 
 class BasicBlockDec(BasicBlock):
