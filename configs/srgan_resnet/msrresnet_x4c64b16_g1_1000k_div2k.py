@@ -1,4 +1,4 @@
-_base_ = '../__base__/default_runtime.py'
+_base_ = '../_base_/default_runtime.py'
 
 experiment_name = 'msrresnet_x4c64b16_g1_1000k_div2k'
 work_dir = f'./work_dirs/{experiment_name}'

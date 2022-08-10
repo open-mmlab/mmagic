@@ -1,6 +1,6 @@
 _base_ = [
-    '../__base__/models/gl_base.py', '../__base__/inpaint_default_runtime.py',
-    '../__base__/datasets/celeba.py'
+    '../_base_/models/gl_base.py', '../_base_/inpaint_default_runtime.py',
+    '../_base_/datasets/celeba.py'
 ]
 
 model = dict(

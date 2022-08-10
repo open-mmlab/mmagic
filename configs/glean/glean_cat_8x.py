@@ -1,4 +1,4 @@
-_base_ = '../__base__/models/base_glean.py'
+_base_ = '../_base_/models/base_glean.py'
 
 experiment_name = 'glean_cat_8x'
 work_dir = f'./work_dirs/{experiment_name}'

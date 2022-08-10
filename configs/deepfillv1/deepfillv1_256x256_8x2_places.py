@@ -1,6 +1,6 @@
 _base_ = [
-    '../__base__/models/deepfillv1_base.py',
-    '../__base__/inpaint_default_runtime.py', '../__base__/datasets/places.py'
+    '../_base_/models/deepfillv1_base.py',
+    '../_base_/inpaint_default_runtime.py', '../_base_/datasets/places.py'
 ]
 
 model = dict(train_cfg=dict(disc_step=5, start_iter=0, local_size=(128, 128)))
