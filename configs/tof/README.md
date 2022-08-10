@@ -34,9 +34,9 @@ Note: These pretrained SPyNets don't contain BN layer since `batch_size=1`, whic
 Evaluated on RGB channels.
 The metrics are `PSNR / SSIM` .
 
-|                                        Method                                        |       Vid4       | GPU Info |                                               Download                                                |
-| :----------------------------------------------------------------------------------: | :--------------: | :------: | :---------------------------------------------------------------------------------------------------: |
-| [tof_x4_vimeo90k_official](/configs/video_restorers/tof/tof_x4_vimeo90k_official.py) | 24.4377 / 0.7433 |    -     | [model](https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth) |
+|                                Method                                |       Vid4       | GPU Info |                                               Download                                                |
+| :------------------------------------------------------------------: | :--------------: | :------: | :---------------------------------------------------------------------------------------------------: |
+| [tof_x4_vimeo90k_official](/configs/tof/tof_x4_vimeo90k_official.py) | 24.4377 / 0.7433 |    -     | [model](https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth) |
 
 ## Citation
 

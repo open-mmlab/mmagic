@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2003.13063
   README: configs/dic/README.md
 Models:
-- Config: configs/image_restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ.py
+- Config: configs/dic/dic_x8c48b6_g4_150k_CelebAHQ.py
   In Collection: DIC
   Metadata:
     GPUs: 4 (Tesla PG503-216)
@@ -21,7 +21,7 @@ Models:
         SSIM: 0.7422
     Task: Dic
   Weights: https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.pth
-- Config: configs/image_restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ.py
+- Config: configs/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ.py
   In Collection: DIC
   Metadata:
     GPUs: 4 (Tesla PG503-216)

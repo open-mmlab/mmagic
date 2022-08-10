@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/1802.08797
   README: configs/rdn/README.md
 Models:
-- Config: configs/image_restorers/rdn/rdn_x2c64b16_g1_1000k_div2k.py
+- Config: configs/rdn/rdn_x2c64b16_g1_1000k_div2k.py
   In Collection: RDN
   Metadata:
     GPUs: 1 (TITAN Xp)
@@ -27,7 +27,7 @@ Models:
         SSIM: 0.9385
     Task: Rdn
   Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x2c64b16_g1_1000k_div2k_20210419-dc146009.pth
-- Config: configs/image_restorers/rdn/rdn_x3c64b16_g1_1000k_div2k.py
+- Config: configs/rdn/rdn_x3c64b16_g1_1000k_div2k.py
   In Collection: RDN
   Metadata:
     GPUs: 1 (TITAN Xp)
@@ -47,7 +47,7 @@ Models:
         SSIM: 0.8943
     Task: Rdn
   Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x3c64b16_g1_1000k_div2k_20210419-b93cb6aa.pth
-- Config: configs/image_restorers/rdn/rdn_x4c64b16_g1_1000k_div2k.py
+- Config: configs/rdn/rdn_x4c64b16_g1_1000k_div2k.py
   In Collection: RDN
   Metadata:
     GPUs: 1 (TITAN Xp)

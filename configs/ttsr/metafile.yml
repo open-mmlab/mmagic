@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2006.04139
   README: configs/ttsr/README.md
 Models:
-- Config: configs/image_restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED.py
+- Config: configs/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED.py
   In Collection: TTSR
   Metadata:
     GPUs: 1 (TITAN Xp)
@@ -21,7 +21,7 @@ Models:
         SSIM: 0.7491
     Task: Ttsr
   Weights: https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.pth
-- Config: configs/image_restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py
+- Config: configs/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py
   In Collection: TTSR
   Metadata:
     GPUs: 1 (TITAN Xp)

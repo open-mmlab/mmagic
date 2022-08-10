@@ -77,7 +77,7 @@ Models:
         SSIM: 0.9467
     Task: Tof
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_pytoflow_nobn_1xb1_vimeo90k_20220321-5f4b243e.pth
-- Config: configs/video_restorers/tof/tof_x4_vimeo90k_official.py
+- Config: configs/tof/tof_x4_vimeo90k_official.py
   In Collection: TOFlow
   Metadata:
     GPUs: '-'

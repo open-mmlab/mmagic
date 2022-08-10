@@ -14,7 +14,7 @@ from rich.table import Table
 from tqdm import tqdm
 
 console = Console()
-MMEDIT_ROOT = Path(__file__).absolute().parents[2]
+MMEDIT_ROOT = Path(__file__).absolute().parents[1]
 
 # key-in-metafile: key-in-results.pkl
 METRICS_MAP = {

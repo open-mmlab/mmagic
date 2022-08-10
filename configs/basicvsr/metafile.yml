@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2012.02181
   README: configs/basicvsr/README.md
 Models:
-- Config: configs/video_restorers/basicvsr/basicvsr_reds4.py
+- Config: configs/basicvsr/basicvsr_reds4.py
   In Collection: BasicVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
@@ -36,7 +36,7 @@ Models:
         SSIM: 0.9395
     Task: Basicvsr
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth
-- Config: configs/video_restorers/basicvsr/basicvsr_vimeo90k_bi.py
+- Config: configs/basicvsr/basicvsr_vimeo90k_bi.py
   In Collection: BasicVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
@@ -65,7 +65,7 @@ Models:
         SSIM: 0.9451
     Task: Basicvsr
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_vimeo90k_bi_20210409-d2d8f760.pth
-- Config: configs/video_restorers/basicvsr/basicvsr_vimeo90k_bd.py
+- Config: configs/basicvsr/basicvsr_vimeo90k_bd.py
   In Collection: BasicVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
