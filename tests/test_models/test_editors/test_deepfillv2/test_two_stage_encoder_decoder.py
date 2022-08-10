@@ -14,7 +14,8 @@ from mmedit.utils import register_all_modules
 def test_two_stage_inpaintor():
     register_all_modules()
 
-    config_file = join(dirname(__file__), 'configs', 'two_stage_test.py')
+    config_file = join(
+        dirname(__file__), '../../..', 'configs', 'two_stage_test.py')
     cfg = Config.fromfile(config_file)
 
     inpaintor = MODELS.build(cfg.model)

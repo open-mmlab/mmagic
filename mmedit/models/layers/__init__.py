@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 # To register Deconv
 from .aspp import ASPP
+from .conv import *  # noqa: F401, F403
 from .gated_conv_module import SimpleGatedConvModule
 from .gca_module import GCAModule
 from .linear_module import LinearModule

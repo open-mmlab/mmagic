@@ -34,7 +34,7 @@ def test_deepfillv1_inpaintor():
     register_all_modules()
 
     config_file = osp.join(
-        osp.dirname(__file__), 'configs', 'deepfillv1_test.py')
+        osp.dirname(__file__), '../../..', 'configs', 'deepfillv1_test.py')
     cfg = Config.fromfile(config_file)
 
     deepfillv1 = MODELS.build(cfg.model)

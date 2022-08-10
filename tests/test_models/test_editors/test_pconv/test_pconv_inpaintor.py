@@ -12,7 +12,8 @@ from mmedit.utils import register_all_modules
 def test_pconv_inpaintor():
     register_all_modules()
 
-    config_file = join(dirname(__file__), 'configs', 'pconv_test.py')
+    config_file = join(
+        dirname(__file__), '../../..', 'configs', 'pconv_test.py')
     cfg = Config.fromfile(config_file)
 
     inpaintor = MODELS.build(cfg.model)

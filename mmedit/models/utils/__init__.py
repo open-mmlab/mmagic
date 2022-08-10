@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .bbox_utils import extract_around_bbox, extract_bbox_patch
-from .conv import *  # noqa: F401, F403
 from .downsample import pixel_unshuffle
 from .ensemble import SpatialTemporalEnsemble
 from .flow_warp import flow_warp

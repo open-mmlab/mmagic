@@ -4,8 +4,8 @@ import torch.nn as nn
 from mmcv.runner import load_checkpoint
 from mmengine import MMLogger
 
+from mmedit.models.__base__ import MultiLayerDiscriminator
 from mmedit.registry import COMPONENTS
-from .multi_layer_disc import MultiLayerDiscriminator
 
 
 @COMPONENTS.register_module()
