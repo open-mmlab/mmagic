@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/pdf/2104.01431.pdf
   README: configs/AOT-GAN/README.md
 Models:
-- Config: configs/inpaintors/AOT-GAN/AOT-GAN_512x512_4x12_places.py
+- Config: configs/AOT-GAN/AOT-GAN_512x512_4x12_places.py
   In Collection: AOT-GAN
   Metadata:
     GPUs: 4 (GeForce GTX 1080 Ti)

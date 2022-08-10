@@ -1,4 +1,4 @@
-_base_ = '../__base__/models/base_edvr_config.py'
+_base_ = '../_base_/models/base_edvr_config.py'
 
 experiment_name = 'edvrm_x4_g8_600k_reds'
 work_dir = f'./work_dirs/{experiment_name}'

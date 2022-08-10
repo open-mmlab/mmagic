@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.__base__ import BaseMattor
+from mmedit.models.base_models import BaseMattor
 from mmedit.models.utils import get_unknown_tensor
 from mmedit.registry import MODELS
 

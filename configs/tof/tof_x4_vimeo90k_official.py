@@ -1,5 +1,5 @@
 # only testing the official model is supported
-_base_ = '../__base__/default_runtime.py'
+_base_ = '../_base_/default_runtime.py'
 
 experiment_name = 'tof_x4_vimeo90k_official'
 

@@ -21,7 +21,7 @@ python demo/inpainting_demo.py \
 
 ```shell
 python demo/inpainting_demo.py \
-    configs/inpaintors/global_local/gl_256x256_8x12_celeba.py \
+    configs/global_local/gl_256x256_8x12_celeba.py \
     https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth \
     tests/data/image/celeba_test.png \
     tests/data/image/bbox_mask.png \
@@ -49,7 +49,7 @@ python demo/matting_demo.py \
 
 ```shell
 python demo/matting_demo.py \
-    configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py \
+    configs/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py \
     https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth \
     tests/data/matting_dataset/merged/GT05.jpg \
     tests/data/matting_dataset/trimap/GT05.png \
@@ -77,7 +77,7 @@ python demo/restoration_demo.py \
 
 ```shell
 python demo/restoration_demo.py \
-    configs/image_restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py \
+    configs/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py \
     https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth \
     tests/data/image/lq/baboon_x4.png \
     demo/demo_out_baboon.png
@@ -87,7 +87,7 @@ python demo/restoration_demo.py \
 
 ```shell
 python demo/restoration_demo.py \
-    configs/image_restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py \
+    configs/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py \
     https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth \
     tests/data/frames/sequence/gt/sequence_1/00000000.png \
     demo/demo_out.png \
@@ -114,7 +114,7 @@ python demo/restoration_face_demo.py \
 
 ```shell
 python demo/restoration_face_demo.py \
-    configs/image_restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq.py \
+    configs/glean/glean_in128out1024_4x2_300k_ffhq_celebahq.py \
     https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth \
     tests/data/image/face/000001.png \
     tests/data/pred/000001.png \
@@ -141,7 +141,7 @@ EDVR:
 
 ```shell
 python demo/restoration_video_demo.py \
-    configs/video_restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py \
+    configs/edvr/edvrm_wotsa_x4_g8_600k_reds.py \
     https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth \
     data/Vid4/BIx4/calendar/ \
     demo/output \
@@ -152,7 +152,7 @@ BasicVSR:
 
 ```shell
 python demo/restoration_video_demo.py \
-    configs/video_restorers/basicvsr/basicvsr_reds4.py \
+    configs/basicvsr/basicvsr_reds4.py \
     https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth \
     data/Vid4/BIx4/calendar/ \
     demo/output
@@ -181,7 +181,7 @@ python demo/video_interpolation_demo.py \
 
 ```shell
 python demo/video_interpolation_demo.py \
-    configs/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet.py \
+    configs/cain/cain_b5_g1b32_vimeo90k_triplet.py \
     https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth \
     tests/data/test_inference.mp4 \
     tests/data/test_inference_vfi_out.mp4 \
@@ -192,7 +192,7 @@ python demo/video_interpolation_demo.py \
 
 ```shell
 python demo/video_interpolation_demo.py \
-    configs/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet.py \
+    configs/cain/cain_b5_g1b32_vimeo90k_triplet.py \
     https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth \
     tests/data/test_inference.mp4 \
     tests/data/test_inference_vfi_out.mp4 \

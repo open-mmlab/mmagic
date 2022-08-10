@@ -3,7 +3,7 @@ from typing import List
 
 import torch
 
-from mmedit.models.__base__ import OneStageInpaintor
+from mmedit.models.base_models import OneStageInpaintor
 from mmedit.registry import MODELS
 from ...utils import set_requires_grad
 

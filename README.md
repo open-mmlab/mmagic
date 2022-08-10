@@ -138,9 +138,9 @@ Supported algorithms:
 <details open>
 <summary>Matting</summary>
 
-- [x] [DIM](configs/mattors/dim/README.md) (CVPR'2017)
-- [x] [IndexNet](configs/mattors/indexnet/README.md) (ICCV'2019)
-- [x] [GCA](configs/mattors/gca/README.md) (AAAI'2020)
+- [x] [DIM](configs/dim/README.md) (CVPR'2017)
+- [x] [IndexNet](configs/indexnet/README.md) (ICCV'2019)
+- [x] [GCA](configs/gca/README.md) (AAAI'2020)
 
 </details>
 
@@ -183,9 +183,9 @@ Supported algorithms:
 <details open>
 <summary>Video Interpolation</summary>
 
-- [x] [TOFlow](configs/video_interpolators/tof/README.md) (IJCV'2019)
-- [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
-- [x] [FLAVR](configs/video_interpolators/flavr/README.md) (CVPR'2021)
+- [x] [TOFlow](configs/tof/README.md) (IJCV'2019)
+- [x] [CAIN](configs/cain/README.md) (AAAI'2020)
+- [x] [FLAVR](configs/flavr/README.md) (CVPR'2021)
 
 </details>
 

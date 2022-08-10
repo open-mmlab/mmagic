@@ -3,7 +3,7 @@ import math
 
 import torch
 
-from mmedit.models.__base__ import BaseEditModel
+from mmedit.models.base_models import BaseEditModel
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 

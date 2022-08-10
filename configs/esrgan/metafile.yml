@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/1809.00219
   README: configs/esrgan/README.md
 Models:
-- Config: configs/image_restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py
+- Config: configs/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py
   In Collection: ESRGAN
   Metadata:
     GPUs: '1'
@@ -27,7 +27,7 @@ Models:
         SSIM: 0.8559
     Task: Esrgan
   Weights: https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth
-- Config: configs/image_restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py
+- Config: configs/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py
   In Collection: ESRGAN
   Metadata:
     GPUs: '1'

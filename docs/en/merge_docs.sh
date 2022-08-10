@@ -6,17 +6,17 @@ cp -r ../../configs/ _tmp/
 find _tmp/configs -name README_zh-CN.md | xargs rm
 
 sed -i '$a\\n<br/><hr/>\n' _tmp/configs/inpainting/*/README.md
-sed -i '$a\\n<br/><hr/>\n' _tmp/configs/mattors/*/README.md
+sed -i '$a\\n<br/><hr/>\n' _tmp/configs/*/README.md
 sed -i '$a\\n<br/><hr/>\n' _tmp/configs/restorers/*/README.md
 sed -i '$a\\n<br/><hr/>\n' _tmp/configs/synthesizers/*/README.md
-sed -i '$a\\n<br/><hr/>\n' _tmp/configs/video_interpolators/*/README.md
+sed -i '$a\\n<br/><hr/>\n' _tmp/configs/*/README.md
 
 # gather models
 cat ../../configs/inpainting/*/README.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Inpainting Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' > _tmp/inpainting_models.md
-cat ../../configs/mattors/*/README.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Matting Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' > _tmp/mattors_models.md
+cat ../../configs/*/README.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Matting Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' > _tmp/mattors_models.md
 cat ../../configs/restorers/*/README.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Super-Resolution Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' > _tmp/restorers_models.md
 cat ../../configs/synthesizers/*/README.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Generation Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' > _tmp/synthesizers_models.md
-cat ../../configs/video_interpolators/*/README.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Frame-Interpolation Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' > _tmp/video_interpolators_models.md
+cat ../../configs/*/README.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# Frame-Interpolation Models' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' > _tmp/video_interpolators_models.md
 
 # gather datasets
 cat ../../tools/data/generation/README.md > _tmp/generation_datasets.md

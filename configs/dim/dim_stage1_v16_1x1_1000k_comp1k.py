@@ -1,5 +1,5 @@
 _base_ = [
-    '../__base__/datasets/comp1k.py', '../__base__/matting_default_runtime.py'
+    '../_base_/datasets/comp1k.py', '../_base_/matting_default_runtime.py'
 ]
 
 # model settings

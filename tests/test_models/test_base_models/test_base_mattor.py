@@ -7,7 +7,7 @@ import numpy as np
 import torch
 from mmcv import ConfigDict
 
-from mmedit.models.__base__ import BaseMattor
+from mmedit.models.base_models import BaseMattor
 from mmedit.models.editors import DIM
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
@@ -21,7 +21,7 @@ def _get_model_cfg(fname):
     Grab configs necessary to create a model. These are deep copied to allow
     for safe modification of parameters without influencing other tests.
     """
-    config_dpath = 'configs/mattors'
+    config_dpath = 'configs'
     config_fpath = osp.join(config_dpath, fname)
     if not osp.exists(config_dpath):
         raise Exception('Cannot find config path')

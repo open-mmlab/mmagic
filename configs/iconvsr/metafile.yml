@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2012.02181
   README: configs/iconvsr/README.md
 Models:
-- Config: configs/video_restorers/iconvsr/iconvsr_reds4.py
+- Config: configs/iconvsr/iconvsr_reds4.py
   In Collection: IconVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
@@ -36,7 +36,7 @@ Models:
         SSIM: 0.9416
     Task: Iconvsr
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
-- Config: configs/video_restorers/iconvsr/iconvsr_vimeo90k_bi.py
+- Config: configs/iconvsr/iconvsr_vimeo90k_bi.py
   In Collection: IconVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
@@ -65,7 +65,7 @@ Models:
         SSIM: 0.9467
     Task: Iconvsr
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413-7c7418dc.pth
-- Config: configs/video_restorers/iconvsr/iconvsr_vimeo90k_bd.py
+- Config: configs/iconvsr/iconvsr_vimeo90k_bd.py
   In Collection: IconVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
