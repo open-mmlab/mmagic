@@ -161,12 +161,9 @@ if __name__ == '__main__':
         job_name_list = f.readlines()
         csv_path = osp.basename(args.list).replace('.log', '.csv')
         plain_txt = show_job_status(args.work_dirs, job_name_list, csv_path)
-<<<<<<< HEAD
         with open('status.log', 'w') as f:
             f.write(plain_txt)
         print('save status to status.log')
-=======
->>>>>>> update config path
     else:
         if args.resume.upper() == 'LATEST':
             resume_from_file(osp.join(CACHE_DIR, 'latest'))
