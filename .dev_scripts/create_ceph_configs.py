@@ -220,12 +220,15 @@ if __name__ == '__main__':
         count_done = res.count(True)
         count_fail = res.count(False)
         fail_list = [fn for status, fn in zip(res, files) if status is False]
+        skip_list = [fn for status, fn in zip(res, files) if status is None]
 
         print(f'Successfully update {count_done} configs.')
         print(f'Skip {count_skip} configs.')
+        if count_skip > 0:
+            print(skip_list)
         print(f'Fail {count_fail} configs.')
-        for fn in fail_list:
-            print(fn)
+        if count_fail > 0:
+            print(fail_list)
 
     else:
         update_ceph_config(args.test_file, args, dry_run=True)
