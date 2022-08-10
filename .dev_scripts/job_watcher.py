@@ -63,15 +63,23 @@ def show_job_status(root, job_name_list):
                 out_content = file.read()
             out_content = out_content.split('\n')
             # only show last two lines
+<<<<<<< HEAD
             if len(out_content) > 10:
                 out_content = out_content[-7:-1]
+=======
+            if len(out_content) > 2:
+                out_content = out_content[-5:-1]
+>>>>>>> [Feature] check job status
             out_content = '\n'.join(out_content)
         else:
             out_content = 'No output currently.'
         table.add_row([name, id_, status, out_content])
     with open('status.csv', 'w') as file:
         file.write(table.get_csv_string())
+<<<<<<< HEAD
         print('save job status to status.cvs')
+=======
+>>>>>>> [Feature] check job status
     return table.get_string()
 
 
