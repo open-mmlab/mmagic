@@ -3,8 +3,9 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.models.layers import (ResGCADecoder, ResGCAEncoder, ResNetDec,
-                                  ResNetEnc, ResShortcutDec, ResShortcutEnc)
+from mmedit.models.editors.gca import (ResGCADecoder, ResGCAEncoder, ResNetDec,
+                                       ResNetEnc, ResShortcutDec,
+                                       ResShortcutEnc)
 
 
 def assert_tensor_with_shape(tensor, shape):

@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from mmcv.utils.parrots_wrapper import _BatchNorm
 
-from mmedit.models.layers import VGG16
+from mmedit.models.base_models import VGG16
 
 
 def check_norm_state(modules, train_state):
