@@ -3,7 +3,7 @@ _base_ = '../default_runtime.py'
 # DistributedDataParallel
 model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
 
-save_dir = 'sh1984:s3://ysli/glean'
+save_dir = './work_dirs'
 
 val_evaluator = [
     dict(type='MAE'),

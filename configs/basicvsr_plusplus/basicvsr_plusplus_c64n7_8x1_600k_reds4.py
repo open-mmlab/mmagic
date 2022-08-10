@@ -1,4 +1,4 @@
-_base_ = './basicvsr/basicvsr_reds4.py'
+_base_ = '../basicvsr/basicvsr_reds4.py'
 
 experiment_name = 'basicvsr_plusplus_c64n7_8x1_600k_reds4'
 work_dir = f'./work_dirs/{experiment_name}'
@@ -34,8 +34,7 @@ optim_wrapper = dict(
         optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99))),
     paramwise_cfg=dict(custom_keys={'spynet': dict(lr_mult=0.25)}))
 
-default_hooks = dict(
-    checkpoint=dict(out_dir='sh1984:s3://ysli/basicvsr_plusplus'))
+default_hooks = dict(checkpoint=dict(out_dir=work_dir))
 
 # learning policy
 lr_config = dict(

@@ -111,7 +111,7 @@ optim_wrapper = dict(
         optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99))),
     paramwise_cfg=dict(custom_keys={'spynet': dict(lr_mult=0.125)}))
 
-default_hooks = dict(checkpoint=dict(out_dir='sh1984:s3://ysli/basicvsr'))
+default_hooks = dict(checkpoint=dict(out_dir='./work_dirs'))
 
 # learning policy
 lr_config = dict(
