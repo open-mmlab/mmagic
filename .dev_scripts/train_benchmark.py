@@ -7,6 +7,7 @@ from collections import OrderedDict
 from datetime import datetime
 from pathlib import Path
 
+from job_watcher import start_from_proc
 from modelindex.load_model_index import load
 from rich.console import Console
 from rich.syntax import Syntax
@@ -206,6 +207,7 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
         f.write(job_script)
 
     commands.append(f'echo "{config}"')
+    commands.append(f'echo "{work_dir}"')
     if args.local:
         commands.append(f'bash {work_dir}/job.sh')
     else:
@@ -279,7 +281,15 @@ def train(args):
     console.print(preview)
 
     if args.run:
-        os.system(command_str)
+        proc = os.popen(command_str)
+        job_name_list = start_from_proc(args.work_dir, proc)
+        history_log = datetime.now().strftime('%Y%m%d_%H%M%S') + '.log'
+        with open(history_log, 'w') as fp:
+            for job in job_name_list:
+                fp.write(job + '\n')
+        fp.close()
+        print(f'Have saved job submission history in {history_log}')
+
     else:
         console.print('Please set "--run" to start the job')
 
