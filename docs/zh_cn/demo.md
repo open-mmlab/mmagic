@@ -181,7 +181,7 @@ python demo/video_interpolation_demo.py \
 
 ```shell
 python demo/video_interpolation_demo.py \
-    configs/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet.py \
+    configs/cain/cain_b5_g1b32_vimeo90k_triplet.py \
     https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth \
     tests/data/test_inference.mp4 \
     tests/data/test_inference_vfi_out.mp4 \
@@ -192,7 +192,7 @@ python demo/video_interpolation_demo.py \
 
 ```shell
 python demo/video_interpolation_demo.py \
-    configs/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet.py \
+    configs/cain/cain_b5_g1b32_vimeo90k_triplet.py \
     https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth \
     tests/data/test_inference.mp4 \
     tests/data/test_inference_vfi_out.mp4 \

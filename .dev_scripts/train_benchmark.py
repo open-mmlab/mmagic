@@ -88,10 +88,7 @@ def parse_args():
     parser.add_argument(
         'partition', type=str, help='Cluster partition to use.')
     parser.add_argument(
-        '--job-name',
-        type=str,
-        default='training-regression',
-        help='Slurm job name prefix')
+        '--job-name', type=str, default=' ', help='Slurm job name prefix')
     parser.add_argument(
         '--train-all', action='store_true', help='Train all model or not.')
     parser.add_argument('--port', type=int, default=29666, help='dist port')
