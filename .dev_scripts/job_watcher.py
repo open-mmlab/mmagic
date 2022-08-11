@@ -70,7 +70,6 @@ def show_job_status(root, job_name_list, csv_path=None):
         else:
             out_content = 'No output currently.'
         table.add_row([name, id_, status, out_content])
-
     with open(csv_path, 'w') as file:
         file.write(table.get_csv_string())
         print(f'save job status to {csv_path}')
@@ -162,9 +161,12 @@ if __name__ == '__main__':
         job_name_list = f.readlines()
         csv_path = osp.basename(args.list).replace('.log', '.csv')
         plain_txt = show_job_status(args.work_dirs, job_name_list, csv_path)
+<<<<<<< HEAD
         with open('status.log', 'w') as f:
             f.write(plain_txt)
         print('save status to status.log')
+=======
+>>>>>>> update config path
     else:
         if args.resume.upper() == 'LATEST':
             resume_from_file(osp.join(CACHE_DIR, 'latest'))
