@@ -37,7 +37,7 @@ def show_job_out(name, root, job_name_list):
     return highlighted_file_content
 
 
-def show_job_status(root, job_name_list):
+def show_job_status(root, job_name_list, csv_path=None):
     """Show job status and dump to csv.
     Args:
         root (_type_): _description_
@@ -48,6 +48,8 @@ def show_job_status(root, job_name_list):
     table = PrettyTable(title='Job Status')
     table.field_names = ['Name', 'ID', 'Status', 'Output']
     swatch_tmp = 'swatch examine {}'
+    if csv_path is None: 
+        csv_path = 'status.cvs'
 
     for info in job_name_list:
         id_, name = info.split(' @ ')
@@ -62,24 +64,16 @@ def show_job_status(root, job_name_list):
             with open(job_out_path, 'r') as file:
                 out_content = file.read()
             out_content = out_content.split('\n')
-            # only show last two lines
-<<<<<<< HEAD
             if len(out_content) > 10:
                 out_content = out_content[-7:-1]
-=======
-            if len(out_content) > 2:
-                out_content = out_content[-5:-1]
->>>>>>> [Feature] check job status
             out_content = '\n'.join(out_content)
         else:
             out_content = 'No output currently.'
         table.add_row([name, id_, status, out_content])
-    with open('status.csv', 'w') as file:
+
+    with open(csv_path, 'w') as file:
         file.write(table.get_csv_string())
-<<<<<<< HEAD
-        print('save job status to status.cvs')
-=======
->>>>>>> [Feature] check job status
+        print(f'save job status to {csv_path}')
     return table.get_string()
 
 
@@ -166,7 +160,8 @@ if __name__ == '__main__':
     if args.list is not None:
         f = open(args.list, 'r')
         job_name_list = f.readlines()
-        plain_txt = show_job_status(args.work_dirs, job_name_list)
+        csv_path = osp.basename(args.list).replace('.log', '.csv')
+        plain_txt = show_job_status(args.work_dirs, job_name_list, csv_path)
         with open('status.log', 'w') as f:
             f.write(plain_txt)
         print('save status to status.log')
