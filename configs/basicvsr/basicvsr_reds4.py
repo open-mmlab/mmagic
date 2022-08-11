@@ -106,9 +106,8 @@ test_cfg = dict(type='TestLoop')
 # optimizer
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
-    optimizer=dict(
-        type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99))),
+    type='OptimWrapper',
+    optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99)),
     paramwise_cfg=dict(custom_keys={'spynet': dict(lr_mult=0.125)}))
 
 default_hooks = dict(checkpoint=dict(out_dir='./work_dirs'))

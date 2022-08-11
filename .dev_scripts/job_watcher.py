@@ -37,7 +37,7 @@ def show_job_out(name, root, job_name_list):
     return highlighted_file_content
 
 
-def show_job_status(root, job_name_list):
+def show_job_status(root, job_name_list, csv_path=None):
     """Show job status and dump to csv.
     Args:
         root (_type_): _description_
@@ -48,6 +48,8 @@ def show_job_status(root, job_name_list):
     table = PrettyTable(title='Job Status')
     table.field_names = ['Name', 'ID', 'Status', 'Output']
     swatch_tmp = 'swatch examine {}'
+    if csv_path is None:
+        csv_path = 'status.csv'
 
     for info in job_name_list:
         id_, name = info.split(' @ ')
@@ -69,9 +71,9 @@ def show_job_status(root, job_name_list):
         else:
             out_content = 'No output currently.'
         table.add_row([name, id_, status, out_content])
-    with open('status.csv', 'w') as file:
+    with open(csv_path, 'w') as file:
         file.write(table.get_csv_string())
-        print('save job status to status.cvs')
+        print(f'save job status to {csv_path}')
     return table.get_string()
 
 
@@ -158,10 +160,8 @@ if __name__ == '__main__':
     if args.list is not None:
         f = open(args.list, 'r')
         job_name_list = f.readlines()
-        plain_txt = show_job_status(args.work_dirs, job_name_list)
-        with open('status.log', 'w') as f:
-            f.write(plain_txt)
-        print('save status to status.log')
+        csv_path = osp.basename(args.list).replace('.log', '.csv')
+        plain_txt = show_job_status(args.work_dirs, job_name_list, csv_path)
     else:
         if args.resume.upper() == 'LATEST':
             resume_from_file(osp.join(CACHE_DIR, 'latest'))
