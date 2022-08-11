@@ -7,6 +7,7 @@ from collections import OrderedDict
 from datetime import datetime
 from pathlib import Path
 
+from job_watcher import start_from_proc
 from modelindex.load_model_index import load
 from rich.console import Console
 from rich.syntax import Syntax
@@ -87,6 +88,11 @@ def parse_args():
         description="Train models' accuracy in model-index.yml")
     parser.add_argument(
         'partition', type=str, help='Cluster partition to use.')
+    parser.add_argument('--skip', type=str, default=None)
+    parser.add_argument('--skip-list', default=None)
+    parser.add_argument('--rerun', type=str, default=None)
+    parser.add_argument('--rerun-list', default=None)
+    parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
         '--job-name', type=str, default=' ', help='Slurm job name prefix')
     parser.add_argument(
@@ -129,6 +135,20 @@ def parse_args():
     parser.add_argument('--save', action='store_true', help='Save the summary')
 
     args = parser.parse_args()
+
+    if args.skip is not None:
+        with open(args.skip, 'r') as fp:
+            skip_list = fp.readlines()
+            skip_list = [j.split('\n')[0] for j in skip_list]
+            args.skip_list = skip_list
+            print('skip_list: ', args.skip_list)
+    elif args.rerun is not None:
+        with open(args.rerun, 'r') as fp:
+            rerun_list = fp.readlines()
+            rerun_list = [j.split('\n')[0] for j in rerun_list]
+            args.rerun_list = rerun_list
+            print('rerun_list: ', args.rerun_list)
+
     return args
 
 
@@ -158,19 +178,16 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
         else:
             n_gpus = 1
 
-    # if 'singan' in config.name:
-    #     # sinGAN use only 1 gpu
-    #     n_gpus = 1
-    # else:
-    #     # parse n gpus from config (b{batch_size}x{n_gpu})
-    #     pattern = r'b\d+x\d+'
-    #     parse_res = re.search(pattern, config.name)
-    #     if not parse_res:
-    #         n_gpus = 8  # defaults as 8 gpu
-    #     else:
-    #         n_gpus = int(parse_res.group().split('x')[-1])
+    if args.gpus_per_job is not None:
+        n_gpus = min(args.gpus_per_job, n_gpus)
 
     job_name = f'{args.job_name}_{fname}'
+    if (args.skip_list is not None) and model_info.name in args.skip_list:
+        return None
+    if (args.rerun_list is not None) and (model_info.name
+                                          not in args.rerun_list):
+        return None
+
     work_dir = Path(args.work_dir) / fname
     work_dir.mkdir(parents=True, exist_ok=True)
 
@@ -206,6 +223,7 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
         f.write(job_script)
 
     commands.append(f'echo "{config}"')
+    commands.append(f'echo "{work_dir}"')
     if args.local:
         commands.append(f'bash {work_dir}/job.sh')
     else:
@@ -279,7 +297,15 @@ def train(args):
     console.print(preview)
 
     if args.run:
-        os.system(command_str)
+        proc = os.popen(command_str)
+        job_name_list = start_from_proc(args.work_dir, proc)
+        history_log = datetime.now().strftime('%Y%m%d-%H%M%S') + '.log'
+        with open(history_log, 'w') as fp:
+            for job in job_name_list:
+                fp.write(job + '\n')
+        fp.close()
+        print(f'Have saved job submission history in {history_log}')
+
     else:
         console.print('Please set "--run" to start the job')
 
