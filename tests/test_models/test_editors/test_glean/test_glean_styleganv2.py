@@ -18,8 +18,7 @@ def test_glean(init_weights):
     model = SRGAN(
         generator=dict(
             type='GLEANStyleGANv2', in_size=16, out_size=64, style_channels=4),
-        discriminator=dict(
-            type='StyleGANv2Discriminator', in_size=64, pretrained=None),
+        discriminator=dict(type='StyleGANv2Discriminator', in_size=64),
         pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean'),
         perceptual_loss=dict(
             type='PerceptualLoss',
