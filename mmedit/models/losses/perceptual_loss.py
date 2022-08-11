@@ -42,8 +42,8 @@ class PerceptualVGG(nn.Module):
 
         # get vgg model and load pretrained vgg weight
         # remove _vgg from attributes to avoid `find_unused_parameters` bug
-        _vgg = getattr(vgg, vgg_type)()
-        self.init_weights(_vgg, pretrained)
+        _vgg = getattr(vgg, vgg_type)()(pretrained=True)
+        # self.init_weights(_vgg, pretrained) #TODO urlopen error
         num_layers = max(map(int, layer_name_list)) + 1
         assert len(_vgg.features) >= num_layers
         # only borrow layers that will be used from _vgg to avoid unused params
