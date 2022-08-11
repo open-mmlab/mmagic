@@ -91,7 +91,7 @@ optim_wrapper = dict(
 
 # learning policy
 param_scheduler = dict(
-    type='milestones',
+    type='MultiStepLR',
     by_epoch=False,
     gamma=0.5,
     milestones=[200000, 400000, 600000, 800000])
