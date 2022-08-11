@@ -283,7 +283,7 @@ def train(args):
     if args.run:
         proc = os.popen(command_str)
         job_name_list = start_from_proc(args.work_dir, proc)
-        history_log = datetime.now().strftime('%Y%m%d_%H%M%S') + '.log'
+        history_log = datetime.now().strftime('%Y%m%d-%H%M%S') + '.log'
         with open(history_log, 'w') as fp:
             for job in job_name_list:
                 fp.write(job + '\n')
