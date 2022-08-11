@@ -63,14 +63,15 @@ def show_job_status(root, job_name_list):
                 out_content = file.read()
             out_content = out_content.split('\n')
             # only show last two lines
-            if len(out_content) > 2:
-                out_content = out_content[-5:-1]
+            if len(out_content) > 10:
+                out_content = out_content[-7:-1]
             out_content = '\n'.join(out_content)
         else:
             out_content = 'No output currently.'
         table.add_row([name, id_, status, out_content])
     with open('status.csv', 'w') as file:
         file.write(table.get_csv_string())
+        print('save job status to status.cvs')
     return table.get_string()
 
 
@@ -142,10 +143,27 @@ def show_tui(root, job_name_list):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
+    parser.add_argument('--list', type=str, default=None)
     parser.add_argument('--resume', default='latest')
+    parser.add_argument(
+        '--work_dirs', type=str, default='work_dirs/benchmark_train')
+    parser.add_argument(
+        '--type',
+        type=str,
+        default='failed',
+        choices=['running', 'success', 'queue', 'failed', 'all'],
+    )
     args = parser.parse_args()
 
-    if args.resume.upper() == 'LATEST':
-        resume_from_file(osp.join(CACHE_DIR, 'latest'))
+    if args.list is not None:
+        f = open(args.list, 'r')
+        job_name_list = f.readlines()
+        plain_txt = show_job_status(args.work_dirs, job_name_list)
+        with open('status.log', 'w') as f:
+            f.write(plain_txt)
+        print('save status to status.log')
     else:
-        resume_from_file(args.resume)
+        if args.resume.upper() == 'LATEST':
+            resume_from_file(osp.join(CACHE_DIR, 'latest'))
+        else:
+            resume_from_file(args.resume)
