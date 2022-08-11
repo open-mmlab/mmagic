@@ -5,7 +5,7 @@ import mmcv
 import numpy as np
 import torch
 import torch.nn as nn
-from mmcv.runner.checkpoint import _load_checkpoint_with_prefix
+from mmengine.model import BaseModule
 
 from mmedit.registry import COMPONENTS
 from .stylegan2_modules import (ConstantInput, ConvDownLayer,
@@ -16,7 +16,7 @@ from .stylegan2_utils import get_mean_latent, get_module_device, style_mixing
 
 
 @COMPONENTS.register_module()
-class StyleGANv2Generator(nn.Module):
+class StyleGANv2Generator(BaseModule):
     r"""StyleGAN2 Generator.
 
     This module comes from MMGeneration. In the future, this code will be
@@ -27,7 +27,7 @@ class StyleGANv2Generator(nn.Module):
     in: Analyzing and Improving the Image Quality of StyleGAN CVPR2020.
 
     You can load pretrained model through passing information into
-    ``pretrained`` argument. We have already offered official weights as
+    ``init_cfg`` argument. We have already offered official weights as
     follows:
 
     - styelgan2-ffhq-config-f: http://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth  # noqa
@@ -42,8 +42,9 @@ class StyleGANv2Generator(nn.Module):
 
         # ckpt_http is one of the valid path from http source
         generator = StyleGANv2Generator(1024, 512,
-                                        pretrained=dict(
-                                            ckpt_path=ckpt_http,
+                                        init_cfg=dict(
+                                            type='Pretrained',
+                                            checkpoint==ckpt_http,
                                             prefix='generator_ema'))
 
     Of course, you can also download the checkpoint in advance and set
@@ -72,8 +73,8 @@ class StyleGANv2Generator(nn.Module):
             Defaults to 'single'.
         mix_prob (float, optional): Mixing probability. The value should be
             in range of [0, 1]. Defaults to 0.9.
-        pretrained (dict | None, optional): Information for pretained models.
-            The necessary key is 'ckpt_path'. Besides, you can also provide
+        init_cfg (dict | None, optional): Initialization config dict.
+            The necessary key is 'checkpoint'. Besides, you can also provide
             'prefix' to load the generator part from the whole state dict.
             Defaults to None.
         bgr2rgb (bool, optional): Whether to flip the image channel dimension.
@@ -90,9 +91,11 @@ class StyleGANv2Generator(nn.Module):
                  default_style_mode='mix',
                  eval_style_mode='single',
                  mix_prob=0.9,
-                 pretrained=None,
+                 init_cfg=None,
                  bgr2rgb=False):
-        super().__init__()
+
+        super().__init__(init_cfg=init_cfg)
+
         self.out_size = out_size
         self.style_channels = style_channels
         self.num_mlps = num_mlps
@@ -183,19 +186,6 @@ class StyleGANv2Generator(nn.Module):
             shape = [1, 1, 2**res, 2**res]
             self.register_buffer(f'injected_noise_{layer_idx}',
                                  torch.randn(*shape))
-
-        if pretrained is not None:
-            self._load_pretrained_model(**pretrained)
-
-    def _load_pretrained_model(self,
-                               ckpt_path,
-                               prefix='',
-                               map_location='cpu',
-                               strict=True):
-        state_dict = _load_checkpoint_with_prefix(prefix, ckpt_path,
-                                                  map_location)
-        self.load_state_dict(state_dict, strict=strict)
-        mmcv.print_log(f'Load pretrained model from {ckpt_path}', 'mmedit')
 
     def train(self, mode=True):
         if mode:
@@ -405,7 +395,7 @@ class StyleGANv2Generator(nn.Module):
 
 
 @COMPONENTS.register_module()
-class StyleGANv2Discriminator(nn.Module):
+class StyleGANv2Discriminator(BaseModule):
     """StyleGANv2 Discriminator.
 
     This module comes from MMGeneration. In the future, this code will be
@@ -416,7 +406,7 @@ class StyleGANv2Discriminator(nn.Module):
     StyleGAN CVPR2020.
 
     You can load pretrained model through passing information into
-    ``pretrained`` argument. We have already offered official weights as
+    ``init_cfg`` argument. We have already offered official weights as
     follows:
 
     - styelgan2-ffhq-config-f: http://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth  # noqa
@@ -432,7 +422,8 @@ class StyleGANv2Discriminator(nn.Module):
         # ckpt_http is one of the valid path from http source
         discriminator = StyleGAN2Discriminator(1024, 512,
                                                pretrained=dict(
-                                                   ckpt_path=ckpt_http,
+                                                   type='Pretrained',
+                                                   checkpoint==ckpt_http,
                                                    prefix='discriminator'))
 
     Of course, you can also download the checkpoint in advance and set
@@ -451,8 +442,8 @@ class StyleGANv2Discriminator(nn.Module):
             to [1, 3, 3, 1].
         mbstd_cfg (dict, optional): Configs for minibatch-stddev layer.
             Defaults to dict(group_size=4, channel_groups=1).
-        pretrained (dict | None, optional): Information for pretained models.
-            The necessary key is 'ckpt_path'. Besides, you can also provide
+        init_cfg (dict, optional): Initialization config dict.
+            The necessary key is 'checkpoint'. Besides, you can also provide
             'prefix' to load the generator part from the whole state dict.
             Defaults to None.
         bgr2rgb (bool, optional): Whether to flip the image channel dimension.
@@ -464,9 +455,10 @@ class StyleGANv2Discriminator(nn.Module):
                  channel_multiplier=2,
                  blur_kernel=[1, 3, 3, 1],
                  mbstd_cfg=dict(group_size=4, channel_groups=1),
-                 pretrained=None,
+                 init_cfg=None,
                  bgr2rgb=False):
-        super().__init__()
+
+        super().__init__(init_cfg=init_cfg)
 
         self.bgr2rgb = bgr2rgb
 
@@ -507,18 +499,6 @@ class StyleGANv2Discriminator(nn.Module):
                 act_cfg=dict(type='fused_bias')),
             EqualLinearActModule(channels[4], 1),
         )
-        if pretrained is not None:
-            self._load_pretrained_model(**pretrained)
-
-    def _load_pretrained_model(self,
-                               ckpt_path,
-                               prefix='',
-                               map_location='cpu',
-                               strict=True):
-        state_dict = _load_checkpoint_with_prefix(prefix, ckpt_path,
-                                                  map_location)
-        self.load_state_dict(state_dict, strict=strict)
-        mmcv.print_log(f'Load pretrained model from {ckpt_path}', 'mmedit')
 
     def forward(self, x):
         """Forward function.
