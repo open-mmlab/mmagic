@@ -86,6 +86,7 @@ METRICS_MAP = {
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Train models' accuracy in model-index.yml")
+    parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
         'partition', type=str, help='Cluster partition to use.')
     parser.add_argument(
@@ -159,17 +160,8 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
         else:
             n_gpus = 1
 
-    # if 'singan' in config.name:
-    #     # sinGAN use only 1 gpu
-    #     n_gpus = 1
-    # else:
-    #     # parse n gpus from config (b{batch_size}x{n_gpu})
-    #     pattern = r'b\d+x\d+'
-    #     parse_res = re.search(pattern, config.name)
-    #     if not parse_res:
-    #         n_gpus = 8  # defaults as 8 gpu
-    #     else:
-    #         n_gpus = int(parse_res.group().split('x')[-1])
+    if args.gpus_per_job is not None:
+        n_gpus = min(args.gpus_per_job, 2)
 
     job_name = f'{args.job_name}_{fname}'
     work_dir = Path(args.work_dir) / fname

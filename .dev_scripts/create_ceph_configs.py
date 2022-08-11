@@ -184,6 +184,7 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
     parser.add_argument('--ceph-path', type=str, default=None)
+    parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
         '--work-dir-prefix',
         type=str,
