@@ -197,7 +197,10 @@ train_pipeline = [
 ]
 
 val_pipeline = [
-    dict(type='GenerateSegmentIndices', interval_list=[1]),
+    dict(
+        type='GenerateSegmentIndices',
+        interval_list=[1],
+        filename_tmpl='{:04d}.png'),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='RescaleToZeroOne', keys=['img', 'gt']),
@@ -243,6 +246,7 @@ val_dataloader = dict(
         metainfo=dict(dataset_type='udm10', task_name='vsr'),
         data_root=f'{data_root}/UDM10',
         data_prefix=dict(img='BIx4', gt='GT'),
+        num_input_frames=15,
         pipeline=val_pipeline))
 
 test_dataloader = dict(
@@ -255,6 +259,7 @@ test_dataloader = dict(
         metainfo=dict(dataset_type='video_lq', task_name='vsr'),
         data_root=f'{data_root}/VideoLQ',
         data_prefix=dict(img='', gt=''),
+        num_input_frames=15,
         pipeline=val_pipeline))
 
 val_evaluator = [
@@ -291,3 +296,8 @@ default_hooks = dict(
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
+
+model_wrapper_cfg = dict(
+    type='MMSeparateDistributedDataParallel',
+    broadcast_buffers=False,
+    find_unused_parameters=False)
