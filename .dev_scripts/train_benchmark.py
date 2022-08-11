@@ -86,7 +86,6 @@ METRICS_MAP = {
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Train models' accuracy in model-index.yml")
-    parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
         'partition', type=str, help='Cluster partition to use.')
     parser.add_argument('--gpus-per-job', type=int, default=None)
