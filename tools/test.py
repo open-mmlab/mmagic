@@ -6,8 +6,7 @@ import os.path as osp
 from mmengine.config import Config, DictAction
 from mmengine.runner import Runner
 
-from mmedit.registry import register_all_modules
-from mmedit.utils import print_colored_log
+from mmedit.utils import print_colored_log, register_all_modules
 
 
 # TODO: support fuse_conv_bn, visualization, and format_only

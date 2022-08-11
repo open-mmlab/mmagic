@@ -1,3 +1,5 @@
+_base_ = '../__base__/default_runtime.py'
+
 experiment_name = 'basicvsr_plusplus_c128n25_600k_ntire_decompress_track1'
 work_dir = f'./work_dirs/{experiment_name}'
 
@@ -54,4 +56,12 @@ test_dataloader = dict(
         metainfo=dict(dataset_type='ntire21_track1', task_name='vsr'),
         data_root='data/NTIRE21_decompression_track1',
         data_prefix=dict(img='LQ', gt='GT'),
+        num_input_frames=15,
         pipeline=test_pipeline))
+
+test_evaluator = [
+    dict(type='PSNR'),
+    dict(type='SSIM'),
+]
+
+test_cfg = dict(type='TestLoop')

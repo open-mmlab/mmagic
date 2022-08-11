@@ -19,7 +19,7 @@ model = dict(
             '_171224-bce9310c.pth',
             prefix='generator_ema')),
     discriminator=dict(
-        type='StyleGAN2Discriminator',
+        type='StyleGANv2Discriminator',
         in_size=1024,
         init_cfg=dict(
             type='Pretrained',
@@ -97,8 +97,8 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='ffhq', task_name='sisr'),
-        data_root='data/FFHQ',
-        data_prefix=dict(img='BIx16_down', gt='GT'),
+        data_root='data/ffhq',
+        data_prefix=dict(img='BIx16_down', gt='images'),
         ann_file='meta_info_FFHQ_GT.txt',
         pipeline=train_pipeline))
 
