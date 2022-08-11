@@ -1,4 +1,4 @@
-_base_ = '../__base__/default_runtime.py'
+_base_ = '../_base_/default_runtime.py'
 
 experiment_name = 'basicvsr_plusplus_c128n25_600k_ntire_decompress_track1'
 work_dir = f'./work_dirs/{experiment_name}'

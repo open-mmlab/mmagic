@@ -29,9 +29,8 @@ train_cfg = dict(
 # optimizer
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
-    optimizer=dict(
-        type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99))),
+    type='OptimWrapper',
+    optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99)),
     paramwise_cfg=dict(custom_keys={'spynet': dict(lr_mult=0.25)}))
 
 default_hooks = dict(checkpoint=dict(out_dir=work_dir))
