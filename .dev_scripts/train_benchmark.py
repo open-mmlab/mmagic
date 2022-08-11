@@ -90,6 +90,8 @@ def parse_args():
         'partition', type=str, help='Cluster partition to use.')
     parser.add_argument('--skip', type=str, default=None)
     parser.add_argument('--skip-list', default=None)
+    parser.add_argument('--rerun', type=str, default=None)
+    parser.add_argument('--rerun-list', default=None)
     parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
         '--job-name', type=str, default=' ', help='Slurm job name prefix')
@@ -139,6 +141,13 @@ def parse_args():
             skip_list = fp.readlines()
             skip_list = [j.split('\n')[0] for j in skip_list]
             args.skip_list = skip_list
+            print('skip_list: ', args.skip_list)
+    elif args.rerun is not None:
+        with open(args.rerun, 'r') as fp:
+            rerun_list = fp.readlines()
+            rerun_list = [j.split('\n')[0] for j in rerun_list]
+            args.rerun_list = rerun_list
+            print('rerun_list: ', args.rerun_list)
 
     return args
 
@@ -173,8 +182,12 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
         n_gpus = min(args.gpus_per_job, n_gpus)
 
     job_name = f'{args.job_name}_{fname}'
-    if args.skip_list is not None and job_name in args.skip_list:
+    if (args.skip_list is not None) and model_info.name in args.skip_list:
         return None
+    if (args.rerun_list is not None) and (model_info.name
+                                          not in args.rerun_list):
+        return None
+
     work_dir = Path(args.work_dir) / fname
     work_dir.mkdir(parents=True, exist_ok=True)
 
