@@ -48,13 +48,8 @@ def show_job_status(root, job_name_list, csv_path=None):
     table = PrettyTable(title='Job Status')
     table.field_names = ['Name', 'ID', 'Status', 'Output']
     swatch_tmp = 'swatch examine {}'
-<<<<<<< HEAD
-    if csv_path is None: 
-        csv_path = 'status.cvs'
-=======
     if csv_path is None:
-        csv_path = 'status.csv'
->>>>>>> update config path
+        csv_path = 'status.cvs'
 
     for info in job_name_list:
         id_, name = info.split(' @ ')

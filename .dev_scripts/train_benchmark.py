@@ -89,8 +89,7 @@ def parse_args():
     parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
         'partition', type=str, help='Cluster partition to use.')
-    parser.add_argument(
-        '--gpus-per-job', type=int, default=None)
+    parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
         '--job-name', type=str, default=' ', help='Slurm job name prefix')
     parser.add_argument(
@@ -162,7 +161,7 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
         else:
             n_gpus = 1
 
-    if args.gpus_per_job is not None: 
+    if args.gpus_per_job is not None:
         n_gpus = min(args.gpus_per_job, n_gpus)
 
     job_name = f'{args.job_name}_{fname}'
