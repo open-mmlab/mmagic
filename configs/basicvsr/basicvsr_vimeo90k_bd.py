@@ -104,3 +104,5 @@ val_evaluator = [
     dict(type='SSIM', convert_to='Y'),
 ]
 test_evaluator = val_evaluator
+
+find_unused_parameters = True

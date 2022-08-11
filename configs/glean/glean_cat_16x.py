@@ -19,7 +19,7 @@ model = dict(
             '_172444-15bc485b.pth',
             prefix='generator_ema')),
     discriminator=dict(
-        type='StyleGAN2Discriminator',
+        type='StyleGANv2Discriminator',
         in_size=256,
         init_cfg=dict(
             type='Pretrained',

@@ -8,4 +8,6 @@ model = dict(
     test_cfg=dict(refine=True),
 )
 
-load_from = './checkpoints/dim_stage2_v16_pln_1x1_1000k_comp1k_SAD-52.3_20200607_171909-d83c4775.pth'  # noqa: E501
+load_from = \
+    'https://download.openmmlab.com/mmediting/mattors/dim/'\
+    'dim_stage2_v16_pln_1x1_1000k_comp1k_SAD-52.3_20200607_171909-d83c4775.pth'

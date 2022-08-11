@@ -420,7 +420,7 @@ class StyleGANv2Discriminator(BaseModule):
     .. code-block:: python
 
         # ckpt_http is one of the valid path from http source
-        discriminator = StyleGAN2Discriminator(1024, 512,
+        discriminator = StyleGANv2Discriminator(1024, 512,
                                                pretrained=dict(
                                                    type='Pretrained',
                                                    checkpoint==ckpt_http,

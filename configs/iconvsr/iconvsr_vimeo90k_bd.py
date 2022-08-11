@@ -27,3 +27,5 @@ model = dict(
     ))
 
 default_hooks = dict(checkpoint=dict(out_dir=work_dir))
+
+find_unused_parameters = True

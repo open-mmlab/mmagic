@@ -88,6 +88,8 @@ def parse_args():
         description="Train models' accuracy in model-index.yml")
     parser.add_argument(
         'partition', type=str, help='Cluster partition to use.')
+    parser.add_argument('--skip', type=str, default=None)
+    parser.add_argument('--skip-list', default=None)
     parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
         '--job-name', type=str, default=' ', help='Slurm job name prefix')
@@ -131,6 +133,13 @@ def parse_args():
     parser.add_argument('--save', action='store_true', help='Save the summary')
 
     args = parser.parse_args()
+
+    if args.skip is not None:
+        with open(args.skip, 'r') as fp:
+            skip_list = fp.readlines()
+            skip_list = [j.split('\n')[0] for j in skip_list]
+            args.skip_list = skip_list
+
     return args
 
 
@@ -164,6 +173,8 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
         n_gpus = min(args.gpus_per_job, n_gpus)
 
     job_name = f'{args.job_name}_{fname}'
+    if args.skip_list is not None and job_name in args.skip_list:
+        return None
     work_dir = Path(args.work_dir) / fname
     work_dir.mkdir(parents=True, exist_ok=True)
 
