@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from ..registry import register_all_modules
 from .cli import modify_args
 from .logger import get_root_logger, print_colored_log
 from .setup_env import setup_multi_processes
@@ -8,4 +9,5 @@ __all__ = [
     'print_colored_log',
     'get_root_logger',
     'setup_multi_processes',
+    'register_all_modules',
 ]
