@@ -69,10 +69,7 @@ def parse_args():
         'partition', type=str, help='Cluster partition to use.')
     parser.add_argument('checkpoint_root', help='Checkpoint file root path.')
     parser.add_argument(
-        '--job-name',
-        type=str,
-        default='gen-test-benchmark',
-        help='Slurm job name prefix')
+        '--job-name', type=str, default=' ', help='Slurm job name prefix')
     parser.add_argument('--port', type=int, default=29666, help='dist port')
     parser.add_argument(
         '--use-ceph-config',
