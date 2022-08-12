@@ -3,6 +3,7 @@ _base_ = [
     '../_base_/datasets/places.py'
 ]
 
+save_dir = './work_dirs/'
 model = dict(
     train_cfg=dict(
         disc_step=0,
@@ -72,4 +73,5 @@ optim_wrapper = dict(
     dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=0.00005)))
 lr_config = dict(policy='Fixed', by_epoch=False)
 
-checkpoint_config = dict(type='CheckpointHook', by_epoch=False, interval=50000)
+checkpoint_config = dict(
+    type='CheckpointHook', by_epoch=False, interval=50000, out_dir=save_dir)

@@ -3,6 +3,7 @@ _base_ = [
     '../_base_/inpaint_default_runtime.py', '../_base_/datasets/celeba.py'
 ]
 
+save_dir = './work_dirs'
 model = dict(train_cfg=dict(disc_step=1, start_iter=0))
 
 input_shape = (256, 256)
@@ -59,4 +60,5 @@ test_cfg = dict(type='TestLoop')
 
 lr_config = dict(policy='Fixed', by_epoch=False)
 
-checkpoint = dict(type='CheckpointHook', interval=50000, by_epoch=False)
+checkpoint = dict(
+    type='CheckpointHook', interval=50000, by_epoch=False, out_dir=save_dir)

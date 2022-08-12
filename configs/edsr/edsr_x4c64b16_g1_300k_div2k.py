@@ -2,6 +2,7 @@ _base_ = '../_base_/default_runtime.py'
 
 experiment_name = 'edsr_x4c64b16_g1_300k_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
 
 load_from = None  # based on pre-trained x2 model
 
@@ -72,7 +73,6 @@ test_pipeline = [
 # dataset settings
 dataset_type = 'BasicImageDataset'
 data_root = 'data'
-save_dir = work_dir
 
 train_dataloader = dict(
     num_workers=4,

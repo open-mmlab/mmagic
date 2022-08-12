@@ -69,10 +69,7 @@ def parse_args():
         'partition', type=str, help='Cluster partition to use.')
     parser.add_argument('checkpoint_root', help='Checkpoint file root path.')
     parser.add_argument(
-        '--job-name',
-        type=str,
-        default='gen-test-benchmark',
-        help='Slurm job name prefix')
+        '--job-name', type=str, default=' ', help='Slurm job name prefix')
     parser.add_argument('--port', type=int, default=29666, help='dist port')
     parser.add_argument(
         '--use-ceph-config',
@@ -294,7 +291,13 @@ def test(args):
 
     if args.run:
         proc = os.popen(command_str)
-        start_from_proc(args.work_dir, proc)
+        job_name_list = start_from_proc(args.work_dir, proc)
+        history_log = datetime.now().strftime('test-%Y%m%d-%H%M%S') + '.log'
+        with open(history_log, 'w') as fp:
+            for job in job_name_list:
+                fp.write(job + '\n')
+        fp.close()
+        print(f'Have saved job submission history in {history_log}')
     else:
         console.print('Please set "--run" to start the job')
 

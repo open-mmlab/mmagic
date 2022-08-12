@@ -1,4 +1,5 @@
 default_scope = 'mmedit'
+save_dir = './work_dirs'
 
 default_hooks = dict(
     timer=dict(type='IterTimerHook'),
@@ -7,6 +8,7 @@ default_hooks = dict(
     checkpoint=dict(
         type='CheckpointHook',
         interval=5000,
+        out_dir=save_dir,
         by_epoch=False,
         max_keep_ckpts=10,
         save_best='PSNR',

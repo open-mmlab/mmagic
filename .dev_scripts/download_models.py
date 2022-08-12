@@ -44,9 +44,9 @@ def additional_download(args):
                 wget.download(url, path)
         else:
             if args.dry_run:
-                print(f'wget -N {url} {path}')
+                print(f'wget --no-check-certificate -N {url} {path}')
             else:
-                os.system(f'wget -N {url} {path}')
+                os.system(f'wget --no-check-certificate -N {url} {path}')
 
 
 def parse_args():

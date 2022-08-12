@@ -2,6 +2,7 @@ _base_ = '../basicvsr/basicvsr_vimeo90k_bd.py'
 
 experiment_name = 'iconvsr_vimeo90k_bd'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
 
 # model settings
 model = dict(
@@ -26,6 +27,6 @@ model = dict(
         output_view=(1, -1, 1, 1),
     ))
 
-default_hooks = dict(checkpoint=dict(out_dir=work_dir))
+default_hooks = dict(checkpoint=dict(out_dir=save_dir))
 
 find_unused_parameters = True
