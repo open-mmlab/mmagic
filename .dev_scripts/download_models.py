@@ -109,22 +109,24 @@ def download(args):
 
         model_weight_url = model_info.weights
 
-        # use [:-1] because download url for translation is
-        # 'METHOD/refactor/NAME.pth', use [:-1] can remain
-        # `refactor` in `model_name` (`refactor/NAME.pth`)
         if model_weight_url.startswith(http_prefix_long):
-            model_name = osp.join(
-                *model_weight_url[len(http_prefix_long):].split('/')[:-1])
+            model_name = model_weight_url[len(http_prefix_long):]
         elif model_weight_url.startswith(http_prefix_short):
-            model_name = osp.join(
-                *model_weight_url[len(http_prefix_short):].split('/')[:-1])
+            model_name = model_weight_url[len(http_prefix_short):]
         else:
             raise ValueError(f'Unknown url prefix. \'{model_weight_url}\'')
+
+        model_name_split = model_name.split('/')
+        if len(model_name_split) == 3:  # 'TASK/METHOD/MODEL.pth'
+            # remove task name
+            model_name = osp.join(*model_name_split[1:-1])
+        else:
+            model_name = osp.join(*model_name_split[:-1])
         ckpt_name = model_weight_url.split('/')[-1]
-        # import ipdb
-        # ipdb.set_trace()
+
         download_path = osp.join(checkpoint_root, model_name, ckpt_name)
         download_root = osp.join(checkpoint_root, model_name)
+
         if osp.exists(download_path):
             print(f'Already exists {download_path}')
             # do not delete when dry-run is true
@@ -142,15 +144,14 @@ def download(args):
             if args.dry_run:
                 print(' '.join(cmd_str_list))
             else:
-                # os.system(cmd_str)
-                subprocess.run([cmd_str_list], check=True)
+                subprocess.run(cmd_str_list, check=True)
         except Exception:
             # for older version of wget
             cmd_str_list = ['wget', '-P', download_root, model_weight_url]
             if args.dry_run:
                 print(' '.join(cmd_str_list))
             else:
-                subprocess.run([cmd_str_list], check=True)
+                subprocess.run(cmd_str_list, check=True)
 
 
 if __name__ == '__main__':

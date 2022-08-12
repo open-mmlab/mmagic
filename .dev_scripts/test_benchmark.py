@@ -139,20 +139,36 @@ def create_test_job_batch(commands, model_info, args, port, script_name):
     config = Path(config)
     assert config.exists(), f'{fname}: {config} not found.'
 
-    http_prefix = 'https://download.openmmlab.com/mmediting/'
+    http_prefix_short = 'https://download.openmmlab.com/mmediting/'
+    http_prefix_long = 'https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/'  # noqa
+    model_weight_url = model_info.weights
+
+    if model_weight_url.startswith(http_prefix_long):
+        model_name = model_weight_url[len(http_prefix_long):]
+    elif model_weight_url.startswith(http_prefix_short):
+        model_name = model_weight_url[len(http_prefix_short):]
+    else:
+        raise ValueError(f'Unknown url prefix. \'{model_weight_url}\'')
+
+    model_name_split = model_name.split('/')
+    if len(model_name_split) == 3:  # 'TASK/METHOD/MODEL.pth'
+        # remove task name
+        model_name = osp.join(*model_name_split[1:])
+    else:
+        model_name = osp.join(*model_name_split)
+
     if 's3://' in args.checkpoint_root:
         from mmcv.fileio import FileClient
         from petrel_client.common.exception import AccessDeniedError
         file_client = FileClient.infer_client(uri=args.checkpoint_root)
-        checkpoint = file_client.join_path(
-            args.checkpoint_root, model_info.weights[len(http_prefix):])
+        checkpoint = file_client.join_path(args.checkpoint_root, model_name)
         try:
             exists = file_client.exists(checkpoint)
         except AccessDeniedError:
             exists = False
     else:
         checkpoint_root = Path(args.checkpoint_root)
-        checkpoint = checkpoint_root / model_info.weights[len(http_prefix):]
+        checkpoint = checkpoint_root / model_name
         exists = checkpoint.exists()
     if not exists:
         print(f'WARNING: {fname}: {checkpoint} not found.')
