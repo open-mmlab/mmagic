@@ -88,6 +88,8 @@ def parse_args():
         description="Train models' accuracy in model-index.yml")
     parser.add_argument(
         'partition', type=str, help='Cluster partition to use.')
+    parser.add_argument(
+        '--resume', action='store_true', help='Whether to resume checkpoint.')
     parser.add_argument('--skip', type=str, default=None)
     parser.add_argument('--skip-list', default=None)
     parser.add_argument('--rerun', type=str, default=None)
@@ -217,7 +219,11 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
                   f'export MASTER_PORT={port}\n'
                   f'{runner} -u {script_name} {config} '
                   f'--work-dir={work_dir} '
-                  f'--launcher={launcher}\n')
+                  f'--launcher={launcher}')
+    if args.resume:
+        job_script += '  --resume \n'
+    else:
+        job_script += '\n'
 
     with open(work_dir / 'job.sh', 'w') as f:
         f.write(job_script)
@@ -299,7 +305,7 @@ def train(args):
     if args.run:
         proc = os.popen(command_str)
         job_name_list = start_from_proc(args.work_dir, proc)
-        history_log = datetime.now().strftime('%Y%m%d-%H%M%S') + '.log'
+        history_log = datetime.now().strftime('train-%Y%m%d-%H%M%S') + '.log'
         with open(history_log, 'w') as fp:
             for job in job_name_list:
                 fp.write(job + '\n')
