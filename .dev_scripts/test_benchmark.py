@@ -1,165 +1,423 @@
-#!/usr/bin/env python
-# Copyright (c) OpenMMLab. All rights reserved.
-
-# This tool is used to update README.md and README_zh-CN.md in configs
-
-import datetime
-import glob
+import argparse
 import os
-import platform
-import posixpath as osp  # Even on windows, use posixpath
-import sys
-import threading
+import os.path as osp
+import pickle
+import re
+from collections import OrderedDict
+from datetime import datetime
+from importlib.machinery import SourceFileLoader
+from pathlib import Path
 
-import yaml
+from modelindex.load_model_index import load
+from rich.console import Console
+from rich.syntax import Syntax
+from rich.table import Table
 
-MMEditing_ROOT = osp.dirname(osp.dirname(osp.dirname(__file__)))
-DOWNLOAD_DIR = osp.join(MMEditing_ROOT, 'work_dirs', 'download')
-LOG_DIR = osp.join(
-    MMEditing_ROOT, 'work_dirs',
-    'benchmark_test_' + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
-PARTITION = 'mm_lol'
+# from task_watcher import start_from_proc
 
-sem = threading.Semaphore(8)  # The maximum number of restricted threads
+console = Console()
+MMEDITING_ROOT = Path(__file__).absolute().parents[1]
+
+# key-in-metafile: key-in-results.pkl
+METRICS_MAP = {
+    'PSNR': {
+        'keys': ['PSNR'],
+        'tolerance': 0.1,
+        'rule': 'larger'
+    },
+    'SSIM': {
+        'keys': ['MattingSSIM', 'SSIM'],
+        'tolerance': 0.1,
+        'rule': 'larger'
+    },
+    'l1 error': {
+        'keys': ['MAE'],
+        'tolerance': 0.1,
+        'rule': 'less'
+    },
+    'CONN': {
+        'keys': ['ConnectivityError'],
+        'tolerance': 0.1,
+        'rule': 'less'
+    },
+    'GRAD': {
+        'keys': ['GradientError'],
+        'tolerance': 0.1,
+        'rule': 'less'
+    },
+    'MSE': {
+        'keys': ['MSE', 'MattingMSE'],
+        'tolerance': 0.1,
+        'rule': 'less'
+    },
+    'SAD': {
+        'keys': ['SAD'],
+        'tolerance': 0.1,
+        'rule': 'less'
+    },
+    'NIQE': {
+        'keys': ['NIQE'],
+        'tolerance': 0.1,
+        'rule': 'less'
+    }
+}
 
 
-def filter(info):
-    """Filter the models you want to test.
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Test all models' accuracy in model-index.yml")
+    parser.add_argument(
+        'partition', type=str, help='Cluster partition to use.')
+    parser.add_argument('checkpoint_root', help='Checkpoint file root path.')
+    parser.add_argument(
+        '--job-name',
+        type=str,
+        default='gen-test-benchmark',
+        help='Slurm job name prefix')
+    parser.add_argument('--port', type=int, default=29666, help='dist port')
+    parser.add_argument(
+        '--use-ceph-config',
+        action='store_true',
+        default=False,
+        help='Use ceph configs or not.')
+    parser.add_argument(
+        '--models', nargs='+', type=str, help='Specify model names to run.')
+    parser.add_argument(
+        '--work-dir',
+        default='work_dirs/benchmark_test',
+        help='the dir to save metric')
+    parser.add_argument(
+        '--run', action='store_true', help='run script directly')
+    parser.add_argument(
+        '--local',
+        action='store_true',
+        help='run at local instead of cluster.')
+    parser.add_argument(
+        '--mail', type=str, help='Mail address to watch test status.')
+    parser.add_argument(
+        '--mail-type',
+        nargs='+',
+        default=['BEGIN'],
+        choices=['NONE', 'BEGIN', 'END', 'FAIL', 'REQUEUE', 'ALL'],
+        help='Mail address to watch test status.')
+    parser.add_argument(
+        '--quotatype',
+        default=None,
+        choices=['reserved', 'auto', 'spot'],
+        help='Quota type, only available for phoenix-slurm>=0.2')
+    parser.add_argument(
+        '--summary',
+        action='store_true',
+        help='Summarize benchmark test results.')
+    parser.add_argument('--save', action='store_true', help='Save the summary')
 
-    Args:
-        info (dict): info of model.
+    group_parser = parser.add_mutually_exclusive_group()
+    group_parser.add_argument(
+        '--P0', action='store_true', help='Whether test model in P0 list')
+    group_parser.add_argument(
+        '--model-list',
+        type=str,
+        default='',
+        help='Path of algorithm list to load')
+    args = parser.parse_args()
+    return args
 
-    Returns:
-        Bool: If this model should be tested.
-    """
 
-    # return 'global_local' in info['Config']
-    return True
+def create_test_job_batch(commands, model_info, args, port, script_name):
+    config_http_prefix_blob = ('https://github.com/open-mmlab/mmediting/'
+                               'blob/master/')
+    config_http_prefix_tree = ('https://github.com/open-mmlab/mmediting/'
+                               'tree/master/')
+    fname = model_info.name
+
+    config = model_info.config
+    if config.startswith('http'):
+        config = config.replace(config_http_prefix_blob, './')
+        config = config.replace(config_http_prefix_tree, './')
+    if args.use_ceph_config:
+        config = config.replace('configs', 'configs_ceph')
+
+    config = Path(config)
+    assert config.exists(), f'{fname}: {config} not found.'
+
+    http_prefix = 'https://download.openmmlab.com/mmediting/'
+    if 's3://' in args.checkpoint_root:
+        from mmcv.fileio import FileClient
+        from petrel_client.common.exception import AccessDeniedError
+        file_client = FileClient.infer_client(uri=args.checkpoint_root)
+        checkpoint = file_client.join_path(
+            args.checkpoint_root, model_info.weights[len(http_prefix):])
+        try:
+            exists = file_client.exists(checkpoint)
+        except AccessDeniedError:
+            exists = False
+    else:
+        checkpoint_root = Path(args.checkpoint_root)
+        checkpoint = checkpoint_root / model_info.weights[len(http_prefix):]
+        exists = checkpoint.exists()
+    if not exists:
+        print(f'WARNING: {fname}: {checkpoint} not found.')
+        return None
+
+    job_name = f'{args.job_name}_{fname}'
+    work_dir = Path(args.work_dir) / fname
+    work_dir.mkdir(parents=True, exist_ok=True)
+    result_file = work_dir / 'result.pkl'
+
+    if args.mail is not None and 'NONE' not in args.mail_type:
+        mail_cfg = (f'#SBATCH --mail {args.mail}\n'
+                    f'#SBATCH --mail-type {args.mail_type}\n')
+    else:
+        mail_cfg = ''
+
+    if args.quotatype is not None:
+        quota_cfg = f'#SBATCH --quotatype {args.quotatype}\n'
+    else:
+        quota_cfg = ''
+
+    launcher = 'none' if args.local else 'slurm'
+    runner = 'python' if args.local else 'srun python'
+
+    # NOTE: set gpus as 2
+    job_script = (f'#!/bin/bash\n'
+                  f'#SBATCH --output {work_dir}/job.%j.out\n'
+                  f'#SBATCH --partition={args.partition}\n'
+                  f'#SBATCH --job-name {job_name}\n'
+                  f'#SBATCH --gres=gpu:2\n'
+                  f'{mail_cfg}{quota_cfg}'
+                  f'#SBATCH --ntasks-per-node=2\n'
+                  f'#SBATCH --ntasks=2\n'
+                  f'#SBATCH --cpus-per-task=16\n\n'
+                  f'export MASTER_PORT={port}\n'
+                  f'{runner} -u {script_name} {config} {checkpoint} '
+                  f'--work-dir={work_dir} '
+                  f'--out={result_file} '
+                  f'--launcher={launcher}\n')
+
+    with open(work_dir / 'job.sh', 'w') as f:
+        f.write(job_script)
+
+    commands.append(f'echo "{config}"')
+    commands.append(f'echo "{work_dir}"')
+    if args.local:
+        commands.append(f'bash {work_dir}/job.sh')
+    else:
+        commands.append(f'sbatch {work_dir}/job.sh')
+
+    return work_dir / 'job.sh'
 
 
-def find_available_port():
-    """Find an available port.
-    """
+def test(args):
+    # parse model-index.yml
+    model_index_file = MMEDITING_ROOT / 'model-index.yml'
+    model_index = load(str(model_index_file))
+    model_index.build_models_with_collections()
+    models = OrderedDict({model.name: model for model in model_index.models})
 
-    port = 65535
-    while True:
-        if platform.system() == 'Windows':
-            port_is_occupied = os.popen('netstat -an | findstr :' +
-                                        str(port)).readlines()
+    script_name = osp.join('tools', 'test.py')
+    port = args.port
+
+    commands = []
+    if args.models:
+        patterns = [re.compile(pattern) for pattern in args.models]
+        filter_models = {}
+        for k, v in models.items():
+            if any([re.match(pattern, k) for pattern in patterns]):
+                filter_models[k] = v
+        if len(filter_models) == 0:
+            print('No model found, please specify models in:')
+            print('\n'.join(models.keys()))
+            return
+        models = filter_models
+
+    # load model list
+    if args.P0:
+        file_list = osp.join(osp.dirname(__file__), 'p0_test_list.py')
+    elif args.model_list:
+        file_list = args.model_list
+    else:
+        file_list = None
+
+    if file_list:
+        test_list = SourceFileLoader('model_list',
+                                     file_list).load_module().model_list
+    else:
+        test_list = None
+
+    preview_script = ''
+    for model_info in models.values():
+
+        if model_info.results is None:
+            continue
+
+        if test_list is not None and model_info.name not in test_list:
+            continue
+
+        script_path = create_test_job_batch(commands, model_info, args, port,
+                                            script_name)
+        preview_script = script_path or preview_script
+        port += 1
+
+    command_str = '\n'.join(commands)
+
+    import ipdb
+    ipdb.set_trace()
+    preview = Table()
+    preview.add_column(str(preview_script))
+    preview.add_column('Shell command preview')
+    preview.add_row(
+        Syntax.from_path(
+            preview_script,
+            background_color='default',
+            line_numbers=True,
+            word_wrap=True),
+        Syntax(
+            command_str,
+            'bash',
+            background_color='default',
+            line_numbers=True,
+            word_wrap=True))
+    console.print(preview)
+
+    if args.run:
+        os.popen(command_str)
+        # proc = os.popen(command_str)
+        # start_from_proc(args.work_dir, proc)
+    else:
+        console.print('Please set "--run" to start the job')
+
+
+def show_summary(summary_data, models_map, work_dir, save=False):
+    table = Table(title='Test Benchmark Regression Summary')
+    table.add_column('Model')
+    md_header = ['Model']
+    for metric in METRICS_MAP:
+        table.add_column(f'{metric} (expect)')
+        table.add_column(f'{metric}')
+        md_header.append(f'{metric} (expect)')
+        md_header.append(f'{metric}')
+    table.add_column('Date')
+    md_header.append('Config')
+
+    def set_color(value, expect, tolerance, rule):
+        if value > expect + tolerance:
+            return 'green' if rule == 'larger' else 'red'
+        elif value < expect - tolerance:
+            return 'red' if rule == 'larger' else 'green'
         else:
-            port_is_occupied = os.popen('netstat -antu | grep :' +
-                                        str(port)).readlines()
-        if not port_is_occupied:
-            yield port
-        port -= 1
-        if port < 1024:
-            port = 65535
+            return 'white'
+
+    md_rows = ['| ' + ' | '.join(md_header) + ' |\n']
+    md_rows.append('|:' + ':|:'.join(['---'] * len(md_header)) + ':|\n')
+
+    for model_name, summary in summary_data.items():
+        row = [model_name]
+        md_row = [model_name]
+        for metric_key in METRICS_MAP:
+            if metric_key in summary:
+                metric = summary[metric_key]
+                expect = round(metric['expect'], 2)
+                result = round(metric['result'], 2)
+                tolerance = metric['tolerance']
+                rule = metric['rule']
+                color = set_color(result, expect, tolerance, rule)
+                row.append(f'{expect:.2f}')
+                row.append(f'[{color}]{result:.2f}[/{color}]')
+                md_row.append(f'{expect:.2f}')
+                md_row.append(f'{result:.2f}')
+            else:
+                row.extend([''] * 2)
+                md_row.extend([''] * 2)
+        if 'date' in summary:
+            row.append(summary['date'])
+            md_row.append(summary['date'])
+        else:
+            row.append('')
+            md_row.append('')
+        table.add_row(*row)
+
+        # add config to row
+        model_info = models_map[model_name]
+        md_row.append(model_info.config)
+        md_rows.append('| ' + ' | '.join(md_row) + ' |\n')
+
+    console.print(table)
+
+    if save:
+        summary_path = work_dir / 'test_benchmark_summary.md'
+        with open(summary_path, 'w') as file:
+            file.write('# Test Benchmark Regression Summary\n')
+            file.writelines(md_rows)
 
 
-def process_config_file(config_file, thread_id):
-    """Modify config file.
+def summary(args):
+    model_index_file = MMEDITING_ROOT / 'model-index.yml'
+    model_index = load(str(model_index_file))
+    model_index.build_models_with_collections()
+    models = OrderedDict({model.name: model for model in model_index.models})
 
-    Args:
-        config_file (str): Path of the original config file.
-        thread_id (int): The ID of thread
-    """
+    work_dir = Path(args.work_dir)
 
-    with open(config_file, 'r', encoding='utf-8') as f:
-        data = f.read()
+    if args.models:
+        patterns = [re.compile(pattern) for pattern in args.models]
+        filter_models = {}
+        for k, v in models.items():
+            if any([re.match(pattern, k) for pattern in patterns]):
+                filter_models[k] = v
+        if len(filter_models) == 0:
+            print('No model found, please specify models in:')
+            print('\n'.join(models.keys()))
+            return
+        models = filter_models
 
-    data = data.replace('# data_root', 'data_root')
-    data = data.replace('# save_dir', 'save_dir')
-    data = data.replace('# bg_dir', 'bg_dir')
+    summary_data = {}
+    for model_name, model_info in models.items():
 
-    with open(config_file, 'w', encoding='utf-8') as f:
-        f.write(data)  # Will be automatically restored
-    basename = osp.basename(config_file)
-    save_config = osp.join(LOG_DIR, f'{thread_id:03d}_{basename}')
-    with open(save_config, 'w', encoding='utf-8') as f:
-        f.write(data)
+        if model_info.results is None:
+            continue
 
+        # Skip if not found result file.
+        result_file = work_dir / model_name / 'result.pkl'
+        if not result_file.exists():
+            summary_data[model_name] = {}
+            continue
 
-def slurm_test(info: dict, thread_id, allotted_port):
-    """Slurm test.
+        with open(result_file, 'rb') as file:
+            results = pickle.load(file)
+        date = datetime.fromtimestamp(result_file.lstat().st_mtime)
 
-    Args:
-        info (dict): Test info from metafile.yml
-        thread_id (int): The ID of thread
-        allotted_port (int): The ID of allotted port
-    """
+        expect_metrics = model_info.results[0].metrics
 
-    sem.acquire()
+        # extract metrics
+        summary = {'date': date.strftime('%Y-%m-%d')}
+        for key_yml, key_tolerance in METRICS_MAP.items():
+            key_results = key_tolerance['keys']
+            tolerance = key_tolerance['tolerance']
+            rule = key_tolerance['rule']
 
-    config = info['Config']
-    weights = info['Weights']
+            for key_result in key_results:
+                if key_yml in expect_metrics and key_result in results:
+                    expect_result = float(expect_metrics[key_yml])
+                    result = float(results[key_result])
+                    summary[key_yml] = dict(
+                        expect=expect_result,
+                        result=result,
+                        tolerance=tolerance,
+                        rule=rule)
 
-    process_config_file(config, thread_id)
-    basename, _ = osp.splitext(osp.basename(config))
+        summary_data[model_name] = summary
 
-    weights = osp.join(DOWNLOAD_DIR, 'hub', 'checkpoints',
-                       osp.basename(weights))
-
-    env_cmd = f'TORCH_HOME={DOWNLOAD_DIR} MASTER_PORT={allotted_port} '
-    env_cmd += 'GPUS=2 GPUS_PER_NODE=2 CPUS_PER_TASK=8'
-    base_cmd = 'bash tools/slurm_test.sh'
-    task_cmd = f'{PARTITION} {basename}'
-    out_file = osp.join(LOG_DIR, f'{thread_id:03d}_{basename}.log')
-    cmd = f'{env_cmd} {base_cmd} {task_cmd} {config} {weights} &> {out_file}'
-
-    print(f'RUN {thread_id:03d}: {cmd}')
-    os.system(cmd)
-
-    sem.release()
+    show_summary(summary_data, models, work_dir, args.save)
 
 
-def test_models(meta_file, available_ports):
-    """Download all pth files.
+def main():
+    args = parse_args()
 
-    Args:
-        pth_files (List[str]): List of pth files.
-    """
-
-    global thread_num
-
-    with open(meta_file, 'r', encoding='utf-8') as f:
-        data = f.read()
-    yaml_data = yaml.load(data, yaml.FullLoader)
-    infos: list = yaml_data['Models']
-    infos.sort(key=lambda info: info['Config'])
-
-    for info in infos:
-        if filter(info=info):
-            allotted_port = next(available_ports)
-            threading.Thread(
-                target=slurm_test,
-                args=(info, thread_num, allotted_port)).start()
-            thread_num += 1
+    if args.summary:
+        summary(args)
+    else:
+        test(args)
 
 
 if __name__ == '__main__':
-
-    assert 'nothing to commit, working tree clean' in os.popen(
-        'git status').read(), 'Git: Please commit all changes first.'
-
-    if len(sys.argv) <= 1:
-        configs_root = osp.join(MMEditing_ROOT, 'configs')
-        file_list = glob.glob(
-            osp.join(configs_root, '**', '*metafile.yml'), recursive=True)
-        file_list.sort()
-    else:
-        file_list = [
-            fn for fn in sys.argv[1:] if osp.basename(fn) == 'metafile.yml'
-        ]
-
-    if not file_list:
-        sys.exit(0)
-
-    if not osp.exists(LOG_DIR):
-        os.makedirs(LOG_DIR)
-
-    thread_num = 0
-    available_ports = find_available_port()
-    for fn in file_list:
-        test_models(fn, available_ports)
-
-    os.system('git checkout .')
+    main()
