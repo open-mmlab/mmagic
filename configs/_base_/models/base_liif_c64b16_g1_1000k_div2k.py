@@ -1,5 +1,6 @@
 _base_ = '../default_runtime.py'
 work_dir = './work_dirs/liif'
+save_dir = './work_dirs'
 
 scale_min, scale_max = 1, 4
 scale_test = 4
@@ -61,7 +62,6 @@ test_pipeline = [
 # dataset settings
 dataset_type = 'BasicImageDataset'
 data_root = 'data'
-save_dir = work_dir
 
 train_dataloader = dict(
     num_workers=8,

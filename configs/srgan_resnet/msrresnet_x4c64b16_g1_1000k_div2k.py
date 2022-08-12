@@ -2,6 +2,7 @@ _base_ = '../_base_/default_runtime.py'
 
 experiment_name = 'msrresnet_x4c64b16_g1_1000k_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
 
 scale = 4
 # model settings
@@ -65,7 +66,6 @@ test_pipeline = [
 # dataset settings
 dataset_type = 'BasicImageDataset'
 data_root = 'data'
-save_dir = work_dir
 
 train_dataloader = dict(
     num_workers=8,

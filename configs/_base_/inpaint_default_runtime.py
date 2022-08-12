@@ -1,10 +1,15 @@
 default_scope = 'mmedit'
+save_dir = './work_dirs'
 
 default_hooks = dict(
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),
-    checkpoint=dict(type='CheckpointHook', interval=50000, by_epoch=False),
+    checkpoint=dict(
+        type='CheckpointHook',
+        interval=50000,
+        by_epoch=False,
+        out_dir=save_dir),
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
 

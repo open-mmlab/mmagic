@@ -2,6 +2,7 @@ _base_ = '../basicvsr/basicvsr_reds4.py'
 
 experiment_name = 'iconvsr_reds4'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
 
 # model settings
 model = dict(
@@ -26,4 +27,4 @@ model = dict(
         output_view=(1, -1, 1, 1),
     ))
 
-default_hooks = dict(checkpoint=dict(out_dir=work_dir))
+default_hooks = dict(checkpoint=dict(out_dir=save_dir))

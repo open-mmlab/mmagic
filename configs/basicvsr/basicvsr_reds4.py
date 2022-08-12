@@ -2,6 +2,7 @@ _base_ = '../_base_/default_runtime.py'
 
 experiment_name = 'basicvsr_reds4'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs'
 
 scale = 4
 
@@ -110,7 +111,7 @@ optim_wrapper = dict(
     optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99)),
     paramwise_cfg=dict(custom_keys={'spynet': dict(lr_mult=0.125)}))
 
-default_hooks = dict(checkpoint=dict(out_dir='./work_dirs'))
+default_hooks = dict(checkpoint=dict(out_dir=save_dir))
 
 # learning policy
 lr_config = dict(
