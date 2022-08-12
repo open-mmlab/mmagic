@@ -294,7 +294,13 @@ def test(args):
 
     if args.run:
         proc = os.popen(command_str)
-        start_from_proc(args.work_dir, proc)
+        job_name_list = start_from_proc(args.work_dir, proc)
+        history_log = datetime.now().strftime('test-%Y%m%d-%H%M%S') + '.log'
+        with open(history_log, 'w') as fp:
+            for job in job_name_list:
+                fp.write(job + '\n')
+        fp.close()
+        print(f'Have saved job submission history in {history_log}')
     else:
         console.print('Please set "--run" to start the job')
 
