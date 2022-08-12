@@ -88,6 +88,11 @@ def parse_args():
         description="Train models' accuracy in model-index.yml")
     parser.add_argument(
         'partition', type=str, help='Cluster partition to use.')
+    parser.add_argument('--skip', type=str, default=None)
+    parser.add_argument('--skip-list', default=None)
+    parser.add_argument('--rerun', type=str, default=None)
+    parser.add_argument('--rerun-list', default=None)
+    parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
         '--resume', action='store_true', help='Whether to resume checkpoint.')
     parser.add_argument('--skip', type=str, default=None)
