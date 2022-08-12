@@ -3,6 +3,7 @@ import argparse
 import os
 import os.path as osp
 
+import mmengine
 from mmengine.config import Config, DictAction
 from mmengine.runner import Runner
 
@@ -14,6 +15,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Test (and eval) a model')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
+    parser.add_argument('--out', help='the file to save metric results.')
     parser.add_argument(
         '--work-dir',
         help='the directory to save the file containing evaluation metrics')
@@ -68,6 +70,16 @@ def main():
 
     print_colored_log(f'Working directory: {cfg.work_dir}')
     print_colored_log(f'Log directiry: {runner._log_dir}')
+
+    if args.out:
+
+        class SaveMetricHook(mmengine.Hook):
+
+            def after_test_epoch(self, _, metrics=None):
+                if metrics is not None:
+                    mmengine.dump(metrics, args.out)
+
+        runner.register_hook(SaveMetricHook(), 'LOWEST')
 
     # start testing
     runner.test()
