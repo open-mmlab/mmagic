@@ -95,11 +95,6 @@ def parse_args():
     parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
         '--resume', action='store_true', help='Whether to resume checkpoint.')
-    parser.add_argument('--skip', type=str, default=None)
-    parser.add_argument('--skip-list', default=None)
-    parser.add_argument('--rerun', type=str, default=None)
-    parser.add_argument('--rerun-list', default=None)
-    parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
         '--job-name', type=str, default=' ', help='Slurm job name prefix')
     parser.add_argument(
