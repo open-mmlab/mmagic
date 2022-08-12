@@ -132,21 +132,13 @@ def download(args):
                 os.system(f'rm -rf {download_path}')
             else:
                 continue
-        try:
-            cmd_str = (f'wget -q --show-progress -P {download_root} '
-                       f'{model_weight_url}')
 
-            if args.dry_run:
-                print(cmd_str)
-            else:
-                os.system(cmd_str)
-        except Exception:
-            # for older version of wget
-            cmd_str = (f'wget -P {download_root} {model_weight_url}')
-            if args.dry_run:
-                print(cmd_str)
-            else:
-                os.system(cmd_str)
+        # for older version of wget
+        cmd_str = (f'wget -P {download_root} {model_weight_url}')
+        if args.dry_run:
+            print(cmd_str)
+        else:
+            os.system(cmd_str)
 
 
 if __name__ == '__main__':
