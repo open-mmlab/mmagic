@@ -8,12 +8,11 @@ from datetime import datetime
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
 
+from job_watcher import start_from_proc
 from modelindex.load_model_index import load
 from rich.console import Console
 from rich.syntax import Syntax
 from rich.table import Table
-
-# from task_watcher import start_from_proc
 
 console = Console()
 MMEDITING_ROOT = Path(__file__).absolute().parents[1]
@@ -260,8 +259,6 @@ def test(args):
 
     command_str = '\n'.join(commands)
 
-    import ipdb
-    ipdb.set_trace()
     preview = Table()
     preview.add_column(str(preview_script))
     preview.add_column('Shell command preview')
@@ -280,9 +277,8 @@ def test(args):
     console.print(preview)
 
     if args.run:
-        os.popen(command_str)
-        # proc = os.popen(command_str)
-        # start_from_proc(args.work_dir, proc)
+        proc = os.popen(command_str)
+        start_from_proc(args.work_dir, proc)
     else:
         console.print('Please set "--run" to start the job')
 

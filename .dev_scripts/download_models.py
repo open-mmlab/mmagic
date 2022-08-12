@@ -6,6 +6,7 @@ import os
 import platform
 import posixpath as osp  # Even on windows, use posixpath
 import re
+import subprocess
 from collections import OrderedDict
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
@@ -132,13 +133,24 @@ def download(args):
                 os.system(f'rm -rf {download_path}')
             else:
                 continue
+        try:
+            cmd_str_list = [
+                'wget', '-q', '--show-progress', '-p', download_root,
+                model_weight_url
+            ]
 
-        # for older version of wget
-        cmd_str = (f'wget -P {download_root} {model_weight_url}')
-        if args.dry_run:
-            print(cmd_str)
-        else:
-            os.system(cmd_str)
+            if args.dry_run:
+                print(' '.join(cmd_str_list))
+            else:
+                # os.system(cmd_str)
+                subprocess.run([cmd_str_list], check=True)
+        except Exception:
+            # for older version of wget
+            cmd_str_list = ['wget', '-P', download_root, model_weight_url]
+            if args.dry_run:
+                print(' '.join(cmd_str_list))
+            else:
+                subprocess.run([cmd_str_list], check=True)
 
 
 if __name__ == '__main__':
