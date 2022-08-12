@@ -2,6 +2,7 @@ _base_ = '../_base_/default_runtime.py'
 
 experiment_name = 'cain_b5_g1b32_vimeo90k_triplet'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs'
 
 # model settings
 model = dict(
@@ -80,7 +81,6 @@ demo_pipeline = [
 train_dataset_type = 'BasicFramesDataset'
 val_dataset_type = 'BasicFramesDataset'
 data_root = 'data/vimeo_triplet'
-save_dir = work_dir
 
 train_dataloader = dict(
     num_workers=32,

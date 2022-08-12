@@ -2,6 +2,7 @@ _base_ = [
     '../_base_/datasets/comp1k.py', '../_base_/matting_default_runtime.py'
 ]
 
+save_dir = './work_dirs/'
 # model settings
 model = dict(
     type='DIM',
@@ -90,4 +91,5 @@ optim_wrapper = dict(
 # lr_config = dict(policy='Fixed')
 
 # checkpoint saving
-default_hooks = dict(checkpoint=dict(type='CheckpointHook', interval=40000))
+default_hooks = dict(
+    checkpoint=dict(type='CheckpointHook', interval=40000, out_dir=save_dir))

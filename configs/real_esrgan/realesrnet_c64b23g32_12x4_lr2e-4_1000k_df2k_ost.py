@@ -2,6 +2,7 @@ _base_ = '../_base_/default_runtime.py'
 
 experiment_name = 'realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
 
 scale = 4
 gt_crop_size = 400
@@ -188,7 +189,6 @@ test_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-save_dir = work_dir
 
 train_dataloader = dict(
     num_workers=12,

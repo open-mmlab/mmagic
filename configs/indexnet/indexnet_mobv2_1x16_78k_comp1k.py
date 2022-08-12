@@ -2,6 +2,8 @@ _base_ = [
     '../_base_/datasets/comp1k.py', '../_base_/matting_default_runtime.py'
 ]
 
+save_dir = './work_dirs/'
+
 # model settings
 model = dict(
     type='IndexNet',
@@ -113,7 +115,7 @@ param_scheduler = dict(
 )
 
 # checkpoint saving
-default_hooks = dict(checkpoint=dict(interval=2600))
+default_hooks = dict(checkpoint=dict(interval=2600, out_dir=save_dir))
 
 # runtime settings
 # inheritate from _base_

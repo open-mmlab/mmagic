@@ -2,6 +2,7 @@ _base_ = '../_base_/default_runtime.py'
 
 experiment_name = 'realbasicvsr_wogan_c64b20_2x30x8_lr1e-4_300k_reds'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
 
 scale = 4
 
@@ -220,7 +221,6 @@ test_pipeline = [
 ]
 
 data_root = 'data'
-save_dir = work_dir
 
 train_dataloader = dict(
     num_workers=10,

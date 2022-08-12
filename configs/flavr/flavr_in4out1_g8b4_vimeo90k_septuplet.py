@@ -2,6 +2,7 @@ _base_ = '../_base_/default_runtime.py'
 
 experiment_name = 'flavr_in4out1_g8b4_vimeo90k_septuplet'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
 
 # model settings
 model = dict(
@@ -89,7 +90,6 @@ demo_pipeline = [
 train_dataset_type = 'BasicFramesDataset'
 val_dataset_type = 'BasicFramesDataset'
 data_root = 'data/vimeo90k'
-save_dir = work_dir
 
 train_dataloader = dict(
     num_workers=16,

@@ -2,6 +2,7 @@ _base_ = '../_base_/default_runtime.py'
 
 experiment_name = 'tdan_vimeo90k_bdx4_lr1e-4_400k'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
 
 load_from = './experiments/tdan_vimeo90k_bdx4_lr1e-4_400k/iter_400000.pth'
 
@@ -63,7 +64,6 @@ demo_pipeline = [
 ]
 
 data_root = 'data'
-save_dir = work_dir
 
 train_dataloader = dict(
     num_workers=8,

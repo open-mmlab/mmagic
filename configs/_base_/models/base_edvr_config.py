@@ -56,7 +56,7 @@ demo_pipeline = [
 ]
 
 data_root = 'data/REDS'
-save_dir = 'work_dirs/edvr'
+save_dir = './work_dirs'
 
 train_dataloader = dict(
     num_workers=8,

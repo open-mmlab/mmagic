@@ -2,6 +2,7 @@ _base_ = '../basicvsr/basicvsr_vimeo90k_bd.py'
 
 experiment_name = 'basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs'
 
 load_from = 'https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth'  # noqa
 
@@ -34,5 +35,5 @@ optim_wrapper = dict(
     optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99)),
     paramwise_cfg=dict(custom_keys={'spynet': dict(lr_mult=0.25)}))
 
-default_hooks = dict(checkpoint=dict(out_dir=work_dir))
+default_hooks = dict(checkpoint=dict(out_dir=save_dir))
 find_unused_parameters = True

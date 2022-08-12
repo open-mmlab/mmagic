@@ -29,7 +29,7 @@ demo_pipeline = [
 train_dataset_type = 'BasicFramesDataset'
 val_dataset_type = 'BasicFramesDataset'
 data_root = 'data/vimeo_triplet'
-save_dir = 'work_dirs/tof_vfi'
+save_dir = './work_dirs'
 
 train_dataloader = dict(
     num_workers=4,
