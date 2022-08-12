@@ -8,6 +8,6 @@ model = dict(
     test_cfg=dict(refine=True),
 )
 
-load_from = \
-    'https://download.openmmlab.com/mmediting/mattors/dim/'\
-    'dim_stage1_v16_1x1_1000k_comp1k_SAD-53.8_20200605_140257-979a420f.pth'
+# load_from = \
+#     'https://download.openmmlab.com/mmediting/mattors/dim/'\
+#     'dim_stage1_v16_1x1_1000k_comp1k_SAD-53.8_20200605_140257-979a420f.pth'

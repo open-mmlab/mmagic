@@ -393,6 +393,7 @@ def summary(args):
 
         # Skip if not found result file.
         result_file = work_dir / model_name / 'result.pkl'
+        print(result_file)
         if not result_file.exists():
             summary_data[model_name] = {}
             continue
