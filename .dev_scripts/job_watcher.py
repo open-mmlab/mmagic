@@ -49,7 +49,7 @@ def show_job_status(root, job_name_list, csv_path=None):
     table.field_names = ['Name', 'ID', 'Status', 'Output']
     swatch_tmp = 'swatch examine {}'
     if csv_path is None:
-        csv_path = 'status.cvs'
+        csv_path = 'status.csv'
 
     for info in job_name_list:
         id_, name = info.split(' @ ')
