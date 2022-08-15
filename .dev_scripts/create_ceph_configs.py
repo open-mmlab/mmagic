@@ -121,7 +121,7 @@ def update_ceph_config(filename, args, dry_run=False):
                             bg_dir_path = bg_dir_path.replace(
                                 repo_name, 'detection')
                             bg_dir_path = bg_dir_path.replace(
-                                'openmmlab', 'sproject')
+                                'openmmlab:', 'sproject:')
                         pipeline['bg_dir'] = bg_dir_path
                     elif type_ == 'CompositeFg':
                         fg_dir_path = pipeline['fg_dirs']

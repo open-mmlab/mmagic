@@ -69,7 +69,7 @@ test_pipeline = [
 ]
 
 train_dataloader = dict(
-    batch_size=12,
+    batch_size=4,  # 12
     sampler=dict(shuffle=False),
     dataset=dict(pipeline=train_pipeline),
 )

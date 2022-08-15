@@ -6,12 +6,12 @@ scale_min, scale_max = 1, 4
 scale_test = 4
 
 train_pipeline = [
-    dict(
-        type='LoadImageFromFile',
-        key='img',
-        color_type='color',
-        channel_order='rgb',
-        imdecode_backend='cv2'),
+    # dict(
+    #     type='LoadImageFromFile',
+    #     key='img',
+    #     color_type='color',
+    #     channel_order='rgb',
+    #     imdecode_backend='cv2'),
     dict(
         type='LoadImageFromFile',
         key='gt',

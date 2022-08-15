@@ -77,7 +77,7 @@ class RandomDownSampling(BaseTransform):
             crop_lr = resize_fn(crop_hr, w_lr, self.interpolation,
                                 self.backend)
         results['gt'] = crop_hr
-        results['lq'] = crop_lr
+        results['img'] = crop_lr
         results['scale'] = scale
 
         return results
