@@ -5,7 +5,7 @@ work_dir = f'./work_dirs/{experiment_name}'
 
 scale = 4
 
-load_from = 'https://download.openmmlab.com/mmediting/restorers/srresnet_srgan/msrresnet_x4c64b16_1x16_300k_div2k_20200521-61556be5.pth'  # noqa
+# load_from = 'https://download.openmmlab.com/mmediting/restorers/srresnet_srgan/msrresnet_x4c64b16_1x16_300k_div2k_20200521-61556be5.pth'  # noqa
 
 # DistributedDataParallel
 model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')

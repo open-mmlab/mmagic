@@ -3,8 +3,10 @@ _base_ = '../_base_/default_runtime.py'
 experiment_name = 'tdan_vimeo90k_bdx4_lr1e-4_400k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
+scale = 4
 
-load_from = './experiments/tdan_vimeo90k_bdx4_lr1e-4_400k/iter_400000.pth'
+# load_from = 'https://download.openmmlab.com/mmediting/restorers/tdan/'\
+#              'tdan_vimeo90k_bdx4_20210528-c53ab844.pth'
 
 # model settings
 model = dict(
@@ -35,6 +37,7 @@ test_evaluator = val_evaluator
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='PairedRandomCrop', gt_patch_size=192),
     dict(
         type='Flip',

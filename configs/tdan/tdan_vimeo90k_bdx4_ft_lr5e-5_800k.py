@@ -10,4 +10,5 @@ optim_wrapper = dict(
         optimizer=dict(type='Adam', lr=5e-5),
     ))
 
-load_from = './experiments/tdan_vimeo90k_bdx4_lr1e-4_400k/iter_400000.pth'
+# load_from = 'https://download.openmmlab.com/mmediting/restorers/tdan/'\
+#               'tdan_vimeo90k_bdx4_20210528-c53ab844.pth'
