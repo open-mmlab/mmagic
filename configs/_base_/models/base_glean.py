@@ -1,7 +1,8 @@
 _base_ = '../default_runtime.py'
 
 # DistributedDataParallel
-model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
+model_wrapper_cfg = dict(
+    type='MMSeparateDistributedDataParallel', find_unused_parameters=True)
 
 save_dir = './work_dirs'
 
