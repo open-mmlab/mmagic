@@ -125,26 +125,23 @@ def update_ceph_config(filename, args, dry_run=False):
                         pipeline['bg_dir'] = bg_dir_path
                     elif type_ == 'CompositeFg':
                         fg_dir_path = pipeline['fg_dirs']
-                        tmp_fg_dir_path = []
-                        for fg in fg_dir_path:
+                        for i, fg in enumerate(fg_dir_path):
                             for dataroot_prefix in local_dataroot_prefix:
                                 if fg.startswith(dataroot_prefix + '/'):
                                     dataroot_prefix = dataroot_prefix + '/'
                                 fg = fg.replace(dataroot_prefix,
                                                 ceph_dataroot_prefix)
-                                tmp_fg_dir_path.append(fg)
-                        pipeline['fg_dirs'] = tmp_fg_dir_path
+                                pipeline['fg_dirs'][i] = fg
 
                         alpha_dir_path = pipeline['alpha_dirs']
-                        tmp_alpha_dir_path = []
-                        for alpha_dir in alpha_dir_path:
+                        for i, alpha_dir in enumerate(alpha_dir_path):
                             for dataroot_prefix in local_dataroot_prefix:
                                 if alpha_dir.startswith(dataroot_prefix + '/'):
                                     dataroot_prefix = dataroot_prefix + '/'
                                 alpha_dir = alpha_dir.replace(
                                     dataroot_prefix, ceph_dataroot_prefix)
-                                tmp_alpha_dir_path.append(alpha_dir)
-                            pipeline['alpha_dirs'] = tmp_alpha_dir_path
+                                pipeline['alpha_dirs'][i] = alpha_dir
+
             config[prefix]['dataset'] = dataset
 
         # 2. change visualizer
