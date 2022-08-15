@@ -2,7 +2,7 @@ _base_ = '../_base_/models/base_edvr_config.py'
 
 experiment_name = 'edvrl_c128b40_8x8_lr2e-4_600k_reds4'
 work_dir = f'./work_dirs/{experiment_name}'
-load_from = 'https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth'  # noqa: E501
+# load_from = 'https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth'  # noqa: E501
 
 # model settings
 model = dict(
@@ -34,3 +34,5 @@ lr_config = dict(
     periods=[150000, 150000, 150000, 150000],
     restart_weights=[1, 0.5, 0.5, 0.5],
     min_lr=1e-7)
+
+find_unused_parameters = True

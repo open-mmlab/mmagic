@@ -4,7 +4,7 @@ experiment_name = 'basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bi'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs'
 
-load_from = 'https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth'  # noqa
+# load_from = 'https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth'  # noqa
 
 # model settings
 model = dict(

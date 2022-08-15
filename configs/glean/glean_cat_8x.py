@@ -116,3 +116,4 @@ val_dataloader = dict(
         pipeline=test_pipeline))
 
 test_dataloader = val_dataloader
+find_unused_parameters = True

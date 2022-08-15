@@ -94,6 +94,54 @@ def update_ceph_config(filename, args, dry_run=False):
                     if type_ == 'mmcls.LoadImageFromFile':
                         pipeline['file_client_args'] = dict(backend='petrel')
                         break
+                    elif type_ == 'LoadMask':
+                        if 'mask_list_file' in pipeline['mask_config']:
+                            local_mask_path = pipeline['mask_config'][
+                                'mask_list_file']
+                            for dataroot_prefix in local_dataroot_prefix:
+                                if local_mask_path.startswith(dataroot_prefix +
+                                                              '/'):
+                                    dataroot_prefix = dataroot_prefix + '/'
+                                local_mask_path = local_mask_path.replace(
+                                    dataroot_prefix, ceph_dataroot_prefix)
+                            pipeline['mask_config'][
+                                'mask_list_file'] = local_mask_path
+                            pipeline['mask_config']['prefix'] = osp.dirname(
+                                local_mask_path)
+                            pipeline['mask_config']['io_backend'] = 'petrel'
+                            pipeline['mask_config'][
+                                'file_client_kwargs'] = dict(backend='petrel')
+                    elif type_ == 'RandomLoadResizeBg':
+                        bg_dir_path = pipeline['bg_dir']
+                        for dataroot_prefix in local_dataroot_prefix:
+                            if bg_dir_path.startswith(dataroot_prefix + '/'):
+                                dataroot_prefix = dataroot_prefix + '/'
+                            bg_dir_path = bg_dir_path.replace(
+                                dataroot_prefix, ceph_dataroot_prefix)
+                            bg_dir_path = bg_dir_path.replace(
+                                repo_name, 'detection')
+                            bg_dir_path = bg_dir_path.replace(
+                                'openmmlab', 'sproject')
+                        pipeline['bg_dir'] = bg_dir_path
+                    elif type_ == 'CompositeFg':
+                        fg_dir_path = pipeline['fg_dirs']
+                        for i, fg in enumerate(fg_dir_path):
+                            for dataroot_prefix in local_dataroot_prefix:
+                                if fg.startswith(dataroot_prefix + '/'):
+                                    dataroot_prefix = dataroot_prefix + '/'
+                                fg = fg.replace(dataroot_prefix,
+                                                ceph_dataroot_prefix)
+                                pipeline['fg_dirs'][i] = fg
+
+                        alpha_dir_path = pipeline['alpha_dirs']
+                        for i, alpha_dir in enumerate(alpha_dir_path):
+                            for dataroot_prefix in local_dataroot_prefix:
+                                if alpha_dir.startswith(dataroot_prefix + '/'):
+                                    dataroot_prefix = dataroot_prefix + '/'
+                                alpha_dir = alpha_dir.replace(
+                                    dataroot_prefix, ceph_dataroot_prefix)
+                                pipeline['alpha_dirs'][i] = alpha_dir
+
             config[prefix]['dataset'] = dataset
 
         # 2. change visualizer
@@ -232,4 +280,9 @@ if __name__ == '__main__':
             print(fail_list)
 
     else:
-        update_ceph_config(args.test_file, args, dry_run=True)
+        shutil.copy(args.test_file,
+                    args.test_file.replace('configs', 'configs_ceph'))
+        update_ceph_config(
+            args.test_file.replace('configs', 'configs_ceph'),
+            args,
+            dry_run=True)

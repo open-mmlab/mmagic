@@ -35,3 +35,5 @@ lr_config = dict(
     periods=[50000, 100000, 150000, 150000, 150000],
     restart_weights=[1, 1, 1, 1, 1],
     min_lr=1e-7)
+
+find_unused_parameters = True

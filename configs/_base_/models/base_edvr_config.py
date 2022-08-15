@@ -15,6 +15,7 @@ train_pipeline = [
         key='gt',
         color_type='color',
         channel_order='rgb'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='PairedRandomCrop', gt_patch_size=256),
     dict(
         type='Flip',

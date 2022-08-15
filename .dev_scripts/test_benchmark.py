@@ -359,7 +359,7 @@ def show_summary(summary_data, models_map, work_dir, save=False):
     console.print(table)
 
     if save:
-        summary_path = work_dir / 'test_benchmark_summary.md'
+        summary_path = work_dir / '../test_benchmark_summary.md'
         with open(summary_path, 'w') as file:
             file.write('# Test Benchmark Regression Summary\n')
             file.writelines(md_rows)
@@ -402,6 +402,7 @@ def summary(args):
         date = datetime.fromtimestamp(result_file.lstat().st_mtime)
 
         expect_metrics = model_info.results[0].metrics
+        print(result_file, expect_metrics)
 
         # extract metrics
         summary = {'date': date.strftime('%Y-%m-%d')}
@@ -419,7 +420,7 @@ def summary(args):
                         result=result,
                         tolerance=tolerance,
                         rule=rule)
-
+        print(summary)
         summary_data[model_name] = summary
 
     show_summary(summary_data, models, work_dir, args.save)

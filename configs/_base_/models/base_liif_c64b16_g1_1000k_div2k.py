@@ -8,6 +8,12 @@ scale_test = 4
 train_pipeline = [
     dict(
         type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb',
+        imdecode_backend='cv2'),
+    dict(
+        type='LoadImageFromFile',
         key='gt',
         color_type='color',
         channel_order='rgb',
@@ -70,6 +76,7 @@ train_dataloader = dict(
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
         type=dataset_type,
+        ann_file='meta_info_DIV2K800sub_GT.txt',
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
         data_root=data_root + '/DIV2K',
         data_prefix=dict(gt='DIV2K_train_HR_sub'),
