@@ -104,7 +104,7 @@ val_evaluator = [
 test_evaluator = val_evaluator
 
 train_cfg = dict(
-    type='IterBasedTrainLoop', max_iters=1_000_000, val_interval=3)
+    type='IterBasedTrainLoop', max_iters=1_000_000, val_interval=3000)
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 

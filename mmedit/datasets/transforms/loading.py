@@ -1,12 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
-from pathlib import Path
 from typing import List, Optional, Tuple
 
 import mmcv
 import numpy as np
 from mmcv.transforms import BaseTransform
-from mmengine.fileio import FileClient
+from mmengine.fileio import FileClient, list_from_file
 
 from mmedit.registry import TRANSFORMS
 from .trans_utils import (bbox2mask, brush_stroke_mask, get_irregular_mask,
@@ -276,19 +275,19 @@ class LoadMask(BaseTransform):
     def _init_info(self):
         if self.mask_mode == 'set':
             # get mask list information
-            self.mask_list = []
-            mask_list_file = self.mask_config['mask_list_file']
-            with open(mask_list_file, 'r') as f:
-                for line in f:
-                    line_split = line.strip().split(' ')
-                    mask_name = line_split[0]
-                    self.mask_list.append(
-                        Path(self.mask_config['prefix']).joinpath(mask_name))
-            self.mask_set_size = len(self.mask_list)
             self.io_backend = self.mask_config['io_backend']
             self.color_type = self.mask_config['color_type']
+            self.file_prefix = self.mask_config['prefix']
             self.file_client_kwargs = self.mask_config['file_client_kwargs']
             self.file_client = None
+
+            mask_list_file = self.mask_config['mask_list_file']
+            self.mask_list = list_from_file(
+                mask_list_file, file_client_args=self.file_client_kwargs)
+            self.mask_list = [
+                osp.join(self.file_prefix, i) for i in self.mask_list
+            ]
+            self.mask_set_size = len(self.mask_list)
         elif self.mask_mode == 'file':
             self.io_backend = 'disk'
             self.color_type = 'unchanged'
@@ -297,8 +296,7 @@ class LoadMask(BaseTransform):
 
     def _get_random_mask_from_set(self):
         if self.file_client is None:
-            self.file_client = FileClient(self.io_backend,
-                                          **self.file_client_kwargs)
+            self.file_client = FileClient(self.io_backend)
         # minus 1 to avoid out of range error
         mask_idx = np.random.randint(0, self.mask_set_size)
         mask_bytes = self.file_client.get(self.mask_list[mask_idx])
