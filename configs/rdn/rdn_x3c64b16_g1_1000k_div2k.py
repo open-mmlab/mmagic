@@ -80,7 +80,7 @@ train_dataloader = dict(
         data_root=data_root + '/DIV2K',
         data_prefix=dict(
             img='DIV2K_train_LR_bicubic/X3_sub', gt='DIV2K_train_HR_sub'),
-        filename_tmpl=dict(img='{}_x3', gt='{}'),
+        filename_tmpl=dict(img='{}', gt='{}'),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
