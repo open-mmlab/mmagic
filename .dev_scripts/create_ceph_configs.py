@@ -95,20 +95,22 @@ def update_ceph_config(filename, args, dry_run=False):
                         pipeline['file_client_args'] = dict(backend='petrel')
                         break
                     elif type_ == 'LoadMask':
-                        local_mask_path = pipeline['mask_config'][
-                            'mask_list_file']
-                        for dataroot_prefix in local_dataroot_prefix:
-                            if local_mask_path.startswith(dataroot_prefix +
-                                                          '/'):
-                                dataroot_prefix = dataroot_prefix + '/'
-                            print(dataroot_prefix, ceph_dataroot_prefix)
-                            local_mask_path = local_mask_path.replace(
-                                dataroot_prefix, ceph_dataroot_prefix)
-                            print(local_mask_path)
-                        pipeline['mask_config'][
-                            'mask_list_file'] = local_mask_path
-                        pipeline['mask_config']['prefix'] = osp.dirname(
-                            local_mask_path)
+                        if 'mask_list_file' in pipeline['mask_config']:
+                            local_mask_path = pipeline['mask_config'][
+                                'mask_list_file']
+                            for dataroot_prefix in local_dataroot_prefix:
+                                if local_mask_path.startswith(dataroot_prefix +
+                                                              '/'):
+                                    dataroot_prefix = dataroot_prefix + '/'
+                                local_mask_path = local_mask_path.replace(
+                                    dataroot_prefix, ceph_dataroot_prefix)
+                            pipeline['mask_config'][
+                                'mask_list_file'] = local_mask_path
+                            pipeline['mask_config']['prefix'] = osp.dirname(
+                                local_mask_path)
+                            pipeline['mask_config']['io_backend'] = 'petrel'
+                            pipeline['mask_config'][
+                                'file_client_kwargs'] = dict(backend='petrel')
                     elif type_ == 'RandomLoadResizeBg':
                         bg_dir_path = pipeline['bg_dir']
                         for dataroot_prefix in local_dataroot_prefix:
@@ -120,7 +122,6 @@ def update_ceph_config(filename, args, dry_run=False):
                                 repo_name, 'detection')
                             bg_dir_path = bg_dir_path.replace(
                                 'openmmlab', 'sproject')
-                            print(bg_dir_path)
                         pipeline['bg_dir'] = bg_dir_path
                     elif type_ == 'CompositeFg':
                         fg_dir_path = pipeline['fg_dirs']
@@ -132,7 +133,6 @@ def update_ceph_config(filename, args, dry_run=False):
                                 fg = fg.replace(dataroot_prefix,
                                                 ceph_dataroot_prefix)
                                 tmp_fg_dir_path.append(fg)
-                                print(fg)
                         pipeline['fg_dirs'] = tmp_fg_dir_path
 
                         alpha_dir_path = pipeline['alpha_dirs']
@@ -144,7 +144,6 @@ def update_ceph_config(filename, args, dry_run=False):
                                 alpha_dir = alpha_dir.replace(
                                     dataroot_prefix, ceph_dataroot_prefix)
                                 tmp_alpha_dir_path.append(alpha_dir)
-                                print(alpha_dir)
                             pipeline['alpha_dirs'] = tmp_alpha_dir_path
             config[prefix]['dataset'] = dataset
 
