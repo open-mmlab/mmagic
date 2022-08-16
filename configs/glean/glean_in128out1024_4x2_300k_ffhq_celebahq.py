@@ -19,7 +19,7 @@ model = dict(
             '_171224-bce9310c.pth',
             prefix='generator_ema')),
     discriminator=dict(
-        type='StyleGAN2Discriminator',
+        type='StyleGANv2Discriminator',
         in_size=1024,
         init_cfg=dict(
             type='Pretrained',
@@ -149,7 +149,7 @@ demo_pipeline = [
         keys=['img'],
     ),
     dict(type='ToTensor', keys=['img']),
-    dict(type='Collect', keys=['img'], meta_keys=[])
+    dict(type='PackEditInputs')
 ]
 
 # dataset settings
