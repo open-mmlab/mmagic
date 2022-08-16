@@ -7,6 +7,9 @@ save_dir = './work_dirs/'
 scale = 4
 gt_crop_size = 400
 
+# DistributedDataParallel
+model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
+
 # model settings
 model = dict(
     type='RealESRGAN',
