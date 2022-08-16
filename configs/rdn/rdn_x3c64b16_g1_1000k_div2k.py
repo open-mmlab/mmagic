@@ -36,7 +36,7 @@ train_pipeline = [
         channel_order='rgb',
         imdecode_backend='cv2'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
-    dict(type='PairedRandomCrop', gt_patch_size=64),
+    dict(type='PairedRandomCrop', gt_patch_size=96),
     dict(
         type='Flip',
         keys=['img', 'gt'],
