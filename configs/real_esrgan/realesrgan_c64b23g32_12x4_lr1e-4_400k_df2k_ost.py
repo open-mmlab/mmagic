@@ -3,13 +3,9 @@ _base_ = './realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost.py'
 experiment_name = 'realesrgan_c64b23g32_12x4_lr1e-4_400k_df2k_ost'
 work_dir = f'./work_dirs/{experiment_name}'
 
-load_from = 'https://download.openmmlab.com/mmediting/restorers/real_esrgan/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth'  # noqa
+# load_from =  # path of pre-trained real-esrnet
 
 scale = 4
-gt_crop_size = 400
-
-# DistributedDataParallel
-model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
 
 # model settings
 model = dict(
