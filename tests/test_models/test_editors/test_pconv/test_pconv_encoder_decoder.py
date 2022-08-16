@@ -1,9 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import pytest
 import torch
-from mmcv.utils.parrots_wrapper import _BatchNorm
 
-from mmedit.models.editors import PConvEncoder, PConvEncoderDecoder
+from mmedit.models.editors import PConvEncoderDecoder
 
 
 def test_pconv_encdec():
@@ -23,17 +22,3 @@ def test_pconv_encdec():
 
         with pytest.raises(TypeError):
             pconv_encdec.init_weights(pretrained=dict(igccc=8989))
-
-
-def test_pconv_enc():
-    pconv_enc = PConvEncoder(norm_eval=False)
-    pconv_enc.train()
-    for name, module in pconv_enc.named_modules():
-        if isinstance(module, _BatchNorm):
-            assert module.training
-
-    pconv_enc = PConvEncoder(norm_eval=True)
-    pconv_enc.train()
-    for name, module in pconv_enc.named_modules():
-        if isinstance(module, _BatchNorm):
-            assert not module.training
