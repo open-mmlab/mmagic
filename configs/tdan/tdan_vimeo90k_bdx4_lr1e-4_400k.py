@@ -84,7 +84,7 @@ train_dataloader = dict(
         fixed_seq_len=7,
         load_frames_list=dict(
             img=['im2.png', 'im3.png', 'im4.png', 'im5.png', 'im6.png'],
-            gt=['im2.png', 'im3.png', 'im4.png', 'im5.png', 'im6.png']),
+            gt=['im4.png']),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
