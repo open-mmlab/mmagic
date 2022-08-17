@@ -149,7 +149,7 @@ demo_pipeline = [
         keys=['img'],
     ),
     dict(type='ToTensor', keys=['img']),
-    dict(type='Collect', keys=['img'], meta_keys=[])
+    dict(type='PackEditInputs')
 ]
 
 # dataset settings

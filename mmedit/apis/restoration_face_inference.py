@@ -75,7 +75,7 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
         data = dict(lq=img.astype(np.float32), img_path='demo/tmp.png')
         _data = test_pipeline(data)
         data = dict()
-        data['batch_inputs'] = _data['img']
+        data['batch_inputs'] = _data['inputs']
         data = collate([data], samples_per_gpu=1)
         if 'cuda' in str(device):
             data = scatter(data, [device])[0]

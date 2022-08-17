@@ -5,6 +5,7 @@ from .base_mattor import BaseMattor
 from .basic_interpolator import BasicInterpolator
 from .multi_layer_disc import MultiLayerDiscriminator
 from .one_stage import OneStageInpaintor
+from .patch_disc import PatchDiscriminator
 from .resnet import ResNet
 from .simple_encoder_decoder import SimpleEncoderDecoder
 from .smpatch_disc import SoftMaskPatchDiscriminator

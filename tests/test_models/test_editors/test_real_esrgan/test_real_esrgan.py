@@ -104,16 +104,3 @@ def test_real_esrgan(init_weights):
 
     # reset mock to clear some memory usage
     init_weights.reset_mock()
-
-
-def test_unet_disc_with_spectral_norm():
-    # cpu
-    disc = UNetDiscriminatorWithSpectralNorm(in_channels=3)
-    img = torch.randn(1, 3, 16, 16)
-    disc(img)
-
-    # cuda
-    if torch.cuda.is_available():
-        disc = disc.cuda()
-        img = img.cuda()
-        disc(img)
