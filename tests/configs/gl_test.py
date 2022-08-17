@@ -76,7 +76,7 @@ model_inference = dict(
         encoder=dict(type='GLEncoder'),
         decoder=dict(type='GLDecoder'),
         dilation_neck=dict(
-            type='GLDilationNeck', norm_cfg=dict(type='SyncBN'))),
+            type='GLDilationNeck')),
     disc=dict(
         type='GLDiscs',
         global_disc_cfg=dict(
@@ -95,6 +95,15 @@ model_inference = dict(
             num_convs=5,
             norm_cfg=dict(type='SyncBN'),
         ),
+    ),
+    loss_gan=dict(
+        type='GANLoss',
+        gan_type='vanilla',
+        loss_weight=0.001,
+    ),
+    loss_l1_hole=dict(
+        type='L1Loss',
+        loss_weight=1.0,
     ))
 
 test_pipeline = [
