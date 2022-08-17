@@ -321,18 +321,15 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
             if self.with_gp_loss:
                 if hasattr(self.disc, 'module'):
                     global_disc = self.disc.module.global_disc
-                    local_disc = self.disc.module.local_disc 
-                else: 
+                    local_disc = self.disc.module.local_disc
+                else:
                     global_disc = self.disc.global_disc
                     local_disc = self.disc.local_disc
 
                 loss_gp_global = self.loss_gp(
-                    global_disc,
-                    gt_img,
-                    stage2_fake_img,
-                    mask=mask)
-                loss_gp_local = self.loss_gp(local_disc,
-                                             gt_local, stage2_fake_local)
+                    global_disc, gt_img, stage2_fake_img, mask=mask)
+                loss_gp_local = self.loss_gp(local_disc, gt_local,
+                                             stage2_fake_local)
                 loss_disc, log_vars_d = self.parse_losses(
                     dict(
                         loss_gp_global=loss_gp_global,
