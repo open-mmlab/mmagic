@@ -16,9 +16,7 @@ Models:
   Results:
   - Dataset: CUFED
     Metrics:
-      CUFED:
-        PSNR: 25.2433
-        SSIM: 0.7491
+      SSIM: 0.7491
     Task: Ttsr
   Weights: https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.pth
 - Config: configs/ttsr/ttsr-gan_x4c64b16_500k-1xb9_CUFED.py
@@ -30,8 +28,6 @@ Models:
   Results:
   - Dataset: CUFED
     Metrics:
-      CUFED:
-        PSNR: 24.6075
-        SSIM: 0.7234
+      SSIM: 0.7234
     Task: Ttsr
   Weights: https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth

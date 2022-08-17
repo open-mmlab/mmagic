@@ -1,4 +1,6 @@
-_base_ = '../_base_/default_runtime.py'
+_base_ = [
+    '../_base_/default_runtime.py', '../_base_/image_srx4_test_config.py'
+]
 
 experiment_name = 'esrgan_psnr-x4c64b23g32_1000k-1xb16_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
@@ -49,7 +51,7 @@ train_pipeline = [
     dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
-test_pipeline = [
+val_pipeline = [
     dict(
         type='LoadImageFromFile',
         key='img',
@@ -93,21 +95,17 @@ val_dataloader = dict(
         metainfo=dict(dataset_type='set5', task_name='sisr'),
         data_root=data_root + '/Set5',
         data_prefix=dict(img='LRbicx4', gt='GTmod12'),
-        pipeline=test_pipeline))
-
-test_dataloader = val_dataloader
+        pipeline=val_pipeline))
 
 val_evaluator = [
     dict(type='MAE'),
     dict(type='PSNR', crop_border=scale),
     dict(type='SSIM', crop_border=scale),
 ]
-test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_000_000, val_interval=5000)
 val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(

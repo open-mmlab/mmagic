@@ -12,8 +12,4 @@ val_dataloader = dict(
     dataset=dict(
         type='BasicFramesDataset', data_prefix=dict(img='BIx4', gt='GT')))
 
-test_dataloader = dict(
-    dataset=dict(
-        type='BasicFramesDataset', data_prefix=dict(img='BIx4', gt='GT')))
-
 find_unused_parameters = True

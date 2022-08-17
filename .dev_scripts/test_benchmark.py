@@ -3,63 +3,21 @@ import os
 import os.path as osp
 import pickle
 import re
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from datetime import datetime
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
 
 from job_watcher import start_from_proc
+from metric_mapping import METRICS_MAPPING, filter_metric
 from modelindex.load_model_index import load
 from rich.console import Console
 from rich.syntax import Syntax
 from rich.table import Table
+from task_mapping import TASK_MAPPING
 
 console = Console()
 MMEDITING_ROOT = Path(__file__).absolute().parents[1]
-
-# key-in-metafile: key-in-results.pkl
-METRICS_MAP = {
-    'PSNR': {
-        'keys': ['PSNR'],
-        'tolerance': 0.1,
-        'rule': 'larger'
-    },
-    'SSIM': {
-        'keys': ['MattingSSIM', 'SSIM'],
-        'tolerance': 0.1,
-        'rule': 'larger'
-    },
-    'l1 error': {
-        'keys': ['MAE'],
-        'tolerance': 0.1,
-        'rule': 'less'
-    },
-    'CONN': {
-        'keys': ['ConnectivityError'],
-        'tolerance': 0.1,
-        'rule': 'less'
-    },
-    'GRAD': {
-        'keys': ['GradientError'],
-        'tolerance': 0.1,
-        'rule': 'less'
-    },
-    'MSE': {
-        'keys': ['MSE', 'MattingMSE'],
-        'tolerance': 0.1,
-        'rule': 'less'
-    },
-    'SAD': {
-        'keys': ['SAD'],
-        'tolerance': 0.1,
-        'rule': 'less'
-    },
-    'NIQE': {
-        'keys': ['NIQE'],
-        'tolerance': 0.1,
-        'rule': 'less'
-    }
-}
 
 
 def parse_args():
@@ -105,6 +63,10 @@ def parse_args():
         '--summary',
         action='store_true',
         help='Summarize benchmark test results.')
+    parser.add_argument(
+        '--by-task',
+        action='store_true',
+        help='Summairze benchmark results by task.')
     parser.add_argument('--save', action='store_true', help='Save the summary')
 
     group_parser = parser.add_mutually_exclusive_group()
@@ -294,19 +256,36 @@ def test(args):
         job_name_list = start_from_proc(args.work_dir, proc)
         history_log = datetime.now().strftime('test-%Y%m%d-%H%M%S') + '.log'
         with open(history_log, 'w') as fp:
+            fp.write(args.work_dir + '\n')
             for job in job_name_list:
                 fp.write(job + '\n')
-        fp.close()
+
+        cache_path = osp.expanduser(osp.join('~', '.task_watcher'))
+        # print(cache_path)
+        os.makedirs(cache_path, exist_ok=True)
+        with open(osp.join(cache_path, 'latest.log'), 'w') as fp:
+            fp.write(args.work_dir + '\n')
+            for job in job_name_list:
+                fp.write(job + '\n')
         print(f'Have saved job submission history in {history_log}')
     else:
         console.print('Please set "--run" to start the job')
 
 
-def show_summary(summary_data, models_map, work_dir, save=False):
-    table = Table(title='Test Benchmark Regression Summary')
+def show_summary(summary_data,
+                 models_map,
+                 work_dir,
+                 name='test_benchmark_summary',
+                 save=False):
+    # table = Table(title='Test Benchmark Regression Summary')
+    table_title = name.replace('_', ' ')
+    table_title = table_title.capitalize()
+    table = Table(title=table_title)
     table.add_column('Model')
     md_header = ['Model']
-    for metric in METRICS_MAP:
+
+    used_metrics = filter_metric(METRICS_MAPPING, summary_data)
+    for metric in used_metrics:
         table.add_column(f'{metric} (expect)')
         table.add_column(f'{metric}')
         md_header.append(f'{metric} (expect)')
@@ -328,7 +307,7 @@ def show_summary(summary_data, models_map, work_dir, save=False):
     for model_name, summary in summary_data.items():
         row = [model_name]
         md_row = [model_name]
-        for metric_key in METRICS_MAP:
+        for metric_key in used_metrics:
             if metric_key in summary:
                 metric = summary[metric_key]
                 expect = round(metric['expect'], 2)
@@ -338,8 +317,8 @@ def show_summary(summary_data, models_map, work_dir, save=False):
                 color = set_color(result, expect, tolerance, rule)
                 row.append(f'{expect:.2f}')
                 row.append(f'[{color}]{result:.2f}[/{color}]')
-                md_row.append(f'{expect:.2f}')
-                md_row.append(f'{result:.2f}')
+                md_row.append(f'{expect:.4f}')
+                md_row.append(f'{result:.4f}')
             else:
                 row.extend([''] * 2)
                 md_row.extend([''] * 2)
@@ -359,7 +338,7 @@ def show_summary(summary_data, models_map, work_dir, save=False):
     console.print(table)
 
     if save:
-        summary_path = work_dir / '../test_benchmark_summary.md'
+        summary_path = work_dir / f'{name}.md'
         with open(summary_path, 'w') as file:
             file.write('# Test Benchmark Regression Summary\n')
             file.writelines(md_rows)
@@ -386,6 +365,7 @@ def summary(args):
         models = filter_models
 
     summary_data = {}
+    task_summary_data = defaultdict(dict)
     for model_name, model_info in models.items():
 
         if model_info.results is None:
@@ -402,11 +382,10 @@ def summary(args):
         date = datetime.fromtimestamp(result_file.lstat().st_mtime)
 
         expect_metrics = model_info.results[0].metrics
-        print(result_file, expect_metrics)
 
         # extract metrics
         summary = {'date': date.strftime('%Y-%m-%d')}
-        for key_yml, key_tolerance in METRICS_MAP.items():
+        for key_yml, key_tolerance in METRICS_MAPPING.items():
             key_results = key_tolerance['keys']
             tolerance = key_tolerance['tolerance']
             rule = key_tolerance['rule']
@@ -420,10 +399,21 @@ def summary(args):
                         result=result,
                         tolerance=tolerance,
                         rule=rule)
-        print(summary)
+
         summary_data[model_name] = summary
 
-    show_summary(summary_data, models, work_dir, args.save)
+        in_collection = model_info.data['In Collection']
+        for task, collection_list in TASK_MAPPING.items():
+            if in_collection.upper() in [c.upper() for c in collection_list]:
+                task_summary_data[task][model_name] = summary
+                break
+
+    if args.by_task:
+        for task_name, data in task_summary_data.items():
+            show_summary(
+                data, models, work_dir, f'{task_name}_summary', save=args.save)
+
+    show_summary(summary_data, models, work_dir, save=args.save)
 
 
 def main():

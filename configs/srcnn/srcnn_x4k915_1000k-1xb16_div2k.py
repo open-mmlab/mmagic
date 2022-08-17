@@ -1,4 +1,6 @@
-_base_ = '../_base_/default_runtime.py'
+_base_ = [
+    '../_base_/default_runtime.py', '../_base_/image_srx4_test_config.py'
+]
 
 experiment_name = 'srcnn_x4k915_1000k-1xb16_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
