@@ -14,8 +14,8 @@ def test_inpainting_inference():
 
     data_root = osp.join(osp.dirname(__file__), '../../')
     config = data_root + 'configs/global_local/gl_256x256_8x12_celeba.py'
-    checkpoint = 'https://download.openmmlab.com/mmediting/inpainting/ \
-        global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth'
+    checkpoint = 'https://download.openmmlab.com/mmediting/inpainting/'\
+                 'global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth'
 
     masked_img_path = data_root + 'tests/data/inpainting/celeba_test.png'
     mask_path = data_root + 'tests/data/inpainting/bbox_mask.png'

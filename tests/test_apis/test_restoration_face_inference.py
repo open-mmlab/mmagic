@@ -16,8 +16,8 @@ def test_restoration_face_inference():
     config = data_root + 'configs/glean/glean_in128out1024_4x2_300k' + \
         '_ffhq_celebahq.py'
 
-    checkpoint = 'https://download.openmmlab.com/mmediting/restorers/ \
-        glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth'
+    checkpoint = 'https://download.openmmlab.com/mmediting/restorers/'\
+        'glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth'
 
     img_path = data_root + 'tests/data/image/face/000001.png'
 
