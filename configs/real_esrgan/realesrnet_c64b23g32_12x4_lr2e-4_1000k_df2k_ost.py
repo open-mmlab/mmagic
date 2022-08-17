@@ -244,7 +244,8 @@ test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
-    dict(
+    constructor='MultiOptimWrapperConstructor',
+    generator=dict(
         type='OptimWrapper',
         optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99))))
 
@@ -275,9 +276,9 @@ visualizer = dict(
 custom_hooks = [
     dict(type='BasicVisualizationHook', interval=1),
     dict(
-        type='EMAHook',
-        ema_type='ExponentialMovingAverage',
+        type='ExponentialMovingAverageHook',
+        module_keys=('generator_ema'),
         interval=1,
-        momentum=0.999,
+        interp_cfg=dict(momentum=0.999),
     )
 ]
