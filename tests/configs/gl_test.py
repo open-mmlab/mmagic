@@ -75,8 +75,7 @@ model_inference = dict(
         type='GLEncoderDecoder',
         encoder=dict(type='GLEncoder'),
         decoder=dict(type='GLDecoder'),
-        dilation_neck=dict(
-            type='GLDilationNeck')),
+        dilation_neck=dict(type='GLDilationNeck')),
     disc=dict(
         type='GLDiscs',
         global_disc_cfg=dict(

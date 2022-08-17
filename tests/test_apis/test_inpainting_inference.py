@@ -17,7 +17,7 @@ def test_inpainting_inference():
         device = torch.device('cuda', 0)
     else:
         device = torch.device('cpu')
-    
+
     checkpoint = 'https://download.openmmlab.com/mmediting/inpainting/'\
                  'global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth'
 
