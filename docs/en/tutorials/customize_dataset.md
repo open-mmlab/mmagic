@@ -76,7 +76,7 @@ import os
 import os.path as osp
 
 from .base_vfi_dataset import BaseVFIDataset
-from .registry import DATASETS
+from mmedit.registry import DATASETS
 
 
 @DATASETS.register_module()

@@ -4,10 +4,10 @@ import warnings
 import torch
 import torch.nn as nn
 from mmcv.runner import load_checkpoint
+from mmengine import MMLogger
 
-from mmedit.models.image_restorers.dic import LightCNN
+from mmedit.models.editors.dic import LightCNN
 from mmedit.registry import LOSSES
-from mmedit.utils import get_root_logger
 
 
 class LightCNNFeature(nn.Module):
@@ -45,7 +45,7 @@ class LightCNNFeature(nn.Module):
                 Defaults to True.
         """
         if isinstance(pretrained, str):
-            logger = get_root_logger()
+            logger = MMLogger.get_current_instance()
             load_checkpoint(self, pretrained, strict=strict, logger=logger)
         elif pretrained is not None:
             raise TypeError(f'"pretrained" must be a str or None. '

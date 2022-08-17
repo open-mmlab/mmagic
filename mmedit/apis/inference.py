@@ -2,7 +2,8 @@
 import mmcv
 from mmcv.runner import load_checkpoint
 
-from mmedit.registry import MODELS, register_all_modules
+from mmedit.registry import MODELS
+from mmedit.utils import register_all_modules
 
 
 def delete_cfg(cfg, key='init_cfg'):

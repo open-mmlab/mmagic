@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from mmedit.registry import LOSSES
-from .utils import masked_loss
+from .loss_utils import masked_loss
 
 _reduction_modes = ['none', 'mean', 'sum']
 

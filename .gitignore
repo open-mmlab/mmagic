@@ -114,6 +114,8 @@ venv.bak/
 *.pkl.json
 *.log.json
 work_dirs/
+work_dirs
+configs_ceph/
 /data/
 /data
 mmedit/.mim

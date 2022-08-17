@@ -103,7 +103,7 @@ python demo/matting_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${TR
 如果 `--imshow` 被指定，这个样例也能通过 opencv 展示图片。比如：
 
 ```shell
-python demo/matting_demo.py configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py work_dirs/dim_stage3/latest.pth tests/data/merged/GT05.jpg tests/data/trimap/GT05.png tests/data/pred/GT05.png
+python demo/matting_demo.py configs/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py work_dirs/dim_stage3/latest.pth tests/data/merged/GT05.jpg tests/data/trimap/GT05.png tests/data/pred/GT05.png
 ```
 
 预测的 alpha 图将被保存到 `tests/data/pred/GT05.png`。

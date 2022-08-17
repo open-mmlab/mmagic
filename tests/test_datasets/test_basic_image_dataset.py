@@ -5,7 +5,7 @@ from pathlib import Path
 import mmcv
 
 from mmedit.datasets import BasicImageDataset
-from mmedit.transforms import LoadImageFromFile
+from mmedit.datasets.transforms import LoadImageFromFile
 
 
 class TestImageDatasets:

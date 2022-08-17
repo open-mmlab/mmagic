@@ -1,13 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from ..registry import register_all_modules
 from .cli import modify_args
-from .logger import get_root_logger, print_colored_log
-from .setup_env import setup_multi_processes
+# TODO replace with engine's API
+from .logger import print_colored_log
+from .setup_env import register_all_modules
 
-__all__ = [
-    'modify_args',
-    'print_colored_log',
-    'get_root_logger',
-    'setup_multi_processes',
-    'register_all_modules',
-]
+__all__ = ['modify_args', 'print_colored_log', 'register_all_modules']

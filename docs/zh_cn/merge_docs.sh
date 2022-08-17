@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 sed -i '$a\\n<br/><hr/>\n' ../../configs/inpainting/*/README_zh-CN.md
-sed -i '$a\\n<br/><hr/>\n' ../../configs/mattors/*/README_zh-CN.md
+sed -i '$a\\n<br/><hr/>\n' ../../configs/*/README_zh-CN.md
 sed -i '$a\\n<br/><hr/>\n' ../../configs/restorers/*/README_zh-CN.md
 sed -i '$a\\n<br/><hr/>\n' ../../configs/synthesizers/*/README_zh-CN.md
 
 # gather models
 cat ../../configs/inpainting/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# 补全模型' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >inpainting_models.md
-cat ../../configs/mattors/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# 抠图模型' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >mattors_models.md
+cat ../../configs/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# 抠图模型' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >mattors_models.md
 cat ../../configs/restorers/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# 超分辨率模型' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >restorers_models.md
 cat ../../configs/synthesizers/*/README_zh-CN.md | sed "s/md###t/html#t/g" | sed "s/#/#&/" | sed '1i\# 生成模型' | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >synthesizers_models.md
 
