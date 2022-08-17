@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from ..registry import register_all_modules
 from .cli import modify_args
 # TODO replace with engine's API
 from .logger import print_colored_log
