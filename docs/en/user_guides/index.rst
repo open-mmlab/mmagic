@@ -1,7 +1,11 @@
 .. toctree::
    :maxdepth: 2
 
-   customize_dataset.md
-   customize_pipeline.md
-   customize_models.md
-   customize_losses.md
+   config/config_inpainting 
+   datasets/dataset_prepare
+   inference.md 
+   train_test.md 
+   useful_tools.md 
+   visualization.md
+
+   

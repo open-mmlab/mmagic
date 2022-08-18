@@ -24,71 +24,58 @@ Documentation
 =============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Get Started
 
-   install.md
-   demo.md
+   overview.md
+   get_started.md
 
 .. toctree::
    :maxdepth: 2
-   :caption: Basic Usage
+   :caption: User Guides
 
-   quick_run.md
-   _tmp/config.md
-   faq.md
+   user_guides/index.rst
 
 .. toctree::
    :maxdepth: 2
-   :caption: Customize MMEditing
+   :caption: Advanced Guides
 
-   tutorials/index.rst
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Model Zoo
-
-   _tmp/modelzoo.md
-   _tmp/inpainting_models.md
-   _tmp/mattors_models.md
-   _tmp/restorers_models.md
-   _tmp/synthesizers_models.md
-   _tmp/video_interpolators_models.md
+   advanced_guides/index.rst
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Datasets
-
-   _tmp/datasets.md
-   _tmp/inpainting_datasets.md
-   _tmp/matting_datasets.md
-   _tmp/sr_datasets.md
-   _tmp/generation_datasets.md
+   :maxdepth: 1
+   :caption: Migration
+   
+   migration.md
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Useful Tools and Scripts
-
-   tools_scripts.md
-
-.. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: API Reference
 
    api.rst
 
+
 .. toctree::
-   :maxdepth: 2
-   :caption: Miscellaneous
+   :maxdepth: 1
+   :caption: Model Zoo
 
-   changelog.md
+   model_zoo.md
 
-   .. notes.md
+.. toctree::
+   :maxdepth: 1
+   :caption: Notes
+   
+   notes/contribution_guide.md
+   notes/projects.md
+   notes/changelog.md
+   notes/faq.md
+
 
 .. toctree::
    :caption: Switch Language
 
    switch_language.md
+
 
 
 Indices and tables
