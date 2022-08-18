@@ -80,8 +80,8 @@ class GenerateCoordinateAndCell(BaseTransform):
             if self.reshape_gt:
                 hr_rgb = crop_hr.contiguous().view(3, -1).permute(1, 0)
                 results['gt'] = hr_rgb
-        elif self.scale is not None and 'lq' in results:
-            _, h_lr, w_lr = results['lq'].shape
+        elif self.scale is not None and 'img' in results:
+            _, h_lr, w_lr = results['img'].shape
             self.target_size = (round(h_lr * self.scale),
                                 round(w_lr * self.scale))
         else:

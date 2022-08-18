@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/default_runtime.py', '../_base_/image_srx3_test_config.py'
+    '../_base_/default_runtime.py', '../_base_/datasets/sisr_x3_test_config.py'
 ]
 
 experiment_name = 'edsr_x3c64b16_300k-1xb16_div2k'

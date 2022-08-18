@@ -156,6 +156,7 @@ def parse_md(md_file):
         collection['Metadata']['Architecture'].append(name)
         collection['Name'] = name
         collection_name = name
+        is_liif = collection_name.upper() == 'LIIF'
         while i < len(lines):
             # parse reference
             if lines[i].startswith('> ['):
@@ -239,6 +240,11 @@ def parse_md(md_file):
                     metrics = {}
 
                     for key in used_metrics:
+                        # handle scale for LIIF model
+                        if key.upper() == 'SCALE':
+                            # remove 'x' in scale
+                            scale = line[used_metrics[key]].strip()[1:]
+
                         metrics_data = line[used_metrics[key]]
                         metrics_data = metrics_data.replace('*', '')
                         if '/' not in metrics_data:
@@ -256,24 +262,34 @@ def parse_md(md_file):
                             except ValueError:
                                 pass
 
-                    model = {
-                        'Name':
-                        model_name,
-                        'In Collection':
-                        collection_name,
-                        'Config':
-                        config,
-                        'Metadata':
-                        metadata,
-                        'Results': [{
-                            'Task': task,
-                            'Dataset': dataset,
-                            'Metrics': metrics
-                        }],
-                        'Weights':
-                        checkpoint
-                    }
-                    models.append(model)
+                    if is_liif:
+                        new_metrics = dict()
+                        for k, v in metrics.items():
+                            dataset, metric_name = k.split(' ')
+                            new_metrics[f'{dataset}x{scale} {metric_name}'] = v
+                        metrics = new_metrics
+
+                    if is_liif and models and models[-1]['Name'] == model_name:
+                        models[-1]['Results'][0]['Metrics'].update(metrics)
+                    else:
+                        model = {
+                            'Name':
+                            model_name,
+                            'In Collection':
+                            collection_name,
+                            'Config':
+                            config,
+                            'Metadata':
+                            metadata,
+                            'Results': [{
+                                'Task': task,
+                                'Dataset': dataset,
+                                'Metrics': metrics
+                            }],
+                            'Weights':
+                            checkpoint
+                        }
+                        models.append(model)
                     j += 1
                 i = j
 

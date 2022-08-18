@@ -1,11 +1,13 @@
-_base_ = '../_base_/models/base_liif.py'
+_base_ = [
+    '../_base_/models/base_liif_c64b16_g1_1000k_div2k.py',
+    '../_base_/datasets/liif_test_config.py'
+]
 
 experiment_name = 'liif-edsr-norm_c64b16_1000k-1xb16_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
 scale_min, scale_max = 1, 4
-scale_test = 4
 
 # model settings
 model = dict(

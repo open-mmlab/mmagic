@@ -26,7 +26,7 @@ set5_dataloader = dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='set5', task_name='sisr'),
         data_root=set5_data_root,
-        data_prefix=dict(img='LRbicx4', gt='GTmod12'),
+        data_prefix=dict(img='LRbicx3', gt='GTmod12'),
         pipeline=test_pipeline))
 set5_evaluator = [
     dict(type='PSNR', crop_border=2, prefix='Set5'),
@@ -43,7 +43,7 @@ set14_dataloader = dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='set14', task_name='sisr'),
         data_root=set5_data_root,
-        data_prefix=dict(img='LRbicx4', gt='GTmod12'),
+        data_prefix=dict(img='LRbicx3', gt='GTmod12'),
         pipeline=test_pipeline))
 set14_evaluator = [
     dict(type='PSNR', crop_border=2, prefix='Set14'),
@@ -59,13 +59,13 @@ div2k_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type='BasicImageDataset',
-        ann_file='meta_info_DIV2K800sub_GT.txt',
+        ann_file='meta_info_DIV2K100sub_GT.txt',
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
         data_root=div2k_data_root,
         # TODO: what this"
         data_prefix=dict(
-            img='DIV2K_test_LR_bicubic/X4', gt='DIV2K_test_HR_sub'),
-        filename_tmpl=dict(img='{}_x4', gt='{}'),
+            img='DIV2K_train_LR_bicubic/X3', gt='DIV2K_train_HR_sub'),
+        # filename_tmpl=dict(img='{}_x3', gt='{}'),
         pipeline=test_pipeline))
 div2k_evaluator = [
     dict(type='PSNR', crop_border=2, prefix='DIV2K'),
@@ -76,11 +76,11 @@ div2k_evaluator = [
 test_cfg = dict(type='MultiTestLoop')
 test_dataloader = [
     set5_dataloader,
-    # set14_dataloader,
-    # div2k_dataloader,
+    set14_dataloader,
+    div2k_dataloader,
 ]
 test_evaluator = [
     set5_evaluator,
-    # set14_evaluator,
-    # div2k_evaluator,
+    set14_evaluator,
+    div2k_evaluator,
 ]

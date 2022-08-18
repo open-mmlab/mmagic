@@ -1,4 +1,6 @@
-_base_ = ['../_base_/default_runtime.py', './tdan_test_config.py']
+_base_ = [
+    '../_base_/default_runtime.py', '../_base_/datasets/tdan_test_config.py'
+]
 
 experiment_name = 'tdan_x4_lr1e-4-400k-1xb16_vimeo90k-bd'
 work_dir = f'./work_dirs/{experiment_name}'

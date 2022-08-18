@@ -89,19 +89,15 @@ val_dataloader = dict(
         data_prefix=dict(img='LRbicx4', gt='GTmod12'),
         pipeline=val_pipeline))
 
-# test_dataloader = val_dataloader
-
 val_evaluator = [
     dict(type='MAE'),
     dict(type='PSNR', crop_border=scale_max),
     dict(type='SSIM', crop_border=scale_max),
 ]
-# test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_000_000, val_interval=3000)
 val_cfg = dict(type='ValLoop')
-# test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(

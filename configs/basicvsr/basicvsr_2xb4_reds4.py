@@ -1,4 +1,7 @@
-_base_ = ['../_base_/default_runtime.py', 'basicvsr_test_config.py']
+_base_ = [
+    '../_base_/default_runtime.py',
+    '../_base_/datasets/basicvsr_test_config.py'
+]
 
 experiment_name = 'basicvsr_2xb4_reds4'
 work_dir = f'./work_dirs/{experiment_name}'
