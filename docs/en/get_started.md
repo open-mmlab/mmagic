@@ -1,6 +1,6 @@
-# Getting Started
+# Get Started
 
-# Installation
+## Installation
 
 We highly recommend developers follow our best practices to install MMEditing.
 However, the whole process is highly customizable.
@@ -182,7 +182,6 @@ Here is the description:
 You can also use `pip -e .[all]`, which will install more dependencies, especially for pre-commit hooks and unittests
 
 This page provides basic tutorials about the usage of MMEditing.
-For installation instructions, please see [install.md](install.md).
 
 ## Prepare datasets
 
@@ -252,7 +251,7 @@ You can check [slurm_test.sh](https://github.com/open-mmlab/mmediting/blob/maste
 - `--deterministic`: Related to `--seed`, this argument decides whether to set deterministic options for CUDNN backend. If specified, it will set `torch.backends.cudnn.deterministic` to True and `torch.backends.cudnn.benchmark` to False.
 - `--cfg-options`: If specified, the key-value pair optional cfg will be merged into config file.
 
-Note: Currently, we do NOT use `--eval` argument like [MMDetection](https://github.com/open-mmlab/mmdetection) to specify evaluation metrics. The evaluation metrics are given in the config files (see [config.md](config.md)).
+Note: Currently, we do NOT use `--eval` argument like [MMDetection](https://github.com/open-mmlab/mmdetection) to specify evaluation metrics. The evaluation metrics are given in the config files (see [config.md](user_guides/config/config.md)).
 
 ### Image demos
 

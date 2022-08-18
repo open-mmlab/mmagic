@@ -27,8 +27,8 @@ Documentation
    :maxdepth: 1
    :caption: Get Started
 
-   overview.md
-   get_started.md
+   Overview <overview.md>
+   Get Started <get_started.md>
 
 .. toctree::
    :maxdepth: 2
