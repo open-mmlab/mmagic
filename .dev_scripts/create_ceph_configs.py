@@ -2,49 +2,134 @@ import glob
 import os.path as osp
 import shutil
 from argparse import ArgumentParser
+from copy import deepcopy
 
 from mmengine import Config
 from tqdm import tqdm
 
 
-def update_intervals(config, args):
-    if args.iters is None:
-        return config
+def convert_data_config(data_cfg):
+    ceph_dataroot_prefix_temp = 'openmmlab:s3://openmmlab/datasets/{}/'
+    local_dataroot_prefix = ['data', './data']
+    # val_dataloader may None
+    if data_cfg is None:
+        return
 
-    # 1. change max-iters and val-interval
-    if 'train_cfg' in config and config['train_cfg']:
-        config['train_cfg'] = dict(
-            type='IterBasedTrainLoop',
-            max_iters=args.iters,
-            val_interval=args.iters // 5)
+    data_cfg_updated = deepcopy(data_cfg)
+    dataset: dict = data_cfg['dataset']
 
-    # 2. change logging interval
-    if 'default_hooks' in config and config['default_hooks']:
-        config['default_hooks']['logger'] = dict(type='LoggerHook', interval=2)
-        config['default_hooks']['checkpoint'] = dict(
-            type='CheckpointHook', interval=args.iters // 5)
+    dataset_type: str = dataset['type']
+    if 'mmcls' in dataset_type:
+        repo_name = 'classification'
+    else:
+        repo_name = 'editing'
+    ceph_dataroot_prefix = ceph_dataroot_prefix_temp.format(repo_name)
 
-    return config
+    if 'data_root' in dataset:
+        data_root: str = dataset['data_root']
+
+        for dataroot_prefix in local_dataroot_prefix:
+            if data_root.startswith(dataroot_prefix):
+                # avoid cvt './data/imagenet' ->
+                # openmmlab:s3://openmmlab/datasets/classification//imagenet
+                if data_root.startswith(dataroot_prefix + '/'):
+                    dataroot_prefix = dataroot_prefix + '/'
+                data_root = data_root.replace(dataroot_prefix,
+                                              ceph_dataroot_prefix)
+                # add '/' at the end
+                if not data_root.endswith('/'):
+                    data_root = data_root + '/'
+                dataset['data_root'] = data_root
+
+    elif 'data_roots' in dataset:
+        # specific for pggan dataset, which need a dict of data_roots
+        data_roots: dict = dataset['data_roots']
+        for k, data_root in data_roots.items():
+            for dataroot_prefix in local_dataroot_prefix:
+                if data_root.startswith(dataroot_prefix):
+                    # avoid cvt './data/imagenet' ->
+                    # openmmlab:s3://openmmlab/datasets/classification//imagenet
+                    if data_root.startswith(dataroot_prefix + '/'):
+                        dataroot_prefix = dataroot_prefix + '/'
+                    data_root = data_root.replace(dataroot_prefix,
+                                                  ceph_dataroot_prefix)
+                    # add '/' at the end
+                    if not data_root.endswith('/'):
+                        data_root = data_root + '/'
+                    data_roots[k] = data_root
+        dataset['data_roots'] = data_roots
+
+    else:
+        raise KeyError
+
+    if hasattr(dataset, 'pipeline'):
+        pipelines = dataset['pipeline']
+        for pipeline in pipelines:
+            type_ = pipeline['type']
+            # only change mmcv(mmcls)'s loading config
+            if type_ == 'mmcls.LoadImageFromFile':
+                pipeline['file_client_args'] = dict(backend='petrel')
+            elif type_ == 'LoadMask':
+                if 'mask_list_file' in pipeline['mask_config']:
+                    local_mask_path = pipeline['mask_config']['mask_list_file']
+                    for dataroot_prefix in local_dataroot_prefix:
+                        if local_mask_path.startswith(dataroot_prefix + '/'):
+                            dataroot_prefix = dataroot_prefix + '/'
+                        local_mask_path = local_mask_path.replace(
+                            dataroot_prefix, ceph_dataroot_prefix)
+                    pipeline['mask_config']['mask_list_file'] = local_mask_path
+                    pipeline['mask_config']['prefix'] = osp.dirname(
+                        local_mask_path)
+                    pipeline['mask_config']['io_backend'] = 'petrel'
+                    pipeline['mask_config']['file_client_kwargs'] = dict(
+                        backend='petrel')
+            elif type_ == 'RandomLoadResizeBg':
+                bg_dir_path = pipeline['bg_dir']
+                for dataroot_prefix in local_dataroot_prefix:
+                    if bg_dir_path.startswith(dataroot_prefix + '/'):
+                        dataroot_prefix = dataroot_prefix + '/'
+                    bg_dir_path = bg_dir_path.replace(dataroot_prefix,
+                                                      ceph_dataroot_prefix)
+                    bg_dir_path = bg_dir_path.replace(repo_name, 'detection')
+                    bg_dir_path = bg_dir_path.replace('openmmlab:',
+                                                      'sproject:')
+                pipeline['bg_dir'] = bg_dir_path
+            elif type_ == 'CompositeFg':
+                fg_dir_path = pipeline['fg_dirs']
+                for i, fg in enumerate(fg_dir_path):
+                    for dataroot_prefix in local_dataroot_prefix:
+                        if fg.startswith(dataroot_prefix + '/'):
+                            dataroot_prefix = dataroot_prefix + '/'
+                        fg = fg.replace(dataroot_prefix, ceph_dataroot_prefix)
+                        pipeline['fg_dirs'][i] = fg
+
+                alpha_dir_path = pipeline['alpha_dirs']
+                for i, alpha_dir in enumerate(alpha_dir_path):
+                    for dataroot_prefix in local_dataroot_prefix:
+                        if alpha_dir.startswith(dataroot_prefix + '/'):
+                            dataroot_prefix = dataroot_prefix + '/'
+                        alpha_dir = alpha_dir.replace(dataroot_prefix,
+                                                      ceph_dataroot_prefix)
+                        pipeline['alpha_dirs'][i] = alpha_dir
+
+    data_cfg_updated['dataset'] = dataset
+    return data_cfg_updated
 
 
 def update_ceph_config(filename, args, dry_run=False):
-    if filename.startswith(osp.join(args.target_dir, '_base_')):
+    if filename.startswith(osp.join('configs_ceph', '_base_')):
         # Skip base configs
         return None
 
     if args.ceph_path is not None:
         if args.ceph_path.endswith('/'):
             args.ceph_path = args.ceph_path[:-1]
-        work_dir = f'{args.ceph_path}/{args.work_dir_prefix}'
-        save_dir = f'{args.ceph_path}/{args.save_dir_prefix}'
-        if not work_dir.endswith('/'):
-            work_dir = work_dir + '/'
-        if not save_dir.endswith('/'):
-            save_dir = save_dir + '/'
+        ceph_path = f'{args.ceph_path}/{args.work_dir_prefix}'
+        if not ceph_path.endswith('/'):
+            ceph_path = ceph_path + '/'
     else:
         # disable save local results to ceph
-        work_dir = args.work_dir_prefix
-        save_dir = args.save_dir_prefix
+        ceph_path = None
 
     try:
         # 0. load config
@@ -53,126 +138,32 @@ def update_ceph_config(filename, args, dry_run=False):
         dataloader_prefix = [
             f'{p}_dataloader' for p in ['train', 'val', 'test']
         ]
-        local_dataroot_prefix = ['data', './data']
-        ceph_dataroot_prefix_temp = 'openmmlab:s3://openmmlab/datasets/{}/'
 
         for prefix in dataloader_prefix:
             if not hasattr(config, prefix):
                 continue
             data_cfg = config[prefix]
-
-            # val_dataloader may None
-            if data_cfg is None:
-                continue
-            dataset: dict = data_cfg['dataset']
-
-            dataset_type: str = dataset['type']
-            if 'mmcls' in dataset_type:
-                repo_name = 'classification'
+            if not isinstance(data_cfg, list):
+                data_cfg_list = [data_cfg]
+                data_cfg_is_list = False
             else:
-                repo_name = 'editing'
-            ceph_dataroot_prefix = ceph_dataroot_prefix_temp.format(repo_name)
+                data_cfg_list = data_cfg
+                data_cfg_is_list = True
 
-            if 'data_root' in dataset:
-                data_root: str = dataset['data_root']
-
-                for dataroot_prefix in local_dataroot_prefix:
-                    if data_root.startswith(dataroot_prefix):
-                        # avoid cvt './data/imagenet' ->
-                        # openmmlab:s3://openmmlab/datasets/classification//imagenet
-                        if data_root.startswith(dataroot_prefix + '/'):
-                            dataroot_prefix = dataroot_prefix + '/'
-                        data_root = data_root.replace(dataroot_prefix,
-                                                      ceph_dataroot_prefix)
-                        # add '/' at the end
-                        if not data_root.endswith('/'):
-                            data_root = data_root + '/'
-                        dataset['data_root'] = data_root
-
-            elif 'data_roots' in dataset:
-                # specific for pggan dataset, which need a dict of data_roots
-                data_roots: dict = dataset['data_roots']
-                for k, data_root in data_roots.items():
-                    for dataroot_prefix in local_dataroot_prefix:
-                        if data_root.startswith(dataroot_prefix):
-                            # avoid cvt './data/imagenet' ->
-                            # openmmlab:s3://openmmlab/datasets/classification//imagenet
-                            if data_root.startswith(dataroot_prefix + '/'):
-                                dataroot_prefix = dataroot_prefix + '/'
-                            data_root = data_root.replace(
-                                dataroot_prefix, ceph_dataroot_prefix)
-                            # add '/' at the end
-                            if not data_root.endswith('/'):
-                                data_root = data_root + '/'
-                            data_roots[k] = data_root
-                dataset['data_roots'] = data_roots
-
+            data_cfg_updated_list = [
+                convert_data_config(cfg) for cfg in data_cfg_list
+            ]
+            if data_cfg_is_list:
+                config[prefix] = data_cfg_updated_list
             else:
-                raise KeyError
-
-            if hasattr(dataset, 'pipeline'):
-                pipelines = dataset['pipeline']
-                for pipeline in pipelines:
-                    type_ = pipeline['type']
-                    # only change mmcv(mmcls)'s loading config
-                    if type_ == 'mmcls.LoadImageFromFile':
-                        pipeline['file_client_args'] = dict(backend='petrel')
-                        break
-                    elif type_ == 'LoadMask':
-                        if 'mask_list_file' in pipeline['mask_config']:
-                            local_mask_path = pipeline['mask_config'][
-                                'mask_list_file']
-                            for dataroot_prefix in local_dataroot_prefix:
-                                if local_mask_path.startswith(dataroot_prefix +
-                                                              '/'):
-                                    dataroot_prefix = dataroot_prefix + '/'
-                                local_mask_path = local_mask_path.replace(
-                                    dataroot_prefix, ceph_dataroot_prefix)
-                            pipeline['mask_config'][
-                                'mask_list_file'] = local_mask_path
-                            pipeline['mask_config']['prefix'] = osp.dirname(
-                                local_mask_path)
-                            pipeline['mask_config']['io_backend'] = 'petrel'
-                            pipeline['mask_config'][
-                                'file_client_kwargs'] = dict(backend='petrel')
-                    elif type_ == 'RandomLoadResizeBg':
-                        bg_dir_path = pipeline['bg_dir']
-                        for dataroot_prefix in local_dataroot_prefix:
-                            if bg_dir_path.startswith(dataroot_prefix + '/'):
-                                dataroot_prefix = dataroot_prefix + '/'
-                            bg_dir_path = bg_dir_path.replace(
-                                dataroot_prefix, ceph_dataroot_prefix)
-                            bg_dir_path = bg_dir_path.replace(
-                                repo_name, 'detection')
-                            bg_dir_path = bg_dir_path.replace(
-                                'openmmlab:', 'sproject:')
-                        pipeline['bg_dir'] = bg_dir_path
-                    elif type_ == 'CompositeFg':
-                        fg_dir_path = pipeline['fg_dirs']
-                        for i, fg in enumerate(fg_dir_path):
-                            for dataroot_prefix in local_dataroot_prefix:
-                                if fg.startswith(dataroot_prefix + '/'):
-                                    dataroot_prefix = dataroot_prefix + '/'
-                                fg = fg.replace(dataroot_prefix,
-                                                ceph_dataroot_prefix)
-                                pipeline['fg_dirs'][i] = fg
-
-                        alpha_dir_path = pipeline['alpha_dirs']
-                        for i, alpha_dir in enumerate(alpha_dir_path):
-                            for dataroot_prefix in local_dataroot_prefix:
-                                if alpha_dir.startswith(dataroot_prefix + '/'):
-                                    dataroot_prefix = dataroot_prefix + '/'
-                                alpha_dir = alpha_dir.replace(
-                                    dataroot_prefix, ceph_dataroot_prefix)
-                                pipeline['alpha_dirs'][i] = alpha_dir
-
-            config[prefix]['dataset'] = dataset
+                config[prefix] = data_cfg_updated_list[0]
 
         # 2. change visualizer
         if hasattr(config, 'vis_backends'):
             for vis_cfg in config['vis_backends']:
                 if vis_cfg['type'] == 'GenVisBackend':
-                    vis_cfg['ceph_path'] = work_dir
+                    if ceph_path is not None:
+                        vis_cfg['ceph_path'] = ceph_path
 
             # add pavi config
             if args.add_pavi:
@@ -233,14 +224,14 @@ def update_ceph_config(filename, args, dry_run=False):
 
             for name, hooks in config['default_hooks'].items():
                 # ignore ceph path
+                if ceph_path is None:
+                    continue
                 if name == 'logger':
-                    hooks['out_dir'] = save_dir
+                    hooks['out_dir'] = ceph_path
                     hooks['file_client_args'] = file_client_args
                 elif name == 'checkpoint':
-                    hooks['out_dir'] = save_dir
+                    hooks['out_dir'] = ceph_path
                     hooks['file_client_args'] = file_client_args
-
-        update_intervals(config, args)
 
         # 4. save
         config.dump(config.filename)
@@ -257,19 +248,10 @@ if __name__ == '__main__':
     parser.add_argument('--ceph-path', type=str, default=None)
     parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
-        '--save-dir-prefix',
-        type=str,
-        default='work_dirs',
-        help='Default prefix of the work dirs in the bucket')
-    parser.add_argument(
         '--work-dir-prefix',
         type=str,
         default='work_dirs',
         help='Default prefix of the work dirs in the bucket')
-    parser.add_argument(
-        '--target-dir', type=str, default='configs_ceph', help='configs path')
-    parser.add_argument(
-        '--iters', type=int, default=None, help='set intervals')
     parser.add_argument(
         '--test-file', type=str, default=None, help='Dry-run on a test file.')
     parser.add_argument(
@@ -286,11 +268,11 @@ if __name__ == '__main__':
     if args.test_file is None:
 
         print('Copying config files to "config_ceph" ...')
-        shutil.copytree('configs', args.target_dir, dirs_exist_ok=True)
+        shutil.copytree('configs', 'configs_ceph', dirs_exist_ok=True)
 
         print('Updating ceph configuration ...')
         files = glob.glob(
-            osp.join(args.target_dir, '**', '*.py'), recursive=True)
+            osp.join('configs_ceph', '**', '*.py'), recursive=True)
         pbars = tqdm(files)
         res = []
         for f in pbars:
@@ -313,8 +295,8 @@ if __name__ == '__main__':
 
     else:
         shutil.copy(args.test_file,
-                    args.test_file.replace('configs', args.target_dir))
+                    args.test_file.replace('configs', 'configs_ceph'))
         update_ceph_config(
-            args.test_file.replace('configs', args.target_dir),
+            args.test_file.replace('configs', 'configs_ceph'),
             args,
             dry_run=True)

@@ -133,7 +133,7 @@ def create_test_job_batch(commands, model_info, args, port, script_name):
         print(f'WARNING: {fname}: {checkpoint} not found.')
         return None
 
-    job_name = f'{args.job_name}_{fname}'
+    job_name = f'{args.job_name}_{fname}'.strip('_')
     work_dir = Path(args.work_dir) / fname
     work_dir.mkdir(parents=True, exist_ok=True)
     result_file = work_dir / 'result.pkl'
