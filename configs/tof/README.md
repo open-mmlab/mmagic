@@ -36,7 +36,7 @@ The metrics are `PSNR / SSIM` .
 
 |                                Method                                |       Vid4       | GPU Info |                                               Download                                                |
 | :------------------------------------------------------------------: | :--------------: | :------: | :---------------------------------------------------------------------------------------------------: |
-| [tof_x4_vimeo90k_official](/configs/tof/tof_official_vimeo90k-x4.py) | 24.4377 / 0.7433 |    -     | [model](https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth) |
+| [tof_x4_vimeo90k_official](/configs/tof/tof_x4_official_vimeo90k.py) | 24.4377 / 0.7433 |    -     | [model](https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth) |
 
 ## Citation
 

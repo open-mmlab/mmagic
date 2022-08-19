@@ -77,12 +77,12 @@ Models:
         SSIM: 0.9467
     Task: Tof
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_pytoflow_nobn_1xb1_vimeo90k_20220321-5f4b243e.pth
-- Config: configs/tof/tof_official_vimeo90k-x4.py
+- Config: configs/tof/tof_x4_official_vimeo90k.py
   In Collection: TOFlow
   Metadata:
     GPUs: '-'
     Training Data: VIMEO90K
-  Name: tof_official_vimeo90k-x4
+  Name: tof_x4_official_vimeo90k
   Results:
   - Dataset: VIMEO90K
     Metrics:
