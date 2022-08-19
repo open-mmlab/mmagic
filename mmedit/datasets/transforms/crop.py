@@ -366,7 +366,8 @@ class PairedRandomCrop(BaseTransform):
             raise ValueError(
                 f'LQ ({h_lq}, {w_lq}) is smaller than patch size '
                 f'({lq_patch_size}, {lq_patch_size}). Please check '
-                f'{results["lq_path"][0]} and {results["gt_path"][0]}.')
+                f'{results[f"{self.lq_key}_path"]} and '
+                f'{results[f"{self.gt_key}_path"]}.')
 
         # randomly choose top and left coordinates for img patch
         top = np.random.randint(h_lq - lq_patch_size + 1)
