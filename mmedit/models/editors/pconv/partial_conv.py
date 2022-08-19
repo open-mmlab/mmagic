@@ -3,10 +3,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmcv.cnn import CONV_LAYERS
+
+from mmedit.registry import MODELS
 
 
-@CONV_LAYERS.register_module(name='PConv')
+@MODELS.register_module(name='PConv')
 class PartialConv2d(nn.Conv2d):
     """Implementation for partial convolution.
 

@@ -5,8 +5,9 @@ from typing import Optional
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmcv.cnn import ConvModule, kaiming_init, normal_init
+from mmcv.cnn import ConvModule
 from mmengine.model import BaseModule
+from mmengine.model.utils import kaiming_init, normal_init
 
 from mmedit.models.layers import DepthwiseSeparableConvModule
 from mmedit.registry import MODELS

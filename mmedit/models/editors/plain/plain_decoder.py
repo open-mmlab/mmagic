@@ -4,8 +4,8 @@ from typing import Optional
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmcv.cnn.utils.weight_init import xavier_init
 from mmengine.model import BaseModule
+from mmengine.model.utils import xavier_init
 from torch.autograd import Function
 from torch.nn.modules.pooling import _MaxUnpoolNd
 from torch.nn.modules.utils import _pair

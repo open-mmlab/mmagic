@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
-from mmcv.cnn import build_activation_layer, kaiming_init
+from mmcv.cnn import build_activation_layer
+from mmengine.model.utils import kaiming_init
 
 
 class LinearModule(nn.Module):

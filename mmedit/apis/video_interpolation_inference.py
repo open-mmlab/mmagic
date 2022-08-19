@@ -7,9 +7,9 @@ import cv2
 import mmcv
 import numpy as np
 import torch
-from mmcv.fileio import FileClient
 from mmcv.parallel import collate
 from mmengine.dataset import Compose
+from mmengine.fileio import FileClient
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 FILE_CLIENT = FileClient('disk')

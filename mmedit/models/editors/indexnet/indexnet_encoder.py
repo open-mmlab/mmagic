@@ -5,9 +5,10 @@ from typing import Optional
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmcv.cnn import ConvModule, constant_init, xavier_init
+from mmcv.cnn import ConvModule
 from mmcv.utils.parrots_wrapper import SyncBatchNorm
 from mmengine.model import BaseModule
+from mmengine.model.utils import constant_init, xavier_init
 
 from mmedit.models.layers import ASPP, DepthwiseSeparableConvModule
 from mmedit.registry import MODELS

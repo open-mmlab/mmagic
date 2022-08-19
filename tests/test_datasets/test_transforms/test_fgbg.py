@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from pathlib import Path
 
-import mmcv
 import numpy as np
 import pytest
+from mmengine.fileio import load
 
 from mmedit.datasets.transforms import (CompositeFg, MergeFgAndBg, PerturbBg,
                                         RandomJitter, RandomLoadResizeBg)
@@ -147,7 +147,7 @@ def test_random_jitter():
 def test_random_load_resize_bg():
     ann_file = data_root / 'ann_old.json'
     bg_dir = data_root / 'bg'
-    data_infos = mmcv.load(ann_file)
+    data_infos = load(ann_file)
     results = dict()
     for data_info in data_infos:
         for key in data_info:

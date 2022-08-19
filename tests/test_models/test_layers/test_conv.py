@@ -3,4 +3,4 @@ from mmedit.models.layers import conv
 
 
 def test_conv():
-    assert 'Deconv' in conv.CONV_LAYERS.module_dict
+    assert 'Deconv' in conv.MODELS.module_dict

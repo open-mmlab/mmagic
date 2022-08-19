@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
-from mmcv.cnn import constant_init, kaiming_init
 from mmcv.utils.parrots_wrapper import _BatchNorm
+from mmengine.model.utils import constant_init, kaiming_init
 
 
 def default_init_weights(module, scale=1):

@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
-from mmcv.cnn.utils.weight_init import xavier_init
 from mmengine.model import BaseModule
+from mmengine.model.utils import xavier_init
 
 from mmedit.registry import MODELS
 
