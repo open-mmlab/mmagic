@@ -1,4 +1,4 @@
-_base_ = '../_base_/models/base_liif_c64b16_div2k_1000k-1xb16.py'
+_base_ = '../_base_/models/base_liif.py'
 
 experiment_name = 'liif-edsr-norm_c64b16_div2k_1000k-1xb16'
 work_dir = f'./work_dirs/{experiment_name}'

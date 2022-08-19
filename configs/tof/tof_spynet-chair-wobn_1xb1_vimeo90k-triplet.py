@@ -1,4 +1,4 @@
-_base_ = '../_base_/models/base_tof_wobn_vimeo90k-triplet_1xb1.py'
+_base_ = '../_base_/models/.py'
 
 experiment_name = 'tof_spynet-chair-wobn_vimeo90k-triplet_1xb1'
 work_dir = f'./work_dirs/{experiment_name}'
