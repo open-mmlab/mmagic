@@ -270,7 +270,7 @@ class TestAugmentations:
             img=np.random.randn(64, 32, 3),
             scale=4,
             gt_path='fake_gt_path',
-            lq_path='fake_lq_path')
+            img_path='fake_lq_path')
         pairedrandomcrop = PairedRandomCrop(128)
         results = pairedrandomcrop(results)
         assert results['gt'].shape == (128, 128, 3)
@@ -283,7 +283,7 @@ class TestAugmentations:
                 img=np.random.randn(64, 64, 3),
                 scale=4,
                 gt_path='fake_gt_path',
-                lq_path='fake_lq_path')
+                img_path='fake_lq_path')
             results = pairedrandomcrop(results)
 
         # LQ (h, w) is smaller than patch size.
@@ -293,7 +293,7 @@ class TestAugmentations:
                 img=np.random.randn(8, 8, 3),
                 scale=4,
                 gt_path='fake_gt_path',
-                lq_path='fake_lq_path')
+                img_path='fake_lq_path')
             results = pairedrandomcrop(results)
 
         assert repr(pairedrandomcrop) == (
@@ -307,7 +307,7 @@ class TestAugmentations:
             img=[self.img_lq, self.img_lq],
             gt=[self.img_gt, self.img_gt],
             scale=4,
-            lq_path='fake_lq_path',
+            img_path='fake_lq_path',
             gt_path='fake_gt_path')
         pairedrandomcrop = PairedRandomCrop(128)
         results = pairedrandomcrop(results)
