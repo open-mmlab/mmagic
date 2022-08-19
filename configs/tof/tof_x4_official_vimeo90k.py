@@ -1,7 +1,7 @@
 # only testing the official model is supported
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'tof_official_vimeo90k-x4'
+experiment_name = 'tof_x4_official_vimeo90k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs'
 

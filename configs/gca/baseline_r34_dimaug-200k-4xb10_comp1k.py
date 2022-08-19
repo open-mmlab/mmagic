@@ -1,6 +1,6 @@
 _base_ = ['./baseline_r34_200k-4xb10_comp1k.py']
 
-experiment_name = 'baseline_dimaug-r34_200k-4xb10_comp1k'
+experiment_name = 'baseline_r34_dimaug-200k-4xb10_comp1k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
