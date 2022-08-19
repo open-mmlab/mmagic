@@ -3,8 +3,9 @@ from typing import Optional
 
 import torch.nn as nn
 import torch.nn.functional as F
-from mmcv.cnn import ConvModule, build_activation_layer, constant_init
+from mmcv.cnn import ConvModule, build_activation_layer
 from mmengine.model import BaseModule
+from mmengine.model.utils import constant_init
 
 from mmedit.registry import MODELS
 from .gca_module import GCAModule

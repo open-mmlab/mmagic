@@ -13,7 +13,7 @@ def test_video_interpolation_inference():
         device = torch.device('cpu')
 
     data_root = osp.join(osp.dirname(__file__), '../../')
-    config = data_root + 'configs/cain/cain_b5_g1b32_vimeo90k_triplet.py'
+    config = data_root + 'configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py'
     checkpoint = 'https://download.openmmlab.com/mmediting/'\
         'video_interpolators/cain/'\
         'cain_b5_320k_vimeo-triple_20220117-647f3de2.pth'

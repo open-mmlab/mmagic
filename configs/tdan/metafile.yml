@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/abs/1812.02898
   README: configs/tdan/README.md
 Models:
-- Config: configs/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py
+- Config: configs/tdan/tdan_x4ft_lr5e-5-400k-1xb16_vimeo90k-bi.py
   In Collection: TDAN
   Metadata:
     GPUs: 8 (Tesla V100-SXM2-32GB)
     Training Data: VIMEO90K
-  Name: tdan_vimeo90k_bix4_ft_lr5e-5_400k
+  Name: tdan_x4ft_lr5e-5-400k-1xb16_vimeo90k-bi
   Results:
   - Dataset: VIMEO90K
     Metrics:
@@ -30,12 +30,12 @@ Models:
         SSIM: 0.792
     Task: Tdan
   Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
-- Config: configs/tdan/tdan_vimeo90k_bdx4_ft_lr5e-5_800k.py
+- Config: configs/tdan/tdan_x4ft_lr5e-5-800k-1xb16_vimeo90k-bd.py
   In Collection: TDAN
   Metadata:
     GPUs: 8 (Tesla V100-SXM2-32GB)
     Training Data: VIMEO90K
-  Name: tdan_vimeo90k_bdx4_ft_lr5e-5_800k
+  Name: tdan_x4ft_lr5e-5-800k-1xb16_vimeo90k-bd
   Results:
   - Dataset: VIMEO90K
     Metrics:

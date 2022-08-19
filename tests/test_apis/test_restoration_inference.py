@@ -13,7 +13,7 @@ def test_restoration_inference():
         device = torch.device('cpu')
 
     data_root = osp.join(osp.dirname(__file__), '../../')
-    config = data_root + 'configs/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py'
+    config = data_root + 'configs/esrgan/esrgan_x4c64b23g32_400k-1xb16_div2k.py'  # noqa
     checkpoint = 'https://download.openmmlab.com/mmediting/restorers/'\
         'basicvsr/basicvsr_reds4_20120409-0e599677.pth'
 

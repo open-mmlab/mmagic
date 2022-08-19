@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/abs/1609.04802
   README: configs/srgan_resnet/README.md
 Models:
-- Config: configs/srgan_resnet/msrresnet_x4c64b16_g1_1000k_div2k.py
+- Config: configs/srgan_resnet/msrresnet_x4c64b16_1000k-1xb16_div2k.py
   In Collection: SRGAN
   Metadata:
     GPUs: '1'
     Training Data: DIV2K
-  Name: msrresnet_x4c64b16_g1_1000k_div2k
+  Name: msrresnet_x4c64b16_1000k-1xb16_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -27,12 +27,12 @@ Models:
         SSIM: 0.8491
     Task: Srgan_resnet
   Weights: https://download.openmmlab.com/mmediting/restorers/srresnet_srgan/msrresnet_x4c64b16_1x16_300k_div2k_20200521-61556be5.pth
-- Config: configs/srgan_resnet/srgan_x4c64b16_g1_1000k_div2k.py
+- Config: configs/srgan_resnet/srgan_x4c64b16_1000k-1xb16_div2k.py
   In Collection: SRGAN
   Metadata:
     GPUs: '1'
     Training Data: DIV2K
-  Name: srgan_x4c64b16_g1_1000k_div2k
+  Name: srgan_x4c64b16_1000k-1xb16_div2k
   Results:
   - Dataset: DIV2K
     Metrics:

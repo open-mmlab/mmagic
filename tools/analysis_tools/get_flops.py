@@ -2,7 +2,7 @@
 import argparse
 
 from mmcv import Config
-from mmcv.cnn.utils import get_model_complexity_info
+from mmengine.model.utils import get_model_complexity_info
 
 from mmedit.registry import MODELS
 

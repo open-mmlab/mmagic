@@ -2,7 +2,8 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from mmcv.cnn import ConvModule, kaiming_init, normal_init, xavier_init
+from mmcv.cnn import ConvModule
+from mmengine.model.utils import kaiming_init, normal_init, xavier_init
 from torch.nn import init
 
 

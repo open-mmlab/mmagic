@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/pdf/2012.08512.pdf
   README: configs/flavr/README.md
 Models:
-- Config: configs/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet.py
+- Config: configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py
   In Collection: FLAVR
   Metadata:
     GPUs: 8 (Tesla PG503-216)
     Training Data: VIMEO90K
-  Name: flavr_in4out1_g8b4_vimeo90k_septuplet
+  Name: flavr_in4out1_8xb4_vimeo90k-septuplet
   Results:
   - Dataset: VIMEO90K
     Metrics:
