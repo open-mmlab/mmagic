@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/abs/1908.00672
   README: configs/indexnet/README.md
 Models:
-- Config: configs/indexnet/indexnet_mobv2_comp1k_78k-1xb16.py
+- Config: configs/indexnet/indexnet_mobv2_78k-1xb16_comp1k.py
   In Collection: IndexNet
   Metadata:
     GPUs: '1'
     Training Data: COMP1K
-  Name: indexnet_mobv2_comp1k_78k-1xb16
+  Name: indexnet_mobv2_78k-1xb16_comp1k
   Results:
   - Dataset: COMP1K
     Metrics:
@@ -22,12 +22,12 @@ Models:
       SAD: 45.6
     Task: Indexnet
   Weights: https://download.openmmlab.com/mmediting/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k_SAD-45.6_20200618_173817-26dd258d.pth
-- Config: configs/indexnet/indexnet_mobv2-dimaug_comp1k_78k-1xb16.py
+- Config: configs/indexnet/indexnet_mobv2-dimaug_78k-1xb16_comp1k.py
   In Collection: IndexNet
   Metadata:
     GPUs: '1'
     Training Data: COMP1K
-  Name: indexnet_mobv2-dimaug_comp1k_78k-1xb16
+  Name: indexnet_mobv2-dimaug_78k-1xb16_comp1k
   Results:
   - Dataset: COMP1K
     Metrics:

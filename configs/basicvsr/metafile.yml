@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/abs/2012.02181
   README: configs/basicvsr/README.md
 Models:
-- Config: configs/basicvsr/basicvsr_reds4_2xb4.py
+- Config: configs/basicvsr/basicvsr_2xb4_reds4.py
   In Collection: BasicVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
     Training Data: REDS
-  Name: basicvsr_reds4_2xb4
+  Name: basicvsr_2xb4_reds4
   Results:
   - Dataset: REDS
     Metrics:
@@ -36,12 +36,12 @@ Models:
         SSIM: 0.9395
     Task: Basicvsr
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth
-- Config: configs/basicvsr/basicvsr_vimeo90k-bi_2xb4.py
+- Config: configs/basicvsr/basicvsr_2xb4_vimeo90k-bi.py
   In Collection: BasicVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
     Training Data: VIMEO90K
-  Name: basicvsr_vimeo90k-bi_2xb4
+  Name: basicvsr_2xb4_vimeo90k-bi
   Results:
   - Dataset: VIMEO90K
     Metrics:
@@ -65,12 +65,12 @@ Models:
         SSIM: 0.9451
     Task: Basicvsr
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_vimeo90k_bi_20210409-d2d8f760.pth
-- Config: configs/basicvsr/basicvsr_vimeo90k-bd_2xb4.py
+- Config: configs/basicvsr/basicvsr_2xb4_vimeo90k-bd.py
   In Collection: BasicVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
     Training Data: VIMEO90K
-  Name: basicvsr_vimeo90k-bd_2xb4
+  Name: basicvsr_2xb4_vimeo90k-bd
   Results:
   - Dataset: VIMEO90K
     Metrics:

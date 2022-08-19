@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/abs/1801.07892
   README: configs/deepfillv1/README.md
 Models:
-- Config: configs/deepfillv1/deepfillv1_places-256x256_8xb2.py
+- Config: configs/deepfillv1/deepfillv1_8xb2_places-256x256.py
   In Collection: DeepFillv1
   Metadata:
     GPUs: '8'
     Training Data: PLACES
-  Name: deepfillv1_places-256x256_8xb2
+  Name: deepfillv1_8xb2_places-256x256
   Results:
   - Dataset: PLACES
     Metrics:
@@ -21,12 +21,12 @@ Models:
       l1 error: 11.019
     Task: Deepfillv1
   Weights: https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth
-- Config: configs/deepfillv1/deepfillv1_celeba-256x256_4xb4.py
+- Config: configs/deepfillv1/deepfillv1_4xb4_celeba-256x256.py
   In Collection: DeepFillv1
   Metadata:
     GPUs: '4'
     Training Data: CELEBA
-  Name: deepfillv1_celeba-256x256_4xb4
+  Name: deepfillv1_4xb4_celeba-256x256
   Results:
   - Dataset: CELEBA
     Metrics:

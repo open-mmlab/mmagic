@@ -13,7 +13,7 @@ def test_restoration_video_inference():
         device = torch.device('cpu')
 
     data_root = osp.join(osp.dirname(__file__), '../../')
-    config = data_root + '/configs/basicvsr/basicvsr_reds4_2xb4.py'
+    config = data_root + '/configs/basicvsr/basicvsr_2xb4_reds4.py'
     checkpoint = 'https://download.openmmlab.com/mmediting/restorers/'\
         'basicvsr/basicvsr_reds4_20120409-0e599677.pth'
 

@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/abs/1501.00092
   README: configs/srcnn/README.md
 Models:
-- Config: configs/srcnn/srcnn_x4k915_div2k_1000k-1xb16.py
+- Config: configs/srcnn/srcnn_x4k915_1000k-1xb16_div2k.py
   In Collection: SRCNN
   Metadata:
     GPUs: '1'
     Training Data: DIV2K
-  Name: srcnn_x4k915_div2k_1000k-1xb16
+  Name: srcnn_x4k915_1000k-1xb16_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
