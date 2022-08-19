@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost'
+experiment_name = 'realesrnet_c64b23g32_df2k-ost_lr2e-4-1000k-4xb12'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

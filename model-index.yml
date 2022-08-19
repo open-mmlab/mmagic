@@ -1,7 +1,7 @@
 Import:
-- configs/AOT-GAN/metafile.yml
+- configs/aot_gan/metafile.yml
 - configs/basicvsr/metafile.yml
-- configs/basicvsr_plusplus/metafile.yml
+- configs/basicvsr_pp/metafile.yml
 - configs/cain/metafile.yml
 - configs/deepfillv1/metafile.yml
 - configs/deepfillv2/metafile.yml

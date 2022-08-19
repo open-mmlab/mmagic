@@ -1,6 +1,5 @@
 _base_ = [
-    '../_base_/models/base_gl.py', 
-    '../_base_/inpaint_default_runtime.py',
+    '../_base_/models/base_gl.py', '../_base_/inpaint_default_runtime.py',
     '../_base_/datasets/celeba.py'
 ]
 

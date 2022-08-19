@@ -1,7 +1,8 @@
 _base_ = './realbasicvsr_wogan_c64b20_2x30x8_lr1e-4_300k_reds.py'
 
-experiment_name = 'realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds'
+experiment_name = 'realbasicvsr_c64b20-1x30x8_reds_lr5e-5-150k-8xb1'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
 
 # load_from = 'https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_wogan_c64b20_2x30x8_lr1e-4_300k_reds_20211027-0e2ff207.pth'  # noqa
 

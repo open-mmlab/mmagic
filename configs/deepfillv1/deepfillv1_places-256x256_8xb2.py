@@ -1,7 +1,6 @@
 _base_ = [
     '../_base_/models/base_deepfillv1.py',
-    '../_base_/inpaint_default_runtime.py', 
-    '../_base_/datasets/places.py'
+    '../_base_/inpaint_default_runtime.py', '../_base_/datasets/places.py'
 ]
 
 experiment_name = 'deepfillv1_places-256x256_8xb2'

@@ -1,11 +1,10 @@
 _base_ = [
     '../_base_/models/base_deepfillv2.py',
-    '../_base_/inpaint_default_runtime.py', 
-    '../_base_/datasets/celeba.py'
+    '../_base_/inpaint_default_runtime.py', '../_base_/datasets/celeba.py'
 ]
 
 save_dir = './work_dirs'
-experiment_name 'deepfillv2_celeba-256x256_8xb2'
+experiment_name = 'deepfillv2_celeba-256x256_8xb2'
 model = dict(train_cfg=dict(disc_step=1, start_iter=0))
 
 input_shape = (256, 256)

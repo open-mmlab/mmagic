@@ -1,6 +1,5 @@
 _base_ = [
-    '../_base_/inpaint_default_runtime.py',
-    '../_base_/datasets/places.py'
+    '../_base_/inpaint_default_runtime.py', '../_base_/datasets/places.py'
 ]
 
 experiment_name = 'aot-gan_smpgan_places-512x512_4xb4'
@@ -60,9 +59,9 @@ model = dict(
         loss_weight=1.,
     ),
     train_cfg=dict(
-    disc_step=1,
-    start_iter=0,
-))
+        disc_step=1,
+        start_iter=0,
+    ))
 
 mask_root = 'data/pconv_mask'
 train_pipeline = [
@@ -142,7 +141,6 @@ train_cfg = dict(
 )
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
-
 
 # optimizer
 optim_wrapper = dict(

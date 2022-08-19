@@ -5,7 +5,7 @@ Collections:
   Name: AOT-GAN
   Paper:
   - https://arxiv.org/pdf/2104.01431.pdf
-  README: configs/AOT-GAN/README.md
+  README: configs/aot_gan/README.md
 Models:
 - Config: configs/AOT-GAN/AOT-GAN_512x512_4x12_places.py
   In Collection: AOT-GAN
@@ -19,5 +19,5 @@ Models:
       PSNR: 19.01
       SSIM: 0.682
       l1 error: 7.07
-    Task: Aot-gan
+    Task: Aot_gan
   Weights: https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth

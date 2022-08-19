@@ -1,7 +1,8 @@
-_base_ = '../_base_/models/base_liif_c64b16_g1_1000k_div2k.py'
+_base_ = '../_base_/models/base_liif_c64b16_div2k_1000k-1xb16.py'
 
-experiment_name = 'liif_rdn_norm_x2-4_c64b16_g1_1000k_div2k'
+experiment_name = 'liif-rdn-norm_c64b16_div2k_1000k-1xb16'
 work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
 
 scale_min, scale_max = 1, 4
 scale_test = 4

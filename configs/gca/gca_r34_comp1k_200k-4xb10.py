@@ -1,6 +1,5 @@
 _base_ = [
-    '../_base_/datasets/comp1k.py', 
-    '../_base_/matting_default_runtime.py'
+    '../_base_/datasets/comp1k.py', '../_base_/matting_default_runtime.py'
 ]
 
 experiment_name = 'gca_r34_comp1k_200k-4xb10'

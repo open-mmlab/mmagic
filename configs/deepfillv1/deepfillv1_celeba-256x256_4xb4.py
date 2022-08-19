@@ -1,7 +1,6 @@
 _base_ = [
     '../_base_/models/base_deepfillv1.py',
-    '../_base_/inpaint_default_runtime.py', 
-    '../_base_/datasets/celeba.py'
+    '../_base_/inpaint_default_runtime.py', '../_base_/datasets/celeba.py'
 ]
 
 experiment_name = 'deepfillv1_celeba-256x256_4xb4'

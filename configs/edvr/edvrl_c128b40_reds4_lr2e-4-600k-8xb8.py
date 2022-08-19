@@ -4,7 +4,6 @@ experiment_name = 'edvrl_c128b40_reds4_lr2e-4-600k-8xb8'
 save_dir = './work_dirs'
 work_dir = f'./work_dirs/{experiment_name}'
 
-
 # load_from = 'https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth'  # noqa: E501
 
 # model settings

@@ -1,7 +1,6 @@
 _base_ = [
     '../_base_/models/base_deepfillv2.py',
-    '../_base_/inpaint_default_runtime.py', 
-    '../_base_/datasets/places.py'
+    '../_base_/inpaint_default_runtime.py', '../_base_/datasets/places.py'
 ]
 
 save_dir = './work_dirs'
