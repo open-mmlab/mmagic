@@ -61,14 +61,15 @@ val_dataloader = dict(
         num_input_frames=7,
         pipeline=val_pipeline))
 
-test_dataloader = val_dataloader
+# TODO: data is not uploaded yet
+# test_dataloader = val_dataloader
 
 val_evaluator = [
     dict(type='MAE'),
     dict(type='PSNR'),
     dict(type='SSIM'),
 ]
-test_evaluator = val_evaluator
+# test_evaluator = val_evaluator
 
 val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+# test_cfg = dict(type='TestLoop')

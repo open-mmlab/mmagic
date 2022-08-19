@@ -62,10 +62,8 @@ div2k_dataloader = dict(
         ann_file='meta_info_DIV2K100sub_GT.txt',
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
         data_root=div2k_data_root,
-        # TODO: what this"
         data_prefix=dict(
-            img='DIV2K_train_LR_bicubic/X3', gt='DIV2K_train_HR_sub'),
-        # filename_tmpl=dict(img='{}_x3', gt='{}'),
+            img='DIV2K_train_LR_bicubic/X3_sub', gt='DIV2K_train_HR_sub'),
         pipeline=test_pipeline))
 div2k_evaluator = [
     dict(type='PSNR', crop_border=2, prefix='DIV2K'),

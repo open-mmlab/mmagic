@@ -214,9 +214,10 @@ test_pipeline = [
         type='GenerateSegmentIndices',
         interval_list=[1],
         filename_tmpl='{:08d}.png'),
+    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='RescaleToZeroOne', keys=['img']),
-    dict(type='ToTensor', keys=['img']),
+    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -260,13 +261,15 @@ test_dataloader = dict(
         data_root=f'{data_root}/VideoLQ',
         data_prefix=dict(img='', gt=''),
         num_input_frames=15,
-        pipeline=val_pipeline))
+        pipeline=test_pipeline))
 
 val_evaluator = [
     dict(type='PSNR'),
     dict(type='SSIM'),
 ]
-test_evaluator = val_evaluator
+# test_evaluator = [dict(type='NIQE', convert_to='Y')]
+test_evaluator = [dict(type='NIQE', input_order='CHW', convert_to='Y')]
+# test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=300_000, val_interval=5000)

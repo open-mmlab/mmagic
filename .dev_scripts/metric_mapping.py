@@ -35,7 +35,7 @@ METRICS_MAPPING = {
         'tolerance': 0.1,
         'rule': 'less'
     },
-    'NIQE': {
+    'NIQE (Y)': {
         'keys': ['NIQE'],
         'tolerance': 0.1,
         'rule': 'less'
@@ -152,6 +152,18 @@ METRICS_MAPPING = {
         'rule': 'larger'
     },
 }
+
+# add LIIF metrics
+liif_metrics = {}
+for dataset in ['Set5', 'Set14', 'DIV2K']:
+    for metric, tolerance in zip(['PSNR', 'SSIM'], [0.1, 0.1]):
+        for scale in [2, 3, 4, 6, 18, 30]:
+            liif_metrics[f'{dataset}x{scale} {metric}'] = {
+                'keys': [f'{dataset}x{scale}/{metric}'],
+                'tolerance': 0.1,
+                'rule': 'larger'
+            }
+METRICS_MAPPING.update(liif_metrics)
 
 
 def filter_metric(metric_mapping, summary_data):

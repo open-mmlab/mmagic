@@ -385,10 +385,10 @@ def summary(args):
 
         # extract metrics
         summary = {'date': date.strftime('%Y-%m-%d')}
-        for key_yml, key_tolerance in METRICS_MAPPING.items():
-            key_results = key_tolerance['keys']
-            tolerance = key_tolerance['tolerance']
-            rule = key_tolerance['rule']
+        for key_yml, value_yml in METRICS_MAPPING.items():
+            key_results = value_yml['keys']
+            tolerance = value_yml['tolerance']
+            rule = value_yml['rule']
 
             for key_result in key_results:
                 if key_yml in expect_metrics and key_result in results:
