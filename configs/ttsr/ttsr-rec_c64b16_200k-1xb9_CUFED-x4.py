@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'ttsr-rec_c64b16_CUFED-x4_200k-1xb9'
+experiment_name = 'ttsr-rec_c64b16_200k-1xb9_CUFED-x4'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

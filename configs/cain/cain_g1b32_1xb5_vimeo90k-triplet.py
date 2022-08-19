@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'cain_g1b32_vimeo90k-triplet_1xb5'
+experiment_name = 'cain_g1b32_1xb5_vimeo90k-triplet'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs'
 

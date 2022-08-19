@@ -1,6 +1,6 @@
-_base_ = '../basicvsr/basicvsr_vimeo90k-bi_2xb4.py'
+_base_ = '../basicvsr/basicvsr_2xb4_vimeo90k-bi.py'
 
-experiment_name = 'basicvsr-pp_c64n7_vimeo90k-bi_300k-4xb2'
+experiment_name = 'basicvsr-pp_c64n7_300k-4xb2_vimeo90k-bi'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs'
 

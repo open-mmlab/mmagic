@@ -3,7 +3,7 @@ _base_ = [
     '../_base_/inpaint_default_runtime.py', '../_base_/datasets/places.py'
 ]
 
-experiment_name = 'deepfillv1_places-256x256_8xb2'
+experiment_name = 'deepfillv1_8xb2_places-256x256'
 save_dir = './work_dirs'
 model = dict(train_cfg=dict(disc_step=5, start_iter=0, local_size=(128, 128)))
 

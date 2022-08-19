@@ -1,6 +1,6 @@
-_base_ = './ttsr-rec_c64b16_CUFED-x4_200k-1xb9.py'
+_base_ = './ttsr-rec_c64b16_200k-1xb9_CUFED-x4.py'
 
-experiment_name = 'ttsr-gan_c64b16_CUFED-x4_500k-1xb9'
+experiment_name = 'ttsr-gan_c64b16_500k-1xb9_CUFED-x4'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 scale = 4

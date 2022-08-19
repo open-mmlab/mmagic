@@ -3,7 +3,7 @@ _base_ = [
     '../_base_/datasets/celeba.py'
 ]
 
-experiment_name = 'pconv_stage1_celeba-256x256_8xb1'
+experiment_name = 'pconv_stage1_8xb1_celeba-256x256'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

@@ -1,6 +1,6 @@
-_base_ = './basicvsr-pp_c128n25_ntire-decompress-track1_600k.py'
+_base_ = './basicvsr-pp_c128n25_600k_ntire-decompress-track1.py'
 
-experiment_name = 'basicvsr-pp_c128n25_ntire-decompress-track2_600k'
+experiment_name = 'basicvsr-pp_c128n25_600k_ntire-decompress-track2'
 work_dir = f'./work_dirs/{experiment_name}'
 
 test_dataloader = dict(

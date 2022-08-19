@@ -1,6 +1,6 @@
-_base_ = './esrgan_psnr-x4c64b23g32_div2k_1000k-1xb16.py'
+_base_ = './esrgan_psnr-x4c64b23g32_1000k-1xb16_div2k.py'
 
-experiment_name = 'esrgan_x4c64b23g32_div2k_400k-1xb16'
+experiment_name = 'esrgan_x4c64b23g32_400k-1xb16_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
 
 scale = 4

@@ -1,4 +1,4 @@
-experiment_name = 'basicvsr-pp_c128n25_ntire-vsr_600k'
+experiment_name = 'basicvsr-pp_c128n25_600k_ntire-vsr'
 
 # model settings
 model = dict(

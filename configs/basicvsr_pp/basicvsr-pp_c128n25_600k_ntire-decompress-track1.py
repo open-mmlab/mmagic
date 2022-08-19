@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'basicvsr-pp_c128n25_ntire-decompress-track1_600k'
+experiment_name = 'basicvsr-pp_c128n25_600k_ntire-decompress-track1'
 work_dir = f'./work_dirs/{experiment_name}'
 
 # model settings

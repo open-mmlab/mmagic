@@ -1,6 +1,6 @@
 _base_ = '../_base_/models/base_glean.py'
 
-experiment_name = 'glean_cat-x16_2xb8'
+experiment_name = 'glean_2xb8_cat-x16'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs'
 

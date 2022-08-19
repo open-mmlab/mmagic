@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'edsr_x2c64b16_div2k_300k-1xb16'
+experiment_name = 'edsr_x2c64b16_300k-1xb16_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

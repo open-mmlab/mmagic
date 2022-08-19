@@ -3,7 +3,7 @@ _base_ = [
     '../_base_/datasets/celeba.py'
 ]
 
-experiment_name = 'gl_celeba-256x256_8xb12'
+experiment_name = 'gl_8xb12_celeba-256x256'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

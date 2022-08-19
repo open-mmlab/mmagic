@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'dic_x8c48b6_celeba-hq_150k-4xb2'
+experiment_name = 'dic_x8c48b6_150k-4xb2_celeba-hq'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

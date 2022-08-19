@@ -4,7 +4,7 @@ _base_ = [
 ]
 
 save_dir = './work_dirs'
-experiment_name = 'deepfillv2_places-256x256_8xb2'
+experiment_name = 'deepfillv2_8xb2_places-256x256'
 model = dict(train_cfg=dict(disc_step=1, start_iter=0))
 
 input_shape = (256, 256)

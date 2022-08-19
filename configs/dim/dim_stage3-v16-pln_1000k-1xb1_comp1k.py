@@ -1,7 +1,7 @@
-_base_ = ['./dim_stage1-v16_comp1k_1000k-1xb1.py']
+_base_ = ['./dim_stage1-v16_1000k-1xb1_comp1k.py']
 
 save_dir = './work_dirs'
-experiment_name = 'dim_stage3-v16-pln_comp1k_1000k-1xb1'
+experiment_name = 'dim_stage3-v16-pln_1000k-1xb1_comp1k'
 
 # model settings
 model = dict(

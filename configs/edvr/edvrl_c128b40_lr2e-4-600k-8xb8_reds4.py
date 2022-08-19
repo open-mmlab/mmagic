@@ -1,6 +1,6 @@
 _base_ = '../_base_/models/base_edvr.py'
 
-experiment_name = 'edvrl_c128b40_reds4_lr2e-4-600k-8xb8'
+experiment_name = 'edvrl_c128b40_lr2e-4-600k-8xb8_reds4'
 save_dir = './work_dirs'
 work_dir = f'./work_dirs/{experiment_name}'
 

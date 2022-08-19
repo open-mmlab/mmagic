@@ -2,7 +2,7 @@ _base_ = [
     '../_base_/inpaint_default_runtime.py', '../_base_/datasets/places.py'
 ]
 
-experiment_name = 'aot-gan_smpgan_places-512x512_4xb4'
+experiment_name = 'aot-gan_smpgan_4xb4_places-512x512'
 save_dir = './work_dirs'
 
 input_shape = (512, 512)

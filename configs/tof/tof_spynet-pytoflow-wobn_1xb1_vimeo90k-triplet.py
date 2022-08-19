@@ -1,6 +1,6 @@
 _base_ = '../_base_/models/base_tof.py'
 
-experiment_name = 'tof_spynet-pytoflow-wobn_vimeo90k-triplet_1xb1'
+experiment_name = 'tof_spynet-pytoflow-wobn_1xb1_vimeo90k-triplet'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs'
 

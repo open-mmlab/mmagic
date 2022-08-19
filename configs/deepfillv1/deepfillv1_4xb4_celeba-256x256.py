@@ -3,7 +3,7 @@ _base_ = [
     '../_base_/inpaint_default_runtime.py', '../_base_/datasets/celeba.py'
 ]
 
-experiment_name = 'deepfillv1_celeba-256x256_4xb4'
+experiment_name = 'deepfillv1_4xb4_celeba-256x256'
 save_dir = './work_dirs'
 model = dict(
     train_cfg=dict(disc_step=2, start_iter=0, local_size=(128, 128)), )

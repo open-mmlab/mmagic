@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'tdan_vimeo90k-bd-x4_lr1e-4-400k-1xb16'
+experiment_name = 'tdan_lr1e-4-400k-1xb16_vimeo90k-bd-x4'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 scale = 4

@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'realbasicvsr_wogan-c64b20-2x30x8_reds_lr1e-4-300k-8xb2'
+experiment_name = 'realbasicvsr_wogan-c64b20-2x30x8_lr1e-4-300k-8xb2_reds'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
