@@ -187,7 +187,7 @@ pip3 install -e .
 
 </details>
 
-请参考[模型库](https://mmediting.readthedocs.io/en/latest/modelzoo.html)了解详情。
+请参考[模型库](https://mmediting.readthedocs.io/en/latest/_tmp/modelzoo.html)了解详情。
 
 ## 参与贡献
 

@@ -8,13 +8,13 @@
 如果你的文件夹结构不是如此，你可能需要查看一下配置文件中与之相关的数据路径设置。
 下面是各种任务中，我们需要到的数据集的介绍：
 
-[Inpainting](https://mmediting.readthedocs.io/en/latest/inpainting_datasets.html)
+[Inpainting](https://mmediting.readthedocs.io/en/latest/_tmp/inpainting_datasets.html)
 
-[Matting](https://mmediting.readthedocs.io/en/latest/matting_datasets.html)
+[Matting](https://mmediting.readthedocs.io/en/latest/_tmp/matting_datasets.html)
 
-[Restoration](https://mmediting.readthedocs.io/en/latest/sr_datasets.html)
+[Restoration](https://mmediting.readthedocs.io/en/latest/_tmp/sr_datasets.html)
 
-[Generation](https://mmediting.readthedocs.io/en/latest/generation_datasets.html)
+[Generation](https://mmediting.readthedocs.io/en/latest/_tmp/generation_datasets.html)
 
 ## 用预训练模型做推理
 
