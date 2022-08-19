@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/abs/2012.09161
   README: configs/liif/README.md
 Models:
-- Config: configs/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-edsr-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif-edsr-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -27,12 +27,12 @@ Models:
         SSIM: 0.9366
     Task: Liif
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
-- Config: configs/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-edsr-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif-edsr-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -47,12 +47,12 @@ Models:
         SSIM: 0.8915
     Task: Liif
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
-- Config: configs/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-edsr-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif-edsr-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -67,12 +67,12 @@ Models:
         SSIM: 0.8509
     Task: Liif
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
-- Config: configs/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-edsr-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif-edsr-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -87,12 +87,12 @@ Models:
         SSIM: 0.7774
     Task: Liif
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
-- Config: configs/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-edsr-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif-edsr-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -107,12 +107,12 @@ Models:
         SSIM: 0.5406
     Task: Liif
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
-- Config: configs/liif/liif_edsr_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-edsr-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_edsr_norm_c64b16_g1_1000k_div2k
+  Name: liif-edsr-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -127,12 +127,12 @@ Models:
         SSIM: 0.501
     Task: Liif
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
-- Config: configs/liif/liif_rdn_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-rdn-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_rdn_norm_c64b16_g1_1000k_div2k
+  Name: liif-rdn-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -147,12 +147,12 @@ Models:
         SSIM: 0.9366
     Task: Liif
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth
-- Config: configs/liif/liif_rdn_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-rdn-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_rdn_norm_c64b16_g1_1000k_div2k
+  Name: liif-rdn-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -167,12 +167,12 @@ Models:
         SSIM: 0.8923
     Task: Liif
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth
-- Config: configs/liif/liif_rdn_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-rdn-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_rdn_norm_c64b16_g1_1000k_div2k
+  Name: liif-rdn-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -187,12 +187,12 @@ Models:
         SSIM: 0.8513
     Task: Liif
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth
-- Config: configs/liif/liif_rdn_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-rdn-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_rdn_norm_c64b16_g1_1000k_div2k
+  Name: liif-rdn-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -207,12 +207,12 @@ Models:
         SSIM: 0.7751
     Task: Liif
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth
-- Config: configs/liif/liif_rdn_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-rdn-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_rdn_norm_c64b16_g1_1000k_div2k
+  Name: liif-rdn-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -227,12 +227,12 @@ Models:
         SSIM: 0.5329
     Task: Liif
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth
-- Config: configs/liif/liif_rdn_norm_c64b16_g1_1000k_div2k.py
+- Config: configs/liif/liif-rdn-norm_c64b16_div2k_1000k-1xb16.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
     Training Data: DIV2K
-  Name: liif_rdn_norm_c64b16_g1_1000k_div2k
+  Name: liif-rdn-norm_c64b16_div2k_1000k-1xb16
   Results:
   - Dataset: DIV2K
     Metrics:

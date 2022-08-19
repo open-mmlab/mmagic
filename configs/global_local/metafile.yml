@@ -7,12 +7,12 @@ Collections:
   - http://iizuka.cs.tsukuba.ac.jp/projects/completion/data/completion_sig2017.pdf
   README: configs/global_local/README.md
 Models:
-- Config: configs/global_local/gl_256x256_8x12_places.py
+- Config: configs/global_local/gl_places-256x256_8xb12.py
   In Collection: Global&Local
   Metadata:
     GPUs: '8'
     Training Data: PLACES
-  Name: gl_256x256_8x12_places
+  Name: gl_places-256x256_8xb12
   Results:
   - Dataset: PLACES
     Metrics:
@@ -21,12 +21,12 @@ Models:
       l1 error: 11.164
     Task: Global_local
   Weights: https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth
-- Config: configs/global_local/gl_256x256_8x12_celeba.py
+- Config: configs/global_local/gl_celeba-256x256_8xb12.py
   In Collection: Global&Local
   Metadata:
     GPUs: '8'
     Training Data: CELEBA
-  Name: gl_256x256_8x12_celeba
+  Name: gl_celeba-256x256_8xb12
   Results:
   - Dataset: CELEBA
     Metrics:

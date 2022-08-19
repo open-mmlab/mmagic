@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/pdf/2104.01431.pdf
   README: configs/aot_gan/README.md
 Models:
-- Config: configs/AOT-GAN/AOT-GAN_512x512_4x12_places.py
+- Config: configs/aot_gan/aot-gan_smpgan_places-512x512_4xb4.py
   In Collection: AOT-GAN
   Metadata:
     GPUs: 4 (GeForce GTX 1080 Ti)
     Training Data: PLACES
-  Name: AOT-GAN_512x512_4x12_places
+  Name: aot-gan_smpgan_places-512x512_4xb4
   Results:
   - Dataset: PLACES
     Metrics:
