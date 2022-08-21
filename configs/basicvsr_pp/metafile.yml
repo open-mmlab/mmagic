@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2104.13371
   README: configs/basicvsr_pp/README.md
 Models:
-- Config: configs/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4.py
+- Config: configs/basicvsr_pp/basicvsr_plusplus_c64n7_8x1_600k_reds4.py
   In Collection: BasicVSR++
   Metadata:
     GPUs: 8 (Tesla V100-PCIE-32GB)
@@ -36,7 +36,7 @@ Models:
         SSIM: 0.9411
     Task: Basicvsr_pp
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
-- Config: configs/basicvsr_plusplus/basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bi.py
+- Config: configs/basicvsr_pp/basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bi.py
   In Collection: BasicVSR++
   Metadata:
     GPUs: 4 (Tesla V100-PCIE-32GB)
@@ -65,7 +65,7 @@ Models:
         SSIM: 0.95
     Task: Basicvsr_pp
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305-4ef437e2.pth
-- Config: configs/basicvsr_plusplus/basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd.py
+- Config: configs/basicvsr_pp/basicvsr_plusplus_c64n7_4x2_300k_vimeo90k_bd.py
   In Collection: BasicVSR++
   Metadata:
     GPUs: 4 (Tesla V100-PCIE-32GB)
