@@ -13,9 +13,10 @@ def update_intervals(config, args):
 
     # 1. change max-iters and val-interval
     if 'train_cfg' in config and config['train_cfg']:
-        config['train_cfg']['type'] = 'IterBasedTrainLoop'
-        config['train_cfg']['max_iters'] = args.iters
-        config['train_cfg']['val_interval'] = args.iters // 5
+        config['train_cfg'] = dict(
+            type='IterBasedTrainLoop',
+            max_iters=args.iters,
+            val_interval=args.iters // 5)
 
     # 2. change logging interval
     if 'default_hooks' in config and config['default_hooks']:

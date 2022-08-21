@@ -140,9 +140,9 @@ class AOTInpaintor(OneStageInpaintor):
         batch_inputs, data_samples = self.data_preprocessor(data, True)
         log_vars = {}
 
+        # prepare data for training
         gt_img = torch.stack([d.gt_img.data
                               for d in data_samples])  # float, [-1,1]
-        # print(gt_img.min(), gt_img.max(), gt_img.dtype)
         mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
         mask = mask.float()
         masked_img = batch_inputs
@@ -156,6 +156,7 @@ class AOTInpaintor(OneStageInpaintor):
         # discriminator training step
         if self.train_cfg.disc_step > 0:
             set_requires_grad(self.disc, True)
+
             disc_losses_real = self.forward_train_d(
                 gt_img, True, True, mask=mask)
             disc_losses_fake = self.forward_train_d(
@@ -163,12 +164,13 @@ class AOTInpaintor(OneStageInpaintor):
             disc_losses_ = disc_losses_real['real_loss'] + disc_losses_fake[
                 'fake_loss']
             disc_losses = dict(disc_losses=disc_losses_)
-            loss_disc, log_vars_d = self.parse_losses(disc_losses)
-            log_vars.update(log_vars_d)
-            optim_wrapper['disc'].zero_grad()
-            loss_disc.backward()
 
+            loss_disc, log_vars_d = self.parse_losses(disc_losses)
+            print('loss disc: ', loss_disc)
+            loss_disc.backward()
             optim_wrapper['disc'].step()
+            optim_wrapper['disc'].zero_grad()
+            log_vars.update(log_vars_d)
 
             self.disc_step_count = (self.disc_step_count +
                                     1) % self.train_cfg.disc_step
@@ -183,8 +185,9 @@ class AOTInpaintor(OneStageInpaintor):
                                                 mask, masked_img)
         loss_g, log_vars_g = self.parse_losses(g_losses)
         log_vars.update(log_vars_g)
-        optim_wrapper['generator'].zero_grad()
+
         loss_g.backward()
         optim_wrapper['generator'].step()
+        optim_wrapper['generator'].zero_grad()
 
         return log_vars
