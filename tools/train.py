@@ -72,7 +72,8 @@ def main():
 
     # enable automatic-mixed-precision training
     if args.amp is True:
-        if not isinstance(cfg.optim_wrapper, dict):
+        if ('constructor' not in cfg.optim_wrapper) or \
+                cfg.optim_wrapper['constructor'] == 'DefaultOptimWrapperConstructor': # noqa
             optim_wrapper = cfg.optim_wrapper.type
             if optim_wrapper == 'AmpOptimWrapper':
                 print_colored_log(
@@ -87,11 +88,12 @@ def main():
                 cfg.optim_wrapper.loss_scale = 'dynamic'
         else:
             for key, val in cfg.optim_wrapper.items():
-                assert val.type == 'OptimWrapper', (
-                    '`--amp` is only supported when the optimizer wrapper '
-                    f'`type is OptimWrapper` but got {val.type}.')
-                cfg.optim_wrapper[key].type = 'AmpOptimWrapper'
-                cfg.optim_wrapper[key].loss_scale = 'dynamic'
+                if isinstance(val, dict) and 'type' in val:
+                    assert val.type == 'OptimWrapper', (
+                        '`--amp` is only supported when the optimizer wrapper '
+                        f'`type is OptimWrapper` but got {val.type}.')
+                    cfg.optim_wrapper[key].type = 'AmpOptimWrapper'
+                    cfg.optim_wrapper[key].loss_scale = 'dynamic'
 
     if args.resume:
         cfg.resume = True

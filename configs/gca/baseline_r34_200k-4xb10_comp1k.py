@@ -110,7 +110,10 @@ val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
 # optimizer
-optim_wrapper = dict(optimizer=dict(type='Adam', lr=4e-4, betas=[0.5, 0.999]))
+optim_wrapper = dict(
+    constructor='DefaultOptimWrapperConstructor',
+    type='OptimWrapper',
+    optimizer=dict(type='Adam', lr=4e-4, betas=[0.5, 0.999]))
 # learning policy
 param_scheduler = [
     dict(

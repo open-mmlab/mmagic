@@ -43,7 +43,9 @@ model = dict(
 
 # optimizer
 optim_wrapper = dict(
-    dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=0.00005)))
+    constructor='DefaultOptimWrapperConstructor',
+    type='OptimWrapper',
+    optimizer=dict(type='Adam', lr=0.00005))
 
 # learning policy
 # Fixed
