@@ -116,6 +116,7 @@ venv.bak/
 work_dirs/
 work_dirs
 configs_ceph/
+configs_ceph_*/
 /data/
 /data
 mmedit/.mim

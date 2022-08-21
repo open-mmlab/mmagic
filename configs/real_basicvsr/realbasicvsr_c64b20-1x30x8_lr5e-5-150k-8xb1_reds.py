@@ -1,4 +1,4 @@
-_base_ = './realbasicvsr_wogan-c64b20-2x30x8_lr1e-4_300k-8xb2_reds.py'
+_base_ = './realbasicvsr_wogan-c64b20-2x30x8_lr1e-4-300k-8xb2_reds.py'
 
 experiment_name = 'realbasicvsr_c64b20-1x30x8_lr5e-5-150k-8xb1_reds'
 work_dir = f'./work_dirs/{experiment_name}'
