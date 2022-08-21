@@ -166,8 +166,7 @@ class AOTInpaintor(OneStageInpaintor):
             disc_losses = dict(disc_losses=disc_losses_)
 
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
-            print('loss disc: ', loss_disc)
-            loss_disc.backward()
+            optim_wrapper['disc'].backward(loss_disc)
             optim_wrapper['disc'].step()
             optim_wrapper['disc'].zero_grad()
             log_vars.update(log_vars_d)
@@ -186,7 +185,7 @@ class AOTInpaintor(OneStageInpaintor):
         loss_g, log_vars_g = self.parse_losses(g_losses)
         log_vars.update(log_vars_g)
 
-        loss_g.backward()
+        optim_wrapper['generator'].backward(loss_g)
         optim_wrapper['generator'].step()
         optim_wrapper['generator'].zero_grad()
 

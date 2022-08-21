@@ -206,12 +206,12 @@ class GLInpaintor(OneStageInpaintor):
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
             optim_wrapper['disc'].zero_grad()
-            loss_disc.backward()
+            optim_wrapper['disc'].backward(loss_disc)
 
             disc_losses = self.forward_train_d(real_data, True, True)
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
-            loss_disc.backward()
+            optim_wrapper['disc'].backward(loss_disc)
             optim_wrapper['disc'].step()
             self.disc_step_count = (self.disc_step_count +
                                     1) % self.train_cfg.disc_step
@@ -241,7 +241,7 @@ class GLInpaintor(OneStageInpaintor):
             loss_g, log_vars_g = self.parse_losses(g_losses)
             log_vars.update(log_vars_g)
             optim_wrapper['generator'].zero_grad()
-            loss_g.backward()
+            optim_wrapper['generator'].backward(loss_g)
             optim_wrapper['generator'].step()
 
             results.update(fake_gt_local=fake_gt_local.cpu())

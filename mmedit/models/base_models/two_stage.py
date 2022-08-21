@@ -268,7 +268,7 @@ class TwoStageInpaintor(OneStageInpaintor):
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
             optim_wrapper['disc'].zero_grad()
-            loss_disc.backward()
+            optim_wrapper['disc'].backward(loss_disc)
 
             if self.disc_input_with_mask:
                 disc_input_x = torch.cat([gt_img, mask], dim=1)
@@ -278,7 +278,7 @@ class TwoStageInpaintor(OneStageInpaintor):
                 disc_input_x, True, is_disc=True)
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
-            loss_disc.backward()
+            optim_wrapper['disc'].backward(loss_disc)
 
             if self.with_gp_loss:
                 # gradient penalty loss should not be used with mask as input
@@ -288,7 +288,7 @@ class TwoStageInpaintor(OneStageInpaintor):
                 loss_disc, log_vars_d = self.parse_losses(
                     dict(loss_gp=loss_d_gp))
                 log_vars.update(log_vars_d)
-                loss_disc.backward()
+                optim_wrapper['disc'].backward(loss_disc)
 
             optim_wrapper['disc'].step()
 
@@ -320,7 +320,7 @@ class TwoStageInpaintor(OneStageInpaintor):
             two_stage_losses)
         log_vars.update(log_vars_two_stage)
         optim_wrapper['generator'].zero_grad()
-        loss_two_stage.backward()
+        optim_wrapper['generator'].backward(loss_two_stage)
         optim_wrapper['generator'].step()
 
         return log_vars
