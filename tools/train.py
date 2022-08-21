@@ -72,30 +72,26 @@ def main():
 
     # enable automatic-mixed-precision training
     if args.amp is True:
-        optim_wrapper = cfg.optim_wrapper.type
-        if optim_wrapper == 'AmpOptimWrapper':
-            print_colored_log(
-                'AMP training is already enabled in your config.',
-                logger='current',
-                level=logging.WARNING)
+        if not isinstance(cfg.optim_wrapper, dict):
+            optim_wrapper = cfg.optim_wrapper.type
+            if optim_wrapper == 'AmpOptimWrapper':
+                print_colored_log(
+                    'AMP training is already enabled in your config.',
+                    logger='current',
+                    level=logging.WARNING)
+            else:
+                assert optim_wrapper == 'OptimWrapper', (
+                    '`--amp` is only supported when the optimizer wrapper '
+                    f'`type is OptimWrapper` but got {optim_wrapper}.')
+                cfg.optim_wrapper.type = 'AmpOptimWrapper'
+                cfg.optim_wrapper.loss_scale = 'dynamic'
         else:
-            assert optim_wrapper == 'OptimWrapper', (
-                '`--amp` is only supported when the optimizer wrapper type is '
-                f'`OptimWrapper` but got {optim_wrapper}.')
-            cfg.optim_wrapper.type = 'AmpOptimWrapper'
-            cfg.optim_wrapper.loss_scale = 'dynamic'
-
-    # # enable automatically scaling LR
-    # if args.auto_scale_lr:
-    #     if 'auto_scale_lr' in cfg and \
-    #             'enable' in cfg.auto_scale_lr and \
-    #             'base_batch_size' in cfg.auto_scale_lr:
-    #         cfg.auto_scale_lr.enable = True
-    #     else:
-    #         raise RuntimeError('Can not find "auto_scale_lr" or '
-    #                            '"auto_scale_lr.enable" or '
-    #                            '"auto_scale_lr.base_batch_size" in your'
-    #                            ' configuration file.')
+            for key, val in cfg.optim_wrapper.items():
+                assert val.type == 'OptimWrapper', (
+                    '`--amp` is only supported when the optimizer wrapper '
+                    f'`type is OptimWrapper` but got {val.type}.')
+                cfg.optim_wrapper[key].type = 'AmpOptimWrapper'
+                cfg.optim_wrapper[key].loss_scale = 'dynamic'
 
     if args.resume:
         cfg.resume = True

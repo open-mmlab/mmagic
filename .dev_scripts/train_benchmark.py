@@ -206,7 +206,7 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
     else:
         quota_cfg = ''
 
-    launcher = 'none' if args.local else 'slurm'
+    launcher = 'none' if args.local or n_gpus == 0 else 'slurm'
     runner = 'python' if args.local else 'srun python'
 
     job_script = (f'#!/bin/bash\n'
@@ -221,7 +221,7 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
                        f'#SBATCH --ntasks={n_gpus}\n'
                        f'#SBATCH --cpus-per-task=5\n\n')
     else:
-        job_script += '\n\n export CUDA_VISIBLE_DEVICES=-1\n'
+        job_script += '\n\n' + 'export CUDA_VISIBLE_DEVICES=-1\n'
 
     job_script += (f'export MASTER_PORT={port}\n'
                    f'{runner} -u {script_name} {config} '

@@ -147,7 +147,7 @@ if __name__ == '__main__':
     parser.add_argument('--list', type=str, default=None)
     parser.add_argument('--resume', default='latest')
     parser.add_argument(
-        '--work_dirs', type=str, default='work_dirs/benchmark_train')
+        '--work-dir', type=str, default='work_dirs/benchmark_amp')
     parser.add_argument(
         '--type',
         type=str,
@@ -160,7 +160,7 @@ if __name__ == '__main__':
         f = open(args.list, 'r')
         job_name_list = f.readlines()
         csv_path = osp.basename(args.list).replace('.log', '.csv')
-        plain_txt = show_job_status(args.work_dirs, job_name_list, csv_path)
+        plain_txt = show_job_status(args.work_dir, job_name_list, csv_path)
         with open('status.log', 'w') as f:
             f.write(plain_txt)
         print('save status to status.log')
