@@ -13,6 +13,7 @@ def update_intervals(config, args):
 
     # 1. change max-iters and val-interval
     if 'train_cfg' in config and config['train_cfg']:
+        config['train_cfg']['type'] = 'IterBasedTrainLoop'
         config['train_cfg']['max_iters'] = args.iters
         config['train_cfg']['val_interval'] = args.iters // 5
 
