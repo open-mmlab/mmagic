@@ -3,6 +3,7 @@ from os.path import dirname, join
 
 import torch
 from mmcv import Config
+from mmengine.optim import OptimWrapper
 
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
@@ -39,7 +40,9 @@ def test_gl_inpaintor():
 
     optim_g = torch.optim.SGD(gl.generator.parameters(), lr=0.1)
     optim_d = torch.optim.SGD(gl.disc.parameters(), lr=0.1)
-    optim_dict = dict(generator=optim_g, disc=optim_d)
+    optims = dict(
+        generator=OptimWrapper(optim_g),
+        discriminator=OptimWrapper(optim_d))
 
     for i in range(5):
         log_vars = gl.train_step(data_batch, optim_dict)
