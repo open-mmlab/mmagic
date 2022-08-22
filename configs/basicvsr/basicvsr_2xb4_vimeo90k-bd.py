@@ -78,7 +78,7 @@ val_dataloader = dict(
         data_root=f'{data_root}/Vid4',
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
-        depth=2,
+        depth=1,
         num_input_frames=7,
         fixed_seq_len=7,
         pipeline=val_pipeline))
