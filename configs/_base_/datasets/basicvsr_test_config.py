@@ -174,18 +174,18 @@ vid4_bi_evaluator = [
 # config for test
 test_cfg = dict(type='MultiTestLoop')
 test_dataloader = [
-    # reds_dataloader,
+    reds_dataloader,
     vimeo_90k_bd_dataloader,
     vimeo_90k_bi_dataloader,
-    # udm10_dataloader,
-    # vid4_bd_dataloader,
-    # vid4_bi_dataloader,
+    udm10_dataloader,
+    vid4_bd_dataloader,
+    vid4_bi_dataloader,
 ]
 test_evaluator = [
-    # reds_evaluator,
+    reds_evaluator,
     vimeo_90k_bd_evaluator,
     vimeo_90k_bi_evaluator,
-    # udm10_evaluator,
-    # vid4_bd_evaluator,
-    # vid4_bi_evaluator,
+    udm10_evaluator,
+    vid4_bd_evaluator,
+    vid4_bi_evaluator,
 ]

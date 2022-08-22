@@ -79,6 +79,5 @@ val_evaluator = [
     dict(type='PSNR', convert_to='Y'),
     dict(type='SSIM', convert_to='Y'),
 ]
-test_evaluator = val_evaluator
 
 find_unused_parameters = True
