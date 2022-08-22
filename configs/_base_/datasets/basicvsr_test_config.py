@@ -95,7 +95,7 @@ udm10_pipeline = [
     dict(
         type='GenerateSegmentIndices',
         interval_list=[1],
-        filename_tmpl=dict(gt='{:04d}.png', img='{:03d}.png')),
+        filename_tmpl='{:04d}.png'),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='ToTensor', keys=['img', 'gt']),
