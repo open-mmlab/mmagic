@@ -195,7 +195,7 @@ class TTSR(SRGAN):
         loss_g = g_optim_wrapper.scale_loss(parsed_losses_g)
 
         if g_optim_wrapper.should_update():
-            g_optim_wrapper.backward(loss_g)
+            g_optim_wrapper.backward(loss_g, retain_graph=True)
             g_optim_wrapper.step()
             g_optim_wrapper.zero_grad()
 
