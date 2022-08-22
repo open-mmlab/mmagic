@@ -40,9 +40,8 @@ def test_gl_inpaintor():
 
     optim_g = torch.optim.SGD(gl.generator.parameters(), lr=0.1)
     optim_d = torch.optim.SGD(gl.disc.parameters(), lr=0.1)
-    optims = dict(
-        generator=OptimWrapper(optim_g),
-        discriminator=OptimWrapper(optim_d))
+    optim_dict = dict(
+        generator=OptimWrapper(optim_g), disc=OptimWrapper(optim_d))
 
     for i in range(5):
         log_vars = gl.train_step(data_batch, optim_dict)

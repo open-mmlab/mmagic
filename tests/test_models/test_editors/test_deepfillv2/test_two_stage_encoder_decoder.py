@@ -56,9 +56,7 @@ def test_two_stage_inpaintor():
 
     optim_g = torch.optim.Adam(inpaintor.generator.parameters(), lr=0.0001)
     optim_d = torch.optim.Adam(inpaintor.disc.parameters(), lr=0.0001)
-    optims = dict(
-        generator=OptimWrapper(optim_g),
-        discriminator=OptimWrapper(optim_d))
+    optims = dict(generator=OptimWrapper(optim_g), disc=OptimWrapper(optim_d))
 
     # check train_step with standard two_stage model
     for i in range(5):

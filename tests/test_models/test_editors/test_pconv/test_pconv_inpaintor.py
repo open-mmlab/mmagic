@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import imp
 from os.path import dirname, join
 
 import torch

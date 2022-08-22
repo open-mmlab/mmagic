@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import imp
 from os import path as osp
 
 import torch
@@ -77,9 +76,7 @@ def test_deepfillv1_inpaintor():
     # prepare model and optimizer
     optim_g = torch.optim.Adam(deepfillv1.generator.parameters(), lr=0.0001)
     optim_d = torch.optim.Adam(deepfillv1.disc.parameters(), lr=0.0001)
-    optims = dict(
-        generator=OptimWrapper(optim_g),
-        discriminator=OptimWrapper(optim_d))
+    optims = dict(generator=OptimWrapper(optim_g), disc=OptimWrapper(optim_d))
 
     # check train_step with standard deepfillv1 model
     for i in range(5):
