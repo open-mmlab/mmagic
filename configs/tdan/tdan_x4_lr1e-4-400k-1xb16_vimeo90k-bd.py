@@ -119,10 +119,10 @@ test_dataloader = dict(
 
 # optimizer
 optim_wrapper = dict(
-    dict(
-        type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=1e-4, weight_decay=1e-6),
-    ))
+    constructor='DefaultOptimWrapperConstructor',
+    type='OptimWrapper',
+    optimizer=dict(type='Adam', lr=1e-4, weight_decay=1e-6),
+)
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=800_000, val_interval=50000)

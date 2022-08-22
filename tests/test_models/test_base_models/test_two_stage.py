@@ -4,6 +4,7 @@ from os.path import dirname, join
 
 import torch
 from mmcv import Config
+from mmengine.optim import OptimWrapper
 
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
@@ -53,7 +54,7 @@ def test_two_stage_inpaintor():
 
     optim_g = torch.optim.Adam(inpaintor.generator.parameters(), lr=0.0001)
     optim_d = torch.optim.Adam(inpaintor.disc.parameters(), lr=0.0001)
-    optims = dict(generator=optim_g, disc=optim_d)
+    optims = dict(generator=OptimWrapper(optim_g), disc=OptimWrapper(optim_d))
 
     # check train_step with standard two_stage model
     for i in range(5):

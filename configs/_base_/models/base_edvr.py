@@ -106,10 +106,10 @@ test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
-    dict(
-        type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.999)),
-    ))
+    constructor='DefaultOptimWrapperConstructor',
+    type='OptimWrapper',
+    optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.999)),
+)
 
 # learning policy
 # lr_config = dict(

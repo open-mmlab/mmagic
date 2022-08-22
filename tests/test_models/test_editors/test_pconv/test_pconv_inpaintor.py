@@ -3,6 +3,7 @@ from os.path import dirname, join
 
 import torch
 from mmcv import Config
+from mmengine.optim import OptimWrapper
 
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
@@ -40,6 +41,7 @@ def test_pconv_inpaintor():
     }]
 
     optim_g = torch.optim.Adam(inpaintor.generator.parameters(), lr=0.0001)
+    optim_g = OptimWrapper(optim_g)
 
     for i in range(5):
         log_vars = inpaintor.train_step(data_batch, optim_g)

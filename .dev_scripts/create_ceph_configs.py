@@ -7,20 +7,44 @@ from mmengine import Config
 from tqdm import tqdm
 
 
+def update_intervals(config, args):
+    if args.iters is None:
+        return config
+
+    # 1. change max-iters and val-interval
+    if 'train_cfg' in config and config['train_cfg']:
+        config['train_cfg'] = dict(
+            type='IterBasedTrainLoop',
+            max_iters=args.iters,
+            val_interval=args.iters // 5)
+
+    # 2. change logging interval
+    if 'default_hooks' in config and config['default_hooks']:
+        config['default_hooks']['logger'] = dict(type='LoggerHook', interval=2)
+        config['default_hooks']['checkpoint'] = dict(
+            type='CheckpointHook', interval=args.iters // 5)
+
+    return config
+
+
 def update_ceph_config(filename, args, dry_run=False):
-    if filename.startswith(osp.join('configs_ceph', '_base_')):
+    if filename.startswith(osp.join(args.target_dir, '_base_')):
         # Skip base configs
         return None
 
     if args.ceph_path is not None:
         if args.ceph_path.endswith('/'):
             args.ceph_path = args.ceph_path[:-1]
-        ceph_path = f'{args.ceph_path}/{args.work_dir_prefix}'
-        if not ceph_path.endswith('/'):
-            ceph_path = ceph_path + '/'
+        work_dir = f'{args.ceph_path}/{args.work_dir_prefix}'
+        save_dir = f'{args.ceph_path}/{args.save_dir_prefix}'
+        if not work_dir.endswith('/'):
+            work_dir = work_dir + '/'
+        if not save_dir.endswith('/'):
+            save_dir = save_dir + '/'
     else:
         # disable save local results to ceph
-        ceph_path = None
+        work_dir = args.work_dir_prefix
+        save_dir = args.save_dir_prefix
 
     try:
         # 0. load config
@@ -148,8 +172,7 @@ def update_ceph_config(filename, args, dry_run=False):
         if hasattr(config, 'vis_backends'):
             for vis_cfg in config['vis_backends']:
                 if vis_cfg['type'] == 'GenVisBackend':
-                    if ceph_path is not None:
-                        vis_cfg['ceph_path'] = ceph_path
+                    vis_cfg['ceph_path'] = work_dir
 
             # add pavi config
             if args.add_pavi:
@@ -210,14 +233,14 @@ def update_ceph_config(filename, args, dry_run=False):
 
             for name, hooks in config['default_hooks'].items():
                 # ignore ceph path
-                if ceph_path is None:
-                    continue
                 if name == 'logger':
-                    hooks['out_dir'] = ceph_path
+                    hooks['out_dir'] = save_dir
                     hooks['file_client_args'] = file_client_args
                 elif name == 'checkpoint':
-                    hooks['out_dir'] = ceph_path
+                    hooks['out_dir'] = save_dir
                     hooks['file_client_args'] = file_client_args
+
+        update_intervals(config, args)
 
         # 4. save
         config.dump(config.filename)
@@ -234,10 +257,19 @@ if __name__ == '__main__':
     parser.add_argument('--ceph-path', type=str, default=None)
     parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
+        '--save-dir-prefix',
+        type=str,
+        default='work_dirs',
+        help='Default prefix of the work dirs in the bucket')
+    parser.add_argument(
         '--work-dir-prefix',
         type=str,
         default='work_dirs',
         help='Default prefix of the work dirs in the bucket')
+    parser.add_argument(
+        '--target-dir', type=str, default='configs_ceph', help='configs path')
+    parser.add_argument(
+        '--iters', type=int, default=None, help='set intervals')
     parser.add_argument(
         '--test-file', type=str, default=None, help='Dry-run on a test file.')
     parser.add_argument(
@@ -254,11 +286,11 @@ if __name__ == '__main__':
     if args.test_file is None:
 
         print('Copying config files to "config_ceph" ...')
-        shutil.copytree('configs', 'configs_ceph', dirs_exist_ok=True)
+        shutil.copytree('configs', args.target_dir, dirs_exist_ok=True)
 
         print('Updating ceph configuration ...')
         files = glob.glob(
-            osp.join('configs_ceph', '**', '*.py'), recursive=True)
+            osp.join(args.target_dir, '**', '*.py'), recursive=True)
         pbars = tqdm(files)
         res = []
         for f in pbars:
@@ -281,8 +313,8 @@ if __name__ == '__main__':
 
     else:
         shutil.copy(args.test_file,
-                    args.test_file.replace('configs', 'configs_ceph'))
+                    args.test_file.replace('configs', args.target_dir))
         update_ceph_config(
-            args.test_file.replace('configs', 'configs_ceph'),
+            args.test_file.replace('configs', args.target_dir),
             args,
             dry_run=True)

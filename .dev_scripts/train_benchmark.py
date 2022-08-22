@@ -94,6 +94,8 @@ def parse_args():
     parser.add_argument('--rerun-list', default=None)
     parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
+        '--amp', action='store_true', help='Whether to use amp.')
+    parser.add_argument(
         '--resume', action='store_true', help='Whether to resume checkpoint.')
     parser.add_argument(
         '--job-name', type=str, default=' ', help='Slurm job name prefix')
@@ -101,9 +103,9 @@ def parse_args():
         '--train-all', action='store_true', help='Train all model or not.')
     parser.add_argument('--port', type=int, default=29666, help='dist port')
     parser.add_argument(
-        '--use-ceph-config',
-        action='store_true',
-        default=False,
+        '--config-dir',
+        type=str,
+        default='configs_ceph',
         help='Use ceph configs or not.')
     parser.add_argument(
         '--models', nargs='+', type=str, help='Specify model names to run.')
@@ -165,8 +167,8 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
     if config.startswith('http'):
         config = config.replace(config_http_prefix_blob, './')
         config = config.replace(config_http_prefix_tree, './')
-    if args.use_ceph_config:
-        config = config.replace('configs', 'configs_ceph')
+
+    config = config.replace('configs', args.config_dir)
 
     config = Path(config)
     assert config.exists(), f'{fname}: {config} not found.'
@@ -204,26 +206,35 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
     else:
         quota_cfg = ''
 
-    launcher = 'none' if args.local else 'slurm'
+    launcher = 'none' if args.local or n_gpus == 0 else 'slurm'
     runner = 'python' if args.local else 'srun python'
 
     job_script = (f'#!/bin/bash\n'
                   f'#SBATCH --output {work_dir}/job.%j.out\n'
                   f'#SBATCH --partition={args.partition}\n'
                   f'#SBATCH --job-name {job_name}\n'
-                  f'#SBATCH --gres=gpu:{n_gpus}\n'
-                  f'{mail_cfg}{quota_cfg}'
-                  f'#SBATCH --ntasks-per-node={min(n_gpus, 8)}\n'
-                  f'#SBATCH --ntasks={n_gpus}\n'
-                  f'#SBATCH --cpus-per-task=5\n\n'
-                  f'export MASTER_PORT={port}\n'
-                  f'{runner} -u {script_name} {config} '
-                  f'--work-dir={work_dir} '
-                  f'--launcher={launcher}')
-    if args.resume:
-        job_script += '  --resume \n'
+                  f'{mail_cfg}{quota_cfg}')
+
+    if n_gpus > 0:
+        job_script += (f'#SBATCH --gres=gpu:{n_gpus}\n'
+                       f'#SBATCH --ntasks-per-node={min(n_gpus, 8)}\n'
+                       f'#SBATCH --ntasks={n_gpus}\n'
+                       f'#SBATCH --cpus-per-task=5\n\n')
     else:
-        job_script += '\n'
+        job_script += '\n\n' + 'export CUDA_VISIBLE_DEVICES=-1\n'
+
+    job_script += (f'export MASTER_PORT={port}\n'
+                   f'{runner} -u {script_name} {config} '
+                   f'--work-dir={work_dir} '
+                   f'--launcher={launcher}')
+
+    if args.resume:
+        job_script += '  --resume '
+
+    if args.amp:
+        job_script += ' --amp  '
+
+    job_script += '\n'
 
     with open(work_dir / 'job.sh', 'w') as f:
         f.write(job_script)

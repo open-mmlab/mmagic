@@ -79,15 +79,15 @@ test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
-    dict(
-        type='OptimWrapper',
-        optimizer=dict(
-            type='Adam',
-            lr=5e-5,
-            betas=(0.9, 0.99),
-            weight_decay=1e-4,
-        ),
-    ))
+    constructor='DefaultOptimWrapperConstructor',
+    type='OptimWrapper',
+    optimizer=dict(
+        type='Adam',
+        lr=5e-5,
+        betas=(0.9, 0.99),
+        weight_decay=1e-4,
+    ),
+)
 
 # learning policy
 param_scheduler = dict(

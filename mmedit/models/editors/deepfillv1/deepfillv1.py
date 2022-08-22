@@ -307,16 +307,17 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
             set_requires_grad(self.disc, True)
             fake_data = (stage2_fake_img.detach(), stage2_fake_local.detach())
             real_data = (gt_img, gt_local)
+
             disc_losses = self.forward_train_d(fake_data, False, is_disc=True)
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
             optim_wrapper['disc'].zero_grad()
-            loss_disc.backward()
+            optim_wrapper['disc'].backward(loss_disc)
 
             disc_losses = self.forward_train_d(real_data, True, is_disc=True)
             loss_disc, log_vars_d = self.parse_losses(disc_losses)
             log_vars.update(log_vars_d)
-            loss_disc.backward()
+            optim_wrapper['disc'].backward(loss_disc)
 
             if self.with_gp_loss:
                 if hasattr(self.disc, 'module'):
@@ -335,7 +336,7 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
                         loss_gp_global=loss_gp_global,
                         loss_gp_local=loss_gp_local))
                 log_vars.update(log_vars_d)
-                loss_disc.backward()
+                optim_wrapper['disc'].backward(loss_disc)
 
             optim_wrapper['disc'].step()
 
@@ -374,7 +375,7 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
             two_stage_losses)
         log_vars.update(log_vars_two_stage)
         optim_wrapper['generator'].zero_grad()
-        loss_two_stage.backward()
+        optim_wrapper['generator'].backward(loss_two_stage)
         optim_wrapper['generator'].step()
 
         results['fake_gt_local'] = fake_gt_local.cpu()

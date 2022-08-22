@@ -1,6 +1,6 @@
 _base_ = '../_base_/models/base_edvr.py'
 
-experiment_name = 'edvrm_wotsa_reds_600k-8xb8'
+experiment_name = 'edvrm_wotsa_600k-8xb4_reds'
 save_dir = './work_dirs'
 work_dir = f'./work_dirs/{experiment_name}'
 
@@ -30,10 +30,10 @@ model = dict(
 
 # optimizer
 optim_wrapper = dict(
-    dict(
-        type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=4e-4, betas=(0.9, 0.999)),
-    ))
+    constructor='DefaultOptimWrapperConstructor',
+    type='OptimWrapper',
+    optimizer=dict(type='Adam', lr=4e-4, betas=(0.9, 0.999)),
+)
 
 # learning policy
 lr_config = dict(

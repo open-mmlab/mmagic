@@ -107,7 +107,7 @@ class PConvInpaintor(OneStageInpaintor):
         loss_g_, log_vars_g = self.parse_losses(g_losses)
         log_vars.update(log_vars_g)
         optim_wrapper.zero_grad()
-        loss_g_.backward()
+        optim_wrapper.backward(loss_g_)
         optim_wrapper.step()
 
         return log_vars

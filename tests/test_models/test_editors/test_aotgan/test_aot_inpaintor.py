@@ -3,6 +3,7 @@ from os.path import dirname, join
 
 import torch
 from mmcv import Config
+from mmengine.optim import OptimWrapper
 
 from mmedit.models import AOTEncoderDecoder
 from mmedit.registry import MODELS
@@ -23,7 +24,7 @@ def test_aot_inpaintor():
         inpaintor.generator.parameters(), lr=0.0001, betas=(0.0, 0.9))
     optim_d = torch.optim.Adam(
         inpaintor.disc.parameters(), lr=0.0001, betas=(0.0, 0.9))
-    optims = dict(generator=optim_g, disc=optim_d)
+    optims = dict(generator=OptimWrapper(optim_g), disc=OptimWrapper(optim_d))
 
     # test attributes
     assert inpaintor.__class__.__name__ == 'AOTInpaintor'

@@ -3,6 +3,7 @@ from os import path as osp
 
 import torch
 from mmengine import Config
+from mmengine.optim import OptimWrapper
 
 from mmedit.models.editors import (DeepFillEncoderDecoder, DeepFillRefiner,
                                    GLEncoderDecoder)
@@ -75,7 +76,7 @@ def test_deepfillv1_inpaintor():
     # prepare model and optimizer
     optim_g = torch.optim.Adam(deepfillv1.generator.parameters(), lr=0.0001)
     optim_d = torch.optim.Adam(deepfillv1.disc.parameters(), lr=0.0001)
-    optims = dict(generator=optim_g, disc=optim_d)
+    optims = dict(generator=OptimWrapper(optim_g), disc=OptimWrapper(optim_d))
 
     # check train_step with standard deepfillv1 model
     for i in range(5):

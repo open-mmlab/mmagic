@@ -91,6 +91,7 @@ class LIIFNet(BaseModule):
         """
 
         if self.imnet is None:
+            coord = coord.type(feature.type())
             result = F.grid_sample(
                 feature,
                 coord.flip(-1).unsqueeze(1),
@@ -129,10 +130,13 @@ class LIIFNet(BaseModule):
                 coord_[:, :, 0] += vx * radius_x + eps_shift
                 coord_[:, :, 1] += vy * radius_y + eps_shift
                 coord_.clamp_(-1 + 1e-6, 1 - 1e-6)
+
+                coord_ = coord_.type(feature.type())
                 query_feat = F.grid_sample(
                     feature, coord_.flip(-1).unsqueeze(1),
                     mode='nearest', align_corners=False)[:, :, 0, :] \
                     .permute(0, 2, 1)
+
                 query_coord = F.grid_sample(
                     feat_coord, coord_.flip(-1).unsqueeze(1),
                     mode='nearest', align_corners=False)[:, :, 0, :] \
