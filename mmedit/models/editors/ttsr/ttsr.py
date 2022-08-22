@@ -187,11 +187,9 @@ class TTSR(SRGAN):
         g_optim_wrapper = optim_wrapper['generator']
         e_optim_wrapper = optim_wrapper['extractor']
 
-        with g_optim_wrapper.optim_context(
-                self) and e_optim_wrapper.optim_context(self):
-            losses_g = self.g_step(batch_outputs, batch_gt_data)
-
+        losses_g = self.g_step(batch_outputs, batch_gt_data)
         parsed_losses_g, log_vars_g = self.parse_losses(losses_g)
+
         if g_optim_wrapper.should_update():
             g_optim_wrapper.backward(parsed_losses_g)
             g_optim_wrapper.step()

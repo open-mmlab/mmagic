@@ -137,6 +137,7 @@ class LIIFNet(BaseModule):
                     mode='nearest', align_corners=False)[:, :, 0, :] \
                     .permute(0, 2, 1)
 
+                feat_coord = feat_coord.type(coord_.type())
                 query_coord = F.grid_sample(
                     feat_coord, coord_.flip(-1).unsqueeze(1),
                     mode='nearest', align_corners=False)[:, :, 0, :] \
