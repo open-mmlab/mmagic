@@ -21,14 +21,14 @@ Recent works based on deep learning and facial priors have succeeded in super-re
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 
-In the log data of `dic_gan_x8c48b6_g4_150k_CelebAHQ`, DICGAN is verified on the first 9 pictures of the test set of CelebA-HQ, so `PSNR/SSIM` shown in the follow table is different from the log data.
+In the log data of `dic_gan_x8c48b6_g4_150k_CelebAHQ`, DICGAN is verified on the first 9 pictures of the test set of CelebA-HQ, so `PSNR` and `SSIM` shown in the follow table is different from the log data.
 
 `GPU Info`: GPU information during training.
 
-|                                         Method                                          | scale |    CelebA-HQ     |      GPU Info       |                                                                                                                      Download                                                                                                                       |
-| :-------------------------------------------------------------------------------------: | :---: | :--------------: | :-----------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|     [dic_x8c48b6_g4_150k_CelebAHQ](/configs/dic/dic_x8c48b6_150k-4xb2_celeba-hq.py)     |  x8   | 25.2319 / 0.7422 | 4 (Tesla PG503-216) |     [model](https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.log.json)     |
-| [dic_gan_x8c48b6_g4_500k_CelebAHQ](/configs/dic/dic_gan-x8c48b6_500k-4xb2_celeba-hq.py) |  x8   | 23.6241 / 0.6721 | 4 (Tesla PG503-216) | [model](https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.log.json) |
+|                                         Method                                          | scale |  PSNR   |  SSIM  |      GPU Info       |                                                                                                                      Download                                                                                                                       |
+| :-------------------------------------------------------------------------------------: | :---: | :-----: | :----: | :-----------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|     [dic_x8c48b6_g4_150k_CelebAHQ](/configs/dic/dic_x8c48b6_150k-4xb2_celeba-hq.py)     |  x8   | 25.2319 | 0.7422 | 4 (Tesla PG503-216) |     [model](https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.log.json)     |
+| [dic_gan_x8c48b6_g4_500k_CelebAHQ](/configs/dic/dic_gan-x8c48b6_500k-4xb2_celeba-hq.py) |  x8   | 23.6241 | 0.6721 | 4 (Tesla PG503-216) | [model](https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.log.json) |
 
 ## Citation
 
