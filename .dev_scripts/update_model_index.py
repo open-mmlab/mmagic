@@ -14,7 +14,7 @@ import sys
 import warnings
 from functools import reduce
 
-import mmcv
+import mmengine
 
 MMEditing_ROOT = osp.dirname(osp.dirname(osp.dirname(__file__)))
 
@@ -35,7 +35,7 @@ def dump_yaml_and_check_difference(obj, file):
         Bool: If the target YAML file is different from the original.
     """
 
-    str_dump = mmcv.dump(
+    str_dump = mmengine.dump(
         obj, None, file_format='yaml', sort_keys=True,
         line_break='\n')  # force use LF
 
