@@ -2,7 +2,7 @@ _base_ = [
     '../_base_/default_runtime.py', '../_base_/datasets/sisr_x4_test_config.py'
 ]
 
-experiment_name = 'msrresnet_x4c64b16_1000k-1xb16_div2k'
+experiment_name = 'msrresnet_x4c64b16_1xb16-1000k_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

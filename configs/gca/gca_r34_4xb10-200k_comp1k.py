@@ -2,7 +2,7 @@ _base_ = [
     '../_base_/datasets/comp1k.py', '../_base_/matting_default_runtime.py'
 ]
 
-experiment_name = 'gca_r34_200k-4xb10_comp1k'
+experiment_name = 'gca_r34_4xb10-200k_comp1k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

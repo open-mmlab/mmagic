@@ -1,6 +1,6 @@
-_base_ = './realesrnet_c64b23g32_lr2e-4-1000k-4xb12_df2k-ost.py'
+_base_ = './realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py'
 
-experiment_name = 'realesrgan_c64b23g32_lr1e-4-400k-4xb12_df2k-ost'
+experiment_name = 'realesrgan_c64b23g32_4xb12-lr1e-4-400k_df2k-ost'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

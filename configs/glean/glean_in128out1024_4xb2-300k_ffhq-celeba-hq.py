@@ -1,6 +1,6 @@
 _base_ = '../_base_/models/base_glean.py'
 
-experiment_name = 'glean_in128out1024_300k-4xb2_ffhq-celeba-hq'
+experiment_name = 'glean_in128out1024_4xb2-300k_ffhq-celeba-hq'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs'
 

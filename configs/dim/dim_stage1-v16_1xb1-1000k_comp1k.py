@@ -3,7 +3,7 @@ _base_ = [
 ]
 
 save_dir = './work_dirs/'
-experiment_name = 'dim_stage1-v16_1000k-1xb1_comp1k'
+experiment_name = 'dim_stage1-v16_1xb1-1000k_comp1k'
 
 # model settings
 model = dict(

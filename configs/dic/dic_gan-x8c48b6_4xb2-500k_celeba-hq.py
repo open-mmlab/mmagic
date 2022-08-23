@@ -1,6 +1,6 @@
-_base_ = './dic_x8c48b6_150k-4xb2_celeba-hq.py'
+_base_ = './dic_x8c48b6_4xb2-150k_celeba-hq.py'
 
-experiment_name = 'dic_gan-x8c48b6_500k-4xb2_celeba-hq'
+experiment_name = 'dic_gan-x8c48b6_4xb2-500k_celeba-hq'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs'
 

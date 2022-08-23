@@ -3,7 +3,7 @@ _base_ = [
     '../_base_/datasets/liif_test_config.py'
 ]
 
-experiment_name = 'liif-edsr-norm_c64b16_1000k-1xb16_div2k'
+experiment_name = 'liif-edsr-norm_c64b16_1xb16-1000k_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

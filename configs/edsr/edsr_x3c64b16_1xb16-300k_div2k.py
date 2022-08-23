@@ -2,7 +2,7 @@ _base_ = [
     '../_base_/default_runtime.py', '../_base_/datasets/sisr_x3_test_config.py'
 ]
 
-experiment_name = 'edsr_x3c64b16_300k-1xb16_div2k'
+experiment_name = 'edsr_x3c64b16_1xb16-300k_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

@@ -1,6 +1,6 @@
-_base_ = ['./indexnet_mobv2_78k-1xb16_comp1k.py']
+_base_ = ['./indexnet_mobv2_1xb16-78k_comp1k.py']
 
-experiment_name = 'indexnet_mobv2-dimaug_78k-1xb16_comp1k'
+experiment_name = 'indexnet_mobv2-dimaug_1xb16-78k_comp1k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

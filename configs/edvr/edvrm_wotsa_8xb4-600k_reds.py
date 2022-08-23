@@ -1,6 +1,6 @@
 _base_ = '../_base_/models/base_edvr.py'
 
-experiment_name = 'edvrm_wotsa_600k-8xb4_reds'
+experiment_name = 'edvrm_wotsa_8xb4-600k_reds'
 save_dir = './work_dirs'
 work_dir = f'./work_dirs/{experiment_name}'
 

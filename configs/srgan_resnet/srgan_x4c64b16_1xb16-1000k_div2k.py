@@ -1,6 +1,6 @@
-_base_ = './msrresnet_x4c64b16_1000k-1xb16_div2k.py'
+_base_ = './msrresnet_x4c64b16_1xb16-1000k_div2k.py'
 
-experiment_name = 'srgan_x4c64b16_1000k-1xb16_div2k'
+experiment_name = 'srgan_x4c64b16_1xb16-1000k_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
 
 scale = 4

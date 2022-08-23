@@ -1,6 +1,6 @@
 _base_ = '../basicvsr/basicvsr_2xb4_reds4.py'
 
-experiment_name = 'basicvsr-pp_c64n7_600k-8xb1_reds4'
+experiment_name = 'basicvsr-pp_c64n7_8xb1-600k_reds4'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs'
 
