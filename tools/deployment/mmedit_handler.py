@@ -9,7 +9,7 @@ import torch
 from ts.torch_handler.base_handler import BaseHandler
 
 from mmedit.apis import init_model, restoration_inference
-from mmedit.core import tensor2img
+from mmedit.engine import tensor2img
 
 
 class MMEditHandler(BaseHandler):

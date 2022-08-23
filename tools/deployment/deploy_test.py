@@ -5,14 +5,14 @@ from typing import Any
 
 import mmcv
 import torch
-from deploy_test import ONNXRuntimeEditing
+from export import ONNXRuntimeEditing
 from mmcv import Config, DictAction
 from mmcv.parallel import MMDataParallel
 from torch import nn
 
 from mmedit.apis import single_gpu_test
 from mmedit.datasets import build_dataloader, build_dataset
-from mmedit.models import BasicRestorer
+from mmedit.models import BaseEditModel
 from mmedit.registry import MODELS
 
 
@@ -78,7 +78,7 @@ class TensorRTEditing(nn.Module):
         super().__init__()
         base_model = MODELS.build(
             cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
-        if isinstance(base_model, BasicRestorer):
+        if isinstance(base_model, BaseEditModel):
             WrapperClass = TensorRTRestorer
         self.wrapper = WrapperClass(base_model, trt_file, device_id)
 

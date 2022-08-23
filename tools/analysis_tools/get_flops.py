@@ -1,10 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 
+import torch
 from mmcv import Config
-from mmengine.model.utils import get_model_complexity_info
 
 from mmedit.registry import MODELS
+from mmedit.utils import register_all_modules
+
+try:
+    from mmcv.cnn import get_model_complexity_info
+except ImportError:
+    raise ImportError('Please upgrade mmcv to >0.6.2')
 
 
 def parse_args():
@@ -33,17 +39,22 @@ def main():
     else:
         raise ValueError('invalid input shape')
 
+    register_all_modules()
+
     cfg = Config.fromfile(args.config)
-    model = MODELS.build(
-        cfg.model, train_cfg=cfg.train_cfg, test_cfg=cfg.test_cfg).cuda()
+    model = MODELS.build(cfg.model)
+    if torch.cuda.is_available():
+        model.cuda()
     model.eval()
 
     if hasattr(model, 'forward_dummy'):
         model.forward = model.forward_dummy
-    else:
-        raise NotImplementedError(
-            'FLOPs counter is currently not currently supported '
-            f'with {model.__class__.__name__}')
+    elif hasattr(model, 'forward_tensor'):
+        model.forward = model.forward_tensor
+    # else:
+    #     raise NotImplementedError(
+    #         'FLOPs counter is currently not currently supported '
+    #         f'with {model.__class__.__name__}')
 
     flops, params = get_model_complexity_info(model, input_shape)
 
