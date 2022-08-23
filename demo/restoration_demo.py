@@ -6,7 +6,7 @@ import mmcv
 import torch
 
 from mmedit.apis import init_model, restoration_inference
-from mmedit.core import tensor2img
+from mmedit.engine import tensor2img
 from mmedit.utils import modify_args
 
 

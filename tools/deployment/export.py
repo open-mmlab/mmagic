@@ -7,7 +7,7 @@ import onnxruntime as ort
 import torch
 from torch import nn
 
-from mmedit.models import BaseMattor, BasicRestorer
+from mmedit.models import BaseEditModel, BaseMattor
 from mmedit.registry import MODELS
 
 
@@ -126,7 +126,7 @@ class ONNXRuntimeEditing(nn.Module):
 
         if isinstance(base_model, BaseMattor):
             WrapperClass = ONNXRuntimeMattor
-        elif isinstance(base_model, BasicRestorer):
+        elif isinstance(base_model, BaseEditModel):
             WrapperClass = ONNXRuntimeRestorer
         self.wrapper = WrapperClass(self.sess, self.io_binding,
                                     self.output_names, base_model)

@@ -1,6 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
+import glob
+import os.path as osp
+import re
 import warnings
+from functools import reduce
 
 import cv2
 import mmcv
@@ -12,12 +16,15 @@ from mmcv.onnx import register_extra_symbolics
 from mmcv.runner import load_checkpoint
 from mmengine.dataset import Compose
 
+from mmedit.apis import delete_cfg
 from mmedit.registry import MODELS
+from mmedit.utils import register_all_modules
 
 
 def pytorch2onnx(model,
                  input,
                  model_type,
+                 device,
                  opset_version=11,
                  show=False,
                  output_file='tmp.onnx',
@@ -36,15 +43,29 @@ def pytorch2onnx(model,
         verify (bool): Whether compare the outputs between Pytorch and ONNX.
             Default: False.
     """
-    model.cpu().eval()
+    model.to(device)
+    model.eval()
+
+    if hasattr(model, 'forward_dummy'):
+        model.forward = model.forward_dummy
+    elif hasattr(model, 'forward_tensor'):
+        model.forward = model.forward_tensor
 
     if model_type == 'mattor':
-        merged = input['merged'].unsqueeze(0)
-        trimap = input['trimap'].unsqueeze(0)
-        data = torch.cat((merged, trimap), 1)
-    elif model_type == 'restorer':
-        data = input['lq'].unsqueeze(0)
-    model.forward = model.forward_dummy
+        merged = input['data_sample'].trimap.data.unsqueeze(0)
+        trimap = input['data_sample'].gt_merged.data.unsqueeze(0)
+        data = torch.cat((merged, trimap), dim=1).float()
+        data = model.resize_inputs(data)
+    elif model_type == 'image_restorer':
+        data = input['inputs'].unsqueeze(0)
+    elif model_type == 'inpainting':
+        masks = input['data_sample'].mask.data.unsqueeze(0)
+        img = input['inputs'].unsqueeze(0)
+        data = torch.cat((img, masks), dim=1)
+    elif model_type == 'video_restorer':
+        data = input['inputs'].unsqueeze(0)
+    data = data.to(device)
+
     # pytorch has some bug in pytorch1.3, we have to fix it
     # by replacing these existing op
     register_extra_symbolics(opset_version)
@@ -93,11 +114,11 @@ def pytorch2onnx(model,
             pytorch_result = model(data)
         if isinstance(pytorch_result, (tuple, list)):
             pytorch_result = pytorch_result[0]
-        pytorch_result = pytorch_result.detach().numpy()
+        pytorch_result = pytorch_result.detach().cpu().numpy()
         # get onnx output
         sess = rt.InferenceSession(output_file)
         onnx_result = sess.run(None, {
-            'input': data.detach().numpy(),
+            'input': data.detach().cpu().numpy(),
         })
         # only concern pred_alpha value
         if isinstance(onnx_result, (tuple, list)):
@@ -127,12 +148,17 @@ def parse_args():
     parser.add_argument(
         'model_type',
         help='what kind of model the config belong to.',
-        choices=['inpainting', 'mattor', 'restorer', 'synthesizer'])
+        choices=['inpainting', 'mattor', 'image_restorer', 'video_restorer'])
     parser.add_argument('img_path', help='path to input image file')
     parser.add_argument(
         '--trimap-path',
         default=None,
         help='path to input trimap file, used in mattor model')
+    parser.add_argument(
+        '--mask-path',
+        default=None,
+        help='path to input mask file, used in inpainting model')
+    parser.add_argument('--device', type=int, default=0, help='CUDA device id')
     parser.add_argument('--show', action='store_true', help='show onnx graph')
     parser.add_argument('--output-file', type=str, default='tmp.onnx')
     parser.add_argument('--opset-version', type=int, default=11)
@@ -157,8 +183,14 @@ if __name__ == '__main__':
 
     assert args.opset_version == 11, 'MMEditing only support opset 11 now'
 
+    if args.device < 0 or not torch.cuda.is_available():
+        device = torch.device('cpu')
+    else:
+        device = torch.device('cuda', args.device)
+
     config = mmcv.Config.fromfile(args.config)
-    config.model.pretrained = None
+    delete_cfg(config, key='init_cfg')
+
     # ONNX does not support spectral norm
     if model_type == 'mattor':
         if hasattr(config.model.backbone.encoder, 'with_spectral_norm'):
@@ -166,32 +198,66 @@ if __name__ == '__main__':
             config.model.backbone.decoder.with_spectral_norm = False
         config.test_cfg.metrics = None
 
+    register_all_modules()
+
     # build the model
-    model = MODELS.build(config.model, test_cfg=config.test_cfg)
+    model = MODELS.build(config.model)
     checkpoint = load_checkpoint(model, args.checkpoint, map_location='cpu')
+
+    # select the data pipeline
+    if config.get('demo_pipeline', None):
+        test_pipeline = config.demo_pipeline
+    elif config.get('test_pipeline', None):
+        test_pipeline = config.test_pipeline
+    else:
+        test_pipeline = config.val_pipeline
 
     # remove alpha from test_pipeline
     if model_type == 'mattor':
         keys_to_remove = ['alpha', 'ori_alpha']
-    elif model_type == 'restorer':
+    elif model_type == 'image_restorer':
         keys_to_remove = ['gt', 'gt_path']
+    else:
+        keys_to_remove = []
     for key in keys_to_remove:
-        for pipeline in list(config.test_pipeline):
+        for pipeline in list(test_pipeline):
             if 'key' in pipeline and key == pipeline['key']:
-                config.test_pipeline.remove(pipeline)
+                test_pipeline.remove(pipeline)
             if 'keys' in pipeline and key in pipeline['keys']:
                 pipeline['keys'].remove(key)
                 if len(pipeline['keys']) == 0:
-                    config.test_pipeline.remove(pipeline)
+                    test_pipeline.remove(pipeline)
             if 'meta_keys' in pipeline and key in pipeline['meta_keys']:
                 pipeline['meta_keys'].remove(key)
-    # build the data pipeline
-    test_pipeline = Compose(config.test_pipeline)
+
     # prepare data
     if model_type == 'mattor':
         data = dict(merged_path=args.img_path, trimap_path=args.trimap_path)
-    elif model_type == 'restorer':
-        data = dict(lq_path=args.img_path)
+    elif model_type == 'image_restorer':
+        data = dict(img_path=args.img_path)
+    elif model_type == 'inpainting':
+        data = dict(gt_path=args.img_path, mask_path=args.mask_path)
+    elif model_type == 'video_restorer':
+        # the first element in the pipeline must be 'GenerateSegmentIndices'
+        if test_pipeline[0]['type'] != 'GenerateSegmentIndices':
+            raise TypeError('The first element in the pipeline must be '
+                            f'"GenerateSegmentIndices", but got '
+                            f'"{test_pipeline[0]["type"]}".')
+        # prepare data
+        sequence_length = len(glob.glob(osp.join(args.img_path, '*')))
+        img_dir_split = re.split(r'[\\/]', args.img_path)
+        if img_dir_split[0] == '':
+            img_dir_split[0] = '/'
+        key = img_dir_split[-1]
+        lq_folder = reduce(osp.join, img_dir_split[:-1])
+        data = dict(
+            img_path=lq_folder,
+            gt_path='',
+            key=key,
+            sequence_length=sequence_length)
+
+    # build the data pipeline
+    test_pipeline = Compose(test_pipeline)
     data = test_pipeline(data)
 
     # convert model to onnx file
@@ -199,6 +265,7 @@ if __name__ == '__main__':
         model,
         data,
         model_type,
+        device,
         opset_version=args.opset_version,
         show=args.show,
         output_file=args.output_file,
