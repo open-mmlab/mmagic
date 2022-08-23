@@ -113,9 +113,7 @@ def restoration_video_inference(model,
             result = []
             for i in range(0, data.size(1) - 2 * (window_size // 2)):
                 data_i = data[:, i:i + window_size].to(device)
-                result.append(
-                    model(batch_inputs=data_i,
-                          mode='tensor')[:, [2, 1, 0], :, :].cpu())
+                result.append(model(batch_inputs=data_i, mode='tensor').cpu())
             result = torch.stack(result, dim=1)
         else:  # recurrent framework
             if max_seq_len is None:
