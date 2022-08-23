@@ -13,7 +13,7 @@ def test_restoration_face_inference():
         device = torch.device('cpu')
 
     data_root = osp.join(osp.dirname(__file__), '../../')
-    config = data_root + 'configs/glean/glean_in128out1024_300k-4xb2_ffhq-celeba-hq.py'  # noqa
+    config = data_root + 'configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py'  # noqa
 
     checkpoint = 'https://download.openmmlab.com/mmediting/restorers/'\
         'glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth'
