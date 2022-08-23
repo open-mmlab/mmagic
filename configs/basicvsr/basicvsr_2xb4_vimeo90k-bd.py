@@ -31,14 +31,6 @@ val_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-test_pipeline = [
-    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='MirrorSequence', keys=['img']),
-    dict(type='ToTensor', keys=['img', 'gt']),
-    dict(type='PackEditInputs')
-]
-
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
@@ -83,27 +75,9 @@ val_dataloader = dict(
         fixed_seq_len=7,
         pipeline=val_pipeline))
 
-test_dataloader = dict(
-    num_workers=1,
-    batch_size=1,
-    persistent_workers=False,
-    sampler=dict(type='DefaultSampler', shuffle=False),
-    dataset=dict(
-        type='BasicFramesDataset',
-        metainfo=dict(dataset_type='vimeo90k_seq', task_name='vsr'),
-        data_root=f'{data_root}/vimeo90k',
-        data_prefix=dict(img='BDx4', gt='GT'),
-        ann_file='meta_info_Vimeo90K_test_GT.txt',
-        depth=2,
-        num_input_frames=7,
-        fixed_seq_len=7,
-        load_frames_list=dict(img=file_list, gt=['im4.png']),
-        pipeline=test_pipeline))
-
 val_evaluator = [
     dict(type='PSNR', convert_to='Y'),
     dict(type='SSIM', convert_to='Y'),
 ]
-test_evaluator = val_evaluator
 
 find_unused_parameters = True

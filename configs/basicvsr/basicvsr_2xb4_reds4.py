@@ -1,4 +1,7 @@
-_base_ = '../_base_/default_runtime.py'
+_base_ = [
+    '../_base_/default_runtime.py',
+    '../_base_/datasets/basicvsr_test_config.py'
+]
 
 experiment_name = 'basicvsr_2xb4_reds4'
 work_dir = f'./work_dirs/{experiment_name}'
@@ -91,18 +94,14 @@ val_dataloader = dict(
         fixed_seq_len=100,
         pipeline=val_pipeline))
 
-test_dataloader = val_dataloader
-
 val_evaluator = [
     dict(type='PSNR'),
     dict(type='SSIM'),
 ]
-test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=300_000, val_interval=5000)
 val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(

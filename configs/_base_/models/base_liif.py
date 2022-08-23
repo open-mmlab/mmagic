@@ -29,7 +29,7 @@ train_pipeline = [
     dict(type='GenerateCoordinateAndCell', sample_quantity=2304),
     dict(type='PackEditInputs')
 ]
-valid_pipeline = [
+val_pipeline = [
     dict(
         type='LoadImageFromFile',
         key='gt',
@@ -41,23 +41,24 @@ valid_pipeline = [
     dict(type='GenerateCoordinateAndCell', reshape_gt=False),
     dict(type='PackEditInputs')
 ]
-test_pipeline = [
-    dict(
-        type='LoadImageFromFile',
-        key='gt',
-        color_type='color',
-        channel_order='rgb',
-        imdecode_backend='cv2'),
-    dict(
-        type='LoadImageFromFile',
-        key='img',
-        color_type='color',
-        channel_order='rgb',
-        imdecode_backend='cv2'),
-    dict(type='ToTensor', keys=['img', 'gt']),
-    dict(type='GenerateCoordinateAndCell', scale=scale_test, reshape_gt=False),
-    dict(type='PackEditInputs')
-]
+# test_pipeline = [
+#     dict(
+#         type='LoadImageFromFile',
+#         key='gt',
+#         color_type='color',
+#         channel_order='rgb',
+#         imdecode_backend='cv2'),
+#     dict(
+#         type='LoadImageFromFile',
+#         key='img',
+#         color_type='color',
+#         channel_order='rgb',
+#         imdecode_backend='cv2'),
+#     dict(type='ToTensor', keys=['img', 'gt']),
+#     dict(type='GenerateCoordinateAndCell', scale=scale_test,
+#          reshape_gt=False),
+#     dict(type='PackEditInputs')
+# ]
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
@@ -86,21 +87,17 @@ val_dataloader = dict(
         metainfo=dict(dataset_type='set5', task_name='sisr'),
         data_root=data_root + '/Set5',
         data_prefix=dict(img='LRbicx4', gt='GTmod12'),
-        pipeline=test_pipeline))
-
-test_dataloader = val_dataloader
+        pipeline=val_pipeline))
 
 val_evaluator = [
     dict(type='MAE'),
     dict(type='PSNR', crop_border=scale_max),
     dict(type='SSIM', crop_border=scale_max),
 ]
-test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_000_000, val_interval=3000)
 val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(

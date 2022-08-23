@@ -183,13 +183,6 @@ val_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-test_pipeline = [
-    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['img']),
-    dict(type='ToTensor', keys=['img']),
-    dict(type='PackEditInputs')
-]
-
 # dataset settings
 dataset_type = 'BasicImageDataset'
 
@@ -218,17 +211,7 @@ val_dataloader = dict(
         data_prefix=dict(gt='HR', img='bicLRx4'),
         pipeline=val_pipeline))
 
-test_dataloader = dict(
-    num_workers=4,
-    persistent_workers=False,
-    drop_last=False,
-    sampler=dict(type='DefaultSampler', shuffle=False),
-    dataset=dict(
-        type=dataset_type,
-        metainfo=dict(dataset_type='realsrset', task_name='real_sr'),
-        data_root='data/realsrset',
-        data_prefix=dict(gt='', img=''),
-        pipeline=test_pipeline))
+test_dataloader = val_dataloader
 
 val_evaluator = [
     dict(type='MAE'),

@@ -1,21 +1,21 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
-from typing import List, Optional, Sequence
+from typing import Optional
 
 import cv2
 import mmcv
 import numpy as np
-from mmengine.evaluator import BaseMetric
 from scipy.ndimage import convolve
 from scipy.special import gamma
 
 from mmedit.datasets.transforms import MATLABLikeResize
 from mmedit.registry import METRICS
-from .metrics_utils import average, obtain_data, reorder_image, to_numpy
+from .base_sample_wise_metric import BaseSampleWiseMetric
+from .metrics_utils import reorder_image, to_numpy
 
 
 @METRICS.register_module()
-class NIQE(BaseMetric):
+class NIQE(BaseSampleWiseMetric):
     """Calculate NIQE (Natural Image Quality Evaluator) metric.
 
     Ref: Making a "Completely Blind" Image Quality Analyzer.
@@ -51,7 +51,7 @@ class NIQE(BaseMetric):
         - NIQE (float): Natural Image Quality Evaluator
     """
 
-    default_prefix = 'NIQE'
+    metric = 'NIQE'
 
     def __init__(self,
                  key: str = 'pred_img',
@@ -75,8 +75,7 @@ class NIQE(BaseMetric):
         self.input_order = input_order
         self.convert_to = convert_to
 
-    def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
+    def process_image(self, gt, pred, mask) -> None:
         """Process one batch of data and predictions
 
         Args:
@@ -86,35 +85,12 @@ class NIQE(BaseMetric):
                 the model.
         """
 
-        for data, prediction in zip(data_batch, predictions):
-
-            if self.is_predicted:
-                img = obtain_data(prediction, self.key)
-            else:
-                img = obtain_data(data, self.key)
-
-            result = niqe(
-                img=img,
-                crop_border=self.crop_border,
-                input_order=self.input_order,
-                convert_to=self.convert_to)
-
-            self.results.append({self.prefix: result})
-
-    def compute_metrics(self, results: List):
-        """Compute the metrics from processed results.
-
-        Args:
-            results (dict): The processed results of each batch.
-
-        Returns:
-            Dict: The computed metrics. The keys are the names of the metrics,
-            and the values are corresponding results.
-        """
-
-        result = average(results, self.prefix)
-
-        return {self.prefix: result}
+        result = niqe(
+            img=pred,
+            crop_border=self.crop_border,
+            input_order=self.input_order,
+            convert_to=self.convert_to)
+        return result
 
 
 def estimate_aggd_param(block):

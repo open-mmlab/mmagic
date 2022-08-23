@@ -15,9 +15,16 @@ def test_niqe():
     data_batch = [dict(gt_img=img)]
     predictions = [dict(pred_img=img)]
 
+    data_batch = [
+        dict(
+            data_sample=dict(
+                gt_img=torch.from_numpy(img), gt_channel_order='bgr'))
+    ]
     data_batch.append(
-        {k: torch.from_numpy(deepcopy(v))
-         for (k, v) in data_batch[0].items()})
+        dict(
+            data_sample=dict(
+                gt_img=torch.from_numpy(img), img_channel_order='bgr')))
+
     predictions.append({
         k: torch.from_numpy(deepcopy(v))
         for (k, v) in predictions[0].items()

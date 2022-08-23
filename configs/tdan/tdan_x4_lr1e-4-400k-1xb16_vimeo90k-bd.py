@@ -1,4 +1,6 @@
-_base_ = '../_base_/default_runtime.py'
+_base_ = [
+    '../_base_/default_runtime.py', '../_base_/datasets/tdan_test_config.py'
+]
 
 experiment_name = 'tdan_x4_lr1e-4-400k-1xb16_vimeo90k-bd'
 work_dir = f'./work_dirs/{experiment_name}'
@@ -26,13 +28,11 @@ model = dict(
         std=[255, 255, 255],
         input_view=(1, -1, 1, 1),
         output_view=(-1, 1, 1)))
-# test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=8, convert_to='y')
 
 val_evaluator = [
     dict(type='PSNR', crop_border=8, convert_to='Y'),
     dict(type='SSIM', crop_border=8, convert_to='Y'),
 ]
-test_evaluator = val_evaluator
 
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
@@ -102,21 +102,6 @@ val_dataloader = dict(
         num_input_frames=5,
         pipeline=val_pipeline))
 
-test_dataloader = dict(
-    num_workers=1,
-    batch_size=1,
-    persistent_workers=False,
-    sampler=dict(type='DefaultSampler', shuffle=False),
-    dataset=dict(
-        type='BasicFramesDataset',
-        metainfo=dict(dataset_type='spmcs', task_name='vsr'),
-        data_root=f'{data_root}/SPMCS',
-        data_prefix=dict(img='BDx4', gt='GT'),
-        ann_file='meta_info_SPMCS_GT.txt',
-        depth=2,
-        num_input_frames=5,
-        pipeline=val_pipeline))
-
 # optimizer
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
@@ -127,7 +112,6 @@ optim_wrapper = dict(
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=800_000, val_interval=50000)
 val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
 
 # No learning policy
 

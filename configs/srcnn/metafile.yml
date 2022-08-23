@@ -16,14 +16,11 @@ Models:
   Results:
   - Dataset: DIV2K
     Metrics:
-      DIV2K:
-        PSNR: 27.746
-        SSIM: 0.7854
-      Set14:
-        PSNR: 25.6486
-        SSIM: 0.7014
-      Set5:
-        PSNR: 28.4316
-        SSIM: 0.8099
+      DIV2K PSNR: 27.746
+      DIV2K SSIM: 0.7854
+      Set14 PSNR: 25.6486
+      Set14 SSIM: 0.7014
+      Set5 PSNR: 28.4316
+      Set5 SSIM: 0.8099
     Task: Srcnn
   Weights: https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth
