@@ -84,7 +84,7 @@ class SAD(BaseMetric):
         super().__init__(**kwargs)
 
     def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
+                data_samples: Sequence[dict]) -> None:
         """Process one batch of data and predictions
 
         Args:
@@ -93,7 +93,7 @@ class SAD(BaseMetric):
             predictions (Sequence[dict]): A batch of outputs from
                 the model.
         """
-        for data, prediction in zip(data_batch, predictions):
+        for data, prediction in zip(data_batch, data_samples):
             pred_alpha, gt_alpha, _ = _fetch_data_and_check(data, prediction)
 
             # divide by 1000 to reduce the magnitude of the result
