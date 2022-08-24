@@ -52,7 +52,7 @@ class BaseEditModel(BaseModel):
         self.pixel_loss = MODELS.build(pixel_loss)
 
     def forward(self,
-                batch_inputs: torch.Tensor,
+                inputs: torch.Tensor,
                 data_samples: Optional[List[EditDataSample]] = None,
                 mode: str = 'tensor',
                 **kwargs):
@@ -62,7 +62,7 @@ class BaseEditModel(BaseModel):
         ``forward`` method of BaseModel is an abstract method, its subclasses
         must implement this method.
 
-        Accepts ``batch_inputs`` and ``data_samples`` processed by
+        Accepts ``inputs`` and ``data_samples`` processed by
         :attr:`data_preprocessor`, and returns results according to mode
         arguments.
 
@@ -77,7 +77,7 @@ class BaseEditModel(BaseModel):
         loss.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -105,20 +105,20 @@ class BaseEditModel(BaseModel):
         """
 
         if mode == 'tensor':
-            return self.forward_tensor(batch_inputs, data_samples, **kwargs)
+            return self.forward_tensor(inputs, data_samples, **kwargs)
 
         elif mode == 'predict':
-            return self.forward_inference(batch_inputs, data_samples, **kwargs)
+            return self.forward_inference(inputs, data_samples, **kwargs)
 
         elif mode == 'loss':
-            return self.forward_train(batch_inputs, data_samples, **kwargs)
+            return self.forward_train(inputs, data_samples, **kwargs)
 
-    def forward_tensor(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_tensor(self, inputs, data_samples=None, **kwargs):
         """Forward tensor.
             Returns result of simple forward.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -127,16 +127,16 @@ class BaseEditModel(BaseModel):
             Tensor: result of simple forward.
         """
 
-        feats = self.generator(batch_inputs, **kwargs)
+        feats = self.generator(inputs, **kwargs)
 
         return feats
 
-    def forward_inference(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_inference(self, inputs, data_samples=None, **kwargs):
         """Forward inference.
             Returns predictions of validation, testing, and simple inference.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -145,7 +145,7 @@ class BaseEditModel(BaseModel):
             List[EditDataSample]: predictions.
         """
 
-        feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
+        feats = self.forward_tensor(inputs, data_samples, **kwargs)
         feats = self.data_preprocessor.destructor(feats)
         predictions = []
         for idx in range(feats.shape[0]):
@@ -156,12 +156,12 @@ class BaseEditModel(BaseModel):
 
         return predictions
 
-    def forward_train(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_train(self, inputs, data_samples=None, **kwargs):
         """Forward training.
             Returns dict of losses of training.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -170,7 +170,7 @@ class BaseEditModel(BaseModel):
             dict: Dict of losses.
         """
 
-        feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
+        feats = self.forward_tensor(inputs, data_samples, **kwargs)
         gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
         batch_gt_data = torch.stack(gt_imgs)
 
