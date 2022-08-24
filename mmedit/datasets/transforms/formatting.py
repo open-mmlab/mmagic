@@ -182,7 +182,7 @@ class PackEditInputs(BaseTransform):
 
         data_sample.set_metainfo(metainfo=metainfo)
 
-        packed_results['data_sample'] = data_sample
+        packed_results['data_samples'] = data_sample
 
         return packed_results
 
