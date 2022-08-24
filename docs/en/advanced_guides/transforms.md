@@ -10,70 +10,41 @@ A pipeline consists of a sequence of operations. Each operation takes a dict as 
 
 The operations are categorized into data loading, pre-processing, and formatting
 
-Here is a pipeline example for BasicVSR++.
+Here is a pipeline example for BasicVSR.
 
 ```python
 train_pipeline = [
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='lq',
-        channel_order='rgb'),
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='gt',
-        channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
+    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='PairedRandomCrop', gt_patch_size=256),
     dict(
-        type='Flip', keys=['lq', 'gt'], flip_ratio=0.5,
+        type='Flip',
+        keys=['img', 'gt'],
+        flip_ratio=0.5,
         direction='horizontal'),
-    dict(type='Flip', keys=['lq', 'gt'], flip_ratio=0.5, direction='vertical'),
-    dict(type='RandomTransposeHW', keys=['lq', 'gt'], transpose_ratio=0.5),
-    dict(type='MirrorSequence', keys=['lq', 'gt']),
-    dict(type='FramesToTensor', keys=['lq', 'gt']),
-    dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'gt_path'])
+    dict(
+        type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
+    dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
+    dict(type='MirrorSequence', keys=['img', 'gt']),
+    dict(type='ToTensor', keys=['img', 'gt']),
+    dict(type='PackEditInputs')
 ]
 
 val_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='lq',
-        channel_order='rgb'),
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='gt',
-        channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
-    dict(type='FramesToTensor', keys=['lq', 'gt']),
-    dict(
-        type='Collect',
-        keys=['lq', 'gt'],
-        meta_keys=['lq_path', 'gt_path', 'key'])
+    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='ToTensor', keys=['img', 'gt']),
+    dict(type='PackEditInputs')
 ]
 
 test_pipeline = [
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='lq',
-        channel_order='rgb'),
-    dict(
-        type='LoadImageFromFileList',
-        io_backend='disk',
-        key='gt',
-        channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['lq', 'gt']),
-    dict(type='MirrorSequence', keys=['lq']),
-    dict(type='FramesToTensor', keys=['lq', 'gt']),
-    dict(
-        type='Collect',
-        keys=['lq', 'gt'],
-        meta_keys=['lq_path', 'gt_path', 'key'])
+    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='MirrorSequence', keys=['img']),
+    dict(type='ToTensor', keys=['img', 'gt']),
+    dict(type='PackEditInputs')
 ]
 ```
 
@@ -84,10 +55,6 @@ For each operation, we list the related dict fields that are added/updated/remov
 `LoadImageFromFile`
 
 - add: img, img_path, img_ori_shape, \*ori_img
-
-`LoadImageFromFileList`
-
-- add: imgs, img_paths, img_ori_shapes, \*ori_imgs
 
 `RandomLoadResizeBg`
 
@@ -100,10 +67,6 @@ For each operation, we list the related dict fields that are added/updated/remov
 `GetSpatialDiscountMask`
 
 - add: discount_mask
-
-`LoadPairedImageFromFile`
-
-- add: img, img_a, img_b, img_path, img_a_path, img_b_path, img_ori_shape, img_a_ori_shape, img_b_ori_shape, \*ori_img, \*ori_img_a, \*ori_img_b
 
 ### Pre-processing
 
@@ -125,11 +88,6 @@ For each operation, we list the related dict fields that are added/updated/remov
 `Flip`
 
 - add: flip, flip_direction
-- update: specified by `keys`
-
-`Pad`
-
-- add: pad
 - update: specified by `keys`
 
 `RandomAffine`
@@ -210,10 +168,6 @@ For each operation, we list the related dict fields that are added/updated/remov
 
 - add: specified by `dst_key`
 
-`Quantize`
-
-- update: specified by `keys`
-
 `UnsharpMasking`
 
 - add: img_unsharp
@@ -264,7 +218,7 @@ For each operation, we list the related dict fields that are added/updated/remov
 
 - add: masked_img
 
-`GenerateHeatmap`
+`GenerateFacialHeatmap`
 
 - add: heatmap
 
@@ -290,22 +244,14 @@ For each operation, we list the related dict fields that are added/updated/remov
 
 - update: specified by `keys`.
 
-`ImageToTensor`
-
-- update: specified by `keys`.
-
-`FramesToTensor`
-
-- update: specified by `keys`.
-
 `FormatTrimap`
 
 - update: trimap
 
-`Collect`
+`PackEditInputs`
 
-- add: img_meta (the keys of img_meta is specified by `meta_keys`)
-- remove: all other keys except for those specified by `keys`
+- add: inputs, data_sample
+- remove: all other keys
 
 ## Extend and use custom pipelines
 
@@ -313,10 +259,10 @@ For each operation, we list the related dict fields that are added/updated/remov
 
 ```python
 import random
-from mmdet.datasets import PIPELINES
+from mmedit.registry import TRANSFORMS
 
 
-@PIPELINES.register_module()
+@TRANSFORMS.register_module()
 class MyTransform:
     """Add your transform
 
