@@ -23,12 +23,12 @@ class LIIF(BaseEditModel):
             :class:`BaseDataPreprocessor`.
     """
 
-    def forward_tensor(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_tensor(self, inputs, data_samples=None, **kwargs):
         """Forward tensor.
             Returns result of simple forward.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -39,21 +39,21 @@ class LIIF(BaseEditModel):
 
         coord = torch.stack([
             data_sample.metainfo['coord'] for data_sample in data_samples
-        ]).to(batch_inputs)
+        ]).to(inputs)
         cell = torch.stack([
             data_sample.metainfo['cell'] for data_sample in data_samples
-        ]).to(batch_inputs)
+        ]).to(inputs)
 
-        feats = self.generator(batch_inputs, coord, cell, **kwargs)
+        feats = self.generator(inputs, coord, cell, **kwargs)
 
         return feats
 
-    def forward_inference(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_inference(self, inputs, data_samples=None, **kwargs):
         """Forward inference.
             Returns predictions of validation, testing, and simple inference.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -62,11 +62,11 @@ class LIIF(BaseEditModel):
             List[EditDataSample]: predictions.
         """
 
-        feats = self.forward_tensor(batch_inputs, data_samples, test_mode=True)
+        feats = self.forward_tensor(inputs, data_samples, test_mode=True)
         feats = self.data_preprocessor.destructor(feats)
 
         # reshape for eval
-        ih, iw = batch_inputs.shape[-2:]
+        ih, iw = inputs.shape[-2:]
         coord_count = data_samples[0].metainfo['coord'].shape[0]
         s = math.sqrt(coord_count / (ih * iw))
         shape = [len(data_samples), round(ih * s), round(iw * s), 3]

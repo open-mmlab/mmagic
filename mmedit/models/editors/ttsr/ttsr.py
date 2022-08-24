@@ -71,12 +71,12 @@ class TTSR(SRGAN):
 
         self.pixel_init = train_cfg.get('pixel_init', 0) if train_cfg else 0
 
-    def forward_tensor(self, batch_inputs, data_samples=None, training=False):
+    def forward_tensor(self, inputs, data_samples=None, training=False):
         """Forward tensor.
             Returns result of simple forward.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -105,7 +105,7 @@ class TTSR(SRGAN):
 
         soft_attention, textures = self.transformer(img_lq, ref_lq, refs)
 
-        pred = self.generator(batch_inputs, soft_attention, textures)
+        pred = self.generator(inputs, soft_attention, textures)
 
         if training:
             return pred, soft_attention, textures

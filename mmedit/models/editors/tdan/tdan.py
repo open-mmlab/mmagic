@@ -43,12 +43,12 @@ class TDAN(BaseEditModel):
 
         self.lq_pixel_loss = MODELS.build(lq_pixel_loss)
 
-    def forward_train(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_train(self, inputs, data_samples=None, **kwargs):
         """Forward training.
             Returns dict of losses of training.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -58,7 +58,7 @@ class TDAN(BaseEditModel):
         """
 
         feats, aligned_img = self.forward_tensor(
-            batch_inputs, data_samples, training=True, **kwargs)
+            inputs, data_samples, training=True, **kwargs)
         gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
         batch_gt_data = torch.stack(gt_imgs)
 
@@ -67,15 +67,15 @@ class TDAN(BaseEditModel):
         losses['loss_pix'] = self.pixel_loss(feats, batch_gt_data)
         # loss on the aligned LR images
         t = aligned_img.size(1)
-        lq_ref = batch_inputs[:, t // 2:t // 2 +
-                              1, :, :, :].expand(-1, t, -1, -1, -1)
+        lq_ref = inputs[:,
+                        t // 2:t // 2 + 1, :, :, :].expand(-1, t, -1, -1, -1)
         loss_pix_lq = self.lq_pixel_loss(aligned_img, lq_ref)
         losses['loss_pix_lq'] = loss_pix_lq
 
         return losses
 
     def forward_tensor(self,
-                       batch_inputs,
+                       inputs,
                        data_samples=None,
                        training=False,
                        **kwargs):
@@ -83,7 +83,7 @@ class TDAN(BaseEditModel):
             Returns result of simple forward.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -93,6 +93,6 @@ class TDAN(BaseEditModel):
                 forward train.
         """
 
-        outputs = self.generator(batch_inputs, **kwargs)
+        outputs = self.generator(inputs, **kwargs)
 
         return outputs if training else outputs[0]
