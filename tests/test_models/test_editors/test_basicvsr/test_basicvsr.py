@@ -50,7 +50,7 @@ def test_basicvsr():
     # val
     output = model.val_step(data)
     assert output[0].pred_img.data.shape == (5, 3, 256, 256)
-    data[0]['data_sample'].gt_img.data = torch.rand(3, 256, 256)
+    data[0]['data_samples'].gt_img.data = torch.rand(3, 256, 256)
     output = model.val_step(data)
     assert output[0].pred_img.data.shape == (3, 256, 256)
     img = torch.rand(3, 64, 64)

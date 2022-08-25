@@ -18,12 +18,12 @@ class TestPixelMetrics:
         mask[:16] *= 0
         gt = np.ones((32, 32, 3)) * 2
         data_sample = dict(gt_img=gt, mask=mask, gt_channel_order='bgr')
-        cls.data_batch = [dict(data_sample=data_sample)]
+        cls.data_batch = [dict(data_samples=data_sample)]
         cls.predictions = [dict(pred_img=np.ones((32, 32, 3)))]
 
         cls.data_batch.append(
             dict(
-                data_sample=dict(
+                data_samples=dict(
                     gt_img=torch.from_numpy(gt),
                     mask=torch.from_numpy(mask),
                     img_channel_order='bgr')))

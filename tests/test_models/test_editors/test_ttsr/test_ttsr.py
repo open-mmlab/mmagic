@@ -74,13 +74,13 @@ def test_ttsr(init_weights):
         discriminator=OptimWrapper(optimizer_d))
 
     # prepare data
-    inputs = torch.rand(3, 32, 32)
+    inputs = torch.rand(1, 3, 32, 32)
     data_sample = EditDataSample(
         gt_img=PixelData(data=torch.rand(3, 128, 128)),
         ref_img=PixelData(data=torch.rand(3, 128, 128)),
         img_lq=PixelData(data=torch.rand(3, 128, 128)),
         ref_lq=PixelData(data=torch.rand(3, 128, 128)))
-    data = [dict(inputs=inputs, data_sample=data_sample)]
+    data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
     log_vars = model.train_step(data, optim_wrapper)

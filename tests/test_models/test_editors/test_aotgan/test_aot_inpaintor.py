@@ -48,7 +48,7 @@ def test_aot_inpaintor():
     data_batch = [{
         'inputs':
         masked_img,
-        'data_sample':
+        'data_samples':
         EditDataSample(
             mask=PixelData(data=mask),
             mask_bbox=mask_bbox,

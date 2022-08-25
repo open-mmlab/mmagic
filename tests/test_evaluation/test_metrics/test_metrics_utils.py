@@ -28,7 +28,7 @@ def test_img_transform():
 def test_obtain_data():
     img = np.random.randint(0, 255, size=(4, 4, 3))
     key = 'img'
-    data_sample = {'data_sample': {key: img}}
+    data_sample = {'data_samples': {key: img}}
     result = metrics_utils.obtain_data(data_sample, key)
     assert not (result - img).any()
 

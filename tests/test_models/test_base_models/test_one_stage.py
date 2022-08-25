@@ -67,7 +67,7 @@ def test_one_stage_inpaintor():
             gt_img=PixelData(data=gt_img),
         )
         data_samples = [data_sample]
-        data_batch = [{'inputs': input, 'data_sample': data_sample}]
+        data_batch = [{'inputs': input, 'data_samples': data_sample}]
 
         # test forward_tensor
         fake_reses, fake_imgs = inpaintor.forward_tensor(inputs, data_samples)

@@ -59,10 +59,10 @@ def test_pack_edit_inputs():
 
     packed_results = pack_edit_inputs(results)
 
-    target_keys = ['inputs', 'data_sample']
+    target_keys = ['inputs', 'data_samples']
     assert set(target_keys).issubset(set(packed_results.keys()))
 
-    data_sample = packed_results['data_sample']
+    data_sample = packed_results['data_samples']
     assert isinstance(data_sample, EditDataSample)
 
     gt_tensors = [to_tensor(v) for v in ori_results['gt']]

@@ -46,7 +46,7 @@ class TestMattingMetrics:
 
         cls.data_batch = [{
             'inputs': [],
-            'data_sample': {
+            'data_samples': {
                 'ori_trimap': trimap,
                 'ori_alpha': gt_alpha,
             },

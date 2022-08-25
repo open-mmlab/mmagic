@@ -69,7 +69,7 @@ class BaseSampleWiseMetric(BaseMetric):
         return {self.metric: result}
 
     def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
+                data_samples: Sequence[dict]) -> None:
         """Process one batch of data and predictions
 
         Args:
@@ -79,17 +79,17 @@ class BaseSampleWiseMetric(BaseMetric):
                 the model.
         """
 
-        for data, prediction in zip(data_batch, predictions):
+        for data, data_sample in zip(data_batch, data_samples):
 
             self.channel_order = 'rgb'
-            metainfo = data['data_sample']
+            metainfo = data['data_samples']
             if 'gt_channel_order' in metainfo:
                 self.channel_order = metainfo['gt_channel_order']
             elif 'img_channel_order' in metainfo:
                 self.channel_order = metainfo['img_channel_order']
 
             gt = obtain_data(data, self.gt_key, self.device)
-            pred = obtain_data(prediction, self.pred_key, self.device)
+            pred = obtain_data(data_sample, self.pred_key, self.device)
             if self.mask_key is not None:
                 mask = obtain_data(data, self.mask_key)
                 mask[mask != 0] = 1
