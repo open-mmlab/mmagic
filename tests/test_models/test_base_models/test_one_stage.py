@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 import torch
-from mmcv import Config
+from mmengine import Config
 
 from mmedit.models import GLEncoderDecoder
 from mmedit.registry import MODELS
