@@ -52,14 +52,14 @@ def pytorch2onnx(model,
         model.forward = model.forward_tensor
 
     if model_type == 'mattor':
-        merged = input['data_sample'].trimap.data.unsqueeze(0)
-        trimap = input['data_sample'].gt_merged.data.unsqueeze(0)
+        merged = input['data_samples'].trimap.data.unsqueeze(0)
+        trimap = input['data_samples'].gt_merged.data.unsqueeze(0)
         data = torch.cat((merged, trimap), dim=1).float()
         data = model.resize_inputs(data)
     elif model_type == 'image_restorer':
         data = input['inputs'].unsqueeze(0)
     elif model_type == 'inpainting':
-        masks = input['data_sample'].mask.data.unsqueeze(0)
+        masks = input['data_samples'].mask.data.unsqueeze(0)
         img = input['inputs'].unsqueeze(0)
         data = torch.cat((img, masks), dim=1)
     elif model_type == 'video_restorer':

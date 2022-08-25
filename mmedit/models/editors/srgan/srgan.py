@@ -288,7 +288,8 @@ class SRGAN(BaseEditModel):
 
         g_optim_wrapper = optim_wrapper['generator']
 
-        batch_inputs, data_samples = self.data_preprocessor(data, True)
+        data = self.data_preprocessor(data, True)
+        batch_inputs, data_samples = data['inputs'], data['data_samples']
         batch_gt_data = self.extract_gt_data(data_samples)
 
         log_vars = dict()

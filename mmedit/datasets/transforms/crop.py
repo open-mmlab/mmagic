@@ -5,7 +5,7 @@ import random
 import mmcv
 import numpy as np
 from mmcv.transforms import BaseTransform
-from mmengine.utils import is_tuple_of
+from mmengine.utils import is_list_of, is_tuple_of
 from torch.nn.modules.utils import _pair
 
 from mmedit.registry import TRANSFORMS
@@ -760,8 +760,8 @@ class CropAroundUnknown(BaseTransform):
 
         if isinstance(interpolations, str):
             self.interpolations = [interpolations] * len(self.keys)
-        elif mmcv.is_list_of(interpolations,
-                             str) and len(interpolations) == len(self.keys):
+        elif is_list_of(interpolations, str) and len(interpolations) == len(
+                self.keys):
             self.interpolations = interpolations
         else:
             raise TypeError(

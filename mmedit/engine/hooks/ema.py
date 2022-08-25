@@ -4,12 +4,12 @@ from copy import deepcopy
 from functools import partial
 from typing import Optional, Sequence
 
-import mmcv
 import torch
 from mmengine.hooks import Hook
 from mmengine.model.wrappers import is_model_wrapper
 from mmengine.registry import HOOKS
 from mmengine.runner import Runner
+from mmengine.utils import is_tuple_of
 
 DATA_BATCH = Optional[Sequence[dict]]
 
@@ -47,8 +47,7 @@ class ExponentialMovingAverageHook(Hook):
                  interval=-1,
                  start_iter=0):
         super().__init__()
-        assert isinstance(module_keys, str) or mmcv.is_tuple_of(
-            module_keys, str)
+        assert isinstance(module_keys, str) or is_tuple_of(module_keys, str)
         self.module_keys = (module_keys, ) if isinstance(module_keys,
                                                          str) else module_keys
         # sanity check for the format of module keys

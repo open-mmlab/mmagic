@@ -37,7 +37,7 @@ def matting_inference(model, img, trimap):
     _data = test_pipeline(data)
     trimap = _data['data_samples'].trimap.data
     data = dict()
-    data['batch_inputs'] = torch.cat([_data['inputs'], trimap], dim=0).float()
+    data['inputs'] = torch.cat([_data['inputs'], trimap], dim=0).float()
     data = collate([data])
     data['data_samples'] = [_data['data_samples']]
     if 'cuda' in str(device):

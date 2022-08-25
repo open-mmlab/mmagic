@@ -193,14 +193,14 @@ class StyleGANv2Generator(BaseModule):
             if self.default_style_mode != self._default_style_mode:
                 print_log(
                     f'Switch to train style mode: {self._default_style_mode}',
-                    'mmgen')
+                    'current')
             self.default_style_mode = self._default_style_mode
 
         else:
             if self.default_style_mode != self.eval_style_mode:
                 print_log(
                     f'Switch to evaluation style mode: {self.eval_style_mode}',
-                    'mmgen')
+                    'current')
             self.default_style_mode = self.eval_style_mode
 
         return super(StyleGANv2Generator, self).train(mode)

@@ -23,7 +23,7 @@ class TestVisualizationHook(TestCase):
             tensor4d=torch.ones(2, 3, 32, 32) * torch.tensor(
                 [[[[0.1]], [[0.2]], [[0.3]]], [[[0.4]], [[0.5]], [[0.6]]]]),
             pixdata=PixelData(data=torch.ones(1, 32, 32) * 0.6))
-        self.data_batch = [{'data_sample': data_sample, 'inputs': input}] * 2
+        self.data_batch = [{'data_samples': data_sample, 'inputs': input}] * 2
 
         output = EditDataSample(
             outpixdata=PixelData(data=np.ones(shape=(32, 32)) * 0.8))

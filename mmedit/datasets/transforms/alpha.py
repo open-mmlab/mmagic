@@ -5,9 +5,9 @@
 import random
 
 import cv2
-import mmcv
 import numpy as np
 from mmcv.transforms import BaseTransform
+from mmengine.utils import is_list_of, is_tuple_of
 
 from mmedit.registry import TRANSFORMS
 from .trans_utils import random_choose_unknown
@@ -164,15 +164,15 @@ class GenerateSoftSeg(BaseTransform):
         if not isinstance(dilate_ksize, int):
             raise TypeError(
                 f'dilate_ksize must be an int, but got {type(dilate_ksize)}')
-        if (not mmcv.is_tuple_of(erode_iter_range, int)
+        if (not is_tuple_of(erode_iter_range, int)
                 or len(erode_iter_range) != 2):
             raise TypeError('erode_iter_range must be a tuple of 2 int, '
                             f'but got {erode_iter_range}')
-        if (not mmcv.is_tuple_of(dilate_iter_range, int)
+        if (not is_tuple_of(dilate_iter_range, int)
                 or len(dilate_iter_range) != 2):
             raise TypeError('dilate_iter_range must be a tuple of 2 int, '
                             f'but got {dilate_iter_range}')
-        if not mmcv.is_list_of(blur_ksizes, tuple):
+        if not is_list_of(blur_ksizes, tuple):
             raise TypeError(
                 f'blur_ksizes must be a list of tuple, but got {blur_ksizes}')
 

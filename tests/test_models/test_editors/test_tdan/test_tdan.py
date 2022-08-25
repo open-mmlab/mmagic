@@ -29,7 +29,7 @@ def test_tdan():
     inputs = torch.rand(5, 3, 16, 16)
     target = torch.rand(3, 64, 64)
     data_sample = EditDataSample(gt_img=PixelData(data=target))
-    data = [dict(inputs=inputs, data_sample=data_sample)]
+    data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
     log_vars = model.train_step(data, optim_wrapper)
