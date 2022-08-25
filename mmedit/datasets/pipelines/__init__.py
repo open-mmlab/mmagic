@@ -16,6 +16,7 @@ from .generate_assistant import GenerateCoordinateAndCell, GenerateHeatmap
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
                       LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
                       RandomLoadResizeBg)
+from .maskrcnn_bbox import GenMaskRCNNBbox
 from .matlab_like_resize import MATLABLikeResize
 from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
                           GenerateTrimap, GenerateTrimapWithDistTransform,
@@ -43,5 +44,5 @@ __all__ = [
     'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
     'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
     'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking',
-    'RandomVideoCompression'
+    'RandomVideoCompression', 'GenMaskRCNNBbox'
 ]

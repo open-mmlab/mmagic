@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from .colorization_backbones import (FusionGenerator, InstanceGenerator,
+                                     SIGGRAPHGenerator)
 from .encoder_decoders import (VGG16, ContextualAttentionNeck, DeepFillDecoder,
                                DeepFillEncoder, DeepFillEncoderDecoder,
                                DepthwiseIndexBlock, FBADecoder,
@@ -29,5 +31,6 @@ __all__ = [
     'UnetGenerator', 'ResnetGenerator', 'FBAResnetDilated', 'FBADecoder',
     'BasicVSRNet', 'IconVSR', 'TTSRNet', 'GLEANStyleGANv2', 'TDANNet',
     'LIIFEDSR', 'LIIFRDN', 'BasicVSRPlusPlus', 'RealBasicVSRNet', 'CAINNet',
-    'TOFlowVFINet', 'FLAVRNet'
+    'TOFlowVFINet', 'FLAVRNet', 'SIGGRAPHGenerator', 'FusionGenerator',
+    'InstanceGenerator'
 ]

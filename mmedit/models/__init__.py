@@ -3,6 +3,7 @@ from .backbones import *  # noqa: F401, F403
 from .base import BaseModel
 from .builder import (build, build_backbone, build_component, build_loss,
                       build_model)
+from .colorizations import FusionModel
 from .common import *  # noqa: F401, F403
 from .components import *  # noqa: F401, F403
 from .extractors import LTE, FeedbackHourglass
@@ -23,5 +24,5 @@ __all__ = [
     'GLInpaintor', 'PConvInpaintor', 'SRGAN', 'ESRGAN', 'GCA',
     'TwoStageInpaintor', 'IndexNet', 'DeepFillv1Inpaintor', 'Pix2Pix',
     'CycleGAN', 'SearchTransformer', 'LTE', 'FeedbackHourglass',
-    'BasicInterpolator', 'CAIN'
+    'BasicInterpolator', 'CAIN', 'FusionModel'
 ]
