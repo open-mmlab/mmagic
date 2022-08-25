@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
 from mmcv.cnn import ConvModule, build_conv_layer
-from mmcv.runner import load_checkpoint
 from mmengine import MMLogger
+from mmengine.runner import load_checkpoint
 
 from mmedit.models.utils import generation_init_weights
 from mmedit.registry import COMPONENTS

@@ -2,7 +2,7 @@
 
 import numpy as np
 import torch
-from mmengine import ConfigDict
+from mmengine.config import ConfigDict
 
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData

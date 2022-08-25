@@ -3,7 +3,7 @@ import os
 import os.path as osp
 from typing import Callable, List, Optional, Union
 
-from mmengine import BaseDataset
+from mmengine.dataset import BaseDataset
 from mmengine.fileio import FileClient, list_from_file
 
 from ..registry import DATASETS

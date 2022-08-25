@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 import torch
-from mmengine import ConfigDict
+from mmengine.config import ConfigDict
 
 from mmedit.models.editors import DIM
 from mmedit.registry import MODELS

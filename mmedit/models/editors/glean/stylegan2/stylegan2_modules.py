@@ -12,7 +12,7 @@ from mmcv.cnn.bricks.activation import build_activation_layer
 from mmcv.ops.fused_bias_leakyrelu import (FusedBiasLeakyReLU,
                                            fused_bias_leakyrelu)
 from mmcv.ops.upfirdn2d import upfirdn2d
-from mmengine.model.utils import normal_init
+from mmengine.model.weight_init import normal_init
 from packaging import version
 from torch.nn.init import _calculate_correct_fan
 

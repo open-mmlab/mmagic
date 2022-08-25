@@ -4,7 +4,7 @@ from unittest import TestCase
 import numpy as np
 import pytest
 import torch
-from mmengine.data import BaseDataElement
+from mmengine.structures import BaseDataElement
 
 from mmedit.structures import EditDataSample, PixelData
 

@@ -6,8 +6,8 @@ from typing import Optional, Sequence
 
 import mmcv
 import torch
-from mmcv.parallel import is_module_wrapper
 from mmengine.hooks import Hook
+from mmengine.model.wrappers import is_model_wrapper
 from mmengine.registry import HOOKS
 from mmengine.runner import Runner
 
@@ -86,7 +86,7 @@ class ExponentialMovingAverageHook(Hook):
         if not self.every_n_iters(runner, self.interval):
             return
 
-        model = runner.model.module if is_module_wrapper(
+        model = runner.model.module if is_model_wrapper(
             runner.model) else runner.model
 
         for key in self.module_keys:
@@ -106,7 +106,7 @@ class ExponentialMovingAverageHook(Hook):
             ema_net.load_state_dict(states_ema, strict=True)
 
     def before_run(self, runner):
-        model = runner.model.module if is_module_wrapper(
+        model = runner.model.module if is_model_wrapper(
             runner.model) else runner.model
         # sanity check for ema model
         for k in self.module_keys:

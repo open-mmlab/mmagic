@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import mmcv
-from mmcv.runner import load_checkpoint
+from mmengine.config import ConfigDict
+from mmengine.runner import load_checkpoint
 
 from mmedit.registry import MODELS
 from mmedit.utils import register_all_modules
@@ -10,7 +11,7 @@ def delete_cfg(cfg, key='init_cfg'):
     if key in cfg:
         cfg.pop(key)
     for _key in cfg.keys():
-        if isinstance(cfg[_key], mmcv.utils.config.ConfigDict):
+        if isinstance(cfg[_key], ConfigDict):
             delete_cfg(cfg[_key], key)
 
 

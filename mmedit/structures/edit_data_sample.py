@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmengine.data import BaseDataElement
+from mmengine.structures import BaseDataElement
 
 from .pixel_data import PixelData
 
