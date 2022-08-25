@@ -7,9 +7,10 @@ import cv2
 import mmcv
 import numpy as np
 import torch
-from mmcv.parallel import collate
 from mmengine.dataset import Compose
+from mmengine.dataset.utils import default_collate as collate
 from mmengine.fileio import FileClient
+from mmengine.utils import ProgressBar
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 FILE_CLIENT = FileClient('disk')
@@ -154,7 +155,7 @@ def video_interpolation_inference(model,
         batch_size - 1)
     repeat_frame = model.required_frames - model.step_frames
 
-    prog_bar = mmcv.ProgressBar(
+    prog_bar = ProgressBar(
         math.ceil(
             (end_idx + step_size - lenth_per_step - start_idx) / step_size))
     output_index = start_idx
@@ -165,7 +166,7 @@ def video_interpolation_inference(model,
         # data prepare
         data = dict(img=images, inputs_path=None, key=input_dir)
         data = test_pipeline(data)['inputs'] / 255.0
-        data = collate([data], samples_per_gpu=1)
+        data = collate([data])
         # data.shape: [1, t, c, h, w]
 
         # forward the model

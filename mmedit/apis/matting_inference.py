@@ -1,7 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
-from mmcv.parallel import collate, scatter
 from mmengine.dataset import Compose
+from mmengine.dataset.utils import default_collate as collate
+from torch.nn.parallel import scatter
 
 
 def matting_inference(model, img, trimap):
@@ -34,11 +35,11 @@ def matting_inference(model, img, trimap):
     # prepare data
     data = dict(merged_path=img, trimap_path=trimap)
     _data = test_pipeline(data)
-    trimap = _data['data_sample'].trimap.data
+    trimap = _data['data_samples'].trimap.data
     data = dict()
     data['batch_inputs'] = torch.cat([_data['inputs'], trimap], dim=0).float()
-    data = collate([data], samples_per_gpu=1)
-    data['data_samples'] = [_data['data_sample']]
+    data = collate([data])
+    data['data_samples'] = [_data['data_samples']]
     if 'cuda' in str(device):
         data = scatter(data, [device])[0]
     # forward the model

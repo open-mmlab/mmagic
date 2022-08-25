@@ -2,7 +2,7 @@
 from os.path import dirname, join
 
 import torch
-from mmcv import Config
+from mmengine import Config
 from mmengine.optim import OptimWrapper
 
 from mmedit.registry import MODELS
