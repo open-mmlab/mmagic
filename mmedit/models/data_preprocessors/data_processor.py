@@ -126,7 +126,6 @@ class EditDataPreprocessor(BaseDataPreprocessor):
 
         data['inputs'] = inputs
         data['data_samples'] = batch_data_samples
-        # return inputs, batch_data_samples
         return data
 
     def destructor(self, batch_tensor: torch.Tensor):

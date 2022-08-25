@@ -40,11 +40,11 @@ def test_liif():
     assert model.__class__.__name__ == 'LIIF'
 
     # prepare data
-    inputs = torch.rand(3, 8, 8)
+    inputs = torch.rand(1, 3, 8, 8)
     data_sample = EditDataSample(
         metainfo=dict(coord=torch.rand(256, 2), cell=torch.rand(256, 2)))
     data_sample.gt_img = PixelData(data=torch.rand(256, 3))
-    data = [dict(inputs=inputs, data_sample=data_sample)]
+    data = dict(inputs=inputs, data_samples=[data_sample])
 
     optimizer = Adam(model.generator.parameters(), lr=0.001)
     optim_wrapper = OptimWrapper(optimizer)

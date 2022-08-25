@@ -25,18 +25,19 @@ def test_gl_inpaintor():
     gt_img = torch.randn(3, 256, 256)
     mask = torch.zeros_like(gt_img)[0:1, ...]
     mask[..., 100:210, 100:210] = 1.
-    masked_img = gt_img * (1. - mask)
+    masked_img = gt_img.unsqueeze(0) * (1. - mask)
     mask_bbox = [100, 100, 110, 110]
-    data_batch = [{
+    data_batch = {
         'inputs':
         masked_img,
-        'data_samples':
-        EditDataSample(
-            mask=PixelData(data=mask),
-            mask_bbox=mask_bbox,
-            gt_img=PixelData(data=gt_img),
-        )
-    }]
+        'data_samples': [
+            EditDataSample(
+                mask=PixelData(data=mask),
+                mask_bbox=mask_bbox,
+                gt_img=PixelData(data=gt_img),
+            )
+        ]
+    }
 
     optim_g = torch.optim.SGD(gl.generator.parameters(), lr=0.1)
     optim_d = torch.optim.SGD(gl.disc.parameters(), lr=0.1)

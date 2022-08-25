@@ -59,7 +59,6 @@ def test_one_stage_inpaintor():
         mask[..., 20:100, 100:120] = 1.
         masked_img = gt_img * (1. - mask)
         mask_bbox = [100, 100, 110, 110]
-        input = masked_img
         inputs = masked_img.unsqueeze(0)
         data_sample = EditDataSample(
             mask=PixelData(data=mask),
@@ -67,7 +66,7 @@ def test_one_stage_inpaintor():
             gt_img=PixelData(data=gt_img),
         )
         data_samples = [data_sample]
-        data_batch = [{'inputs': input, 'data_samples': data_sample}]
+        data_batch = {'inputs': inputs, 'data_samples': [data_sample]}
 
         # test forward_tensor
         fake_reses, fake_imgs = inpaintor.forward_tensor(inputs, data_samples)
