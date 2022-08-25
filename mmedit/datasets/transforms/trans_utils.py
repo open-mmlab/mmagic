@@ -7,7 +7,7 @@ import cv2
 import mmcv
 import numpy as np
 import torch
-from mmcv.utils import print_log
+from mmengine.logging import print_log
 from PIL import Image, ImageDraw
 
 

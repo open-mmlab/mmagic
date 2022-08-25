@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
-from mmcv.runner import load_checkpoint
 from mmengine import MMLogger
+from mmengine.runner import load_checkpoint
 
 from mmedit.registry import BACKBONES
 

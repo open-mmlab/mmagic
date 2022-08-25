@@ -2,8 +2,8 @@
 import os.path as osp
 
 import torch
-from mmcv import Config
-from mmcv.runner import load_checkpoint
+from mmengine import Config
+from mmengine.runner import load_checkpoint
 
 from mmedit.apis import inpainting_inference
 from mmedit.registry import MODELS

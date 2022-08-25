@@ -5,7 +5,7 @@ from unittest.mock import patch
 import mmcv
 import numpy as np
 import torch
-from mmcv import ConfigDict
+from mmengine.config import ConfigDict
 
 from mmedit.models.base_models import BaseMattor
 from mmedit.models.editors import DIM

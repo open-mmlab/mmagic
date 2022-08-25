@@ -4,7 +4,7 @@ import os.path as osp
 import re
 from typing import Callable, List, Optional, Tuple, Union
 
-from mmengine import BaseDataset
+from mmengine.dataset import BaseDataset
 from mmengine.fileio import FileClient, list_from_file
 
 from mmedit.registry import DATASETS

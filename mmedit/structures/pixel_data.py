@@ -6,7 +6,7 @@ import numpy as np
 import torch
 
 
-class PixelData(mmengine.PixelData):
+class PixelData(mmengine.structures.PixelData):
     """Data structure for pixel-level annnotations or predictions.
 
     Different from parent class:
@@ -76,4 +76,4 @@ class PixelData(mmengine.PixelData):
             ], f'The dim of value must be 2, 3 or 4, but got {value.ndim}'
 
             # call BaseDataElement.__setattr__
-            super(mmengine.PixelData, self).__setattr__(name, value)
+            super(mmengine.structures.PixelData, self).__setattr__(name, value)

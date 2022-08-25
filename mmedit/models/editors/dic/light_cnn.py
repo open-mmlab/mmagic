@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
-from mmcv.runner import load_checkpoint
 from mmengine import MMLogger
 from mmengine.model import BaseModule
+from mmengine.runner import load_checkpoint
 
 from mmedit.registry import MODELS
 

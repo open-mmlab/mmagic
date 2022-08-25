@@ -4,8 +4,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import torch
 import torch.nn.functional as F
-from mmcv import ConfigDict
-from mmengine.config import Config
+from mmengine.config import Config, ConfigDict
 from mmengine.model import BaseModel
 
 from mmedit.registry import MODELS

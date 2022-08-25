@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional, Sequence
 
-from mmengine.data import BaseDataElement
 from mmengine.hooks import Hook
 from mmengine.registry import HOOKS
+from mmengine.structures import BaseDataElement
 
 
 @HOOKS.register_module()
