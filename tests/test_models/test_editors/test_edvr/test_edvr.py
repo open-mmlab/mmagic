@@ -35,10 +35,10 @@ def test_edvr():
     optim_wrapper = OptimWrapper(optimizer)
 
     # prepare data
-    inputs = torch.rand(5, 3, 20, 20)
+    inputs = torch.rand(1, 5, 3, 20, 20)
     target = torch.rand(5, 3, 80, 80)
     data_sample = EditDataSample(gt_img=PixelData(data=target))
-    data = [dict(inputs=inputs, data_sample=data_sample)]
+    data = dict(inputs=inputs, data_samples=[data_sample])
 
     log_vars = model.train_step(data, optim_wrapper)
     assert model.generator.conv_first.weight.requires_grad is False

@@ -44,10 +44,10 @@ def test_base_edit_model():
     optim_wrapper = OptimWrapper(optimizer)
 
     # prepare data
-    inputs = torch.rand(3, 20, 20)
+    inputs = torch.rand(1, 3, 20, 20)
     target = torch.rand(3, 20, 20)
     data_sample = EditDataSample(gt_img=PixelData(data=target))
-    data = [dict(inputs=inputs, data_sample=data_sample)]
+    data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
     log_vars = model.train_step(data, optim_wrapper)
