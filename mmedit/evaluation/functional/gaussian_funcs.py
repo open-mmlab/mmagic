@@ -11,7 +11,7 @@ def gaussian(x, sigma):
         sigma (float): Standard deviation of the gaussian function.
 
     Return:
-        ndarray or scalar: Gaussian value of `x`.
+        np.ndarray or scalar: Gaussian value of `x`.
     """
     return np.exp(-x**2 / (2 * sigma**2)) / (sigma * np.sqrt(2 * np.pi))
 
@@ -24,7 +24,7 @@ def dgaussian(x, sigma):
         sigma (float): Standard deviation of the gaussian function.
 
     Return:
-        ndarray or scalar: Gradient of gaussian of `x`.
+        np.ndarray or scalar: Gradient of gaussian of `x`.
     """
     return -x * gaussian(x, sigma) / sigma**2
 
@@ -38,7 +38,8 @@ def gauss_filter(sigma, epsilon=1e-2):
             Default: 1e-2.
 
     Return:
-        tuple[ndarray]: Gaussian filter along x and y axis.
+        filter_x (np.ndarray): Gaussian filter along x axis.
+        filter_y (np.ndarray): Gaussian filter along y axis.
     """
     half_size = np.ceil(
         sigma * np.sqrt(-2 * np.log(np.sqrt(2 * np.pi) * sigma * epsilon)))
@@ -67,11 +68,11 @@ def gauss_gradient(img, sigma):
     index.html
 
     Args:
-        img (ndarray): Input image.
+        img (np.ndarray): Input image.
         sigma (float): Standard deviation of the gaussian kernel.
 
     Return:
-        ndarray: Gaussian gradient of input `img`.
+        np.ndarray: Gaussian gradient of input `img`.
     """
     filter_x, filter_y = gauss_filter(sigma)
     img_filtered_x = cv2.filter2D(

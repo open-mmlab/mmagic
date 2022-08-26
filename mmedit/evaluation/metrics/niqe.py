@@ -45,7 +45,7 @@ class NIQE(BaseSampleWiseMetric):
         convert_to (str): Whether to convert the images to other color models.
             If None, the images are not altered. When computing for 'Y',
             the images are assumed to be in BGR order. Options are 'Y' and
-            None. Default: None.
+            None. Default: 'gray.
 
     Metrics:
         - NIQE (float): Natural Image Quality Evaluator
@@ -76,13 +76,14 @@ class NIQE(BaseSampleWiseMetric):
         self.convert_to = convert_to
 
     def process_image(self, gt, pred, mask) -> None:
-        """Process one batch of data and predictions
+        """Process an image.
 
         Args:
-            data_batch (Sequence[Tuple[Any, dict]]): A batch of data
-                from the dataloader.
-            predictions (Sequence[dict]): A batch of outputs from
-                the model.
+            gt (np.ndarray): GT image.
+            pred (np.ndarray): Pred image.
+            mask (np.ndarray): Mask of evaluation.
+        Returns:
+            result (np.ndarray): NIQE result.
         """
 
         result = niqe(
@@ -97,7 +98,7 @@ def estimate_aggd_param(block):
     """Estimate AGGD (Asymmetric Generalized Gaussian Distribution) parameters.
 
     Args:
-        block (ndarray): 2D Image block.
+        block (np.ndarray): 2D Image block.
 
     Returns:
         tuple: alpha (float), beta_l (float) and beta_r (float) for the AGGD
@@ -127,10 +128,10 @@ def compute_feature(block):
     """Compute features.
 
     Args:
-        block (ndarray): 2D Image block.
+        block (np.ndarray): 2D Image block.
 
     Returns:
-        list: Features with length of 18.
+        feat (List): Features with length of 18.
     """
     feat = []
     alpha, beta_l, beta_r = estimate_aggd_param(block)
@@ -169,19 +170,22 @@ def niqe_core(img,
     construction of multivariate Gaussian model.
 
     Args:
-        img (ndarray): Input image whose quality needs to be computed. The
+        img (np.ndarray): Input image whose quality needs to be computed. The
             image must be a gray or Y (of YCbCr) image with shape (h, w).
             Range [0, 255] with float type.
-        mu_pris_param (ndarray): Mean of a pre-defined multivariate Gaussian
+        mu_pris_param (np.ndarray): Mean of a pre-defined multivariate Gaussian
             model calculated on the pristine dataset.
-        cov_pris_param (ndarray): Covariance of a pre-defined multivariate
+        cov_pris_param (np.ndarray): Covariance of a pre-defined multivariate
             Gaussian model calculated on the pristine dataset.
         gaussian_window (ndarray): A 7x7 Gaussian window used for smoothing the
             image.
         block_size_h (int): Height of the blocks in to which image is divided.
-            Default: 96 (the official recommended value).
+            Default: 96 (the official recommended value). Default: 96.
         block_size_w (int): Width of the blocks in to which image is divided.
-            Default: 96 (the official recommended value).
+            Default: 96 (the official recommended value). Default: 96.
+
+    Returns:
+        np.ndarray: NIQE quality.
     """
     # crop image
     h, w = img.shape
@@ -245,7 +249,7 @@ def niqe(img, crop_border, input_order='HWC', convert_to='y'):
     We use the recommended block size (96, 96) without overlaps.
 
     Args:
-        img (ndarray): Input image whose quality needs to be computed.
+        img (np.ndarray): Input image whose quality needs to be computed.
             The input image must be in range [0, 255] with float/int type.
             The input_order of image can be 'HW' or 'HWC' or 'CHW'. (BGR order)
             If the input order is 'HWC' or 'CHW', it will be converted to gray
@@ -258,7 +262,7 @@ def niqe(img, crop_border, input_order='HWC', convert_to='y'):
             Default: 'y'.
 
     Returns:
-        float: NIQE result.
+        niqe_result (float): NIQE result.
     """
 
     # we use the official params estimated from the pristine dataset.

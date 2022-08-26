@@ -35,7 +35,7 @@ def img_transform(img,
     Ref: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
 
     Args:
-        img (ndarray): Images with range [0, 255].
+        img (np.ndarray): Images with range [0, 255].
         crop_border (int): Cropped pixels in each edges of an image. These
             pixels are not involved in the PSNR calculation. Default: 0.
         input_order (str): Whether the input order is 'HWC' or 'CHW'.
@@ -47,7 +47,7 @@ def img_transform(img,
         channel_order (str): The channel order of image. Default: 'rgb'
 
     Returns:
-        float: psnr result.
+        float: PSNR result.
     """
 
     if input_order not in ['HWC', 'CHW']:
@@ -81,7 +81,16 @@ def img_transform(img,
 
 
 def obtain_data(data_sample, key, device='cpu'):
+    """Obtain data of key from data_sample and converse data to device.
 
+    Args:
+        data_sample (dict): A dict of data sample.
+        key (str): The key of data to obtain.
+        device (str): Which device the data will deploy. Default: 'cpu'.
+
+    Returns:
+        result (Tensor | np.ndarray): The data of key.
+    """
     candidates = ['data_sample', key, 'data']
 
     for k in candidates:
@@ -105,13 +114,13 @@ def reorder_image(img, input_order='HWC'):
     If the input_order is (h, w, c), return as it is.
 
     Args:
-        img (ndarray): Input image.
+        img (np.ndarray): Input image.
         input_order (str): Whether the input order is 'HWC' or 'CHW'.
             If the input image shape is (h, w), input_order will not have
             effects. Default: 'HWC'.
 
     Returns:
-        ndarray: reordered image.
+        np.ndarray: Reordered image.
     """
 
     if input_order not in ['HWC', 'CHW']:
@@ -130,7 +139,15 @@ def reorder_image(img, input_order='HWC'):
 
 
 def to_numpy(img, dtype=np.float64):
+    """Convert data into numpy arrays of dtype.
 
+    Args:
+        img (Tensor | np.ndarray): Input data.
+        dtype (np.dtype): Set the data type of the output. Default: np.float64
+
+    Returns:
+        img (np.ndarray): Converted numpy arrays data.
+    """
     if isinstance(img, torch.Tensor):
         img = img.cpu().numpy()
     elif not isinstance(img, np.ndarray):

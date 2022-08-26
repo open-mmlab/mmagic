@@ -26,6 +26,17 @@ def _assert_masked(pred_alpha, trimap):
 
 
 def _fetch_data_and_check(data_batch, predictions):
+    """Fetch and check data from one item of data_batch and predictions
+
+    Args:
+        data_batch (dict): One item of data_batch.
+        predictions (dict): One item of predictions.
+
+    Returns:
+        pred_alpha (Tensor): Pred_alpha data of predictions.
+        ori_alpha (Tensor): Ori_alpha data of data_batch.
+        ori_trimap (Tensor): Ori_trimap data of data_batch.
+    """
     ori_trimap = data_batch['data_sample']['ori_trimap'][:, :, 0]
     ori_alpha = data_batch['data_sample']['ori_alpha'][:, :, 0]
     pred_alpha = predictions['pred_alpha']['data']  # 2D tensor
@@ -162,7 +173,7 @@ class MattingMSE(BaseMetric):
         """Process one batch of data and predictions
 
         Args:
-            data_batch (Sequence[Tuple[Any, dict]]): A batch of data
+            data_batch (Sequence[dict]): A batch of data
                 from the dataloader.
             predictions (Sequence[dict]): A batch of outputs from
                 the model.
