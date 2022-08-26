@@ -41,18 +41,19 @@ def test_two_stage_inpaintor():
     gt_img = torch.rand((3, 256, 256))
     mask = torch.zeros((1, 256, 256))
     mask[..., 50:180, 60:170] = 1.
-    masked_img = gt_img * (1. - mask)
+    masked_img = gt_img.unsqueeze(0) * (1. - mask)
     mask_bbox = [100, 100, 110, 110]
-    data_batch = [{
+    data_batch = {
         'inputs':
         masked_img,
-        'data_samples':
-        EditDataSample(
-            mask=PixelData(data=mask),
-            mask_bbox=mask_bbox,
-            gt_img=PixelData(data=gt_img),
-        )
-    }]
+        'data_samples': [
+            EditDataSample(
+                mask=PixelData(data=mask),
+                mask_bbox=mask_bbox,
+                gt_img=PixelData(data=gt_img),
+            )
+        ]
+    }
 
     optim_g = torch.optim.Adam(inpaintor.generator.parameters(), lr=0.0001)
     optim_d = torch.optim.Adam(inpaintor.disc.parameters(), lr=0.0001)
@@ -78,7 +79,8 @@ def test_two_stage_inpaintor():
             assert 'stage2_loss_l1_valid' in log_vars
 
     # check for forward_test
-    data_inputs, data_sample = inpaintor.data_preprocessor(data_batch, True)
+    data = inpaintor.data_preprocessor(data_batch, True)
+    data_inputs, data_sample = data['inputs'], data['data_samples']
     output = inpaintor.forward_test(data_inputs, data_sample)
     prediction = output[0]
     assert 'fake_res' in prediction

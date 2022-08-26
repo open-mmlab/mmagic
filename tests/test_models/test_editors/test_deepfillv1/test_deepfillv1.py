@@ -60,18 +60,19 @@ def test_deepfillv1_inpaintor():
     gt_img = torch.rand((3, 256, 256))
     mask = torch.zeros((1, 256, 256))
     mask[..., 50:180, 60:170] = 1.
-    masked_img = gt_img * (1. - mask)
+    masked_img = gt_img.unsqueeze(0) * (1. - mask)
     mask_bbox = [100, 100, 110, 110]
-    data_batch = [{
+    data_batch = {
         'inputs':
         masked_img,
-        'data_samples':
-        EditDataSample(
-            mask=PixelData(data=mask),
-            mask_bbox=mask_bbox,
-            gt_img=PixelData(data=gt_img),
-        )
-    }]
+        'data_samples': [
+            EditDataSample(
+                mask=PixelData(data=mask),
+                mask_bbox=mask_bbox,
+                gt_img=PixelData(data=gt_img),
+            )
+        ]
+    }
 
     # prepare model and optimizer
     optim_g = torch.optim.Adam(deepfillv1.generator.parameters(), lr=0.0001)

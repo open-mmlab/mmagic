@@ -114,7 +114,7 @@ class BasicVSRNet(BaseModule):
         Returns:
             Tensor: Output HR sequence with shape (n, t, c, 4h, 4w).
         """
-
+        print(lrs.size())
         n, t, c, h, w = lrs.size()
         assert h >= 64 and w >= 64, (
             'The height and width of inputs should be at least 64, '
