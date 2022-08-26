@@ -5,6 +5,7 @@ It is recommended to symlink the dataset root to `$MMEDITING/data`. If your fold
 MMEditing supported super-resolution datasets:
 
 - Image Super-Resolution
+  - [DF2K_OST](#df2kost-dataset) \[ [Homepage](https://github.com/xinntao/Real-ESRGAN/blob/master/docs/Training.md) \]
   - [DIV2K](#div2k-dataset) \[ [Homepage](https://data.vision.ee.ethz.ch/cvl/DIV2K/) \]
 - Video Super-Resolution
   - [REDS](#reds-dataset) \[ [Homepage](https://seungjunnah.github.io/Datasets/reds.html) \]
@@ -108,14 +109,16 @@ mmediting
 │   │   │   ├── X2
 │   │   │   ├── X3
 │   │   │   ├── X4
-│   ├── val_set5
-│   │   ├── Set5_bicLRx2
-│   │   ├── Set5_bicLRx3
-│   │   ├── Set5_bicLRx4
-│   ├── val_set14
-│   │   ├── Set14_bicLRx2
-│   │   ├── Set14_bicLRx3
-│   │   ├── Set14_bicLRx4
+│   ├── Set5
+│   │   ├── GTmod12
+│   │   ├── LRbicx2
+│   │   ├── LRbicx3
+│   │   ├── LRbicx4
+│   ├── Set14
+│   │   ├── GTmod12
+│   │   ├── LRbicx2
+│   │   ├── LRbicx3
+│   │   ├── LRbicx4
 ```
 
 ### Crop sub-images
@@ -310,17 +313,27 @@ The training and test datasets can be download from [here](http://toflow.csail.m
 The Vimeo90K dataset has a `clip/sequence/img` folder structure:
 
 ```text
-├── GT/LQ
-│   ├── 00001
-│   │   ├── 0001
-│   │   │   ├── im1.png
-│   │   │   ├── im2.png
+mmediting
+├── mmedit
+├── tools
+├── configs
+├── data
+│   ├── vimeo_triplet
+│   │   ├── BDx4
+│   │   │   ├── 00001
+│   │   │   │   ├── 0001
+│   │   │   │   │   ├── im1.png
+│   │   │   │   │   ├── im2.png
+│   │   │   │   │   ├── ...
+│   │   │   │   ├── 0002
+│   │   │   │   ├── 0003
+│   │   │   │   ├── ...
+│   │   │   ├── 00002
 │   │   │   ├── ...
-│   │   ├── 0002
-│   │   ├── 0003
-│   │   ├── ...
-│   ├── 00002
-│   ├── ...
+│   │   ├── BIx4
+│   │   ├── GT
+│   │   ├── meta_info_Vimeo90K_test_GT.txt
+│   │   ├── meta_info_Vimeo90K_train_GT.txt
 ```
 
 ### Prepare the annotation files for Vimeo90K dataset
