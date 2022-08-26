@@ -7,6 +7,13 @@ from mmedit.utils import register_all_modules
 
 
 def delete_cfg(cfg, key='init_cfg'):
+    """Delete key from config object.
+
+    Args:
+        cfg (str or :obj:`mmcv.Config`): Config object.
+        key (str): Which key to delete.
+    """
+
     if key in cfg:
         cfg.pop(key)
     for _key in cfg.keys():

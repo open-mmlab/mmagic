@@ -13,6 +13,16 @@ VIDEO_EXTENSIONS = ('.mp4', '.mov')
 
 
 def pad_sequence(data, window_size):
+    """Pad frame sequence data.
+
+    Args:
+        data (Tensor): The frame sequence data.
+        window_size (int): The window size used in sliding-window framework.
+
+    Returns:
+        data: The padded result.
+    """
+
     padding = window_size // 2
 
     data = torch.cat([
