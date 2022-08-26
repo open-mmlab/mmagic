@@ -1,8 +1,10 @@
 # Overview
 
+## What is MMEditing?
+
 MMEditing is an open-source toolbox for professional AI researchers and machine learning engineers to explore image/video processing, editing and synthesis.
 
-MMEditing allows researchers and engineers to use pre-trained state-of-the-art models, train and develop new models easily.
+MMEditing allows researchers and engineers to use pre-trained state-of-the-art models, train and develop new customized models easily.
 MMEditing supports various tasks, including:
 
 - Image super-resolution
@@ -34,11 +36,11 @@ MMEditing supports various tasks, including:
 </video>
 </div>
 
-### Why should I use transformers?
+## Why should I use transformers?
 
 - **State of the art**
 
-  The toolbox provides state-of-the-art methods in inpainting/matting/super-resolution/generation.
+  The toolbox provides state-of-the-art methods tp process, edit and synthesize images and videos.
 
 - **Easy-Modular design**
 
@@ -48,25 +50,35 @@ MMEditing supports various tasks, including:
 
   The toolbox directly supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *generation* tasks.
 
-Note that **MMSR** has been merged into this repo, as a part of MMEditing.
-With elaborate designs of the new framework and careful implementations.
-
 ## How to Use this Guide
 
 Here is a detailed step-by-step guide to learn more about MMEditing:
 
-## Get Started
+### Get Started
 
-For installation instructions, please see [get_started](getting_started.md).
+For installation instructions, please see [get_started](get_started.md).
 
-## basic usage of MMEditing
+### Basic usage of MMEditing
 
-- [config](tutorials/0_config.md)
+For beginners, we suggest learning the basic usage of MMEditing from here:
 
-- [dataset prepare](tutorials/1_dataset_prepare.md)
+- [config](user_guides/config/config_inpainting.md)
 
-- [inference](tutorials/2_inference.md)
+- [dataset prepare](user_guides/datasets/dataset_prepare.md)
 
-- [train and test](tutorials/3_train_test.md)
+- [inference](user_guides/inference.md)
 
-3. Refer to the below tutorials to dive deeper:
+- [train and test](user_guides/train_test.md)
+
+- [visualization](user_guides/visualization.md)
+
+- [useful tools](user_guides/useful_tools.md)
+
+### Advanced guides
+
+For users who are familiar with MMEditing, we suggest learning more about MMEditing from here:
+
+- [dataset](advanced_guides/dataset.md)
+- [models](advanced_guides/models/customize_models.md)
+- [losses](advanced_guides/dataset.md)
+- [transforms](advanced_guides/transforms.md)
