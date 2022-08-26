@@ -17,8 +17,7 @@ def test_concatimagevisualizer():
         array3d=np.ones(shape=(32, 32, 3)) * [0.4, 0.5, 0.6],
         tensor4d=torch.ones(2, 3, 32, 32) * torch.tensor(
             [[[[0.1]], [[0.2]], [[0.3]]], [[[0.4]], [[0.5]], [[0.6]]]]),
-        pixdata=PixelData(data=torch.ones(1, 32, 32) * 0.6))
-    output = EditDataSample(
+        pixdata=PixelData(data=torch.ones(1, 32, 32) * 0.6),
         outpixdata=PixelData(data=np.ones(shape=(32, 32)) * 0.8))
 
     vis = ConcatImageVisualizer(
@@ -26,8 +25,8 @@ def test_concatimagevisualizer():
         img_keys=['tensor3d', 'array3d', 'pixdata', 'outpixdata', 'tensor4d'],
         vis_backends=[dict(type='LocalVisBackend')],
         save_dir='work_dirs')
-    vis.add_datasample(
-        input=input, data_sample=data_sample, output=output, step=1)
+
+    vis.add_datasample(input=input, data_sample=data_sample, step=1)
 
     vis = ConcatImageVisualizer(
         fn_key='path_bgr',
@@ -35,8 +34,8 @@ def test_concatimagevisualizer():
         vis_backends=[dict(type='LocalVisBackend')],
         save_dir='work_dirs',
         bgr2rgb=True)
-    vis.add_datasample(
-        input=input, data_sample=data_sample, output=output, step=2)
+
+    vis.add_datasample(input=input, data_sample=data_sample, step=2)
 
     for fn in 'rgb_1.png', 'bgr_2.png':
         img = mmcv.imread(f'work_dirs/vis_data/vis_image/{fn}')
