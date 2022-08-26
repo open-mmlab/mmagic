@@ -55,7 +55,6 @@ class ConcatImageVisualizer(Visualizer):
     def add_datasample(self,
                        input: torch.Tensor,
                        data_sample: EditDataSample,
-                       output: EditDataSample,
                        step=0) -> None:
         """Concatenate image and draw.
 
@@ -71,8 +70,9 @@ class ConcatImageVisualizer(Visualizer):
         merged_dict = {
             'input': input,
             **data_sample.to_dict(),
-            **output.to_dict()
         }
+        print(merged_dict.keys(), self.fn_key)
+
         fn = merged_dict[self.fn_key]
         fn = re.split(r' |/|\\', fn)[-1]
         fn = fn.split('.')[0]
