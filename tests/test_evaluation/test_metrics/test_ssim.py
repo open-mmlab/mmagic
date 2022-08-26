@@ -13,15 +13,16 @@ def test_ssim():
     mask = np.ones((3, 32, 32)) * 2
     mask[:16] *= 0
     gt_img = np.ones((3, 32, 32)) * 2
-    data_batch = [
-        dict(
-            data_sample=dict(gt_img=gt_img, mask=mask, gt_channel_order='bgr'))
-    ]
     predictions = [dict(pred_img=np.ones((3, 32, 32)))]
 
+    data_batch = [
+        dict(
+            data_samples=dict(
+                gt_img=gt_img, mask=mask, gt_channel_order='bgr'))
+    ]
     data_batch.append(
         dict(
-            data_sample=dict(
+            data_samples=dict(
                 gt_img=torch.from_numpy(gt_img),
                 mask=torch.from_numpy(mask),
                 img_channel_order='bgr')))

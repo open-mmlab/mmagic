@@ -12,23 +12,21 @@ from mmedit.evaluation.metrics import NIQE, niqe
 def test_niqe():
     img = mmcv.imread('tests/data/image/gt/baboon.png')
 
-    data_batch = [dict(gt_img=img)]
     predictions = [dict(pred_img=img)]
-
-    data_batch = [
-        dict(
-            data_sample=dict(
-                gt_img=torch.from_numpy(img), gt_channel_order='bgr'))
-    ]
-    data_batch.append(
-        dict(
-            data_sample=dict(
-                gt_img=torch.from_numpy(img), img_channel_order='bgr')))
-
     predictions.append({
         k: torch.from_numpy(deepcopy(v))
         for (k, v) in predictions[0].items()
     })
+
+    data_batch = [
+        dict(
+            data_samples=dict(
+                gt_img=torch.from_numpy(img), gt_channel_order='bgr'))
+    ]
+    data_batch.append(
+        dict(
+            data_samples=dict(
+                gt_img=torch.from_numpy(img), img_channel_order='bgr')))
 
     niqe_ = NIQE()
     niqe_.process(data_batch, predictions)
