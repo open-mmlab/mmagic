@@ -2,58 +2,81 @@
 
 Some intermediate variables are used in the configs files, like `train_pipeline`/`test_pipeline` in datasets.
 
-For example, we would like to first define the `train_pipeline`/`test_pipeline` and pass them into `data`. Thus, `train_pipeline`/`test_pipeline` are intermediate variable.
+For example, we would like to first define the `train_pipeline`/`test_pipeline` and pass them into `train_dataloader`/`test_dataloader`. Thus, `train_pipeline`/`test_pipeline` are intermediate variable.
 
 ```python
 ...
-train_dataset_type = 'SRAnnotationDataset'
-val_dataset_type = 'SRFolderDataset'
 train_pipeline = [
     dict(
         type='LoadImageFromFile',
-        io_backend='disk',
-        key='lq',
-        flag='unchanged'),
-    ...
-    dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'gt_path']),
-    dict(type='ImageToTensor', keys=['lq', 'gt'])
+        key='img',
+        color_type='color',
+        channel_order='rgb',
+        imdecode_backend='cv2'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb',
+        imdecode_backend='cv2'),
+    dict(type='SetValues', dictionary=dict(scale=scale)),
+    dict(type='PairedRandomCrop', gt_patch_size=128),
+    dict(
+        type='Flip',
+        keys=['img', 'gt'],
+        flip_ratio=0.5,
+        direction='horizontal'),
+    dict(
+        type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
+    dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
+    dict(type='ToTensor', keys=['img', 'gt']),
+    dict(type='PackEditInputs')
 ]
 test_pipeline = [
     dict(
         type='LoadImageFromFile',
-        io_backend='disk',
-        key='lq',
-        flag='unchanged'),
-    ...
-    dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'gt_path']),
-    dict(type='ImageToTensor', keys=['lq', 'gt'])
+        key='img',
+        color_type='color',
+        channel_order='rgb',
+        imdecode_backend='cv2'),
+    dict(
+        type='LoadImageFromFile',
+        key='gt',
+        color_type='color',
+        channel_order='rgb',
+        imdecode_backend='cv2'),
+    dict(type='ToTensor', keys=['img', 'gt']),
+    dict(type='PackEditInputs')
 ]
 
-data = dict(
-    # train
-    train_dataloader = dict(
-        samples_per_gpu=16,
-        workers_per_gpu=6,
-        drop_last=True),
-    train=dict(
-        type='RepeatDataset',
-        times=1000,
-        dataset=dict(
-            type=train_dataset_type,
-            lq_folder='data/DIV2K/DIV2K_train_LR_bicubic/X2_sub',
-            gt_folder='data/DIV2K/DIV2K_train_HR_sub',
-            ann_file='data/DIV2K/meta_info_DIV2K800sub_GT.txt',
-            pipeline=train_pipeline,
-            scale=scale)),
-    # val
-    val_dataloader = dict(samples_per_gpu=1, workers_per_gpu=1),
-    val=dict(
-        type=val_dataset_type,
-        lq_folder='data/val_set5/Set5_bicLRx2',
-        gt_folder='data/val_set5/Set5_mod12',
-        pipeline=test_pipeline,
-        scale=scale,
-        filename_tmpl='{}')
+# dataset settings
+dataset_type = 'BasicImageDataset'
+data_root = 'data'
 
-empty_cache = True  # empty cache in every iteration.
+train_dataloader = dict(
+    num_workers=4,
+    persistent_workers=False,
+    sampler=dict(type='InfiniteSampler', shuffle=True),
+    dataset=dict(
+        type=dataset_type,
+        ann_file='meta_info_DIV2K800sub_GT.txt',
+        metainfo=dict(dataset_type='div2k', task_name='sisr'),
+        data_root=data_root + '/DIV2K',
+        data_prefix=dict(
+            img='DIV2K_train_LR_bicubic/X4_sub', gt='DIV2K_train_HR_sub'),
+        filename_tmpl=dict(img='{}', gt='{}'),
+        pipeline=train_pipeline))
+
+test_dataloader = dict(
+    num_workers=4,
+    persistent_workers=False,
+    drop_last=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type=dataset_type,
+        metainfo=dict(dataset_type='set5', task_name='sisr'),
+        data_root=data_root + '/Set5',
+        data_prefix=dict(img='LRbicx4', gt='GTmod12'),
+        pipeline=test_pipeline))
+...
 ```
