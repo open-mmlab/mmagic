@@ -1,13 +1,10 @@
-## Inference with pre-trained models
+# Testing and Training in MMEditing
 
-We provide testing scripts to evaluate pre-trained models on a whole dataset,
-as well as some task-specific image demos.
-
-### Test a pre-trained model
+## Test a pre-trained model in MMEditing
 
 MMEditing implements **distributed** testing with `MMDistributedDataParallel`.
 
-#### Test with single/multiple GPUs
+### Test with single/multiple GPUs
 
 You can use the following commands to test a pre-trained model with single/multiple GPUs.
 
@@ -29,7 +26,7 @@ python tools/test.py configs/example_config.py work_dirs/example_exp/example_mod
 ./tools/dist_test.sh configs/example_config.py work_dirs/example_exp/example_model_20200202.pth --save-path work_dirs/example_exp/results/
 ```
 
-#### Test with Slurm
+### Test with Slurm
 
 If you run MMEditing on a cluster managed with [slurm](https://slurm.schedmd.com/), you can use the script `slurm_test.sh`. (This script also supports single machine testing.)
 
@@ -45,7 +42,7 @@ GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/exampl
 
 You can check [slurm_test.sh](https://github.com/open-mmlab/mmediting/blob/master/tools/slurm_test.sh) for full arguments and environment variables.
 
-#### Optional arguments
+### Optional arguments
 
 - `--out`: Specify the filename of the output results in pickle format. If not given, the results will not be saved to a file.
 - `--save-path`: Specify the path to store edited images. If not given, the images will not be saved.
@@ -55,7 +52,7 @@ You can check [slurm_test.sh](https://github.com/open-mmlab/mmediting/blob/maste
 
 Note: Currently, we do NOT use `--eval` argument like [MMDetection](https://github.com/open-mmlab/mmdetection) to specify evaluation metrics. The evaluation metrics are given in the config files (see [config.md](config.md)).
 
-## Train a model
+## Train a model in MMEditing
 
 MMEditing implements **distributed** training with `MMDistributedDataParallel`.
 
@@ -85,7 +82,7 @@ Difference between `resume-from` and `load-from`:
 `resume-from` loads both the model weights and optimizer status, and the iteration is also inherited from the specified checkpoint. It is usually used for resuming the training process that is interrupted accidentally.
 `load-from` only loads the model weights and the training iteration starts from 0. It is usually used for fine-tuning.
 
-#### Train with multiple nodes
+### Train with multiple nodes
 
 To launch distributed training on multiple machines, which can be accessed via IPs, run following commands:
 
@@ -152,3 +149,8 @@ Then you can launch two jobs with `config1.py` ang `config2.py`.
 CUDA_VISIBLE_DEVICES=0,1,2,3 GPUS=4 ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} config1.py ${WORK_DIR}
 CUDA_VISIBLE_DEVICES=4,5,6,7 GPUS=4 ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} config2.py ${WORK_DIR}
 ```
+
+
+### Optional arguments
+
+- `--amp`: This argument is used for fixed-precision training.
