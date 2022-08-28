@@ -1,8 +1,8 @@
-### Demo
+# Inference in MMEditing 
 
-We provide some task-specific demo scripts to test a single image.
+We provide APIs for you to easily play with state-of-the-art models on your own images or videos. Here we provide some task-specific demo scripts for your reference. 
 
-#### Inpainting
+## Run a Demo of Image Inpainting
 
 You can use the following commands to test a pair of images for inpainting.
 
@@ -30,7 +30,7 @@ python demo/inpainting_demo.py \
 
 The predicted inpainting result will be save in `tests/data/pred/inpainting_celeba.png`.
 
-#### Matting
+## Run a Demo of Image Matting
 
 You can use the following commands to test a pair of images and trimap.
 
@@ -58,7 +58,7 @@ python demo/matting_demo.py \
 
 The predicted alpha matte will be save in `tests/data/pred/GT05.png`.
 
-#### Restoration (Image)
+## Run a Demo of Image Super-Resolution 
 
 You can use the following commands to test an image for restoration.
 
@@ -94,7 +94,7 @@ python demo/restoration_demo.py \
     --ref-path tests/data/frames/sequence/gt/sequence_1/00000001.png
 ```
 
-#### Restoration (Face Image)
+## Run a Demo of Facial Restoration 
 
 You can use the following commands to test an face image for restoration.
 
@@ -121,7 +121,7 @@ python demo/restoration_face_demo.py \
     --upscale-factor 4
 ```
 
-#### Restoration (Video)
+## Run a Demo of Video Super-Resolution
 
 You can use the following commands to test a video for restoration.
 
@@ -160,7 +160,7 @@ python demo/restoration_video_demo.py \
 
 The restored video will be save in `output/`.
 
-#### video frame interpolation
+## Run a Demo of Video Frame Interpolation
 
 You can use the following commands to test a video for frame interpolation.
 
@@ -197,41 +197,4 @@ python demo/video_interpolation_demo.py \
     tests/data/test_inference.mp4 \
     tests/data/test_inference_vfi_out.mp4 \
     --fps 60.0
-```
-
-#### Generation
-
-```shell
-python demo/generation_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${IMAGE_FILE} \
-    ${SAVE_FILE} \
-    [--unpaired-path ${UNPAIRED_IMAGE_FILE}] \
-    [--imshow] \
-    [--device ${GPU_ID}]
-```
-
-If `--unpaired-path` is specified (used for CycleGAN), the model will perform unpaired image-to-image translation. If `--imshow` is specified, the demo will also show image with opencv. Examples:
-
-Paired:
-
-```shell
-python demo/generation_demo.py \
-    configs/example_config.py \
-    work_dirs/example_exp/example_model_20200202.pth \
-    demo/demo.jpg \
-    demo/demo_out.jpg
-```
-
-Unpaired (also show image with opencv):
-
-```shell
-python demo/generation_demo.py 、
-    configs/example_config.py \
-    work_dirs/example_exp/example_model_20200202.pth \
-    demo/demo.jpg \
-    demo/demo_out.jpg \
-    --unpaired-path demo/demo_unpaired.jpg \
-    --imshow
 ```
