@@ -201,6 +201,7 @@ class ToTensor(BaseTransform):
     Args:
         keys (Sequence[str]): Required keys to be converted.
         to_float32 (bool): Whether convert tensors of images to float32.
+            Default: True.
     """
 
     def __init__(self, keys, to_float32=True):

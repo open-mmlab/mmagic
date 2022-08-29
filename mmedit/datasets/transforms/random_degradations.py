@@ -506,6 +506,7 @@ class DegradationsWithShuffle:
             modified.
         shuffle_idx (list | None, optional): The degradations corresponding to
             these indices are shuffled. If None, all degradations are shuffled.
+            Default: None.
     """
 
     def __init__(self, degradations, keys, shuffle_idx=None):

@@ -19,7 +19,7 @@ class Crop(BaseTransform):
         keys (Sequence[str]): The images to be cropped.
         crop_size (Tuple[int]): Target spatial size (h, w).
         random_crop (bool): If set to True, it will random crop
-            image. Otherwise, it will work as center crop.
+            image. Otherwise, it will work as center crop. Default: True.
         is_pad_zeros (bool, optional): Whether to pad the image with 0 if
             crop_size is greater than image size. Default: False.
     """
@@ -177,6 +177,7 @@ class FixedCrop(BaseTransform):
         crop_size (Tuple[int]): Target spatial size (h, w).
         crop_pos (Tuple[int]): Specific position (x, y). If set to None,
             random initialize the position to crop paired data batch.
+            Default: None.
     """
 
     def __init__(self, keys, crop_size, crop_pos=None):
@@ -722,7 +723,7 @@ class CropAroundUnknown(BaseTransform):
             contain 'trimap'.
         crop_sizes (list[int | tuple[int]]): List of (w, h) to be selected.
         unknown_source (str, optional): Unknown area to select from. It must be
-            'alpha' or 'tirmap'. Default to 'alpha'.
+            'alpha' or 'trimap'. Default to 'alpha'.
         interpolations (str | list[str], optional): Interpolation method of
             mmcv.imresize. The interpolation operation will be applied when
             image size is smaller than the crop_size. If given as a list of
