@@ -1,8 +1,24 @@
-# Tutorial 3: Customize Models
+# Design Your Own Models
 
-MMEditing supports multiple tasks, each of which has different settings. Fortunately, their customization is similar. Here, we use a super-resolution model, BasicVSR, as an example in this tutorial. You will be able to define your model based on your own needs after this tutorial.
+<!--
+1. inheritance and interface of models
+2. each components in the models
+3. forward
+4. data pre-processing
+5. data post-processing
+-->
 
-We first need to create BasicVSR in `mmedit/models/restorers/basicvsr.py` .
+MMEditing is built upon MMEngine and MMCV, which enables users to design new models quickly, train and evaluate them easily. In this section, you will learn how to design your own model. Here, we take implementing SRGAN (a classical model of image super-resolution) as an example.
+
+To implement a classical image super-resolution model, SRGAN, you need to follow the steps below:
+
+1. Define your own network architectures
+2. Define data pre-processing step
+3. Define data post-processing step
+4. Define the training step
+5. Start training
+
+## Define your own network architectures
 
 ```python
 from mmedit.registry import MODELS
@@ -27,8 +43,6 @@ class BasicVSR(BasicRestorer):
         # count training steps
         self.register_buffer('step_counter', torch.zeros(1))
 ```
-
-## Model Argument
 
 The values of these arguments are taken from the configuration file. Let's have a glance at the model part in the configuration file, you can find the complete config at `configs/restorers/basicvsr/basicvsr_reds4.py` .
 
@@ -71,7 +85,7 @@ class BasicVSRNet(nn.Module):
         pass
 ```
 
-### Importing Module
+## Define your own network architectures
 
 This is the part we need to be careful. We need to add the following line to `mmedit/models/backbones/__init__.py` to use the defined backbone.
 
