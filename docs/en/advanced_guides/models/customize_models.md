@@ -10,15 +10,15 @@
 
 MMEditing is built upon MMEngine and MMCV, which enables users to design new models quickly, train and evaluate them easily. In this section, you will learn how to design your own model. Here, we take implementing SRGAN (a classical model of image super-resolution) as an example.
 
-To implement a classical image super-resolution model, SRGAN, you need to follow the steps below:
+To implement a classical image super-resolution model, SRGAN, you need to follow these steps:
 
-1. Define your own network architectures
-2. Define data pre-processing step
-3. Define data post-processing step
-4. Define the training step
-5. Start training
+- [Step 1: Define your own network architectures](#step-1-define-your-own-network-architectures)
+- [Step 2: Define data pre-processing step](#step-2-define-data-pre-processing-step)
+- [Step 3: Define data post-processing step](#step-3-define-data-post-processing-step)
+- [Step 4: Define the training step](#step-4-define-the-training-step)
+- [Step 5: Start training](#step-5-start-training)
 
-## Define your own network architectures
+## Step 1: Define your own network architectures
 
 ```python
 from mmedit.registry import MODELS
@@ -62,11 +62,7 @@ test_cfg = dict(metrics=['PSNR', 'SSIM'], crop_border=0)
 
 We will now go through them one by one.
 
-## generator
-
 `generator` specifies the network architecture, which is called **backbone** in MMEditing. The definition of the backbone is straightforward, but there is one thing that needs our attention.
-
-### Defining Backbone
 
 Create a new file `mmedit/models/backbones/basicvsr_net.py` . The definition is standard. Please do make sure the line `@BACKBONES.register_module()` is added for all modules you would like to use.
 
@@ -85,15 +81,11 @@ class BasicVSRNet(nn.Module):
         pass
 ```
 
-## Define your own network architectures
-
 This is the part we need to be careful. We need to add the following line to `mmedit/models/backbones/__init__.py` to use the defined backbone.
 
 ```python
 from .basicvsr_net import BasicVSRNet
 ```
-
-## Specification in Configuration File
 
 Given the above model, the specification in the configuration file is straightforward. We see that the argument `type` is just the name of the backbone, and other arguments correspond to that in the backbone.
 
@@ -106,11 +98,9 @@ generator=dict(
     'basicvsr/spynet_20210409-c6c1bd09.pth')
 ```
 
-## pixel_loss
+## Step 2: Define data pre-processing step
 
 `pixel_loss` refers to the loss used in BasicVSR. The specification of the loss is similar to that of the backbone.
-
-### Defining Loss
 
 Let's use Charbonnier loss as an example. We first define the loss in `mmedit/models/losses/pixelwise_loss.py` . The decorator `masked_loss` enables the loss to be weighted and masked for each element. Again, do make sure that the line `@LOSSES.register_module()` is included.
 
@@ -161,19 +151,15 @@ Then, the specification in the config follows naturally.
 pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean')
 ```
 
-## train_cfg and test_cfg
-
 `train_cfg` and `test_cfg` are just additional parameters you want to pass to the model. For example, in BasicVSR, a constant is passed to the model to fix a part of the network for a certain number of iterations.
 
 ```python
 self.fix_iter = train_cfg.get('fix_iter', 0) if train_cfg else 0
 ```
 
-## Model Functions
-
 The model functions are used to control the training and test. In this tutorial, we will highlight a few important ones. For more details of the functions, you may refer to [here](https://github.com/open-mmlab/mmediting/blob/master/mmedit/models/restorers/basic_restorer.py).
 
-### train_step
+## Step 3: Define data post-processing step
 
 This corresponds to the pipeline of each iteration, including forward and backward. In this example, the output and losses are computed. They are then used for backpropagation. More details of the forward process is discussed below.
 
@@ -191,7 +177,7 @@ def train_step(self, data_batch, optimizer):
     return outputs
 ```
 
-### forward_train
+## Step 4: Define the training step
 
 This corresponds to the forward process. In this example, we will compute `output` given `lq` . Then `pixel_loss` is computed between `output` and `gt` . The computed loss will then be passed to a dictionary for further computations, including backpropagation. If you have any other losses, you should also include them here.
 
@@ -207,8 +193,6 @@ def forward_train(self, lq, gt):
         results=dict(lq=lq.cpu(), gt=gt.cpu(), output=output.cpu()))
     return outputs
 ```
-
-### forward_test
 
 This corresponds to the validation and test. For example, you need to specify how you perform evaluation (i.e. calculation of metrics) and how you save the outputs.
 
@@ -247,3 +231,5 @@ def forward_test(self,
 
         return results
 ```
+
+## Step 5: Start training
