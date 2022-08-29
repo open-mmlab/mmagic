@@ -16,9 +16,9 @@ def generation_init_weights(module, init_type='normal', init_gain=0.02):
     Args:
         module (nn.Module): Module to be initialized.
         init_type (str): The name of an initialization method:
-            normal | xavier | kaiming | orthogonal.
+            normal | xavier | kaiming | orthogonal. Default: 'normal'.
         init_gain (float): Scaling factor for normal, xavier and
-            orthogonal.
+            orthogonal. Default: 0.02.
     """
 
     def init_func(m):
@@ -67,7 +67,7 @@ class GANImageBuffer:
         buffer_size (int): The size of image buffer. If buffer_size = 0,
             no buffer will be created.
         buffer_ratio (float): The chance / possibility  to use the images
-            previously stored in the buffer.
+            previously stored in the buffer. Default: 0.5.
     """
 
     def __init__(self, buffer_size, buffer_ratio=0.5):
@@ -244,7 +244,7 @@ class ResidualBlockWithDropout(nn.Module):
         padding_mode (str): The name of padding layer:
             'reflect' | 'replicate' | 'zeros'.
         norm_cfg (dict): Config dict to build norm layer. Default:
-            `dict(type='IN')`.
+            `dict(type='BN')`.
         use_dropout (bool): Whether to use dropout layers. Default: True.
     """
 

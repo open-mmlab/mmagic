@@ -29,16 +29,18 @@ class MattorPreprocessor(BaseDataPreprocessor):
 
     Args:
         mean (Sequence[float or int]): The pixel mean of R, G, B channels.
-            Defaults to (127.5, 127.5, 127.5).
+            Defaults to [123.675, 116.28, 103.53].
         std (Sequence[float or int]): The pixel standard deviation of R, G, B
-            channels. (127.5, 127.5, 127.5)
+            channels. [58.395, 57.12, 57.375].
         bgr_to_rgb (bool): whether to convert image from BGR to RGB.
-            Defaults to False.
-        proc_inputs (str): Methods to process inputs.
+            Defaults to True.
+        proc_inputs (str): Methods to process inputs. Default: 'normalize'.
             Available options are ``normalize``.
         proc_trimap (str): Methods to process gt tensors.
+            Default: 'rescale_to_zero_one'.
             Available options are ``rescale_to_zero_one`` and ``as-is``.
         proc_gt (str): Methods to process gt tensors.
+            Default: 'rescale_to_zero_one'.
             Available options are ``rescale_to_zero_one`` and ``ignore``.
     """
 
@@ -126,6 +128,7 @@ class MattorPreprocessor(BaseDataPreprocessor):
         Args:
             data (Sequence[dict]): data sampled from dataloader.
             training (bool): Whether to enable training time augmentation.
+                Default: False.
 
         Returns:
             Tuple[torch.Tensor, list]:

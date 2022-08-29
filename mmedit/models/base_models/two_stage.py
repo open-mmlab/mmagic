@@ -20,10 +20,28 @@ class TwoStageInpaintor(OneStageInpaintor):
     The `stage1_loss_type` and `stage2_loss_type` should be chosen from these
     loss types.
     Args:
+        data_preprocessor (dict): Config of data_preprocessor.
+        encdec (dict): Config for encoder-decoder style generator.
+        disc (dict): Config for discriminator.
+        loss_gan (dict): Config for adversarial loss.
+        loss_gp (dict): Config for gradient penalty loss.
+        loss_disc_shift (dict): Config for discriminator shift loss.
+        loss_composed_percep (dict): Config for perceptual and style loss with
+            composed image as input.
+        loss_out_percep (dict): Config for perceptual and style loss with
+            direct output as input.
+        loss_l1_hole (dict): Config for l1 loss in the hole.
+        loss_l1_valid (dict): Config for l1 loss in the valid region.
+        loss_tv (dict): Config for total variation loss.
+        train_cfg (dict): Configs for training scheduler. `disc_step` must be
+            contained for indicates the discriminator updating steps in each
+            training step.
+        test_cfg (dict): Configs for testing scheduler.
+        init_cfg (dict, optional): Initialization config dict.
         stage1_loss_type (tuple[str]): Contains the loss names used in the
-            first stage model.
+            first stage model. Default: ('loss_l1_hole').
         stage2_loss_type (tuple[str]): Contains the loss names used in the
-            second stage model.
+            second stage model. Default: ('loss_l1_hole', 'loss_gan').
         input_with_ones (bool): Whether to concatenate an extra ones tensor in
             input. Default: True.
         disc_input_with_mask (bool): Whether to add mask as input in
@@ -77,7 +95,7 @@ class TwoStageInpaintor(OneStageInpaintor):
         """Forward function in tensor mode.
         Args:
             inputs (torch.Tensor): Input tensor.
-            data_sample (dict): Dict contains data sample.
+            data_samples (List[dict]): List of data sample dict.
         Returns:
             dict: Dict contains output results.
         """
@@ -128,10 +146,15 @@ class TwoStageInpaintor(OneStageInpaintor):
         """Calculate two-stage loss.
         Args:
             stage1_data (dict): Contain stage1 results.
-            stage2_data (dict): Contain stage2 results.
-            data_batch (dict): Contain data needed to calculate loss.
+            stage2_data (dict): Contain stage2 results..
+            gt (torch.Tensor): Ground-truth image.
+            mask (torch.Tensor): Mask image.
+            masked_img (torch.Tensor): Composition of mask image and
+                ground-truth image.
         Returns:
-            dict: Contain losses with name.
+            tuple(dict): Dict contains the results computed within this \
+                function for visualization and dict contains the loss items \
+                computed in this function.
         """
 
         loss = dict()
@@ -225,10 +248,12 @@ class TwoStageInpaintor(OneStageInpaintor):
         iterations for optimizing discriminator with different input data and
         only one iteration for optimizing gerator after `disc_step` iterations
         for discriminator.
+
         Args:
-            data_batch (torch.Tensor): Batch of data as input.
-            optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
-                generator and discriminator (if have).
+            data (List[dict]): Batch of data as input.
+            optim_wrapper (dict[torch.optim.Optimizer]): Dict with optimizers
+                for generator and discriminator (if have).
+
         Returns:
             dict: Dict with loss, information for logger, the number of \
                 samples and results for visualization.

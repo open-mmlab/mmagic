@@ -12,10 +12,12 @@ class LinearModule(nn.Module):
     Args:
         in_features (int): Same as nn.Linear.
         out_features (int): Same as nn.Linear.
-        bias (bool): Same as nn.Linear.
+        bias (bool): Same as nn.Linear. Default: True.
         act_cfg (dict): Config dict for activation layer, "relu" by default.
         inplace (bool): Whether to use inplace mode for activation.
+            Default: True.
         with_spectral_norm (bool): Whether use spectral norm in linear module.
+            Default: False.
         order (tuple[str]): The order of linear/activation layers. It is a
             sequence of "linear", "norm" and "act". Examples are
             ("linear", "act") and ("act", "linear").
@@ -61,6 +63,7 @@ class LinearModule(nn.Module):
         self.init_weights()
 
     def init_weights(self):
+        """Init weights for the model."""
         if self.with_activation and self.act_cfg['type'] == 'LeakyReLU':
             nonlinearity = 'leaky_relu'
             a = self.act_cfg.get('negative_slope', 0.01)

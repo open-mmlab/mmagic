@@ -44,6 +44,8 @@ def charbonnier_loss(pred, target, eps=1e-12):
     Args:
         pred (Tensor): Prediction Tensor with shape (n, c, h, w).
         target ([type]): Target Tensor with shape (n, c, h, w).
+        eps (float): A value used to control the curvature near zero.
+            Default: 1e-12.
 
     Returns:
         Tensor: Calculated Charbonnier loss.

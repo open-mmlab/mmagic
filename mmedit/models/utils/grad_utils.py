@@ -5,7 +5,8 @@ def set_requires_grad(nets, requires_grad=False):
     Args:
         nets (nn.Module | list[nn.Module]): A list of networks or a single
             network.
-        requires_grad (bool): Whether the networks require gradients or not
+        requires_grad (bool): Whether the networks require gradients or not.
+            Default: False.
     """
     if not isinstance(nets, list):
         nets = [nets]

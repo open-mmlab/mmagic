@@ -18,11 +18,12 @@ class MultiLayerDiscriminator(nn.Module):
         in_channels (int): Input channel of the first input convolution.
         max_channels (int): The maximum channel number in this structure.
         num_conv (int): Number of stacked intermediate convs (including input
-            conv but excluding output conv).
+            conv but excluding output conv). Default to 5.
         fc_in_channels (int | None): Input dimension of the fully connected
             layer. If `fc_in_channels` is None, the fully connected layer will
-            be removed.
+            be removed. Default to None.
         fc_out_channels (int): Output dimension of the fully connected layer.
+            Default to 1024.
         kernel_size (int): Kernel size of the conv modules. Default to 5.
         conv_cfg (dict): Config dict to build conv layer.
         norm_cfg (dict): Config dict to build norm layer.

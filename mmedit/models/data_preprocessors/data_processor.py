@@ -27,10 +27,10 @@ class EditDataPreprocessor(BaseDataPreprocessor):
 
     Args:
         mean (Sequence[float or int]): The pixel mean of R, G, B channels.
-            Defaults to (255, 255, 255). If ``mean`` and ``std`` are not
+            Defaults to (0, 0, 0). If ``mean`` and ``std`` are not
             specified, ImgDataPreprocessor will normalize images to [0, 1].
         std (Sequence[float or int]): The pixel standard deviation of R, G, B
-            channels. (0, 0, 0). If ``mean`` and ``std`` are not
+            channels. (255, 255, 255). If ``mean`` and ``std`` are not
             specified, ImgDataPreprocessor will normalize images to [0, 1].
         pad_size_divisor (int): The size of padded image should be
             divisible by ``pad_size_divisor``. Defaults to 1.
@@ -39,7 +39,7 @@ class EditDataPreprocessor(BaseDataPreprocessor):
         output_view (Tuple | List | None): Tensor view of mean and std for
             output (without batch). If None, output_view=input_view.
             Defaults: None.
-        pad_args: Args of F.pad.
+        pad_args (dict): Args of F.pad. Default: dict().
     """
 
     def __init__(
@@ -97,6 +97,7 @@ class EditDataPreprocessor(BaseDataPreprocessor):
         Args:
             data (Sequence[dict]): data sampled from dataloader.
             training (bool): Whether to enable training time augmentation.
+                Default: False.
 
         Returns:
             Tuple[torch.Tensor, Optional[list]]: Data in the same format as the
