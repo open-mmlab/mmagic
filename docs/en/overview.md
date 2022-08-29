@@ -36,7 +36,7 @@ MMEditing supports various tasks, including:
 </video>
 </div>
 
-## Why should I use transformers?
+## Why should I use MMEditing?
 
 - **State of the art**
 
