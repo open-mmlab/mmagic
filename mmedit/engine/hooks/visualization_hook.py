@@ -11,7 +11,8 @@ class BasicVisualizationHook(Hook):
     """Basic hook that invoke visualizers during validation and test.
 
     Args:
-        interval (int): Visualization interval. Default: 1.
+        interval (int | dict): Visualization interval. Default: {}.
+        on_train (bool): Whether to call hook during train. Default to False.
         on_val (bool): Whether to call hook during validation. Default to True.
         on_test (bool): Whether to call hook during test. Default to True.
     """

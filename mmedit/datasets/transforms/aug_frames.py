@@ -65,7 +65,7 @@ class TemporalReverse(BaseTransform):
 
     Args:
         keys (list[str]): The frame lists to be reversed.
-        reverse_ratio (float): The propability to reverse the frame lists.
+        reverse_ratio (float): The probability to reverse the frame lists.
             Default: 0.5.
     """
 

@@ -35,6 +35,7 @@ class ConcatImageVisualizer(Visualizer):
             note that only float array or tensor will be denormalized,
             uint8 arrays are assumed to be unnormalized.
         bgr2rgb (bool): whether to convert the image from BGR to RGB.
+        name (str): name of visualizer. Default: 'visualizer'.
         *args and **kwargs: Other arguments are passed to `Visualizer`.
     """
 
@@ -60,9 +61,10 @@ class ConcatImageVisualizer(Visualizer):
         """Concatenate image and draw.
 
         Args:
-            input (torch.Tensor): Single input tensor from data_batch
-            data_sample (EditDataSample): Single data_sample from data_batch
-            output (EditDataSample): Single prediction output by model
+            input (torch.Tensor): Single input tensor from data_batch.
+            data_sample (EditDataSample): Single data_sample from data_batch.
+            output (EditDataSample): Single prediction output by model.
+            step (int): Global step value to record. Default: 0.
         """
         # Note:
         # with LocalVisBackend and default arguments, we have:
