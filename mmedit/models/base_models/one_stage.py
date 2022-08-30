@@ -165,7 +165,7 @@ class OneStageInpaintor(BaseModel):
 
         Returns:
             dict: Dict with loss, information for logger, the number of
-            samples and results for visualization.
+                samples and results for visualization.
         """
         batch_inputs, data_samples = self.data_preprocessor(data, True)
         log_vars = {}

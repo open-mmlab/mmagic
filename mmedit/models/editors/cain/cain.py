@@ -15,7 +15,6 @@ class CAIN(BasicInterpolator):
         pixel_loss (dict): Config for pixel-wise loss.
         train_cfg (dict): Config for training. Default: None.
         test_cfg (dict): Config for testing. Default: None.
-        pretrained (str): Path for pretrained model. Default: None.
         required_frames (int): Required frames in each process. Default: 2
         step_frames (int): Step size of video frame interpolation. Default: 1
         init_cfg (dict, optional): The weight initialized config for
