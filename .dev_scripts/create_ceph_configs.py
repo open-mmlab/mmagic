@@ -247,15 +247,15 @@ def update_ceph_config(filename, args, dry_run=False):
 
         # 3. change logger hook and checkpoint hook
         if hasattr(config, 'default_hooks'):
-            file_client_args = dict(backend='petrel')
+            # file_client_args = dict(backend='petrel')
 
             for name, hooks in config['default_hooks'].items():
                 if name == 'logger':
-                    # hooks['out_dir'] = save_dir
-                    hooks['file_client_args'] = file_client_args
+                    hooks['out_dir'] = save_dir
+                    # hooks['file_client_args'] = file_client_args
                 elif name == 'checkpoint':
-                    # hooks['out_dir'] = save_dir
-                    hooks['file_client_args'] = file_client_args
+                    hooks['out_dir'] = save_dir
+                    # hooks['file_client_args'] = file_client_args
 
         # 4. save
         config.dump(config.filename)
