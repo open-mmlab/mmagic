@@ -1,6 +1,6 @@
 .. toctree::
    :maxdepth: 2
-   
-    dataset.md
-    transforms.md
-    losses.md
+
+   models/customize_models.md
+   transforms.md
+   losses.md
