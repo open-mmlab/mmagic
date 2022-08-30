@@ -6,32 +6,32 @@ Languages:
 |
 `简体中文 <https://mmediting.readthedocs.io/zh_CN/latest/>`_
 
-MMEditing is an open-source toolbox for low-level vision.
-It supports various tasks, including:
+MMEditing is an open-source toolbox for image/video processing, editing and synthesis.
+
+MMEditing supports various tasks, including:
 
 * Image super-resolution
 * Video super-resolution
 * Video frame interpolation
 * Image inpainting
 * Image matting
-* Image generation
-* and possibly more in the future.
+And many other tasks are coming soon!
 
-It is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab project <https://openmmlab.com/>`_.
+MMEditing is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab project <https://openmmlab.com/>`_.
 Codes are available on `GitHub <https://github.com/open-mmlab/mmediting>`_.
 
 Documentation
 =============
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    :caption: Get Started
 
    Overview <overview.md>
    Get Started <get_started.md>
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: User Guides
 
    user_guides/index.rst
