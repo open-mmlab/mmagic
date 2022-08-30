@@ -52,10 +52,7 @@ class ConcatImageVisualizer(Visualizer):
         self.pixel_range = pixel_range
         self.bgr2rgb = bgr2rgb
 
-    def add_datasample(self,
-                       input: torch.Tensor,
-                       data_sample: EditDataSample,
-                       step=0) -> None:
+    def add_datasample(self, data_sample: EditDataSample, step=0) -> None:
         """Concatenate image and draw.
 
         Args:
@@ -68,10 +65,8 @@ class ConcatImageVisualizer(Visualizer):
         # self.save_dir == runner._log_dir / 'vis_data'
 
         merged_dict = {
-            'input': input,
             **data_sample.to_dict(),
         }
-        print(merged_dict.keys(), self.fn_key)
 
         fn = merged_dict[self.fn_key]
         fn = re.split(r' |/|\\', fn)[-1]

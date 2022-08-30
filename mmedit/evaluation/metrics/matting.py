@@ -25,10 +25,10 @@ def _assert_masked(pred_alpha, trimap):
             'pred_alpha should be masked by trimap before evaluation')
 
 
-def _fetch_data_and_check(data_batch, predictions):
-    ori_trimap = data_batch['data_samples']['ori_trimap'][:, :, 0]
-    ori_alpha = data_batch['data_samples']['ori_alpha'][:, :, 0]
-    pred_alpha = predictions['pred_alpha']['data']  # 2D tensor
+def _fetch_data_and_check(data_samples):
+    ori_trimap = data_samples['ori_trimap'][:, :, 0]
+    ori_alpha = data_samples['ori_alpha'][:, :, 0]
+    pred_alpha = data_samples['output']['pred_alpha']['data']  # 2D tensor
     pred_alpha = pred_alpha.cpu().numpy()
 
     _assert_ndim(ori_trimap, 'trimap', 2, 'HxW')
@@ -93,8 +93,8 @@ class SAD(BaseMetric):
             predictions (Sequence[dict]): A batch of outputs from
                 the model.
         """
-        for data, data_sample in zip(data_batch, data_samples):
-            pred_alpha, gt_alpha, _ = _fetch_data_and_check(data, data_sample)
+        for data_sample in data_samples:
+            pred_alpha, gt_alpha, _ = _fetch_data_and_check(data_sample)
 
             # divide by 1000 to reduce the magnitude of the result
             sad_sum = np.abs(pred_alpha - gt_alpha).sum() / self.norm_const
@@ -167,9 +167,8 @@ class MattingMSE(BaseMetric):
             data_samples (Sequence[dict]): A batch of outputs from
                 the model.
         """
-        for data, data_sample in zip(data_batch, data_samples):
-            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
-                data, data_sample)
+        for data_sample in data_samples:
+            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(data_sample)
 
             weight_sum = (trimap == 128).sum()
             if weight_sum != 0:
@@ -243,9 +242,8 @@ class GradientError(BaseMetric):
                 the model.
         """
 
-        for data, data_sample in zip(data_batch, data_samples):
-            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
-                data, data_sample)
+        for data_sample in data_samples:
+            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(data_sample)
 
             gt_alpha_normed = np.zeros_like(gt_alpha)
             pred_alpha_normed = np.zeros_like(pred_alpha)
@@ -329,9 +327,8 @@ class ConnectivityError(BaseMetric):
                 the model.
         """
 
-        for data, data_sample in zip(data_batch, data_samples):
-            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
-                data, data_sample)
+        for data_sample in data_samples:
+            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(data_sample)
 
             thresh_steps = np.arange(0, 1 + self.step, self.step)
             round_down_map = -np.ones_like(gt_alpha)

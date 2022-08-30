@@ -87,7 +87,6 @@ class ExponentialMovingAverageHook(Hook):
 
         model = runner.model.module if is_model_wrapper(
             runner.model) else runner.model
-        print(is_model_wrapper(runner.model))
 
         for key in self.module_keys:
             # get current ema states

@@ -59,8 +59,7 @@ class BasicVisualizationHook(Hook):
         else:
             interval = self._interval.get(mode, 1)
 
-        assert len(data_batch) == len(outputs)
         if self.every_n_inner_iters(batch_idx, interval):
             for data_sample in outputs:
                 runner.visualizer.add_datasample(
-                    input, data_sample, step=f'{mode}_{runner.iter}')
+                    data_sample, step=f'{mode}_{runner.iter}')

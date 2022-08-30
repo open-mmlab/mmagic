@@ -24,7 +24,7 @@ def update_intervals(config, args):
         config['default_hooks']['logger'] = dict(
             type='LoggerHook', interval=args.iters // 10)
         config['default_hooks']['checkpoint'] = dict(
-            type='CheckpointHook', interval=args.iters // 5)
+            type='CheckpointHook', interval=args.iters // 15)
 
     return config
 
@@ -251,10 +251,10 @@ def update_ceph_config(filename, args, dry_run=False):
 
             for name, hooks in config['default_hooks'].items():
                 if name == 'logger':
-                    hooks['out_dir'] = save_dir
+                    # hooks['out_dir'] = save_dir
                     hooks['file_client_args'] = file_client_args
                 elif name == 'checkpoint':
-                    hooks['out_dir'] = save_dir
+                    # hooks['out_dir'] = save_dir
                     hooks['file_client_args'] = file_client_args
 
         # 4. save
