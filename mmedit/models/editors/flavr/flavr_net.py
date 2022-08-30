@@ -79,6 +79,15 @@ class FLAVRNet(BaseModule):
                 padding=0))
 
     def forward(self, images: torch.Tensor):
+        """Forward function.
+
+        Args:
+            images (Tensor): Input frames tensor with shape (N, T, C, H, W).
+
+        Returns:
+            out (Tensor): Output tensor.
+        """
+
         # from [b, t, c, h, w] to [b, c, d, h, w], where t==d
         images = images.permute((0, 2, 1, 3, 4))
 
@@ -162,6 +171,14 @@ class Encoder(nn.Module):
         self._initialize_weights()
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor).
+
+        Returns:
+            tuple(Tensor): Output tensors.
+        """
 
         x_0 = self.stem_layer(x)
         x_1 = self.layer1(x_0)
@@ -178,6 +195,7 @@ class Encoder(nn.Module):
                     norm_cfg,
                     stride=1,
                     temporal_stride=None):
+        """Make layers by stacking the blocks."""
         downsample = None
 
         if stride != 1 or self.in_channels != mid_channels * block.expansion:
@@ -218,6 +236,7 @@ class Encoder(nn.Module):
         return nn.Sequential(*layers)
 
     def _initialize_weights(self):
+        """Init weights for models."""
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
                 nn.init.kaiming_normal_(
@@ -296,6 +315,14 @@ class Decoder(nn.Module):
             batchnorm=batchnorm)
 
     def forward(self, xs):
+        """Forward function.
+
+        Args:
+            xs (Tensor): Input tensor).
+
+        Returns:
+            dx_out (Tensor): Output tensor.
+        """
 
         dx_3 = self.lrelu(self.layer0(xs[4]))
         dx_3 = self._join_tensors(dx_3, xs[3])
@@ -387,7 +414,7 @@ class UpConv3d(nn.Module):
         self.upconv = nn.Sequential(*self.upconv)
 
     def forward(self, x):
-
+        """Forward function."""
         return self.upconv(x)
 
 
@@ -402,7 +429,7 @@ class Conv3d(nn.Module):
         kernel_size (int | tuple[int]): Size of the convolving kernel.
             Same as that in ``nn._ConvNd``.
         stride (int | tuple[int]): Stride of the convolution.
-            Same as that in ``nn._ConvNd``.
+            Same as that in ``nn._ConvNd``. Default: 1.
         padding (int | tuple[int]): Zero-padding added to both sides of
             the input. Same as that in ``nn._ConvNd``.
         bias (bool): If ``True``, adds a learnable bias to the conv layer.
@@ -437,7 +464,7 @@ class Conv3d(nn.Module):
         self.conv = nn.Sequential(*self.conv)
 
     def forward(self, x):
-
+        """Forward function."""
         return self.conv(x)
 
 
@@ -470,14 +497,13 @@ class BasicBlock(nn.Module):
 
     Args:
         in_channels (int): Number of channels in the input feature map.
-        out_channels (int): Number of channels produced by the block.
+        mid_channels (int):  Number of middle channels.
         stride (int | tuple[int]): Stride of the first convolution.
             Default: 1.
         norm_cfg (dict | None): Config dict for normalization layer.
             Default: None.
         bias (bool): If ``True``, adds a learnable bias to the conv layers.
             Default: ``True``
-        batchnorm (bool): Whether contains BatchNorm3d. Default: False.
         downsample (None | torch.nn.Module): Down-sample layer.
             Default: None.
     """
@@ -520,6 +546,15 @@ class BasicBlock(nn.Module):
         self.stride = stride
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            xs (Tensor): Input tensor).
+
+        Returns:
+            out (Tensor): Output tensor.
+        """
+
         residual = x
         out = self.conv1(x)
         out = self.conv2(out)
@@ -551,6 +586,14 @@ class SEGating(nn.Module):
             nn.Sigmoid())
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor).
+
+        Returns:
+            Tensor: Output tensors.
+        """
 
         out = self.pool(x)
         y = self.attn_layer(out)

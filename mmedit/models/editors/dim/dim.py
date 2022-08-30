@@ -29,7 +29,6 @@ class DIM(BaseMattor):
         data_preprocessor (dict, optional): Config of data pre-processor.
         backbone (dict): Config of backbone.
         refiner (dict): Config of refiner.
-        pretrained (str): Path of pretrained model.
         loss_alpha (dict): Config of the alpha prediction loss. Default: None.
         loss_comp (dict): Config of the composition loss. Default: None.
         loss_refine (dict): Config of the loss of the refiner. Default: None.
@@ -38,6 +37,8 @@ class DIM(BaseMattor):
             ``train_refiner`` should be specified.
         test_cfg (dict): Config of testing. In ``test_cfg``, If the model has a
             refiner, ``train_refiner`` should be specified.
+        init_cfg (dict, optional): The weight initialized config for
+            :class:`BaseModule`. Default: None.
     """
 
     def __init__(self,
@@ -91,10 +92,6 @@ class DIM(BaseMattor):
 
     def init_weights(self):
         """Initialize the model network weights.
-
-        Args:
-            pretrained (str, optional): Path to the pretrained weight.
-                Defaults to None.
         """
         super().init_weights()
         if self.with_refiner:
@@ -107,7 +104,12 @@ class DIM(BaseMattor):
         return hasattr(self, 'refiner') and self.refiner is not None
 
     def train(self, mode=True):
-        """Mode switcher."""
+        """Mode switcher.
+
+        Args:
+            mode (bool): whether to set training mode (``True``) or evaluation
+                mode (``False``). Default: ``True``.
+        """
         super().train(mode)
         if mode and (not self.train_cfg.train_backbone):
             self.backbone.eval()

@@ -159,7 +159,7 @@ class FBADecoder(nn.Module):
         Args:
             inputs (dict): Output dict of FbaEncoder.
         Returns:
-            Tensor: Predicted alpha, fg and bg of the current batch.
+            tuple(Tensor): Predicted alpha, fg and bg of the current batch.
         """
 
         conv_out = inputs['conv_out']
