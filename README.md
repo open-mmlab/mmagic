@@ -114,11 +114,11 @@ cd mmediting
 pip3 install -e .
 ```
 
-Please refer to [install.md](docs/en/install.md) for more detailed instruction.
+Please refer to [get_started.md](docs/en/get_started.md) for more detailed instruction.
 
 ## Getting Started
 
-Please see [getting_started.md](docs/en/getting_started.md) and [demo.md](docs/en/demo.md) for the basic usage of MMEditing.
+Please see [get_started.md](docs/en/get_started.md) and [inference.md](docs/en/user_guides/inference.md) for the basic usage of MMEditing.
 
 ## Model Zoo
 
@@ -127,11 +127,11 @@ Supported algorithms:
 <details open>
 <summary>Inpainting</summary>
 
-- [x] [Global&Local](configs/inpainting/global_local/README.md) (ToG'2017)
-- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
-- [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
-- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
-- [x] [AOT-GAN](configs/inpainting/AOT-GAN/README.md) (TVCG'2021)
+- [x] [Global&Local](configs/global_local/README.md) (ToG'2017)
+- [x] [DeepFillv1](configs/deepfillv1/README.md) (CVPR'2018)
+- [x] [PConv](configs/partial_conv/README.md) (ECCV'2018)
+- [x] [DeepFillv2](configs/deepfillv2/README.md) (CVPR'2019)
+- [x] [AOT-GAN](configs/AOT-GAN/README.md) (TVCG'2021)
 
 </details>
 
@@ -147,36 +147,28 @@ Supported algorithms:
 <details open>
 <summary>Image-Super-Resolution</summary>
 
-- [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
-- [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
-- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
-- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
-- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
-- [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
-- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
-- [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
-- [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
+- [x] [SRCNN](configs/srcnn/README.md) (TPAMI'2015)
+- [x] [SRResNet&SRGAN](configs/srgan_resnet/README.md) (CVPR'2016)
+- [x] [EDSR](configs/edsr/README.md) (CVPR'2017)
+- [x] [ESRGAN](configs/esrgan/README.md) (ECCV'2018)
+- [x] [RDN](configs/rdn/README.md) (CVPR'2018)
+- [x] [DIC](configs/dic/README.md) (CVPR'2020)
+- [x] [TTSR](configs/ttsr/README.md) (CVPR'2020)
+- [x] [GLEAN](configs/glean/README.md) (CVPR'2021)
+- [x] [LIIF](configs/liif/README.md) (CVPR'2021)
 
 </details>
 
 <details open>
 <summary>Video-Super-Resolution</summary>
 
-- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
-- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
-- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
-- [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
-- [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (CVPR'2022)
-- [x] [RealBasicVSR](configs/restorers/real_basicvsr/README.md) (CVPR'2022)
-
-</details>
-
-<details open>
-<summary>Generation</summary>
-
-- [x] [CycleGAN](configs/synthesizers/cyclegan/README.md) (ICCV'2017)
-- [x] [pix2pix](configs/synthesizers/pix2pix/README.md) (CVPR'2017)
+- [x] [EDVR](configs/edvr/README.md) (CVPR'2019)
+- [x] [TOF](configs/tof/README.md) (IJCV'2019)
+- [x] [TDAN](configs/tdan/README.md) (CVPR'2020)
+- [x] [BasicVSR](configs/basicvsr/README.md) (CVPR'2021)
+- [x] [IconVSR](configs/iconvsr/README.md) (CVPR'2021)
+- [x] [BasicVSR++](configs/basicvsr_plusplus/README.md) (CVPR'2022)
+- [x] [RealBasicVSR](configs/real_basicvsr/README.md) (CVPR'2022)
 
 </details>
 
