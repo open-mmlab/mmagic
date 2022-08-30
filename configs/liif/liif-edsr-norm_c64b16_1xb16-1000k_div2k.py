@@ -1,6 +1,5 @@
 _base_ = [
-    '../_base_/models/base_liif_c64b16_g1_1000k_div2k.py',
-    '../_base_/datasets/liif_test_config.py'
+    '../_base_/models/base_liif.py', '../_base_/datasets/liif_test_config.py'
 ]
 
 experiment_name = 'liif-edsr-norm_c64b16_1xb16-1000k_div2k'
