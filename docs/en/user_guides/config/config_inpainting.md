@@ -13,6 +13,11 @@ For more detailed usage and the corresponding alternative for each modules, plea
 ```python
 model = dict(
     type='GLInpaintor', # The name of inpaintor
+    data_preprocessor=dict(
+        type='EditDataPreprocessor', # The name of data preprocessor
+        mean=[127.5], # Mean value used in data normalization
+        std=[127.5], # Std value used in data normalization
+    ),
     encdec=dict(
         type='GLEncoderDecoder', # The name of encoder-decoder
         encoder=dict(type='GLEncoder', norm_cfg=dict(type='SyncBN')), # The config of encoder
@@ -46,22 +51,27 @@ model = dict(
     loss_l1_hole=dict(
         type='L1Loss', # The type of l1 loss
         loss_weight=1.0 # The weight of l1 loss
-    ),
-    pretrained=None) # The path of pretrained weight
+    ))
 
 train_cfg = dict(
-    disc_step=1, # The steps of training discriminator before training generator
-    iter_tc=90000, # Iterations of warming up generator
-    iter_td=100000, # Iterations of warming up discriminator
-    start_iter=0, # Starting iteration
-    local_size=(128, 128)) # The size of local patches
-test_cfg = dict(metrics=['l1']) # The config of testing scheme
+    type='IterBasedTrainLoop',# The name of train loop type
+    max_iters=500002, # The number of total iterations
+    val_interval=50000, # The number of validation interval iterations
+)
+val_cfg = dict(type='ValLoop') # The name of validation loop type
+test_cfg = dict(type='TestLoop') # The name of test loop type
 
-dataset_type = 'ImgInpaintingDataset' # The type of dataset
+val_evaluator = [
+    dict(type='MAE', mask_key='mask', scaling=100), # The name of metrics to evaluate
+    dict(type='PSNR'), # The name of metrics to evaluate
+    dict(type='SSIM'), # The name of metrics to evaluate
+]
+test_evaluator = val_evaluator
+
 input_shape = (256, 256) # The shape of input image
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='gt_img'), # The config of loading image
+    dict(type='LoadImageFromFile', key='gt'), # The config of loading image
     dict(
         type='LoadMask', # The type of loading mask pipeline
         mask_mode='bbox', # The type of mask
@@ -72,13 +82,13 @@ train_pipeline = [
             img_shape=input_shape)),  # The input image shape
     dict(
         type='Crop', # The type of crop pipeline
-        keys=['gt_img'],  # The keys of images to be cropped
+        keys=['gt'],  # The keys of images to be cropped
         crop_size=(384, 384),  # The size of cropped patch
         random_crop=True,  # Whether to use random crop
     ),
     dict(
         type='Resize',  # The type of resizing pipeline
-        keys=['gt_img'],  # They keys of images to be resized
+        keys=['gt'],  # They keys of images to be resized
         scale=input_shape,  # The scale of resizing function
         keep_ratio=False,  # Whether to keep ratio during resizing
     ),
@@ -88,70 +98,90 @@ train_pipeline = [
         mean=[127.5] * 3,  # Mean value used in normalization
         std=[127.5] * 3,  # Std value used in normalization
         to_rgb=False),  # Whether to transfer image channels to rgb
-    dict(type='GetMaskedImage'),  # The config of getting masked image pipeline
-    dict(
-        type='Collect',  # The type of collecting data from current pipeline
-        keys=['gt_img', 'masked_img', 'mask', 'mask_bbox'],  # The keys of data to be collected
-        meta_keys=['gt_img_path']),  # The meta keys of data to be collected
-    dict(type='ToTensor', keys=['gt_img', 'masked_img', 'mask']),  # The config dict of image to tensor pipeline
-    dict(type='ToTensor', keys=['mask_bbox'])  # The config dict of ToTensor pipeline
+    dict(type='GetMaskedImage'), # The config of getting masked image pipeline
+    dict(type='PackEditInputs'), # The config of collecting data from current pipeline
 ]
 
 test_pipeline = train_pipeline  # Constructing testing/validation pipeline
 
-data_root = 'data/places365'  # Set data root
+dataset_type = 'BasicImageDataset' # The type of dataset
+data_root = 'data/places'  # Root path of data
 
-data = dict(
-    samples_per_gpu=12,  # Batch size of a single GPU
-    workers_per_gpu=8,  # Worker to pre-fetch data for each single GPU
-    val_samples_per_gpu=1,  # Batch size of a single GPU in validation
-    val_workers_per_gpu=8,  # Worker to pre-fetch data for each single GPU in validation
-    drop_last=True,  # Whether to drop out the last batch of data
-    train=dict(  # Train dataset config
-        type=dataset_type,
-        ann_file=f'{data_root}/train_places_img_list_total.txt',
-        data_prefix=data_root,
+train_dataloader = dict(
+    batch_size=12, # Batch size of a single GPU
+    num_workers=4, # The number of workers to pre-fetch data for each single GPU
+    persistent_workers=False, # Whether maintain the workers Dataset instances alive
+    sampler=dict(type='InfiniteSampler', shuffle=False), # The type of data sampler
+    dataset=dict(  # Train dataset config
+        type=dataset_type, # Type of dataset
+        data_root=data_root, # Root path of data
+        data_prefix=dict(gt='data_large'), # Prefix of image path
+        ann_file='meta/places365_train_challenge.txt', # Path of annotation file
+        test_mode=False,
         pipeline=train_pipeline,
-        test_mode=False),
-    val=dict(  # Validation dataset config
-        type=dataset_type,
-        ann_file=f'{data_root}/val_places_img_list.txt',
-        data_prefix=data_root,
+    ))
+
+val_dataloader = dict(
+    batch_size=1, # Batch size of a single GPU
+    num_workers=4, # The number of workers to pre-fetch data for each single GPU
+    persistent_workers=False, # Whether maintain the workers Dataset instances alive
+    drop_last=False, # Whether drop the last incomplete batch
+    sampler=dict(type='DefaultSampler', shuffle=False), # The type of data sampler
+    dataset=dict( # Validation dataset config
+        type=dataset_type, # Type of dataset
+        data_root=data_root, # Root path of data
+        data_prefix=dict(gt='val_large'), # Prefix of image path
+        ann_file='meta/places365_val.txt', # Path of annotation file
+        test_mode=True,
         pipeline=test_pipeline,
-        test_mode=True))
+    ))
 
-optimizers = dict(  # Config used to build optimizer, support all the optimizers in PyTorch whose arguments are also the same as those in PyTorch
-    generator=dict(type='Adam', lr=0.0004), disc=dict(type='Adam', lr=0.0004))
+test_dataloader = val_dataloader
 
-lr_config = dict(policy='Fixed', by_epoch=False)  # Learning rate scheduler config used to register LrUpdater hook
+model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel') # The name of model wrapper
 
-checkpoint_config = dict(by_epoch=False, interval=50000)  # Config to set the checkpoint hook, Refer to https://github.com/open-mmlab/mmcv/blob/master/mmcv/runner/hooks/checkpoint.py for implementation.
-log_config = dict(  # config to register logger hook
-    interval=100,  # Interval to print the log
-    hooks=[
-        dict(type='TextLoggerHook', by_epoch=False),
-        # dict(type='TensorboardLoggerHook'),  # The Tensorboard logger is also supported
-        # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
-    ])  # The logger used to record the training process.
+optim_wrapper = dict( # Config used to build optimizer, support all the optimizers in PyTorch whose arguments are also the same as those in PyTorch
+    constructor='MultiOptimWrapperConstructor',
+    generator=dict(
+        type='OptimWrapper', optimizer=dict(type='Adam', lr=0.0004)),
+    disc=dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=0.0004)))
 
-visual_config = dict(  # config to register visualization hook
-    type='VisualizationHook',
-    output_dir='visual',
-    interval=1000,
-    res_name_list=[
-        'gt_img', 'masked_img', 'fake_res', 'fake_img', 'fake_gt_local'
-    ],
-)  # The logger used to visualize the training process.
-
-evaluation = dict(interval=50000)  # The config to build the evaluation hook
-
-total_iters = 500002
-dist_params = dict(backend='nccl')  # Parameters to setup distributed training, the port can also be set.
-log_level = 'INFO'  # The level of logging.
-work_dir = None  # Directory to save the model checkpoints and logs for the current experiments.
-load_from = None  # load models as a pre-trained model from a given path. This will not resume training.
-resume_from = None  # Resume checkpoints from a given path, the training will be resumed from the epoch when the checkpoint's is saved.
-workflow = [('train', 10000)]  # Workflow for runner. [('train', 1)] means there is only one workflow and the workflow named 'train' is executed once. The workflow trains the model by 12 epochs according to the total_epochs.
+default_scope = 'mmedit' # Used to set registries location
+save_dir = './work_dirs' # Directory to save the model checkpoints and logs for the current experiments
 exp_name = 'gl_places'  # The experiment name
+
+default_hooks = dict( # Used to build default hooks
+    timer=dict(type='IterTimerHook'),
+    logger=dict(type='LoggerHook', interval=100), # Config to register logger hook
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    checkpoint=dict( # Config to set the checkpoint hook
+        type='CheckpointHook',
+        interval=50000,
+        by_epoch=False,
+        out_dir=save_dir),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+)
+
+env_cfg = dict( # Parameters to setup distributed training, the port can also be set
+    cudnn_benchmark=False,
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0),
+    dist_cfg=dict(backend='nccl'),
+)
+
+vis_backends = [dict(type='LocalVisBackend')] # The name of visualization backend
+visualizer = dict( # Config used to build visualizer
+    type='ConcatImageVisualizer',
+    vis_backends=vis_backends,
+    fn_key='gt_path',
+    img_keys=['gt_img', 'input', 'pred_img'],
+    bgr2rgb=True)
+custom_hooks = [dict(type='BasicVisualizationHook', interval=1)] # Used to build custom hooks
+
+log_level = 'INFO' # The level of logging
+log_processor = dict(type='LogProcessor', by_epoch=False) # Used to build log processor
+
+load_from = None # load models as a pre-trained model from a given path. This will not resume training.
+resume = False # Resume checkpoints from a given path, the training will be resumed from the epoch when the checkpoint's is saved.
+
 find_unused_parameters = False  # Whether to set find unused parameters in ddp
 ```
