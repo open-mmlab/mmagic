@@ -156,8 +156,11 @@ def update_ceph_config(filename, args, dry_run=False):
         save_dir = args.save_dir_prefix
 
     try:
-        # 0. load config
         config = Config.fromfile(filename)
+
+        # 0. update intervals
+        config = update_intervals(config, args)
+
         # 1. change dataloader
         dataloader_prefix = [
             f'{p}_dataloader' for p in ['train', 'val', 'test']

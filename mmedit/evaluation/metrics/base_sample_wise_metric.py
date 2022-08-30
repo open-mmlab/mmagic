@@ -82,7 +82,7 @@ class BaseSampleWiseMetric(BaseMetric):
         for data, data_sample in zip(data_batch, data_samples):
 
             self.channel_order = 'rgb'
-            metainfo = data['data_samples']
+            metainfo = data.metainfo
             if 'gt_channel_order' in metainfo:
                 self.channel_order = metainfo['gt_channel_order']
             elif 'img_channel_order' in metainfo:
