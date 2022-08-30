@@ -1,8 +1,16 @@
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
-   config/config_inpainting
-   datasets/dataset_prepare
+   config.md
+
+.. toctree::
+   :maxdepth: 3
+
+   datasets/dataset_prepare.md
+
+.. toctree::
+   :maxdepth: 3
+
    inference.md
    train_test.md
    useful_tools.md
