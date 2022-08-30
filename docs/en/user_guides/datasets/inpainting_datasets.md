@@ -45,9 +45,11 @@ mmediting
 ├── tools
 ├── configs
 ├── data
-│   ├── celeba-hq
-│   │   ├── train
-|   |   ├── val
+│   ├── CelebA-HQ
+│   │   ├── train_256
+|   |   ├── test_256
+|   |   ├── train_celeba_img_list.txt
+|   |   ├── val_celeba_img_list.txt
 
 ```
 
@@ -102,10 +104,11 @@ mmediting
 ├── tools
 ├── configs
 ├── data
-│   ├── places
-│   │   ├── test_set
-│   │   ├── train_set
+│   ├── Places
+│   │   ├── data_large
+│   │   ├── val_large
 |   |   ├── meta
-|   |   |    ├── Places365_train.txt
-|   |   |    ├── Places365_val.txt
+|   |   |    ├── places365_train_challenge.txt
+|   |   |    ├── places365_val.txt
+
 ```

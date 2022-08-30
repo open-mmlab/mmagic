@@ -45,7 +45,7 @@ Documentation
 .. toctree::
    :maxdepth: 1
    :caption: Migration
-   
+
    migration.md
 
 .. toctree::
@@ -64,7 +64,7 @@ Documentation
 .. toctree::
    :maxdepth: 1
    :caption: Notes
-   
+
    notes/contribution_guide.md
    notes/projects.md
    notes/changelog.md
