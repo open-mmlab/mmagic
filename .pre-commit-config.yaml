@@ -41,7 +41,7 @@ repos:
           - mdformat-openmmlab
           - mdformat_frontmatter
           - linkify-it-py
-  # TODO: uncomment this after mmengine release
+  # TODO: uncomment after mmengine rebase
   # - repo: local
   #   hooks:
   #     - id: update-model-index

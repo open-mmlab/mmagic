@@ -43,12 +43,12 @@ Models:
       PSNR: 20.88
     Task: Glean
   Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_16x_20210527-68912543.pth
-- Config: configs/glean/glean_in128out1024_300k-4xb2_ffhq-celeba-hq.py
+- Config: configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py
   In Collection: GLEAN
   Metadata:
     GPUs: 4 (Tesla V100-SXM3-32GB)
     Training Data: CELEBA
-  Name: glean_in128out1024_300k-4xb2_ffhq-celeba-hq
+  Name: glean_in128out1024_4xb2-300k_ffhq-celeba-hq
   Results:
   - Dataset: CELEBA
     Metrics:
