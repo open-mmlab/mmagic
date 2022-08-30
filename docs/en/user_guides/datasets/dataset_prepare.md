@@ -1,6 +1,23 @@
 # Dataset Preparation
 
-We supports multiple datasets. Please follow the corresponding tutorials for data preparation of different tasks.
+We supports multiple datasets of different tasks. You can follow the tutorials to prepare datasets.
+
+## Download datasets
+
+You are supposed to download datasets from their homepage first.
+Most of datasets are available after downloaded, so you only need to make sure the folder structure is correct and further preparation is not necessary.
+For example, you can simply prepare [Vimeo90K-triplet](./video_interpolation_datasets.md#Vimeo90K-triplet-Dataset) datasets by downloading datasets from [homepage](http://toflow.csail.mit.edu/).
+
+## Prepare datasets
+
+Some datasets need to be preprocessed before training or testing. We support many scripts to prepare datasets in [tools/data](/tools/data). And you can follow the tutorials of every dataset to run scripts.
+For example, we recommend to crop the DIV2K images to sub-images. We provide a script to prepare cropped DIV2K dataset. You can run following command:
+
+```shell
+python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
+```
+
+We support detailed tutorials and split them according to different tasks. Please follow the corresponding tutorials for data preparation of different tasks.
 
 - [Prepare Inpainting Datasets](inpainting_datasets.md)
   - [Paris Street View](inpainting_datasets.md#paris-street-view-dataset) \[ [Homepage](https://github.com/pathak22/context-encoder/issues/24) \]

@@ -1,5 +1,12 @@
 # Tutorial 2: Customize Data Pipelines
 
+- [Customize Data Pipelines](#Tutorial-2:-Customize-Data-Pipelines)
+  - [Design of Data pipelines](#Design-of-Data-pipelines)
+    - [Data loading](#Data-loading)
+    - [Pre-processing](#Pre-processing)
+    - [Formatting](#Formatting)
+  - [Extend and use custom pipelines](#Extend-and-use-custom-pipelines)
+
 ## Design of Data pipelines
 
 Following typical conventions, we use `Dataset` and `DataLoader` for data loading with multiple workers. `Dataset` returns a dict of data items corresponding the arguments of models' forward method.
@@ -27,7 +34,6 @@ train_pipeline = [
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     dict(type='MirrorSequence', keys=['img', 'gt']),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -35,7 +41,6 @@ val_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -43,7 +48,6 @@ test_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='MirrorSequence', keys=['img']),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 ```
@@ -259,11 +263,12 @@ For each operation, we list the related dict fields that are added/updated/remov
 
 ```python
 import random
+from mmcv.transforms import BaseTransform
 from mmedit.registry import TRANSFORMS
 
 
 @TRANSFORMS.register_module()
-class MyTransform:
+class MyTransform(BaseTransform):
     """Add your transform
 
     Args:
@@ -273,10 +278,17 @@ class MyTransform:
     def __init__(self, p=0.5):
         self.p = p
 
-    def __call__(self, results):
+    def transform(self, results):
         if random.random() > self.p:
             results['dummy'] = True
         return results
+
+    def __repr__(self):
+
+        repr_str = self.__class__.__name__
+        repr_str += (f'(p={self.p})')
+
+        return repr_str
 ```
 
 2. Import and use the pipeline in your config file.

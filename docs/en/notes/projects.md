@@ -21,9 +21,9 @@ Methods already supported and maintained by MMEditing are not listed.
 - GLEAN:Generative Latent Bank for Large-Factor Image Super-Resolution, CVPR 2021 [\[paper\]](https://arxiv.org/abs/2012.00739)[\[github\]](https://github.com/ckkelvinchan/GLEAN)
 - DAN:Unfolding the Alternating Optimization for Blind Super Resolution, NeurIPS 2020 [\[paper\]](https://arxiv.org/abs/2010.02631v4)[\[github\]](https://github.com/AlexZou14/DAN-Basd-on-Openmmlab)
 
-## Other projects
+## Open-source projects
 
-Some projects extend MMEditing for more functions and fields.
+Some open-source projects extend MMEditing for more functions and fields.
 They reveal the potential of what MMEditing can do. We list several of them as below.
 
 - [PowerVQE](https://github.com/ryanxingql/powervqe): Open framework for quality enhancement of compressed videos based on PyTorch and MMEditing.

@@ -1,20 +1,33 @@
 # Migration from MMEdit 0.x
 
+- [Migration from MMEdit 0.x](#Migration-from-MMEdit-0.x)
+  - [New dependencies](#New-dependencies)
+  - [Overall Structures](#Overall-Structures)
+  - [Config](#Config)
+    - [File name](#File-name)
+    - [Model settings](#Model-settings)
+    - [Data settings](#Data-settings)
+    - [Evaluation settings](#Evaluation-settings)
+    - [Schedule settings](#Schedule-settings)
+    - [Runtime settings](#Runtime-settings)
+    - [Other config settings](#Other-config-settings)
+  - [Model](#Model)
+
 We introduce some modifications in MMEdit 1.x. This document will help users of the 0.x version to quickly migrate projects to the newest version.
 
 ## New dependencies
 
-MMEdit 1.x depends on some new packages, you can prepare a new clean environment and install again according to the install tutorial. Or install the below packages manually.
+MMEdit 1.x depends on some new packages, you can prepare a new clean environment and install again according to the [install tutorial](./get_started.md). Or install the below packages manually.
 
-- MMEngine: MMEngine is the core the OpenMMLab 2.0 architecture, and we splited many compentents unrelated to computer vision from MMCV to MMEngine.
+- MMEngine: MMEngine is the core of the OpenMMLab 2.0 architecture, and we split many components unrelated to computer vision from MMCV to MMEngine.
 - MMCV: The computer vision package of OpenMMLab. This is not a new dependency, but you need to upgrade it to above 2.0.0rc0 version.
 
 ## Overall Structures
 
 We refactor overall structures in MMEdit 1.x as following.
 
-- The  `core` in the old versions of MMEdit is split into `engine`, `evaluation`, `structures`, and `visualization` in MMEdit 1.x.
-- The `pipelines` of `datasets` in the old versions of MMEdit is refactored to `transforms` in MMEdit 1.x.
+- The  `core` in the old versions of MMEdit is split into `engine`, `evaluation`, `structures`, and `visualization`
+- The `pipelines` of `datasets` in the old versions of MMEdit is refactored to `transforms`
 - The `models` in MMedit 1.x is refactored to five parts: `base_models`, `data_preprocessors`, `editors`, `layers` and `losses`.
 
 ## Config
@@ -29,7 +42,7 @@ We update model settings in MMEdit 1.x. Important modifications are as following
 
 - Remove `pretrained` fields.
 - Add `train_cfg` and `test_cfg` fields in model settings.
-- Add `data_preprocessor` fields. Normalization and color space transforms operations are moved from datasets transforms pipelines to data_preprocessor.
+- Add `data_preprocessor` fields. Normalization and color space transforms operations are moved from datasets transforms pipelines to data_preprocessor. We will introduce data_preprocessor later.
 
 <table class="docutils">
 <thead>
@@ -198,7 +211,6 @@ train_pipeline = [  # Training data processing pipeline
         keys=['lq', 'gt'],  # Images to be transposed
         transpose_ratio=0.5  # Transpose ratio
         ),
-    dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
     dict(type='PackEditInputs')  # The config of collecting data from current pipeline
 ]
 test_pipeline = [  # Test pipeline
@@ -212,7 +224,6 @@ test_pipeline = [  # Test pipeline
         color_type='color',  # Color type of image
         channel_order='rgb',  # Channel order of image
         imdecode_backend='cv2'),  # decode backend
-    dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
     dict(type='PackEditInputs')  # The config of collecting data from current pipeline
 ]
 ```
@@ -244,7 +255,7 @@ We update dataloader settings in MMEdit 1.x. Important modifications are as foll
 data = dict(
     # train
     samples_per_gpu=16,  # Batch size of a single GPU
-    workers_per_gpu=6,  # Worker to pre-fetch data for each single GPU
+    workers_per_gpu=4,  # Worker to pre-fetch data for each single GPU
     drop_last=True,  # Use drop_last in data_loader
     train=dict(  # Train dataset config
         type='RepeatDataset',  # Repeated dataset for iter-based model
@@ -258,7 +269,7 @@ data = dict(
             scale=scale)),  # Scale factor for upsampling
     # val
     val_samples_per_gpu=1,  # Batch size of a single GPU for validation
-    val_workers_per_gpu=1,  # Worker to pre-fetch data for each single GPU for validation
+    val_workers_per_gpu=4,  # Worker to pre-fetch data for each single GPU for validation
     val=dict(
         type=val_dataset_type,  # Type of dataset
         lq_folder='data/val_set5/Set5_bicLRx2',  # Path for lq folder
@@ -284,6 +295,7 @@ data = dict(
 dataset_type = 'BasicImageDataset'  # The type of dataset
 data_root = 'data'  # Root path of data
 train_dataloader = dict(
+    batch_size=16,
     num_workers=4,  # The number of workers to pre-fetch data for each single GPU
     persistent_workers=False,  # Whether maintain the workers Dataset instances alive
     sampler=dict(type='InfiniteSampler', shuffle=True),  # The type of data sampler
@@ -297,6 +309,7 @@ train_dataloader = dict(
         filename_tmpl=dict(img='{}', gt='{}'),  # Filename template
         pipeline=train_pipeline))
 val_dataloader = dict(
+    batch_size=1,
     num_workers=4,  # The number of workers to pre-fetch data for each single GPU
     persistent_workers=False,  # Whether maintain the workers Dataset instances alive
     drop_last=False,  # Whether drop the last incomplete batch
@@ -350,9 +363,7 @@ evaluation = dict(  # The config to build the evaluation hook
 
 ```python
 val_evaluator = [
-    dict(type='MAE'),  # The name of metrics to evaluate
     dict(type='PSNR', crop_border=scale),  # The name of metrics to evaluate
-    dict(type='SSIM', crop_border=scale),  # The name of metrics to evaluate
 ]
 test_evaluator = val_evaluator
 
@@ -374,7 +385,7 @@ We update schedule settings in MMEdit 1.x. Important modifications are as follow
 
 - Now we use `optim_wrapper` field to specify all configuration about the optimization process. And the `optimizer` is a sub field of `optim_wrapper` now.
 - The `lr_config` field is removed and we use new `param_scheduler` to replace it.
-- The `total_iters` field is moved to `train_cfg`, `val_cfg` and `test_cfg`, which configure the loop in training, validation and test.
+- The `total_iters` field is moved to `train_cfg` as `max_iters`, `val_cfg` and `test_cfg`, which configure the loop in training, validation and test.
 
 <table class="docutils">
 <thead>
@@ -400,7 +411,7 @@ lr_config = dict( # Learning rate scheduler config used to register LrUpdater ho
 optim_wrapper = dict(
     dict(
         type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=0.00001),
+        optimizer=dict(type='Adam', lr=1e-4),
     )
 )  # Config used to build optimizer, support all the optimizers in PyTorch whose arguments are also the same as those in PyTorch.
 param_scheduler = dict(  # Config of learning policy
@@ -416,6 +427,8 @@ test_cfg = dict(type='TestLoop')  # The name of test loop type
 </tr>
 </thead>
 </table>
+
+> More details of schedule settings are shown in [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/migration/migrate_param_scheduler_from_mmcv.md).
 
 ### Runtime settings
 
@@ -497,7 +510,7 @@ resume = False  # Resume checkpoints from a given path, the training will be res
 </thead>
 </table>
 
-### Others
+### Other config settings
 
 More details of config are shown in [config guides](/docs/en/user_guides/config).
 
@@ -508,4 +521,4 @@ We refactor models in MMEdit 1.x. Important modifications are as following.
 - The `models` in MMedit 1.x is refactored to five parts: `base_models`, `data_preprocessors`, `editors`, `layers` and `losses`.
 - Add `data_preprocessor` module in `models`. Normalization and color space transforms operations are moved from datasets transforms pipelines to data_preprocessor. The data out from the data pipeline is transformed by this module and then fed into the model.
 
-More details of config are shown in [model guides](/docs/en/advanced_guides/models).
+More details of models are shown in [model guides](/docs/en/advanced_guides/models).
