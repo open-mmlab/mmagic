@@ -150,13 +150,13 @@ After the implementation of `class MSRResNet`, we need to update the model list 
 from .srgan.sr_resnet import MSRResNet
 ```
 
-## Step 2: Define the forward loop of your model
+## Step 2: Define the forward function of your model
 
 After the implementation of the network architecture,
 we need to define our model `class BaseEditModel` and implement the forward loop of `class BaseEditModel`.
 
 To implement `class BaseEditModel`,
-we create a new file in `mmedit/models/base_models/base_edit_model.py`.
+we create a new file `mmedit/models/base_models/base_edit_model.py`.
 Specifically, `class BaseEditModel` inherits from `mmengine.model.BaseModel`.
 In the `__init__` function, we define the loss functions, training and testing configurations, networks of `class BaseEditModel`.
 
