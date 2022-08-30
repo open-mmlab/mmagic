@@ -30,6 +30,7 @@ Install PyTorch following [official instructions](https://pytorch.org/get-starte
   ```shell
   conda install pytorch=1.10 torchvision cudatoolkit=11.3 -c pytorch
   ```
+
 - On CPU platforms:
 
   ```shell
@@ -88,7 +89,7 @@ Please also make sure the GPU driver satisfies the minimum version requirements.
 See [this table](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html#cuda-major-component-versions__table-cuda-toolkit-driver-versions) for more information.
 
 Please **Note** that there is no need to install the complete CUDA toolkit if you follow our [best practices](#best-practices) because no CUDA code will be compiled.
-However, if you hope to compile MMCV or other C++/CUDA operators, you need to install the complete CUDA toolkit from [NVIDIA&#39;s website](https://developer.nvidia.com/cuda-downloads), and **its version should match the CUDA version of PyTorch**, which is the version of `cudatoolkit` in `conda install`.
+However, if you hope to compile MMCV or other C++/CUDA operators, you need to install the complete CUDA toolkit from [NVIDIA's website](https://developer.nvidia.com/cuda-downloads), and **its version should match the CUDA version of PyTorch**, which is the version of `cudatoolkit` in `conda install`.
 
 ### Install without Conda
 
