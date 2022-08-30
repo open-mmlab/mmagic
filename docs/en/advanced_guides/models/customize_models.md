@@ -378,7 +378,7 @@ After implementing the network architecture and the forward loop of SRCNN,
 now we can create a new file `configs/srcnn/srcnn_x4k915_g1_1000k_div2k.py`
 to set the configurations needed by training SRCNN.
 
-In the configuration file, we need to specify the parameters of our model, `class BaseEditModel`, including the generator network architecture, loss function, additional training and testing configuration, and data preprocessor of input tensors.
+In the configuration file, we need to specify the parameters of our model, `class BaseEditModel`, including the generator network architecture, loss function, additional training and testing configuration, and data preprocessor of input tensors. Please refer to the [Introduction to the loss in MMEditing](../losses.md) for more details of losses in MMEditing.
 
 ```python
 # model settings
@@ -390,8 +390,6 @@ model = dict(
         kernel_sizes=(9, 1, 5),
         upscale_factor=scale),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-    train_cfg=dict(),
-    test_cfg=dict(metrics=['PSNR'], crop_border=scale),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
