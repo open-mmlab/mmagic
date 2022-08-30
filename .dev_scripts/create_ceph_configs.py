@@ -21,7 +21,8 @@ def update_intervals(config, args):
 
     # 2. change logging interval
     if 'default_hooks' in config and config['default_hooks']:
-        config['default_hooks']['logger'] = dict(type='LoggerHook', interval=2)
+        config['default_hooks']['logger'] = dict(
+            type='LoggerHook', interval=args.iters // 10)
         config['default_hooks']['checkpoint'] = dict(
             type='CheckpointHook', interval=args.iters // 5)
 

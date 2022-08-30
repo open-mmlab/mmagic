@@ -116,6 +116,7 @@ class OneStageInpaintor(BaseModel):
         elif mode == 'predict':
             # Pre-process runs in BaseModel.val_step / test_step
             predictions = self.forward_test(inputs, data_samples)
+            predictions = self.convert_to_datasample(data_samples, predictions)
             return predictions
         elif mode == 'loss':
             raise NotImplementedError('This mode should not be used in '
@@ -371,6 +372,11 @@ class OneStageInpaintor(BaseModel):
                 fake_res=fr, fake_img=fi, pred_img=PixelData(data=fi))
             predictions.append(pred)
         return predictions
+
+    def convert_to_datasample(self, inputs, data_samples):
+        for data_sample, output in zip(inputs, data_samples):
+            data_sample.output = output
+        return inputs
 
     def forward_dummy(self, x):
         """Forward dummy function for getting flops.

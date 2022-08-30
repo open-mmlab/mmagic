@@ -236,9 +236,15 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
             inputs = self.resize_inputs(inputs)
             batch_pred_alpha = self._forward_test(inputs)
             predictions = self.postprocess(batch_pred_alpha, data_samples)
+            predictions = self.convert_to_datasample(data_samples, predictions)
             return predictions
         elif mode == 'loss':
             loss = self._forward_train(inputs, data_samples)
             return loss
         else:
             raise ValueError('Invalid forward mode.')
+
+    def convert_to_datasample(self, inputs, data_samples):
+        for data_sample, output in zip(inputs, data_samples):
+            data_sample.output = output
+        return inputs

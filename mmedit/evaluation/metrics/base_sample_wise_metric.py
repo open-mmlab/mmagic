@@ -79,17 +79,18 @@ class BaseSampleWiseMetric(BaseMetric):
                 the model.
         """
 
-        for data, data_sample in zip(data_batch, data_samples):
+        for data in data_samples:
+            prediction = data['output']
 
             self.channel_order = 'rgb'
-            metainfo = data.metainfo
+            metainfo = data
             if 'gt_channel_order' in metainfo:
                 self.channel_order = metainfo['gt_channel_order']
             elif 'img_channel_order' in metainfo:
                 self.channel_order = metainfo['img_channel_order']
 
             gt = obtain_data(data, self.gt_key, self.device)
-            pred = obtain_data(data_sample, self.pred_key, self.device)
+            pred = obtain_data(prediction, self.pred_key, self.device)
             if self.mask_key is not None:
                 mask = obtain_data(data, self.mask_key)
                 mask[mask != 0] = 1

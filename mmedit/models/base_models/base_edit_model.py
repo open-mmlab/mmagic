@@ -108,10 +108,18 @@ class BaseEditModel(BaseModel):
             return self.forward_tensor(inputs, data_samples, **kwargs)
 
         elif mode == 'predict':
-            return self.forward_inference(inputs, data_samples, **kwargs)
+            predictions = self.forward_inference(inputs, data_samples,
+                                                 **kwargs)
+            predictions = self.convert_to_datasample(data_samples, predictions)
+            return predictions
 
         elif mode == 'loss':
             return self.forward_train(inputs, data_samples, **kwargs)
+
+    def convert_to_datasample(self, inputs, data_samples):
+        for data_sample, output in zip(inputs, data_samples):
+            data_sample.output = output
+        return inputs
 
     def forward_tensor(self, inputs, data_samples=None, **kwargs):
         """Forward tensor.
