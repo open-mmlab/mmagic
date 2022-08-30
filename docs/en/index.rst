@@ -15,7 +15,7 @@ MMEditing supports various tasks, including:
 * Video frame interpolation
 * Image inpainting
 * Image matting
-* and many other tasks coming soon!
+And many other tasks are coming soon!
 
 MMEditing is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab project <https://openmmlab.com/>`_.
 Codes are available on `GitHub <https://github.com/open-mmlab/mmediting>`_.

@@ -40,13 +40,13 @@ MMEditing supports various tasks, including:
 
 - **State of the art**
 
-  The toolbox provides state-of-the-art methods tp process, edit and synthesize images and videos.
+  The toolbox provides state-of-the-art methods to process, edit and synthesize images and videos.
 
 - **Easy-Modular design**
 
-  We decompose the editing framework into different components and one can easily construct a customized editor framework by combining different modules.
+  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules.
 
-- **Support of multiple tasks in editing**
+- **Support multiple tasks**
 
   The toolbox directly supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *generation* tasks.
 
@@ -62,7 +62,7 @@ For installation instructions, please see [get_started](get_started.md).
 
 For beginners, we suggest learning the basic usage of MMEditing from here:
 
-- [config](user_guides/config/config_inpainting.md)
+- [config](user_guides/config.md)
 
 - [dataset prepare](user_guides/datasets/dataset_prepare.md)
 
