@@ -1,10 +1,11 @@
-# Inference in MMEditing 
+# Inference in MMEditing
 
-We provide APIs for you to easily play with state-of-the-art models on your own images or videos. Here we provide some task-specific demo scripts for your reference. 
+We provide APIs for you to easily play with state-of-the-art models on your own images or videos.
+Here we provide some task-specific demo scripts for your reference.
 
 ## Run a Demo of Image Inpainting
 
-You can use the following commands to test a pair of images for inpainting.
+You can use the following commands to test images for inpainting.
 
 ```shell
 python demo/inpainting_demo.py \
@@ -58,7 +59,7 @@ python demo/matting_demo.py \
 
 The predicted alpha matte will be save in `tests/data/pred/GT05.png`.
 
-## Run a Demo of Image Super-Resolution 
+## Run a Demo of Image Super-Resolution
 
 You can use the following commands to test an image for restoration.
 
@@ -94,7 +95,7 @@ python demo/restoration_demo.py \
     --ref-path tests/data/frames/sequence/gt/sequence_1/00000001.png
 ```
 
-## Run a Demo of Facial Restoration 
+## Run a Demo of Facial Restoration
 
 You can use the following commands to test an face image for restoration.
 
