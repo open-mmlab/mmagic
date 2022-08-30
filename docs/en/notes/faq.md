@@ -13,9 +13,10 @@ and make sure you fill in all required information in the template.
 
   The registry mechanism will be triggered only when the file of the module is imported. So you need to import that file somewhere.
 
-- What's the folder structure of xxx dataset.
+- What's the folder structure of xxx dataset?
 
   You can make sure the folder structure is correct following tutorials of [dataset preparation](../advanced_guides/dataset.md).
 
 - How to use LMDB data to train the model?
-  YOu can use scripts in `tools/data` to make LMDB files. More details are shown in tutorials of [dataset preparation](../advanced_guides/dataset.md).
+
+  You can use scripts in `tools/data` to make LMDB files. More details are shown in tutorials of [dataset preparation](../advanced_guides/dataset.md).

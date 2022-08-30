@@ -1,6 +1,10 @@
 # Dataset Preparation
 
-We supports multiple datasets of different tasks. You can follow the tutorials to prepare datasets.
+We supports multiple datasets of different tasks.
+There are two ways to use datasets for training and testing models in MMEditing:
+
+1. Using downloaded datasets directly
+2. Preprocessing downloaded datasets before using them.
 
 ## Download datasets
 
@@ -16,6 +20,8 @@ For example, we recommend to crop the DIV2K images to sub-images. We provide a s
 ```shell
 python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
 ```
+
+## The overview of the datasets in MMEditing
 
 We support detailed tutorials and split them according to different tasks. Please follow the corresponding tutorials for data preparation of different tasks.
 
