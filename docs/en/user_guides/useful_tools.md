@@ -2,7 +2,7 @@
 
 We provide lots of useful tools under `tools/` directory.
 
-## Get the FLOPs and params 
+## Get the FLOPs and params
 
 We provide a script adapted from [flops-counter.pytorch](https://github.com/sovrasov/flops-counter.pytorch) to compute the FLOPs and params of a given model.
 
@@ -153,4 +153,3 @@ The table below lists the models that are guaranteed to be exportable to TensorR
 - *All models above are tested with Pytorch==1.8.1,  onnxruntime==1.7.0 and tensorrt==7.2.3.4*
 - If you meet any problem with the listed models above, please create an issue and it would be taken care of soon. For models not included in the list, please try to solve them by yourself.
 - Because this feature is experimental and may change fast, please always try with the latest `mmcv` and `mmedit`.
-
