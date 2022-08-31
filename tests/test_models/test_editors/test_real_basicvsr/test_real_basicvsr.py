@@ -89,7 +89,7 @@ def test_real_basicvsr(init_weights):
 
     # val
     output = model.val_step(data)
-    assert output[0].pred_img.data.shape == (5, 3, 256, 256)
+    assert output[0].output.pred_img.data.shape == (5, 3, 256, 256)
 
     # feat
     output = model(torch.rand(1, 5, 3, 64, 64), mode='tensor')

@@ -113,7 +113,7 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
 def assert_pred_alpha(predictions, batch_size):
     assert isinstance(predictions, list)
     assert isinstance(predictions[0], EditDataSample)
-    pred_alpha = predictions[0].pred_alpha.data
+    pred_alpha = predictions[0].output.pred_alpha.data
     assert isinstance(pred_alpha, torch.Tensor)
     assert pred_alpha.dtype == torch.uint8
     assert pred_alpha.shape[-2:] == batch_size
@@ -268,7 +268,7 @@ def test_dim():
         output_test = model(*input_test, mode='predict')
         assert isinstance(output_test, list)
         assert isinstance(output_test[0], EditDataSample)
-        pred_alpha = output_test[0].pred_alpha.data
+        pred_alpha = output_test[0].output.pred_alpha.data
         assert isinstance(pred_alpha, torch.Tensor)
         assert pred_alpha.dtype == torch.uint8
         assert pred_alpha.shape[-2:] == (48, 48)

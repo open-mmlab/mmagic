@@ -71,7 +71,7 @@ def test_esrgan(init_weights):
 
     # val
     output = model.val_step(data)
-    assert output[0].pred_img.data.shape == (3, 128, 128)
+    assert output[0].output.pred_img.data.shape == (3, 128, 128)
 
     # feat
     output = model(torch.rand(1, 3, 32, 32), mode='tensor')

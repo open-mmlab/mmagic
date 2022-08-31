@@ -45,5 +45,6 @@ def matting_inference(model, img, trimap):
     # forward the model
     with torch.no_grad():
         result = model(mode='predict', **data)
-    result = result[0].pred_alpha.data
+    result = result[0].output
+    result = result.pred_alpha.data
     return result.cpu().numpy()

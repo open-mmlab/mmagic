@@ -31,8 +31,12 @@ def test_ssim():
         for (k, v) in predictions[0].items()
     })
 
+    data_samples = [d_['data_samples'] for d_ in data_batch]
+    for d, p in zip(data_samples, predictions):
+        d['output'] = p
+
     ssim_ = SSIM()
-    ssim_.process(data_batch, predictions)
+    ssim_.process(data_batch, data_samples)
     result = ssim_.compute_metrics(ssim_.results)
     assert 'SSIM' in result
     np.testing.assert_almost_equal(result['SSIM'], 0.913062377743969)

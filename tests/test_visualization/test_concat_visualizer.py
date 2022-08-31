@@ -8,7 +8,6 @@ from mmedit.visualization import ConcatImageVisualizer
 
 
 def test_concatimagevisualizer():
-    input = torch.rand(1, 3, 32, 32)
     data_sample = EditDataSample(
         path_rgb='fake_dir/rgb.png',
         path_bgr='fake_dir/bgr.png',
@@ -26,7 +25,7 @@ def test_concatimagevisualizer():
         vis_backends=[dict(type='LocalVisBackend')],
         save_dir='work_dirs')
 
-    vis.add_datasample(input=input, data_sample=data_sample, step=1)
+    vis.add_datasample(data_sample=data_sample, step=1)
 
     vis = ConcatImageVisualizer(
         fn_key='path_bgr',
@@ -35,7 +34,7 @@ def test_concatimagevisualizer():
         save_dir='work_dirs',
         bgr2rgb=True)
 
-    vis.add_datasample(input=input, data_sample=data_sample, step=2)
+    vis.add_datasample(data_sample=data_sample, step=2)
 
     for fn in 'rgb_1.png', 'bgr_2.png':
         img = mmcv.imread(f'work_dirs/vis_data/vis_image/{fn}')

@@ -69,7 +69,7 @@ def test_glean(init_weights):
 
     # val
     output = model.val_step(data)
-    assert output[0].pred_img.data.shape == (3, 64, 64)
+    assert output[0].output.pred_img.data.shape == (3, 64, 64)
 
     # feat
     output = model(torch.rand(1, 3, 16, 16), mode='tensor')

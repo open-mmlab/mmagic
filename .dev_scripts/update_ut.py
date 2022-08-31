@@ -16,6 +16,7 @@ def update_ut():
     folders = [f for f in os.listdir(args.src) if osp.isdir(f'mmedit/{f}')]
     target_ut = []
     missing_ut = []
+    blank_ut = []
 
     for subf in folders:
         if subf == '.mim' or subf == '__pycache__':
@@ -41,6 +42,10 @@ def update_ut():
                     missing_ut.append(dst_path)
                     fp = open(dst_path, 'a')
                     fp.close()
+                else:
+                    text_lines = open(dst_path, 'r').readlines()
+                    if len(text_lines) <= 3:
+                        blank_ut.append(dst_path)
 
     existing_ut = glob('tests/test_*/**/*.py', recursive=True)
     additional_ut = list(set(existing_ut) - set(target_ut))
@@ -52,6 +57,10 @@ def update_ut():
     if len(missing_ut) > 0:
         print('Missing UT:')
         for f in missing_ut:
+            print(f)
+    if len(blank_ut) > 0:
+        print('Blank UT:')
+        for f in blank_ut:
             print(f)
 
 

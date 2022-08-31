@@ -60,7 +60,7 @@ def test_base_edit_model():
 
     # val
     output = model.val_step(data)
-    assert output[0].pred_img.data.shape == (3, 20, 20)
+    assert output[0].output.pred_img.data.shape == (3, 20, 20)
 
     # feat
     output = model(torch.rand(1, 3, 20, 20), mode='tensor')

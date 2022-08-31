@@ -62,8 +62,8 @@ def test_liif():
     assert isinstance(predictions, List)
     assert len(predictions) == 1
     assert isinstance(predictions[0], EditDataSample)
-    assert isinstance(predictions[0].pred_img.data, torch.Tensor)
-    assert predictions[0].pred_img.data.shape == (3, 16, 16)
+    assert isinstance(predictions[0].output.pred_img.data, torch.Tensor)
+    assert predictions[0].output.pred_img.data.shape == (3, 16, 16)
 
     # feat
     output = model(torch.rand(1, 3, 8, 8), [data_sample], mode='tensor')

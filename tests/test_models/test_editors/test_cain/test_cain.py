@@ -102,7 +102,7 @@ def test_cain():
 
     # val
     output = model.val_step(data)
-    assert output[0].pred_img.data.shape == (3, 32, 32)
+    assert output[0].output.pred_img.data.shape == (3, 32, 32)
 
     # feat
     output = model(torch.rand(1, 2, 3, 32, 32), mode='tensor')

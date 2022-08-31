@@ -28,14 +28,18 @@ def test_niqe():
             data_samples=dict(
                 gt_img=torch.from_numpy(img), img_channel_order='bgr')))
 
+    data_samples = [d_['data_samples'] for d_ in data_batch]
+    for d, p in zip(data_samples, predictions):
+        d['output'] = p
+
     niqe_ = NIQE()
-    niqe_.process(data_batch, predictions)
+    niqe_.process(data_batch, data_samples)
     result = niqe_.compute_metrics(niqe_.results)
     assert 'NIQE' in result
     np.testing.assert_almost_equal(result['NIQE'], 5.731541051885604)
 
     niqe_ = NIQE(key='gt_img', is_predicted=False)
-    niqe_.process(data_batch, predictions)
+    niqe_.process(data_batch, data_samples)
     result = niqe_.compute_metrics(niqe_.results)
     assert 'NIQE' in result
     np.testing.assert_almost_equal(result['NIQE'], 5.731541051885604)

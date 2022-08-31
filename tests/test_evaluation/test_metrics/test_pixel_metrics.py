@@ -32,6 +32,10 @@ class TestPixelMetrics:
             for (k, v) in cls.predictions[0].items()
         })
 
+        for d, p in zip(cls.data_batch, cls.predictions):
+            d['output'] = p
+        cls.predictions = cls.data_batch
+
     def test_mae(self):
 
         # Single MAE

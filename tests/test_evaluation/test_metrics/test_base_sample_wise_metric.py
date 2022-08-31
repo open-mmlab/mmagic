@@ -39,10 +39,16 @@ def test_process():
                 gt_img=torch.from_numpy(gt),
                 mask=torch.from_numpy(mask),
                 img_channel_order='bgr')))
+
     predictions.append({
         k: torch.from_numpy(deepcopy(v))
         for (k, v) in predictions[0].items()
     })
+
+    for d, p in zip(data_batch, predictions):
+        d['output'] = p
+
+    predictions = data_batch
     metric.process(data_batch, predictions)
     assert len(metric.results) == 2
     assert metric.results[0]['metric'] == 0
