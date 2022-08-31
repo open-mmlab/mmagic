@@ -15,14 +15,14 @@ class PConvEncoder(nn.Module):
 
     Args:
         in_channels (int): The number of input channels. Default: 3.
-        num_layers (int): The number of convolutional layers. Default 7.
+        num_layers (int): The number of convolutional layers. Default: 7.
         conv_cfg (dict): Config for convolution module. Default:
             {'type': 'PConv', 'multi_channel': True}.
         norm_cfg (dict): Config for norm layer. Default:
             {'type': 'BN'}.
         norm_eval (bool): Whether to set norm layers to eval mode, namely,
             freeze running stats (mean and var). Note: Effective on Batch Norm
-            and its variants only.
+            and its variants only. Default: False.
     """
 
     def __init__(self,
@@ -90,6 +90,7 @@ class PConvEncoder(nn.Module):
                     act_cfg=dict(type='ReLU')))
 
     def train(self, mode=True):
+        """Set BatchNorm modules in the model to evaluation mode."""
         super().train(mode)
         if mode and self.norm_eval:
             for m in self.modules():

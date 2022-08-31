@@ -14,11 +14,14 @@ class IndexNet(BaseMattor):
     Indices Matter: Learning to Index for Deep Image Matting
 
     Args:
+        data_preprocessor (dict, optional): The pre-process config of
+            :class:`BaseDataPreprocessor`.
         backbone (dict): Config of backbone.
         train_cfg (dict): Config of training. In 'train_cfg', 'train_backbone'
             should be specified.
         test_cfg (dict): Config of testing.
-        pretrained (str): path of pretrained model.
+        init_cfg (dict, optional): The weight initialized config for
+            :class:`BaseModule`.
         loss_alpha (dict): Config of the alpha prediction loss. Default: None.
         loss_comp (dict): Config of the composition loss. Default: None.
     """
@@ -44,25 +47,36 @@ class IndexNet(BaseMattor):
             MODELS.build(loss_comp) if loss_comp is not None else None)
 
     def _forward(self, inputs):
+        """Forward function.
+
+        Args:
+            inputs (torch.Tensor): Input tensor.
+
+        Returns:
+            Tensor: Output tensor.
+        """
         pred_alpha = self.backbone(inputs)
         return pred_alpha
 
     def _forward_test(self, inputs):
+        """Forward function for testing IndexNet model.
+
+        Args:
+            inputs (torch.Tensor): batch input tensor.
+
+        Returns:
+            Tensor: Output tensor of model.
+        """
         return self._forward(inputs)
 
     def _forward_train(self, inputs, data_samples):
         """Forward function for training IndexNet model.
 
         Args:
-            merged (Tensor): Input images tensor with shape (N, C, H, W).
-                Typically these should be mean centered and std scaled.
-            trimap (Tensor): Tensor of trimap with shape (N, 1, H, W).
-            meta (list[dict]): Meta data about the current data batch.
-            alpha (Tensor): Tensor of alpha with shape (N, 1, H, W).
-            ori_merged (Tensor): Tensor of origin merged images (not
-                normalized) with shape (N, C, H, W).
-            fg (Tensor): Tensor of foreground with shape (N, C, H, W).
-            bg (Tensor): Tensor of background with shape (N, C, H, W).
+            inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement]): data samples collated by
+                :attr:`data_preprocessor`.
 
         Returns:
             dict: Contains the loss items and batch information.

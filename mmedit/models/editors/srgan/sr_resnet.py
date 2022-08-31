@@ -105,14 +105,6 @@ class MSRResNet(BaseModule):
         return out
 
     def init_weights(self):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-
+        """Init weights for models."""
         for m in [self.conv_first, self.conv_hr, self.conv_last]:
             default_init_weights(m, 0.1)

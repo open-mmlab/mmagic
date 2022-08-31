@@ -31,6 +31,7 @@ class TTSRNet(BaseModule):
         out_channels (int): Number of channels in the output image
         mid_channels (int): Channel number of intermediate features.
             Default: 64
+        texture_channels (int): Number of texture channels. Default: 64.
         num_blocks (tuple[int]): Block numbers in the trunk network.
             Default: (16, 16, 8, 4)
         res_scale (float): Used to scale the residual in residual block.
