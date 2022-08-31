@@ -1,41 +1,73 @@
-mmedit.core
---------------
-.. automodule:: mmedit.core
+mmedit.apis
+---------------
+.. automodule:: mmedit.apis
     :members:
 
-mmedit.datasets
----------------
 
+mmedit.datasets
+-------------------------
+
+datasets
+^^^^^^^^^^
 .. automodule:: mmedit.datasets
     :members:
 
-mmedit.datasets.pipelines
--------------------------
-
-.. automodule:: mmedit.datasets.pipelines
+transforms
+^^^^^^^^^^
+.. automodule:: mmedit.datasets.transforms
     :members:
+
+
+mmedit.engine
+--------------
+
+hooks
+^^^^^^^^^^
+.. automodule:: mmedit.engine.hooks
+    :members:
+
+optimizers
+^^^^^^^^^^
+.. automodule:: mmedit.engine.optimizers
+    :members:
+
+schedulers
+^^^^^^^^^^
+.. automodule:: mmedit.engine.schedulers
+    :members:
+
+
+mmedit.evaluation
+------------------
+
+metrics
+^^^^^^^^^^
+.. automodule:: mmedit.evaluation.metrics
+    :members:
+
+
+functional
+^^^^^^^^^^
+.. automodule:: mmedit.evaluation.functional
+    :members:
+
 
 mmedit.models
 --------------
 
-models
+base_models
 ^^^^^^^
-.. automodule:: mmedit.models
+.. automodule:: mmedit.models.base_models
     :members:
 
-common
+data_preprocessors
 ^^^^^^^
-.. automodule:: mmedit.models.utils
+.. automodule:: mmedit.models.data_preprocessors
     :members:
 
-backbones
+layers
 ^^^^^^^^^^^^
-.. automodule:: mmedit.models.backbones
-    :members:
-
-components
-^^^^^^^^^^^^
-.. automodule:: mmedit.models.components
+.. automodule:: mmedit.models.layers
     :members:
 
 losses
@@ -43,7 +75,25 @@ losses
 .. automodule:: mmedit.models.losses
     :members:
 
+utils
+^^^^^^^^^^^^
+.. automodule:: mmedit.models.utils
+    :members:
+
+editors
+^^^^^^^^^^^^
+.. automodule:: mmedit.models.editors
+    :members:
+
+
+mmedit.visualization
+--------------------
+
+.. automodule:: mmedit.visualization
+    :members:
+
 mmedit.utils
---------------
+--------------------
+
 .. automodule:: mmedit.utils
     :members:
