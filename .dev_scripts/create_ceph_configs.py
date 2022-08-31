@@ -257,8 +257,6 @@ def update_ceph_config(filename, args, dry_run=False):
                     hooks['out_dir'] = save_dir
                     # hooks['file_client_args'] = file_client_args
 
-        update_intervals(config, args)
-
         # 4. save
         config.dump(config.filename)
         return True
