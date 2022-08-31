@@ -17,6 +17,7 @@ DATA_BATCH = Optional[Sequence[dict]]
 @HOOKS.register_module()
 class ExponentialMovingAverageHook(Hook):
     """Exponential Moving Average Hook.
+
     Exponential moving average is a trick that widely used in current GAN
     literature, e.g., PGGAN, StyleGAN, and BigGAN. This general idea of it is
     maintaining a model with the same architecture, but its parameters are

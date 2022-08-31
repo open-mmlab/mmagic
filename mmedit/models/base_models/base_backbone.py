@@ -8,8 +8,7 @@ from mmedit.registry import BACKBONES
 
 @BACKBONES.register_module()
 class BaseBackbone(nn.Module):
-    """Base backbone for image and video editing.
-    """
+    """Base backbone for image and video editing."""
 
     def init_weights(self, pretrained=None, strict=True):
         """Init weights for models.

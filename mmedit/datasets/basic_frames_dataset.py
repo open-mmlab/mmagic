@@ -308,8 +308,7 @@ class BasicFramesDataset(BaseDataset):
         return path_list
 
     def _set_seq_lens(self):
-        """Get sequence lengths.
-        """
+        """Get sequence lengths."""
 
         if self.seq_lens['fixed_seq_len']:
             return

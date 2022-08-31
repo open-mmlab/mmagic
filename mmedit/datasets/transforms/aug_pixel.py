@@ -547,7 +547,6 @@ class UnsharpMasking(BaseTransform):
 
     Added keys are "xxx_unsharp", where "xxx" are the attributes specified
     in "keys".
-
     """
 
     def __init__(self, kernel_size, sigma, weight, threshold, keys):
@@ -566,8 +565,7 @@ class UnsharpMasking(BaseTransform):
         self.kernel = np.matmul(kernel, kernel.transpose())
 
     def _unsharp_masking(self, imgs):
-        """Unsharp masking function
-        """
+        """Unsharp masking function."""
 
         is_single_image = False
         if isinstance(imgs, np.ndarray):

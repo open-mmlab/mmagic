@@ -5,8 +5,7 @@ import warnings
 
 
 def modify_args():
-    """Modify args of argparse.ArgumentParser
-    """
+    """Modify args of argparse.ArgumentParser."""
     for i, v in enumerate(sys.argv):
         if i == 0:
             assert v.endswith('.py')

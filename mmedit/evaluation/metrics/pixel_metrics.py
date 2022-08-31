@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-"""Evaluation metrics based on pixels"""
+"""Evaluation metrics based on pixels."""
 
 from typing import Optional
 

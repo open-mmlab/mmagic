@@ -10,8 +10,8 @@ from mmedit.registry import TRANSFORMS
 
 @TRANSFORMS.register_module()
 class GenerateFrameIndices(BaseTransform):
-    """Generate frame index for REDS datasets. It also performs
-    temporal augmention with random interval.
+    """Generate frame index for REDS datasets. It also performs temporal
+    augmention with random interval.
 
     Required Keys:
 

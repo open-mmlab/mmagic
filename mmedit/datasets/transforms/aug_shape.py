@@ -310,7 +310,7 @@ class Resize(BaseTransform):
         self.backend = backend
 
     def _resize(self, img):
-        """Resize function
+        """Resize function.
 
         Args:
             img (np.ndarray): Image.

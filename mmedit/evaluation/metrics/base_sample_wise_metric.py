@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-"""Evaluation metrics based on each sample"""
+"""Evaluation metrics based on each sample."""
 
 from typing import List, Optional, Sequence
 
@@ -70,7 +70,7 @@ class BaseSampleWiseMetric(BaseMetric):
 
     def process(self, data_batch: Sequence[dict],
                 data_samples: Sequence[dict]) -> None:
-        """Process one batch of data and predictions
+        """Process one batch of data and predictions.
 
         Args:
             data_batch (Sequence[dict]): A batch of data
