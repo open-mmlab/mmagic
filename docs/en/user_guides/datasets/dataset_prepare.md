@@ -1,4 +1,4 @@
-# Dataset Preparation
+# Prepare Datasets
 
 We supports multiple datasets of different tasks.
 There are two ways to use datasets for training and testing models in MMEditing:

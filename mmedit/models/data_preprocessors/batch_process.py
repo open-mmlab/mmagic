@@ -9,7 +9,9 @@ def stack_batch(tensor_list: List[torch.Tensor],
                 pad_size_divisor: int = 1,
                 pad_args: dict = dict()):
     """Stack multiple tensors to form a batch and pad the images to the max
-    shape use the right bottom padding mode in these images. If
+    shape use the right bottom padding mode in these images.
+
+    If
     ``pad_size_divisor > 0``, add padding to ensure the shape of each dim is
     divisible by ``pad_size_divisor``.
     Args:
@@ -63,6 +65,7 @@ def stack_batch(tensor_list: List[torch.Tensor],
 
 def split_batch(batch_tensor: torch.Tensor, padded_sizes: torch.Tensor):
     """reverse operation of ``stack_batch``.
+
     Args:
         batch_tensor (Tensor): The 4D-tensor or 5D-tensor.
             Tensor.dim == tensor_list[0].dim + 1

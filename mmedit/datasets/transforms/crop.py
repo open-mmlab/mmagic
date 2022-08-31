@@ -122,8 +122,8 @@ class Crop(BaseTransform):
 
 @TRANSFORMS.register_module()
 class CropLike(BaseTransform):
-    """Crop/pad the image in the target_key according to the size of image
-        in the reference_key .
+    """Crop/pad the image in the target_key according to the size of image in
+    the reference_key .
 
     Args:
         target_key (str): The key needs to be cropped.

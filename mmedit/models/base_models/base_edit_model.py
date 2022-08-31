@@ -122,8 +122,7 @@ class BaseEditModel(BaseModel):
         return inputs
 
     def forward_tensor(self, inputs, data_samples=None, **kwargs):
-        """Forward tensor.
-            Returns result of simple forward.
+        """Forward tensor. Returns result of simple forward.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by
@@ -140,8 +139,8 @@ class BaseEditModel(BaseModel):
         return feats
 
     def forward_inference(self, inputs, data_samples=None, **kwargs):
-        """Forward inference.
-            Returns predictions of validation, testing, and simple inference.
+        """Forward inference. Returns predictions of validation, testing, and
+        simple inference.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by
@@ -165,8 +164,7 @@ class BaseEditModel(BaseModel):
         return predictions
 
     def forward_train(self, inputs, data_samples=None, **kwargs):
-        """Forward training.
-            Returns dict of losses of training.
+        """Forward training. Returns dict of losses of training.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by

@@ -1,4 +1,4 @@
-### Demo
+# Demo
 
 We provide some task-specific demo scripts to test a single image.
 

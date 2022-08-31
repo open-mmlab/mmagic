@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-"""Evaluation metrics used in Image Matting"""
+"""Evaluation metrics used in Image Matting."""
 
 from typing import List, Sequence
 
@@ -26,7 +26,7 @@ def _assert_masked(pred_alpha, trimap):
 
 
 def _fetch_data_and_check(data_samples):
-    """Fetch and check data from one item of data_batch and predictions
+    """Fetch and check data from one item of data_batch and predictions.
 
     Args:
         data_batch (dict): One item of data_batch.
@@ -96,7 +96,7 @@ class SAD(BaseMetric):
 
     def process(self, data_batch: Sequence[dict],
                 data_samples: Sequence[dict]) -> None:
-        """Process one batch of data and predictions
+        """Process one batch of data and predictions.
 
         Args:
             data_batch (Sequence[Tuple[Any, dict]]): A batch of data
@@ -170,7 +170,7 @@ class MattingMSE(BaseMetric):
 
     def process(self, data_batch: Sequence[dict],
                 data_samples: Sequence[dict]) -> None:
-        """Process one batch of data and predictions
+        """Process one batch of data and predictions.
 
         Args:
             data_batch (Sequence[dict]): A batch of data

@@ -11,10 +11,11 @@ from .one_stage import OneStageInpaintor
 
 @MODELS.register_module()
 class TwoStageInpaintor(OneStageInpaintor):
-    """Standard two-stage inpaintor with commonly used losses.
-    A two-stage inpaintor contains two encoder-decoder style generators to
-    inpaint masked regions.
-    Currently, we support these loss types in each of two stage inpaintors:
+    """Standard two-stage inpaintor with commonly used losses. A two-stage
+    inpaintor contains two encoder-decoder style generators to inpaint masked
+    regions. Currently, we support these loss types in each of two stage
+    inpaintors:
+
     ['loss_gan', 'loss_l1_hole', 'loss_l1_valid', 'loss_composed_percep',\
      'loss_out_percep', 'loss_tv']
     The `stage1_loss_type` and `stage2_loss_type` should be chosen from these
@@ -93,6 +94,7 @@ class TwoStageInpaintor(OneStageInpaintor):
 
     def forward_tensor(self, inputs, data_samples):
         """Forward function in tensor mode.
+
         Args:
             inputs (torch.Tensor): Input tensor.
             data_samples (List[dict]): List of data sample dict.
@@ -115,6 +117,7 @@ class TwoStageInpaintor(OneStageInpaintor):
 
     def two_stage_loss(self, stage1_data, stage2_data, gt, mask, masked_img):
         """Calculate two-stage loss.
+
         Args:
             stage1_data (dict): Contain stage1 results.
             stage2_data (dict): Contain stage2 results..
@@ -167,6 +170,7 @@ class TwoStageInpaintor(OneStageInpaintor):
                                  mask,
                                  prefix='stage1_'):
         """Calculate multiple types of losses.
+
         Args:
             loss_type (str): Type of the loss.
             fake_res (torch.Tensor): Direct results from model.

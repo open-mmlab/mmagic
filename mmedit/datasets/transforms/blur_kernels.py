@@ -145,7 +145,6 @@ def bivariate_generalized_gaussian(kernel_size,
 
     Returns:
         kernel (np.ndarray): normalized kernel.
-
     """
 
     if grid is None:
@@ -401,7 +400,7 @@ def random_bivariate_plateau_kernel(kernel_size,
 
 
 def random_circular_lowpass_kernel(omega_range, kernel_size, pad_to=0):
-    """ Generate a 2D Sinc filter
+    """Generate a 2D Sinc filter.
 
     Reference: https://dsp.stackexchange.com/questions/58301/2-d-circularly-symmetric-low-pass-filter  # noqa
 
@@ -450,7 +449,6 @@ def random_mixed_kernels(kernel_list,
                          omega_range=[0, np.pi],
                          noise_range=None):
     """Randomly generate a kernel.
-
 
     Args:
         kernel_list (list): A list of kernel types. Choices are

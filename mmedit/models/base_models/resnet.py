@@ -106,6 +106,7 @@ class BasicBlock(nn.Module):
 
 class Bottleneck(nn.Module):
     """Bottleneck block for ResNet.
+
     Args:
         inplanes (int): Number of input channels.
         planes (int): Number of output channels.

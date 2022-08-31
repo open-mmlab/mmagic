@@ -75,8 +75,8 @@ class ResidualBlockNoBN(nn.Module):
         Initialization methods like `kaiming_init` are for VGG-style
         modules. For modules with residual paths, using smaller std is
         better for stability and performance. We empirically use 0.1.
-        See more details in "ESRGAN: Enhanced Super-Resolution Generative
-        Adversarial Networks"
+        See more details in "ESRGAN: Enhanced Super-Resolution
+        Generative Adversarial Networks"
         """
 
         for m in [self.conv1, self.conv2]:

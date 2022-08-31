@@ -132,7 +132,7 @@ class AdobeComp1kDataset(BaseDataset):
         return data_list
 
     def parse_data_info(self, raw_data_info: dict) -> Union[dict, List[dict]]:
-        """Join data_root to each path in data_info"""
+        """Join data_root to each path in data_info."""
 
         data_info = raw_data_info.copy()
         for key in raw_data_info:

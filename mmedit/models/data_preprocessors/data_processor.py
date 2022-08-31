@@ -130,8 +130,8 @@ class EditDataPreprocessor(BaseDataPreprocessor):
         return data
 
     def destructor(self, batch_tensor: torch.Tensor):
-        """Destructor of data processor.
-        Destruct padding, normalization and dissolve batch.
+        """Destructor of data processor. Destruct padding, normalization and
+        dissolve batch.
 
         Args:
             batch_tensor (Tensor): Batched output.

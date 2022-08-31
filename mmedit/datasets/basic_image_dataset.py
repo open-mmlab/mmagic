@@ -125,7 +125,6 @@ class BasicImageDataset(BaseDataset):
                 data_root='data/places',
                 data_prefix=dict(gt='train_set'),
                 pipeline=[])
-
     """
 
     METAINFO = dict(dataset_type='basic_image_dataset', task_name='editing')

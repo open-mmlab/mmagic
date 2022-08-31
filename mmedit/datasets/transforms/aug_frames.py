@@ -7,7 +7,7 @@ from mmedit.registry import TRANSFORMS
 
 @TRANSFORMS.register_module()
 class MirrorSequence(BaseTransform):
-    """Extend short sequences (e.g. Vimeo-90K) by mirroring the sequences
+    """Extend short sequences (e.g. Vimeo-90K) by mirroring the sequences.
 
     Given a sequence with N frames (x1, ..., xN), extend the sequence to
     (x1, ..., xN, xN, ..., x1).

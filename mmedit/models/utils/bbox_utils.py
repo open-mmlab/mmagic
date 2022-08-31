@@ -4,7 +4,7 @@ import torch
 
 
 def extract_bbox_patch(bbox, img, channel_first=True):
-    """Extract patch from a given bbox
+    """Extract patch from a given bbox.
 
     Args:
         bbox (torch.Tensor | numpy.array): Bbox with (top, left, h, w). If

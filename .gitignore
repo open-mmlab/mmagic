@@ -120,6 +120,7 @@ configs_ceph_*/
 /data/
 /data
 mmedit/.mim
+demo/*.png
 
 # Pytorch
 *.pth

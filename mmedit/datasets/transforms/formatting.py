@@ -195,8 +195,8 @@ class PackEditInputs(BaseTransform):
 
 @TRANSFORMS.register_module()
 class ToTensor(BaseTransform):
-    """Convert some values in results dict to `torch.Tensor` type
-    in data loader pipeline.
+    """Convert some values in results dict to `torch.Tensor` type in data
+    loader pipeline.
 
     Args:
         keys (Sequence[str]): Required keys to be converted.

@@ -62,7 +62,7 @@ class BasicFramesDataset(BaseDataset):
         num_output_frames (None | int): Number of output frames. Default: None.
         fixed_seq_len (None | int): The fixed sequence length.
             If None, BasicFramesDataset will obtain the length of each
-                sequence.
+            sequence.
             Default: None.
         load_frames_list (dict): Load frames list for each key.
             Default: dict().
@@ -308,8 +308,7 @@ class BasicFramesDataset(BaseDataset):
         return path_list
 
     def _set_seq_lens(self):
-        """Get sequence lengths.
-        """
+        """Get sequence lengths."""
 
         if self.seq_lens['fixed_seq_len']:
             return

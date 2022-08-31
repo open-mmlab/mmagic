@@ -14,8 +14,9 @@ from .trans_utils import (bbox2mask, brush_stroke_mask, get_irregular_mask,
 
 @TRANSFORMS.register_module()
 class LoadImageFromFile(BaseTransform):
-    """Load a single image or image frames from corresponding paths.
-    Required Keys:
+    """Load a single image or image frames from corresponding paths. Required
+    Keys:
+
     - [Key]_path
     New Keys:
     - [KEY]
@@ -82,6 +83,7 @@ class LoadImageFromFile(BaseTransform):
 
     def transform(self, results: dict) -> dict:
         """Functions to load image or frames.
+
         Args:
             results (dict): Result dict from :obj:``mmcv.BaseDataset``.
         Returns:
@@ -126,6 +128,7 @@ class LoadImageFromFile(BaseTransform):
 
     def _load_image(self, filename):
         """Load an image from file.
+
         Args:
             filename (str): Path of image file.
         Returns:
@@ -156,6 +159,7 @@ class LoadImageFromFile(BaseTransform):
 
     def _convert(self, img: np.ndarray):
         """Convert an image to the require format.
+
         Args:
             img (np.ndarray): The original image.
         Returns:

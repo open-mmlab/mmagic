@@ -98,8 +98,8 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         self.backbone = MODELS.build(backbone)
 
     def resize_inputs(self, batch_inputs):
-        """Pad or interpolate images and trimaps to multiple of given factor.
-        """
+        """Pad or interpolate images and trimaps to multiple of given
+        factor."""
 
         resize_method = self.test_cfg['resize_method']
         resize_mode = self.test_cfg['resize_mode']

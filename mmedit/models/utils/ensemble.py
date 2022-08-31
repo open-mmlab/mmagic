@@ -4,14 +4,13 @@ import torch.nn as nn
 
 
 class SpatialTemporalEnsemble(nn.Module):
-    """ Apply spatial and temporal ensemble and compute outputs
+    """Apply spatial and temporal ensemble and compute outputs.
 
     Args:
         is_temporal_ensemble (bool, optional): Whether to apply ensemble
             temporally. If True, the sequence will also be flipped temporally.
             If the input is an image, this argument must be set to False.
             Default: False.
-
     """
 
     def __init__(self, is_temporal_ensemble=False):
@@ -31,7 +30,6 @@ class SpatialTemporalEnsemble(nn.Module):
 
         Returns:
             torch.Tensor: Output of the model with spatial ensemble applied.
-
         """
 
         is_single_image = False
@@ -64,7 +62,6 @@ class SpatialTemporalEnsemble(nn.Module):
 
         Returns:
             torch.Tensor: Output of the model with spatial ensemble applied.
-
         """
 
         img_list = [imgs.cpu()]
@@ -95,7 +92,6 @@ class SpatialTemporalEnsemble(nn.Module):
 
         Returns:
             torch.Tensor: Output of the model with spatial ensemble applied.
-
         """
         outputs = self.spatial_ensemble(imgs, model)
         if self.is_temporal_ensemble:
