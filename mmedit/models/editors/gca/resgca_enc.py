@@ -17,10 +17,10 @@ class BasicBlock(nn.Module):
     Args:
         in_channels (int): Input channels of the block.
         out_channels (int): Output channels of the block.
-        kernel_size (int): Kernel size of the convolution layers.
-        stride (int): Stride of the first conv of the block.
+        kernel_size (int): Kernel size of the convolution layers. Default: 3.
+        stride (int): Stride of the first conv of the block. Default: 1.
         interpolation (nn.Module, optional): Interpolation module for skip
-            connection.
+            connection. Default: None.
         conv_cfg (dict): dictionary to construct convolution layer. If it is
             None, 2d convolution will be applied. Default: None.
         norm_cfg (dict): Config dict for normalization layer. "BN" by default.
@@ -59,6 +59,24 @@ class BasicBlock(nn.Module):
 
     def build_conv1(self, in_channels, out_channels, kernel_size, stride,
                     conv_cfg, norm_cfg, act_cfg, with_spectral_norm):
+        """Build conv1 of the block.
+
+        Args:
+            in_channels (int): The input channels of the ConvModule.
+            out_channels (int): The output channels of the ConvModule.
+            kernel_size (int): The kernel size of the ConvModule.
+            stride (int): The stride of the ConvModule. If stride is set to 2,
+                then ``conv_cfg`` will be overwritten as
+                ``dict(type='Deconv')`` and ``kernel_size`` will be overwritten
+                as 4.
+            conv_cfg (dict): The conv config of the ConvModule.
+            norm_cfg (dict): The norm config of the ConvModule.
+            act_cfg (dict): The activation config of the ConvModule.
+            with_spectral_norm (bool): Whether use spectral norm.
+
+        Returns:
+            nn.Module: The built ConvModule.
+        """
         return ConvModule(
             in_channels,
             out_channels,
@@ -72,6 +90,24 @@ class BasicBlock(nn.Module):
 
     def build_conv2(self, in_channels, out_channels, kernel_size, conv_cfg,
                     norm_cfg, with_spectral_norm):
+        """Build conv2 of the block.
+
+        Args:
+            in_channels (int): The input channels of the ConvModule.
+            out_channels (int): The output channels of the ConvModule.
+            kernel_size (int): The kernel size of the ConvModule.
+            stride (int): The stride of the ConvModule. If stride is set to 2,
+                then ``conv_cfg`` will be overwritten as
+                ``dict(type='Deconv')`` and ``kernel_size`` will be overwritten
+                as 4.
+            conv_cfg (dict): The conv config of the ConvModule.
+            norm_cfg (dict): The norm config of the ConvModule.
+            act_cfg (dict): The activation config of the ConvModule.
+            with_spectral_norm (bool): Whether use spectral norm.
+
+        Returns:
+            nn.Module: The built ConvModule.
+        """
         return ConvModule(
             out_channels,
             out_channels,
@@ -84,6 +120,14 @@ class BasicBlock(nn.Module):
             with_spectral_norm=with_spectral_norm)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            inputs (torch.Tensor): Input tensor.
+
+        Returns:
+            Tensor: Output tensor.
+        """
         identity = x
 
         out = self.conv1(x)
@@ -120,6 +164,7 @@ class ResNetEnc(BaseModule):
             Default: False.
         late_downsample (bool): Whether to adopt late downsample strategy,
             Default: False.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,

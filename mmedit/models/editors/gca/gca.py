@@ -15,14 +15,17 @@ class GCA(BaseMattor):
     https://arxiv.org/abs/2001.04069
 
     Args:
+        data_preprocessor (dict, optional): The pre-process config of
+            :class:`BaseDataPreprocessor`.
         backbone (dict): Config of backbone.
+        loss_alpha (dict): Config of the alpha prediction loss. Default: None.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
         train_cfg (dict): Config of training. In ``train_cfg``,
             ``train_backbone`` should be specified. If the model has a refiner,
             ``train_refiner`` should be specified.
         test_cfg (dict): Config of testing. In ``test_cfg``, If the model has a
             refiner, ``train_refiner`` should be specified.
-        pretrained (str): Path of the pretrained model.
-        loss_alpha (dict): Config of the alpha prediction loss. Default: None.
+
     """
 
     def __init__(self,
@@ -42,23 +45,37 @@ class GCA(BaseMattor):
         self.loss_alpha = MODELS.build(loss_alpha)
 
     def _forward(self, inputs):
+        """Forward function.
+
+        Args:
+            inputs (torch.Tensor): Input tensor.
+
+        Returns:
+            Tensor: Output tensor.
+        """
         raw_alpha = self.backbone(inputs)
         pred_alpha = (raw_alpha.tanh() + 1.0) / 2.0
         return pred_alpha
 
     def _forward_test(self, inputs):
+        """Forward function for testing GCA model.
+
+        Args:
+            inputs (torch.Tensor): batch input tensor.
+
+        Returns:
+            Tensor: Output tensor of model.
+        """
         return self._forward(inputs)
 
     def _forward_train(self, inputs, data_samples):
         """Forward function for training GCA model.
 
         Args:
-            merged (Tensor): with shape (N, C, H, W) encoding input images.
-                Typically these should be mean centered and std scaled.
-            trimap (Tensor): with shape (N, C', H, W). Tensor of trimap. C'
-                might be 1 or 3.
-            meta (list[dict]): Meta data about the current data batch.
-            alpha (Tensor): with shape (N, 1, H, W). Tensor of alpha.
+            inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement]): data samples collated by
+                :attr:`data_preprocessor`.
 
         Returns:
             dict: Contains the loss items and batch information.
