@@ -38,6 +38,7 @@ class MultiOptimWrapperConstructor:
 
     Args:
         optim_wrapper_cfg_dict (dict): Config of the optimizer wrapper.
+        paramwise_cfg (dict): Config of parameter-wise settings. Default: None.
     """
 
     def __init__(self, optim_wrapper_cfg: dict, paramwise_cfg=None):
