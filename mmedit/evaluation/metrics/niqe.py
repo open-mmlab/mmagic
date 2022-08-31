@@ -45,7 +45,7 @@ class NIQE(BaseSampleWiseMetric):
         convert_to (str): Whether to convert the images to other color models.
             If None, the images are not altered. When computing for 'Y',
             the images are assumed to be in BGR order. Options are 'Y' and
-            None. Default: 'gray.
+            None. Default: 'gray'.
 
     Metrics:
         - NIQE (float): Natural Image Quality Evaluator

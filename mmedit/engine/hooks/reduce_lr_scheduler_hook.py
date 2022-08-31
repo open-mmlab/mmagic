@@ -102,6 +102,7 @@ class ReduceLRSchedulerHook(ParamSchedulerHook):
 
         Args:
             runner (Runner): The runner of the training process.
+            metrics (dict, optional): The metrics of validation. Default: None.
         """
         # If val_metric is None, we check training loss to reduce learning
         # rate.

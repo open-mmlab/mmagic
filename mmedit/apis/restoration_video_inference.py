@@ -20,7 +20,7 @@ def pad_sequence(data, window_size):
         window_size (int): The window size used in sliding-window framework.
 
     Returns:
-        data: The padded result.
+        data (Tensor): The padded result.
     """
 
     padding = window_size // 2

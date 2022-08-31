@@ -10,7 +10,7 @@ def delete_cfg(cfg, key='init_cfg'):
     """Delete key from config object.
 
     Args:
-        cfg (str or :obj:`mmcv.Config`): Config object.
+        cfg (str or :obj:`mmengine.Config`): Config object.
         key (str): Which key to delete.
     """
 

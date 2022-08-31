@@ -53,7 +53,7 @@ def _cubic(x):
         x (np.ndarray): The distance from the center position.
 
     Returns:
-        f (np.ndarray): The weight corresponding to a particular distance.
+        np.ndarray: The weight corresponding to a particular distance.
 
     """
 
