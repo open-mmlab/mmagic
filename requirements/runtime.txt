@@ -3,7 +3,8 @@ av==8.0.3; python_version < '3.7'
 face-alignment
 facexlib
 lmdb
-mmcv-full>=1.3.13 # To support DCN on CPU
+mmcv>=2.0.0rc1
+mmengine
 numpy
 opencv-python!=4.5.5.62,!=4.5.5.64
 # MMCV depends opencv-python instead of headless, thus we install opencv-python
