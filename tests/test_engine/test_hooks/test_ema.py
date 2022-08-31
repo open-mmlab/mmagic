@@ -1,11 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from copy import deepcopy
+from unittest.mock import MagicMock
 
 import pytest
 import torch
 import torch.nn as nn
+from mmengine.model import MMDistributedDataParallel
 from packaging import version
-from torch.nn.parallel import DataParallel
 
 from mmedit.engine import ExponentialMovingAverageHook
 
@@ -183,8 +184,10 @@ class TestEMA:
 
         # test before run
         ema = ExponentialMovingAverageHook(**self.default_config)
-        self.runner.model = SimpleModelNoEMA().cuda()
-        self.runner.model = DataParallel(self.runner.model)
+        model_ = SimpleModelNoEMA().cuda()
+        self.runner.model = MagicMock(spec=MMDistributedDataParallel)
+        self.runner.model.module = model_
+
         self.runner.iter = 0
         ema.before_run(self.runner)
         assert hasattr(self.runner.model.module, 'module_a_ema')

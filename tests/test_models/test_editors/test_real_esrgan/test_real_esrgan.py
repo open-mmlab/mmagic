@@ -71,11 +71,11 @@ def test_real_esrgan(init_weights):
         discriminator=OptimWrapper(optimizer_d))
 
     # prepare data
-    inputs = torch.rand(3, 32, 32)
+    inputs = torch.rand(1, 3, 32, 32)
     target = torch.rand(3, 128, 128)
     data_sample = EditDataSample(
         gt_img=PixelData(data=target), gt_unsharp=PixelData(data=target))
-    data = [dict(inputs=inputs, data_sample=data_sample)]
+    data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
     log_vars = model.train_step(data, optim_wrapper)
@@ -86,7 +86,7 @@ def test_real_esrgan(init_weights):
 
     # val
     output = model.val_step(data)
-    assert output[0].pred_img.data.shape == (3, 128, 128)
+    assert output[0].output.pred_img.data.shape == (3, 128, 128)
 
     # feat
     output = model(torch.rand(1, 3, 32, 32), mode='tensor')

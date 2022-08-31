@@ -30,19 +30,25 @@ def test_process():
     mask[:16] *= 0
     gt = np.ones((32, 32, 3)) * 2
     data_sample = dict(gt_img=gt, mask=mask, gt_channel_order='bgr')
-    data_batch = [dict(data_sample=data_sample)]
+    data_batch = [dict(data_samples=data_sample)]
     predictions = [dict(pred_img=np.ones((32, 32, 3)))]
 
     data_batch.append(
         dict(
-            data_sample=dict(
+            data_samples=dict(
                 gt_img=torch.from_numpy(gt),
                 mask=torch.from_numpy(mask),
                 img_channel_order='bgr')))
+
     predictions.append({
         k: torch.from_numpy(deepcopy(v))
         for (k, v) in predictions[0].items()
     })
+
+    for d, p in zip(data_batch, predictions):
+        d['output'] = p
+
+    predictions = data_batch
     metric.process(data_batch, predictions)
     assert len(metric.results) == 2
     assert metric.results[0]['metric'] == 0

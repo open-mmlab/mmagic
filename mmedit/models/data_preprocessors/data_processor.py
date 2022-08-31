@@ -104,7 +104,9 @@ class EditDataPreprocessor(BaseDataPreprocessor):
             model input.
         """
 
-        inputs, batch_data_samples = self.collate_data(data)
+        # inputs, batch_data_samples = self.collate_data(data)
+        data = super().forward(data=data, training=training)
+        inputs, batch_data_samples = data['inputs'], data['data_samples']
 
         # Check if input is normalized to [0, 1]
         self.norm_input_flag = (inputs[0].max() <= 1)
@@ -114,9 +116,8 @@ class EditDataPreprocessor(BaseDataPreprocessor):
                   for _input in inputs]
 
         # Pad and stack Tensor.
-        batch_inputs, self.padded_sizes = stack_batch(inputs,
-                                                      self.pad_size_divisor,
-                                                      self.pad_args)
+        inputs, self.padded_sizes = stack_batch(inputs, self.pad_size_divisor,
+                                                self.pad_args)
 
         if training:
             for data_sample in batch_data_samples:
@@ -124,7 +125,9 @@ class EditDataPreprocessor(BaseDataPreprocessor):
                     (data_sample.gt_img.data - self.outputs_mean[0]) /
                     self.outputs_std[0])
 
-        return batch_inputs, batch_data_samples
+        data['inputs'] = inputs
+        data['data_samples'] = batch_data_samples
+        return data
 
     def destructor(self, batch_tensor: torch.Tensor):
         """Destructor of data processor.

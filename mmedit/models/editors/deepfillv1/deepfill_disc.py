@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
-from mmcv.runner import load_checkpoint
 from mmengine import MMLogger
-from mmengine.model.utils import normal_init
+from mmengine.model.weight_init import normal_init
+from mmengine.runner import load_checkpoint
 
 from mmedit.registry import COMPONENTS
 

@@ -28,6 +28,8 @@ model = dict(
         output_view=(-1, 1, 1),
     ))
 
+train_dataloader = dict(num_workers=6, batch_size=4)
+
 # learning policy
 total_iters = 600000
 lr_config = dict(

@@ -2,7 +2,7 @@
 import argparse
 
 import torch
-from mmcv import Config
+from mmengine import Config
 
 from mmedit.registry import MODELS
 from mmedit.utils import register_all_modules

@@ -3,7 +3,7 @@ from typing import Optional
 
 import torch.nn as nn
 from mmengine.model import BaseModule
-from mmengine.model.utils import constant_init, xavier_init
+from mmengine.model.weight_init import constant_init, xavier_init
 
 from mmedit.registry import MODELS
 from ..layers.aspp import ASPP

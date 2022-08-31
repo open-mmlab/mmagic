@@ -1,7 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
-from mmcv.parallel import collate, scatter
 from mmengine.dataset import Compose
+from mmengine.dataset.utils import default_collate as collate
+from torch.nn.parallel import scatter
 
 
 def restoration_inference(model, img, ref=None):
@@ -47,10 +48,10 @@ def restoration_inference(model, img, ref=None):
         data = dict(img_path=img)
     _data = test_pipeline(data)
     data = dict()
-    data['batch_inputs'] = _data['inputs'] / 255.0
-    data = collate([data], samples_per_gpu=1)
+    data['inputs'] = _data['inputs'] / 255.0
+    data = collate([data])
     if ref:
-        data['data_samples'] = [_data['data_sample']]
+        data['data_samples'] = [_data['data_samples']]
     if 'cuda' in str(device):
         data = scatter(data, [device])[0]
         if ref:

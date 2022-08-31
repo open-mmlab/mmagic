@@ -113,35 +113,6 @@ class TwoStageInpaintor(OneStageInpaintor):
         fake_imgs = stage2_fake_res * masks + masked_imgs * (1. - masks)
         return stage2_fake_res, fake_imgs
 
-    # def forward_test(self, inputs, data_samples):
-    #     """Forward function for testing.
-
-    #     Args:
-    #         masked_img (torch.Tensor): Tensor with shape of (n, 3, h, w).
-    #         mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
-    #         save_image (bool, optional): If True, results will be saved as
-    #             image. Defaults to False.
-    #         save_path (str, optional): If given a valid str, the results will
-    #             be saved in this path. Defaults to None.
-    #         iteration (int, optional): Iteration number. Defaults to None.
-
-    #     Returns:
-    #         dict: Contain output results and eval metrics (if have).
-    #     """
-    #     if self.input_with_ones:
-    #         tmp_ones = torch.ones_like(mask)
-    #         input_x = torch.cat([masked_img, tmp_ones, mask], dim=1)
-    #     else:
-    #         input_x = torch.cat([masked_img, mask], dim=1)
-    #     stage1_fake_res, stage2_fake_res = self.generator(input_x)
-    #     fake_img = stage2_fake_res * mask + masked_img * (1. - mask)
-    #     output = dict()
-    #     eval_result = {}
-
-    #     output['meta'] = None if 'meta' not in kwargs else kwargs['meta'][0]
-
-    #     return output
-
     def two_stage_loss(self, stage1_data, stage2_data, gt, mask, masked_img):
         """Calculate two-stage loss.
         Args:
@@ -258,7 +229,8 @@ class TwoStageInpaintor(OneStageInpaintor):
             dict: Dict with loss, information for logger, the number of \
                 samples and results for visualization.
         """
-        batch_inputs, data_samples = self.data_preprocessor(data, True)
+        data = self.data_preprocessor(data, True)
+        batch_inputs, data_samples = data['inputs'], data['data_samples']
         log_vars = {}
 
         masked_img = batch_inputs  # float

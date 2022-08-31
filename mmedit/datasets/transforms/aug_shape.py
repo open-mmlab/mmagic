@@ -5,6 +5,7 @@ from typing import Dict
 import mmcv
 import numpy as np
 from mmcv.transforms import BaseTransform
+from mmengine.utils import is_tuple_of
 
 from mmedit.registry import TRANSFORMS
 
@@ -104,7 +105,7 @@ class RandomRotation(BaseTransform):
                 raise ValueError('Degrees must be positive if it is a number.')
             else:
                 degrees = (-degrees, degrees)
-        elif not mmcv.is_tuple_of(degrees, (int, float)):
+        elif not is_tuple_of(degrees, (int, float)):
             raise TypeError(f'Degrees must be float | int or tuple of float | '
                             'int, but got '
                             f'{type(degrees)}.')
@@ -288,7 +289,7 @@ class Resize(BaseTransform):
         if isinstance(scale, float):
             if scale <= 0:
                 raise ValueError(f'Invalid scale {scale}, must be positive.')
-        elif mmcv.is_tuple_of(scale, int):
+        elif is_tuple_of(scale, int):
             max_long_edge = max(scale)
             max_short_edge = min(scale)
             if max_short_edge == -1:

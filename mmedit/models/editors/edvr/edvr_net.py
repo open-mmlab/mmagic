@@ -4,7 +4,7 @@ import torch.nn as nn
 from mmcv.cnn import ConvModule
 from mmcv.ops import ModulatedDeformConv2d, modulated_deform_conv2d
 from mmengine.model import BaseModule
-from mmengine.model.utils import constant_init, kaiming_init
+from mmengine.model.weight_init import constant_init, kaiming_init
 from torch.nn.modules.utils import _pair
 
 from mmedit.models.utils import PixelShufflePack, ResidualBlockNoBN, make_layer

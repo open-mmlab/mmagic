@@ -5,10 +5,6 @@ rm -r _tmp/*
 cp -r ../../configs/ _tmp/
 find _tmp/configs -name README_zh-CN.md | xargs rm
 
-sed -i '$a\\n<br/><hr/>\n' _tmp/configs/inpainting/*/README.md
-sed -i '$a\\n<br/><hr/>\n' _tmp/configs/*/README.md
-sed -i '$a\\n<br/><hr/>\n' _tmp/configs/restorers/*/README.md
-sed -i '$a\\n<br/><hr/>\n' _tmp/configs/synthesizers/*/README.md
 sed -i '$a\\n<br/><hr/>\n' _tmp/configs/*/README.md
 
 # gather models

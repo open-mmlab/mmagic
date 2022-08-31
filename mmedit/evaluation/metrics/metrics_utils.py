@@ -82,7 +82,6 @@ def img_transform(img,
 
 def obtain_data(data_sample, key, device='cpu'):
     """Obtain data of key from data_sample and converse data to device.
-
     Args:
         data_sample (dict): A dict of data sample.
         key (str): The key of data to obtain.
@@ -91,7 +90,7 @@ def obtain_data(data_sample, key, device='cpu'):
     Returns:
         result (Tensor | np.ndarray): The data of key.
     """
-    candidates = ['data_sample', key, 'data']
+    candidates = ['data_samples', key, 'data']
 
     for k in candidates:
         if k in data_sample:

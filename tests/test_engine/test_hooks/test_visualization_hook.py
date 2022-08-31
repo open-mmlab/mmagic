@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import copy
 from unittest import TestCase
 from unittest.mock import Mock
 
@@ -14,7 +15,7 @@ from mmedit.visualization import ConcatImageVisualizer
 class TestVisualizationHook(TestCase):
 
     def setUp(self) -> None:
-        input = torch.rand(1, 3, 32, 32)
+        input = torch.rand(2, 3, 32, 32)
         data_sample = EditDataSample(
             path_rgb='rgb.png',
             tensor3d=torch.ones(3, 32, 32) *
@@ -23,16 +24,20 @@ class TestVisualizationHook(TestCase):
             tensor4d=torch.ones(2, 3, 32, 32) * torch.tensor(
                 [[[[0.1]], [[0.2]], [[0.3]]], [[[0.4]], [[0.5]], [[0.6]]]]),
             pixdata=PixelData(data=torch.ones(1, 32, 32) * 0.6))
-        self.data_batch = [{'data_sample': data_sample, 'inputs': input}] * 2
+        self.data_batch = {'inputs': input, 'data_samples': [data_sample] * 2}
 
-        output = EditDataSample(
-            outpixdata=PixelData(data=np.ones(shape=(32, 32)) * 0.8))
+        output = copy.deepcopy(data_sample)
+        output.outpixdata = PixelData(data=np.ones(shape=(32, 32)) * 0.8)
         self.outputs = [output] * 2
 
         self.vis = ConcatImageVisualizer(
             fn_key='path_rgb',
             img_keys=[
-                'tensor3d', 'array3d', 'pixdata', 'outpixdata', 'tensor4d'
+                'tensor3d',
+                'array3d',
+                'pixdata',
+                'tensor4d',
+                'outpixdata',
             ],
             vis_backends=[dict(type='LocalVisBackend')],
             save_dir='work_dirs')

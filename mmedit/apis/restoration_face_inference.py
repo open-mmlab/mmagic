@@ -2,8 +2,9 @@
 import mmcv
 import numpy as np
 import torch
-from mmcv.parallel import collate, scatter
 from mmengine.dataset import Compose
+from mmengine.dataset.utils import default_collate as collate
+from torch.nn.parallel import scatter
 
 try:
     from facexlib.utils.face_restoration_helper import FaceRestoreHelper
@@ -75,8 +76,8 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
         data = dict(lq=img.astype(np.float32), img_path='demo/tmp.png')
         _data = test_pipeline(data)
         data = dict()
-        data['batch_inputs'] = _data['inputs']
-        data = collate([data], samples_per_gpu=1)
+        data['inputs'] = _data['inputs']
+        data = collate([data])
         if 'cuda' in str(device):
             data = scatter(data, [device])[0]
 

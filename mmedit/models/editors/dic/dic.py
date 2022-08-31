@@ -55,12 +55,12 @@ class DIC(SRGAN):
 
         self.pixel_init = train_cfg.get('pixel_init', 0) if train_cfg else 0
 
-    def forward_tensor(self, batch_inputs, data_samples=None, training=False):
+    def forward_tensor(self, inputs, data_samples=None, training=False):
         """Forward tensor.
             Returns result of simple forward.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -71,7 +71,7 @@ class DIC(SRGAN):
                 forward train.
         """
 
-        sr_list, heatmap_list = self.generator(batch_inputs)
+        sr_list, heatmap_list = self.generator(inputs)
 
         if training:
             return sr_list, heatmap_list

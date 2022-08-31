@@ -83,12 +83,12 @@ class BasicVSR(BaseEditModel):
 
         return is_mirror_extended
 
-    def forward_train(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_train(self, inputs, data_samples=None, **kwargs):
         """Forward training.
             Returns dict of losses of training.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -108,7 +108,7 @@ class BasicVSR(BaseEditModel):
             # train all the parameters
             self.generator.requires_grad_(True)
 
-        feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
+        feats = self.forward_tensor(inputs, data_samples, **kwargs)
         gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
         batch_gt_data = torch.stack(gt_imgs)
 
@@ -117,12 +117,12 @@ class BasicVSR(BaseEditModel):
 
         return dict(loss=loss)
 
-    def forward_inference(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_inference(self, inputs, data_samples=None, **kwargs):
         """Forward inference.
             Returns predictions of validation, testing.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -131,7 +131,7 @@ class BasicVSR(BaseEditModel):
             List[EditDataSample]: predictions.
         """
 
-        feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
+        feats = self.forward_tensor(inputs, data_samples, **kwargs)
         # feats.shape = [b, t, c, h, w]
         feats = self.data_preprocessor.destructor(feats)
 
@@ -140,7 +140,7 @@ class BasicVSR(BaseEditModel):
         gt = data_samples[0].get('gt_img', None)
         if gt is not None and gt.data.ndim == 3:
             t = feats.size(1)
-            if self.check_if_mirror_extended(batch_inputs):
+            if self.check_if_mirror_extended(inputs):
                 # with mirror extension
                 feats = 0.5 * (feats[:, t // 4] + feats[:, -1 - t // 4])
             else:

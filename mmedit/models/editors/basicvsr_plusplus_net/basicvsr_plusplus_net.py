@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.ops import ModulatedDeformConv2d, modulated_deform_conv2d
 from mmengine.model import BaseModule
-from mmengine.model.utils import constant_init
+from mmengine.model.weight_init import constant_init
 
 from mmedit.models.utils import PixelShufflePack, flow_warp
 from mmedit.registry import MODELS

@@ -2,9 +2,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmcv.runner import load_checkpoint
 from mmengine import MMLogger
 from mmengine.model import BaseModule
+from mmengine.runner import load_checkpoint
 
 from mmedit.models.utils import (default_init_weights, make_layer,
                                  pixel_unshuffle)

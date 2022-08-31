@@ -275,7 +275,8 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
             dict: Dict with loss, information for logger, the number of \
                 samples and results for visualization.
         """
-        batch_inputs, data_samples = self.data_preprocessor(data, True)
+        data = self.data_preprocessor(data, True)
+        batch_inputs, data_samples = data['inputs'], data['data_samples']
         log_vars = {}
 
         masked_img = batch_inputs  # float

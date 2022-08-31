@@ -2,9 +2,9 @@
 """Augmentation on trimaps."""
 
 import cv2
-import mmcv
 import numpy as np
 from mmcv.transforms import BaseTransform
+from mmengine.utils import is_tuple_of
 
 from mmedit.registry import TRANSFORMS
 
@@ -82,13 +82,13 @@ class GenerateTrimap(BaseTransform):
     def __init__(self, kernel_size, iterations=1, random=True):
         if isinstance(kernel_size, int):
             kernel_size = kernel_size, kernel_size + 1
-        elif not mmcv.is_tuple_of(kernel_size, int) or len(kernel_size) != 2:
+        elif not is_tuple_of(kernel_size, int) or len(kernel_size) != 2:
             raise ValueError('kernel_size must be an int or a tuple of 2 int, '
                              f'but got {kernel_size}')
 
         if isinstance(iterations, int):
             iterations = iterations, iterations + 1
-        elif not mmcv.is_tuple_of(iterations, int) or len(iterations) != 2:
+        elif not is_tuple_of(iterations, int) or len(iterations) != 2:
             raise ValueError('iterations must be an int or a tuple of 2 int, '
                              f'but got {iterations}')
 

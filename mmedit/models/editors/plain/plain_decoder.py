@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmengine.model import BaseModule
-from mmengine.model.utils import xavier_init
+from mmengine.model.weight_init import xavier_init
 from torch.autograd import Function
 from torch.nn.modules.pooling import _MaxUnpoolNd
 from torch.nn.modules.utils import _pair

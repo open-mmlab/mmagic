@@ -29,12 +29,12 @@ class CAIN(BasicInterpolator):
             :meth:`forward`.
     """
 
-    def forward_inference(self, batch_inputs, data_samples=None):
+    def forward_inference(self, inputs, data_samples=None):
         """Forward inference.
             Returns predictions of validation, testing, and simple inference.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -44,6 +44,6 @@ class CAIN(BasicInterpolator):
         """
 
         predictions = super().forward_inference(
-            batch_inputs, data_samples, padding_flag=True)
+            inputs, data_samples, padding_flag=True)
 
         return predictions

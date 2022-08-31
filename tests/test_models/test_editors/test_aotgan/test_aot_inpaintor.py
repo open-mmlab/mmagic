@@ -2,7 +2,7 @@
 from os.path import dirname, join
 
 import torch
-from mmcv import Config
+from mmengine import Config
 from mmengine.optim import OptimWrapper
 
 from mmedit.models import AOTEncoderDecoder
@@ -43,18 +43,19 @@ def test_aot_inpaintor():
     gt_img = torch.randn(3, 256, 256)
     mask = torch.zeros((1, 256, 256))
     mask[..., 50:180, 60:170] = 1.
-    masked_img = gt_img * (1. - mask) + mask
+    masked_img = gt_img.unsqueeze(0) * (1. - mask) + mask
     mask_bbox = [100, 100, 110, 110]
-    data_batch = [{
+    data_batch = {
         'inputs':
         masked_img,
-        'data_sample':
-        EditDataSample(
-            mask=PixelData(data=mask),
-            mask_bbox=mask_bbox,
-            gt_img=PixelData(data=gt_img),
-        )
-    }]
+        'data_samples': [
+            EditDataSample(
+                mask=PixelData(data=mask),
+                mask_bbox=mask_bbox,
+                gt_img=PixelData(data=gt_img),
+            )
+        ]
+    }
 
     # check train_step
     for i in range(5):
@@ -66,7 +67,8 @@ def test_aot_inpaintor():
         assert 'loss_g_fake' in log_vars
 
     # # check forward_test
-    data_inputs, data_sample = inpaintor.data_preprocessor(data_batch, True)
+    data = inpaintor.data_preprocessor(data_batch, True)
+    data_inputs, data_sample = data['inputs'], data['data_samples']
     output = inpaintor.forward_test(data_inputs, data_sample)
     prediction = output[0]
     assert 'fake_res' in prediction
