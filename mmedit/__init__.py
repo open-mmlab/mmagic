@@ -20,13 +20,13 @@ except ImportError:
         return digit_ver
 
 
-MMCV_MIN = '2.0.0rc0'
+MMCV_MIN = '2.0.0rc1'
 MMCV_MAX = '2.1.0'
 mmcv_min_version = digit_version(MMCV_MIN)
 mmcv_max_version = digit_version(MMCV_MAX)
 mmcv_version = digit_version(mmcv.__version__)
 
-MMENGINE_MIN = '0.0.0'
+MMENGINE_MIN = '0.1.0'
 MMENGINE_MAX = '0.2.0'
 mmengine_min_version = digit_version(MMENGINE_MIN)
 mmengine_max_version = digit_version(MMENGINE_MAX)
