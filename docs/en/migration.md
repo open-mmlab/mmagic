@@ -1,17 +1,17 @@
 # Migration from MMEdit 0.x
 
-- [Migration from MMEdit 0.x](#Migration-from-MMEdit-0.x)
-  - [New dependencies](#New-dependencies)
-  - [Overall Structures](#Overall-Structures)
-  - [Config](#Config)
-    - [File name](#File-name)
-    - [Model settings](#Model-settings)
-    - [Data settings](#Data-settings)
-    - [Evaluation settings](#Evaluation-settings)
-    - [Schedule settings](#Schedule-settings)
-    - [Runtime settings](#Runtime-settings)
-    - [Other config settings](#Other-config-settings)
-  - [Model](#Model)
+- [Migration from MMEdit 0.x](#migration-from-mmedit-0x)
+  - [New dependencies](#new-dependencies)
+  - [Overall Structures](#overall-structures)
+  - [Config](#config)
+    - [File name](#file-name)
+    - [Model settings](#model-settings)
+    - [Data settings](#data-settings)
+    - [Evaluation settings](#evaluation-settings)
+    - [Schedule settings](#schedule-settings)
+    - [Runtime settings](#runtime-settings)
+    - [Other config settings](#other-config-settings)
+  - [Model](#model)
 
 We introduce some modifications in MMEdit 1.x. This document will help users of the 0.x version to quickly migrate projects to the newest version.
 

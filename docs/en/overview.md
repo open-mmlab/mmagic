@@ -50,15 +50,15 @@ MMEditing supports various tasks, including:
 
   The toolbox directly supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *generation* tasks.
 
-## How to Use this Guide
+## How to use this Guide
 
 Here is a detailed step-by-step guide to learn more about MMEditing:
 
-### Get Started
+### Get started
 
 For installation instructions, please see [get_started](get_started.md).
 
-### Basic usage of MMEditing
+### User guides
 
 For beginners, we suggest learning the basic usage of MMEditing from here:
 

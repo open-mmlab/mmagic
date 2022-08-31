@@ -1,18 +1,18 @@
-# Config System for MMEditing
+# Learn about Configs in MMEditing
 
-- [Config System for MMEditing](#Config-System-for-MMEditing)
-  - [Modify config](#Modify-config-through-script-arguments)
-  - [Config File Structure](#Config-File-Structure)
-  - [Config Name Style](#Config-Name-Style)
-  - [An Example of EDSR](#An-Example-of-EDSR)
-    - [Model config](#Model-config)
-    - [Data config](#Data-config)
-    - [Evaluation config](#Evaluation-config)
-    - [Training and testing config](#Training-and-testing-config)
-    - [Optimization config](#Optimization-config)
-    - [Hook config](#Hook-config)
-    - [Runtime-config](#Runtime-config)
-  - [Other examples](#Other-examples)
+- [Config System for MMEditing](#learn-about-configs-in-mmediting)
+  - [Modify config](#modify-config-through-script-arguments)
+  - [Config File Structure](#config-file-structure)
+  - [Config Name Style](#config-name-style)
+  - [An Example of EDSR](#an-example-of-edsr)
+    - [Model config](#model-config)
+    - [Data config](#data-config)
+    - [Evaluation config](#evaluation-config)
+    - [Training and testing config](#training-and-testing-config)
+    - [Optimization config](#optimization-config)
+    - [Hook config](#hook-config)
+    - [Runtime-config](#runtime-config)
+  - [Other examples](#other-examples)
 
 We incorporate modular and inheritance design into our config system, which is convenient to conduct various experiments. You can learn about the usage of our config system according to following tutorials.
 

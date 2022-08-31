@@ -10,7 +10,7 @@ Users need to [prepare dataset](../user_guides/datasets/dataset_prepare.md) firs
 
 MMEditing supports multiple ways to test a pre-trained model in MMEditing:
 
-1. [Test with single GPUs](#test-with-singlemultiple-gpus)
+1. [Test with single GPUs](#test-with-single-gpus)
 2. [Test with multiple GPUs](#test-with-multiple-gpus)
 3. [Test with Slurm](#test-with-slurm)
 
@@ -68,7 +68,6 @@ MMEditing supports multiple ways of training:
 2. [Train with a single node multiple GPUs](#train-with-a-single-node-multiple-gpus)
 3. [Train with multiple nodes](#train-with-multiple-nodes)
 4. [Train with Slurm](#train-with-slurm)
-5. [Launch multiple jobs on a single machine](#launch-multiple-jobs-on-a-single-machine)
 
 Specifically, all outputs (log files and checkpoints) will be saved to the working directory,
 which is specified by `work_dir` in the config file.

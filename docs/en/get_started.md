@@ -1,4 +1,4 @@
-# Get Started: Install and run MMEditing
+# Get Started: Install and Run MMEditing
 
 ## Prerequisite
 
@@ -6,7 +6,7 @@ Currently, MMEditing works with
 
 - Python >= 3.6
 - [PyTorch](https://pytorch.org/) >= 1.5
-- [MMCV](https://github.com/open-mmlab/mmcv) >= 2.0.0rc0
+- [MMCV](https://github.com/open-mmlab/mmcv) >= 2.0.0rc1
 
 1. For Ampere-based NVIDIA GPUs, such as GeForce 30 series and NVIDIA A100, **CUDA 11 is a must**.
 2. For older NVIDIA GPUs, CUDA 11 is backward compatible, but CUDA 10.2 offers better compatibility and is more lightweight.
@@ -45,11 +45,12 @@ Install PyTorch following [official instructions](https://pytorch.org/get-starte
   ```
 
 **Step 3.**
-Install pre-built [MMCV](https://github.com/open-mmlab/mmcv) using [MIM](https://github.com/open-mmlab/mim).
+Install pre-built [MMCV](https://github.com/open-mmlab/mmcv) and [MMEngine](https://github.com/open-mmlab/mmengine) using [MIM](https://github.com/open-mmlab/mim).
 
 ```shell
 pip3 install openmim
-mim install mmcv-full==1.5.0
+mim install 'mmcv>=2.0.0rc1'
+pip install git+https://github.com/open-mmlab/mmengine.git
 ```
 
 **Step 4.**
@@ -80,7 +81,7 @@ Here is the description:
 
 You can also use `pip install -e .[all]`, which will install more dependencies, especially for pre-commit hooks and unittests.
 
-## Run with MMEditing
+## Quick Run
 
 After installing MMEditing successfully, now you are able to run with MMEditing!
 

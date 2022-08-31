@@ -1,12 +1,12 @@
-# Tutorial 1: Customize Datasets
+# Prepare Your Own Datasets
 
-- [Customize Datasets](#Tutorial-1:-Customize-Datasets)
-  - [Supported Data Format](#Supported-Data-Format)
-  - [Support new data format](#Support-new-data-format)
-  - [Customize datasets by dataset wrappers](#Customize-datasets-by-dataset-wrappers)
-    - [Repeat dataset](#Repeat-dataset)
+- [Customize Datasets](#tutorial-1-customize-datasets)
+  - [Supported Data Format](#supported-data-format)
+  - [Support new data format](#support-new-data-format)
+  - [Customize datasets by dataset wrappers](#customize-datasets-by-dataset-wrappers)
+    - [Repeat dataset](#repeat-dataset)
 
-We support three types of datasets listed as [Supported Data Format](##supported-data-format): image, frames and Adobe composition-1k dataset. Customized datasets are supposed to inherit from one of them following [Support new data format](##support-new-data-format) tutorial.
+We support three types of datasets listed as [Supported Data Format](#supported-data-format): image, frames and Adobe composition-1k dataset. Customized datasets are supposed to inherit from one of them following [Support new data format](#support-new-data-format) tutorial.
 
 ## Supported Data Format
 

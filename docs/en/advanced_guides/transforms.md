@@ -1,11 +1,11 @@
-# Tutorial 2: Customize Data Pipelines
+# Design Your Own Data Pipelines
 
-- [Customize Data Pipelines](#Tutorial-2:-Customize-Data-Pipelines)
-  - [Design of Data pipelines](#Design-of-Data-pipelines)
-    - [Data loading](#Data-loading)
-    - [Pre-processing](#Pre-processing)
-    - [Formatting](#Formatting)
-  - [Extend and use custom pipelines](#Extend-and-use-custom-pipelines)
+- [Customize Data Pipelines](#design-your-own-data-pipelines)
+  - [Design of Data pipelines](#design-of-data-pipelines)
+    - [Data loading](#data-loading)
+    - [Pre-processing](#pre-processing)
+    - [Formatting](#formatting)
+  - [Extend and use custom pipelines](#extend-and-use-custom-pipelines)
 
 ## Design of Data pipelines
 

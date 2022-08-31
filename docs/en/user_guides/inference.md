@@ -1,4 +1,4 @@
-# Inference in MMEditing
+# Inference with Pre-trained Models
 
 We provide APIs for you to easily play with state-of-the-art models on your own images or videos.
 Here we provide some task-specific demo scripts for your reference.
