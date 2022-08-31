@@ -97,7 +97,7 @@ def resize_fn(img, size, interpolation='bicubic', backend='pillow'):
     """Resize the given image to a given size.
 
     Args:
-        img (ndarray | torch.Tensor): The input image.
+        img (np.ndarray | torch.Tensor): The input image.
         size (int | tuple[int]): Target size w or (w, h).
         interpolation (str): Interpolation method, accepted values are
             "nearest", "bilinear", "bicubic", "area", "lanczos" for 'cv2'
@@ -110,7 +110,7 @@ def resize_fn(img, size, interpolation='bicubic', backend='pillow'):
             Default: "pillow".
 
     Returns:
-        ndarray | torch.Tensor: `resized_img`, whose type is same as `img`.
+        np.ndarray | Tensor: `resized_img`, whose type is same as `img`.
     """
     if isinstance(size, int):
         size = (size, size)

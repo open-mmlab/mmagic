@@ -239,7 +239,7 @@ class TransferalPerceptualLoss(nn.Module):
         loss_weight (float): Loss weight. Default: 1.0.
         use_attention (bool): If True, use soft-attention tensor. Default: True
         criterion (str): Criterion type. Options are 'l1' and 'mse'.
-            Default: 'l1'.
+            Default: 'mse'.
     """
 
     def __init__(self, loss_weight=1.0, use_attention=True, criterion='mse'):

@@ -41,7 +41,7 @@ class GCAModule(nn.Module):
         interpolation (str): Interpolation method in upsampling and
             downsampling.
         penalty (float): Punishment hyperparameter to avoid a large correlation
-            between each unknown patch and itself.
+            between each unknown patch and itself. Default: -1e4.
         eps (float): A small number to avoid dividing by 0 when calculating
             the normed image feature patch. Default: 1e-4.
     """
@@ -79,6 +79,7 @@ class GCAModule(nn.Module):
         self.init_weights()
 
     def init_weights(self):
+        """Init weights for the model."""
         xavier_init(self.guidance_conv, distribution='uniform')
         xavier_init(self.out_conv.conv, distribution='uniform')
         constant_init(self.out_conv.norm, 1e-3)
@@ -336,12 +337,31 @@ class GCAModule(nn.Module):
         return x
 
     def pad(self, x, kernel_size, stride):
+        """Pad input tensor.
+
+        Args:
+            x (Tensor): Input tensor.
+            kernel_size (int): Kernel size of conv layer.
+            stride (int): Stride of conv layer.
+
+        Returns:
+            Tensor: Padded tensor
+        """
         left = (kernel_size - stride + 1) // 2
         right = (kernel_size - stride) // 2
         pad = (left, right, left, right)
         return F.pad(x, pad, **self.pad_args)
 
     def get_self_correlation_mask(self, img_feat):
+        """Create self correlation mask.
+
+        Args:
+            img_feat (Tensor): Input tensor.
+
+        Returns:
+            Tensor: Mask tensor.
+
+        """
         _, _, h, w = img_feat.shape
         # As ONNX does not support dynamic num_classes, we have to convert it
         # into an integer
@@ -354,6 +374,15 @@ class GCAModule(nn.Module):
 
     @staticmethod
     def l2_norm(x):
+        """L2 normalization function.
+
+        Args:
+            x (Tensor): Input tensor.
+
+        Returns:
+            Tensor: L2 normalized output tensor.
+        """
+
         x = x**2
         x = x.sum(dim=[1, 2, 3], keepdim=True)
         return torch.sqrt(x)

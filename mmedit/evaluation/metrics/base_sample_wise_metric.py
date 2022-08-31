@@ -57,7 +57,7 @@ class BaseSampleWiseMetric(BaseMetric):
         """Compute the metrics from processed results.
 
         Args:
-            results (dict): The processed results of each batch.
+            results (List): The processed results of each batch.
 
         Returns:
             Dict: The computed metrics. The keys are the names of the metrics,
@@ -73,7 +73,7 @@ class BaseSampleWiseMetric(BaseMetric):
         """Process one batch of data and predictions
 
         Args:
-            data_batch (Sequence[Tuple[Any, dict]]): A batch of data
+            data_batch (Sequence[dict]): A batch of data
                 from the dataloader.
             predictions (Sequence[dict]): A batch of outputs from
                 the model.

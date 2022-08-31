@@ -123,7 +123,8 @@ class ResidualDenseBlock(nn.Module):
 
     Args:
         mid_channels (int): Channel number of intermediate features.
-        growth_channels (int): Channels for each growth.
+            Default: 64.
+        growth_channels (int): Channels for each growth. Default: 32.
     """
 
     def __init__(self, mid_channels=64, growth_channels=32):
@@ -173,7 +174,7 @@ class RRDB(nn.Module):
 
     Args:
         mid_channels (int): Channel number of intermediate features.
-        growth_channels (int): Channels for each growth.
+        growth_channels (int): Channels for each growth. Default: 32.
     """
 
     def __init__(self, mid_channels, growth_channels=32):

@@ -16,7 +16,7 @@ def get_size_from_scale(input_size, scale_factor):
         scale_factor (float): The resize factor.
 
     Returns:
-        list[int]: The size of the output image.
+        output_shape (list[int]): The size of the output image.
     """
 
     output_shape = [
@@ -35,7 +35,7 @@ def get_scale_from_size(input_size, output_size):
         output_size (tuple(int)): The size of the output image.
 
     Returns:
-        list[float]: The scale factor of each dimension.
+        scale (list[float]): The scale factor of each dimension.
     """
 
     scale = [
@@ -50,10 +50,10 @@ def _cubic(x):
     """ Cubic function.
 
     Args:
-        x (ndarray): The distance from the center position.
+        x (np.ndarray): The distance from the center position.
 
     Returns:
-        ndarray: The weight corresponding to a particular distance.
+        np.ndarray: The weight corresponding to a particular distance.
 
     """
 
@@ -83,7 +83,8 @@ def get_weights_indices(input_length, output_length, scale, kernel,
         kernel_width (int): The width of the kernel.
 
     Returns:
-        list[ndarray]: The weights and the indices for interpolation.
+        tuple(list[np.ndarray], list[np.ndarray]): The weights and the indices
+            for interpolation.
 
 
     """
@@ -130,7 +131,7 @@ def resize_along_dim(img_in, weights, indices, dim):
     """Resize along a specific dimension.
 
     Args:
-        img_in (ndarray): The input image.
+        img_in (np.ndarray): The input image.
         weights (ndarray): The weights used for interpolation, computed from
             [get_weights_indices].
         indices (ndarray): The indices used for interpolation, computed from
@@ -138,7 +139,7 @@ def resize_along_dim(img_in, weights, indices, dim):
         dim (int): Which dimension to undergo interpolation.
 
     Returns:
-        ndarray: Interpolated (along one dimension) image.
+        np.ndarray: Interpolated (along one dimension) image.
     """
 
     img_in = img_in.astype(np.float32)
@@ -216,6 +217,12 @@ class MATLABLikeResize(BaseTransform):
         self.kernel_width = kernel_width
 
     def _resize(self, img):
+        """resize an image to the require size.
+        Args:
+            img (np.ndarray): The original image.
+        Returns:
+            output (np.ndarray): The resized image.
+        """
         weights = {}
         indices = {}
 
@@ -252,7 +259,15 @@ class MATLABLikeResize(BaseTransform):
         return output
 
     def transform(self, results):
+        """transform function.
 
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         for key in self.keys:
             is_single_image = False
             if isinstance(results[key], np.ndarray):

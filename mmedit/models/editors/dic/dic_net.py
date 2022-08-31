@@ -134,6 +134,8 @@ class FeedbackBlock(nn.Module):
         mid_channels (int): Number of channels in the intermediate features.
         num_blocks (int): Number of blocks.
         upscale_factor (int): upscale factor.
+        padding (int): Padding size. Default: 2.
+        prelu_init (float): `init` of PReLU. Default: 0.2
     """
 
     def __init__(self,
@@ -251,6 +253,14 @@ class FeedbackBlockCustom(FeedbackBlock):
             nn.PReLU(init=prelu_init))
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
         x = self.conv_first(x)
 
         lr_features = [x]
@@ -388,6 +398,8 @@ class FeedbackBlockHeatmapAttention(FeedbackBlock):
         mid_channels (int): Number of channels in the intermediate features.
         num_blocks (int): Number of blocks.
         upscale_factor (int): upscale factor.
+        padding (int): Padding size. Default: 2.
+        prelu_init (float): `init` of PReLU. Default: 0.2
     """
 
     def __init__(self,

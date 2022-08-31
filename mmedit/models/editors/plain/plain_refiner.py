@@ -13,8 +13,7 @@ class PlainRefiner(BaseModule):
 
     Args:
         conv_channels (int): Number of channels produced by the three main
-            convolutional layer.
-        loss_refine (dict): Config of the loss of the refiner. Default: None.
+            convolutional layer. Default: 64.
         pretrained (str): Name of pretrained model. Default: None.
     """
 
@@ -35,6 +34,8 @@ class PlainRefiner(BaseModule):
         self.relu = nn.ReLU(inplace=True)
 
     def init_weights(self):
+        """Init weights for the module.
+        """
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 xavier_init(m)

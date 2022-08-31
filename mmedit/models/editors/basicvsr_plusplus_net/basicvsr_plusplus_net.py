@@ -388,9 +388,11 @@ class SecondOrderDeformableAlignment(ModulatedDeformConv2d):
         self.init_offset()
 
     def init_offset(self):
+        """Init constant offset"""
         constant_init(self.conv_offset[-1], val=0, bias=0)
 
     def forward(self, x, extra_feat, flow_1, flow_2):
+        """Forward function"""
         extra_feat = torch.cat([extra_feat, flow_1, flow_2], dim=1)
         out = self.conv_offset(extra_feat)
         o1, o2, mask = torch.chunk(out, 3, dim=1)

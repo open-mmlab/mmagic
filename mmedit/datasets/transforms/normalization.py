@@ -19,6 +19,8 @@ class Normalize(BaseTransform):
         mean (np.ndarray): Mean values of different channels.
         std (np.ndarray): Std values of different channels.
         to_rgb (bool): Whether to convert channels from BGR to RGB.
+            Default: False.
+        save_original (bool): Whether to save original images. Default: False.
     """
 
     def __init__(self, keys, mean, std, to_rgb=False, save_original=False):

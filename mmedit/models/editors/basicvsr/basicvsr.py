@@ -22,7 +22,10 @@ class BasicVSR(BaseEditModel):
         ensemble (dict): Config for ensemble. Default: None.
         train_cfg (dict): Config for training. Default: None.
         test_cfg (dict): Config for testing. Default: None.
-        pretrained (str): Path for pretrained model. Default: None.
+        init_cfg (dict, optional): The weight initialized config for
+            :class:`BaseModule`.
+        data_preprocessor (dict, optional): The pre-process config of
+            :class:`BaseDataPreprocessor`.
     """
 
     def __init__(self,

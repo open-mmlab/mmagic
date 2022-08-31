@@ -20,6 +20,8 @@ class BinarizeImage(BaseTransform):
     Args:
         keys (Sequence[str]): The images to be binarized.
         binary_thr (float): Threshold for binarization.
+        amin (int): Lower limits of pixel value.
+        amx (int): Upper limits of pixel value.
         dtype (np.dtype): Set the data type of the output. Default: np.uint8
     """
 
@@ -38,7 +40,7 @@ class BinarizeImage(BaseTransform):
             img (np.ndarray): Input image.
 
         Returns:
-            np.ndarray: Output image.
+            img (np.ndarray): Output image.
         """
 
         # Binarize to 0/1
@@ -84,6 +86,8 @@ class Clip(BaseTransform):
 
     Args:
         keys (list[str]): The keys whose values are clipped.
+        amin (int): Lower limits of pixel value.
+        amx (int): Upper limits of pixel value.
     """
 
     def __init__(self, keys, a_min=0, a_max=255):
@@ -195,7 +199,7 @@ class ColorJitter(BaseTransform):
             this_seed (int): Seed of torch.
 
         Returns:
-            np.ndarray: The output image.
+            image (np.ndarray): The output image.
         """
 
         if self.channel_order.lower() == 'bgr':
@@ -478,11 +482,9 @@ class RandomMaskDilation(BaseTransform):
 
     Args:
         keys (Sequence[str]): The images to be resized.
-        get_binary (bool): If True, according to binary_thr, reset final
-            output as binary mask. Otherwise, return masks directly.
-        binary_thr (float): Threshold for obtaining binary mask.
-        kernel_min (int): Min size of dilation kernel.
-        kernel_max (int): Max size of dilation kernel.
+        binary_thr (float): Threshold for obtaining binary mask. Default: 0.
+        kernel_min (int): Min size of dilation kernel. Default: 9.
+        kernel_max (int): Max size of dilation kernel. Default: 49.
     """
 
     def __init__(self, keys, binary_thr=0., kernel_min=9, kernel_max=49):
@@ -587,7 +589,15 @@ class UnsharpMasking(BaseTransform):
         return outputs
 
     def transform(self, results):
+        """transform function.
 
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
         for key in self.keys:
             results[f'{key}_unsharp'] = self._unsharp_masking(results[key])
 

@@ -10,10 +10,12 @@ class GetMaskedImage(BaseTransform):
     """Get masked image.
 
     Args:
-        img_key (str): Key for clean image.
+        img_key (str): Key for clean image. Default: 'gt'.
         mask_key (str): Key for mask image. The mask shape should be
             (h, w, 1) while '1' indicate holes and '0' indicate valid
-            regions.
+            regions. Default: 'mask'.
+        img_key (str): Key for output image. Default: 'img'.
+        zero_value (float): Pixel value of masked area.
     """
 
     def __init__(self,

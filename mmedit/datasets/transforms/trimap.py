@@ -76,7 +76,7 @@ class GenerateTrimap(BaseTransform):
             interpreted as (erode iterations, dilate iterations). Default to 1.
         random (bool, optional): Whether use random kernel_size and iterations
             when generating trimap. See `kernel_size` and `iterations` for more
-            information.
+            information. Default to True.
     """
 
     def __init__(self, kernel_size, iterations=1, random=True):

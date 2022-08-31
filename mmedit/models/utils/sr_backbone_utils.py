@@ -10,7 +10,7 @@ def default_init_weights(module, scale=1):
     Args:
         modules (nn.Module): Modules to be initialized.
         scale (float): Scale initialized weights, especially for residual
-            blocks.
+            blocks. Default: 1.
     """
     for m in module.modules():
         if isinstance(m, nn.Conv2d):

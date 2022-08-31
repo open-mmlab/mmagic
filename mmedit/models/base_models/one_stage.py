@@ -23,14 +23,15 @@ class OneStageInpaintor(BaseModel):
     input style or training schedule.
 
     Args:
-        generator (dict): Config for encoder-decoder style generator.
+        data_preprocessor (dict): Config of data_preprocessor.
+        encdec (dict): Config for encoder-decoder style generator.
         disc (dict): Config for discriminator.
         loss_gan (dict): Config for adversarial loss.
         loss_gp (dict): Config for gradient penalty loss.
         loss_disc_shift (dict): Config for discriminator shift loss.
-        loss_composed_percep (dict): Config for perceptural and style loss with
+        loss_composed_percep (dict): Config for perceptual and style loss with
             composed image as input.
-        loss_out_percep (dict): Config for perceptural and style loss with
+        loss_out_percep (dict): Config for perceptual and style loss with
             direct output as input.
         loss_l1_hole (dict): Config for l1 loss in the hole.
         loss_l1_valid (dict): Config for l1 loss in the valid region.
@@ -39,7 +40,7 @@ class OneStageInpaintor(BaseModel):
             contained for indicates the discriminator updating steps in each
             training step.
         test_cfg (dict): Configs for testing scheduler.
-        pretrained (str): Path for pretrained model. Default None.
+        init_cfg (dict, optional): Initialization config dict.
     """
 
     def __init__(self,
@@ -102,13 +103,31 @@ class OneStageInpaintor(BaseModel):
         """Forward function.
 
         Args:
-            masked_img (torch.Tensor): Image with hole as input.
-            mask (torch.Tensor): Mask as input.
-            test_mode (bool, optional): Whether use testing mode.
-                Defaults to True.
+            inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+            mode (str): mode should be one of ``loss``, ``predict`` and
+                ``tensor``. Default: 'tensor'.
+
+                - ``loss``: Called by ``train_step`` and return loss ``dict``
+                  used for logging
+                - ``predict``: Called by ``val_step`` and ``test_step``
+                  and return list of ``BaseDataElement`` results used for
+                  computing metric.
+                - ``tensor``: Called by custom use to get ``Tensor`` type
+                  results.
 
         Returns:
-            dict: Dict contains output results.
+            ForwardResults:
+
+                - If ``mode == loss``, return a ``dict`` of loss tensor used
+                  for backward and logging.
+                - If ``mode == predict``, return a ``list`` of
+                  :obj:`BaseDataElement` for computing metric
+                  and getting inference result.
+                - If ``mode == tensor``, return a tensor or ``tuple`` of tensor
+                  or ``dict`` or tensor for custom use.
         """
         if mode == 'tensor':
             raw = self.forward_tensor(inputs, data_samples)
@@ -141,13 +160,13 @@ class OneStageInpaintor(BaseModel):
         for discriminator.
 
         Args:
-            data_batch (torch.Tensor): Batch of data as input.
-            optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
-                generator and discriminator (if have).
+            data (List[dict]): Batch of data as input.
+            optim_wrapper (dict[torch.optim.Optimizer]): Dict with optimizers
+                for generator and discriminator (if have).
 
         Returns:
             dict: Dict with loss, information for logger, the number of
-            samples and results for visualization.
+                samples and results for visualization.
         """
         data = self.data_preprocessor(data, True)
         batch_inputs, data_samples = data['inputs'], data['data_samples']
@@ -242,7 +261,7 @@ class OneStageInpaintor(BaseModel):
         several proposed losses for stable training.
 
         Args:
-            data (torch.Tensor): Batch of real data or fake data.
+            data_batch (torch.Tensor): Batch of real data or fake data.
             is_real (bool): If True, the gan loss will regard this batch as
                 real data. Otherwise, the gan loss will regard this batch as
                 fake data.
@@ -278,7 +297,10 @@ class OneStageInpaintor(BaseModel):
             fake_res (torch.Tensor): Direct output of the generator.
             fake_img (torch.Tensor): Composition of `fake_res` and
                 ground-truth image.
-            data_batch (dict): Contain other elements for computing losses.
+            gt (torch.Tensor): Ground-truth image.
+            mask (torch.Tensor): Mask image.
+            masked_img (torch.Tensor): Composition of mask image and
+                ground-truth image.
 
         Returns:
             tuple(dict): Dict contains the results computed within this \
@@ -332,10 +354,11 @@ class OneStageInpaintor(BaseModel):
 
         Args:
             inputs (torch.Tensor): Input tensor.
-            data_sample (dict): Dict contains data sample.
+            data_samples (List[dict]): List of data sample dict.
 
         Returns:
-            dict: Dict contains output results.
+            tuple: Direct output of the generator and composition of `fake_res`
+                and ground-truth image.
         """
         # Pre-process runs in BaseModel.val_step / test_step
         masked_imgs = inputs  # N,3,H,W
@@ -351,16 +374,12 @@ class OneStageInpaintor(BaseModel):
         """Forward function for testing.
 
         Args:
-            masked_img (torch.Tensor): Tensor with shape of (n, 3, h, w).
-            mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
-            save_image (bool, optional): If True, results will be saved as
-                image. Defaults to False.
-            save_path (str, optional): If given a valid str, the reuslts will
-                be saved in this path. Defaults to None.
-            iteration (int, optional): Iteration number. Defaults to None.
+            inputs (torch.Tensor): Input tensor.
+            data_samples (List[dict]): List of data sample dict.
 
         Returns:
-            dict: Contain output results and eval metrics (if have).
+            predictions (List[DataSample]): List of prediction saved in
+                DataSample.
         """
         fake_reses, fake_imgs = self.forward_tensor(inputs, data_samples)
 

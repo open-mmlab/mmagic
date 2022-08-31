@@ -24,6 +24,7 @@ class VGG16(BaseModule):
             layer. Default to False.
         dilations (list[int], optional): Atrous rates of ASPP module.
             Default to None.
+        init_cfg (dict, optional): Initialization config dict.
     """
 
     def __init__(self,
@@ -68,6 +69,7 @@ class VGG16(BaseModule):
         return nn.Sequential(*layers)
 
     def init_weights(self):
+        """Init weights for the model."""
         if self.init_cfg is not None:
             super().init_weights()
         else:

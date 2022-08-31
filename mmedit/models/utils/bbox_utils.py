@@ -15,7 +15,7 @@ def extract_bbox_patch(bbox, img, channel_first=True):
             order like (n, h, w, c) or (n, c, h, w).
         channel_first (bool): If True, the channel dimension of img is before
             height and width, e.g. (c, h, w). Otherwise, the img shape (samples
-            in the batch) is like (h, w, c).
+            in the batch) is like (h, w, c). Default: True.
 
     Returns:
         (torch.Tensor | numpy.array): Extracted patches. The dimension of the \
@@ -106,12 +106,18 @@ def extract_around_bbox(img, bbox, target_size, channel_first=True):
     """Extract patches around the given bbox.
 
     Args:
+        img (torch.Tensor | numpy.array): Image data to be extracted. If
+            organized in batch dimension, the batch dimension must be the first
+            order like (n, h, w, c) or (n, c, h, w).
         bbox (np.ndarray | torch.Tensor): Bboxes to be modified. Bbox can
             be in batch or not.
         target_size (List(int)): Target size of final bbox.
+        channel_first (bool): If True, the channel dimension of img is before
+            height and width, e.g. (c, h, w). Otherwise, the img shape (samples
+            in the batch) is like (h, w, c). Default: True.
 
     Returns:
-        (torch.Tensor | numpy.array): Extracted patches. The dimension of the \
+        (torch.Tensor | np.ndarray): Extracted patches. The dimension of the \
             output should be the same as `img`.
     """
     bbox_new = scale_bbox(bbox, target_size)

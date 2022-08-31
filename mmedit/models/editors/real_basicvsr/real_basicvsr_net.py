@@ -62,6 +62,16 @@ class RealBasicVSRNet(BaseModule):
         self.basicvsr.spynet.requires_grad_(False)
 
     def forward(self, lqs, return_lqs=False):
+        """Forward function for BasicVSR++.
+
+        Args:
+            lqs (tensor): Input low quality (LQ) sequence with
+                shape (n, t, c, h, w).
+            return_lqs (bool): Whether to return LQ sequence. Default: False.
+
+        Returns:
+            Tensor: Output HR sequence.
+        """
         n, t, c, h, w = lqs.size()
 
         for _ in range(0, 3):  # at most 3 cleaning, determined empirically

@@ -83,12 +83,6 @@ def video_interpolation_inference(model,
             Default: 0.
         fps (float): frame rate of the output video. Default: 0.
         filename_tmpl (str): template of the file names. Default: '{:08d}.png'
-
-    Returns:
-        output (list[numpy.array]): The predicted interpolation result.
-            It is an image sequence.
-        input_fps (float): The fps of input video. If the input is an image
-            sequence, input_fps=0.0
     """
 
     device = next(model.parameters()).device  # model device

@@ -85,6 +85,7 @@ class GANLoss(nn.Module):
             target_is_real (bool): Whether the target is real or fake.
             is_disc (bool): Whether the loss for discriminators or not.
                 Default: False.
+            mask (Tensor): The mask tensor. Default: None.
 
         Returns:
             Tensor: GAN loss value.
@@ -162,7 +163,14 @@ class GaussianBlur(nn.Module):
 
     @staticmethod
     def compute_zero_padding(kernel_size):
-        """Compute zero padding tuple."""
+        """Compute zero padding tuple.
+
+        Args:
+            kernel_size (tuple[int]): The size of the kernel.
+
+        Returns:
+            tuple: Padding of height and weight.
+        """
 
         padding = [(ks - 1) // 2 for ks in kernel_size]
 
@@ -225,6 +233,17 @@ class GaussianBlur(nn.Module):
         return kernel_1d
 
     def gaussian(self, kernel_size, sigma):
+        """Gaussian function.
+
+        Args:
+            kernel_size (int): Kernel filter size in x or y direction.
+                               Should be odd and positive.
+            sigma (float): Gaussian standard deviation in x or y direction.
+
+        Returns:
+            Tensor: A 1D torch tensor with gaussian filter
+                coefficients in x or y direction.
+        """
 
         def gauss_arg(x):
             return -(x - kernel_size // 2)**2 / float(2 * sigma**2)
@@ -235,6 +254,14 @@ class GaussianBlur(nn.Module):
         return gauss / gauss.sum()
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Tensor with shape (n, c, h, w)
+
+        Returns:
+            Tensor: The Gaussian-blurred tensor.
+        """
         if not torch.is_tensor(x):
             raise TypeError(
                 'Input x type is not a torch.Tensor. Got {}'.format(type(x)))

@@ -30,7 +30,7 @@ class Flip(BaseTransform):
 
     Args:
         keys (list[str]): The images to be flipped.
-        flip_ratio (float): The propability to flip the images.
+        flip_ratio (float): The probability to flip the images. Default: 0.5.
         direction (str): Flip images horizontally or vertically. Options are
             "horizontal" | "vertical". Default: "horizontal".
     """
@@ -146,7 +146,7 @@ class RandomRotation(BaseTransform):
 class RandomTransposeHW(BaseTransform):
     """Randomly transpose images in H and W dimensions with a probability.
 
-    (TransposeHW = horizontal flip + anti-clockwise rotatation by 90 degrees)
+    (TransposeHW = horizontal flip + anti-clockwise rotation by 90 degrees)
     When used with horizontal/vertical flips, it serves as a way of rotation
     augmentation.
     It also supports randomly transposing a list of images.
@@ -156,7 +156,8 @@ class RandomTransposeHW(BaseTransform):
 
     Args:
         keys (list[str]): The images to be transposed.
-        transpose_ratio (float): The propability to transpose the images.
+        transpose_ratio (float): The probability to transpose the images.
+            Default: 0.5.
     """
 
     def __init__(self, keys, transpose_ratio=0.5):
@@ -242,14 +243,14 @@ class Resize(BaseTransform):
         keep_ratio (bool): If set to True, images will be resized without
             changing the aspect ratio. Otherwise, it will resize images to a
             given size. Default: False.
-            Note that it is used togher with `scale`.
+            Note that it is used together with `scale`.
         size_factor (int): Let the output shape be a multiple of size_factor.
             Default:None.
             Note that when it is used, `scale` should be set to None and
             `keep_ratio` should be set to False.
         max_size (int): The maximum size of the longest side of the output.
             Default:None.
-            Note that it is used togher with `size_factor`.
+            Note that it is used together with `size_factor`.
         interpolation (str): Algorithm used for interpolation:
             "nearest" | "bilinear" | "bicubic" | "area" | "lanczos".
             Default: "bilinear".
@@ -315,7 +316,7 @@ class Resize(BaseTransform):
             img (np.ndarray): Image.
 
         Returns:
-            np.ndarray: Resized image.
+            img (np.ndarray): Resized image.
         """
 
         if self.keep_ratio:

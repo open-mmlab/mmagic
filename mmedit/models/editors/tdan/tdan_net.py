@@ -27,7 +27,7 @@ class TDANNet(BaseModule):
         out_channels (int): Number of channels of the output image. Default: 3.
         num_blocks_before_align (int): Number of residual blocks before
             temporal alignment. Default: 5.
-        num_blocks_before_align (int): Number of residual blocks after
+        num_blocks_after_align (int): Number of residual blocks after
             temporal alignment. Default: 10.
     """
 
@@ -143,9 +143,11 @@ class AugmentedDeformConv2dPack(DeformConv2d):
         self.init_offset()
 
     def init_offset(self):
+        """Init constant offset"""
         constant_init(self.conv_offset, val=0, bias=0)
 
     def forward(self, x, extra_feat):
+        """Forward function"""
         offset = self.conv_offset(extra_feat)
         return deform_conv2d(x, offset, self.weight, self.stride, self.padding,
                              self.dilation, self.groups, self.deform_groups)

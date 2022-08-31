@@ -104,6 +104,7 @@ class ResNetDec(BaseModule):
             Default: False.
         late_downsample (bool): Whether to adopt late downsample strategy,
             Default: False.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,
@@ -329,6 +330,7 @@ class ResGCADecoder(ResShortcutDec):
             None, 2d convolution will be applied. Default: None.
         norm_cfg (dict): Config dict for normalization layer. "BN" by default.
         act_cfg (dict): Config dict for activation layer, "ReLU" by default.
+        with_spectral_norm (bool): Whether use spectral norm. Default: False.
         late_downsample (bool): Whether to adopt late downsample strategy,
             Default: False.
     """

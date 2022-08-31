@@ -118,7 +118,7 @@ def get_padding_functions(x, padding=7):
 
     Args:
         x (Tensor): Input tensor.
-        padding (int): Padding size.
+        padding (int): Padding size. Default: 7.
 
     Returns:
         padding_function (Function): Padding function.

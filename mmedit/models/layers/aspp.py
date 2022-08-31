@@ -8,6 +8,20 @@ from .separable_conv_module import DepthwiseSeparableConvModule
 
 
 class ASPPPooling(nn.Sequential):
+    """ASPP Pooling module.
+
+    The code is adopted from
+    https://github.com/pytorch/vision/blob/master/torchvision/models/
+    segmentation/deeplabv3.py
+
+    Args:
+        in_channels (int): Input channels of the module.
+        out_channels (int): Output channels of the module.
+        conv_cfg (dict): Config dict for convolution layer. If "None",
+            nn.Conv2d will be applied.
+        norm_cfg (dict): Config dict for normalization layer.
+        act_cfg (dict): Config dict for activation layer.
+    """
 
     def __init__(self, in_channels, out_channels, conv_cfg, norm_cfg, act_cfg):
         super().__init__(
@@ -21,6 +35,14 @@ class ASPPPooling(nn.Sequential):
                 act_cfg=act_cfg))
 
     def forward(self, x):
+        """Forward function for ASPP Pooling module.
+
+        Args:
+            x (Tensor): Input tensor.
+
+        Returns:
+            Tensor: Output tensor.
+        """
         size = x.shape[-2:]
         for mod in self:
             x = mod(x)
@@ -41,9 +63,9 @@ class ASPP(nn.Module):
 
     Args:
         in_channels (int): Input channels of the module.
-        out_channels (int): Output channels of the module.
+        out_channels (int): Output channels of the module. Default: 256.
         mid_channels (int): Output channels of the intermediate ASPP conv
-            modules.
+            modules. Default: 256.
         dilations (Sequence[int]): Dilation rate of three ASPP conv module.
             Default: [12, 24, 36].
         conv_cfg (dict): Config dict for convolution layer. If "None",

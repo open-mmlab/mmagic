@@ -69,6 +69,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         backbone (dict): Config of backbone.
         data_preprocessor (dict): Config of data_preprocessor.
             See :class:`MattorPreprocessor` for details.
+        init_cfg (dict, optional): Initialization config dict.
         train_cfg (dict): Config of training.
             Customized by subclassesCustomized bu In ``train_cfg``,
             ``train_backbone`` should be specified. If the model has a refiner,
@@ -76,7 +77,6 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         test_cfg (dict): Config of testing.
             In ``test_cfg``, If the model has a
             refiner, ``train_refiner`` should be specified.
-        pretrained (str): Path of pretrained model.
     """
 
     def __init__(self,
@@ -214,7 +214,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
                 - Ground-truth alpha / foreground / background to compute loss
                 - other meta information
             mode (str): mode should be one of ``loss``, ``predict`` and
-                ``tensor``
+                ``tensor``. Default: 'tensor'.
 
                 - ``loss``: Called by ``train_step`` and return loss ``dict``
                   used for logging

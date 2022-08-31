@@ -31,7 +31,7 @@ class LoadImageFromFile(BaseTransform):
             argument for :func:``mmcv.imfrombytes``.
             See :func:``mmcv.imfrombytes`` for details.
             candidates are 'cv2', 'turbojpeg', 'pillow', and 'tifffile'.
-            Defaults to 'cv2'.
+            Defaults to None.
         use_cache (bool): If True, load all images at once. Default: False.
         to_float32 (bool): Whether to convert the loaded image to a float32
             numpy array. If set to False, the loaded image is an uint8 array.
@@ -254,14 +254,14 @@ class LoadMask(BaseTransform):
 
     Args:
         mask_mode (str): Mask mode in ['bbox', 'irregular', 'ff', 'set',
-            'file'].
+            'file']. Default: 'bbox'.
             * bbox: square bounding box masks.
             * irregular: irregular holes.
             * ff: free-form holes from DeepFillv2.
             * set: randomly get a mask from a mask set.
             * file: get mask from 'mask_path' in results.
         mask_config (dict): Params for creating masks. Each type of mask needs
-            different configs.
+            different configs. Default: None.
     """
 
     def __init__(self, mask_mode='bbox', mask_config=None):

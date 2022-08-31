@@ -85,10 +85,10 @@ class HolisticIndexBlock(nn.Module):
 
     Args:
         in_channels (int): Input channels of the holistic index block.
-        kernel_size (int): Kernel size of the conv layers. Default: 2.
-        padding (int): Padding number of the conv layers. Default: 0.
         norm_cfg (dict): Config dict for normalization layer.
             Default: dict(type='BN').
+        use_context (bool, optional): Whether use larger kernel size in index
+            block. Refer to the paper for more information. Defaults to False.
         use_nonlinear (bool): Whether add a non-linear conv layer in the index
             block. Default: False.
     """
@@ -148,15 +148,15 @@ class DepthwiseIndexBlock(nn.Module):
 
     Args:
         in_channels (int): Input channels of the holistic index block.
-        kernel_size (int): Kernel size of the conv layers. Default: 2.
-        padding (int): Padding number of the conv layers. Default: 0.
+        norm_cfg (dict): Config dict for normalization layer.
+            Default: dict(type='BN').
+        use_context (bool, optional): Whether use larger kernel size in index
+            block. Refer to the paper for more information. Defaults to False.
+        use_nonlinear (bool): Whether add a non-linear conv layer in the index
+            blocks. Default: False.
         mode (str): Mode of index block. Should be 'o2o' or 'm2o'. In 'o2o'
             mode, the group of the conv layers is 1; In 'm2o' mode, the group
             of the conv layer is `in_channels`.
-        norm_cfg (dict): Config dict for normalization layer.
-            Default: dict(type='BN').
-        use_nonlinear (bool): Whether add a non-linear conv layer in the index
-            blocks. Default: False.
     """
 
     def __init__(self,
@@ -283,6 +283,16 @@ class InvertedResidual(nn.Module):
                     pw_act_cfg=None))
 
     def pad(self, inputs, kernel_size, dilation):
+        """Pad input tensor.
+
+        Args:
+            inputs (Tensor): Input tensor.
+            kernel_size (int): Kernel size of conv layer.
+            dilation (int): Dilation of conv layer.
+
+        Returns:
+            Tensor: Padded tensor
+        """
         effective_ksize = kernel_size + (kernel_size - 1) * (dilation - 1)
         left = (effective_ksize - 1) // 2
         right = effective_ksize // 2
@@ -337,6 +347,7 @@ class IndexNetEncoder(BaseModule):
         use_context (bool, optional): Whether use larger kernel size in
             index network. Refer to the paper for more information.
             Defaults to True.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
 
     Raises:
         ValueError: out_stride must 16 or 32.

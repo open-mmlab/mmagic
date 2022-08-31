@@ -13,6 +13,7 @@ class SimpleEncoderDecoder(BaseModule):
     Args:
         encoder (dict): Config of the encoder.
         decoder (dict): Config of the decoder.
+        init_cfg (dict, optional): Initialization config dict.
     """
 
     def __init__(self,

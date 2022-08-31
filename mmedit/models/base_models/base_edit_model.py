@@ -82,7 +82,7 @@ class BaseEditModel(BaseModel):
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
             mode (str): mode should be one of ``loss``, ``predict`` and
-                ``tensor``
+                ``tensor``. Default: 'tensor'.
 
                 - ``loss``: Called by ``train_step`` and return loss ``dict``
                   used for logging
@@ -101,7 +101,7 @@ class BaseEditModel(BaseModel):
                   :obj:`BaseDataElement` for computing metric
                   and getting inference result.
                 - If ``mode == tensor``, return a tensor or ``tuple`` of tensor
-                  or ``dict or tensor for custom use.
+                  or ``dict`` or tensor for custom use.
         """
 
         if mode == 'tensor':

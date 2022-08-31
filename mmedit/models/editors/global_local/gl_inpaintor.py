@@ -63,7 +63,7 @@ class GLInpaintor(OneStageInpaintor):
             contained for indicates the discriminator updating steps in each
             training step.
         test_cfg (dict): Configs for testing scheduler.
-        pretrained (str): Path for pretrained model. Default None.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,
@@ -113,8 +113,11 @@ class GLInpaintor(OneStageInpaintor):
             fake_res (torch.Tensor): Direct output of the generator.
             fake_img (torch.Tensor): Composition of `fake_res` and
                 ground-truth image.
-            data_batch (dict): Contain other elements for computing losses.
-
+            fake_local (torch.Tensor): Local image.
+            gt (torch.Tensor): Ground-truth image.
+            mask (torch.Tensor): Mask image.
+            masked_img (torch.Tensor): Composition of mask image and
+                ground-truth image.
         Returns:
             tuple[dict]: A tuple containing two dictionaries. The first one \
                 is the result dict, which contains the results computed \
@@ -161,9 +164,9 @@ class GLInpaintor(OneStageInpaintor):
         iterations for discriminator.
 
         Args:
-            data_batch (torch.Tensor): Batch of data as input.
-            optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
-                generator and discriminator (if have).
+            data (List[dict]): Batch of data as input.
+            optim_wrapper (dict[torch.optim.Optimizer]): Dict with optimizers
+                for generator and discriminator (if have).
 
         Returns:
             dict: Dict with loss, information for logger, the number of \

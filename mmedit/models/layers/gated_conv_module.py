@@ -25,7 +25,9 @@ class SimpleGatedConvModule(nn.Module):
             contains two convolutions for feature and gate separately.
         kernel_size (int or tuple[int]): Same as nn.Conv2d.
         feat_act_cfg (dict): Config dict for feature activation layer.
+            Default: dict(type='ELU').
         gate_act_cfg (dict): Config dict for gate activation layer.
+            Default: dict(type='Sigmoid').
         kwargs (keyword arguments): Same as `ConvModule`.
     """
 

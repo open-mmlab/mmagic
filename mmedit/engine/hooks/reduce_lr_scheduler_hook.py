@@ -12,6 +12,14 @@ DATA_BATCH = Optional[Sequence[dict]]
 
 @HOOKS.register_module()
 class ReduceLRSchedulerHook(ParamSchedulerHook):
+    """A hook to update learning rate.
+
+    Args:
+        val_metric (str): The metric of validation. If val_metric is not None,
+            we check val_metric to reduce learning. Default: None.
+        by_epoch (bool): Whether to update by epoch. Default: True.
+        interval (int): The interval of iterations to update. Default: 1.
+    """
 
     def __init__(self,
                  val_metric: str = None,
@@ -34,7 +42,11 @@ class ReduceLRSchedulerHook(ParamSchedulerHook):
         self.message_hub.update_scalar('value', value)
 
     def after_train_epoch(self, runner: Runner):
+        """Call step function for each scheduler after each train epoch.
 
+        Args:
+            runner (Runner): The runner of the training process.
+        """
         if not self.by_epoch:
             return
 
@@ -86,7 +98,12 @@ class ReduceLRSchedulerHook(ParamSchedulerHook):
     def after_val_epoch(self,
                         runner,
                         metrics: Optional[Dict[str, float]] = None):
+        """Call step function for each scheduler after each validation epoch.
 
+        Args:
+            runner (Runner): The runner of the training process.
+            metrics (dict, optional): The metrics of validation. Default: None.
+        """
         # If val_metric is None, we check training loss to reduce learning
         # rate.
         if self.val_metric is None:

@@ -74,6 +74,8 @@ class SSIM(BaseSampleWiseMetric):
             gt (Torch | np.ndarray): GT image.
             pred (Torch | np.ndarray): Pred image.
             mask (Torch | np.ndarray): Mask of evaluation.
+        Returns:
+            np.ndarray: SSIM result.
         """
 
         return ssim(
@@ -91,10 +93,10 @@ def _ssim(img1, img2):
     It is called by func:`ssim`.
 
     Args:
-        img1, img2 (ndarray): Images with range [0, 255] with order 'HWC'.
+        img1, img2 (np.ndarray): Images with range [0, 255] with order 'HWC'.
 
     Returns:
-        float: ssim result.
+        float: SSIM result.
     """
 
     C1 = (0.01 * 255)**2
@@ -150,7 +152,7 @@ def ssim(img1,
         channel_order (str): The channel order of image. Default: 'rgb'
 
     Returns:
-        float: ssim result.
+        float: SSIM result.
     """
 
     assert img1.shape == img2.shape, (

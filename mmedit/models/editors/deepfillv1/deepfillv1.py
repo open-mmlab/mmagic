@@ -51,9 +51,9 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
         loss_gan (dict): Config for adversarial loss.
         loss_gp (dict): Config for gradient penalty loss.
         loss_disc_shift (dict): Config for discriminator shift loss.
-        loss_composed_percep (dict): Config for perceptural and style loss with
+        loss_composed_percep (dict): Config for perceptual and style loss with
             composed image as input.
-        loss_out_percep (dict): Config for perceptural and style loss with
+        loss_out_percep (dict): Config for perceptual and style loss with
             direct output as input.
         loss_l1_hole (dict): Config for l1 loss in the hole.
         loss_l1_valid (dict): Config for l1 loss in the valid region.
@@ -62,7 +62,7 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
             contained for indicates the discriminator updating steps in each
             training step.
         test_cfg (dict): Configs for testing scheduler.
-        pretrained (str): Path for pretrained model. Default None.
+        init_cfg (dict, optional): Initialization config dict.
     """
 
     def __init__(self,
@@ -111,7 +111,7 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
         discriminators for global and local consistency.
 
         Args:
-            data (torch.Tensor): Batch of real data or fake data.
+            data_batch (torch.Tensor): Batch of real data or fake data.
             is_real (bool): If True, the gan loss will regard this batch as
                 real data. Otherwise, the gan loss will regard this batch as
                 fake data.
@@ -149,10 +149,14 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
         Args:
             stage1_data (dict): Contain stage1 results.
             stage2_data (dict): Contain stage2 results.
-            data_batch (dict): Contain data needed to calculate loss.
-
+            gt (torch.Tensor): Ground-truth image.
+            mask (torch.Tensor): Mask image.
+            masked_img (torch.Tensor): Composition of mask image and
+                ground-truth image.
         Returns:
-            dict: Contain losses with name.
+            tuple(dict): Dict contains the results computed within this \
+                function for visualization and dict contains the loss items \
+                computed in this function.
         """
         loss = dict()
         results = dict(
@@ -263,9 +267,9 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
         for discriminator.
 
         Args:
-            data_batch (torch.Tensor): Batch of data as input.
-            optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
-                generator and discriminator (if have).
+            data (List[dict]): Batch of data as input.
+            optim_wrapper (dict[torch.optim.Optimizer]): Dict with optimizers
+                for generator and discriminator (if have).
 
         Returns:
             dict: Dict with loss, information for logger, the number of \

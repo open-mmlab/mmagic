@@ -29,7 +29,8 @@ class ESRGAN(SRGAN):
             the training.
             These two keys are useful when training with WGAN.
         test_cfg (dict): Config for testing. Default: None.
-        pretrained (str): Path for pretrained model. Default: None.
+        init_cfg (dict, optional): The weight initialized config for
+            :class:`BaseModule`. Default: None.
     """
 
     def g_step(self, batch_outputs: torch.Tensor, batch_gt_data: torch.Tensor):
@@ -76,6 +77,15 @@ class ESRGAN(SRGAN):
 
     def d_step_real(self, batch_outputs: torch.Tensor,
                     batch_gt_data: torch.Tensor):
+        """D step of real data.
+
+        Args:
+            batch_outputs (Tensor): Batch output of generator.
+            batch_gt_data (Tensor): Batch GT data.
+
+        Returns:
+            dict: Dict of losses.
+        """
 
         # real
         fake_d_pred = self.discriminator(batch_outputs)
@@ -92,6 +102,15 @@ class ESRGAN(SRGAN):
         return loss_d_real
 
     def d_step_fake(self, batch_outputs: torch.Tensor, batch_gt_data):
+        """D step of fake data.
+
+        Args:
+            batch_outputs (Tensor): Batch output of generator.
+            batch_gt_data (Tensor): Batch GT data.
+
+        Returns:
+            dict: Dict of losses.
+        """
 
         # fake
         fake_d_pred = self.discriminator(batch_outputs.detach())

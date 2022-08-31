@@ -19,7 +19,7 @@ def make_coord(shape, ranges=None, flatten=True):
         ranges (tuple): range of coordinate value. Default: None.
         flatten (bool): flatten to (n, 2) or Not. Default: True.
 
-    return:
+    Returns:
         coord (Tensor): coordinates.
     """
     coord_seqs = []
@@ -43,7 +43,7 @@ def make_coord(shape, ranges=None, flatten=True):
 
 
 def bbox2mask(img_shape, bbox, dtype='uint8'):
-    """Generate mask in ndarray from bbox.
+    """Generate mask in np.ndarray from bbox.
 
     The returned mask has the shape of (h, w, 1). '1' indicates the
     hole and '0' indicates the valid regions.
@@ -54,10 +54,11 @@ def bbox2mask(img_shape, bbox, dtype='uint8'):
     Args:
         img_shape (tuple[int]): The size of the image.
         bbox (tuple[int]): Configuration tuple, (top, left, height, width)
-        dtype (str): Indicate the data type of returned masks. Default: 'uint8'
+        np.dtype (str): Indicate the data type of returned masks.
+            Default: 'uint8'
 
-    Return:
-        numpy.ndarray: Mask in the shape of (h, w, 1).
+    Returns:
+        mask (np.ndarray): Mask in the shape of (h, w, 1).
     """
 
     height, width = img_shape[:2]
@@ -100,11 +101,12 @@ def brush_stroke_mask(img_shape,
         brush_width (int | tuple[int]): (min_width, max_width). If only give
             an integer, we will fix the width of brush. Default: (12, 40).
         max_loops (int): The max number of for loops of drawing strokes.
-        dtype (str): Indicate the data type of returned masks.
+            Default: 4.
+        np.dtype (str): Indicate the data type of returned masks.
             Default: 'uint8'.
 
     Returns:
-        numpy.ndarray: Mask in the shape of (h, w, 1).
+        mask (np.ndarray): Mask in the shape of (h, w, 1).
     """
 
     img_h, img_w = img_shape[:2]
@@ -268,10 +270,11 @@ def random_irregular_mask(img_shape,
             an integer, we will fix the length of brush. Default: (10, 100).
         brush_width (int | tuple[int]): (min_width, max_width). If only give
             an integer, we will fix the width of brush. Default: (10, 40).
-        dtype (str): Indicate the data type of returned masks. Default: 'uint8'
+        np.dtype (str): Indicate the data type of returned masks.
+            Default: 'uint8'
 
     Returns:
-        numpy.ndarray: Mask in the shape of (h, w, 1).
+        mask (np.ndarray): Mask in the shape of (h, w, 1).
     """
 
     h, w = img_shape[:2]
@@ -338,7 +341,7 @@ def get_irregular_mask(img_shape, area_ratio_range=(0.15, 0.5), **kwargs):
         ratio. Default: (0.15, 0.5).
 
     Returns:
-        numpy.ndarray: Mask in the shape of (h, w, 1).
+        mask (np.ndarray): Mask in the shape of (h, w, 1).
     """
 
     mask = random_irregular_mask(img_shape, **kwargs)
@@ -386,10 +389,10 @@ def dtype_limits(image, clip_negative=False):
     7e4840bd9439d1dfb6beaf549998452c99f97fdd/skimage/util/dtype.py#L35
 
     Args:
-        image (ndarray): Input image.
+        image (np.ndarray): Input image.
         clip_negative (bool, optional): If True, clip the negative range
             (i.e. return 0 for min intensity) even if the image dtype allows
-            negative values.
+            negative values. Default: False.
 
     Returns
         tuple: Lower and upper intensity limits.
@@ -413,12 +416,12 @@ def adjust_gamma(image, gamma=1, gain=1):
     equation ``O = I**gamma`` after scaling each pixel to the range 0 to 1.
 
     Args:
-        image (ndarray): Input image.
+        image (np.ndarray): Input image.
         gamma (float, optional): Non negative real number. Defaults to 1.
         gain (float, optional): The constant multiplier. Defaults to 1.
 
     Returns:
-        ndarray: Gamma corrected output image.
+        np.ndarray: Gamma corrected output image.
     """
     if np.any(image < 0):
         raise ValueError('Image Correction methods work correctly only on '
@@ -437,6 +440,16 @@ def adjust_gamma(image, gamma=1, gain=1):
 
 
 def add_gaussian_noise(img: np.ndarray, mu, sigma):
+    """Add Gaussian Noise on the input image.
+
+    Args:
+        img (np.ndarray): Input image.
+        mu (float): The mu value of the Gaussian function.
+        sigma (float): The sigma value of the Gaussian function.
+
+    Returns:
+        noisy_img (np.ndarray): Gaussian noisy output image.
+    """
     img = img.astype(np.float32)
     gauss_noise = np.random.normal(mu, sigma, img.shape)
     noisy_img = img + gauss_noise

@@ -9,7 +9,23 @@ from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
 
 class BasicBlock(nn.Module):
-    """Basic block for ResNet."""
+    """Basic block for ResNet.
+
+    Args:
+        inplanes (int): Number of input channels.
+        planes (int): Number of output channels.
+        stride (int): Stride of the first block of one stage. Default: 1.
+        dilation (int): Dilation of one stage. Default: 1.
+        downsample (nn.Module): Downsample module. Default: None.
+        act_cfg (dict): Dictionary to construct and config activation layer.
+            Default: dict(type='ReLU').
+        conv_cfg (dict): Dictionary to construct and config convolution layer.
+            Default: None.
+        norm_cfg (dict): Dictionary to construct and config norm layer.
+            Default: dict(type='BN').
+        with_cp (bool): Use checkpoint or not. Using checkpoint will save some
+            memory while slowing down the training speed. Default: False.
+    """
 
     expansion = 1
 
@@ -89,7 +105,22 @@ class BasicBlock(nn.Module):
 
 
 class Bottleneck(nn.Module):
-    """Bottleneck block for ResNet."""
+    """Bottleneck block for ResNet.
+    Args:
+        inplanes (int): Number of input channels.
+        planes (int): Number of output channels.
+        stride (int): Stride of the first block of one stage. Default: 1.
+        dilation (int): Dilation of one stage. Default: 1.
+        downsample (nn.Module): Downsample module. Default: None.
+        act_cfg (dict): Dictionary to construct and config activation layer.
+            Default: dict(type='ReLU').
+        conv_cfg (dict): Dictionary to construct and config convolution layer.
+            Default: None.
+        norm_cfg (dict): Dictionary to construct and config norm layer.
+            Default: dict(type='BN').
+        with_cp (bool): Use checkpoint or not. Using checkpoint will save some
+            memory while slowing down the training speed. Default: False.
+    """
 
     expansion = 4
 
@@ -203,23 +234,29 @@ class ResNet(nn.Module):
         base_channels (int): Number of base channels of res layer. Default: 64.
         num_stages (int): Resnet stages, normally 4.
         strides (Sequence[int]): Strides of the first block of each stage.
+            Default: (1, 2, 2, 2).
         dilations (Sequence[int]): Dilation of each stage.
-        deep_stem (bool): Replace 7x7 conv in input stem with 3 3x3 conv
+            Default: (1, 1, 2, 4).
+        deep_stem (bool): Replace 7x7 conv in input stem with 3 3x3 conv.
+            Default: False.
         avg_down (bool): Use AvgPool instead of stride conv when
-            downsampling in the bottleneck.
+            downsampling in the bottleneck. Default: False.
         frozen_stages (int): Stages to be frozen (stop grad and set eval mode).
-            -1 means not freezing any parameters.
+            -1 means not freezing any parameters. Default: -1.
         act_cfg (dict): Dictionary to construct and config activation layer.
+            Default: dict(type='ReLU').
         conv_cfg (dict): Dictionary to construct and config convolution layer.
+            Default: None.
         norm_cfg (dict): Dictionary to construct and config norm layer.
+            Default: dict(type='BN').
         with_cp (bool): Use checkpoint or not. Using checkpoint will save some
-            memory while slowing down the training speed.
+            memory while slowing down the training speed. Default: False.
         multi_grid (Sequence[int]|None): Multi grid dilation rates of last
-            stage. Default: None
+            stage. Default: None.
         contract_dilation (bool): Whether contract first dilation of each layer
-            Default: False
+            Default: False.
         zero_init_residual (bool): Whether to use zero init for last norm layer
-            in resblocks to let them behave as identity.
+            in resblocks to let them behave as identity. Default: True.
     """
 
     arch_settings = {

@@ -24,7 +24,7 @@ class AOTInpaintor(OneStageInpaintor):
         several proposed losses for stable training.
 
         Args:
-            data (torch.Tensor): Batch of real data or fake data.
+            data_batch (torch.Tensor): Batch of real data or fake data.
             is_real (bool): If True, the gan loss will regard this batch as
                 real data. Otherwise, the gan loss will regard this batch as
                 fake data.
@@ -62,7 +62,10 @@ class AOTInpaintor(OneStageInpaintor):
             fake_res (torch.Tensor): Direct output of the generator.
             fake_img (torch.Tensor): Composition of `fake_res` and
                 ground-truth image.
-            data_batch (dict): Contain other elements for computing losses.
+            gt (torch.Tensor): Ground-truth image.
+            mask (torch.Tensor): Mask image.
+            masked_img (torch.Tensor): Composition of mask image and
+                ground-truth image.
 
         Returns:
             tuple(dict): Dict contains the results computed within this
@@ -100,10 +103,11 @@ class AOTInpaintor(OneStageInpaintor):
 
         Args:
             inputs (torch.Tensor): Input tensor.
-            data_sample (dict): Dict contains data sample.
+            data_samples (List[dict]): List of data sample dict.
 
         Returns:
-            dict: Dict contains output results.
+            tuple: Direct output of the generator and composition of `fake_res`
+                and ground-truth image.
         """
         # Pre-process runs in BaseModel.val_step / test_step
         masks = torch.stack(
@@ -129,9 +133,9 @@ class AOTInpaintor(OneStageInpaintor):
         5. optimize discriminator
 
         Args:
-            data_batch (torch.Tensor): Batch of data as input.
-            optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
-                generator and discriminator (if exist).
+            data (List[dict]): Batch of data as input.
+            optim_wrapper (dict[torch.optim.Optimizer]): Dict with optimizers
+                for generator and discriminator (if have).
 
         Returns:
             dict: Dict with loss, information for logger, the number of

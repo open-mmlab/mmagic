@@ -188,7 +188,7 @@ class GenerateFacialHeatmap(BaseTransform):
         """Generate heatmap from img.
 
         Args:
-            image (numpy.ndarray): Face image.
+            image (np.ndarray): Face image.
 
         results:
             heatmap (np.ndarray): Heatmap the face image.
@@ -209,7 +209,7 @@ class GenerateFacialHeatmap(BaseTransform):
         """Generate face landmark by face_alignment.
 
         Args:
-            image (numpy.ndarray): Face image.
+            image (np.ndarray): Face image.
 
         Returns:
             landmark (Tuple[float]): Location of landmark.
@@ -231,7 +231,7 @@ class GenerateFacialHeatmap(BaseTransform):
         """Generate One Heatmap.
 
         Args:
-            landmark (Tuple[float]): Location of a landmark.
+            keypoint (Tuple[float]): Location of a landmark.
 
         results:
             heatmap (np.ndarray): A heatmap of landmark.

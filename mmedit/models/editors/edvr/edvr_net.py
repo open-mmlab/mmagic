@@ -33,7 +33,7 @@ class EDVRNet(BaseModule):
         center_frame_idx (int): The index of center frame. Frame counting from
             0. Default: 2.
         with_tsa (bool): Whether to use TSA module. Default: True.
-        init_cfg (dict, optional): Initialization config dict.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,
@@ -217,9 +217,11 @@ class ModulatedDCNPack(ModulatedDeformConv2d):
         self.init_offset()
 
     def init_offset(self):
+        """Init constant offset"""
         constant_init(self.conv_offset, val=0, bias=0)
 
     def forward(self, x, extra_feat):
+        """Forward function"""
         out = self.conv_offset(extra_feat)
         o1, o2, mask = torch.chunk(out, 3, dim=1)
         offset = torch.cat((o1, o2), dim=1)

@@ -39,7 +39,7 @@ class CompositeFg(BaseTransform):
         alpha_dirs (str | list[str]): Path of directories to load alpha mattes
             from.
         interpolation (str): Interpolation method of `mmcv.imresize` to resize
-            the randomly loaded images.
+            the randomly loaded images. Default: 'nearest'.
     """
 
     def __init__(self, fg_dirs, alpha_dirs, interpolation='nearest'):
@@ -274,7 +274,6 @@ class RandomLoadResizeBg(BaseTransform):
 
     Args:
         bg_dir (str): Path of directory to load background images from.
-        io_backend (str): io backend where images are store. Default: 'disk'.
         flag (str): Loading flag for images. Default: 'color'.
         channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
             Default: 'bgr'.

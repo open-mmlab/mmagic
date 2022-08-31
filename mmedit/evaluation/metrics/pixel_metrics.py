@@ -40,8 +40,11 @@ class MAE(BaseSampleWiseMetric):
         """Process an image.
 
         Args:
-            gt (Torch | np.ndarray): GT image.
-            pred (Torch | np.ndarray): Pred image.
+            gt (Tensor | np.ndarray): GT image.
+            pred (Tensor | np.ndarray): Pred image.
+            mask (Tensor | np.ndarray): Mask of evaluation.
+        Returns:
+            result (np.ndarray): MAE result.
         """
 
         gt = gt / 255.
@@ -93,6 +96,8 @@ class MSE(BaseSampleWiseMetric):
             gt (Torch | np.ndarray): GT image.
             pred (Torch | np.ndarray): Pred image.
             mask (Torch | np.ndarray): Mask of evaluation.
+        Returns:
+            result (np.ndarray): MSE result.
         """
 
         gt = gt / 255.
@@ -168,6 +173,8 @@ class PSNR(BaseSampleWiseMetric):
             gt (Torch | np.ndarray): GT image.
             pred (Torch | np.ndarray): Pred image.
             mask (Torch | np.ndarray): Mask of evaluation.
+        Returns:
+            np.ndarray: PSNR result.
         """
 
         return psnr(
@@ -237,6 +244,8 @@ class SNR(BaseSampleWiseMetric):
             gt (Torch | np.ndarray): GT image.
             pred (Torch | np.ndarray): Pred image.
             mask (Torch | np.ndarray): Mask of evaluation.
+        Returns:
+            np.ndarray: SNR result.
         """
 
         return snr(
@@ -269,9 +278,10 @@ def psnr(img1,
             If None, the images are not altered. When computing for 'Y',
             the images are assumed to be in BGR order. Options are 'Y' and
             None. Default: None.
+        channel_order (str): The channel order of image. Default: 'rgb'.
 
     Returns:
-        float: psnr result.
+        result (float): PSNR result.
     """
 
     assert img1.shape == img2.shape, (
@@ -320,9 +330,10 @@ def snr(gt,
             If None, the images are not altered. When computing for 'Y',
             the images are assumed to be in BGR order. Options are 'Y' and
             None. Default: None.
+        channel_order (str): The channel order of image. Default: 'rgb'.
 
     Returns:
-        float: psnr result.
+        float: SNR result.
     """
 
     assert gt.shape == pred.shape, (
