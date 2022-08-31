@@ -5,6 +5,7 @@ import random
 import mmcv
 import numpy as np
 from mmcv.transforms import BaseTransform
+from mmengine.utils import is_list_of, is_tuple_of
 from torch.nn.modules.utils import _pair
 
 from mmedit.registry import TRANSFORMS
@@ -26,7 +27,7 @@ class Crop(BaseTransform):
 
     def __init__(self, keys, crop_size, random_crop=True, is_pad_zeros=False):
 
-        if not mmcv.is_tuple_of(crop_size, int):
+        if not is_tuple_of(crop_size, int):
             raise TypeError(
                 'Elements of crop_size must be int and crop_size must be'
                 f' tuple, but got {type(crop_size[0])} in {type(crop_size)}')
@@ -181,11 +182,11 @@ class FixedCrop(BaseTransform):
 
     def __init__(self, keys, crop_size, crop_pos=None):
 
-        if not mmcv.is_tuple_of(crop_size, int):
+        if not is_tuple_of(crop_size, int):
             raise TypeError(
                 'Elements of crop_size must be int and crop_size must be'
                 f' tuple, but got {type(crop_size[0])} in {type(crop_size)}')
-        if not mmcv.is_tuple_of(crop_pos, int) and (crop_pos is not None):
+        if not is_tuple_of(crop_pos, int) and (crop_pos is not None):
             raise TypeError(
                 'Elements of crop_pos must be int and crop_pos must be'
                 f' tuple or None, but got {type(crop_pos[0])} in '
@@ -439,14 +440,14 @@ class RandomResizedCrop(BaseTransform):
         assert keys, 'Keys should not be empty.'
         if isinstance(crop_size, int):
             crop_size = (crop_size, crop_size)
-        elif not mmcv.is_tuple_of(crop_size, int):
+        elif not is_tuple_of(crop_size, int):
             raise TypeError('"crop_size" must be an integer '
                             'or a tuple of integers, but got '
                             f'{type(crop_size)}')
-        if not mmcv.is_tuple_of(scale, float):
+        if not is_tuple_of(scale, float):
             raise TypeError('"scale" must be a tuple of float, '
                             f'but got {type(scale)}')
-        if not mmcv.is_tuple_of(ratio, float):
+        if not is_tuple_of(ratio, float):
             raise TypeError('"ratio" must be a tuple of float, '
                             f'but got {type(ratio)}')
 
@@ -551,7 +552,7 @@ class CropAroundCenter(BaseTransform):
     """
 
     def __init__(self, crop_size):
-        if mmcv.is_tuple_of(crop_size, int):
+        if is_tuple_of(crop_size, int):
             assert len(crop_size) == 2, 'length of crop_size must be 2.'
         elif not isinstance(crop_size, int):
             raise TypeError('crop_size must be int or a tuple of int, but got '
@@ -657,7 +658,7 @@ class CropAroundFg(BaseTransform):
 
         if 'seg' not in keys:
             raise ValueError(f'"seg" must be in keys, but got {keys}')
-        if (not mmcv.is_tuple_of(bd_ratio_range, float)
+        if (not is_tuple_of(bd_ratio_range, float)
                 or len(bd_ratio_range) != 2):
             raise TypeError('bd_ratio_range must be a tuple of 2 int, but got '
                             f'{bd_ratio_range}')
@@ -744,7 +745,7 @@ class CropAroundUnknown(BaseTransform):
             raise TypeError(
                 f'Crop sizes must be list, but got {type(crop_sizes)}.')
         self.crop_sizes = [_pair(crop_size) for crop_size in crop_sizes]
-        if not mmcv.is_tuple_of(self.crop_sizes[0], int):
+        if not is_tuple_of(self.crop_sizes[0], int):
             raise TypeError('Elements of crop_sizes must be int or tuple of '
                             f'int, but got {type(self.crop_sizes[0][0])}.')
 
@@ -759,8 +760,8 @@ class CropAroundUnknown(BaseTransform):
 
         if isinstance(interpolations, str):
             self.interpolations = [interpolations] * len(self.keys)
-        elif mmcv.is_list_of(interpolations,
-                             str) and len(interpolations) == len(self.keys):
+        elif is_list_of(interpolations, str) and len(interpolations) == len(
+                self.keys):
             self.interpolations = interpolations
         else:
             raise TypeError(

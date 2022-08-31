@@ -25,10 +25,10 @@ def _assert_masked(pred_alpha, trimap):
             'pred_alpha should be masked by trimap before evaluation')
 
 
-def _fetch_data_and_check(data_batch, predictions):
-    ori_trimap = data_batch['data_sample']['ori_trimap'][:, :, 0]
-    ori_alpha = data_batch['data_sample']['ori_alpha'][:, :, 0]
-    pred_alpha = predictions['pred_alpha']['data']  # 2D tensor
+def _fetch_data_and_check(data_samples):
+    ori_trimap = data_samples['ori_trimap'][:, :, 0]
+    ori_alpha = data_samples['ori_alpha'][:, :, 0]
+    pred_alpha = data_samples['output']['pred_alpha']['data']  # 2D tensor
     pred_alpha = pred_alpha.cpu().numpy()
 
     _assert_ndim(ori_trimap, 'trimap', 2, 'HxW')
@@ -84,7 +84,7 @@ class SAD(BaseMetric):
         super().__init__(**kwargs)
 
     def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
+                data_samples: Sequence[dict]) -> None:
         """Process one batch of data and predictions
 
         Args:
@@ -93,8 +93,8 @@ class SAD(BaseMetric):
             predictions (Sequence[dict]): A batch of outputs from
                 the model.
         """
-        for data, prediction in zip(data_batch, predictions):
-            pred_alpha, gt_alpha, _ = _fetch_data_and_check(data, prediction)
+        for data_sample in data_samples:
+            pred_alpha, gt_alpha, _ = _fetch_data_and_check(data_sample)
 
             # divide by 1000 to reduce the magnitude of the result
             sad_sum = np.abs(pred_alpha - gt_alpha).sum() / self.norm_const
@@ -158,18 +158,17 @@ class MattingMSE(BaseMetric):
         super().__init__(**kwargs)
 
     def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
+                data_samples: Sequence[dict]) -> None:
         """Process one batch of data and predictions
 
         Args:
             data_batch (Sequence[Tuple[Any, dict]]): A batch of data
                 from the dataloader.
-            predictions (Sequence[dict]): A batch of outputs from
+            data_samples (Sequence[dict]): A batch of outputs from
                 the model.
         """
-        for data, prediction in zip(data_batch, predictions):
-            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
-                data, prediction)
+        for data_sample in data_samples:
+            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(data_sample)
 
             weight_sum = (trimap == 128).sum()
             if weight_sum != 0:
@@ -232,7 +231,7 @@ class GradientError(BaseMetric):
         super().__init__(**kwargs)
 
     def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
+                data_samples: Sequence[dict]) -> None:
         """Process one batch of data samples and predictions. The processed
         results should be stored in ``self.results``, which will be used to
         compute the metrics when all batches have been processed.
@@ -243,9 +242,8 @@ class GradientError(BaseMetric):
                 the model.
         """
 
-        for data, prediction in zip(data_batch, predictions):
-            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
-                data, prediction)
+        for data_sample in data_samples:
+            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(data_sample)
 
             gt_alpha_normed = np.zeros_like(gt_alpha)
             pred_alpha_normed = np.zeros_like(pred_alpha)
@@ -318,7 +316,7 @@ class ConnectivityError(BaseMetric):
         super().__init__(**kwargs)
 
     def process(self, data_batch: Sequence[dict],
-                predictions: Sequence[dict]) -> None:
+                data_samples: Sequence[dict]) -> None:
         """Process one batch of data samples and predictions. The processed
         results should be stored in ``self.results``, which will be used to
         compute the metrics when all batches have been processed.
@@ -329,9 +327,8 @@ class ConnectivityError(BaseMetric):
                 the model.
         """
 
-        for data, prediction in zip(data_batch, predictions):
-            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(
-                data, prediction)
+        for data_sample in data_samples:
+            pred_alpha, gt_alpha, trimap = _fetch_data_and_check(data_sample)
 
             thresh_steps = np.arange(0, 1 + self.step, self.step)
             round_down_map = -np.ones_like(gt_alpha)

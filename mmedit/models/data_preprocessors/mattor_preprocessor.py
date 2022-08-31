@@ -133,8 +133,10 @@ class MattorPreprocessor(BaseDataPreprocessor):
         """
         if not training:
             # Image may of different size when testing
-            assert len(data) == 1, ('only batch_size=1 '
-                                    'is supported for testing.')
+            assert len(
+                data['data_samples']) == 1, ('only batch_size=1 '
+                                             'is supported for testing.')
+        data = super().forward(data, training=training)
 
         images, trimaps, batch_data_samples = self.collate_data(data)
 
@@ -164,16 +166,19 @@ class MattorPreprocessor(BaseDataPreprocessor):
         # N, (4/6), H, W
         batch_inputs = torch.cat((batch_images, batch_trimaps), dim=1)
 
-        return batch_inputs, batch_data_samples
+        data['inputs'] = batch_inputs
+        data['data_samples'] = batch_data_samples
+        # return batch_inputs, batch_data_samples
+        return data
 
     def collate_data(self, data: Sequence[dict]) -> Tuple[list, list, list]:
         """Collating and moving data to the target device.
 
         See base class ``BaseDataPreprocessor`` for detailed information.
         """
-        inputs = [data_['inputs'] for data_ in data]
-        trimaps = [data_['data_sample'].trimap.data for data_ in data]
-        batch_data_samples = [data_['data_sample'] for data_ in data]
+        inputs = [data_ for data_ in data['inputs']]
+        trimaps = [data_.trimap.data for data_ in data['data_samples']]
+        batch_data_samples = [data_ for data_ in data['data_samples']]
 
         # Move data from CPU to corresponding device.
         inputs = [_input.to(self.device) for _input in inputs]

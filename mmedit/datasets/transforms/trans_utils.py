@@ -4,10 +4,10 @@ import logging
 import math
 
 import cv2
-import mmcv
 import numpy as np
 import torch
-from mmcv.utils import print_log
+from mmengine.logging import print_log
+from mmengine.utils import is_tuple_of
 from PIL import Image, ImageDraw
 
 
@@ -205,9 +205,9 @@ def random_bbox(img_shape, max_bbox_shape, max_bbox_delta=40, min_margin=20):
         max_bbox_delta = (max_bbox_delta, max_bbox_delta)
     if not isinstance(min_margin, tuple):
         min_margin = (min_margin, min_margin)
-    assert mmcv.is_tuple_of(max_bbox_shape, int)
-    assert mmcv.is_tuple_of(max_bbox_delta, int)
-    assert mmcv.is_tuple_of(min_margin, int)
+    assert is_tuple_of(max_bbox_shape, int)
+    assert is_tuple_of(max_bbox_delta, int)
+    assert is_tuple_of(min_margin, int)
 
     img_h, img_w = img_shape[:2]
     max_mask_h, max_mask_w = max_bbox_shape

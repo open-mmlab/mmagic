@@ -73,12 +73,12 @@ class SRGAN(BaseEditModel):
             # No GAN model or loss.
             self.disc_repeat = 0
 
-    def forward_train(self, batch_inputs, data_samples=None, **kwargs):
+    def forward_train(self, inputs, data_samples=None, **kwargs):
         """Forward training.
             Losses of training is calculated in train_step.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -88,14 +88,14 @@ class SRGAN(BaseEditModel):
         """
 
         return self.forward_tensor(
-            batch_inputs, data_samples, training=True, **kwargs)
+            inputs, data_samples, training=True, **kwargs)
 
-    def forward_tensor(self, batch_inputs, data_samples=None, training=False):
+    def forward_tensor(self, inputs, data_samples=None, training=False):
         """Forward tensor.
             Returns result of simple forward.
 
         Args:
-            batch_inputs (torch.Tensor): batch input tensor collated by
+            inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
@@ -104,7 +104,7 @@ class SRGAN(BaseEditModel):
             Tensor: result of simple forward.
         """
 
-        feats = self.generator(batch_inputs)
+        feats = self.generator(inputs)
 
         return feats
 
@@ -288,7 +288,8 @@ class SRGAN(BaseEditModel):
 
         g_optim_wrapper = optim_wrapper['generator']
 
-        batch_inputs, data_samples = self.data_preprocessor(data, True)
+        data = self.data_preprocessor(data, True)
+        batch_inputs, data_samples = data['inputs'], data['data_samples']
         batch_gt_data = self.extract_gt_data(data_samples)
 
         log_vars = dict()

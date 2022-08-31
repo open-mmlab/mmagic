@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import mmcv
-from mmcv.runner import load_checkpoint
+from mmengine import Config
+from mmengine.config import ConfigDict
+from mmengine.runner import load_checkpoint
 
 from mmedit.registry import MODELS
 from mmedit.utils import register_all_modules
@@ -10,7 +11,7 @@ def delete_cfg(cfg, key='init_cfg'):
     if key in cfg:
         cfg.pop(key)
     for _key in cfg.keys():
-        if isinstance(cfg[_key], mmcv.utils.config.ConfigDict):
+        if isinstance(cfg[_key], ConfigDict):
             delete_cfg(cfg[_key], key)
 
 
@@ -18,7 +19,7 @@ def init_model(config, checkpoint=None, device='cuda:0'):
     """Initialize a model from config file.
 
     Args:
-        config (str or :obj:`mmcv.Config`): Config file path or the config
+        config (str or :obj:`mmengine.Config`): Config file path or the config
             object.
         checkpoint (str, optional): Checkpoint path. If left as None, the model
             will not load any weights.
@@ -29,8 +30,8 @@ def init_model(config, checkpoint=None, device='cuda:0'):
     """
 
     if isinstance(config, str):
-        config = mmcv.Config.fromfile(config)
-    elif not isinstance(config, mmcv.Config):
+        config = Config.fromfile(config)
+    elif not isinstance(config, Config):
         raise TypeError('config must be a filename or Config object, '
                         f'but got {type(config)}')
     # config.test_cfg.metrics = None

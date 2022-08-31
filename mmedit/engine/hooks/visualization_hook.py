@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional, Sequence
 
-from mmengine.data import BaseDataElement
 from mmengine.hooks import Hook
 from mmengine.registry import HOOKS
+from mmengine.structures import BaseDataElement
 
 
 @HOOKS.register_module()
@@ -59,10 +59,7 @@ class BasicVisualizationHook(Hook):
         else:
             interval = self._interval.get(mode, 1)
 
-        assert len(data_batch) == len(outputs)
         if self.every_n_inner_iters(batch_idx, interval):
-            for data, output in zip(data_batch, outputs):
-                input = data['inputs']
-                data_sample = data['data_sample']
+            for data_sample in outputs:
                 runner.visualizer.add_datasample(
-                    input, data_sample, output, step=f'{mode}_{runner.iter}')
+                    data_sample, step=f'{mode}_{runner.iter}')

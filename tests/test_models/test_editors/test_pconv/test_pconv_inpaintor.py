@@ -2,7 +2,7 @@
 from os.path import dirname, join
 
 import torch
-from mmcv import Config
+from mmengine import Config
 from mmengine.optim import OptimWrapper
 
 from mmedit.registry import MODELS
@@ -27,18 +27,19 @@ def test_pconv_inpaintor():
     gt_img = torch.randn(3, 256, 256)
     mask = torch.zeros_like(gt_img)[0:1, ...]
     mask[..., 100:210, 100:210] = 1.
-    masked_img = gt_img * (1. - mask)
+    masked_img = gt_img.unsqueeze(0) * (1. - mask)
     mask_bbox = [100, 100, 110, 110]
-    data_batch = [{
+    data_batch = {
         'inputs':
         masked_img,
-        'data_sample':
-        EditDataSample(
-            mask=PixelData(data=mask),
-            mask_bbox=mask_bbox,
-            gt_img=PixelData(data=gt_img),
-        )
-    }]
+        'data_samples': [
+            EditDataSample(
+                mask=PixelData(data=mask),
+                mask_bbox=mask_bbox,
+                gt_img=PixelData(data=gt_img),
+            )
+        ]
+    }
 
     optim_g = torch.optim.Adam(inpaintor.generator.parameters(), lr=0.0001)
     optim_g = OptimWrapper(optim_g)
@@ -50,7 +51,8 @@ def test_pconv_inpaintor():
         assert 'loss_tv' in log_vars
 
     # check for forward_test
-    data_inputs, data_sample = inpaintor.data_preprocessor(data_batch, True)
+    data = inpaintor.data_preprocessor(data_batch, True)
+    data_inputs, data_sample = data['inputs'], data['data_samples']
     output = inpaintor.forward_test(data_inputs, data_sample)
     prediction = output[0]
     assert 'fake_res' in prediction

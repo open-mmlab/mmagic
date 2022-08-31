@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/abs/1809.00219
   README: configs/esrgan/README.md
 Models:
-- Config: configs/esrgan/esrgan_psnr-x4c64b23g32_1000k-1xb16_div2k.py
+- Config: configs/esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py
   In Collection: ESRGAN
   Metadata:
     GPUs: '1'
     Training Data: DIV2K
-  Name: esrgan_psnr-x4c64b23g32_1000k-1xb16_div2k
+  Name: esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -24,12 +24,12 @@ Models:
       Set5 SSIM: 0.8559
     Task: Esrgan
   Weights: https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth
-- Config: configs/esrgan/esrgan_x4c64b23g32_400k-1xb16_div2k.py
+- Config: configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py
   In Collection: ESRGAN
   Metadata:
     GPUs: '1'
     Training Data: DIV2K
-  Name: esrgan_x4c64b23g32_400k-1xb16_div2k
+  Name: esrgan_x4c64b23g32_1xb16-400k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:

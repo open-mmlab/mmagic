@@ -82,7 +82,7 @@ def img_transform(img,
 
 def obtain_data(data_sample, key, device='cpu'):
 
-    candidates = ['data_sample', key, 'data']
+    candidates = ['data_samples', key, 'data']
 
     for k in candidates:
         if k in data_sample:

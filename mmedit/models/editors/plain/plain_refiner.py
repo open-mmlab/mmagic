@@ -2,7 +2,7 @@
 import torch
 import torch.nn as nn
 from mmengine.model import BaseModule
-from mmengine.model.utils import xavier_init
+from mmengine.model.weight_init import xavier_init
 
 from mmedit.registry import MODELS
 

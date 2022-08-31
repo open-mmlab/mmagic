@@ -40,11 +40,11 @@ def test_liif():
     assert model.__class__.__name__ == 'LIIF'
 
     # prepare data
-    inputs = torch.rand(3, 8, 8)
+    inputs = torch.rand(1, 3, 8, 8)
     data_sample = EditDataSample(
         metainfo=dict(coord=torch.rand(256, 2), cell=torch.rand(256, 2)))
     data_sample.gt_img = PixelData(data=torch.rand(256, 3))
-    data = [dict(inputs=inputs, data_sample=data_sample)]
+    data = dict(inputs=inputs, data_samples=[data_sample])
 
     optimizer = Adam(model.generator.parameters(), lr=0.001)
     optim_wrapper = OptimWrapper(optimizer)
@@ -62,8 +62,8 @@ def test_liif():
     assert isinstance(predictions, List)
     assert len(predictions) == 1
     assert isinstance(predictions[0], EditDataSample)
-    assert isinstance(predictions[0].pred_img.data, torch.Tensor)
-    assert predictions[0].pred_img.data.shape == (3, 16, 16)
+    assert isinstance(predictions[0].output.pred_img.data, torch.Tensor)
+    assert predictions[0].output.pred_img.data.shape == (3, 16, 16)
 
     # feat
     output = model(torch.rand(1, 3, 8, 8), [data_sample], mode='tensor')

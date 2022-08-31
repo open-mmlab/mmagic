@@ -1,11 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import random
 
-import mmcv
 import numpy as np
 import torch
 import torch.nn as nn
+from mmengine.logging import print_log
 from mmengine.model import BaseModule
+from mmengine.utils import is_seq_of
 
 from mmedit.registry import COMPONENTS
 from .stylegan2_modules import (ConstantInput, ConvDownLayer,
@@ -190,16 +191,16 @@ class StyleGANv2Generator(BaseModule):
     def train(self, mode=True):
         if mode:
             if self.default_style_mode != self._default_style_mode:
-                mmcv.print_log(
+                print_log(
                     f'Switch to train style mode: {self._default_style_mode}',
-                    'mmgen')
+                    'current')
             self.default_style_mode = self._default_style_mode
 
         else:
             if self.default_style_mode != self.eval_style_mode:
-                mmcv.print_log(
+                print_log(
                     f'Switch to evaluation style mode: {self.eval_style_mode}',
-                    'mmgen')
+                    'current')
             self.default_style_mode = self.eval_style_mode
 
         return super(StyleGANv2Generator, self).train(mode)
@@ -287,7 +288,7 @@ class StyleGANv2Generator(BaseModule):
         if isinstance(styles, torch.Tensor):
             assert styles.shape[1] == self.style_channels
             styles = [styles]
-        elif mmcv.is_seq_of(styles, torch.Tensor):
+        elif is_seq_of(styles, torch.Tensor):
             for t in styles:
                 assert t.shape[-1] == self.style_channels
         # receive a noise generator and sample noise.

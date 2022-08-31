@@ -97,7 +97,7 @@ class PackEditInputs(BaseTransform):
             dict:
 
             - 'inputs' (obj:`torch.Tensor`): The forward data of models.
-            - 'data_sample' (obj:`EditDataSample`): The annotation info of the
+            - 'data_samples' (obj:`EditDataSample`): The annotation info of the
                 sample.
         """
 
@@ -182,7 +182,7 @@ class PackEditInputs(BaseTransform):
 
         data_sample.set_metainfo(metainfo=metainfo)
 
-        packed_results['data_sample'] = data_sample
+        packed_results['data_samples'] = data_sample
 
         return packed_results
 

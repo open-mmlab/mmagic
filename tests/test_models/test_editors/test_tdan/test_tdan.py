@@ -26,10 +26,10 @@ def test_tdan():
     optim_wrapper = OptimWrapper(optimizer)
 
     # prepare data
-    inputs = torch.rand(5, 3, 16, 16)
+    inputs = torch.rand(1, 5, 3, 16, 16)
     target = torch.rand(3, 64, 64)
     data_sample = EditDataSample(gt_img=PixelData(data=target))
-    data = [dict(inputs=inputs, data_sample=data_sample)]
+    data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
     log_vars = model.train_step(data, optim_wrapper)
@@ -37,7 +37,7 @@ def test_tdan():
 
     # val
     output = model.val_step(data)
-    assert output[0].pred_img.data.shape == (3, 64, 64)
+    assert output[0].output.pred_img.data.shape == (3, 64, 64)
 
     # feat
     output = model(torch.rand(1, 5, 3, 16, 16), mode='tensor')

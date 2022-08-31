@@ -21,9 +21,10 @@ def update_intervals(config, args):
 
     # 2. change logging interval
     if 'default_hooks' in config and config['default_hooks']:
-        config['default_hooks']['logger'] = dict(type='LoggerHook', interval=2)
+        config['default_hooks']['logger'] = dict(
+            type='LoggerHook', interval=args.iters // 10)
         config['default_hooks']['checkpoint'] = dict(
-            type='CheckpointHook', interval=args.iters // 5)
+            type='CheckpointHook', interval=args.iters // 15)
 
     return config
 
@@ -156,8 +157,11 @@ def update_ceph_config(filename, args, dry_run=False):
         save_dir = args.save_dir_prefix
 
     try:
-        # 0. load config
         config = Config.fromfile(filename)
+
+        # 0. update intervals
+        config = update_intervals(config, args)
+
         # 1. change dataloader
         dataloader_prefix = [
             f'{p}_dataloader' for p in ['train', 'val', 'test']
@@ -243,15 +247,15 @@ def update_ceph_config(filename, args, dry_run=False):
 
         # 3. change logger hook and checkpoint hook
         if hasattr(config, 'default_hooks'):
-            file_client_args = dict(backend='petrel')
+            # file_client_args = dict(backend='petrel')
 
             for name, hooks in config['default_hooks'].items():
                 if name == 'logger':
                     hooks['out_dir'] = save_dir
-                    hooks['file_client_args'] = file_client_args
+                    # hooks['file_client_args'] = file_client_args
                 elif name == 'checkpoint':
                     hooks['out_dir'] = save_dir
-                    hooks['file_client_args'] = file_client_args
+                    # hooks['file_client_args'] = file_client_args
 
         # 4. save
         config.dump(config.filename)

@@ -4,8 +4,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import torch
 import torch.nn.functional as F
-from mmcv import ConfigDict
-from mmengine.config import Config
+from mmengine.config import Config, ConfigDict
 from mmengine.model import BaseModel
 
 from mmedit.registry import MODELS
@@ -202,13 +201,13 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         return predictions
 
     def forward(self,
-                batch_inputs: torch.Tensor,
+                inputs: torch.Tensor,
                 data_samples: DataSamples = None,
                 mode: str = 'tensor') -> List[EditDataSample]:
         """General forward function.
 
         Args:
-            batch_inputs (torch.Tensor): A batch of inputs.
+            inputs (torch.Tensor): A batch of inputs.
                 with image and trimap concatenated alone channel dimension.
             data_samples (List[EditDataSample], optional):
                 A list of data samples, containing:
@@ -230,16 +229,22 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
                 Sequence of predictions packed into EditDataElement
         """
         if mode == 'tensor':
-            raw = self._forward(batch_inputs)
+            raw = self._forward(inputs)
             return raw
         elif mode == 'predict':
             # Pre-process runs in runner
-            batch_inputs = self.resize_inputs(batch_inputs)
-            batch_pred_alpha = self._forward_test(batch_inputs)
+            inputs = self.resize_inputs(inputs)
+            batch_pred_alpha = self._forward_test(inputs)
             predictions = self.postprocess(batch_pred_alpha, data_samples)
+            predictions = self.convert_to_datasample(data_samples, predictions)
             return predictions
         elif mode == 'loss':
-            loss = self._forward_train(batch_inputs, data_samples)
+            loss = self._forward_train(inputs, data_samples)
             return loss
         else:
             raise ValueError('Invalid forward mode.')
+
+    def convert_to_datasample(self, inputs, data_samples):
+        for data_sample, output in zip(inputs, data_samples):
+            data_sample.output = output
+        return inputs

@@ -2,10 +2,10 @@
 import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule
-from mmcv.runner import load_checkpoint
-from mmcv.utils.parrots_wrapper import _BatchNorm
 from mmengine import MMLogger
-from mmengine.model.utils import constant_init, kaiming_init
+from mmengine.model.weight_init import constant_init, kaiming_init
+from mmengine.runner import load_checkpoint
+from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
 from mmedit.registry import MODELS
 
