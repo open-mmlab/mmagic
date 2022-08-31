@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.0rc0(31/8/2022)
+
+MMEditing 1.0.0rc0 is the first version of MMEditing 1.x, a part of the OpenMMLab 2.0 projects.
+
+Built upon the new [training engine](https://github.com/open-mmlab/mmengine), MMEditing 1.x unifies the interfaces of dataset, models, evaluation, and visualization.
+
+And there are some BC-breaking changes. Please check [the migration tutorial](https://mmediting.readthedocs.io/en/1.x/migration.html) for more details.
+
 ## v0.15.0 (01/06/2022)
 
 **Highlights**
