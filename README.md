@@ -19,17 +19,17 @@
   <div>&nbsp;</div>
 
 [![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/latest/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/1.x/)
 [![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/1.x/LICENSE)
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘Documentation](https://mmediting.readthedocs.io/en/latest/) |
-[🛠️Installation](https://mmediting.readthedocs.io/en/latest/install.html) |
-[👀Model Zoo](https://mmediting.readthedocs.io/en/latest/_tmp/modelzoo.html) |
-[🆕Update News](https://github.com/open-mmlab/mmediting/blob/master/docs/en/changelog.md) |
+[📘Documentation](https://mmediting.readthedocs.io/en/1.x/) |
+[🛠️Installation](https://mmediting.readthedocs.io/en/1.x/get_started.html#installation) |
+[👀Model Zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo.html) |
+[🆕Update News](docs/en/notes/changelog.md) |
 [🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
 [🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
 
@@ -63,18 +63,19 @@ https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-
 
 - **Support of multiple tasks in editing**
 
-  The toolbox directly supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *generation* tasks.
+  The toolbox directly supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *interpolation* tasks.
 
 - **State of the art**
 
-  The toolbox provides state-of-the-art methods in inpainting/matting/super-resolution/generation.
+  The toolbox provides state-of-the-art methods in inpainting/matting/super-resolution/interpolation.
 
 Note that **MMSR** has been merged into this repo, as a part of MMEditing.
 With elaborate designs of the new framework and careful implementations,
 hope MMEditing could provide better experience.
 
-## News
+## What's New
 
+- \[2022-08-31\] v1.0.0rc0 was released.
 - \[2022-06-01\] v0.15.0 was released.
   - Support FLAVR
   - Support AOT-GAN
@@ -87,11 +88,11 @@ hope MMEditing could provide better experience.
   - Support running in Windows
 - \[2022-02-11\] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
 
-Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
+Please refer to [changelog.md](docs/en/notes/changelog.md) for details and release history.
 
 ## Installation
 
-MMEditing depends on [PyTorch](https://pytorch.org/) and [MMCV](https://github.com/open-mmlab/mmcv).
+MMEditing depends on [PyTorch](https://pytorch.org/), [MMEngine](https://github.com/open-mmlab/mmengine) and [MMCV](https://github.com/open-mmlab/mmcv).
 Below are quick steps for installation.
 
 **Step 1.**
@@ -102,14 +103,15 @@ Install MMCV with [MIM](https://github.com/open-mmlab/mim).
 
 ```shell
 pip3 install openmim
-mim install mmcv-full
+# wait for more pre-compiled pkgs to release
+mim install 'mmcv>=2.0.0rc1'
 ```
 
 **Step 3.**
 Install MMEditing from source.
 
 ```shell
-git clone https://github.com/open-mmlab/mmediting.git
+git clone -b 1.x shttps://github.com/open-mmlab/mmediting.git
 cd mmediting
 pip3 install -e .
 ```
@@ -131,7 +133,7 @@ Supported algorithms:
 - [x] [DeepFillv1](configs/deepfillv1/README.md) (CVPR'2018)
 - [x] [PConv](configs/partial_conv/README.md) (ECCV'2018)
 - [x] [DeepFillv2](configs/deepfillv2/README.md) (CVPR'2019)
-- [x] [AOT-GAN](configs/AOT-GAN/README.md) (TVCG'2021)
+- [x] [AOT-GAN](configs/aot_gan/README.md) (TVCG'2021)
 
 </details>
 
@@ -167,7 +169,7 @@ Supported algorithms:
 - [x] [TDAN](configs/tdan/README.md) (CVPR'2020)
 - [x] [BasicVSR](configs/basicvsr/README.md) (CVPR'2021)
 - [x] [IconVSR](configs/iconvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/basicvsr_plusplus/README.md) (CVPR'2022)
+- [x] [BasicVSR++](configs/basicvsr_pp/README.md) (CVPR'2022)
 - [x] [RealBasicVSR](configs/real_basicvsr/README.md) (CVPR'2022)
 
 </details>
@@ -181,11 +183,11 @@ Supported algorithms:
 
 </details>
 
-Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/_tmp/modelzoo.html) for more details.
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo.html) for more details.
 
 ## Contributing
 
-We appreciate all contributions to improve MMEditing. Please refer to our [contributing guidelines](https://github.com/open-mmlab/mmediting/wiki/A.-Contribution-Guidelines).
+We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
 
 ## Acknowledgement
 
@@ -210,6 +212,7 @@ This project is released under the [Apache 2.0 license](LICENSE).
 
 ## Projects in OpenMMLab
 
+- [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab MMEngine.
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab foundational library for computer vision.
 - [MIM](https://github.com/open-mmlab/mim): MIM installs OpenMMLab packages.
 - [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab image classification toolbox and benchmark.

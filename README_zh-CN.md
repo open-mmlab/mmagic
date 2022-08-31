@@ -19,17 +19,17 @@
   <div>&nbsp;</div>
 
 [![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/latest/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/1.x/)
 [![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/1.x/LICENSE)
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘使用文档](https://mmediting.readthedocs.io/zh_CN/latest/) |
-[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/latest/install.html) |
-[👀模型库](https://mmediting.readthedocs.io/zh_CN/latest/modelzoo.html) |
-[🆕更新记录](https://github.com/open-mmlab/mmediting/blob/master/docs/zh_cn/changelog.md) |
+[📘使用文档](https://mmediting.readthedocs.io/zh_CN/1.x/) |
+[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/1.x/get_started.htmll) |
+[👀模型库](https://mmediting.readthedocs.io/zh_CN/1.x/model_zoo.html) |
+[🆕更新记录](docs/zh_cn/notes/changelog.md) |
 [🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
 [🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
 
@@ -63,17 +63,18 @@ https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-
 
 - **支持多种编辑任务**
 
-  MMEditing 支持*修复*、*抠图*、*超分辨率*、*生成*等多种主流编辑任务。
+  MMEditing 支持*修复*、*抠图*、*超分辨率*、*插帧*等多种主流编辑任务。
 
 - **SOTA**
 
-  MMEditing 提供修复/抠图/超分辨率/生成等任务最先进的算法。
+  MMEditing 提供修复/抠图/超分辨率/插帧等任务最先进的算法。
 
 需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
 MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
 
 ## 最新消息
 
+- \[2022-08-31\] v1.0.0rc0 版本发布
 - \[2022-06-01\] v0.15.0 版本发布
   - 支持 FLAVR
   - 支持 AOT-GAN
@@ -86,11 +87,11 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
   - 支持在 Windows 系统中运行
 - \[2022-02-11\] 切换到 **PyTorch 1.5+**. 将不再保证与早期版本的 PyTorch 的兼容性
 
-请查看 [changelog.md](docs/en/changelog.md) 以获取更多细节与发版记录
+请查看 [changelog.md](docs/zh_cn/notes/changelog.md) 以获取更多细节与发版记录
 
 ## 安装
 
-MMEditing 依赖 [PyTorch](https://pytorch.org/) 和 [MMCV](https://github.com/open-mmlab/mmcv)，以下是安装的简要步骤。
+MMEditing 依赖 [PyTorch](https://pytorch.org/)，[MMEngine](https://github.com/open-mmlab/mmengine) 和 [MMCV](https://github.com/open-mmlab/mmcv)，以下是安装的简要步骤。
 
 **步骤 1.**
 依照[官方教程](https://pytorch.org/get-started/locally/)安装PyTorch
@@ -100,23 +101,24 @@ MMEditing 依赖 [PyTorch](https://pytorch.org/) 和 [MMCV](https://github.com/o
 
 ```
 pip3 install openmim
-mim install mmcv-full
+# wait for more pre-compiled pkgs to release
+mim install 'mmcv>=2.0.0rc1'
 ```
 
 **步骤 3.**
 从源码安装 MMEditing
 
 ```
-git clone https://github.com/open-mmlab/mmediting.git
+git clone -b 1.x https://github.com/open-mmlab/mmediting.git
 cd mmediting
 pip3 install -e .
 ```
 
-更详细的安装指南请参考 [install.md](docs/zh_cn/install.md) 。
+更详细的安装指南请参考 [install.md](docs/zh_cn/get_started.md) 。
 
 ## 开始使用
 
-请参考[使用教程](docs/zh_cn/getting_started.md)和[功能演示](docs/zh_cn/demo.md)获取MMEditing的基本用法。
+请参考[使用教程](docs/zh_cn/get_started.md)和[功能演示](docs/zh_cn/user_guides/inference.md)获取MMEditing的基本用法。
 
 ## 模型库
 
@@ -125,65 +127,65 @@ pip3 install -e .
 <details open>
 <summary>图像修复</summary>
 
-- [x] [Global&Local](configs/global_local/README.md) (ToG'2017)
-- [x] [DeepFillv1](configs/deepfillv1/README.md) (CVPR'2018)
-- [x] [PConv](configs/partial_conv/README.md) (ECCV'2018)
-- [x] [DeepFillv2](configs/deepfillv2/README.md) (CVPR'2019)
-- [x] [AOT-GAN](configs/AOT-GAN/README.md) (TVCG'2021)
+- [x] [Global&Local](configs/global_local/README_zh-CN.md) (ToG'2017)
+- [x] [DeepFillv1](configs/deepfillv1/README_zh-CN.md) (CVPR'2018)
+- [x] [PConv](configs/partial_conv/README_zh-CN.md) (ECCV'2018)
+- [x] [DeepFillv2](configs/deepfillv2/README_zh-CN.md) (CVPR'2019)
+- [x] [AOT-GAN](configs/aot_gan/README_zh-CN.md) (TVCG'2021)
 
 </details>
 
 <details open>
 <summary>图像抠图</summary>
 
-- [x] [DIM](configs/dim/README.md) (CVPR'2017)
-- [x] [IndexNet](configs/indexnet/README.md) (ICCV'2019)
-- [x] [GCA](configs/gca/README.md) (AAAI'2020)
+- [x] [DIM](configs/dim/README_zh-CN.md) (CVPR'2017)
+- [x] [IndexNet](configs/indexnet/README_zh-CN.md) (ICCV'2019)
+- [x] [GCA](configs/gca/README_zh-CN.md) (AAAI'2020)
 
 </details>
 
 <details open>
 <summary>图像超分辨率</summary>
 
-- [x] [SRCNN](configs/srcnn/README.md) (TPAMI'2015)
-- [x] [SRResNet&SRGAN](configs/srresnet_srgan/README.md) (CVPR'2016)
-- [x] [EDSR](configs/edsr/README.md) (CVPR'2017)
-- [x] [ESRGAN](configs/esrgan/README.md) (ECCV'2018)
-- [x] [RDN](configs/rdn/README.md) (CVPR'2018)
-- [x] [DIC](configs/dic/README.md) (CVPR'2020)
-- [x] [TTSR](configs/ttsr/README.md) (CVPR'2020)
-- [x] [GLEAN](configs/glean/README.md) (CVPR'2021)
-- [x] [LIIF](configs/liif/README.md) (CVPR'2021)
+- [x] [SRCNN](configs/srcnn/README_zh-CN.md) (TPAMI'2015)
+- [x] [SRResNet&SRGAN](configs/srresnet_srgan/README_zh-CN.md) (CVPR'2016)
+- [x] [EDSR](configs/edsr/README_zh-CN.md) (CVPR'2017)
+- [x] [ESRGAN](configs/esrgan/README_zh-CN.md) (ECCV'2018)
+- [x] [RDN](configs/rdn/README_zh-CN.md) (CVPR'2018)
+- [x] [DIC](configs/dic/README_zh-CN.md) (CVPR'2020)
+- [x] [TTSR](configs/ttsr/README_zh-CN.md) (CVPR'2020)
+- [x] [GLEAN](configs/glean/README_zh-CN.md) (CVPR'2021)
+- [x] [LIIF](configs/liif/README_zh-CN.md) (CVPR'2021)
 
 </details>
 
 <details open>
 <summary>视频超分辨率</summary>
 
-- [x] [EDVR](configs/edvr/README.md) (CVPR'2019)
-- [x] [TOF](configs/tof/README.md) (IJCV'2019)
-- [x] [TDAN](configs/tdan/README.md) (CVPR'2020)
-- [x] [BasicVSR](configs/basicvsr/README.md) (CVPR'2021)
-- [x] [IconVSR](configs/iconvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/basicvsr_plusplus/README.md) (CVPR'2022)
-- [x] [RealBasicVSR](configs/real_basicvsr/README.md) (CVPR'2022)
+- [x] [EDVR](configs/edvr/README_zh-CN.md) (CVPR'2019)
+- [x] [TOF](configs/tof/README_zh-CN.md) (IJCV'2019)
+- [x] [TDAN](configs/tdan/README_zh-CN.md) (CVPR'2020)
+- [x] [BasicVSR](configs/basicvsr/README_zh-CN.md) (CVPR'2021)
+- [x] [IconVSR](configs/iconvsr/README_zh-CN.md) (CVPR'2021)
+- [x] [BasicVSR++](configs/basicvsr_pp/README_zh-CN.md) (CVPR'2022)
+- [x] [RealBasicVSR](configs/real_basicvsr/README_zh-CN.md) (CVPR'2022)
 
 </details>
 
 <details open>
 <summary>视频插帧</summary>
 
-- [x] [TOFlow](configs/tof/README.md) (IJCV'2019)
-- [x] [CAIN](configs/cain/README.md) (AAAI'2020)
-- [x] [FLAVR](configs/flavr/README.md) (CVPR'2021)
+- [x] [TOFlow](configs/tof/README_zh-CN.md) (IJCV'2019)
+- [x] [CAIN](configs/cain/README_zh-CN.md) (AAAI'2020)
+- [x] [FLAVR](configs/flavr/README_zh-CN.md) (CVPR'2021)
 
 </details>
 
-请参考[模型库](https://mmediting.readthedocs.io/en/latest/modelzoo.html)了解详情。
+请参考[模型库](https://mmediting.readthedocs.io/zh_CN/1.x/model_zoo.html)了解详情。
 
 ## 参与贡献
 
-感谢您为改善 MMEditing 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/blob/master/CONTRIBUTING.md) 以获取贡献指南。
+感谢您为改善 MMEditing 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) 和 MMEngine 中的[CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) 以获取贡献指南。
 
 ## 致谢
 
@@ -208,6 +210,7 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## OpenMMLab 的其他项目
 
+- [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab MMEngine
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab 计算机视觉基础库
 - [MIM](https://github.com/open-mmlab/mim): MIM 是 OpenMMlab 项目、算法、模型的统一入口
 - [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab 图像分类工具箱
