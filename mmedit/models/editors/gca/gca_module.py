@@ -337,6 +337,16 @@ class GCAModule(nn.Module):
         return x
 
     def pad(self, x, kernel_size, stride):
+        """Pad input tensor.
+        
+        Args:
+            x (Tensor): Input tensor.
+            kernel_size (int): Kernel size of conv layer.
+            stride (int): Stride of conv layer.
+        
+        Returns:
+            Tensor: Padded tensor
+        """
         left = (kernel_size - stride + 1) // 2
         right = (kernel_size - stride) // 2
         pad = (left, right, left, right)

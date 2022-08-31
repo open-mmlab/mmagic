@@ -25,6 +25,7 @@ class IndexedUpsample(BaseModule):
             Defaults to dict(type='BN').
         conv_module (ConvModule | DepthwiseSeparableConvModule, optional):
             Conv module. Defaults to ConvModule.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,
@@ -77,7 +78,19 @@ class IndexedUpsample(BaseModule):
 
 @MODELS.register_module()
 class IndexNetDecoder(BaseModule):
+    """Decoder for IndexNet.
 
+    Please refer to https://arxiv.org/abs/1908.00672.
+
+    Args:
+        in_channels (int): Input channels of the decoder.
+        kernel_size (int, optional): Kernel size of the convolution layer.
+            Defaults to 5.
+        norm_cfg (None | dict, optional): Config dict for normalization
+            layer. Defaults to dict(type='BN').
+        separable_conv (bool): Whether to use separable conv. Default: False. 
+        init_cfg (dict, optional): Initialization config dict. Default: None.
+    """
     def __init__(self,
                  in_channels,
                  kernel_size=5,

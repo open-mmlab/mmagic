@@ -233,6 +233,8 @@ class ResNetEnc(BaseModule):
         self.out_channels = 512
 
     def init_weights(self):
+        """Init weights for the module.
+        """
         if self.init_cfg is not None:
             super().init_weights()
             if self.init_cfg['type'] == 'Pretrained':
@@ -349,6 +351,7 @@ class ResShortcutEnc(ResNetEnc):
             Default: False.
         order (tuple[str]): Order of `conv`, `norm` and `act` layer in shortcut
             convolution module. Default: ('conv', 'act', 'norm').
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,
@@ -482,6 +485,7 @@ class ResGCAEncoder(ResShortcutEnc):
             Default: False.
         order (tuple[str]): Order of `conv`, `norm` and `act` layer in shortcut
             convolution module. Default: ('conv', 'act', 'norm').
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,

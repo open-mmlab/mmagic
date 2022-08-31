@@ -87,6 +87,7 @@ class TDAN(BaseEditModel):
                 :attr:`data_preprocessor`.
             data_samples (List[BaseDataElement], optional):
                 data samples collated by :attr:`data_preprocessor`.
+            training (bool): Whether is training. Default: False.
 
         Returns:
             (Tensor | List[Tensor]): results of forward inference and

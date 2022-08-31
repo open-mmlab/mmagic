@@ -20,13 +20,8 @@ class PConvInpaintor(OneStageInpaintor):
         """Forward function for testing.
 
         Args:
-            masked_img (torch.Tensor): Tensor with shape of (n, 3, h, w).
-            mask (torch.Tensor): Tensor with shape of (n, 1, h, w).
-            save_image (bool, optional): If True, results will be saved as
-                image. Defaults to False.
-            save_path (str, optional): If given a valid str, the results will
-                be saved in this path. Defaults to None.
-            iteration (int, optional): Iteration number. Defaults to None.
+            inputs (torch.Tensor): Input tensor.
+            data_samples (List[dict]): List of data sample dict.
 
         Returns:
             dict: Contain output results and eval metrics (if have).
@@ -78,9 +73,9 @@ class PConvInpaintor(OneStageInpaintor):
         for discriminator.
 
         Args:
-            data_batch (torch.Tensor): Batch of data as input.
-            optimizer (dict[torch.optim.Optimizer]): Dict with optimizers for
-                generator and discriminator (if have).
+            data (List[dict]): Batch of data as input.
+            optim_wrapper (dict[torch.optim.Optimizer]): Dict with optimizers
+                for generator and discriminator (if have).
 
         Returns:
             dict: Dict with loss, information for logger, the number of \

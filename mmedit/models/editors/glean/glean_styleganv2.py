@@ -77,7 +77,7 @@ class GLEANStyleGANv2(BaseModule):
             Defaults to 'single'.
         mix_prob (float, optional): Mixing probability. The value should be
             in range of [0, 1]. Defaults to 0.9.
-        init_cfg (dict, optional): Initialization config dict.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
         bgr2rgb (bool, optional): Whether to flip the image channel dimension.
             Defaults to False.
     """
@@ -272,10 +272,10 @@ class RRDBFeatureExtractor(nn.Module):
     It is equivalent to ESRGAN with the upsampling module removed.
 
     Args:
-        in_channels (int): Channel number of inputs.
+        in_channels (int): Channel number of inputs. Default: 3.
         mid_channels (int): Channel number of intermediate features.
             Default: 64
-        num_blocks (int): Block number in the trunk network. Default: 23
+        num_blocks (int): Block number in the trunk network. Default: 23.
         growth_channels (int): Channels for each growth. Default: 32.
     """
 

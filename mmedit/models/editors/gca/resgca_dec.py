@@ -178,7 +178,6 @@ class ResNetDec(BaseModule):
 
     def _make_layer(self, block, planes, num_blocks, conv_cfg, norm_cfg,
                     act_cfg, with_spectral_norm):
-        """Make layers by stacking the blocks."""
         upsample = nn.Sequential(
             nn.UpsamplingNearest2d(scale_factor=2),
             ConvModule(

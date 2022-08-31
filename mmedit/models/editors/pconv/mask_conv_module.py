@@ -50,7 +50,7 @@ class MaskConvModule(ConvModule):
         """Forward function for partial conv2d.
 
         Args:
-            input (torch.Tensor): Tensor with shape of (n, c, h, w).
+            x (torch.Tensor): Tensor with shape of (n, c, h, w).
             mask (torch.Tensor): Tensor with shape of (n, c, h, w) or
                 (n, 1, h, w). If mask is not given, the function will
                 work as standard conv2d. Default: None.
