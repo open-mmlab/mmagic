@@ -88,9 +88,10 @@ class IndexNetDecoder(BaseModule):
             Defaults to 5.
         norm_cfg (None | dict, optional): Config dict for normalization
             layer. Defaults to dict(type='BN').
-        separable_conv (bool): Whether to use separable conv. Default: False. 
+        separable_conv (bool): Whether to use separable conv. Default: False.
         init_cfg (dict, optional): Initialization config dict. Default: None.
     """
+
     def __init__(self,
                  in_channels,
                  kernel_size=5,

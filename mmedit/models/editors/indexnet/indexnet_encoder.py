@@ -284,12 +284,12 @@ class InvertedResidual(nn.Module):
 
     def pad(self, inputs, kernel_size, dilation):
         """Pad input tensor.
-        
+
         Args:
             inputs (Tensor): Input tensor.
             kernel_size (int): Kernel size of conv layer.
             dilation (int): Dilation of conv layer.
-        
+
         Returns:
             Tensor: Padded tensor
         """
