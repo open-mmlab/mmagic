@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="resources/mmediting-logo.png" width="500px"/>
+  <img src="docs/zh_cn/_static/image/mmediting-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
     <b><font size="5">OpenMMLab 官网</font></b>
@@ -114,7 +114,7 @@ cd mmediting
 pip3 install -e .
 ```
 
-更详细的安装指南请参考 [install.md](docs/zh_cn/get_started.md) 。
+更详细的安装指南请参考 [get_started.md](docs/zh_cn/get_started.md) 。
 
 ## 开始使用
 
@@ -148,7 +148,7 @@ pip3 install -e .
 <summary>图像超分辨率</summary>
 
 - [x] [SRCNN](configs/srcnn/README_zh-CN.md) (TPAMI'2015)
-- [x] [SRResNet&SRGAN](configs/srresnet_srgan/README_zh-CN.md) (CVPR'2016)
+- [x] [SRResNet&SRGAN](configs/srgan_resnet/README_zh-CN.md) (CVPR'2016)
 - [x] [EDSR](configs/edsr/README_zh-CN.md) (CVPR'2017)
 - [x] [ESRGAN](configs/esrgan/README_zh-CN.md) (ECCV'2018)
 - [x] [RDN](configs/rdn/README_zh-CN.md) (CVPR'2018)
@@ -185,7 +185,7 @@ pip3 install -e .
 
 ## 参与贡献
 
-感谢您为改善 MMEditing 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) 和 MMEngine 中的[CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) 以获取贡献指南。
+感谢您为改善 MMEditing 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) 和 MMEngine 中的[CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING_zh-CN.md) 以获取贡献指南。
 
 ## 致谢
 
@@ -210,7 +210,7 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## OpenMMLab 的其他项目
 
-- [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab MMEngine
+- [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab MMEngine.
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab 计算机视觉基础库
 - [MIM](https://github.com/open-mmlab/mim): MIM 是 OpenMMlab 项目、算法、模型的统一入口
 - [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab 图像分类工具箱
