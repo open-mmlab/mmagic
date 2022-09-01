@@ -2,7 +2,7 @@ ARG PYTORCH="1.6.0"
 ARG CUDA="10.1"
 ARG CUDA_ALIAS="101"
 ARG CUDNN="7"
-ARG MMCV="1.3.1"
+ARG MMCV="2.0.0rc1"
 
 FROM pytorch/pytorch:${PYTORCH}-cuda${CUDA}-cudnn${CUDNN}-devel
 
@@ -16,9 +16,10 @@ RUN apt-get update && apt-get install -y git ninja-build libglib2.0-0 libsm6 lib
 
 # Install mmediting
 RUN conda clean --all
-RUN git clone https://github.com/open-mmlab/mmediting.git /mmediting
+RUN git clone -b 1.x https://github.com/open-mmlab/mmediting.git /mmediting
 WORKDIR /mmediting
 ENV FORCE_CUDA="1"
-RUN pip install mmcv-full==${MMCV} -f https://download.openmmlab.com/mmcv/dist/cu${CUDA_ALIAS}/torch${PYTORCH}/index.html
+RUN pip install openmim
+RUN mim install mmcv==${MMCV}
 RUN pip install -r requirements.txt
 RUN pip install --no-cache-dir -e .
