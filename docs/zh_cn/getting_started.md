@@ -18,7 +18,7 @@
 
 ## 用预训练模型做推理
 
-我们提供了同时提供了用于测试一整个数据集测试脚本以及一些针对特定任务的运行样例。
+我们提供测试脚本来评估整个数据集，以及一些针对特定任务的运行样例。
 
 ### 测试一个数据集
 
@@ -54,7 +54,7 @@ python tools/test.py configs/example_config.py work_dirs/example_exp/example_mod
 [GPUS=${GPUS}] ./tools/slurm_test.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${CHECKPOINT_FILE}
 ```
 
-这里有一个使用8个 GPU 进行测是的样例，我们使用 `dev` 分区，同时设置任务名字为 `test`：
+这里有一个使用8个 GPU 进行测试的样例，我们使用 `dev` 分区，同时设置任务名字为 `test`：
 
 ```shell
 GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/example_exp/example_model_20200202.pth
