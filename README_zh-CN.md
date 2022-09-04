@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="resources/mmediting-logo.png" width="500px"/>
+  <img src="docs/zh_cn/_static/resources/mmediting-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
     <b><font size="5">OpenMMLab 官网</font></b>
