@@ -5,8 +5,8 @@
 ## 准备数据集
 
 推荐将数据集根目录链接到 $MMEditing/data 文件夹。
-如果你的文件夹结构不是如此，你可能需要查看一下配置文件中与之相关的数据路径设置。
-下面是各种任务中，我们需要到的数据集的介绍：
+如果你的文件夹结构不是如此，你可能需要修改一下配置文件中与之相关的数据路径。
+下面是各种任务中，我们需要用到的数据集的介绍：
 
 [Inpainting](https://mmediting.readthedocs.io/en/latest/_tmp/inpainting_datasets.html)
 
