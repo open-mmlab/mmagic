@@ -82,7 +82,6 @@ def test_deepfillv1_inpaintor():
     # check train_step with standard deepfillv1 model
     for i in range(5):
         log_vars = deepfillv1.train_step(data_batch, optims)
-        print(log_vars.keys())
 
         if i % 2 == 0:
             assert 'real_loss_global' in log_vars

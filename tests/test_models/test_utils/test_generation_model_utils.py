@@ -80,7 +80,6 @@ def test_unet_skip_connection_block():
     block = UnetSkipConnectionBlock(16, 16, is_innermost=True)
     input = torch.rand((2, 16, 128, 128))
     output = block(input)
-    print(output.shape)
     assert output.detach().numpy().shape == (2, 32, 128, 128)
 
 

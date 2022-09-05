@@ -20,7 +20,6 @@ def test_average():
 
 def test_img_transform():
     img = np.random.randint(0, 255, size=(4, 4, 3))
-    print(img)
     new_img = metrics_utils.img_transform(img, 0, 'HWC', None, 'rgb')
     assert new_img.shape == (4, 4, 3)
 

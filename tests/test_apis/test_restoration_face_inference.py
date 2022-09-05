@@ -15,8 +15,7 @@ def test_restoration_face_inference():
     data_root = osp.join(osp.dirname(__file__), '../../')
     config = data_root + 'configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py'  # noqa
 
-    checkpoint = 'https://download.openmmlab.com/mmediting/restorers/'\
-        'glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth'
+    checkpoint = None
 
     img_path = data_root + 'tests/data/image/face/000001.png'
 

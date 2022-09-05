@@ -14,8 +14,7 @@ def test_restoration_inference():
 
     data_root = osp.join(osp.dirname(__file__), '../../')
     config = data_root + 'configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py'  # noqa
-    checkpoint = 'https://download.openmmlab.com/mmediting/restorers/'\
-        'basicvsr/basicvsr_reds4_20120409-0e599677.pth'
+    checkpoint = None
 
     img_path = data_root + 'tests/data/image/lq/baboon_x4.png'
 

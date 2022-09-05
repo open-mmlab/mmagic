@@ -14,8 +14,7 @@ def test_restoration_video_inference():
 
     data_root = osp.join(osp.dirname(__file__), '../../')
     config = data_root + '/configs/basicvsr/basicvsr_2xb4_reds4.py'
-    checkpoint = 'https://download.openmmlab.com/mmediting/restorers/'\
-        'basicvsr/basicvsr_reds4_20120409-0e599677.pth'
+    checkpoint = None
 
     input_dir = data_root + '/tests/data/frames/sequence/gt/sequence_1'
 
