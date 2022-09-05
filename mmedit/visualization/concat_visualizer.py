@@ -68,6 +68,7 @@ class ConcatImageVisualizer(Visualizer):
 
         merged_dict = {
             **data_sample.to_dict(),
+            **data_sample['output'].to_dict(),
         }
 
         fn = merged_dict[self.fn_key]
