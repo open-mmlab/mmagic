@@ -141,7 +141,6 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         resize_mode = self.test_cfg['resize_mode']
 
         ori_h, ori_w = data_sample.ori_merged_shape[:2]
-        # print(ds.ori_merged_shape)
         if resize_method == 'pad':
             pred_alpha = pred_alpha[:, :ori_h, :ori_w]
         elif resize_method == 'interp':

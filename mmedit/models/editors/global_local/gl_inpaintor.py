@@ -179,15 +179,10 @@ class GLInpaintor(OneStageInpaintor):
         masked_img = batch_inputs  # float
         gt_img = torch.stack([d.gt_img.data
                               for d in data_samples])  # float, [-1,1]
-        # print(gt_img.min(), gt_img.max(), gt_img.dtype)
         mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
         mask = mask.float()
-        # print(mask.min(), mask.max(), mask.dtype, mask.unique())
 
         bbox_tensor = torch.tensor([d.mask_bbox for d in data_samples])  # int
-        # mask = data_samples['mask']
-        # bbox_tensor = data_samples['mask_bbox']
-        # print(mask)
 
         input_x = torch.cat([masked_img, mask], dim=1)
         fake_res = self.generator(input_x)

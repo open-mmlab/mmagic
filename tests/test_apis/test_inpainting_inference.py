@@ -18,8 +18,7 @@ def test_inpainting_inference():
     else:
         device = torch.device('cpu')
 
-    checkpoint = 'https://download.openmmlab.com/mmediting/inpainting/'\
-                 'global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth'
+    checkpoint = None
 
     data_root = osp.join(osp.dirname(__file__), '../')
     config_file = osp.join(data_root, 'configs', 'gl_test.py')

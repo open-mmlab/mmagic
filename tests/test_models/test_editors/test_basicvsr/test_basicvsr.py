@@ -38,7 +38,6 @@ def test_basicvsr():
 
     # train
     log_vars = model.train_step(data, optim_wrapper)
-    # print(model.generator.spynet.basic_module[0].basic_module[0].conv.weight)
     assert model.generator.spynet.basic_module[0].basic_module[
         0].conv.weight.requires_grad is False
     assert isinstance(log_vars, dict)
