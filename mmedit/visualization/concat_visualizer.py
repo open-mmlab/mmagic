@@ -68,8 +68,10 @@ class ConcatImageVisualizer(Visualizer):
 
         merged_dict = {
             **data_sample.to_dict(),
-            **data_sample['output'].to_dict(),
         }
+
+        if 'output' in merged_dict.keys():
+            merged_dict.update(**merged_dict['output'])
 
         fn = merged_dict[self.fn_key]
         fn = re.split(r' |/|\\', fn)[-1]

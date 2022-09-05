@@ -108,6 +108,7 @@ class PackEditInputs(BaseTransform):
             img = results.pop('img')
             img_tensor = images_to_tensor(img)
             packed_results['inputs'] = img_tensor
+            data_sample.input = PixelData(data=img_tensor.clone())
 
         if 'gt' in results:
             gt = results.pop('gt')
