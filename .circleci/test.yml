@@ -62,7 +62,7 @@ jobs:
             pip install git+https://git@github.com/open-mmlab/mmengine.git@main
             pip install -U openmim
             mim install 'mmcv >= 2.0.0rc1'
-            pip install -r requirements/test.txt
+            pip install -r requirements/tests.txt
       - run:
           name: Build and install
           command: |
@@ -105,7 +105,7 @@ jobs:
             docker exec mmedit pip install -e /mmengine
             docker exec mmocr pip install -U openmim
             docker exec mmocr mim install 'mmcv >= 2.0.0rc1'
-            docker exec mmedit pip install -r requirements/test.txt
+            docker exec mmedit pip install -r requirements/tests.txt
       - run:
           name: Build and install
           command: |

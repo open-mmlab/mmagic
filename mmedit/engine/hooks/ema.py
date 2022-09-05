@@ -69,10 +69,32 @@ class ExponentialMovingAverageHook(Hook):
 
     @staticmethod
     def lerp(a, b, momentum=0.999, momentum_nontrainable=0., trainable=True):
+        """This is the function to perform linear interpolation between a and
+        b.
+
+        Args:
+            a (float): number a
+            b (float): bumber b
+            momentum (float, optional): momentum. Defaults to 0.999.
+            momentum_nontrainable (float, optional): Defaults to 0.
+            trainable (bool, optional): trainable flag. Defaults to True.
+
+        Returns:
+            _type_: _description_
+        """
         m = momentum if trainable else momentum_nontrainable
         return a + (b - a) * m
 
-    def every_n_iters(self, runner, n):
+    def every_n_iters(self, runner: Runner, n: int):
+        """This is the function to perform every n iterations.
+
+        Args:
+            runner (Runner): runner used to drive the whole pipeline
+            n (int): the number of iterations
+
+        Returns:
+            int: the latest iterations
+        """
         if runner.iter < self.start_iter:
             return True
         return (runner.iter + 1 - self.start_iter) % n == 0 if n > 0 else False
@@ -83,6 +105,15 @@ class ExponentialMovingAverageHook(Hook):
                          batch_idx: int,
                          data_batch: DATA_BATCH = None,
                          outputs: Optional[dict] = None) -> None:
+        """This is the function to perform after each training iteration.
+
+        Args:
+            runner (Runner): runner to drive the pipeline
+            batch_idx (int): the id of batch
+            data_batch (DATA_BATCH, optional): data batch. Defaults to None.
+            outputs (Optional[dict], optional): output. Defaults to None.
+        """
+
         if not self.every_n_iters(runner, self.interval):
             return
 
@@ -105,7 +136,15 @@ class ExponentialMovingAverageHook(Hook):
                         v, states_ema[k], trainable=v.requires_grad).detach()
             ema_net.load_state_dict(states_ema, strict=True)
 
-    def before_run(self, runner):
+    def before_run(self, runner: Runner):
+        """This is the function perform before each run.
+
+        Args:
+            runner (Runner): runner used to drive the whole pipeline
+
+        Raises:
+            RuntimeError: error message
+        """
         model = runner.model.module if is_model_wrapper(
             runner.model) else runner.model
         # sanity check for ema model

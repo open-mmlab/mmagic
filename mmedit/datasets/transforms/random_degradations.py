@@ -32,7 +32,15 @@ class RandomBlur:
         self.keys = keys
         self.params = params
 
-    def get_kernel(self, num_kernels):
+    def get_kernel(self, num_kernels: int):
+        """This is the function to create kernel.
+
+        Args:
+            num_kernels (int): the number of kernels
+
+        Returns:
+            _type_: _description_
+        """
         kernel_type = np.random.choice(
             self.params['kernel_list'], p=self.params['kernel_prob'])
         kernel_size = random.choice(self.params['kernel_size'])
@@ -104,6 +112,14 @@ class RandomBlur:
         return kernels
 
     def _apply_random_blur(self, imgs):
+        """This is the function to apply blur operation on images.
+
+        Args:
+            imgs (Tensor): images
+
+        Returns:
+            Tensor: Images applied blur
+        """
         is_single_image = False
         if isinstance(imgs, np.ndarray):
             is_single_image = True
@@ -213,6 +229,14 @@ class RandomNoise:
         self.params = params
 
     def _apply_gaussian_noise(self, imgs):
+        """This is the function used to apply gaussian noise on images.
+
+        Args:
+            imgs (Tensor): images
+
+        Returns:
+            Tensor: images applied gaussian noise
+        """
         sigma_range = self.params['gaussian_sigma']
         sigma = np.random.uniform(sigma_range[0], sigma_range[1]) / 255.
 
@@ -263,6 +287,17 @@ class RandomNoise:
         return outputs
 
     def _apply_random_noise(self, imgs):
+        """This is the function used to apply random noise on images.
+
+        Args:
+            imgs (Tensor): training images
+
+        Raises:
+            NotImplementedError: _description_
+
+        Returns:
+            _type_: _description_
+        """
         noise_type = np.random.choice(
             self.params['noise_type'], p=self.params['noise_prob'])
 
@@ -322,6 +357,18 @@ class RandomResize:
             lanczos=cv2.INTER_LANCZOS4)
 
     def _random_resize(self, imgs):
+        """This is the function used to randomly resize images for training
+        augmentation.
+
+        Args:
+            imgs (Tensor): training images
+
+        Raises:
+            NotImplementedError: _description_
+
+        Returns:
+            Tensor: images after radomly resized
+        """
         is_single_image = False
         if isinstance(imgs, np.ndarray):
             is_single_image = True
@@ -424,6 +471,14 @@ class RandomVideoCompression:
         logging.getLogger('libav').setLevel(50)
 
     def _apply_random_compression(self, imgs):
+        """This is the function to apply random compression on images.
+
+        Args:
+            imgs (Tensor): training images
+
+        Returns:
+            Tensor: images after randomly compressed
+        """
         codec = random.choices(self.params['codec'],
                                self.params['codec_prob'])[0]
         bitrate = self.params['bitrate']
