@@ -192,6 +192,7 @@ def video_interpolation_inference(model,
         if start_index + lenth_per_step >= end_idx:
             break
 
+    print()
     print(f'Output dir: {output_dir}')
     if to_video:
         target.release()
