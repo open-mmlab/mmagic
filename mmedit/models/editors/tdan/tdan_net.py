@@ -143,11 +143,11 @@ class AugmentedDeformConv2dPack(DeformConv2d):
         self.init_offset()
 
     def init_offset(self):
-        """Init constant offset"""
+        """Init constant offset."""
         constant_init(self.conv_offset, val=0, bias=0)
 
     def forward(self, x, extra_feat):
-        """Forward function"""
+        """Forward function."""
         offset = self.conv_offset(extra_feat)
         return deform_conv2d(x, offset, self.weight, self.stride, self.padding,
                              self.dilation, self.groups, self.deform_groups)

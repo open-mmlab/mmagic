@@ -9,7 +9,7 @@ from mmedit.registry import MODELS
 
 @MODELS.register_module()
 class LTE(BaseModule):
-    """Learnable Texture Extractor
+    """Learnable Texture Extractor.
 
     Based on pretrained VGG19. Generate features in 3 levels.
 
@@ -59,8 +59,7 @@ class LTE(BaseModule):
                 param.requires_grad = requires_grad
 
     def forward(self, x):
-        """
-        Forward function.
+        """Forward function.
 
         Args:
             x (Tensor): Input tensor with shape (n, 3, h, w).

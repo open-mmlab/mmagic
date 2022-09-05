@@ -194,8 +194,7 @@ class ResidualBlocksWithInputConv(nn.Module):
         self.main = nn.Sequential(*main)
 
     def forward(self, feat):
-        """
-        Forward function for ResidualBlocksWithInputConv.
+        """Forward function for ResidualBlocksWithInputConv.
 
         Args:
             feat (Tensor): Input feature with shape (n, in_channels, h, w)

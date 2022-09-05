@@ -84,8 +84,8 @@ class TOFlowVSRNet(BaseModule):
 class BasicModule(nn.Module):
     """Basic module of SPyNet.
 
-    Note that unlike the common spynet architecture, the basic module
-    here contains batch normalization.
+    Note that unlike the common spynet architecture, the basic module here
+    contains batch normalization.
     """
 
     def __init__(self):

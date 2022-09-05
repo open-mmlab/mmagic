@@ -86,7 +86,7 @@ class IconVSRNet(BaseModule):
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
 
     def spatial_padding(self, lrs):
-        """ Apply pdding spatially.
+        """Apply pdding spatially.
 
         Since the PCD module in EDVR requires that the resolution is a multiple
         of 4, we apply padding to the input LR images if their resolution is
@@ -97,7 +97,6 @@ class IconVSRNet(BaseModule):
 
         Returns:
             Tensor: Padded LR sequence with shape (n, t, c, h_pad, w_pad).
-
         """
         n, t, c, h, w = lrs.size()
 
@@ -127,7 +126,8 @@ class IconVSRNet(BaseModule):
                 self.is_mirror_extended = True
 
     def compute_refill_features(self, lrs, keyframe_idx):
-        """ Compute keyframe features for information-refill.
+        """Compute keyframe features for information-refill.
+
         Since EDVR-M is used, padding is performed before feature computation.
         Args:
             lrs (Tensor): Input LR images with shape (n, t, c, h, w)
@@ -180,6 +180,7 @@ class IconVSRNet(BaseModule):
 
     def forward(self, lrs):
         """Forward function for IconVSR.
+
         Args:
             lrs (Tensor): Input LR tensor with shape (n, t, c, h, w).
         Returns:
@@ -335,6 +336,7 @@ class EDVRFeatureExtractor(nn.Module):
 
     def forward(self, x):
         """Forward function for EDVRFeatureExtractor.
+
         Args:
             x (Tensor): Input tensor with shape (n, t, 3, h, w).
         Returns:

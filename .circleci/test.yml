@@ -25,7 +25,7 @@ jobs:
           name: Check docstring coverage
           command: |
             pip install interrogate
-            interrogate -v --ignore-init-method --ignore-module --ignore-nested-functions --ignore-magic --ignore-regex "__repr__" --fail-under 60 mmedit
+            interrogate -v --ignore-init-method --ignore-module --ignore-nested-functions --ignore-magic --ignore-regex "__repr__" --fail-under 90 mmedit
   build_cpu:
     parameters:
       # The python version must match available image tags in
@@ -51,29 +51,30 @@ jobs:
       - run:
           name: Configure Python & pip
           command: |
-            python -m pip install --upgrade pip
-            python -m pip install wheel
+            pip install --upgrade pip
+            pip install wheel
       - run:
           name: Install PyTorch
           command: |
             python -V
-            python -m pip install torch==<< parameters.torch >>+cpu torchvision==<< parameters.torchvision >>+cpu -f https://download.pytorch.org/whl/torch_stable.html
+            pip install torch==<< parameters.torch >>+cpu torchvision==<< parameters.torchvision >>+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - run:
           name: Install mmediting dependencies
           command: |
-            python -m pip install git+ssh://git@github.com/open-mmlab/mmengine.git@main
-            python -m pip install << parameters.mmcv >>
-            python -m pip install -r requirements.txt
+            pip install git+ssh://git@github.com/open-mmlab/mmengine.git@main
+            pip install -U openmim
+            mim install 'mmcv >= 2.0.0rc1'
+            pip install -r requirements/test.txt
       - run:
           name: Build and install
           command: |
-            python -m pip install -e .
+            pip install -e .
       - run:
           name: Run unittests
           command: |
-            python -m coverage run --branch --source mmedit -m pytest tests/
-            python -m coverage xml
-            python -m coverage report -m
+            coverage run --branch --source mmedit -m pytest tests/
+            coverage xml
+            coverage report -m
   build_cuda:
     parameters:
       torch:
@@ -84,8 +85,6 @@ jobs:
       cudnn:
         type: integer
         default: 7
-      mmcv:
-        type: string
     machine:
       image: ubuntu-2004-cuda-11.4:202110-01
       # docker_layer_caching: true
@@ -96,7 +95,7 @@ jobs:
           # Cloning repos in VM since Docker doesn't have access to the private key
           name: Clone Repos
           command: |
-            git clone -b main --depth 1 ssh://git@github.com/open-mmlab/mmengine.git /home/circleci/mmengine
+            git clone -b main --depth 1 https://github.com/open-mmlab/mmengine.git /home/circleci/mmengine
       - run:
           name: Build Docker image
           command: |
@@ -106,8 +105,9 @@ jobs:
           name: Install mmedit dependencies
           command: |
             docker exec mmedit pip install -e /mmengine
-            docker exec mmedit pip install << parameters.mmcv >>
-            docker exec mmedit pip install -r requirements.txt
+            docker exec mmocr pip install -U openmim
+            docker exec mmocr mim install 'mmcv >= 2.0.0rc1'
+            docker exec mmedit pip install -r requirements/test.txt
       - run:
           name: Build and install
           command: |
@@ -115,7 +115,7 @@ jobs:
       - run:
           name: Run unittests
           command: |
-            docker exec mmedit python -m pytest tests/
+            docker exec mmedit pytest tests/
 workflows:
   pr_stage_lint:
     when: << pipeline.parameters.lint_only >>
@@ -126,6 +126,7 @@ workflows:
             branches:
               ignore:
                 - dev-1.x
+                - 1.x
   pr_stage_test:
     when:
       not:
@@ -137,20 +138,19 @@ workflows:
             branches:
               ignore:
                 - dev-1.x
+                - test-1.x
       - build_cpu:
           name: minimum_version_cpu
           torch: 1.6.0
           torchvision: 0.7.0
           python: 3.6.9  # The lowest python 3.6.x version available on CircleCI images
-          mmcv: https://download.openmmlab.com/mmcv/dist/cpu/torch1.6.0/mmcv-2.0.0rc1-cp36-cp36m-manylinux1_x86_64.whl
           requires:
             - lint
       - build_cpu:
           name: maximum_version_cpu
-          torch: 1.9.0
-          torchvision: 0.10.0
+          torch: 1.12.1
+          torchvision: 0.13.1
           python: 3.9.0
-          mmcv: https://download.openmmlab.com/mmcv/dist/cpu/torch1.9.0/mmcv-2.0.0rc1-cp39-cp39-manylinux1_x86_64.whl
           requires:
             - minimum_version_cpu
       - hold:
@@ -163,7 +163,6 @@ workflows:
           # Use double quotation mark to explicitly specify its type
           # as string instead of number
           cuda: "10.2"
-          mmcv: https://download.openmmlab.com/mmcv/dist/cu102/torch1.8.0/mmcv-2.0.0rc1-cp37-cp37m-manylinux1_x86_64.whl
           requires:
             - hold
   merge_stage_test:
@@ -176,7 +175,6 @@ workflows:
           torch: 1.6.0
           # Use double quotation mark to explicitly specify its type
           # as string instead of number
-          mmcv: https://download.openmmlab.com/mmcv/dist/cu101/torch1.6.0/mmcv-2.0.0rc1-cp37-cp37m-manylinux1_x86_64.whl
           cuda: "10.1"
           filters:
             branches:

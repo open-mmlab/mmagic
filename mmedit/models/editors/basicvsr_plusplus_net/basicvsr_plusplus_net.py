@@ -246,7 +246,6 @@ class BasicVSRPlusPlusNet(BaseModule):
 
         Returns:
             Tensor: Output HR sequence with shape (n, t, c, 4h, 4w).
-
         """
 
         outputs = []
@@ -367,7 +366,6 @@ class SecondOrderDeformableAlignment(ModulatedDeformConv2d):
             False.
         max_residue_magnitude (int): The maximum magnitude of the offset
             residue (Eq. 6 in paper). Default: 10.
-
     """
 
     def __init__(self, *args, **kwargs):
@@ -388,11 +386,11 @@ class SecondOrderDeformableAlignment(ModulatedDeformConv2d):
         self.init_offset()
 
     def init_offset(self):
-        """Init constant offset"""
+        """Init constant offset."""
         constant_init(self.conv_offset[-1], val=0, bias=0)
 
     def forward(self, x, extra_feat, flow_1, flow_2):
-        """Forward function"""
+        """Forward function."""
         extra_feat = torch.cat([extra_feat, flow_1, flow_2], dim=1)
         out = self.conv_offset(extra_feat)
         o1, o2, mask = torch.chunk(out, 3, dim=1)

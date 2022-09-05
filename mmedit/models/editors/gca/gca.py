@@ -25,7 +25,6 @@ class GCA(BaseMattor):
             ``train_refiner`` should be specified.
         test_cfg (dict): Config of testing. In ``test_cfg``, If the model has a
             refiner, ``train_refiner`` should be specified.
-
     """
 
     def __init__(self,

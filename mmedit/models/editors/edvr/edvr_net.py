@@ -160,8 +160,7 @@ class EDVRNet(BaseModule):
         return out
 
     def init_weights(self):
-        """Init weights for models.
-        """
+        """Init weights for models."""
 
         super().init_weights()
 
@@ -217,11 +216,11 @@ class ModulatedDCNPack(ModulatedDeformConv2d):
         self.init_offset()
 
     def init_offset(self):
-        """Init constant offset"""
+        """Init constant offset."""
         constant_init(self.conv_offset, val=0, bias=0)
 
     def forward(self, x, extra_feat):
-        """Forward function"""
+        """Forward function."""
         out = self.conv_offset(extra_feat)
         o1, o2, mask = torch.chunk(out, 3, dim=1)
         offset = torch.cat((o1, o2), dim=1)

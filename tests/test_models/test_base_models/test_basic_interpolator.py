@@ -9,8 +9,7 @@ from mmedit.registry import BACKBONES
 
 @BACKBONES.register_module()
 class InterpolateExample(nn.Module):
-    """An example of interpolate network for testing BasicInterpolator.
-    """
+    """An example of interpolate network for testing BasicInterpolator."""
 
     def __init__(self):
         super().__init__()

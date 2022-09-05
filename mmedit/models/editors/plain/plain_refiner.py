@@ -34,8 +34,7 @@ class PlainRefiner(BaseModule):
         self.relu = nn.ReLU(inplace=True)
 
     def init_weights(self):
-        """Init weights for the module.
-        """
+        """Init weights for the module."""
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 xavier_init(m)

@@ -17,9 +17,10 @@ register_all_modules()
 
 
 def _get_model_cfg(fname):
-    """
-    Grab configs necessary to create a model. These are deep copied to allow
-    for safe modification of parameters without influencing other tests.
+    """Grab configs necessary to create a model.
+
+    These are deep copied to allow for safe modification of parameters without
+    influencing other tests.
     """
     config_dpath = 'configs'
     config_fpath = osp.join(config_dpath, fname)
@@ -30,8 +31,7 @@ def _get_model_cfg(fname):
 
 
 def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
-    """
-    Create a superset of inputs needed to run backbone.
+    """Create a superset of inputs needed to run backbone.
 
     Args:
         img_shape (tuple): shape of the input image.
@@ -74,8 +74,7 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
 
 
 def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
-    """
-    Create a superset of inputs needed to run backbone.
+    """Create a superset of inputs needed to run backbone.
 
     Args:
         img_shape (tuple): shape of the input image.

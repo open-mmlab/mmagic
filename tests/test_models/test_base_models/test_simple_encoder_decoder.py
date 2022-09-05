@@ -66,8 +66,7 @@ def test_encoder_decoder():
 
 
 def _demo_inputs_pair(img_shape=(64, 64), batch_size=1, cuda=False):
-    """
-    Create a superset of inputs needed to run backbone.
+    """Create a superset of inputs needed to run backbone.
 
     Args:
         img_shape (tuple): shape of the input image.

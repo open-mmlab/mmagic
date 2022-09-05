@@ -46,8 +46,7 @@ class IndexedUpsample(BaseModule):
             act_cfg=dict(type='ReLU6'))
 
     def init_weights(self):
-        """Init weights for the module.
-        """
+        """Init weights for the module."""
         if self.init_cfg is not None:
             super().init_weights()
         else:
@@ -130,8 +129,7 @@ class IndexNetDecoder(BaseModule):
                 1, 1, kernel_size, padding=(kernel_size - 1) // 2, bias=False))
 
     def init_weights(self):
-        """Init weights for the module.
-        """
+        """Init weights for the module."""
         if self.init_cfg is not None:
             super().init_weights()
         else:

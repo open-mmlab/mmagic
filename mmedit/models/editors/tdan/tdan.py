@@ -44,8 +44,7 @@ class TDAN(BaseEditModel):
         self.lq_pixel_loss = MODELS.build(lq_pixel_loss)
 
     def forward_train(self, inputs, data_samples=None, **kwargs):
-        """Forward training.
-            Returns dict of losses of training.
+        """Forward training. Returns dict of losses of training.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by
@@ -79,8 +78,7 @@ class TDAN(BaseEditModel):
                        data_samples=None,
                        training=False,
                        **kwargs):
-        """Forward tensor.
-            Returns result of simple forward.
+        """Forward tensor. Returns result of simple forward.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by

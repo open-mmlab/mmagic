@@ -44,8 +44,7 @@ class EDVR(BaseEditModel):
         self.register_buffer('step_counter', torch.tensor(0), False)
 
     def forward_train(self, inputs, data_samples=None):
-        """Forward training.
-            Returns dict of losses of training.
+        """Forward training. Returns dict of losses of training.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by

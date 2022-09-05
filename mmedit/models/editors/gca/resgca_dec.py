@@ -158,8 +158,7 @@ class ResNetDec(BaseModule):
             act_cfg=None)
 
     def init_weights(self):
-        """Init weights for the module.
-        """
+        """Init weights for the module."""
         if self.init_cfg is not None:
             super().init_weights()
         else:

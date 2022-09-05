@@ -34,8 +34,8 @@ class TestAugmentations:
 
     @staticmethod
     def check_flip(origin_img, result_img, flip_direction):
-        """Check if the origin_img are flipped correctly into result_img
-        in different flip_directions
+        """Check if the origin_img are flipped correctly into result_img in
+        different flip_directions.
 
         Args:
             origin_img (np.ndarray): Original image.
@@ -61,7 +61,7 @@ class TestAugmentations:
 
     @staticmethod
     def check_transposehw(origin_img, result_img):
-        """Check if the origin_imgs are transposed correctly"""
+        """Check if the origin_imgs are transposed correctly."""
 
         h, w, c = origin_img.shape
         for i in range(c):

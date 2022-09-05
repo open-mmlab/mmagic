@@ -177,8 +177,7 @@ class MattorPreprocessor(BaseDataPreprocessor):
     def collate_data(self, data: Sequence[dict]) -> Tuple[list, list, list]:
         """Collating and moving data to the target device.
 
-        See base class ``BaseDataPreprocessor`` for detailed
-        information.
+        See base class ``BaseDataPreprocessor`` for detailed information.
         """
         inputs = [data_ for data_ in data['inputs']]
         trimaps = [data_.trimap.data for data_ in data['data_samples']]

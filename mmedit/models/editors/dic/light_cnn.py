@@ -73,7 +73,7 @@ class LightCNN(BaseModule):
 
 
 class MaxFeature(nn.Module):
-    """Conv2d or Linear layer with max feature selector
+    """Conv2d or Linear layer with max feature selector.
 
     Generate feature maps with double channels, split them and select the max
         feature.

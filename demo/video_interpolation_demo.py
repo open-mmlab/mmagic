@@ -55,7 +55,7 @@ def parse_args():
 
 
 def main():
-    """ Demo for video interpolation models.
+    """Demo for video interpolation models.
 
     Note that we accept video as input(output), when 'input_dir'('output_dir')
     is set to the path to the video. But using videos introduces video

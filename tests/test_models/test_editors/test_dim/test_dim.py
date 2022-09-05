@@ -12,8 +12,8 @@ register_all_modules()
 
 
 def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
-    """
-    Create a superset of inputs needed to run backbone.
+    """Create a superset of inputs needed to run backbone.
+
     Args:
         img_shape (tuple): shape of the input image.
         batch_size (int): batch size of the input batch.
@@ -55,8 +55,8 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
 
 
 def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
-    """
-    Create a superset of inputs needed to run backbone.
+    """Create a superset of inputs needed to run backbone.
+
     Args:
         img_shape (tuple): shape of the input image.
         batch_size (int): batch size of the input batch.

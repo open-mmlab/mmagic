@@ -30,8 +30,8 @@ class CAIN(BasicInterpolator):
     """
 
     def forward_inference(self, inputs, data_samples=None):
-        """Forward inference.
-            Returns predictions of validation, testing, and simple inference.
+        """Forward inference. Returns predictions of validation, testing, and
+        simple inference.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by

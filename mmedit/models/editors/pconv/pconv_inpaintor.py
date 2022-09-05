@@ -12,8 +12,8 @@ from mmedit.structures import EditDataSample, PixelData
 class PConvInpaintor(OneStageInpaintor):
     """Inpaintor for Partial Convolution method.
 
-    This inpaintor is implemented according to the paper:
-    Image inpainting for irregular holes using partial convolutions
+    This inpaintor is implemented according to the paper: Image inpainting for
+    irregular holes using partial convolutions
     """
 
     def forward_test(self, inputs, data_samples):

@@ -360,7 +360,6 @@ class GCAModule(nn.Module):
 
         Returns:
             Tensor: Mask tensor.
-
         """
         _, _, h, w = img_feat.shape
         # As ONNX does not support dynamic num_classes, we have to convert it
