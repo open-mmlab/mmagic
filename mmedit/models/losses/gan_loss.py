@@ -1,8 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import numpy as np
 import torch
 import torch.autograd as autograd
+import torch.distributed as dist
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.dist import is_distributed
 from torch.nn.functional import conv2d
 
 from mmedit.registry import LOSSES
@@ -277,7 +280,11 @@ class GaussianBlur(nn.Module):
         return conv2d(x, kernel, padding=self.padding, stride=1, groups=c)
 
 
-def gradient_penalty_loss(discriminator, real_data, fake_data, mask=None):
+def gradient_penalty_loss(discriminator,
+                          real_data,
+                          fake_data,
+                          mask=None,
+                          norm_mode='pixel'):
     """Calculate gradient penalty for wgan-gp.
 
     Args:
@@ -309,7 +316,15 @@ def gradient_penalty_loss(discriminator, real_data, fake_data, mask=None):
     if mask is not None:
         gradients = gradients * mask
 
-    gradients_penalty = ((gradients.norm(2, dim=1) - 1)**2).mean()
+    if norm_mode == 'pixel':
+        gradients_penalty = ((gradients.norm(2, dim=1) - 1)**2).mean()
+    elif norm_mode == 'HWC':
+        gradients_penalty = ((
+            gradients.reshape(batch_size, -1).norm(2, dim=1) - 1)**2).mean()
+    else:
+        raise NotImplementedError(
+            'Currently, we only support ["pixel", "HWC"] '
+            f'norm mode but got {norm_mode}.')
     if mask is not None:
         gradients_penalty /= torch.mean(mask)
 
@@ -346,6 +361,20 @@ class GradientPenaltyLoss(nn.Module):
         return loss * self.loss_weight
 
 
+def disc_shift_loss(pred):
+    """Disc Shift loss.
+
+    This loss is proposed in PGGAN as an auxiliary loss for discriminator.
+
+    Args:
+        pred (Tensor): Input tensor.
+
+    Returns:
+        torch.Tensor: loss tensor.
+    """
+    return pred**2
+
+
 @LOSSES.register_module()
 class DiscShiftLoss(nn.Module):
     """Disc shift loss.
@@ -367,6 +396,186 @@ class DiscShiftLoss(nn.Module):
         Returns:
             Tensor: Loss.
         """
-        loss = torch.mean(x**2)
+        loss = torch.mean(disc_shift_loss)
 
         return loss * self.loss_weight
+
+
+def r1_gradient_penalty_loss(discriminator,
+                             real_data,
+                             mask=None,
+                             norm_mode='pixel',
+                             loss_scaler=None,
+                             use_apex_amp=False):
+    """Calculate R1 gradient penalty for WGAN-GP.
+
+    R1 regularizer comes from:
+    "Which Training Methods for GANs do actually Converge?" ICML'2018
+
+    Different from original gradient penalty, this regularizer only penalized
+    gradient w.r.t. real data.
+
+    Args:
+        discriminator (nn.Module): Network for the discriminator.
+        real_data (Tensor): Real input data.
+        mask (Tensor): Masks for inpainting. Default: None.
+        norm_mode (str): This argument decides along which dimension the norm
+            of the gradients will be calculated. Currently, we support ["pixel"
+            , "HWC"]. Defaults to "pixel".
+
+    Returns:
+        Tensor: A tensor for gradient penalty.
+    """
+    batch_size = real_data.shape[0]
+
+    real_data = real_data.clone().requires_grad_()
+
+    disc_pred = discriminator(real_data)
+    if loss_scaler:
+        disc_pred = loss_scaler.scale(disc_pred)
+    elif use_apex_amp:
+        from apex.amp._amp_state import _amp_state
+        _loss_scaler = _amp_state.loss_scalers[0]
+        disc_pred = _loss_scaler.loss_scale() * disc_pred.float()
+
+    gradients = autograd.grad(
+        outputs=disc_pred,
+        inputs=real_data,
+        grad_outputs=torch.ones_like(disc_pred),
+        create_graph=True,
+        retain_graph=True,
+        only_inputs=True)[0]
+
+    if loss_scaler:
+        # unscale the gradient
+        inv_scale = 1. / loss_scaler.get_scale()
+        gradients = gradients * inv_scale
+    elif use_apex_amp:
+        inv_scale = 1. / _loss_scaler.loss_scale()
+        gradients = gradients * inv_scale
+
+    if mask is not None:
+        gradients = gradients * mask
+
+    if norm_mode == 'pixel':
+        gradients_penalty = ((gradients.norm(2, dim=1))**2).mean()
+    elif norm_mode == 'HWC':
+        gradients_penalty = gradients.pow(2).reshape(batch_size,
+                                                     -1).sum(1).mean()
+    else:
+        raise NotImplementedError(
+            'Currently, we only support ["pixel", "HWC"] '
+            f'norm mode but got {norm_mode}.')
+    if mask is not None:
+        gradients_penalty /= torch.mean(mask)
+
+    return gradients_penalty
+
+
+def gen_path_regularizer(generator,
+                         num_batches,
+                         mean_path_length,
+                         pl_batch_shrink=1,
+                         decay=0.01,
+                         weight=1.,
+                         pl_batch_size=None,
+                         sync_mean_buffer=False,
+                         loss_scaler=None,
+                         use_apex_amp=False):
+    """Generator Path Regularization.
+
+    Path regularization is proposed in StyelGAN2, which can help the improve
+    the continuity of the latent space. More details can be found in:
+    Analyzing and Improving the Image Quality of StyleGAN, CVPR2020.
+
+    Args:
+        generator (nn.Module): The generator module. Note that this loss
+            requires that the generator contains ``return_latents`` interface,
+            with which we can get the latent code of the current sample.
+        num_batches (int): The number of samples used in calculating this loss.
+        mean_path_length (Tensor): The mean path length, calculated by moving
+            average.
+        pl_batch_shrink (int, optional): The factor of shrinking the batch size
+            for saving GPU memory. Defaults to 1.
+        decay (float, optional): Decay for moving average of mean path length.
+            Defaults to 0.01.
+        weight (float, optional): Weight of this loss item. Defaults to ``1.``.
+        pl_batch_size (int | None, optional): The batch size in calculating
+            generator path. Once this argument is set, the ``num_batches`` will
+            be overridden with this argument and won't be affectted by
+            ``pl_batch_shrink``. Defaults to None.
+        sync_mean_buffer (bool, optional): Whether to sync mean path length
+            across all of GPUs. Defaults to False.
+
+    Returns:
+        tuple[Tensor]: The penalty loss, detached mean path tensor, and \
+            current path length.
+    """
+    # reduce batch size for conserving GPU memory
+    if pl_batch_shrink > 1:
+        num_batches = max(1, num_batches // pl_batch_shrink)
+
+    # reset the batch size if pl_batch_size is not None
+    if pl_batch_size is not None:
+        num_batches = pl_batch_size
+
+    # get output from different generators
+    output_dict = generator(None, num_batches=num_batches, return_latents=True)
+    fake_img, latents = output_dict['fake_img'], output_dict['latent']
+
+    noise = torch.randn_like(fake_img) / np.sqrt(
+        fake_img.shape[2] * fake_img.shape[3])
+
+    if loss_scaler:
+        loss = loss_scaler.scale((fake_img * noise).sum())[0]
+        grad = autograd.grad(
+            outputs=loss,
+            inputs=latents,
+            grad_outputs=torch.ones(()).to(loss),
+            create_graph=True,
+            retain_graph=True,
+            only_inputs=True)[0]
+
+        # unsacle the grad
+        inv_scale = 1. / loss_scaler.get_scale()
+        grad = grad * inv_scale
+    elif use_apex_amp:
+        from apex.amp._amp_state import _amp_state
+
+        # by default, we use loss_scalers[0] for discriminator and
+        # loss_scalers[1] for generator
+        _loss_scaler = _amp_state.loss_scalers[1]
+        loss = _loss_scaler.loss_scale() * ((fake_img * noise).sum()).float()
+
+        grad = autograd.grad(
+            outputs=loss,
+            inputs=latents,
+            grad_outputs=torch.ones(()).to(loss),
+            create_graph=True,
+            retain_graph=True,
+            only_inputs=True)[0]
+
+        # unsacle the grad
+        inv_scale = 1. / _loss_scaler.loss_scale()
+        grad = grad * inv_scale
+    else:
+        grad = autograd.grad(
+            outputs=(fake_img * noise).sum(),
+            inputs=latents,
+            grad_outputs=torch.ones(()).to(fake_img),
+            create_graph=True,
+            retain_graph=True,
+            only_inputs=True)[0]
+
+    path_lengths = torch.sqrt(grad.pow(2).sum(2).mean(1))
+    # update mean path
+    path_mean = mean_path_length + decay * (
+        path_lengths.mean() - mean_path_length)
+
+    if sync_mean_buffer and is_distributed():
+        dist.all_reduce(path_mean)
+        path_mean = path_mean / float(dist.get_world_size())
+
+    path_penalty = (path_lengths - path_mean).pow(2).mean() * weight
+
+    return path_penalty, path_mean.detach(), path_lengths

@@ -12,7 +12,7 @@ from scipy.special import gamma
 from mmedit.datasets.transforms import MATLABLikeResize
 from mmedit.registry import METRICS
 from .base_sample_wise_metric import BaseSampleWiseMetric
-from .metrics_utils import reorder_image, to_numpy
+from .metric_utils import reorder_image, to_numpy
 
 
 @METRICS.register_module()

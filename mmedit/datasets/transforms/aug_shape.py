@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import random
-from typing import Dict
+from typing import Dict, List, Union
 
 import mmcv
 import numpy as np
@@ -234,7 +234,7 @@ class Resize(BaseTransform):
     record the test transformation to align the input's shape.
 
     Args:
-        keys (list[str]): The images to be resized.
+        keys (str | list[str]): The image(s) to be resized.
         scale (float | tuple[int]): If scale is tuple[int], target spatial
             size (h, w). Otherwise, target spatial size is scaled by input
             size.
@@ -263,7 +263,7 @@ class Resize(BaseTransform):
     """
 
     def __init__(self,
-                 keys,
+                 keys: Union[str, List[str]] = 'img',
                  scale=None,
                  keep_ratio=False,
                  size_factor=None,
@@ -273,6 +273,7 @@ class Resize(BaseTransform):
                  output_keys=None):
 
         assert keys, 'Keys should not be empty.'
+        keys = [keys] if not isinstance(keys, list) else keys
         if output_keys:
             assert len(output_keys) == len(keys)
         else:

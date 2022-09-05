@@ -1,8 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .batch_process import split_batch, stack_batch
 from .data_processor import EditDataPreprocessor
+from .gen_preprocessor import GenDataPreprocessor
 from .mattor_preprocessor import MattorPreprocessor
 
 __all__ = [
-    'EditDataPreprocessor', 'MattorPreprocessor', 'split_batch', 'stack_batch'
+    'EditDataPreprocessor', 'MattorPreprocessor', 'split_batch', 'stack_batch',
+    'GenDataPreprocessor'
 ]

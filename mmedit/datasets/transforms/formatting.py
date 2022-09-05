@@ -87,6 +87,28 @@ class PackEditInputs(BaseTransform):
     Others will be packed into metainfo field of EditDataSample.
     """
 
+    # pre_defined_keys = [
+    #     'img', 'gt', 'ref', 'mask', 'gt_heatmap', 'trimap', 'gt_alphg',
+    #     'gt_fg', 'gt_bg'
+    # ]
+
+    def __init__(
+        self,
+        keys: Tuple[List[str], str, None] = None,
+        #  pack_all: bool = False,
+        #  meta_keys: Optional[Sequence[str]] = None
+    ):
+        if keys is not None:
+            if isinstance(keys, list):
+                self.keys = keys
+            else:
+                self.keys = [keys]
+        else:
+            self.keys = None
+
+        # self.pack_all = pack_all
+        # self.meta_keys = [] if meta_keys is None else meta_keys
+
     def transform(self, results: dict) -> dict:
         """Method to pack the input data.
 
@@ -104,7 +126,16 @@ class PackEditInputs(BaseTransform):
         packed_results = dict()
         data_sample = EditDataSample()
 
-        if 'img' in results:
+        if self.keys is not None:
+            packed_results['inputs'] = dict()
+            for key in self.keys:
+                img = results.pop(key)
+                if len(img.shape) < 3:
+                    img = np.expand_dims(img, -1)
+                img = np.ascontiguousarray(img.transpose(2, 0, 1))
+                packed_results['inputs'][key] = to_tensor(img)
+
+        elif 'img' in results:
             img = results.pop('img')
             img_tensor = images_to_tensor(img)
             packed_results['inputs'] = img_tensor
@@ -114,6 +145,10 @@ class PackEditInputs(BaseTransform):
             gt = results.pop('gt')
             gt_tensor = images_to_tensor(gt)
             data_sample.gt_img = PixelData(data=gt_tensor)
+
+        if 'gt_label' in results:
+            gt_label = results.pop('gt_label')
+            data_sample.set_gt_label(gt_label)
 
         if 'img_lq' in results:
             img_lq = results.pop('img_lq')

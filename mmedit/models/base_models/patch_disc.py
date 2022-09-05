@@ -8,6 +8,7 @@ from mmedit.models.utils import generation_init_weights
 from mmedit.registry import COMPONENTS
 
 
+# @MODULES.register_module()
 @COMPONENTS.register_module()
 class PatchDiscriminator(nn.Module):
     """A PatchGAN discriminator.

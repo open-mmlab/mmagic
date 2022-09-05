@@ -6,7 +6,7 @@ import pytest
 import torch
 
 from mmedit.evaluation.metrics import MAE, MSE, PSNR, SNR, psnr
-from mmedit.evaluation.metrics.metrics_utils import reorder_image
+from mmedit.evaluation.metrics.metric_utils import reorder_image
 
 
 class TestPixelMetrics:

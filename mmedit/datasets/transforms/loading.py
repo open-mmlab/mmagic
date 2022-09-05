@@ -424,3 +424,114 @@ class GetSpatialDiscountMask(BaseTransform):
     def __repr__(self):
         return self.__class__.__name__ + (f'(gamma={self.gamma}, '
                                           f'beta={self.beta})')
+
+
+@TRANSFORMS.register_module()
+class LoadPairedImageFromFile(LoadImageFromFile):
+    """Load a pair of images from file.
+
+    Each sample contains a pair of images, which are concatenated in the w
+    dimension (a|b). This is a special loading class for generation paired
+    dataset. It loads a pair of images as the common loader does and crops
+    it into two images with the same shape in different domains.
+
+    Required key is "pair_path". Added or modified keys are "pair",
+    "pair_ori_shape", "ori_pair", "img_{domain_a}", "img_{domain_b}",
+    "img_{domain_a}_path", "img_{domain_b}_path", "img_{domain_a}_ori_shape",
+    "img_{domain_b}_ori_shape", "ori_img_{domain_a}" and
+    "ori_img_{domain_b}".
+
+    Args:
+        key (str): Keys in results to find corresponding path.
+        domain_a (str, Optional): One of the paired image domain. Defaults
+            to 'A'.
+        domain_b (str, Optional): The other of the paired image domain.
+            Defaults to 'B'.
+        color_type (str): The flag argument for :func:``mmcv.imfrombytes``.
+            Defaults to 'color'.
+        channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
+            Default: 'bgr'.
+        imdecode_backend (str): The image decoding backend type. The backend
+            argument for :func:``mmcv.imfrombytes``.
+            See :func:``mmcv.imfrombytes`` for details.
+            candidates are 'cv2', 'turbojpeg', 'pillow', and 'tifffile'.
+            Defaults to None.
+        use_cache (bool): If True, load all images at once. Default: False.
+        to_float32 (bool): Whether to convert the loaded image to a float32
+            numpy array. If set to False, the loaded image is an uint8 array.
+            Defaults to False.
+        to_y_channel (bool): Whether to convert the loaded image to y channel.
+            Only support 'rgb2ycbcr' and 'rgb2ycbcr'
+            Defaults to False.
+        file_client_args (dict): Arguments to instantiate a FileClient.
+            If not specified, will infer from file uri.
+            See :class:`mmengine.fileio.FileClient` for details.
+            Defaults to ``None``.
+        io_backend (str, optional): io backend where images are store. Defaults
+            to None.
+    """
+
+    def __init__(self,
+                 key: str,
+                 domain_a: str = 'A',
+                 domain_b: str = 'B',
+                 color_type: str = 'color',
+                 channel_order: str = 'bgr',
+                 imdecode_backend: Optional[str] = None,
+                 use_cache: bool = False,
+                 to_float32: bool = False,
+                 to_y_channel: bool = False,
+                 save_original_img: bool = False,
+                 file_client_args: Optional[dict] = None):
+        super().__init__(key, color_type, channel_order, imdecode_backend,
+                         use_cache, to_float32, to_y_channel,
+                         save_original_img, file_client_args)
+        assert isinstance(domain_a, str)
+        assert isinstance(domain_b, str)
+        self.domain_a = domain_a
+        self.domain_b = domain_b
+
+    def transform(self, results: dict) -> dict:
+        """Functions to load paired images.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        filename = results[f'{self.key}_path']
+
+        image = self._load_image(filename)
+        image = self._convert(image)
+        if self.save_original_img:
+            ori_image = image.copy()
+        shape = image.shape
+
+        # crop pair into a and b
+        w = shape[1]
+        if w % 2 != 0:
+            raise ValueError(
+                f'The width of image pair must be even number, but got {w}.')
+        new_w = w // 2
+        image_a = image[:, :new_w, :]
+        image_b = image[:, new_w:, :]
+
+        results[f'img_{self.domain_a}'] = image
+        results[f'img_{self.domain_b}'] = image
+        results[f'img_{self.domain_a}_path'] = filename
+        results[f'img_{self.domain_b}_path'] = filename
+        results[f'img_{self.domain_a}_ori_shape'] = image_a.shape
+        results[f'img_{self.domain_b}_ori_shape'] = image_b.shape
+        if self.save_original_img:
+            results[f'ori_img_{self.domain_a}'] = image_a.copy()
+            results[f'ori_img_{self.domain_b}'] = image_b.copy()
+
+        results[self.key] = image
+        results[f'ori_{self.key}_shape'] = shape
+        results[f'{self.key}_channel_order'] = self.channel_order
+        if self.save_original_img:
+            results[f'ori_{self.key}'] = ori_image
+
+        return results

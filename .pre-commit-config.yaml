@@ -31,7 +31,7 @@ repos:
     rev: v2.1.0
     hooks:
       - id: codespell
-        args: ["--skip", "*.ipynb", "-L", "formating,theis"]
+        args: ["--skip", "*.ipynb", "-L", "formating,theis,te,nd,thre,Gool,gool,lod,patten,confectionary"]
   - repo: https://github.com/executablebooks/mdformat
     rev: 0.7.9
     hooks:

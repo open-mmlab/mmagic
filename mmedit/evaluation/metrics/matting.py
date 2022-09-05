@@ -9,7 +9,7 @@ from mmengine.evaluator import BaseMetric
 
 from mmedit.registry import METRICS
 from ..functional import gauss_gradient
-from .metrics_utils import average
+from .metric_utils import average
 
 
 def _assert_ndim(input, name, ndim, shape_hint):
