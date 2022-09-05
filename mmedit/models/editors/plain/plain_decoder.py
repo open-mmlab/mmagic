@@ -40,6 +40,20 @@ class MaxUnpool2dop(Function):
 
     @staticmethod
     def symbolic(g, input, indices, kernel_size, stride, padding, output_size):
+        """This is the function to define the module of MaxUnpool.
+
+        Args:
+            g (_type_): _description_
+            input (Tensor): Tensor needed to upsample.
+            indices (Tensor): Indices output of the previous MaxPool.
+            kernel_size (int): Size of the max pooling window.
+            stride (Tuple): Stride of the max pooling window.
+            padding (Tuple): Padding that was added to the input.
+            output_size (List or Tuple): The shape of output tensor.
+
+        Returns:
+            _type_: _description_
+        """
         # get shape
         input_shape = g.op('Shape', input)
         const_0 = g.op('Constant', value_t=torch.tensor(0))
