@@ -101,8 +101,8 @@ def restoration_video_inference(model,
         # prepare data
         sequence_length = len(glob.glob(osp.join(img_dir, '*')))
         img_dir_split = re.split(r'[\\/]', img_dir)
-        if img_dir_split[0] == '':
-            img_dir_split[0] = '/'
+        # if img_dir_split[0] == '':
+        #     img_dir_split[0] = '/'
         key = img_dir_split[-1]
         lq_folder = reduce(osp.join, img_dir_split[:-1])
         data = dict(
