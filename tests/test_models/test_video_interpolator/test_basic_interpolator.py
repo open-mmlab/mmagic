@@ -14,8 +14,7 @@ from mmedit.models.registry import COMPONENTS
 
 @COMPONENTS.register_module()
 class InterpolateExample(nn.Module):
-    """An example of interpolate network for testing BasicInterpolator.
-    """
+    """An example of interpolate network for testing BasicInterpolator."""
 
     def __init__(self):
         super().__init__()
@@ -30,8 +29,7 @@ class InterpolateExample(nn.Module):
 
 @COMPONENTS.register_module()
 class InterpolateExample2(nn.Module):
-    """An example of interpolate network for testing BasicInterpolator.
-    """
+    """An example of interpolate network for testing BasicInterpolator."""
 
     def __init__(self):
         super().__init__()

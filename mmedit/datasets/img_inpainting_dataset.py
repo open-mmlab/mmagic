@@ -7,8 +7,7 @@ from .registry import DATASETS
 
 @DATASETS.register_module()
 class ImgInpaintingDataset(BaseDataset):
-    """Image dataset for inpainting.
-    """
+    """Image dataset for inpainting."""
 
     def __init__(self, ann_file, pipeline, data_prefix=None, test_mode=False):
         super().__init__(pipeline, test_mode)

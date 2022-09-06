@@ -129,7 +129,7 @@ def random_choose_unknown(unknown, crop_size):
 
 
 def make_coord(shape, ranges=None, flatten=True):
-    """ Make coordinates at grid centers.
+    """Make coordinates at grid centers.
 
     Args:
         shape (tuple): shape of image.

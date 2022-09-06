@@ -942,8 +942,8 @@ class GenerateFrameIndiceswithPadding:
 
 @PIPELINES.register_module()
 class GenerateFrameIndices:
-    """Generate frame index for REDS datasets. It also performs
-    temporal augmention with random interval.
+    """Generate frame index for REDS datasets. It also performs temporal
+    augmention with random interval.
 
     Required keys: lq_path, gt_path, key, num_input_frames
     Added or modified keys:  lq_path, gt_path, interval, reverse
@@ -1131,7 +1131,7 @@ class GenerateSegmentIndices:
 
 @PIPELINES.register_module()
 class MirrorSequence:
-    """Extend short sequences (e.g. Vimeo-90K) by mirroring the sequences
+    """Extend short sequences (e.g. Vimeo-90K) by mirroring the sequences.
 
     Given a sequence with N frames (x1, ..., xN), extend the sequence to
     (x1, ..., xN, xN, ..., x1).
@@ -1171,7 +1171,6 @@ class MirrorSequence:
 @PIPELINES.register_module()
 class CopyValues:
     """Copy the value of a source key to a destination key.
-
 
     It does the following: results[dst_key] = results[src_key] for
     (src_key, dst_key) in zip(src_keys, dst_keys).
@@ -1281,7 +1280,6 @@ class UnsharpMasking:
 
     Added keys are "xxx_unsharp", where "xxx" are the attributes specified
     in "keys".
-
     """
 
     def __init__(self, kernel_size, sigma, weight, threshold, keys):

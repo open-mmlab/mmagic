@@ -50,7 +50,6 @@ class AdobeComp1kDataset(BaseMattingDataset):
                 "bg": 'bg/001.png'
             },
         ]
-
     """
 
     def load_annotations(self):

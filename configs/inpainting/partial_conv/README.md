@@ -20,14 +20,14 @@ Existing deep learning based image inpainting methods use a standard convolution
 
 **Places365-Challenge**
 
-|                                    Method                                    | Mask Type | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |                                                                                                                        Download                                                                                                                         |
-| :--------------------------------------------------------------------------: | :-------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                Method                                | Mask Type | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  |                                Download                                |
+| :------------------------------------------------------------------: | :-------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :--------------------------------------------------------------------: |
 | [PConv](/configs/inpainting/partial_conv/pconv_256x256_stage2_4x2_places.py) | free-form |  256x256   |    500k     | Places365-val |  8.776   | 22.762 | 0.801 | [model](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.log.json) |
 
 **CelebA-HQ**
 
-|                                    Method                                    | Mask Type | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  |                                                                                                                        Download                                                                                                                         |
-| :--------------------------------------------------------------------------: | :-------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                Method                                 | Mask Type | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  |                                 Download                                 |
+| :-------------------------------------------------------------------: | :-------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :----------------------------------------------------------------------: |
 | [PConv](/configs/inpainting/partial_conv/pconv_256x256_stage2_4x2_celeba.py) | free-form |  256x256   |    500k     | CelebA-val |  5.990   | 25.404 | 0.853 | [model](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.log.json) |
 
 ## Citation

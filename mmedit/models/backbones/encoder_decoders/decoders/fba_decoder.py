@@ -13,14 +13,11 @@ from mmedit.utils import get_root_logger
 class FBADecoder(nn.Module):
     """Decoder for FBA matting.
 
-        pool_scales (tuple[int]): Pooling scales used in Pooling Pyramid
-            Module.
-        in_channels (int): Input channels.
-        channels (int): Channels after modules, before conv_seg.
-        conv_cfg (dict|None): Config of conv layers.
-        norm_cfg (dict|None): Config of norm layers.
-        act_cfg (dict): Config of activation layers.
-        align_corners (bool): align_corners argument of F.interpolate.
+    pool_scales (tuple[int]): Pooling scales used in Pooling Pyramid Module.
+    in_channels (int): Input channels. channels (int): Channels after modules,
+    before conv_seg. conv_cfg (dict|None): Config of conv layers. norm_cfg
+    (dict|None): Config of norm layers. act_cfg (dict): Config of activation
+    layers. align_corners (bool): align_corners argument of F.interpolate.
     """
 
     def __init__(self,
@@ -154,6 +151,7 @@ class FBADecoder(nn.Module):
 
     def forward(self, inputs):
         """Forward function.
+
         Args:
             inputs (dict): Output dict of FbaEncoder.
         Returns:

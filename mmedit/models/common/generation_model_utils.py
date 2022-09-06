@@ -55,8 +55,8 @@ def generation_init_weights(module, init_type='normal', init_gain=0.02):
 
 
 class GANImageBuffer:
-    """This class implements an image buffer that stores previously
-    generated images.
+    """This class implements an image buffer that stores previously generated
+    images.
 
     This buffer allows us to update the discriminator using a history of
     generated images rather than the ones produced by the latest generator
@@ -112,7 +112,8 @@ class GANImageBuffer:
 
 
 class UnetSkipConnectionBlock(nn.Module):
-    """Construct a Unet submodule with skip connections, with the following
+    """Construct a Unet submodule with skip connections, with the following.
+
     structure: downsampling - `submodule` - upsampling.
 
     Args:

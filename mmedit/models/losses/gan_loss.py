@@ -134,8 +134,8 @@ class GANLoss(nn.Module):
 @LOSSES.register_module()
 class GaussianBlur(nn.Module):
     """A Gaussian filter which blurs a given tensor with a two-dimensional
-    gaussian kernel by convolving it along each channel. Batch operation
-    is supported.
+    gaussian kernel by convolving it along each channel. Batch operation is
+    supported.
 
     This function is modified from kornia.filters.gaussian:
     `<https://kornia.readthedocs.io/en/latest/_modules/kornia/filters/gaussian.html>`.
@@ -203,7 +203,8 @@ class GaussianBlur(nn.Module):
         return kernel_2d
 
     def get_1d_gaussian_kernel(self, kernel_size, sigma):
-        """Get the Gaussian filter coefficients in one dimension (x or y direction).
+        """Get the Gaussian filter coefficients in one dimension (x or y
+        direction).
 
         Args:
             kernel_size (int): Kernel filter size in x or y direction.
@@ -322,8 +323,8 @@ class GradientPenaltyLoss(nn.Module):
 class DiscShiftLoss(nn.Module):
     """Disc shift loss.
 
-        Args:
-            loss_weight (float, optional): Loss weight. Defaults to 1.0.
+    Args:
+        loss_weight (float, optional): Loss weight. Defaults to 1.0.
     """
 
     def __init__(self, loss_weight=0.1):

@@ -676,8 +676,7 @@ class CropAroundFg:
 class ModCrop:
     """Mod crop gt images, used during testing.
 
-    Required keys are "scale" and "gt",
-    added or modified keys are "gt".
+    Required keys are "scale" and "gt", added or modified keys are "gt".
     """
 
     def __call__(self, results):
@@ -704,8 +703,8 @@ class ModCrop:
 
 @PIPELINES.register_module()
 class CropLike:
-    """Crop/pad the image in the target_key according to the size of image
-        in the reference_key .
+    """Crop/pad the image in the target_key according to the size of image in
+    the reference_key .
 
     Args:
         target_key (str): The key needs to be cropped.

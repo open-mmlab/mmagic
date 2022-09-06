@@ -10,7 +10,7 @@ from .multi_layer_disc import MultiLayerDiscriminator
 
 @COMPONENTS.register_module()
 class GLDiscs(nn.Module):
-    """Discriminators in Global&Local
+    """Discriminators in Global&Local.
 
     This discriminator contains a local discriminator and a global
     discriminator as described in the original paper:

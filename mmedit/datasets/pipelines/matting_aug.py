@@ -592,7 +592,6 @@ class TransformTrimap:
 
     Adopted from the following repository:
     https://github.com/MarcoForte/FBA_Matting/blob/master/networks/transforms.py.
-
     """
 
     def __call__(self, results):

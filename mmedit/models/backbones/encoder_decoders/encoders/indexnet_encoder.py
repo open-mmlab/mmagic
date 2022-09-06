@@ -475,8 +475,7 @@ class IndexNetEncoder(nn.Module):
         return nn.Sequential(*layers)
 
     def freeze_bn(self):
-        """Set BatchNorm modules in the model to evaluation mode.
-        """
+        """Set BatchNorm modules in the model to evaluation mode."""
         for m in self.modules():
             if isinstance(m, (nn.BatchNorm2d, SyncBatchNorm)):
                 m.eval()

@@ -9,7 +9,8 @@ from mmedit.core.utils import sync_random_seed
 
 
 class DistributedSampler(_DistributedSampler):
-    """DistributedSampler inheriting from `torch.utils.data.DistributedSampler`.
+    """DistributedSampler inheriting from
+    `torch.utils.data.DistributedSampler`.
 
     In pytorch of lower versions, there is no `shuffle` argument. This child
     class will port one to DistributedSampler.

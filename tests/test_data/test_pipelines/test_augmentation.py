@@ -55,8 +55,8 @@ class TestAugmentations:
 
     @staticmethod
     def check_flip(origin_img, result_img, flip_type):
-        """Check if the origin_img are flipped correctly into result_img
-        in different flip_types"""
+        """Check if the origin_img are flipped correctly into result_img in
+        different flip_types."""
         h, w, c = origin_img.shape
         if flip_type == 'horizontal':
             for i in range(h):
@@ -197,8 +197,7 @@ class TestAugmentations:
         """Check if the origin_img is padded correctly.
 
         Supported modes for checking are 'constant' (with 'constant_values' of
-        0) and 'reflect'.
-        Supported images should be 2 dimensional.
+        0) and 'reflect'. Supported images should be 2 dimensional.
         """
         if mode not in ['constant', 'reflect']:
             raise NotImplementedError(
@@ -411,7 +410,7 @@ class TestAugmentations:
 
     @staticmethod
     def check_transposehw(origin_img, result_img):
-        """Check if the origin_imgs are transposed correctly"""
+        """Check if the origin_imgs are transposed correctly."""
         h, w, c = origin_img.shape
         for i in range(c):
             for j in range(h):

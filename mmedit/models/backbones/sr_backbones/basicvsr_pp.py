@@ -248,7 +248,6 @@ class BasicVSRPlusPlus(nn.Module):
 
         Returns:
             Tensor: Output HR sequence with shape (n, t, c, 4h, 4w).
-
         """
 
         outputs = []
@@ -385,7 +384,6 @@ class SecondOrderDeformableAlignment(ModulatedDeformConv2d):
             False.
         max_residue_magnitude (int): The maximum magnitude of the offset
             residue (Eq. 6 in paper). Default: 10.
-
     """
 
     def __init__(self, *args, **kwargs):

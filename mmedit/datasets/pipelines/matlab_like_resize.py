@@ -45,14 +45,13 @@ def get_scale_from_size(input_size, output_size):
 
 
 def _cubic(x):
-    """ Cubic function.
+    """Cubic function.
 
     Args:
         x (ndarray): The distance from the center position.
 
     Returns:
         ndarray: The weight corresponding to a particular distance.
-
     """
 
     x = np.array(x, dtype=np.float32)
@@ -82,8 +81,6 @@ def get_weights_indices(input_length, output_length, scale, kernel,
 
     Returns:
         list[ndarray]: The weights and the indices for interpolation.
-
-
     """
     if scale < 1:  # modified kernel for antialiasing
 
@@ -169,25 +166,25 @@ def resize_along_dim(img_in, weights, indices, dim):
 class MATLABLikeResize:
     """Resize the input image using MATLAB-like downsampling.
 
-        Currently support bicubic interpolation only. Note that the output of
-        this function is slightly different from the official MATLAB function.
+    Currently support bicubic interpolation only. Note that the output of
+    this function is slightly different from the official MATLAB function.
 
-        Required keys are the keys in attribute "keys". Added or modified keys
-        are "scale" and "output_shape", and the keys in attribute "keys".
+    Required keys are the keys in attribute "keys". Added or modified keys
+    are "scale" and "output_shape", and the keys in attribute "keys".
 
-        Args:
-            keys (list[str]): A list of keys whose values are modified.
-            scale (float | None, optional): The scale factor of the resize
-                operation. If None, it will be determined by output_shape.
-                Default: None.
-            output_shape (tuple(int) | None, optional): The size of the output
-                image. If None, it will be determined by scale. Note that if
-                scale is provided, output_shape will not be used.
-                Default: None.
-            kernel (str, optional): The kernel for the resize operation.
-                Currently support 'bicubic' only. Default: 'bicubic'.
-            kernel_width (float): The kernel width. Currently support 4.0 only.
-                Default: 4.0.
+    Args:
+        keys (list[str]): A list of keys whose values are modified.
+        scale (float | None, optional): The scale factor of the resize
+            operation. If None, it will be determined by output_shape.
+            Default: None.
+        output_shape (tuple(int) | None, optional): The size of the output
+            image. If None, it will be determined by scale. Note that if
+            scale is provided, output_shape will not be used.
+            Default: None.
+        kernel (str, optional): The kernel for the resize operation.
+            Currently support 'bicubic' only. Default: 'bicubic'.
+        kernel_width (float): The kernel width. Currently support 4.0 only.
+            Default: 4.0.
     """
 
     def __init__(self,

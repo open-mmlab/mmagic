@@ -137,8 +137,8 @@ class MSELoss(nn.Module):
 
 @LOSSES.register_module()
 class CharbonnierLoss(nn.Module):
-    """Charbonnier loss (one variant of Robust L1Loss, a differentiable
-    variant of L1Loss).
+    """Charbonnier loss (one variant of Robust L1Loss, a differentiable variant
+    of L1Loss).
 
     Described in "Deep Laplacian Pyramid Networks for Fast and Accurate
         Super-Resolution".
@@ -193,8 +193,8 @@ class CharbonnierLoss(nn.Module):
 class MaskedTVLoss(L1Loss):
     """Masked TV loss.
 
-        Args:
-            loss_weight (float, optional): Loss weight. Defaults to 1.0.
+    Args:
+        loss_weight (float, optional): Loss weight. Defaults to 1.0.
     """
 
     def __init__(self, loss_weight=1.0):

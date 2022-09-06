@@ -39,8 +39,7 @@ def test_plain_refiner():
 
 
 def _demo_inputs_pair(img_shape=(64, 64), batch_size=1, cuda=False):
-    """
-    Create a superset of inputs needed to run refiner.
+    """Create a superset of inputs needed to run refiner.
 
     Args:
         img_shape (tuple): shape of the input image.

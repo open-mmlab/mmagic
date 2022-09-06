@@ -26,7 +26,7 @@ def _prepare_input_img(model_type: str,
                        img_path: str,
                        config: dict,
                        rescale_shape: Optional[Iterable] = None) -> dict:
-    """Prepare the input image
+    """Prepare the input image.
 
     Args:
         model_type (str): which kind of model config belong to, \
@@ -92,7 +92,7 @@ def onnx2tensorrt(onnx_file: str,
                   show: bool = False,
                   workspace_size: int = 1,
                   verbose: bool = False):
-    """Convert ONNX model to TensorRT model
+    """Convert ONNX model to TensorRT model.
 
     Args:
         onnx_file (str): the path of the input ONNX file.

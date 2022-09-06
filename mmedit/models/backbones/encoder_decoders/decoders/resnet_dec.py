@@ -152,8 +152,7 @@ class ResNetDec(nn.Module):
             act_cfg=None)
 
     def init_weights(self):
-        """Init weights for the module.
-        """
+        """Init weights for the module."""
         for m in self.modules():
             if isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
                 constant_init(m.weight, 1)
