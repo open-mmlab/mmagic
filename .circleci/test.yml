@@ -88,7 +88,7 @@ jobs:
         default: 7
     machine:
       image: ubuntu-2004-cuda-11.4:202110-01
-      # docker_layer_caching: true
+      docker_layer_caching: true
     resource_class: gpu.nvidia.small
     steps:
       - checkout
@@ -105,8 +105,8 @@ jobs:
       - run:
           name: Install mmedit dependencies
           command: |
-            python -m pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch${MMCV_TORCH}/index.html
-            python -m pip install -r requirements.txt
+            docker exec mmedit pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/${MMCV_CUDA}/torch${MMCV_TORCH}/index.html
+            docker exec mmedit pip install -r requirements.txt
       - run:
           name: Build and install
           command: |
