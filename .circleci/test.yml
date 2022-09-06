@@ -103,8 +103,8 @@ jobs:
           name: Install mmedit dependencies
           command: |
             docker exec mmedit pip install -e /mmengine
-            docker exec mmocr pip install -U openmim
-            docker exec mmocr mim install 'mmcv >= 2.0.0rc1'
+            docker exec mmedit pip install -U openmim
+            docker exec mmedit mim install 'mmcv >= 2.0.0rc1'
             docker exec mmedit pip install -r requirements/tests.txt
       - run:
           name: Build and install
