@@ -59,7 +59,7 @@ jobs:
       - run:
           name: Install mmediting dependencies
           command: |
-            pip install git+https://git@github.com/open-mmlab/mmengine.git@main
+            pip install git+https://github.com/open-mmlab/mmengine.git@main
             pip install -U openmim
             mim install 'mmcv >= 2.0.0rc1'
             pip install -r requirements/tests.txt
