@@ -74,6 +74,8 @@ class ConcatImageVisualizer(Visualizer):
             merged_dict.update(**merged_dict['output'])
 
         fn = merged_dict[self.fn_key]
+        if isinstance(fn, list):
+            fn = fn[0]
         fn = re.split(r' |/|\\', fn)[-1]
         fn = fn.split('.')[0]
 
