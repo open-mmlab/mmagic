@@ -14,7 +14,6 @@ train_dataloader = dict(
         data_roots={
             '1024': './data/ffhq/images',
             '256': './data/ffhq/ffhq_imgs/ffhq_256',
-            '64': './data/ffhq/ffhq_imgs/ffhq_64'
         },
         gpu_samples_base=4,
         # note that this should be changed with total gpu number

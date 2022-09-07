@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
 import warnings
-from typing import Any, List, Optional
+from typing import Any, Iterator, List, Optional
 
 import torch
 import torch.nn as nn
@@ -13,8 +13,6 @@ from mmengine.evaluator import BaseMetric
 from mmengine.model import is_model_wrapper
 from torch import Tensor
 from torch.utils.data.dataloader import DataLoader
-
-# from mmedit.models.utils import get_module_device
 
 
 class GenMetric(BaseMetric):
@@ -191,3 +189,132 @@ class GenMetric(BaseMetric):
         if is_model_wrapper(module):
             module = module.module
         self.data_preprocessor = module.data_preprocessor
+
+
+class GenerativeMetric(GenMetric):
+    """Metric for generative metrics. Except for the preparation phase
+    (:meth:`prepare`), generative metrics do not need extra real images.
+
+    Args:
+        fake_nums (int): Numbers of the generated image need for the metric.
+        real_nums (int): Numbers of the real image need for the metric. If `-1`
+            is passed means all images from the dataset is need. Defaults to 0.
+        fake_key (Optional[str]): Key for get fake images of the output dict.
+            Defaults to None.
+        real_key (Optional[str]): Key for get real images from the input dict.
+            Defaults to 'img'.
+        sample_model (str): Sampling mode for the generative model. Support
+            'orig' and 'ema'. Defaults to 'ema'.
+        collect_device (str): Device name used for collecting results from
+            different ranks during distributed training. Must be 'cpu' or
+            'gpu'. Defaults to 'cpu'.
+        prefix (str, optional): The prefix that will be added in the metric
+            names to disambiguate homonymous metrics of different evaluators.
+            If prefix is not provided in the argument, self.default_prefix
+            will be used instead. Defaults to None.
+    """
+    SAMPLER_MODE = 'Generative'
+
+    def __init__(self,
+                 fake_nums: int,
+                 real_nums: int = 0,
+                 fake_key: Optional[str] = None,
+                 real_key: Optional[str] = 'img',
+                 sample_model: str = 'ema',
+                 collect_device: str = 'cpu',
+                 prefix: Optional[str] = None):
+        super().__init__(fake_nums, real_nums, fake_key, real_key,
+                         sample_model, collect_device, prefix)
+
+    def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
+                           metrics: GenMetric):
+        """Get sampler for generative metrics. Returns a dummy iterator, whose
+        return value of each iteration is a dict containing batch size and
+        sample mode to generate images.
+
+        Args:
+            model (nn.Module): Model to evaluate.
+            dataloader (DataLoader): Dataloader for real images. Used to get
+                batch size during generate fake images.
+            metrics (List['GenMetric']): Metrics with the same sampler mode.
+
+        Returns:
+            :class:`dummy_iterator`: Sampler for generative metrics.
+        """
+
+        batch_size = dataloader.batch_size
+
+        sample_model = metrics[0].sample_model
+        assert all([metric.sample_model == sample_model for metric in metrics
+                    ]), ('\'sample_model\' between metrics is inconsistency.')
+
+        class dummy_iterator:
+
+            def __init__(self, batch_size, max_length, sample_model) -> None:
+                self.batch_size = batch_size
+                self.max_length = max_length
+                self.sample_model = sample_model
+
+            def __iter__(self) -> Iterator:
+                self.idx = 0
+                return self
+
+            def __len__(self) -> int:
+                return math.ceil(self.max_length / self.batch_size)
+
+            def __next__(self) -> dict:
+                if self.idx > self.max_length:
+                    raise StopIteration
+                self.idx += batch_size
+                return dict(
+                    inputs=dict(
+                        sample_model=self.sample_model,
+                        num_batches=self.batch_size))
+
+        return dummy_iterator(
+            batch_size=batch_size,
+            max_length=max([metric.fake_nums_per_device
+                            for metric in metrics]),
+            sample_model=sample_model)
+
+    def evaluate(self) -> dict():
+        """Evaluate generative metric. In this function we only collect
+        :attr:`fake_results` because generative metrics do not need real
+        images.
+
+        Returns:
+            dict: Evaluation metrics dict on the val dataset. The keys are the
+                names of the metrics, and the values are corresponding results.
+        """
+        results_fake = self._collect_target_results(target='fake')
+
+        if is_main_process():
+            # pack to list, align with BaseMetrics
+            _metrics = self.compute_metrics(results_fake)
+            # Add prefix to metric names
+            if self.prefix:
+                _metrics = {
+                    '/'.join((self.prefix, k)): v
+                    for k, v in _metrics.items()
+                }
+            metrics = [_metrics]
+        else:
+            metrics = [None]  # type: ignore
+
+        broadcast_object_list(metrics)
+
+        # reset the results list
+        self.fake_results.clear()
+
+        return metrics[0]
+
+    def compute_metrics(self, results) -> dict:
+        """Compute the metrics from processed results.
+
+        Args:
+            results (list): The processed results of each batch.
+
+        Returns:
+            dict: The computed metrics. The keys are the names of the metrics,
+            and the values are corresponding results.
+        """
