@@ -1,6 +1,6 @@
 # # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
-import sys
+import platform
 
 import pytest
 import torch
@@ -9,7 +9,7 @@ from mmedit.apis import init_model, restoration_face_inference
 
 
 @pytest.mark.skipif(
-    'win' in sys.platform and torch.cuda.is_available(),
+    'win' in platform.system().lower() and torch.cuda.is_available(),
     reason='skip on windows-cuda due to limited RAM.')
 def test_restoration_face_inference():
     if torch.cuda.is_available():

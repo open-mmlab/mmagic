@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import sys
+import platform
 
 import pytest
 import torch
@@ -49,7 +49,7 @@ def test_cain_net_cpu():
 
 
 @pytest.mark.skipif(
-    'win' in sys.platform and torch.cuda.is_available(),
+    'win' in platform.system().lower() and torch.cuda.is_available(),
     reason='skip on windows-cuda due to limited RAM.')
 def test_cain_net_cuda():
 

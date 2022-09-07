@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import sys
+import platform
 
 import pytest
 import torch
@@ -9,7 +9,7 @@ from mmedit.registry import MODELS
 
 
 @pytest.mark.skipif(
-    'win' in sys.platform and torch.cuda.is_available(),
+    'win' in platform.system().lower() and torch.cuda.is_available(),
     reason='skip on windows-cuda due to limited RAM.')
 def test_max_feature():
     # cpu
@@ -37,7 +37,7 @@ def test_max_feature():
 
 
 @pytest.mark.skipif(
-    'win' in sys.platform and torch.cuda.is_available(),
+    'win' in platform.system().lower() and torch.cuda.is_available(),
     reason='skip on windows-cuda due to limited RAM.')
 def test_light_cnn():
     cfg = dict(type='LightCNN', in_channels=3)
