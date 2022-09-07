@@ -126,15 +126,4 @@ jobs:
       #   uses: mxschmitt/action-tmate@v3
       - name: Run unittests and generate coverage report
         run: |
-          pytest tests/ \
-          --ignore tests/test_apis/ \
-          tests/test_models/test_editors/test_basicvsr_plusplus_net \
-          tests/test_models/test_editors/test_cain/ \
-          tests/test_models/test_editors/test_dic/ \
-          tests/test_models/test_editors/test_dim/ \
-          tests/test_models/test_editors/test_edvr/ \
-          tests/test_models/test_editors/test_esrgan \
-          tests/test_models/test_editors/test_fba/ \
-          tests/test_models/test_editors/test_flavr \
-          tests/test_models/test_editors/test_gca \
-          tests/test_models/test_editors/test_glean \
+          pytest tests/ --ignore tests/test_apis/ tests/test_models/test_editors/test_basicvsr_plusplus_net tests/test_models/test_editors/test_cain/ tests/test_models/test_editors/test_dic/ tests/test_models/test_editors/test_dim/ tests/test_models/test_editors/test_edvr/ tests/test_models/test_editors/test_esrgan tests/test_models/test_editors/test_fba/ tests/test_models/test_editors/test_flavr tests/test_models/test_editors/test_gca tests/test_models/test_editors/test_glean
