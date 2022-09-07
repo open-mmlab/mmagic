@@ -167,7 +167,7 @@ class GenDataPreprocessor(ImgDataPreprocessor):
         Args:
             data (dict): Input data to process.
             training (bool): Whether to enable training time augmentation.
-                This is ignored for :class:`GANDataPreprocessor`. Defaults to
+                This is ignored for :class:`GenDataPreprocessor`. Defaults to
                 False.
         Returns:
             dict: Data in the same format as the model input.

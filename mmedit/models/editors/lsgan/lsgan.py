@@ -18,7 +18,7 @@ class LSGAN(BaseGAN):
     Paper link: https://arxiv.org/pdf/1611.04076.pdf
 
     Detailed architecture can be found in
-    :class:~`mmgen.models.architectures.lsgan.generator_discriminator.LSGANGenerator`  # noqa
+    :class:~`mmgen.models.architectures.lsgan.generator_generator.LSGANGenerator`  # noqa
     and
     :class:~`mmgen.models.architectures.lsgan.generator_discriminator.LSGANDiscriminator`  # noqa
     """

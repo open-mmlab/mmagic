@@ -1,0 +1,47 @@
+Collections:
+- Metadata:
+    Architecture:
+    - Unsupervised Representation Learning with Deep Convolutional Generative Adversarial
+      Networks
+  Name: Unsupervised Representation Learning with Deep Convolutional Generative Adversarial
+    Networks
+  Paper:
+  - https://arxiv.org/abs/1511.06434
+  README: configs/dcgan/README.md
+Models:
+- Config: https://github.com/open-mmlab/mmgeneration/blob/master/configs/base_dcgan_Glr4e-4_Dlr1e-4_1xb128-5kiters_mnist-64x64.py
+  In Collection: Unsupervised Representation Learning with Deep Convolutional Generative
+    Adversarial Networks
+  Metadata:
+    Training Data: Others
+  Name: base_dcgan_Glr4e-4_Dlr1e-4_1xb128-5kiters_mnist-64x64
+  Results:
+  - Dataset: Others
+    Metrics:
+      MS-SSIM: 0.1395
+    Task: Dcgan
+  Weights: https://download.openmmlab.com/mmgen/base_dcgan_mnist-64_b128x1_Glr4e-4_Dlr1e-4_5k_20210512_163926-207a1eaf.pth
+- Config: https://github.com/open-mmlab/mmgeneration/blob/master/configs/base_dcgan_1xb128-300kiters_celeba-cropped-64.py
+  In Collection: Unsupervised Representation Learning with Deep Convolutional Generative
+    Adversarial Networks
+  Metadata:
+    Training Data: CELEBA
+  Name: base_dcgan_1xb128-300kiters_celeba-cropped-64
+  Results:
+  - Dataset: CELEBA
+    Metrics:
+      MS-SSIM: 0.2899
+    Task: Dcgan
+  Weights: https://download.openmmlab.com/mmgen/base_dcgan_celeba-cropped_64_b128x1_300kiter_20210408_161607-1f8a2277.pth
+- Config: https://github.com/open-mmlab/mmgeneration/blob/master/configs/base_dcgan_1xb128-5epoches_lsun-bedroom-64x64.py
+  In Collection: Unsupervised Representation Learning with Deep Convolutional Generative
+    Adversarial Networks
+  Metadata:
+    Training Data: Others
+  Name: base_dcgan_1xb128-5epoches_lsun-bedroom-64x64
+  Results:
+  - Dataset: Others
+    Metrics:
+      MS-SSIM: 0.2095
+    Task: Dcgan
+  Weights: https://download.openmmlab.com/mmgen/base_dcgan_lsun-bedroom_64_b128x1_5e_20210408_161713-117c498b.pth

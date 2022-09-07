@@ -33,9 +33,9 @@ class UnpairedImageDataset(BaseDataset):
         test_mode (bool): Store `True` when building test dataset.
             Default: `False`.
         domain_a (str, optional): Domain of images in trainA / testA.
-            Defaults to None.
+            Defaults to 'A'.
         domain_b (str, optional): Domain of images in trainB / testB.
-            Defaults to None.
+            Defaults to 'B'.
     """
 
     def __init__(self,
@@ -43,8 +43,8 @@ class UnpairedImageDataset(BaseDataset):
                  pipeline,
                  io_backend: Optional[str] = None,
                  test_mode=False,
-                 domain_a=None,
-                 domain_b=None):
+                 domain_a='A',
+                 domain_b='B'):
         phase = 'test' if test_mode else 'train'
         self.dataroot_a = osp.join(str(data_root), phase + 'A')
         self.dataroot_b = osp.join(str(data_root), phase + 'B')
@@ -87,39 +87,6 @@ class UnpairedImageDataset(BaseDataset):
             data_infos.append(dict(path=path))
         return data_infos
 
-    # def prepare_train_data(self, idx):
-    #     """Prepare unpaired training data.
-
-    #     Args:
-    #         idx (int): Index of current batch.
-
-    #     Returns:
-    #         dict: Prepared training data batch.
-    #     """
-    #     img_a_path = self.data_infos_a[idx % self.len_a]['path']
-    #     idx_b = np.random.randint(0, self.len_b)
-    #     img_b_path = self.data_infos_b[idx_b]['path']
-    #     results = dict()
-    #     results[f'img_{self.domain_a}_path'] = img_a_path
-    #     results[f'img_{self.domain_b}_path'] = img_b_path
-    #     return self.pipeline(results)
-
-    # def prepare_test_data(self, idx):
-    #     """Prepare unpaired test data.
-
-    #     Args:
-    #         idx (int): Index of current batch.
-
-    #     Returns:
-    #         list[dict]: Prepared test data batch.
-    #     """
-    #     img_a_path = self.data_infos_a[idx % self.len_a]['path']
-    #     img_b_path = self.data_infos_b[idx % self.len_b]['path']
-    #     results = dict()
-    #     results[f'img_{self.domain_a}_path'] = img_a_path
-    #     results[f'img_{self.domain_b}_path'] = img_b_path
-    #     return self.pipeline(results)
-
     @force_full_init
     def get_data_info(self, idx) -> dict:
         img_a_path = self.data_infos_a[idx % self.len_a]['path']
@@ -150,14 +117,3 @@ class UnpairedImageDataset(BaseDataset):
         images = [self.file_client.join_path(path, img) for img in imgs_list]
         assert images, f'{path} has no valid image file.'
         return images
-
-    # def __getitem__(self, idx):
-    #     """Get item at each call.
-
-    #     Args:
-    #         idx (int): Index for getting each item.
-    #     """
-    #     if not self.test_mode:
-    #         return self.prepare_train_data(idx)
-
-    #     return self.prepare_test_data(idx)

@@ -8,6 +8,9 @@ from .gan_loss import (DiscShiftLoss, GANLoss, GaussianBlur,
                        GradientPenaltyLoss, gen_path_regularizer,
                        gradient_penalty_loss, r1_gradient_penalty_loss)
 from .gradient_loss import GradientLoss
+from .loss_comps import (CLIPLossComps, DiscShiftLossComps, FaceIdLossComps,
+                         GANLossComps, GeneratorPathRegularizerComps,
+                         GradientPenaltyLossComps, R1GradientPenaltyComps)
 from .loss_utils import mask_reduce_loss, reduce_loss
 from .perceptual_loss import (PerceptualLoss, PerceptualVGG,
                               TransferalPerceptualLoss)
@@ -20,5 +23,7 @@ __all__ = [
     'mask_reduce_loss', 'DiscShiftLoss', 'MaskedTVLoss', 'GradientLoss',
     'TransferalPerceptualLoss', 'LightCNNFeatureLoss', 'gradient_penalty_loss',
     'r1_gradient_penalty_loss', 'gen_path_regularizer', 'FaceIdLoss',
-    'CLIPLoss'
+    'CLIPLoss', 'CLIPLossComps', 'DiscShiftLossComps', 'FaceIdLossComps',
+    'GANLossComps', 'GeneratorPathRegularizerComps',
+    'GradientPenaltyLossComps', 'R1GradientPenaltyComps'
 ]

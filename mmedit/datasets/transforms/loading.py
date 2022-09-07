@@ -518,8 +518,8 @@ class LoadPairedImageFromFile(LoadImageFromFile):
         image_a = image[:, :new_w, :]
         image_b = image[:, new_w:, :]
 
-        results[f'img_{self.domain_a}'] = image
-        results[f'img_{self.domain_b}'] = image
+        results[f'img_{self.domain_a}'] = image_a
+        results[f'img_{self.domain_b}'] = image_b
         results[f'img_{self.domain_a}_path'] = filename
         results[f'img_{self.domain_b}_path'] = filename
         results[f'img_{self.domain_a}_ori_shape'] = image_a.shape

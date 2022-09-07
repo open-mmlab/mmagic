@@ -29,6 +29,7 @@ from .liif import LIIF, MLPRefiner
 from .lsgan import LSGAN
 from .pconv import (MaskConvModule, PartialConv2d, PConvDecoder, PConvEncoder,
                     PConvEncoderDecoder, PConvInpaintor)
+from .pix2pix import Pix2Pix
 from .plain import PlainDecoder, PlainRefiner
 from .rdn import RDNNet
 from .real_basicvsr import RealBasicVSR, RealBasicVSRNet
@@ -62,5 +63,5 @@ __all__ = [
     'ModifiedVGG', 'MSRResNet', 'RDNNet', 'LTE', 'TTSR', 'TTSRNet',
     'TTSRDiscriminator', 'TTSRNet', 'SearchTransformer', 'GLEANStyleGANv2',
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
-    'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN'
+    'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix'
 ]

@@ -87,17 +87,7 @@ class PackEditInputs(BaseTransform):
     Others will be packed into metainfo field of EditDataSample.
     """
 
-    # pre_defined_keys = [
-    #     'img', 'gt', 'ref', 'mask', 'gt_heatmap', 'trimap', 'gt_alphg',
-    #     'gt_fg', 'gt_bg'
-    # ]
-
-    def __init__(
-        self,
-        keys: Tuple[List[str], str, None] = None,
-        #  pack_all: bool = False,
-        #  meta_keys: Optional[Sequence[str]] = None
-    ):
+    def __init__(self, keys: Tuple[List[str], str, None] = None):
         if keys is not None:
             if isinstance(keys, list):
                 self.keys = keys
@@ -105,9 +95,6 @@ class PackEditInputs(BaseTransform):
                 self.keys = [keys]
         else:
             self.keys = None
-
-        # self.pack_all = pack_all
-        # self.meta_keys = [] if meta_keys is None else meta_keys
 
     def transform(self, results: dict) -> dict:
         """Method to pack the input data.

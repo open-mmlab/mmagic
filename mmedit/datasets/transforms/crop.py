@@ -823,3 +823,96 @@ class CropAroundUnknown(BaseTransform):
                      f'interpolations={self.interpolations})')
 
         return repr_str
+
+
+@TRANSFORMS.register_module()
+class RandomCropLongEdge(BaseTransform):
+    """Random crop the given image by the long edge.
+
+    Args:
+        keys (list[str]): The images to be cropped.
+    """
+
+    def __init__(self, keys='img'):
+        assert keys, 'Keys should not be empty.'
+        if not isinstance(keys, list):
+            keys = [keys]
+        self.keys = keys
+
+    def transform(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+
+        for key in self.keys:
+            img = results[key]
+            img_height, img_width = img.shape[:2]
+            crop_size = min(img_height, img_width)
+            y1 = 0 if img_height == crop_size else \
+                np.random.randint(0, img_height - crop_size)
+            x1 = 0 if img_width == crop_size else \
+                np.random.randint(0, img_width - crop_size)
+            y2, x2 = y1 + crop_size - 1, x1 + crop_size - 1
+
+            img = mmcv.imcrop(img, bboxes=np.array([x1, y1, x2, y2]))
+            results[key] = img
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(keys={self.keys})')
+        return repr_str
+
+
+@TRANSFORMS.register_module()
+class CenterCropLongEdge(BaseTransform):
+    """Center crop the given image by the long edge.
+
+    Args:
+        keys (list[str]): The images to be cropped.
+    """
+
+    def __init__(self, keys='img'):
+        assert keys, 'Keys should not be empty.'
+        if not isinstance(keys, list):
+            keys = [keys]
+        self.keys = keys
+
+    def transform(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+
+        for key in self.keys:
+            img = results[key]
+            img_height, img_width = img.shape[:2]
+            crop_size = min(img_height, img_width)
+            y1 = 0 if img_height == crop_size else \
+                int(round(img_height - crop_size) / 2)
+            x1 = 0 if img_width == crop_size else \
+                int(round(img_width - crop_size) / 2)
+            y2 = y1 + crop_size - 1
+            x2 = x1 + crop_size - 1
+
+            img = mmcv.imcrop(img, bboxes=np.array([x1, y1, x2, y2]))
+            results[key] = img
+
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += (f'(keys={self.keys})')
+        return repr_str

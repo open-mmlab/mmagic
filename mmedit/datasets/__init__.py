@@ -6,7 +6,6 @@ from .cifar10_dataset import CIFAR10
 from .comp1k_dataset import AdobeComp1kDataset
 from .imagenet_dataset import ImageNet
 from .paired_image_dataset import PairedImageDataset
-from .unconditional_image_dataset import UnconditionalImageDataset
 from .unpaired_image_dataset import UnpairedImageDataset
 
 __all__ = [
@@ -14,7 +13,6 @@ __all__ = [
     'BasicImageDataset',
     'BasicFramesDataset',
     'BasicConditionalDataset',
-    'UnconditionalImageDataset',
     'UnpairedImageDataset',
     'PairedImageDataset',
     'ImageNet',

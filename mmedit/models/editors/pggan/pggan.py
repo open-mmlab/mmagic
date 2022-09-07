@@ -24,7 +24,6 @@ ModelType = Union[Dict, nn.Module]
 TrainInput = Union[dict, Tensor]
 
 
-# @MODELS.register_module('StyleGANV1')
 @MODELS.register_module('PGGAN')
 @MODELS.register_module()
 class ProgressiveGrowingGAN(BaseGAN):

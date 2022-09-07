@@ -29,7 +29,7 @@ class Flip(BaseTransform):
     - [KEYS]
 
     Args:
-        keys (list[str]): The images to be flipped.
+        keys (Union[str, List[str]]): The images to be flipped.
         flip_ratio (float): The probability to flip the images. Default: 0.5.
         direction (str): Flip images horizontally or vertically. Options are
             "horizontal" | "vertical". Default: "horizontal".
@@ -348,7 +348,6 @@ class Resize(BaseTransform):
         Returns:
             dict: A dict containing the processed data and information.
         """
-
         if self.size_factor:
             h, w = results[self.keys[0]].shape[:2]
             new_h = h - (h % self.size_factor)
