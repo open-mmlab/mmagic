@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/models/styleganv3_base.py',
+    '../_base_/models/base_styleganv3.py',
     '../_base_/datasets/ffhq_flip.py',
     '../_base_/gen_default_runtime.py',
 ]

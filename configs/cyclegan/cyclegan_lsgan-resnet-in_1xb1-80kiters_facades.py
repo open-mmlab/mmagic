@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/models/cyclegan/base_cyclegan.py',
+    '../_base_/models/base_cyclegan.py',
     '../_base_/datasets/unpaired_imgs_256x256.py',
     '../_base_/gen_default_runtime.py'
 ]

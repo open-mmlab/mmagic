@@ -1,6 +1,6 @@
 _base_ = [
-    '../_base_/models/base_pix2pix.py.py',
-    '../_base_/datasets/paired_imgs_256x256.py',
+    '../_base_/models/base_pix2pix.py',
+    '../_base_/datasets/paired_imgs_256x256_crop.py',
     '../_base_/gen_default_runtime.py',
 ]
 source_domain = domain_b = 'edges'

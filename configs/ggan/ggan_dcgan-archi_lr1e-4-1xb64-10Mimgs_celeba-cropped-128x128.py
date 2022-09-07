@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/models/base_dcgan_128x128.py',
+    '../_base_/models/dcgan/base_dcgan_128x128.py',
     '../_base_/datasets/unconditional_imgs_128x128.py',
     '../_base_/gen_default_runtime.py'
 ]

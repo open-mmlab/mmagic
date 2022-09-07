@@ -1,6 +1,6 @@
 _base_ = [
     '../_base_/datasets/lsun-car_pad_512.py',
-    '../_base_/models/styleganv2_base.py', '../_base_/gen_default_runtime.py'
+    '../_base_/models/base_styleganv2.py', '../_base_/gen_default_runtime.py'
 ]
 
 # reg params

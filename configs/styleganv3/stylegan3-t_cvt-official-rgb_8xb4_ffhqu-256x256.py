@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/models/styleganv3_base.py',
+    '../_base_/models/base_styleganv3.py',
     '../_base_/gen_default_runtime.py',
     '../_base_/datasets/unconditional_imgs_flip_lanczos_resize_256x256.py',
 ]

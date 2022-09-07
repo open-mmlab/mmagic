@@ -1,7 +1,7 @@
 """Config for the `config-f` setting in StyleGAN2."""
 
 _base_ = [
-    '../_base_/datasets/ffhq_flip.py', '../_base_/models/styleganv2_base.py',
+    '../_base_/datasets/ffhq_flip.py', '../_base_/models/base_styleganv2.py',
     '../_base_/gen_default_runtime.py'
 ]
 
