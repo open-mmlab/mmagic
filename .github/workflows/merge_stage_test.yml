@@ -6,11 +6,12 @@ on:
       - 'README.md'
       - 'README_zh-CN.md'
       - 'docs/**'
-      - 'demo/**'
       - '.dev_scripts/**'
       - '.circleci/**'
     branches:
       - dev-1.x
+      - test-1.x
+      - 1.x
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -51,6 +52,7 @@ jobs:
           coverage run --branch --source mmedit -m pytest tests/
           coverage xml
           coverage report -m
+
   build_cpu_pt:
     runs-on: ubuntu-18.04
     strategy:
@@ -146,6 +148,7 @@ jobs:
         run: |
           python setup.py check -m -s
           TORCH_CUDA_ARCH_LIST=7.0 pip install -e .
+
   build_windows:
     runs-on: ${{ matrix.os }}
     strategy:

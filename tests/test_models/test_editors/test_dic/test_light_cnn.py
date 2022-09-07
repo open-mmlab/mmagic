@@ -9,7 +9,7 @@ from mmedit.registry import MODELS
 
 
 @pytest.mark.skipif(
-    sys.platform == 'win32' and torch.cuda.is_available(),
+    'win' in sys.platform and torch.cuda.is_available(),
     reason='skip on windows-cuda due to limited RAM.')
 def test_max_feature():
     # cpu
@@ -37,7 +37,7 @@ def test_max_feature():
 
 
 @pytest.mark.skipif(
-    sys.platform == 'win32' and torch.cuda.is_available(),
+    'win' in sys.platform and torch.cuda.is_available(),
     reason='skip on windows-cuda due to limited RAM.')
 def test_light_cnn():
     cfg = dict(type='LightCNN', in_channels=3)

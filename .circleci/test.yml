@@ -114,6 +114,7 @@ jobs:
           name: Run unittests
           command: |
             docker exec mmedit pytest tests/
+
 workflows:
   pr_stage_lint:
     when: << pipeline.parameters.lint_only >>
@@ -124,6 +125,7 @@ workflows:
             branches:
               ignore:
                 - dev-1.x
+                - test-1.x
                 - 1.x
   pr_stage_test:
     when:
@@ -137,6 +139,7 @@ workflows:
               ignore:
                 - dev-1.x
                 - test-1.x
+                - 1.x
       - build_cpu:
           name: minimum_version_cpu
           torch: 1.6.0
@@ -178,3 +181,5 @@ workflows:
             branches:
               only:
                 - dev-1.x
+                - test-1.x
+                - 1.x

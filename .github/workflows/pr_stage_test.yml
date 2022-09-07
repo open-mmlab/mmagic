@@ -6,7 +6,6 @@ on:
       - 'README.md'
       - 'README_zh-CN.md'
       - 'docs/**'
-      - 'demo/**'
       - '.dev_scripts/**'
       - '.circleci/**'
 
@@ -94,6 +93,7 @@ jobs:
         run: |
           python setup.py check -m -s
           TORCH_CUDA_ARCH_LIST=7.0 pip install -e .
+
   build_windows:
     runs-on: ${{ matrix.os }}
     strategy:
