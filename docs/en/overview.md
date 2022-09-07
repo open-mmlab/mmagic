@@ -42,7 +42,7 @@ MMEditing supports various tasks, including:
 
   The toolbox provides state-of-the-art methods to process, edit and synthesize images and videos.
 
-- **Easy-Modular design**
+- **Easy-modular design**
 
   We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules.
 
