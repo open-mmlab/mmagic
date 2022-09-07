@@ -48,8 +48,8 @@ model = dict(
     test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
-        mean=[0.5, 0.5, 0.5],
-        std=[0.5, 0.5, 0.5],
+        mean=[127.5, 127.5, 127.5],
+        std=[127.5, 127.5, 127.5],
     ),
 )
 
@@ -131,7 +131,6 @@ test_pipeline = [
         key='gt',
         color_type='color',
         channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['gt', 'img']),
     dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
@@ -142,7 +141,6 @@ demo_pipeline = [
         key='img',
         color_type='color',
         channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['img']),
     dict(
         type='RandomResize',
         params=dict(
