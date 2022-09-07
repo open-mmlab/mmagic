@@ -104,7 +104,8 @@ def test_video_interpolation_inference():
 
     if torch.cuda.is_available():
         model = init_model(
-            './configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py',
+            './configs/video_interpolators/cain/'
+            'cain_b5_g1b32_vimeo90k_triplet.py',
             None,
             device='cuda')
         model.cfg['demo_pipeline'] = [
