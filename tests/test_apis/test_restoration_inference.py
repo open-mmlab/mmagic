@@ -1,11 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
+import sys
 
+import pytest
 import torch
 
 from mmedit.apis import init_model, restoration_inference
 
 
+@pytest.mark.skipif(
+    sys.platform == 'win32' and torch.cuda.is_available(),
+    reason='skip on windows-cuda due to limited RAM.')
 def test_restoration_inference():
     if torch.cuda.is_available():
         device = torch.device('cuda', 0)

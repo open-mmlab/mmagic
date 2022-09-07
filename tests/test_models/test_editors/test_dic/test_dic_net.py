@@ -1,4 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import sys
+
+import pytest
 import torch
 import torch.nn as nn
 
@@ -36,7 +39,7 @@ def test_feedback_block_heatmap_attention():
     assert x3.shape == x2.shape
 
 
-def test_dic_net():
+def test_dic_net_cpu():
 
     model_cfg = dict(
         type='DICNet',
@@ -75,6 +78,33 @@ def test_dic_net():
     assert len(output) == 4
     assert torch.is_tensor(output[-1])
     assert output[-1].shape == targets.shape
+
+
+@pytest.mark.skipif(
+    sys.platform == 'win32' and torch.cuda.is_available(),
+    reason='skip on windows-cuda due to limited RAM.')
+def test_dic_net_cuda():
+    # prepare data
+    inputs = torch.rand(1, 3, 16, 16)
+    targets = torch.rand(1, 3, 128, 128)
+
+    model_cfg = dict(
+        type='DICNet',
+        in_channels=3,
+        out_channels=3,
+        mid_channels=48,
+        num_blocks=6,
+        hg_mid_channels=256,
+        hg_num_keypoints=68,
+        num_steps=4,
+        upscale_factor=8,
+        detach_attention=False)
+
+    # build model
+    model = MODELS.build(model_cfg)
+
+    # prepare loss
+    loss_function = nn.L1Loss()
 
     # test on gpu
     if torch.cuda.is_available():

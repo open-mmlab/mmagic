@@ -1,5 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import sys
+
 import numpy as np
+import pytest
 import torch
 from mmengine.config import ConfigDict
 
@@ -11,6 +14,9 @@ from mmedit.utils import register_all_modules
 register_all_modules()
 
 
+@pytest.mark.skipif(
+    sys.platform == 'win32' and torch.cuda.is_available(),
+    reason='skip on windows-cuda due to limited RAM.')
 def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
     """Create a superset of inputs needed to run backbone.
 
@@ -54,6 +60,9 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
     return inputs, data_samples
 
 
+@pytest.mark.skipif(
+    sys.platform == 'win32' and torch.cuda.is_available(),
+    reason='skip on windows-cuda due to limited RAM.')
 def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
     """Create a superset of inputs needed to run backbone.
 
@@ -161,6 +170,9 @@ def test_dim_config():
     assert mattor.test_cfg.refine
 
 
+@pytest.mark.skipif(
+    sys.platform == 'win32' and torch.cuda.is_available(),
+    reason='skip on windows-cuda due to limited RAM.')
 def test_dim():
     model_cfg = ConfigDict(
         type='DIM',

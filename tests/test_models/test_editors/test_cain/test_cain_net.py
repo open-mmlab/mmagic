@@ -1,11 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import sys
+
 import pytest
 import torch
 
 from mmedit.registry import MODELS
 
 
-def test_cain_net():
+def test_cain_net_cpu():
 
     model_cfg = dict(type='CAINNet')
 
@@ -17,7 +19,6 @@ def test_cain_net():
 
     # prepare data
     inputs0 = torch.rand(1, 2, 3, 5, 5)
-    target0 = torch.rand(1, 3, 5, 5)
     inputs = torch.rand(1, 2, 3, 256, 248)
     target = torch.rand(1, 3, 256, 248)
 
@@ -39,6 +40,21 @@ def test_cain_net():
     with pytest.raises(ValueError):
         model_cfg = dict(type='CAINNet', norm='lys')
         MODELS.build(model_cfg)
+
+
+@pytest.mark.skipif(
+    sys.platform == 'win32' and torch.cuda.is_available(),
+    reason='skip on windows-cuda due to limited RAM.')
+def test_cain_net_cuda():
+
+    # prepare data
+    inputs0 = torch.rand(1, 2, 3, 5, 5)
+    target0 = torch.rand(1, 3, 5, 5)
+    inputs = torch.rand(1, 2, 3, 256, 248)
+    target = torch.rand(1, 3, 256, 248)
+
+    model_cfg = dict(type='CAINNet', norm='bn')
+    model = MODELS.build(model_cfg)
 
     # test on gpu
     if torch.cuda.is_available():

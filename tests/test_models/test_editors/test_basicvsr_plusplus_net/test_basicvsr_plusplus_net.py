@@ -1,11 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import sys
+
 import pytest
 import torch
 
 from mmedit.models.editors import BasicVSRPlusPlusNet
 
 
-def test_basicvsr_plusplus():
+def test_basicvsr_plusplus_cpu():
     """Test BasicVSR++."""
 
     # cpu
@@ -45,6 +47,11 @@ def test_basicvsr_plusplus():
     output = model(input_tensor)
     assert output.shape == (1, 5, 3, 256, 256)
 
+
+@pytest.mark.skipif(
+    sys.platform == 'win32' and torch.cuda.is_available(),
+    reason='skip on windows-cuda due to limited RAM.')
+def test_basicvsr_plusplus_cuda():
     # gpu
     if torch.cuda.is_available():
         model = BasicVSRPlusPlusNet(
