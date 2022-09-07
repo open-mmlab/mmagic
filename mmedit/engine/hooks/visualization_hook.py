@@ -437,7 +437,7 @@ class GenVisualizationHook(Hook):
                     'message_hub.runtime_info[\'vis_results\'].')
 
             value = vis_results[key]
-            # pack to list of GenDataSample
+            # pack to list of EditDataSample
             if isinstance(value, torch.Tensor):
                 gen_samples = []
                 num_batches = value.shape[0]

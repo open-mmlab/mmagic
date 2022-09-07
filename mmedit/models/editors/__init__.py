@@ -37,6 +37,9 @@ from .real_esrgan import RealESRGAN, UNetDiscriminatorWithSpectralNorm
 from .sagan import SAGAN
 from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
+from .stylegan1 import StyleGAN1
+from .stylegan2 import StyleGAN2
+from .stylegan3 import StyleGAN3
 from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
@@ -63,5 +66,6 @@ __all__ = [
     'ModifiedVGG', 'MSRResNet', 'RDNNet', 'LTE', 'TTSR', 'TTSRNet',
     'TTSRDiscriminator', 'TTSRNet', 'SearchTransformer', 'GLEANStyleGANv2',
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
-    'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix'
+    'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
+    'StyleGAN1', 'StyleGAN2', 'StyleGAN3'
 ]

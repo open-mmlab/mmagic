@@ -6,7 +6,7 @@ from typing import List, Optional, Sequence
 from mmengine.evaluator import BaseMetric
 
 from mmedit.registry import METRICS
-from .metric_utils import average, obtain_data
+from .metrics_utils import average, obtain_data
 
 
 @METRICS.register_module()

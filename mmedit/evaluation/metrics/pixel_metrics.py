@@ -7,7 +7,7 @@ import numpy as np
 
 from mmedit.registry import METRICS
 from .base_sample_wise_metric import BaseSampleWiseMetric
-from .metric_utils import img_transform
+from .metrics_utils import img_transform
 
 
 @METRICS.register_module()

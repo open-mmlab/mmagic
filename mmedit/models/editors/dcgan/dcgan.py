@@ -7,7 +7,7 @@ from mmengine.optim import OptimWrapper
 from torch import Tensor
 
 from mmedit.registry import MODELS
-from mmedit.structures import GenDataSample
+from mmedit.structures import EditDataSample
 from ...base_models import BaseGAN
 
 
@@ -66,14 +66,14 @@ class DCGAN(BaseGAN):
         return loss, log_var
 
     def train_discriminator(self, inputs: dict,
-                            data_samples: List[GenDataSample],
+                            data_samples: List[EditDataSample],
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[GenDataSample]): Data samples from dataloader.
+            data_samples (List[EditDataSample]): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:
@@ -95,13 +95,13 @@ class DCGAN(BaseGAN):
         optimizer_wrapper.update_params(parsed_losses)
         return log_vars
 
-    def train_generator(self, inputs: dict, data_samples: List[GenDataSample],
+    def train_generator(self, inputs: dict, data_samples: List[EditDataSample],
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[GenDataSample]): Data samples from dataloader.
+            data_samples (List[EditDataSample]): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
