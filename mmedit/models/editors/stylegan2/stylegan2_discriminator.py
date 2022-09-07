@@ -3,6 +3,7 @@ import mmengine
 import numpy as np
 import torch
 import torch.nn as nn
+from mmengine.model import BaseModule
 from mmengine.runner.amp import autocast
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 
@@ -13,8 +14,9 @@ from .ada.misc import constant
 from .stylegan2_modules import ConvDownLayer, ModMBStddevLayer, ResBlock
 
 
+@MODULES.register_module('StyleGANv2Discriminator')
 @MODULES.register_module()
-class StyleGAN2Discriminator(nn.Module):
+class StyleGAN2Discriminator(BaseModule):
     """StyleGAN2 Discriminator.
 
     The architecture of this discriminator is proposed in StyleGAN2. More
@@ -87,8 +89,10 @@ class StyleGAN2Discriminator(nn.Module):
                  out_fp32=True,
                  convert_input_fp32=True,
                  input_bgr2rgb=False,
+                 init_cfg=None,
                  pretrained=None):
-        super().__init__()
+        # TODO: pretrained can be deleted later
+        super().__init__(init_cfg=init_cfg)
         self.num_fp16_scale = num_fp16_scales
         self.fp16_enabled = fp16_enabled
         self.convert_input_fp32 = convert_input_fp32
@@ -110,7 +114,9 @@ class StyleGAN2Discriminator(nn.Module):
 
         in_channels = channels[in_size]
 
-        _use_fp16 = num_fp16_scales > 0
+        # import ipdb
+        # ipdb.set_trace()
+        _use_fp16 = num_fp16_scales > 0 or fp16_enabled
         convs = [
             ConvDownLayer(3, channels[in_size], 1, fp16_enabled=_use_fp16)
         ]
@@ -168,6 +174,8 @@ class StyleGAN2Discriminator(nn.Module):
         Returns:
             torch.Tensor: Predict score for the input image.
         """
+        # import ipdb
+        # ipdb.set_trace()
         # This setting was used to finetune on converted weights
         if self.input_bgr2rgb:
             x = x[:, [2, 1, 0], ...]

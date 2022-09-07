@@ -4,11 +4,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from mmedit.registry import MODULES
-from .. import MiniBatchStddevLayer
-from ..pggan import EqualizedLRConvDownModule, EqualizedLRConvModule
+from ..pggan import (EqualizedLRConvDownModule, EqualizedLRConvModule,
+                     MiniBatchStddevLayer)
 from .stylegan1_modules import Blur, EqualLinearActModule
 
 
+@MODULES.register_module('StyleGANv1Discriminator')
 @MODULES.register_module()
 class StyleGAN1Discriminator(nn.Module):
     """StyleGAN1 Discriminator.

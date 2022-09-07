@@ -14,8 +14,9 @@ from .stylegan1_modules import EqualLinearActModule, StyleConv
 from .stylegan_utils import get_mean_latent, style_mixing
 
 
+@MODULES.register_module('StyleGANv1Generator')
 @MODULES.register_module()
-class StyleGANv1Generator(nn.Module):
+class StyleGAN1Generator(nn.Module):
     """StyleGAN1 Generator.
 
     In StyleGAN1, we use a progressive growing architecture composing of a
@@ -132,7 +133,7 @@ class StyleGANv1Generator(nn.Module):
                     f'Switch to evaluation style mode: {self.eval_style_mode}')
             self.default_style_mode = self.eval_style_mode
 
-        return super(StyleGANv1Generator, self).train(mode)
+        return super(StyleGAN1Generator, self).train(mode)
 
     def make_injected_noise(self):
         """make noises that will be injected into feature maps.

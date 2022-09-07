@@ -16,8 +16,9 @@ from ..stylegan1 import (ConstantInput, EqualLinearActModule, get_mean_latent,
 from .stylegan2_modules import ModulatedStyleConv, ModulatedToRGB
 
 
+@MODULES.register_module('StyleGANv2Generator')
 @MODULES.register_module()
-class StyleGANv2Generator(nn.Module):
+class StyleGAN2Generator(nn.Module):
     r"""StyleGAN2 Generator.
 
     In StyleGAN2, we use a static architecture composing of a style mapping
@@ -96,6 +97,7 @@ class StyleGANv2Generator(nn.Module):
                  mix_prob=0.9,
                  num_fp16_scales=0,
                  fp16_enabled=False,
+                 bgr2rgb=False,
                  pretrained=None):
         super().__init__()
         self.out_size = out_size
@@ -109,6 +111,7 @@ class StyleGANv2Generator(nn.Module):
         self.mix_prob = mix_prob
         self.num_fp16_scales = num_fp16_scales
         self.fp16_enabled = fp16_enabled
+        self.bgr2rgb = bgr2rgb
 
         # define style mapping layers
         mapping_layers = [PixelNorm()]
@@ -231,7 +234,7 @@ class StyleGANv2Generator(nn.Module):
                     f'Switch to evaluation style mode: {self.eval_style_mode}')
             self.default_style_mode = self.eval_style_mode
 
-        return super(StyleGANv2Generator, self).train(mode)
+        return super(StyleGAN2Generator, self).train(mode)
 
     def make_injected_noise(self):
         """make noises that will be injected into feature maps.
@@ -431,10 +434,16 @@ class StyleGANv2Generator(nn.Module):
                 out = conv(out, latent[:, _index + 1], noise=noise2)
                 skip = to_rgb(out, latent[:, _index + 2], skip)
                 _index += 2
+        print()
+        import ipdb
+        ipdb.set_trace()
 
         # make sure the output image is torch.float32 to avoid RunTime Error
         # in other modules
         img = skip.to(torch.float32)
+
+        if self.bgr2rgb:
+            img = torch.flip(img, dims=1)
 
         if return_latents or return_noise:
             output_dict = dict(

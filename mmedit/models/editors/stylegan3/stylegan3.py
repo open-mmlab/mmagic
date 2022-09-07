@@ -9,7 +9,7 @@ from mmengine.optim import OptimWrapper
 from torch import Tensor
 
 from mmedit.registry import MODELS
-from mmedit.structures import GenDataSample
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import SampleList
 from ...utils import get_module_device, get_valid_num_batches
 from ..stylegan2 import StyleGAN2
@@ -62,7 +62,7 @@ class StyleGAN3(StyleGAN2):
                 sampler. More detials in `Metrics` and `Evaluator`.
 
         Returns:
-            SampleList: A list of ``GenDataSample`` contain generated results.
+            SampleList: A list of ``EditDataSample`` contain generated results.
         """
         data = self.data_preprocessor(data)
         inputs_dict, data_samples = data['inputs'], data['data_samples']
@@ -86,7 +86,7 @@ class StyleGAN3(StyleGAN2):
                 sampler. More detials in `Metrics` and `Evaluator`.
 
         Returns:
-            SampleList: A list of ``GenDataSample`` contain generated results.
+            SampleList: A list of ``EditDataSample`` contain generated results.
         """
         data = self.data_preprocessor(data)
         inputs_dict, data_samples = data['inputs'], data['data_samples']
@@ -103,14 +103,14 @@ class StyleGAN3(StyleGAN2):
         return outputs
 
     def train_discriminator(self, inputs: dict,
-                            data_samples: List[GenDataSample],
+                            data_samples: List[EditDataSample],
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[GenDataSample]): Data samples from dataloader.
+            data_samples (List[EditDataSample]): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:
@@ -136,13 +136,13 @@ class StyleGAN3(StyleGAN2):
         message_hub.update_info('disc_pred_real', disc_pred_real)
         return log_vars
 
-    def train_generator(self, inputs: dict, data_samples: List[GenDataSample],
+    def train_generator(self, inputs: dict, data_samples: List[EditDataSample],
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[GenDataSample]): Data samples from dataloader.
+            data_samples (List[EditDataSample]): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
@@ -191,7 +191,7 @@ class StyleGAN3(StyleGAN2):
         transform_matrix[:] = identity_matrix
         orig = generator.synthesis(ws=ws, **sample_kwargs)
 
-        batch_sample = [GenDataSample() for _ in range(batch_size)]
+        batch_sample = [EditDataSample() for _ in range(batch_size)]
         # Integer translation (EQ-T).
         if eq_cfg['compute_eqt_int']:
             t = (torch.rand(2, device=device) * 2 -
@@ -206,7 +206,7 @@ class StyleGAN3(StyleGAN2):
             for idx in range(batch_size):
                 data_sample = batch_sample[idx]
                 setattr(data_sample, 'eqt_int',
-                        GenDataSample(diff=diff, mask=mask))
+                        EditDataSample(diff=diff, mask=mask))
 
         # Fractional translation (EQ-T_frac).
         if eq_cfg['compute_eqt_frac']:
@@ -221,7 +221,7 @@ class StyleGAN3(StyleGAN2):
             for idx in range(batch_size):
                 data_sample = batch_sample[idx]
                 setattr(data_sample, 'eqt_frac',
-                        GenDataSample(diff=diff, mask=mask))
+                        EditDataSample(diff=diff, mask=mask))
 
         # Rotation (EQ-R).
         if eq_cfg['compute_eqr']:
@@ -237,6 +237,6 @@ class StyleGAN3(StyleGAN2):
             for idx in range(batch_size):
                 data_sample = batch_sample[idx]
                 setattr(data_sample, 'eqr',
-                        GenDataSample(diff=diff, mask=mask))
+                        EditDataSample(diff=diff, mask=mask))
 
         return batch_sample

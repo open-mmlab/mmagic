@@ -162,7 +162,6 @@ def pixel_norm(x, eps=1e-6):
 
 
 @MODULES.register_module()
-@MODELS.register_module()
 class PixelNorm(nn.Module):
     """Pixel Normalization.
 
@@ -506,7 +505,6 @@ class PGGANDecisionHead(nn.Module):
 
 
 @MODULES.register_module()
-@MODELS.register_module()
 class MiniBatchStddevLayer(nn.Module):
     """Minibatch standard deviation.
 

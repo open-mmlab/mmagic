@@ -251,6 +251,8 @@ class ModulatedConv2d(nn.Module):
 
             if self.fp16_enabled:
                 weight = weight.to(torch.float16)
+                x = x.to(torch.float16)
+
             if self.upsample:
                 x = x.reshape(1, n * c, h, w)
                 weight = weight.view(n, self.out_channels, c, self.kernel_size,
@@ -523,9 +525,6 @@ class ModulatedStyleConv(nn.Module):
 
         self.noise_injector = NoiseInjection()
         self.activate = _FusedBiasLeakyReLU(out_channels)
-
-        # if self.fp16_enabled:
-        #     self.half()
 
     def forward(self, x, style, noise=None, return_noise=False):
         """Forward Function.
@@ -844,12 +843,17 @@ class ResBlock(nn.Module):
         self.convert_input_fp32 = convert_input_fp32
 
         self.conv1 = ConvDownLayer(
-            in_channels, in_channels, 3, blur_kernel=blur_kernel)
+            in_channels,
+            in_channels,
+            3,
+            fp16_enabled=fp16_enabled,
+            blur_kernel=blur_kernel)
         self.conv2 = ConvDownLayer(
             in_channels,
             out_channels,
             3,
             downsample=True,
+            fp16_enabled=fp16_enabled,
             blur_kernel=blur_kernel)
 
         self.skip = ConvDownLayer(
@@ -859,9 +863,9 @@ class ResBlock(nn.Module):
             downsample=True,
             act_cfg=None,
             bias=False,
+            fp16_enabled=fp16_enabled,
             blur_kernel=blur_kernel)
 
-    # @auto_fp16()
     def forward(self, input):
         """Forward function.
 
@@ -873,10 +877,10 @@ class ResBlock(nn.Module):
         """
         # TODO: study whether this explicit datatype transfer will harm the
         # apex training speed
-        fp16_enabled = self.fp16_enabled and not self.convert_input_fp32
-        with autocast(enabled=fp16_enabled):
-            if not fp16_enabled:
-                input = input.to(torch.float32)
+        if not self.fp16_enabled and self.convert_input_fp32:
+            input = input.to(torch.float32)
+
+        with autocast(enabled=self.fp16_enabled):
             out = self.conv1(input)
             out = self.conv2(out)
 
