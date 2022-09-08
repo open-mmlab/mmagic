@@ -122,8 +122,8 @@ jobs:
       - name: Build and install
         run: |
           pip install -e .
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Run unittests and generate coverage report
         run: |
           pytest tests/
