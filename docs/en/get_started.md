@@ -35,7 +35,7 @@ Install PyTorch following [official instructions](https://pytorch.org/get-starte
 - On GPU platforms:
 
   ```shell
-  conda install pytorch=1.10 torchvision cudatoolkit=11.3 -c pytorch
+  conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
   ```
 
 - On CPU platforms:
@@ -66,7 +66,6 @@ pip3 install -e .
 Verification.
 
 ```shell
-cd ~
 python -c "import mmedit; print(mmedit.__version__)"
 # Example output: 0.14.0
 ```
@@ -76,7 +75,7 @@ The installation is successful if the version number is output correctly.
 You may be curious about what `-e .` means when supplied with `pip install`.
 Here is the description:
 
-- `-e` means [editable mode](https://pip.pypa.io/en/latest/cli/pip_install/#cmdoption-e). When `import mmedit`, modules under the cloned directory are imported. If `pip install` without `-e`, pip will copy cloned codes to somewhere like `lib/python/site-package`. Consequently, modified code under the cloned directory takes no effect unless `pip install` again. This is particularly convenient for developers. If some codes are modified, new codes will be imported next time without reinstallation.
+- `-e` means [editable mode](https://pip.pypa.io/en/latest/cli/pip_install/#cmdoption-e). When `import mmedit`, modules under the cloned directory are imported. If `pip install` without `-e`, pip will copy cloned codes to somewhere like `lib/python/site-package`. Consequently, modified code under the cloned directory takes no effect unless `pip install` again. Thus, `pip install` with `-e` is particularly convenient for developers. If some codes are modified, new codes will be imported next time without reinstallation.
 - `.` means code in this directory
 
 You can also use `pip install -e .[all]`, which will install more dependencies, especially for pre-commit hooks and unittests.
