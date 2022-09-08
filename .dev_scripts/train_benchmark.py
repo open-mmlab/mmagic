@@ -99,8 +99,6 @@ def parse_args():
         '--resume', action='store_true', help='Whether to resume checkpoint.')
     parser.add_argument(
         '--job-name', type=str, default=' ', help='Slurm job name prefix')
-    parser.add_argument(
-        '--train-all', action='store_true', help='Train all model or not.')
     parser.add_argument('--port', type=int, default=29666, help='dist port')
     parser.add_argument(
         '--config-dir',
@@ -251,11 +249,8 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
 
 def train(args):
     # parse model-index.yml
-    if args.train_all:
-        model_index_file = MMEDIT_ROOT / 'model-index.yml'
-    else:
-        print('Not implemented yet.')
-        exit()
+    model_index_file = MMEDIT_ROOT / 'model-index.yml'
+
     model_index = load(str(model_index_file))
     model_index.build_models_with_collections()
     models = OrderedDict({model.name: model for model in model_index.models})
