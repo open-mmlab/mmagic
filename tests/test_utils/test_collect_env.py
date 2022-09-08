@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.utils import collect_env
+from mmedit.utils.collect_env import collect_env
 
 
 def test_collect_env():
