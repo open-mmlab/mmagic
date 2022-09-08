@@ -39,6 +39,9 @@ def test_feedback_block_heatmap_attention():
     assert x3.shape == x2.shape
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_dic_net_cpu():
 
     model_cfg = dict(
@@ -75,6 +78,7 @@ def test_dic_net_cpu():
     loss = loss_function(output[-1], targets)
     loss.backward()
     optimizer.step()
+
     assert len(output) == 4
     assert torch.is_tensor(output[-1])
     assert output[-1].shape == targets.shape

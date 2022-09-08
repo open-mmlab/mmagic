@@ -49,7 +49,7 @@ def test_basicvsr_plusplus_cpu():
 
 
 @pytest.mark.skipif(
-    'win' in platform.system().lower() and torch.cuda.is_available(),
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
     reason='skip on windows-cuda due to limited RAM.')
 def test_basicvsr_plusplus_cuda():
     # gpu

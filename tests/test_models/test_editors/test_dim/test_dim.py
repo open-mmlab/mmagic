@@ -61,7 +61,7 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
 
 
 @pytest.mark.skipif(
-    'win' in platform.system().lower() and torch.cuda.is_available(),
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
     reason='skip on windows-cuda due to limited RAM.')
 def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
     """Create a superset of inputs needed to run backbone.
@@ -113,6 +113,9 @@ def assert_dict_keys_equal(dictionary, target_keys):
     assert set(dictionary.keys()) == set(target_keys)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_dim_config():
 
     data_preprocessor = dict(
@@ -171,7 +174,7 @@ def test_dim_config():
 
 
 @pytest.mark.skipif(
-    'win' in platform.system().lower() and torch.cuda.is_available(),
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
     reason='skip on windows-cuda due to limited RAM.')
 def test_dim():
     model_cfg = ConfigDict(

@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from unittest.mock import patch
 
+import pytest
 import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
@@ -12,6 +14,9 @@ from mmedit.models.losses import (GANLoss, MSELoss, PerceptualLoss,
 from mmedit.structures import EditDataSample, PixelData
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 @patch.object(PerceptualVGG, 'init_weights')
 def test_glean(init_weights):
 

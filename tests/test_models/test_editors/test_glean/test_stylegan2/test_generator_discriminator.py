@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 
 import pytest
@@ -18,6 +19,9 @@ class TestStyleGAN2Generator:
         cls.default_cfg = dict(
             out_size=64, style_channels=16, num_mlps=4, channel_multiplier=1)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_stylegan2_g_cpu(self):
         # test default config
         g = StyleGANv2Generator(**self.default_cfg)
@@ -126,12 +130,18 @@ class TestStyleGAN2Generator:
         assert res.shape == (2, 3, 256, 256)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 class TestStyleGANv2Disc:
 
     @classmethod
     def setup_class(cls):
         cls.default_cfg = dict(in_size=64, channel_multiplier=1)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_stylegan2_disc_cpu(self):
         d = StyleGANv2Discriminator(**self.default_cfg)
         img = torch.randn((2, 3, 64, 64))
