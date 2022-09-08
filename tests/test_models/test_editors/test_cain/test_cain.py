@@ -13,6 +13,9 @@ from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_cain_net_cpu():
 
     model_cfg = dict(type='CAINNet')
@@ -86,6 +89,9 @@ def test_cain_net_cuda():
             MODELS.build(model_cfg).cuda()
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_cain():
 
     # build model

@@ -7,6 +7,9 @@ import torch
 from mmedit.registry import MODELS
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_cain_net_cpu():
 
     model_cfg = dict(type='CAINNet')
