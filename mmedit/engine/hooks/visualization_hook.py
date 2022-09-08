@@ -104,7 +104,7 @@ class GenVisualizationHook(Hook):
             `sample_kwargs['type']` as default.
 
     For convenience, we also define a group of alias of samplers' type for
-    models supported in MMGeneration. Refers to
+    models supported in MMEditing. Refers to
     `:attr:self.SAMPLER_TYPE_MAPPING`.
 
     Example:

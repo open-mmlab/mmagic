@@ -434,9 +434,6 @@ class StyleGAN2Generator(nn.Module):
                 out = conv(out, latent[:, _index + 1], noise=noise2)
                 skip = to_rgb(out, latent[:, _index + 2], skip)
                 _index += 2
-        print()
-        import ipdb
-        ipdb.set_trace()
 
         # make sure the output image is torch.float32 to avoid RunTime Error
         # in other modules

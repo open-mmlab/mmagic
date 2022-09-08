@@ -18,7 +18,7 @@ class GeneratorPathRegularizerComps(nn.Module):
     here.
 
     **Note for the design of ``data_info``:**
-    In ``MMGeneration``, almost all of loss modules contain the argument
+    In ``MMEditing``, almost all of loss modules contain the argument
     ``data_info``, which can be used for constructing the link between the
     input items (needed in loss calculation) and the data from the generative
     model. For example, in the training of GAN model, we will collect all of

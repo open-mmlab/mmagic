@@ -114,8 +114,6 @@ class StyleGAN2Discriminator(BaseModule):
 
         in_channels = channels[in_size]
 
-        # import ipdb
-        # ipdb.set_trace()
         _use_fp16 = num_fp16_scales > 0 or fp16_enabled
         convs = [
             ConvDownLayer(3, channels[in_size], 1, fp16_enabled=_use_fp16)
@@ -174,8 +172,6 @@ class StyleGAN2Discriminator(BaseModule):
         Returns:
             torch.Tensor: Predict score for the input image.
         """
-        # import ipdb
-        # ipdb.set_trace()
         # This setting was used to finetune on converted weights
         if self.input_bgr2rgb:
             x = x[:, [2, 1, 0], ...]

@@ -13,7 +13,7 @@ class DiscShiftLossComps(nn.Module):
     This loss is proposed in PGGAN as an auxiliary loss for discriminator.
 
     **Note for the design of ``data_info``:**
-    In ``MMGeneration``, almost all of loss modules contain the argument
+    In ``MMEditing``, almost all of loss modules contain the argument
     ``data_info``, which can be used for constructing the link between the
     input items (needed in loss calculation) and the data from the generative
     model. For example, in the training of GAN model, we will collect all of
@@ -137,7 +137,7 @@ class GradientPenaltyLossComps(nn.Module):
     want.
 
     **Note for the design of ``data_info``:**
-    In ``MMGeneration``, almost all of loss modules contain the argument
+    In ``MMEditing``, almost all of loss modules contain the argument
     ``data_info``, which can be used for constructing the link between the
     input items (needed in loss calculation) and the data from the generative
     model. For example, in the training of GAN model, we will collect all of
@@ -270,7 +270,7 @@ class R1GradientPenaltyComps(nn.Module):
     gradient w.r.t. real data.
 
     **Note for the design of ``data_info``:**
-    In ``MMGeneration``, almost all of loss modules contain the argument
+    In ``MMEditing``, almost all of loss modules contain the argument
     ``data_info``, which can be used for constructing the link between the
     input items (needed in loss calculation) and the data from the generative
     model. For example, in the training of GAN model, we will collect all of

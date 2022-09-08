@@ -19,7 +19,7 @@ mean_std_type = Optional[Sequence[Union[float, int]]]
 
 @VISUALIZERS.register_module()
 class GenVisualizer(Visualizer):
-    """MMGeneration Visualizer.
+    """MMEditing Visualizer.
 
     Args:
         name (str): Name of the instance. Defaults to 'visualizer'.

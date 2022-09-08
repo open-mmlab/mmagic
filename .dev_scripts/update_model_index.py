@@ -171,7 +171,10 @@ def parse_md(md_file):
                         'SKIP THIS TABLE' not in lines[i - 2]  # for aot-gan
                     ):
                 cols = [col.strip() for col in lines[i].split('|')][1:-1]
-                if 'Config' not in cols or 'Download' not in cols:
+                # if 'cain' in name.lower():
+                #     import ipdb
+                #     ipdb.set_trace()
+                if 'Config' not in cols and 'Download' not in cols:
                     warnings.warn(f"Lack 'Config' or 'Download' in line {i+1}")
                     i += 1
                     continue

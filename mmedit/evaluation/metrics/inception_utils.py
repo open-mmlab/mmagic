@@ -145,7 +145,7 @@ def _load_inception_torch(inception_args, metric) -> nn.Module:
             'please use Tero\'s Inception V3 checkpoints '
             'and use Bicubic Interpolation with Pillow backend '
             'for image resizing. More details may refer to '
-            'https://github.com/open-mmlab/mmgeneration/blob/master/docs/en/quick_run.md#is.',  # noqa
+            'https://github.com/open-mmlab/MMEditing/blob/master/docs/en/quick_run.md#is.',  # noqa
             'current')
     return inception_model
 

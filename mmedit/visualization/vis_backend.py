@@ -385,7 +385,7 @@ class PaviGenVisBackend(BaseVisBackend):
 
 @VISBACKENDS.register_module()
 class WandbGenVisBackend(WandbVisBackend):
-    """Wandb visualization backend for MMGeneration."""
+    """Wandb visualization backend for MMEditing."""
 
     def _init_env(self):
         """Setup env for wandb."""

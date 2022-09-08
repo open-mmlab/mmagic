@@ -20,8 +20,8 @@ from .stylegan2_utils import get_mean_latent, get_module_device, style_mixing
 class StyleGANv2Generator(BaseModule):
     r"""StyleGAN2 Generator.
 
-    This module comes from MMGeneration. In the future, this code will be
-    removed and StyleGANv2 will be directly imported from mmgeneration.
+    This module comes from MMEditing. In the future, this code will be
+    removed and StyleGANv2 will be directly imported from MMEditing.
 
     In StyleGAN2, we use a static architecture composing of a style mapping
     module and number of convolutional style blocks. More details can be found
@@ -399,8 +399,8 @@ class StyleGANv2Generator(BaseModule):
 class StyleGANv2Discriminator(BaseModule):
     """StyleGANv2 Discriminator.
 
-    This module comes from MMGeneration. In the future, this code will be
-    removed and StyleGANv2 will be directly imported from mmgeneration.
+    This module comes from MMEditing. In the future, this code will be
+    removed and StyleGANv2 will be directly imported from MMEditing.
 
     The architecture of this discriminator is proposed in StyleGAN2. More
     details can be found in: Analyzing and Improving the Image Quality of

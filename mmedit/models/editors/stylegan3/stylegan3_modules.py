@@ -521,11 +521,7 @@ class SynthesisLayer(nn.Module):
                 clamp=self.conv_clamp)
 
         # Ensure correct shape and dtype.
-        try:
-            assert x.dtype == dtype
-        except Exception:
-            import ipdb
-            ipdb.set_trace()
+        assert x.dtype == dtype
         return x
 
     @staticmethod

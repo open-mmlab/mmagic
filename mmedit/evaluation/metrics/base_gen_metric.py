@@ -16,7 +16,7 @@ from torch.utils.data.dataloader import DataLoader
 
 
 class GenMetric(BaseMetric):
-    """Metric for MMGeneration.
+    """Metric for MMEditing.
 
     Args:
         fake_nums (int): Numbers of the generated image need for the metric.
