@@ -79,7 +79,7 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
 
         with torch.no_grad():
             output = model(test_mode=True, **data)['output']
-            output = torch.clip(output, min=0, max=1)
+            output = torch.clamp(output, min=0, max=1)
 
         output = output.squeeze(0).permute(1, 2, 0)[:, :, [2, 1, 0]]
         output = output.cpu().numpy() * 255  # (0, 255)
