@@ -50,6 +50,10 @@ jobs:
           coverage run --branch --source mmedit -m pytest tests/
           coverage xml
           coverage report -m
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+
   build_cpu_pt:
     runs-on: ubuntu-18.04
     strategy:
@@ -168,3 +172,6 @@ jobs:
       - name: Run unittests and generate coverage report
         run: |
           pytest tests/
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
