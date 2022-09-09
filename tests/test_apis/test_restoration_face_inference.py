@@ -1,11 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
+import pytest
 import torch
 
+from mmedit import digit_version
 from mmedit.apis import init_model, restoration_face_inference
 
 
+@pytest.mark.skipif(
+    digit_version(torch.__version__) < (1, 6),
+    reason='requires torch-1.6.0 or higher')
 def test_restoration_face_inference():
 
     if torch.cuda.is_available():
