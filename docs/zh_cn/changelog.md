@@ -1,5 +1,21 @@
 # 变更日志
 
+## v0.15.2 (09/09/2022)
+
+**改进**
+
+- \[Docs\] 修正文档中的拼写错误 by @Yulv-git in https://github.com/open-mmlab/mmediting/pull/1079
+- \[Docs\] 修正 model zoo 数据集的链接 by @Z-Fran in https://github.com/open-mmlab/mmediting/pull/1043
+- \[Docs\] 修正 readme 中的拼写错误 by @arch-user-france1 in https://github.com/open-mmlab/mmediting/pull/1078
+- \[Improve\] 提供 FLAVR demo by @Yshuo-Li in https://github.com/open-mmlab/mmediting/pull/954
+- \[Fix\] 更新 MMCV 的版本上限到 1.7 by @wangruohui in https://github.com/open-mmlab/mmediting/pull/1001
+- \[Improve\] 改进 niqe_pris_params.npz 安装路径 by @ychfan in https://github.com/open-mmlab/mmediting/pull/995
+- \[CI\] 更新 Github Actions， CircleCI 以及 Issue 和 PR 的模板 by @zengyh1900 in https://github.com/open-mmlab/mmediting/pull/1087
+
+**Contributors**
+
+@wangruohui @Yshuo-Li @zengyh1900 @Z-Fran @ychfan @arch-user-france1 @Yulv-git
+
 ## v0.15.1 (04/07/2022)
 
 **Bug 修复**

@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.15.2 (09/09/2022)
+
+**Improvements**
+
+- \[Docs\] Fix typos in docs. by @Yulv-git in https://github.com/open-mmlab/mmediting/pull/1079
+- \[Docs\]  fix model_zoo and datasets docs link by @Z-Fran in https://github.com/open-mmlab/mmediting/pull/1043
+- \[Docs\]  fix typos in readme. by @arch-user-france1 in https://github.com/open-mmlab/mmediting/pull/1078
+- \[Improve\] FLAVR demo by @Yshuo-Li in https://github.com/open-mmlab/mmediting/pull/954
+- \[Fix\] Update MMCV_MAX to 1.7 by @wangruohui in https://github.com/open-mmlab/mmediting/pull/1001
+- \[Improve\] Fix niqe_pris_params.npz path when installed as package by @ychfan in https://github.com/open-mmlab/mmediting/pull/995
+- \[CI\] update github workflow, circleci and github templates by @zengyh1900 in https://github.com/open-mmlab/mmediting/pull/1087
+
+**Contributors**
+
+@wangruohui @Yshuo-Li @zengyh1900 @Z-Fran @ychfan @arch-user-france1 @Yulv-git
+
 ## v0.15.1 (04/07/2022)
 
 **Bug Fixes**
