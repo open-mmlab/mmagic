@@ -49,5 +49,5 @@ class TestVisualizationHook(TestCase):
         hook = BasicVisualizationHook()
         hook._after_iter(runner, 1, self.data_batch, self.outputs)
 
-        img = mmcv.imread('work_dirs/vis_data/vis_image/rgb_None_1.png')
+        img = mmcv.imread('work_dirs/vis_data/vis_image/rgb_1.png')
         assert img.shape == (64, 160, 3)
