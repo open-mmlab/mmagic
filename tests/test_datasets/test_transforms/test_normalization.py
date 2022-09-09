@@ -22,8 +22,8 @@ class TestAugmentations:
         return set(target_keys).issubset(set(result_keys))
 
     def check_normalize(self, origin_img, result_img, norm_cfg):
-        """Check if the origin_img are normalized correctly into result_img
-        in a given norm_cfg."""
+        """Check if the origin_img are normalized correctly into result_img in
+        a given norm_cfg."""
         target_img = result_img.copy()
         target_img *= norm_cfg['std'][None, None, :]
         target_img += norm_cfg['mean'][None, None, :]

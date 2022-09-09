@@ -94,7 +94,6 @@ def get_task_name(md_file):
 
 def generate_unique_name(md_file):
     """Search config files and return the unique name of them.
-    For Confin.Name.
 
     Args:
         md_file (str): Path to .md file.

@@ -39,6 +39,7 @@ def show_job_out(name, root, job_name_list):
 
 def show_job_status(root, job_name_list, csv_path=None):
     """Show job status and dump to csv.
+
     Args:
         root (_type_): _description_
         job_name_list (_type_): _description_
@@ -78,6 +79,7 @@ def show_job_status(root, job_name_list, csv_path=None):
 
 def save_for_resume(root, job_name_list):
     """Save job name and job ID for resume.
+
     Args:
         root (_type_): _description_
         job_name_list (_type_): _description_
@@ -96,6 +98,7 @@ def save_for_resume(root, job_name_list):
 
 def resume_from_file(file_path):
     """Resume TUI from file.
+
     Args:
         file_path (_type_): _description_
     """
@@ -109,6 +112,7 @@ def resume_from_file(file_path):
 
 def start_from_proc(root, proc):
     """Start TUI from proc.
+
     Args:
         root (_type_): _description_
         proc (_type_): _description_

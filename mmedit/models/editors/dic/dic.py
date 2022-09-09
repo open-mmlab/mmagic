@@ -56,8 +56,7 @@ class DIC(SRGAN):
         self.pixel_init = train_cfg.get('pixel_init', 0) if train_cfg else 0
 
     def forward_tensor(self, inputs, data_samples=None, training=False):
-        """Forward tensor.
-            Returns result of simple forward.
+        """Forward tensor. Returns result of simple forward.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by
@@ -79,14 +78,12 @@ class DIC(SRGAN):
             return sr_list[-1]
 
     def if_run_g(self):
-        """Calculates whether need to run the generator step.
-        """
+        """Calculates whether need to run the generator step."""
 
         return True
 
     def if_run_d(self):
-        """Calculates whether need to run the discriminator step.
-        """
+        """Calculates whether need to run the discriminator step."""
 
         return self.step_counter >= self.pixel_init and super().if_run_d()
 
@@ -130,7 +127,7 @@ class DIC(SRGAN):
 
     def d_step_with_optim(self, batch_outputs, batch_gt_data, optim_wrapper):
         """D step with optim of GAN: Calculate losses of discriminator and run
-            optim.
+        optim.
 
         Args:
             batch_outputs (Tuple[Tensor]): Batch output of generator.

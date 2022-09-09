@@ -147,8 +147,8 @@ def get_padding_functions(x, padding=7):
 
 
 class ConvNormWithReflectionPad(nn.Module):
-    """Apply reflection padding, followed by a convolution,
-        which can be followed by an optional normalization.
+    """Apply reflection padding, followed by a convolution, which can be
+    followed by an optional normalization.
 
     Args:
         in_channels (int): Channel number of input features.
@@ -278,7 +278,7 @@ class ResidualChannelAttention(nn.Module):
 
 class ResidualGroup(nn.Module):
     """Residual Group, consisting of a stack of residual channel attention,
-        followed by a convolution.
+    followed by a convolution.
 
     Args:
         block_layer (nn.Module): nn.Module class for basic block.

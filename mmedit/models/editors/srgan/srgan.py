@@ -74,8 +74,7 @@ class SRGAN(BaseEditModel):
             self.disc_repeat = 0
 
     def forward_train(self, inputs, data_samples=None, **kwargs):
-        """Forward training.
-            Losses of training is calculated in train_step.
+        """Forward training. Losses of training is calculated in train_step.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by
@@ -91,8 +90,7 @@ class SRGAN(BaseEditModel):
             inputs, data_samples, training=True, **kwargs)
 
     def forward_tensor(self, inputs, data_samples=None, training=False):
-        """Forward tensor.
-            Returns result of simple forward.
+        """Forward tensor. Returns result of simple forward.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by
@@ -110,15 +108,13 @@ class SRGAN(BaseEditModel):
         return feats
 
     def if_run_g(self):
-        """Calculates whether need to run the generator step.
-        """
+        """Calculates whether need to run the generator step."""
 
         return (self.step_counter % self.disc_steps == 0
                 and self.step_counter >= self.disc_init_steps)
 
     def if_run_d(self):
-        """Calculates whether need to run the discriminator step.
-        """
+        """Calculates whether need to run the discriminator step."""
 
         return self.discriminator and self.gan_loss
 
@@ -196,7 +192,7 @@ class SRGAN(BaseEditModel):
                           batch_gt_data: torch.Tensor,
                           optim_wrapper: OptimWrapperDict):
         """G step with optim of GAN: Calculate losses of generator and run
-            optim.
+        optim.
 
         Args:
             batch_outputs (Tensor): Batch output of generator.
@@ -221,7 +217,7 @@ class SRGAN(BaseEditModel):
                           batch_gt_data: torch.Tensor,
                           optim_wrapper: OptimWrapperDict):
         """D step with optim of GAN: Calculate losses of discriminator and run
-            optim.
+        optim.
 
         Args:
             batch_outputs (Tensor): Batch output of generator.

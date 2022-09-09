@@ -14,8 +14,9 @@ from mmedit.registry import MODELS
 class FBADecoder(nn.Module):
     """Decoder for FBA matting.
 
-        pool_scales (tuple[int]): Pooling scales used in Pooling Pyramid
-            Module.
+    Args:
+        pool_scales (tuple[int]): Pooling scales used in
+        Pooling Pyramid Module.
         in_channels (int): Input channels.
         channels (int): Channels after modules, before conv_seg.
         conv_cfg (dict|None): Config of conv layers.
@@ -156,6 +157,7 @@ class FBADecoder(nn.Module):
 
     def forward(self, inputs):
         """Forward function.
+
         Args:
             inputs (dict): Output dict of FbaEncoder.
         Returns:

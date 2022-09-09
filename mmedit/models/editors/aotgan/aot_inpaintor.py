@@ -12,8 +12,8 @@ from ...utils import set_requires_grad
 class AOTInpaintor(OneStageInpaintor):
     """Inpaintor for AOT-GAN method.
 
-    This inpaintor is implemented according to the paper:
-    Aggregated Contextual Transformations for High-Resolution Image Inpainting
+    This inpaintor is implemented according to the paper: Aggregated Contextual
+    Transformations for High-Resolution Image Inpainting
     """
 
     def forward_train_d(self, data_batch, is_real, is_disc, mask):

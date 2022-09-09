@@ -91,16 +91,14 @@ class DIM(BaseMattor):
             self.loss_refine = MODELS.build(loss_refine)
 
     def init_weights(self):
-        """Initialize the model network weights.
-        """
+        """Initialize the model network weights."""
         super().init_weights()
         if self.with_refiner:
             self.refiner.init_weights()
 
     @property
     def with_refiner(self):
-        """Whether the matting model has a refiner.
-        """
+        """Whether the matting model has a refiner."""
         return hasattr(self, 'refiner') and self.refiner is not None
 
     def train(self, mode=True):
@@ -115,8 +113,7 @@ class DIM(BaseMattor):
             self.backbone.eval()
 
     def freeze_backbone(self):
-        """Freeze the backbone and only train the refiner.
-        """
+        """Freeze the backbone and only train the refiner."""
         self.backbone.eval()
         for param in self.backbone.parameters():
             param.requires_grad = False

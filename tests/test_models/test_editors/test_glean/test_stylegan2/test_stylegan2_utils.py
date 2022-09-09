@@ -1,10 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
+import pytest
 import torch
 
 from mmedit.models.editors.glean.stylegan2 import (StyleGANv2Generator,
                                                    stylegan2_utils)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_get_module_device():
     config = dict(
         out_size=64, style_channels=16, num_mlps=4, channel_multiplier=1)

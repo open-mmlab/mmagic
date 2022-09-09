@@ -137,7 +137,7 @@ class RealBasicVSR(RealESRGAN):
                           batch_gt_data: torch.Tensor,
                           optim_wrapper: OptimWrapperDict):
         """D step with optim of GAN: Calculate losses of discriminator and run
-            optim.
+        optim.
 
         Args:
             batch_outputs (Tensor): Batch output of generator.

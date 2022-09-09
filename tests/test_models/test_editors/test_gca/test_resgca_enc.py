@@ -7,8 +7,7 @@ from mmedit.models.editors.gca import ResNetEnc, ResShortcutEnc
 
 
 def _demo_inputs(input_shape=(1, 4, 64, 64)):
-    """
-    Create a superset of inputs needed to run encoder.
+    """Create a superset of inputs needed to run encoder.
 
     Args:
         input_shape (tuple): input batch dimensions.

@@ -45,6 +45,7 @@ def mse(alpha, trimap, pred_alpha):
 
 def gradient_error(alpha, trimap, pred_alpha, sigma=1.4):
     """Gradient error for evaluating alpha matte prediction.
+
     Args:
         alpha (ndarray): Ground-truth alpha matte.
         trimap (ndarray): Input trimap with its value in {0, 128, 255}.
@@ -78,6 +79,7 @@ def gradient_error(alpha, trimap, pred_alpha, sigma=1.4):
 
 def connectivity(alpha, trimap, pred_alpha, step=0.1):
     """Connectivity error for evaluating alpha matte prediction.
+
     Args:
         alpha (ndarray): Ground-truth alpha matte with shape (height, width).
             Value range of alpha is [0, 255].

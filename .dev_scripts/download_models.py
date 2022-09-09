@@ -19,8 +19,7 @@ IS_WINDOWS = (platform.system() == 'Windows')
 
 
 def additional_download(args):
-    """Download additional weights file used in this repo, such as VGG.
-    """
+    """Download additional weights file used in this repo, such as VGG."""
 
     url_path = [
         'https://www.adrianbulat.com/downloads/python-fan/2DFAN4-cd938726ad.zip',  # noqa

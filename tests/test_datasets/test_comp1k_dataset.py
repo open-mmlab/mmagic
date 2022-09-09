@@ -17,6 +17,7 @@ class TestMattingDatasets:
 
     def test_comp1k_dataset(self):
         """Verify AdobeComp1kDataset reads dataset correctly.
+
         AdobeComp1kDataset should support both new and old annotation formats.
         """
 

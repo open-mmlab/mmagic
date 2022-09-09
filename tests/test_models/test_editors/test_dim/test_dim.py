@@ -1,5 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import numpy as np
+import pytest
 import torch
 from mmengine.config import ConfigDict
 
@@ -11,9 +14,12 @@ from mmedit.utils import register_all_modules
 register_all_modules()
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
-    """
-    Create a superset of inputs needed to run backbone.
+    """Create a superset of inputs needed to run backbone.
+
     Args:
         img_shape (tuple): shape of the input image.
         batch_size (int): batch size of the input batch.
@@ -54,9 +60,12 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
     return inputs, data_samples
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
-    """
-    Create a superset of inputs needed to run backbone.
+    """Create a superset of inputs needed to run backbone.
+
     Args:
         img_shape (tuple): shape of the input image.
         batch_size (int): batch size of the input batch.
@@ -104,6 +113,9 @@ def assert_dict_keys_equal(dictionary, target_keys):
     assert set(dictionary.keys()) == set(target_keys)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_dim_config():
 
     data_preprocessor = dict(
@@ -161,6 +173,9 @@ def test_dim_config():
     assert mattor.test_cfg.refine
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_dim():
     model_cfg = ConfigDict(
         type='DIM',

@@ -24,8 +24,7 @@ class LIIF(BaseEditModel):
     """
 
     def forward_tensor(self, inputs, data_samples=None, **kwargs):
-        """Forward tensor.
-            Returns result of simple forward.
+        """Forward tensor. Returns result of simple forward.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by
@@ -49,8 +48,8 @@ class LIIF(BaseEditModel):
         return feats
 
     def forward_inference(self, inputs, data_samples=None, **kwargs):
-        """Forward inference.
-            Returns predictions of validation, testing, and simple inference.
+        """Forward inference. Returns predictions of validation, testing, and
+        simple inference.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by

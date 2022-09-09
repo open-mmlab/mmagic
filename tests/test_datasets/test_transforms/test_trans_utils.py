@@ -23,8 +23,8 @@ class TestCrop:
 
     @classmethod
     def setup_class(cls):
-        """Check the dimension of gray scale images read by LoadImageFromFile.
-        """
+        """Check the dimension of gray scale images read by
+        LoadImageFromFile."""
         image_loader = LoadImageFromFile(key='img')
         path_alpha = Path(
             __file__
@@ -244,7 +244,7 @@ class TestCrop:
 
 
 def test_adjust_gamma():
-    """Test Gamma Correction
+    """Test Gamma Correction.
 
     Adpted from
     # https://github.com/scikit-image/scikit-image/blob/7e4840bd9439d1dfb6beaf549998452c99f97fdd/skimage/exposure/tests/test_exposure.py#L534  # noqa

@@ -84,8 +84,7 @@ class BasicVSR(BaseEditModel):
         return is_mirror_extended
 
     def forward_train(self, inputs, data_samples=None, **kwargs):
-        """Forward training.
-            Returns dict of losses of training.
+        """Forward training. Returns dict of losses of training.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by
@@ -118,8 +117,7 @@ class BasicVSR(BaseEditModel):
         return dict(loss=loss)
 
     def forward_inference(self, inputs, data_samples=None, **kwargs):
-        """Forward inference.
-            Returns predictions of validation, testing.
+        """Forward inference. Returns predictions of validation, testing.
 
         Args:
             inputs (torch.Tensor): batch input tensor collated by

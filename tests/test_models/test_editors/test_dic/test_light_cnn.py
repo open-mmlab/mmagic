@@ -1,12 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import pytest
 import torch
 
-# from mmedit.models.image_restorers.dic.light_cnn import MaxFeature
 from mmedit.models.editors import MaxFeature
 from mmedit.registry import MODELS
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_max_feature():
     # cpu
     conv2d = MaxFeature(16, 16, filter_type='conv2d')
@@ -32,6 +36,9 @@ def test_max_feature():
         MaxFeature(12, 12, filter_type='conv1d')
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_light_cnn():
     cfg = dict(type='LightCNN', in_channels=3)
     net = MODELS.build(cfg)

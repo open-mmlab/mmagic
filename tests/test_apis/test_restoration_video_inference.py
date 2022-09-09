@@ -13,10 +13,10 @@ def test_restoration_video_inference():
         device = torch.device('cpu')
 
     data_root = osp.join(osp.dirname(__file__), '../../')
-    config = data_root + '/configs/basicvsr/basicvsr_2xb4_reds4.py'
+    config = osp.join(data_root, 'configs/basicvsr/basicvsr_2xb4_reds4.py')
     checkpoint = None
 
-    input_dir = data_root + '/tests/data/frames/sequence/gt/sequence_1'
+    input_dir = osp.join(data_root, 'tests/data/frames/sequence/gt/sequence_1')
 
     model = init_model(config, checkpoint, device=device)
 

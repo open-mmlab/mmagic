@@ -14,8 +14,9 @@ from mmedit.registry import MODELS
 
 
 class MaxUnpool2dop(Function):
-    """We warp the `torch.nn.functional.max_unpool2d`
-    with an extra `symbolic` method, which is needed while exporting to ONNX.
+    """We warp the `torch.nn.functional.max_unpool2d` with an extra `symbolic`
+    method, which is needed while exporting to ONNX.
+
     Users should not call this function directly.
     """
 
@@ -23,6 +24,7 @@ class MaxUnpool2dop(Function):
     def forward(ctx, input, indices, kernel_size, stride, padding,
                 output_size):
         """Forward function of MaxUnpool2dop.
+
         Args:
             input (Tensor): Tensor needed to upsample.
             indices (Tensor): Indices output of the previous MaxPool.
@@ -38,6 +40,20 @@ class MaxUnpool2dop(Function):
 
     @staticmethod
     def symbolic(g, input, indices, kernel_size, stride, padding, output_size):
+        """This is the function to define the module of MaxUnpool.
+
+        Args:
+            g (_type_): _description_
+            input (Tensor): Tensor needed to upsample.
+            indices (Tensor): Indices output of the previous MaxPool.
+            kernel_size (int): Size of the max pooling window.
+            stride (Tuple): Stride of the max pooling window.
+            padding (Tuple): Padding that was added to the input.
+            output_size (List or Tuple): The shape of output tensor.
+
+        Returns:
+            _type_: _description_
+        """
         # get shape
         input_shape = g.op('Shape', input)
         const_0 = g.op('Constant', value_t=torch.tensor(0))
@@ -104,6 +120,7 @@ class MaxUnpool2dop(Function):
 
 class MaxUnpool2d(_MaxUnpoolNd):
     """This module is modified from Pytorch `MaxUnpool2d` module.
+
     Args:
       kernel_size (int or tuple): Size of the max pooling window.
       stride (int or tuple): Stride of the max pooling window.
@@ -120,6 +137,7 @@ class MaxUnpool2d(_MaxUnpoolNd):
 
     def forward(self, input, indices, output_size=None):
         """Forward function of MaxUnpool2d.
+
         Args:
             input (Tensor): Tensor needed to upsample.
             indices (Tensor): Indices output of the previous MaxPool.
@@ -158,8 +176,7 @@ class PlainDecoder(BaseModule):
         self.max_unpool2d = nn.MaxUnpool2d(kernel_size=2, stride=2)
 
     def init_weights(self):
-        """Init weights for the module.
-        """
+        """Init weights for the module."""
         if self.init_cfg is not None:
             super().init_weights()
         else:

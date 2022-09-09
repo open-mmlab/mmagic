@@ -1,11 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import pytest
 import torch
 
 from mmedit.models.editors import EDSRNet
 
 
-def test_edsr():
+def test_edsr_cpu():
     """Test EDSRNet."""
 
     # x2 model
@@ -49,6 +51,22 @@ def test_edsr():
     output = net(gray)
     assert isinstance(output, torch.Tensor)
     assert output.shape == (1, 1, 48, 48)
+
+
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
+def test_edsr_cuda():
+
+    net = EDSRNet(
+        in_channels=1,
+        out_channels=1,
+        mid_channels=8,
+        num_blocks=2,
+        upscale_factor=4,
+        rgb_mean=[0],
+        rgb_std=[1])
+    gray = torch.rand((1, 1, 12, 12))
 
     # x4 model forward (gpu)
     if torch.cuda.is_available():
