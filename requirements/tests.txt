@@ -1,5 +1,4 @@
 codecov
-facexlib
 flake8
 interrogate
 isort==5.10.1
