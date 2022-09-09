@@ -20,6 +20,7 @@ from mmedit.utils import get_root_logger
 
 def init_random_seed(seed=None, device='cuda'):
     """Initialize random seed.
+
     If the seed is not set, the seed will be automatically randomized,
     and then broadcast to all processes to prevent some potential bugs.
     Args:

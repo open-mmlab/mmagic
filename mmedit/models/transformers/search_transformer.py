@@ -11,7 +11,6 @@ class SearchTransformer(nn.Module):
     """Search texture reference by transformer.
 
     Include relevance embedding, hard-attention and soft-attention.
-
     """
 
     def gather(self, inputs, dim, index):
@@ -37,7 +36,7 @@ class SearchTransformer(nn.Module):
         return outputs
 
     def forward(self, lq_up, ref_downup, refs):
-        """Texture transformer
+        """Texture transformer.
 
         Q = LTE(lq_up)
         K = LTE(ref_downup)

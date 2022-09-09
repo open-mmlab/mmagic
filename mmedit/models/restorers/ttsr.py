@@ -137,7 +137,6 @@ class TTSR(BasicRestorer):
         Returns:
             dict: Returned output, which includes:
                 log_vars, num_samples, results (lq, gt and pred).
-
         """
         # data
         lq = data_batch['lq']

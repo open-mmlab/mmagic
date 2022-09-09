@@ -250,7 +250,7 @@ class TOFlowVFINet(nn.Module):
         return img * self.std + self.mean
 
     def spatial_padding(self, inputs):
-        """ Apply pdding spatially.
+        """Apply pdding spatially.
 
         Since the SPyNet module in TOFlow requires that the resolution is a
         multiple of 16, we apply padding to the input LR images if their
@@ -261,7 +261,6 @@ class TOFlowVFINet(nn.Module):
 
         Returns:
             Tensor: Padded sequence with shape (n, 2, c, h_pad, w_pad).
-
         """
         n, t, c, h, w = inputs.size()
 

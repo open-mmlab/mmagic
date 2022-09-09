@@ -11,9 +11,10 @@ from mmedit.models import BaseMattor, build_model
 
 
 def _get_model_cfg(fname):
-    """
-    Grab configs necessary to create a model. These are deep copied to allow
-    for safe modification of parameters without influencing other tests.
+    """Grab configs necessary to create a model.
+
+    These are deep copied to allow for safe modification of parameters without
+    influencing other tests.
     """
     config_dpath = 'configs/mattors'
     config_fpath = osp.join(config_dpath, fname)
@@ -290,8 +291,7 @@ def test_gca():
 
 
 def _demo_input_train(img_shape, batch_size=1, cuda=False):
-    """
-    Create a superset of inputs needed to run backbone.
+    """Create a superset of inputs needed to run backbone.
 
     Args:
         img_shape (tuple): shape of the input image.
@@ -328,8 +328,7 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False):
 
 
 def _demo_input_test(img_shape, batch_size=1, cuda=False, test_trans='resize'):
-    """
-    Create a superset of inputs needed to run backbone.
+    """Create a superset of inputs needed to run backbone.
 
     Args:
         img_shape (tuple): shape of the input image.

@@ -9,8 +9,7 @@ IMG_EXTENSIONS = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.ppm',
 
 
 class BaseVFIDataset(BaseDataset):
-    """Base class for video frame interpolation datasets.
-    """
+    """Base class for video frame interpolation datasets."""
 
     def __init__(self, pipeline, folder, ann_file, test_mode=False):
         super().__init__(pipeline, test_mode)

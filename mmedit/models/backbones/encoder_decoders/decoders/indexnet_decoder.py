@@ -43,8 +43,7 @@ class IndexedUpsample(nn.Module):
         self.init_weights()
 
     def init_weights(self):
-        """Init weights for the module.
-        """
+        """Init weights for the module."""
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 kaiming_init(m, mode='fan_in', nonlinearity='leaky_relu')
@@ -110,8 +109,7 @@ class IndexNetDecoder(nn.Module):
                 1, 1, kernel_size, padding=(kernel_size - 1) // 2, bias=False))
 
     def init_weights(self):
-        """Init weights for the module.
-        """
+        """Init weights for the module."""
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 std = math.sqrt(2. / (m.out_channels * m.kernel_size[0]**2))

@@ -75,6 +75,7 @@ class SRVid4Dataset(BaseSRDataset):
 
     def load_annotations(self):
         """Load annotations for Vid4 dataset.
+
         Returns:
             list[dict]: A list of dicts for paired paths and other information.
         """
@@ -98,6 +99,7 @@ class SRVid4Dataset(BaseSRDataset):
 
     def evaluate(self, results, logger=None):
         """Evaluate with different metrics.
+
         Args:
             results (list[tuple]): The output of forward_test() of the model.
         Return:

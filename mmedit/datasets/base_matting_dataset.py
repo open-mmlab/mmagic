@@ -7,8 +7,7 @@ from .registry import DATASETS
 
 @DATASETS.register_module()
 class BaseMattingDataset(BaseDataset):
-    """Base image matting dataset.
-    """
+    """Base image matting dataset."""
 
     def __init__(self, ann_file, pipeline, data_prefix=None, test_mode=False):
         super().__init__(pipeline, test_mode)

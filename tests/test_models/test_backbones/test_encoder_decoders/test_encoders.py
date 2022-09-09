@@ -43,8 +43,7 @@ def assert_mid_feat_shape(mid_feat, target_shape):
 
 
 def _demo_inputs(input_shape=(2, 4, 64, 64)):
-    """
-    Create a superset of inputs needed to run encoder.
+    """Create a superset of inputs needed to run encoder.
 
     Args:
         input_shape (tuple): input batch dimensions.

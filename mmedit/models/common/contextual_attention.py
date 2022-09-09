@@ -211,7 +211,6 @@ class ContextualAttentionModule(nn.Module):
             (h, 2)          1
             (h, 3)              1
             ...
-
         """
         # horizontal direction
         n, _, h_map, w_map = correlation_map.size()
@@ -242,7 +241,7 @@ class ContextualAttentionModule(nn.Module):
                             stride=1,
                             dilation=1,
                             padding=0):
-        """Calculate (h, w) after unfolding
+        """Calculate (h, w) after unfolding.
 
         The official implementation of `unfold` in pytorch will put the
         dimension (h, w) into `L`. Thus, this function is just to calculate the

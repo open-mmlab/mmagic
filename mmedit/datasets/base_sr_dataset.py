@@ -13,8 +13,7 @@ IMG_EXTENSIONS = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.ppm',
 
 
 class BaseSRDataset(BaseDataset):
-    """Base class for super resolution datasets.
-    """
+    """Base class for super resolution datasets."""
 
     def __init__(self, pipeline, scale, test_mode=False):
         super().__init__(pipeline, test_mode)

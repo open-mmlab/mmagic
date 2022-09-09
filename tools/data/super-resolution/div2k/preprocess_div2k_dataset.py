@@ -322,7 +322,7 @@ def make_lmdb(data_path,
 
 
 def read_img_worker(path, key, compress_level):
-    """Read image worker
+    """Read image worker.
 
     Args:
         path (str): Image path.

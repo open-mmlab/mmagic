@@ -134,7 +134,8 @@ class CycleGAN(BaseModel):
         self.discriminators['b'].init_weights(pretrained=pretrained)
 
     def get_module(self, module):
-        """Get `nn.ModuleDict` to fit the `MMDistributedDataParallel` interface.
+        """Get `nn.ModuleDict` to fit the `MMDistributedDataParallel`
+        interface.
 
         Args:
             module (MMDistributedDataParallel | nn.ModuleDict): The input
