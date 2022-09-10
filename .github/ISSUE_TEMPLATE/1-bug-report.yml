@@ -16,12 +16,12 @@ body:
       label: Prerequisite
       description: Please check the following items before creating a new issue.
       options:
-        - label: I have searched [the existing and past issues](https://github.com/open-mmlab/mmediting/issues) but cannot get the expected help.
-          required: true
-        - label: I have read the [FAQ documentation](https://mmdetection.readthedocs.io/en/latest/faq.html) but cannot get the expected help.
-          required: true
-        - label: The bug has not been fixed in the [latest version](https://github.com/open-mmlab/mmediting).
-          required: true
+      - label: I have searched [the existing and past issues](https://github.com/open-mmlab/mmediting/issues) but cannot get the expected help.
+        required: true
+      - label: I have read the [FAQ documentation](https://mmdetection.readthedocs.io/en/latest/faq.html) but cannot get the expected help.
+        required: true
+      - label: The bug has not been fixed in the [latest version](https://github.com/open-mmlab/mmediting).
+        required: true
 
   - type: textarea
     attributes:
