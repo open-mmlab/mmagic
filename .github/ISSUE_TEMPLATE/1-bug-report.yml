@@ -1,12 +1,13 @@
 name: 🐛 Bug report
 description: Create a report to help us reproduce and fix the bug
+
 body:
   - type: markdown
     attributes:
       value: |
         Thank you for reporting this issue to help us improve!
         If you have already identified the reason, we strongly appreciate you creating a new PR to fix it [here](https://github.com/open-mmlab/mmediting/pulls)!
-        If this issue is about installing MMCV, please file an issue at https://github.com/open-mmlab/mmcv/issues/new/choose or https://github.com/open-mmlab/mim/issues/new/choose.
+        If this issue is about installing MMCV, please file an issue at [MMCV](https://github.com/open-mmlab/mmcv/issues/new/choose) or [MIM](https://github.com/open-mmlab/mim/issues/new/choose).
         If you need our help, please fill in as much of the following form as you're able.
   - type: checkboxes
     attributes:
