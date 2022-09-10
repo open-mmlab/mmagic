@@ -9,11 +9,13 @@ body:
       A clear and concise description of what content in https://mmediting.readthedocs.io/en/latest/ is an issue.
   validations:
     required: true
+
 - type: textarea
   attributes:
     label: Suggest a potential alternative/fix
     description: >
       Tell us how we could improve the documentation in this regard.
+
 - type: markdown
   attributes:
     value: >
