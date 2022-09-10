@@ -1,11 +1,12 @@
-name: 💬 Reimplementation Questions
-description: Ask about questions during model reimplementation
+name: "💬 Reimplementation Questions"
+description: "Ask about questions during model reimplementation"
 
 body:
   - type: markdown
     attributes:
     value: |
-        If you have already identified the reason, we strongly appreciate you creating a new PR to fix it [here](https://github.com/open-mmlab/mmediting/pulls)!
+      If you have already identified the reason, we strongly appreciate you creating a new PR to fix it [here](https://github.com/open-mmlab/mmediting/pulls)!
+
   - type: checkboxes
     attributes:
       label: Prerequisite
@@ -17,6 +18,7 @@ body:
           required: true
         - label: The bug has not been fixed in the [latest version](https://github.com/open-mmlab/mmediting).
           required: true
+
   - type: textarea
     attributes:
       label: 💬 Describe the reimplementation questions
@@ -51,6 +53,7 @@ body:
         ```
       validations:
         required: true
+
   - type: textarea
     attributes:
       label: Environment
@@ -60,7 +63,7 @@ body:
             - How you installed PyTorch \[e.g., pip, conda, source\]
             - Other environment variables that may be related (such as `$PATH`, `$LD_LIBRARY_PATH`, `$PYTHONPATH`, etc.)
       validations:
-      required: true
+        required: true
 
   - type: textarea
     attributes:
@@ -70,11 +73,12 @@ body:
          ```none
          A placeholder for results comparison
          ```
+
   - type: textarea
     attributes:
       label: Additional information
       description: Tell us anything else you think we should know.
       placeholder: |
-         1. Did you make any modifications on the code or config? Did you understand what you have modified?
-         2. What dataset did you use?
-         3. What do you think might be the reason?
+        1. Did you make any modifications on the code or config? Did you understand what you have modified?
+        2. What dataset did you use?
+        3. What do you think might be the reason?
