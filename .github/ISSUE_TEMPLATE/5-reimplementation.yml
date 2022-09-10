@@ -12,8 +12,6 @@ body:
     attributes:
       label: Prerequisite
       description: Please check the following items before creating a new issue.
-      validations:
-        required: true
       options:
       - label: I have searched [the existing and past issues](https://github.com/open-mmlab/mmediting/issues) but cannot get the expected help.
         required: true
@@ -21,6 +19,8 @@ body:
         required: true
       - label: The bug has not been fixed in the [latest version](https://github.com/open-mmlab/mmediting).
         required: true
+    validations:
+      required: true
 
   - type: textarea
     attributes:
@@ -54,8 +54,8 @@ body:
         ```
         The error message or logs you got, with the full traceback.
         ```
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: textarea
     attributes:
@@ -65,8 +65,8 @@ body:
          You may add addition that may be helpful for locating the problem, such as
             - How you installed PyTorch \[e.g., pip, conda, source\]
             - Other environment variables that may be related (such as `$PATH`, `$LD_LIBRARY_PATH`, `$PYTHONPATH`, etc.)
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: textarea
     attributes:
