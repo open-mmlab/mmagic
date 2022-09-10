@@ -43,8 +43,8 @@ body:
         ```
         The error message or logs you got, with the full traceback.
         ```
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: textarea
     attributes:
