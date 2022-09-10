@@ -123,3 +123,6 @@ jobs:
       - name: Run unittests and generate coverage report
         run: |
           pytest tests/
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
