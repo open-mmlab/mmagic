@@ -49,6 +49,7 @@ CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/gca/gca_r34_4xb10-200k_com
 
 # 单个GPU上训练
 python tools/train.py configs/gca/gca_r34_4xb10-200k_comp1k.py
+
 # 多个GPU上训练
 ./tools/dist_train.sh configs/gca/gca_r34_4xb10-200k_comp1k.py 8
 ```
