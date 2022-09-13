@@ -6,10 +6,9 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models.editors.glean.stylegan2 import (StyleGANv2Discriminator,
-                                                   StyleGANv2Generator)
-from mmedit.models.editors.glean.stylegan2.stylegan2_utils import \
-    get_module_device
+from mmedit.models.editors.stylegan2 import (StyleGAN2Discriminator,
+                                             StyleGAN2Generator)
+from mmedit.models.utils import get_module_device
 
 
 class TestStyleGAN2Generator:
@@ -24,7 +23,7 @@ class TestStyleGAN2Generator:
         reason='skip on windows-cuda due to limited RAM.')
     def test_stylegan2_g_cpu(self):
         # test default config
-        g = StyleGANv2Generator(**self.default_cfg)
+        g = StyleGAN2Generator(**self.default_cfg)
         res = g(None, num_batches=2)
         assert res.shape == (2, 3, 64, 64)
 
@@ -77,14 +76,14 @@ class TestStyleGAN2Generator:
 
         cfg_ = deepcopy(self.default_cfg)
         cfg_['out_size'] = 256
-        g = StyleGANv2Generator(**cfg_)
+        g = StyleGAN2Generator(**cfg_)
         res = g(None, num_batches=2)
         assert res.shape == (2, 3, 256, 256)
 
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_g_cuda(self):
         # test default config
-        g = StyleGANv2Generator(**self.default_cfg).cuda()
+        g = StyleGAN2Generator(**self.default_cfg).cuda()
         res = g(None, num_batches=2)
         assert res.shape == (2, 3, 64, 64)
 
@@ -125,7 +124,7 @@ class TestStyleGAN2Generator:
 
         cfg_ = deepcopy(self.default_cfg)
         cfg_['out_size'] = 256
-        g = StyleGANv2Generator(**cfg_).cuda()
+        g = StyleGAN2Generator(**cfg_).cuda()
         res = g(None, num_batches=2)
         assert res.shape == (2, 3, 256, 256)
 
@@ -143,14 +142,14 @@ class TestStyleGANv2Disc:
         'win' in platform.system().lower() and 'cu' in torch.__version__,
         reason='skip on windows-cuda due to limited RAM.')
     def test_stylegan2_disc_cpu(self):
-        d = StyleGANv2Discriminator(**self.default_cfg)
+        d = StyleGAN2Discriminator(**self.default_cfg)
         img = torch.randn((2, 3, 64, 64))
         score = d(img)
         assert score.shape == (2, 1)
 
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_stylegan2_disc_cuda(self):
-        d = StyleGANv2Discriminator(**self.default_cfg).cuda()
+        d = StyleGAN2Discriminator(**self.default_cfg).cuda()
         img = torch.randn((2, 3, 64, 64)).cuda()
         score = d(img)
         assert score.shape == (2, 1)

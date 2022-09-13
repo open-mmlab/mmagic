@@ -4,8 +4,10 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors.glean.stylegan2 import (StyleGANv2Generator,
-                                                   stylegan2_utils)
+from mmedit.models.editors.stylegan1.stylegan_utils import (get_mean_latent,
+                                                            style_mixing)
+from mmedit.models.editors.stylegan2 import StyleGAN2Generator
+from mmedit.models.utils import get_module_device
 
 
 @pytest.mark.skipif(
@@ -14,11 +16,11 @@ from mmedit.models.editors.glean.stylegan2 import (StyleGANv2Generator,
 def test_get_module_device():
     config = dict(
         out_size=64, style_channels=16, num_mlps=4, channel_multiplier=1)
-    g = StyleGANv2Generator(**config)
+    g = StyleGAN2Generator(**config)
     res = g(None, num_batches=2)
     assert res.shape == (2, 3, 64, 64)
 
-    truncation_mean = stylegan2_utils.get_mean_latent(g, 4096)
+    truncation_mean = get_mean_latent(g, 4096)
     res = g(
         None,
         num_batches=2,
@@ -27,11 +29,11 @@ def test_get_module_device():
         truncation_latent=truncation_mean)
 
     # res = g.style_mixing(2, 2, truncation_latent=truncation_mean)
-    res = stylegan2_utils.style_mixing(
+    res = style_mixing(
         g,
         n_source=2,
         n_target=2,
         truncation_latent=truncation_mean,
         style_channels=g.style_channels)
 
-    assert stylegan2_utils.get_module_device(g) == torch.device('cpu')
+    assert get_module_device(g) == torch.device('cpu')
