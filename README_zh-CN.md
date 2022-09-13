@@ -156,6 +156,7 @@ pip3 install -e .
 - [x] [TTSR](configs/ttsr/README_zh-CN.md) (CVPR'2020)
 - [x] [GLEAN](configs/glean/README_zh-CN.md) (CVPR'2021)
 - [x] [LIIF](configs/liif/README_zh-CN.md) (CVPR'2021)
+- [x] [Real-ESRGAN](configs/real_esrgan/README.md) (ICCVW'2021)
 
 </details>
 

@@ -158,6 +158,7 @@ Supported algorithms:
 - [x] [TTSR](configs/ttsr/README.md) (CVPR'2020)
 - [x] [GLEAN](configs/glean/README.md) (CVPR'2021)
 - [x] [LIIF](configs/liif/README.md) (CVPR'2021)
+- [x] [Real-ESRGAN](configs/real_esrgan/README.md) (ICCVW'2021)
 
 </details>
 
