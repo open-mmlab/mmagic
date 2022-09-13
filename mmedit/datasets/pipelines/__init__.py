@@ -10,8 +10,8 @@ from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    CropLike, FixedCrop, ModCrop, PairedRandomCrop,
                    RandomResizedCrop)
-from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
-                        ToTensor)
+from .formating import (Collect, FormatTrimap, FramesToTensor, GetMaskedImage,
+                        ImageToTensor, ToTensor)
 from .generate_assistant import GenerateCoordinateAndCell, GenerateHeatmap
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
                       LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
@@ -43,5 +43,5 @@ __all__ = [
     'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
     'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
     'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking',
-    'RandomVideoCompression'
+    'RandomVideoCompression', 'FramesToTensor'
 ]
