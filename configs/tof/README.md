@@ -2,6 +2,8 @@
 
 > [Video Enhancement with Task-Oriented Flow](https://arxiv.org/abs/1711.09078)
 
+> **Task**: Video Interpolation, Video Super-Resolution
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -45,6 +47,71 @@ The metrics are `PSNR / SSIM` .
 |                                Method                                |       Vid4       | GPU Info |                                               Download                                                |
 | :------------------------------------------------------------------: | :--------------: | :------: | :---------------------------------------------------------------------------------------------------: |
 | [tof_x4_vimeo90k_official](/configs/tof/tof_x4_official_vimeo90k.py) | 24.4377 / 0.7433 |    -     | [model](https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+TOF only supports video interpolation task for training now.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/tof/tof_spynet-chair-wobn_1xb1_vimeo90k-triplet.py
+
+# single-gpu train
+python tools/train.py configs/tof/tof_spynet-chair-wobn_1xb1_vimeo90k-triplet.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/tof/tof_spynet-chair-wobn_1xb1_vimeo90k-triplet.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+TOF supports two tasks for testing.
+
+**Task 1**: Video Interpolation
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/tof/tof_spynet-chair-wobn_1xb1_vimeo90k-triplet.py https://download.openmmlab.com/mmediting/video_interpolators/toflow/pretrained_spynet_chair_20220321-4d82e91b.pth
+
+# single-gpu test
+python tools/test.py configs/tof/tof_spynet-chair-wobn_1xb1_vimeo90k-triplet.py https://download.openmmlab.com/mmediting/video_interpolators/toflow/pretrained_spynet_chair_20220321-4d82e91b.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/tof/tof_spynet-chair-wobn_1xb1_vimeo90k-triplet.py https://download.openmmlab.com/mmediting/video_interpolators/toflow/pretrained_spynet_chair_20220321-4d82e91b.pth 8
+```
+
+**Task 2**: Video Super-Resolution
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/tof/tof_x4_official_vimeo90k.py https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth
+
+# single-gpu test
+python tools/test.py configs/tof/tof_x4_official_vimeo90k.py https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/tof/tof_x4_official_vimeo90k.py https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

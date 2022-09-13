@@ -2,6 +2,8 @@
 
 > [Channel Attention Is All You Need for Video Frame Interpolation](https://aaai.org/ojs/index.php/AAAI/article/view/6693/6547)
 
+> **Task**: Video Interpolation
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -25,6 +27,52 @@ The learning rate adjustment strategy is `Step LR scheduler with min_lr clipping
 |                                      Method                                      |  PSNR   |  SSIM  |         GPU Info         |                                      Download                                       |
 | :------------------------------------------------------------------------------: | :-----: | :----: | :----------------------: | :---------------------------------------------------------------------------------: |
 | [cain_b5_g1b32_vimeo90k_triplet](/configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py) | 34.6010 | 0.9578 | 1 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth)/[log](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py
+
+# single-gpu train
+python tools/train.py configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth
+
+# single-gpu test
+python tools/test.py configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

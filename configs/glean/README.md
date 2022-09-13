@@ -2,6 +2,8 @@
 
 > [GLEAN: Generative Latent Bank for Large-Factor Image Super-Resolution](https://arxiv.org/abs/2012.00739)
 
+> **Task**: Image Super-Resolution
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -26,6 +28,52 @@ For the meta info used in training and test, please refer to [here](https://gith
 |               [glean_ffhq_16x](/configs/glean/glean_x16_2xb8_ffhq.py)                | 26.91 | 2 (Tesla V100-PCIE-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527-61a3afad.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527_194536.log.json) |
 |                [glean_cat_16x](/configs/glean/glean_x16_2xb8_cat.py)                 | 20.88 | 2 (Tesla V100-PCIE-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_16x_20210527-68912543.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_16x_20210527_103708.log.json) |
 | [glean_in128out1024_4x2_300k_ffhq_celebahq](/configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py) | 27.94 | 4 (Tesla V100-SXM3-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812_100549.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/glean/glean_x8_2xb8_cat.py
+
+# single-gpu train
+python tools/train.py configs/glean/glean_x8_2xb8_cat.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/glean/glean_x8_2xb8_cat.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/glean/glean_x8_2xb8_cat.py https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth
+
+# single-gpu test
+python tools/test.py configs/glean/glean_x8_2xb8_cat.py https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/glean/glean_x8_2xb8_cat.py https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

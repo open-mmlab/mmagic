@@ -2,6 +2,8 @@
 
 > [Indices Matter: Learning to Index for Deep Image Matting](https://arxiv.org/abs/1908.00672)
 
+> **Task**: Matting
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -30,6 +32,52 @@ We show that existing upsampling operators can be unified with the notion of the
 |                                         Method                                         | SAD  |  MSE  | GRAD | CONN | GPU Info |                                         Download                                          |
 | :------------------------------------------------------------------------------------: | :--: | :---: | :--: | :--: | :------: | :---------------------------------------------------------------------------------------: |
 | [M2O DINs (with DIM pipeline)](/configs/indexnet/indexnet_mobv2-dimaug_1xb16-78k_comp1k.py) | 50.1 | 0.016 | 30.8 | 49.5 |    1     | [model](https://download.openmmlab.com/mmediting/mattors/indexnet/indexnet_dimaug_mobv2_1x16_78k_comp1k_SAD-50.1_20200626_231857-af359436.pth) \| [log](https://download.openmmlab.com/mmediting/mattors/indexnet/indexnet_dimaug_mobv2_1x16_78k_comp1k_20200626_231857.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/indexnet/indexnet_mobv2_1xb16-78k_comp1k.py
+
+# single-gpu train
+python tools/train.py configs/indexnet/indexnet_mobv2_1xb16-78k_comp1k.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/indexnet/indexnet_mobv2_1xb16-78k_comp1k.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/indexnet/indexnet_mobv2_1xb16-78k_comp1k.py https://download.openmmlab.com/mmediting/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k_SAD-45.6_20200618_173817-26dd258d.pth
+
+# single-gpu test
+python tools/test.py configs/indexnet/indexnet_mobv2_1xb16-78k_comp1k.py https://download.openmmlab.com/mmediting/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k_SAD-45.6_20200618_173817-26dd258d.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/indexnet/indexnet_mobv2_1xb16-78k_comp1k.py https://download.openmmlab.com/mmediting/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k_SAD-45.6_20200618_173817-26dd258d.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

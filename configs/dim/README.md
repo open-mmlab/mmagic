@@ -2,6 +2,8 @@
 
 > [Deep Image Matting](https://arxiv.org/abs/1703.03872)
 
+> **Task**: Matting
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -35,6 +37,82 @@ Image matting is a fundamental computer vision problem and has many applications
 > The performance of the model is not stable during the training. Thus, the reported performance is not from the last checkpoint. Instead, it is the best performance of all validations during training.
 
 > The performance of training (best performance) with different random seeds diverges in a large range. You may need to run several experiments for each setting to obtain the above performance.
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+DIM is trained with three stages.
+
+**Stage 1**: train the encoder-decoder part without the refinement part.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/dim/dim_stage1-v16_1xb1-1000k_comp1k.py
+
+# single-gpu train
+python tools/train.py configs/dim/dim_stage1-v16_1xb1-1000k_comp1k.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/dim/dim_stage1-v16_1xb1-1000k_comp1k.py 8
+```
+
+**Stage 2**: fix the encoder-decoder part and train the refinement part.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/dim/dim_stage2-v16-pln_1xb1-1000k_comp1k.py
+
+# single-gpu train
+python tools/train.py configs/dim/dim_stage2-v16-pln_1xb1-1000k_comp1k.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/dim/dim_stage2-v16-pln_1xb1-1000k_comp1k.py 8
+```
+
+**Stage 3**: fine-tune the whole network.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/dim/dim_stage3-v16-pln_1xb1-1000k_comp1k.py
+
+# single-gpu train
+python tools/train.py configs/dim/dim_stage3-v16-pln_1xb1-1000k_comp1k.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/dim/dim_stage3-v16-pln_1xb1-1000k_comp1k.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/dim/dim_stage3-v16-pln_1xb1-1000k_comp1k.py https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth
+
+# single-gpu test
+python tools/test.py configs/dim/dim_stage3-v16-pln_1xb1-1000k_comp1k.py https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/dim/dim_stage3-v16-pln_1xb1-1000k_comp1k.py https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

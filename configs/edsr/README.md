@@ -2,6 +2,8 @@
 
 > [Enhanced Deep Residual Networks for Single Image Super-Resolution](https://arxiv.org/abs/1707.02921)
 
+> **Task**: Image Super-Resolution
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -26,6 +28,52 @@ The metrics are `PSNR / SSIM` .
 | [edsr_x2c64b16_1x16_300k_div2k](/configs/edsr/edsr_x2c64b16_1xb16-300k_div2k.py) |  35.7592  |  31.4290   |  34.5896   |  0.9372   |   0.8874   |   0.9352   |    1     | [model](https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x2c64b16_1x16_300k_div2k_20200604-19fe95ea.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x2c64b16_1x16_300k_div2k_20200604_221933.log.json) |
 | [edsr_x3c64b16_1x16_300k_div2k](/configs/edsr/edsr_x3c64b16_1xb16-300k_div2k.py) |  32.3301  |  28.4125   |  30.9154   |  0.8912   |   0.8022   |   0.8711   |    1     | [model](https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x3c64b16_1x16_300k_div2k_20200608-36d896f4.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x3c64b16_1x16_300k_div2k_20200608_114850.log.json) |
 | [edsr_x4c64b16_1x16_300k_div2k](/configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py) |  30.2223  |  26.7870   |  28.9675   |  0.8500   |   0.7366   |   0.8172   |    1     | [model](https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608_115148.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth
+
+# single-gpu train
+python tools/train.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth
+
+# multi-gpu train
+./tools/dist_train.sh configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py
+
+# single-gpu test
+python tools/test.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py
+
+# multi-gpu test
+./tools/dist_test.sh configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

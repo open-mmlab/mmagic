@@ -2,6 +2,8 @@
 
 > [Generative Image Inpainting with Contextual Attention](https://arxiv.org/abs/1801.07892)
 
+> **Task**: Inpainting
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -29,6 +31,52 @@ Recent deep learning based approaches have shown promising results for the chall
 |                              Method                              |  Mask Type  | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  | GPU Info |                              Download                               |
 | :--------------------------------------------------------------: | :---------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :------: | :-----------------------------------------------------------------: |
 | [DeepFillv1](/configs/deepfillv1/deepfillv1_4xb4_celeba-256x256.py) | square bbox |  256x256   |    1500k    | CelebA-val |  6.677   | 26.878 | 0.911 |    4     | [model](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba_20200619-dd51a855.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba_20200619-dd51a855.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/deepfillv1/deepfillv1_8xb2_places-256x256.py
+
+# single-gpu train
+python tools/train.py configs/deepfillv1/deepfillv1_8xb2_places-256x256.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/deepfillv1/deepfillv1_8xb2_places-256x256.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/deepfillv1/deepfillv1_8xb2_places-256x256.py https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth
+
+# single-gpu test
+python tools/test.py configs/deepfillv1/deepfillv1_8xb2_places-256x256.py https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/deepfillv1/deepfillv1_8xb2_places-256x256.py https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

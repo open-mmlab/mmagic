@@ -2,6 +2,8 @@
 
 > [EDVR: Video Restoration with Enhanced Deformable Convolutional Networks](https://arxiv.org/abs/1905.02716?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%253A+arxiv%252FQSXk+%2528ExcitingAds%2521+cs+updates+on+arXiv.org%2529)
 
+> **Task**: Video Super-Resolution
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -34,6 +36,52 @@ The metrics are `PSNR and SSIM` .
 |           [edvrm_x4_8x4_600k_reds](/configs/edvr/edvrm_8xb4-600k_reds.py)            | 0.8684 |            8             | [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20200622_102544.log.json) |
 | [edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4](/configs/edvr/edvrl_wotsa-c128b40_8xb8-lr2e-4-600k_reds4.py) | 0.8784 | 8 (Tesla V100-PCIE-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228_144658.log.json) |
 | [edvrl_c128b40_8x8_lr2e-4_600k_reds4](/configs/edvr/edvrl_c128b40_8xb8-lr2e-4-600k_reds4.py) | 0.8793 | 8 (Tesla V100-PCIE-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104-4509865f.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104_171823.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/edvr/edvrm_8xb4-600k_reds.py
+
+# single-gpu train
+python tools/train.py configs/edvr/edvrm_8xb4-600k_reds.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/edvr/edvrm_8xb4-600k_reds.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py python tools/test.py configs/edvr/edvrm_8xb4-600k_reds.py https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth
+
+# single-gpu test
+python tools/test.py configs/edvr/edvrm_8xb4-600k_reds.py https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/edvr/edvrm_8xb4-600k_reds.py https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

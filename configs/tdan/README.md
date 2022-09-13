@@ -2,6 +2,8 @@
 
 > [TDAN: Temporally Deformable Alignment Network for Video Super-Resolution](https://arxiv.org/abs/1812.02898)
 
+> **Task**: Video Super-Resolution
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -31,32 +33,44 @@ The metrics are `PSNR / SSIM` .
 | [tdan_vimeo90k_bix4_ft_lr5e-5_400k](/configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py) |      **0.792**       |        **0.856**         |        0.772         |          0.842           | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
 | [tdan_vimeo90k_bdx4_ft_lr5e-5_800k](/configs/tdan/tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd.py) |        0.784         |          0.851           |      **0.815**       |        **0.868**         | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
 
+## Quick Start
+
 **Train**
 
 <details>
 <summary>Train Instructions</summary>
 
-You can use the following command to train a model.
-
-```shell
-./tools/dist_train.sh ${CONFIG_FILE} ${GPU_NUM} [optional arguments]
-```
+You can use the following commands to train a model with cpu or single/multiple GPUs.
 
 TDAN is trained with two stages.
 
 **Stage 1**: Train with a larger learning rate (1e-4)
 
 ```shell
-./tools/dist_train.sh configs/tdan/tdan_vimeo90k_bix4_lr1e-4_400k.py 8
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/tdan/tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi.py
+
+# single-gpu train
+python tools/train.py configs/tdan/tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi.py
+
+# multi-gpu train
+./tools/dist_train.sh cconfigs/tdan/tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi.py 8
 ```
 
 **Stage 2**: Fine-tune with a smaller learning rate (5e-5)
 
 ```shell
-./tools/dist_train.sh configs/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py 8
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py
+
+# single-gpu train
+python tools/train.py configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py 8
 ```
 
-For more details, you can refer to **Train a model** part in [getting_started](/docs/en/getting_started.md#train-a-model).
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
 
 </details>
 
@@ -65,19 +79,20 @@ For more details, you can refer to **Train a model** part in [getting_started](/
 <details>
 <summary>Test Instructions</summary>
 
-You can use the following command to test a model.
+You can use the following commands to test a model with cpu or single/multiple GPUs.
 
 ```shell
-python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [--save-path ${IMAGE_SAVE_PATH}]
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
+
+# single-gpu test
+python tools/test.py configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth 8
 ```
 
-Example: Test TDAN on SPMCS-30 using Bicubic downsampling.
-
-```shell
-python tools/test.py configs/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py  checkpoints/SOME_CHECKPOINT.pth --save_path outputs/
-```
-
-For more details, you can refer to **Inference with pretrained models** part in [getting_started](/docs/en/getting_started.md#inference-with-pretrained-models).
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
 
 </details>
 

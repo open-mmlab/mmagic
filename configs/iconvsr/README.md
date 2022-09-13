@@ -2,6 +2,8 @@
 
 > [BasicVSR: The Search for Essential Components in Video Super-Resolution and Beyond](https://arxiv.org/abs/2012.02181)
 
+> **Task**: Video Super-Resolution
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -32,6 +34,52 @@ The pretrained weights of the IconVSR components can be found here: [SPyNet](htt
 | [iconvsr_reds4](/configs/iconvsr/iconvsr_2xb4_reds4.py) |       **0.8951**        |           0.9416            |      **0.8354**      |        0.9471         |           0.9287            |        0.7732        | 2 (Tesla V100-PCIE-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413_222735.log.json) |
 | [iconvsr_vimeo90k_bi](/configs/iconvsr/iconvsr_2xb4_vimeo90k-bi.py) |         0.8659          |         **0.9467**          |        0.8297        |        0.9398         |           0.9295            |        0.7491        | 2 (Tesla V100-PCIE-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413-7c7418dc.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413_222757.log.json) |
 | [iconvsr_vimeo90k_bd](/configs/iconvsr/iconvsr_2xb4_vimeo90k-bd.py) |         0.8465          |           0.9339            |        0.8028        |      **0.9697**       |         **0.9517**          |      **0.8612**      | 2 (Tesla V100-PCIE-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bd_20210414-5f38cb34.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bd_20210414_084128.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/iconvsr/iconvsr_2xb4_reds4.py
+
+# single-gpu train
+python tools/train.py configs/iconvsr/iconvsr_2xb4_reds4.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/iconvsr/iconvsr_2xb4_reds4.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/iconvsr/iconvsr_2xb4_reds4.py https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
+
+# single-gpu test
+python tools/test.py configs/iconvsr/iconvsr_2xb4_reds4.py https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/iconvsr/iconvsr_2xb4_reds4.py https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

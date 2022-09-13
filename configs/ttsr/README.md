@@ -2,6 +2,8 @@
 
 > [Learning Texture Transformer Network for Image Super-Resolution](https://arxiv.org/abs/2006.04139)
 
+> **Task**: Image Super-Resolution
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -25,6 +27,52 @@ The metrics are `PSNR and SSIM` .
 | :----------------------------------------------------------------------------------: | :---: | :-----: | :----: | :----------: | :------------------------------------------------------------------------------------: |
 | [ttsr-rec_x4_c64b16_g1_200k_CUFED](/configs/ttsr/ttsr-rec_x4c64b16_1xb9-200k_CUFED.py) |  x4   | 25.2433 | 0.7491 | 1 (TITAN Xp) | [model](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.log.json) |
 | [ttsr-gan_x4_c64b16_g1_500k_CUFED](/configs/ttsr/ttsr-gan_x4c64b16_1xb9-500k_CUFED.py) |  x4   | 24.6075 | 0.7234 | 1 (TITAN Xp) | [model](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/ttsr/ttsr-gan_x4c64b16_1xb9-500k_CUFED.py
+
+# single-gpu train
+python tools/train.py configs/ttsr/ttsr-gan_x4c64b16_1xb9-500k_CUFED.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/ttsr/ttsr-gan_x4c64b16_1xb9-500k_CUFED.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/ttsr/ttsr-gan_x4c64b16_1xb9-500k_CUFED.py https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth
+
+# single-gpu test
+python tools/test.py configs/ttsr/ttsr-gan_x4c64b16_1xb9-500k_CUFED.py https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/ttsr/ttsr-gan_x4c64b16_1xb9-500k_CUFED.py https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

@@ -2,6 +2,8 @@
 
 > [Deep Face Super-Resolution with Iterative Collaboration between Attentive Recovery and Landmark Estimation](https://arxiv.org/abs/2003.13063)
 
+> **Task**: Image Super-Resolution
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -29,6 +31,52 @@ In the log data of `dic_gan_x8c48b6_g4_150k_CelebAHQ`, DICGAN is verified on the
 | :------------------------------------------------------------------------------: | :---: | :-----: | :----: | :-----------------: | :---------------------------------------------------------------------------------: |
 | [dic_x8c48b6_g4_150k_CelebAHQ](/configs/dic/dic_x8c48b6_4xb2-150k_celeba-hq.py)  |  x8   | 25.2319 | 0.7422 | 4 (Tesla PG503-216) | [model](https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.log.json) |
 | [dic_gan_x8c48b6_g4_500k_CelebAHQ](/configs/dic/dic_gan-x8c48b6_4xb2-500k_celeba-hq.py) |  x8   | 23.6241 | 0.6721 | 4 (Tesla PG503-216) | [model](https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/dic/dic_gan-x8c48b6_4xb2-500k_celeba-hq.py
+
+# single-gpu train
+python tools/train.py configs/dic/dic_gan-x8c48b6_4xb2-500k_celeba-hq.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/dic/dic_gan-x8c48b6_4xb2-500k_celeba-hq.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/dic/dic_gan-x8c48b6_4xb2-500k_celeba-hq.py https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.pth
+
+# single-gpu test
+python tools/test.py configs/dic/dic_gan-x8c48b6_4xb2-500k_celeba-hq.py https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/dic/dic_gan-x8c48b6_4xb2-500k_celeba-hq.py https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

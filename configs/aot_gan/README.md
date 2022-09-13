@@ -84,7 +84,7 @@ You can use the following commands to test a model with cpu or single/multiple G
 
 ```shell
 # cpu test
-CUDA_VISIBLE_DEVICES=-1 configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
 
 # single-gpu test
 python tools/test.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
