@@ -8,7 +8,7 @@ body:
       value: |
         Thank you for reporting this issue to help us improve!
         If you have already identified the reason, we strongly appreciate you creating a new PR to fix it [here](https://github.com/open-mmlab/mmediting/pulls)!
-        If this issue is about installing MMCV, please file an issue at [MMCV](https://github.com/open-mmlab/mmcv/issues/new/choose) or [MIM](https://github.com/open-mmlab/mim/issues/new/choose).
+        If this issue is about installing MMCV, please file an issue at [MMCV](https://github.com/open-mmlab/mmcv/issues/new/choose).
         If you need our help, please fill in as much of the following form as you're able.
 
   - type: checkboxes
@@ -50,7 +50,7 @@ body:
     attributes:
       label: Environment
       description: |
-        Please run `python mmdet/utils/collect_env.py` to collect necessary environment information and paste it here.
+        Please run `python mmedit/utils/collect_env.py` to collect necessary environment information and paste it here.
         You may add addition that may be helpful for locating the problem, such as
           - How you installed PyTorch \[e.g., pip, conda, source\]
           - Other environment variables that may be related (such as `$PATH`, `$LD_LIBRARY_PATH`, `$PYTHONPATH`, etc.)
