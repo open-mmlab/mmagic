@@ -8,7 +8,7 @@ import torch.nn as nn
 
 from mmedit.models.utils import (GANImageBuffer, ResidualBlockWithDropout,
                                  UnetSkipConnectionBlock,
-                                 generation_init_weights)
+                                 generation_init_weights, set_requires_grad)
 
 
 def test_gan_image_buffer():
@@ -88,3 +88,10 @@ def test_residual_block_with_dropout():
     input = torch.rand((2, 16, 128, 128))
     output = block(input)
     assert output.detach().numpy().shape == (2, 16, 128, 128)
+
+
+def test_set_requires_grad():
+    model = torch.nn.Conv2d(1, 3, 1, 1)
+    set_requires_grad(model, False)
+    for param in model.parameters():
+        assert not param.requires_grad
