@@ -136,26 +136,48 @@ class EditDataSample(BaseDataElement):
 
     @property
     def gt_samples(self) -> 'EditDataSample':
+        """This is the function to fetch gt_samples.
+
+        Returns:
+            EditDataSample: gt samples.
+        """
         return self._gt_samples
 
     @gt_samples.setter
     def gt_samples(self, value: 'EditDataSample'):
+        """This is the function to set gt_samples.
+
+        Args:
+            value (EditDataSample): gt samples.
+        """
         self.set_field(value, '_gt_samples', dtype=EditDataSample)
 
     @gt_samples.deleter
     def gt_samples(self):
+        """This is the function to delete gt_samples."""
         del self._gt_samples
 
     @property
     def noise(self) -> torch.Tensor:
+        """This is the function to fetch noise.
+
+        Returns:
+            torch.Tensor: noise.
+        """
         return self._noise
 
     @noise.setter
     def noise(self, value: PixelData):
+        """This is the function to set noise.
+
+        Args:
+            value (PixelData): noise.
+        """
         self.set_field(value, '_noise', dtype=torch.Tensor)
 
     @noise.deleter
     def noise(self):
+        """This is the functionto delete noise."""
         del self._noise
 
     @property
@@ -183,10 +205,20 @@ class EditDataSample(BaseDataElement):
 
     @property
     def fake_img(self) -> Union[PixelData, Tensor]:
+        """This is the function to fetch fake_img.
+
+        Returns:
+            Union[PixelData, Tensor]: The fake img.
+        """
         return self._fake_img
 
     @fake_img.setter
     def fake_img(self, value: Union[PixelData, Tensor]):
+        """This is the function to set fake_img.
+
+        Args:
+            value (Union[PixelData, Tensor]): The value of fake img.
+        """
         assert isinstance(value, (PixelData, Tensor))
         if isinstance(value, PixelData):
             self.set_field(value, '_fake_img', dtype=PixelData)
@@ -195,6 +227,7 @@ class EditDataSample(BaseDataElement):
 
     @fake_img.deleter
     def fake_img(self):
+        """This is the function to delete fake_img."""
         del self._fake_img
 
     @property
@@ -544,38 +577,71 @@ class EditDataSample(BaseDataElement):
 
     @property
     def sample_model(self) -> str:
+        """This is the function to fetch sample model.
+
+        Returns:
+            str: Mode of Sample model.
+        """
         return self._sample_model
 
     @sample_model.setter
     def sample_model(self, value: str):
+        """This is the function to set sample model.
+
+        Args:
+            value (str): The mode of sample model.
+        """
         self.set_field(value, '_sample_model', dtype=str)
 
     @sample_model.deleter
     def sample_model(self):
+        """This is the function to delete sample model."""
         del self._sample_model
 
     @property
     def ema(self) -> 'EditDataSample':
+        """This is the function to fetch ema results.
+
+        Returns:
+            EditDataSample: Results of the ema model.
+        """
         return self._ema
 
     @ema.setter
     def ema(self, value: 'EditDataSample'):
+        """This is the function to set ema results.
+
+        Args:
+            value (EditDataSample): Results of the ema model.
+        """
         self.set_field(value, '_ema', dtype=EditDataSample)
 
     @ema.deleter
     def ema(self):
+        """This is the function to delete ema results."""
         del self._ema
 
     @property
     def orig(self) -> 'EditDataSample':
+        """This is the function to fetch original results.
+
+        Returns:
+            EditDataSample: Results of the ema model.
+        """
         return self._orig
 
     @orig.setter
     def orig(self, value: 'EditDataSample'):
+        """This is the function to set ema results.
+
+        Args:
+            value (EditDataSample): Results of the ema model.
+        """
         self.set_field(value, '_orig', dtype=EditDataSample)
 
     @orig.deleter
     def orig(self):
+        """This is the function to delete ema results."""
         del self._orig
 
     def set_gt_label(
@@ -591,12 +657,23 @@ class EditDataSample(BaseDataElement):
 
     @property
     def gt_label(self):
+        """This the function to fetch gt label.
+
+        Returns:
+            LabelData: gt label.
+        """
         return self._gt_label
 
     @gt_label.setter
     def gt_label(self, value: LabelData):
+        """This is the function to set gt label.
+
+        Args:
+            value (LabelData): gt label.
+        """
         self.set_field(value, '_gt_label', dtype=LabelData)
 
     @gt_label.deleter
     def gt_label(self):
+        """This is the function to delete gt label."""
         del self._gt_label

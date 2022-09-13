@@ -40,6 +40,14 @@ class Pix2Pix(BaseTranslationModel):
         return results
 
     def _get_disc_loss(self, outputs):
+        """Get the loss of discriminator.
+
+        Args:
+            outputs (dict): A dict of output.
+
+        Returns:
+            Tuple: Loss and a dict of log of loss terms.
+        """
         # GAN loss for the discriminator
         losses = dict()
 
@@ -63,6 +71,15 @@ class Pix2Pix(BaseTranslationModel):
         return loss_d, log_vars_d
 
     def _get_gen_loss(self, outputs):
+        """Get the loss of generator.
+
+        Args:
+            outputs (dict): A dict of output.
+
+        Returns:
+            Tuple: Loss and a dict of log of loss terms.
+        """
+
         target_domain = self._default_domain
         source_domain = self.get_other_domains(target_domain)[0]
         losses = dict()

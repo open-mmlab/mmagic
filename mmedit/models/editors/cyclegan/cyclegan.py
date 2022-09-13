@@ -133,6 +133,14 @@ class CycleGAN(BaseTranslationModel):
         return loss_g, log_vars_g
 
     def _get_opposite_domain(self, domain):
+        """Get the opposite domain respect to the input domain.
+
+        Args:
+            domain (str): The input domain.
+
+        Returns:
+            str: The opposite domain.
+        """
         for item in self._reachable_domains:
             if item != domain:
                 return item

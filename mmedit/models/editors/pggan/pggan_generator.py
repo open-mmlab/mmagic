@@ -114,7 +114,15 @@ class PGGANGenerator(nn.Module):
         # build upsample layer for residual path
         self.upsample_layer = MODELS.build(self.upsample_cfg)
 
-    def _get_torgb_layer(self, in_channels):
+    def _get_torgb_layer(self, in_channels: int):
+        """Get the to-rgb layer based on `in_channels`.
+
+        Args:
+            in_channels (int): Number of input channels.
+
+        Returns:
+            nn.Module: To-rgb layer.
+        """
         return EqualizedLRConvModule(
             in_channels,
             3,
@@ -125,12 +133,30 @@ class PGGANGenerator(nn.Module):
             norm_cfg=None,
             act_cfg=None)
 
-    def _num_out_channels(self, log_scale):
+    def _num_out_channels(self, log_scale: int):
+        """Calculate the number of output channels based on logarithm of
+        current scale.
+
+        Args:
+            log_scale (int): The logarithm of the current scale.
+
+        Returns:
+            int: The current number of output channels.
+        """
         return min(
             int(self.base_channels / (2.0**(log_scale * self.channel_decay))),
             self.max_channels)
 
     def _get_upconv_block(self, in_channels, log_scale):
+        """Get the conv block for upsampling.
+
+        Args:
+            in_channels (int): The number of input channels.
+            log_scale (int): The logarithmic of the current scale.
+
+        Returns:
+            nn.Module: The conv block for upsampling.
+        """
         modules = []
         # start 4x4 scale
         if log_scale == 2:

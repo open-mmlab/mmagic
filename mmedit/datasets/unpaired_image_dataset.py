@@ -67,6 +67,11 @@ class UnpairedImageDataset(BaseDataset):
         self.domain_b = domain_b
 
     def load_data_list(self):
+        """Load the data list.
+
+        Returns:
+            list: The data info list of source and target domain.
+        """
         self.data_infos_a = self._load_domain_data_list(self.dataroot_a)
         self.data_infos_b = self._load_domain_data_list(self.dataroot_b)
         return [self.data_infos_a, self.data_infos_b]
@@ -89,6 +94,15 @@ class UnpairedImageDataset(BaseDataset):
 
     @force_full_init
     def get_data_info(self, idx) -> dict:
+        """Get annotation by index and automatically call ``full_init`` if the
+        dataset has not been fully initialized.
+
+        Args:
+            idx (int): The index of data.
+
+        Returns:
+            dict: The idx-th annotation of the dataset.
+        """
         img_a_path = self.data_infos_a[idx % self.len_a]['path']
         if self.test_mode:
             idx_b = np.random.randint(0, self.len_b)
@@ -101,6 +115,7 @@ class UnpairedImageDataset(BaseDataset):
         return data_info
 
     def __len__(self):
+        """The length of the dataset."""
         return max(self.len_a, self.len_b)
 
     def scan_folder(self, path):

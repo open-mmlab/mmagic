@@ -52,6 +52,11 @@ def sliced_wasserstein(distribution_a,
 
 # Gaussian blur kernel
 def get_gaussian_kernel():
+    """Get the gaussian blur kernel.
+
+    Returns:
+        Tensor: Blur kernel.
+    """
     kernel = np.array([[1, 4, 6, 4, 1], [4, 16, 24, 16, 4], [6, 24, 36, 24, 6],
                        [4, 16, 24, 16, 4], [1, 4, 6, 4, 1]],
                       np.float32) / 256.0
@@ -60,6 +65,17 @@ def get_gaussian_kernel():
 
 
 def get_pyramid_layer(image, gaussian_k, direction='down'):
+    """Get the pyramid layer.
+
+    Args:
+        image (Tensor): Input image.
+        gaussian_k (Tensor): Gaussian kernel
+        direction (str, optional): The direction of pyramid. Defaults to
+            'down'.
+
+    Returns:
+        Tensor: The output of the pyramid.
+    """
     gaussian_k = gaussian_k.to(image.device)
     if direction == 'up':
         image = F.interpolate(image, scale_factor=2)
@@ -75,6 +91,16 @@ def get_pyramid_layer(image, gaussian_k, direction='down'):
 
 
 def gaussian_pyramid(original, n_pyramids, gaussian_k):
+    """Get a group of gaussian pyramid.
+
+    Args:
+        original (Tensor): The input image.
+        n_pyramids (int): The number of pyramids.
+        gaussian_k (Tensor): The gaussian kernel.
+
+    Returns:
+        List[Tensor]: The list of output of gaussian pyramid.
+    """
     x = original
     # pyramid down
     pyramids = [original]

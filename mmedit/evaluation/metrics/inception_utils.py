@@ -104,6 +104,14 @@ def load_inception(inception_args, metric):
 
 
 def _load_inception_from_path(inception_path):
+    """Load inception from passed path.
+
+    Args:
+        inception_path (str): The path of inception.
+
+    Returns:
+        nn.Module: The loaded inception.
+    """
     print_log(
         'Try to load Tero\'s Inception Model from '
         f'\'{inception_path}\'.', 'current')
