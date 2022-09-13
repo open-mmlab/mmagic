@@ -43,13 +43,15 @@ class EditDataPreprocessor(BaseDataPreprocessor):
     """
 
     def __init__(
-            self,
-            mean: Sequence[Union[float, int]] = (0, 0, 0),
-            std: Sequence[Union[float, int]] = (255, 255, 255),
-            pad_size_divisor: int = 1,
-            input_view=(-1, 1, 1),
-            output_view=None,
-            pad_args: dict = dict(),
+        self,
+        mean: Sequence[Union[float, int]] = (0, 0, 0),
+        std: Sequence[Union[float, int]] = (255, 255, 255),
+        pad_size_divisor: int = 1,
+        input_view=(-1, 1, 1),
+        output_view=None,
+        pad_args: dict = dict(),
+        # non_image_keys: Optional[Tuple[str, List[str]]] = None,
+        # non_concentate_keys: Optional[Tuple[str, List[str]]] = None,
     ) -> None:
 
         super().__init__()

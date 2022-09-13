@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import random
-from typing import Dict
+from typing import Dict, List, Union
 
 import mmcv
 import numpy as np
@@ -29,7 +29,7 @@ class Flip(BaseTransform):
     - [KEYS]
 
     Args:
-        keys (list[str]): The images to be flipped.
+        keys (Union[str, List[str]]): The images to be flipped.
         flip_ratio (float): The probability to flip the images. Default: 0.5.
         direction (str): Flip images horizontally or vertically. Options are
             "horizontal" | "vertical". Default: "horizontal".
@@ -234,7 +234,7 @@ class Resize(BaseTransform):
     record the test transformation to align the input's shape.
 
     Args:
-        keys (list[str]): The images to be resized.
+        keys (str | list[str]): The image(s) to be resized.
         scale (float | tuple[int]): If scale is tuple[int], target spatial
             size (h, w). Otherwise, target spatial size is scaled by input
             size.
@@ -263,7 +263,7 @@ class Resize(BaseTransform):
     """
 
     def __init__(self,
-                 keys,
+                 keys: Union[str, List[str]] = 'img',
                  scale=None,
                  keep_ratio=False,
                  size_factor=None,
@@ -273,6 +273,7 @@ class Resize(BaseTransform):
                  output_keys=None):
 
         assert keys, 'Keys should not be empty.'
+        keys = [keys] if not isinstance(keys, list) else keys
         if output_keys:
             assert len(output_keys) == len(keys)
         else:
@@ -347,7 +348,6 @@ class Resize(BaseTransform):
         Returns:
             dict: A dict containing the processed data and information.
         """
-
         if self.size_factor:
             h, w = results[self.keys[0]].shape[:2]
             new_h = h - (h % self.size_factor)
@@ -380,4 +380,56 @@ class Resize(BaseTransform):
             f'keep_ratio={self.keep_ratio}, size_factor={self.size_factor}, '
             f'max_size={self.max_size}, interpolation={self.interpolation})')
 
+        return repr_str
+
+
+@TRANSFORMS.register_module()
+class NumpyPad(BaseTransform):
+    """Numpy Padding.
+
+    In this augmentation, numpy padding is adopted to customize padding
+    augmentation. Please carefully read the numpy manual in:
+    https://numpy.org/doc/stable/reference/generated/numpy.pad.html
+
+    If you just hope a single dimension to be padded, you must set ``padding``
+    like this:
+
+    ::
+
+        padding = ((2, 2), (0, 0), (0, 0))
+
+    In this case, if you adopt an input with three dimension, only the first
+    dimension will be padded.
+
+    Args:
+        keys (Union[str, List[str]]): The images to be padded.
+        padding (int | tuple(int)): Please refer to the args ``pad_width`` in
+            ``numpy.pad``.
+    """
+
+    def __init__(self, keys, padding, **kwargs):
+        if isinstance(keys, str):
+            keys = [keys]
+        self.keys = keys
+        self.padding = padding
+        self.kwargs = kwargs
+
+    def transform(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        for key in self.keys:
+            results[key] = np.pad(results[key], self.padding, **self.kwargs)
+
+        return results
+
+    def __repr__(self) -> str:
+        repr_str = self.__class__.__name__
+        repr_str += (f'(padding={self.padding}, kwargs={self.kwargs})')
         return repr_str

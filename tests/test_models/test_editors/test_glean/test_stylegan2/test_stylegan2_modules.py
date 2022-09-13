@@ -4,7 +4,7 @@ from copy import deepcopy
 import pytest
 import torch
 
-from mmedit.models.editors.glean.stylegan2.stylegan2_modules import (
+from mmedit.models.editors.stylegan2.stylegan2_modules import (
     Blur, ModulatedStyleConv, ModulatedToRGB)
 
 

@@ -20,8 +20,9 @@ def reduce_loss(loss, reduction):
         return loss
     if reduction_enum == 1:
         return loss.mean()
-
-    return loss.sum()
+    if reduction_enum == 2:
+        return loss.sum()
+    raise ValueError(f'reduction type {reduction} not supported')
 
 
 def mask_reduce_loss(loss, weight=None, reduction='mean', sample_wise=False):

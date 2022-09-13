@@ -78,6 +78,8 @@ class GLEANStyleGANv2(BaseModule):
         mix_prob (float, optional): Mixing probability. The value should be
             in range of [0, 1]. Defaults to 0.9.
         init_cfg (dict, optional): Initialization config dict. Default: None.
+        fp16_enabled (bool, optional): Whether to use fp16 training in this
+            module. Defaults to False.
         bgr2rgb (bool, optional): Whether to flip the image channel dimension.
             Defaults to False.
     """
@@ -97,6 +99,7 @@ class GLEANStyleGANv2(BaseModule):
                  eval_style_mode='single',
                  mix_prob=0.9,
                  init_cfg=None,
+                 fp16_enabled=False,
                  bgr2rgb=False):
 
         super().__init__(init_cfg=init_cfg)
@@ -119,6 +122,7 @@ class GLEANStyleGANv2(BaseModule):
                 default_style_mode=default_style_mode,
                 eval_style_mode=eval_style_mode,
                 mix_prob=mix_prob,
+                fp16_enabled=fp16_enabled,
                 bgr2rgb=bgr2rgb))
         self.generator.requires_grad_(False)
 

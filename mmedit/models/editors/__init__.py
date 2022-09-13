@@ -2,7 +2,10 @@
 from .aotgan import AOTBlockNeck, AOTEncoderDecoder, AOTInpaintor
 from .basicvsr import BasicVSR, BasicVSRNet
 from .basicvsr_plusplus_net import BasicVSRPlusPlusNet
+from .biggan import BigGAN
 from .cain import CAIN, CAINNet
+from .cyclegan import CycleGAN
+from .dcgan import DCGAN
 from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
                          DeepFillDecoder, DeepFillEncoder, DeepFillRefiner,
                          DeepFillv1Discriminators, DeepFillv1Inpaintor)
@@ -16,6 +19,7 @@ from .esrgan import ESRGAN, RRDBNet
 from .fba import FBADecoder, FBAResnetDilated
 from .flavr import FLAVR, FLAVRNet
 from .gca import GCA
+from .ggan import GGAN
 from .glean import GLEANStyleGANv2
 from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
                            GLEncoderDecoder)
@@ -24,17 +28,27 @@ from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
                        IndexNetEncoder)
 from .liif import LIIF, MLPRefiner
+from .lsgan import LSGAN
 from .pconv import (MaskConvModule, PartialConv2d, PConvDecoder, PConvEncoder,
                     PConvEncoderDecoder, PConvInpaintor)
+from .pggan import ProgressiveGrowingGAN
+from .pix2pix import Pix2Pix
 from .plain import PlainDecoder, PlainRefiner
 from .rdn import RDNNet
 from .real_basicvsr import RealBasicVSR, RealBasicVSRNet
 from .real_esrgan import RealESRGAN, UNetDiscriminatorWithSpectralNorm
+from .sagan import SAGAN
 from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
+from .stylegan1 import StyleGAN1
+from .stylegan2 import StyleGAN2
+from .stylegan3 import StyleGAN3
 from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
+from .wgan_gp import WGANGP
+
+# from .biggan import SNConvModule, SNE
 
 __all__ = [
     'AOTEncoderDecoder', 'AOTBlockNeck', 'AOTInpaintor',
@@ -55,5 +69,7 @@ __all__ = [
     'ModifiedVGG', 'MSRResNet', 'RDNNet', 'LTE', 'TTSR', 'TTSRNet',
     'TTSRDiscriminator', 'TTSRNet', 'SearchTransformer', 'GLEANStyleGANv2',
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
-    'FBADecoder'
+    'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
+    'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
+    'ProgressiveGrowingGAN'
 ]

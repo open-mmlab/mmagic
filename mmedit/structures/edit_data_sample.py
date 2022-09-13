@@ -1,7 +1,53 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmengine.structures import BaseDataElement
+from numbers import Number
+from typing import Sequence, Union
+
+import mmengine
+import numpy as np
+import torch
+from mmengine.structures import BaseDataElement, LabelData
+from torch import Tensor
 
 from .pixel_data import PixelData
+
+
+def format_label(value: Union[torch.Tensor, np.ndarray, Sequence, int],
+                 num_classes: int = None) -> LabelData:
+    """Convert label of various python types to :obj:`mmengine.LabelData`.
+
+    Supported types are: :class:`numpy.ndarray`, :class:`torch.Tensor`,
+    :class:`Sequence`, :class:`int`.
+
+    Args:
+        value (torch.Tensor | numpy.ndarray | Sequence | int): Label value.
+        num_classes (int, optional): The number of classes. If not None, set
+            it to the metainfo. Defaults to None.
+
+    Returns:
+        :obj:`mmengine.LabelData`: The foramtted label data.
+    """
+
+    # Handle single number
+    if isinstance(value, (torch.Tensor, np.ndarray)) and value.ndim == 0:
+        value = int(value.item())
+
+    if isinstance(value, np.ndarray):
+        value = torch.from_numpy(value)
+    elif isinstance(value, Sequence) and not mmengine.is_str(value):
+        value = torch.tensor(value)
+    elif isinstance(value, int):
+        value = torch.LongTensor([value])
+    elif not isinstance(value, torch.Tensor):
+        raise TypeError(f'Type {type(value)} is not an available label type.')
+
+    metainfo = {}
+    if num_classes is not None:
+        metainfo['num_classes'] = num_classes
+        if value.max() >= num_classes:
+            raise ValueError(f'The label data ({value}) should not '
+                             f'exceed num_classes ({num_classes}).')
+    label = LabelData(label=value, metainfo=metainfo)
+    return label
 
 
 class EditDataSample(BaseDataElement):
@@ -89,6 +135,52 @@ class EditDataSample(BaseDataElement):
         del self._gt_img
 
     @property
+    def gt_samples(self) -> 'EditDataSample':
+        """This is the function to fetch gt_samples.
+
+        Returns:
+            EditDataSample: gt samples.
+        """
+        return self._gt_samples
+
+    @gt_samples.setter
+    def gt_samples(self, value: 'EditDataSample'):
+        """This is the function to set gt_samples.
+
+        Args:
+            value (EditDataSample): gt samples.
+        """
+        self.set_field(value, '_gt_samples', dtype=EditDataSample)
+
+    @gt_samples.deleter
+    def gt_samples(self):
+        """This is the function to delete gt_samples."""
+        del self._gt_samples
+
+    @property
+    def noise(self) -> torch.Tensor:
+        """This is the function to fetch noise.
+
+        Returns:
+            torch.Tensor: noise.
+        """
+        return self._noise
+
+    @noise.setter
+    def noise(self, value: PixelData):
+        """This is the function to set noise.
+
+        Args:
+            value (PixelData): noise.
+        """
+        self.set_field(value, '_noise', dtype=torch.Tensor)
+
+    @noise.deleter
+    def noise(self):
+        """This is the functionto delete noise."""
+        del self._noise
+
+    @property
     def pred_img(self) -> PixelData:
         """This is the function to fetch pred_img in PixelData.
 
@@ -110,6 +202,33 @@ class EditDataSample(BaseDataElement):
     def pred_img(self):
         """This is the function to fetch pred_img."""
         del self._pred_img
+
+    @property
+    def fake_img(self) -> Union[PixelData, Tensor]:
+        """This is the function to fetch fake_img.
+
+        Returns:
+            Union[PixelData, Tensor]: The fake img.
+        """
+        return self._fake_img
+
+    @fake_img.setter
+    def fake_img(self, value: Union[PixelData, Tensor]):
+        """This is the function to set fake_img.
+
+        Args:
+            value (Union[PixelData, Tensor]): The value of fake img.
+        """
+        assert isinstance(value, (PixelData, Tensor))
+        if isinstance(value, PixelData):
+            self.set_field(value, '_fake_img', dtype=PixelData)
+        else:
+            self.set_field(value, '_fake_img', dtype=Tensor)
+
+    @fake_img.deleter
+    def fake_img(self):
+        """This is the function to delete fake_img."""
+        del self._fake_img
 
     @property
     def img_lq(self) -> PixelData:
@@ -455,3 +574,106 @@ class EditDataSample(BaseDataElement):
     def gt_merged(self):
         """This is the function to fetch gt_merged."""
         del self._gt_merged
+
+    @property
+    def sample_model(self) -> str:
+        """This is the function to fetch sample model.
+
+        Returns:
+            str: Mode of Sample model.
+        """
+        return self._sample_model
+
+    @sample_model.setter
+    def sample_model(self, value: str):
+        """This is the function to set sample model.
+
+        Args:
+            value (str): The mode of sample model.
+        """
+        self.set_field(value, '_sample_model', dtype=str)
+
+    @sample_model.deleter
+    def sample_model(self):
+        """This is the function to delete sample model."""
+        del self._sample_model
+
+    @property
+    def ema(self) -> 'EditDataSample':
+        """This is the function to fetch ema results.
+
+        Returns:
+            EditDataSample: Results of the ema model.
+        """
+        return self._ema
+
+    @ema.setter
+    def ema(self, value: 'EditDataSample'):
+        """This is the function to set ema results.
+
+        Args:
+            value (EditDataSample): Results of the ema model.
+        """
+        self.set_field(value, '_ema', dtype=EditDataSample)
+
+    @ema.deleter
+    def ema(self):
+        """This is the function to delete ema results."""
+        del self._ema
+
+    @property
+    def orig(self) -> 'EditDataSample':
+        """This is the function to fetch original results.
+
+        Returns:
+            EditDataSample: Results of the ema model.
+        """
+        return self._orig
+
+    @orig.setter
+    def orig(self, value: 'EditDataSample'):
+        """This is the function to set ema results.
+
+        Args:
+            value (EditDataSample): Results of the ema model.
+        """
+        self.set_field(value, '_orig', dtype=EditDataSample)
+
+    @orig.deleter
+    def orig(self):
+        """This is the function to delete ema results."""
+        del self._orig
+
+    def set_gt_label(
+        self, value: Union[np.ndarray, torch.Tensor, Sequence[Number], Number]
+    ) -> 'EditDataSample':
+        """Set label of ``gt_label``."""
+        label = format_label(value, self.get('num_classes'))
+        if 'gt_label' in self:
+            self.gt_label.label = label.label
+        else:
+            self.gt_label = label
+        return self
+
+    @property
+    def gt_label(self):
+        """This the function to fetch gt label.
+
+        Returns:
+            LabelData: gt label.
+        """
+        return self._gt_label
+
+    @gt_label.setter
+    def gt_label(self, value: LabelData):
+        """This is the function to set gt label.
+
+        Args:
+            value (LabelData): gt label.
+        """
+        self.set_field(value, '_gt_label', dtype=LabelData)
+
+    @gt_label.deleter
+    def gt_label(self):
+        """This is the function to delete gt label."""
+        del self._gt_label

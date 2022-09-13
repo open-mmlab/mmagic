@@ -1,10 +1,51 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Dict, Optional, Union
+
 import numpy as np
 import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule
 from mmengine.model.weight_init import kaiming_init, normal_init, xavier_init
+from torch import Tensor
 from torch.nn import init
+
+from mmedit.utils.typing import ForwardInputs
+
+
+def get_module_device(module):
+    """Get the device of a module.
+
+    Args:
+        module (nn.Module): A module contains the parameters.
+
+    Returns:
+        torch.device: The device of the module.
+    """
+    try:
+        next(module.parameters())
+    except StopIteration:
+        raise ValueError('The input module should contain parameters.')
+
+    if next(module.parameters()).is_cuda:
+        return next(module.parameters()).get_device()
+    else:
+        return torch.device('cpu')
+
+
+def set_requires_grad(nets, requires_grad=False):
+    """Set requires_grad for all the networks.
+
+    Args:
+        nets (nn.Module | list[nn.Module]): A list of networks or a single
+            network.
+        requires_grad (bool): Whether the networks require gradients or not
+    """
+    if not isinstance(nets, list):
+        nets = [nets]
+    for net in nets:
+        if net is not None:
+            for param in net.parameters():
+                param.requires_grad = requires_grad
 
 
 def generation_init_weights(module, init_type='normal', init_gain=0.02):
@@ -301,3 +342,82 @@ class ResidualBlockWithDropout(nn.Module):
         """
         out = x + self.block(x)
         return out
+
+
+def get_valid_noise_size(noise_size: Optional[int],
+                         generator: Union[Dict, nn.Module]) -> Optional[int]:
+    """Get the value of `noise_size` from input, `generator` and check the
+    consistency of these values. If no conflict is found, return that value.
+
+    Args:
+        noise_size (Optional[int]): `noise_size` passed to
+            `BaseGAN_refactor`'s initialize function.
+        generator (ModelType): The config or the model of generator.
+
+    Returns:
+        int | None: The noise size feed to generator.
+    """
+    if isinstance(generator, dict):
+        model_noise_size = generator.get('noise_size', None)
+    else:
+        model_noise_size = getattr(generator, 'noise_size', None)
+
+    # get noise_size
+    if noise_size is not None and model_noise_size is not None:
+        assert noise_size == model_noise_size, (
+            'Input \'noise_size\' is unconsistency with '
+            f'\'generator.noise_size\'. Receive \'{noise_size}\' and '
+            f'\'{model_noise_size}\'.')
+    else:
+        noise_size = noise_size or model_noise_size
+
+    return noise_size
+
+
+def get_valid_num_batches(batch_inputs: ForwardInputs) -> int:
+    """Try get the valid batch size from inputs.
+
+    - If some values in `batch_inputs` are `Tensor` and 'num_batches' is in
+      `batch_inputs`, we check whether the value of 'num_batches' and the the
+      length of first dimension of all tensors are same. If the values are not
+      same, `AssertionError` will be raised. If all values are the same,
+      return the value.
+    - If no values in `batch_inputs` is `Tensor`, 'num_batches' must be
+      contained in `batch_inputs`. And this value will be returned.
+    - If some values are `Tensor` and 'num_batches' is not contained in
+      `batch_inputs`, we check whether all tensor have the same length on the
+      first dimension. If the length are not same, `AssertionError` will be
+      raised. If all length are the same, return the length as batch size.
+    - If batch_inputs is a `Tensor`, directly return the length of the first
+      dimension as batch size.
+
+    Args:
+        batch_inputs (ForwardInputs): Inputs passed to :meth:`forward`.
+
+    Returns:
+        int: The batch size of samples to generate.
+    """
+    if isinstance(batch_inputs, Tensor):
+        return batch_inputs.shape[0]
+
+    # get num_batces from batch_inputs
+    num_batches_dict = {
+        k: v.shape[0]
+        for k, v in batch_inputs.items() if isinstance(v, Tensor)
+    }
+    if 'num_batches' in batch_inputs:
+        num_batches_dict['num_batches'] = batch_inputs['num_batches']
+
+    # ensure num_batches is not None
+    assert len(num_batches_dict.keys()) > 0, (
+        'Cannot get \'num_batches\' form preprocessed input '
+        f'(\'{batch_inputs}\').')
+
+    # ensure all num_batches are same
+    num_batches = list(num_batches_dict.values())[0]
+    assert all([
+        bz == num_batches for bz in num_batches_dict.values()
+    ]), ('\'num_batches\' is inconsistency among the preprocessed input. '
+         f'\'num_batches\' parsed resutls: {num_batches_dict}')
+
+    return num_batches

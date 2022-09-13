@@ -171,7 +171,20 @@ def parse_md(md_file):
                         'SKIP THIS TABLE' not in lines[i - 2]  # for aot-gan
                     ):
                 cols = [col.strip() for col in lines[i].split('|')][1:-1]
-                config_idx = cols.index('Method')
+                # if 'cain' in name.lower():
+                #     import ipdb
+                #     ipdb.set_trace()
+                if 'Config' not in cols and 'Download' not in cols:
+                    warnings.warn(f"Lack 'Config' or 'Download' in line {i+1}")
+                    i += 1
+                    continue
+                if 'Method' in cols:
+                    config_idx = cols.index('Method')
+                elif 'Config' in cols:
+                    config_idx = cols.index('Config')
+                else:
+                    print(cols)
+                    raise ValueError('Cannot find config Table.')
                 checkpoint_idx = cols.index('Download')
                 try:
                     flops_idx = cols.index('FLOPs')
@@ -201,7 +214,10 @@ def parse_md(md_file):
                         continue
 
                     if line[checkpoint_idx].find('](') >= 0:
-                        left = line[checkpoint_idx].index('model](') + 7
+                        if line[checkpoint_idx].find('model](') >= 0:
+                            left = line[checkpoint_idx].index('model](') + 7
+                        else:
+                            left = line[checkpoint_idx].index('ckpt](') + 6
                         right = line[checkpoint_idx].index(')', left)
                         checkpoint = line[checkpoint_idx][left:right]
 

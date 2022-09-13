@@ -8,7 +8,7 @@ from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
 from mmedit.models import SRGAN, EditDataPreprocessor, GLEANStyleGANv2
-from mmedit.models.editors.glean import StyleGANv2Discriminator
+from mmedit.models.editors.stylegan2 import StyleGAN2Discriminator
 from mmedit.models.losses import (GANLoss, MSELoss, PerceptualLoss,
                                   PerceptualVGG)
 from mmedit.structures import EditDataSample, PixelData
@@ -46,7 +46,7 @@ def test_glean(init_weights):
 
     assert isinstance(model, SRGAN)
     assert isinstance(model.generator, GLEANStyleGANv2)
-    assert isinstance(model.discriminator, StyleGANv2Discriminator)
+    assert isinstance(model.discriminator, StyleGAN2Discriminator)
     assert isinstance(model.pixel_loss, MSELoss)
     assert isinstance(model.perceptual_loss, PerceptualLoss)
     assert isinstance(model.gan_loss, GANLoss)
