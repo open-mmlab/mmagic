@@ -2,6 +2,8 @@
 
 > [AOT-GAN: Aggregated Contextual Transformations for High-Resolution Image Inpainting](https://arxiv.org/pdf/2104.01431.pdf)
 
+> **Task**: Inpainting
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -48,6 +50,52 @@ More results for different mask area:
 |                 | 30 – 40%  | 0.835         | 0.866                 |
 |                 | 40 – 50%  | 0.773         | 0.815                 |
 |                 | 50 – 60%  | 0.682         | 0.739                 |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py
+
+# single-gpu train
+python tools/train.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
+
+# single-gpu test
+python tools/test.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 
