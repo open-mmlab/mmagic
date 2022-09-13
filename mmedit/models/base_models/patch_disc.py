@@ -5,11 +5,10 @@ from mmengine import MMLogger
 from mmengine.runner import load_checkpoint
 
 from mmedit.models.utils import generation_init_weights
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODULES
 
 
-# @MODULES.register_module()
-@COMPONENTS.register_module()
+@MODULES.register_module()
 class PatchDiscriminator(nn.Module):
     """A PatchGAN discriminator.
 

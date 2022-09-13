@@ -9,7 +9,7 @@ from mmengine import FileClient
 from mmedit.registry import DATASETS
 from .basic_conditional_dataset import BasicConditionalDataset
 from .categories import CIFAR10_CATEGORIES
-from .utils import check_md5, download_and_extract_archive
+from .data_utils import check_md5, download_and_extract_archive
 
 
 @DATASETS.register_module()

@@ -16,6 +16,7 @@ from typing import Callable, Dict, List, Tuple
 from mmengine.fileio.file_client import FileClient
 
 
+# TODO: we can use FileClient.infer_client to replace this function
 def infer_io_backend(data_root: str) -> str:
     """Infer the io backend from the given data_root.
 

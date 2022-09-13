@@ -1,7 +1,4 @@
-_base_ = [
-    '../_base_/gen_default_runtime.py',
-    '../_base_/datasets/grow_scale_imgs_128x128.py',
-]
+_base_ = ['../_base_/gen_default_runtime.py']
 
 # define GAN model
 model = dict(
@@ -26,8 +23,6 @@ model_wrapper_cfg = dict(find_unused_parameters=True)
 
 # TRAIN
 train_cfg = dict(max_iters=280000)
-data_roots = {'128': './data/celeba-cropped/cropped_images_aligned_png'}
-train_dataloader = dict(batch_size=64, dataset=dict(data_roots=data_roots))
 
 optim_wrapper = dict(
     constructor='PGGANOptimWrapperConstructor',
@@ -35,6 +30,45 @@ optim_wrapper = dict(
     discriminator=dict(
         optimizer=dict(type='Adam', lr=0.001, betas=(0., 0.99))),
     lr_schedule=dict(generator={'128': 0.0015}, discriminator={'128': 0.0015}))
+
+# DATA
+dataset_type = 'GrowScaleImgDataset'
+data_roots = {'128': './data/celeba-cropped/cropped_images_aligned_png'}
+
+train_pipeline = [
+    dict(type='LoadImageFromFile', key='img'),
+    dict(type='Resize', scale=(128, 128)),
+    dict(type='Flip', keys=['img'], direction='horizontal'),
+    dict(type='PackEditInputs')
+]
+
+train_dataloader = dict(
+    num_workers=4,
+    batch_size=64,  # initialize batch size
+    dataset=dict(
+        type=dataset_type,
+        pipeline=train_pipeline,
+        data_roots=data_roots,
+        gpu_samples_base=4,
+        # note that this should be changed with total gpu number
+        gpu_samples_per_scale={
+            '4': 64,
+            '8': 32,
+            '16': 16,
+            '32': 8,
+            '64': 4
+        },
+        len_per_stage=-1),
+    sampler=dict(type='InfiniteSampler', shuffle=True))
+
+test_dataloader = dict(
+    num_workers=4,
+    batch_size=64,
+    dataset=dict(
+        type='UnconditionalImageDataset',
+        pipeline=train_pipeline,
+        data_root=data_roots['128']),
+    sampler=dict(type='DefaultSampler', shuffle=False))
 
 # VIS_HOOK + DATAFETCH
 custom_hooks = [
@@ -61,4 +95,3 @@ metrics = [
 val_cfg = val_evaluator = val_dataloader = None
 
 test_evaluator = dict(metrics=metrics)
-test_dataloader = dict(dataset=dict(data_root=data_roots['128']))

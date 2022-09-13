@@ -8,7 +8,7 @@ from mmengine.dataset import BaseDataset
 from mmengine.logging import MMLogger
 
 from mmedit.registry import DATASETS
-from .utils import expanduser, find_folders, get_samples
+from .data_utils import expanduser, find_folders, get_samples
 
 
 @DATASETS.register_module()

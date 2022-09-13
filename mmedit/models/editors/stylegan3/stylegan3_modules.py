@@ -5,8 +5,9 @@ import torch
 import torch.nn as nn
 from mmengine.runner.amp import autocast
 
-from mmedit.models.layers import bias_act, conv2d_gradfix, filtered_lrelu
+from mmedit.models.layers import conv2d_gradfix
 from mmedit.registry import MODULES
+from .ops import bias_act, filtered_lrelu
 
 
 def modulated_conv2d(

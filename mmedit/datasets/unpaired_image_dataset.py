@@ -7,7 +7,7 @@ from mmengine import FileClient
 from mmengine.dataset import BaseDataset, force_full_init
 
 from mmedit.registry import DATASETS
-from .utils import infer_io_backend
+from .data_utils import infer_io_backend
 
 IMG_EXTENSIONS = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.ppm',
                   '.PPM', '.bmp', '.BMP', '.tif', '.TIF', '.tiff', '.TIFF')

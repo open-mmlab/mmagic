@@ -1,6 +1,6 @@
 _base_ = [
-    '../_base_/datasets/lsun-car_pad_512.py',
-    '../_base_/models/base_styleganv2.py', '../_base_/gen_default_runtime.py'
+    '../_base_/gen_default_runtime.py',
+    '../_base_/models/base_styleganv2.py',
 ]
 
 # reg params
@@ -38,17 +38,52 @@ optim_wrapper = dict(
         optimizer=dict(
             type='Adam', lr=0.002 * d_reg_ratio, betas=(0,
                                                         0.99**d_reg_ratio))))
-
+# DATA
 batch_size = 4
 data_root = './data/lsun/images/car'
+dataset_type = 'BasicImageDataset'
 
+train_pipeline = [
+    dict(type='LoadImageFromFile', key='img'),
+    dict(
+        type='NumpyPad',
+        keys='img',
+        padding=((64, 64), (0, 0), (0, 0)),
+    ),
+    dict(type='Flip', keys=['img'], direction='horizontal'),
+    dict(type='PackEditInputs')
+]
+
+val_pipeline = train_pipeline
+
+# `batch_size` and `data_root` need to be set.
 train_dataloader = dict(
-    batch_size=batch_size, dataset=dict(data_root=data_root))
+    batch_size=4,
+    num_workers=8,
+    persistent_workers=True,
+    sampler=dict(type='InfiniteSampler', shuffle=True),
+    dataset=dict(
+        type=dataset_type, data_root=data_root, pipeline=train_pipeline))
 
-val_dataloader = dict(batch_size=batch_size, dataset=dict(data_root=data_root))
+val_dataloader = dict(
+    batch_size=4,
+    num_workers=8,
+    dataset=dict(
+        type=dataset_type,
+        data_root=data_root,  # set by user
+        pipeline=val_pipeline),
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    persistent_workers=True)
 
 test_dataloader = dict(
-    batch_size=batch_size, dataset=dict(data_root=data_root))
+    batch_size=4,
+    num_workers=8,
+    dataset=dict(
+        type=dataset_type,
+        data_root=data_root,  # set by user
+        pipeline=val_pipeline),
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    persistent_workers=True)
 
 # VIS_HOOK
 custom_hooks = [

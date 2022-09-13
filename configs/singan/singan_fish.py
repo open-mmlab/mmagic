@@ -1,7 +1,4 @@
-_base_ = [
-    '../_base_/models/base_singan.py', '../_base_/datasets/singan.py',
-    '../_base_/gen_default_runtime.py'
-]
+_base_ = ['../_base_/gen_default_runtime.py']
 
 # MODEL WRAPPER
 model_wrapper_cfg = dict(find_unused_parameters=True)
@@ -16,9 +13,23 @@ iters_per_scale = 2000
 test_pkl_data = None
 
 model = dict(
-    generator=dict(num_scales=num_scales),
-    discriminator=dict(num_scales=num_scales),
+    type='SinGAN',
+    data_preprocessor=dict(
+        type='GenDataPreprocessor', non_image_keys=['input_sample']),
+    generator=dict(
+        type='SinGANMultiScaleGenerator',
+        in_channels=3,
+        out_channels=3,
+        num_scales=num_scales,
+    ),
+    discriminator=dict(
+        type='SinGANMultiScaleDiscriminator',
+        in_channels=3,
+        num_scales=num_scales,
+    ),
+    noise_weight_init=0.1,
     test_pkl_data=test_pkl_data,
+    lr_scheduler_args=dict(milestones=[1600], gamma=0.1),
     generator_steps=generator_steps,
     discriminator_steps=discriminator_steps,
     iters_per_scale=iters_per_scale,
@@ -27,9 +38,24 @@ model = dict(
 # DATA
 min_size = 25
 max_size = 300
+dataset_type = 'SinGANDataset'
 data_root = './data/singan/fish-crop.jpg'
+
+pipeline = [dict(type='PackEditInputs')]
+dataset = dict(
+    type=dataset_type,
+    data_root=data_root,
+    min_size=min_size,
+    max_size=max_size,
+    scale_factor_init=0.75,
+    pipeline=pipeline)
+
 train_dataloader = dict(
-    dataset=dict(data_root=data_root, min_size=min_size, max_size=max_size))
+    batch_size=1,
+    num_workers=0,
+    dataset=dataset,
+    sampler=None,
+    persistent_workers=False)
 
 # TRAINING
 optim_wrapper = dict(

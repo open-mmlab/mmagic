@@ -1,5 +1,4 @@
 _base_ = [
-    '../_base_/models/biggan/base_biggan_32x32.py',
     '../_base_/datasets/cifar10_noaug.py',
     '../_base_/gen_default_runtime.py',
 ]
@@ -11,7 +10,34 @@ ema_config = dict(
     momentum=0.9999,
     start_iter=1000)
 
-model = dict(data_preprocessor=dict(rgb_to_bgr=True), ema_config=ema_config)
+model = dict(
+    type='BigGAN',
+    num_classes=10,
+    data_preprocessor=dict(type='GenDataPreprocessor', rgb_to_bgr=True),
+    generator=dict(
+        type='BigGANGenerator',
+        output_scale=32,
+        noise_size=128,
+        num_classes=10,
+        base_channels=64,
+        with_shared_embedding=False,
+        sn_eps=1e-8,
+        sn_style='torch',
+        init_type='N02',
+        split_noise=False,
+        auto_sync_bn=False),
+    discriminator=dict(
+        type='BigGANDiscriminator',
+        input_scale=32,
+        num_classes=10,
+        base_channels=64,
+        sn_eps=1e-8,
+        sn_style='torch',
+        init_type='N02',
+        with_spectral_norm=True),
+    generator_steps=1,
+    discriminator_steps=4,
+    ema_config=ema_config)
 
 # define dataset
 train_dataloader = dict(batch_size=25, num_workers=8)
