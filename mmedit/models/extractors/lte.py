@@ -11,7 +11,7 @@ from mmedit.utils import get_root_logger
 
 @COMPONENTS.register_module()
 class LTE(nn.Module):
-    """Learnable Texture Extractor
+    """Learnable Texture Extractor.
 
     Based on pretrained VGG19. Generate features in 3 levels.
 
@@ -67,8 +67,7 @@ class LTE(nn.Module):
             self.init_weights(pretrained)
 
     def forward(self, x):
-        """
-        Forward function.
+        """Forward function.
 
         Args:
             x (Tensor): Input tensor with shape (n, 3, h, w).

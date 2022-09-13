@@ -17,7 +17,9 @@ jobs:
         with:
           python-version: 3.7
       - name: Build MMEditing
-        run: python setup.py sdist
+        run: |
+          pip install wheel
+          python setup.py sdist bdist_wheel
       - name: Publish distribution to PyPI
         run: |
           pip install twine

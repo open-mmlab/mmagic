@@ -11,8 +11,9 @@ from mmedit.models.registry import COMPONENTS
 
 
 class MaxUnpool2dop(Function):
-    """We warp the `torch.nn.functional.max_unpool2d`
-    with an extra `symbolic` method, which is needed while exporting to ONNX.
+    """We warp the `torch.nn.functional.max_unpool2d` with an extra `symbolic`
+    method, which is needed while exporting to ONNX.
+
     Users should not call this function directly.
     """
 
@@ -20,6 +21,7 @@ class MaxUnpool2dop(Function):
     def forward(ctx, input, indices, kernel_size, stride, padding,
                 output_size):
         """Forward function of MaxUnpool2dop.
+
         Args:
             input (Tensor): Tensor needed to upsample.
             indices (Tensor): Indices output of the previous MaxPool.
@@ -101,6 +103,7 @@ class MaxUnpool2dop(Function):
 
 class MaxUnpool2d(_MaxUnpoolNd):
     """This module is modified from Pytorch `MaxUnpool2d` module.
+
     Args:
       kernel_size (int or tuple): Size of the max pooling window.
       stride (int or tuple): Stride of the max pooling window.
@@ -117,6 +120,7 @@ class MaxUnpool2d(_MaxUnpoolNd):
 
     def forward(self, input, indices, output_size=None):
         """Forward function of MaxUnpool2d.
+
         Args:
             input (Tensor): Tensor needed to upsample.
             indices (Tensor): Indices output of the previous MaxPool.
@@ -154,8 +158,7 @@ class PlainDecoder(nn.Module):
         self.max_unpool2d = nn.MaxUnpool2d(kernel_size=2, stride=2)
 
     def init_weights(self):
-        """Init weights for the module.
-        """
+        """Init weights for the module."""
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 xavier_init(m)

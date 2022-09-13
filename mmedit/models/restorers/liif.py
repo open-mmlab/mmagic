@@ -64,7 +64,6 @@ class LIIF(BasicRestorer):
         Returns:
             dict: Returned output, which includes:
                 log_vars, num_samples, results (lq, gt and pred).
-
         """
         # data
         coord = data_batch['coord']

@@ -6,7 +6,7 @@ from .sr_backbone_utils import default_init_weights
 
 
 class PixelShufflePack(nn.Module):
-    """ Pixel Shuffle upsample layer.
+    """Pixel Shuffle upsample layer.
 
     Args:
         in_channels (int): Number of input channels.
@@ -33,8 +33,7 @@ class PixelShufflePack(nn.Module):
         self.init_weights()
 
     def init_weights(self):
-        """Initialize weights for PixelShufflePack.
-        """
+        """Initialize weights for PixelShufflePack."""
         default_init_weights(self, 1)
 
     def forward(self, x):

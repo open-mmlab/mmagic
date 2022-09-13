@@ -295,7 +295,7 @@ def random_irregular_mask(img_shape,
 
 
 def get_irregular_mask(img_shape, area_ratio_range=(0.15, 0.5), **kwargs):
-    """Get irregular mask with the constraints in mask ratio
+    """Get irregular mask with the constraints in mask ratio.
 
     Args:
         img_shape (tuple[int]): Size of the image.

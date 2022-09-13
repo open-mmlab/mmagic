@@ -19,7 +19,7 @@ _conv1x1_layer = partial(
 
 
 class SFE(nn.Module):
-    """Structural Feature Encoder
+    """Structural Feature Encoder.
 
     Backbone of Texture Transformer Network for Image Super-Resolution.
 
@@ -238,7 +238,6 @@ class TTSRNet(nn.Module):
             Default: (16, 16, 8, 4)
         res_scale (float): Used to scale the residual in residual block.
             Default: 1.
-
     """
 
     def __init__(self,

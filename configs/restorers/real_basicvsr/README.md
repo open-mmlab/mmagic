@@ -20,8 +20,8 @@ The diversity and complexity of degradations in real-world video super-resolutio
 
 Evaluated on Y channel. The code for computing NRQM, NIQE, and PI can be found [here](https://github.com/roimehrez/PIRM2018). MATLAB official code is used to compute BRISQUE.
 
-|                                                             Method                                                             | NRQM (Y) | NIQE (Y) | PI (Y) | BRISQUE (Y) |                                                                                                                                         Download                                                                                                                                         |
-| :----------------------------------------------------------------------------------------------------------------------------: | :------: | :------: | :----: | :---------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                       Method                                       | NRQM (Y) | NIQE (Y) | PI (Y) | BRISQUE (Y) |                                       Download                                        |
+| :--------------------------------------------------------------------------------: | :------: | :------: | :----: | :---------: | :-----------------------------------------------------------------------------------: |
 | [realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds](/configs/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds.py) |  6.0477  |  3.7662  | 3.8593 |   29.030    | [model](https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104-52f77c2c.pth)/[log](https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104_183640.log.json) |
 
 ## Citation

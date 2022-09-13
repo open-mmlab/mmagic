@@ -125,7 +125,6 @@ def make_lmdb_for_df2k_ost(data_root):
 
     Args:
         data_root (str): Data root path.
-
     """
 
     folder_paths = [
@@ -278,7 +277,7 @@ def make_lmdb(data_path,
 
 
 def read_img_worker(path, key, compress_level):
-    """Read image worker
+    """Read image worker.
 
     Args:
         path (str): Image path.

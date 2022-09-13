@@ -1,11 +1,6 @@
 name: lint
 
-on:
-  push:
-   branches:
-    - master
-
-  pull_request:
+on: [push, pull_request]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -13,7 +8,7 @@ concurrency:
 
 jobs:
   lint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.7
@@ -29,4 +24,4 @@ jobs:
       - name: Check docstring coverage
         run: |
           pip install interrogate
-          interrogate -v --ignore-init-method --ignore-module --ignore-nested-functions --exclude mmedit/ops --ignore-regex "__repr__" --fail-under 80 mmedit
+          interrogate -v --ignore-init-method --ignore-module --ignore-nested-functions --exclude mmedit/ops --ignore-regex "__repr__" --fail-under 50 mmedit

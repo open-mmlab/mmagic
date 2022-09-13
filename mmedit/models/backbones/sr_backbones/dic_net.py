@@ -10,7 +10,7 @@ from mmedit.utils import get_root_logger
 
 
 class FeedbackBlock(nn.Module):
-    """Feedback Block of DIC
+    """Feedback Block of DIC.
 
     It has a style of:
 
@@ -208,7 +208,7 @@ class GroupResBlock(nn.Module):
 
 
 class FeatureHeatmapFusingBlock(nn.Module):
-    """ Fusing Feature and Heatmap.
+    """Fusing Feature and Heatmap.
 
     Args:
         in_channels (int): Number of channels in the input features.

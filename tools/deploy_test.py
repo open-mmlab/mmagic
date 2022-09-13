@@ -16,7 +16,7 @@ from mmedit.models import BasicRestorer, build_model
 
 
 class TensorRTRestorerGenerator(nn.Module):
-    """Inner class for tensorrt restorer model inference
+    """Inner class for tensorrt restorer model inference.
 
     Args:
         trt_file (str): The path to the tensorrt file.
@@ -44,7 +44,7 @@ class TensorRTRestorerGenerator(nn.Module):
 
 
 class TensorRTRestorer(nn.Module):
-    """A warper class for tensorrt restorer
+    """A warper class for tensorrt restorer.
 
     Args:
         base_model (Any): The base model build from config.
@@ -64,7 +64,7 @@ class TensorRTRestorer(nn.Module):
 
 
 class TensorRTEditing(nn.Module):
-    """A class for testing tensorrt deployment
+    """A class for testing tensorrt deployment.
 
     Args:
         trt_file (str): The path to the tensorrt file.

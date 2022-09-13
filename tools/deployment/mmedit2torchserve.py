@@ -21,6 +21,7 @@ def mmedit2torchserve(
     force: bool = False,
 ):
     """Converts MMEditing model (config + checkpoint) to TorchServe `.mar`.
+
     Args:
         config_file:
             In MMEditing config format.
