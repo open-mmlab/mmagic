@@ -6,12 +6,11 @@ import torch.nn as nn
 from mmcv.cnn import build_norm_layer
 from mmengine.dist import is_distributed
 from mmengine.model import constant_init, xavier_init
+from torch import Tensor
 from torch.nn.init import xavier_uniform_
 from torch.nn.utils import spectral_norm
 
 from mmedit.models.editors.biggan.biggan_modules import SNConvModule
-# from mmgen.models.architectures.biggan.biggan_snmodule import SNEmbedding
-# from mmgen.models.architectures.biggan.modules import SNConvModule
 from mmedit.models.editors.biggan.biggan_snmodule import SNEmbedding
 from mmedit.registry import MODELS, MODULES
 
@@ -168,6 +167,14 @@ class SNGANGenResBlock(nn.Module):
         return out + shortcut
 
     def forward_shortcut(self, x):
+        """Forward the shortcut branch.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
         out = x
         if self.learnable_sc:
             if self.with_upsample:
@@ -312,7 +319,15 @@ class SNGANDiscResBlock(nn.Module):
         shortcut = self.forward_shortcut(x)
         return out + shortcut
 
-    def forward_shortcut(self, x):
+    def forward_shortcut(self, x: Tensor) -> Tensor:
+        """Forward the shortcut branch.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
         out = x
         if self.learnable_sc:
             out = self.shortcut(out)
@@ -321,6 +336,7 @@ class SNGANDiscResBlock(nn.Module):
         return out
 
     def init_weights(self):
+        """Initialize weights."""
         if self.init_type.upper() == 'STUDIO':
             nn.init.orthogonal_(self.conv_1.conv.weight)
             nn.init.orthogonal_(self.conv_2.conv.weight)
@@ -426,7 +442,7 @@ class SNGANDiscHeadResBlock(nn.Module):
             spectral_norm_cfg=sn_cfg)
         self.init_weights()
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """Forward function.
 
         Args:
@@ -435,7 +451,6 @@ class SNGANDiscHeadResBlock(nn.Module):
         Returns:
             Tensor: Forward results.
         """
-
         out = self.conv_1(x)
         out = self.activate(out)
         out = self.conv_2(out)
@@ -444,12 +459,21 @@ class SNGANDiscHeadResBlock(nn.Module):
         shortcut = self.forward_shortcut(x)
         return out + shortcut
 
-    def forward_shortcut(self, x):
+    def forward_shortcut(self, x: Tensor) -> Tensor:
+        """Forward the shortcut branch.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
         out = self.downsample(x)
         out = self.shortcut(out)
         return out
 
     def init_weights(self):
+        """Initialize weights."""
         if self.init_type.upper() == 'STUDIO':
             for m in [self.conv_1, self.conv_2, self.shortcut]:
                 nn.init.orthogonal_(m.conv.weight)
@@ -595,6 +619,7 @@ class SNConditionNorm(nn.Module):
         return out
 
     def init_weights(self):
+        """Initialize weights."""
         if self.use_cbn:
             if self.init_type.upper() == 'STUDIO':
                 nn.init.orthogonal_(self.weight_embedding.weight)

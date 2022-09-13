@@ -57,7 +57,6 @@ class ArgumentsSampler:
         if self.idx >= self.max_times:
             raise StopIteration
         self.idx += 1
-        # return deepcopy(self.forward_kwargs)
         return dict(inputs=deepcopy(self.forward_kwargs))
 
 

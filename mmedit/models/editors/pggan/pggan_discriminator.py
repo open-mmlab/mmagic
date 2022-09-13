@@ -143,17 +143,46 @@ class PGGANDiscriminator(nn.Module):
                                           self._num_out_channels(0),
                                           1 + self.label_size)
 
-    def _num_out_channels(self, log_scale):
+    def _num_out_channels(self, log_scale: int) -> int:
+        """Calculate the number of output channels of the current network from
+        logarithm of current scale.
+
+        Args:
+            log_scale (int): The logarithm of the current scale.
+
+        Returns:
+            int: The number of output channels.
+        """
         return min(
             int(self.base_channels / (2.0**(log_scale * self.channel_decay))),
             self.max_channels)
 
-    def _get_fromrgb_layer(self, in_channels, log2_scale):
+    def _get_fromrgb_layer(self, in_channels: int,
+                           log2_scale: int) -> nn.Module:
+        """Get the 'fromrgb' layer from logarithm of current scale.
+
+        Args:
+            in_channels (int): The number of input channels.
+            log2_scale (int): The logarithm of the current scale.
+
+        Returns:
+            nn.Module: The built from-rgb layer.
+        """
         return EqualizedLRConvModule(in_channels,
                                      self._num_out_channels(log2_scale - 1),
                                      **self.fromrgb_layer_cfg)
 
-    def _get_convdown_block(self, in_channels, log2_scale):
+    def _get_convdown_block(self, in_channels: int,
+                            log2_scale: int) -> nn.Module:
+        """Get the downsample layer from logarithm of current scale.
+
+        Args:
+            in_channels (int): The number of input channels.
+            log2_scale (int): The logarithm of the current scale.
+
+        Returns:
+            nn.Module: The built Conv layer.
+        """
         modules = []
         if log2_scale == 2:
             modules.append(

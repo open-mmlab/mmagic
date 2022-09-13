@@ -10,7 +10,23 @@ def noise_sample_fn(noise: Union[Tensor, Callable, None] = None,
                     num_batches: int = 1,
                     noise_size: Union[int, Sequence[int], None] = None,
                     device: Optional[str] = None) -> Tensor:
+    """Sample noise with respect to the given `num_batches`, `noise_size` and
+    `device`.
 
+    Args:
+        noise (torch.Tensor | callable | None): You can directly give a
+            batch of noise through a ``torch.Tensor`` or offer a callable
+            function to sample a batch of noise data. Otherwise, the ``None``
+            indicates to use the default noise sampler. Defaults to None.
+        num_batches (int, optional): The number of batch size. Defaults to 1.
+        noise_size (Union[int, Sequence[int], None], optional): The size of
+            random noise. Defaults to None.
+        device (Optional[str], optional): The target device of the random
+            noise. Defaults to None.
+
+    Returns:
+        Tensor: Sampled random noise.
+    """
     if isinstance(noise, torch.Tensor):
         noise_batch = noise
         # unsqueeze if need
@@ -58,7 +74,24 @@ def label_sample_fn(label: Union[Tensor, Callable, List[int], None] = None,
                     num_batches: int = 1,
                     num_classes: Optional[int] = None,
                     device: Optional[str] = None) -> Union[Tensor, None]:
+    """Sample random label with respect to `num_batches`, `num_classes` and
+    `device`.
 
+    Args:
+        label (Union[Tensor, Callable, List[int], None], optional): You can
+            directly give a batch of label through a ``torch.Tensor`` or offer
+            a callable function to sample a batch of label data. Otherwise, the
+            ``None`` indicates to use the default label sampler.
+            Defaults to None.
+        num_batches (int, optional): The number of batch size. Defaults to 1.
+        num_classes (Optional[int], optional): The number of classes. Defaults
+            to None.
+        device (Optional[str], optional): The target device of the label.
+            Defaults to None.
+
+    Returns:
+        Union[Tensor, None]: Sampled random label.
+    """
     if num_classes is None or num_classes <= 0:
         return None
     if isinstance(label, Tensor):
