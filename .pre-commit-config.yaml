@@ -37,20 +37,21 @@ repos:
     hooks:
       - id: mdformat
         args: ["--number", "--table-width", "200"]
+        language_version: python3.7
         additional_dependencies:
           - mdformat-openmmlab
           - mdformat_frontmatter
           - linkify-it-py
-  # - repo: local
-  #   hooks:
-  #     - id: update-model-index
-  #       name: update-model-index
-  #       description: Collect model information and update model-index.yml
-  #       entry: .dev_scripts/update_model_index.py
-  #       additional_dependencies: [mmengine]
-  #       language: python
-  #       files: ^configs/.*\.md$
-  #       require_serial: true
+  - repo: local
+    hooks:
+      - id: update-model-index
+        name: update-model-index
+        description: Collect model information and update model-index.yml
+        entry: .dev_scripts/update_model_index.py
+        additional_dependencies: [mmengine]
+        language: python
+        files: ^configs/.*\.md$
+        require_serial: true
   - repo: https://github.com/myint/docformatter
     rev: v1.3.1
     hooks:
