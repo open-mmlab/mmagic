@@ -1,5 +1,7 @@
 # EDVR (CVPRW'2019)
 
+> **任务**: 视频超分辨率
+
 <!-- [ALGORITHM] -->
 
 <details>
@@ -28,3 +30,49 @@
 |         [edvrm_x4_8x4_600k_reds](/configs/edvr/edvrm_8xb4-600k_reds.py)          | 30.4194 / 0.8684 |            8             | [模型](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20200622_102544.log.json) |
 | [edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4](/configs/edvr/edvrl_wotsa-c128b40_8xb8-lr2e-4-600k_reds4.py) | 31.0010 / 0.8784 | 8 (Tesla V100-PCIE-32GB) | [模型](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228_144658.log.json) |
 | [edvrl_c128b40_8x8_lr2e-4_600k_reds4](/configs/edvr/edvrl_c128b40_8xb8-lr2e-4-600k_reds4.py) | 31.0467 / 0.8793 | 8 (Tesla V100-PCIE-32GB) | [模型](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104-4509865f.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104_171823.log.json) |
+
+## 快速开始
+
+**训练**
+
+<details>
+<summary>训练说明</summary>
+
+您可以使用以下命令来训练模型。
+
+```shell
+# CPU上训练
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/edvr/edvrm_8xb4-600k_reds.py
+
+# 单个GPU上训练
+python tools/train.py configs/edvr/edvrm_8xb4-600k_reds.py
+
+# 多个GPU上训练
+./tools/dist_train.sh configs/edvr/edvrm_8xb4-600k_reds.py 8
+```
+
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Train a model** 部分。
+
+</details>
+
+**测试**
+
+<details>
+<summary>测试说明</summary>
+
+您可以使用以下命令来测试模型。
+
+```shell
+# CPU上测试
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/edvr/edvrm_8xb4-600k_reds.py https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth
+
+# 单个GPU上测试
+python tools/test.py configs/edvr/edvrm_8xb4-600k_reds.py https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth
+
+# 多个GPU上测试
+./tools/dist_test.sh configs/edvr/edvrm_8xb4-600k_reds.py https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth 8
+```
+
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Test a pre-trained model** 部分。
+
+</details>

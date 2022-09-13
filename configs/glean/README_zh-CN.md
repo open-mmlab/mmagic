@@ -1,5 +1,7 @@
 # GLEAN (CVPR'2021)
 
+> **任务**: 图像超分辨率
+
 <!-- [ALGORITHM] -->
 
 <details>
@@ -26,3 +28,49 @@
 |                [glean_ffhq_16x](/configs/glean/glean_x16_2xb8_ffhq.py)                | 26.91 | 2 (Tesla V100-PCIE-32GB) | [模型](https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527-61a3afad.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527_194536.log.json) |
 |                 [glean_cat_16x](/configs/glean/glean_x16_2xb8_cat.py)                 | 20.88 | 2 (Tesla V100-PCIE-32GB) | [模型](https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_16x_20210527-68912543.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_16x_20210527_103708.log.json) |
 | [glean_in128out1024_4x2_300k_ffhq_celebahq](/configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py) | 27.94 | 4 (Tesla V100-SXM3-32GB) | [模型](https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812_100549.log.json) |
+
+## 快速开始
+
+**训练**
+
+<details>
+<summary>训练说明</summary>
+
+您可以使用以下命令来训练模型。
+
+```shell
+# CPU上训练
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/glean/glean_x8_2xb8_cat.py
+
+# 单个GPU上训练
+python tools/train.py configs/glean/glean_x8_2xb8_cat.py
+
+# 多个GPU上训练
+./tools/dist_train.sh configs/glean/glean_x8_2xb8_cat.py 8
+```
+
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Train a model** 部分。
+
+</details>
+
+**测试**
+
+<details>
+<summary>测试说明</summary>
+
+您可以使用以下命令来测试模型。
+
+```shell
+# CPU上测试
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/glean/glean_x8_2xb8_cat.py https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth
+
+# 单个GPU上测试
+python tools/test.py configs/glean/glean_x8_2xb8_cat.py https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth
+
+# 多个GPU上测试
+./tools/dist_test.sh configs/glean/glean_x8_2xb8_cat.py https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth 8
+```
+
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Test a pre-trained model** 部分。
+
+</details>

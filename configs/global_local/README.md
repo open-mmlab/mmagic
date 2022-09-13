@@ -2,6 +2,8 @@
 
 > [Globally and Locally Consistent Image Completion](http://iizuka.cs.tsukuba.ac.jp/projects/completion/data/completion_sig2017.pdf)
 
+> **Task**: Inpainting
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -31,6 +33,52 @@ We present a novel approach for image completion that results in images that are
 |                              Method                              |  Mask Type  | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  | GPU Info |                              Download                               |
 | :--------------------------------------------------------------: | :---------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :------: | :-----------------------------------------------------------------: |
 | [Global&Local](/configs/global_local/gl_8xb12_celeba-256x256.py) | square bbox |  256x256   |    500k     | CelebA-val |  6.678   | 26.780 | 0.904 |    8     | [model](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/global_local/gl_8xb12_places-256x256.py
+
+# single-gpu train
+python tools/train.py configs/global_local/gl_8xb12_places-256x256.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/global_local/gl_8xb12_places-256x256.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/global_local/gl_8xb12_places-256x256.py https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth
+
+# single-gpu test
+python tools/test.py configs/global_local/gl_8xb12_places-256x256.py https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/global_local/gl_8xb12_places-256x256.py https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

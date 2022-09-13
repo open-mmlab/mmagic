@@ -2,6 +2,8 @@
 
 > [FLAVR: Flow-Agnostic Video Representations for Fast Frame Interpolation](https://arxiv.org/pdf/2012.08512.pdf)
 
+> **Task**: Video Interpolation
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -26,6 +28,52 @@ The metrics are `PSNR / SSIM` .
 | [flavr_in4out1_g8b4_vimeo90k_septuplet](/configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py) |  x2   | 36.3340 | 0.96015 | 8 (Tesla PG503-216) | [model](https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth) \| [log](https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.log.json) |
 
 Note: FLAVR for x8 VFI task will supported in the future.
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py
+
+# single-gpu train
+python tools/train.py configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth
+
+# single-gpu test
+python tools/test.py configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

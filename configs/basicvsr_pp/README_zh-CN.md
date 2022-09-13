@@ -1,5 +1,7 @@
 # BasicVSR++ (CVPR'2022)
 
+> **任务**: 视频超分辨率
+
 <!-- [ALGORITHM] -->
 
 <details>
@@ -39,3 +41,49 @@ SPyNet 的 预训练权重在[这里](https://download.openmmlab.com/mmediting/r
 
 </details>
 ```
+
+## 快速开始
+
+**训练**
+
+<details>
+<summary>训练说明</summary>
+
+您可以使用以下命令来训练模型。
+
+```shell
+# CPU上训练
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py
+
+# 单个GPU上训练
+python tools/train.py configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py
+
+# 多个GPU上训练
+./tools/dist_train.sh configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py 8
+```
+
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Train a model** 部分。
+
+</details>
+
+**测试**
+
+<details>
+<summary>测试说明</summary>
+
+您可以使用以下命令来测试模型。
+
+```shell
+# CPU上测试
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
+
+# 单个GPU上测试
+python tools/test.py configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
+
+# 多个GPU上测试
+./tools/dist_test.sh configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth 8
+```
+
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Test a pre-trained model** 部分。
+
+</details>

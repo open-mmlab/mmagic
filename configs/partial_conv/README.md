@@ -2,6 +2,8 @@
 
 > [Image Inpainting for Irregular Holes Using Partial Convolutions](https://arxiv.org/abs/1804.07723)
 
+> **Task**: Inpainting
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -29,6 +31,52 @@ Existing deep learning based image inpainting methods use a standard convolution
 |                              Method                               | Mask Type | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  | GPU Info |                               Download                               |
 | :---------------------------------------------------------------: | :-------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :------: | :------------------------------------------------------------------: |
 | [PConv](/configs/partial_conv/pconv_stage2_4xb2_celeba-256x256.py) | free-form |  256x256   |    500k     | CelebA-val |  5.990   | 25.404 | 0.853 |    4     | [model](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/partial_conv/pconv_stage2_4xb2_places-256x256.py
+
+# single-gpu train
+python tools/train.py configs/partial_conv/pconv_stage2_4xb2_places-256x256.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/partial_conv/pconv_stage2_4xb2_places-256x256.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/partial_conv/pconv_stage2_4xb2_places-256x256.py https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.pth
+
+# single-gpu test
+python tools/test.py configs/partial_conv/pconv_stage2_4xb2_places-256x256.py https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/partial_conv/pconv_stage2_4xb2_places-256x256.py https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 

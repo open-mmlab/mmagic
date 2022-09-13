@@ -2,6 +2,8 @@
 
 > [Natural Image Matting via Guided Contextual Attention](https://arxiv.org/abs/2001.04069)
 
+> **Task**: Matting
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
@@ -31,6 +33,52 @@ Over the last few years, deep learning based approaches have achieved outstandin
 | :----------------------------------------------------------------------------------: | :---: | :----: | :---: | :---: | :------: | :-------------------------------------------------------------------------------------: |
 | [baseline (with DIM pipeline)](/configs/gca/baseline_r34_4xb10-dimaug-200k_comp1k.py) | 49.95 | 0.0144 | 30.21 | 49.67 |    4     | [model](https://download.openmmlab.com/mmediting/mattors/gca/baseline_dimaug_r34_4x10_200k_comp1k_SAD-49.95_20200626_231612-535c9a11.pth) \| [log](https://download.openmmlab.com/mmediting/mattors/gca/baseline_dimaug_r34_4x10_200k_comp1k_20200626_231612.log.json) |
 |     [GCA (with DIM pipeline)](/configs/gca/gca_r34_4xb10-dimaug-200k_comp1k.py)      | 49.42 | 0.0129 | 28.07 | 49.47 |    4     | [model](https://download.openmmlab.com/mmediting/mattors/gca/gca_dimaug_r34_4x10_200k_comp1k_SAD-49.42_20200626_231422-8e9cc127.pth) \| [log](https://download.openmmlab.com/mmediting/mattors/gca/gca_dimaug_r34_4x10_200k_comp1k_20200626_231422.log.json) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/gca/gca_r34_4xb10-200k_comp1k.py
+
+# single-gpu train
+python tools/train.py configs/gca/gca_r34_4xb10-200k_comp1k.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/gca/gca_r34_4xb10-200k_comp1k.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/gca/gca_r34_4xb10-200k_comp1k.py https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth
+
+# single-gpu test
+python tools/test.py configs/gca/gca_r34_4xb10-200k_comp1k.py https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/gca/gca_r34_4xb10-200k_comp1k.py https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 
