@@ -2,8 +2,10 @@
 from .aotgan import AOTBlockNeck, AOTEncoderDecoder, AOTInpaintor
 from .basicvsr import BasicVSR, BasicVSRNet
 from .basicvsr_plusplus_net import BasicVSRPlusPlusNet
+from .biggan import BigGAN
 from .cain import CAIN, CAINNet
 from .cyclegan import CycleGAN
+from .dcgan import DCGAN
 from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
                          DeepFillDecoder, DeepFillEncoder, DeepFillRefiner,
                          DeepFillv1Discriminators, DeepFillv1Inpaintor)
@@ -29,6 +31,7 @@ from .liif import LIIF, MLPRefiner
 from .lsgan import LSGAN
 from .pconv import (MaskConvModule, PartialConv2d, PConvDecoder, PConvEncoder,
                     PConvEncoderDecoder, PConvInpaintor)
+from .pggan import ProgressiveGrowingGAN
 from .pix2pix import Pix2Pix
 from .plain import PlainDecoder, PlainRefiner
 from .rdn import RDNNet
@@ -67,5 +70,6 @@ __all__ = [
     'TTSRDiscriminator', 'TTSRNet', 'SearchTransformer', 'GLEANStyleGANv2',
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
-    'StyleGAN1', 'StyleGAN2', 'StyleGAN3'
+    'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
+    'ProgressiveGrowingGAN'
 ]

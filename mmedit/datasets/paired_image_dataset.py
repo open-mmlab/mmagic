@@ -26,7 +26,7 @@ class PairedImageDataset(BaseDataset):
         pipeline (List[dict | callable]): A sequence of data transformations.
         test_mode (bool): Store `True` when building test dataset.
             Default: `False`.
-        testdir (str): Subfolder of dataroot which contain test images.
+        test_dir (str): Subfolder of dataroot which contain test images.
             Default: 'test'.
     """
 
@@ -35,8 +35,8 @@ class PairedImageDataset(BaseDataset):
                  pipeline,
                  io_backend: Optional[str] = None,
                  test_mode=False,
-                 testdir='test'):
-        phase = testdir if test_mode else 'train'
+                 test_dir='test'):
+        phase = test_dir if test_mode else 'train'
         self.data_root = osp.join(str(data_root), phase)
 
         if io_backend is None:

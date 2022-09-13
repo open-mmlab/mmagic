@@ -1,37 +1,21 @@
 _base_ = [
+    '../_base_/models/biggan/base_biggan_128x128.py',
     '../_base_/datasets/imagenet_noaug_128.py',
     '../_base_/gen_default_runtime.py',
 ]
 
 # define model
+ema_config = dict(
+    type='ExponentialMovingAverage',
+    interval=1,
+    momentum=0.9999,
+    update_buffers=True,
+    start_iter=20000)
+
 model = dict(
-    type='BigGAN',
-    num_classes=1000,
-    data_preprocessor=dict(type='GenDataPreprocessor'),
-    generator=dict(
-        type='BigGANGenerator',
-        output_scale=128,
-        noise_size=120,
-        num_classes=1000,
-        base_channels=96,
-        shared_dim=128,
-        with_shared_embedding=True,
-        sn_eps=1e-6,
-        init_type='ortho',
-        act_cfg=dict(type='ReLU', inplace=True),
-        split_noise=True,
-        auto_sync_bn=False),
-    discriminator=dict(
-        type='BigGANDiscriminator',
-        input_scale=128,
-        num_classes=1000,
-        base_channels=96,
-        sn_eps=1e-6,
-        init_type='ortho',
-        act_cfg=dict(type='ReLU', inplace=True),
-        with_spectral_norm=True),
-    generator_steps=1,
-    discriminator_steps=1)
+    generator=dict(sn_style='torch'),
+    discriminator=dict(sn_style='torch'),
+    ema_config=ema_config)
 
 # define dataset
 train_dataloader = dict(
@@ -59,18 +43,6 @@ custom_hooks = [
             sample_model='ema/orig',
             target_keys=['ema', 'orig'])),
 ]
-
-ema_config = dict(
-    type='ExponentialMovingAverage',
-    interval=1,
-    momentum=0.9999,
-    update_buffers=True,
-    start_iter=20000)
-
-model = dict(
-    generator=dict(sn_style='torch'),
-    discriminator=dict(sn_style='torch'),
-    ema_config=ema_config)
 
 # Traning sets' datasize 1,281,167
 train_cfg = dict(max_iters=1500000)

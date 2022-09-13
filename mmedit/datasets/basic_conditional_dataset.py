@@ -93,7 +93,8 @@ class BasicConditionalDataset(BaseDataset):
         assert (ann_file or data_prefix or data_root), \
             'One of `ann_file`, `data_root` and `data_prefix` must '\
             'be specified.'
-
+        if isinstance(data_prefix, str):
+            data_prefix = dict(img_path=expanduser(data_prefix))
         self.extensions = tuple(set([i.lower() for i in extensions]))
 
         super().__init__(

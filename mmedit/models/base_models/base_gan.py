@@ -621,13 +621,14 @@ class BaseConditionalGAN(BaseGAN):
                  discriminator_steps: int = 1,
                  noise_size: Optional[int] = None,
                  num_classes: Optional[int] = None,
-                 ema_config: Optional[Dict] = None):
+                 ema_config: Optional[Dict] = None,
+                 loss_config: Optional[Dict] = None):
 
         self.num_classes = self._get_valid_num_classes(num_classes, generator,
                                                        discriminator)
         super().__init__(generator, discriminator, data_preprocessor,
                          generator_steps, discriminator_steps, noise_size,
-                         ema_config)
+                         ema_config, loss_config)
 
     def label_fn(self, label: LabelVar = None, num_batches: int = 1) -> Tensor:
         """Sampling function for label. There are three scenarios in this

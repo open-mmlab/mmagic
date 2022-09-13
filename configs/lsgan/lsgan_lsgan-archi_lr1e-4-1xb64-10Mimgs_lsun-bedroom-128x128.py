@@ -1,6 +1,6 @@
 _base_ = [
     '../_base_/datasets/unconditional_imgs_128x128.py',
-    '../_base_/default_runtime.py'
+    '../_base_/gen_default_runtime.py'
 ]
 # define model
 model = dict(

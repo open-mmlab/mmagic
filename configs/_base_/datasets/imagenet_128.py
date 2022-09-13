@@ -7,12 +7,12 @@ train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='RandomCropLongEdge', keys=['img']),
     dict(type='Resize', scale=(128, 128), keys=['img'], backend='pillow'),
-    dict(type='RandomFlip', prob=0.5, direction='horizontal'),
+    dict(type='Flip', flip_ratio=0.5, direction='horizontal'),
     dict(type='PackEditInputs')
 ]
 
 test_pipeline = [
-    dict(type='LoadImageFromFile'),
+    dict(type='LoadImageFromFile', key='img'),
     dict(type='CenterCropLongEdge', keys=['img']),
     dict(type='Resize', scale=(128, 128), backend='pillow'),
     dict(type='PackEditInputs')

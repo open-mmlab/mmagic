@@ -2,9 +2,10 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from mmcv.cnn import ConvModule, normal_init
-from mmcv.runner import load_checkpoint
+from mmcv.cnn import ConvModule
 from mmengine import MMLogger
+from mmengine.model import normal_init
+from mmengine.runner import load_checkpoint
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
 from mmedit.registry import MODULES

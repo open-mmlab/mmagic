@@ -8,7 +8,7 @@ model = dict(discriminator=dict(output_scale=4, out_channels=1))
 
 # define dataset
 batch_size = 64
-data_root = './data/celeba/cropped_images_aligned_png/'
+data_root = './data/celeba-cropped/cropped_images_aligned_png/'
 train_dataloader = dict(
     batch_size=batch_size, dataset=dict(data_root=data_root))
 

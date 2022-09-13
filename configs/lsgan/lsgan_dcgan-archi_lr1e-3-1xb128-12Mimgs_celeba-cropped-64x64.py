@@ -1,7 +1,7 @@
 _base_ = [
     '../_base_/models/dcgan/base_dcgan_64x64.py',
     '../_base_/datasets/unconditional_imgs_64x64.py',
-    '../_base_/default_runtime.py'
+    '../_base_/gen_default_runtime.py'
 ]
 model = dict(type='LSGAN')
 total_iters = 100000

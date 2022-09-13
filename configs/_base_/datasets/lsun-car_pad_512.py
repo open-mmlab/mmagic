@@ -4,7 +4,7 @@ train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(
         type='NumpyPad',
-        key='img',
+        keys='img',
         padding=((64, 64), (0, 0), (0, 0)),
     ),
     dict(type='Flip', keys=['img'], direction='horizontal'),

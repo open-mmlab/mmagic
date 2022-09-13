@@ -5,6 +5,7 @@ _base_ = [
 
 model = dict(
     type='GGAN',
+    noise_size=1024,
     data_preprocessor=dict(type='GenDataPreprocessor'),
     generator=dict(type='LSGANGenerator', output_scale=64),
     discriminator=dict(type='LSGANDiscriminator', input_scale=64))

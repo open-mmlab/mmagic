@@ -1,36 +1,17 @@
 _base_ = [
+    '../_base_/models/biggan/base_biggan_32x32.py',
     '../_base_/datasets/cifar10_noaug.py',
     '../_base_/gen_default_runtime.py',
 ]
 
 # define model
-model = dict(
-    type='BigGAN',
-    num_classes=10,
-    data_preprocessor=dict(type='GenDataPreprocessor'),
-    generator=dict(
-        type='BigGANGenerator',
-        output_scale=32,
-        noise_size=128,
-        num_classes=10,
-        base_channels=64,
-        with_shared_embedding=False,
-        sn_eps=1e-8,
-        sn_style='torch',
-        init_type='N02',
-        split_noise=False,
-        auto_sync_bn=False),
-    discriminator=dict(
-        type='BigGANDiscriminator',
-        input_scale=32,
-        num_classes=10,
-        base_channels=64,
-        sn_eps=1e-8,
-        sn_style='torch',
-        init_type='N02',
-        with_spectral_norm=True),
-    generator_steps=1,
-    discriminator_steps=4)
+ema_config = dict(
+    type='ExponentialMovingAverage',
+    interval=1,
+    momentum=0.9999,
+    start_iter=1000)
+
+model = dict(data_preprocessor=dict(rgb_to_bgr=True), ema_config=ema_config)
 
 # define dataset
 train_dataloader = dict(batch_size=25, num_workers=8)
@@ -50,14 +31,6 @@ custom_hooks = [
             sample_model='ema/orig',
             target_keys=['ema', 'orig'])),
 ]
-
-ema_config = dict(
-    type='ExponentialMovingAverage',
-    interval=1,
-    momentum=0.9999,
-    start_iter=1000)
-
-model = dict(data_preprocessor=dict(rgb_to_bgr=True), ema_config=ema_config)
 
 optim_wrapper = dict(
     generator=dict(optimizer=dict(type='Adam', lr=0.0002, betas=(0.0, 0.999))),
