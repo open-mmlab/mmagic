@@ -1,5 +1,7 @@
 # LIIF (CVPR'2021)
 
+> **任务**: 图像超分辨率
+
 <!-- [ALGORITHM] -->
 
 <details>
@@ -40,3 +42,49 @@
 - 这两个配置仅在 _testing pipeline_ 上有所不同。 所以他们使用相同的检查点。
 - 数据根据 [EDSR](/configs/restorers/edsr) 进行正则化。
 - 在 RGB 通道上进行评估，在评估之前裁剪每个边界中的 `scale` 像素。
+
+## 快速开始
+
+**训练**
+
+<details>
+<summary>训练说明</summary>
+
+您可以使用以下命令来训练模型。
+
+```shell
+# CPU上训练
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/liif/liif-edsr-norm_c64b16_1xb16-1000k_div2k.py
+
+# 单个GPU上训练
+python tools/train.py configs/liif/liif-edsr-norm_c64b16_1xb16-1000k_div2k.py
+
+# 多个GPU上训练
+./tools/dist_train.sh configs/liif/liif-edsr-norm_c64b16_1xb16-1000k_div2k.py 8
+```
+
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Train a model** 部分。
+
+</details>
+
+**测试**
+
+<details>
+<summary>测试说明</summary>
+
+您可以使用以下命令来测试模型。
+
+```shell
+# CPU上测试
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/liif/liif-edsr-norm_c64b16_1xb16-1000k_div2k.py https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
+
+# 单个GPU上测试
+python tools/test.py configs/liif/liif-edsr-norm_c64b16_1xb16-1000k_div2k.py https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
+
+# 多个GPU上测试
+./tools/dist_test.sh configs/liif/liif-edsr-norm_c64b16_1xb16-1000k_div2k.py https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth 8
+```
+
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Test a pre-trained model** 部分。
+
+</details>

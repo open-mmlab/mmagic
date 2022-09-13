@@ -40,13 +40,13 @@ You can use the following commands to train a model with cpu or single/multiple 
 
 ```shell
 # cpu train
-CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py
 
 # single-gpu train
-python tools/train.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth
+python tools/train.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py
 
 # multi-gpu train
-./tools/dist_train.sh configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth 8
+./tools/dist_train.sh configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py 8
 ```
 
 For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
@@ -62,13 +62,13 @@ You can use the following commands to test a model with cpu or single/multiple G
 
 ```shell
 # cpu test
-CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth
 
 # single-gpu test
-python tools/test.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py
+python tools/test.py configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth
 
 # multi-gpu test
-./tools/dist_test.sh configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py 8
+./tools/dist_test.sh configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth 8
 ```
 
 For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).

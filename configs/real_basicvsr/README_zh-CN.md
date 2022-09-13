@@ -1,5 +1,7 @@
 # RealBasicVSR (CVPR'2022)
 
+> **任务**: 视频超分辨率
+
 <!-- [ALGORITHM] -->
 
 <details>
@@ -34,3 +36,49 @@
 **注:**
 
 1. 您可能希望将图像裁剪为子图像以加快 IO。请参阅[此处](/tools/data/super-resolution/reds/preprocess_reds_dataset.py)了解更多详情。
+
+## 快速开始
+
+**训练**
+
+<details>
+<summary>训练说明</summary>
+
+您可以使用以下命令来训练模型。
+
+```shell
+# CPU上训练
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/real_basicvsr/realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds.py
+
+# 单个GPU上训练
+python tools/train.py configs/real_basicvsr/realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds.py
+
+# 多个GPU上训练
+./tools/dist_train.sh configs/real_basicvsr/realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds.py 8
+```
+
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Train a model** 部分。
+
+</details>
+
+**测试**
+
+<details>
+<summary>测试说明</summary>
+
+您可以使用以下命令来测试模型。
+
+```shell
+# CPU上测试
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/real_basicvsr/realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds.py https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104-52f77c2c.pth
+
+# 单个GPU上测试
+python tools/test.py configs/real_basicvsr/realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds.py https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104-52f77c2c.pth
+
+# 多个GPU上测试
+./tools/dist_test.sh configs/real_basicvsr/realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds.py https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104-52f77c2c.pth 8
+```
+
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Test a pre-trained model** 部分。
+
+</details>

@@ -1,5 +1,7 @@
 # TDAN (CVPR'2020)
 
+> **任务**: 视频超分辨率
+
 <!-- [ALGORITHM] -->
 
 <details>
@@ -26,6 +28,8 @@
 | [tdan_vimeo90k_bix4_ft_lr5e-5_400k](/configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py) | **26.49/0.792** | **30.42/0.856** |   25.93/0.772   |   29.69/0.842   | 8 (Tesla V100-SXM2-32GB) | [模型](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
 | [tdan_vimeo90k_bdx4_ft_lr5e-5_800k](/configs/tdan/tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd.py) |   25.80/0.784   |   29.56/0.851   | **26.87/0.815** | **30.77/0.868** | 8 (Tesla V100-SXM2-32GB) | [模型](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
 
+## 快速开始
+
 **训练**
 
 <details>
@@ -33,25 +37,35 @@
 
 您可以使用以下命令来训练模型。
 
-```shell
-./tools/dist_train.sh ${CONFIG_FILE} ${GPU_NUM} [optional arguments]
-```
-
 TDAN 训练有两个阶段。
 
 **阶段 1**: 以更大的学习率训练 (1e-4)
 
 ```shell
-./tools/dist_train.sh configs/tdan/tdan_vimeo90k_bix4_lr1e-4_400k.py 8
+# CPU上训练
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/tdan/tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi.py
+
+# 单个GPU上训练
+python tools/train.py configs/tdan/tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi.py
+
+# 多个GPU上训练
+./tools/dist_train.sh configs/tdan/tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi.py 8
 ```
 
 **阶段 2**: 以较小的学习率进行微调 (5e-5)
 
 ```shell
-./tools/dist_train.sh configs/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py 8
+# CPU上训练
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py
+
+# 单个GPU上训练
+python tools/train.py configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py
+
+# 多个GPU上训练
+./tools/dist_train.sh configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py 8
 ```
 
-更多细节可以参考 [getting_started](/docs/zh_cn/getting_started.md#train-a-model) 中的 **Train a model** 部分。
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Train a model** 部分。
 
 </details>
 
@@ -63,15 +77,16 @@ TDAN 训练有两个阶段。
 您可以使用以下命令来测试模型。
 
 ```shell
-python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [--save-path ${IMAGE_SAVE_PATH}]
+# CPU上测试
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
+
+# 单个GPU上测试
+python tools/test.py configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
+
+# 多个GPU上测试
+./tools/dist_test.sh configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth 8
 ```
 
-示例：使用 `bicubic` 下采样在 SPMCS-30 上测试 TDAN。
-
-```shell
-python tools/test.py configs/tdan/tdan_vimeo90k_bix4_ft_lr5e-5_400k.py  checkpoints/SOME_CHECKPOINT.pth --save_path outputs/
-```
-
-更多细节可以参考 [getting_started](/docs/zh_cn/getting_started.md#inference-with-pretrained-models) 中的 **Inference with pretrained models** 部分。
+更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Test a pre-trained model** 部分。
 
 </details>
