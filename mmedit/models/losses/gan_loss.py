@@ -396,7 +396,7 @@ class DiscShiftLoss(nn.Module):
         Returns:
             Tensor: Loss.
         """
-        loss = torch.mean(disc_shift_loss)
+        loss = torch.mean(disc_shift_loss(x))
 
         return loss * self.loss_weight
 

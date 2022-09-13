@@ -6,6 +6,7 @@ import mmengine
 import numpy as np
 import torch
 from mmengine.structures import BaseDataElement, LabelData
+from torch import Tensor
 
 from .pixel_data import PixelData
 
@@ -181,12 +182,16 @@ class EditDataSample(BaseDataElement):
         del self._pred_img
 
     @property
-    def fake_img(self) -> PixelData:
+    def fake_img(self) -> Union[PixelData, Tensor]:
         return self._fake_img
 
     @fake_img.setter
-    def fake_img(self, value: PixelData):
-        self.set_field(value, '_fake_img', dtype=PixelData)
+    def fake_img(self, value: Union[PixelData, Tensor]):
+        assert isinstance(value, (PixelData, Tensor))
+        if isinstance(value, PixelData):
+            self.set_field(value, '_fake_img', dtype=PixelData)
+        else:
+            self.set_field(value, '_fake_img', dtype=Tensor)
 
     @fake_img.deleter
     def fake_img(self):

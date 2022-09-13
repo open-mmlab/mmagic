@@ -12,7 +12,8 @@ import os
 import numpy as np
 import torch
 
-from ... import conv2d
+from mmedit.models.layers.conv2d_gradfix import conv2d
+# from ... import conv2d
 from .. import custom_ops
 
 _plugin = None

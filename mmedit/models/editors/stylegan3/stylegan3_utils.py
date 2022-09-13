@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 
-from mmedit.models.layers.stylegan3.ops import upfirdn2d
+from .stylegan3_ops.ops import upfirdn2d
 
 
 def apply_integer_translation(x, tx, ty):

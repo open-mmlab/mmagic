@@ -7,7 +7,7 @@ from mmengine.runner.amp import autocast
 
 from mmedit.models.layers import conv2d_gradfix
 from mmedit.registry import MODULES
-from .ops import bias_act, filtered_lrelu
+from .stylegan3_ops.ops import bias_act, filtered_lrelu
 
 
 def modulated_conv2d(
