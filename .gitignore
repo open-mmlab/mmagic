@@ -122,6 +122,7 @@ configs_ceph_*/
 mmedit/.mim
 demo/*.png
 *.csv
+out/*.png
 
 # Pytorch
 *.pth
