@@ -42,16 +42,26 @@ Documentation
    2_get_started.md
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: User Guides
 
-   user_guides/index.rst
+   user_guides/1_config.md
+   user_guides/2_dataset_prepare.md
+   user_guides/3_inference.md
+   user_guides/4_train_test.md
+   user_guides/5_visualization.md
+   user_guides/6_useful_tools.md
+   user_guides/7_deploy.md
 
 .. toctree::
    :maxdepth: 2
    :caption: Advanced Guides
 
-   advanced_guides/index.rst
+   advanced_guides/1_models.md
+   advanced_guides/2_dataset.md
+   advanced_guides/3_transforms.md
+   advanced_guides/4_losses.md
+   advanced_guides/5_metrics.md
 
 
 .. toctree::
@@ -63,9 +73,18 @@ Documentation
 
 .. toctree::
    :maxdepth: 1
-   :caption: Migration
+   :caption: Migration from MMEdit 0.x
 
-   4_migration.md
+   migration/1_overview.md
+   migration/2_runtime.md
+   migration/3_models.md
+   migration/4_eval_test.md
+   migration/5_schedule.md
+   migration/6_data.md
+   migration/7_distributed_train.md
+   migration/8_optimizers.md
+   migration/9_visualization.md
+   migration/10_amp.md
 
 .. toctree::
    :maxdepth: 1
@@ -77,7 +96,10 @@ Documentation
    :maxdepth: 1
    :caption: Notes
 
-   notes/index.rst
+   notes/1_contribution_guide.md
+   notes/2_projects.md
+   notes/3_changelog.md
+   notes/4_faq.md
 
 
 .. toctree::

@@ -1,5 +1,12 @@
 # Contributing to MMEditing
 
+This section introduces following contents:
+
+- [Workflow](#workflow)
+- [Code style](#code-style)
+  - [Python](#python)
+  - [C++ and CUDA](#c-and-cuda)
+
 All kinds of contributions are welcome, including but not limited to the following.
 
 - Fix typo or bugs
