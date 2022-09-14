@@ -4,6 +4,7 @@ from .base_models import (BaseEditModel, BaseMattor, BasicInterpolator,
                           ExponentialMovingAverage, InceptionV3,
                           MultiLayerDiscriminator)
 from .data_preprocessors import EditDataPreprocessor, MattorPreprocessor
+from .diffusers import *  # noqa: F401, F403
 from .editors import *  # noqa: F401, F403
 from .losses import *  # noqa: F401, F403
 
