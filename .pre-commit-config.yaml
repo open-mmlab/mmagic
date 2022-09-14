@@ -37,7 +37,6 @@ repos:
     hooks:
       - id: mdformat
         args: ["--number", "--table-width", "200"]
-        language_version: python3.7
         additional_dependencies:
           - mdformat-openmmlab
           - mdformat_frontmatter

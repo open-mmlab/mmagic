@@ -1,8 +1,23 @@
+Advanced Guides
+=====================================
+
+
 .. toctree::
    :maxdepth: 2
+   :caption: Advanced Guides
 
-   models/customize_models.md
+   1_models.md
+   2_dataset.md
+   3_transforms.md
+   4_losses.md
+   5_metrics.md
 
-   dataset.md
-   transforms.md
-   losses.md
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

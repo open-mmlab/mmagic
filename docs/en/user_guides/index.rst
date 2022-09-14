@@ -1,22 +1,22 @@
-.. toctree::
-   :maxdepth: 3
-
-   config.md
+User Guides
+=====================================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
+   :caption: User Guides
 
-   datasets/dataset_prepare.md
-   datasets/inpainting_datasets.md
-   datasets/matting_datasets.md
-   datasets/super-resolution_datasets.md
-   datasets/video_interpolation_datasets.md
+   1_config.md
+   2_dataset_prepare.md
+   3_inference.md
+   4_train_test.md
+   5_visualization.md
+   6_useful_tools.md
+   7_deploy.md
 
-.. toctree::
-   :maxdepth: 3
 
-   inference.md
-   train_test.md
-   visualization.md
-   useful_tools.md
-   deploy.md
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

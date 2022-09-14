@@ -6,47 +6,66 @@ Languages:
 |
 `简体中文 <https://mmediting.readthedocs.io/zh_CN/latest/>`_
 
-MMEditing is an open-source toolbox for image/video processing, editing and synthesis.
+MMEditing is an open-source toolbox for image and video processing, editing and synthesis.
 
-MMEditing supports various tasks, including:
+MMEditing supports various foundamental generative models, including:
+
+* Unconditional Generative Adversarial Networks (GANs)
+* Conditional Generative Adversarial Networks (GANs)
+* Internal Learning
+* Diffusion Models
+* And many other generative models are coming soon!
+
+
+MMEditing supports various applications, including:
 
 * Image super-resolution
 * Video super-resolution
 * Video frame interpolation
 * Image inpainting
 * Image matting
-* And many other tasks are coming soon!
+* Image-to-image translation
+* And many other applications are coming soon!
 
 MMEditing is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab project <https://openmmlab.com/>`_.
 Codes are available on `GitHub <https://github.com/open-mmlab/mmediting>`_.
+
 
 Documentation
 =============
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :caption: Get Started
 
-   overview.md
-   get_started.md
+   1_overview.md
+   2_get_started.md
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: User Guides
 
    user_guides/index.rst
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Advanced Guides
 
    advanced_guides/index.rst
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Model Zoo
+
+   3_model_zoo.md
+
 
 .. toctree::
    :maxdepth: 1
    :caption: Migration
 
-   migration.md
+   4_migration.md
 
 .. toctree::
    :maxdepth: 1
@@ -54,27 +73,17 @@ Documentation
 
    api.rst
 
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Model Zoo
-
-   model_zoo.md
-
 .. toctree::
    :maxdepth: 1
    :caption: Notes
 
-   notes/contribution_guide.md
-   notes/projects.md
-   notes/changelog.md
-   notes/faq.md
+   notes/index.rst
 
 
 .. toctree::
    :caption: Switch Language
 
-   switch_language.md
+   5_switch_language.md
 
 
 
