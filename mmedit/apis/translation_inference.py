@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 from mmengine.dataset import Compose
+from mmengine.dataset.utils import default_collate as collate
 
 from mmedit.models.base_models import BaseTranslationModel
 
@@ -22,7 +23,7 @@ def sample_img2img_model(model, image_path, target_domain=None, **kwargs):
         target_domain = model._default_domain
     source_domain = model.get_other_domains(target_domain)[0]
 
-    cfg = model._cfg
+    cfg = model.cfg
     # build the data pipeline
     test_pipeline = Compose(cfg.test_pipeline)
 
@@ -33,8 +34,7 @@ def sample_img2img_model(model, image_path, target_domain=None, **kwargs):
     data[f'img_{source_domain}_path'] = image_path
     data[f'img_{target_domain}_path'] = image_path
 
-    data = [test_pipeline(data)]
-
+    data = collate([test_pipeline(data)])
     data = model.data_preprocessor(data, False)
     inputs_dict = data['inputs']
 

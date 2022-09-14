@@ -42,22 +42,6 @@ def infer_io_backend(data_root: str) -> str:
     return backend
 
 
-def rm_suffix(s, suffix=None):
-    """Remove.
-
-    Args:
-        s (_type_): _description_
-        suffix (_type_, optional): _description_. Defaults to None.
-
-    Returns:
-        _type_: _description_
-    """
-    if suffix is None:
-        return s[:s.rfind('.')]
-    else:
-        return s[:s.rfind(suffix)]
-
-
 def calculate_md5(fpath: str,
                   file_client: FileClient = None,
                   chunk_size: int = 1024 * 1024) -> str:
