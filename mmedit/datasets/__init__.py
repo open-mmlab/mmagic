@@ -4,6 +4,7 @@ from .basic_frames_dataset import BasicFramesDataset
 from .basic_image_dataset import BasicImageDataset
 from .cifar10_dataset import CIFAR10
 from .comp1k_dataset import AdobeComp1kDataset
+from .grow_scale_image_dataset import GrowScaleImgDataset
 from .imagenet_dataset import ImageNet
 from .paired_image_dataset import PairedImageDataset
 from .unpaired_image_dataset import UnpairedImageDataset
@@ -17,4 +18,5 @@ __all__ = [
     'PairedImageDataset',
     'ImageNet',
     'CIFAR10',
+    'GrowScaleImgDataset',
 ]

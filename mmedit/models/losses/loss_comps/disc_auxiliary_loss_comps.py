@@ -377,19 +377,13 @@ class R1GradientPenaltyComps(nn.Module):
             }
             kwargs.update(loss_input_dict)
             kwargs.update(
-                dict(
-                    # weight=self.loss_weight,
-                    norm_mode=self.norm_mode,
-                    use_apex_amp=self.use_apex_amp))
+                dict(norm_mode=self.norm_mode, use_apex_amp=self.use_apex_amp))
             return r1_gradient_penalty_loss(**kwargs) * self.loss_weight
         else:
             # if you have not define how to build computational graph, this
             # module will just directly return the loss as usual.
             return r1_gradient_penalty_loss(
-                *args,
-                # weight=self.loss_weight,
-                norm_mode=self.norm_mode,
-                **kwargs) * self.loss_weight
+                *args, norm_mode=self.norm_mode, **kwargs) * self.loss_weight
 
     def loss_name(self):
         """Loss Name.

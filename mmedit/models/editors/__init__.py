@@ -38,6 +38,7 @@ from .rdn import RDNNet
 from .real_basicvsr import RealBasicVSR, RealBasicVSRNet
 from .real_esrgan import RealESRGAN, UNetDiscriminatorWithSpectralNorm
 from .sagan import SAGAN
+from .singan import SinGAN
 from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
 from .stylegan1 import StyleGAN1
@@ -71,5 +72,5 @@ __all__ = [
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
-    'ProgressiveGrowingGAN'
+    'ProgressiveGrowingGAN', 'SinGAN'
 ]

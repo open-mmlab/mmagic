@@ -4,7 +4,8 @@ import copy
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import (Flip, RandomRotation,
+from mmedit.datasets.transforms import (CenterCropLongEdge, Flip, NumpyPad,
+                                        RandomCropLongEdge, RandomRotation,
                                         RandomTransposeHW, Resize)
 
 
@@ -301,3 +302,36 @@ class TestAugmentations:
             'scale=(128, 128), '
             f'keep_ratio={False}, size_factor=None, '
             'max_size=None, interpolation=bilinear)')
+
+
+def test_random_long_edge_crop():
+    results = dict(img=np.random.rand(256, 128, 3).astype(np.float32))
+    crop = RandomCropLongEdge(['img'])
+    results = crop(results)
+    assert results['img'].shape == (128, 128, 3)
+
+    repr_str = crop.__class__.__name__
+    repr_str += (f'(keys={crop.keys})')
+
+    assert str(crop) == repr_str
+
+
+def test_center_long_edge_crop():
+    results = dict(img=np.random.rand(256, 128, 3).astype(np.float32))
+    crop = CenterCropLongEdge(['img'])
+    results = crop(results)
+    assert results['img'].shape == (128, 128, 3)
+
+
+def test_numpy_pad():
+    results = dict(img=np.zeros((5, 5, 1)))
+
+    pad = NumpyPad(['img'], ((2, 2), (0, 0), (0, 0)))
+    results = pad(results)
+    assert results['img'].shape == (9, 5, 1)
+
+    repr_str = pad.__class__.__name__
+    repr_str += (
+        f'(keys={pad.keys}, padding={pad.padding}, kwargs={pad.kwargs})')
+
+    assert str(pad) == repr_str

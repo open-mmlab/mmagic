@@ -58,8 +58,7 @@ GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/exampl
 
 MMEditing 使用 `MMDistributedDataParallel` 实现 **分布式**测试。
 
-所有输出（日志文件和模型权重文件）都将保存到工作目录中，
-工作目录由配置文件中的 `work_dir` 指定。
+所有输出（日志文件和模型权重文件）都将保存到工作目录中，工作目录由配置文件中的 `work_dir` 指定。
 
 默认情况下，我们在多次迭代后评估验证集上的模型，您可以通过在训练配置中添加 `interval` 参数来更改评估间隔。
 
@@ -121,8 +120,7 @@ GPUS=8 ./tools/slurm_train.sh dev configs/inpainting/gl_places.py /nfs/xxxx/gl_p
 
 ### 在一台机器上启动多个作业
 
-如果您在一台机器上启动多个作业，例如，在具有 8 个 GPU 的机器上进行 2 个 4-GPU 训练的作业，
-您需要为每个作业指定不同的端口（默认为 29500）以避免通信冲突。
+如果您在一台机器上启动多个作业，例如，在具有 8 个 GPU 的机器上进行 2 个 4-GPU 训练的作业，您需要为每个作业指定不同的端口（默认为 29500）以避免通信冲突。
 
 ```shell
 CUDA_VISIBLE_DEVICES=0,1,2,3 PORT=29500 ./tools/dist_train.sh ${CONFIG_FILE} 4

@@ -233,7 +233,7 @@ class ToTensor(BaseTransform):
         self.to_float32 = to_float32
 
     def _data_to_tensor(self, value):
-
+        """Convert the value to tensor."""
         is_image = check_if_image(value)
 
         if is_image:

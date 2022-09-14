@@ -142,7 +142,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             self.gan_loss = None
             self.gen_auxiliary_losses = None
             self.disc_auxiliary_losses = None
-            self.loss_config = None
+            self.loss_config = dict()
             return
 
         self.loss_config = deepcopy(loss_config)
