@@ -43,6 +43,15 @@ def infer_io_backend(data_root: str) -> str:
 
 
 def rm_suffix(s, suffix=None):
+    """Remove.
+
+    Args:
+        s (_type_): _description_
+        suffix (_type_, optional): _description_. Defaults to None.
+
+    Returns:
+        _type_: _description_
+    """
     if suffix is None:
         return s[:s.rfind('.')]
     else:
@@ -51,7 +60,19 @@ def rm_suffix(s, suffix=None):
 
 def calculate_md5(fpath: str,
                   file_client: FileClient = None,
-                  chunk_size: int = 1024 * 1024):
+                  chunk_size: int = 1024 * 1024) -> str:
+    """Calculate MD5 of the file.
+
+    Args:
+        fpath (str): The path of the file.
+        file_client (FileClient, optional): The file client to fetch the file.
+            Defaults to None.
+        chunk_size (int, optional): The chunk size to calculate MD5. Defaults
+            to 1024*1024.
+
+    Returns:
+        str: The string of MD5.
+    """
     md5 = hashlib.md5()
     if file_client is None or file_client.name == 'HardDiskBackend':
         with open(fpath, 'rb') as f:
@@ -62,11 +83,30 @@ def calculate_md5(fpath: str,
     return md5.hexdigest()
 
 
-def check_md5(fpath, md5, **kwargs):
+def check_md5(fpath, md5, **kwargs) -> bool:
+    """Checn whether the MD5 of the file.
+
+    Args:
+        fpath (str): The path of the file.
+        md5 (str): Target MD5 value.
+
+    Returns:
+        bool: If true, the MD5 of passed file is same as target MD5.
+    """
     return md5 == calculate_md5(fpath, **kwargs)
 
 
-def check_integrity(fpath, md5=None):
+def check_integrity(fpath, md5=None) -> bool:
+    """Check whether the file is integrity by comparing the MD5 of the file
+    with target MD5.
+
+    Args:
+        fpath (str): The path of the file.
+        md5 (str, optional): The target MD5 value. Defaults to None.
+
+    Returns:
+        bool: If true, the passed file is integrity.
+    """
     if not os.path.isfile(fpath):
         return False
     if md5 is None:
@@ -179,30 +219,37 @@ def download_url(url, root, filename=None, md5=None):
 
 
 def _is_tarxz(filename):
+    """Judge whether the file is `.tar.xz`"""
     return filename.endswith('.tar.xz')
 
 
 def _is_tar(filename):
+    """Judge whether the file is `.tar`"""
     return filename.endswith('.tar')
 
 
 def _is_targz(filename):
+    """Judge whether the file is `.tar.gz`"""
     return filename.endswith('.tar.gz')
 
 
 def _is_tgz(filename):
+    """Judge whether the file is `.tgz`"""
     return filename.endswith('.tgz')
 
 
 def _is_gzip(filename):
+    """Judge whether the file is `.gzip`"""
     return filename.endswith('.gz') and not filename.endswith('.tar.gz')
 
 
 def _is_zip(filename):
+    """Judge whether the file is `.zip`"""
     return filename.endswith('.zip')
 
 
 def extract_archive(from_path, to_path=None, remove_finished=False):
+    """Extract the archive."""
     if to_path is None:
         to_path = os.path.dirname(from_path)
 
@@ -237,6 +284,7 @@ def download_and_extract_archive(url,
                                  filename=None,
                                  md5=None,
                                  remove_finished=False):
+    """Download and extract the archive."""
     download_root = os.path.expanduser(download_root)
     if extract_root is None:
         extract_root = download_root
