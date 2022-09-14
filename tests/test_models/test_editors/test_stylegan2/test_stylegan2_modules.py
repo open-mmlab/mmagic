@@ -5,8 +5,8 @@ from copy import deepcopy
 import pytest
 import torch
 
-from mmedit.models.editors.stylegan2 import (StyleGAN2Generator,
-                                             get_mean_latent, style_mixing)
+from mmedit.models.editors.stylegan1 import get_mean_latent, style_mixing
+from mmedit.models.editors.stylegan2 import StyleGAN2Generator
 from mmedit.models.editors.stylegan2.stylegan2_modules import (
     Blur, ModulatedStyleConv, ModulatedToRGB)
 from mmedit.models.utils import get_module_device

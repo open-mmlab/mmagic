@@ -5,8 +5,9 @@ from .composition_loss import (CharbonnierCompLoss, L1CompositionLoss,
 from .face_id_loss import FaceIdLoss
 from .feature_loss import LightCNNFeatureLoss
 from .gan_loss import (DiscShiftLoss, GANLoss, GaussianBlur,
-                       GradientPenaltyLoss, gen_path_regularizer,
-                       gradient_penalty_loss, r1_gradient_penalty_loss)
+                       GradientPenaltyLoss, disc_shift_loss,
+                       gen_path_regularizer, gradient_penalty_loss,
+                       r1_gradient_penalty_loss)
 from .gradient_loss import GradientLoss
 from .loss_comps import (CLIPLossComps, DiscShiftLossComps, FaceIdLossComps,
                          GANLossComps, GeneratorPathRegularizerComps,
@@ -25,5 +26,5 @@ __all__ = [
     'r1_gradient_penalty_loss', 'gen_path_regularizer', 'FaceIdLoss',
     'CLIPLoss', 'CLIPLossComps', 'DiscShiftLossComps', 'FaceIdLossComps',
     'GANLossComps', 'GeneratorPathRegularizerComps',
-    'GradientPenaltyLossComps', 'R1GradientPenaltyComps'
+    'GradientPenaltyLossComps', 'R1GradientPenaltyComps', 'disc_shift_loss'
 ]

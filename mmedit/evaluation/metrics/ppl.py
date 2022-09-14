@@ -1,13 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional, Sequence
 
+import lpips
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data.dataloader import DataLoader
 
-from mmedit.models import PerceptualLoss
 from mmedit.models.utils import get_module_device
 from mmedit.registry import METRICS
 from .base_gen_metric import GenerativeMetric
@@ -133,8 +133,7 @@ class PerceptualPathLength(GenerativeMetric):
         """
         # use minibatch's device type to initialize a lpips calculator
         if not hasattr(self, 'percept'):
-            self.percept = PerceptualLoss(
-                use_gpu=images.device.type.startswith('cuda'))
+            self.percept = lpips.LPIPS(net='vgg').to(images.device)
         # crop and resize images
         if self.crop:
             c = images.shape[2] // 8

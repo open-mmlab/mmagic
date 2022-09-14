@@ -3,7 +3,8 @@ from .alpha import GenerateSeg, GenerateSoftSeg
 from .aug_frames import MirrorSequence, TemporalReverse
 from .aug_pixel import (BinarizeImage, Clip, ColorJitter, RandomAffine,
                         RandomMaskDilation, UnsharpMasking)
-from .aug_shape import Flip, RandomRotation, RandomTransposeHW, Resize
+from .aug_shape import (Flip, NumpyPad, RandomRotation, RandomTransposeHW,
+                        Resize)
 from .crop import (CenterCropLongEdge, Crop, CropAroundCenter, CropAroundFg,
                    CropAroundUnknown, CropLike, FixedCrop, ModCrop,
                    PairedRandomCrop, RandomCropLongEdge, RandomResizedCrop)
@@ -48,5 +49,5 @@ __all__ = [
     'FormatTrimap', 'TransformTrimap', 'GenerateTrimap',
     'GenerateTrimapWithDistTransform', 'CompositeFg', 'RandomLoadResizeBg',
     'MergeFgAndBg', 'PerturbBg', 'RandomJitter', 'LoadPairedImageFromFile',
-    'CenterCropLongEdge', 'RandomCropLongEdge'
+    'CenterCropLongEdge', 'RandomCropLongEdge', NumpyPad
 ]

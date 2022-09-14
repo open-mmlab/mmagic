@@ -2,9 +2,28 @@
 from mmengine import Config
 from mmengine.config import ConfigDict
 from mmengine.runner import load_checkpoint
+from mmengine.runner import set_random_seed as set_random_seed_engine
 
 from mmedit.registry import MODELS
 from mmedit.utils import register_all_modules
+
+
+def set_random_seed(seed, deterministic=False, use_rank_shift=True):
+    """Set random seed.
+
+    In this function, we just modify the default behavior of the similar
+    function defined in MMCV.
+    Args:
+        seed (int): Seed to be used.
+        deterministic (bool): Whether to set the deterministic option for
+            CUDNN backend, i.e., set `torch.backends.cudnn.deterministic`
+            to True and `torch.backends.cudnn.benchmark` to False.
+            Default: False.
+        rank_shift (bool): Whether to add rank number to the random seed to
+            have different random seed in different threads. Default: True.
+    """
+    set_random_seed_engine(
+        seed, deterministic=deterministic, use_rank_shift=use_rank_shift)
 
 
 def delete_cfg(cfg, key='init_cfg'):

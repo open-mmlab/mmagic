@@ -332,13 +332,17 @@ class EditDataSample(BaseDataElement):
         return self._mask
 
     @mask.setter
-    def mask(self, value: PixelData):
+    def mask(self, value: Union[PixelData, Tensor]):
         """This is the function to set the value of mask.
 
         Args:
-            value (PixelData):  data element
+            value (Union[PixelData, Tensor]):  data element
         """
-        self.set_field(value, '_mask', dtype=PixelData)
+        assert isinstance(value, (PixelData, Tensor))
+        if isinstance(value, PixelData):
+            self.set_field(value, '_mask', dtype=PixelData)
+        else:
+            self.set_field(value, '_mask', dtype=Tensor)
 
     @mask.deleter
     def mask(self):
