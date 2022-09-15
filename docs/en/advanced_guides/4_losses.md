@@ -8,11 +8,15 @@ so that the new loss module can be adopted in our framework without extra effort
 
 This guides includes:
 
-- [Introduction to supported losses](#introduction-to-supported-losses)
-- [Design a new loss function](#design-a-new-loss-function)
-  - [An example of MSELoss](#an-example-of-mseloss)
-  - [An example of DiscShiftLoss](#an-example-of-discshiftloss)
-  - [An example of GANWithCustomizedLoss](#an-example-of-ganwithcustomizedloss)
+- [Design Your Own Loss Functions](#design-your-own-loss-functions)
+  - [Introduction to supported losses](#introduction-to-supported-losses)
+  - [Design a new loss function](#design-a-new-loss-function)
+    - [An example of MSELoss](#an-example-of-mseloss)
+    - [An example of DiscShiftLoss](#an-example-of-discshiftloss)
+    - [An example of GANWithCustomizedLoss](#an-example-of-ganwithcustomizedloss)
+  - [Available losses](#available-losses)
+    - [regular losses](#regular-losses)
+    - [losses components](#losses-components)
 
 ## Introduction to supported losses
 
@@ -228,3 +232,259 @@ Here, the `_get_disc_loss` will help to combine all kinds of losses automaticall
 
 Therefore, as long as users design the loss module with the same rules, any kind of loss can be inserted in the training of generative models,
 without other modifications in the code of models. What you only need to do is just defining the `data_info` in the config files.
+
+## Available losses
+
+We list available losses as follows.
+
+> **Method** means a kind of loss. \
+> **class** denotes the class which the method belongs to. \
+> **Type** denotes the type of loss. E.g. gan_loss, feature_loss, gradient_loss. \
+> **Example** give an config example showing how to add the loss. \
+> **paper** link is given if certain paper put forward this loss.
+
+### regular losses
+
+<table class="docutils">
+<thead>
+  <tr>
+    <th>Method</th>
+    <th>class</th>
+    <th>Example</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>vanilla gan loss</td>
+    <td>mmedit.models.GANLoss</td>
+<td>
+
+```python
+# dic gan
+loss_gan=dict(
+    type='GANLoss',
+    gan_type='vanilla',
+    loss_weight=0.001,
+)
+
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>lsgan loss</td>
+    <td>mmedit.models.GANLoss</td>
+<td>
+</td>
+
+</tr>
+  <tr>
+    <td>wgan loss</td>
+    <td>mmedit.models.GANLoss</td>
+    <td>
+
+```python
+# deepfillv1
+loss_gan=dict(
+    type='GANLoss',
+    gan_type='wgan',
+    loss_weight=0.0001,
+)
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>hinge loss</td>
+    <td>mmedit.models.GANLoss</td>
+    <td>
+
+```python
+# deepfillv2
+loss_gan=dict(
+    type='GANLoss',
+    gan_type='hinge',
+    loss_weight=0.1,
+)
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>smgan loss</td>
+    <td>mmedit.models.GANLoss</td>
+<td>
+
+```python
+# aot-gan
+loss_gan=dict(
+    type='GANLoss',
+    gan_type='smgan',
+    loss_weight=0.01,
+)
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>gradient penalty</td>
+    <td>mmedit.models.GradientPenaltyLoss</td>
+    <td>
+
+```python
+# deepfillv1
+loss_gp=dict(type='GradientPenaltyLoss', loss_weight=10.)
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>discriminator shift loss</td>
+    <td>mmedit.models.DiscShiftLoss</td>
+    <td>
+
+```python
+# deepfillv1
+loss_disc_shift=dict(type='DiscShiftLoss', loss_weight=0.001)
+
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>clip loss</td>
+    <td>mmedit.models.CLIPLoss</td>
+    <td></td>
+
+</tr>
+  <tr>
+    <td>L1 composition loss</td>
+    <td>mmedit.models.L1CompositionLoss</td>
+    <td></td>
+
+</tr>
+  <tr>
+    <td>MSE composition loss</td>
+    <td>mmedit.models.MSECompositionLoss</td>
+    <td></td>
+
+</tr>
+  <tr>
+    <td>charbonnier composition loss</td>
+    <td>mmedit.models.CharbonnierCompLoss</td>
+    <td>
+
+```python
+# dim
+loss_comp=dict(type='CharbonnierCompLoss', loss_weight=0.5)
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>face id Loss</td>
+    <td>mmedit.models.FaceIdLoss</td>
+    <td></td>
+
+</tr>
+  <tr>
+    <td>light cnn feature loss</td>
+    <td>mmedit.models.LightCNNFeatureLoss</td>
+    <td>
+
+```python
+# dic gan
+feature_loss=dict(
+    type='LightCNNFeatureLoss',
+    pretrained=pretrained_light_cnn,
+    loss_weight=0.1,
+    criterion='l1')
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>gradient loss</td>
+    <td>mmedit.models.GradientLoss</td>
+    <td></td>
+
+</tr>
+  <tr>
+    <td>l1 Loss</td>
+    <td>mmedit.models.L1Loss</td>
+    <td>
+
+```python
+# dic gan
+pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean')
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>mse loss</td>
+    <td>mmedit.models.MSELoss</td>
+    <td>
+
+```python
+# dic gan
+align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean')
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>charbonnier loss</td>
+    <td>mmedit.models.CharbonnierLoss</td>
+    <td>
+
+```python
+# dim
+loss_alpha=dict(type='CharbonnierLoss', loss_weight=0.5)
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>masked total variation loss</td>
+    <td>mmedit.models.MaskedTVLoss</td>
+    <td>
+
+```python
+# partial conv
+loss_tv=dict(
+    type='MaskedTVLoss',
+    loss_weight=0.1
+)
+
+```
+
+</td>
+  </tr>
+</tbody>
+</table>
+
+### losses components
+
+For `GANWithCustomizedLoss`, we provide several components to build customized loss.
+
+| Method                               | class                                       |
+| ------------------------------------ | ------------------------------------------- |
+| clip loss component                  | mmedit.models.CLIPLossComps                 |
+| discriminator shift loss component   | mmedit.models. DiscShiftLossComps           |
+| gradient penalty loss component      | mmedit.models. GradientPenaltyLossComps     |
+| r1 gradient penalty component        | mmedit.models. R1GradientPenaltyComps       |
+| face Id loss component               | mmedit.models. FaceIdLossComps              |
+| gan loss component                   | mmedit.models. GANLossComps                 |
+| generator path regularizer component | mmedit.models.GeneratorPathRegularizerComps |
