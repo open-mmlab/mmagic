@@ -20,6 +20,7 @@ class TwoStageInpaintor(OneStageInpaintor):
      'loss_out_percep', 'loss_tv']
     The `stage1_loss_type` and `stage2_loss_type` should be chosen from these
     loss types.
+
     Args:
         data_preprocessor (dict): Config of data_preprocessor.
         encdec (dict): Config for encoder-decoder style generator.
@@ -178,7 +179,7 @@ class TwoStageInpaintor(OneStageInpaintor):
             gt (torch.Tensor): Ground-truth tensor.
             mask (torch.Tensor): Mask tensor.
             prefix (str, optional): Prefix for loss name.
-                Defaults to 'stage1_'.
+                Defaults to 'stage1\_'. # noqa
         Returns:
             dict: Contain loss value with its name.
         """
@@ -214,11 +215,13 @@ class TwoStageInpaintor(OneStageInpaintor):
 
     def train_step(self, data: List[dict], optim_wrapper):
         """Train step function.
+
         In this function, the inpaintor will finish the train step following
         the pipeline:
-            1. get fake res/image
-            2. optimize discriminator (if have)
-            3. optimize generator
+        1. get fake res/image
+        2. optimize discriminator (if have)
+        3. optimize generator
+
         If `self.train_cfg.disc_step > 1`, the train step will contain multiple
         iterations for optimizing discriminator with different input data and
         only one iteration for optimizing gerator after `disc_step` iterations

@@ -18,9 +18,9 @@ class LTE(BaseModule):
         pixel_range (float): Pixel range of geature. Default: 1.
         load_pretrained_vgg (bool): Load pretrained VGG from torchvision.
             Default: True.
-            Train: must load pretrained VGG
+            Train: must load pretrained VGG.
             Eval: needn't load pretrained VGG, because we will load pretrained
-                LTE.
+            LTE.
     """
 
     def __init__(self,

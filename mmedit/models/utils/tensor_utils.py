@@ -6,17 +6,18 @@ def get_unknown_tensor(trimap, unknown_value=128 / 255):
 
     Args:
         trimap (Tensor): Tensor with shape (N, 3, H, W) or (N, 1, H, W).
-        unknown_value (float): Scalar value indicating unknown region in trimap
+        unknown_value (float): Scalar value indicating unknown region in
+            trimap.
             If trimap is pre-processed using `'rescale_to_zero_one'`, then
-                0 for bg, 128/255 for unknown, 1 for fg,
-                and unknown_value should set to 128 / 255
+            0 for bg, 128/255 for unknown, 1 for fg,
+            and unknown_value should set to 128 / 255.
             If trimap is pre-processed by
             :meth:`FormatTrimap(to_onehot=False)`, then
-                0 for bg, 1 for unknown, 2 for fg
-                and unknown_value should set to 1
+            0 for bg, 1 for unknown, 2 for fg
+            and unknown_value should set to 1.
             If trimap is pre-processed by
             :meth:`FormatTrimap(to_onehot=True)`, then
-                trimap is 3-channeled, and this value is not used.
+            trimap is 3-channeled, and this value is not used.
 
     Returns:
         Tensor: Unknown area mask of shape (N, 1, H, W).

@@ -10,7 +10,7 @@ class AOTEncoderDecoder(GLEncoderDecoder):
     This implementation follows:
     Aggregated Contextual Transformations for High-Resolution Image Inpainting
     The architecture of the encoder-decoder is:
-        (conv2d x 3) --> (dilated conv2d x 8) --> (conv2d or deconv2d x 3)
+    (conv2d x 3) --> (dilated conv2d x 8) --> (conv2d or deconv2d x 3).
 
     Args:
         encoder (dict): Config dict to encoder.

@@ -17,6 +17,7 @@ class BasicVSRNet(BaseModule):
     """BasicVSR network structure for video super-resolution.
 
     Support only x4 upsampling.
+
     Paper:
         BasicVSR: The Search for Essential Components in Video Super-Resolution
         and Beyond, CVPR, 2021
