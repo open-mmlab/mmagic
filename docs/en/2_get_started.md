@@ -61,7 +61,6 @@ Install PyTorch following [official instructions](https://pytorch.org/get-starte
 
 ```shell
 pip install -U openmim
-# wait for more pre-compiled pkgs to release
 mim install 'mmcv>=2.0.0rc1'
 ```
 
@@ -77,7 +76,7 @@ Install [MMEditing](https://github.com/open-mmlab/mmediting) from the source cod
 ```shell
 git clone -b 1.x https://github.com/open-mmlab/mmediting.git
 cd mmediting
-pip3 install -e .
+pip3 install -e -v .
 ```
 
 **Step 5.**
