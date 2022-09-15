@@ -1,10 +1,20 @@
 # Design Your Own Metrics
 
-MMEditing supports various metrics to assess the quality of generative models. Refer to [train_test](../user_guides/4_train_test.md) for usages.
+MMEditing supports various metrics to assess the quality of models. Refer to [train_test](../user_guides/4_train_test.md) for usages.
 Here, we will specify the details of different metrics one by one.
 
 The structure of this guide are as follows:
 
+- [MAE](#MAE)
+- [MSE](#MSE)
+- [PSNR](#PSNR)
+- [SNR](#SNR)
+- [SSIM](#SSIM)
+- [NIQE](#NIQE)
+- [SAD](#SAD)
+- [MattingMSE](#MattingMSE)
+- [GradientError](#GradientError)
+- [ConnectivityError](#ConnectivityError)
 - [FID and TransFID](#fid-and-transfid)
 - [IS and TransIS](#is-and-transis)
 - [Precision and Recall](#precision-and-recall)
@@ -13,11 +23,122 @@ The structure of this guide are as follows:
 - [MS-SSIM](#ms-ssim)
 - [Equivarience](#equivarience)
 
+## MAE
+
+MAE is Mean Absolute Error metric for image.
+To evaluate with MAE, please add the following configuration in the config file:
+
+```python
+val_evaluator = [
+    dict(type='MAE'),
+]
+```
+
+## MSE
+
+MSE is Mean Squared Error metric for image.
+To evaluate with MSE, please add the following configuration in the config file:
+
+```python
+val_evaluator = [
+    dict(type='MSE'),
+]
+```
+
+## PSNR
+
+PSNR is Peak Signal-to-Noise Ratio. Our implement refers to https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio.
+To evaluate with PSNR, please add the following configuration in the config file:
+
+```python
+val_evaluator = [
+    dict(type='PSNR'),
+]
+```
+
+## SNR
+
+SNR is Signal-to-Noise Ratio. Our implementation refers to https://en.wikipedia.org/wiki/Signal-to-noise_ratio.
+To evaluate with SNR, please add the following configuration in the config file:
+
+```python
+val_evaluator = [
+    dict(type='SNR'),
+]
+```
+
+## SSIM
+
+SSIM is structural similarity for image, proposed in [Image quality assessment: from error visibility to structural similarity](https://live.ece.utexas.edu/publications/2004/zwang_ssim_ieeeip2004.pdf). The results of our implementation are the same as that of the official released MATLAB code in https://ece.uwaterloo.ca/~z70wang/research/ssim/.
+To evaluate with SSIM, please add the following configuration in the config file:
+
+```python
+val_evaluator = [
+    dict(type='SSIM'),
+]
+```
+
+## NIQE
+
+NIQE is Natural Image Quality Evaluator metric, proposed in [Making a "Completely Blind" Image Quality Analyzer](http://www.live.ece.utexas.edu/publications/2013/mittal2013.pdf). Our implementation could produce almost the same results as the official MATLAB codes: http://live.ece.utexas.edu/research/quality/niqe_release.zip.
+
+To evaluate with NIQE, please add the following configuration in the config file:
+
+```python
+val_evaluator = [
+    dict(type='NIQE'),
+]
+```
+
+## SAD
+
+SAD is Sum of Absolute Differences metric for image matting. This metric compute per-pixel absolute difference and sum across all pixels.
+To evaluate with SAD, please add the following configuration in the config file:
+
+```python
+val_evaluator = [
+    dict(type='SAD'),
+]
+```
+
+## MattingMSE
+
+MattingMSE is Mean Squared Error metric for image matting.
+To evaluate with MattingMSE, please add the following configuration in the config file:
+
+```python
+val_evaluator = [
+    dict(type='MattingMSE'),
+]
+```
+
+## GradientError
+
+GradientError is Gradient error for evaluating alpha matte prediction.
+To evaluate with GradientError, please add the following configuration in the config file:
+
+```python
+val_evaluator = [
+    dict(type='GradientError'),
+]
+```
+
+## ConnectivityError
+
+ConnectivityError is Connectivity error for evaluating alpha matte prediction.
+To evaluate with ConnectivityError, please add the following configuration in the config file:
+
+```python
+val_evaluator = [
+    dict(type='ConnectivityError'),
+]
+```
+
 ## FID and TransFID
 
 Fréchet Inception Distance is a measure of similarity between two datasets of images. It was shown to correlate well with the human judgment of visual quality and is most often used to evaluate the quality of samples of Generative Adversarial Networks. FID is calculated by computing the Fréchet distance between two Gaussians fitted to feature representations of the Inception network.
 
-In `MMEditing`, we provide two versions for FID calculation. One is the commonly used PyTorch version and the other one is used in StyleGAN paper. Meanwhile, we have compared the difference between these two implementations in the StyleGAN2-FFHQ1024 model (the details can be found [here](https://github.com/open-mmlab/mmgeneration/blob/master/configs/styleganv2/README.md)). Fortunately, there is a marginal difference in the final results. Thus, we recommend users adopt the more convenient PyTorch version.
+In `MMEditing`, we provide two versions for FID calculation. One is the commonly used PyTorch version and the other one is used in StyleGAN paper. Meanwhile, we have compared the difference between these two implementations in the StyleGAN2-FFHQ1024 model (the details can be found [here](/configs/styleganv2/README.md)). Fortunately, there is a marginal difference in the final results. Thus, we recommend users adopt the more convenient PyTorch version.
 
 **About PyTorch version and Tero's version:** The commonly used PyTorch version adopts the modified InceptionV3 network to extract features for real and fake images. However, Tero's FID requires a [script module](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/inception-2015-12-05.pt) for Tensorflow InceptionV3. Note that applying this script module needs `PyTorch >= 1.6.0`.
 
@@ -72,7 +193,7 @@ metrics = [
 ]
 ```
 
-To be noted that, the selection of Inception V3 and image resize method can significantly influence the final IS score. Therefore, we strongly recommend users may download the [Tero's script model of Inception V3](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/inception-2015-12-05.pt) (load this script model need torch >= 1.6) and use `Bicubic` interpolation with `Pillow` backend. We provide a template for the [data process pipline](https://github.com/open-mmlab/mmgeneration/tree/master/configs/_base_/datasets/Inception_Score.py) as well.
+To be noted that, the selection of Inception V3 and image resize method can significantly influence the final IS score. Therefore, we strongly recommend users may download the [Tero's script model of Inception V3](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/inception-2015-12-05.pt) (load this script model need torch >= 1.6) and use `Bicubic` interpolation with `Pillow` backend.
 
 Corresponding to config, you can set `resize_method` and `use_pillow_resize` for image resizing. You can also set `inception_style` as `StyleGAN` for recommended tero's inception model, or `PyTorch` for torchvision's implementation. For environment without internet, you can download the inception's weights, and set `inception_path` to your inception model.
 
