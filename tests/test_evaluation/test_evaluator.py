@@ -12,6 +12,8 @@ register_all_modules()
 fid_loading_str = 'mmedit.evaluation.metrics.fid.FrechetInceptionDistance._load_inception'  # noqa
 is_loading_str = 'mmedit.evaluation.metrics.inception_score.InceptionScore._load_inception'  # noqa
 
+loading_mock = MagicMock(return_value=(MagicMock(), 'StyleGAN'))
+
 
 class TestGenEvaluator(TestCase):
 
@@ -31,15 +33,15 @@ class TestGenEvaluator(TestCase):
             dict(type='TransFID', fake_nums=10),
         ]
 
-    @patch(is_loading_str, return_value=(MagicMock(), 'StyleGAN'))
-    @patch(fid_loading_str, return_value=(MagicMock(), 'StyleGAN'))
-    def test_init(self, m1, m2):
+    @patch(is_loading_str, loading_mock)
+    @patch(fid_loading_str, loading_mock)
+    def test_init(self):
         evaluator = GenEvaluator(self.metrics)
         self.assertFalse(evaluator.is_ready)
 
-    @patch(is_loading_str, return_value=(MagicMock(), 'StyleGAN'))
-    @patch(fid_loading_str, return_value=(MagicMock(), 'StyleGAN'))
-    def test_prepare_metric(self, m1, m2):
+    @patch(is_loading_str, loading_mock)
+    @patch(fid_loading_str, loading_mock)
+    def test_prepare_metric(self):
         evaluator = GenEvaluator(self.metrics)
         model = MagicMock()
         model.data_preprocessor.device = 'cpu'
@@ -54,9 +56,9 @@ class TestGenEvaluator(TestCase):
         evaluator.prepare_metrics(model, dataloader)
         evaluator.metrics[0].assert_not_called()
 
-    @patch(is_loading_str, return_value=(MagicMock(), 'StyleGAN'))
-    @patch(fid_loading_str, return_value=(MagicMock(), 'StyleGAN'))
-    def test_prepare_samplers(self, m1, m2):
+    @patch(is_loading_str, loading_mock)
+    @patch(fid_loading_str, loading_mock)
+    def test_prepare_samplers(self):
         evaluator = GenEvaluator(self.metrics)
 
         model = MagicMock()
@@ -75,9 +77,9 @@ class TestGenEvaluator(TestCase):
         self.assertEqual(metric_sampler_list[0][1].max_length, 11)
         self.assertEqual(len(metric_sampler_list[0][1]), 6)
 
-    @patch(is_loading_str, return_value=(MagicMock(), 'StyleGAN'))
-    @patch(fid_loading_str, return_value=(MagicMock(), 'StyleGAN'))
-    def test_process(self, m1, m2):
+    @patch(is_loading_str, loading_mock)
+    @patch(fid_loading_str, loading_mock)
+    def test_process(self):
         evaluator = GenEvaluator(self.metrics)
         metrics_mock = [MagicMock(), MagicMock()]
 
@@ -96,9 +98,9 @@ class TestGenEvaluator(TestCase):
                 'd': 4
             }])
 
-    @patch(is_loading_str, return_value=(MagicMock(), 'StyleGAN'))
-    @patch(fid_loading_str, return_value=(MagicMock(), 'StyleGAN'))
-    def test_evaluate(self, m1, m2):
+    @patch(is_loading_str, loading_mock)
+    @patch(fid_loading_str, loading_mock)
+    def test_evaluate(self):
         evaluator = GenEvaluator(self.metrics)
 
         # mock metrics
