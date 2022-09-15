@@ -76,7 +76,7 @@ Install [MMEditing](https://github.com/open-mmlab/mmediting) from the source cod
 ```shell
 git clone -b 1.x https://github.com/open-mmlab/mmediting.git
 cd mmediting
-pip3 install -e -v .
+pip3 install -e . -v
 ```
 
 **Step 5.**
