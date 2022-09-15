@@ -25,4 +25,4 @@ We refactor overall structures in MMEdit 1.x as following.
 
 We rename config file to new template: `{model_settings}_{module_setting}_{training_setting}_{datasets_info}`.
 
-More details of config are shown in [config guides](/docs/en/user_guides/config).
+More details of config are shown in [config guides](/docs/en/user_guides/1_config.md).
