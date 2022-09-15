@@ -50,7 +50,7 @@ mmediting
 For faster IO, we recommend to crop the images to sub-images. We provide such a script:
 
 ```shell
-python tools/data/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
+python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
 ```
 
 The generated data is stored under `df2k_ost` and the data structure is as follows, where `_sub` indicates the sub-images.
@@ -72,7 +72,7 @@ mmediting
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
+python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
 ```
 
 ## DIV2K Dataset
@@ -126,7 +126,7 @@ mmediting
 For faster IO, we recommend to crop the DIV2K images to sub-images. We provide such a script:
 
 ```shell
-python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
+python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
 ```
 
 The generated data is stored under `DIV2K` and the data structure is as follows, where `_sub` indicates the sub-images.
@@ -170,7 +170,7 @@ Example of an annotation file:
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
+python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
 ```
 
 ## REDS Dataset
@@ -196,7 +196,7 @@ The original val dataset (clip names from 000 to 029) are modified to avoid conf
 You can prepare the REDS dataset by running:
 
 ```shell
-python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS
+python tools/dataset_converters/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS
 ```
 
 ```text
@@ -224,7 +224,7 @@ mmediting
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
+python tools/dataset_converters/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
 
 ### Crop to sub-images
@@ -232,7 +232,7 @@ python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path .
 MMEditing also support cropping REDS images to sub-images for faster IO. We provide such a script:
 
 ```shell
-python tools/data/super-resolution/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
+python tools/dataset_converters/super-resolution/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
 ```
 
 The generated data is stored under `REDS` and the data structure is as follows, where `_sub` indicates the sub-images.
@@ -341,7 +341,7 @@ mmediting
 To prepare the annotation file for training, you need to download the official training list path for Vimeo90K from the official website, and run the following command:
 
 ```shell
-python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt
+python tools/dataset_converters/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt
 ```
 
 The annotation file for test is generated similarly.
@@ -351,5 +351,5 @@ The annotation file for test is generated similarly.
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt --gt-path ./data/Vimeo90K/GT --lq-path ./data/Vimeo90K/LQ  --make-lmdb
+python tools/dataset_converters/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt --gt-path ./data/Vimeo90K/GT --lq-path ./data/Vimeo90K/LQ  --make-lmdb
 ```
