@@ -1,12 +1,10 @@
 # OVERVIEW
 
-- Number of checkpoints: 170
+- Number of checkpoints: 149
 
 - Number of configs: 133
 
-- Number of papers: 42
-
-  - ALGORITHM: 42
+- Number of algorithms: 44
 
 # Inpainting Models
 
@@ -14,7 +12,7 @@
 
 - Number of configs: 9
 
-- Number of papers: 5
+- Number of algorithms: 5
 
   - [AOT-GAN](/configs/AOT-GAN/README.md) Aggregated Contextual Transformations for High-Resolution Image Inpainting
 
@@ -32,7 +30,7 @@
 
 - Number of configs: 9
 
-- Number of papers: 3
+- Number of algorithms: 3
 
   - [DIM](/configs/dim/README.md) Deep Image Matting
 
@@ -46,7 +44,7 @@
 
 - Number of configs: 40
 
-- Number of papers: 16
+- Number of algorithms: 16
 
   - [BasicVSR](/configs/basicvsr/README.md) Basicvsr: The Search for Essential Components in Video Super-Resolution and Beyond
 
@@ -86,7 +84,7 @@
 
 - Number of configs: 3
 
-- Number of papers: 3
+- Number of algorithms: 3
 
   - [CAIN](/configs/cain/README.md) Channel Attention Is All You Need for Video Frame Interpolation
 
@@ -100,7 +98,7 @@
 
 - Number of configs: 37
 
-- Number of papers: 9
+- Number of algorithms: 9
 
   - [DCGAN](/configs/dcgan/README.md) Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks (3 ckpts)
 
@@ -122,15 +120,15 @@
 
 # Conditional GANs Models
 
-- Number of checkpoints: 47
+- Number of checkpoints: 26
 
-- Number of configs: 19
+- Number of configs: 26
 
-- Number of papers: 3
+- Number of algorithms: 4
 
   - [SNGAN](/configs/sngan_proj/README.md) Spectral Normalization for Generative Adversarial Networks (10 ckpts)
 
-  - [Projection GAN](/configs/sngan_proj/README.md) Spectral Normalization for Generative Adversarial Networks (21 ckpts)
+  - [Projection GAN](/configs/sngan_proj/README.md) Spectral Normalization for Generative Adversarial Networks
 
   - [SAGAN](/configs/sagan/README.md) Self-attention generative adversarial networks (9 ckpts)
 
@@ -142,7 +140,7 @@
 
 - Number of configs: 10
 
-- Number of papers: 2
+- Number of algorithms: 2
 
   - [Pix2Pix](/configs/pix2pix/README.md) Pix2Pix: Image-to-Image Translation with Conditional Adversarial Networks (4 ckpts)
 
@@ -154,7 +152,7 @@
 
 - Number of configs: 3
 
-- Number of papers: 1
+- Number of algorithms: 1
 
   - [SinGAN](/configs/singan/README.md) Singan: Learning a Generative Model from a Single Natural Image (3 ckpts)
 
@@ -164,6 +162,6 @@
 
 - Number of configs: 3
 
-- Number of papers: 1
+- Number of algorithms: 1
 
   - [Improved DDPM](/configs/improved_ddpm/README.md) Improved Denoising Diffusion Probabilistic Models (3 ckpts)
