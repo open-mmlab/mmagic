@@ -1,8 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-# import copy
 import copy
+import platform
 from os.path import dirname, join
 
+import pytest
 import torch
 from mmengine import Config
 from mmengine.optim import OptimWrapper
@@ -12,6 +13,9 @@ from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import register_all_modules
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_two_stage_inpaintor():
     register_all_modules()
 
