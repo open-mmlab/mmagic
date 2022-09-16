@@ -7,9 +7,13 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from mmengine.testing import assert_allclose
+from torch.nn import ModuleList
 from torch.optim import SGD
 
 from mmedit.models import BaseGAN, GenDataPreprocessor
+from mmedit.models.losses import (DiscShiftLossComps, GANLossComps,
+                                  GeneratorPathRegularizerComps,
+                                  GradientPenaltyLossComps)
 from mmedit.registry import MODULES
 from mmedit.structures import EditDataSample
 
@@ -70,6 +74,11 @@ class TestBaseGAN(TestCase):
         # test init without discriminator
         gan = ToyGAN(generator=gen, data_preprocessor=GenDataPreprocessor())
         self.assertEqual(gan.discriminator, None)
+
+        self.assertIsNone(gan.gan_loss)
+        self.assertIsNone(gan.gen_auxiliary_losses)
+        self.assertIsNone(gan.disc_auxiliary_losses)
+        self.assertEqual(gan.loss_config, dict())
 
     def test_train_step(self):
         # prepare model
@@ -281,3 +290,113 @@ class TestBaseGAN(TestCase):
         self.assertEqual(len(outputs), 3)
         for idx, output in enumerate(outputs):
             self.assertEqual(output.id, idx + 1)
+
+    def test_custom_loss(self):
+        message_hub = MessageHub.get_instance('basegan-test-custom-loss')
+        message_hub.update_info('iter', 10)
+
+        gan_loss = dict(type='GANLossComps', gan_type='vanilla')
+
+        # test loss config is dict()
+        gan = BaseGAN(
+            noise_size=5,
+            generator=deepcopy(generator),
+            discriminator=deepcopy(discriminator),
+            data_preprocessor=GenDataPreprocessor(),
+            loss_config=dict())
+        self.assertIsNone(gan.gan_loss)
+        self.assertIsNone(gan.disc_auxiliary_losses)
+        self.assertIsNone(gan.gen_auxiliary_losses)
+
+        # test loss config is list
+        disc_auxiliary_loss_list = [
+            dict(type='DiscShiftLossComps'),
+            dict(type='GradientPenaltyLossComps')
+        ]
+        gen_auxiliary_loss_list = [dict(type='GeneratorPathRegularizerComps')]
+        loss_config = dict(
+            gan_loss=gan_loss,
+            disc_auxiliary_loss=disc_auxiliary_loss_list,
+            gen_auxiliary_loss=gen_auxiliary_loss_list)
+        gan = BaseGAN(
+            noise_size=5,
+            generator=deepcopy(generator),
+            discriminator=deepcopy(discriminator),
+            data_preprocessor=GenDataPreprocessor(),
+            loss_config=loss_config)
+        self.assertIsInstance(gan.disc_auxiliary_losses, ModuleList)
+        self.assertIsInstance(gan.disc_auxiliary_losses[0], DiscShiftLossComps)
+        self.assertIsInstance(gan.disc_auxiliary_losses[1],
+                              GradientPenaltyLossComps)
+        self.assertIsInstance(gan.gen_auxiliary_losses, ModuleList)
+        self.assertIsInstance(gan.gen_auxiliary_losses[0],
+                              GeneratorPathRegularizerComps)
+
+        # test loss config is single dict
+        disc_auxiliary_loss = dict(
+            type='DiscShiftLossComps', data_info=dict(pred='disc_pred_fake'))
+        gen_auxiliary_loss = dict(
+            type='GeneratorPathRegularizerComps',
+            data_info=dict(generator='gen', num_batches='batch_size'))
+        loss_config = dict(
+            gan_loss=gan_loss,
+            disc_auxiliary_loss=disc_auxiliary_loss,
+            gen_auxiliary_loss=gen_auxiliary_loss)
+
+        gan = BaseGAN(
+            noise_size=5,
+            generator=deepcopy(generator),
+            discriminator=deepcopy(discriminator),
+            data_preprocessor=GenDataPreprocessor(),
+            loss_config=loss_config)
+        self.assertIsInstance(gan.gan_loss, GANLossComps)
+        self.assertIsInstance(gan.disc_auxiliary_losses, ModuleList)
+        self.assertIsInstance(gan.disc_auxiliary_losses[0], DiscShiftLossComps)
+        self.assertIsInstance(gan.gen_auxiliary_losses, ModuleList)
+        self.assertIsInstance(gan.gen_auxiliary_losses[0],
+                              GeneratorPathRegularizerComps)
+
+        # test forward custom loss terms
+        gan = BaseGAN(
+            noise_size=5,
+            generator=deepcopy(generator),
+            discriminator=deepcopy(discriminator),
+            data_preprocessor=GenDataPreprocessor(),
+            loss_config=loss_config)
+        # mock gen aux loss to avoid build styleGAN Generator
+        gen_aux_loss_mock = MagicMock(return_value=torch.Tensor([1.]))
+        gen_aux_loss_mock.loss_name = MagicMock(return_value='loss_gen_aux')
+        gan._modules['gen_auxiliary_losses'] = [gen_aux_loss_mock]
+        # mock optim wrapper
+        optimizer_wrapper = {
+            'discriminator': MagicMock(),
+            'generator': MagicMock()
+        }
+        optimizer_wrapper['discriminator']._accumulative_counts = 1
+        optimizer_wrapper['generator']._accumulative_counts = 1
+
+        data = dict(inputs=dict(img=torch.randn(2, 3, 32, 32)))
+        log_vars = gan.train_step(data, optim_wrapper=optimizer_wrapper)
+        self.assertIn('loss', log_vars)
+        self.assertIn('loss_disc_fake', log_vars)
+        self.assertIn('loss_disc_real', log_vars)
+        self.assertIn('loss_disc_fake_g', log_vars)
+        self.assertIn('loss_gen_aux', log_vars)
+        self.assertIn('loss_disc_shift', log_vars)
+
+        # test forward with only gan loss
+        loss_config = dict(gan_loss=gan_loss)
+        gan = BaseGAN(
+            noise_size=5,
+            generator=deepcopy(generator),
+            discriminator=deepcopy(discriminator),
+            data_preprocessor=GenDataPreprocessor(),
+            loss_config=loss_config)
+        data = dict(inputs=dict(img=torch.randn(2, 3, 32, 32)))
+        log_vars = gan.train_step(data, optim_wrapper=optimizer_wrapper)
+        self.assertIn('loss', log_vars)
+        self.assertIn('loss_disc_fake', log_vars)
+        self.assertIn('loss_disc_real', log_vars)
+        self.assertIn('loss_disc_fake_g', log_vars)
+        self.assertNotIn('loss_gen_aux', log_vars)
+        self.assertNotIn('loss_disc_shift', log_vars)
