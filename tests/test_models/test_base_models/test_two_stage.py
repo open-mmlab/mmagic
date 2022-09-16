@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
 from os.path import dirname, join
+from unittest.mock import MagicMock
 
 import torch
 from mmengine import Config
@@ -34,6 +35,9 @@ def test_two_stage_inpaintor():
     assert inpaintor.with_composed_percep_loss
     assert not inpaintor.with_out_percep_loss
     assert inpaintor.with_gan
+
+    inpaintor._modules['loss_percep'] = MagicMock(
+        return_value=(torch.Tensor([1]), torch.Tensor([2])))
 
     # prepare data
     gt_img = torch.rand((3, 256, 256))

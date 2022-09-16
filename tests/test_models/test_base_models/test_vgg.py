@@ -1,5 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import numpy as np
+import pytest
 import torch
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
@@ -40,6 +43,9 @@ def _demo_inputs(input_shape=(2, 4, 64, 64)):
     return img
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_vgg16_encoder():
     """Test VGG16 encoder."""
     target_shape = [(2, 64, 32, 32), (2, 128, 16, 16), (2, 256, 8, 8),
