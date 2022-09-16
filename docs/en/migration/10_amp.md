@@ -1,11 +1,11 @@
 # Migration of AMP Training
 
-In 0.x, MMGeneration do not support AMP training for the entire forward process.
+In 0.x, MMEditing do not support AMP training for the entire forward process.
 Instead, users must use `auto_fp16` decorator to warp the specific submodule and convert the parameter of submodule to fp16.
 This allows for fine-grained control of the model parameters, but is more cumbersome to use.
 In addition, users need to handle operations such as scaling of the loss function during the training process by themselves.
 
-In 1.x version, MMGeneration use `AmpOptimWrapper` provided by MMEngine.
+In 1.x version, MMEditing use `AmpOptimWrapper` provided by MMEngine.
 In `AmpOptimWrapper.update_params`, gradient scaling and `GradScaler` updating is automatically performed.
 And in `optim_context` context manager, `auto_cast` is applied to the entire forward process.
 
@@ -28,8 +28,8 @@ runner = dict(fp16_loss_scaler=dict(init_scale=512))
 ```python
 # code
 import torch.nn as nn
-from mmgen.models.builder import build_model
-from mmgen.core.runners.fp16_utils import auto_fp16
+from mmedit.models.builder import build_model
+from mmedit.core.runners.fp16_utils import auto_fp16
 
 
 class DemoModule(nn.Module):
@@ -88,7 +88,7 @@ class DemoModel(nn.Module):
 ```python
 # config
 optim_wrapper = dict(
-    constructor='GenOptimWrapperConstructor',
+    constructor='OptimWrapperConstructor',
     generator=dict(
         accumulative_counts=8,
         optimizer=dict(type='Adam', lr=0.0001, betas=(0.0, 0.999), eps=1e-06),
@@ -104,7 +104,7 @@ optim_wrapper = dict(
 ```python
 # code
 import torch.nn as nn
-from mmgen.registry import MODULES
+from mmedit.registry import MODULES
 from mmengine.model import BaseModel
 
 
@@ -141,7 +141,7 @@ class DemoModel(BaseModel):
 </thead>
 </table>
 
-To avoid user modifications to the configuration file, MMGeneration provides the `--amp` option in `train.py`, which allows the user to start AMP training without modifying the configuration file.
+To avoid user modifications to the configuration file, MMEditing provides the `--amp` option in `train.py`, which allows the user to start AMP training without modifying the configuration file.
 Users can start AMP training by following command:
 
 ```bash

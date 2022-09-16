@@ -11,7 +11,7 @@ We update data pipelines settings in MMEdit 1.x. Important modifications are as 
 
 - Remove normalization and color space transforms operations. They are moved from datasets transforms pipelines to data_preprocessor.
 - The original formatting transforms pipelines `Collect` are combined as `PackEditInputs`.
-  More details of data pipelines are shown in [transform guides](/docs/en/advanced_guides/transforms.md).
+  More details of data pipelines are shown in [transform guides](/docs/en/advanced_guides/3_transforms.md).
 
 <table class="docutils">
 <thead>
@@ -141,8 +141,8 @@ test_pipeline = [  # Test pipeline
 We update dataloader settings in MMEdit 1.x. Important modifications are as following.
 
 - The original `data` field is split to `train_dataloader`, `val_dataloader` and `test_dataloader`. This allows us to configure them in fine-grained. For example, you can specify different sampler and batch size during training and test.
-- The samples_per_gpu is renamed to batch_size.
-- The workers_per_gpu is renamed to num_workers.
+- The `samples_per_gpu` is renamed to `batch_size`.
+- The `workers_per_gpu` is renamed to `num_workers`.
 
 <table class="docutils">
 <thead>
@@ -223,139 +223,6 @@ val_dataloader = dict(
         data_prefix=dict(img='LRbicx2', gt='GTmod12'),  # Prefix of image path
         pipeline=test_pipeline))
 test_dataloader = val_dataloader
-```
-
-</td>
-
-</tr>
-</thead>
-</table>
-
-MMGeneration redesign data flow and data transforms pipelien based on MMCV 2.x and MMEngine.
-
-Changes in `data`:
-
-1. The original `data` field is splited to `train_dataloader`, `val_dataloader` and `test_dataloader`. This allows us to configure them in fine-grained. For example, you can specify different sampler and batch size during training and test.
-2. The `samples_per_gpu` is renamed to `batch_size`.
-3. The `workers_per_gpu` is renamed to `num_workers`.
-
-<table class="docutils">
-<thead>
-  <tr>
-    <th> 0.x Version </th>
-    <th> 1.x Version </th>
-<tbody>
-<tr>
-<td valign="top">
-
-```python
-data = dict(
-    samples_per_gpu=None,
-    workers_per_gpu=4,
-    train=dict(...),
-    val=dict(...),
-    test=dict(...))
-```
-
-</td>
-
-<td valign="top">
-
-```python
-# `batch_size` and `data_root` need to be set.
-train_dataloader = dict(
-    batch_size=4,
-    num_workers=8,
-    persistent_workers=True,
-    sampler=dict(type='InfiniteSampler', shuffle=True),
-    dataset=dict(...))
-
-val_dataloader = dict(
-    batch_size=4,
-    num_workers=8,
-    dataset=dict(...),
-    sampler=dict(type='DefaultSampler', shuffle=False),
-    persistent_workers=True)
-```
-
-</td>
-
-</tr>
-</thead>
-</table>
-
-Changes in `pipeline`
-
-1. Normalization, color space transforms are no longer performed in transforms pipelines, but converted to `data_preprocessor`.
-2. Data is packed to `GenDataSample` by `PackGenInputs` in the last step of transforms pipeline. To know more about datasample please refers to [this tutorial](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/data_element.md).
-
-Take config for FFHQ-Flip dataset as example:
-
-<table class="docutils">
-<thead>
-  <tr>
-    <th> 0.x Version </th>
-    <th> 1.x Version </th>
-<tbody>
-<tr>
-<td valign="top">
-
-```python
-dataset_type = 'UnconditionalImageDataset'
-
-train_pipeline = [
-    dict(
-        type='LoadImageFromFile',
-        key='real_img',
-        io_backend='disk',
-    ),
-    dict(type='Flip', keys=['real_img'], direction='horizontal'),
-    dict(
-        type='Normalize',
-        keys=['real_img'],
-        mean=[127.5] * 3,
-        std=[127.5] * 3,
-        to_rgb=False),
-    dict(type='ImageToTensor', keys=['real_img']),
-    dict(type='Collect', keys=['real_img'], meta_keys=['real_img_path'])
-]
-
-val_pipeline = [
-    dict(
-        type='LoadImageFromFile',
-        key='real_img',
-        io_backend='disk',
-    ),
-    dict(
-        type='Normalize',
-        keys=['real_img'],
-        mean=[127.5] * 3,
-        std=[127.5] * 3,
-        to_rgb=True),
-    dict(type='ImageToTensor', keys=['real_img']),
-    dict(type='Collect', keys=['real_img'], meta_keys=['real_img_path'])
-]
-```
-
-</td>
-
-<td valign="top">
-
-```python
-dataset_type = 'UnconditionalImageDataset'
-
-train_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
-    dict(type='Flip', keys=['img'], direction='horizontal'),
-    dict(type='PackGenInputs', keys=['img'], meta_keys=['img_path'])
-]
-
-val_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
-    dict(type='PackGenInputs', keys=['img'], meta_keys=['img_path'])
-]
-data_preprocessor = dict(
-    mean=[127.5, 127.5, 127.5], std=[127.5, 127.5, 127.5], bgr_to_rgb=False)
 ```
 
 </td>

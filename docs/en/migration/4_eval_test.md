@@ -48,6 +48,8 @@ test_cfg = dict(type='TestLoop')  # The name of test loop type
 </thead>
 </table>
 
+We have merged [MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x) into MMEditing. Here is migration of Evaluation and Testing Settings about MMGeneration.
+
 The evaluation field is splited to `val_evaluator` and `test_evaluator`. And it won't support `interval` and `save_best` arguments. The `interval` is moved to `train_cfg.val_interval`, see [the schedule settings](#1-runner-and-schedule) and the `save_best` is moved to `default_hooks.checkpoint.save_best`.
 
 <table class="docutils">
@@ -105,6 +107,46 @@ default_hooks = dict(
         save_best=['FID-Full-50k/fid', 'IS-50k/is'],
         rule=['less', 'greater']))
 test_evaluator = val_evaluator
+```
+
+</td>
+
+</tr>
+</thead>
+</table>
+
+To evaluate and test the model correctly, we need to set specific loop in `val_cfg` and `test_cfg`.
+
+<table class="docutils">
+<thead>
+  <tr>
+    <th> Static Model in 0.x Version </th>
+    <th> Static Model in 1.x Version </th>
+<tbody>
+<tr>
+<td valign="top">
+
+```python
+total_iters = 1000000
+
+runner = dict(
+    type='DynamicIterBasedRunner',
+    is_dynamic_ddp=False,
+    pass_training_status=True)
+```
+
+</td>
+
+<td valign="top">
+
+```python
+train_cfg = dict(
+    by_epoch=False,  # use iteration based training
+    max_iters=1000000,  # max training iteration
+    val_begin=1,
+    val_interval=10000)  # evaluation interval
+val_cfg = dict(type='GenValLoop')  # specific loop in validation
+test_cfg = dict(type='GenTestLoop')  # specific loop in testing
 ```
 
 </td>
