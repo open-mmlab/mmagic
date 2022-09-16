@@ -52,6 +52,7 @@ Documentation
    user_guides/5_visualization.md
    user_guides/6_useful_tools.md
    user_guides/7_deploy.md
+   user_guides/8_metrics.md
 
 .. toctree::
    :maxdepth: 2
@@ -61,7 +62,6 @@ Documentation
    advanced_guides/2_dataset.md
    advanced_guides/3_transforms.md
    advanced_guides/4_losses.md
-   advanced_guides/5_metrics.md
 
 
 .. toctree::
