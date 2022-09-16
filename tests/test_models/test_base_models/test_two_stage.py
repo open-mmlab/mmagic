@@ -14,6 +14,7 @@ from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import register_all_modules
 
 
+# TODO: this test is same as `test_two_stage_encoder_decoder.py`
 @pytest.mark.skipif(
     'win' in platform.system().lower() and 'cu' in torch.__version__,
     reason='skip on windows-cuda due to limited RAM.')
