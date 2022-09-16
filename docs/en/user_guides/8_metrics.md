@@ -1,27 +1,30 @@
-# Design Your Own Metrics
+# Tutorial 8: Using Metrics in MMEditing
 
-MMEditing supports various metrics to assess the quality of models. Refer to [train_test](../user_guides/4_train_test.md) for usages.
+MMEditing supports **17 metrics** to assess the quality of models.
+
+Please refer to [Train and Test in MMEditing](../user_guides/4_train_test.md) for usages.
+
 Here, we will specify the details of different metrics one by one.
 
 The structure of this guide are as follows:
 
-- [MAE](#MAE)
-- [MSE](#MSE)
-- [PSNR](#PSNR)
-- [SNR](#SNR)
-- [SSIM](#SSIM)
-- [NIQE](#NIQE)
-- [SAD](#SAD)
-- [MattingMSE](#MattingMSE)
-- [GradientError](#GradientError)
-- [ConnectivityError](#ConnectivityError)
-- [FID and TransFID](#fid-and-transfid)
-- [IS and TransIS](#is-and-transis)
-- [Precision and Recall](#precision-and-recall)
-- [PPL](#ppl)
-- [SWD](#swd)
-- [MS-SSIM](#ms-ssim)
-- [Equivarience](#equivarience)
+01. [MAE](#mae)
+02. [MSE](#mse)
+03. [PSNR](#psnr)
+04. [SNR](#snr)
+05. [SSIM](#ssim)
+06. [NIQE](#niqe)
+07. [SAD](#sad)
+08. [MattingMSE](#mattingmse)
+09. [GradientError](#gradienterror)
+10. [ConnectivityError](#connectivityerror)
+11. [FID and TransFID](#fid-and-transfid)
+12. [IS and TransIS](#is-and-transis)
+13. [Precision and Recall](#precision-and-recall)
+14. [PPL](#ppl)
+15. [SWD](#swd)
+16. [MS-SSIM](#ms-ssim)
+17. [Equivarience](#equivarience)
 
 ## MAE
 
