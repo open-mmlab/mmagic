@@ -56,12 +56,12 @@ mmedit.models
 --------------
 
 base_models
-^^^^^^^
+^^^^^^^^^^^^
 .. automodule:: mmedit.models.base_models
     :members:
 
 data_preprocessors
-^^^^^^^
+^^^^^^^^^^^^^^^^^^^
 .. automodule:: mmedit.models.data_preprocessors
     :members:
 
