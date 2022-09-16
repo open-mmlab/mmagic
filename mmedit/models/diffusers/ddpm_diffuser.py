@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from typing import Union
 
 import torch
@@ -13,29 +14,29 @@ class DDPMDiffuser:
                  num_train_timesteps=1000,
                  beta_start=0.0001,
                  beta_end=0.02,
-                 beta_schedule="linear",
+                 beta_schedule='linear',
                  trained_betas=None,
-                 variance_type="fixed_small",
+                 variance_type='fixed_small',
                  clip_sample=True):
         self.num_train_timesteps = num_train_timesteps
         if trained_betas is not None:
             self.betas = torch.as_tensor(trained_betas)
-        elif beta_schedule == "linear":
+        elif beta_schedule == 'linear':
             self.betas = torch.linspace(
                 beta_start, beta_end, num_train_timesteps, dtype=torch.float32)
-        elif beta_schedule == "scaled_linear":
+        elif beta_schedule == 'scaled_linear':
             # this schedule is very specific to the latent diffusion model.
             self.betas = torch.linspace(
                 beta_start**0.5,
                 beta_end**0.5,
                 num_train_timesteps,
                 dtype=torch.float32)**2
-        elif beta_schedule == "squaredcos_cap_v2":
+        elif beta_schedule == 'squaredcos_cap_v2':
             # Glide cosine schedule
             self.betas = betas_for_alpha_bar(num_train_timesteps)
         else:
             raise NotImplementedError(
-                f"{beta_schedule} does is not implemented for {self.__class__}"
+                f'{beta_schedule} does is not implemented for {self.__class__}'
             )
 
         self.alphas = 1.0 - self.betas
@@ -70,19 +71,19 @@ class DDPMDiffuser:
             variance_type = self.variance_type
 
         # hacks - were probs added for training stability
-        if variance_type == "fixed_small":
+        if variance_type == 'fixed_small':
             variance = self.clip(variance, min_value=1e-20)
         # for rl-diffuser https://arxiv.org/abs/2205.09991
-        elif variance_type == "fixed_small_log":
+        elif variance_type == 'fixed_small_log':
             variance = self.log(self.clip(variance, min_value=1e-20))
-        elif variance_type == "fixed_large":
+        elif variance_type == 'fixed_large':
             variance = self.betas[t]
-        elif variance_type == "fixed_large_log":
+        elif variance_type == 'fixed_large_log':
             # Glide max_log
             variance = self.log(self.betas[t])
-        elif variance_type == "learned":
+        elif variance_type == 'learned':
             return predicted_variance
-        elif variance_type == "learned_range":
+        elif variance_type == 'learned_range':
             min_log = variance
             max_log = self.betas[t]
             frac = (predicted_variance + 1) / 2
@@ -99,7 +100,7 @@ class DDPMDiffuser:
         t = timestep
 
         if model_output.shape[1] == sample.shape[
-                1] * 2 and self.variance_type in ["learned", "learned_range"]:
+                1] * 2 and self.variance_type in ['learned', 'learned_range']:
             model_output, predicted_variance = torch.split(
                 model_output, sample.shape[1], dim=1)
         else:
@@ -146,7 +147,7 @@ class DDPMDiffuser:
 
         pred_prev_sample = pred_prev_sample + variance
 
-        return {"prev_sample": pred_prev_sample}
+        return {'prev_sample': pred_prev_sample}
 
     def add_noise(self, original_samples, noise, timesteps):
         sqrt_alpha_prod = self.alphas_cumprod[timesteps]**0.5

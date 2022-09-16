@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from copy import deepcopy
 from typing import List, Optional
 
@@ -86,12 +87,12 @@ class AblatedDiffusionModel(BaseModel):
             timesteps = tqdm(timesteps)
         for t in timesteps:
             # 1. predict noise model_output
-            model_output = self.unet(image, t, label=labels)["outputs"]
+            model_output = self.unet(image, t, label=labels)['outputs']
 
             # 2. compute previous image: x_t -> t_t-1
-            image = self.diffuser.step(model_output, t, image)["prev_sample"]
+            image = self.diffuser.step(model_output, t, image)['prev_sample']
 
-        return {"samples": image}
+        return {'samples': image}
 
     def forward(self,
                 inputs: ForwardInputs,
