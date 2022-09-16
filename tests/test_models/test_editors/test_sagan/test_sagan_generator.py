@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 
 import pytest
@@ -21,6 +22,9 @@ class TestSNGANPROJGenerator(object):
             num_classes=10,
             base_channels=32)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_sngan_proj_generator(self):
 
         # test default setting with builder

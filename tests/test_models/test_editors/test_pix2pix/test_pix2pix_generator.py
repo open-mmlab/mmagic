@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 
 import pytest
@@ -20,6 +21,9 @@ class TestUnetGenerator:
             use_dropout=True,
             init_cfg=dict(type='normal', gain=0.02))
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_pix2pix_generator_cpu(self):
         # test with default cfg
         real_a = torch.randn((2, 3, 256, 256))
