@@ -56,6 +56,9 @@ jobs:
           env_vars: OS,PYTHON
           name: codecov-umbrella
           fail_ci_if_error: false
+      # - name: Setup tmate session
+      #   if: ${{ failure() }}
+      #   uses: mxschmitt/action-tmate@v3
 
   build_cu102:
     runs-on: ubuntu-18.04
@@ -93,6 +96,9 @@ jobs:
         run: |
           python setup.py check -m -s
           TORCH_CUDA_ARCH_LIST=7.0 pip install -e .
+      # - name: Setup tmate session
+      #   if: ${{ failure() }}
+      #   uses: mxschmitt/action-tmate@v3
 
   build_windows:
     runs-on: ${{ matrix.os }}
@@ -122,8 +128,9 @@ jobs:
       - name: Build and install
         run: |
           pip install -e .
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
       - name: Run unittests and generate coverage report
         run: |
           pytest tests/
+      # - name: Setup tmate session
+      #   if: ${{ failure() }}
+      #   uses: mxschmitt/action-tmate@v3

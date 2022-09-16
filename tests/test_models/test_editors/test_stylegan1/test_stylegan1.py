@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from unittest import TestCase
 
 import numpy as np
@@ -31,6 +32,9 @@ class TestStyleGAN1(TestCase):
             optimizer=dict(type='Adam', lr=0.001, betas=(0., 0.99))),
         lr_schedule=lr_schedule)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_stylegan_cpu(self):
         message_hub = MessageHub.get_instance('test-s1')
         message_hub.update_info('iter', 0)

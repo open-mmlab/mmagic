@@ -1,7 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
+import platform
 from os.path import dirname, join
+from unittest.mock import MagicMock
 
+import pytest
 import torch
 from mmengine import Config
 from mmengine.optim import OptimWrapper
@@ -11,6 +14,10 @@ from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import register_all_modules
 
 
+# TODO: this test is same as `test_two_stage_encoder_decoder.py`
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_two_stage_inpaintor():
     register_all_modules()
 
@@ -34,6 +41,9 @@ def test_two_stage_inpaintor():
     assert inpaintor.with_composed_percep_loss
     assert not inpaintor.with_out_percep_loss
     assert inpaintor.with_gan
+
+    inpaintor._modules['loss_percep'] = MagicMock(
+        return_value=(torch.Tensor([1]), torch.Tensor([2])))
 
     # prepare data
     gt_img = torch.rand((3, 256, 256))

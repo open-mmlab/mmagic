@@ -1,7 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
+import platform
 import sys
 
+import pytest
 import torch
 # from mmcv.runner import obj_from_dict
 from mmengine.logging import MessageHub
@@ -47,6 +49,9 @@ def obj_from_dict(info: dict, parent=None, default_args=None):
     return obj_type(**args)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_pix2pix():
     # model settings
     model_cfg = dict(
