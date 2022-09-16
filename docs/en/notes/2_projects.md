@@ -30,11 +30,11 @@ Methods already supported and maintained by MMEditing are not listed.
 
 - DAN:Unfolding the Alternating Optimization for Blind Super Resolution, NeurIPS 2020 [\[paper\]](https://arxiv.org/abs/2010.02631v4)[\[github\]](https://github.com/AlexZou14/DAN-Basd-on-Openmmlab)
 
-- [Positional Encoding as Spatial Inductive Bias in GANs (CVPR 2021)](https://github.com/open-mmlab/mmgeneration/tree/master/configs/positional_encoding_in_gans)
+- Positional Encoding as Spatial Inductive Bias in GANs, CVPR 2021[\[paper\]](https://openaccess.thecvf.com/content/CVPR2021/papers/Xu_Positional_Encoding_As_Spatial_Inductive_Bias_in_GANs_CVPR_2021_paper.pdf)[\[github\]](https://github.com/open-mmlab/mmgeneration/tree/master/configs/positional_encoding_in_gans)
 
-- [A Multi-Modality Ovarian Tumor Ultrasound Image Dataset for Unsupervised Cross-Domain Semantic Segmentation (arXiv 2022)](https://github.com/cv516buaa/mmotu_ds2net)
+- A Multi-Modality Ovarian Tumor Ultrasound Image Dataset for Unsupervised Cross-Domain Semantic Segmentation, arXiv 2022 [\[paper\]](https://arxiv.org/pdf/2207.06799.pdf)[\[github\]](https://github.com/cv516buaa/mmotu_ds2net)
 
-- [Arbitrary-Scale Image Synthesis (CVPR 2022)](https://github.com/vglsd/ScaleParty)
+- Arbitrary-Scale Image Synthesis, CVPR 2022 [\[paper\]](https://arxiv.org/pdf/2204.02273.pdf)[\[github\]](https://github.com/vglsd/ScaleParty)
 
 ## Open-source projects
 
@@ -43,4 +43,4 @@ They reveal the potential of what MMEditing can do. We list several of them as b
 
 - [PowerVQE](https://github.com/ryanxingql/powervqe): Open framework for quality enhancement of compressed videos based on PyTorch and MMEditing.
 - [VR-Baseline](https://github.com/linjing7/VR-Baseline): Video Restoration Toolbox.
-- [Manga-Colorization-with-CycleGAN](https://github.com/chandlerbing65nm/Manga-Colorization-with-CycleGAN)
+- [Manga-Colorization-with-CycleGAN](https://github.com/chandlerbing65nm/Manga-Colorization-with-CycleGAN): Colorizing Black&White Japanese Manga using Generative Adversarial Network.
