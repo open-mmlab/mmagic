@@ -1,12 +1,10 @@
 # OVERVIEW
 
-- Number of checkpoints: 70
+- Number of checkpoints: 149
 
-- Number of configs: 61
+- Number of configs: 133
 
-- Number of papers: 26
-
-  - ALGORITHM: 26
+- Number of algorithms: 44
 
 # Inpainting Models
 
@@ -14,7 +12,7 @@
 
 - Number of configs: 9
 
-- Number of papers: 5
+- Number of algorithms: 5
 
   - [AOT-GAN](/configs/AOT-GAN/README.md) Aggregated Contextual Transformations for High-Resolution Image Inpainting
 
@@ -32,7 +30,7 @@
 
 - Number of configs: 9
 
-- Number of papers: 3
+- Number of algorithms: 3
 
   - [DIM](/configs/dim/README.md) Deep Image Matting
 
@@ -46,7 +44,7 @@
 
 - Number of configs: 40
 
-- Number of papers: 16
+- Number of algorithms: 16
 
   - [BasicVSR](/configs/basicvsr/README.md) Basicvsr: The Search for Essential Components in Video Super-Resolution and Beyond
 
@@ -86,7 +84,7 @@
 
 - Number of configs: 3
 
-- Number of papers: 3
+- Number of algorithms: 3
 
   - [CAIN](/configs/cain/README.md) Channel Attention Is All You Need for Video Frame Interpolation
 
@@ -94,40 +92,76 @@
 
   - [TOFlow](/configs/tof/README.md) Video Enhancement With Task-Oriented Flow
 
-# Model zoo of fundamental generative models
+# Unconditional GANs Models
 
-- Number of papers: 16
+- Number of checkpoints: 37
 
-- Number of checkpoints: 100
+- Number of configs: 37
 
-  - [BigGAN](https://github.com/open-mmlab/mmgeneration/blob/master/configs/biggan) (7 ckpts)
+- Number of algorithms: 9
 
-  - [CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent Adversarial Networks](https://github.com/open-mmlab/mmgeneration/blob/master/configs/cyclegan) (6 ckpts)
+  - [DCGAN](/configs/dcgan/README.md) Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks (3 ckpts)
 
-  - [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://github.com/open-mmlab/mmgeneration/blob/master/configs/dcgan) (3 ckpts)
+  - [WGAN-GP](/configs/wgan-gp/README.md) Improved Training of Wasserstein GANs (2 ckpts)
 
-  - [GGAN](https://github.com/open-mmlab/mmgeneration/blob/master/configs/ggan) (3 ckpts)
+  - [LSGAN](/configs/lsgan/README.md) Least Squares Generative Adversarial Networks (4 ckpts)
 
-  - [Improved-DDPM](https://github.com/open-mmlab/mmgeneration/blob/master/configs/improved_ddpm) (3 ckpts)
+  - [GGAN](/configs/ggan/README.md) Geometric GAN (3 ckpts)
 
-  - [LSGAN](https://github.com/open-mmlab/mmgeneration/blob/master/configs/lsgan) (4 ckpts)
+  - [PGGAN](/configs/pggan/README.md) Progressive Growing of GANs for Improved Quality, Stability, and Variation (3 ckpts)
 
-  - [PGGAN](https://github.com/open-mmlab/mmgeneration/blob/master/configs/pggan) (3 ckpts)
+  - [StyleGANV1](/configs/styleganv1/README.md) A Style-Based Generator Architecture for Generative Adversarial Networks (2 ckpts)
 
-  - [Pix2Pix](https://github.com/open-mmlab/mmgeneration/blob/master/configs/pix2pix) (4 ckpts)
+  - [StyleGANV2](/configs/styleganv2/README.md) Analyzing and Improving the Image Quality of Stylegan (11 ckpts)
 
-  - [Positional Encoding in GANs](https://github.com/open-mmlab/mmgeneration/blob/master/configs/positional_encoding_in_gans) (21 ckpts)
+  - [StyleGANV3](/configs/styleganv3/README.md) Alias-Free Generative Adversarial Networks (9 ckpts)
 
-  - [SAGAN](https://github.com/open-mmlab/mmgeneration/blob/master/configs/sagan) (9 ckpts)
+  - [Positional Encoding in GANs](/configs/positional_encoding_in_gans/README.md) Positional Encoding as Spatial Inductive Bias in GANs
 
-  - [SinGAN](https://github.com/open-mmlab/mmgeneration/blob/master/configs/singan) (3 ckpts)
+# Conditional GANs Models
 
-  - [SNGAN](https://github.com/open-mmlab/mmgeneration/blob/master/configs/sngan_proj) (10 ckpts)
+- Number of checkpoints: 26
 
-  - [StyleGANv1](https://github.com/open-mmlab/mmgeneration/blob/master/configs/styleganv1) (2 ckpts)
+- Number of configs: 26
 
-  - [StyleGANv2](https://github.com/open-mmlab/mmgeneration/blob/master/configs/styleganv2) (11 ckpts)
+- Number of algorithms: 4
 
-  - [StyleGANv3](https://github.com/open-mmlab/mmgeneration/blob/master/configs/styleganv3) (9 ckpts)
+  - [SNGAN](/configs/sngan_proj/README.md) Spectral Normalization for Generative Adversarial Networks (10 ckpts)
 
-  - [WGAN-GP](https://github.com/open-mmlab/mmgeneration/blob/master/configs/wgan-gp) (2 ckpts)
+  - [Projection GAN](/configs/sngan_proj/README.md) Spectral Normalization for Generative Adversarial Networks
+
+  - [SAGAN](/configs/sagan/README.md) Self-attention generative adversarial networks (9 ckpts)
+
+  - [BIGGAN/BIGGAN-DEEP](/configs/biggan/README.md) Large Scale GAN Training for High Fidelity Natural Image Synthesis (7 ckpts)
+
+# Image2Image Translation Models
+
+- Number of checkpoints: 10
+
+- Number of configs: 10
+
+- Number of algorithms: 2
+
+  - [Pix2Pix](/configs/pix2pix/README.md) Pix2Pix: Image-to-Image Translation with Conditional Adversarial Networks (4 ckpts)
+
+  - [CycleGAN](/configs/cyclegan/README.md) CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent Adversarial Networks (6 ckpts)
+
+# Internal Learning
+
+- Number of checkpoints: 3
+
+- Number of configs: 3
+
+- Number of algorithms: 1
+
+  - [SinGAN](/configs/singan/README.md) Singan: Learning a Generative Model from a Single Natural Image (3 ckpts)
+
+# Denoising Diffusion Probabilistic Models
+
+- Number of checkpoints: 3
+
+- Number of configs: 3
+
+- Number of algorithms: 1
+
+  - [Improved DDPM](/configs/improved_ddpm/README.md) Improved Denoising Diffusion Probabilistic Models (3 ckpts)
