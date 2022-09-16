@@ -213,7 +213,7 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
             gt (torch.Tensor): Ground-truth tensor.
             mask (torch.Tensor): Mask tensor.
             prefix (str, optional): Prefix for loss name.
-                Defaults to 'stage1_'.
+                Defaults to 'stage1\_'. # noqa
             fake_local (torch.Tensor, optional): Local results from model.
                 Defaults to None.
 

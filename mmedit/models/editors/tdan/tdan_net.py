@@ -16,6 +16,7 @@ class TDANNet(BaseModule):
     """TDAN network structure for video super-resolution.
 
     Support only x4 upsampling.
+
     Paper:
         TDAN: Temporally-Deformable Alignment Network for Video Super-
         Resolution, CVPR, 2020

@@ -21,6 +21,7 @@ class GrowScaleImgDataset(BaseDataset):
     #. Support growing scale dataset. The motivation is to decrease data
        pre-processing load in CPU. In this dataset, you can provide
        ``imgs_roots`` like:
+
         .. code-block:: python
 
             {'64': 'path_to_64x64_imgs',

@@ -19,7 +19,7 @@ TrainInput = Union[dict, Tensor]
 @MODELS.register_module()
 class BigGAN(BaseConditionalGAN):
     """Impelmentation of `Large Scale GAN Training for High Fidelity Natural
-    Image Synthesis<https://arxiv.org/abs/1809.11096>`_ (BigGAN).
+    Image Synthesis <https://arxiv.org/abs/1809.11096>`_ (BigGAN).
 
     Detailed architecture can be found in
     :class:~`mmgen.models.architectures.biggan.generator_discriminator.BigGANGenerator`  # noqa

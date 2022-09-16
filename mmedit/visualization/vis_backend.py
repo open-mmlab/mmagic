@@ -188,6 +188,7 @@ class GenVisBackend(BaseVisBackend):
 
         The scalar dict will be written to the default and
         specified files if ``file_path`` is specified.
+
         Args:
             scalar_dict (dict): Key-value pair storing the tag and
                 corresponding values. The value must be dumped
@@ -368,6 +369,7 @@ class PaviGenVisBackend(BaseVisBackend):
 
         The scalar dict will be written to the default and
         specified files if ``file_path`` is specified.
+
         Args:
             scalar_dict (dict): Key-value pair storing the tag and
                 corresponding values. The value must be dumped

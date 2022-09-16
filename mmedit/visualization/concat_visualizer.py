@@ -36,7 +36,7 @@ class ConcatImageVisualizer(Visualizer):
             uint8 arrays are assumed to be unnormalized.
         bgr2rgb (bool): whether to convert the image from BGR to RGB.
         name (str): name of visualizer. Default: 'visualizer'.
-        *args and **kwargs: Other arguments are passed to `Visualizer`.
+        *args and \**kwargs: Other arguments are passed to `Visualizer`. # noqa
     """
 
     def __init__(self,

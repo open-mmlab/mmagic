@@ -13,6 +13,7 @@ def set_random_seed(seed, deterministic=False, use_rank_shift=True):
 
     In this function, we just modify the default behavior of the similar
     function defined in MMCV.
+
     Args:
         seed (int): Seed to be used.
         deterministic (bool): Whether to set the deterministic option for
