@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
-import os
 
 import mmcv
 import torch
@@ -8,16 +7,13 @@ import torch
 from mmedit.apis import colorization_inference, init_model
 from mmedit.utils import modify_args
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
-# os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
-
 
 def parse_args():
     modify_args()
     parser = argparse.ArgumentParser(description='Colorzation demo')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('img_path', help='path to input image file')
+    parser.add_argument('bbox_path', help='path to input image bbox file')
     parser.add_argument('save_path', help='path to save generation result')
     parser.add_argument(
         '--unpaired-path', default=None, help='path to unpaired image file')
@@ -38,9 +34,8 @@ def main():
 
     #
     model = init_model(args.config, device=device)
-    output = colorization_inference(model, args.img_path)
+    output = colorization_inference(model, args.img_path, args.bbox_path)
 
-    mmcv.imwrite(output, args.save_path)
     if args.imshow:
         mmcv.imshow(output, 'predicted generation result')
 

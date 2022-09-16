@@ -15,7 +15,7 @@ class SIGGRAPHGenerator(nn.Module):
                  use_tanh=True,
                  classification=True):
         super(SIGGRAPHGenerator, self).__init__()
-        self.input_nc = input_nc
+        self.input_nc = input_nc + output_nc + 1
         self.output_nc = output_nc
         self.classification = classification
         use_bias = True
@@ -456,7 +456,7 @@ class FusionGenerator(nn.Module):
                  use_tanh=True,
                  classification=True):
         super(FusionGenerator, self).__init__()
-        self.input_nc = input_nc
+        self.input_nc = input_nc + output_nc + 1
         self.output_nc = output_nc
         self.classification = classification
         use_bias = True
@@ -1028,7 +1028,7 @@ class InstanceGenerator(nn.Module):
                  use_tanh=True,
                  classification=True):
         super(InstanceGenerator, self).__init__()
-        self.input_nc = input_nc
+        self.input_nc = input_nc + output_nc + 1
         self.output_nc = output_nc
         self.classification = classification
         use_bias = True
@@ -1471,4 +1471,5 @@ class InstanceGenerator(nn.Module):
         feature_map['conv10_up'] = conv10_up
         feature_map['conv10_2'] = conv10_2
         feature_map['out_reg'] = out_reg
+
         return (out_reg, feature_map)

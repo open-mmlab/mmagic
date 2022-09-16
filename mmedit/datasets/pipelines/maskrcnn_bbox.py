@@ -28,23 +28,30 @@ class GenMaskRCNNBbox:
             transforms.ToTensor()
         ])
 
-    def gen_maskrcnn_bbox_fromPred(self, img, box_num_upbound=-1):
+    def gen_maskrcnn_bbox_fromPred(self,
+                                   img,
+                                   bbox_path=None,
+                                   box_num_upbound=8):
         '''
         ## Arguments:
         - pred_data_path: Detectron2 predict results
         - box_num_upbound: object bounding boxes number.
                            Default: -1 means use all the instances.
         '''
+        if bbox_path:
+            pred_data = np.load(bbox_path)
+            pred_bbox = pred_data['bbox'].astype(np.int32)
+            pred_scores = pred_data['scores']
+        else:
+            lab_image = cv.cvtColor(img, cv.COLOR_BGR2LAB)
+            l_channel, a_channel, b_channel = cv.split(lab_image)
+            l_stack = np.stack([l_channel, l_channel, l_channel], axis=2)
+            outputs = self.predictor(l_stack)
+            pred_bbox = outputs['instances'].pred_boxes.to(
+                torch.device('cpu')).tensor.numpy()
+            pred_scores = outputs['instances'].scores.cpu().data.numpy()
 
-        lab_image = cv.cvtColor(img, cv.COLOR_BGR2LAB)
-        l_channel, a_channel, b_channel = cv.split(lab_image)
-        l_stack = np.stack([l_channel, l_channel, l_channel], axis=2)
-        outputs = self.predictor(l_stack)
-        pred_bbox = outputs['instances'].pred_boxes.to(
-            torch.device('cpu')).tensor.numpy()
-        pred_scores = outputs['instances'].scores.cpu().data.numpy()
-
-        pred_bbox = pred_bbox.astype(np.int32)
+            pred_bbox = pred_bbox.astype(np.int32)
         if 0 < box_num_upbound < pred_bbox.shape[0]:
             index_mask = np.argsort(
                 pred_scores, axis=0)[pred_scores.shape[0] -
@@ -116,7 +123,11 @@ class GenMaskRCNNBbox:
     def test_fusion(self, results):
         img = results['gt']
         pil_img = self.read_to_pil(img)
-        pred_bbox = self.gen_maskrcnn_bbox_fromPred(img)
+        if results['bbox_path']:
+            pred_bbox = self.gen_maskrcnn_bbox_fromPred(
+                img, results['bbox_path'], box_num_upbound=8)
+        else:
+            pred_bbox = self.gen_maskrcnn_bbox_fromPred(img, box_num_upbound=8)
 
         img_list = [self.transforms(pil_img)]  # 这里删除了一个transform
 
@@ -161,7 +172,11 @@ class GenMaskRCNNBbox:
 
     def train(self, results):
         img = results[self.key]
-        pred_bbox = self.gen_maskrcnn_bbox_fromPred(img)
+        if results['bbox_path']:
+            pred_bbox = self.gen_maskrcnn_bbox_fromPred(
+                img, results['bbox_path'])
+        else:
+            pred_bbox = self.gen_maskrcnn_bbox_fromPred(img)
         rgb_img, gray_img = self.gen_gray_color_pil(img)
         index_list = range(len(pred_bbox))
         index_list = sample(index_list, 1)
@@ -190,6 +205,6 @@ class GenMaskRCNNBbox:
             model_zoo.get_config_file(
                 'COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml'))
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7
-        cfg.MODEL.WEIGHTS = '/mnt/d/code/MMEditing/model_final_2d9806.pkl'
+        cfg.MODEL.WEIGHTS = '/mnt/ruoning/model_final_2d9806.pkl'
         predictor = DefaultPredictor(cfg)
         return predictor
