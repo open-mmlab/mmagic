@@ -2,12 +2,17 @@
 
 In this document, we will introduce the design of each datasets in MMEditing and how users can design their own dataset.
 
-- [Supported Dataset](#supported-data-format)
-  - [BasicImageDataset](#basicimagedataset)
-  - [BasicFramesDataset](#basicframesdataset)
-  - [AdobeComp1kDataset](#adobecomp1kdataset)
-- [Design a new dataset](#design-a-new-dataset)
-  - [Repeat dataset](#repeat-dataset)
+- [Prepare Your Own Datasets](#prepare-your-own-datasets)
+  - [Supported Data Format](#supported-data-format)
+    - [BasicImageDataset](#basicimagedataset)
+    - [BasicFramesDataset](#basicframesdataset)
+    - [AdobeComp1kDataset](#adobecomp1kdataset)
+    - [GrowScaleImgDataset](#growscaleimgdataset)
+    - [SinGANDataset](#singandataset)
+    - [PairedImageDataset](#pairedimagedataset)
+    - [UnpairedImageDataset](#unpairedimagedataset)
+  - [Design a new dataset](#design-a-new-dataset)
+    - [Repeat dataset](#repeat-dataset)
 
 ## Supported Data Format
 
@@ -21,23 +26,222 @@ In `prepare_data`, data loading pipeline consists of the following steps:
 
 ### BasicImageDataset
 
-- [BasicImageDataset](/mmedit/datasets/basic_image_dataset.py)
-  General image dataset designed for low-level vision tasks with image, such as image super-resolution and inpainting. The annotation file is optional.
+[BasicImageDataset](/mmedit/datasets/basic_image_dataset.py)
+General image dataset designed for low-level vision tasks with image, such as image super-resolution, inpainting and unconditional image generation. The annotation file is optional.
+
+If use annotation file, the annotation format can be shown as follows.
+
+```bash
+   Case 1 (CelebA-HQ):
+
+       000001.png
+       000002.png
+
+   Case 2 (DIV2K):
+
+       0001_s001.png (480,480,3)
+       0001_s002.png (480,480,3)
+       0001_s003.png (480,480,3)
+       0002_s001.png (480,480,3)
+       0002_s002.png (480,480,3)
+
+   Case 3 (Vimeo90k):
+
+       00001/0266 (256, 448, 3)
+       00001/0268 (256, 448, 3)
+```
+
+Here we give several examples showing how to use `BasicImageDataset`. Assume the file structure as the following:
+
+```md
+mmediting (root)
+├── mmedit
+├── tools
+├── configs
+├── data
+│   ├── DIV2K
+│   │   ├── DIV2K_train_HR
+│   │   │   ├── image.png
+│   │   ├── DIV2K_train_LR_bicubic
+│   │   │   ├── X2
+│   │   │   ├── X3
+│   │   │   ├── X4
+│   │   │   │   ├── image_x4.png
+│   │   ├── DIV2K_valid_HR
+│   │   ├── DIV2K_valid_LR_bicubic
+│   │   │   ├── X2
+│   │   │   ├── X3
+│   │   │   ├── X4
+│   ├── places
+│   │   ├── test_set
+│   │   ├── train_set
+|   |   ├── meta
+|   |   |    ├── Places365_train.txt
+|   |   |    ├── Places365_val.txt
+|   ├── celebahq
+│   │   ├── imgs_1024
+
+```
+
+Case 1: Loading DIV2K dataset for training a SISR model.
+
+```python
+   dataset = BasicImageDataset(
+       ann_file='',
+       metainfo=dict(
+           dataset_type='div2k',
+           task_name='sisr'),
+       data_root='data/DIV2K',
+       data_prefix=dict(
+           gt='DIV2K_train_HR', img='DIV2K_train_LR_bicubic/X4'),
+       filename_tmpl=dict(img='{}_x4', gt='{}'),
+       pipeline=[])
+```
+
+Case 2: Loading places dataset for training an inpainting model.
+
+```python
+   dataset = BasicImageDataset(
+       ann_file='meta/Places365_train.txt',
+       metainfo=dict(
+           dataset_type='places365',
+           task_name='inpainting'),
+       data_root='data/places',
+       data_prefix=dict(gt='train_set'),
+       pipeline=[])
+```
+
+Case 3: Loading CelebA-HQ dataset for training an PGGAN.
+
+```python
+dataset = BasicImageDataset(
+        pipeline=[],
+        data_root='./data/celebahq/imgs_1024')
+```
 
 ### BasicFramesDataset
 
-- [BasicFramesDataset](/mmedit/datasets/basic_frames_dataset.py)
-  General frames dataset designed for low-level vision tasks with frames, such as video super-resolution and video frame interpolation. The annotation file is optional.
+[BasicFramesDataset](/mmedit/datasets/basic_frames_dataset.py)
+General frames dataset designed for low-level vision tasks with frames, such as video super-resolution and video frame interpolation. The annotation file is optional.
+
+If use annotation file, the annotation format can be shown as follows.
+
+```bash
+Case 1 (Vid4):
+
+   calendar 41
+   city 34
+   foliage 49
+   walk 47
+
+Case 2 (REDS):
+
+   000/00000000.png (720, 1280, 3)
+   000/00000001.png (720, 1280, 3)
+
+Case 3 (Vimeo90k):
+
+   00001/0266 (256, 448, 3)
+   00001/0268 (256, 448, 3)
+```
+
+Assume the file structure as the following:
+
+```bash
+mmediting (root)
+├── mmedit
+├── tools
+├── configs
+├── data
+│   ├── Vid4
+│   │   ├── BIx4
+│   │   │   ├── city
+│   │   │   │   ├── img1.png
+│   │   ├── GT
+│   │   │   ├── city
+│   │   │   │   ├── img1.png
+│   │   ├── meta_info_Vid4_GT.txt
+│   ├── places
+│   │   ├── sequences
+|   |   |   ├── 00001
+│   │   │   │   ├── 0389
+│   │   │   │   │   ├── img1.png
+│   │   │   │   │   ├── img2.png
+│   │   │   │   │   ├── img3.png
+│   │   ├── tri_trainlist.txt
+```
+
+Case 1: Loading Vid4 dataset for training a VSR model.
+
+```python
+dataset = BasicFramesDataset(
+    ann_file='meta_info_Vid4_GT.txt',
+    metainfo=dict(dataset_type='vid4', task_name='vsr'),
+    data_root='data/Vid4',
+    data_prefix=dict(img='BIx4', gt='GT'),
+    pipeline=[],
+    depth=2,
+    num_input_frames=5)
+```
+
+Case 2: Loading Vimeo90k dataset for training a VFI model.
+
+```python
+dataset = BasicFramesDataset(
+    ann_file='tri_trainlist.txt',
+    metainfo=dict(dataset_type='vimeo90k', task_name='vfi'),
+    data_root='data/vimeo-triplet',
+    data_prefix=dict(img='sequences', gt='sequences'),
+    pipeline=[],
+    depth=2,
+    load_frames_list=dict(
+        img=['img1.png', 'img3.png'], gt=['img2.png']))
+```
 
 ### AdobeComp1kDataset
 
-- [AdobeComp1kDataset](/mmedit/datasets/comp1k_dataset.py)
-  Adobe composition-1k dataset.
+[AdobeComp1kDataset](/mmedit/datasets/comp1k_dataset.py)
+Adobe composition-1k dataset.
 
-### UnconditionalImageDataset
+The dataset loads (alpha, fg, bg) data and apply specified transforms to
+the data. You could specify whether composite merged image online or load
+composited merged image in pipeline.
 
-`UnconditionalImageDataset` is used for loading data for unconditional GAN models (e.g., StyleGANv2, StyleGANv3, WGAN-GP).
-In this class, we implement `load_data_list` to scan the data list from passed `data_root` and use the default data loading logic provided by `BaseDataset`.
+Example for online comp-1k dataset:
+
+```json
+[
+   {
+       "alpha": 'alpha/000.png',
+       "fg": 'fg/000.png',
+       "bg": 'bg/000.png'
+   },
+   {
+       "alpha": 'alpha/001.png',
+       "fg": 'fg/001.png',
+       "bg": 'bg/001.png'
+   },
+]
+```
+
+Example for offline comp-1k dataset:
+
+```json
+[
+  {
+      "alpha": 'alpha/000.png',
+      "merged": 'merged/000.png',
+      "fg": 'fg/000.png',
+      "bg": 'bg/000.png'
+  },
+  {
+      "alpha": 'alpha/001.png',
+      "merged": 'merged/001.png',
+      "fg": 'fg/001.png',
+      "bg": 'bg/001.png'
+  },
+]
+```
 
 ### GrowScaleImgDataset
 

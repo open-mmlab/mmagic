@@ -4,17 +4,18 @@ In this tutorial, we introduce the design of transforms pipeline in MMEditing.
 
 The structure of this guide are as follows:
 
-- [Data pipelines in MMEditing](#data-pipelines-in-mmediting)
-  - [A simple example of data transform](#a-simple-example-of-data-transform)
-  - [An example of BasicVSR](#an-example-of-basicvsr)
-  - [An example of Pix2Pix](#an-example-of-pix2pix)
-- [Supported transforms in MMEditing](#supported-transforms-in-mmediting)
-  - [Data loading](#data-loading)
-  - [Pre-processing](#pre-processing)
-  - [Formatting](#formatting)
-- [Extend and use custom pipelines](#extend-and-use-custom-pipelines)
-  - [A simple example of MyTransform](#a-simple-example-of-mytransform)
-  - [An example of flipping](#an-example-of-flipping)
+- [Design Your Own Data Pipelines](#design-your-own-data-pipelines)
+  - [Data pipelines in MMEditing](#data-pipelines-in-mmediting)
+    - [A simple example of data transform](#a-simple-example-of-data-transform)
+    - [An example of BasicVSR](#an-example-of-basicvsr)
+    - [An example of Pix2Pix](#an-example-of-pix2pix)
+  - [Supported transforms in MMEditing](#supported-transforms-in-mmediting)
+    - [Data loading](#data-loading)
+    - [Pre-processing](#pre-processing)
+    - [Formatting](#formatting)
+  - [Extend and use custom pipelines](#extend-and-use-custom-pipelines)
+    - [A simple example of MyTransform](#a-simple-example-of-mytransform)
+    - [An example of flipping](#an-example-of-flipping)
 
 ## Data pipelines in MMEditing
 
@@ -135,206 +136,416 @@ pipeline = [
 
 ### Data loading
 
-`LoadImageFromFile`
-
-- add: img, img_path, img_ori_shape, \*ori_img
-
-`RandomLoadResizeBg`
-
-- add: bg
-
-`LoadMask`
-
-- add: mask
-
-`GetSpatialDiscountMask`
-
-- add: discount_mask
+<table class="docutils">
+   <thead>
+      <tr>
+         <th style="text-align:center">Transform</th>
+         <th style="text-align:center">Modification of Results' keys</th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr>
+         <td>
+            <code>LoadImageFromFile</code>
+         </td>
+         <td>
+            - add: img, img_path, img_ori_shape, \*ori_img
+         </td>
+      </tr>
+      <tr>
+         <td>
+            <code>RandomLoadResizeBg</code>
+         </td>
+         <td>
+            - add: bg
+         </td>
+      </tr>
+      <tr>
+         <td>
+            <code>LoadMask</code>
+         </td>
+         <td>
+            - add: mask
+         </td>
+      </tr>
+      <tr>
+         <td>
+            <code>GetSpatialDiscountMask</code>
+         </td>
+         <td>
+            - add: discount_mask
+         </td>
+      </tr>
+   </tbody>
+</table>
 
 ### Pre-processing
 
-`Resize`
-
-- add: scale_factor, keep_ratio, interpolation, backend
-- update: specified by `keys`
-
-`MATLABLikeResize`
-
-- add: scale, output_shape
-- update: specified by `keys`
-
-`RandomRotation`
-
-- add: degrees
-- update: specified by `keys`
-
-`Flip`
-
-- add: flip, flip_direction
-- update: specified by `keys`
-
-`RandomAffine`
-
-- update: specified by `keys`
-
-`RandomJitter`
-
-- update: fg (img)
-
-`ColorJitter`
-
-- update: specified by `keys`
-
-`BinarizeImage`
-
-- update: specified by `keys`
-
-`RandomMaskDilation`
-
-- add: img_dilate_kernel_size
-
-`RandomTransposeHW`
-
-- add: transpose
-
-`RandomDownSampling`
-
-- update: scale, gt (img), lq (img)
-
-`RandomBlur`
-
-- update: specified by `keys`
-
-`RandomResize`
-
-- update: specified by `keys`
-
-`RandomNoise`
-
-- update: specified by `keys`
-
-`RandomJPEGCompression`
-
-- update: specified by `keys`
-
-`RandomVideoCompression`
-
-- update: specified by `keys`
-
-`DegradationsWithShuffle`
-
-- update: specified by `keys`
-
-`GenerateFrameIndices`
-
-- update: img_path (gt_path, lq_path)
-
-`GenerateFrameIndiceswithPadding`
-
-- update: img_path (gt_path, lq_path)
-
-`TemporalReverse`
-
-- add: reverse
-- update: specified by `keys`
-
-`GenerateSegmentIndices`
-
-- add: interval
-- update: img_path (gt_path, lq_path)
-
-`MirrorSequence`
-
-- update: specified by `keys`
-
-`CopyValues`
-
-- add: specified by `dst_key`
-
-`UnsharpMasking`
-
-- add: img_unsharp
-
-`Crop`
-
-- add: img_crop_bbox, crop_size
-- update: specified by `keys`
-
-`RandomResizedCrop`
-
-- add: img_crop_bbox
-- update: specified by `keys`
-
-`FixedCrop`
-
-- add: crop_size, crop_pos
-- update: specified by `keys`
-
-`PairedRandomCrop`
-
-- update: gt (img), lq (img)
-
-`CropAroundCenter`
-
-- add: crop_bbox
-- update: fg (img), alpha (img), trimap (img), bg (img)
-
-`CropAroundUnknown`
-
-- add: crop_bbox
-- update: specified by `keys`
-
-`CropAroundFg`
-
-- add: crop_bbox
-- update: specified by `keys`
-
-`ModCrop`
-
-- update: gt (img)
-
-`CropLike`
-
-- update: specified by `target_key`
-
-`GetMaskedImage`
-
-- add: masked_img
-
-`GenerateFacialHeatmap`
-
-- add: heatmap
-
-`GenerateCoordinateAndCell`
-
-- add: coord, cell
-- update: gt (img)
-
-`Normalize`
-
-- add: img_norm_cfg
-- update: specified by `keys`
-
-`RescaleToZeroOne`
-
-- update: specified by `keys`
-
-...
+<table class="docutils">
+   <thead>
+      <tr>
+         <th style="text-align:center">Transform</th>
+         <th style="text-align:center">Modification of Results' keys</th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr>
+         <td>
+            <code>Resize</code>
+         </td >
+         <td>
+            - add: scale_factor, keep_ratio, interpolation, backend
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>MATLABLikeResize</code>
+         </td >
+         <td>
+            - add: scale, output_shape
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>RandomRotation</code>
+         </td >
+         <td>
+            - add: degrees
+            - update: specified by <code>keys</code>
+         <td>
+      </tr>
+      <tr>
+         <td>
+            <code>Flip</code>
+         </td >
+         <td>
+            - add: flip, flip_direction
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>RandomAffine</code>
+         </td >
+         <td>
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>RandomJitter</code>
+         </td >
+         <td>
+            - update: fg (img)
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>ColorJitter</code>
+         </td >
+         <td>
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>BinarizeImage</code>
+         </td >
+         <td>
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>RandomMaskDilation</code>
+         </td >
+         <td>
+            - add: img_dilate_kernel_size
+         <td>
+      </tr>
+      <tr>
+         <td>
+            <code>RandomTransposeHW</code>
+         </td >
+         <td>
+            - add: transpose
+      </tr>
+      <tr>
+         <td>
+            <code>RandomDownSampling</code>
+         </td >
+         <td>
+            - update: scale, gt (img), lq (img)
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>RandomBlur</code>
+         </td >
+         <td>
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>RandomResize</code>
+         </td >
+         <td>
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>RandomNoise</code>
+         </td >
+         <td>
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>RandomJPEGCompression</code>
+         </td >
+         <td>
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>RandomVideoCompression</code>
+         </td >
+         <td>
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>DegradationsWithShuffle</code>
+         </td >
+         <td>
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>GenerateFrameIndices</code>
+         </td >
+         <td>
+            - update: img_path (gt_path, lq_path)
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>GenerateFrameIndiceswithPadding</code>
+         </td >
+         <td>
+            - update: img_path (gt_path, lq_path)
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>TemporalReverse</code>
+         </td >
+         <td>
+            - add: reverse
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>GenerateSegmentIndices</code>
+         </td >
+         <td>
+            - add: interval
+            - update: img_path (gt_path, lq_path)
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>MirrorSequence</code>
+         </td >
+         <td>
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>CopyValues</code>
+         </td >
+         <td>
+            - add: specified by <code>dst_key</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>UnsharpMasking</code>
+         </td >
+         <td>
+            - add: img_unsharp
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>Crop</code>
+         </td >
+         <td>
+            - add: img_crop_bbox, crop_size
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>RandomResizedCrop</code>
+         </td >
+         <td>
+            - add: img_crop_bbox
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>FixedCrop</code>
+         </td >
+         <td>
+            - add: crop_size, crop_pos
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>PairedRandomCrop</code>
+         </td >
+         <td>
+            - update: gt (img), lq (img)
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>CropAroundCenter</code>
+         </td >
+         <td>
+            - add: crop_bbox
+            - update: fg (img), alpha (img), trimap (img), bg (img)
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>CropAroundUnknown</code>
+         </td >
+         <td>
+            - add: crop_bbox
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>CropAroundFg</code>
+         </td >
+         <td>
+            - add: crop_bbox
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>ModCrop</code>
+         </td >
+         <td>
+            - update: gt (img)
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>CropLike</code>
+         </td >
+         <td>
+            - update: specified by <code>target_key</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>GetMaskedImage</code>
+         </td >
+         <td>
+            - add: masked_img
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>GenerateFacialHeatmap</code>
+         </td >
+         <td>
+            - add: heatmap
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>GenerateCoordinateAndCell</code>
+         </td >
+         <td>
+            - add: coord, cell
+            - update: gt (img)
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>Normalize</code>
+         </td >
+         <td>
+            - add: img_norm_cfg
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+      <tr>
+         <td>
+            <code>RescaleToZeroOne</code>
+         </td >
+         <td>
+            - update: specified by <code>keys</code>
+         </td >
+      </tr>
+   </tbody>
+</table>
 
 ### Formatting
 
-`ToTensor`
-
-- update: specified by `keys`.
-
-`FormatTrimap`
-
-- update: trimap
-
-`PackEditInputs`
-
-- add: inputs, data_sample
-- remove: all other keys
+<table class="docutils">
+   <thead>
+      <tr>
+         <th style="text-align:center">Transform</th>
+         <th style="text-align:center">Modification of Results' keys</th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr>
+         <td>
+            <code>ToTensor</code>
+         </td>
+         <td>
+            update: specified by <code>keys</code>.
+         </td>
+      </tr>
+      <tr>
+         <td>
+            <code>FormatTrimap</code>
+         </td>
+         <td>
+            - update: trimap
+         </td>
+      </tr>
+      <tr>
+         <td>
+            <code>PackEditInputs</code>
+         </td>
+         <td>
+            - add: inputs, data_sample
+            - remove: all other keys
+         </td>
+      </tr>
+   </tbody>
+</table>
 
 ## Extend and use custom pipelines
 

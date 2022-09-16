@@ -235,13 +235,7 @@ without other modifications in the code of models. What you only need to do is j
 
 ## Available losses
 
-We list available losses as follows.
-
-> **Method** means a kind of loss. \
-> **class** denotes the class which the method belongs to. \
-> **Type** denotes the type of loss. E.g. gan_loss, feature_loss, gradient_loss. \
-> **Example** give an config example showing how to add the loss. \
-> **paper** link is given if certain paper put forward this loss.
+We list available losses with examples in configs as follows.
 
 ### regular losses
 
