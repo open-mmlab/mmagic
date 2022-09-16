@@ -23,6 +23,7 @@ from .ggan import GGAN
 from .glean import GLEANStyleGANv2
 from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
                            GLEncoderDecoder)
+from .guided_diffusion import AblatedDiffusionModel
 from .iconvsr import IconVSRNet
 from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
@@ -38,6 +39,7 @@ from .rdn import RDNNet
 from .real_basicvsr import RealBasicVSR, RealBasicVSRNet
 from .real_esrgan import RealESRGAN, UNetDiscriminatorWithSpectralNorm
 from .sagan import SAGAN
+from .singan import SinGAN
 from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
 from .stylegan1 import StyleGAN1
@@ -47,7 +49,6 @@ from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
 from .wgan_gp import WGANGP
-from .guided_diffusion import AblatedDiffusionModel
 
 # from .biggan import SNConvModule, SNE
 
@@ -72,5 +73,5 @@ __all__ = [
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
-    'ProgressiveGrowingGAN', 'AblatedDiffusionModel'
+    'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel'
 ]

@@ -125,7 +125,8 @@ class FeedbackBlock(nn.Module):
 
     It has a style of:
 
-    ::
+    .. code-block:: text
+
         ----- Module ----->
           ^            |
           |____________|

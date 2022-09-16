@@ -29,7 +29,7 @@ def test_reduce_lr_scheduler_hook():
     runner.epoch = 0
     runner.iter = 0
     runner.param_schedulers = scheduler
-    runner.message_hub = MessageHub.get_instance('task')
+    runner.message_hub = MessageHub.get_instance('test-reduce-lr-scheduler')
     runner.message_hub.update_scalar('train/loss', 0.1)
 
     hook = ReduceLRSchedulerHook(val_metric=None, by_epoch=True, interval=2)

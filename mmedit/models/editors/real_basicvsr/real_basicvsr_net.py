@@ -12,6 +12,7 @@ class RealBasicVSRNet(BaseModule):
     """RealBasicVSR network structure for real-world video super-resolution.
 
     Support only x4 upsampling.
+
     Paper:
         Investigating Tradeoffs in Real-World Video Super-Resolution, arXiv
 

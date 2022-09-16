@@ -25,8 +25,8 @@ class GenLogProcessor(LogProcessor):
         If `mode` is in 'val' or 'test', we use `runner.val_loop.total_length`
         and `runner.test_loop.total_length` as the total number of iterations
         shown in log. If you want to know how `total_length` is calculated,
-        please refers to `:meth:mmgen.core.runners.loops.GenValLoop.run` and
-        `:meth:mmgen.core.runners.loops.GenTestLoop.run`.
+        please refers to `:meth:mmedit.engine.runners.loops.GenValLoop.run` and
+        `:meth:mmedit.engien.runners.loops.GenTestLoop.run`.
 
         Args:
             runner (Runner): The runner of training phase.
@@ -57,7 +57,7 @@ class GenLogProcessor(LogProcessor):
         for key, value in tag.items():
             if key.startswith('lr'):
                 log_tag.pop(key)
-                lr_str_list.append(f'{key}: {value:.3e}')
+                lr_str_list.append(f'{key}: {value:.{self.num_digits}e}')
         lr_str = ' '.join(lr_str_list)
         # Format log header.
         # by_epoch == True
@@ -87,8 +87,8 @@ class GenLogProcessor(LogProcessor):
             eta = runner.message_hub.get_info('eta')
             eta_str = str(datetime.timedelta(seconds=int(eta)))
             log_str += f'eta: {eta_str}  '
-            log_str += (f'time: {tag["time"]:.3f}  '
-                        f'data_time: {tag["data_time"]:.3f}  ')
+            log_str += (f'time: {tag["time"]:.{self.num_digits}f}  '
+                        f'data_time: {tag["data_time"]:.{self.num_digits}f}  ')
             # Pop recorded keys
             log_tag.pop('time')
             log_tag.pop('data_time')
@@ -103,7 +103,7 @@ class GenLogProcessor(LogProcessor):
                 if mode == 'val' and not name.startswith('val/loss'):
                     continue
                 if isinstance(val, float):
-                    val = f'{val:.4f}'
+                    val = f'{val:.{self.num_digits}f}'
                 log_items.append(f'{name}: {val}')
             log_str += '  '.join(log_items)
         return tag, log_str
@@ -161,7 +161,7 @@ class GenLogProcessor(LogProcessor):
             if name in ('time', 'data_time'):
                 continue
             if isinstance(val, float):
-                val = f'{val:.4f}'
+                val = f'{val:.{self.num_digits}f}'
             log_items.append(f'{name}: {val}')
         log_str += '  '.join(log_items)
         return tag, log_str

@@ -431,5 +431,7 @@ class NumpyPad(BaseTransform):
 
     def __repr__(self) -> str:
         repr_str = self.__class__.__name__
-        repr_str += (f'(padding={self.padding}, kwargs={self.kwargs})')
+        repr_str += (
+            f'(keys={self.keys}, padding={self.padding}, kwargs={self.kwargs})'
+        )
         return repr_str

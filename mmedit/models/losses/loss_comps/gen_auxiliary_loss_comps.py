@@ -147,13 +147,13 @@ class GeneratorPathRegularizerComps(nn.Module):
                     pl_batch_size=self.pl_batch_size,
                     sync_mean_buffer=self.sync_mean_buffer))
             path_penalty, self.mean_path_length, _ = gen_path_regularizer(
-                **kwargs) * self.loss_weight
-
-            return path_penalty
+                **kwargs)
         else:
             # if you have not define how to build computational graph, this
             # module will just directly return the loss as usual.
-            return gen_path_regularizer(*args, **kwargs) * self.loss_weight
+            path_penalty, self.mean_path_length, _ = gen_path_regularizer(
+                *args, **kwargs)
+        return path_penalty * self.loss_weight
 
     def loss_name(self):
         """Loss Name.

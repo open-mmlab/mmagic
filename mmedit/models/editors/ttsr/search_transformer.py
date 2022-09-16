@@ -63,8 +63,9 @@ class SearchTransformer(nn.Module):
                 [(N, C, H, W), (N, C/2, 2H, 2W), ...]
 
         Returns:
-            soft_attention (Tensor): Soft-Attention tensor. (N, 1, H, W)
-            textures (Tuple[Tensor]): Transferred GT textures.
+            tuple: tuple contains:
+                soft_attention (Tensor): Soft-Attention tensor. (N, 1, H, W) \n
+                textures (Tuple[Tensor]): Transferred GT textures.
                 [(N, C, H, W), (N, C/2, 2H, 2W), ...]
         """
 

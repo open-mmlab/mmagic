@@ -57,6 +57,7 @@ class CLIPLoss(nn.Module):
 
     .. code-block:: python
         :linenos:
+
         data_info = dict(
             image='fake_imgs',
             text='descriptions')
