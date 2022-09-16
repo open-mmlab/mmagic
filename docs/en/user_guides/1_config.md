@@ -6,11 +6,14 @@ If you wish to inspect the config file, you may run `python tools/misc/print_con
 You can learn about the usage of our config system according to following tutorials.
 
 - [Modify config](#modify-config-through-script-arguments)
-- [Config File Structure](#config-file-structure)
-- [Config Name Style](#config-name-style)
-- [An Example of EDSR](#an-example-of-edsr)
+- [Config file structure](#config-file-structure)
+- [Config name style](#config-name-style)
+- [An example of EDSR](#an-example-of-edsr)
 - [An example of StyleGAN2](#an-example-of-stylegan2)
 - [Other examples](#other-examples)
+  - [An example of config system for inpainting](#an-example-of-config-system-for-inpainting)
+  - [An example of config system for matting](#an-example-of-config-system-for-matting)
+  - [An example of config system for restoration](#an-example-of-config-system-for-restoration)
 
 ## Modify config through script arguments
 
@@ -483,8 +486,516 @@ resume = False  # Whether to resume from the checkpoint define in `load_from`. I
 
 ## Other examples
 
-More details of config system are shown in following tutorials.
+### An example of config system for inpainting
 
-- [inpainting config](./config/config_inpainting.md)
-- [matting config](./config/config_matting.md)
-- [restoration config](./config/config_restoration.md)
+To help the users have a basic idea of a complete config and the modules in a inpainting system,
+we make brief comments on the config of Global&Local as the following.
+For more detailed usage and the corresponding alternative for each modules, please refer to the API documentation.
+
+```python
+model = dict(
+    type='GLInpaintor', # The name of inpaintor
+    data_preprocessor=dict(
+        type='EditDataPreprocessor', # The name of data preprocessor
+        mean=[127.5], # Mean value used in data normalization
+        std=[127.5], # Std value used in data normalization
+    ),
+    encdec=dict(
+        type='GLEncoderDecoder', # The name of encoder-decoder
+        encoder=dict(type='GLEncoder', norm_cfg=dict(type='SyncBN')), # The config of encoder
+        decoder=dict(type='GLDecoder', norm_cfg=dict(type='SyncBN')), # The config of decoder
+        dilation_neck=dict(
+            type='GLDilationNeck', norm_cfg=dict(type='SyncBN'))), # The config of dilation neck
+    disc=dict(
+        type='GLDiscs', # The name of discriminator
+        global_disc_cfg=dict(
+            in_channels=3, # The input channel of discriminator
+            max_channels=512, # The maximum middle channel in discriminator
+            fc_in_channels=512 * 4 * 4, # The input channel of last fc layer
+            fc_out_channels=1024, # The output channel of last fc channel
+            num_convs=6, # The number of convs used in discriminator
+            norm_cfg=dict(type='SyncBN') # The config of norm layer
+        ),
+        local_disc_cfg=dict(
+            in_channels=3, # The input channel of discriminator
+            max_channels=512, # The maximum middle channel in discriminator
+            fc_in_channels=512 * 4 * 4, # The input channel of last fc layer
+            fc_out_channels=1024, # The output channel of last fc channel
+            num_convs=5, # The number of convs used in discriminator
+            norm_cfg=dict(type='SyncBN') # The config of norm layer
+        ),
+    ),
+    loss_gan=dict(
+        type='GANLoss', # The name of GAN loss
+        gan_type='vanilla', # The type of GAN loss
+        loss_weight=0.001 # The weight of GAN loss
+    ),
+    loss_l1_hole=dict(
+        type='L1Loss', # The type of l1 loss
+        loss_weight=1.0 # The weight of l1 loss
+    ))
+
+train_cfg = dict(
+    type='IterBasedTrainLoop',# The name of train loop type
+    max_iters=500002, # The number of total iterations
+    val_interval=50000, # The number of validation interval iterations
+)
+val_cfg = dict(type='ValLoop') # The name of validation loop type
+test_cfg = dict(type='TestLoop') # The name of test loop type
+
+val_evaluator = [
+    dict(type='MAE', mask_key='mask', scaling=100), # The name of metrics to evaluate
+    dict(type='PSNR'), # The name of metrics to evaluate
+    dict(type='SSIM'), # The name of metrics to evaluate
+]
+test_evaluator = val_evaluator
+
+input_shape = (256, 256) # The shape of input image
+
+train_pipeline = [
+    dict(type='LoadImageFromFile', key='gt'), # The config of loading image
+    dict(
+        type='LoadMask', # The type of loading mask pipeline
+        mask_mode='bbox', # The type of mask
+        mask_config=dict(
+            max_bbox_shape=(128, 128), # The shape of bbox
+            max_bbox_delta=40, # The changing delta of bbox height and width
+            min_margin=20,  # The minimum margin from bbox to the image border
+            img_shape=input_shape)),  # The input image shape
+    dict(
+        type='Crop', # The type of crop pipeline
+        keys=['gt'],  # The keys of images to be cropped
+        crop_size=(384, 384),  # The size of cropped patch
+        random_crop=True,  # Whether to use random crop
+    ),
+    dict(
+        type='Resize',  # The type of resizing pipeline
+        keys=['gt'],  # They keys of images to be resized
+        scale=input_shape,  # The scale of resizing function
+        keep_ratio=False,  # Whether to keep ratio during resizing
+    ),
+    dict(
+        type='Normalize',  # The type of normalizing pipeline
+        keys=['gt_img'],  # The keys of images to be normed
+        mean=[127.5] * 3,  # Mean value used in normalization
+        std=[127.5] * 3,  # Std value used in normalization
+        to_rgb=False),  # Whether to transfer image channels to rgb
+    dict(type='GetMaskedImage'), # The config of getting masked image pipeline
+    dict(type='PackEditInputs'), # The config of collecting data from current pipeline
+]
+
+test_pipeline = train_pipeline  # Constructing testing/validation pipeline
+
+dataset_type = 'BasicImageDataset' # The type of dataset
+data_root = 'data/places'  # Root path of data
+
+train_dataloader = dict(
+    batch_size=12, # Batch size of a single GPU
+    num_workers=4, # The number of workers to pre-fetch data for each single GPU
+    persistent_workers=False, # Whether maintain the workers Dataset instances alive
+    sampler=dict(type='InfiniteSampler', shuffle=False), # The type of data sampler
+    dataset=dict(  # Train dataset config
+        type=dataset_type, # Type of dataset
+        data_root=data_root, # Root path of data
+        data_prefix=dict(gt='data_large'), # Prefix of image path
+        ann_file='meta/places365_train_challenge.txt', # Path of annotation file
+        test_mode=False,
+        pipeline=train_pipeline,
+    ))
+
+val_dataloader = dict(
+    batch_size=1, # Batch size of a single GPU
+    num_workers=4, # The number of workers to pre-fetch data for each single GPU
+    persistent_workers=False, # Whether maintain the workers Dataset instances alive
+    drop_last=False, # Whether drop the last incomplete batch
+    sampler=dict(type='DefaultSampler', shuffle=False), # The type of data sampler
+    dataset=dict( # Validation dataset config
+        type=dataset_type, # Type of dataset
+        data_root=data_root, # Root path of data
+        data_prefix=dict(gt='val_large'), # Prefix of image path
+        ann_file='meta/places365_val.txt', # Path of annotation file
+        test_mode=True,
+        pipeline=test_pipeline,
+    ))
+
+test_dataloader = val_dataloader
+
+model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel') # The name of model wrapper
+
+optim_wrapper = dict( # Config used to build optimizer, support all the optimizers in PyTorch whose arguments are also the same as those in PyTorch
+    constructor='MultiOptimWrapperConstructor',
+    generator=dict(
+        type='OptimWrapper', optimizer=dict(type='Adam', lr=0.0004)),
+    disc=dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=0.0004)))
+
+default_scope = 'mmedit' # Used to set registries location
+save_dir = './work_dirs' # Directory to save the model checkpoints and logs for the current experiments
+exp_name = 'gl_places'  # The experiment name
+
+default_hooks = dict( # Used to build default hooks
+    timer=dict(type='IterTimerHook'),
+    logger=dict(type='LoggerHook', interval=100), # Config to register logger hook
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    checkpoint=dict( # Config to set the checkpoint hook
+        type='CheckpointHook',
+        interval=50000,
+        by_epoch=False,
+        out_dir=save_dir),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+)
+
+env_cfg = dict( # Parameters to setup distributed training, the port can also be set
+    cudnn_benchmark=False,
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0),
+    dist_cfg=dict(backend='nccl'),
+)
+
+vis_backends = [dict(type='LocalVisBackend')] # The name of visualization backend
+visualizer = dict( # Config used to build visualizer
+    type='ConcatImageVisualizer',
+    vis_backends=vis_backends,
+    fn_key='gt_path',
+    img_keys=['gt_img', 'input', 'pred_img'],
+    bgr2rgb=True)
+custom_hooks = [dict(type='BasicVisualizationHook', interval=1)] # Used to build custom hooks
+
+log_level = 'INFO' # The level of logging
+log_processor = dict(type='LogProcessor', by_epoch=False) # Used to build log processor
+
+load_from = None # load models as a pre-trained model from a given path. This will not resume training.
+resume = False # Resume checkpoints from a given path, the training will be resumed from the epoch when the checkpoint's is saved.
+
+find_unused_parameters = False  # Whether to set find unused parameters in ddp
+```
+
+### An example of config system for matting
+
+To help the users have a basic idea of a complete config, we make a brief comments on the config of the original DIM model we implemented as the following. For more detailed usage and the corresponding alternative for each modules, please refer to the API documentation.
+
+```python
+# model settings
+model = dict(
+    type='DIM',  # The name of model (we call mattor).
+    data_preprocessor=dict(  # The Config to build data preprocessor
+        type='MattorPreprocessor',
+        mean=[123.675, 116.28, 103.53],
+        std=[58.395, 57.12, 57.375],
+        bgr_to_rgb=True,
+        proc_inputs='normalize',
+        proc_trimap='rescale_to_zero_one',
+        proc_gt='rescale_to_zero_one',
+    ),
+    backbone=dict(  # The config of the backbone.
+        type='SimpleEncoderDecoder',  # The type of the backbone.
+        encoder=dict(  # The config of the encoder.
+            type='VGG16'),  # The type of the encoder.
+        decoder=dict(  # The config of the decoder.
+            type='PlainDecoder')),  # The type of the decoder.
+    pretrained='./weights/vgg_state_dict.pth',  # The pretrained weight of the encoder to be loaded.
+    loss_alpha=dict(  # The config of the alpha loss.
+        type='CharbonnierLoss',  # The type of the loss for predicted alpha matte.
+        loss_weight=0.5),  # The weight of the alpha loss.
+    loss_comp=dict(  # The config of the composition loss.
+        type='CharbonnierCompLoss',  # The type of the composition loss.
+        loss_weight=0.5), # The weight of the composition loss.
+    train_cfg=dict(  # Config of training DIM model.
+        train_backbone=True,  # In DIM stage1, backbone is trained.
+        train_refiner=False),  # In DIM stage1, refiner is not trained.
+    test_cfg=dict(  # Config of testing DIM model.
+        refine=False,  # Whether use refiner output as output, in stage1, we don't use it.
+        resize_method='pad',
+        resize_mode='reflect',
+        size_divisor=32,
+    ),
+)
+
+# data settings
+dataset_type = 'AdobeComp1kDataset'  # Dataset type, this will be used to define the dataset.
+data_root = 'data/adobe_composition-1k'  # Root path of data.
+
+train_pipeline = [  # Training data processing pipeline.
+    dict(
+        type='LoadImageFromFile',  # Load alpha matte from file.
+        key='alpha',  # Key of alpha matte in annotation file. The pipeline will read alpha matte from path `alpha_path`.
+        color_type='grayscale'),  # Load as grayscale image which has shape (height, width).
+    dict(
+        type='LoadImageFromFile',  # Load image from file.
+        key='fg'),  # Key of image to load. The pipeline will read fg from path `fg_path`.
+    dict(
+        type='LoadImageFromFile',  # Load image from file.
+        key='bg'),  # Key of image to load. The pipeline will read bg from path `bg_path`.
+    dict(
+        type='LoadImageFromFile',  # Load image from file.
+        key='merged'),  # Key of image to load. The pipeline will read merged from path `merged_path`.
+    dict(
+        type='CropAroundUnknown',  # Crop images around unknown area (semi-transparent area).
+        keys=['alpha', 'merged', 'fg', 'bg'],  # Images to crop.
+        crop_sizes=[320, 480, 640]),  # Candidate crop size.
+    dict(
+        type='Flip',  # Augmentation pipeline that flips the images.
+        keys=['alpha', 'merged', 'fg', 'bg']),  # Images to be flipped.
+    dict(
+        type='Resize',  # Augmentation pipeline that resizes the images.
+        keys=['alpha', 'merged', 'fg', 'bg'],  # Images to be resized.
+        scale=(320, 320),  # Target size.
+        keep_ratio=False),  # Whether to keep the ratio between height and width.
+    dict(
+        type='GenerateTrimap',  # Generate trimap from alpha matte.
+        kernel_size=(1, 30)),  # Kernel size range of the erode/dilate kernel.
+    dict(type='PackEditInputs'),  # The config of collecting data from current pipeline
+]
+test_pipeline = [
+    dict(
+        type='LoadImageFromFile',  # Load alpha matte.
+        key='alpha',  # Key of alpha matte in annotation file. The pipeline will read alpha matte from path `alpha_path`.
+        color_type='grayscale',
+        save_original_img=True),
+    dict(
+        type='LoadImageFromFile',  # Load image from file
+        key='trimap',  # Key of image to load. The pipeline will read trimap from path `trimap_path`.
+        color_type='grayscale',  # Load as grayscale image which has shape (height, width).
+        save_original_img=True),  # Save a copy of trimap for calculating metrics. It will be saved with key `ori_trimap`
+    dict(
+        type='LoadImageFromFile',  # Load image from file
+        key='merged'),  # Key of image to load. The pipeline will read merged from path `merged_path`.
+    dict(type='PackEditInputs'),  # The config of collecting data from current pipeline
+]
+
+train_dataloader = dict(
+    batch_size=1,  # Batch size of a single GPU
+    num_workers=4,  # The number of workers to pre-fetch data for each single GPU
+    persistent_workers=False,  # Whether maintain the workers Dataset instances alive
+    sampler=dict(type='InfiniteSampler', shuffle=True),  # The type of data sampler
+    dataset=dict(  # Train dataset config
+        type=dataset_type,  # Type of dataset
+        data_root=data_root,  # Root path of data
+        ann_file='training_list.json',  # Path of annotation file
+        test_mode=False,
+        pipeline=train_pipeline,
+    ))
+
+val_dataloader = dict(
+    batch_size=1,  # Batch size of a single GPU
+    num_workers=4,  # The number of workers to pre-fetch data for each single GPU
+    persistent_workers=False,  # Whether maintain the workers Dataset instances alive
+    drop_last=False,  # Whether drop the last incomplete batch
+    sampler=dict(type='DefaultSampler', shuffle=False),  # The type of data sampler
+    dataset=dict(  # Validation dataset config
+        type=dataset_type,  # Type of dataset
+        data_root=data_root,  # Root path of data
+        ann_file='test_list.json',  # Path of annotation file
+        test_mode=True,
+        pipeline=test_pipeline,
+    ))
+
+test_dataloader = val_dataloader
+
+val_evaluator = [
+    dict(type='SAD'),  # The name of metrics to evaluate
+    dict(type='MattingMSE'),  # The name of metrics to evaluate
+    dict(type='GradientError'),  # The name of metrics to evaluate
+    dict(type='ConnectivityError'),  # The name of metrics to evaluate
+]
+test_evaluator = val_evaluator
+
+train_cfg = dict(
+    type='IterBasedTrainLoop',  # The name of train loop type
+    max_iters=1_000_000,  # The number of total iterations
+    val_interval=40000,  # The number of validation interval iterations
+)
+val_cfg = dict(type='ValLoop')  # The name of validation loop type
+test_cfg = dict(type='TestLoop')  # The name of test loop type
+
+# optimizer
+optim_wrapper = dict(
+    dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=0.00001),
+    )
+)  # Config used to build optimizer, support all the optimizers in PyTorch whose arguments are also the same as those in PyTorch.
+
+default_scope = 'mmedit'  # Used to set registries location
+save_dir = './work_dirs'  # Directory to save the model checkpoints and logs for the current experiments.
+
+default_hooks = dict(  # Used to build default hooks
+    timer=dict(type='IterTimerHook'),
+    logger=dict(type='LoggerHook', interval=100),  # Config to register logger hook
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    checkpoint=dict(  # Config to set the checkpoint hook
+        type='CheckpointHook',
+        interval=40000,  # The save interval is 40000 iterations.
+        by_epoch=False,  # Count by iterations.
+        out_dir=save_dir),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+)
+
+env_cfg = dict(  # Parameters to setup distributed training, the port can also be set
+    cudnn_benchmark=False,
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=4),
+    dist_cfg=dict(backend='nccl'),
+)
+
+log_level = 'INFO'  # The level of logging
+log_processor = dict(type='LogProcessor', by_epoch=False)  # Used to build log processor
+
+load_from = None  # load models as a pre-trained model from a given path. This will not resume training.
+resume = False  # Resume checkpoints from a given path, the training will be resumed from the epoch when the checkpoint's is saved.
+```
+
+### An example of config system for restoration
+
+To help the users have a basic idea of a complete config, we make a brief comments on the config of the EDSR model we implemented as the following. For more detailed usage and the corresponding alternative for each modules, please refer to the API documentation.
+
+```python
+exp_name = 'edsr_x2c64b16_1x16_300k_div2k'  # The experiment name
+work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
+
+load_from = None  # based on pre-trained x2 model
+
+scale = 2  # Scale factor for upsampling
+# model settings
+model = dict(
+    type='BaseEditModel',  # Name of the model
+    generator=dict(  # Config of the generator
+        type='EDSRNet',  # Type of the generator
+        in_channels=3,  # Channel number of inputs
+        out_channels=3,  # Channel number of outputs
+        mid_channels=64,  # Channel number of intermediate features
+        num_blocks=16,  # Block number in the trunk network
+        upscale_factor=scale, # Upsampling factor
+        res_scale=1,  # Used to scale the residual in residual block
+        rgb_mean=(0.4488, 0.4371, 0.4040),  # Image mean in RGB orders
+        rgb_std=(1.0, 1.0, 1.0)),  # Image std in RGB orders
+    pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean')  # Config for pixel loss
+    train_cfg=dict(),  # Config of training model.
+    test_cfg=dict(),  # Config of testing model.
+    data_preprocessor=dict(  # The Config to build data preprocessor
+        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
+                                                             255.]))
+
+train_pipeline = [  # Training data processing pipeline
+    dict(type='LoadImageFromFile',  # Load images from files
+        key='img',  # Keys in results to find corresponding path
+        color_type='color',  # Color type of image
+        channel_order='rgb',  # Channel order of image
+        imdecode_backend='cv2'),  # decode backend
+    dict(type='LoadImageFromFile',  # Load images from files
+        key='gt',  # Keys in results to find corresponding path
+        color_type='color',  # Color type of image
+        channel_order='rgb',  # Channel order of image
+        imdecode_backend='cv2'),  # decode backend
+    dict(type='SetValues', dictionary=dict(scale=scale)),  # Set value to destination keys
+    dict(type='PairedRandomCrop', gt_patch_size=96),  # Paired random crop
+    dict(type='Flip',  # Flip images
+        keys=['lq', 'gt'],  # Images to be flipped
+        flip_ratio=0.5,  # Flip ratio
+        direction='horizontal'),  # Flip direction
+    dict(type='Flip',  # Flip images
+        keys=['lq', 'gt'],  # Images to be flipped
+        flip_ratio=0.5,  # Flip ratio
+        direction='vertical'),  # Flip direction
+    dict(type='RandomTransposeHW',  # Random transpose h and w for images
+        keys=['lq', 'gt'],  # Images to be transposed
+        transpose_ratio=0.5  # Transpose ratio
+        ),
+    dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
+    dict(type='PackEditInputs')  # The config of collecting data from current pipeline
+]
+test_pipeline = [  # Test pipeline
+    dict(type='LoadImageFromFile',  # Load images from files
+        key='img',  # Keys in results to find corresponding path
+        color_type='color',  # Color type of image
+        channel_order='rgb',  # Channel order of image
+        imdecode_backend='cv2'),  # decode backend
+    dict(type='LoadImageFromFile',  # Load images from files
+        key='gt',  # Keys in results to find corresponding path
+        color_type='color',  # Color type of image
+        channel_order='rgb',  # Channel order of image
+        imdecode_backend='cv2'),  # decode backend
+    dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
+    dict(type='PackEditInputs')  # The config of collecting data from current pipeline
+]
+
+# dataset settings
+dataset_type = 'BasicImageDataset'  # The type of dataset
+data_root = 'data'  # Root path of data
+
+train_dataloader = dict(
+    num_workers=4,  # The number of workers to pre-fetch data for each single GPU
+    persistent_workers=False,  # Whether maintain the workers Dataset instances alive
+    sampler=dict(type='InfiniteSampler', shuffle=True),  # The type of data sampler
+    dataset=dict(  # Train dataset config
+        type=dataset_type,  # Type of dataset
+        ann_file='meta_info_DIV2K800sub_GT.txt',  # Path of annotation file
+        metainfo=dict(dataset_type='div2k', task_name='sisr'),
+        data_root=data_root + '/DIV2K',  # Root path of data
+        data_prefix=dict(  # Prefix of image path
+            img='DIV2K_train_LR_bicubic/X2_sub', gt='DIV2K_train_HR_sub'),
+        filename_tmpl=dict(img='{}', gt='{}'),  # Filename template
+        pipeline=train_pipeline))
+val_dataloader = dict(
+    num_workers=4,  # The number of workers to pre-fetch data for each single GPU
+    persistent_workers=False,  # Whether maintain the workers Dataset instances alive
+    drop_last=False,  # Whether drop the last incomplete batch
+    sampler=dict(type='DefaultSampler', shuffle=False),  # The type of data sampler
+    dataset=dict(  # Validation dataset config
+        type=dataset_type,  # Type of dataset
+        metainfo=dict(dataset_type='set5', task_name='sisr'),
+        data_root=data_root + '/Set5',  # Root path of data
+        data_prefix=dict(img='LRbicx2', gt='GTmod12'),  # Prefix of image path
+        pipeline=test_pipeline))
+test_dataloader = val_dataloader
+
+val_evaluator = [
+    dict(type='MAE'),  # The name of metrics to evaluate
+    dict(type='PSNR', crop_border=scale),  # The name of metrics to evaluate
+    dict(type='SSIM', crop_border=scale),  # The name of metrics to evaluate
+]
+test_evaluator = val_evaluator
+
+train_cfg = dict(
+    type='IterBasedTrainLoop', max_iters=300000, val_interval=5000)  # Config of train loop type
+val_cfg = dict(type='ValLoop')  # The name of validation loop type
+test_cfg = dict(type='TestLoop')  # The name of test loop type
+
+# optimizer
+optim_wrapper = dict(
+    dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=0.00001),
+    )
+)  # Config used to build optimizer, support all the optimizers in PyTorch whose arguments are also the same as those in PyTorch.
+
+param_scheduler = dict(  # Config of learning policy
+    type='MultiStepLR', by_epoch=False, milestones=[200000], gamma=0.5)
+
+default_hooks = dict(  # Used to build default hooks
+    checkpoint=dict(  # Config to set the checkpoint hook
+        type='CheckpointHook',
+        interval=5000,  # The save interval is 5000 iterations
+        save_optimizer=True,
+        by_epoch=False,  # Count by iterations
+        out_dir=save_dir,
+    ),
+    timer=dict(type='IterTimerHook'),
+    logger=dict(type='LoggerHook', interval=100),  # Config to register logger hook
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+)
+
+default_scope = 'mmedit'  # Used to set registries location
+save_dir = './work_dirs'  # Directory to save the model checkpoints and logs for the current experiments.
+
+env_cfg = dict(  # Parameters to setup distributed training, the port can also be set
+    cudnn_benchmark=False,
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=4),
+    dist_cfg=dict(backend='nccl'),
+)
+
+log_level = 'INFO'  # The level of logging
+log_processor = dict(type='LogProcessor', window_size=100, by_epoch=False)  # Used to build log processor
+
+load_from = None  # load models as a pre-trained model from a given path. This will not resume training.
+resume = False  # Resume checkpoints from a given path, the training will be resumed from the epoch when the checkpoint's is saved.
+```
