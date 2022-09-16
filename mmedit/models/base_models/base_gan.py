@@ -819,7 +819,7 @@ class BaseConditionalGAN(BaseGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        num_batches = inputs.shape[0]
+        num_batches = inputs['img'].shape[0]
 
         noise = self.noise_fn(num_batches=num_batches)
         fake_labels = self.label_fn(num_batches=num_batches)
@@ -858,7 +858,7 @@ class BaseConditionalGAN(BaseGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = inputs
+        real_imgs = inputs['img']
         real_labels = self.data_sample_to_label(data_samples)
         assert real_labels is not None, (
             'Cannot found \'gt_label\' in \'data_sample\'.')

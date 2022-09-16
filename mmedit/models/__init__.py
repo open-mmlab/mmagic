@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from ..registry import BACKBONES, COMPONENTS, LOSSES, MODELS
-from .base_models import (BaseEditModel, BaseGAN, BaseMattor,
-                          BaseTranslationModel, BasicInterpolator,
+from .base_models import (BaseConditionalGAN, BaseEditModel, BaseGAN,
+                          BaseMattor, BaseTranslationModel, BasicInterpolator,
                           ExponentialMovingAverage, InceptionV3,
                           MultiLayerDiscriminator, PatchDiscriminator)
 from .data_preprocessors import (EditDataPreprocessor, GenDataPreprocessor,
@@ -14,5 +14,5 @@ __all__ = [
     'EditDataPreprocessor', 'BasicInterpolator', 'MultiLayerDiscriminator',
     'BACKBONES', 'COMPONENTS', 'LOSSES', 'BaseMattor', 'MODELS',
     'BasicInterpolator', 'InceptionV3', 'ExponentialMovingAverage',
-    'GenDataPreprocessor', 'PatchDiscriminator'
+    'GenDataPreprocessor', 'PatchDiscriminator', 'BaseConditionalGAN'
 ]
