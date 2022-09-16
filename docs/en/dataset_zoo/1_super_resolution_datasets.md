@@ -4,14 +4,17 @@ It is recommended to symlink the dataset root to `$MMEDITING/data`. If your fold
 
 MMEditing supported super-resolution datasets:
 
-- Image Super-Resolution
-  - [DF2K_OST](#df2kost-dataset) \[ [Homepage](https://github.com/xinntao/Real-ESRGAN/blob/master/docs/Training.md) \]
+- [Image super-resolution](#image-super-resolution)
+  - [DF2K_OST](#df2k-ost-dataset) \[ [Homepage](https://github.com/xinntao/Real-ESRGAN/blob/master/docs/Training.md) \]
   - [DIV2K](#div2k-dataset) \[ [Homepage](https://data.vision.ee.ethz.ch/cvl/DIV2K/) \]
-- Video Super-Resolution
+- [Video super-resolution](#video-super-resolution)
   - [REDS](#reds-dataset) \[ [Homepage](https://seungjunnah.github.io/Datasets/reds.html) \]
+  - [Vid4](#vid4-dataset) \[ [Homepage](https://drive.google.com/file/d/1ZuvNNLgR85TV_whJoHM7uVb-XW1y70DW/view) \]
   - [Vimeo90K](#vimeo90k-dataset) \[ [Homepage](http://toflow.csail.mit.edu) \]
 
-## DF2K_OST Dataset
+## Image super-resolution
+
+### DF2K-OST dataset
 
 <!-- [DATASET] -->
 
@@ -45,12 +48,12 @@ mmediting
 ...
 ```
 
-### Crop sub-images
+#### Crop sub-images
 
 For faster IO, we recommend to crop the images to sub-images. We provide such a script:
 
 ```shell
-python tools/data/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
+python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
 ```
 
 The generated data is stored under `df2k_ost` and the data structure is as follows, where `_sub` indicates the sub-images.
@@ -67,15 +70,15 @@ mmediting
 ...
 ```
 
-### Prepare LMDB dataset for DF2K_OST
+#### Prepare LMDB dataset for DF2K_OST
 
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
+python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
 ```
 
-## DIV2K Dataset
+### DIV2K Dataset
 
 <!-- [DATASET] -->
 
@@ -121,12 +124,12 @@ mmediting
 │   │   ├── LRbicx4
 ```
 
-### Crop sub-images
+#### Crop sub-images
 
 For faster IO, we recommend to crop the DIV2K images to sub-images. We provide such a script:
 
 ```shell
-python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
+python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
 ```
 
 The generated data is stored under `DIV2K` and the data structure is as follows, where `_sub` indicates the sub-images.
@@ -152,7 +155,7 @@ mmediting
 ...
 ```
 
-### Prepare annotation list
+#### Prepare annotation list
 
 If you use the annotation mode for the dataset, you first need to prepare a specific `txt` file.
 
@@ -165,15 +168,17 @@ Example of an annotation file:
 0001_s002.png (480,480,3)
 ```
 
-### Prepare LMDB dataset for DIV2K
+#### Prepare LMDB dataset for DIV2K
 
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
+python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
 ```
 
-## REDS Dataset
+## Video super-resolution
+
+### REDS Dataset
 
 <!-- [DATASET] -->
 
@@ -196,7 +201,7 @@ The original val dataset (clip names from 000 to 029) are modified to avoid conf
 You can prepare the REDS dataset by running:
 
 ```shell
-python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS
+python tools/dataset_converters/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS
 ```
 
 ```text
@@ -219,20 +224,20 @@ mmediting
 │   │   ├── sharp_bicubic
 ```
 
-### Prepare LMDB dataset for REDS
+#### Prepare LMDB dataset for REDS
 
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
+python tools/dataset_converters/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
 
-### Crop to sub-images
+#### Crop to sub-images
 
 MMEditing also support cropping REDS images to sub-images for faster IO. We provide such a script:
 
 ```shell
-python tools/data/super-resolution/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
+python tools/dataset_converters/super-resolution/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
 ```
 
 The generated data is stored under `REDS` and the data structure is as follows, where `_sub` indicates the sub-images.
@@ -269,7 +274,7 @@ mmediting
 
 Note that by default `preprocess_reds_dataset.py` does not make lmdb and annotation file for the cropped dataset. You may need to modify the scripts a little bit for such operations.
 
-## Vid4 Dataset
+### Vid4 Dataset
 
 <!-- [DATASET] -->
 
@@ -291,7 +296,7 @@ The Vid4 dataset can be downloaded from [here](https://drive.google.com/file/d/1
 1. BIx4 contains images downsampled by bicubic interpolation
 2. BDx4 contains images blurred by Gaussian kernel with σ=1.6, followed by a subsampling every four pixels.
 
-## Vimeo90K Dataset
+### Vimeo90K Dataset
 
 <!-- [DATASET] -->
 
@@ -336,20 +341,20 @@ mmediting
 │   │   ├── meta_info_Vimeo90K_train_GT.txt
 ```
 
-### Prepare the annotation files for Vimeo90K dataset
+#### Prepare the annotation files for Vimeo90K dataset
 
 To prepare the annotation file for training, you need to download the official training list path for Vimeo90K from the official website, and run the following command:
 
 ```shell
-python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt
+python tools/dataset_converters/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt
 ```
 
 The annotation file for test is generated similarly.
 
-### Prepare LMDB dataset for Vimeo90K
+#### Prepare LMDB dataset for Vimeo90K
 
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt --gt-path ./data/Vimeo90K/GT --lq-path ./data/Vimeo90K/LQ  --make-lmdb
+python tools/dataset_converters/super-resolution/vimeo90k/preprocess_vimeo90k_dataset.py ./data/Vimeo90K/official_train_list.txt --gt-path ./data/Vimeo90K/GT --lq-path ./data/Vimeo90K/LQ  --make-lmdb
 ```

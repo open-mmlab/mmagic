@@ -73,6 +73,19 @@ Documentation
 
 .. toctree::
    :maxdepth: 1
+   :caption: Dataset Zoo
+
+   dataset_zoo/0_overview.md
+   dataset_zoo/1_super_resolution_datasets.md
+   dataset_zoo/2_inpainting_datasets.md
+   dataset_zoo/3_matting_datasets.md
+   dataset_zoo/4_video_interpolation_datasets.md
+   dataset_zoo/5_unconditional_gans_datasets.md
+   dataset_zoo/6_image_translation_datasets.md
+
+
+.. toctree::
+   :maxdepth: 1
    :caption: Migration from MMEdit 0.x
 
    migration/1_overview.md
