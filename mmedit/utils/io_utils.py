@@ -37,6 +37,7 @@ def download_from_url(url,
                       dest_dir=MMGEN_CACHE_DIR,
                       hash_prefix=None):
     """Download object at the given URL to a local path.
+
     Args:
         url (str): URL of the object to download.
         dest_path (str): Path where object will be saved.

@@ -21,7 +21,6 @@ class GenDataPreprocessor(ImgDataPreprocessor):
     of this classes should be dict which keys are `inputs` and `data_samples`.
 
     Besides to process tensor `inputs`, this class support dict as `inputs`.
-
     - If the value is `Tensor` and the corresponding key is not contained in
     :attr:`_NON_IMAGE_KEYS`, it will be processed as image tensor.
     - If the value is `Tensor` and the corresponding key belongs to

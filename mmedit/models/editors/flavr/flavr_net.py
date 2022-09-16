@@ -13,6 +13,7 @@ class FLAVRNet(BaseModule):
 
     Paper:
         FLAVR: Flow-Agnostic Video Representations for Fast Frame Interpolation
+
     Ref repo: https://github.com/tarun005/FLAVR
 
     Args:

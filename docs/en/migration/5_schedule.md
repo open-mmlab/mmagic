@@ -47,43 +47,4 @@ test_cfg = dict(type='TestLoop')  # The name of test loop type
 </thead>
 </table>
 
-In 0.x version, MMGeneration use `lr_config` field to define the learning reate scheduler. In 1.x version, we use [`param_scheduler`](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/param_scheduler.md) to replace it.
-
-<table class="docutils">
-<thead>
-  <tr>
-    <th> 0.x Version </th>
-    <th> 1.x Version </th>
-<tbody>
-<tr>
-<td valign="top">
-
-```python
-lr_config = dict(
-    policy='Linear',
-    by_epoch=False,
-    target_lr=0,
-    start=135000,
-    interval=1350)
-```
-
-</td>
-<td valign="top">
-
-```python
-param_scheduler = dict(
-    type='LinearLrInterval',
-    interval=1350,
-    by_epoch=False,
-    start_factor=0.0002,
-    end_factor=0,
-    begin=135000,
-    end=270000)
-```
-
-</td>
-</tr>
-</thead>
-</table>
-
 > More details of schedule settings are shown in [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/migration/migrate_param_scheduler_from_mmcv.md).

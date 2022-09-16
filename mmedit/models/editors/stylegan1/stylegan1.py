@@ -19,7 +19,7 @@ TrainInput = Union[dict, Tensor]
 @MODELS.register_module()
 class StyleGAN1(ProgressiveGrowingGAN):
     """Implementation of `A Style-Based Generator Architecture for Generative
-    Adversarial Networks.
+    Adversarial Networks`.
 
     <https://openaccess.thecvf.com/content_CVPR_2019/html/Karras_A_Style-Based_Generator_Architecture_for_Generative_Adversarial_Networks_CVPR_2019_paper.html>`_  # noqa
     (StyleGANv1). This class is inheriant from

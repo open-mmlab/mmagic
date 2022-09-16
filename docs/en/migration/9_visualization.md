@@ -1,6 +1,6 @@
 # Migration of Visualization
 
-In 0.x, MMGeneration use `MMGenVisualizationHook` and `VisualizeUnconditionalSamples` to visualization generating results in training process. In 1.x version, we unify the function of those hooks into `GenVisualizationHook`. Additionally, follow the design of MMEngine, we implement `GenVisualizer` and a group of `VisBackend` to draw and save the visualization results.
+In 0.x, MMEditing use `VisualizationHook` to visualize results in training process. In 1.x version, we unify the function of those hooks into `BasicVisualizationHook` / `GenVisualizationHook`. Additionally, follow the design of MMEngine, we implement `ConcatImageVisualizer` / `GenVisualizer` and a group of `VisBackend` to draw and save the visualization results.
 
 <table class="docutils">
 <thead>
@@ -12,12 +12,12 @@ In 0.x, MMGeneration use `MMGenVisualizationHook` and `VisualizeUnconditionalSam
 <td valign="top">
 
 ```python
-custom_hooks = [
-    dict(
-        type='VisualizeUnconditionalSamples',
-        output_dir='training_samples',
-        interval=1000)
-]
+visual_config = dict(
+    type='VisualizationHook',
+    output_dir='visual',
+    interval=1000,
+    res_name_list=['gt_img', 'masked_img', 'fake_res', 'fake_img'],
+)
 ```
 
 </td>
@@ -25,15 +25,14 @@ custom_hooks = [
 <td valign="top">
 
 ```python
-custom_hooks = [
-    dict(
-        type='GenVisualizationHook',
-        interval=5000,
-        fixed_input=True,
-        vis_kwargs_list=dict(type='GAN', name='fake_img'))
-]
-vis_backends = [dict(type='GenVisBackend')]
-visualizer = dict(type='GenVisualizer', vis_backends=vis_backends)
+vis_backends = [dict(type='LocalVisBackend')]
+visualizer = dict(
+    type='ConcatImageVisualizer',
+    vis_backends=vis_backends,
+    fn_key='gt_path',
+    img_keys=['gt_img', 'input', 'pred_img'],
+    bgr2rgb=True)
+custom_hooks = [dict(type='BasicVisualizationHook', interval=1)]
 ```
 
 </td>
@@ -42,4 +41,4 @@ visualizer = dict(type='GenVisualizer', vis_backends=vis_backends)
 </thead>
 </table>
 
-To learn more about the visualization function, please refers to [this tutorial](./user_guides/5_visualization.md).
+To learn more about the visualization function, please refers to [this tutorial](/docs/en/user_guides/5_visualization.md).

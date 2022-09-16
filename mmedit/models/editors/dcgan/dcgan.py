@@ -14,11 +14,10 @@ from ...base_models import BaseGAN
 @MODELS.register_module()
 class DCGAN(BaseGAN):
     """Impelmentation of `Unsupervised Representation Learning with Deep
-    Convolutional Generative Adversarial Networks.
-
-    <https://arxiv.org/abs/1511.06434>`_ (DCGAN).
+    Convolutional Generative Adversarial Networks`.
 
     Paper link:
+        <https://arxiv.org/abs/1511.06434>`_ (DCGAN).
 
     Detailed architecture can be found in
     :class:~`mmgen.models.architectures.dcgan.generator_discriminator.DCGANGenerator`  # noqa

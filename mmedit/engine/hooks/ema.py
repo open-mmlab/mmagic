@@ -24,6 +24,7 @@ class ExponentialMovingAverageHook(Hook):
     updated as a moving average of the trained weights in the original model.
     In general, the model with moving averaged weights achieves better
     performance.
+
     Args:
         module_keys (str | tuple[str]): The name of the ema model. Note that we
             require these keys are followed by '_ema' so that we can easily

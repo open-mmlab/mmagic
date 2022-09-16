@@ -14,6 +14,7 @@ class FaceIdLoss(nn.Module):
 
     .. code-block:: python
         :linenos:
+
         data_info = dict(
             gt='real_imgs',
             pred='fake_imgs')
