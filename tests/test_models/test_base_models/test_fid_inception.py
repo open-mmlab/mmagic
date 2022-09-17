@@ -40,4 +40,4 @@ def test_load_fid_inception():
 
     inputs = torch.randn(1, 3, 299, 299)
     outputs = fid_net(inputs)
-    print(outputs)
+    assert outputs.shape == (1, 1008)
