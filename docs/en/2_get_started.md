@@ -90,6 +90,7 @@ python -c "import mmedit; print(mmedit.__version__)"
 
 The installation is successful if the version number is output correctly.
 
+```{note}
 You may be curious about what `-e .` means when supplied with `pip install`.
 Here is the description:
 
@@ -101,6 +102,7 @@ Here is the description:
 - `.` means code in this directory
 
 You can also use `pip install -e .[all]`, which will install more dependencies, especially for pre-commit hooks and unittests.
+```
 
 ### Customize installation
 
