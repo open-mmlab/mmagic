@@ -49,19 +49,22 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
         super().__init__(data_preprocessor=data_preprocessor)
 
         # get valid noise_size
-        self.noise_size = get_valid_noise_size(noise_size, generator)
+        noise_size = get_valid_noise_size(noise_size, generator)
 
         # build generator
         if isinstance(generator, dict):
             self._gen_cfg = deepcopy(generator)
             # build generator with default `noise_size` and `num_classes`
             gen_args = dict()
-            if self.noise_size:
-                gen_args['noise_size'] = self.noise_size
+            if noise_size:
+                gen_args['noise_size'] = noise_size
             if hasattr(self, 'num_classes'):
                 gen_args['num_classes'] = self.num_classes
             generator = MODULES.build(generator, default_args=gen_args)
         self.generator = generator
+        # get noise_size from generator because generator may have default
+        # `noise_size` value
+        self.noise_size = getattr(self.generator, 'noise_size', noise_size)
 
         # build discriminator
         if discriminator:
@@ -150,25 +153,25 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
         # build pre-defined losses
         gan_loss = loss_config.get('gan_loss', None)
         if gan_loss is not None:
-            self.gan_loss = MODULES.build(loss_config)
+            self.gan_loss = MODULES.build(gan_loss)
         else:
             self.gan_loss = None
 
         disc_auxiliary_loss = loss_config.get('disc_auxiliary_loss', None)
-        if 'disc_auxiliary_loss' in loss_config:
-            self.disc_auxiliary_losses = MODULES.build(disc_auxiliary_loss)
-            if not isinstance(self.disc_auxiliary_losses, nn.ModuleList):
-                self.disc_auxiliary_losses = nn.ModuleList(
-                    [self.disc_auxiliary_losses])
+        if disc_auxiliary_loss:
+            if not isinstance(disc_auxiliary_loss, list):
+                disc_auxiliary_loss = [disc_auxiliary_loss]
+            self.disc_auxiliary_losses = nn.ModuleList(
+                [MODULES.build(loss) for loss in disc_auxiliary_loss])
         else:
             self.disc_auxiliary_losses = None
 
         gen_auxiliary_loss = loss_config.get('gen_auxiliary_loss', None)
         if gen_auxiliary_loss:
-            self.gen_auxiliary_losses = MODULES.build(gen_auxiliary_loss)
-            if not isinstance(self.gen_auxiliary_losses, nn.ModuleList):
-                self.gen_auxiliary_losses = nn.ModuleList(
-                    [self.gen_auxiliary_losses])
+            if not isinstance(gen_auxiliary_loss, list):
+                gen_auxiliary_loss = [gen_auxiliary_loss]
+            self.gen_auxiliary_losses = nn.ModuleList(
+                [MODULES.build(loss) for loss in gen_auxiliary_loss])
         else:
             self.gen_auxiliary_losses = None
 
@@ -473,7 +476,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             out_dict['disc_pred_fake_g'], target_is_real=True, is_disc=False)
 
         # gen auxiliary loss
-        if self.with_gen_auxiliary_loss:
+        if self.gen_auxiliary_losses is not None:
             for loss_module in self.gen_auxiliary_losses:
                 loss_ = loss_module(out_dict)
                 if loss_ is None:
@@ -485,7 +488,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                     )] = losses_dict[loss_module.loss_name()] + loss_
                 else:
                     losses_dict[loss_module.loss_name()] = loss_
-        loss, log_var = self._parse_losses(losses_dict)
+        loss, log_var = self.parse_losses(losses_dict)
 
         return loss, log_var
 
@@ -502,7 +505,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             out_dict['disc_pred_real'], target_is_real=True, is_disc=True)
 
         # disc auxiliary loss
-        if self.with_disc_auxiliary_loss:
+        if self.disc_auxiliary_losses is not None:
             for loss_module in self.disc_auxiliary_losses:
                 loss_ = loss_module(out_dict)
                 if loss_ is None:
@@ -518,7 +521,6 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
 
         return loss, log_var
 
-    # @abstractmethod
     def train_generator(self, inputs: dict, data_samples: List[EditDataSample],
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Training function for discriminator. All GANs should implement this
@@ -817,7 +819,7 @@ class BaseConditionalGAN(BaseGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        num_batches = inputs.shape[0]
+        num_batches = inputs['img'].shape[0]
 
         noise = self.noise_fn(num_batches=num_batches)
         fake_labels = self.label_fn(num_batches=num_batches)
@@ -856,7 +858,7 @@ class BaseConditionalGAN(BaseGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = inputs
+        real_imgs = inputs['img']
         real_labels = self.data_sample_to_label(data_samples)
         assert real_labels is not None, (
             'Cannot found \'gt_label\' in \'data_sample\'.')
