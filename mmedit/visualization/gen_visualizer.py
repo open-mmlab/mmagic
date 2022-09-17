@@ -299,10 +299,10 @@ class GenVisualizer(Visualizer):
                        **kwargs) -> None:
         """Draw datasample and save to all backends.
 
-        If GT and prediction are plotted at the same time, they 
+        If GT and prediction are plotted at the same time, they
         are displayed in a stitched image where the left image is the ground truth and the right image is the prediction.
 
-        If ``show`` is True, all storage backends are ignored, 
+        If ``show`` is True, all storage backends are ignored,
         and the images will be displayed in a local window.
 
         Args:

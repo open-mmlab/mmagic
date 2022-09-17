@@ -15,8 +15,8 @@ except ImportError:
 
 @TRANSFORMS.register_module()
 class GenerateCoordinateAndCell(BaseTransform):
-    """Generate coordinate and cell.
-    Generate coordinate from the desired size of SR image.
+    """Generate coordinate and cell. Generate coordinate from the desired size
+    of SR image.
 
     Train or val:
 
@@ -48,7 +48,6 @@ class GenerateCoordinateAndCell(BaseTransform):
     #. results['lq'].shape[-2:] * scale
 
     #. target_size
-    
     """
 
     def __init__(self,

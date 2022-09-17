@@ -110,7 +110,6 @@ class EditDataSample(BaseDataElement):
                                 [0.8139, 0.0908,  ..., 0.4964, 0.9672]]])
                 ) at 0x1f6ae000af0>
         ) at 0x1f6a5a99a00>
-
     """
 
     @property

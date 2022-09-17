@@ -70,7 +70,7 @@ class BasicImageDataset(BaseDataset):
     Note:
 
         Assume the file structure as the following:
-        
+
         .. code-block:: none
 
             mmediting (root)
