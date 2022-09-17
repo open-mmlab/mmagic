@@ -62,6 +62,26 @@ class TestVisualizationHook(TestCase):
         img = mmcv.imread('work_dirs/vis_data/vis_image/rgb_1.png')
         assert img.shape == (64, 160, 3)
 
+        hook._on_train = hook._on_test = hook._on_val = True
+        runner.visualizer = Mock()
+        runner.visualizer.add_datasample = Mock()
+        hook._after_iter(
+            runner, 1, self.data_batch, self.outputs, mode='train')
+        runner.visualizer.add_datasample.assert_called
+        hook._after_iter(runner, 1, self.data_batch, self.outputs, mode='val')
+        runner.visualizer.add_datasample.assert_called
+        hook._after_iter(runner, 1, self.data_batch, self.outputs, mode='test')
+        assert runner.visualizer.assert_called
+
+        hook._on_train = hook._on_test = hook._on_val = False
+        hook._after_iter(
+            runner, 1, self.data_batch, self.outputs, mode='train')
+        assert runner.visualizer.assert_not_called
+        hook._after_iter(runner, 1, self.data_batch, self.outputs, mode='val')
+        assert runner.visualizer.assert_not_called
+        hook._after_iter(runner, 1, self.data_batch, self.outputs, mode='test')
+        assert runner.visualizer.assert_not_called
+
 
 class TestGenVisualizationHook(TestCase):
 
