@@ -71,30 +71,32 @@ class BasicImageDataset(BaseDataset):
 
         Assume the file structure as the following:
 
-        mmediting (root)
-        ├── mmedit
-        ├── tools
-        ├── configs
-        ├── data
-        │   ├── DIV2K
-        │   │   ├── DIV2K_train_HR
-        │   │   │   ├── image.png
-        │   │   ├── DIV2K_train_LR_bicubic
-        │   │   │   ├── X2
-        │   │   │   ├── X3
-        │   │   │   ├── X4
-        │   │   │   │   ├── image_x4.png
-        │   │   ├── DIV2K_valid_HR
-        │   │   ├── DIV2K_valid_LR_bicubic
-        │   │   │   ├── X2
-        │   │   │   ├── X3
-        │   │   │   ├── X4
-        │   ├── places
-        │   │   ├── test_set
-        │   │   ├── train_set
-        |   |   ├── meta
-        |   |   |    ├── Places365_train.txt
-        |   |   |    ├── Places365_val.txt
+        .. code-block:: none
+
+            mmediting (root)
+            ├── mmedit
+            ├── tools
+            ├── configs
+            ├── data
+            │   ├── DIV2K
+            │   │   ├── DIV2K_train_HR
+            │   │   │   ├── image.png
+            │   │   ├── DIV2K_train_LR_bicubic
+            │   │   │   ├── X2
+            │   │   │   ├── X3
+            │   │   │   ├── X4
+            │   │   │   │   ├── image_x4.png
+            │   │   ├── DIV2K_valid_HR
+            │   │   ├── DIV2K_valid_LR_bicubic
+            │   │   │   ├── X2
+            │   │   │   ├── X3
+            │   │   │   ├── X4
+            │   ├── places
+            │   │   ├── test_set
+            │   │   ├── train_set
+            |   |   ├── meta
+            |   |   |    ├── Places365_train.txt
+            |   |   |    ├── Places365_val.txt
 
     Examples:
 

@@ -69,6 +69,7 @@ docs/en/_build/
 docs/en/_tmp/
 docs/zh_cn/_build/
 docs/zh_cn/_tmp/
+requirements/src/
 
 # PyBuilder
 target/

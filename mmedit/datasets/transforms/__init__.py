@@ -49,5 +49,5 @@ __all__ = [
     'FormatTrimap', 'TransformTrimap', 'GenerateTrimap',
     'GenerateTrimapWithDistTransform', 'CompositeFg', 'RandomLoadResizeBg',
     'MergeFgAndBg', 'PerturbBg', 'RandomJitter', 'LoadPairedImageFromFile',
-    'CenterCropLongEdge', 'RandomCropLongEdge', NumpyPad
+    'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad'
 ]

@@ -18,7 +18,7 @@ The structure of this guide are as follows:
 
 You are supposed to download datasets from their homepage first.
 Most of datasets are available after downloaded, so you only need to make sure the folder structure is correct and further preparation is not necessary.
-For example, you can simply prepare [Vimeo90K-triplet](./video_interpolation_datasets.md#Vimeo90K-triplet-Dataset) datasets by downloading datasets from [homepage](http://toflow.csail.mit.edu/).
+For example, you can simply prepare [Vimeo90K-triplet](../dataset_zoo/4_video_interpolation_datasets.md#vimeo90K-triplet-dataset) datasets by downloading datasets from [homepage](http://toflow.csail.mit.edu/).
 
 ## Prepare datasets
 

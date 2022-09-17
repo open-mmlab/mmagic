@@ -28,7 +28,8 @@ class GenVisualizer(Visualizer):
         save_dir (str, optional): Save file dir for all storage backends.
             If it is None, the backend storage will not save any data.
 
-    Examples:
+    Examples::
+
         >>> # Draw image
         >>> vis = GenVisualizer()
         >>> vis.add_datasample(
@@ -298,11 +299,11 @@ class GenVisualizer(Visualizer):
                        **kwargs) -> None:
         """Draw datasample and save to all backends.
 
-        - If GT and prediction are plotted at the same time, they are
-        displayed in a stitched image where the left image is the
-        ground truth and the right image is the prediction.
-        - If ``show`` is True, all storage backends are ignored, and
-        the images will be displayed in a local window.
+        If GT and prediction are plotted at the same time, they
+        are displayed in a stitched image where the left image is the ground truth and the right image is the prediction.
+
+        If ``show`` is True, all storage backends are ignored,
+        and the images will be displayed in a local window.
 
         Args:
             name (str): The image identifier.

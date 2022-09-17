@@ -406,7 +406,7 @@ After implementing the network architecture and the forward loop of SRCNN,
 now we can create a new file `configs/srcnn/srcnn_x4k915_g1_1000k_div2k.py`
 to set the configurations needed by training SRCNN.
 
-In the configuration file, we need to specify the parameters of our model, `class BaseEditModel`, including the generator network architecture, loss function, additional training and testing configuration, and data preprocessor of input tensors. Please refer to the [Introduction to the loss in MMEditing](../losses.md) for more details of losses in MMEditing.
+In the configuration file, we need to specify the parameters of our model, `class BaseEditModel`, including the generator network architecture, loss function, additional training and testing configuration, and data preprocessor of input tensors. Please refer to the [Introduction to the loss in MMEditing](./4_losses.md) for more details of losses in MMEditing.
 
 ```python
 # model settings
@@ -425,7 +425,7 @@ model = dict(
     ))
 ```
 
-We also need to specify the training dataloader and testing dataloader according to [create your own dataloader](advanced_tutorial/dataset.md).
+We also need to specify the training dataloader and testing dataloader according to [create your own dataloader](../dataset_zoo/0_overview.md).
 Finally we can start training our own model by：
 
 ```python

@@ -14,7 +14,7 @@
 
 - Number of algorithms: 5
 
-  - [AOT-GAN](/configs/AOT-GAN/README.md) Aggregated Contextual Transformations for High-Resolution Image Inpainting
+  - [AOT-GAN](../../configs/AOT-GAN/README.md) Aggregated Contextual Transformations for High-Resolution Image Inpainting
 
   - [DeepFillv2](/configs/deepfillv2/README.md) Free-Form Image Inpainting With Gated Convolution
 

@@ -26,9 +26,19 @@ hooks
 .. automodule:: mmedit.engine.hooks
     :members:
 
+logging
+^^^^^^^^^^
+.. automodule:: mmedit.engine.logging
+    :members:
+
 optimizers
 ^^^^^^^^^^
 .. automodule:: mmedit.engine.optimizers
+    :members:
+
+runner
+^^^^^^^^^^
+.. automodule:: mmedit.engine.runner
     :members:
 
 schedulers
@@ -83,6 +93,13 @@ utils
 editors
 ^^^^^^^^^^^^
 .. automodule:: mmedit.models.editors
+    :members:
+
+
+mmedit.structures
+--------------------
+
+.. automodule:: mmedit.structures
     :members:
 
 
