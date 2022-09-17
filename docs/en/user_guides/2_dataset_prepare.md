@@ -18,11 +18,11 @@ The structure of this guide are as follows:
 
 You are supposed to download datasets from their homepage first.
 Most of datasets are available after downloaded, so you only need to make sure the folder structure is correct and further preparation is not necessary.
-For example, you can simply prepare [Vimeo90K-triplet](../dataset_zoo/4_video_interpolation_datasets.md#vimeo90K-triplet-dataset) datasets by downloading datasets from [homepage](http://toflow.csail.mit.edu/).
+For example, you can simply prepare Vimeo90K-triplet datasets by downloading datasets from [homepage](http://toflow.csail.mit.edu/).
 
 ## Prepare datasets
 
-Some datasets need to be preprocessed before training or testing. We support many scripts to prepare datasets in [tools/dataset_converters](/tools/dataset_converters). And you can follow the tutorials of every dataset to run scripts.
+Some datasets need to be preprocessed before training or testing. We support many scripts to prepare datasets in [tools/dataset_converters](https://github.com/open-mmlab/mmediting/tree/1.x/tools/dataset_converters). And you can follow the tutorials of every dataset to run scripts.
 For example, we recommend to crop the DIV2K images to sub-images. We provide a script to prepare cropped DIV2K dataset. You can run following command:
 
 ```shell
@@ -33,4 +33,6 @@ python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.
 
 We support detailed tutorials and split them according to different tasks.
 
-Please check our [the corresponding tutorials](../dataset_zoo/0_overview.md) for data preparation of different tasks.
+Please check our [dataset zoo](../dataset_zoo/0_overview.md) for data preparation of different tasks.
+
+If you're interested in more details of datasets in MMEditing, please check the [advanced guides](../advanced_guides/2_dataset.md).

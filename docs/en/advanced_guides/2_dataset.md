@@ -26,7 +26,7 @@ In `prepare_data`, data loading pipeline consists of the following steps:
 
 ### BasicImageDataset
 
-[BasicImageDataset](/mmedit/datasets/basic_image_dataset.py)
+**BasicImageDataset** `mmedit.datasets.BasicImageDataset`
 General image dataset designed for low-level vision tasks with image, such as image super-resolution, inpainting and unconditional image generation. The annotation file is optional.
 
 If use annotation file, the annotation format can be shown as follows.
@@ -121,7 +121,7 @@ dataset = BasicImageDataset(
 
 ### BasicFramesDataset
 
-[BasicFramesDataset](/mmedit/datasets/basic_frames_dataset.py)
+**BasicFramesDataset** `mmedit.datasets.BasicFramesDataset`
 General frames dataset designed for low-level vision tasks with frames, such as video super-resolution and video frame interpolation. The annotation file is optional.
 
 If use annotation file, the annotation format can be shown as follows.
@@ -200,7 +200,7 @@ dataset = BasicFramesDataset(
 
 ### AdobeComp1kDataset
 
-[AdobeComp1kDataset](/mmedit/datasets/comp1k_dataset.py)
+**AdobeComp1kDataset** `mmedit.datasets.AdobeComp1kDataset`
 Adobe composition-1k dataset.
 
 The dataset loads (alpha, fg, bg) data and apply specified transforms to
@@ -209,7 +209,7 @@ composited merged image in pipeline.
 
 Example for online comp-1k dataset:
 
-```json
+```md
 [
    {
        "alpha": 'alpha/000.png',
@@ -226,7 +226,7 @@ Example for online comp-1k dataset:
 
 Example for offline comp-1k dataset:
 
-```json
+```md
 [
   {
       "alpha": 'alpha/000.png',
@@ -376,9 +376,9 @@ def prepare_test_data(self, idx):
 
 If you want to create a dataset for a new low level CV task (e.g. denoise, derain, defog, and de-reflection) or existing dataset format doesn't meet your need, you can reorganize new data formats to existing format.
 
-Or create a new dataset in [mmedit/datasets](/mmedit/datasets) to load the data.
+Or create a new dataset in `mmedit/datasets` to load the data.
 
-Inheriting from the base class of datasets such as [BasicImageDataset](/mmedit/datasets/basic_image_dataset.py) and [BasicFramesDataset](/mmedit/datasets/basic_frames_dataset.py) will make it easier to create a new dataset.
+Inheriting from the base class of datasets such as `BasicImageDataset` and `BasicFramesDataset` will make it easier to create a new dataset.
 
 And you can create a new dataset inherited from [BaseDataset](https://github.com/open-mmlab/mmengine/blob/main/mmengine/dataset/base_dataset.py) which is the base class of datasets in [MMEngine](https://github.com/open-mmlab/mmengine).
 

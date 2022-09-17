@@ -1,167 +1,328 @@
-# OVERVIEW
+# Overview
 
-- Number of checkpoints: 149
+- Number of checkpoints: 146
+- Number of configs: 135
+- Number of papers: 40
+  - ALGORITHM: 41
+- Tasks:
+  - matting
+  - video interpolation
+  - inpainting
+  - video super-resolution
+  - image super-resolution
 
-- Number of configs: 133
+For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
-- Number of algorithms: 44
+## AOT-GAN (TVCG'2021)
 
-# Inpainting Models
+- Tasks: inpainting
+- Number of checkpoints: 1
+- Number of configs: 1
+- Number of papers: 1
+  - \[ALGORITHM\] Aggregated Contextual Transformations for High-Resolution Image Inpainting ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/aot_gan/README.md#citation))
 
-- Number of checkpoints: 8
+## BasicVSR (CVPR'2021)
 
-- Number of configs: 9
+- Tasks: video super-resolution
+- Number of checkpoints: 3
+- Number of configs: 3
+- Number of papers: 1
+  - \[ALGORITHM\] Basicvsr: The Search for Essential Components in Video Super-Resolution and Beyond ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/basicvsr/README.md#citation))
 
-- Number of algorithms: 5
+## BasicVSR++ (CVPR'2022)
 
-  - [AOT-GAN](../../configs/AOT-GAN/README.md) Aggregated Contextual Transformations for High-Resolution Image Inpainting
+- Tasks: video super-resolution
+- Number of checkpoints: 7
+- Number of configs: 7
+- Number of papers: 1
+  - \[ALGORITHM\] Basicvsr++: Improving Video Super-Resolution With Enhanced Propagation and Alignment ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/basicvsr_pp/README.md#citation))
 
-  - [DeepFillv2](/configs/deepfillv2/README.md) Free-Form Image Inpainting With Gated Convolution
-
-  - [DeepFillv1](/configs/deepfillv1/README.md) Generative Image Inpainting With Contextual Attention
-
-  - [Global&Local](/configs/global_local/README.md) Globally and Locally Consistent Image Completion
-
-  - [PConv](/configs/partial_conv/README.md) Image Inpainting for Irregular Holes Using Partial Convolutions
-
-# Matting Models
-
-- Number of checkpoints: 9
-
-- Number of configs: 9
-
-- Number of algorithms: 3
-
-  - [DIM](/configs/dim/README.md) Deep Image Matting
-
-  - [IndexNet](/configs/indexnet/README.md) Indices Matter: Learning to Index for Deep Image Matting
-
-  - [GCA](/configs/gca/README.md) Natural Image Matting via Guided Contextual Attention
-
-# Super-Resolution Models
-
-- Number of checkpoints: 46
-
-- Number of configs: 40
-
-- Number of algorithms: 16
-
-  - [BasicVSR](/configs/basicvsr/README.md) Basicvsr: The Search for Essential Components in Video Super-Resolution and Beyond
-
-  - [BasicVSR++](/configs/basicvsr_plusplus/README.md) Basicvsr++: Improving Video Super-Resolution With Enhanced Propagation and Alignment
-
-  - [DIC](/configs/dic/README.md) Deep Face Super-Resolution With Iterative Collaboration Between Attentive Recovery and Landmark Estimation
-
-  - [EDVR](/configs/edvr/README.md) Edvr: Video Restoration With Enhanced Deformable Convolutional Networks
-
-  - [EDSR](/configs/edsr/README.md) Enhanced Deep Residual Networks for Single Image Super-Resolution
-
-  - [ESRGAN](/configs/esrgan/README.md) Esrgan: Enhanced Super-Resolution Generative Adversarial Networks
-
-  - [GLEAN](/configs/glean/README.md) Glean: Generative Latent Bank for Large-Factor Image Super-Resolution
-
-  - [SRCNN](/configs/srcnn/README.md) Image Super-Resolution Using Deep Convolutional Networks
-
-  - [LIIF](/configs/liif/README.md) Learning Continuous Image Representation With Local Implicit Image Function
-
-  - [TTSR](/configs/ttsr/README.md) Learning Texture Transformer Network for Image Super-Resolution
-
-  - [SRGAN](/configs/srgan_resnet/README.md) Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network
-
-  - [Real-ESRGAN](/configs/real_esrgan/README.md) Real-Esrgan: Training Real-World Blind Super-Resolution With Pure Synthetic Data
-
-  - [RealBasicVSR](/configs/real_basicvsr/README.md) Realbasicvsr: Investigating Tradeoffs in Real-World Video Super-Resolution
-
-  - [RDN](/configs/rdn/README.md) Residual Dense Network for Image Super-Resolution
-
-  - [TDAN](/configs/tdan/README.md) Tdan: Temporally-Deformable Alignment Network for Video Super-Resolution
-
-  - [TOFlow](/configs/tof/README.md) Video Enhancement With Task-Oriented Flow
-
-# Frame-Interpolation Models
+## BigGAN
 
 - Number of checkpoints: 7
+- Number of configs: 6
+- Number of papers: 1
+  - \[ALGORITHM\] Large Scale {Gan ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/biggan/README.md#citation))
 
+## CAIN (AAAI'2020)
+
+- Tasks: video interpolation
+- Number of checkpoints: 1
+- Number of configs: 1
+- Number of papers: 1
+  - \[ALGORITHM\] Channel Attention Is All You Need for Video Frame Interpolation ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/cain/README.md#citation))
+
+## CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent Adversarial Networks
+
+- Number of checkpoints: 6
+- Number of configs: 6
+- Number of papers: 1
+  - \[ALGORITHM\] Unpaired Image-to-Image Translation Using Cycle-Consistent Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/cyclegan/README.md#citation))
+
+## Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks
+
+- Number of checkpoints: 3
 - Number of configs: 3
+- Number of papers: 1
+  - \[ALGORITHM\] Unsupervised Representation Learning With Deep Convolutional Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/dcgan/README.md#citation))
 
-- Number of algorithms: 3
+## DeepFillv1 (CVPR'2018)
 
-  - [CAIN](/configs/cain/README.md) Channel Attention Is All You Need for Video Frame Interpolation
+- Tasks: inpainting
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Generative Image Inpainting With Contextual Attention ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/deepfillv1/README.md#citation))
 
-  - [FLAVR](/configs/flavr/README.md) Flavr: Flow-Agnostic Video Representations for Fast Frame Interpolation
+## DeepFillv2 (CVPR'2019)
 
-  - [TOFlow](/configs/tof/README.md) Video Enhancement With Task-Oriented Flow
+- Tasks: inpainting
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Free-Form Image Inpainting With Gated Convolution ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/deepfillv2/README.md#citation))
 
-# Unconditional GANs Models
+## DIC (CVPR'2020)
 
-- Number of checkpoints: 37
+- Tasks: image super-resolution
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Deep Face Super-Resolution With Iterative Collaboration Between Attentive Recovery and Landmark Estimation ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/dic/README.md#citation))
 
-- Number of configs: 37
+## DIM (CVPR'2017)
 
-- Number of algorithms: 9
+- Tasks: matting
+- Number of checkpoints: 3
+- Number of configs: 3
+- Number of papers: 1
+  - \[ALGORITHM\] Deep Image Matting ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/dim/README.md#citation))
 
-  - [DCGAN](/configs/dcgan/README.md) Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks (3 ckpts)
+## EDSR (CVPR'2017)
 
-  - [WGAN-GP](/configs/wgan-gp/README.md) Improved Training of Wasserstein GANs (2 ckpts)
+- Tasks: image super-resolution
+- Number of checkpoints: 3
+- Number of configs: 3
+- Number of papers: 1
+  - \[ALGORITHM\] Enhanced Deep Residual Networks for Single Image Super-Resolution ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/edsr/README.md#citation))
 
-  - [LSGAN](/configs/lsgan/README.md) Least Squares Generative Adversarial Networks (4 ckpts)
+## EDVR (CVPRW'2019)
 
-  - [GGAN](/configs/ggan/README.md) Geometric GAN (3 ckpts)
+- Tasks: video super-resolution
+- Number of checkpoints: 4
+- Number of configs: 4
+- Number of papers: 1
+  - \[ALGORITHM\] Edvr: Video Restoration With Enhanced Deformable Convolutional Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/edvr/README.md#citation))
 
-  - [PGGAN](/configs/pggan/README.md) Progressive Growing of GANs for Improved Quality, Stability, and Variation (3 ckpts)
+## ESRGAN (ECCVW'2018)
 
-  - [StyleGANV1](/configs/styleganv1/README.md) A Style-Based Generator Architecture for Generative Adversarial Networks (2 ckpts)
+- Tasks: image super-resolution
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Esrgan: Enhanced Super-Resolution Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/esrgan/README.md#citation))
 
-  - [StyleGANV2](/configs/styleganv2/README.md) Analyzing and Improving the Image Quality of Stylegan (11 ckpts)
+## FLAVR (arXiv'2020)
 
-  - [StyleGANV3](/configs/styleganv3/README.md) Alias-Free Generative Adversarial Networks (9 ckpts)
+- Tasks: video interpolation
+- Number of checkpoints: 1
+- Number of configs: 1
+- Number of papers: 1
+  - \[ALGORITHM\] Flavr: Flow-Agnostic Video Representations for Fast Frame Interpolation ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/flavr/README.md#citation))
 
-  - [Positional Encoding in GANs](/configs/positional_encoding_in_gans/README.md) Positional Encoding as Spatial Inductive Bias in GANs
+## GCA (AAAI'2020)
 
-# Conditional GANs Models
+- Tasks: matting
+- Number of checkpoints: 4
+- Number of configs: 4
+- Number of papers: 1
+  - \[ALGORITHM\] Natural Image Matting via Guided Contextual Attention ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/gca/README.md#citation))
 
-- Number of checkpoints: 26
+## GGAN
 
-- Number of configs: 26
+- Number of checkpoints: 3
+- Number of configs: 3
+- Number of papers: 1
+  - \[ALGORITHM\] Geometric Gan ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/ggan/README.md#citation))
 
-- Number of algorithms: 4
+## GLEAN (CVPR'2021)
 
-  - [SNGAN](/configs/sngan_proj/README.md) Spectral Normalization for Generative Adversarial Networks (10 ckpts)
+- Tasks: image super-resolution
+- Number of checkpoints: 4
+- Number of configs: 4
+- Number of papers: 1
+  - \[ALGORITHM\] Glean: Generative Latent Bank for Large-Factor Image Super-Resolution ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/glean/README.md#citation))
 
-  - [Projection GAN](/configs/sngan_proj/README.md) Spectral Normalization for Generative Adversarial Networks
+## Global&Local (ToG'2017)
 
-  - [SAGAN](/configs/sagan/README.md) Self-attention generative adversarial networks (9 ckpts)
+- Tasks: inpainting
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Globally and Locally Consistent Image Completion ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/global_local/README.md#citation))
 
-  - [BIGGAN/BIGGAN-DEEP](/configs/biggan/README.md) Large Scale GAN Training for High Fidelity Natural Image Synthesis (7 ckpts)
+## IconVSR (CVPR'2021)
 
-# Image2Image Translation Models
+- Tasks: video super-resolution
+- Number of checkpoints: 3
+- Number of configs: 3
+- Number of papers: 1
+  - \[ALGORITHM\] Basicvsr: The Search for Essential Components in Video Super-Resolution and Beyond ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/iconvsr/README.md#citation))
+
+## IndexNet (ICCV'2019)
+
+- Tasks: matting
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Indices Matter: Learning to Index for Deep Image Matting ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/indexnet/README.md#citation))
+
+## LIIF (CVPR'2021)
+
+- Tasks: image super-resolution
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Learning Continuous Image Representation With Local Implicit Image Function ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/liif/README.md#citation))
+
+## LSGAN
+
+- Number of checkpoints: 4
+- Number of configs: 4
+- Number of papers: 1
+  - \[ALGORITHM\] Least Squares Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/lsgan/README.md#citation))
+
+## PConv (ECCV'2018)
+
+- Tasks: inpainting
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Image Inpainting for Irregular Holes Using Partial Convolutions ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/partial_conv/README.md#citation))
+
+## PGGAN
+
+- Number of checkpoints: 3
+- Number of configs: 3
+- Number of papers: 1
+  - \[ALGORITHM\] Progressive Growing of Gans for Improved Quality, Stability, and Variation ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/pggan/README.md#citation))
+
+## Pix2Pix
+
+- Number of checkpoints: 4
+- Number of configs: 4
+- Number of papers: 1
+  - \[ALGORITHM\] Image-to-Image Translation With Conditional Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/pix2pix/README.md#citation))
+
+## RDN (CVPR'2018)
+
+- Tasks: image super-resolution
+- Number of checkpoints: 3
+- Number of configs: 3
+- Number of papers: 1
+  - \[ALGORITHM\] Residual Dense Network for Image Super-Resolution ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/rdn/README.md#citation))
+
+## RealBasicVSR (CVPR'2022)
+
+- Tasks: video super-resolution
+- Number of checkpoints: 1
+- Number of configs: 1
+- Number of papers: 1
+  - \[ALGORITHM\] Realbasicvsr: Investigating Tradeoffs in Real-World Video Super-Resolution ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/real_basicvsr/README.md#citation))
+
+## Real-ESRGAN (ICCVW'2021)
+
+- Tasks: image super-resolution
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Real-Esrgan: Training Real-World Blind Super-Resolution With Pure Synthetic Data ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/real_esrgan/README.md#citation))
+
+## SAGAN
+
+- Number of checkpoints: 9
+- Number of configs: 5
+- Number of papers: 1
+  - \[ALGORITHM\] Self-Attention Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/sagan/README.md#citation))
+
+## SinGAN
+
+- Number of checkpoints: 3
+- Number of configs: 3
+- Number of papers: 1
+  - \[ALGORITHM\] Singan: Learning a Generative Model From a Single Natural Image ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/singan/README.md#citation))
+
+## SNGAN
 
 - Number of checkpoints: 10
+- Number of configs: 5
+- Number of papers: 1
+  - \[ALGORITHM\] Spectral Normalization for Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/sngan_proj/README.md#citation))
 
-- Number of configs: 10
+## SRCNN (TPAMI'2015)
 
-- Number of algorithms: 2
+- Tasks: image super-resolution
+- Number of checkpoints: 1
+- Number of configs: 1
+- Number of papers: 1
+  - \[ALGORITHM\] Image Super-Resolution Using Deep Convolutional Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/srcnn/README.md#citation))
 
-  - [Pix2Pix](/configs/pix2pix/README.md) Pix2Pix: Image-to-Image Translation with Conditional Adversarial Networks (4 ckpts)
+## SRGAN (CVPR'2016)
 
-  - [CycleGAN](/configs/cyclegan/README.md) CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent Adversarial Networks (6 ckpts)
+- Tasks: image super-resolution
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/srgan_resnet/README.md#citation))
 
-# Internal Learning
+## StyleGANv1
 
-- Number of checkpoints: 3
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] A Style-Based Generator Architecture for Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv1/README.md#citation))
 
-- Number of configs: 3
+## StyleGANv2
 
-- Number of algorithms: 1
+- Number of checkpoints: 12
+- Number of configs: 11
+- Number of papers: 1
+  - \[ALGORITHM\] Analyzing and Improving the Image Quality of Stylegan ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv2/README.md#citation))
 
-  - [SinGAN](/configs/singan/README.md) Singan: Learning a Generative Model from a Single Natural Image (3 ckpts)
+## StyleGANv3
 
-# Denoising Diffusion Probabilistic Models
+- Number of checkpoints: 9
+- Number of configs: 9
+- Number of papers: 1
+  - \[ALGORITHM\] Alias-Free Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv3/README.md#citation))
 
-- Number of checkpoints: 3
+## TDAN (CVPR'2020)
 
-- Number of configs: 3
+- Tasks: video super-resolution
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Tdan: Temporally-Deformable Alignment Network for Video Super-Resolution ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/tdan/README.md#citation))
 
-- Number of algorithms: 1
+## TOFlow (IJCV'2019)
 
-  - [Improved DDPM](/configs/improved_ddpm/README.md) Improved Denoising Diffusion Probabilistic Models (3 ckpts)
+- Tasks: video interpolation,video super-resolution
+- Number of checkpoints: 6
+- Number of configs: 6
+- Number of papers: 1
+  - \[ALGORITHM\] Video Enhancement With Task-Oriented Flow ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/tof/README.md#citation))
+
+## TTSR (CVPR'2020)
+
+- Tasks: image super-resolution
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Learning Texture Transformer Network for Image Super-Resolution ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/ttsr/README.md#citation))
+
+## WGAN-GP
+
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Improved Training of Wasserstein Gans ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/wgan-gp/README.md#citation))
