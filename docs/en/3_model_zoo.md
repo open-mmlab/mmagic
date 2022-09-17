@@ -5,11 +5,11 @@
 - Number of papers: 40
   - ALGORITHM: 41
 - Tasks:
-  - matting
-  - video interpolation
   - inpainting
-  - video super-resolution
+  - video interpolation
   - image super-resolution
+  - video super-resolution
+  - matting
 
 For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
