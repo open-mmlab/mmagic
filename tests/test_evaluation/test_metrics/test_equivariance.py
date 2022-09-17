@@ -24,7 +24,7 @@ def process_fn(data_batch, predictions):
 
 
 @pytest.mark.skipif(
-    digit_version(TORCH_VERSION) <= digit_version('1.6.0'),
+    digit_version(TORCH_VERSION) < digit_version('1.8.0'),
     reason='version limitation')
 class TestEquivariance:
 
