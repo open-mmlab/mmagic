@@ -33,8 +33,8 @@ class GenIterTimerHook(IterTimerHook):
         `runner.val_loop.total_length` or `runner.test_loop.total_length` as
         total number of iterations. If you want to know how `total_length` is
         calculated, please refers to
-        `:meth:mmgen.core.runners.loops.GenValLoop.run` and
-        `:meth:mmgen.core.runners.loops.GenTestLoop.run`.
+        `:meth:mmedit.engine.runners.loops.GenValLoop.run` and
+        `:meth:mmedit.engine.runners.loops.GenTestLoop.run`.
 
         Args:
             runner (Runner): The runner of the training validation and
