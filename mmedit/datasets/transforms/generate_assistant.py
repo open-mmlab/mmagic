@@ -22,7 +22,8 @@ class GenerateCoordinateAndCell(BaseTransform):
 
     #. Generate coordinate from GT.
 
-    #. Reshape GT image to (HgWg, 3) and transpose to (3, HgWg). where `Hg` and `Wg` represent the height and width of GT.
+    #. Reshape GT image to (HgWg, 3) and transpose to (3, HgWg).
+    where `Hg` and `Wg` represent the height and width of GT.
 
     Test:
 
@@ -65,15 +66,18 @@ class GenerateCoordinateAndCell(BaseTransform):
         """Call function.
 
         Args:
-            results (dict): A dict containing the necessary information and data for augmentation.
+            results (dict): A dict containing the necessary information
+            and data for augmentation.
             Require either in results:
             1. 'lq' (tensor), whose shape is similar as (3, H, W).
             2. 'gt' (tensor), whose shape is similar as (3, H, W).
-            3. None, the premise is self.target_size and len(self.target_size) >= 2.
+            3. None, the premise is self.target_size and
+            len(self.target_size) >= 2.
 
         Returns:
             dict: A dict containing the processed data and information.
-            Reshape 'gt' to (-1, 3) and transpose to (3, -1) if 'gt' in results.
+            Reshape 'gt' to (-1, 3) and transpose to (3, -1)
+            if 'gt' in results.
             Add 'coord' and 'cell'.
         """
 
