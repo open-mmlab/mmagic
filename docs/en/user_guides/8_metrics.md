@@ -176,7 +176,7 @@ metrics = [
 ```
 
 `TransFID` has same usage as `FID`, but it's designed for translation models like `Pix2Pix` and `CycleGAN`, which is adapted for our evaluator. You can refer
-to [evaluation](../advanced_guides/evaluation.md) for details.
+to [evaluation](../user_guides/4_train_test.md) for details.
 
 ## IS and TransIS
 
@@ -223,7 +223,7 @@ We also perform a survey on the influence of data loading pipeline and the versi
 </details>
 
 `TransIS` has same usage as `IS`, but it's designed for translation models like `Pix2Pix` and `CycleGAN`, which is adapted for our evaluator. You can refer
-to [evaluation](../advanced_guides/evaluation.md) for details.
+to [evaluation](../user_guides/4_train_test.md) for details.
 
 ## Precision and Recall
 

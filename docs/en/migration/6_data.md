@@ -11,7 +11,7 @@ We update data pipelines settings in MMEdit 1.x. Important modifications are as 
 
 - Remove normalization and color space transforms operations. They are moved from datasets transforms pipelines to data_preprocessor.
 - The original formatting transforms pipelines `Collect` are combined as `PackEditInputs`.
-  More details of data pipelines are shown in [transform guides](/docs/en/advanced_guides/3_transforms.md).
+  More details of data pipelines are shown in [transform guides](../advanced_guides/3_transforms.md).
 
 <table class="docutils">
 <thead>
