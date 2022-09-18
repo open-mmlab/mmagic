@@ -5,6 +5,8 @@ from copy import deepcopy
 import pytest
 import torch
 import torch.nn as nn
+from mmengine import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 
 from mmedit.models.editors.stylegan2 import (ADAAug, ADAStyleGAN2Discriminator,
                                              StyleGAN2Discriminator)
@@ -64,6 +66,9 @@ class TestStyleGANv2AdaDisc:
         cls.default_cfg = dict(
             in_size=64, data_aug=dict(type='ADAAug'), channel_multiplier=1)
 
+    @pytest.mark.skipif(
+        digit_version(TORCH_VERSION) < digit_version('1.6.0'),
+        reason='torch version lower than 1.7.0 does not have `torch.exp2` api')
     def test_styleganv2_ada(self):
         disc = ADAStyleGAN2Discriminator(**self.default_cfg)
         assert hasattr(disc, 'ada_aug')
@@ -80,6 +85,9 @@ class TestStyleGANv2AdaDisc:
         assert score.shape == (2, 1)
 
 
+@pytest.mark.skipif(
+    digit_version(TORCH_VERSION) < digit_version('1.6.0'),
+    reason='torch version lower than 1.7.0 does not have `torch.exp2` api')
 def test_ada_pipeline():
     ada = ADAAug()
     ada.update(0, 2)

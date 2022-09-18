@@ -1,7 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from unittest import TestCase
 
+import pytest
 import torch
+from mmengine import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 
 from mmedit.models.editors.stylegan2.ada.augment import AugmentPipe
 
@@ -41,6 +44,9 @@ class TestAuementPipe(TestCase):
             cutout_size=0.5,
         )
 
+    @pytest.mark.skipif(
+        digit_version(TORCH_VERSION) < digit_version('1.6.0'),
+        reason='torch version lower than 1.7.0 does not have `torch.exp2` api')
     def test_forward(self):
         augment_pipeline = AugmentPipe(**self.default_cfg)
 
