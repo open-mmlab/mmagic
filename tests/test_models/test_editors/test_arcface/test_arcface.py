@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 
 import pytest
@@ -19,6 +20,9 @@ class TestArcFace:
             drop_ratio=0.4,
             affine=True)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_arcface_cpu(self):
         model = Backbone(**self.default_cfg)
         x = torch.randn((2, 3, 224, 224))
