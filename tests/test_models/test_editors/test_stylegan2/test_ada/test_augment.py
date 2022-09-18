@@ -45,7 +45,7 @@ class TestAuementPipe(TestCase):
         )
 
     @pytest.mark.skipif(
-        digit_version(TORCH_VERSION) < digit_version('1.6.0'),
+        digit_version(TORCH_VERSION) <= digit_version('1.6.0'),
         reason='torch version lower than 1.7.0 does not have `torch.exp2` api')
     def test_forward(self):
         augment_pipeline = AugmentPipe(**self.default_cfg)
