@@ -38,6 +38,10 @@ class TestUnetGenerator:
         fake_b = gen(real_a)
         assert fake_b.shape == (2, 3, 256, 256)
 
+        with pytest.raises(TypeError):
+            gen = UnetGenerator(**self.default_cfg)
+            gen.init_weights(pretrained=10)
+
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_pix2pix_generator_cuda(self):
         # test with default cfg
@@ -52,3 +56,7 @@ class TestUnetGenerator:
         gen = UnetGenerator(**cfg).cuda()
         fake_b = gen(real_a)
         assert fake_b.shape == (2, 3, 256, 256)
+
+        with pytest.raises(TypeError):
+            gen = UnetGenerator(**self.default_cfg)
+            gen.init_weights(pretrained=10)
