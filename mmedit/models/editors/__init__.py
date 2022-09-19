@@ -72,5 +72,6 @@ __all__ = [
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
-    'ProgressiveGrowingGAN', 'SinGAN', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2'
+    'ProgressiveGrowingGAN', 'SinGAN', 'IDLossModel', 'PESinGAN',
+    'MSPIEStyleGAN2'
 ]

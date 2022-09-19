@@ -7,8 +7,7 @@ from .stylegan2_modules import (ConvDownLayer, ModMBStddevLayer,
                                 ModulatedToRGB, ResBlock)
 
 __all__ = [
-
     'StyleGAN2', 'StyleGAN2Discriminator', 'StyleGAN2Generator',
-    'ADAStyleGAN2Discriminator', 'ADAAug',
-    'ConvDownLayer', 'ModMBStddevLayer', 'ModulatedToRGB', 'ResBlock'
+    'ADAStyleGAN2Discriminator', 'ADAAug', 'ConvDownLayer', 'ModMBStddevLayer',
+    'ModulatedToRGB', 'ResBlock'
 ]
