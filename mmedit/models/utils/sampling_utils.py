@@ -1,7 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Callable, List, Optional, Sequence, Union
 
+import numpy as np
 import torch
+from mmengine import is_list_of
 from torch import Tensor
 
 
@@ -59,7 +61,7 @@ def noise_sample_fn(noise: Union[Tensor, Callable, None] = None,
     if noise_size is not None:
         if isinstance(noise_size, int):
             noise_size = [noise_size]
-        assert list(noise_batch.shape[1:]) == noise_size, (
+        assert list(noise_batch.shape[1:]) == list(noise_size), (
             'Size of the input noise is inconsistency with \'noise_size\'\'. '
             f'Receive \'{noise_batch.shape[1:]}\' and \'{noise_size}\' '
             'respectively.')
@@ -92,11 +94,23 @@ def label_sample_fn(label: Union[Tensor, Callable, List[int], None] = None,
     Returns:
         Union[Tensor, None]: Sampled random label.
     """
-    if num_classes is None or num_classes <= 0:
+    # label is not passed and do not have `num_classes` to sample label
+    if (num_classes is None or num_classes <= 0) and (label is None):
         return None
+
     if isinstance(label, Tensor):
         label_batch = label
+    elif isinstance(label, np.ndarray):
+        label_batch = torch.from_numpy(label)
     elif isinstance(label, list):
+        if is_list_of(label, (int, np.ndarray)):
+            label = [torch.LongTensor([lab]).squeeze() for lab in label]
+        else:
+            assert is_list_of(label, torch.Tensor), (
+                'Only support \'int\', \'np.ndarray\' and \'torch.Tensor\' '
+                'type for list input. But receives '
+                f'\'{[type(lab) for lab in label]}\'')
+            label = [lab.squeeze() for lab in label]
         label_batch = torch.stack(label, dim=0)
     else:
         # generate label_batch manually, prepare and check `num_batches`
@@ -112,7 +126,15 @@ def label_sample_fn(label: Union[Tensor, Callable, List[int], None] = None,
             # otherwise, we will adopt default label sampler.
             label_batch = torch.randint(0, num_classes, (num_batches, ))
 
-    # Check the noise if `num_classes` is passed. Ignore `num_batches` because
+    # Check whether is LongTensor (torch.int64) and shape like [bz, ]
+    assert label_batch.dtype == torch.int64, (
+        'Input label cannot convert to torch.LongTensor (torch.int64). Please '
+        'check your input.')
+    assert label_batch.ndim == 1, (
+        'Input label must shape like \'[num_batches, ]\', but shape like '
+        f'({label_batch.shape})')
+
+    # Check the label if `num_classes` is passed. Ignore `num_batches` because
     # `num_batches` has default value.
     if num_classes is not None:
         invalid_index = torch.logical_or(label_batch < 0,

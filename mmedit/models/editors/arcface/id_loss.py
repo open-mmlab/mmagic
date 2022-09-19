@@ -14,12 +14,11 @@ class IDLossModel(nn.Module):
     Args:
         ir_se50_weights (str, optional): Url of ir-se50 weights.
             Defaults to None.
-        device (str, optional): Device of model. Defaults to 'cuda'.
     """
     # ir se50 weight download link
     _ir_se50_url = 'https://gg0ltg.by.files.1drv.com/y4m3fNNszG03z9n8JQ7EhdtQKW8tQVQMFBisPVRgoXi_UfP8pKSSqv8RJNmHy2JampcPmEazo_Mx6NTFSqBpZmhPniROm9uNoghnzaavvYpxkCfiNmDH9YyIF3g-0nwt6bsjk2X80JDdL5z88OAblSDmB-kuQkWSWvA9BM3Xt8DHMCY8lO4HOQCZ5YWUtFyPAVwEyzTGDM-JRA5EJoN2bF1cg'  # noqa
 
-    def __init__(self, ir_se50_weights=None, device='cuda'):
+    def __init__(self, ir_se50_weights=None):
         super(IDLossModel, self).__init__()
         mmengine.print_log('Loading ResNet ArcFace', 'current')
         self.facenet = Backbone(
@@ -31,7 +30,7 @@ class IDLossModel(nn.Module):
                 ir_se50_weights, map_location='cpu'))
         self.pool = torch.nn.AdaptiveAvgPool2d((256, 256))
         self.face_pool = torch.nn.AdaptiveAvgPool2d((112, 112))
-        self.facenet = self.facenet.eval().to(device)
+        self.facenet = self.facenet.eval()
 
     def extract_feats(self, x):
         """Extracting face features.

@@ -2,6 +2,7 @@ av
 av==8.0.3; python_version < '3.7'
 face-alignment
 facexlib
+git+https://github.com/openai/CLIP.git
 lmdb
 lpips
 mmcv>=2.0.0rc1
