@@ -101,7 +101,7 @@ def label_sample_fn(label: Union[Tensor, Callable, List[int], None] = None,
     if isinstance(label, Tensor):
         label_batch = label
     elif isinstance(label, np.ndarray):
-        label_batch = torch.from_numpy(label)
+        label_batch = torch.from_numpy(label).long()
     elif isinstance(label, list):
         if is_list_of(label, (int, np.ndarray)):
             label = [torch.LongTensor([lab]).squeeze() for lab in label]
