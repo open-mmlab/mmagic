@@ -125,7 +125,9 @@ class DenoisingUnet(nn.Module):
     """
 
     _default_channels_cfg = {
+        512: [0.5, 1, 1, 2, 2, 4, 4],
         256: [1, 1, 2, 2, 4, 4],
+        128: [1, 1, 2, 3, 4],
         64: [1, 2, 3, 4],
         32: [1, 2, 2, 2]
     }
@@ -240,17 +242,16 @@ class DenoisingUnet(nn.Module):
 
         # init the channel scale factor
         scale = 1
-        self.in_blocks = nn.ModuleList([
-            EmbedSequential(
-                nn.Conv2d(in_channels, base_channels, 3, 1, padding=1))
-        ])
-        self.in_channels_list = [base_channels]
+        ch = int(base_channels * self.channel_factor_list[0])
+        self.in_blocks = nn.ModuleList(
+            [EmbedSequential(nn.Conv2d(in_channels, ch, 3, 1, padding=1))])
+        self.in_channels_list = [ch]
 
         # construct the encoder part of Unet
         for level, factor in enumerate(self.channel_factor_list):
-            in_channels_ = base_channels if level == 0 \
-                else base_channels * self.channel_factor_list[level - 1]
-            out_channels_ = base_channels * factor
+            in_channels_ = ch if level == 0 \
+                else int(base_channels * self.channel_factor_list[level - 1])
+            out_channels_ = int(base_channels * factor)
 
             for _ in range(resblocks_per_downsample):
                 layers = [
@@ -310,10 +311,10 @@ class DenoisingUnet(nn.Module):
                         default_args={
                             'in_channels':
                             in_channels_ + in_channels_list.pop(),
-                            'out_channels': base_channels * factor
+                            'out_channels': int(base_channels * factor)
                         })
                 ]
-                in_channels_ = base_channels * factor
+                in_channels_ = int(base_channels * factor)
                 if scale in attention_scale:
                     layers.append(
                         MODULES.build(
