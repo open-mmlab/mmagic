@@ -5,9 +5,11 @@ from .conv import *  # noqa: F401, F403
 from .conv2d_gradfix import conv2d, conv_transpose2d
 from .gated_conv_module import SimpleGatedConvModule
 from .linear_module import LinearModule
+from .positional_encoding import CatersianGrid, SinusoidalPositionalEmbedding
 from .separable_conv_module import DepthwiseSeparableConvModule
 
 __all__ = [
     'ASPP', 'DepthwiseSeparableConvModule', 'SimpleGatedConvModule',
-    'LinearModule', 'conv2d', 'conv_transpose2d'
+    'LinearModule', 'conv2d', 'conv_transpose2d', 'CatersianGrid',
+    'SinusoidalPositionalEmbedding'
 ]
