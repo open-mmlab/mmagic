@@ -19,21 +19,19 @@ class CLIPLossModel(torch.nn.Module):
             containing the state_dict. For more details, you can refer to
             https://github.com/openai/CLIP/blob/573315e83f07b53a61ff5098757e8fc885f1703e/clip/clip.py#L91 # noqa
             Defaults to 'ViT-B/32'.
-        device (str, optional): Model device. Defaults to 'cuda'.
     """
 
     def __init__(self,
                  in_size=1024,
                  scale_factor=7,
                  pool_size=224,
-                 clip_type='ViT-B/32',
-                 device='cuda'):
+                 clip_type='ViT-B/32'):
         super(CLIPLossModel, self).__init__()
         try:
             import clip
         except ImportError:
             raise 'To use clip loss, openai clip need to be installed first'
-        self.model, self.preprocess = clip.load(clip_type, device=device)
+        self.model, self.preprocess = clip.load(clip_type, device='cpu')
         self.upsample = torch.nn.Upsample(scale_factor=scale_factor)
         self.avg_pool = torch.nn.AvgPool2d(
             kernel_size=(scale_factor * in_size // pool_size))

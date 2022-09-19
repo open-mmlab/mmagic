@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import pytest
 import torch
 
 from mmedit.engine import tensor2img
@@ -22,3 +23,9 @@ def test_tensor2img():
     assert len(result) == len(input)
     for r in result:
         assert r.shape == (8, 8, 3)
+
+    with pytest.raises(TypeError):
+        tensor2img('wrong type')
+
+    with pytest.raises(ValueError):
+        tensor2img([torch.randn(2, 3, 4, 4, 4) for _ in range(2)])

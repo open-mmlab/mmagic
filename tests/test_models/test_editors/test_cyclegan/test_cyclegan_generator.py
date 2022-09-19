@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 
 import pytest
@@ -7,6 +8,9 @@ import torch
 from mmedit.models.editors.cyclegan import ResnetGenerator
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 class TestResnetGenerator:
 
     @classmethod

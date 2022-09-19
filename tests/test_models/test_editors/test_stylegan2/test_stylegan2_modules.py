@@ -8,7 +8,7 @@ import torch
 from mmedit.models.editors.stylegan1 import get_mean_latent, style_mixing
 from mmedit.models.editors.stylegan2 import StyleGAN2Generator
 from mmedit.models.editors.stylegan2.stylegan2_modules import (
-    Blur, ModulatedStyleConv, ModulatedToRGB)
+    Blur, DownsampleUpFIRDn, ModulatedStyleConv, ModulatedToRGB)
 from mmedit.models.utils import get_module_device
 
 
@@ -39,6 +39,26 @@ def test_get_module_device():
         style_channels=g.style_channels)
 
     assert get_module_device(g) == torch.device('cpu')
+
+
+class TestDownsampleUpFIRDn():
+
+    def test_DownsampleUpFIRDn(self):
+        downsample = DownsampleUpFIRDn((2, 2), 2)
+        assert downsample.pad == (0, 0)
+
+        inp = torch.randn(1, 3, 4, 4)
+        out = downsample(inp)
+        assert out.shape == (1, 3, 2, 2)
+
+    @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
+    def test_DownsampleUpFIRDn_cuda(self):
+        downsample = DownsampleUpFIRDn((2, 2), 2).cuda()
+        assert downsample.pad == (0, 0)
+
+        inp = torch.randn(1, 3, 4, 4).cuda()
+        out = downsample(inp)
+        assert out.shape == (1, 3, 2, 2)
 
 
 class TestBlur:

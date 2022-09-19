@@ -30,7 +30,7 @@ class FaceIdLossComps(nn.Module):
             directly pass the input data to the loss function.
             Defaults to None.
         facenet (dict, optional): Config dict for facenet. Defaults to
-            dict(type='ArcFace', ir_se50_weights=None, device='cuda').
+            dict(type='ArcFace', ir_se50_weights=None).
         loss_name (str, optional): Name of the loss item. If you want this loss
             item to be included into the backward graph, `loss_` must be the
             prefix of the name. Defaults to 'loss_id'.
@@ -39,8 +39,7 @@ class FaceIdLossComps(nn.Module):
     def __init__(self,
                  loss_weight=1.0,
                  data_info=None,
-                 facenet=dict(
-                     type='ArcFace', ir_se50_weights=None, device='cuda'),
+                 facenet=dict(type='ArcFace', ir_se50_weights=None),
                  loss_name='loss_id'):
 
         super().__init__()
@@ -86,7 +85,8 @@ class FaceIdLossComps(nn.Module):
             }
             kwargs.update(loss_input_dict)
 
-        return self.net(*args, **kwargs) * self.loss_weight
+        # NOTE: only return the loss term
+        return self.net(*args, **kwargs)[0] * self.loss_weight
 
     def loss_name(self):
         """Loss Name.

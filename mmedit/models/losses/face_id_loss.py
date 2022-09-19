@@ -39,8 +39,7 @@ class FaceIdLoss(nn.Module):
     def __init__(self,
                  loss_weight=1.0,
                  data_info=None,
-                 facenet=dict(
-                     type='ArcFace', ir_se50_weights=None, device='cuda'),
+                 facenet=dict(type='ArcFace', ir_se50_weights=None),
                  loss_name='loss_id'):
 
         super(FaceIdLoss, self).__init__()
@@ -52,4 +51,5 @@ class FaceIdLoss(nn.Module):
     def forward(self, pred=None, gt=None):
         """Forward function."""
 
-        return self.net(pred, gt) * self.loss_weight
+        # NOTE: only return the loss term
+        return self.net(pred, gt)[0] * self.loss_weight

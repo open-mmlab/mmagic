@@ -97,7 +97,7 @@ jobs:
       - name: Run unittests and generate coverage report
         run: |
           coverage run --branch --source mmedit -m pytest tests/
-          coverage xml
+          coverage xml --omit="**/stylegan3_ops/*,**/conv2d_gradfix.py"
           coverage report -m
       # Only upload coverage report for python3.7 && pytorch1.8.1 cpu
       - name: Upload coverage to Codecov

@@ -5,12 +5,14 @@ import sys
 
 import pytest
 import torch
-# from mmcv.runner import obj_from_dict
 from mmengine.logging import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
 from mmedit.models import GenDataPreprocessor, PatchDiscriminator, Pix2Pix
 from mmedit.models.editors.pix2pix import UnetGenerator
+from mmedit.utils import register_all_modules
+
+register_all_modules()
 
 
 def obj_from_dict(info: dict, parent=None, default_args=None):
@@ -212,3 +214,38 @@ def test_pix2pix():
 
         for v in log_check_list:
             assert isinstance(log_vars[v].item(), float)
+
+
+def test_pix2pix_val_step():
+    # model settings
+    model_cfg = dict(
+        data_preprocessor=GenDataPreprocessor(),
+        generator=dict(
+            type='UnetGenerator',
+            in_channels=3,
+            out_channels=3,
+            num_down=8,
+            base_channels=64,
+            norm_cfg=dict(type='BN'),
+            use_dropout=True,
+            init_cfg=dict(type='normal', gain=0.02)),
+        discriminator=dict(
+            type='PatchDiscriminator',
+            in_channels=6,
+            base_channels=64,
+            num_conv=3,
+            norm_cfg=dict(type='BN'),
+            init_cfg=dict(type='normal', gain=0.02)),
+        default_domain='photo',
+        reachable_domains=['photo'],
+        related_domains=['photo', 'mask'])
+    synthesizer = Pix2Pix(**model_cfg)
+    img_mask = torch.rand(1, 3, 256, 256)
+    img_photo = torch.rand(1, 3, 256, 256)
+    data_batch = dict(inputs={'img_mask': img_mask, 'img_photo': img_photo})
+    out = synthesizer.val_step(data_batch)
+    assert isinstance(out, list)
+    assert len(out) == 1
+    assert 'gt_photo' in out[0]
+    assert 'gt_mask' in out[0]
+    assert 'fake_photo' in out[0]
