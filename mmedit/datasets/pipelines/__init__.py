@@ -6,6 +6,7 @@ from .augmentation import (BinarizeImage, ColorJitter, CopyValues, Flip,
                            Quantize, RandomAffine, RandomJitter,
                            RandomMaskDilation, RandomTransposeHW, Resize,
                            TemporalReverse, UnsharpMasking)
+from .colorization_aug import GenGrayColorPil
 from .compose import Compose
 from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
                    CropLike, FixedCrop, ModCrop, PairedRandomCrop,
@@ -13,9 +14,9 @@ from .crop import (Crop, CropAroundCenter, CropAroundFg, CropAroundUnknown,
 from .formating import (Collect, FormatTrimap, GetMaskedImage, ImageToTensor,
                         ToTensor)
 from .generate_assistant import GenerateCoordinateAndCell, GenerateHeatmap
-from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
-                      LoadImageFromFileList, LoadMask, LoadPairedImageFromFile,
-                      RandomLoadResizeBg)
+from .loading import (GetSpatialDiscountMask, LoadBboxFromFile,
+                      LoadImageFromFile, LoadImageFromFileList, LoadMask,
+                      LoadPairedImageFromFile, RandomLoadResizeBg)
 from .maskrcnn_bbox import GenMaskRCNNBbox
 from .matlab_like_resize import MATLABLikeResize
 from .matting_aug import (CompositeFg, GenerateSeg, GenerateSoftSeg,
@@ -44,5 +45,6 @@ __all__ = [
     'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
     'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
     'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking',
-    'RandomVideoCompression', 'GenMaskRCNNBbox'
+    'RandomVideoCompression', 'GenMaskRCNNBbox', 'LoadBboxFromFile',
+    'GenGrayColorPil'
 ]

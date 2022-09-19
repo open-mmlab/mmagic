@@ -10,31 +10,31 @@ from ..registry import MODELS
 @MODELS.register_module()
 class BaseColorization(BaseModel):
 
-    def __init__(self,
-                 ngf,
-                 output_nc,
-                 avg_loss_alpha,
-                 ab_norm,
-                 l_norm,
-                 l_cent,
-                 sample_Ps,
-                 mask_cent,
-                 init_type,
-                 fusion_weight_path,
-                 which_direction,
-                 loss,
-                 ab_max=110.,
-                 ab_quant=10.,
-                 gpu_ids='0',
-                 train_cfg=None,
-                 test_cfg=None,
-                 pretrained=None):
+    def __init__(
+        self,
+        ngf,
+        output_nc,
+        # avg_loss_alpha,
+        ab_norm,
+        l_norm,
+        l_cent,
+        sample_Ps,
+        mask_cent,
+        init_type,
+        fusion_weight_path,
+        which_direction,
+        loss,
+        ab_max=110.,
+        ab_quant=10.,
+        gpu_ids='0',
+        train_cfg=None,
+        test_cfg=None,
+        pretrained=None):
         super().__init__()
         # BaseColorization.initialize(self)
-
         self.ngf = ngf
         self.output_nc = output_nc
-        self.avg_loss_alpha = avg_loss_alpha
+        # self.avg_loss_alpha = avg_loss_alpha
         self.ab_norm = ab_norm
         self.l_norm = l_norm
         self.l_cent = l_cent

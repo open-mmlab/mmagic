@@ -560,3 +560,109 @@ class LoadPairedImageFromFile(LoadImageFromFile):
             results['ori_img_b'] = img_b.copy()
 
         return results
+
+
+@PIPELINES.register_module()
+class LoadBboxFromFile:
+
+    def __init__(self, stage, key):
+        self.stage = stage
+        self.key = key
+
+    def get_box_info(self, pred_bbox, original_shape, final_size):
+        assert len(pred_bbox) == 4
+        resize_startx = int(pred_bbox[0] / original_shape[0] * final_size)
+        resize_starty = int(pred_bbox[1] / original_shape[1] * final_size)
+        resize_endx = int(pred_bbox[2] / original_shape[0] * final_size)
+        resize_endy = int(pred_bbox[3] / original_shape[1] * final_size)
+        rh = resize_endx - resize_startx
+        rw = resize_endy - resize_starty
+        if rh < 1:
+            if final_size - resize_endx > 1:
+                resize_endx += 1
+            else:
+                resize_startx -= 1
+            rh = 1
+        if rw < 1:
+            if final_size - resize_endy > 1:
+                resize_endy += 1
+            else:
+                resize_starty -= 1
+            rw = 1
+        L_pad = resize_startx
+        R_pad = final_size - resize_endx
+        T_pad = resize_starty
+        B_pad = final_size - resize_endy
+        return [L_pad, R_pad, T_pad, B_pad, rh, rw]
+
+    def __call__(self, results, box_num_upbound=-1):
+        '''
+        ## Arguments:
+        - box_num_upbound: object bounding boxes number.
+            Default: -1 means use all the instances.
+        '''
+        from random import sample
+        pred_data_path = results['gt_bbox_path']
+        pred_data = np.load(pred_data_path)
+        pred_bbox = pred_data['bbox'].astype(np.int32)
+
+        if 0 < box_num_upbound < pred_bbox.shape[0]:
+            pred_scores = pred_data['scores']
+            index_mask = np.argsort(
+                pred_scores, axis=0)[pred_scores.shape[0] -
+                                     box_num_upbound:pred_scores.shape[0]]
+            pred_bbox = pred_bbox[index_mask]
+        index_list = range(len(pred_bbox))
+
+        if self.stage == 'instance':
+            index_list = sample(index_list, 1)
+            startx, starty, endx, endy = pred_bbox[index_list[0]]
+            instance = results['gt_img'][starty:endy + 1, startx:endx + 1]
+            results[self.key] = instance
+            return results
+
+        else:
+            full_rgb_list = []
+            full_gray_list = []
+
+            rgb_img = results['rgb_img']
+            gray_img = results['gray_img']
+            full_rgb_list.append(rgb_img)
+            full_gray_list.append(gray_img)
+
+            cropped_rgb_list = []
+            cropped_gray_list = []
+            index_list = range(len(pred_bbox))
+            box_info, box_info_2x, box_info_4x, box_info_8x = np.zeros(
+                (4, len(index_list), 6))
+            for i in range(len(index_list)):
+                startx, starty, endx, endy = pred_bbox[i]
+                box_info[i] = np.array(
+                    self.get_box_info(pred_bbox[i], rgb_img.size,
+                                      self.final_size))
+                box_info_2x[i] = np.array(
+                    self.get_box_info(pred_bbox[i], rgb_img.size,
+                                      self.final_size // 2))
+                box_info_4x[i] = np.array(
+                    self.get_box_info(pred_bbox[i], rgb_img.size,
+                                      self.final_size // 4))
+                box_info_8x[i] = np.array(
+                    self.get_box_info(pred_bbox[i], rgb_img.size,
+                                      self.final_size // 8))
+                cropped_rgb_list.append(
+                    self.transforms(
+                        rgb_img.crop((startx, starty, endx, endy))))
+                cropped_gray_list.append(
+                    self.transforms(
+                        gray_img.crop((startx, starty, endx, endy))))
+
+            results['cropped_rgb'] = cropped_rgb_list
+            results['cropped_gray'] = cropped_gray_list
+            results['full_rgb'] = full_rgb_list
+            results['full_gray'] = full_gray_list
+            results['box_info'] = box_info
+            results['box_info_2x'] = box_info_2x
+            results['box_info_4x'] = box_info_4x
+            results['box_info_8x'] = box_info_8x
+
+            return results

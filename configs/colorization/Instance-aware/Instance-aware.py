@@ -1,8 +1,8 @@
 model = dict(
-    type='FusionModel',
+    type='FusionModelTest',
     ngf=64,
     output_nc=2,
-    avg_loss_alpha=.986,
+    # avg_loss_alpha=.986,
     ab_norm=110.,
     l_norm=100.,
     l_cent=50.,
@@ -16,14 +16,14 @@ model = dict(
         type='InstanceGenerator',
         input_nc=4,
         output_nc=2,
-        classification=False),
-    full_model=dict(
-        type='SIGGRAPHGenerator',
-        input_nc=4,
-        output_nc=2,
+        norm_type='batch',
         classification=False),
     fusion_model=dict(
-        type='FusionGenerator', input_nc=4, output_nc=2, classification=False))
+        type='FusionGenerator',
+        input_nc=4,
+        output_nc=2,
+        norm_type='batch',
+        classification=False))
 
 test_cfg = dict(metrics=['psnr', 'ssim'])
 test_pipeline = [

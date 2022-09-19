@@ -1,8 +1,23 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import functools
+
 import torch
 import torch.nn as nn
 
 from mmedit.models.registry import BACKBONES
+
+
+def get_norm_layer(norm_type='instance'):
+    if norm_type == 'batch':
+        norm_layer = functools.partial(nn.BatchNorm2d, affine=True)
+    elif norm_type == 'instance':
+        norm_layer = functools.partial(nn.InstanceNorm2d, affine=False)
+    elif norm_type == 'none':
+        norm_layer = None
+    else:
+        raise NotImplementedError('normalization layer [%s] is not found' %
+                                  norm_type)
+    return norm_layer
 
 
 @BACKBONES.register_module()
@@ -11,13 +26,16 @@ class SIGGRAPHGenerator(nn.Module):
     def __init__(self,
                  input_nc,
                  output_nc,
-                 norm_layer=nn.BatchNorm2d,
+                 norm_type,
                  use_tanh=True,
                  classification=True):
         super(SIGGRAPHGenerator, self).__init__()
-        self.input_nc = input_nc + output_nc + 1
+        self.input_nc = input_nc
         self.output_nc = output_nc
         self.classification = classification
+
+        norm_layer = get_norm_layer(norm_type)
+
         use_bias = True
 
         # Conv1
@@ -452,14 +470,16 @@ class FusionGenerator(nn.Module):
     def __init__(self,
                  input_nc,
                  output_nc,
-                 norm_layer=nn.BatchNorm2d,
+                 norm_type,
                  use_tanh=True,
                  classification=True):
         super(FusionGenerator, self).__init__()
-        self.input_nc = input_nc + output_nc + 1
+        self.input_nc = input_nc
         self.output_nc = output_nc
         self.classification = classification
         use_bias = True
+
+        norm_layer = get_norm_layer(norm_type)
 
         # Conv1
         # model1=[nn.ReflectionPad2d(1),]
@@ -1024,14 +1044,16 @@ class InstanceGenerator(nn.Module):
     def __init__(self,
                  input_nc,
                  output_nc,
-                 norm_layer=nn.BatchNorm2d,
+                 norm_type,
                  use_tanh=True,
                  classification=True):
         super(InstanceGenerator, self).__init__()
-        self.input_nc = input_nc + output_nc + 1
+        self.input_nc = input_nc
         self.output_nc = output_nc
         self.classification = classification
         use_bias = True
+
+        norm_layer = get_norm_layer(norm_type)
 
         # Conv1
         # model1=[nn.ReflectionPad2d(1),]

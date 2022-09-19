@@ -1,11 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import functools
+
 from collections import OrderedDict
 
 import torch
-import torch.nn as nn
-from torch.nn import init
 
+from mmedit.models.common import generation_init_weights
 from ..builder import build_backbone
 from ..registry import MODELS
 from .basic_colorization import BaseColorization
@@ -15,32 +14,32 @@ from .util import encode_ab_ind, get_colorization_data, lab2rgb
 @MODELS.register_module()
 class FusionModel(BaseColorization):
 
-    def __init__(self,
-                 ngf,
-                 output_nc,
-                 avg_loss_alpha,
-                 ab_norm,
-                 l_norm,
-                 l_cent,
-                 sample_Ps,
-                 mask_cent,
-                 fusion_weight_path,
-                 resize_or_crop,
-                 loss=None,
-                 stage=None,
-                 init_type='normal',
-                 which_direction='AtoB',
-                 instance_model=None,
-                 full_model=None,
-                 fusion_model=None,
-                 train_cfg=None,
-                 test_cfg=None,
-                 pretrained=None):
-
+    def __init__(
+        self,
+        ngf,
+        output_nc,
+        # avg_loss_alpha,
+        ab_norm,
+        l_norm,
+        l_cent,
+        sample_Ps,
+        mask_cent,
+        fusion_weight_path,
+        resize_or_crop,
+        loss=None,
+        stage=None,
+        init_type='normal',
+        which_direction='AtoB',
+        instance_model=None,
+        full_model=None,
+        fusion_model=None,
+        train_cfg=None,
+        test_cfg=None,
+        pretrained=None):
         super(FusionModel, self).__init__(
             ngf,
             output_nc,
-            avg_loss_alpha,
+            # avg_loss_alpha,
             ab_norm,
             l_norm,
             l_cent,
@@ -71,46 +70,12 @@ class FusionModel(BaseColorization):
         if resize_or_crop != 'scale_width':
             torch.backends.cudnn.benchmark = True
 
-    def get_norm_layer(self, norm_type='instance'):
-        if norm_type == 'batch':
-            norm_layer = functools.partial(nn.BatchNorm2d, affine=True)
-        elif norm_type == 'instance':
-            norm_layer = functools.partial(nn.InstanceNorm2d, affine=False)
-        elif norm_type == 'none':
-            norm_layer = None
-        else:
-            raise NotImplementedError('normalization layer [%s] is not found' %
-                                      norm_type)
-        return norm_layer
-
-    def _init_weights(self, net, init_type='xavier', gain=0.02):
-
-        def init_func(m):
-            classname = m.__class__.__name__
-            if hasattr(m, 'weight') and (classname.find('Conv') != -1
-                                         or classname.find('Linear') != -1):
-                if init_type == 'normal':
-                    init.normal_(m.weight.data, 0.0, gain)
-                elif init_type == 'xavier':
-                    init.xavier_normal_(m.weight.data, gain=gain)
-                elif init_type == 'kaiming':
-                    init.kaiming_normal_(m.weight.data, a=0, mode='fan_in')
-                elif init_type == 'orthogonal':
-                    init.orthogonal_(m.weight.data, gain=gain)
-                else:
-                    raise NotImplementedError(
-                        'initialization method [%s] is not implemented' %
-                        init_type)
-                if hasattr(m, 'bias') and m.bias is not None:
-                    init.constant_(m.bias.data, 0.0)
-            elif classname.find('BatchNorm2d') != -1:
-                init.normal_(m.weight.data, 1.0, gain)
-                init.constant_(m.bias.data, 0.0)
-
-        net.apply(init_func)
-
-    def init_net(self, net, init_type='xavier'):
-        self._init_weights(net, init_type)
+    def init_net(self, net, init_type='xavier', gpu_ids=[]):
+        if len(gpu_ids) > 0:
+            assert (torch.cuda.is_available())
+            net.to(gpu_ids[0])
+            net = torch.nn.DataParallel(net, gpu_ids)
+        generation_init_weights(net, init_type)
         return net
 
     def set_input(self, input):
@@ -383,7 +348,7 @@ class FusionModel(BaseColorization):
 
         # initialize average loss values
         self.avg_losses = OrderedDict()
-        self.avg_loss_alpha = self.avg_loss_alpha
+        # self.avg_loss_alpha = self.avg_loss_alpha
         self.error_cnt = 0
         for loss_name in self.loss_names:
             self.avg_losses[loss_name] = 0
@@ -558,6 +523,9 @@ class FusionModel(BaseColorization):
 
         output['fake_img'] = out_img
         output['meta'] = None if 'meta' not in kwargs else kwargs['meta'][0]
+
+        self.save_visualization(out_img,
+                                '/mnt/ruoning/results/output_mmedit11.png')
         return output
 
     def setup_to_test(self):
@@ -565,34 +533,25 @@ class FusionModel(BaseColorization):
         self.netG = self.init_net(
             build_backbone(self.instance_model),
             init_type=self.init_type,
+            gpu_ids=[0],
         )
         self.netG.eval()
 
         self.netGF = self.init_net(
             build_backbone(self.fusion_model),
             init_type=self.init_type,
+            gpu_ids=[0],
         )
         self.netGF.eval()
-
-        self.netGComp = self.init_net(
-            build_backbone(self.full_model),
-            init_type=self.init_type,
-        )
-        self.netGComp.eval()
 
         GF_path = '{0}/latest_net_GF.pth'.format(self.fusion_weight_path)
         print('load Fusion model from %s' % GF_path)
         GF_state_dict = torch.load(GF_path)
+        self.netGF.load_state_dict(GF_state_dict, strict=False)
 
         G_path = '{0}/latest_net_G.pth'.format(self.fusion_weight_path)
         G_state_dict = torch.load(G_path)
+        self.netG.module.load_state_dict(G_state_dict, strict=False)
 
-        GComp_path = '{0}/latest_net_GComp.pth'.format(self.fusion_weight_path)
-        GComp_state_dict = torch.load(GComp_path)
-
-        self.netGF.load_state_dict(GF_state_dict, strict=False)
-        self.netG.load_state_dict(G_state_dict, strict=False)
-        self.netGComp.load_state_dict(GComp_state_dict, strict=False)
         self.netGF.eval()
         self.netG.eval()
-        self.netGComp.eval()

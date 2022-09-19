@@ -5,8 +5,8 @@
 ## 准备数据集
 
 推荐将数据集根目录链接到 $MMEditing/data 文件夹。
-如果你的文件夹结构不是如此，你可能需要查看一下配置文件中与之相关的数据路径设置。
-下面是各种任务中，我们需要到的数据集的介绍：
+如果你的文件夹结构不是如此，你可能需要修改一下配置文件中与之相关的数据路径。
+下面是各种任务中，我们需要用到的数据集的介绍：
 
 [Inpainting](https://mmediting.readthedocs.io/en/latest/_tmp/inpainting_datasets.html)
 
@@ -18,7 +18,7 @@
 
 ## 用预训练模型做推理
 
-我们提供了同时提供了用于测试一整个数据集测试脚本以及一些针对特定任务的运行样例。
+我们提供测试脚本来评估整个数据集，以及一些针对特定任务的运行样例。
 
 ### 测试一个数据集
 
@@ -54,7 +54,7 @@ python tools/test.py configs/example_config.py work_dirs/example_exp/example_mod
 [GPUS=${GPUS}] ./tools/slurm_test.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${CHECKPOINT_FILE}
 ```
 
-这里有一个使用8个 GPU 进行测是的样例，我们使用 `dev` 分区，同时设置任务名字为 `test`：
+这里有一个使用8个 GPU 进行测试的样例，我们使用 `dev` 分区，同时设置任务名字为 `test`：
 
 ```shell
 GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/example_exp/example_model_20200202.pth

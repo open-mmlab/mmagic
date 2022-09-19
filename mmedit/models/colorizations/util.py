@@ -217,7 +217,7 @@ def get_colorization_data(data_raw,
                           num_points=None,
                           **kwargs):
     data = {}
-    # todo 这里删除了data_raw的下标
+
     data_lab = rgb2lab(data_raw[0], **kwargs)
     data['A'] = data_lab[:, [
         0,
@@ -271,7 +271,7 @@ def add_color_patches_rand_gt(data,
                 cont_cond = pp < num_points
             if not cont_cond:  # skip out of loop if condition not met
                 continue
-            print('add hint !!!!!!!!!')
+
             P = np.random.choice(kwargs['sample_PS'])  # patch size
 
             # sample location

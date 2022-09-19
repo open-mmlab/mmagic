@@ -5,6 +5,7 @@ from .base_matting_dataset import BaseMattingDataset
 from .base_sr_dataset import BaseSRDataset
 from .base_vfi_dataset import BaseVFIDataset
 from .builder import build_dataloader, build_dataset
+from .color_cocostuff_dataset import COCOStuff_Instance_Dataset
 from .comp1k_dataset import AdobeComp1kDataset
 from .dataset_wrappers import RepeatDataset
 from .generation_paired_dataset import GenerationPairedDataset
@@ -38,5 +39,6 @@ __all__ = [
     'SRREDSMultipleGTDataset', 'SRVimeo90KMultipleGTDataset',
     'SRTestMultipleGTDataset', 'SRFolderRefDataset', 'SRFacialLandmarkDataset',
     'SRFolderMultipleGTDataset', 'SRFolderVideoDataset', 'BaseVFIDataset',
-    'VFIVimeo90KDataset', 'VFIVimeo90K7FramesDataset'
+    'VFIVimeo90KDataset', 'VFIVimeo90K7FramesDataset',
+    'COCOStuff_Instance_Dataset'
 ]
