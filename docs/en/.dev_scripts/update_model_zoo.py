@@ -60,7 +60,7 @@ def update_model_zoo():
 
         # count configs
         configs = set(x.lower().strip()
-                      for x in re.findall(r'/configs/.*\.py', content))
+                      for x in re.findall(r'/configs/.*?\.py', content))
 
         # count ckpts
         ckpts = list(
