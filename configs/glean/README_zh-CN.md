@@ -28,6 +28,9 @@
 |                [glean_ffhq_16x](/configs/glean/glean_x16_2xb8_ffhq.py)                | 26.91 | 2 (Tesla V100-PCIE-32GB) | [模型](https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527-61a3afad.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527_194536.log.json) |
 |                 [glean_cat_16x](/configs/glean/glean_x16_2xb8_cat.py)                 | 20.88 | 2 (Tesla V100-PCIE-32GB) | [模型](https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_16x_20210527-68912543.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_16x_20210527_103708.log.json) |
 | [glean_in128out1024_4x2_300k_ffhq_celebahq](/configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py) | 27.94 | 4 (Tesla V100-SXM3-32GB) | [模型](https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812_100549.log.json) |
+|             [glean_fp16_cat_8x](/configs/glean/glean_x8-fp16_2xb8_cat.py)             |   -   |            -             |                                           -                                            |
+|           [glean_fp16_ffhq_16x](/configs/glean/glean_x16-fp16_2xb8_ffhq.py)           |   -   |            -             |                                           -                                            |
+| [glean_fp16_in128out1024_4x2_300k_ffhq_celebahq](/configs/glean/glean_in128out1024-fp16_4xb2-300k_ffhq-celeba-hq.py) |   -   |            -             |                                           -                                            |
 
 ## 快速开始
 
