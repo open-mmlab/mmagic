@@ -65,7 +65,7 @@ Models:
   - Dataset: CAT
     Metrics: {}
     Task: Glean
-  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth
+  Weights: ''
 - Config: configs/glean/glean_x16-fp16_2xb8_ffhq.py
   In Collection: GLEAN
   Metadata:
@@ -76,7 +76,7 @@ Models:
   - Dataset: FFHQ
     Metrics: {}
     Task: Glean
-  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth
+  Weights: ''
 - Config: configs/glean/glean_in128out1024-fp16_4xb2-300k_ffhq-celeba-hq.py
   In Collection: GLEAN
   Metadata:
@@ -87,4 +87,4 @@ Models:
   - Dataset: CELEBA
     Metrics: {}
     Task: Glean
-  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth
+  Weights: ''
