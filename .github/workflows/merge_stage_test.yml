@@ -50,7 +50,7 @@ jobs:
       - name: Run unittests and generate coverage report
         run: |
           coverage run --branch --source mmedit -m pytest tests/
-          coverage xml --omit="**/stylegan3_ops/*,**/conv2d_gradfix.py"
+          coverage xml
           coverage report -m
 
   build_cpu_pt:
