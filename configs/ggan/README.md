@@ -2,6 +2,8 @@
 
 > [Geometric GAN](https://arxiv.org/abs/1705.02894)
 
+> **Task**: Unconditional GANs
+
 <!-- [ALGORITHM] -->
 
 ## Abstract

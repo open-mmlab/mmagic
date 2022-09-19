@@ -2,6 +2,8 @@
 
 > [Spectral Normalization for Generative Adversarial Networks](https://openreview.net/forum?id=B1QRgziT-)
 
+> **Task**: Conditional GANs
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
