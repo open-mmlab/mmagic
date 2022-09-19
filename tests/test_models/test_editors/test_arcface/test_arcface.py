@@ -117,7 +117,7 @@ class TestArcFace:
         assert y.shape == (2, 512)
 
         # test loss model
-        id_loss_model = IDLossModel()
+        id_loss_model = IDLossModel().cuda()
         x1 = torch.randn((2, 3, 224, 224)).cuda()
         x2 = torch.randn((2, 3, 224, 224)).cuda()
         y, _ = id_loss_model(pred=x1, gt=x2)
