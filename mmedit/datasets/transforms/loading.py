@@ -8,7 +8,7 @@ from mmcv.transforms import BaseTransform
 from mmengine.fileio import FileClient, list_from_file
 
 from mmedit.registry import TRANSFORMS
-from .trans_utils import (bbox2mask, brush_stroke_mask, get_irregular_mask,
+from mmedit.utils import (bbox2mask, brush_stroke_mask, get_irregular_mask,
                           random_bbox)
 
 

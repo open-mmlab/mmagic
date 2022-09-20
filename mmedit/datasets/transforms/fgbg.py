@@ -10,7 +10,7 @@ from mmcv.transforms import BaseTransform
 from mmengine.fileio import FileClient
 
 from mmedit.registry import TRANSFORMS
-from .trans_utils import add_gaussian_noise, adjust_gamma
+from mmedit.utils import add_gaussian_noise, adjust_gamma
 
 
 @TRANSFORMS.register_module()

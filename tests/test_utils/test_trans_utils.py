@@ -5,10 +5,9 @@ import numpy as np
 import pytest
 
 from mmedit.datasets.transforms import (CropAroundCenter, CropAroundFg,
-                                        CropAroundUnknown, LoadImageFromFile,
-                                        adjust_gamma, bbox2mask,
-                                        brush_stroke_mask, get_irregular_mask,
-                                        random_bbox)
+                                        CropAroundUnknown, LoadImageFromFile)
+from mmedit.utils import (adjust_gamma, bbox2mask, brush_stroke_mask,
+                          get_irregular_mask, random_bbox)
 
 dtype_range = {
     np.bool_: (False, True),
@@ -28,7 +27,7 @@ class TestCrop:
         image_loader = LoadImageFromFile(key='img')
         path_alpha = Path(
             __file__
-        ).parent.parent.parent / 'data' / 'matting_dataset' / 'alpha' / 'GT05.jpg'  # noqa: E501
+        ).parent.parent / 'data' / 'matting_dataset' / 'alpha' / 'GT05.jpg'  # noqa: E501
         result = image_loader({'img_path': path_alpha})
         if result['img'].ndim == 3:
             cls.ext_dim = (1, )
