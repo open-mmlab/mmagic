@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.engine import tensor2img
+from mmedit.utils import tensor2img
 
 
 def test_tensor2img():
