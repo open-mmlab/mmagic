@@ -72,3 +72,56 @@ def tensor2img(tensor, out_type=np.uint8, min_max=(0, 1)):
         result.append(img_np)
     result = result[0] if len(result) == 1 else result
     return result
+
+
+def reorder_image(img, input_order='HWC'):
+    """Reorder images to 'HWC' order.
+
+    If the input_order is (h, w), return (h, w, 1);
+    If the input_order is (c, h, w), return (h, w, c);
+    If the input_order is (h, w, c), return as it is.
+
+    Args:
+        img (np.ndarray): Input image.
+        input_order (str): Whether the input order is 'HWC' or 'CHW'.
+            If the input image shape is (h, w), input_order will not have
+            effects. Default: 'HWC'.
+
+    Returns:
+        np.ndarray: Reordered image.
+    """
+
+    if input_order not in ['HWC', 'CHW']:
+        raise ValueError(
+            f'Wrong input_order {input_order}. Supported input_orders are '
+            '"HWC" and "CHW"')
+    if len(img.shape) == 2:
+        img = img[..., None]
+        return img
+    if input_order == 'CHW':
+        if isinstance(img, np.ndarray):
+            img = img.transpose(1, 2, 0)
+        elif isinstance(img, torch.Tensor):
+            img = img.permute(1, 2, 0)
+    return img
+
+
+def to_numpy(img, dtype=np.float64):
+    """Convert data into numpy arrays of dtype.
+
+    Args:
+        img (Tensor | np.ndarray): Input data.
+        dtype (np.dtype): Set the data type of the output. Default: np.float64
+
+    Returns:
+        img (np.ndarray): Converted numpy arrays data.
+    """
+    if isinstance(img, torch.Tensor):
+        img = img.cpu().numpy()
+    elif not isinstance(img, np.ndarray):
+        raise TypeError('Only support torch.tensor and np.ndarray, '
+                        f'but got type {type(img)}')
+
+    img = img.astype(dtype)
+
+    return img
