@@ -7,7 +7,6 @@ import pytest
 import torch
 from mmengine.logging import HistoryBuffer, MessageHub, MMLogger
 
-# from mmengine.runner import LogProcessor
 from mmedit.engine import GenLogProcessor as LogProcessor
 
 
