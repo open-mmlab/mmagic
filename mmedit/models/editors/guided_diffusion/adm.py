@@ -4,7 +4,9 @@ from typing import List, Optional
 
 import mmengine
 import torch
-from mmengine.model import BaseModel
+from mmengine import MessageHub
+from mmengine.model import BaseModel, is_model_wrapper
+from mmengine.optim import OptimWrapperDict
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from tqdm import tqdm
 
@@ -15,7 +17,18 @@ from mmedit.utils.typing import ForwardInputs, SampleList
 
 @MODELS.register_module('ADM')
 @MODELS.register_module('GuidedDiffusion')
+@MODELS.register_module()
 class AblatedDiffusionModel(BaseModel):
+    """_summary_
+
+    Args:
+        data_preprocessor (_type_): _description_
+        unet (_type_): _description_
+        diffuser (_type_): _description_
+        use_fp16 (bool, optional): _description_. Defaults to False.
+        classifier (_type_, optional): _description_. Defaults to None.
+        pretrained_cfgs (_type_, optional): _description_. Defaults to None.
+    """
 
     def __init__(self,
                  data_preprocessor,
@@ -24,6 +37,7 @@ class AblatedDiffusionModel(BaseModel):
                  use_fp16=False,
                  classifier=None,
                  pretrained_cfgs=None):
+
         super().__init__(data_preprocessor=data_preprocessor)
         self.unet = MODULES.build(unet)
         self.diffuser = DIFFUSERS.build(diffuser)
@@ -36,6 +50,11 @@ class AblatedDiffusionModel(BaseModel):
             self.unet.convert_to_fp16()
 
     def load_pretrained_models(self, pretrained_cfgs):
+        """_summary_
+
+        Args:
+            pretrained_cfgs (_type_): _description_
+        """
         for key, ckpt_cfg in pretrained_cfgs.items():
             prefix = ckpt_cfg.get('prefix', '')
             map_location = ckpt_cfg.get('map_location', 'cpu')
@@ -61,6 +80,19 @@ class AblatedDiffusionModel(BaseModel):
               num_inference_steps=1000,
               labels=None,
               show_progress=False):
+        """_summary_
+
+        Args:
+            init_image (_type_, optional): _description_. Defaults to None.
+            batch_size (int, optional): _description_. Defaults to 1.
+            num_inference_steps (int, optional): _description_. 
+                Defaults to 1000.
+            labels (_type_, optional): _description_. Defaults to None.
+            show_progress (bool, optional): _description_. Defaults to False.
+
+        Returns:
+            _type_: _description_
+        """
         # Sample gaussian noise to begin loop
         if init_image is None:
             image = torch.randn((batch_size, self.unet.in_channels,
@@ -98,6 +130,17 @@ class AblatedDiffusionModel(BaseModel):
                 inputs: ForwardInputs,
                 data_samples: Optional[list] = None,
                 mode: Optional[str] = None) -> List[EditDataSample]:
+        """_summary_
+
+        Args:
+            inputs (ForwardInputs): _description_
+            data_samples (Optional[list], optional): _description_. 
+                Defaults to None.
+            mode (Optional[str], optional): _description_. Defaults to None.
+
+        Returns:
+            List[EditDataSample]: _description_
+        """
         init_image = inputs.get('init_image', None)
         batch_size = inputs.get('batch_size', 1)
         labels = data_samples.get('labels', None)
@@ -172,3 +215,47 @@ class AblatedDiffusionModel(BaseModel):
         data = self.data_preprocessor(data)
         outputs = self(**data)
         return outputs
+
+    def train_step(self, data: dict, optim_wrapper: OptimWrapperDict):
+        """_summary_
+
+        Args:
+            data (dict): _description_
+            optim_wrapper (OptimWrapperDict): _description_
+
+        Returns:
+            _type_: _description_
+        """
+
+        message_hub = MessageHub.get_current_instance()
+        curr_iter = message_hub.get_info('iter')
+
+        # real_imgs, data_samples = self.data_preprocessor(data)
+        data = self.data_preprocessor(data)
+        real_imgs = data['inputs']
+        denoising_dict_ = self.reconstruction_step(
+            self.denoising,
+            real_imgs,
+            timesteps=self.sampler,
+            return_noise=True)
+        denoising_dict_['real_imgs'] = real_imgs
+        loss, log_vars = self.denoising_loss(denoising_dict_)
+        optim_wrapper['denoising'].update_params(loss)
+
+        # update EMA
+        if self.with_ema_denoising and (curr_iter + 1) >= self.ema_start:
+            self.denoising_ema.update_parameters(
+                self.denoising_ema.
+                module if is_model_wrapper(self.denoising) else self.denoising)
+            # if not update buffer, copy buffer from orig model
+            if not self.denoising_ema.update_buffers:
+                self.denoising_ema.sync_buffers(
+                    self.denoising.module
+                    if is_model_wrapper(self.denoising) else self.denoising)
+        elif self.with_ema_denoising:
+            # before ema, copy weights from orig
+            self.denoising_ema.sync_parameters(
+                self.denoising.
+                module if is_model_wrapper(self.denoising) else self.denoising)
+
+        return log_vars
