@@ -6,7 +6,6 @@ from .base_gan import BaseConditionalGAN, BaseGAN
 from .base_mattor import BaseMattor
 from .base_translation_model import BaseTranslationModel
 from .basic_interpolator import BasicInterpolator
-from .fid_inception import InceptionV3
 from .multi_layer_disc import MultiLayerDiscriminator
 from .one_stage import OneStageInpaintor
 from .patch_disc import PatchDiscriminator
@@ -21,6 +20,5 @@ __all__ = [
     'BaseMattor', 'BasicInterpolator', 'BaseTranslationModel',
     'MultiLayerDiscriminator', 'OneStageInpaintor',
     'SoftMaskPatchDiscriminator', 'TwoStageInpaintor', 'SimpleEncoderDecoder',
-    'PatchDiscriminator', 'VGG16', 'ResNet', 'InceptionV3',
-    'ExponentialMovingAverage'
+    'PatchDiscriminator', 'VGG16', 'ResNet', 'ExponentialMovingAverage'
 ]

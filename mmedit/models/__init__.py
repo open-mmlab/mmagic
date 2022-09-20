@@ -2,8 +2,8 @@
 from ..registry import BACKBONES, COMPONENTS, LOSSES, MODELS
 from .base_models import (BaseConditionalGAN, BaseEditModel, BaseGAN,
                           BaseMattor, BaseTranslationModel, BasicInterpolator,
-                          ExponentialMovingAverage, InceptionV3,
-                          MultiLayerDiscriminator, PatchDiscriminator)
+                          ExponentialMovingAverage, MultiLayerDiscriminator,
+                          PatchDiscriminator)
 from .data_preprocessors import (EditDataPreprocessor, GenDataPreprocessor,
                                  MattorPreprocessor)
 from .editors import *  # noqa: F401, F403
@@ -13,6 +13,6 @@ __all__ = [
     'BaseGAN', 'BaseTranslationModel', 'BaseEditModel', 'MattorPreprocessor',
     'EditDataPreprocessor', 'BasicInterpolator', 'MultiLayerDiscriminator',
     'BACKBONES', 'COMPONENTS', 'LOSSES', 'BaseMattor', 'MODELS',
-    'BasicInterpolator', 'InceptionV3', 'ExponentialMovingAverage',
-    'GenDataPreprocessor', 'PatchDiscriminator', 'BaseConditionalGAN'
+    'BasicInterpolator', 'ExponentialMovingAverage', 'GenDataPreprocessor',
+    'PatchDiscriminator', 'BaseConditionalGAN'
 ]

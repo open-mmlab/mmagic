@@ -2,8 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models import InceptionV3
-from mmedit.models.base_models.fid_inception import fid_inception_v3
+from mmedit.evaluation.functional.fid_inception import (InceptionV3,
+                                                        fid_inception_v3)
 
 
 class TestFIDInception:

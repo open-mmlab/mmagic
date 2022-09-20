@@ -21,8 +21,8 @@ from torch.utils.data.dataloader import DataLoader
 from torch.utils.data.dataset import Dataset
 from torchvision.models.inception import inception_v3
 
-from mmedit.models import InceptionV3
 from mmedit.utils import MMGEN_CACHE_DIR, download_from_url
+from . import InceptionV3
 
 ALLOWED_INCEPTION = ['StyleGAN', 'PyTorch']
 TERO_INCEPTION_URL = 'https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/inception-2015-12-05.pt'  # noqa
