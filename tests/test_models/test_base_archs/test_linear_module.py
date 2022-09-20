@@ -2,7 +2,7 @@
 import torch
 import torch.nn as nn
 
-from mmedit.models.layers import LinearModule
+from mmedit.models.base_archs import LinearModule
 
 
 def test_linear_module():

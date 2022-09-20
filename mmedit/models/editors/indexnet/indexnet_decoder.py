@@ -9,7 +9,7 @@ from mmcv.cnn import ConvModule
 from mmengine.model import BaseModule
 from mmengine.model.weight_init import kaiming_init, normal_init
 
-from mmedit.models.layers import DepthwiseSeparableConvModule
+from mmedit.models.base_archs import DepthwiseSeparableConvModule
 from mmedit.registry import MODELS
 
 

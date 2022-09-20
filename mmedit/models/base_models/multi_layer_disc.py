@@ -4,7 +4,7 @@ from mmcv.cnn import ConvModule
 from mmengine import MMLogger
 from mmengine.runner import load_checkpoint
 
-from mmedit.models.layers import LinearModule
+from mmedit.models.base_archs import LinearModule
 from mmedit.registry import COMPONENTS
 
 

@@ -6,7 +6,7 @@ from mmengine.model import BaseModule
 from mmengine.model.weight_init import constant_init, xavier_init
 
 from mmedit.registry import MODELS
-from ..layers.aspp import ASPP
+from ..base_archs.aspp import ASPP
 
 
 @MODELS.register_module()

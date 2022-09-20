@@ -9,7 +9,7 @@ from mmcv.cnn.bricks import ConvModule, build_norm_layer
 from mmengine.model import normal_init
 from torch.nn.init import _calculate_correct_fan
 
-from mmedit.models.layers import AllGatherLayer
+from mmedit.models.base_archs import AllGatherLayer
 from mmedit.registry import MODELS, MODULES
 
 

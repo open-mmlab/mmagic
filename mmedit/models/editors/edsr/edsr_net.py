@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from mmengine.model import BaseModule
 
-from mmedit.models.layers import PixelShufflePack, ResidualBlockNoBN
+from mmedit.models.base_archs import PixelShufflePack, ResidualBlockNoBN
 from mmedit.models.utils import make_layer
 from mmedit.registry import MODELS
 

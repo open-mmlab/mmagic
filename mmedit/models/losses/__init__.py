@@ -12,7 +12,7 @@ from .gradient_loss import GradientLoss
 from .loss_comps import (CLIPLossComps, DiscShiftLossComps, FaceIdLossComps,
                          GANLossComps, GeneratorPathRegularizerComps,
                          GradientPenaltyLossComps, R1GradientPenaltyComps)
-from .loss_utils import mask_reduce_loss, reduce_loss
+from .loss_wrapper import mask_reduce_loss, reduce_loss
 from .perceptual_loss import (PerceptualLoss, PerceptualVGG,
                               TransferalPerceptualLoss)
 from .pixelwise_loss import CharbonnierLoss, L1Loss, MaskedTVLoss, MSELoss

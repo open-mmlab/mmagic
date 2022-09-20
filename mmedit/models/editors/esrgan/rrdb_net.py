@@ -6,7 +6,7 @@ from mmengine import MMLogger
 from mmengine.model import BaseModule
 from mmengine.runner import load_checkpoint
 
-from mmedit.models.layers import pixel_unshuffle
+from mmedit.models.base_archs import pixel_unshuffle
 from mmedit.models.utils import default_init_weights, make_layer
 from mmedit.registry import BACKBONES
 
