@@ -90,8 +90,8 @@ https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-
 
   The toolbox directly supports popular and contemporary *inpainting*, *matting*, *super-resolution*, *interpolation* and *generation* tasks.
 
-- **Efficient Distributed Training for Generative Models:** 
-  
+- **Efficient Distributed Training for Generative Models:**
+
   With support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
 
 - **State of the art**
@@ -106,7 +106,7 @@ hope MMEditing could provide better experience.
 
 - \[2022-08-31\] 🎉[MMGeneration](https://github.com/open-mmlab/mmgeneration/tree/1.x) was merged into MMEditing! And we are calling for your suggestion!
 - \[2022-08-31\] v1.0.0rc0 was released. This release introduced a brand new and flexible training & test engine, but it's still in progress. Welcome
-to try according to [the documentation](https://mmediting.readthedocs.io/en/1.x/).
+  to try according to [the documentation](https://mmediting.readthedocs.io/en/1.x/).
 - \[2022-06-01\] v0.15.0 was released.
   - Support FLAVR
   - Support AOT-GAN
@@ -214,7 +214,6 @@ Supported algorithms:
 - [x] [FLAVR](configs/flavr/README.md) (CVPR'2021)
 
 </details>
-
 
 <details open>
 <summary>Unconditional GANs (click to collapse)</summary>
