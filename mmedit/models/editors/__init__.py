@@ -30,7 +30,7 @@ from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexNetEncoder)
 from .liif import LIIF, MLPRefiner
 from .lsgan import LSGAN
-from .mspie import MSPIEStyleGAN2
+from .mspie import MSPIEStyleGAN2, PESinGAN
 from .pconv import (MaskConvModule, PartialConv2d, PConvDecoder, PConvEncoder,
                     PConvEncoderDecoder, PConvInpaintor)
 from .pggan import ProgressiveGrowingGAN
@@ -40,7 +40,7 @@ from .rdn import RDNNet
 from .real_basicvsr import RealBasicVSR, RealBasicVSRNet
 from .real_esrgan import RealESRGAN, UNetDiscriminatorWithSpectralNorm
 from .sagan import SAGAN
-from .singan import PESinGAN, SinGAN
+from .singan import SinGAN
 from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
 from .stylegan1 import StyleGAN1

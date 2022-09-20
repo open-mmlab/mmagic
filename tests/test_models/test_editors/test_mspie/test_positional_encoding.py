@@ -2,8 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models.layers import CatersianGrid as CSG
-from mmedit.models.layers import SinusoidalPositionalEmbedding as SPE
+from mmedit.models.editors.mspie import CatersianGrid as CSG
+from mmedit.models.editors.mspie import SinusoidalPositionalEmbedding as SPE
 
 
 class TestSPE:

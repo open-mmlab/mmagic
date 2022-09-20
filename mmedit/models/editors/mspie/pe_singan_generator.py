@@ -1,23 +1,23 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from functools import partial
 
+import mmengine
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmengine.logging import MMLogger
-from mmengine.runner import load_state_dict
 
 from mmedit.registry import MODULES
-from .singan_modules import GeneratorBlock
+from ..singan.singan_generator import SinGANMultiScaleGenerator
+from ..singan.singan_modules import GeneratorBlock
 
 
 @MODULES.register_module()
-class SinGANMultiScaleGenerator(nn.Module):
-    """Multi-Scale Generator used in SinGAN.
+class SinGANMSGeneratorPE(SinGANMultiScaleGenerator):
+    """Multi-Scale Generator used in SinGAN with positional encoding.
 
-    More details can be found in: Singan: Learning a Generative Model from a
-    Single Natural Image, ICCV'19.
+    More details can be found in: Positional Encoding as Spatial Inductvie Bias
+    in GANs, CVPR'2021.
 
     Notes:
 
@@ -43,6 +43,19 @@ class SinGANMultiScaleGenerator(nn.Module):
             maps in the generator block. Defaults to 32.
         out_act_cfg (dict | None, optional): Configs for output activation
             layer. Defaults to dict(type='Tanh').
+        padding_mode (str, optional): The mode of convolutional padding, same
+            as :obj:`nn.Conv2d`. Defaults to 'zero'.
+        pad_at_head (bool, optional): Whether to add padding at head.
+            Defaults to True.
+        interp_pad (bool, optional): The padding value of interpolating feature
+            maps. Defaults to False.
+        noise_with_pad (bool, optional): Whether the input fixed noises are
+            with explicit padding. Defaults to False.
+        positional_encoding (dict | None, optional): Configs for the positional
+            encoding. Defaults to None.
+        first_stage_in_channels (int | None, optional): The input channel of
+            the first generator block. If None, the first stage will adopt the
+            same input channels as other stages. Defaults to None.
     """
 
     def __init__(self,
@@ -55,8 +68,22 @@ class SinGANMultiScaleGenerator(nn.Module):
                  base_channels=32,
                  min_feat_channels=32,
                  out_act_cfg=dict(type='Tanh'),
+                 padding_mode='zero',
+                 pad_at_head=True,
+                 interp_pad=False,
+                 noise_with_pad=False,
+                 positional_encoding=None,
+                 first_stage_in_channels=None,
                  **kwargs):
-        super().__init__()
+        super(SinGANMultiScaleGenerator, self).__init__()
+
+        self.pad_at_head = pad_at_head
+        self.interp_pad = interp_pad
+        self.noise_with_pad = noise_with_pad
+
+        self.with_positional_encode = positional_encoding is not None
+        if self.with_positional_encode:
+            self.head_position_encode = MODULES.build(positional_encoding)
 
         self.pad_head = int((kernel_size - 1) / 2 * num_layers)
         self.blocks = nn.ModuleList()
@@ -70,9 +97,16 @@ class SinGANMultiScaleGenerator(nn.Module):
             min_feat_ch = min(
                 min_feat_channels * pow(2, int(np.floor(scale / 4))), 128)
 
+            if scale == 0:
+                in_ch = (
+                    first_stage_in_channels
+                    if first_stage_in_channels else in_channels)
+            else:
+                in_ch = in_channels
+
             self.blocks.append(
                 GeneratorBlock(
-                    in_channels=in_channels,
+                    in_channels=in_ch,
                     out_channels=out_channels,
                     kernel_size=kernel_size,
                     padding=padding,
@@ -80,10 +114,21 @@ class SinGANMultiScaleGenerator(nn.Module):
                     base_channels=base_ch,
                     min_feat_channels=min_feat_ch,
                     out_act_cfg=out_act_cfg,
+                    padding_mode=padding_mode,
                     **kwargs))
 
-        self.noise_padding_layer = nn.ZeroPad2d(self.pad_head)
-        self.img_padding_layer = nn.ZeroPad2d(self.pad_head)
+        if padding_mode == 'zero':
+            self.noise_padding_layer = nn.ZeroPad2d(self.pad_head)
+            self.img_padding_layer = nn.ZeroPad2d(self.pad_head)
+            self.mask_padding_layer = nn.ReflectionPad2d(self.pad_head)
+        elif padding_mode == 'reflect':
+            self.noise_padding_layer = nn.ReflectionPad2d(self.pad_head)
+            self.img_padding_layer = nn.ReflectionPad2d(self.pad_head)
+            self.mask_padding_layer = nn.ReflectionPad2d(self.pad_head)
+            mmengine.print_log('Using Reflection padding', 'current')
+        else:
+            raise NotImplementedError(
+                f'Padding mode {padding_mode} is not supported')
 
     def forward(self,
                 input_sample,
@@ -137,12 +182,31 @@ class SinGANMultiScaleGenerator(nn.Module):
             if return_noise:
                 noise_list.append(noise_)
 
-            # add padding at head
-            pad_ = (self.pad_head, ) * 4
-            noise_ = F.pad(noise_, pad_)
-            g_res_pad = F.pad(g_res, pad_)
-            noise = noise_ * noise_weights[stage] + g_res_pad
+            if self.with_positional_encode and stage == 0:
+                head_grid = self.head_position_encode(fixed_noises[0])
+                noise_ = noise_ + head_grid
 
+            # add padding at head
+            if self.pad_at_head:
+                if self.interp_pad:
+                    if self.noise_with_pad:
+                        size = noise_.shape[-2:]
+                    else:
+                        size = (noise_.size(2) + 2 * self.pad_head,
+                                noise_.size(3) + 2 * self.pad_head)
+                        noise_ = self.upsample(noise_, size)
+                    g_res_pad = self.upsample(g_res, size)
+                else:
+                    if not self.noise_with_pad:
+                        noise_ = self.noise_padding_layer(noise_)
+                    g_res_pad = self.img_padding_layer(g_res)
+            else:
+                g_res_pad = g_res
+
+            if stage == 0 and self.with_positional_encode:
+                noise = noise_ * noise_weights[stage]
+            else:
+                noise = noise_ * noise_weights[stage] + g_res_pad
             g_res = self.blocks[stage](noise.detach(), g_res)
 
             if get_prev_res and stage != curr_scale:
@@ -151,35 +215,17 @@ class SinGANMultiScaleGenerator(nn.Module):
             # upsample, here we use interpolation from PyTorch
             if stage != curr_scale:
                 h_next, w_next = fixed_noises[stage + 1].shape[-2:]
+                if self.noise_with_pad:
+                    # remove the additional padding if noise with pad
+                    h_next -= 2 * self.pad_head
+                    w_next -= 2 * self.pad_head
                 g_res = self.upsample(g_res, (h_next, w_next))
 
         if get_prev_res or return_noise:
             output_dict = dict(
                 fake_img=g_res,
                 prev_res_list=prev_res_list,
-                # noise_batch=noise_list
-            )
+                noise_batch=noise_list)
             return output_dict
 
         return g_res
-
-    def check_and_load_prev_weight(self, curr_scale):
-        logger = MMLogger.get_current_instance()
-        if curr_scale == 0:
-            return
-        prev_ch = self.blocks[curr_scale - 1].base_channels
-        curr_ch = self.blocks[curr_scale].base_channels
-
-        prev_in_ch = self.blocks[curr_scale - 1].in_channels
-        curr_in_ch = self.blocks[curr_scale].in_channels
-        if prev_ch == curr_ch and prev_in_ch == curr_in_ch:
-            load_state_dict(
-                self.blocks[curr_scale],
-                self.blocks[curr_scale - 1].state_dict(),
-                logger=MMLogger.get_current_instance())
-            logger.info('Successfully load pretrianed model from last scale.')
-        else:
-            logger.info(
-                'Cannot load pretrained model from last scale since'
-                f' prev_ch({prev_ch}) != curr_ch({curr_ch})'
-                f' or prev_in_ch({prev_in_ch}) != curr_in_ch({curr_in_ch})')
