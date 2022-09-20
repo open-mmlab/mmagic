@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.utils import pixel_unshuffle
+from mmedit.models.layers import pixel_unshuffle
 
 
 def test_pixel_unshuffle():

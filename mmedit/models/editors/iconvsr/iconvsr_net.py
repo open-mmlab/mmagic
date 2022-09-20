@@ -7,8 +7,8 @@ from mmengine import MMLogger
 from mmengine.model import BaseModule
 from mmengine.runner import load_checkpoint
 
-from mmedit.models.utils import (PixelShufflePack, ResidualBlockNoBN,
-                                 flow_warp, make_layer)
+from mmedit.models.layers import PixelShufflePack, ResidualBlockNoBN
+from mmedit.models.utils import flow_warp, make_layer
 from mmedit.registry import MODELS
 from ..basicvsr.basicvsr_net import ResidualBlocksWithInputConv, SPyNet
 from ..edvr.edvr_net import PCDAlignment, TSAFusion

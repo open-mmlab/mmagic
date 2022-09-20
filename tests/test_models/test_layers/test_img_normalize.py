@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.utils import ImgNormalize
+from mmedit.models.layers import ImgNormalize
 
 
 def test_normalize_layer():

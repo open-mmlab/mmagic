@@ -2,8 +2,8 @@
 import torch.nn as nn
 from mmengine.model import BaseModule
 
-from mmedit.models.utils import (PixelShufflePack, ResidualBlockNoBN,
-                                 default_init_weights, make_layer)
+from mmedit.models.layers import PixelShufflePack, ResidualBlockNoBN
+from mmedit.models.utils import default_init_weights, make_layer
 from mmedit.registry import MODELS
 
 

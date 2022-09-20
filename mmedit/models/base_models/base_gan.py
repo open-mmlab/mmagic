@@ -13,9 +13,8 @@ from torch import Tensor
 from mmedit.registry import MODELS, MODULES
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, LabelVar, NoiseVar, SampleList
-from ..utils import (gather_log_vars, get_valid_noise_size,
-                     get_valid_num_batches, label_sample_fn, noise_sample_fn,
-                     set_requires_grad)
+from ..utils import (get_valid_noise_size, get_valid_num_batches,
+                     label_sample_fn, noise_sample_fn, set_requires_grad)
 
 ModelType = Union[Dict, nn.Module]
 
@@ -90,6 +89,31 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             self._with_ema_gen = True
 
         self._init_loss(loss_config)
+
+    @staticmethod
+    def gather_log_vars(log_vars_list: List[Dict[str, Tensor]]
+                        ) -> Dict[str, Tensor]:
+        """Gather a list of log_vars.
+        Args:
+            log_vars_list: List[Dict[str, Tensor]]
+
+        Returns:
+            Dict[str, Tensor]
+        """
+        if len(log_vars_list) == 1:
+            return log_vars_list[0]
+
+        log_keys = log_vars_list[0].keys()
+
+        log_vars = dict()
+        for k in log_keys:
+            assert all([k in log_vars for log_vars in log_vars_list
+                        ]), (f'\'{k}\' not in some of the \'log_vars\'.')
+            log_vars[k] = torch.mean(
+                torch.stack([log_vars[k] for log_vars in log_vars_list],
+                            dim=0))
+
+        return log_vars
 
     def _init_loss(self, loss_config: Optional[Dict] = None) -> None:
         """Initialize customized loss modules.
@@ -442,7 +466,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                         **data, optimizer_wrapper=gen_optimizer_wrapper)
 
                 log_vars_gen_list.append(log_vars_gen)
-            log_vars_gen = gather_log_vars(log_vars_gen_list)
+            log_vars_gen = self.gather_log_vars(log_vars_gen_list)
             log_vars_gen.pop('loss', None)  # remove 'loss' from gen logs
 
             set_requires_grad(self.discriminator, True)

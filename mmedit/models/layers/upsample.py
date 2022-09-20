@@ -2,7 +2,7 @@
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .sr_backbone_utils import default_init_weights
+from .sr_backbone import default_init_weights
 
 
 class PixelShufflePack(nn.Module):
