@@ -1,10 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.models.base_models import BaseBackbone
+import torch.nn as nn
+from mmengine import MMLogger
+from mmengine.runner import load_checkpoint
 from mmedit.registry import BACKBONES, COMPONENTS
 
 
 @BACKBONES.register_module()
-class GLEncoderDecoder(BaseBackbone):
+class GLEncoderDecoder(nn.Module):
     """Encoder-Decoder used in Global&Local model.
 
     This implementation follows:
@@ -47,15 +49,20 @@ class GLEncoderDecoder(BaseBackbone):
         x = self.decoder(x)
 
         return x
-
-    def init_weights(self, pretrained=None, strict=False):
+    
+    def init_weights(self, pretrained=None, strict=True):
         """Init weights for models.
 
         Args:
             pretrained (str, optional): Path for pretrained weights. If given
                 None, pretrained weights will not be loaded. Defaults: None.
             strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to False.
+                Defaults to True.
         """
 
-        return super().init_weights(pretrained, strict)
+        if isinstance(pretrained, str):
+            logger = MMLogger.get_current_instance()
+            load_checkpoint(self, pretrained, strict=strict, logger=logger)
+        elif pretrained is not None:
+            raise TypeError(f'"pretrained" must be a str or None. '
+                            f'But received {type(pretrained)}.')

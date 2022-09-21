@@ -12,6 +12,12 @@ from .linear_module import LinearModule
 from .separable_conv_module import DepthwiseSeparableConvModule
 from .sr_backbone import ResidualBlockNoBN
 from .upsample import PixelShufflePack
+from .vgg import VGG16
+from .multi_layer_disc import MultiLayerDiscriminator
+from .patch_disc import PatchDiscriminator
+from .resnet import ResNet
+from .simple_encoder_decoder import SimpleEncoderDecoder
+from .smpatch_disc import SoftMaskPatchDiscriminator
 
 # from .sr_backbone import ResidualBlockNoBN, default_init_weights
 
@@ -19,5 +25,7 @@ __all__ = [
     'ASPP', 'DepthwiseSeparableConvModule', 'SimpleGatedConvModule',
     'LinearModule', 'conv2d', 'conv_transpose2d', 'pixel_unshuffle',
     'PixelShufflePack', 'ImgNormalize', 'SpatialTemporalEnsemble',
+    'SoftMaskPatchDiscriminator', 'SimpleEncoderDecoder', 'MultiLayerDiscriminator', 
+    'PatchDiscriminator', 'VGG16', 'ResNet', 
     'AllGatherLayer', 'ResidualBlockNoBN'
 ]
