@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .average_model import ExponentialMovingAverage
+from .average_model import ExponentialMovingAverage, RampUpEMA
 from .base_backbone import BaseBackbone
 from .base_edit_model import BaseEditModel
 from .base_gan import BaseConditionalGAN, BaseGAN
@@ -20,5 +20,6 @@ __all__ = [
     'BaseMattor', 'BasicInterpolator', 'BaseTranslationModel',
     'MultiLayerDiscriminator', 'OneStageInpaintor',
     'SoftMaskPatchDiscriminator', 'TwoStageInpaintor', 'SimpleEncoderDecoder',
-    'PatchDiscriminator', 'VGG16', 'ResNet', 'ExponentialMovingAverage'
+    'PatchDiscriminator', 'VGG16', 'ResNet', 'ExponentialMovingAverage',
+    'RampUpEMA'
 ]
