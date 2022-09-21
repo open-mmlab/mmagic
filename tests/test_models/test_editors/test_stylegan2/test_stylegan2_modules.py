@@ -8,7 +8,8 @@ import torch
 from mmedit.models.editors.stylegan1 import get_mean_latent, style_mixing
 from mmedit.models.editors.stylegan2 import StyleGAN2Generator
 from mmedit.models.editors.stylegan2.stylegan2_modules import (
-    Blur, DownsampleUpFIRDn, ModulatedStyleConv, ModulatedToRGB)
+    Blur, DownsampleUpFIRDn, ModulatedConv2d, ModulatedStyleConv,
+    ModulatedToRGB)
 from mmedit.models.utils import get_module_device
 
 
@@ -121,6 +122,79 @@ class TestModStyleConv:
         input_style = torch.randn((2, 5)).cuda()
 
         res = conv(input_x, input_style)
+        assert res.shape == (2, 1, 4, 4)
+
+
+class TestModulatedConv2d():
+
+    @classmethod
+    def setup_class(cls):
+        cls.default_cfg = dict(
+            in_channels=3,
+            out_channels=1,
+            kernel_size=3,
+            style_channels=5,
+            upsample=True)
+
+    def test_mod_conv_cpu(self):
+        conv = ModulatedConv2d(**self.default_cfg)
+        input_x = torch.randn((2, 3, 4, 4))
+        input_style = torch.randn((2, 5))
+
+        res = conv(input_x, input_style)
+        assert res.shape == (2, 1, 8, 8)
+
+        _cfg = deepcopy(self.default_cfg)
+        _cfg['upsample'] = False
+        conv = ModulatedConv2d(**_cfg)
+        input_x = torch.randn((2, 3, 4, 4))
+        input_style = torch.randn((2, 5))
+
+        res = conv(input_x, input_style)
+        assert res.shape == (2, 1, 4, 4)
+
+        _cfg = deepcopy(self.default_cfg)
+        _cfg['upsample'] = False
+        _cfg['downsample'] = True
+        conv = ModulatedConv2d(**_cfg)
+        input_x = torch.randn((2, 3, 8, 8))
+        input_style = torch.randn((2, 5))
+        res = conv(input_x, input_style)
+        assert res.shape == (2, 1, 4, 4)
+
+        # test input gain
+        res = conv(input_x, input_style, input_gain=torch.randn(2, 3))
+        assert res.shape == (2, 1, 4, 4)
+
+    @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
+    def test_mod_conv_cuda(self):
+        conv = ModulatedConv2d(**self.default_cfg).cuda()
+        input_x = torch.randn((2, 3, 4, 4)).cuda()
+        input_style = torch.randn((2, 5)).cuda()
+
+        res = conv(input_x, input_style)
+        assert res.shape == (2, 1, 8, 8)
+
+        _cfg = deepcopy(self.default_cfg)
+        _cfg['upsample'] = False
+        conv = ModulatedConv2d(**_cfg).cuda()
+        input_x = torch.randn((2, 3, 4, 4)).cuda()
+        input_style = torch.randn((2, 5)).cuda()
+
+        res = conv(input_x, input_style)
+        assert res.shape == (2, 1, 4, 4)
+
+        _cfg = deepcopy(self.default_cfg)
+        _cfg['upsample'] = False
+        _cfg['downsample'] = True
+        conv = ModulatedConv2d(**_cfg).cuda()
+        input_x = torch.randn((2, 3, 8, 8)).cuda()
+        input_style = torch.randn((2, 5)).cuda()
+        res = conv(input_x, input_style)
+        assert res.shape == (2, 1, 4, 4)
+
+        # test input gain
+        res = conv(input_x, input_style, input_gain=torch.randn(2, 3).cuda())
         assert res.shape == (2, 1, 4, 4)
 
 
