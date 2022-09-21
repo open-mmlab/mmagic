@@ -48,7 +48,6 @@ train_pipeline = [
         saturation=0.05,
         hue=0.05),
     dict(type='TemporalReverse', keys=['img'], reverse_ratio=0.5),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -63,7 +62,6 @@ val_pipeline = [
         key='gt',
         channel_order='rgb',
         imdecode_backend='pillow'),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -73,7 +71,6 @@ demo_pipeline = [
         key='img',
         channel_order='rgb',
         imdecode_backend='pillow'),
-    dict(type='ToTensor', keys=['img']),
     dict(type='PackEditInputs')
 ]
 

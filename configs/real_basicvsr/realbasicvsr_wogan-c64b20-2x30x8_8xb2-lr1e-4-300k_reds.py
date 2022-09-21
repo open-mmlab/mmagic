@@ -193,7 +193,6 @@ train_pipeline = [
         keys=['img'],
     ),
     dict(type='Clip', keys=['img']),
-    dict(type='ToTensor', keys=['img', 'gt', 'gt_unsharp']),
     dict(type='PackEditInputs')
 ]
 
@@ -205,7 +204,6 @@ val_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='RescaleToZeroOne', keys=['img', 'gt']),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -217,7 +215,6 @@ test_pipeline = [
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='RescaleToZeroOne', keys=['img']),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 

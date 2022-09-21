@@ -33,14 +33,12 @@ test_pipeline = [
         filename_tmpl='{:03d}.png'),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='ToTensor', keys=['img']),
     dict(type='PackEditInputs')
 ]
 

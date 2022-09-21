@@ -87,7 +87,6 @@ train_pipeline = [
         direction='vertical'),
     dict(
         type='RandomTransposeHW', keys=['ref', 'ref_lq'], transpose_ratio=0.5),
-    dict(type='ToTensor', keys=['img', 'gt', 'img_lq', 'ref', 'ref_lq']),
     dict(type='PackEditInputs')
 ]
 valid_pipeline = [
@@ -122,7 +121,6 @@ valid_pipeline = [
         output_keys=['img_lq', 'ref_lq'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='ToTensor', keys=['img', 'gt', 'img_lq', 'ref', 'ref_lq']),
     dict(type='PackEditInputs')
 ]
 demo_pipeline = [
@@ -156,7 +154,6 @@ demo_pipeline = [
         output_keys=['img_lq', 'ref_lq'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='ToTensor', keys=['img', 'img_lq', 'ref', 'ref_lq']),
     dict(type='PackEditInputs')
 ]
 
