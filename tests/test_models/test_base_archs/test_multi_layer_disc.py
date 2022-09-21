@@ -3,7 +3,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models import MultiLayerDiscriminator
+from mmedit.models.base_archs import MultiLayerDiscriminator
 
 
 def test_multi_layer_disc():

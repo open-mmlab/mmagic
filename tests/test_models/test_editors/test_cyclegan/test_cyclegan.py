@@ -6,7 +6,8 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import CycleGAN, GenDataPreprocessor, PatchDiscriminator
+from mmedit.models import CycleGAN, GenDataPreprocessor
+from mmedit.models.base_archs import PatchDiscriminator
 from mmedit.models.editors.cyclegan import ResnetGenerator
 from mmedit.structures import EditDataSample
 

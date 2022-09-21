@@ -19,8 +19,6 @@ from .sr_backbone import ResidualBlockNoBN
 from .upsample import PixelShufflePack
 from .vgg import VGG16
 
-# from .sr_backbone import ResidualBlockNoBN, default_init_weights
-
 __all__ = [
     'ASPP', 'DepthwiseSeparableConvModule', 'SimpleGatedConvModule',
     'LinearModule', 'conv2d', 'conv_transpose2d', 'pixel_unshuffle',

@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.base_models import ResNet
+from mmedit.models.base_archs import ResNet
 
 
 def test_resnet():
