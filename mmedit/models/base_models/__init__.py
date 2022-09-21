@@ -9,9 +9,7 @@ from .one_stage import OneStageInpaintor
 from .two_stage import TwoStageInpaintor
 
 __all__ = [
-    'BaseEditModel', 'BaseGAN', 'BaseConditionalGAN',
-    'BaseMattor', 'BasicInterpolator', 'BaseTranslationModel', 
-    'OneStageInpaintor','TwoStageInpaintor', 
-    'ExponentialMovingAverage',
-    'RampUpEMA'
+    'BaseEditModel', 'BaseGAN', 'BaseConditionalGAN', 'BaseMattor',
+    'BasicInterpolator', 'BaseTranslationModel', 'OneStageInpaintor',
+    'TwoStageInpaintor', 'ExponentialMovingAverage', 'RampUpEMA'
 ]

@@ -1,32 +1,30 @@
 import os
 import os.path as osp
 from argparse import ArgumentParser
+from fnmatch import fnmatch
 from glob import glob
-from fnmatch import fnmatch 
+
 from tqdm import tqdm
 
 parser = ArgumentParser()
 parser.add_argument('--src', type=str, default='mmedit')
 parser.add_argument('--dst', type=str, default='tests')
-parser.add_argument('--exclude', nargs='+', 
+parser.add_argument(
+    '--exclude',
+    nargs='+',
     default=[
-        'mmedit/.mim', 
-        'mmedit/registry.py',
-        'mmedit/version.py',
-        '__pycache__', 
-        '__init__',
-        '**/__init__.py',
-        '**/stylegan3_ops/*',
-        '**/conv2d_gradfix.py',
-        '**/grid_sample_gradfix.py'])
+        'mmedit/.mim', 'mmedit/registry.py', 'mmedit/version.py',
+        '__pycache__', '__init__', '**/__init__.py', '**/stylegan3_ops/*',
+        '**/conv2d_gradfix.py', '**/grid_sample_gradfix.py'
+    ])
 args = parser.parse_args()
 
 
-def check_exclude(fn): 
-    for pattern in args.exclude: 
-        if fnmatch(fn, pattern): 
-            return True 
-    return False 
+def check_exclude(fn):
+    for pattern in args.exclude:
+        if fnmatch(fn, pattern):
+            return True
+    return False
 
 
 def update_ut():
@@ -38,8 +36,8 @@ def update_ut():
     file_list = glob(f'mmedit/**/*.py', recursive=True)
 
     for f in tqdm(file_list):
-        if check_exclude(f): 
-            continue 
+        if check_exclude(f):
+            continue
 
         if osp.splitext(osp.basename(f))[0] != '__init__':
 

@@ -2,6 +2,7 @@
 import torch.nn as nn
 from mmengine import MMLogger
 from mmengine.runner import load_checkpoint
+
 from mmedit.registry import BACKBONES, COMPONENTS
 
 
@@ -49,7 +50,7 @@ class GLEncoderDecoder(nn.Module):
         x = self.decoder(x)
 
         return x
-    
+
     def init_weights(self, pretrained=None, strict=True):
         """Init weights for models.
 
