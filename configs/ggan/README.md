@@ -1,4 +1,4 @@
-# GGAN (arXiv'2017)
+# GGAN (ArXiv'2017)
 
 > [Geometric GAN](https://arxiv.org/abs/1705.02894)
 

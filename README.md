@@ -39,7 +39,7 @@ English | [简体中文](/README_zh-CN.md)
 
 ## Introduction
 
-MMEditing is an open-source image and video editing&&generating toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+MMEditing is an open-source image and video editing&generating toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
 Currently, MMEditing support the following tasks:
 
@@ -55,7 +55,7 @@ https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-
 
 https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
 
-<table>
+<table align="center">
 <thead>
   <tr>
     <td>
@@ -216,12 +216,12 @@ Supported algorithms:
 </details>
 
 <details open>
-<summary>Unconditional GANs (click to collapse)</summary>
+<summary>Unconditional GANs</summary>
 
 - ✅ [DCGAN](configs/dcgan/README.md) (ICLR'2016)
-- ✅ [WGAN-GP](configs/wgan-gp/README.md) (NIPS'2017)
+- ✅ [WGAN-GP](configs/wgan-gp/README.md) (NeurIPS'2017)
 - ✅ [LSGAN](configs/lsgan/README.md) (ICCV'2017)
-- ✅ [GGAN](configs/ggan/README.md) (arXiv'2017)
+- ✅ [GGAN](configs/ggan/README.md) (ArXiv'2017)
 - ✅ [PGGAN](configs/pggan/README.md) (ICLR'2018)
 - ✅ [StyleGANV1](configs/styleganv1/README.md) (CVPR'2019)
 - ✅ [StyleGANV2](configs/styleganv2/README.md) (CVPR'2020)
@@ -230,7 +230,7 @@ Supported algorithms:
 </details>
 
 <details open>
-<summary>Conditional GANs (click to collapse)</summary>
+<summary>Conditional GANs</summary>
 
 - ✅ [SNGAN](configs/sngan_proj/README.md) (ICLR'2018)
 - ✅ [Projection GAN](configs/sngan_proj/README.md) (ICLR'2018)
@@ -240,7 +240,7 @@ Supported algorithms:
 </details>
 
 <details open>
-<summary>Image2Image Translation (click to collapse)</summary>
+<summary>Image2Image Translation</summary>
 
 - ✅ [Pix2Pix](configs/pix2pix/README.md) (CVPR'2017)
 - ✅ [CycleGAN](configs/cyclegan/README.md) (ICCV'2017)
@@ -248,7 +248,7 @@ Supported algorithms:
 </details>
 
 <details open>
-<summary>Internal Learning (click to collapse)</summary>
+<summary>Internal Learning</summary>
 
 - ✅ [SinGAN](configs/singan/README.md) (ICCV'2019)
 
