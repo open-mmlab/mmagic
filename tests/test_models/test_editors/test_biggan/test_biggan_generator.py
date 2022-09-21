@@ -113,9 +113,9 @@ class TestBigGANGenerator(object):
         res = g(None, None, num_batches=3)
         assert res.shape == (3, 3, 128, 128)
 
-        # test init --> NO2
+        # test init --> N02
         cfg = deepcopy(self.default_config)
-        cfg.update(init_type='NO2')
+        cfg.update(init_type='N02')
         g = MODULES.build(cfg)
 
         # test init --> xavier
@@ -130,7 +130,7 @@ class TestBigGANGenerator(object):
             g = MODULES.build(cfg)
 
         cfg = deepcopy(self.default_config)
-        cfg.update(pretrained='1234')
+        cfg.update(pretrained=1234)
         with pytest.raises(TypeError):
             g = MODULES.build(cfg)
 
