@@ -21,7 +21,7 @@ from torch.utils.data.dataloader import DataLoader
 from torch.utils.data.dataset import Dataset
 from torchvision.models.inception import inception_v3
 
-from mmedit.utils import MMGEN_CACHE_DIR, download_from_url
+from mmedit.utils import MMEDIT_CACHE_DIR, download_from_url
 from . import InceptionV3
 
 ALLOWED_INCEPTION = ['StyleGAN', 'PyTorch']
@@ -131,7 +131,7 @@ def _load_inception_from_url(inception_url: str) -> nn.Module:
     print_log(f'Try to download Inception Model from {inception_url}...',
               'current')
     try:
-        path = download_from_url(inception_url, dest_dir=MMGEN_CACHE_DIR)
+        path = download_from_url(inception_url, dest_dir=MMEDIT_CACHE_DIR)
         print_log('Download Finished.', 'current')
         return _load_inception_from_path(path)
     except Exception as e:
@@ -336,7 +336,7 @@ def prepare_inception_feat(dataloader: DataLoader,
     if inception_pkl is None:
         inception_pkl, args = get_inception_feat_cache_name_and_args(
             dataloader, metric, real_nums, capture_mean_cov, capture_all)
-        inception_pkl = osp.join(MMGEN_CACHE_DIR, inception_pkl)
+        inception_pkl = osp.join(MMEDIT_CACHE_DIR, inception_pkl)
     else:
         args = dict()
     if osp.exists(inception_pkl):
@@ -510,7 +510,7 @@ def prepare_vgg_feat(dataloader: DataLoader,
     # cannot load or download from file, extract manually
     if vgg_pkl is None:
         vgg_pkl, args = get_vgg_feat_cache_name_and_args(dataloader, metric)
-        vgg_pkl = osp.join(MMGEN_CACHE_DIR, vgg_pkl)
+        vgg_pkl = osp.join(MMEDIT_CACHE_DIR, vgg_pkl)
     else:
         args = dict()
     if osp.exists(vgg_pkl):
