@@ -15,7 +15,11 @@ parser.add_argument(
     default=[
         'mmedit/.mim', 'mmedit/registry.py', 'mmedit/version.py',
         '__pycache__', '__init__', '**/__init__.py', '**/stylegan3_ops/*',
-        '**/conv2d_gradfix.py', '**/grid_sample_gradfix.py'
+        '**/conv2d_gradfix.py', '**/grid_sample_gradfix.py',
+        '**/misc.py'
+        '**/upfirdn2d.py',
+        'mmedit/models/base_archs/all_gather_layer.py',
+        '**/typing.py'
     ])
 args = parser.parse_args()
 
