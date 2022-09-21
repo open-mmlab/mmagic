@@ -2,6 +2,8 @@
 
 > [Alias-Free Generative Adversarial Networks](https://nvlabs-fi-cdn.nvidia.com/stylegan3/stylegan3-paper.pdf)
 
+> **Task**: Unconditional GANs
+
 <!-- [ALGORITHM] -->
 
 ## Abstract

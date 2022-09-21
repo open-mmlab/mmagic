@@ -2,6 +2,8 @@
 
 > [Large Scale GAN Training for High Fidelity Natural Image Synthesis](https://openreview.net/forum?id=B1xsqj09Fm)
 
+> **Task**: Conditional GANs
+
 <!-- [ALGORITHM] -->
 
 ## Abstract

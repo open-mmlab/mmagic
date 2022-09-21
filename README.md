@@ -142,7 +142,7 @@ mim install 'mmcv>=2.0.0rc1'
 Install MMEditing from source.
 
 ```shell
-git clone -b 1.x shttps://github.com/open-mmlab/mmediting.git
+git clone -b 1.x https://github.com/open-mmlab/mmediting.git
 cd mmediting
 pip3 install -e .
 ```

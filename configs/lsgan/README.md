@@ -2,6 +2,8 @@
 
 > [Least Squares Generative Adversarial Networks](https://openaccess.thecvf.com/content_iccv_2017/html/Mao_Least_Squares_Generative_ICCV_2017_paper.html)
 
+> **Task**: Unconditional GANs
+
 <!-- [ALGORITHM] -->
 
 ## Abstract
