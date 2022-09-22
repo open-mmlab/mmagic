@@ -143,11 +143,11 @@ Models:
       n_disc: 5.0
     Task: Sagan
   Weights: https://download.openmmlab.com/mmgen/sagan/sagan_32_cifar10_convert-studio-rgb_20210730_153321-080da7e2.pth
-- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/sagan/sagan_cvt-studioGAN_cifar10-32x32.py
+- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/sagan/sagan_128_cvt_studioGAN.py
   In Collection: SAGAN
   Metadata:
     Training Data: Others
-  Name: sagan_cvt-studioGAN_cifar10-32x32
+  Name: sagan_128_cvt_studioGAN
   Results:
   - Dataset: Others
     Metrics:

@@ -18,7 +18,7 @@ from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import SampleList
 from ...base_models import BaseGAN
-from ...utils import gather_log_vars, set_requires_grad
+from ...utils import set_requires_grad
 
 ModelType = Union[Dict, nn.Module]
 TrainInput = Union[dict, Tensor]
@@ -446,7 +446,7 @@ class SinGAN(BaseGAN):
                         inputs_dict, data_sample, gen_optimizer_wrapper)
 
                 log_vars_gen_list.append(log_vars_gen)
-            log_vars_gen = gather_log_vars(log_vars_gen_list)
+            log_vars_gen = self.gather_log_vars(log_vars_gen_list)
             log_vars_gen.pop('loss', None)  # remove 'loss' from gen logs
 
             set_requires_grad(self.discriminator, True)

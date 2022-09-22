@@ -37,7 +37,7 @@ mmediting
 For faster IO, we recommend to crop the images to sub-images. We provide such a script:
 
 ```shell
-python tools/data/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
+python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
 ```
 
 The generated data is stored under `df2k_ost` and the data structure is as follows, where `_sub` indicates the sub-images.
@@ -59,5 +59,5 @@ mmediting
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
+python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
 ```

@@ -10,7 +10,7 @@ from mmengine.model import BaseModule
 from mmengine.model.weight_init import constant_init, xavier_init
 from mmengine.utils.dl_utils.parrots_wrapper import SyncBatchNorm
 
-from mmedit.models.layers import ASPP, DepthwiseSeparableConvModule
+from mmedit.models.base_archs import ASPP, DepthwiseSeparableConvModule
 from mmedit.registry import MODELS
 
 

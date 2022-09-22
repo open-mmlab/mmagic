@@ -6,7 +6,8 @@ from mmcv.ops import ModulatedDeformConv2d, modulated_deform_conv2d
 from mmengine.model import BaseModule
 from mmengine.model.weight_init import constant_init
 
-from mmedit.models.utils import PixelShufflePack, flow_warp
+from mmedit.models.base_archs import PixelShufflePack
+from mmedit.models.utils import flow_warp
 from mmedit.registry import MODELS
 from ..basicvsr.basicvsr_net import ResidualBlocksWithInputConv, SPyNet
 

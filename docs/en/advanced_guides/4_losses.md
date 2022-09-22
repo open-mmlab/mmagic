@@ -465,6 +465,50 @@ loss_tv=dict(
 ```
 
 </td>
+
+</tr>
+  <tr>
+    <td>perceptual loss</td>
+    <td>mmedit.models.PerceptualLoss</td>
+    <td>
+
+```python
+# real_basicvsr
+perceptual_loss=dict(
+    type='PerceptualLoss',
+    layer_weights={
+        '2': 0.1,
+        '7': 0.1,
+        '16': 1.0,
+        '25': 1.0,
+        '34': 1.0,
+    },
+    vgg_type='vgg19',
+    perceptual_weight=1.0,
+    style_weight=0,
+    norm_img=False)
+
+```
+
+</td>
+
+</tr>
+  <tr>
+    <td>transferal perceptual loss</td>
+    <td>mmedit.models.TransferalPerceptualLoss</td>
+    <td>
+
+```python
+# ttsr
+transferal_perceptual_loss=dict(
+    type='TransferalPerceptualLoss',
+    loss_weight=1e-2,
+    use_attention=False,
+    criterion='mse')
+
+```
+
+</td>
   </tr>
 </tbody>
 </table>

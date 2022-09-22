@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.models.base_models.resnet import ResNet
+from mmedit.models.base_archs import ResNet
 from mmedit.registry import MODELS
 
 

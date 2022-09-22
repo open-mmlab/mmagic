@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import clip
 import pytest
 import torch
@@ -8,6 +10,9 @@ from mmengine.utils.dl_utils import TORCH_VERSION
 from mmedit.models.losses import CLIPLossComps
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 @pytest.mark.skipif(
     digit_version(TORCH_VERSION) <= digit_version('1.6.0'),
     reason='version limitation')

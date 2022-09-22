@@ -4,7 +4,8 @@ from mmengine.logging import MMLogger
 from mmengine.runner import load_checkpoint
 
 from mmedit.registry import MODULES
-from ...utils import UnetSkipConnectionBlock, generation_init_weights
+from ...utils import generation_init_weights
+from .pix2pix_modules import UnetSkipConnectionBlock
 
 
 @MODULES.register_module()

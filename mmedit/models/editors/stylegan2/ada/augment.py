@@ -10,7 +10,7 @@ import numpy as np
 import scipy.signal
 import torch
 
-from ....layers import conv2d_gradfix
+from ....base_archs import conv2d_gradfix
 from . import grid_sample_gradfix, misc, upfirdn2d
 
 # ----------------------------------------------------------------------------
