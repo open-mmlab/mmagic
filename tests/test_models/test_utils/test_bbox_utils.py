@@ -1,51 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import copy
-
 import numpy as np
 import pytest
 import torch
-import torch.nn as nn
 
 from mmedit.models.editors import PlainRefiner
-from mmedit.models.utils import (GANImageBuffer, PixelShufflePack,
-                                 extract_around_bbox, extract_bbox_patch,
-                                 generation_init_weights, pixel_unshuffle,
-                                 set_requires_grad)
-
-
-def test_pixel_shuffle():
-
-    # test on cpu
-    model = PixelShufflePack(3, 3, 2, 3)
-    model.init_weights()
-    x = torch.rand(1, 3, 16, 16)
-    y = model(x)
-    assert y.shape == (1, 3, 32, 32)
-
-    # test on gpu
-    if torch.cuda.is_available():
-        model = model.cuda()
-        x = x.cuda()
-        y = model(x)
-        assert y.shape == (1, 3, 32, 32)
-
-
-def test_pixel_unshuffle():
-    # test on cpu
-    x = torch.rand(1, 3, 20, 20)
-    y = pixel_unshuffle(x, scale=2)
-    assert y.shape == (1, 12, 10, 10)
-    with pytest.raises(AssertionError):
-        y = pixel_unshuffle(x, scale=3)
-
-    # test on gpu
-    if torch.cuda.is_available():
-        x = x.cuda()
-        y = pixel_unshuffle(x, scale=2)
-        assert y.shape == (1, 12, 10, 10)
-
-        with pytest.raises(AssertionError):
-            y = pixel_unshuffle(x, scale=3)
+from mmedit.models.utils import extract_around_bbox, extract_bbox_patch
 
 
 def test_extract_bbox_patch():
@@ -162,75 +121,3 @@ def _demo_inputs_pair(img_shape=(64, 64), batch_size=1, cuda=False):
         trimap = trimap.cuda()
         raw_alpha = raw_alpha.cuda()
     return merged, alpha, trimap, raw_alpha
-
-
-def test_set_requires_grad():
-    model = torch.nn.Conv2d(1, 3, 1, 1)
-    set_requires_grad(model, False)
-    for param in model.parameters():
-        assert not param.requires_grad
-
-
-def test_gan_image_buffer():
-    # test buffer size = 0
-    buffer = GANImageBuffer(buffer_size=0)
-    img_np = np.random.randn(1, 3, 256, 256)
-    img_tensor = torch.from_numpy(img_np)
-    img_tensor_return = buffer.query(img_tensor)
-    assert torch.equal(img_tensor_return, img_tensor)
-
-    # test buffer size > 0
-    buffer = GANImageBuffer(buffer_size=1)
-    img_np = np.random.randn(2, 3, 256, 256)
-    img_tensor = torch.from_numpy(img_np)
-    img_tensor_0 = torch.unsqueeze(img_tensor[0], 0)
-    img_tensor_1 = torch.unsqueeze(img_tensor[1], 0)
-    img_tensor_00 = torch.cat([img_tensor_0, img_tensor_0], 0)
-    img_tensor_return = buffer.query(img_tensor)
-    assert (torch.equal(img_tensor_return, img_tensor)
-            and torch.equal(buffer.image_buffer[0], img_tensor_0)) or \
-           (torch.equal(img_tensor_return, img_tensor_00)
-            and torch.equal(buffer.image_buffer[0], img_tensor_1))
-
-    # test buffer size > 0, specify buffer chance
-    buffer = GANImageBuffer(buffer_size=1, buffer_ratio=0.3)
-    img_np = np.random.randn(2, 3, 256, 256)
-    img_tensor = torch.from_numpy(img_np)
-    img_tensor_0 = torch.unsqueeze(img_tensor[0], 0)
-    img_tensor_1 = torch.unsqueeze(img_tensor[1], 0)
-    img_tensor_00 = torch.cat([img_tensor_0, img_tensor_0], 0)
-    img_tensor_return = buffer.query(img_tensor)
-    assert (torch.equal(img_tensor_return, img_tensor)
-            and torch.equal(buffer.image_buffer[0], img_tensor_0)) or \
-           (torch.equal(img_tensor_return, img_tensor_00)
-            and torch.equal(buffer.image_buffer[0], img_tensor_1))
-
-
-def test_generation_init_weights():
-    # Conv
-    module = nn.Conv2d(3, 3, 1)
-    module_tmp = copy.deepcopy(module)
-    generation_init_weights(module, init_type='normal', init_gain=0.02)
-    generation_init_weights(module, init_type='xavier', init_gain=0.02)
-    generation_init_weights(module, init_type='kaiming')
-    generation_init_weights(module, init_type='orthogonal', init_gain=0.02)
-    with pytest.raises(NotImplementedError):
-        generation_init_weights(module, init_type='abc')
-    assert not torch.equal(module.weight.data, module_tmp.weight.data)
-
-    # Linear
-    module = nn.Linear(3, 1)
-    module_tmp = copy.deepcopy(module)
-    generation_init_weights(module, init_type='normal', init_gain=0.02)
-    generation_init_weights(module, init_type='xavier', init_gain=0.02)
-    generation_init_weights(module, init_type='kaiming')
-    generation_init_weights(module, init_type='orthogonal', init_gain=0.02)
-    with pytest.raises(NotImplementedError):
-        generation_init_weights(module, init_type='abc')
-    assert not torch.equal(module.weight.data, module_tmp.weight.data)
-
-    # BatchNorm2d
-    module = nn.BatchNorm2d(3)
-    module_tmp = copy.deepcopy(module)
-    generation_init_weights(module, init_type='normal', init_gain=0.02)
-    assert not torch.equal(module.weight.data, module_tmp.weight.data)

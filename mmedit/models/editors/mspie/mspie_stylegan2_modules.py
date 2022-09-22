@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from ...layers import conv2d, conv_transpose2d
+from ...base_archs import conv2d, conv_transpose2d
 from ..pggan import equalized_lr
 from ..stylegan1 import Blur, EqualLinearActModule, NoiseInjection
 from ..stylegan2.stylegan2_modules import _FusedBiasLeakyReLU

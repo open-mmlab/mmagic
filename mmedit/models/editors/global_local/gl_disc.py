@@ -4,7 +4,7 @@ import torch.nn as nn
 from mmengine import MMLogger
 from mmengine.runner import load_checkpoint
 
-from mmedit.models.base_models import MultiLayerDiscriminator
+from mmedit.models.base_archs import MultiLayerDiscriminator
 from mmedit.registry import COMPONENTS
 
 

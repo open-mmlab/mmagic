@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
-import torch
 
 from mmedit.evaluation.metrics import metrics_utils
 
@@ -30,9 +29,3 @@ def test_obtain_data():
     data_sample = {'data_samples': {key: img}}
     result = metrics_utils.obtain_data(data_sample, key)
     assert not (result - img).any()
-
-
-def test_to_numpy():
-    input = torch.rand(1, 3, 8, 8)
-    output = metrics_utils.to_numpy(input)
-    assert isinstance(output, np.ndarray)

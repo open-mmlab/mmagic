@@ -9,8 +9,8 @@ from mmcv.ops.upfirdn2d import upfirdn2d
 from mmengine.dist import get_dist_info
 from mmengine.runner.amp import autocast
 
-from ...layers import conv2d, conv_transpose2d
-from ...utils import AllGatherLayer
+from mmedit.models.base_archs import AllGatherLayer
+from ...base_archs import conv2d, conv_transpose2d
 from ..pggan import EqualizedLRConvModule, equalized_lr
 from ..stylegan1 import Blur, EqualLinearActModule, NoiseInjection, make_kernel
 

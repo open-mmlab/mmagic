@@ -8,7 +8,8 @@ from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import SampleList
 from ...base_models import BaseTranslationModel
-from ...utils import GANImageBuffer, set_requires_grad
+from ...utils import set_requires_grad
+from .cyclegan_modules import GANImageBuffer
 
 
 @MODELS.register_module()

@@ -18,7 +18,7 @@ from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, SampleList
 from ...base_models import BaseGAN
-from ...utils import gather_log_vars, get_valid_num_batches, set_requires_grad
+from ...utils import get_valid_num_batches, set_requires_grad
 
 ModelType = Union[Dict, nn.Module]
 TrainInput = Union[dict, Tensor]
@@ -451,7 +451,7 @@ class ProgressiveGrowingGAN(BaseGAN):
                         real_imgs, data_sample, gen_optimizer_wrapper)
 
                 log_vars_gen_list.append(log_vars_gen)
-            log_vars_gen = gather_log_vars(log_vars_gen_list)
+            log_vars_gen = self.gather_log_vars(log_vars_gen_list)
             log_vars_gen.pop('loss', None)  # remove 'loss' from gen logs
 
             set_requires_grad(self.discriminator, True)
