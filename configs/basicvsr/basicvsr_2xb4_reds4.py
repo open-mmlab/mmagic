@@ -113,11 +113,11 @@ optim_wrapper = dict(
 default_hooks = dict(checkpoint=dict(out_dir=save_dir))
 
 # learning policy
-lr_config = dict(
-    policy='CosineRestartLR',
+param_scheduler = dict(
+    type='CosineRestartLR',
     by_epoch=False,
     periods=[300000],
     restart_weights=[1],
-    min_lr=1e-7)
+    eta_min=1e-7)
 
 find_unused_parameters = True
