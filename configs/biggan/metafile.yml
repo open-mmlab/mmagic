@@ -73,7 +73,7 @@ Models:
       IS: 135.107
     Task: Biggan
   Weights: https://download.openmmlab.com/mmgen/biggan/biggan-deep_imagenet1k_256x256_cvt_hugging-face_rgb_20210728_111735-28651569.pth
-- Config: https://github.com/open-mmlab/mmediting/blob/1.x/configs/biggan/biggan-deep_cvt-hugging-face_rgb_imagenet1k-512x512.py
+- Config: configs/biggan/biggan-deep_cvt-hugging-face_rgb_imagenet1k-512x512.py
   In Collection: BigGAN
   Metadata:
     Training Data: Others
