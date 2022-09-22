@@ -1,5 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import pytest
 import torch
+from mmengine.utils.dl_utils import TORCH_VERSION
+from mmengine.utils.version_utils import digit_version
 
 from mmedit.models.editors.stylegan3.stylegan3_utils import (
     apply_fractional_pseudo_rotation, apply_fractional_rotation,
@@ -22,6 +25,9 @@ def test_fractional_translation():
     print(m.shape)
 
 
+@pytest.mark.skipif(
+    digit_version(TORCH_VERSION) < digit_version('1.8.0'),
+    reason='version limitation')
 def test_fractional_rotation():
     angle = torch.randn([])
     x = torch.randn(1, 3, 16, 16)
@@ -30,6 +36,9 @@ def test_fractional_rotation():
     print(ref_mask.shape)
 
 
+@pytest.mark.skipif(
+    digit_version(TORCH_VERSION) < digit_version('1.8.0'),
+    reason='version limitation')
 def test_fractional_pseduo_rotation():
     angle = torch.randn([])
     x = torch.randn(1, 3, 16, 16)
