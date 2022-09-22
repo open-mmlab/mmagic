@@ -400,3 +400,27 @@ class TestBaseGAN(TestCase):
         self.assertIn('loss_disc_fake_g', log_vars)
         self.assertNotIn('loss_gen_aux', log_vars)
         self.assertNotIn('loss_disc_shift', log_vars)
+
+    def test_gather_log_vars(self):
+        gan = ToyGAN(
+            noise_size=5,
+            generator=deepcopy(generator),
+            discriminator=deepcopy(discriminator),
+            data_preprocessor=GenDataPreprocessor())
+        log_dict_list = [
+            dict(loss=torch.Tensor([2.33]), loss_disc=torch.Tensor([1.14514]))
+        ]
+        self.assertDictEqual(log_dict_list[0],
+                             gan.gather_log_vars(log_dict_list))
+
+        log_dict_list = [
+            dict(loss=torch.Tensor([2]), loss_disc=torch.Tensor([2])),
+            dict(loss=torch.Tensor([3]), loss_disc=torch.Tensor([5]))
+        ]
+        self.assertDictEqual(
+            dict(loss=torch.Tensor([2.5]), loss_disc=torch.Tensor([3.5])),
+            gan.gather_log_vars(log_dict_list))
+
+        # test raise error
+        with self.assertRaises(AssertionError):
+            gan.gather_log_vars([dict(a=1), dict(b=2)])

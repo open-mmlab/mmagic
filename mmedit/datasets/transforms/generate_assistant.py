@@ -4,7 +4,7 @@ import torch
 from mmcv.transforms.base import BaseTransform
 
 from mmedit.registry import TRANSFORMS
-from .trans_utils import make_coord
+from mmedit.utils import make_coord
 
 try:
     import face_alignment

@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.models.base_models import VGG16
+from mmedit.models.base_archs import VGG16
 from mmedit.models.editors import PlainDecoder
 
 

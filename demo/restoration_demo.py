@@ -6,8 +6,7 @@ import mmcv
 import torch
 
 from mmedit.apis import init_model, restoration_inference
-from mmedit.engine import tensor2img
-from mmedit.utils import modify_args
+from mmedit.utils import modify_args, tensor2img
 
 
 def parse_args():

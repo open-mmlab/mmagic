@@ -10,7 +10,7 @@ from mmcv.transforms import BaseTransform
 from mmengine.utils import is_list_of, is_tuple_of
 
 from mmedit.registry import TRANSFORMS
-from .trans_utils import random_choose_unknown
+from mmedit.utils import random_choose_unknown
 
 
 @TRANSFORMS.register_module()

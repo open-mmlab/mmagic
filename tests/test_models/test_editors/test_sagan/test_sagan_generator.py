@@ -170,6 +170,14 @@ class TestSNGANPROJGenerator(object):
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
 
+        # test different init_cfg --> SAGAN
+        config = deepcopy(self.default_config)
+        config['init_cfg'] = dict(type='sagan')
+        g = MODULES.build(config)
+        assert isinstance(g, SNGANGenerator)
+        x = g(None, num_batches=2)
+        assert x.shape == (2, 3, 32, 32)
+
         # test different init_cfg --> raise error
         config = deepcopy(self.default_config)
         config['init_cfg'] = dict(type='wgan-gp')

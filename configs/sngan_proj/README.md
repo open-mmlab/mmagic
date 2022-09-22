@@ -1,6 +1,8 @@
-# SNGAN
+# SNGAN (ICLR'2018)
 
 > [Spectral Normalization for Generative Adversarial Networks](https://openreview.net/forum?id=B1QRgziT-)
+
+> **Task**: Conditional GANs
 
 <!-- [ALGORITHM] -->
 

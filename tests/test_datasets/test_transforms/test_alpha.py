@@ -26,7 +26,7 @@ def test_generate_seg():
     results = dict(alpha=alpha, trimap=trimap)
     for _ in range(3):
         # test multiple times as it contain some random operations
-        generate_seg = GenerateSeg()
+        generate_seg = GenerateSeg(num_holes_range=(1, 3))
         generate_seg_results = generate_seg(results)
         assert_keys_contain(generate_seg_results.keys(), target_keys)
         assert generate_seg_results['seg'].shape == alpha.shape
@@ -36,7 +36,7 @@ def test_generate_seg():
     # check repr string and the default setting
     assert repr(generate_seg) == generate_seg.__class__.__name__ + (
         '(kernel_size=5, erode_iter_range=(10, 20), '
-        'dilate_iter_range=(15, 30), num_holes_range=(0, 3), '
+        'dilate_iter_range=(15, 30), num_holes_range=(1, 3), '
         'hole_sizes=[(15, 15), (25, 25), (35, 35), (45, 45)], '
         'blur_ksizes=[(21, 21), (31, 31), (41, 41)]')
 

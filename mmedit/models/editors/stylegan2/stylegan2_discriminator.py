@@ -205,7 +205,7 @@ class ADAStyleGAN2Discriminator(StyleGAN2Discriminator):
                 augmentation. Defaults to None.
         """
         super().__init__(in_size, *args, **kwargs)
-        self.with_ada = data_aug is not None
+        self.with_ada = data_aug is not None and data_aug is not dict()
         if self.with_ada:
             self.ada_aug = MODULES.build(data_aug)
             self.ada_aug.requires_grad = False
@@ -240,6 +240,7 @@ class ADAAug(nn.Module):
                  ada_target=0.6,
                  ada_kimg=500):
         super().__init__()
+        aug_pipeline = dict() if aug_pipeline is None else aug_pipeline
         self.aug_pipeline = AugmentPipe(**aug_pipeline)
         self.update_interval = update_interval
         self.ada_kimg = ada_kimg
