@@ -104,7 +104,7 @@ hope MMEditing could provide better experience.
 
 ## What's New
 
-- \[2022-08-31\] 🎉[MMGeneration](https://github.com/open-mmlab/mmgeneration/tree/1.x) was merged into MMEditing! And we are calling for your suggestion!
+- \[2022-09-13\] 🎉[MMGeneration](https://github.com/open-mmlab/mmgeneration/tree/1.x) was merged into MMEditing! And we are calling for your [suggestion](https://github.com/open-mmlab/mmediting/discussions/1108)!
 - \[2022-08-31\] v1.0.0rc0 was released. This release introduced a brand new and flexible training & test engine, but it's still in progress. Welcome
   to try according to [the documentation](https://mmediting.readthedocs.io/en/1.x/).
 - \[2022-06-01\] v0.15.0 was released.
@@ -160,58 +160,58 @@ Supported algorithms:
 <details open>
 <summary>Inpainting</summary>
 
-- [x] [Global&Local](configs/global_local/README.md) (ToG'2017)
-- [x] [DeepFillv1](configs/deepfillv1/README.md) (CVPR'2018)
-- [x] [PConv](configs/partial_conv/README.md) (ECCV'2018)
-- [x] [DeepFillv2](configs/deepfillv2/README.md) (CVPR'2019)
-- [x] [AOT-GAN](configs/aot_gan/README.md) (TVCG'2021)
+- ✅ [Global&Local](configs/global_local/README.md) (ToG'2017)
+- ✅ [DeepFillv1](configs/deepfillv1/README.md) (CVPR'2018)
+- ✅ [PConv](configs/partial_conv/README.md) (ECCV'2018)
+- ✅ [DeepFillv2](configs/deepfillv2/README.md) (CVPR'2019)
+- ✅ [AOT-GAN](configs/aot_gan/README.md) (TVCG'2021)
 
 </details>
 
 <details open>
 <summary>Matting</summary>
 
-- [x] [DIM](configs/dim/README.md) (CVPR'2017)
-- [x] [IndexNet](configs/indexnet/README.md) (ICCV'2019)
-- [x] [GCA](configs/gca/README.md) (AAAI'2020)
+- ✅ [DIM](configs/dim/README.md) (CVPR'2017)
+- ✅ [IndexNet](configs/indexnet/README.md) (ICCV'2019)
+- ✅ [GCA](configs/gca/README.md) (AAAI'2020)
 
 </details>
 
 <details open>
 <summary>Image-Super-Resolution</summary>
 
-- [x] [SRCNN](configs/srcnn/README.md) (TPAMI'2015)
-- [x] [SRResNet&SRGAN](configs/srgan_resnet/README.md) (CVPR'2016)
-- [x] [EDSR](configs/edsr/README.md) (CVPR'2017)
-- [x] [ESRGAN](configs/esrgan/README.md) (ECCV'2018)
-- [x] [RDN](configs/rdn/README.md) (CVPR'2018)
-- [x] [DIC](configs/dic/README.md) (CVPR'2020)
-- [x] [TTSR](configs/ttsr/README.md) (CVPR'2020)
-- [x] [GLEAN](configs/glean/README.md) (CVPR'2021)
-- [x] [LIIF](configs/liif/README.md) (CVPR'2021)
-- [x] [Real-ESRGAN](configs/real_esrgan/README.md) (ICCVW'2021)
+- ✅ [SRCNN](configs/srcnn/README.md) (TPAMI'2015)
+- ✅ [SRResNet&SRGAN](configs/srgan_resnet/README.md) (CVPR'2016)
+- ✅ [EDSR](configs/edsr/README.md) (CVPR'2017)
+- ✅ [ESRGAN](configs/esrgan/README.md) (ECCV'2018)
+- ✅ [RDN](configs/rdn/README.md) (CVPR'2018)
+- ✅ [DIC](configs/dic/README.md) (CVPR'2020)
+- ✅ [TTSR](configs/ttsr/README.md) (CVPR'2020)
+- ✅ [GLEAN](configs/glean/README.md) (CVPR'2021)
+- ✅ [LIIF](configs/liif/README.md) (CVPR'2021)
+- ✅ [Real-ESRGAN](configs/real_esrgan/README.md) (ICCVW'2021)
 
 </details>
 
 <details open>
 <summary>Video-Super-Resolution</summary>
 
-- [x] [EDVR](configs/edvr/README.md) (CVPR'2019)
-- [x] [TOF](configs/tof/README.md) (IJCV'2019)
-- [x] [TDAN](configs/tdan/README.md) (CVPR'2020)
-- [x] [BasicVSR](configs/basicvsr/README.md) (CVPR'2021)
-- [x] [IconVSR](configs/iconvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/basicvsr_pp/README.md) (CVPR'2022)
-- [x] [RealBasicVSR](configs/real_basicvsr/README.md) (CVPR'2022)
+- ✅ [EDVR](configs/edvr/README.md) (CVPR'2019)
+- ✅ [TOF](configs/tof/README.md) (IJCV'2019)
+- ✅ [TDAN](configs/tdan/README.md) (CVPR'2020)
+- ✅ [BasicVSR](configs/basicvsr/README.md) (CVPR'2021)
+- ✅ [IconVSR](configs/iconvsr/README.md) (CVPR'2021)
+- ✅ [BasicVSR++](configs/basicvsr_pp/README.md) (CVPR'2022)
+- ✅ [RealBasicVSR](configs/real_basicvsr/README.md) (CVPR'2022)
 
 </details>
 
 <details open>
 <summary>Video Interpolation</summary>
 
-- [x] [TOFlow](configs/tof/README.md) (IJCV'2019)
-- [x] [CAIN](configs/cain/README.md) (AAAI'2020)
-- [x] [FLAVR](configs/flavr/README.md) (CVPR'2021)
+- ✅ [TOFlow](configs/tof/README.md) (IJCV'2019)
+- ✅ [CAIN](configs/cain/README.md) (AAAI'2020)
+- ✅ [FLAVR](configs/flavr/README.md) (CVPR'2021)
 
 </details>
 
