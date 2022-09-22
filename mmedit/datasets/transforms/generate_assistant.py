@@ -4,8 +4,8 @@ import torch
 from mmcv.transforms.base import BaseTransform
 
 from mmedit.registry import TRANSFORMS
+from mmedit.utils import make_coord
 from .formatting import images_to_tensor
-from .trans_utils import make_coord
 
 try:
     import face_alignment
