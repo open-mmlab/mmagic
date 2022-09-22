@@ -68,7 +68,7 @@ bash tools/dist_train.sh \
   --work-dir ./work_dirs/quick-test
 ```
 
-With a similar way, users can switch to [config for partial-GD](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv2/stylegan2_c2_8xb4-fp16-800kiters_quicktest-ffhq-256x256.py) and [config for globalG-partialD](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv2/stylegan2_c2-PL-R1_8xb4-fp16-globalG-partialD-no-scaler-800kiters_ffhq-256x256.py) to test the other two mixed precision training configuration.
+With a similar way, users can switch to [config for partial-GD](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv2/stylegan2_c2_8xb4-fp16-800kiters_quicktest-ffhq-256x256.py) and [config for globalG-partialD](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv2/stylegan2_c2_8xb4-fp16-global-800kiters_quicktest-ffhq-256x256.py) to test the other two mixed precision training configuration.
 
 *Note that to use the [APEX](https://github.com/NVIDIA/apex) toolkit, you have to installed it following the official guidance. (APEX is not included in our requirements.) If you are using GPUs without tensor core, you would better to switch to the newer PyTorch version (>= 1.7,0). Otherwise, the APEX installation or running may meet several bugs.*
 

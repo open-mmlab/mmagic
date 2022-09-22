@@ -220,6 +220,8 @@ def parse_md(md_file):
                             left = line[checkpoint_idx].index('ckpt](') + 6
                         right = line[checkpoint_idx].index(')', left)
                         checkpoint = line[checkpoint_idx][left:right]
+                    else:
+                        checkpoint = ''
 
                     name_key = osp.splitext(osp.basename(config))[0]
                     model_name = name_key
