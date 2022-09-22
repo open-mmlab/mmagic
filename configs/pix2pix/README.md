@@ -1,4 +1,4 @@
-# Pix2Pix
+# Pix2Pix (CVPR'2017)
 
 > [Pix2Pix: Image-to-Image Translation with Conditional Adversarial Networks](https://openaccess.thecvf.com/content_cvpr_2017/html/Isola_Image-To-Image_Translation_With_CVPR_2017_paper.html)
 

@@ -1,4 +1,4 @@
-# StyleGANv3
+# StyleGANv3 (NeurIPS'2021)
 
 > [Alias-Free Generative Adversarial Networks](https://nvlabs-fi-cdn.nvidia.com/stylegan3/stylegan3-paper.pdf)
 

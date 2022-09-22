@@ -1,4 +1,4 @@
-# SAGAN
+# SAGAN (ICML'2019)
 
 > [Self-attention generative adversarial networks](https://proceedings.mlr.press/v97/zhang19d.html)
 

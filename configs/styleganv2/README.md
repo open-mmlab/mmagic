@@ -1,4 +1,4 @@
-# StyleGANv2
+# StyleGANv2 (CVPR'2020)
 
 > [Analyzing and Improving the Image Quality of Stylegan](https://openaccess.thecvf.com/content_CVPR_2020/html/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.html)
 
