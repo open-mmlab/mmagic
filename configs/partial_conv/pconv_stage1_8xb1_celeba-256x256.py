@@ -79,7 +79,7 @@ optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
     type='OptimWrapper',
     optimizer=dict(type='Adam', lr=0.0002))
-lr_config = dict(policy='Fixed', by_epoch=False)
+param_scheduler = dict(policy='Fixed', by_epoch=False)
 
 checkpoint = dict(
     type='CheckpointHook', interval=50000, by_epoch=False, out_dir=save_dir)
