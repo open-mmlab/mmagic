@@ -89,8 +89,6 @@ optim_wrapper = dict(
     type='OptimWrapper',
     optimizer=dict(type='Adam', lr=0.00001),
 )
-# learning policy
-# lr_config = dict(policy='Fixed')
 
 # checkpoint saving
 default_hooks = dict(

@@ -108,14 +108,6 @@ optim_wrapper = dict(
     optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.999)),
 )
 
-# learning policy
-# lr_config = dict(
-#     policy='CosineRestart',
-#     by_epoch=False,
-#     periods=[50000, 100000, 150000, 150000, 150000],
-#     restart_weights=[1, 1, 1, 1, 1],
-#     min_lr=1e-7)
-
 default_hooks = dict(
     checkpoint=dict(
         type='CheckpointHook',

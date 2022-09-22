@@ -46,9 +46,6 @@ optim_wrapper = dict(
         optimizer=dict(type='Adam', lr=0.0002, betas=(0.5, 0.999))))
 
 # learning policy
-lr_config = dict(
-    policy='Linear', by_epoch=False, target_lr=0, start=125000, interval=1250)
-
 param_scheduler = dict(
     type='LinearLrInterval',
     interval=1250,
