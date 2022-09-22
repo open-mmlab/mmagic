@@ -139,7 +139,6 @@ train_pipeline = [  # Training data processing pipeline
         keys=['lq', 'gt'],  # Images to be transposed
         transpose_ratio=0.5  # Transpose ratio
         ),
-    dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
     dict(type='PackEditInputs')  # The config of collecting data from current pipeline
 ]
 test_pipeline = [  # Test pipeline
@@ -153,7 +152,6 @@ test_pipeline = [  # Test pipeline
         color_type='color',  # Color type of image
         channel_order='rgb',  # Channel order of image
         imdecode_backend='cv2'),  # decode backend
-    dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
     dict(type='PackEditInputs')  # The config of collecting data from current pipeline
 ]
 ```

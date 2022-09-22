@@ -2,15 +2,16 @@
 
 This section introduces the migration of data settings:
 
-- [Data pipelines](#data-pipelines)
-- [Dataloader](#dataloader)
+- [Migration of Data Settings](#migration-of-data-settings)
+  - [Data pipelines](#data-pipelines)
+  - [Dataloader](#dataloader)
 
 ## Data pipelines
 
 We update data pipelines settings in MMEdit 1.x. Important modifications are as following.
 
 - Remove normalization and color space transforms operations. They are moved from datasets transforms pipelines to data_preprocessor.
-- The original formatting transforms pipelines `Collect` are combined as `PackEditInputs`.
+- The original formatting transforms pipelines `Collect` and `ToTensor` are combined as `PackEditInputs`.
   More details of data pipelines are shown in [transform guides](../advanced_guides/3_transforms.md).
 
 <table class="docutils">

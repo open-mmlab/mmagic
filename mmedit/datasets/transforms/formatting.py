@@ -131,6 +131,8 @@ class PackEditInputs(BaseTransform):
         if 'gt' in results:
             gt = results.pop('gt')
             gt_tensor = images_to_tensor(gt)
+            if len(gt_tensor.shape) > 3 and gt_tensor.size(0) == 1:
+                gt_tensor.squeeze_(0)
             data_sample.gt_img = PixelData(data=gt_tensor)
 
         if 'gt_label' in results:
