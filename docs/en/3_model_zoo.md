@@ -1,15 +1,15 @@
 # Overview
 
-- Number of checkpoints: 146
-- Number of configs: 135
+- Number of checkpoints: 147
+- Number of configs: 148
 - Number of papers: 40
   - ALGORITHM: 41
 - Tasks:
   - inpainting
-  - video interpolation
-  - image super-resolution
   - video super-resolution
   - matting
+  - image super-resolution
+  - video interpolation
 
 For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
@@ -40,7 +40,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 ## BigGAN
 
 - Number of checkpoints: 7
-- Number of configs: 6
+- Number of configs: 7
 - Number of papers: 1
   - \[ALGORITHM\] Large Scale {Gan ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/biggan/README.md#citation))
 
@@ -149,7 +149,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
 - Tasks: image super-resolution
 - Number of checkpoints: 4
-- Number of configs: 4
+- Number of configs: 7
 - Number of papers: 1
   - \[ALGORITHM\] Glean: Generative Latent Bank for Large-Factor Image Super-Resolution ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/glean/README.md#citation))
 
@@ -196,7 +196,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
 - Tasks: inpainting
 - Number of checkpoints: 2
-- Number of configs: 2
+- Number of configs: 4
 - Number of papers: 1
   - \[ALGORITHM\] Image Inpainting for Irregular Holes Using Partial Convolutions ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/partial_conv/README.md#citation))
 
@@ -225,8 +225,8 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 ## RealBasicVSR (CVPR'2022)
 
 - Tasks: video super-resolution
-- Number of checkpoints: 1
-- Number of configs: 1
+- Number of checkpoints: 2
+- Number of configs: 2
 - Number of papers: 1
   - \[ALGORITHM\] Realbasicvsr: Investigating Tradeoffs in Real-World Video Super-Resolution ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/real_basicvsr/README.md#citation))
 
@@ -241,7 +241,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 ## SAGAN
 
 - Number of checkpoints: 9
-- Number of configs: 5
+- Number of configs: 6
 - Number of papers: 1
   - \[ALGORITHM\] Self-Attention Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/sagan/README.md#citation))
 
@@ -255,7 +255,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 ## SNGAN
 
 - Number of checkpoints: 10
-- Number of configs: 5
+- Number of configs: 6
 - Number of papers: 1
   - \[ALGORITHM\] Spectral Normalization for Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/sngan_proj/README.md#citation))
 
@@ -285,14 +285,14 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 ## StyleGANv2
 
 - Number of checkpoints: 12
-- Number of configs: 11
+- Number of configs: 12
 - Number of papers: 1
   - \[ALGORITHM\] Analyzing and Improving the Image Quality of Stylegan ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv2/README.md#citation))
 
 ## StyleGANv3
 
 - Number of checkpoints: 9
-- Number of configs: 9
+- Number of configs: 10
 - Number of papers: 1
   - \[ALGORITHM\] Alias-Free Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv3/README.md#citation))
 
@@ -300,13 +300,13 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
 - Tasks: video super-resolution
 - Number of checkpoints: 2
-- Number of configs: 2
+- Number of configs: 4
 - Number of papers: 1
   - \[ALGORITHM\] Tdan: Temporally-Deformable Alignment Network for Video Super-Resolution ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/tdan/README.md#citation))
 
 ## TOFlow (IJCV'2019)
 
-- Tasks: video interpolation,video super-resolution
+- Tasks: video super-resolution,video interpolation
 - Number of checkpoints: 6
 - Number of configs: 6
 - Number of papers: 1

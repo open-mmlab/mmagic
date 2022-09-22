@@ -49,6 +49,16 @@ Models:
       IS: 96.728
     Task: Biggan
   Weights: https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_cvt_BigGAN-PyTorch_rgb_20210730_125223-3e353fef.pth
+- Config: configs/biggan/biggan_torch-sn_8xb32-1500kiters_imagenet1k-128x128.py
+  In Collection: BigGAN
+  Metadata:
+    Training Data: Others
+  Name: biggan_torch-sn_8xb32-1500kiters_imagenet1k-128x128
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Biggan
+  Weights: ''
 - Config: https://github.com/open-mmlab/mmediting/blob/master/configs/biggan/biggan-deep_cvt-hugging-face-rgb_imagenet1k-128x128.py
   In Collection: BigGAN
   Metadata:
