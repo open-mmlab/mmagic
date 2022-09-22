@@ -32,14 +32,16 @@ mmediting
 │   │   │   ├── X2
 │   │   │   ├── X3
 │   │   │   ├── X4
-│   ├── val_set5
-│   │   ├── Set5_bicLRx2
-│   │   ├── Set5_bicLRx3
-│   │   ├── Set5_bicLRx4
-│   ├── val_set14
-│   │   ├── Set14_bicLRx2
-│   │   ├── Set14_bicLRx3
-│   │   ├── Set14_bicLRx4
+│   ├── Set5
+│   │   ├── GTmod12
+│   │   ├── LRbicx2
+│   │   ├── LRbicx3
+│   │   ├── LRbicx4
+│   ├── Set14
+│   │   ├── GTmod12
+│   │   ├── LRbicx2
+│   │   ├── LRbicx3
+│   │   ├── LRbicx4
 ```
 
 ## 裁剪子图
@@ -47,7 +49,7 @@ mmediting
 为了加快 IO，建议将 DIV2K 中的图片裁剪为一系列子图，为此，我们提供了一个脚本：
 
 ```shell
-python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
+python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
 ```
 
 生成的数据保存在 `DIV2K` 目录下，其文件结构如下所示，其中 `_sub` 表示子图:
@@ -91,5 +93,5 @@ mmediting
 如果您想使用 `LMDB` 以获得更快的 IO 速度，可以通过以下脚本来构建 LMDB 文件
 
 ```shell
-python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
+python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
 ```

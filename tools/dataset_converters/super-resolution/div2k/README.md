@@ -32,14 +32,16 @@ mmediting
 │   │   │   ├── X2
 │   │   │   ├── X3
 │   │   │   ├── X4
-│   ├── val_set5
-│   │   ├── Set5_bicLRx2
-│   │   ├── Set5_bicLRx3
-│   │   ├── Set5_bicLRx4
-│   ├── val_set14
-│   │   ├── Set14_bicLRx2
-│   │   ├── Set14_bicLRx3
-│   │   ├── Set14_bicLRx4
+│   ├── Set5
+│   │   ├── GTmod12
+│   │   ├── LRbicx2
+│   │   ├── LRbicx3
+│   │   ├── LRbicx4
+│   ├── Set14
+│   │   ├── GTmod12
+│   │   ├── LRbicx2
+│   │   ├── LRbicx3
+│   │   ├── LRbicx4
 ```
 
 ## Crop sub-images
@@ -47,7 +49,7 @@ mmediting
 For faster IO, we recommend to crop the DIV2K images to sub-images. We provide such a script:
 
 ```shell
-python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
+python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
 ```
 
 The generated data is stored under `DIV2K` and the data structure is as follows, where `_sub` indicates the sub-images.
@@ -91,5 +93,5 @@ Example of an annotation file:
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/data/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
+python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
 ```
