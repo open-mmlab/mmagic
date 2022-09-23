@@ -27,9 +27,9 @@
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
 [📘Documentation](https://mmediting.readthedocs.io/en/1.x/) |
-[🛠️Installation](https://mmediting.readthedocs.io/en/1.x/get_started.html#installation) |
-[👀Model Zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo.html) |
-[🆕Update News](docs/en/notes/changelog.md) |
+[🛠️Installation](https://mmediting.readthedocs.io/en/1.x/2_get_started.html#installation) |
+[👀Model Zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) |
+[🆕Update News](docs/en/notes/3_changelog.md) |
 [🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
 [🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
 
@@ -119,7 +119,7 @@ hope MMEditing could provide better experience.
   - Support running in Windows
 - \[2022-02-11\] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
 
-Please refer to [changelog.md](docs/en/notes/changelog.md) for details and release history.
+Please refer to [changelog.md](docs/en/notes/3_changelog.md) for details and release history.
 
 ## Installation
 
@@ -147,11 +147,11 @@ cd mmediting
 pip3 install -e .
 ```
 
-Please refer to [get_started.md](docs/en/get_started.md) for more detailed instruction.
+Please refer to [get_started.md](docs/en/2_get_started.md) for more detailed instruction.
 
 ## Getting Started
 
-Please see [get_started.md](docs/en/get_started.md) and [inference.md](docs/en/user_guides/inference.md) for the basic usage of MMEditing.
+Please see [get_started.md](docs/en/2_get_started.md) and [inference.md](docs/en/user_guides/3_inference.md) for the basic usage of MMEditing.
 
 ## Model Zoo
 
@@ -254,7 +254,7 @@ Supported algorithms:
 
 </details>
 
-Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo.html) for more details.
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) for more details.
 
 ## Contributing
 
