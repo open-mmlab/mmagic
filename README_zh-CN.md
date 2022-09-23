@@ -149,7 +149,7 @@ pip3 install -e .
 
 ## 开始使用
 
-请参考[使用教程](docs/zh_cn/2_get_started.md)和[功能演示](docs/zh_cn/user_guides/inference.md)获取MMEditing的基本用法。
+请参考[使用教程](docs/zh_cn/2_get_started.md)和[功能演示](docs/zh_cn/user_guides/3_inference.md)获取MMEditing的基本用法。
 
 ## 模型库
 
