@@ -20,6 +20,7 @@ def test_PickleDataHook():
     hook = PickleDataHook(
         output_dir='./', data_name_list=['a', 'b', 'c'], interval=3)
     runner = MagicMock()
+    runner.work_dir = './test/data'
     runner.iter = 0
     runner.model = ToyModel()
 
