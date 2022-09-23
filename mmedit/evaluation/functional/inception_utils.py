@@ -48,17 +48,18 @@ def disable_gpu_fuser_on_pt19():
 def load_inception(inception_args, metric):
     """Load Inception Model from given ``inception_args`` and ``metric``.
 
-    This
-    function would try to load Inception under the guidance of 'type' given in
-    `inception_args`, if not given, we would try best to load Tero's ones. In
-    detailly, we would first try to load the model from disk with the given
-    'inception_path', and then try to download the checkpoint from
+    This function would try to load Inception under the guidance of 'type'
+    given in `inception_args`, if not given, we would try best to load Tero's
+    ones. In detailly, we would first try to load the model from disk with
+    the given 'inception_path', and then try to download the checkpoint from
     'inception_url'. If both method are failed, pytorch version of Inception
     would be loaded.
+
     Args:
         inception_args (dict): Keyword args for inception net.
         metric (string): Metric to use the Inception. This argument would
             influence the pytorch's Inception loading.
+
     Returns:
         model (torch.nn.Module): Loaded Inception model.
         style (string): The version of the loaded Inception.
@@ -287,6 +288,7 @@ def prepare_inception_feat(dataloader: DataLoader,
       extract the inception feature manually and save to 'inception_pkl'.
     - If `metric.inception_pkl` is not defined, we will extrace the inception
       feature and save it to default cache dir with default name.
+
     Args:
         datalaoder (Dataloader): The dataloader of real images.
         metric (BaseMetric): The metric which needs inception features.
@@ -298,6 +300,7 @@ def prepare_inception_feat(dataloader: DataLoader,
         capture_all (bool): Whether save the raw inception feature. If true,
             it will take a lot of time to save the inception feature. Defaults
             to False.
+
     Returns:
         dict: Dict contains inception feature.
     """
@@ -472,6 +475,7 @@ def prepare_vgg_feat(dataloader: DataLoader,
       extract the vgg feature manually and save to 'vgg_pkl'.
     - If `metric.vgg_pkl` is not defined, we will extrace the vgg
       feature and save it to default cache dir with default name.
+
     Args:
         datalaoder (Dataloader): The dataloader of real images.
         metric (BaseMetric): The metric which needs vgg features.
