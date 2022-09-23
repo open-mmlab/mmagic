@@ -1,5 +1,21 @@
 # 变更日志 (待更新)
 
+## v1.0.0rc1(23/9/2022)
+
+MMEditing 1.0.0rc1 已经合并了 MMGeneration 1.x。
+
+- 支持 42+ 算法, 169+ 配置文件 and 168+ 预训练模型参数文件.
+- 支持 26+ loss functions, 20+ metrics.
+- 支持 tensorboard, wandb.
+- 支持 unconditional GANs, conditional GANs, image2image translation 以及 internal learning.
+
+## v1.0.0rc0(31/8/2022)
+
+MMEditing 1.0.0rc0 是 MMEditing 1.x 的第一个版本，是 OpenMMLab 2.0 项目的一部分。
+
+基于新的[训练引擎](https://github.com/open-mmlab/mmengine), MMEditing 1.x 统一了数据、模型、评测和可视化的接口。
+该版本存在有一些 BC-breaking 的修改。 请在[迁移指南](https://mmediting.readthedocs.io/en/1.x/migration.html)中查看更多细节。
+
 ## v0.15.0 (01/06/2022)
 
 **Highlights主要更新**
