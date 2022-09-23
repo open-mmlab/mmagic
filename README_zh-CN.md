@@ -27,9 +27,9 @@
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
 [📘使用文档](https://mmediting.readthedocs.io/zh_CN/1.x/) |
-[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/1.x/get_started.htmll) |
-[👀模型库](https://mmediting.readthedocs.io/zh_CN/1.x/model_zoo.html) |
-[🆕更新记录](docs/zh_cn/notes/changelog.md) |
+[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/1.x/2_get_started.htmll) |
+[👀模型库](https://mmediting.readthedocs.io/zh_CN/1.x/3_model_zoo.html) |
+[🆕更新记录](docs/zh_cn/notes/3_changelog.md) |
 [🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
 [🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
 
@@ -118,7 +118,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
   - 支持在 Windows 系统中运行
 - \[2022-02-11\] 切换到 **PyTorch 1.5+**. 将不再保证与早期版本的 PyTorch 的兼容性
 
-请查看 [changelog.md](docs/zh_cn/notes/changelog.md) 以获取更多细节与发版记录
+请查看 [changelog.md](docs/zh_cn/notes/3_changelog.md) 以获取更多细节与发版记录
 
 ## 安装
 
@@ -145,11 +145,11 @@ cd mmediting
 pip3 install -e .
 ```
 
-更详细的安装指南请参考 [get_started.md](docs/zh_cn/get_started.md) 。
+更详细的安装指南请参考 [get_started.md](docs/zh_cn/2_get_started.md) 。
 
 ## 开始使用
 
-请参考[使用教程](docs/zh_cn/get_started.md)和[功能演示](docs/zh_cn/user_guides/inference.md)获取MMEditing的基本用法。
+请参考[使用教程](docs/zh_cn/2_get_started.md)和[功能演示](docs/zh_cn/user_guides/inference.md)获取MMEditing的基本用法。
 
 ## 模型库
 
@@ -252,7 +252,7 @@ pip3 install -e .
 
 </details>
 
-请参考[模型库](https://mmediting.readthedocs.io/zh_CN/1.x/model_zoo.html)了解详情。
+请参考[模型库](https://mmediting.readthedocs.io/zh_CN/1.x/3_model_zoo.html)了解详情。
 
 ## 参与贡献
 
