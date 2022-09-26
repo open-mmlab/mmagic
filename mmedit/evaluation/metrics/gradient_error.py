@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from typing import List, Sequence
 
 import cv2
@@ -6,7 +7,8 @@ from mmengine.evaluator import BaseMetric
 
 from mmedit.registry import METRICS
 from ..functional import gauss_gradient
-from .metrics_utils import average, _fetch_data_and_check
+from .metrics_utils import _fetch_data_and_check, average
+
 
 @METRICS.register_module()
 class GradientError(BaseMetric):
@@ -91,4 +93,3 @@ class GradientError(BaseMetric):
         grad_err = average(results, 'grad_err')
 
         return {'GradientError': grad_err}
-

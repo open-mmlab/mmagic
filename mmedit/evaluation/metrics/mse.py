@@ -4,6 +4,7 @@
 from mmedit.registry import METRICS
 from .base_sample_wise_metric import BaseSampleWiseMetric
 
+
 @METRICS.register_module()
 class MSE(BaseSampleWiseMetric):
     """Mean Squared Error metric for image.
@@ -54,4 +55,3 @@ class MSE(BaseSampleWiseMetric):
             result = diff.mean()
 
         return result
-

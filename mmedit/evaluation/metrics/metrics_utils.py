@@ -50,7 +50,6 @@ def _fetch_data_and_check(data_samples):
     return pred_alpha, ori_alpha, ori_trimap
 
 
-
 def average(results, key):
     """Average of key in results(list[dict]).
 

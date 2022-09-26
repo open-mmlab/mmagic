@@ -1,5 +1,4 @@
-
-
+# Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional
 
 import numpy as np

@@ -1,4 +1,4 @@
-
+# Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional
 
 import numpy as np
@@ -6,6 +6,7 @@ import numpy as np
 from mmedit.registry import METRICS
 from .base_sample_wise_metric import BaseSampleWiseMetric
 from .metrics_utils import img_transform
+
 
 @METRICS.register_module()
 class SNR(BaseSampleWiseMetric):
@@ -76,7 +77,6 @@ class SNR(BaseSampleWiseMetric):
             input_order=self.input_order,
             convert_to=self.convert_to,
             channel_order=self.channel_order)
-
 
 
 def snr(gt,

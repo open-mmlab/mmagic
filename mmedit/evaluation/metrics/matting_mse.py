@@ -1,9 +1,10 @@
-
+# Copyright (c) OpenMMLab. All rights reserved.
 from typing import List, Sequence
+
 from mmengine.evaluator import BaseMetric
 
 from mmedit.registry import METRICS
-from .metrics_utils import average, _fetch_data_and_check
+from .metrics_utils import _fetch_data_and_check, average
 
 
 @METRICS.register_module()
@@ -79,4 +80,3 @@ class MattingMSE(BaseMetric):
         mse = average(results, 'mse')
 
         return {'MattingMSE': mse}
-
