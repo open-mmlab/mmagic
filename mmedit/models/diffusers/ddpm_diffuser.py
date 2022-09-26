@@ -79,15 +79,15 @@ class DDPMDiffuser:
 
         # hacks - were probs added for training stability
         if variance_type == 'fixed_small':
-            variance = self.clip(variance, min_value=1e-20)
+            variance = np.clip(variance, min_value=1e-20)
         # for rl-diffuser https://arxiv.org/abs/2205.09991
         elif variance_type == 'fixed_small_log':
-            variance = self.log(self.clip(variance, min_value=1e-20))
+            variance = np.log(np.clip(variance, min_value=1e-20))
         elif variance_type == 'fixed_large':
             variance = self.betas[t]
         elif variance_type == 'fixed_large_log':
             # Glide max_log
-            variance = self.log(self.betas[t])
+            variance = np.log(self.betas[t])
         elif variance_type == 'learned':
             return predicted_variance
         elif variance_type == 'learned_range':
@@ -148,14 +148,14 @@ class DDPMDiffuser:
 
         # 6. Add noise
         noise = torch.randn_like(model_output)
-        variance = 0
+        sigma = 0
         if t > 0:
-            variance = self._get_variance(
+            sigma = self._get_variance(
                 t, predicted_variance=predicted_variance)**0.5
 
-        pred_prev_sample = pred_prev_mean + variance * noise
+        pred_prev_sample = pred_prev_mean + sigma * noise
 
-        return {'prev_sample': pred_prev_sample, 'mean':pred_prev_mean, 'variance':variance, 'noise':noise}
+        return {'prev_sample': pred_prev_sample, 'mean':pred_prev_mean, 'sigma':sigma, 'noise':noise}
 
     def add_noise(self, original_samples, noise, timesteps):
         sqrt_alpha_prod = self.alphas_cumprod[timesteps]**0.5

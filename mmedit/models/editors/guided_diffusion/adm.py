@@ -141,8 +141,8 @@ class AblatedDiffusionModel(BaseModel):
             # 3. applying classifier guide
             if self.classifier and classifier_scale != 0.0:
                 gradient = classifier_grad(image, t, labels, classifier_scale=classifier_scale)
-                guided_mean = (diffuser_output["mean"].float() + diffuser_output["variance"] * gradient.float())
-                image = guided_mean + diffuser_output["variance"]* noise
+                guided_mean = (diffuser_output["mean"].float() + diffuser_output["sigma"] * gradient.float())
+                image = guided_mean + diffuser_output["sigma"]* noise
             else:
                 image = diffuser_output['prev_sample']
 
