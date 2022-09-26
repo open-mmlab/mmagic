@@ -85,7 +85,7 @@ class AblatedDiffusionModel(BaseModel):
         Args:
             init_image (_type_, optional): _description_. Defaults to None.
             batch_size (int, optional): _description_. Defaults to 1.
-            num_inference_steps (int, optional): _description_. 
+            num_inference_steps (int, optional): _description_.
                 Defaults to 1000.
             labels (_type_, optional): _description_. Defaults to None.
             show_progress (bool, optional): _description_. Defaults to False.
@@ -134,7 +134,7 @@ class AblatedDiffusionModel(BaseModel):
 
         Args:
             inputs (ForwardInputs): _description_
-            data_samples (Optional[list], optional): _description_. 
+            data_samples (Optional[list], optional): _description_.
                 Defaults to None.
             mode (Optional[str], optional): _description_. Defaults to None.
 

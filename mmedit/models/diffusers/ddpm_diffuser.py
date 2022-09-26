@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Union
 
+import numpy as np
 import torch
 
 from mmedit.registry import DIFFUSERS
@@ -20,17 +21,17 @@ class DDPMDiffuser:
                  clip_sample=True):
         self.num_train_timesteps = num_train_timesteps
         if trained_betas is not None:
-            self.betas = torch.as_tensor(trained_betas)
+            self.betas = np.asarray(trained_betas)
         elif beta_schedule == 'linear':
-            self.betas = torch.linspace(
-                beta_start, beta_end, num_train_timesteps, dtype=torch.float32)
+            self.betas = np.linspace(
+                beta_start, beta_end, num_train_timesteps, dtype=np.float64)
         elif beta_schedule == 'scaled_linear':
             # this schedule is very specific to the latent diffusion model.
-            self.betas = torch.linspace(
+            self.betas = np.linspace(
                 beta_start**0.5,
                 beta_end**0.5,
                 num_train_timesteps,
-                dtype=torch.float32)**2
+                dtype=np.float32)**2
         elif beta_schedule == 'squaredcos_cap_v2':
             # Glide cosine schedule
             self.betas = betas_for_alpha_bar(num_train_timesteps)
@@ -40,12 +41,12 @@ class DDPMDiffuser:
             )
 
         self.alphas = 1.0 - self.betas
-        self.alphas_cumprod = torch.cumprod(self.alphas, dim=0)
-        self.one = torch.tensor(1.0)
+        self.alphas_cumprod = np.cumprod(self.alphas, axis=0)
+        self.one = np.array(1.0)
 
         # setable values
         self.num_inference_steps = None
-        self.timesteps = torch.arange(0, num_train_timesteps).flip(0)
+        self.timesteps = np.arange(0, num_train_timesteps)[::-1].copy()
 
         self.variance_type = variance_type
         self.clip_sample = clip_sample
@@ -54,9 +55,9 @@ class DDPMDiffuser:
         num_inference_steps = min(self.num_train_timesteps,
                                   num_inference_steps)
         self.num_inference_steps = num_inference_steps
-        self.timesteps = torch.arange(
+        self.timesteps = np.arange(
             0, self.num_train_timesteps,
-            self.num_train_timesteps // self.num_inference_steps).flip(0)
+            self.num_train_timesteps // self.num_inference_steps)[::-1].copy()
 
     def _get_variance(self, t, predicted_variance=None, variance_type=None):
         alpha_prod_t = self.alphas_cumprod[t]
@@ -66,6 +67,12 @@ class DDPMDiffuser:
         # and sample from it to get previous sample
         # x_{t-1} ~ N(pred_prev_sample, variance) == add variance to pred_sample # noqa
         variance = (1 - alpha_prod_t_prev) / (1 - alpha_prod_t) * self.betas[t]
+
+        if t == 0:
+            log_variance = (1 - alpha_prod_t_prev) / (
+                1 - alpha_prod_t) * self.betas[1]
+        else:
+            log_variance = np.log(variance)
 
         if variance_type is None:
             variance_type = self.variance_type
@@ -84,10 +91,11 @@ class DDPMDiffuser:
         elif variance_type == 'learned':
             return predicted_variance
         elif variance_type == 'learned_range':
-            min_log = variance
-            max_log = self.betas[t]
+            min_log = log_variance
+            max_log = np.log(self.betas[t])
             frac = (predicted_variance + 1) / 2
-            variance = frac * max_log + (1 - frac) * min_log
+            log_variance = frac * max_log + (1 - frac) * min_log
+            variance = torch.exp(log_variance)
 
         return variance
 

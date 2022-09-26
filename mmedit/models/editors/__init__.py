@@ -23,7 +23,7 @@ from .ggan import GGAN
 from .glean import GLEANStyleGANv2
 from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
                            GLEncoderDecoder)
-from .guided_diffusion import AblatedDiffusionModel
+from .guided_diffusion import AblatedDiffusionModel, DenoisingUnet
 from .iconvsr import IconVSRNet
 from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
@@ -73,5 +73,5 @@ __all__ = [
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
-    'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel'
+    'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel', 'DenoisingUnet'
 ]
