@@ -1,40 +1,42 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 
-from .equivariance import Equivariance
+from .psnr import PSNR 
+from .snr import SNR 
+from .mae import MAE 
+from .mse import MSE 
+from .ssim import SSIM
+from .ms_ssim import MultiScaleStructureSimilarity
 from .fid import FrechetInceptionDistance, TransFID
 from .inception_score import InceptionScore, TransIS
-from .matting import SAD, ConnectivityError, GradientError, MattingMSE
-from .ms_ssim import MultiScaleStructureSimilarity
-from .niqe import NIQE, niqe
-from .pixel_metrics import MAE, MSE, PSNR, SNR, psnr, snr
+from .sad import SAD
+from .matting_mse import MattingMSE
+from .connectivity_error import ConnectivityError
+from .gradient_error import GradientError
 from .ppl import PerceptualPathLength
 from .precision_and_recall import PrecisionAndRecall
-from .ssim import SSIM, ssim
 from .swd import SlicedWassersteinDistance
+from .niqe import NIQE
+from .equivariance import Equivariance
+
 
 __all__ = [
+    'MAE',
+    'MSE',
+    'PSNR',
+    'SNR',
+    'SSIM',
+    'MultiScaleStructureSimilarity',
+    'FrechetInceptionDistance',
+    'TransFID',
+    'InceptionScore',
+    'TransIS',
+    'SAD',
+    'MattingMSE',
     'ConnectivityError',
     'GradientError',
-    'MAE',
-    'MattingMSE',
-    'MSE',
-    'NIQE',
-    'niqe',
-    'PSNR',
-    'psnr',
-    'SAD',
-    'SNR',
-    'snr',
-    'SSIM',
-    'ssim',
-    'Equivariance',
-    'FrechetInceptionDistance',
-    'InceptionScore',
-    'MultiScaleStructureSimilarity',
     'PerceptualPathLength',
-    'MultiScaleStructureSimilarity',
     'PrecisionAndRecall',
     'SlicedWassersteinDistance',
-    'TransFID',
-    'TransIS',
+    'NIQE',
+    'Equivariance',
 ]
