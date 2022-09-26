@@ -2,7 +2,7 @@
 import math
 
 import numpy as np
-
+import torch
 
 def betas_for_alpha_bar(num_diffusion_timesteps, max_beta=0.999):
 

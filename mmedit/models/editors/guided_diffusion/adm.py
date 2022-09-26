@@ -14,6 +14,14 @@ from mmedit.registry import DIFFUSERS, MODELS, MODULES
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, SampleList
 
+def classifier_grad(x, t, y=None, classifier_scale=1.0):
+    assert y is not None
+    with torch.enable_grad():
+        x_in = x.detach().requires_grad_(True)
+        logits = classifier(x_in, t)
+        log_probs = F.log_softmax(logits, dim=-1)
+        selected = log_probs[range(len(logits)), y.view(-1)]
+        return torch.autograd.grad(selected.sum(), x_in)[0] * classifier_scale
 
 @MODELS.register_module('ADM')
 @MODELS.register_module('GuidedDiffusion')
@@ -36,6 +44,7 @@ class AblatedDiffusionModel(BaseModel):
                  diffuser,
                  use_fp16=False,
                  classifier=None,
+                 classifier_scale=1.0,
                  pretrained_cfgs=None):
 
         super().__init__(data_preprocessor=data_preprocessor)
@@ -43,6 +52,10 @@ class AblatedDiffusionModel(BaseModel):
         self.diffuser = DIFFUSERS.build(diffuser)
         if classifier:
             self.classifier = MODULES.build(unet)
+        else:
+            self.classifier = None
+        self.classifier_scale = classifier_scale
+
         if pretrained_cfgs:
             self.load_pretrained_models(pretrained_cfgs)
         if use_fp16:
@@ -79,6 +92,7 @@ class AblatedDiffusionModel(BaseModel):
               batch_size=1,
               num_inference_steps=1000,
               labels=None,
+              classifier_scale=0.0,
               show_progress=False):
         """_summary_
 
@@ -118,11 +132,19 @@ class AblatedDiffusionModel(BaseModel):
         if show_progress:
             timesteps = tqdm(timesteps)
         for t in timesteps:
-            # 1. predict noise model_output
+            # 1. predicted model_output
             model_output = self.unet(image, t, label=labels)['outputs']
 
-            # 2. compute previous image: x_t -> t_t-1
-            image = self.diffuser.step(model_output, t, image)['prev_sample']
+            # 2. compute previous image: x_t -> x_t-1
+            diffuser_output = self.diffuser.step(model_output, t, image)
+
+            # 3. applying classifier guide
+            if self.classifier and classifier_scale != 0.0:
+                gradient = classifier_grad(image, t, labels, classifier_scale=classifier_scale)
+                guided_mean = (diffuser_output["mean"].float() + diffuser_output["variance"] * gradient.float())
+                image = guided_mean + diffuser_output["variance"]* noise
+            else:
+                image = diffuser_output['prev_sample']
 
         return {'samples': image}
 
@@ -149,12 +171,14 @@ class AblatedDiffusionModel(BaseModel):
         num_inference_steps = sample_kwargs.get(
             'num_inference_steps', self.diffuser.num_train_timesteps)
         show_progress = sample_kwargs.get('show_progress', False)
+        classifier_scale = sample_kwargs.get('classifier_scale', self.classifier_scale)
 
         outputs = self.infer(
             init_image=init_image,
             batch_size=batch_size,
             num_inference_steps=num_inference_steps,
-            show_progress=show_progress)
+            show_progress=show_progress,
+            classifier_scale=classifier_scale)
 
         batch_sample_list = []
         for idx in range(batch_size):
@@ -230,7 +254,6 @@ class AblatedDiffusionModel(BaseModel):
         message_hub = MessageHub.get_current_instance()
         curr_iter = message_hub.get_info('iter')
 
-        # real_imgs, data_samples = self.data_preprocessor(data)
         data = self.data_preprocessor(data)
         real_imgs = data['inputs']
         denoising_dict_ = self.reconstruction_step(
