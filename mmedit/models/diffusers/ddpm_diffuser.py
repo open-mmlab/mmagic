@@ -183,6 +183,13 @@ class DDPMDiffuser:
             sqrt_alpha_prod * original_samples +
             sqrt_one_minus_alpha_prod * noise)
         return noisy_samples
+    
+    def training_loss(self, model, x_0, t):
+        raise NotImplementedError("This function is supposed to return a dict containing loss items giving sampled x0 and timestep.")
+
+    def sample_timestep(self):
+        raise NotImplementedError
+        
 
     def __len__(self):
         return self.num_train_timesteps

@@ -250,19 +250,17 @@ class AblatedDiffusionModel(BaseModel):
         Returns:
             _type_: _description_
         """
-
         message_hub = MessageHub.get_current_instance()
         curr_iter = message_hub.get_info('iter')
 
+        # sampling x0 and timestep
         data = self.data_preprocessor(data)
         real_imgs = data['inputs']
-        denoising_dict_ = self.reconstruction_step(
-            self.denoising,
-            real_imgs,
-            timesteps=self.sampler,
-            return_noise=True)
-        denoising_dict_['real_imgs'] = real_imgs
-        loss, log_vars = self.denoising_loss(denoising_dict_)
+        timestep = self.diffuser.sample_timestep()
+
+        # calculating loss
+        loss_dict = self.diffuser.training_loss(self.unet, real_imgs, timestep)
+        loss, log_vars = self._parse_losses(loss_dict)
         optim_wrapper['denoising'].update_params(loss)
 
         # update EMA
