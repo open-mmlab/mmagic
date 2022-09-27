@@ -1,20 +1,3 @@
-# Copyright 2022 Stanford University Team and The HuggingFace Team. All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# DISCLAIMER: This code is strongly influenced by https://github.com/pesser/pytorch_diffusion
-# and https://github.com/hojonathanho/diffusion
-
 import math
 from typing import Union
 
@@ -26,7 +9,23 @@ from mmedit.registry import DIFFUSERS
 
 @DIFFUSERS.register_module()
 class DDIMDiffuser:
-    
+    """```DDIMDiffuser``` support the diffusion and reverse process formulated in https://arxiv.org/abs/2010.02502. 
+
+    The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddim.py. # noqa
+
+    Args:
+        num_train_timesteps (int, optional): _description_. Defaults to 1000.
+        beta_start (float, optional): _description_. Defaults to 0.0001.
+        beta_end (float, optional): _description_. Defaults to 0.02.
+        beta_schedule (str, optional): _description_. Defaults to "linear".
+        variance_type (str, optional): _description_. Defaults to 'learned_range'.
+        timestep_values (_type_, optional): _description_. Defaults to None.
+        clip_sample (bool, optional): _description_. Defaults to True.
+        set_alpha_to_one (bool, optional): _description_. Defaults to True.
+
+    Raises:
+        NotImplementedError: _description_
+    """
     def __init__(
         self,
         num_train_timesteps=1000,
