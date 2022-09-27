@@ -5,12 +5,16 @@ assign:
   # assign strategy, both issues and pull requests follow the same strategy
   strategy:
     # random
-    round-robin
-    # daily-shift-based
+    # round-robin
+    daily-shift-based
   scedule:
     '*/1 * * * *'
   # assignees
   assignees:
-    - wangruohui
-    - Yshuo-Li
-    - 1900zyh
+    - LeoXing1996
+    - zengyh1900
+    - plyfager
+    - Z-Fran
+    - Z-Fran
+    - LeoXing1996
+    - LeoXing1996
