@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from copy import deepcopy
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
@@ -76,6 +77,26 @@ class TestGenEvaluator(TestCase):
                 ]))
         self.assertEqual(metric_sampler_list[0][1].max_length, 11)
         self.assertEqual(len(metric_sampler_list[0][1]), 6)
+
+        # test prepare metrics with different `sample_model`
+        cfg = deepcopy(self.metrics)
+        cfg.append(
+            dict(
+                type='FrechetInceptionDistance',
+                fake_nums=12,
+                inception_style='pytorch',
+                sample_model='ema'))
+        evaluator = GenEvaluator(cfg)
+
+        # mock metrics
+        model = MagicMock()
+        model.data_preprocessor.device = 'cpu'
+
+        dataloader = MagicMock()
+        dataloader.batch_size = 2
+
+        metric_sampler_list = evaluator.prepare_samplers(model, dataloader)
+        self.assertEqual(len(metric_sampler_list), 3)
 
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
