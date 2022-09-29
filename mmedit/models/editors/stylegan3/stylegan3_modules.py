@@ -169,7 +169,8 @@ class MappingNetwork(nn.Module):
                 activation='lrelu',
                 lr_multiplier=lr_multiplier)
             setattr(self, f'fc{idx}', layer)
-        self.register_buffer('w_avg', torch.zeros([style_channels]))
+        if num_ws is not None and w_avg_beta is not None:
+            self.register_buffer('w_avg', torch.zeros([style_channels]))
 
     def forward(self,
                 z,
@@ -196,9 +197,11 @@ class MappingNetwork(nn.Module):
         if num_truncation_layer is None:
             num_truncation_layer = self.num_ws
 
+        x = None
         # Embed, normalize, and concatenate inputs.
-        x = z.to(torch.float32)
-        x = x * (x.square().mean(1, keepdim=True) + 1e-8).rsqrt()
+        if self.noise_size > 0:
+            x = z.to(torch.float32)
+            x = x * (x.square().mean(1, keepdim=True) + 1e-8).rsqrt()
         if self.c_dim > 0:
             y = self.embed(c.to(torch.float32))
             y = y * (y.square().mean(1, keepdim=True) + 1e-8).rsqrt()
@@ -209,15 +212,19 @@ class MappingNetwork(nn.Module):
             x = getattr(self, f'fc{idx}')(x)
 
         # Update moving average of W.
-        if update_emas:
+        if update_emas and self.w_avg_beta is not None:
             self.w_avg.copy_(x.detach().mean(
                 dim=0).lerp(self.w_avg, self.w_avg_beta))
 
         # Broadcast and apply truncation.
-        x = x.unsqueeze(1).repeat([1, self.num_ws, 1])
+        if self.num_ws is not None:
+            x = x.unsqueeze(1).repeat([1, self.num_ws, 1])
         if truncation != 1:
-            x[:, :num_truncation_layer] = self.w_avg.lerp(
-                x[:, :num_truncation_layer], truncation)
+            if self.num_ws is not None:
+                x = self.w_avg.lerp(x, truncation)
+            else:
+                x[:, :num_truncation_layer] = self.w_avg.lerp(
+                    x[:, :num_truncation_layer], truncation)
         return x
 
 
