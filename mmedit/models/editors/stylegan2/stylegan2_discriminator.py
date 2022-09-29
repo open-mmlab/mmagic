@@ -58,6 +58,12 @@ class StyleGAN2Discriminator(BaseModule):
     Args:
         in_size (int): The input size of images.
         img_channels (int): The number of channels of the input image. Defaults to 3.
+        channel_multiplier (int, optional): The multiplier factor for the
+            channel number. Defaults to 2.
+        blur_kernel (list, optional): The blurry kernel. Defaults
+            to [1, 3, 3, 1].
+        mbstd_cfg (dict, optional): Configs for minibatch-stddev layer.
+            Defaults to dict(group_size=4, channel_groups=1).
         c_dim (int, optional): The dimension of conditional input. If None or
             less than 1, no conditional mapping will be applied. Defaults to None.
         cmap_dim (int, optional): The dimension of the output of conditional
@@ -67,12 +73,6 @@ class StyleGAN2Discriminator(BaseModule):
             input. Only work when c_dim is larger than 0. If :attr:`cmapping_layer`
             is None and :attr:`c_dim` is larger than 0, cmapping_layer will set as 8.
             Defaults to None.
-        channel_multiplier (int, optional): The multiplier factor for the
-            channel number. Defaults to 2.
-        blur_kernel (list, optional): The blurry kernel. Defaults
-            to [1, 3, 3, 1].
-        mbstd_cfg (dict, optional): Configs for minibatch-stddev layer.
-            Defaults to dict(group_size=4, channel_groups=1).
         num_fp16_scales (int, optional): The number of resolutions to use auto
             fp16 training. Defaults to 0.
         fp16_enabled (bool, optional): Whether to use fp16 training in this
