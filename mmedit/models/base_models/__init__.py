@@ -8,9 +8,11 @@ from .base_translation_model import BaseTranslationModel
 from .basic_interpolator import BasicInterpolator
 from .one_stage import OneStageInpaintor
 from .two_stage import TwoStageInpaintor
+from .base_colorization import BaseColorization
 
 __all__ = [
     'BaseEditModel', 'BaseGAN', 'BaseConditionalGAN', 'BaseMattor',
     'BasicInterpolator', 'BaseTranslationModel', 'OneStageInpaintor',
-    'TwoStageInpaintor', 'ExponentialMovingAverage', 'RampUpEMA'
+    'TwoStageInpaintor', 'ExponentialMovingAverage', 'RampUpEMA',
+    'BaseColorization'
 ]

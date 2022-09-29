@@ -28,6 +28,8 @@ from .random_down_sampling import RandomDownSampling
 from .trimap import (FormatTrimap, GenerateTrimap,
                      GenerateTrimapWithDistTransform, TransformTrimap)
 from .values import CopyValues, SetValues
+from .get_maskrcnn_bbox import GenMaskRCNNBbox
+from .get_gray_color_pil import GenGrayColorPil
 
 __all__ = [
     'BinarizeImage', 'Clip', 'ColorJitter', 'CopyValues', 'Crop', 'CropLike',
@@ -45,5 +47,6 @@ __all__ = [
     'GenerateSoftSeg', 'FormatTrimap', 'TransformTrimap', 'GenerateTrimap',
     'GenerateTrimapWithDistTransform', 'CompositeFg', 'RandomLoadResizeBg',
     'MergeFgAndBg', 'PerturbBg', 'RandomJitter', 'LoadPairedImageFromFile',
-    'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad'
+    'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad', 'GenMaskRCNNBbox',
+    'GenGrayColorPil'
 ]

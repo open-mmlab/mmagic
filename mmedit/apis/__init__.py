@@ -8,6 +8,7 @@ from .restoration_inference import restoration_inference
 from .restoration_video_inference import restoration_video_inference
 from .translation_inference import sample_img2img_model
 from .video_interpolation_inference import video_interpolation_inference
+from .colorization_inference import colorization_inference
 
 __all__ = [
     'init_model',
@@ -22,4 +23,5 @@ __all__ = [
     'sample_conditional_model',
     'sample_unconditional_model',
     'sample_img2img_model',
+    'colorization_inference'
 ]
