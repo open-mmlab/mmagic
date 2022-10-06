@@ -92,61 +92,6 @@ class SiLU(nn.Module):
         return F.silu(x, inplace=self.inplace)
 
 
-@MODULES.register_module()
-class MultiHeadAttention(nn.Module):
-    """An attention block allows spatial position to attend to each other.
-
-    Originally ported from here, but adapted to the N-d case.
-    https://github.com/hojonathanho/diffusion/blob/1e0dceb3b3495bbe19116a5e1b3596cd0706c543/diffusion_tf/models/unet.py#L66.  # noqa
-
-    Args:
-        in_channels (int): Channels of the input feature map.
-        num_heads (int, optional): Number of heads in the attention.
-        norm_cfg (dict, optional): Config for normalization layer. Default
-            to ``dict(type='GN', num_groups=32)``
-    """
-
-    def __init__(self,
-                 in_channels,
-                 num_heads=1,
-                 norm_cfg=dict(type='GN', num_groups=32)):
-        super().__init__()
-        self.num_heads = num_heads
-        _, self.norm = build_norm_layer(norm_cfg, in_channels)
-        self.qkv = nn.Conv1d(in_channels, in_channels * 3, 1)
-        self.proj = nn.Conv1d(in_channels, in_channels, 1)
-        self.init_weights()
-
-    @staticmethod
-    def QKVAttention(qkv):
-        channel = qkv.shape[1] // 3
-        q, k, v = torch.chunk(qkv, 3, dim=1)
-        scale = 1 / np.sqrt(np.sqrt(channel))
-        weight = torch.einsum('bct,bcs->bts', q * scale, k * scale)
-        weight = torch.softmax(weight.float(), dim=-1).type(weight.dtype)
-        weight = torch.einsum('bts,bcs->bct', weight, v)
-        return weight
-
-    def forward(self, x):
-        """Forward function for multi head attention.
-        Args:
-            x (torch.Tensor): Input feature map.
-
-        Returns:
-            torch.Tensor: Feature map after attention.
-        """
-        b, c, *spatial = x.shape
-        x = x.reshape(b, c, -1)
-        qkv = self.qkv(self.norm(x))
-        qkv = qkv.reshape(b * self.num_heads, -1, qkv.shape[2])
-        h = self.QKVAttention(qkv)
-        h = h.reshape(b, -1, h.shape[-1])
-        h = self.proj(h)
-        return (h + x).reshape(b, c, *spatial)
-
-    def init_weights(self):
-        constant_init(self.proj, 0)
-
 
 @MODULES.register_module()
 class MultiHeadAttentionBlock(nn.Module):

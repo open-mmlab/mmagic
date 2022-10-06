@@ -6,7 +6,7 @@ import torch.nn as nn
 from mmcv.cnn.bricks.conv_module import ConvModule
 from mmengine.logging import MMLogger
 from mmengine.model import constant_init
-from mmengine.runner import load_checkpoint
+from mmengine.runner import load_checkpoint, BaseModule
 
 from mmedit.registry import MODULES
 from .modules import (DenoisingResBlock, EmbedSequential, TimeEmbedding,
@@ -14,49 +14,15 @@ from .modules import (DenoisingResBlock, EmbedSequential, TimeEmbedding,
 
 
 @MODULES.register_module()
-class DenoisingUnet(nn.Module):
-    """Denoising Unet. This network receives a diffused image ``x_t`` and
-    current timestep ``t``, and returns a ``output_dict`` corresponding to the
-    passed ``output_cfg``.
-
-    ``output_cfg`` defines the number of channels and the meaning of the
-    output. ``output_cfg`` mainly contains keys of ``mean`` and ``var``,
-    denoting how the network outputs mean and variance required for the
-    denoising process.
-    For ``mean``:
-    1. ``dict(mean='EPS')``: Model will predict noise added in the
-        diffusion process, and the ``output_dict`` will contain a key named
-        ``eps_t_pred``.
-    2. ``dict(mean='START_X')``: Model will direct predict the mean of the
-        original image `x_0`, and the ``output_dict`` will contain a key named
-        ``x_0_pred``.
-    3. ``dict(mean='X_TM1_PRED')``: Model will predict the mean of diffused
-        image at `t-1` timestep, and the ``output_dict`` will contain a key
-        named ``x_tm1_pred``.
-
-    For ``var``:
-    1. ``dict(var='FIXED_SMALL')`` or ``dict(var='FIXED_LARGE')``: Variance in
-        the denoising process is regarded as a fixed value. Therefore only
-        'mean' will be predicted, and the output channels will equal to the
-        input image (e.g., three channels for RGB image.)
-    2. ``dict(var='LEARNED')``: Model will predict `log_variance` in the
-        denoising process, and the ``output_dict`` will contain a key named
-        ``log_var``.
-    3. ``dict(var='LEARNED_RANGE')``: Model will predict an interpolation
-        factor and the `log_variance` will be calculated as
-        `factor * upper_bound + (1-factor) * lower_bound`. The ``output_dict``
-        will contain a key named ``factor``.
-
-    If ``var`` is not ``FIXED_SMALL`` or ``FIXED_LARGE``, the number of output
-    channels will be the double of input channels, where the first half part
-    contains predicted mean values and the other part is the predicted
-    variance values. Otherwise, the number of output channels equals to the
-    input channels, only containing the predicted mean values.
+class DenoisingUnet(BaseModule):
+    """Denoising Unet. 
 
     Args:
         image_size (int | list[int]): The size of image to denoise.
         in_channels (int, optional): The input channels of the input image.
             Defaults as ``3``.
+        out_channels (int, optional): The output channels of the output result.
+            Defaults as ``6``.
         base_channels (int, optional): The basic channel number of the
             generator. The other layers contain channels based on this number.
             Defaults to ``128``.
@@ -87,8 +53,6 @@ class DenoisingUnet(nn.Module):
             of the dict should be the output scale and corresponding value
             should be a list to define channels. Default: Please refer to
             ``_defualt_channels_cfg``.
-        output_cfg (dict, optional): Config for output variables. Defaults to
-            ``dict(mean='eps', var='learned_range')``.
         norm_cfg (dict, optional): The config for normalization layers.
             Defaults to ``dict(type='GN', num_groups=32)``.
         act_cfg (dict, optional): The config for activation layers. Defaults
@@ -118,10 +82,8 @@ class DenoisingUnet(nn.Module):
             Defaults to ``dict(type='DenoisingUpsample')``.
         attention_res (int | list[int], optional): Resolution of feature maps
             to apply attention operation. Defaults to ``[16, 8]``.
-        pretrained (str | dict, optional): Path for the pretrained model or
-            dict containing information for pretained models whose necessary
-            key is 'ckpt_path'. Besides, you can also provide 'prefix' to load
-            the generator part from the whole state dict.  Defaults to None.
+        init_cfg: The config to control the initialization. The usage is the
+            same as in ``BaseModule``. Defaults to None.
     """
 
     _default_channels_cfg = {
@@ -135,6 +97,7 @@ class DenoisingUnet(nn.Module):
     def __init__(self,
                  image_size,
                  in_channels=3,
+                 out_channels=6,
                  base_channels=128,
                  resblocks_per_downsample=3,
                  num_timesteps=1000,
@@ -144,7 +107,6 @@ class DenoisingUnet(nn.Module):
                  num_classes=0,
                  use_fp16=False,
                  channels_cfg=None,
-                 output_cfg=dict(mean='eps', var='learned_range'),
                  norm_cfg=dict(type='GN', num_groups=32),
                  act_cfg=dict(type='SiLU', inplace=False),
                  shortcut_kernel_size=1,
@@ -160,23 +122,15 @@ class DenoisingUnet(nn.Module):
                  downsample_cfg=dict(type='DenoisingDownsample'),
                  upsample_cfg=dict(type='DenoisingUpsample'),
                  attention_res=[16, 8],
-                 pretrained=None):
+                 init_cfg=None):
 
-        super().__init__()
+        super().__init__(init_cfg)
 
         self.num_classes = num_classes
         self.num_timesteps = num_timesteps
         self.use_rescale_timesteps = use_rescale_timesteps
         self.dtype = torch.float16 if use_fp16 else torch.float32
-
-        self.output_cfg = deepcopy(output_cfg)
-        self.mean_mode = self.output_cfg.get('mean', 'eps')
-        self.var_mode = self.output_cfg.get('var', 'learned_range')
         self.in_channels = in_channels
-
-        # double output_channels to output mean and var at same time
-        out_channels = in_channels if 'FIXED' in self.var_mode.upper() \
-            else 2 * in_channels
         self.out_channels = out_channels
 
         # check type of image_size
@@ -347,7 +301,7 @@ class DenoisingUnet(nn.Module):
             bias=True,
             order=('norm', 'act', 'conv'))
 
-        self.init_weights(pretrained)
+        self.init_weights()
 
     def forward(self, x_t, t, label=None, return_noise=False):
         """Forward function.
@@ -393,35 +347,6 @@ class DenoisingUnet(nn.Module):
         outputs = self.out(h)
 
         return {'outputs': outputs}
-
-    def init_weights(self, pretrained=None):
-        """Init weights for models.
-
-        We just use the initialization method proposed in the original paper.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-        """
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=False, logger=logger)
-        elif pretrained is None:
-            # As Improved-DDPM, we apply zero-initialization to
-            #   second conv block in ResBlock (keywords: conv_2)
-            #   the output layer of the Unet (keywords: 'out' but
-            #     not 'out_blocks')
-            #   projection layer in Attention layer (keywords: proj)
-            for n, m in self.named_modules():
-                if isinstance(m, nn.Conv2d) and ('conv_2' in n or
-                                                 ('out' in n
-                                                  and 'out_blocks' not in n)):
-                    constant_init(m, 0)
-                if isinstance(m, nn.Conv1d) and 'proj' in n:
-                    constant_init(m, 0)
-        else:
-            raise TypeError('pretrained must be a str or None but'
-                            f' got {type(pretrained)} instead.')
 
     def convert_to_fp16(self):
         """Convert the precision of the model to float16."""

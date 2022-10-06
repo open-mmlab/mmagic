@@ -49,7 +49,7 @@ from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
 from .wgan_gp import WGANGP
-
+from .diffusers import DDPMDiffuser, DDIMDiffuser
 # from .biggan import SNConvModule, SNE
 
 __all__ = [
@@ -73,5 +73,6 @@ __all__ = [
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
-    'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel', 'DenoisingUnet'
+    'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel', 'DenoisingUnet',
+    'DDPMDiffuser', 'DDIMDiffuser'
 ]

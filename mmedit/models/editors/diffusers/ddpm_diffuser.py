@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from types import NotImplementedType
 from typing import Union
 
 import numpy as np
@@ -30,9 +31,6 @@ class DDPMDiffuser:
             trained_betas (_type_, optional): _description_. Defaults to None.
             variance_type (str, optional): _description_. Defaults to 'fixed_small'.
             clip_sample (bool, optional): _description_. Defaults to True.
-
-        Raises:
-            NotImplementedError: _description_
         """
         self.num_train_timesteps = num_train_timesteps
         if trained_betas is not None:
@@ -111,7 +109,8 @@ class DDPMDiffuser:
             frac = (predicted_variance + 1) / 2
             log_variance = frac * max_log + (1 - frac) * min_log
             variance = torch.exp(log_variance)
-
+        else:
+            raise NotImplementedError(f'Varience type {variance_type} is not supported.')
         return variance
 
     def step(self,

@@ -6,7 +6,6 @@ from .base_models import (BaseEditModel, BaseGAN, BaseMattor,
                           MultiLayerDiscriminator, PatchDiscriminator)
 from .data_preprocessors import (EditDataPreprocessor, GenDataPreprocessor,
                                  MattorPreprocessor)
-from .diffusers import *  # noqa: F401, F403
 from .editors import *  # noqa: F401, F403
 from .losses import *  # noqa: F401, F403
 
