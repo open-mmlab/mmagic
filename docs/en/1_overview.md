@@ -74,11 +74,11 @@ MMEditing supports various applications, including:
 
 - **Powerful and Popular Applications**
 
-  MMEditing supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *generation* applications. Specifically, MMEditing supports GAN interpolation, GAN projection, GAN manipulations and many other popular GAN's applications. It's time to play with your GANs! ([Tutorial for applications](advanced_guides/applications.md))
+  MMEditing supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *generation* applications. Specifically, MMEditing supports GAN interpolation, GAN projection, GAN manipulations and many other popular GAN's applications. It's time to play with your GANs!
 
 - **New Modular Design for Flexible Combination:**
 
-  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combination among different modules.(Tutorial for [losses](advanced_guides/losses.md))
+  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combination among different modules.(Tutorial for [losses](advanced_guides/4_losses.md))
 
 - **Efficient Distributed Training:**
 
@@ -86,12 +86,12 @@ MMEditing supports various applications, including:
 
 ## Get started
 
-For installation instructions, please see [get_started](get_started.md).
+For installation instructions, please see [get_started](2_get_started.md).
 
 ## User guides
 
-For beginners, we suggest learning the basic usage of MMEditing from [user_guides](user_guides/config.md).
+For beginners, we suggest learning the basic usage of MMEditing from [user_guides](user_guides/1_config.md).
 
 ### Advanced guides
 
-For users who are familiar with MMEditing, you may want to learn the design of MMEditing, as well as how to extend the repo, how to use multiple repos and other advanced usages, please refer to [advanced_guides](advanced_guides/models/customize_models.md).
+For users who are familiar with MMEditing, you may want to learn the design of MMEditing, as well as how to extend the repo, how to use multiple repos and other advanced usages, please refer to [advanced_guides](advanced_guides/1_models.md).

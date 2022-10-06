@@ -2,7 +2,7 @@
 import torch.nn as nn
 from mmcv.cnn import ConvModule
 
-from mmedit.models.layers import SimpleGatedConvModule
+from mmedit.models.base_archs import SimpleGatedConvModule
 from mmedit.registry import COMPONENTS
 
 

@@ -1,8 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import numpy as np
+import pytest
 import torch
 
-from mmedit.models.base_models import VGG16
+from mmedit.models.base_archs import VGG16
 from mmedit.models.editors import PlainDecoder
 
 
@@ -25,28 +28,32 @@ def _demo_inputs(input_shape=(1, 4, 64, 64)):
     return img
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_plain_decoder():
     """Test PlainDecoder."""
 
-    model = PlainDecoder(512)
-    model.init_weights()
-    model.train()
-    # create max_pooling index for training
-    encoder = VGG16(4)
-    img = _demo_inputs()
-    outputs = encoder(img)
-    prediction = model(outputs)
-    assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
-
-    # test forward with gpu
-    if torch.cuda.is_available():
+    with torch.no_grad():
         model = PlainDecoder(512)
         model.init_weights()
         model.train()
-        model.cuda()
+        # create max_pooling index for training
         encoder = VGG16(4)
-        encoder.cuda()
-        img = _demo_inputs().cuda()
+        img = _demo_inputs()
         outputs = encoder(img)
         prediction = model(outputs)
         assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
+
+        # test forward with gpu
+        if torch.cuda.is_available():
+            model = PlainDecoder(512)
+            model.init_weights()
+            model.train()
+            model.cuda()
+            encoder = VGG16(4)
+            encoder.cuda()
+            img = _demo_inputs().cuda()
+            outputs = encoder(img)
+            prediction = model(outputs)
+            assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))

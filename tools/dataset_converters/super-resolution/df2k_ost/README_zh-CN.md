@@ -37,7 +37,7 @@ mmediting
 为了更快的 IO，我们建议将图像裁剪为子图像。 我们提供了这样一个脚本：
 
 ```shell
-python tools/data/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
+python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
 ```
 
 生成的数据存放在 `df2k_ost` 下，数据结构如下，其中 `_sub` 表示子图像。
@@ -59,5 +59,5 @@ mmediting
 如果你想使用 LMDB 数据集来获得更快的 IO 速度，你可以通过以下方式制作 LMDB 文件：
 
 ```shell
-python tools/data/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
+python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
 ```

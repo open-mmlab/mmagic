@@ -59,7 +59,5 @@ train_cfg = dict(
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
-lr_config = dict(policy='Fixed', by_epoch=False)
-
 checkpoint = dict(
     type='CheckpointHook', interval=250000, by_epoch=False, out_dir=save_dir)

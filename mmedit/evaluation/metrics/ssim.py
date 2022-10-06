@@ -5,8 +5,9 @@ import cv2
 import numpy as np
 
 from mmedit.registry import METRICS
+from mmedit.utils import to_numpy
 from .base_sample_wise_metric import BaseSampleWiseMetric
-from .metrics_utils import img_transform, to_numpy
+from .metrics_utils import img_transform
 
 
 @METRICS.register_module()

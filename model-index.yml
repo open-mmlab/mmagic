@@ -25,6 +25,7 @@ Import:
 - configs/partial_conv/metafile.yml
 - configs/pggan/metafile.yml
 - configs/pix2pix/metafile.yml
+- configs/positional_encoding_in_gans/metafile.yml
 - configs/rdn/metafile.yml
 - configs/real_basicvsr/metafile.yml
 - configs/real_esrgan/metafile.yml

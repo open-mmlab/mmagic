@@ -12,7 +12,7 @@ import os
 import numpy as np
 import torch
 
-from mmedit.models.layers.conv2d_gradfix import conv2d
+from mmedit.models.base_archs.conv2d_gradfix import conv2d
 # from ... import conv2d
 from .. import custom_ops
 

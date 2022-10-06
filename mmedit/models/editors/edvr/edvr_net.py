@@ -7,7 +7,8 @@ from mmengine.model import BaseModule
 from mmengine.model.weight_init import constant_init, kaiming_init
 from torch.nn.modules.utils import _pair
 
-from mmedit.models.utils import PixelShufflePack, ResidualBlockNoBN, make_layer
+from mmedit.models.base_archs import PixelShufflePack, ResidualBlockNoBN
+from mmedit.models.utils import make_layer
 from mmedit.registry import MODELS
 
 

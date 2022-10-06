@@ -39,11 +39,11 @@ We use the following tools for linting and formatting:
 - [mdformat](https://github.com/executablebooks/mdformat): Mdformat is an opinionated Markdown formatter that can be used to enforce a consistent style in Markdown files.
 - [docformatter](https://github.com/myint/docformatter): A formatter to format docstring.
 
-Style configurations can be found in [setup.cfg](/setup.cfg).
+Style configurations can be found in [setup.cfg](https://github.com/open-mmlab/mmediting/blob/1.x/setup.cfg).
 
 We use [pre-commit hook](https://pre-commit.com/) that checks and formats for `flake8`, `yapf`, `isort`, `trailing whitespaces`, `markdown files`,
 fixes `end-of-files`, `double-quoted-strings`, `python-encoding-pragma`, `mixed-line-ending`, sorts `requirments.txt` automatically on every commit.
-The config for a pre-commit hook is stored in [.pre-commit-config](/.pre-commit-config.yaml).
+The config for a pre-commit hook is stored in [.pre-commit-config](https://github.com/open-mmlab/mmediting/blob/1.x/.pre-commit-config.yaml).
 
 After you clone the repository, you will need to install initialize pre-commit hook.
 

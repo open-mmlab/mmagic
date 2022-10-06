@@ -30,11 +30,12 @@ model = dict(
         output_view=(-1, 1, 1),
     ))
 
-lr_config = dict(
-    policy='CosineRestartLR',
+# learning policy
+param_scheduler = dict(
+    type='CosineRestartLR',
     by_epoch=False,
     periods=[150000, 150000, 150000, 150000],
     restart_weights=[1, 0.5, 0.5, 0.5],
-    min_lr=1e-7)
+    eta_min=1e-7)
 
 find_unused_parameters = True

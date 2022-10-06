@@ -31,9 +31,9 @@ model = dict(
 train_dataloader = dict(num_workers=6, batch_size=8)
 
 # learning policy
-lr_config = dict(
-    policy='CosineRestartLR',
+param_scheduler = dict(
+    type='CosineRestartLR',
     by_epoch=False,
     periods=[150000, 150000, 150000, 150000],
     restart_weights=[1, 1, 1, 1],
-    min_lr=1e-7)
+    eta_min=1e-7)

@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.0rc1(23/9/2022)
+
+MMEditing 1.0.0rc1 has merged MMGeneration 1.x.
+
+- Support 42+ algorithms, 169+ configs and 168+ checkpoints.
+- Support 26+ loss functions, 20+ metrics.
+- Support tensorboard, wandb.
+- Support unconditional GANs, conditional GANs, image2image translation and internal learning.
+
 ## v1.0.0rc0(31/8/2022)
 
 MMEditing 1.0.0rc0 is the first version of MMEditing 1.x, a part of the OpenMMLab 2.0 projects.

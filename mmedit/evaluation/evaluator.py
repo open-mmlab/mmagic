@@ -14,13 +14,13 @@ from mmedit.structures import EditDataSample
 class GenEvaluator(Evaluator):
     """Evaluator for generative models. Unlike high-level vision tasks, metrics
     for generative models have various input types. For example, Inception
-    Score (IS, :class:`~mmgen.core.evaluation.InceptionScore`) only needs to
+    Score (IS, :class:`~mmedit.core.evaluation.InceptionScore`) only needs to
     take fake images as input. However, Frechet Inception Distance (FID,
-    :class:`~mmgen.core.evaluation.FrechetInceptionDistance`) needs to take
+    :class:`~mmedit.engine.evaluation.FrechetInceptionDistance`) needs to take
     both real images and fake images as input, and the numbers of real images
     and fake images can be set arbitrarily. For Perceptual path length (PPL,
-    :class:`~mmgen.core.evaluation.PerceptualPathLength.`), generator need to
-    sample images along a latent path.
+    :class:`~mmedit.engine.evaluation.PerceptualPathLength.`), generator need
+    to sample images along a latent path.
 
     In order to be compatible with different metrics, we designed two critical
     functions, :meth:`prepare_metrics` and :meth:`prepare_samplers` to support
@@ -34,8 +34,8 @@ class GenEvaluator(Evaluator):
       same sample mode can share the sampler.
 
     The whole evaluation process can be found in
-    :meth:~`mmgen.core.runners.loops.GenValLoop.run` and
-    :meth:~`mmgen.core.runners.loops.GenTestLoop.run`.
+    :meth:~`mmedit.engine.runners.loops.GenValLoop.run` and
+    :meth:~`mmedit.engine.runners.loops.GenTestLoop.run`.
 
     Args:
         metrics (dict or BaseMetric or Sequence): The config of metrics.

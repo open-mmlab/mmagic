@@ -22,7 +22,7 @@
 可通过运行以下命令来准备 REDS 数据集:
 
 ```shell
-python tools/data/super-resolution/reds/preprocess_reds_dataset.py ./data/REDS
+python tools/dataset_converters/super-resolution/reds/preprocess_reds_dataset.py ./data/REDS
 ```
 
 ```text
@@ -50,7 +50,7 @@ mmediting
 如果您想使用 `LMDB` 以获得更快的 IO 速度，可以通过以下脚本来构建 LMDB 文件：
 
 ```shell
-python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
+python tools/dataset_converters/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
 
 ## 裁剪为子图
@@ -58,7 +58,7 @@ python tools/data/super-resolution/reds/preprocess_reds_dataset.py --root-path .
 MMEditing 支持将 REDS 图像裁剪为子图像以加快 IO。我们提供了这样一个脚本：
 
 ```shell
-python tools/data/super-resolution/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
+python tools/dataset_converters/super-resolution/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
 ```
 
 生成的数据存储在 `REDS` 下，数据结构如下，其中`_sub`表示子图像。

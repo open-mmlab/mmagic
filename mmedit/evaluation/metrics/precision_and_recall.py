@@ -12,8 +12,8 @@ from torchvision import models as torchvision_models
 
 from mmedit.models.utils import get_module_device
 from mmedit.registry import METRICS
+from ..functional import prepare_vgg_feat
 from .base_gen_metric import GenerativeMetric
-from .inception_utils import prepare_vgg_feat
 
 
 def compute_pr_distances(row_features,

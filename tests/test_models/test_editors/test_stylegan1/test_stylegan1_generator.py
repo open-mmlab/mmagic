@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 
 import pytest
@@ -81,6 +82,9 @@ class TestStyleGAN1Generator:
             n_target=4)
         assert style_mixing_images.shape == (25, 3, 32, 32)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_g_cpu(self):
         # test default config
         g = StyleGAN1Generator(**self.default_cfg)

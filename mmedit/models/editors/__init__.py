@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .aotgan import AOTBlockNeck, AOTEncoderDecoder, AOTInpaintor
+from .arcface import IDLossModel
 from .basicvsr import BasicVSR, BasicVSRNet
 from .basicvsr_plusplus_net import BasicVSRPlusPlusNet
 from .biggan import BigGAN
@@ -30,6 +31,7 @@ from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexNetEncoder)
 from .liif import LIIF, MLPRefiner
 from .lsgan import LSGAN
+from .mspie import MSPIEStyleGAN2, PESinGAN
 from .pconv import (MaskConvModule, PartialConv2d, PConvDecoder, PConvEncoder,
                     PConvEncoderDecoder, PConvInpaintor)
 from .pggan import ProgressiveGrowingGAN
@@ -74,5 +76,6 @@ __all__ = [
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel', 'DenoisingUnet',
-    'DDPMDiffuser', 'DDIMDiffuser'
+    'DDPMDiffuser', 'DDIMDiffuser','IDLossModel', 'PESinGAN',
+    'MSPIEStyleGAN2'
 ]

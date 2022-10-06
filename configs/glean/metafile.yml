@@ -55,3 +55,36 @@ Models:
       PSNR: 27.94
     Task: Glean
   Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth
+- Config: configs/glean/glean_x8-fp16_2xb8_cat.py
+  In Collection: GLEAN
+  Metadata:
+    GPUs: '-'
+    Training Data: CAT
+  Name: glean_x8-fp16_2xb8_cat
+  Results:
+  - Dataset: CAT
+    Metrics: {}
+    Task: Glean
+  Weights: ''
+- Config: configs/glean/glean_x16-fp16_2xb8_ffhq.py
+  In Collection: GLEAN
+  Metadata:
+    GPUs: '-'
+    Training Data: FFHQ
+  Name: glean_x16-fp16_2xb8_ffhq
+  Results:
+  - Dataset: FFHQ
+    Metrics: {}
+    Task: Glean
+  Weights: ''
+- Config: configs/glean/glean_in128out1024-fp16_4xb2-300k_ffhq-celeba-hq.py
+  In Collection: GLEAN
+  Metadata:
+    GPUs: '-'
+    Training Data: CELEBA
+  Name: glean_in128out1024-fp16_4xb2-300k_ffhq-celeba-hq
+  Results:
+  - Dataset: CELEBA
+    Metrics: {}
+    Task: Glean
+  Weights: ''

@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from types import NotImplementedType
 from typing import Union
 
 import numpy as np

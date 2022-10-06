@@ -31,12 +31,11 @@ model = dict(
 train_dataloader = dict(num_workers=6, batch_size=4)
 
 # learning policy
-total_iters = 600000
-lr_config = dict(
-    policy='CosineRestartLR',
+param_scheduler = dict(
+    type='CosineRestartLR',
     by_epoch=False,
     periods=[50000, 100000, 150000, 150000, 150000],
     restart_weights=[1, 1, 1, 1, 1],
-    min_lr=1e-7)
+    eta_min=1e-7)
 
 find_unused_parameters = True

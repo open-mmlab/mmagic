@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from unittest.mock import MagicMock
 
 import pytest
@@ -103,6 +104,9 @@ class TestPPL:
         ppl_res = ppl.compute_metrics(ppl.fake_results)
         assert ppl_res['ppl_score'] >= 0
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_ppl_cpu(self):
         ppl = PerceptualPathLength(
             fake_nums=2,
