@@ -23,13 +23,16 @@ class DDPMDiffuser:
         The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddpm.py. # noqa
 
         Args:
-            num_train_timesteps (int, optional): _description_. Defaults to 1000.
-            beta_start (float, optional): _description_. Defaults to 0.0001.
-            beta_end (float, optional): _description_. Defaults to 0.02.
-            beta_schedule (str, optional): _description_. Defaults to 'linear'.
-            trained_betas (_type_, optional): _description_. Defaults to None.
-            variance_type (str, optional): _description_. Defaults to 'fixed_small'.
-            clip_sample (bool, optional): _description_. Defaults to True.
+            num_train_timesteps (int, optional): Number of timesteps during training. Defaults to 1000.
+            beta_start (float, optional): The beta value at first timestep. Defaults to 0.0001.
+            beta_end (float, optional): The beta value at last timestep. Defaults to 0.02.
+            beta_schedule (str, optional): Scheduler type of beta. Current supported type are `linear`,
+                 `scaled_linear`, `squaredcos_cap_v2`. Defaults to 'linear'.
+            trained_betas (list, optional): Assigned betas. Defaults to None.
+            variance_type (str, optional): The type of predicted variance. Current supported type are 
+                `fixed_small`, `fixed_small_log`, `fixed_large`, `fixed_large_log`, `learned` and
+                 `learned_range`. Defaults to 'fixed_small'.
+            clip_sample (bool, optional): Whether to clip predicted ``x_0`` to [-1, 1]. Defaults to True.
         """
         self.num_train_timesteps = num_train_timesteps
         if trained_betas is not None:
