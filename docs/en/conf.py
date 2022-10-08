@@ -105,7 +105,7 @@ html_theme_options = {
         ' brought by OpenMMLab 2.0. Check out the '
         '<a href="https://github.com/open-mmlab/mmediting/releases">changelog</a>, '  # noqa
         '<a href="https://github.com/open-mmlab/mmediting/tree/1.x">code</a> '  # noqa
-        'and <a href="https://mmediting.readthedocs.io/en/dev-1.x/">documentation</a> of MMEditing 1.0 for more details.',  # noqa
+        'and <a href="https://mmediting.readthedocs.io/en/1.x/">documentation</a> of MMEditing 1.0 for more details.',  # noqa
     }
 }
 

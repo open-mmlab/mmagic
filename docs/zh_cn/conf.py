@@ -101,12 +101,12 @@ html_theme_options = {
         'title':
         '注意',
         'content':
-        '您正在阅读 MMEditing 0.x MMEditing 0.x 会在 2022 年末开始'
+        '您正在阅读 MMEditing 0.x。 MMEditing 0.x 会在 2022 年末开始'
         '逐步停止维护，建议您及时升级到 MMEditing 1.0 版本，享受由 OpenMMLab '
         '2.0 带来的更多新特性和更佳的性能表现。阅读 MMEditing 1.0 的'
         '<a href="https://github.com/open-mmlab/mmediting/releases">发版日志</a>、 '  # noqa
         '<a href="https://github.com/open-mmlab/mmediting/tree/1.x">代码</a> '  # noqa
-        '和 <a href="https://mmediting.readthedocs.io/zh_CN/dev-1.x/">文档</a> 以了解更多。',  # noqa
+        '和 <a href="https://mmediting.readthedocs.io/zh_CN/1.x/">文档</a> 以了解更多。',  # noqa
     }
 }
 
