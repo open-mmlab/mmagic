@@ -92,7 +92,6 @@ class SiLU(nn.Module):
         return F.silu(x, inplace=self.inplace)
 
 
-
 @MODULES.register_module()
 class MultiHeadAttentionBlock(nn.Module):
     """An attention block that allows spatial positions to attend to each

@@ -4,9 +4,7 @@ from copy import deepcopy
 import torch
 import torch.nn as nn
 from mmcv.cnn.bricks.conv_module import ConvModule
-from mmengine.logging import MMLogger
-from mmengine.model import constant_init
-from mmengine.runner import load_checkpoint, BaseModule
+from mmengine.runner import BaseModule
 
 from mmedit.registry import MODULES
 from .modules import (DenoisingResBlock, EmbedSequential, TimeEmbedding,
@@ -15,7 +13,7 @@ from .modules import (DenoisingResBlock, EmbedSequential, TimeEmbedding,
 
 @MODULES.register_module()
 class DenoisingUnet(BaseModule):
-    """Denoising Unet. 
+    """Denoising Unet.
 
     Args:
         image_size (int | list[int]): The size of image to denoise.

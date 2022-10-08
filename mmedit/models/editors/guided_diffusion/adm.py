@@ -1,9 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from copy import deepcopy
-from typing import List, Optional
+from typing import Dict, List, Optional, Union
 
 import mmengine
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
 from mmengine import MessageHub
 from mmengine.model import BaseModel, is_model_wrapper
 from mmengine.optim import OptimWrapperDict
@@ -13,26 +15,29 @@ from tqdm import tqdm
 from mmedit.registry import DIFFUSERS, MODELS, MODULES
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, SampleList
-from typing import Dict, List, Optional, Union
-import torch.nn as nn
 
 ModelType = Union[Dict, nn.Module]
+
 
 @MODELS.register_module('ADM')
 @MODELS.register_module('GuidedDiffusion')
 @MODELS.register_module()
 class AblatedDiffusionModel(BaseModel):
-    """Ablated diffusion model mentioned in the paper 
-    Diffusion Models Beat GANs on Image Synthesis (https://arxiv.org/pdf/2105.05233.pdf).
+    """Ablated diffusion model mentioned in the paper Diffusion Models Beat
+    GANs on Image Synthesis (https://arxiv.org/pdf/2105.05233.pdf).
 
     Args:
         data_preprocessor (dict, optional): The pre-process config of
             :class:`BaseDataPreprocessor`.
-        unet (Union[Dict, nn.Module]): The config or the model of denoising unet.
+        unet (Union[Dict, nn.Module]): The config or the model of denoising
+            unet.
         diffuser (Dict): The config of the diffusion scheduler.
-        use_fp16 (bool, optional): Whether to use fp16 parameters for blocks of unet. Defaults to False.
-        classifier (Optional[Union[Dict, nn.Module]]): The config or the model of the classifier. Defaults to None.
-        pretrained_cfgs (Optional[Dict]): The configs of the pretrained weights. Defaults to None.
+        use_fp16 (bool, optional): Whether to use fp16 parameters for blocks
+            of unet. Defaults to False.
+        classifier (Optional[Union[Dict, nn.Module]]): The config or the model
+            of the classifier. Defaults to None.
+        pretrained_cfgs (Optional[Dict]): The configs of the pretrained
+            weights. Defaults to None.
     """
 
     def __init__(self,
@@ -69,11 +74,12 @@ class AblatedDiffusionModel(BaseModel):
         Example:
             pretrained_cfgs = dict(
                 unet=dict(ckpt_path='openai/512x512_diffusion.pt'),
-                classifier=dict(ckpt_path="adm-u_8xb32_imagenet-512x512.pth", prefix='classifier'),
-            ) 
+                classifier=dict(ckpt_path="adm-u_8xb32_imagenet-512x512.pth",
+                    prefix='classifier'),
+            )
 
         Args:
-            pretrained_cfgs (Optional[Dict]): The configs of the pretrained 
+            pretrained_cfgs (Optional[Dict]): The configs of the pretrained
                 weights. Defaults to None.
         """
         for key, ckpt_cfg in pretrained_cfgs.items():
@@ -105,15 +111,15 @@ class AblatedDiffusionModel(BaseModel):
         """_summary_
 
         Args:
-            init_image (Optional[torch.Tensor]): The initial image for diffusion 
-                process. Defaults to None.
+            init_image (Optional[torch.Tensor]): The initial image for
+                diffusion process. Defaults to None.
             batch_size (int, optional): The batch size of image. Defaults to 1.
             num_inference_steps (int, optional): Denoising steps of inference.
                 Defaults to 1000.
-            labels (int, optional): The label of generated images. If not given,
-                 random labels will be used. Defaults to None.
-            show_progress (bool, optional): Whether show progress bar of denoising 
-                process. Defaults to False.
+            labels (int, optional): The label of generated images. If not
+                given, random labels will be used. Defaults to None.
+            show_progress (bool, optional): Whether show progress bar of
+                denoising process. Defaults to False.
 
         Returns:
             Dict: The result of inference.
@@ -151,9 +157,13 @@ class AblatedDiffusionModel(BaseModel):
 
             # 3. applying classifier guide
             if self.classifier and classifier_scale != 0.0:
-                gradient = self.classifier_grad(image, t, labels, classifier_scale=classifier_scale)
-                guided_mean = (diffuser_output["mean"].float() + diffuser_output["sigma"] * gradient.float())
-                image = guided_mean + diffuser_output["sigma"]* noise
+                gradient = self.classifier_grad(
+                    image, t, labels, classifier_scale=classifier_scale)
+                guided_mean = (
+                    diffuser_output['mean'].float() +
+                    diffuser_output['sigma'] * gradient.float())
+                image = guided_mean + diffuser_output[
+                    'sigma'] * diffuser_output['noise']
             else:
                 image = diffuser_output['prev_sample']
 
@@ -170,8 +180,8 @@ class AblatedDiffusionModel(BaseModel):
                 information (e.g. noise, num_batches, mode) to generate image.
             data_samples (Optional[list]): Data samples collated by
                 :attr:`data_preprocessor`. Defaults to None.
-            mode (Optional[str]): `mode` is not used in :class:`AblatedDiffusionModel`.
-                Defaults to None.
+            mode (Optional[str]): `mode` is not used in
+                :class:`AblatedDiffusionModel`. Defaults to None.
 
         Returns:
             SampleList: A list of ``EditDataSample`` contain generated results.
@@ -184,7 +194,8 @@ class AblatedDiffusionModel(BaseModel):
         num_inference_steps = sample_kwargs.get(
             'num_inference_steps', self.diffuser.num_train_timesteps)
         show_progress = sample_kwargs.get('show_progress', False)
-        classifier_scale = sample_kwargs.get('classifier_scale', self.classifier_scale)
+        classifier_scale = sample_kwargs.get('classifier_scale',
+                                             self.classifier_scale)
 
         outputs = self.infer(
             init_image=init_image,
@@ -290,16 +301,15 @@ class AblatedDiffusionModel(BaseModel):
 
         return log_vars
 
-    @staticmethod
-    def classifier_grad(x, t, y=None, classifier_scale=1.0):
+    def classifier_grad(self, x, t, y=None, classifier_scale=1.0):
         """Compute classifier guidance gradient at timestep t.
 
         Args:
             x (torch.Tensor): Denoising result as timestep t.
             t (int): Current timestep.
-            y (torch.Tensor, optional): The labels tensor. 
+            y (torch.Tensor, optional): The labels tensor.
                 Defaults to None.
-            classifier_scale (float, optional): The magnitude of 
+            classifier_scale (float, optional): The magnitude of
                 classifier guidance. Defaults to 1.0.
 
         Returns:
@@ -308,7 +318,8 @@ class AblatedDiffusionModel(BaseModel):
         assert y is not None
         with torch.enable_grad():
             x_in = x.detach().requires_grad_(True)
-            logits = classifier(x_in, t)
+            logits = self.classifier(x_in, t)
             log_probs = F.log_softmax(logits, dim=-1)
             selected = log_probs[range(len(logits)), y.view(-1)]
-            return torch.autograd.grad(selected.sum(), x_in)[0] * classifier_scale
+            return torch.autograd.grad(selected.sum(),
+                                       x_in)[0] * classifier_scale

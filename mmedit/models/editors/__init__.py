@@ -13,6 +13,7 @@ from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
 from .deepfillv2 import DeepFillEncoderDecoder
 from .dic import (DIC, DICNet, FeedbackBlock, FeedbackBlockCustom,
                   FeedbackBlockHeatmapAttention, LightCNN, MaxFeature)
+from .diffusers import DDIMDiffuser, DDPMDiffuser
 from .dim import DIM
 from .edsr import EDSRNet
 from .edvr import EDVR, EDVRNet
@@ -51,7 +52,7 @@ from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
 from .wgan_gp import WGANGP
-from .diffusers import DDPMDiffuser, DDIMDiffuser
+
 # from .biggan import SNConvModule, SNE
 
 __all__ = [
@@ -75,7 +76,7 @@ __all__ = [
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
-    'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel', 'DenoisingUnet',
-    'DDPMDiffuser', 'DDIMDiffuser','IDLossModel', 'PESinGAN',
+    'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel',
+    'DenoisingUnet', 'DDPMDiffuser', 'DDIMDiffuser', 'IDLossModel', 'PESinGAN',
     'MSPIEStyleGAN2'
 ]

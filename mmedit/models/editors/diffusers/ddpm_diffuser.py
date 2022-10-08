@@ -10,6 +10,7 @@ from .diffuser_utils import betas_for_alpha_bar
 
 @DIFFUSERS.register_module()
 class DDPMDiffuser:
+
     def __init__(self,
                  num_train_timesteps=1000,
                  beta_start=0.0001,
@@ -18,7 +19,8 @@ class DDPMDiffuser:
                  trained_betas=None,
                  variance_type='fixed_small',
                  clip_sample=True):
-        """ ```DDPMDiffuser``` support the diffusion and reverse process formulated in https://arxiv.org/abs/2006.11239. 
+        """```DDPMDiffuser``` support the diffusion and reverse process
+        formulated in https://arxiv.org/abs/2006.11239.
 
         The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddpm.py. # noqa
 
@@ -29,7 +31,7 @@ class DDPMDiffuser:
             beta_schedule (str, optional): Scheduler type of beta. Current supported type are `linear`,
                  `scaled_linear`, `squaredcos_cap_v2`. Defaults to 'linear'.
             trained_betas (list, optional): Assigned betas. Defaults to None.
-            variance_type (str, optional): The type of predicted variance. Current supported type are 
+            variance_type (str, optional): The type of predicted variance. Current supported type are
                 `fixed_small`, `fixed_small_log`, `fixed_large`, `fixed_large_log`, `learned` and
                  `learned_range`. Defaults to 'fixed_small'.
             clip_sample (bool, optional): Whether to clip predicted ``x_0`` to [-1, 1]. Defaults to True.
@@ -112,7 +114,8 @@ class DDPMDiffuser:
             log_variance = frac * max_log + (1 - frac) * min_log
             variance = torch.exp(log_variance)
         else:
-            raise NotImplementedError(f'Varience type {variance_type} is not supported.')
+            raise NotImplementedError(
+                f'Varience type {variance_type} is not supported.')
         return variance
 
     def step(self,
@@ -171,7 +174,12 @@ class DDPMDiffuser:
 
         pred_prev_sample = pred_prev_mean + sigma * noise
 
-        return {'prev_sample': pred_prev_sample, 'mean':pred_prev_mean, 'sigma':sigma, 'noise':noise}
+        return {
+            'prev_sample': pred_prev_sample,
+            'mean': pred_prev_mean,
+            'sigma': sigma,
+            'noise': noise
+        }
 
     def add_noise(self, original_samples, noise, timesteps):
         sqrt_alpha_prod = self.alphas_cumprod[timesteps]**0.5
@@ -184,13 +192,14 @@ class DDPMDiffuser:
             sqrt_alpha_prod * original_samples +
             sqrt_one_minus_alpha_prod * noise)
         return noisy_samples
-    
+
     def training_loss(self, model, x_0, t):
-        raise NotImplementedError("This function is supposed to return a dict containing loss items giving sampled x0 and timestep.")
+        raise NotImplementedError(
+            'This function is supposed to return a dict containing loss items'
+            ' giving sampled x0 and timestep.')
 
     def sample_timestep(self):
         raise NotImplementedError
-        
 
     def __len__(self):
         return self.num_train_timesteps
