@@ -313,7 +313,8 @@ class AblatedDiffusionModel(BaseModel):
                 classifier guidance. Defaults to 1.0.
 
         Returns:
-            _type_: _description_
+            torch.Tensor: Gradient of log probability to ``x_in`` multiplied
+                by scale.
         """
         assert y is not None
         with torch.enable_grad():

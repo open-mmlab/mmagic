@@ -35,6 +35,7 @@ class EmbedSequential(nn.Sequential):
 
 @MODELS.register_module('GN32')
 class GroupNorm32(nn.GroupNorm):
+    """A wrapper for using float32 computing in group norm."""
 
     def __init__(self, num_channels, num_groups=32, **kwargs):
         super().__init__(num_groups, num_channels, **kwargs)

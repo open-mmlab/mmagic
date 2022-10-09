@@ -301,7 +301,7 @@ class DenoisingUnet(BaseModule):
 
         self.init_weights()
 
-    def forward(self, x_t, t, label=None, return_noise=False):
+    def forward(self, x_t, t, label=None):
         """Forward function.
         Args:
             x_t (torch.Tensor): Diffused image at timestep `t` to denoise.
@@ -310,12 +310,9 @@ class DenoisingUnet(BaseModule):
                 batch of label through a ``torch.Tensor`` or offer a callable
                 function to sample a batch of label data. Otherwise, the
                 ``None`` indicates to use the default label sampler.
-            return_noise (bool, optional): If True, inputted ``x_t`` and ``t``
-                will be returned in a dict with output desired by
-                ``output_cfg``. Defaults to False.
 
         Returns:
-            torch.Tensor | dict: If not ``return_noise``
+            dict: Output of unet.
         """
         if not torch.is_tensor(t):
             t = torch.tensor([t], dtype=torch.long, device=x_t.device)
