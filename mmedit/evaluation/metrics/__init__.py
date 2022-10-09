@@ -9,21 +9,24 @@ from .mae import MAE
 from .matting_mse import MattingMSE
 from .ms_ssim import MultiScaleStructureSimilarity
 from .mse import MSE
-from .niqe import NIQE
+from .niqe import NIQE, niqe
 from .ppl import PerceptualPathLength
 from .precision_and_recall import PrecisionAndRecall
-from .psnr import PSNR
+from .psnr import PSNR, psnr
 from .sad import SAD
-from .snr import SNR
-from .ssim import SSIM
+from .snr import SNR, snr
+from .ssim import SSIM, ssim
 from .swd import SlicedWassersteinDistance
 
 __all__ = [
     'MAE',
     'MSE',
     'PSNR',
+    'psnr',
     'SNR',
+    'snr',
     'SSIM',
+    'ssim',
     'MultiScaleStructureSimilarity',
     'FrechetInceptionDistance',
     'TransFID',
@@ -37,5 +40,6 @@ __all__ = [
     'PrecisionAndRecall',
     'SlicedWassersteinDistance',
     'NIQE',
+    'niqe',
     'Equivariance',
 ]
