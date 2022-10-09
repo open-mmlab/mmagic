@@ -122,8 +122,19 @@ class DDPMDiffuser:
              model_output: Union[torch.FloatTensor],
              timestep: int,
              sample: Union[torch.FloatTensor],
-             predict_epsilon=True,
-             generator=None):
+             predict_epsilon=True):
+        """Get denosing result from model's output.
+
+        Args:
+            model_output (Union[torch.FloatTensor]): Model's output.
+            timestep (int): Current timestep.
+            sample (Union[torch.FloatTensor]): Sample at current timestep.
+            predict_epsilon (bool, optional): Whether model predict epsilon.
+                Defaults to True.
+
+        Returns:
+            dict: Denoising result.
+        """
         t = timestep
 
         if model_output.shape[1] == sample.shape[
