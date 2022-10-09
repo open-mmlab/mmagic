@@ -4,7 +4,7 @@ from copy import deepcopy
 import torch
 import torch.nn as nn
 from mmcv.cnn.bricks.conv_module import ConvModule
-from mmengine.runner import BaseModule
+from mmengine.model import BaseModule
 
 from mmedit.registry import MODULES
 from .modules import (DenoisingResBlock, EmbedSequential, TimeEmbedding,
