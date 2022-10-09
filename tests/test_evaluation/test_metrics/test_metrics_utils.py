@@ -1,7 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
+import pytest
 
 from mmedit.evaluation.metrics import metrics_utils
+from mmedit.evaluation.metrics.metrics_utils import reorder_image
 
 
 def test_average():
@@ -29,3 +31,21 @@ def test_obtain_data():
     data_sample = {'data_samples': {key: img}}
     result = metrics_utils.obtain_data(data_sample, key)
     assert not (result - img).any()
+
+
+def test_reorder_image():
+    img_hw = np.ones((32, 32))
+    img_hwc = np.ones((32, 32, 3))
+    img_chw = np.ones((3, 32, 32))
+
+    with pytest.raises(ValueError):
+        reorder_image(img_hw, 'HH')
+
+    output = reorder_image(img_hw)
+    assert output.shape == (32, 32, 1)
+
+    output = reorder_image(img_hwc)
+    assert output.shape == (32, 32, 3)
+
+    output = reorder_image(img_chw, input_order='CHW')
+    assert output.shape == (32, 32, 3)

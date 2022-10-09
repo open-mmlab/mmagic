@@ -1,40 +1,45 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 
+from .connectivity_error import ConnectivityError
 from .equivariance import Equivariance
 from .fid import FrechetInceptionDistance, TransFID
+from .gradient_error import GradientError
 from .inception_score import InceptionScore, TransIS
-from .matting import SAD, ConnectivityError, GradientError, MattingMSE
+from .mae import MAE
+from .matting_mse import MattingMSE
 from .ms_ssim import MultiScaleStructureSimilarity
+from .mse import MSE
 from .niqe import NIQE, niqe
-from .pixel_metrics import MAE, MSE, PSNR, SNR, psnr, snr
 from .ppl import PerceptualPathLength
 from .precision_and_recall import PrecisionAndRecall
+from .psnr import PSNR, psnr
+from .sad import SAD
+from .snr import SNR, snr
 from .ssim import SSIM, ssim
 from .swd import SlicedWassersteinDistance
 
 __all__ = [
-    'ConnectivityError',
-    'GradientError',
     'MAE',
-    'MattingMSE',
     'MSE',
-    'NIQE',
-    'niqe',
     'PSNR',
     'psnr',
-    'SAD',
     'SNR',
     'snr',
     'SSIM',
     'ssim',
-    'Equivariance',
+    'MultiScaleStructureSimilarity',
     'FrechetInceptionDistance',
+    'TransFID',
     'InceptionScore',
-    'MultiScaleStructureSimilarity',
+    'TransIS',
+    'SAD',
+    'MattingMSE',
+    'ConnectivityError',
+    'GradientError',
     'PerceptualPathLength',
-    'MultiScaleStructureSimilarity',
     'PrecisionAndRecall',
     'SlicedWassersteinDistance',
-    'TransFID',
-    'TransIS',
+    'NIQE',
+    'niqe',
+    'Equivariance',
 ]
