@@ -83,7 +83,7 @@ html_theme_options = {
                 {
                     'name': 'MMEditing 0.x',
                     'url': 'https://mmediting.readthedocs.io/en/latest/',
-                    'description': 'docs at main branch'
+                    'description': 'docs at master branch'
                 },
                 {
                     'name': 'MMEditing 1.x',
