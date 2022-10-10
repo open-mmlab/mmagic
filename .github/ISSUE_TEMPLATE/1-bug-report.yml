@@ -29,12 +29,12 @@ body:
   - type: checkboxes
     attributes:
       label: Information
-      description: The problem arises when
+      description: The problem arises when\:
       options:
       - label: I'm using the official example scripts for the officially supported task.
       - label: I'm using my own modified scripts or I'm working on my own task or datasets.
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: textarea
     attributes:
