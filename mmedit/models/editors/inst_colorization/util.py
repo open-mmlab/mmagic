@@ -1,11 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from __future__ import print_function
-import os
-from collections import OrderedDict
 
 import numpy as np
 import torch
-from PIL import Image
 
 
 # Color conversion code
@@ -124,7 +121,7 @@ def lab2xyz(lab):
 def rgb2lab(rgb, **kwargs):
     lab = xyz2lab(rgb2xyz(rgb))
     # print(lab[0, 0, 0, 0])
-    lab_0 = lab[:, [0], :, :]
+    # lab_0 = lab[:, [0], :, :]
     l_rs = (lab[:, [0], :, :] - kwargs['l_cent']) / kwargs['l_norm']
     # print(l_rs[0, 0, 0, 0])
     ab_rs = lab[:, 1:, :, :] / kwargs['ab_norm']
@@ -258,4 +255,3 @@ def encode_ab_ind(data_ab, **kwargs):
                              kwargs['ab_quant'])  # normalized bin number
     data_q = data_ab_rs[:, [0], :, :] * A + data_ab_rs[:, [1], :, :]
     return data_q
-

@@ -1,6 +1,4 @@
-_base_ = [
-    '../_base_/default_runtime.py'
-]
+_base_ = ['../_base_/default_runtime.py']
 
 exp_name = 'Instance-aware_full'
 save_dir = './'
@@ -14,11 +12,7 @@ model = dict(
         std=[127.5],
     ),
     instance_model=dict(
-        type='SIGGRAPHGenerator',
-        input_nc=4,
-        output_nc=2,
-        norm_type='batch'
-    ),
+        type='SIGGRAPHGenerator', input_nc=4, output_nc=2, norm_type='batch'),
     stage='full',
     ngf=64,
     output_nc=2,
@@ -31,8 +25,7 @@ model = dict(
     init_type='normal',
     which_direction='AtoB',
     loss=dict(type='HuberLoss', delta=.01),
-    pretrained='./checkpoints/pytorch_trained.pth'
-)
+    pretrained='./checkpoints/pytorch_trained.pth')
 
 input_shape = (256, 256)
 
@@ -52,11 +45,7 @@ train_pipeline = [
 test_pipeline = [
     dict(type='LoadImageFromFile', key='gt'),
     dict(type='GenMaskRCNNBbox', stage='test_fusion', finesize=256),
-    dict(type='Resize',
-         keys=['gt'],
-         scale=(256, 256),
-         keep_ratio=False
-         ),
+    dict(type='Resize', keys=['gt'], scale=(256, 256), keep_ratio=False),
     dict(type='PackEditInputs'),
 ]
 
@@ -92,7 +81,6 @@ test_dataloader = dict(
         pipeline=test_pipeline,
         test_mode=False))
 
-
 test_evaluator = [dict(type='PSNR'), dict(type='SSIM')]
 
 train_cfg = dict(
@@ -103,7 +91,6 @@ train_cfg = dict(
 
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
-
 
 # optimizer
 optim_wrapper = dict(
@@ -127,9 +114,7 @@ visualizer = dict(
     type='ConcatImageVisualizer',
     vis_backends=vis_backends,
     fn_key='gt_path',
-    img_keys=[
-        'gray', 'real', 'fake_reg', 'hint', 'real_ab', 'fake_ab_reg'
-    ],
+    img_keys=['gray', 'real', 'fake_reg', 'hint', 'real_ab', 'fake_ab_reg'],
     bgr2rgb=False)
 
 env_cfg = dict(
@@ -137,5 +122,3 @@ env_cfg = dict(
     mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0),
     dist_cfg=dict(backend='nccl'),
 )
-
-

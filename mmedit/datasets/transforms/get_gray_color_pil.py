@@ -1,9 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import numpy as np
 import cv2
+import numpy as np
 from mmcv.transforms.base import BaseTransform
 
 from mmedit.registry import TRANSFORMS
+
 
 @TRANSFORMS.register_module()
 class GenGrayColorPil(BaseTransform):
