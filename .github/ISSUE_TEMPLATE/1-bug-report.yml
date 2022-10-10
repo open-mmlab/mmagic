@@ -79,5 +79,6 @@ body:
       label: Additional information
       description: Tell us anything else you think we should know.
       placeholder: |
-        1. What dataset did you use?
-        2. What do you think might be the reason?
+        1. What's your expected result? 
+        2. What dataset did you use?
+        3. What do you think might be the reason?
