@@ -22,7 +22,7 @@ body:
 
   - type: textarea
     attributes:
-      label: What is the feature you are proposing to solve the problem?
+      label: What is the feature?
     validations:
       required: true
 
