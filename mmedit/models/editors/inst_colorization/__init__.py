@@ -1,8 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .inst_colorization import INSTA
-from .inst_colorizatiuion_net import (FusionGenerator, InstanceGenerator,
-                                      SIGGRAPHGenerator)
+from .inst_colorization import InstColorization
+from .inst_colorization_net import (FusionGenerator, InstanceGenerator,
+                                    SIGGRAPHGenerator)
 
 __all__ = [
-    'INSTA', 'SIGGRAPHGenerator', 'InstanceGenerator', 'FusionGenerator'
+    'InstColorization', 'SIGGRAPHGenerator', 'InstanceGenerator',
+    'FusionGenerator'
 ]
