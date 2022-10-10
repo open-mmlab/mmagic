@@ -1,7 +1,7 @@
 name: 🚀 Feature request
 description: Suggest an idea for this project
 labels: [feature-request]
-title: "[feature]"
+title: "[feature] "
 
 body:
   - type: markdown
