@@ -5,7 +5,7 @@ work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
 scale = 4
-gt_crop_size = 400
+gt_crop_size = 256
 
 # DistributedDataParallel
 model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
@@ -27,8 +27,8 @@ model = dict(
     test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
-        mean=[0, 0, 0],
-        std=[1, 1, 1],
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.],
     ))
 
 train_pipeline = [
@@ -38,7 +38,8 @@ train_pipeline = [
         type='Crop',
         keys=['gt'],
         crop_size=(gt_crop_size, gt_crop_size),
-        random_crop=True),
+        random_crop=True,
+        is_pad_zeros=True),
     dict(type='RescaleToZeroOne', keys=['gt']),
     dict(
         type='UnsharpMasking',
@@ -177,6 +178,7 @@ train_pipeline = [
 val_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='MATLABLikeResize', keys=['img'], scale=0.25), # For RealSR datasets
     dict(type='RescaleToZeroOne', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
@@ -204,10 +206,11 @@ val_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(dataset_type='set5', task_name='real_sr'),
-        data_root='data/set5',
-        data_prefix=dict(gt='HR', img='bicLRx4'),
-        pipeline=val_pipeline))
+        metainfo=dict(dataset_type='imagenet', task_name='real_sr'),
+        data_root='data/imagenet',
+        data_prefix=dict(gt='val', img='val'),
+        # filename_tmpl=dict(img='{}_LR4', gt='{}_HR'), # for RealSR datasets
+        pipeline=train_pipeline))
 
 test_dataloader = val_dataloader
 
@@ -215,6 +218,7 @@ val_evaluator = [
     dict(type='MAE'),
     dict(type='PSNR'),
     dict(type='SSIM'),
+    dict(type='NIQE', input_order='CHW')
 ]
 test_evaluator = val_evaluator
 
@@ -253,7 +257,7 @@ visualizer = dict(
     vis_backends=vis_backends,
     fn_key='gt_path',
     img_keys=['gt_img', 'input', 'pred_img'],
-    bgr2rgb=True)
+    bgr2rgb=False)
 custom_hooks = [
     dict(type='BasicVisualizationHook', interval=1),
     dict(
