@@ -6,14 +6,14 @@ from typing import Union
 import torch
 from mmengine.config import Config
 
-from mmedit.models.base_models import BaseColorization
+from mmedit.models.editors import SRGAN
 from mmedit.models.utils import generation_init_weights
 from mmedit.registry import BACKBONES, COMPONENTS
 from .util import encode_ab_ind, get_colorization_data, lab2rgb
 
 
 @BACKBONES.register_module()
-class INSTA(BaseColorization):
+class INSTA(SRGAN):
 
     def __init__(self,
                  data_preprocessor: Union[dict, Config],

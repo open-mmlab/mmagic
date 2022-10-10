@@ -25,13 +25,13 @@ You can use the following commands to train a model with cpu or single/multiple 
 
 ```shell
 # CPU train
-CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/insta/insta_full_cocostuff_256x256.py
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/inst_colorization/insta_full_cocostuff_256x256.py
 
 # single-gpu train
-python tools/train.py configs/insta/insta_full_cocostuff_256x256.py
+python tools/train.py configs/inst_colorization/insta_full_cocostuff_256x256.py
 
 # multi-gpu train
-./tools/dist_train.sh configs/insta/insta_full_cocostuff_256x256.py 8
+./tools/dist_train.sh configs/inst_colorization/insta_full_cocostuff_256x256.py 8
 ```
 
 For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
@@ -47,13 +47,13 @@ You can use the following commands to test a model with cpu or single/multiple G
 
 ```shell
 # CPU test
-CUDA_VISIBLE_DEVICES=-1 python demo/colorization_demo.py configs/insta/insta_full_cocostuff_256x256.py ../checkpoints/instance_aware_cocostuff.pth
+CUDA_VISIBLE_DEVICES=-1 python demo/colorization_demo.py configs/inst_colorization//insta_full_cocostuff_256x256.py ../checkpoints/instance_aware_cocostuff.pth
 
 # single-gpu test
-python demo/colorization_demo.py configs/insta/insta_full_cocostuff_256x256.py ../checkpoints/instance_aware_cocostuff.pth
+python demo/colorization_demo.py configs/inst_colorization/insta_full_cocostuff_256x256.py ../checkpoints/instance_aware_cocostuff.pth
 
 # multi-gpu test
-./tools/dist_test.sh configs/insta/insta_full_cocostuff_256x256.py ../checkpoints/instance_aware_cocostuff.pth 8
+./tools/dist_test.sh configs/inst_colorization/insta_full_cocostuff_256x256.py ../checkpoints/instance_aware_cocostuff.pth 8
 ```
 
 For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).

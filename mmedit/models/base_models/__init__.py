@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .average_model import ExponentialMovingAverage, RampUpEMA
-from .base_colorization import BaseColorization
 from .base_conditional_gan import BaseConditionalGAN
 from .base_edit_model import BaseEditModel
 from .base_gan import BaseGAN
@@ -11,8 +10,14 @@ from .one_stage import OneStageInpaintor
 from .two_stage import TwoStageInpaintor
 
 __all__ = [
-    'BaseEditModel', 'BaseGAN', 'BaseConditionalGAN', 'BaseMattor',
-    'BasicInterpolator', 'BaseTranslationModel', 'OneStageInpaintor',
-    'TwoStageInpaintor', 'ExponentialMovingAverage', 'RampUpEMA',
-    'BaseColorization'
+    'BaseEditModel',
+    'BaseGAN',
+    'BaseConditionalGAN',
+    'BaseMattor',
+    'BasicInterpolator',
+    'BaseTranslationModel',
+    'OneStageInpaintor',
+    'TwoStageInpaintor',
+    'ExponentialMovingAverage',
+    'RampUpEMA',
 ]

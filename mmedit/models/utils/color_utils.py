@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from __future__ import print_function
-
 import numpy as np
 import torch
 
