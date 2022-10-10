@@ -5,10 +5,11 @@ import os.path as osp
 
 import mmengine
 from mmengine.config import Config, DictAction
+from mmengine.hooks import Hook
 from mmengine.runner import Runner
 
 from mmedit.utils import print_colored_log, register_all_modules
-from mmengine.hooks import Hook
+
 
 # TODO: support fuse_conv_bn, visualization, and format_only
 def parse_args():
