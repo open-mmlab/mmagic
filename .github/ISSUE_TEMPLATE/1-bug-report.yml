@@ -25,16 +25,16 @@ body:
       - label: The bug has not been fixed in the [latest version](https://github.com/open-mmlab/mmediting).
         required: true
 
-
-  - type: checkboxes
-    validations:
-      required: true
+  - type: dropdown
+    id: task
     attributes:
-      label: Information
+      label: Task
       description: The problem arises when 
       options:
-      - label: I'm using the official example scripts for the officially supported task.
-      - label: I'm using my own modified scripts or I'm working on my own task or datasets.
+        - I'm using the official example scripts for the officially supported task.
+        - I'm using my own modified scripts or I'm working on my own task or datasets.
+    validations:
+      required: true
 
   - type: textarea
     attributes:
