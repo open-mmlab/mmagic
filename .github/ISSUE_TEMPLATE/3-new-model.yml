@@ -1,6 +1,8 @@
 name: "\U0001F31F New model/dataset/scheduler addition"
 description: Submit a proposal/request to implement a new model / dataset / scheduler
-labels: [ "New model/dataset/scheduler" ]
+labels: [ "new-models" ]
+title: "[New Models] "
+
 
 body:
   - type: textarea
