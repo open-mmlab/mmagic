@@ -76,6 +76,7 @@ def download(args):
 
     http_prefix_long = 'https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/'  # noqa
     http_prefix_short = 'https://download.openmmlab.com/mmediting/'
+    http_prefix_gen = 'https://download.openmmlab.com/mmgen/'
 
     # load model list
     if args.model_list:
@@ -112,6 +113,11 @@ def download(args):
             model_name = model_weight_url[len(http_prefix_long):]
         elif model_weight_url.startswith(http_prefix_short):
             model_name = model_weight_url[len(http_prefix_short):]
+        elif model_weight_url.startswith(http_prefix_gen):
+            model_name = model_weight_url[len(http_prefix_gen):]
+        elif model_weight_url == '':
+            print(f'{model_info.Name} weight is missing')
+            return None
         else:
             raise ValueError(f'Unknown url prefix. \'{model_weight_url}\'')
 

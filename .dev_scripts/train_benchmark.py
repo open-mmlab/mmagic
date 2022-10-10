@@ -171,14 +171,19 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
     config = Path(config)
     assert config.exists(), f'{fname}: {config} not found.'
 
-    # get n gpus
     try:
         n_gpus = int(model_info.metadata.data['GPUs'].split()[0])
     except Exception:
         if 'official' in model_info.config:
             return None
         else:
-            n_gpus = 1
+            pattern = r'\d+xb\d+'
+            parse_res = re.search(pattern, config.name)
+            if not parse_res:
+                # defaults to use 1 gpu
+                n_gpus = 1
+            else:
+                n_gpus = int(parse_res.group().split('x')[0])
 
     if args.gpus_per_job is not None:
         n_gpus = min(args.gpus_per_job, n_gpus)
