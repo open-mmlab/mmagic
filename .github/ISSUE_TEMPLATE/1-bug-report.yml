@@ -27,14 +27,14 @@ body:
 
 
   - type: checkboxes
+    validations:
+      required: true
     attributes:
       label: Information
       description: The problem arises when 
       options:
       - label: I'm using the official example scripts for the officially supported task.
       - label: I'm using my own modified scripts or I'm working on my own task or datasets.
-    validations:
-      required: true
 
   - type: textarea
     attributes:
@@ -49,7 +49,7 @@ body:
 
   - type: textarea
     attributes:
-      label: 🐞 Reproduces the problem - code sample
+      label: Reproduces the problem - code sample
       description: |
         Please provide a code sample that reproduces the problem you ran into. It can be a Colab link or just a code snippet.
         Did you make any modifications on the code or config? Are you clear about what you have modified?
@@ -62,7 +62,7 @@ body:
 
   - type: textarea
     attributes:
-      label: 🐞 Reproduces the problem - command or script 
+      label: Reproduces the problem - command or script 
       description: |
         What command or script did you run?
       placeholder: |
@@ -74,7 +74,7 @@ body:
 
   - type: textarea
     attributes:
-      label: 🐞 Reproduces the problem - error message
+      label: Reproduces the problem - error message
       description: |
         Please provide the error message or logs you got, with the full traceback.
       placeholder: |
