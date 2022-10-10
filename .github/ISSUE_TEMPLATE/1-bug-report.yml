@@ -48,6 +48,8 @@ body:
         ```shell
         The command or script you run.
         ```
+    validations:
+      required: true
 
   - type: textarea
     attributes:
