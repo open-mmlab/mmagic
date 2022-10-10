@@ -15,7 +15,7 @@ from .loss_comps import (CLIPLossComps, DiscShiftLossComps, FaceIdLossComps,
 from .loss_wrapper import mask_reduce_loss, reduce_loss
 from .perceptual_loss import (PerceptualLoss, PerceptualVGG,
                               TransferalPerceptualLoss)
-from .pixelwise_loss import CharbonnierLoss, L1Loss, MaskedTVLoss, MSELoss
+from .pixelwise_loss import CharbonnierLoss, L1Loss, MaskedTVLoss, MSELoss, PSNRLoss
 
 __all__ = [
     'L1Loss', 'MSELoss', 'CharbonnierLoss', 'L1CompositionLoss',

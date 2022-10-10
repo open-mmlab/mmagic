@@ -60,7 +60,7 @@ class NIQE(BaseSampleWiseMetric):
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None,
                  crop_border=0,
-                 input_order='HWC',
+                 input_order='CHW',
                  convert_to='gray') -> None:
         super().__init__(collect_device=collect_device, prefix=prefix)
 
@@ -69,12 +69,14 @@ class NIQE(BaseSampleWiseMetric):
             'y', 'gray'
         ], ('Only support gray image, '
             "``convert_to`` should be selected from ['y', 'gray']")
-
+    
         self.key = key
         self.is_predicted = is_predicted
         self.crop_border = crop_border
         self.input_order = input_order
         self.convert_to = convert_to
+        
+
 
     def process_image(self, gt, pred, mask) -> None:
         """Process an image.
