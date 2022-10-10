@@ -8,7 +8,7 @@ keys = params.keys()
 print(list(keys)[:20])
 for key in tqdm(list(keys)):
     new_key = 'generator.'+key
-    new_ema_key = 'generator_ema.'+key
+    # new_ema_key = 'generator_ema.'+key
     params[new_key] = params.pop(key)
     # params[new_ema_key] = params[new_key]
 

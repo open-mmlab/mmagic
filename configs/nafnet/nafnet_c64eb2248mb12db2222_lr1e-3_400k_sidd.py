@@ -23,14 +23,14 @@ model = dict(
     test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
-        mean=[0., 0., 0.],
-        std=[255., 255., 255.],
+        mean=[0.0, 0.0, 0.0],
+        std=[255.0, 255.0, 255.0],
     )
 )
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='img'),
+    dict(type='LoadImageFromFile', key='gt'),
     dict(type='SetValues', dictionary=dict(scale=1)),
     dict(
         type='Flip',
@@ -48,10 +48,8 @@ train_pipeline = [
 ]
 
 val_pipeline = [
-    dict(type='LoadImageFromFile', key='img', channel_order='rgb', to_float32=True),
-    # file_client_args=dict(backend='lmdb', db_path='../datasets/SIDD/val/input_crops.lmdb')),
-    dict(type='LoadImageFromFile', key='gt', channel_order='rgb', to_float32=True),
-    # file_client_args=dict(backend='lmdb', db_path='../datasets/SIDD/val/gt_crops.lmdb')),
+    dict(type='LoadImageFromFile', key='img'),
+    dict(type='LoadImageFromFile', key='gt'),
     dict(type='PackEditInputs')
 ]
 
@@ -126,21 +124,4 @@ default_hooks = dict(
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
 
-# custom hook
-vis_backends = [dict(type='LocalVisBackend')]
-visualizer = dict(
-    type='ConcatImageVisualizer',
-    vis_backends=vis_backends,
-    fn_key='gt_path',
-    img_keys=['gt_img', 'input', 'pred_img'],
-    bgr2rgb=False,
-    pixel_range=dict(pred_img=[0.0, 1.0]))
-custom_hooks = [
-    dict(type='BasicVisualizationHook', interval=1),
-    dict(
-        type='ExponentialMovingAverageHook',
-        module_keys=('generator_ema'),
-        interval=1,
-        interp_cfg=dict(momentum=0.999),
-    )
-]
+visualizer = dict(bgr2rgb=True)
