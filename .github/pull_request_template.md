@@ -8,7 +8,7 @@ Please describe the motivation of this PR and the goal you want to achieve throu
 
 Please briefly describe what modification is made in this PR.
 
-## Whose help do you want? @ them here!
+## Who can help? @ them here!
 
 ## BC-breaking (Optional)
 
