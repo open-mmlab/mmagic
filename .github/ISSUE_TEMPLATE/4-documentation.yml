@@ -1,6 +1,6 @@
 name: 📚 Documentation
 description: Report an issue related to https://mmediting.readthedocs.io/en/latest/.
-labels: "docs"
+labels: "docs,awaiting response"
 title: "[Docs] "
 
 body:
