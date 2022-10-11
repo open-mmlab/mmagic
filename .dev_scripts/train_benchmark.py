@@ -13,6 +13,7 @@ from rich.console import Console
 from rich.syntax import Syntax
 from rich.table import Table
 from tqdm import tqdm
+from utils import filter_jobs, parse_job_list_from_file
 
 console = Console()
 MMEDIT_ROOT = Path(__file__).absolute().parents[1]
@@ -91,6 +92,10 @@ def parse_args():
     parser.add_argument('--skip', type=str, default=None)
     parser.add_argument('--skip-list', default=None)
     parser.add_argument('--rerun', type=str, default=None)
+    parser.add_argument(
+        '--rerun-fail', action='store_true', help='only rerun failed tasks')
+    parser.add_argument(
+        '--rerun-cancel', action='store_true', help='only rerun cancel tasks')
     parser.add_argument('--rerun-list', default=None)
     parser.add_argument('--gpus-per-job', type=int, default=None)
     parser.add_argument(
@@ -145,11 +150,22 @@ def parse_args():
             args.skip_list = skip_list
             print('skip_list: ', args.skip_list)
     elif args.rerun is not None:
-        with open(args.rerun, 'r') as fp:
-            rerun_list = fp.readlines()
-            rerun_list = [j.split('\n')[0] for j in rerun_list]
-            args.rerun_list = rerun_list
-            print('rerun_list: ', args.rerun_list)
+        job_id_list_full, job_name_list_full = parse_job_list_from_file(
+            args.rerun)
+        filter_target = []
+
+        if args.rerun_fail:
+            filter_target += ['FAILED']
+        if args.rerun_cancel:
+            filter_target += ['CANCELLED']
+
+        _, job_name_list = filter_jobs(
+            job_id_list_full,
+            job_name_list_full,
+            filter_target,
+            show_table=True,
+            table_name='Rerun List')
+        args.rerun_list = job_name_list
 
     return args
 
