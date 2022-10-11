@@ -98,6 +98,7 @@ def parse_args():
         '--rerun-cancel', action='store_true', help='only rerun cancel tasks')
     parser.add_argument('--rerun-list', default=None)
     parser.add_argument('--gpus-per-job', type=int, default=None)
+    parser.add_argument('--cpus-per-job', type=int, default=16)
     parser.add_argument(
         '--amp', action='store_true', help='Whether to use amp.')
     parser.add_argument(
@@ -238,7 +239,7 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
         job_script += (f'#SBATCH --gres=gpu:{n_gpus}\n'
                        f'#SBATCH --ntasks-per-node={min(n_gpus, 8)}\n'
                        f'#SBATCH --ntasks={n_gpus}\n'
-                       f'#SBATCH --cpus-per-task=5\n\n')
+                       f'#SBATCH --cpus-per-task={args.cpus_per_job}\n\n')
     else:
         job_script += '\n\n' + 'export CUDA_VISIBLE_DEVICES=-1\n'
 
