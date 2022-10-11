@@ -184,7 +184,34 @@ python .dev_scripts/train_benchmark.py mm_lol \
 
 Specifically, you need to enable `--skip`, and specify the list of models to skip by `--skip-list`
 
-## Automatically check links
+## 7. Train failed or canceled jobs
+
+If you want to rerun failed or canceled jobs in the last run, you can combine `--rerun` flag with `--rerun-failure` and `--rerun-cancel` flags.
+
+For example, the log file of the last run is `train-20221009-211904.log`, and now you want to rerun the failed jobs. You can use the following command:
+
+```bash
+python .dev_scripts/train_benchmark.py mm_lol \
+    --job-name RERUN \
+    --rerun train-20221009-211904.log \
+    --rerun-fail \
+    --run
+```
+
+We can combine `--rerun-fail` and `--rerun-cancel` with flag `---models` to rerun a **subset** of failed or canceled model.
+
+```bash
+python .dev_scripts/train_benchmark.py mm_lol \
+    --job-name RERUN \
+    --rerun train-20221009-211904.log \
+    --rerun-fail \
+    --models sagan \  # only rerun 'sagan' models in all failed tasks
+    --run
+```
+
+Specifically, `--rerun-fail` and `--rerun-cancel` can be used together to rerun both failed and cancaled jobs.
+
+## 8. Automatically check links
 
 Use the following script to check whether the links in documentations are valid:
 
