@@ -1,8 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import glob
 import os.path as osp
-import re
-from functools import reduce
 
 import mmcv
 import numpy as np
@@ -91,9 +89,8 @@ def restoration_video_inference(model,
 
         # prepare data
         sequence_length = len(glob.glob(osp.join(img_dir, '*')))
-        img_dir_split = re.split(r'[\\/]', img_dir)
-        key = img_dir_split[-1]
-        lq_folder = reduce(osp.join, img_dir_split[:-1])
+        lq_folder = osp.dirname(img_dir)
+        key = osp.basename(img_dir)
         data = dict(
             lq_path=lq_folder,
             gt_path='',
