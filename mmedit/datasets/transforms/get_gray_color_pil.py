@@ -17,7 +17,7 @@ class GenGrayColorPil(BaseTransform):
         if self.stage == 'instance':
             rgb_img = results['instance']
         else:
-            rgb_img = results['gt_img']
+            rgb_img = results['img']
         if len(rgb_img.shape) == 2:
             rgb_img = np.stack([rgb_img, rgb_img, rgb_img], 2)
         gray_img = cv2.cvtColor(rgb_img, cv2.COLOR_RGB2GRAY)

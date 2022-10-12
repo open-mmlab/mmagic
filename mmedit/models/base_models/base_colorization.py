@@ -7,6 +7,7 @@ from torchvision.utils import save_image
 from mmengine.model import BaseModel
 from mmengine.config import Config, ConfigDict
 
+from mmedit.structures import EditDataSample, PixelData
 from mmedit.registry import MODELS
 
 

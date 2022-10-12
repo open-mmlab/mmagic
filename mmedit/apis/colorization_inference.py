@@ -6,14 +6,14 @@ from mmengine.dataset.utils import default_collate as collate
 from torch.nn.parallel import scatter
 
 
-def colorization_inference(model, img, bbox):
+def colorization_inference(model, img):
 
     device = next(model.parameters()).device
 
     # build the data pipeline
     test_pipeline = Compose(model.cfg.test_pipeline)
     # prepare data
-    data = dict(gt_path=img, bbox_path=bbox)
+    data = dict(img_path=img)
     data = test_pipeline(data)
     data = collate([data])
 

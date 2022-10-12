@@ -17,7 +17,7 @@ from mmedit.registry import TRANSFORMS
 @TRANSFORMS.register_module()
 class GenMaskRCNNBbox:
 
-    def __init__(self, key='gt', stage='test_fusion', finesize=256):
+    def __init__(self, key='img', stage='test_fusion', finesize=256):
         self.key = key
         self.predictor = self.detectron()
         self.stage = stage
@@ -121,13 +121,16 @@ class GenMaskRCNNBbox:
         return [L_pad, R_pad, T_pad, B_pad, rh, rw]
 
     def test_fusion(self, results):
-        img = results['gt']
+        img = results['img']
         pil_img = self.read_to_pil(img)
-        if results['bbox_path']:
+
+        if 'bbox_path' in results.keys():
             pred_bbox = self.gen_maskrcnn_bbox_fromPred(
-                img, results['bbox_path'], box_num_upbound=8)
+                img, results['bbox_path'])
+        elif 'instance' in results.keys():
+            pred_bbox = results['instance']
         else:
-            pred_bbox = self.gen_maskrcnn_bbox_fromPred(img, box_num_upbound=8)
+            pred_bbox = self.gen_maskrcnn_bbox_fromPred(img)
 
         img_list = [self.transforms(pil_img)]  # 这里删除了一个transform
 
@@ -172,11 +175,15 @@ class GenMaskRCNNBbox:
 
     def train(self, results):
         img = results[self.key]
-        if results['bbox_path']:
+
+        if 'bbox_path' in results.keys():
             pred_bbox = self.gen_maskrcnn_bbox_fromPred(
                 img, results['bbox_path'])
+        elif 'instance' in results.keys():
+            pred_bbox = results['instance'][0]['bbox']
         else:
             pred_bbox = self.gen_maskrcnn_bbox_fromPred(img)
+
         rgb_img, gray_img = self.gen_gray_color_pil(img)
         index_list = range(len(pred_bbox))
         index_list = sample(index_list, 1)

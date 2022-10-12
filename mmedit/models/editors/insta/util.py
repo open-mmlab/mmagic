@@ -153,7 +153,7 @@ def get_colorization_data(data_raw,
                           **kwargs):
     data = {}
 
-    data_lab = rgb2lab(data_raw[0], **kwargs)
+    data_lab = rgb2lab(data_raw, **kwargs)
     data['A'] = data_lab[:, [
         0,
     ], :, :]

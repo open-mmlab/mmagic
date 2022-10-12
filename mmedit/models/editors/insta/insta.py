@@ -22,11 +22,13 @@ class INSTA(BaseColorization):
                  output_nc,
                  avg_loss_alpha,
                  ab_norm,
+                 ab_max,
+                 ab_quant,
                  l_norm,
                  l_cent,
                  sample_Ps,
                  mask_cent,
-                 stage=None,
+                 insta_stage=None,
                  which_direction='AtoB',
                  instance_model=None,
                  full_model=None,
@@ -47,22 +49,23 @@ class INSTA(BaseColorization):
         self.output_nc = output_nc
         self.avg_loss_alpha = avg_loss_alpha
         self.ab_norm = ab_norm
+        self.ab_max = ab_max
+        self.ab_quant = ab_quant
         self.l_norm = l_norm
         self.l_cent = l_cent
         self.sample_Ps = sample_Ps
         self.mask_cent = mask_cent
         self.which_direction = which_direction
 
-        self.device = torch.device('cuda:{}'.format(
-            self.gpu_ids[0])) if self.gpu_ids else torch.device('cpu')
+        self.device = torch.device('cuda:{}'.format(0))
 
         self.instance_model = instance_model
         self.full_model = full_model
         self.fusion_model = fusion_model
 
-        self.stage = stage
+        self.insta_stage = insta_stage
 
-        if self.stage is not None:
+        if self.insta_stage == 'full' or self.insta_stage == 'instance':
             self.training = False
             self.setup_to_train()
         else:
@@ -116,7 +119,7 @@ class INSTA(BaseColorization):
         self.fake_B_reg = self.comp_B_reg
 
     def generator_loss(self):
-        if self.stage == 'full' or self.stage == 'instance':
+        if self.insta_stage == 'full' or self.insta_stage == 'instance':
             self.loss_L1 = torch.mean(
                 self.criterionL1(
                     self.fake_B_reg.type(torch.cuda.FloatTensor),
@@ -126,7 +129,7 @@ class INSTA(BaseColorization):
                     self.fake_B_reg.type(torch.cuda.FloatTensor),
                     self.real_B.type(torch.cuda.FloatTensor)))
 
-        elif self.stage == 'fusion':
+        elif self.insta_stage == 'fusion':
             self.loss_L1 = torch.mean(
                 self.criterionL1(
                     self.fake_B_reg.type(torch.cuda.FloatTensor),
@@ -166,7 +169,7 @@ class INSTA(BaseColorization):
             mask_cent=self.mask_cent,
         )
 
-        if self.stage == 'full' or self.stage == 'instance':
+        if self.insta_stage == 'full' or self.insta_stage == 'instance':
             data_batch['rgb_img'] = [data_batch['rgb_img']]
             data_batch['gray_img'] = [data_batch['gray_img']]
 
@@ -183,7 +186,7 @@ class INSTA(BaseColorization):
             (_, self.fake_B_reg) = self.netG(self.real_A, self.hint_B,
                                              self.mask_B)
 
-        elif self.stage == 'fusion':
+        elif self.insta_stage == 'fusion':
 
             data_batch['cropped_rgb'] = torch.stack(
                 data_batch['cropped_rgb_list'])
@@ -254,13 +257,13 @@ class INSTA(BaseColorization):
 
         self.loss_names = ['G', 'L1']
 
-        if self.stage == 'full' or self.stage == 'instance':
+        if self.insta_stage == 'full' or self.insta_stage == 'instance':
             self.model_names = ['G']
             self.netG = COMPONENTS.build(self.instance_model)
             generation_init_weights(self.netG)
             self.generator = self.netG
 
-        elif self.stage == 'fusion':
+        elif self.insta_stage == 'fusion':
             self.model_names = ['G', 'GF', 'GComp']
             self.netG = COMPONENTS.build(self.instance_model)
             generation_init_weights(self.netG)
@@ -292,8 +295,9 @@ class INSTA(BaseColorization):
                 list(self.netGF.module.model_out.parameters())
 
         else:
-            print('Error Stage!')
-            exit()
+            # print('Error Stage!')
+            # exit()
+            pass
 
         self.criterionL1 = self.loss
 
@@ -309,7 +313,7 @@ class INSTA(BaseColorization):
         visual_ret = OrderedDict()
         opt = dict(
             ab_norm=self.ab_norm, l_norm=self.l_norm, l_cent=self.l_cent)
-        if self.stage == 'full' or self.stage == 'instance':
+        if self.insta_stage == 'full' or self.insta_stage == 'instance':
 
             visual_ret['gray'] = lab2rgb(
                 torch.cat((self.real_A.type(
@@ -340,7 +344,7 @@ class INSTA(BaseColorization):
                            self.fake_B_reg.type(torch.cuda.FloatTensor)),
                           dim=1), **opt)
 
-        elif self.stage == 'fusion':
+        elif self.insta_stage == 'fusion':
             visual_ret['gray'] = lab2rgb(
                 torch.cat((self.full_real_A.type(
                     torch.cuda.FloatTensor), torch.zeros_like(
@@ -389,17 +393,19 @@ class INSTA(BaseColorization):
             exit()
         return visual_ret
 
-    def forward_test(self, **kwargs):
+    def forward_test(self, inputs, data_samples, **kwargs):
+
         output = dict()
-        kwargs['full_img'][0] = kwargs['full_img'][0].cuda()
-        if not kwargs['empty_box']:
-            kwargs['cropped_img'][0] = kwargs['cropped_img'][0].cuda()
-            box_info = kwargs['box_info'][0]
-            box_info_2x = kwargs['box_info_2x'][0]
-            box_info_4x = kwargs['box_info_4x'][0]
-            box_info_8x = kwargs['box_info_8x'][0]
+        data = data_samples[0]
+        full_img= data.full_img
+        if not data.empty_box:
+            cropped_img = data.cropped_img
+            box_info = data.box_info
+            box_info_2x = data.box_info_2x
+            box_info_4x = data.box_info_4x
+            box_info_8x = data.box_info_8x
             cropped_data = get_colorization_data(
-                kwargs['cropped_img'],
+                cropped_img,
                 ab_thresh=0,
                 ab_norm=self.ab_norm,
                 l_norm=self.l_norm,
@@ -408,7 +414,7 @@ class INSTA(BaseColorization):
                 mask_cent=self.mask_cent,
             )
             full_img_data = get_colorization_data(
-                kwargs['full_img'],
+                full_img,
                 ab_thresh=0,
                 ab_norm=self.ab_norm,
                 l_norm=self.l_norm,
@@ -422,7 +428,7 @@ class INSTA(BaseColorization):
                 [box_info, box_info_2x, box_info_4x, box_info_8x])
         else:
             full_img_data = get_colorization_data(
-                kwargs['full_img'], ab_thresh=0)
+                full_img, ab_thresh=0)
             self.set_forward_without_box(full_img_data)
 
         (_, feature_map) = self.netG(self.real_A, self.hint_B, self.mask_B)
@@ -448,7 +454,7 @@ class INSTA(BaseColorization):
 
     def setup_to_test(self):
         self.netG = COMPONENTS.build(self.instance_model)
-        generation_init_weights(self.netG, self.init_type)
+        generation_init_weights(self.netG)
 
         self.netGF = COMPONENTS.build(self.fusion_model)
-        generation_init_weights(self.netGF, self.init_type)
+        generation_init_weights(self.netGF)

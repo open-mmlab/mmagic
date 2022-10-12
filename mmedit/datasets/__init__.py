@@ -8,6 +8,7 @@ from .grow_scale_image_dataset import GrowScaleImgDataset
 from .imagenet_dataset import ImageNet
 from .paired_image_dataset import PairedImageDataset
 from .unpaired_image_dataset import UnpairedImageDataset
+from .coco import CocoDataset
 
 __all__ = [
     'AdobeComp1kDataset',
@@ -19,4 +20,5 @@ __all__ = [
     'ImageNet',
     'CIFAR10',
     'GrowScaleImgDataset',
+    'CocoDataset'
 ]

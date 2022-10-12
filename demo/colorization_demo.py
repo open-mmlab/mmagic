@@ -14,7 +14,6 @@ def parse_args():
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoints', help='checkpoints file path')
     parser.add_argument('img_path', help='path to input image file')
-    # parser.add_argument('bbox_path', help='path to input image bbox file')
     parser.add_argument('save_path', help='path to save generation result')
     parser.add_argument(
         '--unpaired-path', default=None, help='path to unpaired image file')
@@ -35,7 +34,7 @@ def main():
 
     #
     model = init_model(args.config, args.checkpoints, device=device)
-    output = colorization_inference(model, args.img_path, args.bbox_path)
+    output = colorization_inference(model, args.img_path)
 
     if args.imshow:
         mmcv.imshow(output, 'predicted generation result')

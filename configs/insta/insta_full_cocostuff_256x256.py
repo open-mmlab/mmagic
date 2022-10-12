@@ -7,7 +7,7 @@ save_dir = './'
 work_dir = '..'
 
 model = dict(
-    type='FusionModel',
+    type='INSTA',
     data_preprocessor=dict(
         type='EditDataPreprocessor',
         mean=[127.5],
@@ -19,25 +19,25 @@ model = dict(
         output_nc=2,
         norm_type='batch'
     ),
-    stage='full',
+    insta_stage='full',
     ngf=64,
     output_nc=2,
     avg_loss_alpha=.986,
     ab_norm=110.,
+    ab_max=110.,
+    ab_quant=10.,
     l_norm=100.,
     l_cent=50.,
     sample_Ps=[1, 2, 3, 4, 5, 6, 7, 8, 9],
     mask_cent=.5,
-    init_type='normal',
     which_direction='AtoB',
     loss=dict(type='HuberLoss', delta=.01),
-    pretrained='./checkpoints/pytorch_trained.pth'
 )
 
 input_shape = (256, 256)
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='gt_img'),
+    dict(type='LoadImageFromFile', key='img'),
     dict(type='GenGrayColorPil', stage='full', keys=['rgb_img', 'gray_img']),
     dict(
         type='Resize',
@@ -50,10 +50,10 @@ train_pipeline = [
 ]
 
 test_pipeline = [
-    dict(type='LoadImageFromFile', key='gt'),
+    dict(type='LoadImageFromFile', key='img'),
     dict(type='GenMaskRCNNBbox', stage='test_fusion', finesize=256),
     dict(type='Resize',
-         keys=['gt'],
+         keys=['img'],
          scale=(256, 256),
          keep_ratio=False
          ),
@@ -61,18 +61,17 @@ test_pipeline = [
 ]
 
 dataset_type = 'CocoDataset'
-data_root = '/mnt/j/DataSet/cocostuff/train2017'
-ann_file_path = '/mnt/j/DataSet/cocostuff/'
+data_root = '/mnt/j/DataSet/cocostuff'
+ann_file_path = '/mnt/j/DataSet/cocostuff'
 
 train_dataloader = dict(
     batch_size=4,
     num_workers=4,
     persistent_workers=False,
     sampler=dict(shuffle=False),
-    workers_per_gpu=1,
     dataset=dict(
         type=dataset_type,
-        data_root=data_root,
+        data_root=data_root + '/train2017',
         data_prefix=dict(gt='data_large'),
         ann_file=f'{ann_file_path}/img_list.txt',
         pipeline=train_pipeline,
@@ -80,18 +79,16 @@ train_dataloader = dict(
 
 test_dataloader = dict(
     batch_size=1,
-    num_workers=4,
+    num_workers=1,
     persistent_workers=False,
     sampler=dict(type='DefaultSampler', shuffle=False),
-    workers_per_gpu=1,
     dataset=dict(
         type=dataset_type,
-        data_root=data_root,
+        data_root=data_root + '/train2017',
         data_prefix=dict(gt='data_large'),
-        ann_file=f'{ann_file_path}/img_list.txt',
+        ann_file=f'{ann_file_path}/train_annotation.json',
         pipeline=test_pipeline,
-        test_mode=False))
-
+        test_mode=True))
 
 test_evaluator = [dict(type='PSNR'), dict(type='SSIM')]
 
@@ -101,9 +98,11 @@ train_cfg = dict(
     val_interval=50000,
 )
 
+val_dataloader = test_dataloader
+val_evaluator = test_evaluator
+
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
-
 
 # optimizer
 optim_wrapper = dict(
@@ -137,5 +136,3 @@ env_cfg = dict(
     mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0),
     dist_cfg=dict(backend='nccl'),
 )
-
-
