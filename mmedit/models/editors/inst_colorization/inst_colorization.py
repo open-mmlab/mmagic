@@ -6,15 +6,14 @@ from typing import Union
 import torch
 from mmengine.config import Config
 
-from mmedit.models.utils import generation_init_weights
-from mmedit.models.base_models import BaseColorization
+from mmedit.models.utils import (encode_ab_ind, generation_init_weights,
+                                 get_colorization_data, lab2rgb)
 from mmedit.registry import BACKBONES, COMPONENTS
-
-from .util import encode_ab_ind, get_colorization_data, lab2rgb
+from ..srgan import SRGAN
 
 
 @BACKBONES.register_module()
-class INSTA(BaseColorization):
+class InstColorization(SRGAN):
 
     def __init__(self,
                  data_preprocessor: Union[dict, Config],
@@ -37,13 +36,12 @@ class INSTA(BaseColorization):
                  init_cfg=None,
                  train_cfg=None,
                  test_cfg=None):
-        super(INSTA, self).__init__(
+        super(InstColorization, self).__init__(
             data_preprocessor=data_preprocessor,
             loss=loss,
             init_cfg=init_cfg,
             train_cfg=train_cfg,
-            test_cfg=test_cfg
-        )
+            test_cfg=test_cfg)
 
         self.ngf = ngf
         self.output_nc = output_nc
@@ -151,7 +149,7 @@ class INSTA(BaseColorization):
                     self, 'loss_' +
                     name)) + self.avg_loss_alpha * self.avg_losses[name]
                 errors_ret[name] = (1 - self.avg_loss_alpha) / (
-                    1 - self.avg_loss_alpha**
+                    1 - self.avg_loss_alpha**  # noqa
                     self.error_cnt) * self.avg_losses[name]
 
         return errors_ret

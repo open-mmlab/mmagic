@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
-
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 from torch.nn.parallel import scatter

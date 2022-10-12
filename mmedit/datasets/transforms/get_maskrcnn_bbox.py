@@ -32,12 +32,12 @@ class GenMaskRCNNBbox:
                                    img,
                                    bbox_path=None,
                                    box_num_upbound=8):
-        '''
-        ## Arguments:
+        """## Arguments:
+
         - pred_data_path: Detectron2 predict results
         - box_num_upbound: object bounding boxes number.
                            Default: -1 means use all the instances.
-        '''
+        """
         if bbox_path:
             pred_data = np.load(bbox_path)
             pred_bbox = pred_data['bbox'].astype(np.int32)

@@ -34,7 +34,8 @@ def main():
 
     #
     model = init_model(args.config, args.checkpoints, device=device)
-    output = colorization_inference(model, args.img_path)
+    output = colorization_inference(model, args.img_path, args.bbox_path)
+    mmcv.imwrite(output, args.save_path)
 
     if args.imshow:
         mmcv.imshow(output, 'predicted generation result')

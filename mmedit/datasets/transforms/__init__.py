@@ -16,7 +16,9 @@ from .generate_assistant import (GenerateCoordinateAndCell,
 from .generate_frame_indices import (GenerateFrameIndices,
                                      GenerateFrameIndiceswithPadding,
                                      GenerateSegmentIndices)
+from .get_gray_color_pil import GenGrayColorPil
 from .get_masked_image import GetMaskedImage
+from .get_maskrcnn_bbox import GenMaskRCNNBbox
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile, LoadMask,
                       LoadPairedImageFromFile)
 from .matlab_like_resize import MATLABLikeResize
@@ -28,8 +30,6 @@ from .random_down_sampling import RandomDownSampling
 from .trimap import (FormatTrimap, GenerateTrimap,
                      GenerateTrimapWithDistTransform, TransformTrimap)
 from .values import CopyValues, SetValues
-from .get_maskrcnn_bbox import GenMaskRCNNBbox
-from .get_gray_color_pil import GenGrayColorPil
 
 __all__ = [
     'BinarizeImage', 'Clip', 'ColorJitter', 'CopyValues', 'Crop', 'CropLike',
