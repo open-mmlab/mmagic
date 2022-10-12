@@ -41,7 +41,7 @@ set14_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='set14', task_name='sisr'),
-        data_root=set5_data_root,
+        data_root=set14_data_root,
         data_prefix=dict(img='LRbicx2', gt='GTmod12'),
         pipeline=test_pipeline))
 set14_evaluator = [

@@ -5,15 +5,15 @@
 - Number of papers: 41
   - ALGORITHM: 42
 - Tasks:
-  - video super-resolution
-  - image2image translation
-  - video interpolation
-  - conditional gans
-  - inpainting
-  - image super-resolution
-  - matting
   - unconditional gans
+  - image2image translation
+  - conditional gans
+  - matting
+  - image super-resolution
+  - video super-resolution
+  - inpainting
   - internal learning
+  - video interpolation
 
 For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
