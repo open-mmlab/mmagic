@@ -89,49 +89,14 @@ class DDIMDiffuser:
             self.num_train_timesteps // self.num_inference_steps)[::-1].copy()
         self.timesteps += offset
 
-    def _get_variance(self,
-                      timestep,
-                      prev_timestep,
-                      predicted_variance=None,
-                      variance_type=None):
+    def _get_variance(self, timestep, prev_timestep):
         alpha_prod_t = self.alphas_cumprod[timestep]
         alpha_prod_t_prev = self.alphas_cumprod[
             prev_timestep] if prev_timestep >= 0 else self.final_alpha_cumprod
         beta_prod_t = 1 - alpha_prod_t
         beta_prod_t_prev = 1 - alpha_prod_t_prev
-
         variance = (beta_prod_t_prev /
                     beta_prod_t) * (1 - alpha_prod_t / alpha_prod_t_prev)
-
-        if timestep == 0:
-            log_variance = (1 - alpha_prod_t_prev) / (1 - alpha_prod_t) * (
-                1 - self.alphas_cumprod[1] / alpha_prod_t_prev)
-        else:
-            log_variance = np.log(variance)
-
-        if variance_type is None:
-            variance_type = self.variance_type
-
-        # hacks - were probs added for training stability
-        if variance_type == 'fixed_small':
-            variance = np.clip(variance, min_value=1e-20)
-        # for rl-diffuser https://arxiv.org/abs/2205.09991
-        elif variance_type == 'fixed_small_log':
-            variance = np.log(np.clip(variance, min_value=1e-20))
-        elif variance_type == 'fixed_large':
-            variance = self.betas[timestep]
-        elif variance_type == 'fixed_large_log':
-            # Glide max_log
-            variance = np.log(self.betas[timestep])
-        elif variance_type == 'learned':
-            return predicted_variance
-        elif variance_type == 'learned_range':
-            min_log = log_variance
-            max_log = np.log(self.betas[timestep])
-            frac = (predicted_variance + 1) / 2
-            log_variance = frac * max_log + (1 - frac) * min_log
-            variance = torch.exp(log_variance)
-
         return variance
 
     def step(

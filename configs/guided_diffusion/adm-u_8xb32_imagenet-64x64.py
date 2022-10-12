@@ -41,5 +41,6 @@ metrics = [
         inception_style='StyleGAN')
 ]
 
-val_evaluator = dict(metrics=metrics)
+# annotate this since it will take long time during training
+# val_evaluator = dict(metrics=metrics)
 test_evaluator = dict(metrics=metrics)

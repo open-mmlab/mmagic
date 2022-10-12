@@ -41,5 +41,5 @@ metrics = [
         inception_style='StyleGAN')
 ]
 
-val_evaluator = dict(metrics=metrics)
+# val_evaluator = dict(metrics=metrics)
 test_evaluator = dict(metrics=metrics)
