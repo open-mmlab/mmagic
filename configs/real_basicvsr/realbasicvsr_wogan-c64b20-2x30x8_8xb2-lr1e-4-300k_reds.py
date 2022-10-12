@@ -275,9 +275,10 @@ test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
-    constructor='DefaultOptimWrapperConstructor',
-    type='OptimWrapper',
-    optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99)))
+    constructor='MultiOptimWrapperConstructor',
+    generator=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99))))
 
 # NO learning policy
 
