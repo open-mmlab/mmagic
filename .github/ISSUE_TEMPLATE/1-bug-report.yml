@@ -46,7 +46,7 @@ body:
         - 1.x branch https://github.com/open-mmlab/mmediting/tree/1.x
     validations:
       required: true
-      
+
 
   - type: textarea
     attributes:

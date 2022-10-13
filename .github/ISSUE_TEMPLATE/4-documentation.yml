@@ -1,5 +1,5 @@
 name: 📚 Documentation
-description: Report an issue related to the documentation. 
+description: Report an issue related to the documentation.
 labels: "docs,awaiting response"
 title: "[Docs] "
 
@@ -8,18 +8,18 @@ body:
   id: branch
   attributes:
     label: Branch
-    description: This issue is related to the 
+    description: This issue is related to the
     options:
       - master branch  https://mmediting.readthedocs.io/en/latest/
       - 1.x branch https://mmediting.readthedocs.io/en/1.x/
   validations:
     required: true
-      
+
 - type: textarea
   attributes:
     label: 📚 The doc issue
     description: >
-      A clear and concise description the issue. 
+      A clear and concise description the issue.
   validations:
     required: true
 

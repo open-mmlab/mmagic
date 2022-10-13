@@ -18,7 +18,7 @@ body:
       description: |
         Tell us more about the feature and how this feature can help.
       placeholder: |
-        E.g., It is inconvenient when \[....\]. 
+        E.g., It is inconvenient when \[....\].
         This feature can \[....\].
     validations:
       required: true
@@ -27,5 +27,5 @@ body:
     attributes:
       label: Any other context?
       description: |
-        Have you considered any alternative solutions or features? If so, what are they? 
+        Have you considered any alternative solutions or features? If so, what are they?
         Also, feel free to add any other context or screenshots about the feature request here.
