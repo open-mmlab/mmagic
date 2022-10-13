@@ -96,7 +96,6 @@ val_dataloader = dict(
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
         depth=2,
-        num_input_frames=5,
         pipeline=val_pipeline))
 
 # optimizer

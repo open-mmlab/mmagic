@@ -69,7 +69,6 @@ vid4_bd_dataloader = dict(
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
         depth=2,
-        num_input_frames=5,
         pipeline=vid4_pipeline))
 
 vid4_bi_dataloader = dict(
@@ -84,7 +83,6 @@ vid4_bi_dataloader = dict(
         data_prefix=dict(img='BIx4', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
         depth=2,
-        num_input_frames=5,
         pipeline=vid4_pipeline))
 
 vid4_bd_evaluator = [
