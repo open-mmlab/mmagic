@@ -9,7 +9,7 @@ body:
       value: |
         If you have already identified the reason, we strongly appreciate you creating a new PR to fix it [here](https://github.com/open-mmlab/mmediting/pulls)!
         If this issue is about installing MMCV, please file an issue at [MMCV](https://github.com/open-mmlab/mmcv/issues/new/choose).
-        If you need our help, please fill in as much of the following form as you're able.
+        If you need our help, please fill in as much of the following form as you're able to.
 
         **The less clear the description, the longer it will take to solve it.**
 
@@ -22,7 +22,7 @@ body:
         required: true
       - label: I have read the [FAQ documentation](https://mmediting.readthedocs.io/en/1.x/notes/4_faq.html) but cannot get the expected help.
         required: true
-      - label: The bug has not been fixed in the [latest version](https://github.com/open-mmlab/mmediting).
+      - label: The bug has not been fixed in the [latest version](https://github.com/open-mmlab/mmediting) or r) or [latest version (1.x)](https://github.com/open-mmlab/mmediting/tree/dev-1.x).
         required: true
 
   - type: dropdown
@@ -32,9 +32,21 @@ body:
       description: The problem arises when
       options:
         - I'm using the official example scripts/configs for the officially supported tasks/models/datasets.
-        - I have modified the scripts/configs or I'm working on my own tasks/models/datasets.
+        - I have modified the scripts/configs, or I'm working on my own tasks/models/datasets.
     validations:
       required: true
+
+  - type: dropdown
+    id: branch
+    attributes:
+      label: Branch
+      description: The problem arises when I'm working on
+      options:
+        - master branch
+        - 1.x branch
+    validations:
+      required: true
+      
 
   - type: textarea
     attributes:
@@ -52,7 +64,6 @@ body:
       label: Reproduces the problem - code sample
       description: |
         Please provide a code sample that reproduces the problem you ran into. It can be a Colab link or just a code snippet.
-        Did you make any modifications on the code or config? Are you clear about what you have modified?
       placeholder: |
         ```python
         # Sample code to reproduce the problem
