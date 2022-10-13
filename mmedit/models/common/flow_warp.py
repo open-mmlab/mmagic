@@ -29,8 +29,11 @@ def flow_warp(x,
                          f'flow ({flow.size()[1:3]}) are not the same.')
     _, _, h, w = x.size()
     # create mesh grid
-    grid_y, grid_x = torch.meshgrid(torch.arange(0, h), torch.arange(0, w))
-    grid = torch.stack((grid_x, grid_y), 2).type_as(x)  # (h, w, 2)
+    device = flow.device
+    grid_y, grid_x = torch.meshgrid(
+        torch.arange(0, h, device=device, dtype=x.dtype),
+        torch.arange(0, w, device=device, dtype=x.dtype))
+    grid = torch.stack((grid_x, grid_y), 2)  # h, w, 2
     grid.requires_grad = False
 
     grid_flow = grid + flow

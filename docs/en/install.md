@@ -1,155 +1,181 @@
-## Prerequisites
+# Installation
 
-- Linux / Windows / Mac
-- Python 3.6+
-- PyTorch 1.5 or higher
-- CUDA 9.0 or higher
-- NCCL 2
-- GCC 5.4 or higher
-- [mmcv](https://github.com/open-mmlab/mmcv)
+We highly recommend developers follow our best practices to install MMEditing.
+However, the whole process is highly customizable.
+See [Customize Installation](#customize-installation) section for more information.
 
-## Installation
+## Best Practices
 
-a. Create a conda virtual environment and activate it.
+The following steps work on Linux, Windows, and macOS.
+If you have already set up a PyTorch environment, no matter using conda or pip, you can start from **step 3**.
 
-```shell
-conda create -n open-mmlab python=3.8 -y
-conda activate open-mmlab
-```
+**Step 0.**
+Download and install Miniconda from [official website](https://docs.conda.io/en/latest/miniconda.html).
 
-b. Install PyTorch and torchvision following the [official instructions](https://pytorch.org/), then install mmcv-full
-
-e.g. `cuda 10.1` & `pytorch 1.7`,
+**Step 1.**
+Create a [conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/environments.html#) and activate it
 
 ```shell
-conda install pytorch==1.7.1 torchvision cudatoolkit=10.1 -c pytorch
-pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7/index.html "opencv-python<=4.5.4.60"
+conda create --name mmedit python=3.8 -y
+conda activate mmedit
 ```
 
-Note 1: Higher version `opencv-python` is not supported.
+**Step 2.**
+Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/), e.g.
 
-Note 2: Make sure that your compilation CUDA version and runtime CUDA version match.
-You can check the supported CUDA version for precompiled packages on the [PyTorch website](https://pytorch.org/).
+- On GPU platforms:
 
-`E.g. 1` If you have CUDA 10.1 installed under `/usr/local/cuda`, you need to install the prebuilt PyTorch with CUDA 10.1.
+  ```shell
+  conda install pytorch=1.10 torchvision cudatoolkit=11.3 -c pytorch
+  ```
+
+- On CPU platforms:
+
+  ```shell
+  conda install pytorch=1.10 torchvision cpuonly -c pytorch
+  ```
+
+**Step 3.**
+Install pre-built [MMCV](https://github.com/open-mmlab/mmcv) using [MIM](https://github.com/open-mmlab/mim).
 
 ```shell
-conda install pytorch cudatoolkit=10.1 torchvision -c pytorch
+pip3 install openmim
+mim install mmcv-full==1.5.0
 ```
 
-`E.g. 2` If you have CUDA 9.2 installed under `/usr/local/cuda` and would like to install
-PyTorch 1.3.1., you need to install the prebuilt PyTorch with CUDA 9.2.
-
-```shell
-conda install pytorch=1.3.1 cudatoolkit=9.2 torchvision=0.4.2 -c pytorch
-```
-
-c. Clone the mmediting repository.
+**Step 4.**
+Install [MMEditing](https://github.com/open-mmlab/mmediting) from the source code.
 
 ```shell
 git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
+pip3 install -e .
 ```
 
-d. Install build requirements and then install mmediting.
+**Step 5.**
+Verification.
 
 ```shell
-pip install -r requirements.txt
-pip install -v -e .  # or "python setup.py develop"
+cd ~
+python -c "import mmedit; print(mmedit.__version__)"
+# Example output: 0.14.0
 ```
 
-If you build mmediting on macOS, replace the last command with
+The installation is successful if the version number is output correctly.
 
-```
-CC=clang CXX=clang++ CFLAGS='-stdlib=libc++' pip install -e .
-```
+## Customize Installation
 
-e. Verify installation
+### Version of Dependencies
 
-After the installation is complete, you can switch to another directory (such as `/home`) and try to import mmedit in python. If the import is successful, the installation is successful.
+You may change the version of Python, PyTorch, and MMCV by changing the version numbers in **Step 1, 2, and 3**, respectively.
+
+Currently, MMEditing works with
+
+- Python >= 3.6
+- [PyTorch](https://pytorch.org/) >= 1.5
+- [MMCV](https://github.com/open-mmlab/mmcv) >= 1.3.13
+
+### Version of CUDA
+
+When installing PyTorch in **Step 2**, you need to specify the version of CUDA.
+If you are not clear on which to choose, follow our recommendations:
+
+1. For Ampere-based NVIDIA GPUs, such as GeForce 30 series and NVIDIA A100, **CUDA 11 is a must**.
+2. For older NVIDIA GPUs, CUDA 11 is backward compatible, but CUDA 10.2 offers better compatibility and is more lightweight.
+
+Please also make sure the GPU driver satisfies the minimum version requirements.
+See [this table](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html#cuda-major-component-versions__table-cuda-toolkit-driver-versions) for more information.
+
+Please **Note** that there is no need to install the complete CUDA toolkit if you follow our [best practices](#best-practices) because no CUDA code will be compiled.
+However, if you hope to compile MMCV or other C++/CUDA operators, you need to install the complete CUDA toolkit from [NVIDIA's website](https://developer.nvidia.com/cuda-downloads), and **its version should match the CUDA version of PyTorch**, which is the version of `cudatoolkit` in `conda install`.
+
+### Install without Conda
+
+Though we highly recommend using conda to create environments and install PyTorch, it is viable to install PyTorch only with pip, for example, with the following command,
 
 ```shell
-$ cd ~
-$ python
->>> import mmedit
->>> mmedit.__version__
-'0.12.0'
+pip3 install torch torchvision
 ```
 
-Note:
+However, an `--extra-index-url` or `-f` option is usually required to specify the CPU / CUDA version.
+See [PyTorch website](https://pytorch.org/get-started/locally/) for more details.
 
-1. The git commit id will be written to the version number with step d, e.g. 0.6.0+2e7045c. The version will also be saved in trained models.
-It is recommended that you run step d each time you pull some updates from github. If C++/CUDA codes are modified, then this step is compulsory.
+### Install without MIM
 
-    > Important: Be sure to remove the `./build` folder if you reinstall mmedit with a different CUDA/PyTorch version.
+[MMCV](https://github.com/open-mmlab/mmcv) contains C++ and CUDA extensions, thus depending on PyTorch in a complex way.
+[MIM](https://github.com/open-mmlab/mim) solves such dependency automatically and makes installation easier.
+However, it is not a must.
 
-    ```
-    pip uninstall mmedit
-    rm -rf ./build
-    find . -name "*.so" | xargs rm
-    ```
+To install MMCV with `pip` instead of MIM, please follow [MMCV installation guides](https://mmcv.readthedocs.io/en/latest/get_started/installation.html).
+This requires manually specifying a *find-url* based on PyTorch version and its CUDA version.
 
-2. Following the above instructions, mmediting is installed on `dev` mode, any local modifications made to the code will take effect without the need to reinstall it (unless you submit some commits and want to update the version number).
-
-3. If you would like to use `opencv-python-headless` instead of `opencv-python`,
-you can install it before installing MMCV.
-
-4. Some models (such as EDVR in restorers) depend on CUDA ops in `mmcv-full` which is listed in `requirements.txt`. Install it with the default command `pip install -r requirements.txt` need to compile CUDA ops locally and it may take up to 10 mins. Another option is to install pre-compiled `mmcv-full`, visit [MMCV github page](https://github.com/open-mmlab/mmcv#install-with-pip) for concrete instructions. Moreover, if the model you intend to use does not depend on CUDA ops, you could also install the lite version of mmcv with `pip install mmcv` in which CUDA ops is excluded.
-
-### Install with CPU only
-The code can be built for CPU only environment (where CUDA isn't available).
-
-Accordingly, install the CPU version of PyTorch and MMCV.
+For example, the following command install `mmcv-full` built for PyTorch 1.10.x and CUDA 11.3.
 
 ```shell
-conda install pytorch==1.7.1 torchvision cudatoolkit=10.1 -c pytorch
-pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7/index.html "opencv-python<=4.5.4.60"
+pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10.0/index.html
 ```
 
-<!-- In CPU mode you can run the demo/webcam_demo.py for example. -->
-However some functionality is gone in this mode:
+### On macOS
 
-- Deformable Convolution
+Pre-built MMCV package is not available for macOS, so you have to build MMCV from the source.
+Pip will build it automatically during installation, but it requires a C++ compiler.
+A simple solution is to install Clang with `xcode-select --install`.
 
-So if you try to run inference with a model containing deformable convolution you will get an error.
+Under such circumstances, MIM is not required and `pip install mmcv-full -v` can do the job.
+See [MMCV installation guides](https://mmcv.readthedocs.io/en/latest/get_started/build.html) for more details.
 
-### Another option: Docker Image
+### On Google Colab
 
-We provide a [Dockerfile](https://github.com/open-mmlab/mmediting/blob/master/docker/Dockerfile) to build an image.
+Online machine learning platform such as [Google Colab](https://research.google.com/) usually has PyTorch installed.
+Thus we only need to install MMCV and MMEditing with the following commands.
 
-```shell
-# build an image with PyTorch 1.5, CUDA 10.1
-docker build -t mmediting docker/
+**Step 1.**
+Install pre-built [MMCV](https://github.com/open-mmlab/mmcv) using [MIM](https://github.com/open-mmlab/mim).
+
+```ipython
+!pip3 install openmim
+!mim install mmcv-full
 ```
 
-Run it with
+**Step 2.**
+Install MMEditing from the source.
 
-```shell
-docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmediting/data mmediting
+```ipython
+!git clone https://github.com/open-mmlab/mmediting.git
+%cd mmediting
+!pip3 install -e .
 ```
 
-### A from-scratch setup script
+**Step 3.**
+Verification.
 
-Here is a full script for setting up mmediting with conda.
-
-```shell
-conda create -n open-mmlab python=3.7 -y
-conda activate open-mmlab
-
-# install latest pytorch prebuilt with the default prebuilt CUDA version (usually the latest)
-conda install -c pytorch pytorch torchvision -y
-git clone https://github.com/open-mmlab/mmediting.git
-cd mmediting
-pip install -r requirements.txt
-pip install -v -e .
+```python
+import mmedit
+print(mmedit.__version__)
+# Example output: 0.13.0
 ```
 
-<!-- ### Using multiple MMEditing versions
+**Note**: within Jupyter, the exclamation mark `!` is used to call external executables and `%cd` is a [IPython magic command](https://ipython.readthedocs.io/en/stable/interactive/magics.html#magic-cd) to change the current working directory of Python.
 
-The train and test scripts already modify the `PYTHONPATH` to ensure the script use the MMEditing in the current directory.
+## Additional Notes
 
-To use the default MMEditing installed in the environment rather than that you are working with, you can remove the following line in those scripts
+### Speed up Installation with Mirror
 
-```shell
-PYTHONPATH="$(dirname $0)/..":$PYTHONPATH
-``` -->
+One can configure conda and pip mirrors to speed up the installation.
+This step is very practical for users geologically in China.
+
+See the below links (in Chinese) for details：
+
+- <https://mirrors.tuna.tsinghua.edu.cn/help/pypi/>
+- <https://mirror.tuna.tsinghua.edu.cn/help/anaconda/>
+- <https://developer.aliyun.com/mirror/pypi>
+
+### On `-e .`
+
+You may be curious about what `-e .` means when supplied with `pip install`.
+Here is the description:
+
+- `-e` means [editable mode](https://pip.pypa.io/en/latest/cli/pip_install/#cmdoption-e). When `import mmedit`, modules under the cloned directory are imported. If `pip install` without `-e`, pip will copy cloned codes to somewhere like `lib/python/site-package`. Consequently, modified code under the cloned directory takes no effect unless `pip install` again. This is particularly convenient for developers. If some codes are modified, new codes will be imported next time without reinstallation.
+- `.` means code in this directory
+
+You can also use `pip -e .[all]`, which will install more dependencies, especially for pre-commit hooks and unittests.

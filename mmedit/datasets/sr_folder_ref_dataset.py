@@ -7,8 +7,8 @@ from .registry import DATASETS
 
 @DATASETS.register_module()
 class SRFolderRefDataset(BaseSRDataset):
-    """
-    General paired image folder dataset for reference-based image restoration.
+    """General paired image folder dataset for reference-based image
+    restoration.
 
     The dataset loads ref (reference) image pairs
         Must contain: ref (reference)
@@ -85,7 +85,7 @@ class SRFolderRefDataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
-        """Load annoations for SR dataset.
+        """Load annotations for SR dataset.
 
         It loads the ref, LQ and GT image path from folders.
 

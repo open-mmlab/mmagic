@@ -40,11 +40,11 @@ If you only want to composite test data (since compositing training data is time
 python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit
 ```
 
-If you only want to preprocess test data, i.e. for FBA, you can skip the train set by adding the `--skip_train` option:
+If you only want to preprocess test data, i.e. for FBA, you can skip the train set by adding the `--skip-train` option:
 
 ```shell
 # skip preprocessing training set
-python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --skip_train
+python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --skip-train
 ```
 
 > Currently, `GCA` and `FBA` support online composition of training data. But you can modify the data pipeline of other models to perform online composition instead of loading composited images (we called it `merged` in our data pipeline).
@@ -83,6 +83,7 @@ mmediting
 │   ├── VOCdevkit
 │   │   ├── VOC2012
 ```
+
 ## Prepare the dataset for FBA
 
 FBA adopts dynamic dataset augmentation proposed in [Learning-base Sampling for Natural Image Matting](https://openaccess.thecvf.com/content_CVPR_2019/papers/Tang_Learning-Based_Sampling_for_Natural_Image_Matting_CVPR_2019_paper.pdf).
@@ -93,7 +94,7 @@ Prepare the test set as follows:
 
 ```shell
 # skip preprocessing training set, as it composites online during training
-python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --skip_train
+python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --skip-train
 ```
 
 Extend the foreground of training set as follows:

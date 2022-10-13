@@ -14,8 +14,7 @@ from mmedit.models.registry import COMPONENTS
 
 @COMPONENTS.register_module()
 class InterpolateExample(nn.Module):
-    """An example of interpolate network for testing BasicInterpolator.
-    """
+    """An example of interpolate network for testing BasicInterpolator."""
 
     def __init__(self):
         super().__init__()
@@ -30,8 +29,7 @@ class InterpolateExample(nn.Module):
 
 @COMPONENTS.register_module()
 class InterpolateExample2(nn.Module):
-    """An example of interpolate network for testing BasicInterpolator.
-    """
+    """An example of interpolate network for testing BasicInterpolator."""
 
     def __init__(self):
         super().__init__()
@@ -92,6 +90,8 @@ def test_basic_interpolator():
     assert torch.equal(outputs['inputs'], data_batch['inputs'])
     assert torch.is_tensor(outputs['output'])
     assert outputs['output'].size() == (1, 3, 20, 20)
+    assert outputs['output'].max() <= 1.
+    assert outputs['output'].min() >= 0.
 
     # test forward_dummy
     with torch.no_grad():
@@ -138,6 +138,8 @@ def test_basic_interpolator():
         assert torch.equal(outputs['inputs'], data_batch['inputs'].cpu())
         assert torch.is_tensor(outputs['output'])
         assert outputs['output'].size() == (1, 3, 20, 20)
+        assert outputs['output'].max() <= 1.
+        assert outputs['output'].min() >= 0.
 
         # train_step
         outputs = restorer.train_step(data_batch, optimizer)

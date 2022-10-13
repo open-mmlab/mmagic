@@ -90,13 +90,11 @@ class BaseMattor(BaseModel):
 
     @property
     def with_refiner(self):
-        """Whether the matting model has a refiner.
-        """
+        """Whether the matting model has a refiner."""
         return hasattr(self, 'refiner') and self.refiner is not None
 
     def freeze_backbone(self):
-        """Freeze the backbone and only train the refiner.
-        """
+        """Freeze the backbone and only train the refiner."""
         self.backbone.eval()
         for param in self.backbone.parameters():
             param.requires_grad = False
@@ -212,8 +210,7 @@ class BaseMattor(BaseModel):
 
     @abstractmethod
     def forward_test(self, merged, trimap, meta, **kwargs):
-        """Defines the computation performed at every test call.
-        """
+        """Defines the computation performed at every test call."""
 
     def train_step(self, data_batch, optimizer):
         """Defines the computation and network update at every training call.

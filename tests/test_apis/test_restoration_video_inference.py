@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+
 import pytest
 import torch
 
-from mmedit.apis import (init_model, restoration_video_inference,
-                         video_interpolation_inference)
+from mmedit.apis import init_model, restoration_video_inference
 
 
 def test_restoration_video_inference():
@@ -65,61 +65,3 @@ def test_restoration_video_inference():
         output = restoration_video_inference(model, img_dir, window_size,
                                              start_idx, filename_tmpl)
         assert output.shape == (1, 5, 3, 256, 256)
-
-
-def test_video_interpolation_inference():
-    model = init_model(
-        './configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py',
-        None,
-        device='cpu')
-    model.cfg['demo_pipeline'] = [
-        dict(
-            type='LoadImageFromFileList',
-            io_backend='disk',
-            key='inputs',
-            channel_order='rgb'),
-        dict(type='RescaleToZeroOne', keys=['inputs']),
-        dict(type='FramesToTensor', keys=['inputs']),
-        dict(
-            type='Collect', keys=['inputs'], meta_keys=['inputs_path', 'key'])
-    ]
-
-    input_dir = './tests/data/vimeo90k/00001/0266'
-    output, fps = video_interpolation_inference(
-        model, input_dir, batch_size=10)
-    assert isinstance(output, list)
-    assert isinstance(fps, float)
-
-    input_dir = './tests/data/test_inference.mp4'
-    output, fps = video_interpolation_inference(model, input_dir)
-    assert isinstance(output, list)
-    assert isinstance(fps, float)
-    if torch.cuda.is_available():
-        model = init_model(
-            './configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py',
-            None,
-            device='cuda')
-        model.cfg['demo_pipeline'] = [
-            dict(
-                type='LoadImageFromFileList',
-                io_backend='disk',
-                key='inputs',
-                channel_order='rgb'),
-            dict(type='RescaleToZeroOne', keys=['inputs']),
-            dict(type='FramesToTensor', keys=['inputs']),
-            dict(
-                type='Collect',
-                keys=['inputs'],
-                meta_keys=['inputs_path', 'key'])
-        ]
-
-        input_dir = './tests/data/vimeo90k/00001/0266'
-        output, fps = video_interpolation_inference(
-            model, input_dir, batch_size=10)
-        assert isinstance(output, list)
-        assert isinstance(fps, float)
-
-        input_dir = './tests/data/test_inference.mp4'
-        output, fps = video_interpolation_inference(model, input_dir)
-        assert isinstance(output, list)
-        assert isinstance(fps, float)

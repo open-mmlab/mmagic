@@ -1,5 +1,3 @@
-## FAQ
-
 ### Use intermediate variables in configs
 
 Some intermediate variables are used in the configs files, like `train_pipeline`/`test_pipeline` in datasets.
@@ -27,7 +25,7 @@ test_pipeline = [
         key='lq',
         flag='unchanged'),
     ...
-    dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'lq_path']),
+    dict(type='Collect', keys=['lq', 'gt'], meta_keys=['lq_path', 'gt_path']),
     dict(type='ImageToTensor', keys=['lq', 'gt'])
 ]
 

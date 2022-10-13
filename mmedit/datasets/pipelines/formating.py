@@ -32,8 +32,8 @@ def to_tensor(data):
 
 @PIPELINES.register_module()
 class ToTensor:
-    """Convert some values in results dict to `torch.Tensor` type
-    in data loader pipeline.
+    """Convert some values in results dict to `torch.Tensor` type in data
+    loader pipeline.
 
     Args:
         keys (Sequence[str]): Required keys to be converted.

@@ -15,8 +15,8 @@ from .one_stage import OneStageInpaintor
 class AOTInpaintor(OneStageInpaintor):
     """Inpaintor for AOT-GAN method.
 
-    This inpaintor is implemented according to the paper:
-    Aggregated Contextual Transformations for High-Resolution Image Inpainting
+    This inpaintor is implemented according to the paper: Aggregated Contextual
+    Transformations for High-Resolution Image Inpainting
     """
 
     def forward_train_d(self, data_batch, is_real, is_disc, mask):
@@ -144,7 +144,7 @@ class AOTInpaintor(OneStageInpaintor):
                 else:
                     eval_results[metric_name] = self._eval_metrics[
                         metric_name]()(data_dict).item()
-            output['eval_results'] = eval_results
+            output['eval_result'] = eval_results
         else:
             output['fake_res'] = fake_res
             output['fake_img'] = fake_img

@@ -11,7 +11,7 @@ Models:
   In Collection: RealBasicVSR
   Metadata:
     Training Data: REDS
-  Name: realbasicvsr_1x30x8
+  Name: realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds
   Results:
   - Dataset: REDS
     Metrics:

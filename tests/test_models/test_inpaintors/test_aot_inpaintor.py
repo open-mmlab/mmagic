@@ -39,10 +39,10 @@ def test_aot_inpaintor():
     inpaintor
     data_batch = dict(gt_img=gt_img, mask=mask, masked_img=masked_img)
     output = inpaintor.forward_test(**data_batch)
-    assert 'eval_results' in output
+    assert 'eval_result' in output
 
     output = inpaintor.val_step(data_batch)
-    assert 'eval_results' in output
+    assert 'eval_result' in output
 
     optim_g = torch.optim.SGD(inpaintor.generator.parameters(), lr=0.1)
     optim_d = torch.optim.SGD(inpaintor.disc.parameters(), lr=0.1)
@@ -60,10 +60,10 @@ def test_aot_inpaintor():
     # test forward test w/o save image
     outputs = inpaintor.forward_test(
         masked_img[0:1], mask[0:1], gt_img=gt_img[0:1, ...])
-    assert 'eval_results' in outputs
-    assert outputs['eval_results']['l1'] > 0
-    assert outputs['eval_results']['psnr'] > 0
-    assert outputs['eval_results']['ssim'] > 0
+    assert 'eval_result' in outputs
+    assert outputs['eval_result']['l1'] > 0
+    assert outputs['eval_result']['psnr'] > 0
+    assert outputs['eval_result']['ssim'] > 0
 
     # test forward test w/o eval metrics
     inpaintor.test_cfg = dict()
@@ -131,10 +131,10 @@ def test_aot_inpaintor():
         inpaintor.cuda()
         data_batch = dict(gt_img=gt_img, mask=mask, masked_img=masked_img)
         output = inpaintor.forward_test(**data_batch)
-        assert 'eval_results' in output
+        assert 'eval_result' in output
 
         output = inpaintor.val_step(data_batch)
-        assert 'eval_results' in output
+        assert 'eval_result' in output
 
         optim_g = torch.optim.SGD(inpaintor.generator.parameters(), lr=0.1)
         optim_d = torch.optim.SGD(inpaintor.disc.parameters(), lr=0.1)
@@ -152,10 +152,10 @@ def test_aot_inpaintor():
         # test forward test w/o save image
         outputs = inpaintor.forward_test(
             masked_img[0:1], mask[0:1], gt_img=gt_img[0:1, ...])
-        assert 'eval_results' in outputs
-        assert outputs['eval_results']['l1'] > 0
-        assert outputs['eval_results']['psnr'] > 0
-        assert outputs['eval_results']['ssim'] > 0
+        assert 'eval_result' in outputs
+        assert outputs['eval_result']['l1'] > 0
+        assert outputs['eval_result']['psnr'] > 0
+        assert outputs['eval_result']['ssim'] > 0
 
         # test forward test w/o eval metrics
         inpaintor.test_cfg = dict()

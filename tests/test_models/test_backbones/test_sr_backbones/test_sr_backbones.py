@@ -92,12 +92,25 @@ def test_edsr():
     net.init_weights(pretrained=None)
     output = net(img)
     assert output.shape == (1, 3, 48, 48)
+    # gray x4 modeland, initialization and forward (cpu)
+    net = EDSR(
+        in_channels=1,
+        out_channels=1,
+        mid_channels=8,
+        num_blocks=2,
+        upscale_factor=4,
+        rgb_mean=[0],
+        rgb_std=[1])
+    net.init_weights(pretrained=None)
+    gray = _demo_inputs((1, 1, 12, 12))
+    output = net(gray)
+    assert output.shape == (1, 1, 48, 48)
 
     # x4 model forward (gpu)
     if torch.cuda.is_available():
         net = net.cuda()
-        output = net(img.cuda())
-        assert output.shape == (1, 3, 48, 48)
+        output = net(gray.cuda())
+        assert output.shape == (1, 1, 48, 48)
 
     with pytest.raises(TypeError):
         # pretrained should be str or None

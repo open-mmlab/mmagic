@@ -8,7 +8,7 @@ from mmedit.datasets.pipelines.utils import (adjust_gamma, dtype_range,
 
 
 def test_adjust_gamma():
-    """Test Gamma Correction
+    """Test Gamma Correction.
 
     Adpted from
     # https://github.com/scikit-image/scikit-image/blob/7e4840bd9439d1dfb6beaf549998452c99f97fdd/skimage/exposure/tests/test_exposure.py#L534  # noqa

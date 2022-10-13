@@ -85,7 +85,7 @@ class IconVSR(nn.Module):
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
 
     def spatial_padding(self, lrs):
-        """ Apply pdding spatially.
+        """Apply pdding spatially.
 
         Since the PCD module in EDVR requires that the resolution is a multiple
         of 4, we apply padding to the input LR images if their resolution is
@@ -96,7 +96,6 @@ class IconVSR(nn.Module):
 
         Returns:
             Tensor: Padded LR sequence with shape (n, t, c, h_pad, w_pad).
-
         """
         n, t, c, h, w = lrs.size()
 
@@ -126,7 +125,8 @@ class IconVSR(nn.Module):
                 self.is_mirror_extended = True
 
     def compute_refill_features(self, lrs, keyframe_idx):
-        """ Compute keyframe features for information-refill.
+        """Compute keyframe features for information-refill.
+
         Since EDVR-M is used, padding is performed before feature computation.
         Args:
             lrs (Tensor): Input LR images with shape (n, t, c, h, w)
@@ -179,6 +179,7 @@ class IconVSR(nn.Module):
 
     def forward(self, lrs):
         """Forward function for IconVSR.
+
         Args:
             lrs (Tensor): Input LR tensor with shape (n, t, c, h, w).
         Returns:
@@ -205,7 +206,7 @@ class IconVSR(nn.Module):
         flows_forward, flows_backward = self.compute_flow(lrs)
         feats_refill = self.compute_refill_features(lrs, keyframe_idx)
 
-        # backward-time propgation
+        # backward-time propagation
         outputs = []
         feat_prop = lrs.new_zeros(n, self.mid_channels, h, w)
         for i in range(t - 1, -1, -1):
@@ -252,6 +253,7 @@ class IconVSR(nn.Module):
 
     def init_weights(self, pretrained=None, strict=True):
         """Init weights for models.
+
         Args:
             pretrained (str, optional): Path for pretrained weights. If given
                 None, pretrained weights will not be loaded. Defaults to None.
@@ -349,6 +351,7 @@ class EDVRFeatureExtractor(nn.Module):
 
     def forward(self, x):
         """Forward function for EDVRFeatureExtractor.
+
         Args:
             x (Tensor): Input tensor with shape (n, t, 3, h, w).
         Returns:

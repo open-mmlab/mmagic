@@ -97,7 +97,7 @@ def parse_requirements(fname='requirements.txt', with_version=True):
                 info['package'] = line
             else:
                 # Remove versioning from the package
-                pat = '(' + '|'.join(['>=', '==', '>']) + ')'
+                pat = '(' + '|'.join(['>=', '<=', '==', '>', '<']) + ')'
                 parts = re.split(pat, line, maxsplit=1)
                 parts = [p.strip() for p in parts]
 
@@ -141,7 +141,7 @@ def parse_requirements(fname='requirements.txt', with_version=True):
     return packages
 
 
-def add_mim_extention():
+def add_mim_extension():
     """Add extra files that are required to support MIM into the package.
 
     These files will be added by creating a symlink to the originals if the
@@ -201,7 +201,7 @@ def add_mim_extention():
 
 
 if __name__ == '__main__':
-    add_mim_extention()
+    add_mim_extension()
     setup(
         name='mmedit',
         version=get_version(),
@@ -210,13 +210,16 @@ if __name__ == '__main__':
         long_description_content_type='text/markdown',
         maintainer='MMEditing Contributors',
         maintainer_email='openmmlab@gmail.com',
-        keywords='computer vision, inpainting, matting, '
-        'super-resolution, generation',
+        keywords='computer vision, super resolution, video interpolation, '
+        'inpainting, matting, SISR, RefSR, VSR, GAN, VFI',
         url='https://github.com/open-mmlab/mmediting',
         packages=find_packages(exclude=('configs', 'tools', 'demo')),
         include_package_data=True,
         classifiers=[
             'Development Status :: 4 - Beta',
+            'Intended Audience :: Developers',
+            'Intended Audience :: Education',
+            'Intended Audience :: Science/Research',
             'License :: OSI Approved :: Apache Software License',
             'Operating System :: OS Independent',
             'Programming Language :: Python :: 3',
@@ -224,11 +227,15 @@ if __name__ == '__main__':
             'Programming Language :: Python :: 3.7',
             'Programming Language :: Python :: 3.8',
             'Programming Language :: Python :: 3.9',
+            'Programming Language :: Python :: 3.10',
+            'Topic :: Scientific/Engineering :: Artificial Intelligence',
+            'Topic :: Scientific/Engineering :: Image Processing',
         ],
         license='Apache License 2.0',
         install_requires=parse_requirements('requirements/runtime.txt'),
         extras_require={
             'all': parse_requirements('requirements.txt'),
             'tests': parse_requirements('requirements/tests.txt'),
+            'mim': parse_requirements('requirements/mminstall.txt'),
         },
         zip_safe=False)

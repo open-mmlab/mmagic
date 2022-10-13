@@ -5,7 +5,7 @@
 MMEditing 支持下列超分辨率数据集：
 
 - 图像超分辨率
-    - [DIV2K](div2k/README.md) \[ [Homepage](https://data.vision.ee.ethz.ch/cvl/DIV2K/) \]
+  - [DIV2K](div2k/README.md) \[ [Homepage](https://data.vision.ee.ethz.ch/cvl/DIV2K/) \]
 - 视频超分辨率
-    - [REDS](reds/README.md) \[ [Homepage](https://seungjunnah.github.io/Datasets/reds.html) \]
-    - [Vimeo90K](vimeo90k/README.md) \[ [Homepage](http://toflow.csail.mit.edu) \]
+  - [REDS](reds/README.md) \[ [Homepage](https://seungjunnah.github.io/Datasets/reds.html) \]
+  - [Vimeo90K](vimeo90k/README.md) \[ [Homepage](http://toflow.csail.mit.edu) \]

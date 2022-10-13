@@ -36,11 +36,11 @@ python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composi
 python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit
 ```
 
-如果您只想预处理测试数据，即对于 FBA，您可以通过添加 `--skip_train` 选项来跳过训练集：
+如果您只想预处理测试数据，即对于 FBA，您可以通过添加 `--skip-train` 选项来跳过训练集：
 
 ```shell
 # 跳过预处理训练集
-python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --skip_train
+python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --skip-train
 ```
 
 > 目前，`GCA` 和 `FBA` 支持在线合成训练数据。但是你可以修改其他模型的数据管道来执行在线合成，而不是加载合成图像（我们在数据管道中称之为“合并”）。
@@ -79,6 +79,7 @@ mmediting
 │   ├── VOCdevkit
 │   │   ├── VOC2012
 ```
+
 ## 为 FBA 准备数据集
 
 FBA采用 [Learning-base Sampling for Natural Image Matting](https://openaccess.thecvf.com/content_CVPR_2019/papers/Tang_Learning-Based_Sampling_for_Natural_Image_Matting_CVPR_2019_paper.pdf) 中提出的动态数据集增强。此外，为了减少增强过程中的伪影，它使用前景的扩展版本作为前景。我们提供脚本来估计前景。
@@ -87,7 +88,7 @@ FBA采用 [Learning-base Sampling for Natural Image Matting](https://openaccess.
 
 ```shell
 # 跳过预处理训练集，因为它在训练期间在线合成
-python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --skip_train
+python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --skip-train
 ```
 
 扩展训练集的前景：

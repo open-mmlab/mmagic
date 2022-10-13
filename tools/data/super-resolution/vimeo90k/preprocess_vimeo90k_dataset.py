@@ -7,6 +7,8 @@ import cv2
 import lmdb
 import mmcv
 
+from mmedit.utils import modify_args
+
 
 def make_lmdb(mode,
               data_path,
@@ -133,14 +135,15 @@ def generate_anno_file(train_list, file_name='meta_info_Vimeo90K_GT.txt'):
 
 
 def parse_args():
+    modify_args()
     parser = argparse.ArgumentParser(
         description='Preprocess Vimeo90K datasets',
         epilog='You can download the Vimeo90K dataset '
         'from：http://toflow.csail.mit.edu/')
     parser.add_argument(
         'train_list', help='official training list path for Vimeo90K')
-    parser.add_argument('--gt_path', default=None, help='GT path for Vimeo90K')
-    parser.add_argument('--lq_path', default=None, help='LQ path for Vimeo90K')
+    parser.add_argument('--gt-path', default=None, help='GT path for Vimeo90K')
+    parser.add_argument('--lq-path', default=None, help='LQ path for Vimeo90K')
     parser.add_argument(
         '--make-lmdb', action='store_true', help='create lmdb files')
 

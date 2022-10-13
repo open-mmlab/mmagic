@@ -8,13 +8,13 @@ For installation instructions, please see [install.md](install.md).
 It is recommended to symlink the dataset root to `$MMEditing/data`.
 If your folder structure is different, you may need to change the corresponding paths in config files.
 
-[Inpainting](https://mmediting.readthedocs.io/en/latest/inpainting_datasets.html)
+[Inpainting](https://mmediting.readthedocs.io/en/latest/_tmp/inpainting_datasets.html)
 
-[Matting](https://mmediting.readthedocs.io/en/latest/matting_datasets.html)
+[Matting](https://mmediting.readthedocs.io/en/latest/_tmp/matting_datasets.html)
 
-[Restoration](https://mmediting.readthedocs.io/en/latest/sr_datasets.html)
+[Restoration](https://mmediting.readthedocs.io/en/latest/_tmp/sr_datasets.html)
 
-[Generation](https://mmediting.readthedocs.io/en/latest/generation_datasets.html)
+[Generation](https://mmediting.readthedocs.io/en/latest/_tmp/generation_datasets.html)
 
 ## Inference with pretrained models
 
@@ -36,6 +36,7 @@ python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [-
 # multi-gpu testing
 ./tools/dist_test.sh ${CONFIG_FILE} ${CHECKPOINT_FILE} ${GPU_NUM} [--out ${RESULT_FILE}] [--save-path ${IMAGE_SAVE_PATH}]
 ```
+
 For example,
 
 ```shell
@@ -53,6 +54,7 @@ If you run MMEditing on a cluster managed with [slurm](https://slurm.schedmd.com
 ```shell
 [GPUS=${GPUS}] ./tools/slurm_test.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${CHECKPOINT_FILE}
 ```
+
 Here is an example of using 8 GPUs to test an example model on the 'dev' partition with job name 'test'.
 
 ```shell
@@ -67,9 +69,9 @@ You can check [slurm_test.sh](https://github.com/open-mmlab/mmediting/blob/maste
 - `--save-path`: Specify the path to store edited images. If not given, the images will not be saved.
 - `--seed`: Random seed during testing. This argument is used for fixed results in some tasks such as inpainting.
 - `--deterministic`: Related to `--seed`, this argument decides whether to set deterministic options for CUDNN backend. If specified, it will set `torch.backends.cudnn.deterministic` to True and `torch.backends.cudnn.benchmark` to False.
+- `--cfg-options`: If specified, the key-value pair optional cfg will be merged into config file.
 
 Note: Currently, we do NOT use `--eval` argument like [MMDetection](https://github.com/open-mmlab/mmdetection) to specify evaluation metrics. The evaluation metrics are given in the config files (see [config.md](config.md)).
-
 
 ### Image demos
 
@@ -126,10 +128,10 @@ The restored image will be save in `demo/demo_out_baboon.png`.
 #### Generation
 
 ```shell
-python demo/generation_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${SAVE_FILE} [--unpaired_path ${UNPAIRED_IMAGE_FILE}] [--imshow] [--device ${GPU_ID}]
+python demo/generation_demo.py ${CONFIG_FILE} ${CHECKPOINT_FILE} ${IMAGE_FILE} ${SAVE_FILE} [--unpaired-path ${UNPAIRED_IMAGE_FILE}] [--imshow] [--device ${GPU_ID}]
 ```
 
-If `--unpaired_path` is specified (used for CycleGAN), the model will perform unpaired image-to-image translation. If `--imshow` is specified, the demo will also show image with opencv. Examples:
+If `--unpaired-path` is specified (used for CycleGAN), the model will perform unpaired image-to-image translation. If `--imshow` is specified, the demo will also show image with opencv. Examples:
 
 Paired:
 
@@ -140,9 +142,8 @@ python demo/generation_demo.py configs/example_config.py work_dirs/example_exp/e
 Unpaired (also show image with opencv):
 
 ```shell
-python demo/generation_demo.py configs/example_config.py work_dirs/example_exp/example_model_20200202.pth demo/demo.jpg demo/demo_out.jpg --unpaired_path demo/demo_unpaired.jpg --imshow
+python demo/generation_demo.py configs/example_config.py work_dirs/example_exp/example_model_20200202.pth demo/demo.jpg demo/demo_out.jpg --unpaired-path demo/demo_unpaired.jpg --imshow
 ```
-
 
 ## Train a model
 
@@ -152,6 +153,7 @@ All outputs (log files and checkpoints) will be saved to the working directory,
 which is specified by `work_dir` in the config file.
 
 By default we evaluate the model on the validation set after several iterations, you can change the evaluation interval by adding the interval argument in the training config.
+
 ```python
 evaluation = dict(interval=1e4, by_epoch=False)  # This evaluates the model per 1e4 iterations.
 ```
@@ -167,6 +169,7 @@ Optional arguments are:
 - `--no-validate` (**not suggested**): By default, the codebase will perform evaluation every k iterations during the training. To disable this behavior, use `--no-validate`.
 - `--work-dir ${WORK_DIR}`: Override the working directory specified in the config file.
 - `--resume-from ${CHECKPOINT_FILE}`: Resume from a previous checkpoint file.
+- `--cfg-options`: If specified, the key-value pair optional cfg will be merged into config file.
 
 Difference between `resume-from` and `load-from`:
 `resume-from` loads both the model weights and optimizer status, and the iteration is also inherited from the specified checkpoint. It is usually used for resuming the training process that is interrupted accidentally.
@@ -203,11 +206,13 @@ CUDA_VISIBLE_DEVICES=4,5,6,7 PORT=29501 ./tools/dist_train.sh ${CONFIG_FILE} 4
 If you launch training jobs with Slurm, you need to modify the config files (usually the 6th line from the bottom in config files) to set different communication ports.
 
 In `config1.py`,
+
 ```python
 dist_params = dict(backend='nccl', port=29500)
 ```
 
 In `config2.py`,
+
 ```python
 dist_params = dict(backend='nccl', port=29501)
 ```
@@ -218,7 +223,6 @@ Then you can launch two jobs with `config1.py` ang `config2.py`.
 CUDA_VISIBLE_DEVICES=0,1,2,3 GPUS=4 ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} config1.py ${WORK_DIR}
 CUDA_VISIBLE_DEVICES=4,5,6,7 GPUS=4 ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} config2.py ${WORK_DIR}
 ```
-
 
 ## Useful tools
 
@@ -233,9 +237,11 @@ python tools/get_flops.py ${CONFIG_FILE} [--shape ${INPUT_SHAPE}]
 ```
 
 For example,
+
 ```shell
 python tools/get_flops.py configs/resotorer/srresnet.py --shape 40 40
 ```
+
 You will get the result like this.
 
 ```

@@ -31,7 +31,7 @@ __all__ = [
     'RandomLoadResizeBg', 'Compose', 'ImageToTensor', 'ToTensor',
     'GetMaskedImage', 'BinarizeImage', 'Flip', 'Pad', 'RandomAffine',
     'RandomJitter', 'ColorJitter', 'RandomMaskDilation', 'RandomTransposeHW',
-    'Resize', 'RandomResizedCrop', 'CenterCrop', 'Crop', 'CropAroundCenter',
+    'Resize', 'RandomResizedCrop', 'Crop', 'CropAroundCenter',
     'CropAroundUnknown', 'ModCrop', 'PairedRandomCrop', 'Normalize',
     'RescaleToZeroOne', 'GenerateTrimap', 'MergeFgAndBg', 'CompositeFg',
     'TemporalReverse', 'LoadImageFromFileList', 'GenerateFrameIndices',
@@ -43,5 +43,5 @@ __all__ = [
     'CropLike', 'GenerateHeatmap', 'MATLABLikeResize', 'CopyValues',
     'Quantize', 'RandomBlur', 'RandomJPEGCompression', 'RandomNoise',
     'DegradationsWithShuffle', 'RandomResize', 'UnsharpMasking',
-    'RandomVideoCompression', 'CropSequence'
+    'RandomVideoCompression'
 ]

@@ -11,7 +11,7 @@ Models:
   In Collection: EDVR
   Metadata:
     Training Data: REDS
-  Name: edvrm_wotsa
+  Name: edvrm_wotsa_x4_g8_600k_reds
   Results:
   - Dataset: REDS
     Metrics:
@@ -24,7 +24,7 @@ Models:
   In Collection: EDVR
   Metadata:
     Training Data: REDS
-  Name: edvrm_x4
+  Name: edvrm_x4_g8_600k_reds
   Results:
   - Dataset: REDS
     Metrics:
@@ -37,7 +37,7 @@ Models:
   In Collection: EDVR
   Metadata:
     Training Data: REDS
-  Name: edvrl_wotsa
+  Name: edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4
   Results:
   - Dataset: REDS
     Metrics:
@@ -50,7 +50,7 @@ Models:
   In Collection: EDVR
   Metadata:
     Training Data: REDS
-  Name: edvrl_c128b40
+  Name: edvrl_c128b40_8x8_lr2e-4_600k_reds4
   Results:
   - Dataset: REDS
     Metrics:

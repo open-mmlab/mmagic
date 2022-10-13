@@ -55,8 +55,8 @@ class TestAugmentations:
 
     @staticmethod
     def check_flip(origin_img, result_img, flip_type):
-        """Check if the origin_img are flipped correctly into result_img
-        in different flip_types"""
+        """Check if the origin_img are flipped correctly into result_img in
+        different flip_types."""
         h, w, c = origin_img.shape
         if flip_type == 'horizontal':
             for i in range(h):
@@ -197,8 +197,7 @@ class TestAugmentations:
         """Check if the origin_img is padded correctly.
 
         Supported modes for checking are 'constant' (with 'constant_values' of
-        0) and 'reflect'.
-        Supported images should be 2 dimensional.
+        0) and 'reflect'. Supported images should be 2 dimensional.
         """
         if mode not in ['constant', 'reflect']:
             raise NotImplementedError(
@@ -265,7 +264,28 @@ class TestAugmentations:
 
         target_keys = ['fg', 'alpha']
 
+        # Test identical transformation
+        alpha = np.random.rand(4, 4).astype(np.float32)
+        fg = np.random.rand(4, 4).astype(np.float32)
+        results = dict(alpha=alpha, fg=fg)
+        random_affine = RandomAffine(['fg', 'alpha'],
+                                     degrees=0, flip_ratio=0.0)
+        random_affine_results = random_affine(results)
+        assert np.allclose(alpha, random_affine_results['alpha'])
+        assert np.allclose(fg, random_affine_results['fg'])
+
+        # Test flip in both direction
+        alpha = np.random.rand(4, 4).astype(np.float32)
+        fg = np.random.rand(4, 4).astype(np.float32)
+        results = dict(alpha=alpha, fg=fg)
+        random_affine = RandomAffine(['fg', 'alpha'],
+                                     degrees=0, flip_ratio=1.0)
+        random_affine_results = random_affine(results)
+        assert np.allclose(alpha[::-1, ::-1], random_affine_results['alpha'])
+        assert np.allclose(fg[::-1, ::-1], random_affine_results['fg'])
+
         # test random affine with different valid setting combinations
+        # only shape are tested
         alpha = np.random.rand(240, 320).astype(np.float32)
         fg = np.random.rand(240, 320).astype(np.float32)
         results = dict(alpha=alpha, fg=fg)
@@ -343,22 +363,54 @@ class TestAugmentations:
 
         results = copy.deepcopy(self.results)
         results['gt'] = (results['gt'] * 255).astype(np.uint8)
+        results['lq'] = [results['gt'], results['gt']]
 
-        target_keys = ['gt']
+        target_keys = ['gt', 'lq']
 
         color_jitter = ColorJitter(
-            keys=['gt'], brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5)
+            keys=['gt', 'lq'],
+            brightness=0.5,
+            contrast=0.5,
+            saturation=0.5,
+            hue=0.5)
         color_jitter_results = color_jitter(results)
         assert self.check_keys_contain(color_jitter_results.keys(),
                                        target_keys)
         assert color_jitter_results['gt'].shape == self.img_gt.shape
+        color_jitter = ColorJitter(
+            keys=['gt', 'lq'],
+            channel_order='bgr',
+            brightness=0.5,
+            contrast=0.5,
+            saturation=0.5,
+            hue=0.5)
+        color_jitter_results = color_jitter(results)
+        assert self.check_keys_contain(color_jitter_results.keys(),
+                                       target_keys)
+        assert color_jitter_results['gt'].shape == self.img_gt.shape
+        assert np.abs(color_jitter_results['gt']-self.img_gt.shape).mean() > 0
 
         assert repr(color_jitter) == color_jitter.__class__.__name__ + (
-            f"(keys=['gt'], to_rgb=False)")
+            f'(keys={color_jitter.keys}, '
+            f'channel_order={color_jitter.channel_order}, '
+            f'brightness={color_jitter.transform.brightness}, '
+            f'contrast={color_jitter.transform.contrast}, '
+            f'saturation={color_jitter.transform.saturation}, '
+            f'hue={color_jitter.transform.hue})')
+
+        with pytest.raises(AssertionError):
+            color_jitter = ColorJitter(
+                keys=['gt', 'lq'],
+                channel_order='bgr',
+                to_rgb=True,
+                brightness=0.5,
+                contrast=0.5,
+                saturation=0.5,
+                hue=0.5)
 
     @staticmethod
     def check_transposehw(origin_img, result_img):
-        """Check if the origin_imgs are transposed correctly"""
+        """Check if the origin_imgs are transposed correctly."""
         h, w, c = origin_img.shape
         for i in range(c):
             for j in range(h):
@@ -780,8 +832,8 @@ class TestAugmentations:
         copy_ = CopyValues(src_keys=['gt'], dst_keys=['lq'])
         assert np.array_equal(copy_(results)['lq'], results['gt'])
         assert repr(copy_) == copy_.__class__.__name__ + (
-            f"(src_keys=['gt'])"
-            f"(dst_keys=['lq'])")
+            "(src_keys=['gt'])"
+            "(dst_keys=['lq'])")
 
     def test_unsharp_masking(self):
         results = {}

@@ -1,0 +1,33 @@
+name: 🚀 Feature request
+description: Suggest an idea for this project
+labels: [feature-request]
+title: "[Feature] "
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We strongly appreciate you creating a PR to implete this feature [here](https://github.com/open-mmlab/mmediting/pulls)!
+        If you need our help, please fill in as much of the following form as you're able.
+
+        **The less clear the description, the longer it will take to solve it.**
+
+  - type: textarea
+    attributes:
+      label: What is the problem this feature will solve?
+      placeholder: |
+        E.g., It is inconvenient when \[....\].
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: What is the feature?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: What alternatives have you considered?
+      description: |
+        Add any other context or screenshots about the feature request here.

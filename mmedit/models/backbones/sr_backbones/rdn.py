@@ -7,12 +7,11 @@ from mmedit.utils import get_root_logger
 
 
 class DenseLayer(nn.Module):
-    """Dense layer
+    """Dense layer.
 
     Args:
         in_channels (int): Channel number of inputs.
         out_channels (int): Channel number of outputs.
-
     """
 
     def __init__(self, in_channels, out_channels):
@@ -34,7 +33,7 @@ class DenseLayer(nn.Module):
 
 
 class RDB(nn.Module):
-    """Residual Dense Block of Residual Dense Network
+    """Residual Dense Block of Residual Dense Network.
 
     Args:
         in_channels (int): Channel number of inputs.

@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="resources/mmediting-logo.png" width="500px"/>
+  <img src="docs/en/_static/image/mmediting-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
     <b><font size="5">OpenMMLab website</font></b>
@@ -28,28 +28,32 @@
 
 [📘Documentation](https://mmediting.readthedocs.io/en/latest/) |
 [🛠️Installation](https://mmediting.readthedocs.io/en/latest/install.html) |
-[👀Model Zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) |
+[👀Model Zoo](https://mmediting.readthedocs.io/en/latest/_tmp/modelzoo.html) |
 [🆕Update News](https://github.com/open-mmlab/mmediting/blob/master/docs/en/changelog.md) |
 [🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
 [🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
 
 </div>
 
-## Introduction
-
 English | [简体中文](/README_zh-CN.md)
 
-MMEditing is an open source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://open-mmlab.github.io/) project.
+## Introduction
+
+MMEditing is an open-source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+
+Currently, MMEditing supports the following tasks:
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/12756472/158984079-c4754015-c1f6-48c5-ac46-62e79448c372.jpg"/>
+</div>
 
 The master branch works with **PyTorch 1.5+**.
 
-<div align="center">
-  <img src="resources/mmediting-demo.jpg"/>
-</div>
+Some Demos:
 
-<div align="center">
-<video src="https://user-images.githubusercontent.com/56712176/153550102-fdbd3ac8-cd20-416c-a5dc-4dbfbb97fdaa.mp4" width="520px" height="220px"/>
-</div>
+https://user-images.githubusercontent.com/12756472/175944645-cabe8c2b-9f25-440b-91cc-cdac4e752c5a.mp4
+
+https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
 
 ### Major features
 
@@ -71,22 +75,50 @@ hope MMEditing could provide better experience.
 
 ## News
 
-- [2022-03-01] v0.13.0 was released.
+- \[2022-06-01\] v0.15.0 was released.
+  - Support FLAVR
+  - Support AOT-GAN
+  - Support CAIN with ReduceLROnPlateau Scheduler
+- \[2022-04-01\] v0.14.0 was released.
+  - Support TOFlow in video frame interpolation
+- \[2022-03-01\] v0.13.0 was released.
   - Support CAIN
   - Support EDVR-L
   - Support running in Windows
-- [2022-02-11] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
-- [2022-01-21] Support video frame interplation: CAIN
+- \[2022-02-11\] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
 ## Installation
 
-Please refer to [install.md](docs/en/install.md) for installation.
+MMEditing depends on [PyTorch](https://pytorch.org/) and [MMCV](https://github.com/open-mmlab/mmcv).
+Below are quick steps for installation.
+
+**Step 1.**
+Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/).
+
+**Step 2.**
+Install MMCV with [MIM](https://github.com/open-mmlab/mim).
+
+```shell
+pip3 install openmim
+mim install mmcv-full
+```
+
+**Step 3.**
+Install MMEditing from source.
+
+```shell
+git clone https://github.com/open-mmlab/mmediting.git
+cd mmediting
+pip3 install -e .
+```
+
+Please refer to [install.md](docs/en/install.md) for more detailed instruction.
 
 ## Getting Started
 
-Please see [getting_started.md](docs/en/getting_started.md) for the basic usage of MMEditing.
+Please see [getting_started.md](docs/en/getting_started.md) and [demo.md](docs/en/demo.md) for the basic usage of MMEditing.
 
 ## Model Zoo
 
@@ -99,6 +131,7 @@ Supported algorithms:
 - [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
 - [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
 - [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
+- [x] [AOT-GAN](configs/inpainting/AOT-GAN/README.md) (TVCG'2021)
 
 </details>
 
@@ -119,7 +152,6 @@ Supported algorithms:
 - [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
 - [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
 - [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
-- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
 - [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
 - [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
 - [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
@@ -130,11 +162,13 @@ Supported algorithms:
 <details open>
 <summary>Video-Super-Resolution</summary>
 
+- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
 - [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
 - [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
 - [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (NTIRE'2021)
 - [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
+- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (CVPR'2022)
+- [x] [RealBasicVSR](configs/restorers/real_basicvsr/README.md) (CVPR'2022)
 
 </details>
 
@@ -149,15 +183,17 @@ Supported algorithms:
 <details open>
 <summary>Video Interpolation</summary>
 
+- [x] [TOFlow](configs/video_interpolators/tof/README.md) (IJCV'2019)
 - [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
+- [x] [FLAVR](configs/video_interpolators/flavr/README.md) (CVPR'2021)
 
 </details>
 
-Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) for more details.
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/_tmp/modelzoo.html) for more details.
 
 ## Contributing
 
-We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md) in MMCV for the contributing guideline.
+We appreciate all contributions to improve MMEditing. Please refer to our [contributing guidelines](https://github.com/open-mmlab/mmediting/wiki/A.-Contribution-Guidelines).
 
 ## Acknowledgement
 
@@ -165,14 +201,14 @@ MMEditing is an open source project that is contributed by researchers and engin
 
 ## Citation
 
-If you find this project useful in your research, please consider cite:
+If MMEditing is helpful to your research, please cite it as below.
 
 ```bibtex
-@misc{mmediting2020,
-    title={OpenMMLab Editing Estimation Toolbox and Benchmark},
-    author={MMEditing Contributors},
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {{MMEditing Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year={2020}
+    year = {2022}
 }
 ```
 

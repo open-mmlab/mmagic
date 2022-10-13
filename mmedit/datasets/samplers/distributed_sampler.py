@@ -5,9 +5,12 @@ import math
 import torch
 from torch.utils.data import DistributedSampler as _DistributedSampler
 
+from mmedit.core.utils import sync_random_seed
+
 
 class DistributedSampler(_DistributedSampler):
-    """DistributedSampler inheriting from `torch.utils.data.DistributedSampler`.
+    """DistributedSampler inheriting from
+    `torch.utils.data.DistributedSampler`.
 
     In pytorch of lower versions, there is no `shuffle` argument. This child
     class will port one to DistributedSampler.
@@ -18,7 +21,8 @@ class DistributedSampler(_DistributedSampler):
                  num_replicas=None,
                  rank=None,
                  shuffle=True,
-                 samples_per_gpu=1):
+                 samples_per_gpu=1,
+                 seed=0):
         super().__init__(dataset, num_replicas=num_replicas, rank=rank)
         self.shuffle = shuffle
         self.samples_per_gpu = samples_per_gpu
@@ -28,6 +32,14 @@ class DistributedSampler(_DistributedSampler):
                 len(self.dataset) * 1.0 / self.num_replicas / samples_per_gpu))
         self.num_samples = self.num_samples_per_replica * self.samples_per_gpu
         self.total_size = self.num_samples * self.num_replicas
+
+        # In distributed sampling, different ranks should sample
+        # non-overlapped data in the dataset. Therefore, this function
+        # is used to make sure that each rank shuffles the data indices
+        # in the same order based on the same seed. Then different ranks
+        # could use different indices to select non-overlapped data from the
+        # same data list.
+        self.seed = sync_random_seed(seed)
 
         # to avoid padding bug when meeting too small dataset
         if len(dataset) < self.num_replicas * samples_per_gpu:
@@ -40,7 +52,11 @@ class DistributedSampler(_DistributedSampler):
         # deterministically shuffle based on epoch
         if self.shuffle:
             g = torch.Generator()
-            g.manual_seed(self.epoch)
+            # When :attr:`shuffle=True`, this ensures all replicas
+            # use a different random ordering for each epoch.
+            # Otherwise, the next iteration of this sampler will
+            # yield the same ordering.
+            g.manual_seed(self.epoch + self.seed)
             indices = torch.randperm(len(self.dataset), generator=g).tolist()
         else:
             indices = torch.arange(len(self.dataset)).tolist()

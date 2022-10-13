@@ -9,6 +9,7 @@ import random
 import cv2
 import mmcv
 import numpy as np
+import torch
 import torchvision.transforms as transforms
 from PIL import Image
 
@@ -447,7 +448,11 @@ class RandomAffine:
         else:
             shear = 0.0
 
-        flip = (np.random.rand(2) < flip_ratio).astype(np.int32) * 2 - 1
+        # Because `flip` is used as a multiplier in line 479 and 480,
+        # so -1 stands for flip and 1 stands for no flip. Thus `flip`
+        # should be an 'inverse' flag as the result of the comparison.
+        # See https://github.com/open-mmlab/mmediting/pull/799 for more detail
+        flip = (np.random.rand(2) > flip_ratio).astype(np.int32) * 2 - 1
 
         return angle, translations, scale, shear, flip
 
@@ -521,7 +526,7 @@ class RandomAffine:
             params = self._get_params(self.degrees, self.translate, self.scale,
                                       self.shear, self.flip_ratio, (h, w))
 
-        center = (w * 0.5 + 0.5, h * 0.5 + 0.5)
+        center = (w * 0.5 - 0.5, h * 0.5 - 0.5)
         M = self._get_inverse_affine_matrix(center, *params)
         M = np.array(M).reshape((2, 3))
 
@@ -622,30 +627,75 @@ class ColorJitter:
 
     Args:
         keys (list[str]): The images to be resized.
-        to_rgb (bool): Whether to convert channels from BGR to RGB.
-            Default: False.
+        channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
+            Default: 'rgb'.
+
+    Notes: ``**kwards`` follows the args list of
+        ``torchvision.transforms.ColorJitter``.
+
+        brightness (float or tuple of float (min, max)): How much to jitter
+            brightness. brightness_factor is chosen uniformly from
+            [max(0, 1 - brightness), 1 + brightness] or the given [min, max].
+            Should be non negative numbers.
+        contrast (float or tuple of float (min, max)): How much to jitter
+            contrast. contrast_factor is chosen uniformly from
+            [max(0, 1 - contrast), 1 + contrast] or the given [min, max].
+            Should be non negative numbers.
+        saturation (float or tuple of float (min, max)): How much to jitter
+            saturation. saturation_factor is chosen uniformly from
+            [max(0, 1 - saturation), 1 + saturation] or the given [min, max].
+            Should be non negative numbers.
+        hue (float or tuple of float (min, max)): How much to jitter hue.
+            hue_factor is chosen uniformly from [-hue, hue] or the given
+            [min, max].
+            Should have 0<= hue <= 0.5 or -0.5 <= min <= max <= 0.5.
     """
 
-    def __init__(self, keys, to_rgb=False, **kwargs):
+    def __init__(self, keys, channel_order='rgb', **kwargs):
         assert keys, 'Keys should not be empty.'
+        assert 'to_rgb' not in kwargs, (
+            '`to_rgb` is not support in ColorJitter, '
+            "which is replaced by `channel_order` ('rgb' or 'bgr')")
 
         self.keys = keys
-        self.to_rgb = to_rgb
+        self.channel_order = channel_order
         self.transform = transforms.ColorJitter(**kwargs)
 
+    def _color_jitter(self, image, this_seed):
+
+        if self.channel_order.lower() == 'bgr':
+            image = image[..., ::-1]
+
+        image = Image.fromarray(image)
+        torch.manual_seed(this_seed)
+        image = self.transform(image)
+        image = np.asarray(image)
+
+        if self.channel_order.lower() == 'bgr':
+            image = image[..., ::-1]
+
+        return image
+
     def __call__(self, results):
+
+        this_seed = random.randint(0, 2**32)
+
         for k in self.keys:
-            if self.to_rgb:
-                results[k] = results[k][..., ::-1]
-            results[k] = Image.fromarray(results[k])
-            results[k] = self.transform(results[k])
-            results[k] = np.asarray(results[k])
-            results[k] = results[k][..., ::-1]
+            if isinstance(results[k], list):
+                results[k] = [
+                    self._color_jitter(v, this_seed) for v in results[k]
+                ]
+            else:
+                results[k] = self._color_jitter(results[k], this_seed)
         return results
 
     def __repr__(self):
         repr_str = self.__class__.__name__
-        repr_str += (f'(keys={self.keys}, to_rgb={self.to_rgb})')
+        repr_str += (f'(keys={self.keys}, channel_order={self.channel_order}, '
+                     f'brightness={self.transform.brightness}, '
+                     f'contrast={self.transform.contrast}, '
+                     f'saturation={self.transform.saturation}, '
+                     f'hue={self.transform.hue})')
 
         return repr_str
 
@@ -892,8 +942,8 @@ class GenerateFrameIndiceswithPadding:
 
 @PIPELINES.register_module()
 class GenerateFrameIndices:
-    """Generate frame index for REDS datasets. It also performs
-    temporal augmention with random interval.
+    """Generate frame index for REDS datasets. It also performs temporal
+    augmention with random interval.
 
     Required keys: lq_path, gt_path, key, num_input_frames
     Added or modified keys:  lq_path, gt_path, interval, reverse
@@ -1081,7 +1131,7 @@ class GenerateSegmentIndices:
 
 @PIPELINES.register_module()
 class MirrorSequence:
-    """Extend short sequences (e.g. Vimeo-90K) by mirroring the sequences
+    """Extend short sequences (e.g. Vimeo-90K) by mirroring the sequences.
 
     Given a sequence with N frames (x1, ..., xN), extend the sequence to
     (x1, ..., xN, xN, ..., x1).
@@ -1121,7 +1171,6 @@ class MirrorSequence:
 @PIPELINES.register_module()
 class CopyValues:
     """Copy the value of a source key to a destination key.
-
 
     It does the following: results[dst_key] = results[src_key] for
     (src_key, dst_key) in zip(src_keys, dst_keys).
@@ -1231,7 +1280,6 @@ class UnsharpMasking:
 
     Added keys are "xxx_unsharp", where "xxx" are the attributes specified
     in "keys".
-
     """
 
     def __init__(self, kernel_size, sigma, weight, threshold, keys):

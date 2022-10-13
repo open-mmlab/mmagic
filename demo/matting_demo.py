@@ -24,8 +24,12 @@ def parse_args():
 def main():
     args = parse_args()
 
-    model = init_model(
-        args.config, args.checkpoint, device=torch.device('cuda', args.device))
+    if args.device < 0 or not torch.cuda.is_available():
+        device = torch.device('cpu')
+    else:
+        device = torch.device('cuda', args.device)
+
+    model = init_model(args.config, args.checkpoint, device=device)
 
     pred_alpha = matting_inference(model, args.img_path,
                                    args.trimap_path) * 255

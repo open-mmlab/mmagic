@@ -16,6 +16,7 @@ cat ../../tools/data/generation/README_zh-CN.md > generation_datasets.md
 cat ../../tools/data/inpainting/README_zh-CN.md > inpainting_datasets.md
 cat ../../tools/data/matting/README_zh-CN.md > matting_datasets.md
 cat ../../tools/data/super-resolution/README_zh-CN.md > sr_datasets.md
+cat ../../tools/data/video-interpolation/README.md > vfi_datasets.md
 
 sed -i 's=(paired-pix2pix/README_zh-CN.md)=(#paired-dataset-for-pix2pix)=g' generation_datasets.md
 sed -i 's=(unpaired-cyclegan/README_zh-CN.md)=(#unpaired-dataset-for-cyclegan)=g' generation_datasets.md
@@ -26,6 +27,7 @@ sed -i 's=(comp1k/README_zh-CN.md)=(#composition-1k-dataset)=g' matting_datasets
 sed -i 's=(div2k/README_zh-CN.md)=(#div2k-dataset)=g' sr_datasets.md
 sed -i 's=(reds/README_zh-CN.md)=(#reds-dataset)=g' sr_datasets.md
 sed -i 's=(vimeo90k/README_zh-CN.md)=(#vimeo90k-dataset)=g' sr_datasets.md
+sed -i 's=(vimeo90k-triplet/README.md)=(#vimeo90k-triplet-dataset)=g' vfi_datasets.md
 
 cat ../../tools/data/generation/*/README_zh-CN.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> generation_datasets.md
 cat ../../tools/data/inpainting/*/README_zh-CN.md | sed 's/# Preparing/# /g' | sed "s/#/#&/" | sed 's/](\/docs\//](/g' | sed 's=](/=](https://github.com/open-mmlab/mmediting/tree/master/=g' >> inpainting_datasets.md
