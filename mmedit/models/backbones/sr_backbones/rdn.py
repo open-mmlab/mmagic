@@ -51,7 +51,7 @@ class RDB(nn.Module):
         # local feature fusion
         self.lff = nn.Conv2d(
             in_channels + channel_growth * num_layers,
-            channel_growth,
+            in_channels,
             kernel_size=1)
 
     def forward(self, x):
