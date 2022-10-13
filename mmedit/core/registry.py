@@ -6,6 +6,7 @@ METRICS = Registry('metric')
 
 def build(cfg, registry, default_args=None):
     """Build a module.
+
     Args:
         cfg (dict, list[dict]): The config of modules, is is either a dict
             or a list of configs.

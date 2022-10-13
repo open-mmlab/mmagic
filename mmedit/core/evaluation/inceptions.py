@@ -20,6 +20,7 @@ def img2tensor(img, out_type=torch.float32):
 
 class InceptionV3:
     """Inception network used in calculating perceptual loss.
+
     In this implementation, we allow users to choose whether use normalization
     in the input feature and the type of inception network. Note that the
     pretrained path must fit the inception type.
@@ -63,6 +64,7 @@ class InceptionV3:
 
     def forward(self, x):
         """Forward function.
+
         Args:
             x (np.ndarray): Input np.ndarray with shape (h, w, c).
         Returns:
@@ -85,6 +87,7 @@ class InceptionV3:
 
     def init_weights(self, model, pretrained):
         """Init weights.
+
         Args:
             model (nn.Module): Models to be inited.
             pretrained (str): Path for pretrained weights.
