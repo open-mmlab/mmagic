@@ -56,6 +56,7 @@ val_dataloader = dict(
         data_prefix=dict(img='BIx4up_direct', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
         depth=2,
+        num_input_frames=7,
         pipeline=val_pipeline))
 
 # TODO: data is not uploaded yet
