@@ -42,8 +42,8 @@ body:
       label: Branch
       description: The problem arises when I'm working on
       options:
-        - master branch https://mmediting.readthedocs.io/en/latest/
-        - 1.x branch https://mmediting.readthedocs.io/en/1.x/
+        - master branch https://github.com/open-mmlab/mmediting
+        - 1.x branch https://github.com/open-mmlab/mmediting/tree/1.x
     validations:
       required: true
       
