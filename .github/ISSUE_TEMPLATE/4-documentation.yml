@@ -1,14 +1,25 @@
 name: 📚 Documentation
-description: Report an issue related to https://mmediting.readthedocs.io/en/latest/.
+description: Report an issue related to the documentation. 
 labels: "docs,awaiting response"
 title: "[Docs] "
 
 body:
+- type: dropdown
+  id: branch
+  attributes:
+    label: Branch
+    description: This issue is related to the 
+    options:
+      - master branch  https://mmediting.readthedocs.io/en/latest/
+      - 1.x branch https://mmediting.readthedocs.io/en/1.x/
+  validations:
+    required: true
+      
 - type: textarea
   attributes:
     label: 📚 The doc issue
     description: >
-      A clear and concise description of what content in https://mmediting.readthedocs.io/en/latest/ is an issue.
+      A clear and concise description the issue. 
   validations:
     required: true
 
