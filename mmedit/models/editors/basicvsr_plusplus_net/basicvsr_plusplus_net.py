@@ -98,9 +98,6 @@ class BasicVSRPlusPlusNet(BaseModule):
         # activation function
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
 
-        # check if the sequence is augmented by flipping
-        self.is_mirror_extended = False
-
     def check_if_mirror_extended(self, lqs):
         """Check whether the input is a mirror-extended sequence.
 
@@ -112,6 +109,8 @@ class BasicVSRPlusPlusNet(BaseModule):
                 shape (n, t, c, h, w).
         """
 
+        # check if the sequence is augmented by flipping
+        self.is_mirror_extended = False
         if lqs.size(1) % 2 == 0:
             lqs_1, lqs_2 = torch.chunk(lqs, 2, dim=1)
             if torch.norm(lqs_1 - lqs_2.flip(1)) == 0:
