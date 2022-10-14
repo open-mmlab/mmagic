@@ -1,6 +1,6 @@
 name: 📚 Documentation
 description: Report an issue related to the documentation.
-labels: "docs,awaiting response"
+labels: "kind/doc,status/unconfirmed"
 title: "[Docs] "
 
 body:
