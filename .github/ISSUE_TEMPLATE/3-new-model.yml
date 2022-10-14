@@ -1,6 +1,6 @@
 name: "\U0001F31F New model/dataset/scheduler addition"
 description: Submit a proposal/request to implement a new model / dataset / scheduler
-labels: "feature-request,awaiting response"
+labels: "kind/feature,status/unconfirmed"
 title: "[New Models] "
 
 
