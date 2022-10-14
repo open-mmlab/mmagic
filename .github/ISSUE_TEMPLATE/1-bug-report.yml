@@ -22,7 +22,7 @@ body:
         required: true
       - label: I have read the [FAQ documentation](https://mmediting.readthedocs.io/en/1.x/notes/4_faq.html) but cannot get the expected help.
         required: true
-      - label: The bug has not been fixed in the [latest version](https://github.com/open-mmlab/mmediting) or r) or [latest version (1.x)](https://github.com/open-mmlab/mmediting/tree/dev-1.x).
+      - label: The bug has not been fixed in the [latest version (master)](https://github.com/open-mmlab/mmediting) or [latest version (1.x)](https://github.com/open-mmlab/mmediting/tree/dev-1.x).
         required: true
 
   - type: dropdown
