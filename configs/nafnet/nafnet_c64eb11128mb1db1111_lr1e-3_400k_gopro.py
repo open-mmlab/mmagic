@@ -29,8 +29,8 @@ model = dict(
 )
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='img'),
+    dict(type='LoadImageFromFile', key='gt'),
     dict(type='SetValues', dictionary=dict(scale=1)),
     dict(
         type='Flip',
@@ -48,8 +48,8 @@ train_pipeline = [
 ]
 
 val_pipeline = [
-    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='img'),
+    dict(type='LoadImageFromFile', key='gt'),
     dict(type='PackEditInputs')
 ]
 
@@ -129,20 +129,4 @@ default_hooks = dict(
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
 
-# custom hook
-vis_backends = [dict(type='LocalVisBackend')]
-visualizer = dict(
-    type='ConcatImageVisualizer',
-    vis_backends=vis_backends,
-    fn_key='gt_path',
-    img_keys=['gt_img', 'input', 'pred_img'],
-    bgr2rgb=False)
-custom_hooks = [
-    dict(type='BasicVisualizationHook', interval=1),
-    dict(
-        type='ExponentialMovingAverageHook',
-        module_keys=('generator_ema'),
-        interval=1,
-        interp_cfg=dict(momentum=0.999),
-    )
-]
+visualizer = dict(bgr2rgb=True)
