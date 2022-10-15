@@ -57,7 +57,7 @@ optim_wrapper = dict(
 custom_hooks = [
     dict(
         type='GenVisualizationHook',
-        interval=50,
+        interval=5000,
         fixed_input=True,
         vis_kwargs_list=[
             dict(type='Translation', name='trans'),
@@ -65,7 +65,6 @@ custom_hooks = [
         ])
 ]
 
-# learning policy
 num_images = 106
 metrics = [
     dict(
@@ -73,6 +72,8 @@ metrics = [
         prefix='IS-Full',
         fake_nums=num_images,
         fake_key=f'fake_{domain_a}',
+        use_pillow_resize=False,
+        resize_method='bilinear',
         inception_style='PyTorch'),
     dict(
         type='TransFID',
