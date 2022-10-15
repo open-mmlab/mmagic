@@ -5,7 +5,7 @@ import mmcv
 import torch
 
 from mmedit.apis import colorization_inference, init_model
-from mmedit.utils import modify_args
+from mmedit.utils import modify_args, tensor2img
 
 
 def parse_args():
@@ -34,8 +34,9 @@ def main():
 
     #
     model = init_model(args.config, args.checkpoints, device=device)
-    output = colorization_inference(model, args.img_path, args.bbox_path)
-    mmcv.imwrite(output, args.save_path)
+    output = colorization_inference(model, args.img_path)
+    result = tensor2img(output)[..., ::-1]
+    mmcv.imwrite(result, args.save_path)
 
     if args.imshow:
         mmcv.imshow(output, 'predicted generation result')

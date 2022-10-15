@@ -25,13 +25,13 @@ Image colorization is inherently an ill-posed problem with multi-modal uncertain
 
 ```shell
 # CPU上训练
-CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/insta/insta_full_cocostuff_256x256.py
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/insta/inst-colorizatioon_cocostuff_full_256x256.py
 
 # 单个GPU上训练
-python tools/train.py configs/insta/insta_full_cocostuff_256x256.py
+python tools/train.py configs/insta/inst-colorizatioon_cocostuff_full_256x256.py
 
 # 多个GPU上训练
-./tools/dist_train.sh configs/insta/insta_full_cocostuff_256x256.py 8
+./tools/dist_train.sh configs/insta/inst-colorizatioon_cocostuff_full_256x256.py 8
 ```
 
 更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Train a model** 部分。
@@ -47,13 +47,13 @@ python tools/train.py configs/insta/insta_full_cocostuff_256x256.py
 
 ```shell
 # CPU上测试
-CUDA_VISIBLE_DEVICES=-1 python demo/colorization_demo.py configs/insta/insta_full_cocostuff_256x256.py ../checkpoints/instance_aware_cocostuff.pth
+CUDA_VISIBLE_DEVICES=-1 python demo/colorization_demo.py configs/insta/inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth
 
 # 单个GPU上测试
-python demo/colorization_demo.py configs/insta/insta_full_cocostuff_256x256.py ../checkpoints/instance_aware_cocostuff.pth
+python demo/colorization_demo.py configs/insta/inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth
 
 # 多个GPU上测试
-./tools/dist_test.sh configs/insta/insta_full_cocostuff_256x256.py ../checkpoints/instance_aware_cocostuff.pth 8
+./tools/dist_test.sh configs/insta/inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth 8
 ```
 
 更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Test a pre-trained model** 部分。

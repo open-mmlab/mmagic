@@ -212,6 +212,6 @@ class GenMaskRCNNBbox:
             model_zoo.get_config_file(
                 'COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml'))
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7
-        cfg.MODEL.WEIGHTS = '/mnt/d/code/MMEditing/model_final_2d9806.pkl'
+        cfg.MODEL.WEIGHTS = '/mnt/ruoning/model_final_2d9806.pkl'
         predictor = DefaultPredictor(cfg)
         return predictor

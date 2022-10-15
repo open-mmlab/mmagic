@@ -1,13 +1,14 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-
 from collections import OrderedDict
-from typing import Union
+from typing import Union, List, Dict
 
 import torch
 from mmengine.config import Config
+from mmengine.optim import OptimWrapperDict
 
 from mmedit.models.utils import (encode_ab_ind, generation_init_weights,
                                  get_colorization_data, lab2rgb)
+from mmedit.structures import  EditDataSample, PixelData
 from mmedit.registry import BACKBONES, COMPONENTS
 from ..srgan import SRGAN
 
@@ -29,16 +30,16 @@ class InstColorization(SRGAN):
                  mask_cent,
                  insta_stage=None,
                  which_direction='AtoB',
-                 instance_model=None,
-                 full_model=None,
-                 fusion_model=None,
+                 generator=None,
                  loss=None,
                  init_cfg=None,
                  train_cfg=None,
                  test_cfg=None):
+
         super(InstColorization, self).__init__(
+            generator=generator,
             data_preprocessor=data_preprocessor,
-            loss=loss,
+            pixel_loss=loss,
             init_cfg=init_cfg,
             train_cfg=train_cfg,
             test_cfg=test_cfg)
@@ -57,19 +58,19 @@ class InstColorization(SRGAN):
 
         self.device = torch.device('cuda:{}'.format(0))
 
-        self.instance_model = instance_model
-        self.full_model = full_model
-        self.fusion_model = fusion_model
-
         self.insta_stage = insta_stage
 
         if self.insta_stage == 'full' or self.insta_stage == 'instance':
             self.training = False
             self.setup_to_train()
-        else:
-            self.setup_to_test()
 
     def set_input(self, input):
+
+        self.encode_ab_opt = dict(
+            ab_norm=self.ab_norm,
+            ab_max=self.ab_max,
+            ab_quant=self.ab_quant
+        )
         AtoB = self.which_direction == 'AtoB'
         self.real_A = input['A' if AtoB else 'B'].to(self.device)
         self.real_B = input['B' if AtoB else 'A'].to(self.device)
@@ -79,12 +80,10 @@ class InstColorization(SRGAN):
         self.mask_B_nc = self.mask_B + self.mask_cent
 
         self.real_B_enc = encode_ab_ind(
-            self.real_B[:, :, ::4, ::4],
-            ab_norm=self.ab_norm,
-            ab_max=self.ab_max,
-            ab_quant=self.ab_quant)
+            self.real_B[:, :, ::4, ::4], **self.encode_ab_opt)
 
     def set_fusion_input(self, input, box_info):
+
         AtoB = self.which_direction == 'AtoB'
         self.full_real_A = input['A' if AtoB else 'B'].to(self.device)
         self.full_real_B = input['B' if AtoB else 'A'].to(self.device)
@@ -94,13 +93,11 @@ class InstColorization(SRGAN):
 
         self.full_mask_B_nc = self.full_mask_B + self.mask_cent
         self.full_real_B_enc = encode_ab_ind(
-            self.full_real_B[:, :, ::4, ::4],
-            ab_norm=self.ab_norm,
-            ab_max=self.ab_max,
-            ab_quant=self.ab_quant)
+            self.full_real_B[:, :, ::4, ::4], **self.encode_ab_opt)
         self.box_info_list = box_info
 
     def set_forward_without_box(self, input):
+
         AtoB = self.which_direction == 'AtoB'
         self.full_real_A = input['A' if AtoB else 'B'].to(self.device)
         self.full_real_B = input['B' if AtoB else 'A'].to(self.device)
@@ -109,7 +106,7 @@ class InstColorization(SRGAN):
         self.full_mask_B = input['mask_B'].to(self.device)
         self.full_mask_B_nc = self.full_mask_B + self.mask_cent
         self.full_real_B_enc = encode_ab_ind(self.full_real_B[:, :, ::4, ::4],
-                                             self)
+                                             **self.encode_ab_opt)
 
         (_, self.comp_B_reg) = self.netGComp(self.full_real_A,
                                              self.full_hint_B,
@@ -117,25 +114,21 @@ class InstColorization(SRGAN):
         self.fake_B_reg = self.comp_B_reg
 
     def generator_loss(self):
+
         if self.insta_stage == 'full' or self.insta_stage == 'instance':
             self.loss_L1 = torch.mean(
                 self.criterionL1(
                     self.fake_B_reg.type(torch.cuda.FloatTensor),
                     self.real_B.type(torch.cuda.FloatTensor)))
-            self.loss_G = 10 * torch.mean(
-                self.criterionL1(
-                    self.fake_B_reg.type(torch.cuda.FloatTensor),
-                    self.real_B.type(torch.cuda.FloatTensor)))
+            self.loss_G = 10 * self.loss_L1
 
         elif self.insta_stage == 'fusion':
             self.loss_L1 = torch.mean(
                 self.criterionL1(
                     self.fake_B_reg.type(torch.cuda.FloatTensor),
                     self.full_real_B.type(torch.cuda.FloatTensor)))
-            self.loss_G = 10 * torch.mean(
-                self.criterionL1(
-                    self.fake_B_reg.type(torch.cuda.FloatTensor),
-                    self.full_real_B.type(torch.cuda.FloatTensor)))
+            self.loss_G = 10 * self.loss_L1
+
         else:
             print('Error! Wrong stage selection!')
             exit()
@@ -147,14 +140,19 @@ class InstColorization(SRGAN):
                 # float(...) works for both scalar tensor and float number
                 self.avg_losses[name] = float(getattr(
                     self, 'loss_' +
-                    name)) + self.avg_loss_alpha * self.avg_losses[name]
+                          name)) + self.avg_loss_alpha * self.avg_losses[name]
                 errors_ret[name] = (1 - self.avg_loss_alpha) / (
-                    1 - self.avg_loss_alpha**  # noqa
-                    self.error_cnt) * self.avg_losses[name]
+                        1 - self.avg_loss_alpha **  # noqa
+                        self.error_cnt) * self.avg_losses[name]
 
         return errors_ret
 
-    def train_step(self, data_batch, optimizer):
+    def train_step(self, data: List[dict],
+                   optim_wrapper: OptimWrapperDict) -> Dict[str, torch.Tensor]:
+
+        g_optim_wrapper = optim_wrapper['generator']
+        data = self.data_preprocessor(data, True)
+        batch_inputs, data_samples = data['inputs'], data['data_samples']
 
         log_vars = {}
 
@@ -168,51 +166,50 @@ class InstColorization(SRGAN):
         )
 
         if self.insta_stage == 'full' or self.insta_stage == 'instance':
-            data_batch['rgb_img'] = [data_batch['rgb_img']]
-            data_batch['gray_img'] = [data_batch['gray_img']]
+            data_samples['rgb_img'] = [data_samples['rgb_img']]
+            data_samples['gray_img'] = [data_samples['gray_img']]
 
-            input_data = get_colorization_data(data_batch['gray_img'],
+            input_data = get_colorization_data(data_samples['gray_img'],
                                                **colorization_data_opt)
 
-            gt_data = get_colorization_data(data_batch['rgb_img'],
+            gt_data = get_colorization_data(data_samples['rgb_img'],
                                             **colorization_data_opt)
 
             input_data['B'] = gt_data['B']
             input_data['hint_B'] = gt_data['hint_B']
             input_data['mask_B'] = gt_data['mask_B']
             self.set_input(input_data)
-            (_, self.fake_B_reg) = self.netG(self.real_A, self.hint_B,
-                                             self.mask_B)
+            self.fake_B_reg = self.generator(self.real_A, self.hint_B, self.mask_B)
 
         elif self.insta_stage == 'fusion':
 
-            data_batch['cropped_rgb'] = torch.stack(
-                data_batch['cropped_rgb_list'])
-            data_batch['cropped_gray'] = torch.stack(
-                data_batch['cropped_gray_list'])
-            data_batch['full_rgb'] = torch.stack(data_batch['full_rgb_list'])
-            data_batch['full_gray'] = torch.stack(data_batch['full_gray_list'])
-            data_batch['box_info'] = torch.from_numpy(
-                data_batch['box_info']).type(torch.long)
-            data_batch['box_info_2x'] = torch.from_numpy(
-                data_batch['box_info_2x']).type(torch.long)
-            data_batch['box_info_4x'] = torch.from_numpy(
-                data_batch['box_info_4x']).type(torch.long)
-            data_batch['box_info_8x'] = torch.from_numpy(
-                data_batch['box_info_8x']).type(torch.long)
+            data_samples['cropped_rgb'] = torch.stack(
+                data_samples['cropped_rgb_list'])
+            data_samples['cropped_gray'] = torch.stack(
+                data_samples['cropped_gray_list'])
+            data_samples['full_rgb'] = torch.stack(data_samples['full_rgb_list'])
+            data_samples['full_gray'] = torch.stack(data_samples['full_gray_list'])
+            data_samples['box_info'] = torch.from_numpy(
+                data_samples['box_info']).type(torch.long)
+            data_samples['box_info_2x'] = torch.from_numpy(
+                data_samples['box_info_2x']).type(torch.long)
+            data_samples['box_info_4x'] = torch.from_numpy(
+                data_samples['box_info_4x']).type(torch.long)
+            data_samples['box_info_8x'] = torch.from_numpy(
+                data_samples['box_info_8x']).type(torch.long)
 
-            box_info = data_batch['box_info'][0]
-            box_info_2x = data_batch['box_info_2x'][0]
-            box_info_4x = data_batch['box_info_4x'][0]
-            box_info_8x = data_batch['box_info_8x'][0]
+            box_info = data_samples['box_info'][0]
+            box_info_2x = data_samples['box_info_2x'][0]
+            box_info_4x = data_samples['box_info_4x'][0]
+            box_info_8x = data_samples['box_info_8x'][0]
 
             cropped_input_data = get_colorization_data(
-                data_batch['cropped_gray'], **colorization_data_opt)
-            cropped_gt_data = get_colorization_data(data_batch['cropped_rgb'],
+                data_samples['cropped_gray'], **colorization_data_opt)
+            cropped_gt_data = get_colorization_data(data_samples['cropped_rgb'],
                                                     **colorization_data_opt)
-            full_input_data = get_colorization_data(data_batch['full_gray'],
+            full_input_data = get_colorization_data(data_samples['full_gray'],
                                                     **colorization_data_opt)
-            full_gt_data = get_colorization_data(data_batch['full_rgb'],
+            full_gt_data = get_colorization_data(data_samples['full_rgb'],
                                                  **colorization_data_opt)
 
             cropped_input_data['B'] = cropped_gt_data['B']
@@ -223,13 +220,10 @@ class InstColorization(SRGAN):
                 full_input_data,
                 [box_info, box_info_2x, box_info_4x, box_info_8x])
 
-            (_, self.comp_B_reg) = self.netGComp(self.full_real_A,
-                                                 self.full_hint_B,
-                                                 self.full_mask_B)
-            (_, feature_map) = self.netG(self.real_A, self.hint_B, self.mask_B)
-            self.fake_B_reg = self.netGF(self.full_real_A, self.full_hint_B,
-                                         self.full_mask_B, feature_map,
-                                         self.box_info_list)
+            self.fake_B_reg = self.generator(
+                self.real_A, self.hint_B, self.mask_B, self.full_real_A, self.full_hint_B,
+                self.full_mask_B, self.box_info_list
+            )
 
         optimizer['generator'].zero_grad()
 
@@ -255,48 +249,6 @@ class InstColorization(SRGAN):
 
         self.loss_names = ['G', 'L1']
 
-        if self.insta_stage == 'full' or self.insta_stage == 'instance':
-            self.model_names = ['G']
-            self.netG = COMPONENTS.build(self.instance_model)
-            generation_init_weights(self.netG)
-            self.generator = self.netG
-
-        elif self.insta_stage == 'fusion':
-            self.model_names = ['G', 'GF', 'GComp']
-            self.netG = COMPONENTS.build(self.instance_model)
-            generation_init_weights(self.netG)
-            self.netG.eval()
-
-            self.netGF = COMPONENTS.build(self.fusion_model)
-            generation_init_weights(self.netGF)
-            self.netGF.eval()
-
-            self.netGComp = COMPONENTS.build(self.full_model)
-            generation_init_weights(self.netGComp)
-            self.netGComp.eval()
-
-            self.generator = \
-                list(self.netGF.module.weight_layer.parameters()) + \
-                list(self.netGF.module.weight_layer2.parameters()) + \
-                list(self.netGF.module.weight_layer3.parameters()) + \
-                list(self.netGF.module.weight_layer4.parameters()) + \
-                list(self.netGF.module.weight_layer5.parameters()) + \
-                list(self.netGF.module.weight_layer6.parameters()) + \
-                list(self.netGF.module.weight_layer7.parameters()) + \
-                list(self.netGF.module.weight_layer8_1.parameters()) + \
-                list(self.netGF.module.weight_layer8_2.parameters()) + \
-                list(self.netGF.module.weight_layer9_1.parameters()) + \
-                list(self.netGF.module.weight_layer9_2.parameters()) + \
-                list(self.netGF.module.weight_layer10_1.parameters()) + \
-                list(self.netGF.module.weight_layer10_2.parameters()) + \
-                list(self.netGF.module.model10.parameters()) + \
-                list(self.netGF.module.model_out.parameters())
-
-        else:
-            # print('Error Stage!')
-            # exit()
-            pass
-
         self.criterionL1 = self.loss
 
         # initialize average loss values
@@ -307,7 +259,7 @@ class InstColorization(SRGAN):
             self.avg_losses[loss_name] = 0
 
     def get_current_visuals(self):
-        from collections import OrderedDict
+
         visual_ret = OrderedDict()
         opt = dict(
             ab_norm=self.ab_norm, l_norm=self.l_norm, l_cent=self.l_cent)
@@ -316,8 +268,8 @@ class InstColorization(SRGAN):
             visual_ret['gray'] = lab2rgb(
                 torch.cat((self.real_A.type(
                     torch.cuda.FloatTensor), torch.zeros_like(
-                        self.real_B).type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
+                    self.real_B).type(torch.cuda.FloatTensor)),
+                    dim=1), **opt)
             visual_ret['real'] = lab2rgb(
                 torch.cat((self.real_A.type(torch.cuda.FloatTensor),
                            self.real_B.type(torch.cuda.FloatTensor)),
@@ -335,19 +287,19 @@ class InstColorization(SRGAN):
                 torch.cat((torch.zeros_like(
                     self.real_A.type(torch.cuda.FloatTensor)),
                            self.real_B.type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
+                    dim=1), **opt)
             visual_ret['fake_ab_reg'] = lab2rgb(
                 torch.cat((torch.zeros_like(
                     self.real_A.type(torch.cuda.FloatTensor)),
                            self.fake_B_reg.type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
+                    dim=1), **opt)
 
         elif self.insta_stage == 'fusion':
             visual_ret['gray'] = lab2rgb(
                 torch.cat((self.full_real_A.type(
                     torch.cuda.FloatTensor), torch.zeros_like(
-                        self.full_real_B).type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
+                    self.full_real_B).type(torch.cuda.FloatTensor)),
+                    dim=1), **opt)
             visual_ret['real'] = lab2rgb(
                 torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
                            self.full_real_B.type(torch.cuda.FloatTensor)),
@@ -355,10 +307,7 @@ class InstColorization(SRGAN):
             visual_ret['comp_reg'] = lab2rgb(
                 torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
                            self.comp_B_reg.type(torch.cuda.FloatTensor)),
-                          dim=1),
-                ab_norm=self.ab_norm,
-                l_norm=self.l_norm,
-                l_cent=self.l_cent)
+                          dim=1), **opt)
             visual_ret['fake_reg'] = lab2rgb(
                 torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
                            self.fake_B_reg.type(torch.cuda.FloatTensor)),
@@ -375,27 +324,36 @@ class InstColorization(SRGAN):
                 torch.cat((torch.zeros_like(
                     self.full_real_A.type(torch.cuda.FloatTensor)),
                            self.full_real_B.type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
+                    dim=1), **opt)
             visual_ret['comp_ab_reg'] = lab2rgb(
                 torch.cat((torch.zeros_like(
                     self.full_real_A.type(torch.cuda.FloatTensor)),
                            self.comp_B_reg.type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
+                    dim=1), **opt)
             visual_ret['fake_ab_reg'] = lab2rgb(
                 torch.cat((torch.zeros_like(
                     self.full_real_A.type(torch.cuda.FloatTensor)),
                            self.fake_B_reg.type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
+                    dim=1), **opt)
         else:
             print('Error! Wrong stage selection!')
             exit()
         return visual_ret
 
-    def forward_test(self, inputs, data_samples, **kwargs):
+    def forward_tensor(self, inputs, data_samples, **kwargs):
 
-        output = dict()
         data = data_samples[0]
-        full_img= data.full_img
+        full_img = data.full_img
+
+        convert_params = dict(
+            ab_thresh=0,
+            ab_norm=self.ab_norm,
+            l_norm=self.l_norm,
+            l_cent=self.l_cent,
+            sample_PS=self.sample_Ps,
+            mask_cent=self.mask_cent,
+        )
+
         if not data.empty_box:
             cropped_img = data.cropped_img
             box_info = data.box_info
@@ -404,21 +362,11 @@ class InstColorization(SRGAN):
             box_info_8x = data.box_info_8x
             cropped_data = get_colorization_data(
                 cropped_img,
-                ab_thresh=0,
-                ab_norm=self.ab_norm,
-                l_norm=self.l_norm,
-                l_cent=self.l_cent,
-                sample_PS=self.sample_Ps,
-                mask_cent=self.mask_cent,
+                **convert_params
             )
             full_img_data = get_colorization_data(
                 full_img,
-                ab_thresh=0,
-                ab_norm=self.ab_norm,
-                l_norm=self.l_norm,
-                l_cent=self.l_cent,
-                sample_PS=self.sample_Ps,
-                mask_cent=self.mask_cent,
+                **convert_params
             )
             self.set_input(cropped_data)
             self.set_fusion_input(
@@ -429,10 +377,9 @@ class InstColorization(SRGAN):
                 full_img, ab_thresh=0)
             self.set_forward_without_box(full_img_data)
 
-        (_, feature_map) = self.netG(self.real_A, self.hint_B, self.mask_B)
-        self.fake_B_reg = self.netGF(self.full_real_A, self.full_hint_B,
-                                     self.full_mask_B, feature_map,
-                                     self.box_info_list)
+        self.fake_B_reg = self.generator(
+            self.real_A, self.hint_B, self.mask_B, self.full_real_A,
+            self.full_hint_B, self.full_mask_B, self.box_info_list)
 
         out_img = torch.clamp(
             lab2rgb(
@@ -443,16 +390,17 @@ class InstColorization(SRGAN):
                 l_norm=self.l_norm,
                 l_cent=self.l_cent), 0.0, 1.0)
 
-        output['fake_img'] = out_img
-        output['meta'] = None if 'meta' not in kwargs else kwargs['meta'][0]
+        return out_img
 
-        self.save_visualization(out_img,
-                                '/mnt/ruoning/results/output_mmedit11.png')
-        return output
+    def forward_inference(self, inputs, data_samples=None, **kwargs):
+        feats = self.forward_tensor(inputs, data_samples, **kwargs)
+        predictions = []
+        for idx in range(feats.shape[0]):
+            batch_tensor = feats[idx] * 127.5 + 127.5
+            pred_img = PixelData(data=batch_tensor.to('cpu'))
+            predictions.append(
+                EditDataSample(
+                    pred_img=pred_img,
+                    metainfo=data_samples[idx].metainfo))
 
-    def setup_to_test(self):
-        self.netG = COMPONENTS.build(self.instance_model)
-        generation_init_weights(self.netG)
-
-        self.netGF = COMPONENTS.build(self.fusion_model)
-        generation_init_weights(self.netGF)
+        return predictions

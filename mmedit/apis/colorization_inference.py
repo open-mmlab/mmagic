@@ -20,6 +20,6 @@ def colorization_inference(model, img):
         data = scatter(data, [device])[0]
     # forward the model
     with torch.no_grad():
-        result = model(mode='predict', **data)
+        result = model(mode='tensor', **data)
 
-    return result['fake_img']
+    return result
