@@ -172,13 +172,13 @@ class InstColorization(SRGAN):
         log_vars = {}
 
         if self.insta_stage == 'full' or self.insta_stage == 'instance':
-            data_samples['rgb_img'] = [data_samples['rgb_img']]
-            data_samples['gray_img'] = [data_samples['gray_img']]
+            rgb_img = [data_samples.rgb_img]
+            gray_img = [data_samples.gray_img]
 
-            input_data = get_colorization_data(data_samples['gray_img'],
+            input_data = get_colorization_data(gray_img,
                                                **self.colorization_data_opt)
 
-            gt_data = get_colorization_data(data_samples['rgb_img'],
+            gt_data = get_colorization_data(rgb_img,
                                             **self.colorization_data_opt)
 
             input_data['B'] = gt_data['B']
@@ -188,34 +188,18 @@ class InstColorization(SRGAN):
             self.fake_B_reg = self.generator(self.real_A, self.hint_B, self.mask_B)
 
         elif self.insta_stage == 'fusion':
-
-            data_samples['cropped_rgb'] = torch.stack(
-                data_samples['cropped_rgb_list'])
-            data_samples['cropped_gray'] = torch.stack(
-                data_samples['cropped_gray_list'])
-            data_samples['full_rgb'] = torch.stack(data_samples['full_rgb_list'])
-            data_samples['full_gray'] = torch.stack(data_samples['full_gray_list'])
-            data_samples['box_info'] = torch.from_numpy(
-                data_samples['box_info']).type(torch.long)
-            data_samples['box_info_2x'] = torch.from_numpy(
-                data_samples['box_info_2x']).type(torch.long)
-            data_samples['box_info_4x'] = torch.from_numpy(
-                data_samples['box_info_4x']).type(torch.long)
-            data_samples['box_info_8x'] = torch.from_numpy(
-                data_samples['box_info_8x']).type(torch.long)
-
-            box_info = data_samples['box_info'][0]
-            box_info_2x = data_samples['box_info_2x'][0]
-            box_info_4x = data_samples['box_info_4x'][0]
-            box_info_8x = data_samples['box_info_8x'][0]
+            box_info = data_samples.box_info
+            box_info_2x = data_samples.box_info_2x
+            box_info_4x = data_samples.box_info_4x
+            box_info_8x = data_samples.box_info_8x
 
             cropped_input_data = get_colorization_data(
-                data_samples['cropped_gray'], **self.colorization_data_opt)
-            cropped_gt_data = get_colorization_data(data_samples['cropped_rgb'],
+                data_samples.cropped_gray, **self.colorization_data_opt)
+            cropped_gt_data = get_colorization_data(data_samples.cropped_rgb,
                                                     **self.colorization_data_opt)
-            full_input_data = get_colorization_data(data_samples['full_gray'],
+            full_input_data = get_colorization_data(data_samples.full_gray,
                                                     **self.colorization_data_opt)
-            full_gt_data = get_colorization_data(data_samples['full_rgb'],
+            full_gt_data = get_colorization_data(data_samples.full_rgb,
                                                  **self.colorization_data_opt)
 
             cropped_input_data['B'] = cropped_gt_data['B']

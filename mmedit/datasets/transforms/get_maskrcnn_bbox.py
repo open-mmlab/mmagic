@@ -17,7 +17,7 @@ from mmedit.registry import TRANSFORMS
 @TRANSFORMS.register_module()
 class GenMaskRCNNBbox:
 
-    def __init__(self, key='img', stage='test_fusion', finesize=256):
+    def __init__(self, key='img', stage='test', finesize=256):
         self.key = key
         self.predictor = self.detectron()
         self.stage = stage
@@ -75,31 +75,30 @@ class GenMaskRCNNBbox:
             out_img = Image.fromarray(out_img)
         return out_img
 
-    @staticmethod
-    def get_box_info(pred_bbox, original_shape, final_size):
+    def get_box_info(self, pred_bbox, original_shape):
         assert len(pred_bbox) == 4
-        resize_startx = int(pred_bbox[0] / original_shape[0] * final_size)
-        resize_starty = int(pred_bbox[1] / original_shape[1] * final_size)
-        resize_endx = int(pred_bbox[2] / original_shape[0] * final_size)
-        resize_endy = int(pred_bbox[3] / original_shape[1] * final_size)
+        resize_startx = int(pred_bbox[0] / original_shape[0] * self.final_size)
+        resize_starty = int(pred_bbox[1] / original_shape[1] * self.final_size)
+        resize_endx = int(pred_bbox[2] / original_shape[0] * self.final_size)
+        resize_endy = int(pred_bbox[3] / original_shape[1] * self.final_size)
         rh = resize_endx - resize_startx
         rw = resize_endy - resize_starty
         if rh < 1:
-            if final_size - resize_endx > 1:
+            if self.final_size - resize_endx > 1:
                 resize_endx += 1
             else:
                 resize_startx -= 1
             rh = 1
         if rw < 1:
-            if final_size - resize_endy > 1:
+            if self.final_size - resize_endy > 1:
                 resize_endy += 1
             else:
                 resize_starty -= 1
             rw = 1
         L_pad = resize_startx
-        R_pad = final_size - resize_endx
+        R_pad = self.final_size - resize_endx
         T_pad = resize_starty
-        B_pad = final_size - resize_endy
+        B_pad = self.final_size - resize_endy
         return [L_pad, R_pad, T_pad, B_pad, rh, rw]
 
     def fusion(self, results, img, pred_bbox):

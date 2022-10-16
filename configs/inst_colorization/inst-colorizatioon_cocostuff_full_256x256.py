@@ -56,8 +56,8 @@ test_pipeline = [
 ]
 
 dataset_type = 'CocoDataset'
-data_root = '/mnt/j/DataSet/cocostuff'
-ann_file_path = '/mnt/j/DataSet/cocostuff'
+data_root = '/mnt/meng/cocos'
+ann_file_path = '/mnt/ruoning/bbox'
 
 train_dataloader = dict(
     batch_size=4,

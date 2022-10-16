@@ -12,7 +12,7 @@ class HuberLoss(nn.Module):
         super(HuberLoss, self).__init__()
         self.delta = delta
 
-    def __call__(self, in0, in1):
+    def forward(self, in0, in1):
         mask = torch.zeros_like(in0)
         mann = torch.abs(in0 - in1)
         eucl = .5 * (mann**2)
