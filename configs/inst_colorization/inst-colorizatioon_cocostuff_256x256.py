@@ -36,7 +36,7 @@ model = dict(
 
 test_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
-    dict(type='GenMaskRCNNBbox', stage='test_fusion', finesize=256),
+    dict(type='GenMaskRCNNBbox', stage=stage, finesize=256),
     dict(type='Resize', keys=['img'], scale=(256, 256), keep_ratio=False),
     dict(type='PackEditInputs'),
 ]

@@ -47,14 +47,34 @@ class InstColorization(SRGAN):
         self.ngf = ngf
         self.output_nc = output_nc
         self.avg_loss_alpha = avg_loss_alpha
-        self.ab_norm = ab_norm
-        self.ab_max = ab_max
-        self.ab_quant = ab_quant
-        self.l_norm = l_norm
-        self.l_cent = l_cent
-        self.sample_Ps = sample_Ps
         self.mask_cent = mask_cent
         self.which_direction = which_direction
+
+        self.encode_ab_opt = dict(
+            ab_norm=ab_norm,
+            ab_max=ab_max,
+            ab_quant=ab_quant)
+
+        self.colorization_data_opt = dict(
+            ab_thresh=0,
+            ab_norm=ab_norm,
+            l_norm=l_norm,
+            l_cent=l_cent,
+            sample_PS=sample_Ps,
+            mask_cent=mask_cent,
+        )
+
+        self.lab2rgb_opt = dict(
+            ab_norm=ab_norm, l_norm=l_norm, l_cent=l_cent)
+
+        self.convert_params = dict(
+            ab_thresh=0,
+            ab_norm=ab_norm,
+            l_norm=l_norm,
+            l_cent=l_cent,
+            sample_PS=sample_Ps,
+            mask_cent=mask_cent,
+        )
 
         self.device = torch.device('cuda:{}'.format(0))
 
@@ -66,11 +86,6 @@ class InstColorization(SRGAN):
 
     def set_input(self, input):
 
-        self.encode_ab_opt = dict(
-            ab_norm=self.ab_norm,
-            ab_max=self.ab_max,
-            ab_quant=self.ab_quant
-        )
         AtoB = self.which_direction == 'AtoB'
         self.real_A = input['A' if AtoB else 'B'].to(self.device)
         self.real_B = input['B' if AtoB else 'A'].to(self.device)
@@ -156,24 +171,15 @@ class InstColorization(SRGAN):
 
         log_vars = {}
 
-        colorization_data_opt = dict(
-            ab_thresh=0,
-            ab_norm=self.ab_norm,
-            l_norm=self.l_norm,
-            l_cent=self.l_cent,
-            sample_PS=self.sample_Ps,
-            mask_cent=self.mask_cent,
-        )
-
         if self.insta_stage == 'full' or self.insta_stage == 'instance':
             data_samples['rgb_img'] = [data_samples['rgb_img']]
             data_samples['gray_img'] = [data_samples['gray_img']]
 
             input_data = get_colorization_data(data_samples['gray_img'],
-                                               **colorization_data_opt)
+                                               **self.colorization_data_opt)
 
             gt_data = get_colorization_data(data_samples['rgb_img'],
-                                            **colorization_data_opt)
+                                            **self.colorization_data_opt)
 
             input_data['B'] = gt_data['B']
             input_data['hint_B'] = gt_data['hint_B']
@@ -204,13 +210,13 @@ class InstColorization(SRGAN):
             box_info_8x = data_samples['box_info_8x'][0]
 
             cropped_input_data = get_colorization_data(
-                data_samples['cropped_gray'], **colorization_data_opt)
+                data_samples['cropped_gray'], **self.colorization_data_opt)
             cropped_gt_data = get_colorization_data(data_samples['cropped_rgb'],
-                                                    **colorization_data_opt)
+                                                    **self.colorization_data_opt)
             full_input_data = get_colorization_data(data_samples['full_gray'],
-                                                    **colorization_data_opt)
+                                                    **self.colorization_data_opt)
             full_gt_data = get_colorization_data(data_samples['full_rgb'],
-                                                 **colorization_data_opt)
+                                                 **self.colorization_data_opt)
 
             cropped_input_data['B'] = cropped_gt_data['B']
             full_input_data['B'] = full_gt_data['B']
@@ -258,115 +264,24 @@ class InstColorization(SRGAN):
         for loss_name in self.loss_names:
             self.avg_losses[loss_name] = 0
 
-    def get_current_visuals(self):
-
-        visual_ret = OrderedDict()
-        opt = dict(
-            ab_norm=self.ab_norm, l_norm=self.l_norm, l_cent=self.l_cent)
-        if self.insta_stage == 'full' or self.insta_stage == 'instance':
-
-            visual_ret['gray'] = lab2rgb(
-                torch.cat((self.real_A.type(
-                    torch.cuda.FloatTensor), torch.zeros_like(
-                    self.real_B).type(torch.cuda.FloatTensor)),
-                    dim=1), **opt)
-            visual_ret['real'] = lab2rgb(
-                torch.cat((self.real_A.type(torch.cuda.FloatTensor),
-                           self.real_B.type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
-            visual_ret['fake_reg'] = lab2rgb(
-                torch.cat((self.real_A.type(torch.cuda.FloatTensor),
-                           self.fake_B_reg.type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
-
-            visual_ret['hint'] = lab2rgb(
-                torch.cat((self.real_A.type(torch.cuda.FloatTensor),
-                           self.hint_B.type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
-            visual_ret['real_ab'] = lab2rgb(
-                torch.cat((torch.zeros_like(
-                    self.real_A.type(torch.cuda.FloatTensor)),
-                           self.real_B.type(torch.cuda.FloatTensor)),
-                    dim=1), **opt)
-            visual_ret['fake_ab_reg'] = lab2rgb(
-                torch.cat((torch.zeros_like(
-                    self.real_A.type(torch.cuda.FloatTensor)),
-                           self.fake_B_reg.type(torch.cuda.FloatTensor)),
-                    dim=1), **opt)
-
-        elif self.insta_stage == 'fusion':
-            visual_ret['gray'] = lab2rgb(
-                torch.cat((self.full_real_A.type(
-                    torch.cuda.FloatTensor), torch.zeros_like(
-                    self.full_real_B).type(torch.cuda.FloatTensor)),
-                    dim=1), **opt)
-            visual_ret['real'] = lab2rgb(
-                torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
-                           self.full_real_B.type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
-            visual_ret['comp_reg'] = lab2rgb(
-                torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
-                           self.comp_B_reg.type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
-            visual_ret['fake_reg'] = lab2rgb(
-                torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
-                           self.fake_B_reg.type(torch.cuda.FloatTensor)),
-                          dim=1), **opt)
-
-            self.instance_mask = torch.nn.functional.interpolate(
-                torch.zeros([1, 1, 176, 176]),
-                size=visual_ret['gray'].shape[2:],
-                mode='bilinear').type(torch.cuda.FloatTensor)
-            visual_ret['box_mask'] = torch.cat(
-                (self.instance_mask, self.instance_mask, self.instance_mask),
-                1)
-            visual_ret['real_ab'] = lab2rgb(
-                torch.cat((torch.zeros_like(
-                    self.full_real_A.type(torch.cuda.FloatTensor)),
-                           self.full_real_B.type(torch.cuda.FloatTensor)),
-                    dim=1), **opt)
-            visual_ret['comp_ab_reg'] = lab2rgb(
-                torch.cat((torch.zeros_like(
-                    self.full_real_A.type(torch.cuda.FloatTensor)),
-                           self.comp_B_reg.type(torch.cuda.FloatTensor)),
-                    dim=1), **opt)
-            visual_ret['fake_ab_reg'] = lab2rgb(
-                torch.cat((torch.zeros_like(
-                    self.full_real_A.type(torch.cuda.FloatTensor)),
-                           self.fake_B_reg.type(torch.cuda.FloatTensor)),
-                    dim=1), **opt)
-        else:
-            print('Error! Wrong stage selection!')
-            exit()
-        return visual_ret
-
     def forward_tensor(self, inputs, data_samples, **kwargs):
 
         data = data_samples[0]
-        full_img = data.full_img
-
-        convert_params = dict(
-            ab_thresh=0,
-            ab_norm=self.ab_norm,
-            l_norm=self.l_norm,
-            l_cent=self.l_cent,
-            sample_PS=self.sample_Ps,
-            mask_cent=self.mask_cent,
-        )
+        full_img = data.full_gray
 
         if not data.empty_box:
-            cropped_img = data.cropped_img
+            cropped_img = data.cropped_gray
             box_info = data.box_info
             box_info_2x = data.box_info_2x
             box_info_4x = data.box_info_4x
             box_info_8x = data.box_info_8x
             cropped_data = get_colorization_data(
                 cropped_img,
-                **convert_params
+                **self.convert_params
             )
             full_img_data = get_colorization_data(
                 full_img,
-                **convert_params
+                **self.convert_params
             )
             self.set_input(cropped_data)
             self.set_fusion_input(
@@ -385,10 +300,7 @@ class InstColorization(SRGAN):
             lab2rgb(
                 torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
                            self.fake_B_reg.type(torch.cuda.FloatTensor)),
-                          dim=1),
-                ab_norm=self.ab_norm,
-                l_norm=self.l_norm,
-                l_cent=self.l_cent), 0.0, 1.0)
+                          dim=1), **self.lab2rgb_opt), 0.0, 1.0)
 
         return out_img
 
@@ -404,3 +316,84 @@ class InstColorization(SRGAN):
                     metainfo=data_samples[idx].metainfo))
 
         return predictions
+
+    def get_current_visuals(self):
+
+        visual_ret = OrderedDict()
+
+        if self.insta_stage == 'full' or self.insta_stage == 'instance':
+
+            visual_ret['gray'] = lab2rgb(
+                torch.cat((self.real_A.type(
+                    torch.cuda.FloatTensor), torch.zeros_like(
+                    self.real_B).type(torch.cuda.FloatTensor)),
+                    dim=1), **self.lab2rgb_opt)
+            visual_ret['real'] = lab2rgb(
+                torch.cat((self.real_A.type(torch.cuda.FloatTensor),
+                           self.real_B.type(torch.cuda.FloatTensor)),
+                          dim=1), **self.lab2rgb_opt)
+            visual_ret['fake_reg'] = lab2rgb(
+                torch.cat((self.real_A.type(torch.cuda.FloatTensor),
+                           self.fake_B_reg.type(torch.cuda.FloatTensor)),
+                          dim=1), **self.lab2rgb_opt)
+
+            visual_ret['hint'] = lab2rgb(
+                torch.cat((self.real_A.type(torch.cuda.FloatTensor),
+                           self.hint_B.type(torch.cuda.FloatTensor)),
+                          dim=1), **self.lab2rgb_opt)
+            visual_ret['real_ab'] = lab2rgb(
+                torch.cat((torch.zeros_like(
+                    self.real_A.type(torch.cuda.FloatTensor)),
+                           self.real_B.type(torch.cuda.FloatTensor)),
+                    dim=1), **self.lab2rgb_opt)
+            visual_ret['fake_ab_reg'] = lab2rgb(
+                torch.cat((torch.zeros_like(
+                    self.real_A.type(torch.cuda.FloatTensor)),
+                           self.fake_B_reg.type(torch.cuda.FloatTensor)),
+                    dim=1), **self.lab2rgb_opt)
+
+        elif self.insta_stage == 'fusion':
+            visual_ret['gray'] = lab2rgb(
+                torch.cat((self.full_real_A.type(
+                    torch.cuda.FloatTensor), torch.zeros_like(
+                    self.full_real_B).type(torch.cuda.FloatTensor)),
+                    dim=1), **self.lab2rgb_opt)
+            visual_ret['real'] = lab2rgb(
+                torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
+                           self.full_real_B.type(torch.cuda.FloatTensor)),
+                          dim=1), **self.lab2rgb_opt)
+            visual_ret['comp_reg'] = lab2rgb(
+                torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
+                           self.comp_B_reg.type(torch.cuda.FloatTensor)),
+                          dim=1), **self.lab2rgb_opt)
+            visual_ret['fake_reg'] = lab2rgb(
+                torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
+                           self.fake_B_reg.type(torch.cuda.FloatTensor)),
+                          dim=1), **self.lab2rgb_opt)
+
+            self.instance_mask = torch.nn.functional.interpolate(
+                torch.zeros([1, 1, 176, 176]),
+                size=visual_ret['gray'].shape[2:],
+                mode='bilinear').type(torch.cuda.FloatTensor)
+            visual_ret['box_mask'] = torch.cat(
+                (self.instance_mask, self.instance_mask, self.instance_mask),
+                1)
+            visual_ret['real_ab'] = lab2rgb(
+                torch.cat((torch.zeros_like(
+                    self.full_real_A.type(torch.cuda.FloatTensor)),
+                           self.full_real_B.type(torch.cuda.FloatTensor)),
+                    dim=1), **self.lab2rgb_opt)
+            visual_ret['comp_ab_reg'] = lab2rgb(
+                torch.cat((torch.zeros_like(
+                    self.full_real_A.type(torch.cuda.FloatTensor)),
+                           self.comp_B_reg.type(torch.cuda.FloatTensor)),
+                    dim=1), **self.lab2rgb_opt)
+            visual_ret['fake_ab_reg'] = lab2rgb(
+                torch.cat((torch.zeros_like(
+                    self.full_real_A.type(torch.cuda.FloatTensor)),
+                           self.fake_B_reg.type(torch.cuda.FloatTensor)),
+                    dim=1), **self.lab2rgb_opt)
+        else:
+            print('Error! Wrong stage selection!')
+            exit()
+        return visual_ret

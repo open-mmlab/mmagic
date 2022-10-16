@@ -61,24 +61,6 @@ class GenMaskRCNNBbox:
         return pred_bbox
 
     @staticmethod
-    def gen_gray_color_pil(rgb_img):
-        '''
-        return: RGB and GRAY pillow image object
-        '''
-        if len(np.asarray(rgb_img).shape) == 2:
-            rgb_img = np.stack([
-                np.asarray(rgb_img),
-                np.asarray(rgb_img),
-                np.asarray(rgb_img)
-            ], 2)
-            rgb_img = Image.fromarray(rgb_img)
-        gray_img = np.round(color.rgb2gray(np.asarray(rgb_img)) *
-                            255.0).astype(np.uint8)
-        gray_img = np.stack([gray_img, gray_img, gray_img], -1)
-        gray_img = Image.fromarray(gray_img)
-        return rgb_img, gray_img
-
-    @staticmethod
     def read_to_pil(out_img):
         '''
         return: pillow image object HxWx3
@@ -120,45 +102,57 @@ class GenMaskRCNNBbox:
         B_pad = final_size - resize_endy
         return [L_pad, R_pad, T_pad, B_pad, rh, rw]
 
-    def test_fusion(self, results):
-        img = results['img']
-        pil_img = self.read_to_pil(img)
+    def fusion(self, results, img, pred_bbox):
+        if self.stage == 'test':
+            gray_img = self.read_to_pil(img)
+            return self.get_instance_info(results, pred_bbox, gray_img)
 
-        if 'bbox_path' in results.keys():
-            pred_bbox = self.gen_maskrcnn_bbox_fromPred(
-                img, results['bbox_path'])
-        elif 'instance' in results.keys():
-            pred_bbox = results['instance']
+        if self.stage == 'fusion':
+            rgb_img, gray_img = results['rgb_img'], results['gray_img']
+            return self.get_instance_info(results, pred_bbox, gray_img, rgb_img)
+
+    def get_instance_info(self, results, pred_bbox, gray_img, rgb_img=None):
+
+        if not rgb_img:
+            full_gray_list = [self.transforms(gray_img)]
+            cropped_gray_list = []
         else:
-            pred_bbox = self.gen_maskrcnn_bbox_fromPred(img)
+            full_rgb_list = [self.transforms(rgb_img)]
+            full_gray_list = [self.transforms(gray_img)]
+            cropped_rgb_list = []
+            cropped_gray_list = []
 
-        img_list = [self.transforms(pil_img)]  # 这里删除了一个transform
-
-        cropped_img_list = []
         index_list = range(len(pred_bbox))
         box_info, box_info_2x, box_info_4x, box_info_8x = np.zeros(
             (4, len(index_list), 6))
         for i in index_list:
             startx, starty, endx, endy = pred_bbox[i]
             box_info[i] = np.array(
-                self.get_box_info(pred_bbox[i], pil_img.size, self.final_size))
+                self.get_box_info(pred_bbox[i], gray_img.size, self.final_size))
             box_info_2x[i] = np.array(
-                self.get_box_info(pred_bbox[i], pil_img.size,
+                self.get_box_info(pred_bbox[i], gray_img.size,
                                   self.final_size // 2))
             box_info_4x[i] = np.array(
-                self.get_box_info(pred_bbox[i], pil_img.size,
+                self.get_box_info(pred_bbox[i], gray_img.size,
                                   self.final_size // 4))
             box_info_8x[i] = np.array(
-                self.get_box_info(pred_bbox[i], pil_img.size,
+                self.get_box_info(pred_bbox[i], gray_img.size,
                                   self.final_size // 8))
             cropped_img = self.transforms(
-                pil_img.crop((startx, starty, endx, endy)))
-            cropped_img_list.append(cropped_img)
+                gray_img.crop((startx, starty, endx, endy)))
+            cropped_gray_list.append(cropped_img)
+            if rgb_img:
+                cropped_rgb_list.append(self.transforms(rgb_img.crop((startx, starty, endx, endy))))
+                cropped_gray_list.append(self.transforms(gray_img.crop((startx, starty, endx, endy))))
 
-        results['full_img'] = torch.stack(img_list)
-        # output['file_id'] = self.IMAGE_ID_LIST[index].split('.')[0]
+        results['full_gray'] = torch.stack(full_gray_list)
+        if rgb_img:
+            results['full_rgb'] = torch.stack(full_rgb_list)
+
         if len(pred_bbox) > 0:
-            results['cropped_img'] = torch.stack(cropped_img_list)
+            results['cropped_gray'] = torch.stack(cropped_gray_list)
+            if rgb_img:
+                results['cropped_rgb'] = torch.stack(cropped_rgb_list)
             results['box_info'] = torch.from_numpy(box_info).type(torch.long)
             results['box_info_2x'] = torch.from_numpy(box_info_2x).type(
                 torch.long)
@@ -169,22 +163,12 @@ class GenMaskRCNNBbox:
             results['empty_box'] = False
         else:
             results['empty_box'] = True
-        print('full_img:', results['full_img'].size)
-        # print("cropped_img:", results['cropped_img'].size)
+
         return results
 
-    def train(self, results):
-        img = results[self.key]
+    def train(self, results, pred_bbox):
 
-        if 'bbox_path' in results.keys():
-            pred_bbox = self.gen_maskrcnn_bbox_fromPred(
-                img, results['bbox_path'])
-        elif 'instance' in results.keys():
-            pred_bbox = results['instance'][0]['bbox']
-        else:
-            pred_bbox = self.gen_maskrcnn_bbox_fromPred(img)
-
-        rgb_img, gray_img = self.gen_gray_color_pil(img)
+        rgb_img, gray_img = results['rgb_img'], results['gray_img']
         index_list = range(len(pred_bbox))
         index_list = sample(index_list, 1)
         startx, starty, endx, endy = pred_bbox[index_list[0]]
@@ -197,12 +181,21 @@ class GenMaskRCNNBbox:
         return results
 
     def __call__(self, results):
+        img = results['img']
 
-        if self.stage == 'test_fusion':
-            results = self.test_fusion(results)
+        if 'bbox_path' in results.keys():
+            pred_bbox = self.gen_maskrcnn_bbox_fromPred(
+                img, results['bbox_path'])
+        elif 'instance' in results.keys():
+            pred_bbox = results['instance']
+        else:
+            pred_bbox = self.gen_maskrcnn_bbox_fromPred(img)
 
-        if self.stage == 'train':
-            results = self.train(results)
+        if self.stage == 'fusion' or self.stage == 'test':
+            results = self.fusion(results, img, pred_bbox)
+
+        if self.stage == 'full' or self.stage == 'instance':
+            results = self.train(results, pred_bbox)
 
         return results
 
