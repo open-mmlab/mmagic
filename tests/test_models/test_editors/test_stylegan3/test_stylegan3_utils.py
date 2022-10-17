@@ -16,6 +16,13 @@ def test_integer_transformation():
     print(z.shape)
     print(m.shape)
 
+    # cover more lines
+    t = torch.zeros(2)
+    z, m = apply_integer_translation(x, t[0], t[1])
+
+    t = torch.ones(2) * 2
+    z, m = apply_integer_translation(x, t[0], t[1])
+
 
 def test_fractional_translation():
     x = torch.randn(1, 3, 16, 16)
@@ -23,6 +30,13 @@ def test_fractional_translation():
     z, m = apply_fractional_translation(x, t[0], t[1])
     print(z.shape)
     print(m.shape)
+
+    # cover more lines
+    t = torch.zeros(2)
+    z, m = apply_fractional_translation(x, t[0], t[1])
+
+    t = torch.ones(2) * 2
+    z, m = apply_fractional_translation(x, t[0], t[1])
 
 
 @pytest.mark.skipif(
