@@ -71,10 +71,16 @@ class RDN(nn.Module):
     """RDN model for single image super-resolution.
 
     Paper: Residual Dense Network for Image Super-Resolution
+    Official implementation: ''
 
     Adapted from 'https://github.com/yjn870/RDN-pytorch.git'
     'RDN-pytorch/blob/master/models.py'
     Copyright (c) 2021, JaeYun Yeo, under MIT License.
+    
+    Most of the implementation follows 'https://github.com/sanghyun-son/EDSR-PyTorch.git'
+    'EDSR-PyTorch/blob/master/src/model/rdn.py'
+    Copyright (c) 2017, sanghyun-son, under MIT license.
+    
 
     Args:
         in_channels (int): Channel number of inputs.
