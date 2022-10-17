@@ -112,16 +112,15 @@ class RDN(nn.Module):
             mid_channels, mid_channels, kernel_size=3, padding=3 // 2)
 
         # residual dense blocks
-        self.rdbs = nn.ModuleList(
-            [RDB(self.mid_channels, self.channel_growth, self.num_layers)])
-        for _ in range(self.num_blocks - 1):
+        self.rdbs = nn.ModuleList()
+        for _ in range(self.num_blocks):
             self.rdbs.append(
-                RDB(self.channel_growth, self.channel_growth, self.num_layers))
+                RDB(self.mid_channels, self.channel_growth, self.num_layers))
 
         # global feature fusion
         self.gff = nn.Sequential(
             nn.Conv2d(
-                self.channel_growth * self.num_blocks,
+                self.mid_channels * self.num_blocks,
                 self.mid_channels,
                 kernel_size=1),
             nn.Conv2d(

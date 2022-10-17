@@ -14,6 +14,7 @@ def test_rdn():
         in_channels=3,
         out_channels=3,
         mid_channels=64,
+        channel_growth=32,
         num_blocks=16,
         upscale_factor=scale)
 
