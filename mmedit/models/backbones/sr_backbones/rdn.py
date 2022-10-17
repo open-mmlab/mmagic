@@ -71,7 +71,6 @@ class RDN(nn.Module):
     """RDN model for single image super-resolution.
 
     Paper: Residual Dense Network for Image Super-Resolution
-    Official implementation: ''
 
     Adapted from 'https://github.com/yjn870/RDN-pytorch.git'
     'RDN-pytorch/blob/master/models.py'
