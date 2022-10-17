@@ -8,6 +8,8 @@ on:
       - 'docs/**'
       - '.dev_scripts/**'
       - '.circleci/**'
+      - 'configs/**'
+
     branches:
       - dev-1.x
       - test-1.x
