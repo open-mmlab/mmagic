@@ -76,6 +76,12 @@ class RDN(nn.Module):
     'RDN-pytorch/blob/master/models.py'
     Copyright (c) 2021, JaeYun Yeo, under MIT License.
 
+    Most of the implementation follows the implementation in:
+    'https://github.com/sanghyun-son/EDSR-PyTorch.git'
+    'EDSR-PyTorch/blob/master/src/model/rdn.py'
+    Copyright (c) 2017, sanghyun-son, under MIT license.
+
+
     Args:
         in_channels (int): Channel number of inputs.
         out_channels (int): Channel number of outputs.
