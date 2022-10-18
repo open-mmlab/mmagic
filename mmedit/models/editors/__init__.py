@@ -45,7 +45,7 @@ from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
 from .stylegan1 import StyleGAN1
 from .stylegan2 import StyleGAN2
-from .stylegan3 import StyleGAN3
+from .stylegan3 import StyleGAN3, StyleGAN3Generator
 from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
@@ -73,5 +73,5 @@ __all__ = [
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'IDLossModel', 'PESinGAN',
-    'MSPIEStyleGAN2'
+    'MSPIEStyleGAN2', 'StyleGAN3Generator'
 ]

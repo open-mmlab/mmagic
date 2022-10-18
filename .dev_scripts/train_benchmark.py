@@ -20,6 +20,11 @@ MMEDIT_ROOT = Path(__file__).absolute().parents[1]
 
 # key-in-metafile: key-in-results.pkl
 METRICS_MAP = {
+    'FID': {
+        'keys': ['FID-Full-50k/fid'],
+        'tolerance': 0.5,
+        'rule': 'less'
+    },
     'SWD': {
         'keys': ['SWD/avg'],
         'tolerance': 0.1,
