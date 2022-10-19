@@ -14,8 +14,8 @@ from .ppl import PerceptualPathLength
 from .precision_and_recall import PrecisionAndRecall
 from .psnr import PSNR, psnr
 from .sad import SAD
-from .snr import SNR, snr
-from .ssim import SSIM, ssim
+from .snr import SNR
+from .ssim import SSIM
 from .swd import SlicedWassersteinDistance
 
 __all__ = [
@@ -24,9 +24,7 @@ __all__ = [
     'PSNR',
     'psnr',
     'SNR',
-    'snr',
     'SSIM',
-    'ssim',
     'MultiScaleStructureSimilarity',
     'FrechetInceptionDistance',
     'TransFID',
