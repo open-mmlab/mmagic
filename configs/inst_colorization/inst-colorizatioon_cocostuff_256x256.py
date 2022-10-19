@@ -2,11 +2,12 @@ from logging import PlaceHolder
 
 _base_ = ['../_base_/default_runtime.py']
 
-exp_name = 'Instance-aware_full'
+exp_name = 'inst-colorization_cocostuff_256x256'
 save_dir = './'
 work_dir = '..'
 
 stage = 'test'
+
 model = dict(
     type='InstColorization',
     data_preprocessor=dict(
@@ -15,22 +16,17 @@ model = dict(
         std=[127.5],
     ),
     generator=dict(
-        type='InstColorizationGenerator',
+        type='InstColorization',
         stage=stage,
         detector=PlaceHolder,
-        full_model=dict(
-            type='InstanceGenerator',
-            input_nc=4,
-            output_nc=2,
+        image_model=dict(
+            type='ColorizationNet', input_nc=4, output_nc=2,
             norm_type='batch'),
         instance_model=dict(
-            type='InstanceGenerator',
-            input_nc=4,
-            output_nc=2,
+            type='ColorizationNet', input_nc=4, output_nc=2,
             norm_type='batch'),
         fusion_model=dict(
-            type='FusionGenerator', input_nc=4, output_nc=2,
-            norm_type='batch')),
+            type='FusionNet', input_nc=4, output_nc=2, norm_type='batch')),
     insta_stage=stage,
     ngf=64,
     output_nc=2,

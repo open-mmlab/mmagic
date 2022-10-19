@@ -1,20 +1,20 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from collections import OrderedDict
-from typing import Union, List, Dict
+from typing import Dict, List, Union
 
 import torch
 from mmengine.config import Config
 from mmengine.optim import OptimWrapperDict
 
+from mmedit.models import BaseEditModel
 from mmedit.models.utils import (encode_ab_ind, generation_init_weights,
                                  get_colorization_data, lab2rgb)
-from mmedit.structures import  EditDataSample, PixelData
-from mmedit.registry import BACKBONES, COMPONENTS
-from ..srgan import SRGAN
+from mmedit.registry import MODULES
+from mmedit.structures import EditDataSample, PixelData
 
 
-@BACKBONES.register_module()
-class InstColorization(SRGAN):
+@MODULES.register_module()
+class InstColorization(BaseEditModel):
 
     def __init__(self,
                  data_preprocessor: Union[dict, Config],
@@ -51,9 +51,7 @@ class InstColorization(SRGAN):
         self.which_direction = which_direction
 
         self.encode_ab_opt = dict(
-            ab_norm=ab_norm,
-            ab_max=ab_max,
-            ab_quant=ab_quant)
+            ab_norm=ab_norm, ab_max=ab_max, ab_quant=ab_quant)
 
         self.colorization_data_opt = dict(
             ab_thresh=0,
@@ -64,8 +62,7 @@ class InstColorization(SRGAN):
             mask_cent=mask_cent,
         )
 
-        self.lab2rgb_opt = dict(
-            ab_norm=ab_norm, l_norm=l_norm, l_cent=l_cent)
+        self.lab2rgb_opt = dict(ab_norm=ab_norm, l_norm=l_norm, l_cent=l_cent)
 
         self.convert_params = dict(
             ab_thresh=0,
@@ -94,8 +91,8 @@ class InstColorization(SRGAN):
         self.mask_B = input['mask_B'].to(self.device)
         self.mask_B_nc = self.mask_B + self.mask_cent
 
-        self.real_B_enc = encode_ab_ind(
-            self.real_B[:, :, ::4, ::4], **self.encode_ab_opt)
+        self.real_B_enc = encode_ab_ind(self.real_B[:, :, ::4, ::4],
+                                        **self.encode_ab_opt)
 
     def set_fusion_input(self, input, box_info):
 
@@ -107,8 +104,8 @@ class InstColorization(SRGAN):
         self.full_mask_B = input['mask_B'].to(self.device)
 
         self.full_mask_B_nc = self.full_mask_B + self.mask_cent
-        self.full_real_B_enc = encode_ab_ind(
-            self.full_real_B[:, :, ::4, ::4], **self.encode_ab_opt)
+        self.full_real_B_enc = encode_ab_ind(self.full_real_B[:, :, ::4, ::4],
+                                             **self.encode_ab_opt)
         self.box_info_list = box_info
 
     def set_forward_without_box(self, input):
@@ -155,10 +152,10 @@ class InstColorization(SRGAN):
                 # float(...) works for both scalar tensor and float number
                 self.avg_losses[name] = float(getattr(
                     self, 'loss_' +
-                          name)) + self.avg_loss_alpha * self.avg_losses[name]
+                    name)) + self.avg_loss_alpha * self.avg_losses[name]
                 errors_ret[name] = (1 - self.avg_loss_alpha) / (
-                        1 - self.avg_loss_alpha **  # noqa
-                        self.error_cnt) * self.avg_losses[name]
+                    1 - self.avg_loss_alpha**  # noqa
+                    self.error_cnt) * self.avg_losses[name]
 
         return errors_ret
 
@@ -185,7 +182,8 @@ class InstColorization(SRGAN):
             input_data['hint_B'] = gt_data['hint_B']
             input_data['mask_B'] = gt_data['mask_B']
             self.set_input(input_data)
-            self.fake_B_reg = self.generator(self.real_A, self.hint_B, self.mask_B)
+            self.fake_B_reg = self.generator(self.real_A, self.hint_B,
+                                             self.mask_B)
 
         elif self.insta_stage == 'fusion':
             box_info = data_samples.box_info
@@ -195,10 +193,10 @@ class InstColorization(SRGAN):
 
             cropped_input_data = get_colorization_data(
                 data_samples.cropped_gray, **self.colorization_data_opt)
-            cropped_gt_data = get_colorization_data(data_samples.cropped_rgb,
-                                                    **self.colorization_data_opt)
-            full_input_data = get_colorization_data(data_samples.full_gray,
-                                                    **self.colorization_data_opt)
+            cropped_gt_data = get_colorization_data(
+                data_samples.cropped_rgb, **self.colorization_data_opt)
+            full_input_data = get_colorization_data(
+                data_samples.full_gray, **self.colorization_data_opt)
             full_gt_data = get_colorization_data(data_samples.full_rgb,
                                                  **self.colorization_data_opt)
 
@@ -210,10 +208,11 @@ class InstColorization(SRGAN):
                 full_input_data,
                 [box_info, box_info_2x, box_info_4x, box_info_8x])
 
-            self.fake_B_reg = self.generator(
-                self.real_A, self.hint_B, self.mask_B, self.full_real_A, self.full_hint_B,
-                self.full_mask_B, self.box_info_list
-            )
+            self.fake_B_reg = self.generator(self.real_A, self.hint_B,
+                                             self.mask_B, self.full_real_A,
+                                             self.full_hint_B,
+                                             self.full_mask_B,
+                                             self.box_info_list)
 
         optimizer['generator'].zero_grad()
 
@@ -259,26 +258,21 @@ class InstColorization(SRGAN):
             box_info_2x = data.box_info_2x
             box_info_4x = data.box_info_4x
             box_info_8x = data.box_info_8x
-            cropped_data = get_colorization_data(
-                cropped_img,
-                **self.convert_params
-            )
-            full_img_data = get_colorization_data(
-                full_img,
-                **self.convert_params
-            )
+            cropped_data = get_colorization_data(cropped_img,
+                                                 **self.convert_params)
+            full_img_data = get_colorization_data(full_img,
+                                                  **self.convert_params)
             self.set_input(cropped_data)
             self.set_fusion_input(
                 full_img_data,
                 [box_info, box_info_2x, box_info_4x, box_info_8x])
         else:
-            full_img_data = get_colorization_data(
-                full_img, ab_thresh=0)
+            full_img_data = get_colorization_data(full_img, ab_thresh=0)
             self.set_forward_without_box(full_img_data)
 
-        self.fake_B_reg = self.generator(
-            self.real_A, self.hint_B, self.mask_B, self.full_real_A,
-            self.full_hint_B, self.full_mask_B, self.box_info_list)
+        self.fake_B_reg = self.generator(self.real_A, self.hint_B, self.mask_B,
+                                         self.full_real_A, self.full_hint_B,
+                                         self.full_mask_B, self.box_info_list)
 
         out_img = torch.clamp(
             lab2rgb(
@@ -296,8 +290,7 @@ class InstColorization(SRGAN):
             pred_img = PixelData(data=batch_tensor.to('cpu'))
             predictions.append(
                 EditDataSample(
-                    pred_img=pred_img,
-                    metainfo=data_samples[idx].metainfo))
+                    pred_img=pred_img, metainfo=data_samples[idx].metainfo))
 
         return predictions
 
@@ -310,8 +303,8 @@ class InstColorization(SRGAN):
             visual_ret['gray'] = lab2rgb(
                 torch.cat((self.real_A.type(
                     torch.cuda.FloatTensor), torch.zeros_like(
-                    self.real_B).type(torch.cuda.FloatTensor)),
-                    dim=1), **self.lab2rgb_opt)
+                        self.real_B).type(torch.cuda.FloatTensor)),
+                          dim=1), **self.lab2rgb_opt)
             visual_ret['real'] = lab2rgb(
                 torch.cat((self.real_A.type(torch.cuda.FloatTensor),
                            self.real_B.type(torch.cuda.FloatTensor)),
@@ -329,19 +322,19 @@ class InstColorization(SRGAN):
                 torch.cat((torch.zeros_like(
                     self.real_A.type(torch.cuda.FloatTensor)),
                            self.real_B.type(torch.cuda.FloatTensor)),
-                    dim=1), **self.lab2rgb_opt)
+                          dim=1), **self.lab2rgb_opt)
             visual_ret['fake_ab_reg'] = lab2rgb(
                 torch.cat((torch.zeros_like(
                     self.real_A.type(torch.cuda.FloatTensor)),
                            self.fake_B_reg.type(torch.cuda.FloatTensor)),
-                    dim=1), **self.lab2rgb_opt)
+                          dim=1), **self.lab2rgb_opt)
 
         elif self.insta_stage == 'fusion':
             visual_ret['gray'] = lab2rgb(
                 torch.cat((self.full_real_A.type(
                     torch.cuda.FloatTensor), torch.zeros_like(
-                    self.full_real_B).type(torch.cuda.FloatTensor)),
-                    dim=1), **self.lab2rgb_opt)
+                        self.full_real_B).type(torch.cuda.FloatTensor)),
+                          dim=1), **self.lab2rgb_opt)
             visual_ret['real'] = lab2rgb(
                 torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
                            self.full_real_B.type(torch.cuda.FloatTensor)),
@@ -366,17 +359,17 @@ class InstColorization(SRGAN):
                 torch.cat((torch.zeros_like(
                     self.full_real_A.type(torch.cuda.FloatTensor)),
                            self.full_real_B.type(torch.cuda.FloatTensor)),
-                    dim=1), **self.lab2rgb_opt)
+                          dim=1), **self.lab2rgb_opt)
             visual_ret['comp_ab_reg'] = lab2rgb(
                 torch.cat((torch.zeros_like(
                     self.full_real_A.type(torch.cuda.FloatTensor)),
                            self.comp_B_reg.type(torch.cuda.FloatTensor)),
-                    dim=1), **self.lab2rgb_opt)
+                          dim=1), **self.lab2rgb_opt)
             visual_ret['fake_ab_reg'] = lab2rgb(
                 torch.cat((torch.zeros_like(
                     self.full_real_A.type(torch.cuda.FloatTensor)),
                            self.fake_B_reg.type(torch.cuda.FloatTensor)),
-                    dim=1), **self.lab2rgb_opt)
+                          dim=1), **self.lab2rgb_opt)
         else:
             print('Error! Wrong stage selection!')
             exit()

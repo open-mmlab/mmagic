@@ -16,7 +16,10 @@ model = dict(
         type='InstColorizationGenerator',
         stage=stage,
         instance_model=dict(
-            type='SIGGRAPHGenerator', input_nc=4, output_nc=2, norm_type='batch'),
+            type='SIGGRAPHGenerator',
+            input_nc=4,
+            output_nc=2,
+            norm_type='batch'),
     ),
     insta_stage=stage,
     ngf=64,
