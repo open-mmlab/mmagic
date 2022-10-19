@@ -49,7 +49,7 @@ You can use the following commands to test a model with cpu or single/multiple G
 # CPU test
 CUDA_VISIBLE_DEVICES=-1 python demo/colorization_demo.py configs/inst_colorization//inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth
 
-# single-gpu test
+# single-gpu demo
 python demo/colorization_demo.py configs/inst_colorization/inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth
 
 # multi-gpu test

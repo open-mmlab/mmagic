@@ -16,8 +16,6 @@ def parse_args():
     parser.add_argument('img_path', help='path to input image file')
     parser.add_argument('save_path', help='path to save generation result')
     parser.add_argument(
-        '--unpaired-path', default=None, help='path to unpaired image file')
-    parser.add_argument(
         '--imshow', action='store_true', help='whether show image with opencv')
     parser.add_argument('--device', type=int, default=0, help='CUDA device id')
     args = parser.parse_args()

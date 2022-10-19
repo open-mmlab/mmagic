@@ -47,13 +47,13 @@ python tools/train.py configs/insta/inst-colorizatioon_cocostuff_full_256x256.py
 
 ```shell
 # CPU上测试
-CUDA_VISIBLE_DEVICES=-1 python demo/colorization_demo.py configs/insta/inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth
+CUDA_VISIBLE_DEVICES=-1 python demo/colorization_demo.py configs/inst_colorization/inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth
 
-# 单个GPU上测试
-python demo/colorization_demo.py configs/insta/inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth
+# 单个GPU上 demo
+python demo/colorization_demo.py configs/inst_colorization/inst-colorizatioon_cocostuff_256x256.py work_dirs/checkpoints/instance_aware_cocostuff.pth work_dirs/colorization_example.jpg work_dirs/output_example.png
 
 # 多个GPU上测试
-./tools/dist_test.sh configs/insta/inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth 8
+./tools/dist_test.sh configs/inst_colorization/inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth 8
 ```
 
 更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Test a pre-trained model** 部分。

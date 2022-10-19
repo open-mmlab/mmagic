@@ -1,3 +1,5 @@
+from logging import PlaceHolder
+
 _base_ = ['../_base_/default_runtime.py']
 
 exp_name = 'Instance-aware_full'
@@ -15,11 +17,20 @@ model = dict(
     generator=dict(
         type='InstColorizationGenerator',
         stage=stage,
+        detector=PlaceHolder,
+        full_model=dict(
+            type='InstanceGenerator',
+            input_nc=4,
+            output_nc=2,
+            norm_type='batch'),
         instance_model=dict(
-            type='InstanceGenerator', input_nc=4, output_nc=2, norm_type='batch'),
+            type='InstanceGenerator',
+            input_nc=4,
+            output_nc=2,
+            norm_type='batch'),
         fusion_model=dict(
-            type='FusionGenerator', input_nc=4, output_nc=2, norm_type='batch')
-    ),
+            type='FusionGenerator', input_nc=4, output_nc=2,
+            norm_type='batch')),
     insta_stage=stage,
     ngf=64,
     output_nc=2,
