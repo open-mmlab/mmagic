@@ -85,15 +85,9 @@ class WeightLayer(BaseModule):
 
         mask_list_maskout = mask_list.clone()
 
-        # instance_mask = torch.clamp(
-        #     torch.sum(
-        #         mask_list_maskout[:, :instance_feature.shape[0]],
-        #         1,
-        #         keepdim=True), 0.0, 1.0)
-
         featur_map_list.append(bg_feature)
         featur_map_list = torch.cat(featur_map_list, 0)
         mask_list_maskout = mask_list_maskout.permute(1, 0, 2, 3).contiguous()
         out = featur_map_list * mask_list_maskout
         out = torch.sum(out, 0, keepdim=True)
-        return out  # , instance_mask, torch.clamp(mask_list, 0.0, 1.0)
+        return out

@@ -10,8 +10,7 @@ from mmengine.config import Config
 from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
 
-from mmedit.models.utils import (encode_ab_ind, generation_init_weights,
-                                 get_colorization_data, lab2rgb)
+from mmedit.models.utils import (encode_ab_ind, get_colorization_data, lab2rgb)
 from mmedit.registry import MODULES
 from mmedit.structures import EditDataSample, PixelData
 
@@ -22,9 +21,8 @@ class InstColorization(BaseModel):
     def __init__(self,
                  data_preprocessor: Union[dict, Config],
                  detector_cfg,
-                 image_model,
+                 full_model,
                  instance_model,
-                 fusion_model,
                  stage,
                  ngf,
                  output_nc,
@@ -46,9 +44,11 @@ class InstColorization(BaseModel):
             init_cfg=init_cfg, data_preprocessor=data_preprocessor)
 
         # colorization networks
-        self.image_model = MODULES.build(image_model)
+        # Stage 1 & 3. fusion model intergrates the image model 
+        self.full_model = MODULES.build(full_model)
+
+        # Stage 2. instance model used for training instance colorization 
         self.instance_model = MODULES.build(instance_model)
-        self.fusion_model = MODULES.build(fusion_model)
 
         # detector
         cfg = get_cfg()
@@ -228,83 +228,7 @@ class InstColorization(BaseModel):
 
         return dict(loss=loss)
 
-    def set_input(self, input):
 
-        AtoB = self.which_direction == 'AtoB'
-        self.real_A = input['A' if AtoB else 'B'].to(self.device)
-        self.real_B = input['B' if AtoB else 'A'].to(self.device)
-        self.hint_B = input['hint_B'].to(self.device)
-
-        self.mask_B = input['mask_B'].to(self.device)
-        self.mask_B_nc = self.mask_B + self.mask_cent
-
-        self.real_B_enc = encode_ab_ind(self.real_B[:, :, ::4, ::4],
-                                        **self.encode_ab_opt)
-
-    def set_fusion_input(self, input, box_info):
-
-        AtoB = self.which_direction == 'AtoB'
-        self.full_real_A = input['A' if AtoB else 'B'].to(self.device)
-        self.full_real_B = input['B' if AtoB else 'A'].to(self.device)
-
-        self.full_hint_B = input['hint_B'].to(self.device)
-        self.full_mask_B = input['mask_B'].to(self.device)
-
-        self.full_mask_B_nc = self.full_mask_B + self.mask_cent
-        self.full_real_B_enc = encode_ab_ind(self.full_real_B[:, :, ::4, ::4],
-                                             **self.encode_ab_opt)
-        self.box_info_list = box_info
-
-    def set_forward_without_box(self, input):
-
-        AtoB = self.which_direction == 'AtoB'
-        self.full_real_A = input['A' if AtoB else 'B'].to(self.device)
-        self.full_real_B = input['B' if AtoB else 'A'].to(self.device)
-        # self.image_paths = input['A_paths' if AtoB else 'B_paths']
-        self.full_hint_B = input['hint_B'].to(self.device)
-        self.full_mask_B = input['mask_B'].to(self.device)
-        self.full_mask_B_nc = self.full_mask_B + self.mask_cent
-        self.full_real_B_enc = encode_ab_ind(self.full_real_B[:, :, ::4, ::4],
-                                             **self.encode_ab_opt)
-
-        (_, self.comp_B_reg) = self.netGComp(self.full_real_A,
-                                             self.full_hint_B,
-                                             self.full_mask_B)
-        self.fake_B_reg = self.comp_B_reg
-
-    def generator_loss(self):
-
-        if self.stage == 'full' or self.stage == 'instance':
-            self.loss_L1 = torch.mean(
-                self.criterionL1(
-                    self.fake_B_reg.type(torch.cuda.FloatTensor),
-                    self.real_B.type(torch.cuda.FloatTensor)))
-            self.loss_G = 10 * self.loss_L1
-
-        elif self.stage == 'fusion':
-            self.loss_L1 = torch.mean(
-                self.criterionL1(
-                    self.fake_B_reg.type(torch.cuda.FloatTensor),
-                    self.full_real_B.type(torch.cuda.FloatTensor)))
-            self.loss_G = 10 * self.loss_L1
-
-        else:
-            print('Error! Wrong stage selection!')
-            exit()
-
-        self.error_cnt += 1
-        errors_ret = OrderedDict()
-        for name in self.loss_names:
-            if isinstance(name, str):
-                # float(...) works for both scalar tensor and float number
-                self.avg_losses[name] = float(getattr(
-                    self, 'loss_' +
-                    name)) + self.avg_loss_alpha * self.avg_losses[name]
-                errors_ret[name] = (1 - self.avg_loss_alpha) / (
-                    1 - self.avg_loss_alpha**  # noqa
-                    self.error_cnt) * self.avg_losses[name]
-
-        return errors_ret
 
     def train_step(self, data: List[dict],
                    optim_wrapper: OptimWrapperDict) -> Dict[str, torch.Tensor]:
@@ -427,6 +351,14 @@ class InstColorization(BaseModel):
                     pred_img=pred_img, metainfo=data_samples[idx].metainfo))
 
         return predictions
+
+
+
+
+
+
+
+
 
     def get_current_visuals(self):
 

@@ -1,5 +1,3 @@
-from logging import PlaceHolder
-
 _base_ = ['../_base_/default_runtime.py']
 
 exp_name = 'inst-colorization_cocostuff_256x256'
@@ -16,12 +14,10 @@ model = dict(
         std=[127.5],
     ),
     detector_cfg='COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml',
-    image_model=dict(
-        type='ColorizationNet', input_nc=4, output_nc=2, norm_type='batch'),
+    full_model=dict(
+        type='FusionNet', input_nc=4, output_nc=2, norm_type='batch'),
     instance_model=dict(
         type='ColorizationNet', input_nc=4, output_nc=2, norm_type='batch'),
-    fusion_model=dict(
-        type='FusionNet', input_nc=4, output_nc=2, norm_type='batch'),
     stage=stage,
     ngf=64,
     output_nc=2,

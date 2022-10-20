@@ -30,7 +30,6 @@ def main():
     else:
         device = torch.device('cuda', args.device)
 
-    #
     model = init_model(args.config, args.checkpoints, device=device)
     output = colorization_inference(model, args.img_path)
     result = tensor2img(output)[..., ::-1]
