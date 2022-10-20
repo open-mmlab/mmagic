@@ -1,10 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .colorization_net import (FusionGenerator, InstanceGenerator,
-                               SIGGRAPHGenerator)
+from .colorization_net import ColorizationNet
+from .fusion_net import FusionNet
 from .inst_colorization import InstColorization
-from .inst_colorization_net import InstColorizationGenerator
 
 __all__ = [
-    'InstColorization', 'SIGGRAPHGenerator', 'InstanceGenerator',
-    'FusionGenerator', 'InstColorizationGenerator'
+    'InstColorization',
+    'ColorizationNet',
+    'FusionNet',
 ]

@@ -1,10 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import functools
-
 import torch
 import torch.nn as nn
 
 from mmedit.registry import MODULES
+from .weight_block import WeightBlock, get_norm_layer
 
 
 @MODULES.register_module()
@@ -52,7 +51,7 @@ class FusionNet(nn.Module):
         ]
         # add a subsampling operation
 
-        self.weight_layer = WeightGenerator(64)
+        self.weight_layer = WeightBlock(64)
 
         # Conv2
         # model2=[nn.ReflectionPad2d(1),]
@@ -77,7 +76,7 @@ class FusionNet(nn.Module):
         ]
         # add a subsampling layer operation
 
-        self.weight_layer2 = WeightGenerator(128)
+        self.weight_layer2 = WeightBlock(128)
 
         # Conv3
         # model3=[nn.ReflectionPad2d(1),]
@@ -111,7 +110,7 @@ class FusionNet(nn.Module):
         ]
         # add a subsampling layer operation
 
-        self.weight_layer3 = WeightGenerator(256)
+        self.weight_layer3 = WeightBlock(256)
 
         # Conv4
         # model47=[nn.ReflectionPad2d(1),]
@@ -144,7 +143,7 @@ class FusionNet(nn.Module):
             norm_layer(512),
         ]
 
-        self.weight_layer4 = WeightGenerator(512)
+        self.weight_layer4 = WeightBlock(512)
 
         # Conv5
         # model47+=[nn.ReflectionPad2d(2),]
@@ -195,7 +194,7 @@ class FusionNet(nn.Module):
             norm_layer(512),
         ]
 
-        self.weight_layer5 = WeightGenerator(512)
+        self.weight_layer5 = WeightBlock(512)
 
         # Conv6
         # model6+=[nn.ReflectionPad2d(2),]
@@ -246,7 +245,7 @@ class FusionNet(nn.Module):
             norm_layer(512),
         ]
 
-        self.weight_layer6 = WeightGenerator(512)
+        self.weight_layer6 = WeightBlock(512)
 
         # Conv7
         # model47+=[nn.ReflectionPad2d(1),]
@@ -279,7 +278,7 @@ class FusionNet(nn.Module):
             norm_layer(512),
         ]
 
-        self.weight_layer7 = WeightGenerator(512)
+        self.weight_layer7 = WeightBlock(512)
 
         # Conv7
         model8up = [
@@ -293,7 +292,7 @@ class FusionNet(nn.Module):
                 256, 256, kernel_size=3, stride=1, padding=1, bias=use_bias),
         ]
 
-        self.weight_layer8_1 = WeightGenerator(256)
+        self.weight_layer8_1 = WeightBlock(256)
 
         # model47+=[norm_layer(256),]
         model8 = [
@@ -320,7 +319,7 @@ class FusionNet(nn.Module):
             norm_layer(256),
         ]
 
-        self.weight_layer8_2 = WeightGenerator(256)
+        self.weight_layer8_2 = WeightBlock(256)
 
         # Conv9
         model9up = [
@@ -335,7 +334,7 @@ class FusionNet(nn.Module):
         ]
         # add the two feature maps above
 
-        self.weight_layer9_1 = WeightGenerator(128)
+        self.weight_layer9_1 = WeightBlock(128)
 
         # model9=[norm_layer(128),]
         model9 = [
@@ -353,7 +352,7 @@ class FusionNet(nn.Module):
             norm_layer(128),
         ]
 
-        self.weight_layer9_2 = WeightGenerator(128)
+        self.weight_layer9_2 = WeightBlock(128)
 
         # Conv10
         model10up = [
@@ -368,7 +367,7 @@ class FusionNet(nn.Module):
         ]
         # add the two feature maps above
 
-        self.weight_layer10_1 = WeightGenerator(128)
+        self.weight_layer10_1 = WeightBlock(128)
 
         # model10=[norm_layer(128),]
         model10 = [
@@ -389,7 +388,7 @@ class FusionNet(nn.Module):
             nn.LeakyReLU(negative_slope=.2),
         ]
 
-        self.weight_layer10_2 = WeightGenerator(128)
+        self.weight_layer10_2 = WeightBlock(128)
 
         # classification output
         model_class = [
@@ -417,7 +416,7 @@ class FusionNet(nn.Module):
         if (use_tanh):
             model_out += [nn.Tanh()]
 
-        self.weight_layerout = WeightGenerator(2)
+        self.weight_layerout = WeightBlock(2)
 
         self.model1 = nn.Sequential(*model1)
         self.model2 = nn.Sequential(*model2)

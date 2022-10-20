@@ -6,7 +6,7 @@ exp_name = 'inst-colorization_cocostuff_256x256'
 save_dir = './'
 work_dir = '..'
 
-stage = 'test'
+stage = 'full'
 
 model = dict(
     type='InstColorization',
@@ -15,19 +15,14 @@ model = dict(
         mean=[127.5],
         std=[127.5],
     ),
-    generator=dict(
-        type='InstColorization',
-        stage=stage,
-        detector=PlaceHolder,
-        image_model=dict(
-            type='ColorizationNet', input_nc=4, output_nc=2,
-            norm_type='batch'),
-        instance_model=dict(
-            type='ColorizationNet', input_nc=4, output_nc=2,
-            norm_type='batch'),
-        fusion_model=dict(
-            type='FusionNet', input_nc=4, output_nc=2, norm_type='batch')),
-    insta_stage=stage,
+    detector_cfg='COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml',
+    image_model=dict(
+        type='ColorizationNet', input_nc=4, output_nc=2, norm_type='batch'),
+    instance_model=dict(
+        type='ColorizationNet', input_nc=4, output_nc=2, norm_type='batch'),
+    fusion_model=dict(
+        type='FusionNet', input_nc=4, output_nc=2, norm_type='batch'),
+    stage=stage,
     ngf=64,
     output_nc=2,
     avg_loss_alpha=.986,

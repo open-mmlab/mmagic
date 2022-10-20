@@ -1,12 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from collections import OrderedDict
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 import torch
+from detectron2 import model_zoo
+from detectron2.config import get_cfg
+from detectron2.engine import DefaultPredictor
 from mmengine.config import Config
+from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
 
-from mmedit.models import BaseEditModel
 from mmedit.models.utils import (encode_ab_ind, generation_init_weights,
                                  get_colorization_data, lab2rgb)
 from mmedit.registry import MODULES
@@ -14,10 +17,15 @@ from mmedit.structures import EditDataSample, PixelData
 
 
 @MODULES.register_module()
-class InstColorization(BaseEditModel):
+class InstColorization(BaseModel):
 
     def __init__(self,
                  data_preprocessor: Union[dict, Config],
+                 detector_cfg,
+                 image_model,
+                 instance_model,
+                 fusion_model,
+                 stage,
                  ngf,
                  output_nc,
                  avg_loss_alpha,
@@ -28,58 +36,197 @@ class InstColorization(BaseEditModel):
                  l_cent,
                  sample_Ps,
                  mask_cent,
-                 insta_stage=None,
                  which_direction='AtoB',
-                 generator=None,
                  loss=None,
                  init_cfg=None,
                  train_cfg=None,
                  test_cfg=None):
 
-        super(InstColorization, self).__init__(
-            generator=generator,
-            data_preprocessor=data_preprocessor,
-            pixel_loss=loss,
-            init_cfg=init_cfg,
-            train_cfg=train_cfg,
-            test_cfg=test_cfg)
+        super().__init__(
+            init_cfg=init_cfg, data_preprocessor=data_preprocessor)
 
-        self.ngf = ngf
-        self.output_nc = output_nc
-        self.avg_loss_alpha = avg_loss_alpha
-        self.mask_cent = mask_cent
-        self.which_direction = which_direction
+        # colorization networks
+        self.image_model = MODULES.build(image_model)
+        self.instance_model = MODULES.build(instance_model)
+        self.fusion_model = MODULES.build(fusion_model)
 
-        self.encode_ab_opt = dict(
-            ab_norm=ab_norm, ab_max=ab_max, ab_quant=ab_quant)
+        # detector
+        cfg = get_cfg()
+        cfg.merge_from_file(model_zoo.get_config_file(detector_cfg))
+        cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7
+        cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(detector_cfg)
+        self.detector = DefaultPredictor(cfg)
 
-        self.colorization_data_opt = dict(
-            ab_thresh=0,
-            ab_norm=ab_norm,
-            l_norm=l_norm,
-            l_cent=l_cent,
-            sample_PS=sample_Ps,
-            mask_cent=mask_cent,
-        )
+        self.stage = stage
 
-        self.lab2rgb_opt = dict(ab_norm=ab_norm, l_norm=l_norm, l_cent=l_cent)
+        # self.train_cfg = train_cfg
+        # self.test_cfg = test_cfg
+        # self.ngf = ngf
+        # self.output_nc = output_nc
+        # self.avg_loss_alpha = avg_loss_alpha
+        # self.mask_cent = mask_cent
+        # self.which_direction = which_direction
 
-        self.convert_params = dict(
-            ab_thresh=0,
-            ab_norm=ab_norm,
-            l_norm=l_norm,
-            l_cent=l_cent,
-            sample_PS=sample_Ps,
-            mask_cent=mask_cent,
-        )
+        # self.encode_ab_opt = dict(
+        #     ab_norm=ab_norm, ab_max=ab_max, ab_quant=ab_quant)
+        # self.colorization_data_opt = dict(
+        #     ab_thresh=0,
+        #     ab_norm=ab_norm,
+        #     l_norm=l_norm,
+        #     l_cent=l_cent,
+        #     sample_PS=sample_Ps,
+        #     mask_cent=mask_cent,
+        # )
+        # self.lab2rgb_opt = dict(ab_norm=ab_norm, l_norm=l_norm, l_cent=l_cent)
+        # self.convert_params = dict(
+        #     ab_thresh=0,
+        #     ab_norm=ab_norm,
+        #     l_norm=l_norm,
+        #     l_cent=l_cent,
+        #     sample_PS=sample_Ps,
+        #     mask_cent=mask_cent,
+        # )
 
-        self.device = torch.device('cuda:{}'.format(0))
+        # # loss
+        # self.loss_names = ['G', 'L1']
+        # self.criterionL1 = self.loss
+        # self.avg_losses = OrderedDict()
+        # self.error_cnt = 0
+        # for loss_name in self.loss_names:
+        #     self.avg_losses[loss_name] = 0
 
-        self.insta_stage = insta_stage
+    def forward(self,
+                inputs: torch.Tensor,
+                data_samples: Optional[List[EditDataSample]] = None,
+                mode: str = 'tensor',
+                **kwargs):
+        """Returns losses or predictions of training, validation, testing, and
+        simple inference process.
 
-        if self.insta_stage == 'full' or self.insta_stage == 'instance':
-            self.training = False
-            self.setup_to_train()
+        ``forward`` method of BaseModel is an abstract method, its subclasses
+        must implement this method.
+
+        Accepts ``inputs`` and ``data_samples`` processed by
+        :attr:`data_preprocessor`, and returns results according to mode
+        arguments.
+
+        During non-distributed training, validation, and testing process,
+        ``forward`` will be called by ``BaseModel.train_step``,
+        ``BaseModel.val_step`` and ``BaseModel.val_step`` directly.
+
+        During distributed data parallel training process,
+        ``MMSeparateDistributedDataParallel.train_step`` will first call
+        ``DistributedDataParallel.forward`` to enable automatic
+        gradient synchronization, and then call ``forward`` to get training
+        loss.
+
+        Args:
+            inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+            mode (str): mode should be one of ``loss``, ``predict`` and
+                ``tensor``. Default: 'tensor'.
+
+                - ``loss``: Called by ``train_step`` and return loss ``dict``
+                  used for logging
+                - ``predict``: Called by ``val_step`` and ``test_step``
+                  and return list of ``BaseDataElement`` results used for
+                  computing metric.
+                - ``tensor``: Called by custom use to get ``Tensor`` type
+                  results.
+
+        Returns:
+            ForwardResults:
+
+                - If ``mode == loss``, return a ``dict`` of loss tensor used
+                  for backward and logging.
+                - If ``mode == predict``, return a ``list`` of
+                  :obj:`BaseDataElement` for computing metric
+                  and getting inference result.
+                - If ``mode == tensor``, return a tensor or ``tuple`` of tensor
+                  or ``dict`` or tensor for custom use.
+        """
+
+        if mode == 'tensor':
+            return self.forward_tensor(inputs, data_samples, **kwargs)
+
+        elif mode == 'predict':
+            predictions = self.forward_inference(inputs, data_samples,
+                                                 **kwargs)
+            predictions = self.convert_to_datasample(data_samples, predictions)
+            return predictions
+
+        elif mode == 'loss':
+            return self.forward_train(inputs, data_samples, **kwargs)
+
+    def convert_to_datasample(self, inputs, data_samples):
+        for data_sample, output in zip(inputs, data_samples):
+            data_sample.output = output
+        return inputs
+
+    def forward_tensor(self, inputs, data_samples=None, **kwargs):
+        """Forward tensor. Returns result of simple forward.
+
+        Args:
+            inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            Tensor: result of simple forward.
+        """
+
+        feats = self.generator(inputs, **kwargs)
+
+        return feats
+
+    def forward_inference(self, inputs, data_samples=None, **kwargs):
+        """Forward inference. Returns predictions of validation, testing, and
+        simple inference.
+
+        Args:
+            inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            List[EditDataSample]: predictions.
+        """
+
+        feats = self.forward_tensor(inputs, data_samples, **kwargs)
+        feats = self.data_preprocessor.destructor(feats)
+        predictions = []
+        for idx in range(feats.shape[0]):
+            predictions.append(
+                EditDataSample(
+                    pred_img=PixelData(data=feats[idx].to('cpu')),
+                    metainfo=data_samples[idx].metainfo))
+
+        return predictions
+
+    def forward_train(self, inputs, data_samples=None, **kwargs):
+        """Forward training. Returns dict of losses of training.
+
+        Args:
+            inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            dict: Dict of losses.
+        """
+
+        feats = self.forward_tensor(inputs, data_samples, **kwargs)
+        gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
+        batch_gt_data = torch.stack(gt_imgs)
+
+        loss = self.pixel_loss(feats, batch_gt_data)
+
+        return dict(loss=loss)
 
     def set_input(self, input):
 
@@ -127,14 +274,14 @@ class InstColorization(BaseEditModel):
 
     def generator_loss(self):
 
-        if self.insta_stage == 'full' or self.insta_stage == 'instance':
+        if self.stage == 'full' or self.stage == 'instance':
             self.loss_L1 = torch.mean(
                 self.criterionL1(
                     self.fake_B_reg.type(torch.cuda.FloatTensor),
                     self.real_B.type(torch.cuda.FloatTensor)))
             self.loss_G = 10 * self.loss_L1
 
-        elif self.insta_stage == 'fusion':
+        elif self.stage == 'fusion':
             self.loss_L1 = torch.mean(
                 self.criterionL1(
                     self.fake_B_reg.type(torch.cuda.FloatTensor),
@@ -168,7 +315,7 @@ class InstColorization(BaseEditModel):
 
         log_vars = {}
 
-        if self.insta_stage == 'full' or self.insta_stage == 'instance':
+        if self.stage == 'full' or self.stage == 'instance':
             rgb_img = [data_samples.rgb_img]
             gray_img = [data_samples.gray_img]
 
@@ -185,7 +332,7 @@ class InstColorization(BaseEditModel):
             self.fake_B_reg = self.generator(self.real_A, self.hint_B,
                                              self.mask_B)
 
-        elif self.insta_stage == 'fusion':
+        elif self.stage == 'fusion':
             box_info = data_samples.box_info
             box_info_2x = data_samples.box_info_2x
             box_info_4x = data_samples.box_info_4x
@@ -233,19 +380,6 @@ class InstColorization(BaseEditModel):
             results=results)
 
         return output
-
-    def setup_to_train(self):
-
-        self.loss_names = ['G', 'L1']
-
-        self.criterionL1 = self.loss
-
-        # initialize average loss values
-        self.avg_losses = OrderedDict()
-        # self.avg_loss_alpha = self.avg_loss_alpha
-        self.error_cnt = 0
-        for loss_name in self.loss_names:
-            self.avg_losses[loss_name] = 0
 
     def forward_tensor(self, inputs, data_samples, **kwargs):
 
@@ -298,7 +432,7 @@ class InstColorization(BaseEditModel):
 
         visual_ret = OrderedDict()
 
-        if self.insta_stage == 'full' or self.insta_stage == 'instance':
+        if self.stage == 'full' or self.stage == 'instance':
 
             visual_ret['gray'] = lab2rgb(
                 torch.cat((self.real_A.type(
@@ -329,7 +463,7 @@ class InstColorization(BaseEditModel):
                            self.fake_B_reg.type(torch.cuda.FloatTensor)),
                           dim=1), **self.lab2rgb_opt)
 
-        elif self.insta_stage == 'fusion':
+        elif self.stage == 'fusion':
             visual_ret['gray'] = lab2rgb(
                 torch.cat((self.full_real_A.type(
                     torch.cuda.FloatTensor), torch.zeros_like(
