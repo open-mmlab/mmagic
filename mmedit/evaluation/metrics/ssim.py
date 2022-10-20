@@ -158,8 +158,7 @@ def ssim(img1,
 
     assert img1.shape == img2.shape, (
         f'Image shapes are different: {img1.shape}, {img2.shape}.')
-    # import torch
-    # img2 = torch.round(img2)
+
     img1 = img_transform(
         img1,
         crop_border=crop_border,
