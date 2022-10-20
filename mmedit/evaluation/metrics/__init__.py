@@ -12,7 +12,7 @@ from .mse import MSE
 from .niqe import NIQE, niqe
 from .ppl import PerceptualPathLength
 from .precision_and_recall import PrecisionAndRecall
-from .psnr import PSNR, psnr
+from .psnr import PSNR
 from .sad import SAD
 from .snr import SNR, snr
 from .ssim import SSIM, ssim
@@ -22,7 +22,6 @@ __all__ = [
     'MAE',
     'MSE',
     'PSNR',
-    'psnr',
     'SNR',
     'snr',
     'SSIM',

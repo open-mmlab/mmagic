@@ -1,30 +1,21 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Optional
+from typing import Optional, Sequence
 
-import numpy as np
+from mmeval import PSNR as PSNR_MMEVAL
 
 from mmedit.registry import METRICS
-from .base_sample_wise_metric import BaseSampleWiseMetric
-from .metrics_utils import img_transform
+from .metrics_utils import obtain_data
 
 
 @METRICS.register_module()
-class PSNR(BaseSampleWiseMetric):
+class PSNR(PSNR_MMEVAL):
     """Peak Signal-to-Noise Ratio.
 
     Ref: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
 
     Args:
-
         gt_key (str): Key of ground-truth. Default: 'gt_img'
         pred_key (str): Key of prediction. Default: 'pred_img'
-        collect_device (str): Device name used for collecting results from
-            different ranks during distributed training. Must be 'cpu' or
-            'gpu'. Defaults to 'cpu'.
-        prefix (str, optional): The prefix that will be added in the metric
-            names to disambiguate homonymous metrics of different evaluators.
-            If prefix is not provided in the argument, self.default_prefix
-            will be used instead. Default: None
         crop_border (int): Cropped pixels in each edges of an image. These
             pixels are not involved in the PSNR calculation. Default: 0.
         input_order (str): Whether the input order is 'HWC' or 'CHW'.
@@ -33,6 +24,17 @@ class PSNR(BaseSampleWiseMetric):
             If None, the images are not altered. When computing for 'Y',
             the images are assumed to be in BGR order. Options are 'Y' and
             None. Default: None.
+        channel_order (str): The channel order of image. Default: 'rgb'.
+        scaling (float, optional): Scaling factor for final metric.
+            E.g. scaling=100 means the final metric will be amplified by 100
+            for output. Default: 1
+        prefix (str, optional): The prefix that will be added in the metric
+            names to disambiguate homonymous metrics of different evaluators.
+            If prefix is not provided in the argument, self.default_prefix
+            will be used instead. Default: None.
+        dist_backend (str | None): The name of the distributed communication
+            backend. Refer to :class:`mmeval.BaseMetric`.
+            Defaults to 'torch_cuda'.
 
     Metrics:
         - PSNR (float): Peak Signal-to-Noise Ratio
@@ -43,89 +45,66 @@ class PSNR(BaseSampleWiseMetric):
     def __init__(self,
                  gt_key: str = 'gt_img',
                  pred_key: str = 'pred_img',
-                 collect_device: str = 'cpu',
-                 prefix: Optional[str] = None,
                  crop_border=0,
                  input_order='CHW',
-                 convert_to=None) -> None:
+                 convert_to=None,
+                 channel_order: str = 'rgb',
+                 scaling: float = 1,
+                 prefix: Optional[str] = None,
+                 dist_backend: str = 'torch_cuda',
+                 **kwargs) -> None:
         super().__init__(
-            gt_key=gt_key,
-            pred_key=pred_key,
-            mask_key=None,
-            collect_device=collect_device,
-            prefix=prefix)
+            crop_border=crop_border,
+            input_order=input_order,
+            convert_to=convert_to,
+            channel_order=channel_order,
+            dist_backend=dist_backend,
+            **kwargs)
 
-        self.crop_border = crop_border
-        self.input_order = input_order
-        self.convert_to = convert_to
+        self.gt_key = gt_key
+        self.pred_key = pred_key
+        self.scaling = scaling
+        self.prefix = prefix
 
-    def process_image(self, gt, pred, mask):
-        """Process an image.
+    def process(self, data_batch: Sequence[dict],
+                data_samples: Sequence[dict]) -> None:
+        """Process one batch of data and predictions.
 
         Args:
-            gt (Torch | np.ndarray): GT image.
-            pred (Torch | np.ndarray): Pred image.
-            mask (Torch | np.ndarray): Mask of evaluation.
-        Returns:
-            np.ndarray: PSNR result.
+            data_batch (Sequence[dict]): A batch of data
+                from the dataloader.
+            predictions (Sequence[dict]): A batch of outputs from
+                the model.
         """
 
-        return psnr(
-            img1=gt,
-            img2=pred,
-            crop_border=self.crop_border,
-            input_order=self.input_order,
-            convert_to=self.convert_to,
-            channel_order=self.channel_order)
+        for data in data_samples:
+            prediction = data['output']
 
+            metainfo = data
+            if 'gt_channel_order' in metainfo:
+                channel_order = metainfo['gt_channel_order']
+            elif 'img_channel_order' in metainfo:
+                channel_order = metainfo['img_channel_order']
+            else:
+                channel_order = self.channel_order
 
-def psnr(img1,
-         img2,
-         crop_border=0,
-         input_order='HWC',
-         convert_to=None,
-         channel_order='rgb'):
-    """Calculate PSNR (Peak Signal-to-Noise Ratio).
+            # convert to list of np.ndarray
+            gt = [obtain_data(data, self.gt_key).numpy()]
+            pred = [obtain_data(prediction, self.pred_key).numpy()]
 
-    Ref: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
+            self.add(pred, gt, channel_order)
 
-    Args:
-        img1 (ndarray): Images with range [0, 255].
-        img2 (ndarray): Images with range [0, 255].
-        crop_border (int): Cropped pixels in each edges of an image. These
-            pixels are not involved in the PSNR calculation. Default: 0.
-        input_order (str): Whether the input order is 'HWC' or 'CHW'.
-            Default: 'HWC'.
-        convert_to (str): Whether to convert the images to other color models.
-            If None, the images are not altered. When computing for 'Y',
-            the images are assumed to be in BGR order. Options are 'Y' and
-            None. Default: None.
-        channel_order (str): The channel order of image. Default: 'rgb'.
+    def evaluate(self, *args, **kwargs):
+        """Returns metric results and print pretty table of metrics per class.
 
-    Returns:
-        result (float): PSNR result.
-    """
+        This method would be invoked by ``mmengine.Evaluator``.
+        """
 
-    assert img1.shape == img2.shape, (
-        f'Image shapes are different: {img1.shape}, {img2.shape}.')
+        metric_results = self.compute(*args, **kwargs)
+        self.reset()
 
-    img1 = img_transform(
-        img1,
-        crop_border=crop_border,
-        input_order=input_order,
-        convert_to=convert_to,
-        channel_order=channel_order)
-    img2 = img_transform(
-        img2,
-        crop_border=crop_border,
-        input_order=input_order,
-        convert_to=convert_to,
-        channel_order=channel_order)
-
-    mse_value = ((img1 - img2)**2).mean()
-    if mse_value == 0:
-        result = float('inf')
-    else:
-        result = 20. * np.log10(255. / np.sqrt(mse_value))
-
-    return result
+        key_template = f'{self.prefix}/{{}}' if self.prefix else '{}'
+        return {
+            key_template.format(k): v * self.scaling
+            for k, v in metric_results.items()
+        }
