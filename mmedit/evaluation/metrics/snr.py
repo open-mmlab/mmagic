@@ -29,6 +29,9 @@ class SNR(SNR_MMEVAL):
             names to disambiguate homonymous metrics of different evaluators.
             If prefix is not provided in the argument, self.default_prefix
             will be used instead. Default: None
+        dist_backend (str | None): The name of the distributed communication
+            backend. Refer to :class:`mmeval.BaseMetric`.
+            Defaults to 'torch_cuda'.
 
     Metrics:
         - SNR (float): Signal-to-Noise Ratio
@@ -45,9 +48,15 @@ class SNR(SNR_MMEVAL):
                  channel_order: str = 'rgb',
                  prefix: Optional[str] = None,
                  scaling: float = 1,
+                 dist_backend: str = 'torch_cuda',
                  **kwargs) -> None:
-        super().__init__(input_order, convert_to, crop_border, channel_order,
-                         **kwargs)
+        super().__init__(
+            crop_border,
+            input_order,
+            convert_to,
+            channel_order,
+            dist_backend=dist_backend,
+            **kwargs)
 
         self.gt_key = gt_key
         self.pred_key = pred_key
@@ -68,26 +77,26 @@ class SNR(SNR_MMEVAL):
         for data in data_samples:
             prediction = data['output']
 
-            channel_order = 'rgb'
             metainfo = data
             if 'gt_channel_order' in metainfo:
                 channel_order = metainfo['gt_channel_order']
             elif 'img_channel_order' in metainfo:
                 channel_order = metainfo['img_channel_order']
+            else:
+                channel_order = self.channel_order
 
-            gt = obtain_data(data, self.gt_key)
-            pred = obtain_data(prediction, self.pred_key)
+            # convert to list of np.ndarray
+            gt = [obtain_data(data, self.gt_key).numpy()]
+            pred = [obtain_data(prediction, self.pred_key).numpy()]
 
-            gt = [sample for sample in gt]
-            pred = [sample for sample in pred]
-
-            self.add(gt, pred, channel_order)
+            self.add(pred, gt, channel_order)
 
     def evaluate(self, *args, **kwargs):
         """Returns metric results and print pretty table of metrics per class.
 
         This method would be invoked by ``mmengine.Evaluator``.
         """
+        # print('snr: ', *args, **kwargs)
         metric_results = self.compute(*args, **kwargs)
         self.reset()
 

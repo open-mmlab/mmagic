@@ -40,6 +40,9 @@ class SSIM(SSIM_MMEVAL):
         scaling (float, optional): Scaling factor for final metric.
             E.g. scaling=100 means the final metric will be amplified by 100
             for output. Default: 1
+        dist_backend (str | None): The name of the distributed communication
+            backend. Refer to :class:`mmeval.BaseMetric`.
+            Defaults to 'torch_cuda'.
         **kwargs: Keyword parameters passed to :class:`BaseMetric`.
 
     Metrics:
@@ -55,9 +58,15 @@ class SSIM(SSIM_MMEVAL):
                  channel_order: str = 'rgb',
                  prefix: Optional[str] = None,
                  scaling: float = 1,
+                 dist_backend: str = 'torch_cuda',
                  **kwargs) -> None:
-        super().__init__(input_order, crop_border, convert_to, channel_order,
-                         **kwargs)
+        super().__init__(
+            crop_border,
+            input_order,
+            convert_to,
+            channel_order,
+            dist_backend=dist_backend,
+            **kwargs)
 
         self.gt_key = gt_key
         self.pred_key = pred_key
@@ -85,13 +94,11 @@ class SSIM(SSIM_MMEVAL):
             elif 'img_channel_order' in metainfo:
                 channel_order = metainfo['img_channel_order']
 
-            gt = obtain_data(data, self.gt_key)
-            pred = obtain_data(prediction, self.pred_key)
+            # convert to list of np.ndarray
+            gt = [obtain_data(data, self.gt_key).numpy()]
+            pred = [obtain_data(prediction, self.pred_key).numpy()]
 
-            gt = [sample.numpy() for sample in gt]
-            pred = [sample.numpy() for sample in pred]
-
-            self.add(gt, pred, channel_order)
+            self.add(pred, gt, channel_order)
 
     def evaluate(self, *args, **kwargs):
         """Returns metric results and print pretty table of metrics per class.
