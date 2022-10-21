@@ -51,6 +51,7 @@ def test_real_esrgan(init_weights):
         is_use_sharpened_gt_in_pixel=False,
         is_use_sharpened_gt_in_percep=False,
         is_use_sharpened_gt_in_gan=False,
+        is_use_ema=False,
         train_cfg=None,
         test_cfg=None,
         data_preprocessor=EditDataPreprocessor())
