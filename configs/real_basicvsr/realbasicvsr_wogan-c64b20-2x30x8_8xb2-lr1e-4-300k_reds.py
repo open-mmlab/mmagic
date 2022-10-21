@@ -244,6 +244,7 @@ val_dataloader = dict(
         metainfo=dict(dataset_type='udm10', task_name='vsr'),
         data_root=f'{data_root}/UDM10',
         data_prefix=dict(img='BIx4', gt='GT'),
+        num_input_frames=15,
         pipeline=val_pipeline))
 
 test_dataloader = dict(
@@ -256,6 +257,7 @@ test_dataloader = dict(
         metainfo=dict(dataset_type='video_lq', task_name='vsr'),
         data_root=f'{data_root}/VideoLQ',
         data_prefix=dict(img='', gt=''),
+        num_input_frames=15,
         pipeline=test_pipeline))
 
 val_evaluator = [
