@@ -89,6 +89,12 @@ def test_real_esrgan(init_weights):
     output = model.val_step(data)
     assert output[0].output.pred_img.data.shape == (3, 128, 128)
 
+    # val_ema
+    model.generator_ema = model.generator
+    model.is_use_ema = True
+    output = model.val_step(data)
+    assert output[0].output.pred_img.data.shape == (3, 128, 128)
+
     # feat
     output = model(torch.rand(1, 3, 32, 32), mode='tensor')
     assert output.shape == (1, 3, 128, 128)
