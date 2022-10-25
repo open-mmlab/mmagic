@@ -35,10 +35,13 @@ model = dict(
 test_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(
-        type='GenMaskRCNNBbox',
+        type='InstanceCrop',
         config_file='COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml',  # noqa
-        stage=stage,
         finesize=256),
-    dict(type='Resize', keys=['img'], scale=(256, 256), keep_ratio=False),
+    dict(
+        type='Resize',
+        keys=['img', 'cropped_img'],
+        scale=(256, 256),
+        keep_ratio=False),
     dict(type='PackEditInputs'),
 ]
