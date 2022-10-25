@@ -9,7 +9,6 @@ from detectron2 import model_zoo
 from detectron2.config import get_cfg
 from detectron2.engine import DefaultPredictor
 from PIL import Image
-from skimage import color
 
 from mmedit.registry import TRANSFORMS
 
@@ -17,7 +16,8 @@ from mmedit.registry import TRANSFORMS
 @TRANSFORMS.register_module()
 class GenMaskRCNNBbox:
 
-    def __init__(self, key='img', stage='test', finesize=256):
+    def __init__(self, config_file, key='img', stage='test', finesize=256):
+        self.config_file = config_file
         self.key = key
         self.predictor = self.detectron()
         self.stage = stage
@@ -108,7 +108,8 @@ class GenMaskRCNNBbox:
 
         if self.stage == 'fusion':
             rgb_img, gray_img = results['rgb_img'], results['gray_img']
-            return self.get_instance_info(results, pred_bbox, gray_img, rgb_img)
+            return self.get_instance_info(results, pred_bbox, gray_img,
+                                          rgb_img)
 
     def get_instance_info(self, results, pred_bbox, gray_img, rgb_img=None):
 
@@ -127,7 +128,8 @@ class GenMaskRCNNBbox:
         for i in index_list:
             startx, starty, endx, endy = pred_bbox[i]
             box_info[i] = np.array(
-                self.get_box_info(pred_bbox[i], gray_img.size, self.final_size))
+                self.get_box_info(pred_bbox[i], gray_img.size,
+                                  self.final_size))
             box_info_2x[i] = np.array(
                 self.get_box_info(pred_bbox[i], gray_img.size,
                                   self.final_size // 2))
@@ -141,8 +143,12 @@ class GenMaskRCNNBbox:
                 gray_img.crop((startx, starty, endx, endy)))
             cropped_gray_list.append(cropped_img)
             if rgb_img:
-                cropped_rgb_list.append(self.transforms(rgb_img.crop((startx, starty, endx, endy))))
-                cropped_gray_list.append(self.transforms(gray_img.crop((startx, starty, endx, endy))))
+                cropped_rgb_list.append(
+                    self.transforms(
+                        rgb_img.crop((startx, starty, endx, endy))))
+                cropped_gray_list.append(
+                    self.transforms(
+                        gray_img.crop((startx, starty, endx, endy))))
 
         results['full_gray'] = torch.stack(full_gray_list)
         if rgb_img:
@@ -200,10 +206,8 @@ class GenMaskRCNNBbox:
 
     def detectron(self):
         cfg = get_cfg()
-        cfg.merge_from_file(
-            model_zoo.get_config_file(
-                'COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml'))
+        cfg.merge_from_file(model_zoo.get_config_file(self.config_file))
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7
-        cfg.MODEL.WEIGHTS = '/mnt/ruoning/model_final_2d9806.pkl'
+        cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(self.config_file)
         predictor = DefaultPredictor(cfg)
         return predictor

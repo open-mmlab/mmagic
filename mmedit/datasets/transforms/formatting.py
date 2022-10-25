@@ -200,12 +200,12 @@ class PackEditInputs(BaseTransform):
             gt_bg = results.pop('bg')
             gt_bg_tensor = images_to_tensor(gt_bg)
             data_sample.gt_bg = PixelData(data=gt_bg_tensor)
-        
+
         if 'rgb_img' in results:
             gt_rgb = results.pop('rgb_img')
             gt_rgb_tensor = images_to_tensor(gt_rgb)
             data_sample.gt_rgb = PixelData(data=gt_rgb_tensor)
-        
+
         if 'gray_img' in results:
             gray = results.pop('gray_img')
             gray_tensor = images_to_tensor(gray)
@@ -243,7 +243,7 @@ class ToTensor(BaseTransform):
 
         self.keys = keys
         self.to_float32 = to_float32
-    
+
     def _data_to_tensor(self, value):
         """Convert the value to tensor."""
         is_image = check_if_image(value)

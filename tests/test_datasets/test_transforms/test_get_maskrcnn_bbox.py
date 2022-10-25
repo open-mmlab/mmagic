@@ -1,20 +1,20 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
+
 import cv2 as cv
+
 from mmedit.datasets.transforms import GenMaskRCNNBbox
 from mmedit.utils import tensor2img
 
 
 class TestMaskRCNNBbox:
 
-    DEFAULT_ARGS = dict(
-        key='img', finesize=256
-    )
+    DEFAULT_ARGS = dict(key='img', finesize=256)
 
     def test_maskrcnn_bbox(self):
         detectetor = GenMaskRCNNBbox(**self.DEFAULT_ARGS, stage='test')
-        data_root = ".."
-        img_path = "data/image/gray/test.jpg"
+        data_root = '..'
+        img_path = 'data/image/gray/test.jpg'
         img = cv.imread(os.path.join(data_root, img_path))
 
         data = dict(img=img)
@@ -39,8 +39,8 @@ class TestMaskRCNNBbox:
 
     def test_gen_maskrcnn_from_pred(self):
         detectetor = GenMaskRCNNBbox(**self.DEFAULT_ARGS, stage='test')
-        data_root = ".."
-        img_path = "data/image/gray/test.jpg"
+        data_root = '..'
+        img_path = 'data/image/gray/test.jpg'
         img = cv.imread(os.path.join(data_root, img_path))
 
         box_num_upbound = 4
@@ -51,8 +51,8 @@ class TestMaskRCNNBbox:
 
     def test_get_box_info(self):
         detectetor = GenMaskRCNNBbox(**self.DEFAULT_ARGS, stage='test')
-        data_root = ".."
-        img_path = "data/image/gray/test.jpg"
+        data_root = '..'
+        img_path = 'data/image/gray/test.jpg'
         img = cv.imread(os.path.join(data_root, img_path))
 
         pred_bbox = detectetor.gen_maskrcnn_bbox_fromPred(img)
@@ -64,10 +64,9 @@ class TestMaskRCNNBbox:
 
         box_info = detectetor.get_box_info(pred_bbox, img.shape)
 
-        assert box_info[0] == resize_starty and box_info[1] == 256 - resize_endx \
-               and box_info[2] == resize_starty and box_info[3] == 256 - resize_endy \
-               and box_info[4] == resize_endx - resize_startx \
-               and box_info[5] == resize_endy - resize_starty
-
-
-
+        assert box_info[0] == resize_starty and \
+            box_info[1] == 256 - resize_endx and \
+            box_info[2] == resize_starty and \
+            box_info[3] == 256 - resize_endy and \
+            box_info[4] == resize_endx - resize_startx and \
+            box_info[5] == resize_endy - resize_starty

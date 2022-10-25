@@ -1,8 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
-from typing import List, Callable, Optional, Union
-from pathlib import Path
-from typing import List, Union, Dict
+from typing import List
 
 from mmengine.dataset import BaseDataset
 from mmengine.fileio import load
@@ -38,7 +36,7 @@ class CocoDataset(BaseDataset):
                 data_list.append(data_info)
             else:
                 raise TypeError('data_info should be a dict or list of dict, '
-                                    f'but got {type(data_info)}')
+                                f'but got {type(data_info)}')
 
         return data_list
 
@@ -48,6 +46,7 @@ class CocoDataset(BaseDataset):
         data_info = raw_data_info.copy()
         for key in raw_data_info:
             if 'path' in key:
-                data_info['gt_img_path'] = osp.join(self.data_root, data_info[key])
+                data_info['gt_img_path'] = osp.join(self.data_root,
+                                                    data_info[key])
 
         return data_info

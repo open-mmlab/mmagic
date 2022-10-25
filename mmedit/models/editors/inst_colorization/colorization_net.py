@@ -10,7 +10,8 @@ from .weight_layer import get_norm_layer
 
 @MODULES.register_module()
 class ColorizationNet(BaseModule):
-    """Real-Time User-Guided Image Colorization with Learned Deep Priors.
+    """Real-Time User-Guided Image Colorization with Learned Deep Priors. The
+    backbone used for.
 
     https://arxiv.org/abs/1705.02999
 
@@ -41,7 +42,7 @@ class ColorizationNet(BaseModule):
         use_bias = True
 
         # Conv1
-        self.model1 = nn.Sequential([
+        self.model1 = nn.Sequential(
             nn.Conv2d(
                 input_nc,
                 64,
@@ -54,10 +55,10 @@ class ColorizationNet(BaseModule):
                 64, 64, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(64),
-        ])
+        )
 
         # Conv2
-        self.model2 = nn.Sequential([
+        self.model2 = nn.Sequential(
             nn.Conv2d(
                 64, 128, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
@@ -65,10 +66,10 @@ class ColorizationNet(BaseModule):
                 128, 128, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(128),
-        ])
+        )
 
         # Conv3
-        self.model3 = nn.Sequential([
+        self.model3 = nn.Sequential(
             nn.Conv2d(
                 128, 256, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
@@ -79,10 +80,10 @@ class ColorizationNet(BaseModule):
                 256, 256, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(256),
-        ])
+        )
 
         # Conv4
-        self.model4 = nn.Sequential([
+        self.model4 = nn.Sequential(
             nn.Conv2d(
                 256, 512, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
@@ -93,10 +94,10 @@ class ColorizationNet(BaseModule):
                 512, 512, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(512),
-        ])
+        )
 
         # Conv5
-        self.model5 = nn.Sequential([
+        self.model5 = nn.Sequential(
             nn.Conv2d(
                 512,
                 512,
@@ -125,10 +126,10 @@ class ColorizationNet(BaseModule):
                 bias=use_bias),
             nn.ReLU(True),
             norm_layer(512),
-        ])
+        )
 
         # Conv6
-        self.model6 = nn.Sequential([
+        self.model6 = nn.Sequential(
             nn.Conv2d(
                 512,
                 512,
@@ -157,10 +158,10 @@ class ColorizationNet(BaseModule):
                 bias=use_bias),
             nn.ReLU(True),
             norm_layer(512),
-        ])
+        )
 
         # Conv7
-        self.model7 = nn.Sequential([
+        self.model7 = nn.Sequential(
             nn.Conv2d(
                 512, 512, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
@@ -171,20 +172,16 @@ class ColorizationNet(BaseModule):
                 512, 512, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(512),
-        ])
+        )
 
         # Conv8
-        self.model8up = [
-            nn.ConvTranspose2d(
-                512, 256, kernel_size=4, stride=2, padding=1, bias=use_bias)
-        ]
+        self.model8up = nn.ConvTranspose2d(
+            512, 256, kernel_size=4, stride=2, padding=1, bias=use_bias)
 
-        self.model3short8 = [
-            nn.Conv2d(
-                256, 256, kernel_size=3, stride=1, padding=1, bias=use_bias),
-        ]
+        self.model3short8 = nn.Conv2d(
+            256, 256, kernel_size=3, stride=1, padding=1, bias=use_bias)
 
-        self.model8 = nn.Sequential([
+        self.model8 = nn.Sequential(
             nn.ReLU(True),
             nn.Conv2d(
                 256, 256, kernel_size=3, stride=1, padding=1, bias=use_bias),
@@ -193,38 +190,30 @@ class ColorizationNet(BaseModule):
                 256, 256, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(256),
-        ])
+        )
 
         # Conv9
-        self.model9up = [
-            nn.ConvTranspose2d(
-                256, 128, kernel_size=4, stride=2, padding=1, bias=use_bias),
-        ]
+        self.model9up = nn.ConvTranspose2d(
+            256, 128, kernel_size=4, stride=2, padding=1, bias=use_bias)
 
-        self.model2short9 = [
-            nn.Conv2d(
-                128, 128, kernel_size=3, stride=1, padding=1, bias=use_bias),
-        ]
-        self.model9 = nn.Sequential([
+        self.model2short9 = nn.Conv2d(
+            128, 128, kernel_size=3, stride=1, padding=1, bias=use_bias)
+        self.model9 = nn.Sequential(
             nn.ReLU(True),
             nn.Conv2d(
                 128, 128, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(128),
-        ])
+        )
 
         # Conv10
-        self.model10up = [
-            nn.ConvTranspose2d(
-                128, 128, kernel_size=4, stride=2, padding=1, bias=use_bias),
-        ]
+        self.model10up = nn.ConvTranspose2d(
+            128, 128, kernel_size=4, stride=2, padding=1, bias=use_bias)
 
-        self.model1short10 = [
-            nn.Conv2d(
-                64, 128, kernel_size=3, stride=1, padding=1, bias=use_bias),
-        ]
+        self.model1short10 = nn.Conv2d(
+            64, 128, kernel_size=3, stride=1, padding=1, bias=use_bias)
 
-        self.model10 = nn.Sequential([
+        self.model10 = nn.Sequential(
             nn.ReLU(True),
             nn.Conv2d(
                 128,
@@ -235,7 +224,7 @@ class ColorizationNet(BaseModule):
                 padding=1,
                 bias=use_bias),
             nn.LeakyReLU(negative_slope=.2),
-        ])
+        )
 
         # classification output
         self.model_class = nn.Conv2d(

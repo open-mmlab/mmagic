@@ -1,19 +1,21 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
+from mmengine.model import BaseModule
 
 from mmedit.registry import MODULES
+from .weight_layer import WeightLayer, get_norm_layer
 
-from .weight_layer import get_norm_layer, WeightLayer
 
 @MODULES.register_module()
-class FusionNet(nn.Module):
+class FusionNet(BaseModule):
     """Instance-aware Image Colorization.
 
     https://arxiv.org/abs/2005.10825
 
     Codes adapted from 'https://github.com/ericsujw/InstColorization.git'
     'InstColorization/blob/master/models/networks.py#L314'
+    FusionNet: the full image model with weight layer for fusion.
 
     Args:
         input_nc:
@@ -36,9 +38,9 @@ class FusionNet(nn.Module):
 
         norm_layer = get_norm_layer(norm_type)
         use_bias = True
-        
+
         # Conv1
-        self.model1 = nn.Sequential([
+        self.model1 = nn.Sequential(
             nn.Conv2d(
                 input_nc,
                 64,
@@ -51,12 +53,12 @@ class FusionNet(nn.Module):
                 64, 64, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(64),
-        ])
+        )
 
         self.weight_layer = WeightLayer(64)
 
         # Conv2
-        self.model2 = nn.Sequential([
+        self.model2 = nn.Sequential(
             nn.Conv2d(
                 64, 128, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
@@ -64,13 +66,12 @@ class FusionNet(nn.Module):
                 128, 128, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(128),
-        ])
+        )
 
         self.weight_layer2 = WeightLayer(128)
 
-  
         # Conv3
-        self.model3 = nn.Sequential([
+        self.model3 = nn.Sequential(
             nn.Conv2d(
                 128, 256, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
@@ -81,12 +82,12 @@ class FusionNet(nn.Module):
                 256, 256, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(256),
-        ])
+        )
 
         self.weight_layer3 = WeightLayer(256)
-        
+
         # Conv4
-        self.model4 = nn.Sequential([
+        self.model4 = nn.Sequential(
             nn.Conv2d(
                 256, 512, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
@@ -97,12 +98,12 @@ class FusionNet(nn.Module):
                 512, 512, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(512),
-        ])
+        )
 
         self.weight_layer4 = WeightLayer(512)
 
         # Conv5
-        self.model5 = nn.Sequential([
+        self.model5 = nn.Sequential(
             nn.Conv2d(
                 512,
                 512,
@@ -131,12 +132,12 @@ class FusionNet(nn.Module):
                 bias=use_bias),
             nn.ReLU(True),
             norm_layer(512),
-        ])
+        )
 
         self.weight_layer5 = WeightLayer(512)
 
         # Conv6
-        self.model6 = nn.Sequential([
+        self.model6 = nn.Sequential(
             nn.Conv2d(
                 512,
                 512,
@@ -165,12 +166,12 @@ class FusionNet(nn.Module):
                 bias=use_bias),
             nn.ReLU(True),
             norm_layer(512),
-        ])
+        )
 
         self.weight_layer6 = WeightLayer(512)
 
         # Conv7
-        self.model7 = nn.Sequential([
+        self.model7 = nn.Sequential(
             nn.Conv2d(
                 512, 512, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
@@ -181,24 +182,20 @@ class FusionNet(nn.Module):
                 512, 512, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(512),
-        ])
+        )
 
         self.weight_layer7 = WeightLayer(512)
 
         # Conv8
-        self.model8up = [
-            nn.ConvTranspose2d(
-                512, 256, kernel_size=4, stride=2, padding=1, bias=use_bias)
-        ]
+        self.model8up = nn.ConvTranspose2d(
+            512, 256, kernel_size=4, stride=2, padding=1, bias=use_bias)
 
-        self.model3short8 = [
-            nn.Conv2d(
-                256, 256, kernel_size=3, stride=1, padding=1, bias=use_bias),
-        ]
+        self.model3short8 = nn.Conv2d(
+            256, 256, kernel_size=3, stride=1, padding=1, bias=use_bias)
 
         self.weight_layer8_1 = WeightLayer(256)
 
-        self.model8 = nn.Sequential([
+        self.model8 = nn.Sequential(
             nn.ReLU(True),
             nn.Conv2d(
                 256, 256, kernel_size=3, stride=1, padding=1, bias=use_bias),
@@ -207,47 +204,39 @@ class FusionNet(nn.Module):
                 256, 256, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(256),
-        ])
+        )
 
         self.weight_layer8_2 = WeightLayer(256)
 
         # Conv9
-        self.model9up = [
-            nn.ConvTranspose2d(
-                256, 128, kernel_size=4, stride=2, padding=1, bias=use_bias),
-        ]
+        self.model9up = nn.ConvTranspose2d(
+            256, 128, kernel_size=4, stride=2, padding=1, bias=use_bias)
 
-        self.model2short9 = [
-            nn.Conv2d(
-                128, 128, kernel_size=3, stride=1, padding=1, bias=use_bias),
-        ]
+        self.model2short9 = nn.Conv2d(
+            128, 128, kernel_size=3, stride=1, padding=1, bias=use_bias)
 
         self.weight_layer9_1 = WeightLayer(128)
 
-        self.model9 = nn.Sequential([
+        self.model9 = nn.Sequential(
             nn.ReLU(True),
             nn.Conv2d(
                 128, 128, kernel_size=3, stride=1, padding=1, bias=use_bias),
             nn.ReLU(True),
             norm_layer(128),
-        ])
+        )
 
         self.weight_layer9_2 = WeightLayer(128)
 
         # Conv10
-        self.model10up = [
-            nn.ConvTranspose2d(
-                128, 128, kernel_size=4, stride=2, padding=1, bias=use_bias),
-        ]
+        self.model10up = nn.ConvTranspose2d(
+            128, 128, kernel_size=4, stride=2, padding=1, bias=use_bias)
 
-        self.model1short10 = [
-            nn.Conv2d(
-                64, 128, kernel_size=3, stride=1, padding=1, bias=use_bias),
-        ]
+        self.model1short10 = nn.Conv2d(
+            64, 128, kernel_size=3, stride=1, padding=1, bias=use_bias)
 
         self.weight_layer10_1 = WeightLayer(128)
 
-        self.model10 = nn.Sequential([
+        self.model10 = nn.Sequential(
             nn.ReLU(True),
             nn.Conv2d(
                 128,
@@ -258,7 +247,7 @@ class FusionNet(nn.Module):
                 padding=1,
                 bias=use_bias),
             nn.LeakyReLU(negative_slope=.2),
-        ])
+        )
 
         self.weight_layer10_2 = WeightLayer(128)
 

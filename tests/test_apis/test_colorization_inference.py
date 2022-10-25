@@ -19,7 +19,9 @@ def test_colorization_inference():
         device = torch.device('cpu')
 
     data_root = '../../'
-    config = data_root + 'configs/inst_colorization/inst-colorizatioon_cocostuff_256x256.py'
+    config = osp.join(
+        data_root,
+        'configs/inst_colorization/inst-colorizatioon_cocostuff_256x256.py')
 
     checkpoint = None
 

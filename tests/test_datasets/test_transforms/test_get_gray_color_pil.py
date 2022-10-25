@@ -5,10 +5,8 @@ from mmedit.datasets.transforms import GenGrayColorPil
 
 
 def test_get_gray_color_pil():
-    img = cv.imread("../../data/image/gt/baboon.png")
-    test_class = GenGrayColorPil(
-        stage='test', keys=['rgb_img', 'gray_img']
-    )
+    img = cv.imread('../../data/image/gt/baboon.png')
+    test_class = GenGrayColorPil(stage='test', keys=['rgb_img', 'gray_img'])
 
     results = test_class.transform(dict(img=img))
 

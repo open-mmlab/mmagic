@@ -13,7 +13,6 @@ model = dict(
         mean=[127.5],
         std=[127.5],
     ),
-    detector_cfg='COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml',
     full_model=dict(
         type='FusionNet', input_nc=4, output_nc=2, norm_type='batch'),
     instance_model=dict(
@@ -32,9 +31,14 @@ model = dict(
     which_direction='AtoB',
     loss=dict(type='HuberLoss', delta=.01))
 
+# yapf: disable
 test_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
-    dict(type='GenMaskRCNNBbox', stage=stage, finesize=256),
+    dict(
+        type='GenMaskRCNNBbox',
+        config_file='COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml',  # noqa
+        stage=stage,
+        finesize=256),
     dict(type='Resize', keys=['img'], scale=(256, 256), keep_ratio=False),
     dict(type='PackEditInputs'),
 ]

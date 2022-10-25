@@ -3,14 +3,11 @@ from collections import OrderedDict
 from typing import Dict, List, Optional, Union
 
 import torch
-from detectron2 import model_zoo
-from detectron2.config import get_cfg
-from detectron2.engine import DefaultPredictor
 from mmengine.config import Config
 from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
 
-from mmedit.models.utils import (encode_ab_ind, get_colorization_data, lab2rgb)
+from mmedit.models.utils import get_colorization_data, lab2rgb
 from mmedit.registry import MODULES
 from mmedit.structures import EditDataSample, PixelData
 
@@ -20,7 +17,6 @@ class InstColorization(BaseModel):
 
     def __init__(self,
                  data_preprocessor: Union[dict, Config],
-                 detector_cfg,
                  full_model,
                  instance_model,
                  stage,
@@ -44,18 +40,11 @@ class InstColorization(BaseModel):
             init_cfg=init_cfg, data_preprocessor=data_preprocessor)
 
         # colorization networks
-        # Stage 1 & 3. fusion model intergrates the image model 
+        # Stage 1 & 3. fusion model intergrates the image model
         self.full_model = MODULES.build(full_model)
 
-        # Stage 2. instance model used for training instance colorization 
+        # Stage 2. instance model used for training instance colorization
         self.instance_model = MODULES.build(instance_model)
-
-        # detector
-        cfg = get_cfg()
-        cfg.merge_from_file(model_zoo.get_config_file(detector_cfg))
-        cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7
-        cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(detector_cfg)
-        self.detector = DefaultPredictor(cfg)
 
         self.stage = stage
 
@@ -77,7 +66,8 @@ class InstColorization(BaseModel):
         #     sample_PS=sample_Ps,
         #     mask_cent=mask_cent,
         # )
-        # self.lab2rgb_opt = dict(ab_norm=ab_norm, l_norm=l_norm, l_cent=l_cent)
+        # self.lab2rgb_opt = dict(
+        # ab_norm=ab_norm, l_norm=l_norm, l_cent=l_cent)
         # self.convert_params = dict(
         #     ab_thresh=0,
         #     ab_norm=ab_norm,
@@ -165,48 +155,6 @@ class InstColorization(BaseModel):
             data_sample.output = output
         return inputs
 
-    def forward_tensor(self, inputs, data_samples=None, **kwargs):
-        """Forward tensor. Returns result of simple forward.
-
-        Args:
-            inputs (torch.Tensor): batch input tensor collated by
-                :attr:`data_preprocessor`.
-            data_samples (List[BaseDataElement], optional):
-                data samples collated by :attr:`data_preprocessor`.
-
-        Returns:
-            Tensor: result of simple forward.
-        """
-
-        feats = self.generator(inputs, **kwargs)
-
-        return feats
-
-    def forward_inference(self, inputs, data_samples=None, **kwargs):
-        """Forward inference. Returns predictions of validation, testing, and
-        simple inference.
-
-        Args:
-            inputs (torch.Tensor): batch input tensor collated by
-                :attr:`data_preprocessor`.
-            data_samples (List[BaseDataElement], optional):
-                data samples collated by :attr:`data_preprocessor`.
-
-        Returns:
-            List[EditDataSample]: predictions.
-        """
-
-        feats = self.forward_tensor(inputs, data_samples, **kwargs)
-        feats = self.data_preprocessor.destructor(feats)
-        predictions = []
-        for idx in range(feats.shape[0]):
-            predictions.append(
-                EditDataSample(
-                    pred_img=PixelData(data=feats[idx].to('cpu')),
-                    metainfo=data_samples[idx].metainfo))
-
-        return predictions
-
     def forward_train(self, inputs, data_samples=None, **kwargs):
         """Forward training. Returns dict of losses of training.
 
@@ -228,14 +176,11 @@ class InstColorization(BaseModel):
 
         return dict(loss=loss)
 
-
-
     def train_step(self, data: List[dict],
                    optim_wrapper: OptimWrapperDict) -> Dict[str, torch.Tensor]:
 
-        g_optim_wrapper = optim_wrapper['generator']
         data = self.data_preprocessor(data, True)
-        batch_inputs, data_samples = data['inputs'], data['data_samples']
+        data_batch, data_samples = data['inputs'], data['data_samples']
 
         log_vars = {}
 
@@ -285,7 +230,7 @@ class InstColorization(BaseModel):
                                              self.full_mask_B,
                                              self.box_info_list)
 
-        optimizer['generator'].zero_grad()
+        optim_wrapper['generator'].zero_grad()
 
         loss = self.generator_loss()
 
@@ -294,7 +239,7 @@ class InstColorization(BaseModel):
 
         loss_d.backward()
 
-        optimizer['generator'].step()
+        optim_wrapper['generator'].step()
 
         results = self.get_current_visuals()
 
@@ -351,14 +296,6 @@ class InstColorization(BaseModel):
                     pred_img=pred_img, metainfo=data_samples[idx].metainfo))
 
         return predictions
-
-
-
-
-
-
-
-
 
     def get_current_visuals(self):
 
