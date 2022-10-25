@@ -29,10 +29,14 @@ class EvalIterHook(Hook):
                             f'but got { type(dataloader)}')
         self.dataloader = dataloader
         self.interval = interval
-        self.metrics = build_metric(metrics or [])
         self.eval_kwargs = eval_kwargs
         self.save_image = self.eval_kwargs.pop('save_image', False)
         self.save_path = self.eval_kwargs.pop('save_path', None)
+
+        metrics = metrics or []
+        if isinstance(metrics, dict):
+            metrics = [metrics]
+        self.metrics = build_metric(metrics)
 
     def after_train_iter(self, runner):
         """The behavior after each train iteration.

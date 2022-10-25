@@ -4,6 +4,7 @@ import tempfile
 from unittest.mock import MagicMock
 
 import mmcv.runner
+import numpy as np
 import pytest
 import torch
 import torch.nn as nn
@@ -11,6 +12,7 @@ from mmcv.runner import obj_from_dict
 from torch.utils.data import DataLoader, Dataset
 
 from mmedit.core import EvalIterHook
+from mmedit.core.registry import METRICS
 
 
 class ExampleDataset(Dataset):
@@ -38,6 +40,13 @@ class ExampleModel(nn.Module):
         return dict(result=rlt)
 
 
+@METRICS.register_module()
+class ExampleMetric:
+
+    def __call__(self, X, Y):
+        return dict(a=0, b=1)
+
+
 def test_eval_hook():
     with pytest.raises(TypeError):
         test_dataset = ExampleModel()
@@ -58,6 +67,58 @@ def test_eval_hook():
     data_loader = DataLoader(
         test_dataset, batch_size=1, sampler=None, num_workers=0, shuffle=False)
     eval_hook = EvalIterHook(data_loader)
+    optim_cfg = dict(type='Adam', lr=2e-4, betas=(0.9, 0.999))
+    optimizer = obj_from_dict(optim_cfg, torch.optim,
+                              dict(params=model.parameters()))
+    with tempfile.TemporaryDirectory() as tmpdir:
+        runner = mmcv.runner.IterBasedRunner(
+            model=model,
+            optimizer=optimizer,
+            work_dir=tmpdir,
+            logger=logging.getLogger())
+        runner.register_hook(eval_hook)
+        runner.run([loader], [('train', 1)], 1)
+        test_dataset.evaluate.assert_called_with([torch.tensor([1])],
+                                                 logger=runner.logger)
+
+    with pytest.raises(AssertionError):
+        # When using `EvalHook` with metrics, the return value of
+        # `dataset.evaluate` must contain the key 'InceptionV3'.
+        test_dataset = ExampleDataset()
+        test_dataset.evaluate = MagicMock(return_value=dict(test='success'))
+        model = ExampleModel()
+        data_loader = DataLoader(
+            test_dataset,
+            batch_size=1,
+            sampler=None,
+            num_workers=0,
+            shuffle=False)
+        eval_hook = EvalIterHook(
+            data_loader, metrics=dict(type='ExampleMetric'))
+        optim_cfg = dict(type='Adam', lr=2e-4, betas=(0.9, 0.999))
+        optimizer = obj_from_dict(optim_cfg, torch.optim,
+                                  dict(params=model.parameters()))
+        with tempfile.TemporaryDirectory() as tmpdir:
+            runner = mmcv.runner.IterBasedRunner(
+                model=model,
+                optimizer=optimizer,
+                work_dir=tmpdir,
+                logger=logging.getLogger())
+            runner.register_hook(eval_hook)
+            runner.run([loader], [('train', 1)], 1)
+            test_dataset.evaluate.assert_called_with([torch.tensor([1])],
+                                                     logger=runner.logger)
+
+    # for feature based metrics
+    test_dataset = ExampleDataset()
+    test_dataset.evaluate = MagicMock(
+        return_value=dict(
+            InceptionV3=(np.zeros((1, 2048)), np.zeros((1, 2048)))))
+    loader = DataLoader(test_dataset, batch_size=1)
+    model = ExampleModel()
+    data_loader = DataLoader(
+        test_dataset, batch_size=1, sampler=None, num_workers=0, shuffle=False)
+    eval_hook = EvalIterHook(data_loader, metrics=[dict(type='ExampleMetric')])
     optim_cfg = dict(type='Adam', lr=2e-4, betas=(0.9, 0.999))
     optimizer = obj_from_dict(optim_cfg, torch.optim,
                               dict(params=model.parameters()))

@@ -2,6 +2,7 @@
 import tempfile
 
 import mmcv
+import numpy as np
 import pytest
 import torch
 from mmcv.runner import obj_from_dict
@@ -120,7 +121,7 @@ def test_basic_restorer():
         assert outputs['results']['output'].size() == (1, 3, 80, 80)
 
     # test with metric and save image
-    test_cfg = dict(metrics=('PSNR', 'SSIM'), crop_border=0)
+    test_cfg = dict(metrics=('PSNR', 'SSIM', 'InceptionV3'), crop_border=0)
     test_cfg = mmcv.Config(test_cfg)
 
     data_batch = {
@@ -149,6 +150,12 @@ def test_basic_restorer():
         assert isinstance(outputs['eval_result']['PSNR'], float)
         assert isinstance(outputs['eval_result']['SSIM'], float)
 
+        incept_result = outputs['eval_result']['InceptionV3']
+        assert isinstance(incept_result, tuple) and len(incept_result) == 2
+        for feat in incept_result:
+            assert isinstance(feat, np.ndarray)
+            assert feat.shape == (1, 2048)
+
         outputs = restorer(
             **data_batch,
             test_mode=True,
@@ -159,6 +166,12 @@ def test_basic_restorer():
         assert isinstance(outputs['eval_result'], dict)
         assert isinstance(outputs['eval_result']['PSNR'], float)
         assert isinstance(outputs['eval_result']['SSIM'], float)
+
+        incept_result = outputs['eval_result']['InceptionV3']
+        assert isinstance(incept_result, tuple) and len(incept_result) == 2
+        for feat in incept_result:
+            assert isinstance(feat, np.ndarray)
+            assert feat.shape == (1, 2048)
 
         with pytest.raises(ValueError):
             # iteration should be number or None
