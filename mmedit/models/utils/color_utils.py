@@ -58,34 +58,6 @@ def xyz2rgb(xyz):
     return rgb
 
 
-def xyz2lab(xyz):
-    # 0.95047, 1., 1.08883 # white
-    sc = torch.Tensor((0.95047, 1., 1.08883))[None, :, None, None]
-    if (xyz.is_cuda):
-        sc = sc.cuda()
-
-    xyz_scale = xyz / sc
-
-    mask = (xyz_scale > .008856).type(torch.FloatTensor)
-    if (xyz_scale.is_cuda):
-        mask = mask.cuda()
-
-    xyz_int = xyz_scale**(1 / 3.) * mask + (7.787 * xyz_scale +
-                                            16. / 116.) * (1 - mask)
-
-    L = 116. * xyz_int[:, 1, :, :] - 16.
-    a = 500. * (xyz_int[:, 0, :, :] - xyz_int[:, 1, :, :])
-    b = 200. * (xyz_int[:, 1, :, :] - xyz_int[:, 2, :, :])
-    out = torch.cat((L[:, None, :, :], a[:, None, :, :], b[:, None, :, :]),
-                    dim=1)
-
-    # if(torch.sum(torch.isnan(out))>0):
-    # print('xyz2lab')
-    # embed()
-
-    return out
-
-
 def lab2xyz(lab):
     y_int = (lab[:, 0, :, :] + 16.) / 116.
     x_int = (lab[:, 1, :, :] / 500.) + y_int
@@ -116,6 +88,58 @@ def lab2xyz(lab):
     return out
 
 
+def lab2rgb(lab_rs, **kwargs):
+    L = lab_rs[:, [0], :, :] * kwargs['l_norm'] + kwargs['l_cent']
+    AB = lab_rs[:, 1:, :, :] * kwargs['ab_norm']
+    lab = torch.cat((L, AB), dim=1)
+    out = xyz2rgb(lab2xyz(lab))
+    # if(torch.sum(torch.isnan(out))>0):
+    # print('lab2rgb')
+    # embed()
+    return out
+
+
+def encode_ab_ind(data_ab, **kwargs):
+    # Encode ab value into an index
+    # INPUTS
+    #   data_ab   Nx2xHxW \in [-1,1]
+    # OUTPUTS
+    #   data_q    Nx1xHxW \in [0,Q)
+    A = 2 * kwargs['ab_max'] / kwargs['ab_quant'] + 1
+    data_ab_rs = torch.round((data_ab * kwargs['ab_norm'] + kwargs['ab_max']) /
+                             kwargs['ab_quant'])  # normalized bin number
+    data_q = data_ab_rs[:, [0], :, :] * A + data_ab_rs[:, [1], :, :]
+    return data_q
+
+
+def xyz2lab(xyz):
+    # 0.95047, 1., 1.08883 # white
+    sc = torch.Tensor((0.95047, 1., 1.08883))[None, :, None, None]
+    if (xyz.is_cuda):
+        sc = sc.cuda()
+
+    xyz_scale = xyz / sc
+
+    mask = (xyz_scale > .008856).type(torch.FloatTensor)
+    if (xyz_scale.is_cuda):
+        mask = mask.cuda()
+
+    xyz_int = xyz_scale**(1 / 3.) * mask + (7.787 * xyz_scale +
+                                            16. / 116.) * (1 - mask)
+
+    L = 116. * xyz_int[:, 1, :, :] - 16.
+    a = 500. * (xyz_int[:, 0, :, :] - xyz_int[:, 1, :, :])
+    b = 200. * (xyz_int[:, 1, :, :] - xyz_int[:, 2, :, :])
+    out = torch.cat((L[:, None, :, :], a[:, None, :, :], b[:, None, :, :]),
+                    dim=1)
+
+    # if(torch.sum(torch.isnan(out))>0):
+    # print('xyz2lab')
+    # embed()
+
+    return out
+
+
 def rgb2lab(rgb, **kwargs):
     lab = xyz2lab(rgb2xyz(rgb))
     # print(lab[0, 0, 0, 0])
@@ -126,17 +150,6 @@ def rgb2lab(rgb, **kwargs):
     out = torch.cat((l_rs, ab_rs), dim=1)
     # if(torch.sum(torch.isnan(out))>0):
     # print('rgb2lab')
-    # embed()
-    return out
-
-
-def lab2rgb(lab_rs, **kwargs):
-    L = lab_rs[:, [0], :, :] * kwargs['l_norm'] + kwargs['l_cent']
-    AB = lab_rs[:, 1:, :, :] * kwargs['ab_norm']
-    lab = torch.cat((L, AB), dim=1)
-    out = xyz2rgb(lab2xyz(lab))
-    # if(torch.sum(torch.isnan(out))>0):
-    # print('lab2rgb')
     # embed()
     return out
 
@@ -240,16 +253,3 @@ def add_color_patches_rand_gt(data,
     data['mask_B'] -= kwargs['mask_cent']
 
     return data
-
-
-def encode_ab_ind(data_ab, **kwargs):
-    # Encode ab value into an index
-    # INPUTS
-    #   data_ab   Nx2xHxW \in [-1,1]
-    # OUTPUTS
-    #   data_q    Nx1xHxW \in [0,Q)
-    A = 2 * kwargs['ab_max'] / kwargs['ab_quant'] + 1
-    data_ab_rs = torch.round((data_ab * kwargs['ab_norm'] + kwargs['ab_max']) /
-                             kwargs['ab_quant'])  # normalized bin number
-    data_q = data_ab_rs[:, [0], :, :] * A + data_ab_rs[:, [1], :, :]
-    return data_q

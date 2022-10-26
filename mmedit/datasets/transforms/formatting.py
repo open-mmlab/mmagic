@@ -211,6 +211,11 @@ class PackEditInputs(BaseTransform):
             gray_tensor = images_to_tensor(gray)
             data_sample.gray = PixelData(data=gray_tensor)
 
+        if 'cropped_img' in results:
+            cropped_img = results.pop('cropped_img')
+            cropped_img = images_to_tensor(cropped_img)
+            data_sample.cropped_img = PixelData(data=cropped_img)
+
         metainfo = dict()
         for key in results:
             metainfo[key] = results[key]
