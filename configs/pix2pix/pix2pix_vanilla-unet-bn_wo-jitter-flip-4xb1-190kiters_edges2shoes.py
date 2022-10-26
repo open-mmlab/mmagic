@@ -3,8 +3,8 @@ _base_ = [
     '../_base_/datasets/paired_imgs_256x256_crop.py',
     '../_base_/gen_default_runtime.py',
 ]
-source_domain = domain_b = 'edges'
-target_domain = domain_a = 'photo'
+source_domain = domain_a = 'edges'
+target_domain = domain_b = 'photo'
 # model settings
 model = dict(
     default_domain=target_domain,
@@ -60,6 +60,9 @@ custom_hooks = [
             dict(type='TranslationVal', name='trans_val')
         ])
 ]
+
+# save multi best checkpoints
+default_hooks = dict(checkpoint=dict(save_best='FID-Full/fid', rule='less'))
 
 fake_nums = 200
 metrics = [
