@@ -1,21 +1,5 @@
-# Copyright 2022 Stanford University Team and The HuggingFace Team. All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# DISCLAIMER: This code is strongly influenced by https://github.com/pesser/pytorch_diffusion
-# and https://github.com/hojonathanho/diffusion
-
 import math
+from statistics import mean
 from typing import Union
 
 import numpy as np
@@ -26,7 +10,23 @@ from mmedit.registry import DIFFUSERS
 
 @DIFFUSERS.register_module()
 class DDIMDiffuser:
-    
+    """```DDIMDiffuser``` support the diffusion and reverse process formulated in https://arxiv.org/abs/2010.02502. 
+
+    The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddim.py. # noqa
+
+    Args:
+        num_train_timesteps (int, optional): _description_. Defaults to 1000.
+        beta_start (float, optional): _description_. Defaults to 0.0001.
+        beta_end (float, optional): _description_. Defaults to 0.02.
+        beta_schedule (str, optional): _description_. Defaults to "linear".
+        variance_type (str, optional): _description_. Defaults to 'learned_range'.
+        timestep_values (_type_, optional): _description_. Defaults to None.
+        clip_sample (bool, optional): _description_. Defaults to True.
+        set_alpha_to_one (bool, optional): _description_. Defaults to True.
+
+    Raises:
+        NotImplementedError: _description_
+    """
     def __init__(
         self,
         num_train_timesteps=1000,
@@ -78,7 +78,7 @@ class DDIMDiffuser:
         )[::-1].copy()
         self.timesteps += offset
 
-    def _get_variance(self, timestep, prev_timestep, predicted_variance=None, variance_type=None):
+    def _get_variance(self, timestep, prev_timestep):
         alpha_prod_t = self.alphas_cumprod[timestep]
         alpha_prod_t_prev = self.alphas_cumprod[prev_timestep] if prev_timestep >= 0 else self.final_alpha_cumprod
         beta_prod_t = 1 - alpha_prod_t
@@ -86,34 +86,7 @@ class DDIMDiffuser:
 
         variance = (beta_prod_t_prev / beta_prod_t) * (1 - alpha_prod_t / alpha_prod_t_prev)
 
-        if timestep == 0:
-            log_variance = (1 - alpha_prod_t_prev) / (
-                1 - alpha_prod_t) * (1 - self.alphas_cumprod[1] / alpha_prod_t_prev)
-        else:
-            log_variance = np.log(variance)
 
-        if variance_type is None:
-            variance_type = self.variance_type
-
-        # hacks - were probs added for training stability
-        if variance_type == 'fixed_small':
-            variance = np.clip(variance, min_value=1e-20)
-        # for rl-diffuser https://arxiv.org/abs/2205.09991
-        elif variance_type == 'fixed_small_log':
-            variance = np.log(np.clip(variance, min_value=1e-20))
-        elif variance_type == 'fixed_large':
-            variance = self.betas[timestep]
-        elif variance_type == 'fixed_large_log':
-            # Glide max_log
-            variance = np.log(self.betas[timestep])
-        elif variance_type == 'learned':
-            return predicted_variance
-        elif variance_type == 'learned_range':
-            min_log = log_variance
-            max_log = np.log(self.betas[timestep])
-            frac = (predicted_variance + 1) / 2
-            log_variance = frac * max_log + (1 - frac) * min_log
-            variance = torch.exp(log_variance)
 
         return variance
         
@@ -122,16 +95,23 @@ class DDIMDiffuser:
         model_output: Union[torch.FloatTensor, np.ndarray],
         timestep: int,
         sample: Union[torch.FloatTensor, np.ndarray],
+        cond_fn = None,
+        cond_kwargs = {},
         eta: float = 0.0,
         use_clipped_model_output: bool = False,
         generator=None,
-    ):
+    ):  
+        output = {}
         if self.num_inference_steps is None:
             raise ValueError(
                 "Number of inference steps is 'None', you need to run 'set_timesteps' after creating the scheduler"
             )
 
-        if model_output.shape[1] == sample.shape[
+        pred = None
+        if isinstance(model_output, dict):
+            pred = model_output['pred']
+            model_output = model_output['eps']
+        elif model_output.shape[1] == sample.shape[
                 1] * 2 and self.variance_type in ['learned', 'learned_range']:
             model_output, predicted_variance = torch.split(
                 model_output, sample.shape[1], dim=1)
@@ -160,15 +140,23 @@ class DDIMDiffuser:
         # 3. compute predicted original sample from predicted noise also called
         # "predicted x_0" of formula (12) from https://arxiv.org/pdf/2010.02502.pdf
         pred_original_sample = (sample - beta_prod_t ** (0.5) * model_output) / alpha_prod_t ** (0.5)
+        if pred is not None:
+            pred_original_sample = pred
 
+        gradient = 0.
+        if cond_fn is not None:
+            gradient = cond_fn(cond_kwargs['unet'], self, sample, timestep, beta_prod_t, cond_kwargs['model_stats'], init_image=cond_kwargs['init_image'], y=None, secondary_model=cond_kwargs.get('secondary_model', None))
+            model_output = model_output - (beta_prod_t**0.5) * gradient
+            pred_original_sample = (sample - beta_prod_t ** (0.5) * model_output) / alpha_prod_t ** (0.5)
         # 4. Clip "predicted x_0"
         if self.clip_sample:
             pred_original_sample = torch.clamp(pred_original_sample, -1, 1)
 
         # 5. compute variance: "sigma_t(η)" -> see formula (16)
         # σ_t = sqrt((1 − α_t−1)/(1 − α_t)) * sqrt(1 − α_t/α_t−1)
-        variance = self._get_variance(timestep, prev_timestep, predicted_variance=predicted_variance)
+        variance = self._get_variance(timestep, prev_timestep)
         std_dev_t = eta * variance ** (0.5)
+        output.update(dict(sigma=std_dev_t))
 
         if use_clipped_model_output:
             # the model_output is always re-derived from the clipped x_0 in Glide
@@ -178,19 +166,23 @@ class DDIMDiffuser:
         pred_sample_direction = (1 - alpha_prod_t_prev - std_dev_t**2) ** (0.5) * model_output
 
         # 7. compute x_t without "random noise" of formula (12) from https://arxiv.org/pdf/2010.02502.pdf
-        prev_sample = alpha_prod_t_prev ** (0.5) * pred_original_sample + pred_sample_direction
+        prev_mean = alpha_prod_t_prev ** (0.5) * pred_original_sample + pred_sample_direction
+        output.update(dict(mean=prev_mean, prev_sample=prev_mean))
 
         if eta > 0:
             device = model_output.device if torch.is_tensor(model_output) else "cpu"
             noise = torch.randn(model_output.shape, generator=generator).to(device)
-            variance = self._get_variance(timestep, prev_timestep) ** (0.5) * eta * noise
+            variance = std_dev_t * noise
 
             if not torch.is_tensor(model_output):
                 variance = variance.numpy()
 
-            prev_sample = prev_sample + variance
+            prev_sample = prev_mean + variance
+            output.update({'prev_sample': prev_sample})
 
-        return {"prev_sample": prev_sample}
+        # NOTE: this x0 is twice computed
+        output.update({'original_sample': pred_original_sample, 'beta_prod_t':beta_prod_t})
+        return output
 
     def add_noise(self, original_samples, noise, timesteps):
         sqrt_alpha_prod = self.alphas_cumprod[timesteps] ** 0.5

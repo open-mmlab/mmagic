@@ -10,7 +10,6 @@ from .diffuser_utils import betas_for_alpha_bar
 
 @DIFFUSERS.register_module()
 class DDPMDiffuser:
-
     def __init__(self,
                  num_train_timesteps=1000,
                  beta_start=0.0001,
@@ -19,6 +18,22 @@ class DDPMDiffuser:
                  trained_betas=None,
                  variance_type='fixed_small',
                  clip_sample=True):
+        """ ```DDPMDiffuser``` support the diffusion and reverse process formulated in https://arxiv.org/abs/2006.11239. 
+
+        The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddpm.py. # noqa
+
+        Args:
+            num_train_timesteps (int, optional): _description_. Defaults to 1000.
+            beta_start (float, optional): _description_. Defaults to 0.0001.
+            beta_end (float, optional): _description_. Defaults to 0.02.
+            beta_schedule (str, optional): _description_. Defaults to 'linear'.
+            trained_betas (_type_, optional): _description_. Defaults to None.
+            variance_type (str, optional): _description_. Defaults to 'fixed_small'.
+            clip_sample (bool, optional): _description_. Defaults to True.
+
+        Raises:
+            NotImplementedError: _description_
+        """
         self.num_train_timesteps = num_train_timesteps
         if trained_betas is not None:
             self.betas = np.asarray(trained_betas)
@@ -106,7 +121,7 @@ class DDPMDiffuser:
              predict_epsilon=True,
              generator=None):
         t = timestep
-
+        
         if model_output.shape[1] == sample.shape[
                 1] * 2 and self.variance_type in ['learned', 'learned_range']:
             model_output, predicted_variance = torch.split(
@@ -168,6 +183,13 @@ class DDPMDiffuser:
             sqrt_alpha_prod * original_samples +
             sqrt_one_minus_alpha_prod * noise)
         return noisy_samples
+    
+    def training_loss(self, model, x_0, t):
+        raise NotImplementedError("This function is supposed to return a dict containing loss items giving sampled x0 and timestep.")
+
+    def sample_timestep(self):
+        raise NotImplementedError
+        
 
     def __len__(self):
         return self.num_train_timesteps

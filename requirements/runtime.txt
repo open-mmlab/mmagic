@@ -17,3 +17,4 @@ Pillow
 tensorboard
 torch
 torchvision
+-e git+https://github.com/mlfoundations/open_clip.git

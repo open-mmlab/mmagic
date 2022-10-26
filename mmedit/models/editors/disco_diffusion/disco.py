@@ -7,13 +7,17 @@ import torch
 from mmengine import MessageHub
 from mmengine.model import BaseModel, is_model_wrapper
 from mmengine.optim import OptimWrapperDict
-from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
+from mmengine.runner.checkpoint import _load_checkpoint_with_prefix, _load_checkpoint
 from tqdm import tqdm
 
 from mmedit.registry import DIFFUSERS, MODELS, MODULES
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, SampleList
+from mmengine.runner import set_random_seed
+from .guider import ImageTextGuider
 
+from torchvision.utils import save_image
+from .secondary_model import SecondaryDiffusionImageNet2, alpha_sigma_to_t
 
 @MODELS.register_module('disco')
 @MODELS.register_module('dd')
@@ -23,20 +27,26 @@ class DiscoDiffusion(BaseModel):
                  data_preprocessor,
                  unet,
                  diffuser,
+                 secondary_model=None,
+                 cutter_cfg=dict(),
+                 loss_cfg=dict(),
+                 clip_models_cfg=[],
                  use_fp16=False,
-                 # classifier-related stuff
-                 classifier=None,
-                 classifier_scale=1.0,
                  pretrained_cfgs=None):
 
         super().__init__(data_preprocessor=data_preprocessor)
         self.unet = MODULES.build(unet)
         self.diffuser = DIFFUSERS.build(diffuser)
-        if classifier:
-            self.classifier = MODULES.build(unet)
+        clip_models = []
+        for clip_cfg in clip_models_cfg:
+            clip_models.append(MODULES.build(clip_cfg))
+        self.guider = ImageTextGuider(clip_models, cutter_cfg, loss_cfg)
+
+        if secondary_model is not None:
+            self.secondary_model = MODULES.build(secondary_model)
+            self.with_secondary_model = True
         else:
-            self.classifier = None
-        self.classifier_scale = classifier_scale
+            self.with_secondary_model = False
 
         if pretrained_cfgs:
             self.load_pretrained_models(pretrained_cfgs)
@@ -55,7 +65,11 @@ class DiscoDiffusion(BaseModel):
             map_location = ckpt_cfg.get('map_location', 'cpu')
             strict = ckpt_cfg.get('strict', True)
             ckpt_path = ckpt_cfg.get('ckpt_path')
-            state_dict = _load_checkpoint_with_prefix(prefix, ckpt_path,
+            if prefix:
+                state_dict = _load_checkpoint_with_prefix(prefix, ckpt_path,
+                                                      map_location)
+            else:
+                state_dict = _load_checkpoint(ckpt_path,
                                                       map_location)
             getattr(self, key).load_state_dict(state_dict, strict=strict)
             mmengine.print_log(f'Load pretrained {key} from {ckpt_path}')
@@ -69,13 +83,19 @@ class DiscoDiffusion(BaseModel):
         """
         return next(self.parameters()).device
 
+
+
     def infer(self,
+              height=None,
+              width=None,
               init_image=None,
               batch_size=1,
               num_inference_steps=1000,
-              labels=None,
-              classifier_scale=0.0,
-              show_progress=False):
+              show_progress=False,
+              text_prompts=[],
+              image_prompts=[],
+              eta = 0.8,
+              seed=None):
         """_summary_
 
         Args:
@@ -89,23 +109,25 @@ class DiscoDiffusion(BaseModel):
         Returns:
             _type_: _description_
         """
-        # Sample gaussian noise to begin loop
+        height = (height//64)*64 if height else self.unet.image_size
+        width = (width//64)*64 if width else self.unet.image_size
+        # TODO: print modified height and width
+
         if init_image is None:
             image = torch.randn((batch_size, self.unet.in_channels,
-                                 self.unet.image_size, self.unet.image_size))
+                                 height, width))
             image = image.to(self.device)
         else:
+            # TODO: resize init_image
             image = init_image
 
-        if isinstance(labels, int):
-            labels = torch.tensor(labels).repeat(batch_size, 1)
-        elif labels is None:
-            labels = torch.randint(
-                low=0,
-                high=self.unet.num_classes,
-                size=(batch_size, ),
-                device=self.device)
+        loss_values = []
+        # set random seed
+        if isinstance(seed, int):
+            set_random_seed(seed=seed)
 
+        # get stats from text prompts and image prompts
+        model_stats = self.guider.compute_prompt_stats(text_prompts=text_prompts)
         # set step values
         if num_inference_steps > 0:
             self.diffuser.set_timesteps(num_inference_steps)
@@ -115,152 +137,19 @@ class DiscoDiffusion(BaseModel):
             timesteps = tqdm(timesteps)
         for t in timesteps:
             # 1. predicted model_output
-            model_output = self.unet(image, t, label=labels)['outputs']
+            model_output = self.unet(image, t)['outputs']
 
             # 2. compute previous image: x_t -> x_t-1
-            diffuser_output = self.diffuser.step(model_output, t, image)
+            cond_kwargs = {'model_stats': model_stats, 'init_image':init_image, 'unet': self.unet}
+            if self.with_secondary_model:
+                cond_kwargs.update(secondary_model=self.secondary_model)
+            diffuser_output = self.diffuser.step(model_output, t, image, cond_fn=self.guider.cond_fn, cond_kwargs=cond_kwargs, eta = eta)
 
-            # 3. applying classifier guide
-            if self.classifier and classifier_scale != 0.0:
-                gradient = classifier_grad(image, t, labels, classifier_scale=classifier_scale)
-                guided_mean = (diffuser_output["mean"].float() + diffuser_output["sigma"] * gradient.float())
-                image = guided_mean + diffuser_output["sigma"]* noise
-            else:
-                image = diffuser_output['prev_sample']
+            image = diffuser_output['prev_sample']
+            save_image(image, f"work_dirs/disco/{t}.png", normalize=True)
 
         return {'samples': image}
 
-    def forward(self,
-                inputs: ForwardInputs,
-                data_samples: Optional[list] = None,
-                mode: Optional[str] = None) -> List[EditDataSample]:
-        """_summary_
+    def forward(self, x):
+        return x
 
-        Args:
-            inputs (ForwardInputs): _description_
-            data_samples (Optional[list], optional): _description_.
-                Defaults to None.
-            mode (Optional[str], optional): _description_. Defaults to None.
-
-        Returns:
-            List[EditDataSample]: _description_
-        """
-        init_image = inputs.get('init_image', None)
-        batch_size = inputs.get('batch_size', 1)
-        labels = data_samples.get('labels', None)
-        sample_kwargs = inputs.get('sample_kwargs', dict())
-
-        num_inference_steps = sample_kwargs.get(
-            'num_inference_steps', self.diffuser.num_train_timesteps)
-        show_progress = sample_kwargs.get('show_progress', False)
-        classifier_scale = sample_kwargs.get('classifier_scale', self.classifier_scale)
-
-        outputs = self.infer(
-            init_image=init_image,
-            batch_size=batch_size,
-            num_inference_steps=num_inference_steps,
-            show_progress=show_progress,
-            classifier_scale=classifier_scale)
-
-        batch_sample_list = []
-        for idx in range(batch_size):
-            gen_sample = EditDataSample()
-            if data_samples:
-                gen_sample.update(data_samples[idx])
-            if isinstance(outputs, dict):
-                gen_sample.ema = EditDataSample(
-                    fake_img=PixelData(data=outputs['ema'][idx]),
-                    sample_model='ema')
-                gen_sample.orig = EditDataSample(
-                    fake_img=PixelData(data=outputs['orig'][idx]),
-                    sample_model='orig')
-                gen_sample.sample_model = 'ema/orig'
-                gen_sample.set_gt_label(labels[idx])
-                gen_sample.ema.set_gt_label(labels[idx])
-                gen_sample.orig.set_gt_label(labels[idx])
-            else:
-                gen_sample.fake_img = PixelData(data=outputs[idx])
-                gen_sample.set_gt_label(labels[idx])
-
-            # Append input condition (noise and sample_kwargs) to
-            # batch_sample_list
-            if init_image is not None:
-                gen_sample.noise = init_image[idx]
-            gen_sample.sample_kwargs = deepcopy(sample_kwargs)
-            batch_sample_list.append(gen_sample)
-        return batch_sample_list
-
-    def val_step(self, data: dict) -> SampleList:
-        """Gets the generated image of given data.
-
-        Calls ``self.data_preprocessor(data)`` and
-        ``self(inputs, data_sample, mode=None)`` in order. Return the
-        generated results which will be passed to evaluator.
-
-        Args:
-            data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
-
-        Returns:
-            SampleList: Generated image or image dict.
-        """
-        data = self.data_preprocessor(data)
-        outputs = self(**data)
-        return outputs
-
-    def test_step(self, data: dict) -> SampleList:
-        """Gets the generated image of given data. Same as :meth:`val_step`.
-
-        Args:
-            data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
-
-        Returns:
-            List[EditDataSample]: Generated image or image dict.
-        """
-        data = self.data_preprocessor(data)
-        outputs = self(**data)
-        return outputs
-
-    def train_step(self, data: dict, optim_wrapper: OptimWrapperDict):
-        """_summary_
-
-        Args:
-            data (dict): _description_
-            optim_wrapper (OptimWrapperDict): _description_
-
-        Returns:
-            _type_: _description_
-        """
-
-        message_hub = MessageHub.get_current_instance()
-        curr_iter = message_hub.get_info('iter')
-
-        data = self.data_preprocessor(data)
-        real_imgs = data['inputs']
-        denoising_dict_ = self.reconstruction_step(
-            self.denoising,
-            real_imgs,
-            timesteps=self.sampler,
-            return_noise=True)
-        denoising_dict_['real_imgs'] = real_imgs
-        loss, log_vars = self.denoising_loss(denoising_dict_)
-        optim_wrapper['denoising'].update_params(loss)
-
-        # update EMA
-        if self.with_ema_denoising and (curr_iter + 1) >= self.ema_start:
-            self.denoising_ema.update_parameters(
-                self.denoising_ema.
-                module if is_model_wrapper(self.denoising) else self.denoising)
-            # if not update buffer, copy buffer from orig model
-            if not self.denoising_ema.update_buffers:
-                self.denoising_ema.sync_buffers(
-                    self.denoising.module
-                    if is_model_wrapper(self.denoising) else self.denoising)
-        elif self.with_ema_denoising:
-            # before ema, copy weights from orig
-            self.denoising_ema.sync_parameters(
-                self.denoising.
-                module if is_model_wrapper(self.denoising) else self.denoising)
-
-        return log_vars
