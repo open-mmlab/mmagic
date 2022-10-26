@@ -7,10 +7,10 @@ import cv2
 import mmcv
 import numpy as np
 import torch
-from mmcv.fileio import FileClient
-from mmcv.parallel import collate
-
-from mmedit.datasets.pipelines import Compose
+from mmengine.dataset import Compose
+from mmengine.dataset.utils import default_collate as collate
+from mmengine.fileio import FileClient
+from mmengine.utils import ProgressBar
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 FILE_CLIENT = FileClient('disk')
@@ -83,12 +83,6 @@ def video_interpolation_inference(model,
             Default: 0.
         fps (float): frame rate of the output video. Default: 0.
         filename_tmpl (str): template of the file names. Default: '{:08d}.png'
-
-    Returns:
-        output (list[numpy.array]): The predicted interpolation result.
-            It is an image sequence.
-        input_fps (float): The fps of input video. If the input is an image
-            sequence, input_fps=0.0
     """
 
     device = next(model.parameters()).device  # model device
@@ -155,7 +149,7 @@ def video_interpolation_inference(model,
         batch_size - 1)
     repeat_frame = model.required_frames - model.step_frames
 
-    prog_bar = mmcv.ProgressBar(
+    prog_bar = ProgressBar(
         math.ceil(
             (end_idx + step_size - lenth_per_step - start_idx) / step_size))
     output_index = start_idx
@@ -164,16 +158,16 @@ def video_interpolation_inference(model,
             source, start_index, lenth_per_step, from_video, end_index=end_idx)
 
         # data prepare
-        data = dict(inputs=images, inputs_path=None, key=input_dir)
-        data = [test_pipeline(data)]
-        data = collate(data, samples_per_gpu=1)['inputs']
+        data = dict(img=images, inputs_path=None, key=input_dir)
+        data = test_pipeline(data)['inputs'] / 255.0
+        data = collate([data])
         # data.shape: [1, t, c, h, w]
 
         # forward the model
         data = model.split_frames(data)
         input_tensors = data.clone().detach()
         with torch.no_grad():
-            output = model(data.to(device), test_mode=True)['output']
+            output = model(data.to(device), mode='tensor')
             if len(output.shape) == 4:
                 output = output.unsqueeze(1)
             output_tensors = output.cpu()

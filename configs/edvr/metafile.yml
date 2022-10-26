@@ -1,0 +1,105 @@
+Collections:
+- Metadata:
+    Architecture:
+    - EDVR
+  Name: EDVR
+  Paper:
+  - https://arxiv.org/abs/1905.02716?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%253A+arxiv%252FQSXk+%2528ExcitingAds%2521+cs+updates+on+arXiv.org%2529
+  README: configs/edvr/README.md
+Models:
+- Config: configs/edvr/edvrm_wotsa_8xb4-600k_reds.py
+  In Collection: EDVR
+  Metadata:
+    GPUs: '8'
+    Training Data: REDS
+  Name: edvrm_wotsa_8xb4-600k_reds
+  Results:
+  - Dataset: REDS
+    Metrics:
+      PSNR: 30.343
+    Task: Edvr
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth
+- Config: configs/edvr/edvrm_8xb4-600k_reds.py
+  In Collection: EDVR
+  Metadata:
+    GPUs: '8'
+    Training Data: REDS
+  Name: edvrm_8xb4-600k_reds
+  Results:
+  - Dataset: REDS
+    Metrics:
+      PSNR: 30.4194
+    Task: Edvr
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth
+- Config: configs/edvr/edvrl_wotsa-c128b40_8xb8-lr2e-4-600k_reds4.py
+  In Collection: EDVR
+  Metadata:
+    GPUs: 8 (Tesla V100-PCIE-32GB)
+    Training Data: REDS
+  Name: edvrl_wotsa-c128b40_8xb8-lr2e-4-600k_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      PSNR: 31.001
+    Task: Edvr
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth
+- Config: configs/edvr/edvrl_c128b40_8xb8-lr2e-4-600k_reds4.py
+  In Collection: EDVR
+  Metadata:
+    GPUs: 8 (Tesla V100-PCIE-32GB)
+    Training Data: REDS
+  Name: edvrl_c128b40_8xb8-lr2e-4-600k_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      PSNR: 31.0467
+    Task: Edvr
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104-4509865f.pth
+- Config: configs/edvr/edvrm_wotsa_8xb4-600k_reds.py
+  In Collection: EDVR
+  Metadata:
+    GPUs: '8'
+    Training Data: REDS
+  Name: edvrm_wotsa_8xb4-600k_reds
+  Results:
+  - Dataset: REDS
+    Metrics:
+      SSIM: 0.8664
+    Task: Edvr
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth
+- Config: configs/edvr/edvrm_8xb4-600k_reds.py
+  In Collection: EDVR
+  Metadata:
+    GPUs: '8'
+    Training Data: REDS
+  Name: edvrm_8xb4-600k_reds
+  Results:
+  - Dataset: REDS
+    Metrics:
+      SSIM: 0.8684
+    Task: Edvr
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth
+- Config: configs/edvr/edvrl_wotsa-c128b40_8xb8-lr2e-4-600k_reds4.py
+  In Collection: EDVR
+  Metadata:
+    GPUs: 8 (Tesla V100-PCIE-32GB)
+    Training Data: REDS
+  Name: edvrl_wotsa-c128b40_8xb8-lr2e-4-600k_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      SSIM: 0.8784
+    Task: Edvr
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth
+- Config: configs/edvr/edvrl_c128b40_8xb8-lr2e-4-600k_reds4.py
+  In Collection: EDVR
+  Metadata:
+    GPUs: 8 (Tesla V100-PCIE-32GB)
+    Training Data: REDS
+  Name: edvrl_c128b40_8xb8-lr2e-4-600k_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      SSIM: 0.8793
+    Task: Edvr
+  Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_c128b40_8x8_lr2e-4_600k_reds4_20220104-4509865f.pth

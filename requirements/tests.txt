@@ -1,8 +1,10 @@
-codecov
-flake8
+# codecov
+# flake8
+# isort==5.10.1
+# onnxruntime
+# pytest
+# pytest-runner
+# yapf
+coverage
 interrogate
-isort==5.10.1
-onnxruntime
 pytest
-pytest-runner
-yapf

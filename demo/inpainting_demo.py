@@ -5,7 +5,7 @@ import mmcv
 import torch
 
 from mmedit.apis import init_model, inpainting_inference
-from mmedit.core import tensor2img
+from mmedit.engine import tensor2img
 
 
 def parse_args():
@@ -33,7 +33,7 @@ def main():
     model = init_model(args.config, args.checkpoint, device=device)
 
     result = inpainting_inference(model, args.masked_img_path, args.mask_path)
-    result = tensor2img(result, min_max=(-1, 1))[..., ::-1]
+    result = tensor2img(result)[..., ::-1]
 
     mmcv.imwrite(result, args.save_path)
     if args.imshow:

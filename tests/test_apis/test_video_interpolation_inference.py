@@ -1,79 +1,27 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os
-import shutil
+import os.path as osp
 
-import pytest
 import torch
 
 from mmedit.apis import init_model, video_interpolation_inference
 
 
 def test_video_interpolation_inference():
-    model = init_model(
-        './configs/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet.py',
-        None,
-        device='cpu')
-    model.cfg['demo_pipeline'] = [
-        dict(
-            type='LoadImageFromFileList',
-            io_backend='disk',
-            key='inputs',
-            channel_order='rgb'),
-        dict(type='RescaleToZeroOne', keys=['inputs']),
-        dict(type='FramesToTensor', keys=['inputs']),
-        dict(
-            type='Collect', keys=['inputs'], meta_keys=['inputs_path', 'key'])
-    ]
-
-    input_dir = './tests/data/vimeo90k/00001/0266'
-    output_dir = './tests/data/vimeo90k/00001/out'
-    os.mkdir(output_dir)
-    video_interpolation_inference(model, input_dir, output_dir, batch_size=10)
-
-    input_dir = './tests/data/test_inference.mp4'
-    output_dir = './tests/data/test_inference_out.mp4'
-    video_interpolation_inference(model, input_dir, output_dir)
-
-    with pytest.raises(AssertionError):
-        input_dir = './tests/data/test_inference.mp4'
-        output_dir = './tests/data/test_inference_out.mp4'
-        video_interpolation_inference(
-            model, input_dir, output_dir, fps_multiplier=-1)
-
     if torch.cuda.is_available():
-        model = init_model(
-            './configs/video_interpolators/cain/'
-            'cain_b5_g1b32_vimeo90k_triplet.py',
-            None,
-            device='cuda')
-        model.cfg['demo_pipeline'] = [
-            dict(
-                type='LoadImageFromFileList',
-                io_backend='disk',
-                key='inputs',
-                channel_order='rgb'),
-            dict(type='RescaleToZeroOne', keys=['inputs']),
-            dict(type='FramesToTensor', keys=['inputs']),
-            dict(
-                type='Collect',
-                keys=['inputs'],
-                meta_keys=['inputs_path', 'key'])
-        ]
+        device = torch.device('cuda', 0)
+    else:
+        device = torch.device('cpu')
 
-        input_dir = './tests/data/vimeo90k/00001/0266'
-        output_dir = './tests/data/vimeo90k/00001'
-        video_interpolation_inference(
-            model, input_dir, output_dir, batch_size=10)
+    data_root = osp.join(osp.dirname(__file__), '../../')
+    config = data_root + 'configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py'
+    checkpoint = None
 
-        input_dir = './tests/data/test_inference.mp4'
-        output_dir = './tests/data/test_inference_out.mp4'
-        video_interpolation_inference(model, input_dir, output_dir)
+    input_dir = data_root + 'tests/data/frames/test_inference.mp4'
 
-        with pytest.raises(AssertionError):
-            input_dir = './tests/data/test_inference.mp4'
-            output_dir = './tests/data/test_inference_out.mp4'
-            video_interpolation_inference(
-                model, input_dir, output_dir, fps_multiplier=-1)
+    model = init_model(config, checkpoint, device=device)
 
-    shutil.rmtree('./tests/data/vimeo90k/00001/out')
-    os.remove('./tests/data/test_inference_out.mp4')
+    video_interpolation_inference(
+        model=model, input_dir=input_dir, output_dir='out', fps=60.0)
+
+
+test_video_interpolation_inference()

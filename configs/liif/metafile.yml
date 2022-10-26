@@ -1,0 +1,103 @@
+Collections:
+- Metadata:
+    Architecture:
+    - LIIF
+  Name: LIIF
+  Paper:
+  - https://arxiv.org/abs/2012.09161
+  README: configs/liif/README.md
+Models:
+- Config: configs/liif/liif-edsr-norm_c64b16_1xb16-1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    GPUs: 1 (TITAN Xp)
+    Training Data: DIV2K
+  Name: liif-edsr-norm_c64b16_1xb16-1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2Kx18 PSNR: 22.1987
+      DIV2Kx18 SSIM: 0.5955
+      DIV2Kx2 PSNR: 34.6647
+      DIV2Kx2 SSIM: 0.9355
+      DIV2Kx3 PSNR: 30.9808
+      DIV2Kx3 SSIM: 0.8724
+      DIV2Kx30 PSNR: 20.505
+      DIV2Kx30 SSIM: 0.5577
+      DIV2Kx4 PSNR: 29.0245
+      DIV2Kx4 SSIM: 0.8187
+      DIV2Kx6 PSNR: 26.777
+      DIV2Kx6 SSIM: 0.7425
+      Set14x18 PSNR: 20.0096
+      Set14x18 SSIM: 0.4525
+      Set14x2 PSNR: 31.5579
+      Set14x2 SSIM: 0.8889
+      Set14x3 PSNR: 28.4605
+      Set14x3 SSIM: 0.8039
+      Set14x30 PSNR: 18.1321
+      Set14x30 SSIM: 0.3963
+      Set14x4 PSNR: 26.8415
+      Set14x4 SSIM: 0.7381
+      Set14x6 PSNR: 24.7461
+      Set14x6 SSIM: 0.6444
+      Set5x18 PSNR: 20.8516
+      Set5x18 SSIM: 0.5406
+      Set5x2 PSNR: 35.7131
+      Set5x2 SSIM: 0.9366
+      Set5x3 PSNR: 32.3805
+      Set5x3 SSIM: 0.8915
+      Set5x30 PSNR: 18.8467
+      Set5x30 SSIM: 0.501
+      Set5x4 PSNR: 30.2748
+      Set5x4 SSIM: 0.8509
+      Set5x6 PSNR: 27.1187
+      Set5x6 SSIM: 0.7774
+    Task: Liif
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
+- Config: configs/liif/liif-rdn-norm_c64b16_1xb16-1000k_div2k.py
+  In Collection: LIIF
+  Metadata:
+    GPUs: 1 (TITAN Xp)
+    Training Data: DIV2K
+  Name: liif-rdn-norm_c64b16_1xb16-1000k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2Kx18 PSNR: 22.2972
+      DIV2Kx18 SSIM: 0.595
+      DIV2Kx2 PSNR: 34.7548
+      DIV2Kx2 SSIM: 0.9356
+      DIV2Kx3 PSNR: 31.0744
+      DIV2Kx3 SSIM: 0.8731
+      DIV2Kx30 PSNR: 20.5663
+      DIV2Kx30 SSIM: 0.556
+      DIV2Kx4 PSNR: 29.1101
+      DIV2Kx4 SSIM: 0.8197
+      DIV2Kx6 PSNR: 26.8693
+      DIV2Kx6 SSIM: 0.7437
+      Set14x18 PSNR: 20.1077
+      Set14x18 SSIM: 0.4537
+      Set14x2 PSNR: 31.6866
+      Set14x2 SSIM: 0.8896
+      Set14x3 PSNR: 28.4905
+      Set14x3 SSIM: 0.8037
+      Set14x30 PSNR: 18.1448
+      Set14x30 SSIM: 0.3942
+      Set14x4 PSNR: 26.8734
+      Set14x4 SSIM: 0.7373
+      Set14x6 PSNR: 24.7824
+      Set14x6 SSIM: 0.6434
+      Set5x18 PSNR: 20.8913
+      Set5x18 SSIM: 0.5329
+      Set5x2 PSNR: 35.7874
+      Set5x2 SSIM: 0.9366
+      Set5x3 PSNR: 32.4992
+      Set5x3 SSIM: 0.8923
+      Set5x30 PSNR: 18.9354
+      Set5x30 SSIM: 0.4864
+      Set5x4 PSNR: 30.3835
+      Set5x4 SSIM: 0.8513
+      Set5x6 PSNR: 27.1914
+      Set5x6 SSIM: 0.7751
+    Task: Liif
+  Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth

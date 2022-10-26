@@ -1,0 +1,22 @@
+Collections:
+- Metadata:
+    Architecture:
+    - CAIN
+  Name: CAIN
+  Paper:
+  - https://aaai.org/ojs/index.php/AAAI/article/view/6693/6547
+  README: configs/cain/README.md
+Models:
+- Config: configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py
+  In Collection: CAIN
+  Metadata:
+    GPUs: 1 (Tesla V100-SXM2-32GB)
+    Training Data: VIMEO90K
+  Name: cain_g1b32_1xb5_vimeo90k-triplet
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      PSNR: 34.601
+      SSIM: 0.9578
+    Task: Cain
+  Weights: https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth

@@ -49,8 +49,7 @@ def parse_args():
         '--filename-tmpl',
         default='{:08d}.png',
         help='template of the file names')
-    parser.add_argument(
-        '--device', type=int, default=None, help='CUDA device id')
+    parser.add_argument('--device', type=int, default=0, help='CUDA device id')
     args = parser.parse_args()
     return args
 

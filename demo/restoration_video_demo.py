@@ -8,7 +8,7 @@ import numpy as np
 import torch
 
 from mmedit.apis import init_model, restoration_video_inference
-from mmedit.core import tensor2img
+from mmedit.engine import tensor2img
 from mmedit.utils import modify_args
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov')

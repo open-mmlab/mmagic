@@ -5,13 +5,25 @@ import os.path as osp
 import mmcv
 import numpy as np
 import torch
+from mmengine.dataset import Compose
 
-from mmedit.datasets.pipelines import Compose
+# import re
+# from functools import reduce
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov')
 
 
 def pad_sequence(data, window_size):
+    """Pad frame sequence data.
+
+    Args:
+        data (Tensor): The frame sequence data.
+        window_size (int): The window size used in sliding-window framework.
+
+    Returns:
+        data (Tensor): The padded result.
+    """
+
     padding = window_size // 2
 
     data = torch.cat([
@@ -64,9 +76,9 @@ def restoration_video_inference(model,
     if file_extension in VIDEO_EXTENSIONS:
         video_reader = mmcv.VideoReader(img_dir)
         # load the images
-        data = dict(lq=[], lq_path=None, key=img_dir)
+        data = dict(img=[], img_path=None, key=img_dir)
         for frame in video_reader:
-            data['lq'].append(np.flip(frame, axis=2))
+            data['img'].append(np.flip(frame, axis=2))
 
         # remove the data loading pipeline
         tmp_pipeline = []
@@ -92,7 +104,7 @@ def restoration_video_inference(model,
         lq_folder = osp.dirname(img_dir)
         key = osp.basename(img_dir)
         data = dict(
-            lq_path=lq_folder,
+            img_path=lq_folder,
             gt_path='',
             key=key,
             sequence_length=sequence_length)
@@ -100,7 +112,7 @@ def restoration_video_inference(model,
     # compose the pipeline
     test_pipeline = Compose(test_pipeline)
     data = test_pipeline(data)
-    data = data['lq'].unsqueeze(0)  # in cpu
+    data = data['inputs'].unsqueeze(0) / 255.0  # in cpu
 
     # forward the model
     with torch.no_grad():
@@ -109,18 +121,17 @@ def restoration_video_inference(model,
             result = []
             for i in range(0, data.size(1) - 2 * (window_size // 2)):
                 data_i = data[:, i:i + window_size].to(device)
-                result.append(model(lq=data_i, test_mode=True)['output'].cpu())
+                result.append(model(inputs=data_i, mode='tensor').cpu())
             result = torch.stack(result, dim=1)
         else:  # recurrent framework
             if max_seq_len is None:
-                result = model(
-                    lq=data.to(device), test_mode=True)['output'].cpu()
+                result = model(inputs=data.to(device), mode='tensor').cpu()
             else:
                 result = []
                 for i in range(0, data.size(1), max_seq_len):
                     result.append(
                         model(
-                            lq=data[:, i:i + max_seq_len].to(device),
-                            test_mode=True)['output'].cpu())
+                            inputs=data[:, i:i + max_seq_len].to(device),
+                            mode='tensor').cpu())
                 result = torch.cat(result, dim=1)
     return result

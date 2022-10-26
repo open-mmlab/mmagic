@@ -1,0 +1,57 @@
+Collections:
+- Metadata:
+    Architecture:
+    - GLEAN
+  Name: GLEAN
+  Paper:
+  - https://arxiv.org/abs/2012.00739
+  README: configs/glean/README.md
+Models:
+- Config: configs/glean/glean_x8_2xb8_cat.py
+  In Collection: GLEAN
+  Metadata:
+    GPUs: 2 (Tesla V100-PCIE-32GB)
+    Training Data: CAT
+  Name: glean_x8_2xb8_cat
+  Results:
+  - Dataset: CAT
+    Metrics:
+      PSNR: 23.98
+    Task: Glean
+  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth
+- Config: configs/glean/glean_x16_2xb8_ffhq.py
+  In Collection: GLEAN
+  Metadata:
+    GPUs: 2 (Tesla V100-PCIE-32GB)
+    Training Data: FFHQ
+  Name: glean_x16_2xb8_ffhq
+  Results:
+  - Dataset: FFHQ
+    Metrics:
+      PSNR: 26.91
+    Task: Glean
+  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527-61a3afad.pth
+- Config: configs/glean/glean_x16_2xb8_cat.py
+  In Collection: GLEAN
+  Metadata:
+    GPUs: 2 (Tesla V100-PCIE-32GB)
+    Training Data: CAT
+  Name: glean_x16_2xb8_cat
+  Results:
+  - Dataset: CAT
+    Metrics:
+      PSNR: 20.88
+    Task: Glean
+  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_16x_20210527-68912543.pth
+- Config: configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py
+  In Collection: GLEAN
+  Metadata:
+    GPUs: 4 (Tesla V100-SXM3-32GB)
+    Training Data: CELEBA
+  Name: glean_in128out1024_4xb2-300k_ffhq-celeba-hq
+  Results:
+  - Dataset: CELEBA
+    Metrics:
+      PSNR: 27.94
+    Task: Glean
+  Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth

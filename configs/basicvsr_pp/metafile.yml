@@ -1,0 +1,111 @@
+Collections:
+- Metadata:
+    Architecture:
+    - BasicVSR++
+  Name: BasicVSR++
+  Paper:
+  - https://arxiv.org/abs/2104.13371
+  README: configs/basicvsr_pp/README.md
+Models:
+- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py
+  In Collection: BasicVSR++
+  Metadata:
+    GPUs: 8 (Tesla V100-PCIE-32GB)
+    Training Data: REDS
+  Name: basicvsr-pp_c64n7_8xb1-600k_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4 (BIx4) PSNR (RGB): 32.3855
+      UDM10 (BDx4) PSNR (Y): 34.6868
+      Vid4 (BDx4) PSNR (Y): 24.6209
+      Vid4 (BIx4) PSNR (Y): 27.7674
+      Vimeo-90K-T (BDx4) PSNR (Y): 34.0372
+      Vimeo-90K-T (BIx4) PSNR (Y): 36.4445
+    Task: Basicvsr_pp
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
+- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi.py
+  In Collection: BasicVSR++
+  Metadata:
+    GPUs: 4 (Tesla V100-PCIE-32GB)
+    Training Data: VIMEO90K
+  Name: basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4) PSNR (RGB): 31.0126
+      UDM10 (BDx4) PSNR (Y): 33.1211
+      Vid4 (BDx4) PSNR (Y): 23.6086
+      Vid4 (BIx4) PSNR (Y): 27.7882
+      Vimeo-90K-T (BDx4) PSNR (Y): 33.8972
+      Vimeo-90K-T (BIx4) PSNR (Y): 37.7864
+    Task: Basicvsr_pp
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305-4ef437e2.pth
+- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd.py
+  In Collection: BasicVSR++
+  Metadata:
+    GPUs: 4 (Tesla V100-PCIE-32GB)
+    Training Data: VIMEO90K
+  Name: basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4) PSNR (RGB): 29.2041
+      UDM10 (BDx4) PSNR (Y): 40.7216
+      Vid4 (BDx4) PSNR (Y): 29.04
+      Vid4 (BIx4) PSNR (Y): 26.4377
+      Vimeo-90K-T (BDx4) PSNR (Y): 38.2054
+      Vimeo-90K-T (BIx4) PSNR (Y): 34.7248
+    Task: Basicvsr_pp
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd_20210305-ab315ab1.pth
+- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py
+  In Collection: BasicVSR++
+  Metadata:
+    GPUs: 8 (Tesla V100-PCIE-32GB)
+    Training Data: REDS
+  Name: basicvsr-pp_c64n7_8xb1-600k_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4 (BIx4) SSIM (RGB): 0.9069
+      UDM10 (BDx4) SSIM (Y): 0.9417
+      Vid4 (BDx4) SSIM (Y): 0.754
+      Vid4 (BIx4) SSIM (Y): 0.8444
+      Vimeo-90K-T (BDx4) SSIM (Y): 0.9244
+      Vimeo-90K-T (BIx4) SSIM (Y): 0.9411
+    Task: Basicvsr_pp
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
+- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi.py
+  In Collection: BasicVSR++
+  Metadata:
+    GPUs: 4 (Tesla V100-PCIE-32GB)
+    Training Data: VIMEO90K
+  Name: basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4) SSIM (RGB): 0.8804
+      UDM10 (BDx4) SSIM (Y): 0.927
+      Vid4 (BDx4) SSIM (Y): 0.7033
+      Vid4 (BIx4) SSIM (Y): 0.8401
+      Vimeo-90K-T (BDx4) SSIM (Y): 0.9195
+      Vimeo-90K-T (BIx4) SSIM (Y): 0.95
+    Task: Basicvsr_pp
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305-4ef437e2.pth
+- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd.py
+  In Collection: BasicVSR++
+  Metadata:
+    GPUs: 4 (Tesla V100-PCIE-32GB)
+    Training Data: VIMEO90K
+  Name: basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4) SSIM (RGB): 0.8528
+      UDM10 (BDx4) SSIM (Y): 0.9722
+      Vid4 (BDx4) SSIM (Y): 0.8753
+      Vid4 (BIx4) SSIM (Y): 0.8074
+      Vimeo-90K-T (BDx4) SSIM (Y): 0.955
+      Vimeo-90K-T (BIx4) SSIM (Y): 0.9351
+    Task: Basicvsr_pp
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd_20210305-ab315ab1.pth

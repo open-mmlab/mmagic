@@ -1,0 +1,37 @@
+Collections:
+- Metadata:
+    Architecture:
+    - Global&Local
+  Name: Global&Local
+  Paper:
+  - http://iizuka.cs.tsukuba.ac.jp/projects/completion/data/completion_sig2017.pdf
+  README: configs/global_local/README.md
+Models:
+- Config: configs/global_local/gl_8xb12_places-256x256.py
+  In Collection: Global&Local
+  Metadata:
+    GPUs: '8'
+    Training Data: PLACES
+  Name: gl_8xb12_places-256x256
+  Results:
+  - Dataset: PLACES
+    Metrics:
+      PSNR: 23.152
+      SSIM: 0.862
+      l1 error: 11.164
+    Task: Global_local
+  Weights: https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth
+- Config: configs/global_local/gl_8xb12_celeba-256x256.py
+  In Collection: Global&Local
+  Metadata:
+    GPUs: '8'
+    Training Data: CELEBA
+  Name: gl_8xb12_celeba-256x256
+  Results:
+  - Dataset: CELEBA
+    Metrics:
+      PSNR: 26.78
+      SSIM: 0.904
+      l1 error: 6.678
+    Task: Global_local
+  Weights: https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth

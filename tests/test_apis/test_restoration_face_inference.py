@@ -1,28 +1,28 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+# # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
+import platform
 
 import pytest
 import torch
 
-from mmedit import digit_version
 from mmedit.apis import init_model, restoration_face_inference
 
 
 @pytest.mark.skipif(
-    digit_version(torch.__version__) < (1, 6),
-    reason='requires torch-1.6.0 or higher')
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_restoration_face_inference():
-
     if torch.cuda.is_available():
         device = torch.device('cuda', 0)
     else:
         device = torch.device('cpu')
 
+    data_root = osp.join(osp.dirname(__file__), '../../')
+    config = data_root + 'configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py'  # noqa
+
     checkpoint = None
 
-    data_root = osp.join(osp.dirname(__file__), '../../')
-    config = data_root + 'configs/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq.py'  # noqa
-    img_path = data_root + 'tests/data/face/000001.png'
+    img_path = data_root + 'tests/data/image/face/000001.png'
 
     model = init_model(config, checkpoint, device=device)
 

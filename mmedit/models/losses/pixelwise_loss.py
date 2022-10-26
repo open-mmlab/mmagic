@@ -3,8 +3,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from ..registry import LOSSES
-from .utils import masked_loss
+from mmedit.registry import LOSSES
+from .loss_utils import masked_loss
 
 _reduction_modes = ['none', 'mean', 'sum']
 
@@ -44,6 +44,8 @@ def charbonnier_loss(pred, target, eps=1e-12):
     Args:
         pred (Tensor): Prediction Tensor with shape (n, c, h, w).
         target ([type]): Target Tensor with shape (n, c, h, w).
+        eps (float): A value used to control the curvature near zero.
+            Default: 1e-12.
 
     Returns:
         Tensor: Calculated Charbonnier loss.

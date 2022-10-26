@@ -1,0 +1,69 @@
+Collections:
+- Metadata:
+    Architecture:
+    - TDAN
+  Name: TDAN
+  Paper:
+  - https://arxiv.org/abs/1812.02898
+  README: configs/tdan/README.md
+Models:
+- Config: configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py
+  In Collection: TDAN
+  Metadata:
+    GPUs: 8 (Tesla V100-SXM2-32GB)
+    Training Data: VIMEO90K
+  Name: tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      SPMCS-30 (BDx4) PSNR (Y): 29.69
+      SPMCS-30 (BIx4) PSNR (Y): 30.42
+      Vid4 (BDx4) PSNR (Y): 25.93
+      Vid4 (BIx4) PSNR (Y): 26.49
+    Task: Tdan
+  Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
+- Config: configs/tdan/tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd.py
+  In Collection: TDAN
+  Metadata:
+    GPUs: 8 (Tesla V100-SXM2-32GB)
+    Training Data: VIMEO90K
+  Name: tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      SPMCS-30 (BDx4) PSNR (Y): 30.77
+      SPMCS-30 (BIx4) PSNR (Y): 29.56
+      Vid4 (BDx4) PSNR (Y): 26.87
+      Vid4 (BIx4) PSNR (Y): 25.8
+    Task: Tdan
+  Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth
+- Config: configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py
+  In Collection: TDAN
+  Metadata:
+    GPUs: 8 (Tesla V100-SXM2-32GB)
+    Training Data: VIMEO90K
+  Name: tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      SPMCS-30 (BDx4) SSIM (Y): 0.842
+      SPMCS-30 (BIx4) SSIM (Y): 0.856
+      Vid4 (BDx4) SSIM (Y): 0.772
+      Vid4 (BIx4) SSIM (Y): 0.792
+    Task: Tdan
+  Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
+- Config: configs/tdan/tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd.py
+  In Collection: TDAN
+  Metadata:
+    GPUs: 8 (Tesla V100-SXM2-32GB)
+    Training Data: VIMEO90K
+  Name: tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      SPMCS-30 (BDx4) SSIM (Y): 0.868
+      SPMCS-30 (BIx4) SSIM (Y): 0.851
+      Vid4 (BDx4) SSIM (Y): 0.815
+      Vid4 (BIx4) SSIM (Y): 0.784
+    Task: Tdan
+  Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth

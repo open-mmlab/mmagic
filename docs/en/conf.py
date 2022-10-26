@@ -71,42 +71,15 @@ html_theme = 'pytorch_sphinx_theme'
 html_theme_path = [pytorch_sphinx_theme.get_html_theme_path()]
 
 html_theme_options = {
+    # 'logo_url': 'https://mmocr.readthedocs.io/en/latest/',
     'menu': [
         {
             'name': 'GitHub',
             'url': 'https://github.com/open-mmlab/mmediting',
         },
-        {
-            'name':
-            'Version',
-            'children': [
-                {
-                    'name': 'MMEditing 0.x',
-                    'url': 'https://mmediting.readthedocs.io/en/latest/',
-                    'description': 'docs at master branch'
-                },
-                {
-                    'name': 'MMEditing 1.x',
-                    'url': 'https://mmediting.readthedocs.io/en/dev-1.x/',
-                    'description': 'docs at 1.x branch'
-                },
-            ],
-            'active':
-            True,
-        },
     ],
     'menu_lang':
-    'en',
-    'header_note': {
-        'content':
-        'You are reading the documentation for MMEditing 0.x, which '
-        'will soon be deprecated by the end of 2022. We recommend you upgrade '
-        'to MMEditing 1.0 to enjoy fruitful new features and better performance '  # noqa
-        ' brought by OpenMMLab 2.0. Check out the '
-        '<a href="https://github.com/open-mmlab/mmediting/releases">changelog</a>, '  # noqa
-        '<a href="https://github.com/open-mmlab/mmediting/tree/1.x">code</a> '  # noqa
-        'and <a href="https://mmediting.readthedocs.io/en/1.x/">documentation</a> of MMEditing 1.0 for more details.',  # noqa
-    }
+    'en'
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -125,7 +98,7 @@ master_doc = 'index'
 
 
 def builder_inited_handler(app):
-    subprocess.run(['bash', './merge_docs.sh'])
+    # subprocess.run(['bash', './merge_docs.sh'])
     subprocess.run(['python', './stat.py'])
 
 

@@ -31,8 +31,7 @@ def main():
 
     model = init_model(args.config, args.checkpoint, device=device)
 
-    pred_alpha = matting_inference(model, args.img_path,
-                                   args.trimap_path) * 255
+    pred_alpha = matting_inference(model, args.img_path, args.trimap_path)
 
     mmcv.imwrite(pred_alpha, args.save_path)
     if args.imshow:
