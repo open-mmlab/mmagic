@@ -16,7 +16,7 @@ from torch import Tensor
 from mmedit.models.utils import get_module_device
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
-from mmedit.utils import SampleList
+from mmedit.utils import ForwardInputs, SampleList
 from ...base_models import BaseGAN
 from ...utils import set_requires_grad
 
@@ -171,27 +171,27 @@ class SinGAN(BaseGAN):
                 self.fixed_noises.append(noise)
 
     def forward(self,
-                batch_inputs: dict,
+                inputs: ForwardInputs,
                 data_samples: Optional[list] = None,
                 mode=None) -> List[EditDataSample]:
-        """Forward function for SinGAN. For SinGAN, `batch_inputs` should be a
-        dict contains 'num_batches', 'mode' and other input arguments for the
+        """Forward function for SinGAN. For SinGAN, `inputs` should be a dict
+        contains 'num_batches', 'mode' and other input arguments for the
         generator.
 
         Args:
-            batch_inputs (dict): Dict containing the necessary information
+            inputs (dict): Dict containing the necessary information
                 (e.g., noise, num_batches, mode) to generate image.
             data_samples (Optional[list]): Data samples collated by
                 :attr:`data_preprocessor`. Defaults to None.
             mode (Optional[str]): `mode` is not used in
                 :class:`BaseConditionalGAN`. Defaults to None.
         """
-        sample_model = self._get_valid_model(batch_inputs)
+        sample_model = self._get_valid_model(inputs)
 
         # handle batch_inputs
-        assert isinstance(batch_inputs, dict), (
-            'SinGAN only support dict type batch_inputs in forward function.')
-        gen_kwargs = deepcopy(batch_inputs)
+        assert isinstance(inputs, dict), (
+            'SinGAN only support dict type inputs in forward function.')
+        gen_kwargs = deepcopy(inputs)
         num_batches = gen_kwargs.pop('num_batches', 1)
         assert num_batches == 1, (
             'SinGAN only support \'num_batches\' as 1, but receive '
@@ -235,14 +235,24 @@ class SinGAN(BaseGAN):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
-            if isinstance(outputs, dict):
-                gen_sample.ema = EditDataSample(
-                    fake_img=PixelData(data=outputs['ema'][idx]),
-                    sample_model='ema')
-                gen_sample.orig = EditDataSample(
-                    fake_img=PixelData(data=outputs['orig'][idx]),
-                    sample_model='orig')
-                gen_sample.sample_model = 'ema/orig'
+            if sample_model == 'ema/orig':
+                for model_ in ['ema', 'orig']:
+                    model_sample_ = EditDataSample()
+                    fake_img = PixelData(data=outputs[model_]['fake_img'][idx])
+                    prev_res_list = [
+                        r[idx] for r in outputs[model_]['prev_res_list']
+                    ]
+                    model_sample_.fake_img = fake_img
+                    model_sample_.prev_res_list = prev_res_list
+                    model_sample_.sample_model = sample_model
+
+                    gen_sample.set_field(model_, model_sample_)
+            elif isinstance(outputs, dict):
+                gen_sample.fake_img = PixelData(data=outputs['fake_img'][idx])
+                gen_sample.prev_res_list = [
+                    r[idx] for r in outputs['prev_res_list']
+                ]
+                gen_sample.sample_model = sample_model
             else:
                 gen_sample.fake_img = PixelData(data=outputs[idx])
                 gen_sample.sample_model = sample_model
