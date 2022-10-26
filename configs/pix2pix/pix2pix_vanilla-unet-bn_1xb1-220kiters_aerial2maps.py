@@ -3,6 +3,9 @@ _base_ = [
     '../_base_/datasets/paired_imgs_256x256_crop.py',
     '../_base_/gen_default_runtime.py'
 ]
+# deterministic training can improve the performance of Pix2Pix
+randomness = dict(deterministic=True)
+
 source_domain = domain_a = 'aerial'
 target_domain = domain_b = 'map'
 # model settings
