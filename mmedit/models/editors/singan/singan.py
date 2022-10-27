@@ -186,7 +186,6 @@ class SinGAN(BaseGAN):
             mode (Optional[str]): `mode` is not used in
                 :class:`BaseConditionalGAN`. Defaults to None.
         """
-        sample_model = self._get_valid_model(inputs)
 
         # handle batch_inputs
         assert isinstance(inputs, dict), (
@@ -196,6 +195,9 @@ class SinGAN(BaseGAN):
         assert num_batches == 1, (
             'SinGAN only support \'num_batches\' as 1, but receive '
             f'{num_batches}.')
+        sample_model = self._get_valid_model(inputs)
+        gen_kwargs.pop('sample_model', None)  # remove sample_model
+
         mode = gen_kwargs.pop('mode', mode)
         mode = 'rand' if mode is None else mode
         curr_scale = gen_kwargs.pop('curr_scale', self.curr_stage)
@@ -238,15 +240,18 @@ class SinGAN(BaseGAN):
             if sample_model == 'ema/orig':
                 for model_ in ['ema', 'orig']:
                     model_sample_ = EditDataSample()
-                    fake_img = PixelData(data=outputs[model_]['fake_img'][idx])
-                    prev_res_list = [
-                        r[idx] for r in outputs[model_]['prev_res_list']
-                    ]
+                    output_ = outputs[model_]
+                    if isinstance(output_, dict):
+                        fake_img = PixelData(data=output_['fake_img'][idx])
+                        prev_res_list = [
+                            r[idx] for r in outputs[model_]['prev_res_list']
+                        ]
+                        model_sample_.prev_res_list = prev_res_list
+                    else:
+                        fake_img = PixelData(data=output_[idx])
                     model_sample_.fake_img = fake_img
-                    model_sample_.prev_res_list = prev_res_list
                     model_sample_.sample_model = sample_model
-
-                    gen_sample.set_field(model_, model_sample_)
+                    gen_sample.set_field(model_sample_, model_)
             elif isinstance(outputs, dict):
                 gen_sample.fake_img = PixelData(data=outputs['fake_img'][idx])
                 gen_sample.prev_res_list = [

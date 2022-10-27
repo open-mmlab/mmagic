@@ -75,3 +75,53 @@ class TestSinGAN:
             elif i in [4, 5]:
                 assert singan.curr_stage == 2
                 assert img.shape[-2:] == (32, 32)
+
+            outputs = singan.forward(
+                dict(num_batches=1, get_prev_res=True), None)
+            assert all([hasattr(out, 'prev_res_list') for out in outputs])
+
+        # test forward singan with ema
+        singan = SinGAN(
+            self.generator,
+            self.disc,
+            num_scales=3,
+            data_preprocessor=self.data_preprocessor,
+            noise_weight_init=self.noise_weight_init,
+            iters_per_scale=self.iters_per_scale,
+            lr_scheduler_args=self.lr_scheduler_args,
+            ema_confg=dict(type='ExponentialMovingAverage'))
+        optim_wrapper_dict_builder = SinGANOptimWrapperConstructor(
+            self.optim_wrapper_cfg)
+        optim_wrapper_dict = optim_wrapper_dict_builder(singan)
+
+        for i in range(6):
+            singan.train_step(self.data_batch, optim_wrapper_dict)
+            message_hub.update_info('iter', message_hub.get_info('iter') + 1)
+
+            outputs = singan.forward(
+                dict(num_batches=1, sample_model='ema/orig'), None)
+
+            img = torch.stack([out.orig.fake_img.data for out in outputs],
+                              dim=0)
+            img_ema = torch.stack([out.ema.fake_img.data for out in outputs],
+                                  dim=0)
+            if i in [0, 1]:
+                assert singan.curr_stage == 0
+                assert img.shape[-2:] == (25, 25)
+                assert img_ema.shape[-2:] == (25, 25)
+            elif i in [2, 3]:
+                assert singan.curr_stage == 1
+                assert img.shape[-2:] == (30, 30)
+                assert img_ema.shape[-2:] == (30, 30)
+            elif i in [4, 5]:
+                assert singan.curr_stage == 2
+                assert img.shape[-2:] == (32, 32)
+                assert img_ema.shape[-2:] == (32, 32)
+
+            outputs = singan.forward(
+                dict(
+                    num_batches=1, sample_model='ema/orig', get_prev_res=True),
+                None)
+
+            assert all([hasattr(out.orig, 'prev_res_list') for out in outputs])
+            assert all([hasattr(out.ema, 'prev_res_list') for out in outputs])
