@@ -26,5 +26,5 @@ __all__ = [
     'r1_gradient_penalty_loss', 'gen_path_regularizer', 'FaceIdLoss',
     'CLIPLoss', 'CLIPLossComps', 'DiscShiftLossComps', 'FaceIdLossComps',
     'GANLossComps', 'GeneratorPathRegularizerComps',
-    'GradientPenaltyLossComps', 'R1GradientPenaltyComps', 'disc_shift_loss'
+    'GradientPenaltyLossComps', 'R1GradientPenaltyComps', 'disc_shift_loss', 'PSNRLoss'
 ]
