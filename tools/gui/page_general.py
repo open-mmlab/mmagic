@@ -2,8 +2,7 @@
 import cv2
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
-
-from tools.gui.utils import layout2widget
+from utils import layout2widget
 
 
 class SliderTab(QtWidgets.QWidget):
@@ -96,7 +95,7 @@ class GeneralPage(QtWidgets.QWidget):
 
         self.tab_slider = SliderTab()
         self.tabs = QtWidgets.QTabWidget()
-        self.tabs.addTab(self.tab_slider, 'befor/after slider')
+        self.tabs.addTab(self.tab_slider, 'before/after slider')
 
         layout = QtWidgets.QVBoxLayout()
         self.setLayout(layout)

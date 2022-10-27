@@ -1,11 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import sys
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-
-from tools.gui.component import QLabelClick
-from tools.gui.page_general import GeneralPage
-from tools.gui.page_sr import SRPage
+from component import QLabelClick
+from page_sr import SRPage
+from PyQt5 import QtWidgets
 
 
 class Homepage(QtWidgets.QWidget):
@@ -39,38 +37,37 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.homepage = Homepage(self)
-        self.sr = SRPage()
-        self.general = GeneralPage()
-        self.setCentralWidget(self.homepage)
 
-        # MenuBar
-        menubar_Aaa = self.menuBar().addMenu('Aaa')
-        menubar_Bbb = self.menuBar().addMenu('Bbb')
-        menubar_Ccc = self.menuBar().addMenu('Ccc')
-        menubar_Aaa.addAction('New')
-        save = QtWidgets.QAction('Save', self)
-        save.setShortcut('Ctrl+S')
-        menubar_Aaa.addAction(save)
+        # # MenuBar
+        # menubar_Aaa = self.menuBar().addMenu('Aaa')
+        # menubar_Bbb = self.menuBar().addMenu('Bbb')
+        # menubar_Ccc = self.menuBar().addMenu('Ccc')
+        # menubar_Aaa.addAction('New')
+        # save = QtWidgets.QAction('Save', self)
+        # save.setShortcut('Ctrl+S')
+        # menubar_Aaa.addAction(save)
+        # menubar_Bbb.addAction('New')
+        # menubar_Ccc.addAction('New')
 
-        menubar_Bbb.addAction('New')
-        menubar_Ccc.addAction('New')
+        # # ToolBar
+        # self.toolBar = QtWidgets.QToolBar('ToolBar')
+        # open = QtWidgets.QAction(QtGui.QIcon(), 'Open', self)
+        # save = QtWidgets.QAction(QtGui.QIcon(), 'Save', self)
+        # self.toolBar.addAction(open)
+        # self.toolBar.addAction(save)
+        # self.addToolBar(QtCore.Qt.ToolBarArea.LeftToolBarArea, self.toolBar)
 
-        # ToolBar
-        self.toolBar = QtWidgets.QToolBar('ToolBar')
-        save = QtWidgets.QAction(QtGui.QIcon(), 'save', self)
-        self.toolBar.addAction(save)
-        self.addToolBar(QtCore.Qt.ToolBarArea.LeftToolBarArea, self.toolBar)
         # StatusBar
         self.statusBar = QtWidgets.QStatusBar()
         self.setStatusBar(self.statusBar)
-        self.statusBar.showMessage('This is status bar')
+        self.statusBar.showMessage('')
+
+        self.homepage = Homepage(self)
+        self.sr = SRPage(self)
+        self.setCentralWidget(self.sr)
 
     def setup_window(self):
-        self.setObjectName('mainUI')
-        self.setFixedSize(1550, 900)
-        self.setWindowTitle('EditUI')
-        # self.setWindowIcon(QtGui.QIcon('Logo.png'))
+        self.setWindowTitle('EditGUI')
 
     def change_window(self, wname):
         if wname == 'sr':
