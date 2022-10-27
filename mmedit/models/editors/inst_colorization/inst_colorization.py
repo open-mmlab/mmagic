@@ -149,7 +149,7 @@ class InstColorization(BaseModel):
 
         #  prepare data
 
-        assert len(data_samples), \
+        assert len(data_samples) == 1, \
             'fusion model supports only one image due to different numbers '\
             'of instances of different images'
 
@@ -158,9 +158,6 @@ class InstColorization(BaseModel):
             data_samples[0].box_info, data_samples[0].box_info_2x,
             data_samples[0].box_info_4x, data_samples[0].box_info_8x
         ]
-        print(data_samples[0])
-        print('crop: ', torch.min(cropped_img), torch.max(cropped_img))
-        print('full: ', torch.min(inputs), torch.max(inputs))
         cropped_data = get_colorization_data(cropped_img, self.color_data_opt)
         full_img_data = get_colorization_data(inputs, self.color_data_opt)
         AtoB = self.which_direction == 'AtoB'
@@ -199,6 +196,5 @@ class InstColorization(BaseModel):
             output.type(torch.cuda.FloatTensor)
         ]
         output = torch.cat(output, dim=1)
-        print('output: ', torch.min(output), torch.max(output))
         output = torch.clamp(lab2rgb(output, self.color_data_opt), 0.0, 1.0)
         return output
