@@ -46,7 +46,6 @@ test_pipeline = [
         transforms=dict(
             type='Resize', scale=(256, 256), interpolation='bicubic'),
     ),
-
     # NOTE: users should implement their own keyMapper and Pack operation
     # dict(
     #     type='KeyMapper',
@@ -80,6 +79,7 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         data_root=None,  # set by user
+        test_mode=True,
         pipeline=test_pipeline),
     sampler=dict(type='DefaultSampler', shuffle=False),
     persistent_workers=True)
@@ -90,6 +90,7 @@ test_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         data_root=None,  # set by user
+        test_mode=True,
         pipeline=test_pipeline),
     sampler=dict(type='DefaultSampler', shuffle=False),
     persistent_workers=True)

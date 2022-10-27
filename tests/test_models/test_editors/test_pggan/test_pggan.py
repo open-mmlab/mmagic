@@ -72,6 +72,10 @@ class TestPGGAN(TestCase):
                 assert np.isclose(pggan._actual_nkimgs[-1], 0.012, atol=1e-8)
 
         # test forward
+        outputs = pggan.forward(dict(img=torch.randn(3, 3, 16, 16)))
+        assert len(outputs) == 3
+        assert all(['gt_img' in out for out in outputs])
+
         outputs = pggan.forward(dict(num_batches=2))
         assert len(outputs) == 2
         assert all([out.fake_img.data.shape == (3, 16, 16) for out in outputs])

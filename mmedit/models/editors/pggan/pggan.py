@@ -175,6 +175,8 @@ class ProgressiveGrowingGAN(BaseGAN):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
+            if isinstance(inputs, dict) and 'img' in inputs:
+                gen_sample.gt_img = PixelData(data=inputs['img'][idx])
             if isinstance(outputs, dict):
                 gen_sample.ema = EditDataSample(
                     fake_img=PixelData(data=outputs['ema'][idx]),

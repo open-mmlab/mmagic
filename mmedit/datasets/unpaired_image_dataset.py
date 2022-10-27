@@ -104,7 +104,7 @@ class UnpairedImageDataset(BaseDataset):
             dict: The idx-th annotation of the dataset.
         """
         img_a_path = self.data_infos_a[idx % self.len_a]['path']
-        if self.test_mode:
+        if not self.test_mode:
             idx_b = np.random.randint(0, self.len_b)
             img_b_path = self.data_infos_b[idx_b]['path']
         else:

@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.evaluation.metrics import SNR, psnr
+from mmedit.evaluation.metrics import SNR, snr
 
 
 class TestPixelMetrics:
@@ -45,44 +45,46 @@ class TestPixelMetrics:
 
 
 def test_snr():
-    img_hw_1 = np.ones((32, 32))
-    img_hwc_1 = np.ones((32, 32, 3))
-    img_chw_1 = np.ones((3, 32, 32))
-    img_hw_2 = np.ones((32, 32)) * 2
-    img_hwc_2 = np.ones((32, 32, 3)) * 2
-    img_chw_2 = np.ones((3, 32, 32)) * 2
+    img_hw_1 = np.ones((32, 32)) * 2
+    img_hwc_1 = np.ones((32, 32, 3)) * 2
+    img_chw_1 = np.ones((3, 32, 32)) * 2
+    img_hw_2 = np.ones((32, 32))
+    img_hwc_2 = np.ones((32, 32, 3))
+    img_chw_2 = np.ones((3, 32, 32))
 
     with pytest.raises(ValueError):
-        psnr(img_hw_1, img_hw_2, crop_border=0, input_order='HH')
+        snr(img_hw_1, img_hw_2, crop_border=0, input_order='HH')
 
     with pytest.raises(ValueError):
-        psnr(img_hw_1, img_hw_2, crop_border=0, convert_to='ABC')
+        snr(img_hw_1, img_hw_2, crop_border=0, convert_to='ABC')
 
-    psnr_result = psnr(img_hw_1, img_hw_2, crop_border=0)
-    np.testing.assert_almost_equal(psnr_result, 48.1308036)
-    psnr_result = psnr(img_hwc_1, img_hwc_2, crop_border=0, input_order='HWC')
-    np.testing.assert_almost_equal(psnr_result, 48.1308036)
-    psnr_result = psnr(img_chw_1, img_chw_2, crop_border=0, input_order='CHW')
-    np.testing.assert_almost_equal(psnr_result, 48.1308036)
+    snr_result = snr(img_hw_1, img_hw_2, crop_border=0)
+    np.testing.assert_almost_equal(snr_result, 6.020600199699402)
+    snr_result = snr(img_hwc_1, img_hwc_2, crop_border=0, input_order='HWC')
+    np.testing.assert_almost_equal(snr_result, 6.020600199699402)
+    print(snr_result)
+    snr_result = snr(img_chw_1, img_chw_2, crop_border=0, input_order='CHW')
+    np.testing.assert_almost_equal(snr_result, 6.020600199699402)
+    print(snr_result)
 
-    psnr_result = psnr(img_hw_1, img_hw_2, crop_border=2)
-    np.testing.assert_almost_equal(psnr_result, 48.1308036)
-    psnr_result = psnr(img_hwc_1, img_hwc_2, crop_border=3, input_order='HWC')
-    np.testing.assert_almost_equal(psnr_result, 48.1308036)
-    psnr_result = psnr(img_chw_1, img_chw_2, crop_border=4, input_order='CHW')
-    np.testing.assert_almost_equal(psnr_result, 48.1308036)
+    snr_result = snr(img_hw_1, img_hw_2, crop_border=2)
+    np.testing.assert_almost_equal(snr_result, 6.020600199699402)
+    snr_result = snr(img_hwc_1, img_hwc_2, crop_border=3, input_order='HWC')
+    np.testing.assert_almost_equal(snr_result, 6.020600199699402)
+    snr_result = snr(img_chw_1, img_chw_2, crop_border=4, input_order='CHW')
+    np.testing.assert_almost_equal(snr_result, 6.020600199699402)
 
-    psnr_result = psnr(img_hwc_1, img_hwc_2, crop_border=0, convert_to=None)
-    np.testing.assert_almost_equal(psnr_result, 48.1308036)
-    psnr_result = psnr(img_hwc_1, img_hwc_2, crop_border=0, convert_to='Y')
-    np.testing.assert_almost_equal(psnr_result, 49.4527218)
+    snr_result = snr(img_hwc_1, img_hwc_2, crop_border=0, convert_to=None)
+    np.testing.assert_almost_equal(snr_result, 6.020600199699402)
+    snr_result = snr(img_hwc_1, img_hwc_2, crop_border=0, convert_to='Y')
+    np.testing.assert_almost_equal(snr_result, 26.290040016174316)
 
     # test float inf
-    psnr_result = psnr(img_hw_1, img_hw_1, crop_border=0)
-    assert psnr_result == float('inf')
+    snr_result = snr(img_hw_1, img_hw_1, crop_border=0)
+    assert snr_result == float('inf')
 
     # test uint8
-    img_hw_1 = np.zeros((32, 32), dtype=np.uint8)
-    img_hw_2 = np.ones((32, 32), dtype=np.uint8) * 255
-    psnr_result = psnr(img_hw_1, img_hw_2, crop_border=0)
-    assert psnr_result == 0
+    img_hw_1 = np.ones((32, 32), dtype=np.uint8)
+    img_hw_2 = np.zeros((32, 32), dtype=np.uint8)
+    snr_result = snr(img_hw_1, img_hw_2, crop_border=0)
+    assert snr_result == 0
