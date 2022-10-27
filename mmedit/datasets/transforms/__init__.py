@@ -16,7 +16,6 @@ from .generate_assistant import (GenerateCoordinateAndCell,
 from .generate_frame_indices import (GenerateFrameIndices,
                                      GenerateFrameIndiceswithPadding,
                                      GenerateSegmentIndices)
-from .get_gray_color_pil import GenGrayColorPil
 from .get_masked_image import GetMaskedImage
 from .get_maskrcnn_bbox import InstanceCrop
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile, LoadMask,
@@ -47,6 +46,5 @@ __all__ = [
     'GenerateSoftSeg', 'FormatTrimap', 'TransformTrimap', 'GenerateTrimap',
     'GenerateTrimapWithDistTransform', 'CompositeFg', 'RandomLoadResizeBg',
     'MergeFgAndBg', 'PerturbBg', 'RandomJitter', 'LoadPairedImageFromFile',
-    'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad', 'InstanceCrop',
-    'GenGrayColorPil'
+    'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad', 'InstanceCrop'
 ]
