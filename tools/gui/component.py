@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import cv2
+import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from utils import layout2widget
 
@@ -11,6 +13,90 @@ class QLabelClick(QtWidgets.QLabel):
 
     def mousePressEvent(self, event):
         self.clicked.emit(self.text())
+
+
+class QLabelSlider(QtWidgets.QLabel):
+
+    def __init__(self, parent, scale, label_1, label_2, title):
+        super().__init__()
+        self.parent = parent
+        self.hSlider = -1
+        self.vSlider = -1
+        self.oldSlider = -1
+        self.scale = scale
+        self.label_1 = label_1
+        self.label_2 = label_2
+        self.title = title
+        self.images = self.parent.images
+        self.isShow = False
+
+    def mousePressEvent(self, ev: QtGui.QMouseEvent) -> None:
+        if ev.button() == QtCore.Qt.LeftButton:
+            if self.hSlider > -1:
+                self.oldSlider = self.hSlider
+            elif self.vSlider > -1:
+                self.oldSlider = self.vSlider
+        return super().mousePressEvent(ev)
+
+    def mouseReleaseEvent(self, ev: QtGui.QMouseEvent) -> None:
+        if ev.button() == QtCore.Qt.LeftButton:
+            self.oldSlider = -1
+            self.update()
+        return super().mouseReleaseEvent(ev)
+
+    def mouseMoveEvent(self, ev: QtGui.QMouseEvent) -> None:
+        if self.oldSlider > -1:
+            if self.hSlider > -1:
+                self.hSlider = ev.pos().x()
+            elif self.vSlider > -1:
+                self.vSlider = ev.pos().y()
+        self.update()
+        return super().mouseMoveEvent(ev)
+
+    def paintEvent(self, ev: QtGui.QPaintEvent) -> None:
+        qp = QtGui.QPainter()
+        qp.begin(self)
+        qp.drawImage(0, 0, QtGui.QImage(self.getImage()))
+        pen = QtGui.QPen(QtCore.Qt.green, 3)
+        qp.setPen(pen)
+        qp.drawLine(self.hSlider, 0, self.hSlider, self.height())
+        length = 9
+        qp.drawText(self.hSlider - 10 - len(self.label_1) * length, 20,
+                    self.label_1)
+        qp.drawText(self.hSlider + 10, 20, self.label_2)
+        qp.drawText(10, self.height() - 10, self.title)
+        qp.end()
+
+    def getImage(self):
+        img1, img2 = self.images
+        if img1 is None or img2 is None:
+            return
+        h1, w1, c1 = img1.shape
+        h2, w2, c2 = img2.shape
+        if w2 > w1:
+            img1 = cv2.resize(img1, (w2, h2))
+            self.setFixedHeight(h2 * self.scale)
+            self.setFixedWidth(w2 * self.scale)
+            if self.hSlider < 0:
+                self.hSlider = int(w2 / 2.0 * self.scale)
+        else:
+            img2 = cv2.resize(img2, (w1, h1))
+            self.setFixedHeight(h1 * self.scale)
+            self.setFixedWidth(w1 * self.scale)
+            if self.hSlider < 0:
+                self.hSlider = int(w1 / 2.0 * self.scale)
+
+        v = int(self.hSlider / self.scale)
+        img11 = img1[:, 0:v].copy()
+        img22 = img2[:, v:].copy()
+        img = np.hstack((img11, img22))
+        # img = cv2.line(img, (v, 0), (v, h2), (0, 222, 0), 4)
+        rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img_dis = QtGui.QImage(rgb_img, w2, h2, w2 * c2,
+                               QtGui.QImage.Format_RGB888)
+        img = QtGui.QPixmap.fromImage(img_dis).scaled(self.width(),
+                                                      self.height())
+        return img
 
 
 class QLabelPaint(QtWidgets.QLabel):

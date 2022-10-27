@@ -2,9 +2,8 @@
 import os
 
 import cv2
-import numpy as np
-from component import ConcatImageWidget
-from PyQt5 import QtCore, QtGui, QtWidgets
+from component import ConcatImageWidget, QLabelSlider
+from PyQt5 import QtCore, QtWidgets
 from utils import layout2widget
 
 
@@ -321,40 +320,61 @@ class PatchTab(QtWidgets.QWidget):
 
 class SliderTab(QtWidgets.QWidget):
 
-    def __init__(self):
+    def __init__(self, parent):
         super().__init__()
+        self.parent = parent
         self.images = [None, None]
+        self.imageArea = None
 
-        self.dirTypeRect = QtWidgets.QGroupBox('Select File or Directory')
-        self.dirTypeRect.setFlat(True)
-        btn_dirType1 = QtWidgets.QRadioButton('Directory', self.dirTypeRect)
-        btn_dirType2 = QtWidgets.QRadioButton('File', self.dirTypeRect)
-        self.btnGroup_dirType = QtWidgets.QButtonGroup()
-        self.btnGroup_dirType.addButton(btn_dirType1, 0)
-        self.btnGroup_dirType.addButton(btn_dirType2, 1)
-        self.btnGroup_dirType.button(0).setChecked(True)
+        self.modeRect = QtWidgets.QGroupBox('Mode')
+        self.modeRect.setFlat(True)
+        btn_mode1 = QtWidgets.QRadioButton('Match', self.modeRect)
+        btn_mode2 = QtWidgets.QRadioButton('Single', self.modeRect)
+        self.btnGroup_mode = QtWidgets.QButtonGroup()
+        self.btnGroup_mode.addButton(btn_mode1, 0)
+        self.btnGroup_mode.addButton(btn_mode2, 1)
+        self.btnGroup_mode.button(0).setChecked(True)
+        self.btnGroup_mode.idToggled.connect(self.reset)
         hlayout = QtWidgets.QHBoxLayout()
-        hlayout.addWidget(btn_dirType1)
-        hlayout.addWidget(btn_dirType2)
-        self.dirTypeRect.setLayout(hlayout)
+        hlayout.addWidget(btn_mode1)
+        hlayout.addWidget(btn_mode2)
+        self.modeRect.setLayout(hlayout)
 
         self.cb_1 = QtWidgets.QComboBox()
         self.cb_2 = QtWidgets.QComboBox()
-        self.cb_1.currentIndexChanged.connect(self.change_image)
-        self.cb_2.currentIndexChanged.connect(self.change_image)
+        self.cb_1.currentIndexChanged.connect(self.change_image_0)
+        self.cb_2.currentIndexChanged.connect(self.change_image_1)
         self.input_label_1 = QtWidgets.QLineEdit()
         self.input_label_2 = QtWidgets.QLineEdit()
         self.input_title = QtWidgets.QLineEdit()
+        self.input_label_1.textChanged.connect(self.set_label)
+        self.input_label_2.textChanged.connect(self.set_label)
+        self.input_title.textChanged.connect(self.set_label)
+
+        # set scale
+        self.txt_scale = QtWidgets.QLabel('100 %')
+        self.slider_scale = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.slider_scale.setMinimum(0)
+        self.slider_scale.setMaximum(200)
+        self.slider_scale.setValue(100)
+        self.slider_scale.valueChanged.connect(self.set_scale)
 
         self.btn_add_1 = QtWidgets.QPushButton()
         self.btn_add_2 = QtWidgets.QPushButton()
-        self.btn_add_1.setText('Add a file')
-        self.btn_add_2.setText('Add a directory')
+        self.btn_add_1.setText('Set image 1')
+        self.btn_add_2.setText('Set image 2')
         self.btn_add_1.clicked.connect(self.add_1)
-        self.btn_add_2.clicked.connect(self.add_1)
+        self.btn_add_2.clicked.connect(self.add_2)
+
+        self.btn_reset = QtWidgets.QPushButton()
+        self.btn_reset.setText('Reset')
+        self.btn_reset.clicked.connect(self.reset)
+        self.btn_save = QtWidgets.QPushButton()
+        self.btn_save.setText('Save')
+        self.btn_save.clicked.connect(self.save)
 
         left_grid = QtWidgets.QGridLayout()
-        left_grid.addWidget(self.dirTypeRect, 0, 0, 1, 10)
+        left_grid.addWidget(self.modeRect, 0, 0, 1, 10)
         left_grid.addWidget(QtWidgets.QLabel('Set image 1'), 1, 0, 1, 1)
         left_grid.addWidget(self.cb_1, 1, 1, 1, 9)
         left_grid.addWidget(QtWidgets.QLabel('Set image 2'), 2, 0, 1, 1)
@@ -365,16 +385,19 @@ class SliderTab(QtWidgets.QWidget):
         left_grid.addWidget(self.input_label_2, 4, 1, 1, 9)
         left_grid.addWidget(QtWidgets.QLabel('Set title'), 5, 0, 1, 1)
         left_grid.addWidget(self.input_title, 5, 1, 1, 9)
-        left_grid.addWidget(self.btn_add_1, 6, 0, 1, 5)
-        left_grid.addWidget(self.btn_add_2, 6, 5, 1, 5)
+        left_grid.addWidget(QtWidgets.QLabel('Set scale'), 6, 0, 1, 1)
+        left_grid.addWidget(self.slider_scale, 6, 1, 1, 8)
+        left_grid.addWidget(self.txt_scale, 6, 9, 1, 1)
+        left_grid.addWidget(self.btn_add_1, 7, 0, 1, 5)
+        left_grid.addWidget(self.btn_add_2, 7, 5, 1, 5)
+        left_grid.addWidget(self.btn_reset, 8, 0, 1, 10)
+        left_grid.addWidget(self.btn_save, 9, 0, 1, 10)
+        left_grid.addWidget(QtWidgets.QLabel(), 10, 0, 20, 10)
 
         self.image_scroll = QtWidgets.QScrollArea()
         self.image_scroll.setAlignment(QtCore.Qt.AlignCenter)
-        self.slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-        self.slider.valueChanged.connect(self.show_image)
         right_grid = QtWidgets.QGridLayout()
         right_grid.addWidget(self.image_scroll, 0, 0)
-        right_grid.addWidget(self.slider, 1, 0)
 
         # Splitter
         hsplitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
@@ -387,57 +410,128 @@ class SliderTab(QtWidgets.QWidget):
         self.setLayout(hlayout)
 
     def add_1(self):
-        path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Select gt file', '', 'Images (*.jpg *.png *.mp4 *.avi)')
-        if self.cb_1.count() > 0:
-            if self.cb_1.findText(path) > -1:
-                self.cb_1.removeItem(self.cb_1.findText(path))
-            if self.cb_2.findText(path) > -1:
-                self.cb_2.removeItem(self.cb_2.findText(path))
-            self.cb_1.addItem(path)
-            self.cb_2.addItem(path)
-            self.cb_2.setCurrentIndex(self.cb_2.count() - 1)
+        if self.btnGroup_mode.checkedId() == 0:
+            path = QtWidgets.QFileDialog.getExistingDirectory(self)
+            if len(path) <= 0:
+                return
+            self.cb_1.clear()
+            files = sorted(os.listdir(path))
+            for f in files:
+                self.cb_1.addItem(path + '/' + f)
         else:
-            self.cb_1.addItem(path)
-            self.cb_2.addItem(path)
-            self.cb_1.setCurrentIndex(0)
-            self.cb_2.setCurrentIndex(0)
+            path, _ = QtWidgets.QFileDialog.getOpenFileName(
+                self, 'Select gt file', '', 'Images (*.jpg *.png *.mp4 *.avi)')
+            if len(path) <= 0:
+                return
+            if self.cb_1.count() > 0:
+                if self.cb_1.findText(path) > -1:
+                    self.cb_1.removeItem(self.cb_1.findText(path))
+                if self.cb_2.findText(path) > -1:
+                    self.cb_2.removeItem(self.cb_2.findText(path))
+                self.cb_1.addItem(path)
+                self.cb_2.addItem(path)
+                self.cb_2.setCurrentIndex(self.cb_2.count() - 1)
+            else:
+                self.cb_1.addItem(path)
+                self.cb_2.addItem(path)
+                self.cb_1.setCurrentIndex(0)
+                self.cb_2.setCurrentIndex(0)
 
-    def change_image(self):
+    def add_2(self):
+        if self.btnGroup_mode.checkedId() == 0:
+            path = QtWidgets.QFileDialog.getExistingDirectory(self)
+            print(path)
+            if len(path) <= 0:
+                return
+            self.cb_2.clear()
+            files = sorted(os.listdir(path))
+            for f in files:
+                self.cb_2.addItem(path + '/' + f)
+        else:
+            paths = QtWidgets.QFileDialog.getExistingDirectory(self)
+            if len(paths) <= 0:
+                return
+            files = sorted(os.listdir(paths))
+            for f in files:
+                path = paths + '/' + f
+                if self.cb_1.count() > 0:
+                    if self.cb_1.findText(path) > -1:
+                        self.cb_1.removeItem(self.cb_1.findText(path))
+                    if self.cb_2.findText(path) > -1:
+                        self.cb_2.removeItem(self.cb_2.findText(path))
+                    self.cb_1.addItem(path)
+                    self.cb_2.addItem(path)
+                    self.cb_2.setCurrentIndex(self.cb_2.count() - 1)
+                else:
+                    self.cb_1.addItem(path)
+                    self.cb_2.addItem(path)
+                    self.cb_1.setCurrentIndex(0)
+                    self.cb_2.setCurrentIndex(0)
+
+    def set_label(self):
+        if self.imageArea is not None:
+            self.imageArea.label_1 = self.input_label_1.text()
+            self.imageArea.label_2 = self.input_label_2.text()
+            self.imageArea.title = self.input_title.text()
+            self.imageArea.update()
+
+    def set_scale(self):
+        """Set scale."""
+        scale = self.slider_scale.value()
+        self.txt_scale.setText(f'{scale} %')
+        if self.imageArea is not None:
+            self.imageArea.hSlider = -1
+            self.imageArea.scale = scale / 100.0 + 1e-7
+            self.imageArea.update()
+
+    def change_image_0(self):
+        if self.btnGroup_mode.checkedId() == 0:
+            self.cb_2.setCurrentIndex(self.cb_1.currentIndex())
+        self.images[0] = cv2.imread(self.cb_1.currentText())
+        self.images[1] = cv2.imread(self.cb_2.currentText())
+        self.show_image()
+
+    def change_image_1(self):
+        if self.btnGroup_mode.checkedId() == 0:
+            self.cb_1.setCurrentIndex(self.cb_2.currentIndex())
         self.images[0] = cv2.imread(self.cb_1.currentText())
         self.images[1] = cv2.imread(self.cb_2.currentText())
         self.show_image()
 
     def show_image(self):
-        if self.images[0] is None or self.images[1] is None:
-            return
-        img1, img2 = self.images
-        h2, w2, c2 = img2.shape
-        self.slider.setMaximum(w2)
-        # img2 = cv2.resize(img2, (800, int(800 / w2 * h2)))
-        h2, w2, c2 = img2.shape
-        img1 = cv2.resize(img1, (w2, h2))
-        v = self.slider.value()
-        img11 = img1[:, 0:v].copy()
-        img22 = img2[:, v:].copy()
-        img = np.hstack((img11, img22))
-        img = cv2.line(img, (v, 0), (v, h2), (0, 222, 0), 4)
-        rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img_dis = QtGui.QImage(rgb_img, w2, h2, w2 * c2,
-                               QtGui.QImage.Format_RGB888)
-        jpg = QtGui.QPixmap.fromImage(img_dis)
-        # .scaled(
-        # self.imageArea.width(), int(self.imageArea.width() / w2 * h2))
-
-        imageArea = QtWidgets.QLabel()
-        imageArea.setFrameShape(QtWidgets.QFrame.Box)
-        imageArea.setLineWidth(2)
-        imageArea.setAlignment(QtCore.Qt.AlignBottom)
-        imageArea.setStyleSheet(
+        self.imageArea = QLabelSlider(self,
+                                      self.slider_scale.value() / 100.0 + 1e-7,
+                                      self.input_label_1.text(),
+                                      self.input_label_2.text(),
+                                      self.input_title.text())
+        self.imageArea.setFrameShape(QtWidgets.QFrame.Box)
+        self.imageArea.setLineWidth(2)
+        self.imageArea.setAlignment(QtCore.Qt.AlignBottom)
+        self.imageArea.setStyleSheet(
             'border-width: 0px; border-style: solid; border-color: rgb(100, 100, 100);background-color: rgb(255, 255, 255)'  # noqa
         )
-        imageArea.setPixmap(jpg)
-        self.image_scroll.setWidget(imageArea)
+        self.image_scroll.setWidget(self.imageArea)
+
+    def reset(self):
+        self.images = [None, None]
+        self.cb_1.clear()
+        self.cb_2.clear()
+        self.show_image()
+        if self.btnGroup_mode.checkedId() == 0:
+            self.btn_add_1.setText('Set image 1')
+            self.btn_add_2.setText('Set image 2')
+        else:
+            self.btn_add_1.setText('Add file')
+            self.btn_add_2.setText('Add directory')
+
+    def save(self):
+        """Save slider compare result."""
+        path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'save')
+        if self.imageArea:
+            self.imageArea.grab().save(path)
+            QtWidgets.QMessageBox.about(self, 'Message', 'Success!')
+        else:
+            QtWidgets.QMessageBox.about(self, 'Message', 'Nothing to save.')
 
 
 class SRPage(QtWidgets.QWidget):
@@ -449,7 +543,7 @@ class SRPage(QtWidgets.QWidget):
         self.statusBar = self.parent.statusBar
 
         self.tab_patch = PatchTab(self)
-        self.tab_slider = SliderTab()
+        self.tab_slider = SliderTab(self)
         self.tabs = QtWidgets.QTabWidget()
         self.tabs.addTab(self.tab_patch, 'patch compare')
         self.tabs.addTab(self.tab_slider, 'before/after slider')
