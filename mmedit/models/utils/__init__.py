@@ -1,7 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 
 from .bbox_utils import extract_around_bbox, extract_bbox_patch
-from .color_utils import encode_ab_ind, get_colorization_data, lab2rgb
 from .flow_warp import flow_warp
 from .model_utils import (default_init_weights, generation_init_weights,
                           get_module_device, get_valid_noise_size,
@@ -14,5 +13,5 @@ __all__ = [
     'generation_init_weights', 'set_requires_grad', 'extract_bbox_patch',
     'extract_around_bbox', 'get_unknown_tensor', 'noise_sample_fn',
     'label_sample_fn', 'get_valid_num_batches', 'get_valid_noise_size',
-    'get_module_device', 'encode_ab_ind', 'get_colorization_data', 'lab2rgb'
+    'get_module_device'
 ]

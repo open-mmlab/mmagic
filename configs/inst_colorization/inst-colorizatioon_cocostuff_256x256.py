@@ -13,21 +13,32 @@ model = dict(
         mean=[127.5],
         std=[127.5],
     ),
-    full_model=dict(
-        type='FusionNet', input_nc=4, output_nc=2, norm_type='batch'),
+    image_model=dict(
+        type='ColorizationNet', input_nc=4, output_nc=2, norm_type='batch'),
     instance_model=dict(
         type='ColorizationNet', input_nc=4, output_nc=2, norm_type='batch'),
-    stage=stage,
-    ngf=64,
-    output_nc=2,
-    avg_loss_alpha=.986,
-    ab_norm=110.,
-    ab_max=110.,
-    ab_quant=10.,
-    l_norm=100.,
-    l_cent=50.,
-    sample_Ps=[1, 2, 3, 4, 5, 6, 7, 8, 9],
-    mask_cent=.5,
+    fusion_model=dict(
+        type='FusionNet', input_nc=4, output_nc=2, norm_type='batch'),
+    color_data_opt=dict(
+        ab_thresh=0,
+        p=1.0,
+        sample_PS=[
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+        ],
+        ab_norm=110,
+        ab_max=110.,
+        ab_quant=10.,
+        l_norm=100.,
+        l_cent=50.,
+        mask_cent=0.5),
     which_direction='AtoB',
     loss=dict(type='HuberLoss', delta=.01))
 

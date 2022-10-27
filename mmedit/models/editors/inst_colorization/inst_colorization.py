@@ -6,9 +6,9 @@ from mmengine.config import Config
 from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
 
-from mmedit.models.utils import get_colorization_data, lab2rgb
 from mmedit.registry import MODULES
 from mmedit.structures import EditDataSample, PixelData
+from .color_utils import get_colorization_data, lab2rgb
 
 
 @MODULES.register_module()
@@ -16,19 +16,10 @@ class InstColorization(BaseModel):
 
     def __init__(self,
                  data_preprocessor: Union[dict, Config],
-                 full_model,
+                 image_model,
                  instance_model,
-                 stage,
-                 ngf,
-                 output_nc,
-                 avg_loss_alpha,
-                 ab_norm,
-                 ab_max,
-                 ab_quant,
-                 l_norm,
-                 l_cent,
-                 sample_Ps,
-                 mask_cent,
+                 fusion_model,
+                 color_data_opt,
                  which_direction='AtoB',
                  loss=None,
                  init_cfg=None,
@@ -39,50 +30,20 @@ class InstColorization(BaseModel):
             init_cfg=init_cfg, data_preprocessor=data_preprocessor)
 
         # colorization networks
-        # Stage 1 & 3. fusion model intergrates the image model
-        self.full_model = MODULES.build(full_model)
+        # image_model: used to colorize a single image
+        self.image_model = MODULES.build(image_model)
 
-        # Stage 2. instance model used for training instance colorization
+        # instance model: used to colorize cropped instance
         self.instance_model = MODULES.build(instance_model)
 
-        self.stage = stage
+        # fusion model: input a single image with related instance features
+        self.fusion_model = MODULES.build(fusion_model)
 
-        # self.train_cfg = train_cfg
-        # self.test_cfg = test_cfg
-        # self.ngf = ngf
-        # self.output_nc = output_nc
-        # self.avg_loss_alpha = avg_loss_alpha
-        # self.mask_cent = mask_cent
-        # self.which_direction = which_direction
+        self.color_data_opt = color_data_opt
+        self.which_direction = which_direction
 
-        # self.encode_ab_opt = dict(
-        #     ab_norm=ab_norm, ab_max=ab_max, ab_quant=ab_quant)
-        # self.colorization_data_opt = dict(
-        #     ab_thresh=0,
-        #     ab_norm=ab_norm,
-        #     l_norm=l_norm,
-        #     l_cent=l_cent,
-        #     sample_PS=sample_Ps,
-        #     mask_cent=mask_cent,
-        # )
-        # self.lab2rgb_opt = dict(
-        # ab_norm=ab_norm, l_norm=l_norm, l_cent=l_cent)
-        # self.convert_params = dict(
-        #     ab_thresh=0,
-        #     ab_norm=ab_norm,
-        #     l_norm=l_norm,
-        #     l_cent=l_cent,
-        #     sample_PS=sample_Ps,
-        #     mask_cent=mask_cent,
-        # )
-
-        # # loss
-        # self.loss_names = ['G', 'L1']
-        # self.criterionL1 = self.loss
-        # self.avg_losses = OrderedDict()
-        # self.error_cnt = 0
-        # for loss_name in self.loss_names:
-        #     self.avg_losses[loss_name] = 0
+        self.train_cfg = train_cfg
+        self.test_cfg = test_cfg
 
     def forward(self,
                 inputs: torch.Tensor,
@@ -149,6 +110,11 @@ class InstColorization(BaseModel):
         elif mode == 'loss':
             return self.forward_train(inputs, data_samples, **kwargs)
 
+    def convert_to_datasample(self, inputs, data_samples):
+        for data_sample, output in zip(inputs, data_samples):
+            data_sample.output = output
+        return inputs
+
     def forward_train(self, inputs, data_samples=None, **kwargs):
         raise NotImplementedError(
             'Instance Colorization has not supported training.')
@@ -180,44 +146,58 @@ class InstColorization(BaseModel):
         Returns:
             dict: Dict contains output results.
         """
-        print(data_samples)
-        for dp in data_samples:
-            print(dp.keys())
 
-        data = data_samples[0]
-        full_img = data.full_gray
+        #  prepare data
 
-        if not data.empty_box:
-            cropped_img = data.cropped_gray
-            box_info = data.box_info
-            box_info_2x = data.box_info_2x
-            box_info_4x = data.box_info_4x
-            box_info_8x = data.box_info_8x
-            cropped_data = get_colorization_data(cropped_img,
-                                                 **self.convert_params)
-            full_img_data = get_colorization_data(full_img,
-                                                  **self.convert_params)
-            self.set_input(cropped_data)
-            self.set_fusion_input(
-                full_img_data,
-                [box_info, box_info_2x, box_info_4x, box_info_8x])
+        assert len(data_samples), \
+            'fusion model supports only one image due to different numbers '\
+            'of instances of different images'
+
+        cropped_img = data_samples[0].cropped_img.data
+        box_info_list = [
+            data_samples[0].box_info, data_samples[0].box_info_2x,
+            data_samples[0].box_info_4x, data_samples[0].box_info_8x
+        ]
+        print('crop: ', torch.min(cropped_img), torch.max(cropped_img))
+        print('full: ', torch.min(inputs), torch.max(inputs))
+        cropped_data = get_colorization_data(cropped_img, self.color_data_opt)
+        full_img_data = get_colorization_data(inputs, self.color_data_opt)
+        AtoB = self.which_direction == 'AtoB'
+
+        # preprocess input for a single image
+        full_real_A = full_img_data['A' if AtoB else 'B']
+        # full_real_B = full_img_data['B' if AtoB else 'A']
+        full_hint_B = full_img_data['hint_B']
+        full_mask_B = full_img_data['mask_B']
+        # full_mask_B_nc = full_mask_B + self.color_data_opt['mask_cent']
+        # full_real_B_enc = encode_ab_ind(full_real_B[:, :, ::4, ::4],
+        #                                 self.color_data_opt)
+
+        if not data_samples[0].empty_box:
+            # preprocess instance input
+            real_A = cropped_data['A' if AtoB else 'B']
+            # real_B = cropped_data['B' if AtoB else 'A']
+            hint_B = cropped_data['hint_B']
+            mask_B = cropped_data['mask_B']
+            # mask_B_nc = mask_B + self.color_data_opt['mask_cent']
+            # real_B_enc = encode_ab_ind(real_B[:, :, ::4, ::4],
+            #                            self.color_data_opt)
+
+            # network forward
+            _, output, feature_map = self.instance_model(
+                real_A, hint_B, mask_B)
+            output = self.fusion_model(full_real_A, full_hint_B, full_mask_B,
+                                       feature_map, box_info_list)
+
         else:
-            full_img_data = get_colorization_data(full_img, ab_thresh=0)
-            self.set_forward_without_box(full_img_data)
+            _, output, _ = self.image_model(full_real_A, full_hint_B,
+                                            full_mask_B)
 
-        self.fake_B_reg = self.generator(self.real_A, self.hint_B, self.mask_B,
-                                         self.full_real_A, self.full_hint_B,
-                                         self.full_mask_B, self.box_info_list)
-
-        out_img = torch.clamp(
-            lab2rgb(
-                torch.cat((self.full_real_A.type(torch.cuda.FloatTensor),
-                           self.fake_B_reg.type(torch.cuda.FloatTensor)),
-                          dim=1), **self.lab2rgb_opt), 0.0, 1.0)
-
-        return out_img
-
-    def convert_to_datasample(self, inputs, data_samples):
-        for data_sample, output in zip(inputs, data_samples):
-            data_sample.output = output
-        return inputs
+        output = [
+            full_real_A.type(torch.cuda.FloatTensor),
+            output.type(torch.cuda.FloatTensor)
+        ]
+        output = torch.cat(output, dim=1)
+        print('output: ', torch.min(output), torch.max(output))
+        output = torch.clamp(lab2rgb(output, self.color_data_opt), 0.0, 1.0)
+        return output

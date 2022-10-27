@@ -3,38 +3,7 @@ import numpy as np
 import torch
 
 
-# Color conversion code
-def rgb2xyz(rgb):  # rgb from [0,1]
-    # xyz_from_rgb = np.array([[0.412453, 0.357580, 0.180423],
-    # [0.212671, 0.715160, 0.072169],
-    # [0.019334, 0.119193, 0.950227]])
-
-    mask = (rgb > .04045).type(torch.FloatTensor)
-    if (rgb.is_cuda):
-        mask = mask.cuda()
-
-    rgb = (((rgb + .055) / 1.055)**2.4) * mask + rgb / 12.92 * (1 - mask)
-
-    x = .412453 * rgb[:, 0, :, :] + .357580 * rgb[:, 1, :, :] \
-        + .180423 * rgb[:, 2, :, :]
-    y = .212671 * rgb[:, 0, :, :] + .715160 * rgb[:, 1, :, :] \
-        + .072169 * rgb[:, 2, :, :]
-    z = .019334 * rgb[:, 0, :, :] + .119193 * rgb[:, 1, :, :] \
-        + .950227 * rgb[:, 2, :, :]
-    out = torch.cat((x[:, None, :, :], y[:, None, :, :], z[:, None, :, :]),
-                    dim=1)
-
-    # if(torch.sum(torch.isnan(out))>0):
-    # print('rgb2xyz')
-    # embed()
-    return out
-
-
 def xyz2rgb(xyz):
-    # array([[ 3.24048134, -1.53715152, -0.49853633],
-    #        [-0.96925495,  1.87599   ,  0.04155593],
-    #        [ 0.05564664, -0.20404134,  1.05731107]])
-
     r = 3.24048134 * xyz[:, 0, :, :] - 1.53715152 * xyz[:, 1, :, :] \
         - 0.49853633 * xyz[:, 2, :, :]
     g = -0.96925495 * xyz[:, 0, :, :] + 1.87599 * xyz[:, 1, :, :] \
@@ -42,19 +11,16 @@ def xyz2rgb(xyz):
     b = .05564664 * xyz[:, 0, :, :] - .20404134 * xyz[:, 1, :, :] \
         + 1.05731107 * xyz[:, 2, :, :]
 
+    # sometimes reaches a small negative number, which causes NaNs
     rgb = torch.cat((r[:, None, :, :], g[:, None, :, :], b[:, None, :, :]),
                     dim=1)
     rgb = torch.max(rgb, torch.zeros_like(rgb))
-    # sometimes reaches a small negative number, which causes NaNs
 
     mask = (rgb > .0031308).type(torch.FloatTensor)
     if rgb.is_cuda:
         mask = mask.cuda()
 
     rgb = (1.055 * (rgb**(1. / 2.4)) - 0.055) * mask + 12.92 * rgb * (1 - mask)
-    # if(torch.sum(torch.isnan(rgb))>0):
-    # print('xyz2rgb')
-    # embed()
     return rgb
 
 
@@ -80,36 +46,54 @@ def lab2xyz(lab):
     sc = sc.to(out.device)
 
     out = out * sc
-
-    # if(torch.sum(torch.isnan(out))>0):
-    # print('lab2xyz')
-    # embed()
-
     return out
 
 
-def lab2rgb(lab_rs, **kwargs):
-    L = lab_rs[:, [0], :, :] * kwargs['l_norm'] + kwargs['l_cent']
-    AB = lab_rs[:, 1:, :, :] * kwargs['ab_norm']
+def lab2rgb(lab_rs, color_data_opt):
+    L = lab_rs[:,
+               [0], :, :] * color_data_opt['l_norm'] + color_data_opt['l_cent']
+    AB = lab_rs[:, 1:, :, :] * color_data_opt['ab_norm']
     lab = torch.cat((L, AB), dim=1)
     out = xyz2rgb(lab2xyz(lab))
-    # if(torch.sum(torch.isnan(out))>0):
-    # print('lab2rgb')
-    # embed()
     return out
 
 
-def encode_ab_ind(data_ab, **kwargs):
+def encode_ab_ind(data_ab, color_data_opt):
     # Encode ab value into an index
     # INPUTS
     #   data_ab   Nx2xHxW \in [-1,1]
     # OUTPUTS
     #   data_q    Nx1xHxW \in [0,Q)
-    A = 2 * kwargs['ab_max'] / kwargs['ab_quant'] + 1
-    data_ab_rs = torch.round((data_ab * kwargs['ab_norm'] + kwargs['ab_max']) /
-                             kwargs['ab_quant'])  # normalized bin number
+    A = 2 * color_data_opt['ab_max'] / color_data_opt['ab_quant'] + 1
+    data_ab_rs = torch.round(
+        (data_ab * color_data_opt['ab_norm'] + color_data_opt['ab_max']) /
+        color_data_opt['ab_quant'])  # normalized bin number
     data_q = data_ab_rs[:, [0], :, :] * A + data_ab_rs[:, [1], :, :]
     return data_q
+
+
+# Color conversion code
+def rgb2xyz(rgb):  # rgb from [0,1]
+    # xyz_from_rgb = np.array([[0.412453, 0.357580, 0.180423],
+    # [0.212671, 0.715160, 0.072169],
+    # [0.019334, 0.119193, 0.950227]])
+
+    mask = (rgb > .04045).type(torch.FloatTensor)
+    if (rgb.is_cuda):
+        mask = mask.cuda()
+
+    rgb = (((rgb + .055) / 1.055)**2.4) * mask + rgb / 12.92 * (1 - mask)
+
+    x = .412453 * rgb[:, 0, :, :] + .357580 * rgb[:, 1, :, :] \
+        + .180423 * rgb[:, 2, :, :]
+    y = .212671 * rgb[:, 0, :, :] + .715160 * rgb[:, 1, :, :] \
+        + .072169 * rgb[:, 2, :, :]
+    z = .019334 * rgb[:, 0, :, :] + .119193 * rgb[:, 1, :, :] \
+        + .950227 * rgb[:, 2, :, :]
+    out = torch.cat((x[:, None, :, :], y[:, None, :, :], z[:, None, :, :]),
+                    dim=1)
+
+    return out
 
 
 def xyz2lab(xyz):
@@ -133,42 +117,28 @@ def xyz2lab(xyz):
     out = torch.cat((L[:, None, :, :], a[:, None, :, :], b[:, None, :, :]),
                     dim=1)
 
-    # if(torch.sum(torch.isnan(out))>0):
-    # print('xyz2lab')
-    # embed()
-
     return out
 
 
-def rgb2lab(rgb, **kwargs):
+def rgb2lab(rgb, color_opt):
     lab = xyz2lab(rgb2xyz(rgb))
-    # print(lab[0, 0, 0, 0])
-    # lab_0 = lab[:, [0], :, :]
-    l_rs = (lab[:, [0], :, :] - kwargs['l_cent']) / kwargs['l_norm']
-    # print(l_rs[0, 0, 0, 0])
-    ab_rs = lab[:, 1:, :, :] / kwargs['ab_norm']
+    l_rs = (lab[:, [0], :, :] - color_opt['l_cent']) / color_opt['l_norm']
+    ab_rs = lab[:, 1:, :, :] / color_opt['ab_norm']
     out = torch.cat((l_rs, ab_rs), dim=1)
-    # if(torch.sum(torch.isnan(out))>0):
-    # print('rgb2lab')
-    # embed()
     return out
 
 
-def get_colorization_data(data_raw,
-                          ab_thresh=5.,
-                          p=.125,
-                          num_points=None,
-                          **kwargs):
+def get_colorization_data(data_raw, color_opt, num_points=None):
     data = {}
-
-    data_lab = rgb2lab(data_raw, **kwargs)
+    data_lab = rgb2lab(data_raw, color_opt)
     data['A'] = data_lab[:, [
         0,
     ], :, :]
     data['B'] = data_lab[:, 1:, :, :]
 
-    if ab_thresh > 0:  # mask out grayscale images
-        thresh = 1. * ab_thresh / kwargs['ab_norm']
+    # mask out grayscale images
+    if color_opt['ab_thresh'] > 0:
+        thresh = 1. * color_opt['ab_thresh'] / color_opt['ab_norm']
         mask = torch.sum(
             torch.abs(
                 torch.max(torch.max(data['B'], dim=3)[0], dim=2)[0] -
@@ -176,20 +146,19 @@ def get_colorization_data(data_raw,
             dim=1) >= thresh
         data['A'] = data['A'][mask, :, :, :]
         data['B'] = data['B'][mask, :, :, :]
-        # print('Removed %i points'%torch.sum(mask==0).numpy())
         if torch.sum(mask) == 0:
             return None
 
     return add_color_patches_rand_gt(
-        data, p=p, num_points=num_points, **kwargs)
+        data, color_opt, p=color_opt['p'], num_points=num_points)
 
 
 def add_color_patches_rand_gt(data,
+                              color_opt,
                               p=.125,
                               num_points=None,
                               use_avg=True,
-                              samp='normal',
-                              **kwargs):
+                              samp='normal'):
     # Add random color points sampled from ground truth based on:
     #   Number of points
     #   - if num_points is 0, then sample from geometric distribution,
@@ -207,18 +176,21 @@ def add_color_patches_rand_gt(data,
         pp = 0
         cont_cond = True
         while cont_cond:
-            if num_points is None:  # draw from geometric
-                # embed()
+            # draw from geometric
+            if num_points is None:
                 cont_cond = np.random.rand() < (1 - p)
-            else:  # add certain number of points
+            else:
+                # add certain number of points
                 cont_cond = pp < num_points
-            if not cont_cond:  # skip out of loop if condition not met
+            # skip out of loop if condition not met
+            if not cont_cond:
                 continue
 
-            P = np.random.choice(kwargs['sample_PS'])  # patch size
+            # patch size
+            P = np.random.choice(color_opt['sample_PS'])
 
-            # sample location
-            if samp == 'normal':  # geometric distribution
+            # sample location: geometric distribution
+            if samp == 'normal':
                 h = int(
                     np.clip(
                         np.random.normal((H - P + 1) / 2., (H - P + 1) / 4.),
@@ -250,6 +222,6 @@ def add_color_patches_rand_gt(data,
             # increment counter
             pp += 1
 
-    data['mask_B'] -= kwargs['mask_cent']
+    data['mask_B'] -= color_opt['mask_cent']
 
     return data
