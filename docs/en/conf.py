@@ -32,11 +32,15 @@ author = 'MMEditing Authors'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
+    'sphinx.ext.autosectionlabel',
     'sphinx_markdown_tables',
-    'sphinx_copybutton',
     'myst_parser',
+    'sphinx_copybutton',
+    'sphinx.ext.autodoc.typehints',
 ]
 
 autodoc_mock_imports = [
