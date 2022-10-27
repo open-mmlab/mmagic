@@ -88,7 +88,6 @@ val_evaluator = [
     dict(type='MAE'),
     dict(type='PSNR'),
     dict(type='SSIM'),
-    dict(type='NIQE'),
 ]
 test_evaluator = val_evaluator
 
@@ -106,7 +105,7 @@ test_cfg = dict(type='TestLoop')
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
     type='OptimWrapper',
-    optimizer=dict(type='AdamW', lr=1e-3, betas=(0.9, 0.9)))
+    optimizer=dict(type='AdamW', lr=1e-3, weight_decay=1e-3, betas=(0.9, 0.9)))
 
 # learning policy
 param_scheduler = dict(
@@ -129,4 +128,6 @@ default_hooks = dict(
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
 
-visualizer = dict(bgr2rgb=True)
+visualizer = dict(bgr2rgb=False)
+
+randomness = dict(seed=10, diff_rank_seed=True)
