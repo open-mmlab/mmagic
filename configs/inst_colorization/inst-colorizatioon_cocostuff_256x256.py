@@ -44,7 +44,7 @@ model = dict(
 
 # yapf: disable
 test_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
+    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(
         type='InstanceCrop',
         config_file='COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml',  # noqa

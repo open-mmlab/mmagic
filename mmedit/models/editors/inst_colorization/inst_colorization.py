@@ -158,6 +158,7 @@ class InstColorization(BaseModel):
             data_samples[0].box_info, data_samples[0].box_info_2x,
             data_samples[0].box_info_4x, data_samples[0].box_info_8x
         ]
+        print(data_samples[0])
         print('crop: ', torch.min(cropped_img), torch.max(cropped_img))
         print('full: ', torch.min(inputs), torch.max(inputs))
         cropped_data = get_colorization_data(cropped_img, self.color_data_opt)

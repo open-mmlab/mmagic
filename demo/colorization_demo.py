@@ -32,7 +32,7 @@ def main():
 
     model = init_model(args.config, args.checkpoints, device=device)
     output = colorization_inference(model, args.img_path)
-    result = tensor2img(output)[..., ::-1]
+    result = tensor2img(output)
     mmcv.imwrite(result, args.save_path)
 
     if args.imshow:
