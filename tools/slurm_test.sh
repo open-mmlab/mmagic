@@ -20,6 +20,5 @@ srun -p ${PARTITION} \
     --ntasks-per-node=${GPUS_PER_NODE} \
     --cpus-per-task=${CPUS_PER_TASK} \
     --kill-on-bad-exit=1 \
-    --quotatype=auto \
     ${SRUN_ARGS} \
     python -u tools/test.py ${CONFIG} ${CHECKPOINT} --launcher="slurm" ${PY_ARGS}
