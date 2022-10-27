@@ -270,7 +270,7 @@ class RandomNoise:
 
         outputs = []
         for img in imgs:
-            noise = img.copy().astype(np.float32)
+            noise = img.copy()
             if is_gray_noise:
                 noise = cv2.cvtColor(noise[..., [2, 1, 0]], cv2.COLOR_BGR2GRAY)
                 noise = noise[..., np.newaxis]

@@ -176,13 +176,13 @@ def ssim(img1,
     img2 = to_numpy(img2)
 
     ssims = []
-    # for i in range(img1.shape[2]):
-    #     ssims.append(_ssim(img1[..., i], img2[..., i]))
-    ssims.append(_ssim_3d(img1, img2, max_value=255))
+    for i in range(img1.shape[2]):
+        ssims.append(_ssim(img1[..., i], img2[..., i]))
 
     return np.array(ssims).mean()
 
-
+# Components for SSIM with 3D kernels
+# Not used for now
 import torch
 
 def _3d_gaussian_calculator(img, conv3d):

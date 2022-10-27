@@ -5,7 +5,7 @@ work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
 scale = 4
-gt_crop_size = 256
+gt_crop_size = 400
 
 # DistributedDataParallel
 model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
@@ -23,6 +23,7 @@ model = dict(
         upscale_factor=scale),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     is_use_sharpened_gt_in_pixel=True,
+    is_use_ema=True,
     train_cfg=dict(),
     test_cfg=dict(),
     data_preprocessor=dict(
@@ -38,8 +39,7 @@ train_pipeline = [
         type='Crop',
         keys=['gt'],
         crop_size=(gt_crop_size, gt_crop_size),
-        random_crop=True,
-        is_pad_zeros=True),
+        random_crop=True),
     dict(type='RescaleToZeroOne', keys=['gt']),
     dict(
         type='UnsharpMasking',
@@ -178,8 +178,6 @@ train_pipeline = [
 val_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='MATLABLikeResize', keys=['img'], scale=0.25), # For RealSR datasets
-    dict(type='RescaleToZeroOne', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -206,19 +204,16 @@ val_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(dataset_type='imagenet', task_name='real_sr'),
-        data_root='data/imagenet',
-        data_prefix=dict(gt='val', img='val'),
-        # filename_tmpl=dict(img='{}_LR4', gt='{}_HR'), # for RealSR datasets
-        pipeline=train_pipeline))
+        metainfo=dict(dataset_type='set5', task_name='real_sr'),
+        data_root='data/Set5',
+        data_prefix=dict(gt='GTmod12', img='LRbicx4'),
+        pipeline=val_pipeline))
 
 test_dataloader = val_dataloader
 
 val_evaluator = [
-    dict(type='MAE'),
     dict(type='PSNR'),
     dict(type='SSIM'),
-    dict(type='NIQE', input_order='CHW')
 ]
 test_evaluator = val_evaluator
 

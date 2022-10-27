@@ -51,8 +51,8 @@ model = dict(
     test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
-        mean=[0., 0., 0.],
-        std=[255., 255., 255.],
+        mean=[0, 0, 0],
+        std=[1, 1, 1],
     ))
 
 train_cfg = dict(
