@@ -89,7 +89,6 @@ class MMEditVisualizationHook(Hook):
 @HOOKS.register_module()
 class VisualizationHook(MMEditVisualizationHook):
 
-    @deprecated_function('0.16.0', '0.20.0',
-                         'use \'MMEditVisualizationHook\'.')
+    @deprecated_function('0.16.0', '0.20.0', 'use \'MMEditVisualizationHook\'')
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
