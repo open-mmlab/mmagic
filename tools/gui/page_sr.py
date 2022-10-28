@@ -16,6 +16,7 @@ class PatchTab(QtWidgets.QWidget):
         self.statusBar = self.parent.statusBar
         self.file_paths = []
         self.labels = []
+        self.rect = None
         self.images = None
         self.isShow = False
 
@@ -105,6 +106,7 @@ class PatchTab(QtWidgets.QWidget):
 
         # select gt
         self.cb_gt = QtWidgets.QComboBox()
+        self.cb_gt.currentTextChanged.connect(self.change_gt)
         self.btn_setGt = QtWidgets.QPushButton()
         self.btn_setGt.setText('Select GT')
         self.btn_setGt.clicked.connect(self.open_gt)
@@ -114,11 +116,13 @@ class PatchTab(QtWidgets.QWidget):
         self.spin_cols.setMinimum(1)
         self.spin_cols.setMaximum(10)
         self.spin_cols.setValue(4)
+        self.spin_cols.valueChanged.connect(self.set_column)
 
         # set scale
+        self.scale = 100
         self.txt_scale = QtWidgets.QLabel('100 %')
         self.slider_scale = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-        self.slider_scale.setMinimum(0)
+        self.slider_scale.setMinimum(1)
         self.slider_scale.setMaximum(200)
         self.slider_scale.setValue(100)
         self.slider_scale.valueChanged.connect(self.set_scale)
@@ -150,6 +154,7 @@ class PatchTab(QtWidgets.QWidget):
 
         # Bottom Widget
         self.image_scroll = QtWidgets.QScrollArea()
+        self.image_scroll.installEventFilter(self)
 
         # Splitter
         hsplitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
@@ -170,12 +175,16 @@ class PatchTab(QtWidgets.QWidget):
         """Open a file or directory from dialog."""
         if self.btnGroup_dirType.checkedId() == 0:
             path = QtWidgets.QFileDialog.getExistingDirectory()
+            if len(path) <= 0:
+                return
             label = path.split('/')[-1]
             self.input_file.setText(path)
             self.input_label.setText(label)
         else:
             path, _ = QtWidgets.QFileDialog.getOpenFileName(
                 self, 'Select file', '', 'Images (*.jpg *.png)')
+            if len(path) <= 0:
+                return
             label = path.split('/')[-1].split('.')[0]
             self.input_file.setText(path)
             self.input_label.setText(label)
@@ -240,6 +249,8 @@ class PatchTab(QtWidgets.QWidget):
         else:
             path, _ = QtWidgets.QFileDialog.getOpenFileName(
                 self, 'Select gt file', '', 'Images (*.jpg *.png)')
+        if len(path) <= 0:
+            return
         self.set_gt(path)
 
     def set_gt(self, path):
@@ -252,14 +263,29 @@ class PatchTab(QtWidgets.QWidget):
             for f in files:
                 self.cb_gt.addItem(path + '/' + f)
 
+    def change_gt(self):
+        if self.isShow:
+            self.run()
+
     def set_scale(self):
         """Set scale."""
         scale = self.slider_scale.value()
         self.txt_scale.setText(f'{scale} %')
+        self.scale = scale
+        if self.isShow:
+            rect = None
+            if self.rect:
+                rect = [
+                    int(r * scale / 100.0 / self.old_scale) for r in self.rect
+                ]
+            self.run(rect)
+
+    def set_column(self):
+        """Set column."""
         if self.isShow:
             self.run()
 
-    def run(self):
+    def run(self, rect=None):
         """Generate patch compare result."""
         if self.cb_gt.currentText() == '':
             QtWidgets.QMessageBox.about(self, 'Message', 'Please set gt!')
@@ -288,8 +314,8 @@ class PatchTab(QtWidgets.QWidget):
         mode = self.btnGroup_mode.checkedId()
         self.images = ConcatImageWidget(self, mode, self.spin_cols.value())
         self.images.set_images(self.file_paths, self.labels,
-                               self.cb_gt.currentText(),
-                               self.slider_scale.value() / 100.0)
+                               self.cb_gt.currentText(), self.scale / 100.0,
+                               rect)
         self.image_scroll.setWidget(self.images)
         self.isShow = True
 
@@ -311,11 +337,52 @@ class PatchTab(QtWidgets.QWidget):
     def save(self):
         """Save patch compare result."""
         path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'save')
+        if len(path) <= 0:
+            return
         if self.images:
             self.images.grab().save(path)
             QtWidgets.QMessageBox.about(self, 'Message', 'Success!')
         else:
             QtWidgets.QMessageBox.about(self, 'Message', 'Nothing to save.')
+
+    def wheelEvent(self, ev) -> None:
+        key = QtWidgets.QApplication.keyboardModifiers()
+        if key == QtCore.Qt.ControlModifier:
+            scale = ev.angleDelta().y() / 120
+            self.scale += scale
+            if self.scale < 1:
+                self.scale = 1
+            self.txt_scale.setText(f'{self.scale} %')
+            self.slider_scale.setValue(self.scale)
+            if self.scale > 200 and self.isShow:
+                rect = None
+                if self.rect:
+                    rect = [
+                        int(r * self.scale / 100.0 / self.old_scale)
+                        for r in self.rect
+                    ]
+                self.run(rect)
+        return super().wheelEvent(ev)
+
+    def keyPressEvent(self, ev) -> None:
+        if ev.key() == QtCore.Qt.Key_Left:
+            if self.cb_gt.currentIndex() > 0:
+                self.cb_gt.setCurrentIndex(self.cb_gt.currentIndex() - 1)
+            else:
+                self.cb_gt.setCurrentIndex(self.cb_gt.count() - 1)
+        elif ev.key() == QtCore.Qt.Key_Right:
+            if self.cb_gt.currentIndex() < self.cb_gt.count() - 1:
+                self.cb_gt.setCurrentIndex(self.cb_gt.currentIndex() + 1)
+            else:
+                self.cb_gt.setCurrentIndex(0)
+        return super().keyPressEvent(ev)
+
+    def eventFilter(self, object, event) -> bool:
+        if object == self.image_scroll:
+            if event.type() == QtCore.QEvent.KeyPress:
+                self.keyPressEvent(event)
+                return False
+        return super().eventFilter(object, event)
 
 
 class SliderTab(QtWidgets.QWidget):
@@ -352,9 +419,10 @@ class SliderTab(QtWidgets.QWidget):
         self.input_title.textChanged.connect(self.set_label)
 
         # set scale
+        self.scale = 100
         self.txt_scale = QtWidgets.QLabel('100 %')
         self.slider_scale = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-        self.slider_scale.setMinimum(0)
+        self.slider_scale.setMinimum(1)
         self.slider_scale.setMaximum(200)
         self.slider_scale.setValue(100)
         self.slider_scale.valueChanged.connect(self.set_scale)
@@ -396,6 +464,7 @@ class SliderTab(QtWidgets.QWidget):
 
         self.image_scroll = QtWidgets.QScrollArea()
         self.image_scroll.setAlignment(QtCore.Qt.AlignCenter)
+        self.image_scroll.installEventFilter(self)
         right_grid = QtWidgets.QGridLayout()
         right_grid.addWidget(self.image_scroll, 0, 0)
 
@@ -480,9 +549,7 @@ class SliderTab(QtWidgets.QWidget):
         scale = self.slider_scale.value()
         self.txt_scale.setText(f'{scale} %')
         if self.imageArea is not None:
-            self.imageArea.hSlider = -1
-            self.imageArea.scale = scale / 100.0 + 1e-7
-            self.imageArea.update()
+            self.imageArea.set_scale(scale / 100.0)
 
     def change_image_0(self):
         if self.btnGroup_mode.checkedId() == 0:
@@ -527,11 +594,46 @@ class SliderTab(QtWidgets.QWidget):
     def save(self):
         """Save slider compare result."""
         path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'save')
+        if len(path) <= 0:
+            return
         if self.imageArea:
             self.imageArea.grab().save(path)
             QtWidgets.QMessageBox.about(self, 'Message', 'Success!')
         else:
             QtWidgets.QMessageBox.about(self, 'Message', 'Nothing to save.')
+
+    def wheelEvent(self, ev) -> None:
+        key = QtWidgets.QApplication.keyboardModifiers()
+        if key == QtCore.Qt.ControlModifier:
+            scale = ev.angleDelta().y() / 120
+            self.scale += scale
+            if self.scale < 1:
+                self.scale = 1
+            self.txt_scale.setText(f'{self.scale} %')
+            self.slider_scale.setValue(self.scale)
+            if self.scale > 200 and self.imageArea is not None:
+                self.imageArea.set_scale(self.scale / 100.0)
+        return super().wheelEvent(ev)
+
+    def keyPressEvent(self, ev) -> None:
+        if ev.key() == QtCore.Qt.Key_Left:
+            if self.cb_1.currentIndex() > 0:
+                self.cb_1.setCurrentIndex(self.cb_1.currentIndex() - 1)
+            else:
+                self.cb_1.setCurrentIndex(self.cb_1.count() - 1)
+        elif ev.key() == QtCore.Qt.Key_Right:
+            if self.cb_1.currentIndex() < self.cb_1.count() - 1:
+                self.cb_1.setCurrentIndex(self.cb_1.currentIndex() + 1)
+            else:
+                self.cb_1.setCurrentIndex(0)
+        return super().keyPressEvent(ev)
+
+    def eventFilter(self, object, event) -> bool:
+        if object == self.image_scroll:
+            if event.type() == QtCore.QEvent.KeyPress:
+                self.keyPressEvent(event)
+                return False
+        return super().eventFilter(object, event)
 
 
 class SRPage(QtWidgets.QWidget):

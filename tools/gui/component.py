@@ -67,6 +67,11 @@ class QLabelSlider(QtWidgets.QLabel):
         qp.drawText(10, self.height() - 10, self.title)
         qp.end()
 
+    def set_scale(self, scale):
+        self.hSlider = int(self.hSlider * scale / self.scale)
+        self.scale = scale
+        self.update()
+
     def getImage(self):
         img1, img2 = self.images
         if img1 is None or img2 is None:
@@ -101,13 +106,16 @@ class QLabelSlider(QtWidgets.QLabel):
 
 class QLabelPaint(QtWidgets.QLabel):
 
-    def __init__(self, parent):
+    def __init__(self, parent, beginPoint=None, endPoint=None):
         super().__init__()
-        self.beginPoint = None
-        self.endPoint = None
+        self.beginPoint = beginPoint
+        self.endPoint = endPoint
         self.parent = parent
         self.statusBar = self.parent.statusBar
-        self.isShow = False
+        if self.beginPoint and self.endPoint:
+            self.isShow = True
+        else:
+            self.isShow = False
 
     def mousePressEvent(self, ev: QtGui.QMouseEvent) -> None:
         if ev.button() == QtCore.Qt.LeftButton:
@@ -121,6 +129,7 @@ class QLabelPaint(QtWidgets.QLabel):
             self.endPoint = ev.pos()
             self.update()
             self.isShow = True
+            self.parent.set_rect(self.beginPoint, self.endPoint)
         return super().mouseReleaseEvent(ev)
 
     def mouseMoveEvent(self, ev: QtGui.QMouseEvent) -> None:
@@ -157,14 +166,16 @@ class ConcatImageWidget(QtWidgets.QWidget):
         self.hlayout = QtWidgets.QHBoxLayout()
         self.setLayout(self.hlayout)
         self.mode = mode
+        self.scale = 1
         self.col_num = col_num
         self.file_path = None
         self.labels = None
         self.gt = None
-        self.gt_scale = 1
         self.img_h = 0
+        self.rect = None
 
     def show_images(self, x=0, y=0, w=0, h=0):
+        self.rect = [x, y, w, h]
         vlayout = QtWidgets.QVBoxLayout()
         vlayout.setContentsMargins(0, 0, 0, 0)
         hlayout_img = QtWidgets.QHBoxLayout()
@@ -226,10 +237,11 @@ class ConcatImageWidget(QtWidgets.QWidget):
         else:
             self.hlayout.addWidget(layout2widget(vlayout))
 
-    def set_images(self, file_path, labels, gt=None, scale=1):
+    def set_images(self, file_path, labels, gt=None, scale=1, rect=None):
         self.file_path = file_path
         self.labels = labels
         self.gt = gt
+        self.scale = scale
 
         for i in reversed(range(self.hlayout.count())):
             self.hlayout.itemAt(i).widget().deleteLater()
@@ -241,10 +253,27 @@ class ConcatImageWidget(QtWidgets.QWidget):
         row = (len(self.file_path) + self.col_num - 1) // self.col_num
         self.img_h = int(float(self.gt_h - (row - 1) * 29) / row)
 
-        label = QLabelPaint(self)
+        beginPoint = None
+        endPoint = None
+        if rect:
+            beginPoint = QtCore.QPoint(rect[0], rect[1])
+            endPoint = QtCore.QPoint(rect[2], rect[3])
+        label = QLabelPaint(self, beginPoint, endPoint)
         label.setMargin(0)
         label.setAlignment(QtCore.Qt.AlignTop)
         label.setPixmap(img)
         self.hlayout.addWidget(label)
+        if rect:
+            self.show_images(rect[0], rect[1], rect[2] - rect[0],
+                             rect[3] - rect[1])
+        else:
+            self.show_images(0, 0, self.gt_w, self.gt_h)
 
-        self.show_images(0, 0, self.gt_w, self.gt_h)
+    def set_rect(self, beginPoint, endPoint):
+        self.parent.rect = [
+            beginPoint.x(),
+            beginPoint.y(),
+            endPoint.x(),
+            endPoint.y()
+        ]
+        self.parent.old_scale = self.scale
