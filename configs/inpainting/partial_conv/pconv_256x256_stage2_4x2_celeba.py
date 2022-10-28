@@ -121,7 +121,7 @@ log_config = dict(
     ])
 
 visual_config = dict(
-    type='VisualizationHook',
+    type='MMEditVisualizationHook',
     output_dir='visual',
     interval=1000,
     res_name_list=['gt_img', 'masked_img', 'fake_res', 'fake_img'],
