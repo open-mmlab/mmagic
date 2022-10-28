@@ -60,6 +60,7 @@ metrics = [
         type='FrechetInceptionDistance',
         prefix='FID-Full-50k',
         fake_nums=50000,
+        real_nums=50000,
         inception_style='StyleGAN',
         sample_model='ema'),
     dict(type='PrecisionAndRecall', fake_nums=10000, prefix='PR-10K')
