@@ -19,11 +19,12 @@ class ColorizationNet(BaseModule):
     'InstColorization/blob/master/models/networks.py#L108'
 
     Args:
-        input_nc:
-        output_nc:
-        norm_type:
-        use_tanh:
-        classification:
+        input_nc (int): input image channels
+        output_nc (int): output image channels
+        norm_type (str): instance normalization or batch normalization
+        use_tanh (bool): Whether to use nn.Tanh() Default: True.
+        classification (bool): backprop trunk using classification,
+            otherwise use regression. Default: True
     """
 
     def __init__(self,
@@ -255,6 +256,18 @@ class ColorizationNet(BaseModule):
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, input_A, input_B, mask_B):
+        """Forward function.
+
+        Args:
+            input_A (tensor): Channel of the image in lab color space
+            input_B (tensor): Color patch
+            mask_B (tensor): Color patch mask
+
+        Returns:
+            out_class (tensor): Classification output
+            out_reg (tensor): Regression output
+            feature_map (dict): The full-image feature
+        """
         conv1_2 = self.model1(torch.cat((input_A, input_B, mask_B), dim=1))
         conv2_2 = self.model2(conv1_2[:, :, ::2, ::2])
         conv3_3 = self.model3(conv2_2[:, :, ::2, ::2])

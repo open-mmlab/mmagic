@@ -4,6 +4,14 @@ import torch
 
 
 def xyz2rgb(xyz):
+    """Conversion images from lab to xyz.
+
+    Args:
+        xyz (tensor): The images to be conversion
+
+    Returns:
+        out (tensor): The converted image
+    """
     r = 3.24048134 * xyz[:, 0, :, :] - 1.53715152 * xyz[:, 1, :, :] \
         - 0.49853633 * xyz[:, 2, :, :]
     g = -0.96925495 * xyz[:, 0, :, :] + 1.87599 * xyz[:, 1, :, :] \
@@ -25,6 +33,14 @@ def xyz2rgb(xyz):
 
 
 def lab2xyz(lab):
+    """Conversion images from lab to xyz.
+
+    Args:
+        lab (tensor): The images to be conversion
+
+    Returns:
+        out (tensor): The converted image
+    """
     y_int = (lab[:, 0, :, :] + 16.) / 116.
     x_int = (lab[:, 1, :, :] / 500.) + y_int
     z_int = y_int - (lab[:, 2, :, :] / 200.)
@@ -50,6 +66,16 @@ def lab2xyz(lab):
 
 
 def lab2rgb(lab_rs, color_data_opt):
+    """Conversion images from lab to rgb.
+
+    Args:
+        lab_rs (tensor): The images to be conversion
+        color_data_opt (dict): Config for image colorspace transformation.
+            Include: l_norm, ab_norm, l_cent
+
+    Returns:
+        out (tensor): The converted image
+    """
     L = lab_rs[:,
                [0], :, :] * color_data_opt['l_norm'] + color_data_opt['l_cent']
     AB = lab_rs[:, 1:, :, :] * color_data_opt['ab_norm']
@@ -59,11 +85,15 @@ def lab2rgb(lab_rs, color_data_opt):
 
 
 def encode_ab_ind(data_ab, color_data_opt):
-    # Encode ab value into an index
-    # INPUTS
-    #   data_ab   Nx2xHxW \in [-1,1]
-    # OUTPUTS
-    #   data_q    Nx1xHxW \in [0,Q)
+    """Encode ab value into an index.
+
+    Args:
+        data_ab: Nx2xHxW from [-1,1]
+        color_data_opt: Config for image colorspace transformation.
+            ab_max, ab_quant, ab_norm, ab_quant
+    Returns:
+            Nx1xHxW from [0,Q)
+    """
     A = 2 * color_data_opt['ab_max'] / color_data_opt['ab_quant'] + 1
     data_ab_rs = torch.round(
         (data_ab * color_data_opt['ab_norm'] + color_data_opt['ab_max']) /
@@ -72,12 +102,19 @@ def encode_ab_ind(data_ab, color_data_opt):
     return data_q
 
 
-# Color conversion code
-def rgb2xyz(rgb):  # rgb from [0,1]
-    # xyz_from_rgb = np.array([[0.412453, 0.357580, 0.180423],
-    # [0.212671, 0.715160, 0.072169],
-    # [0.019334, 0.119193, 0.950227]])
+def rgb2xyz(rgb):
+    """Conversion images from rgb to xyz
+    rgb from [0,1]
+    xyz_from_rgb = np.array([[0.412453, 0.357580, 0.180423],
+                             [0.212671, 0.715160, 0.072169],
+                             [0.019334, 0.119193, 0.950227]])
+    Args:
+        rgb (Tensor): image in rgb colorspace
 
+    Returns:
+         xyz (Tensor): image in xyz colorspace
+
+    """
     mask = (rgb > .04045).type(torch.FloatTensor)
     if (rgb.is_cuda):
         mask = mask.cuda()
@@ -97,7 +134,16 @@ def rgb2xyz(rgb):  # rgb from [0,1]
 
 
 def xyz2lab(xyz):
-    # 0.95047, 1., 1.08883 # white
+    """Conversion images from xyz to lab
+    xyz from [0,1]
+    factors: 0.95047, 1., 1.08883
+
+    Args:
+        xyz (Tensor): image in xyz colorspace
+
+    Returns:
+         out (Tensor): Image in lab colorspace
+    """
     sc = torch.Tensor((0.95047, 1., 1.08883))[None, :, None, None]
     if (xyz.is_cuda):
         sc = sc.cuda()
@@ -121,6 +167,16 @@ def xyz2lab(xyz):
 
 
 def rgb2lab(rgb, color_opt):
+    """Conversion images from rgb to lab.
+
+    Args:
+        data_raw (tensor): The images to be conversion
+        color_opt (dict): Config for image colorspace transformation.
+            Include: ab_thresh, ab_norm, sample_PS, mask_cent
+
+    Returns:
+        out (tensor): The converted image
+    """
     lab = xyz2lab(rgb2xyz(rgb))
     l_rs = (lab[:, [0], :, :] - color_opt['l_cent']) / color_opt['l_norm']
     ab_rs = lab[:, 1:, :, :] / color_opt['ab_norm']
@@ -129,6 +185,16 @@ def rgb2lab(rgb, color_opt):
 
 
 def get_colorization_data(data_raw, color_opt, num_points=None):
+    """Conversion images from rgb to lab.
+
+    Args:
+        data_raw (tensor): The images to be conversion
+        color_opt (dict): Config for image colorspace transformation.
+            Include: ab_thresh, ab_norm, sample_PS, mask_cent
+
+    Returns:
+        results (dict): Output in add_color_patches_rand_gt
+    """
     data = {}
     data_lab = rgb2lab(data_raw, color_opt)
     data['A'] = data_lab[:, [
@@ -159,14 +225,30 @@ def add_color_patches_rand_gt(data,
                               num_points=None,
                               use_avg=True,
                               samp='normal'):
-    # Add random color points sampled from ground truth based on:
-    #   Number of points
-    #   - if num_points is 0, then sample from geometric distribution,
-    #       drawn from probability p
-    #   - if num_points > 0, then sample that number of points
-    #   Location of points
-    #   - if samp is 'normal', draw from N(0.5, 0.25) of image
-    #   - otherwise, draw from U[0, 1] of image
+    """Add random color points sampled from ground truth based on: Number of
+    points.
+
+    - if num_points is 0, then sample from geometric distribution,
+        drawn from probability p
+    - if num_points > 0, then sample that number of points
+    Location of points
+    - if samp is 'normal', draw from N(0.5, 0.25) of image
+    - otherwise, draw from U[0, 1] of image
+
+    Args:
+        data (tensor): The images to be conversion
+        color_opt (dict): Config for image colorspace transformation
+            Include: ab_thresh, ab_norm, sample_PS, mask_cent
+        p (float): Sampling geometric distribution, 1.0 means no hints
+        num_points (int): Certain number of points
+        use_avg (bool): Whether to use the mean when add color point
+            Default: True.
+        samp (str): Geometric distribution or uniform distribution when
+            sample location. Default: normal.
+
+    Returns:
+        results (dict): Result dict from :obj:``mmcv.BaseDataset``.
+    """
     N, C, H, W = data['B'].shape
 
     data['hint_B'] = torch.zeros_like(data['B'])
@@ -188,7 +270,6 @@ def add_color_patches_rand_gt(data,
 
             # patch size
             P = np.random.choice(color_opt['sample_PS'])
-
             # sample location: geometric distribution
             if samp == 'normal':
                 h = int(
@@ -205,7 +286,6 @@ def add_color_patches_rand_gt(data,
 
             # add color point
             if use_avg:
-                # embed()
                 data['hint_B'][nn, :, h:h + P, w:w + P] = torch.mean(
                     torch.mean(
                         data['B'][nn, :, h:h + P, w:w + P],

@@ -12,11 +12,16 @@ from mmedit.registry import TRANSFORMS
 
 @TRANSFORMS.register_module()
 class InstanceCrop(BaseTransform):
-    """## Arguments:
+    """Use maskrcnn to detect instances on image.
 
-    - pred_data_path: Detectron2 predict results
-    - box_num_upbound: object bounding boxes number.
-                Default: -1 means use all the instances.
+    Mask R-CNN is used to detect the instance on the image
+    pred_bbox is used to segment the instance on the image
+
+    Args:
+        config_file (str): config file name relative to detectron2's "configs/"
+        key (str): Unused
+        box_num_upbound (int):The upper limit on the number of instances
+            in the figure
     """
 
     def __init__(self,
@@ -36,10 +41,18 @@ class InstanceCrop(BaseTransform):
         self.final_size = finesize
 
     def transform(self, results: dict) -> dict:
+        """The transform function of InstanceCrop.
 
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for Conversion
+
+        Returns:
+            results (dict): A dict containing the processed data
+                and information.
+        """
         # get consistent box prediction based on L channel
         full_img = results['img']
-        # cv.imwrite('full_img.jpg', full_img)
         full_img_size = results['ori_img_shape'][:-1][::-1]
         lab_image = cv.cvtColor(full_img, cv.COLOR_BGR2LAB)
         l_channel, a_channel, b_channel = cv.split(lab_image)
@@ -66,7 +79,6 @@ class InstanceCrop(BaseTransform):
         for i in index_list:
             startx, starty, endx, endy = pred_bbox[i]
             cropped_img = full_img[starty:endy, startx:endx, :]
-            # cv.imwrite(f"crop_{i}.jpg", cropped_img)
             cropped_img_list.append(cropped_img)
             box_info[i] = np.array(
                 get_box_info(pred_bbox[i], full_img_size, self.final_size))
@@ -97,6 +109,16 @@ class InstanceCrop(BaseTransform):
 
 
 def get_box_info(pred_bbox, original_shape, final_size):
+    """
+
+    Args:
+        pred_bbox: The bounding box for the instance
+        original_shape: Original image shape
+        final_size: Size of the final output
+
+    Returns:
+        List: [L_pad, R_pad, T_pad, B_pad, rh, rw]
+    """
     assert len(pred_bbox) == 4
     resize_startx = int(pred_bbox[0] / original_shape[0] * final_size)
     resize_starty = int(pred_bbox[1] / original_shape[1] * final_size)
