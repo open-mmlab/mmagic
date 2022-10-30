@@ -3,7 +3,7 @@ import os
 
 import cv2 as cv
 
-from mmedit.datasets.transforms import GenMaskRCNNBbox
+from mmedit.datasets.transforms import InstanceCrop
 from mmedit.utils import tensor2img
 
 
@@ -12,7 +12,7 @@ class TestMaskRCNNBbox:
     DEFAULT_ARGS = dict(key='img', finesize=256)
 
     def test_maskrcnn_bbox(self):
-        detectetor = GenMaskRCNNBbox(**self.DEFAULT_ARGS, stage='test')
+        detectetor = InstanceCrop(**self.DEFAULT_ARGS, stage='test')
         data_root = '..'
         img_path = 'data/image/gray/test.jpg'
         img = cv.imread(os.path.join(data_root, img_path))
@@ -38,7 +38,7 @@ class TestMaskRCNNBbox:
         assert tensor2img(results['rgb_img']).shape == (3, 256, 256)
 
     def test_gen_maskrcnn_from_pred(self):
-        detectetor = GenMaskRCNNBbox(**self.DEFAULT_ARGS, stage='test')
+        detectetor = InstanceCrop(**self.DEFAULT_ARGS, stage='test')
         data_root = '..'
         img_path = 'data/image/gray/test.jpg'
         img = cv.imread(os.path.join(data_root, img_path))
@@ -50,7 +50,7 @@ class TestMaskRCNNBbox:
         assert pred_bbox.shape[-1] == 4
 
     def test_get_box_info(self):
-        detectetor = GenMaskRCNNBbox(**self.DEFAULT_ARGS, stage='test')
+        detectetor = InstanceCrop(**self.DEFAULT_ARGS, stage='test')
         data_root = '..'
         img_path = 'data/image/gray/test.jpg'
         img = cv.imread(os.path.join(data_root, img_path))
