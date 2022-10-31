@@ -64,7 +64,7 @@ test_pipeline = [
 
 # `batch_size` and `data_root` need to be set.
 train_dataloader = dict(
-    batch_size=1,
+    batch_size=4,
     num_workers=4,
     persistent_workers=True,
     sampler=dict(type='InfiniteSampler', shuffle=True),
@@ -74,7 +74,7 @@ train_dataloader = dict(
         pipeline=train_pipeline))
 
 val_dataloader = dict(
-    batch_size=1,
+    batch_size=4,
     num_workers=4,
     dataset=dict(
         type=dataset_type,
@@ -85,7 +85,7 @@ val_dataloader = dict(
     persistent_workers=True)
 
 test_dataloader = dict(
-    batch_size=1,
+    batch_size=4,
     num_workers=4,
     dataset=dict(
         type=dataset_type,
