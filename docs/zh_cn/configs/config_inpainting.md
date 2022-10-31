@@ -133,7 +133,7 @@ log_config = dict(  # 配置注册记录器钩子
     ])  # 用于记录训练过程的记录器
 
 visual_config = dict(  # 构建可视化钩子的配置
-    type='VisualizationHook',
+    type='MMEditVisualizationHook',
     output_dir='visual',
     interval=1000,
     res_name_list=[

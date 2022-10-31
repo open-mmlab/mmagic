@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 
-from mmedit.core import VisualizationHook
+from mmedit.core import MMEditVisualizationHook
 from mmedit.utils import get_root_logger
 
 
@@ -40,7 +40,7 @@ class ExampleModel(nn.Module):
 def test_visual_hook():
     with pytest.raises(
             AssertionError), tempfile.TemporaryDirectory() as tmpdir:
-        VisualizationHook(tmpdir, [1, 2, 3])
+        MMEditVisualizationHook(tmpdir, [1, 2, 3])
     test_dataset = ExampleDataset()
     test_dataset.evaluate = MagicMock(return_value=dict(test='success'))
 
@@ -51,7 +51,7 @@ def test_visual_hook():
         test_dataset, batch_size=1, sampler=None, num_workers=0, shuffle=False)
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        visual_hook = VisualizationHook(
+        visual_hook = MMEditVisualizationHook(
             tmpdir, ['img'], interval=8, rerange=False)
         runner = mmcv.runner.IterBasedRunner(
             model=model,
@@ -67,7 +67,7 @@ def test_visual_hook():
                                        img[0].permute(1, 2, 0) * 255)
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        visual_hook = VisualizationHook(
+        visual_hook = MMEditVisualizationHook(
             tmpdir, ['img'], interval=8, rerange=True)
         runner = mmcv.runner.IterBasedRunner(
             model=model,
