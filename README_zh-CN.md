@@ -88,11 +88,11 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 全新的 [**MMEditing v1.0.0rc1**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc1) 已经在 24/09/2022 发布:
 
-- 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量模型和😍。
-- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
-- Refactored and more flexible [architecture](https://mmediting.readthedocs.io/en/1.x/1_overview.html).
+- 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
+- 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
+- 重构之后更加灵活 [architecture](https://mmediting.readthedocs.io/en/1.x/1_overview.html)。
 
-Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
+在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
 
 ## 安装
 
