@@ -1,5 +1,66 @@
 # Changelog
 
+## v0.16.0 (31/10/2022)
+
+**Deprecations**
+
+`VisualizationHook` is deprecated. Users should use `MMEditVisualizationHook` instead. (#1375)
+
+<table align="center">
+  <thead>
+      <tr align='center'>
+          <td>Old Version</td>
+          <td>Current Version</td>
+      </tr>
+  </thead>
+  <tbody><tr valign='top'>
+  <th>
+
+```python
+visual_config = dict(  # config to register visualization hook
+  type='VisualizationHook',
+  output_dir='visual',
+  interval=1000,
+  res_name_list=[
+      'gt_img', 'masked_img', 'fake_res', 'fake_img', 'fake_gt_local'
+  ],
+)
+```
+
+</th>
+  <th>
+
+```python
+visual_config = dict(  # config to register visualization hook
+  type='MMEditVisualizationHook',
+  output_dir='visual',
+  interval=1000,
+  res_name_list=[
+      'gt_img', 'masked_img', 'fake_res', 'fake_img', 'fake_gt_local'
+  ],
+)
+```
+
+</th></tr>
+</tbody></table>
+
+**New Features & Improvements**
+
+- Improve arguments type in `preprocess_div2k_dataset.py`. (#1381)
+- Update docstring of RDN. (#1326)
+- Update the introduction in readme. (#)
+
+**Bug Fixes**
+
+- Fix FLAVR register in `mmedit/models/video_interpolators` when importing `FLAVR`. (#1186)
+- Fix data path processing in `restoration_video_inference.py`. (#1262)
+- Fix the number of channels in RDB. (#1292, #1311)
+
+**Contributors**
+
+A total of 5 developers contributed to this release.
+Thanks @LeoXing1996, @Z-Fran, @zengyh1900, @ryanxingql, @ruoningYu.
+
 ## v0.15.2 (09/09/2022)
 
 **Improvements**
