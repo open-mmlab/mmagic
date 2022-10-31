@@ -55,7 +55,8 @@ https://user-images.githubusercontent.com/12756472/175944645-cabe8c2b-9f25-440b-
 
 https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
 
-### Major features
+<details open>
+<summary>Major features</summary>
 
 - **Modular design**
 
@@ -73,21 +74,27 @@ Note that **MMSR** has been merged into this repo, as a part of MMEditing.
 With elaborate designs of the new framework and careful implementations,
 hope MMEditing could provide better experience.
 
-## News
+## What's New
 
-- \[2022-06-01\] v0.15.0 was released.
-  - Support FLAVR
-  - Support AOT-GAN
-  - Support CAIN with ReduceLROnPlateau Scheduler
-- \[2022-04-01\] v0.14.0 was released.
-  - Support TOFlow in video frame interpolation
-- \[2022-03-01\] v0.13.0 was released.
-  - Support CAIN
-  - Support EDVR-L
-  - Support running in Windows
-- \[2022-02-11\] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
+### 💎 Stable version
+
+**0.16.0** was released in 31/10/2022:
+
+- `VisualizationHook` is deprecated. Users should use `MMEditVisualizationHook` instead.
+- Fix FLAVR register.
+- Fix the number of channels in RDB.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
+
+### 🌟 Preview of 1.x version
+
+A brand new version of [**MMEditing v1.0.0rc1**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc1) was released in 24/09/2022:
+
+- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍。
+- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
+- Refactored and more flexible [architecture](https://mmediting.readthedocs.io/en/1.x/1_overview.html).
+
+Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
 
 ## Installation
 

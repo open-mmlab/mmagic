@@ -72,21 +72,27 @@ https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-
 需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
 MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
 
-## 最新消息
+## 最新进展
 
-- \[2022-06-01\] v0.15.0 版本发布
-  - 支持 FLAVR
-  - 支持 AOT-GAN
-  - 新版 CAIN，支持 ReduceLROnPlateau 策略
-- \[2022-04-01\] v0.14.0 版本发布
-  - 支持视频插帧算法 TOFlow
-- \[2022-03-01\] v0.13.0 版本发布
-  - 支持 CAIN
-  - 支持 EDVR-L
-  - 支持在 Windows 系统中运行
-- \[2022-02-11\] 切换到 **PyTorch 1.5+**. 将不再保证与早期版本的 PyTorch 的兼容性
+### 💎 稳定版本
 
-请查看 [changelog.md](docs/en/changelog.md) 以获取更多细节与发版记录
+最新的 **0.16.0** 版本已经在 31/10/2022 发布：
+
+- `VisualizationHook` 将被启用，建议用户使用 `MMEditVisualizationHook`。
+- 修复 FLAVR 的注册问题。
+- 修正 RDB 模型中的通道数。
+
+如果像了解更多版本更新细节和历史信息，请阅读[更新日志](docs/en/changelog.md)。
+
+### 🌟 1.x 预览版本
+
+全新的 [**MMEditing v1.0.0rc1**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc1) 已经在 24/09/2022 发布:
+
+- 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量模型和😍。
+- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
+- Refactored and more flexible [architecture](https://mmediting.readthedocs.io/en/1.x/1_overview.html).
+
+Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
 
 ## 安装
 
