@@ -1,10 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import datetime
 import os
 
 import cv2
-from component import ConcatImageWidget, QLabelSlider
+from component import ConcatImageWidget, QLabelSlider, VideoSlider
 from PyQt5 import QtCore, QtWidgets
-from utils import layout2widget
+from utils import layout2widget, qimage2array
 
 
 class PatchTab(QtWidgets.QWidget):
@@ -393,6 +394,22 @@ class SliderTab(QtWidgets.QWidget):
         self.images = [None, None]
         self.imageArea = None
 
+        # Type setting
+        self.typeRect = QtWidgets.QGroupBox('Type')
+        self.typeRect.setFlat(True)
+        btn_type1 = QtWidgets.QRadioButton('Image', self.typeRect)
+        btn_type2 = QtWidgets.QRadioButton('Video', self.typeRect)
+        self.btnGroup_type = QtWidgets.QButtonGroup()
+        self.btnGroup_type.addButton(btn_type1, 0)
+        self.btnGroup_type.addButton(btn_type2, 1)
+        self.btnGroup_type.button(0).setChecked(True)
+        self.btnGroup_type.idToggled.connect(self.reset)
+        hlayout = QtWidgets.QHBoxLayout()
+        hlayout.addWidget(btn_type1)
+        hlayout.addWidget(btn_type2)
+        self.typeRect.setLayout(hlayout)
+
+        # Mode setting
         self.modeRect = QtWidgets.QGroupBox('Mode')
         self.modeRect.setFlat(True)
         btn_mode1 = QtWidgets.QRadioButton('Match', self.modeRect)
@@ -407,10 +424,11 @@ class SliderTab(QtWidgets.QWidget):
         hlayout.addWidget(btn_mode2)
         self.modeRect.setLayout(hlayout)
 
+        # Settings
         self.cb_1 = QtWidgets.QComboBox()
         self.cb_2 = QtWidgets.QComboBox()
-        self.cb_1.currentIndexChanged.connect(self.change_image_0)
-        self.cb_2.currentIndexChanged.connect(self.change_image_1)
+        self.cb_1.currentIndexChanged.connect(self.change_image_1)
+        self.cb_2.currentIndexChanged.connect(self.change_image_2)
         self.input_label_1 = QtWidgets.QLineEdit()
         self.input_label_2 = QtWidgets.QLineEdit()
         self.input_title = QtWidgets.QLineEdit()
@@ -418,7 +436,7 @@ class SliderTab(QtWidgets.QWidget):
         self.input_label_2.textChanged.connect(self.set_label)
         self.input_title.textChanged.connect(self.set_label)
 
-        # set scale
+        # Set scale
         self.scale = 100
         self.txt_scale = QtWidgets.QLabel('100 %')
         self.slider_scale = QtWidgets.QSlider(QtCore.Qt.Horizontal)
@@ -427,6 +445,33 @@ class SliderTab(QtWidgets.QWidget):
         self.slider_scale.setValue(100)
         self.slider_scale.valueChanged.connect(self.set_scale)
 
+        # Auto slider setting
+        self.autoRect = QtWidgets.QGroupBox('Auto Slider')
+        self.autoRect.setFlat(True)
+        btn_autoMode1 = QtWidgets.QRadioButton('Right', self.autoRect)
+        btn_autoMode2 = QtWidgets.QRadioButton('Left', self.autoRect)
+        btn_autoMode3 = QtWidgets.QRadioButton('Alternate', self.autoRect)
+        self.btnGroup_auto = QtWidgets.QButtonGroup()
+        self.btnGroup_auto.addButton(btn_autoMode1, 0)
+        self.btnGroup_auto.addButton(btn_autoMode2, 1)
+        self.btnGroup_auto.addButton(btn_autoMode3, 2)
+        self.btnGroup_auto.button(2).setChecked(True)
+        self.btnGroup_auto.idToggled.connect(self.reset)
+        self.slider_auto = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.slider_auto.setMinimum(0)
+        self.slider_auto.setMaximum(200)
+        self.slider_auto.setValue(0)
+        self.slider_auto.valueChanged.connect(self.set_autoSlider)
+        glayout = QtWidgets.QGridLayout()
+        glayout.addWidget(QtWidgets.QLabel('Direction:'), 0, 0, 1, 1)
+        glayout.addWidget(btn_autoMode3, 0, 2, 1, 1)
+        glayout.addWidget(btn_autoMode1, 0, 3, 1, 1)
+        glayout.addWidget(btn_autoMode2, 0, 4, 1, 1)
+        glayout.addWidget(QtWidgets.QLabel('Speed:'), 1, 0, 1, 1)
+        glayout.addWidget(self.slider_auto, 1, 1, 1, 4)
+        self.autoRect.setLayout(glayout)
+
+        # Add file
         self.btn_add_1 = QtWidgets.QPushButton()
         self.btn_add_2 = QtWidgets.QPushButton()
         self.btn_add_1.setText('Set image 1')
@@ -434,34 +479,50 @@ class SliderTab(QtWidgets.QWidget):
         self.btn_add_1.clicked.connect(self.add_1)
         self.btn_add_2.clicked.connect(self.add_2)
 
+        # Buttons
+        self.btn_pause = QtWidgets.QPushButton()
+        self.btn_pause.setText('Pause (Space)')
+        self.btn_pause.clicked.connect(self.pause)
+        self.btn_pause.setEnabled(False)
+
         self.btn_reset = QtWidgets.QPushButton()
         self.btn_reset.setText('Reset')
         self.btn_reset.clicked.connect(self.reset)
+
         self.btn_save = QtWidgets.QPushButton()
         self.btn_save.setText('Save')
         self.btn_save.clicked.connect(self.save)
 
-        left_grid = QtWidgets.QGridLayout()
-        left_grid.addWidget(self.modeRect, 0, 0, 1, 10)
-        left_grid.addWidget(QtWidgets.QLabel('Set image 1'), 1, 0, 1, 1)
-        left_grid.addWidget(self.cb_1, 1, 1, 1, 9)
-        left_grid.addWidget(QtWidgets.QLabel('Set image 2'), 2, 0, 1, 1)
-        left_grid.addWidget(self.cb_2, 2, 1, 1, 9)
-        left_grid.addWidget(QtWidgets.QLabel('Set label 1'), 3, 0, 1, 1)
-        left_grid.addWidget(self.input_label_1, 3, 1, 1, 9)
-        left_grid.addWidget(QtWidgets.QLabel('Set label 2'), 4, 0, 1, 1)
-        left_grid.addWidget(self.input_label_2, 4, 1, 1, 9)
-        left_grid.addWidget(QtWidgets.QLabel('Set title'), 5, 0, 1, 1)
-        left_grid.addWidget(self.input_title, 5, 1, 1, 9)
-        left_grid.addWidget(QtWidgets.QLabel('Set scale'), 6, 0, 1, 1)
-        left_grid.addWidget(self.slider_scale, 6, 1, 1, 8)
-        left_grid.addWidget(self.txt_scale, 6, 9, 1, 1)
-        left_grid.addWidget(self.btn_add_1, 7, 0, 1, 5)
-        left_grid.addWidget(self.btn_add_2, 7, 5, 1, 5)
-        left_grid.addWidget(self.btn_reset, 8, 0, 1, 10)
-        left_grid.addWidget(self.btn_save, 9, 0, 1, 10)
-        left_grid.addWidget(QtWidgets.QLabel(), 10, 0, 20, 10)
+        self.btn_record = QtWidgets.QPushButton()
+        self.btn_record.setText('Record (Enter)')
+        self.btn_record.clicked.connect(self.record)
 
+        left_grid = QtWidgets.QGridLayout()
+        left_grid.addWidget(self.typeRect, 0, 0, 1, 10)
+        left_grid.addWidget(self.modeRect, 1, 0, 1, 10)
+        left_grid.addWidget(QtWidgets.QLabel('Set image 1'), 2, 0, 1, 1)
+        left_grid.addWidget(self.cb_1, 2, 1, 1, 9)
+        left_grid.addWidget(QtWidgets.QLabel('Set image 2'), 3, 0, 1, 1)
+        left_grid.addWidget(self.cb_2, 3, 1, 1, 9)
+        left_grid.addWidget(QtWidgets.QLabel('Set label 1'), 4, 0, 1, 1)
+        left_grid.addWidget(self.input_label_1, 4, 1, 1, 9)
+        left_grid.addWidget(QtWidgets.QLabel('Set label 2'), 5, 0, 1, 1)
+        left_grid.addWidget(self.input_label_2, 5, 1, 1, 9)
+        left_grid.addWidget(QtWidgets.QLabel('Set title'), 6, 0, 1, 1)
+        left_grid.addWidget(self.input_title, 6, 1, 1, 9)
+        left_grid.addWidget(QtWidgets.QLabel('Set scale'), 7, 0, 1, 1)
+        left_grid.addWidget(self.slider_scale, 7, 1, 1, 8)
+        left_grid.addWidget(self.txt_scale, 7, 9, 1, 1)
+        left_grid.addWidget(self.autoRect, 8, 0, 1, 10)
+        left_grid.addWidget(self.btn_add_1, 9, 0, 1, 5)
+        left_grid.addWidget(self.btn_add_2, 9, 5, 1, 5)
+        left_grid.addWidget(self.btn_pause, 10, 0, 1, 10)
+        left_grid.addWidget(self.btn_reset, 11, 0, 1, 10)
+        left_grid.addWidget(self.btn_save, 12, 0, 1, 10)
+        left_grid.addWidget(self.btn_record, 13, 0, 1, 10)
+        left_grid.addWidget(QtWidgets.QLabel(), 14, 0, 20, 10)
+
+        # Image area
         self.image_scroll = QtWidgets.QScrollArea()
         self.image_scroll.setAlignment(QtCore.Qt.AlignCenter)
         self.image_scroll.installEventFilter(self)
@@ -478,18 +539,80 @@ class SliderTab(QtWidgets.QWidget):
         hlayout.addWidget(hsplitter)
         self.setLayout(hlayout)
 
-    def add_1(self):
+        # Timer
+        self.timer_slider = QtCore.QTimer(self)
+        self.timer_slider.timeout.connect(self.auto_slider)
+        self.timer_record = QtCore.QTimer(self)
+        self.timer_record.timeout.connect(self.recording)
+
+        # Player
+        self.player = VideoSlider(self)
+        self.player.sigout.connect(self.setImg)
+        # self.player1_end = False
+        # self.player2_end = False
+        # self.player1 = VideoPlayer(self)
+        # self.player2 = VideoPlayer(self)
+        # self.player1.sigout.connect(self.setImg1)
+        # self.player2.sigout.connect(self.setImg2)
+        # self.player1.sigend.connect(self.set_player1)
+        # self.player2.sigend.connect(self.set_player2)
+
+    def set_autoSlider(self):
+        if self.imageArea:
+            self.timer_slider.stop()
+            if self.slider_auto.value() > 0:
+                self.imageArea.auto_mode = self.btnGroup_auto.checkedId() + 1
+                self.timer_slider.start(1000 / (self.slider_auto.value()))
+            else:
+                self.imageArea.auto_mode = 0
+
+    def auto_slider(self):
+        self.imageArea.auto_slider()
+
+    def add_image(self, cb, btn):
         if self.btnGroup_mode.checkedId() == 0:
             path = QtWidgets.QFileDialog.getExistingDirectory(self)
             if len(path) <= 0:
                 return
-            self.cb_1.clear()
+            cb.clear()
             files = sorted(os.listdir(path))
             for f in files:
-                self.cb_1.addItem(path + '/' + f)
+                cb.addItem(path + '/' + f)
+        else:
+            if btn == 'add_1':
+                path, _ = QtWidgets.QFileDialog.getOpenFileName(
+                    self, 'Select gt file', '', 'Images (*.jpg *.png)')
+                if len(path) <= 0:
+                    return
+                files = [path]
+            elif btn == 'add_2':
+                paths = QtWidgets.QFileDialog.getExistingDirectory(self)
+                if len(paths) <= 0:
+                    return
+                files = sorted(os.listdir(paths))
+                files = [paths + '/' + f for f in files]
+
+            for path in files:
+                if self.cb_1.count() > 0:
+                    if self.cb_1.findText(path) > -1:
+                        self.cb_1.removeItem(self.cb_1.findText(path))
+                    if self.cb_2.findText(path) > -1:
+                        self.cb_2.removeItem(self.cb_2.findText(path))
+                    self.cb_1.addItem(path)
+                    self.cb_2.addItem(path)
+                    self.cb_2.setCurrentIndex(self.cb_2.count() - 1)
+                else:
+                    self.cb_1.addItem(path)
+                    self.cb_2.addItem(path)
+                    self.cb_1.setCurrentIndex(0)
+                    self.cb_2.setCurrentIndex(0)
+
+    def add_1(self):
+        if self.btnGroup_type.checkedId() == 0:
+            self.add_image(self.cb_1, 'add_1')
         else:
             path, _ = QtWidgets.QFileDialog.getOpenFileName(
-                self, 'Select gt file', '', 'Images (*.jpg *.png *.mp4 *.avi)')
+                self, 'Select gt file', '', 'Images (*.mp4 *.avi)')
             if len(path) <= 0:
                 return
             if self.cb_1.count() > 0:
@@ -507,35 +630,25 @@ class SliderTab(QtWidgets.QWidget):
                 self.cb_2.setCurrentIndex(0)
 
     def add_2(self):
-        if self.btnGroup_mode.checkedId() == 0:
+        if self.btnGroup_type.checkedId() == 0:
+            self.add_image(self.cb_2, 'add_2')
+        else:
             path = QtWidgets.QFileDialog.getExistingDirectory(self)
-            print(path)
             if len(path) <= 0:
                 return
-            self.cb_2.clear()
-            files = sorted(os.listdir(path))
-            for f in files:
-                self.cb_2.addItem(path + '/' + f)
-        else:
-            paths = QtWidgets.QFileDialog.getExistingDirectory(self)
-            if len(paths) <= 0:
-                return
-            files = sorted(os.listdir(paths))
-            for f in files:
-                path = paths + '/' + f
-                if self.cb_1.count() > 0:
-                    if self.cb_1.findText(path) > -1:
-                        self.cb_1.removeItem(self.cb_1.findText(path))
-                    if self.cb_2.findText(path) > -1:
-                        self.cb_2.removeItem(self.cb_2.findText(path))
-                    self.cb_1.addItem(path)
-                    self.cb_2.addItem(path)
-                    self.cb_2.setCurrentIndex(self.cb_2.count() - 1)
-                else:
-                    self.cb_1.addItem(path)
-                    self.cb_2.addItem(path)
-                    self.cb_1.setCurrentIndex(0)
-                    self.cb_2.setCurrentIndex(0)
+            if self.cb_1.count() > 0:
+                if self.cb_1.findText(path) > -1:
+                    self.cb_1.removeItem(self.cb_1.findText(path))
+                if self.cb_2.findText(path) > -1:
+                    self.cb_2.removeItem(self.cb_2.findText(path))
+                self.cb_1.addItem(path)
+                self.cb_2.addItem(path)
+                self.cb_2.setCurrentIndex(self.cb_2.count() - 1)
+            else:
+                self.cb_1.addItem(path)
+                self.cb_2.addItem(path)
+                self.cb_1.setCurrentIndex(0)
+                self.cb_2.setCurrentIndex(0)
 
     def set_label(self):
         if self.imageArea is not None:
@@ -551,19 +664,41 @@ class SliderTab(QtWidgets.QWidget):
         if self.imageArea is not None:
             self.imageArea.set_scale(scale / 100.0)
 
-    def change_image_0(self):
-        if self.btnGroup_mode.checkedId() == 0:
-            self.cb_2.setCurrentIndex(self.cb_1.currentIndex())
-        self.images[0] = cv2.imread(self.cb_1.currentText())
-        self.images[1] = cv2.imread(self.cb_2.currentText())
-        self.show_image()
-
     def change_image_1(self):
-        if self.btnGroup_mode.checkedId() == 0:
-            self.cb_1.setCurrentIndex(self.cb_2.currentIndex())
-        self.images[0] = cv2.imread(self.cb_1.currentText())
-        self.images[1] = cv2.imread(self.cb_2.currentText())
-        self.show_image()
+        if self.btnGroup_type.checkedId() == 1:
+            self.change_video()
+        else:
+            if self.btnGroup_mode.checkedId() == 0:
+                self.cb_2.setCurrentIndex(self.cb_1.currentIndex())
+            self.images[0] = cv2.imread(self.cb_1.currentText())
+            self.images[1] = cv2.imread(self.cb_2.currentText())
+            self.show_image()
+
+    def change_image_2(self):
+        if self.btnGroup_type.checkedId() == 1:
+            self.change_video()
+        else:
+            if self.btnGroup_mode.checkedId() == 0:
+                self.cb_1.setCurrentIndex(self.cb_2.currentIndex())
+            self.images[0] = cv2.imread(self.cb_1.currentText())
+            self.images[1] = cv2.imread(self.cb_2.currentText())
+            self.show_image()
+
+    def change_video(self):
+        if self.cb_1.currentText() != '' and self.cb_2.currentText() != '':
+            self.player.set(self.cb_1.currentText(), self.cb_2.currentText())
+            self.player.start()
+            self.btn_pause.setEnabled(True)
+
+    # def setImg1(self, img):
+    #     self.images[0] = img
+    #     self.imageArea.setImage(self.images)
+    # def setImg2(self, img):
+    #     self.images[1] = img
+    #     self.imageArea.setImage(self.images)
+    def setImg(self, images):
+        self.images = images
+        self.imageArea.setImage(self.images)
 
     def show_image(self):
         self.imageArea = QLabelSlider(self,
@@ -579,17 +714,36 @@ class SliderTab(QtWidgets.QWidget):
         )
         self.image_scroll.setWidget(self.imageArea)
 
+    def pause(self):
+        if self.btn_pause.text() == 'Pause (Space)':
+            self.player.pause()
+            self.btn_pause.setText('Play (Space)')
+        else:
+            self.player.resume()
+            self.btn_pause.setText('Pause (Space)')
+
     def reset(self):
         self.images = [None, None]
         self.cb_1.clear()
         self.cb_2.clear()
         self.show_image()
-        if self.btnGroup_mode.checkedId() == 0:
-            self.btn_add_1.setText('Set image 1')
-            self.btn_add_2.setText('Set image 2')
+        if self.btnGroup_type.checkedId == 0:
+            if self.btnGroup_mode.checkedId() == 0:
+                self.btn_add_1.setText('Set image 1')
+                self.btn_add_2.setText('Set image 2')
+            else:
+                self.btn_add_1.setText('Add file')
+                self.btn_add_2.setText('Add directory')
         else:
-            self.btn_add_1.setText('Add file')
-            self.btn_add_2.setText('Add directory')
+            self.btn_add_1.setText('Add a video')
+            self.btn_add_2.setText('Add frames')
+
+        self.btn_pause.setText('Pause (Space)')
+        self.btn_pause.setEnabled(False)
+        self.btn_record.setText('Record (Enter)')
+
+        self.timer_slider.stop()
+        self.timer_record.stop()
 
     def save(self):
         """Save slider compare result."""
@@ -601,6 +755,26 @@ class SliderTab(QtWidgets.QWidget):
             QtWidgets.QMessageBox.about(self, 'Message', 'Success!')
         else:
             QtWidgets.QMessageBox.about(self, 'Message', 'Nothing to save.')
+
+    def record(self):
+        if self.btn_record.text() == 'Record (Enter)':
+            cur = datetime.datetime.now()
+            fname = f'{cur.year}{cur.month}{cur.day}{cur.hour}{cur.minute}\
+                {cur.second}.mp4'
+
+            self.recorder = cv2.VideoWriter(fname, 0x7634706d, 25,
+                                            (self.imageArea.w,
+                                             self.imageArea.h))
+            self.timer_record.start(1000 / 25)
+            self.btn_record.setText('End (Enter)')
+        elif self.btn_record.text() == 'End (Enter)':
+            self.recorder.release()
+            self.btn_record.setText('Record (Enter)')
+
+    def recording(self):
+        img = self.imageArea.grab().toImage()
+        img = qimage2array(img)
+        self.recorder.write(img)
 
     def wheelEvent(self, ev) -> None:
         key = QtWidgets.QApplication.keyboardModifiers()
@@ -626,13 +800,17 @@ class SliderTab(QtWidgets.QWidget):
                 self.cb_1.setCurrentIndex(self.cb_1.currentIndex() + 1)
             else:
                 self.cb_1.setCurrentIndex(0)
-        return super().keyPressEvent(ev)
+        elif ev.key(
+        ) == QtCore.Qt.Key_Enter or ev.key() + 1 == QtCore.Qt.Key_Enter:
+            self.record()
+        elif ev.key() == QtCore.Qt.Key_Space:
+            self.pause()
 
     def eventFilter(self, object, event) -> bool:
-        if object == self.image_scroll:
+        if object == self.image_scroll or object == self:
             if event.type() == QtCore.QEvent.KeyPress:
                 self.keyPressEvent(event)
-                return False
+                return True
         return super().eventFilter(object, event)
 
 

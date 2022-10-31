@@ -1,4 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os
+import time
+import traceback
+
 import cv2
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -28,7 +32,7 @@ class QLabelSlider(QtWidgets.QLabel):
         self.label_2 = label_2
         self.title = title
         self.images = self.parent.images
-        self.isShow = False
+        self.auto_mode = 0
 
     def mousePressEvent(self, ev: QtGui.QMouseEvent) -> None:
         if ev.button() == QtCore.Qt.LeftButton:
@@ -72,24 +76,52 @@ class QLabelSlider(QtWidgets.QLabel):
         self.scale = scale
         self.update()
 
+    def setImage(self, images):
+        self.images = images
+        self.update()
+
+    def auto_slider(self):
+        try:
+            if self.auto_mode == 1:
+                self.hSlider += 1
+                if self.hSlider > self.w:
+                    self.hSlider = 0
+            elif self.auto_mode == 2:
+                self.hSlider -= 1
+                if self.hSlider < 0:
+                    self.hSlider = self.w
+            elif self.auto_mode == 3:
+                self.hSlider += 1
+                if self.hSlider >= self.w:
+                    self.auto_mode = 4
+            elif self.auto_mode == 4:
+                self.hSlider -= 1
+                if self.hSlider <= 0:
+                    self.auto_mode = 3
+            self.update()
+
+        except Exception:
+            print(traceback.format_exc())
+            pass
+
     def getImage(self):
         img1, img2 = self.images
         if img1 is None or img2 is None:
             return
-        h1, w1, c1 = img1.shape
-        h2, w2, c2 = img2.shape
+        h1, w1, c = img1.shape
+        h2, w2, c = img2.shape
         if w2 > w1:
             img1 = cv2.resize(img1, (w2, h2))
-            self.setFixedHeight(h2 * self.scale)
-            self.setFixedWidth(w2 * self.scale)
-            if self.hSlider < 0:
-                self.hSlider = int(w2 / 2.0 * self.scale)
+            h, w = h2, w2
         else:
             img2 = cv2.resize(img2, (w1, h1))
-            self.setFixedHeight(h1 * self.scale)
-            self.setFixedWidth(w1 * self.scale)
-            if self.hSlider < 0:
-                self.hSlider = int(w1 / 2.0 * self.scale)
+            h, w = h1, w1
+        self.h = int(h * self.scale)
+        self.w = int(w * self.scale)
+        self.setFixedHeight(self.h)
+        self.setFixedWidth(self.w)
+        if self.hSlider < 0:
+            self.hSlider = int(self.w / 2.0)
 
         v = int(self.hSlider / self.scale)
         img11 = img1[:, 0:v].copy()
@@ -97,7 +129,7 @@ class QLabelSlider(QtWidgets.QLabel):
         img = np.hstack((img11, img22))
         # img = cv2.line(img, (v, 0), (v, h2), (0, 222, 0), 4)
         rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img_dis = QtGui.QImage(rgb_img, w2, h2, w2 * c2,
+        img_dis = QtGui.QImage(rgb_img, w, h, w * c,
                                QtGui.QImage.Format_RGB888)
         img = QtGui.QPixmap.fromImage(img_dis).scaled(self.width(),
                                                       self.height())
@@ -277,3 +309,136 @@ class ConcatImageWidget(QtWidgets.QWidget):
             endPoint.y()
         ]
         self.parent.old_scale = self.scale
+
+
+class VideoPlayer(QtCore.QThread):
+    sigout = QtCore.pyqtSignal(np.ndarray)
+    sigend = QtCore.pyqtSignal(bool)
+
+    def __init__(self, parent):
+        super(VideoPlayer, self).__init__(parent)
+        self.parent = parent
+
+    def set(self, path, fps=None):
+        self.path = path
+        self.video, self.fps, self.actual_frames = self.setVideo(path, fps)
+        self.time = self.actual_frames / self.fps
+        self.total_frames = self.actual_frames
+        self.num = 0
+        self.working = True
+        self.isPause = False
+        self.mutex = QtCore.QMutex()
+        self.cond = QtCore.QWaitCondition()
+
+    def setVideo(self, path, fps):
+        if os.path.isfile(path):
+            v = cv2.VideoCapture(path)
+            total_frames = v.get(cv2.CAP_PROP_FRAME_COUNT)
+            if fps is None:
+                fps = v.get(cv2.CAP_PROP_FPS)
+        else:
+            files = sorted(os.listdir(path))
+            v = ['/'.join([path, f]) for f in files]
+            total_frames = len(v)
+            if fps is None:
+                fps = 25
+        return v, fps, total_frames
+
+    def pause(self):
+        self.isPause = True
+
+    def resume(self):
+        self.isPause = False
+        self.cond.wakeAll()
+
+    def __del__(self):
+        self.working = False
+        self.wait()
+
+    def run(self):
+        while self.working:
+            self.mutex.lock()
+            if self.isPause:
+                self.cond.wait(self.mutex)
+            if isinstance(self.video, list):
+                img = cv2.imread(self.video[self.num])
+                self.num += 1
+                self.sigout.emit(img)
+                if self.num >= self.total_frames:
+                    self.sigend.emit(True)
+                    self.num = 0
+                time.sleep(1 / self.fps)
+            self.mutex.unlock()
+
+
+class VideoSlider(QtCore.QThread):
+    sigout = QtCore.pyqtSignal(list)
+    sigend = QtCore.pyqtSignal(bool)
+
+    def __init__(self, parent):
+        super(VideoSlider, self).__init__(parent)
+        self.parent = parent
+
+    def set(self, path1, path2, fps1=None, fps2=None):
+        self.path1 = path1
+        self.path2 = path2
+        self.v1, self.fps1, self.total_frames1 = self.setVideo(path1, fps1)
+        self.v2, self.fps2, self.total_frames2 = self.setVideo(path2, fps2)
+        if self.fps1 != self.fps2:
+            return False
+        self.fps = self.fps1
+        self.num = 0
+        self.working = True
+        self.isPause = False
+        self.mutex = QtCore.QMutex()
+        self.cond = QtCore.QWaitCondition()
+        return True
+
+    def setVideo(self, path, fps):
+        if os.path.isfile(path):
+            v = cv2.VideoCapture(path)
+            total_frames = v.get(cv2.CAP_PROP_FRAME_COUNT)
+            fps = v.get(cv2.CAP_PROP_FPS)
+        else:
+            files = sorted(os.listdir(path))
+            v = ['/'.join([path, f]) for f in files]
+            total_frames = len(v)
+            if fps is None:
+                fps = 25
+        return v, fps, total_frames
+
+    def pause(self):
+        self.isPause = True
+
+    def resume(self):
+        self.isPause = False
+        self.cond.wakeAll()
+
+    def __del__(self):
+        self.working = False
+        self.wait()
+
+    def run(self):
+        while self.working:
+            self.mutex.lock()
+            if self.isPause:
+                self.cond.wait(self.mutex)
+            if isinstance(self.v1, list):
+                num = self.num if self.num < self.total_frames1 \
+                    else self.total_frames1 - 1
+                img1 = cv2.imread(self.v1[num])
+            elif isinstance(self.v1, cv2.VideoCapture):
+                img1 = self.v1.read()
+            if isinstance(self.v2, list):
+                num = self.num if self.num < self.total_frames2 \
+                    else self.total_frames2 - 1
+                img2 = cv2.imread(self.v2[num])
+            elif isinstance(self.v1, cv2.VideoCapture):
+                img2 = self.v1.read()
+            self.num += 1
+            self.sigout.emit([img1, img2])
+            if self.num >= self.total_frames1 and \
+                    self.num >= self.total_frames2:
+                self.num = 0
+            time.sleep(1 / self.fps)
+            self.mutex.unlock()
