@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 import torch
-from mmcv.ops.upfirdn2d import upfirdn2d
+from mmcv.ops import upfirdn2d
 
 
 def _parse_scaling(scaling):

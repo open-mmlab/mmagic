@@ -3,11 +3,10 @@ import numpy as np
 import scipy
 import torch
 import torch.nn as nn
+from mmcv.ops import bias_act, conv2d_gradfix, filtered_lrelu
 from mmengine.runner.amp import autocast
 
-from mmedit.models.base_archs import conv2d_gradfix
 from mmedit.registry import MODULES
-from .stylegan3_ops.ops import bias_act, filtered_lrelu
 
 
 def modulated_conv2d(
@@ -116,7 +115,7 @@ class FullyConnectedLayer(nn.Module):
             x = torch.addmm(b.unsqueeze(0), x, w.t())
         else:
             x = x.matmul(w.t())
-            x = bias_act.bias_act(x, b, act=self.activation)
+            x = bias_act(x, b, act=self.activation)
         return x
 
 
@@ -509,7 +508,7 @@ class SynthesisLayer(nn.Module):
             # Execute bias, filtered leaky ReLU, and clamping.
             gain = 1 if self.is_torgb else np.sqrt(2)
             slope = 1 if self.is_torgb else 0.2
-            x = filtered_lrelu.filtered_lrelu(
+            x = filtered_lrelu(
                 x=x,
                 fu=self.up_filter,
                 fd=self.down_filter,
