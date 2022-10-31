@@ -32,9 +32,7 @@ custom_hooks = [
 ]
 default_hooks = dict(
     checkpoint=dict(
-        max_keep_ckpts=20,
-        save_best=['FID-Full-50k/fid', 'swd/avg', 'ms-ssim/avg'],
-        rule=['less', 'less', 'greater']))
+        max_keep_ckpts=20, save_best='FID-Full-50k/fid', rule='less'))
 
 # METRICS
 metrics = [
