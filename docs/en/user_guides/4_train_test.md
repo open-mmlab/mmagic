@@ -196,7 +196,7 @@ val_dataloader = dict(
         pipeline=[
             dict(type='LoadImageFromFile', key='img'),
             dict(type='Resize', scale=(64, 64)),
-            dict(type='PackGenInputs', meta_keys=[])
+            dict(type='PackEditInputs')
         ]),
     sampler=dict(type='DefaultSampler', shuffle=False),
     persistent_workers=True)

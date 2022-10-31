@@ -67,7 +67,7 @@ test_dataloader = dict(
 ```
 
 Here, we adopt `LoadPairedImageFromFile` to load a paired image as the common loader does and crops
-it into two images with the same shape in different domains. As shown in the example, `pipeline` provides important data pipeline to process images, including loading from file system, resizing, cropping, flipping, transferring to `torch.Tensor` and packing to `GenDataSample`. All of supported data pipelines can be found in `mmedit/datasets/transforms`.
+it into two images with the same shape in different domains. As shown in the example, `pipeline` provides important data pipeline to process images, including loading from file system, resizing, cropping, flipping, transferring to `torch.Tensor` and packing to `EditDataSample`. All of supported data pipelines can be found in `mmedit/datasets/transforms`.
 
 For unpaired-data trained translation model like CycleGAN , `UnpairedImageDataset` is designed to train such translation models. Here is an example config for horse2zebra dataset:
 
@@ -99,17 +99,15 @@ train_pipeline = [
     dict(type='Flip', keys=[f'img_{domain_a}'], direction='horizontal'),
     dict(type='Flip', keys=[f'img_{domain_b}'], direction='horizontal'),
     dict(
-        type='PackGenInputs',
-        keys=[f'img_{domain_a}', f'img_{domain_b}'],
-        meta_keys=[f'img_{domain_a}_path', f'img_{domain_b}_path'])
+        type='PackEditInputs',
+        keys=[f'img_{domain_a}', f'img_{domain_b}'])
 ]
 test_pipeline = [
     dict(type='LoadImageFromFile', io_backend='disk', key='img', flag='color'),
     dict(type='Resize', scale=(256, 256), interpolation='bicubic'),
     dict(
-        type='PackGenInputs',
-        keys=[f'img_{domain_a}', f'img_{domain_b}'],
-        meta_keys=[f'img_{domain_a}_path', f'img_{domain_b}_path'])
+        type='PackEditInputs',
+        keys=[f'img_{domain_a}', f'img_{domain_b}'])
 ]
 data_root = './data/horse2zebra/'
 # `batch_size` and `data_root` need to be set.
