@@ -381,7 +381,8 @@ def parse_args():
     parser.add_argument(
         '--n-thread',
         nargs='?',
-        default=20,
+        default=8,
+        type=int,
         help='thread number when using multiprocessing')
     parser.add_argument(
         '--make-lmdb',
