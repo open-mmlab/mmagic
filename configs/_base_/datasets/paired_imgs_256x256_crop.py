@@ -10,18 +10,11 @@ train_pipeline = [
         domain_b='B',
         color_type='color'),
     dict(
-        type='TransformBroadcaster',
-        mapping={'img': ['img_A', 'img_B']},
-        auto_remap=True,
-        share_random_params=True,
-        transforms=[
-            dict(
-                type='Resize',
-                keys='img',
-                scale=(286, 286),
-                interpolation='bicubic'),
-            dict(type='FixedCrop', keys=['img'], crop_size=(256, 256))
-        ]),
+        type='Resize',
+        keys=['img_A', 'img_B'],
+        scale=(286, 286),
+        interpolation='bicubic'),
+    dict(type='FixedCrop', keys=['img_A', 'img_B'], crop_size=(256, 256)),
     dict(type='Flip', keys=['img_A', 'img_B'], direction='horizontal'),
     # NOTE: users should implement their own keyMapper and Pack operation
     # dict(

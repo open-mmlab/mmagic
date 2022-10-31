@@ -28,8 +28,8 @@ set5_dataloader = dict(
         data_prefix=dict(img='LRbicx3', gt='GTmod12'),
         pipeline=test_pipeline))
 set5_evaluator = [
-    dict(type='PSNR', crop_border=2, prefix='Set5'),
-    dict(type='SSIM', crop_border=2, prefix='Set5'),
+    dict(type='PSNR', crop_border=3, prefix='Set5'),
+    dict(type='SSIM', crop_border=3, prefix='Set5'),
 ]
 
 set14_data_root = 'data/Set14'
@@ -41,12 +41,12 @@ set14_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='set14', task_name='sisr'),
-        data_root=set5_data_root,
+        data_root=set14_data_root,
         data_prefix=dict(img='LRbicx3', gt='GTmod12'),
         pipeline=test_pipeline))
 set14_evaluator = [
-    dict(type='PSNR', crop_border=2, prefix='Set14'),
-    dict(type='SSIM', crop_border=2, prefix='Set14'),
+    dict(type='PSNR', crop_border=3, prefix='Set14'),
+    dict(type='SSIM', crop_border=3, prefix='Set14'),
 ]
 
 # test config for DIV2K
@@ -65,8 +65,8 @@ div2k_dataloader = dict(
             img='DIV2K_train_LR_bicubic/X3_sub', gt='DIV2K_train_HR_sub'),
         pipeline=test_pipeline))
 div2k_evaluator = [
-    dict(type='PSNR', crop_border=2, prefix='DIV2K'),
-    dict(type='SSIM', crop_border=2, prefix='DIV2K'),
+    dict(type='PSNR', crop_border=3, prefix='DIV2K'),
+    dict(type='SSIM', crop_border=3, prefix='DIV2K'),
 ]
 
 # test config

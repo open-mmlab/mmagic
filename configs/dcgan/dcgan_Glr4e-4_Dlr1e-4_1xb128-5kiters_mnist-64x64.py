@@ -30,7 +30,11 @@ val_dataloader = dict(batch_size=batch_size, dataset=dict(data_root=data_root))
 test_dataloader = dict(
     batch_size=batch_size, dataset=dict(data_root=data_root))
 
-default_hooks = dict(checkpoint=dict(interval=500))
+default_hooks = dict(
+    checkpoint=dict(
+        interval=500,
+        save_best=['swd/avg', 'ms-ssim/avg'],
+        rule=['less', 'greater']))
 
 # VIS_HOOK
 custom_hooks = [

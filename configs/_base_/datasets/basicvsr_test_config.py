@@ -109,7 +109,6 @@ udm10_dataloader = dict(
         metainfo=dict(dataset_type='udm10', task_name='vsr'),
         data_root=udm10_data_root,
         data_prefix=dict(img='BDx4', gt='GT'),
-        num_input_frames=15,
         pipeline=udm10_pipeline))
 
 udm10_evaluator = [
@@ -138,8 +137,6 @@ vid4_bd_dataloader = dict(
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
         depth=1,
-        num_input_frames=7,
-        fixed_seq_len=7,
         pipeline=vid4_pipeline))
 
 vid4_bi_dataloader = dict(
@@ -154,8 +151,6 @@ vid4_bi_dataloader = dict(
         data_prefix=dict(img='BIx4', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
         depth=1,
-        num_input_frames=7,
-        fixed_seq_len=7,
         pipeline=vid4_pipeline))
 
 vid4_bd_evaluator = [

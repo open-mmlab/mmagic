@@ -51,6 +51,7 @@ def test_real_esrgan(init_weights):
         is_use_sharpened_gt_in_pixel=False,
         is_use_sharpened_gt_in_percep=False,
         is_use_sharpened_gt_in_gan=False,
+        is_use_ema=False,
         train_cfg=None,
         test_cfg=None,
         data_preprocessor=EditDataPreprocessor())
@@ -85,6 +86,12 @@ def test_real_esrgan(init_weights):
     ])
 
     # val
+    output = model.val_step(data)
+    assert output[0].output.pred_img.data.shape == (3, 128, 128)
+
+    # val_ema
+    model.generator_ema = model.generator
+    model.is_use_ema = True
     output = model.val_step(data)
     assert output[0].output.pred_img.data.shape == (3, 128, 128)
 

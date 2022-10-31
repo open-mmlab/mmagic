@@ -7,8 +7,7 @@ import pytest
 import torch
 
 from mmedit.datasets.transforms import LoadImageFromFile
-from mmedit.evaluation.metrics import (SAD, ConnectivityError, GradientError,
-                                       MattingMSE)
+from mmedit.evaluation.metrics import ConnectivityError
 
 
 class TestMattingMetrics:
@@ -71,111 +70,6 @@ class TestMattingMetrics:
         cls.good_preds = copy.deepcopy((cls.data_samples))
         for d, p in zip(cls.good_preds, cls.good_preds_):
             d['output'] = p
-
-    def test_sad(self):
-        """Test SAD for evaluating predicted alpha matte."""
-
-        data_batch, bad_pred1, bad_pred2, good_pred = (
-            self.data_batch,
-            self.bad_preds1,
-            self.bad_preds2,
-            self.good_preds,
-        )
-
-        sad = SAD()
-
-        with pytest.raises(ValueError):
-            sad.process(data_batch, bad_pred1)
-
-        with pytest.raises(ValueError):
-            sad.process(data_batch, bad_pred2)
-
-        # process 2 batches
-        sad.process(data_batch, good_pred)
-        sad.process(data_batch, good_pred)
-
-        assert sad.results == [
-            {
-                'sad': 0.768,
-            },
-            {
-                'sad': 0.768,
-            },
-        ]
-
-        res = sad.compute_metrics(sad.results)
-
-        assert list(res.keys()) == ['SAD']
-        np.testing.assert_almost_equal(res['SAD'], 0.768)
-
-    def test_mse(self):
-        """Test MattingMSE for evaluating predicted alpha matte."""
-
-        data_batch, bad_pred1, bad_pred2, good_pred = (
-            self.data_batch,
-            self.bad_preds1,
-            self.bad_preds2,
-            self.good_preds,
-        )
-
-        mse = MattingMSE()
-
-        with pytest.raises(ValueError):
-            mse.process(data_batch, bad_pred1)
-
-        with pytest.raises(ValueError):
-            mse.process(data_batch, bad_pred2)
-
-        # process 2 batches
-        mse.process(data_batch, good_pred)
-        mse.process(data_batch, good_pred)
-
-        assert mse.results == [
-            {
-                'mse': 3.0,
-            },
-            {
-                'mse': 3.0,
-            },
-        ]
-
-        res = mse.compute_metrics(mse.results)
-
-        assert list(res.keys()) == ['MattingMSE']
-        np.testing.assert_almost_equal(res['MattingMSE'], 3.0)
-
-    def test_gradient_error(self):
-        """Test gradient error for evaluating predicted alpha matte."""
-
-        data_batch, bad_pred1, bad_pred2, good_pred = (
-            self.data_batch,
-            self.bad_preds1,
-            self.bad_preds2,
-            self.good_preds,
-        )
-
-        grad_err = GradientError()
-
-        with pytest.raises(ValueError):
-            grad_err.process(data_batch, bad_pred1)
-
-        with pytest.raises(ValueError):
-            grad_err.process(data_batch, bad_pred2)
-
-        # process 2 batches
-        grad_err.process(data_batch, good_pred)
-        grad_err.process(data_batch, good_pred)
-
-        assert len(grad_err.results) == 2
-        for el in grad_err.results:
-            assert list(el.keys()) == ['grad_err']
-            np.testing.assert_almost_equal(el['grad_err'], 0.0028887)
-
-        res = grad_err.compute_metrics(grad_err.results)
-
-        assert list(res.keys()) == ['GradientError']
-        np.testing.assert_almost_equal(el['grad_err'], 0.0028887)
-        # assert np.allclose(res['GradientError'], 0.0028887)
 
     def test_connectivity_error(self):
         """Test connectivity error for evaluating predicted alpha matte."""
