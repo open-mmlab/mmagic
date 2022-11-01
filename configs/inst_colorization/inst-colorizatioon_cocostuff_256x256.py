@@ -47,7 +47,7 @@ test_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(
         type='InstanceCrop',
-        config_file='COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml',  # noqa
+        config_file='mmdet::/mask_rcnn_X_101_32x8d_FPN_3x.yaml',  # noqa
         finesize=256),
     dict(
         type='Resize',

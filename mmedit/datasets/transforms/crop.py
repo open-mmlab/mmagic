@@ -2,14 +2,17 @@
 import math
 import random
 
+import cv2 as cv
 import mmcv
 import numpy as np
+import torch
 from mmcv.transforms import BaseTransform
+from mmengine.hub import get_model
 from mmengine.utils import is_list_of, is_tuple_of
 from torch.nn.modules.utils import _pair
 
 from mmedit.registry import TRANSFORMS
-from mmedit.utils import random_choose_unknown
+from mmedit.utils import get_box_info, random_choose_unknown
 
 
 @TRANSFORMS.register_module()
@@ -916,3 +919,97 @@ class CenterCropLongEdge(BaseTransform):
         repr_str = self.__class__.__name__
         repr_str += (f'(keys={self.keys})')
         return repr_str
+
+
+@TRANSFORMS.register_module()
+class InstanceCrop(BaseTransform):
+    """Use maskrcnn to detect instances on image.
+
+    Mask R-CNN is used to detect the instance on the image
+    pred_bbox is used to segment the instance on the image
+
+    Args:
+        config_file (str): config file name relative to detectron2's "configs/"
+        key (str): Unused
+        box_num_upbound (int):The upper limit on the number of instances
+            in the figure
+    """
+
+    def __init__(self,
+                 config_file,
+                 key='img',
+                 box_num_upbound=-1,
+                 finesize=256):
+        # detector
+        self.predictor = get_model(config_file, pretrained=True)
+
+        self.key = key
+        self.box_num_upbound = box_num_upbound
+        self.final_size = finesize
+
+    def transform(self, results: dict) -> dict:
+        """The transform function of InstanceCrop.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for Conversion
+
+        Returns:
+            results (dict): A dict containing the processed data
+                and information.
+        """
+        # get consistent box prediction based on L channel
+        full_img = results['img']
+        full_img_size = results['ori_img_shape'][:-1][::-1]
+        lab_image = cv.cvtColor(full_img, cv.COLOR_BGR2LAB)
+        l_channel, a_channel, b_channel = cv.split(lab_image)
+        l_stack = np.stack([l_channel, l_channel, l_channel], axis=2)
+        outputs = self.predictor(l_stack)
+
+        # get the most confident boxes
+        pred_bbox = outputs['instances'].pred_boxes.to(
+            torch.device('cpu')).tensor.numpy()
+        pred_scores = outputs['instances'].scores.cpu().data.numpy()
+        pred_bbox = pred_bbox.astype(np.int32)
+        if self.box_num_upbound > 0 and pred_bbox.shape[
+                0] > self.box_num_upbound:
+            index_mask = np.argsort(pred_scores, axis=0)
+            index_mask = index_mask[pred_scores.shape[0] -
+                                    self.box_num_upbound:pred_scores.shape[0]]
+            pred_bbox = pred_bbox[index_mask]
+
+        # get cropped images and box info
+        cropped_img_list = []
+        index_list = range(len(pred_bbox))
+        box_info, box_info_2x, box_info_4x, box_info_8x = np.zeros(
+            (4, len(index_list), 6))
+        for i in index_list:
+            startx, starty, endx, endy = pred_bbox[i]
+            cropped_img = full_img[starty:endy, startx:endx, :]
+            cropped_img_list.append(cropped_img)
+            box_info[i] = np.array(
+                get_box_info(pred_bbox[i], full_img_size, self.final_size))
+            box_info_2x[i] = np.array(
+                get_box_info(pred_bbox[i], full_img_size,
+                             self.final_size // 2))
+            box_info_4x[i] = np.array(
+                get_box_info(pred_bbox[i], full_img_size,
+                             self.final_size // 4))
+            box_info_8x[i] = np.array(
+                get_box_info(pred_bbox[i], full_img_size,
+                             self.final_size // 8))
+
+        # update results
+        if len(pred_bbox) > 0:
+            results['cropped_img'] = cropped_img_list
+            results['box_info'] = torch.from_numpy(box_info).type(torch.long)
+            results['box_info_2x'] = torch.from_numpy(box_info_2x).type(
+                torch.long)
+            results['box_info_4x'] = torch.from_numpy(box_info_4x).type(
+                torch.long)
+            results['box_info_8x'] = torch.from_numpy(box_info_8x).type(
+                torch.long)
+            results['empty_box'] = False
+        else:
+            results['empty_box'] = True
+        return results

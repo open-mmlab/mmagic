@@ -6,8 +6,9 @@ from .aug_pixel import (BinarizeImage, Clip, ColorJitter, RandomAffine,
 from .aug_shape import (Flip, NumpyPad, RandomRotation, RandomTransposeHW,
                         Resize)
 from .crop import (CenterCropLongEdge, Crop, CropAroundCenter, CropAroundFg,
-                   CropAroundUnknown, CropLike, FixedCrop, ModCrop,
-                   PairedRandomCrop, RandomCropLongEdge, RandomResizedCrop)
+                   CropAroundUnknown, CropLike, FixedCrop, InstanceCrop,
+                   ModCrop, PairedRandomCrop, RandomCropLongEdge,
+                   RandomResizedCrop)
 from .fgbg import (CompositeFg, MergeFgAndBg, PerturbBg, RandomJitter,
                    RandomLoadResizeBg)
 from .formatting import PackEditInputs, ToTensor
@@ -17,7 +18,6 @@ from .generate_frame_indices import (GenerateFrameIndices,
                                      GenerateFrameIndiceswithPadding,
                                      GenerateSegmentIndices)
 from .get_masked_image import GetMaskedImage
-from .get_maskrcnn_bbox import InstanceCrop
 from .loading import (GetSpatialDiscountMask, LoadImageFromFile, LoadMask,
                       LoadPairedImageFromFile)
 from .matlab_like_resize import MATLABLikeResize
