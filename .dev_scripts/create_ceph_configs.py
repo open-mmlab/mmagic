@@ -40,7 +40,7 @@ def convert_data_config(data_cfg):
     dataset: dict = data_cfg['dataset']
 
     dataset_type: str = dataset['type']
-    if 'mmcls' in dataset_type:
+    if dataset_type in ['ImageNet', 'CIFAR10']:
         repo_name = 'classification'
     else:
         repo_name = 'editing'
@@ -112,8 +112,6 @@ def convert_data_config(data_cfg):
                     bg_dir_path = bg_dir_path.replace(dataroot_prefix,
                                                       ceph_dataroot_prefix)
                     bg_dir_path = bg_dir_path.replace(repo_name, 'detection')
-                    bg_dir_path = bg_dir_path.replace('openmmlab:',
-                                                      'sproject:')
                 pipeline['bg_dir'] = bg_dir_path
             elif type_ == 'CompositeFg':
                 fg_dir_path = pipeline['fg_dirs']
@@ -188,9 +186,10 @@ def update_ceph_config(filename, args, dry_run=False):
 
         # 2. change visualizer
         if hasattr(config, 'vis_backends'):
-            for vis_cfg in config['vis_backends']:
-                if vis_cfg['type'] == 'GenVisBackend':
-                    vis_cfg['ceph_path'] = work_dir
+            # TODO: support upload to ceph
+            # for vis_cfg in config['vis_backends']:
+            #     if vis_cfg['type'] == 'GenVisBackend':
+            #         vis_cfg['ceph_path'] = work_dir
 
             # add pavi config
             if args.add_pavi:

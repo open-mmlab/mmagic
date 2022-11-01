@@ -22,7 +22,11 @@ optim_wrapper = dict(
     discriminator=dict(
         optimizer=dict(type='Adam', lr=0.0001, betas=(0.5, 0.99))))
 
-default_hooks = dict(checkpoint=dict(max_keep_ckpts=20))
+train_cfg = dict(max_iters=160000)
+
+default_hooks = dict(
+    checkpoint=dict(
+        max_keep_ckpts=20, save_best='FID-Full-50k/fid', rule='less'))
 
 # VIS_HOOK
 custom_hooks = [
@@ -32,8 +36,6 @@ custom_hooks = [
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))
 ]
-
-train_cfg = dict(max_iters=160000)
 
 # METRICS
 metrics = [
@@ -54,14 +56,5 @@ metrics = [
         image_shape=(3, 128, 128))
 ]
 
-val_metrics = [
-    dict(
-        type='FrechetInceptionDistance',
-        prefix='FID-Full-50k',
-        fake_nums=50000,
-        inception_style='StyleGAN',
-        sample_model='orig'),
-]
-
-val_evaluator = dict(metrics=val_metrics)
+val_evaluator = dict(metrics=metrics)
 test_evaluator = dict(metrics=metrics)

@@ -190,7 +190,7 @@ class GenerateFacialHeatmap(BaseTransform):
         else:
             heatmap = self.generate_heatmap_from_img(img)
 
-        results[f'{self.image_key}_heatmap'] = heatmap
+        results[f'{self.image_key}_heatmap'] = heatmap.astype(np.float32)
 
         return results
 

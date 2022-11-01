@@ -52,7 +52,6 @@ test_dataloader = dict(
         metainfo=dict(dataset_type='ntire21_track1', task_name='vsr'),
         data_root='data/NTIRE21_decompression_track1',
         data_prefix=dict(img='LQ', gt='GT'),
-        num_input_frames=15,
         pipeline=test_pipeline))
 
 test_evaluator = [

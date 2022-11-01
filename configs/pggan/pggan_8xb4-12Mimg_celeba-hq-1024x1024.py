@@ -102,6 +102,11 @@ custom_hooks = [
             target_keys=['ema', 'orig'])),
     dict(type='PGGANFetchDataHook')
 ]
+default_hooks = dict(
+    checkpoint=dict(
+        max_keep_ckpts=20,
+        save_best=['swd/avg', 'ms-ssim/avg'],
+        rule=['less', 'greater']))
 
 # METRICS
 metrics = [

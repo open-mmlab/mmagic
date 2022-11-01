@@ -30,6 +30,9 @@ custom_hooks = [
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))
 ]
+default_hooks = dict(
+    checkpoint=dict(
+        max_keep_ckpts=20, save_best='FID-Full-50k/fid', rule='less'))
 
 # METRICS
 metrics = [

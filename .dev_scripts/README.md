@@ -9,6 +9,7 @@
 - [4. Monitor your training](#4-monitor-your-training)
 - [5. Train with a list of models](#5-train-with-a-list-of-models)
 - [6. Train with skipping a list of models](#6-train-with-skipping-a-list-of-models)
+- [7. Automatically check links](#automatically-check-links)
 
 ## 1. Check UT
 
@@ -128,7 +129,7 @@ python .dev_scripts/train_benchmark.py mm_lol \
     --quotatype=auto
 ```
 
-# 4. Monitor your training
+## 4. Monitor your training
 
 After you submitting jobs following [3-Train-all-the-models](#3-train-all-the-models), you will find a `xxx.log` file.
 This log file list all the job name of job id you have submitted. With this log file, you can monitor your training by running `.dev_scripts/job_watcher.py`.
@@ -141,7 +142,7 @@ python .dev_scripts/job_watcher.py --work-dir work_dirs/benchmark_fp32/ --log 20
 
 Then, you will find `20220923-140317.csv`, which reports the status and recent log of each job.
 
-# 5. Train with a list of models
+## 5. Train with a list of models
 
 If you only need to run some of the models, you can list all the models' name in a file, and specify the models when using `train_benchmark.py`.
 
@@ -162,7 +163,7 @@ python .dev_scripts/train_benchmark.py mm_lol \
 
 Specifically, you need to enable `--rerun`, and specify the list of models to rerun by `--rerun-list`
 
-# 6. Train with skipping a list of models
+## 6. Train with skipping a list of models
 
 If you want to train all the models while skipping some models, you can also list all the models' name in a file, and specify the models when running `train_benchmark.py`.
 
@@ -182,3 +183,53 @@ python .dev_scripts/train_benchmark.py mm_lol \
 ```
 
 Specifically, you need to enable `--skip`, and specify the list of models to skip by `--skip-list`
+
+## 7. Train failed or canceled jobs
+
+If you want to rerun failed or canceled jobs in the last run, you can combine `--rerun` flag with `--rerun-failure` and `--rerun-cancel` flags.
+
+For example, the log file of the last run is `train-20221009-211904.log`, and now you want to rerun the failed jobs. You can use the following command:
+
+```bash
+python .dev_scripts/train_benchmark.py mm_lol \
+    --job-name RERUN \
+    --rerun train-20221009-211904.log \
+    --rerun-fail \
+    --run
+```
+
+We can combine `--rerun-fail` and `--rerun-cancel` with flag `---models` to rerun a **subset** of failed or canceled model.
+
+```bash
+python .dev_scripts/train_benchmark.py mm_lol \
+    --job-name RERUN \
+    --rerun train-20221009-211904.log \
+    --rerun-fail \
+    --models sagan \  # only rerun 'sagan' models in all failed tasks
+    --run
+```
+
+Specifically, `--rerun-fail` and `--rerun-cancel` can be used together to rerun both failed and cancaled jobs.
+
+## 8. `deterministic` training
+
+Set `torch.backends.cudnn.deterministic = True` and `torch.backends.cudnn.benchmark = False` can remove randomness operation in Pytorch training. You can add `--deterministic` flag when start your benchmark training to remove the influence of randomness operation.
+
+```shell
+python .dev_scripts/train_benchmark.py mm_lol --job-name xzn --models pix2pix --cpus-per-job 16 --run --deterministic
+```
+
+## 9. Automatically check links
+
+Use the following script to check whether the links in documentations are valid:
+
+```shell
+python3 .github/scripts/doc_link_checker.py --target docs/zh_cn
+python3 .github/scripts/doc_link_checker.py --target README_zh-CN.md
+python3 .github/scripts/doc_link_checker.py --target docs/en
+python3 .github/scripts/doc_link_checker.py --target README.md
+```
+
+You can specify the `--target` by a file or a directory.
+
+**Notes:** DO NOT use it in CI, because requiring too many http requirements by CI will cause 503 and CI will propabaly fail.

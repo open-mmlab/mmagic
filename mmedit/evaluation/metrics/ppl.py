@@ -240,6 +240,7 @@ class PerceptualPathLength(GenerativeMetric):
                 if self.idx >= len(self.batch_sizes):
                     raise StopIteration
                 batch = self.batch_sizes[self.idx]
+                injected_noise = self.generator.make_injected_noise()
                 inputs = torch.randn([batch * 2, self.latent_dim],
                                      device=self.device)
                 if self.sampling == 'full':
@@ -270,6 +271,7 @@ class PerceptualPathLength(GenerativeMetric):
                     inputs=dict(
                         noise=latent_e,
                         sample_kwargs=dict(
+                            injected_noise=injected_noise,
                             input_is_latent=(self.space == 'W'))))
 
         ppl_sampler = PPLSampler(

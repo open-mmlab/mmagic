@@ -47,12 +47,13 @@ model = dict(
     is_use_sharpened_gt_in_pixel=True,
     is_use_sharpened_gt_in_percep=True,
     is_use_sharpened_gt_in_gan=False,
+    is_use_ema=True,
     train_cfg=dict(start_iter=1000000),
     test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
-        mean=[0, 0, 0],
-        std=[1, 1, 1],
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.],
     ))
 
 train_cfg = dict(

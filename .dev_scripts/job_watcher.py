@@ -9,7 +9,7 @@ from pygments import formatters, highlight, lexers
 from pygments.util import ClassNotFound
 from simple_term_menu import TerminalMenu
 
-CACHE_DIR = '~/.task_watcher'
+CACHE_DIR = osp.join(osp.abspath('~'), '.task_watcher')
 
 
 def show_job_out(name, root, job_name_list):

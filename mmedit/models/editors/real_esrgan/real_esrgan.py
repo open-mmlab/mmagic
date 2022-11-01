@@ -33,6 +33,8 @@ class RealESRGAN(SRGAN):
         is_use_sharpened_gt_in_gan (bool, optional): Whether to use the
             image sharpened by unsharp masking as the GT for adversarial loss.
             Default: False.
+        is_use_ema (bool, optional): When to apply exponential moving average
+            on the network weights. Default: True.
         train_cfg (dict): Config for training. Default: None.
             You may change the training of gan by setting:
             `disc_steps`: how many discriminator updates after one generate
@@ -56,6 +58,7 @@ class RealESRGAN(SRGAN):
                  is_use_sharpened_gt_in_pixel=False,
                  is_use_sharpened_gt_in_percep=False,
                  is_use_sharpened_gt_in_gan=False,
+                 is_use_ema=True,
                  train_cfg=None,
                  test_cfg=None,
                  init_cfg=None,
@@ -75,11 +78,33 @@ class RealESRGAN(SRGAN):
         self.is_use_sharpened_gt_in_pixel = is_use_sharpened_gt_in_pixel
         self.is_use_sharpened_gt_in_percep = is_use_sharpened_gt_in_percep
         self.is_use_sharpened_gt_in_gan = is_use_sharpened_gt_in_gan
+        self.is_use_ema = is_use_ema
 
         if train_cfg is not None:  # used for initializing from ema model
             self.start_iter = train_cfg.get('start_iter', -1)
         else:
             self.start_iter = -1
+
+    def forward_tensor(self, inputs, data_samples=None, training=False):
+        """Forward tensor. Returns result of simple forward.
+
+        Args:
+            inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+            training (bool): Whether is training. Default: False.
+
+        Returns:
+            Tensor: result of simple forward.
+        """
+
+        if training or not self.is_use_ema:
+            feats = self.generator(inputs)
+        else:
+            feats = self.generator_ema(inputs)
+
+        return feats
 
     def g_step(self, batch_outputs, batch_gt_data):
         """G step of GAN: Calculate losses of generator.

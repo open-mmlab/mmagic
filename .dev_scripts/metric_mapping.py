@@ -1,5 +1,10 @@
 # key-in-metafile: key-in-results.pkl
 METRICS_MAPPING = {
+    'FID': {
+        'keys': ['FID-Full-50k/fid'],
+        'tolerance': 0.5,
+        'rule': 'less'
+    },
     'PSNR': {
         'keys': ['PSNR'],
         'tolerance': 0.1,
