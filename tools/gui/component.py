@@ -431,13 +431,19 @@ class VideoSlider(QtCore.QThread):
                     else self.total_frames1 - 1
                 img1 = cv2.imread(self.v1[num])
             elif isinstance(self.v1, cv2.VideoCapture):
-                img1 = self.v1.read()
+                r, img1 = self.v1.read()
+                if not r:
+                    self.v1, self.fps1, self.total_frames1 = self.setVideo(
+                        self.path1, self.fps1)
             if isinstance(self.v2, list):
                 num = self.num if self.num < self.total_frames2 \
                     else self.total_frames2 - 1
                 img2 = cv2.imread(self.v2[num])
             elif isinstance(self.v1, cv2.VideoCapture):
-                img2 = self.v1.read()
+                r, img2 = self.v1.read()
+                if not r:
+                    self.v2, self.fps2, self.total_frames2 = self.setVideo(
+                        self.path2, self.fps2)
             self.num += 1
             self.sigout.emit([img1, img2])
             if self.num >= self.total_frames1 and \

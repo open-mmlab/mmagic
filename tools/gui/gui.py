@@ -38,7 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        self.setWindowTitle('EditGUI')
+        self.setWindowTitle('MMEditing Viewer')
         # # MenuBar
         # menubar_Aaa = self.menuBar().addMenu('Aaa')
         # menubar_Bbb = self.menuBar().addMenu('Bbb')

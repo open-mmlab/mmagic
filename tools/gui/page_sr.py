@@ -776,6 +776,8 @@ class SliderTab(QtWidgets.QWidget):
                 self.recorder.write(img)
             self.recorder.release()
             self.timer_record.stop()
+            QtWidgets.QMessageBox.about(self, 'Message',
+                                        f'Save {fname} success!')
             self.btn_record.setText('Record (Enter)')
 
     def recording(self):
