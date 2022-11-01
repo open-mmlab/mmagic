@@ -450,7 +450,7 @@ class SliderTab(QtWidgets.QWidget):
         self.btnGroup_auto.addButton(btn_autoMode2, 1)
         self.btnGroup_auto.addButton(btn_autoMode3, 2)
         self.btnGroup_auto.button(2).setChecked(True)
-        self.btnGroup_auto.idToggled.connect(self.reset)
+        self.btnGroup_auto.idToggled.connect(self.set_autoSlider)
         self.slider_auto = QtWidgets.QSlider(QtCore.Qt.Horizontal)
         self.slider_auto.setMinimum(0)
         self.slider_auto.setMaximum(200)
