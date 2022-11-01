@@ -225,13 +225,13 @@ class MaskedTVLoss(L1Loss):
 
 @LOSSES.register_module()
 class PSNRLoss(nn.Module):
-    """PSNR Loss in "HINet: Half Instance Normalization Network for Image Restoration".
+    """PSNR Loss in "HINet: Half Instance Normalization Network for Image
+    Restoration".
 
     Args:
         loss_weight (float, optional): Loss weight. Defaults to 1.0.
         reduction: reduction for PSNR. Can only be mean here.
         toY: change to calculate the PSNR of Y channel in YCbCr format
-    
     """
 
     def __init__(self, loss_weight=1.0, reduction='mean', toY=False):
@@ -257,5 +257,6 @@ class PSNRLoss(nn.Module):
             pred, target = pred / 255., target / 255.
             pass
         assert len(pred.size()) == 4
-        
-        return self.loss_weight * self.scale * torch.log(((pred - target) ** 2).mean(dim=(1, 2, 3)) + 1e-8).mean()
+
+        return self.loss_weight * self.scale * torch.log((
+            (pred - target)**2).mean(dim=(1, 2, 3)) + 1e-8).mean()

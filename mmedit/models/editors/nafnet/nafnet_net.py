@@ -1,17 +1,13 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmengine.model import BaseModule
 
 from mmedit.registry import MODELS
-from .utils import LayerNorm2d
 from .local_utils import Local_Base
+from .utils import LayerNorm2d
 
-"""
-    Two networks:
-        NAFNet
-        NAFNetLocal (with local AvgPool2D)
-"""
 
 @MODELS.register_module()
 class NAFNet(BaseModule):
@@ -27,13 +23,30 @@ class NAFNet(BaseModule):
         dec_blk_nums (List of int): Number of blocks for each decoder.
     """
 
-    def __init__(self, img_channel=3, mid_channels=16, middle_blk_num=1, enc_blk_nums=[], dec_blk_nums=[]):
+    def __init__(self,
+                 img_channel=3,
+                 mid_channels=16,
+                 middle_blk_num=1,
+                 enc_blk_nums=[],
+                 dec_blk_nums=[]):
         super().__init__()
 
-        self.intro = nn.Conv2d(in_channels=img_channel, out_channels=mid_channels, kernel_size=3, padding=1, stride=1, groups=1,
-                              bias=True)
-        self.ending = nn.Conv2d(in_channels=mid_channels, out_channels=img_channel, kernel_size=3, padding=1, stride=1, groups=1,
-                              bias=True)
+        self.intro = nn.Conv2d(
+            in_channels=img_channel,
+            out_channels=mid_channels,
+            kernel_size=3,
+            padding=1,
+            stride=1,
+            groups=1,
+            bias=True)
+        self.ending = nn.Conv2d(
+            in_channels=mid_channels,
+            out_channels=img_channel,
+            kernel_size=3,
+            padding=1,
+            stride=1,
+            groups=1,
+            bias=True)
 
         self.encoders = nn.ModuleList()
         self.decoders = nn.ModuleList()
@@ -44,13 +57,8 @@ class NAFNet(BaseModule):
         chan = mid_channels
         for num in enc_blk_nums:
             self.encoders.append(
-                nn.Sequential(
-                    *[NAFBlock(chan) for _ in range(num)]
-                )
-            )
-            self.downs.append(
-                nn.Conv2d(chan, 2*chan, 2, 2)
-            )
+                nn.Sequential(*[NAFBlock(chan) for _ in range(num)]))
+            self.downs.append(nn.Conv2d(chan, 2 * chan, 2, 2))
             chan = chan * 2
 
         self.middle_blks = \
@@ -62,17 +70,12 @@ class NAFNet(BaseModule):
             self.ups.append(
                 nn.Sequential(
                     nn.Conv2d(chan, chan * 2, 1, bias=False),
-                    nn.PixelShuffle(2)
-                )
-            )
+                    nn.PixelShuffle(2)))
             chan = chan // 2
             self.decoders.append(
-                nn.Sequential(
-                    *[NAFBlock(chan) for _ in range(num)]
-                )
-            )
+                nn.Sequential(*[NAFBlock(chan) for _ in range(num)]))
 
-        self.padder_size = 2 ** len(self.encoders)
+        self.padder_size = 2**len(self.encoders)
 
     def forward(self, inp):
         B, C, H, W = inp.shape
@@ -101,14 +104,22 @@ class NAFNet(BaseModule):
 
     def check_image_size(self, x):
         _, _, h, w = x.size()
-        mod_pad_h = (self.padder_size - h % self.padder_size) % self.padder_size
-        mod_pad_w = (self.padder_size - w % self.padder_size) % self.padder_size
+        mod_pad_h = (self.padder_size -
+                     h % self.padder_size) % self.padder_size
+        mod_pad_w = (self.padder_size -
+                     w % self.padder_size) % self.padder_size
         x = F.pad(x, (0, mod_pad_w, 0, mod_pad_h))
         return x
 
+
 @MODELS.register_module()
 class NAFNetLocal(Local_Base, NAFNet):
-    def __init__(self, *args, train_size=(1, 3, 256, 256), fast_imp=False, **kwargs):
+
+    def __init__(self,
+                 *args,
+                 train_size=(1, 3, 256, 256),
+                 fast_imp=False,
+                 **kwargs):
         Local_Base.__init__(self)
         NAFNet.__init__(self, *args, **kwargs)
 
@@ -117,61 +128,114 @@ class NAFNetLocal(Local_Base, NAFNet):
 
         self.eval()
         with torch.no_grad():
-            self.convert(base_size=base_size, train_size=train_size, fast_imp=fast_imp)
+            self.convert(
+                base_size=base_size, train_size=train_size, fast_imp=fast_imp)
 
 
 # Components for NAFNet
 
+
 class NAFBlock(nn.Module):
     """NAFNet's Block in paper.
-    
-    Simple gate will shrink the channel to a half. To keep the number of channels, it expands the channels first.
+
+    Simple gate will shrink the channel to a half.
+    To keep the number of channels,
+    it expands the channels first.
 
     Args:
-        in_channels (int): number of channels 
+        in_channels (int): number of channels
         DW_Expand (int): channel expansion factor for part 1
         FFN_Expand (int): channel expansion factor for part 2
         drop_out_rate (float): drop out ratio
     """
-    def __init__(self, in_channels, DW_Expand=2, FFN_Expand=2, drop_out_rate=0.):
+
+    def __init__(self,
+                 in_channels,
+                 DW_Expand=2,
+                 FFN_Expand=2,
+                 drop_out_rate=0.):
         super().__init__()
 
-        # Part 1 
-        
+        # Part 1
+
         dw_channel = in_channels * DW_Expand
-        self.conv1 = nn.Conv2d(in_channels=in_channels, out_channels=dw_channel, kernel_size=1, padding=0, stride=1, groups=1, bias=True)
-        self.conv2 = nn.Conv2d(in_channels=dw_channel, out_channels=dw_channel, kernel_size=3, padding=1, stride=1, groups=dw_channel,
-                               bias=True)
+        self.conv1 = nn.Conv2d(
+            in_channels=in_channels,
+            out_channels=dw_channel,
+            kernel_size=1,
+            padding=0,
+            stride=1,
+            groups=1,
+            bias=True)
+        self.conv2 = nn.Conv2d(
+            in_channels=dw_channel,
+            out_channels=dw_channel,
+            kernel_size=3,
+            padding=1,
+            stride=1,
+            groups=dw_channel,
+            bias=True)
 
         # Simplified Channel Attention
         self.sca = nn.Sequential(
             nn.AdaptiveAvgPool2d(1),
-            nn.Conv2d(in_channels=dw_channel // 2, out_channels=dw_channel // 2, kernel_size=1, padding=0, stride=1,
-                      groups=1, bias=True),
+            nn.Conv2d(
+                in_channels=dw_channel // 2,
+                out_channels=dw_channel // 2,
+                kernel_size=1,
+                padding=0,
+                stride=1,
+                groups=1,
+                bias=True),
         )
 
-        self.conv3 = nn.Conv2d(in_channels=dw_channel // 2, out_channels=in_channels, kernel_size=1, padding=0, stride=1, groups=1, bias=True)
+        self.conv3 = nn.Conv2d(
+            in_channels=dw_channel // 2,
+            out_channels=in_channels,
+            kernel_size=1,
+            padding=0,
+            stride=1,
+            groups=1,
+            bias=True)
 
         # Part 2
 
-        ffn_channel = FFN_Expand * in_channels 
-        self.conv4 = nn.Conv2d(in_channels=in_channels, out_channels=ffn_channel, kernel_size=1, padding=0, stride=1, groups=1, bias=True)
-        self.conv5 = nn.Conv2d(in_channels=ffn_channel // 2, out_channels=in_channels, kernel_size=1, padding=0, stride=1, groups=1, bias=True)
+        ffn_channel = FFN_Expand * in_channels
+        self.conv4 = nn.Conv2d(
+            in_channels=in_channels,
+            out_channels=ffn_channel,
+            kernel_size=1,
+            padding=0,
+            stride=1,
+            groups=1,
+            bias=True)
+        self.conv5 = nn.Conv2d(
+            in_channels=ffn_channel // 2,
+            out_channels=in_channels,
+            kernel_size=1,
+            padding=0,
+            stride=1,
+            groups=1,
+            bias=True)
 
         # Simple Gate
         self.sg = SimpleGate()
 
-        # Layer Normalization 
+        # Layer Normalization
         self.norm1 = LayerNorm2d(in_channels)
         self.norm2 = LayerNorm2d(in_channels)
 
         # Dropout
-        self.dropout1 = nn.Dropout(drop_out_rate) if drop_out_rate > 0. else nn.Identity()
-        self.dropout2 = nn.Dropout(drop_out_rate) if drop_out_rate > 0. else nn.Identity()
+        self.dropout1 = nn.Dropout(
+            drop_out_rate) if drop_out_rate > 0. else nn.Identity()
+        self.dropout2 = nn.Dropout(
+            drop_out_rate) if drop_out_rate > 0. else nn.Identity()
 
         # Feature weight ratio
-        self.beta = nn.Parameter(torch.zeros((1, in_channels, 1, 1)), requires_grad=True)
-        self.gamma = nn.Parameter(torch.zeros((1, in_channels, 1, 1)), requires_grad=True)
+        self.beta = nn.Parameter(
+            torch.zeros((1, in_channels, 1, 1)), requires_grad=True)
+        self.gamma = nn.Parameter(
+            torch.zeros((1, in_channels, 1, 1)), requires_grad=True)
 
     def forward(self, inp):
         x = inp
@@ -199,6 +263,7 @@ class NAFBlock(nn.Module):
 
 
 class SimpleGate(nn.Module):
+
     def forward(self, x):
         x1, x2 = x.chunk(2, dim=1)
         return x1 * x2

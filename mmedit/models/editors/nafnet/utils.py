@@ -1,9 +1,6 @@
-import math
+# Copyright (c) OpenMMLab. All rights reserved.
 import torch
 from torch import nn as nn
-from torch.nn import functional as F
-from torch.nn import init as init
-from torch.nn.modules.batchnorm import _BatchNorm
 
 
 class LayerNormFunction(torch.autograd.Function):
@@ -30,8 +27,9 @@ class LayerNormFunction(torch.autograd.Function):
 
         mean_gy = (g * y).mean(dim=1, keepdim=True)
         gx = 1. / torch.sqrt(var + eps) * (g - y * mean_gy - mean_g)
-        return gx, (grad_output * y).sum(dim=3).sum(dim=2).sum(dim=0), grad_output.sum(dim=3).sum(dim=2).sum(
-            dim=0), None
+        return gx, (grad_output * y).sum(dim=3).sum(dim=2).sum(
+            dim=0), grad_output.sum(dim=3).sum(dim=2).sum(dim=0), None
+
 
 class LayerNorm2d(nn.Module):
 

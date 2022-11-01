@@ -25,8 +25,7 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0.0, 0.0, 0.0],
         std=[255.0, 255.0, 255.0],
-    )
-)
+    ))
 
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
@@ -38,10 +37,7 @@ train_pipeline = [
         flip_ratio=0.5,
         direction='horizontal'),
     dict(
-        type='Flip', 
-        keys=['img', 'gt'], 
-        flip_ratio=0.5, 
-        direction='vertical'),
+        type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     dict(type='PairedRandomCrop', gt_patch_size=256),
     dict(type='PackEditInputs')
@@ -66,7 +62,7 @@ train_dataloader = dict(
         metainfo=dict(dataset_type='sidd', task_name='denoising'),
         data_root='../datasets/SIDD/train',
         data_prefix=dict(gt='gt', img='noisy'),
-        filename_tmpl=dict(img='{}_NOISY', gt='{}_GT'), 
+        filename_tmpl=dict(img='{}_NOISY', gt='{}_GT'),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -79,7 +75,7 @@ val_dataloader = dict(
         metainfo=dict(dataset_type='sidd', task_name='denoising'),
         data_root='../datasets/SIDD/val/',
         data_prefix=dict(gt='gt', img='noisy'),
-        filename_tmpl=dict(gt='{}_GT', img='{}_NOISY'), 
+        filename_tmpl=dict(gt='{}_GT', img='{}_NOISY'),
         pipeline=val_pipeline))
 
 test_dataloader = val_dataloader
@@ -105,10 +101,7 @@ optim_wrapper = dict(
 
 # learning policy
 param_scheduler = dict(
-    type='CosineAnnealingLR',
-    by_epoch=False,
-    T_max=400_000, 
-    eta_min=1e-7)
+    type='CosineAnnealingLR', by_epoch=False, T_max=400_000, eta_min=1e-7)
 
 default_hooks = dict(
     checkpoint=dict(

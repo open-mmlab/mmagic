@@ -25,8 +25,7 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-    )
-)
+    ))
 
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
@@ -38,10 +37,7 @@ train_pipeline = [
         flip_ratio=0.5,
         direction='horizontal'),
     dict(
-        type='Flip', 
-        keys=['img', 'gt'], 
-        flip_ratio=0.5, 
-        direction='vertical'),
+        type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     dict(type='PairedRandomCrop', gt_patch_size=256),
     dict(type='PackEditInputs')
@@ -109,10 +105,7 @@ optim_wrapper = dict(
 
 # learning policy
 param_scheduler = dict(
-    type='CosineAnnealingLR',
-    by_epoch=False,
-    T_max=400_000, 
-    eta_min=1e-7)
+    type='CosineAnnealingLR', by_epoch=False, T_max=400_000, eta_min=1e-7)
 
 default_hooks = dict(
     checkpoint=dict(

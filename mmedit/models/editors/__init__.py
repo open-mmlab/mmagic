@@ -31,6 +31,7 @@ from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
 from .liif import LIIF, MLPRefiner
 from .lsgan import LSGAN
 from .mspie import MSPIEStyleGAN2, PESinGAN
+from .nafnet import Baseline, BaselineLocal, NAFNet, NAFNetLocal
 from .pconv import (MaskConvModule, PartialConv2d, PConvDecoder, PConvEncoder,
                     PConvEncoderDecoder, PConvInpaintor)
 from .pggan import ProgressiveGrowingGAN
@@ -50,7 +51,6 @@ from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
 from .wgan_gp import WGANGP
-from .nafnet import NAFNet, NAFNetLocal, Baseline, BaselineLocal
 
 __all__ = [
     'AOTEncoderDecoder', 'AOTBlockNeck', 'AOTInpaintor',
@@ -74,5 +74,6 @@ __all__ = [
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'IDLossModel', 'PESinGAN',
-    'MSPIEStyleGAN2', 'StyleGAN3Generator'
+    'MSPIEStyleGAN2', 'StyleGAN3Generator', 'Baseline', 'BaselineLocal',
+    'NAFNet', 'NAFNetLocal'
 ]
