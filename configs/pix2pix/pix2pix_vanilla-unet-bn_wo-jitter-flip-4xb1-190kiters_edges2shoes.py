@@ -53,7 +53,8 @@ train_pipeline += [key_mapping, pack_input]
 val_pipeline += [key_mapping, pack_input]
 test_pipeline += [key_mapping, pack_input]
 
-train_dataloader = dict(dataset=dict(data_root=dataroot, test_dir='val'))
+train_dataloader = dict(
+    batch_size=4, dataset=dict(data_root=dataroot, test_dir='val'))
 val_dataloader = dict(
     dataset=dict(data_root=dataroot, test_dir='val', test_mode=True))
 test_dataloader = val_dataloader
