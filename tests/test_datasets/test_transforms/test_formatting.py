@@ -4,7 +4,8 @@ import torch
 from mmcv.transforms import to_tensor
 
 from mmedit.datasets.transforms import PackEditInputs, ToTensor
-from mmedit.datasets.transforms.formatting import images_to_tensor
+from mmedit.datasets.transforms.formatting import (can_convert_to_image,
+                                                   images_to_tensor)
 from mmedit.structures.edit_data_sample import EditDataSample
 
 
@@ -117,6 +118,18 @@ def test_pack_edit_inputs():
     assert data_sample.metainfo['img_shape'] == (64, 64)
     assert data_sample.metainfo['a'] == 'b'
 
+    # test pack_all
+    pack_edit_inputs = PackEditInputs(pack_all=True)
+    results = ori_results.copy()
+    packed_results = pack_edit_inputs(results)
+    print(packed_results['inputs'].keys())
+
+    target_keys = [
+        'img', 'gt', 'img_lq', 'ref', 'ref_lq', 'mask', 'gt_heatmap',
+        'gt_unsharp', 'merged', 'trimap', 'alpha', 'fg', 'bg'
+    ]
+    assert all([k in target_keys for k in packed_results['inputs']])
+
 
 def test_to_tensor():
 
@@ -135,3 +148,14 @@ def test_to_tensor():
     assert set(keys).issubset(results.keys())
     for _, v in results.items():
         assert isinstance(v, torch.Tensor)
+
+
+def test_can_convert_to_image():
+    values = [
+        np.random.rand(64, 64, 3),
+        [np.random.rand(64, 61, 3),
+         np.random.rand(64, 61, 3)], (64, 64), 'b'
+    ]
+    targets = [True, True, False, False]
+    for val, tar in zip(values, targets):
+        assert can_convert_to_image(val) == tar

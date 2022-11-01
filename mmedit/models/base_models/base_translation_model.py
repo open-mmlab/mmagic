@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from abc import ABCMeta
 from copy import deepcopy
-from typing import List
+from typing import List, Optional
 
 import torch.nn as nn
 from mmengine.model import BaseModel, is_model_wrapper
@@ -52,7 +52,8 @@ class BaseTranslationModel(BaseModel, metaclass=ABCMeta):
                  data_preprocessor,
                  discriminator_steps: int = 1,
                  disc_init_steps: int = 0,
-                 real_img_key: str = 'real_img'):
+                 real_img_key: str = 'real_img',
+                 loss_config: Optional[dict] = None):
         super().__init__(data_preprocessor)
         self._default_domain = default_domain
         self._reachable_domains = reachable_domains
@@ -80,6 +81,7 @@ class BaseTranslationModel(BaseModel, metaclass=ABCMeta):
         else:
             self.discriminators = None
 
+        self.loss_config = dict() if loss_config is None else loss_config
         self.init_weights()
 
     def init_weights(self, pretrained=None):
