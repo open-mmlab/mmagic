@@ -6,8 +6,10 @@ import cv2 as cv
 import mmcv
 import numpy as np
 import torch
-from mmcv.transforms import BaseTransform
-from mmengine.hub import get_model
+from mmcv.ops import RoIPool
+from mmcv.transforms import BaseTransform, Compose
+from mmdet.utils import register_all_modules
+from mmengine.hub import get_config, get_model
 from mmengine.utils import is_list_of, is_tuple_of
 from torch.nn.modules.utils import _pair
 
@@ -940,12 +942,36 @@ class InstanceCrop(BaseTransform):
                  key='img',
                  box_num_upbound=-1,
                  finesize=256):
-        # detector
-        self.predictor = get_model(config_file, pretrained=True)
+
+        self.predictor = self.set_model(config_file)
+        self.pipeline = self.set_pipeline(config_file)
 
         self.key = key
         self.box_num_upbound = box_num_upbound
         self.final_size = finesize
+
+    def set_model(self, config_file):
+        model = get_model(config_file, pretrained=True)
+        if model.data_preprocessor.device.type == 'cpu':
+            for m in model.modules():
+                assert not isinstance(
+                    m, RoIPool
+                ), 'CPU inference with RoIPool is not supported currently.'
+        return model
+
+    def set_pipeline(self, config_file):
+        register_all_modules()
+        cfg = get_config(config_file)
+        test_pipeline = cfg.test_dataloader.dataset.pipeline
+        test_pipeline[0].type = 'mmdet.LoadImageFromNDArray'
+        new_test_pipeline = []
+        for pipeline in test_pipeline:
+            if pipeline['type'] != 'LoadAnnotations' and pipeline[
+                    'type'] != 'LoadPanopticAnnotations':
+                new_test_pipeline.append(pipeline)
+
+        test_pipeline = Compose(new_test_pipeline)
+        return test_pipeline
 
     def transform(self, results: dict) -> dict:
         """The transform function of InstanceCrop.
@@ -961,10 +987,7 @@ class InstanceCrop(BaseTransform):
         # get consistent box prediction based on L channel
         full_img = results['img']
         full_img_size = results['ori_img_shape'][:-1][::-1]
-        lab_image = cv.cvtColor(full_img, cv.COLOR_BGR2LAB)
-        l_channel, a_channel, b_channel = cv.split(lab_image)
-        l_stack = np.stack([l_channel, l_channel, l_channel], axis=2)
-        outputs = self.predictor(l_stack)
+        outputs = self.predict_bbox(full_img)
 
         # get the most confident boxes
         pred_bbox = outputs['instances'].pred_boxes.to(
@@ -1012,4 +1035,15 @@ class InstanceCrop(BaseTransform):
             results['empty_box'] = False
         else:
             results['empty_box'] = True
+        return results
+
+    def predict_bbox(self, image):
+        lab_image = cv.cvtColor(image, cv.COLOR_BGR2LAB)
+        l_channel, a_channel, b_channel = cv.split(lab_image)
+        l_stack = np.stack([l_channel, l_channel, l_channel], axis=2)
+        data_ = dict(img=l_stack, img_id=0)
+        data_ = self.pipeline(data_)
+        data_['inputs'] = [data_['inputs']]
+        data_['data_samples'] = [data_['data_samples']]
+        results = self.predictor.test_step(data_)[0]
         return results
