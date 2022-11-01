@@ -5,7 +5,7 @@ import os
 import cv2
 from component import ConcatImageWidget, QLabelSlider, VideoSlider
 from PyQt5 import QtCore, QtWidgets
-from utils import layout2widget, qimage2array
+from utils import layout2widget
 
 
 class PatchTab(QtWidgets.QWidget):
@@ -550,7 +550,7 @@ class SliderTab(QtWidgets.QWidget):
         # self.player2.sigout.connect(self.setImg2)
         # self.player1.sigend.connect(self.set_player1)
         # self.player2.sigend.connect(self.set_player2)
-
+        self.record_num = 0
         self.show_image()
 
     def set_autoSlider(self):
@@ -756,22 +756,34 @@ class SliderTab(QtWidgets.QWidget):
 
     def record(self):
         if self.btn_record.text() == 'Record (Enter)':
-            cur = datetime.datetime.now()
-            fname = f'{cur.year}{cur.month}{cur.day}{cur.hour}{cur.minute}\
-                {cur.second}.mp4'
-
-            self.recorder = cv2.VideoWriter(fname, -1, 25, (self.imageArea.w,
-                                                            self.imageArea.h))
+            self.record_num = 0
             self.timer_record.start(1000 / 25)
             self.btn_record.setText('End (Enter)')
         elif self.btn_record.text() == 'End (Enter)':
+            paths = sorted(os.listdir('tmp/'))
+            paths = ['tmp/' + p for p in paths]
+            if len(paths) <= 0:
+                return
+            img = cv2.imread(paths[0])
+            h, w, _ = img.shape
+            cur = datetime.datetime.now()
+            fname = f'{cur.year}{cur.month}{cur.day}{cur.hour}{cur.minute}{cur.second}.mp4'  # noqa
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            self.recorder = cv2.VideoWriter(fname, fourcc, 25, (w, h))
+            for i in range(self.record_num):
+                img = cv2.imread(paths[i])
+                img = cv2.resize(img, (w, h))
+                self.recorder.write(img)
             self.recorder.release()
+            self.timer_record.stop()
             self.btn_record.setText('Record (Enter)')
 
     def recording(self):
-        img = self.imageArea.grab().toImage()
-        img = qimage2array(img)
-        self.recorder.write(img)
+        if not os.path.isdir('tmp/'):
+            os.makedirs('tmp/')
+        fname = 'tmp/' + str(self.record_num).zfill(8) + '.png'
+        self.record_num += 1
+        self.imageArea.grab().save(fname)
 
     def wheelEvent(self, ev) -> None:
         key = QtWidgets.QApplication.keyboardModifiers()
