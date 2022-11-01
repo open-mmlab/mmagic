@@ -491,6 +491,9 @@ class SliderTab(QtWidgets.QWidget):
         self.btn_record.setText('Record (Enter)')
         self.btn_record.clicked.connect(self.record)
 
+        self.txt_prompt = QtWidgets.QLabel()
+        self.txt_prompt.setStyleSheet('color: red; font-size: 28px')
+
         left_grid = QtWidgets.QGridLayout()
         left_grid.addWidget(self.typeRect, 0, 0, 1, 10)
         left_grid.addWidget(self.modeRect, 1, 0, 1, 10)
@@ -514,7 +517,8 @@ class SliderTab(QtWidgets.QWidget):
         left_grid.addWidget(self.btn_reset, 11, 0, 1, 10)
         left_grid.addWidget(self.btn_save, 12, 0, 1, 10)
         left_grid.addWidget(self.btn_record, 13, 0, 1, 10)
-        left_grid.addWidget(QtWidgets.QLabel(), 14, 0, 20, 10)
+        left_grid.addWidget(QtWidgets.QLabel(), 14, 0, 10, 10)
+        left_grid.addWidget(self.txt_prompt, 25, 0, 20, 10)
 
         # Image area
         self.image_scroll = QtWidgets.QScrollArea()
@@ -758,6 +762,7 @@ class SliderTab(QtWidgets.QWidget):
         if self.btn_record.text() == 'Record (Enter)':
             self.record_num = 0
             self.timer_record.start(1000 / 25)
+            self.txt_prompt.setText('Recording...')
             self.btn_record.setText('End (Enter)')
         elif self.btn_record.text() == 'End (Enter)':
             paths = sorted(os.listdir('tmp/'))
@@ -776,9 +781,10 @@ class SliderTab(QtWidgets.QWidget):
                 self.recorder.write(img)
             self.recorder.release()
             self.timer_record.stop()
+            self.txt_prompt.setText('')
+            self.btn_record.setText('Record (Enter)')
             QtWidgets.QMessageBox.about(self, 'Message',
                                         f'Save {fname} success!')
-            self.btn_record.setText('Record (Enter)')
 
     def recording(self):
         if not os.path.isdir('tmp/'):
