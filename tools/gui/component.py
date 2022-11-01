@@ -1,7 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
 import time
-import traceback
 
 import cv2
 import numpy as np
@@ -80,6 +79,10 @@ class QLabelSlider(QtWidgets.QLabel):
         self.images = images
         self.update()
 
+    def set_auoMode(self, mode):
+        if mode != 3 or self.auto_mode < 3:
+            self.auto_mode = mode
+
     def auto_slider(self):
         try:
             if self.auto_mode == 1:
@@ -101,7 +104,7 @@ class QLabelSlider(QtWidgets.QLabel):
             self.update()
 
         except Exception:
-            print(traceback.format_exc())
+            print(Exception)
             pass
 
     def getImage(self):

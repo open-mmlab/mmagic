@@ -555,10 +555,10 @@ class SliderTab(QtWidgets.QWidget):
         if self.imageArea:
             self.timer_slider.stop()
             if self.slider_auto.value() > 0:
-                self.imageArea.auto_mode = self.btnGroup_auto.checkedId() + 1
+                self.imageArea.set_auoMode(self.btnGroup_auto.checkedId() + 1)
                 self.timer_slider.start(1000 / (self.slider_auto.value()))
             else:
-                self.imageArea.auto_mode = 0
+                self.imageArea.set_auoMode(0)
 
     def auto_slider(self):
         self.imageArea.auto_slider()
@@ -711,9 +711,11 @@ class SliderTab(QtWidgets.QWidget):
     def pause(self):
         if self.btn_pause.text() == 'Pause (Space)':
             self.player.pause()
+            self.timer_slider.stop()
             self.btn_pause.setText('Play (Space)')
         else:
             self.player.resume()
+            self.set_autoSlider()
             self.btn_pause.setText('Pause (Space)')
 
     def reset(self):
