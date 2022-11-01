@@ -725,7 +725,7 @@ class SliderTab(QtWidgets.QWidget):
         self.cb_1.clear()
         self.cb_2.clear()
         self.show_image()
-        if self.btnGroup_type.checkedId == 0:
+        if self.btnGroup_type.checkedId() == 1:
             if self.btnGroup_mode.checkedId() == 0:
                 self.btn_add_1.setText('Set image 1')
                 self.btn_add_2.setText('Set image 2')
