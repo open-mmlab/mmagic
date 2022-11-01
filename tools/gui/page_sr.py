@@ -391,8 +391,8 @@ class SliderTab(QtWidgets.QWidget):
         # Type setting
         self.typeRect = QtWidgets.QGroupBox('Type')
         self.typeRect.setFlat(True)
-        btn_type1 = QtWidgets.QRadioButton('Image', self.typeRect)
-        btn_type2 = QtWidgets.QRadioButton('Video', self.typeRect)
+        btn_type1 = QtWidgets.QRadioButton('Video', self.typeRect)
+        btn_type2 = QtWidgets.QRadioButton('Image', self.typeRect)
         self.btnGroup_type = QtWidgets.QButtonGroup()
         self.btnGroup_type.addButton(btn_type1, 0)
         self.btnGroup_type.addButton(btn_type2, 1)
@@ -494,9 +494,9 @@ class SliderTab(QtWidgets.QWidget):
         left_grid = QtWidgets.QGridLayout()
         left_grid.addWidget(self.typeRect, 0, 0, 1, 10)
         left_grid.addWidget(self.modeRect, 1, 0, 1, 10)
-        left_grid.addWidget(QtWidgets.QLabel('Set image 1'), 2, 0, 1, 1)
+        left_grid.addWidget(QtWidgets.QLabel('Add a video'), 2, 0, 1, 1)
         left_grid.addWidget(self.cb_1, 2, 1, 1, 9)
-        left_grid.addWidget(QtWidgets.QLabel('Set image 2'), 3, 0, 1, 1)
+        left_grid.addWidget(QtWidgets.QLabel('Add frames'), 3, 0, 1, 1)
         left_grid.addWidget(self.cb_2, 3, 1, 1, 9)
         left_grid.addWidget(QtWidgets.QLabel('Set label 1'), 4, 0, 1, 1)
         left_grid.addWidget(self.input_label_1, 4, 1, 1, 9)
@@ -602,7 +602,7 @@ class SliderTab(QtWidgets.QWidget):
                     self.cb_2.setCurrentIndex(0)
 
     def add_1(self):
-        if self.btnGroup_type.checkedId() == 0:
+        if self.btnGroup_type.checkedId() == 1:
             self.add_image(self.cb_1, 'add_1')
         else:
             path, _ = QtWidgets.QFileDialog.getOpenFileName(
@@ -624,7 +624,7 @@ class SliderTab(QtWidgets.QWidget):
                 self.cb_2.setCurrentIndex(0)
 
     def add_2(self):
-        if self.btnGroup_type.checkedId() == 0:
+        if self.btnGroup_type.checkedId() == 1:
             self.add_image(self.cb_2, 'add_2')
         else:
             path = QtWidgets.QFileDialog.getExistingDirectory(self)
@@ -659,7 +659,7 @@ class SliderTab(QtWidgets.QWidget):
             self.imageArea.set_scale(scale / 100.0)
 
     def change_image_1(self):
-        if self.btnGroup_type.checkedId() == 1:
+        if self.btnGroup_type.checkedId() == 0:
             self.change_video()
         else:
             if self.btnGroup_mode.checkedId() == 0:
@@ -669,7 +669,7 @@ class SliderTab(QtWidgets.QWidget):
             self.show_image()
 
     def change_image_2(self):
-        if self.btnGroup_type.checkedId() == 1:
+        if self.btnGroup_type.checkedId() == 0:
             self.change_video()
         else:
             if self.btnGroup_mode.checkedId() == 0:

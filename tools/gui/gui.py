@@ -38,6 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
+        self.setWindowTitle('EditGUI')
         # # MenuBar
         # menubar_Aaa = self.menuBar().addMenu('Aaa')
         # menubar_Bbb = self.menuBar().addMenu('Bbb')
@@ -65,9 +66,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.homepage = Homepage(self)
         self.sr = SRPage(self)
         self.setCentralWidget(self.sr)
-
-    def setup_window(self):
-        self.setWindowTitle('EditGUI')
 
     def change_window(self, wname):
         if wname == 'sr':
