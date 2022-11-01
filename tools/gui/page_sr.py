@@ -468,8 +468,8 @@ class SliderTab(QtWidgets.QWidget):
         # Add file
         self.btn_add_1 = QtWidgets.QPushButton()
         self.btn_add_2 = QtWidgets.QPushButton()
-        self.btn_add_1.setText('Set image 1')
-        self.btn_add_2.setText('Set image 2')
+        self.btn_add_1.setText('Add a video')
+        self.btn_add_2.setText('Add frames')
         self.btn_add_1.clicked.connect(self.add_1)
         self.btn_add_2.clicked.connect(self.add_2)
 
@@ -494,9 +494,9 @@ class SliderTab(QtWidgets.QWidget):
         left_grid = QtWidgets.QGridLayout()
         left_grid.addWidget(self.typeRect, 0, 0, 1, 10)
         left_grid.addWidget(self.modeRect, 1, 0, 1, 10)
-        left_grid.addWidget(QtWidgets.QLabel('Add a video'), 2, 0, 1, 1)
+        left_grid.addWidget(QtWidgets.QLabel('Left'), 2, 0, 1, 1)
         left_grid.addWidget(self.cb_1, 2, 1, 1, 9)
-        left_grid.addWidget(QtWidgets.QLabel('Add frames'), 3, 0, 1, 1)
+        left_grid.addWidget(QtWidgets.QLabel('Right'), 3, 0, 1, 1)
         left_grid.addWidget(self.cb_2, 3, 1, 1, 9)
         left_grid.addWidget(QtWidgets.QLabel('Set label 1'), 4, 0, 1, 1)
         left_grid.addWidget(self.input_label_1, 4, 1, 1, 9)
@@ -550,6 +550,8 @@ class SliderTab(QtWidgets.QWidget):
         # self.player2.sigout.connect(self.setImg2)
         # self.player1.sigend.connect(self.set_player1)
         # self.player2.sigend.connect(self.set_player2)
+
+        self.show_image()
 
     def set_autoSlider(self):
         if self.imageArea:
@@ -758,9 +760,8 @@ class SliderTab(QtWidgets.QWidget):
             fname = f'{cur.year}{cur.month}{cur.day}{cur.hour}{cur.minute}\
                 {cur.second}.mp4'
 
-            self.recorder = cv2.VideoWriter(fname, 0x7634706d, 25,
-                                            (self.imageArea.w,
-                                             self.imageArea.h))
+            self.recorder = cv2.VideoWriter(fname, -1, 25, (self.imageArea.w,
+                                                            self.imageArea.h))
             self.timer_record.start(1000 / 25)
             self.btn_record.setText('End (Enter)')
         elif self.btn_record.text() == 'End (Enter)':
