@@ -108,9 +108,6 @@ class PatchTab(QtWidgets.QWidget):
         # select gt
         self.cb_gt = QtWidgets.QComboBox()
         self.cb_gt.currentTextChanged.connect(self.change_gt)
-        self.btn_setGt = QtWidgets.QPushButton()
-        self.btn_setGt.setText('Select GT')
-        self.btn_setGt.clicked.connect(self.open_gt)
 
         # set column
         self.spin_cols = QtWidgets.QSpinBox()
@@ -143,7 +140,7 @@ class PatchTab(QtWidgets.QWidget):
         right_grid.addWidget(self.modeRect, 0, 0, 1, 20)
         right_grid.addWidget(self.dirTypeRect, 1, 0, 1, 20)
         right_grid.addWidget(self.cb_gt, 2, 0, 1, 15)
-        right_grid.addWidget(self.btn_setGt, 2, 15, 1, 5)
+        right_grid.addWidget(QtWidgets.QLabel('Reference'), 2, 16, 1, 3)
         right_grid.addWidget(self.spin_cols, 3, 0, 1, 15)
         right_grid.addWidget(QtWidgets.QLabel('Set   columns'), 3, 16, 1, 3)
         right_grid.addWidget(self.txt_scale, 4, 0, 1, 1)
@@ -199,8 +196,8 @@ class PatchTab(QtWidgets.QWidget):
                 row, 0, QtWidgets.QTableWidgetItem(self.input_file.text()))
             self.tb_files.setItem(
                 row, 1, QtWidgets.QTableWidgetItem(self.input_label.text()))
-            if self.cb_gt.count() == 0:
-                self.set_gt(self.input_file.text())
+            # if self.cb_gt.count() == 0:
+            #     self.set_gt(self.input_file.text())
         else:
             QtWidgets.QMessageBox.about(self, 'Message',
                                         'Please input available file/folder')
@@ -211,10 +208,13 @@ class PatchTab(QtWidgets.QWidget):
         menu_up = menu.addAction('move up')
         menu_down = menu.addAction('move down')
         menu_delete = menu.addAction('delete')
-        menu_gt = menu.addAction('set gt')
+        menu_gt = menu.addAction('set reference')
         menu_pos = self.tb_files.mapToGlobal(pos)
+        row = None
         for i in self.tb_files.selectionModel().selection().indexes():
             row = i.row()
+        if row is None or row >= self.tb_files.rowCount():
+            return
         action = menu.exec(menu_pos)
         if action == menu_up:
             self.tb_swap(row, -1)
@@ -223,6 +223,10 @@ class PatchTab(QtWidgets.QWidget):
         elif action == menu_delete:
             self.tb_files.removeRow(row)
         elif action == menu_gt:
+            for r in range(self.tb_files.rowCount()):
+                self.tb_files.setItem(r, 2, QtWidgets.QTableWidgetItem(''))
+            self.tb_files.setItem(row, 2,
+                                  QtWidgets.QTableWidgetItem('Reference'))
             self.set_gt(self.tb_files.item(row, 0).text())
         if self.isShow:
             self.run()
@@ -242,17 +246,6 @@ class PatchTab(QtWidgets.QWidget):
             self.tb_files.setItem(row, col,
                                   self.tb_files.takeItem(target, col))
             self.tb_files.setItem(target, col, tmp)
-
-    def open_gt(self):
-        """Open GT file from dialog."""
-        if self.btnGroup_dirType.checkedId() == 0:
-            path = QtWidgets.QFileDialog.getExistingDirectory()
-        else:
-            path, _ = QtWidgets.QFileDialog.getOpenFileName(
-                self, 'Select gt file', '', 'Images (*.jpg *.png)')
-        if len(path) <= 0:
-            return
-        self.set_gt(path)
 
     def set_gt(self, path):
         """Set GT ComboBox items."""
@@ -301,8 +294,9 @@ class PatchTab(QtWidgets.QWidget):
         files = []
         self.labels = []
         for r in range(rows):
-            files.append(self.tb_files.item(r, 0).text())
-            self.labels.append(self.tb_files.item(r, 1).text())
+            if self.tb_files.item(r, 2).text() != 'Reference':
+                files.append(self.tb_files.item(r, 0).text())
+                self.labels.append(self.tb_files.item(r, 1).text())
 
         file_name = os.path.basename(self.cb_gt.currentText())
         self.file_paths = []
