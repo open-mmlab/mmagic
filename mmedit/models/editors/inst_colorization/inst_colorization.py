@@ -13,6 +13,28 @@ from .color_utils import get_colorization_data, lab2rgb
 
 @MODULES.register_module()
 class InstColorization(BaseModel):
+    """Colorization InstColorization  method.
+
+    This Colorization is implemented according to the paper:
+        Instance-aware Image Colorization, CVPR 2020
+
+    Adapted from 'https://github.com/ericsujw/InstColorization.git'
+    'InstColorization/models/train_model'
+    Copyright (c) 2020, Su, under MIT License.
+
+    Args:
+        data_preprocessor (dict, optional): The pre-process config of
+            :class:`BaseDataPreprocessor`.
+        image_model (dict): Config for single image model
+        instance_model (dict): Config for instance model
+        fusion_model (dict): Config for fusion model
+        color_data_opt (dict): Option for colorspace conversion
+        which_direction (str): AtoB or BtoA
+        loss (dict): Config for loss.
+        init_cfg  (str): Initialization config dict. Default: None.
+        train_cfg (dict): Config for training. Default: None.
+        test_cfg (dict): Config for testing. Default: None.
+    """
 
     def __init__(self,
                  data_preprocessor: Union[dict, Config],
@@ -116,15 +138,37 @@ class InstColorization(BaseModel):
         return inputs
 
     def forward_train(self, inputs, data_samples=None, **kwargs):
+        """Forward function for training."""
         raise NotImplementedError(
             'Instance Colorization has not supported training.')
 
     def train_step(self, data: List[dict],
                    optim_wrapper: OptimWrapperDict) -> Dict[str, torch.Tensor]:
+        """Train step function.
+
+        Args:
+            data (List[dict]): Batch of data as input.
+            optim_wrapper (dict[torch.optim.Optimizer]): Dict with optimizers
+                for generator and discriminator (if have).
+        Returns:
+            dict: Dict with loss, information for logger, the number of
+                samples and results for visualization.
+        """
         raise NotImplementedError(
             'Instance Colorization has not supported training.')
 
     def forward_inference(self, inputs, data_samples=None, **kwargs):
+        """Forward inference. Returns predictions of validation, testing.
+
+        Args:
+            inputs (torch.Tensor): batch input tensor collated by
+                :attr:`data_preprocessor`.
+            data_samples (List[BaseDataElement], optional):
+                data samples collated by :attr:`data_preprocessor`.
+
+        Returns:
+            List[EditDataSample]: predictions.
+        """
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
         predictions = []
         for idx in range(feats.shape[0]):
@@ -164,22 +208,14 @@ class InstColorization(BaseModel):
 
         # preprocess input for a single image
         full_real_A = full_img_data['A' if AtoB else 'B']
-        # full_real_B = full_img_data['B' if AtoB else 'A']
         full_hint_B = full_img_data['hint_B']
         full_mask_B = full_img_data['mask_B']
-        # full_mask_B_nc = full_mask_B + self.color_data_opt['mask_cent']
-        # full_real_B_enc = encode_ab_ind(full_real_B[:, :, ::4, ::4],
-        #                                 self.color_data_opt)
 
         if not data_samples[0].empty_box:
             # preprocess instance input
             real_A = cropped_data['A' if AtoB else 'B']
-            # real_B = cropped_data['B' if AtoB else 'A']
             hint_B = cropped_data['hint_B']
             mask_B = cropped_data['mask_B']
-            # mask_B_nc = mask_B + self.color_data_opt['mask_cent']
-            # real_B_enc = encode_ab_ind(real_B[:, :, ::4, ::4],
-            #                            self.color_data_opt)
 
             # network forward
             _, output, feature_map = self.instance_model(

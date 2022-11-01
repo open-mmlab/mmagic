@@ -6,7 +6,15 @@ from torch.nn.parallel import scatter
 
 
 def colorization_inference(model, img):
+    """Inference image with the model.
 
+    Args:
+        model (nn.Module): The loaded model.
+        img (str): Image file path.
+
+    Returns:
+        Tensor: The predicted colorization result.
+    """
     device = next(model.parameters()).device
 
     # build the data pipeline

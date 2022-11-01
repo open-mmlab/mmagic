@@ -9,6 +9,15 @@ from mmedit.registry import MODULES
 
 
 def get_norm_layer(norm_type='instance'):
+    """Gets the normalization layer.
+
+    Args:
+        norm_type (str): Type of the normalization layer.
+
+    Returns:
+        norm_layer (BatchNorm2d or InstanceNorm2d or None):
+            normalization layer. Default: instance
+    """
     if norm_type == 'batch':
         norm_layer = functools.partial(nn.BatchNorm2d, affine=True)
     elif norm_type == 'instance':
@@ -23,6 +32,15 @@ def get_norm_layer(norm_type='instance'):
 
 @MODULES.register_module()
 class WeightLayer(BaseModule):
+    """Weight layer of the fusion_net. A small neural network with three
+    convolutional layers to predict full-image weight map and perinstance
+    weight map.
+
+    Args:
+        input_ch (int): Number of channels in the input image.
+        inner_ch (int): Number of channels produced by the convolution.
+            Default: True
+    """
 
     def __init__(self, input_ch, inner_ch=16):
         super(WeightLayer, self).__init__()
@@ -47,6 +65,16 @@ class WeightLayer(BaseModule):
         self.normalize = nn.Softmax(1)
 
     def resize_and_pad(self, feauture_maps, info_array):
+        """Resize the instance feature as well as the weight map to match the
+        size of full-image and do zero padding on both of them.
+
+        Args:
+            feauture_maps (tensor): Feature map
+            info_array (tensor): The bounding box
+
+        Returns:
+            feauture_maps (tensor): Feature maps after resize and padding
+        """
         feauture_maps = torch.nn.functional.interpolate(
             feauture_maps,
             size=(info_array[5], info_array[4]),
@@ -58,6 +86,17 @@ class WeightLayer(BaseModule):
         return feauture_maps
 
     def forward(self, instance_feature, bg_feature, box_info):
+        """Forward function.
+
+        Args:
+            instance_feature (tensor): Instance feature obtained from the
+                colorization_net
+            bg_feature (tensor):  full-image feature
+            box_info (tensor): The bounding box corresponding to the instance
+
+        Returns:
+            out (tensor): Fused feature
+        """
         mask_list = []
         featur_map_list = []
         mask_sum_for_pred = torch.zeros_like(bg_feature)[:1, :1]
