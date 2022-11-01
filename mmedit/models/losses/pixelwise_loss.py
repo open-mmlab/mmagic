@@ -234,9 +234,8 @@ class PSNRLoss(nn.Module):
         toY: change to calculate the PSNR of Y channel in YCbCr format
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean', toY=False):
+    def __init__(self, loss_weight=1.0, toY=False):
         super(PSNRLoss, self).__init__()
-        assert reduction == 'mean'
         self.loss_weight = loss_weight
         import numpy as np
         self.scale = 10 / np.log(10)
