@@ -381,7 +381,8 @@ class VideoSlider(QtCore.QThread):
     def __init__(self, parent):
         super(VideoSlider, self).__init__(parent)
         self.parent = parent
-
+        self.mutex = QtCore.QMutex()
+        self.cond = QtCore.QWaitCondition()
     def set(self, path1, path2, fps1=None, fps2=None):
         self.path1 = path1
         self.path2 = path2
@@ -393,8 +394,6 @@ class VideoSlider(QtCore.QThread):
         self.num = 0
         self.working = True
         self.isPause = False
-        self.mutex = QtCore.QMutex()
-        self.cond = QtCore.QWaitCondition()
         return True
 
     def setVideo(self, path, fps):
