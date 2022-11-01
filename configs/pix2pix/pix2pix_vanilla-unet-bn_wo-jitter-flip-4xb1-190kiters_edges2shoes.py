@@ -18,6 +18,20 @@ train_cfg = dict(max_iters=190000)
 
 # dataset settings
 dataroot = './data/pix2pix/edges2shoes'
+# overwrite train pipeline since we do not use flip and crop
+_base_.train_dataloader.dataset.pipeline = [
+    dict(
+        type='LoadPairedImageFromFile',
+        key='pair',
+        domain_a='A',
+        domain_b='B',
+        color_type='color'),
+    dict(
+        type='Resize',
+        keys=['img_A', 'img_B'],
+        scale=(256, 256),
+        interpolation='bicubic'),
+]
 train_pipeline = _base_.train_dataloader.dataset.pipeline
 val_pipeline = _base_.val_dataloader.dataset.pipeline
 test_pipeline = _base_.test_dataloader.dataset.pipeline
