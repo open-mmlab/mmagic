@@ -8,6 +8,7 @@ from .restoration_inference import restoration_inference
 from .restoration_video_inference import restoration_video_inference
 from .translation_inference import sample_img2img_model
 from .video_interpolation_inference import video_interpolation_inference
+from .inferencers import *
 
 __all__ = [
     'init_model',

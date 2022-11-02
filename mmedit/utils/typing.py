@@ -2,6 +2,7 @@
 from typing import Callable, Dict, List, Sequence, Tuple, Union
 
 from mmengine.structures import BaseDataElement
+from mmengine.config import ConfigDict
 from torch import Tensor
 
 ForwardInputs = Tuple[Dict[str, Union[Tensor, str, int]], Tensor]
@@ -9,3 +10,5 @@ SampleList = Sequence[BaseDataElement]
 
 NoiseVar = Union[Tensor, Callable, None]
 LabelVar = Union[Tensor, Callable, List[int], None]
+
+ConfigType = Union[ConfigDict, Dict]
