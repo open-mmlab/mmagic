@@ -54,7 +54,7 @@ class GenVisualizer(Visualizer):
                             mean: mean_std_type = None,
                             std: mean_std_type = None) -> Tensor:
         """Post process images. First convert image to `rgb` order. And then
-        de-norm image to fid `mean` and `std` if `mean` and `std` is passed.
+        de-norm image to `mean` and `std` if they are passed.
 
         Args:
             image (Tensor): Image to pose process.
@@ -73,7 +73,7 @@ class GenVisualizer(Visualizer):
             image = image[:, [2, 1, 0], ...]
         if mean is not None and std is not None:
             image = image * std + mean
-        return image
+        return image.clamp(0, 255)
 
     @staticmethod
     def _get_n_row_and_padding(samples: Tuple[dict, Tensor],

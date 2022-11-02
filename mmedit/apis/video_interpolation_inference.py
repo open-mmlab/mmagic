@@ -99,8 +99,7 @@ def video_interpolation_inference(model,
     tmp_pipeline = []
     for pipeline in test_pipeline:
         if pipeline['type'] not in [
-                'GenerateSegmentIndices', 'LoadImageFromFileList',
-                'LoadImageFromFile'
+                'GenerateSegmentIndices', 'LoadImageFromFile'
         ]:
             tmp_pipeline.append(pipeline)
     test_pipeline = tmp_pipeline
