@@ -43,11 +43,11 @@ Models:
       IS: 3.31
     Task: Pix2pix
   Weights: https://download.openmmlab.com/mmgen/pix2pix/refactor/pix2pix_vanilla_unet_bn_b2a_1x1_219200_maps_convert-bgr_20210902_170814-6d2eac4a.pth
-- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/pix2pix/pix2pix_vanilla-unet-bn_wo-jitter-flip-4xb1-190kiters_edges2shoes.py
+- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/pix2pix/pix2pix_vanilla-unet-bn_wo-jitter-flip-1xb4-190kiters_edges2shoes.py
   In Collection: Pix2Pix
   Metadata:
     Training Data: EDGES2SHOES
-  Name: pix2pix_vanilla-unet-bn_wo-jitter-flip-4xb1-190kiters_edges2shoes
+  Name: pix2pix_vanilla-unet-bn_wo-jitter-flip-1xb4-190kiters_edges2shoes
   Results:
   - Dataset: EDGES2SHOES
     Metrics:
