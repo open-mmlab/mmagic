@@ -1,5 +1,12 @@
 # MMEditing Viewer
 
+- [Introduction](#introduction)
+- [Major features](#major-features)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Examples](#examples)
+- [Contributing](#contributing)
+
 ## Introduction
 
 **MMEditing Viewer** is a qualitative comparison tools to facilitate your research.
@@ -14,6 +21,14 @@
 - **Before/After slider comparison**
   - Support both videos and images comparison
   - Record and save comparison results as a video clip
+
+## Prerequisites
+
+MMEditing Viewer works on Linux, Windows and macOS. It requires:
+
+- Python >= 3.6
+- PyQt5
+- opencv-python (headless version)
 
 ## Getting Started
 
@@ -33,7 +48,7 @@ QObject::moveToThread: Current thread is not the object's thread.
 Available platform plugins are: xcb... .
 ```
 
-Please install opencv-pytho-headless version.
+Please install opencv-python-headless version.
 
 ```shell
 pip install opencv-python-headless
@@ -43,8 +58,13 @@ pip install opencv-python-headless
 Install MMEditing.
 
 ```shell
+git clone -b 1.x https://github.com/open-mmlab/mmediting.git
+```
+
+If you want to follow the newest features, you can clone `dev-1.x` branch.
+
+```shell
 git clone -b dev-1.x https://github.com/open-mmlab/mmediting.git
-cd mmediting
 ```
 
 **Step 3.**

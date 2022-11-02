@@ -659,10 +659,10 @@ class SliderTab(QtWidgets.QWidget):
 
     def set_scale(self):
         """Set scale."""
-        scale = self.slider_scale.value()
-        self.txt_scale.setText(f'{scale} %')
+        self.scale = self.slider_scale.value()
+        self.txt_scale.setText(f'{self.scale} %')
         if self.imageArea is not None:
-            self.imageArea.set_scale(scale / 100.0)
+            self.imageArea.set_scale(self.scale / 100.0)
 
     def change_image_1(self):
         if self.btnGroup_type.checkedId() == 0:
@@ -765,8 +765,8 @@ class SliderTab(QtWidgets.QWidget):
             self.txt_prompt.setText('Recording...')
             self.btn_record.setText('End (Enter)')
         elif self.btn_record.text() == 'End (Enter)':
-            paths = sorted(os.listdir('tmp/'))
-            paths = ['tmp/' + p for p in paths]
+            paths = sorted(os.listdir('.tmp/'))
+            paths = ['.tmp/' + p for p in paths]
             if len(paths) <= 0:
                 return
             img = cv2.imread(paths[0])
@@ -775,10 +775,12 @@ class SliderTab(QtWidgets.QWidget):
             fname = f'{cur.year}{cur.month}{cur.day}{cur.hour}{cur.minute}{cur.second}.mp4'  # noqa
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             self.recorder = cv2.VideoWriter(fname, fourcc, 25, (w, h))
+            self.txt_prompt.setText('Saving...')
             for i in range(self.record_num):
                 img = cv2.imread(paths[i])
                 img = cv2.resize(img, (w, h))
                 self.recorder.write(img)
+                os.remove(paths[i])
             self.recorder.release()
             self.timer_record.stop()
             self.txt_prompt.setText('')
@@ -787,9 +789,9 @@ class SliderTab(QtWidgets.QWidget):
                                         f'Save {fname} success!')
 
     def recording(self):
-        if not os.path.isdir('tmp/'):
-            os.makedirs('tmp/')
-        fname = 'tmp/' + str(self.record_num).zfill(8) + '.png'
+        if not os.path.isdir('.tmp/'):
+            os.makedirs('.tmp/')
+        fname = '.tmp/' + str(self.record_num).zfill(8) + '.png'
         self.record_num += 1
         self.imageArea.grab().save(fname)
 
@@ -801,9 +803,10 @@ class SliderTab(QtWidgets.QWidget):
             if self.scale < 1:
                 self.scale = 1
             self.txt_scale.setText(f'{self.scale} %')
-            self.slider_scale.setValue(self.scale)
             if self.scale > 200 and self.imageArea is not None:
                 self.imageArea.set_scale(self.scale / 100.0)
+            else:
+                self.slider_scale.setValue(self.scale)
         return super().wheelEvent(ev)
 
     def keyPressEvent(self, ev) -> None:
