@@ -43,7 +43,7 @@ class WeightLayer(BaseModule):
     """
 
     def __init__(self, input_ch, inner_ch=16):
-        super(WeightLayer, self).__init__()
+        super().__init__()
         self.simple_instance_conv = nn.Sequential(
             nn.Conv2d(input_ch, inner_ch, kernel_size=3, stride=1, padding=1),
             nn.ReLU(True),

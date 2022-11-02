@@ -4,7 +4,7 @@ import torch
 
 
 def xyz2rgb(xyz):
-    """Conversion images from lab to xyz.
+    """Conversion images from xyz to rgb.
 
     Args:
         xyz (tensor): The images to be conversion

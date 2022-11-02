@@ -963,6 +963,7 @@ class InstanceCrop(BaseTransform):
                 and information.
         """
         # get consistent box prediction based on L channel
+
         full_img = results['img']
         full_img_size = results['ori_img_shape'][:-1][::-1]
         pred_bbox, pred_scores = self.predict_bbox(full_img)

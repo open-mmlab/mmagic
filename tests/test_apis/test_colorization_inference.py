@@ -18,11 +18,11 @@ def test_colorization_inference():
     else:
         device = torch.device('cpu')
 
-    data_root = '../../'
     config = osp.join(
-        data_root,
-        'configs/inst_colorization/inst-colorizatioon_cocostuff_256x256.py')
-
+        osp.dirname(__file__),
+        '../..',
+        'configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py'  # noqa
+    )
     checkpoint = None
 
     cfg = Config.fromfile(config)
@@ -35,7 +35,8 @@ def test_colorization_inference():
     model.to(device)
     model.eval()
 
-    img_path = '../data/image/gray/test.jpg'
+    img_path = osp.join(
+        osp.dirname(__file__), '..', 'data/image/img_root/horse/horse.jpeg')
 
     result = colorization_inference(model, img_path)
     assert tensor2img(result)[..., ::-1].shape == (256, 256, 3)

@@ -1,8 +1,8 @@
 _base_ = ['../_base_/default_runtime.py']
 
-exp_name = 'inst-colorization_cocostuff_256x256'
-save_dir = './'
-work_dir = '..'
+experiment_name = 'inst-colorization_full_official_cocostuff_256x256'
+work_dir = f'./work_dirs/{experiment_name}'
+save_dir = './work_dirs/'
 
 stage = 'full'
 

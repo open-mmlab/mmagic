@@ -33,7 +33,7 @@ class ColorizationNet(BaseModule):
                  norm_type,
                  use_tanh=True,
                  classification=True):
-        super(ColorizationNet, self).__init__()
+        super().__init__()
         self.input_nc = input_nc
         self.output_nc = output_nc
         self.classification = classification
