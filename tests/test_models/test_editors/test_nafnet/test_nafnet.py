@@ -7,9 +7,6 @@ import torch
 from mmedit.models import NAFNet, NAFNetLocal
 
 
-@pytest.mark.skipif(
-    'win' in platform.system().lower() and 'cu' in torch.__version__,
-    reason='skip on windows-cuda due to limited RAM.')
 def test_nafnet():
 
     model = NAFNet(
@@ -24,8 +21,8 @@ def test_nafnet():
     assert model.__class__.__name__ == 'NAFNet'
 
     # prepare data
-    inputs = torch.rand(1, 3, 256, 256)
-    targets = torch.rand(1, 3, 256, 256)
+    inputs = torch.rand(1, 3, 64, 64)
+    targets = torch.rand(1, 3, 64, 64)
 
     # test on cpu
     output = model(inputs)
@@ -56,8 +53,8 @@ def test_nafnet_local():
     assert model.__class__.__name__ == 'NAFNetLocal'
 
     # prepare data
-    inputs = torch.rand(1, 3, 256, 256)
-    targets = torch.rand(1, 3, 256, 256)
+    inputs = torch.rand(1, 3, 64, 64)
+    targets = torch.rand(1, 3, 64, 64)
 
     # test on cpu
     output = model(inputs)
