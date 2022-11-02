@@ -41,7 +41,7 @@ max_size = 300
 dataset_type = 'SinGANDataset'
 data_root = './data/singan/fish-crop.jpg'
 
-pipeline = [dict(type='PackEditInputs')]
+pipeline = [dict(type='PackEditInputs', pack_all=True)]
 dataset = dict(
     type=dataset_type,
     data_root=data_root,
