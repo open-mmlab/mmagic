@@ -11,6 +11,16 @@ from .utils import LayerNorm2d
 
 @MODELS.register_module()
 class Baseline(BaseModule):
+    """The original version of Baseline model in "Simple Baseline for Image
+    Restoration".
+
+    Args:
+        img_channels (int): Channel number of inputs.
+        mid_channels (int): Channel number of intermediate features.
+        middle_blk_num (int): Number of middle blocks.
+        enc_blk_nums (List of int): Number of blocks for each encoder.
+        dec_blk_nums (List of int): Number of blocks for each decoder.
+    """
 
     def __init__(self,
                  img_channel=3,
@@ -76,6 +86,11 @@ class Baseline(BaseModule):
         self.padder_size = 2**len(self.encoders)
 
     def forward(self, inp):
+        """Forward function.
+
+        args:
+            inp: input tensor image with (B, C, H, W) shape
+        """
         B, C, H, W = inp.shape
         inp = self.check_image_size(inp)
 
@@ -101,6 +116,12 @@ class Baseline(BaseModule):
         return x[:, :, :H, :W]
 
     def check_image_size(self, x):
+        """Check image size and pad images so that it has enough dimension do
+        downsample.
+
+        args:
+            x: input tensor image with (B, C, H, W) shape.
+        """
         _, _, h, w = x.size()
         mod_pad_h = (self.padder_size -
                      h % self.padder_size) % self.padder_size
@@ -112,6 +133,16 @@ class Baseline(BaseModule):
 
 @MODELS.register_module()
 class BaselineLocal(Local_Base, Baseline):
+    """The original version of Baseline model in "Simple Baseline for Image
+    Restoration".
+
+    Args:
+        img_channels (int): Channel number of inputs.
+        mid_channels (int): Channel number of intermediate features.
+        middle_blk_num (int): Number of middle blocks.
+        enc_blk_nums (List of int): Number of blocks for each encoder.
+        dec_blk_nums (L`ist of int): Number of blocks for each decoder.
+    """
 
     def __init__(self,
                  *args,
@@ -132,6 +163,14 @@ class BaselineLocal(Local_Base, Baseline):
 
 # Components for Baseline
 class BaselineBlock(nn.Module):
+    """Baseline's Block in paper.
+
+    Args:
+        in_channels (int): number of channels
+        DW_Expand (int): channel expansion factor for part 1
+        FFN_Expand (int): channel expansion factor for part 2
+        drop_out_rate (float): drop out ratio
+    """
 
     def __init__(self,
                  in_channels,
@@ -220,6 +259,11 @@ class BaselineBlock(nn.Module):
             torch.zeros((1, in_channels, 1, 1)), requires_grad=True)
 
     def forward(self, inp):
+        """Forward Function.
+
+        Args:
+            inp: input tensor image
+        """
         x = inp
 
         x = self.norm1(x)

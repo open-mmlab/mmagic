@@ -5,6 +5,7 @@ import torch.nn.functional as F
 
 
 class AvgPool2d(nn.Module):
+    """Average Pooling 2D."""
 
     def __init__(self,
                  kernel_size=None,
@@ -92,6 +93,7 @@ class AvgPool2d(nn.Module):
 
 
 def replace_layers(model, base_size, train_size, fast_imp, **kwargs):
+    """Replace all layers with AvgPool2d."""
     for n, m in model.named_children():
         if len(list(m.children())) > 0:
             # compound module, go inside it
@@ -111,6 +113,11 @@ Improving Image Restoration by Revisiting Global Information Aggregation
 
 
 class Local_Base():
+    """Local Base class to use global average pooling.
+
+    args:
+        train_size: training image size
+    """
 
     def convert(self, *args, train_size, **kwargs):
         replace_layers(self, *args, train_size=train_size, **kwargs)

@@ -4,6 +4,7 @@ from torch import nn as nn
 
 
 class LayerNormFunction(torch.autograd.Function):
+    """Layer normalization."""
 
     @staticmethod
     def forward(ctx, x, weight, bias, eps):
@@ -32,6 +33,7 @@ class LayerNormFunction(torch.autograd.Function):
 
 
 class LayerNorm2d(nn.Module):
+    """Layer normalization module."""
 
     def __init__(self, channels, eps=1e-6):
         super(LayerNorm2d, self).__init__()

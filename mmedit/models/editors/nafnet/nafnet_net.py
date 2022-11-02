@@ -78,6 +78,11 @@ class NAFNet(BaseModule):
         self.padder_size = 2**len(self.encoders)
 
     def forward(self, inp):
+        """Forward function.
+
+        args:
+            inp: input tensor image with (B, C, H, W) shape
+        """
         B, C, H, W = inp.shape
         inp = self.check_image_size(inp)
 
@@ -103,6 +108,12 @@ class NAFNet(BaseModule):
         return x[:, :, :H, :W]
 
     def check_image_size(self, x):
+        """Check image size and pad images so that it has enough dimension do
+        downsample.
+
+        args:
+            x: input tensor image with (B, C, H, W) shape.
+        """
         _, _, h, w = x.size()
         mod_pad_h = (self.padder_size -
                      h % self.padder_size) % self.padder_size
@@ -114,6 +125,18 @@ class NAFNet(BaseModule):
 
 @MODELS.register_module()
 class NAFNetLocal(Local_Base, NAFNet):
+    """The original version of NAFNetLocal in "Simple Baseline for Image
+    Restoration".
+
+    NAFNetLocal uses local average pooling modules than NAFNet.
+
+    Args:
+        img_channels (int): Channel number of inputs.
+        mid_channels (int): Channel number of intermediate features.
+        middle_blk_num (int): Number of middle blocks.
+        enc_blk_nums (List of int): Number of blocks for each encoder.
+        dec_blk_nums (List of int): Number of blocks for each decoder.
+    """
 
     def __init__(self,
                  *args,
@@ -238,6 +261,11 @@ class NAFBlock(nn.Module):
             torch.zeros((1, in_channels, 1, 1)), requires_grad=True)
 
     def forward(self, inp):
+        """Forward Function.
+
+        Args:
+            inp: input tensor image
+        """
         x = inp
         # part 1
         x = self.norm1(x)
@@ -263,6 +291,15 @@ class NAFBlock(nn.Module):
 
 
 class SimpleGate(nn.Module):
+    """The Simple Gate in "Simple Baseline for Image Restoration".
+
+    Args:
+        x: input tensor feature map with (B, 2 * C, H, W)
+
+    Return:
+        x1 * x2
+        (where x1, x2 are two separate parts by simple split x to [B, C, H, W])
+    """
 
     def forward(self, x):
         x1, x2 = x.chunk(2, dim=1)
