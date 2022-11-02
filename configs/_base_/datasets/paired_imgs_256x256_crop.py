@@ -10,18 +10,11 @@ train_pipeline = [
         domain_b='B',
         color_type='color'),
     dict(
-        type='TransformBroadcaster',
-        mapping={'img': ['img_A', 'img_B']},
-        auto_remap=True,
-        share_random_params=True,
-        transforms=[
-            dict(
-                type='Resize',
-                keys='img',
-                scale=(286, 286),
-                interpolation='bicubic'),
-            dict(type='FixedCrop', keys=['img'], crop_size=(256, 256))
-        ]),
+        type='Resize',
+        keys=['img_A', 'img_B'],
+        scale=(286, 286),
+        interpolation='bicubic'),
+    dict(type='FixedCrop', keys=['img_A', 'img_B'], crop_size=(256, 256)),
     dict(type='Flip', keys=['img_A', 'img_B'], direction='horizontal'),
     # NOTE: users should implement their own keyMapper and Pack operation
     # dict(
@@ -76,7 +69,7 @@ test_pipeline = [
 
 # `batch_size` and `data_root` need to be set.
 train_dataloader = dict(
-    batch_size=1,
+    batch_size=4,
     num_workers=4,
     persistent_workers=True,
     sampler=dict(type='InfiniteSampler', shuffle=True),
@@ -86,7 +79,7 @@ train_dataloader = dict(
         pipeline=train_pipeline))
 
 val_dataloader = dict(
-    batch_size=1,
+    batch_size=4,
     num_workers=4,
     dataset=dict(
         type=dataset_type,
@@ -96,7 +89,7 @@ val_dataloader = dict(
     persistent_workers=True)
 
 test_dataloader = dict(
-    batch_size=1,
+    batch_size=4,
     num_workers=4,
     dataset=dict(
         type=dataset_type,

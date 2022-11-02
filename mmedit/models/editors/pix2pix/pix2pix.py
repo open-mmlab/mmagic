@@ -20,6 +20,7 @@ class Pix2Pix(BaseTranslationModel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.pixel_loss_weight = self.loss_config.get('pixel_loss_weight', 100)
 
     def forward_test(self, img, target_domain, **kwargs):
         """Forward function for testing.
@@ -92,6 +93,12 @@ class Pix2Pix(BaseTranslationModel):
         losses['loss_gan_g'] = F.binary_cross_entropy_with_logits(
             fake_pred, 1. * torch.ones_like(fake_pred))
 
+        # L1 loss for generator
+        losses['loss_pixel'] = self.pixel_loss_weight * F.l1_loss(
+            outputs[f'real_{target_domain}'],
+            outputs[f'fake_{target_domain}'],
+            reduce='mean')
+
         loss_g, log_vars_g = self.parse_losses(losses)
         return loss_g, log_vars_g
 
@@ -141,11 +148,9 @@ class Pix2Pix(BaseTranslationModel):
             # discriminator
             set_requires_grad(self.discriminators, True)
             # optimize
-            disc_optimizer_wrapper.zero_grad()
             loss_d, log_vars_d = self._get_disc_loss(outputs)
+            disc_optimizer_wrapper.update_params(loss_d)
             log_vars.update(log_vars_d)
-            disc_optimizer_wrapper.backward(loss_d)
-            disc_optimizer_wrapper.step()
 
         # generator, no updates to discriminator parameters.
         gen_optimizer_wrapper = optim_wrapper['generators']
@@ -154,11 +159,9 @@ class Pix2Pix(BaseTranslationModel):
             set_requires_grad(self.discriminators, False)
             # optimize
             with gen_optimizer_wrapper.optim_context(self.generators):
-                gen_optimizer_wrapper.zero_grad()
                 loss_g, log_vars_g = self._get_gen_loss(outputs)
+                gen_optimizer_wrapper.update_params(loss_g)
                 log_vars.update(log_vars_g)
-                gen_optimizer_wrapper.backward(loss_g)
-                gen_optimizer_wrapper.step()
 
         return log_vars
 
