@@ -3,6 +3,8 @@ from datetime import datetime
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 import numpy as np
 import torch
+import mmcv
+import os.path as osp
 from mmengine.config import Config
 from mmengine.runner import load_checkpoint
 from mmengine.structures import InstanceData
@@ -41,9 +43,6 @@ class BaseInferencer:
             Defaults to False.
     """
 
-    func_kwargs = dict(preprocess=[], forward=[], visualize=[], postprocess=[])
-    func_order = dict(preprocess=0, forward=1, visualize=2, postprocess=3)
-
     def __init__(self,
                  config: Union[ConfigType, str],
                  ckpt: Optional[str],
@@ -65,7 +64,10 @@ class BaseInferencer:
         self._init_model(cfg, ckpt, device)
         self._init_pipeline(cfg)
         self._init_visualizer(cfg)
-        self.base_params = self._dispatch_kwargs(**kwargs)
+
+        # A global counter tracking the number of images processed, for
+        # naming of the output images
+        self.num_visualized_imgs = 0
 
     def _init_model(self, cfg: Union[ConfigType, str], ckpt: Optional[str],
                     device: str) -> None:
@@ -105,30 +107,32 @@ class BaseInferencer:
             cfg.visualizer['name'] = f'inferencer{ts}'
             self.visualizer = VISUALIZERS.build(cfg.visualizer)
 
-    def _dispatch_kwargs(self, **kwargs) -> Tuple[Dict, Dict, Dict, Dict]:
-        """Dispatch kwargs to preprocess(), forward(), visualize() and
-        postprocess() according to the actual demands."""
-        results = [{}, {}, {}, {}]
-        dispatched_kwargs = set()
-
-        # Dispatch kwargs according to self.func_kwargs
-        for func_name, func_kwargs in self.func_kwargs.items():
-            for func_kwarg in func_kwargs:
-                if func_kwarg in kwargs:
-                    dispatched_kwargs.add(func_kwarg)
-                    results[self.func_order[func_name]][func_kwarg] = kwargs[
-                        func_kwarg]
-
-        # Find if there is any kwargs that are not dispatched
-        for kwarg in kwargs:
-            if kwarg not in dispatched_kwargs:
-                raise ValueError(f'Unknown kwarg: {kwarg}')
-
-        return results
-
-    def preprocess(self, inputs: InputsType) -> List[Dict]:
+    def preprocess(self, inputs: InputsType) -> Dict:
         """Process the inputs into a model-feedable format."""
-        raise NotImplementedError
+        results = []
+        for single_input in inputs:
+            if isinstance(single_input, str):
+                if osp.isdir(single_input):
+                    raise ValueError('Feeding a directory is not supported')
+                    # for img_path in os.listdir(single_input):
+                    #     data_ =dict(img_path=osp.join(single_input,img_path))
+                    #     results.append(self.file_pipeline(data_))
+                else:
+                    data_ = dict(img_path=single_input)
+                    results.append(self.file_pipeline(data_))
+            elif isinstance(single_input, np.ndarray):
+                data_ = dict(img=single_input)
+                results.append(self.ndarray_pipeline(data_))
+            else:
+                raise ValueError(
+                    f'Unsupported input type: {type(single_input)}')
+
+        return self._collate(results)
+
+    def _collate(self, results: List[Dict]) -> Dict:
+        """Collate the results from different images."""
+        results = {key: [d[key] for d in results] for key in results[0]}
+        return results
 
     def forward(self, inputs: InputsType) -> PredType:
         """Forward the inputs to the model."""
@@ -157,12 +161,55 @@ class BaseInferencer:
                 Defaults to 0.3.
             img_out_dir (str): Output directory of images. Defaults to ''.
         """
-        raise NotImplementedError
+        if self.visualizer is None or not show and img_out_dir == '':
+            return None
+
+        if getattr(self, 'visualizer') is None:
+            raise ValueError('Visualization needs the "visualizer" term'
+                             'defined in the config, but got None.')
+
+        results = []
+
+        for single_input, pred in zip(inputs, preds):
+            if isinstance(single_input, str):
+                img = mmcv.imread(single_input)
+                img = img[:, :, ::-1]
+                img_name = osp.basename(single_input)
+            elif isinstance(single_input, np.ndarray):
+                img = single_input.copy()
+                img_num = str(self.num_visualized_imgs).zfill(8)
+                img_name = f'{img_num}.jpg'
+            else:
+                raise ValueError('Unsupported input type: '
+                                 f'{type(single_input)}')
+
+            out_file = osp.join(img_out_dir, img_name) if img_out_dir != '' \
+                else None
+
+            self.visualizer.add_datasample(
+                img_name,
+                img,
+                pred,
+                show=show,
+                wait_time=wait_time,
+                draw_gt=False,
+                draw_pred=draw_pred,
+                pred_score_thr=pred_score_thr,
+                out_file=out_file,
+            )
+            results.append(img)
+            self.num_visualized_imgs += 1
+
+        return results
 
     def postprocess(
         self,
         preds: PredType,
         imgs: Optional[List[np.ndarray]] = None,
+        is_batch: bool = False,
+        print_result: bool = False,
+        pred_out_file: str = '',
+        get_datasample: bool = False,
     ) -> Union[ResType, Tuple[ResType, np.ndarray]]:
         """Postprocess predictions.
 
@@ -176,8 +223,35 @@ class BaseInferencer:
             pred_out_file (str): Output file name to store predictions
                 without images. Supported file formats are “json”, “yaml/yml”
                 and “pickle/pkl”. Defaults to ''.
+            get_datasample (bool): Whether to use Datasample to store
+                inference results. If False, dict will be used.
 
         Returns:
             TODO
+        """
+
+        results = preds
+        if not get_datasample:
+            results = []
+            for pred in preds:
+                result = self._pred2dict(pred)
+                results.append(result)
+        if not is_batch:
+            results = results[0]
+        if print_result:
+            print(results)
+        # Add img to the results after printing
+        if pred_out_file != '':
+            mmcv.dump(results, pred_out_file)
+        if imgs is None:
+            return results
+        return results, imgs
+
+    def _pred2dict(self, data_sample: InstanceData) -> Dict:
+        """Extract elements necessary to represent a prediction into a
+        dictionary.
+
+        It's better to contain only basic data elements such as strings and
+        numbers in order to guarantee it's json-serializable.
         """
         raise NotImplementedError

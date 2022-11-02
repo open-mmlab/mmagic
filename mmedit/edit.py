@@ -29,12 +29,10 @@ class MMEdit:
                  model_version: str = 'a',
                  model_config: str = None,
                  model_ckpt: str = None,
-                 config_dir: str = 'configs/',
                  device: torch.device = 'cuda',
                  **kwargs) -> None:
 
         register_all_modules(init_default_scope=True)
-        self.config_dir = config_dir
         inferencer_kwargs = {}
         inferencer_kwargs.update(
             self._get_inferencer_kwargs(model_name, model_version, model_config, model_ckpt))
@@ -48,7 +46,7 @@ class MMEdit:
         if model is not None:
             cfgs = self.get_model_config(model)
             kwargs['type'] = cfgs['type']
-            kwargs['config'] = os.path.join(self.config_dir, cfgs['version'][model_version]['config'])
+            kwargs['config'] = os.path.join('configs/', cfgs['version'][model_version]['config'])
             kwargs['ckpt'] = cfgs['version'][model_version]['ckpt']
             # kwargs['ckpt'] = 'https://download.openmmlab.com/' + \
                 # f'mmediting/{cfgs["version"][model_version]["ckpt"]}'
@@ -97,12 +95,13 @@ class MMEdit:
             "kie_edge_labels" and "kie_edge_scores".
         """
         return self.inferencer(
-            img,
-            label,
+            img=img,
+            label=label,
             img_out_dir=img_out_dir,
             show=show,
             print_result=print_result,
-            pred_out_file=pred_out_file)
+            pred_out_file=pred_out_file,
+            **kwargs)
 
     def get_model_config(self, model_name: str) -> Dict:
         """Get the model configuration including model config and checkpoint
@@ -139,10 +138,15 @@ class MMEdit:
             'styleganv1': {
                 'type':
                 'unconditional',
-                'config':
-                'configs/styleganv1/styleganv1_ffhq-256x256_8xb4-25Mimgs.py',
-                'ckpt':
-                'styleganv1/styleganv1_ffhq_256_g8_25Mimg_20210407_161748-0094da86.pth'
+                'version': {
+                    'a': {
+                        'config':
+                        'styleganv1/styleganv1_ffhq-256x256_8xb4-25Mimgs.py',
+                        'ckpt':
+                        'ckpt/unconditional/styleganv1_ffhq_256_g8_25Mimg_20210407_161748-0094da86.pth'
+                    }
+                }
+
             }
 
         }

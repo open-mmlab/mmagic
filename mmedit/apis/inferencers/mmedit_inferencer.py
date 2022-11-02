@@ -30,6 +30,6 @@ class MMEditInferencer(BaseMMEditInferencer):
         else:
             raise ValueError(f'Unknown inferencer type: {self.type}')
     
-    def __call__(self, img: InputsType, label: InputsType, **kwargs) -> Union[Dict, List[Dict]]:
-        return self.inferencer(img, label, **kwargs)
+    def __call__(self, **kwargs) -> Union[Dict, List[Dict]]:
+        return self.inferencer(**kwargs)
 

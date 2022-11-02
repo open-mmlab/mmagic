@@ -3,8 +3,6 @@ import os
 import torch
 import numpy as np
 from typing import Dict, List
-from torchvision import utils
-
 from mmengine import mkdir_or_exist
 
 from mmedit.structures import EditDataSample
@@ -12,13 +10,25 @@ from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
 
 class ConditionalInferencer(BaseMMEditInferencer):
+    func_kwargs = dict(
+        preprocess=['label'],
+        forward=[],
+        visualize=['img_out_dir'],
+        postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
-    def preprocess(self, inputs: InputsType) -> Dict:
-        sample_nums = self.cfg.infer_cfg.sample_nums
-        labels = inputs
-        sample_model = self.cfg.infer_cfg.sample_model
+    def preprocess(self, label: InputsType) -> Dict:
 
-        preprocess_res = dict(num_batches=sample_nums, labels=labels, sample_model=sample_model)
+        # set model with infer_cfg if it exist else set default value
+        if 'infer_cfg' in self.cfg and 'sample_nums' in self.cfg.infer_cfg:
+            sample_nums = self.cfg.infer_cfg.sample_nums
+        else:
+            sample_nums = 4
+        if 'infer_cfg' in self.cfg and 'sample_model' in self.cfg.infer_cfg:
+            sample_model = self.cfg.infer_cfg.sample_model
+        else:
+            sample_model = 'ema'
+
+        preprocess_res = dict(num_batches=sample_nums, labels=label, sample_model=sample_model)
 
         return preprocess_res
 
@@ -26,12 +36,7 @@ class ConditionalInferencer(BaseMMEditInferencer):
         return self.model(inputs)
     
     def visualize(self,
-                inputs: InputsType,
                 preds: PredType,
-                show: bool = False,
-                wait_time: int = 0,
-                draw_pred: bool = True,
-                pred_score_thr: float = 0.3,
                 img_out_dir: str = '') -> List[np.ndarray]:
         
         res_list = []
