@@ -1,7 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import platform
-
-import pytest
 import torch
 
 from mmedit.models import NAFNet, NAFNetLocal
