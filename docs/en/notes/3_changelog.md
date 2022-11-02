@@ -1,5 +1,33 @@
 # Changelog
 
+## v1.0.0rc2 (02/11/2022)
+
+**Highlights**
+We are excited to announce the release of PyTorch 1.11. This release is composed of over 3,300 commits since 1.10, made by 434 contributors. Along with 1.11, we are releasing beta versions of TorchData and functorch. We want to sincerely thank our community for continuously improving PyTorch.
+
+- TorchData is a new library for common modular data loading primitives for easily constructing flexible and performant data pipelines. View it on GitHub.
+- functorch, a library that adds composable function transforms to PyTorch, is now available in beta. View it on GitHub.
+- Distributed Data Parallel (DDP) static graph optimizations available in stable.
+
+You can check the blogpost that shows the new features here.
+
+**New Features & Improvements**
+
+- Improve arguments type in `preprocess_div2k_dataset.py`. (#1381)
+- Update docstring of RDN. (#1326)
+- Update the introduction in readme. (#)
+
+**Bug Fixes**
+
+- Fix FLAVR register in `mmedit/models/video_interpolators` when importing `FLAVR`. (#1186)
+- Fix data path processing in `restoration_video_inference.py`. (#1262)
+- Fix the number of channels in RDB. (#1292, #1311)
+
+**Contributors**
+
+A total of 5 developers contributed to this release.
+Thanks @LeoXing1996, @Z-Fran, @zengyh1900, @ryanxingql, @ruoningYu.
+
 ## v1.0.0rc1(23/9/2022)
 
 MMEditing 1.0.0rc1 has merged MMGeneration 1.x.
