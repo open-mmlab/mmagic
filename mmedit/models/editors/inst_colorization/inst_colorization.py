@@ -197,12 +197,6 @@ class InstColorization(BaseModel):
             'fusion model supports only one image due to different numbers '\
             'of instances of different images'
 
-        cropped_img = data_samples[0].cropped_img.data
-        box_info_list = [
-            data_samples[0].box_info, data_samples[0].box_info_2x,
-            data_samples[0].box_info_4x, data_samples[0].box_info_8x
-        ]
-        cropped_data = get_colorization_data(cropped_img, self.color_data_opt)
         full_img_data = get_colorization_data(inputs, self.color_data_opt)
         AtoB = self.which_direction == 'AtoB'
 
@@ -213,6 +207,14 @@ class InstColorization(BaseModel):
 
         if not data_samples[0].empty_box:
             # preprocess instance input
+            cropped_img = data_samples[0].cropped_img.data
+            box_info_list = [
+                data_samples[0].box_info, data_samples[0].box_info_2x,
+                data_samples[0].box_info_4x, data_samples[0].box_info_8x
+            ]
+            cropped_data = get_colorization_data(cropped_img,
+                                                 self.color_data_opt)
+
             real_A = cropped_data['A' if AtoB else 'B']
             hint_B = cropped_data['hint_B']
             mask_B = cropped_data['mask_B']

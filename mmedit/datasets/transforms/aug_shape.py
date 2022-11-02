@@ -367,8 +367,9 @@ class Resize(BaseTransform):
             self.scale = (new_w, new_h)
 
         for key, out_key in zip(self.keys, self.output_keys):
-            size, results[out_key] = self._resize(results[key])
-            results[f'{out_key}_shape'] = size
+            if key in results:
+                size, results[out_key] = self._resize(results[key])
+                results[f'{out_key}_shape'] = size
 
         results['scale_factor'] = self.scale_factor
         results['keep_ratio'] = self.keep_ratio

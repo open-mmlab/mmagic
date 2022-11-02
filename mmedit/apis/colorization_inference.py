@@ -28,20 +28,21 @@ def colorization_inference(model, img):
     data['data_samples'] = [_data['data_samples']]
     if 'cuda' in str(device):
         data = scatter(data, [device])[0]
-        data['data_samples'][0].cropped_img.data = scatter(
-            data['data_samples'][0].cropped_img.data, [device])[0] / 255.0
+        if not data['data_samples'][0].empty_box:
+            data['data_samples'][0].cropped_img.data = scatter(
+                data['data_samples'][0].cropped_img.data, [device])[0] / 255.0
 
-        data['data_samples'][0].box_info.data = scatter(
-            data['data_samples'][0].box_info.data, [device])[0]
+            data['data_samples'][0].box_info.data = scatter(
+                data['data_samples'][0].box_info.data, [device])[0]
 
-        data['data_samples'][0].box_info_2x.data = scatter(
-            data['data_samples'][0].box_info_2x.data, [device])[0]
+            data['data_samples'][0].box_info_2x.data = scatter(
+                data['data_samples'][0].box_info_2x.data, [device])[0]
 
-        data['data_samples'][0].box_info_4x.data = scatter(
-            data['data_samples'][0].box_info_4x.data, [device])[0]
+            data['data_samples'][0].box_info_4x.data = scatter(
+                data['data_samples'][0].box_info_4x.data, [device])[0]
 
-        data['data_samples'][0].box_info_8x.data = scatter(
-            data['data_samples'][0].box_info_8x.data, [device])[0]
+            data['data_samples'][0].box_info_8x.data = scatter(
+                data['data_samples'][0].box_info_8x.data, [device])[0]
 
     # forward the model
     with torch.no_grad():

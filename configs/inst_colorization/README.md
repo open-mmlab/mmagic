@@ -12,51 +12,31 @@
 
 Image colorization is inherently an ill-posed problem with multi-modal uncertainty. Previous methods leverage the deep neural network to map input grayscale images to plausible color outputs directly. Although these learning-based methods have shown impressive performance, they usually fail on the input images that contain multiple objects. The leading cause is that existing models perform learning and colorization on the entire image. In the absence of a clear figure-ground separation, these models cannot effectively locate and learn meaningful object-level semantics. In this paper, we propose a method for achieving instance-aware colorization. Our network architecture leverages an off-the-shelf object detector to obtain cropped object images and uses an instance colorization network to extract object-level features. We use a similar network to extract the full-image features and apply a fusion module to full object-level and image-level features to predict the final colors. Both colorization networks and fusion modules are learned from a large-scale dataset. Experimental results show that our work outperforms existing methods on different quality metrics and achieves state-of-the-art performance on image colorization.
 
+<!-- [IMAGE] -->
+
+<div align=center >
+ <img src="https://github.com/ericsujw/InstColorization/blob/master/imgs/teaser.png?raw=true" width="400"/>
+</div >
+
 ## Results and models
+
+|                                               Method                                                |                                               Download                                                |
+| :-------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: |
+| [instance_aware_colorization_officiial](/configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py) | [model](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth) |
 
 ## Quick Start
 
-**Train**
-
 <details>
-<summary>Train Instructions</summary>
+<summary>Colorization demo</summary>
 
-You can use the following commands to train a model with cpu or single/multiple GPUs.
+You can use the following commands to colorize an image.
 
 ```shell
-# CPU train
-CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/inst_colorization/inst-colorizatioon_cocostuff_full_256x256.py
 
-# single-gpu train
-python tools/train.py configs/inst_colorization/inst-colorizatioon_cocostuff_full_256x256.py
-
-# multi-gpu train
-./tools/dist_train.sh configs/inst_colorization/inst-colorizatioon_cocostuff_full_256x256.py 8
+python demo/colorization_demo.py configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth input.jpg output.jpg
 ```
 
-For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
-
-</details>
-
-**Test**
-
-<details>
-<summary>Test Instructions</summary>
-
-You can use the following commands to test a model with cpu or single/multiple GPUs.
-
-```shell
-# CPU test
-CUDA_VISIBLE_DEVICES=-1 python demo/colorization_demo.py configs/inst_colorization//inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth
-
-# single-gpu demo
-python demo/colorization_demo.py configs/inst_colorization/inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth
-
-# multi-gpu test
-./tools/dist_test.sh configs/inst_colorization/inst-colorizatioon_cocostuff_full_256x256.py ../checkpoints/instance_aware_cocostuff.pth 8
-```
-
-For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+For more demos, you can refer to [Tutorial 3: inference with pre-trained models](https://mmediting.readthedocs.io/en/1.x/user_guides/3_inference.html).
 
 </details>
 

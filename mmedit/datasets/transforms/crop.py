@@ -6,10 +6,10 @@ import cv2 as cv
 import mmcv
 import numpy as np
 import torch
-from mmcv.ops import RoIPool
-from mmcv.transforms import BaseTransform, Compose
-from mmdet.utils import register_all_modules
-from mmengine.hub import get_config, get_model
+from mmcv.transforms import BaseTransform
+from mmdet.apis import inference_detector, init_detector
+from mmengine.hub import get_config
+from mmengine.registry import DefaultScope
 from mmengine.utils import is_list_of, is_tuple_of
 from torch.nn.modules.utils import _pair
 
@@ -943,35 +943,13 @@ class InstanceCrop(BaseTransform):
                  box_num_upbound=-1,
                  finesize=256):
 
-        self.predictor = self.set_model(config_file)
-        self.pipeline = self.set_pipeline(config_file)
+        cfg = get_config(config_file, pretrained=True)
+        with DefaultScope.overwrite_default_scope('mmdet'):
+            self.predictor = init_detector(cfg, cfg.model_path)
 
         self.key = key
         self.box_num_upbound = box_num_upbound
         self.final_size = finesize
-
-    def set_model(self, config_file):
-        model = get_model(config_file, pretrained=True)
-        if model.data_preprocessor.device.type == 'cpu':
-            for m in model.modules():
-                assert not isinstance(
-                    m, RoIPool
-                ), 'CPU inference with RoIPool is not supported currently.'
-        return model
-
-    def set_pipeline(self, config_file):
-        register_all_modules()
-        cfg = get_config(config_file)
-        test_pipeline = cfg.test_dataloader.dataset.pipeline
-        test_pipeline[0].type = 'mmdet.LoadImageFromNDArray'
-        new_test_pipeline = []
-        for pipeline in test_pipeline:
-            if pipeline['type'] != 'LoadAnnotations' and pipeline[
-                    'type'] != 'LoadPanopticAnnotations':
-                new_test_pipeline.append(pipeline)
-
-        test_pipeline = Compose(new_test_pipeline)
-        return test_pipeline
 
     def transform(self, results: dict) -> dict:
         """The transform function of InstanceCrop.
@@ -987,13 +965,8 @@ class InstanceCrop(BaseTransform):
         # get consistent box prediction based on L channel
         full_img = results['img']
         full_img_size = results['ori_img_shape'][:-1][::-1]
-        outputs = self.predict_bbox(full_img)
+        pred_bbox, pred_scores = self.predict_bbox(full_img)
 
-        # get the most confident boxes
-        pred_bbox = outputs['instances'].pred_boxes.to(
-            torch.device('cpu')).tensor.numpy()
-        pred_scores = outputs['instances'].scores.cpu().data.numpy()
-        pred_bbox = pred_bbox.astype(np.int32)
         if self.box_num_upbound > 0 and pred_bbox.shape[
                 0] > self.box_num_upbound:
             index_mask = np.argsort(pred_scores, axis=0)
@@ -1039,11 +1012,16 @@ class InstanceCrop(BaseTransform):
 
     def predict_bbox(self, image):
         lab_image = cv.cvtColor(image, cv.COLOR_BGR2LAB)
-        l_channel, a_channel, b_channel = cv.split(lab_image)
+        l_channel, _, _ = cv.split(lab_image)
         l_stack = np.stack([l_channel, l_channel, l_channel], axis=2)
-        data_ = dict(img=l_stack, img_id=0)
-        data_ = self.pipeline(data_)
-        data_['inputs'] = [data_['inputs']]
-        data_['data_samples'] = [data_['data_samples']]
-        results = self.predictor.test_step(data_)[0]
-        return results
+
+        with DefaultScope.overwrite_default_scope('mmdet'):
+            with torch.no_grad():
+                results = inference_detector(self.predictor, l_stack)
+
+        bboxes = results.pred_instances.bboxes.cpu().numpy().astype(np.int32)
+        scores = results.pred_instances.scores.cpu().numpy()
+        index_mask = [i for i, x in enumerate(scores) if x >= 0.7]
+        scores = np.array(scores[index_mask])
+        bboxes = np.array(bboxes[index_mask])
+        return bboxes, scores
