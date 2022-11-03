@@ -338,13 +338,20 @@ class ModulatedStyleConv(nn.Module):
         self.noise_injector = NoiseInjection()
         self.activate = _FusedBiasLeakyReLU(out_channels)
 
-    def forward(self, x, style, noise=None, return_noise=False):
+    def forward(self,
+                x,
+                style,
+                noise=None,
+                add_noise=True,
+                return_noise=False):
         """Forward Function.
 
         Args:
             x ([Tensor): Input features with shape of (N, C, H, W).
             style (Tensor): Style latent with shape of (N, C).
             noise (Tensor, optional): Noise for injection. Defaults to None.
+            add_noise (bool, optional): Whether apply noise injection to
+                feature. Defaults to True.
             return_noise (bool, optional): Whether to return noise tensors.
                 Defaults to False.
 
@@ -354,12 +361,13 @@ class ModulatedStyleConv(nn.Module):
         with autocast(enabled=self.fp16_enabled):
             out = self.conv(x, style)
 
-            if return_noise:
-                out, noise = self.noise_injector(
-                    out, noise=noise, return_noise=return_noise)
-            else:
-                out = self.noise_injector(
-                    out, noise=noise, return_noise=return_noise)
+            if add_noise:
+                if return_noise:
+                    out, noise = self.noise_injector(
+                        out, noise=noise, return_noise=return_noise)
+                else:
+                    out = self.noise_injector(
+                        out, noise=noise, return_noise=return_noise)
 
             # TODO: FP16 in activate layers
             out = self.activate(out)
@@ -429,7 +437,7 @@ class ModulatedToRGB(nn.Module):
             style_bias=style_bias,
             fp16_enabled=fp16_enabled)
 
-        self.bias = nn.Parameter(torch.zeros(1, 3, 1, 1))
+        self.bias = nn.Parameter(torch.zeros(1, out_channels, 1, 1))
 
         # enforece the output to be fp32 (follow Tero's implementation)
         self.out_fp32 = out_fp32
@@ -456,7 +464,8 @@ class ModulatedToRGB(nn.Module):
 
             # Here, Tero adopts FP16 at `skip`.
             if skip is not None:
-                skip = self.upsample(skip)
+                if hasattr(self, 'upsample'):
+                    skip = self.upsample(skip)
                 out = out + skip
         if self.out_fp32:
             out = out.to(torch.float32)

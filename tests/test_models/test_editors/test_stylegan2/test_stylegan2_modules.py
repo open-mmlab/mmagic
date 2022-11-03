@@ -106,6 +106,21 @@ class TestModStyleConv:
         res = conv(input_x, input_style)
         assert res.shape == (2, 1, 4, 4)
 
+        # test add noise
+        noise = torch.randn(2, 1, 4, 4)
+        res = conv(input_x, input_style, noise)
+        assert res.shape == (2, 1, 4, 4)
+
+        # test add noise + return_noise
+        res = conv(input_x, input_style, noise, return_noise=True)
+        assert isinstance(res, tuple)
+        assert res[0].shape == (2, 1, 4, 4)
+        assert (res[1] == noise).all()
+
+        # test add noise is False
+        res = conv(input_x, input_style, noise, add_noise=False)
+        assert res.shape == (2, 1, 4, 4)
+
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_mod_styleconv_cuda(self):
         conv = ModulatedStyleConv(**self.default_cfg).cuda()
@@ -217,6 +232,17 @@ class TestToRGB:
         skip = torch.randn(2, 3, 4, 4)
         res = model(input_x, style, skip)
         assert res.shape == (2, 3, 8, 8)
+
+        # test skip is passed + upsample is False
+        cfg = deepcopy(self.default_cfg)
+        cfg['upsample'] = False
+        cfg['out_channels'] = 7
+        model = ModulatedToRGB(**cfg)
+        input_x = torch.randn((2, 5, 4, 4))
+        skip = torch.randn(2, 7, 4, 4)
+        style = torch.randn((2, 5))
+        res = model(input_x, style, skip)
+        assert res.shape == (2, 7, 4, 4)
 
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_torgb_cuda(self):
