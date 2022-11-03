@@ -56,6 +56,9 @@ class StyleGAN2Generator(nn.Module):
     Args:
         out_size (int): The output size of the StyleGAN2 generator.
         style_channels (int): The number of channels for style code.
+        noise_channels (int, optional): The number of channels for input noise.
+            If not passed, will be set the same value as :attr:`style_channels`.
+            Defaults to None.
         num_mlps (int, optional): The number of MLP layers. Defaults to 8.
         channel_multiplier (int, optional): The multiplier factor for the
             channel number. Defaults to 2.
@@ -88,12 +91,17 @@ class StyleGAN2Generator(nn.Module):
     def __init__(self,
                  out_size,
                  style_channels,
+                 out_channels=3,
+                 noise_size=None,
+                 cond_channels=None,
+                 cond_mapping_channels=None,
                  num_mlps=8,
                  channel_multiplier=2,
                  blur_kernel=[1, 3, 3, 1],
                  lr_mlp=0.01,
                  default_style_mode='mix',
                  eval_style_mode='single',
+                 norm_eps=1e-6,
                  mix_prob=0.9,
                  num_fp16_scales=0,
                  fp16_enabled=False,
@@ -102,6 +110,7 @@ class StyleGAN2Generator(nn.Module):
         super().__init__()
         self.out_size = out_size
         self.style_channels = style_channels
+        self.out_channels = out_channels
         self.num_mlps = num_mlps
         self.channel_multiplier = channel_multiplier
         self.lr_mlp = lr_mlp
@@ -109,17 +118,31 @@ class StyleGAN2Generator(nn.Module):
         self.default_style_mode = default_style_mode
         self.eval_style_mode = eval_style_mode
         self.mix_prob = mix_prob
+        # self.norm_input = norm_input
         self.num_fp16_scales = num_fp16_scales
         self.fp16_enabled = fp16_enabled
         self.bgr2rgb = bgr2rgb
 
-        # define style mapping layers
-        mapping_layers = [PixelNorm()]
+        self.noise_size = style_channels if noise_size is None else noise_size
 
-        for _ in range(num_mlps):
+        self.cond_channels = cond_channels
+        if self.cond_channels is not None and self.cond_channels > 0:
+            cond_mapping_channels = style_channels \
+                if cond_mapping_channels is None else cond_mapping_channels
+            self.embed = EqualLinearActModule(cond_channels,
+                                              cond_mapping_channels)
+        else:
+            cond_mapping_channels = 0
+        in_feat = cond_mapping_channels + self.noise_size
+
+        # define style mapping layers
+        self.pixel_norm = PixelNorm(eps=norm_eps)
+        mapping_layers = []
+
+        for idx in range(num_mlps):
             mapping_layers.append(
                 EqualLinearActModule(
-                    style_channels,
+                    in_feat if idx == 0 else style_channels,
                     style_channels,
                     equalized_lr_cfg=dict(lr_mul=lr_mlp, gain=1.),
                     act_cfg=dict(type='fused_bias')))
@@ -151,6 +174,7 @@ class StyleGAN2Generator(nn.Module):
         self.to_rgb1 = ModulatedToRGB(
             self.channels[4],
             style_channels,
+            out_channels=out_channels,
             upsample=False,
             fp16_enabled=fp16_enabled)
 
@@ -161,10 +185,10 @@ class StyleGAN2Generator(nn.Module):
         self.upsamples = nn.ModuleList()
         self.to_rgbs = nn.ModuleList()
 
-        in_channels_ = self.channels[4]
+        blk_in_channels_ = self.channels[4]
 
         for i in range(3, self.log_size + 1):
-            out_channels_ = self.channels[2**i]
+            blk_out_channels_ = self.channels[2**i]
 
             # If `fp16_enabled` is True, all of layers will be run in auto
             # FP16. In the case of `num_fp16_sacles` > 0, only partial
@@ -173,8 +197,8 @@ class StyleGAN2Generator(nn.Module):
 
             self.convs.append(
                 ModulatedStyleConv(
-                    in_channels_,
-                    out_channels_,
+                    blk_in_channels_,
+                    blk_out_channels_,
                     3,
                     style_channels,
                     upsample=True,
@@ -182,8 +206,8 @@ class StyleGAN2Generator(nn.Module):
                     fp16_enabled=_use_fp16))
             self.convs.append(
                 ModulatedStyleConv(
-                    out_channels_,
-                    out_channels_,
+                    blk_out_channels_,
+                    blk_out_channels_,
                     3,
                     style_channels,
                     upsample=False,
@@ -191,12 +215,13 @@ class StyleGAN2Generator(nn.Module):
                     fp16_enabled=_use_fp16))
             self.to_rgbs.append(
                 ModulatedToRGB(
-                    out_channels_,
+                    blk_out_channels_,
                     style_channels,
+                    out_channels=out_channels,
                     upsample=True,
                     fp16_enabled=_use_fp16))  # set to global fp16
 
-            in_channels_ = out_channels_
+            blk_in_channels_ = blk_out_channels_
 
         self.num_latents = self.log_size * 2 - 2
         self.num_injected_noises = self.num_latents - 1
@@ -282,6 +307,7 @@ class StyleGAN2Generator(nn.Module):
     # @auto_fp16()
     def forward(self,
                 styles,
+                cond=None,
                 num_batches=-1,
                 return_noise=False,
                 return_latents=False,
@@ -305,6 +331,8 @@ class StyleGAN2Generator(nn.Module):
                 offer a callable function to sample a batch of noise data.
                 Otherwise, the ``None`` indicates to use the default noise
                 sampler.
+            cond (torch.Tensor, optional): Conditional inputs for the
+                generator. Defaults to None.
             num_batches (int, optional): The number of batch size.
                 Defaults to 0.
             return_noise (bool, optional): If True, ``noise_batch`` will be
@@ -330,13 +358,14 @@ class StyleGAN2Generator(nn.Module):
             torch.Tensor | dict: Generated image tensor or dictionary \
                 containing more data.
         """
+        input_dim = self.style_channels if input_is_latent else self.noise_size
         # receive noise and conduct sanity check.
         if isinstance(styles, torch.Tensor):
-            assert styles.shape[1] == self.style_channels
+            assert styles.shape[1] == input_dim
             styles = [styles]
         elif mmengine.is_seq_of(styles, torch.Tensor):
             for t in styles:
-                assert t.shape[-1] == self.style_channels
+                assert t.shape[-1] == input_dim
         # receive a noise generator and sample noise.
         elif callable(styles):
             device = get_module_device(self)
@@ -345,11 +374,10 @@ class StyleGAN2Generator(nn.Module):
             if self.default_style_mode == 'mix' and random.random(
             ) < self.mix_prob:
                 styles = [
-                    noise_generator((num_batches, self.style_channels))
-                    for _ in range(2)
+                    noise_generator((num_batches, input_dim)) for _ in range(2)
                 ]
             else:
-                styles = [noise_generator((num_batches, self.style_channels))]
+                styles = [noise_generator((num_batches, input_dim))]
             styles = [s.to(device) for s in styles]
         # otherwise, we will adopt default noise sampler.
         else:
@@ -358,65 +386,81 @@ class StyleGAN2Generator(nn.Module):
             if self.default_style_mode == 'mix' and random.random(
             ) < self.mix_prob:
                 styles = [
-                    torch.randn((num_batches, self.style_channels))
-                    for _ in range(2)
+                    torch.randn((num_batches, input_dim)) for _ in range(2)
                 ]
             else:
-                styles = [torch.randn((num_batches, self.style_channels))]
+                styles = [torch.randn((num_batches, input_dim))]
             styles = [s.to(device) for s in styles]
 
-        with autocast(enabled=self.fp16_enabled):
-            if not input_is_latent:
-                noise_batch = styles
-                styles = [self.style_mapping(s) for s in styles]
+        # no amp for style-mapping and condition-embedding
+        if not input_is_latent:
+            noise_batch = [s.clone() for s in styles]
+            # NOTE: do pixel_norm (2nd_momuent_norm) to noise input
+            styles = [self.pixel_norm(s) for s in styles]
+            if self.cond_channels is not None and self.cond_channels > 0:
+                assert cond is not None, (
+                    '\'cond_channels\' is not None, \'cond\' must be passed.')
+                assert cond.shape[1] == self.cond_channels
+                embedding = self.embed(cond)
+                # NOTE: do pixel_norm (2nd_momuent_norm) to cond embedding
+                embedding = self.pixel_norm(embedding)
+
+            styles_list = []
+            for s in styles:
+                if self.cond_channels is not None and self.cond_channels > 0:
+                    s = torch.cat([s, embedding], dim=1)
+                styles_list.append(self.style_mapping(s))
+
+            styles = styles_list
+        else:
+            noise_batch = None
+
+        if injected_noise is None:
+            if randomize_noise:
+                injected_noise = [None] * self.num_injected_noises
             else:
-                noise_batch = None
+                injected_noise = [
+                    getattr(self, f'injected_noise_{i}')
+                    for i in range(self.num_injected_noises)
+                ]
+        # use truncation trick
+        if truncation < 1:
+            style_t = []
+            # calculate truncation latent on the fly
+            if truncation_latent is None and not hasattr(
+                    self, 'truncation_latent'):
+                self.truncation_latent = self.get_mean_latent()
+                truncation_latent = self.truncation_latent
+            elif truncation_latent is None and hasattr(self,
+                                                       'truncation_latent'):
+                truncation_latent = self.truncation_latent
 
-            if injected_noise is None:
-                if randomize_noise:
-                    injected_noise = [None] * self.num_injected_noises
-                else:
-                    injected_noise = [
-                        getattr(self, f'injected_noise_{i}')
-                        for i in range(self.num_injected_noises)
-                    ]
-            # use truncation trick
-            if truncation < 1:
-                style_t = []
-                # calculate truncation latent on the fly
-                if truncation_latent is None and not hasattr(
-                        self, 'truncation_latent'):
-                    self.truncation_latent = self.get_mean_latent()
-                    truncation_latent = self.truncation_latent
-                elif truncation_latent is None and hasattr(
-                        self, 'truncation_latent'):
-                    truncation_latent = self.truncation_latent
+            for style in styles:
+                style_t.append(truncation_latent + truncation *
+                               (style - truncation_latent))
 
-                for style in styles:
-                    style_t.append(truncation_latent + truncation *
-                                   (style - truncation_latent))
+            styles = style_t
+        # no style mixing
+        if len(styles) < 2:
+            inject_index = self.num_latents
 
-                styles = style_t
-            # no style mixing
-            if len(styles) < 2:
-                inject_index = self.num_latents
-
-                if styles[0].ndim < 3:
-                    latent = styles[0].unsqueeze(1).repeat(1, inject_index, 1)
-
-                else:
-                    latent = styles[0]
-            # style mixing
-            else:
-                if inject_index is None:
-                    inject_index = random.randint(1, self.num_latents - 1)
-
+            if styles[0].ndim < 3:
                 latent = styles[0].unsqueeze(1).repeat(1, inject_index, 1)
-                latent2 = styles[1].unsqueeze(1).repeat(
-                    1, self.num_latents - inject_index, 1)
 
-                latent = torch.cat([latent, latent2], 1)
+            else:
+                latent = styles[0]
+        # style mixing
+        else:
+            if inject_index is None:
+                inject_index = random.randint(1, self.num_latents - 1)
 
+            latent = styles[0].unsqueeze(1).repeat(1, inject_index, 1)
+            latent2 = styles[1].unsqueeze(1).repeat(
+                1, self.num_latents - inject_index, 1)
+
+            latent = torch.cat([latent, latent2], 1)
+
+        with autocast(enabled=self.fp16_enabled):
             # 4x4 stage
             out = self.constant_input(latent)
             if self.fp16_enabled:
