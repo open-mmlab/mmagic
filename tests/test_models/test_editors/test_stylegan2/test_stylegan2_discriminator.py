@@ -31,11 +31,27 @@ class TestStyleGANv2Disc:
         score = d(img)
         assert score.shape == (2, 1)
 
+        cfg = deepcopy(self.default_cfg)
+        cfg['cond_channels'] = 5
+        cfg['cond_mapping_channels'] = 16
+
+        d = StyleGAN2Discriminator(**cfg)
+        score = d(img, torch.randn(2, 5))
+        assert score.shape == (2, 1)
+
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_stylegan2_disc_cuda(self):
         d = StyleGAN2Discriminator(**self.default_cfg).cuda()
         img = torch.randn((2, 3, 64, 64)).cuda()
         score = d(img)
+        assert score.shape == (2, 1)
+
+        cfg = deepcopy(self.default_cfg)
+        cfg['cond_channels'] = 5
+        cfg['cond_mapping_channels'] = 16
+
+        d = StyleGAN2Discriminator(**cfg)
+        score = d(img, torch.randn(2, 5).cuda())
         assert score.shape == (2, 1)
 
 

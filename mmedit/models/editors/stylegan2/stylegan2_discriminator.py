@@ -99,9 +99,9 @@ class StyleGAN2Discriminator(BaseModule):
                  channel_multiplier=2,
                  blur_kernel=[1, 3, 3, 1],
                  mbstd_cfg=dict(group_size=4, channel_groups=1),
-                 c_dim=None,
-                 cmap_dim=None,
-                 c_mapping_layers=None,
+                 cond_channels=None,
+                 cond_mapping_channels=None,
+                 cond_mapping_layers=None,
                  num_fp16_scales=0,
                  fp16_enabled=False,
                  out_fp32=True,
@@ -154,16 +154,17 @@ class StyleGAN2Discriminator(BaseModule):
 
             in_channels = out_channel
 
-        if c_dim > 0:
-            cmap_dim = 512 if cmap_dim is None else cmap_dim
-            c_mapping_layers = 8 if c_mapping_layers is None \
-                else c_mapping_layers
+        if cond_channels is not None and cond_channels > 0:
+            cond_mapping_channels = 512 if cond_mapping_channels is None \
+                else cond_mapping_channels
+            cond_mapping_layers = 8 if cond_mapping_layers is None \
+                else cond_mapping_layers
             self.mapping = MappingNetwork(
                 noise_size=0,
-                style_channels=cmap_dim,
-                c_dim=c_dim,
+                style_channels=cond_mapping_channels,
+                cond_channels=cond_channels,
                 num_ws=None,
-                num_layers=c_mapping_layers,
+                num_layers=cond_mapping_layers,
                 w_avg_beta=None)
 
         self.convs = nn.Sequential(*convs)
@@ -177,7 +178,9 @@ class StyleGAN2Discriminator(BaseModule):
                 channels[4] * 4 * 4,
                 channels[4],
                 act_cfg=dict(type='fused_bias')),
-            EqualLinearActModule(channels[4], 1 if c_dim <= 0 else cmap_dim),
+            EqualLinearActModule(
+                channels[4], 1 if cond_channels is None or cond_channels <= 0
+                else cond_mapping_channels),
         )
 
         self.input_bgr2rgb = input_bgr2rgb
@@ -194,12 +197,12 @@ class StyleGAN2Discriminator(BaseModule):
         self.load_state_dict(state_dict, strict=strict)
         mmengine.print_log(f'Load pretrained model from {ckpt_path}')
 
-    def forward(self, x: Tensor, c: Optional[Tensor]):
+    def forward(self, x: Tensor, cond: Optional[Tensor] = None):
         """Forward function.
 
         Args:
             x (torch.Tensor): Input image tensor.
-            c (torch.Tensor, optional): The conditional feature after
+            cond (torch.Tensor, optional): The conditional feature after
                 mapping layer. Defaults to None.
 
         Returns:
@@ -224,11 +227,11 @@ class StyleGAN2Discriminator(BaseModule):
             x = self.final_linear(x)
 
             # conditioning
-            if c is not None:
-                assert self.mapping is not None, ('')
-                if self.disc_c_noise is not None:
-                    c = c + torch.randn_like(c) * c.std() * self.disc_c_noise
-                cmap = self.mapping(None, c)
+            if cond is not None:
+                assert self.mapping is not None, (
+                    '\'self.mapping\' must not be None when conditional input '
+                    'is passed.')
+                cmap = self.mapping(None, cond)
                 x = (x * cmap).sum(
                     dim=1, keepdim=True) * (1 / np.sqrt(cmap.shape[1]))
 
