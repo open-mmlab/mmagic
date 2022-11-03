@@ -83,6 +83,23 @@ class TestStyleGAN2Generator:
         g.mix_prob = 0
         res = g(None, num_batches=2)
 
+        # test cond channels is negative number
+        cfg_ = deepcopy(self.default_cfg)
+        cfg_['cond_channels'] = -1
+        g = StyleGAN2Generator(**cfg_)
+        assert not hasattr(g, 'embed')
+
+        # test cond channels > 0
+        cfg_ = deepcopy(self.default_cfg)
+        cfg_['cond_channels'] = 10
+        g = StyleGAN2Generator(**cfg_)
+        assert hasattr(g, 'embed')
+        # test raise error
+        with pytest.raises(AssertionError):
+            g(None, num_batches=2)
+        res = g(None, num_batches=2, cond=torch.randn(2, 10))
+        assert res.shape == (2, 3, 256, 256)
+
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_g_cuda(self):
         # test default config
@@ -136,3 +153,20 @@ class TestStyleGAN2Generator:
         res = g(None, num_batches=2)
         g.mix_prob = 0
         res = g(None, num_batches=2)
+
+        # test cond channels is negative number
+        cfg_ = deepcopy(self.default_cfg)
+        cfg_['cond_channels'] = -1
+        g = StyleGAN2Generator(**cfg_)
+        assert not hasattr(g, 'embed')
+
+        # test cond channels > 0
+        cfg_ = deepcopy(self.default_cfg)
+        cfg_['cond_channels'] = 10
+        g = StyleGAN2Generator(**cfg_)
+        assert hasattr(g, 'embed')
+        # test raise error
+        with pytest.raises(AssertionError):
+            g(None, num_batches=2)
+        res = g(None, num_batches=2, cond=torch.randn(2, 10))
+        assert res.shape == (2, 3, 256, 256)

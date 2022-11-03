@@ -50,7 +50,7 @@ class TestStyleGANv2Disc:
         cfg['cond_channels'] = 5
         cfg['cond_mapping_channels'] = 16
 
-        d = StyleGAN2Discriminator(**cfg)
+        d = StyleGAN2Discriminator(**cfg).cuda()
         score = d(img, torch.randn(2, 5).cuda())
         assert score.shape == (2, 1)
 
