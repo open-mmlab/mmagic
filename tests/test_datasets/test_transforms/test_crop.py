@@ -5,6 +5,7 @@ import os.path as osp
 import cv2
 import numpy as np
 import pytest
+import torch
 
 from mmedit.datasets.transforms import (Crop, CropLike, FixedCrop,
                                         InstanceCrop, ModCrop,
@@ -355,6 +356,8 @@ def test_crop_like():
     assert sum_diff < 1e-6
 
 
+@pytest.mark.skipif(
+    not torch.cuda.is_available(), reason='require cuda support')
 def test_instance_crop():
 
     croper = InstanceCrop(
