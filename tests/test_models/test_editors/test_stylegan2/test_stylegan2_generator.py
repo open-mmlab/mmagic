@@ -98,7 +98,7 @@ class TestStyleGAN2Generator:
         with pytest.raises(AssertionError):
             g(None, num_batches=2)
         res = g(None, num_batches=2, cond=torch.randn(2, 10))
-        assert res.shape == (2, 3, 256, 256)
+        assert res.shape == (2, 3, 64, 64)
 
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_g_cuda(self):
@@ -169,4 +169,4 @@ class TestStyleGAN2Generator:
         with pytest.raises(AssertionError):
             g(None, num_batches=2)
         res = g(None, num_batches=2, cond=torch.randn(2, 10))
-        assert res.shape == (2, 3, 256, 256)
+        assert res.shape == (2, 3, 64, 64)
