@@ -39,7 +39,7 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
-      FID: 85.6629
+      FID: 39.9261
       MS-SSIM: 0.0649
     Task: Ggan
   Weights: https://download.openmmlab.com/mmgen/ggan/ggan_lsun-bedroom_lsgan_archi_lr-1e-4_64_b128x1_20m_20210430_143114-5d99b76c.pth
