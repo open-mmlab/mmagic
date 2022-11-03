@@ -1,35 +1,40 @@
-import os
-import warnings
-from pathlib import Path
 from argparse import ArgumentParser
 
 from mmedit.edit import MMEdit
 
+# resources/input/matting/beach_fg.png
+
 def parse_args():
     parser = ArgumentParser()
-    # input for matting
     parser.add_argument(
         '--img', 
         type=str, 
-        default='', 
-        help='Input image file or folder path.')
-
-    # input for conditional models
+        default='resources/input/inpainting/img_resized.jpg', 
+        help='Input image file.')
     parser.add_argument(
         '--label', 
         type=int, 
         default=1, 
-        help='Input label.')
-    
+        help='Input label for conditional models.')
+    parser.add_argument(
+        '--trimap', 
+        type=str, 
+        default='resources/input/matting/beach_trimap.png', 
+        help='Input for matting models.')
+    parser.add_argument(
+        '--mask',
+        type=str,
+        default='resources/input/inpainting/mask_2_resized.png',
+        help='path to input mask file')
     parser.add_argument(
         '--img-out-dir',
         type=str,
-        default='resources/demo_results/unconditional/unconditional_samples_apis.png',
+        default='resources/demo_results/inferencer_samples_apis.png',
         help='Output directory of images.')
     parser.add_argument(
         '--model-name',
         type=str,
-        default='styleganv1',
+        default='aot_gan',
         help='Pretrained editing algorithm')
     parser.add_argument(
         '--model-version',

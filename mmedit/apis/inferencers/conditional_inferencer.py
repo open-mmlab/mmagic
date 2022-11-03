@@ -39,6 +39,7 @@ class ConditionalInferencer(BaseMMEditInferencer):
     
     def visualize(self,
                 preds: PredType,
+                data: Dict = None,
                 img_out_dir: str = '') -> List[np.ndarray]:
         
         res_list = []

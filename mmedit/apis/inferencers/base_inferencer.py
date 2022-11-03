@@ -63,7 +63,6 @@ class BaseInferencer:
                 'cuda' if torch.cuda.is_available() else 'cpu')
         self.device = device
         self._init_model(cfg, ckpt, device)
-        self._init_pipeline(cfg)
         self._init_visualizer(cfg)
 
         # A global counter tracking the number of images processed, for
@@ -110,14 +109,13 @@ class BaseInferencer:
 
     def preprocess(self, inputs: InputsType) -> Dict:
         """Process the inputs into a model-feedable format."""
+        self._init_pipeline(self.cfg)
+
         results = []
         for single_input in inputs:
             if isinstance(single_input, str):
                 if osp.isdir(single_input):
                     raise ValueError('Feeding a directory is not supported')
-                    # for img_path in os.listdir(single_input):
-                    #     data_ =dict(img_path=osp.join(single_input,img_path))
-                    #     results.append(self.file_pipeline(data_))
                 else:
                     data_ = dict(img_path=single_input)
                     results.append(self.file_pipeline(data_))

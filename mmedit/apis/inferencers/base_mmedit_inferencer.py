@@ -74,7 +74,6 @@ class BaseMMEditInferencer(BaseInferencer):
         """Call the inferencer.
 
         Args:
-            user_inputs: Inputs for the inferencer.
             kwargs: Keyword arguments for the inferencer.
         """
 
@@ -90,7 +89,7 @@ class BaseMMEditInferencer(BaseInferencer):
 
         data = self.preprocess(**preprocess_kwargs)
         preds = self.forward(data, **forward_kwargs)
-        imgs = self.visualize(preds, **visualize_kwargs)
+        imgs = self.visualize(preds, data, **visualize_kwargs)
         results = self.postprocess(
             preds, imgs, **postprocess_kwargs)
         return results

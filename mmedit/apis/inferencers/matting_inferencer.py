@@ -4,7 +4,6 @@ import torch
 import mmcv
 import numpy as np
 from typing import Dict, List
-from torchvision import utils
 from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
@@ -58,11 +57,12 @@ class MattingInferencer(BaseMMEditInferencer):
     
     def visualize(self,
                 preds: PredType,
+                data: Dict = None,
                 img_out_dir: str = '') -> List[np.ndarray]:
         
         result = preds[0].output
         result = result.pred_alpha.data.cpu()
-        
+
         # save images
         mkdir_or_exist(os.path.dirname(img_out_dir))
         mmcv.imwrite(result.numpy(), img_out_dir)

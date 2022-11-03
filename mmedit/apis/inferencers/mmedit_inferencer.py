@@ -6,6 +6,7 @@ from .base_mmedit_inferencer import BaseMMEditInferencer
 from .conditional_inferencer import ConditionalInferencer
 from .unconditional_inferencer import UnconditionalInferencer
 from .matting_inferencer import MattingInferencer
+from .inpainting_inferencer import InpaintingInferencer
 
 class MMEditInferencer(BaseMMEditInferencer):
 
@@ -26,6 +27,8 @@ class MMEditInferencer(BaseMMEditInferencer):
             self.inferencer = UnconditionalInferencer(config, ckpt, device)
         elif self.type == 'matting':
             self.inferencer = MattingInferencer(config, ckpt, device)
+        elif self.type == 'inpainting':
+            self.inferencer = InpaintingInferencer(config, ckpt, device)
         else:
             raise ValueError(f'Unknown inferencer type: {self.type}')
     

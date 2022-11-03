@@ -69,6 +69,8 @@ class MMEdit:
     def infer(self,
                  img: InputsType = None,
                  label: InputsType = None,
+                 trimap: InputsType = None,
+                 mask: InputsType = None,
                  img_out_dir: str = '',
                  show: bool = False,
                  print_result: bool = False,
@@ -97,6 +99,8 @@ class MMEdit:
         return self.inferencer(
             img=img,
             label=label,
+            trimap=trimap,
+            mask=mask,
             img_out_dir=img_out_dir,
             show=show,
             print_result=print_result,
@@ -115,8 +119,7 @@ class MMEdit:
         model_dict = {
             # conditional models
             'biggan': {
-                'type':
-                'conditional',
+                'type':'conditional',
                 'version': {
                     'a': {
                         'config':
@@ -136,8 +139,7 @@ class MMEdit:
 
             # unconditional models
             'styleganv1': {
-                'type':
-                'unconditional',
+                'type': 'unconditional',
                 'version': {
                     'a': {
                         'config':
@@ -150,8 +152,7 @@ class MMEdit:
 
             # matting models
             'gca': {
-                'type':
-                'matting',
+                'type': 'matting',
                 'version': {
                     'a': {
                         'config':
@@ -160,6 +161,20 @@ class MMEdit:
                         'ckpt/matting/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth'
                     }
                 }
+            },
+
+            # inpainting models
+            'aot_gan': {
+                'type': 'inpainting',
+                'version': {
+                    'a': {
+                        'config':
+                        'aot_gan/aot-gan_smpgan_4xb4_places-512x512.py',
+                        'ckpt':
+                        'ckpt/inpainting/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth'
+                    }
+                }
+                
             }
         }
         if model_name not in model_dict:
