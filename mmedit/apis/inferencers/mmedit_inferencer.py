@@ -1,14 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os.path as osp
-import numpy as np
 from typing import Dict, List, Optional, Union
 
-
 from mmedit.utils import ConfigType
-from .base_mmedit_inferencer import (BaseMMEditInferencer, InputsType, PredType,
-                                    ResType)
+from .base_mmedit_inferencer import BaseMMEditInferencer
 from .conditional_inferencer import ConditionalInferencer
 from .unconditional_inferencer import UnconditionalInferencer
+from .matting_inferencer import MattingInferencer
 
 class MMEditInferencer(BaseMMEditInferencer):
 
@@ -27,6 +24,8 @@ class MMEditInferencer(BaseMMEditInferencer):
             self.inferencer = ConditionalInferencer(config, ckpt, device)
         elif self.type == 'unconditional':
             self.inferencer = UnconditionalInferencer(config, ckpt, device)
+        elif self.type == 'matting':
+            self.inferencer = MattingInferencer(config, ckpt, device)
         else:
             raise ValueError(f'Unknown inferencer type: {self.type}')
     

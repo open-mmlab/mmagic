@@ -134,7 +134,7 @@ class MMEdit:
 
             },
 
-            #unconditional models
+            # unconditional models
             'styleganv1': {
                 'type':
                 'unconditional',
@@ -146,9 +146,21 @@ class MMEdit:
                         'ckpt/unconditional/styleganv1_ffhq_256_g8_25Mimg_20210407_161748-0094da86.pth'
                     }
                 }
+            },
 
+            # matting models
+            'gca': {
+                'type':
+                'matting',
+                'version': {
+                    'a': {
+                        'config':
+                        'gca/gca_r34_4xb10-200k_comp1k.py',
+                        'ckpt':
+                        'ckpt/matting/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth'
+                    }
+                }
             }
-
         }
         if model_name not in model_dict:
             raise ValueError(f'Model {model_name} is not supported.')

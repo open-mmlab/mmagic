@@ -3,6 +3,7 @@ import os
 import torch
 import numpy as np
 from typing import Dict, List
+from torchvision import utils
 from mmengine import mkdir_or_exist
 
 from mmedit.structures import EditDataSample
@@ -10,6 +11,7 @@ from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
 
 class ConditionalInferencer(BaseMMEditInferencer):
+
     func_kwargs = dict(
         preprocess=['label'],
         forward=[],

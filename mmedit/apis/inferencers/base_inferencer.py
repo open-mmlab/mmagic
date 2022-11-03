@@ -61,6 +61,7 @@ class BaseInferencer:
         if device is None:
             device = torch.device(
                 'cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = device
         self._init_model(cfg, ckpt, device)
         self._init_pipeline(cfg)
         self._init_visualizer(cfg)
