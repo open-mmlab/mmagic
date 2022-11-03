@@ -46,7 +46,7 @@ We want to sincerely thank our community for continuously improving MMEditing.
 **Contributors**
 
 A total of 7 developers contributed to this release.
-Thanks @LeoXing1996, @Z-Fran, @zengyh1900, @plyfager, @ryanxingql,  @ruoningYu, @gaoyang07.
+Thanks @LeoXing1996, @Z-Fran, @zengyh1900, @plyfager, @ryanxingql, @ruoningYu, @gaoyang07.
 
 ## v1.0.0rc1(23/9/2022)
 
