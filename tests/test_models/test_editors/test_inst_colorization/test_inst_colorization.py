@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import platform
+import unittest
 
 import pytest
 import torch
@@ -15,6 +16,10 @@ from mmedit.utils import register_all_modules
 class TestInstColorization:
 
     def test_inst_colorization(self):
+        if not torch.cuda.is_available():
+            # RoI pooling only support in GPU
+            return unittest.skip('test requires GPU and torch+cuda')
+
         register_all_modules()
         model_cfg = dict(
             type='InstColorization',

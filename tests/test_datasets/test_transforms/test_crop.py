@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
 import os.path as osp
+import unittest
 
 import cv2
 import numpy as np
@@ -356,9 +357,11 @@ def test_crop_like():
     assert sum_diff < 1e-6
 
 
-@pytest.mark.skipif(
-    not torch.cuda.is_available(), reason='require cuda support')
 def test_instance_crop():
+
+    if not torch.cuda.is_available():
+        # RoI pooling only support in GPU
+        return unittest.skip('test requires GPU and torch+cuda')
 
     croper = InstanceCrop(
         key='img',
