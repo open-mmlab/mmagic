@@ -15,6 +15,11 @@ class RDNNet(BaseModule):
     'RDN-pytorch/blob/master/models.py'
     Copyright (c) 2021, JaeYun Yeo, under MIT License.
 
+    Most of the implementation follows the implementation in:
+    'https://github.com/sanghyun-son/EDSR-PyTorch.git'
+    'EDSR-PyTorch/blob/master/src/model/rdn.py'
+    Copyright (c) 2017, sanghyun-son, under MIT license.
+
     Args:
         in_channels (int): Channel number of inputs.
         out_channels (int): Channel number of outputs.
@@ -51,16 +56,15 @@ class RDNNet(BaseModule):
             mid_channels, mid_channels, kernel_size=3, padding=3 // 2)
 
         # residual dense blocks
-        self.rdbs = nn.ModuleList(
-            [RDB(self.mid_channels, self.channel_growth, self.num_layers)])
-        for _ in range(self.num_blocks - 1):
+        self.rdbs = nn.ModuleList()
+        for _ in range(self.num_blocks):
             self.rdbs.append(
-                RDB(self.channel_growth, self.channel_growth, self.num_layers))
+                RDB(self.mid_channels, self.channel_growth, self.num_layers))
 
         # global feature fusion
         self.gff = nn.Sequential(
             nn.Conv2d(
-                self.channel_growth * self.num_blocks,
+                self.mid_channels * self.num_blocks,
                 self.mid_channels,
                 kernel_size=1),
             nn.Conv2d(
@@ -165,7 +169,7 @@ class RDB(nn.Module):
         # local feature fusion
         self.lff = nn.Conv2d(
             in_channels + channel_growth * num_layers,
-            channel_growth,
+            in_channels,
             kernel_size=1)
 
     def forward(self, x):

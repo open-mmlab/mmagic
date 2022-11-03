@@ -77,6 +77,24 @@ html_theme_options = {
             'name': 'GitHub',
             'url': 'https://github.com/open-mmlab/mmediting',
         },
+        {
+            'name':
+            'Version',
+            'children': [
+                {
+                    'name': 'MMEditing 0.x',
+                    'url': 'https://mmediting.readthedocs.io/en/latest/',
+                    'description': 'Main branch'
+                },
+                {
+                    'name': 'MMEditing 1.x',
+                    'url': 'https://mmediting.readthedocs.io/en/1.x/',
+                    'description': '1.x branch'
+                },
+            ],
+            'active':
+            True,
+        },
     ],
     'menu_lang':
     'en'
@@ -98,7 +116,7 @@ master_doc = 'index'
 
 
 def builder_inited_handler(app):
-    subprocess.run(['python', './.dev_scripts/update_datasest_zoo.py'])
+    subprocess.run(['bash', './.dev_scripts/update_dataset_zoo.sh'])
     subprocess.run(['python', './.dev_scripts/update_model_zoo.py'])
 
 

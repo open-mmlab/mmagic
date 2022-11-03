@@ -89,7 +89,7 @@ class GenDataPreprocessor(ImgDataPreprocessor):
         Returns:
             CollatedResult: Inputs and data sample at target device.
         """
-        if isinstance(data, str):
+        if isinstance(data, (str, int, float)):
             return data
         return super().cast_data(data)
 

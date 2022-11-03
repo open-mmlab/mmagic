@@ -221,3 +221,15 @@ class TestAugmentations:
         frame_index_generator = GenerateSegmentIndices(interval_list=[10])
         with pytest.raises(ValueError):
             frame_index_generator(copy.deepcopy(results))
+
+        # num_input_frames is None
+        results = dict(
+            img_path='fake_img_root',
+            gt_path='fake_gt_root',
+            key='000',
+            num_input_frames=None,
+            sequence_length=100)
+
+        frame_index_generator = GenerateSegmentIndices(interval_list=[1])
+        rlt = frame_index_generator(copy.deepcopy(results))
+        assert len(rlt['img_path']) == 100

@@ -3,8 +3,11 @@ _base_ = [
     '../_base_/datasets/paired_imgs_256x256_crop.py',
     '../_base_/gen_default_runtime.py'
 ]
-source_domain = domain_b = 'aerial'
-target_domain = domain_a = 'map'
+# deterministic training can improve the performance of Pix2Pix
+randomness = dict(deterministic=True)
+
+source_domain = domain_a = 'aerial'
+target_domain = domain_b = 'map'
 # model settings
 model = dict(
     default_domain=target_domain,
@@ -60,6 +63,9 @@ custom_hooks = [
             dict(type='TranslationVal', name='trans_val')
         ])
 ]
+
+# save multi best checkpoints
+default_hooks = dict(checkpoint=dict(save_best='FID-Full/fid', rule='less'))
 
 fake_nums = 1098
 metrics = [

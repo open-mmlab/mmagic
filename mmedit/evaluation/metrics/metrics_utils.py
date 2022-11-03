@@ -6,6 +6,50 @@ import torch
 from mmedit.utils import reorder_image
 
 
+def _assert_ndim(input, name, ndim, shape_hint):
+    if input.ndim != ndim:
+        raise ValueError(
+            f'{name} should be of shape {shape_hint}, but got {input.shape}.')
+
+
+def _assert_masked(pred_alpha, trimap):
+    if (pred_alpha[trimap == 0] != 0).any() or (pred_alpha[trimap == 255] !=
+                                                255).any():
+        raise ValueError(
+            'pred_alpha should be masked by trimap before evaluation')
+
+
+def _fetch_data_and_check(data_samples):
+    """Fetch and check data from one item of data_batch and predictions.
+
+    Args:
+        data_batch (dict): One item of data_batch.
+        predictions (dict): One item of predictions.
+
+    Returns:
+        pred_alpha (Tensor): Pred_alpha data of predictions.
+        ori_alpha (Tensor): Ori_alpha data of data_batch.
+        ori_trimap (Tensor): Ori_trimap data of data_batch.
+    """
+    ori_trimap = data_samples['ori_trimap'][:, :, 0]
+    ori_alpha = data_samples['ori_alpha'][:, :, 0]
+    pred_alpha = data_samples['output']['pred_alpha']['data']  # 2D tensor
+    pred_alpha = pred_alpha.cpu().numpy()
+
+    _assert_ndim(ori_trimap, 'trimap', 2, 'HxW')
+    _assert_ndim(ori_alpha, 'gt_alpha', 2, 'HxW')
+    _assert_ndim(pred_alpha, 'pred_alpha', 2, 'HxW')
+    _assert_masked(pred_alpha, ori_trimap)
+
+    # dtype uint8 -> float64
+    pred_alpha = pred_alpha / 255.0
+    ori_alpha = ori_alpha / 255.0
+    # test shows that using float32 vs float64 differs final results at 1e-4
+    # speed are comparable, so we choose float64 for accuracy
+
+    return pred_alpha, ori_alpha, ori_trimap
+
+
 def average(results, key):
     """Average of key in results(list[dict]).
 

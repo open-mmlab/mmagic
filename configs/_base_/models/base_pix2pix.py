@@ -20,6 +20,7 @@ model = dict(
         num_conv=3,
         norm_cfg=dict(type='BN'),
         init_cfg=dict(type='normal', gain=0.02)),
+    loss_config=dict(pixel_loss_weight=100.0),
     default_domain=target_domain,
     reachable_domains=[target_domain],
     related_domains=[target_domain, source_domain])

@@ -61,7 +61,7 @@ optim_wrapper = dict(
         optimizer=dict(type='Adam', lr=1e-5, betas=(0.9, 0.999))),
     discriminator=dict(
         type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999))))
+        optimizer=dict(type='Adam', lr=1e-5, betas=(0.9, 0.999))))
 
 # learning policy
 param_scheduler = dict(

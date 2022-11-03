@@ -92,7 +92,7 @@ train_dataloader = dict(
     num_workers=16,
     batch_size=4,  # 8 gpu
     persistent_workers=False,
-    sampler=dict(type='InfiniteSampler', shuffle=True),
+    sampler=dict(type='DefaultSampler', shuffle=True),
     dataset=dict(
         type=train_dataset_type,
         ann_file='txt/sep_trainlist.txt',

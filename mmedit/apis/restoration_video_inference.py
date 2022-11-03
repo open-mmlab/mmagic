@@ -84,7 +84,7 @@ def restoration_video_inference(model,
         tmp_pipeline = []
         for pipeline in test_pipeline:
             if pipeline['type'] not in [
-                    'GenerateSegmentIndices', 'LoadImageFromFileList'
+                    'GenerateSegmentIndices', 'LoadImageFromFile'
             ]:
                 tmp_pipeline.append(pipeline)
         test_pipeline = tmp_pipeline

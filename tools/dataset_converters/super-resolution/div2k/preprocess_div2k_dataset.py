@@ -9,6 +9,7 @@ from multiprocessing import Pool
 import cv2
 import lmdb
 import mmcv
+import mmengine
 import numpy as np
 
 
@@ -88,10 +89,10 @@ def extract_subimages(opt):
         print(f'Folder {save_folder} already exists. Exit.')
         sys.exit(1)
 
-    img_list = list(mmcv.scandir(input_folder))
+    img_list = list(mmengine.scandir(input_folder))
     img_list = [osp.join(input_folder, v) for v in img_list]
 
-    prog_bar = mmcv.ProgressBar(len(img_list))
+    prog_bar = mmengine.ProgressBar(len(img_list))
     pool = Pool(opt['n_thread'])
     for path in img_list:
         pool.apply_async(
@@ -197,7 +198,7 @@ def prepare_keys_div2k(folder_path):
     """
     print('Reading image path list ...')
     img_path_list = sorted(
-        list(mmcv.scandir(folder_path, suffix='png', recursive=False)))
+        list(mmengine.scandir(folder_path, suffix='png', recursive=False)))
     keys = [img_path.split('.png')[0] for img_path in sorted(img_path_list)]
 
     return img_path_list, keys
@@ -381,7 +382,8 @@ def parse_args():
     parser.add_argument(
         '--n-thread',
         nargs='?',
-        default=20,
+        default=8,
+        type=int,
         help='thread number when using multiprocessing')
     parser.add_argument(
         '--make-lmdb',

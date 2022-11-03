@@ -1,7 +1,5 @@
-# custom_imports = dict(
-#     imports=['mmcls.datasets.transforms'], allow_failed_imports=False)
 cifar_pipeline = [
-    dict(type='Flip', flip_ratio=0.5, direction='horizontal'),
+    dict(type='Flip', keys=['img'], flip_ratio=0.5, direction='horizontal'),
     dict(type='PackEditInputs')
 ]
 cifar_dataset = dict(

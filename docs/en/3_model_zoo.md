@@ -1,19 +1,20 @@
 # Overview
 
-- Number of checkpoints: 168
-- Number of configs: 168
-- Number of papers: 41
-  - ALGORITHM: 42
+- Number of checkpoints: 169
+- Number of configs: 169
+- Number of papers: 42
+  - ALGORITHM: 43
 - Tasks:
-  - video super-resolution
   - image2image translation
   - video interpolation
+  - unconditional gans
+  - image super-resolution
+  - internal learning
   - conditional gans
   - inpainting
-  - image super-resolution
+  - video super-resolution
+  - colorization
   - matting
-  - unconditional gans
-  - internal learning
 
 For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
@@ -184,6 +185,14 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 - Number of configs: 2
 - Number of papers: 1
   - \[ALGORITHM\] Indices Matter: Learning to Index for Deep Image Matting ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/indexnet/README.md#citation))
+
+## Instance-aware Image Colorization (CVPR'2020)
+
+- Tasks: colorization
+- Number of checkpoints: 1
+- Number of configs: 1
+- Number of papers: 1
+  - \[ALGORITHM\] Instance-Aware Image Colorization ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/inst_colorization/README.md#quick-start))
 
 ## LIIF (CVPR'2021)
 

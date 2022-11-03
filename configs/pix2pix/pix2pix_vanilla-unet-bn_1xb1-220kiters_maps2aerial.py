@@ -3,6 +3,9 @@ _base_ = [
     '../_base_/datasets/paired_imgs_256x256_crop.py',
     '../_base_/gen_default_runtime.py'
 ]
+# deterministic training can improve the performance of Pix2Pix
+randomness = dict(deterministic=True)
+
 source_domain = domain_b = 'map'
 target_domain = domain_a = 'aerial'
 # model settings
@@ -41,6 +44,15 @@ val_dataloader = dict(
     dataset=dict(data_root=dataroot, test_dir='val', test_mode=True))
 test_dataloader = val_dataloader
 
+# optimizer
+optim_wrapper = dict(
+    generators=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=2e-4, betas=(0.5, 0.999))),
+    discriminators=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=2e-4, betas=(0.5, 0.999))))
+
 custom_hooks = [
     dict(
         type='GenVisualizationHook',
@@ -52,14 +64,8 @@ custom_hooks = [
         ])
 ]
 
-# optimizer
-optim_wrapper = dict(
-    generators=dict(
-        type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=2e-4, betas=(0.5, 0.999))),
-    discriminators=dict(
-        type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=2e-4, betas=(0.5, 0.999))))
+# save multi best checkpoints
+default_hooks = dict(checkpoint=dict(save_best='FID-Full/fid', rule='less'))
 
 fake_nums = 1098
 metrics = [
@@ -74,7 +80,7 @@ metrics = [
         type='TransFID',
         prefix='FID-Full',
         fake_nums=fake_nums,
-        inception_style='StyleGAN',
+        inception_style='PyTorch',
         real_key=f'img_{target_domain}',
         fake_key=f'fake_{target_domain}',
         sample_model='orig')
