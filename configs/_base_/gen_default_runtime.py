@@ -19,8 +19,9 @@ default_hooks = dict(
         type='CheckpointHook',
         interval=10000,
         by_epoch=False,
-        less_keys=['FID-Full-50k/fid'],
-        greater_keys=['IS-50k/is'],
+        max_keep_ckpts=20,
+        less_keys=['FID-Full-50k/fid', 'swd/avg'],
+        greater_keys=['IS-50k/is', 'ms-ssim/avg'],
         save_optimizer=True))
 
 # config for environment

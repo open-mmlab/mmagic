@@ -211,7 +211,15 @@ python .dev_scripts/train_benchmark.py mm_lol \
 
 Specifically, `--rerun-fail` and `--rerun-cancel` can be used together to rerun both failed and cancaled jobs.
 
-## 8. Automatically check links
+## 8. `deterministic` training
+
+Set `torch.backends.cudnn.deterministic = True` and `torch.backends.cudnn.benchmark = False` can remove randomness operation in Pytorch training. You can add `--deterministic` flag when start your benchmark training to remove the influence of randomness operation.
+
+```shell
+python .dev_scripts/train_benchmark.py mm_lol --job-name xzn --models pix2pix --cpus-per-job 16 --run --deterministic
+```
+
+## 9. Automatically check links
 
 Use the following script to check whether the links in documentations are valid:
 

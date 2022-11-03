@@ -39,13 +39,19 @@ train_dataloader = dict(
     batch_size=batch_size,  # set by user
     dataset=dict(data_root=data_root))
 
+pipeline = [
+    dict(type='LoadImageFromFile', key='img'),
+    dict(type='Resize', scale=(256, 256)),
+    dict(type='PackEditInputs', keys=['img'])
+]
+
 val_dataloader = dict(
     batch_size=batch_size,  # set by user
-    dataset=dict(data_root=data_root))
+    dataset=dict(data_root=data_root, pipeline=pipeline))
 
 test_dataloader = dict(
     batch_size=batch_size,  # set by user
-    dataset=dict(data_root=data_root))
+    dataset=dict(data_root=data_root, pipeline=pipeline))
 
 # define optimizer
 d_reg_interval = 16
@@ -72,14 +78,16 @@ custom_hooks = [
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))
 ]
-
+default_hooks = dict(
+    checkpoint=dict(save_best=['FID-Full-50k/fid'], rule=['less']))
 # METRICS
 metrics = [
     dict(
         type='FrechetInceptionDistance',
-        prefix='FID-Full-50k',
+        prefix='FID-50k',
         fake_nums=50000,
-        inception_style='StyleGAN',
+        real_nums=50000,
+        inception_style='pytorch',
         sample_model='ema'),
     dict(type='PrecisionAndRecall', fake_nums=10000, prefix='PR-10K')
 ]
