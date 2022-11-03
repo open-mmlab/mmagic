@@ -118,6 +118,10 @@ def parse_args():
         default='work_dirs/benchmark_train',
         help='the dir to save metric')
     parser.add_argument(
+        '--deterministic',
+        action='store_true',
+        help='Whether set `deterministic` during training.')
+    parser.add_argument(
         '--run', action='store_true', help='run script directly')
     parser.add_argument(
         '--local',
@@ -239,9 +243,13 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
         job_script += (f'#SBATCH --gres=gpu:{n_gpus}\n'
                        f'#SBATCH --ntasks-per-node={min(n_gpus, 8)}\n'
                        f'#SBATCH --ntasks={n_gpus}\n'
-                       f'#SBATCH --cpus-per-task={args.cpus_per_job}\n\n')
+                       f'#SBATCH --cpus-per-task={args.cpus_per_job}\n'
+                       f'#SBATCH --kill-on-bad-exit=1\n\n')
     else:
         job_script += '\n\n' + 'export CUDA_VISIBLE_DEVICES=-1\n'
+
+    if args.deterministic:
+        job_script += 'export CUBLAS_WORKSPACE_CONFIG=:4096:8\n'
 
     job_script += (f'export MASTER_PORT={port}\n'
                    f'{runner} -u {script_name} {config} '
@@ -253,6 +261,9 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
 
     if args.amp:
         job_script += ' --amp  '
+
+    if args.deterministic:
+        job_script += ' --cfg-options randomness.deterministic=True'
 
     job_script += '\n'
 
