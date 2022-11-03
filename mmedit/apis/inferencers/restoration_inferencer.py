@@ -2,13 +2,15 @@
 import os
 import torch
 import numpy as np
+import mmcv
 from typing import Dict, List
 from torchvision import utils
 from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
+from torch.nn.parallel import scatter
 
-from mmedit.models.base_models import BaseTranslationModel
+from mmedit.utils import tensor2img
 from mmedit.structures import EditDataSample
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
@@ -21,66 +23,67 @@ class RestorationInferencer(BaseMMEditInferencer):
         visualize=['img_out_dir'],
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
-    def preprocess(self, img: InputsType) -> Dict:
+    def preprocess(self, img: InputsType, ref: InputsType = None) -> Dict:
         
-        assert isinstance(self.model, BaseTranslationModel)
-
-        # get source domain and target domain
-        self.target_domain = self.model._default_domain
-        source_domain = self.model.get_other_domains(self.target_domain)[0]
-
         cfg = self.model.cfg
+        device = next(self.model.parameters()).device  # model device
+
+        # select the data pipeline
+        if cfg.get('demo_pipeline', None):
+            test_pipeline = cfg.demo_pipeline
+        elif cfg.get('test_pipeline', None):
+            test_pipeline = cfg.test_pipeline
+        else:
+            test_pipeline = cfg.val_pipeline
+
+        # remove gt from test_pipeline
+        keys_to_remove = ['gt', 'gt_path']
+        for key in keys_to_remove:
+            for pipeline in list(test_pipeline):
+                if 'key' in pipeline and key == pipeline['key']:
+                    test_pipeline.remove(pipeline)
+                if 'keys' in pipeline and key in pipeline['keys']:
+                    pipeline['keys'].remove(key)
+                    if len(pipeline['keys']) == 0:
+                        test_pipeline.remove(pipeline)
+                if 'meta_keys' in pipeline and key in pipeline['meta_keys']:
+                    pipeline['meta_keys'].remove(key)
         # build the data pipeline
-        test_pipeline = Compose(cfg.test_pipeline)
-
+        test_pipeline = Compose(test_pipeline)
         # prepare data
+        if ref:  # Ref-SR
+            data = dict(img_path=img, ref_path=ref)
+        else:  # SISR
+            data = dict(img_path=img)
+        _data = test_pipeline(data)
         data = dict()
-        # dirty code to deal with test data pipeline
-        data['pair_path'] = img
-        data[f'img_{source_domain}_path'] = img
-        data[f'img_{self.target_domain}_path'] = img
-
-        data = collate([test_pipeline(data)])
-        data = self.model.data_preprocessor(data, False)
-        inputs_dict = data['inputs']
-
-        source_image = inputs_dict[f'img_{source_domain}']
-        import pdb;pdb.set_trace();
-        return source_image
+        data['inputs'] = _data['inputs'] / 255.0
+        data = collate([data])
+        if ref:
+            data['data_samples'] = [_data['data_samples']]
+        if 'cuda' in str(device):
+            data = scatter(data, [device])[0]
+            if ref:
+                data['data_samples'][0].img_lq.data = data['data_samples'][
+                    0].img_lq.data.to(device)
+                data['data_samples'][0].ref_lq.data = data['data_samples'][
+                    0].ref_lq.data.to(device)
+                data['data_samples'][0].ref_img.data = data['data_samples'][
+                    0].ref_img.data.to(device)
+        return data
 
     def forward(self, inputs: InputsType) -> PredType:
         with torch.no_grad():
-            results = self.model(
-                inputs,
-                test_mode=True,
-                target_domain=self.target_domain)
-        output = results['target']
-        return output
+            result = self.model(mode='tensor', **inputs)
+        return result
     
     def visualize(self,
                 preds: PredType,
                 data: Dict = None,
                 img_out_dir: str = '') -> List[np.ndarray]:
         
-        results = (preds[:, [2, 1, 0]] + 1.) / 2.
+        output = tensor2img(preds[0])
+        mmcv.imwrite(output, img_out_dir)
 
-        # save images
-        mkdir_or_exist(os.path.dirname(img_out_dir))
-        utils.save_image(results, img_out_dir)
+        return output
 
-        return results
-
-    def _pred2dict(self, data_sample: EditDataSample) -> Dict:
-        """Extract elements necessary to represent a prediction into a
-        dictionary. It's better to contain only basic data elements such as
-        strings and numbers in order to guarantee it's json-serializable.
-
-        Args:
-            data_sample (EditDataSample): The data sample to be converted.
-
-        Returns:
-            dict: The output dictionary.
-        """
-        result = {}
-        result['pred_alpha'] = data_sample.output.pred_alpha.data.cpu()
-        return result

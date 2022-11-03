@@ -197,6 +197,17 @@ class MMEdit:
                         'real_esrgan/realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py',
                         'ckpt':
                         'ckpt/restoration/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth'
+                    },
+                }
+            },
+            'esrgan': {
+                'type': 'restoration',
+                'version': {
+                    'a': {
+                        'config':
+                        'esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py',
+                        'ckpt':
+                        'ckpt/restoration/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth'
                     }
                 }
             },

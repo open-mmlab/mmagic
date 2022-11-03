@@ -246,11 +246,17 @@ class BaseInferencer:
             return results
         return results, imgs
 
-    def _pred2dict(self, data_sample: InstanceData) -> Dict:
+    def _pred2dict(self, data_sample: torch.Tensor) -> Dict:
         """Extract elements necessary to represent a prediction into a
-        dictionary.
+        dictionary. It's better to contain only basic data elements such as
+        strings and numbers in order to guarantee it's json-serializable.
 
-        It's better to contain only basic data elements such as strings and
-        numbers in order to guarantee it's json-serializable.
+        Args:
+            data_sample (torch.Tensor): The data sample to be converted.
+
+        Returns:
+            dict: The output dictionary.
         """
-        raise NotImplementedError
+        result = {}
+        result['infer_res'] = data_sample
+        return result

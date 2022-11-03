@@ -9,7 +9,7 @@ def parse_args():
     parser.add_argument(
         '--img', 
         type=str, 
-        default='resources/input/translation/gt_mask_0.png', 
+        default='resources/input/restoration/0901x2.png', 
         help='Input image file.')
     parser.add_argument(
         '--label', 
@@ -34,7 +34,7 @@ def parse_args():
     parser.add_argument(
         '--model-name',
         type=str,
-        default='pix2pix',
+        default='esrgan',
         help='Pretrained editing algorithm')
     parser.add_argument(
         '--model-version',
