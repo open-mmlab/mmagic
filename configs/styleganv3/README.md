@@ -43,8 +43,6 @@ For user convenience, we also offer the converted version of official weights.
 |   stylegan3-t   |  ffhq 1024x1024   | 490000 | 3.37<sup>\*</sup> | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_gamma32.8_8xb4-fp16-noaug_ffhq-1024x1024.py) | [log](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_20220322_090417.log.json) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_best_fid_iter_490000_20220401_120733-4ff83434.pth) |
 | stylegan3-t-ada | metface 1024x1024 | 130000 |       15.09       | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_ada-gamma6.6_8xb4-fp16_metfaces-1024x1024.py) | [log](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_20220328_142211.log.json) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_best_fid_iter_130000_20220401_115101-f2ef498e.pth) |
 
-Note<sup>\*</sup>: This setting still needs a few days to run through, we put out currently the best checkpoint, and we will update the results the first time on the end of the experiment.
-
 ### Experimental Settings
 
 |      Model      |    Dataset     |  Iter  | FID50k |                        Config                         |                        Log                         |                         Download                         |
