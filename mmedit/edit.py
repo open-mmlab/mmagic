@@ -2,7 +2,6 @@
 import os
 import warnings
 import torch
-from pathlib import Path
 from typing import Dict, List, Optional, Union
 
 from mmedit.apis.inferencers import MMEditInferencer
@@ -174,9 +173,62 @@ class MMEdit:
                         'ckpt/inpainting/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth'
                     }
                 }
-                
+            },
+
+            # translation models
+            'pix2pix': {
+                'type': 'translation',
+                'version': {
+                    'a': {
+                        'config':
+                        'pix2pix/pix2pix_vanilla-unet-bn_1xb1-80kiters_facades.py',
+                        'ckpt':
+                        'ckpt/translation/pix2pix_vanilla_unet_bn_1x1_80k_facades_20210902_170442-c0958d50.pth'
+                    }
+                }
+            },
+
+            # restoration models
+            'real_esrgan': {
+                'type': 'restoration',
+                'version': {
+                    'a': {
+                        'config':
+                        'real_esrgan/realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py',
+                        'ckpt':
+                        'ckpt/restoration/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth'
+                    }
+                }
+            },
+
+            # video_restoration models
+            'basicvsr': {
+                'type': 'video_restoration',
+                'version': {
+                    'a': {
+                        'config':
+                        'basicvsr/basicvsr_2xb4_reds4.py',
+                        'ckpt':
+                        'ckpt/video_restoration/basicvsr_reds4_20120409-0e599677.pth'
+                    }
+                }
+            },
+
+            # video_interpolation models
+            'flavr': {
+                'type': 'video_interpolation',
+                'version': {
+                    'a': {
+                        'config':
+                        'flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py',
+                        'ckpt':
+                        'ckpt/video_interpolation/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth'
+                    }
+                }
             }
+
         }
+
         if model_name not in model_dict:
             raise ValueError(f'Model {model_name} is not supported.')
         else:

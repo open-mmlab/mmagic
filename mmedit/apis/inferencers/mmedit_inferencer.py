@@ -7,6 +7,10 @@ from .conditional_inferencer import ConditionalInferencer
 from .unconditional_inferencer import UnconditionalInferencer
 from .matting_inferencer import MattingInferencer
 from .inpainting_inferencer import InpaintingInferencer
+from .translation_inferencer import TranslationInferencer
+from .restoration_inferencer import RestorationInferencer
+from .video_restoration_inferencer import VideoRestorationInferencer
+from .video_interpolation_inferencer import VideoInterpolationInferencer
 
 class MMEditInferencer(BaseMMEditInferencer):
 
@@ -29,6 +33,14 @@ class MMEditInferencer(BaseMMEditInferencer):
             self.inferencer = MattingInferencer(config, ckpt, device)
         elif self.type == 'inpainting':
             self.inferencer = InpaintingInferencer(config, ckpt, device)
+        elif self.type == 'translation':
+            self.inferencer = TranslationInferencer(config, ckpt, device)
+        elif self.type == 'restoration':
+            self.inferencer = RestorationInferencer(config, ckpt, device)
+        elif self.type == 'video_restoration':
+            self.inferencer = VideoRestorationInferencer(config, ckpt, device)
+        elif self.type == 'video_interpolation':
+            self.inferencer = VideoInterpolationInferencer(config, ckpt, device)
         else:
             raise ValueError(f'Unknown inferencer type: {self.type}')
     

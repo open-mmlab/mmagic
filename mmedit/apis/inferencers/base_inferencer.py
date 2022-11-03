@@ -76,7 +76,7 @@ class BaseInferencer:
         model = MODELS.build(cfg.model)
         if ckpt is not None:
             ckpt = load_checkpoint(model, ckpt, map_location='cpu')
-        model.cfg = cfg.model
+        model.cfg = cfg
         model.to(device)
         model.eval()
         self.model = model

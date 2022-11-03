@@ -8,7 +8,6 @@ from mmengine.dataset.utils import default_collate as collate
 from torch.nn.parallel import scatter
 
 from mmedit.utils import tensor2img
-from mmedit.structures import EditDataSample
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
 
