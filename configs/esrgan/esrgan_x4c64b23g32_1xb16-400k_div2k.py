@@ -5,12 +5,13 @@ work_dir = f'./work_dirs/{experiment_name}'
 
 scale = 4
 
-# load_from = 'https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth'  # noqa
-
 # DistributedDataParallel
 model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
 
 # model settings
+pretrain_generator_url = (
+    'https://download.openmmlab.com/mmediting/restorers/esrgan'
+    '/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth')
 model = dict(
     type='ESRGAN',
     generator=dict(
@@ -20,7 +21,8 @@ model = dict(
         mid_channels=64,
         num_blocks=23,
         growth_channels=32,
-        upscale_factor=scale),
+        upscale_factor=scale,
+        init_cfg=dict(type='Pretrained', checkpoint=pretrain_generator_url)),
     discriminator=dict(type='ModifiedVGG', in_channels=3, mid_channels=64),
     pixel_loss=dict(type='L1Loss', loss_weight=1e-2, reduction='mean'),
     perceptual_loss=dict(
