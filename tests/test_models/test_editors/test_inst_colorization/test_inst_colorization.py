@@ -1,4 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
+import pytest
 import torch
 
 from mmedit.registry import BACKBONES
@@ -6,6 +9,9 @@ from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import register_all_modules
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 class TestInstColorization:
 
     def test_inst_colorization(self):

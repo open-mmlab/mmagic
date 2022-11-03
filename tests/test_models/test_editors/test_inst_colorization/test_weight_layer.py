@@ -1,9 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
+import pytest
 import torch
 
 from mmedit.models.editors.inst_colorization.weight_layer import WeightLayer
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_weight_layer():
 
     weight_layer = WeightLayer(64)
