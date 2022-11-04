@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import pytest
 import torch
 
 from mmedit.models.editors.stylegan3.stylegan3_modules import MappingNetwork
@@ -20,3 +21,21 @@ def test_MappingNetwork():
     mapping_network = MappingNetwork(0, 4, 5, cond_channels=8)
     out = mapping_network(None, c)
     assert out.shape == (1, 5, 4)
+
+    # test num_ws is None --> no broadcast
+    mapping_network = MappingNetwork(16, 4, num_ws=None, w_avg_beta=None)
+    assert not hasattr(mapping_network, 'w_avg')
+    out = mapping_network(z)
+    assert out.shape == (1, 4)
+
+    # test truncation is passed
+    with pytest.raises(AssertionError):
+        mapping_network(z, truncation=0.9)
+
+    mapping_network = MappingNetwork(16, 4, 5)
+    out = mapping_network(z, truncation=0.9)
+    assert out.shape == (1, 5, 4)
+
+    out_trunc_work = mapping_network(z, truncation=0.9, num_truncation_layer=3)
+    assert out_trunc_work.shape == (1, 5, 4)
+    assert (out_trunc_work[3:] == out[3:]).all()

@@ -225,7 +225,9 @@ class MappingNetwork(nn.Module):
         if self.num_ws is not None:
             x = x.unsqueeze(1).repeat([1, self.num_ws, 1])
         if truncation != 1:
-            if self.num_ws is not None:
+            assert hasattr(self, 'w_avg'), (
+                '\'w_avg\' must not be None when truncation trick is used.')
+            if num_truncation_layer is None:
                 x = self.w_avg.lerp(x, truncation)
             else:
                 x[:, :num_truncation_layer] = self.w_avg.lerp(
