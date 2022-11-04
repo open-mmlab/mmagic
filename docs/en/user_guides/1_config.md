@@ -331,11 +331,11 @@ data_root = './data/ffhq/'  # Root path of data
 train_pipeline = [  # Training data process pipeline
     dict(type='LoadImageFromFile', key='img'),  # First pipeline to load images from file path
     dict(type='Flip', keys=['img'], direction='horizontal'),  # Argumentation pipeline that flip the images
-    dict(type='PackGenInputs', keys=['img'], meta_keys=['img_path'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
+    dict(type='PackEditInputs', keys=['img'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
 ]
 val_pipeline = [
     dict(type='LoadImageFromFile', key='img'),  # First pipeline to load images from file path
-    dict(type='PackGenInputs', keys=['img'], meta_keys=['img_path'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
+    dict(type='PackEditInputs', keys=['img'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
 ]
 train_dataloader = dict(  # The config of train dataloader
     batch_size=4,  # Batch size of a single GPU
