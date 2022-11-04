@@ -35,13 +35,15 @@
 
 </div>
 
-English | [简体中文](/README_zh-CN.md)
+<div align="center">
+
+English | [简体中文](README_zh-CN.md)
+
+</div>
 
 ## Introduction
 
-MMEditing is an open-source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
-
-Currently, MMEditing supports the following tasks:
+MMEditing is an open-source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project. Currently, MMEditing supports:
 
 <div align="center">
   <img src="https://user-images.githubusercontent.com/12756472/158984079-c4754015-c1f6-48c5-ac46-62e79448c372.jpg"/>
@@ -75,6 +77,8 @@ With elaborate designs of the new framework and careful implementations,
 hope MMEditing could provide better experience.
 
 ## What's New
+
+MMEditing maintains both master and 1.x branches. See more details in  [Branch Maintenance Plan](README.md#branch-maintenance-plan).
 
 ### 💎 Stable version
 
@@ -206,6 +210,16 @@ We appreciate all contributions to improve MMEditing. Please refer to our [contr
 
 MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
 
+## Branch Maintenance Plan
+
+MMEditing currently has two branches, the master and 1.x branches, which go through the following three phases.
+
+| Phase                | Time                  | Branch                                                                        | description                                                                        |
+| -------------------- | --------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| RC Period            | 2022/9/1 - 2022.12.31 | Release candidate code (1.x version) will be released on 1.x branch. Default master branch is still 0.x version | Master and 1.x branches iterate normally                                           |
+| Compatibility Period | 2023/1/1 - 2023.12.31 | **Default master branch will be switched to 1.x branch**, and 0.x branch will correspond to 0.x version | We still maintain the old version 0.x, respond to user needs, but try not to introduce changes that break compatibility; master branch iterates normally |
+| Maintenance Period   | From 2024/1/1         | Default master branch corresponds to 1.x version and 0.x branch is 0.x version | 0.x branch is in maintenance phase, no more new feature support; master branch is iterating normally |
+
 ## Citation
 
 If MMEditing is helpful to your research, please cite it as below.
@@ -225,7 +239,9 @@ This project is released under the [Apache 2.0 license](LICENSE).
 
 ## Projects in OpenMMLab
 
+- [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab foundational library for training deep learning models.
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab foundational library for computer vision.
+- [MMEval](https://github.com/open-mmlab/mmeval): A unified evaluation library for multiple machine learning libraries.
 - [MIM](https://github.com/open-mmlab/mim): MIM installs OpenMMLab packages.
 - [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab image classification toolbox and benchmark.
 - [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab detection toolbox and benchmark.
