@@ -42,9 +42,10 @@ default_hooks = dict(
 metrics = [
     dict(
         type='FrechetInceptionDistance',
-        prefix='FID-Full-50k',
+        prefix='FID-50k',
         fake_nums=50000,
-        inception_style='StyleGAN',
+        real_nums=50000,
+        inception_style='PyTorch',
         sample_model='orig')
 ]
 val_evaluator = dict(metrics=metrics)
