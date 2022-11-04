@@ -243,8 +243,7 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
         job_script += (f'#SBATCH --gres=gpu:{n_gpus}\n'
                        f'#SBATCH --ntasks-per-node={min(n_gpus, 8)}\n'
                        f'#SBATCH --ntasks={n_gpus}\n'
-                       f'#SBATCH --cpus-per-task={args.cpus_per_job}\n'
-                       f'#SBATCH --kill-on-bad-exit=1\n\n')
+                       f'#SBATCH --cpus-per-task={args.cpus_per_job}\n\n')
     else:
         job_script += '\n\n' + 'export CUDA_VISIBLE_DEVICES=-1\n'
 
