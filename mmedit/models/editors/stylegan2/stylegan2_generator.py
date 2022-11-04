@@ -118,7 +118,6 @@ class StyleGAN2Generator(nn.Module):
         self.default_style_mode = default_style_mode
         self.eval_style_mode = eval_style_mode
         self.mix_prob = mix_prob
-        # self.norm_input = norm_input
         self.num_fp16_scales = num_fp16_scales
         self.fp16_enabled = fp16_enabled
         self.bgr2rgb = bgr2rgb
