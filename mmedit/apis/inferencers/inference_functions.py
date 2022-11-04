@@ -1,14 +1,29 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import math
+import os
+import os.path as osp
+import glob
 import torch
 from mmengine import is_list_of
-
 from mmengine import Config
 from mmengine.config import ConfigDict
 from mmengine.runner import load_checkpoint
 from mmengine.runner import set_random_seed as set_random_seed_engine
+from mmengine.dataset import Compose
+from mmengine.dataset.utils import default_collate as collate
+from torch.nn.parallel import scatter
+from mmengine.fileio import FileClient
+from mmengine.utils import ProgressBar
 
+from mmedit.models.base_models import BaseTranslationModel
 from mmedit.registry import MODELS
 from mmedit.utils import register_all_modules
+
+try:
+    from facexlib.utils.face_restoration_helper import FaceRestoreHelper
+    has_facexlib = True
+except ImportError:
+    has_facexlib = False
 
 def set_random_seed(seed, deterministic=False, use_rank_shift=True):
     """Set random seed.
@@ -342,3 +357,457 @@ def sample_img2img_model(model, image_path, target_domain=None, **kwargs):
             **kwargs)
     output = results['target']
     return output
+
+def restoration_inference(model, img, ref=None):
+    """Inference image with the model.
+
+    Args:
+        model (nn.Module): The loaded model.
+        img (str): File path of input image.
+        ref (str | None): File path of reference image. Default: None.
+
+    Returns:
+        Tensor: The predicted restoration result.
+    """
+    cfg = model.cfg
+    device = next(model.parameters()).device  # model device
+
+    # select the data pipeline
+    if cfg.get('demo_pipeline', None):
+        test_pipeline = cfg.demo_pipeline
+    elif cfg.get('test_pipeline', None):
+        test_pipeline = cfg.test_pipeline
+    else:
+        test_pipeline = cfg.val_pipeline
+
+    # remove gt from test_pipeline
+    keys_to_remove = ['gt', 'gt_path']
+    for key in keys_to_remove:
+        for pipeline in list(test_pipeline):
+            if 'key' in pipeline and key == pipeline['key']:
+                test_pipeline.remove(pipeline)
+            if 'keys' in pipeline and key in pipeline['keys']:
+                pipeline['keys'].remove(key)
+                if len(pipeline['keys']) == 0:
+                    test_pipeline.remove(pipeline)
+            if 'meta_keys' in pipeline and key in pipeline['meta_keys']:
+                pipeline['meta_keys'].remove(key)
+    # build the data pipeline
+    test_pipeline = Compose(test_pipeline)
+    # prepare data
+    if ref:  # Ref-SR
+        data = dict(img_path=img, ref_path=ref)
+    else:  # SISR
+        data = dict(img_path=img)
+    _data = test_pipeline(data)
+    data = dict()
+    data['inputs'] = _data['inputs'] / 255.0
+    data = collate([data])
+    if ref:
+        data['data_samples'] = [_data['data_samples']]
+    if 'cuda' in str(device):
+        data = scatter(data, [device])[0]
+        if ref:
+            data['data_samples'][0].img_lq.data = data['data_samples'][
+                0].img_lq.data.to(device)
+            data['data_samples'][0].ref_lq.data = data['data_samples'][
+                0].ref_lq.data.to(device)
+            data['data_samples'][0].ref_img.data = data['data_samples'][
+                0].ref_img.data.to(device)
+    # forward the model
+    with torch.no_grad():
+        result = model(mode='tensor', **data)
+    result = result[0]
+    return result
+
+def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
+    """Inference image with the model.
+
+    Args:
+        model (nn.Module): The loaded model.
+        img (str): File path of input image.
+        upscale_factor (int, optional): The number of times the input image
+            is upsampled. Default: 1.
+        face_size (int, optional): The size of the cropped and aligned faces.
+            Default: 1024.
+
+    Returns:
+        Tensor: The predicted restoration result.
+    """
+    device = next(model.parameters()).device  # model device
+
+    # build the data pipeline
+    if model.cfg.get('demo_pipeline', None):
+        test_pipeline = model.cfg.demo_pipeline
+    elif model.cfg.get('test_pipeline', None):
+        test_pipeline = model.cfg.test_pipeline
+    else:
+        test_pipeline = model.cfg.val_pipeline
+
+    # remove gt from test_pipeline
+    keys_to_remove = ['gt', 'gt_path']
+    for key in keys_to_remove:
+        for pipeline in list(test_pipeline):
+            if 'key' in pipeline and key == pipeline['key']:
+                test_pipeline.remove(pipeline)
+            if 'keys' in pipeline and key in pipeline['keys']:
+                pipeline['keys'].remove(key)
+                if len(pipeline['keys']) == 0:
+                    test_pipeline.remove(pipeline)
+            if 'meta_keys' in pipeline and key in pipeline['meta_keys']:
+                pipeline['meta_keys'].remove(key)
+    # build the data pipeline
+    test_pipeline = Compose(test_pipeline)
+
+    # face helper for detecting and aligning faces
+    assert has_facexlib, 'Please install FaceXLib to use the demo.'
+    face_helper = FaceRestoreHelper(
+        upscale_factor,
+        face_size=face_size,
+        crop_ratio=(1, 1),
+        det_model='retinaface_resnet50',
+        template_3points=True,
+        save_ext='png',
+        device=device)
+
+    face_helper.read_image(img)
+    # get face landmarks for each face
+    face_helper.get_face_landmarks_5(
+        only_center_face=False, eye_dist_threshold=None)
+    # align and warp each face
+    face_helper.align_warp_face()
+
+    for i, img in enumerate(face_helper.cropped_faces):
+        # prepare data
+        mmcv.imwrite(img, 'demo/tmp.png')
+        data = dict(lq=img.astype(np.float32), img_path='demo/tmp.png')
+        _data = test_pipeline(data)
+        data = dict()
+        data['inputs'] = _data['inputs'] / 255.0
+        data = collate([data])
+        if 'cuda' in str(device):
+            data = scatter(data, [device])[0]
+
+        with torch.no_grad():
+            output = model(mode='tensor', **data)
+
+        output = output.squeeze(0).permute(1, 2, 0)[:, :, [2, 1, 0]]
+        output = output.cpu().numpy() * 255  # (0, 255)
+        face_helper.add_restored_face(output)
+
+    face_helper.get_inverse_affine(None)
+    restored_img = face_helper.paste_faces_to_input_image(upsample_img=None)
+
+    return restored_img
+
+
+VIDEO_EXTENSIONS = ('.mp4', '.mov')
+
+
+def pad_sequence(data, window_size):
+    """Pad frame sequence data.
+
+    Args:
+        data (Tensor): The frame sequence data.
+        window_size (int): The window size used in sliding-window framework.
+
+    Returns:
+        data (Tensor): The padded result.
+    """
+
+    padding = window_size // 2
+
+    data = torch.cat([
+        data[:, 1 + padding:1 + 2 * padding].flip(1), data,
+        data[:, -1 - 2 * padding:-1 - padding].flip(1)
+    ],
+                     dim=1)
+
+    return data
+
+
+def restoration_video_inference(model,
+                                img_dir,
+                                window_size,
+                                start_idx,
+                                filename_tmpl,
+                                max_seq_len=None):
+    """Inference image with the model.
+
+    Args:
+        model (nn.Module): The loaded model.
+        img_dir (str): Directory of the input video.
+        window_size (int): The window size used in sliding-window framework.
+            This value should be set according to the settings of the network.
+            A value smaller than 0 means using recurrent framework.
+        start_idx (int): The index corresponds to the first frame in the
+            sequence.
+        filename_tmpl (str): Template for file name.
+        max_seq_len (int | None): The maximum sequence length that the model
+            processes. If the sequence length is larger than this number,
+            the sequence is split into multiple segments. If it is None,
+            the entire sequence is processed at once.
+
+    Returns:
+        Tensor: The predicted restoration result.
+    """
+
+    device = next(model.parameters()).device  # model device
+
+    # build the data pipeline
+    if model.cfg.get('demo_pipeline', None):
+        test_pipeline = model.cfg.demo_pipeline
+    elif model.cfg.get('test_pipeline', None):
+        test_pipeline = model.cfg.test_pipeline
+    else:
+        test_pipeline = model.cfg.val_pipeline
+
+    # check if the input is a video
+    file_extension = osp.splitext(img_dir)[1]
+    if file_extension in VIDEO_EXTENSIONS:
+        video_reader = mmcv.VideoReader(img_dir)
+        # load the images
+        data = dict(img=[], img_path=None, key=img_dir)
+        for frame in video_reader:
+            data['img'].append(np.flip(frame, axis=2))
+
+        # remove the data loading pipeline
+        tmp_pipeline = []
+        for pipeline in test_pipeline:
+            if pipeline['type'] not in [
+                    'GenerateSegmentIndices', 'LoadImageFromFile'
+            ]:
+                tmp_pipeline.append(pipeline)
+        test_pipeline = tmp_pipeline
+    else:
+        # the first element in the pipeline must be 'GenerateSegmentIndices'
+        if test_pipeline[0]['type'] != 'GenerateSegmentIndices':
+            raise TypeError('The first element in the pipeline must be '
+                            f'"GenerateSegmentIndices", but got '
+                            f'"{test_pipeline[0]["type"]}".')
+
+        # specify start_idx and filename_tmpl
+        test_pipeline[0]['start_idx'] = start_idx
+        test_pipeline[0]['filename_tmpl'] = filename_tmpl
+
+        # prepare data
+        sequence_length = len(glob.glob(osp.join(img_dir, '*')))
+        lq_folder = osp.dirname(img_dir)
+        key = osp.basename(img_dir)
+        data = dict(
+            img_path=lq_folder,
+            gt_path='',
+            key=key,
+            sequence_length=sequence_length)
+
+    # compose the pipeline
+    test_pipeline = Compose(test_pipeline)
+    data = test_pipeline(data)
+    data = data['inputs'].unsqueeze(0) / 255.0  # in cpu
+
+    # forward the model
+    with torch.no_grad():
+        if window_size > 0:  # sliding window framework
+            data = pad_sequence(data, window_size)
+            result = []
+            for i in range(0, data.size(1) - 2 * (window_size // 2)):
+                data_i = data[:, i:i + window_size].to(device)
+                result.append(model(inputs=data_i, mode='tensor').cpu())
+            result = torch.stack(result, dim=1)
+        else:  # recurrent framework
+            if max_seq_len is None:
+                result = model(inputs=data.to(device), mode='tensor').cpu()
+            else:
+                result = []
+                for i in range(0, data.size(1), max_seq_len):
+                    result.append(
+                        model(
+                            inputs=data[:, i:i + max_seq_len].to(device),
+                            mode='tensor').cpu())
+                result = torch.cat(result, dim=1)
+    return result
+
+
+VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
+FILE_CLIENT = FileClient('disk')
+
+
+def read_image(filepath):
+    """Read image from file.
+
+    Args:
+        filepath (str): File path.
+
+    Returns:
+        image (np.array): Image.
+    """
+    img_bytes = FILE_CLIENT.get(filepath)
+    image = mmcv.imfrombytes(
+        img_bytes, flag='color', channel_order='rgb', backend='pillow')
+    return image
+
+
+def read_frames(source, start_index, num_frames, from_video, end_index):
+    """Read frames from file or video.
+
+    Args:
+        source (list | mmcv.VideoReader): Source of frames.
+        start_index (int): Start index of frames.
+        num_frames (int): frames number to be read.
+        from_video (bool): Weather read frames from video.
+        end_index (int): The end index of frames.
+
+    Returns:
+        images (np.array): Images.
+    """
+    images = []
+    last_index = min(start_index + num_frames, end_index)
+    # read frames from video
+    if from_video:
+        for index in range(start_index, last_index):
+            if index >= source.frame_cnt:
+                break
+            images.append(np.flip(source.get_frame(index), axis=2))
+    else:
+        files = source[start_index:last_index]
+        images = [read_image(f) for f in files]
+    return images
+
+
+def video_interpolation_inference(model,
+                                  input_dir,
+                                  output_dir,
+                                  start_idx=0,
+                                  end_idx=None,
+                                  batch_size=4,
+                                  fps_multiplier=0,
+                                  fps=0,
+                                  filename_tmpl='{:08d}.png'):
+    """Inference image with the model.
+
+    Args:
+        model (nn.Module): The loaded model.
+        input_dir (str): Directory of the input video.
+        output_dir (str): Directory of the output video.
+        start_idx (int): The index corresponding to the first frame in the
+            sequence. Default: 0
+        end_idx (int | None): The index corresponding to the last interpolated
+            frame in the sequence. If it is None, interpolate to the last
+            frame of video or sequence. Default: None
+        batch_size (int): Batch size. Default: 4
+        fps_multiplier (float): multiply the fps based on the input video.
+            Default: 0.
+        fps (float): frame rate of the output video. Default: 0.
+        filename_tmpl (str): template of the file names. Default: '{:08d}.png'
+    """
+
+    device = next(model.parameters()).device  # model device
+
+    # build the data pipeline
+    if model.cfg.get('demo_pipeline', None):
+        test_pipeline = model.cfg.demo_pipeline
+    elif model.cfg.get('test_pipeline', None):
+        test_pipeline = model.cfg.test_pipeline
+    else:
+        test_pipeline = model.cfg.val_pipeline
+
+    # remove the data loading pipeline
+    tmp_pipeline = []
+    for pipeline in test_pipeline:
+        if pipeline['type'] not in [
+                'GenerateSegmentIndices', 'LoadImageFromFile'
+        ]:
+            tmp_pipeline.append(pipeline)
+    test_pipeline = tmp_pipeline
+
+    # compose the pipeline
+    test_pipeline = Compose(test_pipeline)
+
+    # check if the input is a video
+    input_file_extension = os.path.splitext(input_dir)[1]
+    if input_file_extension in VIDEO_EXTENSIONS:
+        source = mmcv.VideoReader(input_dir)
+        input_fps = source.fps
+        length = source.frame_cnt
+        from_video = True
+        h, w = source.height, source.width
+        if fps_multiplier:
+            assert fps_multiplier > 0, '`fps_multiplier` cannot be negative'
+            output_fps = fps_multiplier * input_fps
+        else:
+            output_fps = fps if fps > 0 else input_fps * 2
+    else:
+        files = os.listdir(input_dir)
+        files = [osp.join(input_dir, f) for f in files]
+        files.sort()
+        source = files
+        length = files.__len__()
+        from_video = False
+        example_frame = read_image(files[0])
+        h, w = example_frame.shape[:2]
+        output_fps = fps
+
+    # check if the output is a video
+    output_file_extension = os.path.splitext(output_dir)[1]
+    if output_file_extension in VIDEO_EXTENSIONS:
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        target = cv2.VideoWriter(output_dir, fourcc, output_fps, (w, h))
+        to_video = True
+    else:
+        to_video = False
+
+    end_idx = min(end_idx, length) if end_idx is not None else length
+
+    # calculate step args
+    step_size = model.step_frames * batch_size
+    lenth_per_step = model.required_frames + model.step_frames * (
+        batch_size - 1)
+    repeat_frame = model.required_frames - model.step_frames
+
+    prog_bar = ProgressBar(
+        math.ceil(
+            (end_idx + step_size - lenth_per_step - start_idx) / step_size))
+    output_index = start_idx
+    for start_index in range(start_idx, end_idx, step_size):
+        images = read_frames(
+            source, start_index, lenth_per_step, from_video, end_index=end_idx)
+
+        # data prepare
+        data = dict(img=images, inputs_path=None, key=input_dir)
+        data = test_pipeline(data)['inputs'] / 255.0
+        data = collate([data])
+        # data.shape: [1, t, c, h, w]
+
+        # forward the model
+        data = model.split_frames(data)
+        input_tensors = data.clone().detach()
+        with torch.no_grad():
+            output = model(data.to(device), mode='tensor')
+            if len(output.shape) == 4:
+                output = output.unsqueeze(1)
+            output_tensors = output.cpu()
+            if len(output_tensors.shape) == 4:
+                output_tensors = output_tensors.unsqueeze(1)
+            result = model.merge_frames(input_tensors, output_tensors)
+        if not start_idx == start_index:
+            result = result[repeat_frame:]
+        prog_bar.update()
+
+        # save frames
+        if to_video:
+            for frame in result:
+                target.write(frame)
+        else:
+            for frame in result:
+                save_path = osp.join(output_dir,
+                                     filename_tmpl.format(output_index))
+                mmcv.imwrite(frame, save_path)
+                output_index += 1
+
+        if start_index + lenth_per_step >= end_idx:
+            break
+
+    print()
+    print(f'Output dir: {output_dir}')
+    if to_video:
+        target.release()

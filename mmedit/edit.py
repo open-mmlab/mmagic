@@ -67,6 +67,7 @@ class MMEdit:
 
     def infer(self,
                  img: InputsType = None,
+                 video: InputsType = None,
                  label: InputsType = None,
                  trimap: InputsType = None,
                  mask: InputsType = None,
@@ -97,6 +98,7 @@ class MMEdit:
         """
         return self.inferencer(
             img=img,
+            video=video,
             label=label,
             trimap=trimap,
             mask=mask,
