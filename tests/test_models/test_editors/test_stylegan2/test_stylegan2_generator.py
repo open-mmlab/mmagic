@@ -24,6 +24,15 @@ class TestStyleGAN2Generator:
         res = g(None, num_batches=2)
         assert res.shape == (2, 3, 64, 64)
 
+        # test truncation_latent is None
+        assert not hasattr(g, 'truncation_latent')
+        res = g(None, num_batches=2, truncation=0.9)
+        assert res.shape == (2, 3, 64, 64)
+        assert hasattr(g, 'truncation_latent')
+        assert g.truncation_latent.shape == (1, 16)
+        res = g(None, num_batches=2, truncation=0.9)
+        assert res.shape == (2, 3, 64, 64)
+
         truncation_mean = g.get_mean_latent()
         res = g(
             None,
