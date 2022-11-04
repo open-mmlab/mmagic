@@ -158,7 +158,7 @@ class NAFNetLocal(Local_Base, NAFNet):
 # Components for NAFNet
 
 
-class NAFBlock(nn.Module):
+class NAFBlock(BaseModule):
     """NAFNet's Block in paper.
 
     Simple gate will shrink the channel to a half.
@@ -290,7 +290,7 @@ class NAFBlock(nn.Module):
         return out
 
 
-class SimpleGate(nn.Module):
+class SimpleGate(BaseModule):
     """The Simple Gate in "Simple Baseline for Image Restoration".
 
     Args:

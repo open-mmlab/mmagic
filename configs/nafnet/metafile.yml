@@ -1,0 +1,9 @@
+Collections:
+- Metadata:
+    Architecture:
+    - NAFNet
+  Name: NAFNet
+  Paper:
+  - https://arxiv.org/abs/2204.04676
+  README: configs/nafnet/README.md
+Models: []

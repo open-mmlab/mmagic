@@ -10,7 +10,7 @@ from .utils import LayerNorm2d
 
 
 @MODELS.register_module()
-class Baseline(BaseModule):
+class NAFBaseline(BaseModule):
     """The original version of Baseline model in "Simple Baseline for Image
     Restoration".
 
@@ -26,8 +26,8 @@ class Baseline(BaseModule):
                  img_channel=3,
                  mid_channels=16,
                  middle_blk_num=1,
-                 enc_blk_nums=[],
-                 dec_blk_nums=[],
+                 enc_blk_nums=[1, 1, 1, 28],
+                 dec_blk_nums=[1, 1, 1, 1],
                  dw_expand=1,
                  ffn_expand=2):
         super().__init__()
@@ -132,7 +132,7 @@ class Baseline(BaseModule):
 
 
 @MODELS.register_module()
-class BaselineLocal(Local_Base, Baseline):
+class NAFBaselineLocal(Local_Base, NAFBaseline):
     """The original version of Baseline model in "Simple Baseline for Image
     Restoration".
 
@@ -150,7 +150,7 @@ class BaselineLocal(Local_Base, Baseline):
                  fast_imp=False,
                  **kwargs):
         Local_Base.__init__(self)
-        Baseline.__init__(self, *args, **kwargs)
+        NAFBaseline.__init__(self, *args, **kwargs)
 
         N, C, H, W = train_size
         base_size = (int(H * 1.5), int(W * 1.5))
@@ -162,7 +162,7 @@ class BaselineLocal(Local_Base, Baseline):
 
 
 # Components for Baseline
-class BaselineBlock(nn.Module):
+class BaselineBlock(BaseModule):
     """Baseline's Block in paper.
 
     Args:

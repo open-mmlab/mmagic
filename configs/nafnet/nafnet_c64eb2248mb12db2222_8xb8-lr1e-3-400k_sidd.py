@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'nafnet_c64eb11128mb1db1111_lr1e-3_400k_gopro'
+experiment_name = 'nafnet_c64eb2248mb12db2222_lr1e-3_400k_sidd'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
@@ -11,20 +11,20 @@ model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
 model = dict(
     type='BaseEditModel',
     generator=dict(
-        type='NAFNetLocal',
+        type='NAFNet',
         img_channel=3,
         mid_channels=64,
-        enc_blk_nums=[1, 1, 1, 28],
-        middle_blk_num=1,
-        dec_blk_nums=[1, 1, 1, 1],
+        enc_blk_nums=[2, 2, 4, 8],
+        middle_blk_num=12,
+        dec_blk_nums=[2, 2, 2, 2],
     ),
     pixel_loss=dict(type='PSNRLoss'),
     train_cfg=dict(),
     test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
-        mean=[0., 0., 0.],
-        std=[255., 255., 255.],
+        mean=[0.0, 0.0, 0.0],
+        std=[255.0, 255.0, 255.0],
     ))
 
 train_pipeline = [
@@ -59,10 +59,10 @@ train_dataloader = dict(
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root='../datasets/gopro/train',
-        data_prefix=dict(gt='sharp', img='blur'),
-        ann_file='meta_info_gopro_train.txt',
+        metainfo=dict(dataset_type='sidd', task_name='denoising'),
+        data_root='../datasets/SIDD/train',
+        data_prefix=dict(gt='gt', img='noisy'),
+        filename_tmpl=dict(img='{}_NOISY', gt='{}_GT'),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -72,10 +72,10 @@ val_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root='../datasets/gopro/test',
-        ann_file='meta_info_gopro_test.txt',
-        data_prefix=dict(gt='sharp', img='blur'),
+        metainfo=dict(dataset_type='sidd', task_name='denoising'),
+        data_root='../datasets/SIDD/val/',
+        data_prefix=dict(gt='gt', img='noisy'),
+        filename_tmpl=dict(gt='{}_GT', img='{}_NOISY'),
         pipeline=val_pipeline))
 
 test_dataloader = val_dataloader
@@ -93,15 +93,12 @@ val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
 # optimizer
-# optim_wrapper = dict(
-#     constructor='MultiOptimWrapperConstructor',
-#     generator=dict(
-#         type='OptimWrapper',
-#         optimizer=dict(type='Adam', lr=1e-3, betas=(0.9, 0.9))))
 optim_wrapper = dict(
-    constructor='DefaultOptimWrapperConstructor',
-    type='OptimWrapper',
-    optimizer=dict(type='AdamW', lr=1e-3, weight_decay=1e-3, betas=(0.9, 0.9)))
+    constructor='MultiOptimWrapperConstructor',
+    generator=dict(
+        type='OptimWrapper',
+        optimizer=dict(
+            type='AdamW', lr=1e-3, weight_decay=1e-3, betas=(0.9, 0.9))))
 
 # learning policy
 param_scheduler = dict(
@@ -121,6 +118,4 @@ default_hooks = dict(
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
 
-visualizer = dict(bgr2rgb=False)
-
-randomness = dict(seed=10, diff_rank_seed=True)
+visualizer = dict(bgr2rgb=True)
