@@ -74,6 +74,6 @@ __all__ = [
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'IDLossModel', 'PESinGAN',
-    'MSPIEStyleGAN2', 'StyleGAN3Generator', 'NAFBaseline', 'NAFBaselineLocal',
-    'NAFNet', 'NAFNetLocal'
+    'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
+    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal'
 ]
