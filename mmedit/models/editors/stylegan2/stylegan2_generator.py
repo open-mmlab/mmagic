@@ -315,6 +315,7 @@ class StyleGAN2Generator(nn.Module):
                 truncation_latent=None,
                 input_is_latent=False,
                 injected_noise=None,
+                add_noise=True,
                 randomize_noise=True):
         """Forward function.
 
@@ -464,7 +465,11 @@ class StyleGAN2Generator(nn.Module):
             out = self.constant_input(latent)
             if self.fp16_enabled:
                 out = out.to(torch.float16)
-            out = self.conv1(out, latent[:, 0], noise=injected_noise[0])
+            out = self.conv1(
+                out,
+                latent[:, 0],
+                noise=injected_noise[0],
+                add_noise=add_noise)
             skip = self.to_rgb1(out, latent[:, 1])
 
             _index = 1
@@ -473,8 +478,13 @@ class StyleGAN2Generator(nn.Module):
             for up_conv, conv, noise1, noise2, to_rgb in zip(
                     self.convs[::2], self.convs[1::2], injected_noise[1::2],
                     injected_noise[2::2], self.to_rgbs):
-                out = up_conv(out, latent[:, _index], noise=noise1)
-                out = conv(out, latent[:, _index + 1], noise=noise2)
+                out = up_conv(
+                    out, latent[:, _index], noise=noise1, add_noise=add_noise)
+                out = conv(
+                    out,
+                    latent[:, _index + 1],
+                    noise=noise2,
+                    add_noise=add_noise)
                 skip = to_rgb(out, latent[:, _index + 2], skip)
                 _index += 2
 
