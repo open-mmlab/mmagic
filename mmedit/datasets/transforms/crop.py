@@ -7,14 +7,15 @@ import mmcv
 import numpy as np
 import torch
 from mmcv.transforms import BaseTransform
-from mmdet.apis import inference_detector, init_detector
 from mmengine.hub import get_config
 from mmengine.registry import DefaultScope
 from mmengine.utils import is_list_of, is_tuple_of
 from torch.nn.modules.utils import _pair
 
 from mmedit.registry import TRANSFORMS
-from mmedit.utils import get_box_info, random_choose_unknown
+from mmedit.utils import get_box_info, random_choose_unknown, try_import
+
+mmdet_apis = try_import('mmdet.apis')
 
 
 @TRANSFORMS.register_module()
@@ -943,9 +944,13 @@ class InstanceCrop(BaseTransform):
                  box_num_upbound=-1,
                  finesize=256):
 
+        assert mmdet_apis is not None, (
+            "Cannot import 'mmdet'. Please install 'mmdet' via "
+            "\"mim install 'mmdet >= 3.0.0rc2'\".")
+
         cfg = get_config(config_file, pretrained=True)
         with DefaultScope.overwrite_default_scope('mmdet'):
-            self.predictor = init_detector(cfg, cfg.model_path)
+            self.predictor = mmdet_apis.init_detector(cfg, cfg.model_path)
 
         self.key = key
         self.box_num_upbound = box_num_upbound
@@ -1018,7 +1023,8 @@ class InstanceCrop(BaseTransform):
 
         with DefaultScope.overwrite_default_scope('mmdet'):
             with torch.no_grad():
-                results = inference_detector(self.predictor, l_stack)
+                results = mmdet_apis.inference_detector(
+                    self.predictor, l_stack)
 
         bboxes = results.pred_instances.bboxes.cpu().numpy().astype(np.int32)
         scores = results.pred_instances.scores.cpu().numpy()
