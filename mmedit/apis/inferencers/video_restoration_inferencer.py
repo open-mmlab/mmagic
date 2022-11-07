@@ -4,15 +4,15 @@ import os.path as osp
 import torch
 import numpy as np
 import mmcv
-from typing import Dict, List
-from torchvision import utils
-from mmengine import mkdir_or_exist
+import glob
+import cv2
+from typing import Dict, List, Optional, Union, Tuple
 from mmengine.dataset import Compose
 
-from mmedit.structures import EditDataSample
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from mmedit.utils import tensor2img
+from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType, ResType
 
-VIDEO_EXTENSIONS = ('.mp4', '.mov')
+VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 
 def pad_sequence(data, window_size):
     """Pad frame sequence data.
@@ -41,20 +41,19 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
         preprocess=['video'],
         forward=[],
         visualize=['result_out_dir'],
-        postprocess=['print_result', 'pred_out_file', 'get_datasample'])
+        postprocess=[])
 
     def preprocess(self, video: InputsType) -> Dict:
-        import pdb;pdb.set_trace();
         # hard code parameters for unused code
         infer_cfg = dict(
                     start_idx = 0,
                     filename_tmpl = '{08d}.png',
                     window_size = 0,
                     max_seq_len = None)
-        self.start_idx = infer_cfg.start_idx
-        self.filename_tmpl = infer_cfg.filename_tmpl
-        self.window_size = infer_cfg.window_size
-        self.max_seq_len = infer_cfg.max_seq_len
+        self.start_idx = infer_cfg['start_idx']
+        self.filename_tmpl = infer_cfg['filename_tmpl']
+        self.window_size = infer_cfg['window_size']
+        self.max_seq_len = infer_cfg['max_seq_len']
         
         # build the data pipeline
         if self.model.cfg.get('demo_pipeline', None):
@@ -107,10 +106,12 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
         data = test_pipeline(data)
         data = data['inputs'].unsqueeze(0) / 255.0  # in cpu
 
+        return data
+
     def forward(self, inputs: InputsType) -> PredType:
         with torch.no_grad():
             if self.window_size > 0:  # sliding window framework
-                data = pad_sequence(data, self.window_size)
+                data = pad_sequence(inputs, self.window_size)
                 result = []
                 for i in range(0, data.size(1) - 2 * (self.window_size // 2)):
                     data_i = data[:, i:i + self.window_size].to(self.device)
@@ -118,13 +119,13 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
                 result = torch.stack(result, dim=1)
             else:  # recurrent framework
                 if self.max_seq_len is None:
-                    result = self.model(inputs=data.to(self.device), mode='tensor').cpu()
+                    result = self.model(inputs=inputs.to(self.device), mode='tensor').cpu()
                 else:
                     result = []
-                    for i in range(0, data.size(1), self.max_seq_len):
+                    for i in range(0, inputs.size(1), self.max_seq_len):
                         result.append(
                             self.model(
-                                inputs=data[:, i:i + self.max_seq_len].to(self.device),
+                                inputs=inputs[:, i:i + self.max_seq_len].to(self.device),
                                 mode='tensor').cpu())
                     result = torch.cat(result, dim=1)
         return result
@@ -133,26 +134,48 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
                 preds: PredType,
                 data: Dict = None,
                 result_out_dir: str = '') -> List[np.ndarray]:
+        file_extension = os.path.splitext(result_out_dir)[1]
+        if file_extension in VIDEO_EXTENSIONS:  # save as video
+            h, w = preds.shape[-2:]
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            video_writer = cv2.VideoWriter(result_out_dir, fourcc, 25, (w, h))
+            for i in range(0, preds.size(1)):
+                img = tensor2img(preds[:, i, :, :, :])
+                video_writer.write(img.astype(np.uint8))
+            cv2.destroyAllWindows()
+            video_writer.release()
+        else:
+            for i in range(self.start_idx, self.start_idx + preds.size(1)):
+                output_i = preds[:, i - self.start_idx, :, :, :]
+                output_i = tensor2img(output_i)
+                save_path_i = f'{preds.output_dir}/{self.filename_tmpl.format(i)}'
+
+                mmcv.imwrite(output_i, save_path_i)
         
-        results = (preds[:, [2, 1, 0]] + 1.) / 2.
+        return []
 
-        # save images
-        mkdir_or_exist(os.path.dirname(result_out_dir))
-        utils.save_image(results, result_out_dir)
-
-        return results
-
-    def _pred2dict(self, data_sample: EditDataSample) -> Dict:
-        """Extract elements necessary to represent a prediction into a
-        dictionary. It's better to contain only basic data elements such as
-        strings and numbers in order to guarantee it's json-serializable.
+    def postprocess(
+        self, 
+        preds: PredType,
+        imgs: Optional[List[np.ndarray]] = None
+    ) -> Union[ResType, Tuple[ResType, np.ndarray]]:
+        """Postprocess predictions.
 
         Args:
-            data_sample (EditDataSample): The data sample to be converted.
+            preds (List[Dict]): Predictions of the model.
+            imgs (Optional[np.ndarray]): Visualized predictions.
+            is_batch (bool): Whether the inputs are in a batch.
+                Defaults to False.
+            print_result (bool): Whether to print the result.
+                Defaults to False.
+            pred_out_file (str): Output file name to store predictions
+                without images. Supported file formats are “json”, “yaml/yml”
+                and “pickle/pkl”. Defaults to ''.
+            get_datasample (bool): Whether to use Datasample to store
+                inference results. If False, dict will be used.
 
         Returns:
-            dict: The output dictionary.
+            TODO
         """
-        result = {}
-        result['pred_alpha'] = data_sample.output.pred_alpha.data.cpu()
-        return result
+        pass
+

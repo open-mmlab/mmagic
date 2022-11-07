@@ -4,6 +4,9 @@ import os
 import os.path as osp
 import glob
 import torch
+import mmcv
+import numpy as np
+import cv2
 from mmengine import is_list_of
 from mmengine import Config
 from mmengine.config import ConfigDict
@@ -501,7 +504,7 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
     return restored_img
 
 
-VIDEO_EXTENSIONS = ('.mp4', '.mov')
+VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 
 
 def pad_sequence(data, window_size):
