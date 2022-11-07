@@ -36,7 +36,7 @@ class BaseInferencer:
             Defaults to True.
         pred_score_thr (float): Minimum score of bboxes to draw.
             Defaults to 0.3.
-        img_out_dir (str): Output directory of images. Defaults to ''.
+        result_out_dir (str): Output directory of images. Defaults to ''.
         pred_out_file: File to save the inference results. If left as empty, no
             file will be saved.
         print_result (bool): Whether to print the result.
@@ -145,7 +145,7 @@ class BaseInferencer:
                   wait_time: int = 0,
                   draw_pred: bool = True,
                   pred_score_thr: float = 0.3,
-                  img_out_dir: str = '') -> List[np.ndarray]:
+                  result_out_dir: str = '') -> List[np.ndarray]:
         """Visualize predictions.
 
         Args:
@@ -158,9 +158,9 @@ class BaseInferencer:
                 Defaults to True.
             pred_score_thr (float): Minimum score of bboxes to draw.
                 Defaults to 0.3.
-            img_out_dir (str): Output directory of images. Defaults to ''.
+            result_out_dir (str): Output directory of images. Defaults to ''.
         """
-        if self.visualizer is None or not show and img_out_dir == '':
+        if self.visualizer is None or not show and result_out_dir == '':
             return None
 
         if getattr(self, 'visualizer') is None:
@@ -182,7 +182,7 @@ class BaseInferencer:
                 raise ValueError('Unsupported input type: '
                                  f'{type(single_input)}')
 
-            out_file = osp.join(img_out_dir, img_name) if img_out_dir != '' \
+            out_file = osp.join(result_out_dir, img_name) if result_out_dir != '' \
                 else None
 
             self.visualizer.add_datasample(

@@ -15,7 +15,7 @@ class ConditionalInferencer(BaseMMEditInferencer):
     func_kwargs = dict(
         preprocess=['label'],
         forward=[],
-        visualize=['img_out_dir'],
+        visualize=['result_out_dir'],
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
     def preprocess(self, label: InputsType) -> Dict:
@@ -40,7 +40,7 @@ class ConditionalInferencer(BaseMMEditInferencer):
     def visualize(self,
                 preds: PredType,
                 data: Dict = None,
-                img_out_dir: str = '') -> List[np.ndarray]:
+                result_out_dir: str = '') -> List[np.ndarray]:
         
         res_list = []
         res_list.extend([item.fake_img.data.cpu() for item in preds])
@@ -48,8 +48,8 @@ class ConditionalInferencer(BaseMMEditInferencer):
         results = (results[:, [2, 1, 0]] + 1.) / 2.
 
         # save images
-        mkdir_or_exist(os.path.dirname(img_out_dir))
-        utils.save_image(results, img_out_dir)
+        mkdir_or_exist(os.path.dirname(result_out_dir))
+        utils.save_image(results, result_out_dir)
 
         return results
 

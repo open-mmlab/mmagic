@@ -71,7 +71,7 @@ class MMEdit:
                  label: InputsType = None,
                  trimap: InputsType = None,
                  mask: InputsType = None,
-                 img_out_dir: str = '',
+                 result_out_dir: str = '',
                  show: bool = False,
                  print_result: bool = False,
                  pred_out_file: str = '',
@@ -83,7 +83,7 @@ class MMEdit:
             imgs (str or np.array or Sequence[str or np.array]): Img,
                 folder path, np array or list/tuple (with img
                 paths or np arrays).
-            img_out_dir (str): Output directory of images. Defaults to ''.
+            result_out_dir (str): Output directory of images. Defaults to ''.
             show (bool): Whether to display the image in a popup window.
                 Defaults to False.
             print_result (bool): Whether to print the results.
@@ -102,7 +102,7 @@ class MMEdit:
             label=label,
             trimap=trimap,
             mask=mask,
-            img_out_dir=img_out_dir,
+            result_out_dir=result_out_dir,
             show=show,
             print_result=print_result,
             pred_out_file=pred_out_file,
@@ -191,6 +191,7 @@ class MMEdit:
             },
 
             # restoration models
+            # real_esrgan error
             'real_esrgan': {
                 'type': 'restoration',
                 'version': {
@@ -215,10 +216,17 @@ class MMEdit:
             },
 
             # video_restoration models
+            # basicvsr error
             'basicvsr': {
                 'type': 'video_restoration',
                 'version': {
                     'a': {
+                        'config':
+                        'basicvsr/basicvsr_2xb4_vimeo90k-bi.py',
+                        'ckpt':
+                        ''
+                    },
+                    'b': {
                         'config':
                         'basicvsr/basicvsr_2xb4_reds4.py',
                         'ckpt':

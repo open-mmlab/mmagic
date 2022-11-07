@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
+import os.path as osp
 import torch
 import numpy as np
 import mmcv
@@ -7,22 +8,53 @@ from typing import Dict, List
 from torchvision import utils
 from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
-from mmengine.dataset.utils import default_collate as collate
 
-from mmedit.models.base_models import BaseTranslationModel
 from mmedit.structures import EditDataSample
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
+VIDEO_EXTENSIONS = ('.mp4', '.mov')
+
+def pad_sequence(data, window_size):
+    """Pad frame sequence data.
+
+    Args:
+        data (Tensor): The frame sequence data.
+        window_size (int): The window size used in sliding-window framework.
+
+    Returns:
+        data (Tensor): The padded result.
+    """
+
+    padding = window_size // 2
+
+    data = torch.cat([
+        data[:, 1 + padding:1 + 2 * padding].flip(1), data,
+        data[:, -1 - 2 * padding:-1 - padding].flip(1)
+    ],
+                     dim=1)
+
+    return data
 
 class VideoRestorationInferencer(BaseMMEditInferencer):
 
     func_kwargs = dict(
-        preprocess=['img'],
+        preprocess=['video'],
         forward=[],
-        visualize=['img_out_dir'],
+        visualize=['result_out_dir'],
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
-    def preprocess(self, img: InputsType) -> Dict:
+    def preprocess(self, video: InputsType) -> Dict:
+        import pdb;pdb.set_trace();
+        # hard code parameters for unused code
+        infer_cfg = dict(
+                    start_idx = 0,
+                    filename_tmpl = '{08d}.png',
+                    window_size = 0,
+                    max_seq_len = None)
+        self.start_idx = infer_cfg.start_idx
+        self.filename_tmpl = infer_cfg.filename_tmpl
+        self.window_size = infer_cfg.window_size
+        self.max_seq_len = infer_cfg.max_seq_len
         
         # build the data pipeline
         if self.model.cfg.get('demo_pipeline', None):
@@ -33,11 +65,11 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
             test_pipeline = self.model.cfg.val_pipeline
 
         # check if the input is a video
-        file_extension = osp.splitext(img_dir)[1]
+        file_extension = osp.splitext(video)[1]
         if file_extension in VIDEO_EXTENSIONS:
-            video_reader = mmcv.VideoReader(img_dir)
+            video_reader = mmcv.VideoReader(video)
             # load the images
-            data = dict(img=[], img_path=None, key=img_dir)
+            data = dict(img=[], img_path=None, key=video)
             for frame in video_reader:
                 data['img'].append(np.flip(frame, axis=2))
 
@@ -57,13 +89,13 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
                                 f'"{test_pipeline[0]["type"]}".')
 
             # specify start_idx and filename_tmpl
-            test_pipeline[0]['start_idx'] = start_idx
-            test_pipeline[0]['filename_tmpl'] = filename_tmpl
+            test_pipeline[0]['start_idx'] = self.start_idx
+            test_pipeline[0]['filename_tmpl'] = self.filename_tmpl
 
             # prepare data
-            sequence_length = len(glob.glob(osp.join(img_dir, '*')))
-            lq_folder = osp.dirname(img_dir)
-            key = osp.basename(img_dir)
+            sequence_length = len(glob.glob(osp.join(video, '*')))
+            lq_folder = osp.dirname(video)
+            key = osp.basename(video)
             data = dict(
                 img_path=lq_folder,
                 gt_path='',
@@ -77,22 +109,22 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
 
     def forward(self, inputs: InputsType) -> PredType:
         with torch.no_grad():
-            if window_size > 0:  # sliding window framework
-                data = pad_sequence(data, window_size)
+            if self.window_size > 0:  # sliding window framework
+                data = pad_sequence(data, self.window_size)
                 result = []
-                for i in range(0, data.size(1) - 2 * (window_size // 2)):
-                    data_i = data[:, i:i + window_size].to(self.device)
+                for i in range(0, data.size(1) - 2 * (self.window_size // 2)):
+                    data_i = data[:, i:i + self.window_size].to(self.device)
                     result.append(self.model(inputs=data_i, mode='tensor').cpu())
                 result = torch.stack(result, dim=1)
             else:  # recurrent framework
-                if max_seq_len is None:
+                if self.max_seq_len is None:
                     result = self.model(inputs=data.to(self.device), mode='tensor').cpu()
                 else:
                     result = []
-                    for i in range(0, data.size(1), max_seq_len):
+                    for i in range(0, data.size(1), self.max_seq_len):
                         result.append(
                             self.model(
-                                inputs=data[:, i:i + max_seq_len].to(self.device),
+                                inputs=data[:, i:i + self.max_seq_len].to(self.device),
                                 mode='tensor').cpu())
                     result = torch.cat(result, dim=1)
         return result
@@ -100,13 +132,13 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
     def visualize(self,
                 preds: PredType,
                 data: Dict = None,
-                img_out_dir: str = '') -> List[np.ndarray]:
+                result_out_dir: str = '') -> List[np.ndarray]:
         
         results = (preds[:, [2, 1, 0]] + 1.) / 2.
 
         # save images
-        mkdir_or_exist(os.path.dirname(img_out_dir))
-        utils.save_image(results, img_out_dir)
+        mkdir_or_exist(os.path.dirname(result_out_dir))
+        utils.save_image(results, result_out_dir)
 
         return results
 

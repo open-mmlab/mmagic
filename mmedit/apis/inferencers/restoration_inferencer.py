@@ -17,7 +17,7 @@ class RestorationInferencer(BaseMMEditInferencer):
     func_kwargs = dict(
         preprocess=['img'],
         forward=[],
-        visualize=['img_out_dir'],
+        visualize=['result_out_dir'],
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
     def preprocess(self, img: InputsType, ref: InputsType = None) -> Dict:
@@ -77,10 +77,10 @@ class RestorationInferencer(BaseMMEditInferencer):
     def visualize(self,
                 preds: PredType,
                 data: Dict = None,
-                img_out_dir: str = '') -> List[np.ndarray]:
+                result_out_dir: str = '') -> List[np.ndarray]:
         
         output = tensor2img(preds[0])
-        mmcv.imwrite(output, img_out_dir)
+        mmcv.imwrite(output, result_out_dir)
 
         return output
 

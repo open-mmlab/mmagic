@@ -29,7 +29,7 @@ class BaseMMEditInferencer(BaseInferencer):
             Defaults to True.
         pred_score_thr (float): Minimum score of bboxes to draw.
             Defaults to 0.3.
-        img_out_dir (str): Output directory of images. Defaults to ''.
+        result_out_dir (str): Output directory of images. Defaults to ''.
         pred_out_file: File to save the inference results. If left as empty, no
             file will be saved.
         print_result (bool): Whether to print the result.
@@ -40,7 +40,7 @@ class BaseMMEditInferencer(BaseInferencer):
         preprocess=[],
         forward=[],
         visualize=[
-            'show', 'wait_time', 'draw_pred', 'pred_score_thr', 'img_out_dir'
+            'show', 'wait_time', 'draw_pred', 'pred_score_thr', 'result_out_dir'
         ],
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
     func_order = dict(preprocess=0, forward=1, visualize=2, postprocess=3)

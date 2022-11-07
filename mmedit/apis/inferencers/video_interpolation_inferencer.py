@@ -1,86 +1,230 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
+import math
+import os.path as osp
 import torch
 import numpy as np
-from typing import Dict, List
-from torchvision import utils
-from mmengine import mkdir_or_exist
-from mmengine.dataset import Compose
+import mmcv
+import cv2
+from typing import Dict, List, Union, Tuple, Optional
 from mmengine.dataset.utils import default_collate as collate
+from mmengine.fileio import FileClient
+from mmengine.utils import ProgressBar
+from mmengine.dataset import Compose
 
-from mmedit.models.base_models import BaseTranslationModel
-from mmedit.structures import EditDataSample
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType, ResType
+
+
+VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
+FILE_CLIENT = FileClient('disk')
+
+
+def read_image(filepath):
+    """Read image from file.
+
+    Args:
+        filepath (str): File path.
+
+    Returns:
+        image (np.array): Image.
+    """
+    img_bytes = FILE_CLIENT.get(filepath)
+    image = mmcv.imfrombytes(
+        img_bytes, flag='color', channel_order='rgb', backend='pillow')
+    return image
+
+
+def read_frames(source, start_index, num_frames, from_video, end_index):
+    """Read frames from file or video.
+
+    Args:
+        source (list | mmcv.VideoReader): Source of frames.
+        start_index (int): Start index of frames.
+        num_frames (int): frames number to be read.
+        from_video (bool): Weather read frames from video.
+        end_index (int): The end index of frames.
+
+    Returns:
+        images (np.array): Images.
+    """
+    images = []
+    last_index = min(start_index + num_frames, end_index)
+    # read frames from video
+    if from_video:
+        for index in range(start_index, last_index):
+            if index >= source.frame_cnt:
+                break
+            images.append(np.flip(source.get_frame(index), axis=2))
+    else:
+        files = source[start_index:last_index]
+        images = [read_image(f) for f in files]
+    return images
 
 
 class VideoInterpolationInferencer(BaseMMEditInferencer):
 
     func_kwargs = dict(
-        preprocess=['img'],
-        forward=[],
-        visualize=['img_out_dir'],
-        postprocess=['print_result', 'pred_out_file', 'get_datasample'])
+        preprocess=['video'],
+        forward=['result_out_dir'],
+        visualize=[],
+        postprocess=[])
 
-    def preprocess(self, img: InputsType) -> Dict:
-        
-        assert isinstance(self.model, BaseTranslationModel)
+    def preprocess(self, video: InputsType) -> Dict:
+        infer_cfg = dict(
+                    start_idx = 0,
+                    end_idx = None,
+                    batch_size = 4,
+                    fps_multiplier=0,
+                    fps=0,
+                    filename_tmpl = '{08d}.png')
+        self.start_idx = infer_cfg['start_idx']
+        self.end_idx = infer_cfg['end_idx']
+        self.batch_size = infer_cfg['batch_size']
+        self.fps_multiplier = infer_cfg['fps_multiplier']
+        self.fps = infer_cfg['fps']
+        self.filename_tmpl = infer_cfg['filename_tmpl']
 
-        # get source domain and target domain
-        self.target_domain = self.model._default_domain
-        source_domain = self.model.get_other_domains(self.target_domain)[0]
-
-        cfg = self.model.cfg
         # build the data pipeline
-        test_pipeline = Compose(cfg.test_pipeline)
+        if self.model.cfg.get('demo_pipeline', None):
+            test_pipeline = self.model.cfg.demo_pipeline
+        elif self.model.cfg.get('test_pipeline', None):
+            test_pipeline = self.model.cfg.test_pipeline
+        else:
+            test_pipeline = self.model.cfg.val_pipeline
 
-        # prepare data
-        data = dict()
-        # dirty code to deal with test data pipeline
-        data['pair_path'] = img
-        data[f'img_{source_domain}_path'] = img
-        data[f'img_{self.target_domain}_path'] = img
+        # remove the data loading pipeline
+        tmp_pipeline = []
+        for pipeline in test_pipeline:
+            if pipeline['type'] not in [
+                    'GenerateSegmentIndices', 'LoadImageFromFile'
+            ]:
+                tmp_pipeline.append(pipeline)
+        test_pipeline = tmp_pipeline
 
-        data = collate([test_pipeline(data)])
-        data = self.model.data_preprocessor(data, False)
-        inputs_dict = data['inputs']
+        # compose the pipeline
+        self.test_pipeline = Compose(test_pipeline)
 
-        source_image = inputs_dict[f'img_{source_domain}']
-        import pdb;pdb.set_trace();
-        return source_image
+        return video
 
-    def forward(self, inputs: InputsType) -> PredType:
-        with torch.no_grad():
-            results = self.model(
-                inputs,
-                test_mode=True,
-                target_domain=self.target_domain)
-        output = results['target']
-        return output
+    def forward(self, inputs: InputsType, result_out_dir: InputsType) -> PredType:
+        # check if the input is a video
+        input_file_extension = os.path.splitext(inputs)[1]
+        if input_file_extension in VIDEO_EXTENSIONS:
+            source = mmcv.VideoReader(inputs)
+            input_fps = source.fps
+            length = source.frame_cnt
+            from_video = True
+            h, w = source.height, source.width
+            if self.fps_multiplier:
+                assert self.fps_multiplier > 0, '`fps_multiplier` cannot be negative'
+                output_fps = self.fps_multiplier * input_fps
+            else:
+                output_fps = self.fps if self.fps > 0 else input_fps * 2
+        else:
+            files = os.listdir(inputs)
+            files = [osp.join(inputs, f) for f in files]
+            files.sort()
+            source = files
+            length = files.__len__()
+            from_video = False
+            example_frame = read_image(files[0])
+            h, w = example_frame.shape[:2]
+            output_fps = self.fps
+
+        # check if the output is a video
+        output_file_extension = os.path.splitext(result_out_dir)[1]
+        if output_file_extension in VIDEO_EXTENSIONS:
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            target = cv2.VideoWriter(result_out_dir, fourcc, output_fps, (w, h))
+            to_video = True
+        else:
+            to_video = False
+
+        self.end_idx = min(self.end_idx, length) if self.end_idx is not None else length
+
+        # calculate step args
+        step_size = self.model.step_frames * self.batch_size
+        lenth_per_step = self.model.required_frames + self.model.step_frames * (
+            self.batch_size - 1)
+        repeat_frame = self.model.required_frames - self.model.step_frames
+
+        prog_bar = ProgressBar(
+            math.ceil(
+                (self.end_idx + step_size - lenth_per_step - self.start_idx) / step_size))
+        output_index = self.start_idx
+        for self.start_index in range(self.start_idx, self.end_idx, step_size):
+            images = read_frames(
+                source, self.start_index, lenth_per_step, from_video, end_index=self.end_idx)
+
+            # data prepare
+            data = dict(img=images, inputs_path=None, key=inputs)
+            data = self.test_pipeline(data)['inputs'] / 255.0
+            data = collate([data])
+            # data.shape: [1, t, c, h, w]
+
+            # forward the model
+            data = self.model.split_frames(data)
+            input_tensors = data.clone().detach()
+            with torch.no_grad():
+                output = self.model(data.to(self.device), mode='tensor')
+                if len(output.shape) == 4:
+                    output = output.unsqueeze(1)
+                output_tensors = output.cpu()
+                if len(output_tensors.shape) == 4:
+                    output_tensors = output_tensors.unsqueeze(1)
+                result = self.model.merge_frames(input_tensors, output_tensors)
+            if not self.start_idx == self.start_index:
+                result = result[repeat_frame:]
+            prog_bar.update()
+
+            # save frames
+            if to_video:
+                for frame in result:
+                    target.write(frame)
+            else:
+                for frame in result:
+                    save_path = osp.join(result_out_dir,
+                                        self.filename_tmpl.format(output_index))
+                    mmcv.imwrite(frame, save_path)
+                    output_index += 1
+
+            if self.start_index + lenth_per_step >= self.end_idx:
+                break
+
+        print()
+        print(f'Output dir: {result_out_dir}')
+        if to_video:
+            target.release()
+        
+        return {}
     
     def visualize(self,
                 preds: PredType,
                 data: Dict = None,
-                img_out_dir: str = '') -> List[np.ndarray]:
-        
-        results = (preds[:, [2, 1, 0]] + 1.) / 2.
+                result_out_dir: str = '') -> List[np.ndarray]:
+        pass
 
-        # save images
-        mkdir_or_exist(os.path.dirname(img_out_dir))
-        utils.save_image(results, img_out_dir)
-
-        return results
-
-    def _pred2dict(self, data_sample: EditDataSample) -> Dict:
-        """Extract elements necessary to represent a prediction into a
-        dictionary. It's better to contain only basic data elements such as
-        strings and numbers in order to guarantee it's json-serializable.
+    def postprocess(
+        self, 
+        preds: PredType,
+        imgs: Optional[List[np.ndarray]] = None
+    ) -> Union[ResType, Tuple[ResType, np.ndarray]]:
+        """Postprocess predictions.
 
         Args:
-            data_sample (EditDataSample): The data sample to be converted.
+            preds (List[Dict]): Predictions of the model.
+            imgs (Optional[np.ndarray]): Visualized predictions.
+            is_batch (bool): Whether the inputs are in a batch.
+                Defaults to False.
+            print_result (bool): Whether to print the result.
+                Defaults to False.
+            pred_out_file (str): Output file name to store predictions
+                without images. Supported file formats are “json”, “yaml/yml”
+                and “pickle/pkl”. Defaults to ''.
+            get_datasample (bool): Whether to use Datasample to store
+                inference results. If False, dict will be used.
 
         Returns:
-            dict: The output dictionary.
+            TODO
         """
-        result = {}
-        result['pred_alpha'] = data_sample.output.pred_alpha.data.cpu()
-        return result
+        pass

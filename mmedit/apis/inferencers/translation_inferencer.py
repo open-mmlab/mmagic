@@ -17,7 +17,7 @@ class TranslationInferencer(BaseMMEditInferencer):
     func_kwargs = dict(
         preprocess=['img'],
         forward=[],
-        visualize=['img_out_dir'],
+        visualize=['result_out_dir'],
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
     def preprocess(self, img: InputsType) -> Dict:
@@ -58,13 +58,13 @@ class TranslationInferencer(BaseMMEditInferencer):
     def visualize(self,
                 preds: PredType,
                 data: Dict = None,
-                img_out_dir: str = '') -> List[np.ndarray]:
+                result_out_dir: str = '') -> List[np.ndarray]:
         
         results = (preds[:, [2, 1, 0]] + 1.) / 2.
 
         # save images
-        mkdir_or_exist(os.path.dirname(img_out_dir))
-        utils.save_image(results, img_out_dir)
+        mkdir_or_exist(os.path.dirname(result_out_dir))
+        utils.save_image(results, result_out_dir)
 
         return results
 

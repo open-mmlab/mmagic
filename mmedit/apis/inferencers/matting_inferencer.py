@@ -18,7 +18,7 @@ class MattingInferencer(BaseMMEditInferencer):
     func_kwargs = dict(
         preprocess=['img', 'trimap'],
         forward=[],
-        visualize=['img_out_dir'],
+        visualize=['result_out_dir'],
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
     def preprocess(self, img: InputsType, trimap: InputsType) -> Dict:
@@ -42,7 +42,8 @@ class MattingInferencer(BaseMMEditInferencer):
         _data = test_pipeline(data)
         trimap = _data['data_samples'].trimap.data
         preprocess_res = dict()
-        preprocess_res['inputs'] = torch.cat([_data['inputs'], trimap], dim=0).float()
+        preprocess_res['inputs'] = torch.cat([_data['inputs'], trimap], 
+                                                dim=0).float()
         preprocess_res = collate([preprocess_res])
         preprocess_res['data_samples'] = [_data['data_samples']]
         preprocess_res['mode'] = 'predict'
@@ -55,17 +56,14 @@ class MattingInferencer(BaseMMEditInferencer):
         with torch.no_grad():
             return self.model(**inputs)
     
-    def visualize(self,
-                preds: PredType,
-                data: Dict = None,
-                img_out_dir: str = '') -> List[np.ndarray]:
-        
+    def visualize(self, preds: PredType, data: Dict = None,
+                  result_out_dir: str = '') -> List[np.ndarray]:
         result = preds[0].output
         result = result.pred_alpha.data.cpu()
 
         # save images
-        mkdir_or_exist(os.path.dirname(img_out_dir))
-        mmcv.imwrite(result.numpy(), img_out_dir)
+        mkdir_or_exist(os.path.dirname(result_out_dir))
+        mmcv.imwrite(result.numpy(), result_out_dir)
 
         return result
 
