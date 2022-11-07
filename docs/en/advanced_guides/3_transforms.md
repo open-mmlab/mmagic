@@ -45,10 +45,10 @@ The input and output types of transformations are both dict.
 dict_keys(['pair_path', 'pair', 'pair_ori_shape', 'img_mask', 'img_photo', 'img_mask_path', 'img_photo_path', 'img_mask_ori_shape', 'img_photo_ori_shape'])
 ```
 
-Generally, the last step of the transforms pipeline must be `PackGenInputs`.
-`PackGenInputs` will pack the processed data into a dict containing two fields: `inputs` and `data_samples`.
+Generally, the last step of the transforms pipeline must be `PackEditInputs`.
+`PackEditInputs` will pack the processed data into a dict containing two fields: `inputs` and `data_samples`.
 `inputs` is the variable you want to use as the model's input, which can be the type of `torch.Tensor`, dict of `torch.Tensor`, or any type you want.
-`data_samples` is a list of `GenDataSample`. Each `GenDataSample` contains groundtruth and necessary information for corresponding input.
+`data_samples` is a list of `EditDataSample`. Each `EditDataSample` contains groundtruth and necessary information for corresponding input.
 
 ### An example of BasicVSR
 
@@ -121,15 +121,8 @@ pipeline = [
         keys=[f'img_{domain_a}', f'img_{domain_b}'],
         direction='horizontal'),
     dict(
-        type='PackGenInputs',
-        keys=[f'img_{domain_a}', f'img_{domain_b}', 'pair'],
-        meta_keys=[
-            'pair_path', 'sample_idx', 'pair_ori_shape',
-            f'img_{domain_a}_path', f'img_{domain_b}_path',
-            f'img_{domain_a}_ori_shape', f'img_{domain_b}_ori_shape', 'flip',
-            'flip_direction'
-        ])
-]
+        type='PackEditInputs',
+        keys=[f'img_{domain_a}', f'img_{domain_b}', 'pair'])
 ```
 
 ## Supported transforms in MMEditing

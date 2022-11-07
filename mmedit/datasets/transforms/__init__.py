@@ -6,8 +6,9 @@ from .aug_pixel import (BinarizeImage, Clip, ColorJitter, RandomAffine,
 from .aug_shape import (Flip, NumpyPad, RandomRotation, RandomTransposeHW,
                         Resize)
 from .crop import (CenterCropLongEdge, Crop, CropAroundCenter, CropAroundFg,
-                   CropAroundUnknown, CropLike, FixedCrop, ModCrop,
-                   PairedRandomCrop, RandomCropLongEdge, RandomResizedCrop)
+                   CropAroundUnknown, CropLike, FixedCrop, InstanceCrop,
+                   ModCrop, PairedRandomCrop, RandomCropLongEdge,
+                   RandomResizedCrop)
 from .fgbg import (CompositeFg, MergeFgAndBg, PerturbBg, RandomJitter,
                    RandomLoadResizeBg)
 from .formatting import PackEditInputs, ToTensor
@@ -45,5 +46,5 @@ __all__ = [
     'GenerateSoftSeg', 'FormatTrimap', 'TransformTrimap', 'GenerateTrimap',
     'GenerateTrimapWithDistTransform', 'CompositeFg', 'RandomLoadResizeBg',
     'MergeFgAndBg', 'PerturbBg', 'RandomJitter', 'LoadPairedImageFromFile',
-    'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad'
+    'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad', 'InstanceCrop'
 ]

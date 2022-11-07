@@ -28,6 +28,7 @@ from .iconvsr import IconVSRNet
 from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
                        IndexNetEncoder)
+from .inst_colorization import InstColorization
 from .liif import LIIF, MLPRefiner
 from .lsgan import LSGAN
 from .mspie import MSPIEStyleGAN2, PESinGAN
