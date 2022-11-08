@@ -77,9 +77,6 @@ class MMEdit:
               trimap: InputsType = None,
               mask: InputsType = None,
               result_out_dir: str = '',
-              show: bool = False,
-              print_result: bool = False,
-              pred_out_file: str = '',
               **kwargs) -> Union[Dict, List[Dict]]:
         """Inferences edit model on an image(video) or a folder of
         images(videos).
@@ -89,11 +86,6 @@ class MMEdit:
                 folder path, np array or list/tuple (with img
                 paths or np arrays).
             result_out_dir (str): Output directory of images. Defaults to ''.
-            show (bool): Whether to display the image in a popup window.
-                Defaults to False.
-            print_result (bool): Whether to print the results.
-            pred_out_file (str): File to save the inference results. If left as
-                empty, no file will be saved.
 
         Returns:
             Dict or List[Dict]: Each dict contains the inference result of
@@ -108,9 +100,6 @@ class MMEdit:
             trimap=trimap,
             mask=mask,
             result_out_dir=result_out_dir,
-            show=show,
-            print_result=print_result,
-            pred_out_file=pred_out_file,
             **kwargs)
 
     def get_model_config(self, model_name: str) -> Dict:

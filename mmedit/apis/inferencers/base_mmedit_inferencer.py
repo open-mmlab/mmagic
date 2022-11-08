@@ -1,11 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from abc import abstractmethod
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
+import mmcv
 import numpy as np
+import torch
+from mmengine.config import Config
+from mmengine.runner import load_checkpoint
 from mmengine.structures import InstanceData
 
+from mmedit.registry import MODELS
 from mmedit.utils import ConfigType
-from .base_inferencer import BaseInferencer
 
 InstanceList = List[InstanceData]
 InputType = Union[str, int, np.ndarray]
@@ -15,7 +20,7 @@ ImgType = Union[np.ndarray, Sequence[np.ndarray]]
 ResType = Union[Dict, List[Dict], InstanceData, List[InstanceData]]
 
 
-class BaseMMEditInferencer(BaseInferencer):
+class BaseMMEditInferencer:
     """Base inferencer.
 
     Args:
@@ -23,27 +28,13 @@ class BaseMMEditInferencer(BaseInferencer):
         ckpt (str, optional): Path to the checkpoint.
         device (str, optional): Device to run inference. If None, the best
             device will be automatically used.
-        show (bool): Whether to display the image in a popup window.
-            Defaults to False.
-        wait_time (float): The interval of show (s). Defaults to 0.
-        draw_pred (bool): Whether to draw predicted bounding boxes.
-            Defaults to True.
-        pred_score_thr (float): Minimum score of bboxes to draw.
-            Defaults to 0.3.
         result_out_dir (str): Output directory of images. Defaults to ''.
-        pred_out_file: File to save the inference results. If left as empty, no
-            file will be saved.
-        print_result (bool): Whether to print the result.
-            Defaults to False.
     """
 
     func_kwargs = dict(
         preprocess=[],
         forward=[],
-        visualize=[
-            'show', 'wait_time', 'draw_pred', 'pred_score_thr',
-            'result_out_dir'
-        ],
+        visualize=['result_out_dir'],
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
     func_order = dict(preprocess=0, forward=1, visualize=2, postprocess=3)
 
@@ -52,8 +43,35 @@ class BaseMMEditInferencer(BaseInferencer):
                  ckpt: Optional[str],
                  device: Optional[str] = None,
                  **kwargs) -> None:
+        # Load config to cfg
+        if isinstance(config, str):
+            cfg = Config.fromfile(config)
+        elif not isinstance(config, ConfigType):
+            raise TypeError('config must be a filename or any ConfigType'
+                            f'object, but got {type(cfg)}')
+        self.cfg = cfg
+        if cfg.model.get('pretrained'):
+            cfg.model.pretrained = None
+
+        if device is None:
+            device = torch.device(
+                'cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = device
+        self._init_model(cfg, ckpt, device)
+
         self.base_params = self._dispatch_kwargs(**kwargs)
-        super().__init__(config=config, ckpt=ckpt, device=device, **kwargs)
+
+    def _init_model(self, cfg: Union[ConfigType, str], ckpt: Optional[str],
+                    device: str) -> None:
+        """Initialize the model with the given config and checkpoint on the
+        specific device."""
+        model = MODELS.build(cfg.model)
+        if ckpt is not None:
+            ckpt = load_checkpoint(model, ckpt, map_location='cpu')
+        model.cfg = cfg
+        model.to(device)
+        model.eval()
+        self.model = model
 
     def _dispatch_kwargs(self, **kwargs) -> Tuple[Dict, Dict, Dict, Dict]:
         """Dispatch kwargs to preprocess(), forward(), visualize() and
@@ -76,6 +94,9 @@ class BaseMMEditInferencer(BaseInferencer):
 
         Args:
             kwargs: Keyword arguments for the inferencer.
+
+        Returns:
+            Union[Dict, List[Dict]]: result of inference pipeline.
         """
 
         params = self._dispatch_kwargs(**kwargs)
@@ -93,3 +114,98 @@ class BaseMMEditInferencer(BaseInferencer):
         imgs = self.visualize(preds, data, **visualize_kwargs)
         results = self.postprocess(preds, imgs, **postprocess_kwargs)
         return results
+
+    @abstractmethod
+    def preprocess(self, inputs: InputsType) -> Dict:
+        """Process the inputs into a model-feedable format.
+
+        Args:
+            inputs (List[Union[str, np.ndarray]]): Inputs for the inferencer.
+            preds (List[Dict]): Predictions of the model.
+            result_out_dir (str): Output directory of images. Defaults to ''.
+
+        Returns:
+            Dict: result of preprocess
+        """
+
+    def forward(self, inputs: InputsType) -> PredType:
+        """Forward the inputs to the model."""
+        with torch.no_grad():
+            return self.model.test_step(inputs)
+
+    @abstractmethod
+    def visualize(self,
+                  inputs: InputsType,
+                  preds: PredType,
+                  result_out_dir: str = '') -> List[np.ndarray]:
+        """Visualize predictions.
+
+        Args:
+            inputs (List[Union[str, np.ndarray]]): Inputs for the inferencer.
+            preds (List[Dict]): Predictions of the model.
+            result_out_dir (str): Output directory of images. Defaults to ''.
+
+        Returns:
+            List[np.ndarray]: result of visualize
+        """
+
+    def postprocess(
+        self,
+        preds: PredType,
+        imgs: Optional[List[np.ndarray]] = None,
+        is_batch: bool = False,
+        print_result: bool = False,
+        pred_out_file: str = '',
+        get_datasample: bool = False,
+    ) -> Union[ResType, Tuple[ResType, np.ndarray]]:
+        """Postprocess predictions.
+
+        Args:
+            preds (List[Dict]): Predictions of the model.
+            imgs (Optional[np.ndarray]): Visualized predictions.
+            is_batch (bool): Whether the inputs are in a batch.
+                Defaults to False.
+            print_result (bool): Whether to print the result.
+                Defaults to False.
+            pred_out_file (str): Output file name to store predictions
+                without images. Supported file formats are “json”, “yaml/yml”
+                and “pickle/pkl”. Defaults to ''.
+            get_datasample (bool): Whether to use Datasample to store
+                inference results. If False, dict will be used.
+
+        Returns:
+            result (Dict): inference results as a dict.
+            imgs (torch.Tensor): image result of inference as a tensor or
+                tensor list.
+        """
+        results = preds
+        if not get_datasample:
+            results = []
+            for pred in preds:
+                result = self._pred2dict(pred)
+                results.append(result)
+        if not is_batch:
+            results = results[0]
+        if print_result:
+            print(results)
+        # Add img to the results after printing
+        if pred_out_file != '':
+            mmcv.dump(results, pred_out_file)
+        if imgs is None:
+            return results
+        return results, imgs
+
+    def _pred2dict(self, data_sample: torch.Tensor) -> Dict:
+        """Extract elements necessary to represent a prediction into a
+        dictionary. It's better to contain only basic data elements such as
+        strings and numbers in order to guarantee it's json-serializable.
+
+        Args:
+            data_sample (torch.Tensor): The data sample to be converted.
+
+        Returns:
+            dict: The output dictionary.
+        """
+        result = {}
+        result['infer_results'] = data_sample
+        return result
