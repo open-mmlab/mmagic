@@ -15,7 +15,7 @@ def test_nafnet():
     )
 
     # test attributes
-    assert model.__class__.__name__ == 'Baseline'
+    assert model.__class__.__name__ == 'NAFBaseline'
 
     # prepare data
     inputs = torch.rand(1, 3, 64, 64)
@@ -47,7 +47,7 @@ def test_baseline_local():
     )
 
     # test attributes
-    assert model.__class__.__name__ == 'BaselineLocal'
+    assert model.__class__.__name__ == 'NAFBaselineLocal'
 
     # prepare data
     inputs = torch.rand(1, 3, 64, 64)
