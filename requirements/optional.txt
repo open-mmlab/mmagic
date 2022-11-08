@@ -1,1 +1,2 @@
 mmdet
+PyQt5
