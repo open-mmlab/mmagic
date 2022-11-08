@@ -24,7 +24,7 @@ class BaseMMEditInferencer:
     """Base inferencer.
 
     Args:
-        model (str or ConfigType): Model config or the path to it.
+        config (str or ConfigType): Model config or the path to it.
         ckpt (str, optional): Path to the checkpoint.
         device (str, optional): Device to run inference. If None, the best
             device will be automatically used.
@@ -96,7 +96,7 @@ class BaseMMEditInferencer:
             kwargs: Keyword arguments for the inferencer.
 
         Returns:
-            Union[Dict, List[Dict]]: result of inference pipeline.
+            Union[Dict, List[Dict]]: Results of inference pipeline.
         """
 
         params = self._dispatch_kwargs(**kwargs)
@@ -121,11 +121,9 @@ class BaseMMEditInferencer:
 
         Args:
             inputs (List[Union[str, np.ndarray]]): Inputs for the inferencer.
-            preds (List[Dict]): Predictions of the model.
-            result_out_dir (str): Output directory of images. Defaults to ''.
 
         Returns:
-            Dict: result of preprocess
+            Dict: Result of preprocess
         """
 
     def forward(self, inputs: InputsType) -> PredType:
@@ -146,7 +144,7 @@ class BaseMMEditInferencer:
             result_out_dir (str): Output directory of images. Defaults to ''.
 
         Returns:
-            List[np.ndarray]: result of visualize
+            List[np.ndarray]: Result of visualize
         """
 
     def postprocess(
@@ -174,8 +172,8 @@ class BaseMMEditInferencer:
                 inference results. If False, dict will be used.
 
         Returns:
-            result (Dict): inference results as a dict.
-            imgs (torch.Tensor): image result of inference as a tensor or
+            result (Dict): Inference results as a dict.
+            imgs (torch.Tensor): Image result of inference as a tensor or
                 tensor list.
         """
         results = preds
@@ -195,17 +193,17 @@ class BaseMMEditInferencer:
             return results
         return results, imgs
 
-    def _pred2dict(self, data_sample: torch.Tensor) -> Dict:
+    def _pred2dict(self, pred_tensor: torch.Tensor) -> Dict:
         """Extract elements necessary to represent a prediction into a
         dictionary. It's better to contain only basic data elements such as
         strings and numbers in order to guarantee it's json-serializable.
 
         Args:
-            data_sample (torch.Tensor): The data sample to be converted.
+            pred_tensor (torch.Tensor): The tensor to be converted.
 
         Returns:
             dict: The output dictionary.
         """
         result = {}
-        result['infer_results'] = data_sample
+        result['infer_results'] = pred_tensor
         return result

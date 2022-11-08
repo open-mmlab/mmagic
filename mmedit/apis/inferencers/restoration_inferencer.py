@@ -13,6 +13,7 @@ from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
 
 class RestorationInferencer(BaseMMEditInferencer):
+    """inferencer that predicts with restoration models."""
 
     func_kwargs = dict(
         preprocess=['img'],
@@ -21,7 +22,16 @@ class RestorationInferencer(BaseMMEditInferencer):
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
     def preprocess(self, img: InputsType, ref: InputsType = None) -> Dict:
+        """Process the inputs into a model-feedable format.
 
+        Args:
+            img(InputsType): Image to be restored by models.
+            ref(InputsType): Reference image for resoration models.
+                Defaults to None.
+
+        Returns:
+            data(Dict): Results of preprocess.
+        """
         cfg = self.model.cfg
         device = next(self.model.parameters()).device  # model device
 
@@ -70,6 +80,7 @@ class RestorationInferencer(BaseMMEditInferencer):
         return data
 
     def forward(self, inputs: InputsType) -> PredType:
+        """Forward the inputs to the model."""
         with torch.no_grad():
             result = self.model(mode='tensor', **inputs)
         return result
@@ -78,8 +89,19 @@ class RestorationInferencer(BaseMMEditInferencer):
                   preds: PredType,
                   data: Dict = None,
                   result_out_dir: str = '') -> List[np.ndarray]:
+        """Visualize predictions.
 
-        output = tensor2img(preds[0])
-        mmcv.imwrite(output, result_out_dir)
+        Args:
+            preds (List[Union[str, np.ndarray]]): Forward results
+                by the inferencer.
+            data (List[Dict]): Not needed by this kind of inferencer.
+            result_out_dir (str): Output directory of image.
+                Defaults to ''.
 
-        return output
+        Returns:
+            List[np.ndarray]: Result of visualize
+        """
+        results = tensor2img(preds[0])
+        mmcv.imwrite(results, result_out_dir)
+
+        return results

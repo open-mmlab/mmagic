@@ -15,6 +15,7 @@ from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
 
 class MattingInferencer(BaseMMEditInferencer):
+    """inferencer that predicts with matting models."""
 
     func_kwargs = dict(
         preprocess=['img', 'trimap'],
@@ -23,6 +24,15 @@ class MattingInferencer(BaseMMEditInferencer):
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
     def preprocess(self, img: InputsType, trimap: InputsType) -> Dict:
+        """Process the inputs into a model-feedable format.
+
+        Args:
+            img(InputsType): Image to be processed by models.
+            mask(InputsType): Mask corresponding to the input image.
+
+        Returns:
+            results(Dict): Results of preprocess.
+        """
         # remove alpha from test_pipeline
         keys_to_remove = ['alpha', 'ori_alpha']
         for key in keys_to_remove:
@@ -54,6 +64,7 @@ class MattingInferencer(BaseMMEditInferencer):
         return preprocess_res
 
     def forward(self, inputs: InputsType) -> PredType:
+        """Forward the inputs to the model."""
         with torch.no_grad():
             return self.model(**inputs)
 
@@ -61,6 +72,18 @@ class MattingInferencer(BaseMMEditInferencer):
                   preds: PredType,
                   data: Dict = None,
                   result_out_dir: str = '') -> List[np.ndarray]:
+        """Visualize predictions.
+
+        Args:
+            preds (List[Union[str, np.ndarray]]): Forward results
+                by the inferencer.
+            data (List[Dict]): Not needed by this kind of inferencer.
+            result_out_dir (str): Output directory of image.
+                Defaults to ''.
+
+        Returns:
+            List[np.ndarray]: Result of visualize
+        """
         result = preds[0].output
         result = result.pred_alpha.data.cpu()
 

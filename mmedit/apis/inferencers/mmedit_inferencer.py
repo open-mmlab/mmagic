@@ -14,18 +14,22 @@ from .video_restoration_inferencer import VideoRestorationInferencer
 
 
 class MMEditInferencer(BaseMMEditInferencer):
+    """Class to assign task to different inferencers.
+
+    Args:
+        type (str): Inferencer type.
+        config (str or ConfigType): Model config or the path to it.
+        ckpt (str, optional): Path to the checkpoint.
+        device (str, optional): Device to run inference. If None, the best
+            device will be automatically used.
+    """
 
     def __init__(self,
                  type: Optional[str] = None,
                  config: Optional[Union[ConfigType, str]] = None,
                  ckpt: Optional[str] = None,
-                 device: Optional[str] = None,
-                 **kwargs) -> None:
-
+                 device: Optional[str] = None) -> None:
         self.type = type
-        self.visualizer = None
-        self.base_params = self._dispatch_kwargs(*kwargs)
-        self.num_visualized_imgs = 0
         if self.type == 'conditional':
             self.inferencer = ConditionalInferencer(config, ckpt, device)
         elif self.type == 'unconditional':
@@ -47,4 +51,12 @@ class MMEditInferencer(BaseMMEditInferencer):
             raise ValueError(f'Unknown inferencer type: {self.type}')
 
     def __call__(self, **kwargs) -> Union[Dict, List[Dict]]:
+        """Call the inferencer.
+
+        Args:
+            kwargs: Keyword arguments for the inferencer.
+
+        Returns:
+            Union[Dict, List[Dict]]: Results of inference pipeline.
+        """
         return self.inferencer(**kwargs)

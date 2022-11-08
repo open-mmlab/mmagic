@@ -13,6 +13,7 @@ from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
 
 class InpaintingInferencer(BaseMMEditInferencer):
+    """inferencer that predicts with inpainting models."""
 
     func_kwargs = dict(
         preprocess=['img', 'mask'],
@@ -21,6 +22,15 @@ class InpaintingInferencer(BaseMMEditInferencer):
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
     def preprocess(self, img: InputsType, mask: InputsType) -> Dict:
+        """Process the inputs into a model-feedable format.
+
+        Args:
+            img(InputsType): Image to be inpainted by models.
+            mask(InputsType): Image mask for inpainting models.
+
+        Returns:
+            results(Dict): Results of preprocess.
+        """
         infer_pipeline_cfg = [
             dict(type='LoadImageFromFile', key='gt', channel_order='bgr'),
             dict(
@@ -47,6 +57,7 @@ class InpaintingInferencer(BaseMMEditInferencer):
         return data
 
     def forward(self, inputs: InputsType) -> PredType:
+        """Forward the inputs to the model."""
         with torch.no_grad():
             result, x = self.model(mode='tensor', **inputs)
         return result
@@ -55,6 +66,18 @@ class InpaintingInferencer(BaseMMEditInferencer):
                   preds: PredType,
                   data: Dict = None,
                   result_out_dir: str = '') -> List[np.ndarray]:
+        """Visualize predictions.
+
+        Args:
+            preds (List[Union[str, np.ndarray]]): Forward results
+                by the inferencer.
+            data (List[Dict]): Mask of input image.
+            result_out_dir (str): Output directory of image.
+                Defaults to ''.
+
+        Returns:
+            List[np.ndarray]: Result of visualize
+        """
         result = preds[0]
         masks = data['data_samples'][0].mask.data
         masked_imgs = data['inputs'][0]

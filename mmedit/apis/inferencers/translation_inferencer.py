@@ -14,6 +14,7 @@ from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
 
 class TranslationInferencer(BaseMMEditInferencer):
+    """inferencer that predicts with translation models."""
 
     func_kwargs = dict(
         preprocess=['img'],
@@ -22,7 +23,14 @@ class TranslationInferencer(BaseMMEditInferencer):
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
     def preprocess(self, img: InputsType) -> Dict:
+        """Process the inputs into a model-feedable format.
 
+        Args:
+            img(InputsType): Image to be translated by models.
+
+        Returns:
+            results(Dict): Results of preprocess.
+        """
         assert isinstance(self.model, BaseTranslationModel)
 
         # get source domain and target domain
@@ -44,10 +52,11 @@ class TranslationInferencer(BaseMMEditInferencer):
         data = self.model.data_preprocessor(data, False)
         inputs_dict = data['inputs']
 
-        source_image = inputs_dict[f'img_{source_domain}']
-        return source_image
+        results = inputs_dict[f'img_{source_domain}']
+        return results
 
     def forward(self, inputs: InputsType) -> PredType:
+        """Forward the inputs to the model."""
         with torch.no_grad():
             results = self.model(
                 inputs, test_mode=True, target_domain=self.target_domain)
@@ -58,7 +67,18 @@ class TranslationInferencer(BaseMMEditInferencer):
                   preds: PredType,
                   data: Dict = None,
                   result_out_dir: str = '') -> List[np.ndarray]:
+        """Visualize predictions.
 
+        Args:
+            preds (List[Union[str, np.ndarray]]): Forward results
+                by the inferencer.
+            data (List[Dict]): Not needed by this kind of inferencer.
+            result_out_dir (str): Output directory of image.
+                Defaults to ''.
+
+        Returns:
+            List[np.ndarray]: Result of visualize
+        """
         results = (preds[:, [2, 1, 0]] + 1.) / 2.
 
         # save images

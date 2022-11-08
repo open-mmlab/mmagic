@@ -12,6 +12,7 @@ from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
 
 class UnconditionalInferencer(BaseMMEditInferencer):
+    """inferencer that predicts with unconditional models."""
 
     func_kwargs = dict(
         preprocess=[],
@@ -20,7 +21,11 @@ class UnconditionalInferencer(BaseMMEditInferencer):
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
     def preprocess(self) -> Dict:
+        """Process the inputs into a model-feedable format.
 
+        Returns:
+            results(Dict): Results of preprocess.
+        """
         # set model with infer_cfg if it exist else set default value
         if 'infer_cfg' in self.cfg and 'sample_nums' in self.cfg.infer_cfg:
             sample_nums = self.cfg.infer_cfg.sample_nums
@@ -31,19 +36,30 @@ class UnconditionalInferencer(BaseMMEditInferencer):
         else:
             sample_model = 'ema'
 
-        preprocess_res = dict(
-            num_batches=sample_nums, sample_model=sample_model)
+        results = dict(num_batches=sample_nums, sample_model=sample_model)
 
-        return preprocess_res
+        return results
 
     def forward(self, inputs: InputsType) -> PredType:
+        """Forward the inputs to the model."""
         return self.model(inputs)
 
     def visualize(self,
                   preds: PredType,
                   data: Dict = None,
                   result_out_dir: str = '') -> List[np.ndarray]:
+        """Visualize predictions.
 
+        Args:
+            preds (List[Union[str, np.ndarray]]): Forward results
+                by the inferencer.
+            data (List[Dict]): Not needed by this kind of inferencer.
+            result_out_dir (str): Output directory of image.
+                Defaults to ''.
+
+        Returns:
+            List[np.ndarray]: Result of visualize
+        """
         res_list = []
         res_list.extend([item.fake_img.data.cpu() for item in preds])
         results = torch.stack(res_list, dim=0)

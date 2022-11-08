@@ -63,6 +63,7 @@ def read_frames(source, start_index, num_frames, from_video, end_index):
 
 
 class VideoInterpolationInferencer(BaseMMEditInferencer):
+    """inferencer that predicts with video interpolation models."""
 
     func_kwargs = dict(
         preprocess=['video'],
@@ -71,6 +72,14 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
         postprocess=[])
 
     def preprocess(self, video: InputsType) -> Dict:
+        """Process the inputs into a model-feedable format.
+
+        Args:
+            video(InputsType): Video to be interpolated by models.
+
+        Returns:
+            video(InputsType): Video to be interpolated by models.
+        """
         infer_cfg = dict(
             start_idx=0,
             end_idx=None,
@@ -107,8 +116,19 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
 
         return video
 
-    def forward(self, inputs: InputsType,
-                result_out_dir: InputsType) -> PredType:
+    def forward(self,
+                inputs: InputsType,
+                result_out_dir: InputsType = '') -> PredType:
+        """Forward the inputs to the model.
+
+        Args:
+            inputs (InputsType): Input video directory.
+            result_out_dir (str): Output directory of video.
+                Defaults to ''.
+
+        Returns:
+            PredType: Result of forwarding
+        """
         # check if the input is a video
         input_file_extension = os.path.splitext(inputs)[1]
         if input_file_extension in VIDEO_EXTENSIONS:
@@ -213,6 +233,7 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
                   preds: PredType,
                   data: Dict = None,
                   result_out_dir: str = '') -> List[np.ndarray]:
+        """Visualize is not needed in this inferencer."""
         pass
 
     def postprocess(
@@ -220,22 +241,5 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
         preds: PredType,
         imgs: Optional[List[np.ndarray]] = None
     ) -> Union[ResType, Tuple[ResType, np.ndarray]]:
-        """Postprocess predictions.
-
-        Args:
-            preds (List[Dict]): Predictions of the model.
-            imgs (Optional[np.ndarray]): Visualized predictions.
-            is_batch (bool): Whether the inputs are in a batch.
-                Defaults to False.
-            print_result (bool): Whether to print the result.
-                Defaults to False.
-            pred_out_file (str): Output file name to store predictions
-                without images. Supported file formats are “json”, “yaml/yml”
-                and “pickle/pkl”. Defaults to ''.
-            get_datasample (bool): Whether to use Datasample to store
-                inference results. If False, dict will be used.
-
-        Returns:
-            TODO
-        """
+        """Postprocess is not needed in this inferencer."""
         pass

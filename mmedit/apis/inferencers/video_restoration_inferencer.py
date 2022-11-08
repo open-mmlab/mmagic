@@ -40,6 +40,7 @@ def pad_sequence(data, window_size):
 
 
 class VideoRestorationInferencer(BaseMMEditInferencer):
+    """inferencer that predicts with video restoration models."""
 
     func_kwargs = dict(
         preprocess=['video'],
@@ -48,6 +49,14 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
         postprocess=[])
 
     def preprocess(self, video: InputsType) -> Dict:
+        """Process the inputs into a model-feedable format.
+
+        Args:
+            video(InputsType): Video to be restored by models.
+
+        Returns:
+            results(InputsType): Results of preprocess.
+        """
         # hard code parameters for unused code
         infer_cfg = dict(
             start_idx=0,
@@ -108,11 +117,19 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
         # compose the pipeline
         test_pipeline = Compose(test_pipeline)
         data = test_pipeline(data)
-        data = data['inputs'].unsqueeze(0) / 255.0  # in cpu
+        results = data['inputs'].unsqueeze(0) / 255.0  # in cpu
 
-        return data
+        return results
 
     def forward(self, inputs: InputsType) -> PredType:
+        """Forward the inputs to the model.
+
+        Args:
+            inputs (InputsType): Images array of input video.
+
+        Returns:
+            PredType: Results of forwarding
+        """
         with torch.no_grad():
             if self.window_size > 0:  # sliding window framework
                 data = pad_sequence(inputs, self.window_size)
@@ -141,6 +158,18 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
                   preds: PredType,
                   data: Dict = None,
                   result_out_dir: str = '') -> List[np.ndarray]:
+        """Visualize predictions.
+
+        Args:
+            preds (List[Union[str, np.ndarray]]): Forward results
+                by the inferencer.
+            data (List[Dict]): Not needed by this kind of inferencer.
+            result_out_dir (str): Output directory of image.
+                Defaults to ''.
+
+        Returns:
+            List[np.ndarray]: Result of visualize
+        """
         file_extension = os.path.splitext(result_out_dir)[1]
         if file_extension in VIDEO_EXTENSIONS:  # save as video
             h, w = preds.shape[-2:]
@@ -167,22 +196,5 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
         preds: PredType,
         imgs: Optional[List[np.ndarray]] = None
     ) -> Union[ResType, Tuple[ResType, np.ndarray]]:
-        """Postprocess predictions.
-
-        Args:
-            preds (List[Dict]): Predictions of the model.
-            imgs (Optional[np.ndarray]): Visualized predictions.
-            is_batch (bool): Whether the inputs are in a batch.
-                Defaults to False.
-            print_result (bool): Whether to print the result.
-                Defaults to False.
-            pred_out_file (str): Output file name to store predictions
-                without images. Supported file formats are “json”, “yaml/yml”
-                and “pickle/pkl”. Defaults to ''.
-            get_datasample (bool): Whether to use Datasample to store
-                inference results. If False, dict will be used.
-
-        Returns:
-            TODO
-        """
+        """Postprocess is not needed in this inferencer."""
         pass

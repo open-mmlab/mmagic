@@ -14,7 +14,9 @@ class MMEdit:
     """MMEdit API for mmediting models inference.
 
     Args:
-        model_name (str): Name of the editing model. Default to 'FCE_IC15'.
+        model_name (str): Name of the editing model.
+        model_version (str): Version of a specific model.
+            Default to 'a'.
         model_config (str): Path to the config file for the editing model.
             Default to None.
         model_ckpt (str): Path to the checkpoint file for the editing model.
@@ -31,7 +33,6 @@ class MMEdit:
                  model_ckpt: str = None,
                  device: torch.device = 'cuda',
                  **kwargs) -> None:
-
         register_all_modules(init_default_scope=True)
         inferencer_kwargs = {}
         inferencer_kwargs.update(
@@ -78,20 +79,20 @@ class MMEdit:
               mask: InputsType = None,
               result_out_dir: str = '',
               **kwargs) -> Union[Dict, List[Dict]]:
-        """Inferences edit model on an image(video) or a folder of
-        images(videos).
+        """Infer edit model on an image(video).
 
         Args:
-            imgs (str or np.array or Sequence[str or np.array]): Img,
-                folder path, np array or list/tuple (with img
-                paths or np arrays).
-            result_out_dir (str): Output directory of images. Defaults to ''.
+            img (str): Img path.
+            video (str): Video path.
+            label (int): Label for conditional or unconditional models.
+            trimap (str): Trimap path for matting models.
+            mask (str): Mask path for inpainting models.
+            result_out_dir (str): Output directory of result image or video.
+                Defaults to ''.
 
         Returns:
             Dict or List[Dict]: Each dict contains the inference result of
-            each image. Possible keys are "det_polygons", "det_scores",
-            "rec_texts", "rec_scores", "kie_labels", "kie_scores",
-            "kie_edge_labels" and "kie_edge_scores".
+            each image or video.
         """
         return self.inferencer(
             img=img,
