@@ -22,12 +22,6 @@ from mmedit.models.base_models import BaseTranslationModel
 from mmedit.registry import MODELS
 from mmedit.utils import register_all_modules
 
-try:
-    from facexlib.utils.face_restoration_helper import FaceRestoreHelper
-    has_facexlib = True
-except ImportError:
-    has_facexlib = False
-
 
 def set_random_seed(seed, deterministic=False, use_rank_shift=True):
     """Set random seed.
@@ -428,6 +422,13 @@ def restoration_inference(model, img, ref=None):
         result = model(mode='tensor', **data)
     result = result[0]
     return result
+
+
+try:
+    from facexlib.utils.face_restoration_helper import FaceRestoreHelper
+    has_facexlib = True
+except ImportError:
+    has_facexlib = False
 
 
 def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
