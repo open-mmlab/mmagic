@@ -35,7 +35,7 @@ class AirNetRestorer(BaseEditModel):
                  train_patch_size=128):
         super().__init__(generator, pixel_loss, train_cfg, test_cfg, init_cfg,
                          data_preprocessor)
-        self.train_path_size = train_patch_size
+        self.train_patch_size = train_patch_size
         self.ce_loss = nn.CrossEntropyLoss()
 
     def forward_tensor(self, inputs, data_samples=None, **kwargs):
@@ -74,7 +74,7 @@ class AirNetRestorer(BaseEditModel):
         outputs = self.generator(inputs_dict)
 
         logits = outputs['logits']
-        labels = outputs['lables']
+        labels = outputs['labels']
         contrastive_loss = self.ce_loss(logits, labels)
         loss_dict = dict(
             loss=contrastive_loss, contrastive_loss=contrastive_loss)
@@ -124,14 +124,14 @@ class AirNetRestorer(BaseEditModel):
     def _crop_patch(self, img_1, img_2):
         H = img_1.shape[-2]
         W = img_1.shape[-1]
-        assert (H <= self.train_path_size) and (W <= self.train_patch_size), \
+        assert (H >= self.train_patch_size) and (W >= self.train_patch_size), \
             'Input image size is smaller than the train patch size'
-        ind_H = torch.randint(0, H - self.train_patch_size)
-        ind_W = torch.randint(0, W - self.train_patch_size)
+        ind_H, ind_W = torch.randint(0, H - self.train_patch_size, (2, 1))
+        # ind_W = torch.randint(0, W - self.train_patch_size, 1)
 
         patch_1 = img_1[..., ind_H:ind_H + self.train_patch_size,
-                        ind_W:ind_W + self.args.train_patch_size]
+                        ind_W:ind_W + self.train_patch_size]
         patch_2 = img_2[..., ind_H:ind_H + self.train_patch_size,
-                        ind_W:ind_W + self.args.train_patch_size]
+                        ind_W:ind_W + self.train_patch_size]
 
         return patch_1, patch_2

@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from .airnet import CBDE, DGRN, AirNet, AirNetRestorer
 from .aotgan import AOTBlockNeck, AOTEncoderDecoder, AOTInpaintor
 from .arcface import IDLossModel
 from .basicvsr import BasicVSR, BasicVSRNet
@@ -73,5 +74,6 @@ __all__ = [
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'IDLossModel', 'PESinGAN',
-    'MSPIEStyleGAN2', 'StyleGAN3Generator'
+    'MSPIEStyleGAN2', 'StyleGAN3Generator', 'AirNetRestorer', 'AirNet', 'CBDE',
+    'DGRN'
 ]

@@ -5,13 +5,18 @@ work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
 # model settings
+N = 1
+# in paper, it is 400 * N degradations in each epoch
+# which means 400 batches each epoch
+epoch_image_size = 400 * N
+
 model = dict(
-    type='AirNetModel',
+    type='AirNetRestorer',
     generator=dict(
         type='AirNet',
         encoder_cfg=dict(
             type='CBDE',
-            batch_size=8,
+            batch_size=N,
             dim=256,
         ),
         restorer_cfg=dict(
@@ -23,12 +28,13 @@ model = dict(
         ),
     ),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-    train_cfg=dict(),
+    train_cfg=dict(epochs_encoder=100),
     test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
-        input_view=[0., 0., 0.],
-        output_view=[255., 255., 255.]),
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.],
+    ),
     train_patch_size=128)
 
 train_pipeline = [
@@ -54,17 +60,16 @@ val_pipeline = [
 
 # dataset settings
 dataset_type = 'BasicImageDataset'
-N = 1
 
 train_dataloader = dict(
     num_workers=8,
-    batch_size=400 * N,  # gpus 4
+    batch_size=N,  # gpus 4
     persistent_workers=False,
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root='../../datasets/gopro/train',
+        data_root='../datasets/gopro/train',
         data_prefix=dict(gt='sharp', img='blur'),
         ann_file='meta_info_gopro_train.txt',
         pipeline=train_pipeline))
@@ -77,21 +82,20 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root='../../datasets/gopro/test',
+        data_root='../datasets/gopro/test',
         ann_file='meta_info_gopro_test.txt',
         data_prefix=dict(gt='sharp', img='blur'),
         pipeline=val_pipeline))
 
 test_dataloader = dict(
     num_workers=4,
-    batch_size=8,
     persistent_workers=False,
     drop_last=False,
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root='../../datasets/gopro/mini_test',
+        data_root='../datasets/gopro/mini_test',
         data_prefix=dict(gt='sharp', img='blur'),
         pipeline=val_pipeline))
 
@@ -102,8 +106,7 @@ val_evaluator = [
 ]
 test_evaluator = val_evaluator
 
-train_cfg = dict(
-    type='EpochBasedTrainLoop', max_epochs=1000, epochs_encoder=100)
+train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=1000)
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
@@ -123,7 +126,7 @@ param_scheduler = [
 default_hooks = dict(
     checkpoint=dict(
         type='CheckpointHook',
-        interval=1,
+        interval=10,
         save_optimizer=True,
         by_epoch=True,
         out_dir=save_dir,
