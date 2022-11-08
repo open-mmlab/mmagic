@@ -5,15 +5,15 @@
 * Number of papers: 41
    - ALGORITHM: 42
 * Tasks:
+    - image super-resolution
+    - unconditional gans
+    - video interpolation
+    - inpainting
+    - image2image translation
     - internal learning
     - video super-resolution
-    - inpainting
-    - image super-resolution
-    - conditional gans
-    - video interpolation
-    - unconditional gans
     - matting
-    - image2image translation
+    - conditional gans
 
 For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
@@ -329,7 +329,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
 
 ##  TOFlow (IJCV'2019)
-* Tasks: video super-resolution,video interpolation
+* Tasks: video interpolation,video super-resolution
 * Number of checkpoints: 6
 * Number of configs: 6
 * Number of papers: 1
