@@ -1,19 +1,20 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os
 import math
+import os
 import os.path as osp
-import torch
-import numpy as np
-import mmcv
+from typing import Dict, List, Optional, Tuple, Union
+
 import cv2
-from typing import Dict, List, Union, Tuple, Optional
+import mmcv
+import numpy as np
+import torch
+from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 from mmengine.fileio import FileClient
 from mmengine.utils import ProgressBar
-from mmengine.dataset import Compose
 
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType, ResType
-
+from .base_mmedit_inferencer import (BaseMMEditInferencer, InputsType,
+                                     PredType, ResType)
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 FILE_CLIENT = FileClient('disk')
@@ -71,12 +72,12 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
 
     def preprocess(self, video: InputsType) -> Dict:
         infer_cfg = dict(
-                    start_idx = 0,
-                    end_idx = None,
-                    batch_size = 4,
-                    fps_multiplier=0,
-                    fps=0,
-                    filename_tmpl = '{08d}.png')
+            start_idx=0,
+            end_idx=None,
+            batch_size=4,
+            fps_multiplier=0,
+            fps=0,
+            filename_tmpl='{08d}.png')
         self.start_idx = infer_cfg['start_idx']
         self.end_idx = infer_cfg['end_idx']
         self.batch_size = infer_cfg['batch_size']
@@ -106,7 +107,8 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
 
         return video
 
-    def forward(self, inputs: InputsType, result_out_dir: InputsType) -> PredType:
+    def forward(self, inputs: InputsType,
+                result_out_dir: InputsType) -> PredType:
         # check if the input is a video
         input_file_extension = os.path.splitext(inputs)[1]
         if input_file_extension in VIDEO_EXTENSIONS:
@@ -116,7 +118,8 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
             from_video = True
             h, w = source.height, source.width
             if self.fps_multiplier:
-                assert self.fps_multiplier > 0, '`fps_multiplier` cannot be negative'
+                assert self.fps_multiplier > 0, \
+                    '`fps_multiplier` cannot be negative'
                 output_fps = self.fps_multiplier * input_fps
             else:
                 output_fps = self.fps if self.fps > 0 else input_fps * 2
@@ -135,26 +138,33 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
         output_file_extension = os.path.splitext(result_out_dir)[1]
         if output_file_extension in VIDEO_EXTENSIONS:
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            target = cv2.VideoWriter(result_out_dir, fourcc, output_fps, (w, h))
+            target = cv2.VideoWriter(result_out_dir, fourcc, output_fps,
+                                     (w, h))
             to_video = True
         else:
             to_video = False
 
-        self.end_idx = min(self.end_idx, length) if self.end_idx is not None else length
+        self.end_idx = min(self.end_idx,
+                           length) if self.end_idx is not None else length
 
         # calculate step args
         step_size = self.model.step_frames * self.batch_size
-        lenth_per_step = self.model.required_frames + self.model.step_frames * (
-            self.batch_size - 1)
+        lenth_per_step = self.model.required_frames + \
+            self.model.step_frames * (self.batch_size - 1)
         repeat_frame = self.model.required_frames - self.model.step_frames
 
         prog_bar = ProgressBar(
             math.ceil(
-                (self.end_idx + step_size - lenth_per_step - self.start_idx) / step_size))
+                (self.end_idx + step_size - lenth_per_step - self.start_idx) /
+                step_size))
         output_index = self.start_idx
         for self.start_index in range(self.start_idx, self.end_idx, step_size):
             images = read_frames(
-                source, self.start_index, lenth_per_step, from_video, end_index=self.end_idx)
+                source,
+                self.start_index,
+                lenth_per_step,
+                from_video,
+                end_index=self.end_idx)
 
             # data prepare
             data = dict(img=images, inputs_path=None, key=inputs)
@@ -183,8 +193,9 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
                     target.write(frame)
             else:
                 for frame in result:
-                    save_path = osp.join(result_out_dir,
-                                        self.filename_tmpl.format(output_index))
+                    save_path = osp.join(
+                        result_out_dir,
+                        self.filename_tmpl.format(output_index))
                     mmcv.imwrite(frame, save_path)
                     output_index += 1
 
@@ -195,17 +206,17 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
         print(f'Output dir: {result_out_dir}')
         if to_video:
             target.release()
-        
+
         return {}
-    
+
     def visualize(self,
-                preds: PredType,
-                data: Dict = None,
-                result_out_dir: str = '') -> List[np.ndarray]:
+                  preds: PredType,
+                  data: Dict = None,
+                  result_out_dir: str = '') -> List[np.ndarray]:
         pass
 
     def postprocess(
-        self, 
+        self,
         preds: PredType,
         imgs: Optional[List[np.ndarray]] = None
     ) -> Union[ResType, Tuple[ResType, np.ndarray]]:

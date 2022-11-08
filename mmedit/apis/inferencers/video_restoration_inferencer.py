@@ -1,18 +1,21 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import glob
 import os
 import os.path as osp
-import torch
-import numpy as np
-import mmcv
-import glob
+from typing import Dict, List, Optional, Tuple, Union
+
 import cv2
-from typing import Dict, List, Optional, Union, Tuple
+import mmcv
+import numpy as np
+import torch
 from mmengine.dataset import Compose
 
 from mmedit.utils import tensor2img
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType, ResType
+from .base_mmedit_inferencer import (BaseMMEditInferencer, InputsType,
+                                     PredType, ResType)
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
+
 
 def pad_sequence(data, window_size):
     """Pad frame sequence data.
@@ -35,6 +38,7 @@ def pad_sequence(data, window_size):
 
     return data
 
+
 class VideoRestorationInferencer(BaseMMEditInferencer):
 
     func_kwargs = dict(
@@ -46,15 +50,15 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
     def preprocess(self, video: InputsType) -> Dict:
         # hard code parameters for unused code
         infer_cfg = dict(
-                    start_idx = 0,
-                    filename_tmpl = '{08d}.png',
-                    window_size = 0,
-                    max_seq_len = None)
+            start_idx=0,
+            filename_tmpl='{08d}.png',
+            window_size=0,
+            max_seq_len=None)
         self.start_idx = infer_cfg['start_idx']
         self.filename_tmpl = infer_cfg['filename_tmpl']
         self.window_size = infer_cfg['window_size']
         self.max_seq_len = infer_cfg['max_seq_len']
-        
+
         # build the data pipeline
         if self.model.cfg.get('demo_pipeline', None):
             test_pipeline = self.model.cfg.demo_pipeline
@@ -81,7 +85,7 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
                     tmp_pipeline.append(pipeline)
             test_pipeline = tmp_pipeline
         else:
-            # the first element in the pipeline must be 'GenerateSegmentIndices'
+            # the first element in the pipeline must be 'GenerateSegmentIndices'    # noqa: E501
             if test_pipeline[0]['type'] != 'GenerateSegmentIndices':
                 raise TypeError('The first element in the pipeline must be '
                                 f'"GenerateSegmentIndices", but got '
@@ -115,25 +119,28 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
                 result = []
                 for i in range(0, data.size(1) - 2 * (self.window_size // 2)):
                     data_i = data[:, i:i + self.window_size].to(self.device)
-                    result.append(self.model(inputs=data_i, mode='tensor').cpu())
+                    result.append(
+                        self.model(inputs=data_i, mode='tensor').cpu())
                 result = torch.stack(result, dim=1)
             else:  # recurrent framework
                 if self.max_seq_len is None:
-                    result = self.model(inputs=inputs.to(self.device), mode='tensor').cpu()
+                    result = self.model(
+                        inputs=inputs.to(self.device), mode='tensor').cpu()
                 else:
                     result = []
                     for i in range(0, inputs.size(1), self.max_seq_len):
                         result.append(
                             self.model(
-                                inputs=inputs[:, i:i + self.max_seq_len].to(self.device),
+                                inputs=inputs[:, i:i + self.max_seq_len].to(
+                                    self.device),
                                 mode='tensor').cpu())
                     result = torch.cat(result, dim=1)
         return result
-    
+
     def visualize(self,
-                preds: PredType,
-                data: Dict = None,
-                result_out_dir: str = '') -> List[np.ndarray]:
+                  preds: PredType,
+                  data: Dict = None,
+                  result_out_dir: str = '') -> List[np.ndarray]:
         file_extension = os.path.splitext(result_out_dir)[1]
         if file_extension in VIDEO_EXTENSIONS:  # save as video
             h, w = preds.shape[-2:]
@@ -148,14 +155,15 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
             for i in range(self.start_idx, self.start_idx + preds.size(1)):
                 output_i = preds[:, i - self.start_idx, :, :, :]
                 output_i = tensor2img(output_i)
-                save_path_i = f'{preds.output_dir}/{self.filename_tmpl.format(i)}'
+                save_path_i = f'{preds.output_dir} / \
+                    {self.filename_tmpl.format(i)}'
 
                 mmcv.imwrite(output_i, save_path_i)
-        
+
         return []
 
     def postprocess(
-        self, 
+        self,
         preds: PredType,
         imgs: Optional[List[np.ndarray]] = None
     ) -> Union[ResType, Tuple[ResType, np.ndarray]]:
@@ -178,4 +186,3 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
             TODO
         """
         pass
-

@@ -1,9 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
-import torch
+from typing import Dict, List
+
 import mmcv
 import numpy as np
-from typing import Dict, List
+import torch
 from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
@@ -42,8 +43,8 @@ class MattingInferencer(BaseMMEditInferencer):
         _data = test_pipeline(data)
         trimap = _data['data_samples'].trimap.data
         preprocess_res = dict()
-        preprocess_res['inputs'] = torch.cat([_data['inputs'], trimap], 
-                                                dim=0).float()
+        preprocess_res['inputs'] = torch.cat([_data['inputs'], trimap],
+                                             dim=0).float()
         preprocess_res = collate([preprocess_res])
         preprocess_res['data_samples'] = [_data['data_samples']]
         preprocess_res['mode'] = 'predict'
@@ -55,8 +56,10 @@ class MattingInferencer(BaseMMEditInferencer):
     def forward(self, inputs: InputsType) -> PredType:
         with torch.no_grad():
             return self.model(**inputs)
-    
-    def visualize(self, preds: PredType, data: Dict = None,
+
+    def visualize(self,
+                  preds: PredType,
+                  data: Dict = None,
                   result_out_dir: str = '') -> List[np.ndarray]:
         result = preds[0].output
         result = result.pred_alpha.data.cpu()

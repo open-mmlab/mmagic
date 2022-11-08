@@ -1,22 +1,22 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import glob
 import math
 import os
 import os.path as osp
-import glob
-import torch
+
+import cv2
 import mmcv
 import numpy as np
-import cv2
-from mmengine import is_list_of
-from mmengine import Config
+import torch
+from mmengine import Config, is_list_of
 from mmengine.config import ConfigDict
-from mmengine.runner import load_checkpoint
-from mmengine.runner import set_random_seed as set_random_seed_engine
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
-from torch.nn.parallel import scatter
 from mmengine.fileio import FileClient
+from mmengine.runner import load_checkpoint
+from mmengine.runner import set_random_seed as set_random_seed_engine
 from mmengine.utils import ProgressBar
+from torch.nn.parallel import scatter
 
 from mmedit.models.base_models import BaseTranslationModel
 from mmedit.registry import MODELS
@@ -27,6 +27,7 @@ try:
     has_facexlib = True
 except ImportError:
     has_facexlib = False
+
 
 def set_random_seed(seed, deterministic=False, use_rank_shift=True):
     """Set random seed.
@@ -95,6 +96,7 @@ def init_model(config, checkpoint=None, device='cuda:0'):
     model.eval()
 
     return model
+
 
 @torch.no_grad()
 def sample_unconditional_model(model,
@@ -226,6 +228,7 @@ def sample_conditional_model(model,
     results = torch.stack(res_list, dim=0)
     return results
 
+
 def inpainting_inference(model, masked_img, mask):
     """Inference image with the model.
 
@@ -237,18 +240,18 @@ def inpainting_inference(model, masked_img, mask):
     Returns:
         Tensor: The predicted inpainting result.
     """
-    cfg = model.cfg
     device = next(model.parameters()).device  # model device
 
     # build the data pipeline
     infer_pipeline = [
-                    dict(type='LoadImageFromFile', key='gt', channel_order='bgr'),
-                    dict(
-                        type='LoadMask',
-                        mask_mode='file',
-                    ),
-                    dict(type='GetMaskedImage'),
-                    dict(type='PackEditInputs'),]
+        dict(type='LoadImageFromFile', key='gt', channel_order='bgr'),
+        dict(
+            type='LoadMask',
+            mask_mode='file',
+        ),
+        dict(type='GetMaskedImage'),
+        dict(type='PackEditInputs'),
+    ]
 
     test_pipeline = Compose(infer_pipeline)
     # prepare data
@@ -272,6 +275,7 @@ def inpainting_inference(model, masked_img, mask):
     masked_imgs = data['inputs'][0]
     result = result[0] * masks + masked_imgs * (1. - masks)
     return result
+
 
 def matting_inference(model, img, trimap):
     """Inference image(s) with the model.
@@ -317,6 +321,7 @@ def matting_inference(model, img, trimap):
     result = result.pred_alpha.data
     return result.cpu().numpy()
 
+
 def sample_img2img_model(model, image_path, target_domain=None, **kwargs):
     """Sampling from translation models.
 
@@ -360,6 +365,7 @@ def sample_img2img_model(model, image_path, target_domain=None, **kwargs):
             **kwargs)
     output = results['target']
     return output
+
 
 def restoration_inference(model, img, ref=None):
     """Inference image with the model.
@@ -422,6 +428,7 @@ def restoration_inference(model, img, ref=None):
         result = model(mode='tensor', **data)
     result = result[0]
     return result
+
 
 def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
     """Inference image with the model.
@@ -814,3 +821,49 @@ def video_interpolation_inference(model,
     print(f'Output dir: {output_dir}')
     if to_video:
         target.release()
+
+
+def colorization_inference(model, img):
+    """Inference image with the model.
+
+    Args:
+        model (nn.Module): The loaded model.
+        img (str): Image file path.
+
+    Returns:
+        Tensor: The predicted colorization result.
+    """
+    device = next(model.parameters()).device
+
+    # build the data pipeline
+    test_pipeline = Compose(model.cfg.test_pipeline)
+    # prepare data
+    data = dict(img_path=img)
+    _data = test_pipeline(data)
+    data = dict()
+    data['inputs'] = _data['inputs'] / 255.0
+    data = collate([data])
+    data['data_samples'] = [_data['data_samples']]
+    if 'cuda' in str(device):
+        data = scatter(data, [device])[0]
+        if not data['data_samples'][0].empty_box:
+            data['data_samples'][0].cropped_img.data = scatter(
+                data['data_samples'][0].cropped_img.data, [device])[0] / 255.0
+
+            data['data_samples'][0].box_info.data = scatter(
+                data['data_samples'][0].box_info.data, [device])[0]
+
+            data['data_samples'][0].box_info_2x.data = scatter(
+                data['data_samples'][0].box_info_2x.data, [device])[0]
+
+            data['data_samples'][0].box_info_4x.data = scatter(
+                data['data_samples'][0].box_info_4x.data, [device])[0]
+
+            data['data_samples'][0].box_info_8x.data = scatter(
+                data['data_samples'][0].box_info_8x.data, [device])[0]
+
+    # forward the model
+    with torch.no_grad():
+        result = model(mode='tensor', **data)
+
+    return result

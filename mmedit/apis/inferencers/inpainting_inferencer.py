@@ -1,8 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch
+from typing import Dict, List
+
 import mmcv
 import numpy as np
-from typing import Dict, List
+import torch
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 from torch.nn.parallel import scatter
@@ -21,14 +22,14 @@ class InpaintingInferencer(BaseMMEditInferencer):
 
     def preprocess(self, img: InputsType, mask: InputsType) -> Dict:
         infer_pipeline_cfg = [
-                        dict(type='LoadImageFromFile', key='gt', channel_order='bgr'),
-                        dict(
-                            type='LoadMask',
-                            mask_mode='file',
-                        ),
-                        dict(type='GetMaskedImage'),
-                        dict(type='PackEditInputs'),
-                    ]
+            dict(type='LoadImageFromFile', key='gt', channel_order='bgr'),
+            dict(
+                type='LoadMask',
+                mask_mode='file',
+            ),
+            dict(type='GetMaskedImage'),
+            dict(type='PackEditInputs'),
+        ]
 
         infer_pipeline = Compose(infer_pipeline_cfg)
 
@@ -49,11 +50,11 @@ class InpaintingInferencer(BaseMMEditInferencer):
         with torch.no_grad():
             result, x = self.model(mode='tensor', **inputs)
         return result
-    
+
     def visualize(self,
-                preds: PredType,
-                data: Dict = None,
-                result_out_dir: str = '') -> List[np.ndarray]:
+                  preds: PredType,
+                  data: Dict = None,
+                  result_out_dir: str = '') -> List[np.ndarray]:
         result = preds[0]
         masks = data['data_samples'][0].mask.data
         masked_imgs = data['inputs'][0]
@@ -63,4 +64,3 @@ class InpaintingInferencer(BaseMMEditInferencer):
         mmcv.imwrite(result, result_out_dir)
 
         return result
-

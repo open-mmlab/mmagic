@@ -1,12 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
-import torch
-import numpy as np
 from typing import Dict, List
-from torchvision import utils
+
+import numpy as np
+import torch
 from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
+from torchvision import utils
 
 from mmedit.models.base_models import BaseTranslationModel
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
@@ -21,7 +22,7 @@ class TranslationInferencer(BaseMMEditInferencer):
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
     def preprocess(self, img: InputsType) -> Dict:
-        
+
         assert isinstance(self.model, BaseTranslationModel)
 
         # get source domain and target domain
@@ -49,17 +50,15 @@ class TranslationInferencer(BaseMMEditInferencer):
     def forward(self, inputs: InputsType) -> PredType:
         with torch.no_grad():
             results = self.model(
-                inputs,
-                test_mode=True,
-                target_domain=self.target_domain)
+                inputs, test_mode=True, target_domain=self.target_domain)
         output = results['target']
         return output
-    
+
     def visualize(self,
-                preds: PredType,
-                data: Dict = None,
-                result_out_dir: str = '') -> List[np.ndarray]:
-        
+                  preds: PredType,
+                  data: Dict = None,
+                  result_out_dir: str = '') -> List[np.ndarray]:
+
         results = (preds[:, [2, 1, 0]] + 1.) / 2.
 
         # save images
@@ -67,4 +66,3 @@ class TranslationInferencer(BaseMMEditInferencer):
         utils.save_image(results, result_out_dir)
 
         return results
-

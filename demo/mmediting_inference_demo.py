@@ -1,25 +1,30 @@
+# Copyright (c) OpenMMLab. All rights reserved.
+# isort: off
 from argparse import ArgumentParser
-
 from mmedit.edit import MMEdit
 
-# resources/input/matting/beach_fg.png
 
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument(
-        '--img', 
-        type=str, 
-        default='resources/input/restoration/0901x2.png', 
+        '--img',
+        type=str,
+        default='resources/input/restoration/0901x2.png',
         help='Input image file.')
     parser.add_argument(
-        '--label', 
-        type=int, 
-        default=1, 
+        '--video',
+        type=str,
+        default='resources/input/video_restoration/v_Basketball_g01_c01.avi',
+        help='Input video file.')
+    parser.add_argument(
+        '--label',
+        type=int,
+        default=1,
         help='Input label for conditional models.')
     parser.add_argument(
-        '--trimap', 
-        type=str, 
-        default='resources/input/matting/beach_trimap.png', 
+        '--trimap',
+        type=str,
+        default='resources/input/matting/beach_trimap.png',
         help='Input for matting models.')
     parser.add_argument(
         '--mask',
@@ -27,14 +32,14 @@ def parse_args():
         default='resources/input/inpainting/mask_2_resized.png',
         help='path to input mask file')
     parser.add_argument(
-        '--img-out-dir',
+        '--result-out-dir',
         type=str,
-        default='resources/demo_results/inferencer_samples_apis.png',
+        default='resources/demo_results/inferencer_samples_apis_video.avi',
         help='Output directory of images.')
     parser.add_argument(
         '--model-name',
         type=str,
-        default='esrgan',
+        default='basicvsr',
         help='Pretrained editing algorithm')
     parser.add_argument(
         '--model-version',
@@ -73,10 +78,12 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
 def main():
     args = parse_args()
     editor = MMEdit(**vars(args))
     editor.infer(**vars(args))
+
 
 if __name__ == '__main__':
     main()

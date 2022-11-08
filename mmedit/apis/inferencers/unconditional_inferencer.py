@@ -1,10 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
-import torch
-import numpy as np
 from typing import Dict, List
-from torchvision import utils
+
+import numpy as np
+import torch
 from mmengine import mkdir_or_exist
+from torchvision import utils
 
 from mmedit.structures import EditDataSample
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
@@ -30,18 +31,19 @@ class UnconditionalInferencer(BaseMMEditInferencer):
         else:
             sample_model = 'ema'
 
-        preprocess_res = dict(num_batches=sample_nums, sample_model=sample_model)
+        preprocess_res = dict(
+            num_batches=sample_nums, sample_model=sample_model)
 
         return preprocess_res
 
     def forward(self, inputs: InputsType) -> PredType:
         return self.model(inputs)
-    
+
     def visualize(self,
-                preds: PredType,
-                data: Dict = None,
-                result_out_dir: str = '') -> List[np.ndarray]:
-        
+                  preds: PredType,
+                  data: Dict = None,
+                  result_out_dir: str = '') -> List[np.ndarray]:
+
         res_list = []
         res_list.extend([item.fake_img.data.cpu() for item in preds])
         results = torch.stack(res_list, dim=0)

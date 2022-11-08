@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Dict, List, Optional, Sequence, Tuple, Union
+
 import numpy as np
 from mmengine.structures import InstanceData
 
@@ -40,11 +41,11 @@ class BaseMMEditInferencer(BaseInferencer):
         preprocess=[],
         forward=[],
         visualize=[
-            'show', 'wait_time', 'draw_pred', 'pred_score_thr', 'result_out_dir'
+            'show', 'wait_time', 'draw_pred', 'pred_score_thr',
+            'result_out_dir'
         ],
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
     func_order = dict(preprocess=0, forward=1, visualize=2, postprocess=3)
-    
 
     def __init__(self,
                  config: Union[ConfigType, str],
@@ -90,10 +91,5 @@ class BaseMMEditInferencer(BaseInferencer):
         data = self.preprocess(**preprocess_kwargs)
         preds = self.forward(data, **forward_kwargs)
         imgs = self.visualize(preds, data, **visualize_kwargs)
-        results = self.postprocess(
-            preds, imgs, **postprocess_kwargs)
+        results = self.postprocess(preds, imgs, **postprocess_kwargs)
         return results
-
-
-
-

@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os
-import torch
-import numpy as np
-import mmcv
 from typing import Dict, List
+
+import mmcv
+import numpy as np
+import torch
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 from torch.nn.parallel import scatter
@@ -21,7 +21,7 @@ class RestorationInferencer(BaseMMEditInferencer):
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
     def preprocess(self, img: InputsType, ref: InputsType = None) -> Dict:
-        
+
         cfg = self.model.cfg
         device = next(self.model.parameters()).device  # model device
 
@@ -73,14 +73,13 @@ class RestorationInferencer(BaseMMEditInferencer):
         with torch.no_grad():
             result = self.model(mode='tensor', **inputs)
         return result
-    
+
     def visualize(self,
-                preds: PredType,
-                data: Dict = None,
-                result_out_dir: str = '') -> List[np.ndarray]:
-        
+                  preds: PredType,
+                  data: Dict = None,
+                  result_out_dir: str = '') -> List[np.ndarray]:
+
         output = tensor2img(preds[0])
         mmcv.imwrite(output, result_out_dir)
 
         return output
-

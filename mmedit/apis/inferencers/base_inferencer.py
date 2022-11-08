@@ -1,14 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os.path as osp
 from datetime import datetime
 from typing import Dict, List, Optional, Sequence, Tuple, Union
+
+import mmcv
 import numpy as np
 import torch
-import mmcv
-import os.path as osp
 from mmengine.config import Config
+from mmengine.dataset import Compose
 from mmengine.runner import load_checkpoint
 from mmengine.structures import InstanceData
-from mmengine.dataset import Compose
 
 from mmedit.registry import MODELS, VISUALIZERS
 from mmedit.utils import ConfigType
@@ -96,7 +97,7 @@ class BaseInferencer:
             if transform['type'] == name:
                 return i
         return -1
-        
+
     def _init_visualizer(self, cfg: ConfigType) -> None:
         """Initialize visualizers."""
         # TODO: We don't export images via backends since the interface
@@ -182,8 +183,8 @@ class BaseInferencer:
                 raise ValueError('Unsupported input type: '
                                  f'{type(single_input)}')
 
-            out_file = osp.join(result_out_dir, img_name) if result_out_dir != '' \
-                else None
+            out_file = osp.join(result_out_dir, img_name) if \
+                result_out_dir != '' else None
 
             self.visualizer.add_datasample(
                 img_name,
