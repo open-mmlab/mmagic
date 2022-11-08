@@ -1,5 +1,53 @@
 # Changelog
 
+## v1.0.0rc2 (02/11/2022)
+
+**Highlights**
+
+We are excited to announce the release of MMEditing 1.0.0rc2. This release supports 43+ models, 170+ configs and 169+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
+
+- patch-based and slider-based image and video comparison viewer.
+- image colorization.
+
+We want to sincerely thank our community for continuously improving MMEditing.
+
+**New Features & Improvements**
+
+- Support qualitative comparison tools. (#1303)
+- Support instance aware colorization. (#1370)
+- Support multi-metrics with different sample-model. (#1171)
+- Improve the implementation
+  - refactoring evaluation metrics. (#1164)
+  - Save gt images in PGGAN's `forward`. (#1332)
+  - Improve type and change default number of `preprocess_div2k_dataset.py`. (#1380)
+  - Support pixel value clip in visualizer. (#1365)
+  - Support SinGAN Dataset and SinGAN demo. (#1363)
+  - Avoid cast int and float in GenDataPreprocessor. (#1385)
+- Improve the documentation
+  - Update a menu switcher. (#1162)
+  - Fix TTSR's README. (#1325)
+  - Revise docs (change `PackGenInputs` and `GenDataSample`). (#1382)
+
+**Bug Fixes**
+
+- Fix PPL bug. (#1172)
+- Fix RDN number of channels. (#1328)
+- Fix types of exceptions in demos. (#1372)
+- Fix realesrgan ema. (#1341)
+- Improve the assertion to ensuer `GenerateFacialHeatmap` as `np.float32`. (#1310)
+- Fix sampling behavior of `unpaired_dataset.py` and  urls in cyclegan's README. (#1308)
+- Fix vsr models in pytorch2onnx. (#1300)
+- Fix incorrect settings in configs. (#1167,#1200,#1236,#1293,#1302,#1304,#1319,#1331,#1336,#1349,#1352,#1353,#1358,#1364,#1367,#1384,#1386,#1391,#1392,#1393)
+
+**New Contributors**
+
+- @gaoyang07 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1372
+
+**Contributors**
+
+A total of 7 developers contributed to this release.
+Thanks @LeoXing1996, @Z-Fran, @zengyh1900, @plyfager, @ryanxingql, @ruoningYu, @gaoyang07.
+
 ## v1.0.0rc1(23/9/2022)
 
 MMEditing 1.0.0rc1 has merged MMGeneration 1.x.

@@ -229,6 +229,21 @@ class PackEditInputs(BaseTransform):
             gt_bg_tensor = images_to_tensor(gt_bg)
             data_sample.gt_bg = PixelData(data=gt_bg_tensor)
 
+        if 'rgb_img' in results:
+            gt_rgb = results.pop('rgb_img')
+            gt_rgb_tensor = images_to_tensor(gt_rgb)
+            data_sample.gt_rgb = PixelData(data=gt_rgb_tensor)
+
+        if 'gray_img' in results:
+            gray = results.pop('gray_img')
+            gray_tensor = images_to_tensor(gray)
+            data_sample.gray = PixelData(data=gray_tensor)
+
+        if 'cropped_img' in results:
+            cropped_img = results.pop('cropped_img')
+            cropped_img = images_to_tensor(cropped_img)
+            data_sample.cropped_img = PixelData(data=cropped_img)
+
         metainfo = dict()
         for key in results:
             metainfo[key] = results[key]

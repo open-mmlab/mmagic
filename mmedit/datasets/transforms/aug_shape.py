@@ -319,24 +319,31 @@ class Resize(BaseTransform):
         Returns:
             img (np.ndarray): Resized image.
         """
-
-        if self.keep_ratio:
-            img, self.scale_factor = mmcv.imrescale(
-                img,
-                self.scale,
-                return_scale=True,
-                interpolation=self.interpolation,
-                backend=self.backend)
+        if isinstance(img, list):
+            for i, image in enumerate(img):
+                size, img[i] = self._resize(image)
+            return size, img
         else:
-            img, w_scale, h_scale = mmcv.imresize(
-                img,
-                self.scale,
-                return_scale=True,
-                interpolation=self.interpolation,
-                backend=self.backend)
-            self.scale_factor = np.array((w_scale, h_scale), dtype=np.float32)
+            if self.keep_ratio:
+                img, self.scale_factor = mmcv.imrescale(
+                    img,
+                    self.scale,
+                    return_scale=True,
+                    interpolation=self.interpolation,
+                    backend=self.backend)
+            else:
+                img, w_scale, h_scale = mmcv.imresize(
+                    img,
+                    self.scale,
+                    return_scale=True,
+                    interpolation=self.interpolation,
+                    backend=self.backend)
+                self.scale_factor = np.array((w_scale, h_scale),
+                                             dtype=np.float32)
 
-        return img
+            if len(img.shape) == 2:
+                img = np.expand_dims(img, axis=2)
+            return img.shape, img
 
     def transform(self, results: Dict) -> Dict:
         """Transform function to resize images.
@@ -358,11 +365,11 @@ class Resize(BaseTransform):
                 new_w = min(self.max_size - (self.max_size % self.size_factor),
                             new_w)
             self.scale = (new_w, new_h)
+
         for key, out_key in zip(self.keys, self.output_keys):
-            results[out_key] = self._resize(results[key])
-            if len(results[out_key].shape) == 2:
-                results[out_key] = np.expand_dims(results[out_key], axis=2)
-            results[f'{out_key}_shape'] = results[out_key].shape
+            if key in results:
+                size, results[out_key] = self._resize(results[key])
+                results[f'{out_key}_shape'] = size
 
         results['scale_factor'] = self.scale_factor
         results['keep_ratio'] = self.keep_ratio

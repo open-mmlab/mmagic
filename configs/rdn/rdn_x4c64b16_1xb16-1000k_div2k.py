@@ -71,6 +71,7 @@ data_root = 'data'
 
 train_dataloader = dict(
     num_workers=4,
+    batch_size=16,
     persistent_workers=False,
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
@@ -110,7 +111,7 @@ val_cfg = dict(type='ValLoop')
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
     type='OptimWrapper',
-    optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99)))
+    optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999)))
 
 # learning policy
 param_scheduler = dict(

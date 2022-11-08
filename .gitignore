@@ -140,3 +140,7 @@ out/*.png
 
 # MacOS
 .DS_Store
+
+# Slurm
+batchscript-*
+*.out

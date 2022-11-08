@@ -1,10 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
+import os.path as osp
+import unittest
 
+import cv2
 import numpy as np
 import pytest
+import torch
 
-from mmedit.datasets.transforms import (Crop, CropLike, FixedCrop, ModCrop,
+from mmedit.datasets.transforms import (Crop, CropLike, FixedCrop,
+                                        InstanceCrop, ModCrop,
                                         PairedRandomCrop, RandomResizedCrop)
 
 
@@ -350,3 +355,31 @@ def test_crop_like():
     assert results['gt'].shape == (512, 512)
     sum_diff = np.sum(abs(results['gt'][:480, :512] - img[:480, :512, 0]))
     assert sum_diff < 1e-6
+
+
+def test_instance_crop():
+
+    if not torch.cuda.is_available():
+        # RoI pooling only support in GPU
+        return unittest.skip('test requires GPU and torch+cuda')
+
+    croper = InstanceCrop(
+        key='img',
+        finesize=256,
+        box_num_upbound=2,
+        config_file='mmdet::mask_rcnn/'
+        'mask-rcnn_x101-32x8d_fpn_ms-poly-3x_coco.py')  # noqa
+
+    img_path = osp.join(
+        osp.dirname(__file__), '..', '..',
+        'data/image/img_root/horse/horse.jpeg')
+    img = cv2.imread(img_path)
+    data = dict(img=img, ori_img_shape=img.shape, img_channel_order='rgb')
+
+    results = croper(data)
+
+    assert 'empty_box' in results
+    if results['empty_box']:
+        cropped_img = results['cropped_img']
+        assert len(cropped_img) == 0
+        assert len(cropped_img) <= 2
