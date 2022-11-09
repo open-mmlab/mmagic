@@ -1,5 +1,34 @@
 # Changelog
 
+## v1.0.0rc3 (03/11/2022)
+
+**Highlights**
+
+We are excited to announce the release of MMEditing 1.0.0rc3. This release supports 43+ models, 170+ configs and 169+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
+
+- convert `mmdet` and `clip` to optional requirements and .
+
+**New Features & Improvements**
+
+- Support `try_import` for `mmdet`. (#1408)
+- Support `try_import` for `flip`. (#1420)
+- Complete requirements (#1419)
+- Update `.gitignore`. ($1416)
+- Set `real_feat` to cpu in `inception_utils`. (#1415)
+- Modify README and configs of StyleGAN2 and PEGAN (#1418)
+- Improve the rendering of Docs-API (#1373)
+
+**Bug Fixes**
+
+- Revise config and pretrain model loading in ESRGAN (#1407)
+- Revise config of LSGAN (#1409)
+- Revise config of CAIN (#1404)
+
+**Contributors**
+
+A total of 5 developers contributed to this release.
+@Z-Fran, @zengyh1900, @plyfager, @LeoXing1996, @ruoningYu.
+
 ## v1.0.0rc2 (02/11/2022)
 
 **Highlights**
