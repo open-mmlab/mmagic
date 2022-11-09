@@ -28,6 +28,10 @@ optim_wrapper = dict(
     discriminator=dict(
         optimizer=dict(type='Adam', lr=0.0001, betas=(0.5, 0.99))))
 
+default_hooks = dict(
+    checkpoint=dict(
+        save_best=['FID-Full-50k/fid', 'IS-50k/is'], rule=['less', 'greater']))
+
 # METRICS
 metrics = [
     dict(

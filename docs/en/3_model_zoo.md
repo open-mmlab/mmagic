@@ -1,19 +1,20 @@
 # Overview
 
-* Number of checkpoints: 168
-* Number of configs: 168
-* Number of papers: 41
-   - ALGORITHM: 42
-* Tasks:
-    - image super-resolution
-    - unconditional gans
-    - video interpolation
-    - inpainting
-    - image2image translation
-    - internal learning
-    - video super-resolution
-    - matting
-    - conditional gans
+- Number of checkpoints: 169
+- Number of configs: 169
+- Number of papers: 42
+  - ALGORITHM: 43
+- Tasks:
+  - image2image translation
+  - video interpolation
+  - unconditional gans
+  - image super-resolution
+  - internal learning
+  - conditional gans
+  - inpainting
+  - video super-resolution
+  - colorization
+  - matting
 
 For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
@@ -192,6 +193,13 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 * Number of papers: 1
     - [ALGORITHM] Learning Continuous Image Representation With Local Implicit Image Function ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/liif/README.md#citation))
 
+## Instance-aware Image Colorization (CVPR'2020)
+
+- Tasks: colorization
+- Number of checkpoints: 1
+- Number of configs: 1
+- Number of papers: 1
+  - \[ALGORITHM\] Instance-Aware Image Colorization ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/inst_colorization/README.md#quick-start))
 
 ##  LSGAN (ICCV'2017)
 * Tasks: unconditional gans

@@ -35,15 +35,17 @@ optim_wrapper = dict(
     generator=dict(optimizer=dict(type='Adam', lr=0.0001, betas=(0.5, 0.99))),
     discriminator=dict(
         optimizer=dict(type='Adam', lr=0.0001, betas=(0.5, 0.99))))
-
+default_hooks = dict(
+    checkpoint=dict(save_best=['FID-Full-50k/fid'], rule=['less']))
 # adjust running config
 # METRICS
 metrics = [
     dict(
         type='FrechetInceptionDistance',
-        prefix='FID-Full-50k',
+        prefix='FID-50k',
         fake_nums=50000,
-        inception_style='StyleGAN',
+        real_nums=50000,
+        inception_style='PyTorch',
         sample_model='orig')
 ]
 val_evaluator = dict(metrics=metrics)

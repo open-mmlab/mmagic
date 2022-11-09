@@ -167,9 +167,12 @@ class SinGANMSGeneratorPE(SinGANMultiScaleGenerator):
             noise_list = []
 
         if input_sample is None:
+            h, w = fixed_noises[0].shape[-2:]
+            if self.noise_with_pad:
+                h -= 2 * self.pad_head
+                w -= 2 * self.pad_head
             input_sample = torch.zeros(
-                (num_batches, 3, fixed_noises[0].shape[-2],
-                 fixed_noises[0].shape[-1])).to(fixed_noises[0])
+                (num_batches, 3, h, w)).to(fixed_noises[0])
 
         g_res = input_sample
 

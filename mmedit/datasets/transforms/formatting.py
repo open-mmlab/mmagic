@@ -76,6 +76,27 @@ def images_to_tensor(value):
     return tensor
 
 
+def can_convert_to_image(value):
+    """Judge whether the input value can be converted to image tensor via
+    :func:`images_to_tensor` function.
+
+    Args:
+        value (any): The input value.
+
+    Returns:
+        bool: If true, the input value can convert to image with
+            :func:`images_to_tensor`, and vice versa.
+    """
+    if isinstance(value, (List, Tuple)):
+        return all([can_convert_to_image(v) for v in value])
+    elif isinstance(value, np.ndarray):
+        return True
+    elif isinstance(value, torch.Tensor):
+        return True
+    else:
+        return False
+
+
 @TRANSFORMS.register_module()
 class PackEditInputs(BaseTransform):
     """Pack the inputs data for SR, VFI, matting and inpainting.
@@ -83,11 +104,17 @@ class PackEditInputs(BaseTransform):
     Keys for images include ``img``, ``gt``, ``ref``, ``mask``, ``gt_heatmap``,
         ``trimap``, ``gt_alpha``, ``gt_fg``, ``gt_bg``. All of them will be
         packed into data field of EditDataSample.
+    pack_all (bool): Whether pack all variables in `results` to `inputs` dict.
+        This is useful when keys of the input dict is not fixed.
+        Please be careful when using this function, because we do not
+        Defaults to False.
 
     Others will be packed into metainfo field of EditDataSample.
     """
 
-    def __init__(self, keys: Tuple[List[str], str, None] = None):
+    def __init__(self,
+                 keys: Tuple[List[str], str, None] = None,
+                 pack_all: bool = False):
         if keys is not None:
             if isinstance(keys, list):
                 self.keys = keys
@@ -95,6 +122,7 @@ class PackEditInputs(BaseTransform):
                 self.keys = [keys]
         else:
             self.keys = None
+        self.pack_all = pack_all
 
     def transform(self, results: dict) -> dict:
         """Method to pack the input data.
@@ -113,14 +141,14 @@ class PackEditInputs(BaseTransform):
         packed_results = dict()
         data_sample = EditDataSample()
 
-        if self.keys is not None:
+        pack_keys = [k for k in results.keys()] if self.pack_all else self.keys
+        if pack_keys is not None:
             packed_results['inputs'] = dict()
-            for key in self.keys:
-                img = results.pop(key)
-                if len(img.shape) < 3:
-                    img = np.expand_dims(img, -1)
-                img = np.ascontiguousarray(img.transpose(2, 0, 1))
-                packed_results['inputs'][key] = to_tensor(img)
+            for key in pack_keys:
+                val = results[key]
+                if can_convert_to_image(val):
+                    packed_results['inputs'][key] = images_to_tensor(val)
+                    results.pop(key)
 
         elif 'img' in results:
             img = results.pop('img')
@@ -200,6 +228,21 @@ class PackEditInputs(BaseTransform):
             gt_bg = results.pop('bg')
             gt_bg_tensor = images_to_tensor(gt_bg)
             data_sample.gt_bg = PixelData(data=gt_bg_tensor)
+
+        if 'rgb_img' in results:
+            gt_rgb = results.pop('rgb_img')
+            gt_rgb_tensor = images_to_tensor(gt_rgb)
+            data_sample.gt_rgb = PixelData(data=gt_rgb_tensor)
+
+        if 'gray_img' in results:
+            gray = results.pop('gray_img')
+            gray_tensor = images_to_tensor(gray)
+            data_sample.gray = PixelData(data=gray_tensor)
+
+        if 'cropped_img' in results:
+            cropped_img = results.pop('cropped_img')
+            cropped_img = images_to_tensor(cropped_img)
+            data_sample.cropped_img = PixelData(data=cropped_img)
 
         metainfo = dict()
         for key in results:
