@@ -6,7 +6,7 @@
 
 We are excited to announce the release of MMEditing 1.0.0rc3. This release supports 43+ models, 170+ configs and 169+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
 
-- convert `mmdet` and `clip` to optional requirements and .
+- convert `mmdet` and `clip` to optional requirements.
 
 **New Features & Improvements**
 
