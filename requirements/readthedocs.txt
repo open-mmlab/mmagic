@@ -1,5 +1,7 @@
 lmdb
 mmcv>=2.0.0rc1
+prettytable
+Pygments
 regex
 scikit-image
 titlecase
