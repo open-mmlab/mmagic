@@ -60,3 +60,12 @@ class MMEditInferencer(BaseMMEditInferencer):
             Union[Dict, List[Dict]]: Results of inference pipeline.
         """
         return self.inferencer(**kwargs)
+
+    def get_extra_parameters(self) -> List[str]:
+        """Each inferencer may has its own parameters. Call this function to
+        get these parameters.
+
+        Returns:
+            List[str]: List of unique parameters.
+        """
+        return self.inferencer.get_extra_parameters()

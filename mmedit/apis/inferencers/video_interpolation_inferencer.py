@@ -231,7 +231,6 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
 
     def visualize(self,
                   preds: PredType,
-                  data: Dict = None,
                   result_out_dir: str = '') -> List[np.ndarray]:
         """Visualize is not needed in this inferencer."""
         pass

@@ -156,7 +156,6 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
 
     def visualize(self,
                   preds: PredType,
-                  data: Dict = None,
                   result_out_dir: str = '') -> List[np.ndarray]:
         """Visualize predictions.
 

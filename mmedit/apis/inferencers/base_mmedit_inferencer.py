@@ -38,10 +38,13 @@ class BaseMMEditInferencer:
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
     func_order = dict(preprocess=0, forward=1, visualize=2, postprocess=3)
 
+    extra_parameters = dict()
+
     def __init__(self,
                  config: Union[ConfigType, str],
                  ckpt: Optional[str],
                  device: Optional[str] = None,
+                 extra_parameters: Optional[Dict] = None,
                  **kwargs) -> None:
         # Load config to cfg
         if isinstance(config, str):
@@ -58,7 +61,7 @@ class BaseMMEditInferencer:
                 'cuda' if torch.cuda.is_available() else 'cpu')
         self.device = device
         self._init_model(cfg, ckpt, device)
-
+        self._init_extra_parameters(extra_parameters)
         self.base_params = self._dispatch_kwargs(**kwargs)
 
     def _init_model(self, cfg: Union[ConfigType, str], ckpt: Optional[str],
@@ -72,6 +75,13 @@ class BaseMMEditInferencer:
         model.to(device)
         model.eval()
         self.model = model
+
+    def _init_extra_parameters(self, extra_parameters: Dict) -> None:
+        """Initialize extra_parameters of each kind of inferencer."""
+        if extra_parameters is not None:
+            for key in self.extra_parameters.keys():
+                if key in extra_parameters.keys():
+                    self.extra_parameters[key] = extra_parameters[key]
 
     def _dispatch_kwargs(self, **kwargs) -> Tuple[Dict, Dict, Dict, Dict]:
         """Dispatch kwargs to preprocess(), forward(), visualize() and
@@ -98,7 +108,6 @@ class BaseMMEditInferencer:
         Returns:
             Union[Dict, List[Dict]]: Results of inference pipeline.
         """
-
         params = self._dispatch_kwargs(**kwargs)
         preprocess_kwargs = self.base_params[0].copy()
         preprocess_kwargs.update(params[0])
@@ -111,9 +120,18 @@ class BaseMMEditInferencer:
 
         data = self.preprocess(**preprocess_kwargs)
         preds = self.forward(data, **forward_kwargs)
-        imgs = self.visualize(preds, data, **visualize_kwargs)
+        imgs = self.visualize(preds, **visualize_kwargs)
         results = self.postprocess(preds, imgs, **postprocess_kwargs)
         return results
+
+    def get_extra_parameters(self) -> List[str]:
+        """Each inferencer may has its own parameters. Call this function to
+        get these parameters.
+
+        Returns:
+            List[str]: List of unique parameters.
+        """
+        return list(self.extra_parameters.keys())
 
     @abstractmethod
     def preprocess(self, inputs: InputsType) -> Dict:
