@@ -3,6 +3,9 @@ import torch
 import torch.nn as nn
 
 from mmedit.registry import MODULES
+from mmedit.utils import try_import
+
+clip = try_import('clip')
 
 
 class CLIPLossModel(torch.nn.Module):
@@ -31,6 +34,10 @@ class CLIPLossModel(torch.nn.Module):
             import clip
         except ImportError:
             raise 'To use clip loss, openai clip need to be installed first'
+
+        assert clip is not None, (
+            "Cannot import 'clip'. Please install 'clip' via "
+            "\"pip install git+https://github.com/openai/CLIP.git\".")
         self.model, self.preprocess = clip.load(clip_type, device='cpu')
         self.upsample = torch.nn.Upsample(scale_factor=scale_factor)
         self.avg_pool = torch.nn.AvgPool2d(
