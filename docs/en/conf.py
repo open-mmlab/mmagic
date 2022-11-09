@@ -87,7 +87,6 @@ html_theme_options = {
                 {
                     'name': 'MMEditing 0.x',
                     'url': 'https://mmediting.readthedocs.io/en/latest/',
-
                     'description': 'Main branch'
                 },
                 {
@@ -101,10 +100,12 @@ html_theme_options = {
                     'description': 'docs at 1.x branch'
                 },
             ],
-            'active': True,
+            'active':
+            True,
         },
     ],
-    'menu_lang': 'en',
+    'menu_lang':
+    'en',
     'header_note': {
         'content':
         'You are reading the documentation for MMEditing 0.x, which '

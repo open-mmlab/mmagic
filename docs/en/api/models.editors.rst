@@ -106,4 +106,3 @@ mmedit.models.editors
     PESinGAN
     MSPIEStyleGAN2
     StyleGAN3Generator
-
