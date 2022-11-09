@@ -100,10 +100,27 @@ Documentation
    migration/10_amp.md
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: API Reference
 
-   api.rst
+    mmedit.apis <api/apis>
+    mmedit.datasets <api/datasets>
+    mmedit.datasets.transforms <api/datasets.transforms>
+    mmedit.engine.hooks <api/engine.hooks>
+    mmedit.engine.optimizers <api/engine.optimizers>
+    mmedit.engine.runner <api/engine.runner>
+    mmedit.engine.schedulers <api/engine.schedulers>
+    mmedit.evaluation.metrics <api/evaluation.metrics>
+    mmedit.evaluation.functional <api/evaluation.functional>
+    mmedit.models.base_models <api/models.base_models>
+    mmedit.models.data_preprocessors <api/models.data_preprocessors>
+    mmedit.models.losses <api/models.losses>
+    mmedit.models.utils <api/models.utils>
+    mmedit.models.editors <api/models.editors>
+    mmedit.structures <api/structures>
+    mmedit.visualization <api/visualization>
+    mmedit.utils <api/utils>
+
 
 .. toctree::
    :maxdepth: 1
