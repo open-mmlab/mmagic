@@ -18,10 +18,12 @@ def test_unconditional_inferencer():
     inferencer_instance = \
         UnconditionalInferencer(cfg,
                                 None,
-                                extra_parameters={'sample_model': 'orig'})
+                                extra_parameters={
+                                    'num_batches': 1,
+                                    'sample_model': 'orig'})
     inference_result = inferencer_instance(result_out_dir=result_out_dir)
     result_img = inference_result[1]
-    assert result_img.detach().numpy().shape == (4, 3, 256, 256)
+    assert result_img.detach().numpy().shape == (1, 3, 256, 256)
 
 
 if __name__ == '__main__':
