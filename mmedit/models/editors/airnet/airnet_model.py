@@ -126,8 +126,8 @@ class AirNetRestorer(BaseEditModel):
         W = img_1.shape[-1]
         assert (H >= self.train_patch_size) and (W >= self.train_patch_size), \
             'Input image size is smaller than the train patch size'
-        ind_H, ind_W = torch.randint(0, H - self.train_patch_size, (2, 1))
-        # ind_W = torch.randint(0, W - self.train_patch_size, 1)
+        ind_H = torch.randint(0, H - self.train_patch_size, (1, 1))
+        ind_W = torch.randint(0, W - self.train_patch_size, (1, 1))
 
         patch_1 = img_1[..., ind_H:ind_H + self.train_patch_size,
                         ind_W:ind_W + self.train_patch_size]

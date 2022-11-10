@@ -71,7 +71,7 @@ class PairedMultipathDataset(ConcatDataset):
         self.datasets_order = torch.arange(0, self.num_datasets)
         # the index counter for each datasets,
         # only used for fixed dataset length
-        self.data_indices = torch.zeros(self.num_datasets)
+        self.data_indices = torch.zeros(self.num_datasets, dtype=torch.int)
 
     def __len__(self):
         if self.fix_length is not None:

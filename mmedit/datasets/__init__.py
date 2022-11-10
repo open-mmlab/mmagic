@@ -7,6 +7,7 @@ from .comp1k_dataset import AdobeComp1kDataset
 from .grow_scale_image_dataset import GrowScaleImgDataset
 from .imagenet_dataset import ImageNet
 from .paired_image_dataset import PairedImageDataset
+from .paired_multipath_dataset import PairedMultipathDataset
 from .singan_dataset import SinGANDataset
 from .unpaired_image_dataset import UnpairedImageDataset
 
@@ -17,6 +18,7 @@ __all__ = [
     'BasicConditionalDataset',
     'UnpairedImageDataset',
     'PairedImageDataset',
+    'PairedMultipathDataset',
     'ImageNet',
     'CIFAR10',
     'GrowScaleImgDataset',
