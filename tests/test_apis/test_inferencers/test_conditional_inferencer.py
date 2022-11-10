@@ -12,11 +12,14 @@ def test_conditional_inferencer():
     cfg = osp.join(
         osp.dirname(__file__), '..', '..', '..', 'configs', 'sngan_proj',
         'sngan-proj_woReLUinplace_lr2e-4-ndisc5-1xb64_cifar10-32x32.py')
-    conditional_instance = \
+    result_out_dir = osp.join(
+        osp.dirname(__file__), '..', '..', 'data', 'conditional_result.png')
+    inferencer_instance = \
         ConditionalInferencer(cfg,
                               None,
                               extra_parameters={'sample_model': 'orig'})
-    inference_result = conditional_instance(label=1)
+    inference_result = inferencer_instance(
+        label=1, result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img.shape == (4, 3, 32, 32)
 

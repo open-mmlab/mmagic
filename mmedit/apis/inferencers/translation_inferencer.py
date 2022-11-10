@@ -65,7 +65,7 @@ class TranslationInferencer(BaseMMEditInferencer):
 
     def visualize(self,
                   preds: PredType,
-                  result_out_dir: str = '') -> List[np.ndarray]:
+                  result_out_dir: str = None) -> List[np.ndarray]:
         """Visualize predictions.
 
         Args:
@@ -81,7 +81,8 @@ class TranslationInferencer(BaseMMEditInferencer):
         results = (preds[:, [2, 1, 0]] + 1.) / 2.
 
         # save images
-        mkdir_or_exist(os.path.dirname(result_out_dir))
-        utils.save_image(results, result_out_dir)
+        if result_out_dir:
+            mkdir_or_exist(os.path.dirname(result_out_dir))
+            utils.save_image(results, result_out_dir)
 
         return results

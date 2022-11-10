@@ -144,10 +144,9 @@ class BaseMMEditInferencer:
             Dict: Result of preprocess
         """
 
+    @abstractmethod
     def forward(self, inputs: InputsType) -> PredType:
         """Forward the inputs to the model."""
-        with torch.no_grad():
-            return self.model.test_step(inputs)
 
     @abstractmethod
     def visualize(self,

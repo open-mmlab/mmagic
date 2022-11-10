@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Dict, List, Optional, Union
 
+import torch
+
 from mmedit.utils import ConfigType
 from .base_mmedit_inferencer import BaseMMEditInferencer
 from .conditional_inferencer import ConditionalInferencer
@@ -29,7 +31,7 @@ class MMEditInferencer(BaseMMEditInferencer):
         type: Optional[str] = None,
         config: Optional[Union[ConfigType, str]] = None,
         ckpt: Optional[str] = None,
-        device: Optional[str] = None,
+        device: torch.device = None,
         extra_parameters: Optional[Dict] = None,
     ) -> None:
         self.type = type

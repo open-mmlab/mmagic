@@ -87,7 +87,7 @@ class RestorationInferencer(BaseMMEditInferencer):
 
     def visualize(self,
                   preds: PredType,
-                  result_out_dir: str = '') -> List[np.ndarray]:
+                  result_out_dir: str = None) -> List[np.ndarray]:
         """Visualize predictions.
 
         Args:
@@ -101,6 +101,7 @@ class RestorationInferencer(BaseMMEditInferencer):
             List[np.ndarray]: Result of visualize
         """
         results = tensor2img(preds[0])
-        mmcv.imwrite(results, result_out_dir)
+        if result_out_dir:
+            mmcv.imwrite(results, result_out_dir)
 
         return results

@@ -20,23 +20,18 @@ class UnconditionalInferencer(BaseMMEditInferencer):
         visualize=['result_out_dir'],
         postprocess=['print_result', 'pred_out_file', 'get_datasample'])
 
+    extra_parameters = dict(num_batches=4, sample_model='ema')
+
     def preprocess(self) -> Dict:
         """Process the inputs into a model-feedable format.
 
         Returns:
             results(Dict): Results of preprocess.
         """
-        # set model with infer_cfg if it exist else set default value
-        if 'infer_cfg' in self.cfg and 'sample_nums' in self.cfg.infer_cfg:
-            sample_nums = self.cfg.infer_cfg.sample_nums
-        else:
-            sample_nums = 4
-        if 'infer_cfg' in self.cfg and 'sample_model' in self.cfg.infer_cfg:
-            sample_model = self.cfg.infer_cfg.sample_model
-        else:
-            sample_model = 'ema'
+        num_batches = self.extra_parameters['num_batches']
+        sample_model = self.extra_parameters['sample_model']
 
-        results = dict(num_batches=sample_nums, sample_model=sample_model)
+        results = dict(num_batches=num_batches, sample_model=sample_model)
 
         return results
 
