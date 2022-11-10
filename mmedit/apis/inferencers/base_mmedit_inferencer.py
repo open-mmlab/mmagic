@@ -153,7 +153,7 @@ class BaseMMEditInferencer:
     def visualize(self,
                   inputs: InputsType,
                   preds: PredType,
-                  result_out_dir: str = '') -> List[np.ndarray]:
+                  result_out_dir: str = None) -> List[np.ndarray]:
         """Visualize predictions.
 
         Args:

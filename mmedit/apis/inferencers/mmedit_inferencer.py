@@ -24,29 +24,39 @@ class MMEditInferencer(BaseMMEditInferencer):
             device will be automatically used.
     """
 
-    def __init__(self,
-                 type: Optional[str] = None,
-                 config: Optional[Union[ConfigType, str]] = None,
-                 ckpt: Optional[str] = None,
-                 device: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        type: Optional[str] = None,
+        config: Optional[Union[ConfigType, str]] = None,
+        ckpt: Optional[str] = None,
+        device: Optional[str] = None,
+        extra_parameters: Optional[Dict] = None,
+    ) -> None:
         self.type = type
         if self.type == 'conditional':
-            self.inferencer = ConditionalInferencer(config, ckpt, device)
+            self.inferencer = ConditionalInferencer(config, ckpt, device,
+                                                    extra_parameters)
         elif self.type == 'unconditional':
-            self.inferencer = UnconditionalInferencer(config, ckpt, device)
+            self.inferencer = UnconditionalInferencer(config, ckpt, device,
+                                                      extra_parameters)
         elif self.type == 'matting':
-            self.inferencer = MattingInferencer(config, ckpt, device)
+            self.inferencer = MattingInferencer(config, ckpt, device,
+                                                extra_parameters)
         elif self.type == 'inpainting':
-            self.inferencer = InpaintingInferencer(config, ckpt, device)
+            self.inferencer = InpaintingInferencer(config, ckpt, device,
+                                                   extra_parameters)
         elif self.type == 'translation':
-            self.inferencer = TranslationInferencer(config, ckpt, device)
+            self.inferencer = TranslationInferencer(config, ckpt, device,
+                                                    extra_parameters)
         elif self.type == 'restoration':
-            self.inferencer = RestorationInferencer(config, ckpt, device)
+            self.inferencer = RestorationInferencer(config, ckpt, device,
+                                                    extra_parameters)
         elif self.type == 'video_restoration':
-            self.inferencer = VideoRestorationInferencer(config, ckpt, device)
+            self.inferencer = VideoRestorationInferencer(
+                config, ckpt, device, extra_parameters)
         elif self.type == 'video_interpolation':
             self.inferencer = VideoInterpolationInferencer(
-                config, ckpt, device)
+                config, ckpt, device, extra_parameters)
         else:
             raise ValueError(f'Unknown inferencer type: {self.type}')
 

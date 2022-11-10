@@ -70,7 +70,7 @@ class MattingInferencer(BaseMMEditInferencer):
 
     def visualize(self,
                   preds: PredType,
-                  result_out_dir: str = '') -> List[np.ndarray]:
+                  result_out_dir: str = None) -> List[np.ndarray]:
         """Visualize predictions.
 
         Args:
@@ -87,8 +87,9 @@ class MattingInferencer(BaseMMEditInferencer):
         result = result.pred_alpha.data.cpu()
 
         # save images
-        mkdir_or_exist(os.path.dirname(result_out_dir))
-        mmcv.imwrite(result.numpy(), result_out_dir)
+        if result_out_dir:
+            mkdir_or_exist(os.path.dirname(result_out_dir))
+            mmcv.imwrite(result.numpy(), result_out_dir)
 
         return result
 

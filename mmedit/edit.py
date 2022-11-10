@@ -160,19 +160,21 @@ class MMEdit:
                  model_version: str = 'a',
                  model_config: str = None,
                  model_ckpt: str = None,
-                 device: torch.device = 'cuda',
-                 **kwargs) -> None:
+                 device: torch.device = None,
+                 extra_parameters: Dict = None) -> None:
         register_all_modules(init_default_scope=True)
         inferencer_kwargs = {}
         inferencer_kwargs.update(
             self._get_inferencer_kwargs(model_name, model_version,
-                                        model_config, model_ckpt))
+                                        model_config, model_ckpt, device,
+                                        extra_parameters))
         self.inferencer = MMEditInferencer(device=device, **inferencer_kwargs)
 
     def _get_inferencer_kwargs(self, model: Optional[str],
                                model_version: Optional[str],
-                               config: Optional[str],
-                               ckpt: Optional[str]) -> Dict:
+                               config: Optional[str], ckpt: Optional[str],
+                               device: Optional[str],
+                               extra_parameters: Optional[Dict]) -> Dict:
         """Get the kwargs for the inferencer."""
         kwargs = {}
 
@@ -198,6 +200,13 @@ class MMEdit:
                     f'{model}\'s default checkpoint is overridden by {ckpt}',
                     UserWarning)
             kwargs['ckpt'] = ckpt
+
+        if device is not None:
+            kwargs['device'] = device
+
+        if extra_parameters is not None:
+            kwargs['extra_parameters'] = extra_parameters
+
         return kwargs
 
     def print_extra_parameters(self):
