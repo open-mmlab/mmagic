@@ -26,7 +26,7 @@ visualizer = dict(
     fn_key='trimap_path',
     img_keys=['pred_alpha', 'trimap', 'gt_merged', 'gt_alpha'],
     bgr2rgb=True)
-custom_hooks = [dict(type='BasicVisualizationHook', interval=1)]
+custom_hooks = [dict(type='BasicVisualizationHook', interval=2000)]
 
 log_level = 'INFO'
 log_processor = dict(type='LogProcessor', by_epoch=False)

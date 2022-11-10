@@ -29,6 +29,7 @@ from .iconvsr import IconVSRNet
 from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
                        IndexNetEncoder)
+from .inst_colorization import InstColorization
 from .liif import LIIF, MLPRefiner
 from .lsgan import LSGAN
 from .mspie import MSPIEStyleGAN2, PESinGAN
@@ -75,5 +76,5 @@ __all__ = [
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'IDLossModel', 'PESinGAN',
     'MSPIEStyleGAN2', 'StyleGAN3Generator', 'AirNetRestorer', 'AirNet', 'CBDE',
-    'DGRN'
+    'DGRN','InstColorization'
 ]

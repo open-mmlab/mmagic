@@ -1,6 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import datetime
+import importlib
 import warnings
+from types import ModuleType
+from typing import Optional
 
 from mmengine import DefaultScope
 
@@ -39,3 +42,19 @@ def register_all_modules(init_default_scope: bool = True) -> None:
             # avoid name conflict
             new_instance_name = f'mmedit-{datetime.datetime.now()}'
             DefaultScope.get_instance(new_instance_name, scope_name='mmedit')
+
+
+def try_import(name: str) -> Optional[ModuleType]:
+    """Try to import a module.
+
+    Args:
+        name (str): Specifies what module to import in absolute or relative
+            terms (e.g. either pkg.mod or ..mod).
+    Returns:
+        ModuleType or None: If importing successfully, returns the imported
+        module, otherwise returns None.
+    """
+    try:
+        return importlib.import_module(name)
+    except ImportError:
+        return None

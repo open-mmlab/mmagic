@@ -62,7 +62,9 @@ jobs:
             pip install git+https://github.com/open-mmlab/mmengine.git@main
             pip install -U openmim
             mim install 'mmcv >= 2.0.0rc1'
+            mim install 'mmdet >= 3.0.0rc2'
             pip install -r requirements/tests.txt
+            pip install git+https://github.com/openai/CLIP.git
       - run:
           name: Build and install
           command: |
@@ -98,14 +100,16 @@ jobs:
           name: Build Docker image
           command: |
             docker build .circleci/docker -t mmedit:gpu --build-arg PYTORCH=<< parameters.torch >> --build-arg CUDA=<< parameters.cuda >> --build-arg CUDNN=<< parameters.cudnn >>
-            docker run --gpus all -t -d -v /home/circleci/project:/mmedit -v /home/circleci/mmengine:/mmengine -w /mmedit --name mmedit mmedit:gpu
+            docker run --gpus all -t -d -v /home/circleci/project:/mmedit -v /home/circleci/mmengine:/mmengine -v /home/circleci/mmdetection:/mmdetection -w /mmedit --name mmedit mmedit:gpu
       - run:
           name: Install mmedit dependencies
           command: |
             docker exec mmedit pip install -e /mmengine
             docker exec mmedit pip install -U openmim
             docker exec mmedit mim install 'mmcv >= 2.0.0rc1'
+            docker exec mmedit mim install 'mmdet >= 3.0.0rc2'
             docker exec mmedit pip install -r requirements/tests.txt
+            docker exec mmedit pip install git+https://github.com/openai/CLIP.git
       - run:
           name: Build and install
           command: |
