@@ -185,6 +185,7 @@ jobs:
           mim install 'mmcv >= 2.0.0rc1'
           mim install 'mmdet >= 3.0.0rc2'
           python -m pip install -r requirements/tests.txt
+          python -m pip install git+https://github.com/openai/CLIP.git
       - name: Build and install
         run: |
           python -m pip install -e .
