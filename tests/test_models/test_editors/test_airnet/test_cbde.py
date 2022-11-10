@@ -29,8 +29,8 @@ def test_cdbe():
     labels = output['labels']
     assert torch.is_tensor(logits)
     assert torch.is_tensor(labels)
-    assert logits.shape == torch.Size([1, 256])
-    assert labels.shape == torch.Size([1, 256])
+    assert logits.shape == torch.Size([1, 257])
+    assert labels.shape == torch.Size([1])
 
     # test on gpu
     if torch.cuda.is_available():
@@ -49,8 +49,8 @@ def test_cdbe():
         labels = output['labels']
         assert torch.is_tensor(logits)
         assert torch.is_tensor(labels)
-        assert logits.shape == torch.Size([1, 256])
-        assert labels.shape == torch.Size([1, 256])
+        assert logits.shape == torch.Size([1, 257])
+        assert labels.shape == torch.Size([1])
 
 
 def test_resblock():

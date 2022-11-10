@@ -6,7 +6,7 @@ from mmedit.models.editors.airnet.moco import MoCo
 
 
 def test_moco():
-    model = MoCo(base_encoder=ResEncoder)
+    model = MoCo(base_encoder=ResEncoder, dim=256, K=256)
 
     assert model.__class__.__name__ == 'MoCo'
 
@@ -27,8 +27,8 @@ def test_moco():
     labels = output['labels']
     assert torch.is_tensor(logits)
     assert torch.is_tensor(labels)
-    assert logits.shape == torch.Size([1, 256])
-    assert labels.shape == torch.Size([1, 256])
+    assert logits.shape == torch.Size([1, 257])
+    assert labels.shape == torch.Size([1])
 
     # test on gpu
     if torch.cuda.is_available():
@@ -47,5 +47,5 @@ def test_moco():
         labels = output['labels']
         assert torch.is_tensor(logits)
         assert torch.is_tensor(labels)
-        assert logits.shape == torch.Size([1, 256])
-        assert labels.shape == torch.Size([1, 256])
+        assert logits.shape == torch.Size([1, 257])
+        assert labels.shape == torch.Size([1])
