@@ -76,5 +76,5 @@ __all__ = [
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'IDLossModel', 'PESinGAN',
     'MSPIEStyleGAN2', 'StyleGAN3Generator', 'AirNetRestorer', 'AirNet', 'CBDE',
-    'DGRN','InstColorization'
+    'DGRN', 'InstColorization'
 ]
