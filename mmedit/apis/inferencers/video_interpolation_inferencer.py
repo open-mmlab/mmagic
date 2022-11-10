@@ -1,7 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
 import os
-import os.path as osp
 from typing import Dict, List, Optional, Tuple, Union
 
 import cv2
@@ -144,15 +143,8 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
             else:
                 output_fps = self.fps if self.fps > 0 else input_fps * 2
         else:
-            files = os.listdir(inputs)
-            files = [osp.join(inputs, f) for f in files]
-            files.sort()
-            source = files
-            length = files.__len__()
-            from_video = False
-            example_frame = read_image(files[0])
-            h, w = example_frame.shape[:2]
-            output_fps = self.fps
+            raise ValueError('Input file is not a video, \
+                which is not supported now.')
 
         # check if the output is a video
         output_file_extension = os.path.splitext(result_out_dir)[1]
@@ -177,7 +169,6 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
             math.ceil(
                 (self.end_idx + step_size - lenth_per_step - self.start_idx) /
                 step_size))
-        output_index = self.start_idx
         for self.start_index in range(self.start_idx, self.end_idx, step_size):
             images = read_frames(
                 source,
@@ -212,12 +203,8 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
                 for frame in result:
                     target.write(frame)
             else:
-                for frame in result:
-                    save_path = osp.join(
-                        result_out_dir,
-                        self.filename_tmpl.format(output_index))
-                    mmcv.imwrite(frame, save_path)
-                    output_index += 1
+                raise ValueError('Output file is not a video, \
+                    which is not supported now.')
 
             if self.start_index + lenth_per_step >= self.end_idx:
                 break
