@@ -47,6 +47,12 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
         visualize=['result_out_dir'],
         postprocess=[])
 
+    extra_parameters = dict(
+        start_idx=0,
+        filename_tmpl='{08d}.png',
+        window_size=0,
+        max_seq_len=None)
+
     def preprocess(self, video: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.
 
@@ -56,17 +62,6 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
         Returns:
             results(InputsType): Results of preprocess.
         """
-        # hard code parameters for unused code
-        infer_cfg = dict(
-            start_idx=0,
-            filename_tmpl='{08d}.png',
-            window_size=0,
-            max_seq_len=None)
-        self.start_idx = infer_cfg['start_idx']
-        self.filename_tmpl = infer_cfg['filename_tmpl']
-        self.window_size = infer_cfg['window_size']
-        self.max_seq_len = infer_cfg['max_seq_len']
-
         # build the data pipeline
         if self.model.cfg.get('demo_pipeline', None):
             test_pipeline = self.model.cfg.demo_pipeline
@@ -113,25 +108,33 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
             PredType: Results of forwarding
         """
         with torch.no_grad():
-            if self.window_size > 0:  # sliding window framework
-                data = pad_sequence(inputs, self.window_size)
+            if self.extra_parameters[
+                    'window_size'] > 0:  # sliding window framework
+                data = pad_sequence(inputs,
+                                    self.extra_parameters['window_size'])
                 result = []
-                for i in range(0, data.size(1) - 2 * (self.window_size // 2)):
-                    data_i = data[:, i:i + self.window_size].to(self.device)
+                # yapf: disable
+                for i in range(0, data.size(1) - 2 * (self.extra_parameters['window_size'] // 2)):  # noqa
+                    # yapf: enable
+                    data_i = data[:, i:i +
+                                  self.extra_parameters['window_size']].to(
+                                      self.device)
                     result.append(
                         self.model(inputs=data_i, mode='tensor').cpu())
                 result = torch.stack(result, dim=1)
             else:  # recurrent framework
-                if self.max_seq_len is None:
+                if self.extra_parameters['max_seq_len'] is None:
                     result = self.model(
                         inputs=inputs.to(self.device), mode='tensor').cpu()
                 else:
                     result = []
-                    for i in range(0, inputs.size(1), self.max_seq_len):
+                    for i in range(0, inputs.size(1),
+                                   self.extra_parameters['max_seq_len']):
                         result.append(
                             self.model(
-                                inputs=inputs[:, i:i + self.max_seq_len].to(
-                                    self.device),
+                                inputs=inputs[:, i:i + self.
+                                              extra_parameters['max_seq_len']].
+                                to(self.device),
                                 mode='tensor').cpu())
                     result = torch.cat(result, dim=1)
         return result

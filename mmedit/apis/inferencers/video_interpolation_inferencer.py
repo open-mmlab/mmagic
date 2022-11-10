@@ -70,6 +70,14 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
         visualize=[],
         postprocess=[])
 
+    extra_parameters = dict(
+        start_idx=0,
+        end_idx=None,
+        batch_size=4,
+        fps_multiplier=0,
+        fps=0,
+        filename_tmpl='{08d}.png')
+
     def preprocess(self, video: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.
 
@@ -79,20 +87,6 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
         Returns:
             video(InputsType): Video to be interpolated by models.
         """
-        infer_cfg = dict(
-            start_idx=0,
-            end_idx=None,
-            batch_size=4,
-            fps_multiplier=0,
-            fps=0,
-            filename_tmpl='{08d}.png')
-        self.start_idx = infer_cfg['start_idx']
-        self.end_idx = infer_cfg['end_idx']
-        self.batch_size = infer_cfg['batch_size']
-        self.fps_multiplier = infer_cfg['fps_multiplier']
-        self.fps = infer_cfg['fps']
-        self.filename_tmpl = infer_cfg['filename_tmpl']
-
         # build the data pipeline
         if self.model.cfg.get('demo_pipeline', None):
             test_pipeline = self.model.cfg.demo_pipeline
@@ -136,12 +130,14 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
             length = source.frame_cnt
             from_video = True
             h, w = source.height, source.width
-            if self.fps_multiplier:
-                assert self.fps_multiplier > 0, \
+            if self.extra_parameters['fps_multiplier']:
+                assert self.extra_parameters['fps_multiplier'] > 0, \
                     '`fps_multiplier` cannot be negative'
-                output_fps = self.fps_multiplier * input_fps
+                output_fps = \
+                    self.extra_parameters['fps_multiplier'] * input_fps
             else:
-                output_fps = self.fps if self.fps > 0 else input_fps * 2
+                fps = self.extra_parameters['fps']
+                output_fps = fps if fps > 0 else input_fps * 2
         else:
             raise ValueError('Input file is not a video, \
                 which is not supported now.')
@@ -156,26 +152,30 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
         else:
             to_video = False
 
-        self.end_idx = min(self.end_idx,
-                           length) if self.end_idx is not None else length
+        self.extra_parameters['end_idx'] = min(
+            self.extra_parameters['end_idx'], length) \
+            if self.extra_parameters['end_idx'] is not None else length
 
         # calculate step args
-        step_size = self.model.step_frames * self.batch_size
+        step_size = \
+            self.model.step_frames * self.extra_parameters['batch_size']
         lenth_per_step = self.model.required_frames + \
-            self.model.step_frames * (self.batch_size - 1)
+            self.model.step_frames * (self.extra_parameters['batch_size'] - 1)
         repeat_frame = self.model.required_frames - self.model.step_frames
 
         prog_bar = ProgressBar(
-            math.ceil(
-                (self.end_idx + step_size - lenth_per_step - self.start_idx) /
-                step_size))
-        for self.start_index in range(self.start_idx, self.end_idx, step_size):
+            math.ceil((self.extra_parameters['end_idx'] + step_size -
+                       lenth_per_step - self.extra_parameters['start_idx']) /
+                      step_size))
+        for self.start_index in range(self.extra_parameters['start_idx'],
+                                      self.extra_parameters['end_idx'],
+                                      step_size):
             images = read_frames(
                 source,
                 self.start_index,
                 lenth_per_step,
                 from_video,
-                end_index=self.end_idx)
+                end_index=self.extra_parameters['end_idx'])
 
             # data prepare
             data = dict(img=images, inputs_path=None, key=inputs)
@@ -194,7 +194,7 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
                 if len(output_tensors.shape) == 4:
                     output_tensors = output_tensors.unsqueeze(1)
                 result = self.model.merge_frames(input_tensors, output_tensors)
-            if not self.start_idx == self.start_index:
+            if not self.extra_parameters['start_idx'] == self.start_index:
                 result = result[repeat_frame:]
             prog_bar.update()
 
@@ -206,7 +206,8 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
                 raise ValueError('Output file is not a video, \
                     which is not supported now.')
 
-            if self.start_index + lenth_per_step >= self.end_idx:
+            if self.start_index + lenth_per_step >= \
+               self.extra_parameters['end_idx']:
                 break
 
         print()
