@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
+import pytest
+
 from mmedit.apis.inferencers.base_mmedit_inferencer import BaseMMEditInferencer
 from mmedit.utils import register_all_modules
 
@@ -8,6 +10,10 @@ register_all_modules()
 
 
 def test_base_mmedit_inferencer():
+    with pytest.raises(Exception) as e_info:
+        inferencer_instance = BaseMMEditInferencer(['error_type'], None)
+    print(e_info)
+
     cfg = osp.join(
         osp.dirname(__file__), '..', '..', '..', 'configs', 'sngan_proj',
         'sngan-proj_woReLUinplace_lr2e-4-ndisc5-1xb64_cifar10-32x32.py')
