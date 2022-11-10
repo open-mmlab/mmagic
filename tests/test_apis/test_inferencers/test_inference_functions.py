@@ -244,6 +244,13 @@ def test_restoration_video_inference():
                                          None)
     assert output.detach().numpy().shape == (1, 2, 3, 256, 448)
 
+    input_video = data_root + 'tests/data/frames/test_inference.mp4'
+    output = restoration_video_inference(
+        model, input_video, 0, 0, '{:08d}.png', max_seq_len=3)
+
+    output = restoration_video_inference(model, input_video, 3, 0,
+                                         '{:08d}.png')
+
 
 def test_translation_inference():
     cfg = osp.join(
@@ -276,12 +283,12 @@ def test_video_interpolation_inference():
     config = data_root + 'configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py'
     checkpoint = None
 
-    input_dir = data_root + 'tests/data/frames/test_inference.mp4'
-
     model = init_model(config, checkpoint, device=device)
 
+    input_dir = data_root + 'tests/data/frames/test_inference.mp4'
     video_interpolation_inference(
         model=model, input_dir=input_dir, output_dir='out', fps=60.0)
 
-
-test_video_interpolation_inference()
+    input_dir = osp.join(data_root, 'tests/data/frames/sequence/gt/sequence_1')
+    video_interpolation_inference(
+        model=model, input_dir=input_dir, output_dir='out', fps=60.0)
