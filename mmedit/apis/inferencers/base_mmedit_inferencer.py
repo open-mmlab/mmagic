@@ -69,7 +69,7 @@ class BaseMMEditInferencer:
         """Initialize the model with the given config and checkpoint on the
         specific device."""
         model = MODELS.build(cfg.model)
-        if ckpt is not None:
+        if ckpt is not None and ckpt != '':
             ckpt = load_checkpoint(model, ckpt, map_location='cpu')
         model.cfg = cfg
         model.to(device)

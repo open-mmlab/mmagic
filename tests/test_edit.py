@@ -6,7 +6,7 @@ register_all_modules()
 
 
 def test_edit():
-    mmedit_instance = MMEdit('biggan')
+    mmedit_instance = MMEdit('biggan', model_ckpt='')
     inference_result = mmedit_instance.infer(label=1)
     result_img = inference_result[1]
     assert result_img.shape == (4, 3, 32, 32)

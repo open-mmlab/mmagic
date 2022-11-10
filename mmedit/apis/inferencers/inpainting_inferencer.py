@@ -68,7 +68,7 @@ class InpaintingInferencer(BaseMMEditInferencer):
 
     def visualize(self,
                   preds: PredType,
-                  result_out_dir: str = '') -> List[np.ndarray]:
+                  result_out_dir: str = None) -> List[np.ndarray]:
         """Visualize predictions.
 
         Args:
@@ -84,7 +84,8 @@ class InpaintingInferencer(BaseMMEditInferencer):
         result = preds[0]
         result = result * self.masks + self.masked_imgs * (1. - self.masks)
 
-        result = tensor2img(result)[..., ::-1]
-        mmcv.imwrite(result, result_out_dir)
+        if result_out_dir:
+            result = tensor2img(result)[..., ::-1]
+            mmcv.imwrite(result, result_out_dir)
 
         return result

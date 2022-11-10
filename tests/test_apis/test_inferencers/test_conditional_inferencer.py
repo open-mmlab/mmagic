@@ -8,7 +8,7 @@ from mmedit.utils import register_all_modules
 register_all_modules()
 
 
-def test_conditional_inference():
+def test_conditional_inferencer():
     cfg = osp.join(
         osp.dirname(__file__), '..', '..', '..', 'configs', 'sngan_proj',
         'sngan-proj_woReLUinplace_lr2e-4-ndisc5-1xb64_cifar10-32x32.py')
@@ -22,4 +22,4 @@ def test_conditional_inference():
 
 
 if __name__ == '__main__':
-    test_conditional_inference()
+    test_conditional_inferencer()
