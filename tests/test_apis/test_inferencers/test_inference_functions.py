@@ -37,7 +37,7 @@ def test_colorization_inference():
 
     config = osp.join(
         osp.dirname(__file__),
-        '../..',
+        '../../..',
         'configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py'  # noqa
     )
     checkpoint = None
@@ -53,7 +53,8 @@ def test_colorization_inference():
     model.eval()
 
     img_path = osp.join(
-        osp.dirname(__file__), '..', 'data/image/img_root/horse/horse.jpeg')
+        osp.dirname(__file__), '..', '..',
+        'data/image/img_root/horse/horse.jpeg')
 
     result = colorization_inference(model, img_path)
     assert tensor2img(result)[..., ::-1].shape == (256, 256, 3)
@@ -61,7 +62,7 @@ def test_colorization_inference():
 
 def test_unconditional_inference():
     cfg = osp.join(
-        osp.dirname(__file__), '..', '..', 'configs', 'dcgan',
+        osp.dirname(__file__), '..', '..', '..', 'configs', 'dcgan',
         'dcgan_Glr4e-4_Dlr1e-4_1xb128-5kiters_mnist-64x64.py')
     cfg = Config.fromfile(cfg)
     model = MODELS.build(cfg.model)
@@ -80,7 +81,7 @@ def test_unconditional_inference():
 
 def test_conditional_inference():
     cfg = osp.join(
-        osp.dirname(__file__), '..', '..', 'configs', 'sngan_proj',
+        osp.dirname(__file__), '..', '..', '..', 'configs', 'sngan_proj',
         'sngan-proj_woReLUinplace_lr2e-4-ndisc5-1xb64_cifar10-32x32.py')
     cfg = Config.fromfile(cfg)
     model = MODELS.build(cfg.model)
@@ -138,7 +139,7 @@ def test_inference():
     else:
         device = torch.device('cpu')
 
-    data_root = osp.join(osp.dirname(__file__), '../../')
+    data_root = osp.join(osp.dirname(__file__), '../../../')
     config = data_root + 'configs/dim/dim_stage3-v16-pln_1xb1-1000k_comp1k.py'
     checkpoint = 'https://download.openmmlab.com/mmediting/mattors/dim/dim_' +\
         'stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth'
@@ -162,7 +163,7 @@ def test_inpainting_inference():
 
     checkpoint = None
 
-    data_root = osp.join(osp.dirname(__file__), '../')
+    data_root = osp.join(osp.dirname(__file__), '../../')
     config_file = osp.join(data_root, 'configs', 'gl_test.py')
 
     cfg = Config.fromfile(config_file)
@@ -191,7 +192,7 @@ def test_restoration_face_inference():
     else:
         device = torch.device('cpu')
 
-    data_root = osp.join(osp.dirname(__file__), '../../')
+    data_root = osp.join(osp.dirname(__file__), '../../../')
     config = data_root + 'configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py'  # noqa
 
     checkpoint = None
@@ -213,7 +214,7 @@ def test_restoration_inference():
     else:
         device = torch.device('cpu')
 
-    data_root = osp.join(osp.dirname(__file__), '../../')
+    data_root = osp.join(osp.dirname(__file__), '../../../')
     config = data_root + 'configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py'  # noqa
     checkpoint = None
 
@@ -231,7 +232,7 @@ def test_restoration_video_inference():
     else:
         device = torch.device('cpu')
 
-    data_root = osp.join(osp.dirname(__file__), '../../')
+    data_root = osp.join(osp.dirname(__file__), '../../../')
     config = osp.join(data_root, 'configs/basicvsr/basicvsr_2xb4_reds4.py')
     checkpoint = None
 
@@ -246,13 +247,14 @@ def test_restoration_video_inference():
 
 def test_translation_inference():
     cfg = osp.join(
-        osp.dirname(__file__), '..', '..', 'configs', 'pix2pix',
+        osp.dirname(__file__), '..', '..', '..', 'configs', 'pix2pix',
         'pix2pix_vanilla-unet-bn_1xb1-80kiters_facades.py')
     cfg = Config.fromfile(cfg)
     model = init_model(cfg, device='cpu')
     model.eval()
     data_path = osp.join(
-        osp.dirname(__file__), '..', 'data', 'unpaired', 'trainA', '1.jpg')
+        osp.dirname(__file__), '..', '..', 'data', 'unpaired', 'trainA',
+        '1.jpg')
     # test num_samples can be divided by num_batches
     results = sample_img2img_model(
         model, image_path=data_path, target_domain='photo')
@@ -270,7 +272,7 @@ def test_video_interpolation_inference():
     else:
         device = torch.device('cpu')
 
-    data_root = osp.join(osp.dirname(__file__), '../../')
+    data_root = osp.join(osp.dirname(__file__), '../../../')
     config = data_root + 'configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py'
     checkpoint = None
 
