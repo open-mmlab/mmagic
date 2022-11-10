@@ -125,3 +125,40 @@ def to_numpy(img, dtype=np.float64):
     img = img.astype(dtype)
 
     return img
+
+
+def get_box_info(pred_bbox, original_shape, final_size):
+    """
+
+    Args:
+        pred_bbox: The bounding box for the instance
+        original_shape: Original image shape
+        final_size: Size of the final output
+
+    Returns:
+        List: [L_pad, R_pad, T_pad, B_pad, rh, rw]
+    """
+    assert len(pred_bbox) == 4
+    resize_startx = int(pred_bbox[0] / original_shape[0] * final_size)
+    resize_starty = int(pred_bbox[1] / original_shape[1] * final_size)
+    resize_endx = int(pred_bbox[2] / original_shape[0] * final_size)
+    resize_endy = int(pred_bbox[3] / original_shape[1] * final_size)
+    rh = resize_endx - resize_startx
+    rw = resize_endy - resize_starty
+    if rh < 1:
+        if final_size - resize_endx > 1:
+            resize_endx += 1
+        else:
+            resize_startx -= 1
+        rh = 1
+    if rw < 1:
+        if final_size - resize_endy > 1:
+            resize_endy += 1
+        else:
+            resize_starty -= 1
+        rw = 1
+    L_pad = resize_startx
+    R_pad = final_size - resize_endx
+    T_pad = resize_starty
+    B_pad = final_size - resize_endy
+    return [L_pad, R_pad, T_pad, B_pad, rh, rw]

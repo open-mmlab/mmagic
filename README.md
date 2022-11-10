@@ -104,22 +104,27 @@ hope MMEditing could provide better experience.
 
 ## What's New
 
-- \[2022-09-13\] 🎉[MMGeneration](https://github.com/open-mmlab/mmgeneration/tree/1.x) was merged into MMEditing! And we are calling for your [suggestion](https://github.com/open-mmlab/mmediting/discussions/1108)!
-- \[2022-08-31\] v1.0.0rc0 was released. This release introduced a brand new and flexible training & test engine, but it's still in progress. Welcome
-  to try according to [the documentation](https://mmediting.readthedocs.io/en/1.x/).
-- \[2022-06-01\] v0.15.0 was released.
-  - Support FLAVR
-  - Support AOT-GAN
-  - Support CAIN with ReduceLROnPlateau Scheduler
-- \[2022-04-01\] v0.14.0 was released.
-  - Support TOFlow in video frame interpolation
-- \[2022-03-01\] v0.13.0 was released.
-  - Support CAIN
-  - Support EDVR-L
-  - Support running in Windows
-- \[2022-02-11\] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
+### 🌟 Preview of 1.x version
 
-Please refer to [changelog.md](docs/en/notes/3_changelog.md) for details and release history.
+A brand new version of [**MMEditing v1.0.0rc3**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc3) was released in 09/11/2022:
+
+- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍。
+- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
+- Support patch-based and slider-based image and video comparison viewer.
+- Support image colorization.
+- Convert `mmdet` and `clip` to optional requirements.
+
+Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
+
+### 💎 Stable version
+
+**0.16.0** was released in 31/10/2022:
+
+- `VisualizationHook` is deprecated. Users should use `MMEditVisualizationHook` instead.
+- Fix FLAVR register.
+- Fix the number of channels in RDB.
+
+Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
 ## Installation
 
@@ -212,6 +217,13 @@ Supported algorithms:
 - ✅ [TOFlow](configs/tof/README.md) (IJCV'2019)
 - ✅ [CAIN](configs/cain/README.md) (AAAI'2020)
 - ✅ [FLAVR](configs/flavr/README.md) (CVPR'2021)
+
+</details>
+
+<details open>
+<summary>Image Colorization</summary>
+
+- ✅ [InstColorization](configs/inst_colorization/README.md) (CVPR'2020)
 
 </details>
 

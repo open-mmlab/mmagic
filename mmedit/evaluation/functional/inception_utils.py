@@ -418,7 +418,7 @@ def prepare_inception_feat(dataloader: DataLoader,
                 f'same time. But receive \'{mean}\' and \'{std}\' '
                 'respectively.')
 
-        real_feat_ = metric.forward_inception(img)
+        real_feat_ = metric.forward_inception(img).cpu()
         real_feat.append(real_feat_)
 
         if is_main_process():
@@ -443,7 +443,7 @@ def prepare_inception_feat(dataloader: DataLoader,
     if is_main_process():
         inception_state = dict(**args)
         if capture_mean_cov:
-            real_feat = torch.cat(real_feat, dim=0)[:num_items].cpu().numpy()
+            real_feat = torch.cat(real_feat, dim=0)[:num_items].numpy()
             real_mean = np.mean(real_feat, 0)
             real_cov = np.cov(real_feat, rowvar=False)
             inception_state['real_mean'] = real_mean
