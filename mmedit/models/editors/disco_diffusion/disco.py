@@ -18,6 +18,8 @@ from .guider import ImageTextGuider
 
 from torchvision.utils import save_image
 from .secondary_model import SecondaryDiffusionImageNet2, alpha_sigma_to_t
+import torch.nn.functional as F
+import mmcv
 
 @MODELS.register_module('disco')
 @MODELS.register_module('dd')
@@ -84,13 +86,14 @@ class DiscoDiffusion(BaseModel):
         return next(self.parameters()).device
 
 
-
+    @torch.no_grad()
     def infer(self,
               height=None,
               width=None,
               init_image=None,
               batch_size=1,
               num_inference_steps=1000,
+              skip_steps=0,
               show_progress=False,
               text_prompts=[],
               image_prompts=[],
@@ -109,30 +112,32 @@ class DiscoDiffusion(BaseModel):
         Returns:
             _type_: _description_
         """
+        # TODO:
+        # set random seed
+        if isinstance(seed, int):
+            set_random_seed(seed=seed)
+
+        # set step values
+        if num_inference_steps > 0:
+            self.diffuser.set_timesteps(num_inference_steps)
+
+        _ = image_prompts
+        
         height = (height//64)*64 if height else self.unet.image_size
         width = (width//64)*64 if width else self.unet.image_size
-        # TODO: print modified height and width
-
         if init_image is None:
             image = torch.randn((batch_size, self.unet.in_channels,
                                  height, width))
             image = image.to(self.device)
         else:
-            # TODO: resize init_image
-            image = init_image
-
-        loss_values = []
-        # set random seed
-        if isinstance(seed, int):
-            set_random_seed(seed=seed)
-
+            init = mmcv.imread(init_image, channel_order='rgb')
+            init = mmcv.imresize(init, (width, height), interpolation='lanczos')/255.
+            init_image = torch.as_tensor(init, dtype=torch.float32).to(self.device).unsqueeze(0).permute(0, 3, 1, 2).mul(2).sub(1)
+            image = init_image.clone()
+            image = self.diffuser.add_noise(image, torch.randn_like(image), self.diffuser.timesteps[skip_steps])
         # get stats from text prompts and image prompts
         model_stats = self.guider.compute_prompt_stats(text_prompts=text_prompts)
-        # set step values
-        if num_inference_steps > 0:
-            self.diffuser.set_timesteps(num_inference_steps)
-
-        timesteps = self.diffuser.timesteps
+        timesteps = self.diffuser.timesteps[skip_steps:-1]
         if show_progress:
             timesteps = tqdm(timesteps)
         for t in timesteps:
@@ -146,8 +151,6 @@ class DiscoDiffusion(BaseModel):
             diffuser_output = self.diffuser.step(model_output, t, image, cond_fn=self.guider.cond_fn, cond_kwargs=cond_kwargs, eta = eta)
 
             image = diffuser_output['prev_sample']
-            save_image(image, f"work_dirs/disco/{t}.png", normalize=True)
-
         return {'samples': image}
 
     def forward(self, x):
