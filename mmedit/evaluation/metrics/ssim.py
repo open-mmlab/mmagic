@@ -3,6 +3,8 @@ from typing import Optional
 
 import cv2
 import numpy as np
+import torch.nn as nn
+from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import METRICS
 from mmedit.utils import to_numpy
@@ -67,6 +69,28 @@ class SSIM(BaseSampleWiseMetric):
         self.crop_border = crop_border
         self.input_order = input_order
         self.convert_to = convert_to
+
+    def prepare(self, module: nn.Module, dataloader: DataLoader):
+        self.SAMPLER_MODE = 'normal'
+
+    def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
+                           metrics) -> DataLoader:
+        """Get sampler for normal metrics. Directly returns the dataloader.
+
+        Args:
+            model (nn.Module): Model to evaluate.
+            dataloader (DataLoader): Dataloader for real images.
+            metrics (List['GenMetric']): Metrics with the same sample mode.
+
+        Returns:
+            DataLoader: Default sampler for normal metrics.
+        """
+        return dataloader
+
+    def evaluate(self, size=None) -> dict:
+        if size is None:
+            size = len(self.results)
+        return super().evaluate(size)
 
     def process_image(self, gt, pred, mask):
         """Process an image.
