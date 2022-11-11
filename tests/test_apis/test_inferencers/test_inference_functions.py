@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 import platform
+import unittest
 
 import pytest
 import torch
@@ -26,12 +27,15 @@ def test_init_model():
         init_model(['dog'])
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_colorization_inference():
     register_all_modules()
 
-    # if not torch.cuda.is_available():
-    #     # RoI pooling only support in GPU
-    #     return unittest.skip('test requires GPU and torch+cuda')
+    if not torch.cuda.is_available():
+        # RoI pooling only support in GPU
+        return unittest.skip('test requires GPU and torch+cuda')
 
     if torch.cuda.is_available():
         device = torch.device('cuda', 0)
