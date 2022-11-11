@@ -26,5 +26,20 @@ def test_video_interpolation_inferencer():
     assert inference_result is None
 
 
+def test_video_interpolation_inferencer_input_dir():
+    data_root = osp.join(osp.dirname(__file__), '../../../')
+    config = data_root + 'configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py'
+    video_path = data_root + 'tests/data/frames/sequence/gt/sequence_1'
+    result_out_dir = data_root + 'tests/data/out'
+
+    inferencer_instance = \
+        VideoInterpolationInferencer(config,
+                                     None,
+                                     extra_parameters={'fps': 60})
+    inference_result = inferencer_instance(
+        video=video_path, result_out_dir=result_out_dir)
+    assert inference_result is None
+
+
 if __name__ == '__main__':
-    test_video_interpolation_inferencer()
+    test_video_interpolation_inferencer_input_dir()

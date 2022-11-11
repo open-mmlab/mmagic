@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
+import pytest
+
 from mmedit.edit import MMEdit
 from mmedit.utils import register_all_modules
 
@@ -8,6 +10,10 @@ register_all_modules()
 
 
 def test_edit():
+    with pytest.raises(Exception) as e_info:
+        MMEdit('dog', ['error_type'], None)
+    print(e_info)
+
     cfg = osp.join(
         osp.dirname(__file__), '..', 'configs', 'biggan',
         'biggan_2xb25-500kiters_cifar10-32x32.py')

@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
 import os
+import os.path as osp
 from typing import Dict, List, Optional, Tuple, Union
 
 import cv2
@@ -76,7 +77,7 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
         batch_size=4,
         fps_multiplier=0,
         fps=0,
-        filename_tmpl='{08d}.png')
+        filename_tmpl='{:08d}.png')
 
     def preprocess(self, video: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.
@@ -139,8 +140,16 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
                 fps = self.extra_parameters['fps']
                 output_fps = fps if fps > 0 else input_fps * 2
         else:
-            raise ValueError('Input file is not a video, \
-                which is not supported now.')
+            files = os.listdir(inputs)
+            files = [osp.join(inputs, f) for f in files]
+            files.sort()
+            source = files
+            length = files.__len__()
+            from_video = False
+            example_frame = read_image(files[0])
+            h, w = example_frame.shape[:2]
+            fps = self.extra_parameters['fps']
+            output_fps = fps if fps > 0 else 60
 
         # check if the output is a video
         output_file_extension = os.path.splitext(result_out_dir)[1]
@@ -167,12 +176,12 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
             math.ceil((self.extra_parameters['end_idx'] + step_size -
                        lenth_per_step - self.extra_parameters['start_idx']) /
                       step_size))
-        for self.start_index in range(self.extra_parameters['start_idx'],
-                                      self.extra_parameters['end_idx'],
-                                      step_size):
+        output_index = self.extra_parameters['start_idx']
+        for start_index in range(self.extra_parameters['start_idx'],
+                                 self.extra_parameters['end_idx'], step_size):
             images = read_frames(
                 source,
-                self.start_index,
+                start_index,
                 lenth_per_step,
                 from_video,
                 end_index=self.extra_parameters['end_idx'])
@@ -194,7 +203,7 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
                 if len(output_tensors.shape) == 4:
                     output_tensors = output_tensors.unsqueeze(1)
                 result = self.model.merge_frames(input_tensors, output_tensors)
-            if not self.extra_parameters['start_idx'] == self.start_index:
+            if not self.extra_parameters['start_idx'] == start_index:
                 result = result[repeat_frame:]
             prog_bar.update()
 
@@ -203,10 +212,14 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
                 for frame in result:
                     target.write(frame)
             else:
-                raise ValueError('Output file is not a video, \
-                    which is not supported now.')
+                filename_tmpl = self.extra_parameters['filename_tmpl']
+                for frame in result:
+                    save_path = osp.join(result_out_dir,
+                                         filename_tmpl.format(output_index))
+                    mmcv.imwrite(frame, save_path)
+                    output_index += 1
 
-            if self.start_index + lenth_per_step >= \
+            if start_index + lenth_per_step >= \
                self.extra_parameters['end_idx']:
                 break
 

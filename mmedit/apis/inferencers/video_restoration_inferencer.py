@@ -49,7 +49,7 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
 
     extra_parameters = dict(
         start_idx=0,
-        filename_tmpl='{08d}.png',
+        filename_tmpl='{:08d}.png',
         window_size=0,
         max_seq_len=None)
 
