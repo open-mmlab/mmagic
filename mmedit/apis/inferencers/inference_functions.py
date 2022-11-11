@@ -38,8 +38,7 @@ def set_random_seed(seed, deterministic=False, use_rank_shift=True):
         rank_shift (bool): Whether to add rank number to the random seed to
             have different random seed in different threads. Default: True.
     """
-    set_random_seed_engine(
-        seed, deterministic=deterministic, use_rank_shift=use_rank_shift)
+    set_random_seed_engine(seed, deterministic, use_rank_shift)
 
 
 def delete_cfg(cfg, key='init_cfg'):

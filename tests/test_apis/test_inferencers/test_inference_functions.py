@@ -302,3 +302,7 @@ def test_video_interpolation_inference():
     input_dir = osp.join(data_root, 'tests/data/frames/sequence/gt/sequence_1')
     video_interpolation_inference(
         model=model, input_dir=input_dir, output_dir='out', fps=60.0)
+
+
+if __name__ == '__main__':
+    test_init_model()
