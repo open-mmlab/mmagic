@@ -521,7 +521,6 @@ class TestGenVisualizationHook(TestCase):
             # check ema
             if idx % 4 == 0:
                 self.assertEqual(target_keys, 'ema')
-                # self.assertEqual(name, 'ema')
                 self.assertEqual(name, 'test_ema')
             # check orig
             elif idx % 4 == 1:
