@@ -10,9 +10,11 @@ register_all_modules()
 
 
 def test_edit():
-    with pytest.raises(Exception) as e_info:
+    with pytest.raises(Exception):
         MMEdit('dog', ['error_type'], None)
-    print(e_info)
+
+    with pytest.raises(Exception):
+        MMEdit()
 
     cfg = osp.join(
         osp.dirname(__file__), '..', 'configs', 'biggan',

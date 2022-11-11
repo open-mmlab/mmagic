@@ -11,7 +11,7 @@ register_all_modules()
 
 def test_base_mmedit_inferencer():
     with pytest.raises(Exception) as e_info:
-        inferencer_instance = BaseMMEditInferencer(['error_type'], None)
+        inferencer_instance = BaseMMEditInferencer(1, None)
     print(e_info)
 
     cfg = osp.join(

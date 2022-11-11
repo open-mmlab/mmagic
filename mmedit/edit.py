@@ -170,15 +170,16 @@ class MMEdit:
                                         extra_parameters))
         self.inferencer = MMEditInferencer(device=device, **inferencer_kwargs)
 
-    def _get_inferencer_kwargs(self, model: Optional[str],
+    def _get_inferencer_kwargs(self, model_name: Optional[str],
                                model_version: Optional[str],
-                               config: Optional[str], ckpt: Optional[str],
+                               model_config: Optional[str],
+                               model_ckpt: Optional[str],
                                extra_parameters: Optional[Dict]) -> Dict:
         """Get the kwargs for the inferencer."""
         kwargs = {}
 
-        if model is not None:
-            cfgs = self.get_model_config(model)
+        if model_name is not None:
+            cfgs = self.get_model_config(model_name)
             kwargs['type'] = cfgs['type']
             kwargs['config'] = os.path.join(
                 'configs/', cfgs['version'][model_version]['config'])
@@ -186,19 +187,19 @@ class MMEdit:
             # kwargs['ckpt'] = 'https://download.openmmlab.com/' + \
             # f'mmediting/{cfgs["version"][model_version]["ckpt"]}'
 
-        if config is not None:
+        if model_config is not None:
             if kwargs.get('config', None) is not None:
                 warnings.warn(
-                    f'{model}\'s default config is overridden by {config}',
-                    UserWarning)
-            kwargs['config'] = config
+                    f'{model_name}\'s default config '
+                    'is overridden by {model_config}', UserWarning)
+            kwargs['config'] = model_config
 
-        if ckpt is not None:
+        if model_ckpt is not None:
             if kwargs.get('ckpt', None) is not None:
                 warnings.warn(
-                    f'{model}\'s default checkpoint is overridden by {ckpt}',
-                    UserWarning)
-            kwargs['ckpt'] = ckpt
+                    f'{model_name}\'s default checkpoint '
+                    'is overridden by {model_ckpt}', UserWarning)
+            kwargs['ckpt'] = model_ckpt
 
         if extra_parameters is not None:
             kwargs['extra_parameters'] = extra_parameters
