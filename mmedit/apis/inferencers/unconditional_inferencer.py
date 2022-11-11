@@ -18,7 +18,7 @@ class UnconditionalInferencer(BaseMMEditInferencer):
         preprocess=[],
         forward=[],
         visualize=['result_out_dir'],
-        postprocess=['print_result', 'pred_out_file', 'get_datasample'])
+        postprocess=[])
 
     extra_parameters = dict(num_batches=4, sample_model='ema')
 

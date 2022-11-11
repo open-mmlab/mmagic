@@ -19,7 +19,7 @@ class RestorationInferencer(BaseMMEditInferencer):
         preprocess=['img'],
         forward=[],
         visualize=['result_out_dir'],
-        postprocess=['print_result', 'pred_out_file', 'get_datasample'])
+        postprocess=[])
 
     def preprocess(self, img: InputsType, ref: InputsType = None) -> Dict:
         """Process the inputs into a model-feedable format.

@@ -2,7 +2,6 @@
 from abc import abstractmethod
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
-import mmcv
 import numpy as np
 import torch
 from mmengine.config import Config
@@ -35,7 +34,7 @@ class BaseMMEditInferencer:
         preprocess=[],
         forward=[],
         visualize=['result_out_dir'],
-        postprocess=['print_result', 'pred_out_file', 'get_datasample'])
+        postprocess=['get_datasample'])
     func_order = dict(preprocess=0, forward=1, visualize=2, postprocess=3)
 
     extra_parameters = dict()
@@ -169,8 +168,6 @@ class BaseMMEditInferencer:
         preds: PredType,
         imgs: Optional[List[np.ndarray]] = None,
         is_batch: bool = False,
-        print_result: bool = False,
-        pred_out_file: str = '',
         get_datasample: bool = False,
     ) -> Union[ResType, Tuple[ResType, np.ndarray]]:
         """Postprocess predictions.
@@ -180,11 +177,6 @@ class BaseMMEditInferencer:
             imgs (Optional[np.ndarray]): Visualized predictions.
             is_batch (bool): Whether the inputs are in a batch.
                 Defaults to False.
-            print_result (bool): Whether to print the result.
-                Defaults to False.
-            pred_out_file (str): Output file name to store predictions
-                without images. Supported file formats are “json”, “yaml/yml”
-                and “pickle/pkl”. Defaults to ''.
             get_datasample (bool): Whether to use Datasample to store
                 inference results. If False, dict will be used.
 
@@ -201,13 +193,6 @@ class BaseMMEditInferencer:
                 results.append(result)
         if not is_batch:
             results = results[0]
-        if print_result:
-            print(results)
-        # Add img to the results after printing
-        if pred_out_file != '':
-            mmcv.dump(results, pred_out_file)
-        if imgs is None:
-            return results
         return results, imgs
 
     def _pred2dict(self, pred_tensor: torch.Tensor) -> Dict:

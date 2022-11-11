@@ -19,7 +19,7 @@ class InpaintingInferencer(BaseMMEditInferencer):
         preprocess=['img', 'mask'],
         forward=[],
         visualize=['result_out_dir'],
-        postprocess=['print_result', 'pred_out_file', 'get_datasample'])
+        postprocess=[])
 
     def preprocess(self, img: InputsType, mask: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.

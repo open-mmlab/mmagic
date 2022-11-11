@@ -21,7 +21,7 @@ class MattingInferencer(BaseMMEditInferencer):
         preprocess=['img', 'trimap'],
         forward=[],
         visualize=['result_out_dir'],
-        postprocess=['print_result', 'pred_out_file', 'get_datasample'])
+        postprocess=[])
 
     def preprocess(self, img: InputsType, trimap: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.
