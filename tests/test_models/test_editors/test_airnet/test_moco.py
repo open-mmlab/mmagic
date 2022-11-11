@@ -1,10 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
+import pytest
 import torch
 
 from mmedit.models.editors.airnet.cbde import ResEncoder
 from mmedit.models.editors.airnet.moco import MoCo
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_moco():
     model = MoCo(base_encoder=ResEncoder, dim=256, K=256)
 

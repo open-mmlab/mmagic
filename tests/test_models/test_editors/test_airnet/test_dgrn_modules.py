@@ -1,9 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
+import pytest
 import torch
 
 from mmedit.models.editors.airnet.dgrn_modules import DGG, default_conv
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_dgg():
     model = DGG(default_conv, 64, 3, 5)
 
