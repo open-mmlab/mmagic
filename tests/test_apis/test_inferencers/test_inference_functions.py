@@ -21,7 +21,7 @@ register_all_modules()
 
 
 def test_init_model():
-    set_random_seed()
+    set_random_seed(1)
 
     with pytest.raises(TypeError):
         init_model(['dog'])
@@ -294,7 +294,10 @@ def test_video_interpolation_inference():
 
     input_dir = data_root + 'tests/data/frames/test_inference.mp4'
     video_interpolation_inference(
-        model=model, input_dir=input_dir, output_dir='out', fps=60.0)
+        model=model,
+        input_dir=input_dir,
+        output_dir='out/result_video.mp4',
+        fps=60.0)
 
     input_dir = osp.join(data_root, 'tests/data/frames/sequence/gt/sequence_1')
     video_interpolation_inference(
