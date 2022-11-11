@@ -27,6 +27,26 @@ def test_video_restoration_inferencer():
     assert inference_result is None
 
 
+def test_video_restoration_inferencer_input_dir():
+    cfg = osp.join(
+        osp.dirname(__file__), '..', '..', '..', 'configs', 'basicvsr',
+        'basicvsr_2xb4_reds4.py')
+    result_out_dir = osp.join(
+        osp.dirname(__file__), '..', '..', 'data',
+        'video_restoration_result.mp4')
+    data_root = osp.join(osp.dirname(__file__), '../../../')
+    input_dir = osp.join(data_root, 'tests/data/frames/sequence/gt/sequence_1')
+    result_out_dir = data_root + 'tests/data/out'
+
+    inferencer_instance = \
+        VideoRestorationInferencer(
+            cfg,
+            None)
+    inference_result = inferencer_instance(
+        video=input_dir, result_out_dir=result_out_dir)
+    assert inference_result is None
+
+
 def test_video_restoration_inferencer_window_size():
     cfg = osp.join(
         osp.dirname(__file__), '..', '..', '..', 'configs', 'basicvsr',
@@ -72,4 +92,4 @@ def test_video_restoration_inferencer_max_seq_len():
 
 
 if __name__ == '__main__':
-    test_video_restoration_inferencer_max_seq_len()
+    test_video_restoration_inferencer_input_dir()

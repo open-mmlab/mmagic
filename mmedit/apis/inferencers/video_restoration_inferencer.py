@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import glob
 import os
 import os.path as osp
 from typing import Dict, List, Optional, Tuple, Union
@@ -88,8 +89,27 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
                     tmp_pipeline.append(pipeline)
             test_pipeline = tmp_pipeline
         else:
-            raise ValueError('Input file is not a video, \
-                which is not supported now.')
+            # the first element in the pipeline must be
+            # 'GenerateSegmentIndices'
+            if test_pipeline[0]['type'] != 'GenerateSegmentIndices':
+                raise TypeError('The first element in the pipeline must be '
+                                f'"GenerateSegmentIndices", but got '
+                                f'"{test_pipeline[0]["type"]}".')
+
+            # specify start_idx and filename_tmpl
+            test_pipeline[0]['start_idx'] = self.extra_parameters['start_idx']
+            test_pipeline[0]['filename_tmpl'] = \
+                self.extra_parameters['filename_tmpl']
+
+            # prepare data
+            sequence_length = len(glob.glob(osp.join(video, '*')))
+            lq_folder = osp.dirname(video)
+            key = osp.basename(video)
+            data = dict(
+                img_path=lq_folder,
+                gt_path='',
+                key=key,
+                sequence_length=sequence_length)
 
         # compose the pipeline
         test_pipeline = Compose(test_pipeline)
@@ -165,8 +185,15 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
             cv2.destroyAllWindows()
             video_writer.release()
         else:
-            raise ValueError('Output file is not a video, \
-                which is not supported now.')
+            for i in range(self.extra_parameters['start_idx'],
+                           self.extra_parameters['start_idx'] + preds.size(1)):
+                output_i = \
+                    preds[:, i - self.extra_parameters['start_idx'], :, :, :]
+                output_i = tensor2img(output_i)
+                filename_tmpl = self.extra_parameters['filename_tmpl']
+                save_path_i = f'{result_out_dir}/{filename_tmpl.format(i)}'
+
+                mmcv.imwrite(output_i, save_path_i)
 
         return []
 

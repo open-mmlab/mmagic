@@ -13,11 +13,18 @@ from mmedit.apis import (colorization_inference, init_model,
                          restoration_face_inference, restoration_inference,
                          restoration_video_inference, sample_conditional_model,
                          sample_img2img_model, sample_unconditional_model,
-                         video_interpolation_inference)
+                         set_random_seed, video_interpolation_inference)
 from mmedit.registry import MODELS
 from mmedit.utils import register_all_modules, tensor2img
 
 register_all_modules()
+
+
+def test_init_model():
+    set_random_seed()
+
+    with pytest.raises(TypeError):
+        init_model(['dog'])
 
 
 @pytest.mark.skipif(
