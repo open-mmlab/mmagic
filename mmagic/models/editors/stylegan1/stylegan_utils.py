@@ -9,7 +9,7 @@ def get_mean_latent(generator, num_samples=4096, bs_per_repeat=1024):
     """Get mean latent of W space in Style-based GANs.
 
     Args:
-        generator (nn.Module): Generator of a Style-based GAN.
+        generator (BaseModule): Generator of a Style-based GAN.
         num_samples (int, optional): Number of sample times. Defaults to 4096.
         bs_per_repeat (int, optional): Batch size of noises per sample.
             Defaults to 1024.

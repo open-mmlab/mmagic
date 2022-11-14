@@ -4,6 +4,7 @@ from copy import deepcopy
 import numpy as np
 import torch
 import torch.nn as nn
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 from ...utils import get_module_device
@@ -11,8 +12,8 @@ from .pggan_modules import (EqualizedLRConvModule, EqualizedLRConvUpModule,
                             PGGANNoiseTo2DFeat)
 
 
-@MODELS.register_module()
-class PGGANGenerator(nn.Module):
+@MODULES.register_module()
+class PGGANGenerator(BaseModule):
     """Generator for PGGAN.
 
     Args:

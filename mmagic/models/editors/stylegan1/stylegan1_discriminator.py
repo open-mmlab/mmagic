@@ -2,6 +2,7 @@
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 from ..pggan import (EqualizedLRConvDownModule, EqualizedLRConvModule,
@@ -9,9 +10,9 @@ from ..pggan import (EqualizedLRConvDownModule, EqualizedLRConvModule,
 from .stylegan1_modules import Blur, EqualLinearActModule
 
 
-@MODELS.register_module('StyleGANv1Discriminator')
-@MODELS.register_module()
-class StyleGAN1Discriminator(nn.Module):
+@MODULES.register_module('StyleGANv1Discriminator')
+@MODULES.register_module()
+class StyleGAN1Discriminator(BaseModule):
     """StyleGAN1 Discriminator.
 
     The architecture of this discriminator is proposed in StyleGAN1. More

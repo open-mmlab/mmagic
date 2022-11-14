@@ -6,6 +6,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 from ...utils import get_module_device
@@ -14,9 +15,9 @@ from .stylegan1_modules import EqualLinearActModule, StyleConv
 from .stylegan_utils import get_mean_latent, style_mixing
 
 
-@MODELS.register_module('StyleGANv1Generator')
-@MODELS.register_module()
-class StyleGAN1Generator(nn.Module):
+@MODULES.register_module('StyleGANv1Generator')
+@MODULES.register_module()
+class StyleGAN1Generator(BaseModule):
     """StyleGAN1 Generator.
 
     In StyleGAN1, we use a progressive growing architecture composing of a
