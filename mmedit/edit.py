@@ -15,7 +15,7 @@ class MMEdit:
 
     Args:
         model_name (str): Name of the editing model.
-        model_version (str): Version of a specific model.
+        model_setting (str): Setting of a specific model.
             Default to 'a'.
         model_config (str): Path to the config file for the editing model.
             Default to None.
@@ -29,7 +29,7 @@ class MMEdit:
         # conditional models
         'biggan': {
             'type': 'conditional',
-            'version': {
+            'setting': {
                 'a': {
                     'config':
                     'biggan/biggan_2xb25-500kiters_cifar10-32x32.py',
@@ -48,7 +48,7 @@ class MMEdit:
         # unconditional models
         'styleganv1': {
             'type': 'unconditional',
-            'version': {
+            'setting': {
                 'a': {
                     'config':
                     'styleganv1/styleganv1_ffhq-256x256_8xb4-25Mimgs.py',
@@ -61,7 +61,7 @@ class MMEdit:
         # matting models
         'gca': {
             'type': 'matting',
-            'version': {
+            'setting': {
                 'a': {
                     'config':
                     'gca/gca_r34_4xb10-200k_comp1k.py',
@@ -74,7 +74,7 @@ class MMEdit:
         # inpainting models
         'aot_gan': {
             'type': 'inpainting',
-            'version': {
+            'setting': {
                 'a': {
                     'config':
                     'aot_gan/aot-gan_smpgan_4xb4_places-512x512.py',
@@ -87,7 +87,7 @@ class MMEdit:
         # translation models
         'pix2pix': {
             'type': 'translation',
-            'version': {
+            'setting': {
                 'a': {
                     'config':
                     'pix2pix/pix2pix_vanilla-unet-bn_1xb1-80kiters_facades.py',  # noqa: E501
@@ -101,7 +101,7 @@ class MMEdit:
         # real_esrgan error
         'real_esrgan': {
             'type': 'restoration',
-            'version': {
+            'setting': {
                 'a': {
                     'config':
                     'real_esrgan/realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py',  # noqa: E501
@@ -112,7 +112,7 @@ class MMEdit:
         },
         'esrgan': {
             'type': 'restoration',
-            'version': {
+            'setting': {
                 'a': {
                     'config':
                     'esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py',  # noqa: E501
@@ -125,7 +125,7 @@ class MMEdit:
         # video_restoration models
         'basicvsr': {
             'type': 'video_restoration',
-            'version': {
+            'setting': {
                 'a': {
                     'config':
                     'basicvsr/basicvsr_2xb4_reds4.py',
@@ -144,7 +144,7 @@ class MMEdit:
         # video_interpolation models
         'flavr': {
             'type': 'video_interpolation',
-            'version': {
+            'setting': {
                 'a': {
                     'config':
                     'flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py',  # noqa: E501
@@ -157,7 +157,7 @@ class MMEdit:
 
     def __init__(self,
                  model_name: str = None,
-                 model_version: str = 'a',
+                 model_setting: str = 'a',
                  model_config: str = None,
                  model_ckpt: str = None,
                  device: torch.device = None,
@@ -165,13 +165,13 @@ class MMEdit:
         register_all_modules(init_default_scope=True)
         inferencer_kwargs = {}
         inferencer_kwargs.update(
-            self._get_inferencer_kwargs(model_name, model_version,
+            self._get_inferencer_kwargs(model_name, model_setting,
                                         model_config, model_ckpt,
                                         extra_parameters))
         self.inferencer = MMEditInferencer(device=device, **inferencer_kwargs)
 
     def _get_inferencer_kwargs(self, model_name: Optional[str],
-                               model_version: Optional[str],
+                               model_setting: Optional[str],
                                model_config: Optional[str],
                                model_ckpt: Optional[str],
                                extra_parameters: Optional[Dict]) -> Dict:
@@ -182,10 +182,10 @@ class MMEdit:
             cfgs = self.get_model_config(model_name)
             kwargs['type'] = cfgs['type']
             kwargs['config'] = os.path.join(
-                'configs/', cfgs['version'][model_version]['config'])
-            kwargs['ckpt'] = cfgs['version'][model_version]['ckpt']
+                'configs/', cfgs['setting'][model_setting]['config'])
+            kwargs['ckpt'] = cfgs['setting'][model_setting]['ckpt']
             # kwargs['ckpt'] = 'https://download.openmmlab.com/' + \
-            # f'mmediting/{cfgs["version"][model_version]["ckpt"]}'
+            # f'mmediting/{cfgs["version"][model_setting]["ckpt"]}'
 
         if model_config is not None:
             if kwargs.get('config', None) is not None:

@@ -34,10 +34,10 @@ def parse_args():
         default=None,
         help='Pretrained editing algorithm')
     parser.add_argument(
-        '--model-version',
+        '--model-setting',
         type=str,
         default='a',
-        help='Pretrained editing algorithm')
+        help='Pretrained editing algorithm setting')
     parser.add_argument(
         '--model-config',
         type=str,

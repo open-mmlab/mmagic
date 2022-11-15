@@ -223,7 +223,6 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
                self.extra_parameters['end_idx']:
                 break
 
-        print()
         print(f'Output dir: {result_out_dir}')
         if to_video:
             target.release()
