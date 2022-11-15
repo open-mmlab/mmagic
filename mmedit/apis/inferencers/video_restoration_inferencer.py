@@ -13,30 +13,7 @@ from mmengine.dataset import Compose
 from mmedit.utils import tensor2img
 from .base_mmedit_inferencer import (BaseMMEditInferencer, InputsType,
                                      PredType, ResType)
-
-VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
-
-
-def pad_sequence(data, window_size):
-    """Pad frame sequence data.
-
-    Args:
-        data (Tensor): The frame sequence data.
-        window_size (int): The window size used in sliding-window framework.
-
-    Returns:
-        data (Tensor): The padded result.
-    """
-
-    padding = window_size // 2
-
-    data = torch.cat([
-        data[:, 1 + padding:1 + 2 * padding].flip(1), data,
-        data[:, -1 - 2 * padding:-1 - padding].flip(1)
-    ],
-                     dim=1)
-
-    return data
+from .inference_functions import VIDEO_EXTENSIONS, pad_sequence
 
 
 class VideoRestorationInferencer(BaseMMEditInferencer):

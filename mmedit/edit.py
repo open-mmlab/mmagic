@@ -24,6 +24,17 @@ class MMEdit:
         config_dir (str): Path to the directory containing config files.
             Default to 'configs/'.
         device (torch.device): Device to use for inference. Default to 'cuda'.
+
+    Examples:
+        >>> # inference of a conditional model, biggan for example
+        >>> editor = MMEdit(model_name='biggan')
+        >>> editor.infer(label=1, result_out_dir='./biggan_res.jpg')
+
+        >>> # inference of a translation model, pix2pix for example
+        >>> editor = MMEdit(model_name='pix2pix')
+        >>> editor.infer(img='./test.jpg', result_out_dir='./pix2pix_res.jpg')
+
+        >>> # see demo/mmediting_inference_tutorial.ipynb for more examples
     """
     inference_supported_models = {
         # conditional models
