@@ -13,6 +13,7 @@ class DDIMDiffuser:
     """```DDIMDiffuser``` support the diffusion and reverse process formulated in https://arxiv.org/abs/2010.02502. 
 
     The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddim.py. # noqa
+    The difference is that we ensemble gradient-guidance in step function.
 
     Args:
         num_train_timesteps (int, optional): _description_. Defaults to 1000.

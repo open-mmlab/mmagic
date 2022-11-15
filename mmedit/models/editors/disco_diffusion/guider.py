@@ -17,14 +17,40 @@ import lpips
 from .secondary_model import *
 
 def sinc(x):
+    """_summary_
+
+    Args:
+        x (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     return torch.where(x != 0, torch.sin(math.pi * x) / (math.pi * x), x.new_ones([]))
 
 def lanczos(x, a):
+    """_summary_
+
+    Args:
+        x (_type_): _description_
+        a (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     cond = torch.logical_and(-a < x, x < a)
     out = torch.where(cond, sinc(x) * sinc(x/a), x.new_zeros([]))
     return out / out.sum()
 
 def ramp(ratio, width):
+    """_summary_
+
+    Args:
+        ratio (_type_): _description_
+        width (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     n = math.ceil(width / ratio + 1)
     out = torch.empty([n])
     cur = 0
@@ -34,6 +60,16 @@ def ramp(ratio, width):
     return torch.cat([-out[1:].flip([0]), out])[1:-1]
 
 def resample(input, size, align_corners=True):
+    """_summary_
+
+    Args:
+        input (_type_): _description_
+        size (_type_): _description_
+        align_corners (bool, optional): _description_. Defaults to True.
+
+    Returns:
+        _type_: _description_
+    """
     n, c, h, w = input.shape
     dh, dw = size
 
@@ -55,6 +91,13 @@ def resample(input, size, align_corners=True):
     return F.interpolate(input, size, mode='bicubic', align_corners=align_corners)
 
 class MakeCutouts(nn.Module):
+    """_summary_
+
+    Args:
+        cut_size (_type_): _description_
+        cutn (_type_): _description_
+        skip_augs (bool, optional): _description_. Defaults to False.
+    """
     def __init__(self, cut_size, cutn, skip_augs=False):
         super().__init__()
         self.cut_size = cut_size
@@ -96,9 +139,17 @@ class MakeCutouts(nn.Module):
         return cutouts
 
 cutout_debug = False
-padargs = {}
 
 class MakeCutoutsDango(nn.Module):
+    """_summary_
+
+    Args:
+        cut_size (_type_): _description_
+        Overview (int, optional): _description_. Defaults to 4.
+        InnerCrop (int, optional): _description_. Defaults to 0.
+        IC_Size_Pow (float, optional): _description_. Defaults to 0.5.
+        IC_Grey_P (float, optional): _description_. Defaults to 0.2.
+    """
     def __init__(self, cut_size,
                  Overview=4, 
                  InnerCrop = 0, IC_Size_Pow=0.5, IC_Grey_P = 0.2
@@ -149,12 +200,6 @@ class MakeCutoutsDango(nn.Module):
                 for _ in range(self.Overview):
                     cutouts.append(cutout)
 
-            # if cutout_debug:
-            #     if is_colab:
-            #         TF.to_pil_image(cutouts[0].clamp(0, 1).squeeze(0)).save("/content/cutout_overview0.jpg",quality=99)
-            #     else:
-            #         TF.to_pil_image(cutouts[0].clamp(0, 1).squeeze(0)).save("cutout_overview0.jpg",quality=99)
-
                               
         if self.InnerCrop >0:
             for i in range(self.InnerCrop):
@@ -166,16 +211,19 @@ class MakeCutoutsDango(nn.Module):
                     cutout = gray(cutout)
                 cutout = resize(cutout, out_shape=output_shape)
                 cutouts.append(cutout)
-            # if cutout_debug:
-            #     if is_colab:
-            #         TF.to_pil_image(cutouts[-1].clamp(0, 1).squeeze(0)).save("/content/cutout_InnerCrop.jpg",quality=99)
-            #     else:
-            #         TF.to_pil_image(cutouts[-1].clamp(0, 1).squeeze(0)).save("cutout_InnerCrop.jpg",quality=99)
         cutouts = torch.cat(cutouts)
         if skip_augs is not True: cutouts=self.augs(cutouts)
         return cutouts
 
 def parse_prompt(prompt):
+    """_summary_
+
+    Args:
+        prompt (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     if prompt.startswith('http://') or prompt.startswith('https://'):
         vals = prompt.rsplit(':', 2)
         vals = [vals[0] + ':' + vals[1], *vals[2:]]
@@ -185,6 +233,15 @@ def parse_prompt(prompt):
     return vals[0], float(vals[1])
 
 def split_prompts(prompts, max_frames=1):
+    """_summary_
+
+    Args:
+        prompts (_type_): _description_
+        max_frames (int, optional): _description_. Defaults to 1.
+
+    Returns:
+        _type_: _description_
+    """
     prompt_series = pd.Series([np.nan for a in range(max_frames)])
     for i, prompt in prompts.items():
         prompt_series[i] = prompt
@@ -195,6 +252,13 @@ def split_prompts(prompts, max_frames=1):
 
 @MODULES.register_module()
 class ImageTextGuider(nn.Module):
+    """_summary_
+
+    Args:
+        clip_models (_type_): _description_
+        cutter_cfg (_type_): _description_
+        loss_cfg (_type_): _description_
+    """
     def __init__(self, clip_models, cutter_cfg, loss_cfg):
         super().__init__()
         self.clip_models = clip_models

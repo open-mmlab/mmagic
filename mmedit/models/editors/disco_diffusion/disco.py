@@ -25,6 +25,19 @@ import mmcv
 @MODELS.register_module('dd')
 @MODELS.register_module()
 class DiscoDiffusion(BaseModel):
+    """_summary_
+
+    Args:
+        data_preprocessor (_type_): _description_
+        unet (_type_): _description_
+        diffuser (_type_): _description_
+        secondary_model (_type_, optional): _description_. Defaults to None.
+        cutter_cfg (_type_, optional): _description_. Defaults to dict().
+        loss_cfg (_type_, optional): _description_. Defaults to dict().
+        clip_models_cfg (list, optional): _description_. Defaults to [].
+        use_fp16 (bool, optional): _description_. Defaults to False.
+        pretrained_cfgs (_type_, optional): _description_. Defaults to None.
+    """
     def __init__(self,
                  data_preprocessor,
                  unet,
@@ -35,7 +48,6 @@ class DiscoDiffusion(BaseModel):
                  clip_models_cfg=[],
                  use_fp16=False,
                  pretrained_cfgs=None):
-
         super().__init__(data_preprocessor=data_preprocessor)
         self.unet = MODULES.build(unet)
         self.diffuser = DIFFUSERS.build(diffuser)
@@ -98,6 +110,7 @@ class DiscoDiffusion(BaseModel):
               text_prompts=[],
               image_prompts=[],
               eta = 0.8,
+              clip_grad_scale=1000,
               seed=None):
         """_summary_
 
