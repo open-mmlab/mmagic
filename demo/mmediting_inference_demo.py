@@ -2,44 +2,36 @@
 # isort: off
 from argparse import ArgumentParser
 from mmedit.edit import MMEdit
+from mmengine import DictAction
 
 
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument(
-        '--img',
-        type=str,
-        default='resources/input/restoration/0901x2.png',
-        help='Input image file.')
+        '--img', type=str, default=None, help='Input image file.')
     parser.add_argument(
-        '--video',
-        type=str,
-        default='resources/input/video_restoration/v_Basketball_g01_c01.avi',
-        help='Input video file.')
+        '--video', type=str, default=None, help='Input video file.')
     parser.add_argument(
         '--label',
         type=int,
-        default=1,
+        default=None,
         help='Input label for conditional models.')
     parser.add_argument(
-        '--trimap',
-        type=str,
-        default='resources/input/matting/beach_trimap.png',
-        help='Input for matting models.')
+        '--trimap', type=str, default=None, help='Input for matting models.')
     parser.add_argument(
         '--mask',
         type=str,
-        default='resources/input/inpainting/mask_2_resized.png',
-        help='path to input mask file')
+        default=None,
+        help='path to input mask file for inpainting models')
     parser.add_argument(
         '--result-out-dir',
         type=str,
-        default='resources/demo_results/inferencer_samples_apis_video.avi',
-        help='Output directory of images.')
+        default=None,
+        help='Output img or video path.')
     parser.add_argument(
         '--model-name',
         type=str,
-        default='basicvsr',
+        default=None,
         help='Pretrained editing algorithm')
     parser.add_argument(
         '--model-version',
@@ -62,18 +54,10 @@ def parse_args():
         default='cuda',
         help='Device used for inference.')
     parser.add_argument(
-        '--show',
-        action='store_true',
-        help='Display the image in a popup window.')
-    parser.add_argument(
-        '--print-result',
-        action='store_true',
-        help='Whether to print the results.')
-    parser.add_argument(
-        '--pred-out-file',
-        type=str,
-        default='',
-        help='File to save the inference results.')
+        '--extra-parameters',
+        nargs='+',
+        action=DictAction,
+        help='Other customized kwargs for different model')
 
     args = parser.parse_args()
     return args
