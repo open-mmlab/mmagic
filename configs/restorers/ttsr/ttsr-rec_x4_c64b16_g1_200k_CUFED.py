@@ -223,7 +223,7 @@ data = dict(
         scale=scale))
 
 # optimizer
-optimizers = dict(type='Adam', lr=1.e-4)
+optimizers = dict(generator=dict(type='Adam', lr=1.e-4))
 
 # learning policy
 total_iters = 200000
