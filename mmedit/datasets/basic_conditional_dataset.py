@@ -291,9 +291,3 @@ class BasicConditionalDataset(BaseDataset):
         body.append(f'Annotation file: \t{self.ann_file}')
         body.append(f'Prefix of images: \t{self.img_prefix}')
         return body
-
-    # def get_cond(self, idx):
-    #     """Get a single of conditional input by given index."""
-
-    #     data_info = self.get_data_info(idx)
-    #     return data_info['gt_label']
