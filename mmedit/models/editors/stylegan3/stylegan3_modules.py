@@ -131,7 +131,9 @@ class MappingNetwork(nn.Module):
         cond_channels(int, optional): Size of the conditional vector.
             Defaults to None.
         style_channels (int): The number of channels for style code.
-        num_ws (int): The repeat times of w latent.
+        num_ws (int | None): The repeat times of w latent. If None is passed,
+            the output will shape like (batch_size, 1), otherwise the output
+            will shape like (bz, num_ws, 1).
         num_layers (int, optional): The number of layers of mapping network.
             Defaults to 2.
         lr_multiplier (float, optional): Equalized learning rate multiplier.

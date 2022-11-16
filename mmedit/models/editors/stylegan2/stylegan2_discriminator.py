@@ -64,9 +64,9 @@ class StyleGAN2Discriminator(BaseModule):
             to [1, 3, 3, 1].
         mbstd_cfg (dict, optional): Configs for minibatch-stddev layer.
             Defaults to dict(group_size=4, channel_groups=1).
-        c_dim (int, optional): The dimension of conditional input. If None or
+        c_channels (int, optional): The dimension of conditional input. If None or
             less than 1, no conditional mapping will be applied. Defaults to None.
-        cmap_dim (int, optional): The dimension of the output of conditional
+        cmap_channels (int, optional): The dimension of the output of conditional
             mapping. Only work when :attr:`c_dim` is larger than 0. If :attr:`c_dim`
             is larger than 0 and :attr:`cmap_dim` is None, will. Defaults to None.
         cmapping_layer (int, optional): The number of mapping layer used to map conditional
@@ -173,14 +173,17 @@ class StyleGAN2Discriminator(BaseModule):
 
         self.final_conv = ConvDownLayer(
             in_channels + 1, channels[4], 3, fp16_enabled=fp16_enabled)
+
+        if cond_channels is None or cond_channels <= 0:
+            final_linear_out_channels = 1
+        else:
+            final_linear_out_channels = cond_mapping_channels
         self.final_linear = nn.Sequential(
             EqualLinearActModule(
                 channels[4] * 4 * 4,
                 channels[4],
                 act_cfg=dict(type='fused_bias')),
-            EqualLinearActModule(
-                channels[4], 1 if cond_channels is None or cond_channels <= 0
-                else cond_mapping_channels),
+            EqualLinearActModule(channels[4], final_linear_out_channels),
         )
 
         self.input_bgr2rgb = input_bgr2rgb
@@ -202,7 +205,7 @@ class StyleGAN2Discriminator(BaseModule):
 
         Args:
             x (torch.Tensor): Input image tensor.
-            cond (torch.Tensor, optional): The conditional feature after
+            cond (torch.Tensor, optional): The conditional feature feed to
                 mapping layer. Defaults to None.
 
         Returns:
