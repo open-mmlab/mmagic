@@ -60,7 +60,7 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root='../datasets/gopro/train',
+        data_root='./data/gopro/train',
         data_prefix=dict(gt='sharp', img='blur'),
         ann_file='meta_info_gopro_train.txt',
         pipeline=train_pipeline))
@@ -73,7 +73,7 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root='../datasets/gopro/test',
+        data_root='./data/gopro/test',
         ann_file='meta_info_gopro_test.txt',
         data_prefix=dict(gt='sharp', img='blur'),
         pipeline=val_pipeline))

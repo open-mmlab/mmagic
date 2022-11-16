@@ -60,7 +60,7 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='sidd', task_name='denoising'),
-        data_root='../datasets/SIDD/train',
+        data_root='./data/SIDD/train',
         data_prefix=dict(gt='gt', img='noisy'),
         filename_tmpl=dict(img='{}_NOISY', gt='{}_GT'),
         pipeline=train_pipeline))
@@ -73,7 +73,7 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='sidd', task_name='denoising'),
-        data_root='../datasets/SIDD/val/',
+        data_root='./data/SIDD/val/',
         data_prefix=dict(gt='gt', img='noisy'),
         filename_tmpl=dict(gt='{}_GT', img='{}_NOISY'),
         pipeline=val_pipeline))
