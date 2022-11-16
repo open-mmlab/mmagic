@@ -156,6 +156,9 @@ class BasicConditionalDataset(BaseDataset):
 
         if not self.ann_file:
             samples = self._find_samples(file_client)
+        elif self.ann_file.endswith('json'):
+            samples = mmengine.fileio.io.load(self.ann_file)
+            samples = [[name, label] for name, label in samples.items()]
         else:
             lines = mmengine.list_from_file(self.ann_file)
             samples = [x.strip().rsplit(' ', 1) for x in lines]
@@ -169,7 +172,10 @@ class BasicConditionalDataset(BaseDataset):
         data_list = []
         for filename, gt_label in samples:
             img_path = add_prefix(filename, self.img_prefix)
-            info = {'img_path': img_path, 'gt_label': int(gt_label)}
+            # convert digit label to int
+            if isinstance(gt_label, str):
+                gt_label = int(gt_label) if gt_label.isdigit() else gt_label
+            info = {'img_path': img_path, 'gt_label': gt_label}
             data_list.append(info)
         return data_list
 
@@ -285,3 +291,9 @@ class BasicConditionalDataset(BaseDataset):
         body.append(f'Annotation file: \t{self.ann_file}')
         body.append(f'Prefix of images: \t{self.img_prefix}')
         return body
+
+    # def get_cond(self, idx):
+    #     """Get a single of conditional input by given index."""
+
+    #     data_info = self.get_data_info(idx)
+    #     return data_info['gt_label']
