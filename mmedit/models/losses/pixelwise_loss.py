@@ -245,17 +245,6 @@ class PSNRLoss(nn.Module):
 
     def forward(self, pred, target):
         assert len(pred.size()) == 4
-        # if self.toY:
-        #     if self.first:
-        #         self.coef = self.coef.to(pred.device)
-        #         self.first = False
-
-        #     pred = (pred * self.coef).sum(dim=1).unsqueeze(dim=1) + 16.
-        #     target = (target * self.coef).sum(dim=1).unsqueeze(dim=1) + 16.
-
-        #     pred, target = pred / 255., target / 255.
-        #     pass
-        # assert len(pred.size()) == 4
 
         return self.loss_weight * self.scale * torch.log((
             (pred - target)**2).mean(dim=(1, 2, 3)) + 1e-8).mean()
