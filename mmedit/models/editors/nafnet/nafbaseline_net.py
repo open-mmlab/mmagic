@@ -5,8 +5,8 @@ import torch.nn.functional as F
 from mmengine.model import BaseModule
 
 from mmedit.registry import MODELS
-from .local_utils import Local_Base
-from .utils import LayerNorm2d
+from .naf_avgpool2d import Local_Base
+from .naf_layerNorm2d import LayerNorm2d
 
 
 @MODELS.register_module()

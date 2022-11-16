@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.nafnet.utils import LayerNorm2d
+from mmedit.models.editors.nafnet.naf_layerNorm2d import LayerNorm2d
 
 
 def test_layer_norm():

@@ -5,7 +5,12 @@ import torch.nn.functional as F
 
 
 class AvgPool2d(nn.Module):
-    """Average Pooling 2D."""
+    """Average Pooling 2D used in NAFNet.
+
+    Note: this is different from the normal AvgPool2d in pytorch.
+    ref.
+    Improving Image Restoration by Revisiting Global Information Aggregation
+    """
 
     def __init__(self,
                  kernel_size=None,
@@ -104,12 +109,6 @@ def replace_layers(model, base_size, train_size, fast_imp, **kwargs):
                 base_size=base_size, fast_imp=fast_imp, train_size=train_size)
             assert m.output_size == 1
             setattr(model, n, pool)
-
-
-'''
-ref.
-Improving Image Restoration by Revisiting Global Information Aggregation
-'''
 
 
 class Local_Base():

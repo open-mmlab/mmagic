@@ -33,7 +33,11 @@ class LayerNormFunction(torch.autograd.Function):
 
 
 class LayerNorm2d(nn.Module):
-    """Layer normalization module."""
+    """Layer normalization module.
+
+    Note: This is different from the layernorm2d in pytorch.
+        The layer norm here will handle different channels respectively.
+    """
 
     def __init__(self, channels, eps=1e-6):
         super(LayerNorm2d, self).__init__()
