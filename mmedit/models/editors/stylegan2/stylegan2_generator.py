@@ -56,9 +56,9 @@ class StyleGAN2Generator(nn.Module):
     Args:
         out_size (int): The output size of the StyleGAN2 generator.
         style_channels (int): The number of channels for style code.
-        noise_channels (int, optional): The number of channels for input noise.
-            If not passed, will be set the same value as :attr:`style_channels`.
-            Defaults to None.
+        noise_noise (int, optional): The size of (number of channels) the input
+            noise. If not passed, will be set the same value as
+            :attr:`style_channels`. Defaults to None.
         num_mlps (int, optional): The number of MLP layers. Defaults to 8.
         channel_multiplier (int, optional): The multiplier factor for the
             channel number. Defaults to 2.
@@ -350,6 +350,7 @@ class StyleGAN2Generator(nn.Module):
             injected_noise (torch.Tensor | None, optional): Given a tensor, the
                 random noise will be fixed as this input injected noise.
                 Defaults to None.
+            add_noise (bool): Whether apply noise injection. Defaults to True.
             randomize_noise (bool, optional): If `False`, images are sampled
                 with the buffered noise tensor injected to the style conv
                 block. Defaults to True.
@@ -394,7 +395,7 @@ class StyleGAN2Generator(nn.Module):
 
         # no amp for style-mapping and condition-embedding
         if not input_is_latent:
-            noise_batch = [s.clone() for s in styles]
+            noise_batch = styles
             # NOTE: do pixel_norm (2nd_momuent_norm) to noise input
             styles = [self.pixel_norm(s) for s in styles]
             if self.cond_channels is not None and self.cond_channels > 0:
