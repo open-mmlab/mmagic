@@ -3,11 +3,16 @@
 
 This code is modified from:
 https://github.com/rosinality/stylegan2-pytorch/blob/master/inception.py
+https://github.com/open-mmlab/mmediting/blob/1.x/mmedit/evaluation/functional/inception_utils.py
 """
+
+from contextlib import contextmanager
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmcv import print_log
+from mmcv.runner.checkpoint import load_from_http
 from torch.utils.model_zoo import load_url
 from torchvision import models
 
@@ -16,8 +21,12 @@ from torchvision import models
 FID_WEIGHTS_URL = 'https://github.com/mseitzer/pytorch-fid/releases/download/fid_weights/pt_inception-2015-12-05-6726825d.pth'  # noqa: E501
 
 
-class InceptionV3(nn.Module):
-    """Pretrained InceptionV3 network returning feature maps."""
+class PyTorchInceptionV3(nn.Module):
+    """Pretrained InceptionV3 network returning feature maps.
+
+    This class is only used when TorchScript is not available,
+    `torch.__version__` < '1.6.0'.
+    """
 
     # Index of default block of inception to return,
     # corresponds to output of final average pooling
@@ -330,3 +339,71 @@ class FIDInceptionE_2(models.inception.InceptionE):
 
         outputs = [branch1x1, branch3x3, branch3x3dbl, branch_pool]
         return torch.cat(outputs, 1)
+
+
+@contextmanager
+def disable_gpu_fuser_on_pt19():
+    """On PyTorch 1.9 a CUDA fuser bug prevents the Inception JIT model to run.
+
+    Refers to:
+      https://github.com/GaParmar/clean-fid/blob/5e1e84cdea9654b9ac7189306dfa4057ea2213d8/cleanfid/inception_torchscript.py#L9  # noqa
+      https://github.com/GaParmar/clean-fid/issues/5
+      https://github.com/pytorch/pytorch/issues/64062
+    """
+    if torch.__version__.startswith('1.9.'):
+        old_val = torch._C._jit_can_fuse_on_gpu()
+        torch._C._jit_override_can_fuse_on_gpu(False)
+    yield
+    if torch.__version__.startswith('1.9.'):
+        torch._C._jit_override_can_fuse_on_gpu(old_val)
+
+
+class StyleGANInceptionV3(nn.Module):
+    """Pretrained InceptionV3 network returning feature maps.
+
+    This class wraps a JIT model to fix a bug in PyTorch 1.9.
+    """
+
+    def __init__(self, inception_url):
+        super().__init__()
+        self.inception = load_from_http(inception_url)
+
+    def forward(self, inp):
+        with disable_gpu_fuser_on_pt19():
+            return self.inception(inp, return_features=True)
+
+
+def load_inception(style='StyleGAN', **inception_kwargs):
+    """Load Inception Model from given `style` and `inception_kwargs`.
+
+    This function would try to load Inception under the guidance of `style`
+    given in `inception_kwargs`, if 'style' is not given, we would try best to
+    load Tero's ones. If PyTorch's version is lower than '1.6', it loads
+    Inception with `torch.nn.Module` since TorchScript is not available.
+    Otherwise, we would load Inception with TorchScript unless the style is set
+    to 'pytorch'.
+
+    Args:
+        style (str): The model style to run Inception model.
+        inception_kwargs (dict): Keyword args for Inception model.
+
+    Returns:
+        model (torch.nn.Module): Loaded Inception model.
+    """
+    assert style in ['StyleGAN', 'pytorch'], ('`style` must be either '
+                                              '\'StyleGAN\' or \'pytorch\'.')
+
+    if torch.__version__ < '1.6.0':
+        print_log(
+            'Current Pytorch Version not support script module, load '
+            'Inception Model from torch model zoo. If you want to use '
+            'Tero\' script model, please update your Pytorch higher '
+            f'than \'1.6\' (now is {torch.__version__})', 'current')
+        return PyTorchInceptionV3(**inception_kwargs)
+
+    if style == 'pytorch':
+        return PyTorchInceptionV3(**inception_kwargs)
+
+    return StyleGANInceptionV3(
+        'https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/inception-2015-12-05.pt'  # noqa: E501
+    )

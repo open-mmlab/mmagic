@@ -4,19 +4,23 @@ import torch
 from scipy import linalg
 
 from ..registry import METRICS
-from .inception_utils import InceptionV3 as _InceptionV3
+from .inception_utils import load_inception
 
 
 class InceptionV3:
     """Feature extractor features using InceptionV3 model.
 
     Args:
+        style (str): The model style to run Inception model. it must be either
+            'StyleGAN' or 'pytorch'.
         device (torch.device): device to extract feature.
         inception_kwargs (**kwargs): kwargs for InceptionV3.
     """
 
-    def __init__(self, device='cpu', **inception_kwargs):
-        self.inception = _InceptionV3(**inception_kwargs).to(device)
+    def __init__(self, style='StyleGAN', device='cpu', **inception_kwargs):
+        self.inception = load_inception(
+            style=style, **inception_kwargs).eval().to(device)
+        self.style = style
         self.device = device
 
     def __call__(self, img1, img2, crop_border=0):
@@ -35,30 +39,30 @@ class InceptionV3:
         )
 
     def img2tensor(self, img):
-        img = img.transpose((2, 0, 1))
-        img = np.expand_dims(img, axis=0)
+        img = np.expand_dims(img.transpose((2, 0, 1)), axis=0)
+        if self.style == 'StyleGAN':
+            return torch.tensor(img).to(device=self.device, dtype=torch.uint8)
+
         return torch.from_numpy(img / 255.).to(
             device=self.device, dtype=torch.float32)
 
     def forward_inception(self, x):
-        with torch.no_grad():
-            return self.inception(x)[0].view(x.shape[0], -1).cpu()
+        if self.style == 'StyleGAN':
+            return self.inception(x).cpu()
+
+        return self.inception(x)[-1].view(x.shape[0], -1).cpu()
 
 
-def frechet_distance(X, Y, eps=1e-6):
+def frechet_distance(X, Y):
     """Compute the frechet distance."""
 
-    muX, covX = np.mean(X, axis=0), np.cov(X, rowvar=False) + eps
-    muY, covY = np.mean(Y, axis=0), np.cov(Y, rowvar=False) + eps
+    muX, covX = np.mean(X, axis=0), np.cov(X, rowvar=False)
+    muY, covY = np.mean(Y, axis=0), np.cov(Y, rowvar=False)
 
-    diff = muX - muY
     cov_sqrt = linalg.sqrtm(covX.dot(covY))
-    if np.iscomplexobj(cov_sqrt):
-        cov_sqrt = cov_sqrt.real
-
-    frechet_distance = diff.dot(diff) + np.trace(covX) + np.trace(
+    frechet_distance = np.square(muX - muY).sum() + np.trace(covX) + np.trace(
         covY) - 2 * np.trace(cov_sqrt)
-    return frechet_distance
+    return np.real(frechet_distance)
 
 
 @METRICS.register_module()
@@ -99,8 +103,8 @@ def mmd2(X, Y, biased=False):
 
     trX = np.trace(XX)
     trY = np.trace(YY)
-    return ((np.sum(XX) - trX) / (m * (m - 1)) + (np.sum(YY) - trY) /
-            (m * (m - 1)) - 2 * np.sum(XY) / m**2)
+    return (np.sum(XX) - trX + np.sum(YY) -
+            trY) / (m * (m - 1)) - 2 * np.sum(XY) / m**2
 
 
 @METRICS.register_module()
