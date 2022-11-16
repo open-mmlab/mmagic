@@ -2,9 +2,10 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule
 
 
-class AvgPool2d(nn.Module):
+class AvgPool2d(BaseModule):
     """Average Pooling 2D used in NAFNet.
 
     Note: this is different from the normal AvgPool2d in pytorch.
