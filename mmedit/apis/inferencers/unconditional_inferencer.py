@@ -60,8 +60,9 @@ class UnconditionalInferencer(BaseMMEditInferencer):
         results = (results[:, [2, 1, 0]] + 1.) / 2.
 
         # save images
-        mkdir_or_exist(os.path.dirname(result_out_dir))
-        utils.save_image(results, result_out_dir)
+        if result_out_dir:
+            mkdir_or_exist(os.path.dirname(result_out_dir))
+            utils.save_image(results, result_out_dir)
 
         return results
 

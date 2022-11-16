@@ -17,6 +17,7 @@ def test_matting_inferencer():
 
     inferencer_instance = \
         MattingInferencer(config, None)
+    inferencer_instance(img=img_path, trimap=trimap_path)
     inference_result = inferencer_instance(
         img=img_path, trimap=trimap_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]

@@ -21,6 +21,8 @@ def test_unconditional_inferencer():
                                 extra_parameters={
                                     'num_batches': 1,
                                     'sample_model': 'orig'})
+    # test no result_out_dir
+    inferencer_instance()
     inference_result = inferencer_instance(result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img.detach().numpy().shape == (1, 3, 256, 256)

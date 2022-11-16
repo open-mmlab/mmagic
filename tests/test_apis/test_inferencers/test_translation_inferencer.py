@@ -20,6 +20,7 @@ def test_translation_inferencer():
 
     inferencer_instance = \
         TranslationInferencer(cfg, None)
+    inferencer_instance(img=data_path)
     inference_result = inferencer_instance(
         img=data_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]

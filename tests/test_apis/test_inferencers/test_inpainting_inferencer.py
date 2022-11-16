@@ -25,6 +25,7 @@ def test_inpainting_inferencer():
 
     inferencer_instance = \
         InpaintingInferencer(cfg, None)
+    inferencer_instance(img=masked_img_path, mask=mask_path)
     inference_result = inferencer_instance(
         img=masked_img_path, mask=mask_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]

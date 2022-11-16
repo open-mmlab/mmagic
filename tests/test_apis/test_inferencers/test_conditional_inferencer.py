@@ -18,6 +18,7 @@ def test_conditional_inferencer():
         ConditionalInferencer(cfg,
                               None,
                               extra_parameters={'sample_model': 'orig'})
+    inference_result = inferencer_instance(label=1)
     inference_result = inferencer_instance(
         label=1, result_out_dir=result_out_dir)
     result_img = inference_result[1]

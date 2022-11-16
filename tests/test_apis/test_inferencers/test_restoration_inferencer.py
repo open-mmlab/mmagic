@@ -24,6 +24,7 @@ def test_restoration_inferencer():
 
     inferencer_instance = \
         RestorationInferencer(config, None)
+    inferencer_instance(img=img_path)
     inference_result = inferencer_instance(
         img=img_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]
