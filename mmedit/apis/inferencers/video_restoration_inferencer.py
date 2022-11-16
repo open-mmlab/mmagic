@@ -9,6 +9,7 @@ import mmcv
 import numpy as np
 import torch
 from mmengine.dataset import Compose
+from mmengine.logging import MMLogger
 
 from mmedit.utils import tensor2img
 from .base_mmedit_inferencer import (BaseMMEditInferencer, InputsType,
@@ -180,4 +181,6 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
         imgs: Optional[List[np.ndarray]] = None
     ) -> Union[ResType, Tuple[ResType, np.ndarray]]:
         """Postprocess is not needed in this inferencer."""
-        pass
+        logger: MMLogger = MMLogger.get_current_instance()
+        logger.info('Postprocess is implemented in visualize process.')
+        return None

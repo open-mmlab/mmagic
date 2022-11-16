@@ -10,6 +10,7 @@ import numpy as np
 import torch
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
+from mmengine.logging import MMLogger
 from mmengine.utils import ProgressBar
 
 from .base_mmedit_inferencer import (BaseMMEditInferencer, InputsType,
@@ -188,7 +189,9 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
                   preds: PredType,
                   result_out_dir: str = '') -> List[np.ndarray]:
         """Visualize is not needed in this inferencer."""
-        pass
+        logger: MMLogger = MMLogger.get_current_instance()
+        logger.info('Visualization is implemented in forward process.')
+        return None
 
     def postprocess(
         self,
@@ -196,4 +199,6 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
         imgs: Optional[List[np.ndarray]] = None
     ) -> Union[ResType, Tuple[ResType, np.ndarray]]:
         """Postprocess is not needed in this inferencer."""
-        pass
+        logger: MMLogger = MMLogger.get_current_instance()
+        logger.info('Postprocess is implemented in forward process.')
+        return None

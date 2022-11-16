@@ -172,7 +172,8 @@ class MMEdit:
                  model_config: str = None,
                  model_ckpt: str = None,
                  device: torch.device = None,
-                 extra_parameters: Dict = None) -> None:
+                 extra_parameters: Dict = None,
+                 **kwargs) -> None:
         register_all_modules(init_default_scope=True)
         inferencer_kwargs = {}
         inferencer_kwargs.update(
