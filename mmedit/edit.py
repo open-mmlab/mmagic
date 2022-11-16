@@ -45,13 +45,13 @@ class MMEdit:
                     'config':
                     'biggan/biggan_2xb25-500kiters_cifar10-32x32.py',
                     'ckpt':
-                    'ckpt/conditional/biggan_cifar10_32x32_b25x2_500k_20210728_110906-08b61a44.pth'  # noqa: E501
+                    'https://download.openmmlab.com/mmgen/biggan/biggan_cifar10_32x32_b25x2_500k_20210728_110906-08b61a44.pth'  # noqa: E501
                 },
                 'b': {
                     'config':
                     'biggan/biggan_ajbrock-sn_8xb32-1500kiters_imagenet1k-128x128.py',  # noqa: E501
                     'ckpt':
-                    'ckpt/conditional/biggan_imagenet1k_128x128_b32x8_best_fid_iter_1232000_20211111_122548-5315b13d.pth'  # noqa: E501
+                    'https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_b32x8_best_fid_iter_1232000_20211111_122548-5315b13d.pth'  # noqa: E501
                 }
             },
         },
@@ -64,7 +64,7 @@ class MMEdit:
                     'config':
                     'styleganv1/styleganv1_ffhq-256x256_8xb4-25Mimgs.py',
                     'ckpt':
-                    'ckpt/unconditional/styleganv1_ffhq_256_g8_25Mimg_20210407_161748-0094da86.pth'  # noqa: E501
+                    'https://download.openmmlab.com/mmgen/styleganv1/styleganv1_ffhq_256_g8_25Mimg_20210407_161748-0094da86.pth'  # noqa: E501
                 }
             }
         },
@@ -77,7 +77,7 @@ class MMEdit:
                     'config':
                     'gca/gca_r34_4xb10-200k_comp1k.py',
                     'ckpt':
-                    'ckpt/matting/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth'  # noqa: E501
+                    'https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth'  # noqa: E501
                 }
             }
         },
@@ -90,7 +90,7 @@ class MMEdit:
                     'config':
                     'aot_gan/aot-gan_smpgan_4xb4_places-512x512.py',
                     'ckpt':
-                    'ckpt/inpainting/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth'  # noqa: E501
+                    'https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth'  # noqa: E501
                 }
             }
         },
@@ -103,7 +103,7 @@ class MMEdit:
                     'config':
                     'pix2pix/pix2pix_vanilla-unet-bn_1xb1-80kiters_facades.py',  # noqa: E501
                     'ckpt':
-                    'ckpt/translation/pix2pix_vanilla_unet_bn_1x1_80k_facades_20210902_170442-c0958d50.pth'  # noqa: E501
+                    'https://download.openmmlab.com/mmgen/pix2pix/refactor/pix2pix_vanilla_unet_bn_1x1_80k_facades_20210902_170442-c0958d50.pth'  # noqa: E501
                 }
             }
         },
@@ -117,7 +117,7 @@ class MMEdit:
                     'config':
                     'real_esrgan/realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py',  # noqa: E501
                     'ckpt':
-                    'ckpt/restoration/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth'  # noqa: E501
+                    'https://download.openmmlab.com/mmediting/restorers/real_esrgan/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth'  # noqa: E501
                 },
             }
         },
@@ -128,7 +128,7 @@ class MMEdit:
                     'config':
                     'esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py',  # noqa: E501
                     'ckpt':
-                    'ckpt/restoration/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth'  # noqa: E501
+                    'https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth'  # noqa: E501
                 }
             }
         },
@@ -141,13 +141,13 @@ class MMEdit:
                     'config':
                     'basicvsr/basicvsr_2xb4_reds4.py',
                     'ckpt':
-                    'ckpt/video_restoration/basicvsr_reds4_20120409-0e599677.pth'  # noqa: E501
+                    'https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth'  # noqa: E501
                 },
                 'b': {
                     'config':
                     'basicvsr/basicvsr_2xb4_vimeo90k-bi.py',
                     'ckpt':
-                    'ckpt/video_restoration/basicvsr_vimeo90k_bi_20210409-d2d8f760.pth'  # noqa: E501
+                    'https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_vimeo90k_bi_20210409-d2d8f760.pth'  # noqa: E501
                 }
             }
         },
@@ -160,7 +160,7 @@ class MMEdit:
                     'config':
                     'flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py',  # noqa: E501
                     'ckpt':
-                    'ckpt/video_interpolation/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth'  # noqa: E501
+                    'https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth'  # noqa: E501
                 }
             }
         }
