@@ -6,17 +6,16 @@ import numpy as np
 import torch
 from mmengine.config import Config
 from mmengine.runner import load_checkpoint
+from mmengine.structures import BaseDataElement
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import ConfigType
+from mmedit.utils import ConfigType, SampleList
 
-InstanceList = List[EditDataSample]
 InputType = Union[str, int, np.ndarray]
 InputsType = Union[InputType, Sequence[InputType]]
-PredType = Union[EditDataSample, InstanceList]
+PredType = Union[BaseDataElement, SampleList]
 ImgType = Union[np.ndarray, Sequence[np.ndarray]]
-ResType = Union[Dict, List[Dict], EditDataSample, List[EditDataSample]]
+ResType = Union[Dict, List[Dict], BaseDataElement, List[BaseDataElement]]
 
 
 class BaseMMEditInferencer:

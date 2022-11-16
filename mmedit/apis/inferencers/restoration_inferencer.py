@@ -64,7 +64,10 @@ class RestorationInferencer(BaseMMEditInferencer):
             data = dict(img_path=img)
         _data = test_pipeline(data)
         data = dict()
-        data['inputs'] = _data['inputs'] / 255.0
+        data_preprocessor = cfg['model']['data_preprocessor']
+        mean = torch.Tensor(data_preprocessor['mean']).view([3, 1, 1])
+        std = torch.Tensor(data_preprocessor['std']).view([3, 1, 1])
+        data['inputs'] = (_data['inputs'] - mean) / std
         data = collate([data])
         if ref:
             data['data_samples'] = [_data['data_samples']]
