@@ -6,7 +6,8 @@ from mmcv.ops import ModulatedDeformConv2d, modulated_deform_conv2d
 from mmengine.model import BaseModule
 from mmengine.model.weight_init import constant_init
 
-from mmedit.models.utils import PixelShufflePack, flow_warp
+from mmedit.models.base_archs import PixelShufflePack
+from mmedit.models.utils import flow_warp
 from mmedit.registry import MODELS
 from ..basicvsr.basicvsr_net import ResidualBlocksWithInputConv, SPyNet
 
@@ -97,9 +98,6 @@ class BasicVSRPlusPlusNet(BaseModule):
         # activation function
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
 
-        # check if the sequence is augmented by flipping
-        self.is_mirror_extended = False
-
     def check_if_mirror_extended(self, lqs):
         """Check whether the input is a mirror-extended sequence.
 
@@ -111,6 +109,8 @@ class BasicVSRPlusPlusNet(BaseModule):
                 shape (n, t, c, h, w).
         """
 
+        # check if the sequence is augmented by flipping
+        self.is_mirror_extended = False
         if lqs.size(1) % 2 == 0:
             lqs_1, lqs_2 = torch.chunk(lqs, 2, dim=1)
             if torch.norm(lqs_1 - lqs_2.flip(1)) == 0:

@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from mmengine.runner.amp import autocast
 
-from mmedit.models.layers import conv2d_gradfix
+from mmedit.models.base_archs import conv2d_gradfix
 from mmedit.registry import MODULES
 from .stylegan3_ops.ops import bias_act, filtered_lrelu
 

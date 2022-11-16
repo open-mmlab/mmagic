@@ -3,6 +3,9 @@ _base_ = [
     '../_base_/datasets/paired_imgs_256x256_crop.py',
     '../_base_/gen_default_runtime.py'
 ]
+# deterministic training can improve the performance of Pix2Pix
+randomness = dict(deterministic=True)
+
 source_domain = domain_b = 'mask'
 target_domain = domain_a = 'photo'
 # model settings
@@ -11,7 +14,7 @@ model = dict(
     reachable_domains=[target_domain],
     related_domains=[target_domain, source_domain])
 
-train_cfg = dict(max_iters=80000, val_interval=100)
+train_cfg = dict(max_iters=80000)
 
 # dataset settings
 dataroot = 'data/pix2pix/facades'
@@ -52,13 +55,16 @@ optim_wrapper = dict(
 custom_hooks = [
     dict(
         type='GenVisualizationHook',
-        interval=100,
+        interval=5000,
         fixed_input=True,
         vis_kwargs_list=[
             dict(type='Translation', name='trans'),
             dict(type='TranslationVal', name='trans_val')
         ])
 ]
+
+# save multi best checkpoints
+default_hooks = dict(checkpoint=dict(save_best='FID-Full/fid', rule='less'))
 
 fake_nums = 106
 metrics = [

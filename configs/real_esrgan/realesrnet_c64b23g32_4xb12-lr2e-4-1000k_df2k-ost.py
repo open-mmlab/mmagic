@@ -23,12 +23,13 @@ model = dict(
         upscale_factor=scale),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     is_use_sharpened_gt_in_pixel=True,
+    is_use_ema=True,
     train_cfg=dict(),
     test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
-        mean=[0, 0, 0],
-        std=[1, 1, 1],
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.],
     ))
 
 train_pipeline = [
@@ -171,15 +172,12 @@ train_pipeline = [
         sigma=0,
         weight=0.5,
         threshold=10),
-    dict(type='ToTensor', keys=['img', 'gt', 'gt_unsharp']),
     dict(type='PackEditInputs')
 ]
 
 val_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['img', 'gt']),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -207,14 +205,13 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='set5', task_name='real_sr'),
-        data_root='data/set5',
-        data_prefix=dict(gt='HR', img='bicLRx4'),
+        data_root='data/Set5',
+        data_prefix=dict(gt='GTmod12', img='LRbicx4'),
         pipeline=val_pipeline))
 
 test_dataloader = val_dataloader
 
 val_evaluator = [
-    dict(type='MAE'),
     dict(type='PSNR'),
     dict(type='SSIM'),
 ]
@@ -255,7 +252,7 @@ visualizer = dict(
     vis_backends=vis_backends,
     fn_key='gt_path',
     img_keys=['gt_img', 'input', 'pred_img'],
-    bgr2rgb=True)
+    bgr2rgb=False)
 custom_hooks = [
     dict(type='BasicVisualizationHook', interval=1),
     dict(

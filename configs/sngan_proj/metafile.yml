@@ -143,11 +143,11 @@ Models:
       disc_step: 5.0
     Task: Sngan_proj
   Weights: https://download.openmmlab.com/mmgen/sngan_proj/sngan_cifar10_convert-studio-rgb_20210709_111346-2979202d.pth
-- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/sngan_proj/sngan-proj-cvt-studioGAN_cifar10-32x32.py
+- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/sngan_proj/sngan-proj-cvt-studioGAN_imagenet1k-128x128.py
   In Collection: SNGAN
   Metadata:
     Training Data: Others
-  Name: sngan-proj-cvt-studioGAN_cifar10-32x32
+  Name: sngan-proj-cvt-studioGAN_imagenet1k-128x128
   Results:
   - Dataset: Others
     Metrics:

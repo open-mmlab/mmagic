@@ -46,9 +46,6 @@ optim_wrapper = dict(
         optimizer=dict(type='Adam', lr=0.0002, betas=(0.5, 0.999))))
 
 # learning policy
-lr_config = dict(
-    policy='Linear', by_epoch=False, target_lr=0, start=125000, interval=1250)
-
 param_scheduler = dict(
     type='LinearLrInterval',
     interval=1250,
@@ -70,21 +67,39 @@ custom_hooks = [
 ]
 
 # testA: 309, testB:238
-num_images = 238
+num_images_a = 309
+num_images_b = 238
 metrics = [
     dict(
         type='TransIS',
-        prefix='IS-Full',
-        fake_nums=num_images,
-        fake_key='fake_winter',
+        prefix=f'IS-{domain_a}-to-{domain_b}',
+        fake_nums=num_images_b,
+        fake_key=f'fake_{domain_b}',
+        use_pillow_resize=False,
+        resize_method='bilinear',
+        inception_style='PyTorch'),
+    dict(
+        type='TransIS',
+        prefix=f'IS-{domain_b}-to-{domain_a}',
+        fake_nums=num_images_a,
+        fake_key=f'fake_{domain_a}',
+        use_pillow_resize=False,
+        resize_method='bilinear',
         inception_style='PyTorch'),
     dict(
         type='TransFID',
-        prefix='FID-Full',
-        fake_nums=num_images,
+        prefix=f'FID-{domain_a}-to-{domain_b}',
+        fake_nums=num_images_b,
         inception_style='PyTorch',
-        real_key='img_winter',
-        fake_key='fake_winter')
+        real_key=f'img_{domain_b}',
+        fake_key=f'fake_{domain_b}'),
+    dict(
+        type='TransFID',
+        prefix=f'FID-{domain_b}-to-{domain_a}',
+        fake_nums=num_images_a,
+        inception_style='PyTorch',
+        real_key=f'img_{domain_a}',
+        fake_key=f'fake_{domain_a}')
 ]
 
 val_evaluator = dict(metrics=metrics)

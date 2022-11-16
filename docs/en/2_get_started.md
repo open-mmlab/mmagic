@@ -46,7 +46,7 @@ Install PyTorch following [official instructions](https://pytorch.org/get-starte
 - On GPU platforms:
 
   ```shell
-  conda install pytorch=1.10 torchvision cudatoolkit=11.3 -c pytorch
+  conda install pytorch torchvision cudatoolkit=11.3 -c pytorch
   ```
 
 - On CPU platforms:
@@ -90,6 +90,7 @@ python -c "import mmedit; print(mmedit.__version__)"
 
 The installation is successful if the version number is output correctly.
 
+```{note}
 You may be curious about what `-e .` means when supplied with `pip install`.
 Here is the description:
 
@@ -97,10 +98,11 @@ Here is the description:
   When `import mmedit`, modules under the cloned directory are imported.
   If `pip install` without `-e`, pip will copy cloned codes to somewhere like `lib/python/site-package`.
   Consequently, modified code under the cloned directory takes no effect unless `pip install` again.
-  This is particularly convenient for developers. If some codes are modified, new codes will be imported next time without reinstallation.
+  Thus, `pip install` with `-e` is particularly convenient for developers. If some codes are modified, new codes will be imported next time without reinstallation.
 - `.` means code in this directory
 
 You can also use `pip install -e .[all]`, which will install more dependencies, especially for pre-commit hooks and unittests.
+```
 
 ### Customize installation
 
@@ -154,7 +156,7 @@ docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmediting/data mmediting
 
 #### Trouble shooting
 
-If you have some issues during the installation, please first view the [FAQ](notes/faq.md) page.
+If you have some issues during the installation, please first view the [FAQ](notes/4_faq.md) page.
 You may [open an issue](https://github.com/open-mmlab/mmediting/issues/new/choose) on GitHub if no solution is found.
 
 ### Developing with multiple MMEditing versions
@@ -205,7 +207,7 @@ import mmcv
 from mmedit.apis import init_model, restoration_inference
 from mmedit.engine.misc import tensor2img
 
-config = 'configs/esrgan/esrgan_x4c64b23g32_400k-1xb16_div2k.py'
+config = 'configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py'
 checkpoint = 'https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth'
 img_path = 'tests/data/image/lq/baboon_x4.png'
 model = init_model(config, checkpoint)

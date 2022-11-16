@@ -47,6 +47,7 @@ class StyleGAN3(StyleGAN2):
                          generator_steps, discriminator_steps, ema_config,
                          loss_config)
 
+        self.noise_size = getattr(self.generator, 'noise_size', 512)
         forward_kwargs = dict() if forward_kwargs is None else forward_kwargs
         disc_default_forward_kwargs = dict(update_emas=True, force_fp32=False)
         gen_default_forward_kwargs = dict(force_fp32=False)

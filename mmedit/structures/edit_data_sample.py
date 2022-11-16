@@ -56,20 +56,21 @@ class EditDataSample(BaseDataElement):
 
     The attributes in ``EditDataSample`` are divided into several parts:
 
-        - ``gt_img``: Ground truth image(s).
-        - ``pred_img``: Image(s) of model predictions.
-        - ``ref_img``: Reference image(s).
-        - ``mask``: Mask in Inpainting.
-        - ``trimap``: Trimap in Matting.
-        - ``gt_alpha``: Ground truth alpha image in Matting.
-        - ``pred_alpha``: Predicted alpha image in Matting.
-        - ``gt_fg``: Ground truth foreground image in Matting.
-        - ``pred_fg``: Predicted foreground image in Matting.
-        - ``gt_bg``: Ground truth background image in Matting.
-        - ``pred_bg``: Predicted background image in Matting.
-        - ``gt_merged``: Ground truth merged image in Matting.
+    - ``gt_img``: Ground truth image(s).
+    - ``pred_img``: Image(s) of model predictions.
+    - ``ref_img``: Reference image(s).
+    - ``mask``: Mask in Inpainting.
+    - ``trimap``: Trimap in Matting.
+    - ``gt_alpha``: Ground truth alpha image in Matting.
+    - ``pred_alpha``: Predicted alpha image in Matting.
+    - ``gt_fg``: Ground truth foreground image in Matting.
+    - ``pred_fg``: Predicted foreground image in Matting.
+    - ``gt_bg``: Ground truth background image in Matting.
+    - ``pred_bg``: Predicted background image in Matting.
+    - ``gt_merged``: Ground truth merged image in Matting.
 
-    Examples:
+    Examples::
+
          >>> import torch
          >>> import numpy as np
          >>> from mmedit.structures import EditDataSample, PixelData

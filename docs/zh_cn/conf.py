@@ -77,6 +77,24 @@ html_theme_options = {
             'name': 'GitHub',
             'url': 'https://github.com/open-mmlab/mmediting',
         },
+        {
+            'name':
+            '版本',
+            'children': [
+                {
+                    'name': 'MMEditing 0.x',
+                    'url': 'https://mmediting.readthedocs.io/en/latest/',
+                    'description': 'Main 分支文档'
+                },
+                {
+                    'name': 'MMEditing 1.x',
+                    'url': 'https://mmediting.readthedocs.io/en/1.x/',
+                    'description': '1.x 分支文档'
+                },
+            ],
+            'active':
+            True,
+        },
     ],
     'menu_lang':
     'cn'

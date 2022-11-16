@@ -11,8 +11,17 @@ model = dict(
     loss_config=dict(cycle_loss_weight=10., id_loss_weight=0.5),
     default_domain=domain_a,
     reachable_domains=[domain_a, domain_b],
-    related_domains=[domain_a, domain_b],
-)
+    related_domains=[domain_a, domain_b])
+
+param_scheduler = dict(
+    type='LinearLrInterval',
+    interval=400,
+    by_epoch=False,
+    start_factor=0.0002,
+    end_factor=0,
+    begin=40000,
+    end=80000)
+
 dataroot = './data/cyclegan/facades'
 train_pipeline = _base_.train_dataloader.dataset.pipeline
 val_pipeline = _base_.val_dataloader.dataset.pipeline
@@ -45,15 +54,6 @@ optim_wrapper = dict(
     discriminators=dict(
         optimizer=dict(type='Adam', lr=0.0002, betas=(0.5, 0.999))))
 
-param_scheduler = dict(
-    type='LinearLrInterval',
-    interval=400,
-    by_epoch=False,
-    start_factor=0.0002,
-    end_factor=0,
-    begin=40000,
-    end=80000)
-
 custom_hooks = [
     dict(
         type='GenVisualizationHook',
@@ -65,8 +65,6 @@ custom_hooks = [
         ])
 ]
 
-total_iters = 80000
-
 num_images = 106
 metrics = [
     dict(
@@ -74,6 +72,8 @@ metrics = [
         prefix='IS-Full',
         fake_nums=num_images,
         fake_key=f'fake_{domain_a}',
+        use_pillow_resize=False,
+        resize_method='bilinear',
         inception_style='PyTorch'),
     dict(
         type='TransFID',

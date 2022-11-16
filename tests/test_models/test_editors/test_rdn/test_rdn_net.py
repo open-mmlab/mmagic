@@ -1,10 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
+import pytest
 import torch
 import torch.nn as nn
 
 from mmedit.models import RDNNet
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_rdn():
 
     scale = 4
@@ -13,6 +19,7 @@ def test_rdn():
         in_channels=3,
         out_channels=3,
         mid_channels=64,
+        channel_growth=32,
         num_blocks=16,
         upscale_factor=scale)
 

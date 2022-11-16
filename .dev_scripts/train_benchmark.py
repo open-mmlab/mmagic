@@ -13,6 +13,7 @@ from rich.console import Console
 from rich.syntax import Syntax
 from rich.table import Table
 from tqdm import tqdm
+from utils import filter_jobs, parse_job_list_from_file
 
 console = Console()
 MMEDIT_ROOT = Path(__file__).absolute().parents[1]
@@ -91,8 +92,13 @@ def parse_args():
     parser.add_argument('--skip', type=str, default=None)
     parser.add_argument('--skip-list', default=None)
     parser.add_argument('--rerun', type=str, default=None)
+    parser.add_argument(
+        '--rerun-fail', action='store_true', help='only rerun failed tasks')
+    parser.add_argument(
+        '--rerun-cancel', action='store_true', help='only rerun cancel tasks')
     parser.add_argument('--rerun-list', default=None)
     parser.add_argument('--gpus-per-job', type=int, default=None)
+    parser.add_argument('--cpus-per-job', type=int, default=16)
     parser.add_argument(
         '--amp', action='store_true', help='Whether to use amp.')
     parser.add_argument(
@@ -111,6 +117,10 @@ def parse_args():
         '--work-dir',
         default='work_dirs/benchmark_train',
         help='the dir to save metric')
+    parser.add_argument(
+        '--deterministic',
+        action='store_true',
+        help='Whether set `deterministic` during training.')
     parser.add_argument(
         '--run', action='store_true', help='run script directly')
     parser.add_argument(
@@ -145,11 +155,22 @@ def parse_args():
             args.skip_list = skip_list
             print('skip_list: ', args.skip_list)
     elif args.rerun is not None:
-        with open(args.rerun, 'r') as fp:
-            rerun_list = fp.readlines()
-            rerun_list = [j.split('\n')[0] for j in rerun_list]
-            args.rerun_list = rerun_list
-            print('rerun_list: ', args.rerun_list)
+        job_id_list_full, job_name_list_full = parse_job_list_from_file(
+            args.rerun)
+        filter_target = []
+
+        if args.rerun_fail:
+            filter_target += ['FAILED']
+        if args.rerun_cancel:
+            filter_target += ['CANCELLED']
+
+        _, job_name_list = filter_jobs(
+            job_id_list_full,
+            job_name_list_full,
+            filter_target,
+            show_table=True,
+            table_name='Rerun List')
+        args.rerun_list = job_name_list
 
     return args
 
@@ -171,14 +192,19 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
     config = Path(config)
     assert config.exists(), f'{fname}: {config} not found.'
 
-    # get n gpus
     try:
         n_gpus = int(model_info.metadata.data['GPUs'].split()[0])
     except Exception:
         if 'official' in model_info.config:
             return None
         else:
-            n_gpus = 1
+            pattern = r'\d+xb\d+'
+            parse_res = re.search(pattern, config.name)
+            if not parse_res:
+                # defaults to use 1 gpu
+                n_gpus = 1
+            else:
+                n_gpus = int(parse_res.group().split('x')[0])
 
     if args.gpus_per_job is not None:
         n_gpus = min(args.gpus_per_job, n_gpus)
@@ -217,9 +243,12 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
         job_script += (f'#SBATCH --gres=gpu:{n_gpus}\n'
                        f'#SBATCH --ntasks-per-node={min(n_gpus, 8)}\n'
                        f'#SBATCH --ntasks={n_gpus}\n'
-                       f'#SBATCH --cpus-per-task=5\n\n')
+                       f'#SBATCH --cpus-per-task={args.cpus_per_job}\n\n')
     else:
         job_script += '\n\n' + 'export CUDA_VISIBLE_DEVICES=-1\n'
+
+    if args.deterministic:
+        job_script += 'export CUBLAS_WORKSPACE_CONFIG=:4096:8\n'
 
     job_script += (f'export MASTER_PORT={port}\n'
                    f'{runner} -u {script_name} {config} '
@@ -231,6 +260,9 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
 
     if args.amp:
         job_script += ' --amp  '
+
+    if args.deterministic:
+        job_script += ' --cfg-options randomness.deterministic=True'
 
     job_script += '\n'
 

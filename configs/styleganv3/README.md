@@ -1,6 +1,8 @@
-# StyleGANv3
+# StyleGANv3 (NeurIPS'2021)
 
 > [Alias-Free Generative Adversarial Networks](https://nvlabs-fi-cdn.nvidia.com/stylegan3/stylegan3-paper.pdf)
+
+> **Task**: Unconditional GANs
 
 <!-- [ALGORITHM] -->
 
@@ -41,13 +43,12 @@ For user convenience, we also offer the converted version of official weights.
 |   stylegan3-t   |  ffhq 1024x1024   | 490000 | 3.37<sup>\*</sup> | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_gamma32.8_8xb4-fp16-noaug_ffhq-1024x1024.py) | [log](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_20220322_090417.log.json) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_best_fid_iter_490000_20220401_120733-4ff83434.pth) |
 | stylegan3-t-ada | metface 1024x1024 | 130000 |       15.09       | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_ada-gamma6.6_8xb4-fp16_metfaces-1024x1024.py) | [log](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_20220328_142211.log.json) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_best_fid_iter_130000_20220401_115101-f2ef498e.pth) |
 
-Note<sup>\*</sup>: This setting still needs a few days to run through, we put out currently the best checkpoint, and we will update the results the first time on the end of the experiment.
-
 ### Experimental Settings
 
-|    Model    |   Dataset    |  Iter  | FID50k |                         Config                          |                         Log                          |                          Download                          |
-| :---------: | :----------: | :----: | :----: | :-----------------------------------------------------: | :--------------------------------------------------: | :--------------------------------------------------------: |
-| stylegan3-t | ffhq 256x256 | 740000 |  4.51  | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_gamma2.0_8xb4-fp16-noaug_ffhq-256x256.py) | [log](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma2.0_ffhq_256_b4x8_20220323_144815.log.json) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma2.0_ffhq_256_b4x8_best_fid_iter_740000_20220401_122456-730e1fba.pth) |
+|      Model      |    Dataset     |  Iter  | FID50k |                        Config                         |                        Log                         |                         Download                         |
+| :-------------: | :------------: | :----: | :----: | :---------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------------: |
+|   stylegan3-t   |  ffhq 256x256  | 740000 |  4.51  | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_gamma2.0_8xb4-fp16-noaug_ffhq-256x256.py) | [log](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma2.0_ffhq_256_b4x8_20220323_144815.log.json) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma2.0_ffhq_256_b4x8_best_fid_iter_740000_20220401_122456-730e1fba.pth) |
+| stylegan3-r-ada | ffhq 1024x1024 |   -    |   -    | [config](/configs/styleganv3/stylegan3-r_ada-gamma3.3_8xb4-fp16_metfaces-1024x1024.py) |                         -                          |                            -                             |
 
 ### Converted Weights
 

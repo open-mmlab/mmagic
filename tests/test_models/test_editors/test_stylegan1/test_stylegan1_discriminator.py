@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import pytest
 import torch
 
@@ -21,6 +23,9 @@ class TestStyleGANv1Disc:
         score = d(img)
         assert score.shape == (2, 1)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_stylegan1_disc_cpu(self):
         d = StyleGAN1Discriminator(**self.default_cfg)
         img = torch.randn((2, 3, 64, 64))

@@ -3,13 +3,13 @@ import hashlib
 import os
 
 import click
-import mmcv
+import mmengine
 import requests
 import torch.distributed as dist
 from mmengine.dist import get_dist_info
 from requests.exceptions import InvalidURL, RequestException, Timeout
 
-MMGEN_CACHE_DIR = os.path.expanduser('~') + '/.cache/openmmlab/mmgen/'
+MMEDIT_CACHE_DIR = os.path.expanduser('~') + '/.cache/openmmlab/mmedit/'
 
 
 def get_content_from_url(url, timeout=15, stream=False):
@@ -34,7 +34,7 @@ def get_content_from_url(url, timeout=15, stream=False):
 
 def download_from_url(url,
                       dest_path=None,
-                      dest_dir=MMGEN_CACHE_DIR,
+                      dest_dir=MMEDIT_CACHE_DIR,
                       hash_prefix=None):
     """Download object at the given URL to a local path.
 
@@ -67,7 +67,7 @@ def download_from_url(url,
     if rank == 0:
         # mkdir
         _dir = os.path.dirname(dest_path)
-        mmcv.mkdir_or_exist(_dir)
+        mmengine.mkdir_or_exist(_dir)
 
         if hash_prefix is not None:
             sha256 = hashlib.sha256()

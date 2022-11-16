@@ -6,8 +6,10 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import CycleGAN, GenDataPreprocessor, PatchDiscriminator
+from mmedit.models import CycleGAN, GenDataPreprocessor
+from mmedit.models.base_archs import PatchDiscriminator
 from mmedit.models.editors.cyclegan import ResnetGenerator
+from mmedit.structures import EditDataSample
 
 
 def obj_from_dict(info: dict, parent=None, default_args=None):
@@ -298,3 +300,34 @@ def test_cyclegan():
             'loss_gan_g_photo', 'cycle_loss', 'id_loss'
     ]:
         assert isinstance(log_vars[v].item(), float)
+
+    # test get opposite domain
+    assert synthesizer._get_opposite_domain('photo') == 'mask'
+
+    # test val_step and test_step
+    data = dict(
+        inputs=dict(
+            img_photo=torch.randn(1, 3, 64, 64),
+            img_mask=torch.randn(1, 3, 64, 64)),
+        data_samples=[EditDataSample(mode='test')])
+    out = synthesizer.test_step(data)
+    assert len(out) == 1
+    assert out[0].fake_photo.data.shape == (3, 64, 64)
+    assert out[0].fake_mask.data.shape == (3, 64, 64)
+    out = synthesizer.val_step(data)
+    assert len(out) == 1
+    assert out[0].fake_photo.data.shape == (3, 64, 64)
+    assert out[0].fake_mask.data.shape == (3, 64, 64)
+
+    data = dict(
+        inputs=dict(
+            img_photo=torch.randn(1, 3, 64, 64),
+            img_mask=torch.randn(1, 3, 64, 64)))
+    out = synthesizer.test_step(data)
+    assert len(out) == 1
+    assert out[0].fake_photo.data.shape == (3, 64, 64)
+    assert out[0].fake_mask.data.shape == (3, 64, 64)
+    out = synthesizer.val_step(data)
+    assert len(out) == 1
+    assert out[0].fake_photo.data.shape == (3, 64, 64)
+    assert out[0].fake_mask.data.shape == (3, 64, 64)

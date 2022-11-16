@@ -51,7 +51,6 @@ train_pipeline = [
         ori_size=128,
         target_size=32,
         sigma=1.0),
-    dict(type='ToTensor', keys=['img', 'gt', 'gt_heatmap']),
     dict(type='PackEditInputs')
 ]
 valid_pipeline = [
@@ -75,7 +74,6 @@ valid_pipeline = [
         output_keys=['img'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 test_pipeline = valid_pipeline

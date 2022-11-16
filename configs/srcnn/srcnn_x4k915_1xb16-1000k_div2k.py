@@ -47,7 +47,6 @@ train_pipeline = [
     dict(
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 val_pipeline = [
@@ -63,7 +62,6 @@ val_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='cv2'),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -73,6 +71,7 @@ data_root = 'data'
 
 train_dataloader = dict(
     num_workers=4,
+    batch_size=16,
     persistent_workers=False,
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
@@ -111,7 +110,7 @@ val_cfg = dict(type='ValLoop')
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
     type='OptimWrapper',
-    optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.99)))
+    optimizer=dict(type='Adam', lr=2e-4, betas=(0.9, 0.999)))
 
 # learning policy
 param_scheduler = dict(

@@ -52,6 +52,7 @@ Documentation
    user_guides/5_visualization.md
    user_guides/6_useful_tools.md
    user_guides/7_deploy.md
+   user_guides/8_metrics.md
 
 .. toctree::
    :maxdepth: 2
@@ -61,7 +62,6 @@ Documentation
    advanced_guides/2_dataset.md
    advanced_guides/3_transforms.md
    advanced_guides/4_losses.md
-   advanced_guides/5_metrics.md
 
 
 .. toctree::
@@ -69,6 +69,19 @@ Documentation
    :caption: Model Zoo
 
    3_model_zoo.md
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Dataset Zoo
+
+   dataset_zoo/0_overview.md
+   dataset_zoo/1_super_resolution_datasets.md
+   dataset_zoo/2_inpainting_datasets.md
+   dataset_zoo/3_matting_datasets.md
+   dataset_zoo/4_video_interpolation_datasets.md
+   dataset_zoo/5_unconditional_gans_datasets.md
+   dataset_zoo/6_image_translation_datasets.md
 
 
 .. toctree::
@@ -87,10 +100,27 @@ Documentation
    migration/10_amp.md
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: API Reference
 
-   api.rst
+    mmedit.apis <api/apis>
+    mmedit.datasets <api/datasets>
+    mmedit.datasets.transforms <api/datasets.transforms>
+    mmedit.engine.hooks <api/engine.hooks>
+    mmedit.engine.optimizers <api/engine.optimizers>
+    mmedit.engine.runner <api/engine.runner>
+    mmedit.engine.schedulers <api/engine.schedulers>
+    mmedit.evaluation.metrics <api/evaluation.metrics>
+    mmedit.evaluation.functional <api/evaluation.functional>
+    mmedit.models.base_models <api/models.base_models>
+    mmedit.models.data_preprocessors <api/models.data_preprocessors>
+    mmedit.models.losses <api/models.losses>
+    mmedit.models.utils <api/models.utils>
+    mmedit.models.editors <api/models.editors>
+    mmedit.structures <api/structures>
+    mmedit.visualization <api/visualization>
+    mmedit.utils <api/utils>
+
 
 .. toctree::
    :maxdepth: 1

@@ -36,9 +36,9 @@ optim_wrapper = dict(
 )
 
 # learning policy
-lr_config = dict(
-    policy='CosineRestartLR',
+param_scheduler = dict(
+    type='CosineRestartLR',
     by_epoch=False,
     periods=[150000, 150000, 150000, 150000],
     restart_weights=[1, 0.5, 0.5, 0.5],
-    min_lr=1e-7)
+    eta_min=1e-7)

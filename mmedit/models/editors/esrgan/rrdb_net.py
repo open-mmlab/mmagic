@@ -2,12 +2,10 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmengine import MMLogger
 from mmengine.model import BaseModule
-from mmengine.runner import load_checkpoint
 
-from mmedit.models.utils import (default_init_weights, make_layer,
-                                 pixel_unshuffle)
+from mmedit.models.base_archs import pixel_unshuffle
+from mmedit.models.utils import default_init_weights, make_layer
 from mmedit.registry import BACKBONES
 
 
@@ -38,8 +36,9 @@ class RRDBNet(BaseModule):
                  mid_channels=64,
                  num_blocks=23,
                  growth_channels=32,
-                 upscale_factor=4):
-        super().__init__()
+                 upscale_factor=4,
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
         if upscale_factor in self._supported_upscale_factors:
             in_channels = in_channels * ((4 // upscale_factor)**2)
         else:
@@ -90,19 +89,11 @@ class RRDBNet(BaseModule):
         out = self.conv_last(self.lrelu(self.conv_hr(feat)))
         return out
 
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is None:
+    def init_weights(self):
+        """Init weights for models."""
+        if self.init_cfg:
+            super().init_weights()
+        else:
             # Use smaller std for better stability and performance. We
             # use 0.1. See more details in "ESRGAN: Enhanced Super-Resolution
             # Generative Adversarial Networks"
@@ -111,9 +102,6 @@ class RRDBNet(BaseModule):
                     self.conv_up2, self.conv_hr, self.conv_last
             ]:
                 default_init_weights(m, 0.1)
-        else:
-            raise TypeError(f'"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')
 
 
 class ResidualDenseBlock(nn.Module):

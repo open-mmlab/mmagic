@@ -22,10 +22,11 @@ model = dict(
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     cleaning_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     is_use_sharpened_gt_in_pixel=True,
+    is_use_ema=True,
     data_preprocessor=dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
-        std=[1., 1., 1.],
+        std=[255., 255., 255.],
         input_view=(1, -1, 1, 1),
         output_view=(1, -1, 1, 1),
     ))
@@ -193,7 +194,6 @@ train_pipeline = [
         keys=['img'],
     ),
     dict(type='Clip', keys=['img']),
-    dict(type='ToTensor', keys=['img', 'gt', 'gt_unsharp']),
     dict(type='PackEditInputs')
 ]
 
@@ -204,8 +204,6 @@ val_pipeline = [
         filename_tmpl='{:04d}.png'),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['img', 'gt']),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -216,8 +214,6 @@ test_pipeline = [
         filename_tmpl='{:08d}.png'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='RescaleToZeroOne', keys=['img']),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -247,7 +243,6 @@ val_dataloader = dict(
         metainfo=dict(dataset_type='udm10', task_name='vsr'),
         data_root=f'{data_root}/UDM10',
         data_prefix=dict(img='BIx4', gt='GT'),
-        num_input_frames=15,
         pipeline=val_pipeline))
 
 test_dataloader = dict(
@@ -260,14 +255,13 @@ test_dataloader = dict(
         metainfo=dict(dataset_type='video_lq', task_name='vsr'),
         data_root=f'{data_root}/VideoLQ',
         data_prefix=dict(img='', gt=''),
-        num_input_frames=15,
         pipeline=test_pipeline))
 
 val_evaluator = [
     dict(type='PSNR'),
     dict(type='SSIM'),
 ]
-# test_evaluator = [dict(type='NIQE', convert_to='Y')]
+
 test_evaluator = [dict(type='NIQE', input_order='CHW', convert_to='Y')]
 # test_evaluator = val_evaluator
 
@@ -278,9 +272,10 @@ test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
-    constructor='DefaultOptimWrapperConstructor',
-    type='OptimWrapper',
-    optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99)))
+    constructor='MultiOptimWrapperConstructor',
+    generator=dict(
+        type='OptimWrapper',
+        optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99))))
 
 # NO learning policy
 
@@ -299,6 +294,16 @@ default_hooks = dict(
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
+
+custom_hooks = [
+    dict(type='BasicVisualizationHook', interval=5),
+    dict(
+        type='ExponentialMovingAverageHook',
+        module_keys=('generator_ema'),
+        interval=1,
+        interp_cfg=dict(momentum=0.999),
+    )
+]
 
 model_wrapper_cfg = dict(
     type='MMSeparateDistributedDataParallel',

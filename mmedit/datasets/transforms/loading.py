@@ -8,7 +8,7 @@ from mmcv.transforms import BaseTransform
 from mmengine.fileio import FileClient, list_from_file
 
 from mmedit.registry import TRANSFORMS
-from .trans_utils import (bbox2mask, brush_stroke_mask, get_irregular_mask,
+from mmedit.utils import (bbox2mask, brush_stroke_mask, get_irregular_mask,
                           random_bbox)
 
 
@@ -16,12 +16,13 @@ from .trans_utils import (bbox2mask, brush_stroke_mask, get_irregular_mask,
 class LoadImageFromFile(BaseTransform):
     """Load a single image or image frames from corresponding paths. Required
     Keys:
-
     - [Key]_path
+
     New Keys:
     - [KEY]
     - ori_[KEY]_shape
     - ori_[KEY]
+
     Args:
         key (str): Keys in results to find corresponding path.
         color_type (str): The flag argument for :func:``mmcv.imfrombytes``.

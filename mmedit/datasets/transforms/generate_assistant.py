@@ -4,7 +4,8 @@ import torch
 from mmcv.transforms.base import BaseTransform
 
 from mmedit.registry import TRANSFORMS
-from .trans_utils import make_coord
+from mmedit.utils import make_coord
+from .formatting import images_to_tensor
 
 try:
     import face_alignment
@@ -15,16 +16,21 @@ except ImportError:
 
 @TRANSFORMS.register_module()
 class GenerateCoordinateAndCell(BaseTransform):
-    """Generate coordinate and cell.
+    """Generate coordinate and cell. Generate coordinate from the desired size
+    of SR image.
 
-    Generate coordinate from the desired size of SR image.
-        Train or val:
-            1. Generate coordinate from GT.
-            2. Reshape GT image to (HgWg, 3) and transpose to (3, HgWg).
-                where `Hg` and `Wg` represent the height and width of GT.
-        Test:
-            Generate coordinate from LQ and scale or target_size.
-    Then generate cell from coordinate.
+    Train or val:
+
+    #. Generate coordinate from GT.
+
+    #. Reshape GT image to (HgWg, 3) and transpose to (3, HgWg).
+    where `Hg` and `Wg` represent the height and width of GT.
+
+    Test:
+
+    #. Generate coordinate from LQ and scale or target_size.
+
+    #. Then generate cell from coordinate.
 
     Args:
         sample_quantity (int | None): The quantity of samples in coordinates.
@@ -38,9 +44,12 @@ class GenerateCoordinateAndCell(BaseTransform):
             If sample_quantity is not None, reshape_gt = True.
 
     The priority of getting 'size of target image' is:
-        1, results['gt'].shape[-2:]
-        2, results['lq'].shape[-2:] * scale
-        3, target_size
+
+    #. results['gt'].shape[-2:]
+
+    #. results['lq'].shape[-2:] * scale
+
+    #. target_size
     """
 
     def __init__(self,
@@ -58,24 +67,25 @@ class GenerateCoordinateAndCell(BaseTransform):
         """Call function.
 
         Args:
-            results (dict): A dict containing the necessary information and
-                data for augmentation.
-                Require either in results:
-                    1. 'lq' (tensor), whose shape is similar as (3, H, W).
-                    2. 'gt' (tensor), whose shape is similar as (3, H, W).
-                    3. None, the premise is
-                        self.target_size and len(self.target_size) >= 2.
+            results (dict): A dict containing the necessary information
+            and data for augmentation.
+            Require either in results:
+            1. 'lq' (tensor), whose shape is similar as (3, H, W).
+            2. 'gt' (tensor), whose shape is similar as (3, H, W).
+            3. None, the premise is self.target_size and
+            len(self.target_size) >= 2.
 
         Returns:
             dict: A dict containing the processed data and information.
-                Reshape 'gt' to (-1, 3) and transpose to (3, -1) if 'gt'
-                in results.
-                Add 'coord' and 'cell'.
+            Reshape 'gt' to (-1, 3) and transpose to (3, -1)
+            if 'gt' in results.
+            Add 'coord' and 'cell'.
         """
 
         # generate hr_coord (and hr_rgb)
         if 'gt' in results:
             crop_hr = results['gt']
+            crop_hr = images_to_tensor(crop_hr)
             self.target_size = crop_hr.shape
             if self.reshape_gt:
                 hr_rgb = crop_hr.contiguous().view(3, -1).permute(1, 0)
@@ -180,7 +190,7 @@ class GenerateFacialHeatmap(BaseTransform):
         else:
             heatmap = self.generate_heatmap_from_img(img)
 
-        results[f'{self.image_key}_heatmap'] = heatmap
+        results[f'{self.image_key}_heatmap'] = heatmap.astype(np.float32)
 
         return results
 

@@ -19,7 +19,7 @@ In this section, we provide following guides:
 
 ## Prerequisite
 
-Users need to [prepare dataset](../user_guides/datasets/dataset_prepare.md) first to enable training and testing models in MMEditing.
+Users need to [prepare dataset](../user_guides/2_dataset_prepare.md) first to enable training and testing models in MMEditing.
 
 ## Test a model in MMEditing
 
@@ -113,7 +113,7 @@ sh slurm_test.sh ${PLATFORM} ${JOBNAME} ${CONFIG_FILE} ${CKPT_FILE}
 MMEditing supports multiple ways of training:
 
 1. [Train with a single GPU](#train-with-a-single-gpu)
-2. [Train with a single node multiple GPUs](#train-with-a-single-node-multiple-gpus)
+2. [Train with multiple GPUs](#train-with-multiple-gpus)
 3. [Train with multiple nodes](#train-with-multiple-nodes)
 4. [Train with Slurm](#train-with-slurm)
 
@@ -196,7 +196,7 @@ val_dataloader = dict(
         pipeline=[
             dict(type='LoadImageFromFile', key='img'),
             dict(type='Resize', scale=(64, 64)),
-            dict(type='PackGenInputs', meta_keys=[])
+            dict(type='PackEditInputs')
         ]),
     sampler=dict(type='DefaultSampler', shuffle=False),
     persistent_workers=True)
@@ -211,4 +211,4 @@ val_evaluator = dict(type='GenEvaluator', metrics=metrics)
 
 You can set `val_begin` and `val_interval` to adjust when to begin valiadation and interval of validation.
 
-For details of metrics, refer to [metrics' guide](../advanced_guides/metrics.md).
+For details of metrics, refer to [metrics' guide](./8_metrics.md).

@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
+from mmedit.models.base_archs import SimpleGatedConvModule
 from mmedit.models.editors import DeepFillEncoder
-from mmedit.models.layers import SimpleGatedConvModule
 
 
 def test_deepfill_enc():

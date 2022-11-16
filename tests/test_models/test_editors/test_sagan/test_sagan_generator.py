@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 
 import pytest
@@ -21,6 +22,9 @@ class TestSNGANPROJGenerator(object):
             num_classes=10,
             base_channels=32)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_sngan_proj_generator(self):
 
         # test default setting with builder
@@ -161,6 +165,14 @@ class TestSNGANPROJGenerator(object):
         # test different init_cfg --> SNGAN
         config = deepcopy(self.default_config)
         config['init_cfg'] = dict(type='sngan')
+        g = MODULES.build(config)
+        assert isinstance(g, SNGANGenerator)
+        x = g(None, num_batches=2)
+        assert x.shape == (2, 3, 32, 32)
+
+        # test different init_cfg --> SAGAN
+        config = deepcopy(self.default_config)
+        config['init_cfg'] = dict(type='sagan')
         g = MODULES.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)

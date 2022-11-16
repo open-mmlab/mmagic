@@ -116,6 +116,27 @@ class TestBigGANDeepGenerator(object):
         res = g(self.noise, self.label)
         assert res.shape == (3, 3, 128, 128)
 
+        # test init --> N02
+        cfg = deepcopy(self.default_config)
+        cfg.update(init_type='N02')
+        g = MODULES.build(cfg)
+
+        # test init --> xavier
+        cfg = deepcopy(self.default_config)
+        cfg.update(init_type='xavier')
+        g = MODULES.build(cfg)
+
+        # test init --> raise error
+        cfg = deepcopy(self.default_config)
+        cfg.update(init_type='dont know')
+        with pytest.raises(NotImplementedError):
+            g = MODULES.build(cfg)
+
+        cfg = deepcopy(self.default_config)
+        cfg.update(pretrained=1234)
+        with pytest.raises(TypeError):
+            g = MODULES.build(cfg)
+
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_biggan_deep_generator_cuda(self):
 

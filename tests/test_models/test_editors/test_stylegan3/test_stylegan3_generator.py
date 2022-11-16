@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 
 import pytest
@@ -38,6 +39,9 @@ class TestStyleGAN3Generator:
             img_channels=3,
             synthesis_cfg=synthesis_r_cfg)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_cpu(self):
         generator = StyleGAN3Generator(**self.default_cfg)
         z = torch.randn((2, 6))

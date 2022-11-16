@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from unittest import TestCase
 
+import pytest
 import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
@@ -34,6 +36,9 @@ class TestStyleGAN2(TestCase):
             g_reg_weight=2. * g_reg_interval,
             pl_batch_shrink=2)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_stylegan2_cpu(self):
         accu_iter = 1
         message_hub = MessageHub.get_instance('test-s2')

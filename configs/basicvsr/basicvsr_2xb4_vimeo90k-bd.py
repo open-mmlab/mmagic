@@ -19,7 +19,6 @@ train_pipeline = [
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     dict(type='MirrorSequence', keys=['img', 'gt']),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -27,14 +26,12 @@ val_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='ToTensor', keys=['img']),
     dict(type='PackEditInputs')
 ]
 
@@ -71,8 +68,6 @@ val_dataloader = dict(
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_Vid4_GT.txt',
         depth=1,
-        num_input_frames=7,
-        fixed_seq_len=7,
         pipeline=val_pipeline))
 
 val_evaluator = [

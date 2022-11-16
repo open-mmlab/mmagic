@@ -42,7 +42,6 @@ train_pipeline = [
     dict(
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -50,14 +49,12 @@ val_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='ToTensor', keys=['img']),
     dict(type='PackEditInputs')
 ]
 
@@ -113,11 +110,11 @@ optim_wrapper = dict(
 default_hooks = dict(checkpoint=dict(out_dir=save_dir))
 
 # learning policy
-lr_config = dict(
-    policy='CosineRestartLR',
+param_scheduler = dict(
+    type='CosineRestartLR',
     by_epoch=False,
     periods=[300000],
     restart_weights=[1],
-    min_lr=1e-7)
+    eta_min=1e-7)
 
 find_unused_parameters = True

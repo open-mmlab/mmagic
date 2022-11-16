@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 
 import pytest
@@ -20,6 +21,9 @@ class TestUnetGenerator:
             use_dropout=True,
             init_cfg=dict(type='normal', gain=0.02))
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_pix2pix_generator_cpu(self):
         # test with default cfg
         real_a = torch.randn((2, 3, 256, 256))
@@ -33,6 +37,10 @@ class TestUnetGenerator:
         gen = UnetGenerator(**cfg)
         fake_b = gen(real_a)
         assert fake_b.shape == (2, 3, 256, 256)
+
+        with pytest.raises(TypeError):
+            gen = UnetGenerator(**self.default_cfg)
+            gen.init_weights(pretrained=10)
 
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_pix2pix_generator_cuda(self):
@@ -48,3 +56,7 @@ class TestUnetGenerator:
         gen = UnetGenerator(**cfg).cuda()
         fake_b = gen(real_a)
         assert fake_b.shape == (2, 3, 256, 256)
+
+        with pytest.raises(TypeError):
+            gen = UnetGenerator(**self.default_cfg)
+            gen.init_weights(pretrained=10)

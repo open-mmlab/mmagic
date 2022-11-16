@@ -29,7 +29,6 @@ val_pipeline = [
         key='gt',
         color_type='color',
         channel_order='rgb'),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -40,7 +39,6 @@ demo_pipeline = [
         key='img',
         color_type='color',
         channel_order='rgb'),
-    dict(type='ToTensor', keys=['img']),
     dict(type='PackEditInputs')
 ]
 

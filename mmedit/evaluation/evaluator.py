@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import hashlib
 from collections import defaultdict
 from typing import Any, Iterator, List, Optional, Sequence, Tuple, Union
 
@@ -8,19 +9,20 @@ from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import EVALUATORS
 from mmedit.structures import EditDataSample
+from .metrics.base_gen_metric import GenMetric
 
 
 @EVALUATORS.register_module()
 class GenEvaluator(Evaluator):
     """Evaluator for generative models. Unlike high-level vision tasks, metrics
     for generative models have various input types. For example, Inception
-    Score (IS, :class:`~mmgen.core.evaluation.InceptionScore`) only needs to
+    Score (IS, :class:`~mmedit.core.evaluation.InceptionScore`) only needs to
     take fake images as input. However, Frechet Inception Distance (FID,
-    :class:`~mmgen.core.evaluation.FrechetInceptionDistance`) needs to take
+    :class:`~mmedit.engine.evaluation.FrechetInceptionDistance`) needs to take
     both real images and fake images as input, and the numbers of real images
     and fake images can be set arbitrarily. For Perceptual path length (PPL,
-    :class:`~mmgen.core.evaluation.PerceptualPathLength.`), generator need to
-    sample images along a latent path.
+    :class:`~mmedit.engine.evaluation.PerceptualPathLength.`), generator need
+    to sample images along a latent path.
 
     In order to be compatible with different metrics, we designed two critical
     functions, :meth:`prepare_metrics` and :meth:`prepare_samplers` to support
@@ -34,8 +36,8 @@ class GenEvaluator(Evaluator):
       same sample mode can share the sampler.
 
     The whole evaluation process can be found in
-    :meth:~`mmgen.core.runners.loops.GenValLoop.run` and
-    :meth:~`mmgen.core.runners.loops.GenTestLoop.run`.
+    :meth:~`mmedit.engine.runners.loops.GenValLoop.run` and
+    :meth:~`mmedit.engine.runners.loops.GenTestLoop.run`.
 
     Args:
         metrics (dict or BaseMetric or Sequence): The config of metrics.
@@ -70,6 +72,19 @@ class GenEvaluator(Evaluator):
             metric.prepare(module, dataloader)
         self.is_ready = True
 
+    @staticmethod
+    def _cal_metric_hash(metric: GenMetric):
+        """Calculate a unique hash value based on the `SAMPLER_MODE` and
+        `sample_model`."""
+        sampler_mode = metric.SAMPLER_MODE
+        sample_model = metric.sample_model
+        metric_dict = {
+            'SAMPLER_MODE': sampler_mode,
+            'sample_model': sample_model
+        }
+        md5 = hashlib.md5(repr(metric_dict).encode('utf-8')).hexdigest()
+        return md5
+
     def prepare_samplers(self, module: BaseModel, dataloader: DataLoader
                          ) -> List[Tuple[List[BaseMetric], Iterator]]:
         """Prepare for the sampler for metrics whose sampling mode are
@@ -91,11 +106,11 @@ class GenEvaluator(Evaluator):
             List[Tuple[List[BaseMetric], Iterator]]: A list of "metrics-shared
                 sampler" pair.
         """
-
-        # grouping metrics based on `SAMPLER_MODE`.
+        # grouping metrics based on `SAMPLER_MODE` and `sample_mode`
         metric_mode_dict = defaultdict(list)
         for metric in self.metrics:
-            metric_mode_dict[metric.SAMPLER_MODE].append(metric)
+            metric_md5 = self._cal_metric_hash(metric)
+            metric_mode_dict[metric_md5].append(metric)
 
         metrics_sampler_list = []
         for metrics in metric_mode_dict.values():

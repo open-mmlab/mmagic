@@ -260,6 +260,8 @@ class GenerateSegmentIndices(BaseTransform):
         self.sequence_length = results['sequence_length']
         num_input_frames = results.get('num_input_frames',
                                        self.sequence_length)
+        if num_input_frames is None:
+            num_input_frames = self.sequence_length
 
         # randomly select a frame as start
         if self.sequence_length - num_input_frames * interval < 0:

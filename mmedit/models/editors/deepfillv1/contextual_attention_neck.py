@@ -2,9 +2,9 @@
 import torch.nn as nn
 from mmcv.cnn import ConvModule
 
+from mmedit.models.base_archs import SimpleGatedConvModule
 from mmedit.models.editors.deepfillv1.contextual_attention import \
     ContextualAttentionModule
-from mmedit.models.layers import SimpleGatedConvModule
 from mmedit.registry import COMPONENTS
 
 

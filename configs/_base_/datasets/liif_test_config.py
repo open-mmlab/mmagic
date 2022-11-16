@@ -10,7 +10,6 @@ test_pipelines = [[
         imdecode_backend='cv2'),
     dict(
         type='RandomDownSampling', scale_min=scale_test, scale_max=scale_test),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='GenerateCoordinateAndCell', scale=scale_test, reshape_gt=False),
     dict(type='PackEditInputs')
 ] for scale_test in scale_test_list]
@@ -30,8 +29,8 @@ set5_dataloaders = [
             pipeline=test_pipeline)) for test_pipeline in test_pipelines
 ]
 set5_evaluators = [[
-    dict(type='PSNR', crop_border=2, prefix=f'Set5x{scale}'),
-    dict(type='SSIM', crop_border=2, prefix=f'Set5x{scale}'),
+    dict(type='PSNR', crop_border=scale, prefix=f'Set5x{scale}'),
+    dict(type='SSIM', crop_border=scale, prefix=f'Set5x{scale}'),
 ] for scale in scale_test_list]
 
 # test config for Set14
@@ -49,8 +48,8 @@ set14_dataloaders = [
             pipeline=test_pipeline)) for test_pipeline in test_pipelines
 ]
 set14_evaluators = [[
-    dict(type='PSNR', crop_border=2, prefix=f'Set14x{scale}'),
-    dict(type='SSIM', crop_border=2, prefix=f'Set14x{scale}'),
+    dict(type='PSNR', crop_border=scale, prefix=f'Set14x{scale}'),
+    dict(type='SSIM', crop_border=scale, prefix=f'Set14x{scale}'),
 ] for scale in scale_test_list]
 
 # test config for DIV2K
@@ -70,8 +69,8 @@ div2k_dataloaders = [
             pipeline=test_pipeline)) for test_pipeline in test_pipelines
 ]
 div2k_evaluators = [[
-    dict(type='PSNR', crop_border=2, prefix=f'DIV2Kx{scale}'),
-    dict(type='SSIM', crop_border=2, prefix=f'DIV2Kx{scale}'),
+    dict(type='PSNR', crop_border=scale, prefix=f'DIV2Kx{scale}'),
+    dict(type='SSIM', crop_border=scale, prefix=f'DIV2Kx{scale}'),
 ] for scale in scale_test_list]
 
 # test config

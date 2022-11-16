@@ -28,7 +28,8 @@ class GenVisualizer(Visualizer):
         save_dir (str, optional): Save file dir for all storage backends.
             If it is None, the backend storage will not save any data.
 
-    Examples:
+    Examples::
+
         >>> # Draw image
         >>> vis = GenVisualizer()
         >>> vis.add_datasample(
@@ -53,7 +54,7 @@ class GenVisualizer(Visualizer):
                             mean: mean_std_type = None,
                             std: mean_std_type = None) -> Tensor:
         """Post process images. First convert image to `rgb` order. And then
-        de-norm image to fid `mean` and `std` if `mean` and `std` is passed.
+        de-norm image to `mean` and `std` if they are passed.
 
         Args:
             image (Tensor): Image to pose process.
@@ -72,7 +73,7 @@ class GenVisualizer(Visualizer):
             image = image[:, [2, 1, 0], ...]
         if mean is not None and std is not None:
             image = image * std + mean
-        return image
+        return image.clamp(0, 255)
 
     @staticmethod
     def _get_n_row_and_padding(samples: Tuple[dict, Tensor],
@@ -298,11 +299,12 @@ class GenVisualizer(Visualizer):
                        **kwargs) -> None:
         """Draw datasample and save to all backends.
 
-        - If GT and prediction are plotted at the same time, they are
-        displayed in a stitched image where the left image is the
+        If GT and prediction are plotted at the same time, they
+        are displayed in a stitched image where the left image is the
         ground truth and the right image is the prediction.
-        - If ``show`` is True, all storage backends are ignored, and
-        the images will be displayed in a local window.
+
+        If ``show`` is True, all storage backends are ignored,
+        and the images will be displayed in a local window.
 
         Args:
             name (str): The image identifier.

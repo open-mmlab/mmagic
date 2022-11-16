@@ -48,7 +48,6 @@ train_pipeline = [
     dict(
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 val_pipeline = [
@@ -62,7 +61,6 @@ val_pipeline = [
         key='gt',
         color_type='color',
         channel_order='rgb'),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -92,8 +90,8 @@ val_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(dataset_type='set5', task_name='sisr'),
-        data_root=data_root + '/Set5',
+        metainfo=dict(dataset_type='set14', task_name='sisr'),
+        data_root=data_root + '/Set14',
         data_prefix=dict(img='LRbicx4', gt='GTmod12'),
         pipeline=val_pipeline))
 

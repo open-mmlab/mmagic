@@ -19,8 +19,10 @@ mmediting
 ├── tools
 ├── configs
 ├── data
-│   ├── celeba-hq
-│   │   ├── train
-|   |   ├── val
+│   ├── CelebA-HQ
+│   │   ├── train_256
+|   |   ├── test_256
+|   |   ├── train_celeba_img_list.txt
+|   |   ├── val_celeba_img_list.txt
 
 ```

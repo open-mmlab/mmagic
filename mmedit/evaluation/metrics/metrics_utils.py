@@ -3,6 +3,52 @@ import mmcv
 import numpy as np
 import torch
 
+from mmedit.utils import reorder_image
+
+
+def _assert_ndim(input, name, ndim, shape_hint):
+    if input.ndim != ndim:
+        raise ValueError(
+            f'{name} should be of shape {shape_hint}, but got {input.shape}.')
+
+
+def _assert_masked(pred_alpha, trimap):
+    if (pred_alpha[trimap == 0] != 0).any() or (pred_alpha[trimap == 255] !=
+                                                255).any():
+        raise ValueError(
+            'pred_alpha should be masked by trimap before evaluation')
+
+
+def _fetch_data_and_check(data_samples):
+    """Fetch and check data from one item of data_batch and predictions.
+
+    Args:
+        data_batch (dict): One item of data_batch.
+        predictions (dict): One item of predictions.
+
+    Returns:
+        pred_alpha (Tensor): Pred_alpha data of predictions.
+        ori_alpha (Tensor): Ori_alpha data of data_batch.
+        ori_trimap (Tensor): Ori_trimap data of data_batch.
+    """
+    ori_trimap = data_samples['ori_trimap'][:, :, 0]
+    ori_alpha = data_samples['ori_alpha'][:, :, 0]
+    pred_alpha = data_samples['output']['pred_alpha']['data']  # 2D tensor
+    pred_alpha = pred_alpha.cpu().numpy()
+
+    _assert_ndim(ori_trimap, 'trimap', 2, 'HxW')
+    _assert_ndim(ori_alpha, 'gt_alpha', 2, 'HxW')
+    _assert_ndim(pred_alpha, 'pred_alpha', 2, 'HxW')
+    _assert_masked(pred_alpha, ori_trimap)
+
+    # dtype uint8 -> float64
+    pred_alpha = pred_alpha / 255.0
+    ori_alpha = ori_alpha / 255.0
+    # test shows that using float32 vs float64 differs final results at 1e-4
+    # speed are comparable, so we choose float64 for accuracy
+
+    return pred_alpha, ori_alpha, ori_trimap
+
 
 def average(results, key):
     """Average of key in results(list[dict]).
@@ -103,56 +149,3 @@ def obtain_data(data_sample, key, device='cpu'):
                 return result
 
     raise KeyError('Mapping key was not found')
-
-
-def reorder_image(img, input_order='HWC'):
-    """Reorder images to 'HWC' order.
-
-    If the input_order is (h, w), return (h, w, 1);
-    If the input_order is (c, h, w), return (h, w, c);
-    If the input_order is (h, w, c), return as it is.
-
-    Args:
-        img (np.ndarray): Input image.
-        input_order (str): Whether the input order is 'HWC' or 'CHW'.
-            If the input image shape is (h, w), input_order will not have
-            effects. Default: 'HWC'.
-
-    Returns:
-        np.ndarray: Reordered image.
-    """
-
-    if input_order not in ['HWC', 'CHW']:
-        raise ValueError(
-            f'Wrong input_order {input_order}. Supported input_orders are '
-            '"HWC" and "CHW"')
-    if len(img.shape) == 2:
-        img = img[..., None]
-        return img
-    if input_order == 'CHW':
-        if isinstance(img, np.ndarray):
-            img = img.transpose(1, 2, 0)
-        elif isinstance(img, torch.Tensor):
-            img = img.permute(1, 2, 0)
-    return img
-
-
-def to_numpy(img, dtype=np.float64):
-    """Convert data into numpy arrays of dtype.
-
-    Args:
-        img (Tensor | np.ndarray): Input data.
-        dtype (np.dtype): Set the data type of the output. Default: np.float64
-
-    Returns:
-        img (np.ndarray): Converted numpy arrays data.
-    """
-    if isinstance(img, torch.Tensor):
-        img = img.cpu().numpy()
-    elif not isinstance(img, np.ndarray):
-        raise TypeError('Only support torch.tensor and np.ndarray, '
-                        f'but got type {type(img)}')
-
-    img = img.astype(dtype)
-
-    return img

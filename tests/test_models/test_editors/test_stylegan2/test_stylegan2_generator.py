@@ -77,6 +77,12 @@ class TestStyleGAN2Generator:
         res = g(None, num_batches=2)
         assert res.shape == (2, 3, 256, 256)
 
+        # set mix_prob as 1 and 0 to cover all lines
+        g.mix_prob = 1
+        res = g(None, num_batches=2)
+        g.mix_prob = 0
+        res = g(None, num_batches=2)
+
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_g_cuda(self):
         # test default config
@@ -124,3 +130,9 @@ class TestStyleGAN2Generator:
         g = StyleGAN2Generator(**cfg_).cuda()
         res = g(None, num_batches=2)
         assert res.shape == (2, 3, 256, 256)
+
+        # set mix_prob as 1 and 0 to cover all lines
+        g.mix_prob = 1
+        res = g(None, num_batches=2)
+        g.mix_prob = 0
+        res = g(None, num_batches=2)

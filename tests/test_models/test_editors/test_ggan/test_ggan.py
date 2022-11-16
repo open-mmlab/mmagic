@@ -58,7 +58,7 @@ class TestGGAN(TestCase):
         # prepare model
         accu_iter = 1
         n_disc = 1
-        message_hub = MessageHub.get_instance('mmgen')
+        message_hub = MessageHub.get_instance('test-ggan')
         gan = GGAN(
             noise_size=10,
             generator=generator,

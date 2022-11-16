@@ -43,7 +43,7 @@ train_pipeline = [
         channel_order='rgb',
         imdecode_backend='cv2'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
-    dict(type='PairedRandomCrop', gt_patch_size=96),
+    dict(type='PairedRandomCrop', gt_patch_size=196),
     dict(
         type='Flip',
         keys=['img', 'gt'],
@@ -52,7 +52,6 @@ train_pipeline = [
     dict(
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 val_pipeline = [
@@ -68,7 +67,6 @@ val_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='cv2'),
-    dict(type='ToTensor', keys=['img', 'gt']),
     dict(type='PackEditInputs')
 ]
 
@@ -77,7 +75,9 @@ dataset_type = 'BasicImageDataset'
 data_root = 'data'
 
 train_dataloader = dict(
-    num_workers=4,
+    num_workers=8,
+    batch_size=16,
+    drop_last=True,
     persistent_workers=False,
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
@@ -116,7 +116,7 @@ val_cfg = dict(type='ValLoop')
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
     type='OptimWrapper',
-    optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99)))
+    optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999)))
 
 # learning policy
 param_scheduler = dict(

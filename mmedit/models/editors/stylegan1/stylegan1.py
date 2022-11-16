@@ -16,6 +16,7 @@ TrainInput = Union[dict, Tensor]
 
 
 @MODELS.register_module('StyleGANV1')
+@MODELS.register_module('StyleGANv1')
 @MODELS.register_module()
 class StyleGAN1(ProgressiveGrowingGAN):
     """Implementation of `A Style-Based Generator Architecture for Generative

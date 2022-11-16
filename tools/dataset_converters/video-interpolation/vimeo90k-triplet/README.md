@@ -20,17 +20,23 @@ The training and test datasets can be download from [here](http://toflow.csail.m
 The Vimeo90K-triplet  dataset has a `clip/sequence/img` folder structure:
 
 ```text
-├── tri_testlist.txt
-├── tri_trainlist.txt
-├── sequences
-│   ├── 00001
-│   │   ├── 0001
-│   │   │   ├── im1.png
-│   │   │   ├── im2.png
-│   │   │   └── im3.png
-│   │   ├── 0002
-│   │   ├── 0003
-│   │   ├── ...
-│   ├── 00002
-│   ├── ...
+mmediting
+├── mmedit
+├── tools
+├── configs
+├── data
+│   ├── vimeo_triplet
+│   │   ├── tri_testlist.txt
+│   │   ├── tri_trainlist.txt
+│   │   ├── sequences
+│   │   │   ├── 00001
+│   │   │   │   ├── 0001
+│   │   │   │   │   ├── im1.png
+│   │   │   │   │   ├── im2.png
+│   │   │   │   │   └── im3.png
+│   │   │   │   ├── 0002
+│   │   │   │   ├── 0003
+│   │   │   │   ├── ...
+│   │   │   ├── 00002
+│   │   │   ├── ...
 ```

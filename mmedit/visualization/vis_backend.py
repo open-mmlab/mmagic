@@ -94,7 +94,12 @@ class GenVisBackend(BaseVisBackend):
 
             if full_work_dir.endswith('/'):
                 full_work_dir = full_work_dir[:-1]
-            src_path = '/'.join(full_work_dir.split('/')[:-1])
+
+            # NOTE: handle src_path with `os.sep`, because may windows
+            # and linux may have different separate.
+            src_path = os.sep.join(full_work_dir.split(os.sep)[:-1])
+            # NOTE: handle tar_path with '/', because ceph use linux
+            # environment
             tar_path = self._ceph_path[:-1] if \
                 self._ceph_path.endswith('/') else self._ceph_path
 
