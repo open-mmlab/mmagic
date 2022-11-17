@@ -19,3 +19,35 @@ def test_avgpool2d():
     print(outputs)
     assert info == tar_info
     assert torch.all(torch.eq(targets, outputs))
+
+    avg_pool_2d = NAFAvgPool2d(
+        base_size=int(inputs.shape[-2] * 1.5),
+        train_size=train_size,
+        fast_imp=False)
+    info = avg_pool_2d.extra_repr()
+    tar_info = 'kernel_size=None, base_size=48,' \
+        + ' stride=None, fast_imp=False'
+    outputs = avg_pool_2d(inputs)
+    print(outputs)
+    assert info == tar_info
+    assert torch.all(torch.eq(targets, outputs))
+
+    avg_pool_2d = NAFAvgPool2d(
+        base_size=base_size, train_size=train_size, fast_imp=True)
+    info = avg_pool_2d.extra_repr()
+    tar_info = 'kernel_size=None, base_size=(48, 48),' \
+        + ' stride=None, fast_imp=True'
+    outputs = avg_pool_2d(inputs)
+    print(outputs)
+    assert info == tar_info
+    assert torch.all(torch.eq(targets, outputs))
+
+    avg_pool_2d = NAFAvgPool2d(
+        base_size=(16, 16), train_size=train_size, fast_imp=True)
+    info = avg_pool_2d.extra_repr()
+    tar_info = 'kernel_size=None, base_size=(16, 16),' \
+        + ' stride=None, fast_imp=True'
+    outputs = avg_pool_2d(inputs)
+    print(outputs)
+    assert info == tar_info
+    assert torch.all(torch.eq(targets, outputs))
