@@ -41,50 +41,42 @@ class MMEdit:
     inference_supported_models = {
         # conditional models
         'biggan': {
-            'task': 'conditional',
-            'default_setting': 0
+            'task': 'conditional'
         },
 
         # unconditional models
         'styleganv1': {
-            'task': 'unconditional',
-            'default_setting': 0
+            'task': 'unconditional'
         },
 
         # matting models
         'gca': {
-            'task': 'matting',
-            'default_setting': 1
+            'task': 'matting'
         },
 
         # inpainting models
         'aot_gan': {
-            'task': 'inpainting',
-            'default_setting': 0
+            'task': 'inpainting'
         },
 
         # translation models
         'pix2pix': {
-            'task': 'translation',
-            'default_setting': 0
+            'task': 'translation'
         },
 
         # restoration models
         'esrgan': {
-            'task': 'restoration',
-            'default_setting': 0
+            'task': 'restoration'
         },
 
         # video_restoration models
         'basicvsr': {
-            'task': 'video_restoration',
-            'default_setting': 0
+            'task': 'video_restoration'
         },
 
         # video_interpolation models
         'flavr': {
-            'task': 'video_interpolation',
-            'default_setting': 0
+            'task': 'video_interpolation'
         },
     }
 
@@ -117,7 +109,7 @@ class MMEdit:
                 parsed_yaml['Models']
 
     def _get_inferencer_kwargs(self, model_name: Optional[str],
-                               model_setting: Optional[str],
+                               model_setting: Optional[int],
                                model_config: Optional[str],
                                model_ckpt: Optional[str],
                                extra_parameters: Optional[Dict]) -> Dict:
@@ -127,7 +119,7 @@ class MMEdit:
         if model_name is not None:
             cfgs = self.get_model_config(model_name)
             kwargs['task'] = cfgs['task']
-            setting_to_use = cfgs['default_setting']
+            setting_to_use = 0
             if model_setting:
                 setting_to_use = model_setting
             config_dir = cfgs['settings'][setting_to_use]['Config']
