@@ -3,8 +3,11 @@ _base_ = [
     '../_base_/datasets/paired_imgs_256x256_crop.py',
     '../_base_/gen_default_runtime.py',
 ]
-source_domain = domain_b = 'edges'
-target_domain = domain_a = 'photo'
+# deterministic training can improve the performance of Pix2Pix
+randomness = dict(deterministic=True)
+
+source_domain = domain_a = 'edges'
+target_domain = domain_b = 'photo'
 # model settings
 model = dict(
     default_domain=target_domain,
@@ -15,6 +18,20 @@ train_cfg = dict(max_iters=190000)
 
 # dataset settings
 dataroot = './data/pix2pix/edges2shoes'
+# overwrite train pipeline since we do not use flip and crop
+_base_.train_dataloader.dataset.pipeline = [
+    dict(
+        type='LoadPairedImageFromFile',
+        key='pair',
+        domain_a='A',
+        domain_b='B',
+        color_type='color'),
+    dict(
+        type='Resize',
+        keys=['img_A', 'img_B'],
+        scale=(256, 256),
+        interpolation='bicubic'),
+]
 train_pipeline = _base_.train_dataloader.dataset.pipeline
 val_pipeline = _base_.val_dataloader.dataset.pipeline
 test_pipeline = _base_.test_dataloader.dataset.pipeline
@@ -36,7 +53,8 @@ train_pipeline += [key_mapping, pack_input]
 val_pipeline += [key_mapping, pack_input]
 test_pipeline += [key_mapping, pack_input]
 
-train_dataloader = dict(dataset=dict(data_root=dataroot, test_dir='val'))
+train_dataloader = dict(
+    batch_size=4, dataset=dict(data_root=dataroot, test_dir='val'))
 val_dataloader = dict(
     dataset=dict(data_root=dataroot, test_dir='val', test_mode=True))
 test_dataloader = val_dataloader
@@ -60,6 +78,9 @@ custom_hooks = [
             dict(type='TranslationVal', name='trans_val')
         ])
 ]
+
+# save multi best checkpoints
+default_hooks = dict(checkpoint=dict(save_best='FID-Full/fid', rule='less'))
 
 fake_nums = 200
 metrics = [

@@ -3,7 +3,7 @@ import hashlib
 import os
 
 import click
-import mmcv
+import mmengine
 import requests
 import torch.distributed as dist
 from mmengine.dist import get_dist_info
@@ -67,7 +67,7 @@ def download_from_url(url,
     if rank == 0:
         # mkdir
         _dir = os.path.dirname(dest_path)
-        mmcv.mkdir_or_exist(_dir)
+        mmengine.mkdir_or_exist(_dir)
 
         if hash_prefix is not None:
             sha256 = hashlib.sha256()

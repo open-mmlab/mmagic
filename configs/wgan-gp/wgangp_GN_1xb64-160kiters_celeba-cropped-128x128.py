@@ -26,7 +26,7 @@ model = dict(
     loss_config=loss_config)
 
 # `batch_size` and `data_root` need to be set.
-batch_size = 4
+batch_size = 64
 data_root = './data/celeba-cropped/cropped_images_aligned_png/'
 train_dataloader = dict(
     batch_size=batch_size, dataset=dict(data_root=data_root))
@@ -47,7 +47,7 @@ optim_wrapper = dict(
 custom_hooks = [
     dict(
         type='GenVisualizationHook',
-        interval=1000,
+        interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))
 ]
@@ -64,6 +64,9 @@ metrics = [
         sample_model='orig',
         image_shape=(3, 128, 128))
 ]
+
+# save multi best checkpoints
+default_hooks = dict(checkpoint=dict(save_best='swd/avg'))
 
 val_evaluator = dict(metrics=metrics)
 test_evaluator = dict(metrics=metrics)

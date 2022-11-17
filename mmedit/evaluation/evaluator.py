@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import hashlib
 from collections import defaultdict
 from typing import Any, Iterator, List, Optional, Sequence, Tuple, Union
 
@@ -8,6 +9,7 @@ from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import EVALUATORS
 from mmedit.structures import EditDataSample
+from .metrics.base_gen_metric import GenMetric
 
 
 @EVALUATORS.register_module()
@@ -70,6 +72,19 @@ class GenEvaluator(Evaluator):
             metric.prepare(module, dataloader)
         self.is_ready = True
 
+    @staticmethod
+    def _cal_metric_hash(metric: GenMetric):
+        """Calculate a unique hash value based on the `SAMPLER_MODE` and
+        `sample_model`."""
+        sampler_mode = metric.SAMPLER_MODE
+        sample_model = metric.sample_model
+        metric_dict = {
+            'SAMPLER_MODE': sampler_mode,
+            'sample_model': sample_model
+        }
+        md5 = hashlib.md5(repr(metric_dict).encode('utf-8')).hexdigest()
+        return md5
+
     def prepare_samplers(self, module: BaseModel, dataloader: DataLoader
                          ) -> List[Tuple[List[BaseMetric], Iterator]]:
         """Prepare for the sampler for metrics whose sampling mode are
@@ -91,11 +106,11 @@ class GenEvaluator(Evaluator):
             List[Tuple[List[BaseMetric], Iterator]]: A list of "metrics-shared
                 sampler" pair.
         """
-
-        # grouping metrics based on `SAMPLER_MODE`.
+        # grouping metrics based on `SAMPLER_MODE` and `sample_mode`
         metric_mode_dict = defaultdict(list)
         for metric in self.metrics:
-            metric_mode_dict[metric.SAMPLER_MODE].append(metric)
+            metric_md5 = self._cal_metric_hash(metric)
+            metric_mode_dict[metric_md5].append(metric)
 
         metrics_sampler_list = []
         for metrics in metric_mode_dict.values():

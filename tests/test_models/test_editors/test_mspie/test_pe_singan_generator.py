@@ -83,3 +83,13 @@ class TestSinGANPEGen:
         res = gen(self.input_sample, self.fixed_noises, self.noise_weights,
                   'rand', 2)
         assert res.shape == (1, 3, 12, 12)
+
+        gen = SinGANMSGeneratorPE(
+            interp_pad=True, noise_with_pad=True, **self.default_args)
+        res = gen(None, self.fixed_noises, self.noise_weights, 'rand', 2)
+        assert res.shape == (1, 3, 6, 6)
+
+        gen = SinGANMSGeneratorPE(
+            interp_pad=True, noise_with_pad=False, **self.default_args)
+        res = gen(None, self.fixed_noises, self.noise_weights, 'rand', 2)
+        assert res.shape == (1, 3, 12, 12)

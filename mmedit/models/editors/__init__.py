@@ -30,6 +30,7 @@ from .iconvsr import IconVSRNet
 from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
                        IndexNetEncoder)
+from .inst_colorization import InstColorization
 from .liif import LIIF, MLPRefiner
 from .lsgan import LSGAN
 from .mspie import MSPIEStyleGAN2, PESinGAN
@@ -47,7 +48,7 @@ from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
 from .stylegan1 import StyleGAN1
 from .stylegan2 import StyleGAN2
-from .stylegan3 import StyleGAN3
+from .stylegan3 import StyleGAN3, StyleGAN3Generator
 from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
@@ -78,5 +79,5 @@ __all__ = [
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel',
     'DenoisingUnet', 'DDPMDiffuser', 'DDIMDiffuser', 'IDLossModel', 'PESinGAN',
-    'MSPIEStyleGAN2'
+    'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization'
 ]
