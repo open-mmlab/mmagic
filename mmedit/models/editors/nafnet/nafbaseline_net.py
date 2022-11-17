@@ -1,3 +1,4 @@
+# Copyright (c) 2022 megvii-model. All Rights Reserved.
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn

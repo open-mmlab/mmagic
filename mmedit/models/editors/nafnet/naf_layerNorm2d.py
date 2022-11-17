@@ -1,3 +1,4 @@
+# Copyright (c) 2022 megvii-model. All Rights Reserved.
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 from torch import nn as nn
@@ -37,6 +38,8 @@ class LayerNorm2d(nn.Module):
 
     Note: This is different from the layernorm2d in pytorch.
         The layer norm here will handle different channels respectively.
+        For more information, please refer to the issue:
+        https://github.com/megvii-research/NAFNet/issues/35
     """
 
     def __init__(self, channels, eps=1e-6):

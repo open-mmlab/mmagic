@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.nafnet.naf_avgpool2d import AvgPool2d
+from mmedit.models.editors.nafnet.naf_avgpool2d import NAFAvgPool2d
 
 
 def test_avgpool2d():
@@ -12,7 +12,7 @@ def test_avgpool2d():
     base_size = (int(inputs.shape[-2] * 1.5), int(inputs.shape[-1] * 1.5))
     train_size = inputs.shape
 
-    avg_pool_2d = AvgPool2d(
+    avg_pool_2d = NAFAvgPool2d(
         base_size=base_size, train_size=train_size, fast_imp=False)
     info = avg_pool_2d.extra_repr()
     outputs = avg_pool_2d(inputs)

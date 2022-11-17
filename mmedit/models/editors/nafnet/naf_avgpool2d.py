@@ -1,3 +1,4 @@
+# Copyright (c) 2022 megvii-model. All Rights Reserved.
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
@@ -5,12 +6,14 @@ import torch.nn.functional as F
 from mmengine.model import BaseModule
 
 
-class AvgPool2d(BaseModule):
+class NAFAvgPool2d(BaseModule):
     """Average Pooling 2D used in NAFNet.
 
     Note: this is different from the normal AvgPool2d in pytorch.
-    ref.
+    According to:
     Improving Image Restoration by Revisiting Global Information Aggregation
+    statistics are aggregated in a local region for each pixel
+    rather than the global average pooling.
     """
 
     def __init__(self,
@@ -90,7 +93,6 @@ class AvgPool2d(BaseModule):
         if self.auto_pad:
             n, c, h, w = x.shape
             _h, _w = out.shape[2:]
-            # print(x.shape, self.kernel_size)
             pad2d = ((w - _w) // 2, (w - _w + 1) // 2, (h - _h) // 2,
                      (h - _h + 1) // 2)
             out = torch.nn.functional.pad(out, pad2d, mode='replicate')
@@ -106,7 +108,7 @@ def replace_layers(model, base_size, train_size, fast_imp, **kwargs):
             replace_layers(m, base_size, train_size, fast_imp, **kwargs)
 
         if isinstance(m, nn.AdaptiveAvgPool2d):
-            pool = AvgPool2d(
+            pool = NAFAvgPool2d(
                 base_size=base_size, fast_imp=fast_imp, train_size=train_size)
             assert m.output_size == 1
             setattr(model, n, pool)
