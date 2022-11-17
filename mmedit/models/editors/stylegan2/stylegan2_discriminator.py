@@ -64,15 +64,16 @@ class StyleGAN2Discriminator(BaseModule):
             to [1, 3, 3, 1].
         mbstd_cfg (dict, optional): Configs for minibatch-stddev layer.
             Defaults to dict(group_size=4, channel_groups=1).
-        c_channels (int, optional): The dimension of conditional input. If None or
+        cond_size (int, optional): The size of conditional input. If None or
             less than 1, no conditional mapping will be applied. Defaults to None.
-        cmap_channels (int, optional): The dimension of the output of conditional
-            mapping. Only work when :attr:`c_dim` is larger than 0. If :attr:`c_dim`
-            is larger than 0 and :attr:`cmap_dim` is None, will. Defaults to None.
-        cmapping_layer (int, optional): The number of mapping layer used to map conditional
-            input. Only work when c_dim is larger than 0. If :attr:`cmapping_layer`
-            is None and :attr:`c_dim` is larger than 0, cmapping_layer will set as 8.
+        cond_mapping_channels (int, optional): The dimension of the output of
+            conditional mapping. Only work when :attr:`c_dim` is larger than 0.
+            If :attr:`c_dim` is larger than 0 and :attr:`cmap_dim` is None, will.
             Defaults to None.
+        cond_mapping_layers (int, optional): The number of mapping layer used to
+            map conditional input. Only work when c_dim is larger than 0. If
+            :attr:`cmapping_layer` is None and :attr:`c_dim` is larger than 0,
+            cmapping_layer will set as 8. Defaults to None.
         num_fp16_scales (int, optional): The number of resolutions to use auto
             fp16 training. Defaults to 0.
         fp16_enabled (bool, optional): Whether to use fp16 training in this
@@ -99,7 +100,7 @@ class StyleGAN2Discriminator(BaseModule):
                  channel_multiplier=2,
                  blur_kernel=[1, 3, 3, 1],
                  mbstd_cfg=dict(group_size=4, channel_groups=1),
-                 cond_channels=None,
+                 cond_size=None,
                  cond_mapping_channels=None,
                  cond_mapping_layers=None,
                  num_fp16_scales=0,
@@ -154,7 +155,7 @@ class StyleGAN2Discriminator(BaseModule):
 
             in_channels = out_channel
 
-        if cond_channels is not None and cond_channels > 0:
+        if cond_size is not None and cond_size > 0:
             cond_mapping_channels = 512 if cond_mapping_channels is None \
                 else cond_mapping_channels
             cond_mapping_layers = 8 if cond_mapping_layers is None \
@@ -162,7 +163,7 @@ class StyleGAN2Discriminator(BaseModule):
             self.mapping = MappingNetwork(
                 noise_size=0,
                 style_channels=cond_mapping_channels,
-                cond_channels=cond_channels,
+                cond_size=cond_size,
                 num_ws=None,
                 num_layers=cond_mapping_layers,
                 w_avg_beta=None)
@@ -174,7 +175,7 @@ class StyleGAN2Discriminator(BaseModule):
         self.final_conv = ConvDownLayer(
             in_channels + 1, channels[4], 3, fp16_enabled=fp16_enabled)
 
-        if cond_channels is None or cond_channels <= 0:
+        if cond_size is None or cond_size <= 0:
             final_linear_out_channels = 1
         else:
             final_linear_out_channels = cond_mapping_channels
@@ -200,12 +201,12 @@ class StyleGAN2Discriminator(BaseModule):
         self.load_state_dict(state_dict, strict=strict)
         mmengine.print_log(f'Load pretrained model from {ckpt_path}')
 
-    def forward(self, x: Tensor, cond: Optional[Tensor] = None):
+    def forward(self, x: Tensor, label: Optional[Tensor] = None):
         """Forward function.
 
         Args:
             x (torch.Tensor): Input image tensor.
-            cond (torch.Tensor, optional): The conditional feature feed to
+            label (torch.Tensor, optional): The conditional input feed to
                 mapping layer. Defaults to None.
 
         Returns:
@@ -230,11 +231,11 @@ class StyleGAN2Discriminator(BaseModule):
             x = self.final_linear(x)
 
             # conditioning
-            if cond is not None:
+            if label is not None:
                 assert self.mapping is not None, (
                     '\'self.mapping\' must not be None when conditional input '
                     'is passed.')
-                cmap = self.mapping(None, cond)
+                cmap = self.mapping(None, label)
                 x = (x * cmap).sum(
                     dim=1, keepdim=True) * (1 / np.sqrt(cmap.shape[1]))
 

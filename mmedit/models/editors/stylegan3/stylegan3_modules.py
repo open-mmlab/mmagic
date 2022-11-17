@@ -128,12 +128,12 @@ class MappingNetwork(nn.Module):
 
     Args:
         noise_size (int, optional): Size of the input noise vector.
-        cond_channels(int, optional): Size of the conditional vector.
-            Defaults to None.
         style_channels (int): The number of channels for style code.
         num_ws (int | None): The repeat times of w latent. If None is passed,
             the output will shape like (batch_size, 1), otherwise the output
             will shape like (bz, num_ws, 1).
+        cond_size (int, optional): Size of the conditional input.
+            Defaults to None.
         num_layers (int, optional): The number of layers of mapping network.
             Defaults to 2.
         lr_multiplier (float, optional): Equalized learning rate multiplier.
@@ -146,26 +146,26 @@ class MappingNetwork(nn.Module):
                  noise_size,
                  style_channels,
                  num_ws,
-                 cond_channels=0,
+                 cond_size=0,
                  num_layers=2,
                  lr_multiplier=0.01,
                  w_avg_beta=0.998):
         super().__init__()
         self.noise_size = noise_size
-        self.cond_channels = cond_channels
+        self.cond_size = cond_size
         self.style_channels = style_channels
         self.num_ws = num_ws
         self.num_layers = num_layers
         self.w_avg_beta = w_avg_beta
 
         # Construct layers.
-        if self.cond_channels is not None and self.cond_channels > 0:
-            self.embed = FullyConnectedLayer(self.cond_channels,
+        if self.cond_size is not None and self.cond_size > 0:
+            self.embed = FullyConnectedLayer(self.cond_size,
                                              self.style_channels)
 
         features = [
             self.noise_size +
-            (self.style_channels if self.cond_channels > 0 else 0)
+            (self.style_channels if self.cond_size > 0 else 0)
         ] + [self.style_channels] * self.num_layers
         for idx, in_features, out_features in zip(
                 range(num_layers), features[:-1], features[1:]):
@@ -180,7 +180,7 @@ class MappingNetwork(nn.Module):
 
     def forward(self,
                 z,
-                cond=None,
+                label=None,
                 truncation=1,
                 num_truncation_layer=None,
                 update_emas=False):
@@ -188,7 +188,7 @@ class MappingNetwork(nn.Module):
 
         Args:
             z (torch.Tensor): Input noise tensor.
-            cond (torch.Tensor, optional): Input label tensor.
+            label (torch.Tensor, optional): The conditional input.
                 Defaults to None.
             truncation (float, optional): Truncation factor. Give value less
                 than 1., the truncation trick will be adopted. Defaults to 1.
@@ -209,8 +209,8 @@ class MappingNetwork(nn.Module):
         if self.noise_size > 0:
             x = z.to(torch.float32)
             x = x * (x.square().mean(1, keepdim=True) + 1e-8).rsqrt()
-        if self.cond_channels > 0:
-            y = self.embed(cond.to(torch.float32))
+        if self.cond_size > 0:
+            y = self.embed(label.to(torch.float32))
             y = y * (y.square().mean(1, keepdim=True) + 1e-8).rsqrt()
             x = torch.cat([x, y], dim=1) if x is not None else y
 

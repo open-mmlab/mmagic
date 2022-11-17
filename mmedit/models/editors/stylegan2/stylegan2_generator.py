@@ -56,9 +56,16 @@ class StyleGAN2Generator(nn.Module):
     Args:
         out_size (int): The output size of the StyleGAN2 generator.
         style_channels (int): The number of channels for style code.
-        noise_noise (int, optional): The size of (number of channels) the input
+        out_channels (int): The number of channels for output. Defaults to 3.
+        noise_size (int, optional): The size of (number of channels) the input
             noise. If not passed, will be set the same value as
             :attr:`style_channels`. Defaults to None.
+        cond_size (int, optional): The size of the conditional input. If not
+            passed or less than 1, no conditional embedding will be used.
+            Defaults to None.
+        cond_mapping_channels (int, optional): The channels of the
+            conditional mapping layers. If not passed, will use the same value
+            as :attr:`style_channels`. Defaults to None.
         num_mlps (int, optional): The number of MLP layers. Defaults to 8.
         channel_multiplier (int, optional): The multiplier factor for the
             channel number. Defaults to 2.
@@ -93,7 +100,7 @@ class StyleGAN2Generator(nn.Module):
                  style_channels,
                  out_channels=3,
                  noise_size=None,
-                 cond_channels=None,
+                 cond_size=None,
                  cond_mapping_channels=None,
                  num_mlps=8,
                  channel_multiplier=2,
@@ -124,12 +131,11 @@ class StyleGAN2Generator(nn.Module):
 
         self.noise_size = style_channels if noise_size is None else noise_size
 
-        self.cond_channels = cond_channels
-        if self.cond_channels is not None and self.cond_channels > 0:
+        self.cond_size = cond_size
+        if self.cond_size is not None and self.cond_size > 0:
             cond_mapping_channels = style_channels \
                 if cond_mapping_channels is None else cond_mapping_channels
-            self.embed = EqualLinearActModule(cond_channels,
-                                              cond_mapping_channels)
+            self.embed = EqualLinearActModule(cond_size, cond_mapping_channels)
         else:
             cond_mapping_channels = 0
         in_feat = cond_mapping_channels + self.noise_size
@@ -306,7 +312,7 @@ class StyleGAN2Generator(nn.Module):
     # @auto_fp16()
     def forward(self,
                 styles,
-                cond=None,
+                label=None,
                 num_batches=-1,
                 return_noise=False,
                 return_latents=False,
@@ -331,7 +337,7 @@ class StyleGAN2Generator(nn.Module):
                 offer a callable function to sample a batch of noise data.
                 Otherwise, the ``None`` indicates to use the default noise
                 sampler.
-            cond (torch.Tensor, optional): Conditional inputs for the
+            label (torch.Tensor, optional): Conditional inputs for the
                 generator. Defaults to None.
             num_batches (int, optional): The number of batch size.
                 Defaults to 0.
@@ -398,17 +404,17 @@ class StyleGAN2Generator(nn.Module):
             noise_batch = styles
             # NOTE: do pixel_norm (2nd_momuent_norm) to noise input
             styles = [self.pixel_norm(s) for s in styles]
-            if self.cond_channels is not None and self.cond_channels > 0:
-                assert cond is not None, (
+            if self.cond_size is not None and self.cond_size > 0:
+                assert label is not None, (
                     '\'cond_channels\' is not None, \'cond\' must be passed.')
-                assert cond.shape[1] == self.cond_channels
-                embedding = self.embed(cond)
+                assert label.shape[1] == self.cond_size
+                embedding = self.embed(label)
                 # NOTE: do pixel_norm (2nd_momuent_norm) to cond embedding
                 embedding = self.pixel_norm(embedding)
 
             styles_list = []
             for s in styles:
-                if self.cond_channels is not None and self.cond_channels > 0:
+                if self.cond_size is not None and self.cond_size > 0:
                     s = torch.cat([s, embedding], dim=1)
                 styles_list.append(self.style_mapping(s))
 

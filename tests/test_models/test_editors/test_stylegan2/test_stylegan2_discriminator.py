@@ -32,7 +32,7 @@ class TestStyleGANv2Disc:
         assert score.shape == (2, 1)
 
         cfg = deepcopy(self.default_cfg)
-        cfg['cond_channels'] = 5
+        cfg['cond_size'] = 5
         cfg['cond_mapping_channels'] = 16
 
         d = StyleGAN2Discriminator(**cfg)
@@ -47,7 +47,7 @@ class TestStyleGANv2Disc:
         assert score.shape == (2, 1)
 
         cfg = deepcopy(self.default_cfg)
-        cfg['cond_channels'] = 5
+        cfg['cond_size'] = 5
         cfg['cond_mapping_channels'] = 16
 
         d = StyleGAN2Discriminator(**cfg).cuda()
