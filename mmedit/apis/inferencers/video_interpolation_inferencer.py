@@ -179,7 +179,8 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
                self.extra_parameters['end_idx']:
                 break
 
-        print(f'Output dir: {result_out_dir}')
+        logger: MMLogger = MMLogger.get_current_instance()
+        logger.info(f'Output video is save at {result_out_dir}.')
         if to_video:
             target.release()
 

@@ -197,3 +197,25 @@ class MMEdit:
             raise ValueError(f'Model {model_name} is not supported.')
         else:
             return self.inference_supported_models[model_name]
+
+    @staticmethod
+    def get_inference_supported_models() -> List:
+        return list(MMEdit.inference_supported_models.keys())
+
+    @staticmethod
+    def get_inference_supported_tasks() -> List:
+        supported_task = set()
+        for key in MMEdit.inference_supported_models.keys():
+            if MMEdit.inference_supported_models[key]['task'] \
+               not in supported_task:
+                supported_task.add(
+                    MMEdit.inference_supported_models[key]['task'])
+        return list(supported_task)
+
+    @staticmethod
+    def get_task_supported_models(task: str) -> List:
+        supported_models = []
+        for key in MMEdit.inference_supported_models.keys():
+            if MMEdit.inference_supported_models[key]['task'] == task:
+                supported_models.append(key)
+        return supported_models

@@ -173,6 +173,9 @@ class VideoRestorationInferencer(BaseMMEditInferencer):
 
                 mmcv.imwrite(output_i, save_path_i)
 
+        logger: MMLogger = MMLogger.get_current_instance()
+        logger.info(f'Output video is save at {result_out_dir}.')
+
         return []
 
     def postprocess(

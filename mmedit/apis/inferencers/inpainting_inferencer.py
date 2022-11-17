@@ -1,9 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os
 from typing import Dict, List
 
 import mmcv
 import numpy as np
 import torch
+from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 from torch.nn.parallel import scatter
@@ -86,6 +88,7 @@ class InpaintingInferencer(BaseMMEditInferencer):
 
         result = tensor2img(result)[..., ::-1]
         if result_out_dir:
+            mkdir_or_exist(os.path.dirname(result_out_dir))
             mmcv.imwrite(result, result_out_dir)
 
         return result
