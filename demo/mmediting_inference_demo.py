@@ -35,8 +35,8 @@ def parse_args():
         help='Pretrained editing algorithm')
     parser.add_argument(
         '--model-setting',
-        type=str,
-        default='a',
+        type=int,
+        default=None,
         help='Pretrained editing algorithm setting')
     parser.add_argument(
         '--model-config',

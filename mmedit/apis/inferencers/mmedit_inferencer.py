@@ -19,7 +19,7 @@ class MMEditInferencer(BaseMMEditInferencer):
     """Class to assign task to different inferencers.
 
     Args:
-        type (str): Inferencer type.
+        task (str): Inferencer task.
         config (str or ConfigType): Model config or the path to it.
         ckpt (str, optional): Path to the checkpoint.
         device (str, optional): Device to run inference. If None, the best
@@ -28,39 +28,39 @@ class MMEditInferencer(BaseMMEditInferencer):
 
     def __init__(
         self,
-        type: Optional[str] = None,
+        task: Optional[str] = None,
         config: Optional[Union[ConfigType, str]] = None,
         ckpt: Optional[str] = None,
         device: torch.device = None,
         extra_parameters: Optional[Dict] = None,
     ) -> None:
-        self.type = type
-        if self.type == 'conditional':
+        self.task = task
+        if self.task == 'conditional':
             self.inferencer = ConditionalInferencer(config, ckpt, device,
                                                     extra_parameters)
-        elif self.type == 'unconditional':
+        elif self.task == 'unconditional':
             self.inferencer = UnconditionalInferencer(config, ckpt, device,
                                                       extra_parameters)
-        elif self.type == 'matting':
+        elif self.task == 'matting':
             self.inferencer = MattingInferencer(config, ckpt, device,
                                                 extra_parameters)
-        elif self.type == 'inpainting':
+        elif self.task == 'inpainting':
             self.inferencer = InpaintingInferencer(config, ckpt, device,
                                                    extra_parameters)
-        elif self.type == 'translation':
+        elif self.task == 'translation':
             self.inferencer = TranslationInferencer(config, ckpt, device,
                                                     extra_parameters)
-        elif self.type == 'restoration':
+        elif self.task == 'restoration':
             self.inferencer = RestorationInferencer(config, ckpt, device,
                                                     extra_parameters)
-        elif self.type == 'video_restoration':
+        elif self.task == 'video_restoration':
             self.inferencer = VideoRestorationInferencer(
                 config, ckpt, device, extra_parameters)
-        elif self.type == 'video_interpolation':
+        elif self.task == 'video_interpolation':
             self.inferencer = VideoInterpolationInferencer(
                 config, ckpt, device, extra_parameters)
         else:
-            raise ValueError(f'Unknown inferencer type: {self.type}')
+            raise ValueError(f'Unknown inferencer task: {self.task}')
 
     def __call__(self, **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.

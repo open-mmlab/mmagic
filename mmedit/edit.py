@@ -1,9 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
+import os.path as osp
 import warnings
 from typing import Dict, List, Optional, Union
 
 import torch
+import yaml
 
 from mmedit.apis.inferencers import MMEditInferencer
 from mmedit.apis.inferencers.base_mmedit_inferencer import InputsType
@@ -39,148 +41,80 @@ class MMEdit:
     inference_supported_models = {
         # conditional models
         'biggan': {
-            'type': 'conditional',
-            'setting': {
-                'a': {
-                    'config':
-                    'biggan/biggan_2xb25-500kiters_cifar10-32x32.py',
-                    'ckpt':
-                    'https://download.openmmlab.com/mmgen/biggan/biggan_cifar10_32x32_b25x2_500k_20210728_110906-08b61a44.pth'  # noqa: E501
-                },
-                'b': {
-                    'config':
-                    'biggan/biggan_ajbrock-sn_8xb32-1500kiters_imagenet1k-128x128.py',  # noqa: E501
-                    'ckpt':
-                    'https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_b32x8_best_fid_iter_1232000_20211111_122548-5315b13d.pth'  # noqa: E501
-                }
-            },
+            'task': 'conditional',
+            'default_setting': 0
         },
 
         # unconditional models
         'styleganv1': {
-            'type': 'unconditional',
-            'setting': {
-                'a': {
-                    'config':
-                    'styleganv1/styleganv1_ffhq-256x256_8xb4-25Mimgs.py',
-                    'ckpt':
-                    'https://download.openmmlab.com/mmgen/styleganv1/styleganv1_ffhq_256_g8_25Mimg_20210407_161748-0094da86.pth'  # noqa: E501
-                }
-            }
+            'task': 'unconditional',
+            'default_setting': 0
         },
 
         # matting models
         'gca': {
-            'type': 'matting',
-            'setting': {
-                'a': {
-                    'config':
-                    'gca/gca_r34_4xb10-200k_comp1k.py',
-                    'ckpt':
-                    'https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth'  # noqa: E501
-                }
-            }
+            'task': 'matting',
+            'default_setting': 1
         },
 
         # inpainting models
         'aot_gan': {
-            'type': 'inpainting',
-            'setting': {
-                'a': {
-                    'config':
-                    'aot_gan/aot-gan_smpgan_4xb4_places-512x512.py',
-                    'ckpt':
-                    'https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth'  # noqa: E501
-                }
-            }
+            'task': 'inpainting',
+            'default_setting': 0
         },
 
         # translation models
         'pix2pix': {
-            'type': 'translation',
-            'setting': {
-                'a': {
-                    'config':
-                    'pix2pix/pix2pix_vanilla-unet-bn_1xb1-80kiters_facades.py',  # noqa: E501
-                    'ckpt':
-                    'https://download.openmmlab.com/mmgen/pix2pix/refactor/pix2pix_vanilla_unet_bn_1x1_80k_facades_20210902_170442-c0958d50.pth'  # noqa: E501
-                }
-            }
+            'task': 'translation',
+            'default_setting': 0
         },
 
         # restoration models
-        # real_esrgan error
-        'real_esrgan': {
-            'type': 'restoration',
-            'setting': {
-                'a': {
-                    'config':
-                    'real_esrgan/realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py',  # noqa: E501
-                    'ckpt':
-                    'https://download.openmmlab.com/mmediting/restorers/real_esrgan/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth'  # noqa: E501
-                },
-            }
-        },
         'esrgan': {
-            'type': 'restoration',
-            'setting': {
-                'a': {
-                    'config':
-                    'esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py',  # noqa: E501
-                    'ckpt':
-                    'https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth'  # noqa: E501
-                }
-            }
+            'task': 'restoration',
+            'default_setting': 0
         },
 
         # video_restoration models
         'basicvsr': {
-            'type': 'video_restoration',
-            'setting': {
-                'a': {
-                    'config':
-                    'basicvsr/basicvsr_2xb4_reds4.py',
-                    'ckpt':
-                    'https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth'  # noqa: E501
-                },
-                'b': {
-                    'config':
-                    'basicvsr/basicvsr_2xb4_vimeo90k-bi.py',
-                    'ckpt':
-                    'https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_vimeo90k_bi_20210409-d2d8f760.pth'  # noqa: E501
-                }
-            }
+            'task': 'video_restoration',
+            'default_setting': 0
         },
 
         # video_interpolation models
         'flavr': {
-            'type': 'video_interpolation',
-            'setting': {
-                'a': {
-                    'config':
-                    'flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py',  # noqa: E501
-                    'ckpt':
-                    'https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth'  # noqa: E501
-                }
-            }
-        }
+            'task': 'video_interpolation',
+            'default_setting': 0
+        },
     }
 
     def __init__(self,
                  model_name: str = None,
-                 model_setting: str = 'a',
+                 model_setting: int = None,
                  model_config: str = None,
                  model_ckpt: str = None,
                  device: torch.device = None,
                  extra_parameters: Dict = None,
                  **kwargs) -> None:
         register_all_modules(init_default_scope=True)
+        self._init_inference_supported_models_cfg()
         inferencer_kwargs = {}
         inferencer_kwargs.update(
             self._get_inferencer_kwargs(model_name, model_setting,
                                         model_config, model_ckpt,
                                         extra_parameters))
         self.inferencer = MMEditInferencer(device=device, **inferencer_kwargs)
+
+    def _init_inference_supported_models_cfg(self) -> None:
+        all_cfgs_dir = osp.join(osp.dirname(__file__), '..', 'configs')
+        supported_models = self.inference_supported_models.keys()
+
+        for key in supported_models:
+            meta_file_dir = osp.join(all_cfgs_dir, key, 'metafile.yml')
+            with open(meta_file_dir, 'r') as stream:
+                parsed_yaml = yaml.safe_load(stream)
+            self.inference_supported_models[key]['settings'] = \
+                parsed_yaml['Models']
 
     def _get_inferencer_kwargs(self, model_name: Optional[str],
                                model_setting: Optional[str],
@@ -192,12 +126,15 @@ class MMEdit:
 
         if model_name is not None:
             cfgs = self.get_model_config(model_name)
-            kwargs['type'] = cfgs['type']
+            kwargs['task'] = cfgs['task']
+            setting_to_use = cfgs['default_setting']
+            if model_setting:
+                setting_to_use = model_setting
+            config_dir = cfgs['settings'][setting_to_use]['Config']
+            config_dir = config_dir[config_dir.find('configs'):]
             kwargs['config'] = os.path.join(
-                'configs/', cfgs['setting'][model_setting]['config'])
-            kwargs['ckpt'] = cfgs['setting'][model_setting]['ckpt']
-            # kwargs['ckpt'] = 'https://download.openmmlab.com/' + \
-            # f'mmediting/{cfgs["version"][model_setting]["ckpt"]}'
+                osp.dirname(__file__), '..', config_dir)
+            kwargs['ckpt'] = cfgs['settings'][setting_to_use]['Weights']
 
         if model_config is not None:
             if kwargs.get('config', None) is not None:
