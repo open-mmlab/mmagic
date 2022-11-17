@@ -62,3 +62,6 @@ param_scheduler = dict(
     by_epoch=False,
     milestones=[50000, 100000, 200000, 300000],
     gamma=0.5)
+
+train_cfg = dict(
+    type='IterBasedTrainLoop', max_iters=400_000, val_interval=5000)
