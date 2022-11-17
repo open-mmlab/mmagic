@@ -26,6 +26,8 @@ class BaseCamera(BaseModule):
             range in radian. Defaults to None.
         look_at (Optional[List, torch.Tensor]): The look at position of the
             camera. Defaults to None.
+        FOV (Optional[float]): The FOV (field-of-view) in degree. Defaults
+            to None.
         up (Optional[List, torch.Tensor]): The up direction of the world
             coordinate. Defaults to None.
         radius (Optional[float]): Radius of the sphere. Defaults to None.
