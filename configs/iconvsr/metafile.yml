@@ -22,7 +22,7 @@ Models:
       Vid4 (BIx4) PSNR (Y): 27.4809
       Vimeo-90K-T (BDx4) PSNR (Y): 34.4299
       Vimeo-90K-T (BIx4) PSNR (Y): 36.4983
-    Task: Iconvsr
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
 - Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bi.py
   In Collection: IconVSR
@@ -39,7 +39,7 @@ Models:
       Vid4 (BIx4) PSNR (Y): 27.4238
       Vimeo-90K-T (BDx4) PSNR (Y): 34.5548
       Vimeo-90K-T (BIx4) PSNR (Y): 37.3729
-    Task: Iconvsr
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413-7c7418dc.pth
 - Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bd.py
   In Collection: IconVSR
@@ -56,7 +56,7 @@ Models:
       Vid4 (BIx4) PSNR (Y): 26.3109
       Vimeo-90K-T (BDx4) PSNR (Y): 37.7573
       Vimeo-90K-T (BIx4) PSNR (Y): 34.678
-    Task: Iconvsr
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bd_20210414-5f38cb34.pth
 - Config: configs/iconvsr/iconvsr_2xb4_reds4.py
   In Collection: IconVSR
@@ -73,7 +73,7 @@ Models:
       Vid4 (BIx4) SSIM (Y): 0.8354
       Vimeo-90K-T (BDx4) SSIM (Y): 0.9287
       Vimeo-90K-T (BIx4) SSIM (Y): 0.9416
-    Task: Iconvsr
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
 - Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bi.py
   In Collection: IconVSR
@@ -90,7 +90,7 @@ Models:
       Vid4 (BIx4) SSIM (Y): 0.8297
       Vimeo-90K-T (BDx4) SSIM (Y): 0.9295
       Vimeo-90K-T (BIx4) SSIM (Y): 0.9467
-    Task: Iconvsr
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413-7c7418dc.pth
 - Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bd.py
   In Collection: IconVSR
@@ -107,5 +107,5 @@ Models:
       Vid4 (BIx4) SSIM (Y): 0.8028
       Vimeo-90K-T (BDx4) SSIM (Y): 0.9517
       Vimeo-90K-T (BIx4) SSIM (Y): 0.9339
-    Task: Iconvsr
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bd_20210414-5f38cb34.pth
