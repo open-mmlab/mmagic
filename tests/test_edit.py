@@ -16,6 +16,13 @@ def test_edit():
     with pytest.raises(Exception):
         MMEdit()
 
+    supported_models = MMEdit.get_inference_supported_models()
+    supported_tasks = MMEdit.get_inference_supported_tasks()
+    task_supported_models = MMEdit.get_task_supported_models('translation')
+    print(supported_models)
+    print(supported_tasks)
+    print(task_supported_models)
+
     cfg = osp.join(
         osp.dirname(__file__), '..', 'configs', 'biggan',
         'biggan_2xb25-500kiters_cifar10-32x32.py')
