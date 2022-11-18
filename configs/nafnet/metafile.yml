@@ -16,7 +16,7 @@ Models:
   Results:
   - Dataset: Others
     Metrics: {}
-    Task: Nafnet
+    Task: Image Restoration
   Weights: https://download.openmmlab.com/mmediting/nafnet/NAFNet-SIDD-midc64.pth
 - Config: configs/nafnet/nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro.py
   In Collection: NAFNet
@@ -27,5 +27,5 @@ Models:
   Results:
   - Dataset: Others
     Metrics: {}
-    Task: Nafnet
+    Task: Image Restoration
   Weights: https://download.openmmlab.com/mmediting/nafnet/NAFNet-GoPro-midc64.pth
