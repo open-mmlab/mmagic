@@ -38,47 +38,34 @@ class MMEdit:
 
         >>> # see demo/mmediting_inference_tutorial.ipynb for more examples
     """
-    inference_supported_models = {
+    inference_supported_models = [
         # conditional models
-        'biggan': {
-            'task': 'conditional'
-        },
+        'biggan',
 
         # unconditional models
-        'styleganv1': {
-            'task': 'unconditional'
-        },
+        'styleganv1',
 
         # matting models
-        'gca': {
-            'task': 'matting'
-        },
+        'gca',
 
         # inpainting models
-        'aot_gan': {
-            'task': 'inpainting'
-        },
+        'aot_gan',
 
         # translation models
-        'pix2pix': {
-            'task': 'translation'
-        },
+        'pix2pix',
 
         # restoration models
-        'esrgan': {
-            'task': 'restoration'
-        },
-
-        # video_restoration models
-        'basicvsr': {
-            'task': 'video_restoration'
-        },
+        'esrgan',
 
         # video_interpolation models
-        'flavr': {
-            'task': 'video_interpolation'
-        },
-    }
+        'flavr',
+
+        # video_restoration models
+        'basicvsr',
+    ]
+
+    inference_supported_models_cfg = {}
+    inference_supported_models_cfg_inited = False
 
     def __init__(self,
                  model_name: str = None,
@@ -89,24 +76,13 @@ class MMEdit:
                  extra_parameters: Dict = None,
                  **kwargs) -> None:
         register_all_modules(init_default_scope=True)
-        self._init_inference_supported_models_cfg()
+        MMEdit.init_inference_supported_models_cfg()
         inferencer_kwargs = {}
         inferencer_kwargs.update(
             self._get_inferencer_kwargs(model_name, model_setting,
                                         model_config, model_ckpt,
                                         extra_parameters))
         self.inferencer = MMEditInferencer(device=device, **inferencer_kwargs)
-
-    def _init_inference_supported_models_cfg(self) -> None:
-        all_cfgs_dir = osp.join(osp.dirname(__file__), '..', 'configs')
-        supported_models = self.inference_supported_models.keys()
-
-        for key in supported_models:
-            meta_file_dir = osp.join(all_cfgs_dir, key, 'metafile.yml')
-            with open(meta_file_dir, 'r') as stream:
-                parsed_yaml = yaml.safe_load(stream)
-            self.inference_supported_models[key]['settings'] = \
-                parsed_yaml['Models']
 
     def _get_inferencer_kwargs(self, model_name: Optional[str],
                                model_setting: Optional[int],
@@ -196,26 +172,54 @@ class MMEdit:
         if model_name not in self.inference_supported_models:
             raise ValueError(f'Model {model_name} is not supported.')
         else:
-            return self.inference_supported_models[model_name]
+            return self.inference_supported_models_cfg[model_name]
+
+    @staticmethod
+    def init_inference_supported_models_cfg() -> None:
+        if not MMEdit.inference_supported_models_cfg_inited:
+            all_cfgs_dir = osp.join(osp.dirname(__file__), '..', 'configs')
+
+            for model_name in MMEdit.inference_supported_models:
+                meta_file_dir = osp.join(all_cfgs_dir, model_name,
+                                         'metafile.yml')
+                with open(meta_file_dir, 'r') as stream:
+                    parsed_yaml = yaml.safe_load(stream)
+                task = parsed_yaml['Models'][0]['Results'][0]['Task']
+                MMEdit.inference_supported_models_cfg[model_name] = {}
+                MMEdit.inference_supported_models_cfg[model_name][
+                    'task'] = task  # noqa
+                MMEdit.inference_supported_models_cfg[model_name][
+                    'settings'] = parsed_yaml['Models']  # noqa
+
+            MMEdit.inference_supported_models_cfg_inited = True
 
     @staticmethod
     def get_inference_supported_models() -> List:
-        return list(MMEdit.inference_supported_models.keys())
+        """static function for getting inference supported modes."""
+        return MMEdit.inference_supported_models
 
     @staticmethod
     def get_inference_supported_tasks() -> List:
+        """static function for getting inference supported tasks."""
+        if not MMEdit.inference_supported_models_cfg_inited:
+            MMEdit.init_inference_supported_models_cfg()
+
         supported_task = set()
-        for key in MMEdit.inference_supported_models.keys():
-            if MMEdit.inference_supported_models[key]['task'] \
+        for key in MMEdit.inference_supported_models_cfg.keys():
+            if MMEdit.inference_supported_models_cfg[key]['task'] \
                not in supported_task:
                 supported_task.add(
-                    MMEdit.inference_supported_models[key]['task'])
+                    MMEdit.inference_supported_models_cfg[key]['task'])
         return list(supported_task)
 
     @staticmethod
     def get_task_supported_models(task: str) -> List:
+        """static function for getting task supported models."""
+        if not MMEdit.inference_supported_models_cfg_inited:
+            MMEdit.init_inference_supported_models_cfg()
+
         supported_models = []
-        for key in MMEdit.inference_supported_models.keys():
-            if MMEdit.inference_supported_models[key]['task'] == task:
+        for key in MMEdit.inference_supported_models_cfg.keys():
+            if MMEdit.inference_supported_models_cfg[key]['task'] == task:
                 supported_models.append(key)
         return supported_models

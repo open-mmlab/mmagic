@@ -35,28 +35,28 @@ class MMEditInferencer(BaseMMEditInferencer):
         extra_parameters: Optional[Dict] = None,
     ) -> None:
         self.task = task
-        if self.task == 'conditional':
+        if self.task in ['conditional', 'Conditional GANs']:
             self.inferencer = ConditionalInferencer(config, ckpt, device,
                                                     extra_parameters)
-        elif self.task == 'unconditional':
+        elif self.task in ['unconditional', 'Unconditional GANs']:
             self.inferencer = UnconditionalInferencer(config, ckpt, device,
                                                       extra_parameters)
-        elif self.task == 'matting':
+        elif self.task in ['matting', 'Matting']:
             self.inferencer = MattingInferencer(config, ckpt, device,
                                                 extra_parameters)
-        elif self.task == 'inpainting':
+        elif self.task in ['inpainting', 'Inpainting']:
             self.inferencer = InpaintingInferencer(config, ckpt, device,
                                                    extra_parameters)
-        elif self.task == 'translation':
+        elif self.task in ['translation', 'Image2Image Translation']:
             self.inferencer = TranslationInferencer(config, ckpt, device,
                                                     extra_parameters)
-        elif self.task == 'restoration':
+        elif self.task in ['restoration', 'Image Super-Resolution']:
             self.inferencer = RestorationInferencer(config, ckpt, device,
                                                     extra_parameters)
-        elif self.task == 'video_restoration':
+        elif self.task in ['video_restoration', 'Video Super-Resolution']:
             self.inferencer = VideoRestorationInferencer(
                 config, ckpt, device, extra_parameters)
-        elif self.task == 'video_interpolation':
+        elif self.task in ['video_interpolation', 'Video Interpolation']:
             self.inferencer = VideoInterpolationInferencer(
                 config, ckpt, device, extra_parameters)
         else:
