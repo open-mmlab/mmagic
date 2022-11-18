@@ -1,6 +1,7 @@
+exclude: ^tests/data/
 repos:
-  - repo: https://gitlab.com/pycqa/flake8.git
-    rev: 3.7.9
+  - repo: https://github.com/PyCQA/flake8
+    rev: 4.0.1
     hooks:
       - id: flake8
   - repo: https://github.com/PyCQA/isort
@@ -8,15 +9,17 @@ repos:
     hooks:
       - id: isort
   - repo: https://github.com/pre-commit/mirrors-yapf
-    rev: v0.29.0
+    rev: v0.30.0
     hooks:
       - id: yapf
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.1.0
     hooks:
       - id: trailing-whitespace
+        exclude: ^dicts/
       - id: check-yaml
       - id: end-of-file-fixer
+        exclude: ^dicts/
       - id: requirements-txt-fixer
       - id: double-quote-string-fixer
       - id: check-merge-conflict
@@ -24,30 +27,40 @@ repos:
         args: ["--remove"]
       - id: mixed-line-ending
         args: ["--fix=lf"]
-  - repo: https://github.com/markdownlint/markdownlint
-    rev: v0.11.0
-    hooks:
-      - id: markdownlint
-        args: ["-r", "~MD002,~MD013,~MD029,~MD033,~MD034",
-              "-t", "allow_different_nesting"]
   - repo: https://github.com/codespell-project/codespell
     rev: v2.1.0
     hooks:
       - id: codespell
-        args: ["--skip", "*.ipynb,tools/data/hvu/label_map.json,configs/restorers/srresnet_srgan/*.md", "-L", "formating,te,nd,thre,Gool,gool"]
+        args: ["--skip", "*.ipynb", "-L", "formating,theis,te,nd,thre,Gool,gool,lod,patten,confectionary"]
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.9
+    hooks:
+      - id: mdformat
+        args: ["--number", "--table-width", "200"]
+        # language_version: python3.7
+        additional_dependencies:
+          - mdformat-openmmlab
+          - mdformat_frontmatter
+          - linkify-it-py
   - repo: local
     hooks:
       - id: update-model-index
         name: update-model-index
         description: Collect model information and update model-index.yml
-        entry: .dev_scripts/github/update_model_index.py
-        additional_dependencies: [mmcv]
+        entry: .dev_scripts/update_model_index.py
+        additional_dependencies: [mmengine]
         language: python
         files: ^configs/.*\.md$
         require_serial: true
+  - repo: https://github.com/myint/docformatter
+    rev: v1.3.1
+    hooks:
+      - id: docformatter
+        args: ["--in-place", "--wrap-descriptions", "79"]
   - repo: https://github.com/open-mmlab/pre-commit-hooks
-    rev: v0.2.0
+    rev: v0.4.0  # Use the ref you want to point at
     hooks:
       - id: check-algo-readme
       - id: check-copyright
         args: ["demo", "mmedit", "tests", "tools"]
+      - id: remove-improper-eol-in-cn-docs

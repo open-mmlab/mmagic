@@ -3,8 +3,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from ..registry import LOSSES
-from .utils import masked_loss
+from mmedit.registry import LOSSES
+from .loss_wrapper import masked_loss
 
 _reduction_modes = ['none', 'mean', 'sum']
 
@@ -44,6 +44,8 @@ def charbonnier_loss(pred, target, eps=1e-12):
     Args:
         pred (Tensor): Prediction Tensor with shape (n, c, h, w).
         target ([type]): Target Tensor with shape (n, c, h, w).
+        eps (float): A value used to control the curvature near zero.
+            Default: 1e-12.
 
     Returns:
         Tensor: Calculated Charbonnier loss.
@@ -137,8 +139,8 @@ class MSELoss(nn.Module):
 
 @LOSSES.register_module()
 class CharbonnierLoss(nn.Module):
-    """Charbonnier loss (one variant of Robust L1Loss, a differentiable
-    variant of L1Loss).
+    """Charbonnier loss (one variant of Robust L1Loss, a differentiable variant
+    of L1Loss).
 
     Described in "Deep Laplacian Pyramid Networks for Fast and Accurate
         Super-Resolution".
@@ -193,8 +195,8 @@ class CharbonnierLoss(nn.Module):
 class MaskedTVLoss(L1Loss):
     """Masked TV loss.
 
-        Args:
-            loss_weight (float, optional): Loss weight. Defaults to 1.0.
+    Args:
+        loss_weight (float, optional): Loss weight. Defaults to 1.0.
     """
 
     def __init__(self, loss_weight=1.0):
@@ -219,3 +221,30 @@ class MaskedTVLoss(L1Loss):
         loss = x_diff + y_diff
 
         return loss
+
+
+@LOSSES.register_module()
+class PSNRLoss(nn.Module):
+    """PSNR Loss in "HINet: Half Instance Normalization Network for Image
+    Restoration".
+
+    Args:
+        loss_weight (float, optional): Loss weight. Defaults to 1.0.
+        reduction: reduction for PSNR. Can only be mean here.
+        toY: change to calculate the PSNR of Y channel in YCbCr format
+    """
+
+    def __init__(self, loss_weight=1.0, toY=False):
+        super(PSNRLoss, self).__init__()
+        self.loss_weight = loss_weight
+        import numpy as np
+        self.scale = 10 / np.log(10)
+        self.toY = toY
+        self.coef = torch.tensor([65.481, 128.553, 24.966]).reshape(1, 3, 1, 1)
+        self.first = True
+
+    def forward(self, pred, target):
+        assert len(pred.size()) == 4
+
+        return self.loss_weight * self.scale * torch.log((
+            (pred - target)**2).mean(dim=(1, 2, 3)) + 1e-8).mean()

@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="resources/mmediting-logo.png" width="500px"/>
+  <img src="docs/en/_static/image/mmediting-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
     <b><font size="5">OpenMMLab website</font></b>
@@ -19,37 +19,66 @@
   <div>&nbsp;</div>
 
 [![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/latest/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/1.x/)
 [![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/1.x/LICENSE)
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘Documentation](https://mmediting.readthedocs.io/en/latest/) |
-[🛠️Installation](https://mmediting.readthedocs.io/en/latest/install.html) |
-[👀Model Zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) |
-[🆕Update News](https://github.com/open-mmlab/mmediting/blob/master/docs/en/changelog.md) |
+[📘Documentation](https://mmediting.readthedocs.io/en/1.x/) |
+[🛠️Installation](https://mmediting.readthedocs.io/en/1.x/2_get_started.html#installation) |
+[👀Model Zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) |
+[🆕Update News](docs/en/notes/3_changelog.md) |
 [🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
 [🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
 
 </div>
 
-## Introduction
-
 English | [简体中文](/README_zh-CN.md)
 
-MMEditing is an open source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://open-mmlab.github.io/) project.
+## Introduction
+
+MMEditing is an open-source image and video editing&generating toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+
+Currently, MMEditing support the following tasks:
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/22982797/191167628-2ac529d6-6614-4b53-ad65-0cfff909aa7d.jpg"/>
+</div>
 
 The master branch works with **PyTorch 1.5+**.
 
-<div align="center">
-  <img src="resources/mmediting-demo.jpg"/>
-</div>
+Some Demos:
 
+https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4
+
+https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
+
+<table align="center">
+<thead>
+  <tr>
+    <td>
 <div align="center">
-<video src="https://user-images.githubusercontent.com/56712176/153550102-fdbd3ac8-cd20-416c-a5dc-4dbfbb97fdaa.mp4" width="520px" height="220px"/>
-</div>
+  <b> GAN Interpolation</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12726765/114679300-9fd4f900-9d3e-11eb-8f37-c36a018c02f7.gif" width="200"/>
+</div></td>
+    <td>
+<div align="center">
+  <b> GAN Projector</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12726765/114524392-c11ee200-9c77-11eb-8b6d-37bc637f5626.gif" width="200"/>
+</div></td>
+    <td>
+<div align="center">
+  <b> GAN Manipulation</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12726765/114523716-20302700-9c77-11eb-804e-327ae1ca0c5b.gif" width="200"/>
+</div></td>
+  </tr>
+</thead>
+</table>
 
 ### Major features
 
@@ -57,36 +86,77 @@ The master branch works with **PyTorch 1.5+**.
 
   We decompose the editing framework into different components and one can easily construct a customized editor framework by combining different modules.
 
-- **Support of multiple tasks in editing**
+- **Support of multiple tasks**
 
-  The toolbox directly supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *generation* tasks.
+  The toolbox directly supports popular and contemporary *inpainting*, *matting*, *super-resolution*, *interpolation* and *generation* tasks.
+
+- **Efficient Distributed Training for Generative Models:**
+
+  With support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
 
 - **State of the art**
 
-  The toolbox provides state-of-the-art methods in inpainting/matting/super-resolution/generation.
+  The toolbox provides state-of-the-art methods in inpainting/matting/super-resolution/interpolation/generation.
 
 Note that **MMSR** has been merged into this repo, as a part of MMEditing.
 With elaborate designs of the new framework and careful implementations,
 hope MMEditing could provide better experience.
 
-## News
+## What's New
 
-- [2022-03-01] v0.13.0 was released.
-  - Support CAIN
-  - Support EDVR-L
-  - Support running in Windows
-- [2022-02-11] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
-- [2022-01-21] Support video frame interplation: CAIN
+### 🌟 Preview of 1.x version
+
+A brand new version of [**MMEditing v1.0.0rc3**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc3) was released in 09/11/2022:
+
+- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍。
+- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
+- Support patch-based and slider-based image and video comparison viewer.
+- Support image colorization.
+- Convert `mmdet` and `clip` to optional requirements.
+
+Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
+
+### 💎 Stable version
+
+**0.16.0** was released in 31/10/2022:
+
+- `VisualizationHook` is deprecated. Users should use `MMEditVisualizationHook` instead.
+- Fix FLAVR register.
+- Fix the number of channels in RDB.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
 ## Installation
 
-Please refer to [install.rst](docs/en/install.rst) for installation.
+MMEditing depends on [PyTorch](https://pytorch.org/), [MMEngine](https://github.com/open-mmlab/mmengine) and [MMCV](https://github.com/open-mmlab/mmcv).
+Below are quick steps for installation.
+
+**Step 1.**
+Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/).
+
+**Step 2.**
+Install MMCV with [MIM](https://github.com/open-mmlab/mim).
+
+```shell
+pip3 install openmim
+# wait for more pre-compiled pkgs to release
+mim install 'mmcv>=2.0.0rc1'
+```
+
+**Step 3.**
+Install MMEditing from source.
+
+```shell
+git clone -b 1.x https://github.com/open-mmlab/mmediting.git
+cd mmediting
+pip3 install -e .
+```
+
+Please refer to [get_started.md](docs/en/2_get_started.md) for more detailed instruction.
 
 ## Getting Started
 
-Please see [getting_started.md](docs/en/getting_started.md) and [demo.md](docs/en/demo.md) for the basic usage of MMEditing.
+Please see [get_started.md](docs/en/2_get_started.md) and [inference.md](docs/en/user_guides/3_inference.md) for the basic usage of MMEditing.
 
 ## Model Zoo
 
@@ -95,70 +165,112 @@ Supported algorithms:
 <details open>
 <summary>Inpainting</summary>
 
-- [x] [Global&Local](configs/inpainting/global_local/README.md) (ToG'2017)
-- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
-- [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
-- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
+- ✅ [Global&Local](configs/global_local/README.md) (ToG'2017)
+- ✅ [DeepFillv1](configs/deepfillv1/README.md) (CVPR'2018)
+- ✅ [PConv](configs/partial_conv/README.md) (ECCV'2018)
+- ✅ [DeepFillv2](configs/deepfillv2/README.md) (CVPR'2019)
+- ✅ [AOT-GAN](configs/aot_gan/README.md) (TVCG'2021)
 
 </details>
 
 <details open>
 <summary>Matting</summary>
 
-- [x] [DIM](configs/mattors/dim/README.md) (CVPR'2017)
-- [x] [IndexNet](configs/mattors/indexnet/README.md) (ICCV'2019)
-- [x] [GCA](configs/mattors/gca/README.md) (AAAI'2020)
+- ✅ [DIM](configs/dim/README.md) (CVPR'2017)
+- ✅ [IndexNet](configs/indexnet/README.md) (ICCV'2019)
+- ✅ [GCA](configs/gca/README.md) (AAAI'2020)
 
 </details>
 
 <details open>
 <summary>Image-Super-Resolution</summary>
 
-- [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
-- [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
-- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
-- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
-- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
-- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
-- [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
-- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
-- [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
-- [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
+- ✅ [SRCNN](configs/srcnn/README.md) (TPAMI'2015)
+- ✅ [SRResNet&SRGAN](configs/srgan_resnet/README.md) (CVPR'2016)
+- ✅ [EDSR](configs/edsr/README.md) (CVPR'2017)
+- ✅ [ESRGAN](configs/esrgan/README.md) (ECCV'2018)
+- ✅ [RDN](configs/rdn/README.md) (CVPR'2018)
+- ✅ [DIC](configs/dic/README.md) (CVPR'2020)
+- ✅ [TTSR](configs/ttsr/README.md) (CVPR'2020)
+- ✅ [GLEAN](configs/glean/README.md) (CVPR'2021)
+- ✅ [LIIF](configs/liif/README.md) (CVPR'2021)
+- ✅ [Real-ESRGAN](configs/real_esrgan/README.md) (ICCVW'2021)
 
 </details>
 
 <details open>
 <summary>Video-Super-Resolution</summary>
 
-- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
-- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
-- [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
-- [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (CVPR'2022)
-- [x] [RealBasicVSR](configs/restorers/real_basicvsr/README.md) (CVPR'2022)
-
-</details>
-
-<details open>
-<summary>Generation</summary>
-
-- [x] [CycleGAN](configs/synthesizers/cyclegan/README.md) (ICCV'2017)
-- [x] [pix2pix](configs/synthesizers/pix2pix/README.md) (CVPR'2017)
+- ✅ [EDVR](configs/edvr/README.md) (CVPR'2019)
+- ✅ [TOF](configs/tof/README.md) (IJCV'2019)
+- ✅ [TDAN](configs/tdan/README.md) (CVPR'2020)
+- ✅ [BasicVSR](configs/basicvsr/README.md) (CVPR'2021)
+- ✅ [IconVSR](configs/iconvsr/README.md) (CVPR'2021)
+- ✅ [BasicVSR++](configs/basicvsr_pp/README.md) (CVPR'2022)
+- ✅ [RealBasicVSR](configs/real_basicvsr/README.md) (CVPR'2022)
 
 </details>
 
 <details open>
 <summary>Video Interpolation</summary>
 
-- [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
+- ✅ [TOFlow](configs/tof/README.md) (IJCV'2019)
+- ✅ [CAIN](configs/cain/README.md) (AAAI'2020)
+- ✅ [FLAVR](configs/flavr/README.md) (CVPR'2021)
 
 </details>
 
-Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/modelzoo.html) for more details.
+<details open>
+<summary>Image Colorization</summary>
+
+- ✅ [InstColorization](configs/inst_colorization/README.md) (CVPR'2020)
+
+</details>
+
+<details open>
+<summary>Unconditional GANs</summary>
+
+- ✅ [DCGAN](configs/dcgan/README.md) (ICLR'2016)
+- ✅ [WGAN-GP](configs/wgan-gp/README.md) (NeurIPS'2017)
+- ✅ [LSGAN](configs/lsgan/README.md) (ICCV'2017)
+- ✅ [GGAN](configs/ggan/README.md) (ArXiv'2017)
+- ✅ [PGGAN](configs/pggan/README.md) (ICLR'2018)
+- ✅ [StyleGANV1](configs/styleganv1/README.md) (CVPR'2019)
+- ✅ [StyleGANV2](configs/styleganv2/README.md) (CVPR'2020)
+- ✅ [StyleGANV3](configs/styleganv3/README.md) (NeurIPS'2021)
+
+</details>
+
+<details open>
+<summary>Conditional GANs</summary>
+
+- ✅ [SNGAN](configs/sngan_proj/README.md) (ICLR'2018)
+- ✅ [Projection GAN](configs/sngan_proj/README.md) (ICLR'2018)
+- ✅ [SAGAN](configs/sagan/README.md) (ICML'2019)
+- ✅ [BIGGAN/BIGGAN-DEEP](configs/biggan/README.md) (ICLR'2019)
+
+</details>
+
+<details open>
+<summary>Image2Image Translation</summary>
+
+- ✅ [Pix2Pix](configs/pix2pix/README.md) (CVPR'2017)
+- ✅ [CycleGAN](configs/cyclegan/README.md) (ICCV'2017)
+
+</details>
+
+<details open>
+<summary>Internal Learning</summary>
+
+- ✅ [SinGAN](configs/singan/README.md) (ICCV'2019)
+
+</details>
+
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) for more details.
 
 ## Contributing
 
-We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md) in MMCV for the contributing guideline.
+We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
 
 ## Acknowledgement
 
@@ -166,39 +278,40 @@ MMEditing is an open source project that is contributed by researchers and engin
 
 ## Citation
 
-If you find this project useful in your research, please consider cite:
+If MMEditing is helpful to your research, please cite it as below.
 
 ```bibtex
-@misc{mmediting2020,
-    title={OpenMMLab Editing Estimation Toolbox and Benchmark},
-    author={MMEditing Contributors},
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {{MMEditing Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year={2020}
+    year = {2022}
 }
 ```
 
 ## License
 
-This project is released under the [Apache 2.0 license](LICENSE).
+This project is released under the [Apache 2.0 license](LICENSE). Please refer to [LICENSES.md](LICENSES.md) for the careful check, if you are using our code for commercial matters.
 
-## Projects in OpenMMLab
+## Projects in OpenMMLab 2.0
 
-- [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab foundational library for computer vision.
+- [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab foundational library for training deep learning models.
+- [MMCV](https://github.com/open-mmlab/mmcv/tree/2.x): OpenMMLab foundational library for computer vision.
 - [MIM](https://github.com/open-mmlab/mim): MIM installs OpenMMLab packages.
-- [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab image classification toolbox and benchmark.
-- [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab detection toolbox and benchmark.
-- [MMDetection3D](https://github.com/open-mmlab/mmdetection3d): OpenMMLab's next-generation platform for general 3D object detection.
-- [MMRotate](https://github.com/open-mmlab/mmrotate): OpenMMLab rotated object detection toolbox and benchmark.
-- [MMSegmentation](https://github.com/open-mmlab/mmsegmentation): OpenMMLab semantic segmentation toolbox and benchmark.
-- [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab text detection, recognition, and understanding toolbox.
-- [MMPose](https://github.com/open-mmlab/mmpose): OpenMMLab pose estimation toolbox and benchmark.
-- [MMHuman3D](https://github.com/open-mmlab/mmhuman3d): OpenMMLab 3D human parametric model toolbox and benchmark.
-- [MMSelfSup](https://github.com/open-mmlab/mmselfsup): OpenMMLab self-supervised learning toolbox and benchmark.
-- [MMRazor](https://github.com/open-mmlab/mmrazor): OpenMMLab model compression toolbox and benchmark.
-- [MMFewShot](https://github.com/open-mmlab/mmfewshot): OpenMMLab fewshot learning toolbox and benchmark.
-- [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab's next-generation action understanding toolbox and benchmark.
-- [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab video perception toolbox and benchmark.
-- [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab optical flow toolbox and benchmark.
-- [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab image and video editing toolbox.
-- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab image and video generative models toolbox.
+- [MMClassification](https://github.com/open-mmlab/mmclassification/tree/1.x): OpenMMLab image classification toolbox and benchmark.
+- [MMDetection](https://github.com/open-mmlab/mmdetection/tree/3.x): OpenMMLab detection toolbox and benchmark.
+- [MMDetection3D](https://github.com/open-mmlab/mmdetection3d/tree/1.x): OpenMMLab's next-generation platform for general 3D object detection.
+- [MMRotate](https://github.com/open-mmlab/mmrotate/tree/1.x): OpenMMLab rotated object detection toolbox and benchmark.
+- [MMSegmentation](https://github.com/open-mmlab/mmsegmentation/tree/1.x): OpenMMLab semantic segmentation toolbox and benchmark.
+- [MMOCR](https://github.com/open-mmlab/mmocr/tree/1.x): OpenMMLab text detection, recognition, and understanding toolbox.
+- [MMPose](https://github.com/open-mmlab/mmpose/tree/1.x): OpenMMLab pose estimation toolbox and benchmark.
+- [MMHuman3D](https://github.com/open-mmlab/mmhuman3d/tree/1.x): OpenMMLab 3D human parametric model toolbox and benchmark.
+- [MMSelfSup](https://github.com/open-mmlab/mmselfsup/tree/1.x): OpenMMLab self-supervised learning toolbox and benchmark.
+- [MMRazor](https://github.com/open-mmlab/mmrazor/tree/1.x): OpenMMLab model compression toolbox and benchmark.
+- [MMFewShot](https://github.com/open-mmlab/mmfewshot/tree/1.x): OpenMMLab fewshot learning toolbox and benchmark.
+- [MMAction2](https://github.com/open-mmlab/mmaction2/tree/1.x): OpenMMLab's next-generation action understanding toolbox and benchmark.
+- [MMTracking](https://github.com/open-mmlab/mmtracking/tree/1.x): OpenMMLab video perception toolbox and benchmark.
+- [MMFlow](https://github.com/open-mmlab/mmflow/tree/1.x): OpenMMLab optical flow toolbox and benchmark.
+- [MMEditing](https://github.com/open-mmlab/mmediting/tree/1.x): OpenMMLab image and video editing toolbox.
+- [MMGeneration](https://github.com/open-mmlab/mmgeneration/tree/1.x): OpenMMLab image and video generative models toolbox.
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab model deployment framework.

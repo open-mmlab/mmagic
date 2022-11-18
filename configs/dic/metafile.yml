@@ -1,0 +1,35 @@
+Collections:
+- Metadata:
+    Architecture:
+    - DIC
+  Name: DIC
+  Paper:
+  - https://arxiv.org/abs/2003.13063
+  README: configs/dic/README.md
+Models:
+- Config: configs/dic/dic_x8c48b6_4xb2-150k_celeba-hq.py
+  In Collection: DIC
+  Metadata:
+    GPUs: 4 (Tesla PG503-216)
+    Training Data: CELEBA
+  Name: dic_x8c48b6_4xb2-150k_celeba-hq
+  Results:
+  - Dataset: CELEBA
+    Metrics:
+      PSNR: 25.2319
+      SSIM: 0.7422
+    Task: Dic
+  Weights: https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.pth
+- Config: configs/dic/dic_gan-x8c48b6_4xb2-500k_celeba-hq.py
+  In Collection: DIC
+  Metadata:
+    GPUs: 4 (Tesla PG503-216)
+    Training Data: CELEBA
+  Name: dic_gan-x8c48b6_4xb2-500k_celeba-hq
+  Results:
+  - Dataset: CELEBA
+    Metrics:
+      PSNR: 23.6241
+      SSIM: 0.6721
+    Task: Dic
+  Weights: https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.pth

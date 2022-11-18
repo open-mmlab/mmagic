@@ -21,14 +21,14 @@ python demo/inpainting_demo.py \
 
 ```shell
 python demo/inpainting_demo.py \
-    configs/inpainting/global_local/gl_256x256_8x12_celeba.py \
-    work_dirs/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth \
-    tests/data/image/celeba_test.png \
-    tests/data/image/bbox_mask.png \
-    tests/data/pred/inpainting_celeba.png
+    configs/global_local/gl_8xb12_celeba-256x256.py \
+    https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth \
+    tests/data/inpainting/celeba_test.png \
+    tests/data/inpainting/bbox_mask.png \
+    tests/data/inpainting/inpainting_celeba.png
 ```
 
-补全结果将保存在 `tests/data/pred/inpainting_celeba.png` 中。
+补全结果将保存在 `tests/data/inpainting/inpainting_celeba.png` 中。
 
 #### 抠图
 
@@ -49,14 +49,14 @@ python demo/matting_demo.py \
 
 ```shell
 python demo/matting_demo.py \
-    configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py \
-    work_dirs/dim_stage3/latest.pth \
-    tests/data/merged/GT05.jpg \
-    tests/data/trimap/GT05.png \
-    tests/data/pred/GT05.png
+    configs/dim/dim_stage3-v16-pln_1000k-1xb1_comp1k.py \
+    https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth \
+    tests/data/matting_dataset/merged/GT05.jpg \
+    tests/data/matting_dataset/trimap/GT05.png \
+    tests/data/matting_dataset/pred/GT05.png
 ```
 
-预测的 alpha 遮罩将保存在 `tests/data/pred/GT05.png` 中。
+预测的 alpha 遮罩将保存在 `tests/data/matting_dataset/pred/GT05.png` 中。
 
 #### 图像超分辨率
 
@@ -70,28 +70,28 @@ python demo/restoration_demo.py \
     ${SAVE_FILE} \
     [--imshow] \
     [--device ${GPU_ID}] \
-    [--ref_path ${REF_PATH}]
+    [--ref-path ${REF_PATH}]
 ```
 
 如果指定了 `--imshow` ，演示程序将使用 opencv 显示图像。例子：
 
 ```shell
 python demo/restoration_demo.py \
-    configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py \
-    work_dirs/esrgan_x4c64b23g32_g1_400k_div2k/latest.pth \
-    tests/data/lq/baboon_x4.png \
+    configs/esrgan/esrgan_x4c64b23g32_400k-1xb16_div2k.py \
+    https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth \
+    tests/data/image/lq/baboon_x4.png \
     demo/demo_out_baboon.png
 ```
 
-您可以通过提供 `--ref_path` 参数来测试基于参考的超分辨率算法。例子：
+您可以通过提供 `--ref-path` 参数来测试基于参考的超分辨率算法。例子：
 
 ```shell
 python demo/restoration_demo.py \
-    configs/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py \
+    configs/ttsr/ttsr-gan_x4c64b16_500k-1xb9_CUFED.py \
     https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth \
-    tests/data/test_multiple_gt/sequence_1/00000000.png \
-    work_dirs/demo_out.png \
-    --ref_path tests/data/test_multiple_gt/sequence_1/00000001.png
+    tests/data/frames/sequence/gt/sequence_1/00000000.png \
+    demo/demo_out.png \
+    --ref-path tests/data/frames/sequence/gt/sequence_1/00000001.png
 ```
 
 #### 人脸图像超分辨率
@@ -104,8 +104,8 @@ python demo/restoration_face_demo.py \
     ${CHECKPOINT_FILE} \
     ${IMAGE_FILE} \
     ${SAVE_FILE} \
-    [--upscale_factor] \
-    [--face_size] \
+    [--upscale-factor] \
+    [--face-size] \
     [--imshow] \
     [--device ${GPU_ID}]
 ```
@@ -114,11 +114,11 @@ python demo/restoration_face_demo.py \
 
 ```shell
 python demo/restoration_face_demo.py \
-    configs/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq.py \
+    configs/glean/glean_in128out1024_300k-4xb2_ffhq-celeba-hq.py \
     https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth \
-    tests/data/face/000001.png \
-    results/000001.png \
-    --upscale_factor 4
+    tests/data/image/face/000001.png \
+    tests/data/image/face/pred.png \
+    --upscale-factor 4
 ```
 
 #### 视频超分辨率
@@ -131,7 +131,7 @@ python demo/restoration_video_demo.py \
     ${CHECKPOINT_FILE} \
     ${INPUT_DIR} \
     ${OUTPUT_DIR} \
-    [--window_size=${WINDOW_SIZE}] \
+    [--window-size=${WINDOW_SIZE}] \
     [--device ${GPU_ID}]
 ```
 
@@ -141,24 +141,24 @@ EDVR:
 
 ```shell
 python demo/restoration_video_demo.py \
-    ./configs/restorers/edvr/edvrm_wotsa_x4_g8_600k_reds.py \
+    configs/edvr/edvrm_wotsa_reds_600k-8xb8.py \
     https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth \
     data/Vid4/BIx4/calendar/ \
-    ./output \
-    --window_size=5
+    demo/output \
+    --window-size=5
 ```
 
 BasicVSR:
 
 ```shell
 python demo/restoration_video_demo.py \
-    ./configs/restorers/basicvsr/basicvsr_reds4.py \
+    configs/basicvsr/basicvsr_2xb4_reds4.py \
     https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth \
     data/Vid4/BIx4/calendar/ \
-    ./output
+    demo/output
 ```
 
-复原的视频将保存在 `output/` 中。
+复原的视频将保存在 ` demo/output/` 中。
 
 #### 视频插帧
 
@@ -170,7 +170,7 @@ python demo/video_interpolation_demo.py \
     ${CHECKPOINT_FILE} \
     ${INPUT_DIR} \
     ${OUTPUT_DIR} \
-    [--fps_multiplier ${FPS_MULTIPLIER}] \
+    [--fps-multiplier ${FPS_MULTIPLIER}] \
     [--fps ${FPS}]
 ```
 
@@ -181,21 +181,21 @@ python demo/video_interpolation_demo.py \
 
 ```shell
 python demo/video_interpolation_demo.py \
-    configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py \
+    configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py \
     https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth \
-    tests/data/test_inference.mp4 \
-    tests/data/test_inference_vfi_out.mp4 \
-    --fps_multiplier 2.0
+    tests/data/frames/test_inference.mp4 \
+    tests/data/frames/test_inference_vfi_out.mp4 \
+    --fps-multiplier 2.0
 ```
 
 由 `fps` 直接给定输出视频的帧率：
 
 ```shell
 python demo/video_interpolation_demo.py \
-    configs/video_interpolators/cain/cain_b5_320k_vimeo-triplet.py \
+    configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py \
     https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth \
-    tests/data/test_inference.mp4 \
-    tests/data/test_inference_vfi_out.mp4 \
+    tests/data/frames/test_inference.mp4 \
+    tests/data/frames/test_inference_vfi_out.mp4 \
     --fps 60.0
 ```
 
@@ -207,12 +207,12 @@ python demo/generation_demo.py \
     ${CHECKPOINT_FILE} \
     ${IMAGE_FILE} \
     ${SAVE_FILE} \
-    [--unpaired_path ${UNPAIRED_IMAGE_FILE}] \
+    [--unpaired-path ${UNPAIRED_IMAGE_FILE}] \
     [--imshow] \
     [--device ${GPU_ID}]
 ```
 
-如果指定了 `--unpaired_path` （用于 CycleGAN），模型将执行未配对的图像到图像的转换。 如果指定了 `--imshow` ，演示也将使用opencv显示图像。 例子：
+如果指定了 `--unpaired-path` （用于 CycleGAN），模型将执行未配对的图像到图像的转换。 如果指定了 `--imshow` ，演示也将使用opencv显示图像。 例子：
 
 针对配对数据：
 
@@ -232,6 +232,6 @@ python demo/generation_demo.py 、
     work_dirs/example_exp/example_model_20200202.pth \
     demo/demo.jpg \
     demo/demo_out.jpg \
-    --unpaired_path demo/demo_unpaired.jpg \
+    --unpaired-path demo/demo_unpaired.jpg \
     --imshow
 ```

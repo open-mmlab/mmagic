@@ -3,70 +3,54 @@
 
 您可以在页面左下角切换中英文文档。
 
+.. note::
+   目前英文版有更多的内容，如果您希望帮助我们翻译一部分文档，可以通过issue联系我们。
+
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: 开始你的第一步
 
-   install.md
-   demo.md
+   概述 <overview.md>
+   入门指引 <get_started.md>
 
 .. toctree::
    :maxdepth: 2
-   :caption: 模型库
+   :caption: 使用指南
 
-   modelzoo.md
-   inpainting_models.md
-   mattors_models.md
-   restorers_models.md
-   synthesizers_models.md
-   video_interpolators_models.md
+   user_guides/index.rst
 
 .. toctree::
    :maxdepth: 2
-   :caption: 数据集
+   :caption: 进阶教程
 
-   datasets.md
-   inpainting_datasets.md
-   matting_datasets.md
-   sr_datasets.md
-   generation_datasets.md
+   advanced_guides/index.rst
 
 .. toctree::
-   :maxdepth: 2
-   :caption: 快速启动
+   :maxdepth: 1
+   :caption: 迁移
 
-   quick_run.md
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: 教程
-
-   config.md
+   migration.md
 
 .. toctree::
-   :maxdepth: 2
-   :caption: 实用工具与脚本
-
-   tools_scripts.md
-
-.. toctree::
-   :maxdepth: 2
-   :caption: 说明
-
-   notes.md
-
-.. toctree::
-   :maxdepth: 2
-   :caption: FAQ
-
-   faq.md
-
-.. toctree::
-   :maxdepth: 2
-   :caption: 接口文档
+   :maxdepth: 1
+   :caption: 接口文档（英文）
 
    api.rst
+
+.. toctree::
+   :maxdepth: 1
+   :caption: 模型库
+
+   model_zoo.md
+
+.. toctree::
+   :maxdepth: 1
+   :caption: 说明
+
+   notes/contribution_guide.md
+   notes/projects.md
+   notes/changelog.md
+   notes/faq.md
 
 .. toctree::
    :caption: 语言切换

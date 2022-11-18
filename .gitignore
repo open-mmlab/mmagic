@@ -69,6 +69,8 @@ docs/en/_build/
 docs/en/_tmp/
 docs/zh_cn/_build/
 docs/zh_cn/_tmp/
+requirements/src/
+docs/en/api/generated
 
 # PyBuilder
 target/
@@ -114,9 +116,15 @@ venv.bak/
 *.pkl.json
 *.log.json
 work_dirs/
+work_dirs
+configs_ceph/
+configs_ceph_*/
 /data/
 /data
 mmedit/.mim
+demo/*.png
+*.csv
+out/*.png
 
 # Pytorch
 *.pth
@@ -133,3 +141,7 @@ mmedit/.mim
 
 # MacOS
 .DS_Store
+
+# Slurm
+batchscript-*
+*.out

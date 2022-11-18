@@ -1,0 +1,35 @@
+Collections:
+- Metadata:
+    Architecture:
+    - Real-ESRGAN
+  Name: Real-ESRGAN
+  Paper:
+  - https://arxiv.org/abs/2107.10833
+  README: configs/real_esrgan/README.md
+Models:
+- Config: configs/real_esrgan/realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py
+  In Collection: Real-ESRGAN
+  Metadata:
+    GPUs: 4 (Tesla V100-SXM2-32GB)
+    Training Data: Others
+  Name: realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics:
+      PSNR: 28.0297
+      SSIM: 0.8236
+    Task: Real_esrgan
+  Weights: https://download.openmmlab.com/mmediting/restorers/real_esrgan/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth
+- Config: configs/real_esrgan/realesrgan_c64b23g32_4xb12-lr1e-4-400k_df2k-ost.py
+  In Collection: Real-ESRGAN
+  Metadata:
+    GPUs: 4 (Tesla V100-SXM2-32GB)
+    Training Data: Others
+  Name: realesrgan_c64b23g32_4xb12-lr1e-4-400k_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics:
+      PSNR: 26.2204
+      SSIM: 0.7655
+    Task: Real_esrgan
+  Weights: https://download.openmmlab.com/mmediting/restorers/real_esrgan/realesrgan_c64b23g32_12x4_lr1e-4_400k_df2k_ost_20211010-34798885.pth

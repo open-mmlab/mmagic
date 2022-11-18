@@ -1,0 +1,111 @@
+Collections:
+- Metadata:
+    Architecture:
+    - IconVSR
+  Name: IconVSR
+  Paper:
+  - https://arxiv.org/abs/2012.02181
+  README: configs/iconvsr/README.md
+Models:
+- Config: configs/iconvsr/iconvsr_2xb4_reds4.py
+  In Collection: IconVSR
+  Metadata:
+    GPUs: 2 (Tesla V100-PCIE-32GB)
+    Training Data: REDS
+  Name: iconvsr_2xb4_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4 (BIx4) PSNR (RGB): 31.6926
+      UDM10 (BDx4) PSNR (Y): 35.3377
+      Vid4 (BDx4) PSNR (Y): 25.211
+      Vid4 (BIx4) PSNR (Y): 27.4809
+      Vimeo-90K-T (BDx4) PSNR (Y): 34.4299
+      Vimeo-90K-T (BIx4) PSNR (Y): 36.4983
+    Task: Iconvsr
+  Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
+- Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bi.py
+  In Collection: IconVSR
+  Metadata:
+    GPUs: 2 (Tesla V100-PCIE-32GB)
+    Training Data: VIMEO90K
+  Name: iconvsr_2xb4_vimeo90k-bi
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4) PSNR (RGB): 30.3452
+      UDM10 (BDx4) PSNR (Y): 34.2595
+      Vid4 (BDx4) PSNR (Y): 24.6666
+      Vid4 (BIx4) PSNR (Y): 27.4238
+      Vimeo-90K-T (BDx4) PSNR (Y): 34.5548
+      Vimeo-90K-T (BIx4) PSNR (Y): 37.3729
+    Task: Iconvsr
+  Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413-7c7418dc.pth
+- Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bd.py
+  In Collection: IconVSR
+  Metadata:
+    GPUs: 2 (Tesla V100-PCIE-32GB)
+    Training Data: VIMEO90K
+  Name: iconvsr_2xb4_vimeo90k-bd
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4) PSNR (RGB): 29.015
+      UDM10 (BDx4) PSNR (Y): 40.064
+      Vid4 (BDx4) PSNR (Y): 28.2464
+      Vid4 (BIx4) PSNR (Y): 26.3109
+      Vimeo-90K-T (BDx4) PSNR (Y): 37.7573
+      Vimeo-90K-T (BIx4) PSNR (Y): 34.678
+    Task: Iconvsr
+  Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bd_20210414-5f38cb34.pth
+- Config: configs/iconvsr/iconvsr_2xb4_reds4.py
+  In Collection: IconVSR
+  Metadata:
+    GPUs: 2 (Tesla V100-PCIE-32GB)
+    Training Data: REDS
+  Name: iconvsr_2xb4_reds4
+  Results:
+  - Dataset: REDS
+    Metrics:
+      REDS4 (BIx4) SSIM (RGB): 0.8951
+      UDM10 (BDx4) SSIM (Y): 0.9471
+      Vid4 (BDx4) SSIM (Y): 0.7732
+      Vid4 (BIx4) SSIM (Y): 0.8354
+      Vimeo-90K-T (BDx4) SSIM (Y): 0.9287
+      Vimeo-90K-T (BIx4) SSIM (Y): 0.9416
+    Task: Iconvsr
+  Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
+- Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bi.py
+  In Collection: IconVSR
+  Metadata:
+    GPUs: 2 (Tesla V100-PCIE-32GB)
+    Training Data: VIMEO90K
+  Name: iconvsr_2xb4_vimeo90k-bi
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4) SSIM (RGB): 0.8659
+      UDM10 (BDx4) SSIM (Y): 0.9398
+      Vid4 (BDx4) SSIM (Y): 0.7491
+      Vid4 (BIx4) SSIM (Y): 0.8297
+      Vimeo-90K-T (BDx4) SSIM (Y): 0.9295
+      Vimeo-90K-T (BIx4) SSIM (Y): 0.9467
+    Task: Iconvsr
+  Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413-7c7418dc.pth
+- Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bd.py
+  In Collection: IconVSR
+  Metadata:
+    GPUs: 2 (Tesla V100-PCIE-32GB)
+    Training Data: VIMEO90K
+  Name: iconvsr_2xb4_vimeo90k-bd
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      REDS4 (BIx4) SSIM (RGB): 0.8465
+      UDM10 (BDx4) SSIM (Y): 0.9697
+      Vid4 (BDx4) SSIM (Y): 0.8612
+      Vid4 (BIx4) SSIM (Y): 0.8028
+      Vimeo-90K-T (BDx4) SSIM (Y): 0.9517
+      Vimeo-90K-T (BIx4) SSIM (Y): 0.9339
+    Task: Iconvsr
+  Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bd_20210414-5f38cb34.pth

@@ -11,9 +11,11 @@ python tools/get_flops.py ${CONFIG_FILE} [--shape ${INPUT_SHAPE}]
 ```
 
 例如，
+
 ```shell
 python tools/get_flops.py configs/resotorer/srresnet.py --shape 40 40
 ```
+
 你会得到以下的结果。
 
 ```
@@ -84,14 +86,14 @@ python tools/pytorch2onnx.py
 
 下表列出了保证可导出到 ONNX 并可在 ONNX Runtime 中运行的模型。
 
-|  模型   |                                                                               配置                                                                                | 动态形状 | 批量推理 | 备注  |
-| :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :-------------: | :---: |
-|  ESRGAN  |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |       Y       |        Y        |       |
-|  ESRGAN  | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |       Y       |        Y        |       |
-|  SRCNN   |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |       Y       |        Y        |       |
-|   DIM    |      [dim_stage3_v16_pln_1x1_1000k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py)       |       Y       |        Y        |       |
-|   GCA    |                 [gca_r34_4x10_200k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/gca/gca_r34_4x10_200k_comp1k.py)                  |       N       |        Y        |       |
-| IndexNet |         [indexnet_mobv2_1x16_78k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k.py)         |       Y       |        Y        |       |
+|   模型   |                                                                                配置                                                                                 | 动态形状 | 批量推理 | 备注 |
+| :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------: | :------: | :--: |
+|  ESRGAN  |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |    Y     |    Y     |      |
+|  ESRGAN  | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |    Y     |    Y     |      |
+|  SRCNN   |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |    Y     |    Y     |      |
+|   DIM    |          [dim_stage3_v16_pln_1x1_1000k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py)           |    Y     |    Y     |      |
+|   GCA    |                     [gca_r34_4x10_200k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/gca/gca_r34_4x10_200k_comp1k.py)                      |    N     |    Y     |      |
+| IndexNet |             [indexnet_mobv2_1x16_78k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/indexnet/indexnet_mobv2_1x16_78k_comp1k.py)             |    Y     |    Y     |      |
 
 **注**：
 
@@ -102,7 +104,6 @@ python tools/pytorch2onnx.py
 ### 将 ONNX 转换为 TensorRT（实验性）
 
 我们还提供了将 [ONNX](https://github.com/onnx/onnx) 模型转换为 [TensorRT](https://github.com/NVIDIA/TensorRT) 格式的脚本。 此外，我们支持比较 ONNX 和 TensorRT 模型之间的输出结果。
-
 
 ```bash
 python tools/onnx2tensorrt.py
@@ -135,17 +136,17 @@ python tools/onnx2tensorrt.py
 - `--verify`: 确定是否验证导出模型的正确性。默认为 `False`。
 - `--verbose`: 确定在创建 TensorRT 引擎时是否详细记录日志消息。默认为 `False`。
 
-**注**：此工具仍处于试验阶段。 目前不支持某些自定义运算符。 我们现在只支持 `restorer`。 在生成 SRCNN 的 ONNX 文件时，将 SCRNN 模型中的 'bicubic' 替换为 'bilinear' [此处](https://github.com/open-mmlab/mmediting/blob/764e6065e315b7d0033762038fcbf0bb1c570d4d/mmedit.bones/modelsrnn py#L40）。 因为 TensorRT 目前不支持 bicubic 插值，最终性能将下降约 4%。
+**注**：此工具仍处于试验阶段。 目前不支持某些自定义运算符。 我们现在只支持 `restorer`。 在生成 SRCNN 的 ONNX 文件时，将 SCRNN 模型中的 'bicubic' 替换为 'bilinear' \[此处\](https://github.com/open-mmlab/mmediting/blob/764e6065e315b7d0033762038fcbf0bb1c570d4d/mmedit.bones/modelsrnn py#L40）。 因为 TensorRT 目前不支持 bicubic 插值，最终性能将下降约 4%。
 
 #### 支持导出到 TensorRT 的模型列表
 
 下表列出了保证可导出到 TensorRT 引擎并可在 TensorRT 中运行的模型。
 
-|  模型   |                                                                               配置                                                                                | 动态形状 | 批量推理 | 备注  |
-| :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :-------------: | :---: |
-|  ESRGAN  |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |       Y       |        Y        |       |
-|  ESRGAN  | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |       Y       |        Y        |       |
-|  SRCNN   |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |       Y       |        Y        |  'bicubic' 上采样必须替换为 'bilinear'     |
+|  模型  |                                                                     配置                                                                      | 动态形状 | 批量推理 |                 备注                  |
+| :----: | :-------------------------------------------------------------------------------------------------------------------------------------------: | :------: | :------: | :-----------------------------------: |
+| ESRGAN | [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py) |    Y     |    Y     |                                       |
+| ESRGAN | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |    Y     |    Y     |                                       |
+| SRCNN  | [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)  |    Y     |    Y     | 'bicubic' 上采样必须替换为 'bilinear' |
 
 **注**：
 
@@ -159,7 +160,7 @@ python tools/onnx2tensorrt.py
 
 #### 先决条件
 
-要评估 ONNX 和 TensorRT 模型，应先安装 onnx、onnxruntime 和 TensorRT。遵循 [mmcv 中的 ONNXRuntime](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) 和 [mmcv 中的 TensorRT 插件](https://github.com/open-mmlab/mmcv/blob/master/docs/tensorrt_plugin.md）使用 ONNXRuntime 自定义操作和 TensorRT 插件安装 `mmcv-full`。
+要评估 ONNX 和 TensorRT 模型，应先安装 onnx、onnxruntime 和 TensorRT。遵循 [mmcv 中的 ONNXRuntime](https://mmcv.readthedocs.io/en/latest/onnxruntime_op.html) 和 \[mmcv 中的 TensorRT 插件\](https://github.com/open-mmlab/mmcv/blob/master/docs/tensorrt_plugin.md%EF%BC%89%E4%BD%BF%E7%94%A8 ONNXRuntime 自定义操作和 TensorRT 插件安装 `mmcv-full`。
 
 #### 用法
 

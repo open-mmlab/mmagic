@@ -1,9 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import mmcv
 import numpy as np
 import torch
-from mmcv.parallel import collate, scatter
-
-from mmedit.datasets.pipelines import Compose
+from mmengine.dataset import Compose
+from mmengine.dataset.utils import default_collate as collate
+from torch.nn.parallel import scatter
 
 try:
     from facexlib.utils.face_restoration_helper import FaceRestoreHelper
@@ -71,12 +72,17 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
 
     for i, img in enumerate(face_helper.cropped_faces):
         # prepare data
-        data = dict(lq=img.astype(np.float32))
-        data = test_pipeline(data)
-        data = scatter(collate([data], samples_per_gpu=1), [device])[0]
+        mmcv.imwrite(img, 'demo/tmp.png')
+        data = dict(lq=img.astype(np.float32), img_path='demo/tmp.png')
+        _data = test_pipeline(data)
+        data = dict()
+        data['inputs'] = _data['inputs'] / 255.0
+        data = collate([data])
+        if 'cuda' in str(device):
+            data = scatter(data, [device])[0]
 
         with torch.no_grad():
-            output = model(test_mode=True, **data)['output'].clip_(0, 1)
+            output = model(mode='tensor', **data)
 
         output = output.squeeze(0).permute(1, 2, 0)[:, :, [2, 1, 0]]
         output = output.cpu().numpy() * 255  # (0, 255)

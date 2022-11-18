@@ -40,7 +40,7 @@ extensions = [
 ]
 
 autodoc_mock_imports = [
-    'mmedit.version', 'skimage', 'mmcv.ops.ModulatedDeformConv2d',
+    'mmedit.version', 'mmcv.ops.ModulatedDeformConv2d',
     'mmcv.ops.modulated_deform_conv2d', 'mmcv._ext'
 ]
 
@@ -77,6 +77,24 @@ html_theme_options = {
             'name': 'GitHub',
             'url': 'https://github.com/open-mmlab/mmediting',
         },
+        {
+            'name':
+            '版本',
+            'children': [
+                {
+                    'name': 'MMEditing 0.x',
+                    'url': 'https://mmediting.readthedocs.io/en/latest/',
+                    'description': 'Main 分支文档'
+                },
+                {
+                    'name': 'MMEditing 1.x',
+                    'url': 'https://mmediting.readthedocs.io/en/1.x/',
+                    'description': '1.x 分支文档'
+                },
+            ],
+            'active':
+            True,
+        },
     ],
     'menu_lang':
     'cn'
@@ -97,7 +115,7 @@ master_doc = 'index'
 
 
 def builder_inited_handler(app):
-    subprocess.run(['./merge_docs.sh'])
+    # subprocess.run(['./merge_docs.sh'])
     subprocess.run(['./stat.py'])
 
 

@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
 
-from ..registry import LOSSES
+from mmedit.registry import LOSSES
 from .pixelwise_loss import charbonnier_loss, l1_loss, mse_loss
 
 _reduction_modes = ['none', 'mean', 'sum']

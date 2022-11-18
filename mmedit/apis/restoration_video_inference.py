@@ -1,20 +1,29 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import glob
 import os.path as osp
-import re
-from functools import reduce
 
 import mmcv
 import numpy as np
 import torch
-from mmcv.parallel import collate, scatter
+from mmengine.dataset import Compose
 
-from mmedit.datasets.pipelines import Compose
+# import re
+# from functools import reduce
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov')
 
 
 def pad_sequence(data, window_size):
+    """Pad frame sequence data.
+
+    Args:
+        data (Tensor): The frame sequence data.
+        window_size (int): The window size used in sliding-window framework.
+
+    Returns:
+        data (Tensor): The padded result.
+    """
+
     padding = window_size // 2
 
     data = torch.cat([
@@ -67,15 +76,15 @@ def restoration_video_inference(model,
     if file_extension in VIDEO_EXTENSIONS:
         video_reader = mmcv.VideoReader(img_dir)
         # load the images
-        data = dict(lq=[], lq_path=None, key=img_dir)
+        data = dict(img=[], img_path=None, key=img_dir)
         for frame in video_reader:
-            data['lq'].append(np.flip(frame, axis=2))
+            data['img'].append(np.flip(frame, axis=2))
 
         # remove the data loading pipeline
         tmp_pipeline = []
         for pipeline in test_pipeline:
             if pipeline['type'] not in [
-                    'GenerateSegmentIndices', 'LoadImageFromFileList'
+                    'GenerateSegmentIndices', 'LoadImageFromFile'
             ]:
                 tmp_pipeline.append(pipeline)
         test_pipeline = tmp_pipeline
@@ -92,11 +101,10 @@ def restoration_video_inference(model,
 
         # prepare data
         sequence_length = len(glob.glob(osp.join(img_dir, '*')))
-        img_dir_split = re.split(r'[\\/]', img_dir)
-        key = img_dir_split[-1]
-        lq_folder = reduce(osp.join, img_dir_split[:-1])
+        lq_folder = osp.dirname(img_dir)
+        key = osp.basename(img_dir)
         data = dict(
-            lq_path=lq_folder,
+            img_path=lq_folder,
             gt_path='',
             key=key,
             sequence_length=sequence_length)
@@ -104,24 +112,26 @@ def restoration_video_inference(model,
     # compose the pipeline
     test_pipeline = Compose(test_pipeline)
     data = test_pipeline(data)
-    data = scatter(collate([data], samples_per_gpu=1), [device])[0]['lq']
+    data = data['inputs'].unsqueeze(0) / 255.0  # in cpu
+
     # forward the model
     with torch.no_grad():
         if window_size > 0:  # sliding window framework
             data = pad_sequence(data, window_size)
             result = []
             for i in range(0, data.size(1) - 2 * (window_size // 2)):
-                data_i = data[:, i:i + window_size]
-                result.append(model(lq=data_i, test_mode=True)['output'].cpu())
+                data_i = data[:, i:i + window_size].to(device)
+                result.append(model(inputs=data_i, mode='tensor').cpu())
             result = torch.stack(result, dim=1)
         else:  # recurrent framework
             if max_seq_len is None:
-                result = model(lq=data, test_mode=True)['output'].cpu()
+                result = model(inputs=data.to(device), mode='tensor').cpu()
             else:
                 result = []
                 for i in range(0, data.size(1), max_seq_len):
                     result.append(
-                        model(lq=data[:, i:i + max_seq_len],
-                              test_mode=True)['output'].cpu())
+                        model(
+                            inputs=data[:, i:i + max_seq_len].to(device),
+                            mode='tensor').cpu())
                 result = torch.cat(result, dim=1)
     return result

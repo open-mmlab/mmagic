@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="resources/mmediting-logo.png" width="500px"/>
+  <img src="docs/zh_cn/_static/image/mmediting-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
     <b><font size="5">OpenMMLab 官网</font></b>
@@ -19,37 +19,66 @@
   <div>&nbsp;</div>
 
 [![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/latest/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/1.x/)
 [![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/1.x/LICENSE)
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘使用文档](https://mmediting.readthedocs.io/zh_CN/latest/) |
-[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/latest/install.html) |
-[👀模型库](https://mmediting.readthedocs.io/zh_CN/latest/modelzoo.html) |
-[🆕更新记录](https://github.com/open-mmlab/mmediting/blob/master/docs/zh_cn/changelog.md) |
+[📘使用文档](https://mmediting.readthedocs.io/zh_CN/1.x/) |
+[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/1.x/2_get_started.htmll) |
+[👀模型库](https://mmediting.readthedocs.io/zh_CN/1.x/3_model_zoo.html) |
+[🆕更新记录](docs/zh_cn/notes/3_changelog.md) |
 [🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
 [🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
 
 </div>
 
-## Introduction
-
 [English](/README.md) | 简体中文
 
-MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://open-mmlab.github.io/) 项目的成员之一。
+## 介绍
+
+MMEditing 是基于 PyTorch 的图像&视频编辑和生成开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
+
+目前 MMEditing 支持下列任务：
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/22982797/191167628-2ac529d6-6614-4b53-ad65-0cfff909aa7d.jpg"/>
+</div>
 
 主分支代码目前支持 **PyTorch 1.5 以上**的版本。
 
-<div align="center">
-  <img src="resources/mmediting-demo.jpg"/>
-</div>
+一些示例:
 
+https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4
+
+https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
+
+<table align="center">
+<thead>
+  <tr>
+    <td>
 <div align="center">
-<video src="https://user-images.githubusercontent.com/56712176/153550102-fdbd3ac8-cd20-416c-a5dc-4dbfbb97fdaa.mp4" width="520px" height="220px"/>
-</div>
+  <b> GAN Interpolation</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12726765/114679300-9fd4f900-9d3e-11eb-8f37-c36a018c02f7.gif" width="200"/>
+</div></td>
+    <td>
+<div align="center">
+  <b> GAN Projector</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12726765/114524392-c11ee200-9c77-11eb-8b6d-37bc637f5626.gif" width="200"/>
+</div></td>
+    <td>
+<div align="center">
+  <b> GAN Manipulation</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12726765/114523716-20302700-9c77-11eb-804e-327ae1ca0c5b.gif" width="200"/>
+</div></td>
+  </tr>
+</thead>
+</table>
 
 ### 主要特性
 
@@ -57,34 +86,75 @@ MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMML
 
   MMEditing 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。
 
-- **支持多种编辑任务**
+- **支持多种任务**
 
-  MMEditing 支持*修复*、*抠图*、*超分辨率*、*生成*等多种主流编辑任务。
+  MMEditing 支持*修复*、*抠图*、*超分辨率*、*插帧*等多种主流编辑任务。
+
+- **高效的分布式训练**
+
+  得益于 [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), 动态模型的训练可以轻松实现。
 
 - **SOTA**
 
-  MMEditing 提供修复/抠图/超分辨率/生成等任务最先进的算法。
+  MMEditing 提供修复/抠图/超分辨率/插帧/生成等任务最先进的算法。
 
 需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
 MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
 
-## 最新消息
+## 最新进展
 
-- [2022-03-01] v0.13.0 版本发布
-  - 支持 CAIN
-  - 支持 EDVR-L
-  - 支持在 Windows 系统中运行
-- [2022-02-11] 切换到 **PyTorch 1.5+**. 将不再保证与早期版本的 PyTorch 的兼容性
+### 🌟 1.x 预览版本
 
-请查看 [changelog.md](docs/en/changelog.md) 以获取更多细节与发版记录
+全新的 [**MMEditing v1.0.0rc3**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc3) 已经在 09/11/2022 发布:
+
+- 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
+- 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
+- 支持基于图像子块以及滑动条的图像和视频比较可视化工具。
+- 支持图像上色任务。
+- 将 `mmdet` 与 `clip` 切换为可选依赖
+
+在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
+
+### 💎 稳定版本
+
+最新的 **0.16.0** 版本已经在 31/10/2022 发布：
+
+- `VisualizationHook` 将被启用，建议用户使用 `MMEditVisualizationHook`。
+- 修复 FLAVR 的注册问题。
+- 修正 RDB 模型中的通道数。
+
+如果像了解更多版本更新细节和历史信息，请阅读[更新日志](docs/en/changelog.md)。
 
 ## 安装
 
-请参考[安装指南](docs/zh_cn/install.md)进行安装。
+MMEditing 依赖 [PyTorch](https://pytorch.org/)，[MMEngine](https://github.com/open-mmlab/mmengine) 和 [MMCV](https://github.com/open-mmlab/mmcv)，以下是安装的简要步骤。
+
+**步骤 1.**
+依照[官方教程](https://pytorch.org/get-started/locally/)安装PyTorch
+
+**步骤 2.**
+使用 [MIM](https://github.com/open-mmlab/mim) 安装 MMCV
+
+```
+pip3 install openmim
+# wait for more pre-compiled pkgs to release
+mim install 'mmcv>=2.0.0rc1'
+```
+
+**步骤 3.**
+从源码安装 MMEditing
+
+```
+git clone -b 1.x https://github.com/open-mmlab/mmediting.git
+cd mmediting
+pip3 install -e .
+```
+
+更详细的安装指南请参考 [get_started.md](docs/zh_cn/2_get_started.md) 。
 
 ## 开始使用
 
-请参考[使用教程](docs/zh_cn/getting_started.md)和[功能演示](docs/zh_cn/demo.md)获取MMEditing的基本用法。
+请参考[使用教程](docs/zh_cn/2_get_started.md)和[功能演示](docs/zh_cn/user_guides/3_inference.md)获取MMEditing的基本用法。
 
 ## 模型库
 
@@ -93,70 +163,112 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 <details open>
 <summary>图像修复</summary>
 
-- [x] [Global&Local](configs/inpainting/global_local/README.md) (ToG'2017)
-- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
-- [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
-- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
+- ✅ [Global&Local](configs/global_local/README.md) (ToG'2017)
+- ✅ [DeepFillv1](configs/deepfillv1/README.md) (CVPR'2018)
+- ✅ [PConv](configs/partial_conv/README.md) (ECCV'2018)
+- ✅ [DeepFillv2](configs/deepfillv2/README.md) (CVPR'2019)
+- ✅ [AOT-GAN](configs/aot_gan/README.md) (TVCG'2021)
 
 </details>
 
 <details open>
 <summary>图像抠图</summary>
 
-- [x] [DIM](configs/mattors/dim/README.md) (CVPR'2017)
-- [x] [IndexNet](configs/mattors/indexnet/README.md) (ICCV'2019)
-- [x] [GCA](configs/mattors/gca/README.md) (AAAI'2020)
+- ✅ [DIM](configs/dim/README.md) (CVPR'2017)
+- ✅ [IndexNet](configs/indexnet/README.md) (ICCV'2019)
+- ✅ [GCA](configs/gca/README.md) (AAAI'2020)
 
 </details>
 
 <details open>
 <summary>图像超分辨率</summary>
 
-- [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
-- [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
-- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
-- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
-- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
-- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
-- [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
-- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
-- [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
-- [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
+- ✅ [SRCNN](configs/srcnn/README.md) (TPAMI'2015)
+- ✅ [SRResNet&SRGAN](configs/srgan_resnet/README.md) (CVPR'2016)
+- ✅ [EDSR](configs/edsr/README.md) (CVPR'2017)
+- ✅ [ESRGAN](configs/esrgan/README.md) (ECCV'2018)
+- ✅ [RDN](configs/rdn/README.md) (CVPR'2018)
+- ✅ [DIC](configs/dic/README.md) (CVPR'2020)
+- ✅ [TTSR](configs/ttsr/README.md) (CVPR'2020)
+- ✅ [GLEAN](configs/glean/README.md) (CVPR'2021)
+- ✅ [LIIF](configs/liif/README.md) (CVPR'2021)
+- ✅ [Real-ESRGAN](configs/real_esrgan/README.md) (ICCVW'2021)
 
 </details>
 
 <details open>
 <summary>视频超分辨率</summary>
 
-- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
-- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
-- [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
-- [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
-- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (CVPR'2022)
-- [x] [RealBasicVSR](configs/restorers/real_basicvsr/README.md) (CVPR'2022)
-
-</details>
-
-<details open>
-<summary>图像生成</summary>
-
-- [x] [CycleGAN](configs/synthesizers/cyclegan/README.md) (ICCV'2017)
-- [x] [pix2pix](configs/synthesizers/pix2pix/README.md) (CVPR'2017)
+- ✅ [EDVR](configs/edvr/README.md) (CVPR'2019)
+- ✅ [TOF](configs/tof/README.md) (IJCV'2019)
+- ✅ [TDAN](configs/tdan/README.md) (CVPR'2020)
+- ✅ [BasicVSR](configs/basicvsr/README.md) (CVPR'2021)
+- ✅ [IconVSR](configs/iconvsr/README.md) (CVPR'2021)
+- ✅ [BasicVSR++](configs/basicvsr_pp/README.md) (CVPR'2022)
+- ✅ [RealBasicVSR](configs/real_basicvsr/README.md) (CVPR'2022)
 
 </details>
 
 <details open>
 <summary>视频插帧</summary>
 
-- [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
+- ✅ [TOFlow](configs/tof/README.md) (IJCV'2019)
+- ✅ [CAIN](configs/cain/README.md) (AAAI'2020)
+- ✅ [FLAVR](configs/flavr/README.md) (CVPR'2021)
 
 </details>
 
-请参考[模型库](https://mmediting.readthedocs.io/en/latest/modelzoo.html)了解详情。
+<details open>
+<summary>图像上色</summary>
+
+- ✅ [InstColorization](configs/inst_colorization/README.md) (CVPR'2020)
+
+</details>
+
+<details open>
+<summary>Unconditional GANs</summary>
+
+- ✅ [DCGAN](configs/dcgan/README.md) (ICLR'2016)
+- ✅ [WGAN-GP](configs/wgan-gp/README.md) (NeurIPS'2017)
+- ✅ [LSGAN](configs/lsgan/README.md) (ICCV'2017)
+- ✅ [GGAN](configs/ggan/README.md) (ArXiv'2017)
+- ✅ [PGGAN](configs/pggan/README.md) (ICLR'2018)
+- ✅ [StyleGANV1](configs/styleganv1/README.md) (CVPR'2019)
+- ✅ [StyleGANV2](configs/styleganv2/README.md) (CVPR'2020)
+- ✅ [StyleGANV3](configs/styleganv3/README.md) (NeurIPS'2021)
+
+</details>
+
+<details open>
+<summary>Conditional GANs</summary>
+
+- ✅ [SNGAN](configs/sngan_proj/README.md) (ICLR'2018)
+- ✅ [Projection GAN](configs/sngan_proj/README.md) (ICLR'2018)
+- ✅ [SAGAN](configs/sagan/README.md) (ICML'2019)
+- ✅ [BIGGAN/BIGGAN-DEEP](configs/biggan/README.md) (ICLR'2019)
+
+</details>
+
+<details open>
+<summary>Image2Image Translation</summary>
+
+- ✅ [Pix2Pix](configs/pix2pix/README.md) (CVPR'2017)
+- ✅ [CycleGAN](configs/cyclegan/README.md) (ICCV'2017)
+
+</details>
+
+<details open>
+<summary>Internal Learning</summary>
+
+- ✅ [SinGAN](configs/singan/README.md) (ICCV'2019)
+
+</details>
+
+请参考[模型库](https://mmediting.readthedocs.io/zh_CN/1.x/3_model_zoo.html)了解详情。
 
 ## 参与贡献
 
-感谢您为改善 MMEditing 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/blob/master/CONTRIBUTING.md) 以获取贡献指南。
+感谢您为改善 MMEditing 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) 和 MMEngine 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING_zh-CN.md) 以获取贡献指南。
 
 ## 致谢
 
@@ -164,14 +276,14 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## 引用
 
-如果您觉得 MMEditing 对您的研究有所帮助，请考虑引用它：
+如果 MMEditing 对您的研究有所帮助，请按照如下 bibtex 引用它。
 
 ```bibtex
-@misc{mmediting2020,
-    title={OpenMMLab Editing Estimation Toolbox and Benchmark},
-    author={MMEditing Contributors},
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {{MMEditing Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year={2020}
+    year = {2022}
 }
 ```
 
@@ -181,6 +293,7 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## OpenMMLab 的其他项目
 
+- [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab MMEngine.
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab 计算机视觉基础库
 - [MIM](https://github.com/open-mmlab/mim): MIM 是 OpenMMlab 项目、算法、模型的统一入口
 - [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab 图像分类工具箱
@@ -203,10 +316,10 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## 欢迎加入 OpenMMLab 社区
 
-扫描下方的二维码可关注 OpenMMLab 团队的 [知乎官方账号](https://www.zhihu.com/people/openmmlab)，加入 OpenMMLab 团队的 [官方交流 QQ 群](https://jq.qq.com/?_wv=1027&k=GJP18SjI)
+扫描下方的二维码可关注 OpenMMLab 团队的 [知乎官方账号](https://www.zhihu.com/people/openmmlab)，加入 OpenMMLab 团队的 [官方交流 QQ 群](https://jq.qq.com/?_wv=1027&k=GJP18SjI)，或通过群主小喵加入微信官方交流群。
 
 <div align="center">
-<img src="resources/zhihu_qrcode.jpg" height="400" />  <img src="resources/qq_group2_qrcode.jpg" height="400" />
+<img src="docs/zh_cn/_static/image/zhihu_qrcode.jpg" height="500" />  <img src="https://raw.githubusercontent.com/open-mmlab/mmcv/master/docs/en/_static/qq_group_qrcode.jpg" height="500" /> <img src="https://raw.githubusercontent.com/open-mmlab/mmcv/master/docs/en/_static/wechat_qrcode.jpg" height="500" />
 </div>
 
 我们会在 OpenMMLab 社区为大家
