@@ -54,10 +54,10 @@ class InpaintingInferencer(BaseMMEditInferencer):
         if 'cuda' in str(self.device):
             data = scatter(data, [self.device])[0]
             data['data_samples'][0].mask.data = scatter(
-                data['data_samples'][0].mask.data, [self.device])[0]
+                data['data_samples'][0].mask.data, [self.device])[0] / 255.0
 
         # save masks and masked_imgs to visualize
-        self.masks = data['data_samples'][0].mask.data
+        self.masks = data['data_samples'][0].mask.data * 255
         self.masked_imgs = data['inputs'][0]
 
         return data

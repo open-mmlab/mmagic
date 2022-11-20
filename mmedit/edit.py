@@ -49,6 +49,7 @@ class MMEdit:
         'gca',
 
         # inpainting models
+        'global_local',
         'aot_gan',
 
         # translation models
@@ -59,9 +60,10 @@ class MMEdit:
 
         # video_interpolation models
         'flavr',
+        'cain',
 
         # video_restoration models
-        'basicvsr',
+        'edvr',
     ]
 
     inference_supported_models_cfg = {}

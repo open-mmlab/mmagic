@@ -257,14 +257,14 @@ def inpainting_inference(model, masked_img, mask):
     if 'cuda' in str(device):
         data = scatter(data, [device])[0]
         data['data_samples'][0].mask.data = scatter(
-            data['data_samples'][0].mask.data, [device])[0]
+            data['data_samples'][0].mask.data, [device])[0] / 255.0
     # else:
     #     data.pop('meta')
     # forward the model
     with torch.no_grad():
         result, x = model(mode='tensor', **data)
 
-    masks = _data['data_samples'].mask.data
+    masks = _data['data_samples'].mask.data * 255
     masked_imgs = data['inputs'][0]
     result = result[0] * masks + masked_imgs * (1. - masks)
     return result
