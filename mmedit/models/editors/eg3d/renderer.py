@@ -2,14 +2,16 @@
 """The renderer is a module that takes in rays, decides where to sample along
 each ray, and computes pixel colors using the volume rendering equation."""
 
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Union
 
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 from mmengine.model import BaseModule
 
-from .eg3d_modules import OSGDecoder
-from .math_utils import get_ray_limits_box, inverse_transform_sampling
+from ..stylegan3.stylegan3_modules import FullyConnectedLayer
+from .math_utils import (get_ray_limits_box, inverse_transform_sampling,
+                         linspace_batch)
 
 
 class EG3DRenderer(BaseModule):
@@ -35,22 +37,19 @@ class EG3DRenderer(BaseModule):
             :attr:`self.project_onto_planes`. Defaults to 'Official'.
     """
 
-    def __init__(
-            self,
-            decoder_cfg: dict,
-            #  ray_start: Tuple[float, str],
-            #  ray_end: Tuple[float, str],
-            ray_start: float,
-            ray_end: float,
-            box_warp: float = 1,
-            depth_resolution: int = 64,
-            depth_resolution_importance: int = 64,
-            density_noise: float = 0,
-            clamp_mode: str = 'softplus',
-            white_back: bool = True,
-            projection_mode: str = 'Official'):
+    def __init__(self,
+                 decoder_cfg: dict,
+                 ray_start: float,
+                 ray_end: float,
+                 box_warp: float = 1,
+                 depth_resolution: int = 64,
+                 depth_resolution_importance: int = 64,
+                 density_noise: float = 0,
+                 clamp_mode: str = 'softplus',
+                 white_back: bool = True,
+                 projection_mode: str = 'Official'):
         super().__init__()
-        self.decoder = OSGDecoder(**decoder_cfg)
+        self.decoder = EG3DDecoder(**decoder_cfg)
 
         self.ray_start = ray_start
         self.ray_end = ray_end
@@ -108,6 +107,8 @@ class EG3DRenderer(BaseModule):
         box_warp = self.get_default_value('box_warp', render_kwargs)
         depth_resolution = self.get_default_value('depth_resolution',
                                                   render_kwargs)
+        depth_resolution_importance = self.get_default_value(
+            'depth_resolution_importance', render_kwargs)
         density_noise = self.get_default_value('density_noise', render_kwargs)
 
         if ray_start == ray_end == 'auto':
@@ -120,6 +121,12 @@ class EG3DRenderer(BaseModule):
             depths_coarse = self.sample_stratified(ray_origins, ray_start,
                                                    ray_end, depth_resolution)
         else:
+            assert (isinstance(ray_start, float) and isinstance(
+                ray_end, float)), (
+                    '\'ray_start\' and \'ray_end\' must be both float type or '
+                    f'both \'auto\'. But receive {ray_start} and {ray_end}.')
+            assert ray_start < ray_end, (
+                '\'ray_start\' must less than \'ray_end\'.')
             # Create stratified depth samples
             depths_coarse = self.sample_stratified(ray_origins, ray_start,
                                                    ray_end, depth_resolution)
@@ -143,8 +150,8 @@ class EG3DRenderer(BaseModule):
                                                     samples_per_ray, 1)
 
         # Fine Pass
-        N_importance = self.depth_resolution_importance
-        if N_importance > 0:
+        N_importance = depth_resolution_importance
+        if N_importance is not None and N_importance > 0:
             _, _, weights = self.volume_rendering(colors_coarse,
                                                   densities_coarse,
                                                   depths_coarse)
@@ -179,16 +186,21 @@ class EG3DRenderer(BaseModule):
 
         return rgb_final, depth_final, weights.sum(2)
 
-    def sample_stratified(self, ray_origins: torch.Tensor, ray_start: float,
-                          ray_end: float,
+    def sample_stratified(self, ray_origins: torch.Tensor,
+                          ray_start: Union[float, torch.Tensor],
+                          ray_end: Union[float, torch.Tensor],
                           depth_resolution: int) -> torch.Tensor:
         """Return depths of approximately uniformly spaced samples along rays.
 
         Args:
             ray_origins (torch.Tensor): The original of each ray, shape like
-                (bz, NeRF_res * NeRF_res, 3).
-            ray_start (float): The start position of all rays.
-            ray_end (float): The end position of all rays.
+                (bz, NeRF_res * NeRF_res, 3). Only used to provide
+                device and shape info.
+            ray_start (Union[float, torch.Tensor]): The start position of rays.
+                If a float is passed, all rays will have the same start
+                distance.
+            ray_end (Union[float, torch.Tensor]): The end position of rays. If
+                a float is passed, all rays will have the same end distance.
             depth_resolution (int): Resolution of depth, as well as the number
                 of points per ray.
 
@@ -197,14 +209,25 @@ class EG3DRenderer(BaseModule):
                 (bz, NeRF_res * NeRF_res, 1).
         """
         N, M, _ = ray_origins.shape
+        if isinstance(ray_start, torch.Tensor):
+            # perform linspace for batch of tensor
+            depths_coarse = linspace_batch(ray_start, ray_end,
+                                           depth_resolution)
+            depths_coarse = depths_coarse.permute(1, 2, 0, 3)
+            depth_delta = (ray_end - ray_start) / (depth_resolution - 1)
+            depths_coarse += torch.rand_like(depths_coarse) * depth_delta[...,
+                                                                          None]
+        else:
+            depths_coarse = torch.linspace(
+                ray_start,
+                ray_end,
+                depth_resolution,
+                device=ray_origins.device)
+            depths_coarse = depths_coarse.reshape(1, 1, depth_resolution, 1)
+            depths_coarse = depths_coarse.repeat(N, M, 1, 1)
 
-        depths_coarse = torch.linspace(
-            ray_start, ray_end, depth_resolution, device=ray_origins.device)
-        depths_coarse = depths_coarse.reshape(1, 1, depth_resolution, 1)
-        depths_coarse = depths_coarse.repeat(N, M, 1, 1)
-
-        depth_delta = (ray_end - ray_start) / (depth_resolution - 1)
-        depths_coarse += torch.rand_like(depths_coarse) * depth_delta
+            depth_delta = (ray_end - ray_start) / (depth_resolution - 1)
+            depths_coarse += torch.rand_like(depths_coarse) * depth_delta
 
         return depths_coarse
 
@@ -444,3 +467,56 @@ class EG3DRenderer(BaseModule):
         importance_z_vals = importance_z_vals.reshape(batch_size, num_rays,
                                                       N_importance, 1)
         return importance_z_vals
+
+
+class EG3DDecoder(BaseModule):
+    """Decoder for EG3D model.
+
+    Args:
+        in_channels (int): The number of input channels.
+        out_channels (int): The number of output channels. Defaults to 32.
+        hidden_channels (int): The number of channels of hidden layer.
+            Defaults to 64.
+        lr_multiplier (float, optional): Equalized learning rate multiplier.
+            Defaults to 1.
+        rgb_padding (float): Padding for RGB output. Defaults to 0.001.
+    """
+
+    def __init__(self,
+                 in_channels: int,
+                 out_channels: int = 32,
+                 hidden_channels: int = 64,
+                 lr_multiplier: float = 1,
+                 rgb_padding: float = 0.001):
+        super().__init__()
+        self.net = nn.Sequential(
+            FullyConnectedLayer(
+                in_channels, hidden_channels, lr_multiplier=lr_multiplier),
+            nn.Softplus(),
+            FullyConnectedLayer(
+                hidden_channels, 1 + out_channels,
+                lr_multiplier=lr_multiplier))
+        self.rgb_padding = rgb_padding
+
+    def forward(self, sampled_features: torch.Tensor) -> dict:
+        """Forward function.
+
+        Args:
+            sampled_features (torch.Tensor): The sampled triplane feature for
+                each points. Shape like (batch_size, xxx, xxx, n_ch).
+
+        Returns:
+            dict: A dict contains rgb and sigma value for each point.
+        """
+        sampled_features = sampled_features.mean(1)
+        N, M, C = sampled_features.shape
+
+        feat = sampled_features.view(-1, C)
+        feat = self.net(feat)
+        feat = feat.view(N, M, -1)
+
+        rgb = torch.sigmoid(
+            feat[..., 1:]) * (1 + 2 * self.rgb_padding) - self.rgb_padding
+        sigma = feat[..., 0:1]
+
+        return {'rgb': rgb, 'sigma': sigma}
