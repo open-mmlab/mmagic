@@ -5,7 +5,8 @@ import numpy.testing as npt
 import pytest
 import torch
 
-from mmedit.models import CharbonnierLoss, L1Loss, MaskedTVLoss, MSELoss
+from mmedit.models import (CharbonnierLoss, L1Loss, MaskedTVLoss, MSELoss,
+                           PSNRLoss)
 
 
 def test_pixelwise_losses():
@@ -101,3 +102,13 @@ def test_pixelwise_losses():
     loss = masked_tv_loss(pred, mask)
     assert loss.shape == ()
     npt.assert_almost_equal(loss.item(), 1.)
+
+    # test PSNR Loss
+    psnr_loss = PSNRLoss(loss_weight=1.0)
+    pred = torch.ones(1, 1, 64, 64)
+    target = torch.zeros(1, 1, 64, 64)
+    loss = psnr_loss(pred, target)
+    assert loss.shape == ()
+    assert loss.item() == 0.0
+    loss = psnr_loss(target, target)
+    assert loss.item() == -80.0

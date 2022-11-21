@@ -106,12 +106,13 @@ hope MMEditing could provide better experience.
 
 ### 🌟 Preview of 1.x version
 
-A brand new version of [**MMEditing v1.0.0rc2**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc2) was released in 02/11/2022:
+A brand new version of [**MMEditing v1.0.0rc3**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc3) was released in 09/11/2022:
 
 - Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍。
 - Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
 - Support patch-based and slider-based image and video comparison viewer.
 - Support image colorization.
+- Convert `mmdet` and `clip` to optional requirements.
 
 Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
 
