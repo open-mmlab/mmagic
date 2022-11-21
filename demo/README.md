@@ -1,12 +1,10 @@
 # MMEditing Demo
 
-There are some mmediting demos for you to run with command line in this folder.
-
-We provide python command line usage here to run these demos and mode instructions could also be found on the [web page](https://mmediting.readthedocs.io/en/dev-1.x/user_guides/3_inference.html)
+There are some mmediting demos in this folder. We provide python command line usage here to run these demos and more guidance could also be found on the [web page](https://mmediting.readthedocs.io/en/dev-1.x/user_guides/3_inference.html)
 
 ## Download sample images or videos
 
-We prepared some images and videos for you to run demo with. After MMEdit is well installed, you could use demo in this folder to infer these data. Download at here (url) and extract it to MMEdit root path.
+We prepared some images and videos for you to run demo with. After MMEdit is well installed, you could use demos in this folder to infer these data. Download at here (url) and extract it to MMEdit root path.
 
 ```shell
 cd mmediting
