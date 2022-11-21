@@ -16,9 +16,23 @@ def test_edit():
     with pytest.raises(Exception):
         MMEdit()
 
+    with pytest.raises(Exception):
+        MMEdit(model_setting=1)
+
     supported_models = MMEdit.get_inference_supported_models()
+    MMEdit.inference_supported_models_cfg_inited = False
+    supported_models = MMEdit.get_inference_supported_models()
+
     supported_tasks = MMEdit.get_inference_supported_tasks()
-    task_supported_models = MMEdit.get_task_supported_models('translation')
+    MMEdit.inference_supported_models_cfg_inited = False
+    supported_tasks = MMEdit.get_inference_supported_tasks()
+
+    task_supported_models = \
+        MMEdit.get_task_supported_models('Image2Image Translation')
+    MMEdit.inference_supported_models_cfg_inited = False
+    task_supported_models = \
+        MMEdit.get_task_supported_models('Image2Image Translation')
+
     print(supported_models)
     print(supported_tasks)
     print(task_supported_models)
