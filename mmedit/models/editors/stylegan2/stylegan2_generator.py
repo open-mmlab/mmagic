@@ -81,6 +81,10 @@ class StyleGAN2Generator(nn.Module):
             Defaults to 'single'.
         mix_prob (float, optional): Mixing probability. The value should be
             in range of [0, 1]. Defaults to ``0.9``.
+        update_mean_latent_with_ema (bool, optional): Whether update mean
+            latent code (w) with EMA. Defaults to False.
+        w_avg_beta (float, optional): The value used for update `w_avg`.
+            Defaults to 0.998.
         num_fp16_scales (int, optional): The number of resolutions to use auto
             fp16 training. Different from ``fp16_enabled``, this argument
             allows users to adopt FP16 training only in several blocks.
@@ -110,6 +114,8 @@ class StyleGAN2Generator(nn.Module):
                  eval_style_mode='single',
                  norm_eps=1e-6,
                  mix_prob=0.9,
+                 update_mean_latent_with_ema=False,
+                 w_avg_beta=0.998,
                  num_fp16_scales=0,
                  fp16_enabled=False,
                  bgr2rgb=False,
@@ -238,6 +244,13 @@ class StyleGAN2Generator(nn.Module):
             self.register_buffer(f'injected_noise_{layer_idx}',
                                  torch.randn(*shape))
 
+        if (self.cond_size is not None
+                and self.cond_size > 0) or update_mean_latent_with_ema:
+            # Due to `get_mean_latent` cannot handle conditional input,
+            # assign avg style code here and update with EMA.
+            self.register_buffer('w_avg', torch.zeros([style_channels]))
+            self.w_avg_beta = w_avg_beta
+
         if pretrained is not None:
             self._load_pretrained_model(**pretrained)
 
@@ -292,6 +305,8 @@ class StyleGAN2Generator(nn.Module):
         Returns:
             Tensor: Mean latent of this generator.
         """
+        if hasattr(self, 'w_avg'):
+            return self.w_avg
         return get_mean_latent(self, num_samples, **kwargs)
 
     def style_mixing(self,
@@ -421,6 +436,12 @@ class StyleGAN2Generator(nn.Module):
             styles = styles_list
         else:
             noise_batch = None
+
+        # update w_avg during training, if need
+        if hasattr(self, 'w_avg') and self.training:
+            # only update w_avg with the first style code
+            self.w_avg.copy_(styles_list[0].detach().mean(
+                dim=0).lerp(self.w_avg, self.w_avg_beta))
 
         if injected_noise is None:
             if randomize_noise:
