@@ -8,8 +8,7 @@ save_dir = './work_dirs/'
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
     type='OptimWrapper',
-    optimizer=dict(type='Adam', lr=5e-5),
+    optimizer=dict(_delete_=True, type='Adam', lr=5e-5),
 )
 
-# load_from = 'https://download.openmmlab.com/mmediting/restorers/tdan/'\
-#               'tdan_vimeo90k_bix4_20210528-739979d9.pth'
+# load_from = 'tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi/iter_400000.pth'
