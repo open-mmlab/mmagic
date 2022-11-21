@@ -191,7 +191,7 @@ val_dataloader = dict(
     batch_size=128,
     num_workers=8,
     dataset=dict(
-        type='UnconditionalImageDataset',
+        type='BasicImageDataset',
         data_root='data/celeba-cropped/',
         pipeline=[
             dict(type='LoadImageFromFile', key='img'),
