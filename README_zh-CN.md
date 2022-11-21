@@ -35,7 +35,11 @@
 
 </div>
 
-[English](/README.md) | 简体中文
+<div align="center">
+
+[English](README.md) | 简体中文
+
+</div>
 
 ## Introduction
 
@@ -72,21 +76,29 @@ https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-
 需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
 MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
 
-## 最新消息
+## 最新进展
 
-- \[2022-06-01\] v0.15.0 版本发布
-  - 支持 FLAVR
-  - 支持 AOT-GAN
-  - 新版 CAIN，支持 ReduceLROnPlateau 策略
-- \[2022-04-01\] v0.14.0 版本发布
-  - 支持视频插帧算法 TOFlow
-- \[2022-03-01\] v0.13.0 版本发布
-  - 支持 CAIN
-  - 支持 EDVR-L
-  - 支持在 Windows 系统中运行
-- \[2022-02-11\] 切换到 **PyTorch 1.5+**. 将不再保证与早期版本的 PyTorch 的兼容性
+MMEditing 同时维护 0.x 和 1.x 版本，详情见[分支维护计划](README_zh-CN.md#分支维护计划)
 
-请查看 [changelog.md](docs/en/changelog.md) 以获取更多细节与发版记录
+### 💎 稳定版本
+
+最新的 **0.16.0** 版本已经在 31/10/2022 发布：
+
+- `VisualizationHook` 将被启用，建议用户使用 `MMEditVisualizationHook`。
+- 修复 FLAVR 的注册问题。
+- 修正 RDB 模型中的通道数。
+
+如果像了解更多版本更新细节和历史信息，请阅读[更新日志](docs/en/changelog.md)。
+
+### 🌟 1.x 预览版本
+
+全新的 [**MMEditing v1.0.0rc1**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc1) 已经在 24/09/2022 发布:
+
+- 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
+- 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
+- 重构之后更加灵活 [architecture](https://mmediting.readthedocs.io/en/1.x/1_overview.html)。
+
+在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
 
 ## 安装
 
@@ -197,6 +209,16 @@ pip3 install -e .
 
 MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。 我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
 
+## 分支维护计划
+
+MMCV 目前有两个分支，分别是 master 和 2.x 分支，它们会经历以下三个阶段：
+
+| 阶段   | 时间                  | 分支                                                         | 说明                                                                                                     |
+| ------ | --------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| 公测期 | 2022/9/1 - 2022.12.31 | 公测版代码发布在 1.x 分支；默认主分支 master 仍对应 0.x 版本 | master 和 1.x 分支正常进行迭代                                                                           |
+| 兼容期 | 2023/1/1 - 2023.12.31 | **切换默认主分支 master 为 1.x 版本**；0.x 分支对应 0.x 版本 | 保持对旧版本 0.x 的维护和开发，响应用户需求，但尽量不引进破坏旧版本兼容性的改动；master 分支正常进行迭代 |
+| 维护期 | 2024/1/1 - 待定       | 默认主分支 master 为 1.x 版本；0.x 分支对应 0.x 版本         | 0.x 分支进入维护阶段，不再进行新功能支持；master 分支正常进行迭代                                        |
+
 ## 引用
 
 如果 MMEditing 对您的研究有所帮助，请按照如下 bibtex 引用它。
@@ -216,14 +238,16 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## OpenMMLab 的其他项目
 
+- [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab 深度学习模型训练基础库
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab 计算机视觉基础库
+- [MMEval](https://github.com/open-mmlab/mmeval): 统一开放的跨框架算法评测库
 - [MIM](https://github.com/open-mmlab/mim): MIM 是 OpenMMlab 项目、算法、模型的统一入口
 - [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab 图像分类工具箱
 - [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab 目标检测工具箱
 - [MMDetection3D](https://github.com/open-mmlab/mmdetection3d): OpenMMLab 新一代通用 3D 目标检测平台
 - [MMRotate](https://github.com/open-mmlab/mmrotate): OpenMMLab 旋转框检测工具箱与测试基准
 - [MMSegmentation](https://github.com/open-mmlab/mmsegmentation): OpenMMLab 语义分割工具箱
-- [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab 全流程文字检测识别理解工具箱
+- [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab 全流程文字检测识别理解工具包
 - [MMPose](https://github.com/open-mmlab/mmpose): OpenMMLab 姿态估计工具箱
 - [MMHuman3D](https://github.com/open-mmlab/mmhuman3d): OpenMMLab 人体参数化模型工具箱与测试基准
 - [MMSelfSup](https://github.com/open-mmlab/mmselfsup): OpenMMLab 自监督学习工具箱与测试基准

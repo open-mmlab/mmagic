@@ -135,7 +135,7 @@ log_config = dict(  # config to register logger hook
     ])  # The logger used to record the training process.
 
 visual_config = dict(  # config to register visualization hook
-    type='VisualizationHook',
+    type='MMEditVisualizationHook',
     output_dir='visual',
     interval=1000,
     res_name_list=[

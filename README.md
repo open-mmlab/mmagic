@@ -35,13 +35,15 @@
 
 </div>
 
-English | [简体中文](/README_zh-CN.md)
+<div align="center">
+
+English | [简体中文](README_zh-CN.md)
+
+</div>
 
 ## Introduction
 
-MMEditing is an open-source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
-
-Currently, MMEditing supports the following tasks:
+MMEditing is an open-source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project. Currently, MMEditing supports:
 
 <div align="center">
   <img src="https://user-images.githubusercontent.com/12756472/158984079-c4754015-c1f6-48c5-ac46-62e79448c372.jpg"/>
@@ -55,7 +57,8 @@ https://user-images.githubusercontent.com/12756472/175944645-cabe8c2b-9f25-440b-
 
 https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
 
-### Major features
+<details open>
+<summary>Major features</summary>
 
 - **Modular design**
 
@@ -73,21 +76,29 @@ Note that **MMSR** has been merged into this repo, as a part of MMEditing.
 With elaborate designs of the new framework and careful implementations,
 hope MMEditing could provide better experience.
 
-## News
+## What's New
 
-- \[2022-06-01\] v0.15.0 was released.
-  - Support FLAVR
-  - Support AOT-GAN
-  - Support CAIN with ReduceLROnPlateau Scheduler
-- \[2022-04-01\] v0.14.0 was released.
-  - Support TOFlow in video frame interpolation
-- \[2022-03-01\] v0.13.0 was released.
-  - Support CAIN
-  - Support EDVR-L
-  - Support running in Windows
-- \[2022-02-11\] Switch to **PyTorch 1.5+**. The compatibility to earlier versions of PyTorch will no longer be guaranteed.
+MMEditing maintains both master and 1.x branches. See more details in  [Branch Maintenance Plan](README.md#branch-maintenance-plan).
+
+### 💎 Stable version
+
+**0.16.0** was released in 31/10/2022:
+
+- `VisualizationHook` is deprecated. Users should use `MMEditVisualizationHook` instead.
+- Fix FLAVR register.
+- Fix the number of channels in RDB.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
+
+### 🌟 Preview of 1.x version
+
+A brand new version of [**MMEditing v1.0.0rc1**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc1) was released in 24/09/2022:
+
+- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍。
+- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
+- Refactored and more flexible [architecture](https://mmediting.readthedocs.io/en/1.x/1_overview.html).
+
+Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
 
 ## Installation
 
@@ -199,6 +210,16 @@ We appreciate all contributions to improve MMEditing. Please refer to our [contr
 
 MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
 
+## Branch Maintenance Plan
+
+MMEditing currently has two branches, the master and 1.x branches, which go through the following three phases.
+
+| Phase                | Time                  | Branch                                                                        | description                                                                        |
+| -------------------- | --------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| RC Period            | 2022/9/1 - 2022.12.31 | Release candidate code (1.x version) will be released on 1.x branch. Default master branch is still 0.x version | Master and 1.x branches iterate normally                                           |
+| Compatibility Period | 2023/1/1 - 2023.12.31 | **Default master branch will be switched to 1.x branch**, and 0.x branch will correspond to 0.x version | We still maintain the old version 0.x, respond to user needs, but try not to introduce changes that break compatibility; master branch iterates normally |
+| Maintenance Period   | From 2024/1/1         | Default master branch corresponds to 1.x version and 0.x branch is 0.x version | 0.x branch is in maintenance phase, no more new feature support; master branch is iterating normally |
+
 ## Citation
 
 If MMEditing is helpful to your research, please cite it as below.
@@ -218,7 +239,9 @@ This project is released under the [Apache 2.0 license](LICENSE).
 
 ## Projects in OpenMMLab
 
+- [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab foundational library for training deep learning models.
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab foundational library for computer vision.
+- [MMEval](https://github.com/open-mmlab/mmeval): A unified evaluation library for multiple machine learning libraries.
 - [MIM](https://github.com/open-mmlab/mim): MIM installs OpenMMLab packages.
 - [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab image classification toolbox and benchmark.
 - [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab detection toolbox and benchmark.

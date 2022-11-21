@@ -1,5 +1,65 @@
 # 变更日志
 
+## v0.16.0 (31/10/2022)
+
+**接口变更**
+
+`VisualizationHook` 即将废弃，建议用户使用 `MMEditVisualizationHook`。(#1375)
+
+<table align="center">
+  <thead>
+      <tr align='center'>
+          <td>旧版本</td>
+          <td>新版本</td>
+      </tr>
+  </thead>
+  <tbody><tr valign='top'>
+  <th>
+
+```python
+visual_config = dict(  # 构建可视化钩子的配置
+  type='VisualizationHook',
+  output_dir='visual',
+  interval=1000,
+  res_name_list=[
+      'gt_img', 'masked_img', 'fake_res', 'fake_img', 'fake_gt_local'
+  ],
+)
+```
+
+</th>
+  <th>
+
+```python
+visual_config = dict(  # 构建可视化钩子的配置
+  type='MMEditVisualizationHook',
+  output_dir='visual',
+  interval=1000,
+  res_name_list=[
+      'gt_img', 'masked_img', 'fake_res', 'fake_img', 'fake_gt_local'
+  ],
+)
+```
+
+</th></tr>
+</tbody></table>
+
+**改进**
+
+- 改进 `preprocess_div2k_dataset.py` 中的参数类型。 (#1381)
+- 更新 RDN 的 docstring。 (#1326)
+- 更新 `readme.md` 中的介绍说明。 (#)
+
+**Bug 修复**
+
+- 修复 FLAVR 在 `mmedit/models/video_interpolators` 中的注册和使用。(#1186)
+- 修复 `restoration_video_inference.py` 中的路径处理问题。 (#1262)
+- 修正 RDB 模型结构中的卷积通道数。(#1292, #1311)
+
+**Contributors**
+
+一共有 5 位 开发者对本次发布做出贡献。感谢 @LeoXing1996, @Z-Fran, @zengyh1900, @ryanxingql, @ruoningYu。
+
 ## v0.15.2 (09/09/2022)
 
 **改进**
