@@ -337,7 +337,8 @@ class StyleGAN2Generator(nn.Module):
                 input_is_latent=False,
                 injected_noise=None,
                 add_noise=True,
-                randomize_noise=True):
+                randomize_noise=True,
+                update_ws=False):
         """Forward function.
 
         This function has been integrated with the truncation trick. Please
@@ -375,6 +376,8 @@ class StyleGAN2Generator(nn.Module):
             randomize_noise (bool, optional): If `False`, images are sampled
                 with the buffered noise tensor injected to the style conv
                 block. Defaults to True.
+            update_ws (bool): Whether update latent code with EMA. Only work
+                when `w_avg` is registeried. Defaults to False.
 
         Returns:
             torch.Tensor | dict: Generated image tensor or dictionary \
@@ -438,7 +441,7 @@ class StyleGAN2Generator(nn.Module):
             noise_batch = None
 
         # update w_avg during training, if need
-        if hasattr(self, 'w_avg') and self.training:
+        if hasattr(self, 'w_avg') and self.training and update_ws:
             # only update w_avg with the first style code
             self.w_avg.copy_(styles[0].detach().mean(
                 dim=0).lerp(self.w_avg, self.w_avg_beta))

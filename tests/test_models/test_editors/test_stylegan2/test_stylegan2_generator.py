@@ -123,17 +123,34 @@ class TestStyleGAN2Generator:
         # test update w_avg with ema
         g.eval()
         res = g(
-            None, num_batches=1, injected_noise=None, randomize_noise=False)
+            None,
+            num_batches=1,
+            injected_noise=None,
+            randomize_noise=False,
+            update_ws=True)
         mean_latent_test = g.get_mean_latent().clone()  # copy for test
         # should not be update in test
         assert (mean_latent_test == mean_latent).all()
 
         g.train()
         res = g(
-            None, num_batches=1, injected_noise=None, randomize_noise=False)
+            None,
+            num_batches=1,
+            injected_noise=None,
+            randomize_noise=False,
+            update_ws=True)
         mean_latent_train = g.get_mean_latent().clone()  # copy for test
         # should be update in train
         assert (mean_latent_train != mean_latent).any()
+
+        res = g(
+            None,
+            num_batches=1,
+            injected_noise=None,
+            randomize_noise=False,
+            update_ws=False)
+        mean_latent_no_update = g.get_mean_latent().clone()  # copy for test
+        assert (mean_latent_train == mean_latent_no_update).all()
 
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_g_cuda(self):
