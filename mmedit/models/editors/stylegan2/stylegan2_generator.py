@@ -440,7 +440,7 @@ class StyleGAN2Generator(nn.Module):
         # update w_avg during training, if need
         if hasattr(self, 'w_avg') and self.training:
             # only update w_avg with the first style code
-            self.w_avg.copy_(styles_list[0].detach().mean(
+            self.w_avg.copy_(styles[0].detach().mean(
                 dim=0).lerp(self.w_avg, self.w_avg_beta))
 
         if injected_noise is None:
