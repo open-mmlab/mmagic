@@ -91,14 +91,14 @@ def polynomial_kernel(X, Y=None, degree=3, gamma=None, coef=1):
     return K
 
 
-def mmd2(X, Y, biased=False):
+def mmd2(X, Y, unbiased=True):
     """Compute the Maximum Mean Discrepancy."""
     XX = polynomial_kernel(X, X)
     YY = polynomial_kernel(Y, Y)
     XY = polynomial_kernel(X, Y)
 
     m = X.shape[0]
-    if biased:
+    if not unbiased:
         return (np.sum(XX) + np.sum(YY) - 2 * np.sum(XY)) / m**2
 
     trX = np.trace(XX)
@@ -112,14 +112,22 @@ class KID:
     """Implementation of `KID <https://arxiv.org/abs/1801.01401>`.
 
     Args:
-        num_repeats (int): Number of repetitions. Default: 100.
+        num_repeats (int): The number of repetitions. Default: 100.
         sample_size (int): Size to sample. Default: 1000.
+        use_unbiased_estimator (bool): Whether to use KID as an unbiased
+            estimator. Using an unbiased estimator is desirable in the case of
+            finite sample size, especially when the number of samples are
+            small. Using an unbiased estimator is recommended in most cases.
+            Default: True
     """
 
-    def __init__(self, num_repeats=100, sample_size=1000, biased=False):
+    def __init__(self,
+                 num_repeats=100,
+                 sample_size=1000,
+                 use_unbiased_estimator=True):
         self.num_repeats = num_repeats
         self.sample_size = sample_size
-        self.biased = biased
+        self.unbiased = use_unbiased_estimator
 
     def __call__(self, X, Y):
         """Calculate KID.
@@ -138,6 +146,6 @@ class KID:
                 num_samples, self.sample_size, replace=False)]
             Y_ = Y[np.random.choice(
                 num_samples, self.sample_size, replace=False)]
-            kid.append(mmd2(X_, Y_, biased=self.biased))
+            kid.append(mmd2(X_, Y_, unbiased=self.unbiased))
         kid = np.array(kid)
         return dict(KID_MEAN=kid.mean(), KID_STD=kid.std())
