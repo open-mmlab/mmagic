@@ -7,6 +7,8 @@ from .biggan import BigGAN
 from .cain import CAIN, CAINNet
 from .cyclegan import CycleGAN
 from .dcgan import DCGAN
+from .ddim import DDIMScheduler
+from .ddpm import DDPMScheduler
 from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
                          DeepFillDecoder, DeepFillEncoder, DeepFillRefiner,
                          DeepFillv1Discriminators, DeepFillv1Inpaintor)
@@ -14,6 +16,7 @@ from .deepfillv2 import DeepFillEncoderDecoder
 from .dic import (DIC, DICNet, FeedbackBlock, FeedbackBlockCustom,
                   FeedbackBlockHeatmapAttention, LightCNN, MaxFeature)
 from .dim import DIM
+from .disco_diffusion import DiscoDiffusion
 from .edsr import EDSRNet
 from .edvr import EDVR, EDVRNet
 from .esrgan import ESRGAN, RRDBNet
@@ -52,7 +55,6 @@ from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
 from .wgan_gp import WGANGP
-from .disco_diffusion import DiscoDiffusion
 
 __all__ = [
     'AOTEncoderDecoder', 'AOTBlockNeck', 'AOTInpaintor',
@@ -75,7 +77,8 @@ __all__ = [
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
-    'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel', 'DenoisingUnet',
-    'DiscoDiffusion', 'IDLossModel', 'PESinGAN',
-    'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization'
+    'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel',
+    'DenoisingUnet', 'DiscoDiffusion', 'IDLossModel', 'PESinGAN',
+    'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization',
+    'DDPMScheduler', 'DDIMScheduler'
 ]

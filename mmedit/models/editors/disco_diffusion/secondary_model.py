@@ -1,11 +1,15 @@
+# Copyright (c) OpenMMLab. All rights reserved.
+import math
 from functools import partial
-import torch.nn as nn
+
 import torch
-import math 
+import torch.nn as nn
+
 from mmedit.registry import MODELS
 
+
 def append_dims(x, n):
-    return x[(Ellipsis, *(None,) * (n - x.ndim))]
+    return x[(Ellipsis, *(None, ) * (n - x.ndim))]
 
 
 def expand_to_planes(x, shape):
@@ -19,7 +23,9 @@ def alpha_sigma_to_t(alpha, sigma):
 def t_to_alpha_sigma(t):
     return torch.cos(t * math.pi / 2), torch.sin(t * math.pi / 2)
 
+
 class ConvBlock(nn.Sequential):
+
     def __init__(self, c_in, c_out):
         super().__init__(
             nn.Conv2d(c_in, c_out, 3, padding=1),
@@ -28,6 +34,7 @@ class ConvBlock(nn.Sequential):
 
 
 class SkipBlock(nn.Module):
+
     def __init__(self, main, skip=None):
         super().__init__()
         self.main = nn.Sequential(*main)
@@ -38,10 +45,12 @@ class SkipBlock(nn.Module):
 
 
 class FourierFeatures(nn.Module):
+
     def __init__(self, in_features, out_features, std=1.):
         super().__init__()
         assert out_features % 2 == 0
-        self.weight = nn.Parameter(torch.randn([out_features // 2, in_features]) * std)
+        self.weight = nn.Parameter(
+            torch.randn([out_features // 2, in_features]) * std)
 
     def forward(self, input):
         f = 2 * math.pi * input @ self.weight.T
@@ -50,6 +59,7 @@ class FourierFeatures(nn.Module):
 
 @MODELS.register_module()
 class SecondaryDiffusionImageNet2(nn.Module):
+
     def __init__(self):
         super().__init__()
         self.in_channels = 3
@@ -58,7 +68,8 @@ class SecondaryDiffusionImageNet2(nn.Module):
 
         self.timestep_embed = FourierFeatures(1, 16)
         self.down = nn.AvgPool2d(2)
-        self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=False)
+        self.up = nn.Upsample(
+            scale_factor=2, mode='bilinear', align_corners=False)
 
         self.net = nn.Sequential(
             ConvBlock(3 + 16, cs[0]),
@@ -108,9 +119,11 @@ class SecondaryDiffusionImageNet2(nn.Module):
         )
 
     def forward(self, input, t):
-        timestep_embed = expand_to_planes(self.timestep_embed(t[:, None]), input.shape)
+        timestep_embed = expand_to_planes(
+            self.timestep_embed(t[:, None]), input.shape)
         v = self.net(torch.cat([input, timestep_embed], dim=1))
-        alphas, sigmas = map(partial(append_dims, n=v.ndim), t_to_alpha_sigma(t))
+        alphas, sigmas = map(
+            partial(append_dims, n=v.ndim), t_to_alpha_sigma(t))
         pred = input * alphas - v * sigmas
         eps = input * sigmas + v * alphas
         return dict(v=v, pred=pred, eps=eps)

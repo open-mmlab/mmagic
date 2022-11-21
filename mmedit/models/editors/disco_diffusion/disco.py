@@ -2,30 +2,35 @@
 from copy import deepcopy
 from typing import List, Optional
 
+import mmcv
 import mmengine
 import torch
+import torch.nn.functional as F
 from mmengine import MessageHub
 from mmengine.model import BaseModel, is_model_wrapper
 from mmengine.optim import OptimWrapperDict
-from mmengine.runner.checkpoint import _load_checkpoint_with_prefix, _load_checkpoint
+from mmengine.runner import set_random_seed
+from mmengine.runner.checkpoint import (_load_checkpoint,
+                                        _load_checkpoint_with_prefix)
+from torchvision.utils import save_image
 from tqdm import tqdm
 
-from mmedit.registry import DIFFUSERS, MODELS, MODULES
+from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, SampleList
-from mmengine.runner import set_random_seed
 from .guider import ImageTextGuider
-
-from torchvision.utils import save_image
 from .secondary_model import SecondaryDiffusionImageNet2, alpha_sigma_to_t
-import torch.nn.functional as F
-import mmcv
+
 
 @MODELS.register_module('disco')
 @MODELS.register_module('dd')
 @MODELS.register_module()
 class DiscoDiffusion(BaseModel):
-    """_summary_
+    """Disco Diffusion (DD) is a Google Colab Notebook which leverages an AI
+    Image generating technique called CLIP-Guided Diffusion to allow you to
+    create compelling and beautiful images from just text inputs. Created by
+    Somnai, augmented by Gandamu, and building on the work of RiversHaveWings,
+    nshepperd, and many others.
 
     Args:
         data_preprocessor (_type_): _description_
@@ -38,6 +43,7 @@ class DiscoDiffusion(BaseModel):
         use_fp16 (bool, optional): _description_. Defaults to False.
         pretrained_cfgs (_type_, optional): _description_. Defaults to None.
     """
+
     def __init__(self,
                  data_preprocessor,
                  unet,
@@ -50,7 +56,7 @@ class DiscoDiffusion(BaseModel):
                  pretrained_cfgs=None):
         super().__init__(data_preprocessor=data_preprocessor)
         self.unet = MODULES.build(unet)
-        self.diffuser = DIFFUSERS.build(diffuser)
+        self.diffuser = DIFFUSION_SCHEDULERS.build(diffuser)
         clip_models = []
         for clip_cfg in clip_models_cfg:
             clip_models.append(MODULES.build(clip_cfg))
@@ -80,11 +86,10 @@ class DiscoDiffusion(BaseModel):
             strict = ckpt_cfg.get('strict', True)
             ckpt_path = ckpt_cfg.get('ckpt_path')
             if prefix:
-                state_dict = _load_checkpoint_with_prefix(prefix, ckpt_path,
-                                                      map_location)
+                state_dict = _load_checkpoint_with_prefix(
+                    prefix, ckpt_path, map_location)
             else:
-                state_dict = _load_checkpoint(ckpt_path,
-                                                      map_location)
+                state_dict = _load_checkpoint(ckpt_path, map_location)
             getattr(self, key).load_state_dict(state_dict, strict=strict)
             mmengine.print_log(f'Load pretrained {key} from {ckpt_path}')
 
@@ -97,9 +102,9 @@ class DiscoDiffusion(BaseModel):
         """
         return next(self.parameters()).device
 
-
     @torch.no_grad()
     def infer(self,
+              scheduler_kwargs=None,
               height=None,
               width=None,
               init_image=None,
@@ -109,12 +114,13 @@ class DiscoDiffusion(BaseModel):
               show_progress=False,
               text_prompts=[],
               image_prompts=[],
-              eta = 0.8,
+              eta=0.8,
               clip_grad_scale=1000,
               seed=None):
         """_summary_
 
         Args:
+            scheduler_kwargs (dict, optional):
             init_image (_type_, optional): _description_. Defaults to None.
             batch_size (int, optional): _description_. Defaults to 1.
             num_inference_steps (int, optional): _description_.
@@ -125,32 +131,45 @@ class DiscoDiffusion(BaseModel):
         Returns:
             _type_: _description_
         """
-        # TODO:
+        # set diffuser
+        if scheduler_kwargs is not None:
+            mmengine.print_log('Switch to infer diffusion scheduler!',
+                               'current')
+            infer_scheduler = DIFFUSION_SCHEDULERS.build(scheduler_kwargs)
+        else:
+            infer_scheduler = self.diffuser
         # set random seed
         if isinstance(seed, int):
             set_random_seed(seed=seed)
 
         # set step values
         if num_inference_steps > 0:
-            self.diffuser.set_timesteps(num_inference_steps)
+            infer_scheduler.set_timesteps(num_inference_steps)
 
         _ = image_prompts
-        
-        height = (height//64)*64 if height else self.unet.image_size
-        width = (width//64)*64 if width else self.unet.image_size
+
+        height = (height // 64) * 64 if height else self.unet.image_size
+        width = (width // 64) * 64 if width else self.unet.image_size
         if init_image is None:
-            image = torch.randn((batch_size, self.unet.in_channels,
-                                 height, width))
+            image = torch.randn(
+                (batch_size, self.unet.in_channels, height, width))
             image = image.to(self.device)
         else:
             init = mmcv.imread(init_image, channel_order='rgb')
-            init = mmcv.imresize(init, (width, height), interpolation='lanczos')/255.
-            init_image = torch.as_tensor(init, dtype=torch.float32).to(self.device).unsqueeze(0).permute(0, 3, 1, 2).mul(2).sub(1)
+            init = mmcv.imresize(
+                init, (width, height), interpolation='lanczos') / 255.
+            init_image = torch.as_tensor(
+                init,
+                dtype=torch.float32).to(self.device).unsqueeze(0).permute(
+                    0, 3, 1, 2).mul(2).sub(1)
             image = init_image.clone()
-            image = self.diffuser.add_noise(image, torch.randn_like(image), self.diffuser.timesteps[skip_steps])
+            image = infer_scheduler.add_noise(
+                image, torch.randn_like(image),
+                infer_scheduler.timesteps[skip_steps])
         # get stats from text prompts and image prompts
-        model_stats = self.guider.compute_prompt_stats(text_prompts=text_prompts)
-        timesteps = self.diffuser.timesteps[skip_steps:-1]
+        model_stats = self.guider.compute_prompt_stats(
+            text_prompts=text_prompts)
+        timesteps = infer_scheduler.timesteps[skip_steps:-1]
         if show_progress:
             timesteps = tqdm(timesteps)
         for t in timesteps:
@@ -158,14 +177,24 @@ class DiscoDiffusion(BaseModel):
             model_output = self.unet(image, t)['outputs']
 
             # 2. compute previous image: x_t -> x_t-1
-            cond_kwargs = {'model_stats': model_stats, 'init_image':init_image, 'unet': self.unet}
+            cond_kwargs = {
+                'model_stats': model_stats,
+                'init_image': init_image,
+                'unet': self.unet
+            }
             if self.with_secondary_model:
                 cond_kwargs.update(secondary_model=self.secondary_model)
-            diffuser_output = self.diffuser.step(model_output, t, image, cond_fn=self.guider.cond_fn, cond_kwargs=cond_kwargs, eta = eta)
+            diffuser_output = infer_scheduler.step(
+                model_output,
+                t,
+                image,
+                cond_fn=self.guider.cond_fn,
+                cond_kwargs=cond_kwargs,
+                eta=eta)
 
             image = diffuser_output['prev_sample']
         return {'samples': image}
 
-    def forward(self, x):
-        return x
-
+    def forward(self, inputs, data_samples, mode):
+        raise NotImplementedError(
+            "Disco Diffusion doesn't have forward function")

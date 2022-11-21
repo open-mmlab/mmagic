@@ -1,0 +1,9 @@
+Collections:
+- Metadata:
+    Architecture:
+    - Disco Diffusion
+  Name: Disco Diffusion
+  Paper:
+  - <>
+  README: configs/disco/README.md
+Models: []

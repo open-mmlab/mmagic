@@ -10,11 +10,12 @@ from mmengine.optim import OptimWrapperDict
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from tqdm import tqdm
 
-from mmedit.registry import DIFFUSERS, MODELS, MODULES
+from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, SampleList
 
-def classifier_grad(x, t, y=None, classifier_scale=1.0):
+
+def classifier_grad(x, t, y=None, classifier, classifier_scale=1.0):
     assert y is not None
     with torch.enable_grad():
         x_in = x.detach().requires_grad_(True)
@@ -22,6 +23,7 @@ def classifier_grad(x, t, y=None, classifier_scale=1.0):
         log_probs = F.log_softmax(logits, dim=-1)
         selected = log_probs[range(len(logits)), y.view(-1)]
         return torch.autograd.grad(selected.sum(), x_in)[0] * classifier_scale
+
 
 @MODELS.register_module('ADM')
 @MODELS.register_module('GuidedDiffusion')
@@ -49,7 +51,7 @@ class AblatedDiffusionModel(BaseModel):
 
         super().__init__(data_preprocessor=data_preprocessor)
         self.unet = MODULES.build(unet)
-        self.diffuser = DIFFUSERS.build(diffuser)
+        self.diffuser = DIFFUSION_SCHEDULERS.build(diffuser)
         if classifier:
             self.classifier = MODULES.build(unet)
         else:
@@ -140,9 +142,13 @@ class AblatedDiffusionModel(BaseModel):
 
             # 3. applying classifier guide
             if self.classifier and classifier_scale != 0.0:
-                gradient = classifier_grad(image, t, labels, classifier_scale=classifier_scale)
-                guided_mean = (diffuser_output["mean"].float() + diffuser_output["sigma"] * gradient.float())
-                image = guided_mean + diffuser_output["sigma"]* diffuser_output["noise"]
+                gradient = classifier_grad(
+                    image, t, labels, self.classifier, classifier_scale=classifier_scale)
+                guided_mean = (
+                    diffuser_output['mean'].float() +
+                    diffuser_output['sigma'] * gradient.float())
+                image = guided_mean + diffuser_output[
+                    'sigma'] * diffuser_output['noise']
             else:
                 image = diffuser_output['prev_sample']
 
@@ -171,7 +177,8 @@ class AblatedDiffusionModel(BaseModel):
         num_inference_steps = sample_kwargs.get(
             'num_inference_steps', self.diffuser.num_train_timesteps)
         show_progress = sample_kwargs.get('show_progress', False)
-        classifier_scale = sample_kwargs.get('classifier_scale', self.classifier_scale)
+        classifier_scale = sample_kwargs.get('classifier_scale',
+                                             self.classifier_scale)
 
         outputs = self.infer(
             init_image=init_image,

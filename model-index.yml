@@ -10,6 +10,7 @@ Import:
 - configs/deepfillv2/metafile.yml
 - configs/dic/metafile.yml
 - configs/dim/metafile.yml
+- configs/disco/metafile.yml
 - configs/edsr/metafile.yml
 - configs/edvr/metafile.yml
 - configs/esrgan/metafile.yml

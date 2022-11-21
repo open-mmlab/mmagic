@@ -64,4 +64,4 @@ LOG_PROCESSORS = Registry('log_processor', parent=registry.LOG_PROCESSORS)
 OPTIM_WRAPPERS = Registry('optim_wrapper', parent=registry.OPTIM_WRAPPERS)
 
 # manage diffusers
-DIFFUSERS = Registry('diffuser')
+DIFFUSION_SCHEDULERS = Registry('diffusion scheduler')

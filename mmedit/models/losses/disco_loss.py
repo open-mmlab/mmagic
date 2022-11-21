@@ -1,9 +1,12 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn.functional as F
+
 
 def spherical_dist_loss(x, y):
     x = F.normalize(x, dim=-1)
     y = F.normalize(y, dim=-1)
-    return (x - y).norm(dim=-1).div(2).arcsin().pow(2).mul(2)     
+    return (x - y).norm(dim=-1).div(2).arcsin().pow(2).mul(2)
+
 
 def tv_loss(input):
     """L2 total variation loss, as in Mahendran et al."""
