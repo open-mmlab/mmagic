@@ -159,7 +159,8 @@ class TriplaneGenerator(BaseModule):
                 num_truncation_layer: Optional[int] = None,
                 input_is_latent: bool = False,
                 plane: Optional[Tensor] = None,
-                add_noise: bool = True) -> dict:
+                add_noise: bool = True,
+                render_kwargs: Optional[dict] = None) -> dict:
         """The forward function for EG3D generator.
 
         Args:
@@ -176,13 +177,15 @@ class TriplaneGenerator(BaseModule):
                 Defaults to None.
             add_noise (bool): Whether apply noise injection to the triplane
                 backbone. Defaults to True.
+            render_kwargs (Optional[dict], optional): The specific kwargs for
+                rendering. Defaults to None.
 
         Returns:
             dict: A dict contains 'fake_img', 'lr_img', 'depth',
                 'ray_directions' and 'ray_origins'.
         """
-
         batch_size = noise.shape[0]
+
         if not input_is_latent:
             styles = self.backbone.mapping(
                 noise,
@@ -192,7 +195,6 @@ class TriplaneGenerator(BaseModule):
 
         ray_origins, ray_directions = self.sample_ray(label)
 
-        # batch_size, _, _ = ray_origins.shape
         if plane is None:
             plane = self.backbone.synthesis(styles, add_noise=add_noise)
 
@@ -203,7 +205,7 @@ class TriplaneGenerator(BaseModule):
 
         # Perform volume rendering
         feature_samples, depth_samples, _ = self.renderer(
-            plane, ray_origins, ray_directions)
+            plane, ray_origins, ray_directions, render_kwargs=render_kwargs)
 
         # Reshape into 'raw' neural-rendered image
         H = W = self.neural_rendering_resolution

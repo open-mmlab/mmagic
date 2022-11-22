@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from copy import deepcopy
 from unittest import TestCase
+from unittest.mock import Mock, patch
 
 import torch
 
@@ -62,3 +63,15 @@ class TestEG3DGenerator(TestCase):
         self.assertEqual(out['depth'].shape, (2, 1, 5, 5))
         self.assertEqual(out['ray_directions'].shape, (2, 25, 3))
         self.assertEqual(out['ray_origins'].shape, (2, 25, 3))
+
+        # test render_kwargs is work in forward
+        render_kwargs = dict(a=1, b='b')
+        render_mock = Mock(
+            return_value=(torch.randn(2, 25, 8), torch.randn(2, 25, 1), None))
+        patch_func = 'mmedit.models.editors.eg3d.renderer.EG3DRenderer.forward'
+        with patch(patch_func, new=render_mock):
+            gen = TriplaneGenerator(**cfg_)
+            gen(noise, cond, render_kwargs=render_kwargs)
+            _, called_kwargs = render_mock.call_args
+            self.assertIn('render_kwargs', called_kwargs)
+            self.assertDictEqual(called_kwargs['render_kwargs'], render_kwargs)
