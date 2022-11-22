@@ -28,10 +28,18 @@ def sample_rays(cam2world: torch.Tensor, intrinsics: torch.Tensor,
     cy = intrinsics[:, 1, 2]
 
     device = cam2world.device
-    u, v = torch.meshgrid(
-        torch.arange(resolution, dtype=torch.float32, device=device),
-        torch.arange(resolution, dtype=torch.float32, device=device),
-        indexing='ij')
+
+    # torch.meshgrid has been modified in 1.10.0 (compatibility with previous
+    # versions), and will be further modified in 1.12 (Breaking Change)
+    if 'indexing' in torch.meshgrid.__code__.co_varnames:
+        u, v = torch.meshgrid(
+            torch.arange(resolution, dtype=torch.float32, device=device),
+            torch.arange(resolution, dtype=torch.float32, device=device),
+            indexing='ij')
+    else:
+        u, v = torch.meshgrid(
+            torch.arange(resolution, dtype=torch.float32, device=device),
+            torch.arange(resolution, dtype=torch.float32, device=device))
     uv = torch.stack([u, v])
     uv = uv * (1. / resolution) + (0.5 / resolution)
     uv = uv.flip(0).reshape(2, -1).transpose(1, 0)
