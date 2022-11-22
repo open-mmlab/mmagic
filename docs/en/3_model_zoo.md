@@ -339,7 +339,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
 ## TOFlow (IJCV'2019)
 
-- Tasks: video interpolation,video super-resolution
+- Tasks: video interpolation, video super-resolution
 - Number of checkpoints: 6
 - Number of configs: 6
 - Number of papers: 1
