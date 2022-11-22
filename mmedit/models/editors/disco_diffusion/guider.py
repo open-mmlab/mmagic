@@ -194,7 +194,7 @@ class MakeCutoutsDango(nn.Module):
         cutouts = []
         gray = T.Grayscale(3)
         sideY, sideX = input.shape[2:4]
-        max_size = max(sideX, sideY)
+        max_size = min(sideX, sideY)
         min_size = min(sideX, sideY, self.cut_size)
         output_shape = [1, 3, self.cut_size, self.cut_size]
         pad_input = F.pad(input,
