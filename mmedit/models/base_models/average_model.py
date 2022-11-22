@@ -62,8 +62,8 @@ class ExponentialMovingAverage(BaseAveragedModel):
             steps (int): The number of times the parameters have been
                 updated.
         """
-        averaged_param.mul_(1 - self.momentum).add_(
-            source_param, alpha=self.momentum)
+        averaged_param.mul_(self.momentum).add_(
+            source_param, alpha=1 - self.momentum)
 
     def _load_from_state_dict(self, state_dict: dict, prefix: str,
                               local_metadata: dict, strict: bool,
@@ -232,7 +232,7 @@ class RampUpEMA(BaseAveragedModel):
         """
         momentum = self.rampup(self.steps, self.ema_kimg, self.ema_rampup,
                                self.batch_size, self.eps)
-        averaged_param.mul_(1 - momentum).add_(source_param, alpha=momentum)
+        averaged_param.mul_(momentum).add_(source_param, alpha=1 - momentum)
 
     def _load_from_state_dict(self, state_dict: dict, prefix: str,
                               local_metadata: dict, strict: bool,
