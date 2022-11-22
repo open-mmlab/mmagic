@@ -325,7 +325,7 @@ model = dict(
 Dataset and data pipeline need to be set to build the dataloader. Due to the complexity of this part, we use intermediate variables to simplify the writing of dataloader configs.
 
 ```python
-dataset_type = 'UnconditionalImageDataset'  # Dataset type, this will be used to define the dataset
+dataset_type = 'BasicImageDataset'  # Dataset type, this will be used to define the dataset
 data_root = './data/ffhq/'  # Root path of data
 
 train_pipeline = [  # Training data process pipeline
