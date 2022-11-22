@@ -1,6 +1,6 @@
 # MMEditing Demo
 
-There are some mmediting demos in this folder. We provide python command line usage here to run these demos and more guidance could also be found on the [web page](https://mmediting.readthedocs.io/en/dev-1.x/user_guides/3_inference.html)
+There are some mmediting demos in this folder. We provide python command line usage here to run these demos and more guidance could also be found in the [documentation](https://mmediting.readthedocs.io/en/dev-1.x/user_guides/3_inference.html)
 
 ## Download sample images or videos
 
@@ -16,7 +16,7 @@ unzip resources.zip
 
 You can use the following commands to perform inference with a MMEdit model.
 
-Usage of python API can be found in this [tutotial](demo/mmediting_inference_tutorial.ipynb).
+Usage of python API can be found in this [tutotial](./mmediting_inference_tutorial.ipynb).
 
 ```shell
 python demo/mmediting_inference_demo.py \
@@ -141,12 +141,12 @@ python demo/restoration_face_demo.py \
 
 These demos are duplicated with mmedting_inference_demo.py and may be removed in the future.
 
-- colorization_demo.py
-- conditional_demo.py
-- inpainting_demo.py
-- matting_demo.py
-- restoration_demo.py
-- restoration_video_demo.py
-- translation_demo.py
-- unconditional_demo.py
-- video_interpolation_demo.py
+- [colorization_demo.py](./colorization_demo.py)
+- [conditional_demo.py](./conditional_demo.py)
+- [inpainting_demo.py](./inpainting_demo.py)
+- [matting_demo.py](./matting_demo.py)
+- [restoration_demo.py](./restoration_demo.py)
+- [restoration_video_demo.py](./restoration_video_demo.py)
+- [translation_demo.py](./translation_demo.py)
+- [unconditional_demo.py](./unconditional_demo.py)
+- [video_interpolation_demo.py](./video_interpolation_demo.py)
