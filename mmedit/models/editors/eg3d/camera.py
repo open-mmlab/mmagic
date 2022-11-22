@@ -6,7 +6,6 @@ import torch
 from mmengine.model import BaseModule
 
 from mmedit.registry import MODULES
-from . import math_utils
 
 DeviceType = Optional[Union[str, int]]
 VectorType = Optional[Union[list, torch.Tensor]]
@@ -56,8 +55,9 @@ class BaseCamera(BaseModule):
         self.up = up
         self.radius = radius
         self.sampling_statregy = sampling_strategy
+        self.device = 'cpu'  # set default device as 'cpu'
 
-        assert (FOV is None) ^ (focal is None), (
+        assert ((FOV is None) or (focal is None)), (
             '\'FOV\' and \'focal\' should not be passed at the same time.')
         self.fov = FOV
         self.focal = focal
@@ -106,8 +106,13 @@ class BaseCamera(BaseModule):
         Returns:
             torch.Tensor: Intrinsic matrix.
         """
-        fov = self.fov if fov is None else fov
-        focal = self.focal if focal is None else focal
+        # 1. check if foc and focal is both passed
+        assert (fov is None) or (focal is None), (
+            '\'fov\' and focal should not be passed at the same time.')
+        # 2. if fov and focal is neither not passed, use initialized ones.
+        if fov is None and focal is None:
+            fov = self.fov if fov is None else fov
+            focal = self.focal if focal is None else focal
         device = self.device if device is None else device
 
         if fov is None and focal is None:
@@ -140,8 +145,8 @@ class BaseCamera(BaseModule):
         assert fov is not None, (
             '\'fov\' and \'self.fov\' should not be None at the same time.')
         device = self.device if device is None else device
-        # NOTE: EG3D multpile 1.414 as `image_width` to `focal`, we retain
-        # this operation
+        # NOTE: EG3D multpile '1 / 1.414' as `image_width` to `focal`, we
+        # retain this operation
         focal = float(1 / (math.tan(fov * math.pi / 360) * 1.414))
         intrinsics = [[focal, 0, 0.5], [0, focal, 0.5], [0, 0, 1]]
         intrinsics = torch.tensor(intrinsics, device=device)
@@ -171,9 +176,10 @@ class BaseCamera(BaseModule):
         intrinsics = torch.tensor(intrinsics, device=device)
         return intrinsics
 
-    def cpu(self) -> None:
+    def cpu(self) -> BaseModule:
         """Set device to cpu."""
         self.device = 'cpu'
+        return self
 
     def cuda(self, device: Optional[int] = None) -> BaseModule:
         """Set device as 'cuda'.
@@ -298,7 +304,7 @@ class BaseCamera(BaseModule):
                                                                      theta)
         camera_origins[:, 1:2] = radius * torch.cos(phi)
         # calculate forward vector and camer2world
-        forward_vectors = math_utils.normalize_vecs(look_at - camera_origins)
+        forward_vectors = normalize_vecs(look_at - camera_origins)
         camera2world = create_cam2world_matrix(forward_vectors, camera_origins,
                                                up)
         return camera2world
@@ -312,7 +318,7 @@ class BaseCamera(BaseModule):
         ]
         for attribute in attribute_list:
             if getattr(self, attribute, None) is not None:
-                repr_string += f'    {attribute}: {getattr(self, attribute)}'
+                repr_string += f'\n    {attribute}: {getattr(self, attribute)}'
         return repr_string
 
 
@@ -404,11 +410,11 @@ def create_cam2world_matrix(forward_vector: torch.Tensor, origin: torch.Tensor,
         torch.Tensor: Camera-to-world matrix.
     """
 
-    forward_vector = math_utils.normalize_vecs(forward_vector)
+    forward_vector = normalize_vecs(forward_vector)
     up_vector = up.type(torch.float).expand_as(forward_vector)
-    right_vector = -math_utils.normalize_vecs(
+    right_vector = -normalize_vecs(
         torch.cross(up_vector, forward_vector, dim=-1))
-    up_vector = math_utils.normalize_vecs(
+    up_vector = normalize_vecs(
         torch.cross(forward_vector, right_vector, dim=-1))
 
     rotation_matrix = torch.eye(
@@ -424,3 +430,15 @@ def create_cam2world_matrix(forward_vector: torch.Tensor, origin: torch.Tensor,
     cam2world = (translation_matrix @ rotation_matrix)[:, :, :]
     assert (cam2world.shape[1:] == (4, 4))
     return cam2world
+
+
+def normalize_vecs(vectors: torch.Tensor) -> torch.Tensor:
+    """Normalize vector with it's lengths at the last dimension.
+
+    Args:
+        vector (torch.Tensor): Vectors to be normalized.
+
+    Returns:
+        torch.Tensor: Vectors after normalization.
+    """
+    return vectors / (torch.norm(vectors, dim=-1, keepdim=True))
