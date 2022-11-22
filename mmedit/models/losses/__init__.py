@@ -29,6 +29,5 @@ __all__ = [
     'CLIPLoss', 'CLIPLossComps', 'DiscShiftLossComps', 'FaceIdLossComps',
     'GANLossComps', 'GeneratorPathRegularizerComps',
     'GradientPenaltyLossComps', 'R1GradientPenaltyComps', 'disc_shift_loss',
-    'spherical_dist_loss', 'tv_loss', 'range_loss',
-    'PSNRLoss'
+    'spherical_dist_loss', 'tv_loss', 'range_loss', 'PSNRLoss'
 ]
