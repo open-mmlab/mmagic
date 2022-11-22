@@ -6,7 +6,7 @@
 
 <!-- [ALGORITHM] -->
 
-## Introduction
+## Abstract
 
 <!-- [ABSTRACT] -->
 

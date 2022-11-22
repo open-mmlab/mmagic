@@ -14,9 +14,8 @@ import torchvision.transforms.functional as TF
 from resize_right import resize
 
 from mmedit.models.losses import range_loss, spherical_dist_loss, tv_loss
-from mmedit.registry import MODULES
 from .prompt_utils import normalize
-from .secondary_model import *
+from .secondary_model import alpha_sigma_to_t
 
 
 def sinc(x):
@@ -122,7 +121,6 @@ class MakeCutouts(nn.Module):
             T.Lambda(lambda x: x + torch.randn_like(x) * 0.01),
             T.RandomGrayscale(p=0.15),
             T.Lambda(lambda x: x + torch.randn_like(x) * 0.01),
-            # T.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.1),
         ])
 
     def forward(self, input):
@@ -196,11 +194,9 @@ class MakeCutoutsDango(nn.Module):
         cutouts = []
         gray = T.Grayscale(3)
         sideY, sideX = input.shape[2:4]
-        max_size = min(sideX, sideY)
+        max_size = max(sideX, sideY)
         min_size = min(sideX, sideY, self.cut_size)
-        l_size = max(sideX, sideY)
         output_shape = [1, 3, self.cut_size, self.cut_size]
-        output_shape_2 = [1, 3, self.cut_size + 2, self.cut_size + 2]
         pad_input = F.pad(input,
                           ((sideY - max_size) // 2, (sideY - max_size) // 2,
                            (sideX - max_size) // 2, (sideX - max_size) // 2))
@@ -235,7 +231,8 @@ class MakeCutoutsDango(nn.Module):
                 cutout = resize(cutout, out_shape=output_shape)
                 cutouts.append(cutout)
         cutouts = torch.cat(cutouts)
-        if skip_augs is not True: cutouts = self.augs(cutouts)
+        if not skip_augs:
+            cutouts = self.augs(cutouts)
         return cutouts
 
 
@@ -385,14 +382,11 @@ class ImageTextGuider(nn.Module):
             x_in_grad = torch.zeros_like(x_in)
             for model_stat in model_stats:
                 for i in range(self.cutter_cfg.cutn_batches):
-                    t_int = int(
-                        t.item()
-                    ) + 1  #errors on last step without +1, need to find source
-                    #when using SLIP Base model the dimensions need to be hard coded to avoid AttributeError: 'VisionTransformer' object has no attribute 'input_resolution'
+                    t_int = int(t.item()) + 1
                     try:
                         input_resolution = model_stat[
                             'clip_model'].model.visual.input_resolution
-                    except:
+                    except AttributeError:
                         input_resolution = 224
 
                     cuts = MakeCutoutsDango(
@@ -412,7 +406,6 @@ class ImageTextGuider(nn.Module):
                         self.cutter_cfg.cut_innercut[1000 - t_int], n, -1
                     ])
                     losses = dists.mul(model_stat['weights']).sum(2).mean(0)
-                    # loss_values.append(losses.sum().item()) # log loss, probably shouldn't do per cutn_batch
                     x_in_grad += torch.autograd.grad(
                         losses.sum() * clip_guidance_scale,
                         x_in)[0] / self.cutter_cfg.cutn_batches
@@ -426,16 +419,14 @@ class ImageTextGuider(nn.Module):
                 init_losses = self.lpips_model(x_in, init_image)
                 loss = loss + init_losses.sum() * self.loss_cfg.init_scale
             x_in_grad += torch.autograd.grad(loss, x_in)[0]
-            if torch.isnan(x_in_grad).any() == False:
+            if not torch.isnan(x_in_grad).any():
                 grad = -torch.autograd.grad(x_in, x, x_in_grad)[0]
             else:
-                # print("NaN'd")
                 x_is_NaN = True
                 grad = torch.zeros_like(x)
-        if clamp_grad and x_is_NaN == False:
+        if clamp_grad and not x_is_NaN:
             magnitude = grad.square().mean().sqrt()
-            return grad * magnitude.clamp(
-                max=clamp_max) / magnitude  #min=-0.02, min=-clamp_max,
+            return grad * magnitude.clamp(max=clamp_max) / magnitude
         return grad
 
     @property

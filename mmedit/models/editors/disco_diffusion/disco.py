@@ -1,25 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from copy import deepcopy
-from typing import List, Optional
-
 import mmcv
 import mmengine
 import torch
-import torch.nn.functional as F
-from mmengine import MessageHub
-from mmengine.model import BaseModel, is_model_wrapper
-from mmengine.optim import OptimWrapperDict
+from mmengine.model import BaseModel
 from mmengine.runner import set_random_seed
 from mmengine.runner.checkpoint import (_load_checkpoint,
                                         _load_checkpoint_with_prefix)
-from torchvision.utils import save_image
 from tqdm import tqdm
 
 from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
-from mmedit.structures import EditDataSample, PixelData
-from mmedit.utils.typing import ForwardInputs, SampleList
 from .guider import ImageTextGuider
-from .secondary_model import SecondaryDiffusionImageNet2, alpha_sigma_to_t
 
 
 @MODELS.register_module('disco')

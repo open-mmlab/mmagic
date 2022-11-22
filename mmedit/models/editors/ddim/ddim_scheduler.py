@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import math
-from statistics import mean
 from typing import Union
 
 import numpy as np
@@ -16,7 +14,7 @@ class DDIMScheduler:
     in https://arxiv.org/abs/2010.02502.
 
     The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddim.py. # noqa
-    The difference is that we ensemble gradient-guidance in step function.
+    The difference is that we ensemble gradient-guided sampling in step function.
 
     Args:
         num_train_timesteps (int, optional): _description_. Defaults to 1000.
@@ -73,10 +71,12 @@ class DDIMScheduler:
         self.alphas = 1.0 - self.betas
         self.alphas_cumprod = np.cumprod(self.alphas, axis=0)
 
-        # At every step in ddim, we are looking into the previous alphas_cumprod
-        # For the final step, there is no previous alphas_cumprod because we are already at 0
-        # `set_alpha_to_one` decides whether we set this paratemer simply to one or
-        # whether we use the final alpha of the "non-previous" one.
+        # At every step in ddim, we are looking into the
+        # previous alphas_cumprod. For the final step,
+        # there is no previous alphas_cumprod because we are already
+        # at 0 `set_alpha_to_one` decides whether we set this paratemer
+        # simply to one or whether we use the final alpha of the
+        # "non-previous" one.
         self.final_alpha_cumprod = np.array(
             1.0) if set_alpha_to_one else self.alphas_cumprod[0]
 
@@ -114,9 +114,9 @@ class DDIMScheduler:
     ):
         output = {}
         if self.num_inference_steps is None:
-            raise ValueError(
-                "Number of inference steps is 'None', you need to run 'set_timesteps' after creating the scheduler"
-            )
+            raise ValueError("Number of inference steps is 'None', '\
+                    'you need to run 'set_timesteps' '\
+                        'after creating the scheduler")
 
         pred = None
         if isinstance(model_output, dict):
@@ -124,12 +124,11 @@ class DDIMScheduler:
             model_output = model_output['eps']
         elif model_output.shape[1] == sample.shape[
                 1] * 2 and self.variance_type in ['learned', 'learned_range']:
-            model_output, predicted_variance = torch.split(
-                model_output, sample.shape[1], dim=1)
+            model_output, _ = torch.split(model_output, sample.shape[1], dim=1)
         else:
-            predicted_variance = None
+            raise TypeError
 
-        # See formulas (12) and (16) of DDIM paper https://arxiv.org/pdf/2010.02502.pdf
+        # See formulas (12) and (16) of DDIM paper https://arxiv.org/pdf/2010.02502.pdf # noqa
         # Ideally, read DDIM paper in-detail understanding
 
         # Notation (<variable name> -> <name in paper>
@@ -141,7 +140,8 @@ class DDIMScheduler:
         # - pred_prev_sample -> "x_t-1"
 
         # 1. get previous step value (=t-1)
-        prev_timestep = timestep - self.num_train_timesteps // self.num_inference_steps
+        prev_timestep = (
+            timestep - self.num_train_timesteps // self.num_inference_steps)
 
         # 2. compute alphas, betas
         alpha_prod_t = self.alphas_cumprod[timestep]
@@ -150,9 +150,9 @@ class DDIMScheduler:
         beta_prod_t = 1 - alpha_prod_t
 
         # 3. compute predicted original sample from predicted noise also called
-        # "predicted x_0" of formula (12) from https://arxiv.org/pdf/2010.02502.pdf
-        pred_original_sample = (sample - beta_prod_t**
-                                (0.5) * model_output) / alpha_prod_t**(0.5)
+        # "predicted x_0" of formula (12) from https://arxiv.org/pdf/2010.02502.pdf # noqa
+        pred_original_sample = (sample - (
+            (beta_prod_t)**(0.5)) * model_output) / alpha_prod_t**(0.5)
         if pred is not None:
             pred_original_sample = pred
 
@@ -169,8 +169,9 @@ class DDIMScheduler:
                 y=None,
                 secondary_model=cond_kwargs.get('secondary_model', None))
             model_output = model_output - (beta_prod_t**0.5) * gradient
-            pred_original_sample = (sample - beta_prod_t**
-                                    (0.5) * model_output) / alpha_prod_t**(0.5)
+            pred_original_sample = (
+                sample -
+                (beta_prod_t**(0.5)) * model_output) / alpha_prod_t**(0.5)
         # 4. Clip "predicted x_0"
         if self.clip_sample:
             pred_original_sample = torch.clamp(pred_original_sample, -1, 1)
@@ -182,15 +183,17 @@ class DDIMScheduler:
         output.update(dict(sigma=std_dev_t))
 
         if use_clipped_model_output:
-            # the model_output is always re-derived from the clipped x_0 in Glide
-            model_output = (sample - alpha_prod_t**
-                            (0.5) * pred_original_sample) / beta_prod_t**(0.5)
+            # the model_output is always
+            # re-derived from the clipped x_0 in Glide
+            model_output = (sample - (alpha_prod_t**(0.5)) *
+                            pred_original_sample) / beta_prod_t**(0.5)
 
-        # 6. compute "direction pointing to x_t" of formula (12) from https://arxiv.org/pdf/2010.02502.pdf
+        # 6. compute "direction pointing to x_t" of formula (12) from https://arxiv.org/pdf/2010.02502.pdf # noqa
         pred_sample_direction = (1 - alpha_prod_t_prev -
                                  std_dev_t**2)**(0.5) * model_output
 
-        # 7. compute x_t without "random noise" of formula (12) from https://arxiv.org/pdf/2010.02502.pdf
+        # 7. compute x_t without "random noise" of
+        # formula (12) from https://arxiv.org/pdf/2010.02502.pdf
         prev_mean = alpha_prod_t_prev**(
             0.5) * pred_original_sample + pred_sample_direction
         output.update(dict(mean=prev_mean, prev_sample=prev_mean))
@@ -217,11 +220,10 @@ class DDIMScheduler:
 
     def add_noise(self, original_samples, noise, timesteps):
         sqrt_alpha_prod = self.alphas_cumprod[timesteps]**0.5
-        # sqrt_alpha_prod = self.match_shape(sqrt_alpha_prod, original_samples)
         sqrt_one_minus_alpha_prod = (1 - self.alphas_cumprod[timesteps])**0.5
-        # sqrt_one_minus_alpha_prod = self.match_shape(sqrt_one_minus_alpha_prod, original_samples)
-
-        noisy_samples = sqrt_alpha_prod * original_samples + sqrt_one_minus_alpha_prod * noise
+        noisy_samples = (
+            sqrt_alpha_prod * original_samples +
+            sqrt_one_minus_alpha_prod * noise)
         return noisy_samples
 
     def __len__(self):

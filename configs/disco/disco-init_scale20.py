@@ -20,15 +20,11 @@ unet = dict(
         use_new_attention_order=False),
     use_scale_shift_norm=True)
 
+unet_ckpt_path = 'https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth'  # noqa
+secondary_model_ckpt_path = 'https://download.openmmlab.com/mmediting/synthesizers/disco/secondary_model_imagenet_2.pth',  # noqa
 pretrained_cfgs = dict(
-    unet=dict(
-        ckpt_path=
-        'https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth',
-        prefix='unet'),
-    secondary_model=dict(
-        ckpt_path=
-        'https://download.openmmlab.com/mmediting/synthesizers/disco/secondary_model_imagenet_2.pth',
-        prefix=''))
+    unet=dict(ckpt_path=unet_ckpt_path, prefix='unet'),
+    secondary_model=dict(ckpt_path=secondary_model_ckpt_path, prefix=''))
 
 secondary_model = dict(type='SecondaryDiffusionImageNet2')
 

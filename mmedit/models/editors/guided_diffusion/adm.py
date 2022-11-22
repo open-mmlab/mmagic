@@ -4,6 +4,7 @@ from typing import List, Optional
 
 import mmengine
 import torch
+import torch.nn.functional as F
 from mmengine import MessageHub
 from mmengine.model import BaseModel, is_model_wrapper
 from mmengine.optim import OptimWrapperDict
@@ -15,7 +16,7 @@ from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, SampleList
 
 
-def classifier_grad(x, t, y=None, classifier, classifier_scale=1.0):
+def classifier_grad(classifier, x, t, y=None, classifier_scale=1.0):
     assert y is not None
     with torch.enable_grad():
         x_in = x.detach().requires_grad_(True)
@@ -143,7 +144,11 @@ class AblatedDiffusionModel(BaseModel):
             # 3. applying classifier guide
             if self.classifier and classifier_scale != 0.0:
                 gradient = classifier_grad(
-                    image, t, labels, self.classifier, classifier_scale=classifier_scale)
+                    self.classifier,
+                    image,
+                    t,
+                    labels,
+                    classifier_scale=classifier_scale)
                 guided_mean = (
                     diffuser_output['mean'].float() +
                     diffuser_output['sigma'] * gradient.float())

@@ -193,8 +193,8 @@ class DDPMScheduler:
 
     def training_loss(self, model, x_0, t):
         raise NotImplementedError(
-            'This function is supposed to return a dict containing loss items giving sampled x0 and timestep.'
-        )
+            'This function is supposed to return '
+            'a dict containing loss items giving sampled x0 and timestep.')
 
     def sample_timestep(self):
         raise NotImplementedError
