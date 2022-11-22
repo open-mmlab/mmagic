@@ -75,7 +75,8 @@ class BaseCamera(BaseModule):
             torch.Tensor: Sampled results.
         """
         if self.sampling_statregy.upper() == 'UNIFORM':
-            return torch.rand((batch_size, 1), device=self.device) * std + mean
+            return (torch.rand(
+                (batch_size, 1), device=self.device) - 0.5) * 2 * std + mean
         elif self.sampling_statregy.upper() == 'GAUSSIAN':
             return torch.randn(
                 (batch_size, 1), device=self.device) * std + mean
