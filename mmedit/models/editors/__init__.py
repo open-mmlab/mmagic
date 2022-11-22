@@ -36,6 +36,7 @@ from .inst_colorization import InstColorization
 from .liif import LIIF, MLPRefiner
 from .lsgan import LSGAN
 from .mspie import MSPIEStyleGAN2, PESinGAN
+from .nafnet import NAFBaseline, NAFBaselineLocal, NAFNet, NAFNetLocal
 from .pconv import (MaskConvModule, PartialConv2d, PConvDecoder, PConvEncoder,
                     PConvEncoderDecoder, PConvInpaintor)
 from .pggan import ProgressiveGrowingGAN
@@ -78,7 +79,7 @@ __all__ = [
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel',
-    'DenoisingUnet', 'DiscoDiffusion', 'IDLossModel', 'PESinGAN',
-    'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization',
-    'DDPMScheduler', 'DDIMScheduler'
+    'DenoisingUnet', 'DiscoDiffusion','IDLossModel', 'PESinGAN',
+    'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
+    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal'
 ]
