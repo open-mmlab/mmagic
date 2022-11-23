@@ -19,28 +19,24 @@ from .secondary_model import alpha_sigma_to_t
 
 
 def sinc(x):
-    """_summary_
-
+    """
+    Sinc function.
+    If x equal to 0,
+        sinc(x) = 1
+    else:
+        sinc(x) = sin(x)/ x
     Args:
-        x (_type_): _description_
+        x (torch.Tensor): Input Tensor
 
     Returns:
-        _type_: _description_
+        torch.Tensor: Function output.
     """
     return torch.where(x != 0,
                        torch.sin(math.pi * x) / (math.pi * x), x.new_ones([]))
 
 
 def lanczos(x, a):
-    """_summary_
-
-    Args:
-        x (_type_): _description_
-        a (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
+    """Lanczos filter's reconstruction kernel L(x)."""
     cond = torch.logical_and(-a < x, x < a)
     out = torch.where(cond, sinc(x) * sinc(x / a), x.new_zeros([]))
     return out / out.sum()
@@ -66,15 +62,16 @@ def ramp(ratio, width):
 
 
 def resample(input, size, align_corners=True):
-    """_summary_
+    """Lanczos resampling image.
 
     Args:
-        input (_type_): _description_
-        size (_type_): _description_
-        align_corners (bool, optional): _description_. Defaults to True.
+        input (torch.Tensor): Input image tensor.
+        size (Tuple[int, int]): Output image size.
+        align_corners (bool): align_corners argument of F.interpolate.
+            Defaults to True.
 
     Returns:
-        _type_: _description_
+        torch.Tensor: Resampling results.
     """
     n, c, h, w = input.shape
     dh, dw = size
@@ -99,19 +96,21 @@ def resample(input, size, align_corners=True):
 
 
 class MakeCutouts(nn.Module):
-    """_summary_
+    """Each iteration, the AI cuts the image into smaller pieces known as cuts
+    , and compares each cut to the prompt to decide how to guide the next 
+    diffusion step. 
+    This classes will randomly cut patches and perfom image augmentation to 
+    these patches.
 
     Args:
-        cut_size (_type_): _description_
-        cutn (_type_): _description_
-        skip_augs (bool, optional): _description_. Defaults to False.
+        cut_size (int): Size of the patches.
+        cutn (int): Number of patches to cut.
     """
 
-    def __init__(self, cut_size, cutn, skip_augs=False):
+    def __init__(self, cut_size, cutn):
         super().__init__()
         self.cut_size = cut_size
         self.cutn = cutn
-        self.skip_augs = skip_augs
         self.augs = T.Compose([
             T.RandomHorizontalFlip(p=0.5),
             T.Lambda(lambda x: x + torch.randn_like(x) * 0.01),
@@ -123,7 +122,7 @@ class MakeCutouts(nn.Module):
             T.Lambda(lambda x: x + torch.randn_like(x) * 0.01),
         ])
 
-    def forward(self, input):
+    def forward(self, input, skip_augs=False):
         input = T.Pad(input.shape[2] // 4, fill=0)(input)
         sideY, sideX = input.shape[2:4]
         max_size = min(sideX, sideY)
@@ -140,7 +139,7 @@ class MakeCutouts(nn.Module):
                 cutout = input[:, :, offsety:offsety + size,
                                offsetx:offsetx + size]
 
-            if not self.skip_augs:
+            if not skip_augs:
                 cutout = self.augs(cutout)
             cutouts.append(resample(cutout, (self.cut_size, self.cut_size)))
             del cutout
@@ -148,19 +147,34 @@ class MakeCutouts(nn.Module):
         cutouts = torch.cat(cutouts, dim=0)
         return cutouts
 
-
-cutout_debug = False
-
-
 class MakeCutoutsDango(nn.Module):
-    """_summary_
-
+    """Dango233(https://github.com/Dango233)'s version of MakeCutouts.
+    
+    The improvement compared to ``MakeCutouts`` is that it use partial
+    greyscale augmentation to capture structure, and partial rotation 
+    augmentation to capture whole frames.
+    
     Args:
-        cut_size (_type_): _description_
-        Overview (int, optional): _description_. Defaults to 4.
-        InnerCrop (int, optional): _description_. Defaults to 0.
-        IC_Size_Pow (float, optional): _description_. Defaults to 0.5.
-        IC_Grey_P (float, optional): _description_. Defaults to 0.2.
+        cut_size (int): Size of the patches.
+        Overview (int): The total number of overview cuts.
+        In details,
+            Overview=1, Add whole frame;
+            Overview=2, Add grayscaled frame;
+            Overview=3, Add horizontal flip frame;
+            Overview=4, Add grayscaled horizontal flip frame;
+            Overview>4, Repeat add frame Overview times. 
+            Defaults to 4.
+        InnerCrop (int): The total number of inner cuts.
+            Defaults to 0.
+        IC_Size_Pow (float): This sets the size of the border
+            used for inner cuts.  High values have larger borders,
+            and therefore the cuts themselves will be smaller and 
+            provide finer details. Defaults to 0.5.
+        IC_Grey_P (float): The portion of the inner cuts can be set to be
+            grayscale instead of color. This may help with improved 
+            definition of shapes and edges, especially in the early
+            diffusion steps where the image structure is being defined.
+            Defaults to 0.2.
     """
 
     def __init__(self,
@@ -191,6 +205,7 @@ class MakeCutoutsDango(nn.Module):
         ])
 
     def forward(self, input, skip_augs=False):
+        '''Forward function'''
         cutouts = []
         gray = T.Grayscale(3)
         sideY, sideX = input.shape[2:4]
@@ -237,14 +252,7 @@ class MakeCutoutsDango(nn.Module):
 
 
 def parse_prompt(prompt):
-    """_summary_
-
-    Args:
-        prompt (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
+    """Parse prompt, return text and text weight"""
     if prompt.startswith('http://') or prompt.startswith('https://'):
         vals = prompt.rsplit(':', 2)
         vals = [vals[0] + ':' + vals[1], *vals[2:]]
@@ -255,15 +263,7 @@ def parse_prompt(prompt):
 
 
 def split_prompts(prompts, max_frames=1):
-    """_summary_
-
-    Args:
-        prompts (_type_): _description_
-        max_frames (int, optional): _description_. Defaults to 1.
-
-    Returns:
-        _type_: _description_
-    """
+    """Split prompts to a list of prompts."""
     prompt_series = pd.Series([np.nan for a in range(max_frames)])
     for i, prompt in prompts.items():
         prompt_series[i] = prompt
@@ -273,12 +273,18 @@ def split_prompts(prompts, max_frames=1):
 
 
 class ImageTextGuider(nn.Module):
-    """_summary_
+    """Disco-Diffusion uses text and images to guide image generation.
+    We will use the clip models to extract text and image features as prompts,
+    and then during the iteration, the features of the image patches are
+    computed, and the similarity loss between the prompts features and the 
+    generated features is computed. Other losses also include RGB Range loss,
+    total variation loss. Using these losses we can guide the image generation 
+    towards the desired target.
 
     Args:
-        clip_models (_type_): _description_
-        cutter_cfg (_type_): _description_
-        loss_cfg (_type_): _description_
+        clip_models (List[Dict]): List of clip model settings.
+        cutter_cfg (Dict): Setting of cutters during iteration.
+        loss_cfg (Dict): Setting of losses.
     """
 
     def __init__(self, clip_models, cutter_cfg, loss_cfg):
@@ -290,6 +296,7 @@ class ImageTextGuider(nn.Module):
         self.lpips_model = lpips.LPIPS(net='vgg')
 
     def frame_prompt_from_text(self, text_prompts, frame_num=0):
+        '''Get current frame prompt.'''
         prompts_series = split_prompts(text_prompts)
         if prompts_series is not None and frame_num >= len(prompts_series):
             frame_prompt = prompts_series[-1]
@@ -305,6 +312,15 @@ class ImageTextGuider(nn.Module):
                              image_prompt=None,
                              fuzzy_prompt=False,
                              rand_mag=0.05):
+        """Compute prompts statistics. 
+
+        Args:
+            cutn (int, optional): _description_. Defaults to 16.
+            text_prompts (list, optional): _description_. Defaults to [].
+            image_prompt (_type_, optional): _description_. Defaults to None.
+            fuzzy_prompt (bool, optional): _description_. Defaults to False.
+            rand_mag (float, optional): _description_. Defaults to 0.05.
+        """
         model_stats = []
         frame_prompt = self.frame_prompt_from_text(text_prompts)
         for clip_model in self.clip_models:
@@ -440,3 +456,5 @@ class ImageTextGuider(nn.Module):
 
     def forward(self, x):
         return x
+
+  

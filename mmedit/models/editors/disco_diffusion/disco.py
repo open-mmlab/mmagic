@@ -25,7 +25,11 @@ class DiscoDiffusion(nn.Module):
     create compelling and beautiful images from just text inputs. Created by
     Somnai, augmented by Gandamu, and building on the work of RiversHaveWings,
     nshepperd, and many others.
-
+    
+    Ref:
+        Github Repo: https://github.com/alembics/disco-diffusion
+        Colab: https://colab.research.google.com/github/alembics/disco-diffusion/blob/main/Disco_Diffusion.ipynb # noqa
+        
     Args:
         unet (ModelType): Config of denoising Unet.
         diffuser (ModelType): Config of diffuser scheduler.
@@ -113,7 +117,7 @@ class DiscoDiffusion(nn.Module):
               text_prompts=[],
               image_prompts=[],
               eta=0.8,
-              clip_grad_scale=1000,
+              clip_guidance_scale=5000,
               seed=None):
         """Inference API for disco diffusion.
 
@@ -136,7 +140,7 @@ class DiscoDiffusion(nn.Module):
                 ``init_image``, they works the same way with
                 ``text_prompts``. Defaults to [].
             eta (float): Eta for ddim sampling. Defaults to 0.8.
-            clip_grad_scale (int): The Scale of influence of prompts
+            clip_guidance_scale (int): The Scale of influence of prompts
                 on output image. Defaults to 1000.
             seed (int): Sampling seed. Defaults to None.
         """
@@ -189,7 +193,8 @@ class DiscoDiffusion(nn.Module):
             cond_kwargs = {
                 'model_stats': model_stats,
                 'init_image': init_image,
-                'unet': self.unet
+                'unet': self.unet,
+                'clip_guidance_scale':clip_guidance_scale
             }
             if self.with_secondary_model:
                 cond_kwargs.update(secondary_model=self.secondary_model)
