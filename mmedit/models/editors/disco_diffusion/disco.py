@@ -25,11 +25,11 @@ class DiscoDiffusion(nn.Module):
     create compelling and beautiful images from just text inputs. Created by
     Somnai, augmented by Gandamu, and building on the work of RiversHaveWings,
     nshepperd, and many others.
-    
+
     Ref:
         Github Repo: https://github.com/alembics/disco-diffusion
         Colab: https://colab.research.google.com/github/alembics/disco-diffusion/blob/main/Disco_Diffusion.ipynb # noqa
-        
+
     Args:
         unet (ModelType): Config of denoising Unet.
         diffuser (ModelType): Config of diffuser scheduler.
@@ -194,7 +194,7 @@ class DiscoDiffusion(nn.Module):
                 'model_stats': model_stats,
                 'init_image': init_image,
                 'unet': self.unet,
-                'clip_guidance_scale':clip_guidance_scale
+                'clip_guidance_scale': clip_guidance_scale
             }
             if self.with_secondary_model:
                 cond_kwargs.update(secondary_model=self.secondary_model)

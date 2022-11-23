@@ -10,13 +10,13 @@ from mmedit.registry import MODELS
 class ClipWrapper(nn.Module):
     """Clip Models wrapper for disco-diffusion.
 
-    We provide wrappers for the clip models of ``openai`` and 
-    ``mlfoundations``, where the user can specify ``clip_type`` 
+    We provide wrappers for the clip models of ``openai`` and
+    ``mlfoundations``, where the user can specify ``clip_type``
     as ``clip`` or ``open_clip``, and then initialize a clip model
-    using the same arguments as in the original codebase. The 
-    following clip models settings are provided in the official 
+    using the same arguments as in the original codebase. The
+    following clip models settings are provided in the official
     repo of disco diffusion:
-    
+
     |            Setting            | Source    | Arguments                                                    | # noqa
     |:-----------------------------:|-----------|--------------------------------------------------------------| # noqa
     | ViTB32                        | clip      | name='ViT-B/32',                  jit=False                  | # noqa
@@ -50,11 +50,12 @@ class ClipWrapper(nn.Module):
             dict(type='ClipWrapper', clip_type='clip', name='ViT-B/16', jit=False),
             dict(type='ClipWrapper', clip_type='clip', name='RN50', jit=False)
         ]
-    
+
     Args:
-        clip_type (List[Dict]): The original source of the clip model. Whether be 
+        clip_type (List[Dict]): The original source of the clip model. Whether be
             ``clip`` or ``open_clip``.
     """
+
     def __init__(self, clip_type, *args, **kwargs):
 
         super().__init__()
@@ -67,5 +68,5 @@ class ClipWrapper(nn.Module):
         self.model.eval().requires_grad_(False)
 
     def forward(self, *args, **kwargs):
-        '''Forward function'''
+        """Forward function."""
         return self.model(*args, **kwargs)

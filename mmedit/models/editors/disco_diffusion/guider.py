@@ -16,11 +16,10 @@ from resize_right import resize
 from mmedit.models.losses import range_loss, spherical_dist_loss, tv_loss
 from .secondary_model import alpha_sigma_to_t
 
-import torchvision.transforms as T
-
 normalize = T.Normalize(
     mean=[0.48145466, 0.4578275, 0.40821073],
     std=[0.26862954, 0.26130258, 0.27577711])
+
 
 def sinc(x):
     """
@@ -100,10 +99,11 @@ def resample(input, size, align_corners=True):
 
 
 class MakeCutouts(nn.Module):
-    """Each iteration, the AI cuts the image into smaller pieces known as cuts
-    , and compares each cut to the prompt to decide how to guide the next 
-    diffusion step. 
-    This classes will randomly cut patches and perfom image augmentation to 
+    """Each iteration, the AI cuts the image into smaller pieces known as cuts.
+
+    , and compares each cut to the prompt to decide how to guide the next
+    diffusion step.
+    This classes will randomly cut patches and perform image augmentation to
     these patches.
 
     Args:
@@ -151,13 +151,14 @@ class MakeCutouts(nn.Module):
         cutouts = torch.cat(cutouts, dim=0)
         return cutouts
 
+
 class MakeCutoutsDango(nn.Module):
     """Dango233(https://github.com/Dango233)'s version of MakeCutouts.
-    
+
     The improvement compared to ``MakeCutouts`` is that it use partial
-    greyscale augmentation to capture structure, and partial rotation 
+    greyscale augmentation to capture structure, and partial rotation
     augmentation to capture whole frames.
-    
+
     Args:
         cut_size (int): Size of the patches.
         Overview (int): The total number of overview cuts.
@@ -166,16 +167,16 @@ class MakeCutoutsDango(nn.Module):
             Overview=2, Add grayscaled frame;
             Overview=3, Add horizontal flip frame;
             Overview=4, Add grayscaled horizontal flip frame;
-            Overview>4, Repeat add frame Overview times. 
+            Overview>4, Repeat add frame Overview times.
             Defaults to 4.
         InnerCrop (int): The total number of inner cuts.
             Defaults to 0.
         IC_Size_Pow (float): This sets the size of the border
             used for inner cuts.  High values have larger borders,
-            and therefore the cuts themselves will be smaller and 
+            and therefore the cuts themselves will be smaller and
             provide finer details. Defaults to 0.5.
         IC_Grey_P (float): The portion of the inner cuts can be set to be
-            grayscale instead of color. This may help with improved 
+            grayscale instead of color. This may help with improved
             definition of shapes and edges, especially in the early
             diffusion steps where the image structure is being defined.
             Defaults to 0.2.
@@ -209,7 +210,7 @@ class MakeCutoutsDango(nn.Module):
         ])
 
     def forward(self, input, skip_augs=False):
-        '''Forward function'''
+        """Forward function."""
         cutouts = []
         gray = T.Grayscale(3)
         sideY, sideX = input.shape[2:4]
@@ -256,7 +257,7 @@ class MakeCutoutsDango(nn.Module):
 
 
 def parse_prompt(prompt):
-    """Parse prompt, return text and text weight"""
+    """Parse prompt, return text and text weight."""
     if prompt.startswith('http://') or prompt.startswith('https://'):
         vals = prompt.rsplit(':', 2)
         vals = [vals[0] + ':' + vals[1], *vals[2:]]
@@ -277,13 +278,13 @@ def split_prompts(prompts, max_frames=1):
 
 
 class ImageTextGuider(nn.Module):
-    """Disco-Diffusion uses text and images to guide image generation.
-    We will use the clip models to extract text and image features as prompts,
-    and then during the iteration, the features of the image patches are
-    computed, and the similarity loss between the prompts features and the 
-    generated features is computed. Other losses also include RGB Range loss,
-    total variation loss. Using these losses we can guide the image generation 
-    towards the desired target.
+    """Disco-Diffusion uses text and images to guide image generation. We will
+    use the clip models to extract text and image features as prompts, and then
+    during the iteration, the features of the image patches are computed, and
+    the similarity loss between the prompts features and the generated features
+    is computed. Other losses also include RGB Range loss, total variation
+    loss. Using these losses we can guide the image generation towards the
+    desired target.
 
     Args:
         clip_models (List[Dict]): List of clip model settings.
@@ -300,7 +301,7 @@ class ImageTextGuider(nn.Module):
         self.lpips_model = lpips.LPIPS(net='vgg')
 
     def frame_prompt_from_text(self, text_prompts, frame_num=0):
-        '''Get current frame prompt.'''
+        """Get current frame prompt."""
         prompts_series = split_prompts(text_prompts)
         if prompts_series is not None and frame_num >= len(prompts_series):
             frame_prompt = prompts_series[-1]
@@ -315,7 +316,7 @@ class ImageTextGuider(nn.Module):
                              image_prompt=None,
                              fuzzy_prompt=False,
                              rand_mag=0.05):
-        """Compute prompts statistics. 
+        """Compute prompts statistics.
 
         Args:
             text_prompts (list): Text prompts. Defaults to [].
@@ -323,7 +324,7 @@ class ImageTextGuider(nn.Module):
             fuzzy_prompt (bool, optional): Controls whether to add multiple
                 noisy prompts to the prompt losses. If True, can increase
                 variability of image output. Defaults to False.
-            rand_mag (float, optional): Controls the magnitude of the 
+            rand_mag (float, optional): Controls the magnitude of the
                 random noise added by fuzzy_prompt. Defaults to 0.05.
         """
         model_stats = []
@@ -385,7 +386,7 @@ class ImageTextGuider(nn.Module):
             beta_prod_t (torch.Tensor): _description_
             model_stats (List[torch.Tensor]): _description_
             secondary_model (nn.Module): A smaller secondary diffusion model
-                trained by Katherine Crowson to remove noise from intermediate 
+                trained by Katherine Crowson to remove noise from intermediate
                 timesteps to prepare them for CLIP.
                 Ref: https://twitter.com/rivershavewings/status/1462859669454536711 # noqa
                 Defaults to None.
@@ -393,7 +394,7 @@ class ImageTextGuider(nn.Module):
                 Defaults to None.
             clamp_grad (bool, optional): Whether clamp gradient. Defaults to True.
             clamp_max (float, optional): Clamp max values. Defaults to 0.05.
-            clip_guidance_scale (int, optional): The scale of influence of 
+            clip_guidance_scale (int, optional): The scale of influence of
                 clip guidance on image generation. Defaults to 5000.
         """
         with torch.enable_grad():
@@ -480,6 +481,4 @@ class ImageTextGuider(nn.Module):
         return next(self.parameters()).device
 
     def forward(self, x):
-        raise NotImplementedError("No forward function for disco guider")
-
-  
+        raise NotImplementedError('No forward function for disco guider')

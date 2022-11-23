@@ -168,7 +168,8 @@ class DDIMScheduler:
                 init_image=cond_kwargs['init_image'],
                 y=None,
                 secondary_model=cond_kwargs.get('secondary_model', None),
-                clip_guidance_scale=cond_kwargs.get('clip_guidance_scale', 5000))
+                clip_guidance_scale=cond_kwargs.get('clip_guidance_scale',
+                                                    5000))
             model_output = model_output - (beta_prod_t**0.5) * gradient
             pred_original_sample = (
                 sample -
