@@ -14,9 +14,13 @@ import torchvision.transforms.functional as TF
 from resize_right import resize
 
 from mmedit.models.losses import range_loss, spherical_dist_loss, tv_loss
-from .prompt_utils import normalize
 from .secondary_model import alpha_sigma_to_t
 
+import torchvision.transforms as T
+
+normalize = T.Normalize(
+    mean=[0.48145466, 0.4578275, 0.40821073],
+    std=[0.26862954, 0.26130258, 0.27577711])
 
 def sinc(x):
     """
@@ -307,7 +311,6 @@ class ImageTextGuider(nn.Module):
         return frame_prompt
 
     def compute_prompt_stats(self,
-                             cutn=16,
                              text_prompts=[],
                              image_prompt=None,
                              fuzzy_prompt=False,
@@ -315,11 +318,13 @@ class ImageTextGuider(nn.Module):
         """Compute prompts statistics. 
 
         Args:
-            cutn (int, optional): _description_. Defaults to 16.
-            text_prompts (list, optional): _description_. Defaults to [].
-            image_prompt (_type_, optional): _description_. Defaults to None.
-            fuzzy_prompt (bool, optional): _description_. Defaults to False.
-            rand_mag (float, optional): _description_. Defaults to 0.05.
+            text_prompts (list): Text prompts. Defaults to [].
+            image_prompt (list): Image prompts. Defaults to None.
+            fuzzy_prompt (bool, optional): Controls whether to add multiple
+                noisy prompts to the prompt losses. If True, can increase
+                variability of image output. Defaults to False.
+            rand_mag (float, optional): Controls the magnitude of the 
+                random noise added by fuzzy_prompt. Defaults to 0.05.
         """
         model_stats = []
         frame_prompt = self.frame_prompt_from_text(text_prompts)
@@ -367,10 +372,25 @@ class ImageTextGuider(nn.Module):
                 model_stats,
                 secondary_model=None,
                 init_image=None,
-                y=None,
                 clamp_grad=True,
                 clamp_max=0.05,
                 clip_guidance_scale=5000):
+        """Clip guidance function.
+
+        Args:
+            model (nn.Module): _description_
+            diffuser (object): _description_
+            x (torch.Tensor): _description_
+            t (int): _description_
+            beta_prod_t (torch.Tensor): _description_
+            model_stats (List[torch.Tensor]): _description_
+            secondary_model (nn.Module): _description_. Defaults to None.
+            init_image (torch.Tensor): _description_. Defaults to None.
+            clamp_grad (bool, optional): Whether clamp gradient. Defaults to True.
+            clamp_max (float, optional): Clamp max values. Defaults to 0.05.
+            clip_guidance_scale (int, optional): The scale of influence of 
+                clip guidance on image generation. Defaults to 5000.
+        """
         with torch.enable_grad():
             x_is_NaN = False
             x = x.detach().requires_grad_()
@@ -455,6 +475,6 @@ class ImageTextGuider(nn.Module):
         return next(self.parameters()).device
 
     def forward(self, x):
-        return x
+        raise NotImplementedError("No forward function for disco guider")
 
   
