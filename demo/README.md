@@ -38,21 +38,21 @@ We prepared some images and videos for you to run demo with. After MMEdit is wel
 Download with python script [download_inference_resources.py](./download_inference_resources.py).
 
 ```shell
-# cd mmediting root path
-cd mmediting
+# cd mmediting demo path
+cd mmediting/demo
 
 # see all resources
-python demo/download_inference_resources.py --print-all
+python download_inference_resources.py --print-all
 # see all task types
-python demo/download_inference_resources.py --print-task-type
+python download_inference_resources.py --print-task-type
 # see resources of one specific task
-python demo/download_inference_resources.py --print-task 'Inpainting'
+python download_inference_resources.py --print-task 'Inpainting'
 # download all resources to default dir '../resources'
-python demo/download_inference_resources.py
+python download_inference_resources.py
 # download resources of one task
-python demo/download_inference_resources.py --task 'Inpainting'
+python download_inference_resources.py --task 'Inpainting'
 # download to the directory you want
-python demo/download_inference_resources.py --root-dir '../your_dir'
+python download_inference_resources.py --root-dir '../your_dir'
 ```
 
 ## 2. MMEditing inference demo
@@ -62,19 +62,19 @@ python demo/download_inference_resources.py --root-dir '../your_dir'
 print all supported models for inference.
 
 ```shell
-python demo/mmediting_inference_demo.py --print-supported-models
+python mmediting_inference_demo.py --print-supported-models
 ```
 
 print all supported tasks for inference.
 
 ```shell
-python demo/mmediting_inference_demo.py --print-supported-tasks
+python mmediting_inference_demo.py --print-supported-tasks
 ```
 
 print all supported models for one task, take 'Image2Image Translation' for example.
 
 ```shell
-python demo/mmediting_inference_demo.py --print-task-supported-models 'Image2Image Translation'
+python mmediting_inference_demo.py --print-task-supported-models 'Image2Image Translation'
 ```
 
 ### 2.2 Perform inference with command line
@@ -104,75 +104,75 @@ Examples for each kind of task:
 #### 2.2.1 Conditional GANs
 
 ```shell
-python demo/mmediting_inference_demo.py \
+python mmediting_inference_demo.py \
         --model-name biggan \
         --label 1 \
-        --result-out-dir resources/output/conditional/demo_conditional_biggan_res.jpg \
+        --result-out-dir ../resources/output/conditional/demo_conditional_biggan_res.jpg \
 ```
 
 #### 2.2.2 Inpainting
 
 ```shell
-python demo/mmediting_inference_demo.py \
+python mmediting_inference_demo.py \
         --model-name global_local  \
-        --img resources/input/inpainting/celeba_test.png \
-        --mask resources/input/inpainting/bbox_mask.png \
-        --result-out-dir resources/output/inpainting/demo_inpainting_global_local_res.jpg
+        --img ../resources/input/inpainting/celeba_test.png \
+        --mask ../resources/input/inpainting/bbox_mask.png \
+        --result-out-dir ../../resources/output/inpainting/demo_inpainting_global_local_res.jpg
 ```
 
 #### 2.2.3 Matting
 
 ```shell
-python demo/mmediting_inference_demo.py \
+python mmediting_inference_demo.py \
         --model-name global_local  \
-        --img resources/input/matting/GT05.jpg \
-        --mask resources/input/matting/GT05_trimap.jpg \
-        --result-out-dir resources/output/matting/demo_matting_gca_res.png
+        --img ../resources/input/matting/GT05.jpg \
+        --mask ../resources/input/matting/GT05_trimap.jpg \
+        --result-out-dir ../resources/output/matting/demo_matting_gca_res.png
 ```
 
 #### 2.2.4 Image Super-resolution
 
 ```shell
-python demo/mmediting_inference_demo.py \
+python mmediting_inference_demo.py \
         --model-name esrgan \
-        --img resources/input/restoration/0901x2.png \
-        --result-out-dir resources/output/restoration/demo_restoration_esrgan_res.png
+        --img ../resources/input/restoration/0901x2.png \
+        --result-out-dir ../resources/output/restoration/demo_restoration_esrgan_res.png
 ```
 
 #### 2.2.5 Image translation
 
 ```shell
-python demo/mmediting_inference_demo.py \
+python mmediting_inference_demo.py \
         --model-name pix2pix \
-        --img resources/input/translation/gt_mask_0.png \
-        --result-out-dir resources/output/translation/demo_translation_pix2pix_res.png
+        --img ../resources/input/translation/gt_mask_0.png \
+        --result-out-dir ../resources/output/translation/demo_translation_pix2pix_res.png
 ```
 
 #### 2.2.6 Unconditional GANs
 
 ```shell
-python demo/mmediting_inference_demo.py \
+python mmediting_inference_demo.py \
         --model-name styleganv1 \
-        --result-out-dir resources/output/unconditional/demo_unconditional_styleganv1_res.jpg
+        --result-out-dir ../resources/output/unconditional/demo_unconditional_styleganv1_res.jpg
 ```
 
 #### 2.2.7 Video interpolation
 
 ```shell
-python demo/mmediting_inference_demo.py \
+python mmediting_inference_demo.py \
         --model-name flavr \
-        --video resources/input/video_interpolation/b-3LLDhc4EU_000000_000010.mp4 \
-        --result-out-dir resources/output/video_interpolation/demo_video_interpolation_flavr_res.mp4
+        --video ../resources/input/video_interpolation/b-3LLDhc4EU_000000_000010.mp4 \
+        --result-out-dir ../resources/output/video_interpolation/demo_video_interpolation_flavr_res.mp4
 ```
 
 #### 2.2.8 Video Super-Resolution
 
 ```shell
-python demo/mmediting_inference_demo.py \
+python mmediting_inference_demo.py \
         --model-name edvr \
         --extra-parameters window_size=5 \
-        --video resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
-        --result-out-dir resources/output/video_restoration/demo_video_restoration_edvr_res.mp4
+        --video ../resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
+        --result-out-dir ../resources/output/video_restoration/demo_video_restoration_edvr_res.mp4
 ```
 
 ## 3. Face restoration demo
@@ -180,7 +180,7 @@ python demo/mmediting_inference_demo.py \
 You can use the following commands to test an face image for restoration.
 
 ```shell
-python demo/restoration_face_demo.py \
+python restoration_face_demo.py \
     ${CONFIG_FILE} \
     ${CHECKPOINT_FILE} \
     ${IMAGE_FILE} \
@@ -194,7 +194,7 @@ python demo/restoration_face_demo.py \
 Examples:
 
 ```shell
-python demo/restoration_face_demo.py \
+python restoration_face_demo.py \
     configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py \
     https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth \
     tests/data/image/face/000001.png \
