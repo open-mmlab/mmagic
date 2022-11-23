@@ -1,8 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Dict, Union
+
 import mmcv
 import mmengine
 import torch
-from mmengine.model import BaseModel
+import torch.nn as nn
 from mmengine.runner import set_random_seed
 from mmengine.runner.checkpoint import (_load_checkpoint,
                                         _load_checkpoint_with_prefix)
@@ -11,11 +13,13 @@ from tqdm import tqdm
 from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
 from .guider import ImageTextGuider
 
+ModelType = Union[Dict, nn.Module]
+
 
 @MODELS.register_module('disco')
 @MODELS.register_module('dd')
 @MODELS.register_module()
-class DiscoDiffusion(BaseModel):
+class DiscoDiffusion(nn.Module):
     """Disco Diffusion (DD) is a Google Colab Notebook which leverages an AI
     Image generating technique called CLIP-Guided Diffusion to allow you to
     create compelling and beautiful images from just text inputs. Created by
@@ -23,19 +27,20 @@ class DiscoDiffusion(BaseModel):
     nshepperd, and many others.
 
     Args:
-        data_preprocessor (_type_): _description_
-        unet (_type_): _description_
-        diffuser (_type_): _description_
-        secondary_model (_type_, optional): _description_. Defaults to None.
-        cutter_cfg (_type_, optional): _description_. Defaults to dict().
-        loss_cfg (_type_, optional): _description_. Defaults to dict().
-        clip_models_cfg (list, optional): _description_. Defaults to [].
-        use_fp16 (bool, optional): _description_. Defaults to False.
-        pretrained_cfgs (_type_, optional): _description_. Defaults to None.
+        unet (ModelType): Config of denoising Unet.
+        diffuser (ModelType): Config of diffuser scheduler.
+        secondary_model (ModelType): There are two diff. Defaults to None.
+        cutter_cfg (dict): The config of image cutter. Defaults to dict().
+        loss_cfg (dict): Loss config for computing gradient. Defaults to
+            dict().
+        clip_models_cfg (list): Config of clip models. Defaults to [].
+        use_fp16 (bool): Whether to use fp16 for unet model. Defaults to False.
+        pretrained_cfgs (dict): Path Config for pretrained weights. Usually
+            this is a dict contains module name and the corresponding ckpt
+            path.Defaults to None.
     """
 
     def __init__(self,
-                 data_preprocessor,
                  unet,
                  diffuser,
                  secondary_model=None,
@@ -44,7 +49,7 @@ class DiscoDiffusion(BaseModel):
                  clip_models_cfg=[],
                  use_fp16=False,
                  pretrained_cfgs=None):
-        super().__init__(data_preprocessor=data_preprocessor)
+        super().__init__()
         self.unet = MODULES.build(unet)
         self.diffuser = DIFFUSION_SCHEDULERS.build(diffuser)
         clip_models = []
@@ -65,10 +70,13 @@ class DiscoDiffusion(BaseModel):
             self.unet.convert_to_fp16()
 
     def load_pretrained_models(self, pretrained_cfgs):
-        """_summary_
+        """Loading pretrained weights to model. ``pretrained_cfgs`` is a dict
+        consist of module name as key and checkpoint path as value.
 
         Args:
-            pretrained_cfgs (_type_): _description_
+            pretrained_cfgs (dict): Path Config for pretrained weights.
+            Usually this is a dict contains module name and the
+            corresponding ckpt path. Defaults to None.
         """
         for key, ckpt_cfg in pretrained_cfgs.items():
             prefix = ckpt_cfg.get('prefix', '')
@@ -107,19 +115,30 @@ class DiscoDiffusion(BaseModel):
               eta=0.8,
               clip_grad_scale=1000,
               seed=None):
-        """_summary_
+        """Inference API for disco diffusion.
 
         Args:
-            scheduler_kwargs (dict, optional):
-            init_image (_type_, optional): _description_. Defaults to None.
-            batch_size (int, optional): _description_. Defaults to 1.
-            num_inference_steps (int, optional): _description_.
+            scheduler_kwargs (dict): Args for infer time diffusion
+                scheduler. Defaults to None.
+            height (int): Height of output image. Defaults to None.
+            width (int): Width of output image. Defaults to None.
+            init_image (str): Initial image at the start point
+                of denoising. Defaults to None.
+            batch_size (int): Batch size. Defaults to 1.
+            num_inference_steps (int): Number of inference steps.
                 Defaults to 1000.
-            labels (_type_, optional): _description_. Defaults to None.
-            show_progress (bool, optional): _description_. Defaults to False.
-
-        Returns:
-            _type_: _description_
+            skip_steps (int): Denoising steps to skip, usually set
+                with ``init_image``. Defaults to 0.
+            show_progress (bool): Whether to show progress.
+                Defaults to False.
+            text_prompts (list): Text prompts. Defaults to [].
+            image_prompts (list): Image prompts, this is not the same as
+                ``init_image``, they works the same way with
+                ``text_prompts``. Defaults to [].
+            eta (float): Eta for ddim sampling. Defaults to 0.8.
+            clip_grad_scale (int): The Scale of influence of prompts
+                on output image. Defaults to 1000.
+            seed (int): Sampling seed. Defaults to None.
         """
         # set diffuser
         if scheduler_kwargs is not None:
@@ -184,7 +203,3 @@ class DiscoDiffusion(BaseModel):
 
             image = diffuser_output['prev_sample']
         return {'samples': image}
-
-    def forward(self, inputs, data_samples, mode):
-        raise NotImplementedError(
-            "Disco Diffusion doesn't have forward function")

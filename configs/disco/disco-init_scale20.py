@@ -1,6 +1,3 @@
-data_preprocessor = dict(
-    type='EditDataPreprocessor', mean=[127.5], std=[127.5])
-
 unet = dict(
     type='DenoisingUnet',
     image_size=512,
@@ -52,7 +49,6 @@ loss_cfg = dict(tv_scale=0, range_scale=150, sat_scale=0, init_scale=20)
 
 model = dict(
     type='DiscoDiffusion',
-    data_preprocessor=data_preprocessor,
     unet=unet,
     diffuser=diffuser,
     secondary_model=secondary_model,

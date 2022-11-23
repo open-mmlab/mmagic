@@ -81,5 +81,6 @@ __all__ = [
     'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel',
     'DenoisingUnet', 'DiscoDiffusion', 'IDLossModel', 'PESinGAN',
     'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
-    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal'
+    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
+    'DDPMScheduler'
 ]
