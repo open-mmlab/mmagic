@@ -59,12 +59,47 @@ def parse_args():
         action=DictAction,
         help='Other customized kwargs for different model')
 
+    # print supported tasks and models
+    parser.add_argument(
+        '--print-supported-models',
+        action='store_true',
+        help='print all supported models for inference.')
+    parser.add_argument(
+        '--print-supported-tasks',
+        action='store_true',
+        help='print all supported tasks for inference.')
+    parser.add_argument(
+        '--print-task-supported-models',
+        type=str,
+        default=None,
+        help='print all supported models for one task')
+
     args = parser.parse_args()
     return args
 
 
 def main():
     args = parse_args()
+
+    if args.print_supported_models:
+        inference_supported_models = MMEdit.get_inference_supported_models()
+        print('all supported models:')
+        print(inference_supported_models)
+        return
+
+    if args.print_supported_tasks:
+        supported_tasks = MMEdit.get_inference_supported_tasks()
+        print('all supported tasks:')
+        print(supported_tasks)
+        return
+
+    if args.print_task_supported_models:
+        task_supported_models = \
+            MMEdit.get_task_supported_models(args.print_task_supported_models)
+        print('translation models:')
+        print(task_supported_models)
+        return
+
     editor = MMEdit(**vars(args))
     editor.infer(**vars(args))
 

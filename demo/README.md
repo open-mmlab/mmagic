@@ -4,17 +4,33 @@ There are some mmediting demos in this folder. We provide python command line us
 
 Table of contents:
 
-- [Download sample images or videos](#1-download-sample-images-or-videos)
+[1. Download sample images or videos](#1-download-sample-images-or-videos)
 
-- [MMEditing inference demo](#2-mmediting-inference-demo)
+[2. MMEditing inference demo](#2-mmediting-inference-demo)
 
-&#8195;   1. [Check supported tasks and models](#21-check-supported-tasks-and-models)
+&#8195;    [2.1. Check supported tasks and models](#21-check-supported-tasks-and-models)
 
-&#8195;   2. [Perform inference with command line](#22-perform-inference-with-command-line)
+&#8195;    [2.2. Perform inference with command line](#22-perform-inference-with-command-line)
 
-- [Face restoration demo](#3-face-restoration-demo):
+&#8195;      [2.2.1. Conditional GANs example](#221-conditional-gans)
 
-- [Other demos](#4-other-demos)
+&#8195;      [2.2.2. Inpainting example](#222-inpainting)
+
+&#8195;      [2.2.3. Matting example](#223-matting)
+
+&#8195;      [2.2.4. Image Super-Resolution example](#224-image-super-resolution)
+
+&#8195;      [2.2.5. Image Translation example](#225-image-translation)
+
+&#8195;      [2.2.6. Unconditional GANs example](#226-unconditional-gans)
+
+&#8195;      [2.2.7. Video Interpolation example](#227-video-interpolation)
+
+&#8195;      [2.2.8. Video Super-Resolution example](#228-video-super-resolution)
+
+[3. Face restoration demo](#3-face-restoration-demo):
+
+[4. Other demos](#4-other-demos)
 
 ## 1. Download sample images or videos
 
@@ -40,22 +56,22 @@ python download_inference_resources.py --root-dir '../your_dir'
 
 ### 2.1 Check supported tasks and models
 
-print all available models for inference.
+print all supported models for inference.
 
 ```shell
-python demo/mmediting_inference_demo.py --print_all_available_models
+python demo/mmediting_inference_demo.py --print-supported-models
 ```
 
-print all available tasks for inference.
+print all supported tasks for inference.
 
 ```shell
-python demo/mmediting_inference_demo.py --print_all_available_models
+python demo/mmediting_inference_demo.py --print-supported-tasks
 ```
 
-print all available models for one task, take 'Image2Image Translation' for example.
+print all supported models for one task, take 'Image2Image Translation' for example.
 
 ```shell
-python demo/mmediting_inference_demo.py --print_available_models_for_a_task 'Image2Image Translation'
+python demo/mmediting_inference_demo.py --print-task-supported-models 'Image2Image Translation'
 ```
 
 ### 2.2 Perform inference with command line
@@ -82,7 +98,7 @@ python demo/mmediting_inference_demo.py \
 
 Examples for each kind of task:
 
-1. Conditional GANs
+#### 2.2.1 Conditional GANs
 
 ```shell
 python demo/mmediting_inference_demo.py \
@@ -91,7 +107,7 @@ python demo/mmediting_inference_demo.py \
         --result-out-dir resources/output/conditional/demo_conditional_biggan_res.jpg \
 ```
 
-2. Inpainting
+#### 2.2.2 Inpainting
 
 ```shell
 python demo/mmediting_inference_demo.py \
@@ -101,7 +117,7 @@ python demo/mmediting_inference_demo.py \
         --result-out-dir resources/output/inpainting/demo_inpainting_global_local_res.jpg
 ```
 
-3. Matting
+#### 2.2.3 Matting
 
 ```shell
 python demo/mmediting_inference_demo.py \
@@ -111,7 +127,7 @@ python demo/mmediting_inference_demo.py \
         --result-out-dir resources/output/matting/demo_matting_gca_res.png
 ```
 
-4. Super resolution
+#### 2.2.4 Image Super-resolution
 
 ```shell
 python demo/mmediting_inference_demo.py \
@@ -120,7 +136,7 @@ python demo/mmediting_inference_demo.py \
         --result-out-dir resources/output/restoration/demo_restoration_esrgan_res.png
 ```
 
-5. Image translation
+#### 2.2.5 Image translation
 
 ```shell
 python demo/mmediting_inference_demo.py \
@@ -129,7 +145,7 @@ python demo/mmediting_inference_demo.py \
         --result-out-dir resources/output/translation/demo_translation_pix2pix_res.png
 ```
 
-6. Unconditional GANs
+#### 2.2.6 Unconditional GANs
 
 ```shell
 python demo/mmediting_inference_demo.py \
@@ -137,7 +153,7 @@ python demo/mmediting_inference_demo.py \
         --result-out-dir resources/output/unconditional/demo_unconditional_styleganv1_res.jpg
 ```
 
-7. Video interpolation
+#### 2.2.7 Video interpolation
 
 ```shell
 python demo/mmediting_inference_demo.py \
@@ -146,7 +162,7 @@ python demo/mmediting_inference_demo.py \
         --result-out-dir resources/output/video_interpolation/demo_video_interpolation_flavr_res.mp4
 ```
 
-8. Video restoration
+#### 2.2.8 Video Super-Resolution
 
 ```shell
 python demo/mmediting_inference_demo.py \
@@ -176,7 +192,7 @@ Examples:
 
 ```shell
 python demo/restoration_face_demo.py \
-    configs/glean/glean_in128out1024_4x2_300k_ffhq_celebahq.py \
+    configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py \
     https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth \
     tests/data/image/face/000001.png \
     tests/data/pred/000001.png \
