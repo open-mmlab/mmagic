@@ -3,7 +3,7 @@
 We incorporate modular and inheritance design into our config system, which is convenient to conduct various experiments.
 If you wish to inspect the config file, you may run `python tools/misc/print_config.py /PATH/TO/CONFIG` to see the complete config.
 
-You can learn about the usage of our config system according to following tutorials.
+You can learn about the usage of our config system according to the following tutorials.
 
 - [Modify config](#modify-config-through-script-arguments)
 - [Config file structure](#config-file-structure)
@@ -83,7 +83,7 @@ please refer to the API documentation and the [tutorial in MMEngine](https://git
 
 ### Model config
 
-In MMEditing's config, we use model fields to setup a model.
+In MMEditing's config, we use model fields to set up a model.
 
 ```python
 model = dict(
@@ -116,12 +116,12 @@ Dataset and data pipeline need to be set to build the dataloader. Due to the com
 ```python
 train_pipeline = [  # Training data processing pipeline
     dict(type='LoadImageFromFile',  # Load images from files
-        key='img',  # Keys in results to find corresponding path
+        key='img',  # Keys in results to find the corresponding path
         color_type='color',  # Color type of image
         channel_order='rgb',  # Channel order of image
         imdecode_backend='cv2'),  # decode backend
     dict(type='LoadImageFromFile',  # Load images from files
-        key='gt',  # Keys in results to find corresponding path
+        key='gt',  # Keys in results to find the corresponding path
         color_type='color',  # Color type of image
         channel_order='rgb',  # Channel order of image
         imdecode_backend='cv2'),  # decode backend
@@ -139,7 +139,7 @@ train_pipeline = [  # Training data processing pipeline
         keys=['lq', 'gt'],  # Images to be transposed
         transpose_ratio=0.5  # Transpose ratio
         ),
-    dict(type='PackEditInputs')  # The config of collecting data from current pipeline
+    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
 ]
 test_pipeline = [  # Test pipeline
     dict(type='LoadImageFromFile',  # Load images from files
@@ -152,7 +152,7 @@ test_pipeline = [  # Test pipeline
         color_type='color',  # Color type of image
         channel_order='rgb',  # Channel order of image
         imdecode_backend='cv2'),  # decode backend
-    dict(type='PackEditInputs')  # The config of collecting data from current pipeline
+    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
 ]
 ```
 
@@ -325,7 +325,7 @@ model = dict(
 Dataset and data pipeline need to be set to build the dataloader. Due to the complexity of this part, we use intermediate variables to simplify the writing of dataloader configs.
 
 ```python
-dataset_type = 'UnconditionalImageDataset'  # Dataset type, this will be used to define the dataset
+dataset_type = 'BasicImageDataset'  # Dataset type, this will be used to define the dataset
 data_root = './data/ffhq/'  # Root path of data
 
 train_pipeline = [  # Training data process pipeline
@@ -579,7 +579,7 @@ train_pipeline = [
         std=[127.5] * 3,  # Std value used in normalization
         to_rgb=False),  # Whether to transfer image channels to rgb
     dict(type='GetMaskedImage'), # The config of getting masked image pipeline
-    dict(type='PackEditInputs'), # The config of collecting data from current pipeline
+    dict(type='PackEditInputs'), # The config of collecting data from the current pipeline
 ]
 
 test_pipeline = train_pipeline  # Constructing testing/validation pipeline
@@ -740,7 +740,7 @@ train_pipeline = [  # Training data processing pipeline.
     dict(
         type='GenerateTrimap',  # Generate trimap from alpha matte.
         kernel_size=(1, 30)),  # Kernel size range of the erode/dilate kernel.
-    dict(type='PackEditInputs'),  # The config of collecting data from current pipeline
+    dict(type='PackEditInputs'),  # The config of collecting data from the current pipeline
 ]
 test_pipeline = [
     dict(
@@ -756,7 +756,7 @@ test_pipeline = [
     dict(
         type='LoadImageFromFile',  # Load image from file
         key='merged'),  # Key of image to load. The pipeline will read merged from path `merged_path`.
-    dict(type='PackEditInputs'),  # The config of collecting data from current pipeline
+    dict(type='PackEditInputs'),  # The config of collecting data from the current pipeline
 ]
 
 train_dataloader = dict(
@@ -898,7 +898,7 @@ train_pipeline = [  # Training data processing pipeline
         transpose_ratio=0.5  # Transpose ratio
         ),
     dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
-    dict(type='PackEditInputs')  # The config of collecting data from current pipeline
+    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
 ]
 test_pipeline = [  # Test pipeline
     dict(type='LoadImageFromFile',  # Load images from files
@@ -912,7 +912,7 @@ test_pipeline = [  # Test pipeline
         channel_order='rgb',  # Channel order of image
         imdecode_backend='cv2'),  # decode backend
     dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
-    dict(type='PackEditInputs')  # The config of collecting data from current pipeline
+    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
 ]
 
 # dataset settings
