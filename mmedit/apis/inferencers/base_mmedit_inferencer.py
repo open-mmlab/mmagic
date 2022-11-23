@@ -97,7 +97,6 @@ class BaseMMEditInferencer:
 
         return results
 
-    @torch.no_grad
     def __call__(self, **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.
 
