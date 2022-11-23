@@ -52,7 +52,7 @@ python download_inference_resources.py
 # download resources of one task
 python download_inference_resources.py --task 'Inpainting'
 # download to the directory you want
-python download_inference_resources.py --root-dir '../your_dir'
+python download_inference_resources.py --root-dir '../resources'
 ```
 
 ## 2. MMEditing inference demo
