@@ -28,7 +28,7 @@ Table of contents:
 
 &#8195;      [2.2.8. Video Super-Resolution example](#228-video-super-resolution)
 
-[3. Face restoration demo](#3-face-restoration-demo):
+[3. Face restoration demo](#3-face-restoration-demo)
 
 [4. Other demos](#4-other-demos)
 
@@ -38,18 +38,21 @@ We prepared some images and videos for you to run demo with. After MMEdit is wel
 Download with python script [download_inference_resources.py](./download_inference_resources.py).
 
 ```shell
+# cd mmediting root path
+cd mmediting
+
 # see all resources
-python download_inference_resources.py --print-all
+python demo/download_inference_resources.py --print-all
 # see all task types
-python download_inference_resources.py --print-task-type
+python demo/download_inference_resources.py --print-task-type
 # see resources of one specific task
-python download_inference_resources.py --print-task 'Inpainting'
+python demo/download_inference_resources.py --print-task 'Inpainting'
 # download all resources to default dir '../resources'
-python download_inference_resources.py
+python demo/download_inference_resources.py
 # download resources of one task
-python download_inference_resources.py --task 'Inpainting'
+python demo/download_inference_resources.py --task 'Inpainting'
 # download to the directory you want
-python download_inference_resources.py --root-dir '../your_dir'
+python demo/download_inference_resources.py --root-dir '../your_dir'
 ```
 
 ## 2. MMEditing inference demo
