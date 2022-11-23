@@ -2,21 +2,67 @@
 
 There are some mmediting demos in this folder. We provide python command line usage here to run these demos and more guidance could also be found in the [documentation](https://mmediting.readthedocs.io/en/dev-1.x/user_guides/3_inference.html)
 
-## Download sample images or videos
+Table of contents:
 
-We prepared some images and videos for you to run demo with. After MMEdit is well installed, you could use demos in this folder to infer these data. Download at here (url) and extract it to MMEdit root path.
+- [Download sample images or videos](#1-download-sample-images-or-videos)
+
+- [MMEditing inference demo](#2-mmediting-inference-demo)
+
+&#8195;   1. [Check supported tasks and models](#21-check-supported-tasks-and-models)
+
+&#8195;   2. [Perform inference with command line](#22-perform-inference-with-command-line)
+
+- [Face restoration demo](#3-face-restoration-demo):
+
+- [Other demos](#4-other-demos)
+
+## 1. Download sample images or videos
+
+We prepared some images and videos for you to run demo with. After MMEdit is well installed, you could use demos in this folder to infer these data.
+Download with python script [download_inference_resources.py](./download_inference_resources.py).
 
 ```shell
-cd mmediting
-wget url
-unzip resources.zip
+# see all resources
+python download_inference_resources.py --print-all
+# see all task types
+python download_inference_resources.py --print-task-type
+# see resources of one specific task
+python download_inference_resources.py --print-task 'Inpainting'
+# download all resources to default dir '../resources'
+python download_inference_resources.py
+# download resources of one task
+python download_inference_resources.py --task 'Inpainting'
+# download to the directory you want
+python download_inference_resources.py --root-dir '../your_dir'
 ```
 
-## MMEditing inference demo
+## 2. MMEditing inference demo
+
+### 2.1 Check supported tasks and models
+
+print all available models for inference.
+
+```shell
+python demo/mmediting_inference_demo.py --print_all_available_models
+```
+
+print all available tasks for inference.
+
+```shell
+python demo/mmediting_inference_demo.py --print_all_available_models
+```
+
+print all available models for one task, take 'Image2Image Translation' for example.
+
+```shell
+python demo/mmediting_inference_demo.py --print_available_models_for_a_task 'Image2Image Translation'
+```
+
+### 2.2 Perform inference with command line
 
 You can use the following commands to perform inference with a MMEdit model.
 
-Usage of python API can be found in this [tutotial](./mmediting_inference_tutorial.ipynb).
+Usage of python API can also be found in this [tutotial](./mmediting_inference_tutorial.ipynb).
 
 ```shell
 python demo/mmediting_inference_demo.py \
@@ -106,11 +152,11 @@ python demo/mmediting_inference_demo.py \
 python demo/mmediting_inference_demo.py \
         --model-name edvr \
         --extra-parameters window_size=5 \
-        --video resources/input/video_interpolation/QUuC4vJs_000084_000094_400x320.mp4 \
+        --video resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
         --result-out-dir resources/output/video_restoration/demo_video_restoration_edvr_res.mp4
 ```
 
-## Face restoration demo
+## 3. Face restoration demo
 
 You can use the following commands to test an face image for restoration.
 
@@ -137,7 +183,7 @@ python demo/restoration_face_demo.py \
     --upscale-factor 4
 ```
 
-## Other demos
+## 4. Other demos
 
 These demos are duplicated with mmedting_inference_demo.py and may be removed in the future.
 
