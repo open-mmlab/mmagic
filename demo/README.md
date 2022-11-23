@@ -28,9 +28,7 @@ Table of contents:
 
 &#8195;      [2.2.8. Video Super-Resolution example](#228-video-super-resolution)
 
-[3. Face restoration demo](#3-face-restoration-demo)
-
-[4. Other demos](#4-other-demos)
+[3. Other demos](#3-other-demos)
 
 ## 1. Download sample images or videos
 
@@ -107,7 +105,7 @@ Examples for each kind of task:
 python mmediting_inference_demo.py \
         --model-name biggan \
         --label 1 \
-        --result-out-dir ../resources/output/conditional/demo_conditional_biggan_res.jpg \
+        --result-out-dir ../resources/output/conditional/demo_conditional_biggan_res.jpg
 ```
 
 #### 2.2.2 Inpainting
@@ -175,34 +173,7 @@ python mmediting_inference_demo.py \
         --result-out-dir ../resources/output/video_restoration/demo_video_restoration_edvr_res.mp4
 ```
 
-## 3. Face restoration demo
-
-You can use the following commands to test an face image for restoration.
-
-```shell
-python restoration_face_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${IMAGE_FILE} \
-    ${SAVE_FILE} \
-    [--upscale-factor] \
-    [--face-size] \
-    [--imshow] \
-    [--device ${GPU_ID}]
-```
-
-Examples:
-
-```shell
-python restoration_face_demo.py \
-    configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py \
-    https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth \
-    tests/data/image/face/000001.png \
-    tests/data/pred/000001.png \
-    --upscale-factor 4
-```
-
-## 4. Other demos
+## 3. Other demos
 
 These demos are duplicated with mmedting_inference_demo.py and may be removed in the future.
 
