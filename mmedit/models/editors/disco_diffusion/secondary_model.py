@@ -7,6 +7,7 @@ import torch.nn as nn
 
 from mmedit.registry import MODELS
 
+# SourceCode: https://colab.research.google.com/drive/1uGKaBOEACeinAA7jX1_zSFtj_ZW-huHS#scrollTo=XIqUfrmvLIhg # noqa
 
 def append_dims(x, n):
     return x[(Ellipsis, *(None, ) * (n - x.ndim))]

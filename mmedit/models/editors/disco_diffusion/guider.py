@@ -384,8 +384,13 @@ class ImageTextGuider(nn.Module):
             t (int): _description_
             beta_prod_t (torch.Tensor): _description_
             model_stats (List[torch.Tensor]): _description_
-            secondary_model (nn.Module): _description_. Defaults to None.
-            init_image (torch.Tensor): _description_. Defaults to None.
+            secondary_model (nn.Module): A smaller secondary diffusion model
+                trained by Katherine Crowson to remove noise from intermediate 
+                timesteps to prepare them for CLIP.
+                Ref: https://twitter.com/rivershavewings/status/1462859669454536711 # noqa
+                Defaults to None.
+            init_image (torch.Tensor): Initial image for denoising.
+                Defaults to None.
             clamp_grad (bool, optional): Whether clamp gradient. Defaults to True.
             clamp_max (float, optional): Clamp max values. Defaults to 0.05.
             clip_guidance_scale (int, optional): The scale of influence of 
