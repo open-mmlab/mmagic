@@ -22,7 +22,7 @@ Models:
       Set14 SSIM: 0.8874
       Set5 PSNR: 35.7592
       Set5 SSIM: 0.9372
-    Task: Edsr
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x2c64b16_1x16_300k_div2k_20200604-19fe95ea.pth
 - Config: configs/edsr/edsr_x3c64b16_1xb16-300k_div2k.py
   In Collection: EDSR
@@ -39,7 +39,7 @@ Models:
       Set14 SSIM: 0.8022
       Set5 PSNR: 32.3301
       Set5 SSIM: 0.8912
-    Task: Edsr
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x3c64b16_1x16_300k_div2k_20200608-36d896f4.pth
 - Config: configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py
   In Collection: EDSR
@@ -56,5 +56,5 @@ Models:
       Set14 SSIM: 0.7366
       Set5 PSNR: 30.2223
       Set5 SSIM: 0.85
-    Task: Edsr
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x4c64b16_1x16_300k_div2k_20200608-3c2af8a3.pth
