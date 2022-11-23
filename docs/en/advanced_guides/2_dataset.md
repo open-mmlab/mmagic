@@ -202,7 +202,7 @@ dataset = BasicFramesDataset(
 
 **BasicConditonalDataset** `mmedit.datasets.BasicConditonalDataset` is designed for conditional GANs (e.g., SAGAN, BigGAN). This dataset support load label for the annotation file. `BasicConditonalDataset` support three kinds of annotation as follow:
 
-#### 1. Line-based annotation file (e.g., txt)
+#### 1. Annotation file read by line (e.g., txt)
 
 Sample files structure:
 

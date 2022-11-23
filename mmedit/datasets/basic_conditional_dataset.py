@@ -21,7 +21,7 @@ class BasicConditionalDataset(BaseDataset):
 
     The dataset supports two kinds of annotation format.
 
-    1. A line-based annotation file (e.g., txt) is provided, and each line indicates a sample:
+    1. A annotation file read by line (e.g., txt) is provided, and each line indicates a sample:
 
        The sample files: ::
 
@@ -187,9 +187,11 @@ class BasicConditionalDataset(BaseDataset):
         elif self.ann_file.endswith('json'):
             samples = mmengine.fileio.io.load(self.ann_file)
             samples = [[name, label] for name, label in samples.items()]
-        else:
+        elif self.ann_file.endswith('txt'):
             lines = mmengine.list_from_file(self.ann_file)
             samples = [x.strip().rsplit(' ', 1) for x in lines]
+        else:
+            raise TypeError('Only support \'json\' and \'txt\' as annotation.')
 
         def add_prefix(filename, prefix=''):
             if not prefix:

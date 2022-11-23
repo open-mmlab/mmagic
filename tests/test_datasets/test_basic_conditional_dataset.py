@@ -32,6 +32,10 @@ class TestBasicConditonalDataset(TestCase):
         self.assertEqual(dataset.CLASSES, ('bus', 'car'))
         self.assertEqual(dataset.class_to_idx, {'bus': 0, 'car': 1})
 
+        ann_file = osp.abspath(osp.join(DATA_DIR, 'wrong.yml'))
+        with self.assertRaises(TypeError):
+            BasicConditionalDataset(data_root=DATA_DIR, ann_file=ann_file)
+
         gt_labels = dataset.get_gt_labels()
         print(type(gt_labels))
         self.assertTrue((gt_labels == np.array([0, 1, 1])).all())
