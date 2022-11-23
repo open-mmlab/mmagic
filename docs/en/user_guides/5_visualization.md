@@ -36,14 +36,14 @@ vis_backends = [
     dict(type='WandbGenVisBackend',  # vis_backend for uploading images to Wandb
         init_kwargs=dict(
             project='MMEditing',   # project name for Wandb
-            name='GAN-Visualization-Demo'  # name of experiment for Wandb
+            name='GAN-Visualization-Demo'  # name of the experiment for Wandb
         ))
 ]
 # Visualizer
 visualizer = dict(type='GenVisualizer', vis_backends=vis_backends)
 ```
 
-If you apply Exponential Moving Average (EMA) to generator and want to visualize the EMA model, you can modify config of `VisualizationHook` as below:
+If you apply Exponential Moving Average (EMA) to a generator and want to visualize the EMA model, you can modify config of `VisualizationHook` as below:
 
 ```python
 custom_hooks = [
@@ -87,7 +87,7 @@ vis_backends = [
     dict(type='WandbGenVisBackend',  # vis_backend for uploading images to Wandb
         init_kwargs=dict(
             project='MMEditing',   # project name for Wandb
-            name='Translation-Visualization-Demo'  # name of experiment for Wandb
+            name='Translation-Visualization-Demo'  # name of the experiment for Wandb
         ))
 ]
 # Visualizer
@@ -113,7 +113,7 @@ vis_backends = [
     dict(type='WandbGenVisBackend',  # vis_backend for uploading images to Wandb
         init_kwargs=dict(
             project='MMEditing',   # project name for Wandb
-            name='Diffusion-Visualization-Demo'  # name of experiment for Wandb
+            name='Diffusion-Visualization-Demo'  # name of the experiment for Wandb
         ))
 ]
 # Visualizer
@@ -179,7 +179,7 @@ The specific configuration of the `VisualizationHook`, `Visualizer` and `VisBack
 ## Visualization Hook
 
 In MMEditing, we use `BasicVisualizationHook` and `GenVisualizationHook` as `VisualizationHook`.
-`GenVisualizationHook` support three following cases.
+`GenVisualizationHook` supports three following cases.
 
 (1) Modify `vis_kwargs_list` to visualize the output of the model under specific inputs , which is suitable for visualization of the generated results of GAN and translation results of Image-to-Image-Translation models under specific data input, etc. Below are two typical examples:
 
@@ -225,8 +225,8 @@ vis_kwargs_list = dict(type='DDPMDenoising')
 ## Visualizer
 
 In MMEditing, we implement `ConcatImageVisualizer` and `GenVisualizer`, which inherit from `mmengine.Visualizer`.
-The base class of `Visualizer` is `ManagerMixin` and this make `Visualizer` a globally unique object.
-After be instantiated, `Visualizer` can be called at anywhere of the code by `Visualizer.get_current_instance()`, as shown below:
+The base class of `Visualizer` is `ManagerMixin` and this makes `Visualizer` a globally unique object.
+After being instantiated, `Visualizer` can be called at anywhere of the code by `Visualizer.get_current_instance()`, as shown below:
 
 ```python
 # configs
@@ -244,7 +244,7 @@ visualizer = Visualizer.get_current_instance()
 ```
 
 The core interface of `Visualizer` is `add_datasample`.
-By this interface,
+Through this interface,
 This interface will call the corresponding drawing function according to the corresponding `vis_mode` to obtain the visualization result in `np.ndarray` type.
 Then `show` or `add_image` will be called to directly show the results or pass the visualization result to the predefined vis_backend.
 
@@ -254,7 +254,7 @@ In general, users do not need to manipulate `VisBackend` objects, only when the 
 MMEditing supports a variety of different visualization backends, including:
 
 - Basic VisBackend of MMEngine: including LocalVisBackend, TensorboardVisBackend and WandbVisBackend. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/visualization.md) to learn more about them
-- GenVisBackend: Backend for **File System**. Save the visualization results to corresponding position.
+- GenVisBackend: Backend for **File System**. Save the visualization results to the corresponding position.
 - TensorboardGenVisBackend: Backend for **Tensorboard**. Send the visualization results to Tensorboard.
 - PaviGenVisBackend: Backend for **Pavi**. Send the visualization results to Tensorboard.
 - WandbGenVisBackend: Backend for **Wandb**. Send the visualization results to Tensorboard.
