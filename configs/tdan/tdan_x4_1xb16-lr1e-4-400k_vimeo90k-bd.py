@@ -7,9 +7,6 @@ work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 scale = 4
 
-# load_from = 'https://download.openmmlab.com/mmediting/restorers/tdan/'\
-#              'tdan_vimeo90k_bdx4_20210528-c53ab844.pth'
-
 # model settings
 model = dict(
     type='TDAN',
@@ -107,7 +104,7 @@ optim_wrapper = dict(
 )
 
 train_cfg = dict(
-    type='IterBasedTrainLoop', max_iters=800_000, val_interval=50000)
+    type='IterBasedTrainLoop', max_iters=400_000, val_interval=50000)
 val_cfg = dict(type='ValLoop')
 
 # No learning policy
