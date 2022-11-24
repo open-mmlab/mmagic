@@ -339,6 +339,7 @@ class ConditionalFID(FrechetInceptionDistance):
         super().__init__(fake_nums, real_nums, inception_style, inception_path,
                          inception_pkl, fake_key, real_key, sample_model,
                          collect_device, force_recal_inception_pkl, prefix)
+        self.SAMPLER_MODE = 'normal'
 
     def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
                            metrics: GenerativeMetric):
