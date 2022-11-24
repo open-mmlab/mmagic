@@ -196,7 +196,7 @@ class StyleGAN2Generator(nn.Module):
         self.upsamples = nn.ModuleList()
         self.to_rgbs = nn.ModuleList()
 
-        blk_in_channels_ = self.channels[4]
+        blk_in_channels_ = self.channels[4]  # in channels of the conv blocks
 
         for i in range(3, self.log_size + 1):
             blk_out_channels_ = self.channels[2**i]

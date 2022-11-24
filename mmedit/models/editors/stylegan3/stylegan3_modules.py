@@ -175,7 +175,7 @@ class MappingNetwork(nn.Module):
                 activation='lrelu',
                 lr_multiplier=lr_multiplier)
             setattr(self, f'fc{idx}', layer)
-        if num_ws is not None and w_avg_beta is not None:
+        if w_avg_beta is not None:
             self.register_buffer('w_avg', torch.zeros([style_channels]))
 
     def forward(self,
@@ -227,8 +227,6 @@ class MappingNetwork(nn.Module):
         if self.num_ws is not None:
             x = x.unsqueeze(1).repeat([1, self.num_ws, 1])
         if truncation != 1:
-            assert hasattr(self, 'w_avg'), (
-                '\'w_avg\' must not be None when truncation trick is used.')
             if num_truncation_layer is None:
                 x = self.w_avg.lerp(x, truncation)
             else:
