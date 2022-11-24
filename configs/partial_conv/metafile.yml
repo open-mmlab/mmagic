@@ -10,7 +10,7 @@ Models:
 - Config: configs/partial_conv/pconv_stage1_8xb1_places-256x256.py
   In Collection: PConv
   Metadata:
-    GPUs: '4'
+    GPUs: '8'
     Training Data: PLACES
   Name: pconv_stage1_8xb1_places-256x256
   Results:
@@ -35,7 +35,7 @@ Models:
 - Config: configs/partial_conv/pconv_stage1_8xb1_celeba-256x256.py
   In Collection: PConv
   Metadata:
-    GPUs: '4'
+    GPUs: '8'
     Training Data: CELEBA
   Name: pconv_stage1_8xb1_celeba-256x256
   Results:
