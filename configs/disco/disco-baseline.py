@@ -37,23 +37,11 @@ clip_models_cfg = [
     dict(type='ClipWrapper', clip_type='clip', name='RN50', jit=False)
 ]
 
-# pretrained_cfgs = None
-cutter_cfg = dict(
-    cut_overview=eval('[12]*400+[4]*600'),
-    cut_innercut=eval('[4]*400+[12]*600'),
-    cut_ic_pow=eval('[1]*1000'),
-    cut_icgray_p=eval('[0.2]*400+[0]*600'),
-    cutn_batches=4)
-
-loss_cfg = dict(tv_scale=0, range_scale=150, sat_scale=0, init_scale=1000)
-
 model = dict(
     type='DiscoDiffusion',
     unet=unet,
     diffuser=diffuser,
     secondary_model=secondary_model,
-    cutter_cfg=cutter_cfg,
-    loss_cfg=loss_cfg,
     clip_models_cfg=clip_models_cfg,
     use_fp16=True,
     pretrained_cfgs=pretrained_cfgs)

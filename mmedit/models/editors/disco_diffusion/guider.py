@@ -288,16 +288,11 @@ class ImageTextGuider(nn.Module):
 
     Args:
         clip_models (List[Dict]): List of clip model settings.
-        cutter_cfg (Dict): Setting of cutters during iteration.
-        loss_cfg (Dict): Setting of losses.
     """
 
-    def __init__(self, clip_models, cutter_cfg, loss_cfg):
+    def __init__(self, clip_models):
         super().__init__()
         self.clip_models = clip_models
-        self.cutter_cfg = Namespace(**cutter_cfg)
-        # loss cfg
-        self.loss_cfg = Namespace(**loss_cfg)
         self.lpips_model = lpips.LPIPS(net='vgg')
 
     def frame_prompt_from_text(self, text_prompts, frame_num=0):
@@ -353,7 +348,6 @@ class ImageTextGuider(nn.Module):
                 else:
                     model_stat['target_embeds'].append(txt)
                     model_stat['weights'].append(weight)
-
             model_stat['target_embeds'] = torch.cat(
                 model_stat['target_embeds'])
             model_stat['weights'] = torch.tensor(
@@ -375,7 +369,17 @@ class ImageTextGuider(nn.Module):
                 init_image=None,
                 clamp_grad=True,
                 clamp_max=0.05,
-                clip_guidance_scale=5000):
+                clip_guidance_scale=5000,
+                init_scale=1000,
+                tv_scale=0.,
+                sat_scale=0.,
+                range_scale=150,
+                cut_overview=[12]*400+[4]*600,
+                cut_innercut=[4]*400+[12]*600,
+                cut_ic_pow=[1]*1000,
+                cut_icgray_p=[0.2]*400+[0]*600,
+                cutn_batches=4
+                ):
         """Clip guidance function.
 
         Args:
@@ -423,7 +427,7 @@ class ImageTextGuider(nn.Module):
             x_in = pred_original_sample * fac + x * (1 - fac)
             x_in_grad = torch.zeros_like(x_in)
             for model_stat in model_stats:
-                for i in range(self.cutter_cfg.cutn_batches):
+                for i in range(cutn_batches):
                     t_int = int(t.item()) + 1
                     try:
                         input_resolution = model_stat[
@@ -433,10 +437,10 @@ class ImageTextGuider(nn.Module):
 
                     cuts = MakeCutoutsDango(
                         input_resolution,
-                        Overview=self.cutter_cfg.cut_overview[1000 - t_int],
-                        InnerCrop=self.cutter_cfg.cut_innercut[1000 - t_int],
-                        IC_Size_Pow=self.cutter_cfg.cut_ic_pow[1000 - t_int],
-                        IC_Grey_P=self.cutter_cfg.cut_icgray_p[1000 - t_int])
+                        Overview=cut_overview[1000 - t_int],
+                        InnerCrop=cut_innercut[1000 - t_int],
+                        IC_Size_Pow=cut_ic_pow[1000 - t_int],
+                        IC_Grey_P=cut_icgray_p[1000 - t_int])
                     clip_in = normalize(cuts(x_in.add(1).div(2)))
                     image_embeds = model_stat['clip_model'].model.encode_image(
                         clip_in).float()
@@ -444,22 +448,22 @@ class ImageTextGuider(nn.Module):
                         image_embeds.unsqueeze(1),
                         model_stat['target_embeds'].unsqueeze(0))
                     dists = dists.view([
-                        self.cutter_cfg.cut_overview[1000 - t_int] +
-                        self.cutter_cfg.cut_innercut[1000 - t_int], n, -1
+                        cut_overview[1000 - t_int] +
+                        cut_innercut[1000 - t_int], n, -1
                     ])
                     losses = dists.mul(model_stat['weights']).sum(2).mean(0)
                     x_in_grad += torch.autograd.grad(
                         losses.sum() * clip_guidance_scale,
-                        x_in)[0] / self.cutter_cfg.cutn_batches
+                        x_in)[0] / cutn_batches
             tv_losses = tv_loss(x_in)
             range_losses = range_loss(pred_original_sample)
             sat_losses = torch.abs(x_in - x_in.clamp(min=-1, max=1)).mean()
-            loss = tv_losses.sum() * self.loss_cfg.tv_scale + range_losses.sum(
-            ) * self.loss_cfg.range_scale + sat_losses.sum(
-            ) * self.loss_cfg.sat_scale
-            if init_image is not None and self.loss_cfg.init_scale:
+            loss = tv_losses.sum() * tv_scale + range_losses.sum(
+            ) * range_scale + sat_losses.sum(
+            ) * sat_scale
+            if init_image is not None and init_scale:
                 init_losses = self.lpips_model(x_in, init_image)
-                loss = loss + init_losses.sum() * self.loss_cfg.init_scale
+                loss = loss + init_losses.sum() * init_scale
             x_in_grad += torch.autograd.grad(loss, x_in)[0]
             if not torch.isnan(x_in_grad).any():
                 grad = -torch.autograd.grad(x_in, x, x_in_grad)[0]

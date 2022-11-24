@@ -34,9 +34,6 @@ class DiscoDiffusion(nn.Module):
         unet (ModelType): Config of denoising Unet.
         diffuser (ModelType): Config of diffuser scheduler.
         secondary_model (ModelType): There are two diff. Defaults to None.
-        cutter_cfg (dict): The config of image cutter. Defaults to dict().
-        loss_cfg (dict): Loss config for computing gradient. Defaults to
-            dict().
         clip_models_cfg (list): Config of clip models. Defaults to [].
         use_fp16 (bool): Whether to use fp16 for unet model. Defaults to False.
         pretrained_cfgs (dict): Path Config for pretrained weights. Usually
@@ -48,8 +45,6 @@ class DiscoDiffusion(nn.Module):
                  unet,
                  diffuser,
                  secondary_model=None,
-                 cutter_cfg=dict(),
-                 loss_cfg=dict(),
                  clip_models_cfg=[],
                  use_fp16=False,
                  pretrained_cfgs=None):
@@ -59,7 +54,7 @@ class DiscoDiffusion(nn.Module):
         clip_models = []
         for clip_cfg in clip_models_cfg:
             clip_models.append(MODULES.build(clip_cfg))
-        self.guider = ImageTextGuider(clip_models, cutter_cfg, loss_cfg)
+        self.guider = ImageTextGuider(clip_models)
 
         if secondary_model is not None:
             self.secondary_model = MODULES.build(secondary_model)
@@ -118,6 +113,15 @@ class DiscoDiffusion(nn.Module):
               image_prompts=[],
               eta=0.8,
               clip_guidance_scale=5000,
+              init_scale=1000,
+              tv_scale=0.,
+              sat_scale=0.,
+              range_scale=150,
+              cut_overview=[12] * 400 + [4] * 600,
+              cut_innercut=[4] * 400 + [12] * 600,
+              cut_ic_pow=[1] * 1000,
+              cut_icgray_p=[0.2] * 400 + [0] * 600,
+              cutn_batches=4,
               seed=None):
         """Inference API for disco diffusion.
 
@@ -190,12 +194,21 @@ class DiscoDiffusion(nn.Module):
             model_output = self.unet(image, t)['outputs']
 
             # 2. compute previous image: x_t -> x_t-1
-            cond_kwargs = {
-                'model_stats': model_stats,
-                'init_image': init_image,
-                'unet': self.unet,
-                'clip_guidance_scale': clip_guidance_scale
-            }
+            cond_kwargs = dict(
+                model_stats=model_stats,
+                init_image=init_image,
+                unet= self.unet,
+                clip_guidance_scale= clip_guidance_scale,
+                init_scale=init_scale,
+                tv_scale=tv_scale,
+                sat_scale=sat_scale,
+                range_scale=range_scale,
+                cut_overview=cut_overview,
+                cut_innercut=cut_innercut,
+                cut_ic_pow=cut_ic_pow,
+                cut_icgray_p=cut_icgray_p,
+                cutn_batches=cutn_batches,
+            )
             if self.with_secondary_model:
                 cond_kwargs.update(secondary_model=self.secondary_model)
             diffuser_output = infer_scheduler.step(
