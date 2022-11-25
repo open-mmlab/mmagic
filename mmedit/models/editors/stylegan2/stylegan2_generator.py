@@ -142,14 +142,21 @@ class StyleGAN2Generator(nn.Module):
             cond_mapping_channels = style_channels \
                 if cond_mapping_channels is None else cond_mapping_channels
             self.embed = EqualLinearActModule(cond_size, cond_mapping_channels)
+            # NOTE: conditional input is passed, do 2nd moment norm for
+            # embedding and noise input respectively, therefore mapping layer
+            # start with FC layer
+            mapping_layers = []
         else:
             cond_mapping_channels = 0
+            # NOTE: conditional input is not passed, put 2nd moment norm at
+            # the start of mapping layers
+            mapping_layers = [PixelNorm(eps=norm_eps)]
         in_feat = cond_mapping_channels + self.noise_size
 
-        # define style mapping layers
+        # define pixel norm
         self.pixel_norm = PixelNorm(eps=norm_eps)
-        mapping_layers = []
 
+        # define style mapping layers
         for idx in range(num_mlps):
             mapping_layers.append(
                 EqualLinearActModule(
@@ -420,15 +427,17 @@ class StyleGAN2Generator(nn.Module):
         # no amp for style-mapping and condition-embedding
         if not input_is_latent:
             noise_batch = styles
-            # NOTE: do pixel_norm (2nd_momuent_norm) to noise input
-            styles = [self.pixel_norm(s) for s in styles]
             if self.cond_size is not None and self.cond_size > 0:
                 assert label is not None, (
                     '\'cond_channels\' is not None, \'cond\' must be passed.')
                 assert label.shape[1] == self.cond_size
                 embedding = self.embed(label)
-                # NOTE: do pixel_norm (2nd_momuent_norm) to cond embedding
+                # NOTE: If conditional input is passed, do norm for cond
+                # embedding and noise input respectively
+                # do pixel_norm (2nd_momuent_norm) to cond embedding
                 embedding = self.pixel_norm(embedding)
+                # do pixel_norm (2nd_momuent_norm) to noise input
+                styles = [self.pixel_norm(s) for s in styles]
 
             styles_list = []
             for s in styles:
