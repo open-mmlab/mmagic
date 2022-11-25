@@ -84,11 +84,7 @@ class FrechetInceptionDistance(GenerativeMetric):
         self.device = module.data_preprocessor.device
         self.inception.to(self.device)
         inception_feat_dict = prepare_inception_feat(
-            dataloader,
-            self,
-            module.data_preprocessor,
-            capture_mean_cov=True,
-            force_recal_inception_pkl=self.force_recal_inception_pkl)
+            dataloader, self, module.data_preprocessor, capture_mean_cov=True)
         if is_main_process():
             self.real_mean = inception_feat_dict['real_mean']
             self.real_cov = inception_feat_dict['real_cov']
@@ -237,14 +233,12 @@ class TransFID(FrechetInceptionDistance):
                  real_key: Optional[str] = 'img',
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
-                 force_recal_inception_pkl: bool = False,
                  prefix: Optional[str] = None):
         # NOTE: set `need_cond` as False since we direct return the original
         # dataloader as sampler
         super().__init__(fake_nums, real_nums, inception_style, inception_path,
                          inception_pkl, fake_key, real_key, False,
-                         sample_model, collect_device,
-                         force_recal_inception_pkl, prefix)
+                         sample_model, collect_device, prefix)
 
         self.SAMPLER_MODE = 'normal'
 
