@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import math
-from typing import Iterator, List, Optional, Sequence, Tuple
+from typing import List, Optional, Sequence, Tuple
 
 import numpy as np
 import torch
@@ -11,7 +10,6 @@ from torch import Tensor
 from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import METRICS
-from mmedit.structures import EditDataSample
 from ..functional import (disable_gpu_fuser_on_pt19, load_inception,
                           prepare_inception_feat)
 from .base_gen_metric import GenerativeMetric
@@ -63,11 +61,12 @@ class FrechetInceptionDistance(GenerativeMetric):
                  inception_pkl: Optional[str] = None,
                  fake_key: Optional[str] = None,
                  real_key: Optional[str] = 'img',
+                 need_cond: bool = False,
                  sample_model: str = 'orig',
                  collect_device: str = 'cpu',
                  force_recal_inception_pkl: bool = False,
                  prefix: Optional[str] = None):
-        super().__init__(fake_nums, real_nums, fake_key, real_key,
+        super().__init__(fake_nums, real_nums, fake_key, real_key, need_cond,
                          sample_model, collect_device, prefix)
         self.real_mean = None
         self.real_cov = None
@@ -242,9 +241,12 @@ class TransFID(FrechetInceptionDistance):
                  collect_device: str = 'cpu',
                  force_recal_inception_pkl: bool = False,
                  prefix: Optional[str] = None):
+        # NOTE: set `need_cond` as False since we direct return the original
+        # dataloader as sampler
         super().__init__(fake_nums, real_nums, inception_style, inception_path,
-                         inception_pkl, fake_key, real_key, sample_model,
-                         collect_device, force_recal_inception_pkl, prefix)
+                         inception_pkl, fake_key, real_key, False,
+                         sample_model, collect_device,
+                         force_recal_inception_pkl, prefix)
 
         self.SAMPLER_MODE = 'normal'
 
@@ -287,126 +289,3 @@ class TransFID(FrechetInceptionDistance):
         feat = self.forward_inception(fake_imgs)
         feat_list = list(torch.split(feat, 1))
         self.fake_results += feat_list
-
-
-@METRICS.register_module()
-class ConditionalFID(FrechetInceptionDistance):
-    """FID score for models need specific conditional input. The Return the a
-    iterator with random conditional input.
-
-    Args:
-        fake_nums (int): Numbers of the generated image need for the metric.
-        real_nums (int): Numbers of the real images need for the metric. If -1
-            is passed, means all real images in the dataset will be used.
-            Defaults to -1.
-        inception_style (str): The target inception style want to load. If the
-            given style cannot be loaded successful, will attempt to load a
-            valid one. Defaults to 'StyleGAN'.
-        inception_path (str, optional): Path the the pretrain Inception
-            network. Defaults to None.
-        inception_pkl (str, optional): Path to reference inception pickle file.
-            If `None`, the statistical value of real distribution will be
-            calculated at running time. Defaults to None.
-        fake_key (Optional[str]): Key for get fake images of the output dict.
-            Defaults to None.
-        real_key (Optional[str]): Key for get real images from the input dict.
-            Defaults to 'img'.
-        sample_model (str): Sampling mode for the generative model. Support
-            'orig' and 'ema'. Defaults to 'orig'.
-        collect_device (str, optional): Device name used for collecting results
-            from different ranks during distributed training. Must be 'cpu' or
-            'gpu'. Defaults to 'cpu'.
-        prefix (str, optional): The prefix that will be added in the metric
-            names to disambiguate homonymous metrics of different evaluators.
-            If prefix is not provided in the argument, self.default_prefix
-            will be used instead. Defaults to None.
-    """
-
-    name = 'ConditionalFID'
-
-    def __init__(self,
-                 fake_nums: int,
-                 real_nums: int = -1,
-                 inception_style='StyleGAN',
-                 inception_path: Optional[str] = None,
-                 inception_pkl: Optional[str] = None,
-                 fake_key: Optional[str] = None,
-                 real_key: Optional[str] = 'img',
-                 sample_model: str = 'orig',
-                 collect_device: str = 'cpu',
-                 force_recal_inception_pkl: bool = False,
-                 prefix: Optional[str] = None):
-        super().__init__(fake_nums, real_nums, inception_style, inception_path,
-                         inception_pkl, fake_key, real_key, sample_model,
-                         collect_device, force_recal_inception_pkl, prefix)
-        self.SAMPLER_MODE = 'normal'
-
-    def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
-                           metrics: GenerativeMetric):
-        """Get sampler for generative metrics. Returns a dummy iterator, whose
-        return value of each iteration is a dict containing batch size and
-        sample mode to generate images.
-
-        Args:
-            model (nn.Module): Model to evaluate.
-            dataloader (DataLoader): Dataloader for real images. Used to get
-                batch size during generate fake images.
-            metrics (List['GenerativeMetric']): Metrics with the same sampler
-                mode.
-
-        Returns:
-            :class:`cond_iterator`: Sampler for generative metrics.
-        """
-
-        batch_size = dataloader.batch_size
-        dataset = dataloader.dataset
-
-        sample_model = metrics[0].sample_model
-        assert all([metric.sample_model == sample_model for metric in metrics
-                    ]), ('\'sample_model\' between metrics is inconsistency.')
-
-        class cond_iterator:
-
-            def __init__(self, batch_size, max_length, sample_model,
-                         dataset) -> None:
-                self.batch_size = batch_size
-                self.max_length = max_length
-                self.sample_model = sample_model
-                self.dataset = dataset
-
-            def __iter__(self) -> Iterator:
-                self.idx = 0
-                return self
-
-            def __len__(self) -> int:
-                return math.ceil(self.max_length / self.batch_size)
-
-            def get_cond(self) -> List[EditDataSample]:
-
-                data_sample_list = []
-                for _ in range(self.batch_size):
-                    data_sample = EditDataSample()
-                    cond = self.dataset.get_data_info(
-                        np.random.randint(len(self.dataset)))['gt_label']
-                    data_sample.set_gt_label(
-                        torch.Tensor(cond).type(torch.float32))
-                    data_sample_list.append(data_sample)
-                return data_sample_list
-
-            def __next__(self) -> dict:
-                if self.idx > self.max_length:
-                    raise StopIteration
-                self.idx += batch_size
-
-                return dict(
-                    inputs=dict(
-                        sample_model=self.sample_model,
-                        num_batches=self.batch_size),
-                    data_samples=self.get_cond())
-
-        return cond_iterator(
-            batch_size=batch_size,
-            max_length=max([metric.fake_nums_per_device
-                            for metric in metrics]),
-            sample_model=sample_model,
-            dataset=dataset)

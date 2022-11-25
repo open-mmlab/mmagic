@@ -89,6 +89,11 @@ class PrecisionAndRecall(GenerativeMetric):
             col_batch_size (int, optional): The batch size of col data.
                 Defaults to 10000.
             auto_save (bool, optional): Whether save vgg feature automatically.
+            need_cond (bool): If true, the sampler will return the conditional
+                input random sampled from the original dataset. This require the
+                dataset implement `get_data_info` and field `gt_label` must be
+                contained in the return value of `get_data_info`. Defaults to
+                False.
         """
     name = 'PR'
 
@@ -98,6 +103,7 @@ class PrecisionAndRecall(GenerativeMetric):
                  k=3,
                  fake_key: Optional[str] = None,
                  real_key: Optional[str] = 'img',
+                 need_cond: bool = False,
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None,
@@ -106,7 +112,7 @@ class PrecisionAndRecall(GenerativeMetric):
                  row_batch_size=10000,
                  col_batch_size=10000,
                  auto_save=True):
-        super().__init__(fake_nums, real_nums, fake_key, real_key,
+        super().__init__(fake_nums, real_nums, fake_key, real_key, need_cond,
                          sample_model, collect_device, prefix)
         print_log('loading vgg16 for improved precision and recall...',
                   'current')

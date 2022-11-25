@@ -24,13 +24,14 @@ class Equivariance(GenerativeMetric):
                  real_nums: int = 0,
                  fake_key: Optional[str] = None,
                  real_key: Optional[str] = 'img',
+                 need_cond: bool = False,
                  sample_mode: str = 'ema',
                  sample_kwargs: dict = dict(),
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None,
                  eq_cfg=dict()):
-        super().__init__(fake_nums, real_nums, fake_key, real_key, sample_mode,
-                         collect_device, prefix)
+        super().__init__(fake_nums, real_nums, fake_key, real_key, need_cond,
+                         sample_mode, collect_device, prefix)
         # set default sampler config
         self._eq_cfg = deepcopy(eq_cfg)
         self._eq_cfg.setdefault('compute_eqt_int', False)

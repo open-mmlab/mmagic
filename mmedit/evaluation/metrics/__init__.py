@@ -2,7 +2,7 @@
 
 from .connectivity_error import ConnectivityError
 from .equivariance import Equivariance
-from .fid import ConditionalFID, FrechetInceptionDistance, TransFID
+from .fid import FrechetInceptionDistance, TransFID
 from .gradient_error import GradientError
 from .inception_score import InceptionScore, TransIS
 from .mae import MAE
@@ -30,7 +30,6 @@ __all__ = [
     'MultiScaleStructureSimilarity',
     'FrechetInceptionDistance',
     'TransFID',
-    'ConditionalFID',
     'InceptionScore',
     'TransIS',
     'SAD',

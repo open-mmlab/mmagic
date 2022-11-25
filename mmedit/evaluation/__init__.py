@@ -1,13 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .evaluator import GenEvaluator
 from .functional import gauss_gradient
-from .metrics import (MAE, MSE, NIQE, PSNR, SAD, SNR, SSIM, ConditionalFID,
-                      ConnectivityError, Equivariance,
-                      FrechetInceptionDistance, GradientError, InceptionScore,
-                      MattingMSE, MultiScaleStructureSimilarity,
-                      PerceptualPathLength, PrecisionAndRecall,
-                      SlicedWassersteinDistance, TransFID, TransIS, niqe, psnr,
-                      snr, ssim)
+from .metrics import (MAE, MSE, NIQE, PSNR, SAD, SNR, SSIM, ConnectivityError,
+                      Equivariance, FrechetInceptionDistance, GradientError,
+                      InceptionScore, MattingMSE,
+                      MultiScaleStructureSimilarity, PerceptualPathLength,
+                      PrecisionAndRecall, SlicedWassersteinDistance, TransFID,
+                      TransIS, niqe, psnr, snr, ssim)
 
 __all__ = [
     'GenEvaluator',
@@ -36,5 +35,4 @@ __all__ = [
     'SlicedWassersteinDistance',
     'TransFID',
     'TransIS',
-    'ConditionalFID',
 ]

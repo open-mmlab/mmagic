@@ -237,6 +237,11 @@ class MultiScaleStructureSimilarity(GenerativeMetric):
             Defaults to None.
         real_key (Optional[str]): Key for get real images from the input dict.
             Defaults to 'img'.
+        need_cond (bool): If true, the sampler will return the conditional
+            input random sampled from the original dataset. This require the
+            dataset implement `get_data_info` and field `gt_label` must be
+            contained in the return value of `get_data_info`. Defaults to
+            False.
         sample_model (str): Sampling mode for the generative model. Support
             'orig' and 'ema'. Defaults to 'ema'.
         collect_device (str, optional): Device name used for collecting results
@@ -252,10 +257,11 @@ class MultiScaleStructureSimilarity(GenerativeMetric):
     def __init__(self,
                  fake_nums: int,
                  fake_key: Optional[str] = None,
+                 need_cond: bool = False,
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None) -> None:
-        super().__init__(fake_nums, 0, fake_key, None, sample_model,
+        super().__init__(fake_nums, 0, fake_key, None, need_cond, sample_model,
                          collect_device, prefix)
 
         assert fake_nums % 2 == 0

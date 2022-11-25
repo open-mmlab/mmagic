@@ -82,6 +82,8 @@ class GenEvaluator(Evaluator):
             'SAMPLER_MODE': sampler_mode,
             'sample_model': sample_model
         }
+        if hasattr(metric, 'need_cond'):
+            metric_dict['need_cond'] = metric.need_cond
         md5 = hashlib.md5(repr(metric_dict).encode('utf-8')).hexdigest()
         return md5
 

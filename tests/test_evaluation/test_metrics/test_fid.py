@@ -12,8 +12,7 @@ import torch.nn as nn
 from mmengine.runner import Runner
 
 from mmedit.datasets import PairedImageDataset
-from mmedit.evaluation import (ConditionalFID, FrechetInceptionDistance,
-                               TransFID)
+from mmedit.evaluation import FrechetInceptionDistance, TransFID
 from mmedit.models import GenDataPreprocessor, Pix2Pix
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import register_all_modules
@@ -77,6 +76,7 @@ class TestFID(TestCase):
                 fake_key='fake',
                 inception_pkl=self.inception_pkl)
 
+            self.assertFalse(fid.need_cond)
             self.assertIsNone(fid.real_mean)
             self.assertIsNone(fid.real_cov)
 
@@ -279,48 +279,3 @@ class TestTransFID:
         fid_res = fid.compute_metrics(fid.fake_results)
         assert fid_res['fid'] >= 0 and fid_res['mean'] >= 0 and fid_res[
             'cov'] >= 0
-
-
-class TestCondFID:
-
-    mock_inception_stylegan = MagicMock(
-        return_value=(inception_mock('StyleGAN'), 'StyleGAN'))
-
-    def test(self):
-        with patch.object(ConditionalFID, '_load_inception',
-                          self.mock_inception_stylegan):
-            cond_fid = ConditionalFID(fake_nums=11)
-            assert cond_fid.SAMPLER_MODE == 'normal'
-
-            # NOTE: only test whether returned sampler is correct in this UT
-            def side_effect(index):
-                return {'gt_label': [i for i in range(index, index + 3)]}
-
-            dataset = MagicMock()
-            dataset.__len__ = MagicMock(return_value=2)
-            dataset.get_data_info.side_effect = side_effect
-            dataloader = MagicMock()
-            dataloader.batch_size = 10
-            dataloader.dataset = dataset
-
-            sampler = cond_fid.get_metric_sampler(None, dataloader, [cond_fid])
-            assert sampler.batch_size == 10
-            assert sampler.max_length == 11
-            assert sampler.sample_model == 'orig'
-            # index passed to `side_effect` can only be 0 or 1
-            assert len(sampler) == 2
-
-            iterator = iter(sampler)
-            output = next(iterator)
-            assert output['inputs'] == dict(
-                sample_model='orig', num_batches=10)
-            assert len(output['data_samples']) == 10
-
-            target_label_list = [
-                torch.FloatTensor([0, 1, 2]),
-                torch.FloatTensor([1, 2, 3])
-            ]
-            # check if all cond in target label list
-            for data in output['data_samples']:
-                label = data.gt_label.label
-                assert any([(label == tar).all() for tar in target_label_list])

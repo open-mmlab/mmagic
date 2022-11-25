@@ -98,6 +98,48 @@ class TestGenEvaluator(TestCase):
         metric_sampler_list = evaluator.prepare_samplers(model, dataloader)
         self.assertEqual(len(metric_sampler_list), 3)
 
+        # test prepare sampler with metric.need_cond = True
+        cfg = deepcopy(self.metrics)
+        cfg += [
+            dict(
+                type='FrechetInceptionDistance',
+                fake_nums=12,
+                inception_style='pytorch',
+                sample_model='ema'),
+            dict(
+                type='FrechetInceptionDistance',
+                fake_nums=12,
+                inception_style='pytorch',
+                sample_model='ema',
+                need_cond=True),
+            dict(
+                type='InceptionScore',
+                fake_nums=10,
+                inception_style='pytorch',
+                sample_model='ema',
+                need_cond=True),
+            dict(
+                type='InceptionScore',
+                fake_nums=10,
+                inception_style='pytorch',
+                sample_model='orig',
+                need_cond=True),
+        ]
+        # all metrics (5 groups): [[IS-orig, FID-orig], [TransFID-orig],
+        #                          [FID-ema], [FID-cond-ema, IS-cond-ema],
+        #                          [IS-cond-orig]]
+        evaluator = GenEvaluator(cfg)
+
+        # mock metrics
+        model = MagicMock()
+        model.data_preprocessor.device = 'cpu'
+
+        dataloader = MagicMock()
+        dataloader.batch_size = 2
+
+        metric_sampler_list = evaluator.prepare_samplers(model, dataloader)
+        self.assertEqual(len(metric_sampler_list), 5)
+
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
     def test_process(self):
