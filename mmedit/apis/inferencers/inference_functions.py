@@ -25,6 +25,7 @@ from mmedit.utils import register_all_modules
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 FILE_CLIENT = FileClient('disk')
 
+
 def set_random_seed(seed, deterministic=False, use_rank_shift=True):
     """Set random seed.
 
