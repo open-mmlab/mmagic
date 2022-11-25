@@ -252,7 +252,6 @@ class DenoisingUnet(nn.Module):
             in_channels_ = ch if level == 0 \
                 else int(base_channels * self.channel_factor_list[level - 1])
             out_channels_ = int(base_channels * factor)
-
             for _ in range(resblocks_per_downsample):
                 layers = [
                     MODULES.build(
@@ -285,7 +284,7 @@ class DenoisingUnet(nn.Module):
                             out_channels=out_channels_,
                             down=True) if resblock_updown else MODULES.
                         build(self.
-                              downsample_cfg, {'in_channels': in_channels_})))
+                              downsample_cfg, default_args={'in_channels': in_channels_})))
                 self.in_channels_list.append(in_channels_)
                 scale *= 2
 
@@ -332,7 +331,7 @@ class DenoisingUnet(nn.Module):
                             norm_cfg=norm_cfg,
                             out_channels=out_channels_,
                             up=True) if resblock_updown else MODULES.
-                        build(self.upsample_cfg, {'in_channels': in_channels_}
+                        build(self.upsample_cfg, default_args={'in_channels': in_channels_}
                               ))
                     scale //= 2
                 self.out_blocks.append(EmbedSequential(*layers))

@@ -54,7 +54,7 @@ class AblatedDiffusionModel(BaseModel):
         self.unet = MODULES.build(unet)
         self.diffuser = DIFFUSION_SCHEDULERS.build(diffuser)
         if classifier:
-            self.classifier = MODULES.build(unet)
+            self.classifier = MODULES.build(classifier)
         else:
             self.classifier = None
         self.classifier_scale = classifier_scale
