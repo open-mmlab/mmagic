@@ -64,7 +64,6 @@ class FrechetInceptionDistance(GenerativeMetric):
                  need_cond: bool = False,
                  sample_model: str = 'orig',
                  collect_device: str = 'cpu',
-                 force_recal_inception_pkl: bool = False,
                  prefix: Optional[str] = None):
         super().__init__(fake_nums, real_nums, fake_key, real_key, need_cond,
                          sample_model, collect_device, prefix)
@@ -74,7 +73,6 @@ class FrechetInceptionDistance(GenerativeMetric):
         self.inception, self.inception_style = self._load_inception(
             inception_style, inception_path)
         self.inception_pkl = inception_pkl
-        self.force_recal_inception_pkl = force_recal_inception_pkl
 
     def prepare(self, module: nn.Module, dataloader: DataLoader) -> None:
         """Preparing inception feature for the real images.

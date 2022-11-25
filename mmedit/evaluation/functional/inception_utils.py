@@ -277,8 +277,7 @@ def prepare_inception_feat(dataloader: DataLoader,
                            metric: BaseMetric,
                            data_preprocessor: Optional[nn.Module] = None,
                            capture_mean_cov: bool = False,
-                           capture_all: bool = False,
-                           force_recal_inception_pkl: bool = False) -> dict:
+                           capture_all: bool = False) -> dict:
     """Prepare inception feature for the input metric.
 
     - If `metric.inception_pkl` is an online path, try to download and load
@@ -311,7 +310,7 @@ def prepare_inception_feat(dataloader: DataLoader,
         return
     inception_pkl: Optional[str] = metric.inception_pkl
 
-    if isinstance(inception_pkl, str) and not force_recal_inception_pkl:
+    if isinstance(inception_pkl, str):
         if is_filepath(inception_pkl) and osp.exists(inception_pkl):
             with open(inception_pkl, 'rb') as file:
                 inception_state = pickle.load(file)
@@ -343,7 +342,7 @@ def prepare_inception_feat(dataloader: DataLoader,
         inception_pkl = osp.join(MMEDIT_CACHE_DIR, inception_pkl)
     else:
         args = dict()
-    if osp.exists(inception_pkl) and not force_recal_inception_pkl:
+    if osp.exists(inception_pkl):
         with open(inception_pkl, 'rb') as file:
             real_feat = pickle.load(file)
         print_log(f'load preprocessed feat from {inception_pkl}', 'current')
