@@ -76,7 +76,7 @@ class TestFID(TestCase):
                 fake_key='fake',
                 inception_pkl=self.inception_pkl)
 
-            self.assertFalse(fid.need_cond)
+            self.assertFalse(fid.need_cond_input)
             self.assertIsNone(fid.real_mean)
             self.assertIsNone(fid.real_cov)
 

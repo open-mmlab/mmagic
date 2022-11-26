@@ -63,11 +63,15 @@ class InceptionScore(GenerativeMetric):
             Defaults to None.
         real_key (Optional[str]): Key for get real images from the input dict.
             Defaults to 'img'.
-        need_cond (bool): If true, the sampler will return the conditional
-            input random sampled from the original dataset. This require the
-            dataset implement `get_data_info` and field `gt_label` must be
-            contained in the return value of `get_data_info`. Defaults to
-            False.
+        need_cond_input (bool): If true, the sampler will return the
+            conditional input randomly sampled from the original dataset.
+            This require the dataset implement `get_data_info` and field
+            `gt_label` must be contained in the return value of
+            `get_data_info`. Noted that, for unconditional models, set
+            `need_cond_input` as True may influence the result of evaluation
+            results since the conditional inputs are sampled from the dataset
+            distribution; otherwise will be sampled from the uniform
+            distribution. Defaults to False.
         sample_model (str): Sampling mode for the generative model. Support
             'orig' and 'ema'. Defaults to 'orig'.
         collect_device (str, optional): Device name used for collecting results
@@ -96,12 +100,12 @@ class InceptionScore(GenerativeMetric):
                  resize_method='bicubic',
                  use_pillow_resize: bool = True,
                  fake_key: Optional[str] = None,
-                 need_cond: bool = False,
+                 need_cond_input: bool = False,
                  sample_model='orig',
                  collect_device: str = 'cpu',
                  prefix: str = None):
-        super().__init__(fake_nums, 0, fake_key, None, need_cond, sample_model,
-                         collect_device, prefix)
+        super().__init__(fake_nums, 0, fake_key, None, need_cond_input,
+                         sample_model, collect_device, prefix)
 
         self.resize = resize
         self.splits = splits

@@ -89,11 +89,15 @@ class PrecisionAndRecall(GenerativeMetric):
             col_batch_size (int, optional): The batch size of col data.
                 Defaults to 10000.
             auto_save (bool, optional): Whether save vgg feature automatically.
-            need_cond (bool): If true, the sampler will return the conditional
-                input random sampled from the original dataset. This require the
-                dataset implement `get_data_info` and field `gt_label` must be
-                contained in the return value of `get_data_info`. Defaults to
-                False.
+            need_cond_input (bool): If true, the sampler will return the
+                conditional input randomly sampled from the original dataset.
+                This require the dataset implement `get_data_info` and field
+                `gt_label` must be contained in the return value of
+                `get_data_info`. Noted that, for unconditional models, set
+                `need_cond_input` as True may influence the result of evaluation
+                results since the conditional inputs are sampled from the dataset
+                distribution; otherwise will be sampled from the uniform
+                distribution. Defaults to False.
         """
     name = 'PR'
 
@@ -103,7 +107,7 @@ class PrecisionAndRecall(GenerativeMetric):
                  k=3,
                  fake_key: Optional[str] = None,
                  real_key: Optional[str] = 'img',
-                 need_cond: bool = False,
+                 need_cond_input: bool = False,
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None,
@@ -112,8 +116,8 @@ class PrecisionAndRecall(GenerativeMetric):
                  row_batch_size=10000,
                  col_batch_size=10000,
                  auto_save=True):
-        super().__init__(fake_nums, real_nums, fake_key, real_key, need_cond,
-                         sample_model, collect_device, prefix)
+        super().__init__(fake_nums, real_nums, fake_key, real_key,
+                         need_cond_input, sample_model, collect_device, prefix)
         print_log('loading vgg16 for improved precision and recall...',
                   'current')
         self.vgg16_pkl = vgg16_pkl

@@ -59,8 +59,8 @@ def test_GenMetric():
 
 
 def test_GenerativeMetric():
-    metric = ToyGenerativeMetric(11, need_cond=True)
-    assert metric.need_cond
+    metric = ToyGenerativeMetric(11, need_cond_input=True)
+    assert metric.need_cond_input
     assert metric.real_nums == 0
     assert metric.fake_nums == 11
 

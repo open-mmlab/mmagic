@@ -206,11 +206,15 @@ class GenerativeMetric(GenMetric):
             Defaults to None.
         real_key (Optional[str]): Key for get real images from the input dict.
             Defaults to 'img'.
-        need_cond (bool): If true, the sampler will return the conditional
-            input random sampled from the original dataset. This require the
-            dataset implement `get_data_info` and field `gt_label` must be
-            contained in the return value of `get_data_info`. Defaults to
-            False.
+        need_cond_input (bool): If true, the sampler will return the
+            conditional input randomly sampled from the original dataset.
+            This require the dataset implement `get_data_info` and field
+            `gt_label` must be contained in the return value of
+            `get_data_info`. Noted that, for unconditional models, set
+            `need_cond_input` as True may influence the result of evaluation
+            results since the conditional inputs are sampled from the dataset
+            distribution; otherwise will be sampled from the uniform
+            distribution. Defaults to False.
         sample_model (str): Sampling mode for the generative model. Support
             'orig' and 'ema'. Defaults to 'ema'.
         collect_device (str): Device name used for collecting results from
@@ -228,13 +232,13 @@ class GenerativeMetric(GenMetric):
                  real_nums: int = 0,
                  fake_key: Optional[str] = None,
                  real_key: Optional[str] = 'img',
-                 need_cond: bool = False,
+                 need_cond_input: bool = False,
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None):
         super().__init__(fake_nums, real_nums, fake_key, real_key,
                          sample_model, collect_device, prefix)
-        self.need_cond = need_cond
+        self.need_cond_input = need_cond_input
 
     def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
                            metrics: GenMetric):
@@ -309,7 +313,7 @@ class GenerativeMetric(GenMetric):
                             for metric in metrics]),
             sample_model=sample_model,
             dataset=dataset,
-            need_cond=self.need_cond)
+            need_cond=self.need_cond_input)
 
     def evaluate(self) -> dict():
         """Evaluate generative metric. In this function we only collect

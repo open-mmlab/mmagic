@@ -98,7 +98,7 @@ class TestGenEvaluator(TestCase):
         metric_sampler_list = evaluator.prepare_samplers(model, dataloader)
         self.assertEqual(len(metric_sampler_list), 3)
 
-        # test prepare sampler with metric.need_cond = True
+        # test prepare sampler with metric.need_cond_input = True
         cfg = deepcopy(self.metrics)
         cfg += [
             dict(
@@ -111,19 +111,19 @@ class TestGenEvaluator(TestCase):
                 fake_nums=12,
                 inception_style='pytorch',
                 sample_model='ema',
-                need_cond=True),
+                need_cond_input=True),
             dict(
                 type='InceptionScore',
                 fake_nums=10,
                 inception_style='pytorch',
                 sample_model='ema',
-                need_cond=True),
+                need_cond_input=True),
             dict(
                 type='InceptionScore',
                 fake_nums=10,
                 inception_style='pytorch',
                 sample_model='orig',
-                need_cond=True),
+                need_cond_input=True),
         ]
         # all metrics (5 groups): [[IS-orig, FID-orig], [TransFID-orig],
         #                          [FID-ema], [FID-cond-ema, IS-cond-ema],
