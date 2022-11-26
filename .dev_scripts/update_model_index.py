@@ -20,8 +20,7 @@ MMEditing_ROOT = osp.dirname(osp.dirname(osp.dirname(__file__)))
 
 all_training_data = [
     'div2k', 'celeba', 'places', 'comp1k', 'vimeo90k', 'reds', 'ffhq', 'cufed',
-    'cat', 'facades', 'summer2winter', 'horse2zebra', 'maps', 'edges2shoes',
-    'df2k'
+    'cat', 'facades', 'summer2winter', 'horse2zebra', 'maps', 'edges2shoes'
 ]
 
 

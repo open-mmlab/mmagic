@@ -11,10 +11,10 @@ Models:
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
-    Training Data: DF2K
+    Training Data: Others
   Name: swinir_x2_p64w8_d6e180_500k_df2k
   Results:
-  - Dataset: DF2K
+  - Dataset: Others
     Metrics:
       Set14 PSNR: 32.3254
       Set14 SSIM: 0.8997
@@ -26,10 +26,10 @@ Models:
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
-    Training Data: DF2K
+    Training Data: Others
   Name: swinir_x3_p64w8_d6e180_500k_df2k
   Results:
-  - Dataset: DF2K
+  - Dataset: Others
     Metrics:
       Set14 PSNR: 29.0268
       Set14 SSIM: 0.8212
@@ -41,10 +41,10 @@ Models:
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
-    Training Data: DF2K
+    Training Data: Others
   Name: swinir_x4_p64w8_d6e180_500k_df2k
   Results:
-  - Dataset: DF2K
+  - Dataset: Others
     Metrics:
       Set14 PSNR: 27.2786
       Set14 SSIM: 0.8973
