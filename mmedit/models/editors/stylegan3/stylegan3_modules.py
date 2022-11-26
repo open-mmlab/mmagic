@@ -207,6 +207,9 @@ class MappingNetwork(nn.Module):
         x = None
         # Embed, normalize, and concatenate inputs.
         if self.noise_size > 0:
+            assert z is not None, (
+                '\'z\' must be passed since \'self.noise_size\''
+                f'({self.noise_size}) larger than 0.')
             x = z.to(torch.float32)
             x = x * (x.square().mean(1, keepdim=True) + 1e-8).rsqrt()
         if self.cond_size > 0:

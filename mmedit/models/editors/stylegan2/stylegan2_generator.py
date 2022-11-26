@@ -257,6 +257,7 @@ class StyleGAN2Generator(nn.Module):
             # assign avg style code here and update with EMA.
             self.register_buffer('w_avg', torch.zeros([style_channels]))
             self.w_avg_beta = w_avg_beta
+            mmengine.print_log('Mean latent code (w) is updated with EMA.')
 
         if pretrained is not None:
             self._load_pretrained_model(**pretrained)
@@ -313,6 +314,7 @@ class StyleGAN2Generator(nn.Module):
             Tensor: Mean latent of this generator.
         """
         if hasattr(self, 'w_avg'):
+            mmengine.print_log('Get latent code (w) which is updated by EMA.')
             return self.w_avg
         return get_mean_latent(self, num_samples, **kwargs)
 

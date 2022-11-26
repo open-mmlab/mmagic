@@ -39,3 +39,7 @@ def test_MappingNetwork():
     out_trunc_work = mapping_network(z, truncation=0.9, num_truncation_layer=3)
     assert out_trunc_work.shape == (1, 5, 4)
     assert (out_trunc_work[3:] == out[3:]).all()
+
+    # test z is None + noise_size > 0
+    with pytest.raises(AssertionError):
+        mapping_network(None)
