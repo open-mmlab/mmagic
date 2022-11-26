@@ -48,6 +48,7 @@ from .srgan import SRGAN, ModifiedVGG, MSRResNet
 from .stylegan1 import StyleGAN1
 from .stylegan2 import StyleGAN2
 from .stylegan3 import StyleGAN3, StyleGAN3Generator
+from .swinir import SwinIRNet
 from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
@@ -76,5 +77,5 @@ __all__ = [
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'IDLossModel', 'PESinGAN',
     'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
-    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal'
+    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'SwinIRNet'
 ]

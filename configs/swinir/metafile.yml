@@ -1,0 +1,144 @@
+Collections:
+- Metadata:
+    Architecture:
+    - SwinIR
+  Name: SwinIR
+  Paper:
+  - https://arxiv.org/abs/2108.10257
+  README: configs/swinir/README.md
+Models:
+- Config: configs/swinir/swinir_x2_p64w8_d6e180_500k_df2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: DF2K
+  Name: swinir_x2_p64w8_d6e180_500k_df2k
+  Results:
+  - Dataset: DF2K
+    Metrics:
+      Set14 PSNR: 32.3254
+      Set14 SSIM: 0.8997
+      Set5 PSNR: 36.2104
+      Set5 SSIM: 0.9458
+    Task: Image Super-Resolution
+  Weights: https://drive.google.com/file/d/1Uw1QtPKnBvFalgx8sC-moFmTLCBtfbqM/view?usp=share_link
+- Config: configs/swinir/swinir_x3_p64w8_d6e180_500k_df2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: DF2K
+  Name: swinir_x3_p64w8_d6e180_500k_df2k
+  Results:
+  - Dataset: DF2K
+    Metrics:
+      Set14 PSNR: 29.0268
+      Set14 SSIM: 0.8212
+      Set5 PSNR: 32.9243
+      Set5 SSIM: 0.908
+    Task: Image Super-Resolution
+  Weights: https://drive.google.com/file/d/13VOC_15bH4OcfqLX3TYa3NwoTSADKH9b/view?usp=share_link
+- Config: configs/swinir/swinir_x4_p64w8_d6e180_500k_df2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: DF2K
+  Name: swinir_x4_p64w8_d6e180_500k_df2k
+  Results:
+  - Dataset: DF2K
+    Metrics:
+      Set14 PSNR: 27.2786
+      Set14 SSIM: 0.8973
+      Set5 PSNR: 30.9975
+      Set5 SSIM: 0.8757
+    Task: Image Super-Resolution
+  Weights: https://drive.google.com/file/d/12IXYTR_3UebYbTqR9wumBEv5AlL6Qyr9/view?usp=share_link
+- Config: configs/swinir/swinir_x2_p48w8_d6e180_500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: DIV2K
+  Name: swinir_x2_p48w8_d6e180_500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      Set14 PSNR: 32.0471
+      Set14 SSIM: 0.9398
+      Set5 PSNR: 36.1395
+      Set5 SSIM: 0.9453
+    Task: Image Super-Resolution
+  Weights: https://drive.google.com/file/d/1NwpDavsYKNcVptQyUrCzFp2ArAtBV6a2/view?usp=share_link
+- Config: configs/swinir/swinir_x3_p48w8_d6e180_500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: DIV2K
+  Name: swinir_x3_p48w8_d6e180_500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      Set14 PSNR: 28.8743
+      Set14 SSIM: 0.8178
+      Set5 PSNR: 32.8619
+      Set5 SSIM: 0.9073
+    Task: Image Super-Resolution
+  Weights: https://drive.google.com/file/d/11fn_CkgaYl-flzaeJeapKa0d17RwPNQ9/view?usp=share_link
+- Config: configs/swinir/swinir_x4_p48w8_d6e180_500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: DIV2K
+  Name: swinir_x4_p48w8_d6e180_500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      Set14 PSNR: 27.108
+      Set14 SSIM: 0.754
+      Set5 PSNR: 30.8093
+      Set5 SSIM: 0.8729
+    Task: Image Super-Resolution
+  Weights: https://drive.google.com/file/d/1KWaJ3X6ZrXJZ37jHczdjRTcElQ_sPTpP/view?usp=share_link
+- Config: configs/swinir/swinir_x2_p64w8_d4e60_500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: DIV2K
+  Name: swinir_x2_p64w8_d4e60_500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      Set14 PSNR: 31.7807
+      Set14 SSIM: 0.8948
+      Set5 PSNR: 35.9517
+      Set5 SSIM: 0.9442
+    Task: Image Super-Resolution
+  Weights: https://drive.google.com/file/d/13dDwSMxjBpZZiXlgKHH9onkxzLUKZ0LX/view?usp=share_link
+- Config: configs/swinir/swinir_x3_p64w8_d4e60_500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: DIV2K
+  Name: swinir_x3_p64w8_d4e60_500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      Set14 PSNR: 28.6482
+      Set14 SSIM: 0.8136
+      Set5 PSNR: 32.6025
+      Set5 SSIM: 0.9045
+    Task: Image Super-Resolution
+  Weights: https://drive.google.com/file/d/1Jj0Mdyd2sbaaredwNxVtp0zraHr_EgCN/view?usp=share_link
+- Config: configs/swinir/swinir_x4_p64w8_d4e60_500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: DIV2K
+  Name: swinir_x4_p64w8_d4e60_500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      Set14 PSNR: 26.944
+      Set14 SSIM: 0.7484
+      Set5 PSNR: 30.5225
+      Set5 SSIM: 0.8678
+    Task: Image Super-Resolution
+  Weights: https://drive.google.com/file/d/1hf-Bod4nAo13dRgyHKYiAi260a1sYCT8/view?usp=share_link
