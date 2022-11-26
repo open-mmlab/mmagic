@@ -3,9 +3,10 @@ import math
 import warnings
 from typing import Any, Iterator, List, Optional
 
+import numpy as np
 import torch
 import torch.nn as nn
-from mmengine import is_list_of
+from mmengine import is_list_of, print_log
 from mmengine.dataset import pseudo_collate
 from mmengine.dist import (all_gather, broadcast_object_list, collect_results,
                            get_dist_info, get_world_size, is_main_process)
@@ -13,6 +14,8 @@ from mmengine.evaluator import BaseMetric
 from mmengine.model import is_model_wrapper
 from torch import Tensor
 from torch.utils.data.dataloader import DataLoader
+
+from mmedit.structures import EditDataSample
 
 
 class GenMetric(BaseMetric):
@@ -203,6 +206,15 @@ class GenerativeMetric(GenMetric):
             Defaults to None.
         real_key (Optional[str]): Key for get real images from the input dict.
             Defaults to 'img'.
+        need_cond_input (bool): If true, the sampler will return the
+            conditional input randomly sampled from the original dataset.
+            This require the dataset implement `get_data_info` and field
+            `gt_label` must be contained in the return value of
+            `get_data_info`. Noted that, for unconditional models, set
+            `need_cond_input` as True may influence the result of evaluation
+            results since the conditional inputs are sampled from the dataset
+            distribution; otherwise will be sampled from the uniform
+            distribution. Defaults to False.
         sample_model (str): Sampling mode for the generative model. Support
             'orig' and 'ema'. Defaults to 'ema'.
         collect_device (str): Device name used for collecting results from
@@ -220,11 +232,16 @@ class GenerativeMetric(GenMetric):
                  real_nums: int = 0,
                  fake_key: Optional[str] = None,
                  real_key: Optional[str] = 'img',
+                 need_cond_input: bool = False,
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None):
         super().__init__(fake_nums, real_nums, fake_key, real_key,
                          sample_model, collect_device, prefix)
+        self.need_cond_input = need_cond_input
+        if self.need_cond_input:
+            print_log('Set \'need_cond_input\' as True, this may influence '
+                      'the evaluation results of conditional models.')
 
     def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
                            metrics: GenMetric):
@@ -243,6 +260,7 @@ class GenerativeMetric(GenMetric):
         """
 
         batch_size = dataloader.batch_size
+        dataset = dataloader.dataset
 
         sample_model = metrics[0].sample_model
         assert all([metric.sample_model == sample_model for metric in metrics
@@ -250,10 +268,13 @@ class GenerativeMetric(GenMetric):
 
         class dummy_iterator:
 
-            def __init__(self, batch_size, max_length, sample_model) -> None:
+            def __init__(self, batch_size, max_length, sample_model, dataset,
+                         need_cond) -> None:
                 self.batch_size = batch_size
                 self.max_length = max_length
                 self.sample_model = sample_model
+                self.dataset = dataset
+                self.need_cond = need_cond
 
             def __iter__(self) -> Iterator:
                 self.idx = 0
@@ -262,20 +283,39 @@ class GenerativeMetric(GenMetric):
             def __len__(self) -> int:
                 return math.ceil(self.max_length / self.batch_size)
 
+            def get_cond(self) -> List[EditDataSample]:
+
+                data_sample_list = []
+                for _ in range(self.batch_size):
+                    data_sample = EditDataSample()
+                    cond = self.dataset.get_data_info(
+                        np.random.randint(len(self.dataset)))['gt_label']
+                    data_sample.set_gt_label(torch.Tensor(cond))
+                    data_sample_list.append(data_sample)
+                return data_sample_list
+
             def __next__(self) -> dict:
                 if self.idx > self.max_length:
                     raise StopIteration
                 self.idx += batch_size
-                return dict(
+
+                output_dict = dict(
                     inputs=dict(
                         sample_model=self.sample_model,
                         num_batches=self.batch_size))
+
+                if self.need_cond:
+                    output_dict['data_samples'] = self.get_cond()
+
+                return output_dict
 
         return dummy_iterator(
             batch_size=batch_size,
             max_length=max([metric.fake_nums_per_device
                             for metric in metrics]),
-            sample_model=sample_model)
+            sample_model=sample_model,
+            dataset=dataset,
+            need_cond=self.need_cond_input)
 
     def evaluate(self) -> dict():
         """Evaluate generative metric. In this function we only collect
