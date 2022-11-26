@@ -6,7 +6,7 @@ from typing import Any, Iterator, List, Optional
 import numpy as np
 import torch
 import torch.nn as nn
-from mmengine import is_list_of
+from mmengine import is_list_of, print_log
 from mmengine.dataset import pseudo_collate
 from mmengine.dist import (all_gather, broadcast_object_list, collect_results,
                            get_dist_info, get_world_size, is_main_process)
@@ -239,6 +239,9 @@ class GenerativeMetric(GenMetric):
         super().__init__(fake_nums, real_nums, fake_key, real_key,
                          sample_model, collect_device, prefix)
         self.need_cond_input = need_cond_input
+        if self.need_cond_input:
+            print_log('Set \'need_cond_input\' as True, this may influence '
+                      'the evaluation results of conditional models.')
 
     def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
                            metrics: GenMetric):
@@ -287,8 +290,7 @@ class GenerativeMetric(GenMetric):
                     data_sample = EditDataSample()
                     cond = self.dataset.get_data_info(
                         np.random.randint(len(self.dataset)))['gt_label']
-                    data_sample.set_gt_label(
-                        torch.Tensor(cond).type(torch.float32))
+                    data_sample.set_gt_label(torch.Tensor(cond))
                     data_sample_list.append(data_sample)
                 return data_sample_list
 
