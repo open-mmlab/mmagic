@@ -9,6 +9,7 @@ from torchvision import utils
 
 from mmedit.structures import EditDataSample
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from .inference_functions import set_random_seed
 
 
 class ConditionalInferencer(BaseMMEditInferencer):
@@ -36,6 +37,8 @@ class ConditionalInferencer(BaseMMEditInferencer):
 
         results = dict(
             num_batches=num_batches, labels=label, sample_model=sample_model)
+
+        set_random_seed(1)
 
         return results
 
