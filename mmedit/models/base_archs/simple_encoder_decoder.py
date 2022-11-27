@@ -5,6 +5,7 @@ from mmengine.model import BaseModule
 
 from mmedit.registry import MODELS
 
+from torch import Tensor
 
 @MODELS.register_module()
 class SimpleEncoderDecoder(BaseModule):
@@ -27,7 +28,7 @@ class SimpleEncoderDecoder(BaseModule):
             decoder['in_channels'] = self.encoder.out_channels
         self.decoder = MODELS.build(decoder)
 
-    def forward(self, *args, **kwargs):
+    def forward(self, *args, **kwargs) -> Tensor:
         """Forward function.
 
         Returns:

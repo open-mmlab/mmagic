@@ -7,6 +7,8 @@ from mmengine.runner import load_checkpoint
 from mmedit.models.utils import generation_init_weights
 from mmedit.registry import MODULES
 
+from typing import Optional, NoReturn
+from torch import Tensor
 
 @MODULES.register_module()
 class PatchDiscriminator(nn.Module):
@@ -27,11 +29,11 @@ class PatchDiscriminator(nn.Module):
     """
 
     def __init__(self,
-                 in_channels,
-                 base_channels=64,
-                 num_conv=3,
-                 norm_cfg=dict(type='BN'),
-                 init_cfg=dict(type='normal', gain=0.02)):
+                 in_channels: int,
+                 base_channels: int = 64,
+                 num_conv: int = 3,
+                 norm_cfg: dict = dict(type='BN'),
+                 init_cfg: Optional[dict] = dict(type='normal', gain=0.02)):
         super().__init__()
         assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"
                                             f'got {type(norm_cfg)}')
@@ -105,7 +107,7 @@ class PatchDiscriminator(nn.Module):
         self.init_gain = 0.02 if init_cfg is None else init_cfg.get(
             'gain', 0.02)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """Forward function.
 
         Args:
@@ -116,7 +118,7 @@ class PatchDiscriminator(nn.Module):
         """
         return self.model(x)
 
-    def init_weights(self, pretrained=None):
+    def init_weights(self, pretrained: Optional[str] = None) -> NoReturn:
         """Initialize weights for the model.
 
         Args:
