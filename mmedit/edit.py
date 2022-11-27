@@ -64,6 +64,9 @@ class MMEdit:
 
         # video_restoration models
         'edvr',
+
+        # text2image models
+        'disco',
     ]
 
     inference_supported_models_cfg = {}
