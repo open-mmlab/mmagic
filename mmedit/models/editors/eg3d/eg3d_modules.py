@@ -3,7 +3,10 @@ from typing import List, Optional, Tuple, Union
 
 import torch
 import torch.nn.functional as F
+from mmengine import print_log
 from mmengine.model import BaseModule
+from mmengine.utils import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 
 from ..stylegan2 import StyleGAN2Generator
 from ..stylegan2.stylegan2_modules import ModulatedStyleConv, ModulatedToRGB
@@ -202,6 +205,9 @@ class SuperResolutionModule(BaseModule):
             img_channels=3,
             upsample=block1_upsample,
             fp16_enabled=fp16_enable)
+        if digit_version(TORCH_VERSION) < digit_version('1.11.0'):
+            print_log(f'Current Pytorch version is {TORCH_VERSION}, lower '
+                      'than 1.11.0. \'sr_antialias\' is ignored.')
 
     def forward(self,
                 img: torch.Tensor,
@@ -227,18 +233,14 @@ class SuperResolutionModule(BaseModule):
         assert styles.ndim == 2 and styles.shape[-1] == self.style_channels
         styles = styles[:, None, :].repeat(1, 3, 1)
         if feature.shape[-1] != self.in_size:
-            feature = F.interpolate(
-                feature,
+            interpolation_kwargs = dict(
                 size=(self.in_size, self.in_size),
                 mode='bilinear',
-                align_corners=False,
-                antialias=self.sr_antialias)
-            img = F.interpolate(
-                img,
-                size=(self.in_size, self.in_size),
-                mode='bilinear',
-                align_corners=False,
-                antialias=self.sr_antialias)
+                align_corners=False)
+            if digit_version(TORCH_VERSION) >= digit_version('1.11.0'):
+                interpolation_kwargs['antialias'] = self.sr_antialias
+            feature = F.interpolate(feature, **interpolation_kwargs)
+            img = F.interpolate(img, **interpolation_kwargs)
         feature, img = self.block0(feature, img, styles, add_noise)
         feature, img = self.block1(feature, img, styles, add_noise)
         return img
