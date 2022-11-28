@@ -232,7 +232,7 @@ class TriplaneGenerator(BaseModule):
 
         output_dict = dict(
             fake_img=sr_image,
-            lr_img=rgb_image,
+            lr_img=rgb_image,  # low-resolution images
             depth=depth_image,
             ray_directions=ray_directions,
             ray_origins=ray_origins)
