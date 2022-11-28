@@ -160,6 +160,7 @@ class TriplaneGenerator(BaseModule):
                 input_is_latent: bool = False,
                 plane: Optional[Tensor] = None,
                 add_noise: bool = True,
+                randomize_noise: bool = True,
                 render_kwargs: Optional[dict] = None) -> dict:
         """The forward function for EG3D generator.
 
@@ -177,6 +178,9 @@ class TriplaneGenerator(BaseModule):
                 Defaults to None.
             add_noise (bool): Whether apply noise injection to the triplane
                 backbone. Defaults to True.
+            randomize_noise (bool, optional): If `False`, images are sampled
+                with the buffered noise tensor injected to the style conv
+                block. Defaults to True.
             render_kwargs (Optional[dict], optional): The specific kwargs for
                 rendering. Defaults to None.
 
@@ -192,11 +196,14 @@ class TriplaneGenerator(BaseModule):
                 label,
                 truncation=truncation,
                 num_truncation_layer=num_truncation_layer)
+        else:
+            styles = noise
 
         ray_origins, ray_directions = self.sample_ray(label)
 
         if plane is None:
-            plane = self.backbone.synthesis(styles, add_noise=add_noise)
+            plane = self.backbone.synthesis(
+                styles, add_noise=add_noise, randomize_noise=randomize_noise)
 
         # Reshape output into three `triplane_channels`-channel planes
         plane = plane.view(
