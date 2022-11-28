@@ -26,9 +26,9 @@ class TestEG3DGenerator(TestCase):
                 ray_start=0.1,
                 ray_end=2.6,
                 box_warp=1.6,
-                depth_resolution=64,
+                depth_resolution=4,
                 white_back=True,
-                depth_resolution_importance=64,
+                depth_resolution_importance=4,
             ),
             rgb2bgr=True)
 
