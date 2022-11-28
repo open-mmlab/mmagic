@@ -99,7 +99,10 @@ class OneStageInpaintor(BaseModel):
 
         self.disc_step_count = 0
 
-    def forward(self, inputs: torch.Tensor, data_samples: list[EditDataSample], mode: str = 'tensor') -> Union[tuple[torch.Tensor], list[EditDataSample]]:
+    def forward(self,
+                inputs: torch.Tensor,
+                data_samples: list[EditDataSample],
+                mode: str = 'tensor') -> Union[tuple[torch.Tensor], list[EditDataSample]]:
         """Forward function.
 
         Args:
@@ -285,7 +288,12 @@ class OneStageInpaintor(BaseModel):
 
         return loss
 
-    def generator_loss(self, fake_res: torch.Tensor, fake_img: torch.Tensor, gt: torch.Tensor, mask: torch.Tensor, masked_img: torch.Tensor) -> tuple[dict]:
+    def generator_loss(self,
+                       fake_res: torch.Tensor,
+                       fake_img: torch.Tensor,
+                       gt: torch.Tensor,
+                       mask: torch.Tensor,
+                       masked_img: torch.Tensor) -> tuple[dict]:
         """Forward function in generator training step.
 
         In this function, we mainly compute the loss items for generator with

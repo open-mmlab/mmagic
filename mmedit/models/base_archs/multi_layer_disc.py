@@ -10,6 +10,7 @@ from mmedit.registry import COMPONENTS
 from typing import Optional, NoReturn
 from torch import Tensor
 
+
 @COMPONENTS.register_module()
 class MultiLayerDiscriminator(nn.Module):
     """Multilayer Discriminator.

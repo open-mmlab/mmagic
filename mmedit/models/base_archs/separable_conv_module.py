@@ -2,8 +2,9 @@
 import torch.nn as nn
 from mmcv.cnn import ConvModule
 
-from typing import Optional, NoReturn, Union
+from typing import Optional, Union
 from torch import Tensor
+
 
 class DepthwiseSeparableConvModule(nn.Module):
     """Depthwise separable convolution module.

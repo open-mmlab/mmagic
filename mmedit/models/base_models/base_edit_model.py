@@ -116,12 +116,18 @@ class BaseEditModel(BaseModel):
         elif mode == 'loss':
             return self.forward_train(inputs, data_samples, **kwargs)
 
-    def convert_to_datasample(self, inputs: torch.Tensor, data_samples: list[EditDataSample]) -> torch.Tensor:
+    def convert_to_datasample(self,
+                              inputs: torch.Tensor,
+                              data_samples: list[EditDataSample]
+                              ) -> torch.Tensor:
         for data_sample, output in zip(inputs, data_samples):
             data_sample.output = output
         return inputs
 
-    def forward_tensor(self, inputs: torch.Tensor, data_samples: Optional[list[EditDataSample]] = None, **kwargs) -> torch.Tensor:
+    def forward_tensor(self,
+                       inputs: torch.Tensor,
+                       data_samples: Optional[list[EditDataSample]] = None,
+                       **kwargs) -> torch.Tensor:
         """Forward tensor. Returns result of simple forward.
 
         Args:
@@ -138,7 +144,10 @@ class BaseEditModel(BaseModel):
 
         return feats
 
-    def forward_inference(self, inputs: torch.Tensor, data_samples: Optional[list[EditDataSample]] = None, **kwargs) -> list[EditDataSample]:
+    def forward_inference(self,
+                          inputs: torch.Tensor,
+                          data_samples: Optional[list[EditDataSample]] = None,
+                          **kwargs) -> list[EditDataSample]:
         """Forward inference. Returns predictions of validation, testing, and
         simple inference.
 
@@ -163,7 +172,10 @@ class BaseEditModel(BaseModel):
 
         return predictions
 
-    def forward_train(self, inputs: torch.Tensor, data_samples: Optional[list[EditDataSample]] = None, **kwargs) -> dict:
+    def forward_train(self,
+                      inputs: torch.Tensor,
+                      data_samples: Optional[list[EditDataSample]] = None,
+                      **kwargs) -> dict:
         """Forward training. Returns dict of losses of training.
 
         Args:

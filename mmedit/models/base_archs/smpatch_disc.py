@@ -7,7 +7,7 @@ from mmengine.runner import load_checkpoint
 from mmedit.models.utils import generation_init_weights
 from mmedit.registry import COMPONENTS
 
-from typing import Optional,NoReturn
+from typing import Optional, NoReturn
 from torch import Tensor
 
 

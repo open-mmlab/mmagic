@@ -10,6 +10,7 @@ from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 from typing import Optional, NoReturn
 from torch import Tensor
 
+
 class BasicBlock(nn.Module):
     """Basic block for ResNet.
 
@@ -132,7 +133,7 @@ class Bottleneck(nn.Module):
                  planes: int,
                  stride: int = 1,
                  dilation: int = 1,
-                 downsample: Optional[nn.Module]=None,
+                 downsample: Optional[nn.Module] = None,
                  act_cfg: dict = dict(type='ReLU'),
                  conv_cfg: Optional[dict] = None,
                  norm_cfg: dict = dict(type='BN'),
@@ -280,7 +281,7 @@ class ResNet(nn.Module):
                  dilations: tuple[int] = (1, 1, 2, 4),
                  deep_stem: bool = False,
                  avg_down: bool = False,
-                 frozen_stages:int = -1,
+                 frozen_stages: int = -1,
                  act_cfg: dict = dict(type='ReLU'),
                  conv_cfg: Optional[dict] = None,
                  norm_cfg: dict = dict(type='BN'),
@@ -336,7 +337,9 @@ class ResNet(nn.Module):
 
         self._freeze_stages()
 
-    def _make_stem_layer(self, in_channels: int, stem_channels: int) -> NoReturn:
+    def _make_stem_layer(self,
+                         in_channels: int,
+                         stem_channels: int) -> NoReturn:
         """Make stem layer for ResNet."""
         if self.deep_stem:
             self.stem = nn.Sequential(
@@ -390,7 +393,12 @@ class ResNet(nn.Module):
         """nn.Module: normalization layer after the second convolution layer"""
         return getattr(self, self.norm1_name)
 
-    def _make_layer(self, block: BasicBlock, planes: int, blocks: int, stride: int = 1, dilation: int = 1) -> nn.Sequential:
+    def _make_layer(self,
+                    block: BasicBlock,
+                    planes: int,
+                    blocks: int,
+                    stride: int = 1,
+                    dilation: int = 1) -> nn.Sequential:
         downsample = None
         if stride != 1 or self.inplanes != planes * block.expansion:
             downsample = nn.Sequential(

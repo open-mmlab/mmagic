@@ -1,5 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from torch import Tensor
+
+
 def pixel_unshuffle(x: Tensor, scale: int) -> Tensor:
     """Down-sample by pixel unshuffle.
 

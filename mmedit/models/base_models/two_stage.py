@@ -117,7 +117,12 @@ class TwoStageInpaintor(OneStageInpaintor):
         fake_imgs = stage2_fake_res * masks + masked_imgs * (1. - masks)
         return stage2_fake_res, fake_imgs
 
-    def two_stage_loss(self, stage1_data: dict, stage2_data: dict, gt: torch.Tensor, mask: torch.Tensor, masked_img: torch.Tensor) -> tuple[dict]:
+    def two_stage_loss(self,
+                       stage1_data: dict,
+                       stage2_data: dict,
+                       gt: torch.Tensor,
+                       mask: torch.Tensor,
+                       masked_img: torch.Tensor) -> tuple[dict]:
         """Calculate two-stage loss.
 
         Args:

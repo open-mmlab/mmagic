@@ -15,7 +15,11 @@ class ImgNormalize(nn.Conv2d):
         sign (int): Sign of bias. Default -1.
     """
 
-    def __init__(self, pixel_range: float, img_mean: tuple[float], img_std: tuple[float], sign: int = -1):
+    def __init__(self,
+                 pixel_range: float,
+                 img_mean: tuple[float],
+                 img_std: tuple[float],
+                 sign: int = -1):
 
         assert len(img_mean) == len(img_std)
         num_channels = len(img_mean)

@@ -8,6 +8,7 @@ from .separable_conv_module import DepthwiseSeparableConvModule
 
 from typing import Optional
 
+
 class ASPPPooling(nn.Sequential):
     """ASPP Pooling module.
 
@@ -24,7 +25,12 @@ class ASPPPooling(nn.Sequential):
         act_cfg (dict): Config dict for activation layer.
     """
 
-    def __init__(self, in_channels: int, out_channels: int, conv_cfg: Optional[dict], norm_cfg: Optional[dict], act_cfg: Optional[dict]):
+    def __init__(self,
+                 in_channels: int,
+                 out_channels: int,
+                 conv_cfg: Optional[dict],
+                 norm_cfg: Optional[dict],
+                 act_cfg: Optional[dict]):
         super().__init__(
             nn.AdaptiveAvgPool2d(1),
             ConvModule(

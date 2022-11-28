@@ -7,6 +7,7 @@ from mmcv.cnn import ConvModule, build_activation_layer
 
 from typing import Optional, Union
 
+
 class SimpleGatedConvModule(nn.Module):
     """Simple Gated Convolutional Module.
 

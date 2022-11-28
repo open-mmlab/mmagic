@@ -10,6 +10,7 @@ from mmedit.registry import MODULES
 from typing import Optional, NoReturn
 from torch import Tensor
 
+
 @MODULES.register_module()
 class PatchDiscriminator(nn.Module):
     """A PatchGAN discriminator.

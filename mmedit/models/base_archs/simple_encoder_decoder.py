@@ -7,6 +7,7 @@ from mmedit.registry import MODELS
 
 from torch import Tensor
 
+
 @MODELS.register_module()
 class SimpleEncoderDecoder(BaseModule):
     """Simple encoder-decoder model from matting.

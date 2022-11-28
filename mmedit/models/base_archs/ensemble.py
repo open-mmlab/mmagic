@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 from typing import Optional
 
+
 class SpatialTemporalEnsemble(nn.Module):
     """Apply spatial and temporal ensemble and compute outputs.
 

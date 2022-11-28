@@ -8,6 +8,7 @@ from .base_edit_model import BaseEditModel
 # TODO tensor2img will be move
 from typing import Optional
 
+
 @MODELS.register_module()
 class BasicInterpolator(BaseEditModel):
     """Basic model for video interpolation.
@@ -80,7 +81,8 @@ class BasicInterpolator(BaseEditModel):
         return result
 
     @staticmethod
-    def merge_frames(input_tensors: torch.Tensor, output_tensors: torch.Tensor) -> torch.Tensor:
+    def merge_frames(input_tensors: torch.Tensor,
+                     output_tensors: torch.Tensor) -> torch.Tensor:
         """merge input frames and output frames.
 
         Interpolate a frame between the given two frames.
