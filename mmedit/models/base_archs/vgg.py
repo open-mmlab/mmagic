@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Optional, NoReturn
+from typing import NoReturn, Optional
 
 import torch.nn as nn
 from mmengine.model import BaseModule

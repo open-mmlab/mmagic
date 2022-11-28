@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import NoReturn, Optional
+from torch import Tensor
 import torch.nn as nn
 from mmcv.cnn import ConvModule, build_conv_layer
 from mmengine import MMLogger
@@ -6,9 +8,6 @@ from mmengine.runner import load_checkpoint
 
 from mmedit.models.utils import generation_init_weights
 from mmedit.registry import MODULES
-
-from typing import Optional, NoReturn
-from torch import Tensor
 
 
 @MODULES.register_module()

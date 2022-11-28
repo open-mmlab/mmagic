@@ -15,7 +15,9 @@ ForwardResults = Union[Dict[str, torch.Tensor], List[EditDataSample],
                        Tuple[torch.Tensor], torch.Tensor]
 
 
-def _pad(batch_image: torch.Tensor, ds_factor, mode='reflect'):
+def _pad(batch_image: torch.Tensor,
+         ds_factor: int,
+         mode: str = 'reflect') -> tuple[torch.Tensor, tuple[int]]:
     """Pad image to a multiple of give down-sampling factor."""
 
     h, w = batch_image.shape[-2:]  # NCHW
@@ -33,7 +35,9 @@ def _pad(batch_image: torch.Tensor, ds_factor, mode='reflect'):
     return batch_image, pad
 
 
-def _interpolate(batch_image, ds_factor, mode='bicubic'):
+def _interpolate(batch_image: torch.Tensor,
+                 ds_factor: int,
+                 mode: str = 'bicubic') -> tuple[torch.Tensor, tuple[int]]:
     """Resize image to multiple of give down-sampling factor."""
 
     h, w = batch_image.shape[-2:]  # NCHW

@@ -1,9 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch.nn as nn
-from mmcv.cnn import ConvModule
-
 from typing import Optional, Union
 from torch import Tensor
+import torch.nn as nn
+from mmcv.cnn import ConvModule
 
 
 class DepthwiseSeparableConvModule(nn.Module):

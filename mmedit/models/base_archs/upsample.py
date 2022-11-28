@@ -1,11 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import NoReturn
+
 import torch.nn as nn
 import torch.nn.functional as F
+from torch import Tensor
 
 from .sr_backbone import default_init_weights
 
-from typing import NoReturn
-from torch import Tensor
+
 
 
 class PixelShufflePack(nn.Module):

@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
 import torch
 
 from mmedit.registry import MODELS
@@ -6,7 +7,6 @@ from mmedit.utils import tensor2img
 from .base_edit_model import BaseEditModel
 
 # TODO tensor2img will be move
-from typing import Optional
 
 
 @MODELS.register_module()

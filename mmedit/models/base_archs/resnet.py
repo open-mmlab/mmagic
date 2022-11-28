@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import NoReturn, Optional
+from torch import Tensor
 import torch.nn as nn
 import torch.utils.checkpoint as cp
 from mmcv.cnn import build_activation_layer, build_conv_layer, build_norm_layer
@@ -6,9 +8,6 @@ from mmengine import MMLogger
 from mmengine.model.weight_init import constant_init, kaiming_init
 from mmengine.runner import load_checkpoint
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
-
-from typing import Optional, NoReturn
-from torch import Tensor
 
 
 class BasicBlock(nn.Module):

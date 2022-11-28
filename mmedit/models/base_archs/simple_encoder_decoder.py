@@ -1,11 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional
+from torch import Tensor
 
 from mmengine.model import BaseModule
 
 from mmedit.registry import MODELS
-
-from torch import Tensor
 
 
 @MODELS.register_module()
