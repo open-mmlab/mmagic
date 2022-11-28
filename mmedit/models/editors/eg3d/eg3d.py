@@ -197,11 +197,36 @@ class EG3D(BaseConditionalGAN):
 
     @torch.no_grad()
     def interpolation(self,
-                      num_frames,
-                      num_batches=4,
-                      mode='both',
-                      sample_model='orig',
-                      show_pbar=True):
+                      num_frames: int,
+                      num_batches: int = 4,
+                      mode: str = 'both',
+                      sample_model: str = 'orig',
+                      show_pbar: bool = True) -> List[dict]:
+        """Interpolation input and return a list of output results. We support
+        three kinds of interpolation mode:
+
+        * 'camera': First generate style code with random noise and forward
+            camera. Then synthesis images with interpolated camera position
+            and fixed style code.
+
+        * 'conditioning': First generate style code with fixed noise and
+            interpolated camera. Then synthesis images with style codes and
+            forward camera.
+
+        * 'both': Generate images with interpolated camera position.
+
+        Args:
+            num_frames (int): The number of frames want to generate.
+            num_batches (int, optional): The number of batches to generate at
+                one time. Defaults to 4.
+            mode (str, optional): The interpolation mode. Supported choices
+                are 'both', 'camera', and 'conditioning'. Defaults to 'both'.
+            sample_model (str, optional): _description_. Defaults to 'orig'.
+            show_pbar (bool, optional): _description_. Defaults to True.
+
+        Returns:
+            List[dict]: The list of output dict of each frame.
+        """
         assert hasattr(self, 'camera'), ('Camera must be defined.')
         assert mode.upper() in ['BOTH', 'CONDITIONING', 'CAMERA']
         assert sample_model in ['ema', 'orig']
@@ -228,10 +253,6 @@ class EG3D(BaseConditionalGAN):
                 num_frames, batch_size=num_batches, device=self.device)
             cond_list = []
             for cam2world in cam2world_list:
-                cond = [
-                    cam2world.view(num_batches, -1),
-                    intrinsics.view(num_batches, -1)
-                ]
                 cond = torch.cat([
                     cam2world.view(num_batches, -1),
                     intrinsics.view(num_batches, -1)
@@ -265,7 +286,7 @@ class EG3D(BaseConditionalGAN):
                 cond,
                 input_is_latent=True,
                 add_noise=True,
-                randomize_noise=False)
+                randomize_noise=False)  # use fixed noise
             output_list.append({k: v.cpu() for k, v in output.items()})
 
             if show_pbar:
