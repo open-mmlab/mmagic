@@ -18,14 +18,14 @@ base_extra_parameters = dict(
     eta=0.8,
     seed=2022)
 
-extra_parameters = base_extra_parameters
+extra_parameters = base_extra_parameters.copy()
 editor.infer(
     text=text_prompts,
     result_out_dir='resources/demo_results/disco_results/src.png',
     extra_parameters=extra_parameters)
 
 # image resolution
-extra_parameters = base_extra_parameters
+extra_parameters = base_extra_parameters.copy()
 extra_parameters['width'] = 768
 extra_parameters['height'] = 1280
 editor.infer(
@@ -34,14 +34,14 @@ editor.infer(
     extra_parameters=extra_parameters)
 
 # clip guidance scale
-extra_parameters = base_extra_parameters
+extra_parameters = base_extra_parameters.copy()
 extra_parameters['clip_guidance_scale'] = 8000
 editor.infer(
     text=text_prompts,
     result_out_dir='resources/demo_results/disco_results/CGS8000.png',
     extra_parameters=extra_parameters)
 
-extra_parameters = base_extra_parameters
+extra_parameters = base_extra_parameters.copy()
 extra_parameters['clip_guidance_scale'] = 4000
 editor.infer(
     text=text_prompts,
