@@ -867,3 +867,33 @@ def colorization_inference(model, img):
         result = model(mode='tensor', **data)
 
     return result
+
+
+def calculate_grid_size(num_batches: int = 1, aspect_ratio: int = 1) -> int:
+    """Calculate the number of images per row (nrow) to make the grid closer to
+    square when formatting a batch of images to grid.
+
+    Args:
+        num_batches (int, optional): Number of images per batch. Defaults to 1.
+        aspect_ratio (int, optional): The aspect ratio (width / height) of
+            each image sample. Defaults to 1.
+
+    Returns:
+        int: Calculated number of images per row.
+    """
+    curr_ncol, curr_nrow = 1, num_batches
+    curr_delta = curr_nrow * aspect_ratio - curr_ncol
+
+    nrow = curr_nrow
+    delta = curr_delta
+
+    while curr_delta > 0:
+
+        curr_ncol += 1
+        curr_nrow = math.ceil(num_batches / curr_ncol)
+
+        curr_delta = curr_nrow * aspect_ratio - curr_ncol
+        if curr_delta < delta and curr_delta >= 0:
+            nrow, delta = curr_nrow, curr_delta
+
+    return nrow
