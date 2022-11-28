@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
 from typing import Optional, Union
+
 import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule, build_activation_layer

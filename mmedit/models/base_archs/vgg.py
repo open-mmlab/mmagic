@@ -4,11 +4,10 @@ from typing import NoReturn, Optional
 import torch.nn as nn
 from mmengine.model import BaseModule
 from mmengine.model.weight_init import constant_init, xavier_init
+from torch import Tensor
 
 from mmedit.registry import MODELS
 from ..base_archs.aspp import ASPP
-
-from torch import Tensor
 
 
 @MODELS.register_module()

@@ -1,9 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional
+
 import torch
 from mmcv.cnn import ConvModule
-from torch import nn, Tensor
+from torch import Tensor, nn
 from torch.nn import functional as F
+
 from .separable_conv_module import DepthwiseSeparableConvModule
 
 

@@ -5,10 +5,9 @@ import torch
 from mmengine.config import Config
 
 from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample
 from ..utils import set_requires_grad
 from .one_stage import OneStageInpaintor
-
-from mmedit.structures import EditDataSample
 
 
 @MODELS.register_module()

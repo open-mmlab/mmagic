@@ -1,9 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import NoReturn, Optional
-from torch import Tensor
+
 import torch.nn as nn
 from mmcv.cnn import build_activation_layer
 from mmengine.model.weight_init import kaiming_init
+from torch import Tensor
 
 
 class LinearModule(nn.Module):

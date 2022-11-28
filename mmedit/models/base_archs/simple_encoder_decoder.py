@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional
-from torch import Tensor
 
 from mmengine.model import BaseModule
+from torch import Tensor
 
 from mmedit.registry import MODELS
 

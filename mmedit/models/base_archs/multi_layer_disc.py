@@ -1,10 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import NoReturn, Optional
-from torch import Tensor
+
 import torch.nn as nn
 from mmcv.cnn import ConvModule
 from mmengine import MMLogger
 from mmengine.runner import load_checkpoint
+from torch import Tensor
 
 from mmedit.models.base_archs import LinearModule
 from mmedit.registry import COMPONENTS

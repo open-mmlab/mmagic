@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import List, NoReturn, Optional, Union
+
 import torch
 from mmengine.config import Config
 from mmengine.model import BaseModel

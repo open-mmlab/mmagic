@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional
+
 import torch
 
 from mmedit.registry import MODELS

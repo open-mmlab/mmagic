@@ -8,8 +8,6 @@ from torch import Tensor
 from .sr_backbone import default_init_weights
 
 
-
-
 class PixelShufflePack(nn.Module):
     """Pixel Shuffle upsample layer.
 

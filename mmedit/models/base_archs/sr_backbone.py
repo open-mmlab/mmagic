@@ -1,10 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import NoReturn
-from torch import Tensor
+
 import torch.nn as nn
+from torch import Tensor
 
 from ..utils import default_init_weights
-
 
 # def default_init_weights(module, scale=1):
 #     """Initialize network weights.
