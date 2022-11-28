@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import clip
-import open_clip
 import torch.nn as nn
 
 from mmedit.registry import MODELS
@@ -62,8 +60,18 @@ class ClipWrapper(nn.Module):
         self.clip_type = clip_type
         assert clip_type in ['clip', 'open_clip']
         if clip_type == 'clip':
+            try:
+                import clip
+            except:
+                raise ImportError('clip need to be installed!'\
+                    'Run `pip install -r requirements/optional.txt` and try again')
             self.model, _ = clip.load(*args, **kwargs)
         elif clip_type == 'open_clip':
+            try:
+                import open_clip
+            except:
+                raise ImportError('open_clip_torch need to be installed!'\
+                    'Run `pip install -r requirements/optional.txt` and try again')
             self.model = open_clip.create_model(*args, **kwargs)
         self.model.eval().requires_grad_(False)
 
