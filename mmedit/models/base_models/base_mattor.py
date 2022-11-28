@@ -247,7 +247,8 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
 
     def convert_to_datasample(self,
                               inputs: torch.Tensor,
-                              data_samples: list[EditDataSample]) -> torch.Tensor:
+                              data_samples: list[EditDataSample]
+                              ) -> torch.Tensor:
         for data_sample, output in zip(inputs, data_samples):
             data_sample.output = output
         return inputs

@@ -10,6 +10,7 @@ from .one_stage import OneStageInpaintor
 
 from mmedit.structures import EditDataSample
 
+
 @MODELS.register_module()
 class TwoStageInpaintor(OneStageInpaintor):
     """Standard two-stage inpaintor with commonly used losses. A two-stage
@@ -94,7 +95,10 @@ class TwoStageInpaintor(OneStageInpaintor):
         if self.train_cfg is not None:
             self.cur_iter = self.train_cfg.start_iter
 
-    def forward_tensor(self, inputs: torch.Tensor, data_samples: list[EditDataSample]) -> tuple[torch.Tensor]:
+    def forward_tensor(self,
+                       inputs: torch.Tensor,
+                       data_samples: list[EditDataSample]
+                       ) -> tuple[torch.Tensor]:
         """Forward function in tensor mode.
 
         Args:
@@ -219,7 +223,9 @@ class TwoStageInpaintor(OneStageInpaintor):
 
         return loss_dict
 
-    def train_step(self, data: List[dict], optim_wrapper: dict[torch.optim.Optimizer]) -> dict:
+    def train_step(self,
+                   data: List[dict],
+                   optim_wrapper: dict[torch.optim.Optimizer]) -> dict:
         """Train step function.
 
         In this function, the inpaintor will finish the train step following
