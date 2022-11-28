@@ -8,7 +8,7 @@ from .cain import CAIN, CAINNet
 from .cyclegan import CycleGAN
 from .dcgan import DCGAN
 from .ddim import DDIMScheduler
-from .ddpm import DDPMScheduler
+from .ddpm import DDPMScheduler, DenoisingUnet
 from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
                          DeepFillDecoder, DeepFillEncoder, DeepFillRefiner,
                          DeepFillv1Discriminators, DeepFillv1Inpaintor)
@@ -27,7 +27,7 @@ from .ggan import GGAN
 from .glean import GLEANStyleGANv2
 from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
                            GLEncoderDecoder)
-from .guided_diffusion import AblatedDiffusionModel, DenoisingUnet
+from .guided_diffusion import AblatedDiffusionModel
 from .iconvsr import IconVSRNet
 from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
@@ -79,8 +79,8 @@ __all__ = [
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel',
-    'DenoisingUnet', 'DiscoDiffusion', 'IDLossModel', 'PESinGAN',
+    'DiscoDiffusion', 'IDLossModel', 'PESinGAN',
     'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
-    'DDPMScheduler'
+    'DDPMScheduler', 'DenoisingUnet'
 ]
