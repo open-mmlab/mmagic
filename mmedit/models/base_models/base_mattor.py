@@ -125,8 +125,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
 
         return torch.cat((batch_images, batch_trimaps), dim=1)
 
-    def restore_size(self,
-                     pred_alpha: torch.Tensor,
+    def restore_size(self, pred_alpha: torch.Tensor,
                      data_sample: EditDataSample) -> torch.Tensor:
         """Restore the predicted alpha to the original shape.
 
@@ -249,8 +248,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         else:
             raise ValueError('Invalid forward mode.')
 
-    def convert_to_datasample(self,
-                              inputs: torch.Tensor,
+    def convert_to_datasample(self, inputs: torch.Tensor,
                               data_samples: list[EditDataSample]
                               ) -> torch.Tensor:
         for data_sample, output in zip(inputs, data_samples):

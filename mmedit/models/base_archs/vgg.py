@@ -56,9 +56,7 @@ class VGG16(BaseModule):
         else:
             self.out_channels = 512
 
-    def _make_layer(self,
-                    inplanes: int,
-                    planes: int,
+    def _make_layer(self, inplanes: int, planes: int,
                     convs_layers: int) -> nn.Sequential:
         layers = []
         for _ in range(convs_layers):

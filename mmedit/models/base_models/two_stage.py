@@ -94,8 +94,7 @@ class TwoStageInpaintor(OneStageInpaintor):
         if self.train_cfg is not None:
             self.cur_iter = self.train_cfg.start_iter
 
-    def forward_tensor(self,
-                       inputs: torch.Tensor,
+    def forward_tensor(self, inputs: torch.Tensor,
                        data_samples: list[EditDataSample]
                        ) -> tuple[torch.Tensor]:
         """Forward function in tensor mode.
@@ -120,11 +119,8 @@ class TwoStageInpaintor(OneStageInpaintor):
         fake_imgs = stage2_fake_res * masks + masked_imgs * (1. - masks)
         return stage2_fake_res, fake_imgs
 
-    def two_stage_loss(self,
-                       stage1_data: dict,
-                       stage2_data: dict,
-                       gt: torch.Tensor,
-                       mask: torch.Tensor,
+    def two_stage_loss(self, stage1_data: dict, stage2_data: dict,
+                       gt: torch.Tensor, mask: torch.Tensor,
                        masked_img: torch.Tensor) -> tuple[dict]:
         """Calculate two-stage loss.
 
@@ -222,8 +218,7 @@ class TwoStageInpaintor(OneStageInpaintor):
 
         return loss_dict
 
-    def train_step(self,
-                   data: List[dict],
+    def train_step(self, data: List[dict],
                    optim_wrapper: dict[torch.optim.Optimizer]) -> dict:
         """Train step function.
 

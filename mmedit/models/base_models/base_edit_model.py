@@ -116,8 +116,7 @@ class BaseEditModel(BaseModel):
         elif mode == 'loss':
             return self.forward_train(inputs, data_samples, **kwargs)
 
-    def convert_to_datasample(self,
-                              inputs: torch.Tensor,
+    def convert_to_datasample(self, inputs: torch.Tensor,
                               data_samples: list[EditDataSample]
                               ) -> torch.Tensor:
         for data_sample, output in zip(inputs, data_samples):

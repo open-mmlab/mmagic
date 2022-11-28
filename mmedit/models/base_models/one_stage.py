@@ -148,8 +148,7 @@ class OneStageInpaintor(BaseModel):
         else:
             raise ValueError('Invalid forward mode.')
 
-    def train_step(self,
-                   data: List[dict],
+    def train_step(self, data: List[dict],
                    optim_wrapper: dict[torch.optim.Optimizer]) -> dict:
         """Train step function.
 
@@ -259,9 +258,8 @@ class OneStageInpaintor(BaseModel):
                                   'current training schedule. Please use '
                                   '`train_step` for training.')
 
-    def forward_train_d(self,
-                        data_batch: torch.Tensor,
-                        is_real: bool, is_disc: bool) -> dict:
+    def forward_train_d(self, data_batch: torch.Tensor, is_real: bool,
+                        is_disc: bool) -> dict:
         """Forward function in discriminator training step.
 
         In this function, we compute the prediction for each data batch (real
@@ -293,11 +291,8 @@ class OneStageInpaintor(BaseModel):
 
         return loss
 
-    def generator_loss(self,
-                       fake_res: torch.Tensor,
-                       fake_img: torch.Tensor,
-                       gt: torch.Tensor,
-                       mask: torch.Tensor,
+    def generator_loss(self, fake_res: torch.Tensor, fake_img: torch.Tensor,
+                       gt: torch.Tensor, mask: torch.Tensor,
                        masked_img: torch.Tensor) -> tuple[dict]:
         """Forward function in generator training step.
 
@@ -362,8 +357,7 @@ class OneStageInpaintor(BaseModel):
 
         return res, loss
 
-    def forward_tensor(self,
-                       inputs: torch.Tensor,
+    def forward_tensor(self, inputs: torch.Tensor,
                        data_samples: list[EditDataSample]
                        ) -> tuple[torch.Tensor]:
         """Forward function in tensor mode.
@@ -386,8 +380,7 @@ class OneStageInpaintor(BaseModel):
         fake_imgs = fake_reses * masks + masked_imgs * (1. - masks)
         return fake_reses, fake_imgs
 
-    def forward_test(self,
-                     inputs: torch.Tensor,
+    def forward_test(self, inputs: torch.Tensor,
                      data_samples: list[EditDataSample]
                      ) -> list[EditDataSample]:
         """Forward function for testing.
@@ -411,8 +404,7 @@ class OneStageInpaintor(BaseModel):
             predictions.append(pred)
         return predictions
 
-    def convert_to_datasample(self,
-                              inputs: torch.Tensor,
+    def convert_to_datasample(self, inputs: torch.Tensor,
                               data_samples: list[EditDataSample]
                               ) -> torch.Tensor:
         for data_sample, output in zip(inputs, data_samples):

@@ -21,10 +21,7 @@ class PixelShufflePack(nn.Module):
         Upsampled feature map.
     """
 
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 scale_factor: int,
+    def __init__(self, in_channels: int, out_channels: int, scale_factor: int,
                  upsample_kernel: int):
         super().__init__()
         self.in_channels = in_channels
