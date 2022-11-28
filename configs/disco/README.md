@@ -20,6 +20,10 @@ Disco Diffusion (DD) is a Google Colab Notebook which leverages an AI Image gene
 
 ## Models Card
 
+|                                  Method                                   | Download |
+| :-----------------------------------------------------------------------: | :------: |
+| [adm](/configs/disco/disco-diffusion_adm-u-finetuned_imagenet-512x512.py) |   ckpt   |
+
 ## Quick Start
 
 In order to get started, we introduce a simplest way to get an image within 6 line of codes.

@@ -6,4 +6,14 @@ Collections:
   Paper:
   - <>
   README: configs/disco/README.md
-Models: []
+Models:
+- Config: configs/disco/disco-diffusion_adm-u-finetuned_imagenet-512x512.py
+  In Collection: Disco Diffusion
+  Metadata:
+    Training Data: Others
+  Name: disco-diffusion_adm-u-finetuned_imagenet-512x512
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Text2Image
+  Weights: ''

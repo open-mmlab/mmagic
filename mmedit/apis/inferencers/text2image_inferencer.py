@@ -19,12 +19,28 @@ class Text2ImageInferencer(BaseMMEditInferencer):
         postprocess=[])
 
     extra_parameters = dict(
-        width=1280,
-        height=768,
-        show_progress=True,
-        num_inference_steps=250,
+        scheduler_kwargs=None,
+        height=None,
+        width=None,
+        init_image=None,
+        batch_size=1,
+        num_inference_steps=1000,
+        skip_steps=0,
+        show_progress=False,
+        text_prompts=[],
+        image_prompts=[],
         eta=0.8,
-        seed=2022)
+        clip_guidance_scale=5000,
+        init_scale=1000,
+        tv_scale=0.,
+        sat_scale=0.,
+        range_scale=150,
+        cut_overview=[12] * 400 + [4] * 600,
+        cut_innercut=[4] * 400 + [12] * 600,
+        cut_ic_pow=[1] * 1000,
+        cut_icgray_p=[0.2] * 400 + [0] * 600,
+        cutn_batches=4,
+        seed=None)
 
     def preprocess(self, text: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.
