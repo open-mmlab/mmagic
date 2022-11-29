@@ -22,5 +22,5 @@ Models:
       Set14 SSIM: 0.7014
       Set5 PSNR: 28.4316
       Set5 SSIM: 0.8099
-    Task: Srcnn
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth

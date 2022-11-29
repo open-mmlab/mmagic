@@ -65,7 +65,7 @@ test_dataloader = dict(
     num_workers=4,
     batch_size=64,
     dataset=dict(
-        type='UnconditionalImageDataset',
+        type='BasicImageDataset',
         pipeline=train_pipeline,
         data_root=data_roots['128']),
     sampler=dict(type='DefaultSampler', shuffle=False))

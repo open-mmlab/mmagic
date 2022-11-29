@@ -16,9 +16,9 @@ However, the whole process is highly customizable. See [Customize installation](
 
 ### Prerequisites
 
-In this section we demonstrate how to prepare an environment with PyTorch.
+In this section, we demonstrate how to prepare an environment with PyTorch.
 
-MMEditing works on Linux, Windows and macOS. It requires:
+MMEditing works on Linux, Windows, and macOS. It requires:
 
 - Python >= 3.6
 - [PyTorch](https://pytorch.org/) >= 1.5
@@ -119,7 +119,7 @@ See [this table](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.h
 **note**
 Installing CUDA runtime libraries is enough if you follow our best practices,
 because no CUDA code will be compiled locally.
-However if you hope to compile MMCV from source or develop other CUDA operators,
+However, if you hope to compile MMCV from source or develop other CUDA operators,
 you need to install the complete CUDA toolkit from NVIDIA's [website](https://developer.nvidia.com/cuda-downloads),
 and its version should match the CUDA version of PyTorch. i.e., the specified version of cudatoolkit in `conda install` command.
 
@@ -173,7 +173,7 @@ PYTHONPATH="$(dirname $0)/..":$PYTHONPATH
 
 After installing MMEditing successfully, now you are able to play with MMEditing!
 
-To synthesize an image of church, you only need several lines of codes by MMEditing!
+To synthesize an image of a church, you only need several lines of codes by MMEditing!
 
 ```python
 from mmedit.apis import init_model, sample_unconditional_model
@@ -182,7 +182,7 @@ config_file = 'configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-church-256x25
 # you can download this checkpoint in advance and use a local file path.
 checkpoint_file = 'https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth'
 device = 'cuda:0'
-# init a generatvie
+# init a generative model
 model = init_model(config_file, checkpoint_file, device=device)
 # sample images
 fake_imgs = sample_unconditional_model(model, 4)

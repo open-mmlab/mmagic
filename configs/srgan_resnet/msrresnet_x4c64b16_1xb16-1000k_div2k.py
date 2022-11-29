@@ -89,15 +89,15 @@ val_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(dataset_type='set5', task_name='sisr'),
-        data_root=data_root + '/Set5',
+        metainfo=dict(dataset_type='set14', task_name='sisr'),
+        data_root=data_root + '/Set14',
         data_prefix=dict(img='LRbicx4', gt='GTmod12'),
         pipeline=val_pipeline))
 
 val_evaluator = [
     dict(type='MAE'),
-    dict(type='PSNR'),
-    dict(type='SSIM'),
+    dict(type='PSNR', crop_border=scale),
+    dict(type='SSIM', crop_border=scale),
 ]
 
 train_cfg = dict(

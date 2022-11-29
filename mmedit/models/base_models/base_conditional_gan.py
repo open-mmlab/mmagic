@@ -92,7 +92,7 @@ class BaseConditionalGAN(BaseGAN):
         returned.
 
         Args:
-            data_sample (List[InstanceData]): Input data samples.
+            data_sample (List[EditDataSample]): Input data samples.
 
         Returns:
             Optional[torch.Tensor]: Packed label tensor.
