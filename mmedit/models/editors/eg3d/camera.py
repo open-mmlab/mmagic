@@ -4,6 +4,7 @@ from typing import List, Optional, Union
 
 import torch
 
+from mmedit.models.utils import normalize_vecs
 from mmedit.registry import MODULES
 
 DeviceType = Optional[Union[str, int]]
@@ -464,15 +465,3 @@ def create_cam2world_matrix(forward_vector: torch.Tensor, origin: torch.Tensor,
     cam2world = (translation_matrix @ rotation_matrix)[:, :, :]
     assert (cam2world.shape[1:] == (4, 4))
     return cam2world
-
-
-def normalize_vecs(vectors: torch.Tensor) -> torch.Tensor:
-    """Normalize vector with it's lengths at the last dimension.
-
-    Args:
-        vector (torch.Tensor): Vectors to be normalized.
-
-    Returns:
-        torch.Tensor: Vectors after normalization.
-    """
-    return vectors / (torch.norm(vectors, dim=-1, keepdim=True))

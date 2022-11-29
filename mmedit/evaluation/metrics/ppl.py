@@ -8,21 +8,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data.dataloader import DataLoader
 
-from mmedit.models.utils import get_module_device
+from mmedit.models.utils import get_module_device, normalize_vecs
 from mmedit.registry import METRICS
 from .base_gen_metric import GenerativeMetric
-
-
-def normalize(a):
-    """L2 normalization.
-
-    Args:
-        a (Tensor): Tensor with shape [N, C].
-
-    Returns:
-        Tensor: Tensor after L2 normalization per-instance.
-    """
-    return a / torch.norm(a, dim=1, keepdim=True)
 
 
 def slerp(a, b, percent):
@@ -37,14 +25,14 @@ def slerp(a, b, percent):
     Returns:
         Tensor: Spherical linear interpolation result with shape [N, C].
     """
-    a = normalize(a)
-    b = normalize(b)
+    a = normalize_vecs(a)
+    b = normalize_vecs(b)
     d = (a * b).sum(-1, keepdim=True)
     p = percent * torch.acos(d)
-    c = normalize(b - d * a)
+    c = normalize_vecs(b - d * a)
     d = a * torch.cos(p) + c * torch.sin(p)
 
-    return normalize(d)
+    return normalize_vecs(d)
 
 
 @METRICS.register_module('PPL')
