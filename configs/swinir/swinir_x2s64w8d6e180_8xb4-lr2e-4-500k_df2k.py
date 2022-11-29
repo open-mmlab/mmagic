@@ -2,7 +2,7 @@ _base_ = [
     '../_base_/default_runtime.py', '../_base_/datasets/sisr_x2_test_config.py'
 ]
 
-experiment_name = 'swinir_x2_p64w8_d4e60_500k_div2k'
+experiment_name = 'swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
@@ -17,11 +17,11 @@ model = dict(
         img_size=64,
         window_size=8,
         img_range=1.0,
-        depths=[6, 6, 6, 6],
-        embed_dim=60,
-        num_heads=[6, 6, 6, 6],
+        depths=[6, 6, 6, 6, 6, 6],
+        embed_dim=180,
+        num_heads=[6, 6, 6, 6, 6, 6],
         mlp_ratio=2,
-        upsampler='pixelshuffledirect',
+        upsampler='pixelshuffle',
         resi_connection='1conv'),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     train_cfg=dict(),
@@ -76,18 +76,18 @@ dataset_type = 'BasicImageDataset'
 data_root = 'data'
 
 train_dataloader = dict(
-    num_workers=8,
-    batch_size=8,
+    num_workers=4,
+    batch_size=4,
     drop_last=True,
     persistent_workers=False,
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
         type=dataset_type,
-        ann_file='meta_info_DIV2K800sub_GT.txt',
+        ann_file='meta_info_DF2K3450sub_GT.txt',
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
-        data_root=data_root + '/DIV2K',
+        data_root=data_root + '/DF2K',
         data_prefix=dict(
-            img='DIV2K_train_LR_bicubic/X2_sub', gt='DIV2K_train_HR_sub'),
+            img='DF2K_train_LR_bicubic/X2_sub', gt='DF2K_train_HR_sub'),
         filename_tmpl=dict(img='{}', gt='{}'),
         pipeline=train_pipeline))
 

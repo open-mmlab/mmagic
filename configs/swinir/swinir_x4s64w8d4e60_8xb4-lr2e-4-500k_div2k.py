@@ -1,27 +1,27 @@
 _base_ = [
-    '../_base_/default_runtime.py', '../_base_/datasets/sisr_x2_test_config.py'
+    '../_base_/default_runtime.py', '../_base_/datasets/sisr_x4_test_config.py'
 ]
 
-experiment_name = 'swinir_x2_p48w8_d6e180_500k_div2k'
+experiment_name = 'swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
-scale = 2
+scale = 4
 # model settings
 model = dict(
     type='BaseEditModel',
     generator=dict(
         type='SwinIRNet',
-        upscale=2,
+        upscale=4,
         in_channels=3,
-        img_size=48,
+        img_size=64,
         window_size=8,
         img_range=1.0,
-        depths=[6, 6, 6, 6, 6, 6],
-        embed_dim=180,
-        num_heads=[6, 6, 6, 6, 6, 6],
+        depths=[6, 6, 6, 6],
+        embed_dim=60,
+        num_heads=[6, 6, 6, 6],
         mlp_ratio=2,
-        upsampler='pixelshuffle',
+        upsampler='pixelshuffledirect',
         resi_connection='1conv'),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     train_cfg=dict(),
@@ -44,7 +44,7 @@ train_pipeline = [
         channel_order='rgb',
         imdecode_backend='cv2'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
-    dict(type='PairedRandomCrop', gt_patch_size=96),
+    dict(type='PairedRandomCrop', gt_patch_size=256),
     dict(
         type='Flip',
         keys=['img', 'gt'],
@@ -76,8 +76,8 @@ dataset_type = 'BasicImageDataset'
 data_root = 'data'
 
 train_dataloader = dict(
-    num_workers=8,
-    batch_size=8,
+    num_workers=4,
+    batch_size=4,
     drop_last=True,
     persistent_workers=False,
     sampler=dict(type='InfiniteSampler', shuffle=True),
@@ -87,7 +87,7 @@ train_dataloader = dict(
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
         data_root=data_root + '/DIV2K',
         data_prefix=dict(
-            img='DIV2K_train_LR_bicubic/X2_sub', gt='DIV2K_train_HR_sub'),
+            img='DIV2K_train_LR_bicubic/X4_sub', gt='DIV2K_train_HR_sub'),
         filename_tmpl=dict(img='{}', gt='{}'),
         pipeline=train_pipeline))
 
@@ -100,7 +100,7 @@ val_dataloader = dict(
         type=dataset_type,
         metainfo=dict(dataset_type='set5', task_name='sisr'),
         data_root=data_root + '/Set5',
-        data_prefix=dict(img='LRbicx2', gt='GTmod12'),
+        data_prefix=dict(img='LRbicx4', gt='GTmod12'),
         pipeline=val_pipeline))
 
 val_evaluator = [

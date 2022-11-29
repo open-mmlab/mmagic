@@ -8,7 +8,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.checkpoint as checkpoint
 from mmengine.model import BaseModule
-# from timm.models.layers import DropPath, to_2tuple, trunc_normal_
 from mmengine.model.weight_init import trunc_normal_
 
 from mmedit.registry import MODELS
@@ -16,6 +15,13 @@ from mmedit.registry import MODELS
 
 # From PyTorch internals
 def _ntuple(n):
+    """A `to_tuple` function generator. It returns a function, this function
+    will repeat the input to a tuple of length ``n`` if the input is not an
+    Iterable object, otherwise, return the input directly.
+
+    Args:
+        n (int): The number of the target length.
+    """
 
     def parse(x):
         if isinstance(x, collections.abc.Iterable) and not isinstance(x, str):
@@ -65,6 +71,14 @@ class DropPath(nn.Module):
         self.scale_by_keep = scale_by_keep
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, L, C).
+
+        Returns:
+            Tensor: Forward results.
+        """
         return drop_path(x, self.drop_prob, self.training, self.scale_by_keep)
 
     def extra_repr(self):
@@ -72,6 +86,17 @@ class DropPath(nn.Module):
 
 
 class Mlp(nn.Module):
+    """Multilayer Perceptron layer.
+
+    Args:
+        in_features (int): Number of input channels.
+        hidden_features (int | None, optional): Number of hidden layer
+            channels. Default: None
+        out_features (int | None, optional): Number of output channels.
+            Default: None
+        act_layer (nn.Module, optional): Activation layer. Default: nn.GELU
+        drop (float, optional): Dropout ratio of attention weight. Default: 0.0
+    """
 
     def __init__(self,
                  in_features,
@@ -88,6 +113,14 @@ class Mlp(nn.Module):
         self.drop = nn.Dropout(drop)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, L, C).
+
+        Returns:
+            Tensor: Forward results.
+        """
         x = self.fc1(x)
         x = self.act(x)
         x = self.drop(x)
@@ -320,6 +353,14 @@ class SwinTransformerBlock(nn.Module):
 
     def calculate_mask(self, x_size):
         # calculate attention mask for SW-MSA
+        """Calculate attention mask for SW-MSA.
+
+        Args:
+            x_size (tuple[int]): Resolution of input feature.
+
+        Returns:
+            Tensor: Attention mask
+        """
         H, W = x_size
         img_mask = torch.zeros((1, H, W, 1))  # 1 H W 1
         h_slices = (slice(0, -self.window_size),
@@ -346,6 +387,15 @@ class SwinTransformerBlock(nn.Module):
         return attn_mask
 
     def forward(self, x, x_size):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, L, C).
+            x_size (tuple[int]): Resolution of input feature.
+
+        Returns:
+            Tensor: Forward results.
+        """
         H, W = x_size
         B, L, C = x.shape
         # assert L == H * W, "input feature has wrong size"
@@ -425,8 +475,13 @@ class PatchMerging(nn.Module):
         self.norm = norm_layer(4 * dim)
 
     def forward(self, x):
-        """
-        x: B, H*W, C
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, H*W, C).
+
+        Returns:
+            Tensor: Forward results.
         """
         H, W = self.input_resolution
         B, L, C = x.shape
@@ -525,6 +580,15 @@ class BasicLayer(nn.Module):
             self.downsample = None
 
     def forward(self, x, x_size):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, L, C).
+            x_size (tuple[int]): Resolution of input feature.
+
+        Returns:
+            Tensor: Forward results.
+        """
         for blk in self.blocks:
             if self.use_checkpoint:
                 x = checkpoint.checkpoint(blk, x, x_size)
@@ -550,6 +614,7 @@ class RSTB(nn.Module):
         num_heads (int): Number of attention heads.
         window_size (int): Local window size.
         mlp_ratio (float): Ratio of mlp hidden dim to embedding dim.
+            Default: 4.0
         qkv_bias (bool, optional): If True, add a learnable bias to
             query, key, value. Default: True
         qk_scale (float | None, optional): Override default qk scale
@@ -564,9 +629,10 @@ class RSTB(nn.Module):
             end of the layer. Default: None
         use_checkpoint (bool): Whether to use checkpointing to save memory.
             Default: False.
-        img_size: Input image size.
-        patch_size: Patch size.
-        resi_connection: The convolutional block before residual connection.
+        img_size (int): Input image size. Default: 224
+        patch_size (int): Patch size. Default: 4
+        resi_connection (string): The convolutional block before
+            residual connection. Default: '1conv'
     """
 
     def __init__(self,
@@ -634,6 +700,15 @@ class RSTB(nn.Module):
             norm_layer=None)
 
     def forward(self, x, x_size):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, L, C).
+            x_size (tuple[int]): Resolution of input feature.
+
+        Returns:
+            Tensor: Forward results.
+        """
         return self.patch_embed(
             self.conv(
                 self.patch_unembed(self.residual_group(x, x_size),
@@ -677,6 +752,14 @@ class PatchEmbed(nn.Module):
             self.norm = None
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, Ph, Pw).
+
+        Returns:
+            Tensor: Forward results.
+        """
         x = x.flatten(2).transpose(1, 2)  # B Ph*Pw C
         if self.norm is not None:
             x = self.norm(x)
@@ -715,6 +798,15 @@ class PatchUnEmbed(nn.Module):
         self.embed_dim = embed_dim
 
     def forward(self, x, x_size):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, L, C).
+            x_size (tuple[int]): Resolution of input feature.
+
+        Returns:
+            Tensor: Forward results.
+        """
         B, HW, C = x.shape
         x = x.transpose(1, 2).view(B, self.embed_dim, x_size[0],
                                    x_size[1])  # B Ph*Pw C
@@ -751,6 +843,9 @@ class UpsampleOneStep(nn.Sequential):
     Args:
         scale (int): Scale factor. Supported scales: 2^n and 3.
         num_feat (int): Channel number of intermediate features.
+        num_out_ch (int): Channel number for PixelShuffle.
+        input_resolution (tuple[int], optional): Input resolution.
+            Default: None
     """
 
     def __init__(self, scale, num_feat, num_out_ch, input_resolution=None):
@@ -775,7 +870,9 @@ class SwinIRNet(BaseModule):
         in_chans (int): Number of input image channels. Default: 3
         embed_dim (int): Patch embedding dimension. Default: 96
         depths (tuple(int)): Depth of each Swin Transformer layer.
+            Default: [6, 6, 6, 6]
         num_heads (tuple(int)): Number of attention heads in different layers.
+            Default: [6, 6, 6, 6]
         window_size (int): Window size. Default: 7
         mlp_ratio (float): Ratio of mlp hidden dim to embedding dim. Default: 4
         qkv_bias (bool): If True, add a learnable bias to query, key, value.
@@ -792,13 +889,14 @@ class SwinIRNet(BaseModule):
             Default: True
         use_checkpoint (bool): Whether to use checkpointing to save memory.
             Default: False
-        upscale: Upscale factor. 2/3/4/8 for image SR, 1 for denoising and
-            compress artifact reduction
-        img_range: Image range. 1. or 255.
-        upsampler: The reconstruction reconstruction module.
-            'pixelshuffle'/'pixelshuffledirect'/'nearest+conv'/None
-        resi_connection: The convolutional block before residual connection.
-            '1conv'/'3conv'
+        upscale (int): Upscale factor. 2/3/4/8 for image SR, 1 for denoising
+            and compress artifact reduction. Default: 2
+        img_range (float): Image range. 1. or 255. Default: 1.0
+        upsampler (string, optional): The reconstruction module.
+            'pixelshuffle' / 'pixelshuffledirect' /'nearest+conv'/None.
+            Default: ''
+        resi_connection (string): The convolutional block before residual
+            connection. '1conv'/'3conv'. Default: '1conv'
     """
 
     def __init__(self,
@@ -966,6 +1064,12 @@ class SwinIRNet(BaseModule):
         return {'relative_position_bias_table'}
 
     def check_image_size(self, x):
+        """Check image size and pad images so that it has enough dimension do
+        window size.
+
+        args:
+            x: input tensor image with (B, C, H, W) shape.
+        """
         _, _, h, w = x.size()
         mod_pad_h = (self.window_size -
                      h % self.window_size) % self.window_size
@@ -975,6 +1079,14 @@ class SwinIRNet(BaseModule):
         return x
 
     def forward_features(self, x):
+        """Forward function of Deep Feature Extraction.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+
+        Returns:
+            Tensor: Forward results.
+        """
         x_size = (x.shape[2], x.shape[3])
         x = self.patch_embed(x)
         if self.ape:
@@ -990,6 +1102,14 @@ class SwinIRNet(BaseModule):
         return x
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+
+        Returns:
+            Tensor: Forward results.
+        """
         H, W = x.shape[2:]
         x = self.check_image_size(x)
 

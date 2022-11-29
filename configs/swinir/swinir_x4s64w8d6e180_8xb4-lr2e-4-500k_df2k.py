@@ -2,7 +2,7 @@ _base_ = [
     '../_base_/default_runtime.py', '../_base_/datasets/sisr_x4_test_config.py'
 ]
 
-experiment_name = 'swinir_x4_p64w8_d6e180_500k_df2k'
+experiment_name = 'swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
@@ -76,8 +76,8 @@ dataset_type = 'BasicImageDataset'
 data_root = 'data'
 
 train_dataloader = dict(
-    num_workers=8,
-    batch_size=8,
+    num_workers=4,
+    batch_size=4,
     drop_last=True,
     persistent_workers=False,
     sampler=dict(type='InfiniteSampler', shuffle=True),

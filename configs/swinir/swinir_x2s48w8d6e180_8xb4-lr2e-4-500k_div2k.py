@@ -1,20 +1,20 @@
 _base_ = [
-    '../_base_/default_runtime.py', '../_base_/datasets/sisr_x3_test_config.py'
+    '../_base_/default_runtime.py', '../_base_/datasets/sisr_x2_test_config.py'
 ]
 
-experiment_name = 'swinir_x3_p64w8_d6e180_500k_df2k'
+experiment_name = 'swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
-scale = 3
+scale = 2
 # model settings
 model = dict(
     type='BaseEditModel',
     generator=dict(
         type='SwinIRNet',
-        upscale=3,
+        upscale=2,
         in_channels=3,
-        img_size=64,
+        img_size=48,
         window_size=8,
         img_range=1.0,
         depths=[6, 6, 6, 6, 6, 6],
@@ -44,7 +44,7 @@ train_pipeline = [
         channel_order='rgb',
         imdecode_backend='cv2'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
-    dict(type='PairedRandomCrop', gt_patch_size=192),
+    dict(type='PairedRandomCrop', gt_patch_size=96),
     dict(
         type='Flip',
         keys=['img', 'gt'],
@@ -76,18 +76,18 @@ dataset_type = 'BasicImageDataset'
 data_root = 'data'
 
 train_dataloader = dict(
-    num_workers=8,
-    batch_size=8,
+    num_workers=4,
+    batch_size=4,
     drop_last=True,
     persistent_workers=False,
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
         type=dataset_type,
-        ann_file='meta_info_DF2K3450sub_GT.txt',
+        ann_file='meta_info_DIV2K800sub_GT.txt',
         metainfo=dict(dataset_type='div2k', task_name='sisr'),
-        data_root=data_root + '/DF2K',
+        data_root=data_root + '/DIV2K',
         data_prefix=dict(
-            img='DF2K_train_LR_bicubic/X3_sub', gt='DF2K_train_HR_sub'),
+            img='DIV2K_train_LR_bicubic/X2_sub', gt='DIV2K_train_HR_sub'),
         filename_tmpl=dict(img='{}', gt='{}'),
         pipeline=train_pipeline))
 
@@ -100,7 +100,7 @@ val_dataloader = dict(
         type=dataset_type,
         metainfo=dict(dataset_type='set5', task_name='sisr'),
         data_root=data_root + '/Set5',
-        data_prefix=dict(img='LRbicx3', gt='GTmod12'),
+        data_prefix=dict(img='LRbicx2', gt='GTmod12'),
         pipeline=val_pipeline))
 
 val_evaluator = [

@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/abs/2108.10257
   README: configs/swinir/README.md
 Models:
-- Config: configs/swinir/swinir_x2_p64w8_d6e180_500k_df2k.py
+- Config: configs/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
     Training Data: Others
-  Name: swinir_x2_p64w8_d6e180_500k_df2k
+  Name: swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k
   Results:
   - Dataset: Others
     Metrics:
@@ -22,12 +22,12 @@ Models:
       Set5 SSIM: 0.9458
     Task: Image Super-Resolution
   Weights: https://drive.google.com/file/d/1Uw1QtPKnBvFalgx8sC-moFmTLCBtfbqM/view?usp=share_link
-- Config: configs/swinir/swinir_x3_p64w8_d6e180_500k_df2k.py
+- Config: configs/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
     Training Data: Others
-  Name: swinir_x3_p64w8_d6e180_500k_df2k
+  Name: swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k
   Results:
   - Dataset: Others
     Metrics:
@@ -37,12 +37,12 @@ Models:
       Set5 SSIM: 0.908
     Task: Image Super-Resolution
   Weights: https://drive.google.com/file/d/13VOC_15bH4OcfqLX3TYa3NwoTSADKH9b/view?usp=share_link
-- Config: configs/swinir/swinir_x4_p64w8_d6e180_500k_df2k.py
+- Config: configs/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
     Training Data: Others
-  Name: swinir_x4_p64w8_d6e180_500k_df2k
+  Name: swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k
   Results:
   - Dataset: Others
     Metrics:
@@ -52,12 +52,12 @@ Models:
       Set5 SSIM: 0.8757
     Task: Image Super-Resolution
   Weights: https://drive.google.com/file/d/12IXYTR_3UebYbTqR9wumBEv5AlL6Qyr9/view?usp=share_link
-- Config: configs/swinir/swinir_x2_p48w8_d6e180_500k_div2k.py
+- Config: configs/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
     Training Data: DIV2K
-  Name: swinir_x2_p48w8_d6e180_500k_div2k
+  Name: swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -67,12 +67,12 @@ Models:
       Set5 SSIM: 0.9453
     Task: Image Super-Resolution
   Weights: https://drive.google.com/file/d/1NwpDavsYKNcVptQyUrCzFp2ArAtBV6a2/view?usp=share_link
-- Config: configs/swinir/swinir_x3_p48w8_d6e180_500k_div2k.py
+- Config: configs/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
     Training Data: DIV2K
-  Name: swinir_x3_p48w8_d6e180_500k_div2k
+  Name: swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -82,12 +82,12 @@ Models:
       Set5 SSIM: 0.9073
     Task: Image Super-Resolution
   Weights: https://drive.google.com/file/d/11fn_CkgaYl-flzaeJeapKa0d17RwPNQ9/view?usp=share_link
-- Config: configs/swinir/swinir_x4_p48w8_d6e180_500k_div2k.py
+- Config: configs/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
     Training Data: DIV2K
-  Name: swinir_x4_p48w8_d6e180_500k_div2k
+  Name: swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -97,12 +97,12 @@ Models:
       Set5 SSIM: 0.8729
     Task: Image Super-Resolution
   Weights: https://drive.google.com/file/d/1KWaJ3X6ZrXJZ37jHczdjRTcElQ_sPTpP/view?usp=share_link
-- Config: configs/swinir/swinir_x2_p64w8_d4e60_500k_div2k.py
+- Config: configs/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
     Training Data: DIV2K
-  Name: swinir_x2_p64w8_d4e60_500k_div2k
+  Name: swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -112,12 +112,12 @@ Models:
       Set5 SSIM: 0.9442
     Task: Image Super-Resolution
   Weights: https://drive.google.com/file/d/13dDwSMxjBpZZiXlgKHH9onkxzLUKZ0LX/view?usp=share_link
-- Config: configs/swinir/swinir_x3_p64w8_d4e60_500k_div2k.py
+- Config: configs/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
     Training Data: DIV2K
-  Name: swinir_x3_p64w8_d4e60_500k_div2k
+  Name: swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
@@ -127,12 +127,12 @@ Models:
       Set5 SSIM: 0.9045
     Task: Image Super-Resolution
   Weights: https://drive.google.com/file/d/1Jj0Mdyd2sbaaredwNxVtp0zraHr_EgCN/view?usp=share_link
-- Config: configs/swinir/swinir_x4_p64w8_d4e60_500k_div2k.py
+- Config: configs/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
     GPUs: '1'
     Training Data: DIV2K
-  Name: swinir_x4_p64w8_d4e60_500k_div2k
+  Name: swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
