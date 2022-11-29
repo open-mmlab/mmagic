@@ -79,3 +79,5 @@ optim_wrapper = dict(
 
 checkpoint_config = dict(
     type='CheckpointHook', by_epoch=False, interval=50000, out_dir=save_dir)
+
+# load_from = 'pconv_stage1_8xb1_places-256x256/iter_800002.pth'

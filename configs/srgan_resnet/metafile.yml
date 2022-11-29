@@ -22,7 +22,7 @@ Models:
       Set14 SSIM: 0.7369
       Set5 PSNR: 30.2252
       Set5 SSIM: 0.8491
-    Task: Srgan_resnet
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/srresnet_srgan/msrresnet_x4c64b16_1x16_300k_div2k_20200521-61556be5.pth
 - Config: configs/srgan_resnet/srgan_x4c64b16_1xb16-1000k_div2k.py
   In Collection: SRGAN
@@ -39,5 +39,5 @@ Models:
       Set14 SSIM: 0.6491
       Set5 PSNR: 27.9499
       Set5 SSIM: 0.7846
-    Task: Srgan_resnet
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/srresnet_srgan/srgan_x4c64b16_1x16_1000k_div2k_20200606-a1f0810e.pth

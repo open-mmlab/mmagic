@@ -8,8 +8,10 @@ save_dir = './work_dirs/'
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
     type='OptimWrapper',
-    optimizer=dict(type='Adam', lr=5e-5),
+    optimizer=dict(_delete_=True, type='Adam', lr=5e-5),
 )
 
-# load_from = 'https://download.openmmlab.com/mmediting/restorers/tdan/'\
-#               'tdan_vimeo90k_bdx4_20210528-c53ab844.pth'
+train_cfg = dict(
+    type='IterBasedTrainLoop', max_iters=800_000, val_interval=50000)
+
+# load_from = 'tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bd/iter_400000.pth'

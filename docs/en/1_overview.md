@@ -78,11 +78,11 @@ MMEditing supports various applications, including:
 
 - **New Modular Design for Flexible Combination:**
 
-  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combination among different modules.(Tutorial for [losses](advanced_guides/4_losses.md))
+  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](advanced_guides/4_losses.md))
 
 - **Efficient Distributed Training:**
 
-  With support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
+  With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
 
 ## Get started
 

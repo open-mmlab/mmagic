@@ -52,7 +52,7 @@ Models:
       Set5x4 SSIM: 0.8509
       Set5x6 PSNR: 27.1187
       Set5x6 SSIM: 0.7774
-    Task: Liif
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
 - Config: configs/liif/liif-rdn-norm_c64b16_1xb16-1000k_div2k.py
   In Collection: LIIF
@@ -99,5 +99,5 @@ Models:
       Set5x4 SSIM: 0.8513
       Set5x6 PSNR: 27.1914
       Set5x6 SSIM: 0.7751
-    Task: Liif
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_rdn_norm_c64b16_g1_1000k_div2k_20210717-22d6fdc8.pth
