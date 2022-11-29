@@ -16,7 +16,7 @@ from functools import reduce
 
 import mmengine
 
-MMEditing_ROOT = osp.dirname(osp.dirname(osp.dirname(__file__)))
+MMEditing_ROOT = osp.dirname(osp.dirname(__file__))
 
 all_training_data = [
     'div2k', 'celeba', 'places', 'comp1k', 'vimeo90k', 'reds', 'ffhq', 'cufed',
