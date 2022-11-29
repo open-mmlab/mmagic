@@ -64,6 +64,7 @@ jobs:
             mim install 'mmcv >= 2.0.0rc1'
             mim install 'mmdet >= 3.0.0rc2'
             pip install -r requirements/tests.txt
+            pip install git+https://github.com/openai/CLIP.git
       - run:
           name: Build and install
           command: |
@@ -108,6 +109,7 @@ jobs:
             docker exec mmedit mim install 'mmcv >= 2.0.0rc1'
             docker exec mmedit mim install 'mmdet >= 3.0.0rc2'
             docker exec mmedit pip install -r requirements/tests.txt
+            docker exec mmedit pip install git+https://github.com/openai/CLIP.git
       - run:
           name: Build and install
           command: |

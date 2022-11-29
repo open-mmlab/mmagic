@@ -186,14 +186,6 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 - Number of papers: 1
   - \[ALGORITHM\] Indices Matter: Learning to Index for Deep Image Matting ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/indexnet/README.md#citation))
 
-## Instance-aware Image Colorization (CVPR'2020)
-
-- Tasks: colorization
-- Number of checkpoints: 1
-- Number of configs: 1
-- Number of papers: 1
-  - \[ALGORITHM\] Instance-Aware Image Colorization ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/inst_colorization/README.md#quick-start))
-
 ## LIIF (CVPR'2021)
 
 - Tasks: image super-resolution
@@ -201,6 +193,14 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 - Number of configs: 2
 - Number of papers: 1
   - \[ALGORITHM\] Learning Continuous Image Representation With Local Implicit Image Function ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/liif/README.md#citation))
+
+## Instance-aware Image Colorization (CVPR'2020)
+
+- Tasks: colorization
+- Number of checkpoints: 1
+- Number of configs: 1
+- Number of papers: 1
+  - \[ALGORITHM\] Instance-Aware Image Colorization ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/inst_colorization/README.md#quick-start))
 
 ## LSGAN (ICCV'2017)
 
@@ -339,7 +339,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
 ## TOFlow (IJCV'2019)
 
-- Tasks: video super-resolution,video interpolation
+- Tasks: video interpolation, video super-resolution
 - Number of checkpoints: 6
 - Number of configs: 6
 - Number of papers: 1
