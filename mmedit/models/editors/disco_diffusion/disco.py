@@ -186,7 +186,7 @@ class DiscoDiffusion(nn.Module):
         # get stats from text prompts and image prompts
         model_stats = self.guider.compute_prompt_stats(
             text_prompts=text_prompts)
-        timesteps = infer_scheduler.timesteps[skip_steps:-1]
+        timesteps = infer_scheduler.timesteps[skip_steps:]
         if show_progress:
             timesteps = tqdm(timesteps)
         for t in timesteps:
