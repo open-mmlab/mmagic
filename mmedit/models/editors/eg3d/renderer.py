@@ -15,7 +15,10 @@ from .math_utils import (get_ray_limits_box, inverse_transform_sampling,
 
 
 class EG3DRenderer(BaseModule):
-    """Renderer for EG3D.
+    """Renderer for EG3D. This class samples render points on each input ray
+    and interpolate the triplane feature corresponding to the points'
+    coordinates. Then, predict each point's RGB feature and density (sigma) by
+    a neural network and calculate the RGB feature of each ray by integration.
 
     Args:
         decoder_cfg (dict): The config to build neural renderer.
@@ -33,8 +36,9 @@ class EG3DRenderer(BaseModule):
             renderer. Defaults to 'softplus'.
         white_back (bool): Whether render a white background. Defaults to True.
         projection_mode (str): The projection method to mapping coordinates of
-            render points to plane. The usage of this argument please refer to
-            :attr:`self.project_onto_planes`. Defaults to 'Official'.
+            render points to plane feature. The usage of this argument please
+            refer to :meth:`self.project_onto_planes` and
+            https://github.com/NVlabs/eg3d/issues/67. Defaults to 'Official'.
     """
 
     def __init__(self,
@@ -62,18 +66,18 @@ class EG3DRenderer(BaseModule):
         self.white_back = white_back
         self.projection_mode = projection_mode
 
-    def get_default_value(self,
-                          target: str,
-                          render_kwargs: Optional[dict] = None) -> Any:
-        """Get default value.
+    def get_value(self,
+                  target: str,
+                  render_kwargs: Optional[dict] = None) -> Any:
+        """Get value of target field.
 
         Args:
-            target (str): _description_
-            render_kwargs (Optional[dict], optional): _description_.
-                Defaults to None.
+            target (str): The key of the target field.
+            render_kwargs (Optional[dict], optional): The input key word
+                arguments dict. Defaults to None.
 
         Returns:
-            Any: _description_
+            Any: The default value of target field.
         """
         if render_kwargs is None:
             return getattr(self, target)
@@ -102,14 +106,13 @@ class EG3DRenderer(BaseModule):
             Tuple[torch.Tensor]: Renderer RGB feature, weighted depths and
                 weights.
         """
-        ray_start = self.get_default_value('ray_start', render_kwargs)
-        ray_end = self.get_default_value('ray_end', render_kwargs)
-        box_warp = self.get_default_value('box_warp', render_kwargs)
-        depth_resolution = self.get_default_value('depth_resolution',
-                                                  render_kwargs)
-        depth_resolution_importance = self.get_default_value(
+        ray_start = self.get_value('ray_start', render_kwargs)
+        ray_end = self.get_value('ray_end', render_kwargs)
+        box_warp = self.get_value('box_warp', render_kwargs)
+        depth_resolution = self.get_value('depth_resolution', render_kwargs)
+        depth_resolution_importance = self.get_value(
             'depth_resolution_importance', render_kwargs)
-        density_noise = self.get_default_value('density_noise', render_kwargs)
+        density_noise = self.get_value('density_noise', render_kwargs)
 
         if ray_start == ray_end == 'auto':
             ray_start, ray_end = get_ray_limits_box(
@@ -297,7 +300,7 @@ class EG3DRenderer(BaseModule):
         return output_features
 
     def project_onto_planes(self, coordinates: torch.Tensor) -> torch.Tensor:
-        """Project 3D points to phane formed by coordinate axes. In this
+        """Project 3D points to plane formed by coordinate axes. In this
         function, we use indexing operation to replace matrix multiplication to
         achieve higher calculation performance.
 
@@ -506,7 +509,7 @@ class EG3DDecoder(BaseModule):
                 each points. Shape like (batch_size, xxx, xxx, n_ch).
 
         Returns:
-            dict: A dict contains rgb and sigma value for each point.
+            dict: A dict contains rgb feature and sigma value for each point.
         """
         sampled_features = sampled_features.mean(1)
         N, M, C = sampled_features.shape

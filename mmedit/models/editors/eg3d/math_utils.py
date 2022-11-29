@@ -1,20 +1,27 @@
-"""MIT License here."""
+# Copyright (c) OpenMMLab. All rights reserved.
+from typing import Tuple
+
 import torch
 
 
-def normalize_vecs(vectors: torch.Tensor) -> torch.Tensor:
-    """Normalize vector lengths."""
-    return vectors / (torch.norm(vectors, dim=-1, keepdim=True))
-
-
 def get_ray_limits_box(rays_o: torch.Tensor, rays_d: torch.Tensor,
-                       box_side_length):
+                       box_side_length: float
+                       ) -> Tuple[torch.Tensor, torch.Tensor]:
     """
     Author: Petr Kellnhofer
     Intersects rays with the [-1, 1] NDC volume.
     Returns min and max distance of entry.
     Returns -1 for no intersection.
     https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection  # noqa
+
+    Args:
+        rays_o (torch.Tensor): The origin of each ray.
+        rays_d (torch.Tensor): The direction vector of each ray.
+        box_side_length (float): The side length of axis aligned
+            bounding box (AABB).
+
+    Returns:
+        Tuple[torch.Tensor, torch.Tensor]:
     """
     o_shape = rays_o.shape
     rays_o = rays_o.detach().reshape(-1, 3)
@@ -78,8 +85,8 @@ def get_ray_limits_box(rays_o: torch.Tensor, rays_d: torch.Tensor,
 
 def inverse_transform_sampling(bins: torch.Tensor,
                                weights: torch.Tensor,
-                               N_importance: int,
-                               det: bool = False,
+                               n_importance: int,
+                               deterministic: bool = False,
                                eps: float = 1e-5) -> torch.Tensor:
     """Sample `N_importance` samples from `bins` with distribution defined by
     `weights`.
@@ -88,9 +95,10 @@ def inverse_transform_sampling(bins: torch.Tensor,
         bins (int): (N_points, N_samples+1) where N_samples is the number
             of coarse samples per ray - 2.
         weights (torch.Tensor): Weights shape like (N_samples, N_samples).
-        N_importance (int): The number of samples to draw from the
+        n_importance (int): The number of samples to draw from the
             distribution.
-        det (bool): deterministic or not. Defaults to False.
+        deterministic (bool): Whether use deterministic sampling method.
+            Defaults to False.
         eps (float): a small number to prevent division by zero.
             Defaults to 1e-5.
 
@@ -108,11 +116,11 @@ def inverse_transform_sampling(bins: torch.Tensor,
     cdf = torch.cat([torch.zeros_like(cdf[:, :1]), cdf], -1)
     # padded to 0~1 inclusive
 
-    if det:
-        u = torch.linspace(0, 1, N_importance, device=bins.device)
-        u = u.expand(N_rays, N_importance)
+    if deterministic:
+        u = torch.linspace(0, 1, n_importance, device=bins.device)
+        u = u.expand(N_rays, n_importance)
     else:
-        u = torch.rand(N_rays, N_importance, device=bins.device)
+        u = torch.rand(N_rays, n_importance, device=bins.device)
     u = u.contiguous()
 
     inds = torch.searchsorted(cdf, u, right=True)
@@ -120,9 +128,9 @@ def inverse_transform_sampling(bins: torch.Tensor,
     above = torch.clamp_max(inds, N_samples_)
 
     inds_sampled = torch.stack([below, above],
-                               -1).view(N_rays, 2 * N_importance)
-    cdf_g = torch.gather(cdf, 1, inds_sampled).view(N_rays, N_importance, 2)
-    bins_g = torch.gather(bins, 1, inds_sampled).view(N_rays, N_importance, 2)
+                               -1).view(N_rays, 2 * n_importance)
+    cdf_g = torch.gather(cdf, 1, inds_sampled).view(N_rays, n_importance, 2)
+    bins_g = torch.gather(bins, 1, inds_sampled).view(N_rays, n_importance, 2)
 
     denom = cdf_g[..., 1] - cdf_g[..., 0]
     # denom equals 0 means a bin has weight 0, in which case it will not
@@ -134,12 +142,21 @@ def inverse_transform_sampling(bins: torch.Tensor,
     return samples
 
 
-def linspace_batch(start: torch.Tensor, stop: torch.Tensor, num: int):
+def linspace_batch(start: torch.Tensor, stop: torch.Tensor,
+                   num: int) -> torch.Tensor:
     """Creates a tensor of shape [num, *start.shape] whose values are evenly
     spaced from start to end, inclusive.
 
     Replicates but the multi-dimensional behaviour of numpy.linspace in
     PyTorch.
+
+    Args:
+        start (torch.Tensor):
+        stop (torch.Tensor):
+        num (int):
+
+    Returns:
+        torch.Tensor:
     """
     # create a tensor of 'num' steps from 0 to 1
     steps = torch.arange(
