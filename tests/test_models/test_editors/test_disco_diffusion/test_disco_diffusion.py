@@ -5,8 +5,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models import (DDIMScheduler, DenoisingUnet,
-                           DiscoDiffusion)
+from mmedit.models import DDIMScheduler, DenoisingUnet, DiscoDiffusion
 from mmedit.utils import register_all_modules
 
 register_all_modules()
@@ -91,7 +90,7 @@ class TestDiscoDiffusion(TestCase):
         # test with different text prompts
         text_prompts = {
             0: [
-                'a portrait of supergirl, by artgerm, rosstran, trending on artstation.' # noqa
+                'a portrait of supergirl, by artgerm, rosstran, trending on artstation.'  # noqa
             ]
         }
         image = self.disco_diffusion.infer(
@@ -105,7 +104,7 @@ class TestDiscoDiffusion(TestCase):
         init_image = 'tests/data/image/face/000001.png'
         text_prompts = {
             0: [
-                'a portrait of supergirl, by artgerm, rosstran, trending on artstation.' # noqa
+                'a portrait of supergirl, by artgerm, rosstran, trending on artstation.'  # noqa
             ]
         }
         image = self.disco_diffusion.infer(
@@ -196,4 +195,3 @@ class TestDiscoDiffusion(TestCase):
             num_inference_steps=5,
             eta=0.8)['samples']
         assert image.shape == (1, 3, 64, 64)
-

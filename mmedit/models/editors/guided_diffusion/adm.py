@@ -17,6 +17,7 @@ from mmedit.utils.typing import ForwardInputs, SampleList
 
 
 def classifier_grad(classifier, x, t, y=None, classifier_scale=1.0):
+    """compute classification gradient to x"""
     assert y is not None
     with torch.enable_grad():
         x_in = x.detach().requires_grad_(True)
@@ -30,15 +31,18 @@ def classifier_grad(classifier, x, t, y=None, classifier_scale=1.0):
 @MODELS.register_module('GuidedDiffusion')
 @MODELS.register_module()
 class AblatedDiffusionModel(BaseModel):
-    """_summary_
+    """Guided diffusion Model.
 
     Args:
-        data_preprocessor (_type_): _description_
-        unet (_type_): _description_
-        diffuser (_type_): _description_
-        use_fp16 (bool, optional): _description_. Defaults to False.
-        classifier (_type_, optional): _description_. Defaults to None.
-        pretrained_cfgs (_type_, optional): _description_. Defaults to None.
+        data_preprocessor (dict, optional): The pre-process config of
+            :class:`BaseDataPreprocessor`.
+        unet (ModelType): Config of denoising Unet.
+        diffuser (ModelType): Config of diffuser scheduler.
+        use_fp16 (bool): Whether to use fp16 for unet model. Defaults to False.
+        classifier (ModelType): Config of classifier. Defaults to None.
+        pretrained_cfgs (dict): Path Config for pretrained weights. Usually
+            this is a dict contains module name and the corresponding ckpt
+            path.Defaults to None.
     """
 
     def __init__(self,

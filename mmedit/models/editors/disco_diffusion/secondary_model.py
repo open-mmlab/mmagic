@@ -7,22 +7,27 @@ import torch.nn as nn
 
 from mmedit.registry import MODELS
 
+# Note: This model is copied from Disco-Diffusion colab. 
 # SourceCode: https://colab.research.google.com/drive/1uGKaBOEACeinAA7jX1_zSFtj_ZW-huHS#scrollTo=XIqUfrmvLIhg # noqa
 
 
 def append_dims(x, n):
+    """Append dims"""
     return x[(Ellipsis, *(None, ) * (n - x.ndim))]
 
 
 def expand_to_planes(x, shape):
+    """Expand tensor to planes"""
     return append_dims(x, len(shape)).repeat([1, 1, *shape[2:]])
 
 
 def alpha_sigma_to_t(alpha, sigma):
+    """convert alpha&sigma to timestep"""
     return torch.atan2(sigma, alpha) * 2 / math.pi
 
 
 def t_to_alpha_sigma(t):
+    """convert timestep to alpha and sigma"""
     return torch.cos(t * math.pi / 2), torch.sin(t * math.pi / 2)
 
 
