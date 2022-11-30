@@ -40,16 +40,16 @@ class Text2ImageInferencer(BaseMMEditInferencer):
         cut_ic_pow=[1] * 1000,
         cut_icgray_p=[0.2] * 400 + [0] * 600,
         cutn_batches=4,
-        seed=None)
+        seed=2022)
 
     def preprocess(self, text: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.
 
         Args:
-            img(InputsType): Image to be restored by models.
+            text(InputsType): text input for text-to-image model.
 
         Returns:
-            data(Dict): Results of preprocess.
+            result(Dict): Results of preprocess.
         """
         result = self.extra_parameters
         result['text_prompts'] = text
@@ -70,7 +70,6 @@ class Text2ImageInferencer(BaseMMEditInferencer):
         Args:
             preds (List[Union[str, np.ndarray]]): Forward results
                 by the inferencer.
-            data (List[Dict]): Not needed by this kind of inferencer.
             result_out_dir (str): Output directory of image.
                 Defaults to ''.
 
