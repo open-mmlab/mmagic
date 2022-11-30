@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
-from argparse import Namespace
 
 import clip
 import lpips
@@ -374,12 +373,11 @@ class ImageTextGuider(nn.Module):
                 tv_scale=0.,
                 sat_scale=0.,
                 range_scale=150,
-                cut_overview=[12]*400+[4]*600,
-                cut_innercut=[4]*400+[12]*600,
-                cut_ic_pow=[1]*1000,
-                cut_icgray_p=[0.2]*400+[0]*600,
-                cutn_batches=4
-                ):
+                cut_overview=[12] * 400 + [4] * 600,
+                cut_innercut=[4] * 400 + [12] * 600,
+                cut_ic_pow=[1] * 1000,
+                cut_icgray_p=[0.2] * 400 + [0] * 600,
+                cutn_batches=4):
         """Clip guidance function.
 
         Args:
@@ -459,8 +457,7 @@ class ImageTextGuider(nn.Module):
             range_losses = range_loss(pred_original_sample)
             sat_losses = torch.abs(x_in - x_in.clamp(min=-1, max=1)).mean()
             loss = tv_losses.sum() * tv_scale + range_losses.sum(
-            ) * range_scale + sat_losses.sum(
-            ) * sat_scale
+            ) * range_scale + sat_losses.sum() * sat_scale
             if init_image is not None and init_scale:
                 init_losses = self.lpips_model(x_in, init_image)
                 loss = loss + init_losses.sum() * init_scale

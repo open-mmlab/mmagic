@@ -132,7 +132,7 @@ class AblatedDiffusionModel(BaseModel):
             self.diffuser.set_timesteps(num_inference_steps)
 
         timesteps = self.diffuser.timesteps
-        
+
         if show_progress and mmengine.dist.is_main_process():
             timesteps = tqdm(timesteps)
         for t in timesteps:

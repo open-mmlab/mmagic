@@ -4,6 +4,6 @@ Collections:
     - Disco Diffusion
   Name: Disco Diffusion
   Paper:
-  - <>
-  README: configs/disco/README.md
+  - https://github.com/alembics/disco-diffusion
+  README: configs/disco_diffusion/README.md
 Models: []

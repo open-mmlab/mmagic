@@ -12,7 +12,7 @@
 
 Disco Diffusion (DD) is a Google Colab Notebook which leverages an AI Image generating technique called CLIP-Guided Diffusion to allow you to create compelling and beautiful images from text inputs.
 
-Created by Somnai, augmented by Gandamu, and building on the work of RiversHaveWings, nshepperd, and many others.  
+Created by Somnai, augmented by Gandamu, and building on the work of RiversHaveWings, nshepperd, and many others.
 
 <!-- [IMAGE] -->
 
@@ -24,31 +24,32 @@ Created by Somnai, augmented by Gandamu, and building on the work of RiversHaveW
 
 We have converted several `unet` weights and offer related configs. Or usage of different `unet`, please refer to tutorial.
 
-| Diffusion Model                          | Config | Weights |
-|------------------------------------------|--------|---------|
-| 512x512_diffusion_uncond_finetune_008100 |[config](configs/disco/disco-diffusion_adm-u-finetuned_imagenet-512x512.py)|[weights](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth)|
-| 256x256_diffusion_uncond                 |[config](configs/disco/disco-diffusion_adm-u-finetuned_imagenet-256x256.py)|[weights]()|
-| portrait_generator_v001                  |[config](configs/disco/disco-diffusion_portrait_generator_v001.py)|[weights](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth)|
-| pixelartdiffusion_expanded               |        Coming soon!     |    
-| pixel_art_diffusion_hard_256             |        Coming soon!     |   
-| pixel_art_diffusion_soft_256             |        Coming soon!     |     
-| pixelartdiffusion4k                      |        Coming soon!     |     
-| watercolordiffusion_2                    |        Coming soon!     |     
-| watercolordiffusion                      |        Coming soon!     |     
-| PulpSciFiDiffusion                       |        Coming soon!     |     
+| Diffusion Model                          | Config                                                                      | Weights                                                                               |
+| ---------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| 512x512_diffusion_uncond_finetune_008100 | [config](configs/disco/disco-diffusion_adm-u-finetuned_imagenet-512x512.py) | [weights](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth) |
+| 256x256_diffusion_uncond                 | [config](configs/disco/disco-diffusion_adm-u-finetuned_imagenet-256x256.py) | [weights](<>)                                                                         |
+| portrait_generator_v001                  | [config](configs/disco/disco-diffusion_portrait_generator_v001.py)          | [weights](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth) |
+| pixelartdiffusion_expanded               | Coming soon!                                                                |                                                                                       |
+| pixel_art_diffusion_hard_256             | Coming soon!                                                                |                                                                                       |
+| pixel_art_diffusion_soft_256             | Coming soon!                                                                |                                                                                       |
+| pixelartdiffusion4k                      | Coming soon!                                                                |                                                                                       |
+| watercolordiffusion_2                    | Coming soon!                                                                |                                                                                       |
+| watercolordiffusion                      | Coming soon!                                                                |                                                                                       |
+| PulpSciFiDiffusion                       | Coming soon!                                                                |                                                                                       |
 
-## TO-dO List
+## To-do List
 
--[ ] pixelart, watercolor, sci-fiction diffusion models
--[ ] image prompt
--[ ] video generation
--[ ] fast sampler(plms, dpm-solver etc.)
+- [ ] pixelart, watercolor, sci-fiction diffusion models
+- [ ] image prompt
+- [ ] video generation
+- [ ] faster sampler(plms, dpm-solver etc.)
 
 We really welcome community users supporting these items and any other interesting staffs!
 
 ## Quick Start
 
 Running the following codes, you can get a text-generated image.
+
 ```python
 from mmengine import Config, MODELS
 from mmedit.utils import register_all_modules
@@ -76,12 +77,15 @@ save_image(image, "image.png")
 ```
 
 ## Tutorials
+
 Coming soon!
 
-## Credits 
+## Credits
+
 Coming soon!
 
 ## Citation
+
 ```bibtex
 @misc{github,
   author={alembics},

@@ -197,8 +197,8 @@ class DiscoDiffusion(nn.Module):
             cond_kwargs = dict(
                 model_stats=model_stats,
                 init_image=init_image,
-                unet= self.unet,
-                clip_guidance_scale= clip_guidance_scale,
+                unet=self.unet,
+                clip_guidance_scale=clip_guidance_scale,
                 init_scale=init_scale,
                 tv_scale=tv_scale,
                 sat_scale=sat_scale,

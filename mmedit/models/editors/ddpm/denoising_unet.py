@@ -9,25 +9,14 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn.bricks import build_norm_layer
-from mmengine.model import constant_init
+from mmcv.cnn.bricks.conv_module import ConvModule
+from mmengine.logging import MMLogger
+from mmengine.model import BaseModule, constant_init
+from mmengine.runner import load_checkpoint
 from mmengine.utils.dl_utils import TORCH_VERSION
 from mmengine.utils.version_utils import digit_version
 
 from mmedit.registry import MODELS, MODULES
-
-
-from copy import deepcopy
-
-import torch
-import torch.nn as nn
-from mmcv.cnn.bricks.conv_module import ConvModule
-from mmengine.logging import MMLogger
-from mmengine.model import constant_init
-from mmengine.runner import load_checkpoint
-
-from mmedit.registry import MODULES
-from mmengine.model import BaseModule
-
 
 
 class EmbedSequential(nn.Sequential):
@@ -859,9 +848,9 @@ class DenoisingUnet(BaseModule):
                             dropout,
                             norm_cfg=norm_cfg,
                             out_channels=out_channels_,
-                            down=True) if resblock_updown else MODULES.
-                        build(self.
-                              downsample_cfg, default_args={'in_channels': in_channels_})))
+                            down=True) if resblock_updown else MODULES.build(
+                                self.downsample_cfg,
+                                default_args={'in_channels': in_channels_})))
                 self.in_channels_list.append(in_channels_)
                 scale *= 2
 
@@ -907,9 +896,9 @@ class DenoisingUnet(BaseModule):
                             dropout,
                             norm_cfg=norm_cfg,
                             out_channels=out_channels_,
-                            up=True) if resblock_updown else MODULES.
-                        build(self.upsample_cfg, default_args={'in_channels': in_channels_}
-                              ))
+                            up=True) if resblock_updown else MODULES.build(
+                                self.upsample_cfg,
+                                default_args={'in_channels': in_channels_}))
                     scale //= 2
                 self.out_blocks.append(EmbedSequential(*layers))
 

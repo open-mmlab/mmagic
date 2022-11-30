@@ -62,16 +62,18 @@ class ClipWrapper(nn.Module):
         if clip_type == 'clip':
             try:
                 import clip
-            except:
-                raise ImportError('clip need to be installed!'\
-                    'Run `pip install -r requirements/optional.txt` and try again')
+            except ImportError:
+                raise ImportError(
+                    'clip need to be installed! Run `pip install -r requirements/optional.txt` and try again'  # noqa
+                )  # noqa
             self.model, _ = clip.load(*args, **kwargs)
         elif clip_type == 'open_clip':
             try:
                 import open_clip
-            except:
-                raise ImportError('open_clip_torch need to be installed!'\
-                    'Run `pip install -r requirements/optional.txt` and try again')
+            except ImportError:
+                raise ImportError(
+                    'open_clip_torch need to be installed! Run `pip install -r requirements/optional.txt` and try again'  # noqa
+                )  # noqa
             self.model = open_clip.create_model(*args, **kwargs)
         self.model.eval().requires_grad_(False)
 
