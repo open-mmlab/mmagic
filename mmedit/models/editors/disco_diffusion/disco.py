@@ -45,19 +45,27 @@ class DiscoDiffusion(nn.Module):
                  unet,
                  diffuser,
                  secondary_model=None,
-                 clip_models_cfg=[],
+                 clip_models=[],
                  use_fp16=False,
                  pretrained_cfgs=None):
         super().__init__()
-        self.unet = MODULES.build(unet)
-        self.diffuser = DIFFUSION_SCHEDULERS.build(diffuser)
-        clip_models = []
-        for clip_cfg in clip_models_cfg:
-            clip_models.append(MODULES.build(clip_cfg))
-        self.guider = ImageTextGuider(clip_models)
+        self.unet = unet if isinstance(unet,
+                                       nn.Module) else MODULES.build(unet)
+        self.diffuser = DIFFUSION_SCHEDULERS.build(diffuser) if isinstance(
+            diffuser, dict) else diffuser
+
+        assert len(clip_models) > 0
+        if isinstance(clip_models[0], nn.Module):
+            _clip_models = clip_models
+        else:
+            _clip_models = []
+            for clip_cfg in clip_models:
+                _clip_models.append(MODULES.build(clip_cfg))
+        self.guider = ImageTextGuider(_clip_models)
 
         if secondary_model is not None:
-            self.secondary_model = MODULES.build(secondary_model)
+            self.secondary_model = secondary_model if isinstance(
+                secondary_model, nn.Module) else MODULES.build(secondary_model)
             self.with_secondary_model = True
         else:
             self.with_secondary_model = False
