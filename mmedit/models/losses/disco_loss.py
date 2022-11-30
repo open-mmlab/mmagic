@@ -3,7 +3,7 @@ import torch.nn.functional as F
 
 
 def spherical_dist_loss(x, y):
-    """spherical distance loss"""
+    """spherical distance loss."""
     x = F.normalize(x, dim=-1)
     y = F.normalize(y, dim=-1)
     return (x - y).norm(dim=-1).div(2).arcsin().pow(2).mul(2)
@@ -18,5 +18,5 @@ def tv_loss(input):
 
 
 def range_loss(input):
-    """range loss"""
+    """range loss."""
     return (input - input.clamp(-1, 1)).pow(2).mean([1, 2, 3])

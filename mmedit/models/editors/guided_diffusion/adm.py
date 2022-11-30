@@ -17,7 +17,7 @@ from mmedit.utils.typing import ForwardInputs, SampleList
 
 
 def classifier_grad(classifier, x, t, y=None, classifier_scale=1.0):
-    """compute classification gradient to x"""
+    """compute classification gradient to x."""
     assert y is not None
     with torch.enable_grad():
         x_in = x.detach().requires_grad_(True)

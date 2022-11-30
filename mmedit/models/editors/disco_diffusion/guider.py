@@ -482,5 +482,5 @@ class ImageTextGuider(nn.Module):
         return next(self.parameters()).device
 
     def forward(self, x):
-        """forward function"""
+        """forward function."""
         raise NotImplementedError('No forward function for disco guider')
