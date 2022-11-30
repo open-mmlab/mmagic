@@ -92,7 +92,7 @@ class TestPPL:
         ppl_res = ppl.compute_metrics(ppl.fake_results)
         assert ppl_res['ppl_score'] >= 0
 
-    # @patch('lpips.LPIPS', LPIPS_mock)
+    @patch('lpips.LPIPS', LPIPS_mock)
     @pytest.mark.skipif(
         'win' in platform.system().lower() and 'cu' in torch.__version__,
         reason='skip on windows-cuda due to limited RAM.')
