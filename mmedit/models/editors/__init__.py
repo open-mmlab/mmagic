@@ -16,6 +16,7 @@ from .dic import (DIC, DICNet, FeedbackBlock, FeedbackBlockCustom,
 from .dim import DIM
 from .edsr import EDSRNet
 from .edvr import EDVR, EDVRNet
+from .eg3d import EG3D
 from .esrgan import ESRGAN, RRDBNet
 from .fba import FBADecoder, FBAResnetDilated
 from .flavr import FLAVR, FLAVRNet
@@ -76,5 +77,5 @@ __all__ = [
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'IDLossModel', 'PESinGAN',
     'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
-    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal'
+    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'EG3D'
 ]
