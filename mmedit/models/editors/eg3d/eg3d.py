@@ -64,7 +64,7 @@ class EG3D(BaseConditionalGAN):
         intrinsics = self.camera.sample_intrinsic(batch_size=num_batches)
         cond = torch.cat(
             [camera2world.reshape(-1, 16),
-             intrinsics.reshape(-1, 9)], dim=1)
+             intrinsics.reshape(-1, 9)], dim=1).to(self.device)
         return cond
 
     def data_sample_to_label(self, data_sample: SampleList
