@@ -58,6 +58,11 @@ def parse_args():
         nargs='+',
         action=DictAction,
         help='Other customized kwargs for different model')
+    parser.add_argument(
+        '--seed',
+        type=int,
+        default=2022,
+        help='The random seed used in inference.')
 
     # print supported tasks and models
     parser.add_argument(

@@ -79,6 +79,7 @@ class MMEdit:
                  model_ckpt: str = None,
                  device: torch.device = None,
                  extra_parameters: Dict = None,
+                 seed: int = 2022,
                  **kwargs) -> None:
         register_all_modules(init_default_scope=True)
         MMEdit.init_inference_supported_models_cfg()
@@ -87,7 +88,8 @@ class MMEdit:
             self._get_inferencer_kwargs(model_name, model_setting,
                                         model_config, model_ckpt,
                                         extra_parameters))
-        self.inferencer = MMEditInferencer(device=device, **inferencer_kwargs)
+        self.inferencer = MMEditInferencer(
+            device=device, seed=seed, **inferencer_kwargs)
 
     def _get_inferencer_kwargs(self, model_name: Optional[str],
                                model_setting: Optional[int],
