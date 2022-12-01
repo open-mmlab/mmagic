@@ -1,14 +1,14 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule
 
 from mmedit.registry import COMPONENTS
 from .mask_conv_module import MaskConvModule
 
 
 @COMPONENTS.register_module()
-class PConvDecoder(nn.Module):
+class PConvDecoder(BaseModule):
     """Decoder with partial conv.
 
     About the details for this architecture, pls see:

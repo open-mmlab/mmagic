@@ -232,7 +232,7 @@ class ModulatedDCNPack(ModulatedDeformConv2d):
                                        self.deform_groups)
 
 
-class PCDAlignment(nn.Module):
+class PCDAlignment(BaseModule):
     """Alignment module using Pyramid, Cascading and Deformable convolution
     (PCD). It is used in EDVRNet.
 
@@ -361,7 +361,7 @@ class PCDAlignment(nn.Module):
         return feat
 
 
-class TSAFusion(nn.Module):
+class TSAFusion(BaseModule):
     """Temporal Spatial Attention (TSA) fusion module. It is used in EDVRNet.
 
     Args:

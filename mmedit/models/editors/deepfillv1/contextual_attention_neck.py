@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch.nn as nn
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
 from mmedit.models.base_archs import SimpleGatedConvModule
 from mmedit.models.editors.deepfillv1.contextual_attention import \
@@ -9,7 +9,7 @@ from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()
-class ContextualAttentionNeck(nn.Module):
+class ContextualAttentionNeck(BaseModule):
     """Neck with contextual attention module.
 
     Args:

@@ -1,13 +1,14 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
 from mmedit.models.base_archs import SimpleGatedConvModule
 from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()
-class GLDilationNeck(nn.Module):
+class GLDilationNeck(BaseModule):
     """Dilation Backbone used in Global&Local model.
 
     This implementation follows:

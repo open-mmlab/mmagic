@@ -1,15 +1,14 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
 from mmcv.cnn import ConvModule
-from mmengine import MMLogger
-from mmengine.runner import load_checkpoint
+from mmengine.model import BaseModule
 
 from mmedit.models.utils import generation_init_weights
 from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()
-class SoftMaskPatchDiscriminator(nn.Module):
+class SoftMaskPatchDiscriminator(BaseModule):
     """A Soft Mask-Guided PatchGAN discriminator.
 
     Args:
@@ -115,19 +114,8 @@ class SoftMaskPatchDiscriminator(nn.Module):
         """
         return self.model(x)
 
-    def init_weights(self, pretrained=None):
-        """Initialize weights for the model.
+    def init_weights(self):
+        """Initialize weights for the model."""
 
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Default: None.
-        """
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=False, logger=logger)
-        elif pretrained is None:
-            generation_init_weights(
-                self, init_type=self.init_type, init_gain=self.init_gain)
-        else:
-            raise TypeError("'pretrained' must be a str or None. "
-                            f'But received {type(pretrained)}.')
+        generation_init_weights(
+            self, init_type=self.init_type, init_gain=self.init_gain)

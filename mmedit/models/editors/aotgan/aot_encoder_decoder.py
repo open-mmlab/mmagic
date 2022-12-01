@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+
 from mmedit.registry import BACKBONES, COMPONENTS
 from ..global_local import GLEncoderDecoder
 

@@ -78,7 +78,7 @@ def build_index_block(in_channels,
         act_cfg=None)
 
 
-class HolisticIndexBlock(nn.Module):
+class HolisticIndexBlock(BaseModule):
     """Holistic Index Block.
 
     From https://arxiv.org/abs/1908.00672.
@@ -141,7 +141,7 @@ class HolisticIndexBlock(nn.Module):
         return enc_idx_feat, dec_idx_feat
 
 
-class DepthwiseIndexBlock(nn.Module):
+class DepthwiseIndexBlock(BaseModule):
     """Depthwise index block.
 
     From https://arxiv.org/abs/1908.00672.
@@ -219,7 +219,7 @@ class DepthwiseIndexBlock(nn.Module):
         return enc_idx_feat, dec_idx_feat
 
 
-class InvertedResidual(nn.Module):
+class InvertedResidual(BaseModule):
     """Inverted residual layer for indexnet encoder.
 
     It basically is a depthwise separable conv module. If `expand_ratio` is not

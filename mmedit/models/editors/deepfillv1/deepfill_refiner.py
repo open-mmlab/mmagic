@@ -1,13 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule
 
 from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()
-class DeepFillRefiner(nn.Module):
+class DeepFillRefiner(BaseModule):
     """Refiner used in DeepFill model.
 
     This implementation follows:

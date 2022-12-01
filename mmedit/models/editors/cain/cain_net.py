@@ -147,7 +147,7 @@ def get_padding_functions(x, padding=7):
     return padding_function, depadding_function
 
 
-class ConvNormWithReflectionPad(nn.Module):
+class ConvNormWithReflectionPad(BaseModule):
     """Apply reflection padding, followed by a convolution, which can be
     followed by an optional normalization.
 
@@ -193,7 +193,7 @@ class ConvNormWithReflectionPad(nn.Module):
         return out
 
 
-class ChannelAttentionLayer(nn.Module):
+class ChannelAttentionLayer(BaseModule):
     """Channel Attention (CA) Layer.
 
     Args:
@@ -236,7 +236,7 @@ class ChannelAttentionLayer(nn.Module):
         return x * y
 
 
-class ResidualChannelAttention(nn.Module):
+class ResidualChannelAttention(BaseModule):
     """Residual Channel Attention Module.
 
     Args:
@@ -277,7 +277,7 @@ class ResidualChannelAttention(nn.Module):
         return out + x
 
 
-class ResidualGroup(nn.Module):
+class ResidualGroup(BaseModule):
     """Residual Group, consisting of a stack of residual channel attention,
     followed by a convolution.
 

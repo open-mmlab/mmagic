@@ -2,12 +2,13 @@
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
 from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()
-class AOTDecoder(nn.Module):
+class AOTDecoder(BaseModule):
     """Decoder used in AOT-GAN model.
 
     This implementation follows:
