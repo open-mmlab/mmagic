@@ -53,6 +53,10 @@ class TriplaneGenerator(BaseModule):
             Defaults to 64.
         sr_in_channels (int): The number of the input channels of super
             resolution module. Defaults to 32.
+        sr_hidden_channels (int): The number of the hidden channels of super
+            resolution module. Defaults to 128.
+        sr_out_channels (int): The number of the output channels of super
+            resolution module. Defaults to 64.
         sr_add_noise (bool): Whether use noise injection to super resolution
             module. Defaults to False.
         neural_rendering_resolution (int): The resolution of the neural
@@ -79,6 +83,8 @@ class TriplaneGenerator(BaseModule):
                  triplane_channels: int = 32,
                  sr_in_size: int = 64,
                  sr_in_channels: int = 32,
+                 sr_hidden_channels: int = 128,
+                 sr_out_channels: int = 64,
                  sr_antialias: bool = True,
                  sr_add_noise: bool = True,
                  neural_rendering_resolution: int = 64,
@@ -131,6 +137,8 @@ class TriplaneGenerator(BaseModule):
             hidden_size=sr_in_size * 2 if sr_factor in [4, 8] else sr_in_size,
             out_size=out_size,
             style_channels=style_channels,
+            hidden_channels=sr_hidden_channels,
+            out_channels=sr_out_channels,
             sr_antialias=sr_antialias)
 
         # flag for pretrained models
