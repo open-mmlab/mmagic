@@ -12,30 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .scheduling_ddim import DDIMScheduler
+from .scheduling_ddpm import DDPMScheduler
+from .scheduling_dpmsolver_multistep import DPMSolverMultistepScheduler
+from .scheduling_euler_ancestral_discrete import EulerAncestralDiscreteScheduler
+from .scheduling_euler_discrete import EulerDiscreteScheduler
+from .scheduling_heun import HeunDiscreteScheduler
+from .scheduling_ipndm import IPNDMScheduler
+from .scheduling_karras_ve import KarrasVeScheduler
+from .scheduling_pndm import PNDMScheduler
+from .scheduling_repaint import RePaintScheduler
+from .scheduling_sde_ve import ScoreSdeVeScheduler
+from .scheduling_sde_vp import ScoreSdeVpScheduler
+from .scheduling_utils import SchedulerMixin
+from .scheduling_vq_diffusion import VQDiffusionScheduler
+from .scheduling_lms_discrete import LMSDiscreteScheduler
 
-from ..utils import is_flax_available, is_scipy_available, is_torch_available
-
-
-if is_torch_available():
-    from .scheduling_ddim import DDIMScheduler
-    from .scheduling_ddpm import DDPMScheduler
-    from .scheduling_dpmsolver_multistep import DPMSolverMultistepScheduler
-    from .scheduling_euler_ancestral_discrete import EulerAncestralDiscreteScheduler
-    from .scheduling_euler_discrete import EulerDiscreteScheduler
-    from .scheduling_heun import HeunDiscreteScheduler
-    from .scheduling_ipndm import IPNDMScheduler
-    from .scheduling_karras_ve import KarrasVeScheduler
-    from .scheduling_pndm import PNDMScheduler
-    from .scheduling_repaint import RePaintScheduler
-    from .scheduling_sde_ve import ScoreSdeVeScheduler
-    from .scheduling_sde_vp import ScoreSdeVpScheduler
-    from .scheduling_utils import SchedulerMixin
-    from .scheduling_vq_diffusion import VQDiffusionScheduler
-else:
-    from ..utils.dummy_pt_objects import *  # noqa F403
-
-
-if is_scipy_available() and is_torch_available():
-    from .scheduling_lms_discrete import LMSDiscreteScheduler
-else:
-    from ..utils.dummy_torch_and_scipy_objects import *  # noqa F403

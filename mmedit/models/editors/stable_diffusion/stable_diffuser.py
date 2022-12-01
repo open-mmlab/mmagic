@@ -125,17 +125,8 @@ class StableDiffuser(nn.Module):
         if class_type == 'StableDiffusionPipeline':
             cls = StableDiffusionPipeline
         
-        cache_dir = kwargs.pop("cache_dir", DIFFUSERS_CACHE)
-        resume_download = kwargs.pop("resume_download", False)
-        force_download = kwargs.pop("force_download", False)
-        proxies = kwargs.pop("proxies", None)
-        local_files_only = kwargs.pop("local_files_only", False)
-        use_auth_token = kwargs.pop("use_auth_token", None)
-        revision = kwargs.pop("revision", None)
         torch_dtype = kwargs.pop("torch_dtype", None)
         custom_pipeline = kwargs.pop("custom_pipeline", None)
-        provider = kwargs.pop("provider", None)
-        sess_options = kwargs.pop("sess_options", None)
         device_map = kwargs.pop("device_map", None)
         low_cpu_mem_usage = kwargs.pop("low_cpu_mem_usage", _LOW_CPU_MEM_USAGE_DEFAULT)
 
@@ -168,60 +159,7 @@ class StableDiffuser(nn.Module):
 
         # 1. Download the checkpoints and configs
         # use snapshot download here to get it working from from_pretrained
-        if not os.path.isdir(pretrained_model_name_or_path):
-            config_dict = cls.load_config(
-                pretrained_model_name_or_path,
-                cache_dir=cache_dir,
-                resume_download=resume_download,
-                force_download=force_download,
-                proxies=proxies,
-                local_files_only=local_files_only,
-                use_auth_token=use_auth_token,
-                revision=revision,
-            )
-            # make sure we only download sub-folders and `diffusers` filenames
-            folder_names = [k for k in config_dict.keys() if not k.startswith("_")]
-            allow_patterns = [os.path.join(k, "*") for k in folder_names]
-            allow_patterns += [WEIGHTS_NAME, SCHEDULER_CONFIG_NAME, CONFIG_NAME, ONNX_WEIGHTS_NAME, cls.config_name]
-
-            # make sure we don't download flax weights
-            ignore_patterns = ["*.msgpack"]
-
-            if custom_pipeline is not None:
-                allow_patterns += [CUSTOM_PIPELINE_FILE_NAME]
-
-            if cls != DiffusionPipeline:
-                requested_pipeline_class = cls.__name__
-            else:
-                requested_pipeline_class = config_dict.get("_class_name", cls.__name__)
-            user_agent = {"pipeline_class": requested_pipeline_class}
-            if custom_pipeline is not None:
-                user_agent["custom_pipeline"] = custom_pipeline
-            user_agent = http_user_agent(user_agent)
-
-            if is_safetensors_available():
-                info = model_info(
-                    pretrained_model_name_or_path,
-                    use_auth_token=use_auth_token,
-                    revision=revision,
-                )
-                if is_safetensors_compatible(info):
-                    ignore_patterns.append("*.bin")
-
-            # download all allow_patterns
-            cached_folder = snapshot_download(
-                pretrained_model_name_or_path,
-                cache_dir=cache_dir,
-                resume_download=resume_download,
-                proxies=proxies,
-                local_files_only=local_files_only,
-                use_auth_token=use_auth_token,
-                revision=revision,
-                allow_patterns=allow_patterns,
-                ignore_patterns=ignore_patterns,
-                user_agent=user_agent,
-            )
-        else:
+        if os.path.isdir(pretrained_model_name_or_path):
             cached_folder = pretrained_model_name_or_path
 
         config_dict = cls.load_config(cached_folder)
@@ -411,74 +349,3 @@ class StableDiffuser(nn.Module):
         optional_parameters = set({k for k, v in parameters.items() if v.default != inspect._empty})
         expected_modules = set(required_parameters.keys()) - set(["self"])
         return expected_modules, optional_parameters
-
-    @property
-    def components(self) -> Dict[str, Any]:
-        r"""
-
-        The `self.components` property can be useful to run different pipelines with the same weights and
-        configurations to not have to re-allocate memory.
-
-        Examples:
-
-        ```py
-        >>> from diffusers import (
-        ...     StableDiffusionPipeline,
-        ...     StableDiffusionImg2ImgPipeline,
-        ...     StableDiffusionInpaintPipeline,
-        ... )
-
-        >>> text2img = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
-        >>> img2img = StableDiffusionImg2ImgPipeline(**text2img.components)
-        >>> inpaint = StableDiffusionInpaintPipeline(**text2img.components)
-        ```
-
-        Returns:
-            A dictionaly containing all the modules needed to initialize the pipeline.
-        """
-        expected_modules, optional_parameters = self._get_signature_keys(self)
-        components = {
-            k: getattr(self, k) for k in self.config.keys() if not k.startswith("_") and k not in optional_parameters
-        }
-
-        if set(components.keys()) != expected_modules:
-            raise ValueError(
-                f"{self} has been incorrectly initialized or {self.__class__} is incorrectly implemented. Expected"
-                f" {expected_modules} to be defined, but {components} are defined."
-            )
-
-        return components
-
-    @staticmethod
-    def numpy_to_pil(images):
-        """
-        Convert a numpy image or a batch of images to a PIL image.
-        """
-        if images.ndim == 3:
-            images = images[None, ...]
-        images = (images * 255).round().astype("uint8")
-        if images.shape[-1] == 1:
-            # special case for grayscale (single channel) images
-            pil_images = [Image.fromarray(image.squeeze(), mode="L") for image in images]
-        else:
-            pil_images = [Image.fromarray(image) for image in images]
-
-        return pil_images
-
-    def progress_bar(self, iterable=None, total=None):
-        if not hasattr(self, "_progress_bar_config"):
-            self._progress_bar_config = {}
-        elif not isinstance(self._progress_bar_config, dict):
-            raise ValueError(
-                f"`self._progress_bar_config` should be of type `dict`, but is {type(self._progress_bar_config)}."
-            )
-
-        if iterable is not None:
-            return tqdm(iterable, **self._progress_bar_config)
-        elif total is not None:
-            return tqdm(total=total, **self._progress_bar_config)
-        else:
-            raise ValueError("Either `total` or `iterable` has to be defined.")
-
-    def set_progress_bar_config(self, **kwargs):
-        self._progress_bar_config = kwargs
