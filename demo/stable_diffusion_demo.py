@@ -9,5 +9,7 @@ cfg = dict(
 
 StableDiffuser = MODELS.build(cfg)
 prompt = "clouds surround the mountains and Chinese palaces,sunshine,lake,overlook,overlook,unreal engine,light effect,Dream"
-image = StableDiffuser.infer(prompt)
+StableDiffuser = StableDiffuser.to("cpu")
+
+image = StableDiffuser.infer(prompt).images[0]
 image.save('resources/output/mmedit_sd_cloud_palace.png')

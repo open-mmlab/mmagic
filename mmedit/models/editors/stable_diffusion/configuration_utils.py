@@ -411,7 +411,7 @@ class ConfigMixin:
             expected_keys = expected_keys - set(cls.ignore_for_config)
 
         # load diffusers library to import compatible and original scheduler
-        diffusers_library = importlib.import_module(__name__.split(".")[0])
+        diffusers_library = importlib.import_module('.'.join(__name__.split(".")[:4]))
 
         if cls.has_compatibles:
             compatible_classes = [c for c in cls._get_compatibles() if not isinstance(c, DummyObject)]
