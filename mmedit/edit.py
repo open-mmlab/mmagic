@@ -64,6 +64,9 @@ class MMEdit:
 
         # video_restoration models
         'edvr',
+
+        # 3D-aware generation
+        'eg3d',
     ]
 
     inference_supported_models_cfg = {}

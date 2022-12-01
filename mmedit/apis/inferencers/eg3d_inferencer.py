@@ -78,7 +78,7 @@ class EG3DInferencer(BaseMMEditInferencer):
     def forward(self,
                 inputs: ForwardInputs,
                 interpolation: Optional[str] = 'both',
-                num_frames: int = 500) -> Union[dict, List[dict]]:
+                num_frames: int = 100) -> Union[dict, List[dict]]:
         """Forward the inputs to the model.
 
         Args:
@@ -146,24 +146,13 @@ class EG3DInferencer(BaseMMEditInferencer):
             result_out_dir (str, optional): The save director of image and
                 videos. Defaults to 'eg3d_output'.
         """
+        print(result_out_dir)
         os.makedirs(result_out_dir, exist_ok=True)
         assert vis_mode.upper() in ['BOTH', 'DEPTH', 'IMG']
         if vis_mode.upper() == 'BOTH':
             vis_mode = ['DEPTH', 'IMG']
         if not isinstance(vis_mode, list):
             vis_mode = [vis_mode]
-
-        # unpack data sampels
-        # if is_list_of(preds, EditDataSample):
-        #     pred_dict = defaultdict(list)
-        #     for pred in preds:
-        #         fake_img = pred.fake_img.data
-        #         depth_img = pred.depth
-        #         pred_dict['fake_img'].append(fake_img)
-        #         pred_dict['depth'].append(depth_img)
-        #     pred_dict['fake_img'] = torch.stack(pred_dict['fake_img'], dim=0)
-        #     pred_dict['depth'] = torch.stack(pred_dict['depth'], dim=0)
-        #     preds = [pred_dict]
 
         if not isinstance(preds, list):
             preds = [preds]

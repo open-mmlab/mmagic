@@ -74,12 +74,29 @@ def parse_args():
         default=None,
         help='print all supported models for one task')
 
-    args = parser.parse_args()
-    return args
+    args, unknown = parser.parse_known_args()
+
+    return args, unknown
 
 
 def main():
-    args = parse_args()
+    args, unknown = parse_args()
+    assert len(unknown) % 2 == 0, (
+        'User defined arguments must be passed in pair, but receive '
+        f'{len(unknown)} arguments.')
+
+    user_defined = {}
+    for idx in range(len(unknown) // 2):
+        key, val = unknown[idx * 2], unknown[idx * 2 + 1]
+        assert key.startswith('--'), (
+            'Key of user define arguments must be start with \'--\', but '
+            f'receive \'{key}\'.')
+
+        key = key.replace('-', '_')
+        val = int(val) if val.isdigit() else val
+        user_defined[key[2:]] = val
+
+    user_defined.update(vars(args))
 
     if args.print_supported_models:
         inference_supported_models = MMEdit.get_inference_supported_models()
@@ -101,7 +118,7 @@ def main():
         return
 
     editor = MMEdit(**vars(args))
-    editor.infer(**vars(args))
+    editor.infer(**user_defined)
 
 
 if __name__ == '__main__':

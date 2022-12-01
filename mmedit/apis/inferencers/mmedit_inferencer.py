@@ -6,6 +6,7 @@ import torch
 from mmedit.utils import ConfigType
 from .base_mmedit_inferencer import BaseMMEditInferencer
 from .conditional_inferencer import ConditionalInferencer
+from .eg3d_inferencer import EG3DInferencer
 from .inpainting_inferencer import InpaintingInferencer
 from .matting_inferencer import MattingInferencer
 from .restoration_inferencer import RestorationInferencer
@@ -59,6 +60,9 @@ class MMEditInferencer(BaseMMEditInferencer):
         elif self.task in ['video_interpolation', 'Video Interpolation']:
             self.inferencer = VideoInterpolationInferencer(
                 config, ckpt, device, extra_parameters)
+        elif self.task in ['3D_aware_generation', '3D-aware Generation']:
+            self.inferencer = EG3DInferencer(config, ckpt, device,
+                                             extra_parameters)
         else:
             raise ValueError(f'Unknown inferencer task: {self.task}')
 
