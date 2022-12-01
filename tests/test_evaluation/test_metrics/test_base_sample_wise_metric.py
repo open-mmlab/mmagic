@@ -3,7 +3,9 @@ from copy import deepcopy
 
 import numpy as np
 import torch
+from torch.utils.data.dataloader import DataLoader
 
+from mmedit.datasets import BasicImageDataset
 from mmedit.evaluation.metrics import base_sample_wise_metric
 
 
@@ -52,3 +54,25 @@ def test_process():
     metric.process(data_batch, predictions)
     assert len(metric.results) == 2
     assert metric.results[0]['metric'] == 0
+
+
+def test_prepare():
+    data_root = 'tests/data/image/'
+    dataset = BasicImageDataset(
+        metainfo=dict(dataset_type='sr_annotation_dataset', task_name='sisr'),
+        data_root=data_root,
+        data_prefix=dict(img='lq', gt='gt'),
+        filename_tmpl=dict(img='{}_x4'),
+        pipeline=[])
+    dataloader = DataLoader(dataset)
+
+    metric = base_sample_wise_metric.BaseSampleWiseMetric()
+    metric.metric = 'metric'
+
+    metric.prepare(None, dataloader)
+    assert metric.SAMPLER_MODE == 'normal'
+    assert metric.sample_model == 'orig'
+    assert metric.size == 1
+
+    metric.get_metric_sampler(None, dataloader, [])
+    assert dataloader == dataloader
