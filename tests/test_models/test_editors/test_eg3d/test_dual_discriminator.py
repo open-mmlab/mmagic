@@ -4,7 +4,7 @@ from unittest import TestCase
 
 import torch
 
-from mmedit.models.editors.eg3d.eg3d_discriminator import DualDiscriminator
+from mmedit.models.editors.eg3d.dual_discriminator import DualDiscriminator
 
 
 class TestEG3DDiscriminator(TestCase):
