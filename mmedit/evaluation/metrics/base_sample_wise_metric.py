@@ -3,7 +3,9 @@
 
 from typing import List, Optional, Sequence
 
+import torch.nn as nn
 from mmengine.evaluator import BaseMetric
+from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import METRICS
 from .metrics_utils import average, obtain_data
@@ -109,3 +111,27 @@ class BaseSampleWiseMetric(BaseMetric):
 
     def process_image(self, gt, pred, mask):
         return 0
+
+    def evaluate(self, size=None) -> dict:
+        if size is None:
+            size = self.size
+        return super().evaluate(size)
+
+    def prepare(self, module: nn.Module, dataloader: DataLoader):
+        self.SAMPLER_MODE = 'normal'
+        self.sample_model = 'orig'
+        self.size = dataloader.dataset.__len__()
+
+    def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
+                           metrics) -> DataLoader:
+        """Get sampler for normal metrics. Directly returns the dataloader.
+
+        Args:
+            model (nn.Module): Model to evaluate.
+            dataloader (DataLoader): Dataloader for real images.
+            metrics (List['GenMetric']): Metrics with the same sample mode.
+
+        Returns:
+            DataLoader: Default sampler for normal metrics.
+        """
+        return dataloader
