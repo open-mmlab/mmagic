@@ -119,8 +119,6 @@ class TriPlaneBackbone(StyleGAN2Generator):
                 dim=0).lerp(self.w_avg, self.w_avg_beta))
 
         if truncation < 1:
-            # BUG: bugs here. Cannot calculate mean latent for conditional
-            # inputs.
             truncation_latent = self.get_mean_latent()
             styles = truncation_latent + truncation * (
                 styles - truncation_latent)
