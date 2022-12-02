@@ -7,6 +7,7 @@ from mmengine.model import BaseModel
 
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
+from mmedit.utils import SampleList
 from ..utils import set_requires_grad
 
 
@@ -102,9 +103,9 @@ class OneStageInpaintor(BaseModel):
     def forward(
         self,
         inputs: torch.Tensor,
-        data_samples: Optional[List[EditDataSample]],
+        data_samples: Optional[SampleList],
         mode: str = 'tensor'
-    ) -> Union[Tuple[torch.Tensor, torch.Tensor], List[EditDataSample]]:
+    ) -> Union[Tuple[torch.Tensor, torch.Tensor], SampleList]:
         """Forward function.
 
         Args:
@@ -358,8 +359,7 @@ class OneStageInpaintor(BaseModel):
 
         return res, loss
 
-    def forward_tensor(self, inputs: torch.Tensor,
-                       data_samples: List[EditDataSample]
+    def forward_tensor(self, inputs: torch.Tensor, data_samples: SampleList
                        ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Forward function in tensor mode.
 
@@ -382,8 +382,7 @@ class OneStageInpaintor(BaseModel):
         return fake_reses, fake_imgs
 
     def forward_test(self, inputs: torch.Tensor,
-                     data_samples: List[EditDataSample]
-                     ) -> List[EditDataSample]:
+                     data_samples: SampleList) -> SampleList:
         """Forward function for testing.
 
         Args:
@@ -405,9 +404,8 @@ class OneStageInpaintor(BaseModel):
             predictions.append(pred)
         return predictions
 
-    def convert_to_datasample(self, inputs: List[EditDataSample],
-                              data_samples: List[EditDataSample]
-                              ) -> List[EditDataSample]:
+    def convert_to_datasample(self, inputs: SampleList,
+                              data_samples: SampleList) -> SampleList:
         for data_sample, output in zip(inputs, data_samples):
             data_sample.output = output
         return inputs
