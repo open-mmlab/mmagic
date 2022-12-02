@@ -6,7 +6,7 @@ import torch.nn as nn
 from mmengine.model import BaseModel
 
 from mmedit.registry import MODELS
-from .maxim_utils import Conv1x1, Conv3x3, CrossGatingBlock
+from .maxim_modules import Conv1x1, Conv3x3, CrossGatingBlock
 
 
 @MODELS.register_module()
@@ -76,6 +76,7 @@ class MAXIM(BaseModel):
                  block_size_lr: Sequence[int] = (8, 8),
                  grid_size_hr: Sequence[int] = (16, 16),
                  grid_size_lr: Sequence[int] = (8, 8),
+                 num_inputs: int = 3,
                  num_outputs: int = 3,
                  dropout_rate: float = 0.0):
         super().__init__()
@@ -98,6 +99,7 @@ class MAXIM(BaseModel):
         self.block_size_lr = block_size_lr
         self.grid_size_hr = grid_size_hr
         self.grid_size_lr = grid_size_lr
+        self.num_inputs = num_inputs
         self.num_outputs = num_outputs
         self.dropout_rate = dropout_rate
         self._model_setup()
@@ -108,7 +110,11 @@ class MAXIM(BaseModel):
         self.gating_block = nn.ModuleList()
         for i in range(self.num_supervision_scales):
             self.conv1.append(
-                Conv3x3((2**i) * self.features, bias=self.use_bias, padding=1))
+                Conv3x3(
+                    self.num_inputs, (2**i) * self.features,
+                    bias=self.use_bias,
+                    padding=1))
+
             if self.use_cross_gating:
                 block_size = self.block_size_hr \
                     if i < self.high_res_stages else self.block_size_lr
@@ -126,11 +132,42 @@ class MAXIM(BaseModel):
                     ))
             else:
                 self.gating_block.append(
-                    nn.Sequential(
-                        Conv1x1(
-                            (2**i) * self.features, use_bias=self.use_bias),
-                        Conv3x3(
-                            (2**i) * self.features, use_bias=self.use_bias)))
+                    Conv1x1((2**i) * self.features, use_bias=self.use_bias))
 
-    def forward(self, inputs: torch.Tensor):
-        B, C, H, W = inputs.shape
+    def forward(self, x: torch.Tensor):
+        B, C, H, W = x.shape  # input image shape
+        shortcuts = []
+        shortcuts.append(x)
+        # Get multi-scale input images
+        for i in range(1, self.num_supervision_scales):
+            shortcuts.append(
+                nn.functional.interpolate(
+                    x, size=(B, C, H // (2**i), W // (2**i)), mode='nearest'))
+
+        # store outputs from all stages and all scales
+        # Eg, [[(64, 64, 3), (128, 128, 3), (256, 256, 3)],   # Stage-1 outputs
+        #      [(64, 64, 3), (128, 128, 3), (256, 256, 3)],]  # Stage-2 outputs
+        # outputs_all = []
+        sam_features, encs_prev, decs_prev = [], [], []
+        for idx_stage in range(self.num_stages):
+            # Input convolution, get multi-scale input features
+            x_scales = []
+            for i in range(self.num_supervision_scales):
+                x_scale = self.conv1[i](shortcuts[i])
+                # If later stages,
+                # fuse input features with SAM features from prev stage
+                if idx_stage > 0:
+                    # use larger blocksize at high-res stages
+                    if self.use_cross_gating:
+                        x_scale, _ = self.gating_block[i](x_scale,
+                                                          sam_features.pop())
+                    else:
+                        x_scale = self.gating_block[i](
+                            torch.cat([x_scale, sam_features.pop()], dim=1))
+
+                x_scales.append(x_scale)
+
+        # not finished, only for commit
+        encs_prev, decs_prev = decs_prev, encs_prev
+
+        return x_scales
