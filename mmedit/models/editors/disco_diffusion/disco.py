@@ -42,7 +42,7 @@ class DiscoDiffusion(nn.Module):
         use_fp16 (bool): Whether to use fp16 for unet model. Defaults to False.
         pretrained_cfgs (dict): Path Config for pretrained weights. Usually
             this is a dict contains module name and the corresponding ckpt
-            path.Defaults to None.
+            path. Defaults to None.
     """
 
     def __init__(self,
