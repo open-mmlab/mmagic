@@ -33,8 +33,12 @@ class DiscoDiffusion(nn.Module):
     Args:
         unet (ModelType): Config of denoising Unet.
         diffuser (ModelType): Config of diffuser scheduler.
-        secondary_model (ModelType): There are two diff. Defaults to None.
-        clip_models_cfg (list): Config of clip models. Defaults to [].
+        secondary_model (ModelType): A smaller secondary diffusion model
+            trained by Katherine Crowson to remove noise from intermediate
+            timesteps to prepare them for CLIP.
+            Ref: https://twitter.com/rivershavewings/status/1462859669454536711 # noqa
+            Defaults to None.
+        clip_models (list): Config of clip models. Defaults to [].
         use_fp16 (bool): Whether to use fp16 for unet model. Defaults to False.
         pretrained_cfgs (dict): Path Config for pretrained weights. Usually
             this is a dict contains module name and the corresponding ckpt

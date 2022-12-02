@@ -32,7 +32,12 @@ def t_to_alpha_sigma(t):
 
 
 class ConvBlock(nn.Sequential):
+    """Convolution Block.
 
+    Args:
+        c_in (int): Input channels.
+        c_out (int): Output channels.
+    """
     def __init__(self, c_in, c_out):
         super().__init__(
             nn.Conv2d(c_in, c_out, 3, padding=1),
@@ -41,18 +46,32 @@ class ConvBlock(nn.Sequential):
 
 
 class SkipBlock(nn.Module):
+    """Skip block wrapper. Wraping main block 
+    and skip block and concat their outputs together.
 
+    Args:
+        main (list): A list of main modules.
+        skip (nn.Module): Skip Module. If not given, 
+            set to ``nn.Identity()``. Defaults to None.
+    """
     def __init__(self, main, skip=None):
         super().__init__()
         self.main = nn.Sequential(*main)
         self.skip = skip if skip else nn.Identity()
 
     def forward(self, input):
+        '''Forward function'''
         return torch.cat([self.main(input), self.skip(input)], dim=1)
 
 
 class FourierFeatures(nn.Module):
+    """Fourier features mapping MLP.
 
+    Args:
+        in_features (int): Input channels.
+        out_features (int): Output channels.
+        std (float): Standard deviation. Defaults to 1..
+    """
     def __init__(self, in_features, out_features, std=1.):
         super().__init__()
         assert out_features % 2 == 0
@@ -60,13 +79,19 @@ class FourierFeatures(nn.Module):
             torch.randn([out_features // 2, in_features]) * std)
 
     def forward(self, input):
+        """Forward function"""
         f = 2 * math.pi * input @ self.weight.T
         return torch.cat([f.cos(), f.sin()], dim=-1)
 
 
 @MODELS.register_module()
 class SecondaryDiffusionImageNet2(nn.Module):
-
+    """A smaller secondary diffusion model
+        trained by Katherine Crowson to remove noise from intermediate
+        timesteps to prepare them for CLIP.
+    
+    Ref: https://twitter.com/rivershavewings/status/1462859669454536711 # noqa
+    """
     def __init__(self):
         super().__init__()
         self.in_channels = 3
@@ -126,6 +151,7 @@ class SecondaryDiffusionImageNet2(nn.Module):
         )
 
     def forward(self, input, t):
+        """Forward function."""
         timestep_embed = expand_to_planes(
             self.timestep_embed(t[:, None]), input.shape)
         v = self.net(torch.cat([input, timestep_embed], dim=1))

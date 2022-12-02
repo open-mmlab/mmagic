@@ -43,7 +43,7 @@ class ClipWrapper(nn.Module):
     An example of a ``clip_modes_cfg`` is as follows:
     .. code-block:: python
 
-        clip_models_cfg = [
+        clip_models = [
             dict(type='ClipWrapper', clip_type='clip', name='ViT-B/32', jit=False),
             dict(type='ClipWrapper', clip_type='clip', name='ViT-B/16', jit=False),
             dict(type='ClipWrapper', clip_type='clip', name='RN50', jit=False)
