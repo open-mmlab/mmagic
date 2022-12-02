@@ -25,7 +25,7 @@ from typing import Dict, Optional, Union
 
 from huggingface_hub import HfFolder, cached_download, hf_hub_download, model_info
 
-from .utils import DIFFUSERS_DYNAMIC_MODULE_NAME, HF_MODULES_CACHE, logging
+from . import DIFFUSERS_DYNAMIC_MODULE_NAME, HF_MODULES_CACHE, logging
 
 
 COMMUNITY_PIPELINES_URL = (
@@ -162,7 +162,7 @@ def find_pipeline_class(loaded_module):
     Retrieve pipeline class that inherits from `DiffusionPipeline`. Note that there has to be exactly one class
     inheriting from `DiffusionPipeline`.
     """
-    from .pipeline_utils import DiffusionPipeline
+    from ..pipeline_utils import DiffusionPipeline
 
     cls_members = dict(inspect.getmembers(loaded_module, inspect.isclass))
 

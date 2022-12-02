@@ -31,8 +31,7 @@ from PIL import Image
 from tqdm.auto import tqdm
 
 from .configuration_utils import ConfigMixin
-from .dynamic_modules_utils import get_class_from_dynamic_module
-from .hub_utils import http_user_agent
+from .utils.dynamic_modules_utils import get_class_from_dynamic_module
 from .modeling_utils import _LOW_CPU_MEM_USAGE_DEFAULT
 from .schedulers.scheduling_utils import SCHEDULER_CONFIG_NAME
 from .utils import (
@@ -459,60 +458,7 @@ class DiffusionPipeline(ConfigMixin):
 
         # 1. Download the checkpoints and configs
         # use snapshot download here to get it working from from_pretrained
-        if not os.path.isdir(pretrained_model_name_or_path):
-            config_dict = cls.load_config(
-                pretrained_model_name_or_path,
-                cache_dir=cache_dir,
-                resume_download=resume_download,
-                force_download=force_download,
-                proxies=proxies,
-                local_files_only=local_files_only,
-                use_auth_token=use_auth_token,
-                revision=revision,
-            )
-            # make sure we only download sub-folders and `diffusers` filenames
-            folder_names = [k for k in config_dict.keys() if not k.startswith("_")]
-            allow_patterns = [os.path.join(k, "*") for k in folder_names]
-            allow_patterns += [WEIGHTS_NAME, SCHEDULER_CONFIG_NAME, CONFIG_NAME, ONNX_WEIGHTS_NAME, cls.config_name]
-
-            # make sure we don't download flax weights
-            ignore_patterns = ["*.msgpack"]
-
-            if custom_pipeline is not None:
-                allow_patterns += [CUSTOM_PIPELINE_FILE_NAME]
-
-            if cls != DiffusionPipeline:
-                requested_pipeline_class = cls.__name__
-            else:
-                requested_pipeline_class = config_dict.get("_class_name", cls.__name__)
-            user_agent = {"pipeline_class": requested_pipeline_class}
-            if custom_pipeline is not None:
-                user_agent["custom_pipeline"] = custom_pipeline
-            user_agent = http_user_agent(user_agent)
-
-            if is_safetensors_available():
-                info = model_info(
-                    pretrained_model_name_or_path,
-                    use_auth_token=use_auth_token,
-                    revision=revision,
-                )
-                if is_safetensors_compatible(info):
-                    ignore_patterns.append("*.bin")
-
-            # download all allow_patterns
-            cached_folder = snapshot_download(
-                pretrained_model_name_or_path,
-                cache_dir=cache_dir,
-                resume_download=resume_download,
-                proxies=proxies,
-                local_files_only=local_files_only,
-                use_auth_token=use_auth_token,
-                revision=revision,
-                allow_patterns=allow_patterns,
-                ignore_patterns=ignore_patterns,
-                user_agent=user_agent,
-            )
-        else:
+        if os.path.isdir(pretrained_model_name_or_path):
             cached_folder = pretrained_model_name_or_path
 
         config_dict = cls.load_config(cached_folder)
