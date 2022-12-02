@@ -17,6 +17,7 @@ from mmedit.utils.typing import ForwardInputs, SampleList
 
 
 def classifier_grad(classifier, x, t, y=None, classifier_scale=1.0):
+    """compute classification gradient to x."""
     assert y is not None
     with torch.enable_grad():
         x_in = x.detach().requires_grad_(True)
@@ -30,21 +31,25 @@ def classifier_grad(classifier, x, t, y=None, classifier_scale=1.0):
 @MODELS.register_module('GuidedDiffusion')
 @MODELS.register_module()
 class AblatedDiffusionModel(BaseModel):
-    """_summary_
+    """Guided diffusion Model.
 
     Args:
-        data_preprocessor (_type_): _description_
-        unet (_type_): _description_
-        diffuser (_type_): _description_
-        use_fp16 (bool, optional): _description_. Defaults to False.
-        classifier (_type_, optional): _description_. Defaults to None.
-        pretrained_cfgs (_type_, optional): _description_. Defaults to None.
+        data_preprocessor (dict, optional): The pre-process config of
+            :class:`BaseDataPreprocessor`.
+        unet (ModelType): Config of denoising Unet.
+        diffusion_scheduler (ModelType): Config of diffusion_scheduler
+            scheduler.
+        use_fp16 (bool): Whether to use fp16 for unet model. Defaults to False.
+        classifier (ModelType): Config of classifier. Defaults to None.
+        pretrained_cfgs (dict): Path Config for pretrained weights. Usually
+            this is a dict contains module name and the corresponding ckpt
+            path.Defaults to None.
     """
 
     def __init__(self,
                  data_preprocessor,
                  unet,
-                 diffuser,
+                 diffusion_scheduler,
                  use_fp16=False,
                  classifier=None,
                  classifier_scale=1.0,
@@ -52,7 +57,8 @@ class AblatedDiffusionModel(BaseModel):
 
         super().__init__(data_preprocessor=data_preprocessor)
         self.unet = MODULES.build(unet)
-        self.diffuser = DIFFUSION_SCHEDULERS.build(diffuser)
+        self.diffusion_scheduler = DIFFUSION_SCHEDULERS.build(
+            diffusion_scheduler)
         if classifier:
             self.classifier = MODULES.build(classifier)
         else:
@@ -129,10 +135,10 @@ class AblatedDiffusionModel(BaseModel):
 
         # set step values
         if num_inference_steps > 0:
-            self.diffuser.set_timesteps(num_inference_steps)
+            self.diffusion_scheduler.set_timesteps(num_inference_steps)
 
-        timesteps = self.diffuser.timesteps
-        
+        timesteps = self.diffusion_scheduler.timesteps
+
         if show_progress and mmengine.dist.is_main_process():
             timesteps = tqdm(timesteps)
         for t in timesteps:
@@ -140,7 +146,8 @@ class AblatedDiffusionModel(BaseModel):
             model_output = self.unet(image, t, label=labels)['outputs']
 
             # 2. compute previous image: x_t -> x_t-1
-            diffuser_output = self.diffuser.step(model_output, t, image)
+            diffusion_scheduler_output = self.diffusion_scheduler.step(
+                model_output, t, image)
 
             # 3. applying classifier guide
             if self.classifier and classifier_scale != 0.0:
@@ -151,12 +158,12 @@ class AblatedDiffusionModel(BaseModel):
                     labels,
                     classifier_scale=classifier_scale)
                 guided_mean = (
-                    diffuser_output['mean'].float() +
-                    diffuser_output['sigma'] * gradient.float())
-                image = guided_mean + diffuser_output[
-                    'sigma'] * diffuser_output['noise']
+                    diffusion_scheduler_output['mean'].float() +
+                    diffusion_scheduler_output['sigma'] * gradient.float())
+                image = guided_mean + diffusion_scheduler_output[
+                    'sigma'] * diffusion_scheduler_output['noise']
             else:
-                image = diffuser_output['prev_sample']
+                image = diffusion_scheduler_output['prev_sample']
 
         return {'samples': image}
 
@@ -181,7 +188,8 @@ class AblatedDiffusionModel(BaseModel):
         sample_kwargs = inputs.get('sample_kwargs', dict())
 
         num_inference_steps = sample_kwargs.get(
-            'num_inference_steps', self.diffuser.num_train_timesteps)
+            'num_inference_steps',
+            self.diffusion_scheduler.num_train_timesteps)
         show_progress = sample_kwargs.get('show_progress', False)
         classifier_scale = sample_kwargs.get('classifier_scale',
                                              self.classifier_scale)
@@ -269,10 +277,11 @@ class AblatedDiffusionModel(BaseModel):
         # sampling x0 and timestep
         data = self.data_preprocessor(data)
         real_imgs = data['inputs']
-        timestep = self.diffuser.sample_timestep()
+        timestep = self.diffusion_scheduler.sample_timestep()
 
         # calculating loss
-        loss_dict = self.diffuser.training_loss(self.unet, real_imgs, timestep)
+        loss_dict = self.diffusion_scheduler.training_loss(
+            self.unet, real_imgs, timestep)
         loss, log_vars = self._parse_losses(loss_dict)
         optim_wrapper['denoising'].update_params(loss)
 

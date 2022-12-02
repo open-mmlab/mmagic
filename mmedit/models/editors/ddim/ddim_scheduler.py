@@ -26,8 +26,6 @@ class DDIMScheduler:
         clip_sample (bool, optional): _description_. Defaults to True.
         set_alpha_to_one (bool, optional): _description_. Defaults to True.
 
-    Raises:
-        NotImplementedError: _description_
     """
 
     def __init__(
@@ -159,13 +157,8 @@ class DDIMScheduler:
         gradient = 0.
         if cond_fn is not None:
             gradient = cond_fn(
-                cond_kwargs.pop('unet'),
-                self,
-                sample,
-                timestep,
-                beta_prod_t,
-                cond_kwargs.pop('model_stats'),
-                **cond_kwargs)
+                cond_kwargs.pop('unet'), self, sample, timestep, beta_prod_t,
+                cond_kwargs.pop('model_stats'), **cond_kwargs)
             model_output = model_output - (beta_prod_t**0.5) * gradient
             pred_original_sample = (
                 sample -

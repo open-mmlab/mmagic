@@ -16,7 +16,7 @@ from .deepfillv2 import DeepFillEncoderDecoder
 from .dic import (DIC, DICNet, FeedbackBlock, FeedbackBlockCustom,
                   FeedbackBlockHeatmapAttention, LightCNN, MaxFeature)
 from .dim import DIM
-from .disco_diffusion import DiscoDiffusion
+from .disco_diffusion import ClipWrapper, DiscoDiffusion
 from .edsr import EDSRNet
 from .edvr import EDVR, EDVRNet
 from .esrgan import ESRGAN, RRDBNet
@@ -79,8 +79,8 @@ __all__ = [
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
     'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel',
-    'DiscoDiffusion', 'IDLossModel', 'PESinGAN',
-    'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
+    'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
+    'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
-    'DDPMScheduler', 'DenoisingUnet'
+    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper'
 ]

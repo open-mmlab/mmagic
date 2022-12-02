@@ -22,6 +22,9 @@ from mmedit.models.base_models import BaseTranslationModel
 from mmedit.registry import MODELS
 from mmedit.utils import register_all_modules
 
+VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
+FILE_CLIENT = FileClient('disk')
+
 
 def set_random_seed(seed, deterministic=False, use_rank_shift=True):
     """Set random seed.
@@ -511,9 +514,6 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
     return restored_img
 
 
-VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
-
-
 def pad_sequence(data, window_size):
     """Pad frame sequence data.
 
@@ -636,10 +636,6 @@ def restoration_video_inference(model,
                             mode='tensor').cpu())
                 result = torch.cat(result, dim=1)
     return result
-
-
-VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
-FILE_CLIENT = FileClient('disk')
 
 
 def read_image(filepath):

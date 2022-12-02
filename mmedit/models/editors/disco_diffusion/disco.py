@@ -32,32 +32,45 @@ class DiscoDiffusion(nn.Module):
 
     Args:
         unet (ModelType): Config of denoising Unet.
-        diffuser (ModelType): Config of diffuser scheduler.
-        secondary_model (ModelType): There are two diff. Defaults to None.
-        clip_models_cfg (list): Config of clip models. Defaults to [].
+        diffusion_scheduler (ModelType): Config of diffusion_scheduler scheduler.
+        secondary_model (ModelType): A smaller secondary diffusion model
+            trained by Katherine Crowson to remove noise from intermediate
+            timesteps to prepare them for CLIP.
+            Ref: https://twitter.com/rivershavewings/status/1462859669454536711 # noqa
+            Defaults to None.
+        clip_models (list): Config of clip models. Defaults to [].
         use_fp16 (bool): Whether to use fp16 for unet model. Defaults to False.
         pretrained_cfgs (dict): Path Config for pretrained weights. Usually
             this is a dict contains module name and the corresponding ckpt
-            path.Defaults to None.
+            path. Defaults to None.
     """
 
     def __init__(self,
                  unet,
-                 diffuser,
+                 diffusion_scheduler,
                  secondary_model=None,
-                 clip_models_cfg=[],
+                 clip_models=[],
                  use_fp16=False,
                  pretrained_cfgs=None):
         super().__init__()
-        self.unet = MODULES.build(unet)
-        self.diffuser = DIFFUSION_SCHEDULERS.build(diffuser)
-        clip_models = []
-        for clip_cfg in clip_models_cfg:
-            clip_models.append(MODULES.build(clip_cfg))
-        self.guider = ImageTextGuider(clip_models)
+        self.unet = unet if isinstance(unet,
+                                       nn.Module) else MODULES.build(unet)
+        self.diffusion_scheduler = DIFFUSION_SCHEDULERS.build(
+            diffusion_scheduler) if isinstance(diffusion_scheduler,
+                                               dict) else diffusion_scheduler
+
+        assert len(clip_models) > 0
+        if isinstance(clip_models[0], nn.Module):
+            _clip_models = clip_models
+        else:
+            _clip_models = []
+            for clip_cfg in clip_models:
+                _clip_models.append(MODULES.build(clip_cfg))
+        self.guider = ImageTextGuider(_clip_models)
 
         if secondary_model is not None:
-            self.secondary_model = MODULES.build(secondary_model)
+            self.secondary_model = secondary_model if isinstance(
+                secondary_model, nn.Module) else MODULES.build(secondary_model)
             self.with_secondary_model = True
         else:
             self.with_secondary_model = False
@@ -148,13 +161,13 @@ class DiscoDiffusion(nn.Module):
                 on output image. Defaults to 1000.
             seed (int): Sampling seed. Defaults to None.
         """
-        # set diffuser
+        # set diffusion_scheduler
         if scheduler_kwargs is not None:
             mmengine.print_log('Switch to infer diffusion scheduler!',
                                'current')
             infer_scheduler = DIFFUSION_SCHEDULERS.build(scheduler_kwargs)
         else:
-            infer_scheduler = self.diffuser
+            infer_scheduler = self.diffusion_scheduler
         # set random seed
         if isinstance(seed, int):
             set_random_seed(seed=seed)
@@ -186,7 +199,7 @@ class DiscoDiffusion(nn.Module):
         # get stats from text prompts and image prompts
         model_stats = self.guider.compute_prompt_stats(
             text_prompts=text_prompts)
-        timesteps = infer_scheduler.timesteps[skip_steps:-1]
+        timesteps = infer_scheduler.timesteps[skip_steps:]
         if show_progress:
             timesteps = tqdm(timesteps)
         for t in timesteps:
@@ -197,8 +210,8 @@ class DiscoDiffusion(nn.Module):
             cond_kwargs = dict(
                 model_stats=model_stats,
                 init_image=init_image,
-                unet= self.unet,
-                clip_guidance_scale= clip_guidance_scale,
+                unet=self.unet,
+                clip_guidance_scale=clip_guidance_scale,
                 init_scale=init_scale,
                 tv_scale=tv_scale,
                 sat_scale=sat_scale,
@@ -211,7 +224,7 @@ class DiscoDiffusion(nn.Module):
             )
             if self.with_secondary_model:
                 cond_kwargs.update(secondary_model=self.secondary_model)
-            diffuser_output = infer_scheduler.step(
+            diffusion_scheduler_output = infer_scheduler.step(
                 model_output,
                 t,
                 image,
@@ -219,5 +232,5 @@ class DiscoDiffusion(nn.Module):
                 cond_kwargs=cond_kwargs,
                 eta=eta)
 
-            image = diffuser_output['prev_sample']
+            image = diffusion_scheduler_output['prev_sample']
         return {'samples': image}

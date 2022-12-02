@@ -7,12 +7,12 @@ Collections:
   - https://arxiv.org/abs/1804.07723
   README: configs/partial_conv/README.md
 Models:
-- Config: configs/partial_conv/pconv_stage1_8xb1_places-256x256.py
+- Config: configs/partial_conv/pconv_stage1_8xb12_places-256x256.py
   In Collection: PConv
   Metadata:
-    GPUs: '4'
+    GPUs: '8'
     Training Data: PLACES
-  Name: pconv_stage1_8xb1_places-256x256
+  Name: pconv_stage1_8xb12_places-256x256
   Results:
   - Dataset: PLACES
     Metrics: {}
@@ -35,7 +35,7 @@ Models:
 - Config: configs/partial_conv/pconv_stage1_8xb1_celeba-256x256.py
   In Collection: PConv
   Metadata:
-    GPUs: '4'
+    GPUs: '8'
     Training Data: CELEBA
   Name: pconv_stage1_8xb1_celeba-256x256
   Results:
