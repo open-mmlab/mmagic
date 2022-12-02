@@ -16,17 +16,15 @@
 import importlib
 import inspect
 import os
-from pathlib import Path
-from typing import Callable, Any, Dict, List, Optional, Union
-from mmedit.registry import MODELS
-
 import torch
+import transformers
 
+from typing import Callable, Any, Dict, List, Optional, Union
 from packaging import version
+from transformers import PreTrainedModel
 
+from .pipeline_utils import DiffusionPipeline
 from .configuration_utils import FrozenDict
-from .pipelines.stable_diffusion import StableDiffusionPipelineOutput
-
 from .modeling_utils import _LOW_CPU_MEM_USAGE_DEFAULT
 from .utils import (
     deprecate,
@@ -35,41 +33,13 @@ from .utils import (
     is_torch_version,
     is_transformers_available,
     logging,
+    StableDiffusionPipelineOutput,
 )
 
-from .pipeline_utils import DiffusionPipeline
-from .pipelines import StableDiffusionPipeline
+from mmedit.registry import MODELS
 
-if is_transformers_available():
-    import transformers
-    from transformers import PreTrainedModel
 
 logger = logging.get_logger(__name__)
-
-
-LOADABLE_CLASSES = {
-    "diffusers": {
-        "ModelMixin": ["save_pretrained", "from_pretrained"],
-        "SchedulerMixin": ["save_pretrained", "from_pretrained"],
-        "DiffusionPipeline": ["save_pretrained", "from_pretrained"],
-        "OnnxRuntimeModel": ["save_pretrained", "from_pretrained"],
-    },
-    "transformers": {
-        "PreTrainedTokenizer": ["save_pretrained", "from_pretrained"],
-        "PreTrainedTokenizerFast": ["save_pretrained", "from_pretrained"],
-        "PreTrainedModel": ["save_pretrained", "from_pretrained"],
-        "FeatureExtractionMixin": ["save_pretrained", "from_pretrained"],
-        "ProcessorMixin": ["save_pretrained", "from_pretrained"],
-        "ImageProcessingMixin": ["save_pretrained", "from_pretrained"],
-    },
-    "onnxruntime.training": {
-        "ORTModule": ["save_pretrained", "from_pretrained"],
-    },
-}
-
-ALL_IMPORTABLE_CLASSES = {}
-for library in LOADABLE_CLASSES:
-    ALL_IMPORTABLE_CLASSES.update(LOADABLE_CLASSES[library])
 
 
 @MODELS.register_module('sd')
@@ -83,17 +53,11 @@ class StableDiffuser(DiffusionPipeline):
 
     def __init__(self, 
             pretrained_model_name_or_path, 
-            class_type,
             requires_safety_checker=True,
             **kwargs):
         super().__init__()
         """
-        """
-        import pdb;pdb.set_trace();
-        cls = None
-        if class_type == 'StableDiffusionPipeline':
-            cls = StableDiffusionPipeline
-        
+        """       
         torch_dtype = kwargs.pop("torch_dtype", None)
         device_map = kwargs.pop("device_map", None)
         low_cpu_mem_usage = kwargs.pop("low_cpu_mem_usage", _LOW_CPU_MEM_USAGE_DEFAULT)
@@ -130,60 +94,20 @@ class StableDiffuser(DiffusionPipeline):
         if os.path.isdir(pretrained_model_name_or_path):
             cached_folder = pretrained_model_name_or_path
 
-        config_dict = cls.load_config(cached_folder)
-
-        # 2. Load the pipeline class, if using custom module then load it from the hub
-        # if we load from explicit class, let's use it
-        pipeline_class = cls
-
-        # some modules can be passed directly to the init
-        # in this case they are already instantiated in `kwargs`
-        # extract them here
-        expected_modules, optional_kwargs = cls._get_signature_keys(pipeline_class)
-        passed_class_obj = {k: kwargs.pop(k) for k in expected_modules if k in kwargs}
-        passed_pipe_kwargs = {k: kwargs.pop(k) for k in optional_kwargs if k in kwargs}
-
-        init_dict, unused_kwargs, _ = pipeline_class.extract_init_dict(config_dict, **kwargs)
-
-        # define init kwargs
-        init_kwargs = {k: init_dict.pop(k) for k in optional_kwargs if k in init_dict}
-        init_kwargs = {**init_kwargs, **passed_pipe_kwargs}
-
-        if len(unused_kwargs) > 0:
-            logger.warning(
-                f"Keyword arguments {unused_kwargs} are not expected by {pipeline_class.__name__} and will be ignored."
-            )
-
-        # import it here to avoid circular import
-        from . import pipelines
+        config_dict = self.load_config(cached_folder)
+        
+        init_dict = {k: config_dict[k] for k in config_dict if not k.startswith('_')}
+        init_kwargs = {}
 
         # 3. Load each module in the pipeline
         for name, (library_name, class_name) in init_dict.items():
-            is_pipeline_module = hasattr(pipelines, library_name)
+            mmedit_library_name = library_name
+            if library_name in ['diffusers', 'stable_diffusion']:
+                mmedit_library_name = 'mmedit.models.editors.stable_diffusion'
+            library = importlib.import_module(mmedit_library_name)
 
-            # if the model is in a pipeline module, then we load it from the pipeline
-            if is_pipeline_module:
-                pipeline_module = getattr(pipelines, library_name)
-                class_obj = getattr(pipeline_module, class_name)
-                importable_classes = ALL_IMPORTABLE_CLASSES
-                class_candidates = {c: class_obj for c in importable_classes.keys()}
-            else:
-                # else we just import it from the library.
-                mmedit_library_name = library_name
-                if library_name == 'diffusers':
-                    mmedit_library_name = 'mmedit.models.editors.stable_diffusion'
-                library = importlib.import_module(mmedit_library_name)
-
-                class_obj = getattr(library, class_name)
-                importable_classes = LOADABLE_CLASSES[library_name]
-                class_candidates = {c: getattr(library, c, None) for c in importable_classes.keys()}
-
-            load_method_name = None
-            for class_name, class_candidate in class_candidates.items():
-                if class_candidate is not None and issubclass(class_obj, class_candidate):
-                    load_method_name = importable_classes[class_name][1]
-
-            load_method = getattr(class_obj, load_method_name)
+            class_obj = getattr(library, class_name)
+            load_method = getattr(class_obj, 'from_pretrained')
             loading_kwargs = {}
 
             if issubclass(class_obj, torch.nn.Module):
@@ -300,6 +224,13 @@ class StableDiffuser(DiffusionPipeline):
         self.vae_scale_factor = 2 ** (len(self.vae.config.block_out_channels) - 1)
         self.register_to_config(requires_safety_checker=requires_safety_checker)
 
+    @staticmethod
+    def _get_signature_keys(obj):
+        parameters = inspect.signature(obj.__init__).parameters
+        required_parameters = {k: v for k, v in parameters.items() if v.default == inspect._empty}
+        optional_parameters = set({k for k, v in parameters.items() if v.default != inspect._empty})
+        expected_modules = set(required_parameters.keys()) - set(["self"])
+        return expected_modules, optional_parameters
 
     def to(self, torch_device: Optional[Union[str, torch.device]] = None):
         if torch_device is None:

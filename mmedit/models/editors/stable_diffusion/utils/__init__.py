@@ -39,7 +39,7 @@ from .import_utils import (
     requires_backends,
 )
 from .logging import get_logger
-from .outputs import BaseOutput
+from .outputs import BaseOutput, StableDiffusionPipelineOutput
 from .pil_utils import PIL_INTERPOLATION
 
 

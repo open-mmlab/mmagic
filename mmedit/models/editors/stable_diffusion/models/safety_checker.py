@@ -18,7 +18,7 @@ import torch.nn as nn
 
 from transformers import CLIPConfig, CLIPVisionModel, PreTrainedModel
 
-from ...utils import logging
+from ..utils import logging
 
 
 logger = logging.get_logger(__name__)

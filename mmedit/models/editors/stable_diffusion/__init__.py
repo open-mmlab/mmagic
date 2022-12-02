@@ -3,7 +3,7 @@ __version__ = "0.9.0"
 from .configuration_utils import ConfigMixin
 from .utils import logging
 from .modeling_utils import ModelMixin
-from .models import AutoencoderKL, Transformer2DModel, UNet1DModel, UNet2DConditionModel, UNet2DModel, VQModel
+from .models import AutoencoderKL, Transformer2DModel, UNet1DModel, UNet2DConditionModel, UNet2DModel, VQModel, StableDiffusionSafetyChecker
 from .pipeline_utils import DiffusionPipeline
 from .schedulers import (
     DDIMScheduler,
@@ -20,13 +20,6 @@ from .schedulers import (
     ScoreSdeVeScheduler,
     VQDiffusionScheduler,
     LMSDiscreteScheduler,
-)
-from .pipelines import (
-    StableDiffusionImg2ImgPipeline,
-    StableDiffusionInpaintPipeline,
-    StableDiffusionInpaintPipelineLegacy,
-    StableDiffusionPipeline,
-    StableDiffusionUpscalePipeline,
 )
 
 

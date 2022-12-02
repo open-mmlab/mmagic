@@ -1,4 +1,4 @@
-from mmengine import Config, MODELS
+from mmengine import MODELS
 from mmedit.utils import register_all_modules
 from mmedit.models.editors.stable_diffusion.utils.training_utils import set_seed
 
@@ -8,7 +8,6 @@ register_all_modules()
 cfg = dict(
         type='StableDiffuser',
         pretrained_model_name_or_path='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5',
-        class_type='StableDiffusionPipeline'
     )
 
 StableDiffuser = MODELS.build(cfg)
