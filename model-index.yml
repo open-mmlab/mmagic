@@ -13,6 +13,7 @@ Import:
 - configs/disco_diffusion/metafile.yml
 - configs/edsr/metafile.yml
 - configs/edvr/metafile.yml
+- configs/eg3d/metafile.yml
 - configs/esrgan/metafile.yml
 - configs/flavr/metafile.yml
 - configs/gca/metafile.yml
