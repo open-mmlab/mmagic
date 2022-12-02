@@ -66,7 +66,7 @@ class MMEdit:
         'edvr',
 
         # text2image models
-        'disco',
+        'disco_diffusion',
 
         # 3D-aware generation
         'eg3d',
