@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import NoReturn, Optional
+from typing import Optional
 
 import torch.nn as nn
 from mmcv.cnn import ConvModule
@@ -118,7 +118,7 @@ class SoftMaskPatchDiscriminator(nn.Module):
         """
         return self.model(x)
 
-    def init_weights(self, pretrained: Optional[str] = None) -> NoReturn:
+    def init_weights(self, pretrained: Optional[str] = None) -> None:
         """Initialize weights for the model.
 
         Args:

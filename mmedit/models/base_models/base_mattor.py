@@ -17,7 +17,7 @@ ForwardResults = Union[Dict[str, torch.Tensor], List[EditDataSample],
 
 def _pad(batch_image: torch.Tensor,
          ds_factor: int,
-         mode: str = 'reflect') -> tuple[torch.Tensor, tuple[int]]:
+         mode: str = 'reflect') -> Tuple[torch.Tensor, Tuple[int, int]]:
     """Pad image to a multiple of give down-sampling factor."""
 
     h, w = batch_image.shape[-2:]  # NCHW
@@ -37,7 +37,7 @@ def _pad(batch_image: torch.Tensor,
 
 def _interpolate(batch_image: torch.Tensor,
                  ds_factor: int,
-                 mode: str = 'bicubic') -> tuple[torch.Tensor, tuple[int]]:
+                 mode: str = 'bicubic') -> Tuple[torch.Tensor, Tuple[int, int]]:
     """Resize image to multiple of give down-sampling factor."""
 
     h, w = batch_image.shape[-2:]  # NCHW
@@ -248,9 +248,9 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         else:
             raise ValueError('Invalid forward mode.')
 
-    def convert_to_datasample(self, inputs: torch.Tensor,
-                              data_samples: list[EditDataSample]
-                              ) -> torch.Tensor:
+    def convert_to_datasample(self, inputs: DataSamples,
+                              data_samples: List[EditDataSample]
+                              ) -> DataSamples:
         for data_sample, output in zip(inputs, data_samples):
             data_sample.output = output
         return inputs

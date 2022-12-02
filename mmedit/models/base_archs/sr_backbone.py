@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import NoReturn
-
 import torch.nn as nn
 from torch import Tensor
 
@@ -70,7 +68,7 @@ class ResidualBlockNoBN(nn.Module):
         if res_scale == 1.0:
             self.init_weights()
 
-    def init_weights(self) -> NoReturn:
+    def init_weights(self) -> None:
         """Initialize weights for ResidualBlockNoBN.
 
         Initialization methods like `kaiming_init` are for VGG-style modules.

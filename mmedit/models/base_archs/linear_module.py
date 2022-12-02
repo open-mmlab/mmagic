@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import NoReturn, Optional
+from typing import Optional, Tuple
 
 import torch.nn as nn
 from mmcv.cnn import build_activation_layer
@@ -33,7 +33,7 @@ class LinearModule(nn.Module):
                  act_cfg: Optional[dict] = dict(type='ReLU'),
                  inplace: bool = True,
                  with_spectral_norm: bool = False,
-                 order: tuple[str] = ('linear', 'act')):
+                 order: Tuple[str, str] = ('linear', 'act')):
         super().__init__()
         assert act_cfg is None or isinstance(act_cfg, dict)
         self.act_cfg = act_cfg
@@ -65,7 +65,7 @@ class LinearModule(nn.Module):
         # Use msra init by default
         self.init_weights()
 
-    def init_weights(self) -> NoReturn:
+    def init_weights(self) -> None:
         """Init weights for the model."""
         if self.with_activation and self.act_cfg['type'] == 'LeakyReLU':
             nonlinearity = 'leaky_relu'

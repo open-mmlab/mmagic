@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import NoReturn, Optional
+from typing import Optional
 
 import torch.nn as nn
 from mmcv.cnn import ConvModule
@@ -152,7 +152,7 @@ class MultiLayerDiscriminator(nn.Module):
 
         return x
 
-    def init_weights(self, pretrained: Optional[str] = None) -> NoReturn:
+    def init_weights(self, pretrained: Optional[str] = None) -> None:
         """Init weights for models.
 
         Args:

@@ -54,7 +54,7 @@ class SpatialTemporalEnsemble(nn.Module):
 
         return imgs
 
-    def spatial_ensemble(self, imgs: torch.Tensor, model: str) -> torch.Tensor:
+    def spatial_ensemble(self, imgs: torch.Tensor, model: nn.Module) -> torch.Tensor:
         """Apply spatial ensemble.
 
         Args:
@@ -84,7 +84,7 @@ class SpatialTemporalEnsemble(nn.Module):
 
         return outputs.to(imgs.device)
 
-    def forward(self, imgs: torch.Tensor, model: str) -> torch.Tensor:
+    def forward(self, imgs: torch.Tensor, model: nn.Module) -> torch.Tensor:
         """Apply spatial and temporal ensemble.
 
         Args:

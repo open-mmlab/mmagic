@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
-from typing import Optional, Union
+from typing import Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
@@ -35,7 +35,7 @@ class SimpleGatedConvModule(nn.Module):
     def __init__(self,
                  in_channels: int,
                  out_channels: int,
-                 kernel_size: Union[int, tuple[int]],
+                 kernel_size: Union[int, Tuple[int, int]],
                  feat_act_cfg: Optional[dict] = dict(type='ELU'),
                  gate_act_cfg: Optional[dict] = dict(type='Sigmoid'),
                  **kwargs):

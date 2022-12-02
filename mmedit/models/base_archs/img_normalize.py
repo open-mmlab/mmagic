@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Tuple
+
 import torch
 import torch.nn as nn
 
@@ -17,8 +19,8 @@ class ImgNormalize(nn.Conv2d):
 
     def __init__(self,
                  pixel_range: float,
-                 img_mean: tuple[float],
-                 img_std: tuple[float],
+                 img_mean: Tuple[float],
+                 img_std: Tuple[float],
                  sign: int = -1):
 
         assert len(img_mean) == len(img_std)

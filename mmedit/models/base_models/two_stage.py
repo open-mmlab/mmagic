@@ -1,11 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import torch
 from mmengine.config import Config
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
+from mmedit.utils import SampleList
 from ..utils import set_requires_grad
 from .one_stage import OneStageInpaintor
 
@@ -66,8 +66,8 @@ class TwoStageInpaintor(OneStageInpaintor):
                  train_cfg: Optional[dict] = None,
                  test_cfg: Optional[dict] = None,
                  init_cfg: Optional[dict] = None,
-                 stage1_loss_type: tuple[str] = ('loss_l1_hole', ),
-                 stage2_loss_type: tuple[str] = ('loss_l1_hole', 'loss_gan'),
+                 stage1_loss_type: Optional[Sequence[str]] = ('loss_l1_hole', ),
+                 stage2_loss_type: Optional[Sequence[str]] = ('loss_l1_hole', 'loss_gan'),
                  input_with_ones: bool = True,
                  disc_input_with_mask: bool = False):
         super().__init__(
@@ -95,8 +95,8 @@ class TwoStageInpaintor(OneStageInpaintor):
             self.cur_iter = self.train_cfg.start_iter
 
     def forward_tensor(self, inputs: torch.Tensor,
-                       data_samples: list[EditDataSample]
-                       ) -> tuple[torch.Tensor]:
+                       data_samples: SampleList
+                       ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Forward function in tensor mode.
 
         Args:
@@ -121,7 +121,7 @@ class TwoStageInpaintor(OneStageInpaintor):
 
     def two_stage_loss(self, stage1_data: dict, stage2_data: dict,
                        gt: torch.Tensor, mask: torch.Tensor,
-                       masked_img: torch.Tensor) -> tuple[dict]:
+                       masked_img: torch.Tensor) -> Tuple[dict, dict]:
         """Calculate two-stage loss.
 
         Args:
@@ -219,7 +219,7 @@ class TwoStageInpaintor(OneStageInpaintor):
         return loss_dict
 
     def train_step(self, data: List[dict],
-                   optim_wrapper: dict[torch.optim.Optimizer]) -> dict:
+                   optim_wrapper: Dict[str, torch.optim.Optimizer]) -> dict:
         """Train step function.
 
         In this function, the inpaintor will finish the train step following

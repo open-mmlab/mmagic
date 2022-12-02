@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import NoReturn
-
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
@@ -35,7 +33,7 @@ class PixelShufflePack(nn.Module):
             padding=(self.upsample_kernel - 1) // 2)
         self.init_weights()
 
-    def init_weights(self) -> NoReturn:
+    def init_weights(self) -> None:
         """Initialize weights for PixelShufflePack."""
         default_init_weights(self, 1)
 

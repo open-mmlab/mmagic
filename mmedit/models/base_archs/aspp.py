@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Optional
+from typing import Optional, Sequence
 
 import torch
 from mmcv.cnn import ConvModule
@@ -86,7 +86,7 @@ class ASPP(nn.Module):
                  in_channels: int,
                  out_channels: int = 256,
                  mid_channels: int = 256,
-                 dilations: tuple[int] = (12, 24, 36),
+                 dilations: Sequence[int] = (12, 24, 36),
                  conv_cfg: Optional[dict] = None,
                  norm_cfg: Optional[dict] = dict(type='BN'),
                  act_cfg: Optional[dict] = dict(type='ReLU'),

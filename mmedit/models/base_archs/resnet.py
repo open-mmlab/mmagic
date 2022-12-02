@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import NoReturn, Optional
+from typing import Optional, Sequence, Tuple
 
 import torch.nn as nn
 import torch.utils.checkpoint as cp
@@ -80,7 +80,7 @@ class BasicBlock(nn.Module):
     def forward(self, x: Tensor) -> nn.Module:
         """Forward function."""
 
-        def _inner_forward(x):
+        def _inner_forward(x: Tensor) -> nn.Module:
             identity = x
 
             out = self.conv1(x)
@@ -277,8 +277,8 @@ class ResNet(nn.Module):
                  stem_channels: int = 64,
                  base_channels: int = 64,
                  num_stages: int = 4,
-                 strides: tuple[int] = (1, 2, 2, 2),
-                 dilations: tuple[int] = (1, 1, 2, 4),
+                 strides: Sequence[int] = (1, 2, 2, 2),
+                 dilations: Sequence[int] = (1, 1, 2, 4),
                  deep_stem: bool = False,
                  avg_down: bool = False,
                  frozen_stages: int = -1,
@@ -286,7 +286,7 @@ class ResNet(nn.Module):
                  conv_cfg: Optional[dict] = None,
                  norm_cfg: dict = dict(type='BN'),
                  with_cp: bool = False,
-                 multi_grid: Optional[tuple[int]] = None,
+                 multi_grid: Optional[Sequence[int]] = None,
                  contract_dilation: bool = False,
                  zero_init_residual: bool = True):
         super(ResNet, self).__init__()
@@ -338,7 +338,7 @@ class ResNet(nn.Module):
         self._freeze_stages()
 
     def _make_stem_layer(self, in_channels: int,
-                         stem_channels: int) -> NoReturn:
+                         stem_channels: int) -> None:
         """Make stem layer for ResNet."""
         if self.deep_stem:
             self.stem = nn.Sequential(
@@ -397,7 +397,7 @@ class ResNet(nn.Module):
                     planes: int,
                     blocks: int,
                     stride: int = 1,
-                    dilation: int = 1) -> nn.Sequential:
+                    dilation: int = 1) -> nn.Module:
         downsample = None
         if stride != 1 or self.inplanes != planes * block.expansion:
             downsample = nn.Sequential(
@@ -433,7 +433,7 @@ class ResNet(nn.Module):
 
         return nn.Sequential(*layers)
 
-    def _nostride_dilate(self, m: nn.Module, dilate: int) -> NoReturn:
+    def _nostride_dilate(self, m: nn.Module, dilate: int) -> None:
         classname = m.__class__.__name__
         if classname.find('Conv') != -1 and dilate > 1:
             # the convolution with stride
@@ -449,7 +449,7 @@ class ResNet(nn.Module):
                     m.dilation = (dilate, dilate)
                     m.padding = (dilate, dilate)
 
-    def init_weights(self, pretrained: Optional[str] = None) -> NoReturn:
+    def init_weights(self, pretrained: Optional[str] = None) -> None:
         """Init weights for the model.
 
         Args:
@@ -475,7 +475,7 @@ class ResNet(nn.Module):
         else:
             raise TypeError('pretrained must be a str or None')
 
-    def _freeze_stages(self) -> NoReturn:
+    def _freeze_stages(self) -> None:
         """Freeze stages param and norm stats."""
         if self.frozen_stages >= 0:
             if self.deep_stem:

@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import NoReturn, Optional
+from typing import Dict, List, Optional
 
 import torch.nn as nn
 from mmengine.model import BaseModule
@@ -32,7 +32,7 @@ class VGG16(BaseModule):
                  in_channels: int,
                  batch_norm: Optional[bool] = False,
                  aspp: Optional[bool] = False,
-                 dilations: Optional[list[int]] = None,
+                 dilations: Optional[List[int]] = None,
                  init_cfg: Optional[dict] = None):
         super().__init__(init_cfg=init_cfg)
         self.batch_norm = batch_norm
@@ -57,7 +57,7 @@ class VGG16(BaseModule):
             self.out_channels = 512
 
     def _make_layer(self, inplanes: int, planes: int,
-                    convs_layers: int) -> nn.Sequential:
+                    convs_layers: int) -> nn.Module:
         layers = []
         for _ in range(convs_layers):
             conv2d = nn.Conv2d(inplanes, planes, kernel_size=3, padding=1)
@@ -70,7 +70,7 @@ class VGG16(BaseModule):
         layers += [nn.MaxPool2d(kernel_size=2, stride=2, return_indices=True)]
         return nn.Sequential(*layers)
 
-    def init_weights(self) -> NoReturn:
+    def init_weights(self) -> None:
         """Init weights for the model."""
         if self.init_cfg is not None:
             super().init_weights()
@@ -82,7 +82,7 @@ class VGG16(BaseModule):
                 elif isinstance(m, nn.BatchNorm2d):
                     constant_init(m, 1)
 
-    def forward(self, x: Tensor) -> dict:
+    def forward(self, x: Tensor) -> Dict[str, Tensor]:
         """Forward function for ASPP module.
 
         Args:
