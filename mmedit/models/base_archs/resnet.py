@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Optional, Sequence, Tuple
+from typing import Optional, Sequence
 
 import torch.nn as nn
 import torch.utils.checkpoint as cp
