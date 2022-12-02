@@ -2,7 +2,6 @@
 from .clip_loss import CLIPLoss
 from .composition_loss import (CharbonnierCompLoss, L1CompositionLoss,
                                MSECompositionLoss)
-from .disco_loss import range_loss, spherical_dist_loss, tv_loss
 from .face_id_loss import FaceIdLoss
 from .feature_loss import LightCNNFeatureLoss
 from .gan_loss import (DiscShiftLoss, GANLoss, GaussianBlur,
@@ -17,7 +16,7 @@ from .loss_wrapper import mask_reduce_loss, reduce_loss
 from .perceptual_loss import (PerceptualLoss, PerceptualVGG,
                               TransferalPerceptualLoss)
 from .pixelwise_loss import (CharbonnierLoss, L1Loss, MaskedTVLoss, MSELoss,
-                             PSNRLoss)
+                             PSNRLoss, tv_loss)
 
 __all__ = [
     'L1Loss', 'MSELoss', 'CharbonnierLoss', 'L1CompositionLoss',
@@ -29,5 +28,5 @@ __all__ = [
     'CLIPLoss', 'CLIPLossComps', 'DiscShiftLossComps', 'FaceIdLossComps',
     'GANLossComps', 'GeneratorPathRegularizerComps',
     'GradientPenaltyLossComps', 'R1GradientPenaltyComps', 'disc_shift_loss',
-    'spherical_dist_loss', 'tv_loss', 'range_loss', 'PSNRLoss'
+    'tv_loss', 'PSNRLoss'
 ]

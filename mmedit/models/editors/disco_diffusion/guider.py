@@ -12,7 +12,7 @@ import torchvision.transforms as T
 import torchvision.transforms.functional as TF
 from resize_right import resize
 
-from mmedit.models.losses import range_loss, spherical_dist_loss, tv_loss
+from mmedit.models.losses import tv_loss
 from .secondary_model import alpha_sigma_to_t
 
 normalize = T.Normalize(
@@ -96,6 +96,15 @@ def resample(input, size, align_corners=True):
     return F.interpolate(
         input, size, mode='bicubic', align_corners=align_corners)
 
+def range_loss(input):
+    """range loss."""
+    return (input - input.clamp(-1, 1)).pow(2).mean([1, 2, 3])
+
+def spherical_dist_loss(x, y):
+    """spherical distance loss."""
+    x = F.normalize(x, dim=-1)
+    y = F.normalize(y, dim=-1)
+    return (x - y).norm(dim=-1).div(2).arcsin().pow(2).mul(2)
 
 class MakeCutouts(nn.Module):
     """Each iteration, the AI cuts the image into smaller pieces known as cuts.
