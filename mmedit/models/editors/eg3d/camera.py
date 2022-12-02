@@ -3,6 +3,8 @@ import math
 from typing import List, Optional, Union
 
 import torch
+from mmengine.utils import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 
 from mmedit.models.utils import normalize_vecs
 from mmedit.registry import MODULES
@@ -207,7 +209,11 @@ class BaseCamera(object):
         v = torch.clamp(v, 1e-5, math.pi - 1e-5)
 
         v = v / math.pi
-        phi = torch.arccos(1 - 2 * v)
+        if digit_version(TORCH_VERSION) <= digit_version('1.6.0'):
+            import numpy as np
+            phi = torch.from_numpy(np.arccos((1 - 2 * v).numpy()))
+        else:
+            phi = torch.arccos(1 - 2 * v)
         return phi
 
     def sample_camera2world(self,

@@ -1,4 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
+import pytest
 import torch
 
 from mmedit.models.editors.ttsr.ttsr_net import (CSFI2, CSFI3, SFE,
@@ -6,6 +9,9 @@ from mmedit.models.editors.ttsr.ttsr_net import (CSFI2, CSFI3, SFE,
 from mmedit.registry import MODELS
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_sfe():
     inputs = torch.rand(2, 3, 48, 48)
     sfe = SFE(3, 64, 16, 1.)
@@ -13,6 +19,9 @@ def test_sfe():
     assert outputs.shape == (2, 64, 48, 48)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_csfi():
     inputs1 = torch.rand(2, 16, 24, 24)
     inputs2 = torch.rand(2, 16, 48, 48)
@@ -30,6 +39,9 @@ def test_csfi():
     assert out4.shape == (2, 16, 96, 96)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_merge_features():
     inputs1 = torch.rand(2, 16, 24, 24)
     inputs2 = torch.rand(2, 16, 48, 48)
@@ -40,6 +52,9 @@ def test_merge_features():
     assert out.shape == (2, 3, 96, 96)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_ttsr_net():
     inputs = torch.rand(2, 3, 24, 24)
     soft_attention = torch.rand(2, 1, 24, 24)
