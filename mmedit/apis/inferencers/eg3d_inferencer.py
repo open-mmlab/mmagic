@@ -8,6 +8,8 @@ import imageio
 import numpy as np
 import torch
 from mmengine import print_log
+from mmengine.utils import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 from PIL import Image
 from torch.nn import functional as F
 from torchvision.utils import make_grid
@@ -287,12 +289,11 @@ class EG3DInferencer(BaseMMEditInferencer):
 
         img_size = preds[0]['fake_img'].shape[-1]
         if img_size != depth.shape[-1]:
-            depth = F.interpolate(
-                depth,
-                size=img_size,
-                mode='bilinear',
-                align_corners=False,
-                antialias=True)
+            interpolation_kwargs = dict(
+                size=img_size, mode='bilinear', align_corners=False)
+            if digit_version(TORCH_VERSION) >= digit_version('1.11.0'):
+                interpolation_kwargs['antialias'] = True
+            depth = F.interpolate(depth, **interpolation_kwargs)
         return depth
 
     def postprocess(self,
