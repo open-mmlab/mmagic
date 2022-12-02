@@ -55,8 +55,9 @@ class DiscoDiffusion(nn.Module):
         super().__init__()
         self.unet = unet if isinstance(unet,
                                        nn.Module) else MODULES.build(unet)
-        self.diffusion_scheduler = DIFFUSION_SCHEDULERS.build(diffusion_scheduler) if isinstance(
-            diffusion_scheduler, dict) else diffusion_scheduler
+        self.diffusion_scheduler = DIFFUSION_SCHEDULERS.build(
+            diffusion_scheduler) if isinstance(diffusion_scheduler,
+                                               dict) else diffusion_scheduler
 
         assert len(clip_models) > 0
         if isinstance(clip_models[0], nn.Module):

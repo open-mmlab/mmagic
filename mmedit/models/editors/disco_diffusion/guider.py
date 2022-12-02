@@ -417,9 +417,11 @@ class ImageTextGuider(nn.Module):
             n = x.shape[0]
             if secondary_model is not None:
                 alpha = torch.tensor(
-                    diffusion_scheduler.alphas_cumprod[t]**0.5, dtype=torch.float32)
+                    diffusion_scheduler.alphas_cumprod[t]**0.5,
+                    dtype=torch.float32)
                 sigma = torch.tensor(
-                    (1 - diffusion_scheduler.alphas_cumprod[t])**0.5, dtype=torch.float32)
+                    (1 - diffusion_scheduler.alphas_cumprod[t])**0.5,
+                    dtype=torch.float32)
                 cosine_t = alpha_sigma_to_t(alpha, sigma).to(x.device)
                 model_output = secondary_model(
                     x, cosine_t[None].repeat([x.shape[0]]))
@@ -432,7 +434,7 @@ class ImageTextGuider(nn.Module):
                 pred_original_sample = (x - beta_prod_t**(0.5) *
                                         model_output) / alpha_prod_t**(0.5)
             # fac = diffusion_scheduler_output['beta_prod_t']** (0.5)
-            # x_in = diffusion_scheduler_output['original_sample'] * fac + x * (1 - fac)
+            # x_in = diffusion_scheduler_output['original_sample'] * fac + x * (1 - fac) # noqa
             fac = beta_prod_t**(0.5)
             x_in = pred_original_sample * fac + x * (1 - fac)
             x_in_grad = torch.zeros_like(x_in)
