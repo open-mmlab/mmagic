@@ -8,6 +8,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmengine.model import BaseModule
+from mmengine.utils import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 
 from ..stylegan3.stylegan3_modules import FullyConnectedLayer
 from .eg3d_utils import (get_ray_limits_box, inverse_transform_sampling,
@@ -431,7 +433,10 @@ class EG3DRenderer(BaseModule):
         composite_depth = torch.sum(weights * depths_mid, -2) / weight_total
 
         # clip the composite to min/max range of depths
-        composite_depth = torch.nan_to_num(composite_depth, float('inf'))
+        if digit_version(TORCH_VERSION) < digit_version('1.8.0'):
+            composite_depth[torch.isnan(composite_depth)] = float('inf')
+        else:
+            composite_depth = torch.nan_to_num(composite_depth, float('inf'))
         composite_depth = torch.clamp(composite_depth, torch.min(depths),
                                       torch.max(depths))
 
