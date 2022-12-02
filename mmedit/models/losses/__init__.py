@@ -2,7 +2,6 @@
 from .clip_loss import CLIPLoss
 from .composition_loss import (CharbonnierCompLoss, L1CompositionLoss,
                                MSECompositionLoss)
-from .disco_loss import range_loss, spherical_dist_loss, tv_loss
 from .face_id_loss import FaceIdLoss
 from .feature_loss import LightCNNFeatureLoss
 from .gan_loss import (DiscShiftLoss, GANLoss, GaussianBlur,

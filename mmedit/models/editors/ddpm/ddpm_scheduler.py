@@ -32,7 +32,6 @@ class DDPMScheduler:
             trained_betas (_type_, optional): _description_. Defaults to None.
             variance_type (str, optional): _description_. Defaults to 'fixed_small'.
             clip_sample (bool, optional): _description_. Defaults to True.
-
         """
         self.num_train_timesteps = num_train_timesteps
         if trained_betas is not None:
@@ -95,7 +94,6 @@ class DDPMScheduler:
         # hacks - were probs added for training stability
         if variance_type == 'fixed_small':
             variance = np.clip(variance, min_value=1e-20)
-
         # for rl-diffusion_scheduler https://arxiv.org/abs/2205.09991
         elif variance_type == 'fixed_small_log':
             variance = np.log(np.clip(variance, min_value=1e-20))

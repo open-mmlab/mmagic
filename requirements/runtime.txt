@@ -18,4 +18,4 @@ resize_right
 tensorboard
 torch
 torchvision
-resize_right
+

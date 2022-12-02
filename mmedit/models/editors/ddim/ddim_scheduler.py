@@ -25,7 +25,6 @@ class DDIMScheduler:
         timestep_values (_type_, optional): _description_. Defaults to None.
         clip_sample (bool, optional): _description_. Defaults to True.
         set_alpha_to_one (bool, optional): _description_. Defaults to True.
-
     """
 
     def __init__(
