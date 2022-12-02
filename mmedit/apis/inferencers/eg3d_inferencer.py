@@ -4,7 +4,6 @@ import os.path as osp
 from collections import defaultdict
 from typing import Dict, List, Optional, Sequence, Union
 
-import imageio
 import numpy as np
 import torch
 from mmengine import print_log
@@ -15,9 +14,11 @@ from torch.nn import functional as F
 from torchvision.utils import make_grid
 
 from mmedit.structures import EditDataSample
-from mmedit.utils import ForwardInputs
+from mmedit.utils import ForwardInputs, try_import
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 from .inference_functions import calculate_grid_size
+
+imageio = try_import('imageio')
 
 
 class EG3DInferencer(BaseMMEditInferencer):
@@ -148,7 +149,11 @@ class EG3DInferencer(BaseMMEditInferencer):
             result_out_dir (str, optional): The save director of image and
                 videos. Defaults to 'eg3d_output'.
         """
-        print(result_out_dir)
+        if save_video:
+            assert imageio is not None, (
+                'Please install imageio-ffmpeg by \'pip install '
+                'imageio-ffmpeg\' to save video.')
+
         os.makedirs(result_out_dir, exist_ok=True)
         assert vis_mode.upper() in ['BOTH', 'DEPTH', 'IMG']
         if vis_mode.upper() == 'BOTH':
