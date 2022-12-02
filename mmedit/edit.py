@@ -115,14 +115,14 @@ class MMEdit:
             if kwargs.get('config', None) is not None:
                 warnings.warn(
                     f'{model_name}\'s default config '
-                    'is overridden by {model_config}', UserWarning)
+                    f'is overridden by {model_config}', UserWarning)
             kwargs['config'] = model_config
 
         if model_ckpt is not None:
             if kwargs.get('ckpt', None) is not None:
                 warnings.warn(
                     f'{model_name}\'s default checkpoint '
-                    'is overridden by {model_ckpt}', UserWarning)
+                    f'is overridden by {model_ckpt}', UserWarning)
             kwargs['ckpt'] = model_ckpt
 
         if extra_parameters is not None:
