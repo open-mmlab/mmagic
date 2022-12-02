@@ -21,7 +21,8 @@ def get_ray_limits_box(rays_o: torch.Tensor, rays_d: torch.Tensor,
             bounding box (AABB).
 
     Returns:
-        Tuple[torch.Tensor, torch.Tensor]:
+        Tuple[torch.Tensor, torch.Tensor]: Start and end point
+            for each ray. Both shape like (bz, res, res, 1).
     """
     o_shape = rays_o.shape
     rays_o = rays_o.detach().reshape(-1, 3)
@@ -94,7 +95,7 @@ def inverse_transform_sampling(bins: torch.Tensor,
     Args:
         bins (int): (N_points, N_samples+1) where N_samples is the number
             of coarse samples per ray - 2.
-        weights (torch.Tensor): Weights shape like (N_samples, N_samples).
+        weights (torch.Tensor): Weights shape like (N_points, N_samples-1).
         n_importance (int): The number of samples to draw from the
             distribution.
         deterministic (bool): Whether use deterministic sampling method.
@@ -151,12 +152,14 @@ def linspace_batch(start: torch.Tensor, stop: torch.Tensor,
     PyTorch.
 
     Args:
-        start (torch.Tensor):
-        stop (torch.Tensor):
-        num (int):
+        start (torch.Tensor): The start point of each ray. Shape like
+            (bz, res, res, 1).
+        stop (torch.Tensor): The end point of each ray. Shape like
+            (bz, res, res, 1).
+        num (int): The number of points to sample.
 
     Returns:
-        torch.Tensor:
+        torch.Tensor: The sampled points. Shape like (num, bz, res, res, 1)
     """
     # create a tensor of 'num' steps from 0 to 1
     steps = torch.arange(

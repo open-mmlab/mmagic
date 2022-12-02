@@ -19,6 +19,38 @@ ModelType = Union[Dict, nn.Module]
 
 @MODELS.register_module()
 class EG3D(BaseConditionalGAN):
+    """Implementation of `Efficient Geometry-aware 3D Generative Adversarial
+    Networks`
+
+    <https://openaccess.thecvf.com/content/CVPR2022/papers/Chan_Efficient_Geometry-Aware_3D_Generative_Adversarial_Networks_CVPR_2022_paper.pdf>_ (EG3D).  # noqa
+
+    Detailed architecture can be found in
+    :class:~`mmedit.models.editors.eg3d.eg3d_generator.TriplaneGenerator`
+    and
+    :class:~`mmedit.models.editors.eg3d.dual_discriminator.DualDiscriminator`
+
+    Args:
+        generator (ModelType): The config or model of the generator.
+        discriminator (Optional[ModelType]): The config or model of the
+            discriminator. Defaults to None.
+        camera (Optional[ModelType]): The pre-defined camera to sample random
+            camera position. If you want to generate images or videos via
+            high-level API, you must set this argument. Defaults to None.
+        data_preprocessor (Optional[Union[dict, Config]]): The pre-process
+            config or :class:`~mmgen.models.GenDataPreprocessor`.
+        generator_steps (int): Number of times the generator was completely
+            updated before the discriminator is updated. Defaults to 1.
+        discriminator_steps (int): Number of times the discriminator was
+            completely updated before the generator is updated. Defaults to 1.
+        noise_size (Optional[int]): Size of the input noise vector.
+            Default to 128.
+        num_classes (Optional[int]): The number classes you would like to
+            generate. Defaults to None.
+        ema_config (Optional[Dict]): The config for generator's exponential
+            moving average setting. Defaults to None.
+        loss_config (Optional[Dict]): The config for training losses.
+            Defaults to None.
+    """
 
     def __init__(self,
                  generator: ModelType,
@@ -221,8 +253,10 @@ class EG3D(BaseConditionalGAN):
                 one time. Defaults to 4.
             mode (str, optional): The interpolation mode. Supported choices
                 are 'both', 'camera', and 'conditioning'. Defaults to 'both'.
-            sample_model (str, optional): _description_. Defaults to 'orig'.
-            show_pbar (bool, optional): _description_. Defaults to True.
+            sample_model (str, optional): The model used to generate images,
+                support 'orig' and 'ema'. Defaults to 'orig'.
+            show_pbar (bool, optional): Whether display a progress bar during
+                interpolation. Defaults to True.
 
         Returns:
             List[dict]: The list of output dict of each frame.
