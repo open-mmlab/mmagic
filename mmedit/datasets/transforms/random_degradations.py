@@ -292,9 +292,6 @@ class RandomNoise:
         Args:
             imgs (Tensor): training images
 
-        Raises:
-            NotImplementedError: _description_
-
         Returns:
             _type_: _description_
         """
@@ -361,10 +358,7 @@ class RandomResize:
         augmentation.
 
         Args:
-            imgs (Tensor): training images
-
-        Raises:
-            NotImplementedError: _description_
+            imgs (Tensor): training images.
 
         Returns:
             Tensor: images after radomly resized
