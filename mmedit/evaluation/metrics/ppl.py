@@ -8,21 +8,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data.dataloader import DataLoader
 
-from mmedit.models.utils import get_module_device
+from mmedit.models.utils import get_module_device, normalize_vecs
 from mmedit.registry import METRICS
 from .base_gen_metric import GenerativeMetric
-
-
-def normalize(a):
-    """L2 normalization.
-
-    Args:
-        a (Tensor): Tensor with shape [N, C].
-
-    Returns:
-        Tensor: Tensor after L2 normalization per-instance.
-    """
-    return a / torch.norm(a, dim=1, keepdim=True)
 
 
 def slerp(a, b, percent):
@@ -37,14 +25,14 @@ def slerp(a, b, percent):
     Returns:
         Tensor: Spherical linear interpolation result with shape [N, C].
     """
-    a = normalize(a)
-    b = normalize(b)
+    a = normalize_vecs(a)
+    b = normalize_vecs(b)
     d = (a * b).sum(-1, keepdim=True)
     p = percent * torch.acos(d)
-    c = normalize(b - d * a)
+    c = normalize_vecs(b - d * a)
     d = a * torch.cos(p) + c * torch.sin(p)
 
-    return normalize(d)
+    return normalize_vecs(d)
 
 
 @METRICS.register_module('PPL')
@@ -71,6 +59,15 @@ class PerceptualPathLength(GenerativeMetric):
                 path or endpoints. Defaults to 'end'.
             latent_dim (int, optional): Latent dimension of input noise.
                 Defaults to 512.
+            need_cond_input (bool): If true, the sampler will return the
+                conditional input randomly sampled from the original dataset.
+                This require the dataset implement `get_data_info` and field
+                `gt_label` must be contained in the return value of
+                `get_data_info`. Noted that, for unconditional models, set
+                `need_cond_input` as True may influence the result of evaluation
+                results since the conditional inputs are sampled from the dataset
+                distribution; otherwise will be sampled from the uniform
+                distribution. Defaults to False.
     """
     SAMPLER_MODE = 'path'
 
@@ -79,6 +76,7 @@ class PerceptualPathLength(GenerativeMetric):
                  real_nums: int = 0,
                  fake_key: Optional[str] = None,
                  real_key: Optional[str] = 'img',
+                 need_cond_input: bool = False,
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None,
@@ -88,7 +86,7 @@ class PerceptualPathLength(GenerativeMetric):
                  sampling='end',
                  latent_dim=512):
         super().__init__(fake_nums, real_nums, fake_key, real_key,
-                         sample_model, collect_device, prefix)
+                         need_cond_input, sample_model, collect_device, prefix)
         self.crop = crop
 
         self.epsilon = epsilon

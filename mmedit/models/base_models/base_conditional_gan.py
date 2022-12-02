@@ -85,8 +85,8 @@ class BaseConditionalGAN(BaseGAN):
             num_classes=self.num_classes,
             device=self.device)
 
-    def data_sample_to_label(self,
-                             data_sample: list) -> Optional[torch.Tensor]:
+    def data_sample_to_label(self, data_sample: List[EditDataSample]
+                             ) -> Optional[torch.Tensor]:
         """Get labels from input `data_sample` and pack to `torch.Tensor`. If
         no label is found in the passed `data_sample`, `None` would be
         returned.
@@ -204,7 +204,7 @@ class BaseConditionalGAN(BaseGAN):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
-            if isinstance(outputs, dict):
+            if sample_model == 'ema/orig':
                 gen_sample.ema = EditDataSample(
                     fake_img=PixelData(data=outputs['ema'][idx]),
                     sample_model='ema')

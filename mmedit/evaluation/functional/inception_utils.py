@@ -345,7 +345,7 @@ def prepare_inception_feat(dataloader: DataLoader,
     if osp.exists(inception_pkl):
         with open(inception_pkl, 'rb') as file:
             real_feat = pickle.load(file)
-        print(f'load preprocessed feat from {inception_pkl}')
+        print_log(f'load preprocessed feat from {inception_pkl}', 'current')
         return real_feat
 
     assert hasattr(metric, 'inception'), (
