@@ -32,9 +32,6 @@ class DDPMScheduler:
             trained_betas (_type_, optional): _description_. Defaults to None.
             variance_type (str, optional): _description_. Defaults to 'fixed_small'.
             clip_sample (bool, optional): _description_. Defaults to True.
-
-        Raises:
-            NotImplementedError: _description_
         """
         self.num_train_timesteps = num_train_timesteps
         if trained_betas is not None:
