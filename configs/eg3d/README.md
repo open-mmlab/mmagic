@@ -20,11 +20,11 @@ Unsupervised generation of high-quality multi-view-consistent images and 3D shap
 
 ## Results and Models
 
-|    Model     |     Comment     | FID50k | FID50k-Camera |                              Config                               |  Download   |
-| :----------: | :-------------: | :----: | :-----------: | :---------------------------------------------------------------: | :---------: |
-| ShapeNet-Car | official weight | 5.6573 |    5.2325     | [config](/configs/eg3d/eg3d_cvt-official-rgb_shapenet-128x128.py) | [model](<>) |
-|     AFHQ     | official weight | 2.9134 |    6.4213     |   [config](/configs/eg3d/eg3d_cvt-official-rgb_afhq-512x512.py)   | [model](<>) |
-|     FFHQ     | official weight | 4.3076 |    6.4453     |   [config](configs/eg3d/eg3d_cvt-official-rgb_ffhq-512x512.py)    | [model](<>) |
+|    Model     |     Comment     | FID50k | FID50k-Camera |                              Config                               |                                         Download                                          |
+| :----------: | :-------------: | :----: | :-----------: | :---------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
+| ShapeNet-Car | official weight | 5.6573 |    5.2325     | [config](/configs/eg3d/eg3d_cvt-official-rgb_shapenet-128x128.py) | [model](https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_shapenet-128x128-85757f4d.pth) |
+|     AFHQ     | official weight | 2.9134 |    6.4213     |   [config](/configs/eg3d/eg3d_cvt-official-rgb_afhq-512x512.py)   | [model](https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_afhq-512x512-ca1dd7c9.pth) |
+|     FFHQ     | official weight | 4.3076 |    6.4453     |   [config](configs/eg3d/eg3d_cvt-official-rgb_ffhq-512x512.py)    | [model](https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_ffhq-512x512-5a0ddcb6.pth) |
 
 - `FID50k-Camera` denotes image generated with random sampled camera position.
 - `FID50k` denotes image generated with camera position randomly sampled from the original dataset.
@@ -38,13 +38,13 @@ For example, if we use FP16 at the super resolution module in [FFHQ model](/conf
 
 You can use the following command to generate sequence images with continuous changed camera position as input.
 
-```python
+```shell
 python demo/mmediting_inference_demo.py --model-name eg3d \
     --model-config configs/eg3d/eg3d_cvt-official-rgb_afhq-512x512.py \
-    --model-ckpt afhq_ema.pt \
-    --result-out-dir eg3d_output \
-    --interpolation camera \
-    --num-frames 100
+    --model-ckpt https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_afhq-512x512-ca1dd7c9.pth \
+    --result-out-dir eg3d_output \  # save images and videos to `eg3d_output`
+    --interpolation camera \  # interpolation camera position only
+    --num-images 100  # generate 100 images during interpolation
 ```
 
 The the following video will be saved to `eg3d_output`.
@@ -55,14 +55,14 @@ The the following video will be saved to `eg3d_output`.
 
 To interpolate the camera position and style code at the same time, you can use the following command.
 
-```python
+```shell
 python demo/mmediting_inference_demo.py --model-name eg3d \
     --model-config configs/eg3d/eg3d_cvt-official-rgb_ffhq-512x512.py \
-    --model-ckpt ffhq_ema.pt \
-    --result-out-dir eg3d_output \
-    --interpolation both \
-    --num-frames 100
-    --seed 233
+    --model-ckpt https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_ffhq-512x512-5a0ddcb6.pth \
+    --result-out-dir eg3d_output \  # save images and videos to `eg3d_output`
+    --interpolation both \  # interpolation camera and conditioning both
+    --num-images 100  # generate 100 images during interpolation
+    --seed 233  # set random seed as 233
 ```
 
 <div align=center>
@@ -71,14 +71,14 @@ python demo/mmediting_inference_demo.py --model-name eg3d \
 
 If you only want to save video of depth map, you can use the following command:
 
-```python
+```shell
 python demo/mmediting_inference_demo.py --model-name eg3d \
     --model-config configs/eg3d/eg3d_cvt-official-rgb_shapenet-128x128.py \
-    --model-ckpt shapenet-ema.pt \
-    --result-out-dir eg3d_output \
-    --interpolation camera \
-    --num-frames 100 \
-    --vis-mode depth
+    --model-ckpt https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_shapenet-128x128-85757f4d.pth \
+    --result-out-dir eg3d_output \  # save images and videos to `eg3d_output`
+    --interpolation camera \  # interpolation camera position only
+    --num-images 100 \  # generate 100 images during interpolation
+    --vis-mode depth  # only visualize depth image
 ```
 
 <div align=center>

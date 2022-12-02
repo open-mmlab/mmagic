@@ -18,7 +18,7 @@ Models:
       FID50k: 5.6573
       FID50k-Camera: 5.2325
     Task: 3D-aware Generation
-  Weights: <>
+  Weights: https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_shapenet-128x128-85757f4d.pth
 - Config: configs/eg3d/eg3d_cvt-official-rgb_afhq-512x512.py
   In Collection: EG3D
   Metadata:
@@ -30,7 +30,7 @@ Models:
       FID50k: 2.9134
       FID50k-Camera: 6.4213
     Task: 3D-aware Generation
-  Weights: <>
+  Weights: https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_afhq-512x512-ca1dd7c9.pth
 - Config: configs/eg3d/eg3d_cvt-official-rgb_ffhq-512x512.py
   In Collection: EG3D
   Metadata:
@@ -42,4 +42,4 @@ Models:
       FID50k: 4.3076
       FID50k-Camera: 6.4453
     Task: 3D-aware Generation
-  Weights: <>
+  Weights: https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_ffhq-512x512-5a0ddcb6.pth
