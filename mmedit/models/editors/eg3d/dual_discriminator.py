@@ -5,6 +5,8 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from mmengine.runner.amp import autocast
+from mmengine.utils import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 from torch import Tensor
 
 from mmedit.registry import MODULES
@@ -70,13 +72,14 @@ class DualDiscriminator(StyleGAN2Discriminator):
 
         if img_raw is not None:
             # the official implementation only use 'antialiased' upsampline,
-            # therefore we only support 'antialiased' here
-            img_raw_sr = F.interpolate(
-                img_raw,
+            # therefore we only support 'antialiased' for torch >= 1.11.0
+            interpolation_kwargs = dict(
                 size=(img.shape[-1], img.shape[-1]),
                 mode='bilinear',
-                align_corners=False,
-                antialias=True)
+                align_corners=False)
+            if digit_version(TORCH_VERSION) >= digit_version('1.11.0'):
+                interpolation_kwargs['antialias'] = True
+            img_raw_sr = F.interpolate(img_raw, **interpolation_kwargs)
             img = torch.cat([img, img_raw_sr], dim=1)
 
         # convs has own fp-16 controller, do not wrap here
