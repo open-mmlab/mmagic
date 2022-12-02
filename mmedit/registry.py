@@ -62,3 +62,6 @@ LOG_PROCESSORS = Registry('log_processor', parent=registry.LOG_PROCESSORS)
 
 # manage optimizer wrapper
 OPTIM_WRAPPERS = Registry('optim_wrapper', parent=registry.OPTIM_WRAPPERS)
+
+# manage diffusion_schedulers
+DIFFUSION_SCHEDULERS = Registry('diffusion scheduler')
