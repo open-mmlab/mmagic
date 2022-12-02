@@ -229,7 +229,7 @@ class EG3D(BaseConditionalGAN):
 
     @torch.no_grad()
     def interpolation(self,
-                      num_frames: int,
+                      num_images: int,
                       num_batches: int = 4,
                       mode: str = 'both',
                       sample_model: str = 'orig',
@@ -248,7 +248,7 @@ class EG3D(BaseConditionalGAN):
         * 'both': Generate images with interpolated camera position.
 
         Args:
-            num_frames (int): The number of frames want to generate.
+            num_images (int): The number of images want to generate.
             num_batches (int, optional): The number of batches to generate at
                 one time. Defaults to 4.
             mode (str, optional): The interpolation mode. Supported choices
@@ -284,7 +284,7 @@ class EG3D(BaseConditionalGAN):
         # 1. generate cond list
         if mode.upper() in ['CAMERA', 'BOTH']:
             cam2world_list = self.camera.interpolation_cam2world(
-                num_frames, batch_size=num_batches, device=self.device)
+                num_images, batch_size=num_batches, device=self.device)
             cond_list = []
             for cam2world in cam2world_list:
                 cond = torch.cat([
@@ -294,14 +294,14 @@ class EG3D(BaseConditionalGAN):
                                  dim=1)
                 cond_list.append(cond)
         else:
-            cond_list = [cond_forward for _ in range(num_frames)]
+            cond_list = [cond_forward for _ in range(num_images)]
 
         # 2. generate pre-defined style list
         if mode.upper() == 'CAMERA':
             # same noise + forward cond
             style = gen.backbone.mapping(
                 self.noise_fn(num_batches=num_batches), cond_forward)
-            style_list = [style for _ in range(num_frames)]
+            style_list = [style for _ in range(num_images)]
         else:
             # same noise + different cond
             noise = self.noise_fn(num_batches=num_batches)
@@ -311,7 +311,7 @@ class EG3D(BaseConditionalGAN):
 
         # 3. interpolation
         if show_pbar:
-            pbar = ProgressBar(num_frames)
+            pbar = ProgressBar(num_images)
         output_list = []
         for style, cond in zip(style_list, cond_list):
             # generate image with const noise
@@ -325,5 +325,7 @@ class EG3D(BaseConditionalGAN):
 
             if show_pbar:
                 pbar.update(1)
+        if show_pbar:
+            print('\n')
 
         return output_list

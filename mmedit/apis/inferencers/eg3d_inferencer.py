@@ -25,7 +25,7 @@ class EG3DInferencer(BaseMMEditInferencer):
 
     func_kwargs = dict(
         preprocess=['inputs'],
-        forward=['num_frames', 'interpolation'],
+        forward=['num_images', 'interpolation'],
         visualize=[
             'result_out_dir', 'vis_mode', 'save_img', 'save_video',
             'img_suffix', 'video_suffix'
@@ -81,7 +81,7 @@ class EG3DInferencer(BaseMMEditInferencer):
     def forward(self,
                 inputs: ForwardInputs,
                 interpolation: Optional[str] = 'both',
-                num_frames: int = 100) -> Union[dict, List[dict]]:
+                num_images: int = 100) -> Union[dict, List[dict]]:
         """Forward the inputs to the model.
 
         Args:
@@ -90,7 +90,7 @@ class EG3DInferencer(BaseMMEditInferencer):
                 of images corresponding to passed `interpolation` mode.
             interpolation (str): The interplolation mode. Supported choices
                 are 'both', 'conditioning', and 'camera'. Defaults to 'both'.
-            num_frames (int): The number of frames of interpolation.
+            num_images (int): The number of frames of interpolation.
                 Defaults to 500.
 
         Returns:
@@ -122,7 +122,7 @@ class EG3DInferencer(BaseMMEditInferencer):
             return output_dict
 
         num_batches = inputs['num_batches']
-        output_list = self.model.interpolation(num_frames, num_batches,
+        output_list = self.model.interpolation(num_images, num_batches,
                                                interpolation)
         return output_list
 

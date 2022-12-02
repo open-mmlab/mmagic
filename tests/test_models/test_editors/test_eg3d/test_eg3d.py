@@ -144,17 +144,17 @@ class TestEG3D(TestCase):
     def test_interpolation(self):
         cfg_ = deepcopy(self.default_cfg)
         model = EG3D(**cfg_)
-        output_list = model.interpolation(num_frames=3, num_batches=2)
+        output_list = model.interpolation(num_images=3, num_batches=2)
         self.assertEqual(len(output_list), 3)
         self._check_dict_output(output_list, 32, 5, 2)
 
         output_list = model.interpolation(
-            num_frames=3, num_batches=2, mode='camera', show_pbar=False)
+            num_images=3, num_batches=2, mode='camera', show_pbar=False)
         self.assertEqual(len(output_list), 3)
         self._check_dict_output(output_list, 32, 5, 2)
 
         output_list = model.interpolation(
-            num_frames=3, num_batches=2, mode='conditioning', show_pbar=False)
+            num_images=3, num_batches=2, mode='conditioning', show_pbar=False)
         self.assertEqual(len(output_list), 3)
         self._check_dict_output(output_list, 32, 5, 2)
 
@@ -164,6 +164,6 @@ class TestEG3D(TestCase):
         model = EG3D(**cfg_)
 
         output_list = model.interpolation(
-            num_frames=3, num_batches=2, sample_model='ema')
+            num_images=3, num_batches=2, sample_model='ema')
         self.assertEqual(len(output_list), 3)
         self._check_dict_output(output_list, 32, 5, 2)

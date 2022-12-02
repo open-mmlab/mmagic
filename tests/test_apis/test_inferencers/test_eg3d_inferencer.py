@@ -59,7 +59,7 @@ def test_eg3d_inferencer():
         save_img=False,
         save_video=True,
         interpolation='camera',
-        num_frames=10,
+        num_images=10,
         result_out_dir=result_out_dir)
     # contrust target file list
     target_file_list = [
@@ -74,7 +74,7 @@ def test_eg3d_inferencer():
         save_img=True,
         save_video=False,
         interpolation='camera',
-        num_frames=10,
+        num_images=10,
         result_out_dir=result_out_dir)
     # contrust target file list
     target_file_list = [
@@ -92,7 +92,7 @@ def test_eg3d_inferencer():
         vis_mode='depth',
         save_img=False,
         interpolation='camera',
-        num_frames=2,
+        num_images=2,
         result_out_dir=result_out_dir)
     # contrust target file list
     target_file_list = ['depth_seed2022.mp4']
@@ -106,7 +106,7 @@ def test_eg3d_inferencer():
         save_img=False,
         interpolation='camera',
         sample_model='orig',
-        num_frames=2,
+        num_images=2,
         result_out_dir=result_out_dir)
     assert len(os.listdir(result_out_dir)) == 0
 
@@ -120,7 +120,7 @@ def test_eg3d_inferencer():
         save_video=True,
         save_img=False,
         interpolation='camera',
-        num_frames=2,
+        num_images=2,
         result_out_dir=result_out_dir)
     # contrust target file list
     target_file_list = [
@@ -139,7 +139,7 @@ def test_eg3d_inferencer():
         save_video=False,
         save_img=True,
         interpolation='camera',
-        num_frames=2,
+        num_images=2,
         result_out_dir=result_out_dir)
     target_file_list = ['depth_seed2022.png']
     assert set(target_file_list) == set(os.listdir(result_out_dir))
@@ -154,5 +154,5 @@ def test_eg3d_inferencer():
             save_video=False,
             save_img=False,
             interpolation='camera',
-            num_frames=2,
+            num_images=2,
             result_out_dir=result_out_dir)
