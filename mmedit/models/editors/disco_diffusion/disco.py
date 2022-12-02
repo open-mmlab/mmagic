@@ -32,7 +32,7 @@ class DiscoDiffusion(nn.Module):
 
     Args:
         unet (ModelType): Config of denoising Unet.
-        diffuser (ModelType): Config of diffuser scheduler.
+        diffusion_scheduler (ModelType): Config of diffusion_scheduler scheduler.
         secondary_model (ModelType): A smaller secondary diffusion model
             trained by Katherine Crowson to remove noise from intermediate
             timesteps to prepare them for CLIP.
@@ -47,7 +47,7 @@ class DiscoDiffusion(nn.Module):
 
     def __init__(self,
                  unet,
-                 diffuser,
+                 diffusion_scheduler,
                  secondary_model=None,
                  clip_models=[],
                  use_fp16=False,
@@ -55,8 +55,8 @@ class DiscoDiffusion(nn.Module):
         super().__init__()
         self.unet = unet if isinstance(unet,
                                        nn.Module) else MODULES.build(unet)
-        self.diffuser = DIFFUSION_SCHEDULERS.build(diffuser) if isinstance(
-            diffuser, dict) else diffuser
+        self.diffusion_scheduler = DIFFUSION_SCHEDULERS.build(diffusion_scheduler) if isinstance(
+            diffusion_scheduler, dict) else diffusion_scheduler
 
         assert len(clip_models) > 0
         if isinstance(clip_models[0], nn.Module):
@@ -160,13 +160,13 @@ class DiscoDiffusion(nn.Module):
                 on output image. Defaults to 1000.
             seed (int): Sampling seed. Defaults to None.
         """
-        # set diffuser
+        # set diffusion_scheduler
         if scheduler_kwargs is not None:
             mmengine.print_log('Switch to infer diffusion scheduler!',
                                'current')
             infer_scheduler = DIFFUSION_SCHEDULERS.build(scheduler_kwargs)
         else:
-            infer_scheduler = self.diffuser
+            infer_scheduler = self.diffusion_scheduler
         # set random seed
         if isinstance(seed, int):
             set_random_seed(seed=seed)
@@ -223,7 +223,7 @@ class DiscoDiffusion(nn.Module):
             )
             if self.with_secondary_model:
                 cond_kwargs.update(secondary_model=self.secondary_model)
-            diffuser_output = infer_scheduler.step(
+            diffusion_scheduler_output = infer_scheduler.step(
                 model_output,
                 t,
                 image,
@@ -231,5 +231,5 @@ class DiscoDiffusion(nn.Module):
                 cond_kwargs=cond_kwargs,
                 eta=eta)
 
-            image = diffuser_output['prev_sample']
+            image = diffusion_scheduler_output['prev_sample']
         return {'samples': image}

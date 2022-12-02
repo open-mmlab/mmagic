@@ -371,7 +371,7 @@ class ImageTextGuider(nn.Module):
 
     def cond_fn(self,
                 model,
-                diffuser,
+                diffusion_scheduler,
                 x,
                 t,
                 beta_prod_t,
@@ -394,7 +394,7 @@ class ImageTextGuider(nn.Module):
 
         Args:
             model (nn.Module): _description_
-            diffuser (object): _description_
+            diffusion_scheduler (object): _description_
             x (torch.Tensor): _description_
             t (int): _description_
             beta_prod_t (torch.Tensor): _description_
@@ -417,9 +417,9 @@ class ImageTextGuider(nn.Module):
             n = x.shape[0]
             if secondary_model is not None:
                 alpha = torch.tensor(
-                    diffuser.alphas_cumprod[t]**0.5, dtype=torch.float32)
+                    diffusion_scheduler.alphas_cumprod[t]**0.5, dtype=torch.float32)
                 sigma = torch.tensor(
-                    (1 - diffuser.alphas_cumprod[t])**0.5, dtype=torch.float32)
+                    (1 - diffusion_scheduler.alphas_cumprod[t])**0.5, dtype=torch.float32)
                 cosine_t = alpha_sigma_to_t(alpha, sigma).to(x.device)
                 model_output = secondary_model(
                     x, cosine_t[None].repeat([x.shape[0]]))
@@ -431,8 +431,8 @@ class ImageTextGuider(nn.Module):
                 alpha_prod_t = 1 - beta_prod_t
                 pred_original_sample = (x - beta_prod_t**(0.5) *
                                         model_output) / alpha_prod_t**(0.5)
-            # fac = diffuser_output['beta_prod_t']** (0.5)
-            # x_in = diffuser_output['original_sample'] * fac + x * (1 - fac)
+            # fac = diffusion_scheduler_output['beta_prod_t']** (0.5)
+            # x_in = diffusion_scheduler_output['original_sample'] * fac + x * (1 - fac)
             fac = beta_prod_t**(0.5)
             x_in = pred_original_sample * fac + x * (1 - fac)
             x_in_grad = torch.zeros_like(x_in)

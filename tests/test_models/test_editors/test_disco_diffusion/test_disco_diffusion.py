@@ -61,15 +61,15 @@ class TestDiscoDiffusion(TestCase):
             use_scale_shift_norm=True)
         # mock clip
         clip_models = [clip_mock_wrapper(), clip_mock_wrapper()]
-        # diffuser
-        diffuser = DDIMScheduler(
+        # diffusion_scheduler
+        diffusion_scheduler = DDIMScheduler(
             variance_type='learned_range',
             beta_schedule='linear',
             clip_sample=False)
 
         self.disco_diffusion = DiscoDiffusion(
             unet=unet32,
-            diffuser=diffuser,
+            diffusion_scheduler=diffusion_scheduler,
             secondary_model=None,
             clip_models=clip_models,
             use_fp16=True)

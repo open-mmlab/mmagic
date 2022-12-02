@@ -25,7 +25,7 @@ pretrained_cfgs = dict(
 
 secondary_model = dict(type='SecondaryDiffusionImageNet2')
 
-diffuser = dict(
+diffusion_scheduler = dict(
     type='DDIMScheduler',
     variance_type='learned_range',
     beta_schedule='linear',
@@ -40,7 +40,7 @@ clip_models = [
 model = dict(
     type='DiscoDiffusion',
     unet=unet,
-    diffuser=diffuser,
+    diffusion_scheduler=diffusion_scheduler,
     secondary_model=secondary_model,
     clip_models=clip_models,
     use_fp16=True,
