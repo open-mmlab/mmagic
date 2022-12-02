@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from sys import platform
+import platform
 
 import pytest
 import torch

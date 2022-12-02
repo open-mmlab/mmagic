@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from os.path import dirname, join
-from sys import platform
 
 import pytest
 import torch
