@@ -31,7 +31,7 @@ diffuser = dict(
     beta_schedule='linear',
     clip_sample=False)
 
-clip_models_cfg = [
+clip_models = [
     dict(type='ClipWrapper', clip_type='clip', name='ViT-B/32', jit=False),
     dict(type='ClipWrapper', clip_type='clip', name='ViT-B/16', jit=False),
     dict(type='ClipWrapper', clip_type='clip', name='RN50', jit=False)
@@ -42,6 +42,6 @@ model = dict(
     unet=unet,
     diffuser=diffuser,
     secondary_model=secondary_model,
-    clip_models_cfg=clip_models_cfg,
+    clip_models=clip_models,
     use_fp16=True,
     pretrained_cfgs=pretrained_cfgs)
