@@ -51,25 +51,27 @@ class TwoStageInpaintor(OneStageInpaintor):
             discriminator. Default: False.
     """
 
-    def __init__(self,
-                 data_preprocessor: Union[dict, Config],
-                 encdec: dict,
-                 disc: Optional[dict] = None,
-                 loss_gan: Optional[dict] = None,
-                 loss_gp: Optional[dict] = None,
-                 loss_disc_shift: Optional[dict] = None,
-                 loss_composed_percep: Optional[dict] = None,
-                 loss_out_percep: bool = False,
-                 loss_l1_hole: Optional[dict] = None,
-                 loss_l1_valid: Optional[dict] = None,
-                 loss_tv: Optional[dict] = None,
-                 train_cfg: Optional[dict] = None,
-                 test_cfg: Optional[dict] = None,
-                 init_cfg: Optional[dict] = None,
-                 stage1_loss_type: Optional[Sequence[str]] = ('loss_l1_hole', ),
-                 stage2_loss_type: Optional[Sequence[str]] = ('loss_l1_hole', 'loss_gan'),
-                 input_with_ones: bool = True,
-                 disc_input_with_mask: bool = False):
+    def __init__(
+            self,
+            data_preprocessor: Union[dict, Config],
+            encdec: dict,
+            disc: Optional[dict] = None,
+            loss_gan: Optional[dict] = None,
+            loss_gp: Optional[dict] = None,
+            loss_disc_shift: Optional[dict] = None,
+            loss_composed_percep: Optional[dict] = None,
+            loss_out_percep: bool = False,
+            loss_l1_hole: Optional[dict] = None,
+            loss_l1_valid: Optional[dict] = None,
+            loss_tv: Optional[dict] = None,
+            train_cfg: Optional[dict] = None,
+            test_cfg: Optional[dict] = None,
+            init_cfg: Optional[dict] = None,
+            stage1_loss_type: Optional[Sequence[str]] = ('loss_l1_hole', ),
+            stage2_loss_type: Optional[Sequence[str]] = ('loss_l1_hole',
+                                                         'loss_gan'),
+            input_with_ones: bool = True,
+            disc_input_with_mask: bool = False):
         super().__init__(
             data_preprocessor=data_preprocessor,
             encdec=encdec,
@@ -94,8 +96,7 @@ class TwoStageInpaintor(OneStageInpaintor):
         if self.train_cfg is not None:
             self.cur_iter = self.train_cfg.start_iter
 
-    def forward_tensor(self, inputs: torch.Tensor,
-                       data_samples: SampleList
+    def forward_tensor(self, inputs: torch.Tensor, data_samples: SampleList
                        ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Forward function in tensor mode.
 

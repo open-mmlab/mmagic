@@ -99,12 +99,12 @@ class OneStageInpaintor(BaseModel):
 
         self.disc_step_count = 0
 
-    def forward(self,
-                inputs: torch.Tensor,
-                data_samples: Optional[List[EditDataSample]],
-                mode: str = 'tensor'
-                ) -> Union[Tuple[torch.Tensor, torch.Tensor],
-                           List[EditDataSample]]:
+    def forward(
+        self,
+        inputs: torch.Tensor,
+        data_samples: Optional[List[EditDataSample]],
+        mode: str = 'tensor'
+    ) -> Union[Tuple[torch.Tensor, torch.Tensor], List[EditDataSample]]:
         """Forward function.
 
         Args:

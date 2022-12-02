@@ -83,7 +83,7 @@ class BasicInterpolator(BaseEditModel):
 
     @staticmethod
     def merge_frames(input_tensors: torch.Tensor,
-                     output_tensors: torch.Tensor) -> torch.Tensor:
+                     output_tensors: torch.Tensor) -> list:
         """merge input frames and output frames.
 
         Interpolate a frame between the given two frames.

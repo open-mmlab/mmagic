@@ -337,8 +337,7 @@ class ResNet(nn.Module):
 
         self._freeze_stages()
 
-    def _make_stem_layer(self, in_channels: int,
-                         stem_channels: int) -> None:
+    def _make_stem_layer(self, in_channels: int, stem_channels: int) -> None:
         """Make stem layer for ResNet."""
         if self.deep_stem:
             self.stem = nn.Sequential(

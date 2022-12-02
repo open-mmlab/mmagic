@@ -37,7 +37,8 @@ def _pad(batch_image: torch.Tensor,
 
 def _interpolate(batch_image: torch.Tensor,
                  ds_factor: int,
-                 mode: str = 'bicubic') -> Tuple[torch.Tensor, Tuple[int, int]]:
+                 mode: str = 'bicubic'
+                 ) -> Tuple[torch.Tensor, Tuple[int, int]]:
     """Resize image to multiple of give down-sampling factor."""
 
     h, w = batch_image.shape[-2:]  # NCHW
