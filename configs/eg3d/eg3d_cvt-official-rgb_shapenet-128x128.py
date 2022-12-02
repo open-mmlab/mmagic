@@ -46,12 +46,12 @@ metrics = [
         inception_pkl=inception_pkl,
         need_cond_input=True,
         sample_model='orig'),
-    # dict(
-    #     type='FID-Full',
-    #     prefix='FID-Random-Camera',
-    #     fake_nums=50000,
-    #     inception_pkl=inception_pkl,
-    #     sample_model='orig'),
+    dict(
+        type='FID-Full',
+        prefix='FID-Random-Camera',
+        fake_nums=50000,
+        inception_pkl=inception_pkl,
+        sample_model='orig'),
 ]
 
 test_pipeline = [
