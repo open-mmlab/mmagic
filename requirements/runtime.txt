@@ -2,6 +2,7 @@ av
 av==8.0.3; python_version < '3.7'
 face-alignment
 facexlib
+imageio-ffmpeg==0.4.4
 lmdb
 lpips
 mmcv>=2.0.0rc1
