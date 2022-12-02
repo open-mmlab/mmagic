@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .camera import GaussianCamera, UniformCamera
-from .eg3d import EG3D
 from .dual_discriminator import DualDiscriminator
+from .eg3d import EG3D
 from .eg3d_generator import TriplaneGenerator
 
 __all__ = [
