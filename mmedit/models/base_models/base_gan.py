@@ -57,7 +57,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             gen_args = dict()
             if noise_size:
                 gen_args['noise_size'] = noise_size
-            if hasattr(self, 'num_classes'):
+            if hasattr(self, 'num_classes') and self.num_classes is not None:
                 gen_args['num_classes'] = self.num_classes
             generator = MODULES.build(generator, default_args=gen_args)
         self.generator = generator

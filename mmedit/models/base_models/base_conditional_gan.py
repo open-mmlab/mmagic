@@ -204,7 +204,7 @@ class BaseConditionalGAN(BaseGAN):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
-            if isinstance(outputs, dict):
+            if sample_model == 'ema/orig':
                 gen_sample.ema = EditDataSample(
                     fake_img=PixelData(data=outputs['ema'][idx]),
                     sample_model='ema')

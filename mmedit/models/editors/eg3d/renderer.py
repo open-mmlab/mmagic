@@ -10,7 +10,7 @@ import torch.nn.functional as F
 from mmengine.model import BaseModule
 
 from ..stylegan3.stylegan3_modules import FullyConnectedLayer
-from .math_utils import (get_ray_limits_box, inverse_transform_sampling,
+from .eg3d_utils import (get_ray_limits_box, inverse_transform_sampling,
                          linspace_batch)
 
 

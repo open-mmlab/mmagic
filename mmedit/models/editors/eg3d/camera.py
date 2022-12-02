@@ -278,7 +278,7 @@ class BaseCamera(object):
         return camera2world
 
     def interpolation_cam2world(self,
-                                num_frames: int,
+                                num_images: int,
                                 h_mean: Optional[float] = None,
                                 v_mean: Optional[float] = None,
                                 h_std: Optional[float] = None,
@@ -293,7 +293,7 @@ class BaseCamera(object):
         list of camera-to-world matrix.
 
         Args:
-            num_frames (int): The number of frames in interpolation.
+            num_images (int): The number of images in interpolation.
             h_mean (Optional[float], optional): Mean of horizontal range in
                 radian. Defaults to None.
             v_mean (Optional[float], optional): Mean of vertical range in
@@ -330,9 +330,9 @@ class BaseCamera(object):
         up = up.to(device)
 
         cam2world_list = []
-        for idx in range(num_frames):
-            h = h_mean + h_std * math.sin(2 * math.pi / num_frames * idx)
-            v = v_mean + v_std * math.cos(2 * math.pi / num_frames * idx)
+        for idx in range(num_images):
+            h = h_mean + h_std * math.sin(2 * math.pi / num_images * idx)
+            v = v_mean + v_std * math.cos(2 * math.pi / num_images * idx)
             cam2world = self.sample_camera2world(
                 h_mean=h,
                 v_mean=v,
