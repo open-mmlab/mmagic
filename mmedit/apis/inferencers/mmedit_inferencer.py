@@ -6,6 +6,7 @@ import torch
 from mmedit.utils import ConfigType
 from .base_mmedit_inferencer import BaseMMEditInferencer
 from .conditional_inferencer import ConditionalInferencer
+from .eg3d_inferencer import EG3DInferencer
 from .inpainting_inferencer import InpaintingInferencer
 from .matting_inferencer import MattingInferencer
 from .restoration_inferencer import RestorationInferencer
@@ -24,41 +25,44 @@ class MMEditInferencer(BaseMMEditInferencer):
         ckpt (str, optional): Path to the checkpoint.
         device (str, optional): Device to run inference. If None, the best
             device will be automatically used.
+        seed (int): The random seed used in inference. Defaults to 2022.
     """
 
-    def __init__(
-        self,
-        task: Optional[str] = None,
-        config: Optional[Union[ConfigType, str]] = None,
-        ckpt: Optional[str] = None,
-        device: torch.device = None,
-        extra_parameters: Optional[Dict] = None,
-    ) -> None:
+    def __init__(self,
+                 task: Optional[str] = None,
+                 config: Optional[Union[ConfigType, str]] = None,
+                 ckpt: Optional[str] = None,
+                 device: torch.device = None,
+                 extra_parameters: Optional[Dict] = None,
+                 seed: int = 2022) -> None:
         self.task = task
         if self.task in ['conditional', 'Conditional GANs']:
-            self.inferencer = ConditionalInferencer(config, ckpt, device,
-                                                    extra_parameters)
+            self.inferencer = ConditionalInferencer(
+                config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['unconditional', 'Unconditional GANs']:
-            self.inferencer = UnconditionalInferencer(config, ckpt, device,
-                                                      extra_parameters)
+            self.inferencer = UnconditionalInferencer(
+                config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['matting', 'Matting']:
-            self.inferencer = MattingInferencer(config, ckpt, device,
-                                                extra_parameters)
+            self.inferencer = MattingInferencer(
+                config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['inpainting', 'Inpainting']:
-            self.inferencer = InpaintingInferencer(config, ckpt, device,
-                                                   extra_parameters)
+            self.inferencer = InpaintingInferencer(
+                config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['translation', 'Image2Image Translation']:
-            self.inferencer = TranslationInferencer(config, ckpt, device,
-                                                    extra_parameters)
+            self.inferencer = TranslationInferencer(
+                config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['restoration', 'Image Super-Resolution']:
-            self.inferencer = RestorationInferencer(config, ckpt, device,
-                                                    extra_parameters)
+            self.inferencer = RestorationInferencer(
+                config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['video_restoration', 'Video Super-Resolution']:
             self.inferencer = VideoRestorationInferencer(
-                config, ckpt, device, extra_parameters)
+                config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['video_interpolation', 'Video Interpolation']:
             self.inferencer = VideoInterpolationInferencer(
-                config, ckpt, device, extra_parameters)
+                config, ckpt, device, extra_parameters, seed=seed)
+        elif self.task in ['3D_aware_generation', '3D-aware Generation']:
+            self.inferencer = EG3DInferencer(
+                config, ckpt, device, extra_parameters, seed=seed)
         else:
             raise ValueError(f'Unknown inferencer task: {self.task}')
 

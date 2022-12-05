@@ -4,12 +4,13 @@ from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 import torch
-from mmengine.config import Config
+from mmengine.config import Config, ConfigDict
 from mmengine.runner import load_checkpoint
 from mmengine.structures import BaseDataElement
 
 from mmedit.registry import MODELS
 from mmedit.utils import ConfigType, SampleList
+from .inference_functions import set_random_seed
 
 InputType = Union[str, int, np.ndarray]
 InputsType = Union[InputType, Sequence[InputType]]
@@ -43,24 +44,28 @@ class BaseMMEditInferencer:
                  ckpt: Optional[str],
                  device: Optional[str] = None,
                  extra_parameters: Optional[Dict] = None,
+                 seed: int = 2022,
                  **kwargs) -> None:
         # Load config to cfg
         if isinstance(config, str):
-            cfg = Config.fromfile(config)
-        elif not isinstance(config, ConfigType):
+            config = Config.fromfile(config)
+        elif not isinstance(config, (ConfigDict, Config)):
             raise TypeError('config must be a filename or any ConfigType'
-                            f'object, but got {type(cfg)}')
-        self.cfg = cfg
-        if cfg.model.get('pretrained'):
-            cfg.model.pretrained = None
+                            f'object, but got {type(config)}')
+        self.cfg = config
+
+        if config.model.get('pretrained'):
+            config.model.pretrained = None
 
         if device is None:
             device = torch.device(
                 'cuda' if torch.cuda.is_available() else 'cpu')
         self.device = device
-        self._init_model(cfg, ckpt, device)
+        self._init_model(config, ckpt, device)
         self._init_extra_parameters(extra_parameters)
         self.base_params = self._dispatch_kwargs(**kwargs)
+        self.seed = seed
+        set_random_seed(self.seed)
 
     def _init_model(self, cfg: Union[ConfigType, str], ckpt: Optional[str],
                     device: str) -> None:
@@ -97,6 +102,7 @@ class BaseMMEditInferencer:
 
         return results
 
+    @torch.no_grad()
     def __call__(self, **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.
 

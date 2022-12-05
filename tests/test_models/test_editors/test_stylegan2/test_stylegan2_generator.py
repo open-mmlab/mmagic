@@ -24,6 +24,15 @@ class TestStyleGAN2Generator:
         res = g(None, num_batches=2)
         assert res.shape == (2, 3, 64, 64)
 
+        # test truncation_latent is None
+        assert not hasattr(g, 'truncation_latent')
+        res = g(None, num_batches=2, truncation=0.9)
+        assert res.shape == (2, 3, 64, 64)
+        assert hasattr(g, 'truncation_latent')
+        assert g.truncation_latent.shape == (1, 16)
+        res = g(None, num_batches=2, truncation=0.9)
+        assert res.shape == (2, 3, 64, 64)
+
         truncation_mean = g.get_mean_latent()
         res = g(
             None,
@@ -83,6 +92,66 @@ class TestStyleGAN2Generator:
         g.mix_prob = 0
         res = g(None, num_batches=2)
 
+        # test cond channels is negative number
+        cfg_ = deepcopy(self.default_cfg)
+        cfg_['cond_size'] = -1
+        g = StyleGAN2Generator(**cfg_)
+        assert not hasattr(g, 'embed')
+
+        # test cond channels > 0
+        cfg_ = deepcopy(self.default_cfg)
+        cfg_['cond_size'] = 10
+        g = StyleGAN2Generator(**cfg_)
+        assert hasattr(g, 'embed')
+        assert hasattr(g, 'w_avg')
+        # test raise error
+        with pytest.raises(AssertionError):
+            g(None, num_batches=2)
+        res = g(None, num_batches=2, label=torch.randn(2, 10))
+        assert res.shape == (2, 3, 64, 64)
+
+        # test update_mean_latent_with_ema
+        cfg_ = deepcopy(self.default_cfg)
+        cfg_['update_mean_latent_with_ema'] = True
+        g = StyleGAN2Generator(**cfg_)
+        assert hasattr(g, 'w_avg')
+        # test get_mean_latent
+        mean_latent = g.get_mean_latent().clone()  # copy for test
+        assert mean_latent.shape == (16, )
+        assert (mean_latent == 0).all()
+
+        # test update w_avg with ema
+        g.eval()
+        res = g(
+            None,
+            num_batches=1,
+            injected_noise=None,
+            randomize_noise=False,
+            update_ws=True)
+        mean_latent_test = g.get_mean_latent().clone()  # copy for test
+        # should not be update in test
+        assert (mean_latent_test == mean_latent).all()
+
+        g.train()
+        res = g(
+            None,
+            num_batches=1,
+            injected_noise=None,
+            randomize_noise=False,
+            update_ws=True)
+        mean_latent_train = g.get_mean_latent().clone()  # copy for test
+        # should be update in train
+        assert (mean_latent_train != mean_latent).any()
+
+        res = g(
+            None,
+            num_batches=1,
+            injected_noise=None,
+            randomize_noise=False,
+            update_ws=False)
+        mean_latent_no_update = g.get_mean_latent().clone()  # copy for test
+        assert (mean_latent_train == mean_latent_no_update).all()
+
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_g_cuda(self):
         # test default config
@@ -136,3 +205,20 @@ class TestStyleGAN2Generator:
         res = g(None, num_batches=2)
         g.mix_prob = 0
         res = g(None, num_batches=2)
+
+        # test cond channels is negative number
+        cfg_ = deepcopy(self.default_cfg)
+        cfg_['cond_size'] = -1
+        g = StyleGAN2Generator(**cfg_)
+        assert not hasattr(g, 'embed')
+
+        # test cond channels > 0
+        cfg_ = deepcopy(self.default_cfg)
+        cfg_['cond_size'] = 10
+        g = StyleGAN2Generator(**cfg_)
+        assert hasattr(g, 'embed')
+        # test raise error
+        with pytest.raises(AssertionError):
+            g(None, num_batches=2)
+        res = g(None, num_batches=2, label=torch.randn(2, 10))
+        assert res.shape == (2, 3, 64, 64)

@@ -173,6 +173,14 @@ python mmediting_inference_demo.py \
         --result-out-dir ../resources/output/video_restoration/demo_video_restoration_edvr_res.mp4
 ```
 
+#### 2.2.9 3D-aware Generation (EG3D)
+
+```shell
+python demo/mmediting_inference_demo.py \
+    --model-name eg3d \
+    --result-out-dir ../resources/output/eg3d-output
+```
+
 ## 3. Other demos
 
 These demos are duplicated with mmedting_inference_demo.py and may be removed in the future.

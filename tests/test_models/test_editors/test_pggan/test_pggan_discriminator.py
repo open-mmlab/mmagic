@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import pytest
 import torch
 
@@ -14,6 +16,9 @@ class TestPGGANDiscriminator:
         cls.default_inputx4 = torch.randn((2, 3, 4, 4))
         cls.default_inputx8 = torch.randn((2, 3, 8, 8))
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_pggan_discriminator(self):
         # test with default cfg
         disc = PGGANDiscriminator(**self.default_cfg)

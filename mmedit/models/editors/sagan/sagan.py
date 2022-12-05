@@ -27,9 +27,9 @@ class SAGAN(BaseConditionalGAN):
     <https://arxiv.org/abs/1802.05637>`_ (Proj-GAN).
 
     Detailed architecture can be found in
-    :class:~`mmgen.models.architectures.sngan_proj.generator_discriminator.SNGANGenerator`  # noqa
+    :class:~`mmedit.models.editors.sagan.sagan_generator.SNGANGenerator`  # noqa
     and
-    :class:~`mmgen.models.architectures.sngan_proj.generator_discriminator.ProjDiscriminator`  # noqa
+    :class:~`mmedit.models.editors.sagan.sagan_discriminator.ProjDiscriminator`  # noqa
 
     Args:
         generator (ModelType): The config or model of the generator.

@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 # yapf: disable
-from .inference_functions import (colorization_inference, delete_cfg,
-                                  init_model, inpainting_inference,
+from .inference_functions import (calculate_grid_size, colorization_inference,
+                                  delete_cfg, init_model, inpainting_inference,
                                   matting_inference,
                                   restoration_face_inference,
                                   restoration_inference,
@@ -19,5 +19,5 @@ __all__ = [
     'restoration_video_inference', 'restoration_face_inference',
     'video_interpolation_inference', 'sample_conditional_model',
     'sample_unconditional_model', 'sample_img2img_model',
-    'colorization_inference'
+    'colorization_inference', 'calculate_grid_size'
 ]

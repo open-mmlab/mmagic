@@ -10,14 +10,17 @@ Import:
 - configs/deepfillv2/metafile.yml
 - configs/dic/metafile.yml
 - configs/dim/metafile.yml
+- configs/disco_diffusion/metafile.yml
 - configs/edsr/metafile.yml
 - configs/edvr/metafile.yml
+- configs/eg3d/metafile.yml
 - configs/esrgan/metafile.yml
 - configs/flavr/metafile.yml
 - configs/gca/metafile.yml
 - configs/ggan/metafile.yml
 - configs/glean/metafile.yml
 - configs/global_local/metafile.yml
+- configs/guided_diffusion/metafile.yml
 - configs/iconvsr/metafile.yml
 - configs/indexnet/metafile.yml
 - configs/inst_colorization/metafile.yml

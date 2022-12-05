@@ -64,6 +64,9 @@ class MMEdit:
 
         # video_restoration models
         'edvr',
+
+        # 3D-aware generation
+        'eg3d',
     ]
 
     inference_supported_models_cfg = {}
@@ -76,6 +79,7 @@ class MMEdit:
                  model_ckpt: str = None,
                  device: torch.device = None,
                  extra_parameters: Dict = None,
+                 seed: int = 2022,
                  **kwargs) -> None:
         register_all_modules(init_default_scope=True)
         MMEdit.init_inference_supported_models_cfg()
@@ -84,7 +88,8 @@ class MMEdit:
             self._get_inferencer_kwargs(model_name, model_setting,
                                         model_config, model_ckpt,
                                         extra_parameters))
-        self.inferencer = MMEditInferencer(device=device, **inferencer_kwargs)
+        self.inferencer = MMEditInferencer(
+            device=device, seed=seed, **inferencer_kwargs)
 
     def _get_inferencer_kwargs(self, model_name: Optional[str],
                                model_setting: Optional[int],
@@ -110,14 +115,14 @@ class MMEdit:
             if kwargs.get('config', None) is not None:
                 warnings.warn(
                     f'{model_name}\'s default config '
-                    'is overridden by {model_config}', UserWarning)
+                    f'is overridden by {model_config}', UserWarning)
             kwargs['config'] = model_config
 
         if model_ckpt is not None:
             if kwargs.get('ckpt', None) is not None:
                 warnings.warn(
                     f'{model_name}\'s default checkpoint '
-                    'is overridden by {model_ckpt}', UserWarning)
+                    f'is overridden by {model_ckpt}', UserWarning)
             kwargs['ckpt'] = model_ckpt
 
         if extra_parameters is not None:

@@ -128,9 +128,12 @@ class MappingNetwork(nn.Module):
 
     Args:
         noise_size (int, optional): Size of the input noise vector.
-        c_dim (int, optional): Size of the input noise vector.
         style_channels (int): The number of channels for style code.
-        num_ws (int): The repeat times of w latent.
+        num_ws (int | None): The repeat times of w latent. If None is passed,
+            the output will shape like (batch_size, 1), otherwise the output
+            will shape like (bz, num_ws, 1).
+        cond_size (int, optional): Size of the conditional input.
+            Defaults to None.
         num_layers (int, optional): The number of layers of mapping network.
             Defaults to 2.
         lr_multiplier (float, optional): Equalized learning rate multiplier.
@@ -143,23 +146,26 @@ class MappingNetwork(nn.Module):
                  noise_size,
                  style_channels,
                  num_ws,
-                 c_dim=0,
+                 cond_size=0,
                  num_layers=2,
                  lr_multiplier=0.01,
                  w_avg_beta=0.998):
         super().__init__()
         self.noise_size = noise_size
-        self.c_dim = c_dim
+        self.cond_size = cond_size
         self.style_channels = style_channels
         self.num_ws = num_ws
         self.num_layers = num_layers
         self.w_avg_beta = w_avg_beta
 
         # Construct layers.
-        self.embed = FullyConnectedLayer(
-            self.c_dim, self.style_channels) if self.c_dim > 0 else None
+        if self.cond_size is not None and self.cond_size > 0:
+            self.embed = FullyConnectedLayer(self.cond_size,
+                                             self.style_channels)
+
         features = [
-            self.noise_size + (self.style_channels if self.c_dim > 0 else 0)
+            self.noise_size +
+            (self.style_channels if self.cond_size > 0 else 0)
         ] + [self.style_channels] * self.num_layers
         for idx, in_features, out_features in zip(
                 range(num_layers), features[:-1], features[1:]):
@@ -169,11 +175,12 @@ class MappingNetwork(nn.Module):
                 activation='lrelu',
                 lr_multiplier=lr_multiplier)
             setattr(self, f'fc{idx}', layer)
-        self.register_buffer('w_avg', torch.zeros([style_channels]))
+        if w_avg_beta is not None:
+            self.register_buffer('w_avg', torch.zeros([style_channels]))
 
     def forward(self,
                 z,
-                c=None,
+                label=None,
                 truncation=1,
                 num_truncation_layer=None,
                 update_emas=False):
@@ -181,7 +188,8 @@ class MappingNetwork(nn.Module):
 
         Args:
             z (torch.Tensor): Input noise tensor.
-            c (torch.Tensor, optional): Input label tensor. Defaults to None.
+            label (torch.Tensor, optional): The conditional input.
+                Defaults to None.
             truncation (float, optional): Truncation factor. Give value less
                 than 1., the truncation trick will be adopted. Defaults to 1.
             num_truncation_layer (int, optional): Number of layers use
@@ -196,11 +204,16 @@ class MappingNetwork(nn.Module):
         if num_truncation_layer is None:
             num_truncation_layer = self.num_ws
 
+        x = None
         # Embed, normalize, and concatenate inputs.
-        x = z.to(torch.float32)
-        x = x * (x.square().mean(1, keepdim=True) + 1e-8).rsqrt()
-        if self.c_dim > 0:
-            y = self.embed(c.to(torch.float32))
+        if self.noise_size > 0:
+            assert z is not None, (
+                '\'z\' must be passed since \'self.noise_size\''
+                f'({self.noise_size}) larger than 0.')
+            x = z.to(torch.float32)
+            x = x * (x.square().mean(1, keepdim=True) + 1e-8).rsqrt()
+        if self.cond_size > 0:
+            y = self.embed(label.to(torch.float32))
             y = y * (y.square().mean(1, keepdim=True) + 1e-8).rsqrt()
             x = torch.cat([x, y], dim=1) if x is not None else y
 
@@ -209,15 +222,21 @@ class MappingNetwork(nn.Module):
             x = getattr(self, f'fc{idx}')(x)
 
         # Update moving average of W.
-        if update_emas:
+        if update_emas and self.w_avg_beta is not None:
             self.w_avg.copy_(x.detach().mean(
                 dim=0).lerp(self.w_avg, self.w_avg_beta))
 
         # Broadcast and apply truncation.
-        x = x.unsqueeze(1).repeat([1, self.num_ws, 1])
+        if self.num_ws is not None:
+            x = x.unsqueeze(1).repeat([1, self.num_ws, 1])
         if truncation != 1:
-            x[:, :num_truncation_layer] = self.w_avg.lerp(
-                x[:, :num_truncation_layer], truncation)
+            assert hasattr(self, 'w_avg'), (
+                '\'w_avg\' must not be None when truncation trick is used.')
+            if num_truncation_layer is None:
+                x = self.w_avg.lerp(x, truncation)
+            else:
+                x[:, :num_truncation_layer] = self.w_avg.lerp(
+                    x[:, :num_truncation_layer], truncation)
         return x
 
 
