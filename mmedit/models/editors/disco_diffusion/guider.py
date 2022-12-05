@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
-from argparse import Namespace
 
 import clip
 import lpips
@@ -13,7 +12,7 @@ import torchvision.transforms as T
 import torchvision.transforms.functional as TF
 from resize_right import resize
 
-from mmedit.models.losses import range_loss, spherical_dist_loss, tv_loss
+from mmedit.models.losses import tv_loss
 from .secondary_model import alpha_sigma_to_t
 
 normalize = T.Normalize(
@@ -96,6 +95,18 @@ def resample(input, size, align_corners=True):
     input = input.reshape([n, c, h, w])
     return F.interpolate(
         input, size, mode='bicubic', align_corners=align_corners)
+
+
+def range_loss(input):
+    """range loss."""
+    return (input - input.clamp(-1, 1)).pow(2).mean([1, 2, 3])
+
+
+def spherical_dist_loss(x, y):
+    """spherical distance loss."""
+    x = F.normalize(x, dim=-1)
+    y = F.normalize(y, dim=-1)
+    return (x - y).norm(dim=-1).div(2).arcsin().pow(2).mul(2)
 
 
 class MakeCutouts(nn.Module):
@@ -360,7 +371,7 @@ class ImageTextGuider(nn.Module):
 
     def cond_fn(self,
                 model,
-                diffuser,
+                diffusion_scheduler,
                 x,
                 t,
                 beta_prod_t,
@@ -374,17 +385,16 @@ class ImageTextGuider(nn.Module):
                 tv_scale=0.,
                 sat_scale=0.,
                 range_scale=150,
-                cut_overview=[12]*400+[4]*600,
-                cut_innercut=[4]*400+[12]*600,
-                cut_ic_pow=[1]*1000,
-                cut_icgray_p=[0.2]*400+[0]*600,
-                cutn_batches=4
-                ):
+                cut_overview=[12] * 400 + [4] * 600,
+                cut_innercut=[4] * 400 + [12] * 600,
+                cut_ic_pow=[1] * 1000,
+                cut_icgray_p=[0.2] * 400 + [0] * 600,
+                cutn_batches=4):
         """Clip guidance function.
 
         Args:
             model (nn.Module): _description_
-            diffuser (object): _description_
+            diffusion_scheduler (object): _description_
             x (torch.Tensor): _description_
             t (int): _description_
             beta_prod_t (torch.Tensor): _description_
@@ -407,9 +417,11 @@ class ImageTextGuider(nn.Module):
             n = x.shape[0]
             if secondary_model is not None:
                 alpha = torch.tensor(
-                    diffuser.alphas_cumprod[t]**0.5, dtype=torch.float32)
+                    diffusion_scheduler.alphas_cumprod[t]**0.5,
+                    dtype=torch.float32)
                 sigma = torch.tensor(
-                    (1 - diffuser.alphas_cumprod[t])**0.5, dtype=torch.float32)
+                    (1 - diffusion_scheduler.alphas_cumprod[t])**0.5,
+                    dtype=torch.float32)
                 cosine_t = alpha_sigma_to_t(alpha, sigma).to(x.device)
                 model_output = secondary_model(
                     x, cosine_t[None].repeat([x.shape[0]]))
@@ -421,8 +433,8 @@ class ImageTextGuider(nn.Module):
                 alpha_prod_t = 1 - beta_prod_t
                 pred_original_sample = (x - beta_prod_t**(0.5) *
                                         model_output) / alpha_prod_t**(0.5)
-            # fac = diffuser_output['beta_prod_t']** (0.5)
-            # x_in = diffuser_output['original_sample'] * fac + x * (1 - fac)
+            # fac = diffusion_scheduler_output['beta_prod_t']** (0.5)
+            # x_in = diffusion_scheduler_output['original_sample'] * fac + x * (1 - fac) # noqa
             fac = beta_prod_t**(0.5)
             x_in = pred_original_sample * fac + x * (1 - fac)
             x_in_grad = torch.zeros_like(x_in)
@@ -459,8 +471,7 @@ class ImageTextGuider(nn.Module):
             range_losses = range_loss(pred_original_sample)
             sat_losses = torch.abs(x_in - x_in.clamp(min=-1, max=1)).mean()
             loss = tv_losses.sum() * tv_scale + range_losses.sum(
-            ) * range_scale + sat_losses.sum(
-            ) * sat_scale
+            ) * range_scale + sat_losses.sum() * sat_scale
             if init_image is not None and init_scale:
                 init_losses = self.lpips_model(x_in, init_image)
                 loss = loss + init_losses.sum() * init_scale
@@ -485,4 +496,5 @@ class ImageTextGuider(nn.Module):
         return next(self.parameters()).device
 
     def forward(self, x):
+        """forward function."""
         raise NotImplementedError('No forward function for disco guider')

@@ -5,6 +5,12 @@ import numpy as np
 
 
 def betas_for_alpha_bar(num_diffusion_timesteps, max_beta=0.999):
+    """Create a beta schedule that discretizes the given alpha_t_bar
+    function, which defines the cumulative product of
+    (1-beta) over time from t = [0,1].
+
+    Source: https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddim.py#L49 # noqa
+    """
 
     def alpha_bar(time_step):
         return math.cos((time_step + 0.008) / 1.008 * math.pi / 2)**2

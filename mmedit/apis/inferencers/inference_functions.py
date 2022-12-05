@@ -22,6 +22,9 @@ from mmedit.models.base_models import BaseTranslationModel
 from mmedit.registry import MODELS
 from mmedit.utils import register_all_modules
 
+VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
+FILE_CLIENT = FileClient('disk')
+
 
 def set_random_seed(seed, deterministic=False, use_rank_shift=True):
     """Set random seed.
@@ -511,9 +514,6 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
     return restored_img
 
 
-VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
-
-
 def pad_sequence(data, window_size):
     """Pad frame sequence data.
 
@@ -636,10 +636,6 @@ def restoration_video_inference(model,
                             mode='tensor').cpu())
                 result = torch.cat(result, dim=1)
     return result
-
-
-VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
-FILE_CLIENT = FileClient('disk')
 
 
 def read_image(filepath):
@@ -867,3 +863,33 @@ def colorization_inference(model, img):
         result = model(mode='tensor', **data)
 
     return result
+
+
+def calculate_grid_size(num_batches: int = 1, aspect_ratio: int = 1) -> int:
+    """Calculate the number of images per row (nrow) to make the grid closer to
+    square when formatting a batch of images to grid.
+
+    Args:
+        num_batches (int, optional): Number of images per batch. Defaults to 1.
+        aspect_ratio (int, optional): The aspect ratio (width / height) of
+            each image sample. Defaults to 1.
+
+    Returns:
+        int: Calculated number of images per row.
+    """
+    curr_ncol, curr_nrow = 1, num_batches
+    curr_delta = curr_nrow * aspect_ratio - curr_ncol
+
+    nrow = curr_nrow
+    delta = curr_delta
+
+    while curr_delta > 0:
+
+        curr_ncol += 1
+        curr_nrow = math.ceil(num_batches / curr_ncol)
+
+        curr_delta = curr_nrow * aspect_ratio - curr_ncol
+        if curr_delta < delta and curr_delta >= 0:
+            nrow, delta = curr_nrow, curr_delta
+
+    return nrow
