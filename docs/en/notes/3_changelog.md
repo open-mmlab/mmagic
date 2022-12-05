@@ -1,5 +1,46 @@
 # Changelog
 
+## v1.0.0rc4 (05/12/2022)
+
+**Highlights**
+
+We are excited to announce the release of MMEditing 1.0.0rc4. This release supports 45+ models, 176+ configs and 175+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
+
+- Support High-level APIs.
+- Support diffusion models.
+- Support Text2Image Task.
+- Support 3D-Aware Generation.
+
+**New Features & Improvements**
+
+- Refactor high-level APIs. (#1410)
+- Support disco-diffusion text-2-image. (#1234, #1504)
+- Support EG3D. (#1482, #1493, #1494, #1499)
+- Support NAFNet model. (#1369)
+
+**Bug Fixes**
+
+- fix srgan train config. (#1441)
+- fix cain config. (#1404)
+- fix rdn and srcnn train configs. (#1392)
+- Revise config and pretrain model loading in esrgan. (#1407)
+
+**Contributors**
+A total of 14 developers contributed to this release.
+Thanks @plyfager, @LeoXing1996, @Z-Fran, @zengyh1900, @VongolaWu, @gaoyang07, @ChangjianZhao, @zxczrx123, @jackghosts, @liuwenran, @CCODING04, @RoseZhao929, @shaocongliu, @liangzelong.
+
+**New Contributors**
+
+- @gaoyang07 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1372
+- @ChangjianZhao made their first contribution in https://github.com/open-mmlab/mmediting/pull/1461
+- @zxczrx123 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1462
+- @jackghosts made their first contribution in https://github.com/open-mmlab/mmediting/pull/1463
+- @liuwenran made their first contribution in https://github.com/open-mmlab/mmediting/pull/1410
+- @CCODING04 made their first contribution in https://github.com/open-mmlab/mmediting/pull/783
+- @RoseZhao929 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1474
+- @shaocongliu made their first contribution in https://github.com/open-mmlab/mmediting/pull/1470
+- @liangzelong made their first contribution in https://github.com/open-mmlab/mmediting/pull/1488
+
 ## v1.0.0rc3 (03/11/2022)
 
 **Highlights**

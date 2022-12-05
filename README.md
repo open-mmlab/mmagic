@@ -104,6 +104,11 @@ hope MMEditing could provide better experience.
 
 ## What's New
 
+### 🎉 Support two more kinds of tasks!!!
+
+- Support Text2Image Task![Disco-Diffusion](configs/disco_diffusion/README.md)
+- Support 3D-aware Generation Task![EG3D](configs/eg3d/README.md)
+
 ### 🌟 Preview of 1.x version
 
 A brand new version of [**MMEditing v1.0.0rc3**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc3) was released in 09/11/2022:
@@ -263,6 +268,21 @@ Supported algorithms:
 <summary>Internal Learning</summary>
 
 - ✅ [SinGAN](configs/singan/README.md) (ICCV'2019)
+
+</details>
+
+<details open>
+<summary>Text2Image</summary>
+
+- ✅ [Disco-Diffusion](configs/disco_diffusion/README.md)
+
+</details>
+
+<details open>
+
+<summary>3D-aware Generation</summary>
+
+- ✅ [EG3D](configs/eg3d/README.md)
 
 </details>
 

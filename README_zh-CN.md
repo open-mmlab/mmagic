@@ -103,6 +103,11 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 最新进展
 
+### 🎉 支持了两个新任务!!!
+
+- 支持了图文生成任务![Disco-Diffusion](configs/disco_diffusion/README.md)
+- 支持了3D级图像生成任务![EG3D](configs/eg3d/README.md)
+
 ### 🌟 1.x 预览版本
 
 全新的 [**MMEditing v1.0.0rc3**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc3) 已经在 09/11/2022 发布:
@@ -261,6 +266,21 @@ pip3 install -e .
 <summary>Internal Learning</summary>
 
 - ✅ [SinGAN](configs/singan/README.md) (ICCV'2019)
+
+</details>
+
+<details open>
+<summary>Text2Image</summary>
+
+- ✅ [Disco-Diffusion](configs/disco_diffusion/README.md)
+
+</details>
+
+<details open>
+
+<summary>3D-aware Generation</summary>
+
+- ✅ [EG3D](configs/eg3d/README.md)
 
 </details>
 
