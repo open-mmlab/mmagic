@@ -20,7 +20,8 @@ def test_translation_inferencer():
         osp.dirname(__file__), '..', '..', 'data', 'disco_result.png')
 
     inferencer_instance = \
-        Text2ImageInferencer(cfg, None, extra_parameters={'num_inference_steps':2})
+        Text2ImageInferencer(
+            cfg, None, extra_parameters={'num_inference_steps': 2})
     inferencer_instance(text=text)
     inference_result = inferencer_instance(
         text=text, result_out_dir=result_out_dir)
