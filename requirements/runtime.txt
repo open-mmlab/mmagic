@@ -18,3 +18,4 @@ resize_right
 tensorboard
 torch
 torchvision
+einops
