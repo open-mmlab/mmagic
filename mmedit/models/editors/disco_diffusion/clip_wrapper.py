@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
+from mmengine import print_log
 
 from mmedit.registry import MODELS
 
@@ -66,6 +67,7 @@ class ClipWrapper(nn.Module):
                 raise ImportError(
                     'clip need to be installed! Run `pip install -r requirements/optional.txt` and try again'  # noqa
                 )  # noqa
+            print_log(f'Creating {kwargs["name"]} by OpenAI', 'current')
             self.model, _ = clip.load(*args, **kwargs)
         elif clip_type == 'open_clip':
             try:
@@ -74,6 +76,9 @@ class ClipWrapper(nn.Module):
                 raise ImportError(
                     'open_clip_torch need to be installed! Run `pip install -r requirements/optional.txt` and try again'  # noqa
                 )  # noqa
+            print_log(
+                f'Creating {kwargs["model_name"]} by mlfoundations',  # noqa
+                'current')
             self.model = open_clip.create_model(*args, **kwargs)
         self.model.eval().requires_grad_(False)
 
