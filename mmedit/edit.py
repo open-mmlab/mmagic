@@ -65,6 +65,9 @@ class MMEdit:
         # video_restoration models
         'edvr',
 
+        # text2image models
+        'disco_diffusion',
+
         # 3D-aware generation
         'eg3d',
     ]
