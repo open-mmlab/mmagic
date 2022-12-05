@@ -24,18 +24,18 @@ Created by Somnai, augmented by Gandamu, and building on the work of RiversHaveW
 
 We have converted several `unet` weights and offer related configs. Or usage of different `unet`, please refer to tutorial.
 
-| Diffusion Model                          | Config                                                                      | Download                                                                               |
-| :--------------------------------------: | :-------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: |
+|             Diffusion Model              |                                   Config                                    |                                       Download                                        |
+| :--------------------------------------: | :-------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------: |
 | 512x512_diffusion_uncond_finetune_008100 | [config](configs/disco/disco-diffusion_adm-u-finetuned_imagenet-512x512.py) | [model](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth) |
-| 256x256_diffusion_uncond                 | [config](configs/disco/disco-diffusion_adm-u-finetuned_imagenet-256x256.py) | [model](<>)                                                                         |
-| portrait_generator_v001                  | [config](configs/disco/disco-diffusion_portrait_generator_v001.py)          | [model](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth) |
-| pixelartdiffusion_expanded               | Coming soon!                                                                |                                                                                       |
-| pixel_art_diffusion_hard_256             | Coming soon!                                                                |                                                                                       |
-| pixel_art_diffusion_soft_256             | Coming soon!                                                                |                                                                                       |
-| pixelartdiffusion4k                      | Coming soon!                                                                |                                                                                       |
-| watercolordiffusion_2                    | Coming soon!                                                                |                                                                                       |
-| watercolordiffusion                      | Coming soon!                                                                |                                                                                       |
-| PulpSciFiDiffusion                       | Coming soon!                                                                |                                                                                       |
+|         256x256_diffusion_uncond         | [config](configs/disco/disco-diffusion_adm-u-finetuned_imagenet-256x256.py) |                                      [model](<>)                                      |
+|         portrait_generator_v001          |     [config](configs/disco/disco-diffusion_portrait_generator_v001.py)      | [model](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth) |
+|        pixelartdiffusion_expanded        |                                Coming soon!                                 |                                                                                       |
+|       pixel_art_diffusion_hard_256       |                                Coming soon!                                 |                                                                                       |
+|       pixel_art_diffusion_soft_256       |                                Coming soon!                                 |                                                                                       |
+|           pixelartdiffusion4k            |                                Coming soon!                                 |                                                                                       |
+|          watercolordiffusion_2           |                                Coming soon!                                 |                                                                                       |
+|           watercolordiffusion            |                                Coming soon!                                 |                                                                                       |
+|            PulpSciFiDiffusion            |                                Coming soon!                                 |                                                                                       |
 
 ## To-do List
 
