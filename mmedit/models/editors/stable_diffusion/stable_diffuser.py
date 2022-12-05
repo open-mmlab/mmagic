@@ -214,7 +214,6 @@ class StableDiffuser(ConfigMixin):
             new_config["sample_size"] = 64
             unet._internal_dict = FrozenDict(new_config)
 
-        import pdb;pdb.set_trace();
         self.register_modules(
             vae=vae,
             text_encoder=text_encoder,
