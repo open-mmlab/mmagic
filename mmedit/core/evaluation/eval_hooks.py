@@ -69,7 +69,7 @@ class EvalIterHook(Hook):
         # evaluate feature-based metrics
         features = eval_res.pop('_inception_feat', None)
         # define self._feature_based_metric = ['FID', 'KID']
-        # # at the start of this class
+        # at the start of this class
         for metric in self._feature_based_metric:
             if metric in eval_res:
                 # since there is no parameters or network in FID and KID,
