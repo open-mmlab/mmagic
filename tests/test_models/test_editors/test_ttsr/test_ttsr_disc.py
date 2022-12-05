@@ -1,9 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+
+import platform
+
+import pytest
 import torch
 
 from mmedit.models import TTSRDiscriminator
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_ttsr_dict():
     net = TTSRDiscriminator(in_channels=3, in_size=160)
     # cpu
