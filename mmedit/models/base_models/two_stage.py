@@ -3,6 +3,7 @@ from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import torch
 from mmengine.config import Config
+from mmengine.optim import OptimWrapperDict
 
 from mmedit.registry import MODELS
 from mmedit.utils import SampleList
@@ -220,7 +221,7 @@ class TwoStageInpaintor(OneStageInpaintor):
         return loss_dict
 
     def train_step(self, data: List[dict],
-                   optim_wrapper: Dict[str, torch.optim.Optimizer]) -> dict:
+                   optim_wrapper: OptimWrapperDict) -> dict:
         """Train step function.
 
         In this function, the inpaintor will finish the train step following

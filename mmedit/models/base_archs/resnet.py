@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Optional, Sequence
+from typing import List, Optional, Sequence
 
 import torch.nn as nn
 import torch.utils.checkpoint as cp
@@ -77,10 +77,10 @@ class BasicBlock(nn.Module):
         """nn.Module: normalization layer after the second convolution layer"""
         return getattr(self, self.norm2_name)
 
-    def forward(self, x: Tensor) -> nn.Module:
+    def forward(self, x: Tensor) -> Tensor:
         """Forward function."""
 
-        def _inner_forward(x: Tensor) -> nn.Module:
+        def _inner_forward(x: Tensor) -> Tensor:
             identity = x
 
             out = self.conv1(x)
@@ -202,7 +202,7 @@ class Bottleneck(nn.Module):
         """nn.Module: normalization layer after the second convolution layer"""
         return getattr(self, self.norm3_name)
 
-    def forward(self, x: Tensor) -> nn.Module:
+    def forward(self, x: Tensor) -> Tensor:
         identity = x
 
         out = self.conv1(x)
@@ -493,7 +493,7 @@ class ResNet(nn.Module):
             for param in m.parameters():
                 param.requires_grad = False
 
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x: Tensor) -> List[Tensor]:
         """Forward function.
 
         Args:

@@ -4,11 +4,15 @@ from typing import Dict, List, Optional, Tuple, Union
 import torch
 from mmengine.config import Config
 from mmengine.model import BaseModel
+from mmengine.optim import OptimWrapperDict
 
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import SampleList
 from ..utils import set_requires_grad
+
+FORWARD_RETURN_TYPE = Union[dict, torch.Tensor,
+                            Tuple[torch.Tensor, torch.Tensor], SampleList]
 
 
 @MODELS.register_module()
@@ -100,12 +104,10 @@ class OneStageInpaintor(BaseModel):
 
         self.disc_step_count = 0
 
-    def forward(
-        self,
-        inputs: torch.Tensor,
-        data_samples: Optional[SampleList],
-        mode: str = 'tensor'
-    ) -> Union[Tuple[torch.Tensor, torch.Tensor], SampleList]:
+    def forward(self,
+                inputs: torch.Tensor,
+                data_samples: Optional[SampleList],
+                mode: str = 'tensor') -> FORWARD_RETURN_TYPE:
         """Forward function.
 
         Args:
@@ -151,7 +153,7 @@ class OneStageInpaintor(BaseModel):
             raise ValueError('Invalid forward mode.')
 
     def train_step(self, data: List[dict],
-                   optim_wrapper: Dict[str, torch.optim.Optimizer]) -> dict:
+                   optim_wrapper: OptimWrapperDict) -> dict:
         """Train step function.
 
         In this function, the inpaintor will finish the train step following

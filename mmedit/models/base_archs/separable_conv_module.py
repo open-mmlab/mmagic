@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Optional, Union
+from typing import Optional, Tuple, Union
 
 import torch.nn as nn
 from mmcv.cnn import ConvModule
@@ -44,10 +44,10 @@ class DepthwiseSeparableConvModule(nn.Module):
     def __init__(self,
                  in_channels: int,
                  out_channels: int,
-                 kernel_size: Union[int, tuple[int]],
-                 stride: Union[int, tuple[int]] = 1,
-                 padding: Union[int, tuple[int]] = 0,
-                 dilation: Union[int, tuple[int]] = 1,
+                 kernel_size: Union[int, Tuple[int, int]],
+                 stride: Union[int, Tuple[int, int]] = 1,
+                 padding: Union[int, Tuple[int, int]] = 0,
+                 dilation: Union[int, Tuple[int, int]] = 1,
                  norm_cfg: Optional[dict] = None,
                  act_cfg: Optional[dict] = dict(type='ReLU'),
                  dw_norm_cfg: Union[dict, str] = 'default',
