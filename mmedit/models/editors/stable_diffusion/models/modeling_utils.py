@@ -27,7 +27,7 @@ from requests import HTTPError
 
 __version__ = 1.5
 
-from .utils import (
+from ..utils import (
     CONFIG_NAME,
     DIFFUSERS_CACHE,
     HUGGINGFACE_CO_RESOLVE_ENDPOINT,

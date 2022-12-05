@@ -40,7 +40,6 @@ from .import_utils import (
 )
 from .logging import get_logger
 from .outputs import BaseOutput, StableDiffusionPipelineOutput
-from .pil_utils import PIL_INTERPOLATION
 
 
 from .testing_utils import (

@@ -19,7 +19,7 @@ import torch.nn as nn
 import torch.utils.checkpoint
 
 from ..configuration_utils import ConfigMixin, register_to_config
-from ..modeling_utils import ModelMixin
+from .modeling_utils import ModelMixin
 from ..utils import BaseOutput, logging
 from .embeddings import TimestepEmbedding, Timesteps
 from .unet_2d_blocks import (

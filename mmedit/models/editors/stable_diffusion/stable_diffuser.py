@@ -19,7 +19,7 @@ import os
 import torch
 import transformers
 
-from typing import Callable, Any, Dict, List, Optional, Union
+from typing import Callable, List, Optional, Union
 from packaging import version
 from transformers import PreTrainedModel
 from PIL import Image
@@ -27,11 +27,10 @@ from tqdm.auto import tqdm
 
 from .configuration_utils import ConfigMixin
 from .configuration_utils import FrozenDict
-from .modeling_utils import _LOW_CPU_MEM_USAGE_DEFAULT
+from .models.modeling_utils import _LOW_CPU_MEM_USAGE_DEFAULT
 from .utils import (
     deprecate,
     is_accelerate_available,
-    is_safetensors_available,
     is_torch_version,
     is_transformers_available,
     logging,
@@ -115,7 +114,7 @@ class StableDiffuser(ConfigMixin):
             if issubclass(class_obj, torch.nn.Module):
                 loading_kwargs["torch_dtype"] = torch_dtype
 
-            from .modeling_utils import ModelMixin
+            from .models.modeling_utils import ModelMixin
             is_diffusers_model = issubclass(class_obj, ModelMixin)
             is_transformers_model = (
                 is_transformers_available()
