@@ -17,7 +17,7 @@ unet = dict(
         use_new_attention_order=False),
     use_scale_shift_norm=True)
 
-unet_ckpt_path = 'work_dirs/adm-cvt-rgb_finetuned_imagenet-256x256.pth'  # noqa
+unet_ckpt_path = 'https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_finetuned_imagenet-256x256-f0f6e11b.pth'  # noqa
 secondary_model_ckpt_path = 'https://download.openmmlab.com/mmediting/synthesizers/disco/secondary_model_imagenet_2.pth'  # noqa
 pretrained_cfgs = dict(
     unet=dict(ckpt_path=unet_ckpt_path, prefix='unet'),
