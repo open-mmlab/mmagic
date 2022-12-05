@@ -115,7 +115,7 @@ class BasicRestorer(BaseModel):
 
         eval_result = dict()
         need_inception = False
-        for metric in self.test_cfg.metric:
+        for metric in self.test_cfg.metrics:
             if metric in ['FID', 'KID']:
                 need_inception = True
                 # build with default args
