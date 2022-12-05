@@ -34,6 +34,7 @@ Import:
 - configs/rdn/metafile.yml
 - configs/real_basicvsr/metafile.yml
 - configs/real_esrgan/metafile.yml
+- configs/restormer/metafile.yml
 - configs/sagan/metafile.yml
 - configs/singan/metafile.yml
 - configs/sngan_proj/metafile.yml

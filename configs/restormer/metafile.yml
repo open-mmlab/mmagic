@@ -4,23 +4,6 @@ Collections:
     - Restormer
   Name: Restormer
   Paper:
-  - https://arxiv.org/abs/1501.00092
-  README: configs/Restormer/README.md
-Models:
-- Config: configs/Restormer/restormer_d48nb4668nrb4h1248-lr3e-4-300k_DPDD.py
-  In Collection: Restormer
-  Metadata:
-    GPUs: '1'
-    Training Data: DPDD
-  Name: restormer_d48nb4668nrb4h1248-lr3e-4-300k_DPDD
-  Results:
-  - Dataset: DPDD
-    Metrics:
-      DIV2K PSNR: 27.746
-      DIV2K SSIM: 0.7854
-      Set14 PSNR: 25.6486
-      Set14 SSIM: 0.7014
-      Set5 PSNR: 28.4316
-      Set5 SSIM: 0.8099
-    Task: Srcnn
-  Weights: https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth
+  - https://arxiv.org/abs/2111.09881
+  README: configs/restormer/README.md
+Models: []
