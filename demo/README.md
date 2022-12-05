@@ -184,7 +184,7 @@ python mmediting_inference_demo.py \
         --result-out-dir ../resources/output/text2image/demo_text2image_disco_res.png
 ```
 
-#### 2.2.10 3D-aware Generation (EG3D)
+#### 2.2.9 3D-aware Generation (EG3D)
 
 ```shell
 python demo/mmediting_inference_demo.py \
