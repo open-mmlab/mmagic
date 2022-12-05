@@ -1,20 +1,21 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
-import torch
-import pytest
 
-from mmedit.apis.inferencers.text2image_inferencer import \
-    Text2ImageInferencer
+import pytest
+import torch
+
+from mmedit.apis.inferencers.text2image_inferencer import Text2ImageInferencer
 from mmedit.utils import register_all_modules
 
 register_all_modules()
+
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
 def test_translation_inferencer():
     cfg = osp.join(
         osp.dirname(__file__), '..', '..', '..', 'configs', 'disco_diffusion',
         'disco-diffusion_adm-u-finetuned_imagenet-512x512.py')
-    text={0:['sad']}
+    text = {0: ['sad']}
     result_out_dir = osp.join(
         osp.dirname(__file__), '..', '..', 'data', 'disco_result.png')
 
