@@ -2,6 +2,7 @@
 import math
 from copy import deepcopy
 from unittest import TestCase
+from unittest.mock import patch
 
 import torch
 from mmengine.testing import assert_allclose
@@ -110,6 +111,14 @@ class TestBaseCamera(TestCase):
         camera = BaseCamera(**cfg_)
         cam2world = camera.sample_camera2world()
         self.assertEqual(cam2world.shape, (1, 4, 4))
+
+        mock_path = 'mmedit.models.editors.eg3d.camera.TORCH_VERSION'
+        with patch(mock_path, '1.6.0'):
+            print(torch.__version__)
+            cfg_ = deepcopy(self.default_cfg)
+            camera = BaseCamera(**cfg_)
+            cam2world = camera.sample_camera2world()
+            self.assertEqual(cam2world.shape, (1, 4, 4))
 
     def test_sample_in_range(self):
         cfg_ = deepcopy(self.default_cfg)

@@ -97,3 +97,14 @@ class TestEG3DRenderer(TestCase):
                 ray_directions,
                 render_kwargs=render_kwargs)
             mock_func.assert_called_once()
+
+        # cover TORCH_VERSION < 1.8.0
+        mock_path = 'mmedit.models.editors.eg3d.renderer.TORCH_VERSION'
+        with patch(mock_path, '1.6.0'):
+            cfg_ = deepcopy(self.renderer_cfg)
+            renderer = EG3DRenderer(**cfg_)
+            renderer(
+                plane,
+                ray_origins,
+                ray_directions,
+                render_kwargs=render_kwargs)
