@@ -1,5 +1,5 @@
 from .configuration_utils import ConfigMixin
-from .models import AutoencoderKL, Transformer2DModel, UNet1DModel, UNet2DConditionModel, UNet2DModel, VQModel, StableDiffusionSafetyChecker
+from .models import AutoencoderKL, Transformer2DModel, UNet2DConditionModel, VQModel, StableDiffusionSafetyChecker
 from .schedulers import (
     DDIMScheduler,
     DDPMScheduler,

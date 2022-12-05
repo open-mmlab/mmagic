@@ -38,7 +38,14 @@ from .utils import (
 )
 
 from mmedit.registry import MODELS
+from transformers.models.clip.feature_extraction_clip import CLIPFeatureExtractor
+from transformers.models.clip.tokenization_clip import CLIPTokenizer
+from transformers.models.clip.modeling_clip import CLIPTextModel
 
+from .models.unet_2d_condition import UNet2DConditionModel
+from .models.vae import AutoencoderKL
+from .models.safety_checker import StableDiffusionSafetyChecker
+from .schedulers.scheduling_pndm import PNDMScheduler
 
 logger = logging.get_logger(__name__)
 
@@ -95,59 +102,27 @@ class StableDiffuser(ConfigMixin):
         if os.path.isdir(pretrained_model_name_or_path):
             cached_folder = pretrained_model_name_or_path
 
-        config_dict = self.load_config(cached_folder)
-        
-        init_dict = {k: config_dict[k] for k in config_dict if not k.startswith('_')}
-        init_kwargs = {}
+        loading_kwargs = {}
+        loading_kwargs["torch_dtype"] = torch_dtype
+        loading_kwargs["device_map"] = device_map
+        loading_kwargs["low_cpu_mem_usage"] = low_cpu_mem_usage
 
-        # 3. Load each module in the pipeline
-        for name, (library_name, class_name) in init_dict.items():
-            mmedit_library_name = library_name
-            if library_name in ['diffusers', 'stable_diffusion']:
-                mmedit_library_name = 'mmedit.models.editors.stable_diffusion'
-            library = importlib.import_module(mmedit_library_name)
+        tokenizer = CLIPTokenizer.from_pretrained(os.path.join(cached_folder, 'tokenizer'), **loading_kwargs)
+        feature_extractor = CLIPFeatureExtractor.from_pretrained(os.path.join(cached_folder, 'feature_extractor'), **loading_kwargs)
+        text_encoder = CLIPTextModel.from_pretrained(os.path.join(cached_folder, 'text_encoder'), **loading_kwargs)
+        vae = AutoencoderKL.from_pretrained(os.path.join(cached_folder, 'vae'), **loading_kwargs)
+        unet = UNet2DConditionModel.from_pretrained(os.path.join(cached_folder, 'unet'), **loading_kwargs)
+        scheduler = PNDMScheduler.from_pretrained(os.path.join(cached_folder, 'scheduler'), **loading_kwargs)
+        safety_checker = StableDiffusionSafetyChecker.from_pretrained(os.path.join(cached_folder, 'safety_checker'), **loading_kwargs)
 
-            class_obj = getattr(library, class_name)
-            load_method = getattr(class_obj, 'from_pretrained')
-            loading_kwargs = {}
-
-            if issubclass(class_obj, torch.nn.Module):
-                loading_kwargs["torch_dtype"] = torch_dtype
-
-            from .models.modeling_utils import ModelMixin
-            is_diffusers_model = issubclass(class_obj, ModelMixin)
-            is_transformers_model = (
-                is_transformers_available()
-                and issubclass(class_obj, PreTrainedModel)
-                and version.parse(version.parse(transformers.__version__).base_version) >= version.parse("4.20.0")
-            )
-
-            # When loading a transformers model, if the device_map is None, the weights will be initialized as opposed to diffusers.
-            # To make default loading faster we set the `low_cpu_mem_usage=low_cpu_mem_usage` flag which is `True` by default.
-            # This makes sure that the weights won't be initialized which significantly speeds up loading.
-            if is_diffusers_model or is_transformers_model:
-                loading_kwargs["device_map"] = device_map
-                loading_kwargs["low_cpu_mem_usage"] = low_cpu_mem_usage
-
-            # check if the module is in a subdirectory
-            if os.path.isdir(os.path.join(cached_folder, name)):
-                loaded_sub_model = load_method(os.path.join(cached_folder, name), **loading_kwargs)
-            else:
-                # else load from the root directory
-                loaded_sub_model = load_method(cached_folder, **loading_kwargs)
-
-            init_kwargs[name] = loaded_sub_model  # UNet(...), # DiffusionSchedule(...)
-
-        tokenizer = init_kwargs['tokenizer']
-        vae = init_kwargs['vae']
-        unet = init_kwargs['unet']
-        scheduler = init_kwargs['scheduler']
-        safety_checker = init_kwargs['safety_checker']
-        feature_extractor = init_kwargs['feature_extractor']
-        text_encoder = init_kwargs['text_encoder']
-        safety_checker = init_kwargs['safety_checker']
-        init_kwargs['requires_safety_checker'] = requires_safety_checker
-        self.init_kwargs = init_kwargs
+        self.submodels = {}
+        self.submodels['tokenizer']=tokenizer
+        self.submodels['vae']=vae
+        self.submodels['scheduler']=scheduler
+        self.submodels['unet']=unet
+        self.submodels['safety_checker']=safety_checker
+        self.submodels['feature_extractor']=feature_extractor
+        self.submodels['text_encoder']=text_encoder
 
         if hasattr(scheduler.config, "steps_offset") and scheduler.config.steps_offset != 1:
             deprecation_message = (
@@ -191,27 +166,6 @@ class StableDiffuser(ConfigMixin):
                 "Make sure to define a feature extractor when loading {self.__class__} if you want to use the safety"
                 " checker. If you do not want to use the safety checker, you can pass `'safety_checker=None'` instead."
             )
-
-        is_unet_version_less_0_9_0 = hasattr(unet.config, "_diffusers_version") and version.parse(
-            version.parse(unet.config._diffusers_version).base_version
-        ) < version.parse("0.9.0.dev0")
-        is_unet_sample_size_less_64 = hasattr(unet.config, "sample_size") and unet.config.sample_size < 64
-        if is_unet_version_less_0_9_0 and is_unet_sample_size_less_64:
-            deprecation_message = (
-                "The configuration file of the unet has set the default `sample_size` to smaller than"
-                " 64 which seems highly unlikely .If you're checkpoint is a fine-tuned version of any of the"
-                " following: \n- CompVis/stable-diffusion-v1-4 \n- CompVis/stable-diffusion-v1-3 \n-"
-                " CompVis/stable-diffusion-v1-2 \n- CompVis/stable-diffusion-v1-1 \n- runwayml/stable-diffusion-v1-5"
-                " \n- runwayml/stable-diffusion-inpainting \n you should change 'sample_size' to 64 in the"
-                " configuration file. Please make sure to update the config accordingly as leaving `sample_size=32`"
-                " in the config might lead to incorrect results in future versions. If you have downloaded this"
-                " checkpoint from the Hugging Face Hub, it would be very nice if you could open a Pull request for"
-                " the `unet/config.json` file"
-            )
-            deprecate("sample_size<64", "1.0.0", deprecation_message, standard_warn=False)
-            new_config = dict(unet.config)
-            new_config["sample_size"] = 64
-            unet._internal_dict = FrozenDict(new_config)
 
         self.register_modules(
             vae=vae,
@@ -303,7 +257,7 @@ class StableDiffuser(ConfigMixin):
         if torch_device is None:
             return self
 
-        module_names = self.init_kwargs
+        module_names = self.submodels
         for name in module_names.keys():
             module = getattr(self, name)
             if isinstance(module, torch.nn.Module):
@@ -325,7 +279,7 @@ class StableDiffuser(ConfigMixin):
         Returns:
             `torch.device`: The torch device on which the pipeline is located.
         """
-        module_names = self.init_kwargs
+        module_names = self.submodels
         for name in module_names.keys():
             module = getattr(self, name)
             if isinstance(module, torch.nn.Module):
