@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numbers
 import os.path as osp
+from copy import deepcopy
 
 import mmcv
 import torch
@@ -107,21 +108,40 @@ class BasicRestorer(BaseModel):
         Returns:
             dict: Evaluation results.
         """
-        # lazy initialization for evaluation
-        if 'InceptionV3' not in self.allowed_metrics and (
-                'InceptionV3' in self.test_cfg.metrics):
-            self.allowed_metrics['InceptionV3'] = InceptionV3(
-                device='cuda' if torch.cuda.is_available() else 'cpu')
-
         crop_border = self.test_cfg.crop_border
 
         output = tensor2img(output)
         gt = tensor2img(gt)
 
         eval_result = dict()
+        need_inception = False
+        for metric in self.test_cfg.metric:
+            if metric in ['FID', 'KID']:
+                need_inception = True
+                # build with default args
+                eval_result[metric] = dict(type=metric)
+            elif (isinstance(metric, dict)
+                  and metric['type'] in ['FID', 'KID']):
+                need_inception = True
+                # build with user defined args
+                eval_result[metric] = deepcopy(metric)
+
+        if need_inception:
+            if '_inception_feat' not in self.allowed_metrics:
+                inception_style = self.test_cfg.get('inception_style',
+                                                    'stylegan')
+                device = 'cuda' if torch.cuda.is_available() else 'cpu'
+                self.allowed_metrics['_inception_feat'] = InceptionV3(
+                    device, inception_style)
+                self.test_cfg.metrics.append('_inception_feat')
+
         for metric in self.test_cfg.metrics:
-            eval_result[metric] = self.allowed_metrics[metric](output, gt,
-                                                               crop_border)
+            if isinstance(metric, dict) or metric in ['FID', 'KID']:
+                # skip FID and KID
+                continue
+            else:
+                eval_result[metric] = self.allowed_metrics[metric](output, gt,
+                                                                   crop_border)
         return eval_result
 
     def forward_test(self,

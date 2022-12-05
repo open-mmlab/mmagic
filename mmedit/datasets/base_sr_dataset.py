@@ -82,11 +82,10 @@ class BaseSRDataset(BaseDataset):
         eval_result.update({
             metric: sum(values) / len(self)
             for metric, values in eval_result.items()
-            if metric != 'InceptionV3'
+            if metric not in ['_inception_feat', 'FID', 'KID']
         })
 
-        # concatenate the features
-        if 'InceptionV3' in eval_result:
+        if '_inception_feat' in eval_result:
             feat1, feat2 = [], []
             for f1, f2 in eval_result['InceptionV3']:
                 feat1.append(f1)

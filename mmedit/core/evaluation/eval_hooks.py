@@ -66,12 +66,18 @@ class EvalIterHook(Hook):
         eval_res = self.dataloader.dataset.evaluate(
             results, logger=runner.logger, **self.eval_kwargs)
 
-        # evaluate feature based metrics
-        features = eval_res.pop('InceptionV3', None)
-        for metric in self.metrics:
-            assert features is not None
-            X, Y = features
-            eval_res[metric.__class__.__name__] = metric(X, Y)
+        # evaluate feature-based metrics
+        features = eval_res.pop('_inception_feat', None)
+        # define self._feature_based_metric = ['FID', 'KID']
+        # # at the start of this class
+        for metric in self._feature_based_metric:
+            if metric in eval_res:
+                # since there is no parameters or network in FID and KID,
+                # we can directly build a new metric
+                metric_implement = build_metric(eval_res[metric])
+                assert features is not None
+                X, Y = features
+                eval_res[metric] = metric_implement(X, Y)
 
         for name, val in eval_res.items():
             if isinstance(val, dict):
