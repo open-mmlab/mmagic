@@ -6,6 +6,9 @@ experiment_name = 'swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
+# DistributedDataParallel
+model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
+
 scale = 2
 # model settings
 model = dict(
@@ -13,7 +16,7 @@ model = dict(
     generator=dict(
         type='SwinIRNet',
         upscale=2,
-        in_channels=3,
+        in_chans=3,
         img_size=64,
         window_size=8,
         img_range=1.0,
@@ -110,7 +113,7 @@ val_evaluator = [
 ]
 
 train_cfg = dict(
-    type='IterBasedTrainLoop', max_iters=500000, val_interval=5000)
+    type='IterBasedTrainLoop', max_iters=500_000, val_interval=5000)
 val_cfg = dict(type='ValLoop')
 
 # optimizer
