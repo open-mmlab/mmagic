@@ -24,6 +24,11 @@ def parse_args():
         default=None,
         help='path to input mask file for inpainting models')
     parser.add_argument(
+        '--text',
+        nargs='+',
+        action=DictAction,
+        help='text input for text2image models')
+    parser.add_argument(
         '--result-out-dir',
         type=str,
         default=None,
