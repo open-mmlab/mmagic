@@ -7,3 +7,4 @@ scikit-image
 titlecase
 torch
 torchvision
+tqdm

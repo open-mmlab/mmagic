@@ -18,5 +18,5 @@ Models:
     Metrics:
       PSNR: 34.601
       SSIM: 0.9578
-    Task: Cain
+    Task: Video Interpolation
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth

@@ -19,5 +19,5 @@ Models:
       PSNR: 19.01
       SSIM: 0.682
       l1 error: 7.07
-    Task: Aot_gan
+    Task: Inpainting
   Weights: https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth

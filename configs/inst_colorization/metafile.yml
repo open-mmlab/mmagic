@@ -15,5 +15,5 @@ Models:
   Results:
   - Dataset: Others
     Metrics: {}
-    Task: Inst_colorization
+    Task: Colorization
   Weights: https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth

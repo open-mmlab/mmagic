@@ -16,7 +16,7 @@ Models:
   - Dataset: Others
     Metrics:
       Num Scales: 8.0
-    Task: Singan
+    Task: Internal Learning
   Weights: https://download.openmmlab.com/mmgen/singan/singan_balloons_20210406_191047-8fcd94cf.pth
 - Config: https://github.com/open-mmlab/mmediting/tree/master/configs/singan/singan_fish.py
   In Collection: SinGAN
@@ -27,7 +27,7 @@ Models:
   - Dataset: Others
     Metrics:
       Num Scales: 10.0
-    Task: Singan
+    Task: Internal Learning
   Weights: https://download.openmmlab.com/mmgen/singan/singan_fis_20210406_201006-860d91b6.pth
 - Config: https://github.com/open-mmlab/mmediting/tree/master/configs/singan/singan_bohemian.py
   In Collection: SinGAN
@@ -38,5 +38,5 @@ Models:
   - Dataset: Others
     Metrics:
       Num Scales: 10.0
-    Task: Singan
+    Task: Internal Learning
   Weights: https://download.openmmlab.com/mmgen/singan/singan_bohemian_20210406_175439-f964ee38.pth

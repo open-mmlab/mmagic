@@ -476,6 +476,7 @@ class TestGenVisualizationHook(TestCase):
         hook = GenVisualizationHook(
             interval=10,
             n_samples=2,
+            max_save_at_test=None,
             test_vis_keys=['ema', 'orig', 'new_model.x_t', 'gt_img'],
             vis_kwargs_list=dict(type='GAN'))
         mock_visualuzer = MagicMock()
@@ -509,7 +510,7 @@ class TestGenVisualizationHook(TestCase):
             _, called_kwargs = args
             gen_samples = called_kwargs['gen_samples']
             name = called_kwargs['name']
-            batch_idx = called_kwargs['batch_idx']
+            batch_idx = called_kwargs['step']
             target_keys = called_kwargs['target_keys']
 
             self.assertEqual(len(gen_samples), 1)
@@ -520,19 +521,19 @@ class TestGenVisualizationHook(TestCase):
             # check ema
             if idx % 4 == 0:
                 self.assertEqual(target_keys, 'ema')
-                self.assertEqual(name, 'ema')
+                self.assertEqual(name, 'test_ema')
             # check orig
             elif idx % 4 == 1:
                 self.assertEqual(target_keys, 'orig')
-                self.assertEqual(name, 'orig')
+                self.assertEqual(name, 'test_orig')
             # check x_t
             elif idx % 4 == 2:
                 self.assertEqual(target_keys, 'new_model.x_t')
-                self.assertEqual(name, 'new_model_x_t')
+                self.assertEqual(name, 'test_new_model_x_t')
             # check gt
             else:
                 self.assertEqual(target_keys, 'gt_img')
-                self.assertEqual(name, 'gt_img')
+                self.assertEqual(name, 'test_gt_img')
 
         # test get target key automatically
         hook.test_vis_keys_list = None
@@ -552,3 +553,29 @@ class TestGenVisualizationHook(TestCase):
         ]
         with self.assertRaises(AssertionError):
             hook.after_test_iter(runner, 42, [], outputs)
+
+        # test max save time
+        hook = GenVisualizationHook(
+            interval=10,
+            n_samples=2,
+            test_vis_keys='ema',
+            vis_kwargs_list=dict(type='GAN'),
+            max_save_at_test=3)
+
+        mock_visualuzer = MagicMock()
+        mock_visualuzer.add_datasample = MagicMock()
+        hook._visualizer = mock_visualuzer
+
+        runner = MagicMock()
+        runner.model = model
+
+        ema_list = [torch.randn(3, 6, 6) for _ in range(4)]
+        outputs = [
+            EditDataSample(ema=EditDataSample(fake_img=PixelData(data=ema)))
+            for ema in ema_list
+        ]
+        hook.after_test_iter(runner, 42, [], outputs)
+        mock_visualuzer.add_datasample.assert_not_called()
+
+        hook.after_test_iter(runner, 0, [], outputs)
+        assert mock_visualuzer.add_datasample.call_count == 3

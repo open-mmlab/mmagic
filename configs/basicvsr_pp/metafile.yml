@@ -22,7 +22,7 @@ Models:
       Vid4 (BIx4) PSNR (Y): 27.7674
       Vimeo-90K-T (BDx4) PSNR (Y): 34.0372
       Vimeo-90K-T (BIx4) PSNR (Y): 36.4445
-    Task: Basicvsr_pp
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
 - Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi.py
   In Collection: BasicVSR++
@@ -39,7 +39,7 @@ Models:
       Vid4 (BIx4) PSNR (Y): 27.7882
       Vimeo-90K-T (BDx4) PSNR (Y): 33.8972
       Vimeo-90K-T (BIx4) PSNR (Y): 37.7864
-    Task: Basicvsr_pp
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305-4ef437e2.pth
 - Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd.py
   In Collection: BasicVSR++
@@ -56,7 +56,7 @@ Models:
       Vid4 (BIx4) PSNR (Y): 26.4377
       Vimeo-90K-T (BDx4) PSNR (Y): 38.2054
       Vimeo-90K-T (BIx4) PSNR (Y): 34.7248
-    Task: Basicvsr_pp
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd_20210305-ab315ab1.pth
 - Config: configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py
   In Collection: BasicVSR++
@@ -73,7 +73,7 @@ Models:
       Vid4 (BIx4) SSIM (Y): 0.8444
       Vimeo-90K-T (BDx4) SSIM (Y): 0.9244
       Vimeo-90K-T (BIx4) SSIM (Y): 0.9411
-    Task: Basicvsr_pp
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
 - Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi.py
   In Collection: BasicVSR++
@@ -90,7 +90,7 @@ Models:
       Vid4 (BIx4) SSIM (Y): 0.8401
       Vimeo-90K-T (BDx4) SSIM (Y): 0.9195
       Vimeo-90K-T (BIx4) SSIM (Y): 0.95
-    Task: Basicvsr_pp
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305-4ef437e2.pth
 - Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd.py
   In Collection: BasicVSR++
@@ -107,5 +107,5 @@ Models:
       Vid4 (BIx4) SSIM (Y): 0.8074
       Vimeo-90K-T (BDx4) SSIM (Y): 0.955
       Vimeo-90K-T (BIx4) SSIM (Y): 0.9351
-    Task: Basicvsr_pp
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd_20210305-ab315ab1.pth

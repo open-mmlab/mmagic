@@ -19,7 +19,7 @@ Models:
       PSNR: 23.429
       SSIM: 0.862
       l1 error: 11.019
-    Task: Deepfillv1
+    Task: Inpainting
   Weights: https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth
 - Config: configs/deepfillv1/deepfillv1_4xb4_celeba-256x256.py
   In Collection: DeepFillv1
@@ -33,5 +33,5 @@ Models:
       PSNR: 26.878
       SSIM: 0.911
       l1 error: 6.677
-    Task: Deepfillv1
+    Task: Inpainting
   Weights: https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba_20200619-dd51a855.pth

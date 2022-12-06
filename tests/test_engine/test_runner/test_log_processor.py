@@ -91,7 +91,7 @@ class TestLogProcessor:
         if by_epoch:
             if mode == 'train':
                 cur_epoch = log_processor._get_epoch(self.runner, mode)
-                log_str = (f'Epoch({mode}) [{cur_epoch}][2/'
+                log_str = (f'Epoch({mode})  [{cur_epoch}][ 2/'
                            f'{len(cur_loop.dataloader)}]  ')
             elif mode == 'val':
                 cur_epoch = log_processor._get_epoch(self.runner, mode)
@@ -243,6 +243,7 @@ class TestLogProcessor:
         runner = MagicMock()
         runner.epoch = 1
         runner.iter = 10
+        runner.max_epochs = 10
         runner.max_iters = 50
         runner.train_dataloader = [0] * 20
         runner.val_dataloader = [0] * 10

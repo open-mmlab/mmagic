@@ -1,27 +1,28 @@
 # Tutorial 3: Inference with Pre-trained Models
 
 MMEditing provides APIs for you to easily play with state-of-the-art models on your own images or videos.
-Specifically, MMEditing supports various foundamental generative models, including:
+Specifically, MMEditing supports various fundamental generative models, including:
 unconditional Generative Adversarial Networks (GANs), conditional GANs, internal learning, diffusion models, etc.
 MMEditing also supports various applications, including:
 image super-resolution, video super-resolution, video frame interpolation, image inpainting, image matting, image-to-image translation, etc.
 
 In this section, we will specify how to play with our pre-trained models.
 
-- [Sample images with unconditional GANs](#sample-images-with-unconditional-gans)
-- [Sample images with conditional GANs](#sample-images-with-conditional-gans)
-- [Sample images with diffusion models](#sample-images-with-diffusion-models)
-- [Run a demo of image inpainting](#run-a-demo-of-image-inpainting)
-- [Run a demo of image matting](#run-a-demo-of-image-matting)
-- [Run a demo of image super-resolution](#run-a-demo-of-image-super-resolution)
-- [Run a demo of facial restoration](#run-a-demo-of-facial-restoration)
-- [Run a demo of video super-resolution](#run-a-demo-of-video-super-resolution)
-- [Run a demo of video frame interpolation](#run-a-demo-of-video-frame-interpolation)
-- [Run a demo of image translation models](#run-a-demo-of-image-translation-models)
+- [Tutorial 3: Inference with Pre-trained Models](#tutorial-3-inference-with-pre-trained-models)
+  - [Sample images with unconditional GANs](#sample-images-with-unconditional-gans)
+  - [Sample images with conditional GANs](#sample-images-with-conditional-gans)
+  - [Sample images with diffusion models](#sample-images-with-diffusion-models)
+  - [Run a demo of image inpainting](#run-a-demo-of-image-inpainting)
+  - [Run a demo of image matting](#run-a-demo-of-image-matting)
+  - [Run a demo of image super-resolution](#run-a-demo-of-image-super-resolution)
+  - [Run a demo of facial restoration](#run-a-demo-of-facial-restoration)
+  - [Run a demo of video super-resolution](#run-a-demo-of-video-super-resolution)
+  - [Run a demo of video frame interpolation](#run-a-demo-of-video-frame-interpolation)
+  - [Run a demo of image translation models](#run-a-demo-of-image-translation-models)
 
 ## Sample images with unconditional GANs
 
-MMEditing provides high-level APIs for sampling images with unconditional GANs. Here is an example for building StyleGAN2-256 and obtaining the synthesized images.
+MMEditing provides high-level APIs for sampling images with unconditional GANs. Here is an example of building StyleGAN2-256 and obtaining the synthesized images.
 
 ```python
 from mmedit.apis import init_model, sample_unconditional_model
@@ -32,7 +33,7 @@ config_file = 'configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py'
 checkpoint_file = 'https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth'
 
 device = 'cuda:0'
-# init a generatvie
+# init a generative model
 model = init_model(config_file, checkpoint_file, device=device)
 # sample images
 fake_imgs = sample_unconditional_model(model, 4)
@@ -48,7 +49,7 @@ python demo/unconditional_demo.py \
     [--device ${GPU_ID}]
 ```
 
-Note that more arguments are also offered to customizing your sampling procedure. Please use `python demo/unconditional_demo.py --help` to check more details.
+Note that more arguments are also offered to customize your sampling procedure. Please use `python demo/unconditional_demo.py --help` to check more details.
 
 ## Sample images with conditional GANs
 
@@ -63,7 +64,7 @@ config_file = 'configs/sagan/sagan_woReLUinplace-Glr1e-4_Dlr4e-4_noaug-ndisc1-8x
 checkpoint_file = 'https://download.openmmlab.com/mmgen/sagan/sagan_128_woReLUinplace_noaug_bigGAN_imagenet1k_b32x8_Glr1e-4_Dlr-4e-4_ndisc1_20210818_210232-3f5686af.pth'
 
 device = 'cuda:0'
-# init a generatvie
+# init a generative model
 model = init_model(config_file, checkpoint_file, device=device)
 # sample images with random label
 fake_imgs = sample_conditional_model(model, 4)
@@ -106,7 +107,7 @@ config_file = 'configs/improved_ddpm/ddpm_cosine-hybird-timestep-4k_16xb8-1500ki
 # you can download this checkpoint in advance and use a local file path.
 checkpoint_file = 'https://download.openmmlab.com/mmgen/improved_ddpm/ddpm_cosine_hybird_timestep-4k_imagenet1k_64x64_b8x16_1500k_20220103_223919-b8f1a310.pth'
 device = 'cuda:0'
-# init a generatvie
+# init a generative model
 model = init_model(config_file, checkpoint_file, device=device)
 # sample images
 fake_imgs = sample_ddpm_model(model, 4)
@@ -150,7 +151,7 @@ python demo/inpainting_demo.py \
     tests/data/pred/inpainting_celeba.png
 ```
 
-The predicted inpainting result will be save in `tests/data/pred/inpainting_celeba.png`.
+The predicted inpainting result will be saved in `tests/data/pred/inpainting_celeba.png`.
 
 ## Run a demo of image matting
 
@@ -178,7 +179,7 @@ python demo/matting_demo.py \
     tests/data/pred/GT05.png
 ```
 
-The predicted alpha matte will be save in `tests/data/pred/GT05.png`.
+The predicted alpha matte will be saved in `tests/data/pred/GT05.png`.
 
 ## Run a demo of image super-resolution
 
@@ -218,7 +219,7 @@ python demo/restoration_demo.py \
 
 ## Run a demo of facial restoration
 
-You can use the following commands to test an face image for restoration.
+You can use the following commands to test a face image for restoration.
 
 ```shell
 python demo/restoration_face_demo.py \
@@ -280,7 +281,7 @@ python demo/restoration_video_demo.py \
     demo/output
 ```
 
-The restored video will be save in `output/`.
+The restored video will be saved in `output/`.
 
 ## Run a demo of video frame interpolation
 
@@ -335,7 +336,7 @@ checkpoint_file = 'https://download.openmmlab.com/mmgen/pix2pix/refactor/pix2pix
 # Specify the path to image you want to translate
 image_path = 'tests/data/paired/test/33_AB.jpg'
 device = 'cuda:0'
-# init a generatvie
+# init a generative model
 model = init_model(config_file, checkpoint_file, device=device)
 # translate a single image
 translated_image = sample_img2img_model(model, image_path, target_domain='photo')
@@ -352,4 +353,4 @@ python demo/translation_demo.py \
     [--device ${GPU_ID}]
 ```
 
-Note that more customized arguments are also offered to customizing your sampling procedure. Please use `python demo/translation_demo.py --help` to check more details.
+Note that more customized arguments are also offered to customize your sampling procedure. Please use `python demo/translation_demo.py --help` to check more details.

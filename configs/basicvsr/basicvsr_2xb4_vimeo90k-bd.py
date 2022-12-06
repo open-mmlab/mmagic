@@ -52,11 +52,13 @@ train_dataloader = dict(
         data_prefix=dict(img='BDx4', gt='GT'),
         ann_file='meta_info_Vimeo90K_train_GT.txt',
         depth=2,
+        num_input_frames=7,
         fixed_seq_len=7,
         load_frames_list=dict(img=file_list, gt=file_list),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
+    _delete_=True,
     num_workers=1,
     batch_size=1,
     persistent_workers=False,

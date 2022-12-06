@@ -1,4 +1,4 @@
-# dataset_type = 'UnconditionalImageDataset'
+# dataset_type = 'BasicImageDataset'
 dataset_type = 'BasicImageDataset'
 
 train_pipeline = [

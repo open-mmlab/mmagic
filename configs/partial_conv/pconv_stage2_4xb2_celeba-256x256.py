@@ -68,7 +68,7 @@ test_dataloader = val_dataloader
 
 train_cfg = dict(
     type='IterBasedTrainLoop',
-    max_iters=500000,
+    max_iters=300002,
     val_interval=50000,
 )
 val_cfg = dict(type='ValLoop')
@@ -82,3 +82,5 @@ optim_wrapper = dict(
 
 checkpoint = dict(
     type='CheckpointHook', interval=50000, by_epoch=False, out_dir=save_dir)
+
+# load_from = 'pconv_stage1_8xb1_celeba-256x256/iter_800002.pth'

@@ -141,6 +141,12 @@ class GenVisualizationHook(Hook):
             visualize. Defaults to 64.
         n_row (Optional[int]): The default value of number of images in each
             row in the visualization results. Defaults to 8.
+        message_hub_vis_kwargs (Optional[Tuple[str, dict, List[str],
+            List[Dict]]]): Key arguments visualize images in message hub.
+            Defaults to None.
+        save_at_test (bool): Whether save images during test. Defaults to True.
+        max_save_at_test (int): Maximum number of samples saved at test time.
+            If None is passed, all samples will be saved. Defaults to 100.
         show (bool): Whether to display the drawn image. Default to False.
         wait_time (float): The interval of show (s). Defaults to 0.
     """
@@ -173,6 +179,7 @@ class GenVisualizationHook(Hook):
                  message_hub_vis_kwargs: Optional[Tuple[str, dict, List[str],
                                                         List[Dict]]] = None,
                  save_at_test: bool = True,
+                 max_save_at_test: int = 100,
                  test_vis_keys: Optional[Union[str, List[str]]] = None,
                  show: bool = False,
                  wait_time: float = 0):
@@ -202,6 +209,7 @@ class GenVisualizationHook(Hook):
         self.wait_time = wait_time
         self.save_at_test = save_at_test
         self.test_vis_keys_list = test_vis_keys
+        self.max_save_at_test = max_save_at_test
         self.message_vis_kwargs = message_hub_vis_kwargs
 
     @master_only
@@ -220,7 +228,7 @@ class GenVisualizationHook(Hook):
         return
 
     @master_only
-    def after_test_iter(self, runner: Runner, batch_idx, data_batch: dict,
+    def after_test_iter(self, runner: Runner, batch_idx: int, data_batch: dict,
                         outputs):
         """Visualize samples after test iteraiton.
 
@@ -247,6 +255,9 @@ class GenVisualizationHook(Hook):
         std = data_preprocessor.std
         for idx, sample in enumerate(outputs):
             curr_idx = batch_idx * len(outputs) + idx
+            if (self.max_save_at_test is not None
+                    and curr_idx >= self.max_save_at_test):
+                continue
             if self.test_vis_keys_list is None:
                 target_keys = [
                     k for k, v in sample.items()
@@ -265,9 +276,9 @@ class GenVisualizationHook(Hook):
             for key in target_keys:
                 name = key.replace('.', '_')
                 self._visualizer.add_datasample(
-                    name=name,
+                    name=f'test_{name}',
                     gen_samples=[sample],
-                    batch_idx=curr_idx,
+                    step=curr_idx,
                     target_keys=key,
                     n_row=1,
                     color_order=output_color_order,

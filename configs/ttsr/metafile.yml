@@ -18,7 +18,7 @@ Models:
     Metrics:
       PSNR: 25.2433
       SSIM: 0.7491
-    Task: Ttsr
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.pth
 - Config: configs/ttsr/ttsr-gan_x4c64b16_1xb9-500k_CUFED.py
   In Collection: TTSR
@@ -31,5 +31,5 @@ Models:
     Metrics:
       PSNR: 24.6075
       SSIM: 0.7234
-    Task: Ttsr
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth

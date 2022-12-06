@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from os.path import dirname, join
 
+import pytest
 import torch
 from mmengine import Config
 from mmengine.optim import OptimWrapper
@@ -10,6 +12,9 @@ from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import register_all_modules
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_pconv_inpaintor():
     register_all_modules()
 
@@ -56,7 +61,6 @@ def test_pconv_inpaintor():
     output = inpaintor.forward_test(data_inputs, data_sample)
     prediction = output[0]
     assert 'fake_res' in prediction
-    assert '_pred_img' in prediction
     assert 'fake_img' in prediction
     assert 'pred_img' in prediction
     assert prediction.pred_img.shape == (256, 256)

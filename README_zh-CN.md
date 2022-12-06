@@ -105,13 +105,14 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ### 🌟 1.x 预览版本
 
-全新的 [**MMEditing v1.0.0rc3**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc3) 已经在 09/11/2022 发布:
+全新的 [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) 已经在 05/12/2022 发布:
 
+- 支持了图文生成任务! [Disco-Diffusion](configs/disco_diffusion/README.md)
+- 支持了3D级图像生成任务! [EG3D](configs/eg3d/README.md)
 - 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
 - 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
 - 支持基于图像子块以及滑动条的图像和视频比较可视化工具。
 - 支持图像上色任务。
-- 将 `mmdet` 与 `clip` 切换为可选依赖
 
 在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
 
@@ -264,6 +265,21 @@ pip3 install -e .
 
 </details>
 
+<details open>
+<summary>Text2Image</summary>
+
+- ✅ [Disco-Diffusion](configs/disco_diffusion/README.md)
+
+</details>
+
+<details open>
+
+<summary>3D-aware Generation</summary>
+
+- ✅ [EG3D](configs/eg3d/README.md)
+
+</details>
+
 请参考[模型库](https://mmediting.readthedocs.io/zh_CN/1.x/3_model_zoo.html)了解详情。
 
 ## 参与贡献
@@ -316,10 +332,10 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 
 ## 欢迎加入 OpenMMLab 社区
 
-扫描下方的二维码可关注 OpenMMLab 团队的 [知乎官方账号](https://www.zhihu.com/people/openmmlab)，加入 OpenMMLab 团队的 [官方交流 QQ 群](https://jq.qq.com/?_wv=1027&k=GJP18SjI)，或通过群主小喵加入微信官方交流群。
+扫描下方的二维码可关注 OpenMMLab 团队的 [知乎官方账号](https://www.zhihu.com/people/openmmlab)，加入 OpenMMLab 团队的 [官方交流 QQ 群](https://jq.qq.com/?_wv=1027&k=K0QI8ByU)，或通过群主小喵加入微信官方交流群。
 
 <div align="center">
-<img src="docs/zh_cn/_static/image/zhihu_qrcode.jpg" height="500" />  <img src="https://raw.githubusercontent.com/open-mmlab/mmcv/master/docs/en/_static/qq_group_qrcode.jpg" height="500" /> <img src="https://raw.githubusercontent.com/open-mmlab/mmcv/master/docs/en/_static/wechat_qrcode.jpg" height="500" />
+<img src="docs/zh_cn/_static/image/zhihu_qrcode.jpg" height="500" />  <img src="https://user-images.githubusercontent.com/25839884/203927852-e15def4d-a0eb-4dfc-9bfb-7cf09ea945d0.png" height="500" /> <img src="https://raw.githubusercontent.com/open-mmlab/mmcv/master/docs/en/_static/wechat_qrcode.jpg" height="500" />
 </div>
 
 我们会在 OpenMMLab 社区为大家

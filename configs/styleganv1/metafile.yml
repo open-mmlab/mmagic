@@ -19,7 +19,7 @@ Models:
       P&R50k_full:
         PSNR: 70.228
         SSIM: 27.05
-    Task: Styleganv1
+    Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmgen/styleganv1/styleganv1_ffhq_256_g8_25Mimg_20210407_161748-0094da86.pth
 - Config: https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv1/styleganv1_ffhq-1024x1024_8xb4-25Mimgs.py
   In Collection: StyleGANv1
@@ -33,5 +33,5 @@ Models:
       P&R50k_full:
         PSNR: 70.302
         SSIM: 36.869
-    Task: Styleganv1
+    Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmgen/styleganv1/styleganv1_ffhq_1024_g8_25Mimg_20210407_161627-850a7234.pth

@@ -2,7 +2,7 @@
 
 We provide lots of useful tools under `tools/` directory.
 
-The structure of this guide are as follows:
+The structure of this guide is as follows:
 
 - [Get the FLOPs and params](#get-the-flops-and-params)
 - [Publish a model](#publish-a-model)
@@ -35,7 +35,7 @@ Params: 1.52 M
 **Note**: This tool is still experimental and we do not guarantee that the number is correct. You may well use the result for simple comparisons, but double check it before you adopt it in technical reports or papers.
 
 (1) FLOPs are related to the input shape while parameters are not. The default input shape is (1, 3, 250, 250).
-(2) Some operators are not counted into FLOPs like GN and custom operators.
+(2) Some operators are not counted in FLOPs like GN and custom operators.
 You can add support for new operators by modifying [`mmcv/cnn/utils/flops_counter.py`](https://github.com/open-mmlab/mmcv/blob/master/mmcv/cnn/utils/flops_counter.py).
 
 ## Publish a model

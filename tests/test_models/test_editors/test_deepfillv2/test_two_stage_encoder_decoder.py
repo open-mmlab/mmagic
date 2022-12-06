@@ -88,7 +88,6 @@ def test_two_stage_inpaintor():
     output = inpaintor.forward_test(data_inputs, data_sample)
     prediction = output[0]
     assert 'fake_res' in prediction
-    assert '_pred_img' in prediction
     assert 'fake_img' in prediction
     assert 'pred_img' in prediction
     assert prediction.pred_img.shape == (256, 256)

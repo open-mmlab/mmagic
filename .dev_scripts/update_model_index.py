@@ -16,7 +16,7 @@ from functools import reduce
 
 import mmengine
 
-MMEditing_ROOT = osp.dirname(osp.dirname(osp.dirname(__file__)))
+MMEditing_ROOT = osp.dirname(osp.dirname(__file__))
 
 all_training_data = [
     'div2k', 'celeba', 'places', 'comp1k', 'vimeo90k', 'reds', 'ffhq', 'cufed',
@@ -156,6 +156,8 @@ def parse_md(md_file):
         collection['Name'] = name
         collection_name = name
         is_liif = collection_name.upper() == 'LIIF'
+        task_line = lines[4]
+        task = task_line.strip().split(':')[-1].strip()
         while i < len(lines):
             # parse reference
             if lines[i].startswith('> ['):
@@ -202,7 +204,6 @@ def parse_md(md_file):
 
                 j = i + 2
                 while j < len(lines) and lines[j][0] == '|':
-                    task = get_task_name(md_file)
                     line = lines[j].split('|')[1:-1]
 
                     if line[config_idx].find('](') >= 0:

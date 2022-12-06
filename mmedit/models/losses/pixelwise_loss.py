@@ -53,6 +53,14 @@ def charbonnier_loss(pred, target, eps=1e-12):
     return torch.sqrt((pred - target)**2 + eps)
 
 
+def tv_loss(input):
+    """L2 total variation loss, as in Mahendran et al."""
+    input = F.pad(input, (0, 1, 0, 1), 'replicate')
+    x_diff = input[..., :-1, 1:] - input[..., :-1, :-1]
+    y_diff = input[..., 1:, :-1] - input[..., :-1, :-1]
+    return (x_diff**2 + y_diff**2).mean([1, 2, 3])
+
+
 @LOSSES.register_module()
 class L1Loss(nn.Module):
     """L1 (mean absolute error, MAE) loss.
@@ -221,3 +229,30 @@ class MaskedTVLoss(L1Loss):
         loss = x_diff + y_diff
 
         return loss
+
+
+@LOSSES.register_module()
+class PSNRLoss(nn.Module):
+    """PSNR Loss in "HINet: Half Instance Normalization Network for Image
+    Restoration".
+
+    Args:
+        loss_weight (float, optional): Loss weight. Defaults to 1.0.
+        reduction: reduction for PSNR. Can only be mean here.
+        toY: change to calculate the PSNR of Y channel in YCbCr format
+    """
+
+    def __init__(self, loss_weight=1.0, toY=False):
+        super(PSNRLoss, self).__init__()
+        self.loss_weight = loss_weight
+        import numpy as np
+        self.scale = 10 / np.log(10)
+        self.toY = toY
+        self.coef = torch.tensor([65.481, 128.553, 24.966]).reshape(1, 3, 1, 1)
+        self.first = True
+
+    def forward(self, pred, target):
+        assert len(pred.size()) == 4
+
+        return self.loss_weight * self.scale * torch.log((
+            (pred - target)**2).mean(dim=(1, 2, 3)) + 1e-8).mean()
