@@ -92,7 +92,7 @@ def test_eval_hook():
     data_loader = DataLoader(
         test_dataset, batch_size=1, sampler=None, num_workers=0, shuffle=False)
     eval_hook = EvalIterHook(data_loader)
-    eval_hook._feature_based_metric.append('example')
+    eval_hook.feature_based_metric.append('example')
     optim_cfg = dict(type='Adam', lr=2e-4, betas=(0.9, 0.999))
     optimizer = obj_from_dict(optim_cfg, torch.optim,
                               dict(params=model.parameters()))
