@@ -22,7 +22,7 @@ class EvalIterHook(Hook):
             save_image (bool): Whether to save image.
             save_path (str): The path to save image.
     """
-    _feature_based_metric = ['FID', 'KID']
+    feature_based_metric = ['FID', 'KID']
 
     def __init__(self, dataloader, interval=1, **eval_kwargs):
         if not isinstance(dataloader, DataLoader):
@@ -64,7 +64,7 @@ class EvalIterHook(Hook):
 
         # evaluate feature-based metrics
         features = eval_res.pop('_inception_feat', None)
-        for metric in self._feature_based_metric:
+        for metric in self.feature_based_metric:
             if metric in eval_res:
                 # since there is no parameters or network in FID and KID,
                 # we can directly build a new metric
