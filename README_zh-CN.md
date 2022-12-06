@@ -103,11 +103,6 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ## 最新进展
 
-### 🎉 支持了两个新任务!!!
-
-- 支持了图文生成任务![Disco-Diffusion](configs/disco_diffusion/README.md)
-- 支持了3D级图像生成任务![EG3D](configs/eg3d/README.md)
-
 ### 🌟 1.x 预览版本
 
 全新的 [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) 已经在 05/12/2022 发布:
@@ -118,7 +113,6 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
 - 支持基于图像子块以及滑动条的图像和视频比较可视化工具。
 - 支持图像上色任务。
-- 将 `mmdet` 与 `clip` 切换为可选依赖
 
 在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
 
