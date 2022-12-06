@@ -124,7 +124,7 @@ class BasicRestorer(BaseModel):
                   and metric['type'] in ['FID', 'KID']):
                 need_inception = True
                 # build with user defined args
-                eval_result[metric] = deepcopy(metric)
+                eval_result[metric['type']] = deepcopy(metric)
 
         if need_inception:
             if '_inception_feat' not in self.allowed_metrics:

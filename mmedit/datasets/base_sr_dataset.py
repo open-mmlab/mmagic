@@ -87,11 +87,15 @@ class BaseSRDataset(BaseDataset):
 
         if '_inception_feat' in eval_result:
             feat1, feat2 = [], []
-            for f1, f2 in eval_result['InceptionV3']:
+            for f1, f2 in eval_result['_inception_feat']:
                 feat1.append(f1)
                 feat2.append(f2)
             feat1 = np.concatenate(feat1, 0)
             feat2 = np.concatenate(feat2, 0)
-            eval_result['InceptionV3'] = feat1, feat2
+            eval_result['_inception_feat'] = feat1, feat2
+
+        for metric in ['FID', 'KID']:
+            if metric in eval_result:
+                eval_result[metric] = eval_result[metric].pop()
 
         return eval_result
