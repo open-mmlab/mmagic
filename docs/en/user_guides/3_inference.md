@@ -237,7 +237,7 @@ If `--imshow` is specified, the demo will also show image with opencv. Examples:
 
 ```shell
 python demo/restoration_face_demo.py \
-    configs/glean/glean_in128out1024_4x2_300k_ffhq_celebahq.py \
+    configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py \
     https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth \
     tests/data/image/face/000001.png \
     tests/data/pred/000001.png \

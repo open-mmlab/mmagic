@@ -118,6 +118,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
 - 支持基于图像子块以及滑动条的图像和视频比较可视化工具。
 - 支持图像上色任务。
+- 将 `mmdet` 与 `clip` 切换为可选依赖
 
 在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
 
