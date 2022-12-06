@@ -86,6 +86,16 @@ class BaseMMEditInferencer:
                 if key in extra_parameters.keys():
                     self.extra_parameters[key] = extra_parameters[key]
 
+    def _update_extra_parameters(self, **kwargs) -> None:
+        """update extra_parameters during run time."""
+        if 'extra_parameters' in kwargs:
+            input_extra_parameters = kwargs['extra_parameters']
+            if input_extra_parameters is not None:
+                for key in self.extra_parameters.keys():
+                    if key in input_extra_parameters.keys():
+                        self.extra_parameters[key] = \
+                            input_extra_parameters[key]
+
     def _dispatch_kwargs(self, **kwargs) -> Tuple[Dict, Dict, Dict, Dict]:
         """Dispatch kwargs to preprocess(), forward(), visualize() and
         postprocess() according to the actual demands."""
@@ -112,6 +122,8 @@ class BaseMMEditInferencer:
         Returns:
             Union[Dict, List[Dict]]: Results of inference pipeline.
         """
+        self._update_extra_parameters(**kwargs)
+
         params = self._dispatch_kwargs(**kwargs)
         preprocess_kwargs = self.base_params[0].copy()
         preprocess_kwargs.update(params[0])
