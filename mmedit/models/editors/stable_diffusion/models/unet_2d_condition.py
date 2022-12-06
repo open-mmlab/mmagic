@@ -20,7 +20,7 @@ import torch.utils.checkpoint
 
 from ..configuration_utils import ConfigMixin, register_to_config
 from .modeling_utils import ModelMixin
-from ..utils import BaseOutput, logging
+from ..utils import logging
 from .embeddings import TimestepEmbedding, Timesteps
 from .unet_2d_blocks import (
     CrossAttnDownBlock2D,
@@ -31,20 +31,10 @@ from .unet_2d_blocks import (
     get_down_block,
     get_up_block,
 )
-
+from addict import Dict
 
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
-
-@dataclass
-class UNet2DConditionOutput(BaseOutput):
-    """
-    Args:
-        sample (`torch.FloatTensor` of shape `(batch_size, num_channels, height, width)`):
-            Hidden states conditioned on `encoder_hidden_states` input. Output of last layer of model.
-    """
-
-    sample: torch.FloatTensor
 
 
 class UNet2DConditionModel(ModelMixin, ConfigMixin):
@@ -274,18 +264,18 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin):
         encoder_hidden_states: torch.Tensor,
         class_labels: Optional[torch.Tensor] = None,
         return_dict: bool = True,
-    ) -> Union[UNet2DConditionOutput, Tuple]:
+    ) -> Union[Dict, Tuple]:
         r"""
         Args:
             sample (`torch.FloatTensor`): (batch, channel, height, width) noisy inputs tensor
             timestep (`torch.FloatTensor` or `float` or `int`): (batch) timesteps
             encoder_hidden_states (`torch.FloatTensor`): (batch, channel, height, width) encoder hidden states
             return_dict (`bool`, *optional*, defaults to `True`):
-                Whether or not to return a [`models.unet_2d_condition.UNet2DConditionOutput`] instead of a plain tuple.
+                Whether or not to return a [`models.unet_2d_condition.Dict`] instead of a plain tuple.
 
         Returns:
-            [`~models.unet_2d_condition.UNet2DConditionOutput`] or `tuple`:
-            [`~models.unet_2d_condition.UNet2DConditionOutput`] if `return_dict` is True, otherwise a `tuple`. When
+            [`~models.unet_2d_condition.Dict`] or `tuple`:
+            [`~models.unet_2d_condition.Dict`] if `return_dict` is True, otherwise a `tuple`. When
             returning a tuple, the first element is the sample tensor.
         """
         # By default samples have to be AT least a multiple of the overall upsampling factor.
@@ -383,4 +373,4 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin):
         if not return_dict:
             return (sample,)
 
-        return UNet2DConditionOutput(sample=sample)
+        return Dict(sample=sample)

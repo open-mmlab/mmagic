@@ -27,7 +27,6 @@ from .utils import (
     is_accelerate_available,
     is_torch_version,
     logging,
-    StableDiffusionPipelineOutput,
 )
 
 from mmedit.registry import MODELS, DIFFUSION_SCHEDULERS
@@ -38,7 +37,6 @@ from transformers.models.clip.modeling_clip import CLIPTextModel
 from .models.unet_2d_condition import UNet2DConditionModel
 from .models.vae import AutoencoderKL
 from .models.safety_checker import StableDiffusionSafetyChecker
-from .schedulers import DDIMScheduler
 
 logger = logging.get_logger(__name__)
 
@@ -109,7 +107,6 @@ class StableDiffuser(nn.Module):
         self.scheduler.order = 1
         self.scheduler.init_noise_sigma = 1.0
 
-        import pdb;pdb.set_trace();
         self.tokenizer = CLIPTokenizer.from_pretrained(os.path.join(cached_folder, 'tokenizer'), **loading_kwargs)
         self.feature_extractor = CLIPFeatureExtractor.from_pretrained(os.path.join(cached_folder, 'feature_extractor'), **loading_kwargs)
         self.text_encoder = CLIPTextModel.from_pretrained(os.path.join(cached_folder, 'text_encoder'), **loading_kwargs)
@@ -339,8 +336,8 @@ class StableDiffuser(nn.Module):
         if not return_dict:
             return (image, has_nsfw_concept)
 
-        return StableDiffusionPipelineOutput(images=image, nsfw_content_detected=has_nsfw_concept)
-        
+        return {'samples':image, 'nsfw_content_detected':has_nsfw_concept}
+
     @property
     def _execution_device(self):
         r"""

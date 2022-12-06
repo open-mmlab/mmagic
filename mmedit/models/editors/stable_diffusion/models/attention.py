@@ -23,21 +23,8 @@ from torch import nn
 from ..configuration_utils import ConfigMixin, register_to_config
 from .modeling_utils import ModelMixin
 from ..models.embeddings import ImagePositionalEmbeddings
-from ..utils import BaseOutput
 from ..utils.import_utils import is_xformers_available
-
-
-@dataclass
-class Transformer2DModelOutput(BaseOutput):
-    """
-    Args:
-        sample (`torch.FloatTensor` of shape `(batch_size, num_channels, height, width)` or `(batch size, num_vector_embeds - 1, num_latent_pixels)` if [`Transformer2DModel`] is discrete):
-            Hidden states conditioned on `encoder_hidden_states` input. If discrete, returns probability distributions
-            for the unnoised latent pixels.
-    """
-
-    sample: torch.FloatTensor
-
+from addict import Dict
 
 if is_xformers_available():
     import xformers
@@ -244,7 +231,7 @@ class Transformer2DModel(ModelMixin, ConfigMixin):
         if not return_dict:
             return (output,)
 
-        return Transformer2DModelOutput(sample=output)
+        return Dict(sample=output)
 
     def _set_use_memory_efficient_attention_xformers(self, use_memory_efficient_attention_xformers: bool):
         for block in self.transformer_blocks:
@@ -848,7 +835,7 @@ class DualTransformer2DModel(nn.Module):
         if not return_dict:
             return (output_states,)
 
-        return Transformer2DModelOutput(sample=output_states)
+        return Dict(sample=output_states)
 
     def _set_attention_slice(self, slice_size):
         for transformer in self.transformers:

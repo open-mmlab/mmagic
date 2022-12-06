@@ -36,7 +36,6 @@ from .import_utils import (
     requires_backends,
 )
 from .logging import get_logger
-from .outputs import BaseOutput, StableDiffusionPipelineOutput
 
 
 logger = get_logger(__name__)

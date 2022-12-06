@@ -20,48 +20,8 @@ import torch.nn as nn
 
 from ..configuration_utils import ConfigMixin, register_to_config
 from .modeling_utils import ModelMixin
-from ..utils import BaseOutput
 from .unet_2d_blocks import UNetMidBlock2D, get_down_block, get_up_block
-
-
-@dataclass
-class DecoderOutput(BaseOutput):
-    """
-    Output of decoding method.
-
-    Args:
-        sample (`torch.FloatTensor` of shape `(batch_size, num_channels, height, width)`):
-            Decoded output sample of the model. Output of the last layer of the model.
-    """
-
-    sample: torch.FloatTensor
-
-
-@dataclass
-class VQEncoderOutput(BaseOutput):
-    """
-    Output of VQModel encoding method.
-
-    Args:
-        latents (`torch.FloatTensor` of shape `(batch_size, num_channels, height, width)`):
-            Encoded output sample of the model. Output of the last layer of the model.
-    """
-
-    latents: torch.FloatTensor
-
-
-@dataclass
-class AutoencoderKLOutput(BaseOutput):
-    """
-    Output of AutoencoderKL encoding method.
-
-    Args:
-        latent_dist (`DiagonalGaussianDistribution`):
-            Encoded outputs of `Encoder` represented as the mean and logvar of `DiagonalGaussianDistribution`.
-            `DiagonalGaussianDistribution` allows for sampling latents from the distribution.
-    """
-
-    latent_dist: "DiagonalGaussianDistribution"
+from addict import Dict
 
 
 class Encoder(nn.Module):
@@ -461,18 +421,18 @@ class VQModel(ModelMixin, ConfigMixin):
             norm_num_groups=norm_num_groups,
         )
 
-    def encode(self, x: torch.FloatTensor, return_dict: bool = True) -> VQEncoderOutput:
+    def encode(self, x: torch.FloatTensor, return_dict: bool = True) -> Dict:
         h = self.encoder(x)
         h = self.quant_conv(h)
 
         if not return_dict:
             return (h,)
 
-        return VQEncoderOutput(latents=h)
+        return Dict(latents=h)
 
     def decode(
         self, h: torch.FloatTensor, force_not_quantize: bool = False, return_dict: bool = True
-    ) -> Union[DecoderOutput, torch.FloatTensor]:
+    ) -> Union[Dict, torch.FloatTensor]:
         # also go through quantization layer
         if not force_not_quantize:
             quant, emb_loss, info = self.quantize(h)
@@ -484,14 +444,14 @@ class VQModel(ModelMixin, ConfigMixin):
         if not return_dict:
             return (dec,)
 
-        return DecoderOutput(sample=dec)
+        return Dict(sample=dec)
 
-    def forward(self, sample: torch.FloatTensor, return_dict: bool = True) -> Union[DecoderOutput, torch.FloatTensor]:
+    def forward(self, sample: torch.FloatTensor, return_dict: bool = True) -> Union[Dict, torch.FloatTensor]:
         r"""
         Args:
             sample (`torch.FloatTensor`): Input sample.
             return_dict (`bool`, *optional*, defaults to `True`):
-                Whether or not to return a [`DecoderOutput`] instead of a plain tuple.
+                Whether or not to return a [`Dict`] instead of a plain tuple.
         """
         x = sample
         h = self.encode(x).latents
@@ -500,7 +460,7 @@ class VQModel(ModelMixin, ConfigMixin):
         if not return_dict:
             return (dec,)
 
-        return DecoderOutput(sample=dec)
+        return Dict(sample=dec)
 
 
 class AutoencoderKL(ModelMixin, ConfigMixin):
@@ -566,7 +526,7 @@ class AutoencoderKL(ModelMixin, ConfigMixin):
         self.quant_conv = torch.nn.Conv2d(2 * latent_channels, 2 * latent_channels, 1)
         self.post_quant_conv = torch.nn.Conv2d(latent_channels, latent_channels, 1)
 
-    def encode(self, x: torch.FloatTensor, return_dict: bool = True) -> AutoencoderKLOutput:
+    def encode(self, x: torch.FloatTensor, return_dict: bool = True) -> Dict:
         h = self.encoder(x)
         moments = self.quant_conv(h)
         posterior = DiagonalGaussianDistribution(moments)
@@ -574,16 +534,16 @@ class AutoencoderKL(ModelMixin, ConfigMixin):
         if not return_dict:
             return (posterior,)
 
-        return AutoencoderKLOutput(latent_dist=posterior)
+        return Dict(latent_dist=posterior)
 
-    def decode(self, z: torch.FloatTensor, return_dict: bool = True) -> Union[DecoderOutput, torch.FloatTensor]:
+    def decode(self, z: torch.FloatTensor, return_dict: bool = True) -> Union[Dict, torch.FloatTensor]:
         z = self.post_quant_conv(z)
         dec = self.decoder(z)
 
         if not return_dict:
             return (dec,)
 
-        return DecoderOutput(sample=dec)
+        return Dict(sample=dec)
 
     def forward(
         self,
@@ -591,14 +551,14 @@ class AutoencoderKL(ModelMixin, ConfigMixin):
         sample_posterior: bool = False,
         return_dict: bool = True,
         generator: Optional[torch.Generator] = None,
-    ) -> Union[DecoderOutput, torch.FloatTensor]:
+    ) -> Union[Dict, torch.FloatTensor]:
         r"""
         Args:
             sample (`torch.FloatTensor`): Input sample.
             sample_posterior (`bool`, *optional*, defaults to `False`):
                 Whether to sample from the posterior.
             return_dict (`bool`, *optional*, defaults to `True`):
-                Whether or not to return a [`DecoderOutput`] instead of a plain tuple.
+                Whether or not to return a [`Dict`] instead of a plain tuple.
         """
         x = sample
         posterior = self.encode(x).latent_dist
@@ -611,4 +571,4 @@ class AutoencoderKL(ModelMixin, ConfigMixin):
         if not return_dict:
             return (dec,)
 
-        return DecoderOutput(sample=dec)
+        return Dict(sample=dec)
