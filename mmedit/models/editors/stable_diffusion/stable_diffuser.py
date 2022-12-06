@@ -13,31 +13,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import importlib
 import inspect
 import os
 import torch
-import transformers
+import torch.nn as nn
 
 from typing import Callable, List, Optional, Union
-from packaging import version
-from transformers import PreTrainedModel
 from PIL import Image
 from tqdm.auto import tqdm
 
-from .configuration_utils import ConfigMixin
-from .configuration_utils import FrozenDict
 from .models.modeling_utils import _LOW_CPU_MEM_USAGE_DEFAULT
 from .utils import (
-    deprecate,
     is_accelerate_available,
     is_torch_version,
-    is_transformers_available,
     logging,
     StableDiffusionPipelineOutput,
 )
 
-from mmedit.registry import MODELS
+from mmedit.registry import MODELS, DIFFUSION_SCHEDULERS
 from transformers.models.clip.feature_extraction_clip import CLIPFeatureExtractor
 from transformers.models.clip.tokenization_clip import CLIPTokenizer
 from transformers.models.clip.modeling_clip import CLIPTextModel
@@ -45,14 +38,14 @@ from transformers.models.clip.modeling_clip import CLIPTextModel
 from .models.unet_2d_condition import UNet2DConditionModel
 from .models.vae import AutoencoderKL
 from .models.safety_checker import StableDiffusionSafetyChecker
-from .schedulers import PNDMScheduler, DPMSolverMultistepScheduler, DDIMScheduler
+from .schedulers import DDIMScheduler
 
 logger = logging.get_logger(__name__)
 
 
 @MODELS.register_module('sd')
 @MODELS.register_module()
-class StableDiffuser(ConfigMixin):
+class StableDiffuser(nn.Module):
     r"""
     Base class for all models.
     """
@@ -60,7 +53,8 @@ class StableDiffuser(ConfigMixin):
     _optional_components = ["safety_checker", "feature_extractor"]
 
     def __init__(self, 
-            pretrained_model_name_or_path, 
+            pretrained_model_name_or_path,
+            diffusion_scheduler,
             requires_safety_checker=True,
             **kwargs):
         super().__init__()
@@ -107,69 +101,27 @@ class StableDiffuser(ConfigMixin):
         loading_kwargs["device_map"] = device_map
         loading_kwargs["low_cpu_mem_usage"] = low_cpu_mem_usage
 
+        self.submodels = ['tokenizer', 'vae', 'scheduler', 'unet', 'safety_checker', 'feature_extractor', 'text_encoder']
+
+        self.scheduler = DIFFUSION_SCHEDULERS.build(
+            diffusion_scheduler) if isinstance(diffusion_scheduler,
+                                               dict) else diffusion_scheduler
+        self.scheduler.order = 1
+        self.scheduler.init_noise_sigma = 1.0
+
+        import pdb;pdb.set_trace();
         self.tokenizer = CLIPTokenizer.from_pretrained(os.path.join(cached_folder, 'tokenizer'), **loading_kwargs)
         self.feature_extractor = CLIPFeatureExtractor.from_pretrained(os.path.join(cached_folder, 'feature_extractor'), **loading_kwargs)
         self.text_encoder = CLIPTextModel.from_pretrained(os.path.join(cached_folder, 'text_encoder'), **loading_kwargs)
         self.vae = AutoencoderKL.from_pretrained(os.path.join(cached_folder, 'vae'), **loading_kwargs)
         self.unet = UNet2DConditionModel.from_pretrained(os.path.join(cached_folder, 'unet'), **loading_kwargs)
-        self.scheduler = DDIMScheduler.from_pretrained(os.path.join(cached_folder, 'scheduler'), **loading_kwargs)
-        self.safety_checker = StableDiffusionSafetyChecker.from_pretrained(os.path.join(cached_folder, 'safety_checker'), **loading_kwargs)
 
-        self.submodels = ['tokenizer', 'vae', 'scheduler', 'unet', 'safety_checker', 'feature_extractor', 'text_encoder']
-
-        if hasattr(self.scheduler.config, "steps_offset") and self.scheduler.config.steps_offset != 1:
-            deprecation_message = (
-                f"The configuration file of this scheduler: {self.scheduler} is outdated. `steps_offset`"
-                f" should be set to 1 instead of {self.scheduler.config.steps_offset}. Please make sure "
-                "to update the config accordingly as leaving `steps_offset` might led to incorrect results"
-                " in future versions. If you have downloaded this checkpoint from the Hugging Face Hub,"
-                " it would be very nice if you could open a Pull request for the `scheduler/scheduler_config.json`"
-                " file"
-            )
-            deprecate("steps_offset!=1", "1.0.0", deprecation_message, standard_warn=False)
-            new_config = dict(self.scheduler.config)
-            new_config["steps_offset"] = 1
-            self.scheduler._internal_dict = FrozenDict(new_config)
-
-        if hasattr(self.scheduler.config, "clip_sample") and self.scheduler.config.clip_sample is True:
-            deprecation_message = (
-                f"The configuration file of this scheduler: {self.scheduler} has not set the configuration `clip_sample`."
-                " `clip_sample` should be set to False in the configuration file. Please make sure to update the"
-                " config accordingly as not setting `clip_sample` in the config might lead to incorrect results in"
-                " future versions. If you have downloaded this checkpoint from the Hugging Face Hub, it would be very"
-                " nice if you could open a Pull request for the `scheduler/scheduler_config.json` file"
-            )
-            deprecate("clip_sample not set", "1.0.0", deprecation_message, standard_warn=False)
-            new_config = dict(self.scheduler.config)
-            new_config["clip_sample"] = False
-            self.scheduler._internal_dict = FrozenDict(new_config)
-
-        if self.safety_checker is None and requires_safety_checker:
-            logger.warning(
-                f"You have disabled the safety checker for {self.__class__} by passing `safety_checker=None`. Ensure"
-                " that you abide to the conditions of the Stable Diffusion license and do not expose unfiltered"
-                " results in services or applications open to the public. Both the diffusers team and Hugging Face"
-                " strongly recommend to keep the safety filter enabled in all public facing circumstances, disabling"
-                " it only for use-cases that involve analyzing network behavior or auditing its results. For more"
-                " information, please have a look at https://github.com/huggingface/diffusers/pull/254 ."
-            )
-
-        if self.safety_checker is not None and self.feature_extractor is None:
-            raise ValueError(
-                "Make sure to define a feature extractor when loading {self.__class__} if you want to use the safety"
-                " checker. If you do not want to use the safety checker, you can pass `'safety_checker=None'` instead."
-            )
+        # self.scheduler = DDIMScheduler.from_pretrained(os.path.join(cached_folder, 'scheduler'), **loading_kwargs)
+        if requires_safety_checker:
+            self.safety_checker = StableDiffusionSafetyChecker.from_pretrained(os.path.join(cached_folder, 'safety_checker'), **loading_kwargs)
 
         self.vae_scale_factor = 2 ** (len(self.vae.config.block_out_channels) - 1)
-        self.register_to_config(requires_safety_checker=requires_safety_checker)
 
-    @staticmethod
-    def _get_signature_keys(obj):
-        parameters = inspect.signature(obj.__init__).parameters
-        required_parameters = {k: v for k, v in parameters.items() if v.default == inspect._empty}
-        optional_parameters = set({k for k, v in parameters.items() if v.default != inspect._empty})
-        expected_modules = set(required_parameters.keys()) - set(["self"])
-        return expected_modules, optional_parameters
 
     def progress_bar(self, iterable=None, total=None):
         if not hasattr(self, "_progress_bar_config"):
@@ -329,7 +281,8 @@ class StableDiffuser(ConfigMixin):
         )
 
         # 4. Prepare timesteps
-        self.scheduler.set_timesteps(num_inference_steps, device=device)
+        # self.scheduler.set_timesteps(num_inference_steps, device=device)
+        self.scheduler.set_timesteps(num_inference_steps)
         timesteps = self.scheduler.timesteps
 
         # 5. Prepare latent variables
@@ -354,7 +307,7 @@ class StableDiffuser(ConfigMixin):
             for i, t in enumerate(timesteps):
                 # expand the latents if we are doing classifier free guidance
                 latent_model_input = torch.cat([latents] * 2) if do_classifier_free_guidance else latents
-                latent_model_input = self.scheduler.scale_model_input(latent_model_input, t)
+                # latent_model_input = self.scheduler.scale_model_input(latent_model_input, t)
 
                 # predict the noise residual
                 noise_pred = self.unet(latent_model_input, t, encoder_hidden_states=text_embeddings).sample
@@ -365,7 +318,7 @@ class StableDiffuser(ConfigMixin):
                     noise_pred = noise_pred_uncond + guidance_scale * (noise_pred_text - noise_pred_uncond)
 
                     # compute the previous noisy sample x_t -> x_t-1
-                    latents = self.scheduler.step(noise_pred, t, latents, **extra_step_kwargs).prev_sample
+                    latents = self.scheduler.step(noise_pred, t, latents, **extra_step_kwargs)['prev_sample']
 
                 # call the callback, if provided
                 if (i + 1) > num_warmup_steps and (i + 1) % self.scheduler.order == 0:
