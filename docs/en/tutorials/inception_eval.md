@@ -24,7 +24,7 @@ To this end, MMEditing provides functions to compute  *Fréchet inception distan
 
 FID and KID can be meausred after images from two distributions are extractes as feature vectors with the InceptionV3 model.
 
-To gain distance between extracted feature vectors, we can use `FID` and `KID` metric in `test_cfg` as follow:
+To gain distance between extracted feature vectors, we can add `FID` and `KID` metric in `test_cfg` as follow:
 
 ```python3
 test_cfg = dict(
