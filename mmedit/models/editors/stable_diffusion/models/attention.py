@@ -23,7 +23,7 @@ from torch import nn
 from ..configuration_utils import ConfigMixin, register_to_config
 from .modeling_utils import ModelMixin
 from ..models.embeddings import ImagePositionalEmbeddings
-from ..utils.import_utils import is_xformers_available
+from ..utils import is_xformers_available
 from addict import Dict
 
 if is_xformers_available():

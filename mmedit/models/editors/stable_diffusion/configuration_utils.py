@@ -28,9 +28,10 @@ from huggingface_hub import hf_hub_download
 from huggingface_hub.utils import EntryNotFoundError, RepositoryNotFoundError, RevisionNotFoundError
 from requests import HTTPError
 
+# from .utils import HUGGINGFACE_CO_RESOLVE_ENDPOINT, DIFFUSERS_CACHE
+from .utils import HUGGINGFACE_CO_RESOLVE_ENDPOINT, DIFFUSERS_CACHE
 __version__ = 1.5
 
-from .utils import DIFFUSERS_CACHE, HUGGINGFACE_CO_RESOLVE_ENDPOINT, DummyObject
 
 from mmengine.logging import MMLogger
 logger = MMLogger.get_current_instance()
@@ -404,9 +405,7 @@ class ConfigMixin:
         # load diffusers library to import compatible and original scheduler
         diffusers_library = importlib.import_module('.'.join(__name__.split(".")[:4]))
 
-        if cls.has_compatibles:
-            compatible_classes = [c for c in cls._get_compatibles() if not isinstance(c, DummyObject)]
-        else:
+        if not cls.has_compatibles:
             compatible_classes = []
 
         expected_keys_comp_cls = set()
