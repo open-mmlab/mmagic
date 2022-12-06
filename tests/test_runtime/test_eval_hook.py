@@ -85,13 +85,14 @@ def test_eval_hook():
     test_dataset = ExampleDataset()
     test_dataset.evaluate = MagicMock(
         return_value=dict(
-            _inception_feat=(np.zeros((1, 2048)), np.zeros((1, 2048)))),
-        example=dict(type='ExampleMetric'))
+            _inception_feat=(np.zeros((1, 2048)), np.zeros((1, 2048))),
+            example=dict(type='ExampleMetric')))
     loader = DataLoader(test_dataset, batch_size=1)
     model = ExampleModel()
     data_loader = DataLoader(
         test_dataset, batch_size=1, sampler=None, num_workers=0, shuffle=False)
     eval_hook = EvalIterHook(data_loader)
+    eval_hook._feature_based_metric.append('example')
     optim_cfg = dict(type='Adam', lr=2e-4, betas=(0.9, 0.999))
     optimizer = obj_from_dict(optim_cfg, torch.optim,
                               dict(params=model.parameters()))
@@ -105,5 +106,5 @@ def test_eval_hook():
         runner.run([loader], [('train', 1)], 1)
         test_dataset.evaluate.assert_called_with([torch.tensor([1])],
                                                  logger=runner.logger)
-        assert runner.log_buffer.output['example']['a'] == 0
-        assert runner.log_buffer.output['example']['b'] == 1
+        assert runner.log_buffer.output['a'] == 0
+        assert runner.log_buffer.output['b'] == 1

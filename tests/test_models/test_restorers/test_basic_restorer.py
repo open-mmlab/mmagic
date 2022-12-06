@@ -7,6 +7,7 @@ import pytest
 import torch
 from mmcv.runner import obj_from_dict
 
+from mmedit.core.evaluation import InceptionV3
 from mmedit.models import build_model
 from mmedit.models.backbones import MSRResNet
 from mmedit.models.losses import L1Loss
@@ -155,7 +156,7 @@ def test_basic_restorer():
         assert isinstance(outputs['eval_result']['KID'], dict)
         assert '_inception_feat' in restorer.allowed_metrics
         assert isinstance(restorer.allowed_metrics['_inception_feat'],
-                          torch.nn.Module)
+                          InceptionV3)
 
         incept_result = outputs['eval_result']['_inception_feat']
         assert isinstance(incept_result, tuple) and len(incept_result) == 2
@@ -179,7 +180,7 @@ def test_basic_restorer():
         assert isinstance(outputs['eval_result']['KID'], dict)
         assert '_inception_feat' in restorer.allowed_metrics
         assert isinstance(restorer.allowed_metrics['_inception_feat'],
-                          torch.nn.Module)
+                          InceptionV3)
 
         incept_result = outputs['eval_result']['_inception_feat']
         assert isinstance(incept_result, tuple) and len(incept_result) == 2

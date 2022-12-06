@@ -129,11 +129,12 @@ class BasicRestorer(BaseModel):
         if need_inception:
             if '_inception_feat' not in self.allowed_metrics:
                 inception_style = self.test_cfg.get('inception_style',
-                                                    'stylegan')
+                                                    'StyleGAN')
                 device = 'cuda' if torch.cuda.is_available() else 'cpu'
                 self.allowed_metrics['_inception_feat'] = InceptionV3(
-                    device, inception_style)
-                self.test_cfg.metrics.append('_inception_feat')
+                    inception_style, device=device)
+                self.test_cfg.metrics = tuple(
+                    self.test_cfg.metrics) + ('_inception_feat', )
 
         for metric in self.test_cfg.metrics:
             if isinstance(metric, dict) or metric in ['FID', 'KID']:
