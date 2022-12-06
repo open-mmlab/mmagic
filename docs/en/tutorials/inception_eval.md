@@ -22,30 +22,16 @@ To this end, MMEditing provides functions to compute  *Fréchet inception distan
 
 # Set Config File
 
-FID and KID can be meausred after images from two distributions are extractes as feature vectors with the Inception V3 model.
+FID and KID can be meausred after images from two distributions are extractes as feature vectors with the InceptionV3 model.
 
-To extract feature vectors in `val_dataloader`, we have to add `'InceptionV3'` to `'metrics'`  in`'test_cfg'`.
-
-```python3
-test_cfg = dict(metrics=['PSNR', 'SSIM', 'InceptionV3'], crop_border=0)
-```
-
-Then, the feature vectors are saved as `eval_result` in `BaseSRdataset`.
-
-Yet, the final metric we want to measure is not specified.
-To specify this, we have to write **InceptionV3 related metrics** in `'evaluation'`.
+To gain distance between extracted feature vectors, we can use `FID` and `KID` metric in `test_cfg` as follow:
 
 ```python3
-# Compute FID only
-evaluation = dict(interval=5000,
-                  save_image=True,
-                  gpu_collect=True,
-                  metrics=dict(type='FID'))
-
-# Compute FID and KID
-evaluation = dict(interval=5000,
-                  save_image=True,
-                  gpu_collect=True,
-                  metrics=[dict(type='FID'), dict('KID')])
-
+test_cfg = dict(
+    metrics=[
+        'PSNR', 'SSIM', 'FID',
+        dict(type='KID', num_repeats=100, sample_size=1000)
+    ],
+    inception_style='StyleGAN',  # or pytorch
+    crop_border=0)
 ```
