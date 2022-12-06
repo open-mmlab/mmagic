@@ -81,8 +81,8 @@ save_image(image, "image.png")
 
 ## Tutorials
 
-Considering that `disco-diffusion` contains many adjustable parameters, we provide users with a [jupyter-notebook](configs/disco_diffusion/tutorials.ipynb) / [colab](https://githubtocolab.com/open-mmlab/mmediting/tree/dev-1.x/configs/disco_diffusion/tutorials.ipynb) tutorial that exhibits the meaning of different parameters, and gives results corresponding to adjustment.
-Refer to https://docs.google.com/document/d/1l8s7uS2dGqjztYSjPpzlmXLjl5PM3IGkRWI3IiCuK7g/edit.
+Considering that `disco-diffusion` contains many adjustable parameters, we provide users with a [jupyter-notebook](configs/disco_diffusion/tutorials.ipynb) / [colab](https://githubtocolab.com/open-mmlab/mmediting/blob/dev-1.x/configs/disco_diffusion/tutorials.ipynb) tutorial that exhibits the meaning of different parameters, and gives results corresponding to adjustment.
+Refer to [Disco Sheet](https://docs.google.com/document/d/1l8s7uS2dGqjztYSjPpzlmXLjl5PM3IGkRWI3IiCuK7g/edit).
 
 ## Credits
 
