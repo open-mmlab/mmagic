@@ -26,7 +26,6 @@ from .models.modeling_utils import _LOW_CPU_MEM_USAGE_DEFAULT
 from .utils import (
     is_accelerate_available,
     is_torch_version,
-    logging,
 )
 
 from mmedit.registry import MODELS, DIFFUSION_SCHEDULERS
@@ -38,7 +37,9 @@ from .models.unet_2d_condition import UNet2DConditionModel
 from .models.vae import AutoencoderKL
 from .models.safety_checker import StableDiffusionSafetyChecker
 
-logger = logging.get_logger(__name__)
+
+from mmengine.logging import MMLogger
+logger = MMLogger.get_current_instance()
 
 
 @MODELS.register_module('sd')

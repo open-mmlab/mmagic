@@ -35,10 +35,6 @@ from .import_utils import (
     is_unidecode_available,
     requires_backends,
 )
-from .logging import get_logger
-
-
-logger = get_logger(__name__)
 
 
 hf_cache_home = os.path.expanduser(

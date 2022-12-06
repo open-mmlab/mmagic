@@ -17,12 +17,8 @@ import torch
 import torch.nn as nn
 
 from transformers import CLIPConfig, CLIPVisionModel, PreTrainedModel
-
-from ..utils import logging
-
-
-logger = logging.get_logger(__name__)
-
+from mmengine.logging import MMLogger
+logger = MMLogger.get_current_instance()
 
 def cosine_distance(image_embeds, text_embeds):
     normalized_image_embeds = nn.functional.normalize(image_embeds)

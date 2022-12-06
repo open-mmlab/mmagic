@@ -30,10 +30,10 @@ from requests import HTTPError
 
 __version__ = 1.5
 
-from .utils import DIFFUSERS_CACHE, HUGGINGFACE_CO_RESOLVE_ENDPOINT, DummyObject, logging
+from .utils import DIFFUSERS_CACHE, HUGGINGFACE_CO_RESOLVE_ENDPOINT, DummyObject
 
-
-logger = logging.get_logger(__name__)
+from mmengine.logging import MMLogger
+logger = MMLogger.get_current_instance()
 
 _re_configuration_file = re.compile(r"config\.(.*)\.json")
 

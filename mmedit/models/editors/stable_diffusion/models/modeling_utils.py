@@ -36,11 +36,10 @@ from ..utils import (
     is_accelerate_available,
     is_safetensors_available,
     is_torch_version,
-    logging,
 )
 
-
-logger = logging.get_logger(__name__)
+from mmengine.logging import MMLogger
+logger = MMLogger.get_current_instance()
 
 
 if is_torch_version(">=", "1.9.0"):

@@ -20,7 +20,6 @@ import torch.utils.checkpoint
 
 from ..configuration_utils import ConfigMixin, register_to_config
 from .modeling_utils import ModelMixin
-from ..utils import logging
 from .embeddings import TimestepEmbedding, Timesteps
 from .unet_2d_blocks import (
     CrossAttnDownBlock2D,
@@ -32,8 +31,8 @@ from .unet_2d_blocks import (
     get_up_block,
 )
 from addict import Dict
-
-logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
+from mmengine.logging import MMLogger
+logger = MMLogger.get_current_instance()
 
 
 
