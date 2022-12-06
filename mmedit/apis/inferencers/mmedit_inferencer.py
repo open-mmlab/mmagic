@@ -10,6 +10,7 @@ from .eg3d_inferencer import EG3DInferencer
 from .inpainting_inferencer import InpaintingInferencer
 from .matting_inferencer import MattingInferencer
 from .restoration_inferencer import RestorationInferencer
+from .text2image_inferencer import Text2ImageInferencer
 from .translation_inferencer import TranslationInferencer
 from .unconditional_inferencer import UnconditionalInferencer
 from .video_interpolation_inferencer import VideoInterpolationInferencer
@@ -59,6 +60,9 @@ class MMEditInferencer(BaseMMEditInferencer):
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['video_interpolation', 'Video Interpolation']:
             self.inferencer = VideoInterpolationInferencer(
+                config, ckpt, device, extra_parameters)
+        elif self.task in ['text2image', 'Text2Image']:
+            self.inferencer = Text2ImageInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['3D_aware_generation', '3D-aware Generation']:
             self.inferencer = EG3DInferencer(
