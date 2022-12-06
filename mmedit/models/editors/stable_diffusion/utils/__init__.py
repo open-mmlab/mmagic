@@ -24,13 +24,11 @@ from .import_utils import (
     USE_TORCH,
     DummyObject,
     is_accelerate_available,
-    is_flax_available,
     is_inflect_available,
     is_modelcards_available,
     is_onnx_available,
     is_safetensors_available,
     is_scipy_available,
-    is_tf_available,
     is_torch_available,
     is_torch_version,
     is_transformers_available,
@@ -40,19 +38,6 @@ from .import_utils import (
 )
 from .logging import get_logger
 from .outputs import BaseOutput, StableDiffusionPipelineOutput
-
-
-from .testing_utils import (
-    floats_tensor,
-    load_hf_numpy,
-    load_image,
-    load_numpy,
-    parse_flag_from_env,
-    require_torch_gpu,
-    slow,
-    torch_all_close,
-    torch_device,
-)
 
 
 logger = get_logger(__name__)

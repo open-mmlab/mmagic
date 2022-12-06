@@ -45,7 +45,7 @@ from transformers.models.clip.modeling_clip import CLIPTextModel
 from .models.unet_2d_condition import UNet2DConditionModel
 from .models.vae import AutoencoderKL
 from .models.safety_checker import StableDiffusionSafetyChecker
-from .schedulers.scheduling_pndm import PNDMScheduler
+from .schedulers import PNDMScheduler, DPMSolverMultistepScheduler, DDIMScheduler
 
 logger = logging.get_logger(__name__)
 
@@ -107,51 +107,44 @@ class StableDiffuser(ConfigMixin):
         loading_kwargs["device_map"] = device_map
         loading_kwargs["low_cpu_mem_usage"] = low_cpu_mem_usage
 
-        tokenizer = CLIPTokenizer.from_pretrained(os.path.join(cached_folder, 'tokenizer'), **loading_kwargs)
-        feature_extractor = CLIPFeatureExtractor.from_pretrained(os.path.join(cached_folder, 'feature_extractor'), **loading_kwargs)
-        text_encoder = CLIPTextModel.from_pretrained(os.path.join(cached_folder, 'text_encoder'), **loading_kwargs)
-        vae = AutoencoderKL.from_pretrained(os.path.join(cached_folder, 'vae'), **loading_kwargs)
-        unet = UNet2DConditionModel.from_pretrained(os.path.join(cached_folder, 'unet'), **loading_kwargs)
-        scheduler = PNDMScheduler.from_pretrained(os.path.join(cached_folder, 'scheduler'), **loading_kwargs)
-        safety_checker = StableDiffusionSafetyChecker.from_pretrained(os.path.join(cached_folder, 'safety_checker'), **loading_kwargs)
+        self.tokenizer = CLIPTokenizer.from_pretrained(os.path.join(cached_folder, 'tokenizer'), **loading_kwargs)
+        self.feature_extractor = CLIPFeatureExtractor.from_pretrained(os.path.join(cached_folder, 'feature_extractor'), **loading_kwargs)
+        self.text_encoder = CLIPTextModel.from_pretrained(os.path.join(cached_folder, 'text_encoder'), **loading_kwargs)
+        self.vae = AutoencoderKL.from_pretrained(os.path.join(cached_folder, 'vae'), **loading_kwargs)
+        self.unet = UNet2DConditionModel.from_pretrained(os.path.join(cached_folder, 'unet'), **loading_kwargs)
+        self.scheduler = DDIMScheduler.from_pretrained(os.path.join(cached_folder, 'scheduler'), **loading_kwargs)
+        self.safety_checker = StableDiffusionSafetyChecker.from_pretrained(os.path.join(cached_folder, 'safety_checker'), **loading_kwargs)
 
-        self.submodels = {}
-        self.submodels['tokenizer']=tokenizer
-        self.submodels['vae']=vae
-        self.submodels['scheduler']=scheduler
-        self.submodels['unet']=unet
-        self.submodels['safety_checker']=safety_checker
-        self.submodels['feature_extractor']=feature_extractor
-        self.submodels['text_encoder']=text_encoder
+        self.submodels = ['tokenizer', 'vae', 'scheduler', 'unet', 'safety_checker', 'feature_extractor', 'text_encoder']
 
-        if hasattr(scheduler.config, "steps_offset") and scheduler.config.steps_offset != 1:
+        if hasattr(self.scheduler.config, "steps_offset") and self.scheduler.config.steps_offset != 1:
             deprecation_message = (
-                f"The configuration file of this scheduler: {scheduler} is outdated. `steps_offset`"
-                f" should be set to 1 instead of {scheduler.config.steps_offset}. Please make sure "
+                f"The configuration file of this scheduler: {self.scheduler} is outdated. `steps_offset`"
+                f" should be set to 1 instead of {self.scheduler.config.steps_offset}. Please make sure "
                 "to update the config accordingly as leaving `steps_offset` might led to incorrect results"
                 " in future versions. If you have downloaded this checkpoint from the Hugging Face Hub,"
                 " it would be very nice if you could open a Pull request for the `scheduler/scheduler_config.json`"
                 " file"
             )
             deprecate("steps_offset!=1", "1.0.0", deprecation_message, standard_warn=False)
-            new_config = dict(scheduler.config)
+            new_config = dict(self.scheduler.config)
             new_config["steps_offset"] = 1
-            scheduler._internal_dict = FrozenDict(new_config)
+            self.scheduler._internal_dict = FrozenDict(new_config)
 
-        if hasattr(scheduler.config, "clip_sample") and scheduler.config.clip_sample is True:
+        if hasattr(self.scheduler.config, "clip_sample") and self.scheduler.config.clip_sample is True:
             deprecation_message = (
-                f"The configuration file of this scheduler: {scheduler} has not set the configuration `clip_sample`."
+                f"The configuration file of this scheduler: {self.scheduler} has not set the configuration `clip_sample`."
                 " `clip_sample` should be set to False in the configuration file. Please make sure to update the"
                 " config accordingly as not setting `clip_sample` in the config might lead to incorrect results in"
                 " future versions. If you have downloaded this checkpoint from the Hugging Face Hub, it would be very"
                 " nice if you could open a Pull request for the `scheduler/scheduler_config.json` file"
             )
             deprecate("clip_sample not set", "1.0.0", deprecation_message, standard_warn=False)
-            new_config = dict(scheduler.config)
+            new_config = dict(self.scheduler.config)
             new_config["clip_sample"] = False
-            scheduler._internal_dict = FrozenDict(new_config)
+            self.scheduler._internal_dict = FrozenDict(new_config)
 
-        if safety_checker is None and requires_safety_checker:
+        if self.safety_checker is None and requires_safety_checker:
             logger.warning(
                 f"You have disabled the safety checker for {self.__class__} by passing `safety_checker=None`. Ensure"
                 " that you abide to the conditions of the Stable Diffusion license and do not expose unfiltered"
@@ -161,21 +154,12 @@ class StableDiffuser(ConfigMixin):
                 " information, please have a look at https://github.com/huggingface/diffusers/pull/254 ."
             )
 
-        if safety_checker is not None and feature_extractor is None:
+        if self.safety_checker is not None and self.feature_extractor is None:
             raise ValueError(
                 "Make sure to define a feature extractor when loading {self.__class__} if you want to use the safety"
                 " checker. If you do not want to use the safety checker, you can pass `'safety_checker=None'` instead."
             )
 
-        self.register_modules(
-            vae=vae,
-            text_encoder=text_encoder,
-            tokenizer=tokenizer,
-            unet=unet,
-            scheduler=scheduler,
-            safety_checker=safety_checker,
-            feature_extractor=feature_extractor,
-        )
         self.vae_scale_factor = 2 ** (len(self.vae.config.block_out_channels) - 1)
         self.register_to_config(requires_safety_checker=requires_safety_checker)
 
@@ -186,38 +170,6 @@ class StableDiffuser(ConfigMixin):
         optional_parameters = set({k for k, v in parameters.items() if v.default != inspect._empty})
         expected_modules = set(required_parameters.keys()) - set(["self"])
         return expected_modules, optional_parameters
-
-    def register_modules(self, **kwargs):
-        # import it here to avoid circular import
-
-        for name, module in kwargs.items():
-            # retrieve library
-            if module is None:
-                register_dict = {name: (None, None)}
-            else:
-                library = module.__module__.split(".")[0]
-
-                # check if the module is a pipeline module
-                pipeline_dir = module.__module__.split(".")[-2] if len(module.__module__.split(".")) > 2 else None
-                path = module.__module__.split(".")
-                is_pipeline_module = pipeline_dir in path
-
-                # if library is not in LOADABLE_CLASSES, then it is a custom module.
-                # Or if it's a pipeline module, then the module is inside the pipeline
-                # folder so we set the library to module name.
-                if is_pipeline_module:
-                    library = pipeline_dir
-
-                # retrieve class_name
-                class_name = module.__class__.__name__
-
-                register_dict = {name: (library, class_name)}
-
-            # save model index config
-            self.register_to_config(**register_dict)
-
-            # set models
-            setattr(self, name, module)
 
     def progress_bar(self, iterable=None, total=None):
         if not hasattr(self, "_progress_bar_config"):
@@ -257,8 +209,7 @@ class StableDiffuser(ConfigMixin):
         if torch_device is None:
             return self
 
-        module_names = self.submodels
-        for name in module_names.keys():
+        for name in self.submodels:
             module = getattr(self, name)
             if isinstance(module, torch.nn.Module):
                 if module.dtype == torch.float16 and str(torch_device) in ["cpu"]:
@@ -279,8 +230,7 @@ class StableDiffuser(ConfigMixin):
         Returns:
             `torch.device`: The torch device on which the pipeline is located.
         """
-        module_names = self.submodels
-        for name in module_names.keys():
+        for name in self.submodels:
             module = getattr(self, name)
             if isinstance(module, torch.nn.Module):
                 return module.device

@@ -4,10 +4,9 @@ from typing import Any, Dict, Optional, Union
 
 from packaging import version
 
+__version__ = '0.9.0'
 
 def deprecate(*args, take_from: Optional[Union[Dict, Any]] = None, standard_warn=True):
-    from .. import __version__
-
     deprecated_kwargs = take_from
     values = ()
     if not isinstance(args[0], tuple):

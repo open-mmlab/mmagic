@@ -1,8 +1,8 @@
 from mmengine import MODELS, Config
 from mmedit.utils import register_all_modules
-from mmedit.models.editors.stable_diffusion.utils.training_utils import set_seed
+from mmengine.runner import set_random_seed
 
-set_seed(1)
+set_random_seed(1)
 
 register_all_modules()
 
