@@ -17,8 +17,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from ..configuration_utils import ConfigMixin, register_to_config
-from .modeling_utils import ModelMixin
 from .unet_2d_blocks import UNetMidBlock2D, get_down_block, get_up_block
 from addict import Dict
 
@@ -350,7 +348,7 @@ class DiagonalGaussianDistribution(object):
         return self.mean
 
 
-class VQModel(ModelMixin, ConfigMixin):
+class VQModel(nn.Module):
     r"""VQ-VAE model from the paper Neural Discrete Representation Learning by Aaron van den Oord, Oriol Vinyals and Koray
     Kavukcuoglu.
 
@@ -373,7 +371,6 @@ class VQModel(ModelMixin, ConfigMixin):
         vq_embed_dim (`int`, *optional*): Hidden dim of codebook vectors in the VQ-VAE.
     """
 
-    @register_to_config
     def __init__(
         self,
         in_channels: int = 3,
@@ -462,7 +459,7 @@ class VQModel(ModelMixin, ConfigMixin):
         return Dict(sample=dec)
 
 
-class AutoencoderKL(ModelMixin, ConfigMixin):
+class AutoencoderKL(nn.Module):
     r"""Variational Autoencoder (VAE) model with KL loss from the paper Auto-Encoding Variational Bayes by Diederik P. Kingma
     and Max Welling.
 
@@ -483,7 +480,6 @@ class AutoencoderKL(ModelMixin, ConfigMixin):
         sample_size (`int`, *optional*, defaults to `32`): TODO
     """
 
-    @register_to_config
     def __init__(
         self,
         in_channels: int = 3,
@@ -498,6 +494,8 @@ class AutoencoderKL(ModelMixin, ConfigMixin):
         sample_size: int = 32,
     ):
         super().__init__()
+
+        self.block_out_channels = block_out_channels
 
         # pass init params to Encoder
         self.encoder = Encoder(

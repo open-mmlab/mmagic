@@ -11,14 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple, Union, List
 
 import torch
 import torch.nn as nn
 import torch.utils.checkpoint
+from torch import Tensor
 
-from ..configuration_utils import ConfigMixin, register_to_config
-from .modeling_utils import ModelMixin
 from .embeddings import TimestepEmbedding, Timesteps
 from .unet_2d_blocks import (
     CrossAttnDownBlock2D,
@@ -35,7 +34,7 @@ logger = MMLogger.get_current_instance()
 
 
 
-class UNet2DConditionModel(ModelMixin, ConfigMixin):
+class UNet2DConditionModel(nn.Module):
     r"""
     UNet2DConditionModel is a conditional 2D UNet model that takes in a noisy sample, conditional state, and a timestep
     and returns sample shaped output.
@@ -70,7 +69,6 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin):
 
     _supports_gradient_checkpointing = True
 
-    @register_to_config
     def __init__(
         self,
         sample_size: Optional[int] = None,
@@ -103,6 +101,10 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin):
         super().__init__()
 
         self.sample_size = sample_size
+        self.in_channels = in_channels
+        self.center_input_sample = center_input_sample
+        self.num_class_embeds = num_class_embeds
+
         time_embed_dim = block_out_channels[0] * 4
 
         # input
@@ -217,7 +219,7 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin):
         self.conv_out = nn.Conv2d(block_out_channels[0], out_channels, kernel_size=3, padding=1)
 
     def set_attention_slice(self, slice_size):
-        head_dims = self.config.attention_head_dim
+        head_dims = self.attention_head_dim
         head_dims = [head_dims] if isinstance(head_dims, int) else head_dims
         if slice_size is not None and any(dim % slice_size != 0 for dim in head_dims):
             raise ValueError(
@@ -291,7 +293,7 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin):
             forward_upsample_size = True
 
         # 0. center input if necessary
-        if self.config.center_input_sample:
+        if self.center_input_sample:
             sample = 2 * sample - 1.0
 
         # 1. time
@@ -313,7 +315,7 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin):
         t_emb = t_emb.to(dtype=self.dtype)
         emb = self.time_embedding(t_emb)
 
-        if self.config.num_class_embeds is not None:
+        if self.num_class_embeds is not None:
             if class_labels is None:
                 raise ValueError("class_labels should be provided when num_class_embeds > 0")
             class_emb = self.class_embedding(class_labels).to(dtype=self.dtype)
@@ -372,3 +374,25 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin):
             return (sample,)
 
         return Dict(sample=sample)
+
+
+    @property
+    def dtype(self) -> torch.dtype:
+        """
+        `torch.dtype`: The dtype of the module (assuming that all the module parameters have the same dtype).
+        """
+        return get_parameter_dtype(self)
+
+def get_parameter_dtype(parameter: torch.nn.Module):
+    try:
+        return next(parameter.parameters()).dtype
+    except StopIteration:
+        # For torch.nn.DataParallel compatibility in PyTorch 1.5
+
+        def find_tensor_attributes(module: torch.nn.Module) -> List[Tuple[str, Tensor]]:
+            tuples = [(k, v) for k, v in module.__dict__.items() if torch.is_tensor(v)]
+            return tuples
+
+        gen = parameter._named_members(get_members_fn=find_tensor_attributes)
+        first_tuple = next(gen)
+        return first_tuple[1].dtype

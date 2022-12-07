@@ -22,7 +22,7 @@ from typing import Callable, List, Optional, Union
 from PIL import Image
 from tqdm.auto import tqdm
 
-from .models.modeling_utils import _LOW_CPU_MEM_USAGE_DEFAULT
+from .utils import _LOW_CPU_MEM_USAGE_DEFAULT
 from .utils import (
     is_accelerate_available,
     is_torch_version,
@@ -54,11 +54,15 @@ class StableDiffuser(nn.Module):
     def __init__(self, 
             pretrained_model_name_or_path,
             diffusion_scheduler,
+            unet_cfg,
+            vae_cfg,
+            pretrained_ckpt_path,
             requires_safety_checker=True,
             **kwargs):
         super().__init__()
         """
         """       
+        
         torch_dtype = kwargs.pop("torch_dtype", None)
         device_map = kwargs.pop("device_map", None)
         low_cpu_mem_usage = kwargs.pop("low_cpu_mem_usage", _LOW_CPU_MEM_USAGE_DEFAULT)
@@ -89,6 +93,8 @@ class StableDiffuser(nn.Module):
                 f"You cannot set `low_cpu_mem_usage` to False while using device_map={device_map} for loading and"
                 " dispatching. Please make sure to set `low_cpu_mem_usage=True`."
             )
+        
+        self.execution_device = torch.device('cpu')
 
         # 1. Download the checkpoints and configs
         # use snapshot download here to get it working from from_pretrained
@@ -108,17 +114,23 @@ class StableDiffuser(nn.Module):
         self.scheduler.order = 1
         self.scheduler.init_noise_sigma = 1.0
 
+        self.unet = UNet2DConditionModel(**unet_cfg)
+        state_dict = torch.load(pretrained_ckpt_path['unet'], map_location="cpu")
+        self.unet.load_state_dict(state_dict, strict=True)
+        # import pdb;pdb.set_trace();
+        self.vae = AutoencoderKL(**vae_cfg)
+        state_dict = torch.load(pretrained_ckpt_path['vae'], map_location="cpu")
+        self.vae.load_state_dict(state_dict, strict=True)
+
         self.tokenizer = CLIPTokenizer.from_pretrained(os.path.join(cached_folder, 'tokenizer'), **loading_kwargs)
         self.feature_extractor = CLIPFeatureExtractor.from_pretrained(os.path.join(cached_folder, 'feature_extractor'), **loading_kwargs)
         self.text_encoder = CLIPTextModel.from_pretrained(os.path.join(cached_folder, 'text_encoder'), **loading_kwargs)
-        self.vae = AutoencoderKL.from_pretrained(os.path.join(cached_folder, 'vae'), **loading_kwargs)
-        self.unet = UNet2DConditionModel.from_pretrained(os.path.join(cached_folder, 'unet'), **loading_kwargs)
-
-        # self.scheduler = DDIMScheduler.from_pretrained(os.path.join(cached_folder, 'scheduler'), **loading_kwargs)
         if requires_safety_checker:
             self.safety_checker = StableDiffusionSafetyChecker.from_pretrained(os.path.join(cached_folder, 'safety_checker'), **loading_kwargs)
 
-        self.vae_scale_factor = 2 ** (len(self.vae.config.block_out_channels) - 1)
+
+        # self.vae_scale_factor = 2 ** (len(self.vae.config.block_out_channels) - 1)
+        self.vae_scale_factor = 2 ** (len(self.vae.block_out_channels) - 1)
 
 
     def progress_bar(self, iterable=None, total=None):
@@ -162,29 +174,29 @@ class StableDiffuser(nn.Module):
         for name in self.submodels:
             module = getattr(self, name)
             if isinstance(module, torch.nn.Module):
-                if module.dtype == torch.float16 and str(torch_device) in ["cpu"]:
-                    logger.warning(
-                        "Pipelines loaded with `torch_dtype=torch.float16` cannot run with `cpu` device. It"
-                        " is not recommended to move them to `cpu` as running them will fail. Please make"
-                        " sure to use an accelerator to run the pipeline in inference, due to the lack of"
-                        " support for`float16` operations on this device in PyTorch. Please, remove the"
-                        " `torch_dtype=torch.float16` argument, or use another device for inference."
-                    )
+                # if module.dtype == torch.float16 and str(torch_device) in ["cpu"]:
+                #     logger.warning(
+                #         "Pipelines loaded with `torch_dtype=torch.float16` cannot run with `cpu` device. It"
+                #         " is not recommended to move them to `cpu` as running them will fail. Please make"
+                #         " sure to use an accelerator to run the pipeline in inference, due to the lack of"
+                #         " support for`float16` operations on this device in PyTorch. Please, remove the"
+                #         " `torch_dtype=torch.float16` argument, or use another device for inference."
+                #     )
                 module.to(torch_device)
+        self.execution_device = torch.device(torch_device)
         return self
 
 
-    @property
-    def device(self) -> torch.device:
-        r"""
-        Returns:
-            `torch.device`: The torch device on which the pipeline is located.
-        """
-        for name in self.submodels:
-            module = getattr(self, name)
-            if isinstance(module, torch.nn.Module):
-                return module.device
-        return torch.device("cpu")
+    # def device(self) -> torch.device:
+    #     r"""
+    #     Returns:
+    #         `torch.device`: The torch device on which the pipeline is located.
+    #     """
+    #     for name in self.submodels:
+    #         module = getattr(self, name)
+    #         if isinstance(module, torch.nn.Module):
+    #             return module.device
+    #     return torch.device("cpu")
 
     @torch.no_grad()
     def infer(
@@ -259,15 +271,15 @@ class StableDiffuser(nn.Module):
             (nsfw) content, according to the `safety_checker`.
         """
         # 0. Default height and width to unet
-        height = height or self.unet.config.sample_size * self.vae_scale_factor
-        width = width or self.unet.config.sample_size * self.vae_scale_factor
+        height = height or self.unet.sample_size * self.vae_scale_factor
+        width = width or self.unet.sample_size * self.vae_scale_factor
 
         # 1. Check inputs. Raise error if not correct
         self.check_inputs(prompt, height, width, callback_steps)
 
         # 2. Define call parameters
         batch_size = 1 if isinstance(prompt, str) else len(prompt)
-        device = self._execution_device
+        device = self.execution_device
         # here `guidance_scale` is defined analog to the guidance weight `w` of equation (2)
         # of the Imagen paper: https://arxiv.org/pdf/2205.11487.pdf . `guidance_scale = 1`
         # corresponds to doing no classifier free guidance.
@@ -339,7 +351,7 @@ class StableDiffuser(nn.Module):
 
         return {'samples':image, 'nsfw_content_detected':has_nsfw_concept}
 
-    @property
+    # @property
     def _execution_device(self):
         r"""
         Returns the device on which the pipeline's models will be executed. After calling

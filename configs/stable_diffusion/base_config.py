@@ -65,20 +65,67 @@ tokenizer = dict(
 )
 
 unet = dict(
-    type='UNet2DConditionModel'
+    act_fn="silu",
+    attention_head_dim=8,
+    block_out_channels=[
+        320,
+        640,
+        1280,
+        1280
+    ],
+    center_input_sample=False,
+    cross_attention_dim=768,
+    down_block_types=[
+        "CrossAttnDownBlock2D",
+        "CrossAttnDownBlock2D",
+        "CrossAttnDownBlock2D",
+        "DownBlock2D"
+    ],
+    downsample_padding=1,
+    flip_sin_to_cos=True,
+    freq_shift=0,
+    in_channels=4,
+    layers_per_block=2,
+    mid_block_scale_factor=1,
+    norm_eps=1e-05,
+    norm_num_groups=32,
+    out_channels=4,
+    sample_size=64,
+    up_block_types=[
+        "UpBlock2D",
+        "CrossAttnUpBlock2D",
+        "CrossAttnUpBlock2D",
+        "CrossAttnUpBlock2D"
+    ]
 )
 
 vae = dict(
-    type='AutoencoderKL'
+    act_fn="silu",
+    block_out_channels=[
+        128,
+        256,
+        512,
+        512
+    ],
+    down_block_types=[
+        "DownEncoderBlock2D",
+        "DownEncoderBlock2D",
+        "DownEncoderBlock2D",
+        "DownEncoderBlock2D"
+    ],
+    in_channels=3,
+    latent_channels=4,
+    layers_per_block=2,
+    norm_num_groups=32,
+    out_channels=3,
+    sample_size=512,
+    up_block_types=[
+        "UpDecoderBlock2D",
+        "UpDecoderBlock2D",
+        "UpDecoderBlock2D",
+        "UpDecoderBlock2D"
+    ]
 )
-        # num_train_timesteps=1000,
-        # beta_start=0.0001,
-        # beta_end=0.02,
-        # beta_schedule='linear',
-        # variance_type='learned_range',
-        # timestep_values=None,
-        # clip_sample=True,
-        # set_alpha_to_one=True,
 
 diffusion_scheduler = dict(
     type='DDIMScheduler',
@@ -91,9 +138,16 @@ diffusion_scheduler = dict(
     clip_sample=False
 )
 
+pretrained_ckpt_path = dict(
+    unet='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin',
+    vae='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5/vae/diffusion_pytorch_model.bin'
+)
 
 model = dict(
     type='StableDiffuser',
     pretrained_model_name_or_path='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5',
     diffusion_scheduler=diffusion_scheduler,
+    unet_cfg=unet,
+    vae_cfg=vae,
+    pretrained_ckpt_path=pretrained_ckpt_path,
 )
