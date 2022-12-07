@@ -196,6 +196,7 @@ test_pipeline = [
     dict(type='ImageToTensor', keys=['lq']),
     dict(type='Collect', keys=['lq'], meta_keys=['lq_path']),
 ]
+test_pipeline = val_pipeline
 
 data = dict(
     workers_per_gpu=6,
@@ -223,9 +224,9 @@ data = dict(
         filename_tmpl='{}'),
     test=dict(
         type=val_dataset_type,
-        lq_folder='data/realsrset',
-        gt_folder='data/realsrset',
-        pipeline=test_pipeline,
+        lq_folder='data/set5/bicLRx4',
+        gt_folder='data/set5/HR',
+        pipeline=val_pipeline,
         scale=scale,
         filename_tmpl='{}'))
 

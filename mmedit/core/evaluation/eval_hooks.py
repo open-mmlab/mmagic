@@ -16,8 +16,6 @@ class EvalIterHook(Hook):
     Args:
         dataloader (DataLoader): A PyTorch dataloader.
         interval (int): Evaluation interval. Default: 1.
-        metrics (dict | list[dict], optional): Configs for metrics that will be
-            used in feature based evaluation hook. Default: None.
         eval_kwargs (dict): Other eval kwargs. It contains:
             save_image (bool): Whether to save image.
             save_path (str): The path to save image.
@@ -94,8 +92,6 @@ class DistEvalIterHook(EvalIterHook):
     Args:
         dataloader (DataLoader): A PyTorch dataloader.
         interval (int): Evaluation interval. Default: 1.
-        metrics (dict | list[dict], optional): Configs for metrics that will be
-            used in feature based evaluation hook. Default: None.
         tmpdir (str | None): Temporary directory to save the results of all
             processes. Default: None.
         gpu_collect (bool): Whether to use gpu or cpu to collect results.
