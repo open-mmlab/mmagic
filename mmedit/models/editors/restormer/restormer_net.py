@@ -12,14 +12,20 @@ from mmedit.registry import MODELS
 
 
 def to_3d(x):
+    """Reshape input tensor."""
     return rearrange(x, 'b c h w -> b (h w) c')
 
 
 def to_4d(x, h, w):
+    """Reshape input tensor."""
     return rearrange(x, 'b (h w) c -> b c h w', h=h, w=w)
 
 
 class BiasFree_LayerNorm(BaseModule):
+    """
+    Args:
+        normalized_shape(tuple): The shape of inputs.
+    """
 
     def __init__(self, normalized_shape):
         super(BiasFree_LayerNorm, self).__init__()
@@ -38,6 +44,10 @@ class BiasFree_LayerNorm(BaseModule):
 
 
 class WithBias_LayerNorm(BaseModule):
+    """
+    Args:
+        normalized_shape(tuple): The shape of inputs.
+    """
 
     def __init__(self, normalized_shape):
         super(WithBias_LayerNorm, self).__init__()
@@ -58,6 +68,12 @@ class WithBias_LayerNorm(BaseModule):
 
 
 class LayerNorm(BaseModule):
+    """Layer Normalization.
+
+    Args:
+        dim(int): Channel number of inputs.
+        LayerNorm_type(str): Layer Normalization type.
+    """
 
     def __init__(self, dim, LayerNorm_type):
         super(LayerNorm, self).__init__()
@@ -72,6 +88,16 @@ class LayerNorm(BaseModule):
 
 
 class FeedForward(BaseModule):
+    """Gated-Dconv Feed-Forward Network (GDFN)
+
+    The original version of GDFN in
+    "Restormer: Efficient Transformer for High-Resolution Image Restoration".
+
+    Args:
+        dim(int): Channel number of inputs.
+        ffn_expansion_factor(float): channel expansion factor. Default: 2.66
+        bias(bool): The bias of convolution.
+    """
 
     def __init__(self, dim, ffn_expansion_factor, bias):
         super(FeedForward, self).__init__()
@@ -94,6 +120,14 @@ class FeedForward(BaseModule):
             hidden_features, dim, kernel_size=1, bias=bias)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+
+        Returns:
+            Tensor: Forward results.
+        """
         x = self.project_in(x)
         x1, x2 = self.dwconv(x).chunk(2, dim=1)
         x = F.gelu(x1) * x2
@@ -102,6 +136,16 @@ class FeedForward(BaseModule):
 
 
 class Attention(BaseModule):
+    """Multi-DConv Head Transposed Self-Attention (MDTA)
+
+    The original version of MDTA in
+    "Restormer: Efficient Transformer for High-Resolution Image Restoration".
+
+    Args:
+        dim(int): Channel number of inputs.
+        num_heads(int): Number of attention heads.
+        bias(bool): The bias of convolution.
+    """
 
     def __init__(self, dim, num_heads, bias):
         super(Attention, self).__init__()
@@ -120,6 +164,14 @@ class Attention(BaseModule):
         self.project_out = nn.Conv2d(dim, dim, kernel_size=1, bias=bias)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+
+        Returns:
+            Tensor: Forward results.
+        """
         b, c, h, w = x.shape
 
         qkv = self.qkv_dwconv(self.qkv(x))
@@ -151,8 +203,19 @@ class Attention(BaseModule):
         return out
 
 
-##########################################################################
 class TransformerBlock(BaseModule):
+    """Transformer Block.
+
+    The original version of Transformer Block in "Restormer: Efficient\
+        Transformer for High-Resolution Image Restoration".
+
+    Args:
+        dim(int): Channel number of inputs.
+        num_heads(int): Number of attention heads.
+        ffn_expansion_factor(float): channel expansion factor. Default: 2.66
+        bias(bool): The bias of convolution.
+        LayerNorm_type(str): Layer Normalization type.
+    """
 
     def __init__(self, dim, num_heads, ffn_expansion_factor, bias,
                  LayerNorm_type):
@@ -164,6 +227,14 @@ class TransformerBlock(BaseModule):
         self.ffn = FeedForward(dim, ffn_expansion_factor, bias)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+
+        Returns:
+            Tesnor: Forward results.
+        """
         x = x + self.attn(self.norm1(x))
         x = x + self.ffn(self.norm2(x))
 
@@ -171,6 +242,13 @@ class TransformerBlock(BaseModule):
 
 
 class OverlapPatchEmbed(BaseModule):
+    """Overlapped image patch embedding with 3x3 Conv.
+
+    Args:
+        in_c(int, optional): Channel number of inputs. Default: 3
+        embed_dim(int, optional): embedding dimension. Default: 48
+        bias(bool, optional): The bias of convolution. Default: False
+    """
 
     def __init__(self, in_c=3, embed_dim=48, bias=False):
         super(OverlapPatchEmbed, self).__init__()
@@ -179,12 +257,25 @@ class OverlapPatchEmbed(BaseModule):
             in_c, embed_dim, kernel_size=3, stride=1, padding=1, bias=bias)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+
+        Returns:
+            Tesnor: Forward results.
+        """
         x = self.proj(x)
 
         return x
 
 
 class Downsample(BaseModule):
+    """Downsample modules.
+
+    Args:
+        n_feat(int): Channel number of features.
+    """
 
     def __init__(self, n_feat):
         super(Downsample, self).__init__()
@@ -199,10 +290,23 @@ class Downsample(BaseModule):
                 bias=False), nn.PixelUnshuffle(2))
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+
+        Returns:
+            Tesnor: Forward results.
+        """
         return self.body(x)
 
 
 class Upsample(BaseModule):
+    """Upsample modules.
+
+    Args:
+        n_feat(int): Channel number of features.
+    """
 
     def __init__(self, n_feat):
         super(Upsample, self).__init__()
@@ -217,11 +321,42 @@ class Upsample(BaseModule):
                 bias=False), nn.PixelShuffle(2))
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+
+        Returns:
+            Tesnor: Forward results.
+        """
         return self.body(x)
 
 
 @MODELS.register_module()
 class Restormer(BaseModule):
+    """Restormer A PyTorch impl of: `Restormer: Efficient Transformer for High-
+    Resolution Image Restoration`. Ref repo:
+    https://github.com/swz30/Restormer.
+
+    Args:
+        inp_channels (int): Number of input image channels. Default: 3
+        out_channels (int): Number of output image channels: 3
+        dim (int): Number of feature dimension. Default: 48
+        num_blocks (List(int)): Depth of each Transformer layer.
+            Default: [4, 6, 6, 8]
+        num_refinement_blocks (int): Number of refinement blocks.
+            Default: 4
+        heads (List(int)): Number of attention heads in different layers.
+            Default: 7
+        ffn_expansion_factor (float): Ratio of feed forward network expansion.
+            Default: 2.66
+        bias (bool): The bias of convolution. Default: False
+        LayerNorm_type (str|optional): Select layer Normalization type.
+            Optional: 'WithBias','BiasFree'
+            Default: 'WithBias'
+        dual_pixel_task (bool): True for dual-pixel defocus deblurring only.
+            Also set inp_channels=6. Default: False
+    """
 
     def __init__(self,
                  inp_channels=3,
@@ -337,6 +472,13 @@ class Restormer(BaseModule):
             bias=bias)
 
     def forward(self, inp_img):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+        Returns:
+            Tensor: Forward results.
+        """
         _, _, h, w = inp_img.shape
         if h % 8 == 0:
             padding_h = 0
