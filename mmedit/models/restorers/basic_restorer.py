@@ -6,6 +6,7 @@ from copy import deepcopy
 import mmcv
 import torch
 from mmcv.runner import auto_fp16
+from mmcv.utils import print_log
 
 from mmedit.core import InceptionV3, psnr, ssim, tensor2img
 from ..base import BaseModel
@@ -114,19 +115,22 @@ class BasicRestorer(BaseModel):
         gt = tensor2img(gt)
 
         eval_result = dict()
-        need_inception = False
+        inception_needed_metrics = []
         for metric in self.test_cfg.metrics:
             if metric in ['FID', 'KID']:
-                need_inception = True
+                inception_needed_metrics.append(metric)
                 # build with default args
                 eval_result[metric] = dict(type=metric)
             elif (isinstance(metric, dict)
                   and metric['type'] in ['FID', 'KID']):
-                need_inception = True
+                inception_needed_metrics.append(metric['type'])
                 # build with user defined args
                 eval_result[metric['type']] = deepcopy(metric)
 
-        if need_inception:
+        if inception_needed_metrics:
+            print_log("'_incetion_feat' is newly added to "
+                      '`self.test_cfg.metrics` to compute '
+                      f'{inception_needed_metrics}.')
             if '_inception_feat' not in self.allowed_metrics:
                 inception_style = self.test_cfg.get('inception_style',
                                                     'StyleGAN')
