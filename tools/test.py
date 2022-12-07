@@ -142,21 +142,9 @@ def main():
             empty_cache=empty_cache)
 
     if rank == 0 and 'eval_result' in outputs[0]:
-        stats = dataset.evaluate(outputs)
-
-        # evaluate feature based metrics
-        features = stats.pop('_inception_feat', None)
-        for metric in EvalIterHook.feature_based_metric:
-            if metric in stats:
-                # since there is no parameters or network in FID and KID,
-                # we can directly build a new metric
-                metric_implement = build_metric(stats[metric])
-                assert features is not None
-                X, Y = features
-                stats[metric] = metric_implement(X, Y)
-
         print('')
         # print metrics
+        stats = dataset.evaluate(outputs)
         for stat in stats:
             print('Eval-{}: {}'.format(stat, stats[stat]))
 
