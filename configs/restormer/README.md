@@ -25,126 +25,113 @@ The metrics are `PSNR / SSIM` .
 
 The model weights of different image restoration tasks are downloaded [here(o6un)](https://pan.baidu.com/s/1TWWR_x0gRvfZoK7Fux6prQ?pwd=o6un).
 
-<details>
-<summary>Deraining</summary>
+### **Deraining**
 
-| Method                                                                                                                                 | Dataset  | PSNR    | SSIM   | GPU Info | Download |
-| -------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- | ------ | -------- | -------- |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Test100](/configs/restormer/Deraining/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Test100.py)   | Test100  | 32.0291 | 0.9239 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Rain100H](/configs/restormer/Deraining/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Rain100H.py) | Rain100H | 31.4800 | 0.9056 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Rain100L](/configs/restormer/Deraining/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Rain100L.py) | Rain100L | 39.1022 | 0.9787 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Test2800](/configs/restormer/Deraining/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Test2800.py) | Test2800 | 34.2170 | 0.9451 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Test1200](/configs/restormer/Deraining/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Test1200.py) | Test1200 | 33.2253 | 0.9272 | 1        | -        |
-| -                                                                                                                                      | Average  | 34.0107 | 0.9361 | 1        | -        |
+| Method                                                                         | Dataset  | PSNR    | SSIM   | GPU Info | Download |
+| ------------------------------------------------------------------------------ | -------- | ------- | ------ | -------- | -------- |
+| [restormer_official_rain13k](/configs/restormer/restormer_official_rain13k.py) | Test100  | 32.0291 | 0.9239 | 1        | -        |
+| [restormer_official_rain13k](/configs/restormer/restormer_official_rain13k.py) | Rain100H | 31.4800 | 0.9056 | 1        | -        |
+| [restormer_official_rain13k](/configs/restormer/restormer_official_rain13k.py) | Rain100L | 39.1022 | 0.9787 | 1        | -        |
+| [restormer_official_rain13k](/configs/restormer/restormer_official_rain13k.py) | Test2800 | 34.2170 | 0.9451 | 1        | -        |
+| [restormer_official_rain13k](/configs/restormer/restormer_official_rain13k.py) | Test1200 | 33.2253 | 0.9272 | 1        | -        |
+| [restormer_official_rain13k](/configs/restormer/restormer_official_rain13k.py) | Average  | 34.0107 | 0.9361 | 1        | -        |
 
-</details>
+### **Deblurring**
 
-<details>
-<summary>Deblurring</summary>
+| Method                                                                       | Datasets   | PSNR    | SSIM   | GPU Info | Download |
+| ---------------------------------------------------------------------------- | ---------- | ------- | ------ | -------- | -------- |
+| [restormer_official_deblur](/configs/restormer/restormer_official_deblur.py) | GoPro      | 32.9295 | 0.9496 | 1        | -        |
+| [restormer_official_deblur](/configs/restormer/restormer_official_deblur.py) | HIDE       | 31.2289 | 0.9345 | 1        | -        |
+| [restormer_official_deblur](/configs/restormer/restormer_official_deblur.py) | RealBlur-J | 28.4356 | 0.8681 | 1        | -        |
+| [restormer_official_deblur](/configs/restormer/restormer_official_deblur.py) | RealBlur-R | 35.9141 | 0.9707 | 1        | -        |
 
-| Method                                                                                                                                    |            | PSNR    | SSIM   | GPU Info | Download |
-| ----------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------- | ------ | -------- | -------- |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Gopro](/configs/restormer/Deblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Gopro.py)         | GoPro      | 32.9295 | 0.9404 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_HIDE](/configs/restormer/Deblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_HIDE.py)           | HIDE       | 31.2289 | 0.9231 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_RealBlurR](/configs/restormer/Deblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_RealBlurR.py) | RealBlur-R | 35.9141 | 0.9707 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_RealBlurR](/configs/restormer/Deblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_RealBlurJ.py) | RealBlur-J | 28.4356 | 0.8681 | 1        | -        |
+### **Denoising**
 
-</details>
+**Test Grayscale Gaussian Noise: $\\sigma$=15**
 
-<details>
-<summary>Denoising</summary>
+| Method                                                                                                                         | Dataset  | PSNR    | SSIM   | GPU Info | ckpt                                | Download |
+| ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------- | ------ | -------- | ----------------------------------- | -------- |
+| [restormer_official_gaussian_denoising_gray_sigma15](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma15.py) | Set12    | 34.0182 | 0.9160 | 1        | gaussian_gray_denoising_sigma15.pth | -        |
+| [restormer_official_gaussian_denoising_gray_sigma15](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma15.py) | BSD68    | 32.4987 | 0.8940 | 1        | gaussian_gray_denoising_sigma15.pth | -        |
+| [restormer_official_gaussian_denoising_gray_sigma15](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma15.py) | Urban100 | 34.4336 | 0.9419 | 1        | gaussian_gray_denoising_sigma15.pth | -        |
+| [restormer_official_gaussian_denoising_gray_sigma15](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma15.py) | Set12    | 33.9642 | 0.9153 | 1        | gaussian_gray_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_gray_sigma15](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma15.py) | BSD68    | 30.4941 | 0.8040 | 1        | gaussian_gray_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_gray_sigma15](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma15.py) | Urban100 | 34.3152 | 0.9409 | 1        | gaussian_gray_denoising_blind.pth   | -        |
 
-**Test Grayscale Gaussian Noise**
+**Test Grayscale Gaussian Noise: $\\sigma$=25**
 
-| Method                                                                                                                                 | Type                      | Set12        | PSNR    | SSIM   | GPU Info | Download |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------ | ------- | ------ | -------- | -------- |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_GNoise_sigma15.py) | Each noise level Training | $\\sigma$=15 | 33.4659 | 0.9137 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_GNoise_sigma25.py) |                           | $\\sigma$=25 | 31.0880 | 0.8397 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_GNoise_sigma50.py) |                           | $\\sigma$=50 | 28.0214 | 0.8127 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_GNoise_sigma15.py) | Blind                     | $\\sigma$=15 | 33.4035 | 0.9125 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_GNoise_sigma25.py) |                           | $\\sigma$=25 | 31.0880 | 0.8770 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Set12_GNoise_sigma50.py) |                           | $\\sigma$=50 | 28.0145 | 0.8125 | 1        | -        |
+| Method                                                                                                                         | Dataset  | PSNR    | SSIM   | GPU Info | ckpt                                | Download |
+| ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------- | ------ | -------- | ----------------------------------- | -------- |
+| [restormer_official_gaussian_denoising_gray_sigma25](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma25.py) | Set12    | 31.7289 | 0.8811 | 1        | gaussian_gray_denoising_sigma25.pth | -        |
+| [restormer_official_gaussian_denoising_gray_sigma25](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma25.py) | BSD68    | 30.1613 | 0.8370 | 1        | gaussian_gray_denoising_sigma25.pth | -        |
+| [restormer_official_gaussian_denoising_gray_sigma25](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma25.py) | Urban100 | 32.1162 | 0.9140 | 1        | gaussian_gray_denoising_sigma25.pth | -        |
+| [restormer_official_gaussian_denoising_gray_sigma25](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma25.py) | Set12    | 31.7106 | 0.8810 | 1        | gaussian_gray_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_gray_sigma25](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma25.py) | BSD68    | 28.0652 | 0.7108 | 1        | gaussian_gray_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_gray_sigma25](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma25.py) | Urban100 | 32.0457 | 0.9131 | 1        | gaussian_gray_denoising_blind.pth   | -        |
 
-| Method                                                                                                                                 | Type                      | BSD68        | PSNR    | SSIM   | GPU Info | Download |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------ | ------- | ------ | -------- | -------- |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_GNoise_sigma15.py) | Each noise level Training | $\\sigma$=15 | 31.9535 | 0.8974 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_GNoise_sigma25.py) |                           | $\\sigma$=25 | 29.5355 | 0.8397 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_GNoise_sigma50.py) |                           | $\\sigma$=50 | 26.6082 | 0.7422 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_GNoise_sigma15.py) | Blind                     | $\\sigma$=15 | 30.6039 | 0.8385 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_GNoise_sigma25.py) |                           | $\\sigma$=25 | 28.0272 | 0.7525 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_GNoise_sigma50.py) |                           | $\\sigma$=50 | 25.0556 | 0.6174 | 1        | -        |
+**Test Grayscale Gaussian Noise: $\\sigma$=50**
 
-| Method                                                                                                                                 | Type                      | Urban100     | PSNR    | SSIM   | GPU Info | Download |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------ | ------- | ------ | -------- | -------- |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_GNoise_sigma15.py) | Each noise level Training | $\\sigma$=15 | 34.4359 | 0.9420 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_GNoise_sigma25.py) |                           | $\\sigma$=25 | 32.1171 | 0.9141 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_GNoise_sigma50.py) |                           | $\\sigma$=50 | 28.9632 | 0.8570 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_GNoise_sigma15.py) | Blind                     | $\\sigma$=15 | 34.3165 | 0.9410 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_GNoise_sigma25.py) |                           | $\\sigma$=25 | 32.0490 | 0.9132 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_GNoise_sigma50.py) |                           | $\\sigma$=50 | 28.9847 | 0.8571 | 1        | -        |
+| Method                                                                                                                         | Dataset  | PSNR    | SSIM   | GPU Info | ckpt                                | Download |
+| ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------- | ------ | -------- | ----------------------------------- | -------- |
+| [restormer_official_gaussian_denoising_gray_sigma50](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma50.py) | Set12    | 28.6269 | 0.8188 | 1        | gaussian_gray_denoising_sigma50.pth | -        |
+| [restormer_official_gaussian_denoising_gray_sigma50](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma50.py) | BSD68    | 27.3266 | 0.7434 | 1        | gaussian_gray_denoising_sigma50.pth | -        |
+| [restormer_official_gaussian_denoising_gray_sigma50](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma50.py) | Urban100 | 28.9636 | 0.8571 | 1        | gaussian_gray_denoising_sigma50.pth | -        |
+| [restormer_official_gaussian_denoising_gray_sigma50](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma50.py) | Set12    | 28.6614 | 0.8197 | 1        | gaussian_gray_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_gray_sigma50](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma50.py) | BSD68    | 25.2580 | 0.5736 | 1        | gaussian_gray_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_gray_sigma50](/configs/restormer/restormer_official_gaussian_denoising_gray_sigma50.py) | Urban100 | 28.9848 | 0.8571 | 1        | gaussian_gray_denoising_blind.pth   | -        |
 
-**Test Color Gaussian Noise**
+**Test Color Gaussian Noise: $\\sigma$=15**
 
-| Method                                                                                                                                 | Type                      | CBSD68       | PSNR    | SSIM   | GPU Info | Download |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------ | ------- | ------ | -------- | -------- |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_Color_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_CNoise_sigma15.py) | Each noise level Training | $\\sigma$=15 | 34.3513 | 0.9352 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_Color_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_CNoise_sigma25.py) |                           | $\\sigma$=25 | 31.7534 | 0.8945 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_Color_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_CNoise_sigma50.py) |                           | $\\sigma$=50 | 28.5511 | 0.8125 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_Color_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_CNoise_sigma15.py) | Blind                     | $\\sigma$=15 | 34.3404 | 0.9356 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_Color_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_CNoise_sigma25.py) |                           | $\\sigma$=25 | 31.7414 | 0.8946 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_Color_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_CNoise_sigma50.py) |                           | $\\sigma$=50 | 28.5506 | 0.8127 | 1        | -        |
+| Method                                                                                                                          | Dataset  | PSNR    | SSIM   | GPU Info | ckpt                                 | Download |
+| ------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- | ------ | -------- | ------------------------------------ | -------- |
+| [restormer_official_gaussian_denoising_color_sigma15](/configs/restormer/restormer_official_gaussian_denoising_color_sigma15.py) | CBSD68   | 34.3506 | 0.9352 | 1        | gaussian_color_denoising_sigma25.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma15](/configs/restormer/restormer_official_gaussian_denoising_color_sigma15.py) | Kodak24  | 35.4900 | 0.9312 | 1        | gaussian_color_denoising_sigma25.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma15](/configs/restormer/restormer_official_gaussian_denoising_color_sigma15.py) | McMaster | 35.6072 | 0.9352 | 1        | gaussian_color_denoising_sigma25.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma15](/configs/restormer/restormer_official_gaussian_denoising_color_sigma15.py) | Urban100 | 35.1522 | 0.9530 | 1        | gaussian_color_denoising_sigma25.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma15](/configs/restormer/restormer_official_gaussian_denoising_color_sigma15.py) | CBSD68   | 34.3422 | 0.9356 | 1        | gaussian_color_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_color_sigma15](/configs/restormer/restormer_official_gaussian_denoising_color_sigma15.py) | Kodak24  | 35.4544 | 0.9308 | 1        | gaussian_color_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_color_sigma15](/configs/restormer/restormer_official_gaussian_denoising_color_sigma15.py) | McMaster | 35.5473 | 0.9344 | 1        | gaussian_color_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_color_sigma15](/configs/restormer/restormer_official_gaussian_denoising_color_sigma15.py) | Urban100 | 35.0754 | 0.9524 | 1        | gaussian_color_denoising_blind.pth   | -        |
 
-| Method                                                                                                                                 | Type                      | Kodak24      | PSNR    | SSIM   | GPU Info | Download |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------ | ------- | ------ | -------- | -------- |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak24_Color_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak_CNoise_sigma15.py) | Each noise level Training | $\\sigma$=15 | 35.4924 | 0.9312 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak24_Color_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak_CNoise_sigma25.py) |                           | $\\sigma$=25 | 33.0608 | 0.8943 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak24_Color_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak_CNoise_sigma50.py) |                           | $\\sigma$=50 | 30.0220 | 0.8241 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak24_Color_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak_CNoise_sigma15.py) | Blind                     | $\\sigma$=15 | 35.4573 | 0.9308 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak24_Color_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak_CNoise_sigma25.py) |                           | $\\sigma$=25 | 33.0368 | 0.8939 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak24_Color_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Kodak_CNoise_sigma50.py) |                           | $\\sigma$=50 | 30.0118 | 0.8238 | 1        | -        |
+**Test Color Gaussian Noise: $\\sigma$=25**
 
-| Method                                                                                                                                 | Type                      | McMaster     | PSNR    | SSIM   | GPU Info | Download |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------ | ------- | ------ | -------- | -------- |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_Color_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_CNoise_sigma15.py) | Each noise level Training | $\\sigma$=15 | 35.6177 | 0.9353 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_Color_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_CNoise_sigma25.py) |                           | $\\sigma$=25 | 33.3405 | 0.9069 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_Color_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_CNoise_sigma50.py) |                           | $\\sigma$=50 | 30.2738 | 0.8521 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_Color_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_CNoise_sigma15.py) | Blind                     | $\\sigma$=15 | 35.5634 | 0.9345 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_Color_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_CNoise_sigma25.py) |                           | $\\sigma$=25 | 33.3111 | 0.9064 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_Color_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_McMaster_CNoise_sigma50.py) |                           | $\\sigma$=50 | 30.2751 | 0.8522 | 1        | -        |
+| Method                                                                                                                          | Dataset  | PSNR    | SSIM   | GPU Info | ckpt                                 | Download |
+| ------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- | ------ | -------- | ------------------------------------ | -------- |
+| [restormer_official_gaussian_denoising_color_sigma25](/configs/restormer/restormer_official_gaussian_denoising_color_sigma25.py) | CBSD68   | 31.7457 | 0.8942 | 1        | gaussian_color_denoising_sigma25.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma25](/configs/restormer/restormer_official_gaussian_denoising_color_sigma25.py) | Kodak24  | 33.0489 | 0.8943 | 1        | gaussian_color_denoising_sigma25.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma25](/configs/restormer/restormer_official_gaussian_denoising_color_sigma25.py) | McMaster | 33.3260 | 0.9066 | 1        | gaussian_color_denoising_sigma25.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma25](/configs/restormer/restormer_official_gaussian_denoising_color_sigma25.py) | Urban100 | 32.9670 | 0.9317 | 1        | gaussian_color_denoising_sigma25.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma25](/configs/restormer/restormer_official_gaussian_denoising_color_sigma25.py) | CBSD68   | 31.7391 | 0.8945 | 1        | gaussian_color_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_color_sigma25](/configs/restormer/restormer_official_gaussian_denoising_color_sigma25.py) | Kodak24  | 33.0380 | 0.8941 | 1        | gaussian_color_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_color_sigma25](/configs/restormer/restormer_official_gaussian_denoising_color_sigma25.py) | McMaster | 33.3040 | 0.9063 | 1        | gaussian_color_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_color_sigma25](/configs/restormer/restormer_official_gaussian_denoising_color_sigma25.py) | Urban100 | 32.9165 | 0.9312 | 1        | gaussian_color_denoising_blind.pth   | -        |
 
-| Method                                                                                                                                 | Type                      | Urban100     | PSNR    | SSIM   | GPU Info | Download |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------ | ------- | ------ | -------- | -------- |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_Color_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_CNoise_sigma15.py) | Each noise level Training | $\\sigma$=15 | 35.1535 | 0.9530 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_Color_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_CNoise_sigma25.py) |                           | $\\sigma$=25 | 32.9670 | 0.9317 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_Color_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_CNoise_sigma50.py) |                           | $\\sigma$=50 | 30.0252 | 0.8902 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_Color_sigma15](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_CNoise_sigma15.py) | Blind                     | $\\sigma$=15 | 35.0756 | 0.9524 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_Color_sigma25](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_CNoise_sigma25.py) |                           | $\\sigma$=25 | 32.9174 | 0.9312 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_Color_sigma50](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Urban100_CNoise_sigma50.py) |                           | $\\sigma$=50 | 30.0189 | 0.8897 | 1        | -        |
+**Test Color Gaussian Noise: $\\sigma$=50**
 
-**Real Image Denoising**
+| Method                                                                                                                          | Dataset  | PSNR    | SSIM   | GPU Info | ckpt                                 | Download |
+| ------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- | ------ | -------- | ------------------------------------ | -------- |
+| [restormer_official_gaussian_denoising_color_sigma50](/configs/restormer/restormer_official_gaussian_denoising_color_sigma50.py) | CBSD68   | 28.5569 | 0.8127 | 1        | gaussian_color_denoising_sigma50.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma50](/configs/restormer/restormer_official_gaussian_denoising_color_sigma50.py) | Kodak24  | 30.0122 | 0.8238 | 1        | gaussian_color_denoising_sigma50.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma50](/configs/restormer/restormer_official_gaussian_denoising_color_sigma50.py) | McMaster | 30.2608 | 0.8515 | 1        | gaussian_color_denoising_sigma50.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma50](/configs/restormer/restormer_official_gaussian_denoising_color_sigma50.py) | Urban100 | 30.0230 | 0.8902 | 1        | gaussian_color_denoising_sigma50.pth | -        |
+| [restormer_official_gaussian_denoising_color_sigma50](/configs/restormer/restormer_official_gaussian_denoising_color_sigma50.py) | CBSD68   | 28.5582 | 0.8126 | 1        | gaussian_color_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_color_sigma50](/configs/restormer/restormer_official_gaussian_denoising_color_sigma50.py) | Kodak24  | 30.0074 | 0.8233 | 1        | gaussian_color_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_color_sigma50](/configs/restormer/restormer_official_gaussian_denoising_color_sigma50.py) | McMaster | 30.2671 | 0.8520 | 1        | gaussian_color_denoising_blind.pth   | -        |
+| [restormer_official_gaussian_denoising_color_sigma50](/configs/restormer/restormer_official_gaussian_denoising_color_sigma50.py) | Urban100 | 30.0172 | 0.8898 | 1        | gaussian_color_denoising_blind.pth   | -        |
 
-| Method                                                                                                                         | Datasets | PSNR    | SSIM   | MAE    | GPU Info | Download |
-| ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------- | ------ | ------ | -------- | -------- |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_SIDD](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_SIDD.py) | SIDD     | 40.0156 | 0.9603 | 0.0086 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_DND](/configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_SIDD.py)  | DND      | -       | -      | -      | 1        | -        |
+### **Defocus Deblurring**
 
-</details>
-
-<details>
-<summary>Defocus Deblurring</summary>
-
-| Method                                                                                                                                             | Datasets | PSNR    | SSIM   | MAE    | GPU Info | Download |
-| -------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- | ------ | ------ | -------- | -------- |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_SingleDPDD](/configs/restormer/DefocusDeblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_SingleDPDD.py) | DPDD_S   | 25.9805 | 0.8166 | 0.0378 | 1        | -        |
-| [restormer_d48nb4668nrb4h1248-lr3e-4-300k_DualDPDD](/configs/restormer/DefocusDeblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_DualDPDD.py)     | DPDD_D   | 26.6160 | 0.8346 | 0.0354 | 1        | -        |
-
-</details>
+| Method                                                                                                  | Datasets | PSNR    | SSIM   | MAE    | GPU Info | Download |
+| ------------------------------------------------------------------------------------------------------- | -------- | ------- | ------ | ------ | -------- | -------- |
+| [restormer_official_defocus_deblur_SingleDPDD](/configs/restormer/restormer_official_defocus_deblur.py) | DPDD_S   | 25.9805 | 0.8166 | 0.0378 | 1        | -        |
+| [restormer_official_defocus_deblur_DualDPDD](/configs/restormer/restormer_official_defocus_deblur.py)   | DPDD_D   | 26.6160 | 0.8346 | 0.0354 | 1        | -        |
 
 ## Quick Start
 
 **Train**
 
-**Train Instructions**
+<details>
+<summary>Train Instructions</summary>
 
 You can use the following commands to train a model with cpu or single/multiple GPUs.
 
@@ -210,30 +197,33 @@ python tools/train.py configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-l
 
 For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
 
+</details>
+
 **Test**
 
-Test Instructions
+<details>
+<summary>Test Instructions</summary>
 
 You can use the following commands to test a model with cpu or single/multiple GPUs.
 
 ```shell
 # cpu test
 # Motion Deblurring
-CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/Deblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Gopro.py Motion_Deblurring_checkpoint_path
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_deblur.py Motion_Deblurring_checkpoint_path
 
 # single-gpu test
 # Motion Deblurring
-python tools/test.py configs/restormer/Deblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Gopro.py Motion_Deblurring_checkpoint_path
-
-
+python tools/test.py configs/restormer/restormer_official_deblur.py Motion_Deblurring_checkpoint_path
 
 # multi-gpu test
 # Motion Deblurring
-./tools/dist_test.sh configs/restormer/Deblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Gopro.py Motion_Deblurring_checkpoint_path
+./tools/dist_test.sh configs/restormer/restormer_official_deblur.py Motion_Deblurring_checkpoint_path
 
 ```
 
 For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 
