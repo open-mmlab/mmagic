@@ -7,6 +7,8 @@ from .biggan import BigGAN
 from .cain import CAIN, CAINNet
 from .cyclegan import CycleGAN
 from .dcgan import DCGAN
+from .ddim import DDIMScheduler
+from .ddpm import DDPMScheduler, DenoisingUnet
 from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
                          DeepFillDecoder, DeepFillEncoder, DeepFillRefiner,
                          DeepFillv1Discriminators, DeepFillv1Inpaintor)
@@ -14,8 +16,10 @@ from .deepfillv2 import DeepFillEncoderDecoder
 from .dic import (DIC, DICNet, FeedbackBlock, FeedbackBlockCustom,
                   FeedbackBlockHeatmapAttention, LightCNN, MaxFeature)
 from .dim import DIM
+from .disco_diffusion import ClipWrapper, DiscoDiffusion
 from .edsr import EDSRNet
 from .edvr import EDVR, EDVRNet
+from .eg3d import EG3D
 from .esrgan import ESRGAN, RRDBNet
 from .fba import FBADecoder, FBAResnetDilated
 from .flavr import FLAVR, FLAVRNet
@@ -24,6 +28,7 @@ from .ggan import GGAN
 from .glean import GLEANStyleGANv2
 from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
                            GLEncoderDecoder)
+from .guided_diffusion import AblatedDiffusionModel
 from .iconvsr import IconVSRNet
 from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
@@ -74,7 +79,9 @@ __all__ = [
     'LIIF', 'MLPRefiner', 'PlainRefiner', 'PlainDecoder', 'FBAResnetDilated',
     'FBADecoder', 'WGANGP', 'CycleGAN', 'SAGAN', 'LSGAN', 'GGAN', 'Pix2Pix',
     'StyleGAN1', 'StyleGAN2', 'StyleGAN3', 'BigGAN', 'DCGAN',
-    'ProgressiveGrowingGAN', 'SinGAN', 'IDLossModel', 'PESinGAN',
-    'MSPIEStyleGAN2', 'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
-    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal'
+    'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel',
+    'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
+    'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
+    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
+    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D'
 ]

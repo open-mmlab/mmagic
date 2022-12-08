@@ -28,6 +28,8 @@ Table of contents:
 
 &#8195;      [2.2.8. Video Super-Resolution example](#228-video-super-resolution)
 
+&#8195;      [2.2.9. Text-to-Image example](#229-text-to-image)
+
 [3. Other demos](#3-other-demos)
 
 ## 1. Download sample images or videos
@@ -171,6 +173,23 @@ python mmediting_inference_demo.py \
         --extra-parameters window_size=5 \
         --video ../resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
         --result-out-dir ../resources/output/video_restoration/demo_video_restoration_edvr_res.mp4
+```
+
+#### 2.2.9 Text-to-Image
+
+```shell
+python mmediting_inference_demo.py \
+        --model-name disco \
+        --text 0=["clouds surround the mountains and Chinese palaces,sunshine,lake,overlook,overlook,unreal engine,light effect,Dream，Greg Rutkowski,James Gurney,artstation"] \
+        --result-out-dir ../resources/output/text2image/demo_text2image_disco_res.png
+```
+
+#### 2.2.9 3D-aware Generation (EG3D)
+
+```shell
+python demo/mmediting_inference_demo.py \
+    --model-name eg3d \
+    --result-out-dir ../resources/output/eg3d-output
 ```
 
 ## 3. Other demos

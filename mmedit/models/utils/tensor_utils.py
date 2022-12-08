@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import torch
 
 
 def get_unknown_tensor(trimap, unknown_value=128 / 255):
@@ -35,3 +36,16 @@ def get_unknown_tensor(trimap, unknown_value=128 / 255):
         # 0 for bg, 128/255 for unknown, 1 for fg
         weight = trimap.eq(unknown_value).float()
     return weight
+
+
+def normalize_vecs(vectors: torch.Tensor) -> torch.Tensor:
+    """Normalize vector with it's lengths at the last dimension. If `vector` is
+    two-dimension tensor, this function is same as L2 normalization.
+
+    Args:
+        vector (torch.Tensor): Vectors to be normalized.
+
+    Returns:
+        torch.Tensor: Vectors after normalization.
+    """
+    return vectors / (torch.norm(vectors, dim=-1, keepdim=True))
