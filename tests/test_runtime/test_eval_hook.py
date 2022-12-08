@@ -52,7 +52,8 @@ def test_eval_hook():
         EvalIterHook(data_loader)
 
     test_dataset = ExampleDataset()
-    test_dataset.evaluate = MagicMock(return_value=dict(test='success'))
+    test_dataset.evaluate = MagicMock(
+        return_value=dict(test='success', test_dict=dict(k1='v1', k2='v2')))
     loader = DataLoader(test_dataset, batch_size=1)
     model = ExampleModel()
     data_loader = DataLoader(
@@ -71,3 +72,6 @@ def test_eval_hook():
         runner.run([loader], [('train', 1)], 1)
         test_dataset.evaluate.assert_called_with([torch.tensor([1])],
                                                  logger=runner.logger)
+        assert runner.log_buffer.output['test'] == 'success'
+        assert runner.log_buffer.output['k1'] == 'v1'
+        assert runner.log_buffer.output['k2'] == 'v2'
