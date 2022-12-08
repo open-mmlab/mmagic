@@ -18,7 +18,6 @@ class EvalIterHook(Hook):
             save_image (bool): Whether to save image.
             save_path (str): The path to save image.
     """
-    feature_based_metric = ['FID', 'KID']
 
     def __init__(self, dataloader, interval=1, **eval_kwargs):
         if not isinstance(dataloader, DataLoader):
