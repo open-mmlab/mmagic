@@ -9,9 +9,7 @@ from mmcv.parallel import MMDataParallel
 from mmcv.runner import get_dist_info, init_dist, load_checkpoint
 
 from mmedit.apis import multi_gpu_test, set_random_seed, single_gpu_test
-from mmedit.core import build_metric
 from mmedit.core.distributed_wrapper import DistributedDataParallelWrapper
-from mmedit.core.evaluation import EvalIterHook
 from mmedit.datasets import build_dataloader, build_dataset
 from mmedit.models import build_model
 from mmedit.utils import setup_multi_processes
@@ -142,21 +140,9 @@ def main():
             empty_cache=empty_cache)
 
     if rank == 0 and 'eval_result' in outputs[0]:
-        stats = dataset.evaluate(outputs)
-
-        # evaluate feature based metrics
-        features = stats.pop('_inception_feat', None)
-        for metric in EvalIterHook.feature_based_metric:
-            if metric in stats:
-                # since there is no parameters or network in FID and KID,
-                # we can directly build a new metric
-                metric_implement = build_metric(stats[metric])
-                assert features is not None
-                X, Y = features
-                stats[metric] = metric_implement(X, Y)
-
         print('')
         # print metrics
+        stats = dataset.evaluate(outputs)
         for stat in stats:
             print('Eval-{}: {}'.format(stat, stats[stat]))
 

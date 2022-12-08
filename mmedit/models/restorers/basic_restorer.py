@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numbers
 import os.path as osp
+import warnings
 from copy import deepcopy
 
 import mmcv
@@ -31,6 +32,7 @@ class BasicRestorer(BaseModel):
         pretrained (str): Path for pretrained model. Default: None.
     """
     allowed_metrics = {'PSNR': psnr, 'SSIM': ssim}
+    feature_based_metrics = ['FID', 'KID']
 
     def __init__(self,
                  generator,
@@ -114,19 +116,22 @@ class BasicRestorer(BaseModel):
         gt = tensor2img(gt)
 
         eval_result = dict()
-        need_inception = False
+        inception_needed_metrics = []
         for metric in self.test_cfg.metrics:
-            if metric in ['FID', 'KID']:
-                need_inception = True
+            if metric in self.feature_based_metrics:
+                inception_needed_metrics.append(metric)
                 # build with default args
                 eval_result[metric] = dict(type=metric)
             elif (isinstance(metric, dict)
-                  and metric['type'] in ['FID', 'KID']):
-                need_inception = True
+                  and metric['type'] in self.feature_based_metrics):
+                inception_needed_metrics.append(metric['type'])
                 # build with user defined args
                 eval_result[metric['type']] = deepcopy(metric)
 
-        if need_inception:
+        if inception_needed_metrics:
+            warnings.warn("'_incetion_feat' is newly added to "
+                          '`self.test_cfg.metrics` to compute '
+                          f'{inception_needed_metrics}.')
             if '_inception_feat' not in self.allowed_metrics:
                 inception_style = self.test_cfg.get('inception_style',
                                                     'StyleGAN')
@@ -137,7 +142,8 @@ class BasicRestorer(BaseModel):
                     self.test_cfg.metrics) + ('_inception_feat', )
 
         for metric in self.test_cfg.metrics:
-            if isinstance(metric, dict) or metric in ['FID', 'KID']:
+            if isinstance(metric,
+                          dict) or metric in self.feature_based_metrics:
                 # skip FID and KID
                 continue
             else:

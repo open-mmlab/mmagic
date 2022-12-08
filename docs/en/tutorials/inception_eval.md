@@ -19,8 +19,9 @@ In this condition, it is difficult to compare the various proposed models with c
 An alternative way to evaluate these models in real-world settings is to compare the distributions of real data and restored-data, rather than directly comparing corresponding images.
 
 To this end, MMEditing provides functions to compute  *Fréchet inception distance* (FID) and *Kernel Inception Distance* (KID), which are commonly used in image generation tasks to check fidelity of generated images, metrics that measure the difference between the two distributions.
+Currently, computing FID and KID is only available for restoration tasks.
 
-# Set Config File
+## Set Config File
 
 FID and KID can be meausred after images from two distributions are extractes as feature vectors with the InceptionV3 model.
 

@@ -4,8 +4,6 @@ import os.path as osp
 from mmcv.runner import Hook
 from torch.utils.data import DataLoader
 
-from ..registry import build_metric
-
 
 class EvalIterHook(Hook):
     """Non-Distributed evaluation hook for iteration-based runner.
@@ -59,22 +57,7 @@ class EvalIterHook(Hook):
         """
         eval_res = self.dataloader.dataset.evaluate(
             results, logger=runner.logger, **self.eval_kwargs)
-
-        # evaluate feature-based metrics
-        features = eval_res.pop('_inception_feat', None)
-        for metric in self.feature_based_metric:
-            if metric in eval_res:
-                # since there is no parameters or network in FID and KID,
-                # we can directly build a new metric
-                metric_implement = build_metric(eval_res[metric])
-                assert features is not None
-                X, Y = features
-                eval_res[metric] = metric_implement(X, Y)
-
         for name, val in eval_res.items():
-            if isinstance(val, dict):
-                runner.log_buffer.output.update(val)
-                continue
             runner.log_buffer.output[name] = val
         runner.log_buffer.ready = True
         # call `after_val_epoch` after evaluation.
