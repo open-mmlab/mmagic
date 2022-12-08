@@ -19,8 +19,8 @@ class ImgNormalize(nn.Conv2d):
 
     def __init__(self,
                  pixel_range: float,
-                 img_mean: Tuple[float],
-                 img_std: Tuple[float],
+                 img_mean: Tuple[float, float, float],
+                 img_std: Tuple[float, float, float],
                  sign: int = -1):
 
         assert len(img_mean) == len(img_std)
