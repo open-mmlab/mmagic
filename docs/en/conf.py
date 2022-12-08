@@ -130,7 +130,7 @@ myst_heading_anchors = 3
 language = 'en'
 
 # The master toctree document.
-master_doc = 'index'
+root_doc = 'index'
 
 
 def builder_inited_handler(app):

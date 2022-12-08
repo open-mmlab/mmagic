@@ -111,7 +111,7 @@ myst_enable_extensions = ['colon_fence']
 language = 'zh_CN'
 
 # The master toctree document.
-master_doc = 'index'
+root_doc = 'index'
 
 
 def builder_inited_handler(app):
