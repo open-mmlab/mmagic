@@ -29,14 +29,9 @@ from .utils import (
 )
 
 from mmedit.registry import MODELS, DIFFUSION_SCHEDULERS
-from transformers.models.clip.feature_extraction_clip import CLIPFeatureExtractor
-from transformers.models.clip.tokenization_clip import CLIPTokenizer
-from transformers.models.clip.modeling_clip import CLIPTextModel
-
 from .models.unet_2d_condition import UNet2DConditionModel
 from .models.vae import AutoencoderKL
-from .models.safety_checker import StableDiffusionSafetyChecker
-
+from .clip_wrapper import load_clip_submodels
 
 from mmengine.logging import MMLogger
 logger = MMLogger.get_current_instance()
@@ -57,7 +52,7 @@ class StableDiffuser(nn.Module):
             unet_cfg,
             vae_cfg,
             pretrained_ckpt_path,
-            requires_safety_checker=True,
+            requires_safety_checker=False,
             **kwargs):
         super().__init__()
         """
@@ -106,7 +101,7 @@ class StableDiffuser(nn.Module):
         loading_kwargs["device_map"] = device_map
         loading_kwargs["low_cpu_mem_usage"] = low_cpu_mem_usage
 
-        self.submodels = ['tokenizer', 'vae', 'scheduler', 'unet', 'safety_checker', 'feature_extractor', 'text_encoder']
+        self.submodels = ['tokenizer', 'vae', 'scheduler', 'unet', 'feature_extractor', 'text_encoder']
 
         self.scheduler = DIFFUSION_SCHEDULERS.build(
             diffusion_scheduler) if isinstance(diffusion_scheduler,
@@ -117,21 +112,15 @@ class StableDiffuser(nn.Module):
         self.unet = UNet2DConditionModel(**unet_cfg)
         state_dict = torch.load(pretrained_ckpt_path['unet'], map_location="cpu")
         self.unet.load_state_dict(state_dict, strict=True)
-        # import pdb;pdb.set_trace();
+
         self.vae = AutoencoderKL(**vae_cfg)
         state_dict = torch.load(pretrained_ckpt_path['vae'], map_location="cpu")
         self.vae.load_state_dict(state_dict, strict=True)
 
-        self.tokenizer = CLIPTokenizer.from_pretrained(os.path.join(cached_folder, 'tokenizer'), **loading_kwargs)
-        self.feature_extractor = CLIPFeatureExtractor.from_pretrained(os.path.join(cached_folder, 'feature_extractor'), **loading_kwargs)
-        self.text_encoder = CLIPTextModel.from_pretrained(os.path.join(cached_folder, 'text_encoder'), **loading_kwargs)
-        if requires_safety_checker:
-            self.safety_checker = StableDiffusionSafetyChecker.from_pretrained(os.path.join(cached_folder, 'safety_checker'), **loading_kwargs)
-
-
-        # self.vae_scale_factor = 2 ** (len(self.vae.config.block_out_channels) - 1)
         self.vae_scale_factor = 2 ** (len(self.vae.block_out_channels) - 1)
 
+        self.tokenizer, self.feature_extractor, self.text_encoder, self.safety_checker = \
+            load_clip_submodels(cached_folder, self.submodels, requires_safety_checker, loading_kwargs)
 
     def progress_bar(self, iterable=None, total=None):
         if not hasattr(self, "_progress_bar_config"):
@@ -174,29 +163,9 @@ class StableDiffuser(nn.Module):
         for name in self.submodels:
             module = getattr(self, name)
             if isinstance(module, torch.nn.Module):
-                # if module.dtype == torch.float16 and str(torch_device) in ["cpu"]:
-                #     logger.warning(
-                #         "Pipelines loaded with `torch_dtype=torch.float16` cannot run with `cpu` device. It"
-                #         " is not recommended to move them to `cpu` as running them will fail. Please make"
-                #         " sure to use an accelerator to run the pipeline in inference, due to the lack of"
-                #         " support for`float16` operations on this device in PyTorch. Please, remove the"
-                #         " `torch_dtype=torch.float16` argument, or use another device for inference."
-                #     )
                 module.to(torch_device)
         self.execution_device = torch.device(torch_device)
         return self
-
-
-    # def device(self) -> torch.device:
-    #     r"""
-    #     Returns:
-    #         `torch.device`: The torch device on which the pipeline is located.
-    #     """
-    #     for name in self.submodels:
-    #         module = getattr(self, name)
-    #         if isinstance(module, torch.nn.Module):
-    #             return module.device
-    #     return torch.device("cpu")
 
     @torch.no_grad()
     def infer(
@@ -350,24 +319,6 @@ class StableDiffuser(nn.Module):
             return (image, has_nsfw_concept)
 
         return {'samples':image, 'nsfw_content_detected':has_nsfw_concept}
-
-    # @property
-    def _execution_device(self):
-        r"""
-        Returns the device on which the pipeline's models will be executed. After calling
-        `pipeline.enable_sequential_cpu_offload()` the execution device can only be inferred from Accelerate's module
-        hooks.
-        """
-        if self.device != torch.device("meta") or not hasattr(self.unet, "_hf_hook"):
-            return self.device
-        for module in self.unet.modules():
-            if (
-                hasattr(module, "_hf_hook")
-                and hasattr(module._hf_hook, "execution_device")
-                and module._hf_hook.execution_device is not None
-            ):
-                return torch.device(module._hf_hook.execution_device)
-        return self.device
 
     def _encode_prompt(self, prompt, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt):
         r"""

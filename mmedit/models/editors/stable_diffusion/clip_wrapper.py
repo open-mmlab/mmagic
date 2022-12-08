@@ -1,23 +1,20 @@
-# Copyright 2022 The HuggingFace Team. All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import numpy as np
 import torch
 import torch.nn as nn
+import os
 
 from transformers import CLIPConfig, CLIPVisionModel, PreTrainedModel
 from mmengine.logging import MMLogger
+from torch.hub import _get_torch_home
+from mmengine.utils.dl_utils import load_url
+from mmengine.utils.path import mkdir_or_exist
+
+from transformers.models.clip.feature_extraction_clip import CLIPFeatureExtractor
+from transformers.models.clip.tokenization_clip import CLIPTokenizer
+from transformers.models.clip.modeling_clip import CLIPTextModel
+
+
+from mmengine.runner.checkpoint import CheckpointLoader
 logger = MMLogger.get_current_instance()
 
 def cosine_distance(image_embeds, text_embeds):
@@ -92,3 +89,26 @@ class StableDiffusionSafetyChecker(PreTrainedModel):
 
         return images, has_nsfw_concepts
 
+
+class TransformersCheckpointLoader:
+
+    def load_from_cache_subdir(model_dir, model_name):
+
+        if model_dir is None:
+            torch_home = _get_torch_home()
+            model_dir = os.path.join(torch_home, 'checkpoints', model_name)
+
+        mkdir_or_exist(model_dir)
+
+
+def load_clip_submodels(cached_folder, submodels, requires_safety_checker, loading_kwargs):
+    tokenizer = CLIPTokenizer.from_pretrained(os.path.join(cached_folder, 'tokenizer'), **loading_kwargs)
+    feature_extractor = CLIPFeatureExtractor.from_pretrained(os.path.join(cached_folder, 'feature_extractor'), **loading_kwargs)
+    text_encoder = CLIPTextModel.from_pretrained(os.path.join(cached_folder, 'text_encoder'), **loading_kwargs)
+    safety_checker = None
+    if requires_safety_checker:
+        submodels.append('safety_checker')
+        safety_checker = StableDiffusionSafetyChecker.from_pretrained(os.path.join(cached_folder, 'safety_checker'), **loading_kwargs)
+
+    return tokenizer, feature_extractor, text_encoder, safety_checker
+    
