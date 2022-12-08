@@ -1,11 +1,18 @@
 _base_ = [
     '../_base_/default_runtime.py',
-    '../_base_/datasets/denoising_gaussian_color_test_sigma50_config.py'
+    '../_base_/datasets/denoising-gaussian_color_test_config.py'
 ]
 
-experiment_name = 'restormer_official_color_denoising_sigma50'
+experiment_name = 'restormer_official_color_denoising_sigma25'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
+
+# modify sigma of RandomNoise
+sigma = 25
+test_dataloader = _base_.test_dataloader
+for dataloader in test_dataloader:
+    test_pipeline = dataloader['dataset']['pipeline']
+    test_pipeline[2]['params']['gaussian_sigma'] = [sigma * 255, sigma * 255]
 
 # model settings
 model = dict(

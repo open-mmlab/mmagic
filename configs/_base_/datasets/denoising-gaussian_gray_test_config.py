@@ -1,3 +1,4 @@
+sigma = 15
 test_pipeline = [
     dict(
         type='LoadImageFromFile',
@@ -18,12 +19,13 @@ test_pipeline = [
         params=dict(
             noise_type=['gaussian'],
             noise_prob=[1],
-            gaussian_sigma=[15 * 255, 15 * 255],
+            gaussian_sigma=[sigma * 255, sigma * 255],
             gaussian_gray_noise_prob=1),
         keys=['img']),
     dict(type='PackEditInputs')
 ]
-gaussian_data_root = 'data/test_gussian'
+
+data_root = 'data/denoising_gussian_test'
 set12_dataloader = dict(
     num_workers=4,
     persistent_workers=False,
@@ -32,11 +34,10 @@ set12_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='Set12', task_name='denoising'),
-        data_root=gaussian_data_root,
+        data_root=data_root,
         data_prefix=dict(img='Set12', gt='Set12'),
         pipeline=test_pipeline))
 set12_evaluator = [
-    dict(type='MAE', prefix='Set12'),
     dict(type='PSNR', prefix='Set12'),
     dict(type='SSIM', prefix='Set12'),
 ]
@@ -49,11 +50,10 @@ bsd68_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='BSD68', task_name='denoising'),
-        data_root=gaussian_data_root,
+        data_root=data_root,
         data_prefix=dict(img='BSD68', gt='BSD68'),
         pipeline=test_pipeline))
 bsd68_evaluator = [
-    dict(type='MAE', prefix='BSD68'),
     dict(type='PSNR', prefix='BSD68'),
     dict(type='SSIM', prefix='BSD68'),
 ]
@@ -66,11 +66,10 @@ urban100_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='Urban100', task_name='denoising'),
-        data_root=gaussian_data_root,
+        data_root=data_root,
         data_prefix=dict(img='Urban100', gt='Urban100'),
         pipeline=test_pipeline))
 urban100_evaluator = [
-    dict(type='MAE', prefix='Urban100'),
     dict(type='PSNR', prefix='Urban100'),
     dict(type='SSIM', prefix='Urban100'),
 ]
