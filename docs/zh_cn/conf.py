@@ -114,6 +114,7 @@ language = 'zh_CN'
 
 # The master toctree document.
 root_doc = 'index'
+notfound_template = '404.html'
 
 
 def builder_inited_handler(app):
