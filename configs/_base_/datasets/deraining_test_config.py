@@ -27,7 +27,6 @@ rain100h_dataloader = dict(
         data_prefix=dict(img='input', gt='target'),
         pipeline=test_pipeline))
 rain100h_evaluator = [
-    dict(type='MAE', prefix='Rain100H'),
     dict(type='PSNR', convert_to='Y', prefix='Rain100H'),
     dict(type='SSIM', convert_to='Y', prefix='Rain100H'),
 ]
@@ -43,10 +42,8 @@ rain100l_dataloader = dict(
         metainfo=dict(dataset_type='Rain100L', task_name='deraining'),
         data_root=rain100l_data_root,
         data_prefix=dict(img='input', gt='target'),
-        # ann_file='meta_info_rain100l_test.txt',
         pipeline=test_pipeline))
 rain100l_evaluator = [
-    dict(type='MAE', prefix='Rain100L'),
     dict(type='PSNR', convert_to='Y', prefix='Rain100L'),
     dict(type='SSIM', convert_to='Y', prefix='Rain100L'),
 ]
@@ -62,10 +59,8 @@ test100_dataloader = dict(
         metainfo=dict(dataset_type='Test100', task_name='deraining'),
         data_root=test100_data_root,
         data_prefix=dict(img='input', gt='target'),
-        # ann_file='meta_info_test100_test.txt',
         pipeline=test_pipeline))
 test100_evaluator = [
-    dict(type='MAE', prefix='Test100'),
     dict(type='PSNR', convert_to='Y', prefix='Test100'),
     dict(type='SSIM', convert_to='Y', prefix='Test100'),
 ]
@@ -81,10 +76,8 @@ test1200_dataloader = dict(
         metainfo=dict(dataset_type='Test1200', task_name='deraining'),
         data_root=test1200_data_root,
         data_prefix=dict(img='input', gt='target'),
-        # ann_file='meta_info_test1200_test.txt',
         pipeline=test_pipeline))
 test1200_evaluator = [
-    dict(type='MAE', prefix='Test1200'),
     dict(type='PSNR', convert_to='Y', prefix='Test1200'),
     dict(type='SSIM', convert_to='Y', prefix='Test1200'),
 ]
@@ -100,10 +93,8 @@ test2800_dataloader = dict(
         metainfo=dict(dataset_type='Test2800', task_name='deraining'),
         data_root=test2800_data_root,
         data_prefix=dict(img='input', gt='target'),
-        # ann_file='meta_info_test2800_test.txt',
         pipeline=test_pipeline))
 test2800_evaluator = [
-    dict(type='MAE', prefix='Test2800'),
     dict(type='PSNR', convert_to='Y', prefix='Test2800'),
     dict(type='SSIM', convert_to='Y', prefix='Test2800'),
 ]

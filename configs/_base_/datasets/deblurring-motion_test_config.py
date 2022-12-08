@@ -27,7 +27,6 @@ gopro_dataloader = dict(
         data_prefix=dict(img='input', gt='target'),
         pipeline=test_pipeline))
 gopro_evaluator = [
-    dict(type='MAE', prefix='GoPro'),
     dict(type='PSNR', prefix='GoPro'),
     dict(type='SSIM', convert_to='Y', prefix='GoPro'),
 ]
@@ -45,7 +44,6 @@ hide_dataloader = dict(
         data_prefix=dict(img='input', gt='target'),
         pipeline=test_pipeline))
 hide_evaluator = [
-    dict(type='MAE', prefix='HIDE'),
     dict(type='PSNR', prefix='HIDE'),
     dict(type='SSIM', convert_to='Y', prefix='HIDE'),
 ]
@@ -63,7 +61,6 @@ realblurj_dataloader = dict(
         data_prefix=dict(img='input', gt='target'),
         pipeline=test_pipeline))
 realblurj_evaluator = [
-    dict(type='MAE', prefix='RealBlurJ'),
     dict(type='PSNR', convert_to='Y', prefix='RealBlurJ'),
     dict(type='SSIM', convert_to='Y', prefix='RealBlurJ'),
 ]
@@ -81,7 +78,6 @@ realblurr_dataloader = dict(
         data_prefix=dict(img='input', gt='target'),
         pipeline=test_pipeline))
 realblurr_evaluator = [
-    dict(type='MAE', prefix='RealBlurR'),
     dict(type='PSNR', convert_to='Y', prefix='RealBlurR'),
     dict(type='SSIM', convert_to='Y', prefix='RealBlurR'),
 ]

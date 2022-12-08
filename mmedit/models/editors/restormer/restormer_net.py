@@ -22,7 +22,8 @@ def to_4d(x, h, w):
 
 
 class BiasFree_LayerNorm(BaseModule):
-    """
+    """Layer normalization without bias.
+
     Args:
         normalized_shape(tuple): The shape of inputs.
     """
@@ -39,12 +40,21 @@ class BiasFree_LayerNorm(BaseModule):
         self.normalized_shape = normalized_shape
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+
+        Returns:
+            Tensor: Forward results.
+        """
         sigma = x.var(-1, keepdim=True, unbiased=False)
         return x / torch.sqrt(sigma + 1e-5) * self.weight
 
 
 class WithBias_LayerNorm(BaseModule):
-    """
+    """Layer normalization with bias. The bias can be learned.
+
     Args:
         normalized_shape(tuple): The shape of inputs.
     """
@@ -62,14 +72,24 @@ class WithBias_LayerNorm(BaseModule):
         self.normalized_shape = normalized_shape
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+
+        Returns:
+            Tensor: Forward results.
+        """
         mu = x.mean(-1, keepdim=True)
         sigma = x.var(-1, keepdim=True, unbiased=False)
         return (x - mu) / torch.sqrt(sigma + 1e-5) * self.weight + self.bias
 
 
 class LayerNorm(BaseModule):
-    """Layer Normalization.
+    """Layer normalization module.
 
+    Note: This is different from the layernorm2d in pytorch.
+        The layer norm here can select Layer Normalization type.
     Args:
         dim(int): Channel number of inputs.
         LayerNorm_type(str): Layer Normalization type.
@@ -83,6 +103,14 @@ class LayerNorm(BaseModule):
             self.body = WithBias_LayerNorm(dim)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (B, C, H, W).
+
+        Returns:
+            Tensor: Forward results.
+        """
         h, w = x.shape[-2:]
         return to_4d(self.body(to_3d(x)), h, w)
 
