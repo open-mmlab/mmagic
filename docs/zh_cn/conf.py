@@ -37,6 +37,8 @@ extensions = [
     'sphinx_markdown_tables',
     'sphinx_copybutton',
     'myst_parser',
+    'sphinx_tabs.tabs',
+    'notfound.extension',
 ]
 
 autodoc_mock_imports = [

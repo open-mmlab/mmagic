@@ -41,6 +41,8 @@ extensions = [
     'myst_parser',
     'sphinx_copybutton',
     'sphinx.ext.autodoc.typehints',
+    'sphinx_tabs.tabs',
+    'notfound.extension',
 ]
 
 autodoc_mock_imports = [
