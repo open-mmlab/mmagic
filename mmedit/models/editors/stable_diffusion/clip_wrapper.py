@@ -2,19 +2,19 @@ import numpy as np
 import torch
 import torch.nn as nn
 import os
+import sys
 
 from transformers import CLIPConfig, CLIPVisionModel, PreTrainedModel
 from mmengine.logging import MMLogger
-from torch.hub import _get_torch_home
-from mmengine.utils.dl_utils import load_url
 from mmengine.utils.path import mkdir_or_exist
+from urllib.parse import urlparse
+from torch.hub import download_url_to_file, get_dir
 
 from transformers.models.clip.feature_extraction_clip import CLIPFeatureExtractor
 from transformers.models.clip.tokenization_clip import CLIPTokenizer
 from transformers.models.clip.modeling_clip import CLIPTextModel
 
 
-from mmengine.runner.checkpoint import CheckpointLoader
 logger = MMLogger.get_current_instance()
 
 def cosine_distance(image_embeds, text_embeds):
@@ -89,26 +89,53 @@ class StableDiffusionSafetyChecker(PreTrainedModel):
 
         return images, has_nsfw_concepts
 
+class ClipCheckpointLoader(object):
 
-class TransformersCheckpointLoader:
+    @classmethod
+    def load_from_cache_subdir(cls, model_dir_dict, loading_kwargs=None):
+        subdir_path=model_dir_dict['subdir_name']
+        resource_files = list(model_dir_dict.values())[1:]
 
-    def load_from_cache_subdir(model_dir, model_name):
+        import pdb;pdb.set_trace();
 
-        if model_dir is None:
-            torch_home = _get_torch_home()
-            model_dir = os.path.join(torch_home, 'checkpoints', model_name)
-
+        hub_dir = get_dir()
+        model_dir = os.path.join(hub_dir, 'checkpoints', subdir_path)
         mkdir_or_exist(model_dir)
 
+        for url in resource_files:
+            parts = urlparse(url)
+            filename = os.path.basename(parts.path)
+            cached_file = os.path.join(model_dir, filename)
+            if not os.path.exists(cached_file):
+                sys.stderr.write('Downloading: "{}" to {}\n'.format(
+                    url, cached_file))
+                hash_prefix = None
+                download_url_to_file(
+                    url, cached_file, hash_prefix)
 
-def load_clip_submodels(cached_folder, submodels, requires_safety_checker, loading_kwargs):
-    tokenizer = CLIPTokenizer.from_pretrained(os.path.join(cached_folder, 'tokenizer'), **loading_kwargs)
-    feature_extractor = CLIPFeatureExtractor.from_pretrained(os.path.join(cached_folder, 'feature_extractor'), **loading_kwargs)
-    text_encoder = CLIPTextModel.from_pretrained(os.path.join(cached_folder, 'text_encoder'), **loading_kwargs)
+        father = cls.__base__
+        return father.from_pretrained(model_dir, **loading_kwargs)
+
+class StableDiffusionSafetyCheckerLoader(StableDiffusionSafetyChecker, ClipCheckpointLoader):
+    pass
+
+class CLIPTokenizerLoader(CLIPTokenizer, ClipCheckpointLoader):
+    pass
+
+class CLIPFeatureExtractorLoader(CLIPFeatureExtractor, ClipCheckpointLoader):
+    pass
+
+class CLIPTextModelLoader(CLIPTextModel, ClipCheckpointLoader):
+    pass
+
+def load_clip_submodels(pretrained_ckpt_path, submodels, requires_safety_checker, loading_kwargs):
+    tokenizer = CLIPTokenizerLoader.load_from_cache_subdir(pretrained_ckpt_path['tokenizer'], loading_kwargs=loading_kwargs)
+    feature_extractor = CLIPFeatureExtractorLoader.load_from_cache_subdir(pretrained_ckpt_path['feature_extractor'], loading_kwargs=loading_kwargs)
+    text_encoder = CLIPTextModelLoader.load_from_cache_subdir(pretrained_ckpt_path['text_encoder'], loading_kwargs=loading_kwargs)
     safety_checker = None
     if requires_safety_checker:
         submodels.append('safety_checker')
-        safety_checker = StableDiffusionSafetyChecker.from_pretrained(os.path.join(cached_folder, 'safety_checker'), **loading_kwargs)
+        safety_checker = StableDiffusionSafetyCheckerLoader.load_from_cache_subdir(pretrained_ckpt_path['safety_checker'], loading_kwargs=loading_kwargs)
 
     return tokenizer, feature_extractor, text_encoder, safety_checker
     

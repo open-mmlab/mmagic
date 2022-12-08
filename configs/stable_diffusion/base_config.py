@@ -1,69 +1,3 @@
-feature_extractor = dict(
-    type='CLIPFeatureExtractor',
-    crop_size=224,
-    do_center_crop=True,
-    do_convert_rgb=True,
-    do_normalize=True,
-    do_resize=True,
-    feature_extractor_type="CLIPFeatureExtractor",
-    image_mean=[
-        0.48145466,
-        0.4578275,
-        0.40821073
-    ],
-    image_std=[
-        0.26862954,
-        0.26130258,
-        0.27577711
-    ],
-    resample=3,
-    size=224
-)
-
-safety_checker = dict(
-    type='StableDiffusionSafetyChecker'
-)
-
-scheduler = dict(
-    type='PNDMScheduler',
-    beta_end=0.012,
-    beta_schedule="scaled_linear",
-    beta_start=0.00085,
-    num_train_timesteps=1000,
-    set_alpha_to_one=False,
-    skip_prk_steps=True,
-    steps_offset=1,
-    trained_betas=None,
-    clip_sample=False
-)
-
-text_encoder = dict(
-    type='CLIPTextModel',
-    attention_dropout=0.0,
-    bos_token_id=0,
-    dropout=0.0,
-    eos_token_id=2,
-    hidden_act="quick_gelu",
-    hidden_size=768,
-    initializer_factor=1.0,
-    initializer_range=0.02,
-    intermediate_size=3072,
-    layer_norm_eps=1e-05,
-    max_position_embeddings=77,
-    model_type="clip_text_model",
-    num_attention_heads=12,
-    num_hidden_layers=12,
-    pad_token_id=1,
-    projection_dim=768,
-    torch_dtype="float32",
-    transformers_version="4.22.0.dev0",
-    vocab_size=49408
-)
-
-tokenizer = dict(
-    type='CLIPTokenizer'
-)
-
 unet = dict(
     act_fn="silu",
     attention_head_dim=8,
@@ -138,14 +72,42 @@ diffusion_scheduler = dict(
     clip_sample=False
 )
 
+tokenizer_path = dict(
+    subdir_name='tokenizer',
+    merges='merges.txt',
+    special_tokens_map='special_tokens_map.json',
+    tokenizer_config='tokenizer_config.json',
+    vocab='vocab.json'
+)
+
+text_encoder_path = dict(
+    subdir_name='text_encoder',
+    config='config.json',
+    pytorch_model='pytorch_model.bin'
+)
+
+feature_extractor_path = dict(
+    subdir_name='feature_extractor',
+    config='preprocessor_config.json'
+)
+
+safety_checker_path = dict(
+    subdir_name='safety_checker',
+    config='config.json',
+    pytorch_model='pytorch_model.bin'
+)
+
 pretrained_ckpt_path = dict(
     unet='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin',
-    vae='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5/vae/diffusion_pytorch_model.bin'
+    vae='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5/vae/diffusion_pytorch_model.bin',
+    tokenizer=tokenizer_path,
+    text_encoder=text_encoder_path,
+    feature_extractor=feature_extractor_path,
+    safety_checker=safety_checker_path
 )
 
 model = dict(
     type='StableDiffuser',
-    pretrained_model_name_or_path='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5',
     diffusion_scheduler=diffusion_scheduler,
     unet_cfg=unet,
     vae_cfg=vae,

@@ -47,12 +47,11 @@ class StableDiffuser(nn.Module):
     _optional_components = ["safety_checker", "feature_extractor"]
 
     def __init__(self, 
-            pretrained_model_name_or_path,
             diffusion_scheduler,
             unet_cfg,
             vae_cfg,
             pretrained_ckpt_path,
-            requires_safety_checker=False,
+            requires_safety_checker=True,
             **kwargs):
         super().__init__()
         """
@@ -91,11 +90,6 @@ class StableDiffuser(nn.Module):
         
         self.execution_device = torch.device('cpu')
 
-        # 1. Download the checkpoints and configs
-        # use snapshot download here to get it working from from_pretrained
-        if os.path.isdir(pretrained_model_name_or_path):
-            cached_folder = pretrained_model_name_or_path
-
         loading_kwargs = {}
         loading_kwargs["torch_dtype"] = torch_dtype
         loading_kwargs["device_map"] = device_map
@@ -120,7 +114,7 @@ class StableDiffuser(nn.Module):
         self.vae_scale_factor = 2 ** (len(self.vae.block_out_channels) - 1)
 
         self.tokenizer, self.feature_extractor, self.text_encoder, self.safety_checker = \
-            load_clip_submodels(cached_folder, self.submodels, requires_safety_checker, loading_kwargs)
+            load_clip_submodels(pretrained_ckpt_path, self.submodels, requires_safety_checker, loading_kwargs)
 
     def progress_bar(self, iterable=None, total=None):
         if not hasattr(self, "_progress_bar_config"):
