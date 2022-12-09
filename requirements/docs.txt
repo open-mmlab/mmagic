@@ -1,6 +1,10 @@
 docutils==0.16.0
+modelindex
 myst_parser
 -e git+https://github.com/open-mmlab/pytorch_sphinx_theme.git#egg=pytorch_sphinx_theme
-sphinx==4.0.2
+sphinx==4.5.0
 sphinx-copybutton
+sphinx-notfound-page
+sphinx-tabs
 sphinx_markdown_tables
+tabulate
