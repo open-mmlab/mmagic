@@ -7,7 +7,7 @@ from mmedit.models.editors import Restormer
 def test_restormer_cpu():
     """Test Restormer."""
 
-    # Image Deblurring: Motion Deblurring or Image Deraining
+    # Motion Deblurring or Image Deraining
     net = Restormer(
         inp_channels=3,
         out_channels=3,
@@ -36,6 +36,7 @@ def test_restormer_cpu():
         bias=False,
         LayerNorm_type='BiasFree',
         dual_pixel_task=False)
+    img = torch.rand(1, 1, 64, 64)
     output = net(img)
     assert isinstance(output, torch.Tensor)
     assert output.shape == (1, 3, 64, 64)
@@ -52,6 +53,7 @@ def test_restormer_cpu():
         bias=False,
         LayerNorm_type='BiasFree',
         dual_pixel_task=False)
+    img = torch.rand(1, 3, 64, 64)
     output = net(img)
     assert isinstance(output, torch.Tensor)
     assert output.shape == (1, 3, 64, 64)
@@ -74,7 +76,7 @@ def test_restormer_cpu():
     assert output.shape == (1, 3, 64, 64)
 
 
-def test_swinir_cuda():
+def test_restormer_cuda():
     net = Restormer(
         inp_channels=3,
         out_channels=3,
@@ -88,7 +90,7 @@ def test_swinir_cuda():
         dual_pixel_task=False)
     img = torch.rand(1, 3, 64, 64)
 
-    # x4 model lightweight SR forward (gpu)
+    # Image Deblurring or Image Deraining (gpu)
     if torch.cuda.is_available():
         net = net.cuda()
         output = net(img.cuda())
