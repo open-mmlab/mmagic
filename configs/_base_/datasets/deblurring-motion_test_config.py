@@ -28,7 +28,7 @@ gopro_dataloader = dict(
         pipeline=test_pipeline))
 gopro_evaluator = [
     dict(type='PSNR', prefix='GoPro'),
-    dict(type='SSIM', convert_to='Y', prefix='GoPro'),
+    dict(type='SSIM', prefix='GoPro'),
 ]
 
 hide_data_root = 'data/HIDE'
@@ -45,7 +45,7 @@ hide_dataloader = dict(
         pipeline=test_pipeline))
 hide_evaluator = [
     dict(type='PSNR', prefix='HIDE'),
-    dict(type='SSIM', convert_to='Y', prefix='HIDE'),
+    dict(type='SSIM', prefix='HIDE'),
 ]
 
 realblurj_data_root = 'data/RealBlur_J'

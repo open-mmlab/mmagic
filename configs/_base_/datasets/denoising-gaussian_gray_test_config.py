@@ -25,7 +25,7 @@ test_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-data_root = 'data/denoising_gussian_test'
+data_root = 'data/denoising_gaussian_test'
 set12_dataloader = dict(
     num_workers=4,
     persistent_workers=False,
