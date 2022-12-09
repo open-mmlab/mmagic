@@ -39,7 +39,7 @@ def test_restormer_cpu():
     img = torch.rand(1, 1, 64, 64)
     output = net(img)
     assert isinstance(output, torch.Tensor)
-    assert output.shape == (1, 3, 64, 64)
+    assert output.shape == (1, 1, 64, 64)
 
     # Image Denoising Color
     net = Restormer(
