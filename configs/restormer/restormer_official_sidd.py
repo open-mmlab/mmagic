@@ -1,9 +1,9 @@
 _base_ = [
     '../_base_/default_runtime.py',
-    '../_base_/datasets/defocus_deblurring_test_config.py'
+    '../_base_/datasets/denoising-real_test_config.py'
 ]
 
-experiment_name = 'restormer_official_gopro'
+experiment_name = 'restormer_official_sidd'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
