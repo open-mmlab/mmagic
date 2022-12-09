@@ -62,10 +62,7 @@ jobs:
             pip install git+https://github.com/open-mmlab/mmengine.git@main
             pip install -U openmim
             mim install 'mmcv >= 2.0.0rc1'
-            mim install 'mmdet >= 3.0.0rc2'
             pip install -r requirements/tests.txt
-            pip install git+https://github.com/openai/CLIP.git
-            pip install imageio-ffmpeg
       - run:
           name: Build and install
           command: |
@@ -108,10 +105,7 @@ jobs:
             docker exec mmedit pip install -e /mmengine
             docker exec mmedit pip install -U openmim
             docker exec mmedit mim install 'mmcv >= 2.0.0rc1'
-            docker exec mmedit mim install 'mmdet >= 3.0.0rc2'
             docker exec mmedit pip install -r requirements/tests.txt
-            docker exec mmedit pip install git+https://github.com/openai/CLIP.git
-            docker exec mmedit pip install imageio-ffmpeg
       - run:
           name: Build and install
           command: |
