@@ -37,6 +37,8 @@ extensions = [
     'sphinx_markdown_tables',
     'sphinx_copybutton',
     'myst_parser',
+    'sphinx_tabs.tabs',
+    'notfound.extension',
 ]
 
 autodoc_mock_imports = [
@@ -111,7 +113,8 @@ myst_enable_extensions = ['colon_fence']
 language = 'zh_CN'
 
 # The master toctree document.
-master_doc = 'index'
+root_doc = 'index'
+notfound_template = '404.html'
 
 
 def builder_inited_handler(app):
