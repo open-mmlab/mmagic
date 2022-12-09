@@ -92,11 +92,9 @@ class StableDiffusionSafetyChecker(PreTrainedModel):
 class ClipCheckpointLoader(object):
 
     @classmethod
-    def load_from_cache_subdir(cls, model_dir_dict, loading_kwargs=None):
+    def load_from_cache_subdir(cls, model_dir_dict, loading_kwargs={}):
         subdir_path=model_dir_dict['subdir_name']
         resource_files = list(model_dir_dict.values())[1:]
-
-        import pdb;pdb.set_trace();
 
         hub_dir = get_dir()
         model_dir = os.path.join(hub_dir, 'checkpoints', subdir_path)
@@ -128,14 +126,14 @@ class CLIPFeatureExtractorLoader(CLIPFeatureExtractor, ClipCheckpointLoader):
 class CLIPTextModelLoader(CLIPTextModel, ClipCheckpointLoader):
     pass
 
-def load_clip_submodels(pretrained_ckpt_path, submodels, requires_safety_checker, loading_kwargs):
-    tokenizer = CLIPTokenizerLoader.load_from_cache_subdir(pretrained_ckpt_path['tokenizer'], loading_kwargs=loading_kwargs)
-    feature_extractor = CLIPFeatureExtractorLoader.load_from_cache_subdir(pretrained_ckpt_path['feature_extractor'], loading_kwargs=loading_kwargs)
-    text_encoder = CLIPTextModelLoader.load_from_cache_subdir(pretrained_ckpt_path['text_encoder'], loading_kwargs=loading_kwargs)
+def load_clip_submodels(pretrained_ckpt_path, submodels, requires_safety_checker):
+    tokenizer = CLIPTokenizerLoader.load_from_cache_subdir(pretrained_ckpt_path['tokenizer'])
+    feature_extractor = CLIPFeatureExtractorLoader.load_from_cache_subdir(pretrained_ckpt_path['feature_extractor'])
+    text_encoder = CLIPTextModelLoader.load_from_cache_subdir(pretrained_ckpt_path['text_encoder'])
     safety_checker = None
     if requires_safety_checker:
         submodels.append('safety_checker')
-        safety_checker = StableDiffusionSafetyCheckerLoader.load_from_cache_subdir(pretrained_ckpt_path['safety_checker'], loading_kwargs=loading_kwargs)
+        safety_checker = StableDiffusionSafetyCheckerLoader.load_from_cache_subdir(pretrained_ckpt_path['safety_checker'])
 
     return tokenizer, feature_extractor, text_encoder, safety_checker
     

@@ -1,20 +1,4 @@
-# coding=utf-8
-# Copyright 2022 The HuggingFace Inc. team.
-# Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 import inspect
-import os
 import torch
 import torch.nn as nn
 
@@ -22,11 +6,6 @@ from typing import Callable, List, Optional, Union
 from PIL import Image
 from tqdm.auto import tqdm
 
-from .utils import _LOW_CPU_MEM_USAGE_DEFAULT
-from .utils import (
-    is_accelerate_available,
-    is_torch_version,
-)
 
 from mmedit.registry import MODELS, DIFFUSION_SCHEDULERS
 from .models.unet_2d_condition import UNet2DConditionModel
@@ -55,45 +34,9 @@ class StableDiffuser(nn.Module):
             **kwargs):
         super().__init__()
         """
-        """       
-        
-        torch_dtype = kwargs.pop("torch_dtype", None)
-        device_map = kwargs.pop("device_map", None)
-        low_cpu_mem_usage = kwargs.pop("low_cpu_mem_usage", _LOW_CPU_MEM_USAGE_DEFAULT)
-
-        if low_cpu_mem_usage and not is_accelerate_available():
-            low_cpu_mem_usage = False
-            logger.warning(
-                "Cannot initialize model with low cpu memory usage because `accelerate` was not found in the"
-                " environment. Defaulting to `low_cpu_mem_usage=False`. It is strongly recommended to install"
-                " `accelerate` for faster and less memory-intense model loading. You can do so with: \n```\npip"
-                " install accelerate\n```\n."
-            )
-
-        if device_map is not None and not is_torch_version(">=", "1.9.0"):
-            raise NotImplementedError(
-                "Loading and dispatching requires torch >= 1.9.0. Please either update your PyTorch version or set"
-                " `device_map=None`."
-            )
-
-        if low_cpu_mem_usage is True and not is_torch_version(">=", "1.9.0"):
-            raise NotImplementedError(
-                "Low memory initialization requires torch >= 1.9.0. Please either update your PyTorch version or set"
-                " `low_cpu_mem_usage=False`."
-            )
-
-        if low_cpu_mem_usage is False and device_map is not None:
-            raise ValueError(
-                f"You cannot set `low_cpu_mem_usage` to False while using device_map={device_map} for loading and"
-                " dispatching. Please make sure to set `low_cpu_mem_usage=True`."
-            )
+        """ 
         
         self.execution_device = torch.device('cpu')
-
-        loading_kwargs = {}
-        loading_kwargs["torch_dtype"] = torch_dtype
-        loading_kwargs["device_map"] = device_map
-        loading_kwargs["low_cpu_mem_usage"] = low_cpu_mem_usage
 
         self.submodels = ['tokenizer', 'vae', 'scheduler', 'unet', 'feature_extractor', 'text_encoder']
 
@@ -114,7 +57,7 @@ class StableDiffuser(nn.Module):
         self.vae_scale_factor = 2 ** (len(self.vae.block_out_channels) - 1)
 
         self.tokenizer, self.feature_extractor, self.text_encoder, self.safety_checker = \
-            load_clip_submodels(pretrained_ckpt_path, self.submodels, requires_safety_checker, loading_kwargs)
+            load_clip_submodels(pretrained_ckpt_path, self.submodels, requires_safety_checker)
 
     def progress_bar(self, iterable=None, total=None):
         if not hasattr(self, "_progress_bar_config"):

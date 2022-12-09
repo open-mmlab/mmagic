@@ -1,26 +1,9 @@
 import os
-
-
-hf_cache_home = os.path.expanduser(
-    os.getenv("HF_HOME", os.path.join(os.getenv("XDG_CACHE_HOME", "~/.cache"), "huggingface"))
-)
-default_cache_path = os.path.join(hf_cache_home, "diffusers")
-
-
-CONFIG_NAME = "config.json"
-WEIGHTS_NAME = "diffusion_pytorch_model.bin"
-DIFFUSERS_CACHE = default_cache_path
-DIFFUSERS_DYNAMIC_MODULE_NAME = "diffusers_modules"
-HF_MODULES_CACHE = os.getenv("HF_MODULES_CACHE", os.path.join(hf_cache_home, "modules"))
-
-
 import importlib.util
 import operator as op
 import os
 import sys
 from typing import Union
-
-from packaging import version
 from packaging.version import Version, parse
 
 # The package importlib_metadata is in a different place, depending on the python version.
