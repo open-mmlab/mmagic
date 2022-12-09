@@ -30,7 +30,7 @@ Table of contents:
 
 &#8195;      [2.2.9. Text-to-Image example](#229-text-to-image)
 
-&#8195;      [2.2.10. Text-to-Image example](#2210-3d-aware-generation-eg3d)
+&#8195;      [2.2.10. 3D-aware Generation (EG3D)](#2210-3d-aware-generation-eg3d)
 
 [3. Other demos](#3-other-demos)
 
