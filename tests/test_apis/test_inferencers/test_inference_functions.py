@@ -8,8 +8,8 @@ import torch
 from mmengine import Config
 from mmengine.runner import load_checkpoint
 
-from mmedit.apis import (colorization_inference, init_model,
-                         inpainting_inference, matting_inference,
+from mmedit.apis import (calculate_grid_size, colorization_inference,
+                         init_model, inpainting_inference, matting_inference,
                          restoration_face_inference, restoration_inference,
                          restoration_video_inference, sample_conditional_model,
                          sample_img2img_model, sample_unconditional_model,
@@ -304,5 +304,15 @@ def test_video_interpolation_inference():
         model=model, input_dir=input_dir, output_dir='out', fps=60.0)
 
 
-if __name__ == '__main__':
-    test_init_model()
+def test_calculate_grid_size():
+    inp_batch_size = (10, 13, 20, 1, 4)
+    target_nrow = (4, 4, 5, 1, 2)
+    for bz, tar in zip(inp_batch_size, target_nrow):
+        assert calculate_grid_size(bz) == tar
+
+    # test aspect_ratio is not None
+    inp_batch_size = (10, 13, 20, 1, 4)
+    aspect_ratio = (2, 3, 3, 4, 3)
+    target_nrow = (3, 3, 3, 1, 2)
+    for bz, ratio, tar in zip(inp_batch_size, aspect_ratio, target_nrow):
+        assert calculate_grid_size(bz, ratio) == tar

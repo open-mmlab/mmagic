@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import mmengine
 import numpy as np
 import torch
@@ -6,9 +8,11 @@ import torch.nn as nn
 from mmengine.model import BaseModule
 from mmengine.runner.amp import autocast
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
+from torch import Tensor
 
 from mmedit.registry import MODULES
 from ..stylegan1 import EqualLinearActModule
+from ..stylegan3.stylegan3_modules import MappingNetwork
 from .ada.augment import AugmentPipe
 from .ada.misc import constant
 from .stylegan2_modules import ConvDownLayer, ModMBStddevLayer, ResBlock
@@ -53,12 +57,23 @@ class StyleGAN2Discriminator(BaseModule):
 
     Args:
         in_size (int): The input size of images.
+        img_channels (int): The number of channels of the input image. Defaults to 3.
         channel_multiplier (int, optional): The multiplier factor for the
             channel number. Defaults to 2.
         blur_kernel (list, optional): The blurry kernel. Defaults
             to [1, 3, 3, 1].
         mbstd_cfg (dict, optional): Configs for minibatch-stddev layer.
             Defaults to dict(group_size=4, channel_groups=1).
+        cond_size (int, optional): The size of conditional input. If None or
+            less than 1, no conditional mapping will be applied. Defaults to None.
+        cond_mapping_channels (int, optional): The dimension of the output of
+            conditional mapping. Only work when :attr:`c_dim` is larger than 0.
+            If :attr:`c_dim` is larger than 0 and :attr:`cmap_dim` is None, will.
+            Defaults to None.
+        cond_mapping_layers (int, optional): The number of mapping layer used to
+            map conditional input. Only work when c_dim is larger than 0. If
+            :attr:`cmapping_layer` is None and :attr:`c_dim` is larger than 0,
+            cmapping_layer will set as 8. Defaults to None.
         num_fp16_scales (int, optional): The number of resolutions to use auto
             fp16 training. Defaults to 0.
         fp16_enabled (bool, optional): Whether to use fp16 training in this
@@ -81,9 +96,13 @@ class StyleGAN2Discriminator(BaseModule):
 
     def __init__(self,
                  in_size,
+                 img_channels=3,
                  channel_multiplier=2,
                  blur_kernel=[1, 3, 3, 1],
                  mbstd_cfg=dict(group_size=4, channel_groups=1),
+                 cond_size=None,
+                 cond_mapping_channels=None,
+                 cond_mapping_layers=None,
                  num_fp16_scales=0,
                  fp16_enabled=False,
                  out_fp32=True,
@@ -116,7 +135,8 @@ class StyleGAN2Discriminator(BaseModule):
 
         _use_fp16 = num_fp16_scales > 0 or fp16_enabled
         convs = [
-            ConvDownLayer(3, channels[in_size], 1, fp16_enabled=_use_fp16)
+            ConvDownLayer(
+                img_channels, channels[in_size], 1, fp16_enabled=_use_fp16)
         ]
 
         for i in range(log_size, 2, -1):
@@ -135,18 +155,36 @@ class StyleGAN2Discriminator(BaseModule):
 
             in_channels = out_channel
 
+        if cond_size is not None and cond_size > 0:
+            cond_mapping_channels = 512 if cond_mapping_channels is None \
+                else cond_mapping_channels
+            cond_mapping_layers = 8 if cond_mapping_layers is None \
+                else cond_mapping_layers
+            self.mapping = MappingNetwork(
+                noise_size=0,
+                style_channels=cond_mapping_channels,
+                cond_size=cond_size,
+                num_ws=None,
+                num_layers=cond_mapping_layers,
+                w_avg_beta=None)
+
         self.convs = nn.Sequential(*convs)
 
         self.mbstd_layer = ModMBStddevLayer(**mbstd_cfg)
 
         self.final_conv = ConvDownLayer(
             in_channels + 1, channels[4], 3, fp16_enabled=fp16_enabled)
+
+        if cond_size is None or cond_size <= 0:
+            final_linear_out_channels = 1
+        else:
+            final_linear_out_channels = cond_mapping_channels
         self.final_linear = nn.Sequential(
             EqualLinearActModule(
                 channels[4] * 4 * 4,
                 channels[4],
                 act_cfg=dict(type='fused_bias')),
-            EqualLinearActModule(channels[4], 1),
+            EqualLinearActModule(channels[4], final_linear_out_channels),
         )
 
         self.input_bgr2rgb = input_bgr2rgb
@@ -163,11 +201,13 @@ class StyleGAN2Discriminator(BaseModule):
         self.load_state_dict(state_dict, strict=strict)
         mmengine.print_log(f'Load pretrained model from {ckpt_path}')
 
-    def forward(self, x):
+    def forward(self, x: Tensor, label: Optional[Tensor] = None):
         """Forward function.
 
         Args:
             x (torch.Tensor): Input image tensor.
+            label (torch.Tensor, optional): The conditional input feed to
+                mapping layer. Defaults to None.
 
         Returns:
             torch.Tensor: Predict score for the input image.
@@ -189,6 +229,15 @@ class StyleGAN2Discriminator(BaseModule):
             x = self.final_conv(x)
             x = x.view(x.shape[0], -1)
             x = self.final_linear(x)
+
+            # conditioning
+            if label is not None:
+                assert self.mapping is not None, (
+                    '\'self.mapping\' must not be None when conditional input '
+                    'is passed.')
+                cmap = self.mapping(None, label)
+                x = (x * cmap).sum(
+                    dim=1, keepdim=True) * (1 / np.sqrt(cmap.shape[1]))
 
         return x
 

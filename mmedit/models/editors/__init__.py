@@ -19,6 +19,7 @@ from .dim import DIM
 from .disco_diffusion import ClipWrapper, DiscoDiffusion
 from .edsr import EDSRNet
 from .edvr import EDVR, EDVRNet
+from .eg3d import EG3D
 from .esrgan import ESRGAN, RRDBNet
 from .fba import FBADecoder, FBAResnetDilated
 from .flavr import FLAVR, FLAVRNet
@@ -82,5 +83,5 @@ __all__ = [
     'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
-    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper'
+    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D'
 ]

@@ -65,6 +65,7 @@ jobs:
             mim install 'mmdet >= 3.0.0rc2'
             pip install -r requirements/tests.txt
             pip install git+https://github.com/openai/CLIP.git
+            pip install imageio-ffmpeg
       - run:
           name: Build and install
           command: |
@@ -110,6 +111,7 @@ jobs:
             docker exec mmedit mim install 'mmdet >= 3.0.0rc2'
             docker exec mmedit pip install -r requirements/tests.txt
             docker exec mmedit pip install git+https://github.com/openai/CLIP.git
+            docker exec mmedit pip install imageio-ffmpeg
       - run:
           name: Build and install
           command: |
@@ -153,8 +155,8 @@ workflows:
             - lint
       - build_cpu:
           name: maximum_version_cpu
-          torch: 1.12.1
-          torchvision: 0.13.1
+          torch: 1.13.0
+          torchvision: 0.14.0
           python: 3.9.0
           requires:
             - minimum_version_cpu

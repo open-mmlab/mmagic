@@ -41,6 +41,15 @@ class FrechetInceptionDistance(GenerativeMetric):
             Defaults to None.
         real_key (Optional[str]): Key for get real images from the input dict.
             Defaults to 'img'.
+        need_cond_input (bool): If true, the sampler will return the
+            conditional input randomly sampled from the original dataset.
+            This require the dataset implement `get_data_info` and field
+            `gt_label` must be contained in the return value of
+            `get_data_info`. Noted that, for unconditional models, set
+            `need_cond_input` as True may influence the result of evaluation
+            results since the conditional inputs are sampled from the dataset
+            distribution; otherwise will be sampled from the uniform
+            distribution. Defaults to False.
         sample_model (str): Sampling mode for the generative model. Support
             'orig' and 'ema'. Defaults to 'orig'.
         collect_device (str, optional): Device name used for collecting results
@@ -61,11 +70,12 @@ class FrechetInceptionDistance(GenerativeMetric):
                  inception_pkl: Optional[str] = None,
                  fake_key: Optional[str] = None,
                  real_key: Optional[str] = 'img',
+                 need_cond_input: bool = False,
                  sample_model: str = 'orig',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None):
         super().__init__(fake_nums, real_nums, fake_key, real_key,
-                         sample_model, collect_device, prefix)
+                         need_cond_input, sample_model, collect_device, prefix)
         self.real_mean = None
         self.real_cov = None
         self.device = 'cpu'
@@ -233,9 +243,11 @@ class TransFID(FrechetInceptionDistance):
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None):
+        # NOTE: set `need_cond` as False since we direct return the original
+        # dataloader as sampler
         super().__init__(fake_nums, real_nums, inception_style, inception_path,
-                         inception_pkl, fake_key, real_key, sample_model,
-                         collect_device, prefix)
+                         inception_pkl, fake_key, real_key, False,
+                         sample_model, collect_device, prefix)
 
         self.SAMPLER_MODE = 'normal'
 

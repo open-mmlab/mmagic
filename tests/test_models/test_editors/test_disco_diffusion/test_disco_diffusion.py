@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from copy import deepcopy
 from unittest import TestCase
 
 import pytest
@@ -40,9 +41,9 @@ class clip_mock_wrapper(nn.Module):
 
 class TestDiscoDiffusion(TestCase):
 
-    def test_init(self):
+    def setUp(self):
         # unet
-        unet32 = DenoisingUnet(
+        self.unet32 = DenoisingUnet(
             image_size=32,
             in_channels=3,
             base_channels=8,
@@ -60,13 +61,17 @@ class TestDiscoDiffusion(TestCase):
                 use_new_attention_order=False),
             use_scale_shift_norm=True)
         # mock clip
-        clip_models = [clip_mock_wrapper(), clip_mock_wrapper()]
+        self.clip_models = [clip_mock_wrapper(), clip_mock_wrapper()]
         # diffusion_scheduler
-        diffusion_scheduler = DDIMScheduler(
+        self.diffusion_scheduler = DDIMScheduler(
             variance_type='learned_range',
             beta_schedule='linear',
             clip_sample=False)
 
+    def test_init(self):
+        unet32 = deepcopy(self.unet32)
+        diffusion_scheduler = deepcopy(self.diffusion_scheduler)
+        clip_models = deepcopy(self.clip_models)
         self.disco_diffusion = DiscoDiffusion(
             unet=unet32,
             diffusion_scheduler=diffusion_scheduler,
@@ -76,7 +81,17 @@ class TestDiscoDiffusion(TestCase):
 
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_infer(self):
+        unet32 = deepcopy(self.unet32)
+        diffusion_scheduler = deepcopy(self.diffusion_scheduler)
+        clip_models = deepcopy(self.clip_models)
+        self.disco_diffusion = DiscoDiffusion(
+            unet=unet32,
+            diffusion_scheduler=diffusion_scheduler,
+            secondary_model=None,
+            clip_models=clip_models,
+            use_fp16=True)
         self.disco_diffusion.cuda().eval()
+
         # test model structure
         text_prompts = {
             0: ['clouds surround the mountains and palaces,sunshine,lake']

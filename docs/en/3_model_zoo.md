@@ -1,20 +1,25 @@
 # Overview
 
-- Number of checkpoints: 169
-- Number of configs: 169
-- Number of papers: 42
-  - ALGORITHM: 43
+- Number of checkpoints: 178
+- Number of configs: 174
+- Number of papers: 46
+  - ALGORITHM: 47
 - Tasks:
-  - image2image translation
   - video interpolation
-  - unconditional gans
   - image super-resolution
-  - internal learning
-  - conditional gans
   - inpainting
+  - image generation
+  - image2image
+  - text2image
   - video super-resolution
-  - colorization
+  - image2image translation
+  - 3d-aware generation
+  - conditional gans
+  - image restoration
   - matting
+  - unconditional gans
+  - internal learning
+  - colorization
 
 For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
@@ -106,6 +111,14 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 - Number of papers: 1
   - \[ALGORITHM\] Deep Image Matting ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/dim/README.md#citation))
 
+## Disco Diffusion
+
+- Tasks: image2image,text2image
+- Number of checkpoints: 2
+- Number of configs: 0
+- Number of papers: 1
+  - \[ALGORITHM\] Disco-Diffusion ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/disco_diffusion/README.md#citation))
+
 ## EDSR (CVPR'2017)
 
 - Tasks: image super-resolution
@@ -121,6 +134,14 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 - Number of configs: 4
 - Number of papers: 1
   - \[ALGORITHM\] Edvr: Video Restoration With Enhanced Deformable Convolutional Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/edvr/README.md#citation))
+
+## EG3D (CVPR'2022)
+
+- Tasks: 3d-aware generation
+- Number of checkpoints: 3
+- Number of configs: 3
+- Number of papers: 1
+  - \[ALGORITHM\] Efficient Geometry-Aware 3d Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/eg3d/README.md#citation))
 
 ## ESRGAN (ECCVW'2018)
 
@@ -170,6 +191,14 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 - Number of papers: 1
   - \[ALGORITHM\] Globally and Locally Consistent Image Completion ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/global_local/README.md#citation))
 
+## Guided Diffusion (NeurIPS'2021)
+
+- Tasks: image generation
+- Number of checkpoints: 2
+- Number of configs: 0
+- Number of papers: 1
+  - \[ALGORITHM\] Diffusion Models Beat Gans on Image Synthesis ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/guided_diffusion/README.md#citation))
+
 ## IconVSR (CVPR'2021)
 
 - Tasks: video super-resolution
@@ -186,14 +215,6 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 - Number of papers: 1
   - \[ALGORITHM\] Indices Matter: Learning to Index for Deep Image Matting ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/indexnet/README.md#citation))
 
-## LIIF (CVPR'2021)
-
-- Tasks: image super-resolution
-- Number of checkpoints: 2
-- Number of configs: 2
-- Number of papers: 1
-  - \[ALGORITHM\] Learning Continuous Image Representation With Local Implicit Image Function ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/liif/README.md#citation))
-
 ## Instance-aware Image Colorization (CVPR'2020)
 
 - Tasks: colorization
@@ -202,6 +223,14 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 - Number of papers: 1
   - \[ALGORITHM\] Instance-Aware Image Colorization ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/inst_colorization/README.md#quick-start))
 
+## LIIF (CVPR'2021)
+
+- Tasks: image super-resolution
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Learning Continuous Image Representation With Local Implicit Image Function ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/liif/README.md#citation))
+
 ## LSGAN (ICCV'2017)
 
 - Tasks: unconditional gans
@@ -209,6 +238,14 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 - Number of configs: 4
 - Number of papers: 1
   - \[ALGORITHM\] Least Squares Generative Adversarial Networks ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/lsgan/README.md#citation))
+
+## NAFNet (ECCV'2022)
+
+- Tasks: image restoration
+- Number of checkpoints: 2
+- Number of configs: 2
+- Number of papers: 1
+  - \[ALGORITHM\] Simple Baselines for Image Restoration ([⇨](https://github.com/open-mmlab/mmediting/blob/1.x/configs/nafnet/README.md#citation))
 
 ## PConv (ECCV'2018)
 
@@ -236,6 +273,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
 ## Positional Encoding in GANs
 
+- Tasks: unconditional gans
 - Number of checkpoints: 21
 - Number of configs: 21
 - Number of papers: 1
@@ -339,7 +377,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
 ## TOFlow (IJCV'2019)
 
-- Tasks: video interpolation, video super-resolution
+- Tasks: video interpolation,video super-resolution
 - Number of checkpoints: 6
 - Number of configs: 6
 - Number of papers: 1
