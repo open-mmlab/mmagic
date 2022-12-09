@@ -106,13 +106,14 @@ hope MMEditing could provide better experience.
 
 ### 🌟 Preview of 1.x version
 
-A brand new version of [**MMEditing v1.0.0rc3**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc3) was released in 09/11/2022:
+A brand new version of [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) was released in 05/12/2022:
 
-- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍。
+- Support Text2Image Task! [Disco-Diffusion](configs/disco_diffusion/README.md)
+- Support 3D-aware Generation Task! [EG3D](configs/eg3d/README.md)
+- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍.
 - Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
 - Support patch-based and slider-based image and video comparison viewer.
 - Support image colorization.
-- Convert `mmdet` and `clip` to optional requirements.
 
 Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
 
@@ -263,6 +264,21 @@ Supported algorithms:
 <summary>Internal Learning</summary>
 
 - ✅ [SinGAN](configs/singan/README.md) (ICCV'2019)
+
+</details>
+
+<details open>
+<summary>Text2Image</summary>
+
+- ✅ [Disco-Diffusion](configs/disco_diffusion/README.md)
+
+</details>
+
+<details open>
+
+<summary>3D-aware Generation</summary>
+
+- ✅ [EG3D](configs/eg3d/README.md)
 
 </details>
 
