@@ -8,7 +8,7 @@ dataset_type = 'BasicImageDataset'
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='Flip', keys=['img'], direction='horizontal'),
-    dict(type='PackGenInputs', keys=['img'], meta_keys=['img_path'])
+    dict(type='PackEditInputs', keys=['img'], meta_keys=['img_path'])
 ]
 
 # `batch_size` and `data_root` need to be set.
@@ -23,7 +23,7 @@ train_dataloader = dict(
         pipeline=train_pipeline))
 ```
 
-Here, we adopt `InfinitySampler` to avoid frequent dataloader reloading, which will accelerate the training procedure. As shown in the example, `pipeline` provides important data pipeline to process images, including loading from file system, resizing, cropping, transferring to `torch.Tensor` and packing to `GenDataSample`. All of supported data pipelines can be found in `mmedit/datasets/transforms`.
+Here, we adopt `InfinitySampler` to avoid frequent dataloader reloading, which will accelerate the training procedure. As shown in the example, `pipeline` provides important data pipeline to process images, including loading from file system, resizing, cropping, transferring to `torch.Tensor` and packing to `EditDataSample`. All of supported data pipelines can be found in `mmedit/datasets/transforms`.
 
 For unconditional GANs with dynamic architectures like PGGAN and StyleGANv1, `GrowScaleImgDataset` is recommended to use for training. Since such dynamic architectures need real images in different scales, directly adopting `UnconditionalImageDataset` will bring heavy I/O cost for loading multiple high-resolution images. Here is an example we use for training PGGAN in CelebA-HQ dataset:
 
@@ -33,7 +33,7 @@ dataset_type = 'GrowScaleImgDataset'
 pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='Flip', keys=['img'], direction='horizontal'),
-    dict(type='PackGenInputs')
+    dict(type='PackEditInputs')
 ]
 
 # `samples_per_gpu` and `imgs_root` need to be set.
