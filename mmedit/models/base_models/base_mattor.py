@@ -251,7 +251,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
 
     def convert_to_datasample(self, inputs: DataSamples,
                               data_samples: List[EditDataSample]
-                              ) -> DataSamples:
+                              ) -> List[EditDataSample]:
         for data_sample, output in zip(inputs, data_samples):
             data_sample.output = output
         return inputs
