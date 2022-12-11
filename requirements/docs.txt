@@ -7,4 +7,3 @@ sphinx-copybutton
 sphinx-notfound-page
 sphinx-tabs
 sphinx_markdown_tables
-tabulate

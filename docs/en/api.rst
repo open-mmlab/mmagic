@@ -4,12 +4,9 @@
    (not declared in any toctree) to remove an unnecessary intermediate page; index.rst instead points directly to the
    package page. DO NOT REMOVE THIS FILE!
 
-
-.. currentmodule:: mmedit
-
 .. autosummary::
    :toctree: _autosummary
    :template: custom-module-template.rst
    :recursive:
 
-   structures
+   mmedit
