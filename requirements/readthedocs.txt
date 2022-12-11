@@ -1,18 +1,19 @@
+clip @ git+https://github.com/openai/CLIP.git@d50d76daa670286dd6cacf3bcd80b5e4823fc8e1
+imageio-ffmpeg==0.4.4
 lmdb
+lpips
 mmcv>=2.0.0rc1
+mmdet >= 3.0.0rc2
 mmengine
+open_clip_torch
+pandas
 prettytable
 Pygments
 regex
 scikit-image
+tabulate
 titlecase
 torch
 torchvision
 tqdm
-tabulate
-pandas
-lpips 
-clip @ git+https://github.com/openai/CLIP.git@d50d76daa670286dd6cacf3bcd80b5e4823fc8e1
-imageio-ffmpeg==0.4.4
-mmdet >= 3.0.0rc2
-open_clip_torch
+resize_right
