@@ -135,7 +135,7 @@ notfound_template = '404.html'
 
 
 def builder_inited_handler(app):
-    # subprocess.run(['bash', './.dev_scripts/update_dataset_zoo.sh'])
+    subprocess.run(['bash', './.dev_scripts/update_dataset_zoo.sh'])
     subprocess.run(['python', './.dev_scripts/update_model_zoo.py'])
 
 
