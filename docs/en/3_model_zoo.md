@@ -5,21 +5,21 @@
 * Number of papers: 46
    - ALGORITHM: 47
 * Tasks:
-    - colorization
-    - conditional gans
-    - video super-resolution
+    - image2image
+    - matting
+    - 3d-aware generation
     - internal learning
     - image restoration
     - image generation
+    - image2image translation
+    - colorization
+    - conditional gans
     - inpainting
     - image super-resolution
-    - text2image
-    - 3d-aware generation
-    - unconditional gans
     - video interpolation
-    - matting
-    - image2image
-    - image2image translation
+    - unconditional gans
+    - video super-resolution
+    - text2image
 
 For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 

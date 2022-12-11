@@ -63,6 +63,20 @@ Documentation
    advanced_guides/3_transforms.md
    advanced_guides/4_losses.md
 
+.. toctree::
+   :maxdepth: 2
+   :caption: API Reference
+
+   mmedit.apis.inferencers <_autosummary/mmedit.apis.inferencers>
+   mmedit.structures <_autosummary/mmedit.structures>
+   mmedit.datasets <_autosummary/mmedit.datasets>
+   mmedit.datasets.transforms <_autosummary/mmedit.datasets.transforms>
+   mmedit.evaluation <_autosummary/mmedit.evaluation>
+   mmedit.visualization <_autosummary/mmedit.visualization>
+   mmedit.engine <_autosummary/mmedit.engine>
+   mmedit.models <_autosummary/mmedit.models>
+   mmedit.utils <_autosummary/mmedit.utils>
+
 
 .. toctree::
    :maxdepth: 1
@@ -98,20 +112,6 @@ Documentation
    migration/8_optimizers.md
    migration/9_visualization.md
    migration/10_amp.md
-
-.. toctree::
-   :maxdepth: 2
-   :caption: API Reference
-
-   mmedit.apis.inferencers <_autosummary/mmedit.apis.inferencers>
-   mmedit.datasets <_autosummary/mmedit.datasets>
-   mmedit.datasets.transforms <_autosummary/mmedit.datasets.transforms>
-   mmedit.models <_autosummary/mmedit.models>
-   mmedit.evaluation <_autosummary/mmedit.evaluation>
-   mmedit.visualization <_autosummary/mmedit.visualization>
-   mmedit.engine <_autosummary/mmedit.engine>
-   mmedit.structures <_autosummary/mmedit.structures>
-   mmedit.utils <_autosummary/mmedit.utils>
 
 
 .. toctree::
