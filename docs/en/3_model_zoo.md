@@ -5,21 +5,21 @@
 - Number of papers: 46
   - ALGORITHM: 47
 - Tasks:
+  - internal learning
   - video interpolation
-  - image super-resolution
   - inpainting
-  - image generation
-  - image2image
+  - unconditional gans
+  - image super-resolution
   - text2image
+  - 3d-aware generation
+  - image generation
+  - image restoration
+  - image2image
+  - conditional gans
   - video super-resolution
   - image2image translation
-  - 3d-aware generation
-  - conditional gans
-  - image restoration
-  - matting
-  - unconditional gans
-  - internal learning
   - colorization
+  - matting
 
 For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
@@ -113,7 +113,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
 ## Disco Diffusion
 
-- Tasks: image2image,text2image
+- Tasks: text2image,image2image
 - Number of checkpoints: 2
 - Number of configs: 0
 - Number of papers: 1
@@ -377,7 +377,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
 ## TOFlow (IJCV'2019)
 
-- Tasks: video interpolation,video super-resolution
+- Tasks: video super-resolution,video interpolation
 - Number of checkpoints: 6
 - Number of configs: 6
 - Number of papers: 1

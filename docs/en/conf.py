@@ -31,8 +31,8 @@ author = 'MMEditing Authors'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
+    'sphinx.ext.autodoc',  # Core library for html generation from docstrings
+    'sphinx.ext.autosummary',  # Create neat summary tables
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
@@ -54,6 +54,15 @@ source_suffix = {
     '.rst': 'restructuredtext',
     '.md': 'markdown',
 }
+
+autosummary_generate = True  # Turn on sphinx.ext.autosummary
+autoclass_content = 'both'  # Add __init__ doc (ie. params) to class summaries
+html_show_sourcelink = False  # Remove 'view source code' from top of page (for html, not python)
+autodoc_inherit_docstrings = True  # If no docstring, inherit from base class
+set_type_checking_flag = True  # Enable 'expensive' imports for sphinx_autodoc_typehints
+nbsphinx_allow_errors = True  # Continue through Jupyter errors
+#autodoc_typehints = "description" # Sphinx-native method. Not as good as sphinx_autodoc_typehints
+add_module_names = False  # Remove namespaces from class/method signatures
 
 # Ignore >>> when copying code
 copybutton_prompt_text = r'>>> |\.\.\. '
@@ -122,7 +131,7 @@ notfound_template = '404.html'
 
 
 def builder_inited_handler(app):
-    subprocess.run(['bash', './.dev_scripts/update_dataset_zoo.sh'])
+    # subprocess.run(['bash', './.dev_scripts/update_dataset_zoo.sh'])
     subprocess.run(['python', './.dev_scripts/update_model_zoo.py'])
 
 

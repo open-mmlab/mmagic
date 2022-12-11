@@ -103,23 +103,15 @@ Documentation
    :maxdepth: 2
    :caption: API Reference
 
-    mmedit.apis <api/apis>
-    mmedit.datasets <api/datasets>
-    mmedit.datasets.transforms <api/datasets.transforms>
-    mmedit.engine.hooks <api/engine.hooks>
-    mmedit.engine.optimizers <api/engine.optimizers>
-    mmedit.engine.runner <api/engine.runner>
-    mmedit.engine.schedulers <api/engine.schedulers>
-    mmedit.evaluation.metrics <api/evaluation.metrics>
-    mmedit.evaluation.functional <api/evaluation.functional>
-    mmedit.models.base_models <api/models.base_models>
-    mmedit.models.data_preprocessors <api/models.data_preprocessors>
-    mmedit.models.losses <api/models.losses>
-    mmedit.models.utils <api/models.utils>
-    mmedit.models.editors <api/models.editors>
-    mmedit.structures <api/structures>
-    mmedit.visualization <api/visualization>
-    mmedit.utils <api/utils>
+   mmedit.apis.inferencers <_autosummary/mmedit.apis.inferencers>
+   mmedit.datasets <_autosummary/mmedit.datasets>
+   mmedit.datasets.transforms <_autosummary/mmedit.datasets.transforms>
+   mmedit.models <_autosummary/mmedit.models>
+   mmedit.evaluation <_autosummary/mmedit.evaluation>
+   mmedit.visualization <_autosummary/mmedit.visualization>
+   mmedit.engine <_autosummary/mmedit.engine>
+   mmedit.structures <_autosummary/mmedit.structures>
+   mmedit.utils <_autosummary/mmedit.utils>
 
 
 .. toctree::
