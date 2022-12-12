@@ -78,7 +78,7 @@ MMEditing supports various applications, including:
 
 - **New Modular Design for Flexible Combination:**
 
-  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](../advanced_guides/losses.md))
+  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](../howto/losses.md))
 
 - **Efficient Distributed Training:**
 
@@ -94,4 +94,8 @@ For beginners, we suggest learning the basic usage of MMEditing from [user_guide
 
 ### Advanced guides
 
-For users who are familiar with MMEditing, you may want to learn the design of MMEditing, as well as how to extend the repo, how to use multiple repos and other advanced usages, please refer to [advanced_guides](../advanced_guides/models.md).
+For users who are familiar with MMEditing, you may want to learn the design of MMEditing, as well as how to extend the repo, how to use multiple repos and other advanced usages, please refer to [advanced_guides](../advanced_guides/evaluator.md).
+
+### How to
+
+For users who want to use MMEditing to do something, please refer to [How to](../howto/models.md).

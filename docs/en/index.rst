@@ -90,8 +90,6 @@ Documentation
    howto/transforms.md
    howto/losses.md
 
-
-
 .. toctree::
    :maxdepth: 2
    :caption: API Reference
@@ -117,10 +115,10 @@ Documentation
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Model Zoo
 
-   model_zoo/model_zoo.md
+   model_zoo/index.rst
 
 
 .. toctree::

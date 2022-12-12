@@ -21,10 +21,48 @@ def anchor(name):
                          name.strip().lower())).strip('-')
 
 
+def summarize(stats, name, task='all'):
+    allpapers = func.reduce(lambda a, b: a.union(b),
+                            [p for p, _, _, _, _ in stats])
+    allconfigs = func.reduce(lambda a, b: a.union(b),
+                             [c for _, c, _, _, _ in stats])
+    allckpts = func.reduce(lambda a, b: a.union(b),
+                           [c for _, _, c, _, _ in stats])
+    alltasks = func.reduce(lambda a, b: a.union(b),
+                           [t for _, _, _, t, _ in stats])
+    task_desc = '\n    - '.join(list(alltasks))
+
+    # Overview
+    papertypes, papercounts = np.unique([t for t, _ in allpapers],
+                                        return_counts=True)
+    countstr = '\n'.join(
+        [f'   - {t}: {c}' for t, c in zip(papertypes, papercounts)])
+    countstr = '\n'.join([f'   - ALGORITHM: {len(stats)}'])
+
+    summary = f"""# {name}
+
+* Number of checkpoints: {len(allckpts)}
+* Number of configs: {len(allconfigs)}
+* Number of papers: {len(allpapers)}
+{countstr}
+    """
+
+    if task == 'Overview':
+        summary += f"""
+* Tasks:
+    - {task_desc}
+
+    """
+
+    return summary
+
+
 # Count algorithms
 def update_model_zoo():
 
-    os.makedirs('model_zoo', exist_ok=True)
+    target_dir = 'model_zoo'
+
+    os.makedirs(target_dir, exist_ok=True)
 
     root_dir = dirname(dirname(dirname(dirname(osp.abspath(__file__)))))
     files = sorted(glob.glob(osp.join(root_dir, 'configs/*/README.md')))
@@ -92,47 +130,44 @@ def update_model_zoo():
 {paperlist}
 
 """
-
         # * We should have: {len(glob.glob(osp.join(dirname(f), '*.py')))}
         stats.append((papers, configs, ckpts, tasks, statsmsg))
 
-    allpapers = func.reduce(lambda a, b: a.union(b),
-                            [p for p, _, _, _, _ in stats])
-    allconfigs = func.reduce(lambda a, b: a.union(b),
-                             [c for _, c, _, _, _ in stats])
-    allckpts = func.reduce(lambda a, b: a.union(b),
-                           [c for _, _, c, _, _ in stats])
+    # overview
+    overview = summarize(stats, 'Overview')
+    with open(osp.join(target_dir, 'overview.md'), 'w') as f:
+        f.write(overview)
+
     alltasks = func.reduce(lambda a, b: a.union(b),
                            [t for _, _, _, t, _ in stats])
-    task_desc = '\n    - '.join(list(alltasks))
 
-    # Overview
-    papertypes, papercounts = np.unique([t for t, _ in allpapers],
-                                        return_counts=True)
-    countstr = '\n'.join(
-        [f'   - {t}: {c}' for t, c in zip(papertypes, papercounts)])
-    countstr = '\n'.join([f'   - ALGORITHM: {len(stats)}'])
+    # index.rst
+    indexmsg = """
+.. toctree::
+   :maxdepth: 1
+   :caption: Model Zoo
 
-    modelzoo = f"""# Overview
+   overview.md
+   """
 
-* Number of checkpoints: {len(allckpts)}
-* Number of configs: {len(allconfigs)}
-* Number of papers: {len(allpapers)}
-{countstr}
-* Tasks:
-    - {task_desc}
+    for task in alltasks:
+        task = task.replace(' ', '_').replace('-', '_').lower()
+        indexmsg += f'   {task}.md\n'
 
-For supported datasets, see [datasets overview](dataset_zoo/overview.md).
-    """
-
-    with open('model_zoo/overview.md', 'w') as f:
-        f.write(modelzoo)
+    with open(osp.join(target_dir, 'index.rst'), 'w') as f:
+        f.write(indexmsg)
 
     #  task-specific
     for task in alltasks:
-        msglist = '\n'.join(x for _, _, _, tasks, x in stats if task in tasks)
-        with open(f'model_zoo/{task}.md', 'w') as f:
-            f.write(msglist)
+        filtered_model = [(paper, config, ckpt, tasks, x)
+                          for paper, config, ckpt, tasks, x in stats
+                          if task in tasks]
+        overview = summarize(filtered_model, name=task)
+        msglist = '\n'.join(x for _, _, _, _, x in filtered_model)
+
+        task = task.replace(' ', '_').replace('-', '_').lower()
+        with open(osp.join(target_dir, f'{task}.md'), 'w') as f:
+            f.write(overview + '\n' + msglist)
 
 
 if __name__ == '__main__':
