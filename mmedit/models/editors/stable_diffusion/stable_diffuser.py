@@ -19,12 +19,9 @@ logger = MMLogger.get_current_instance()
 @MODELS.register_module('sd')
 @MODELS.register_module()
 class StableDiffuser(nn.Module):
-    r"""
-    Base class for all models.
     """
-    config_name = "model_index.json"
-    _optional_components = ["safety_checker", "feature_extractor"]
-
+    """
+    
     def __init__(self, 
             diffusion_scheduler,
             unet_cfg,
