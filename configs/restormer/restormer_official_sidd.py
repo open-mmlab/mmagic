@@ -20,7 +20,7 @@ model = dict(
         heads=[1, 2, 4, 8],
         ffn_expansion_factor=2.66,
         bias=False,
-        LayerNorm_type='WithBias',
+        LayerNorm_type='BiasFree',
         dual_pixel_task=False),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     data_preprocessor=dict(
