@@ -69,8 +69,11 @@ def test_restormer_cpu():
         ffn_expansion_factor=2.66,
         bias=False,
         LayerNorm_type='WithBias',
-        dual_pixel_task=True)
-    img = torch.rand(1, 6, 32, 32)
+        dual_pixel_task=True,
+        dual_keys=['imgL', 'imgR'])
+    img = dict()
+    img['imgL'] = torch.rand(1, 3, 32, 32)
+    img['imgR'] = torch.rand(1, 3, 32, 32)
     output = net(img)
     assert isinstance(output, torch.Tensor)
     assert output.shape == (1, 3, 32, 32)
