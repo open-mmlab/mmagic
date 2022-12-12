@@ -14,7 +14,7 @@ test_pipeline = [
     dict(type='PackEditInputs')
 ]
 
-sidd_data_root = 'data/sidd'
+sidd_data_root = 'data/SIDD'
 sidd_dataloader = dict(
     num_workers=4,
     persistent_workers=False,
@@ -31,7 +31,7 @@ sidd_evaluator = [
     dict(type='SSIM', prefix='SIDD'),
 ]
 
-dnd_data_root = 'data/dnd'
+dnd_data_root = 'data/DND'
 dnd_dataloader = dict(
     num_workers=4,
     persistent_workers=False,
@@ -52,9 +52,9 @@ dnd_evaluator = [
 test_cfg = dict(type='MultiTestLoop')
 test_dataloader = [
     sidd_dataloader,
-    dnd_dataloader,
+    # dnd_dataloader,
 ]
 test_evaluator = [
     sidd_evaluator,
-    dnd_dataloader,
+    # dnd_dataloader,
 ]
