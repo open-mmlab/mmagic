@@ -2,7 +2,7 @@
 
 MMEditing supports **17 metrics** to assess the quality of models.
 
-Please refer to [Train and Test in MMEditing](../user_guides/4_train_test.md) for usages.
+Please refer to [Train and Test in MMEditing](../user_guides/train_test.md) for usages.
 
 Here, we will specify the details of different metrics one by one.
 
@@ -176,7 +176,7 @@ metrics = [
 ```
 
 `TransFID` has same usage as `FID`, but it's designed for translation models like `Pix2Pix` and `CycleGAN`, which is adapted for our evaluator. You can refer
-to [evaluation](../user_guides/4_train_test.md) for details.
+to [evaluation](../user_guides/train_test.md) for details.
 
 ## IS and TransIS
 
@@ -223,7 +223,7 @@ We also perform a survey on the influence of data loading pipeline and the versi
 </details>
 
 `TransIS` has same usage as `IS`, but it's designed for translation models like `Pix2Pix` and `CycleGAN`, which is adapted for our evaluator. You can refer
-to [evaluation](../user_guides/4_train_test.md) for details.
+to [evaluation](../user_guides/train_test.md) for details.
 
 ## Precision and Recall
 

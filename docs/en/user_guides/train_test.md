@@ -19,7 +19,7 @@ In this section, we provide the following guides:
 
 ## Prerequisite
 
-Users need to [prepare dataset](../user_guides/2_dataset_prepare.md) first to enable training and testing models in MMEditing.
+Users need to [prepare dataset](../user_guides/dataset_prepare.md) first to enable training and testing models in MMEditing.
 
 ## Test a model in MMEditing
 
@@ -211,4 +211,4 @@ val_evaluator = dict(type='GenEvaluator', metrics=metrics)
 
 You can set `val_begin` and `val_interval` to adjust when to begin validation and interval of validation.
 
-For details of metrics, refer to [metrics' guide](./8_metrics.md).
+For details of metrics, refer to [metrics' guide](./metrics.md).
