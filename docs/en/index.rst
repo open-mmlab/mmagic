@@ -63,6 +63,29 @@ Documentation
    advanced_guides/3_transforms.md
    advanced_guides/4_losses.md
 
+.. toctree::
+   :maxdepth: 2
+   :caption: API Reference
+
+   mmedit.apis.inferencers <autoapi/mmedit/apis/inferencers/index.rst>
+   mmedit.structures <autoapi/mmedit/structures/index.rst>
+   mmedit.datasets <autoapi/mmedit/datasets/index.rst>
+   mmedit.datasets.transforms <autoapi/mmedit/datasets/transforms/index.rst>
+   mmedit.evaluation <autoapi/mmedit/evaluation/index.rst>
+   mmedit.visualization <autoapi/mmedit/visualization/index.rst>
+   mmedit.engine.hooks <autoapi/mmedit/engine/hooks/index.rst>
+   mmedit.engine.logging <autoapi/mmedit/engine/logging/index.rst>
+   mmedit.engine.optimizers <autoapi/mmedit/engine/optimizers/index.rst>
+   mmedit.engine.runner <autoapi/mmedit/engine/runner/index.rst>
+   mmedit.engine.schedulers <autoapi/mmedit/engine/schedulers/index.rst>
+   mmedit.models.base_archs <autoapi/mmedit/models/base_archs/index.rst>
+   mmedit.models.base_models <autoapi/mmedit/models/base_models/index.rst>
+   mmedit.models.losses <autoapi/mmedit/models/losses/index.rst>
+   mmedit.models.data_preprocessors <autoapi/mmedit/models/data_preprocessors/index.rst>
+   mmedit.models.utils <autoapi/mmedit/models/losses/utils.rst>
+   mmedit.models.editors <autoapi/mmedit/models/editors/index.rst>
+   mmedit.utils <autoapi/mmedit/utils/index.rst>
+
 
 .. toctree::
    :maxdepth: 1
@@ -98,28 +121,6 @@ Documentation
    migration/8_optimizers.md
    migration/9_visualization.md
    migration/10_amp.md
-
-.. toctree::
-   :maxdepth: 2
-   :caption: API Reference
-
-    mmedit.apis <api/apis>
-    mmedit.datasets <api/datasets>
-    mmedit.datasets.transforms <api/datasets.transforms>
-    mmedit.engine.hooks <api/engine.hooks>
-    mmedit.engine.optimizers <api/engine.optimizers>
-    mmedit.engine.runner <api/engine.runner>
-    mmedit.engine.schedulers <api/engine.schedulers>
-    mmedit.evaluation.metrics <api/evaluation.metrics>
-    mmedit.evaluation.functional <api/evaluation.functional>
-    mmedit.models.base_models <api/models.base_models>
-    mmedit.models.data_preprocessors <api/models.data_preprocessors>
-    mmedit.models.losses <api/models.losses>
-    mmedit.models.utils <api/models.utils>
-    mmedit.models.editors <api/models.editors>
-    mmedit.structures <api/structures>
-    mmedit.visualization <api/visualization>
-    mmedit.utils <api/utils>
 
 
 .. toctree::
