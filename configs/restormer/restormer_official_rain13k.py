@@ -1,6 +1,6 @@
 _base_ = [
-    '../../_base_/default_runtime.py',
-    '../../_base_/datasets/deraining_test_config.py'
+    '../_base_/default_runtime.py',
+    '../_base_/datasets/deraining_test_config.py'
 ]
 
 experiment_name = 'restormer_official_rain13k'
