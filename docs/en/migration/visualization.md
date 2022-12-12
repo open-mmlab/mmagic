@@ -41,4 +41,4 @@ custom_hooks = [dict(type='BasicVisualizationHook', interval=1)]
 </thead>
 </table>
 
-To learn more about the visualization function, please refers to [this tutorial](../user_guides/5_visualization.md).
+To learn more about the visualization function, please refers to [this tutorial](../user_guides/visualization.md).

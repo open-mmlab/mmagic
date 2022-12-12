@@ -5,21 +5,21 @@
 - Number of papers: 46
   - ALGORITHM: 47
 - Tasks:
-  - conditional gans
-  - image2image translation
-  - matting
-  - image restoration
-  - inpainting
-  - text2image
-  - video interpolation
   - image2image
   - unconditional gans
-  - colorization
-  - 3d-aware generation
-  - image generation
-  - image super-resolution
-  - internal learning
   - video super-resolution
+  - conditional gans
+  - inpainting
+  - matting
+  - image super-resolution
+  - video interpolation
+  - image restoration
+  - colorization
+  - internal learning
+  - text2image
+  - image generation
+  - 3d-aware generation
+  - image2image translation
 
 For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
@@ -113,7 +113,7 @@ For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
 
 ## Disco Diffusion
 
-- Tasks: text2image,image2image
+- Tasks: image2image,text2image
 - Number of checkpoints: 2
 - Number of configs: 0
 - Number of papers: 1

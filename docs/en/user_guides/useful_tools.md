@@ -61,7 +61,7 @@ The final output filename will be `stylegan2_c2_8xb4_ffhq-1024x1024_{time}-{hash
 
 ## Print full config
 
-MMGeneration incorporates config mechanism to set parameters used for training and testing models. With our [config](../user_guides/1_config.md) mechanism, users can easily conduct extensive experiments without hard coding. If you wish to inspect the config file, you may run `python tools/misc/print_config.py /PATH/TO/CONFIG` to see the complete config.
+MMGeneration incorporates config mechanism to set parameters used for training and testing models. With our [config](../user_guides/config.md) mechanism, users can easily conduct extensive experiments without hard coding. If you wish to inspect the config file, you may run `python tools/misc/print_config.py /PATH/TO/CONFIG` to see the complete config.
 
 An Example:
 
