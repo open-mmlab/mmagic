@@ -83,6 +83,17 @@ Documentation
 
 .. toctree::
    :maxdepth: 2
+   :caption: How To
+
+   howto/models.md
+   howto/dataset.md
+   howto/transforms.md
+   howto/losses.md
+
+
+
+.. toctree::
+   :maxdepth: 2
    :caption: API Reference
 
    mmedit.apis.inferencers <autoapi/mmedit/apis/inferencers/index.rst>

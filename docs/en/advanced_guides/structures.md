@@ -1,4 +1,4 @@
-# Data Structure in MMEditing \[Coming Soon!\]
+# Data structure in MMEditing \[Coming Soon!\]
 
 We're improving this documentation. Don't hesitate to join us!
 

@@ -1,4 +1,4 @@
-# Tutorial 4: Train and Test in MMEditing
+# Tutorial 4: Train and test in MMEditing
 
 In this section, we introduce how to test and train models in MMEditing.
 

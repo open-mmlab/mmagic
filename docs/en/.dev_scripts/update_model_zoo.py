@@ -3,6 +3,7 @@
 
 import functools as func
 import glob
+import os
 import os.path as osp
 import re
 from os.path import basename, dirname
@@ -22,6 +23,8 @@ def anchor(name):
 
 # Count algorithms
 def update_model_zoo():
+
+    os.makedirs('model_zoo', exist_ok=True)
 
     root_dir = dirname(dirname(dirname(dirname(osp.abspath(__file__)))))
     files = sorted(glob.glob(osp.join(root_dir, 'configs/*/README.md')))
@@ -103,9 +106,7 @@ def update_model_zoo():
                            [t for _, _, _, t, _ in stats])
     task_desc = '\n    - '.join(list(alltasks))
 
-    # Summarize
-
-    msglist = '\n'.join(x for _, _, _, _, x in stats)
+    # Overview
     papertypes, papercounts = np.unique([t for t, _ in allpapers],
                                         return_counts=True)
     countstr = '\n'.join(
@@ -121,14 +122,17 @@ def update_model_zoo():
 * Tasks:
     - {task_desc}
 
-For supported datasets, see [datasets overview](dataset_zoo/0_overview.md).
-
-{msglist}
-
+For supported datasets, see [datasets overview](dataset_zoo/overview.md).
     """
 
-    with open('3_model_zoo.md', 'w') as f:
+    with open('model_zoo/overview.md', 'w') as f:
         f.write(modelzoo)
+
+    #  task-specific
+    for task in alltasks:
+        msglist = '\n'.join(x for _, _, _, tasks, x in stats if task in tasks)
+        with open(f'model_zoo/{task}.md', 'w') as f:
+            f.write(msglist)
 
 
 if __name__ == '__main__':

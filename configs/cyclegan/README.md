@@ -2,7 +2,7 @@
 
 > [CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent Adversarial Networks](https://openaccess.thecvf.com/content_iccv_2017/html/Zhu_Unpaired_Image-To-Image_Translation_ICCV_2017_paper.html)
 
-> **Task**: Image2Image Translation
+> **Task**: Image2Image
 
 <!-- [ALGORITHM] -->
 

@@ -1,4 +1,4 @@
-# Tutorial 2: Prepare Datasets
+# Tutorial 2: Prepare datasets
 
 In this section, we will detail how to prepare data and adopt the proper dataset in our repo for different methods.
 

@@ -1,4 +1,4 @@
-# Design Your Own Models
+# How to design your own models
 
 MMEditing is built upon MMEngine and MMCV, which enables users to design new models quickly, train and evaluate them easily.
 In this section, you will learn how to design your own models.
