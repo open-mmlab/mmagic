@@ -89,72 +89,7 @@ Evaluated on RGB channels. The metrics are `PSNR` / `SSIM` .
 
 **Train**
 
-<details>
-<summary>Train Instructions</summary>
-
-You can use the following commands to train a model with cpu or single/multiple GPUs.
-
-```shell
-# cpu train
-# Motion Deblurring
-CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/restormer/Deblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Gopro.py
-
-# Deraining
-CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/restormer/Deraining/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Test100.py
-
-# Defocus Deblurring
-#Single Image
-CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/restormer/DefocusDeblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_SingleDPDD.py
-#Dual Image
-CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/restormer/DefocusDeblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_DualDPDD.py
-
-# Denoising
-# Color Gaussian Noise
-CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_GNoise_sigma15.py
-# Grayscale Gaussian Noise
-CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_CNoise_sigma15.py
-
-# single-gpu train
-# Motion Deblurring
-python tools/train.py configs/restormer/Deblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Gopro.py
-
-# Deraining
-python tools/train.py configs/restormer/Deraining/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Test100.py
-
-# Defocus Deblurring
-#Single Image
-python tools/train.py configs/restormer/DefocusDeblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_SingleDPDD.py
-#Dual Image
-python tools/train.py configs/restormer/DefocusDeblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_DualDPDD.py
-
-# Denoising
-# Color Gaussian Noise
-python tools/train.py configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_GNoise_sigma15.py
-# Grayscale Gaussian Noise
-python tools/train.py configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_CNoise_sigma15.py
-
-# multi-gpu train
-# Motion Deblurring
-./tools/dist_train.sh configs/restormer/Deblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Gopro.py 1
-
-# Deraining
-./tools/dist_train.sh configs/restormer/Deraining/restormer_d48nb4668nrb4h1248-lr3e-4-300k_Test100.py 1
-
-# Defocus Deblurring
-#Single Image
-./tools/dist_train.sh configs/restormer/DefocusDeblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_SingleDPDD.py 1
-#Dual Image
-./tools/dist_train.sh configs/restormer/DefocusDeblurring/restormer_d48nb4668nrb4h1248-lr3e-4-300k_DualDPDD.py 1
-
-# Denoising
-# Color Gaussian Noise
-./tools/dist_train.sh configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_BSD68_GNoise_sigma15.py 1
-# Grayscale Gaussian Noise
-./tools/dist_train.sh configs/restormer/Denoising/restormer_d48nb4668nrb4h1248-lr3e-4-300k_CBSD68_CNoise_sigma15.py 1
-
-```
-
-For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+You can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
 
 </details>
 
@@ -167,16 +102,143 @@ You can use the following commands to test a model with cpu or single/multiple G
 
 ```shell
 # cpu test
+# Deraining
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_rain13k.py https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth
+
 # Motion Deblurring
-CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_deblur.py Motion_Deblurring_checkpoint_path
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_gopro.py https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth
+
+# Defocus Deblurring
+# Single
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dpdd-dual.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-single-6bc31582.pth
+# Dual
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dpdd-single.py https://download.openmmlab.com/mmediting/restormer_official_dpdd-dual-52c94c00.pth
+
+# Gaussian Denoising
+# Test Grayscale Gaussian Noise
+# sigma15
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma15-da74417f.pth
+
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+
+# sigma25
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma25-08010841.pth
+
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+
+# sigma50
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma50-ee852dfe.pth
+
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+
+# Test Color Gaussian Noise
+# sigma15
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma15-012ceb71.pth
+
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
+
+# sigma25
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma25-e307f222.pth
+
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
+
+# sigma50
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma50-a991983d.pth
+
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
 
 # single-gpu test
+# Deraining
+python tools/test.py configs/restormer/restormer_official_rain13k.py https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth
+
 # Motion Deblurring
-python tools/test.py configs/restormer/restormer_official_deblur.py Motion_Deblurring_checkpoint_path
+python tools/test.py configs/restormer/restormer_official_gopro.py https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth
+
+# Defocus Deblurring
+# Single
+python tools/test.py configs/restormer/restormer_official_dpdd-dual.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-single-6bc31582.pth
+# Dual
+python tools/test.py configs/restormer/restormer_official_dpdd-single.py https://download.openmmlab.com/mmediting/restormer_official_dpdd-dual-52c94c00.pth
+
+# Gaussian Denoising
+# Test Grayscale Gaussian Noise
+# sigma15
+python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma15-da74417f.pth
+
+python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+
+# sigma25
+python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma25-08010841.pth
+
+python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+
+# sigma50
+python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma50-ee852dfe.pth
+
+python tools/test.py configs/restormer/restormer_official_dfwb-gray-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+
+# Test Color Gaussian Noise
+# sigma15
+python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma15-012ceb71.pth
+
+python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
+
+# sigma25
+python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma25-e307f222.pth
+
+python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
+
+# sigma50
+python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma50-a991983d.pth
+
+python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
+
 
 # multi-gpu test
+# Deraining
+./tools/dist_test.sh configs/restormer/restormer_official_rain13k.py https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth
+
 # Motion Deblurring
-./tools/dist_test.sh configs/restormer/restormer_official_deblur.py Motion_Deblurring_checkpoint_path
+./tools/dist_test.sh configs/restormer/restormer_official_gopro.py https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth
+
+# Defocus Deblurring
+# Single
+./tools/dist_test.sh configs/restormer/restormer_official_dpdd-dual.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-single-6bc31582.pth
+# Dual
+./tools/dist_test.sh configs/restormer/restormer_official_dpdd-single.py https://download.openmmlab.com/mmediting/restormer_official_dpdd-dual-52c94c00.pth
+
+# Gaussian Denoising
+# Test Grayscale Gaussian Noise
+# sigma15
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-gray-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma15-da74417f.pth
+
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-gray-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+
+# sigma25
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-gray-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma25-08010841.pth
+
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-gray-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+
+# sigma50
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-gray-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma50-ee852dfe.pth
+
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-gray-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+
+# Test Color Gaussian Noise
+# sigma15
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-color-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma15-012ceb71.pth
+
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-color-sigma15.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
+
+# sigma25
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-color-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma25-e307f222.pth
+
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-color-sigma25.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
+
+# sigma50
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-color-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma50-a991983d.pth
+
+./tools/dist_test.sh configs/restormer/restormer_official_dfwb-color-sigma50.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
 
 ```
 
