@@ -31,48 +31,55 @@ author = 'MMEditing Authors'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autosummary',  # Create neat summary tables
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
     'sphinx.ext.autosectionlabel',
     'sphinx_markdown_tables',
-    'myst_parser',
     'sphinx_copybutton',
-    'sphinx.ext.autodoc',  # Core library for html generation from docstrings
-    'sphinx.ext.autodoc.typehints',
     'sphinx_tabs.tabs',
-    'notfound.extension',
-    'autoapi.extension'
+    'myst_parser',
 ]
 
+extensions.append('notfound.extension')  # enable customizing not-found page
+
+extensions.append('autoapi.extension')
+autoapi_type = 'python'
 autoapi_dirs = ['../../mmedit']
+autoapi_add_toctree_entry = False
+autoapi_template_dir = '_templates'
+# autoapi_options = ['members', 'undoc-members', 'show-module-summary']
+
+# # Core library for html generation from docstrings
+# extensions.append('sphinx.ext.autodoc')
+# extensions.append('sphinx.ext.autodoc.typehints')
+# # Enable 'expensive' imports for sphinx_autodoc_typehints
+# set_type_checking_flag = True
+# # Sphinx-native method. Not as good as sphinx_autodoc_typehints
+# autodoc_typehints = "description"
+
+# extensions.append('sphinx.ext.autosummary') # Create neat summary tables
+# autosummary_generate = True  # Turn on sphinx.ext.autosummary
+# # Add __init__ doc (ie. params) to class summaries
+# autoclass_content = 'both'
+# autodoc_skip_member = []
+# # If no docstring, inherit from base class
+# autodoc_inherit_docstrings = True
 
 autodoc_mock_imports = [
-    'mmedit.version',
-    'mmcv._ext',
-    'mmcv.ops.ModulatedDeformConv2d',
-    'mmcv.ops.modulated_deform_conv2d',
-    'clip',
-    'resize_right',
-    'pandas'
+    'mmedit.version', 'mmcv._ext', 'mmcv.ops.ModulatedDeformConv2d',
+    'mmcv.ops.modulated_deform_conv2d', 'clip', 'resize_right', 'pandas'
 ]
-
-autodoc_skip_member = []
 
 source_suffix = {
     '.rst': 'restructuredtext',
     '.md': 'markdown',
 }
 
-autosummary_generate = True  # Turn on sphinx.ext.autosummary
-autoclass_content = 'both'  # Add __init__ doc (ie. params) to class summaries
-html_show_sourcelink = False  # Remove 'view source code' from top of page (for html, not python)
-autodoc_inherit_docstrings = True  # If no docstring, inherit from base class
-set_type_checking_flag = True  # Enable 'expensive' imports for sphinx_autodoc_typehints
-nbsphinx_allow_errors = True  # Continue through Jupyter errors
-#autodoc_typehints = "description" # Sphinx-native method. Not as good as sphinx_autodoc_typehints
-add_module_names = False  # Remove namespaces from class/method signatures
+# # Remove 'view source code' from top of page (for html, not python)
+# html_show_sourcelink = False
+# nbsphinx_allow_errors = True  # Continue through Jupyter errors
+# add_module_names = False  # Remove namespaces from class/method signatures
 
 # Ignore >>> when copying code
 copybutton_prompt_text = r'>>> |\.\.\. '
@@ -145,5 +152,12 @@ def builder_inited_handler(app):
     subprocess.run(['python', './.dev_scripts/update_model_zoo.py'])
 
 
+def skip_member(app, what, name, obj, skip, options):
+    if what == 'package' or what == 'module':
+        skip = True
+    return skip
+
+
 def setup(app):
     app.connect('builder-inited', builder_inited_handler)
+    app.connect('autoapi-skip-member', skip_member)

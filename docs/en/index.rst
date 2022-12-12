@@ -67,15 +67,24 @@ Documentation
    :maxdepth: 2
    :caption: API Reference
 
-   mmedit.apis.inferencers <_autosummary/mmedit.apis.inferencers>
-   mmedit.structures <_autosummary/mmedit.structures>
-   mmedit.datasets <_autosummary/mmedit.datasets>
-   mmedit.datasets.transforms <_autosummary/mmedit.datasets.transforms>
-   mmedit.evaluation <_autosummary/mmedit.evaluation>
-   mmedit.visualization <_autosummary/mmedit.visualization>
-   mmedit.engine <_autosummary/mmedit.engine>
-   mmedit.models <_autosummary/mmedit.models>
-   mmedit.utils <_autosummary/mmedit.utils>
+   mmedit.apis.inferencers <autoapi/mmedit/apis/inferencers/index.rst>
+   mmedit.structures <autoapi/mmedit/structures/index.rst>
+   mmedit.datasets <autoapi/mmedit/datasets/index.rst>
+   mmedit.datasets.transforms <autoapi/mmedit/datasets/transforms/index.rst>
+   mmedit.evaluation <autoapi/mmedit/evaluation/index.rst>
+   mmedit.visualization <autoapi/mmedit/visualization/index.rst>
+   mmedit.engine.hooks <autoapi/mmedit/engine/hooks/index.rst>
+   mmedit.engine.logging <autoapi/mmedit/engine/logging/index.rst>
+   mmedit.engine.optimizers <autoapi/mmedit/engine/optimizers/index.rst>
+   mmedit.engine.runner <autoapi/mmedit/engine/runner/index.rst>
+   mmedit.engine.schedulers <autoapi/mmedit/engine/schedulers/index.rst>
+   mmedit.models.base_archs <autoapi/mmedit/models/base_archs/index.rst>
+   mmedit.models.base_models <autoapi/mmedit/models/base_models/index.rst>
+   mmedit.models.losses <autoapi/mmedit/models/losses/index.rst>
+   mmedit.models.data_preprocessors <autoapi/mmedit/models/data_preprocessors/index.rst>
+   mmedit.models.utils <autoapi/mmedit/models/losses/utils.rst>
+   mmedit.models.editors <autoapi/mmedit/models/editors/index.rst>
+   mmedit.utils <autoapi/mmedit/utils/index.rst>
 
 
 .. toctree::
