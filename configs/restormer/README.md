@@ -81,9 +81,11 @@ Evaluated on RGB channels. The metrics are `PSNR` / `SSIM` .
 
 ### **Real Image Denoising**
 
-|                                  Method                                  | SIDD<br>PSNR/SSIM (Y) | DND<br>PSNR/SSIM (Y) | GPU Info |                                    Download                                     |
-| :----------------------------------------------------------------------: | :-------------------: | :------------------: | :------: | :-----------------------------------------------------------------------------: |
-| [restormer_official_sidd](/configs/restormer/restormer_official_sidd.py) |    32.9295/0.9496     |          -           |    1     | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_sidd-9e7025db.pth) \| log |
+Evaluated on RGB channels. The metrics are `PSNR` / `SSIM` .
+
+|                                  Method                                  | SIDD<br>PSNR/SSIM | DND<br>PSNR/SSIM | GPU Info |                                        Download                                         |
+| :----------------------------------------------------------------------: | :---------------: | :--------------: | :------: | :-------------------------------------------------------------------------------------: |
+| [restormer_official_sidd](/configs/restormer/restormer_official_sidd.py) |  32.9295/0.9496   |        -         |    1     | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_sidd-9e7025db.pth) \| log |
 
 ## Quick Start
 

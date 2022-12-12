@@ -375,7 +375,7 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
-      SIDD<br>PSNR/SSIM (Y):
+      SIDD<br>PSNR/SSIM:
         PSNR: 32.9295
         SSIM: 0.9496
     Task: Denoising, Deblurring, Deraining
