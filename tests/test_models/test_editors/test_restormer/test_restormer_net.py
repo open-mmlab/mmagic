@@ -19,7 +19,7 @@ def test_restormer_cpu():
         bias=False,
         LayerNorm_type='WithBias',
         dual_pixel_task=False)
-    img = torch.rand(1, 3, 64, 64)
+    img = torch.rand(1, 3, 32, 32)
     output = net(img)
     assert isinstance(output, torch.Tensor)
     assert output.shape == (1, 3, 64, 64)
@@ -36,10 +36,10 @@ def test_restormer_cpu():
         bias=False,
         LayerNorm_type='BiasFree',
         dual_pixel_task=False)
-    img = torch.rand(1, 1, 64, 64)
+    img = torch.rand(1, 1, 32, 32)
     output = net(img)
     assert isinstance(output, torch.Tensor)
-    assert output.shape == (1, 1, 64, 64)
+    assert output.shape == (1, 1, 32, 32)
 
     # Image Denoising Color
     net = Restormer(
@@ -56,7 +56,7 @@ def test_restormer_cpu():
     img = torch.rand(1, 3, 64, 64)
     output = net(img)
     assert isinstance(output, torch.Tensor)
-    assert output.shape == (1, 3, 64, 64)
+    assert output.shape == (1, 3, 32, 32)
 
     # Image Dual Defocus Deblurring
     net = Restormer(
@@ -73,7 +73,7 @@ def test_restormer_cpu():
     img = torch.rand(1, 6, 64, 64)
     output = net(img)
     assert isinstance(output, torch.Tensor)
-    assert output.shape == (1, 3, 64, 64)
+    assert output.shape == (1, 3, 32, 32)
 
 
 def test_restormer_cuda():
@@ -88,11 +88,11 @@ def test_restormer_cuda():
         bias=False,
         LayerNorm_type='WithBias',
         dual_pixel_task=False)
-    img = torch.rand(1, 3, 64, 64)
+    img = torch.rand(1, 3, 32, 32)
 
     # Image Deblurring or Image Deraining (gpu)
     if torch.cuda.is_available():
         net = net.cuda()
         output = net(img.cuda())
         assert isinstance(output, torch.Tensor)
-        assert output.shape == (1, 3, 64, 64)
+        assert output.shape == (1, 3, 32, 32)
