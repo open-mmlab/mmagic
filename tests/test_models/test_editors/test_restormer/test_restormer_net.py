@@ -22,7 +22,7 @@ def test_restormer_cpu():
     img = torch.rand(1, 3, 32, 32)
     output = net(img)
     assert isinstance(output, torch.Tensor)
-    assert output.shape == (1, 3, 64, 64)
+    assert output.shape == (1, 3, 32, 32)
 
     # Image Denoising Gray
     net = Restormer(
@@ -53,7 +53,7 @@ def test_restormer_cpu():
         bias=False,
         LayerNorm_type='BiasFree',
         dual_pixel_task=False)
-    img = torch.rand(1, 3, 64, 64)
+    img = torch.rand(1, 3, 32, 32)
     output = net(img)
     assert isinstance(output, torch.Tensor)
     assert output.shape == (1, 3, 32, 32)
@@ -70,7 +70,7 @@ def test_restormer_cpu():
         bias=False,
         LayerNorm_type='WithBias',
         dual_pixel_task=True)
-    img = torch.rand(1, 6, 64, 64)
+    img = torch.rand(1, 6, 32, 32)
     output = net(img)
     assert isinstance(output, torch.Tensor)
     assert output.shape == (1, 3, 32, 32)

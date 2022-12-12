@@ -3,7 +3,7 @@ _base_ = [
     '../_base_/datasets/denoising-gaussian_gray_test_config.py'
 ]
 
-experiment_name = 'restormer_official_dfwb_gray_sigma25'
+experiment_name = 'restormer_official_dfwb_gray_sigma50'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

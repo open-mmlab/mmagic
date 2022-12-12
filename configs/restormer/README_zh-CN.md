@@ -49,9 +49,9 @@ Gopro和HIDE数据集上使用RGB通道测试，ReakBlur-J 和 ReakBlur-R数据�
 | [restormer_official_dfwb-gray-sigma25](/configs/restormer/restormer_official_dfwb-gray-sigma25.py) |    25     |   31.7289/0.8811   |   30.1613/0.8370   |    32.1162/0.9140     |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma25-08010841.pth) \| log |
 | [restormer_official_dfwb-gray-sigma50](/configs/restormer/restormer_official_dfwb-gray-sigma50.py) |    50     |   28.6269/0.8188   |   27.3266/0.7434   |    28.9636/0.8571     |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma50-ee852dfe.pth) \| log |
 |                                                                 |           |                    |                    |                       |         |                                                                  |
-| [restormer_official_dfwb-gray-sigma15](/configs/restormer/restormer_official_dfwb-gray-sigma15.py) |    15     |   33.9642/0.9153   |   30.4941/0.8040   |    34.3152/0.9409     |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth) \| log |
-| [restormer_official_dfwb-gray-sigma25](/configs/restormer/restormer_official_dfwb-gray-sigma25.py) |    25     |   31.7106/0.8810   |   28.0652/0.7108   |    32.0457/0.9131     |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth) \| log |
-| [restormer_official_dfwb-gray-sigma50](/configs/restormer/restormer_official_dfwb-gray-sigma50.py) |    50     |   28.6614/0.8197   |   25.2580/0.5736   |    28.9848/0.8571     |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth) \| log |
+| [restormer_official_dfwb-gray-sigma15](/configs/restormer/restormer_official_dfwb-gray-sigma15.py) |    15     |   33.9642/0.9153   |   32.4994/0.8928   |    34.3152/0.9409     |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth) \| log |
+| [restormer_official_dfwb-gray-sigma25](/configs/restormer/restormer_official_dfwb-gray-sigma25.py) |    25     |   31.7106/0.8810   |   30.1486/0.8360   |    32.0457/0.9131     |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth) \| log |
+| [restormer_official_dfwb-gray-sigma50](/configs/restormer/restormer_official_dfwb-gray-sigma50.py) |    50     |   28.6614/0.8197   |   27.3537/0.7422   |    28.9848/0.8571     |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth) \| log |
 
 > 上面三行代表每个噪声等级训练一个单独的模型，下面三行代表学习一个单一的模型来处理各种噪音水平。
 
@@ -77,7 +77,7 @@ Gopro和HIDE数据集上使用RGB通道测试，ReakBlur-J 和 ReakBlur-R数据�
 
 |                                   方法                                   | SIDD<br>PSNR/SSIM | DND<br>PSNR/SSIM | GPU信息 |                                           下载                                           |
 | :----------------------------------------------------------------------: | :---------------: | :--------------: | :-----: | :--------------------------------------------------------------------------------------: |
-| [restormer_official_sidd](/configs/restormer/restormer_official_sidd.py) |  32.9295/0.9496   |        -         |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_sidd-9e7025db.pth) \| log |
+| [restormer_official_sidd](/configs/restormer/restormer_official_sidd.py) |  40.0156/0.9225   |        -         |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_sidd-9e7025db.pth) \| log |
 
 ## 使用方法
 
