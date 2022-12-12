@@ -31,7 +31,6 @@ author = 'MMEditing Authors'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',  # Core library for html generation from docstrings
     'sphinx.ext.autosummary',  # Create neat summary tables
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
@@ -40,16 +39,23 @@ extensions = [
     'sphinx_markdown_tables',
     'myst_parser',
     'sphinx_copybutton',
+    'sphinx.ext.autodoc',  # Core library for html generation from docstrings
     'sphinx.ext.autodoc.typehints',
     'sphinx_tabs.tabs',
     'notfound.extension',
+    'autoapi.extension'
 ]
+
+autoapi_dirs = ['../../mmedit']
 
 autodoc_mock_imports = [
     'mmedit.version',
     'mmcv._ext',
     'mmcv.ops.ModulatedDeformConv2d',
     'mmcv.ops.modulated_deform_conv2d',
+    'clip',
+    'resize_right',
+    'pandas'
 ]
 
 autodoc_skip_member = []
