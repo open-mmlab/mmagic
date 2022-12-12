@@ -7,6 +7,18 @@ test_pipeline = [
         imdecode_backend='cv2'),
     dict(
         type='LoadImageFromFile',
+        key='imgL',
+        color_type='color',
+        channel_order='rgb',
+        imdecode_backend='cv2'),
+    dict(
+        type='LoadImageFromFile',
+        key='imgR',
+        color_type='color',
+        channel_order='rgb',
+        imdecode_backend='cv2'),
+    dict(
+        type='LoadImageFromFile',
         key='gt',
         color_type='color',
         channel_order='rgb',
@@ -25,7 +37,8 @@ dpdd_indoor_dataloader = dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='DPDD-Indoor', task_name='deblurring'),
         data_root=dpdd_data_root,
-        data_prefix=dict(img='inputC', gt='target'),
+        data_prefix=dict(
+            img='inputC', imgL='inputL', imgR='inputR', gt='target'),
         ann_file='indoor_labels.txt',
         pipeline=test_pipeline))
 dpdd_indoor_evaluator = [
@@ -43,7 +56,8 @@ dpdd_outdoor_dataloader = dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='DPDD-Outdoor', task_name='deblurring'),
         data_root=dpdd_data_root,
-        data_prefix=dict(img='inputC', gt='target'),
+        data_prefix=dict(
+            img='inputC', imgL='inputL', imgR='inputR', gt='target'),
         ann_file='outdoor_labels.txt',
         pipeline=test_pipeline))
 dpdd_outdoor_evaluator = [
@@ -61,28 +75,13 @@ dpdd_dataloader = dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='DPDD-Combined', task_name='deblurring'),
         data_root=dpdd_data_root,
-        data_prefix=dict(img='inputC', gt='target'),
+        data_prefix=dict(
+            img='inputC', imgL='inputL', imgR='inputR', gt='target'),
         pipeline=test_pipeline))
 dpdd_evaluator = [
     dict(type='MAE', prefix='DPDD-Combined'),
     dict(type='PSNR', prefix='DPDD-Combined'),
     dict(type='SSIM', prefix='DPDD-Combined'),
-]
-dpdd_dataloader = dict(
-    num_workers=4,
-    persistent_workers=False,
-    drop_last=False,
-    sampler=dict(type='DefaultSampler', shuffle=False),
-    dataset=dict(
-        type='BasicImageDataset',
-        metainfo=dict(dataset_type='DPDD', task_name='deblurring'),
-        data_root=dpdd_data_root,
-        data_prefix=dict(img='inputC', gt='target'),
-        pipeline=test_pipeline))
-dpdd_evaluator = [
-    dict(type='MAE', prefix='DPDD'),
-    dict(type='PSNR', prefix='DPDD'),
-    dict(type='SSIM', prefix='DPDD'),
 ]
 
 # test config

@@ -25,7 +25,7 @@ class BiasFree_LayerNorm(BaseModule):
     """Layer normalization without bias.
 
     Args:
-        normalized_shape(tuple): The shape of inputs.
+        normalized_shape (tuple): The shape of inputs.
     """
 
     def __init__(self, normalized_shape):
@@ -56,7 +56,7 @@ class WithBias_LayerNorm(BaseModule):
     """Layer normalization with bias. The bias can be learned.
 
     Args:
-        normalized_shape(tuple): The shape of inputs.
+        normalized_shape (tuple): The shape of inputs.
     """
 
     def __init__(self, normalized_shape):
@@ -91,8 +91,8 @@ class LayerNorm(BaseModule):
     Note: This is different from the layernorm2d in pytorch.
         The layer norm here can select Layer Normalization type.
     Args:
-        dim(int): Channel number of inputs.
-        LayerNorm_type(str): Layer Normalization type.
+        dim (int): Channel number of inputs.
+        LayerNorm_type (str): Layer Normalization type.
     """
 
     def __init__(self, dim, LayerNorm_type):
@@ -122,9 +122,9 @@ class FeedForward(BaseModule):
     "Restormer: Efficient Transformer for High-Resolution Image Restoration".
 
     Args:
-        dim(int): Channel number of inputs.
-        ffn_expansion_factor(float): channel expansion factor. Default: 2.66
-        bias(bool): The bias of convolution.
+        dim (int): Channel number of inputs.
+        ffn_expansion_factor (float): channel expansion factor. Default: 2.66
+        bias (bool): The bias of convolution.
     """
 
     def __init__(self, dim, ffn_expansion_factor, bias):
@@ -170,9 +170,9 @@ class Attention(BaseModule):
     "Restormer: Efficient Transformer for High-Resolution Image Restoration".
 
     Args:
-        dim(int): Channel number of inputs.
-        num_heads(int): Number of attention heads.
-        bias(bool): The bias of convolution.
+        dim (int): Channel number of inputs.
+        num_heads (int): Number of attention heads.
+        bias (bool): The bias of convolution.
     """
 
     def __init__(self, dim, num_heads, bias):
@@ -238,11 +238,11 @@ class TransformerBlock(BaseModule):
         Transformer for High-Resolution Image Restoration".
 
     Args:
-        dim(int): Channel number of inputs.
-        num_heads(int): Number of attention heads.
-        ffn_expansion_factor(float): channel expansion factor. Default: 2.66
-        bias(bool): The bias of convolution.
-        LayerNorm_type(str): Layer Normalization type.
+        dim (int): Channel number of inputs.
+        num_heads (int): Number of attention heads.
+        ffn_expansion_factor (float): channel expansion factor. Default: 2.66
+        bias (bool): The bias of convolution.
+        LayerNorm_type (str): Layer Normalization type.
     """
 
     def __init__(self, dim, num_heads, ffn_expansion_factor, bias,
@@ -273,9 +273,9 @@ class OverlapPatchEmbed(BaseModule):
     """Overlapped image patch embedding with 3x3 Conv.
 
     Args:
-        in_c(int, optional): Channel number of inputs. Default: 3
-        embed_dim(int, optional): embedding dimension. Default: 48
-        bias(bool, optional): The bias of convolution. Default: False
+        in_c (int, optional): Channel number of inputs. Default: 3
+        embed_dim (int, optional): embedding dimension. Default: 48
+        bias (bool, optional): The bias of convolution. Default: False
     """
 
     def __init__(self, in_c=3, embed_dim=48, bias=False):
@@ -367,23 +367,25 @@ class Restormer(BaseModule):
     https://github.com/swz30/Restormer.
 
     Args:
-        inp_channels (int): Number of input image channels. Default: 3
-        out_channels (int): Number of output image channels: 3
-        dim (int): Number of feature dimension. Default: 48
+        inp_channels (int): Number of input image channels. Default: 3.
+        out_channels (int): Number of output image channels: 3.
+        dim (int): Number of feature dimension. Default: 48.
         num_blocks (List(int)): Depth of each Transformer layer.
-            Default: [4, 6, 6, 8]
+            Default: [4, 6, 6, 8].
         num_refinement_blocks (int): Number of refinement blocks.
-            Default: 4
+            Default: 4.
         heads (List(int)): Number of attention heads in different layers.
-            Default: 7
+            Default: 7.
         ffn_expansion_factor (float): Ratio of feed forward network expansion.
-            Default: 2.66
+            Default: 2.66.
         bias (bool): The bias of convolution. Default: False
         LayerNorm_type (str|optional): Select layer Normalization type.
             Optional: 'WithBias','BiasFree'
-            Default: 'WithBias'
+            Default: 'WithBias'.
         dual_pixel_task (bool): True for dual-pixel defocus deblurring only.
-            Also set inp_channels=6. Default: False
+            Also set inp_channels=6. Default: False.
+        dual_keys (List): Keys of dual images in inputs.
+            Default: ['imgL', 'imgR'].
     """
 
     def __init__(self,
@@ -396,7 +398,8 @@ class Restormer(BaseModule):
                  ffn_expansion_factor=2.66,
                  bias=False,
                  LayerNorm_type='WithBias',
-                 dual_pixel_task=False):
+                 dual_pixel_task=False,
+                 dual_keys=['imgL', 'imgR']):
 
         super(Restormer, self).__init__()
 
@@ -487,6 +490,7 @@ class Restormer(BaseModule):
         ])
 
         self.dual_pixel_task = dual_pixel_task
+        self.dual_keys = dual_keys
         if self.dual_pixel_task:
             self.skip_conv = nn.Conv2d(
                 dim, int(dim * 2**1), kernel_size=1, bias=bias)
@@ -507,6 +511,11 @@ class Restormer(BaseModule):
         Returns:
             Tensor: Forward results.
         """
+
+        if self.dual_pixel_task:
+            dual_images = [inp_img[key] for key in self.dual_keys]
+            inp_img = torch.cat(dual_images, dim=1)
+
         _, _, h, w = inp_img.shape
         if h % 8 == 0:
             padding_h = 0
@@ -517,7 +526,7 @@ class Restormer(BaseModule):
         else:
             padding_w = 8 - w % 8
 
-        inp_img = F.pad(inp_img, pad=(0, padding_w, 0, padding_h))
+        inp_img = F.pad(inp_img, (0, padding_w, 0, padding_h), 'reflect')
         inp_enc_level1 = self.patch_embed(inp_img)
         out_enc_level1 = self.encoder_level1(inp_enc_level1)
 

@@ -3,7 +3,7 @@ _base_ = [
     '../_base_/datasets/deblurring-defocus_test_config.py'
 ]
 
-experiment_name = 'restormer_official_dpdd'
+experiment_name = 'restormer_official_dpdd-single'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
