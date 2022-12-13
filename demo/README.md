@@ -71,10 +71,10 @@ print all supported tasks for inference.
 python mmediting_inference_demo.py --print-supported-tasks
 ```
 
-print all supported models for one task, take 'Image2Image Translation' for example.
+print all supported models for one task, take 'Image2Image' for example.
 
 ```shell
-python mmediting_inference_demo.py --print-task-supported-models 'Image2Image Translation'
+python mmediting_inference_demo.py --print-task-supported-models 'Image2Image'
 ```
 
 ### 2.2 Perform inference with command line

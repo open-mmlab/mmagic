@@ -36,106 +36,123 @@ Documentation
 
 .. toctree::
    :maxdepth: 1
+   :caption: Community
+
+   community/contribution_guide.md
+   community/projects.md
+
+
+.. toctree::
+   :maxdepth: 1
    :caption: Get Started
 
-   1_overview.md
-   2_get_started.md
+   get_started/overview.md
+   get_started/install.md
+   get_started/quick_run.md
+
 
 .. toctree::
    :maxdepth: 1
    :caption: User Guides
 
-   user_guides/1_config.md
-   user_guides/2_dataset_prepare.md
-   user_guides/3_inference.md
-   user_guides/4_train_test.md
-   user_guides/5_visualization.md
-   user_guides/6_useful_tools.md
-   user_guides/7_deploy.md
-   user_guides/8_metrics.md
+   user_guides/config.md
+   user_guides/dataset_prepare.md
+   user_guides/inference.md
+   user_guides/train_test.md
+   user_guides/metrics.md
+   user_guides/visualization.md
+   user_guides/useful_tools.md
+   user_guides/deploy.md
+   user_guides/faq.md
+
 
 .. toctree::
    :maxdepth: 2
    :caption: Advanced Guides
 
-   advanced_guides/1_models.md
-   advanced_guides/2_dataset.md
-   advanced_guides/3_transforms.md
-   advanced_guides/4_losses.md
+   advanced_guides/models.md
+   advanced_guides/dataset.md
+   advanced_guides/transforms.md
+   advanced_guides/losses.md
+   advanced_guides/evaluator.md
+   advanced_guides/structures.md
+   advanced_guides/data_preprocessor.md
+   advanced_guides/data_flow.md
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+   :caption: How To
+
+   howto/models.md
+   howto/dataset.md
+   howto/transforms.md
+   howto/losses.md
+
+.. toctree::
+
+   faq.md
+
+.. toctree::
+   :maxdepth: 2
    :caption: Model Zoo
 
-   3_model_zoo.md
+   model_zoo/index.rst
 
 
 .. toctree::
    :maxdepth: 1
    :caption: Dataset Zoo
 
-   dataset_zoo/0_overview.md
-   dataset_zoo/1_super_resolution_datasets.md
-   dataset_zoo/2_inpainting_datasets.md
-   dataset_zoo/3_matting_datasets.md
-   dataset_zoo/4_video_interpolation_datasets.md
-   dataset_zoo/5_unconditional_gans_datasets.md
-   dataset_zoo/6_image_translation_datasets.md
+   dataset_zoo/index.rst
+
+.. toctree::
+
+   changelog.md
+
+.. toctree::
+   :maxdepth: 2
+   :caption: API Reference
+
+   mmedit.apis.inferencers <autoapi/mmedit/apis/inferencers/index.rst>
+   mmedit.structures <autoapi/mmedit/structures/index.rst>
+   mmedit.datasets <autoapi/mmedit/datasets/index.rst>
+   mmedit.datasets.transforms <autoapi/mmedit/datasets/transforms/index.rst>
+   mmedit.evaluation <autoapi/mmedit/evaluation/index.rst>
+   mmedit.visualization <autoapi/mmedit/visualization/index.rst>
+   mmedit.engine.hooks <autoapi/mmedit/engine/hooks/index.rst>
+   mmedit.engine.logging <autoapi/mmedit/engine/logging/index.rst>
+   mmedit.engine.optimizers <autoapi/mmedit/engine/optimizers/index.rst>
+   mmedit.engine.runner <autoapi/mmedit/engine/runner/index.rst>
+   mmedit.engine.schedulers <autoapi/mmedit/engine/schedulers/index.rst>
+   mmedit.models.base_archs <autoapi/mmedit/models/base_archs/index.rst>
+   mmedit.models.base_models <autoapi/mmedit/models/base_models/index.rst>
+   mmedit.models.losses <autoapi/mmedit/models/losses/index.rst>
+   mmedit.models.data_preprocessors <autoapi/mmedit/models/data_preprocessors/index.rst>
+   mmedit.models.utils <autoapi/mmedit/models/losses/utils.rst>
+   mmedit.models.editors <autoapi/mmedit/models/editors/index.rst>
+   mmedit.utils <autoapi/mmedit/utils/index.rst>
 
 
 .. toctree::
    :maxdepth: 1
    :caption: Migration from MMEdit 0.x
 
-   migration/1_overview.md
-   migration/2_runtime.md
-   migration/3_models.md
-   migration/4_eval_test.md
-   migration/5_schedule.md
-   migration/6_data.md
-   migration/7_distributed_train.md
-   migration/8_optimizers.md
-   migration/9_visualization.md
-   migration/10_amp.md
-
-.. toctree::
-   :maxdepth: 2
-   :caption: API Reference
-
-    mmedit.apis <api/apis>
-    mmedit.datasets <api/datasets>
-    mmedit.datasets.transforms <api/datasets.transforms>
-    mmedit.engine.hooks <api/engine.hooks>
-    mmedit.engine.optimizers <api/engine.optimizers>
-    mmedit.engine.runner <api/engine.runner>
-    mmedit.engine.schedulers <api/engine.schedulers>
-    mmedit.evaluation.metrics <api/evaluation.metrics>
-    mmedit.evaluation.functional <api/evaluation.functional>
-    mmedit.models.base_models <api/models.base_models>
-    mmedit.models.data_preprocessors <api/models.data_preprocessors>
-    mmedit.models.losses <api/models.losses>
-    mmedit.models.utils <api/models.utils>
-    mmedit.models.editors <api/models.editors>
-    mmedit.structures <api/structures>
-    mmedit.visualization <api/visualization>
-    mmedit.utils <api/utils>
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Notes
-
-   notes/1_contribution_guide.md
-   notes/2_projects.md
-   notes/3_changelog.md
-   notes/4_faq.md
-
+   migration/overview.md
+   migration/runtime.md
+   migration/models.md
+   migration/eval_test.md
+   migration/schedule.md
+   migration/data.md
+   migration/distributed_train.md
+   migration/optimizers.md
+   migration/visualization.md
+   migration/amp.md
 
 .. toctree::
    :caption: Switch Language
 
-   5_switch_language.md
+   switch_language.md
 
 
 
