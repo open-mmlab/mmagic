@@ -94,6 +94,19 @@ Documentation
    faq.md
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Model Zoo
+
+   model_zoo/index.rst
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Dataset Zoo
+
+   dataset_zoo/index.rst
+
+.. toctree::
 
    changelog.md
 
@@ -119,20 +132,6 @@ Documentation
    mmedit.models.utils <autoapi/mmedit/models/losses/utils.rst>
    mmedit.models.editors <autoapi/mmedit/models/editors/index.rst>
    mmedit.utils <autoapi/mmedit/utils/index.rst>
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Model Zoo
-
-   model_zoo/index.rst
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Dataset Zoo
-
-   dataset_zoo/index.rst
 
 
 .. toctree::
