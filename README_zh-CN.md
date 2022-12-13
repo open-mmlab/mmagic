@@ -251,7 +251,7 @@ pip3 install -e .
 </details>
 
 <details open>
-<summary>Image2Image Translation</summary>
+<summary>Image2Image</summary>
 
 - ✅ [Pix2Pix](configs/pix2pix/README.md) (CVPR'2017)
 - ✅ [CycleGAN](configs/cyclegan/README.md) (ICCV'2017)

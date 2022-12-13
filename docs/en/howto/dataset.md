@@ -1,4 +1,4 @@
-# Prepare Your Own Datasets
+# How to prepare your own datasets
 
 In this document, we will introduce the design of each datasets in MMEditing and how users can design their own dataset.
 

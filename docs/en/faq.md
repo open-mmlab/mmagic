@@ -1,4 +1,4 @@
-# Frequently Asked Questions
+# Frequently asked questions
 
 We list some common troubles faced by many users and their corresponding
 solutions here. Feel free to enrich the list if you find any frequent issues
@@ -15,11 +15,11 @@ and make sure you fill in all required information in the template.
 
 **Q2**: What's the folder structure of xxx dataset?
 
-**A2**: You can make sure the folder structure is correct following tutorials of [dataset preparation](../user_guides/dataset_prepare.md).
+**A2**: You can make sure the folder structure is correct following tutorials of [dataset preparation](user_guides/dataset_prepare.md).
 
 **Q3**: How to use LMDB data to train the model?
 
-**A3**:  You can use scripts in `tools/data` to make LMDB files. More details are shown in tutorials of [dataset preparation](../user_guides/dataset_prepare.md).
+**A3**:  You can use scripts in `tools/data` to make LMDB files. More details are shown in tutorials of [dataset preparation](user_guides/dataset_prepare.md).
 
 **Q4**: Why `MMCV==xxx is used but incompatible` is raised when import I try to import `mmgen`?
 

@@ -68,4 +68,4 @@ We refactor models in MMEdit 1.x. Important modifications are as following.
 - The `models` in MMedit 1.x is refactored to five parts: `base_models`, `data_preprocessors`, `editors`, `layers` and `losses`.
 - Add `data_preprocessor` module in `models`. Normalization and color space transforms operations are moved from datasets transforms pipelines to data_preprocessor. The data out from the data pipeline is transformed by this module and then fed into the model.
 
-More details of models are shown in [model guides](../advanced_guides/models.md).
+More details of models are shown in [model guides](../howto/models.md).

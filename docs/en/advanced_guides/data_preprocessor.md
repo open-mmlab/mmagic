@@ -1,4 +1,4 @@
-# Data Pre-Processor \[Coming Soon!\]
+# Data pre-processor \[Coming Soon!\]
 
 We're improving this documentation. Don't hesitate to join us!
 

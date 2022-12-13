@@ -156,7 +156,7 @@ docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmediting/data mmediting
 
 #### Trouble shooting
 
-If you have some issues during the installation, please first view the [FAQ](../user_guides/faq.md) page.
+If you have some issues during the installation, please first view the [FAQ](../faq.md) page.
 You may [open an issue](https://github.com/open-mmlab/mmediting/issues/new/choose) on GitHub if no solution is found.
 
 ### Developing with multiple MMEditing versions
