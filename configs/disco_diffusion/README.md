@@ -1,8 +1,8 @@
-# Disco Diffusion
+# Disco Diffusion (2022)
 
 > [Disco Diffusion](https://github.com/alembics/disco-diffusion)
 
-> **Task**: Text2Image, Image2Image
+> **Task**: Text2Image, Image2Image, diffusion
 
 <!-- [ALGORITHM] -->
 

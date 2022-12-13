@@ -1,7 +1,7 @@
 # Scripts for developing MMEditing
 
-- [1. Check UT](#check-ut)
-- [2. Test all the models](#test-benchmark)
+- [1. Check UT](#1-check-ut)
+- [2. Test all the models](#2-test-all-the-models)
 - [3. Train all the models](#3-train-all-the-models)
   - [3.1 Train for debugging](#31-train-for-debugging)
   - [3.2 Train for FP32](#32-train-for-fp32)
@@ -9,7 +9,9 @@
 - [4. Monitor your training](#4-monitor-your-training)
 - [5. Train with a list of models](#5-train-with-a-list-of-models)
 - [6. Train with skipping a list of models](#6-train-with-skipping-a-list-of-models)
-- [7. Automatically check links](#automatically-check-links)
+- [7. Train failed or canceled jobs](#7-train-failed-or-canceled-jobs)
+- [8. Deterministic training](#8-deterministic-training)
+- [9. Automatically check links](#9-automatically-check-links)
 
 ## 1. Check UT
 
@@ -224,10 +226,10 @@ python .dev_scripts/train_benchmark.py mm_lol --job-name xzn --models pix2pix --
 Use the following script to check whether the links in documentations are valid:
 
 ```shell
-python3 .github/scripts/doc_link_checker.py --target docs/zh_cn
-python3 .github/scripts/doc_link_checker.py --target README_zh-CN.md
-python3 .github/scripts/doc_link_checker.py --target docs/en
-python3 .github/scripts/doc_link_checker.py --target README.md
+python .dev_scripts/doc_link_checker.py --target docs/zh_cn
+python .dev_scripts/doc_link_checker.py --target README_zh-CN.md
+python .dev_scripts/doc_link_checker.py --target docs/en
+python .dev_scripts/doc_link_checker.py --target README.md
 ```
 
 You can specify the `--target` by a file or a directory.
