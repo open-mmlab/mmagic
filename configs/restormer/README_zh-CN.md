@@ -75,9 +75,9 @@ Gopro和HIDE数据集上使用RGB通道测试，ReakBlur-J 和 ReakBlur-R数据�
 
 所有指标均在RGB通道上进行测试，测试指标为PSNR和SSIM。
 
-|                                   方法                                   | SIDD<br>PSNR/SSIM | DND<br>PSNR/SSIM | GPU信息 |                                           下载                                           |
-| :----------------------------------------------------------------------: | :---------------: | :--------------: | :-----: | :--------------------------------------------------------------------------------------: |
-| [restormer_official_sidd](/configs/restormer/restormer_official_sidd.py) |  40.0156/0.9225   |        -         |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_sidd-9e7025db.pth) \| log |
+|                                   方法                                   | SIDD<br>PSNR/SSIM | GPU信息 |                                                  下载                                                   |
+| :----------------------------------------------------------------------: | :---------------: | :-----: | :-----------------------------------------------------------------------------------------------------: |
+| [restormer_official_sidd](/configs/restormer/restormer_official_sidd.py) |  40.0156/0.9225   |    1    | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_sidd-9e7025db.pth) \| log |
 
 ## 使用方法
 

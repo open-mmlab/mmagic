@@ -507,7 +507,7 @@ class Restormer(BaseModule):
         """Forward function.
 
         Args:
-            x (Tensor): Input tensor with shape (B, C, H, W).
+            inp_img (Tensor): Input tensor with shape (B, C, H, W).
         Returns:
             Tensor: Forward results.
         """
