@@ -89,7 +89,13 @@ Documentation
    howto/transforms.md
    howto/losses.md
 
-changelog.md
+.. toctree::
+
+   faq.md
+
+.. toctree::
+
+   changelog.md
 
 .. toctree::
    :maxdepth: 2
