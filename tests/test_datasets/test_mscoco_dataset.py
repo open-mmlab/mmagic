@@ -17,8 +17,8 @@ class TestMSCoCoDatasets:
         dataset = MSCoCoDataset(data_root=self.data_root, pipeline=[])
         assert dataset[0] == dict(
             gt_label='a good meal',
-            img_path=os.path.join(self.data_root,
-                                  'train2014/COCO_train2014_000000000009.jpg'),
+            img_path=os.path.join(self.data_root, 'train2014',
+                                  'COCO_train2014_000000000009.jpg'),
             sample_idx=0)
 
         # test with different phase
@@ -26,6 +26,6 @@ class TestMSCoCoDatasets:
             data_root=self.data_root, phase='val', pipeline=[])
         assert dataset[0] == dict(
             gt_label='a pair of slippers',
-            img_path=os.path.join(self.data_root,
-                                  'val2014/COCO_val2014_000000000042.jpg'),
+            img_path=os.path.join(self.data_root, 'val2014',
+                                  'COCO_val2014_000000000042.jpg'),
             sample_idx=0)
