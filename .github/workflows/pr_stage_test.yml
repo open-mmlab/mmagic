@@ -6,6 +6,7 @@ on:
       - 'README.md'
       - 'README_zh-CN.md'
       - 'docs/**'
+      - 'projects/**'
       - '.dev_scripts/**'
       - '.circleci/**'
       - 'configs/**'
