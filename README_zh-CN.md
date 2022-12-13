@@ -29,13 +29,13 @@
 [📘使用文档](https://mmediting.readthedocs.io/zh_CN/1.x/) |
 [🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/1.x/2_get_started.htmll) |
 [👀模型库](https://mmediting.readthedocs.io/zh_CN/1.x/3_model_zoo.html) |
-[🆕更新记录](docs/zh_cn/notes/3_changelog.md) |
+[🆕更新记录](docs/zh_cn/community/changelog.md) |
 [🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
 [🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
 
-</div>
+[English](README.md) | 简体中文
 
-[English](/README.md) | 简体中文
+</div>
 
 ## 介绍
 
@@ -124,7 +124,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - 修复 FLAVR 的注册问题。
 - 修正 RDB 模型中的通道数。
 
-如果像了解更多版本更新细节和历史信息，请阅读[更新日志](docs/en/changelog.md)。
+如果像了解更多版本更新细节和历史信息，请阅读[更新日志](docs/en/community/changelog.md)。
 
 ## 安装
 
@@ -251,7 +251,7 @@ pip3 install -e .
 </details>
 
 <details open>
-<summary>Image2Image Translation</summary>
+<summary>Image2Image</summary>
 
 - ✅ [Pix2Pix](configs/pix2pix/README.md) (CVPR'2017)
 - ✅ [CycleGAN](configs/cyclegan/README.md) (ICCV'2017)
