@@ -36,4 +36,4 @@ We support detailed tutorials and split them according to different tasks.
 
 Please check our [dataset zoo](../dataset_zoo/0_overview.md) for data preparation of different tasks.
 
-If you're interested in more details of datasets in MMEditing, please check the [advanced guides](../advanced_guides/2_dataset.md).
+If you're interested in more details of datasets in MMEditing, please check the [advanced guides](../advanced_guides/dataset.md).

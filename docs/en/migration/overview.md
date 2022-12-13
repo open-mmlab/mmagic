@@ -7,7 +7,7 @@ This section introduce the following contents in terms of migration from MMEditi
 
 ## New dependencies
 
-MMEdit 1.x depends on some new packages, you can prepare a new clean environment and install again according to the [install tutorial](../2_get_started.md). Or install the below packages manually.
+MMEdit 1.x depends on some new packages, you can prepare a new clean environment and install again according to the [install tutorial](../get_started/install.md). Or install the below packages manually.
 
 1. [MMEngine](https://github.com/open-mmlab/mmengine): MMEngine is the core the OpenMMLab 2.0 architecture, and we splited many compentents unrelated to computer vision from MMCV to MMEngine.
 2. [MMCV](https://github.com/open-mmlab/mmcv/tree/dev-2.x): The computer vision package of OpenMMLab. This is not a new dependency, but you need to upgrade it to above 2.0.0rc0 version.
@@ -25,4 +25,4 @@ We refactor overall structures in MMEdit 1.x as following.
 
 We rename config file to new template: `{model_settings}_{module_setting}_{training_setting}_{datasets_info}`.
 
-More details of config are shown in [config guides](../user_guides/1_config.md).
+More details of config are shown in [config guides](../user_guides/config.md).
