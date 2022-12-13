@@ -11,60 +11,60 @@ def test_restormer_cpu():
     net = Restormer(
         inp_channels=3,
         out_channels=3,
-        dim=48,
-        num_blocks=[4, 6, 6, 8],
-        num_refinement_blocks=4,
+        dim=24,
+        num_blocks=[2, 2, 2, 4],
+        num_refinement_blocks=1,
         heads=[1, 2, 4, 8],
         ffn_expansion_factor=2.66,
         bias=False,
         LayerNorm_type='WithBias',
         dual_pixel_task=False)
-    img = torch.rand(1, 3, 32, 32)
+    img = torch.rand(1, 3, 16, 16)
     output = net(img)
     assert isinstance(output, torch.Tensor)
-    assert output.shape == (1, 3, 32, 32)
+    assert output.shape == (1, 3, 16, 16)
 
     # Image Denoising Gray
     net = Restormer(
         inp_channels=1,
         out_channels=1,
-        dim=48,
-        num_blocks=[4, 6, 6, 8],
-        num_refinement_blocks=4,
+        dim=24,
+        num_blocks=[2, 2, 2, 4],
+        num_refinement_blocks=1,
         heads=[1, 2, 4, 8],
         ffn_expansion_factor=2.66,
         bias=False,
         LayerNorm_type='BiasFree',
         dual_pixel_task=False)
-    img = torch.rand(1, 1, 32, 32)
+    img = torch.rand(1, 1, 16, 16)
     output = net(img)
     assert isinstance(output, torch.Tensor)
-    assert output.shape == (1, 1, 32, 32)
+    assert output.shape == (1, 1, 16, 16)
 
     # Image Denoising Color
     net = Restormer(
         inp_channels=3,
         out_channels=3,
-        dim=48,
-        num_blocks=[4, 6, 6, 8],
-        num_refinement_blocks=4,
+        dim=24,
+        num_blocks=[2, 2, 2, 4],
+        num_refinement_blocks=1,
         heads=[1, 2, 4, 8],
         ffn_expansion_factor=2.66,
         bias=False,
         LayerNorm_type='BiasFree',
         dual_pixel_task=False)
-    img = torch.rand(1, 3, 32, 32)
+    img = torch.rand(1, 3, 16, 16)
     output = net(img)
     assert isinstance(output, torch.Tensor)
-    assert output.shape == (1, 3, 32, 32)
+    assert output.shape == (1, 3, 16, 16)
 
     # Image Dual Defocus Deblurring
     net = Restormer(
         inp_channels=6,
         out_channels=3,
-        dim=48,
-        num_blocks=[4, 6, 6, 8],
-        num_refinement_blocks=4,
+        dim=24,
+        num_blocks=[2, 2, 2, 4],
+        num_refinement_blocks=1,
         heads=[1, 2, 4, 8],
         ffn_expansion_factor=2.66,
         bias=False,
@@ -72,30 +72,30 @@ def test_restormer_cpu():
         dual_pixel_task=True,
         dual_keys=['imgL', 'imgR'])
     img = dict()
-    img['imgL'] = torch.rand(1, 3, 32, 32)
-    img['imgR'] = torch.rand(1, 3, 32, 32)
+    img['imgL'] = torch.rand(1, 3, 16, 16)
+    img['imgR'] = torch.rand(1, 3, 16, 16)
     output = net(img)
     assert isinstance(output, torch.Tensor)
-    assert output.shape == (1, 3, 32, 32)
+    assert output.shape == (1, 3, 16, 16)
 
 
 def test_restormer_cuda():
     net = Restormer(
         inp_channels=3,
         out_channels=3,
-        dim=48,
-        num_blocks=[4, 6, 6, 8],
-        num_refinement_blocks=4,
+        dim=24,
+        num_blocks=[2, 2, 2, 4],
+        num_refinement_blocks=1,
         heads=[1, 2, 4, 8],
         ffn_expansion_factor=2.66,
         bias=False,
         LayerNorm_type='WithBias',
         dual_pixel_task=False)
-    img = torch.rand(1, 3, 32, 32)
+    img = torch.rand(1, 3, 16, 16)
 
     # Image Deblurring or Image Deraining (gpu)
     if torch.cuda.is_available():
         net = net.cuda()
         output = net(img.cuda())
         assert isinstance(output, torch.Tensor)
-        assert output.shape == (1, 3, 32, 32)
+        assert output.shape == (1, 3, 16, 16)
