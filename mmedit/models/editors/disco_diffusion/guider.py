@@ -10,7 +10,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.transforms as T
 import torchvision.transforms.functional as TF
+from mmengine.utils import digit_version
 from resize_right import resize
+from torchvision import __version__ as TORCHVISION_VERSION
 
 from mmedit.models.losses import tv_loss
 from .secondary_model import alpha_sigma_to_t
@@ -206,13 +208,17 @@ class MakeCutoutsDango(nn.Module):
         self.IC_Size_Pow = IC_Size_Pow
         self.IC_Grey_P = IC_Grey_P
 
+        random_affine_args = dict(degrees=10, translate=(0.05, 0.05))
+        if digit_version(TORCHVISION_VERSION) >= digit_version('0.9.0'):
+            random_affine_args['interpolation'] = T.InterpolationMode.BILINEAR
+        else:
+            from PIL import Image
+            random_affine_args['resample'] = Image.NEAREST
+
         self.augs = T.Compose([
             T.RandomHorizontalFlip(p=0.5),
             T.Lambda(lambda x: x + torch.randn_like(x) * 0.01),
-            T.RandomAffine(
-                degrees=10,
-                translate=(0.05, 0.05),
-                interpolation=T.InterpolationMode.BILINEAR),
+            T.RandomAffine(**random_affine_args),
             T.Lambda(lambda x: x + torch.randn_like(x) * 0.01),
             T.RandomGrayscale(p=0.1),
             T.Lambda(lambda x: x + torch.randn_like(x) * 0.01),
