@@ -38,7 +38,7 @@ Documentation
    :maxdepth: 1
    :caption: Community
 
-   community/contribution_guide.md
+   community/contributing.md
    community/projects.md
 
 
