@@ -40,7 +40,6 @@ Documentation
 
    community/contribution_guide.md
    community/projects.md
-   community/changelog.md
 
 
 .. toctree::
@@ -90,6 +89,8 @@ Documentation
    howto/transforms.md
    howto/losses.md
 
+changelog.md
+
 .. toctree::
    :maxdepth: 2
    :caption: API Reference
@@ -125,13 +126,7 @@ Documentation
    :maxdepth: 1
    :caption: Dataset Zoo
 
-   dataset_zoo/overview.md
-   dataset_zoo/super_resolution_datasets.md
-   dataset_zoo/inpainting_datasets.md
-   dataset_zoo/matting_datasets.md
-   dataset_zoo/video_interpolation_datasets.md
-   dataset_zoo/unconditional_gans_datasets.md
-   dataset_zoo/image_translation_datasets.md
+   dataset_zoo/index.rst
 
 
 .. toctree::

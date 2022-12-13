@@ -19,4 +19,5 @@ help:
 %: Makefile
 	rm -rf _build
 	rm -rf model_zoo
+	rm -rf dataset_zoo
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

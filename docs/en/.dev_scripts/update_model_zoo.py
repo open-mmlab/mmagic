@@ -23,13 +23,13 @@ def anchor(name):
 
 def summarize(stats, name, task='all'):
     allpapers = func.reduce(lambda a, b: a.union(b),
-                            [p for p, _, _, _, _ in stats])
+                            [p for p, _, _, _, _, _ in stats])
     allconfigs = func.reduce(lambda a, b: a.union(b),
-                             [c for _, c, _, _, _ in stats])
+                             [c for _, c, _, _, _, _ in stats])
     allckpts = func.reduce(lambda a, b: a.union(b),
-                           [c for _, _, c, _, _ in stats])
+                           [c for _, _, c, _, _, _ in stats])
     alltasks = func.reduce(lambda a, b: a.union(b),
-                           [t for _, _, _, t, _ in stats])
+                           [t for _, _, _, t, _, _ in stats])
     task_desc = '\n    - '.join(list(alltasks))
 
     # Overview
@@ -40,14 +40,19 @@ def summarize(stats, name, task='all'):
     countstr = '\n'.join([f'   - ALGORITHM: {len(stats)}'])
 
     summary = f"""# {name}
+"""
 
+    if name != 'Overview':
+        summary += '\n## Summary'
+
+    summary += f"""
 * Number of checkpoints: {len(allckpts)}
 * Number of configs: {len(allconfigs)}
 * Number of papers: {len(allpapers)}
 {countstr}
     """
 
-    if task == 'Overview':
+    if name == 'Overview':
         summary += f"""
 * Tasks:
     - {task_desc}
@@ -74,6 +79,7 @@ def update_model_zoo():
 
         # title
         title = content.split('\n')[0].replace('#', '')
+        year = title.split('\'')[-1].split(')')[0]
 
         # count papers
         papers = set(
@@ -124,6 +130,7 @@ def update_model_zoo():
         if len(tasks) > 0:
             statsmsg += f"\n* Tasks: {','.join(list(tasks))}"
         statsmsg += f"""
+
 * Number of checkpoints: {len(ckpts)}
 * Number of configs: {len(configs)}
 * Number of papers: {len(papers)}
@@ -131,7 +138,7 @@ def update_model_zoo():
 
 """
         # * We should have: {len(glob.glob(osp.join(dirname(f), '*.py')))}
-        stats.append((papers, configs, ckpts, tasks, statsmsg))
+        stats.append((papers, configs, ckpts, tasks, year, statsmsg))
 
     # overview
     overview = summarize(stats, 'Overview')
@@ -139,7 +146,7 @@ def update_model_zoo():
         f.write(overview)
 
     alltasks = func.reduce(lambda a, b: a.union(b),
-                           [t for _, _, _, t, _ in stats])
+                           [t for _, _, _, t, _, _ in stats])
 
     # index.rst
     indexmsg = """
@@ -148,7 +155,7 @@ def update_model_zoo():
    :caption: Model Zoo
 
    overview.md
-   """
+"""
 
     for task in alltasks:
         task = task.replace(' ', '_').replace('-', '_').lower()
@@ -159,11 +166,12 @@ def update_model_zoo():
 
     #  task-specific
     for task in alltasks:
-        filtered_model = [(paper, config, ckpt, tasks, x)
-                          for paper, config, ckpt, tasks, x in stats
+        filtered_model = [(paper, config, ckpt, tasks, year, x)
+                          for paper, config, ckpt, tasks, year, x in stats
                           if task in tasks]
-        overview = summarize(filtered_model, name=task)
-        msglist = '\n'.join(x for _, _, _, _, x in filtered_model)
+        filtered_model = sorted(filtered_model, key=lambda x: x[-2])[::-1]
+        overview = summarize(filtered_model, task)
+        msglist = '\n'.join(x for _, _, _, _, _, x in filtered_model)
 
         task = task.replace(' ', '_').replace('-', '_').lower()
         with open(osp.join(target_dir, f'{task}.md'), 'w') as f:
