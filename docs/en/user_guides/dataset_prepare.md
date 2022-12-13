@@ -1,4 +1,4 @@
-# Tutorial 2: Prepare Datasets
+# Tutorial 2: Prepare datasets
 
 In this section, we will detail how to prepare data and adopt the proper dataset in our repo for different methods.
 
@@ -34,6 +34,6 @@ python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.
 
 We support detailed tutorials and split them according to different tasks.
 
-Please check our [dataset zoo](../dataset_zoo/0_overview.md) for data preparation of different tasks.
+Please check our [dataset zoo](../dataset_zoo/overview.md) for data preparation of different tasks.
 
-If you're interested in more details of datasets in MMEditing, please check the [advanced guides](../advanced_guides/dataset.md).
+If you're interested in more details of datasets in MMEditing, please check the [advanced guides](../howto/dataset.md).

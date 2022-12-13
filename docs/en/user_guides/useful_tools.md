@@ -1,4 +1,4 @@
-# Tutorial 6: Useful Tools
+# Tutorial 6: Useful tools
 
 We provide lots of useful tools under `tools/` directory.
 

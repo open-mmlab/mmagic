@@ -1,4 +1,4 @@
-# Quick Run
+# Quick run
 
 After installing MMEditing successfully, now you are able to play with MMEditing!
 

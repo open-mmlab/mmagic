@@ -1,4 +1,4 @@
-# Data Flow in MMEditing \[Coming Soon!\]
+# Data flow in MMEditing \[Coming Soon!\]
 
 We're improving this documentation. Don't hesitate to join us!
 

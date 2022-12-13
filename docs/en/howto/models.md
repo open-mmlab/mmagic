@@ -1,4 +1,4 @@
-# Design Your Own Models
+# How to design your own models
 
 MMEditing is built upon MMEngine and MMCV, which enables users to design new models quickly, train and evaluate them easily.
 In this section, you will learn how to design your own models.
@@ -425,7 +425,7 @@ model = dict(
     ))
 ```
 
-We also need to specify the training dataloader and testing dataloader according to [create your own dataloader](../dataset_zoo/0_overview.md).
+We also need to specify the training dataloader and testing dataloader according to [create your own dataloader](../dataset_zoo/overview.md).
 Finally we can start training our own model by：
 
 ```python

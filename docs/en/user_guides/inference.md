@@ -1,4 +1,4 @@
-# Tutorial 3: Inference with Pre-trained Models
+# Tutorial 3: Inference with pre-trained models
 
 MMEditing provides APIs for you to easily play with state-of-the-art models on your own images or videos.
 Specifically, MMEditing supports various fundamental generative models, including:
