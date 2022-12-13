@@ -12,7 +12,7 @@ class ExampleNet(ResNet):
 
     def __init__(self, **kwargs) -> None:
         print('#############################\n'
-              '#  Hello MMClassification!  #\n'
+              '#  Hello MMEditing!  #\n'
               '#############################')
         super().__init__(**kwargs)
 

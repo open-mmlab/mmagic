@@ -92,11 +92,11 @@ You can also paste some visual results here if the model doesn't have quantitati
 <!-- Replace to the citation of the paper your project refers to. -->
 
 ```bibtex
-@misc{2020mmediting,
-    title={OpenMMLab's Image Classification Toolbox and Benchmark},
-    author={MMediting Contributors},
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {{MMEditing Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year={2020}
+    year = {2022}
 }
 ```
 
@@ -123,7 +123,7 @@ to MMediting projects.
 
   - [ ] Training results
 
-    <!-- If you are reproducing the result from a paper, train your model from scratch and verified that the final result can match the original result. Usually, ±0.1% is acceptable for the image classification task on ImageNet-1k. -->
+    <!-- If you are reproducing the result from a paper, train your model from scratch and verified that the final result can match the original result. -->
 
 - [ ] Milestone 3: Good to be a part of our core package!
 
