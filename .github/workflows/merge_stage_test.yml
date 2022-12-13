@@ -9,6 +9,7 @@ on:
       - '.dev_scripts/**'
       - '.circleci/**'
       - 'configs/**'
+      - 'projects/**'
 
     branches:
       - dev-1.x
