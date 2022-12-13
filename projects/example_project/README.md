@@ -38,19 +38,19 @@ Prepare the ImageNet-2012 dataset according to the [instruction](https://mmediti
 **To train with single GPU:**
 
 ```bash
-mim train mmcls configs/examplenet_8xb32_in1k.py
+mim train mmedit configs/examplenet_8xb32_in1k.py
 ```
 
 **To train with multiple GPUs:**
 
 ```bash
-mim train mmcls configs/examplenet_8xb32_in1k.py --launcher pytorch --gpus 8
+mim train mmedit configs/examplenet_8xb32_in1k.py --launcher pytorch --gpus 8
 ```
 
 **To train with multiple GPUs by slurm:**
 
 ```bash
-mim train mmcls configs/examplenet_8xb32_in1k.py --launcher slurm \
+mim train mmedit configs/examplenet_8xb32_in1k.py --launcher slurm \
     --gpus 16 --gpus-per-node 8 --partition $PARTITION
 ```
 
@@ -59,19 +59,19 @@ mim train mmcls configs/examplenet_8xb32_in1k.py --launcher slurm \
 **To test with single GPU:**
 
 ```bash
-mim test mmcls configs/examplenet_8xb32_in1k.py $CHECKPOINT
+mim test mmedit configs/examplenet_8xb32_in1k.py $CHECKPOINT
 ```
 
 **To test with multiple GPUs:**
 
 ```bash
-mim test mmcls configs/examplenet_8xb32_in1k.py $CHECKPOINT --launcher pytorch --gpus 8
+mim test mmedit configs/examplenet_8xb32_in1k.py $CHECKPOINT --launcher pytorch --gpus 8
 ```
 
 **To test with multiple GPUs by slurm:**
 
 ```bash
-mim test mmcls configs/examplenet_8xb32_in1k.py $CHECKPOINT --launcher slurm \
+mim test mmedit configs/examplenet_8xb32_in1k.py $CHECKPOINT --launcher slurm \
     --gpus 16 --gpus-per-node 8 --partition $PARTITION
 ```
 
@@ -109,7 +109,7 @@ to MMediting projects.
 
   - [ ] Finish the code
 
-    <!-- The code's design shall follow existing interfaces and convention. For example, each model component should be registered into `mmcls.registry.MODELS` and configurable via a config file. -->
+    <!-- The code's design shall follow existing interfaces and convention. For example, each model component should be registered into `mmedit.registry.MODELS` and configurable via a config file. -->
 
   - [ ] Basic docstrings & proper citation
 
