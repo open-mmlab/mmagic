@@ -32,6 +32,10 @@ class TestBasicConditonalDataset(TestCase):
         self.assertEqual(dataset.CLASSES, ('bus', 'car'))
         self.assertEqual(dataset.class_to_idx, {'bus': 0, 'car': 1})
 
+        ann_file = osp.abspath(osp.join(DATA_DIR, 'wrong.yml'))
+        with self.assertRaises(TypeError):
+            BasicConditionalDataset(data_root=DATA_DIR, ann_file=ann_file)
+
         gt_labels = dataset.get_gt_labels()
         print(type(gt_labels))
         self.assertTrue((gt_labels == np.array([0, 1, 1])).all())
@@ -79,3 +83,15 @@ class TestBasicConditonalDataset(TestCase):
         self.assertFalse(dataset._fully_initialized)
         self.assertIn("Haven't been initialized", repr(dataset))
         self.assertIn('With transforms:', repr(dataset))
+
+        # test load label from json file
+        ann_file = osp.abspath(osp.join(DATA_DIR, 'anno.json'))
+        dataset = BasicConditionalDataset(
+            data_root=DATA_DIR,
+            ann_file=ann_file,
+            lazy_init=True,
+            pipeline=[dict(type='PackEditInputs')])
+        self.assertEqual(dataset[0]['data_samples'].gt_label.label.tolist(),
+                         [1, 2, 3, 4])
+        self.assertEqual(dataset[1]['data_samples'].gt_label.label.tolist(),
+                         [1, 4, 5, 3])
