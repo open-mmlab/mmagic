@@ -29,7 +29,7 @@
 [📘Documentation](https://mmediting.readthedocs.io/en/1.x/) |
 [🛠️Installation](https://mmediting.readthedocs.io/en/1.x/2_get_started.html#installation) |
 [👀Model Zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) |
-[🆕Update News](docs/en/community/changelog.md) |
+[🆕Update News](docs/en/changelog.md) |
 [🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
 [🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
 
@@ -125,7 +125,7 @@ Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/t
 - Fix FLAVR register.
 - Fix the number of channels in RDB.
 
-Please refer to [changelog.md](docs/en/community/changelog.md) for details and release history.
+Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
 ## Installation
 
@@ -253,7 +253,7 @@ Supported algorithms:
 </details>
 
 <details open>
-<summary>Image2Image Translation</summary>
+<summary>Image2Image</summary>
 
 - ✅ [Pix2Pix](configs/pix2pix/README.md) (CVPR'2017)
 - ✅ [CycleGAN](configs/cyclegan/README.md) (ICCV'2017)

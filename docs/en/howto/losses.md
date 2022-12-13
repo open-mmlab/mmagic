@@ -1,4 +1,4 @@
-# Design Your Own Loss Functions
+# How to design your own loss functions
 
 `losses` are registered as `LOSSES` in `MMEditing`.
 Customizing losses is similar to customizing any other model.

@@ -1,4 +1,4 @@
-# Design Your Own Data Transforms
+# How to design your own data transforms
 
 In this tutorial, we introduce the design of transforms pipeline in MMEditing.
 

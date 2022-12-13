@@ -125,7 +125,6 @@ workflows:
             branches:
               ignore:
                 - dev-1.x
-                - test-1.x
                 - 1.x
   pr_stage_test:
     when:
@@ -138,7 +137,6 @@ workflows:
             branches:
               ignore:
                 - dev-1.x
-                - test-1.x
                 - 1.x
       - build_cpu:
           name: minimum_version_cpu
@@ -181,5 +179,3 @@ workflows:
             branches:
               only:
                 - dev-1.x
-                - test-1.x
-                - 1.x

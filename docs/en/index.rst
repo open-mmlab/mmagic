@@ -40,7 +40,6 @@ Documentation
 
    community/contribution_guide.md
    community/projects.md
-   community/changelog.md
 
 
 .. toctree::
@@ -83,6 +82,36 @@ Documentation
 
 .. toctree::
    :maxdepth: 2
+   :caption: How To
+
+   howto/models.md
+   howto/dataset.md
+   howto/transforms.md
+   howto/losses.md
+
+.. toctree::
+
+   faq.md
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Model Zoo
+
+   model_zoo/index.rst
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Dataset Zoo
+
+   dataset_zoo/index.rst
+
+.. toctree::
+
+   changelog.md
+
+.. toctree::
+   :maxdepth: 2
    :caption: API Reference
 
    mmedit.apis.inferencers <autoapi/mmedit/apis/inferencers/index.rst>
@@ -103,26 +132,6 @@ Documentation
    mmedit.models.utils <autoapi/mmedit/models/losses/utils.rst>
    mmedit.models.editors <autoapi/mmedit/models/editors/index.rst>
    mmedit.utils <autoapi/mmedit/utils/index.rst>
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Model Zoo
-
-   model_zoo/model_zoo.md
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Dataset Zoo
-
-   dataset_zoo/overview.md
-   dataset_zoo/super_resolution_datasets.md
-   dataset_zoo/inpainting_datasets.md
-   dataset_zoo/matting_datasets.md
-   dataset_zoo/video_interpolation_datasets.md
-   dataset_zoo/unconditional_gans_datasets.md
-   dataset_zoo/image_translation_datasets.md
 
 
 .. toctree::
