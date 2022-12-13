@@ -2,7 +2,6 @@
 import os
 from pathlib import Path
 
-
 from mmedit.datasets import MSCoCoDataset
 
 
