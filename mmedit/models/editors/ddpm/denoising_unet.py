@@ -27,10 +27,14 @@ class EmbedSequential(nn.Sequential):
     https://github.com/openai/improved-diffusion/blob/main/improved_diffusion/unet.py#L35
     """
 
-    def forward(self, x, y):
+    def forward(self, x, y, encoder_out=None):
         for layer in self:
             if isinstance(layer, DenoisingResBlock):
                 x = layer(x, y)
+            elif isinstance(
+                    layer,
+                    MultiHeadAttentionBlock) and encoder_out is not None:
+                x = layer(x, encoder_out)
             else:
                 x = layer(x)
         return x
@@ -165,7 +169,8 @@ class MultiHeadAttentionBlock(BaseModule):
                  num_heads=1,
                  num_head_channels=-1,
                  use_new_attention_order=False,
-                 norm_cfg=dict(type='GN32', num_groups=32)):
+                 norm_cfg=dict(type='GN32', num_groups=32),
+                 encoder_channels=None):
         super().__init__()
         self.in_channels = in_channels
         if num_head_channels == -1:
@@ -186,12 +191,18 @@ class MultiHeadAttentionBlock(BaseModule):
             self.attention = QKVAttentionLegacy(self.num_heads)
 
         self.proj_out = nn.Conv1d(in_channels, in_channels, 1)
+        if encoder_channels is not None:
+            self.encoder_kv = nn.Conv1d(encoder_channels, in_channels * 2, 1)
 
-    def forward(self, x):
+    def forward(self, x, encoder_out):
         b, c, *spatial = x.shape
         x = x.reshape(b, c, -1)
         qkv = self.qkv(self.norm(x))
-        h = self.attention(qkv)
+        if encoder_out is not None:
+            encoder_out = self.encoder_kv(encoder_out)
+            h = self.attention(qkv)
+        else:
+            h = self.attention(qkv)
         h = self.proj_out(h)
         return (x + h).reshape(b, c, *spatial)
 
@@ -236,7 +247,7 @@ class QKVAttention(BaseModule):
         super().__init__()
         self.n_heads = n_heads
 
-    def forward(self, qkv):
+    def forward(self, qkv, encoder_kv=None):
         """Apply QKV attention.
 
         :param qkv: an [N x (3 * H * C) x T] tensor of Qs, Ks, and Vs.
@@ -246,6 +257,12 @@ class QKVAttention(BaseModule):
         assert width % (3 * self.n_heads) == 0
         ch = width // (3 * self.n_heads)
         q, k, v = qkv.chunk(3, dim=1)
+        if encoder_kv is not None:
+            assert encoder_kv.shape[1] == self.n_heads * ch * 2
+            ek, ev = encoder_kv.reshape(bs * self.n_heads, ch * 2, -1).split(
+                ch, dim=1)
+            k = torch.cat([ek, k], dim=-1)
+            v = torch.cat([ev, v], dim=-1)
         scale = 1 / math.sqrt(math.sqrt(ch))
         weight = torch.einsum(
             'bct,bcs->bts',
@@ -447,7 +464,10 @@ class DenoisingResBlock(BaseModule):
             x = self.x_upd(x)
             h = in_conv(h)
         else:
-            h = self.conv_1(x)
+            h = x
+            for layer in self.conv_1:
+                h = layer(h)
+            # h = self.conv_1(x)
 
         shortcut = self.forward_shortcut(x)
         h = self.norm_with_embedding(h, y)
@@ -721,6 +741,7 @@ class DenoisingUnet(BaseModule):
                  time_embedding_cfg=None,
                  resblock_cfg=dict(type='DenoisingResBlock'),
                  attention_cfg=dict(type='MultiHeadAttention'),
+                 encoder_channels=None,
                  downsample_conv=True,
                  upsample_conv=True,
                  downsample_cfg=dict(type='DenoisingDownsample'),
@@ -732,6 +753,8 @@ class DenoisingUnet(BaseModule):
 
         self.num_classes = num_classes
         self.num_timesteps = num_timesteps
+        self.base_channels = base_channels
+        self.encoder_channels = encoder_channels
         self.use_rescale_timesteps = use_rescale_timesteps
         self.dtype = torch.float16 if use_fp16 else torch.float32
 
