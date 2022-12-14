@@ -6,18 +6,17 @@ experiment_name = 'swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
-# DistributedDataParallel
-model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
-
 scale = 2
+img_size = 48
+
 # model settings
 model = dict(
     type='BaseEditModel',
     generator=dict(
         type='SwinIRNet',
-        upscale=2,
+        upscale=scale,
         in_chans=3,
-        img_size=48,
+        img_size=img_size,
         window_size=8,
         img_range=1.0,
         depths=[6, 6, 6, 6, 6, 6],
@@ -47,7 +46,7 @@ train_pipeline = [
         channel_order='rgb',
         imdecode_backend='cv2'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
-    dict(type='PairedRandomCrop', gt_patch_size=96),
+    dict(type='PairedRandomCrop', gt_patch_size=img_size * scale),
     dict(
         type='Flip',
         keys=['img', 'gt'],
@@ -107,7 +106,6 @@ val_dataloader = dict(
         pipeline=val_pipeline))
 
 val_evaluator = [
-    dict(type='MAE'),
     dict(type='PSNR', crop_border=scale),
     dict(type='SSIM', crop_border=scale),
 ]
@@ -136,9 +134,4 @@ default_hooks = dict(
         save_optimizer=True,
         by_epoch=False,
         out_dir=save_dir,
-    ),
-    timer=dict(type='IterTimerHook'),
-    logger=dict(type='LoggerHook', interval=100),
-    param_scheduler=dict(type='ParamSchedulerHook'),
-    sampler_seed=dict(type='DistSamplerSeedHook'),
-)
+    ))

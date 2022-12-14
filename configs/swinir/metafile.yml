@@ -151,8 +151,8 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
-      Set12 PSNR: 33.3991
-      Set12 SSIM: 0.9123
+      BSD68 PSNR: 32.5203
+      Set12 PSNR: 33.9731
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/18PmDIFYZtlvyLQnGYvKShO-CdtlPwIwe/view?usp=share_link
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN25_dfwb.py
@@ -164,8 +164,8 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
-      Set12 PSNR: 31.0107
-      Set12 SSIM: 0.874
+      BSD68 PSNR: 30.1377
+      Set12 PSNR: 31.6434
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1PqC9a-3wfyH6DeVpP2yi6r6stqEB1vfj/view?usp=share_link
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN50_dfwb.py
@@ -177,8 +177,8 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
-      Set12 PSNR: 27.8942
-      Set12 SSIM: 0.8102
+      BSD68 PSNR: 27.3157
+      Set12 PSNR: 28.5651
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1miDCBmxe73XoxkJDLAmqOBbuiY9U6JRz/view?usp=share_link
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb.py
@@ -190,8 +190,9 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
+      CBSD68 PSNR: 34.4136
+      Kodak24 PSNR: 35.3555
       McMaster PSNR: 35.6205
-      McMaster SSIM: 0.935
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/16pfIBzAXTv6-3xTsKXEtLkY2pLM-tNFn/view?usp=share_link
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN25_dfwb.py
@@ -203,8 +204,9 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
+      CBSD68 PSNR: 31.7626
+      Kodak24 PSNR: 32.9003
       McMaster PSNR: 33.3198
-      McMaster SSIM: 0.9062
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN50_dfwb.py
@@ -216,8 +218,9 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
+      CBSD68 PSNR: 28.5346
+      Kodak24 PSNR: 29.8058
       McMaster PSNR: 30.2027
-      McMaster SSIM: 0.8494
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb.py
@@ -229,8 +232,8 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
-      classic5 PSNR: 30.2746
-      classic5 SSIM: 0.8254
+      Classic5 PSNR: 30.2746
+      Classic5 SSIM: 0.8254
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1LMEGlGtYcrJ9dhC8pmNsCAWyeZq1Dfc5/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb.py
@@ -242,8 +245,8 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
-      classic5 PSNR: 32.5331
-      classic5 SSIM: 0.8753
+      Classic5 PSNR: 32.5331
+      Classic5 SSIM: 0.8753
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1624dceqoBD5CwqLuL_ozPaYuIQex2WmL/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR30_dfwb.py
@@ -255,8 +258,8 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
-      classic5 PSNR: 33.7504
-      classic5 SSIM: 0.8966
+      Classic5 PSNR: 33.7504
+      Classic5 SSIM: 0.8966
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1X70GSCK8Wo9nYUmtN0MysCarIHliB3WM/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR40_dfwb.py
@@ -268,8 +271,8 @@ Models:
   Results:
   - Dataset: Others
     Metrics:
-      classic5 PSNR: 34.5377
-      classic5 SSIM: 0.9087
+      Classic5 PSNR: 34.5377
+      Classic5 SSIM: 0.9087
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1HQGYXthHnmVsng1313KZmGzewsWPzzDT/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR10_dfwb.py

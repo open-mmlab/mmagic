@@ -4,8 +4,7 @@ experiment_name = 'swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
-# DistributedDataParallel
-model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
+quality = 10
 
 # model settings
 model = dict(
@@ -51,7 +50,7 @@ train_pipeline = [
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     dict(
         type='RandomJPEGCompression',
-        params=dict(quality=[10, 10], color_type='grayscale'),
+        params=dict(quality=[quality, quality], color_type='grayscale'),
         keys=['img']),
     dict(type='PackEditInputs')
 ]
@@ -68,7 +67,7 @@ val_pipeline = [
         imdecode_backend='cv2'),
     dict(
         type='RandomJPEGCompression',
-        params=dict(quality=[10, 10], color_type='grayscale'),
+        params=dict(quality=[quality, quality], color_type='grayscale'),
         keys=['img']),
     dict(type='PackEditInputs')
 ]
@@ -86,7 +85,7 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         ann_file='meta_info_DFWB8550sub_GT.txt',
-        metainfo=dict(dataset_type='dfwb', task_name='gray_CAR_10'),
+        metainfo=dict(dataset_type='dfwb', task_name='CAR'),
         data_root=data_root + '/DFWB',
         data_prefix=dict(img='', gt=''),
         filename_tmpl=dict(img='{}', gt='{}'),
@@ -99,7 +98,7 @@ val_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(dataset_type='classic5', task_name='gray_CAR_10'),
+        metainfo=dict(dataset_type='classic5', task_name='CAR'),
         data_root=data_root + '/classic5',
         data_prefix=dict(img='', gt=''),
         pipeline=val_pipeline))
@@ -107,9 +106,8 @@ val_dataloader = dict(
 test_dataloader = val_dataloader
 
 val_evaluator = [
-    dict(type='MAE'),
-    dict(type='PSNR'),
-    dict(type='SSIM'),
+    dict(type='PSNR', prefix='classic5'),
+    dict(type='SSIM', prefix='classic5'),
 ]
 
 test_evaluator = val_evaluator
@@ -140,8 +138,5 @@ default_hooks = dict(
         by_epoch=False,
         out_dir=save_dir,
     ),
-    timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=200),
-    param_scheduler=dict(type='ParamSchedulerHook'),
-    sampler_seed=dict(type='DistSamplerSeedHook'),
 )

@@ -1,11 +1,18 @@
-_base_ = '../_base_/default_runtime.py'
+_base_ = [
+    '../_base_/default_runtime.py',
+    '../_base_/datasets/denoising-gaussian_color_test_config.py'
+]
 
 experiment_name = 'swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
-# DistributedDataParallel
-model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
+# modify sigma of RandomNoise
+sigma = 15
+test_dataloader = _base_.test_dataloader
+for dataloader in test_dataloader:
+    test_pipeline = dataloader['dataset']['pipeline']
+    test_pipeline[2]['params']['gaussian_sigma'] = [sigma * 255, sigma * 255]
 
 # model settings
 model = dict(
@@ -57,12 +64,13 @@ train_pipeline = [
         type='RandomNoise',
         params=dict(
             noise_type=['gaussian'],
-            noise_prob=['1.0'],
-            gaussian_sigma=[15, 15],
+            noise_prob=[1],
+            gaussian_sigma=[sigma * 255, sigma * 255],
             gaussian_gray_noise_prob=0),
         keys=['img']),
     dict(type='PackEditInputs')
 ]
+
 val_pipeline = [
     dict(
         type='LoadImageFromFile',
@@ -80,8 +88,8 @@ val_pipeline = [
         type='RandomNoise',
         params=dict(
             noise_type=['gaussian'],
-            noise_prob=['1.0'],
-            gaussian_sigma=[15, 15],
+            noise_prob=[1],
+            gaussian_sigma=[sigma * 255, sigma * 255],
             gaussian_gray_noise_prob=0),
         keys=['img']),
     dict(type='PackEditInputs')
@@ -100,7 +108,7 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         ann_file='meta_info_DFWB8550sub_GT.txt',
-        metainfo=dict(dataset_type='dfwb', task_name='color_denoising_15'),
+        metainfo=dict(dataset_type='dfwb', task_name='denoising'),
         data_root=data_root + '/DFWB',
         data_prefix=dict(img='', gt=''),
         filename_tmpl=dict(img='{}', gt='{}'),
@@ -113,25 +121,19 @@ val_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(dataset_type='mcmaster', task_name='color_denoising_15'),
+        metainfo=dict(dataset_type='mcmaster', task_name='denoising'),
         data_root=data_root + '/McMaster',
         data_prefix=dict(img='', gt=''),
         pipeline=val_pipeline))
 
-test_dataloader = val_dataloader
-
 val_evaluator = [
-    dict(type='MAE'),
-    dict(type='PSNR'),
-    dict(type='SSIM'),
+    dict(type='PSNR', prefix='McMaster'),
+    dict(type='SSIM', prefix='McMaster'),
 ]
-
-test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_600_000, val_interval=5000)
 val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
@@ -154,10 +156,7 @@ default_hooks = dict(
         by_epoch=False,
         out_dir=save_dir,
     ),
-    timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=200),
-    param_scheduler=dict(type='ParamSchedulerHook'),
-    sampler_seed=dict(type='DistSamplerSeedHook'),
 )
 
 randomness = dict(seed=0, diff_rank_seed=True)

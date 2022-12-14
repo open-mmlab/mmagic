@@ -39,23 +39,23 @@ The metrics are `PSNR / SSIM` .
 
 004 Grayscale Image Deoising
 
-|                                        Method                                         | Set12 PSNR | Set12 SSIM | GPU Info |                                        Download                                         |
+|                                        Method                                         | Set12 PSNR | BSD68 PSNR | GPU Info |                                        Download                                         |
 | :-----------------------------------------------------------------------------------: | :--------: | :--------: | :------: | :-------------------------------------------------------------------------------------: |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN15_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN15_dfwb.py) |  33.3991   |   0.9123   |    1     | [model](https://drive.google.com/file/d/18PmDIFYZtlvyLQnGYvKShO-CdtlPwIwe/view?usp=share_link) \\ log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN25_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN25_dfwb.py) |  31.0107   |   0.8740   |    1     | [model](https://drive.google.com/file/d/1PqC9a-3wfyH6DeVpP2yi6r6stqEB1vfj/view?usp=share_link) \\ log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN50_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN50_dfwb.py) |  27.8942   |   0.8102   |    1     | [model](https://drive.google.com/file/d/1miDCBmxe73XoxkJDLAmqOBbuiY9U6JRz/view?usp=share_link) \\ log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN15_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN15_dfwb.py) |  33.9731   |  32.5203   |    1     | [model](https://drive.google.com/file/d/18PmDIFYZtlvyLQnGYvKShO-CdtlPwIwe/view?usp=share_link) \\ log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN25_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN25_dfwb.py) |  31.6434   |  30.1377   |    1     | [model](https://drive.google.com/file/d/1PqC9a-3wfyH6DeVpP2yi6r6stqEB1vfj/view?usp=share_link) \\ log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN50_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN50_dfwb.py) |  28.5651   |  27.3157   |    1     | [model](https://drive.google.com/file/d/1miDCBmxe73XoxkJDLAmqOBbuiY9U6JRz/view?usp=share_link) \\ log |
 
 005 Color Image Deoising
 
-|                                       Method                                       | McMaster PSNR | McMaster SSIM | GPU Info |                                       Download                                       |
-| :--------------------------------------------------------------------------------: | :-----------: | :-----------: | :------: | :----------------------------------------------------------------------------------: |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb.py) |    35.6205    |    0.9350     |    1     | [model](https://drive.google.com/file/d/16pfIBzAXTv6-3xTsKXEtLkY2pLM-tNFn/view?usp=share_link) \\ log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN25_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN25_dfwb.py) |    33.3198    |    0.9062     |    1     | [model](https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link) \\ log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN50_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN50_dfwb.py) |    30.2027    |    0.8494     |    1     | [model](https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link) \\ log |
+|                                    Method                                     | CBSD68 PSNR | Kodak24 PSNR | McMaster PSNR | GPU Info |                                    Download                                     |
+| :---------------------------------------------------------------------------: | :---------: | :----------: | :-----------: | :------: | :-----------------------------------------------------------------------------: |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb.py) |   34.4136   |   35.3555    |    35.6205    |    1     | [model](https://drive.google.com/file/d/16pfIBzAXTv6-3xTsKXEtLkY2pLM-tNFn/view?usp=share_link) \\ log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN25_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN25_dfwb.py) |   31.7626   |   32.9003    |    33.3198    |    1     | [model](https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link) \\ log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN50_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN50_dfwb.py) |   28.5346   |   29.8058    |    30.2027    |    1     | [model](https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link) \\ log |
 
 006 JPEG Compression Artifact Reduction (grayscale)
 
-|                                       Method                                       | classic5 PSNR | classic5 SSIM | GPU Info |                                       Download                                       |
+|                                       Method                                       | Classic5 PSNR | Classic5 SSIM | GPU Info |                                       Download                                       |
 | :--------------------------------------------------------------------------------: | :-----------: | :-----------: | :------: | :----------------------------------------------------------------------------------: |
 | [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb.py) |    30.2746    |    0.8254     |    1     | [model](https://drive.google.com/file/d/1LMEGlGtYcrJ9dhC8pmNsCAWyeZq1Dfc5/view?usp=share_link) \\ log |
 | [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb.py) |    32.5331    |    0.8753     |    1     | [model](https://drive.google.com/file/d/1624dceqoBD5CwqLuL_ozPaYuIQex2WmL/view?usp=share_link) \\ log |
