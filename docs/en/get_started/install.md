@@ -7,7 +7,6 @@ In this section, you will know about:
   - [Best practices](#best-practices)
   - [Customize installation](#customize-installation)
   - [Developing with multiple MMEditing versions](#developing-with-multiple-mmediting-versions)
-- [Quick run](#quick-run)
 
 ## Installation
 
