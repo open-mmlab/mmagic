@@ -121,10 +121,10 @@ def update_model_zoo():
         # count tasks
         task_desc = list(
             set(x.lower().strip()
-                for x in re.findall(r'\*\*Task\*\*: .*', content)))
+                for x in re.findall(r'\*\*任务\*\*: .*', content)))
         tasks = set()
         if len(task_desc) > 0:
-            tasks = set(task_desc[0].split('**task**: ')[1].split(', '))
+            tasks = set(task_desc[0].split('**任务**: ')[1].split(', '))
 
         statsmsg = f"""## {title}"""
         if len(tasks) > 0:

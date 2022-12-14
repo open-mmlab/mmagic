@@ -25,7 +25,7 @@ def update_dataset_zoo():
 """
 
     subfolders = os.listdir(source_dir)
-    for subf in tqdm(subfolders):
+    for subf in tqdm(subfolders, desc='update dataset zoo'):
 
         target_subf = subf.replace('-', '_').lower()
         target_readme = os.path.join(target_dir, target_subf + '.md')
