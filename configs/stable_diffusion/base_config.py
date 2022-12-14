@@ -1,4 +1,5 @@
 unet = dict(
+    type="UNet2DConditionModel",
     act_fn="silu",
     attention_head_dim=8,
     block_out_channels=[

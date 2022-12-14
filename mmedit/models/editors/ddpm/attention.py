@@ -5,7 +5,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from ..models.embeddings import ImagePositionalEmbeddings
+from .embeddings import ImagePositionalEmbeddings
 from addict import Dict
 
 

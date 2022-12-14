@@ -578,6 +578,202 @@ class DenoisingUpsample(BaseModule):
             x = self.conv(x)
         return x
 
+def get_timestep_embedding(
+    timesteps: torch.Tensor,
+    embedding_dim: int,
+    flip_sin_to_cos: bool = False,
+    downscale_freq_shift: float = 1,
+    scale: float = 1,
+    max_period: int = 10000,
+):
+    """
+    This matches the implementation in Denoising Diffusion Probabilistic Models: Create sinusoidal timestep embeddings.
+
+    :param timesteps: a 1-D Tensor of N indices, one per batch element.
+                      These may be fractional.
+    :param embedding_dim: the dimension of the output. :param max_period: controls the minimum frequency of the
+    embeddings. :return: an [N x dim] Tensor of positional embeddings.
+    """
+    assert len(timesteps.shape) == 1, "Timesteps should be a 1d-array"
+
+    half_dim = embedding_dim // 2
+    exponent = -math.log(max_period) * torch.arange(
+        start=0, end=half_dim, dtype=torch.float32, device=timesteps.device
+    )
+    exponent = exponent / (half_dim - downscale_freq_shift)
+
+    emb = torch.exp(exponent)
+    emb = timesteps[:, None].float() * emb[None, :]
+
+    # scale embeddings
+    emb = scale * emb
+
+    # concat sine and cosine embeddings
+    emb = torch.cat([torch.sin(emb), torch.cos(emb)], dim=-1)
+
+    # flip sine and cosine embeddings
+    if flip_sin_to_cos:
+        emb = torch.cat([emb[:, half_dim:], emb[:, :half_dim]], dim=-1)
+
+    # zero pad
+    if embedding_dim % 2 == 1:
+        emb = torch.nn.functional.pad(emb, (0, 1, 0, 0))
+    return emb
+
+class Timesteps(nn.Module):
+    def __init__(self, num_channels: int, flip_sin_to_cos: bool, downscale_freq_shift: float):
+        super().__init__()
+        self.num_channels = num_channels
+        self.flip_sin_to_cos = flip_sin_to_cos
+        self.downscale_freq_shift = downscale_freq_shift
+
+    def forward(self, timesteps):
+        t_emb = get_timestep_embedding(
+            timesteps,
+            self.num_channels,
+            flip_sin_to_cos=self.flip_sin_to_cos,
+            downscale_freq_shift=self.downscale_freq_shift,
+        )
+        return t_emb
+
+
+def build_down_block_resattn(
+        resblocks_per_downsample, 
+        resblock_cfg,
+        in_channels_,
+        out_channels_,
+        attention_scale,
+        attention_cfg,
+        in_channels_list,
+        level,
+        channel_factor_list,
+        embedding_channels,
+        use_scale_shift_norm,
+        dropout,
+        norm_cfg,
+        resblock_updown,
+        downsample_cfg,
+        scale
+    ):
+
+    in_blocks = nn.ModuleList()
+
+    for _ in range(resblocks_per_downsample):
+        layers = [
+            MODULES.build(
+                resblock_cfg,
+                default_args={
+                    'in_channels': in_channels_,
+                    'out_channels': out_channels_
+                })
+        ]
+        in_channels_ = out_channels_
+
+        if scale in attention_scale:
+            layers.append(
+                MODULES.build(
+                    attention_cfg,
+                    default_args={'in_channels': in_channels_}))
+
+        in_channels_list.append(in_channels_)
+        in_blocks.append(EmbedSequential(*layers))
+
+    if level != len(channel_factor_list) - 1:
+        in_blocks.append(
+            EmbedSequential(
+                DenoisingResBlock(
+                    out_channels_,
+                    embedding_channels,
+                    use_scale_shift_norm,
+                    dropout,
+                    norm_cfg=norm_cfg,
+                    out_channels=out_channels_,
+                    down=True) if resblock_updown else MODULES.build(
+                        downsample_cfg,
+                        default_args={'in_channels': in_channels_})))
+        in_channels_list.append(in_channels_)
+        scale *= 2
+    return in_blocks, scale
+
+def build_mid_blocks_resattn(
+        resblock_cfg, 
+        attention_cfg,
+        in_channels_
+    ):
+    return EmbedSequential(
+        MODULES.build(
+            resblock_cfg, default_args={'in_channels': in_channels_}),
+        MODULES.build(
+            attention_cfg, default_args={'in_channels':
+                                                in_channels_}),
+        MODULES.build(
+            resblock_cfg, default_args={'in_channels': in_channels_}),
+    )
+
+
+def build_up_blocks_resattn(
+        resblocks_per_downsample,
+        resblock_cfg,
+        in_channels_,
+        in_channels_list,
+        base_channels,
+        factor,
+        scale,
+        attention_scale,
+        attention_cfg,
+        channel_factor_list,
+        level,
+        embedding_channels,
+        use_scale_shift_norm,
+        dropout,
+        norm_cfg,
+        resblock_updown,
+        upsample_cfg,
+    ):
+
+    out_blocks = nn.ModuleList()
+    for idx in range(resblocks_per_downsample + 1):
+        layers = [
+            MODULES.build(
+                resblock_cfg,
+                default_args={
+                    'in_channels':
+                    in_channels_ + in_channels_list.pop(),
+                    'out_channels': int(base_channels * factor)
+                })
+        ]
+        in_channels_ = int(base_channels * factor)
+        if scale in attention_scale:
+            layers.append(
+                MODULES.build(
+                    attention_cfg,
+                    default_args={'in_channels': in_channels_}))
+        if (level != len(channel_factor_list) - 1
+                and idx == resblocks_per_downsample):
+            out_channels_ = in_channels_
+            layers.append(
+                DenoisingResBlock(
+                    in_channels_,
+                    embedding_channels,
+                    use_scale_shift_norm,
+                    dropout,
+                    norm_cfg=norm_cfg,
+                    out_channels=out_channels_,
+                    up=True) if resblock_updown else MODULES.build(
+                        upsample_cfg,
+                        default_args={'in_channels': in_channels_}))
+            scale //= 2
+        out_blocks.append(EmbedSequential(*layers))
+
+    return out_blocks, in_channels_, scale
+
+
+def build_up_blocks_func(block_type):
+    if block_type == 'resattn':
+        return build_up_blocks_resattn
+    elif block_type == 'stable':
+        return build_up_blocks_stable
+
 
 @MODULES.register_module()
 class DenoisingUnet(BaseModule):
@@ -726,7 +922,10 @@ class DenoisingUnet(BaseModule):
                  downsample_cfg=dict(type='DenoisingDownsample'),
                  upsample_cfg=dict(type='DenoisingUpsample'),
                  attention_res=[16, 8],
-                 pretrained=None):
+                 pretrained=None,
+                 embedding_preprocess=False,
+                 flip_sin_to_cos=True,
+                 freq_shift=0):
 
         super().__init__()
 
@@ -771,6 +970,11 @@ class DenoisingUnet(BaseModule):
         else:
             raise ValueError('Only support list or dict for `channels_cfg`, '
                              f'receive {type(channels_cfg)}')
+        
+        if embedding_preprocess:
+            self.conv_in = nn.Conv2d(in_channels, self.channel_factor_list[0], kernel_size=3, padding=(1, 1))
+            # time
+            self.time_proj = Timesteps(self.channel_factor_list[0], flip_sin_to_cos, freq_shift)
 
         embedding_channels = base_channels * 4 \
             if embedding_channels == -1 else embedding_channels
@@ -818,89 +1022,60 @@ class DenoisingUnet(BaseModule):
             in_channels_ = ch if level == 0 \
                 else int(base_channels * self.channel_factor_list[level - 1])
             out_channels_ = int(base_channels * factor)
-            for _ in range(resblocks_per_downsample):
-                layers = [
-                    MODULES.build(
-                        self.resblock_cfg,
-                        default_args={
-                            'in_channels': in_channels_,
-                            'out_channels': out_channels_
-                        })
-                ]
-                in_channels_ = out_channels_
 
-                if scale in attention_scale:
-                    layers.append(
-                        MODULES.build(
-                            self.attention_cfg,
-                            default_args={'in_channels': in_channels_}))
+            in_blocks, scale = build_down_block_resattn(
+                resblocks_per_downsample=resblocks_per_downsample,
+                resblock_cfg=self.resblock_cfg,
+                in_channels_=in_channels_,
+                out_channels_=out_channels_,
+                attention_scale=attention_scale,
+                attention_cfg=self.attention_cfg,
+                in_channels_list=self.in_channels_list,
+                level=level,
+                channel_factor_list=self.channel_factor_list,
+                embedding_channels=embedding_channels,
+                use_scale_shift_norm=use_scale_shift_norm,
+                dropout=dropout,
+                norm_cfg=norm_cfg,
+                resblock_updown=resblock_updown,
+                downsample_cfg=self.downsample_cfg,
+                scale=scale
+            )
+            self.in_blocks.extend(in_blocks)
 
-                self.in_channels_list.append(in_channels_)
-                self.in_blocks.append(EmbedSequential(*layers))
-
-            if level != len(self.channel_factor_list) - 1:
-                self.in_blocks.append(
-                    EmbedSequential(
-                        DenoisingResBlock(
-                            out_channels_,
-                            embedding_channels,
-                            use_scale_shift_norm,
-                            dropout,
-                            norm_cfg=norm_cfg,
-                            out_channels=out_channels_,
-                            down=True) if resblock_updown else MODULES.build(
-                                self.downsample_cfg,
-                                default_args={'in_channels': in_channels_})))
-                self.in_channels_list.append(in_channels_)
-                scale *= 2
 
         # construct the bottom part of Unet
-        self.mid_blocks = EmbedSequential(
-            MODULES.build(
-                self.resblock_cfg, default_args={'in_channels': in_channels_}),
-            MODULES.build(
-                self.attention_cfg, default_args={'in_channels':
-                                                  in_channels_}),
-            MODULES.build(
-                self.resblock_cfg, default_args={'in_channels': in_channels_}),
-        )
+        self.mid_blocks = build_mid_blocks_resattn(
+                            self.resblock_cfg,
+                            self.attention_cfg,
+                            in_channels_
+                        )
 
         # construct the decoder part of Unet
         in_channels_list = deepcopy(self.in_channels_list)
         self.out_blocks = nn.ModuleList()
         for level, factor in enumerate(self.channel_factor_list[::-1]):
-            for idx in range(resblocks_per_downsample + 1):
-                layers = [
-                    MODULES.build(
-                        self.resblock_cfg,
-                        default_args={
-                            'in_channels':
-                            in_channels_ + in_channels_list.pop(),
-                            'out_channels': int(base_channels * factor)
-                        })
-                ]
-                in_channels_ = int(base_channels * factor)
-                if scale in attention_scale:
-                    layers.append(
-                        MODULES.build(
-                            self.attention_cfg,
-                            default_args={'in_channels': in_channels_}))
-                if (level != len(self.channel_factor_list) - 1
-                        and idx == resblocks_per_downsample):
-                    out_channels_ = in_channels_
-                    layers.append(
-                        DenoisingResBlock(
-                            in_channels_,
-                            embedding_channels,
-                            use_scale_shift_norm,
-                            dropout,
-                            norm_cfg=norm_cfg,
-                            out_channels=out_channels_,
-                            up=True) if resblock_updown else MODULES.build(
-                                self.upsample_cfg,
-                                default_args={'in_channels': in_channels_}))
-                    scale //= 2
-                self.out_blocks.append(EmbedSequential(*layers))
+
+            out_blocks, in_channels_, scale = build_up_blocks_resattn(
+                resblocks_per_downsample,
+                self.resblock_cfg,
+                in_channels_,
+                in_channels_list,
+                base_channels,
+                factor,
+                scale,
+                attention_scale,
+                self.attention_cfg,
+                self.channel_factor_list,
+                level,
+                embedding_channels,
+                use_scale_shift_norm,
+                dropout,
+                norm_cfg,
+                resblock_updown,
+                self.upsample_cfg,
+            )
+            self.out_blocks.extend(out_blocks)
 
         self.out = ConvModule(
             in_channels=in_channels_,

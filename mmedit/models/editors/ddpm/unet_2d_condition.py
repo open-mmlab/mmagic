@@ -6,12 +6,8 @@ import torch.utils.checkpoint
 from torch import Tensor
 
 from .embeddings import TimestepEmbedding, Timesteps
-from .unet_2d_blocks import (
-    CrossAttnDownBlock2D,
-    CrossAttnUpBlock2D,
-    DownBlock2D,
+from .unet_blocks import (
     UNetMidBlock2DCrossAttn,
-    UpBlock2D,
     get_down_block,
     get_up_block,
 )
@@ -19,8 +15,9 @@ from addict import Dict
 from mmengine.logging import MMLogger
 logger = MMLogger.get_current_instance()
 
+from mmedit.registry import MODELS
 
-
+@MODELS.register_module()
 class UNet2DConditionModel(nn.Module):
     r"""
     UNet2DConditionModel is a conditional 2D UNet model that takes in a noisy sample, conditional state, and a timestep
@@ -204,45 +201,6 @@ class UNet2DConditionModel(nn.Module):
         self.conv_norm_out = nn.GroupNorm(num_channels=block_out_channels[0], num_groups=norm_num_groups, eps=norm_eps)
         self.conv_act = nn.SiLU()
         self.conv_out = nn.Conv2d(block_out_channels[0], out_channels, kernel_size=3, padding=1)
-
-    def set_attention_slice(self, slice_size):
-        head_dims = self.attention_head_dim
-        head_dims = [head_dims] if isinstance(head_dims, int) else head_dims
-        if slice_size is not None and any(dim % slice_size != 0 for dim in head_dims):
-            raise ValueError(
-                f"Make sure slice_size {slice_size} is a common divisor of "
-                f"the number of heads used in cross_attention: {head_dims}"
-            )
-        if slice_size is not None and slice_size > min(head_dims):
-            raise ValueError(
-                f"slice_size {slice_size} has to be smaller or equal to "
-                f"the lowest number of heads used in cross_attention: min({head_dims}) = {min(head_dims)}"
-            )
-
-        for block in self.down_blocks:
-            if hasattr(block, "attentions") and block.attentions is not None:
-                block.set_attention_slice(slice_size)
-
-        self.mid_block.set_attention_slice(slice_size)
-
-        for block in self.up_blocks:
-            if hasattr(block, "attentions") and block.attentions is not None:
-                block.set_attention_slice(slice_size)
-
-    def set_use_memory_efficient_attention_xformers(self, use_memory_efficient_attention_xformers: bool):
-        for block in self.down_blocks:
-            if hasattr(block, "attentions") and block.attentions is not None:
-                block.set_use_memory_efficient_attention_xformers(use_memory_efficient_attention_xformers)
-
-        self.mid_block.set_use_memory_efficient_attention_xformers(use_memory_efficient_attention_xformers)
-
-        for block in self.up_blocks:
-            if hasattr(block, "attentions") and block.attentions is not None:
-                block.set_use_memory_efficient_attention_xformers(use_memory_efficient_attention_xformers)
-
-    def _set_gradient_checkpointing(self, module, value=False):
-        if isinstance(module, (CrossAttnDownBlock2D, DownBlock2D, CrossAttnUpBlock2D, UpBlock2D)):
-            module.gradient_checkpointing = value
 
     def forward(
         self,

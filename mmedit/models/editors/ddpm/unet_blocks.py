@@ -3,7 +3,7 @@ import torch
 from torch import nn
 
 from .attention import AttentionBlock, DualTransformer2DModel, Transformer2DModel
-from .resnet import Downsample2D, FirDownsample2D, FirUpsample2D, ResnetBlock2D, Upsample2D
+from .res_blocks import Downsample2D, FirDownsample2D, FirUpsample2D, ResnetBlock2D, Upsample2D
 
 
 def get_down_block(

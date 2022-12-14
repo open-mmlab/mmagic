@@ -8,7 +8,6 @@ from tqdm.auto import tqdm
 
 
 from mmedit.registry import MODELS, DIFFUSION_SCHEDULERS
-from .models.unet_2d_condition import UNet2DConditionModel
 from .vae import AutoencoderKL
 from .clip_wrapper import load_clip_submodels
 
@@ -43,7 +42,7 @@ class StableDiffuser(nn.Module):
         self.scheduler.order = 1
         self.scheduler.init_noise_sigma = 1.0
 
-        self.unet = UNet2DConditionModel(**unet_cfg)
+        self.unet = MODELS.build(unet_cfg)
         state_dict = torch.load(pretrained_ckpt_path['unet'], map_location="cpu")
         self.unet.load_state_dict(state_dict, strict=True)
 
