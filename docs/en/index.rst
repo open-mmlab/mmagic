@@ -89,6 +89,8 @@ Documentation
    howto/losses.md
 
 .. toctree::
+   :maxdepth: 1
+   :caption: FAQ
 
    faq.md
 
@@ -106,6 +108,8 @@ Documentation
    dataset_zoo/index.rst
 
 .. toctree::
+   :maxdepth: 1
+   :caption: Changelog
 
    changelog.md
 

@@ -58,6 +58,8 @@
 
 
 .. toctree::
+   :maxdepth: 1
+   :caption: 常见问题
 
    faq.md
 
@@ -76,6 +78,8 @@
    dataset_zoo/index.rst
 
 .. toctree::
+   :maxdepth: 1
+   :caption: 变更日志
 
    changelog.md
 
