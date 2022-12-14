@@ -11,7 +11,7 @@ def update_dataset_zoo():
 
     # generate overview
     overviewmsg = """
-# Overview
+# 概览
 
 """
 
@@ -29,7 +29,7 @@ def update_dataset_zoo():
 
         target_subf = subf.replace('-', '_').lower()
         target_readme = os.path.join(target_dir, target_subf + '.md')
-        source_readme = os.path.join(source_dir, subf, 'README.md')
+        source_readme = os.path.join(source_dir, subf, 'README_zh-CN.md')
         if not os.path.exists(source_readme):
             continue
 

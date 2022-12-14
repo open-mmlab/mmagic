@@ -46,18 +46,18 @@ def summarize(stats, name):
 """
 
     if name != 'Overview':
-        summary += '\n## Summary'
+        summary += '\n## 概览'
 
     summary += f"""
-* Number of checkpoints: {len(allckpts)}
-* Number of configs: {len(allconfigs)}
-* Number of papers: {len(allpapers)}
+* 预训练权重个数: {len(allckpts)}
+* 配置文件个数: {len(allconfigs)}
+* 论文个数: {len(allpapers)}
 {countstr}
     """
 
     if name == 'Overview':
         summary += f"""
-* Tasks:
+* 任务:
 {task_desc}
 
 """
@@ -73,7 +73,7 @@ def update_model_zoo():
     os.makedirs(target_dir, exist_ok=True)
 
     root_dir = dirname(dirname(dirname(dirname(osp.abspath(__file__)))))
-    files = sorted(glob.glob(osp.join(root_dir, 'configs/*/README.md')))
+    files = sorted(glob.glob(osp.join(root_dir, 'configs/*/README_zh-CN.md')))
     stats = []
 
     for f in tqdm(files, desc='update model zoo'):
@@ -97,7 +97,7 @@ def update_model_zoo():
         paperlinks = {}
         for _, p in papers:
             paper_link = osp.join(github_link, 'configs', basename(dirname(f)),
-                                  'README.md')
+                                  'README_zh-CN.md')
             # print(p, paper_link)
             paperlinks[p] = ' '.join(
                 (f'[⇨]({paper_link}#{anchor(paperlink)})'
@@ -119,24 +119,30 @@ def update_model_zoo():
         ckpts.extend(
             x.lower().strip()
             for x in re.findall(r'\[ckpt\]\(https\:\/\/.*\.pth', content))
+        ckpts.extend(
+            x.lower().strip()
+            for x in re.findall(r'\[模型\]\(https\:\/\/.*\.pth', content))
+        ckpts.extend(
+            x.lower().strip()
+            for x in re.findall(r'\[权重\]\(https\:\/\/.*\.pth', content))
         ckpts = set(ckpts)
 
         # count tasks
         task_desc = list(
             set(x.lower().strip()
-                for x in re.findall(r'\*\*Task\*\*: .*', content)))
+                for x in re.findall(r'\*\*任务\*\*: .*', content)))
         tasks = set()
         if len(task_desc) > 0:
-            tasks = set(task_desc[0].split('**task**: ')[1].split(', '))
+            tasks = set(task_desc[0].split('**任务**: ')[1].split(', '))
 
         statsmsg = f"""## {title}"""
         if len(tasks) > 0:
             statsmsg += f"\n* Tasks: {','.join(list(tasks))}"
         statsmsg += f"""
 
-* Number of checkpoints: {len(ckpts)}
-* Number of configs: {len(configs)}
-* Number of papers: {len(papers)}
+* 预训练权重个数: {len(ckpts)}
+* 配置文件个数: {len(configs)}
+* 论文个数: {len(papers)}
 {paperlist}
 
 """
@@ -145,7 +151,7 @@ def update_model_zoo():
         stats.append((papers, configs, ckpts, tasks, year, statsmsg, content))
 
     # overview
-    overview = summarize(stats, 'Overview')
+    overview = summarize(stats, '概览')
     with open(osp.join(target_dir, 'overview.md'), 'w') as f:
         f.write(overview)
 
@@ -156,7 +162,7 @@ def update_model_zoo():
     indexmsg = """
 .. toctree::
    :maxdepth: 1
-   :caption: Model Zoo
+   :caption: 模型库
 
    overview.md
 """

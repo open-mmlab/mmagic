@@ -1,4 +1,4 @@
-# Tutorial 8: Using metrics in MMEditing
+# Tutorial 5: Using metrics in MMEditing
 
 MMEditing supports **17 metrics** to assess the quality of models.
 
