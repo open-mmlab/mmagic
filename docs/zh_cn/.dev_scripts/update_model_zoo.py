@@ -21,16 +21,19 @@ def anchor(name):
                          name.strip().lower())).strip('-')
 
 
-def summarize(stats, name, task='all'):
+def summarize(stats, name):
     allpapers = func.reduce(lambda a, b: a.union(b),
-                            [p for p, _, _, _, _, _ in stats])
+                            [p for p, _, _, _, _, _, _ in stats])
     allconfigs = func.reduce(lambda a, b: a.union(b),
-                             [c for _, c, _, _, _, _ in stats])
+                             [c for _, c, _, _, _, _, _ in stats])
     allckpts = func.reduce(lambda a, b: a.union(b),
-                           [c for _, _, c, _, _, _ in stats])
+                           [c for _, _, c, _, _, _, _ in stats])
     alltasks = func.reduce(lambda a, b: a.union(b),
-                           [t for _, _, _, t, _, _ in stats])
-    task_desc = '\n    - '.join(list(alltasks))
+                           [t for _, _, _, t, _, _, _ in stats])
+    task_desc = '\n'.join([
+        f"    - [{task}]({task.replace('-', '_').replace(' ', '_').lower()}.md)"  # noqa
+        for task in list(alltasks)
+    ])
 
     # Overview
     papertypes, papercounts = np.unique([t for t, _ in allpapers],
@@ -43,21 +46,21 @@ def summarize(stats, name, task='all'):
 """
 
     if name != 'Overview':
-        summary += '\n## Summary'
+        summary += '\n## 概览'
 
     summary += f"""
-* Number of checkpoints: {len(allckpts)}
-* Number of configs: {len(allconfigs)}
-* Number of papers: {len(allpapers)}
+* 预训练权重个数: {len(allckpts)}
+* 配置文件个数: {len(allconfigs)}
+* 论文个数: {len(allpapers)}
 {countstr}
     """
 
     if name == 'Overview':
         summary += f"""
-* Tasks:
-    - {task_desc}
+* 任务:
+{task_desc}
 
-    """
+"""
 
     return summary
 
@@ -116,6 +119,12 @@ def update_model_zoo():
         ckpts.extend(
             x.lower().strip()
             for x in re.findall(r'\[ckpt\]\(https\:\/\/.*\.pth', content))
+        ckpts.extend(
+            x.lower().strip()
+            for x in re.findall(r'\[模型\]\(https\:\/\/.*\.pth', content))
+        ckpts.extend(
+            x.lower().strip()
+            for x in re.findall(r'\[权重\]\(https\:\/\/.*\.pth', content))
         ckpts = set(ckpts)
 
         # count tasks
@@ -131,28 +140,29 @@ def update_model_zoo():
             statsmsg += f"\n* Tasks: {','.join(list(tasks))}"
         statsmsg += f"""
 
-* Number of checkpoints: {len(ckpts)}
-* Number of configs: {len(configs)}
-* Number of papers: {len(papers)}
+* 预训练权重个数: {len(ckpts)}
+* 配置文件个数: {len(configs)}
+* 论文个数: {len(papers)}
 {paperlist}
 
 """
         # * We should have: {len(glob.glob(osp.join(dirname(f), '*.py')))}
-        stats.append((papers, configs, ckpts, tasks, year, statsmsg))
+        content = content.replace('# ', '## ')
+        stats.append((papers, configs, ckpts, tasks, year, statsmsg, content))
 
     # overview
-    overview = summarize(stats, 'Overview')
+    overview = summarize(stats, '概览')
     with open(osp.join(target_dir, 'overview.md'), 'w') as f:
         f.write(overview)
 
     alltasks = func.reduce(lambda a, b: a.union(b),
-                           [t for _, _, _, t, _, _ in stats])
+                           [t for _, _, _, t, _, _, _ in stats])
 
     # index.rst
     indexmsg = """
 .. toctree::
    :maxdepth: 1
-   :caption: Model Zoo
+   :caption: 模型库
 
    overview.md
 """
@@ -166,13 +176,15 @@ def update_model_zoo():
 
     #  task-specific
     for task in alltasks:
-        filtered_model = [(paper, config, ckpt, tasks, year, x)
-                          for paper, config, ckpt, tasks, year, x in stats
-                          if task in tasks]
-        filtered_model = sorted(filtered_model, key=lambda x: x[-2])[::-1]
+        filtered_model = [
+            (paper, config, ckpt, tasks, year, x, content)
+            for paper, config, ckpt, tasks, year, x, content in stats
+            if task in tasks
+        ]
+        filtered_model = sorted(filtered_model, key=lambda x: x[-3])[::-1]
         overview = summarize(filtered_model, task)
-        msglist = '\n'.join(x for _, _, _, _, _, x in filtered_model)
 
+        msglist = '\n'.join(x for _, _, _, _, _, _, x in filtered_model)
         task = task.replace(' ', '_').replace('-', '_').lower()
         with open(osp.join(target_dir, f'{task}.md'), 'w') as f:
             f.write(overview + '\n' + msglist)

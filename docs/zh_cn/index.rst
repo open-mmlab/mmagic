@@ -33,10 +33,10 @@
    user_guides/dataset_prepare.md
    user_guides/inference.md
    user_guides/train_test.md
+   user_guides/metrics.md
    user_guides/visualization.md
    user_guides/useful_tools.md
    user_guides/deploy.md
-   user_guides/metrics.md
 
 .. toctree::
    :maxdepth: 2
