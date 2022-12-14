@@ -8,7 +8,7 @@ from .cain import CAIN, CAINNet
 from .cyclegan import CycleGAN
 from .dcgan import DCGAN
 from .ddim import DDIMScheduler
-from .ddpm import DDPMScheduler, DenoisingUnet
+from .ddpm import DDPMScheduler, DenoisingUnet, DenoisingSRUnet
 from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
                          DeepFillDecoder, DeepFillEncoder, DeepFillRefiner,
                          DeepFillv1Discriminators, DeepFillv1Inpaintor)
@@ -26,6 +26,7 @@ from .flavr import FLAVR, FLAVRNet
 from .gca import GCA
 from .ggan import GGAN
 from .glean import GLEANStyleGANv2
+from .glide import Text2ImUNet, Glide
 from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
                            GLEncoderDecoder)
 from .guided_diffusion import AblatedDiffusionModel
@@ -83,5 +84,6 @@ __all__ = [
     'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
-    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D'
+    'DDPMScheduler', 'DenoisingUnet', 'DenoisingSRUnet', 'ClipWrapper', 'EG3D',
+    'Text2ImUNet', 'Glide',
 ]
