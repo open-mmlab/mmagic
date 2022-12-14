@@ -3,10 +3,357 @@ from typing import Optional, Tuple, Union
 import numpy as np
 import torch
 import torch.nn as nn
+import math
+import torch.nn.functional as F
 
 from addict import Dict
-from .attention import AttentionBlock
-from .resnet import ResnetBlock2D, Downsample2D, Upsample2D
+
+class Downsample2D(nn.Module):
+    """
+    A downsampling layer with an optional convolution.
+
+    Parameters:
+        channels: channels in the inputs and outputs.
+        use_conv: a bool determining if a convolution is applied.
+        out_channels:
+        padding:
+    """
+
+    def __init__(self, channels, use_conv=False, out_channels=None, padding=1, name="conv"):
+        super().__init__()
+        self.channels = channels
+        self.out_channels = out_channels or channels
+        self.use_conv = use_conv
+        self.padding = padding
+        stride = 2
+        self.name = name
+
+        if use_conv:
+            conv = nn.Conv2d(self.channels, self.out_channels, 3, stride=stride, padding=padding)
+        else:
+            assert self.channels == self.out_channels
+            conv = nn.AvgPool2d(kernel_size=stride, stride=stride)
+
+        # TODO(Suraj, Patrick) - clean up after weight dicts are correctly renamed
+        if name == "conv":
+            self.Conv2d_0 = conv
+            self.conv = conv
+        elif name == "Conv2d_0":
+            self.conv = conv
+        else:
+            self.conv = conv
+
+    def forward(self, hidden_states):
+        assert hidden_states.shape[1] == self.channels
+        if self.use_conv and self.padding == 0:
+            pad = (0, 1, 0, 1)
+            hidden_states = F.pad(hidden_states, pad, mode="constant", value=0)
+
+        assert hidden_states.shape[1] == self.channels
+        hidden_states = self.conv(hidden_states)
+
+        return hidden_states
+
+
+class Upsample2D(nn.Module):
+    """
+    An upsampling layer with an optional convolution.
+
+    Parameters:
+        channels: channels in the inputs and outputs.
+        use_conv: a bool determining if a convolution is applied.
+        use_conv_transpose:
+        out_channels:
+    """
+
+    def __init__(self, channels, use_conv=False, use_conv_transpose=False, out_channels=None, name="conv"):
+        super().__init__()
+        self.channels = channels
+        self.out_channels = out_channels or channels
+        self.use_conv = use_conv
+        self.use_conv_transpose = use_conv_transpose
+        self.name = name
+
+        conv = None
+        if use_conv_transpose:
+            conv = nn.ConvTranspose2d(channels, self.out_channels, 4, 2, 1)
+        elif use_conv:
+            conv = nn.Conv2d(self.channels, self.out_channels, 3, padding=1)
+
+        # TODO(Suraj, Patrick) - clean up after weight dicts are correctly renamed
+        if name == "conv":
+            self.conv = conv
+        else:
+            self.Conv2d_0 = conv
+
+    def forward(self, hidden_states, output_size=None):
+        assert hidden_states.shape[1] == self.channels
+
+        if self.use_conv_transpose:
+            return self.conv(hidden_states)
+
+        # Cast to float32 to as 'upsample_nearest2d_out_frame' op does not support bfloat16
+        # TODO(Suraj): Remove this cast once the issue is fixed in PyTorch
+        # https://github.com/pytorch/pytorch/issues/86679
+        dtype = hidden_states.dtype
+        if dtype == torch.bfloat16:
+            hidden_states = hidden_states.to(torch.float32)
+
+        # upsample_nearest_nhwc fails with large batch sizes. see https://github.com/huggingface/diffusers/issues/984
+        if hidden_states.shape[0] >= 64:
+            hidden_states = hidden_states.contiguous()
+
+        # if `output_size` is passed we force the interpolation output
+        # size and do not make use of `scale_factor=2`
+        if output_size is None:
+            hidden_states = F.interpolate(hidden_states, scale_factor=2.0, mode="nearest")
+        else:
+            hidden_states = F.interpolate(hidden_states, size=output_size, mode="nearest")
+
+        # If the input is bfloat16, we cast back to bfloat16
+        if dtype == torch.bfloat16:
+            hidden_states = hidden_states.to(dtype)
+
+        # TODO(Suraj, Patrick) - clean up after weight dicts are correctly renamed
+        if self.use_conv:
+            if self.name == "conv":
+                hidden_states = self.conv(hidden_states)
+            else:
+                hidden_states = self.Conv2d_0(hidden_states)
+
+        return hidden_states
+
+
+class ResnetBlock2D(nn.Module):
+    def __init__(
+        self,
+        *,
+        in_channels,
+        out_channels=None,
+        conv_shortcut=False,
+        dropout=0.0,
+        temb_channels=512,
+        groups=32,
+        groups_out=None,
+        pre_norm=True,
+        eps=1e-6,
+        non_linearity="swish",
+        time_embedding_norm="default",
+        kernel=None,
+        output_scale_factor=1.0,
+        use_in_shortcut=None,
+        up=False,
+        down=False,
+    ):
+        super().__init__()
+        self.pre_norm = pre_norm
+        self.pre_norm = True
+        self.in_channels = in_channels
+        out_channels = in_channels if out_channels is None else out_channels
+        self.out_channels = out_channels
+        self.use_conv_shortcut = conv_shortcut
+        self.time_embedding_norm = time_embedding_norm
+        self.up = up
+        self.down = down
+        self.output_scale_factor = output_scale_factor
+
+        if groups_out is None:
+            groups_out = groups
+
+        self.norm1 = torch.nn.GroupNorm(num_groups=groups, num_channels=in_channels, eps=eps, affine=True)
+
+        self.conv1 = torch.nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=1, padding=1)
+
+        if temb_channels is not None:
+            self.time_emb_proj = torch.nn.Linear(temb_channels, out_channels)
+        else:
+            self.time_emb_proj = None
+
+        self.norm2 = torch.nn.GroupNorm(num_groups=groups_out, num_channels=out_channels, eps=eps, affine=True)
+        self.dropout = torch.nn.Dropout(dropout)
+        self.conv2 = torch.nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1)
+
+        if non_linearity == "swish":
+            self.nonlinearity = lambda x: F.silu(x)
+        elif non_linearity == "mish":
+            self.nonlinearity = Mish()
+        elif non_linearity == "silu":
+            self.nonlinearity = nn.SiLU()
+
+        self.upsample = self.downsample = None
+        if self.up:
+            if kernel == "fir":
+                fir_kernel = (1, 3, 3, 1)
+                self.upsample = lambda x: upsample_2d(x, kernel=fir_kernel)
+            elif kernel == "sde_vp":
+                self.upsample = partial(F.interpolate, scale_factor=2.0, mode="nearest")
+            else:
+                self.upsample = Upsample2D(in_channels, use_conv=False)
+        elif self.down:
+            if kernel == "fir":
+                fir_kernel = (1, 3, 3, 1)
+                self.downsample = lambda x: downsample_2d(x, kernel=fir_kernel)
+            elif kernel == "sde_vp":
+                self.downsample = partial(F.avg_pool2d, kernel_size=2, stride=2)
+            else:
+                self.downsample = Downsample2D(in_channels, use_conv=False, padding=1, name="op")
+
+        self.use_in_shortcut = self.in_channels != self.out_channels if use_in_shortcut is None else use_in_shortcut
+
+        self.conv_shortcut = None
+        if self.use_in_shortcut:
+            self.conv_shortcut = torch.nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=1, padding=0)
+
+    def forward(self, input_tensor, temb):
+        hidden_states = input_tensor
+
+        hidden_states = self.norm1(hidden_states)
+        hidden_states = self.nonlinearity(hidden_states)
+
+        if self.upsample is not None:
+            # upsample_nearest_nhwc fails with large batch sizes. see https://github.com/huggingface/diffusers/issues/984
+            if hidden_states.shape[0] >= 64:
+                input_tensor = input_tensor.contiguous()
+                hidden_states = hidden_states.contiguous()
+            input_tensor = self.upsample(input_tensor)
+            hidden_states = self.upsample(hidden_states)
+        elif self.downsample is not None:
+            input_tensor = self.downsample(input_tensor)
+            hidden_states = self.downsample(hidden_states)
+
+        hidden_states = self.conv1(hidden_states)
+
+        if temb is not None:
+            temb = self.time_emb_proj(self.nonlinearity(temb))[:, :, None, None]
+            hidden_states = hidden_states + temb
+
+        hidden_states = self.norm2(hidden_states)
+        hidden_states = self.nonlinearity(hidden_states)
+
+        hidden_states = self.dropout(hidden_states)
+        hidden_states = self.conv2(hidden_states)
+
+        if self.conv_shortcut is not None:
+            input_tensor = self.conv_shortcut(input_tensor)
+
+        output_tensor = (input_tensor + hidden_states) / self.output_scale_factor
+
+        return output_tensor
+
+
+class AttentionBlock(nn.Module):
+    """
+    An attention block that allows spatial positions to attend to each other. Originally ported from here, but adapted
+    to the N-d case.
+    https://github.com/hojonathanho/diffusion/blob/1e0dceb3b3495bbe19116a5e1b3596cd0706c543/diffusion_tf/models/unet.py#L66.
+    Uses three q, k, v linear layers to compute attention.
+
+    Parameters:
+        channels (`int`): The number of channels in the input and output.
+        num_head_channels (`int`, *optional*):
+            The number of channels in each head. If None, then `num_heads` = 1.
+        norm_num_groups (`int`, *optional*, defaults to 32): The number of groups to use for group norm.
+        rescale_output_factor (`float`, *optional*, defaults to 1.0): The factor to rescale the output by.
+        eps (`float`, *optional*, defaults to 1e-5): The epsilon value to use for group norm.
+    """
+
+    def __init__(
+        self,
+        channels: int,
+        num_head_channels: Optional[int] = None,
+        norm_num_groups: int = 32,
+        rescale_output_factor: float = 1.0,
+        eps: float = 1e-5,
+    ):
+        super().__init__()
+        self.channels = channels
+
+        self.num_heads = channels // num_head_channels if num_head_channels is not None else 1
+        self.num_head_size = num_head_channels
+        self.group_norm = nn.GroupNorm(num_channels=channels, num_groups=norm_num_groups, eps=eps, affine=True)
+
+        # define q,k,v as linear layers
+        self.query = nn.Linear(channels, channels)
+        self.key = nn.Linear(channels, channels)
+        self.value = nn.Linear(channels, channels)
+
+        self.rescale_output_factor = rescale_output_factor
+        self.proj_attn = nn.Linear(channels, channels, 1)
+
+    def transpose_for_scores(self, projection: torch.Tensor) -> torch.Tensor:
+        new_projection_shape = projection.size()[:-1] + (self.num_heads, -1)
+        # move heads to 2nd position (B, T, H * D) -> (B, T, H, D) -> (B, H, T, D)
+        new_projection = projection.view(new_projection_shape).permute(0, 2, 1, 3)
+        return new_projection
+
+    def forward(self, hidden_states):
+        residual = hidden_states
+        batch, channel, height, width = hidden_states.shape
+
+        # norm
+        hidden_states = self.group_norm(hidden_states)
+
+        hidden_states = hidden_states.view(batch, channel, height * width).transpose(1, 2)
+
+        # proj to q, k, v
+        query_proj = self.query(hidden_states)
+        key_proj = self.key(hidden_states)
+        value_proj = self.value(hidden_states)
+
+        scale = 1 / math.sqrt(self.channels / self.num_heads)
+
+        # get scores
+        if self.num_heads > 1:
+            query_states = self.transpose_for_scores(query_proj)
+            key_states = self.transpose_for_scores(key_proj)
+            value_states = self.transpose_for_scores(value_proj)
+
+            # TODO: is there a way to perform batched matmul (e.g. baddbmm) on 4D tensors?
+            #       or reformulate this into a 3D problem?
+            # TODO: measure whether on MPS device it would be faster to do this matmul via einsum
+            #       as some matmuls can be 1.94x slower than an equivalent einsum on MPS
+            #       https://gist.github.com/Birch-san/cba16789ec27bb20996a4b4831b13ce0
+            attention_scores = torch.matmul(query_states, key_states.transpose(-1, -2)) * scale
+        else:
+            query_states, key_states, value_states = query_proj, key_proj, value_proj
+
+            attention_scores = torch.baddbmm(
+                torch.empty(
+                    query_states.shape[0],
+                    query_states.shape[1],
+                    key_states.shape[1],
+                    dtype=query_states.dtype,
+                    device=query_states.device,
+                ),
+                query_states,
+                key_states.transpose(-1, -2),
+                beta=0,
+                alpha=scale,
+            )
+
+        attention_probs = torch.softmax(attention_scores.float(), dim=-1).type(attention_scores.dtype)
+
+        # compute attention output
+        if self.num_heads > 1:
+            # TODO: is there a way to perform batched matmul (e.g. bmm) on 4D tensors?
+            #       or reformulate this into a 3D problem?
+            # TODO: measure whether on MPS device it would be faster to do this matmul via einsum
+            #       as some matmuls can be 1.94x slower than an equivalent einsum on MPS
+            #       https://gist.github.com/Birch-san/cba16789ec27bb20996a4b4831b13ce0
+            hidden_states = torch.matmul(attention_probs, value_states)
+            hidden_states = hidden_states.permute(0, 2, 1, 3).contiguous()
+            new_hidden_states_shape = hidden_states.size()[:-2] + (self.channels,)
+            hidden_states = hidden_states.view(new_hidden_states_shape)
+        else:
+            hidden_states = torch.bmm(attention_probs, value_states)
+
+        # compute next hidden_states
+        hidden_states = self.proj_attn(hidden_states)
+        hidden_states = hidden_states.transpose(-1, -2).reshape(batch, channel, height, width)
+
+        # res connect and rescale
+        hidden_states = (hidden_states + residual) / self.rescale_output_factor
+        return hidden_states
 
 class UNetMidBlock2D(nn.Module):
     def __init__(
@@ -516,117 +863,6 @@ class DiagonalGaussianDistribution(object):
 
     def mode(self):
         return self.mean
-
-
-class VQModel(nn.Module):
-    r"""VQ-VAE model from the paper Neural Discrete Representation Learning by Aaron van den Oord, Oriol Vinyals and Koray
-    Kavukcuoglu.
-
-    This model inherits from [`ModelMixin`]. Check the superclass documentation for the generic methods the library
-    implements for all the model (such as downloading or saving, etc.)
-
-    Parameters:
-        in_channels (int, *optional*, defaults to 3): Number of channels in the input image.
-        out_channels (int,  *optional*, defaults to 3): Number of channels in the output.
-        down_block_types (`Tuple[str]`, *optional*, defaults to :
-            obj:`("DownEncoderBlock2D",)`): Tuple of downsample block types.
-        up_block_types (`Tuple[str]`, *optional*, defaults to :
-            obj:`("UpDecoderBlock2D",)`): Tuple of upsample block types.
-        block_out_channels (`Tuple[int]`, *optional*, defaults to :
-            obj:`(64,)`): Tuple of block output channels.
-        act_fn (`str`, *optional*, defaults to `"silu"`): The activation function to use.
-        latent_channels (`int`, *optional*, defaults to `3`): Number of channels in the latent space.
-        sample_size (`int`, *optional*, defaults to `32`): TODO
-        num_vq_embeddings (`int`, *optional*, defaults to `256`): Number of codebook vectors in the VQ-VAE.
-        vq_embed_dim (`int`, *optional*): Hidden dim of codebook vectors in the VQ-VAE.
-    """
-
-    def __init__(
-        self,
-        in_channels: int = 3,
-        out_channels: int = 3,
-        down_block_types: Tuple[str] = ("DownEncoderBlock2D",),
-        up_block_types: Tuple[str] = ("UpDecoderBlock2D",),
-        block_out_channels: Tuple[int] = (64,),
-        layers_per_block: int = 1,
-        act_fn: str = "silu",
-        latent_channels: int = 3,
-        sample_size: int = 32,
-        num_vq_embeddings: int = 256,
-        norm_num_groups: int = 32,
-        vq_embed_dim: Optional[int] = None,
-    ):
-        super().__init__()
-
-        # pass init params to Encoder
-        self.encoder = Encoder(
-            in_channels=in_channels,
-            out_channels=latent_channels,
-            down_block_types=down_block_types,
-            block_out_channels=block_out_channels,
-            layers_per_block=layers_per_block,
-            act_fn=act_fn,
-            norm_num_groups=norm_num_groups,
-            double_z=False,
-        )
-
-        vq_embed_dim = vq_embed_dim if vq_embed_dim is not None else latent_channels
-
-        self.quant_conv = torch.nn.Conv2d(latent_channels, vq_embed_dim, 1)
-        self.quantize = VectorQuantizer(num_vq_embeddings, vq_embed_dim, beta=0.25, remap=None, sane_index_shape=False)
-        self.post_quant_conv = torch.nn.Conv2d(vq_embed_dim, latent_channels, 1)
-
-        # pass init params to Decoder
-        self.decoder = Decoder(
-            in_channels=latent_channels,
-            out_channels=out_channels,
-            up_block_types=up_block_types,
-            block_out_channels=block_out_channels,
-            layers_per_block=layers_per_block,
-            act_fn=act_fn,
-            norm_num_groups=norm_num_groups,
-        )
-
-    def encode(self, x: torch.FloatTensor, return_dict: bool = True) -> Dict:
-        h = self.encoder(x)
-        h = self.quant_conv(h)
-
-        if not return_dict:
-            return (h,)
-
-        return Dict(latents=h)
-
-    def decode(
-        self, h: torch.FloatTensor, force_not_quantize: bool = False, return_dict: bool = True
-    ) -> Union[Dict, torch.FloatTensor]:
-        # also go through quantization layer
-        if not force_not_quantize:
-            quant, emb_loss, info = self.quantize(h)
-        else:
-            quant = h
-        quant = self.post_quant_conv(quant)
-        dec = self.decoder(quant)
-
-        if not return_dict:
-            return (dec,)
-
-        return Dict(sample=dec)
-
-    def forward(self, sample: torch.FloatTensor, return_dict: bool = True) -> Union[Dict, torch.FloatTensor]:
-        r"""
-        Args:
-            sample (`torch.FloatTensor`): Input sample.
-            return_dict (`bool`, *optional*, defaults to `True`):
-                Whether or not to return a [`Dict`] instead of a plain tuple.
-        """
-        x = sample
-        h = self.encode(x).latents
-        dec = self.decode(h).sample
-
-        if not return_dict:
-            return (dec,)
-
-        return Dict(sample=dec)
 
 
 class AutoencoderKL(nn.Module):

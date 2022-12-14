@@ -9,7 +9,7 @@ from tqdm.auto import tqdm
 
 from mmedit.registry import MODELS, DIFFUSION_SCHEDULERS
 from .models.unet_2d_condition import UNet2DConditionModel
-from .models.vae import AutoencoderKL
+from .vae import AutoencoderKL
 from .clip_wrapper import load_clip_submodels
 
 from mmengine.logging import MMLogger
