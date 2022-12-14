@@ -63,7 +63,6 @@ Documentation
    user_guides/visualization.md
    user_guides/useful_tools.md
    user_guides/deploy.md
-   user_guides/faq.md
 
 
 .. toctree::

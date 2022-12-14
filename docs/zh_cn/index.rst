@@ -42,10 +42,6 @@
    :maxdepth: 2
    :caption: 进阶教程
 
-   advanced_guides/models.md
-   advanced_guides/dataset.md
-   advanced_guides/transforms.md
-   advanced_guides/losses.md
    advanced_guides/evaluator.md
    advanced_guides/structures.md
    advanced_guides/data_preprocessor.md
