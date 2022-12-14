@@ -1,8 +1,8 @@
-# Disco Diffusion
+# Disco Diffusion (2022)
 
 > [Disco Diffusion](https://github.com/alembics/disco-diffusion)
 
-> **Task**: Text2Image, Image2Image
+> **Task**: Text2Image, Image2Image, diffusion
 
 <!-- [ALGORITHM] -->
 
@@ -12,7 +12,7 @@
 
 Disco Diffusion (DD) is a Google Colab Notebook which leverages an AI Image generating technique called CLIP-Guided Diffusion to allow you to create compelling and beautiful images from text inputs.
 
-Created by Somnai, augmented by Gandamu, and building on the work of RiversHaveWings, nshepperd, and many others.
+Created by Somnai, augmented by Gandamu, and building on the work of RiversHaveWings, nshepperd, and many others. See more details in [Credits](#credits).
 
 <!-- [IMAGE] -->
 
@@ -22,23 +22,26 @@ Created by Somnai, augmented by Gandamu, and building on the work of RiversHaveW
 
 ## Results and models
 
-We have converted several `unet` weights and offer related configs. Or usage of different `unet`, please refer to tutorial.
+We have converted several `unet` weights and offer related configs. See more details of different `unet` in [Tutorial](#tutorials).
 
-| Diffusion Model                          | Config                                                                      | Weights                                                                               |
-| ---------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| 512x512_diffusion_uncond_finetune_008100 | [config](configs/disco/disco-diffusion_adm-u-finetuned_imagenet-512x512.py) | [weights](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth) |
-| 256x256_diffusion_uncond                 | [config](configs/disco/disco-diffusion_adm-u-finetuned_imagenet-256x256.py) | [weights](<>)                                                                         |
-| portrait_generator_v001                  | [config](configs/disco/disco-diffusion_portrait_generator_v001.py)          | [weights](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth) |
-| pixelartdiffusion_expanded               | Coming soon!                                                                |                                                                                       |
-| pixel_art_diffusion_hard_256             | Coming soon!                                                                |                                                                                       |
-| pixel_art_diffusion_soft_256             | Coming soon!                                                                |                                                                                       |
-| pixelartdiffusion4k                      | Coming soon!                                                                |                                                                                       |
-| watercolordiffusion_2                    | Coming soon!                                                                |                                                                                       |
-| watercolordiffusion                      | Coming soon!                                                                |                                                                                       |
-| PulpSciFiDiffusion                       | Coming soon!                                                                |                                                                                       |
+|             Diffusion Model              |                                   Config                                    |                                       Download                                        |
+| :--------------------------------------: | :-------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------: |
+| 512x512_diffusion_uncond_finetune_008100 | [config](configs/disco/disco-diffusion_adm-u-finetuned_imagenet-512x512.py) | [model](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth) |
+|         256x256_diffusion_uncond         | [config](configs/disco/disco-diffusion_adm-u-finetuned_imagenet-256x256.py) |                                      [model](<>)                                      |
+|         portrait_generator_v001          |     [config](configs/disco/disco-diffusion_portrait-generator-v001.py)      | [model](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth) |
+|        pixelartdiffusion_expanded        |                                Coming soon!                                 |                                                                                       |
+|       pixel_art_diffusion_hard_256       |                                Coming soon!                                 |                                                                                       |
+|       pixel_art_diffusion_soft_256       |                                Coming soon!                                 |                                                                                       |
+|           pixelartdiffusion4k            |                                Coming soon!                                 |                                                                                       |
+|          watercolordiffusion_2           |                                Coming soon!                                 |                                                                                       |
+|           watercolordiffusion            |                                Coming soon!                                 |                                                                                       |
+|            PulpSciFiDiffusion            |                                Coming soon!                                 |                                                                                       |
 
 ## To-do List
 
+- [x] Text2Image
+- [x] Image2Image
+- [x] Imagenet, portrait diffusion models
 - [ ] pixelart, watercolor, sci-fiction diffusion models
 - [ ] image prompt
 - [ ] video generation
@@ -78,13 +81,15 @@ save_image(image, "image.png")
 
 ## Tutorials
 
-Coming soon!
+Considering that `disco-diffusion` contains many adjustable parameters, we provide users with a [jupyter-notebook](configs/disco_diffusion/tutorials.ipynb) / [colab](https://githubtocolab.com/open-mmlab/mmediting/blob/dev-1.x/configs/disco_diffusion/tutorials.ipynb) tutorial that exhibits the meaning of different parameters, and gives results corresponding to adjustment.
+Refer to [Disco Sheet](https://docs.google.com/document/d/1l8s7uS2dGqjztYSjPpzlmXLjl5PM3IGkRWI3IiCuK7g/edit).
 
 ## Credits
 
 Since our adaptation of disco-diffusion are heavily influenced by disco [colab](https://colab.research.google.com/github/alembics/disco-diffusion/blob/main/Disco_Diffusion.ipynb#scrollTo=License), here we copy the credits below.
 
 <details>
+<summary>Credits</summary>
 Original notebook by Katherine Crowson (https://github.com/crowsonkb, https://twitter.com/RiversHaveWings). It uses either OpenAI's 256x256 unconditional ImageNet or Katherine Crowson's fine-tuned 512x512 diffusion model (https://github.com/openai/guided-diffusion), together with CLIP (https://github.com/openai/CLIP) to connect text prompts with images.
 
 Modified by Daniel Russell (https://github.com/russelldc, https://twitter.com/danielrussruss) to include (hopefully) optimal params for quick generations in 15-100 timesteps rather than 1000, as well as more robust augmentations.
