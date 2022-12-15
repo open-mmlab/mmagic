@@ -102,14 +102,17 @@ val_dataloader = dict(
         data_prefix=dict(img='', gt=''),
         pipeline=val_pipeline))
 
-test_dataloader = val_dataloader
-
 val_evaluator = [
     dict(type='PSNR', prefix='classic5'),
     dict(type='SSIM', prefix='classic5'),
 ]
 
-test_evaluator = val_evaluator
+test_dataloader = _base_.test_dataloader
+for dataloader in test_dataloader:
+    test_pipeline = dataloader['dataset']['pipeline']
+    test_pipeline[0]['color_type'] = 'grayscale'
+    test_pipeline[1]['color_type'] = 'grayscale'
+    test_pipeline[2]['params']['color_type'] = 'grayscale'
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_600_000, val_interval=5000)

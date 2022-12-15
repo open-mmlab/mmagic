@@ -15,5 +15,6 @@ val_pipeline = val_dataloader['dataset']['pipeline']
 val_pipeline[2]['params']['quality'] = [quality, quality]
 
 test_dataloader = _base_.test_dataloader
-test_pipeline = test_dataloader['dataset']['pipeline']
-test_pipeline[2]['params']['quality'] = [quality, quality]
+for dataloader in test_dataloader:
+    test_pipeline = dataloader['dataset']['pipeline']
+    test_pipeline[2]['params']['quality'] = [quality, quality]

@@ -1,4 +1,7 @@
-_base_ = ['../_base_/default_runtime.py']
+_base_ = [
+    '../_base_/default_runtime.py',
+    '../_base_/datasets/decompression_test_config.py'
+]
 
 experiment_name = 'swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10'
 work_dir = f'./work_dirs/{experiment_name}'
@@ -108,14 +111,10 @@ val_dataloader = dict(
         data_prefix=dict(img='', gt=''),
         pipeline=val_pipeline))
 
-test_dataloader = val_dataloader
-
 val_evaluator = [
     dict(type='PSNR', prefix='LIVE1'),
     dict(type='SSIM', prefix='LIVE1'),
 ]
-
-test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_600_000, val_interval=5000)
