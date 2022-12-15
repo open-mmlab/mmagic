@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Optional
+from typing import Dict, List, Optional, Union
 
 import torch
 from mmengine.model import BaseModel
@@ -33,12 +33,12 @@ class BaseEditModel(BaseModel):
     """
 
     def __init__(self,
-                 generator,
-                 pixel_loss,
-                 train_cfg=None,
-                 test_cfg=None,
-                 init_cfg=None,
-                 data_preprocessor=None):
+                 generator: dict,
+                 pixel_loss: dict,
+                 train_cfg: Optional[dict] = None,
+                 test_cfg: Optional[dict] = None,
+                 init_cfg: Optional[dict] = None,
+                 data_preprocessor: Optional[dict] = None):
         super().__init__(
             init_cfg=init_cfg, data_preprocessor=data_preprocessor)
 
@@ -55,7 +55,7 @@ class BaseEditModel(BaseModel):
                 inputs: torch.Tensor,
                 data_samples: Optional[List[EditDataSample]] = None,
                 mode: str = 'tensor',
-                **kwargs):
+                **kwargs) -> Union[torch.Tensor, List[EditDataSample], dict]:
         """Returns losses or predictions of training, validation, testing, and
         simple inference process.
 
@@ -116,12 +116,17 @@ class BaseEditModel(BaseModel):
         elif mode == 'loss':
             return self.forward_train(inputs, data_samples, **kwargs)
 
-    def convert_to_datasample(self, inputs, data_samples):
+    def convert_to_datasample(self, inputs: List[EditDataSample],
+                              data_samples: List[EditDataSample]
+                              ) -> List[EditDataSample]:
         for data_sample, output in zip(inputs, data_samples):
             data_sample.output = output
         return inputs
 
-    def forward_tensor(self, inputs, data_samples=None, **kwargs):
+    def forward_tensor(self,
+                       inputs: torch.Tensor,
+                       data_samples: Optional[List[EditDataSample]] = None,
+                       **kwargs) -> torch.Tensor:
         """Forward tensor. Returns result of simple forward.
 
         Args:
@@ -138,7 +143,10 @@ class BaseEditModel(BaseModel):
 
         return feats
 
-    def forward_inference(self, inputs, data_samples=None, **kwargs):
+    def forward_inference(self,
+                          inputs: torch.Tensor,
+                          data_samples: Optional[List[EditDataSample]] = None,
+                          **kwargs) -> List[EditDataSample]:
         """Forward inference. Returns predictions of validation, testing, and
         simple inference.
 
@@ -163,7 +171,10 @@ class BaseEditModel(BaseModel):
 
         return predictions
 
-    def forward_train(self, inputs, data_samples=None, **kwargs):
+    def forward_train(self,
+                      inputs: torch.Tensor,
+                      data_samples: Optional[List[EditDataSample]] = None,
+                      **kwargs) -> Dict[str, torch.Tensor]:
         """Forward training. Returns dict of losses of training.
 
         Args:

@@ -1,7 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional, Sequence
+
 import torch
 from mmcv.cnn import ConvModule
-from torch import nn
+from torch import Tensor, nn
 from torch.nn import functional as F
 
 from .separable_conv_module import DepthwiseSeparableConvModule
@@ -23,7 +25,9 @@ class ASPPPooling(nn.Sequential):
         act_cfg (dict): Config dict for activation layer.
     """
 
-    def __init__(self, in_channels, out_channels, conv_cfg, norm_cfg, act_cfg):
+    def __init__(self, in_channels: int, out_channels: int,
+                 conv_cfg: Optional[dict], norm_cfg: Optional[dict],
+                 act_cfg: Optional[dict]):
         super().__init__(
             nn.AdaptiveAvgPool2d(1),
             ConvModule(
@@ -34,7 +38,7 @@ class ASPPPooling(nn.Sequential):
                 norm_cfg=norm_cfg,
                 act_cfg=act_cfg))
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """Forward function for ASPP Pooling module.
 
         Args:
@@ -79,14 +83,14 @@ class ASPP(nn.Module):
     """
 
     def __init__(self,
-                 in_channels,
-                 out_channels=256,
-                 mid_channels=256,
-                 dilations=(12, 24, 36),
-                 conv_cfg=None,
-                 norm_cfg=dict(type='BN'),
-                 act_cfg=dict(type='ReLU'),
-                 separable_conv=False):
+                 in_channels: int,
+                 out_channels: int = 256,
+                 mid_channels: int = 256,
+                 dilations: Sequence[int] = (12, 24, 36),
+                 conv_cfg: Optional[dict] = None,
+                 norm_cfg: Optional[dict] = dict(type='BN'),
+                 act_cfg: Optional[dict] = dict(type='ReLU'),
+                 separable_conv: bool = False):
         super().__init__()
 
         if separable_conv:
@@ -131,7 +135,7 @@ class ASPP(nn.Module):
                 norm_cfg=norm_cfg,
                 act_cfg=act_cfg), nn.Dropout(0.5))
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """Forward function for ASPP module.
 
         Args:
