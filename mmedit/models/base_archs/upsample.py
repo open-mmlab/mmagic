@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
 import torch.nn.functional as F
+from torch import Tensor
 
 from .sr_backbone import default_init_weights
 
@@ -18,8 +19,8 @@ class PixelShufflePack(nn.Module):
         Upsampled feature map.
     """
 
-    def __init__(self, in_channels, out_channels, scale_factor,
-                 upsample_kernel):
+    def __init__(self, in_channels: int, out_channels: int, scale_factor: int,
+                 upsample_kernel: int):
         super().__init__()
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -32,11 +33,11 @@ class PixelShufflePack(nn.Module):
             padding=(self.upsample_kernel - 1) // 2)
         self.init_weights()
 
-    def init_weights(self):
+    def init_weights(self) -> None:
         """Initialize weights for PixelShufflePack."""
         default_init_weights(self, 1)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """Forward function for PixelShufflePack.
 
         Args:

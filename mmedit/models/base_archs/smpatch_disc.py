@@ -1,8 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch.nn as nn
 from mmcv.cnn import ConvModule
 from mmengine import MMLogger
 from mmengine.runner import load_checkpoint
+from torch import Tensor
 
 from mmedit.models.utils import generation_init_weights
 from mmedit.registry import COMPONENTS
@@ -29,12 +32,12 @@ class SoftMaskPatchDiscriminator(nn.Module):
     """
 
     def __init__(self,
-                 in_channels,
-                 base_channels=64,
-                 num_conv=3,
-                 norm_cfg=None,
-                 init_cfg=dict(type='normal', gain=0.02),
-                 with_spectral_norm=False):
+                 in_channels: int,
+                 base_channels: Optional[int] = 64,
+                 num_conv: Optional[int] = 3,
+                 norm_cfg: Optional[dict] = None,
+                 init_cfg: Optional[dict] = dict(type='normal', gain=0.02),
+                 with_spectral_norm: Optional[bool] = False):
         super().__init__()
 
         kernel_size = 4
@@ -104,7 +107,7 @@ class SoftMaskPatchDiscriminator(nn.Module):
         self.init_gain = 0.02 if init_cfg is None else init_cfg.get(
             'gain', 0.02)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """Forward function.
 
         Args:
@@ -115,7 +118,7 @@ class SoftMaskPatchDiscriminator(nn.Module):
         """
         return self.model(x)
 
-    def init_weights(self, pretrained=None):
+    def init_weights(self, pretrained: Optional[str] = None) -> None:
         """Initialize weights for the model.
 
         Args:
