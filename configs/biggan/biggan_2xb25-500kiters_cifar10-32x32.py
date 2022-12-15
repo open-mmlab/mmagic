@@ -13,7 +13,7 @@ ema_config = dict(
 model = dict(
     type='BigGAN',
     num_classes=10,
-    data_preprocessor=dict(type='GenDataPreprocessor', rgb_to_bgr=True),
+    data_preprocessor=dict(type='EditDataPreprocessor', rgb_to_bgr=True),
     generator=dict(
         type='BigGANGenerator',
         output_scale=32,

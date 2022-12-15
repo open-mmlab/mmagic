@@ -20,8 +20,7 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(1, -1, 1, 1),
+        only_norm_gt_in_training=True,
     ))
 
 train_dataloader = dict(

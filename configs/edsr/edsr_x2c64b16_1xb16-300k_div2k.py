@@ -24,8 +24,11 @@ model = dict(
     train_cfg=dict(),
     test_cfg=dict(),
     data_preprocessor=dict(
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
-                                                             255.]))
+        type='EditDataPreprocessor',
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.],
+        only_norm_gt_in_training=True,
+    ))
 
 train_pipeline = [
     dict(

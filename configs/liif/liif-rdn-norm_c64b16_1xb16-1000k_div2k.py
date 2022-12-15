@@ -36,5 +36,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0.5 * 255, 0.5 * 255, 0.5 * 255],
         std=[0.5 * 255, 0.5 * 255, 0.5 * 255],
-        input_view=(-1, 1, 1),
-        output_view=(1, -1)))
+        output_view=(1, -1),
+        only_norm_gt_in_training=True,
+    ))
