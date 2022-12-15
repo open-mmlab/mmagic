@@ -113,7 +113,7 @@ class AOTInpaintor(OneStageInpaintor):
         masks = torch.stack(
             list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
 
-        masked_imgs = inputs['img']  # N,3,H,W
+        masked_imgs = inputs  # N,3,H,W
         masked_imgs = masked_imgs.float() + masks
 
         input_xs = torch.cat([masked_imgs, masks], dim=1)  # N,4,H,W

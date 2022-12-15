@@ -69,7 +69,7 @@ def test_aot_inpaintor():
     # # check forward_test
     data = inpaintor.data_preprocessor(data_batch, True)
     data_inputs, data_sample = data['inputs'], data['data_samples']
-    output = inpaintor.forward_test(data_inputs, data_sample)
+    output = inpaintor.forward_test(data_inputs['img'], data_sample)
     prediction = output[0]
     assert 'fake_res' in prediction
     assert 'fake_img' in prediction
