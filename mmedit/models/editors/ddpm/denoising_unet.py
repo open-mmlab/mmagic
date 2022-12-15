@@ -3,6 +3,7 @@ import math
 from copy import deepcopy
 from functools import partial
 from typing import Union, Optional, Tuple
+from addict import Dict
 
 import mmengine
 import numpy as np
@@ -25,6 +26,10 @@ from .unet_blocks import (
     get_down_block,
     get_up_block,
 )
+
+from mmengine.logging import MMLogger
+logger = MMLogger.get_current_instance()
+
 
 class EmbedSequential(nn.Sequential):
     """A sequential module that passes timestep embeddings to the children that
@@ -893,8 +898,8 @@ class DenoisingUnet(BaseModule):
                  pretrained=None,
                 
                 unet_type = '',
-                embedding_preprocess=False,
-                out_channels: int = 4,
+                conv_before_embedding=False,
+                out_channels: int = 8,
                 flip_sin_to_cos: bool = True,
                 freq_shift: int = 0,
                 down_block_types: Tuple[str] = (
@@ -921,7 +926,6 @@ class DenoisingUnet(BaseModule):
                 attention_head_dim: Union[int, Tuple[int]] = 8,
                 dual_cross_attention: bool = False,
                 use_linear_projection: bool = False,
-                num_class_embeds: Optional[int] = None,
         ):
 
         super().__init__()
@@ -969,19 +973,30 @@ class DenoisingUnet(BaseModule):
             raise ValueError('Only support list or dict for `channels_cfg`, '
                              f'receive {type(channels_cfg)}')
         
-        if embedding_preprocess:
-            self.conv_in = nn.Conv2d(in_channels, self.channel_factor_list[0], kernel_size=3, padding=(1, 1))
-            # time
-            self.time_proj = Timesteps(self.channel_factor_list[0], flip_sin_to_cos, freq_shift)
-
         embedding_channels = base_channels * 4 \
             if embedding_channels == -1 else embedding_channels
-        self.time_embedding = TimeEmbedding(
-            base_channels,
-            embedding_channels=embedding_channels,
-            embedding_mode=time_embedding_mode,
-            embedding_cfg=time_embedding_cfg,
-            act_cfg=act_cfg)
+
+        # init the channel scale factor
+        scale = 1
+        ch = int(base_channels * self.channel_factor_list[0])
+        self.in_channels_list = [ch]
+
+        if conv_before_embedding:
+            self.conv_in = nn.Conv2d(in_channels, ch, kernel_size=3, padding=(1, 1))
+            # time
+            self.time_proj = Timesteps(ch, flip_sin_to_cos, freq_shift)
+            self.time_embedding = TimestepEmbedding(base_channels, embedding_channels)
+
+        else:
+            self.time_embedding = TimeEmbedding(
+                base_channels,
+                embedding_channels=embedding_channels,
+                embedding_mode=time_embedding_mode,
+                embedding_cfg=time_embedding_cfg,
+                act_cfg=act_cfg)
+
+            self.in_blocks = nn.ModuleList(
+                [EmbedSequential(nn.Conv2d(in_channels, ch, 3, 1, padding=1))])
 
         if self.num_classes != 0:
             self.label_embedding = nn.Embedding(self.num_classes,
@@ -1007,13 +1022,6 @@ class DenoisingUnet(BaseModule):
         self.downsample_cfg.setdefault('with_conv', downsample_conv)
         self.upsample_cfg = deepcopy(upsample_cfg)
         self.upsample_cfg.setdefault('with_conv', upsample_conv)
-
-        # init the channel scale factor
-        scale = 1
-        ch = int(base_channels * self.channel_factor_list[0])
-        self.in_blocks = nn.ModuleList(
-            [EmbedSequential(nn.Conv2d(in_channels, ch, 3, 1, padding=1))])
-        self.in_channels_list = [ch]
 
         self.down_blocks = nn.ModuleList([])
         self.mid_block = None
@@ -1107,7 +1115,8 @@ class DenoisingUnet(BaseModule):
 
         # construct the decoder part of Unet
         in_channels_list = deepcopy(self.in_channels_list)
-        self.out_blocks = nn.ModuleList()
+        if self.unet_type != 'stable':
+            self.out_blocks = nn.ModuleList()
         for level, factor in enumerate(self.channel_factor_list[::-1]):
 
             if self.unet_type == 'stable':
@@ -1170,7 +1179,7 @@ class DenoisingUnet(BaseModule):
             # out
             self.conv_norm_out = nn.GroupNorm(num_channels=block_out_channels[0], num_groups=norm_num_groups, eps=norm_eps)
             self.conv_act = nn.SiLU()
-            self.conv_out = nn.Conv2d(block_out_channels[0], out_channels, kernel_size=3, padding=1)
+            self.conv_out = nn.Conv2d(block_out_channels[0], self.out_channels, kernel_size=3, padding=1)
         else:
             self.out = ConvModule(
                 in_channels=in_channels_,
@@ -1184,7 +1193,14 @@ class DenoisingUnet(BaseModule):
 
         self.init_weights(pretrained)
 
-    def forward(self, x_t, t, label=None, return_noise=False):
+    def forward(
+            self,
+            x_t,
+            t,
+            encoder_hidden_states=None,
+            label=None,
+            return_noise=False
+        ):
         """Forward function.
         Args:
             x_t (torch.Tensor): Diffused image at timestep `t` to denoise.
@@ -1200,6 +1216,92 @@ class DenoisingUnet(BaseModule):
         Returns:
             torch.Tensor | dict: If not ``return_noise``
         """
+        if self.unet_type == 'stable':
+            # By default samples have to be AT least a multiple of the overall upsampling factor.
+            # The overall upsampling factor is equal to 2 ** (# num of upsampling layears).
+            # However, the upsampling interpolation output size can be forced to fit any upsampling size
+            # on the fly if necessary.
+            sample = x_t
+            default_overall_up_factor = 2**self.num_upsamplers
+
+            # upsample size should be forwarded when sample is not a multiple of `default_overall_up_factor`
+            forward_upsample_size = False
+            upsample_size = None
+
+            if any(s % default_overall_up_factor != 0 for s in sample.shape[-2:]):
+                logger.info("Forward upsample size to force interpolation output size.")
+                forward_upsample_size = True
+
+            # 1. time
+            timesteps = t
+            if not torch.is_tensor(timesteps):
+                # TODO: this requires sync between CPU and GPU. So try to pass timesteps as tensors if you can
+                timesteps = torch.tensor([timesteps], dtype=torch.long, device=sample.device)
+            elif torch.is_tensor(timesteps) and len(timesteps.shape) == 0:
+                timesteps = timesteps[None].to(sample.device)
+
+            # broadcast to batch dimension in a way that's compatible with ONNX/Core ML
+            timesteps = timesteps.expand(sample.shape[0])
+
+            t_emb = self.time_proj(timesteps)
+
+            # timesteps does not contain any weights and will always return f32 tensors
+            # but time_embedding might actually be running in fp16. so we need to cast here.
+            # there might be better ways to encapsulate this.
+            t_emb = t_emb.to(dtype=self.dtype)
+            emb = self.time_embedding(t_emb)
+
+            # 2. pre-process
+            sample = self.conv_in(sample)
+
+            # 3. down
+            down_block_res_samples = (sample,)
+            for downsample_block in self.down_blocks:
+                if hasattr(downsample_block, "attentions") and downsample_block.attentions is not None:
+                    sample, res_samples = downsample_block(
+                        hidden_states=sample,
+                        temb=emb,
+                        encoder_hidden_states=encoder_hidden_states,
+                    )
+                else:
+                    sample, res_samples = downsample_block(hidden_states=sample, temb=emb)
+
+                down_block_res_samples += res_samples
+
+            # 4. mid
+            sample = self.mid_block(sample, emb, encoder_hidden_states=encoder_hidden_states)
+
+            # 5. up
+            for i, upsample_block in enumerate(self.up_blocks):
+                is_final_block = i == len(self.up_blocks) - 1
+
+                res_samples = down_block_res_samples[-len(upsample_block.resnets) :]
+                down_block_res_samples = down_block_res_samples[: -len(upsample_block.resnets)]
+
+                # if we have not reached the final block and need to forward the
+                # upsample size, we do it here
+                if not is_final_block and forward_upsample_size:
+                    upsample_size = down_block_res_samples[-1].shape[2:]
+
+                if hasattr(upsample_block, "attentions") and upsample_block.attentions is not None:
+                    sample = upsample_block(
+                        hidden_states=sample,
+                        temb=emb,
+                        res_hidden_states_tuple=res_samples,
+                        encoder_hidden_states=encoder_hidden_states,
+                        upsample_size=upsample_size,
+                    )
+                else:
+                    sample = upsample_block(
+                        hidden_states=sample, temb=emb, res_hidden_states_tuple=res_samples, upsample_size=upsample_size
+                    )
+            # 6. post-process
+            sample = self.conv_norm_out(sample)
+            sample = self.conv_act(sample)
+            sample = self.conv_out(sample)
+
+            return Dict(sample=sample)
+        
         if not torch.is_tensor(t):
             t = torch.tensor([t], dtype=torch.long, device=x_t.device)
         elif torch.is_tensor(t) and len(t.shape) == 0:
