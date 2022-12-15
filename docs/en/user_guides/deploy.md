@@ -1,4 +1,4 @@
-# Tutorial 7: Deploy models in MMEditing
+# Tutorial 8: Deploy models in MMEditing
 
 [MMDeploy](https://github.com/open-mmlab/mmdeploy) is an open-source deep learning model deployment toolset.
 MMDeploy supports deploying models in MMEditing. Please refer to [MMDeploy](https://github.com/open-mmlab/mmdeploy) for more information.

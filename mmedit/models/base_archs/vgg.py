@@ -1,9 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Optional
+from typing import Dict, List, Optional
 
 import torch.nn as nn
 from mmengine.model import BaseModule
 from mmengine.model.weight_init import constant_init, xavier_init
+from torch import Tensor
 
 from mmedit.registry import MODELS
 from ..base_archs.aspp import ASPP
@@ -28,10 +29,10 @@ class VGG16(BaseModule):
     """
 
     def __init__(self,
-                 in_channels,
-                 batch_norm=False,
-                 aspp=False,
-                 dilations=None,
+                 in_channels: int,
+                 batch_norm: Optional[bool] = False,
+                 aspp: Optional[bool] = False,
+                 dilations: Optional[List[int]] = None,
                  init_cfg: Optional[dict] = None):
         super().__init__(init_cfg=init_cfg)
         self.batch_norm = batch_norm
@@ -55,7 +56,8 @@ class VGG16(BaseModule):
         else:
             self.out_channels = 512
 
-    def _make_layer(self, inplanes, planes, convs_layers):
+    def _make_layer(self, inplanes: int, planes: int,
+                    convs_layers: int) -> nn.Module:
         layers = []
         for _ in range(convs_layers):
             conv2d = nn.Conv2d(inplanes, planes, kernel_size=3, padding=1)
@@ -68,7 +70,7 @@ class VGG16(BaseModule):
         layers += [nn.MaxPool2d(kernel_size=2, stride=2, return_indices=True)]
         return nn.Sequential(*layers)
 
-    def init_weights(self):
+    def init_weights(self) -> None:
         """Init weights for the model."""
         if self.init_cfg is not None:
             super().init_weights()
@@ -80,7 +82,7 @@ class VGG16(BaseModule):
                 elif isinstance(m, nn.BatchNorm2d):
                     constant_init(m, 1)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Dict[str, Tensor]:
         """Forward function for ASPP module.
 
         Args:

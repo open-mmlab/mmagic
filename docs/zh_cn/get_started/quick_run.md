@@ -1,3 +1,5 @@
+# 快速运行 （待更新）
+
 ## 使用预训练模型进行推理
 
 我们提供用于在完整数据集上进行预训练模型评估和特定任务图像演示的测试脚本。
@@ -52,7 +54,7 @@ GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/exampl
 - `--deterministic`: 与 `--seed` 相关，此参数决定是否为 CUDNN 后端设置确定性的选项。如果指定该参数，会将 `torch.backends.cudnn.deterministic` 设置为 `True`，将 `torch.backends.cudnn.benchmark` 设置为 `False`。
 - `--cfg-options`:  如果指明，这里的键值对将会被合并到配置文件中。
 
-注：目前，我们不使用像 [MMDetection](https://github.com/open-mmlab/mmdetection) 那样的 `--eval` 参数来指定评估指标。 评估指标在配置文件中给出（参见 [config.md](config.md)）。
+注：目前，我们不使用像 [MMDetection](https://github.com/open-mmlab/mmdetection) 那样的 `--eval` 参数来指定评估指标。 评估指标在配置文件中给出（参见 [config.md](../user_guides/config.md)）。
 
 ## 训练一个模型
 

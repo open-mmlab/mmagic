@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
+from torch import Tensor
 
 from ..utils import default_init_weights
 
@@ -54,7 +55,7 @@ class ResidualBlockNoBN(nn.Module):
             Default: 1.0.
     """
 
-    def __init__(self, mid_channels=64, res_scale=1.0):
+    def __init__(self, mid_channels: int = 64, res_scale: float = 1.0):
         super().__init__()
         self.res_scale = res_scale
         self.conv1 = nn.Conv2d(mid_channels, mid_channels, 3, 1, 1, bias=True)
@@ -67,7 +68,7 @@ class ResidualBlockNoBN(nn.Module):
         if res_scale == 1.0:
             self.init_weights()
 
-    def init_weights(self):
+    def init_weights(self) -> None:
         """Initialize weights for ResidualBlockNoBN.
 
         Initialization methods like `kaiming_init` are for VGG-style modules.
@@ -79,7 +80,7 @@ class ResidualBlockNoBN(nn.Module):
         for m in [self.conv1, self.conv2]:
             default_init_weights(m, 0.1)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """Forward function.
 
         Args:
