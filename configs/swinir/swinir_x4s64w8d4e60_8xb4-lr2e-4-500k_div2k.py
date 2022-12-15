@@ -8,12 +8,13 @@ scale = 4
 img_size = 64
 
 # model settings
-model = _base_.model
-model['generator']['img_size'] = img_size
-model['generator']['depths'] = [6, 6, 6, 6]
-model['generator']['embed_dim'] = 60
-model['generator']['num_heads'] = [6, 6, 6, 6]
-model['generator']['upsampler'] = 'pixelshuffledirect'
+model = dict(
+    generator=dict(
+        img_size=img_size,
+        depths=[6, 6, 6, 6],
+        embed_dim=60,
+        num_heads=[6, 6, 6, 6],
+        upsampler='pixelshuffledirect'))
 
 # modify patch size of train_dataloader
 train_dataloader = _base_.train_dataloader

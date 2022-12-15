@@ -8,8 +8,7 @@ scale = 3
 img_size = 64
 
 # model settings
-model = _base_.model
-model['generator']['img_size'] = img_size
+model = dict(generator=dict(img_size=img_size))
 
 # modify patch size of train_pipeline
 train_pipeline = _base_.train_pipeline

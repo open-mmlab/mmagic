@@ -26,8 +26,6 @@ model = dict(
         upsampler='pixelshuffle',
         resi_connection='1conv'),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-    train_cfg=dict(),
-    test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
                                                              255.]))
@@ -57,6 +55,7 @@ train_pipeline = [
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     dict(type='PackEditInputs')
 ]
+
 val_pipeline = [
     dict(
         type='LoadImageFromFile',
@@ -126,12 +125,3 @@ param_scheduler = dict(
     by_epoch=False,
     milestones=[250000, 400000, 450000, 475000],
     gamma=0.5)
-
-default_hooks = dict(
-    checkpoint=dict(
-        type='CheckpointHook',
-        interval=5000,
-        save_optimizer=True,
-        by_epoch=False,
-        out_dir=save_dir,
-    ))

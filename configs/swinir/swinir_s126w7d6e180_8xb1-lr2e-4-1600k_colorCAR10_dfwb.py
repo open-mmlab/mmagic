@@ -23,8 +23,6 @@ model = dict(
         upsampler='',
         resi_connection='1conv'),
     pixel_loss=dict(type='CharbonnierLoss', eps=1e-9),
-    train_cfg=dict(),
-    test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
                                                              255.]))
@@ -58,6 +56,7 @@ train_pipeline = [
         keys=['img']),
     dict(type='PackEditInputs')
 ]
+
 val_pipeline = [
     dict(
         type='LoadImageFromFile',
@@ -135,14 +134,3 @@ param_scheduler = dict(
     by_epoch=False,
     milestones=[800000, 1200000, 1400000, 1500000, 1600000],
     gamma=0.5)
-
-default_hooks = dict(
-    checkpoint=dict(
-        type='CheckpointHook',
-        interval=5000,
-        save_optimizer=True,
-        by_epoch=False,
-        out_dir=save_dir,
-    ),
-    logger=dict(type='LoggerHook', interval=200),
-)
