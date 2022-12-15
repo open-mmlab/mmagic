@@ -1,18 +1,13 @@
 _base_ = [
     '../_base_/default_runtime.py',
-    '../_base_/datasets/denoising-gaussian_color_test_config.py'
+    '../_base_/datasets/decompression_test_config.py'
 ]
 
-experiment_name = 'swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb'
+experiment_name = 'swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
-# modify sigma of RandomNoise
-sigma = 15
-test_dataloader = _base_.test_dataloader
-for dataloader in test_dataloader:
-    test_pipeline = dataloader['dataset']['pipeline']
-    test_pipeline[2]['params']['gaussian_sigma'] = [sigma * 255, sigma * 255]
+quality = 10
 
 # model settings
 model = dict(
@@ -21,9 +16,9 @@ model = dict(
         type='SwinIRNet',
         upscale=1,
         in_chans=3,
-        img_size=128,
-        window_size=8,
-        img_range=1.0,
+        img_size=126,
+        window_size=7,
+        img_range=255.0,
         depths=[6, 6, 6, 6, 6, 6],
         embed_dim=180,
         num_heads=[6, 6, 6, 6, 6, 6],
@@ -31,8 +26,6 @@ model = dict(
         upsampler='',
         resi_connection='1conv'),
     pixel_loss=dict(type='CharbonnierLoss', eps=1e-9),
-    train_cfg=dict(),
-    test_cfg=dict(),
     data_preprocessor=dict(
         type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
                                                              255.]))
@@ -51,7 +44,7 @@ train_pipeline = [
         channel_order='rgb',
         imdecode_backend='cv2'),
     dict(type='SetValues', dictionary=dict(scale=1)),
-    dict(type='PairedRandomCrop', gt_patch_size=128),
+    dict(type='PairedRandomCrop', gt_patch_size=126),
     dict(
         type='Flip',
         keys=['img', 'gt'],
@@ -61,12 +54,8 @@ train_pipeline = [
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     dict(
-        type='RandomNoise',
-        params=dict(
-            noise_type=['gaussian'],
-            noise_prob=[1],
-            gaussian_sigma=[sigma * 255, sigma * 255],
-            gaussian_gray_noise_prob=0),
+        type='RandomJPEGCompression',
+        params=dict(quality=[quality, quality], color_type='color'),
         keys=['img']),
     dict(type='PackEditInputs')
 ]
@@ -85,12 +74,8 @@ val_pipeline = [
         channel_order='rgb',
         imdecode_backend='cv2'),
     dict(
-        type='RandomNoise',
-        params=dict(
-            noise_type=['gaussian'],
-            noise_prob=[1],
-            gaussian_sigma=[sigma * 255, sigma * 255],
-            gaussian_gray_noise_prob=0),
+        type='RandomJPEGCompression',
+        params=dict(quality=[quality, quality], color_type='color'),
         keys=['img']),
     dict(type='PackEditInputs')
 ]
@@ -100,7 +85,7 @@ dataset_type = 'BasicImageDataset'
 data_root = 'data'
 
 train_dataloader = dict(
-    num_workers=4,
+    num_workers=2,
     batch_size=1,
     drop_last=True,
     persistent_workers=False,
@@ -108,32 +93,33 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         ann_file='meta_info_DFWB8550sub_GT.txt',
-        metainfo=dict(dataset_type='dfwb', task_name='denoising'),
+        metainfo=dict(dataset_type='dfwb', task_name='CAR'),
         data_root=data_root + '/DFWB',
         data_prefix=dict(img='', gt=''),
         filename_tmpl=dict(img='{}', gt='{}'),
         pipeline=train_pipeline))
 
 val_dataloader = dict(
-    num_workers=4,
+    num_workers=2,
     persistent_workers=False,
     drop_last=False,
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(dataset_type='mcmaster', task_name='denoising'),
-        data_root=data_root + '/McMaster',
+        metainfo=dict(dataset_type='live1', task_name='CAR'),
+        data_root=data_root + '/LIVE1',
         data_prefix=dict(img='', gt=''),
         pipeline=val_pipeline))
 
 val_evaluator = [
-    dict(type='PSNR', prefix='McMaster'),
-    dict(type='SSIM', prefix='McMaster'),
+    dict(type='PSNR', prefix='LIVE1'),
+    dict(type='SSIM', prefix='LIVE1'),
 ]
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_600_000, val_interval=5000)
 val_cfg = dict(type='ValLoop')
+test_cfg = dict(type='TestLoop')
 
 # optimizer
 optim_wrapper = dict(
@@ -147,16 +133,3 @@ param_scheduler = dict(
     by_epoch=False,
     milestones=[800000, 1200000, 1400000, 1500000, 1600000],
     gamma=0.5)
-
-default_hooks = dict(
-    checkpoint=dict(
-        type='CheckpointHook',
-        interval=5000,
-        save_optimizer=True,
-        by_epoch=False,
-        out_dir=save_dir,
-    ),
-    logger=dict(type='LoggerHook', interval=200),
-)
-
-randomness = dict(seed=0, diff_rank_seed=True)
