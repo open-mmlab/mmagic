@@ -137,6 +137,7 @@ class OneStageInpaintor(BaseModel):
                 - If ``mode == tensor``, return a tensor or ``tuple`` of tensor
                   or ``dict`` or tensor for custom use.
         """
+        inputs = inputs['img']
         if mode == 'tensor':
             raw = self.forward_tensor(inputs, data_samples)
             return raw

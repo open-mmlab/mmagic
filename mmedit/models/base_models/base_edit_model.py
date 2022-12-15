@@ -103,7 +103,8 @@ class BaseEditModel(BaseModel):
                 - If ``mode == tensor``, return a tensor or ``tuple`` of tensor
                   or ``dict`` or tensor for custom use.
         """
-
+        if isinstance(inputs, dict):
+            inputs = inputs['img']
         if mode == 'tensor':
             return self.forward_tensor(inputs, data_samples, **kwargs)
 
