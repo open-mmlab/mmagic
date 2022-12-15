@@ -85,7 +85,7 @@ class PConvInpaintor(OneStageInpaintor):
         batch_inputs, data_samples = data['inputs'], data['data_samples']
         log_vars = {}
 
-        masked_img = batch_inputs  # float
+        masked_img = batch_inputs['img']  # float
         gt_img = torch.stack([d.gt_img.data
                               for d in data_samples])  # float, [-1,1]
         # print(gt_img.min(), gt_img.max(), gt_img.dtype)

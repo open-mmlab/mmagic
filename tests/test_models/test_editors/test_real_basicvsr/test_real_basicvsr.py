@@ -78,11 +78,11 @@ def test_real_basicvsr(init_weights):
         discriminator=OptimWrapper(optimizer_d))
 
     # prepare data
-    inputs = torch.rand(1, 5, 3, 64, 64)
+    inputs = torch.rand(5, 3, 64, 64)
     target = torch.rand(5, 3, 256, 256)
     data_sample = EditDataSample(
         gt_img=PixelData(data=target), gt_unsharp=PixelData(data=target))
-    data = dict(inputs=inputs, data_samples=[data_sample])
+    data = dict(inputs=[inputs], data_samples=[data_sample])
 
     # train
     log_vars = model.train_step(data, optim_wrapper)

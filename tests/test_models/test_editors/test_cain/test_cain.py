@@ -99,9 +99,9 @@ def test_cain():
         generator=dict(type='CAINNet'),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
         data_preprocessor=EditDataPreprocessor(
-            input_view=(1, -1, 1, 1),
-            output_view=(-1, 1, 1),
-            pad_args=dict(mode='reflect')))
+            pad_mode='reflect',
+            only_norm_gt_in_training=True,
+        ))
 
     # test attributes
     assert isinstance(model, CAIN)
@@ -113,10 +113,10 @@ def test_cain():
     optim_wrapper = OptimWrapper(optimizer)
 
     # prepare data
-    inputs = torch.rand(1, 2, 3, 32, 32)
+    inputs = torch.rand(2, 3, 32, 32)
     target = torch.rand(3, 32, 32)
     data_sample = EditDataSample(gt_img=PixelData(data=target))
-    data = dict(inputs=inputs, data_samples=[data_sample])
+    data = dict(inputs=[inputs], data_samples=[data_sample])
 
     # train
     log_vars = model.train_step(data, optim_wrapper)
