@@ -55,7 +55,6 @@ class UNet2DConditionModel(nn.Module):
 
     def __init__(
         self,
-        sample_size: Optional[int] = None,
         in_channels: int = 4,
         out_channels: int = 4,
         center_input_sample: bool = False,
@@ -84,7 +83,6 @@ class UNet2DConditionModel(nn.Module):
     ):
         super().__init__()
 
-        self.sample_size = sample_size
         self.in_channels = in_channels
         self.center_input_sample = center_input_sample
         self.num_class_embeds = num_class_embeds

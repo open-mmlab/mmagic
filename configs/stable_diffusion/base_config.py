@@ -25,7 +25,6 @@ unet = dict(
     norm_eps=1e-05,
     norm_num_groups=32,
     out_channels=4,
-    sample_size=64,
     up_block_types=[
         "UpBlock2D",
         "CrossAttnUpBlock2D",

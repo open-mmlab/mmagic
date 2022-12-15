@@ -27,6 +27,7 @@ class StableDiffuser(nn.Module):
             vae_cfg,
             pretrained_ckpt_path,
             requires_safety_checker=True,
+            unet_sample_size=64,
             **kwargs):
         super().__init__()
         """
@@ -42,6 +43,7 @@ class StableDiffuser(nn.Module):
         self.scheduler.order = 1
         self.scheduler.init_noise_sigma = 1.0
 
+        self.unet_sample_size = unet_sample_size
         self.unet = MODELS.build(unet_cfg)
         state_dict = torch.load(pretrained_ckpt_path['unet'], map_location="cpu")
         self.unet.load_state_dict(state_dict, strict=True)
@@ -173,8 +175,8 @@ class StableDiffuser(nn.Module):
             (nsfw) content, according to the `safety_checker`.
         """
         # 0. Default height and width to unet
-        height = height or self.unet.sample_size * self.vae_scale_factor
-        width = width or self.unet.sample_size * self.vae_scale_factor
+        height = height or self.unet_sample_size * self.vae_scale_factor
+        width = width or self.unet_sample_size * self.vae_scale_factor
 
         # 1. Check inputs. Raise error if not correct
         self.check_inputs(prompt, height, width, callback_steps)
