@@ -1,6 +1,6 @@
-_base_ = ['swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR10_dfwb.py']
+_base_ = ['swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10.py']
 
-experiment_name = 'swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR40_dfwb'
+experiment_name = 'swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

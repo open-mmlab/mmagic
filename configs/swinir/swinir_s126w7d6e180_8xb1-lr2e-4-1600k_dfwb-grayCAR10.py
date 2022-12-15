@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb'
+experiment_name = 'swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

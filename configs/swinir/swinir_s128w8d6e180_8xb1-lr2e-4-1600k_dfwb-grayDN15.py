@@ -1,9 +1,9 @@
 _base_ = [
     '../_base_/default_runtime.py',
-    '../_base_/datasets/denoising-gaussian_color_test_config.py'
+    '../_base_/datasets/denoising-gaussian_gray_test_config.py'
 ]
 
-experiment_name = 'swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb'
+experiment_name = 'swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
@@ -20,7 +20,7 @@ model = dict(
     generator=dict(
         type='SwinIRNet',
         upscale=1,
-        in_chans=3,
+        in_chans=1,
         img_size=128,
         window_size=8,
         img_range=1.0,
@@ -31,22 +31,18 @@ model = dict(
         upsampler='',
         resi_connection='1conv'),
     pixel_loss=dict(type='CharbonnierLoss', eps=1e-9),
-    data_preprocessor=dict(
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
-                                                             255.]))
+    data_preprocessor=dict(type='EditDataPreprocessor', mean=[0.], std=[255.]))
 
 train_pipeline = [
     dict(
         type='LoadImageFromFile',
         key='img',
-        color_type='color',
-        channel_order='rgb',
+        color_type='grayscale',
         imdecode_backend='cv2'),
     dict(
         type='LoadImageFromFile',
         key='gt',
-        color_type='color',
-        channel_order='rgb',
+        color_type='grayscale',
         imdecode_backend='cv2'),
     dict(type='SetValues', dictionary=dict(scale=1)),
     dict(type='PairedRandomCrop', gt_patch_size=128),
@@ -73,14 +69,12 @@ val_pipeline = [
     dict(
         type='LoadImageFromFile',
         key='img',
-        color_type='color',
-        channel_order='rgb',
+        color_type='grayscale',
         imdecode_backend='cv2'),
     dict(
         type='LoadImageFromFile',
         key='gt',
-        color_type='color',
-        channel_order='rgb',
+        color_type='grayscale',
         imdecode_backend='cv2'),
     dict(
         type='RandomNoise',
@@ -119,14 +113,14 @@ val_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(dataset_type='mcmaster', task_name='denoising'),
-        data_root=data_root + '/McMaster',
+        metainfo=dict(dataset_type='set12', task_name='denoising'),
+        data_root=data_root + '/Set12',
         data_prefix=dict(img='', gt=''),
         pipeline=val_pipeline))
 
 val_evaluator = [
-    dict(type='PSNR', prefix='McMaster'),
-    dict(type='SSIM', prefix='McMaster'),
+    dict(type='PSNR', prefix='Set12'),
+    dict(type='SSIM', prefix='Set12'),
 ]
 
 train_cfg = dict(

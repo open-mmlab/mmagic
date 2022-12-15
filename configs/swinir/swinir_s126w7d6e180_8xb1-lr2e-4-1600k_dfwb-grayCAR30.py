@@ -1,11 +1,11 @@
 _base_ = ['swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb.py']
 
-experiment_name = 'swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb'
+experiment_name = 'swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
 # modify JPEG quality factor of RandomJPEGCompression
-quality = 20
+quality = 30
 train_dataloader = _base_.train_dataloader
 train_pipeline = train_dataloader['dataset']['pipeline']
 train_pipeline[-2]['params']['quality'] = [quality, quality]
