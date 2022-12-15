@@ -45,6 +45,10 @@ Evaluation of our trained BigGAN.
 |               BigGAN 128x128 Best IS               | ImageNet1k |  13.51(1328000)   | **129.07**(1328000) | [config](/configs/biggan/biggan_ajbrock-sn_8xb32-1500kiters_imagenet1k-128x128.py) | [model](https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_b32x8_best_is_iter_1328000_20211111_122911-28c688bc.pth)\|[log](https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_b32x8_1500k_20211111_122548-5315b13d.log.json) |
 | Note: `BigGAN-Deep` trained on `ImageNet1k` will come later. |            |                   |                     |                                                     |                                                       |
 
+### Note on reproducibility
+
+`BigGAN 128x128` model is trained with V100 GPUs and CUDA 10.1 and can hardly reproduce the result with A100 and CUDA 11.3. If you have any idea about the reproducibility, please feel free to contact with us.
+
 ## Converted weights
 
 Since we haven't finished training our models, we provide you with several pre-trained weights which have been evaluated. Here, we refer to [BigGAN-PyTorch](https://github.com/ajbrock/BigGAN-PyTorch) and [pytorch-pretrained-BigGAN](https://github.com/huggingface/pytorch-pretrained-BigGAN).
