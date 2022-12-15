@@ -142,6 +142,72 @@ Models:
       Set5 SSIM: 0.8678
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1hf-Bod4nAo13dRgyHKYiAi260a1sYCT8/view?usp=share_link
+- Config: configs/swinir/swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Image Restoration
+  Weights: https://drive.google.com/file/d/1efvIxFkevJpRsUd-Mvq7OIeeGbBhXtyJ/view?usp=share_link
+- Config: configs/swinir/swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Image Restoration
+  Weights: https://drive.google.com/file/d/1RpeouyxHZbhS0z-uoX8r5Ys2jD8R59IL/view?usp=share_link
+- Config: configs/swinir/swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Image Restoration
+  Weights: https://drive.google.com/file/d/1YryTalO1rqlqtVi7ZSnEGXXqg_Pg4_9w/view?usp=share_link
+- Config: configs/swinir/swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Image Restoration
+  Weights: https://drive.google.com/file/d/1T0XYcNdAVM_UuQlgauHrUSLM_EPB_XCY/view?usp=share_link
+- Config: configs/swinir/swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-gan_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-gan_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Image Restoration
+  Weights: https://drive.google.com/file/d/1RJOir_JbWcjZDKK1Rq6GqDtrE4DQhbKL/view?usp=share_link
+- Config: configs/swinir/swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-psnr_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-psnr_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Image Restoration
+  Weights: https://drive.google.com/file/d/1YAeG9duFEt5yJtFS_iCFI685mgb7UUJi/view?usp=share_link
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN15_dfwb.py
   In Collection: SwinIR
   Metadata:
@@ -153,6 +219,7 @@ Models:
     Metrics:
       BSD68 PSNR: 32.5203
       Set12 PSNR: 33.9731
+      Urban100 PSNR: 34.3424
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/18PmDIFYZtlvyLQnGYvKShO-CdtlPwIwe/view?usp=share_link
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN25_dfwb.py
@@ -166,6 +233,7 @@ Models:
     Metrics:
       BSD68 PSNR: 30.1377
       Set12 PSNR: 31.6434
+      Urban100 PSNR: 31.9493
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1PqC9a-3wfyH6DeVpP2yi6r6stqEB1vfj/view?usp=share_link
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN50_dfwb.py
@@ -179,6 +247,7 @@ Models:
     Metrics:
       BSD68 PSNR: 27.3157
       Set12 PSNR: 28.5651
+      Urban100 PSNR: 28.6626
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1miDCBmxe73XoxkJDLAmqOBbuiY9U6JRz/view?usp=share_link
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb.py
@@ -193,6 +262,7 @@ Models:
       CBSD68 PSNR: 34.4136
       Kodak24 PSNR: 35.3555
       McMaster PSNR: 35.6205
+      Urban100 PSNR: 35.1836
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/16pfIBzAXTv6-3xTsKXEtLkY2pLM-tNFn/view?usp=share_link
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN25_dfwb.py
@@ -207,6 +277,7 @@ Models:
       CBSD68 PSNR: 31.7626
       Kodak24 PSNR: 32.9003
       McMaster PSNR: 33.3198
+      Urban100 PSNR: 32.9458
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN50_dfwb.py
@@ -221,6 +292,7 @@ Models:
       CBSD68 PSNR: 28.5346
       Kodak24 PSNR: 29.8058
       McMaster PSNR: 30.2027
+      Urban100 PSNR: 29.8832
     Task: Image Restoration
   Weights: https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb.py
