@@ -224,7 +224,7 @@ class StableDiffuser(nn.Module):
                 # latent_model_input = self.scheduler.scale_model_input(latent_model_input, t)
 
                 # predict the noise residual
-                noise_pred = self.unet(latent_model_input, t, encoder_hidden_states=text_embeddings).sample
+                noise_pred = self.unet(latent_model_input, t, encoder_hidden_states=text_embeddings)['outputs']
 
                 # perform guidance
                 if do_classifier_free_guidance:

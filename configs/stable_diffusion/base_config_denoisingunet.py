@@ -1,6 +1,5 @@
 unet = dict(
     type="DenoisingUnet",
-    conv_before_embedding=True,
     image_size=512,
     base_channels=320,
     channels_cfg=[

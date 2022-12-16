@@ -898,7 +898,6 @@ class DenoisingUnet(BaseModule):
                  pretrained=None,
                 
                 unet_type = '',
-                conv_before_embedding=False,
                 out_channels: int = 8,
                 flip_sin_to_cos: bool = True,
                 freq_shift: int = 0,
@@ -981,12 +980,12 @@ class DenoisingUnet(BaseModule):
         ch = int(base_channels * self.channel_factor_list[0])
         self.in_channels_list = [ch]
 
-        if conv_before_embedding:
-            self.conv_in = nn.Conv2d(in_channels, ch, kernel_size=3, padding=(1, 1))
+        if self.unet_type == 'stable':
             # time
             self.time_proj = Timesteps(ch, flip_sin_to_cos, freq_shift)
             self.time_embedding = TimestepEmbedding(base_channels, embedding_channels)
 
+            self.conv_in = nn.Conv2d(in_channels, ch, kernel_size=3, padding=(1, 1))
         else:
             self.time_embedding = TimeEmbedding(
                 base_channels,
@@ -1216,60 +1215,64 @@ class DenoisingUnet(BaseModule):
         Returns:
             torch.Tensor | dict: If not ``return_noise``
         """
-        if self.unet_type == 'stable':
-            # By default samples have to be AT least a multiple of the overall upsampling factor.
-            # The overall upsampling factor is equal to 2 ** (# num of upsampling layears).
-            # However, the upsampling interpolation output size can be forced to fit any upsampling size
-            # on the fly if necessary.
-            sample = x_t
-            default_overall_up_factor = 2**self.num_upsamplers
+        # By default samples have to be AT least a multiple of the overall upsampling factor.
+        # The overall upsampling factor is equal to 2 ** (# num of upsampling layears).
+        # However, the upsampling interpolation output size can be forced to fit any upsampling size
+        # on the fly if necessary.
+        default_overall_up_factor = 2**self.num_upsamplers
 
-            # upsample size should be forwarded when sample is not a multiple of `default_overall_up_factor`
-            forward_upsample_size = False
-            upsample_size = None
+        # upsample size should be forwarded when sample is not a multiple of `default_overall_up_factor`
+        forward_upsample_size = False
+        upsample_size = None
 
-            if any(s % default_overall_up_factor != 0 for s in sample.shape[-2:]):
+        if any(s % default_overall_up_factor != 0 for s in x_t.shape[-2:]):
                 logger.info("Forward upsample size to force interpolation output size.")
                 forward_upsample_size = True
 
             # 1. time
-            timesteps = t
-            if not torch.is_tensor(timesteps):
-                # TODO: this requires sync between CPU and GPU. So try to pass timesteps as tensors if you can
-                timesteps = torch.tensor([timesteps], dtype=torch.long, device=sample.device)
-            elif torch.is_tensor(timesteps) and len(timesteps.shape) == 0:
-                timesteps = timesteps[None].to(sample.device)
+        if not torch.is_tensor(t):
+            t = torch.tensor([t], dtype=torch.long, device=x_t.device)
+        elif torch.is_tensor(t) and len(t.shape) == 0:
+            t = t[None].to(x_t.device)
 
+        if self.unet_type == 'stable':
             # broadcast to batch dimension in a way that's compatible with ONNX/Core ML
-            timesteps = timesteps.expand(sample.shape[0])
+            t = t.expand(x_t.shape[0])
 
-            t_emb = self.time_proj(timesteps)
+            t_emb = self.time_proj(t)
 
-            # timesteps does not contain any weights and will always return f32 tensors
+            # t does not contain any weights and will always return f32 tensors
             # but time_embedding might actually be running in fp16. so we need to cast here.
             # there might be better ways to encapsulate this.
             t_emb = t_emb.to(dtype=self.dtype)
-            emb = self.time_embedding(t_emb)
+            embedding = self.time_embedding(t_emb)
+        else:
+            embedding = self.time_embedding(t)
 
+            if label is not None:
+                assert hasattr(self, 'label_embedding')
+                embedding = self.label_embedding(label) + embedding
+        
+        if self.unet_type == 'stable':
             # 2. pre-process
-            sample = self.conv_in(sample)
+            x_t = self.conv_in(x_t)
 
             # 3. down
-            down_block_res_samples = (sample,)
+            down_block_res_samples = (x_t,)
             for downsample_block in self.down_blocks:
                 if hasattr(downsample_block, "attentions") and downsample_block.attentions is not None:
-                    sample, res_samples = downsample_block(
-                        hidden_states=sample,
-                        temb=emb,
+                    x_t, res_samples = downsample_block(
+                        hidden_states=x_t,
+                        temb=embedding,
                         encoder_hidden_states=encoder_hidden_states,
                     )
                 else:
-                    sample, res_samples = downsample_block(hidden_states=sample, temb=emb)
+                    x_t, res_samples = downsample_block(hidden_states=x_t, temb=embedding)
 
                 down_block_res_samples += res_samples
 
             # 4. mid
-            sample = self.mid_block(sample, emb, encoder_hidden_states=encoder_hidden_states)
+            x_t = self.mid_block(x_t, embedding, encoder_hidden_states=encoder_hidden_states)
 
             # 5. up
             for i, upsample_block in enumerate(self.up_blocks):
@@ -1284,50 +1287,39 @@ class DenoisingUnet(BaseModule):
                     upsample_size = down_block_res_samples[-1].shape[2:]
 
                 if hasattr(upsample_block, "attentions") and upsample_block.attentions is not None:
-                    sample = upsample_block(
-                        hidden_states=sample,
-                        temb=emb,
+                    x_t = upsample_block(
+                        hidden_states=x_t,
+                        temb=embedding,
                         res_hidden_states_tuple=res_samples,
                         encoder_hidden_states=encoder_hidden_states,
                         upsample_size=upsample_size,
                     )
                 else:
-                    sample = upsample_block(
-                        hidden_states=sample, temb=emb, res_hidden_states_tuple=res_samples, upsample_size=upsample_size
+                    x_t = upsample_block(
+                        hidden_states=x_t, temb=embedding, res_hidden_states_tuple=res_samples, upsample_size=upsample_size
                     )
             # 6. post-process
-            sample = self.conv_norm_out(sample)
-            sample = self.conv_act(sample)
-            sample = self.conv_out(sample)
+            x_t = self.conv_norm_out(x_t)
+            x_t = self.conv_act(x_t)
+            x_t = self.conv_out(x_t)
 
-            return Dict(sample=sample)
-        
-        if not torch.is_tensor(t):
-            t = torch.tensor([t], dtype=torch.long, device=x_t.device)
-        elif torch.is_tensor(t) and len(t.shape) == 0:
-            t = t[None].to(x_t.device)
+            outputs = x_t
+        else:
+            h, hs = x_t, []
+            h = h.type(self.dtype)
+            # forward downsample blocks
+            for block in self.in_blocks:
+                h = block(h, embedding)
+                hs.append(h)
 
-        embedding = self.time_embedding(t)
+            # forward middle blocks
+            h = self.mid_blocks(h, embedding)
 
-        if label is not None:
-            assert hasattr(self, 'label_embedding')
-            embedding = self.label_embedding(label) + embedding
-
-        h, hs = x_t, []
-        h = h.type(self.dtype)
-        # forward downsample blocks
-        for block in self.in_blocks:
-            h = block(h, embedding)
-            hs.append(h)
-
-        # forward middle blocks
-        h = self.mid_blocks(h, embedding)
-
-        # forward upsample blocks
-        for block in self.out_blocks:
-            h = block(torch.cat([h, hs.pop()], dim=1), embedding)
-        h = h.type(x_t.dtype)
-        outputs = self.out(h)
+            # forward upsample blocks
+            for block in self.out_blocks:
+                h = block(torch.cat([h, hs.pop()], dim=1), embedding)
+            h = h.type(x_t.dtype)
+            outputs = self.out(h)
 
         return {'outputs': outputs}
 
