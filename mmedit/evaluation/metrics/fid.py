@@ -13,6 +13,7 @@ from mmedit.registry import METRICS
 from ..functional import (disable_gpu_fuser_on_pt19, load_inception,
                           prepare_inception_feat)
 from .base_gen_metric import GenerativeMetric
+from .metrics_utils import obtain_data
 
 
 @METRICS.register_module('FID-Full')
@@ -92,6 +93,7 @@ class FrechetInceptionDistance(GenerativeMetric):
         """
         self.device = module.data_preprocessor.device
         self.inception.to(self.device)
+        self.inception.eval()
         inception_feat_dict = prepare_inception_feat(
             dataloader, self, module.data_preprocessor, capture_mean_cov=True)
         if is_main_process():
@@ -132,6 +134,9 @@ class FrechetInceptionDistance(GenerativeMetric):
         """
         image = image[:, [2, 1, 0]].to(self.device)
 
+        # image must passed with 'bgr'
+        image = image[:, [2, 1, 0]]
+        image = image.to(self.device)
         if self.inception_style == 'StyleGAN':
             image = image.to(torch.uint8)
             with disable_gpu_fuser_on_pt19():
@@ -166,10 +171,19 @@ class FrechetInceptionDistance(GenerativeMetric):
                 # get img tensor
                 fake_img_ = fake_img_['fake_img']
             fake_imgs.append(fake_img_)
-        fake_imgs = torch.stack(fake_imgs, dim=0)
 
-        feat = self.forward_inception(fake_imgs)
-        feat_list = list(torch.split(feat, 1))
+        # check whether shape in fake_imgs are same
+        img_shape = fake_imgs[0].shape
+        if all([img.shape == img_shape for img in fake_imgs]):
+            # all images have the same shape, forward inception altogether
+            fake_imgs = torch.stack(fake_imgs, dim=0)
+            feat = self.forward_inception(fake_imgs)
+            feat_list = list(torch.split(feat, 1))
+        else:
+            # images have different shape, forward separately
+            feat_list = [
+                self.forward_inception(img[None, ...]) for img in fake_imgs
+            ]
         self.fake_results += feat_list
 
     @staticmethod
