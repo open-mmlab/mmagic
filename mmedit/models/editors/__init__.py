@@ -30,11 +30,11 @@ from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
                            GLEncoderDecoder)
 from .guided_diffusion import AblatedDiffusionModel
 from .iconvsr import IconVSRNet
+from .ifrnet import IFRNet, IFRNetInterpolator
 from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
                        IndexNetEncoder)
 from .inst_colorization import InstColorization
-from .irfnet import IRFNet, IRFNetInterpolator
 from .liif import LIIF, MLPRefiner
 from .lsgan import LSGAN
 from .mspie import MSPIEStyleGAN2, PESinGAN
@@ -85,5 +85,5 @@ __all__ = [
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
     'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D',
-    'IRFNetInterpolator', 'IRFNet'
+    'IFRNetInterpolator', 'IFRNet'
 ]
