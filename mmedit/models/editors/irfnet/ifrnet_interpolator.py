@@ -4,7 +4,7 @@ import torch.nn as nn
 from mmengine.model import BaseModule
 
 from mmedit.registry import MODELS
-from .irfnet_utils import resize, warp
+from .ifrnet_utils import resize, warp
 
 
 def convrelu(in_channels,
@@ -57,7 +57,7 @@ class ResBlock(BaseModule):
 
 
 class Encoder(BaseModule):
-    """Encoder for IRFNet."""
+    """Encoder for IFRNet."""
 
     def __init__(self, init_cfg=None):
         super().__init__(init_cfg)
@@ -79,7 +79,7 @@ class Encoder(BaseModule):
 
 
 class Decoder4(BaseModule):
-    """fourth Decoder for IRFNet."""
+    """fourth Decoder for IFRNet."""
 
     def __init__(self, init_cfg=None):
         super().__init__(init_cfg)
@@ -97,7 +97,7 @@ class Decoder4(BaseModule):
 
 
 class Decoder3(BaseModule):
-    """Third Decoder for IRFNet."""
+    """Third Decoder for IFRNet."""
 
     def __init__(self, init_cfg=None):
         super().__init__(init_cfg)
@@ -114,7 +114,7 @@ class Decoder3(BaseModule):
 
 
 class Decoder2(BaseModule):
-    """Second Decoder for IRFNet."""
+    """Second Decoder for IFRNet."""
 
     def __init__(self, init_cfg=None):
         super().__init__(init_cfg)
@@ -131,7 +131,7 @@ class Decoder2(BaseModule):
 
 
 class Decoder1(BaseModule):
-    """First Decoder for IRFNet."""
+    """First Decoder for IFRNet."""
 
     def __init__(self, init_cfg=None):
         super().__init__(init_cfg)
@@ -148,8 +148,8 @@ class Decoder1(BaseModule):
 
 
 @MODELS.register_module()
-class IRFNetInterpolator(BaseModule):
-    """Base module of IRFNet for video frame interpolation.
+class IFRNetInterpolator(BaseModule):
+    """Base module of IFRNet for video frame interpolation.
 
     Paper:
         IFRNet: Intermediate Feature Refine Network

@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .irfnet import IRFNet
-from .irfnet_interpolator import IRFNetInterpolator
+from .ifrnet import IFRNet
+from .ifrnet_interpolator import IFRNetInterpolator
 
-__all__ = ['IRFNet', 'IRFNetInterpolator']
+__all__ = ['IFRNet', 'IFRNetInterpolator']

@@ -4,12 +4,12 @@ import torch
 from mmedit.models.base_models import BasicInterpolator
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
-from .irfnet_utils import Charbonnier_Ada, Charbonnier_L1, Geometry, Ternary
+from .ifrnet_utils import Charbonnier_Ada, Charbonnier_L1, Geometry, Ternary
 
 
 @MODELS.register_module()
-class IRFNet(BasicInterpolator):
-    """Base module of IRFNet for video frame interpolation.
+class IFRNet(BasicInterpolator):
+    """Base module of IFRNet for video frame interpolation.
 
     Paper:
         IFRNet: Intermediate Feature Refine Network
