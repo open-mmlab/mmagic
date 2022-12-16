@@ -1,13 +1,13 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'irfnet_in2out7_8xb4_gopro'
+experiment_name = 'ifrnet_in2out7_8xb4_gopro'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
 # model settings
 model = dict(
-    type='IRFNet',
-    generator=dict(type='IRFNetInterpolator'),
+    type='IFRNet',
+    generator=dict(type='IFRNetInterpolator'),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     train_cfg=dict(),
     test_cfg=dict(),
