@@ -649,24 +649,6 @@ def build_down_block_resattn(
         scale *= 2
     return in_blocks, scale
 
-# def build_down_blocks_stable(
-#         num_layers=layers_per_block,
-#         in_channels=input_channel,
-#         out_channels=output_channel,
-#         temb_channels=time_embed_dim,
-#         add_downsample=not is_final_block,
-#         resnet_eps=norm_eps,
-#         resnet_act_fn=act_fn,
-#         resnet_groups=norm_num_groups,
-#         cross_attention_dim=cross_attention_dim,
-#         attn_num_head_channels=attention_head_dim[i],
-#         downsample_padding=downsample_padding,
-#         dual_cross_attention=dual_cross_attention,
-#         use_linear_projection=use_linear_projection,
-#         only_cross_attention=only_cross_attention[i],
-#     ):
-
-#     return down_block
 
 def build_mid_blocks_resattn(
         resblock_cfg, 
@@ -739,13 +721,6 @@ def build_up_blocks_resattn(
         out_blocks.append(EmbedSequential(*layers))
 
     return out_blocks, in_channels_, scale
-
-
-def build_up_blocks_func(block_type):
-    if block_type == 'resattn':
-        return build_up_blocks_resattn
-    elif block_type == 'stable':
-        return build_up_blocks_stable
 
 
 @MODULES.register_module()
@@ -896,35 +871,11 @@ class DenoisingUnet(BaseModule):
                  upsample_cfg=dict(type='DenoisingUpsample'),
                  attention_res=[16, 8],
                  pretrained=None,
-                
-                unet_type = '',
-                out_channels: int = 8,
-                flip_sin_to_cos: bool = True,
-                freq_shift: int = 0,
-                down_block_types: Tuple[str] = (
-                    "CrossAttnDownBlock2D",
-                    "CrossAttnDownBlock2D",
-                    "CrossAttnDownBlock2D",
-                    "DownBlock2D",
-                ),
-                up_block_types: Tuple[str] = (
-                    "UpBlock2D",
-                    "CrossAttnUpBlock2D",
-                    "CrossAttnUpBlock2D",
-                    "CrossAttnUpBlock2D"
-                ),
-                only_cross_attention: Union[bool, Tuple[bool]] = False,
-                block_out_channels: Tuple[int] = (320, 640, 1280, 1280),
-                layers_per_block: int = 2,
-                downsample_padding: int = 1,
-                mid_block_scale_factor: float = 1,
-                act_fn: str = "silu",
-                norm_num_groups: int = 32,
-                norm_eps: float = 1e-5,
-                cross_attention_dim: int = 1280,
-                attention_head_dim: Union[int, Tuple[int]] = 8,
-                dual_cross_attention: bool = False,
-                use_linear_projection: bool = False,
+                 unet_type = '',
+                 down_block_types: Tuple[str] = (),
+                 up_block_types: Tuple[str] = (),
+                 cross_attention_dim=768,
+                 layers_per_block: int = 2,
         ):
 
         super().__init__()
@@ -982,7 +933,7 @@ class DenoisingUnet(BaseModule):
 
         if self.unet_type == 'stable':
             # time
-            self.time_proj = Timesteps(ch, flip_sin_to_cos, freq_shift)
+            self.time_proj = Timesteps(ch)
             self.time_embedding = TimestepEmbedding(base_channels, embedding_channels)
 
             self.conv_in = nn.Conv2d(in_channels, ch, kernel_size=3, padding=(1, 1))
@@ -1026,11 +977,7 @@ class DenoisingUnet(BaseModule):
         self.mid_block = None
         self.up_blocks = nn.ModuleList([])
 
-        if isinstance(only_cross_attention, bool):
-            only_cross_attention = [only_cross_attention] * len(down_block_types)
-
-        if isinstance(attention_head_dim, int):
-            attention_head_dim = (attention_head_dim,) * len(down_block_types)
+        attention_head_dim = (num_heads,) * len(down_block_types)
 
         # construct the encoder part of Unet
         for level, factor in enumerate(self.channel_factor_list):
@@ -1047,16 +994,11 @@ class DenoisingUnet(BaseModule):
                     in_channels=in_channels_,
                     out_channels=out_channels_,
                     temb_channels=embedding_channels,
-                    add_downsample=not is_final_block,
-                    resnet_eps=norm_eps,
-                    resnet_act_fn=act_fn,
-                    resnet_groups=norm_num_groups,
                     cross_attention_dim=cross_attention_dim,
+                    add_downsample=not is_final_block,
+                    resnet_act_fn=act_cfg['type'],
+                    resnet_groups=norm_cfg['num_groups'],
                     attn_num_head_channels=attention_head_dim[level],
-                    downsample_padding=downsample_padding,
-                    dual_cross_attention=dual_cross_attention,
-                    use_linear_projection=use_linear_projection,
-                    only_cross_attention=only_cross_attention[level],
                 )
                 self.down_blocks.append(down_block)
 
@@ -1081,21 +1023,17 @@ class DenoisingUnet(BaseModule):
                 )
                 self.in_blocks.extend(in_blocks)
 
-
         # construct the bottom part of Unet
+        block_out_channels = [times * base_channels for times in self.channel_factor_list]
         if self.unet_type == 'stable':
             self.mid_block = UNetMidBlock2DCrossAttn(
                 in_channels=block_out_channels[-1],
                 temb_channels=embedding_channels,
-                resnet_eps=norm_eps,
-                resnet_act_fn=act_fn,
-                output_scale_factor=mid_block_scale_factor,
-                resnet_time_scale_shift="default",
                 cross_attention_dim=cross_attention_dim,
+                resnet_act_fn=act_cfg['type'],
+                resnet_time_scale_shift="default",
                 attn_num_head_channels=attention_head_dim[-1],
-                resnet_groups=norm_num_groups,
-                dual_cross_attention=dual_cross_attention,
-                use_linear_projection=use_linear_projection,
+                resnet_groups=norm_cfg['num_groups'],
             )
         else:
             self.mid_blocks = build_mid_blocks_resattn(
@@ -1104,12 +1042,10 @@ class DenoisingUnet(BaseModule):
                                 in_channels_
                             )
 
-
         # stable up parameters
         self.num_upsamplers = 0
         reversed_block_out_channels = list(reversed(block_out_channels))
         reversed_attention_head_dim = list(reversed(attention_head_dim))
-        only_cross_attention = list(reversed(only_cross_attention))
         output_channel = reversed_block_out_channels[0]
 
         # construct the decoder part of Unet
@@ -1140,15 +1076,11 @@ class DenoisingUnet(BaseModule):
                     out_channels=output_channel,
                     prev_output_channel=prev_output_channel,
                     temb_channels=embedding_channels,
-                    add_upsample=add_upsample,
-                    resnet_eps=norm_eps,
-                    resnet_act_fn=act_fn,
-                    resnet_groups=norm_num_groups,
                     cross_attention_dim=cross_attention_dim,
+                    add_upsample=add_upsample,
+                    resnet_act_fn=act_cfg['type'],
+                    resnet_groups=norm_cfg['num_groups'],
                     attn_num_head_channels=reversed_attention_head_dim[level],
-                    dual_cross_attention=dual_cross_attention,
-                    use_linear_projection=use_linear_projection,
-                    only_cross_attention=only_cross_attention[level],
                 )
                 self.up_blocks.append(up_block)
                 prev_output_channel = output_channel
@@ -1176,7 +1108,7 @@ class DenoisingUnet(BaseModule):
 
         if self.unet_type == 'stable':
             # out
-            self.conv_norm_out = nn.GroupNorm(num_channels=block_out_channels[0], num_groups=norm_num_groups, eps=norm_eps)
+            self.conv_norm_out = nn.GroupNorm(num_channels=block_out_channels[0], num_groups=norm_cfg['num_groups'])
             self.conv_act = nn.SiLU()
             self.conv_out = nn.Conv2d(block_out_channels[0], self.out_channels, kernel_size=3, padding=1)
         else:
@@ -1229,7 +1161,6 @@ class DenoisingUnet(BaseModule):
                 logger.info("Forward upsample size to force interpolation output size.")
                 forward_upsample_size = True
 
-            # 1. time
         if not torch.is_tensor(t):
             t = torch.tensor([t], dtype=torch.long, device=x_t.device)
         elif torch.is_tensor(t) and len(t.shape) == 0:
@@ -1249,9 +1180,9 @@ class DenoisingUnet(BaseModule):
         else:
             embedding = self.time_embedding(t)
 
-            if label is not None:
-                assert hasattr(self, 'label_embedding')
-                embedding = self.label_embedding(label) + embedding
+        if label is not None:
+            assert hasattr(self, 'label_embedding')
+            embedding = self.label_embedding(label) + embedding
         
         if self.unet_type == 'stable':
             # 2. pre-process

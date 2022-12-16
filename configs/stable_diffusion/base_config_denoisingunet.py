@@ -9,30 +9,17 @@ unet = dict(
         4
     ],
     unet_type='stable',
-    act_fn="silu",
-    attention_head_dim=8,
-    block_out_channels=[
-        320,
-        640,
-        1280,
-        1280
-    ],
+    act_cfg=dict(type='silu', inplace=False),
     cross_attention_dim=768,
+    num_heads=8,
+    in_channels=4,
+    layers_per_block=2,
     down_block_types=[
         "CrossAttnDownBlock2D",
         "CrossAttnDownBlock2D",
         "CrossAttnDownBlock2D",
         "DownBlock2D"
     ],
-    downsample_padding=1,
-    flip_sin_to_cos=True,
-    freq_shift=0,
-    in_channels=4,
-    layers_per_block=2,
-    mid_block_scale_factor=1,
-    norm_eps=1e-05,
-    norm_num_groups=32,
-    out_channels=4,
     up_block_types=[
         "UpBlock2D",
         "CrossAttnUpBlock2D",

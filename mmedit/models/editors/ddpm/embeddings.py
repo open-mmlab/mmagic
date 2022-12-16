@@ -1,6 +1,4 @@
 import math
-
-import numpy as np
 import torch
 from torch import nn
 
@@ -76,7 +74,7 @@ class TimestepEmbedding(nn.Module):
 
 
 class Timesteps(nn.Module):
-    def __init__(self, num_channels: int, flip_sin_to_cos: bool, downscale_freq_shift: float):
+    def __init__(self, num_channels: int, flip_sin_to_cos: bool = True, downscale_freq_shift: float = 0):
         super().__init__()
         self.num_channels = num_channels
         self.flip_sin_to_cos = flip_sin_to_cos
@@ -90,36 +88,6 @@ class Timesteps(nn.Module):
             downscale_freq_shift=self.downscale_freq_shift,
         )
         return t_emb
-
-
-class GaussianFourierProjection(nn.Module):
-    """Gaussian Fourier embeddings for noise levels."""
-
-    def __init__(
-        self, embedding_size: int = 256, scale: float = 1.0, set_W_to_weight=True, log=True, flip_sin_to_cos=False
-    ):
-        super().__init__()
-        self.weight = nn.Parameter(torch.randn(embedding_size) * scale, requires_grad=False)
-        self.log = log
-        self.flip_sin_to_cos = flip_sin_to_cos
-
-        if set_W_to_weight:
-            # to delete later
-            self.W = nn.Parameter(torch.randn(embedding_size) * scale, requires_grad=False)
-
-            self.weight = self.W
-
-    def forward(self, x):
-        if self.log:
-            x = torch.log(x)
-
-        x_proj = x[:, None] * self.weight[None, :] * 2 * np.pi
-
-        if self.flip_sin_to_cos:
-            out = torch.cat([torch.cos(x_proj), torch.sin(x_proj)], dim=-1)
-        else:
-            out = torch.cat([torch.sin(x_proj), torch.cos(x_proj)], dim=-1)
-        return out
 
 
 class ImagePositionalEmbeddings(nn.Module):
