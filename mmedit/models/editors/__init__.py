@@ -34,6 +34,7 @@ from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
                        IndexNetEncoder)
 from .inst_colorization import InstColorization
+from .irfnet import IRFNet, IRFNetInterpolator
 from .liif import LIIF, MLPRefiner
 from .lsgan import LSGAN
 from .mspie import MSPIEStyleGAN2, PESinGAN
@@ -83,5 +84,6 @@ __all__ = [
     'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
-    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D'
+    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D',
+    'IRFNetInterpolator', 'IRFNet'
 ]
