@@ -106,7 +106,7 @@ val_evaluator = [
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1000000, val_interval=5000)
-val_cfg = dict(type='ValLoop')
+val_cfg = dict(type='EditValLoop')
 
 # optimizer
 optim_wrapper = dict(

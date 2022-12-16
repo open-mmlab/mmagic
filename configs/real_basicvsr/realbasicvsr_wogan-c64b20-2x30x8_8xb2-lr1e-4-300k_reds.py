@@ -264,8 +264,8 @@ test_evaluator = [dict(type='NIQE', input_order='CHW', convert_to='Y')]
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=300_000, val_interval=5000)
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+test_cfg = dict(type='EditTestLoop')
 
 # optimizer
 optim_wrapper = dict(

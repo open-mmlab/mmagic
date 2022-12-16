@@ -57,4 +57,4 @@ test_evaluator = [
     dict(type='SSIM'),
 ]
 
-test_cfg = dict(type='TestLoop')
+test_cfg = dict(type='EditTestLoop')

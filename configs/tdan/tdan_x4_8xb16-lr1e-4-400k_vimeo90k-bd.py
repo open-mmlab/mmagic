@@ -104,7 +104,7 @@ optim_wrapper = dict(
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=400_000, val_interval=50000)
-val_cfg = dict(type='ValLoop')
+val_cfg = dict(type='EditValLoop')
 
 # No learning policy
 

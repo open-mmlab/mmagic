@@ -2,7 +2,7 @@ default_scope = 'mmedit'
 save_dir = './work_dirs'
 
 default_hooks = dict(
-    timer=dict(type='IterTimerHook'),
+    timer=dict(type='GenIterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),
     checkpoint=dict(
@@ -24,7 +24,7 @@ env_cfg = dict(
 )
 
 log_level = 'INFO'
-log_processor = dict(type='LogProcessor', window_size=100, by_epoch=False)
+log_processor = dict(type='GenLogProcessor', window_size=100, by_epoch=False)
 
 load_from = None
 resume = False
