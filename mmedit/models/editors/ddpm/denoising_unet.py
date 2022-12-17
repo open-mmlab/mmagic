@@ -200,7 +200,7 @@ class MultiHeadAttentionBlock(BaseModule):
         qkv = self.qkv(self.norm(x))
         if encoder_out is not None:
             encoder_out = self.encoder_kv(encoder_out)
-            h = self.attention(qkv)
+            h = self.attention(qkv, encoder_out)
         else:
             h = self.attention(qkv)
         h = self.proj_out(h)
@@ -256,7 +256,8 @@ class QKVAttention(BaseModule):
         bs, width, length = qkv.shape
         assert width % (3 * self.n_heads) == 0
         ch = width // (3 * self.n_heads)
-        q, k, v = qkv.chunk(3, dim=1)
+        q, k, v = qkv.reshape(bs * self.n_heads, ch * 3, length).split(
+            ch, dim=1)
         if encoder_kv is not None:
             assert encoder_kv.shape[1] == self.n_heads * ch * 2
             ek, ev = encoder_kv.reshape(bs * self.n_heads, ch * 2, -1).split(
@@ -265,13 +266,10 @@ class QKVAttention(BaseModule):
             v = torch.cat([ev, v], dim=-1)
         scale = 1 / math.sqrt(math.sqrt(ch))
         weight = torch.einsum(
-            'bct,bcs->bts',
-            (q * scale).view(bs * self.n_heads, ch, length),
-            (k * scale).view(bs * self.n_heads, ch, length),
-        )  # More stable with f16 than dividing afterwards
+            'bct,bcs->bts', (q * scale),
+            (k * scale))  # More stable with f16 than dividing afterwards
         weight = torch.softmax(weight.float(), dim=-1).type(weight.dtype)
-        a = torch.einsum('bts,bcs->bct', weight,
-                         v.reshape(bs * self.n_heads, ch, length))
+        a = torch.einsum('bts,bcs->bct', weight, v)
         return a.reshape(bs, -1, length)
 
 
@@ -464,10 +462,7 @@ class DenoisingResBlock(BaseModule):
             x = self.x_upd(x)
             h = in_conv(h)
         else:
-            h = x
-            for layer in self.conv_1:
-                h = layer(h)
-            # h = self.conv_1(x)
+            h = self.conv_1(x)
 
         shortcut = self.forward_shortcut(x)
         h = self.norm_with_embedding(h, y)
