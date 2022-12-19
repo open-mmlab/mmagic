@@ -51,12 +51,13 @@ def test_random_jpeg_compression():
     results = {}
     results['lq'] = np.ones((8, 8, 3)).astype(np.uint8)
 
-    model = RandomJPEGCompression(params=dict(quality=[5, 50]), keys=['lq'])
+    model = RandomJPEGCompression(
+        params=dict(quality=[5, 50], color_type='color'), keys=['lq'])
     results = model(results)
     assert results['lq'].shape == (8, 8, 3)
 
     # skip degradations with prob < 1
-    params = dict(quality=[5, 50], prob=0)
+    params = dict(quality=[5, 50], color_type='color', prob=0)
     model = RandomJPEGCompression(params=params, keys=['lq'])
     assert model(results) == results
 
@@ -334,7 +335,7 @@ def test_random_blur():
 
 def test_degradations_with_shuffle():
     results = {}
-    results['lq'] = np.ones((8, 8, 3)).astype(np.float32)
+    results['lq'] = np.ones((8, 8, 3)).astype(np.uint8)
 
     # shuffle all
     model = DegradationsWithShuffle(
@@ -360,10 +361,10 @@ def test_degradations_with_shuffle():
             [
                 dict(
                     type='RandomJPEGCompression',
-                    params=dict(quality=[5, 10])),
+                    params=dict(quality=[5, 10], color_type='color')),
                 dict(
                     type='RandomJPEGCompression',
-                    params=dict(quality=[15, 20]))
+                    params=dict(quality=[15, 20], color_type='color'))
             ]
         ],
         keys=['lq'],
@@ -391,8 +392,12 @@ def test_degradations_with_shuffle():
                 resize_prob=[1 / 3., 1 / 3., 1 / 3.],
                 target_size=(16, 16))),
         [
-            dict(type='RandomJPEGCompression', params=dict(quality=[5, 10])),
-            dict(type='RandomJPEGCompression', params=dict(quality=[15, 20]))
+            dict(
+                type='RandomJPEGCompression',
+                params=dict(quality=[5, 10], color_type='color')),
+            dict(
+                type='RandomJPEGCompression',
+                params=dict(quality=[15, 20], color_type='color'))
         ]
     ]
     model = DegradationsWithShuffle(

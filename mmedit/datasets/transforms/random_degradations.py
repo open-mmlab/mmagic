@@ -258,8 +258,7 @@ class RandomNoise:
 
             # update noise level
             sigma += np.random.uniform(-sigma_step, sigma_step)
-            sigma = np.clip(sigma, sigma_range[0],
-                            sigma_range[1])
+            sigma = np.clip(sigma, sigma_range[0], sigma_range[1])
 
         return outputs
 
