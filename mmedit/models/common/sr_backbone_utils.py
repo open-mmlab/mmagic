@@ -59,7 +59,7 @@ class ResidualBlockNoBN(nn.Module):
     def __init__(self, mid_channels=64, res_scale=1.0, groups=1):
         super().__init__()
         self.res_scale = res_scale
-        self.conv1 = nn.Conv2d(mid_channels, mid_channels, 3, 1, 1, bias=True, groups=1)
+        self.conv1 = nn.Conv2d(mid_channels, mid_channels, 3, 1, 1, bias=True, groups= groups)
         self.conv2 = nn.Conv2d(mid_channels, mid_channels, 3, 1, 1, bias=True, groups=1)
 
         self.relu = nn.ReLU(inplace=True)
