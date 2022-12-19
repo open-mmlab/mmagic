@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Union
-
 import numpy as np
 import torch
 
@@ -114,9 +112,9 @@ class DDPMScheduler:
         return variance
 
     def step(self,
-             model_output: Union[torch.FloatTensor],
+             model_output: torch.FloatTensor,
              timestep: int,
-             sample: Union[torch.FloatTensor],
+             sample: torch.FloatTensor,
              predict_epsilon=True,
              generator=None):
         t = timestep

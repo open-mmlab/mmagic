@@ -18,15 +18,9 @@ from mmengine.utils.dl_utils import TORCH_VERSION
 from mmengine.utils.version_utils import digit_version
 
 from mmedit.registry import MODELS, MODULES
-
 from .embeddings import TimestepEmbedding, Timesteps
-from .unet_blocks import (
-    UNetMidBlock2DCrossAttn,
-    get_down_block,
-    get_up_block,
-)
+from .unet_blocks import UNetMidBlock2DCrossAttn, get_down_block, get_up_block
 
-from mmengine.logging import MMLogger
 logger = MMLogger.get_current_instance()
 
 
@@ -590,24 +584,12 @@ class DenoisingUpsample(BaseModule):
         return x
 
 
-def build_down_block_resattn(
-        resblocks_per_downsample, 
-        resblock_cfg,
-        in_channels_,
-        out_channels_,
-        attention_scale,
-        attention_cfg,
-        in_channels_list,
-        level,
-        channel_factor_list,
-        embedding_channels,
-        use_scale_shift_norm,
-        dropout,
-        norm_cfg,
-        resblock_updown,
-        downsample_cfg,
-        scale
-    ):
+def build_down_block_resattn(resblocks_per_downsample, resblock_cfg,
+                             in_channels_, out_channels_, attention_scale,
+                             attention_cfg, in_channels_list, level,
+                             channel_factor_list, embedding_channels,
+                             use_scale_shift_norm, dropout, norm_cfg,
+                             resblock_updown, downsample_cfg, scale):
 
     in_blocks = nn.ModuleList()
 
@@ -625,8 +607,7 @@ def build_down_block_resattn(
         if scale in attention_scale:
             layers.append(
                 MODULES.build(
-                    attention_cfg,
-                    default_args={'in_channels': in_channels_}))
+                    attention_cfg, default_args={'in_channels': in_channels_}))
 
         in_channels_list.append(in_channels_)
         in_blocks.append(EmbedSequential(*layers))
@@ -649,41 +630,36 @@ def build_down_block_resattn(
     return in_blocks, scale
 
 
-def build_mid_blocks_resattn(
-        resblock_cfg, 
-        attention_cfg,
-        in_channels_
-    ):
+def build_mid_blocks_resattn(resblock_cfg, attention_cfg, in_channels_):
     return EmbedSequential(
         MODULES.build(
             resblock_cfg, default_args={'in_channels': in_channels_}),
         MODULES.build(
-            attention_cfg, default_args={'in_channels':
-                                                in_channels_}),
+            attention_cfg, default_args={'in_channels': in_channels_}),
         MODULES.build(
             resblock_cfg, default_args={'in_channels': in_channels_}),
     )
 
 
 def build_up_blocks_resattn(
-        resblocks_per_downsample,
-        resblock_cfg,
-        in_channels_,
-        in_channels_list,
-        base_channels,
-        factor,
-        scale,
-        attention_scale,
-        attention_cfg,
-        channel_factor_list,
-        level,
-        embedding_channels,
-        use_scale_shift_norm,
-        dropout,
-        norm_cfg,
-        resblock_updown,
-        upsample_cfg,
-    ):
+    resblocks_per_downsample,
+    resblock_cfg,
+    in_channels_,
+    in_channels_list,
+    base_channels,
+    factor,
+    scale,
+    attention_scale,
+    attention_cfg,
+    channel_factor_list,
+    level,
+    embedding_channels,
+    use_scale_shift_norm,
+    dropout,
+    norm_cfg,
+    resblock_updown,
+    upsample_cfg,
+):
 
     out_blocks = nn.ModuleList()
     for idx in range(resblocks_per_downsample + 1):
@@ -691,8 +667,7 @@ def build_up_blocks_resattn(
             MODULES.build(
                 resblock_cfg,
                 default_args={
-                    'in_channels':
-                    in_channels_ + in_channels_list.pop(),
+                    'in_channels': in_channels_ + in_channels_list.pop(),
                     'out_channels': int(base_channels * factor)
                 })
         ]
@@ -700,8 +675,7 @@ def build_up_blocks_resattn(
         if scale in attention_scale:
             layers.append(
                 MODULES.build(
-                    attention_cfg,
-                    default_args={'in_channels': in_channels_}))
+                    attention_cfg, default_args={'in_channels': in_channels_}))
         if (level != len(channel_factor_list) - 1
                 and idx == resblocks_per_downsample):
             out_channels_ = in_channels_
@@ -713,9 +687,9 @@ def build_up_blocks_resattn(
                     dropout,
                     norm_cfg=norm_cfg,
                     out_channels=out_channels_,
-                    up=True) if resblock_updown else MODULES.build(
-                        upsample_cfg,
-                        default_args={'in_channels': in_channels_}))
+                    up=True) if resblock_updown else MODULES.
+                build(
+                    upsample_cfg, default_args={'in_channels': in_channels_}))
             scale //= 2
         out_blocks.append(EmbedSequential(*layers))
 
@@ -841,41 +815,42 @@ class DenoisingUnet(BaseModule):
         32: [1, 2, 2, 2]
     }
 
-    def __init__(self,
-                 image_size,
-                 in_channels=3,
-                 base_channels=128,
-                 resblocks_per_downsample=3,
-                 num_timesteps=1000,
-                 use_rescale_timesteps=False,
-                 dropout=0,
-                 embedding_channels=-1,
-                 num_classes=0,
-                 use_fp16=False,
-                 channels_cfg=None,
-                 output_cfg=dict(mean='eps', var='learned_range'),
-                 norm_cfg=dict(type='GN', num_groups=32),
-                 act_cfg=dict(type='SiLU', inplace=False),
-                 shortcut_kernel_size=1,
-                 use_scale_shift_norm=False,
-                 resblock_updown=False,
-                 num_heads=4,
-                 time_embedding_mode='sin',
-                 time_embedding_cfg=None,
-                 resblock_cfg=dict(type='DenoisingResBlock'),
-                 attention_cfg=dict(type='MultiHeadAttention'),
-                 downsample_conv=True,
-                 upsample_conv=True,
-                 downsample_cfg=dict(type='DenoisingDownsample'),
-                 upsample_cfg=dict(type='DenoisingUpsample'),
-                 attention_res=[16, 8],
-                 pretrained=None,
-                 unet_type = '',
-                 down_block_types: Tuple[str] = (),
-                 up_block_types: Tuple[str] = (),
-                 cross_attention_dim=768,
-                 layers_per_block: int = 2,
-        ):
+    def __init__(
+        self,
+        image_size,
+        in_channels=3,
+        base_channels=128,
+        resblocks_per_downsample=3,
+        num_timesteps=1000,
+        use_rescale_timesteps=False,
+        dropout=0,
+        embedding_channels=-1,
+        num_classes=0,
+        use_fp16=False,
+        channels_cfg=None,
+        output_cfg=dict(mean='eps', var='learned_range'),
+        norm_cfg=dict(type='GN', num_groups=32),
+        act_cfg=dict(type='SiLU', inplace=False),
+        shortcut_kernel_size=1,
+        use_scale_shift_norm=False,
+        resblock_updown=False,
+        num_heads=4,
+        time_embedding_mode='sin',
+        time_embedding_cfg=None,
+        resblock_cfg=dict(type='DenoisingResBlock'),
+        attention_cfg=dict(type='MultiHeadAttention'),
+        downsample_conv=True,
+        upsample_conv=True,
+        downsample_cfg=dict(type='DenoisingDownsample'),
+        upsample_cfg=dict(type='DenoisingUpsample'),
+        attention_res=[16, 8],
+        pretrained=None,
+        unet_type='',
+        down_block_types: Tuple[str] = (),
+        up_block_types: Tuple[str] = (),
+        cross_attention_dim=768,
+        layers_per_block: int = 2,
+    ):
 
         super().__init__()
 
@@ -921,7 +896,7 @@ class DenoisingUnet(BaseModule):
         else:
             raise ValueError('Only support list or dict for `channels_cfg`, '
                              f'receive {type(channels_cfg)}')
-        
+
         embedding_channels = base_channels * 4 \
             if embedding_channels == -1 else embedding_channels
 
@@ -933,9 +908,11 @@ class DenoisingUnet(BaseModule):
         if self.unet_type == 'stable':
             # time
             self.time_proj = Timesteps(ch)
-            self.time_embedding = TimestepEmbedding(base_channels, embedding_channels)
+            self.time_embedding = TimestepEmbedding(base_channels,
+                                                    embedding_channels)
 
-            self.conv_in = nn.Conv2d(in_channels, ch, kernel_size=3, padding=(1, 1))
+            self.conv_in = nn.Conv2d(
+                in_channels, ch, kernel_size=3, padding=(1, 1))
         else:
             self.time_embedding = TimeEmbedding(
                 base_channels,
@@ -976,7 +953,7 @@ class DenoisingUnet(BaseModule):
         self.mid_block = None
         self.up_blocks = nn.ModuleList([])
 
-        attention_head_dim = (num_heads,) * len(down_block_types)
+        attention_head_dim = (num_heads, ) * len(down_block_types)
 
         # construct the encoder part of Unet
         for level, factor in enumerate(self.channel_factor_list):
@@ -1018,28 +995,27 @@ class DenoisingUnet(BaseModule):
                     norm_cfg=norm_cfg,
                     resblock_updown=resblock_updown,
                     downsample_cfg=self.downsample_cfg,
-                    scale=scale
-                )
+                    scale=scale)
                 self.in_blocks.extend(in_blocks)
 
         # construct the bottom part of Unet
-        block_out_channels = [times * base_channels for times in self.channel_factor_list]
+        block_out_channels = [
+            times * base_channels for times in self.channel_factor_list
+        ]
         if self.unet_type == 'stable':
             self.mid_block = UNetMidBlock2DCrossAttn(
                 in_channels=block_out_channels[-1],
                 temb_channels=embedding_channels,
                 cross_attention_dim=cross_attention_dim,
                 resnet_act_fn=act_cfg['type'],
-                resnet_time_scale_shift="default",
+                resnet_time_scale_shift='default',
                 attn_num_head_channels=attention_head_dim[-1],
                 resnet_groups=norm_cfg['num_groups'],
             )
         else:
-            self.mid_blocks = build_mid_blocks_resattn(
-                                self.resblock_cfg,
-                                self.attention_cfg,
-                                in_channels_
-                            )
+            self.mid_blocks = build_mid_blocks_resattn(self.resblock_cfg,
+                                                       self.attention_cfg,
+                                                       in_channels_)
 
         # stable up parameters
         self.num_upsamplers = 0
@@ -1058,7 +1034,9 @@ class DenoisingUnet(BaseModule):
 
                 prev_output_channel = output_channel
                 output_channel = reversed_block_out_channels[level]
-                input_channel = reversed_block_out_channels[min(level + 1, len(block_out_channels) - 1)]
+                input_channel = reversed_block_out_channels[min(
+                    level + 1,
+                    len(block_out_channels) - 1)]
 
                 # add upsample block for all BUT final layer
                 if not is_final_block:
@@ -1107,9 +1085,15 @@ class DenoisingUnet(BaseModule):
 
         if self.unet_type == 'stable':
             # out
-            self.conv_norm_out = nn.GroupNorm(num_channels=block_out_channels[0], num_groups=norm_cfg['num_groups'])
+            self.conv_norm_out = nn.GroupNorm(
+                num_channels=block_out_channels[0],
+                num_groups=norm_cfg['num_groups'])
             self.conv_act = nn.SiLU()
-            self.conv_out = nn.Conv2d(block_out_channels[0], self.out_channels, kernel_size=3, padding=1)
+            self.conv_out = nn.Conv2d(
+                block_out_channels[0],
+                self.out_channels,
+                kernel_size=3,
+                padding=1)
         else:
             self.out = ConvModule(
                 in_channels=in_channels_,
@@ -1123,14 +1107,12 @@ class DenoisingUnet(BaseModule):
 
         self.init_weights(pretrained)
 
-    def forward(
-            self,
-            x_t,
-            t,
-            encoder_hidden_states=None,
-            label=None,
-            return_noise=False
-        ):
+    def forward(self,
+                x_t,
+                t,
+                encoder_hidden_states=None,
+                label=None,
+                return_noise=False):
         """Forward function.
         Args:
             x_t (torch.Tensor): Diffused image at timestep `t` to denoise.
@@ -1146,19 +1128,24 @@ class DenoisingUnet(BaseModule):
         Returns:
             torch.Tensor | dict: If not ``return_noise``
         """
-        # By default samples have to be AT least a multiple of the overall upsampling factor.
-        # The overall upsampling factor is equal to 2 ** (# num of upsampling layears).
-        # However, the upsampling interpolation output size can be forced to fit any upsampling size
+        # By default samples have to be AT least a multiple of t
+        # he overall upsampling factor.
+        # The overall upsampling factor is equal
+        # to 2 ** (# num of upsampling layears).
+        # However, the upsampling interpolation output size
+        # can be forced to fit any upsampling size
         # on the fly if necessary.
         default_overall_up_factor = 2**self.num_upsamplers
 
-        # upsample size should be forwarded when sample is not a multiple of `default_overall_up_factor`
+        # upsample size should be forwarded when sample is not
+        # a multiple of `default_overall_up_factor`
         forward_upsample_size = False
         upsample_size = None
 
         if any(s % default_overall_up_factor != 0 for s in x_t.shape[-2:]):
-                logger.info("Forward upsample size to force interpolation output size.")
-                forward_upsample_size = True
+            logger.info(
+                'Forward upsample size to force interpolation output size.')
+            forward_upsample_size = True
 
         if not torch.is_tensor(t):
             t = torch.tensor([t], dtype=torch.long, device=x_t.device)
@@ -1166,13 +1153,15 @@ class DenoisingUnet(BaseModule):
             t = t[None].to(x_t.device)
 
         if self.unet_type == 'stable':
-            # broadcast to batch dimension in a way that's compatible with ONNX/Core ML
+            # broadcast to batch dimension in a way that's
+            # compatible with ONNX/Core ML
             t = t.expand(x_t.shape[0])
 
             t_emb = self.time_proj(t)
 
             # t does not contain any weights and will always return f32 tensors
-            # but time_embedding might actually be running in fp16. so we need to cast here.
+            # but time_embedding might actually be running in fp16.
+            # so we need to cast here.
             # there might be better ways to encapsulate this.
             t_emb = t_emb.to(dtype=self.dtype)
             embedding = self.time_embedding(t_emb)
@@ -1182,41 +1171,47 @@ class DenoisingUnet(BaseModule):
         if label is not None:
             assert hasattr(self, 'label_embedding')
             embedding = self.label_embedding(label) + embedding
-        
+
         if self.unet_type == 'stable':
             # 2. pre-process
             x_t = self.conv_in(x_t)
 
             # 3. down
-            down_block_res_samples = (x_t,)
+            down_block_res_samples = (x_t, )
             for downsample_block in self.down_blocks:
-                if hasattr(downsample_block, "attentions") and downsample_block.attentions is not None:
+                if hasattr(downsample_block, 'attentions'
+                           ) and downsample_block.attentions is not None:
                     x_t, res_samples = downsample_block(
                         hidden_states=x_t,
                         temb=embedding,
                         encoder_hidden_states=encoder_hidden_states,
                     )
                 else:
-                    x_t, res_samples = downsample_block(hidden_states=x_t, temb=embedding)
+                    x_t, res_samples = downsample_block(
+                        hidden_states=x_t, temb=embedding)
 
                 down_block_res_samples += res_samples
 
             # 4. mid
-            x_t = self.mid_block(x_t, embedding, encoder_hidden_states=encoder_hidden_states)
+            x_t = self.mid_block(
+                x_t, embedding, encoder_hidden_states=encoder_hidden_states)
 
             # 5. up
             for i, upsample_block in enumerate(self.up_blocks):
                 is_final_block = i == len(self.up_blocks) - 1
 
-                res_samples = down_block_res_samples[-len(upsample_block.resnets) :]
-                down_block_res_samples = down_block_res_samples[: -len(upsample_block.resnets)]
+                res_samples = down_block_res_samples[-len(upsample_block.
+                                                          resnets):]
+                down_block_res_samples = down_block_res_samples[:-len(
+                    upsample_block.resnets)]
 
-                # if we have not reached the final block and need to forward the
-                # upsample size, we do it here
+                # if we have not reached the final block
+                # and need to forward the upsample size, we do it here
                 if not is_final_block and forward_upsample_size:
                     upsample_size = down_block_res_samples[-1].shape[2:]
 
-                if hasattr(upsample_block, "attentions") and upsample_block.attentions is not None:
+                if hasattr(upsample_block, 'attentions'
+                           ) and upsample_block.attentions is not None:
                     x_t = upsample_block(
                         hidden_states=x_t,
                         temb=embedding,
@@ -1226,8 +1221,10 @@ class DenoisingUnet(BaseModule):
                     )
                 else:
                     x_t = upsample_block(
-                        hidden_states=x_t, temb=embedding, res_hidden_states_tuple=res_samples, upsample_size=upsample_size
-                    )
+                        hidden_states=x_t,
+                        temb=embedding,
+                        res_hidden_states_tuple=res_samples,
+                        upsample_size=upsample_size)
             # 6. post-process
             x_t = self.conv_norm_out(x_t)
             x_t = self.conv_act(x_t)
