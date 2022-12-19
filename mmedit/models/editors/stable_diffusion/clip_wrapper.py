@@ -114,6 +114,7 @@ class StableDiffusionSafetyChecker(PreTrainedModel):
 
 
 class ClipCheckpointLoader(object):
+    """helper class to load clip models by directory."""
 
     @classmethod
     def load_from_cache_subdir(cls, model_dir_dict, loading_kwargs={}):
@@ -140,23 +141,47 @@ class ClipCheckpointLoader(object):
 
 class StableDiffusionSafetyCheckerLoader(StableDiffusionSafetyChecker,
                                          ClipCheckpointLoader):
+    """helper class for StableDiffusionSafetyChecker."""
     pass
 
 
 class CLIPTokenizerLoader(CLIPTokenizer, ClipCheckpointLoader):
+    """helper class for CLIPTokenizer."""
     pass
 
 
 class CLIPFeatureExtractorLoader(CLIPFeatureExtractor, ClipCheckpointLoader):
+    """helper class for CLIPFeatureExtractor."""
     pass
 
 
 class CLIPTextModelLoader(CLIPTextModel, ClipCheckpointLoader):
+    """helper class for CLIPTextModel."""
     pass
 
 
 def load_clip_submodels(pretrained_ckpt_path, submodels,
                         requires_safety_checker):
+    """
+    Args:
+        pretrained_ckpt_path (dict):
+            ckpt path of clip models.
+        submodels (List):
+            list of stable diffusion submodels.
+        requires_safety_checker (bool):
+            whether to load safety checker
+
+    Returns:
+        tokenizer:
+            tokenizer with ckpt loaded.
+        feature_extractor:
+            feature_extractor with ckpt loaded.
+        text_encoder:
+            text_encoder with ckpt loaded.
+        safety_checker:
+            safety_checker with ckpt loaded.
+
+    """
     tokenizer = CLIPTokenizerLoader.load_from_cache_subdir(
         pretrained_ckpt_path['tokenizer'])
     feature_extractor = CLIPFeatureExtractorLoader.load_from_cache_subdir(
