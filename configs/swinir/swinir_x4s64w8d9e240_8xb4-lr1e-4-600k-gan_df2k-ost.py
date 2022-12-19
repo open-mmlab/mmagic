@@ -9,4 +9,5 @@ model = dict(
     generator=dict(
         depths=[6, 6, 6, 6, 6, 6, 6, 6, 6],
         embed_dim=240,
-        num_heads=[8, 8, 8, 8, 8, 8, 8, 8, 8]))
+        num_heads=[8, 8, 8, 8, 8, 8, 8, 8, 8],
+        resi_connection='3conv'))
