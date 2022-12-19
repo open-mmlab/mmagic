@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import inspect
 import torch
 import torch.nn as nn
@@ -34,7 +35,6 @@ class StableDiffuser(nn.Module):
         """ 
         
         self.execution_device = torch.device('cpu')
-
         self.submodels = ['tokenizer', 'vae', 'scheduler', 'unet', 'feature_extractor', 'text_encoder']
 
         self.scheduler = DIFFUSION_SCHEDULERS.build(
@@ -57,39 +57,6 @@ class StableDiffuser(nn.Module):
         self.tokenizer, self.feature_extractor, self.text_encoder, self.safety_checker = \
             load_clip_submodels(pretrained_ckpt_path, self.submodels, requires_safety_checker)
 
-    def progress_bar(self, iterable=None, total=None):
-        if not hasattr(self, "_progress_bar_config"):
-            self._progress_bar_config = {}
-        elif not isinstance(self._progress_bar_config, dict):
-            raise ValueError(
-                f"`self._progress_bar_config` should be of type `dict`, but is {type(self._progress_bar_config)}."
-            )
-
-        if iterable is not None:
-            return tqdm(iterable, **self._progress_bar_config)
-        elif total is not None:
-            return tqdm(total=total, **self._progress_bar_config)
-        else:
-            raise ValueError("Either `total` or `iterable` has to be defined.")
-
-    def set_progress_bar_config(self, **kwargs):
-        self._progress_bar_config = kwargs
-
-    @staticmethod
-    def numpy_to_pil(images):
-        """
-        Convert a numpy image or a batch of images to a PIL image.
-        """
-        if images.ndim == 3:
-            images = images[None, ...]
-        images = (images * 255).round().astype("uint8")
-        if images.shape[-1] == 1:
-            # special case for grayscale (single channel) images
-            pil_images = [Image.fromarray(image.squeeze(), mode="L") for image in images]
-        else:
-            pil_images = [Image.fromarray(image) for image in images]
-
-        return pil_images
 
     def to(self, torch_device: Optional[Union[str, torch.device]] = None):
         if torch_device is None:
@@ -115,10 +82,10 @@ class StableDiffuser(nn.Module):
         eta: float = 0.0,
         generator: Optional[torch.Generator] = None,
         latents: Optional[torch.FloatTensor] = None,
-        output_type: Optional[str] = "pil",
         return_dict: bool = True,
         callback: Optional[Callable[[int, int, torch.FloatTensor], None]] = None,
         callback_steps: Optional[int] = 1,
+        show_progress=True,
     ):
         r"""
         Function invoked when calling the pipeline for generation.
@@ -217,38 +184,35 @@ class StableDiffuser(nn.Module):
 
         # 7. Denoising loop
         num_warmup_steps = len(timesteps) - num_inference_steps * self.scheduler.order
-        with self.progress_bar(total=num_inference_steps) as progress_bar:
-            for i, t in enumerate(timesteps):
-                # expand the latents if we are doing classifier free guidance
-                latent_model_input = torch.cat([latents] * 2) if do_classifier_free_guidance else latents
-                # latent_model_input = self.scheduler.scale_model_input(latent_model_input, t)
 
-                # predict the noise residual
-                noise_pred = self.unet(latent_model_input, t, encoder_hidden_states=text_embeddings)['outputs']
+        if show_progress:
+            timesteps = tqdm(timesteps)
+        for i, t in enumerate(timesteps):
+            # expand the latents if we are doing classifier free guidance
+            latent_model_input = torch.cat([latents] * 2) if do_classifier_free_guidance else latents
+            # latent_model_input = self.scheduler.scale_model_input(latent_model_input, t)
 
-                # perform guidance
-                if do_classifier_free_guidance:
-                    noise_pred_uncond, noise_pred_text = noise_pred.chunk(2)
-                    noise_pred = noise_pred_uncond + guidance_scale * (noise_pred_text - noise_pred_uncond)
+            # predict the noise residual
+            noise_pred = self.unet(latent_model_input, t, encoder_hidden_states=text_embeddings)['outputs']
 
-                    # compute the previous noisy sample x_t -> x_t-1
-                    latents = self.scheduler.step(noise_pred, t, latents, **extra_step_kwargs)['prev_sample']
+            # perform guidance
+            if do_classifier_free_guidance:
+                noise_pred_uncond, noise_pred_text = noise_pred.chunk(2)
+                noise_pred = noise_pred_uncond + guidance_scale * (noise_pred_text - noise_pred_uncond)
 
-                # call the callback, if provided
-                if (i + 1) > num_warmup_steps and (i + 1) % self.scheduler.order == 0:
-                    progress_bar.update()
-                    if callback is not None and i % callback_steps == 0:
-                        callback(i, t, latents)
+                # compute the previous noisy sample x_t -> x_t-1
+                latents = self.scheduler.step(noise_pred, t, latents, **extra_step_kwargs)['prev_sample']
+
+            # call the callback, if provided
+            if (i + 1) > num_warmup_steps and (i + 1) % self.scheduler.order == 0:
+                if callback is not None and i % callback_steps == 0:
+                    callback(i, t, latents)
 
         # 8. Post-processing
         image = self.decode_latents(latents)
 
         # 9. Run safety checker
         image, has_nsfw_concept = self.run_safety_checker(image, device, text_embeddings.dtype)
-
-        # 10. Convert to PIL
-        if output_type == "pil":
-            image = self.numpy_to_pil(image)
 
         if not return_dict:
             return (image, has_nsfw_concept)
@@ -362,7 +326,7 @@ class StableDiffuser(nn.Module):
 
     def run_safety_checker(self, image, device, dtype):
         if self.safety_checker is not None:
-            safety_checker_input = self.feature_extractor(self.numpy_to_pil(image), return_tensors="pt").to(device)
+            safety_checker_input = self.feature_extractor(image[0], return_tensors="pt").to(device)
             image, has_nsfw_concept = self.safety_checker(
                 images=image, clip_input=safety_checker_input.pixel_values.to(dtype)
             )

@@ -2,8 +2,7 @@
 import math
 from copy import deepcopy
 from functools import partial
-from typing import Union, Optional, Tuple
-from addict import Dict
+from typing import Tuple
 
 import mmengine
 import numpy as np

@@ -1,4 +1,4 @@
-import numpy as np
+# Copyright (c) OpenMMLab. All rights reserved.
 import torch
 from torch import nn
 
