@@ -50,6 +50,7 @@ from .sagan import SAGAN
 from .singan import SinGAN
 from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
+from .stable_diffusion import StableDiffuser
 from .stylegan1 import StyleGAN1
 from .stylegan2 import StyleGAN2
 from .stylegan3 import StyleGAN3, StyleGAN3Generator
@@ -57,7 +58,6 @@ from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
 from .wgan_gp import WGANGP
-from .stable_diffusion import StableDiffuser
 
 __all__ = [
     'AOTEncoderDecoder', 'AOTBlockNeck', 'AOTInpaintor',
