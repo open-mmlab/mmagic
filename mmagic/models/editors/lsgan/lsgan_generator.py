@@ -45,6 +45,7 @@ class LSGANGenerator(BaseModule):
             except for the final output layer. Defaults to dict(type='ReLU').
         out_act_cfg (dict, optional): Activation config for the final output
             layer. Defaults to dict(type='Tanh').
+        init_cfg (dict, optional): Initialization config dict.
     """
 
     def __init__(self,
@@ -56,8 +57,9 @@ class LSGANGenerator(BaseModule):
                  conv_cfg=dict(type='ConvTranspose2d'),
                  default_norm_cfg=dict(type='BN'),
                  default_act_cfg=dict(type='ReLU'),
-                 out_act_cfg=dict(type='Tanh')):
-        super().__init__()
+                 out_act_cfg=dict(type='Tanh'),
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
         assert output_scale % input_scale == 0
         assert output_scale // input_scale >= 4
 
