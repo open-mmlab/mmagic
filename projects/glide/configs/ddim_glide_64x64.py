@@ -23,7 +23,7 @@ model = dict(
             type='MultiHeadAttentionBlock',
             num_heads=1,
             num_head_channels=64,
-            use_new_attention_order=False,
+            use_new_attention_order=True,
             encoder_channels=512),
         use_scale_shift_norm=True,
         text_ctx=128,
@@ -34,7 +34,7 @@ model = dict(
         xf_padding=True,
     ),
     diffusion_scheduler=dict(
-        type='DDIMScheduler',
+        type='DDPMScheduler',
         variance_type='learned_range',
         beta_schedule='linear'),
     use_fp16=False)
