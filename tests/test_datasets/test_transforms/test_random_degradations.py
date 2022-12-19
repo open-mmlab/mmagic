@@ -9,7 +9,7 @@ from mmedit.datasets.transforms import (DegradationsWithShuffle, RandomBlur,
 
 def test_random_noise():
     results = {}
-    results['lq'] = np.ones((8, 8, 3)).astype(np.float32)
+    results['lq'] = np.ones((8, 8, 3)).astype(np.uint8)
 
     # Gaussian noise
     model = RandomNoise(
@@ -49,7 +49,7 @@ def test_random_noise():
 
 def test_random_jpeg_compression():
     results = {}
-    results['lq'] = np.ones((8, 8, 3)).astype(np.float32)
+    results['lq'] = np.ones((8, 8, 3)).astype(np.uint8)
 
     model = RandomJPEGCompression(params=dict(quality=[5, 50]), keys=['lq'])
     results = model(results)
