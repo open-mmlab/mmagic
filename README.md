@@ -282,6 +282,14 @@ Supported algorithms:
 
 </details>
 
+<details open>
+
+<summary>Image Restoration</summary>
+
+- ✅ [NAFNet](configs/nafnet/README.md)
+
+</details>
+
 Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) for more details.
 
 ## Contributing

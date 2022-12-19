@@ -280,6 +280,14 @@ pip3 install -e .
 
 </details>
 
+<details open>
+
+<summary>Image Restoration</summary>
+
+- ✅ [NAFNet](configs/nafnet/README.md)
+
+</details>
+
 请参考[模型库](https://mmediting.readthedocs.io/zh_CN/1.x/3_model_zoo.html)了解详情。
 
 ## 参与贡献
