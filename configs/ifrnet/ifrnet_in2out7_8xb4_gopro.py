@@ -42,14 +42,7 @@ train_pipeline = [
         direction='horizontal'),
     dict(
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
-    dict(
-        type='ColorJitter',
-        keys=['img', 'gt'],
-        channel_order='rgb',
-        brightness=0.05,
-        contrast=0.05,
-        saturation=0.05,
-        hue=0.05),
+    dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     dict(type='TemporalReverse', keys=['img'], reverse_ratio=0.5),
     dict(type='PackEditInputs')
 ]
@@ -75,7 +68,7 @@ val_dataset_type = 'MultipleFramesDataset'
 data_root = '/mnt/petrelfs/wubohuai/research/datasets/gopro/'
 
 train_dataloader = dict(
-    num_workers=16,
+    num_workers=8,
     batch_size=4,  # 8 gpu
     persistent_workers=False,
     sampler=dict(type='DefaultSampler', shuffle=True),
@@ -112,7 +105,7 @@ val_evaluator = [
 ]
 test_evaluator = val_evaluator
 
-train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=500)
+train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=300, val_interval=20)
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
@@ -120,35 +113,28 @@ test_cfg = dict(type='TestLoop')
 optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
     type='OptimWrapper',
-    optimizer=dict(type='Adam', lr=1e-4, betas=(0.9, 0.99)),
+    optimizer=dict(type='AdamW', lr=1e-4, weight_decay=0),
 )
 
 # learning policy
 param_scheduler = dict(
-    type='ReduceLR',
-    by_epoch=True,
-    mode='min',
-    factor=0.5,
-    patience=10,
-    cooldown=20)
+    type='CosineAnnealingLR', by_epoch=False, T_max=600_000, eta_min=1e-5)
 
 default_hooks = dict(
     checkpoint=dict(
         type='CheckpointHook',
-        interval=1,
+        interval=20,
         save_optimizer=True,
         by_epoch=True,
         out_dir=save_dir,
+        max_keep_ckpts=10,
+        save_best='PSNR',
+        rule='greater',
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=10),
     sampler_seed=dict(type='DistSamplerSeedHook'),
     # visualization=dict(type='EditVisualizationHook'),
-    param_scheduler=dict(
-        type='ReduceLRSchedulerHook',
-        by_epoch=True,
-        interval=1,
-        val_metric='PSNR'),
 )
 
 visualizer = dict(img_keys=['input', 'gt_img', 'pred_img'], fn_key='key')

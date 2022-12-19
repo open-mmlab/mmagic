@@ -43,7 +43,10 @@ class Ternary(nn.Module):
     def transform(self, tensor):
         tensor_ = tensor.mean(dim=1, keepdim=True)
         patches = F.conv2d(
-            tensor_, self.w, padding=self.patch_size // 2, bias=None)
+            tensor_,
+            self.w.to(tensor.device),
+            padding=self.patch_size // 2,
+            bias=None)
         loc_diff = patches - tensor_
         loc_diff_norm = loc_diff / torch.sqrt(0.81 + loc_diff**2)
         return loc_diff_norm
@@ -61,7 +64,7 @@ class Ternary(nn.Module):
         loc_diff_y = self.transform(y)
         diff = loc_diff_x - loc_diff_y.detach()
         dist = (diff**2 / (0.1 + diff**2)).mean(dim=1, keepdim=True)
-        mask = self.valid_mask(x)
+        mask = self.valid_mask(x).to(x.device)
         loss = (dist * mask).mean()
         return loss
 
@@ -81,7 +84,10 @@ class Geometry(nn.Module):
         b, c, h, w = tensor.size()
         tensor_ = tensor.reshape(b * c, 1, h, w)
         patches = F.conv2d(
-            tensor_, self.w, padding=self.patch_size // 2, bias=None)
+            tensor_,
+            self.w.to(tensor.device),
+            padding=self.patch_size // 2,
+            bias=None)
         loc_diff = patches - tensor_
         loc_diff_ = loc_diff.reshape(b, c * (self.patch_size**2), h, w)
         loc_diff_norm = loc_diff_ / torch.sqrt(0.81 + loc_diff_**2)

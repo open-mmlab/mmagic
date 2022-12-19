@@ -144,20 +144,27 @@ class IFRNet(BasicInterpolator):
         Returns:
             dict: Dict of losses.
         """
-        time_embed = self.set_time_embedding()
+        time_embed = self.set_time_embedding(inputs)
         img0, img1 = self.set_scaled_inputs(inputs)
+        B, T, C, H, W = img0.shape
+        img0 = img0.view(B * T, C, H, W)
+        img1 = img1.view(B * T, C, H, W)
         out_dict = self.generator(img0, img1, time_embed)
         pred_imgs = out_dict['pred_img']
+        pred_imgs = pred_imgs.view(B, T, C, H, W)
+        flatten_pred_imgs = pred_imgs.view(B * T, C, H, W)
         feats = out_dict['feats']
         # flows0 = out_dict['flows0']
         # flows1 = out_dict['flows1']
 
         gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
         batch_gt_data = torch.stack(gt_imgs)
-        ft_1, ft_2, ft_3, ft_4 = self.generator.encoder(batch_gt_data)
+        B, T, C, H, W = batch_gt_data.shape
+        flatten_gt_data = batch_gt_data.view(B * T, C, H, W)
+        ft_1, ft_2, ft_3, ft_4 = self.generator.encoder(flatten_gt_data)
 
         loss_rec = self.l1_loss(pred_imgs - batch_gt_data) + \
-            self.tr_loss(pred_imgs, batch_gt_data)
+            self.tr_loss(flatten_pred_imgs, flatten_gt_data)
         loss_geo = 0.01 * (
             self.gc_loss(feats[0], ft_1) + self.gc_loss(feats[1], ft_2) +
             self.gc_loss(feats[2], ft_3))

@@ -110,7 +110,7 @@ class MultipleFramesDataset(BasicFramesDataset):
         Returns:
             list[dict]: A list of annotation.
         """
-
+        self._get_path_list()
         self._set_seq_lens()
 
         folders = []
