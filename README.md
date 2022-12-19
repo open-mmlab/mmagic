@@ -282,6 +282,8 @@ Supported algorithms:
 
 </details>
 
+<details open>
+
 <summary>Image Restoration</summary>
 
 - ✅ [NAFNet](configs/nafnet/README.md)
