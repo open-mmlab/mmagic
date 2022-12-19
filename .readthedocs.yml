@@ -1,10 +1,9 @@
 version: 2
 
-formats: all
+formats: [pdf, epub]
 
 python:
     version: 3.7
     install:
       - requirements: requirements/docs.txt
       - requirements: requirements/readthedocs.txt
-      - requirements: requirements/runtime.txt

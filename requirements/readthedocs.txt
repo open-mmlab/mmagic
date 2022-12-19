@@ -1,9 +1,13 @@
 lmdb
+lpips
 mmcv>=2.0.0rc1
+mmdet >= 3.0.0rc2
+mmengine
 prettytable
 Pygments
 regex
 scikit-image
+tabulate
 titlecase
 torch
 torchvision
