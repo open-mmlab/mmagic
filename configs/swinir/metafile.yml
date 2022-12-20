@@ -7,255 +7,279 @@ Collections:
   - https://arxiv.org/abs/2108.10257
   README: configs/swinir/README.md
 Models:
-- Config: configs/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
-  In Collection: SwinIR
-  Metadata:
-    GPUs: '1'
-    Training Data: Others
-  Name: swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k
-  Results:
-  - Dataset: Others
-    Metrics:
-      Set14 PSNR: 32.3254
-      Set14 SSIM: 0.8997
-      Set5 PSNR: 36.2104
-      Set5 SSIM: 0.9458
-    Task: Image Restoration
-  Weights: https://drive.google.com/file/d/1Uw1QtPKnBvFalgx8sC-moFmTLCBtfbqM/view?usp=share_link
-- Config: configs/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
-  In Collection: SwinIR
-  Metadata:
-    GPUs: '1'
-    Training Data: Others
-  Name: swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k
-  Results:
-  - Dataset: Others
-    Metrics:
-      Set14 PSNR: 29.0268
-      Set14 SSIM: 0.8212
-      Set5 PSNR: 32.9243
-      Set5 SSIM: 0.908
-    Task: Image Restoration
-  Weights: https://drive.google.com/file/d/13VOC_15bH4OcfqLX3TYa3NwoTSADKH9b/view?usp=share_link
-- Config: configs/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
-  In Collection: SwinIR
-  Metadata:
-    GPUs: '1'
-    Training Data: Others
-  Name: swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k
-  Results:
-  - Dataset: Others
-    Metrics:
-      Set14 PSNR: 27.2786
-      Set14 SSIM: 0.8973
-      Set5 PSNR: 30.9975
-      Set5 SSIM: 0.8757
-    Task: Image Restoration
-  Weights: https://drive.google.com/file/d/12IXYTR_3UebYbTqR9wumBEv5AlL6Qyr9/view?usp=share_link
 - Config: configs/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: DIV2K
   Name: swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
-      Set14 PSNR: 32.0471
-      Set14 SSIM: 0.9398
-      Set5 PSNR: 36.1395
-      Set5 SSIM: 0.9453
-    Task: Image Restoration
+      DIV2K PSNR: 37.8921
+      DIV2K SSIM: 0.9481
+      Set14 PSNR: 34.1174
+      Set14 SSIM: 0.923
+      Set5 PSNR: 38.324
+      Set5 SSIM: 0.9626
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1NwpDavsYKNcVptQyUrCzFp2ArAtBV6a2/view?usp=share_link
 - Config: configs/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: DIV2K
   Name: swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
-      Set14 PSNR: 28.8743
-      Set14 SSIM: 0.8178
-      Set5 PSNR: 32.8619
-      Set5 SSIM: 0.9073
-    Task: Image Restoration
+      DIV2K PSNR: 34.1397
+      DIV2K SSIM: 0.8917
+      Set14 PSNR: 30.7669
+      Set14 SSIM: 0.8508
+      Set5 PSNR: 34.864
+      Set5 SSIM: 0.9317
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/11fn_CkgaYl-flzaeJeapKa0d17RwPNQ9/view?usp=share_link
 - Config: configs/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: DIV2K
   Name: swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
-      Set14 PSNR: 27.108
-      Set14 SSIM: 0.754
-      Set5 PSNR: 30.8093
-      Set5 SSIM: 0.8729
-    Task: Image Restoration
+      DIV2K PSNR: 32.0953
+      DIV2K SSIM: 0.8418
+      Set14 PSNR: 28.9065
+      Set14 SSIM: 0.7915
+      Set5 PSNR: 32.7315
+      Set5 SSIM: 0.9029
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1KWaJ3X6ZrXJZ37jHczdjRTcElQ_sPTpP/view?usp=share_link
+- Config: configs/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k
+  Results:
+  - Dataset: Others
+    Metrics:
+      DIV2K PSNR: 37.9473
+      DIV2K SSIM: 0.9488
+      Set14 PSNR: 34.4149
+      Set14 SSIM: 0.9252
+      Set5 PSNR: 38.3971
+      Set5 SSIM: 0.9629
+    Task: Image Super-Resolution,
+  Weights: https://drive.google.com/file/d/1Uw1QtPKnBvFalgx8sC-moFmTLCBtfbqM/view?usp=share_link
+- Config: configs/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k
+  Results:
+  - Dataset: Others
+    Metrics:
+      DIV2K PSNR: 34.283
+      DIV2K SSIM: 0.8939
+      Set14 PSNR: 30.9258
+      Set14 SSIM: 0.854
+      Set5 PSNR: 34.9335
+      Set5 SSIM: 0.9323
+    Task: Image Super-Resolution,
+  Weights: https://drive.google.com/file/d/13VOC_15bH4OcfqLX3TYa3NwoTSADKH9b/view?usp=share_link
+- Config: configs/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k
+  Results:
+  - Dataset: Others
+    Metrics:
+      DIV2K PSNR: 32.3021
+      DIV2K SSIM: 0.8451
+      Set14 PSNR: 29.0792
+      Set14 SSIM: 0.7953
+      Set5 PSNR: 32.9214
+      Set5 SSIM: 0.9053
+    Task: Image Super-Resolution,
+  Weights: https://drive.google.com/file/d/12IXYTR_3UebYbTqR9wumBEv5AlL6Qyr9/view?usp=share_link
 - Config: configs/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: DIV2K
   Name: swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
-      Set14 PSNR: 31.7807
-      Set14 SSIM: 0.8948
-      Set5 PSNR: 35.9517
-      Set5 SSIM: 0.9442
-    Task: Image Restoration
+      DIV2K PSNR: 37.5844
+      DIV2K SSIM: 0.9459
+      Set14 PSNR: 33.8404
+      Set14 SSIM: 0.9207
+      Set5 PSNR: 38.1289
+      Set5 SSIM: 0.9617
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/13dDwSMxjBpZZiXlgKHH9onkxzLUKZ0LX/view?usp=share_link
 - Config: configs/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: DIV2K
   Name: swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
-      Set14 PSNR: 28.6482
-      Set14 SSIM: 0.8136
-      Set5 PSNR: 32.6025
-      Set5 SSIM: 0.9045
-    Task: Image Restoration
+      DIV2K PSNR: 33.8394
+      DIV2K SSIM: 0.8867
+      Set14 PSNR: 30.534
+      Set14 SSIM: 0.8468
+      Set5 PSNR: 34.6037
+      Set5 SSIM: 0.9293
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1Jj0Mdyd2sbaaredwNxVtp0zraHr_EgCN/view?usp=share_link
 - Config: configs/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: DIV2K
   Name: swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k
   Results:
   - Dataset: DIV2K
     Metrics:
-      Set14 PSNR: 26.944
-      Set14 SSIM: 0.7484
-      Set5 PSNR: 30.5225
-      Set5 SSIM: 0.8678
-    Task: Image Restoration
+      DIV2K PSNR: 31.8636
+      DIV2K SSIM: 0.8353
+      Set14 PSNR: 28.7441
+      Set14 SSIM: 0.7861
+      Set5 PSNR: 32.4343
+      Set5 SSIM: 0.8984
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1hf-Bod4nAo13dRgyHKYiAi260a1sYCT8/view?usp=share_link
-- Config: configs/swinir/swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost.py
+- Config: configs/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost
+  Name: swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
   Results:
   - Dataset: Others
-    Metrics: {}
-    Task: Image Restoration
+    Metrics:
+      RealSRSet+5images NIQE: 5.7975
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1efvIxFkevJpRsUd-Mvq7OIeeGbBhXtyJ/view?usp=share_link
-- Config: configs/swinir/swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost.py
+- Config: configs/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost
+  Name: swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
   Results:
   - Dataset: Others
-    Metrics: {}
-    Task: Image Restoration
+    Metrics:
+      RealSRSet+5images NIQE: 7.2738
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1RpeouyxHZbhS0z-uoX8r5Ys2jD8R59IL/view?usp=share_link
-- Config: configs/swinir/swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost.py
+- Config: configs/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost
+  Name: swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
   Results:
   - Dataset: Others
-    Metrics: {}
-    Task: Image Restoration
+    Metrics:
+      RealSRSet+5images NIQE: 5.2329
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1YryTalO1rqlqtVi7ZSnEGXXqg_Pg4_9w/view?usp=share_link
-- Config: configs/swinir/swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost.py
+- Config: configs/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost
+  Name: swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
   Results:
   - Dataset: Others
-    Metrics: {}
-    Task: Image Restoration
+    Metrics:
+      RealSRSet+5images NIQE: 7.746
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1T0XYcNdAVM_UuQlgauHrUSLM_EPB_XCY/view?usp=share_link
-- Config: configs/swinir/swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-gan_df2k-ost.py
+- Config: configs/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-gan_df2k-ost
+  Name: swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost
   Results:
   - Dataset: Others
-    Metrics: {}
-    Task: Image Restoration
+    Metrics:
+      RealSRSet+5images NIQE: 5.1464
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1RJOir_JbWcjZDKK1Rq6GqDtrE4DQhbKL/view?usp=share_link
-- Config: configs/swinir/swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-psnr_df2k-ost.py
+- Config: configs/swinir/swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-psnr_df2k-ost
+  Name: swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost
   Results:
   - Dataset: Others
-    Metrics: {}
-    Task: Image Restoration
+    Metrics:
+      RealSRSet+5images NIQE: 7.6378
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1YAeG9duFEt5yJtFS_iCFI685mgb7UUJi/view?usp=share_link
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN15_dfwb.py
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN15_dfwb
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15
   Results:
   - Dataset: Others
     Metrics:
       BSD68 PSNR: 32.5203
       Set12 PSNR: 33.9731
       Urban100 PSNR: 34.3424
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/18PmDIFYZtlvyLQnGYvKShO-CdtlPwIwe/view?usp=share_link
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN25_dfwb.py
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN25_dfwb
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25
   Results:
   - Dataset: Others
     Metrics:
       BSD68 PSNR: 30.1377
       Set12 PSNR: 31.6434
       Urban100 PSNR: 31.9493
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1PqC9a-3wfyH6DeVpP2yi6r6stqEB1vfj/view?usp=share_link
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN50_dfwb.py
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN50_dfwb
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50
   Results:
   - Dataset: Others
     Metrics:
       BSD68 PSNR: 27.3157
       Set12 PSNR: 28.5651
       Urban100 PSNR: 28.6626
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1miDCBmxe73XoxkJDLAmqOBbuiY9U6JRz/view?usp=share_link
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb.py
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15
   Results:
   - Dataset: Others
     Metrics:
@@ -263,14 +287,14 @@ Models:
       Kodak24 PSNR: 35.3555
       McMaster PSNR: 35.6205
       Urban100 PSNR: 35.1836
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/16pfIBzAXTv6-3xTsKXEtLkY2pLM-tNFn/view?usp=share_link
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN25_dfwb.py
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN25_dfwb
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25
   Results:
   - Dataset: Others
     Metrics:
@@ -278,14 +302,14 @@ Models:
       Kodak24 PSNR: 32.9003
       McMaster PSNR: 33.3198
       Urban100 PSNR: 32.9458
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN50_dfwb.py
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
-  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN50_dfwb
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50
   Results:
   - Dataset: Others
     Metrics:
@@ -293,12 +317,12 @@ Models:
       Kodak24 PSNR: 29.8058
       McMaster PSNR: 30.2027
       Urban100 PSNR: 29.8832
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb
   Results:
@@ -306,12 +330,12 @@ Models:
     Metrics:
       Classic5 PSNR: 30.2746
       Classic5 SSIM: 0.8254
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1LMEGlGtYcrJ9dhC8pmNsCAWyeZq1Dfc5/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb
   Results:
@@ -319,12 +343,12 @@ Models:
     Metrics:
       Classic5 PSNR: 32.5331
       Classic5 SSIM: 0.8753
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1624dceqoBD5CwqLuL_ozPaYuIQex2WmL/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR30_dfwb.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR30_dfwb
   Results:
@@ -332,12 +356,12 @@ Models:
     Metrics:
       Classic5 PSNR: 33.7504
       Classic5 SSIM: 0.8966
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1X70GSCK8Wo9nYUmtN0MysCarIHliB3WM/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR40_dfwb.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR40_dfwb
   Results:
@@ -345,12 +369,12 @@ Models:
     Metrics:
       Classic5 PSNR: 34.5377
       Classic5 SSIM: 0.9087
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1HQGYXthHnmVsng1313KZmGzewsWPzzDT/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR10_dfwb.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR10_dfwb
   Results:
@@ -358,12 +382,12 @@ Models:
     Metrics:
       LIVE1 PSNR: 27.9085
       LIVE1 SSIM: 0.8057
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1YXlmXo5SdQF7JwEvedUmNgxrPZVwxAgg/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR20_dfwb.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR20_dfwb
   Results:
@@ -371,12 +395,12 @@ Models:
     Metrics:
       LIVE1 PSNR: 30.2844
       LIVE1 SSIM: 0.8717
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1pY6RXvp2y98Qx4VhaZOSVTpyOQzk8l9b/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR30_dfwb.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR30_dfwb
   Results:
@@ -384,12 +408,12 @@ Models:
     Metrics:
       LIVE1 PSNR: 31.6396
       LIVE1 SSIM: 0.9
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1LUiFJCdcGCRl4NDAtiyj2Ba87fKW3p5x/view?usp=share_link
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR40_dfwb.py
   In Collection: SwinIR
   Metadata:
-    GPUs: '1'
+    GPUs: '8'
     Training Data: Others
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR40_dfwb
   Results:
@@ -397,5 +421,5 @@ Models:
     Metrics:
       LIVE1 PSNR: 32.5833
       LIVE1 SSIM: 0.9158
-    Task: Image Restoration
+    Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1N7veqPM2ypF1hOyq8UC7BHLb4K5391wZ/view?usp=share_link

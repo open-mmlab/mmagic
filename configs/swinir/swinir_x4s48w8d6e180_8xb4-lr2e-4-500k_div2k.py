@@ -9,6 +9,12 @@ save_dir = './work_dirs/'
 scale = 4
 img_size = 48
 
+# evaluated on Y channels
+test_evaluator = _base_.test_evaluator
+for evaluator in test_evaluator:
+    for metric in evaluator:
+        metric['convert_to'] = 'Y'
+
 # model settings
 model = dict(
     type='BaseEditModel',

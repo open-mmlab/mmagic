@@ -2,7 +2,7 @@
 
 > [SwinIR: Image Restoration Using Swin Transformer](https://arxiv.org/abs/2108.10257)
 
-> **Task**: Image Restoration
+> **Task**: Image Super-Resolution,
 
 <!-- [ALGORITHM] -->
 
@@ -10,7 +10,7 @@
 
 <!-- [ABSTRACT] -->
 
-mage restoration is a long-standing low-level vision problem that aims to restore high-quality images from low-quality images (e.g., downscaled, noisy and compressed images). While state-of-the-art image restoration methods are based on convolutional neural networks, few attempts have been made with Transformers which show impressive performance on high-level vision tasks. In this paper, we propose a strong baseline model SwinIR for image restoration based on the Swin Transformer. SwinIR consists of three parts: shallow feature extraction, deep feature extraction and high-quality image reconstruction. In particular, the deep feature extraction module is composed of several residual Swin Transformer blocks (RSTB), each of which has several Swin Transformer layers together with a residual connection. We conduct experiments on three representative tasks: image super-resolution (including classical, lightweight and real-world image super-resolution), image denoising (including grayscale and color image denoising) and JPEG compression artifact reduction. Experimental results demonstrate that SwinIR outperforms state-of-the-art methods on different tasks by up to 0.14~0.45dB, while the total number of parameters can be reduced by up to 67%.
+Image restoration is a long-standing low-level vision problem that aims to restore high-quality images from low-quality images (e.g., downscaled, noisy and compressed images). While state-of-the-art image restoration methods are based on convolutional neural networks, few attempts have been made with Transformers which show impressive performance on high-level vision tasks. In this paper, we propose a strong baseline model SwinIR for image restoration based on the Swin Transformer. SwinIR consists of three parts: shallow feature extraction, deep feature extraction and high-quality image reconstruction. In particular, the deep feature extraction module is composed of several residual Swin Transformer blocks (RSTB), each of which has several Swin Transformer layers together with a residual connection. We conduct experiments on three representative tasks: image super-resolution (including classical, lightweight and real-world image super-resolution), image denoising (including grayscale and color image denoising) and JPEG compression artifact reduction. Experimental results demonstrate that SwinIR outperforms state-of-the-art methods on different tasks by up to 0.14~0.45dB, while the total number of parameters can be reduced by up to 67%.
 
 <!-- [IMAGE] -->
 
@@ -20,67 +20,84 @@ mage restoration is a long-standing low-level vision problem that aims to restor
 
 ## Results and models
 
-001 Image Super-Resolution
+### **Classical Image Super-Resolution**
 
-Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
+Evaluated on Y channels, `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 
-|                                    Method                                    | Set5 PSNR | Set14 PSNR | Set5 SSIM | Set14 SSIM | GPU Info |                                    Download                                    |
-| :--------------------------------------------------------------------------: | :-------: | :--------: | :-------: | :--------: | :------: | :----------------------------------------------------------------------------: |
-| [swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k](/configs/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  36.2104  |  32.3254   |  0.9458   |   0.8997   |    1     | [model](https://drive.google.com/file/d/1Uw1QtPKnBvFalgx8sC-moFmTLCBtfbqM/view?usp=share_link) \\ log |
-| [swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k](/configs/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  32.9243  |  29.0268   |  0.9080   |   0.8212   |    1     | [model](https://drive.google.com/file/d/13VOC_15bH4OcfqLX3TYa3NwoTSADKH9b/view?usp=share_link) \\ log |
-| [swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k](/configs/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  30.9975  |  27.2786   |  0.8757   |   0.8973   |    1     | [model](https://drive.google.com/file/d/12IXYTR_3UebYbTqR9wumBEv5AlL6Qyr9/view?usp=share_link) \\ log |
-| [swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  36.1395  |  32.0471   |  0.9453   |   0.9398   |    1     | [model](https://drive.google.com/file/d/1NwpDavsYKNcVptQyUrCzFp2ArAtBV6a2/view?usp=share_link) \\ log |
-| [swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  32.8619  |  28.8743   |  0.9073   |   0.8178   |    1     | [model](https://drive.google.com/file/d/11fn_CkgaYl-flzaeJeapKa0d17RwPNQ9/view?usp=share_link) \\ log |
-| [swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  30.8093  |  27.1080   |  0.8729   |   0.7540   |    1     | [model](https://drive.google.com/file/d/1KWaJ3X6ZrXJZ37jHczdjRTcElQ_sPTpP/view?usp=share_link) \\ log |
-| [swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  35.9517  |  31.7807   |  0.9442   |   0.8948   |    1     | [model](https://drive.google.com/file/d/13dDwSMxjBpZZiXlgKHH9onkxzLUKZ0LX/view?usp=share_link) \\ log |
-| [swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  32.6025  |  28.6482   |  0.9045   |   0.8136   |    1     | [model](https://drive.google.com/file/d/1Jj0Mdyd2sbaaredwNxVtp0zraHr_EgCN/view?usp=share_link) \\ log |
-| [swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  30.5225  |  26.9440   |  0.8678   |   0.7484   |    1     | [model](https://drive.google.com/file/d/1hf-Bod4nAo13dRgyHKYiAi260a1sYCT8/view?usp=share_link) \\ log |
+|                               Method                               | Set5 PSNR | Set14 PSNR | DIV2K PSNR | Set5 SSIM | Set14 SSIM | DIV2K SSIM | GPU Info |                               Download                               |
+| :----------------------------------------------------------------: | :-------: | :--------: | :--------: | :-------: | :--------: | :--------: | :------: | :------------------------------------------------------------------: |
+| [swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  38.3240  |  34.1174   |  37.8921   |  0.9626   |   0.9230   |   0.9481   |    8     | [model](https://drive.google.com/file/d/1NwpDavsYKNcVptQyUrCzFp2ArAtBV6a2/view?usp=share_link) \| log |
+| [swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  34.8640  |  30.7669   |  34.1397   |  0.9317   |   0.8508   |   0.8917   |    8     | [model](https://drive.google.com/file/d/11fn_CkgaYl-flzaeJeapKa0d17RwPNQ9/view?usp=share_link) \| log |
+| [swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  32.7315  |  28.9065   |  32.0953   |  0.9029   |   0.7915   |   0.8418   |    8     | [model](https://drive.google.com/file/d/1KWaJ3X6ZrXJZ37jHczdjRTcElQ_sPTpP/view?usp=share_link) \| log |
+| [swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k](/configs/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  38.3971  |  34.4149   |  37.9473   |  0.9629   |   0.9252   |   0.9488   |    8     | [model](https://drive.google.com/file/d/1Uw1QtPKnBvFalgx8sC-moFmTLCBtfbqM/view?usp=share_link) \| log |
+| [swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k](/configs/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  34.9335  |  30.9258   |  34.2830   |  0.9323   |   0.8540   |   0.8939   |    8     | [model](https://drive.google.com/file/d/13VOC_15bH4OcfqLX3TYa3NwoTSADKH9b/view?usp=share_link) \| log |
+| [swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k](/configs/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  32.9214  |  29.0792   |  32.3021   |  0.9053   |   0.7953   |   0.8451   |    8     | [model](https://drive.google.com/file/d/12IXYTR_3UebYbTqR9wumBEv5AlL6Qyr9/view?usp=share_link) \| log |
 
-003 Real-World Image Super-Resolution
+### **Lightweight Image Super-Resolution**
 
-|                                             Method                                              | GPU Info |                                             Download                                              |
-| :---------------------------------------------------------------------------------------------: | :------: | :-----------------------------------------------------------------------------------------------: |
-| [swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost](/configs/swinir/swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost.py) |    1     | [model](https://drive.google.com/file/d/1efvIxFkevJpRsUd-Mvq7OIeeGbBhXtyJ/view?usp=share_link) \\ log |
-| [swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost](/configs/swinir/swinir_x2s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost.py) |    1     | [model](https://drive.google.com/file/d/1RpeouyxHZbhS0z-uoX8r5Ys2jD8R59IL/view?usp=share_link) \\ log |
-| [swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost](/configs/swinir/swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-gan_df2k-ost.py) |    1     | [model](https://drive.google.com/file/d/1YryTalO1rqlqtVi7ZSnEGXXqg_Pg4_9w/view?usp=share_link) \\ log |
-| [swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost](/configs/swinir/swinir_x4s64w8d6e180_8xb4-lr1e-4-600k-psnr_df2k-ost.py) |    1     | [model](https://drive.google.com/file/d/1T0XYcNdAVM_UuQlgauHrUSLM_EPB_XCY/view?usp=share_link) \\ log |
-| [swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-gan_df2k-ost](/configs/swinir/swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-gan_df2k-ost.py) |    1     | [model](https://drive.google.com/file/d/1RJOir_JbWcjZDKK1Rq6GqDtrE4DQhbKL/view?usp=share_link) \\ log |
-| [swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-psnr_df2k-ost](/configs/swinir/swinir_x4s64w8d9e240_8xb4-lr1e-4-600k-psnr_df2k-ost.py) |    1     | [model](https://drive.google.com/file/d/1YAeG9duFEt5yJtFS_iCFI685mgb7UUJi/view?usp=share_link) \\ log |
+Evaluated on Y channels, `scale` pixels in each border are cropped before evaluation.
+The metrics are `PSNR / SSIM` .
 
-004 Grayscale Image Deoising
+|                               Method                               | Set5 PSNR | Set14 PSNR | DIV2K PSNR | Set5 SSIM | Set14 SSIM | DIV2K SSIM | GPU Info |                               Download                               |
+| :----------------------------------------------------------------: | :-------: | :--------: | :--------: | :-------: | :--------: | :--------: | :------: | :------------------------------------------------------------------: |
+| [swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  38.1289  |  33.8404   |  37.5844   |  0.9617   |   0.9207   |   0.9459   |    8     | [model](https://drive.google.com/file/d/13dDwSMxjBpZZiXlgKHH9onkxzLUKZ0LX/view?usp=share_link) \| log |
+| [swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  34.6037  |  30.5340   |  33.8394   |  0.9293   |   0.8468   |   0.8867   |    8     | [model](https://drive.google.com/file/d/1Jj0Mdyd2sbaaredwNxVtp0zraHr_EgCN/view?usp=share_link) \| log |
+| [swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  32.4343  |  28.7441   |  31.8636   |  0.8984   |   0.7861   |   0.8353   |    8     | [model](https://drive.google.com/file/d/1hf-Bod4nAo13dRgyHKYiAi260a1sYCT8/view?usp=share_link) \| log |
+
+### **Real-World Image Super-Resolution**
+
+Evaluated on Y channels.
+The metrics are `NIQE` .
+
+|                                        Method                                        | RealSRSet+5images NIQE | GPU Info |                                        Download                                        |
+| :----------------------------------------------------------------------------------: | :--------------------: | :------: | :------------------------------------------------------------------------------------: |
+| [swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         5.7975         |    8     | [model](https://drive.google.com/file/d/1efvIxFkevJpRsUd-Mvq7OIeeGbBhXtyJ/view?usp=share_link) \| log |
+| [swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         7.2738         |    8     | [model](https://drive.google.com/file/d/1RpeouyxHZbhS0z-uoX8r5Ys2jD8R59IL/view?usp=share_link) \| log |
+| [swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         5.2329         |    8     | [model](https://drive.google.com/file/d/1YryTalO1rqlqtVi7ZSnEGXXqg_Pg4_9w/view?usp=share_link) \| log |
+| [swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         7.7460         |    8     | [model](https://drive.google.com/file/d/1T0XYcNdAVM_UuQlgauHrUSLM_EPB_XCY/view?usp=share_link) \| log |
+| [swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py) |         5.1464         |    8     | [model](https://drive.google.com/file/d/1RJOir_JbWcjZDKK1Rq6GqDtrE4DQhbKL/view?usp=share_link) \| log |
+| [swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py) |         7.6378         |    8     | [model](https://drive.google.com/file/d/1YAeG9duFEt5yJtFS_iCFI685mgb7UUJi/view?usp=share_link) \| log |
+
+### Grayscale Image Deoising
+
+Evaluated on grayscale images.
+The metrics are `PSNR` .
 
 |                                     Method                                     | Set12 PSNR | BSD68 PSNR | Urban100 PSNR | GPU Info |                                     Download                                      |
 | :----------------------------------------------------------------------------: | :--------: | :--------: | :-----------: | :------: | :-------------------------------------------------------------------------------: |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN15_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN15_dfwb.py) |  33.9731   |  32.5203   |    34.3424    |    1     | [model](https://drive.google.com/file/d/18PmDIFYZtlvyLQnGYvKShO-CdtlPwIwe/view?usp=share_link) \\ log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN25_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN25_dfwb.py) |  31.6434   |  30.1377   |    31.9493    |    1     | [model](https://drive.google.com/file/d/1PqC9a-3wfyH6DeVpP2yi6r6stqEB1vfj/view?usp=share_link) \\ log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN50_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_grayDN50_dfwb.py) |  28.5651   |  27.3157   |    28.6626    |    1     | [model](https://drive.google.com/file/d/1miDCBmxe73XoxkJDLAmqOBbuiY9U6JRz/view?usp=share_link) \\ log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15.py) |  33.9731   |  32.5203   |    34.3424    |    8     | [model](https://drive.google.com/file/d/18PmDIFYZtlvyLQnGYvKShO-CdtlPwIwe/view?usp=share_link) \| log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25.py) |  31.6434   |  30.1377   |    31.9493    |    8     | [model](https://drive.google.com/file/d/1PqC9a-3wfyH6DeVpP2yi6r6stqEB1vfj/view?usp=share_link) \| log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50.py) |  28.5651   |  27.3157   |    28.6626    |    8     | [model](https://drive.google.com/file/d/1miDCBmxe73XoxkJDLAmqOBbuiY9U6JRz/view?usp=share_link) \| log |
 
-005 Color Image Deoising
+### Color Image Deoising
+
+Evaluated on RGB channels.
+The metrics are `PSNR` .
 
 |                                 Method                                 | CBSD68 PSNR | Kodak24 PSNR | McMaster PSNR | Urban100 PSNR | GPU Info |                                 Download                                  |
 | :--------------------------------------------------------------------: | :---------: | :----------: | :-----------: | :-----------: | :------: | :-----------------------------------------------------------------------: |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN15_dfwb.py) |   34.4136   |   35.3555    |    35.6205    |    35.1836    |    1     | [model](https://drive.google.com/file/d/16pfIBzAXTv6-3xTsKXEtLkY2pLM-tNFn/view?usp=share_link) \\ log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN25_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN25_dfwb.py) |   31.7626   |   32.9003    |    33.3198    |    32.9458    |    1     | [model](https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link) \\ log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN50_dfwb](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_colorDN50_dfwb.py) |   28.5346   |   29.8058    |    30.2027    |    29.8832    |    1     | [model](https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link) \\ log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15.py) |   34.4136   |   35.3555    |    35.6205    |    35.1836    |    8     | [model](https://drive.google.com/file/d/16pfIBzAXTv6-3xTsKXEtLkY2pLM-tNFn/view?usp=share_link) \| log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25.py) |   31.7626   |   32.9003    |    33.3198    |    32.9458    |    8     | [model](https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link) \| log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50.py) |   28.5346   |   29.8058    |    30.2027    |    29.8832    |    8     | [model](https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link) \| log |
 
-006 JPEG Compression Artifact Reduction (grayscale)
+### JPEG Compression Artifact Reduction (grayscale)
 
 |                                       Method                                       | Classic5 PSNR | Classic5 SSIM | GPU Info |                                       Download                                       |
 | :--------------------------------------------------------------------------------: | :-----------: | :-----------: | :------: | :----------------------------------------------------------------------------------: |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb.py) |    30.2746    |    0.8254     |    1     | [model](https://drive.google.com/file/d/1LMEGlGtYcrJ9dhC8pmNsCAWyeZq1Dfc5/view?usp=share_link) \\ log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb.py) |    32.5331    |    0.8753     |    1     | [model](https://drive.google.com/file/d/1624dceqoBD5CwqLuL_ozPaYuIQex2WmL/view?usp=share_link) \\ log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR30_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR30_dfwb.py) |    33.7504    |    0.8966     |    1     | [model](https://drive.google.com/file/d/1X70GSCK8Wo9nYUmtN0MysCarIHliB3WM/view?usp=share_link) \\ log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR40_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR40_dfwb.py) |    34.5377    |    0.9087     |    1     | [model](https://drive.google.com/file/d/1HQGYXthHnmVsng1313KZmGzewsWPzzDT/view?usp=share_link) \\ log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb.py) |    30.2746    |    0.8254     |    8     | [model](https://drive.google.com/file/d/1LMEGlGtYcrJ9dhC8pmNsCAWyeZq1Dfc5/view?usp=share_link) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb.py) |    32.5331    |    0.8753     |    8     | [model](https://drive.google.com/file/d/1624dceqoBD5CwqLuL_ozPaYuIQex2WmL/view?usp=share_link) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR30_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR30_dfwb.py) |    33.7504    |    0.8966     |    8     | [model](https://drive.google.com/file/d/1X70GSCK8Wo9nYUmtN0MysCarIHliB3WM/view?usp=share_link) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR40_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR40_dfwb.py) |    34.5377    |    0.9087     |    8     | [model](https://drive.google.com/file/d/1HQGYXthHnmVsng1313KZmGzewsWPzzDT/view?usp=share_link) \\ log |
 
-006 JPEG Compression Artifact Reduction (color)
+### JPEG Compression Artifact Reduction (color)
 
 |                                        Method                                         | LIVE1 PSNR | LIVE1 SSIM | GPU Info |                                        Download                                         |
 | :-----------------------------------------------------------------------------------: | :--------: | :--------: | :------: | :-------------------------------------------------------------------------------------: |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR10_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR10_dfwb.py) |  27.9085   |   0.8057   |    1     | [model](https://drive.google.com/file/d/1YXlmXo5SdQF7JwEvedUmNgxrPZVwxAgg/view?usp=share_link) \\ log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR20_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR20_dfwb.py) |  30.2844   |   0.8717   |    1     | [model](https://drive.google.com/file/d/1pY6RXvp2y98Qx4VhaZOSVTpyOQzk8l9b/view?usp=share_link) \\ log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR30_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR30_dfwb.py) |  31.6396   |   0.9000   |    1     | [model](https://drive.google.com/file/d/1LUiFJCdcGCRl4NDAtiyj2Ba87fKW3p5x/view?usp=share_link) \\ log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR40_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR40_dfwb.py) |  32.5833   |   0.9158   |    1     | [model](https://drive.google.com/file/d/1N7veqPM2ypF1hOyq8UC7BHLb4K5391wZ/view?usp=share_link) \\ log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR10_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR10_dfwb.py) |  27.9085   |   0.8057   |    8     | [model](https://drive.google.com/file/d/1YXlmXo5SdQF7JwEvedUmNgxrPZVwxAgg/view?usp=share_link) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR20_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR20_dfwb.py) |  30.2844   |   0.8717   |    8     | [model](https://drive.google.com/file/d/1pY6RXvp2y98Qx4VhaZOSVTpyOQzk8l9b/view?usp=share_link) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR30_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR30_dfwb.py) |  31.6396   |   0.9000   |    8     | [model](https://drive.google.com/file/d/1LUiFJCdcGCRl4NDAtiyj2Ba87fKW3p5x/view?usp=share_link) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR40_dfwb](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR40_dfwb.py) |  32.5833   |   0.9158   |    8     | [model](https://drive.google.com/file/d/1N7veqPM2ypF1hOyq8UC7BHLb4K5391wZ/view?usp=share_link) \| log |
 
 ## Quick Start
 
