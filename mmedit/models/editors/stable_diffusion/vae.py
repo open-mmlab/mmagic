@@ -15,7 +15,7 @@ class Downsample2D(nn.Module):
     Args:
         channels (int): channels in the inputs and outputs.
         use_conv (bool): a bool determining if a convolution is applied.
-        out_channels (int): out channel num
+        out_channels (int): output channels
         padding (int): padding num
     """
 
@@ -55,7 +55,7 @@ class Downsample2D(nn.Module):
             self.conv = conv
 
     def forward(self, hidden_states):
-        """forward hidden states"""
+        """forward hidden states."""
         assert hidden_states.shape[1] == self.channels
         if self.use_conv and self.padding == 0:
             pad = (0, 1, 0, 1)
@@ -74,7 +74,7 @@ class Upsample2D(nn.Module):
         channels (int): channels in the inputs and outputs.
         use_conv (bool): a bool determining if a convolution is applied.
         use_conv_transpose (bool): whether to use conv transpose.
-        out_channels (int): output channel num.
+        out_channels (int): output channels.
     """
 
     def __init__(self,
@@ -104,7 +104,7 @@ class Upsample2D(nn.Module):
             self.Conv2d_0 = conv
 
     def forward(self, hidden_states, output_size=None):
-        """forward with hidden states"""
+        """forward with hidden states."""
         assert hidden_states.shape[1] == self.channels
 
         if self.use_conv_transpose:
@@ -148,6 +148,25 @@ class Upsample2D(nn.Module):
 
 
 class ResnetBlock2D(nn.Module):
+    """resnet block support down sample and up sample.
+
+    Args:
+        in_channels (int): input channels.
+        out_channels (int): output channels.
+        conv_shortcut (bool): whether to use conv shortcut.
+        dropout (float): dropout rate.
+        temb_channels (int): time embedding channels.
+        groups (int): conv groups.
+        groups_out (int): conv out groups.
+        pre_norm (bool): whether to norm before conv. Todo: remove.
+        eps (float): eps for groupnorm.
+        non_linearity (str): non linearity type.
+        time_embedding_norm (str): time embedding norm type.
+        output_scale_factor (float): factor to scale input and output.
+        use_in_shortcut (bool): whether to use conv in shortcut.
+        up (bool): whether to upsample.
+        down (bool): whether to downsample.
+    """
 
     def __init__(
         self,
@@ -225,6 +244,7 @@ class ResnetBlock2D(nn.Module):
                 in_channels, out_channels, kernel_size=1, stride=1, padding=0)
 
     def forward(self, input_tensor, temb):
+        """forward with hidden states and time embeddings."""
         hidden_states = input_tensor
 
         hidden_states = self.norm1(hidden_states)
@@ -271,15 +291,15 @@ class AttentionBlock(nn.Module):
     1e0dceb3b3495bbe19116a5e1b3596cd0706c543/diffusion_tf/models/unet.py#L66.
     Uses three q, k, v linear layers to compute attention.
 
-    Parameters:
-        channels (`int`): The number of channels in the input and output.
-        num_head_channels (`int`, *optional*):
+    Args:
+        channels (int): The number of channels in the input and output.
+        num_head_channels (int, *optional*):
             The number of channels in each head. If None, then `num_heads` = 1.
-        norm_num_groups (`int`, *optional*, defaults to 32):
+        norm_num_groups (int, *optional*, defaults to 32):
             The number of groups to use for group norm.
-        rescale_output_factor (`float`, *optional*, defaults to 1.0):
+        rescale_output_factor (float, *optional*, defaults to 1.0):
             The factor to rescale the output by.
-        eps (`float`, *optional*, defaults to 1e-5):
+        eps (float, *optional*, defaults to 1e-5):
             The epsilon value to use for group norm.
     """
 
@@ -311,6 +331,7 @@ class AttentionBlock(nn.Module):
         self.proj_attn = nn.Linear(channels, channels, 1)
 
     def transpose_for_scores(self, projection: torch.Tensor) -> torch.Tensor:
+        """transpose projection."""
         new_projection_shape = projection.size()[:-1] + (self.num_heads, -1)
         # move heads to 2nd position (B, T, H * D)
         #  -> (B, T, H, D) -> (B, H, T, D)
@@ -319,6 +340,7 @@ class AttentionBlock(nn.Module):
         return new_projection
 
     def forward(self, hidden_states):
+        """forward hidden states."""
         residual = hidden_states
         batch, channel, height, width = hidden_states.shape
 
@@ -386,6 +408,29 @@ class AttentionBlock(nn.Module):
 
 
 class UNetMidBlock2D(nn.Module):
+    """middle block in unet.
+
+    Args:
+        in_channels (int): input channels.
+        temb_channels (int): time embedding channels.
+        dropout (float): dropout rate, defaults to 0.0.
+        num_layers (int): layer num.
+        resnet_eps (float): resnet eps, defaults to 1e-6.
+        resnet_time_scale_shift (str):
+            time scale shift, defaults to 'default'.
+        resnet_act_fn (str):
+            act function in resnet, defaults to 'silu'.
+        resnet_groups (int):
+            conv groups in resnet, defaults to 32.
+        resnet_pre_norm (bool):
+            pre norm in resnet, defaults to True.
+        attn_num_head_channels (int):
+            attention head channels, defaults to 1.
+        attention_type (str):
+            attention type ,defaults to 'default'.
+        output_scale_factor (float):
+            output scale factor, defaults to 1.0.
+    """
 
     def __init__(
         self,
@@ -395,7 +440,7 @@ class UNetMidBlock2D(nn.Module):
         num_layers: int = 1,
         resnet_eps: float = 1e-6,
         resnet_time_scale_shift: str = 'default',
-        resnet_act_fn: str = 'swish',
+        resnet_act_fn: str = 'silu',
         resnet_groups: int = 32,
         resnet_pre_norm: bool = True,
         attn_num_head_channels=1,
@@ -452,6 +497,7 @@ class UNetMidBlock2D(nn.Module):
         self.resnets = nn.ModuleList(resnets)
 
     def forward(self, hidden_states, temb=None, encoder_states=None):
+        """forward with hidden states, time embedding and encoder states."""
         hidden_states = self.resnets[0](hidden_states, temb)
         for attn, resnet in zip(self.attentions, self.resnets[1:]):
             if self.attention_type == 'default':
@@ -464,6 +510,29 @@ class UNetMidBlock2D(nn.Module):
 
 
 class DownEncoderBlock2D(nn.Module):
+    """Down encoder block in vae.
+
+    Args:
+        in_channels (int): input channels.
+        out_channels (int): output channels.
+        dropout (float): dropout rate, defaults to 0.0.
+        num_layers (int): layer nums, defaults to 1.
+        resnet_eps (float): resnet eps, defaults to 1e-6.
+        resnet_time_scale_shift (str):
+            time scale shift in resnet, defaults to 'default'.
+        resnet_act_fn (str):
+            act function in resnet, defaults to 'silu'.
+        resnet_groups (int):
+            group num in resnet, defaults to 32.
+        resnet_pre_norm (bool):
+            whether to pre norm in resnet, defaults to True.
+        output_scale_factor (float):
+            output scale factor, defaults to 1.0.
+        add_downsample (bool):
+            whether to add downsample, defaults to True,
+        downsample_padding (int):
+            downsample padding num, defaults to 1.
+    """
 
     def __init__(
         self,
@@ -473,7 +542,7 @@ class DownEncoderBlock2D(nn.Module):
         num_layers: int = 1,
         resnet_eps: float = 1e-6,
         resnet_time_scale_shift: str = 'default',
-        resnet_act_fn: str = 'swish',
+        resnet_act_fn: str = 'silu',
         resnet_groups: int = 32,
         resnet_pre_norm: bool = True,
         output_scale_factor=1.0,
@@ -514,6 +583,7 @@ class DownEncoderBlock2D(nn.Module):
             self.downsamplers = None
 
     def forward(self, hidden_states):
+        """forward with hidden states."""
         for resnet in self.resnets:
             hidden_states = resnet(hidden_states, temb=None)
 
@@ -525,6 +595,7 @@ class DownEncoderBlock2D(nn.Module):
 
 
 class Encoder(nn.Module):
+    """construct encoder in vae."""
 
     def __init__(
         self,
@@ -593,6 +664,7 @@ class Encoder(nn.Module):
             block_out_channels[-1], conv_out_channels, 3, padding=1)
 
     def forward(self, x):
+        """encoder forward."""
         sample = x
         sample = self.conv_in(sample)
 
@@ -612,6 +684,7 @@ class Encoder(nn.Module):
 
 
 class UpDecoderBlock2D(nn.Module):
+    """construct up decoder block."""
 
     def __init__(
         self,
@@ -658,6 +731,7 @@ class UpDecoderBlock2D(nn.Module):
             self.upsamplers = None
 
     def forward(self, hidden_states):
+        """forward hidden states."""
         for resnet in self.resnets:
             hidden_states = resnet(hidden_states, temb=None)
 
@@ -669,6 +743,7 @@ class UpDecoderBlock2D(nn.Module):
 
 
 class Decoder(nn.Module):
+    """construct decoder in vae."""
 
     def __init__(
         self,
@@ -736,6 +811,7 @@ class Decoder(nn.Module):
             block_out_channels[0], out_channels, 3, padding=1)
 
     def forward(self, z):
+        """decoder forward."""
         sample = z
         sample = self.conv_in(sample)
 
@@ -755,6 +831,7 @@ class Decoder(nn.Module):
 
 
 class DiagonalGaussianDistribution(object):
+    """Calculate diagonal gaussian distribution."""
 
     def __init__(self, parameters, deterministic=False):
         self.parameters = parameters
@@ -771,6 +848,7 @@ class DiagonalGaussianDistribution(object):
 
     def sample(self, generator: Optional[torch.Generator] = None) \
             -> torch.FloatTensor:
+        """sample function."""
         device = self.parameters.device
         sample_device = 'cpu' if device.type == 'mps' else device
         sample = torch.randn(
@@ -782,6 +860,7 @@ class DiagonalGaussianDistribution(object):
         return x
 
     def kl(self, other=None):
+        """calculate kl divergence."""
         if self.deterministic:
             return torch.Tensor([0.0])
         else:
@@ -797,6 +876,7 @@ class DiagonalGaussianDistribution(object):
                 )
 
     def nll(self, sample, dims=[1, 2, 3]):
+        """calculate negative log likelihood."""
         if self.deterministic:
             return torch.Tensor([0.0])
         logtwopi = np.log(2.0 * np.pi)
@@ -806,6 +886,7 @@ class DiagonalGaussianDistribution(object):
             dim=dims)  # noqa
 
     def mode(self):
+        """return self.mean."""
         return self.mean
 
 
@@ -814,7 +895,7 @@ class AutoencoderKL(nn.Module):
     from the paper Auto-Encoding Variational Bayes by Diederik P. Kingma
     and Max Welling.
 
-    Parameters:
+    Args:
         in_channels (int, *optional*, defaults to 3):
             Number of channels in the input image.
         out_channels (int,  *optional*, defaults to 3):
@@ -830,7 +911,8 @@ class AutoencoderKL(nn.Module):
             The activation function to use.
         latent_channels (`int`, *optional*, defaults to `4`):
             Number of channels in the latent space.
-        sample_size (`int`, *optional*, defaults to `32`): TODO
+        sample_size (`int`, *optional*, defaults to `32`):
+            sample size is now not supported.
     """
 
     def __init__(
@@ -879,6 +961,7 @@ class AutoencoderKL(nn.Module):
                                                latent_channels, 1)
 
     def encode(self, x: torch.FloatTensor, return_dict: bool = True) -> Dict:
+        """encode input."""
         h = self.encoder(x)
         moments = self.quant_conv(h)
         posterior = DiagonalGaussianDistribution(moments)
@@ -890,6 +973,7 @@ class AutoencoderKL(nn.Module):
 
     def decode(self, z: torch.FloatTensor, return_dict: bool = True) \
             -> Union[Dict, torch.FloatTensor]:
+        """decode z."""
         z = self.post_quant_conv(z)
         dec = self.decoder(z)
 
@@ -913,6 +997,8 @@ class AutoencoderKL(nn.Module):
                 defaults to `False`.
             return_dict (`bool`, *optional*, defaults to `True`):
                 Whether or not to return a [`Dict`] instead of a plain tuple.
+        Returns:
+            Dict(sample=dec): decode results.
         """
         x = sample
         posterior = self.encode(x).latent_dist
