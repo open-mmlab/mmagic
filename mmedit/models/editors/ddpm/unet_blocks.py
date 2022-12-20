@@ -24,6 +24,7 @@ def get_down_block(
     only_cross_attention=False,
 ):
     """get unet down path block."""
+
     down_block_type = down_block_type[7:] if down_block_type.startswith(
         'UNetRes') else down_block_type
     if down_block_type == 'DownBlock2D':
@@ -78,6 +79,8 @@ def get_up_block(
     use_linear_projection=False,
     only_cross_attention=False,
 ):
+    """get unet up path block."""
+
     up_block_type = up_block_type[7:] if up_block_type.startswith(
         'UNetRes') else up_block_type
     if up_block_type == 'UpBlock2D':
@@ -116,6 +119,7 @@ def get_up_block(
 
 
 class UNetMidBlock2DCrossAttn(nn.Module):
+    """unet mid block built by cross attention."""
 
     def __init__(
         self,
@@ -199,6 +203,8 @@ class UNetMidBlock2DCrossAttn(nn.Module):
         self.resnets = nn.ModuleList(resnets)
 
     def set_attention_slice(self, slice_size):
+        """set attention slice."""
+
         head_dims = self.attn_num_head_channels
         head_dims = [head_dims] if isinstance(head_dims, int) else head_dims
         if slice_size is not None and any(dim % slice_size != 0
@@ -215,13 +221,9 @@ class UNetMidBlock2DCrossAttn(nn.Module):
         for attn in self.attentions:
             attn._set_attention_slice(slice_size)
 
-    def set_use_memory_efficient_attention_xformers(
-            self, use_memory_efficient_attention_xformers: bool):
-        for attn in self.attentions:
-            attn._set_use_memory_efficient_attention_xformers(
-                use_memory_efficient_attention_xformers)
-
     def forward(self, hidden_states, temb=None, encoder_hidden_states=None):
+        """forward with hidden states."""
+
         hidden_states = self.resnets[0](hidden_states, temb)
         for attn, resnet in zip(self.attentions, self.resnets[1:]):
             hidden_states = attn(hidden_states, encoder_hidden_states).sample
@@ -231,6 +233,7 @@ class UNetMidBlock2DCrossAttn(nn.Module):
 
 
 class CrossAttnDownBlock2D(nn.Module):
+    """Down block built by cross attention."""
 
     def __init__(
         self,
@@ -316,6 +319,8 @@ class CrossAttnDownBlock2D(nn.Module):
         self.gradient_checkpointing = False
 
     def set_attention_slice(self, slice_size):
+        """set attention slice."""
+
         head_dims = self.attn_num_head_channels
         head_dims = [head_dims] if isinstance(head_dims, int) else head_dims
         if slice_size is not None and any(dim % slice_size != 0
@@ -332,13 +337,9 @@ class CrossAttnDownBlock2D(nn.Module):
         for attn in self.attentions:
             attn._set_attention_slice(slice_size)
 
-    def set_use_memory_efficient_attention_xformers(
-            self, use_memory_efficient_attention_xformers: bool):
-        for attn in self.attentions:
-            attn._set_use_memory_efficient_attention_xformers(
-                use_memory_efficient_attention_xformers)
-
     def forward(self, hidden_states, temb=None, encoder_hidden_states=None):
+        """forward with hidden states."""
+
         output_states = ()
 
         for resnet, attn in zip(self.resnets, self.attentions):
@@ -377,6 +378,7 @@ class CrossAttnDownBlock2D(nn.Module):
 
 
 class DownBlock2D(nn.Module):
+    """Down block built by resnet."""
 
     def __init__(
         self,
@@ -430,6 +432,8 @@ class DownBlock2D(nn.Module):
         self.gradient_checkpointing = False
 
     def forward(self, hidden_states, temb=None):
+        """forward with hidden states."""
+
         output_states = ()
 
         for resnet in self.resnets:
@@ -459,6 +463,7 @@ class DownBlock2D(nn.Module):
 
 
 class CrossAttnUpBlock2D(nn.Module):
+    """Up block built by cross attention."""
 
     def __init__(
         self,
@@ -544,6 +549,8 @@ class CrossAttnUpBlock2D(nn.Module):
         self.gradient_checkpointing = False
 
     def set_attention_slice(self, slice_size):
+        """set attention slice."""
+
         head_dims = self.attn_num_head_channels
         head_dims = [head_dims] if isinstance(head_dims, int) else head_dims
         if slice_size is not None and any(dim % slice_size != 0
@@ -562,12 +569,6 @@ class CrossAttnUpBlock2D(nn.Module):
 
         self.gradient_checkpointing = False
 
-    def set_use_memory_efficient_attention_xformers(
-            self, use_memory_efficient_attention_xformers: bool):
-        for attn in self.attentions:
-            attn._set_use_memory_efficient_attention_xformers(
-                use_memory_efficient_attention_xformers)
-
     def forward(
         self,
         hidden_states,
@@ -576,6 +577,8 @@ class CrossAttnUpBlock2D(nn.Module):
         encoder_hidden_states=None,
         upsample_size=None,
     ):
+        """forward with hidden states and res hidden states."""
+
         for resnet, attn in zip(self.resnets, self.attentions):
             # pop res hidden states
             res_hidden_states = res_hidden_states_tuple[-1]
@@ -614,6 +617,7 @@ class CrossAttnUpBlock2D(nn.Module):
 
 
 class UpBlock2D(nn.Module):
+    """Up block built by resnet."""
 
     def __init__(
         self,
@@ -671,6 +675,8 @@ class UpBlock2D(nn.Module):
                 res_hidden_states_tuple,
                 temb=None,
                 upsample_size=None):
+        """forward with hidden states and res hidden states."""
+
         for resnet in self.resnets:
             # pop res hidden states
             res_hidden_states = res_hidden_states_tuple[-1]
