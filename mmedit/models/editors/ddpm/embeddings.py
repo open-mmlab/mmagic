@@ -16,12 +16,23 @@ def get_timestep_embedding(
     """This matches the implementation in Denoising Diffusion Probabilistic
     Models: Create sinusoidal timestep embeddings.
 
-    :param timesteps: a 1-D Tensor of N indices, one per batch element.
-                      These may be fractional.
-    :param embedding_dim: the dimension of the output.
-    :param max_period: controls the minimum frequency of the
-    embeddings. :return: an [N x dim] Tensor of positional embeddings.
+    Args:
+        timesteps (torch.Tensor): 
+            a 1-D Tensor of N indices, one per batch element.
+            These may be fractional.
+        embedding_dim (int): the dimension of the output.
+        flip_sin_to_cos (bool):
+            whether to flip sin to cos, defaults to False.
+        downscale_freq_shift (float):
+            downscale frequecy shift, defaults to 1.
+        scale (float):
+            embedding scale, defaults to 1.
+        max_period: controls the minimum frequency of the exponent.
+
+    Returns:
+        emb (torch.Tensor): an [N x dim] Tensor of positional embeddings.
     """
+
     assert len(timesteps.shape) == 1, 'Timesteps should be a 1d-array'
 
     half_dim = embedding_dim // 2
@@ -49,6 +60,7 @@ def get_timestep_embedding(
 
 
 class TimestepEmbedding(nn.Module):
+    """Module which uses linear to embed timestep"""
 
     def __init__(self,
                  in_channels: int,
@@ -71,6 +83,8 @@ class TimestepEmbedding(nn.Module):
         self.linear_2 = nn.Linear(time_embed_dim, time_embed_dim_out)
 
     def forward(self, sample):
+        """forward with sample"""
+
         sample = self.linear_1(sample)
 
         if self.act is not None:
@@ -81,6 +95,7 @@ class TimestepEmbedding(nn.Module):
 
 
 class Timesteps(nn.Module):
+    """A module which transforms timesteps to embedding"""
 
     def __init__(self,
                  num_channels: int,
@@ -92,6 +107,8 @@ class Timesteps(nn.Module):
         self.downscale_freq_shift = downscale_freq_shift
 
     def forward(self, timesteps):
+        """forward with timesteps"""
+
         t_emb = get_timestep_embedding(
             timesteps,
             self.num_channels,
@@ -147,6 +164,8 @@ class ImagePositionalEmbeddings(nn.Module):
         self.width_emb = nn.Embedding(self.width, embed_dim)
 
     def forward(self, index):
+        """forward with index"""
+
         emb = self.emb(index)
 
         height_emb = self.height_emb(

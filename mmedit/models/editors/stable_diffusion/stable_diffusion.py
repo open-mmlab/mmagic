@@ -2,7 +2,6 @@
 import inspect
 from typing import Callable, List, Optional, Union
 
-import cv2
 import torch
 import torch.nn as nn
 from mmengine.logging import MMLogger
@@ -257,9 +256,7 @@ class StableDiffusion(nn.Module):
         # 9. Run safety checker
         image, has_nsfw_concept = self.run_safety_checker(
             image, device, text_embeddings.dtype)
-
-        image = image[0] * 255
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = image[0].permute([2, 0, 1])
 
         return {'samples': image, 'nsfw_content_detected': has_nsfw_concept}
 
@@ -425,7 +422,7 @@ class StableDiffusion(nn.Module):
         image = (image / 2 + 0.5).clamp(0, 1)
         # we always cast to float32 as this does not cause
         # significant overhead and is compatible with bfloa16
-        image = image.cpu().permute(0, 2, 3, 1).float().numpy()
+        image = image.cpu().permute(0, 2, 3, 1).float()
         return image
 
     def prepare_extra_step_kwargs(self, generator, eta):

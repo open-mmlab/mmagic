@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import mmcv
 from mmengine import MODELS, Config
 from mmengine.runner import set_random_seed
+from torchvision import utils
 
 from mmedit.utils import register_all_modules
 
@@ -23,4 +23,5 @@ prompt = 'an insect robot preparing a delicious meal'
 StableDiffuser = StableDiffuser.to('cuda')
 
 image = StableDiffuser.infer(prompt)['samples']
-mmcv.imwrite(image, 'resources/output/insect_sd.png')
+# mmcv.imwrite(image, 'resources/output/insect_sd.png')
+utils.save_image(image, 'resources/output/insect_sd.png')
