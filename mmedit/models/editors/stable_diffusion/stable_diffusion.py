@@ -73,7 +73,8 @@ class StableDiffusion(nn.Module):
             pretrained_ckpt_path, self.submodels, requires_safety_checker)
 
     def to(self, torch_device: Optional[Union[str, torch.device]] = None):
-        """put submodels to torch device.
+        """
+        put submodels to torch device.
 
         Args:
             torch_device(Optional[Union[str, torch.device]]):
@@ -271,15 +272,15 @@ class StableDiffusion(nn.Module):
         Encodes the prompt into text encoder hidden states.
 
         Args:
-            prompt (`str` or `list(int)`):
+            prompt (str or list(int)):
                 prompt to be encoded.
-            device: (`torch.device`):
+            device: (torch.device):
                 torch device.
-            num_images_per_prompt (`int`):
+            num_images_per_prompt (int):
                 number of images that should be generated per prompt.
             do_classifier_free_guidance (`bool`):
                 whether to use classifier free guidance or not.
-            negative_prompt (`str` or `List[str]`):
+            negative_prompt (str or List[str]):
                 The prompt or prompts not to guide the image generation.
                 Ignored when not using guidance (i.e., ignored
                 if `guidance_scale` is less than `1`).
@@ -398,7 +399,7 @@ class StableDiffusion(nn.Module):
                 device to run safety checker.
             dtype (torch.dtype):
                 float type to run.
-        
+
         Returns:
             image (numpy.ndarray):
                 black image if nsfw content detected else input image.
@@ -421,7 +422,7 @@ class StableDiffusion(nn.Module):
 
         Args:
             latents (torch.Tensor): latents to decode.
-        
+
         Returns:
             image (numpy.ndarray): image result.
         """
@@ -434,14 +435,22 @@ class StableDiffusion(nn.Module):
         return image
 
     def prepare_extra_step_kwargs(self, generator, eta):
-        # prepare extra kwargs for the scheduler step,
-        # since not all schedulers have the same signature
-        # eta (η) is only used with the DDIMScheduler,
-        # it will be ignored for other schedulers.
-        # eta corresponds to η in DDIM paper:
-        # https://arxiv.org/abs/2010.02502
-        # and should be between [0, 1]
+        """prepare extra kwargs for the scheduler step
 
+        Args:
+            generator (torch.Generator):
+                generator for random functions.
+            eta (float):
+                eta (η) is only used with the DDIMScheduler,
+                it will be ignored for other schedulers.
+                eta corresponds to η in DDIM paper:
+                https://arxiv.org/abs/2010.02502
+                and should be between [0, 1]
+
+        Return:
+            extra_step_kwargs (dict):
+                dict contains 'generator' and 'eta'
+        """
         accepts_eta = 'eta' in set(
             inspect.signature(self.scheduler.step).parameters.keys())
         extra_step_kwargs = {}
@@ -456,6 +465,8 @@ class StableDiffusion(nn.Module):
         return extra_step_kwargs
 
     def check_inputs(self, prompt, height, width, callback_steps):
+        """check whether inputs are in suitable format or not"""
+
         if not isinstance(prompt, str) and not isinstance(prompt, list):
             raise ValueError(f'`prompt` has to be of '
                              f'type `str` or `list` but is {type(prompt)}')
@@ -495,7 +506,7 @@ class StableDiffusion(nn.Module):
                 generator for random functions, defaults to None.
             latents (torch.Tensor):
                 Pre-generated noisy latents, defaults to None.
-        
+
         Return:
             latents (torch.Tensor): prepared latents.
         """
