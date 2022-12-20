@@ -269,7 +269,7 @@ class AttentionBlock(nn.Module):
     43/diffusion_tf/models/unet.py#L66. Uses three q, k, v linear layers to
     compute attention.
 
-    Parameters:
+    Args:
         channels (`int`): The number of channels in the input and output.
         num_head_channels (`int`, *optional*):
             The number of channels in each head. If None, then `num_heads` = 1.
