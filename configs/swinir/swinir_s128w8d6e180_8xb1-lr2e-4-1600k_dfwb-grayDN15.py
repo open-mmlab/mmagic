@@ -12,7 +12,7 @@ sigma = 15
 test_dataloader = _base_.test_dataloader
 for dataloader in test_dataloader:
     test_pipeline = dataloader['dataset']['pipeline']
-    test_pipeline[2]['params']['gaussian_sigma'] = [sigma * 255, sigma * 255]
+    test_pipeline[2]['params']['gaussian_sigma'] = [sigma, sigma]
 
 # model settings
 model = dict(
@@ -59,7 +59,7 @@ train_pipeline = [
         params=dict(
             noise_type=['gaussian'],
             noise_prob=[1],
-            gaussian_sigma=[sigma * 255, sigma * 255],
+            gaussian_sigma=[sigma, sigma],
             gaussian_gray_noise_prob=0),
         keys=['img']),
     dict(type='PackEditInputs')
@@ -81,7 +81,7 @@ val_pipeline = [
         params=dict(
             noise_type=['gaussian'],
             noise_prob=[1],
-            gaussian_sigma=[sigma * 255, sigma * 255],
+            gaussian_sigma=[sigma, sigma],
             gaussian_gray_noise_prob=0),
         keys=['img']),
     dict(type='PackEditInputs')

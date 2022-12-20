@@ -12,7 +12,7 @@ sigma = 15
 test_dataloader = _base_.test_dataloader
 for dataloader in test_dataloader:
     test_pipeline = dataloader['dataset']['pipeline']
-    test_pipeline[2]['params']['gaussian_sigma'] = [sigma * 255, sigma * 255]
+    test_pipeline[2]['params']['gaussian_sigma'] = [sigma, sigma]
 
 # model settings
 model = dict(

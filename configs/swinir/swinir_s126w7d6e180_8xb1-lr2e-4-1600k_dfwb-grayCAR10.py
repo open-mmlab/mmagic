@@ -1,4 +1,7 @@
-_base_ = '../_base_/default_runtime.py'
+_base_ = [
+    '../_base_/default_runtime.py',
+    '../_base_/datasets/decompression_test_config.py'
+]
 
 experiment_name = 'swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10'
 work_dir = f'./work_dirs/{experiment_name}'
@@ -107,17 +110,20 @@ val_evaluator = [
     dict(type='SSIM', prefix='classic5'),
 ]
 
-test_dataloader = _base_.test_dataloader
-for dataloader in test_dataloader:
-    test_pipeline = dataloader['dataset']['pipeline']
-    test_pipeline[0]['color_type'] = 'grayscale'
-    test_pipeline[1]['color_type'] = 'grayscale'
-    test_pipeline[2]['params']['color_type'] = 'grayscale'
-
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_600_000, val_interval=5000)
 val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+
+test_dataloader = _base_.test_dataloader
+for idx in range(len(test_dataloader)):
+    test_pipeline = test_dataloader[idx]['dataset']['pipeline']
+    if idx > 0:
+        test_pipeline[0]['to_y_channel'] = True
+        test_pipeline[1]['to_y_channel'] = True
+    else:
+        test_pipeline[0]['color_type'] = 'grayscale'
+        test_pipeline[1]['color_type'] = 'grayscale'
+    test_pipeline[2]['params']['color_type'] = 'grayscale'
 
 # optimizer
 optim_wrapper = dict(

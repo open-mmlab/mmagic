@@ -319,106 +319,122 @@ Models:
       Urban100 PSNR: 29.8832
     Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1pihZhiw1V5hWNoaWCuabN8KCj6_il6KG/view?usp=share_link
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb.py
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10.py
   In Collection: SwinIR
   Metadata:
     GPUs: '8'
     Training Data: Others
-  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR10_dfwb
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10
   Results:
   - Dataset: Others
     Metrics:
       Classic5 PSNR: 30.2746
       Classic5 SSIM: 0.8254
+      LIVE1 PSNR: 29.8611
+      LIVE1 SSIM: 0.8292
     Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1LMEGlGtYcrJ9dhC8pmNsCAWyeZq1Dfc5/view?usp=share_link
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb.py
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20.py
   In Collection: SwinIR
   Metadata:
     GPUs: '8'
     Training Data: Others
-  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR20_dfwb
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20
   Results:
   - Dataset: Others
     Metrics:
       Classic5 PSNR: 32.5331
       Classic5 SSIM: 0.8753
+      LIVE1 PSNR: 32.2667
+      LIVE1 SSIM: 0.8914
     Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1624dceqoBD5CwqLuL_ozPaYuIQex2WmL/view?usp=share_link
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR30_dfwb.py
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30.py
   In Collection: SwinIR
   Metadata:
     GPUs: '8'
     Training Data: Others
-  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR30_dfwb
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30
   Results:
   - Dataset: Others
     Metrics:
       Classic5 PSNR: 33.7504
       Classic5 SSIM: 0.8966
+      LIVE1 PSNR: 33.7001
+      LIVE1 SSIM: 0.9179
     Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1X70GSCK8Wo9nYUmtN0MysCarIHliB3WM/view?usp=share_link
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR40_dfwb.py
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40.py
   In Collection: SwinIR
   Metadata:
     GPUs: '8'
     Training Data: Others
-  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_grayCAR40_dfwb
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40
   Results:
   - Dataset: Others
     Metrics:
       Classic5 PSNR: 34.5377
       Classic5 SSIM: 0.9087
+      LIVE1 PSNR: 34.6846
+      LIVE1 SSIM: 0.9322
     Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1HQGYXthHnmVsng1313KZmGzewsWPzzDT/view?usp=share_link
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR10_dfwb.py
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10.py
   In Collection: SwinIR
   Metadata:
     GPUs: '8'
     Training Data: Others
-  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR10_dfwb
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10
   Results:
   - Dataset: Others
     Metrics:
+      Classic5 PSNR: 30.1019
+      Classic5 SSIM: 0.8217
       LIVE1 PSNR: 27.9085
       LIVE1 SSIM: 0.8057
     Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1YXlmXo5SdQF7JwEvedUmNgxrPZVwxAgg/view?usp=share_link
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR20_dfwb.py
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20.py
   In Collection: SwinIR
   Metadata:
     GPUs: '8'
     Training Data: Others
-  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR20_dfwb
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20
   Results:
   - Dataset: Others
     Metrics:
+      Classic5 PSNR: 32.3489
+      Classic5 SSIM: 0.8727
       LIVE1 PSNR: 30.2844
       LIVE1 SSIM: 0.8717
     Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1pY6RXvp2y98Qx4VhaZOSVTpyOQzk8l9b/view?usp=share_link
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR30_dfwb.py
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30.py
   In Collection: SwinIR
   Metadata:
     GPUs: '8'
     Training Data: Others
-  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR30_dfwb
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30
   Results:
   - Dataset: Others
     Metrics:
+      Classic5 PSNR: 33.6028
+      Classic5 SSIM: 0.8949
       LIVE1 PSNR: 31.6396
       LIVE1 SSIM: 0.9
     Task: Image Super-Resolution,
   Weights: https://drive.google.com/file/d/1LUiFJCdcGCRl4NDAtiyj2Ba87fKW3p5x/view?usp=share_link
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR40_dfwb.py
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40.py
   In Collection: SwinIR
   Metadata:
     GPUs: '8'
     Training Data: Others
-  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_colorCAR40_dfwb
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40
   Results:
   - Dataset: Others
     Metrics:
+      Classic5 PSNR: 34.4344
+      Classic5 SSIM: 0.9076
       LIVE1 PSNR: 32.5833
       LIVE1 SSIM: 0.9158
     Task: Image Super-Resolution,
