@@ -50,7 +50,7 @@ from .sagan import SAGAN
 from .singan import SinGAN
 from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
-from .stable_diffusion import StableDiffuser
+from .stable_diffusion import stable_diffusion
 from .stylegan1 import StyleGAN1
 from .stylegan2 import StyleGAN2
 from .stylegan3 import StyleGAN3, StyleGAN3Generator
@@ -84,5 +84,5 @@ __all__ = [
     'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
-    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D', 'StableDiffuser'
+    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D', 'stable_diffusion'
 ]

@@ -1,4 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .stable_diffuser import StableDiffuser
+from .stable_diffusion import StableDiffusion
 
-__all__ = ['StableDiffuser']
+__all__ = ['StableDiffusion']

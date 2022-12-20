@@ -79,7 +79,7 @@ pretrained_ckpt_path = dict(
 # yapf: enable
 
 model = dict(
-    type='StableDiffuser',
+    type='StableDiffusion',
     diffusion_scheduler=diffusion_scheduler,
     unet_cfg=unet,
     vae_cfg=vae,
