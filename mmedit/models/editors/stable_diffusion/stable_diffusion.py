@@ -73,8 +73,7 @@ class StableDiffusion(nn.Module):
             pretrained_ckpt_path, self.submodels, requires_safety_checker)
 
     def to(self, torch_device: Optional[Union[str, torch.device]] = None):
-        """
-        put submodels to torch device.
+        """put submodels to torch device.
 
         Args:
             torch_device(Optional[Union[str, torch.device]]):
@@ -112,8 +111,7 @@ class StableDiffusion(nn.Module):
         callback_steps: Optional[int] = 1,
         show_progress=True,
     ):
-        """
-        Function invoked when calling the pipeline for generation.
+        """Function invoked when calling the pipeline for generation.
 
         Args:
             prompt (`str` or `List[str]`):
@@ -173,7 +171,6 @@ class StableDiffusion(nn.Module):
             dict:['samples', 'nsfw_content_detected']:
                 'samples': image result samples
                 'nsfw_content_detected': nsfw content flags for image samples.
-
         """
         # 0. Default height and width to unet
         height = height or self.unet_sample_size * self.vae_scale_factor
@@ -268,8 +265,7 @@ class StableDiffusion(nn.Module):
 
     def _encode_prompt(self, prompt, device, num_images_per_prompt,
                        do_classifier_free_guidance, negative_prompt):
-        """
-        Encodes the prompt into text encoder hidden states.
+        """Encodes the prompt into text encoder hidden states.
 
         Args:
             prompt (str or list(int)):
@@ -389,8 +385,7 @@ class StableDiffusion(nn.Module):
         return text_embeddings
 
     def run_safety_checker(self, image, device, dtype):
-        """
-        run safety checker to check whether image has nsfw content.
+        """run safety checker to check whether image has nsfw content.
 
         Args:
             image (numpy.ndarray):
@@ -417,8 +412,7 @@ class StableDiffusion(nn.Module):
         return image, has_nsfw_concept
 
     def decode_latents(self, latents):
-        """
-        use vae to decode latents.
+        """use vae to decode latents.
 
         Args:
             latents (torch.Tensor): latents to decode.
@@ -435,7 +429,7 @@ class StableDiffusion(nn.Module):
         return image
 
     def prepare_extra_step_kwargs(self, generator, eta):
-        """prepare extra kwargs for the scheduler step
+        """prepare extra kwargs for the scheduler step.
 
         Args:
             generator (torch.Generator):
@@ -465,7 +459,7 @@ class StableDiffusion(nn.Module):
         return extra_step_kwargs
 
     def check_inputs(self, prompt, height, width, callback_steps):
-        """check whether inputs are in suitable format or not"""
+        """check whether inputs are in suitable format or not."""
 
         if not isinstance(prompt, str) and not isinstance(prompt, list):
             raise ValueError(f'`prompt` has to be of '
@@ -492,8 +486,7 @@ class StableDiffusion(nn.Module):
                         device,
                         generator,
                         latents=None):
-        """
-        prepare latents for diffusion to run in latent space.
+        """prepare latents for diffusion to run in latent space.
 
         Args:
             batch_size (int): batch size.
