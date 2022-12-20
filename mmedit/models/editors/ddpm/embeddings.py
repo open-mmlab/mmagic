@@ -17,7 +17,7 @@ def get_timestep_embedding(
     Models: Create sinusoidal timestep embeddings.
 
     Args:
-        timesteps (torch.Tensor): 
+        timesteps (torch.Tensor):
             a 1-D Tensor of N indices, one per batch element.
             These may be fractional.
         embedding_dim (int): the dimension of the output.
@@ -60,7 +60,7 @@ def get_timestep_embedding(
 
 
 class TimestepEmbedding(nn.Module):
-    """Module which uses linear to embed timestep"""
+    """Module which uses linear to embed timestep."""
 
     def __init__(self,
                  in_channels: int,
@@ -83,7 +83,7 @@ class TimestepEmbedding(nn.Module):
         self.linear_2 = nn.Linear(time_embed_dim, time_embed_dim_out)
 
     def forward(self, sample):
-        """forward with sample"""
+        """forward with sample."""
 
         sample = self.linear_1(sample)
 
@@ -95,7 +95,7 @@ class TimestepEmbedding(nn.Module):
 
 
 class Timesteps(nn.Module):
-    """A module which transforms timesteps to embedding"""
+    """A module which transforms timesteps to embedding."""
 
     def __init__(self,
                  num_channels: int,
@@ -107,7 +107,7 @@ class Timesteps(nn.Module):
         self.downscale_freq_shift = downscale_freq_shift
 
     def forward(self, timesteps):
-        """forward with timesteps"""
+        """forward with timesteps."""
 
         t_emb = get_timestep_embedding(
             timesteps,
@@ -164,7 +164,7 @@ class ImagePositionalEmbeddings(nn.Module):
         self.width_emb = nn.Embedding(self.width, embed_dim)
 
     def forward(self, index):
-        """forward with index"""
+        """forward with index."""
 
         emb = self.emb(index)
 
