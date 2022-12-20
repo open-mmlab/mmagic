@@ -5,8 +5,7 @@ _base_ = [
 
 model = dict(
     type='AblatedDiffusionModel',
-    data_preprocessor=dict(
-        type='EditDataPreprocessor', mean=[127.5], std=[127.5]),
+    data_preprocessor=dict(type='GenDataPreprocessor'),
     unet=dict(
         type='DenoisingUnet',
         image_size=64,
@@ -29,6 +28,7 @@ model = dict(
         type='DDPMScheduler',
         variance_type='learned_range',
         beta_schedule='squaredcos_cap_v2'),
+    rgb2bgr=True,
     use_fp16=False)
 
 test_dataloader = dict(batch_size=32, num_workers=8)
@@ -38,7 +38,10 @@ metrics = [
         type='FrechetInceptionDistance',
         prefix='FID-Full-50k',
         fake_nums=50000,
-        inception_style='StyleGAN')
+        inception_style='StyleGAN',
+        sample_model='orig',
+        sample_kwargs=dict(
+            num_inference_steps=250, show_progress=True, classifier_scale=1.))
 ]
 
 val_evaluator = dict(metrics=metrics)
