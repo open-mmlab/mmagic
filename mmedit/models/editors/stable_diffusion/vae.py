@@ -12,11 +12,11 @@ from addict import Dict
 class Downsample2D(nn.Module):
     """A downsampling layer with an optional convolution.
 
-    Parameters:
-        channels: channels in the inputs and outputs.
-        use_conv: a bool determining if a convolution is applied.
-        out_channels:
-        padding:
+    Args:
+        channels (int): channels in the inputs and outputs.
+        use_conv (bool): a bool determining if a convolution is applied.
+        out_channels (int): out channel num
+        padding (int): padding num
     """
 
     def __init__(self,
@@ -55,6 +55,7 @@ class Downsample2D(nn.Module):
             self.conv = conv
 
     def forward(self, hidden_states):
+        """forward hidden states"""
         assert hidden_states.shape[1] == self.channels
         if self.use_conv and self.padding == 0:
             pad = (0, 1, 0, 1)
@@ -69,11 +70,11 @@ class Downsample2D(nn.Module):
 class Upsample2D(nn.Module):
     """An upsampling layer with an optional convolution.
 
-    Parameters:
-        channels: channels in the inputs and outputs.
-        use_conv: a bool determining if a convolution is applied.
-        use_conv_transpose:
-        out_channels:
+    Args:
+        channels (int): channels in the inputs and outputs.
+        use_conv (bool): a bool determining if a convolution is applied.
+        use_conv_transpose (bool): whether to use conv transpose.
+        out_channels (int): output channel num.
     """
 
     def __init__(self,
@@ -103,6 +104,7 @@ class Upsample2D(nn.Module):
             self.Conv2d_0 = conv
 
     def forward(self, hidden_states, output_size=None):
+        """forward with hidden states"""
         assert hidden_states.shape[1] == self.channels
 
         if self.use_conv_transpose:
@@ -159,7 +161,7 @@ class ResnetBlock2D(nn.Module):
         groups_out=None,
         pre_norm=True,
         eps=1e-6,
-        non_linearity='swish',
+        non_linearity='silu',
         time_embedding_norm='default',
         kernel=None,
         output_scale_factor=1.0,
@@ -903,11 +905,12 @@ class AutoencoderKL(nn.Module):
         return_dict: bool = True,
         generator: Optional[torch.Generator] = None,
     ) -> Union[Dict, torch.FloatTensor]:
-        r"""
+        """
         Args:
-            sample (`torch.FloatTensor`): Input sample.
-            sample_posterior (`bool`, *optional*, defaults to `False`):
+            sample (torch.FloatTensor): Input sample.
+            sample_posterior (bool):
                 Whether to sample from the posterior.
+                defaults to `False`.
             return_dict (`bool`, *optional*, defaults to `True`):
                 Whether or not to return a [`Dict`] instead of a plain tuple.
         """

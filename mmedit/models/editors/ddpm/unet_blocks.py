@@ -23,6 +23,9 @@ def get_down_block(
     use_linear_projection=False,
     only_cross_attention=False,
 ):
+    """
+    get unet down path block
+    """
     down_block_type = down_block_type[7:] if down_block_type.startswith(
         'UNetRes') else down_block_type
     if down_block_type == 'DownBlock2D':
