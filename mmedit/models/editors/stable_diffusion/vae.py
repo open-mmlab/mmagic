@@ -812,10 +812,6 @@ class AutoencoderKL(nn.Module):
     from the paper Auto-Encoding Variational Bayes by Diederik P. Kingma
     and Max Welling.
 
-    This model inherits from [`ModelMixin`].
-    Check the superclass documentation for the generic methods the library
-    implements for all the model (such as downloading or saving, etc.)
-
     Parameters:
         in_channels (int, *optional*, defaults to 3):
             Number of channels in the input image.
