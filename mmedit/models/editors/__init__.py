@@ -46,6 +46,7 @@ from .plain import PlainDecoder, PlainRefiner
 from .rdn import RDNNet
 from .real_basicvsr import RealBasicVSR, RealBasicVSRNet
 from .real_esrgan import RealESRGAN, UNetDiscriminatorWithSpectralNorm
+from .restormer import Restormer
 from .sagan import SAGAN
 from .singan import SinGAN
 from .srcnn import SRCNNNet
@@ -84,5 +85,5 @@ __all__ = [
     'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
-    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D', 'stable_diffusion'
+    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D', 'Restormer'
 ]
