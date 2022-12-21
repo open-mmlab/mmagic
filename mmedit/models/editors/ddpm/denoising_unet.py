@@ -590,6 +590,7 @@ def build_down_block_resattn(resblocks_per_downsample, resblock_cfg,
                              channel_factor_list, embedding_channels,
                              use_scale_shift_norm, dropout, norm_cfg,
                              resblock_updown, downsample_cfg, scale):
+    """build unet down path blocks with resnet and attention."""
 
     in_blocks = nn.ModuleList()
 
@@ -631,6 +632,8 @@ def build_down_block_resattn(resblocks_per_downsample, resblock_cfg,
 
 
 def build_mid_blocks_resattn(resblock_cfg, attention_cfg, in_channels_):
+    """build unet mid blocks with resnet and attention."""
+
     return EmbedSequential(
         MODULES.build(
             resblock_cfg, default_args={'in_channels': in_channels_}),
@@ -660,6 +663,7 @@ def build_up_blocks_resattn(
     resblock_updown,
     upsample_cfg,
 ):
+    """build up path blocks with resnet and attention."""
 
     out_blocks = nn.ModuleList()
     for idx in range(resblocks_per_downsample + 1):
