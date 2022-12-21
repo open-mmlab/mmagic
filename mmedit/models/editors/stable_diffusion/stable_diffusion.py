@@ -48,6 +48,7 @@ class StableDiffusion(nn.Module):
             'tokenizer', 'vae', 'scheduler', 'unet', 'feature_extractor',
             'text_encoder'
         ]
+        self.requires_safety_checker = requires_safety_checker
 
         self.scheduler = DIFFUSION_SCHEDULERS.build(
             diffusion_scheduler) if isinstance(diffusion_scheduler,
@@ -57,19 +58,24 @@ class StableDiffusion(nn.Module):
 
         self.unet_sample_size = unet_sample_size
         self.unet = MODELS.build(unet_cfg)
+
+        self.vae = AutoencoderKL(**vae_cfg)
+        self.vae_scale_factor = 2**(len(self.vae.block_out_channels) - 1)
+
+        self.load_pretrained_ckpt(pretrained_ckpt_path)
+
+    def load_pretrained_ckpt(self, pretrained_ckpt_path):
+        """load pretrained ckpt for each submodel."""
         state_dict = torch.load(
             pretrained_ckpt_path['unet'], map_location='cpu')
         self.unet.load_state_dict(state_dict, strict=True)
 
-        self.vae = AutoencoderKL(**vae_cfg)
         state_dict = torch.load(
             pretrained_ckpt_path['vae'], map_location='cpu')
         self.vae.load_state_dict(state_dict, strict=True)
 
-        self.vae_scale_factor = 2**(len(self.vae.block_out_channels) - 1)
-
         self.tokenizer, self.feature_extractor, self.text_encoder, self.safety_checker = load_clip_submodels(  # noqa
-            pretrained_ckpt_path, self.submodels, requires_safety_checker)
+            pretrained_ckpt_path, self.submodels, self.requires_safety_checker)
 
     def to(self, torch_device: Optional[Union[str, torch.device]] = None):
         """put submodels to torch device.
