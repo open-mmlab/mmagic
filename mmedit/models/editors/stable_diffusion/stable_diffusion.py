@@ -36,9 +36,9 @@ class StableDiffusion(nn.Module):
 
     def __init__(self,
                  diffusion_scheduler,
-                 unet_cfg,
-                 vae_cfg,
-                 pretrained_ckpt_path,
+                 unet,
+                 vae,
+                 pretrained_ckpt_path=None,
                  requires_safety_checker=True,
                  unet_sample_size=64):
         super().__init__()
@@ -57,9 +57,9 @@ class StableDiffusion(nn.Module):
         self.scheduler.init_noise_sigma = 1.0
 
         self.unet_sample_size = unet_sample_size
-        self.unet = MODELS.build(unet_cfg)
+        self.unet = MODELS.build(unet) if isinstance(unet, dict) else unet
 
-        self.vae = AutoencoderKL(**vae_cfg)
+        self.vae = AutoencoderKL(**vae) if isinstance(vae, dict) else vae
         self.vae_scale_factor = 2**(len(self.vae.block_out_channels) - 1)
 
         self.load_pretrained_ckpt(pretrained_ckpt_path)

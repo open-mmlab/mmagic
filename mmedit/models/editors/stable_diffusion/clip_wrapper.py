@@ -203,14 +203,24 @@ def load_clip_submodels(pretrained_ckpt_path, submodels,
             safety_checker with ckpt loaded.
 
     """
-    tokenizer = CLIPTokenizerLoader.load_from_cache_subdir(
-        pretrained_ckpt_path['tokenizer'])
-    feature_extractor = CLIPFeatureExtractorLoader.load_from_cache_subdir(
-        pretrained_ckpt_path['feature_extractor'])
-    text_encoder = CLIPTextModelLoader.load_from_cache_subdir(
-        pretrained_ckpt_path['text_encoder'])
+    tokenizer = None
+    if pretrained_ckpt_path['tokenizer'] is not None:
+        tokenizer = CLIPTokenizerLoader.load_from_cache_subdir(
+            pretrained_ckpt_path['tokenizer'])
+
+    feature_extractor = None
+    if pretrained_ckpt_path['feature_extractor'] is not None:
+        feature_extractor = CLIPFeatureExtractorLoader.load_from_cache_subdir(
+            pretrained_ckpt_path['feature_extractor'])
+
+    text_encoder = None
+    if pretrained_ckpt_path['text_encoder'] is not None:
+        text_encoder = CLIPTextModelLoader.load_from_cache_subdir(
+            pretrained_ckpt_path['text_encoder'])
+
     safety_checker = None
-    if requires_safety_checker:
+    if requires_safety_checker and \
+            pretrained_ckpt_path['safety_checker'] is not None:
         submodels.append('safety_checker')
         safety_checker = \
             StableDiffusionSafetyCheckerLoader.load_from_cache_subdir(
