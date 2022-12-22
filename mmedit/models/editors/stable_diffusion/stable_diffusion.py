@@ -66,13 +66,17 @@ class StableDiffusion(nn.Module):
 
     def load_pretrained_ckpt(self, pretrained_ckpt_path):
         """load pretrained ckpt for each submodel."""
-        state_dict = torch.load(
-            pretrained_ckpt_path['unet'], map_location='cpu')
-        self.unet.load_state_dict(state_dict, strict=True)
+        if 'unet' in pretrained_ckpt_path.keys() and \
+                pretrained_ckpt_path['unet'] is not None:
+            state_dict = torch.load(
+                pretrained_ckpt_path['unet'], map_location='cpu')
+            self.unet.load_state_dict(state_dict, strict=True)
 
-        state_dict = torch.load(
-            pretrained_ckpt_path['vae'], map_location='cpu')
-        self.vae.load_state_dict(state_dict, strict=True)
+        if 'vae' in pretrained_ckpt_path.keys() and \
+                pretrained_ckpt_path['unet'] is not None:
+            state_dict = torch.load(
+                pretrained_ckpt_path['vae'], map_location='cpu')
+            self.vae.load_state_dict(state_dict, strict=True)
 
         self.tokenizer, self.feature_extractor, self.text_encoder, self.safety_checker = load_clip_submodels(  # noqa
             pretrained_ckpt_path, self.submodels, self.requires_safety_checker)

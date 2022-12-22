@@ -1,3 +1,12 @@
+# Copyright (c) OpenMMLab. All rights reserved.
+import torch
+from addict import Dict
+from mmengine import MODELS, Config
+
+from mmedit.utils import register_all_modules
+
+register_all_modules()
+
 unet = dict(
     type='DenoisingUnet',
     image_size=512,
@@ -47,36 +56,11 @@ diffusion_scheduler = dict(
     set_alpha_to_one=False,
     clip_sample=False)
 
-tokenizer_path = dict(
-    subdir_name='tokenizer',
-    merges='merges.txt',
-    special_tokens_map='special_tokens_map.json',
-    tokenizer_config='tokenizer_config.json',
-    vocab='vocab.json')
-
-text_encoder_path = dict(
-    subdir_name='text_encoder',
-    config='config.json',
-    pytorch_model='pytorch_model.bin')
-
-feature_extractor_path = dict(
-    subdir_name='feature_extractor', config='preprocessor_config.json')
-
-safety_checker_path = dict(
-    subdir_name='safety_checker',
-    config='config.json',
-    pytorch_model='pytorch_model.bin')
-
-# yapf: disable
 pretrained_ckpt_path = dict(
-    unet='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin',  # noqa
-    vae='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5/vae/diffusion_pytorch_model.bin',  # noqa
-    tokenizer=tokenizer_path,
-    text_encoder=text_encoder_path,
-    feature_extractor=feature_extractor_path,
-    safety_checker=safety_checker_path
-    )
-# yapf: enable
+    tokenizer=None,
+    text_encoder=None,
+    feature_extractor=None,
+    safety_checker=None)
 
 model = dict(
     type='StableDiffusion',
@@ -84,4 +68,46 @@ model = dict(
     unet=unet,
     vae=vae,
     pretrained_ckpt_path=pretrained_ckpt_path,
+    requires_safety_checker=False,
 )
+
+
+class dummy_tokenizer:
+
+    def __init__(self):
+        self.model_max_length = 0
+
+    def __call__(self,
+                 prompt,
+                 padding='max_length',
+                 max_length=0,
+                 truncation=False,
+                 return_tensors='pt'):
+        text_inputs = Dict()
+        text_inputs['input_ids'] = torch.ones([1, 77])
+        text_inputs['attention_mask'] = torch.ones([1, 77])
+        return text_inputs
+
+
+class dummy_text_encoder:
+
+    def __init__(self):
+        self.config = None
+
+    def __call__(self, x, attention_mask):
+        result = torch.rand([1, 77, 768])
+        return [result]
+
+
+def test_stable_diffusion():
+    StableDiffuser = MODELS.build(Config(model))
+    StableDiffuser.tokenizer = dummy_tokenizer()
+    StableDiffuser.text_encoder = dummy_text_encoder()
+    result = StableDiffuser.infer(
+        'an insect robot preparing a delicious meal', num_inference_steps=1)
+
+    assert result['samples'].shape == (3, 512, 512)
+
+
+if __name__ == '__main__':
+    test_stable_diffusion()
