@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
+
 from mmedit.models.editors.stable_diffusion.vae import AutoencoderKL
 
 
