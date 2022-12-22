@@ -44,15 +44,7 @@ class Downsample2D(nn.Module):
             assert self.channels == self.out_channels
             conv = nn.AvgPool2d(kernel_size=stride, stride=stride)
 
-        # TODO(Suraj, Patrick)
-        # - clean up after weight dicts are correctly renamed
-        if name == 'conv':
-            self.Conv2d_0 = conv
-            self.conv = conv
-        elif name == 'Conv2d_0':
-            self.conv = conv
-        else:
-            self.conv = conv
+        self.conv = conv
 
     def forward(self, hidden_states):
         """forward hidden states."""
@@ -91,17 +83,12 @@ class Upsample2D(nn.Module):
         self.name = name
 
         conv = None
-        if use_conv_transpose:
-            conv = nn.ConvTranspose2d(channels, self.out_channels, 4, 2, 1)
-        elif use_conv:
+        if use_conv:
             conv = nn.Conv2d(self.channels, self.out_channels, 3, padding=1)
-
-        # TODO(Suraj, Patrick)
-        # - clean up after weight dicts are correctly renamed
-        if name == 'conv':
-            self.conv = conv
         else:
-            self.Conv2d_0 = conv
+            conv = nn.ConvTranspose2d(channels, self.out_channels, 4, 2, 1)
+
+        self.conv = conv
 
     def forward(self, hidden_states, output_size=None):
         """forward with hidden states."""
@@ -138,11 +125,7 @@ class Upsample2D(nn.Module):
 
         # TODO(Suraj, Patrick)
         #  - clean up after weight dicts are correctly renamed
-        if self.use_conv:
-            if self.name == 'conv':
-                hidden_states = self.conv(hidden_states)
-            else:
-                hidden_states = self.Conv2d_0(hidden_states)
+        hidden_states = self.conv(hidden_states)
 
         return hidden_states
 
@@ -170,7 +153,6 @@ class ResnetBlock2D(nn.Module):
 
     def __init__(
         self,
-        *,
         in_channels,
         out_channels=None,
         conv_shortcut=False,
