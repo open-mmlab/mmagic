@@ -1,9 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import pytest
 import torch
 
 from mmedit.models.editors import Restormer
 
 
+@pytest.mark.skipif(
+    torch.__version__ < '1.8.0',
+    reason='skip on torch<1.8 due to unsupported PixelUnShuffle')
 def test_restormer_cpu():
     """Test Restormer."""
 
@@ -79,6 +83,9 @@ def test_restormer_cpu():
     assert output.shape == (1, 3, 16, 16)
 
 
+@pytest.mark.skipif(
+    torch.__version__ < '1.8.0',
+    reason='skip on torch<1.8 due to unsupported PixelUnShuffle')
 def test_restormer_cuda():
     net = Restormer(
         inp_channels=3,
