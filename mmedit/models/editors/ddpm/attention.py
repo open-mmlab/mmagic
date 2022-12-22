@@ -6,8 +6,6 @@ import torch.nn.functional as F
 from addict import Dict
 from torch import nn
 
-from .embeddings import ImagePositionalEmbeddings
-
 
 class Transformer2DModel(nn.Module):
     """Transformer model for image-like data. Takes either discrete (classes of
@@ -58,13 +56,6 @@ class Transformer2DModel(nn.Module):
             Includes the class for the masked latent pixel.
         activation_fn (`str`, *optional*, defaults to `"geglu"`):
             Activation function to be used in feed-forward.
-        num_embeds_ada_norm ( `int`, *optional*):
-            Pass if at least one of the norm_layers is `AdaLayerNorm`.
-            The number of diffusion steps used during training.
-            Note that this is fixed at training time as it is used
-            to learn a number of embeddings that are added
-             to the hidden states. During inference, you can denoise for
-            up to but not more than steps than `num_embeds_ada_norm`.
         use_linear_projection (bool):
             Whether to use linear projection, defaults to False.
         only_cross_attention (bool):
@@ -84,7 +75,6 @@ class Transformer2DModel(nn.Module):
         sample_size: Optional[int] = None,
         num_vector_embeds: Optional[int] = None,
         activation_fn: str = 'geglu',
-        num_embeds_ada_norm: Optional[int] = None,
         use_linear_projection: bool = False,
         only_cross_attention: bool = False,
     ):
@@ -130,23 +120,8 @@ class Transformer2DModel(nn.Module):
             else:
                 self.proj_in = nn.Conv2d(
                     in_channels, inner_dim, kernel_size=1, stride=1, padding=0)
-        elif self.is_input_vectorized:
-            assert sample_size is not None, \
-                'Transformer2DModel over discrete input must' + \
-                ' provide sample_size'
-            assert num_vector_embeds is not None, \
-                'Transformer2DModel over discrete input must provide num_embed'
-
-            self.height = sample_size
-            self.width = sample_size
-            self.num_vector_embeds = num_vector_embeds
-            self.num_latent_pixels = self.height * self.width
-
-            self.latent_image_embedding = ImagePositionalEmbeddings(
-                num_embed=num_vector_embeds,
-                embed_dim=inner_dim,
-                height=self.height,
-                width=self.width)
+        else:
+            raise ValueError('input_vectorized not supported now.')
 
         # 3. Define transformers blocks
         self.transformer_blocks = nn.ModuleList([
@@ -157,7 +132,6 @@ class Transformer2DModel(nn.Module):
                 dropout=dropout,
                 cross_attention_dim=cross_attention_dim,
                 activation_fn=activation_fn,
-                num_embeds_ada_norm=num_embeds_ada_norm,
                 attention_bias=attention_bias,
                 only_cross_attention=only_cross_attention,
             ) for d in range(num_layers)
@@ -170,9 +144,8 @@ class Transformer2DModel(nn.Module):
             else:
                 self.proj_out = nn.Conv2d(
                     inner_dim, in_channels, kernel_size=1, stride=1, padding=0)
-        elif self.is_input_vectorized:
-            self.norm_out = nn.LayerNorm(inner_dim)
-            self.out = nn.Linear(inner_dim, self.num_vector_embeds - 1)
+        else:
+            raise ValueError('input_vectorized not supported now.')
 
     def _set_attention_slice(self, slice_size):
         """set attention slice."""
@@ -227,8 +200,8 @@ class Transformer2DModel(nn.Module):
                 hidden_states = hidden_states.permute(0, 2, 3, 1).reshape(
                     batch, height * weight, inner_dim)
                 hidden_states = self.proj_in(hidden_states)
-        elif self.is_input_vectorized:
-            hidden_states = self.latent_image_embedding(hidden_states)
+        else:
+            raise ValueError('input_vectorized not supported now.')
 
         # 2. Blocks
         for block in self.transformer_blocks:
@@ -253,14 +226,8 @@ class Transformer2DModel(nn.Module):
                                                              2).contiguous())
 
             output = hidden_states + residual
-        elif self.is_input_vectorized:
-            hidden_states = self.norm_out(hidden_states)
-            logits = self.out(hidden_states)
-            # (batch, self.num_vector_embeds - 1, self.num_latent_pixels)
-            logits = logits.permute(0, 2, 1)
-
-            # log(p(x_0))
-            output = F.log_softmax(logits.double(), dim=1).float()
+        else:
+            raise ValueError('input_vectorized not supported now.')
 
         if not return_dict:
             return (output, )
@@ -282,9 +249,6 @@ class BasicTransformerBlock(nn.Module):
             The size of the context vector for cross attention.
         activation_fn (`str`, *optional*, defaults to `"geglu"`):
             Activation function to be used in feed-forward.
-        num_embeds_ada_norm (int, *optional*):
-            The number of diffusion steps used during training.
-            See `Transformer2DModel`.
         attention_bias (bool, *optional*, defaults to `False`):
             Configure if the attentions should contain a bias parameter.
         only_cross_attention (bool, defaults to False):
@@ -299,7 +263,6 @@ class BasicTransformerBlock(nn.Module):
         dropout=0.0,
         cross_attention_dim: Optional[int] = None,
         activation_fn: str = 'geglu',
-        num_embeds_ada_norm: Optional[int] = None,
         attention_bias: bool = False,
         only_cross_attention: bool = False,
     ):
@@ -326,13 +289,8 @@ class BasicTransformerBlock(nn.Module):
         )  # is self-attn if context is none
 
         # layer norms
-        self.use_ada_layer_norm = num_embeds_ada_norm is not None
-        if self.use_ada_layer_norm:
-            self.norm1 = AdaLayerNorm(dim, num_embeds_ada_norm)
-            self.norm2 = AdaLayerNorm(dim, num_embeds_ada_norm)
-        else:
-            self.norm1 = nn.LayerNorm(dim)
-            self.norm2 = nn.LayerNorm(dim)
+        self.norm1 = nn.LayerNorm(dim)
+        self.norm2 = nn.LayerNorm(dim)
         self.norm3 = nn.LayerNorm(dim)
 
     def _set_attention_slice(self, slice_size):
@@ -343,9 +301,7 @@ class BasicTransformerBlock(nn.Module):
     def forward(self, hidden_states, context=None, timestep=None):
         """forward with hidden states, context and timestep."""
         # 1. Self-Attention
-        norm_hidden_states = (
-            self.norm1(hidden_states, timestep)
-            if self.use_ada_layer_norm else self.norm1(hidden_states))
+        norm_hidden_states = (self.norm1(hidden_states))
 
         if self.only_cross_attention:
             hidden_states = self.attn1(norm_hidden_states,
@@ -354,9 +310,7 @@ class BasicTransformerBlock(nn.Module):
             hidden_states = self.attn1(norm_hidden_states) + hidden_states
 
         # 2. Cross-Attention
-        norm_hidden_states = (
-            self.norm2(hidden_states, timestep)
-            if self.use_ada_layer_norm else self.norm2(hidden_states))
+        norm_hidden_states = (self.norm2(hidden_states))
         hidden_states = self.attn2(
             norm_hidden_states, context=context) + hidden_states
 
@@ -613,21 +567,3 @@ class ApproximateGELU(nn.Module):
         """forward function."""
         x = self.proj(x)
         return x * torch.sigmoid(1.702 * x)
-
-
-class AdaLayerNorm(nn.Module):
-    """Norm layer modified to incorporate timestep embeddings."""
-
-    def __init__(self, embedding_dim, num_embeddings):
-        super().__init__()
-        self.emb = nn.Embedding(num_embeddings, embedding_dim)
-        self.silu = nn.SiLU()
-        self.linear = nn.Linear(embedding_dim, embedding_dim * 2)
-        self.norm = nn.LayerNorm(embedding_dim, elementwise_affine=False)
-
-    def forward(self, x, timestep):
-        """forward with input feature and timestep."""
-        emb = self.linear(self.silu(self.emb(timestep)))
-        scale, shift = torch.chunk(emb, 2)
-        x = self.norm(x) * (1 + scale) + shift
-        return x
