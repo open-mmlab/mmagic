@@ -103,16 +103,19 @@ class dummy_text_encoder:
 
 
 @pytest.mark.skipif(
-    'win' in platform.system().lower() and 'cu' in torch.__version__,
-    reason='skip on windows-cuda due to limited RAM.')
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
 def test_stable_diffusion():
     StableDiffuser = MODELS.build(Config(model))
     StableDiffuser.tokenizer = dummy_tokenizer()
     StableDiffuser.text_encoder = dummy_text_encoder()
     result = StableDiffuser.infer(
-        'an insect robot preparing a delicious meal', num_inference_steps=1)
+        'an insect robot preparing a delicious meal',
+        height=64,
+        width=64,
+        num_inference_steps=1)
 
-    assert result['samples'].shape == (3, 512, 512)
+    assert result['samples'].shape == (3, 64, 64)
 
 
 if __name__ == '__main__':
