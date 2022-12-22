@@ -1,13 +1,12 @@
-# Deployment
+# Tutorial 8: Deploy models in MMEditing
 
-- [Deployment](#deployment)
-  - [Installation](#installation)
-  - [Convert model](#convert-model)
-  - [Model Specification](#model-specification)
-  - [Model inference](#model-inference)
-    - [Backend model inference](#backend-model-inference)
-    - [SDK model inference](#sdk-model-inference)
-  - [Supported models](#supported-models)
+- [Installation](#installation)
+- [Convert model](#convert-model)
+- [Model specification](#model-specification)
+- [Model inference](#model-inference)
+  - [Backend model inference](#backend-model-inference)
+  - [SDK model inference](#sdk-model-inference)
+- [Supported models](#supported-models)
 
 ______________________________________________________________________
 
@@ -73,7 +72,7 @@ Therefore, in the above example, you can also convert `ESRGAN` to other backend 
 When converting mmedit models to tensorrt models, --device should be set to "cuda"
 ```
 
-## Model Specification
+## Model specification
 
 Before moving on to model inference chapter, let's know more about the converted model structure which is very important for model inference.
 
