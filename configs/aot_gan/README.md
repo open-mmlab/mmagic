@@ -24,7 +24,7 @@ State-of-the-art image inpainting approaches can suffer from generating distorte
 
 |                        Method                        |     Mask Type      | Resolution | Train Iters |   Test Set    | l1 error | PSNR  | SSIM  |        GPU Info         |                        Download                         |
 | :--------------------------------------------------: | :----------------: | :--------: | :---------: | :-----------: | :------: | :---: | :---: | :---------------------: | :-----------------------------------------------------: |
-| [AOT-GAN](/configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py) | free-form (50-60%) |  512x512   |    500k     | Places365-val |   7.07   | 19.01 | 0.682 | 4 (GeForce GTX 1080 Ti) | [model](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [log](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
+| [AOT-GAN](/configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py) | free-form (50-60%) |  512x512   |    500k     | Places365-val |   7.07   | 19.01 | 0.682 | 4 (GeForce GTX 1080 Ti) | [model](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
 
 More results for different mask area:
 
@@ -84,13 +84,13 @@ You can use the following commands to test a model with cpu or single/multiple G
 
 ```shell
 # cpu test
-CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
 
 # single-gpu test
-python tools/test.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
+python tools/test.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
 
 # multi-gpu test
-./tools/dist_test.sh configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth 8
+./tools/dist_test.sh configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth 8
 ```
 
 For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).

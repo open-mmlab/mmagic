@@ -99,13 +99,10 @@ def create_test_job_batch(commands, model_info, args, port, script_name):
     assert config.exists(), f'{fname}: {config} not found.'
 
     http_prefix_short = 'https://download.openmmlab.com/mmediting/'
-    http_prefix_long = 'https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/'  # noqa
     http_prefix_gen = 'https://download.openmmlab.com/mmgen/'
     model_weight_url = model_info.weights
 
-    if model_weight_url.startswith(http_prefix_long):
-        model_name = model_weight_url[len(http_prefix_long):]
-    elif model_weight_url.startswith(http_prefix_short):
+    if model_weight_url.startswith(http_prefix_short):
         model_name = model_weight_url[len(http_prefix_short):]
     elif model_weight_url.startswith(http_prefix_gen):
         model_name = model_weight_url[len(http_prefix_gen):]
