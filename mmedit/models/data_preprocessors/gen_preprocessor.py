@@ -188,3 +188,20 @@ class GenDataPreprocessor(ImgDataPreprocessor):
         data['inputs'] = _batch_inputs
         data.setdefault('data_samples', None)
         return data
+
+    def destructor(self, batch_tensor: torch.Tensor):
+        """Destructor of data processor. Destruct padding, normalization and
+        dissolve batch.
+
+        Args:
+            batch_tensor (Tensor): Batched output.
+
+        Returns:
+            Tensor: Destructed output.
+        """
+
+        # De-normalization
+        batch_tensor = batch_tensor * self.std + self.mean
+        batch_tensor = batch_tensor.clamp_(0, 255)
+
+        return batch_tensor
