@@ -1,4 +1,4 @@
-# Contributing to MMEditing
+# Contributing guidance
 
 Welcome to the MMEditing community, we are committed to building a toolbox for cutting-edge image, video and 3D content generation, editing and processing techniques.
 
