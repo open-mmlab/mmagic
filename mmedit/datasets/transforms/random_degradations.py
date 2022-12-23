@@ -277,7 +277,7 @@ class RandomNoise:
             if is_gray_noise:
                 noise = cv2.cvtColor(noise[..., [2, 1, 0]], cv2.COLOR_BGR2GRAY)
                 noise = noise[..., np.newaxis]
-            noise = np.clip((noise * 255.0).round(), 0, 255)
+            noise = np.clip((noise).round(), 0, 255)
             unique_val = 2**np.ceil(np.log2(len(np.unique(noise))))
             noise = np.random.poisson(noise * unique_val) / unique_val - noise
 
