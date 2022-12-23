@@ -478,14 +478,8 @@ class StableDiffusion(nn.Module):
                  height // self.vae_scale_factor,
                  width // self.vae_scale_factor)
         if latents is None:
-            if device.type == 'mps':
-                # randn does not work reproducibly on mps
-                latents = torch.randn(
-                    shape, generator=generator, device='cpu',
-                    dtype=dtype).to(device)
-            else:
-                latents = torch.randn(
-                    shape, generator=generator, device=device, dtype=dtype)
+            latents = torch.randn(
+                shape, generator=generator, device=device, dtype=dtype)
         else:
             if latents.shape != shape:
                 raise ValueError(f'Unexpected latents shape, '
