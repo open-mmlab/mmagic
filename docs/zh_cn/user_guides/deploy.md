@@ -13,7 +13,6 @@ ______________________________________________________________________
 [MMDeploy](https://github.com/open-mmlab/mmdeploy) 是 OpenMMLab 的部署仓库，负责包括 MMClassification、MMDetection、MMEditing 等在内的各算法库的部署工作。
 你可以从[这里](https://mmdeploy.readthedocs.io/zh_CN/1.x/04-supported-codebases/mmedit.html)获取 MMDeploy 对 MMClassification 部署支持的最新文档。
 
-
 ## 安装
 
 请参考[此处](https://mmediting.readthedocs.io/en/1.x/2_get_started.html#installation)安装 mmedit。然后，按照[说明](https://mmdeploy.readthedocs.io/zh_CN/1.x/get_started.html#mmdeploy)安装 mmdeploy。
@@ -24,10 +23,7 @@ ______________________________________________________________________
 
 ## 模型转换
 
-假设在安装步骤中，mmediting 和 mmdeploy 代码库在同级目录下，并且当前的工作目录为 mmediting 的根目录，
-那么以 [ESRGAN](https://github.com/open-mmlab/mmediting/blob/1.x/configs/esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) 模型为例，
-你可以从[此处](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth)下载对应的 checkpoint，
-并使用以下代码将之转换为 onnx 模型：
+假设在安装步骤中，mmediting 和 mmdeploy 代码库在同级目录下，并且当前的工作目录为 mmediting 的根目录，那么以 [ESRGAN](https://github.com/open-mmlab/mmediting/blob/1.x/configs/esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) 模型为例，你可以从[此处](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth)下载对应的 checkpoint，并使用以下代码将之转换为 onnx 模型：
 
 ```python
 from mmdeploy.apis import torch2onnx
@@ -57,6 +53,7 @@ export2SDK(deploy_cfg, model_cfg, work_dir, pth=model_checkpoint, device=device)
 ```
 
 其中：
+
 - **{task}:** mmedit 中的任务
 - **{backend}:** 推理后端名称。比如，onnxruntime、tensorrt、pplnn、ncnn、openvino、coreml 等等
 - **{precision}:** 推理精度。比如，fp16、int8。不填表示 fp32
