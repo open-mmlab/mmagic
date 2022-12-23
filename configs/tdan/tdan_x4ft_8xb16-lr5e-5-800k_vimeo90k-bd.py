@@ -1,4 +1,4 @@
-_base_ = './tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bd.py'
+_base_ = './tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bd.py'
 
 experiment_name = 'tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd'
 work_dir = f'./work_dirs/{experiment_name}'
