@@ -1,8 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import pytest
 import torch
 
 from mmedit.models.editors.ddpm.attention import (ApproximateGELU,
-                                                  CrossAttention)
+                                                  CrossAttention,
+                                                  Transformer2DModel)
 
 
 def test_ApproximateGELU():
@@ -18,6 +20,16 @@ def test_crossattention():
     crossattention._slice_size = 2
     output = crossattention.forward(input)
     assert output.shape == (2, 64, 64)
+
+
+def test_Transformer2DModel_init():
+    with pytest.raises(Exception):
+        Transformer2DModel(in_channels=3, num_vector_embeds=3)
+
+    with pytest.raises(Exception):
+        Transformer2DModel()
+
+    Transformer2DModel(in_channels=3, use_linear_projection=True)
 
 
 if __name__ == '__main__':

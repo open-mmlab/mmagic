@@ -25,7 +25,7 @@ def test_ddpm():
         ddpm.training_loss(1, 2, 3)
 
     with pytest.raises(Exception):
-        ddpm.set_timesteps()
+        ddpm.sample_timestep()
 
     steps = len(ddpm)
     assert steps == 1000
