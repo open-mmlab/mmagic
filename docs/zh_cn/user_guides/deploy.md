@@ -1,5 +1,10 @@
 # 教程 8：模型部署指南
 
+[MMDeploy](https://github.com/open-mmlab/mmdeploy) 是 OpenMMLab 的部署仓库，负责包括 MMClassification、MMDetection、MMEditing 等在内的各算法库的部署工作。
+你可以从[这里](https://mmdeploy.readthedocs.io/zh_CN/1.x/04-supported-codebases/mmedit.html)获取 MMDeploy 对 MMClassification 部署支持的最新文档。
+
+本文的结构如下：
+
 - [安装](#安装)
 - [模型转换](#模型转换)
 - [模型规范](#模型规范)
@@ -7,11 +12,6 @@
   - [后端模型推理](#后端模型推理)
   - [SDK 模型推理](#sdk-模型推理)
 - [模型支持列表](#模型支持列表)
-
-______________________________________________________________________
-
-[MMDeploy](https://github.com/open-mmlab/mmdeploy) 是 OpenMMLab 的部署仓库，负责包括 MMClassification、MMDetection、MMEditing 等在内的各算法库的部署工作。
-你可以从[这里](https://mmdeploy.readthedocs.io/zh_CN/1.x/04-supported-codebases/mmedit.html)获取 MMDeploy 对 MMClassification 部署支持的最新文档。
 
 ## 安装
 

@@ -1,5 +1,10 @@
 # Tutorial 8: Deploy models in MMEditing
 
+The deployment of OpenMMLab codebases, including MMClassification, MMDetection, MMEditing and so on are supported by [MMDeploy](https://github.com/open-mmlab/mmdeploy).
+The latest deployment guide for MMEditing can be found from [here](https://mmdeploy.readthedocs.io/en/1.x/04-supported-codebases/mmedit.html).
+
+This tutorial is organized as follows:
+
 - [Installation](#installation)
 - [Convert model](#convert-model)
 - [Model specification](#model-specification)
@@ -8,12 +13,6 @@
   - [SDK model inference](#sdk-model-inference)
 - [Supported models](#supported-models)
 
-______________________________________________________________________
-
-
-The deployment of OpenMMLab codebases, including MMClassification, MMDetection, MMEditing and so on are supported by [MMDeploy](https://github.com/open-mmlab/mmdeploy).
-The latest deployment guide for MMEditing can be found from [here](https://mmdeploy.readthedocs.io/en/1.x/04-supported-codebases/mmedit.html).
-
 ## Installation
 
 Please follow the [guide](https://mmediting.readthedocs.io/en/1.x/2_get_started.html#installation) to install mmedit. And then install mmdeploy from source by following [this](https://mmdeploy.readthedocs.io/en/1.x/get_started.html#installation) guide.
@@ -21,7 +20,6 @@ Please follow the [guide](https://mmediting.readthedocs.io/en/1.x/2_get_started.
 ```{note}
 If you install mmdeploy prebuilt package, please also clone its repository by 'git clone https://github.com/open-mmlab/mmdeploy.git --depth=1' to get the deployment config files.
 ```
-
 
 ## Convert model
 
