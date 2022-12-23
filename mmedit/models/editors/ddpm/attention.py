@@ -542,10 +542,7 @@ class GEGLU(nn.Module):
 
     def gelu(self, gate):
         """gelu activation."""
-        if gate.device.type != 'mps':
-            return F.gelu(gate)
-        # mps: gelu is not implemented for float16
-        return F.gelu(gate.to(dtype=torch.float32)).to(dtype=gate.dtype)
+        return F.gelu(gate)
 
     def forward(self, hidden_states):
         """forward with hidden states."""
