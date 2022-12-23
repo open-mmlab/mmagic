@@ -138,14 +138,11 @@ class Transformer2DModel(nn.Module):
         ])
 
         # 4. Define output layers
-        if self.is_input_continuous:
-            if use_linear_projection:
-                self.proj_out = nn.Linear(in_channels, inner_dim)
-            else:
-                self.proj_out = nn.Conv2d(
-                    inner_dim, in_channels, kernel_size=1, stride=1, padding=0)
+        if use_linear_projection:
+            self.proj_out = nn.Linear(in_channels, inner_dim)
         else:
-            raise ValueError('input_vectorized not supported now.')
+            self.proj_out = nn.Conv2d(
+                inner_dim, in_channels, kernel_size=1, stride=1, padding=0)
 
     def _set_attention_slice(self, slice_size):
         """set attention slice."""
@@ -211,23 +208,20 @@ class Transformer2DModel(nn.Module):
                 timestep=timestep)
 
         # 3. Output
-        if self.is_input_continuous:
-            if not self.use_linear_projection:
-                hidden_states = (
-                    hidden_states.reshape(batch, height, weight,
-                                          inner_dim).permute(0, 3, 1,
-                                                             2).contiguous())
-                hidden_states = self.proj_out(hidden_states)
-            else:
-                hidden_states = self.proj_out(hidden_states)
-                hidden_states = (
-                    hidden_states.reshape(batch, height, weight,
-                                          inner_dim).permute(0, 3, 1,
-                                                             2).contiguous())
-
-            output = hidden_states + residual
+        if not self.use_linear_projection:
+            hidden_states = (
+                hidden_states.reshape(batch, height, weight,
+                                      inner_dim).permute(0, 3, 1,
+                                                         2).contiguous())
+            hidden_states = self.proj_out(hidden_states)
         else:
-            raise ValueError('input_vectorized not supported now.')
+            hidden_states = self.proj_out(hidden_states)
+            hidden_states = (
+                hidden_states.reshape(batch, height, weight,
+                                      inner_dim).permute(0, 3, 1,
+                                                         2).contiguous())
+
+        output = hidden_states + residual
 
         if not return_dict:
             return (output, )

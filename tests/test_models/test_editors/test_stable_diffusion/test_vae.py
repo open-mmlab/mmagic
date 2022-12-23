@@ -2,7 +2,7 @@
 import torch
 
 from mmedit.models.editors.stable_diffusion.vae import (
-    AutoencoderKL, DiagonalGaussianDistribution, ResnetBlock2D)
+    AttentionBlock, AutoencoderKL, DiagonalGaussianDistribution, ResnetBlock2D)
 
 
 def test_vae():
@@ -40,5 +40,12 @@ def test_DiagonalGaussianDistribution():
     assert output.shape == (1, )
 
 
+def test_AttentionBlock():
+    input = torch.rand((1, 64, 32, 32))
+    attention = AttentionBlock(64, num_head_channels=8)
+    output = attention.forward(input)
+    assert output.shape == (1, 64, 32, 32)
+
+
 if __name__ == '__main__':
-    test_DiagonalGaussianDistribution()
+    test_AttentionBlock()
