@@ -815,7 +815,7 @@ class DiagonalGaussianDistribution(object):
             -> torch.FloatTensor:
         """sample function."""
         device = self.parameters.device
-        sample_device = 'cpu' if device.type == 'mps' else device
+        sample_device = device
         sample = torch.randn(
             self.mean.shape, generator=generator, device=sample_device)
         # make sure sample is on the same device

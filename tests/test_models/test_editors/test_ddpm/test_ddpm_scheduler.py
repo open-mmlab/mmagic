@@ -31,5 +31,16 @@ def test_ddpm():
     assert steps == 1000
 
 
+def test_ddpm_init():
+    DDPMScheduler(trained_betas=1)
+
+    DDPMScheduler(beta_schedule='scaled_linear')
+
+    DDPMScheduler(beta_schedule='squaredcos_cap_v2')
+
+    with pytest.raises(Exception):
+        DDPMScheduler(beta_schedule='tem')
+
+
 if __name__ == '__main__':
-    test_ddpm()
+    test_ddpm_init()
