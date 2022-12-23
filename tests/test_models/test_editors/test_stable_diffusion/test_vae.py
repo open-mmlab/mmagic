@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.stable_diffusion.vae import (AutoencoderKL,
-                                                        ResnetBlock2D)
+from mmedit.models.editors.stable_diffusion.vae import (
+    AutoencoderKL, DiagonalGaussianDistribution, ResnetBlock2D)
 
 
 def test_vae():
@@ -23,5 +23,22 @@ def test_resnetblock2d():
     assert output.shape == (1, 64, 8, 8)
 
 
+def test_DiagonalGaussianDistribution():
+    param = torch.rand((1, 2, 16, 16))
+    sample = torch.rand((1, 1, 16, 16))
+
+    gauss_dist = DiagonalGaussianDistribution(param, deterministic=False)
+    gauss_dist.sample()
+    gauss_dist.kl()
+    output = gauss_dist.nll(sample)
+    assert output.shape == (1, )
+
+    gauss_dist = DiagonalGaussianDistribution(param, deterministic=True)
+    gauss_dist.sample()
+    gauss_dist.kl()
+    output = gauss_dist.nll(sample)
+    assert output.shape == (1, )
+
+
 if __name__ == '__main__':
-    test_resnetblock2d()
+    test_DiagonalGaussianDistribution()
