@@ -109,6 +109,13 @@ def test_stable_diffusion():
     StableDiffuser = MODELS.build(Config(model))
     StableDiffuser.tokenizer = dummy_tokenizer()
     StableDiffuser.text_encoder = dummy_text_encoder()
+
+    with pytest.raises(Exception):
+        StableDiffuser.infer(1, height=64, width=64)
+
+    with pytest.raises(Exception):
+        StableDiffuser.infer('temp', height=31, width=31)
+
     result = StableDiffuser.infer(
         'an insect robot preparing a delicious meal',
         height=64,
