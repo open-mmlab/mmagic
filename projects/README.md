@@ -1,21 +1,19 @@
 # Welcome to Projects of MMEditing
 
-Welcome to the MMEditing community! 
-The MMEditing ecosystem consists of tutorials, libraries, and projects from a broad set of researchers in academia and industry, ML and application engineers. 
+Welcome to the MMEditing community!
+The MMEditing ecosystem consists of tutorials, libraries, and projects from a broad set of researchers in academia and industry, ML and application engineers.
 The goal of this ecosystem is to support, accelerate, and aid in your exploration with MMEditing for image, video, 3D content generation, editing and processing.
 
 Here are a few projects that are built upon MMEditing. They are examples of how to use MMEditing as a library, to make your projects more maintainable.
-Please find more projects in [MMEditing Ecosystem](https://openmmlab.com/ecosystem). 
+Please find more projects in [MMEditing Ecosystem](https://openmmlab.com/ecosystem).
 
-
-## Show your projects on OpenMMLab Ecosystem 
+## Show your projects on OpenMMLab Ecosystem
 
 You can submit your project so that it can be shown on the homepage of [OpenMMLab](https://openmmlab.com/ecosystem).
 
+## Add example projects to MMEditing
 
-## Add example projects to MMEditing 
-
-Here is an [example project](./example_project) about how to add your projects to MMEditing. 
+Here is an [example project](./example_project) about how to add your projects to MMEditing.
 You can copy and create your own project from the [example project](./example_project).
 
 We also provide some documentation listed below for your reference:
@@ -32,15 +30,13 @@ We also provide some documentation listed below for your reference:
 
   Welcome to start a discussion!
 
-
-## Projects of libraries and toolboxes 
+## Projects of libraries and toolboxes
 
 - [PowerVQE](https://github.com/ryanxingql/powervqe): Open framework for quality enhancement of compressed videos based on PyTorch and MMEditing.
 
 - [VR-Baseline](https://github.com/linjing7/VR-Baseline): Video Restoration Toolbox.
 
 - [Derain-Toolbox](https://github.com/biubiubiiu/derain-toolbox): Single Image Deraining Toolbox and Benchmark
-
 
 ## Projects of research papers
 
