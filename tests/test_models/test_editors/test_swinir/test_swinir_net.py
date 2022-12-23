@@ -1,4 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
+import pytest
 import torch
 
 from mmedit.models.editors import SwinIRNet
@@ -57,6 +60,9 @@ def test_swinir_cpu():
     assert output.shape == (1, 3, 64, 64)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_swinir_cuda():
     net = SwinIRNet(
         upscale=4,
