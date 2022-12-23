@@ -162,10 +162,10 @@ class Upsample2D(nn.Module):
         self.name = name
 
         conv = None
-        if use_conv_transpose:
-            conv = nn.ConvTranspose2d(channels, self.out_channels, 4, 2, 1)
-        elif use_conv:
+        if use_conv:
             conv = nn.Conv2d(self.channels, self.out_channels, 3, padding=1)
+        else:
+            conv = nn.ConvTranspose2d(channels, self.out_channels, 4, 2, 1)
 
         self.conv = conv
 
