@@ -18,6 +18,8 @@ def test_ddim():
     result = ddim.add_noise(sample, noise, 10)
     assert result.shape == (1, 4, 32, 32)
 
+    assert len(ddim) == 1000
+
 
 def test_ddim_init():
     ddim = DDIMScheduler(
@@ -32,5 +34,19 @@ def test_ddim_init():
         DDIMScheduler(num_train_timesteps=1000, beta_schedule='fake')
 
 
+def test_ddim_step():
+    modelout = torch.rand((1, 8, 32, 32))
+    sample = torch.rand((1, 4, 32, 32))
+    ddim = DDIMScheduler(
+        num_train_timesteps=1000, variance_type='learned_range')
+    with pytest.raises(Exception):
+        ddim.step(modelout, 980, sample)
+
+    ddim.set_timesteps(10)
+    result = ddim.step(
+        modelout, 980, sample, eta=1, use_clipped_model_output=True)
+    assert result['prev_sample'].shape == (1, 4, 32, 32)
+
+
 if __name__ == '__main__':
-    test_ddim()
+    test_ddim_step()
