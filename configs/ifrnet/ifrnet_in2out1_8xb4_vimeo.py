@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 
-experiment_name = 'ifrnet_in2out7_8xb4_vimeo'
+experiment_name = 'ifrnet_in2out1_8xb4_vimeo'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 

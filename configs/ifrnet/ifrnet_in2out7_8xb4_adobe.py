@@ -63,7 +63,7 @@ val_pipeline = [
 # dataset settings
 train_dataset_type = 'MultipleFramesDataset'
 val_dataset_type = 'MultipleFramesDataset'
-data_root = '../datasets/gopro_all/'
+data_root = '../datasets/Adobe240fps/'
 
 train_dataloader = dict(
     num_workers=8,
@@ -74,7 +74,7 @@ train_dataloader = dict(
         type=train_dataset_type,
         metainfo=dict(dataset_type='gopro', task_name='mfi'),
         data_root=data_root + 'train',
-        data_prefix=dict(img='', gt=''),
+        data_prefix=dict(img='full_sharp', gt='full_sharp'),
         pipeline=train_pipeline,
         depth=2,
         load_frames_list=dict(img=[0, 8], gt=[1, 2, 3, 4, 5, 6, 7])))
@@ -89,7 +89,7 @@ val_dataloader = dict(
         type=val_dataset_type,
         metainfo=dict(dataset_type='gopro', task_name='mfi'),
         data_root=data_root + 'test',
-        data_prefix=dict(img='', gt=''),
+        data_prefix=dict(img='full_sharp', gt='full_sharp'),
         pipeline=val_pipeline,
         depth=2,
         load_frames_list=dict(img=[0, 8], gt=[1, 2, 3, 4, 5, 6, 7])))
