@@ -2,7 +2,7 @@
 
 > [SwinIR: Image Restoration Using Swin Transformer](https://arxiv.org/abs/2108.10257)
 
-> **Task**: Image Super-Resolution,
+> **Task**: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
 
 <!-- [ALGORITHM] -->
 
@@ -84,7 +84,7 @@ The metrics are `PSNR` .
 ### **JPEG Compression Artifact Reduction (grayscale)**
 
 Evaluated on grayscale images.
-The metrics are `PSNR` .
+The metrics are `PSNR / SSIM` .
 
 |                                  Method                                  | Classic5 PSNR | Classic5 SSIM | LIVE1 PSNR | LIVE1 SSIM | GPU Info |                                  Download                                  |
 | :----------------------------------------------------------------------: | :-----------: | :-----------: | :--------: | :--------: | :------: | :------------------------------------------------------------------------: |
@@ -96,7 +96,7 @@ The metrics are `PSNR` .
 ### **JPEG Compression Artifact Reduction (color)**
 
 Evaluated on RGB channels.
-The metrics are `PSNR` .
+The metrics are `PSNR / SSIM` .
 
 |                                  Method                                  | Classic5 PSNR | Classic5 SSIM | LIVE1 PSNR | LIVE1 SSIM | GPU Info |                                  Download                                  |
 | :----------------------------------------------------------------------: | :-----------: | :-----------: | :--------: | :--------: | :------: | :------------------------------------------------------------------------: |
