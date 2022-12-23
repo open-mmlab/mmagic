@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.ddpm.attention import (
-        ApproximateGELU, CrossAttention)
+from mmedit.models.editors.ddpm.attention import (ApproximateGELU,
+                                                  CrossAttention)
 
 
 def test_ApproximateGELU():
