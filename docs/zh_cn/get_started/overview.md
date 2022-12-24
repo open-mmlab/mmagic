@@ -85,7 +85,7 @@ MMEditing 支持各种应用程序，包括：
 
    在[MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py)的支持下，可以轻松实现动态架构的分布式训练。
 
-## 开始
+## 新手入门
 
 安装说明见[安装](install.md)。
 
