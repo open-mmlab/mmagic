@@ -20,9 +20,9 @@ Image colorization is inherently an ill-posed problem with multi-modal uncertain
 
 ## 结果和模型
 
-|                                               Method                                                |                                               Download                                                |
-| :-------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: |
-| [instance_aware_colorization_officiial](/configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py) | [model](https://download.openmmlab.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth) |
+|                                              Method                                              |                                                 Download                                                 |
+| :----------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: |
+| [instance_aware_colorization_officiial](./inst-colorizatioon_full_official_cocostuff-256x256.py) | [model](https://download.openmmlab.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth) |
 
 ## 快速开始
 

@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2111.09881
   README: configs/restormer/README.md
 Models:
-- Config: configs/restormer/restormer_official_rain13k.py
+- Config: restormer_official_rain13k.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -33,7 +33,7 @@ Models:
         SSIM: 0.9451
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth
-- Config: configs/restormer/restormer_official_gopro.py
+- Config: restormer_official_gopro.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -56,7 +56,7 @@ Models:
         SSIM: 0.9707
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth
-- Config: configs/restormer/restormer_official_dpdd-single.py
+- Config: restormer_official_dpdd-single.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -76,7 +76,7 @@ Models:
       Outdoor Scenes SSIM: 0.7509
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-single-6bc31582.pth
-- Config: configs/restormer/restormer_official_dpdd-dual.py
+- Config: restormer_official_dpdd-dual.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -96,7 +96,7 @@ Models:
       Outdoor Scenes SSIM: 0.8346
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer_official_dpdd-dual-52c94c00.pth
-- Config: configs/restormer/restormer_official_dfwb-gray-sigma15.py
+- Config: restormer_official_dfwb-gray-sigma15.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -117,7 +117,7 @@ Models:
         SSIM: 0.9419
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma15-da74417f.pth
-- Config: configs/restormer/restormer_official_dfwb-gray-sigma25.py
+- Config: restormer_official_dfwb-gray-sigma25.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -138,7 +138,7 @@ Models:
         SSIM: 0.914
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma25-08010841.pth
-- Config: configs/restormer/restormer_official_dfwb-gray-sigma50.py
+- Config: restormer_official_dfwb-gray-sigma50.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -159,7 +159,7 @@ Models:
         SSIM: 0.8571
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma50-ee852dfe.pth
-- Config: configs/restormer/restormer_official_dfwb-gray-sigma15.py
+- Config: restormer_official_dfwb-gray-sigma15.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -180,7 +180,7 @@ Models:
         SSIM: 0.9409
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
-- Config: configs/restormer/restormer_official_dfwb-gray-sigma25.py
+- Config: restormer_official_dfwb-gray-sigma25.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -201,7 +201,7 @@ Models:
         SSIM: 0.9131
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
-- Config: configs/restormer/restormer_official_dfwb-gray-sigma50.py
+- Config: restormer_official_dfwb-gray-sigma50.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -222,7 +222,7 @@ Models:
         SSIM: 0.8571
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
-- Config: configs/restormer/restormer_official_dfwb-color-sigma15.py
+- Config: restormer_official_dfwb-color-sigma15.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -246,7 +246,7 @@ Models:
         SSIM: 0.953
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma15-012ceb71.pth
-- Config: configs/restormer/restormer_official_dfwb-color-sigma25.py
+- Config: restormer_official_dfwb-color-sigma25.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -270,7 +270,7 @@ Models:
         SSIM: 0.9317
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma25-e307f222.pth
-- Config: configs/restormer/restormer_official_dfwb-color-sigma50.py
+- Config: restormer_official_dfwb-color-sigma50.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -294,7 +294,7 @@ Models:
         SSIM: 0.8902
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma50-a991983d.pth
-- Config: configs/restormer/restormer_official_dfwb-color-sigma15.py
+- Config: restormer_official_dfwb-color-sigma15.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -318,7 +318,7 @@ Models:
         SSIM: 0.9524
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
-- Config: configs/restormer/restormer_official_dfwb-color-sigma25.py
+- Config: restormer_official_dfwb-color-sigma25.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -342,7 +342,7 @@ Models:
         SSIM: 0.9312
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
-- Config: configs/restormer/restormer_official_dfwb-color-sigma50.py
+- Config: restormer_official_dfwb-color-sigma50.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
@@ -366,7 +366,7 @@ Models:
         SSIM: 0.8898
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
-- Config: configs/restormer/restormer_official_sidd.py
+- Config: restormer_official_sidd.py
   In Collection: Restormer
   Metadata:
     GPUs: '1'
