@@ -9,7 +9,7 @@ Collections:
   - https://arxiv.org/abs/1511.06434
   README: configs/dcgan/README.md
 Models:
-- Config: configs/dcgan/dcgan_Glr4e-4_Dlr1e-4_1xb128-5kiters_mnist-64x64.py
+- Config: dcgan_Glr4e-4_Dlr1e-4_1xb128-5kiters_mnist-64x64.py
   In Collection: Unsupervised Representation Learning with Deep Convolutional Generative
     Adversarial Networks
   Metadata:
@@ -21,7 +21,7 @@ Models:
       MS-SSIM: 0.1395
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/dcgan/dcgan_mnist-64_b128x1_Glr4e-4_Dlr1e-4_5k_20210512_163926-207a1eaf.pth
-- Config: configs/dcgan/dcgan_1xb128-300kiters_celeba-cropped-64.py
+- Config: dcgan_1xb128-300kiters_celeba-cropped-64.py
   In Collection: Unsupervised Representation Learning with Deep Convolutional Generative
     Adversarial Networks
   Metadata:
@@ -33,7 +33,7 @@ Models:
       MS-SSIM: 0.2899
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/dcgan/dcgan_celeba-cropped_64_b128x1_300kiter_20210408_161607-1f8a2277.pth
-- Config: configs/dcgan/dcgan_1xb128-5epoches_lsun-bedroom-64x64.py
+- Config: dcgan_1xb128-5epoches_lsun-bedroom-64x64.py
   In Collection: Unsupervised Representation Learning with Deep Convolutional Generative
     Adversarial Networks
   Metadata:

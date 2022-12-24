@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2104.13371
   README: configs/basicvsr_pp/README.md
 Models:
-- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py
+- Config: basicvsr-pp_c64n7_8xb1-600k_reds4.py
   In Collection: BasicVSR++
   Metadata:
     GPUs: 8 (Tesla V100-PCIE-32GB)
@@ -24,7 +24,7 @@ Models:
       Vimeo-90K-T (BIx4) PSNR (Y): 36.4445
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
-- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi.py
+- Config: basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi.py
   In Collection: BasicVSR++
   Metadata:
     GPUs: 4 (Tesla V100-PCIE-32GB)
@@ -41,7 +41,7 @@ Models:
       Vimeo-90K-T (BIx4) PSNR (Y): 37.7864
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305-4ef437e2.pth
-- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd.py
+- Config: basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd.py
   In Collection: BasicVSR++
   Metadata:
     GPUs: 4 (Tesla V100-PCIE-32GB)
@@ -58,7 +58,7 @@ Models:
       Vimeo-90K-T (BIx4) PSNR (Y): 34.7248
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd_20210305-ab315ab1.pth
-- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py
+- Config: basicvsr-pp_c64n7_8xb1-600k_reds4.py
   In Collection: BasicVSR++
   Metadata:
     GPUs: 8 (Tesla V100-PCIE-32GB)
@@ -75,7 +75,7 @@ Models:
       Vimeo-90K-T (BIx4) SSIM (Y): 0.9411
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
-- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi.py
+- Config: basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi.py
   In Collection: BasicVSR++
   Metadata:
     GPUs: 4 (Tesla V100-PCIE-32GB)
@@ -92,7 +92,7 @@ Models:
       Vimeo-90K-T (BIx4) SSIM (Y): 0.95
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305-4ef437e2.pth
-- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd.py
+- Config: basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd.py
   In Collection: BasicVSR++
   Metadata:
     GPUs: 4 (Tesla V100-PCIE-32GB)

@@ -20,9 +20,9 @@
 
 **Places365-Challenge**
 
-|                           算法                           |      掩膜类型      | 分辨率  | 训练集容量 |    测试集     | l1 损失 | PSNR  | SSIM  |        GPU 信息         |                           下载                           |
-| :------------------------------------------------------: | :----------------: | :-----: | :--------: | :-----------: | :-----: | :---: | :---: | :---------------------: | :------------------------------------------------------: |
-| [AOT-GAN](/configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py) | free-form (50-60%) | 512x512 |    500k    | Places365-val |  7.07   | 19.01 | 0.682 | 4 (GeForce GTX 1080 Ti) | [模型](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
+|                        算法                        |      掩膜类型      | 分辨率  | 训练集容量 |    测试集     | l1 损失 | PSNR  | SSIM  |        GPU 信息         |                              下载                              |
+| :------------------------------------------------: | :----------------: | :-----: | :--------: | :-----------: | :-----: | :---: | :---: | :---------------------: | :------------------------------------------------------------: |
+| [AOT-GAN](./aot-gan_smpgan_4xb4_places-512x512.py) | free-form (50-60%) | 512x512 |    500k    | Places365-val |  7.07   | 19.01 | 0.682 | 4 (GeForce GTX 1080 Ti) | [模型](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
 
 <!-- SKIP THIS TABLE -->
 

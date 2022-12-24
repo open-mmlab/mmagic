@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/1609.04802
   README: configs/srgan_resnet/README.md
 Models:
-- Config: configs/srgan_resnet/msrresnet_x4c64b16_1xb16-1000k_div2k.py
+- Config: msrresnet_x4c64b16_1xb16-1000k_div2k.py
   In Collection: SRGAN
   Metadata:
     GPUs: '1'
@@ -24,7 +24,7 @@ Models:
       Set5 SSIM: 0.8491
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/srresnet_srgan/msrresnet_x4c64b16_1x16_300k_div2k_20200521-61556be5.pth
-- Config: configs/srgan_resnet/srgan_x4c64b16_1xb16-1000k_div2k.py
+- Config: srgan_x4c64b16_1xb16-1000k_div2k.py
   In Collection: SRGAN
   Metadata:
     GPUs: '1'

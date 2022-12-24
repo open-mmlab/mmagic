@@ -9,7 +9,7 @@ Collections:
   - https://openaccess.thecvf.com/content_iccv_2017/html/Zhu_Unpaired_Image-To-Image_Translation_ICCV_2017_paper.html
   README: configs/cyclegan/README.md
 Models:
-- Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-80kiters_facades.py
+- Config: cyclegan_lsgan-resnet-in_1xb1-80kiters_facades.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
   Metadata:
@@ -22,7 +22,7 @@ Models:
       IS: 1.792
     Task: Image2Image
   Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_80k_facades_20210902_165905-5e2c0876.pth
-- Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-80kiters_facades.py
+- Config: cyclegan_lsgan-id0-resnet-in_1xb1-80kiters_facades.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
   Metadata:
@@ -35,7 +35,7 @@ Models:
       IS: 1.905
     Task: Image2Image
   Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades_convert-bgr_20210902_164411-d8e72b45.pth
-- Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-250kiters_summer2winter.py
+- Config: cyclegan_lsgan-resnet-in_1xb1-250kiters_summer2winter.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
   Metadata:
@@ -48,7 +48,7 @@ Models:
       IS: 2.771
     Task: Image2Image
   Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165932-fcf08dc1.pth
-- Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py
+- Config: cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
   Metadata:
@@ -61,7 +61,7 @@ Models:
       IS: 2.72
     Task: Image2Image
   Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165640-8b825581.pth
-- Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-250kiters_summer2winter.py
+- Config: cyclegan_lsgan-resnet-in_1xb1-250kiters_summer2winter.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
   Metadata:
@@ -74,7 +74,7 @@ Models:
       IS: 3.129
     Task: Image2Image
   Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165932-fcf08dc1.pth
-- Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py
+- Config: cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
   Metadata:
@@ -87,7 +87,7 @@ Models:
       IS: 3.107
     Task: Image2Image
   Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165640-8b825581.pth
-- Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-270kiters_horse2zebra.py
+- Config: cyclegan_lsgan-resnet-in_1xb1-270kiters_horse2zebra.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
   Metadata:
@@ -100,7 +100,7 @@ Models:
       IS: 1.418
     Task: Image2Image
   Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_170004-a32c733a.pth
-- Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-270kiters_horse2zebra.py
+- Config: cyclegan_lsgan-id0-resnet-in_1xb1-270kiters_horse2zebra.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
   Metadata:
@@ -113,7 +113,7 @@ Models:
       IS: 1.542
     Task: Image2Image
   Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_165724-77c9c806.pth
-- Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-270kiters_horse2zebra.py
+- Config: cyclegan_lsgan-resnet-in_1xb1-270kiters_horse2zebra.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
   Metadata:
@@ -126,7 +126,7 @@ Models:
       IS: 3.154
     Task: Image2Image
   Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_170004-a32c733a.pth
-- Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-270kiters_horse2zebra.py
+- Config: cyclegan_lsgan-id0-resnet-in_1xb1-270kiters_horse2zebra.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
   Metadata:

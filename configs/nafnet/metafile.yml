@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2204.04676
   README: configs/nafnet/README.md
 Models:
-- Config: configs/nafnet/nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd.py
+- Config: nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd.py
   In Collection: NAFNet
   Metadata:
     GPUs: 1 (A100)
@@ -18,7 +18,7 @@ Models:
     Metrics: {}
     Task: Image Restoration
   Weights: https://download.openmmlab.com/mmediting/nafnet/NAFNet-SIDD-midc64.pth
-- Config: configs/nafnet/nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro.py
+- Config: nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro.py
   In Collection: NAFNet
   Metadata:
     GPUs: 1 (A100)

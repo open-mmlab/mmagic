@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/pdf/2104.01431.pdf
   README: configs/aot_gan/README.md
 Models:
-- Config: configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py
+- Config: aot-gan_smpgan_4xb4_places-512x512.py
   In Collection: AOT-GAN
   Metadata:
     GPUs: 4 (GeForce GTX 1080 Ti)

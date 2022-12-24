@@ -22,9 +22,9 @@ State-of-the-art image inpainting approaches can suffer from generating distorte
 
 **Places365-Challenge**
 
-|                        Method                        |     Mask Type      | Resolution | Train Iters |   Test Set    | l1 error | PSNR  | SSIM  |        GPU Info         |                        Download                         |
-| :--------------------------------------------------: | :----------------: | :--------: | :---------: | :-----------: | :------: | :---: | :---: | :---------------------: | :-----------------------------------------------------: |
-| [AOT-GAN](/configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py) | free-form (50-60%) |  512x512   |    500k     | Places365-val |   7.07   | 19.01 | 0.682 | 4 (GeForce GTX 1080 Ti) | [model](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
+|                       Method                       |     Mask Type      | Resolution | Train Iters |   Test Set    | l1 error | PSNR  | SSIM  |        GPU Info         |                         Download                          |
+| :------------------------------------------------: | :----------------: | :--------: | :---------: | :-----------: | :------: | :---: | :---: | :---------------------: | :-------------------------------------------------------: |
+| [AOT-GAN](./aot-gan_smpgan_4xb4_places-512x512.py) | free-form (50-60%) |  512x512   |    500k     | Places365-val |   7.07   | 19.01 | 0.682 | 4 (GeForce GTX 1080 Ti) | [model](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
 
 More results for different mask area:
 
