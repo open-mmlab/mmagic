@@ -89,7 +89,7 @@ MMEditing 支持各种应用程序，包括：
 
 安装说明见[安装](install.md)。
 
-＃＃ 用户指南
+## 基础教程
 
 对于初学者，我们建议从 [基础教程](../user_guides/config.md) 学习 MMEditing 的基本用法。
 
