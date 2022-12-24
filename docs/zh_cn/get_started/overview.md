@@ -93,7 +93,7 @@ MMEditing 支持各种应用程序，包括：
 
 对于初学者，我们建议从 [基础教程](../user_guides/config.md) 学习 MMEditing 的基本用法。
 
-### 高级指南
+## 进阶教程
 
 对于熟悉 MMEditing 的用户，可能想了解 MMEditing 的进阶实用，以及如何扩展算法库，如何使用多个算法库框架等高级用法，请参考[进阶教程](../advanced_guides/evaluator.md)。
 
