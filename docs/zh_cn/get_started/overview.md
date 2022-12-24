@@ -1,4 +1,5 @@
 # 概述（待更新）
+
 ＃ 概述
 
 欢迎来到 MMEditing！ 在本节中，您将了解
@@ -51,7 +52,7 @@ MMEditing 支持各种应用程序，包括：
 <video width="100%" 控件>
      <source src="https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4" type="video/mp4">
      <object src="https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4" width="100%">
-     </bject>
+     </object>
 </video>
 </div>
 
@@ -71,19 +72,19 @@ MMEditing 支持各种应用程序，包括：
 
 - **最先进的性能**
 
-   MMEditing 提供最先进的生成模型来处理、编辑和合成图像和视频。
+  MMEditing 提供最先进的生成模型来处理、编辑和合成图像和视频。
 
 - **强大而流行的应用**
 
-   MMEditing 支持流行的*修复*、*抠图*、*超分辨率* 和*生成* 等应用。 具体来说，MMEditing 支持 GAN 插值、GAN 投影、GAN 编辑和许多其他流行的 GAN 的应用。 是时候玩转你的 GAN 了！
+  MMEditing 支持流行的*修复*、*抠图*、*超分辨率* 和*生成* 等应用。 具体来说，MMEditing 支持 GAN 插值、GAN 投影、GAN 编辑和许多其他流行的 GAN 的应用。 是时候玩转你的 GAN 了！
 
 - **全新模块化设计，灵活组合：**
 
-   我们将 MMEditing 分解为不同的模块，通过组合不同的模块可以轻松构建定制的模型。 具体来说，提出了一种新的复杂损失模块设计，用于自定义模块之间的链接，可以实现不同模块之间的灵活组合。([损失函数](../howto/losses.md))
+  我们将 MMEditing 分解为不同的模块，通过组合不同的模块可以轻松构建定制的模型。 具体来说，提出了一种新的复杂损失模块设计，用于自定义模块之间的链接，可以实现不同模块之间的灵活组合。([损失函数](../howto/losses.md))
 
 - **高效的分布式训练：**
 
-   在[MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py)的支持下，可以轻松实现动态架构的分布式训练。
+  在[MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py)的支持下，可以轻松实现动态架构的分布式训练。
 
 ## 新手入门
 
