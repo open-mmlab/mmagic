@@ -99,4 +99,4 @@ MMEditing 支持各种应用程序，包括：
 
 ＃＃＃ 如何
 
-想要使用MMEditing做点什么的用户，请参考[自定义模型](../howto/models.md)。
+想要使用 MMEditing 进行深度开发的用户，可以参考[开发指南](../howto/models.md)。
