@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2012.02181
   README: configs/iconvsr/README.md
 Models:
-- Config: iconvsr_2xb4_reds4.py
+- Config: configs/iconvsr/iconvsr_2xb4_reds4.py
   In Collection: IconVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
@@ -24,7 +24,7 @@ Models:
       Vimeo-90K-T (BIx4) PSNR (Y): 36.4983
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
-- Config: iconvsr_2xb4_vimeo90k-bi.py
+- Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bi.py
   In Collection: IconVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
@@ -41,7 +41,7 @@ Models:
       Vimeo-90K-T (BIx4) PSNR (Y): 37.3729
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413-7c7418dc.pth
-- Config: iconvsr_2xb4_vimeo90k-bd.py
+- Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bd.py
   In Collection: IconVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
@@ -58,7 +58,7 @@ Models:
       Vimeo-90K-T (BIx4) PSNR (Y): 34.678
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bd_20210414-5f38cb34.pth
-- Config: iconvsr_2xb4_reds4.py
+- Config: configs/iconvsr/iconvsr_2xb4_reds4.py
   In Collection: IconVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
@@ -75,7 +75,7 @@ Models:
       Vimeo-90K-T (BIx4) SSIM (Y): 0.9416
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_reds4_20210413-9e09d621.pth
-- Config: iconvsr_2xb4_vimeo90k-bi.py
+- Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bi.py
   In Collection: IconVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)
@@ -92,7 +92,7 @@ Models:
       Vimeo-90K-T (BIx4) SSIM (Y): 0.9467
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/iconvsr/iconvsr_vimeo90k_bi_20210413-7c7418dc.pth
-- Config: iconvsr_2xb4_vimeo90k-bd.py
+- Config: configs/iconvsr/iconvsr_2xb4_vimeo90k-bd.py
   In Collection: IconVSR
   Metadata:
     GPUs: 2 (Tesla V100-PCIE-32GB)

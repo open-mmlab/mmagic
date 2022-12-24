@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/1801.07892
   README: configs/deepfillv1/README.md
 Models:
-- Config: deepfillv1_8xb2_places-256x256.py
+- Config: configs/deepfillv1/deepfillv1_8xb2_places-256x256.py
   In Collection: DeepFillv1
   Metadata:
     GPUs: '8'
@@ -21,7 +21,7 @@ Models:
       l1 error: 11.019
     Task: Inpainting
   Weights: https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth
-- Config: deepfillv1_4xb4_celeba-256x256.py
+- Config: configs/deepfillv1/deepfillv1_4xb4_celeba-256x256.py
   In Collection: DeepFillv1
   Metadata:
     GPUs: '4'

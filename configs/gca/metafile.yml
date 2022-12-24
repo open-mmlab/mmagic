@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2001.04069
   README: configs/gca/README.md
 Models:
-- Config: baseline_r34_4xb10-200k_comp1k.py
+- Config: configs/gca/baseline_r34_4xb10-200k_comp1k.py
   In Collection: GCA
   Metadata:
     GPUs: '4'
@@ -22,7 +22,7 @@ Models:
       SAD: 34.61
     Task: Matting
   Weights: https://download.openmmlab.com/mmediting/mattors/gca/baseline_r34_4x10_200k_comp1k_SAD-34.61_20220620-96f85d56.pth
-- Config: gca_r34_4xb10-200k_comp1k.py
+- Config: configs/gca/gca_r34_4xb10-200k_comp1k.py
   In Collection: GCA
   Metadata:
     GPUs: '4'
@@ -37,7 +37,7 @@ Models:
       SAD: 33.38
     Task: Matting
   Weights: https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth
-- Config: baseline_r34_4xb10-dimaug-200k_comp1k.py
+- Config: configs/gca/baseline_r34_4xb10-dimaug-200k_comp1k.py
   In Collection: GCA
   Metadata:
     GPUs: '4'
@@ -52,7 +52,7 @@ Models:
       SAD: 49.95
     Task: Matting
   Weights: https://download.openmmlab.com/mmediting/mattors/gca/baseline_dimaug_r34_4x10_200k_comp1k_SAD-49.95_20200626_231612-535c9a11.pth
-- Config: gca_r34_4xb10-dimaug-200k_comp1k.py
+- Config: configs/gca/gca_r34_4xb10-dimaug-200k_comp1k.py
   In Collection: GCA
   Metadata:
     GPUs: '4'

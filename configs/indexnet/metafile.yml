@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/1908.00672
   README: configs/indexnet/README.md
 Models:
-- Config: indexnet_mobv2_1xb16-78k_comp1k.py
+- Config: configs/indexnet/indexnet_mobv2_1xb16-78k_comp1k.py
   In Collection: IndexNet
   Metadata:
     GPUs: '1'
@@ -22,7 +22,7 @@ Models:
       SAD: 45.6
     Task: Matting
   Weights: https://download.openmmlab.com/mmediting/mattors/indexnet/indexnet_mobv2_1x16_78k_comp1k_SAD-45.6_20200618_173817-26dd258d.pth
-- Config: indexnet_mobv2-dimaug_1xb16-78k_comp1k.py
+- Config: configs/indexnet/indexnet_mobv2-dimaug_1xb16-78k_comp1k.py
   In Collection: IndexNet
   Metadata:
     GPUs: '1'

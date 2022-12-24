@@ -7,7 +7,7 @@ Collections:
   - https://openaccess.thecvf.com/content_iccv_2017/html/Mao_Least_Squares_Generative_ICCV_2017_paper.html
   README: configs/lsgan/README.md
 Models:
-- Config: lsgan_dcgan-archi_lr1e-3-1xb128-12Mimgs_celeba-cropped-64x64.py
+- Config: configs/lsgan/lsgan_dcgan-archi_lr1e-3-1xb128-12Mimgs_celeba-cropped-64x64.py
   In Collection: LSGAN
   Metadata:
     Training Data: CELEBA
@@ -19,7 +19,7 @@ Models:
       MS-SSIM: 0.3216
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/lsgan/lsgan_celeba-cropped_dcgan-archi_lr-1e-3_64_b128x1_12m_20210429_144001-92ca1d0d.pth
-- Config: lsgan_dcgan-archi_lr1e-4-1xb128-12Mimgs_lsun-bedroom-64x64.py
+- Config: configs/lsgan/lsgan_dcgan-archi_lr1e-4-1xb128-12Mimgs_lsun-bedroom-64x64.py
   In Collection: LSGAN
   Metadata:
     Training Data: Others
@@ -31,7 +31,7 @@ Models:
       MS-SSIM: 0.0671
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/lsgan/lsgan_lsun-bedroom_dcgan-archi_lr-1e-4_64_b128x1_12m_20210429_144602-ec4ec6bb.pth
-- Config: lsgan_dcgan-archi_lr1e-4-1xb64-10Mimgs_celeba-cropped-128x128.py
+- Config: configs/lsgan/lsgan_dcgan-archi_lr1e-4-1xb64-10Mimgs_celeba-cropped-128x128.py
   In Collection: LSGAN
   Metadata:
     Training Data: CELEBA
@@ -43,7 +43,7 @@ Models:
       MS-SSIM: 0.3691
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/lsgan/lsgan_celeba-cropped_dcgan-archi_lr-1e-4_128_b64x1_10m_20210429_144229-01ba67dc.pth
-- Config: lsgan_lsgan-archi_lr1e-4-1xb64-10Mimgs_lsun-bedroom-128x128.py
+- Config: configs/lsgan/lsgan_lsgan-archi_lr1e-4-1xb64-10Mimgs_lsun-bedroom-128x128.py
   In Collection: LSGAN
   Metadata:
     Training Data: Others

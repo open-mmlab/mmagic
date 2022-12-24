@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/1707.02921
   README: configs/edsr/README.md
 Models:
-- Config: edsr_x2c64b16_1xb16-300k_div2k.py
+- Config: configs/edsr/edsr_x2c64b16_1xb16-300k_div2k.py
   In Collection: EDSR
   Metadata:
     GPUs: '1'
@@ -24,7 +24,7 @@ Models:
       Set5 SSIM: 0.9372
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x2c64b16_1x16_300k_div2k_20200604-19fe95ea.pth
-- Config: edsr_x3c64b16_1xb16-300k_div2k.py
+- Config: configs/edsr/edsr_x3c64b16_1xb16-300k_div2k.py
   In Collection: EDSR
   Metadata:
     GPUs: '1'
@@ -41,7 +41,7 @@ Models:
       Set5 SSIM: 0.8912
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x3c64b16_1x16_300k_div2k_20200608-36d896f4.pth
-- Config: edsr_x4c64b16_1xb16-300k_div2k.py
+- Config: configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py
   In Collection: EDSR
   Metadata:
     GPUs: '1'

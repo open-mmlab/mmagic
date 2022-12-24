@@ -7,7 +7,7 @@ Collections:
   - https://openaccess.thecvf.com/content_CVPR_2020/html/Su_Instance-Aware_Image_Colorization_CVPR_2020_paper.html
   README: configs/inst_colorization/README.md
 Models:
-- Config: inst-colorizatioon_full_official_cocostuff-256x256.py
+- Config: configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py
   In Collection: Instance-aware Image Colorization
   Metadata:
     Training Data: Others

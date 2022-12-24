@@ -42,7 +42,7 @@ Models:
       Iter: 740000.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma2.0_ffhq_256_b4x8_best_fid_iter_740000_20220401_122456-730e1fba.pth
-- Config: stylegan3-r_ada-gamma3.3_8xb4-fp16_metfaces-1024x1024.py
+- Config: configs/styleganv3/stylegan3-r_ada-gamma3.3_8xb4-fp16_metfaces-1024x1024.py
   In Collection: StyleGANv3
   Metadata:
     Training Data: Others

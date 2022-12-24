@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/abs/2012.09161
   README: configs/liif/README.md
 Models:
-- Config: liif-edsr-norm_c64b16_1xb16-1000k_div2k.py
+- Config: configs/liif/liif-edsr-norm_c64b16_1xb16-1000k_div2k.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)
@@ -54,7 +54,7 @@ Models:
       Set5x6 SSIM: 0.7774
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
-- Config: liif-rdn-norm_c64b16_1xb16-1000k_div2k.py
+- Config: configs/liif/liif-rdn-norm_c64b16_1xb16-1000k_div2k.py
   In Collection: LIIF
   Metadata:
     GPUs: 1 (TITAN Xp)

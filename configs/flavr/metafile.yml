@@ -7,7 +7,7 @@ Collections:
   - https://arxiv.org/pdf/2012.08512.pdf
   README: configs/flavr/README.md
 Models:
-- Config: flavr_in4out1_8xb4_vimeo90k-septuplet.py
+- Config: configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py
   In Collection: FLAVR
   Metadata:
     GPUs: 8 (Tesla PG503-216)
