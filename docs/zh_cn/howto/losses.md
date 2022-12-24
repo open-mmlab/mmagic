@@ -61,7 +61,7 @@ Class MSELoss(nn.Module)：
          # 代码可以在``mmedit/models/losses/pixelwise_loss.py``中找到
 ```
 
-鉴于损失的定义，我们现在可以通过简单地在配置文件中定义它来使用损失：
+根据这个损失函数的定义，我们现在可以简单地通过在配置文件中定义它来使用：
 
 ```python
 pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean')
