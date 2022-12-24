@@ -3,11 +3,10 @@ _base_ = [
     '../_base_/gen_default_runtime.py',
 ]
 
-# setting image size to 512x512
-train_resize = _base_.train_dataloader.dataset.pipeline[3]
-test_resize = _base_.test_dataloader.dataset.pipeline[3]
-val_resize = _base_.val_dataloader.dataset.pipeline[3]
-train_resize.scale = test_resize.scale = val_resize.scale = (256, 256)
+# setting image size to 256x256
+_base_.train_dataloader.dataset.pipeline[2].scale = (256, 256)
+_base_.test_dataloader.dataset.pipeline[2].scale = (256, 256)
+_base_.val_dataloader.dataset.pipeline[2].scale = (256, 256)
 
 ema_config = dict(
     type='ExponentialMovingAverage',
