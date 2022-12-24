@@ -230,7 +230,7 @@ class GANWithCustomizedLoss(BaseModel):
 
 ```
 
-在这里，`_get_disc_loss` 将帮助自动组合各种损失。
+在这里，`_get_disc_loss` 将帮助自动组合各种损失函数。
 
 因此，只要用户设计相同规则的损失模块，就可以在生成模型的训练中插入任何一种损失，
 无需对模型代码进行其他修改。 您只需要在配置文件中定义 `data_info` 即可。
