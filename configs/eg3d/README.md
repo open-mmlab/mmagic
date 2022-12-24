@@ -20,11 +20,11 @@ Unsupervised generation of high-quality multi-view-consistent images and 3D shap
 
 ## Results and Models
 
-|    Model     |     Comment     | FID50k | FID50k-Camera |                            Config                            |                                            Download                                            |
-| :----------: | :-------------: | :----: | :-----------: | :----------------------------------------------------------: | :--------------------------------------------------------------------------------------------: |
-| ShapeNet-Car | official weight | 5.6573 |    5.2325     |    [config](./eg3d_cvt-official-rgb_shapenet-128x128.py)     | [model](https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_shapenet-128x128-85757f4d.pth) |
-|     AFHQ     | official weight | 2.9134 |    6.4213     |      [config](./eg3d_cvt-official-rgb_afhq-512x512.py)       | [model](https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_afhq-512x512-ca1dd7c9.pth) |
-|     FFHQ     | official weight | 4.3076 |    6.4453     | [config](configs/eg3d/eg3d_cvt-official-rgb_ffhq-512x512.py) | [model](https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_ffhq-512x512-5a0ddcb6.pth) |
+|    Model     |     Comment     | FID50k | FID50k-Camera |                        Config                         |                                               Download                                                |
+| :----------: | :-------------: | :----: | :-----------: | :---------------------------------------------------: | :---------------------------------------------------------------------------------------------------: |
+| ShapeNet-Car | official weight | 5.6573 |    5.2325     | [config](./eg3d_cvt-official-rgb_shapenet-128x128.py) | [model](https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_shapenet-128x128-85757f4d.pth) |
+|     AFHQ     | official weight | 2.9134 |    6.4213     |   [config](./eg3d_cvt-official-rgb_afhq-512x512.py)   | [model](https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_afhq-512x512-ca1dd7c9.pth) |
+|     FFHQ     | official weight | 4.3076 |    6.4453     |   [config](./eg3d_cvt-official-rgb_ffhq-512x512.py)   | [model](https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_ffhq-512x512-5a0ddcb6.pth) |
 
 - `FID50k-Camera` denotes image generated with random sampled camera position.
 - `FID50k` denotes image generated with camera position randomly sampled from the original dataset.
@@ -32,7 +32,7 @@ Unsupervised generation of high-quality multi-view-consistent images and 3D shap
 ### Influence of FP16
 
 All metrics are evaluated under FP32, and it's hard to determine how they will change if we use FP16.
-For example, if we use FP16 at the super resolution module in [FFHQ model](/configs/eg3d_ffhq.py), the output images will be slightly blurrier than the ones generated under FP32, but FID (**4.03**) will be better than FP32 ones.
+For example, if we use FP16 at the super resolution module in [FFHQ model](./eg3d_cvt-official-rgb_ffhq-512x512.py), the output images will be slightly blurrier than the ones generated under FP32, but FID (**4.03**) will be better than FP32 ones.
 
 ## About generate images and videos with High-Level API
 

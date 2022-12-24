@@ -13,12 +13,12 @@ from tqdm import tqdm
 def make_parser():
     parser = argparse.ArgumentParser('Doc link checker')
     parser.add_argument(
-        '--http', default=False, type=bool, help='check http or not ')
-    parser.add_argument(
         '--target',
         default='./docs',
         type=str,
         help='the directory or file to check')
+    parser.add_argument(
+        '--ignore', type=str, nargs='+', default=[], help='input image size')
     return parser
 
 
@@ -69,6 +69,9 @@ def analyze_doc(home, path):
                     if ref.startswith('#'):
                         continue
 
+                    if ref == '<>':
+                        continue
+
                     if '.md#' in ref:
                         ref = ref[:ref.find('#')]
                     if ref.startswith('/'):
@@ -88,13 +91,16 @@ def analyze_doc(home, path):
         raise Exception('found link error')
 
 
-def traverse(target):
+def traverse(args):
+    target = args.target
     if os.path.isfile(target):
         analyze_doc(os.path.dirname(target), target)
         return
     target_files = list(os.walk(target))
     target_files.sort()
     for home, dirs, files in tqdm(target_files):
+        if home in args.ignore:
+            continue
         for filename in files:
             if filename.endswith('.md'):
                 path = os.path.join(home, filename)
@@ -104,4 +110,4 @@ def traverse(target):
 
 if __name__ == '__main__':
     args = make_parser().parse_args()
-    traverse(args.target)
+    traverse(args)

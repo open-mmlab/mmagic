@@ -40,7 +40,7 @@
 
 - △ 指同上。
 - 这两个配置仅在 _testing pipeline_ 上有所不同。 所以他们使用相同的检查点。
-- 数据根据 [EDSR](/configs/restorers/edsr) 进行正则化。
+- 数据根据 [EDSR](../edsr/README.md) 进行正则化。
 - 在 RGB 通道上进行评估，在评估之前裁剪每个边界中的 `scale` 像素。
 
 ## 快速开始
