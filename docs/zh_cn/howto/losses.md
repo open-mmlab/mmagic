@@ -515,7 +515,7 @@ transferal_perceptual_loss=dict(
 </tbody>
 </table>
 
-### 损失组件
+### 损失函数组件
 
 对于“GANWithCustomizedLoss”，我们提供了几个组件来构建自定义损失。
 
