@@ -3,26 +3,24 @@
 `losses` 在 `MMEditing` 中注册为 `LOSSES`。
 在 MMEditing 中设计自己的损失函数，步骤和在 MMEditing 中自定义任何其他模型类似。
 本节主要具体介绍了如何在 MMEditing 中实现自定义的损失函数。
-本教程建议您在实现自定义的损失函数时，应该遵循本教程相同的设计，
-这样在我们的框架中使用您新定义的损失函数，就不需要额外的工作。
+本教程建议您在实现自定义的损失函数时，应该遵循本教程相同的设计，这样在我们的框架中使用您新定义的损失函数，就不需要额外的工作。
 
 本指南包括：
 
 - [设计你自己的损失函数](#如何设计自己的损失函数)
-   - [支持损失函数介绍](#支持的损失函数介绍)
-   - [设计一个新的损失函数](#设计一个新的损失函数)
-     - [MSELoss 的一个例子](#MSELoss-的一个例子)
-     - [DiscShiftLoss 的一个例子](#DiscShiftLoss-的一个例子)
-     - [GANWithCustomizedLoss 的一个例子](#GANWithCustomizedLoss-的一个例子)
-   - [可用损失函数](#可用损失函数)
-     - [常规损失函数](#常规损失函数)
-     - [损失函数组件](#损失函数组件)
+  - [支持损失函数介绍](#支持的损失函数介绍)
+  - [设计一个新的损失函数](#设计一个新的损失函数)
+    - [MSELoss 的一个例子](#MSELoss-的一个例子)
+    - [DiscShiftLoss 的一个例子](#DiscShiftLoss-的一个例子)
+    - [GANWithCustomizedLoss 的一个例子](#GANWithCustomizedLoss-的一个例子)
+  - [可用损失函数](#可用损失函数)
+    - [常规损失函数](#常规损失函数)
+    - [损失函数组件](#损失函数组件)
 
 ## 支持的损失函数介绍
 
 为了方便使用，您可以直接使用我们为具体算法设置的默认损失计算过程，如lsgan、biggan、styleganv2等。
-以`stylegan2`为例，我们使用R1梯度惩罚和生成器路径长度正则化作为可配置损失，用户可以调整
-相关参数，如 `r1_loss_weight` 和 `g_reg_weight`。
+以`stylegan2`为例，我们使用R1梯度惩罚和生成器路径长度正则化作为可配置损失，用户可以调整相关参数，如 `r1_loss_weight` 和 `g_reg_weight`。
 
 ```python
 # stylegan2_base.py
@@ -152,8 +150,6 @@ class DiscShiftLoss(nn.Module):
 
 为了构建计算图，生成模型必须提供包含各种数据的字典。 仔细观察任何生成模型，你会发现我们将各种特征和模块收集到字典中。 我们在这里提供了一个自定义的`GANWithCustomizedLoss`来展示这个过程。
 
-
-
 ```python
 class GANWithCustomizedLoss(BaseModel):
 
@@ -232,8 +228,7 @@ class GANWithCustomizedLoss(BaseModel):
 
 在这里，`_get_disc_loss` 将帮助自动组合各种损失函数。
 
-因此，只要用户设计相同规则的损失模块，就可以在生成模型的训练中插入任何一种损失，
-无需对模型代码进行其他修改。 您只需要在配置文件中定义 `data_info` 即可。
+因此，只要用户设计相同规则的损失模块，就可以在生成模型的训练中插入任何一种损失，无需对模型代码进行其他修改。 您只需要在配置文件中定义 `data_info` 即可。
 
 ## 可用损失函数
 
