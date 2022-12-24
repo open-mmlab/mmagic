@@ -1,9 +1,13 @@
 # Copyright (c) MegFlow. All rights reserved.
+# Copyright (c) OpenMMLab. All rights reserved.
 # /bin/python3
 
 import argparse
 import os
 import re
+
+import requests
+from tqdm import tqdm
 
 
 def make_parser():
@@ -51,12 +55,26 @@ def analyze_doc(home, path):
                     end = item.find(')')
                     ref = item[start + 1:end]
 
-                    if ref.startswith('http') or ref.startswith('#'):
-                        print(ref)
+                    if ref.startswith('http'):
+                        if ref.startswith(
+                                'https://download.openmmlab.com/'
+                        ) or ref.startswith('http://download.openmmlab.com/'):
+                            print(ref)
+                            resp = requests.head(ref)
+                            if resp.status_code == 200:
+                                continue
+                            else:
+                                problem_list.append(ref)
+                        else:
+                            continue
+
+                    if ref.startswith('#'):
                         continue
+
                     if '.md#' in ref:
-                        ref = ref[ref.find('#'):]
+                        ref = ref[:ref.find('#')]
                     fullpath = os.path.join(home, ref)
+                    print(fullpath)
                     if not os.path.exists(fullpath):
                         problem_list.append(ref)
             else:
@@ -73,7 +91,8 @@ def traverse(target):
     if os.path.isfile(target):
         analyze_doc(os.path.dirname(target), target)
         return
-    for home, dirs, files in os.walk(target):
+    target_files = list(os.walk(target))
+    for home, dirs, files in tqdm(target_files):
         for filename in files:
             if filename.endswith('.md'):
                 path = os.path.join(home, filename)
