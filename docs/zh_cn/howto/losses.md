@@ -67,7 +67,7 @@ Class MSELoss(nn.Module)：
 pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean')
 ```
 
-请注意，上面的“pixel_loss”必须在模型中定义。 详情请参考`customize_models`。 与模型定制类似，为了使用您定制的损失，您需要在编写后在`mmedit/models/losses/__init__.py`中导入损失。
+请注意，上面的`pixel_loss`必须在模型中定义。 详情请参考[自定义模型](./models.md)。 与自定义模型类似，为了使用您自己实现的损失函数，您需要在编写后在`mmedit/models/losses/__init__.py`中导入该损失函数。
 
 ### DiscShiftLoss 的一个例子
 
