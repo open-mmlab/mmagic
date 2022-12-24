@@ -7,7 +7,7 @@ Collections:
   - https://openaccess.thecvf.com/content_ICCV_2019/html/Shaham_SinGAN_Learning_a_Generative_Model_From_a_Single_Natural_Image_ICCV_2019_paper.html
   README: configs/singan/README.md
 Models:
-- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/singan/singan_balloons.py
+- Config: configs/singan/singan_balloons.py
   In Collection: SinGAN
   Metadata:
     Training Data: Others
@@ -18,7 +18,7 @@ Models:
       Num Scales: 8.0
     Task: Internal Learning
   Weights: https://download.openmmlab.com/mmgen/singan/singan_balloons_20210406_191047-8fcd94cf.pth
-- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/singan/singan_fish.py
+- Config: configs/singan/singan_fish.py
   In Collection: SinGAN
   Metadata:
     Training Data: Others
@@ -29,7 +29,7 @@ Models:
       Num Scales: 10.0
     Task: Internal Learning
   Weights: https://download.openmmlab.com/mmgen/singan/singan_fis_20210406_201006-860d91b6.pth
-- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/singan/singan_bohemian.py
+- Config: configs/singan/singan_bohemian.py
   In Collection: SinGAN
   Metadata:
     Training Data: Others
