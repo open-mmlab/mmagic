@@ -26,7 +26,6 @@ pattern = re.compile(r'\[.*?\]\(.*?\)')
 
 
 def analyze_doc(home, path):
-    print('analyze {}'.format(path))
     problem_list = []
     code_block = 0
     with open(path) as f:
@@ -59,7 +58,6 @@ def analyze_doc(home, path):
                         if ref.startswith(
                                 'https://download.openmmlab.com/'
                         ) or ref.startswith('http://download.openmmlab.com/'):
-                            print(ref)
                             resp = requests.head(ref)
                             if resp.status_code == 200:
                                 continue
@@ -78,7 +76,6 @@ def analyze_doc(home, path):
                             os.path.dirname(__file__), '../', ref[1:])
                     else:
                         fullpath = os.path.join(home, ref)
-                    print(home, fullpath)
                     if not os.path.exists(fullpath):
                         problem_list.append(ref)
             else:
@@ -96,6 +93,7 @@ def traverse(target):
         analyze_doc(os.path.dirname(target), target)
         return
     target_files = list(os.walk(target))
+    target_files.sort()
     for home, dirs, files in tqdm(target_files):
         for filename in files:
             if filename.endswith('.md'):

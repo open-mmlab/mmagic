@@ -102,7 +102,7 @@ metrics = dict(
             compute_eqt_int=True, compute_eqt_frac=True, compute_eqr=True)))
 ```
 
-And we highly recommend you to use [slurm_eval_multi_gpu](tools/slurm_eval_multi_gpu.sh) script to accelerate evaluation time.
+And we highly recommend you to use [slurm_test.sh](../../tools/slurm_test.sh) script to accelerate evaluation time.
 
 ## Citation
 
