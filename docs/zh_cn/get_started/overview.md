@@ -95,7 +95,7 @@ MMEditing 支持各种应用程序，包括：
 
 ### 高级指南
 
-对于熟悉MMEditing的用户，可能想了解MMEditing的设计，以及如何扩展repo，如何使用多个repos等高级用法，请参考[高级指导](../advanced_guides/evaluator.md)。
+对于熟悉 MMEditing 的用户，可能想了解 MMEditing 的进阶实用，以及如何扩展算法库，如何使用多个算法库框架等高级用法，请参考[进阶教程](../advanced_guides/evaluator.md)。
 
 ## 开发指南
 
