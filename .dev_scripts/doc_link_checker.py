@@ -73,8 +73,12 @@ def analyze_doc(home, path):
 
                     if '.md#' in ref:
                         ref = ref[:ref.find('#')]
-                    fullpath = os.path.join(home, ref)
-                    print(fullpath)
+                    if ref.startswith('/'):
+                        fullpath = os.path.join(
+                            os.path.dirname(__file__), '../', ref[1:])
+                    else:
+                        fullpath = os.path.join(home, ref)
+                    print(home, fullpath)
                     if not os.path.exists(fullpath):
                         problem_list.append(ref)
             else:
