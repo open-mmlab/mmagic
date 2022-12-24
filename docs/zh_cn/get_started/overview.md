@@ -91,7 +91,7 @@ MMEditing 支持各种应用程序，包括：
 
 ＃＃ 用户指南
 
-对于初学者，我们建议从 [使用教程](../user_guides/config.md) 学习 MMEditing 的基本用法。
+对于初学者，我们建议从 [基础教程](../user_guides/config.md) 学习 MMEditing 的基本用法。
 
 ### 高级指南
 
