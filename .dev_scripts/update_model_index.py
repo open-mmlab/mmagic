@@ -177,7 +177,8 @@ def parse_md(md_file):
                 #     import ipdb
                 #     ipdb.set_trace()
                 if 'Config' not in cols and 'Download' not in cols:
-                    warnings.warn(f"Lack 'Config' or 'Download' in line {i+1}")
+                    warnings.warn("Lack 'Config' or 'Download' in"
+                                  f'line {i+1} in {md_file}')
                     i += 1
                     continue
                 if 'Method' in cols:
@@ -210,6 +211,8 @@ def parse_md(md_file):
                         left = line[config_idx].index('](') + 2
                         right = line[config_idx].index(')', left)
                         config = line[config_idx][left:right].strip('./')
+                        config = osp.join(
+                            osp.dirname(md_file), osp.basename(config))
                     elif line[config_idx].find('△') == -1:
                         j += 1
                         continue
