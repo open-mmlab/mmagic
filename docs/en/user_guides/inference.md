@@ -30,7 +30,7 @@ from mmedit.apis import init_model, sample_unconditional_model
 # Specify the path to model config and checkpoint file
 config_file = 'configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py'
 # you can download this checkpoint in advance and use a local file path.
-checkpoint_file = 'https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth'
+checkpoint_file = 'https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth'
 
 device = 'cuda:0'
 # init a generative model
@@ -61,7 +61,7 @@ from mmedit.apis import init_model, sample_conditional_model
 # Specify the path to model config and checkpoint file
 config_file = 'configs/sagan/sagan_woReLUinplace-Glr1e-4_Dlr4e-4_noaug-ndisc1-8xb32-bigGAN-sch_imagenet1k-128x128.py'
 # you can download this checkpoint in advance and use a local file path.
-checkpoint_file = 'https://download.openmmlab.com/mmgen/sagan/sagan_128_woReLUinplace_noaug_bigGAN_imagenet1k_b32x8_Glr1e-4_Dlr-4e-4_ndisc1_20210818_210232-3f5686af.pth'
+checkpoint_file = 'https://download.openmmlab.com/mmediting/sagan/sagan_128_woReLUinplace_noaug_bigGAN_imagenet1k_b32x8_Glr1e-4_Dlr-4e-4_ndisc1_20210818_210232-3f5686af.pth'
 
 device = 'cuda:0'
 # init a generative model
@@ -105,7 +105,7 @@ from mmedit.apis import init_model, sample_ddpm_model
 # Specify the path to model config and checkpoint file
 config_file = 'configs/improved_ddpm/ddpm_cosine-hybird-timestep-4k_16xb8-1500kiters_imagenet1k-64x64.py'
 # you can download this checkpoint in advance and use a local file path.
-checkpoint_file = 'https://download.openmmlab.com/mmgen/improved_ddpm/ddpm_cosine_hybird_timestep-4k_imagenet1k_64x64_b8x16_1500k_20220103_223919-b8f1a310.pth'
+checkpoint_file = 'https://download.openmmlab.com/mmediting/improved_ddpm/ddpm_cosine_hybird_timestep-4k_imagenet1k_64x64_b8x16_1500k_20220103_223919-b8f1a310.pth'
 device = 'cuda:0'
 # init a generative model
 model = init_model(config_file, checkpoint_file, device=device)
@@ -332,7 +332,7 @@ from mmedit.apis import init_model, sample_img2img_model
 # Specify the path to model config and checkpoint file
 config_file = 'configs/pix2pix/pix2pix_vanilla-unet-bn_wo-jitter-flip-4xb1-190kiters_edges2shoes.py'
 # you can download this checkpoint in advance and use a local file path.
-checkpoint_file = 'https://download.openmmlab.com/mmgen/pix2pix/refactor/pix2pix_vanilla_unet_bn_wo_jitter_flip_1x4_186840_edges2shoes_convert-bgr_20210902_170902-0c828552.pth'
+checkpoint_file = 'https://download.openmmlab.com/mmediting/pix2pix/refactor/pix2pix_vanilla_unet_bn_wo_jitter_flip_1x4_186840_edges2shoes_convert-bgr_20210902_170902-0c828552.pth'
 # Specify the path to image you want to translate
 image_path = 'tests/data/paired/test/33_AB.jpg'
 device = 'cuda:0'

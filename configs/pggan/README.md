@@ -28,9 +28,9 @@ We describe a new training methodology for generative adversarial networks. The 
 
 |     Models      |    Details     | MS-SSIM |     SWD(xx,xx,xx,xx/avg)     |                               Config                                |                               Download                                |
 | :-------------: | :------------: | :-----: | :--------------------------: | :-----------------------------------------------------------------: | :-------------------------------------------------------------------: |
-|  pggan_128x128  | celeba-cropped | 0.3023  | 3.42, 4.04, 4.78, 20.38/8.15 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/pggan/pggan_8xb4-12Mimgs_celeba-cropped-128x128.py) | [model](https://download.openmmlab.com/mmgen/pggan/pggan_celeba-cropped_128_g8_20210408_181931-85a2e72c.pth) |
-|  pggan_128x128  |  lsun-bedroom  | 0.0602  |  3.5, 2.96, 2.76, 9.65/4.72  | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/pggan/pggan_8xb4-12Mimgs_lsun-bedroom-128x128.py) | [model](https://download.openmmlab.com/mmgen/pggan/pggan_lsun-bedroom_128x128_g8_20210408_182033-5e59f45d.pth) |
-| pggan_1024x1024 |   celeba-hq    | 0.3379  | 8.93, 3.98, 3.07, 2.64/4.655 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/pggan/pggan_8xb4-12Mimg_celeba-hq-1024x1024.py) | [model](https://download.openmmlab.com/mmgen/pggan/pggan_celeba-hq_1024_g8_20210408_181911-f1ef51c3.pth) |
+|  pggan_128x128  | celeba-cropped | 0.3023  | 3.42, 4.04, 4.78, 20.38/8.15 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/pggan/pggan_8xb4-12Mimgs_celeba-cropped-128x128.py) | [model](https://download.openmmlab.com/mmediting/pggan/pggan_celeba-cropped_128_g8_20210408_181931-85a2e72c.pth) |
+|  pggan_128x128  |  lsun-bedroom  | 0.0602  |  3.5, 2.96, 2.76, 9.65/4.72  | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/pggan/pggan_8xb4-12Mimgs_lsun-bedroom-128x128.py) | [model](https://download.openmmlab.com/mmediting/pggan/pggan_lsun-bedroom_128x128_g8_20210408_182033-5e59f45d.pth) |
+| pggan_1024x1024 |   celeba-hq    | 0.3379  | 8.93, 3.98, 3.07, 2.64/4.655 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/pggan/pggan_8xb4-12Mimg_celeba-hq-1024x1024.py) | [model](https://download.openmmlab.com/mmediting/pggan/pggan_celeba-hq_1024_g8_20210408_181911-f1ef51c3.pth) |
 
 ## Citation
 

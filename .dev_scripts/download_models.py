@@ -75,7 +75,6 @@ def download(args):
     models = OrderedDict({model.name: model for model in model_index.models})
 
     http_prefix_short = 'https://download.openmmlab.com/mmediting/'
-    http_prefix_gen = 'https://download.openmmlab.com/mmgen/'
 
     # load model list
     if args.model_list:
@@ -110,8 +109,6 @@ def download(args):
 
         if model_weight_url.startswith(http_prefix_short):
             model_name = model_weight_url[len(http_prefix_short):]
-        elif model_weight_url.startswith(http_prefix_gen):
-            model_name = model_weight_url[len(http_prefix_gen):]
         elif model_weight_url == '':
             print(f'{model_info.Name} weight is missing')
             return None

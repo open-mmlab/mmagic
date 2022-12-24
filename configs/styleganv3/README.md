@@ -40,26 +40,26 @@ For user convenience, we also offer the converted version of official weights.
 
 |      Model      |      Dataset      |  Iter  |      FID50k       |                      Config                      |                      Log                       |                      Download                       |
 | :-------------: | :---------------: | :----: | :---------------: | :----------------------------------------------: | :--------------------------------------------: | :-------------------------------------------------: |
-|   stylegan3-t   |  ffhq 1024x1024   | 490000 | 3.37<sup>\*</sup> | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_gamma32.8_8xb4-fp16-noaug_ffhq-1024x1024.py) | [log](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_20220322_090417.log.json) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_best_fid_iter_490000_20220401_120733-4ff83434.pth) |
-| stylegan3-t-ada | metface 1024x1024 | 130000 |       15.09       | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_ada-gamma6.6_8xb4-fp16_metfaces-1024x1024.py) | [log](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_20220328_142211.log.json) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_best_fid_iter_130000_20220401_115101-f2ef498e.pth) |
+|   stylegan3-t   |  ffhq 1024x1024   | 490000 | 3.37<sup>\*</sup> | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_gamma32.8_8xb4-fp16-noaug_ffhq-1024x1024.py) | [log](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_20220322_090417.log.json) | [model](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_best_fid_iter_490000_20220401_120733-4ff83434.pth) |
+| stylegan3-t-ada | metface 1024x1024 | 130000 |       15.09       | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_ada-gamma6.6_8xb4-fp16_metfaces-1024x1024.py) | [log](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_20220328_142211.log.json) | [model](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_best_fid_iter_130000_20220401_115101-f2ef498e.pth) |
 
 ### Experimental Settings
 
 |      Model      |    Dataset     |  Iter  | FID50k |                        Config                         |                        Log                         |                         Download                         |
 | :-------------: | :------------: | :----: | :----: | :---------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------------: |
-|   stylegan3-t   |  ffhq 256x256  | 740000 |  4.51  | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_gamma2.0_8xb4-fp16-noaug_ffhq-256x256.py) | [log](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma2.0_ffhq_256_b4x8_20220323_144815.log.json) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_noaug_fp16_gamma2.0_ffhq_256_b4x8_best_fid_iter_740000_20220401_122456-730e1fba.pth) |
+|   stylegan3-t   |  ffhq 256x256  | 740000 |  4.51  | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_gamma2.0_8xb4-fp16-noaug_ffhq-256x256.py) | [log](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma2.0_ffhq_256_b4x8_20220323_144815.log.json) | [model](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma2.0_ffhq_256_b4x8_best_fid_iter_740000_20220401_122456-730e1fba.pth) |
 | stylegan3-r-ada | ffhq 1024x1024 |   -    |   -    | [config](/configs/styleganv3/stylegan3-r_ada-gamma3.3_8xb4-fp16_metfaces-1024x1024.py) |                         -                          |                            -                             |
 
 ### Converted Weights
 
 |    Model    |    Dataset     |     Comment     | FID50k | EQ-T  | EQ-R  |                                 Config                                  |                                 Download                                  |
 | :---------: | :------------: | :-------------: | :----: | :---: | :---: | :---------------------------------------------------------------------: | :-----------------------------------------------------------------------: |
-| stylegan3-t | ffhqu 256x256  | official weight |  4.62  | 63.01 | 13.12 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_ffhqu-256x256.py) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_ffhqu_256_b4x8_cvt_official_rgb_20220329_235046-153df4c8.pth) |
-| stylegan3-t | afhqv2 512x512 | official weight |  4.04  | 60.15 | 13.51 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_afhqv2-512x512.py) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_afhqv2_512_b4x8_cvt_official_rgb_20220329_235017-ee6b037a.pth) |
-| stylegan3-t | ffhq 1024x1024 | official weight |  2.79  | 61.21 | 13.82 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_ffhq-1024x1024.py) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_ffhq_1024_b4x8_cvt_official_rgb_20220329_235113-db6c6580.pth) |
-| stylegan3-r | ffhqu 256x256  | official weight |  4.50  | 66.65 | 40.48 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4_ffhqu-256x256.py) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_r_ffhqu_256_b4x8_cvt_official_rgb_20220329_234909-4521d963.pth) |
-| stylegan3-r | afhqv2 512x512 | official weight |  4.40  | 64.89 | 40.34 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4x8_afhqv2-512x512.py) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_r_afhqv2_512_b4x8_cvt_official_rgb_20220329_234829-f2eaca72.pth) |
-| stylegan3-r | ffhq 1024x1024 | official weight |  3.07  | 64.76 | 46.62 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4_ffhq-1024x1024.py) | [model](https://download.openmmlab.com/mmgen/stylegan3/stylegan3_r_ffhq_1024_b4x8_cvt_official_rgb_20220329_234933-ac0500a1.pth) |
+| stylegan3-t | ffhqu 256x256  | official weight |  4.62  | 63.01 | 13.12 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_ffhqu-256x256.py) | [model](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ffhqu_256_b4x8_cvt_official_rgb_20220329_235046-153df4c8.pth) |
+| stylegan3-t | afhqv2 512x512 | official weight |  4.04  | 60.15 | 13.51 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_afhqv2-512x512.py) | [model](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_afhqv2_512_b4x8_cvt_official_rgb_20220329_235017-ee6b037a.pth) |
+| stylegan3-t | ffhq 1024x1024 | official weight |  2.79  | 61.21 | 13.82 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_ffhq-1024x1024.py) | [model](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ffhq_1024_b4x8_cvt_official_rgb_20220329_235113-db6c6580.pth) |
+| stylegan3-r | ffhqu 256x256  | official weight |  4.50  | 66.65 | 40.48 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4_ffhqu-256x256.py) | [model](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_ffhqu_256_b4x8_cvt_official_rgb_20220329_234909-4521d963.pth) |
+| stylegan3-r | afhqv2 512x512 | official weight |  4.40  | 64.89 | 40.34 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4x8_afhqv2-512x512.py) | [model](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_afhqv2_512_b4x8_cvt_official_rgb_20220329_234829-f2eaca72.pth) |
+| stylegan3-r | ffhq 1024x1024 | official weight |  3.07  | 64.76 | 46.62 | [config](https://github.com/open-mmlab/mmediting/tree/master/configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4_ffhq-1024x1024.py) | [model](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_ffhq_1024_b4x8_cvt_official_rgb_20220329_234933-ac0500a1.pth) |
 
 ## Interpolation
 
@@ -67,7 +67,7 @@ We provide a tool to generate video by walking through GAN's latent space.
 Run this command to get the following video.
 
 ```bash
-python apps/interpolate_sample.py configs/styleganv3/stylegan3_t_afhqv2_512_b4x8_official.py https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_afhqv2_512_b4x8_cvt_official.pkl --export-video --samples-path work_dirs/demos/ --endpoint 6 --interval 60 --space z --seed 2022 --sample-cfg truncation=0.8
+python apps/interpolate_sample.py configs/styleganv3/stylegan3_t_afhqv2_512_b4x8_official.py https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_afhqv2_512_b4x8_cvt_official.pkl --export-video --samples-path work_dirs/demos/ --endpoint 6 --interval 60 --space z --seed 2022 --sample-cfg truncation=0.8
 ```
 
 https://user-images.githubusercontent.com/22982797/151506918-83da9ee3-0d63-4c5b-ad53-a41562b92075.mp4
@@ -78,11 +78,11 @@ We also provide a tool to visualize the equivarience properties for StyleGAN3.
 Run these commands to get the results below.
 
 ```bash
-python tools/utils/equivariance_viz.py configs/styleganv3/stylegan3_r_ffhqu_256_b4x8_official.py https://download.openmmlab.com/mmgen/stylegan3/stylegan3_r_ffhqu_256_b4x8_cvt_official.pkl --translate_max 0.5 --transform rotate --seed 5432
+python tools/utils/equivariance_viz.py configs/styleganv3/stylegan3_r_ffhqu_256_b4x8_official.py https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_ffhqu_256_b4x8_cvt_official.pkl --translate_max 0.5 --transform rotate --seed 5432
 
-python tools/utils/equivariance_viz.py configs/styleganv3/stylegan3_r_ffhqu_256_b4x8_official.py https://download.openmmlab.com/mmgen/stylegan3/stylegan3_r_ffhqu_256_b4x8_cvt_official.pkl --translate_max 0.25 --transform x_t --seed 5432
+python tools/utils/equivariance_viz.py configs/styleganv3/stylegan3_r_ffhqu_256_b4x8_official.py https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_ffhqu_256_b4x8_cvt_official.pkl --translate_max 0.25 --transform x_t --seed 5432
 
-python tools/utils/equivariance_viz.py configs/styleganv3/stylegan3_r_ffhqu_256_b4x8_official.py https://download.openmmlab.com/mmgen/stylegan3/stylegan3_r_ffhqu_256_b4x8_cvt_official.pkl --translate_max 0.25 --transform y_t --seed 5432
+python tools/utils/equivariance_viz.py configs/styleganv3/stylegan3_r_ffhqu_256_b4x8_official.py https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_ffhqu_256_b4x8_cvt_official.pkl --translate_max 0.25 --transform y_t --seed 5432
 ```
 
 https://user-images.githubusercontent.com/22982797/151504902-f3cbfef5-9014-4607-bbe1-deaf48ec6d55.mp4
