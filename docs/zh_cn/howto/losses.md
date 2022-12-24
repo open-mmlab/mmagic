@@ -239,7 +239,7 @@ class GANWithCustomizedLoss(BaseModel):
 
 我们在配置中列出了可用的损失示例，如下所示。
 
-### 常规损失
+### 常规损失函数
 
 <table class="docutils">
 <thead>
