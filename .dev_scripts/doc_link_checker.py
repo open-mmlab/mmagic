@@ -52,6 +52,7 @@ def analyze_doc(home, path):
                     ref = item[start + 1:end]
 
                     if ref.startswith('http') or ref.startswith('#'):
+                        print(ref)
                         continue
                     if '.md#' in ref:
                         ref = ref[ref.find('#'):]
