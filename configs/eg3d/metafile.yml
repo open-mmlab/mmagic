@@ -7,7 +7,7 @@ Collections:
   - https://openaccess.thecvf.com/content/CVPR2022/html/Chan_Efficient_Geometry-Aware_3D_Generative_Adversarial_Networks_CVPR_2022_paper.html
   README: configs/eg3d/README.md
 Models:
-- Config: configs/eg3d/eg3d_cvt-official-rgb_shapenet-128x128.py
+- Config: eg3d_cvt-official-rgb_shapenet-128x128.py
   In Collection: EG3D
   Metadata:
     Training Data: Others
@@ -19,7 +19,7 @@ Models:
       FID50k-Camera: 5.2325
     Task: 3D-aware Generation
   Weights: https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_shapenet-128x128-85757f4d.pth
-- Config: configs/eg3d/eg3d_cvt-official-rgb_afhq-512x512.py
+- Config: eg3d_cvt-official-rgb_afhq-512x512.py
   In Collection: EG3D
   Metadata:
     Training Data: Others
