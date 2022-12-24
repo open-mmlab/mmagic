@@ -14,7 +14,7 @@
      - [MSELoss 的一个例子](#MSELoss-的一个例子)
      - [DiscShiftLoss 的一个例子](#DiscShiftLoss-的一个例子)
      - [GANWithCustomizedLoss 的一个例子](#GANWithCustomizedLoss-的一个例子)
-   - [可用损失](#可用损失)
+   - [可用损失函数](#可用损失函数)
      - [常规损失](#常规损失)
      - [损失组件](#损失组件)
 
