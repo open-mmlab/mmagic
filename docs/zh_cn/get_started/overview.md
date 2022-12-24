@@ -5,7 +5,7 @@
 
 - [MMEditing是什么？](#mmediting-是什么)
 - [为什么要使用 MMEditing？](#为什么要使用-mmediting)
-- [开始](#get-started)
+- [新手入门](#新手入门)
 - [用户指南](#user-guides)
 - [高级指南](#advanced-guides)
 
