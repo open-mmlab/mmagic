@@ -35,7 +35,7 @@ Gopro和HIDE数据集上使用RGB通道测试，ReakBlur-J 和 ReakBlur-R数据�
 |  方法  | 室内场景图像的PSNR | 室内场景图像的SSIM | 室内场景图像的MAE | 室内场景图像的LPIPS | 室外场景图像的PSNR | 室外场景图像的SSIM | 室外场景图像的MAE | 室外场景图像的LPIPS | 所有图像平均PSNR | 所有图像平均SSIM | 所有图像平均MAE | 所有图像平均LPIPS | GPU 信息 |  下载   |
 | :----: | :-------------: | :-------------: | :------------: | :--------------: | :-------------: | :-------------: | :------------: | :--------------: | :------------: | :-------------: | :------------: | :--------------: | :------: | :-----: |
 | [restormer_official_dpdd-single](./restormer_official_dpdd-single.py) |     28.8681     |     0.8859      |     0.0251     |        -         |     23.2410     |     0.7509      |     0.0499     |        -         |    25.9805     |     0.8166      |     0.0378     |        -         |    1     | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-single-6bc31582.pth) \| log |
-| [restormer_official_dpdd-dual](./restormer_official_dpdd-dual.py) |     26.6160     |     0.8346      |     0.0354     |        -         |     26.6160     |     0.8346      |     0.0354     |        -         |    26.6160     |     0.8346      |     0.0354     |        -         |    1     | [model](https://download.openmmlab.com/mmediting/restormer_official_dpdd-dual-52c94c00.pth) \| log |
+| [restormer_official_dpdd-dual](./restormer_official_dpdd-dual.py) |     26.6160     |     0.8346      |     0.0354     |        -         |     26.6160     |     0.8346      |     0.0354     |        -         |    26.6160     |     0.8346      |     0.0354     |        -         |    1     | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-dual-52c94c00.pth) \| log |
 
 ### **图像高斯噪声去除**
 
@@ -104,7 +104,7 @@ CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_officia
 # Single
 CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dpdd-dual.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-single-6bc31582.pth
 # Dual
-CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dpdd-single.py https://download.openmmlab.com/mmediting/restormer_official_dpdd-dual-52c94c00.pth
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/restormer/restormer_official_dpdd-single.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-dual-52c94c00.pth
 
 # Gaussian Denoising
 # Test Grayscale Gaussian Noise
@@ -150,7 +150,7 @@ python tools/test.py configs/restormer/restormer_official_gopro.py https://downl
 # Single
 python tools/test.py configs/restormer/restormer_official_dpdd-dual.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-single-6bc31582.pth
 # Dual
-python tools/test.py configs/restormer/restormer_official_dpdd-single.py https://download.openmmlab.com/mmediting/restormer_official_dpdd-dual-52c94c00.pth
+python tools/test.py configs/restormer/restormer_official_dpdd-single.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-dual-52c94c00.pth
 
 # Gaussian Denoising
 # Test Grayscale Gaussian Noise
@@ -197,7 +197,7 @@ python tools/test.py configs/restormer/restormer_official_dfwb-color-sigma50.py 
 # Single
 ./tools/dist_test.sh configs/restormer/restormer_official_dpdd-dual.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-single-6bc31582.pth
 # Dual
-./tools/dist_test.sh configs/restormer/restormer_official_dpdd-single.py https://download.openmmlab.com/mmediting/restormer_official_dpdd-dual-52c94c00.pth
+./tools/dist_test.sh configs/restormer/restormer_official_dpdd-single.py https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-dual-52c94c00.pth
 
 # Gaussian Denoising
 # Test Grayscale Gaussian Noise
