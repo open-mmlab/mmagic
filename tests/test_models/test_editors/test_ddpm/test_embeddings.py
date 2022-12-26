@@ -1,8 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.ddpm.embeddings import (TimestepEmbedding,
-                                                   get_timestep_embedding)
+from mmedit.models.editors.ddpm.embeddings import TimestepEmbedding, Timesteps
 
 
 def test_TimestepEmbedding():
@@ -19,9 +18,10 @@ def test_TimestepEmbedding():
     assert output.shape == (1, 64, 96)
 
 
-def test_get_timestep_embedding():
+def test_Timesteps():
     input = torch.tensor([4])
-    emb = get_timestep_embedding(input, embedding_dim=9)
+    timesteps = Timesteps(num_channels=9)
+    emb = timesteps.forward(input)
     assert emb.shape == (1, 9)
 
 

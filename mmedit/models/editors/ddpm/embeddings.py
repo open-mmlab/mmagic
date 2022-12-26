@@ -1,62 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
 
+import mmengine
 import torch
+from mmengine.utils.dl_utils import TORCH_VERSION
+from mmengine.utils.version_utils import digit_version
 from torch import nn
-
-
-def get_timestep_embedding(
-    timesteps: torch.Tensor,
-    embedding_dim: int,
-    flip_sin_to_cos: bool = False,
-    downscale_freq_shift: float = 1,
-    scale: float = 1,
-    max_period: int = 10000,
-):
-    """This matches the implementation in Denoising Diffusion Probabilistic
-    Models: Create sinusoidal timestep embeddings.
-
-    Args:
-        timesteps (torch.Tensor):
-            a 1-D Tensor of N indices, one per batch element.
-            These may be fractional.
-        embedding_dim (int): the dimension of the output.
-        flip_sin_to_cos (bool):
-            whether to flip sin to cos, defaults to False.
-        downscale_freq_shift (float):
-            downscale frequecy shift, defaults to 1.
-        scale (float):
-            embedding scale, defaults to 1.
-        max_period: controls the minimum frequency of the exponent.
-
-    Returns:
-        emb (torch.Tensor): an [N x dim] Tensor of positional embeddings.
-    """
-
-    assert len(timesteps.shape) == 1, 'Timesteps should be a 1d-array'
-
-    half_dim = embedding_dim // 2
-    exponent = -math.log(max_period) * torch.arange(
-        start=0, end=half_dim, dtype=torch.float32, device=timesteps.device)
-    exponent = exponent / (half_dim - downscale_freq_shift)
-
-    emb = torch.exp(exponent)
-    emb = timesteps[:, None].float() * emb[None, :]
-
-    # scale embeddings
-    emb = scale * emb
-
-    # concat sine and cosine embeddings
-    emb = torch.cat([torch.sin(emb), torch.cos(emb)], dim=-1)
-
-    # flip sine and cosine embeddings
-    if flip_sin_to_cos:
-        emb = torch.cat([emb[:, half_dim:], emb[:, :half_dim]], dim=-1)
-
-    # zero pad
-    if embedding_dim % 2 == 1:
-        emb = torch.nn.functional.pad(emb, (0, 1, 0, 0))
-    return emb
 
 
 class TimestepEmbedding(nn.Module):
@@ -71,9 +20,13 @@ class TimestepEmbedding(nn.Module):
 
         self.linear_1 = nn.Linear(in_channels, time_embed_dim)
         self.act = None
-        if act_fn == 'silu':
+        if act_fn == 'silu' and \
+                digit_version(TORCH_VERSION) > digit_version('1.6.0'):
             self.act = nn.SiLU()
         else:
+            mmengine.print_log('\'SiLU\' is not supported for '
+                               f'torch < 1.6.0, found \'{torch.version}\'.'
+                               'Use ReLu instead but result maybe wrong')
             self.act = nn.ReLU()
 
         if out_dim is not None:
@@ -105,14 +58,38 @@ class Timesteps(nn.Module):
         self.num_channels = num_channels
         self.flip_sin_to_cos = flip_sin_to_cos
         self.downscale_freq_shift = downscale_freq_shift
+        self.max_period = 10000
+        self.scale = 1
 
     def forward(self, timesteps):
         """forward with timesteps."""
 
-        t_emb = get_timestep_embedding(
-            timesteps,
-            self.num_channels,
-            flip_sin_to_cos=self.flip_sin_to_cos,
-            downscale_freq_shift=self.downscale_freq_shift,
-        )
-        return t_emb
+        assert len(timesteps.shape) == 1, 'Timesteps should be a 1d-array'
+
+        embedding_dim = self.num_channels
+        half_dim = embedding_dim // 2
+        exponent = -math.log(self.max_period) * \
+            torch.arange(
+                start=0,
+                end=half_dim,
+                dtype=torch.float32,
+                device=timesteps.device)
+        exponent = exponent / (half_dim - self.downscale_freq_shift)
+
+        emb = torch.exp(exponent)
+        emb = timesteps[:, None].float() * emb[None, :]
+
+        # scale embeddings
+        emb = self.scale * emb
+
+        # concat sine and cosine embeddings
+        emb = torch.cat([torch.sin(emb), torch.cos(emb)], dim=-1)
+
+        # flip sine and cosine embeddings
+        if self.flip_sin_to_cos:
+            emb = torch.cat([emb[:, half_dim:], emb[:, :half_dim]], dim=-1)
+
+        # zero pad
+        if embedding_dim % 2 == 1:
+            emb = torch.nn.functional.pad(emb, (0, 1, 0, 0))
+        return emb
