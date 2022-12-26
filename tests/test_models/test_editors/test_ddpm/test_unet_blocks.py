@@ -16,6 +16,9 @@ def test_UNetMidBlock2DCrossAttn():
     output = midblock.forward(input)
     assert output.shape == (1, 64, 64, 64)
 
+    with pytest.raises(Exception):
+        midblock.set_attention_slice(8)
+
 
 def test_CrossAttnDownBlock2D():
     input = torch.rand((1, 64, 64, 64))
@@ -23,6 +26,9 @@ def test_CrossAttnDownBlock2D():
     downblock.set_attention_slice(1)
     output, _ = downblock.forward(input)
     assert output.shape == (1, 64, 32, 32)
+
+    with pytest.raises(Exception):
+        downblock.set_attention_slice(8)
 
 
 def test_CrossAttnUpBlock2D():

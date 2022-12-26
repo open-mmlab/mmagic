@@ -40,9 +40,6 @@ def get_down_block(
             downsample_padding=downsample_padding,
         )
     elif down_block_type == 'CrossAttnDownBlock2D':
-        if cross_attention_dim is None:
-            raise ValueError('cross_attention_dim must be '
-                             'specified for CrossAttnDownBlock2D')
         return CrossAttnDownBlock2D(
             num_layers=num_layers,
             in_channels=in_channels,
@@ -96,9 +93,6 @@ def get_up_block(
             resnet_groups=resnet_groups,
         )
     elif up_block_type == 'CrossAttnUpBlock2D':
-        if cross_attention_dim is None:
-            raise ValueError('cross_attention_dim '
-                             'must be specified for CrossAttnUpBlock2D')
         return CrossAttnUpBlock2D(
             num_layers=num_layers,
             in_channels=in_channels,
@@ -202,11 +196,6 @@ class UNetMidBlock2DCrossAttn(nn.Module):
             raise ValueError(
                 f'Make sure slice_size {slice_size} is a common divisor of '
                 f'the number of heads used in cross_attention: {head_dims}')
-        if slice_size is not None and slice_size > min(head_dims):
-            raise ValueError(
-                f'slice_size {slice_size} has to be smaller or equal to '
-                f'the lowest number of heads used in cross_attention:'
-                f' min({head_dims}) = {min(head_dims)}')
 
         for attn in self.attentions:
             attn._set_attention_slice(slice_size)
@@ -308,11 +297,6 @@ class CrossAttnDownBlock2D(nn.Module):
             raise ValueError(
                 f'Make sure slice_size {slice_size} is a common divisor of '
                 f'the number of heads used in cross_attention: {head_dims}')
-        if slice_size is not None and slice_size > min(head_dims):
-            raise ValueError(
-                f'slice_size {slice_size} has to be smaller or equal to '
-                f'the lowest number of heads used in cross_attention:'
-                f' min({head_dims}) = {min(head_dims)}')
 
         for attn in self.attentions:
             attn._set_attention_slice(slice_size)
@@ -498,11 +482,6 @@ class CrossAttnUpBlock2D(nn.Module):
             raise ValueError(
                 f'Make sure slice_size {slice_size} is a common divisor of '
                 f'the number of heads used in cross_attention: {head_dims}')
-        if slice_size is not None and slice_size > min(head_dims):
-            raise ValueError(
-                f'slice_size {slice_size} has to be smaller or equal to '
-                f'the lowest number of heads used '
-                f'in cross_attention: min({head_dims}) = {min(head_dims)}')
 
         for attn in self.attentions:
             attn._set_attention_slice(slice_size)
