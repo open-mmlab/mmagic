@@ -25,7 +25,7 @@ If you install mmdeploy prebuilt package, please also clone its repository by 'g
 
 Suppose mmediting and mmdeploy repositories are in the same directory, and the working directory is the root path of mmediting.
 
-Take [ESRGAN](https://github.com/open-mmlab/mmediting/blob/1.x/configs/esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) model as an example.
+Take [ESRGAN](../../../configs/esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) model as an example.
 You can download its checkpoint from [here](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth), and then convert it to onnx model as follows:
 
 ```python
