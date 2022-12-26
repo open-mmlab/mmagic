@@ -25,7 +25,7 @@ class NAFNet(BaseModule):
     """
 
     def __init__(self,
-                 img_channel=3,
+                 img_channels=3,
                  mid_channels=16,
                  middle_blk_num=1,
                  enc_blk_nums=[],
