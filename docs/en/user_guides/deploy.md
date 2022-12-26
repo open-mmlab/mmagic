@@ -15,7 +15,7 @@ This tutorial is organized as follows:
 
 ## Installation
 
-Please follow the [guide](https://mmediting.readthedocs.io/en/1.x/2_get_started.html#installation) to install mmedit. And then install mmdeploy from source by following [this](https://mmdeploy.readthedocs.io/en/1.x/get_started.html#installation) guide.
+Please follow the [guide](../get_started/install.md) to install mmedit. And then install mmdeploy from source by following [this](https://mmdeploy.readthedocs.io/en/1.x/get_started.html#installation) guide.
 
 ```{note}
 If you install mmdeploy prebuilt package, please also clone its repository by 'git clone https://github.com/open-mmlab/mmdeploy.git --depth=1' to get the deployment config files.
