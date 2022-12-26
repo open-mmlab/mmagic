@@ -21,7 +21,7 @@ Models:
       FID: 124.8033
       IS: 1.792
     Task: Image2Image
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_80k_facades_20210902_165905-5e2c0876.pth
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_80k_facades_20210902_165905-5e2c0876.pth
 - Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-80kiters_facades.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
@@ -34,7 +34,7 @@ Models:
       FID: 125.1694
       IS: 1.905
     Task: Image2Image
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades_convert-bgr_20210902_164411-d8e72b45.pth
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades_convert-bgr_20210902_164411-d8e72b45.pth
 - Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-250kiters_summer2winter.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
@@ -47,7 +47,7 @@ Models:
       FID: 83.7177
       IS: 2.771
     Task: Image2Image
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165932-fcf08dc1.pth
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165932-fcf08dc1.pth
 - Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
@@ -60,7 +60,7 @@ Models:
       FID: 83.1418
       IS: 2.72
     Task: Image2Image
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165640-8b825581.pth
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165640-8b825581.pth
 - Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-250kiters_summer2winter.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
@@ -73,7 +73,7 @@ Models:
       FID: 72.8025
       IS: 3.129
     Task: Image2Image
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165932-fcf08dc1.pth
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165932-fcf08dc1.pth
 - Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
@@ -86,7 +86,7 @@ Models:
       FID: 73.5001
       IS: 3.107
     Task: Image2Image
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165640-8b825581.pth
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165640-8b825581.pth
 - Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-270kiters_horse2zebra.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
@@ -99,7 +99,7 @@ Models:
       FID: 64.5225
       IS: 1.418
     Task: Image2Image
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_170004-a32c733a.pth
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_170004-a32c733a.pth
 - Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-270kiters_horse2zebra.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
@@ -112,7 +112,7 @@ Models:
       FID: 74.777
       IS: 1.542
     Task: Image2Image
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_165724-77c9c806.pth
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_165724-77c9c806.pth
 - Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-270kiters_horse2zebra.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
@@ -125,7 +125,7 @@ Models:
       FID: 141.1517
       IS: 3.154
     Task: Image2Image
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_170004-a32c733a.pth
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_170004-a32c733a.pth
 - Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-270kiters_horse2zebra.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
     Adversarial Networks'
@@ -138,4 +138,4 @@ Models:
       FID: 134.3728
       IS: 3.091
     Task: Image2Image
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_165724-77c9c806.pth
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_165724-77c9c806.pth

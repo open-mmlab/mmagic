@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional, Union
+
 import numpy as np
 import torch
 
@@ -10,11 +12,11 @@ from mmedit.registry import DIFFUSION_SCHEDULERS
 class DDPMScheduler:
 
     def __init__(self,
-                 num_train_timesteps=1000,
-                 beta_start=0.0001,
-                 beta_end=0.02,
-                 beta_schedule='linear',
-                 trained_betas=None,
+                 num_train_timesteps: int = 1000,
+                 beta_start: float = 0.0001,
+                 beta_end: float = 0.02,
+                 beta_schedule: str = 'linear',
+                 trained_betas: Optional[Union[np.array, list]] = None,
                  variance_type='fixed_small',
                  clip_sample=True):
         """```DDPMScheduler``` support the diffusion and reverse process
@@ -23,13 +25,25 @@ class DDPMScheduler:
         The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddpm.py. # noqa
 
         Args:
-            num_train_timesteps (int, optional): _description_. Defaults to 1000.
-            beta_start (float, optional): _description_. Defaults to 0.0001.
-            beta_end (float, optional): _description_. Defaults to 0.02.
-            beta_schedule (str, optional): _description_. Defaults to 'linear'.
-            trained_betas (_type_, optional): _description_. Defaults to None.
-            variance_type (str, optional): _description_. Defaults to 'fixed_small'.
-            clip_sample (bool, optional): _description_. Defaults to True.
+            num_train_timesteps (int, optional): The timesteps for training
+                process. Defaults to 1000.
+            beta_start (float, optional): The beta value at start. The beta
+                values will be interpolated from beta_start to beta_end.
+                Defaults to 0.0001.
+            beta_end (float, optional): The beta value at the end. The beta
+                values will be interpolated from beta_start to beta_end.
+                Defaults to 0.02.
+            beta_schedule (str, optional): The interpolation schedule for beta
+                values. Supported choices are 'linear', 'scaled_linear', and
+                'squaredcos_cap_v2'. Defaults to 'linear'.
+            trained_betas (list, np.array, optional): betas directly to the
+                constructor to bypass `beta_start`, `beta_end` etc. Defaults to None.
+            variance_type (str, optional): How denoising unet output variance
+                value. Supported choices are 'fixed_small', 'fixed_small_log',
+                'fixed_large', 'fixed_large_log', 'learned', and 'leanred_range'.
+                Defaults to 'fixed_small'.
+            clip_sample (bool, optional): Whether clip the value of predicted
+                original image (x0) to [-1, 1]. Defaults to True.
         """
         self.num_train_timesteps = num_train_timesteps
         if trained_betas is not None:
