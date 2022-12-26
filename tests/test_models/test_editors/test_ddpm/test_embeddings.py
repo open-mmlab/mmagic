@@ -12,6 +12,12 @@ def test_TimestepEmbedding():
     output = timestep_emb.forward(input)
     assert output.shape == (1, 64, 16)
 
+    timestep_emb = TimestepEmbedding(
+        in_channels=16, time_embed_dim=16, out_dim=96)
+    timestep_emb.act = None
+    output = timestep_emb.forward(input)
+    assert output.shape == (1, 64, 96)
+
 
 def test_get_timestep_embedding():
     input = torch.tensor([4])
@@ -20,4 +26,4 @@ def test_get_timestep_embedding():
 
 
 if __name__ == '__main__':
-    test_get_timestep_embedding()
+    test_TimestepEmbedding()
