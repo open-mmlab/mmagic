@@ -34,9 +34,9 @@ model = dict(
         xf_padding=True,
     ),
     diffusion_scheduler=dict(
-        type='DDPMScheduler',
+        type='DDIMScheduler',
         variance_type='learned_range',
-        beta_schedule='linear'),
+        beta_schedule='squaredcos_cap_v2'),
     use_fp16=False)
 
 test_dataloader = dict(batch_size=32, num_workers=8)
