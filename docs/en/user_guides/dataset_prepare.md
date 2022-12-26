@@ -34,6 +34,6 @@ python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.
 
 We support detailed tutorials and split them according to different tasks.
 
-Please check our [dataset zoo](../dataset_zoo/overview.md) for data preparation of different tasks.
+Please check our dataset zoo for data preparation of different tasks.
 
 If you're interested in more details of datasets in MMEditing, please check the [advanced guides](../howto/dataset.md).

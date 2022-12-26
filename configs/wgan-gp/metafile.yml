@@ -17,7 +17,7 @@ Models:
     Metrics:
       MS-SSIM: 0.2601
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/wgangp/wgangp_GN_celeba-cropped_128_b64x1_160k_20210408_170611-f8a99336.pth
+  Weights: https://download.openmmlab.com/mmediting/wgangp/wgangp_GN_celeba-cropped_128_b64x1_160k_20210408_170611-f8a99336.pth
 - Config: configs/wgan-gp/wgangp_GN-GP-50_1xb64-160kiters_lsun-bedroom-128x128.py
   In Collection: WGAN-GP
   Metadata:
@@ -28,4 +28,4 @@ Models:
     Metrics:
       MS-SSIM: 0.059
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/wgangp/wgangp_GN_GP-50_lsun-bedroom_128_b64x1_130k_20210408_170509-56f2a37c.pth
+  Weights: https://download.openmmlab.com/mmediting/wgangp/wgangp_GN_GP-50_lsun-bedroom_128_b64x1_130k_20210408_170509-56f2a37c.pth
