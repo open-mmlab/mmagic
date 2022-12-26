@@ -1,9 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import pytest
 import torch
 
 from mmedit.models.editors.ddpm.unet_blocks import (CrossAttnDownBlock2D,
                                                     CrossAttnUpBlock2D,
-                                                    UNetMidBlock2DCrossAttn)
+                                                    UNetMidBlock2DCrossAttn,
+                                                    get_down_block,
+                                                    get_up_block)
 
 
 def test_UNetMidBlock2DCrossAttn():
@@ -25,6 +28,16 @@ def test_CrossAttnDownBlock2D():
 def test_CrossAttnUpBlock2D():
     downblock = CrossAttnUpBlock2D(64, 64, 64, 64, cross_attention_dim=64)
     downblock.set_attention_slice(1)
+
+
+def test_get_down_block():
+    with pytest.raises(Exception):
+        get_down_block('tem', 1, 1, 1, 1, True, 'silu', 1)
+
+
+def get_get_up_block():
+    with pytest.raises(Exception):
+        get_up_block('tem', 1, 1, 1, 1, 1, True, 'silu', 1)
 
 
 if __name__ == '__main__':

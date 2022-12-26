@@ -3,7 +3,7 @@ import pytest
 import torch
 
 from mmedit.models.editors.ddpm.attention import (ApproximateGELU,
-                                                  CrossAttention,
+                                                  CrossAttention, FeedForward,
                                                   Transformer2DModel)
 
 
@@ -32,5 +32,12 @@ def test_Transformer2DModel_init():
     Transformer2DModel(in_channels=3, use_linear_projection=True)
 
 
+def test_FeedForward():
+    input = torch.rand((2, 64, 64))
+    feed_forward = FeedForward(64, 64, activation_fn='geglu-approximate')
+    output = feed_forward.forward(input)
+    assert output.shape == (2, 64, 64)
+
+
 if __name__ == '__main__':
-    test_crossattention()
+    test_FeedForward()
