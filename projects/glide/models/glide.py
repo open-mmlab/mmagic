@@ -124,15 +124,15 @@ class Glide(BaseModel):
         """
         # Sample gaussian noise to begin loop
         if init_image is None:
-            image = torch.randn((batch_size, self.unet.in_channels,
+            image = torch.randn((2*batch_size, self.unet.in_channels,
                                  self.unet.image_size, self.unet.image_size))
             image = image.to(self.device)
         else:
             image = init_image
         # TODO
-        import numpy as np
-        image = torch.tensor(np.load('noises.npy'), device=self.device)
-        image = torch.concat([image] * 2)
+        # import numpy as np
+        # image = torch.tensor(np.load('noises.npy'), device=self.device)
+        # image = torch.concat([image] * 2)
         # if isinstance(labels, int):
         #     labels = torch.tensor(labels).repeat(batch_size, 1)
         # elif labels is None:

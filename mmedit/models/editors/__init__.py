@@ -26,7 +26,6 @@ from .flavr import FLAVR, FLAVRNet
 from .gca import GCA
 from .ggan import GGAN
 from .glean import GLEANStyleGANv2
-from .glide import Glide, Text2ImUNet
 from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
                            GLEncoderDecoder)
 from .guided_diffusion import AblatedDiffusionModel
@@ -84,6 +83,5 @@ __all__ = [
     'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
-    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D', 'Glide',
-    'Text2ImUNet'
+    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D'
 ]
