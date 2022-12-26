@@ -1,7 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import mmengine
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.utils.dl_utils import TORCH_VERSION
+from mmengine.utils.version_utils import digit_version
 
 
 class ResnetBlock2D(nn.Module):
@@ -36,7 +39,7 @@ class ResnetBlock2D(nn.Module):
         groups_out=None,
         pre_norm=True,
         eps=1e-6,
-        non_linearity='swish',
+        non_linearity='silu',
         time_embedding_norm='default',
         output_scale_factor=1.0,
         use_in_shortcut=None,
@@ -78,10 +81,14 @@ class ResnetBlock2D(nn.Module):
         self.conv2 = torch.nn.Conv2d(
             out_channels, out_channels, kernel_size=3, stride=1, padding=1)
 
-        if non_linearity == 'swish':
-            self.nonlinearity = lambda x: F.silu(x)
-        elif non_linearity == 'silu':
+        if non_linearity == 'silu' and \
+                digit_version(TORCH_VERSION) > digit_version('1.6.0'):
             self.nonlinearity = nn.SiLU()
+        else:
+            mmengine.print_log('\'SiLU\' is not supported for '
+                               f'torch < 1.6.0, found \'{torch.version}\'.'
+                               'Use ReLu instead but result maybe wrong')
+            self.nonlinearity = nn.ReLU()
 
         self.upsample = self.downsample = None
         if self.up:

@@ -1092,7 +1092,13 @@ class DenoisingUnet(BaseModule):
             self.conv_norm_out = nn.GroupNorm(
                 num_channels=block_out_channels[0],
                 num_groups=norm_cfg['num_groups'])
-            self.conv_act = nn.SiLU()
+            if digit_version(TORCH_VERSION) > digit_version('1.6.0'):
+                self.conv_act = nn.SiLU()
+            else:
+                mmengine.print_log('\'SiLU\' is not supported for '
+                                   f'torch < 1.6.0, found \'{torch.version}\'.'
+                                   'Use ReLu instead but result maybe wrong')
+                self.conv_act == nn.ReLU()
             self.conv_out = nn.Conv2d(
                 block_out_channels[0],
                 self.out_channels,

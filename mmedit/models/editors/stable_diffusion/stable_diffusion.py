@@ -20,18 +20,14 @@ class StableDiffusion(BaseModel):
     """class to run stable diffsuion pipeline.
 
     Args:
-        diffusion_scheduler(dict):
-            Diffusion scheduler config.
-        unet_cfg(dict):
-            Unet config.
-        vae_cfg(dict):
-            Vae config.
+        diffusion_scheduler(dict): Diffusion scheduler config.
+        unet_cfg(dict): Unet config.
+        vae_cfg(dict): Vae config.
         pretrained_ckpt_path(dict):
             Pretrained ckpt path for submodels in stable diffusion.
         requires_safety_checker(bool):
             whether to run safety checker after image generated.
-        unet_sample_size(int):
-            sampel size for unet.
+        unet_sample_size(int): sampel size for unet.
     """
 
     def __init__(self,

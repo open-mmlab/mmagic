@@ -2,11 +2,14 @@
 import math
 from typing import Optional, Tuple, Union
 
+import mmengine
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from addict import Dict
+from mmengine.utils.dl_utils import TORCH_VERSION
+from mmengine.utils.version_utils import digit_version
 
 
 class Downsample2D(nn.Module):
@@ -188,10 +191,14 @@ class ResnetBlock2D(nn.Module):
         self.conv2 = torch.nn.Conv2d(
             out_channels, out_channels, kernel_size=3, stride=1, padding=1)
 
-        if non_linearity == 'swish':
-            self.nonlinearity = lambda x: F.silu(x)
-        elif non_linearity == 'silu':
+        if non_linearity == 'silu' and \
+                digit_version(TORCH_VERSION) > digit_version('1.6.0'):
             self.nonlinearity = nn.SiLU()
+        else:
+            mmengine.print_log('\'SiLU\' is not supported for '
+                               f'torch < 1.6.0, found \'{torch.version}\'.'
+                               'Use ReLu instead but result maybe wrong')
+            self.nonlinearity = nn.ReLU()
 
         self.upsample = self.downsample = None
         if self.up:
@@ -622,7 +629,13 @@ class Encoder(nn.Module):
             num_channels=block_out_channels[-1],
             num_groups=norm_num_groups,
             eps=1e-6)
-        self.conv_act = nn.SiLU()
+        if digit_version(TORCH_VERSION) > digit_version('1.6.0'):
+            self.conv_act = nn.SiLU()
+        else:
+            mmengine.print_log('\'SiLU\' is not supported for '
+                               f'torch < 1.6.0, found \'{torch.version}\'.'
+                               'Use ReLu instead but result maybe wrong')
+            self.conv_act = nn.ReLU()
 
         conv_out_channels = 2 * out_channels if double_z else out_channels
         self.conv_out = nn.Conv2d(
@@ -771,7 +784,13 @@ class Decoder(nn.Module):
             num_channels=block_out_channels[0],
             num_groups=norm_num_groups,
             eps=1e-6)
-        self.conv_act = nn.SiLU()
+        if digit_version(TORCH_VERSION) > digit_version('1.6.0'):
+            self.conv_act = nn.SiLU()
+        else:
+            mmengine.print_log('\'SiLU\' is not supported for '
+                               f'torch < 1.6.0, found \'{torch.version}\'.'
+                               'Use ReLu instead but result maybe wrong')
+            self.conv_act = nn.ReLU()
         self.conv_out = nn.Conv2d(
             block_out_channels[0], out_channels, 3, padding=1)
 
