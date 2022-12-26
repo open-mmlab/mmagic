@@ -4,7 +4,7 @@ unet = dict(
     base_channels=320,
     channels_cfg=[1, 2, 4, 4],
     unet_type='stable',
-    act_cfg=dict(type='silu', inplace=False),
+    act_cfg=dict(type='silu'),
     cross_attention_dim=768,
     num_heads=8,
     in_channels=4,

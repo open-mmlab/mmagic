@@ -69,7 +69,7 @@ class StableDiffusion(BaseModel):
             self.unet.load_state_dict(state_dict, strict=True)
 
         if 'vae' in pretrained_ckpt_path.keys() and \
-                pretrained_ckpt_path['unet'] is not None:
+                pretrained_ckpt_path['vae'] is not None:
             state_dict = torch.load(
                 pretrained_ckpt_path['vae'], map_location='cpu')
             self.vae.load_state_dict(state_dict, strict=True)
