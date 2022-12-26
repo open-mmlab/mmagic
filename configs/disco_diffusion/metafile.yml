@@ -7,7 +7,7 @@ Collections:
   - https://github.com/alembics/disco-diffusion
   README: configs/disco_diffusion/README.md
 Models:
-- Config: configs/disco/disco-diffusion_adm-u-finetuned_imagenet-512x512.py
+- Config: configs/disco_diffusion/disco-diffusion_adm-u-finetuned_imagenet-512x512.py
   In Collection: Disco Diffusion
   Metadata:
     Training Data: Others
@@ -17,7 +17,7 @@ Models:
     Metrics: {}
     Task: Text2Image, Image2Image, diffusion
   Weights: https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth
-- Config: configs/disco/disco-diffusion_adm-u-finetuned_imagenet-256x256.py
+- Config: configs/disco_diffusion/disco-diffusion_adm-u-finetuned_imagenet-256x256.py
   In Collection: Disco Diffusion
   Metadata:
     Training Data: Others
@@ -27,7 +27,7 @@ Models:
     Metrics: {}
     Task: Text2Image, Image2Image, diffusion
   Weights: <>
-- Config: configs/disco/disco-diffusion_portrait-generator-v001.py
+- Config: configs/disco_diffusion/disco-diffusion_portrait-generator-v001.py
   In Collection: Disco Diffusion
   Metadata:
     Training Data: Others

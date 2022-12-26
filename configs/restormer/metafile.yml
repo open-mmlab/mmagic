@@ -95,7 +95,7 @@ Models:
       Outdoor Scenes PSNR: 26.616
       Outdoor Scenes SSIM: 0.8346
     Task: Denoising, Deblurring, Deraining
-  Weights: https://download.openmmlab.com/mmediting/restormer_official_dpdd-dual-52c94c00.pth
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-dual-52c94c00.pth
 - Config: configs/restormer/restormer_official_dfwb-gray-sigma15.py
   In Collection: Restormer
   Metadata:

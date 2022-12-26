@@ -17,7 +17,7 @@ g_reg_interval = 4
 g_reg_ratio = g_reg_interval / (g_reg_interval + 1)
 d_reg_ratio = d_reg_interval / (d_reg_interval + 1)
 
-load_from = 'https://download.openmmlab.com/mmgen/stylegan3/stylegan3_t_ffhq_1024_b4x8_cvt_official_rgb_20220329_235113-db6c6580.pth'  # noqa
+load_from = 'https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ffhq_1024_b4x8_cvt_official_rgb_20220329_235113-db6c6580.pth'  # noqa
 # ada settings
 aug_kwargs = {
     'xflip': 1,
