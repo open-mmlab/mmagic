@@ -1,10 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import inspect
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import torch
-import torch.nn as nn
 from mmengine.logging import MMLogger
+from mmengine.model import BaseModel
 from tqdm.auto import tqdm
 
 from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
@@ -16,7 +16,7 @@ logger = MMLogger.get_current_instance()
 
 @MODELS.register_module('sd')
 @MODELS.register_module()
-class StableDiffusion(nn.Module):
+class StableDiffusion(BaseModel):
     """class to run stable diffsuion pipeline.
 
     Args:
@@ -489,3 +489,11 @@ class StableDiffusion(nn.Module):
         # deviation required by the scheduler
         latents = latents * self.scheduler.init_noise_sigma
         return latents
+
+    def forward(self,
+                inputs: torch.Tensor,
+                data_samples: Optional[list] = None,
+                mode: str = 'tensor') -> Union[Dict[str, torch.Tensor], list]:
+        """forward is not implemented now."""
+        raise NotImplementedError(
+            'Forward is not implemented now, please use infer.')
