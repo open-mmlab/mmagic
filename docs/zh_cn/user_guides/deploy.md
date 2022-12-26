@@ -23,7 +23,7 @@
 
 ## 模型转换
 
-假设在安装步骤中，mmediting 和 mmdeploy 代码库在同级目录下，并且当前的工作目录为 mmediting 的根目录，那么以 [ESRGAN](https://github.com/open-mmlab/mmediting/blob/1.x/configs/esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) 模型为例，你可以从[此处](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth)下载对应的 checkpoint，并使用以下代码将之转换为 onnx 模型：
+假设在安装步骤中，mmediting 和 mmdeploy 代码库在同级目录下，并且当前的工作目录为 mmediting 的根目录，那么以 [ESRGAN](../../../configs/esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) 模型为例，你可以从[此处](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth)下载对应的 checkpoint，并使用以下代码将之转换为 onnx 模型：
 
 ```python
 from mmdeploy.apis import torch2onnx
