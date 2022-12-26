@@ -25,8 +25,6 @@ def test_nafnet():
     output = model(inputs)
     assert torch.is_tensor(output)
     assert output.shape == targets.shape
-    
-    
 
     # test on gpu
     if torch.cuda.is_available():
