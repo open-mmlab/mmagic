@@ -68,7 +68,8 @@ safety_checker_path = dict(
     pytorch_model='pytorch_model.bin')
 
 # yapf: disable
-pretrained_ckpt_path = dict(
+init_cfg = dict(
+    type='Pretrained',
     unet='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin',  # noqa
     vae='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5/vae/diffusion_pytorch_model.bin',  # noqa
     tokenizer=tokenizer_path,
@@ -83,5 +84,5 @@ model = dict(
     diffusion_scheduler=diffusion_scheduler,
     unet=unet,
     vae=vae,
-    pretrained_ckpt_path=pretrained_ckpt_path,
+    init_cfg=init_cfg,
 )

@@ -5,6 +5,7 @@ from typing import Dict, List, Optional, Union
 import torch
 from mmengine.logging import MMLogger
 from mmengine.model import BaseModel
+from mmengine.runner.checkpoint import _load_checkpoint
 from tqdm.auto import tqdm
 
 from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
@@ -34,9 +35,9 @@ class StableDiffusion(BaseModel):
                  diffusion_scheduler,
                  unet,
                  vae,
-                 pretrained_ckpt_path=None,
                  requires_safety_checker=True,
-                 unet_sample_size=64):
+                 unet_sample_size=64,
+                 init_cfg=None):
         super().__init__()
 
         self.execution_device = torch.device('cpu')
@@ -58,24 +59,23 @@ class StableDiffusion(BaseModel):
         self.vae = AutoencoderKL(**vae) if isinstance(vae, dict) else vae
         self.vae_scale_factor = 2**(len(self.vae.block_out_channels) - 1)
 
-        self.load_pretrained_ckpt(pretrained_ckpt_path)
+        self.init_cfg = init_cfg
+        self.init_weights()
 
-    def load_pretrained_ckpt(self, pretrained_ckpt_path):
+    def init_weights(self):
         """load pretrained ckpt for each submodel."""
-        if 'unet' in pretrained_ckpt_path.keys() and \
-                pretrained_ckpt_path['unet'] is not None:
-            state_dict = torch.load(
-                pretrained_ckpt_path['unet'], map_location='cpu')
+        if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
+            map_location = self.init_cfg.get('map_location', 'cpu')
+            state_dict = _load_checkpoint(
+                self.init_cfg.get('unet', None), map_location)
             self.unet.load_state_dict(state_dict, strict=True)
 
-        if 'vae' in pretrained_ckpt_path.keys() and \
-                pretrained_ckpt_path['vae'] is not None:
-            state_dict = torch.load(
-                pretrained_ckpt_path['vae'], map_location='cpu')
+            state_dict = _load_checkpoint(
+                self.init_cfg.get('vae', None), map_location)
             self.vae.load_state_dict(state_dict, strict=True)
 
         self.tokenizer, self.feature_extractor, self.text_encoder, self.safety_checker = load_clip_submodels(  # noqa
-            pretrained_ckpt_path, self.submodels, self.requires_safety_checker)
+            self.init_cfg, self.submodels, self.requires_safety_checker)
 
     def to(self, torch_device: Optional[Union[str, torch.device]] = None):
         """put submodels to torch device.
