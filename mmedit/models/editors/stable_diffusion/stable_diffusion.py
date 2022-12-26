@@ -40,7 +40,7 @@ class StableDiffusion(BaseModel):
                  init_cfg=None):
         super().__init__()
 
-        self.execution_device = torch.device('cpu')
+        self.device = torch.device('cpu')
         self.submodels = [
             'tokenizer', 'vae', 'scheduler', 'unet', 'feature_extractor',
             'text_encoder'
@@ -66,13 +66,16 @@ class StableDiffusion(BaseModel):
         """load pretrained ckpt for each submodel."""
         if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
             map_location = self.init_cfg.get('map_location', 'cpu')
-            state_dict = _load_checkpoint(
-                self.init_cfg.get('unet', None), map_location)
-            self.unet.load_state_dict(state_dict, strict=True)
+            ckpt_path = self.init_cfg.get('unet', None)
+            if ckpt_path:
+                state_dict = _load_checkpoint(ckpt_path, map_location)
+                self.unet.load_state_dict(state_dict, strict=True)
 
-            state_dict = _load_checkpoint(
-                self.init_cfg.get('vae', None), map_location)
-            self.vae.load_state_dict(state_dict, strict=True)
+            ckpt_path = self.init_cfg.get('vae', None)
+            if ckpt_path:
+                state_dict = _load_checkpoint(
+                    self.init_cfg.get('vae', ), map_location)
+                self.vae.load_state_dict(state_dict, strict=True)
 
         self.tokenizer, self.feature_extractor, self.text_encoder, self.safety_checker = load_clip_submodels(  # noqa
             self.init_cfg, self.submodels, self.requires_safety_checker)
@@ -95,7 +98,7 @@ class StableDiffusion(BaseModel):
             module = getattr(self, name)
             if isinstance(module, torch.nn.Module):
                 module.to(torch_device)
-        self.execution_device = torch.device(torch_device)
+        self.device = torch.device(torch_device)
         return self
 
     @torch.no_grad()
@@ -167,7 +170,7 @@ class StableDiffusion(BaseModel):
 
         # 2. Define call parameters
         batch_size = 1 if isinstance(prompt, str) else len(prompt)
-        device = self.execution_device
+        device = self.device
         # here `guidance_scale` is defined analog to the
         # guidance weight `w` of equation (2)
         # of the Imagen paper: https://arxiv.org/pdf/2205.11487.pdf .

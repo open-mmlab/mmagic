@@ -59,7 +59,8 @@ diffusion_scheduler = dict(
     set_alpha_to_one=False,
     clip_sample=False)
 
-pretrained_ckpt_path = dict(
+init_cfg = dict(
+    type='Pretrained',
     tokenizer=None,
     text_encoder=None,
     feature_extractor=None,
@@ -70,7 +71,7 @@ model = dict(
     diffusion_scheduler=diffusion_scheduler,
     unet=unet,
     vae=vae,
-    pretrained_ckpt_path=pretrained_ckpt_path,
+    init_cfg=init_cfg,
     requires_safety_checker=False,
 )
 
