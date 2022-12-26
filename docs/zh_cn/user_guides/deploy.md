@@ -15,7 +15,7 @@
 
 ## 安装
 
-请参考[此处](https://mmediting.readthedocs.io/en/1.x/2_get_started.html#installation)安装 mmedit。然后，按照[说明](https://mmdeploy.readthedocs.io/zh_CN/1.x/get_started.html#mmdeploy)安装 mmdeploy。
+请参考[此处](../get_started/install.md)安装 mmedit。然后，按照[说明](https://mmdeploy.readthedocs.io/zh_CN/1.x/get_started.html#mmdeploy)安装 mmdeploy。
 
 ```{note}
 如果安装的是 mmdeploy 预编译包，那么也请通过 'git clone https://github.com/open-mmlab/mmdeploy.git --depth=1' 下载 mmdeploy 源码。因为它包含了部署时要用到的配置文件
