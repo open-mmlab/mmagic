@@ -20,6 +20,12 @@ Stable Diffusion is a latent diffusion model conditioned on the text embeddings 
 
 ## Results and models
 
+We provide stable diffusion v1.5 weights. This model has several weights including vae, unet and clip. We put the urls in config file and it will be downloaded automatically when you run codes following the [Quick Start](#quick-start)
+
+|    Diffusion Model    |                       Config                       |                Download                |
+| :-------------------: | :------------------------------------------------: | :------------------------------------: |
+| stable_diffusion_v1.5 | [config](./stable-diffusion_ddim_denoisingunet.py) | Urls could be found in the config file |
+
 ## Quick Start
 
 Running the following codes, you can get a text-generated image.
@@ -40,6 +46,10 @@ StableDiffuser = StableDiffuser.to('cuda')
 image = StableDiffuser.infer(prompt)['samples']
 utils.save_image(image, 'robot.png')
 ```
+
+## Comments
+
+Our codebase for the stable diffusion models builds heavily on [diffusers codebase](https://github.com/huggingface/diffusers) and the model weights are from [stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5). Thanks for the efforts of the community!
 
 ## Citation
 

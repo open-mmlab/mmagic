@@ -109,10 +109,10 @@ class DDPMScheduler:
 
         # hacks - were probs added for training stability
         if variance_type == 'fixed_small':
-            variance = np.clip(variance, min_value=1e-20)
+            variance = np.clip(variance, a_min=1e-20, a_max=10000)
         # for rl-diffusion_scheduler https://arxiv.org/abs/2205.09991
         elif variance_type == 'fixed_small_log':
-            variance = np.log(np.clip(variance, min_value=1e-20))
+            variance = np.log(np.clip(variance, a_min=1e-20, a_max=10000))
         elif variance_type == 'fixed_large':
             variance = self.betas[t]
         elif variance_type == 'fixed_large_log':
