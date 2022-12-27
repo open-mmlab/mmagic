@@ -52,3 +52,14 @@ Models:
       SAD: 50.6
     Task: Matting
   Weights: https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth
+- Config: configs/dim/dim_stage1-v16_1xb1-1000k_comp1k_online-merge.py
+  In Collection: DIM
+  Metadata:
+    GPUs: '-'
+    Training Data: COMP1K
+  Name: dim_stage1-v16_1xb1-1000k_comp1k_online-merge
+  Results:
+  - Dataset: COMP1K
+    Metrics: {}
+    Task: Matting
+  Weights: ''

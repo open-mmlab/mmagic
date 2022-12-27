@@ -39,29 +39,12 @@ The pretrained weights of SPyNet can be found [here](https://download.openmmlab.
 
 Note that the following models are finetuned from smaller models. The training schemes of these models will be released when MMEditing reaches 5k stars. We provide the pre-trained models here.
 
-**NTIRE 2021 Video Super-Resolution**
-
-[basicvsr-pp_c128n25_600k_ntire-vsr](./basicvsr-pp_c128n25_600k_ntire-vsr.py)
-
-[model](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_vsr_20210311-1ff35292.pth)
-
-**NTIRE 2021 Quality Enhancement of Compressed Video - Track 1**
-
-[basicvsr-pp_c128n25_600k_ntire-decompress-track1](./basicvsr-pp_c128n25_600k_ntire-decompress-track1.py)
-
-[model](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track1_20210223-7b2eba02.pth)
-
-**NTIRE 2021 Quality Enhancement of Compressed Video - Track 2**
-
-[basicvsr-pp_c128n25_600k_ntire-decompress-track2](./basicvsr-pp_c128n25_600k_ntire-decompress-track2.py)
-
-[model](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track2_20210314-eeae05e6.pth)
-
-**NTIRE 2021 Quality Enhancement of Compressed Video - Track 3**
-
-[basicvsr-pp_c128n25_600k_ntire-decompress-track3](./basicvsr-pp_c128n25_600k_ntire-decompress-track3.py)
-
-[model](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track3_20210304-6daf4a40.pth)
+| Method                                                                | Download                                                                | Track                                                        |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [basicvsr-pp_c128n25_600k_ntire-vsr](./basicvsr-pp_c128n25_600k_ntire-vsr.py) | [model](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_vsr_20210311-1ff35292.pth) | NTIRE 2021 Video Super-Resolution                            |
+| [basicvsr-pp_c128n25_600k_ntire-decompress-track1](./basicvsr-pp_c128n25_600k_ntire-decompress-track1.py) | [model](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track1_20210223-7b2eba02.pth) | NTIRE 2021 Quality Enhancement of Compressed Video - Track 1 |
+| [basicvsr-pp_c128n25_600k_ntire-decompress-track2](./basicvsr-pp_c128n25_600k_ntire-decompress-track2.py) | [model](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track2_20210314-eeae05e6.pth) | NTIRE 2021 Quality Enhancement of Compressed Video - Track 2 |
+| [basicvsr-pp_c128n25_600k_ntire-decompress-track3](./basicvsr-pp_c128n25_600k_ntire-decompress-track3.py) | [model](https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track3_20210304-6daf4a40.pth) | NTIRE 2021 Quality Enhancement of Compressed Video - Track 3 |
 
 </details>
 

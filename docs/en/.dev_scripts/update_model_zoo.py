@@ -6,13 +6,17 @@ import glob
 import os
 import os.path as osp
 import re
+from collections import OrderedDict
 from os.path import basename, dirname
+from pathlib import Path
 
-import numpy as np
+# import numpy as np
 import titlecase
+from modelindex.load_model_index import load
 from tqdm import tqdm
 
 github_link = 'https://github.com/open-mmlab/mmediting/blob/1.x/'
+MMEDIT_ROOT = Path(__file__).absolute().parents[3]
 
 
 def anchor(name):
@@ -28,6 +32,10 @@ def summarize(stats, name):
                              [c for _, c, _, _, _, _, _ in stats])
     allckpts = func.reduce(lambda a, b: a.union(b),
                            [c for _, _, c, _, _, _, _ in stats])
+
+    for c in allpapers:
+        print('paper: ', c)
+    print(len(allpapers))
     alltasks = func.reduce(lambda a, b: a.union(b),
                            [t for _, _, _, t, _, _, _ in stats])
     task_desc = '\n'.join([
@@ -36,10 +44,6 @@ def summarize(stats, name):
     ])
 
     # Overview
-    papertypes, papercounts = np.unique([t for t, _ in allpapers],
-                                        return_counts=True)
-    countstr = '\n'.join(
-        [f'   - {t}: {c}' for t, c in zip(papertypes, papercounts)])
     countstr = '\n'.join([f'   - ALGORITHM: {len(stats)}'])
 
     summary = f"""# {name}
@@ -65,12 +69,18 @@ def summarize(stats, name):
     return summary
 
 
-# Count algorithms
 def update_model_zoo():
 
+    # target docs
     target_dir = 'model_zoo'
-
     os.makedirs(target_dir, exist_ok=True)
+
+    # parse model-index.yml
+    model_index_file = MMEDIT_ROOT / 'model-index.yml'
+    model_index = load(str(model_index_file))
+    model_index.build_models_with_collections()
+    models = OrderedDict({model.name: model for model in model_index.models})
+    print(len(models.keys()))
 
     root_dir = dirname(dirname(dirname(dirname(osp.abspath(__file__)))))
     files = sorted(glob.glob(osp.join(root_dir, 'configs/*/README.md')))
@@ -110,7 +120,9 @@ def update_model_zoo():
 
         # count configs
         configs = set(x.lower().strip()
-                      for x in re.findall(r'/configs/.*?\.py', content))
+                      for x in re.findall(r'\(.*\.py\)', content))
+        for c in list(configs):
+            print(c)
 
         # count ckpts
         ckpts = list(
