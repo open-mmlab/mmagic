@@ -1,0 +1,9 @@
+Collections:
+- Metadata:
+    Architecture:
+    - Stable Diffusion
+  Name: Stable Diffusion
+  Paper:
+  - https://github.com/CompVis/stable-diffusion
+  README: configs/stable_diffusion/README.md
+Models: []
