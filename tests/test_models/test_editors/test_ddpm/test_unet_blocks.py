@@ -44,7 +44,3 @@ def test_get_down_block():
 def get_get_up_block():
     with pytest.raises(Exception):
         get_up_block('tem', 1, 1, 1, 1, 1, True, 'silu', 1)
-
-
-if __name__ == '__main__':
-    test_UNetMidBlock2DCrossAttn()

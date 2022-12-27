@@ -1,15 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from mmengine import MODELS, Config
-from mmengine.runner import set_random_seed
 from torchvision import utils
 
 from mmedit.utils import register_all_modules
 
-set_random_seed(1)
-
 register_all_modules()
 
-config = 'configs/stable_diffusion/base_config_denoisingunet.py'
+config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py'
 StableDiffuser = MODELS.build(Config.fromfile(config).model)
 # prompt = 'clouds surround the mountains and Chinese palaces,' + \
 #             'sunshine,lake,overlook,overlook,unreal engine,' + \

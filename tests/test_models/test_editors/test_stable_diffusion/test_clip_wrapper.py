@@ -71,7 +71,3 @@ def test_load_clip_submodels():
     submodels = []
     with pytest.raises(Exception):
         load_clip_submodels(pretrained_ckpt_path, submodels, True)
-
-
-if __name__ == '__main__':
-    test_load_clip_submodels()

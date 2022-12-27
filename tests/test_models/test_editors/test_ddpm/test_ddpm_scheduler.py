@@ -40,7 +40,3 @@ def test_ddpm_init():
 
     with pytest.raises(Exception):
         DDPMScheduler(beta_schedule='tem')
-
-
-if __name__ == '__main__':
-    test_ddpm_init()

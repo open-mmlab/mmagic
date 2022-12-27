@@ -23,7 +23,3 @@ def test_Timesteps():
     timesteps = Timesteps(num_channels=9)
     emb = timesteps.forward(input)
     assert emb.shape == (1, 9)
-
-
-if __name__ == '__main__':
-    test_TimestepEmbedding()

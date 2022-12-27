@@ -18,7 +18,3 @@ def test_NormWithEmbedding():
     ins = NormWithEmbedding(32, 32)
     output = ins.forward(input, emb)
     assert output.shape == (4, 32, 4, 32)
-
-
-if __name__ == '__main__':
-    test_NormWithEmbedding()

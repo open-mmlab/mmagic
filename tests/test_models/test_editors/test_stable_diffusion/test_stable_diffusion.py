@@ -124,7 +124,3 @@ def test_stable_diffusion():
         num_inference_steps=1)
 
     assert result['samples'].shape == (3, 64, 64)
-
-
-if __name__ == '__main__':
-    test_stable_diffusion()

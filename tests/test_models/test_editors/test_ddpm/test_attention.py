@@ -37,7 +37,3 @@ def test_FeedForward():
     feed_forward = FeedForward(64, 64, activation_fn='geglu-approximate')
     output = feed_forward.forward(input)
     assert output.shape == (2, 64, 64)
-
-
-if __name__ == '__main__':
-    test_FeedForward()

@@ -5,6 +5,7 @@ from typing import Dict, List, Optional, Union
 import torch
 from mmengine.logging import MMLogger
 from mmengine.model import BaseModel
+from mmengine.runner import set_random_seed
 from mmengine.runner.checkpoint import _load_checkpoint
 from tqdm.auto import tqdm
 
@@ -102,20 +103,19 @@ class StableDiffusion(BaseModel):
         return self
 
     @torch.no_grad()
-    def infer(
-        self,
-        prompt: Union[str, List[str]],
-        height: Optional[int] = None,
-        width: Optional[int] = None,
-        num_inference_steps: int = 50,
-        guidance_scale: float = 7.5,
-        negative_prompt: Optional[Union[str, List[str]]] = None,
-        num_images_per_prompt: Optional[int] = 1,
-        eta: float = 0.0,
-        generator: Optional[torch.Generator] = None,
-        latents: Optional[torch.FloatTensor] = None,
-        show_progress=True,
-    ):
+    def infer(self,
+              prompt: Union[str, List[str]],
+              height: Optional[int] = None,
+              width: Optional[int] = None,
+              num_inference_steps: int = 50,
+              guidance_scale: float = 7.5,
+              negative_prompt: Optional[Union[str, List[str]]] = None,
+              num_images_per_prompt: Optional[int] = 1,
+              eta: float = 0.0,
+              generator: Optional[torch.Generator] = None,
+              latents: Optional[torch.FloatTensor] = None,
+              show_progress=True,
+              seed=1):
         """Function invoked when calling the pipeline for generation.
 
         Args:
@@ -161,6 +161,8 @@ class StableDiffusion(BaseModel):
                 'samples': image result samples
                 'nsfw_content_detected': nsfw content flags for image samples.
         """
+        set_random_seed(seed=seed)
+
         # 0. Default height and width to unet
         height = height or self.unet_sample_size * self.vae_scale_factor
         width = width or self.unet_sample_size * self.vae_scale_factor

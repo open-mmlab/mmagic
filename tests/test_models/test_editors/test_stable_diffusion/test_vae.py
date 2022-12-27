@@ -64,7 +64,3 @@ def test_Upsample2D():
     upsample = Upsample2D(channels=64)
     output = upsample.forward(input, output_size=(32, 32))
     assert output.shape == (1, 64, 64, 64)
-
-
-if __name__ == '__main__':
-    test_AttentionBlock()
