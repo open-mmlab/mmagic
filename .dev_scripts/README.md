@@ -251,5 +251,5 @@ python .dev_scripts/benchmark_valid_flop.py --flops --flops-str
 To update model-index according to `README.md`, please run the following commands,
 
 ```bash
-python .dev_scripts/benchmark_valid_flop.py --flops --flops-str
+python .dev_scripts/update_model_index.py
 ```
