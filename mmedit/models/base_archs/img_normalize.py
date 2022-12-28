@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Tuple
+
 import torch
 import torch.nn as nn
 
@@ -15,7 +17,11 @@ class ImgNormalize(nn.Conv2d):
         sign (int): Sign of bias. Default -1.
     """
 
-    def __init__(self, pixel_range, img_mean, img_std, sign=-1):
+    def __init__(self,
+                 pixel_range: float,
+                 img_mean: Tuple[float, float, float],
+                 img_std: Tuple[float, float, float],
+                 sign: int = -1):
 
         assert len(img_mean) == len(img_std)
         num_channels = len(img_mean)

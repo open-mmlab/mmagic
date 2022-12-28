@@ -109,3 +109,43 @@ Models:
       Vimeo-90K-T (BIx4) SSIM (Y): 0.9351
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd_20210305-ab315ab1.pth
+- Config: configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-vsr.py
+  In Collection: BasicVSR++
+  Metadata:
+    Training Data: Others
+  Name: basicvsr-pp_c128n25_600k_ntire-vsr
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Video Super-Resolution
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_vsr_20210311-1ff35292.pth
+- Config: configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-decompress-track1.py
+  In Collection: BasicVSR++
+  Metadata:
+    Training Data: Others
+  Name: basicvsr-pp_c128n25_600k_ntire-decompress-track1
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Video Super-Resolution
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track1_20210223-7b2eba02.pth
+- Config: configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-decompress-track2.py
+  In Collection: BasicVSR++
+  Metadata:
+    Training Data: Others
+  Name: basicvsr-pp_c128n25_600k_ntire-decompress-track2
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Video Super-Resolution
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track2_20210314-eeae05e6.pth
+- Config: configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-decompress-track3.py
+  In Collection: BasicVSR++
+  Metadata:
+    Training Data: Others
+  Name: basicvsr-pp_c128n25_600k_ntire-decompress-track3
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Video Super-Resolution
+  Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track3_20210304-6daf4a40.pth

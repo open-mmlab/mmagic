@@ -20,8 +20,8 @@
 
 |                                     方法                                      | 图片尺寸 |       PSNR       |      SSIM      | GPU信息  |                                     下载                                      |
 | :---------------------------------------------------------------------------: | :------: | :--------------: | :------------: | :------: | :---------------------------------------------------------------------------: |
-| [nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd](/configs/nafnet/nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd.py) | 256X256  | 40.3045(40.3045) | 0.9253(0.9614) | 1 (A100) | [模型](https://download.openmmlab.com/mmediting/nafnet/NAFNet-SIDD-midc64.pth) \| 日志(即将到来) |
-| [nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro](/configs/nafnet/nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro.py) | 1280x720 | 33.7246(33.7103) | 0.9479(0.9668) | 1 (A100) | [模型](https://download.openmmlab.com/mmediting/nafnet/NAFNet-GoPro-midc64.pth) \| 日志(即将到来) |
+| [nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd](./nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd.py) | 256X256  | 40.3045(40.3045) | 0.9253(0.9614) | 1 (A100) | [模型](https://download.openmmlab.com/mmediting/nafnet/NAFNet-SIDD-midc64.pth) \| 日志(即将到来) |
+| [nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro](./nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro.py) | 1280x720 | 33.7246(33.7103) | 0.9479(0.9668) | 1 (A100) | [模型](https://download.openmmlab.com/mmediting/nafnet/NAFNet-GoPro-midc64.pth) \| 日志(即将到来) |
 
 Note:
 
@@ -49,7 +49,7 @@ python tools/train.py configs/nafnet/nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k
 ./tools/dist_train.sh configs/nafnet/nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd.py 8
 ```
 
-更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Train a model** 部分。
+更多细节可以参考 [train_test.md](../../docs/zh_cn/user_guides/train_test.md) 中的 **Train a model** 部分。
 
 </details>
 
@@ -72,6 +72,6 @@ python tools/test.py configs/nafnet/nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_
 ```
 
 预训练模型未来将会上传，敬请等待。
-更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Test a pre-trained model** 部分。
+更多细节可以参考 [train_test.md](../../docs/zh_cn/user_guides/train_test.md) 中的 **Test a pre-trained model** 部分。
 
 </details>

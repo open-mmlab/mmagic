@@ -25,7 +25,7 @@ The metrics are `PSNR / SSIM` .
 
 |                               Method                               | Set5 PSNR | Set14 PSNR | DIV2K PSNR | Set5 SSIM | Set14 SSIM | DIV2K SSIM | GPU Info |                               Download                               |
 | :----------------------------------------------------------------: | :-------: | :--------: | :--------: | :-------: | :--------: | :--------: | :------: | :------------------------------------------------------------------: |
-| [srcnn_x4k915_1x16_1000k_div2k](/configs/srcnn/srcnn_x4k915_1xb16-1000k_div2k.py) |  28.4316  |  25.6486   |  27.7460   |  0.8099   |   0.7014   |   0.7854   |    1     | [model](https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608_120159.log.json) |
+| [srcnn_x4k915_1x16_1000k_div2k](./srcnn_x4k915_1xb16-1000k_div2k.py) |  28.4316  |  25.6486   |  27.7460   |  0.8099   |   0.7014   |   0.7854   |    1     | [model](https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608-4186f232.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/srcnn/srcnn_x4k915_1x16_1000k_div2k_20200608_120159.log.json) |
 
 ## Quick Start
 

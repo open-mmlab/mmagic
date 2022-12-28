@@ -26,8 +26,8 @@
 
 |                                  算法                                   |       Set5        |      Set14       |      DIV2K       | GPU 信息 |                                   下载                                   |
 | :---------------------------------------------------------------------: | :---------------: | :--------------: | :--------------: | :------: | :----------------------------------------------------------------------: |
-| [esrgan_psnr_x4c64b23g32_1x16_1000k_div2k](/configs/esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) | 30.6428 / 0.8559  | 27.0543 / 0.7447 | 29.3354 / 0.8263 |    1     | [模型](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420_112550.log.json) |
-| [esrgan_x4c64b23g32_1x16_400k_div2k](/configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py) | 28.2700 /  0.7778 | 24.6328 / 0.6491 | 26.6531 / 0.7340 |    1     | [模型](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508_191042.log.json) |
+| [esrgan_psnr_x4c64b23g32_1x16_1000k_div2k](./esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) | 30.6428 / 0.8559  | 27.0543 / 0.7447 | 29.3354 / 0.8263 |    1     | [模型](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420_112550.log.json) |
+| [esrgan_x4c64b23g32_1x16_400k_div2k](./esrgan_x4c64b23g32_1xb16-400k_div2k.py) | 28.2700 /  0.7778 | 24.6328 / 0.6491 | 26.6531 / 0.7340 |    1     | [模型](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508_191042.log.json) |
 
 ## 快速开始
 
