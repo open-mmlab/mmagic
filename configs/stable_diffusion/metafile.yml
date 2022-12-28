@@ -16,4 +16,4 @@ Models:
   - Dataset: Others
     Metrics: {}
     Task: Text2Image
-  Weights: ''
+  Weights: https://huggingface.co/runwayml/stable-diffusion-v1-5
