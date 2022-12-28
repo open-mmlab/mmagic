@@ -228,14 +228,14 @@ make html
 - [mdformat](https://github.com/executablebooks/mdformat): 检查 markdown 文件的工具
 - [docformatter](https://github.com/myint/docformatter): 格式化 docstring 的工具
 
-yapf 和 isort 的配置可以在 [setup.cfg](../../setup.cfg) 找到
+yapf 和 isort 的配置可以在 [setup.cfg](../../../setup.cfg) 找到
 
 通过配置 [pre-commit hook](https://pre-commit.com/) ，我们可以在提交代码时自动检查和格式化 `flake8`、`yapf`、`isort`、`trailing whitespaces`、`markdown files`，修复 `end-of-files`、`double-quoted-strings`、`python-encoding-pragma`、`mixed-line-ending`，调整 `requirments.txt` 的包顺序。
-pre-commit 钩子的配置可以在 [.pre-commit-config](../../.pre-commit-config.yaml) 找到。
+pre-commit 钩子的配置可以在 [.pre-commit-config](../../../.pre-commit-config.yaml) 找到。
 
 pre-commit 具体的安装使用方式见[拉取请求](#2-配置-pre-commit)。
 
-更具体的规范请参考 [OpenMMLab 代码规范](#代码风格)。
+更具体的规范请参考 [OpenMMLab 代码规范](contributing.md#代码风格)。
 
 #### C++ and CUDA
 
@@ -336,7 +336,7 @@ from mmedit.cnn.bricks import Conv2d, build_norm_layer, DropPath, MaxPool2d, \
 from ...utils import is_str  # 最多向上回溯一层，过多的回溯容易导致结构混乱
 ```
 
-OpenMMLab 项目使用 pre-commit 工具自动格式化代码，详情见[贡献代码](./contributing.md#代码风格)。
+OpenMMLab 项目使用 pre-commit 工具自动格式化代码，详情见[贡献代码](contributing.md#代码风格)。
 
 ### 命名规范
 
