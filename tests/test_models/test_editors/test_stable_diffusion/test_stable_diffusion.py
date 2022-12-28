@@ -59,12 +59,7 @@ diffusion_scheduler = dict(
     set_alpha_to_one=False,
     clip_sample=False)
 
-init_cfg = dict(
-    type='Pretrained',
-    tokenizer=None,
-    text_encoder=None,
-    feature_extractor=None,
-    safety_checker=None)
+init_cfg = dict(type='Pretrained', pretrained_model_path=None)
 
 model = dict(
     type='StableDiffusion',

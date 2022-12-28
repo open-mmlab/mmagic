@@ -47,36 +47,11 @@ diffusion_scheduler = dict(
     set_alpha_to_one=False,
     clip_sample=False)
 
-tokenizer_path = dict(
-    subdir_name='tokenizer',
-    merges='merges.txt',
-    special_tokens_map='special_tokens_map.json',
-    tokenizer_config='tokenizer_config.json',
-    vocab='vocab.json')
-
-text_encoder_path = dict(
-    subdir_name='text_encoder',
-    config='config.json',
-    pytorch_model='pytorch_model.bin')
-
-feature_extractor_path = dict(
-    subdir_name='feature_extractor', config='preprocessor_config.json')
-
-safety_checker_path = dict(
-    subdir_name='safety_checker',
-    config='config.json',
-    pytorch_model='pytorch_model.bin')
-
 # yapf: disable
 init_cfg = dict(
     type='Pretrained',
-    unet='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin',  # noqa
-    vae='/nvme/liuwenran/repos/diffusers/resources/stable-diffusion-v1-5/vae/diffusion_pytorch_model.bin',  # noqa
-    tokenizer=tokenizer_path,
-    text_encoder=text_encoder_path,
-    feature_extractor=feature_extractor_path,
-    safety_checker=safety_checker_path
-    )
+    pretrained_model_path='',      # noqa
+)
 # yapf: enable
 
 model = dict(

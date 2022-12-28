@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import inspect
+import os.path as osp
 from typing import Dict, List, Optional, Union
 
 import torch
@@ -67,16 +68,20 @@ class StableDiffusion(BaseModel):
         """load pretrained ckpt for each submodel."""
         if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
             map_location = self.init_cfg.get('map_location', 'cpu')
-            ckpt_path = self.init_cfg.get('unet', None)
-            if ckpt_path:
-                state_dict = _load_checkpoint(ckpt_path, map_location)
-                self.unet.load_state_dict(state_dict, strict=True)
+            pretrained_model_path = self.init_cfg.get('pretrained_model_path',
+                                                      None)
+            if pretrained_model_path:
+                unet_ckpt_path = osp.join(pretrained_model_path, 'unet',
+                                          'diffusion_pytorch_model.bin')
+                if unet_ckpt_path:
+                    state_dict = _load_checkpoint(unet_ckpt_path, map_location)
+                    self.unet.load_state_dict(state_dict, strict=True)
 
-            ckpt_path = self.init_cfg.get('vae', None)
-            if ckpt_path:
-                state_dict = _load_checkpoint(
-                    self.init_cfg.get('vae', ), map_location)
-                self.vae.load_state_dict(state_dict, strict=True)
+                vae_ckpt_path = osp.join(pretrained_model_path, 'vae',
+                                         'diffusion_pytorch_model.bin')
+                if vae_ckpt_path:
+                    state_dict = _load_checkpoint(vae_ckpt_path, map_location)
+                    self.vae.load_state_dict(state_dict, strict=True)
 
         self.tokenizer, self.feature_extractor, self.text_encoder, self.safety_checker = load_clip_submodels(  # noqa
             self.init_cfg, self.submodels, self.requires_safety_checker)

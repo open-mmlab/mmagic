@@ -1,13 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
-import sys
-from urllib.parse import urlparse
 
 import torch
 import torch.nn as nn
 from mmengine.logging import MMLogger
-from mmengine.utils.path import mkdir_or_exist
-from torch.hub import download_url_to_file, get_dir
 from transformers import CLIPConfig, CLIPVisionModel, PreTrainedModel
 from transformers.models.clip.feature_extraction_clip import \
     CLIPFeatureExtractor  # noqa
@@ -134,58 +130,10 @@ class StableDiffusionSafetyChecker(PreTrainedModel):
         return images, has_nsfw_concepts
 
 
-class ClipCheckpointLoader(object):
-    """helper class to load clip models by directory."""
-
-    @classmethod
-    def load_from_cache_subdir(cls, model_dir_dict, loading_kwargs={}):
-        subdir_path = model_dir_dict['subdir_name']
-        resource_files = list(model_dir_dict.values())[1:]
-
-        hub_dir = get_dir()
-        model_dir = os.path.join(hub_dir, 'checkpoints', subdir_path)
-        mkdir_or_exist(model_dir)
-
-        for url in resource_files:
-            parts = urlparse(url)
-            filename = os.path.basename(parts.path)
-            cached_file = os.path.join(model_dir, filename)
-            if not os.path.exists(cached_file):
-                sys.stderr.write('Downloading: "{}" to {}\n'.format(
-                    url, cached_file))
-                hash_prefix = None
-                download_url_to_file(url, cached_file, hash_prefix)
-
-        father = cls.__base__
-        return father.from_pretrained(model_dir, **loading_kwargs)
-
-
-class StableDiffusionSafetyCheckerLoader(StableDiffusionSafetyChecker,
-                                         ClipCheckpointLoader):
-    """helper class for StableDiffusionSafetyChecker."""
-    pass
-
-
-class CLIPTokenizerLoader(CLIPTokenizer, ClipCheckpointLoader):
-    """helper class for CLIPTokenizer."""
-    pass
-
-
-class CLIPFeatureExtractorLoader(CLIPFeatureExtractor, ClipCheckpointLoader):
-    """helper class for CLIPFeatureExtractor."""
-    pass
-
-
-class CLIPTextModelLoader(CLIPTextModel, ClipCheckpointLoader):
-    """helper class for CLIPTextModel."""
-    pass
-
-
-def load_clip_submodels(pretrained_ckpt_path, submodels,
-                        requires_safety_checker):
+def load_clip_submodels(init_cfg, submodels, requires_safety_checker):
     """
     Args:
-        pretrained_ckpt_path (dict):
+        init_cfg (dict):
             ckpt path of clip models.
         submodels (List):
             list of stable diffusion submodels.
@@ -203,27 +151,23 @@ def load_clip_submodels(pretrained_ckpt_path, submodels,
             safety_checker with ckpt loaded.
 
     """
-    tokenizer = None
-    if pretrained_ckpt_path['tokenizer'] is not None:
-        tokenizer = CLIPTokenizerLoader.load_from_cache_subdir(
-            pretrained_ckpt_path['tokenizer'])
+    pretrained_model_path = init_cfg.get('pretrained_model_path', None)
 
-    feature_extractor = None
-    if pretrained_ckpt_path['feature_extractor'] is not None:
-        feature_extractor = CLIPFeatureExtractorLoader.load_from_cache_subdir(
-            pretrained_ckpt_path['feature_extractor'])
+    tokenizer, feature_extractor, text_encoder, safety_checker = \
+        None, None, None, None
+    if pretrained_model_path:
+        tokenizer = CLIPTokenizer.from_pretrained(
+            os.path.join(pretrained_model_path, 'tokenizer'))
 
-    text_encoder = None
-    if pretrained_ckpt_path['text_encoder'] is not None:
-        text_encoder = CLIPTextModelLoader.load_from_cache_subdir(
-            pretrained_ckpt_path['text_encoder'])
+        feature_extractor = CLIPFeatureExtractor.from_pretrained(
+            os.path.join(pretrained_model_path, 'feature_extractor'))
 
-    safety_checker = None
-    if requires_safety_checker and \
-            pretrained_ckpt_path['safety_checker'] is not None:
-        submodels.append('safety_checker')
-        safety_checker = \
-            StableDiffusionSafetyCheckerLoader.load_from_cache_subdir(
-                pretrained_ckpt_path['safety_checker'])
+        text_encoder = CLIPTextModel.from_pretrained(
+            os.path.join(pretrained_model_path, 'text_encoder'))
+
+        if requires_safety_checker:
+            submodels.append('safety_checker')
+            safety_checker = StableDiffusionSafetyChecker.from_pretrained(
+                os.path.join(pretrained_model_path, 'safety_checker'))
 
     return tokenizer, feature_extractor, text_encoder, safety_checker
