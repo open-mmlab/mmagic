@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1804.07723
   README: configs/partial_conv/README.md
+  Task:
+  - inpainting
+  Year: 2018
 Models:
 - Config: configs/partial_conv/pconv_stage1_8xb12_places-256x256.py
   In Collection: PConv

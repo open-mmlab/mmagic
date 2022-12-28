@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1703.03872
   README: configs/dim/README.md
+  Task:
+  - matting
+  Year: 2017
 Models:
 - Config: configs/dim/dim_stage1-v16_1xb1-1000k_comp1k.py
   In Collection: DIM
