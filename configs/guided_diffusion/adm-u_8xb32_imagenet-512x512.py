@@ -6,7 +6,7 @@ _base_ = [
 model = dict(
     type='AblatedDiffusionModel',
     data_preprocessor=dict(
-        type='EditDataPreprocessor', mean=[127.5], std=[127.5]),
+        type='GenDataPreprocessor', mean=[127.5], std=[127.5]),
     unet=dict(
         type='DenoisingUnet',
         image_size=512,
@@ -29,6 +29,7 @@ model = dict(
         type='DDPMScheduler',
         variance_type='learned_range',
         beta_schedule='linear'),
+    rgb2bgr=True,
     use_fp16=False)
 
 test_dataloader = dict(batch_size=32, num_workers=8)
