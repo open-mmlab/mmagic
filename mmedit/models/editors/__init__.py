@@ -30,6 +30,7 @@ from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
                            GLEncoderDecoder)
 from .guided_diffusion import AblatedDiffusionModel
 from .iconvsr import IconVSRNet
+from .ifrnet import IFRNet, IFRNetInterpolator
 from .indexnet import (DepthwiseIndexBlock, HolisticIndexBlock,
                        IndexedUpsample, IndexNet, IndexNetDecoder,
                        IndexNetEncoder)
@@ -84,5 +85,6 @@ __all__ = [
     'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
-    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D', 'Restormer'
+    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D', 'Restormer',
+    'IFRNetInterpolator', 'IFRNet'
 ]
