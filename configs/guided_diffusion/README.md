@@ -22,16 +22,37 @@ We show that diffusion models can achieve image sample quality superior to the c
 
 **ImageNet**
 
-| Method | Resolution | Config                                                             | Weights                                                                                                                |
-| ------ | ---------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| adm-u  | 64x64      | [config](configs/guided_diffusion/adm-u_8xb32_imagenet-64x64.py)   | [model](https://download.openmmlab.com/mmgen/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth)         |
-| adm-u  | 512x512    | [config](configs/guided_diffusion/adm-u_8xb32_imagenet-512x512.py) | [model](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmgen/guided_diffusion/adm-u_8xb32_imagenet-512x512-60b381cb.pth) |
-
-**Note** To support disco diffusion, we support guided diffusion briefly. Complete support of guided diffusion with metrics and test/train logs will come soom!
+| Model | Dataset          | Sampling Scheduler | Steps     | Guidance Scale | FID  | Config | Ckpt |
+| ----- | ---------------- | ------------------ | --------- | -------------- | ---- | ------ | ---- |
+| ADM   | ImageNet 64x64   | DDPM               | 250 steps | -              | 2.61 |        |      |
+| ADM-G | ImageNet 128x128 |                    |           |                | 2.97 |        |      |
+| ADM-G | ImageNet 256x256 | DDPM               | 250 steps | 1.0            | 4.59 |        |      |
+| ADM-G | ImageNet 256x256 | DDIM               | 25 steps  | 1.0            | 5.44 |        |      |
+| ADM-G | ImageNet 512x512 |                    |           |                | 7.72 |        |      |
 
 ## Quick Start
 
-Coming soon!
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/guided_diffusion/adm-u_ddim250_8xb32_imagenet-64x64.py https://download.openmmlab.com/mmgen/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth
+
+# single-gpu test
+python tools/test.py configs/guided_diffusion/adm-u_ddim250_8xb32_imagenet-64x64.py https://download.openmmlab.com/mmgen/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth
+
+# multi-gpu test
+./tools/dist_test.sh configs/guided_diffusion/adm-u_ddim250_8xb32_imagenet-64x64.py https://download.openmmlab.com/mmgen/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+
+</details>
 
 ## Citation
 
