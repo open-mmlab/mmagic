@@ -176,8 +176,6 @@ class IFRNetInterpolator(BaseModule):
         self.decoder1 = Decoder1()
 
     def forward(self, img0, img1, embt):
-        # TODO: check this
-        # mean_ = torch.cat([img0, img1], 2).mean([1,2,3], keepdim=True)
         mean_ = torch.cat([img0, img1], 2).mean(
             1, keepdim=True).mean(
                 2, keepdim=True).mean(

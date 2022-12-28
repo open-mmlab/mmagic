@@ -132,8 +132,6 @@ class MultipleFramesDataset(BasicFramesDataset):
                 whole_list.extend(self.load_frames_list[img_list])
             whole_list = list(set(whole_list))
         else:
-            import ipdb
-            ipdb.set_trace()
             raise AttributeError(
                 'num_input_frames and load_frames_list should not be Empty'
                 'at the same time')
