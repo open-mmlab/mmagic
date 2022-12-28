@@ -60,16 +60,6 @@ As shown in the figure, we provide **3** ways to do mixed-precision training for
 | stylegan2_c2_fp16-globalG-partialD_PL-R1-no-scaler_ffhq_256_b4x8_800k |           the whole G in fp16           | FFHQ256 | 4.362  | [stylegan2_c2-PL-R1_8xb4-fp16-globalG-partialD-no-scaler-800kiters_ffhq-256x256](./stylegan2_c2-PL-R1_8xb4-fp16-globalG-partialD-no-scaler-800kiters_ffhq-256x256.py) | [ckpt](https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_fp16-globalG-partialD_PL-R1-no-scaler_ffhq_256_b4x8_800k_20210508_114930-ef8270d4.pth) |
 | stylegan2_c2_apex_fp16_PL-R1-no-scaler_ffhq_256_b4x8_800k | the whole G&D in fp16 + two loss scaler | FFHQ256 | 4.614  | [stylegan2_c2-PL-R1_8xb4-apex-fp16-no-scaler-800kiters_ffhq-256x256](./stylegan2_c2-PL-R1_8xb4-apex-fp16-no-scaler-800kiters_ffhq-256x256.py) | [ckpt](https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_apex_fp16_PL-R1-no-scaler_ffhq_256_b4x8_800k_20210508_114701-c2bb8afd.pth) |
 
-In addition, we also provide `QuickTestImageDataset` to users for quickly checking whether the code can be run correctly. It's more important for FP16 experiments, because some cuda operations may no support mixed precision training. Esepcially for `APEX`, you can use [this config](./stylegan2_c2_8xb4-apex-fp16-800kiters_quicktest-ffhq-256x256.py) in your local machine by running:
-
-```bash
-bash tools/dist_train.sh \
-  configs/styleganv2/stylegan2_c2_8xb4-apex-fp16-800kiters_quicktest-ffhq-256x256.py 1 \
-  --work-dir ./work_dirs/quick-test
-```
-
-With a similar way, users can switch to [config for partial-GD](./stylegan2_c2_8xb4-fp16-800kiters_quicktest-ffhq-256x256.py) and [config for globalG-partialD](./stylegan2_c2_8xb4-fp16-global-800kiters_quicktest-ffhq-256x256.py) to test the other two mixed precision training configuration.
-
 *Note that to use the [APEX](https://github.com/NVIDIA/apex) toolkit, you have to installed it following the official guidance. (APEX is not included in our requirements.) If you are using GPUs without tensor core, you would better to switch to the newer PyTorch version (>= 1.7,0). Otherwise, the APEX installation or running may meet several bugs.*
 
 ## About Different Implementations of FID Metric
@@ -90,11 +80,11 @@ More precalculated inception pickle files are listed here:
 
 ## About Different Implementation and Setting of PR Metric
 
-|                     Model                      |           P&R Details            | Precision | Recall |
-| :--------------------------------------------: | :------------------------------: | :-------: | :----: |
-| stylegan2_config-f_ffhq_1024 (official weight) |  use Tero's VGG16, P&R50k_full   |  67.876   | 49.299 |
-| stylegan2_config-f_ffhq_1024 (official weight) |     use Tero's VGG16, P&R50k     |  62.856   | 49.400 |
-| stylegan2_config-f_ffhq_1024 (official weight) | use PyTorch's VGG16, P&R50k_full |  67.662   | 55.460 |
+|                     Model                      |                        Config                        |                        Download                         |           P&R Details            | Precision | Recall |
+| :--------------------------------------------: | :--------------------------------------------------: | :-----------------------------------------------------: | :------------------------------: | :-------: | :----: |
+| stylegan2_config-f_ffhq_1024 (official weight) | [stylegan2_c2_8xb4_ffhq-1024x1024](./stylegan2_c2_8xb4_ffhq-1024x1024.py) | [model](https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth) |  use Tero's VGG16, P&R50k_full   |  67.876   | 49.299 |
+| stylegan2_config-f_ffhq_1024 (official weight) | [stylegan2_c2_8xb4_ffhq-1024x1024](./stylegan2_c2_8xb4_ffhq-1024x1024.py) | [model](https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth) |     use Tero's VGG16, P&R50k     |  62.856   | 49.400 |
+| stylegan2_config-f_ffhq_1024 (official weight) | [stylegan2_c2_8xb4_ffhq-1024x1024](./stylegan2_c2_8xb4_ffhq-1024x1024.py) | [model](https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth) | use PyTorch's VGG16, P&R50k_full |  67.662   | 55.460 |
 
 As shown in this table, `P&R50k_full` is the metric used in StyleGANv1 and StyleGANv2. `full` indicates that we use the whole dataset for extracting the real distribution, e.g., 70000 images in FFHQ dataset. However, adopting the VGG16 provided from [Tero](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/vgg16.pt) requires that your PyTorch version must fulfill `>=1.6.0`. Be careful about using the PyTorch's VGG16 to extract features, which will cause higher precision and recall.
 

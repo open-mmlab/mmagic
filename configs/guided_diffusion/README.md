@@ -22,10 +22,11 @@ We show that diffusion models can achieve image sample quality superior to the c
 
 **ImageNet**
 
-| Method | Resolution | Config                                      | Weights                                                                                                            |
-| ------ | ---------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| adm-u  | 64x64      | [config](./adm-u_8xb32_imagenet-64x64.py)   | [model](https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth) |
-| adm-u  | 512x512    | [config](./adm-u_8xb32_imagenet-512x512.py) | [model](https://download.openmmlab.com/mmediting/guided_diffusion/adm-u_8xb32_imagenet-512x512-60b381cb.pth)       |
+| Model | Resolution |                       Config                        |                                                      Download                                                      |
+| :---: | :--------: | :-------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: |
+| adm-u |   64x64    |      [config](./adm-u_8xb32_imagenet-64x64.py)      | [model](https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth) |
+| adm-u |  512x512   |     [config](./adm-u_8xb32_imagenet-512x512.py)     |    [model](https://download.openmmlab.com/mmediting/guided_diffusion/adm-u_8xb32_imagenet-512x512-60b381cb.pth)    |
+| adm-u |  512x512   | [config](./adm-u_ddim250_8xb32_imagenet-512x512.py) |                                                    [model](<>)                                                     |
 
 **Note** To support disco diffusion, we support guided diffusion briefly. Complete support of guided diffusion with metrics and test/train logs will come soom!
 

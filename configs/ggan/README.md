@@ -35,6 +35,8 @@ Generative Adversarial Nets (GANs) represent an important milestone for effectiv
 Note: In the original implementation of [GGAN](https://github.com/lim0606/pytorch-geometric-gan), they set `G_iters` to 10. However our framework does not support `G_iters` currently, so we dropped the settings in the original implementation and conducted several experiments with our own settings. We have shown above the experiment results with the lowest `fid` score. \
 Original settings and our settings:
 
+<!-- SKIP THIS TABLE -->
+
 |       Models       |    Dataset     | Architecture | optimizer |  lr_G  |  lr_D  | G_iters | D_iters |
 | :----------------: | :------------: | :----------: | :-------: | :----: | :----: | :-----: | :-----: |
 | GGAN(origin) 64x64 | CelebA-Cropped | dcgan-archi  |  RMSprop  | 0.0002 | 0.0002 |   10    |    1    |
