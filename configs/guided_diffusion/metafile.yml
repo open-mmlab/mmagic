@@ -27,3 +27,13 @@ Models:
     Metrics: {}
     Task: Image Generation
   Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-u_8xb32_imagenet-512x512-60b381cb.pth
+- Config: configs/guided_diffusion/adm-u_ddim250_8xb32_imagenet-512x512.py
+  In Collection: Guided Diffusion
+  Metadata:
+    Training Data: Others
+  Name: adm-u_ddim250_8xb32_imagenet-512x512
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Image Generation
+  Weights: <>
