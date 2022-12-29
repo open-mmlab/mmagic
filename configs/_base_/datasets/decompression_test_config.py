@@ -15,6 +15,7 @@ test_pipeline = [
     dict(
         type='RandomJPEGCompression',
         params=dict(quality=[quality, quality], color_type='color'),
+        bgr2rgb=True,
         keys=['img']),
     dict(type='PackEditInputs')
 ]

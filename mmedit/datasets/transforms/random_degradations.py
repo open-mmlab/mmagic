@@ -162,11 +162,13 @@ class RandomJPEGCompression:
         params (dict): A dictionary specifying the degradation settings.
         keys (list[str]): A list specifying the keys whose values are
             modified.
+        bgr2rgb (str): Whether change channel order. Default: False.
     """
 
-    def __init__(self, params, keys):
+    def __init__(self, params, keys, bgr2rgb=False):
         self.keys = keys
         self.params = params
+        self.bgr2rgb = bgr2rgb
 
     def _apply_random_compression(self, imgs):
         is_single_image = False
@@ -184,9 +186,15 @@ class RandomJPEGCompression:
         outputs = []
         for img in imgs:
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), jpeg_param]
+            if self.bgr2rgb and color_type == 'color':
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             _, img_encoded = cv2.imencode('.jpg', img, encode_param)
+
             if color_type == 'color':
-                outputs.append(cv2.imdecode(img_encoded, 1))
+                img_encoded = cv2.imdecode(img_encoded, 1)
+                if self.bgr2rgb:
+                    img_encoded = cv2.cvtColor(img_encoded, cv2.COLOR_BGR2RGB)
+                outputs.append(img_encoded)
             else:
                 outputs.append(cv2.imdecode(img_encoded, 0))
 
