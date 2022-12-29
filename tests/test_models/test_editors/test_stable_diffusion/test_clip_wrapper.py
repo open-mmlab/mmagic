@@ -1,13 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import importlib
+import sys
+
 import pytest
 import torch
-from transformers import CLIPConfig
-
-from mmedit.models.editors.stable_diffusion.clip_wrapper import (
-    StableDiffusionSafetyChecker, load_clip_submodels)
 
 
 def test_clip_wrapper():
+    from transformers import CLIPConfig
+
+    from mmedit.models.editors.stable_diffusion.clip_wrapper import \
+        StableDiffusionSafetyChecker
     clipconfig = CLIPConfig()
     safety_checker = StableDiffusionSafetyChecker(clipconfig)
 
@@ -19,6 +22,8 @@ def test_clip_wrapper():
 
 
 def test_load_clip_submodels():
+    from mmedit.models.editors.stable_diffusion.clip_wrapper import \
+        load_clip_submodels
     init_cfg = dict(
         type='Pretrained',
         pretrained_model_path='tem',
@@ -27,3 +32,23 @@ def test_load_clip_submodels():
     submodels = []
     with pytest.raises(Exception):
         load_clip_submodels(init_cfg, submodels, True)
+
+
+def test_load_clip_submodels_transformers_none():
+    transformer_location = sys.modules['transformers']
+    sys.modules['transformers'] = None
+    importlib.reload(
+        sys.modules['mmedit.models.editors.stable_diffusion.clip_wrapper'])
+    from mmedit.models.editors.stable_diffusion.clip_wrapper import \
+        load_clip_submodels
+
+    init_cfg = dict(
+        type='Pretrained',
+        pretrained_model_path='tem',
+    )
+    submodels = []
+    with pytest.raises(ImportError):
+        # import pdb;pdb.set_trace();
+        load_clip_submodels(init_cfg, submodels, True)
+
+    sys.modules['transformers'] = transformer_location
