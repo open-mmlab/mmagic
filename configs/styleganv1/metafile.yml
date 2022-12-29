@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://openaccess.thecvf.com/content_CVPR_2019/html/Karras_A_Style-Based_Generator_Architecture_for_Generative_Adversarial_Networks_CVPR_2019_paper.html
   README: configs/styleganv1/README.md
+  Task:
+  - unconditional gans
+  Year: 2019
 Models:
 - Config: configs/styleganv1/styleganv1_ffhq-256x256_8xb4-25Mimgs.py
   In Collection: StyleGANv1

@@ -41,7 +41,7 @@ def dump_yaml_and_check_difference(obj, file):
 
     if osp.isfile(file):
         file_exists = True
-        print(f'    exist {file}')
+        # print(f'    exist {file}')
         with open(file, 'r', encoding='utf-8') as f:
             str_orig = f.read()
     else:
@@ -144,13 +144,17 @@ def parse_md(md_file):
         Name=collection_name,
         Metadata={'Architecture': []},
         README=readme,
-        Paper=[])
+        Paper=[],
+        Task=[],
+        Year=0,
+    )
     models = []
     # force utf-8 instead of system defined
     with open(md_file, 'r', encoding='utf-8') as md:
         lines = md.readlines()
         i = 0
         name = lines[0][2:]
+        year = re.sub('[^0-9]', '', name.split('(', 1)[-1])
         name = name.split('(', 1)[0].strip()
         collection['Metadata']['Architecture'].append(name)
         collection['Name'] = name
@@ -158,6 +162,8 @@ def parse_md(md_file):
         is_liif = collection_name.upper() == 'LIIF'
         task_line = lines[4]
         task = task_line.strip().split(':')[-1].strip()
+        collection['Task'] = task.lower().split(', ')
+        collection['Year'] = int(year)
         while i < len(lines):
             # parse reference
             if lines[i].startswith('> ['):
@@ -181,6 +187,7 @@ def parse_md(md_file):
                                   f'line {i+1} in {md_file}')
                     i += 1
                     continue
+
                 if 'Method' in cols:
                     config_idx = cols.index('Method')
                 elif 'Config' in cols:
@@ -188,6 +195,7 @@ def parse_md(md_file):
                 else:
                     print(cols)
                     raise ValueError('Cannot find config Table.')
+
                 checkpoint_idx = cols.index('Download')
                 try:
                     flops_idx = cols.index('FLOPs')
@@ -318,7 +326,7 @@ def parse_md(md_file):
                 i += 1
 
     if len(models) == 0:
-        warnings.warn('no model is found in this md file')
+        warnings.warn(f'no model is found in {md_file}')
 
     result = {'Collections': [collection], 'Models': models}
     yml_file = md_file.replace('README.md', 'metafile.yml')
@@ -366,9 +374,11 @@ if __name__ == '__main__':
         sys.exit(0)
 
     file_modified = False
+    # pbar = tqdm.tqdm(range(len(file_list)), initial=0, dynamic_ncols=True)
     for fn in file_list:
-        print(f'process {fn}')
         file_modified |= parse_md(fn)
+        # pbar.update(1)
+        # pbar.set_description(f'processing {fn}')
 
     file_modified |= update_model_index()
 

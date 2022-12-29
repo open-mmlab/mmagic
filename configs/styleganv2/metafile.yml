@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://openaccess.thecvf.com/content_CVPR_2020/html/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.html
   README: configs/styleganv2/README.md
+  Task:
+  - unconditional gans
+  Year: 2020
 Models:
 - Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv2
@@ -190,3 +193,39 @@ Models:
       FID50k: 2.8185
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
+- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
+  In Collection: StyleGANv2
+  Metadata:
+    Training Data: FFHQ
+  Name: stylegan2_c2_8xb4_ffhq-1024x1024
+  Results:
+  - Dataset: FFHQ
+    Metrics:
+      Precision: 67.876
+      Recall: 49.299
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
+- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
+  In Collection: StyleGANv2
+  Metadata:
+    Training Data: FFHQ
+  Name: stylegan2_c2_8xb4_ffhq-1024x1024
+  Results:
+  - Dataset: FFHQ
+    Metrics:
+      Precision: 62.856
+      Recall: 49.4
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
+- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
+  In Collection: StyleGANv2
+  Metadata:
+    Training Data: FFHQ
+  Name: stylegan2_c2_8xb4_ffhq-1024x1024
+  Results:
+  - Dataset: FFHQ
+    Metrics:
+      Precision: 67.662
+      Recall: 55.46
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth

@@ -36,12 +36,16 @@ We use `FID` and `IS` metrics to evaluate the generation performance of pix2pix.
 
 `FID` comparison with official:
 
+<!-- SKIP THIS TABLE -->
+
 | Dataset  |   facades   | aerial2maps  | maps2aerial | edges2shoes |   average    |
 | :------: | :---------: | :----------: | :---------: | :---------: | :----------: |
 | official | **119.135** |   149.731    |   102.072   | **75.774**  |   111.678    |
 |   ours   |  124.9773   | **122.5856** | **88.4635** |   84.3750   | **105.1003** |
 
 `IS` comparison with official:
+
+<!-- SKIP THIS TABLE -->
 
 | Dataset  |  facades  | aerial2maps | maps2aerial | edges2shoes |  average   |
 | :------: | :-------: | :---------: | :---------: | :---------: | :--------: |

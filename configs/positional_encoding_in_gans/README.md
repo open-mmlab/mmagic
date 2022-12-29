@@ -1,4 +1,4 @@
-# Positional Encoding in GANs
+# Positional Encoding in GANs (CVPR'2021)
 
 > [Positional Encoding as Spatial Inductive Bias in GANs](https://openaccess.thecvf.com/content/CVPR2021/html/Xu_Positional_Encoding_As_Spatial_Inductive_Bias_in_GANs_CVPR_2021_paper.html)
 

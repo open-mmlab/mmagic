@@ -13,6 +13,7 @@
 - [8. Deterministic training](#8-deterministic-training)
 - [9. Automatically check links](#9-automatically-check-links)
 - [10. Calculate flops](#10-calculate-flops)
+- [11. Update model idnex](#11-update-model-index)
 
 ## 1. Check UT
 
@@ -237,10 +238,18 @@ You can specify the `--target` by a file or a directory.
 
 **Notes:** DO NOT use it in CI, because requiring too many http requirements by CI will cause 503 and CI will propabaly fail.
 
-10. Calculate flops
+## 10. Calculate flops
 
 To summarize the flops of different models, you can run the following commands:
 
 ```bash
 python .dev_scripts/benchmark_valid_flop.py --flops --flops-str
+```
+
+## 11. Update model index
+
+To update model-index according to `README.md`, please run the following commands,
+
+```bash
+python .dev_scripts/update_model_index.py
 ```

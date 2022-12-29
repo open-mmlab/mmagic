@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://aaai.org/ojs/index.php/AAAI/article/view/6693/6547
   README: configs/cain/README.md
+  Task:
+  - video interpolation
+  Year: 2020
 Models:
 - Config: configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py
   In Collection: CAIN
