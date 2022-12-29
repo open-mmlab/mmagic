@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://github.com/CompVis/stable-diffusion
   README: configs/stable_diffusion/README.md
+  Task:
+  - text2image
+  Year: 2022
 Models:
 - Config: configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py
   In Collection: Stable Diffusion
