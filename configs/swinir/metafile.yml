@@ -6,6 +6,11 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2108.10257
   README: configs/swinir/README.md
+  Task:
+  - image super-resolution
+  - image denoising
+  - jpeg compression artifact reduction
+  Year: 2021
 Models:
 - Config: configs/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
