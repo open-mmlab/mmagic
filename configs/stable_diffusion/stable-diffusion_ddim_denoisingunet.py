@@ -47,12 +47,7 @@ diffusion_scheduler = dict(
     set_alpha_to_one=False,
     clip_sample=False)
 
-# yapf: disable
-init_cfg = dict(
-    type='Pretrained',
-    pretrained_model_path='',      # noqa
-)
-# yapf: enable
+init_cfg = dict(type='Pretrained', pretrained_model_path='')
 
 model = dict(
     type='StableDiffusion',
