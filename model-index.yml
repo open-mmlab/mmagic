@@ -22,6 +22,7 @@ Import:
 - configs/global_local/metafile.yml
 - configs/guided_diffusion/metafile.yml
 - configs/iconvsr/metafile.yml
+- configs/ifrnet/metafile.yml
 - configs/indexnet/metafile.yml
 - configs/inst_colorization/metafile.yml
 - configs/liif/metafile.yml

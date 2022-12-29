@@ -18,10 +18,7 @@ model = dict(
     data_preprocessor=dict(
         type='EditDataPreprocessor',
         mean=[0.0, 0.0, 0.0],
-        std=[255.0, 255.0, 255.0],
-        # input_view=(1, -1, 1, 1),
-        # output_view=(-1, 1, 1),
-    ))
+        std=[255.0, 255.0, 255.0]))
 
 train_pipeline = [
     dict(

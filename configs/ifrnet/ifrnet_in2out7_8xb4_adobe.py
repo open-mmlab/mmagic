@@ -19,8 +19,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0.0, 0.0, 0.0],
         std=[255.0, 255.0, 255.0],
-        # input_view=(1, -1, 1, 1),
-        # output_view=(-1, 1, 1),
     ))
 
 train_pipeline = [
@@ -57,7 +55,7 @@ val_pipeline = [
 # dataset settings
 train_dataset_type = 'MultipleFramesDataset'
 val_dataset_type = 'MultipleFramesDataset'
-data_root = '../datasets/Adobe240fps/'
+data_root = 'data/Adobe240fps/'
 
 train_dataloader = dict(
     num_workers=8,

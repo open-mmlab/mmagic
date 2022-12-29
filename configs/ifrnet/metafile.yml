@@ -1,0 +1,42 @@
+Collections:
+- Metadata:
+    Architecture:
+    - IFRNet
+  Name: IFRNet
+  Paper:
+  - https://arxiv.org/abs/2205.14620
+  README: configs/ifrnet/README.md
+Models:
+- Config: configs/ifrnet/ifrnet_in2out1_8xb4_vimeo.py
+  In Collection: IFRNet
+  Metadata:
+    GPUs: 1 (A100)
+    Training Data: Others
+  Name: ifrnet_in2out1_8xb4_vimeo
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Video Interpolation
+  Weights: <>
+- Config: configs/ifrnet/ifrnet_in2out7_8xb4_gopro.py
+  In Collection: IFRNet
+  Metadata:
+    GPUs: 1 (A100)
+    Training Data: Others
+  Name: ifrnet_in2out7_8xb4_gopro
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Video Interpolation
+  Weights: <>
+- Config: configs/ifrnet/ifrnet_in2out7_8xb4_adobe.py
+  In Collection: IFRNet
+  Metadata:
+    GPUs: 1 (A100)
+    Training Data: Others
+  Name: ifrnet_in2out7_8xb4_adobe
+  Results:
+  - Dataset: Others
+    Metrics: {}
+    Task: Video Interpolation
+  Weights: ''
