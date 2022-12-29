@@ -48,14 +48,8 @@ train_pipeline = [
 ]
 
 val_pipeline = [
-    dict(
-        type='LoadImageFromFile',
-        key='img',
-        channel_order='rgb'),
-    dict(
-        type='LoadImageFromFile',
-        key='gt',
-        channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
+    dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='FixedCrop', keys=['img', 'gt'], crop_size=(512, 512)),
     dict(type='PackEditInputs')
 ]
