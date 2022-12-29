@@ -13,7 +13,7 @@
 
 |                                      算法                                       | scale | Vimeo90k-triplet  |      GPU 信息       |                                       下载                                       |
 | :-----------------------------------------------------------------------------: | :---: | :---------------: | :-----------------: | :------------------------------------------------------------------------------: |
-| [flavr_in4out1_g8b4_vimeo90k_septuplet](/configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py) |  x2   | 36.3340 / 0.96015 | 8 (Tesla PG503-216) | [模型](https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth) \| [日志](https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.log.json) |
+| [flavr_in4out1_g8b4_vimeo90k_septuplet](./flavr_in4out1_8xb4_vimeo90k-septuplet.py) |  x2   | 36.3340 / 0.96015 | 8 (Tesla PG503-216) | [模型](https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth) \| [日志](https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.log.json) |
 
 注：FLAVR 中的 8 倍视频插帧算法将会在未来版本中支持。
 

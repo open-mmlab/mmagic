@@ -15,7 +15,7 @@ model = dict(
         style_channels=512,
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='http://download.openmmlab.com/mmgen/stylegan2/'
+            checkpoint='http://download.openmmlab.com/mmediting/stylegan2/'
             'official_weights/stylegan2-cat-config-f-official_20210327'
             '_172444-15bc485b.pth',
             prefix='generator_ema')),
@@ -24,7 +24,7 @@ model = dict(
         in_size=256,
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='http://download.openmmlab.com/mmgen/stylegan2/'
+            checkpoint='http://download.openmmlab.com/mmediting/stylegan2/'
             'official_weights/stylegan2-cat-config-f-official_20210327'
             '_172444-15bc485b.pth',
             prefix='discriminator')),

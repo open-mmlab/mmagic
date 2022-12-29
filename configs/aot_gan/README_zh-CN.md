@@ -20,9 +20,9 @@
 
 **Places365-Challenge**
 
-|                           算法                           |      掩膜类型      | 分辨率  | 训练集容量 |    测试集     | l1 损失 | PSNR  | SSIM  |        GPU 信息         |                           下载                           |
-| :------------------------------------------------------: | :----------------: | :-----: | :--------: | :-----------: | :-----: | :---: | :---: | :---------------------: | :------------------------------------------------------: |
-| [AOT-GAN](/configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py) | free-form (50-60%) | 512x512 |    500k    | Places365-val |  7.07   | 19.01 | 0.682 | 4 (GeForce GTX 1080 Ti) | [模型](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [日志](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
+|                        算法                        |      掩膜类型      | 分辨率  | 训练集容量 |    测试集     | l1 损失 | PSNR  | SSIM  |        GPU 信息         |                              下载                              |
+| :------------------------------------------------: | :----------------: | :-----: | :--------: | :-----------: | :-----: | :---: | :---: | :---------------------: | :------------------------------------------------------------: |
+| [AOT-GAN](./aot-gan_smpgan_4xb4_places-512x512.py) | free-form (50-60%) | 512x512 |    500k    | Places365-val |  7.07   | 19.01 | 0.682 | 4 (GeForce GTX 1080 Ti) | [模型](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
 
 <!-- SKIP THIS TABLE -->
 
@@ -80,13 +80,13 @@ python tools/train.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py
 
 ```shell
 # CPU上测试
-CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
 
 # 单个GPU上测试
-python tools/test.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
+python tools/test.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
 
 # 多个GPU上测试
-./tools/dist_test.sh configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth 8
+./tools/dist_test.sh configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth 8
 ```
 
 更多细节可以参考 [train_test.md](/docs/zh_cn/user_guides/train_test.md) 中的 **Test a pre-trained model** 部分。
