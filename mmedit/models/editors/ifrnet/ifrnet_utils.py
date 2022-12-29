@@ -44,6 +44,7 @@ class Ternary(nn.Module):
         self.w = torch.tensor(self.w).float()
 
     def transform(self, tensor):
+        """Transform with conv2d."""
         tensor_ = tensor.mean(dim=1, keepdim=True)
         patches = F.conv2d(
             tensor_,
@@ -55,6 +56,7 @@ class Ternary(nn.Module):
         return loc_diff_norm
 
     def valid_mask(self, tensor):
+        """Compute valid mask."""
         padding = self.patch_size // 2
         b, c, h, w = tensor.size()
         inner = torch.ones(b, 1, h - 2 * padding,
@@ -63,6 +65,7 @@ class Ternary(nn.Module):
         return mask
 
     def forward(self, x, y):
+        """Calculate loss."""
         loc_diff_x = self.transform(x)
         loc_diff_y = self.transform(y)
         diff = loc_diff_x - loc_diff_y.detach()
@@ -85,6 +88,7 @@ class Geometry(nn.Module):
         self.w = torch.tensor(self.w).float()
 
     def transform(self, tensor):
+        """Transform with conv2d."""
         b, c, h, w = tensor.size()
         tensor_ = tensor.reshape(b * c, 1, h, w)
         patches = F.conv2d(
@@ -98,6 +102,7 @@ class Geometry(nn.Module):
         return loc_diff_norm
 
     def valid_mask(self, tensor):
+        """Compute valid mask."""
         padding = self.patch_size // 2
         b, c, h, w = tensor.size()
         inner = torch.ones(b, 1, h - 2 * padding,
@@ -106,6 +111,7 @@ class Geometry(nn.Module):
         return mask
 
     def forward(self, x, y):
+        """Calculate loss."""
         loc_diff_x = self.transform(x)
         loc_diff_y = self.transform(y)
         diff = loc_diff_x - loc_diff_y
@@ -122,6 +128,7 @@ class Charbonnier_L1(nn.Module):
         super(Charbonnier_L1, self).__init__()
 
     def forward(self, diff, mask=None):
+        """Calculate loss."""
         if mask is None:
             loss = ((diff**2 + 1e-6)**0.5).mean()
         else:
@@ -137,6 +144,7 @@ class Charbonnier_Ada(nn.Module):
         super(Charbonnier_Ada, self).__init__()
 
     def forward(self, diff, weight):
+        """Calculate loss."""
         alpha = weight / 2
         epsilon = 10**(-(10 * weight - 1) / 3)
         loss = ((diff**2 + epsilon**2)**alpha).mean()

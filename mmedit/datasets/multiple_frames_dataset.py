@@ -177,6 +177,7 @@ class MultipleFramesDataset(BasicFramesDataset):
         return data_list
 
     def _get_frames_list(self, start_idx, img_index_list, folder, folder_path):
+        """Get path list according to indices."""
         indices = [x + start_idx for x in img_index_list]
         paths = [osp.join(folder_path, folder[idx]) for idx in indices]
         return paths

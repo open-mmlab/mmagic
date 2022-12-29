@@ -48,6 +48,7 @@ class ResBlock(BaseModule):
         self.prelu = nn.PReLU(in_channels)
 
     def forward(self, x):
+        """Forward Function."""
         out = self.conv1(x)
         out_middle = out[:, :-self.side_channels, :, :]
         out_side = out[:, -self.side_channels:, :, :]
@@ -82,6 +83,7 @@ class Encoder(BaseModule):
             convrelu(72, 96, 3, 2, 1), convrelu(96, 96, 3, 1, 1))
 
     def forward(self, img):
+        """Forward Function."""
         f1 = self.pyramid1(img)
         f2 = self.pyramid2(f1)
         f3 = self.pyramid3(f2)
@@ -100,6 +102,7 @@ class Decoder4(BaseModule):
             nn.ConvTranspose2d(192, 76, 4, 2, 1, bias=True))
 
     def forward(self, f0, f1, embt):
+        """Forward Function."""
         b, c, h, w = f0.shape
         embt = embt.repeat(1, 1, h, w)
         f_in = torch.cat([f0, f1, embt], 1)
@@ -117,6 +120,7 @@ class Decoder3(BaseModule):
             nn.ConvTranspose2d(216, 52, 4, 2, 1, bias=True))
 
     def forward(self, ft_, f0, f1, up_flow0, up_flow1):
+        """Forward Function."""
         f0_warp = warp(f0, up_flow0)
         f1_warp = warp(f1, up_flow1)
         f_in = torch.cat([ft_, f0_warp, f1_warp, up_flow0, up_flow1], 1)
@@ -134,6 +138,7 @@ class Decoder2(BaseModule):
             nn.ConvTranspose2d(144, 36, 4, 2, 1, bias=True))
 
     def forward(self, ft_, f0, f1, up_flow0, up_flow1):
+        """Forward Function."""
         f0_warp = warp(f0, up_flow0)
         f1_warp = warp(f1, up_flow1)
         f_in = torch.cat([ft_, f0_warp, f1_warp, up_flow0, up_flow1], 1)
@@ -151,6 +156,7 @@ class Decoder1(BaseModule):
             nn.ConvTranspose2d(96, 8, 4, 2, 1, bias=True))
 
     def forward(self, ft_, f0, f1, up_flow0, up_flow1):
+        """Forward Function."""
         f0_warp = warp(f0, up_flow0)
         f1_warp = warp(f1, up_flow1)
         f_in = torch.cat([ft_, f0_warp, f1_warp, up_flow0, up_flow1], 1)
@@ -178,6 +184,7 @@ class IFRNetInterpolator(BaseModule):
         self.decoder1 = Decoder1()
 
     def forward(self, img0, img1, embt):
+        """Interpolate one frame according to t embedding."""
         mean_ = torch.cat([img0, img1], 2).mean(
             1, keepdim=True).mean(
                 2, keepdim=True).mean(
