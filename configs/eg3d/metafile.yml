@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://openaccess.thecvf.com/content/CVPR2022/html/Chan_Efficient_Geometry-Aware_3D_Generative_Adversarial_Networks_CVPR_2022_paper.html
   README: configs/eg3d/README.md
+  Task:
+  - 3d-aware generation
+  Year: 2022
 Models:
 - Config: configs/eg3d/eg3d_cvt-official-rgb_shapenet-128x128.py
   In Collection: EG3D

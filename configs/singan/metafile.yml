@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://openaccess.thecvf.com/content_ICCV_2019/html/Shaham_SinGAN_Learning_a_Generative_Model_From_a_Single_Natural_Image_ICCV_2019_paper.html
   README: configs/singan/README.md
+  Task:
+  - internal learning
+  Year: 2019
 Models:
 - Config: configs/singan/singan_balloons.py
   In Collection: SinGAN

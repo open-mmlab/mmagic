@@ -6,6 +6,9 @@ Collections:
   Paper:
   - http://iizuka.cs.tsukuba.ac.jp/projects/completion/data/completion_sig2017.pdf
   README: configs/global_local/README.md
+  Task:
+  - inpainting
+  Year: 2017
 Models:
 - Config: configs/global_local/gl_8xb12_places-256x256.py
   In Collection: Global&Local

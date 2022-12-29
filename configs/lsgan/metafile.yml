@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://openaccess.thecvf.com/content_iccv_2017/html/Mao_Least_Squares_Generative_ICCV_2017_paper.html
   README: configs/lsgan/README.md
+  Task:
+  - unconditional gans
+  Year: 2017
 Models:
 - Config: configs/lsgan/lsgan_dcgan-archi_lr1e-3-1xb128-12Mimgs_celeba-cropped-64x64.py
   In Collection: LSGAN
