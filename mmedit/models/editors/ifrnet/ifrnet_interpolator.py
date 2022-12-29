@@ -15,6 +15,7 @@ def convrelu(in_channels,
              dilation=1,
              groups=1,
              bias=True):
+    """Conv2d with PReLU activation function."""
     return nn.Sequential(
         nn.Conv2d(
             in_channels,
@@ -28,6 +29,7 @@ def convrelu(in_channels,
 
 
 class ResBlock(BaseModule):
+    """ResBlock with 5 convrelu."""
 
     def __init__(self, in_channels, side_channels, bias=True, init_cfg=None):
         super().__init__(init_cfg)

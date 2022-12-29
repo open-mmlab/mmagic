@@ -6,6 +6,7 @@ import torch.nn.functional as F
 
 
 def warp(img, flow):
+    """Warp inputs image with correspoind flow."""
     B, _, H, W = flow.shape
     xx = torch.linspace(-1.0, 1.0, W).view(1, 1, 1, W).expand(B, -1, H, -1)
     yy = torch.linspace(-1.0, 1.0, H).view(1, 1, H, 1).expand(B, -1, -1, W)
@@ -25,11 +26,13 @@ def warp(img, flow):
 
 
 def resize(x, scale_factor):
+    """Resize inputs by scale_factor."""
     return F.interpolate(
         x, scale_factor=scale_factor, mode='bilinear', align_corners=False)
 
 
 class Ternary(nn.Module):
+    """Task-oriented Flow Distillatoin Ternary  Loss."""
 
     def __init__(self, patch_size=7):
         super(Ternary, self).__init__()
@@ -70,6 +73,7 @@ class Ternary(nn.Module):
 
 
 class Geometry(nn.Module):
+    """Feature Space Geometry Consistency Loss."""
 
     def __init__(self, patch_size=3):
         super(Geometry, self).__init__()
@@ -112,6 +116,7 @@ class Geometry(nn.Module):
 
 
 class Charbonnier_L1(nn.Module):
+    """Charbonnier L1 loss by putting epsilon into sqrt."""
 
     def __init__(self):
         super(Charbonnier_L1, self).__init__()
@@ -126,6 +131,7 @@ class Charbonnier_L1(nn.Module):
 
 
 class Charbonnier_Ada(nn.Module):
+    """Charbonnier Adam loss by using weights as epsilon."""
 
     def __init__(self):
         super(Charbonnier_Ada, self).__init__()

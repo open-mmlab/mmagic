@@ -13,10 +13,7 @@ class MultipleFramesDataset(BasicFramesDataset):
     This dataset is designed for low-level vision tasks with frames,
     especially for tasks containing video frame interpolation.
 
-    The annotation file is optional.
-
-    If use annotation file, the details for annotation format
-    can be found in BasicFramesDataset.
+    Note: This dataset is mainly used for Multiple Frame Interpolation.
 
     Args:
         ann_file (str): Annotation file path. Defaults to ''.
@@ -72,21 +69,7 @@ class MultipleFramesDataset(BasicFramesDataset):
         │   │   │   │   │   ├── img3.png
         │   │   ├── tri_trainlist.txt
 
-        Case 1: Loading 5 frames for inputs.
-
-        .. code-block:: python
-
-            dataset = BasicFramesDataset(
-                ann_file='meta_info_Vid4_GT.txt',
-                metainfo=dict(dataset_type='vid4', task_name='vsr'),
-                data_root='data/Vid4',
-                data_prefix=dict(img='BIx4', gt='GT'),
-                pipeline=[],
-                depth=2,
-                num_input_frames=5)
-
-
-        Case 2: Loading dataset for training a VFI model.
+        Case 1: Loading dataset for training a VFI model.
 
         .. code-block:: python
 
@@ -98,7 +81,21 @@ class MultipleFramesDataset(BasicFramesDataset):
                 pipeline=[],
                 depth=2,
                 load_frames_list=dict(
-                    img=['img1.png', 'img3.png'], gt=['img2.png']))
+                    img=[0, 2], gt=[1]))
+
+        Case 1: Loading dataset for training a MFI model.
+
+        .. code-block:: python
+
+            dataset = BasicFramesDataset(
+                ann_file='tri_trainlist.txt',
+                metainfo=dict(dataset_type='gopro', task_name='mfi'),
+                data_root='data/vimeo-triplet',
+                data_prefix=dict(img='sequences', gt='sequences'),
+                pipeline=[],
+                depth=2,
+                load_frames_list=dict(
+                    img=[0, 8], gt=[1, 2, 3, 4, 5, 6, 7]))
     """
 
     METAINFO = dict(
