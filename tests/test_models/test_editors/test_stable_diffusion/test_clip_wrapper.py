@@ -19,55 +19,11 @@ def test_clip_wrapper():
 
 
 def test_load_clip_submodels():
-    tokenizer_path = dict(
-        subdir_name='tokenizer',
-        merges='1.txt',
-        special_tokens_map='1.json',
-        tokenizer_config='1.json',
-        vocab='1.json')
-
-    text_encoder_path = dict(
-        subdir_name='text_encoder', config='1.json', pytorch_model='1.bin')
-
-    feature_extractor_path = dict(
-        subdir_name='feature_extractor', config='1.json')
-
-    safety_checker_path = dict(
-        subdir_name='safety_checker', config='1.json', pytorch_model='1.bin')
-
-    pretrained_ckpt_path = {}
-    pretrained_ckpt_path['tokenizer'] = tokenizer_path
-    pretrained_ckpt_path['feature_extractor'] = None
-    pretrained_ckpt_path['text_encoder'] = None
-    pretrained_ckpt_path['safety_checker'] = None
+    init_cfg = dict(
+        type='Pretrained',
+        pretrained_model_path='tem',
+    )
 
     submodels = []
     with pytest.raises(Exception):
-        load_clip_submodels(pretrained_ckpt_path, submodels, True)
-
-    pretrained_ckpt_path = {}
-    pretrained_ckpt_path['tokenizer'] = None
-    pretrained_ckpt_path['feature_extractor'] = feature_extractor_path
-    pretrained_ckpt_path['text_encoder'] = None
-    pretrained_ckpt_path['safety_checker'] = None
-    submodels = []
-    with pytest.raises(Exception):
-        load_clip_submodels(pretrained_ckpt_path, submodels, True)
-
-    pretrained_ckpt_path = {}
-    pretrained_ckpt_path['tokenizer'] = None
-    pretrained_ckpt_path['feature_extractor'] = None
-    pretrained_ckpt_path['text_encoder'] = text_encoder_path
-    pretrained_ckpt_path['safety_checker'] = None
-    submodels = []
-    with pytest.raises(Exception):
-        load_clip_submodels(pretrained_ckpt_path, submodels, True)
-
-    pretrained_ckpt_path = {}
-    pretrained_ckpt_path['tokenizer'] = None
-    pretrained_ckpt_path['feature_extractor'] = None
-    pretrained_ckpt_path['text_encoder'] = None
-    pretrained_ckpt_path['safety_checker'] = safety_checker_path
-    submodels = []
-    with pytest.raises(Exception):
-        load_clip_submodels(pretrained_ckpt_path, submodels, True)
+        load_clip_submodels(init_cfg, submodels, True)
