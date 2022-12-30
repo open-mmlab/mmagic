@@ -6,6 +6,11 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2111.09881
   README: configs/restormer/README.md
+  Task:
+  - denoising
+  - deblurring
+  - deraining
+  Year: 2022
 Models:
 - Config: configs/restormer/restormer_official_rain13k.py
   In Collection: Restormer

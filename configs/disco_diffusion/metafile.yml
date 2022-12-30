@@ -6,6 +6,11 @@ Collections:
   Paper:
   - https://github.com/alembics/disco-diffusion
   README: configs/disco_diffusion/README.md
+  Task:
+  - text2image
+  - image2image
+  - diffusion
+  Year: 2022
 Models:
 - Config: configs/disco_diffusion/disco-diffusion_adm-u-finetuned_imagenet-512x512.py
   In Collection: Disco Diffusion

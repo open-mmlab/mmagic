@@ -40,6 +40,7 @@ Import:
 - configs/sngan_proj/metafile.yml
 - configs/srcnn/metafile.yml
 - configs/srgan_resnet/metafile.yml
+- configs/stable_diffusion/metafile.yml
 - configs/styleganv1/metafile.yml
 - configs/styleganv2/metafile.yml
 - configs/styleganv3/metafile.yml

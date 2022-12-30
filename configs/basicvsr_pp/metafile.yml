@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2104.13371
   README: configs/basicvsr_pp/README.md
+  Task:
+  - video super-resolution
+  Year: 2022
 Models:
 - Config: configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py
   In Collection: BasicVSR++

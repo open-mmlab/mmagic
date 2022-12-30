@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2012.09161
   README: configs/liif/README.md
+  Task:
+  - image super-resolution
+  Year: 2021
 Models:
 - Config: configs/liif/liif-edsr-norm_c64b16_1xb16-1000k_div2k.py
   In Collection: LIIF
