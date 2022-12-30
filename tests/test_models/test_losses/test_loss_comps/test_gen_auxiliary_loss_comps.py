@@ -10,6 +10,9 @@ from mmedit.models.editors.stylegan2 import StyleGAN2Generator
 from mmedit.models.losses import GeneratorPathRegularizerComps
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 class TestPathRegularizer:
 
     @classmethod
@@ -17,9 +20,6 @@ class TestPathRegularizer:
         cls.data_info = dict(generator='generator', num_batches='num_batches')
         cls.gen = StyleGAN2Generator(32, 10, num_mlps=2)
 
-    @pytest.mark.skipif(
-        'win' in platform.system().lower() and 'cu' in torch.__version__,
-        reason='skip on windows-cuda due to limited RAM.')
     def test_path_regularizer_cpu(self):
         gen = self.gen
 
