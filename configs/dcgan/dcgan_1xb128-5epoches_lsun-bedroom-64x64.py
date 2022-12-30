@@ -44,6 +44,8 @@ metrics = [
         sample_model='orig',
         image_shape=(3, 64, 64))
 ]
+# save best checkpoints
+default_hooks = dict(checkpoint=dict(save_best='swd/avg', rule='less'))
 
 val_evaluator = dict(metrics=metrics)
 test_evaluator = dict(metrics=metrics)
