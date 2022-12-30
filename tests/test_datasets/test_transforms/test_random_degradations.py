@@ -61,6 +61,9 @@ def test_random_jpeg_compression():
     model = RandomJPEGCompression(params=params, keys=['lq'])
     assert model(results) == results
 
+    model = RandomJPEGCompression(params=params, keys=['lq'], bgr2rgb=True)
+    assert model(results).shape == results.shape
+
     assert repr(model) == model.__class__.__name__ + f'(params={params}, ' \
         + "keys=['lq'])"
 
