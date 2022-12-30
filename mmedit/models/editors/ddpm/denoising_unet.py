@@ -32,10 +32,14 @@ class EmbedSequential(nn.Sequential):
     https://github.com/openai/improved-diffusion/blob/main/improved_diffusion/unet.py#L35
     """
 
-    def forward(self, x, y):
+    def forward(self, x, y, encoder_out=None):
         for layer in self:
             if isinstance(layer, DenoisingResBlock):
                 x = layer(x, y)
+            elif isinstance(
+                    layer,
+                    MultiHeadAttentionBlock) and encoder_out is not None:
+                x = layer(x, encoder_out)
             else:
                 x = layer(x)
         return x
@@ -170,7 +174,8 @@ class MultiHeadAttentionBlock(BaseModule):
                  num_heads=1,
                  num_head_channels=-1,
                  use_new_attention_order=False,
-                 norm_cfg=dict(type='GN32', num_groups=32)):
+                 norm_cfg=dict(type='GN32', num_groups=32),
+                 encoder_channels=None):
         super().__init__()
         self.in_channels = in_channels
         if num_head_channels == -1:
@@ -191,12 +196,18 @@ class MultiHeadAttentionBlock(BaseModule):
             self.attention = QKVAttentionLegacy(self.num_heads)
 
         self.proj_out = nn.Conv1d(in_channels, in_channels, 1)
+        if encoder_channels is not None:
+            self.encoder_kv = nn.Conv1d(encoder_channels, in_channels * 2, 1)
 
-    def forward(self, x):
+    def forward(self, x, encoder_out):
         b, c, *spatial = x.shape
         x = x.reshape(b, c, -1)
         qkv = self.qkv(self.norm(x))
-        h = self.attention(qkv)
+        if encoder_out is not None:
+            encoder_out = self.encoder_kv(encoder_out)
+            h = self.attention(qkv, encoder_out)
+        else:
+            h = self.attention(qkv)
         h = self.proj_out(h)
         return (x + h).reshape(b, c, *spatial)
 
@@ -212,7 +223,7 @@ class QKVAttentionLegacy(BaseModule):
         super().__init__()
         self.n_heads = n_heads
 
-    def forward(self, qkv):
+    def forward(self, qkv, encoder_kv=None):
         """Apply QKV attention.
 
         :param qkv: an [N x (H * 3 * C) x T] tensor of Qs, Ks, and Vs.
@@ -223,6 +234,12 @@ class QKVAttentionLegacy(BaseModule):
         ch = width // (3 * self.n_heads)
         q, k, v = qkv.reshape(bs * self.n_heads, ch * 3, length).split(
             ch, dim=1)
+        if encoder_kv is not None:
+            assert encoder_kv.shape[1] == self.n_heads * ch * 2
+            ek, ev = encoder_kv.reshape(bs * self.n_heads, ch * 2, -1).split(
+                ch, dim=1)
+            k = torch.cat([ek, k], dim=-1)
+            v = torch.cat([ev, v], dim=-1)
         scale = 1 / math.sqrt(math.sqrt(ch))
         weight = torch.einsum(
             'bct,bcs->bts', q * scale,
@@ -819,48 +836,49 @@ class DenoisingUnet(BaseModule):
         32: [1, 2, 2, 2]
     }
 
-    def __init__(
-        self,
-        image_size,
-        in_channels=3,
-        base_channels=128,
-        resblocks_per_downsample=3,
-        num_timesteps=1000,
-        use_rescale_timesteps=False,
-        dropout=0,
-        embedding_channels=-1,
-        num_classes=0,
-        use_fp16=False,
-        channels_cfg=None,
-        output_cfg=dict(mean='eps', var='learned_range'),
-        norm_cfg=dict(type='GN', num_groups=32),
-        act_cfg=dict(type='SiLU', inplace=False),
-        shortcut_kernel_size=1,
-        use_scale_shift_norm=False,
-        resblock_updown=False,
-        num_heads=4,
-        time_embedding_mode='sin',
-        time_embedding_cfg=None,
-        resblock_cfg=dict(type='DenoisingResBlock'),
-        attention_cfg=dict(type='MultiHeadAttention'),
-        downsample_conv=True,
-        upsample_conv=True,
-        downsample_cfg=dict(type='DenoisingDownsample'),
-        upsample_cfg=dict(type='DenoisingUpsample'),
-        attention_res=[16, 8],
-        pretrained=None,
-        unet_type='',
-        down_block_types: Tuple[str] = (),
-        up_block_types: Tuple[str] = (),
-        cross_attention_dim=768,
-        layers_per_block: int = 2,
-    ):
+    def __init__(self,
+                 image_size,
+                 in_channels=3,
+                 base_channels=128,
+                 resblocks_per_downsample=3,
+                 num_timesteps=1000,
+                 use_rescale_timesteps=False,
+                 dropout=0,
+                 embedding_channels=-1,
+                 num_classes=0,
+                 use_fp16=False,
+                 channels_cfg=None,
+                 output_cfg=dict(mean='eps', var='learned_range'),
+                 norm_cfg=dict(type='GN', num_groups=32),
+                 act_cfg=dict(type='SiLU', inplace=False),
+                 shortcut_kernel_size=1,
+                 use_scale_shift_norm=False,
+                 resblock_updown=False,
+                 num_heads=4,
+                 time_embedding_mode='sin',
+                 time_embedding_cfg=None,
+                 resblock_cfg=dict(type='DenoisingResBlock'),
+                 attention_cfg=dict(type='MultiHeadAttention'),
+                 encoder_channels=None,
+                 downsample_conv=True,
+                 upsample_conv=True,
+                 downsample_cfg=dict(type='DenoisingDownsample'),
+                 upsample_cfg=dict(type='DenoisingUpsample'),
+                 attention_res=[16, 8],
+                 pretrained=None,
+                 unet_type='',
+                 down_block_types: Tuple[str] = (),
+                 up_block_types: Tuple[str] = (),
+                 cross_attention_dim=768,
+                 layers_per_block: int = 2):
 
         super().__init__()
 
         self.unet_type = unet_type
         self.num_classes = num_classes
         self.num_timesteps = num_timesteps
+        self.base_channels = base_channels
+        self.encoder_channels = encoder_channels
         self.use_rescale_timesteps = use_rescale_timesteps
         self.dtype = torch.float16 if use_fp16 else torch.float32
 
@@ -1006,6 +1024,7 @@ class DenoisingUnet(BaseModule):
         block_out_channels = [
             times * base_channels for times in self.channel_factor_list
         ]
+        in_channels_ = self.in_channels_list[-1]
         if self.unet_type == 'stable':
             self.mid_block = UNetMidBlock2DCrossAttn(
                 in_channels=block_out_channels[-1],
