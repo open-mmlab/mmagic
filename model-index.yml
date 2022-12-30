@@ -44,6 +44,7 @@ Import:
 - configs/styleganv1/metafile.yml
 - configs/styleganv2/metafile.yml
 - configs/styleganv3/metafile.yml
+- configs/swinir/metafile.yml
 - configs/tdan/metafile.yml
 - configs/tof/metafile.yml
 - configs/ttsr/metafile.yml
