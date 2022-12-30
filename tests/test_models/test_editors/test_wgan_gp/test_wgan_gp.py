@@ -1,7 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 from unittest import TestCase
 
+import pytest
 import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
@@ -54,6 +56,9 @@ class TestWGANGP(TestCase):
         gan = WGANGP(generator=gen, data_preprocessor=GenDataPreprocessor())
         self.assertEqual(gan.discriminator, None)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        reason='skip on windows-cuda due to limited RAM.')
     def test_train_step(self):
         # prepare model
         accu_iter = 1
