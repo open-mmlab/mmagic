@@ -29,7 +29,7 @@
 [📘使用文档](https://mmediting.readthedocs.io/zh_CN/1.x/) |
 [🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/1.x/2_get_started.htmll) |
 [👀模型库](https://mmediting.readthedocs.io/zh_CN/1.x/3_model_zoo.html) |
-[🆕更新记录](docs/zh_cn/community/changelog.md) |
+[🆕更新记录](docs/zh_cn/changelog.md) |
 [🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
 [🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
 
@@ -124,7 +124,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - 修复 FLAVR 的注册问题。
 - 修正 RDB 模型中的通道数。
 
-如果像了解更多版本更新细节和历史信息，请阅读[更新日志](docs/en/community/changelog.md)。
+如果像了解更多版本更新细节和历史信息，请阅读[更新日志](docs/en/changelog.md)。
 
 ## 安装
 
@@ -151,11 +151,11 @@ cd mmediting
 pip3 install -e .
 ```
 
-更详细的安装指南请参考 [get_started.md](docs/zh_cn/2_get_started.md) 。
+更详细的安装指南请参考 [installation](docs/zh_cn/get_started/install.md) 。
 
 ## 开始使用
 
-请参考[使用教程](docs/zh_cn/2_get_started.md)和[功能演示](docs/zh_cn/user_guides/3_inference.md)获取MMEditing的基本用法。
+请参考[使用教程](docs/zh_cn/get_started/install.md)和[功能演示](docs/zh_cn/get_started/quick_run.md)获取MMEditing的基本用法。
 
 ## 模型库
 
@@ -277,6 +277,14 @@ pip3 install -e .
 <summary>3D-aware Generation</summary>
 
 - ✅ [EG3D](configs/eg3d/README.md)
+
+</details>
+
+<details open>
+
+<summary>Image Restoration</summary>
+
+- ✅ [NAFNet](configs/nafnet/README.md)
 
 </details>
 

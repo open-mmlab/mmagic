@@ -2,6 +2,7 @@
 from typing import Optional
 
 from mmengine.model import BaseModule
+from torch import Tensor
 
 from mmedit.registry import MODELS
 
@@ -27,7 +28,7 @@ class SimpleEncoderDecoder(BaseModule):
             decoder['in_channels'] = self.encoder.out_channels
         self.decoder = MODELS.build(decoder)
 
-    def forward(self, *args, **kwargs):
+    def forward(self, *args, **kwargs) -> Tensor:
         """Forward function.
 
         Returns:

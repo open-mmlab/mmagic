@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://openreview.net/forum?id=B1xsqj09Fm
   README: configs/biggan/README.md
+  Task:
+  - conditional gans
+  Year: 2019
 Models:
 - Config: configs/biggan/biggan_2xb25-500kiters_cifar10-32x32.py
   In Collection: BigGAN
@@ -16,7 +19,7 @@ Models:
   - Dataset: Others
     Metrics: {}
     Task: Conditional GANs
-  Weights: https://download.openmmlab.com/mmgen/biggan/biggan_cifar10_32x32_b25x2_500k_20210728_110906-08b61a44.pth
+  Weights: https://download.openmmlab.com/mmediting/biggan/biggan_cifar10_32x32_b25x2_500k_20210728_110906-08b61a44.pth
 - Config: configs/biggan/biggan_ajbrock-sn_8xb32-1500kiters_imagenet1k-128x128.py
   In Collection: BigGAN
   Metadata:
@@ -26,7 +29,7 @@ Models:
   - Dataset: Others
     Metrics: {}
     Task: Conditional GANs
-  Weights: https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_b32x8_best_fid_iter_1232000_20211111_122548-5315b13d.pth
+  Weights: https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_b32x8_best_fid_iter_1232000_20211111_122548-5315b13d.pth
 - Config: configs/biggan/biggan_ajbrock-sn_8xb32-1500kiters_imagenet1k-128x128.py
   In Collection: BigGAN
   Metadata:
@@ -36,7 +39,7 @@ Models:
   - Dataset: Others
     Metrics: {}
     Task: Conditional GANs
-  Weights: https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_b32x8_best_is_iter_1328000_20211111_122911-28c688bc.pth
+  Weights: https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_b32x8_best_is_iter_1328000_20211111_122911-28c688bc.pth
 - Config: configs/biggan/biggan_cvt-BigGAN-PyTorch-rgb_imagenet1k-128x128.py
   In Collection: BigGAN
   Metadata:
@@ -48,7 +51,7 @@ Models:
       FID: 10.1414
       IS: 96.728
     Task: Conditional GANs
-  Weights: https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_cvt_BigGAN-PyTorch_rgb_20210730_125223-3e353fef.pth
+  Weights: https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_cvt_BigGAN-PyTorch_rgb_20210730_125223-3e353fef.pth
 - Config: configs/biggan/biggan-deep_cvt-hugging-face-rgb_imagenet1k-128x128.py
   In Collection: BigGAN
   Metadata:
@@ -60,7 +63,7 @@ Models:
       FID: 5.9471
       IS: 107.161
     Task: Conditional GANs
-  Weights: https://download.openmmlab.com/mmgen/biggan/biggan-deep_imagenet1k_128x128_cvt_hugging-face_rgb_20210728_111659-099e96f9.pth
+  Weights: https://download.openmmlab.com/mmediting/biggan/biggan-deep_imagenet1k_128x128_cvt_hugging-face_rgb_20210728_111659-099e96f9.pth
 - Config: configs/biggan/biggan-deep_cvt-hugging-face_rgb_imagenet1k-256x256.py
   In Collection: BigGAN
   Metadata:
@@ -72,7 +75,7 @@ Models:
       FID: 11.3151
       IS: 135.107
     Task: Conditional GANs
-  Weights: https://download.openmmlab.com/mmgen/biggan/biggan-deep_imagenet1k_256x256_cvt_hugging-face_rgb_20210728_111735-28651569.pth
+  Weights: https://download.openmmlab.com/mmediting/biggan/biggan-deep_imagenet1k_256x256_cvt_hugging-face_rgb_20210728_111735-28651569.pth
 - Config: configs/biggan/biggan-deep_cvt-hugging-face_rgb_imagenet1k-512x512.py
   In Collection: BigGAN
   Metadata:
@@ -84,4 +87,4 @@ Models:
       FID: 16.8728
       IS: 124.368
     Task: Conditional GANs
-  Weights: https://download.openmmlab.com/mmgen/biggan/biggan-deep_imagenet1k_512x512_cvt_hugging-face_rgb_20210728_112346-a42585f2.pth
+  Weights: https://download.openmmlab.com/mmediting/biggan/biggan-deep_imagenet1k_512x512_cvt_hugging-face_rgb_20210728_112346-a42585f2.pth
