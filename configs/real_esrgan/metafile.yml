@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2107.10833
   README: configs/real_esrgan/README.md
+  Task:
+  - image super-resolution
+  Year: 2021
 Models:
 - Config: configs/real_esrgan/realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py
   In Collection: Real-ESRGAN

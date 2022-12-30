@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://openaccess.thecvf.com/content_CVPR_2020/html/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.html
   README: configs/styleganv2/README.md
+  Task:
+  - unconditional gans
+  Year: 2020
 Models:
 - Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv2
@@ -19,7 +22,7 @@ Models:
       Precision50k: 62.856
       Recall50k: 49.4
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4_lsun-car-384x512.py
   In Collection: StyleGANv2
   Metadata:
@@ -32,7 +35,7 @@ Models:
       Precision50k: 65.986
       Recall50k: 48.19
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-car-config-f-official_20210327_172340-8cfe053c.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-car-config-f-official_20210327_172340-8cfe053c.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-horse-256x256.py
   In Collection: StyleGANv2
   Metadata:
@@ -42,7 +45,7 @@ Models:
   - Dataset: Others
     Metrics: {}
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-horse-config-f-official_20210327_173203-ef3e69ca.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-horse-config-f-official_20210327_173203-ef3e69ca.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-church-256x256.py
   In Collection: StyleGANv2
   Metadata:
@@ -52,7 +55,7 @@ Models:
   - Dataset: Others
     Metrics: {}
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-cat-256x256.py
   In Collection: StyleGANv2
   Metadata:
@@ -62,7 +65,7 @@ Models:
   - Dataset: CAT
     Metrics: {}
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-cat-config-f-official_20210327_172444-15bc485b.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-cat-config-f-official_20210327_172444-15bc485b.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
   Metadata:
@@ -75,7 +78,7 @@ Models:
       Precision50k: 69.012
       Recall50k: 40.417
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv2
   Metadata:
@@ -88,7 +91,7 @@ Models:
       Precision50k: 68.236
       Recall50k: 49.583
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4_lsun-car-384x512.py
   In Collection: StyleGANv2
   Metadata:
@@ -101,7 +104,7 @@ Models:
       Precision50k: 66.76
       Recall50k: 50.576
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_lsun-car_384x512_b4x8_1800k_20210424_160929-fc9072ca.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_lsun-car_384x512_b4x8_1800k_20210424_160929-fc9072ca.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
   Metadata:
@@ -112,7 +115,7 @@ Models:
     Metrics:
       FID50k: 3.992
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
 - Config: configs/styleganv2/stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
   Metadata:
@@ -123,7 +126,7 @@ Models:
     Metrics:
       FID50k: 4.331
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_fp16_partial-GD_PL-no-scaler_ffhq_256_b4x8_800k_20210508_114854-dacbe4c9.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_fp16_partial-GD_PL-no-scaler_ffhq_256_b4x8_800k_20210508_114854-dacbe4c9.pth
 - Config: configs/styleganv2/stylegan2_c2-PL-R1_8xb4-fp16-globalG-partialD-no-scaler-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
   Metadata:
@@ -134,7 +137,7 @@ Models:
     Metrics:
       FID50k: 4.362
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_fp16-globalG-partialD_PL-R1-no-scaler_ffhq_256_b4x8_800k_20210508_114930-ef8270d4.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_fp16-globalG-partialD_PL-R1-no-scaler_ffhq_256_b4x8_800k_20210508_114930-ef8270d4.pth
 - Config: configs/styleganv2/stylegan2_c2-PL-R1_8xb4-apex-fp16-no-scaler-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
   Metadata:
@@ -145,7 +148,7 @@ Models:
     Metrics:
       FID50k: 4.614
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_apex_fp16_PL-R1-no-scaler_ffhq_256_b4x8_800k_20210508_114701-c2bb8afd.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_apex_fp16_PL-R1-no-scaler_ffhq_256_b4x8_800k_20210508_114701-c2bb8afd.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv2
   Metadata:
@@ -156,7 +159,7 @@ Models:
     Metrics:
       FID50k: 2.8732
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv2
   Metadata:
@@ -167,7 +170,7 @@ Models:
     Metrics:
       FID50k: 2.9413
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv2
   Metadata:
@@ -178,7 +181,7 @@ Models:
     Metrics:
       FID50k: 2.8134
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv2
   Metadata:
@@ -189,4 +192,40 @@ Models:
     Metrics:
       FID50k: 2.8185
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
+- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
+  In Collection: StyleGANv2
+  Metadata:
+    Training Data: FFHQ
+  Name: stylegan2_c2_8xb4_ffhq-1024x1024
+  Results:
+  - Dataset: FFHQ
+    Metrics:
+      Precision: 67.876
+      Recall: 49.299
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
+- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
+  In Collection: StyleGANv2
+  Metadata:
+    Training Data: FFHQ
+  Name: stylegan2_c2_8xb4_ffhq-1024x1024
+  Results:
+  - Dataset: FFHQ
+    Metrics:
+      Precision: 62.856
+      Recall: 49.4
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
+- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
+  In Collection: StyleGANv2
+  Metadata:
+    Training Data: FFHQ
+  Name: stylegan2_c2_8xb4_ffhq-1024x1024
+  Results:
+  - Dataset: FFHQ
+    Metrics:
+      Precision: 67.662
+      Recall: 55.46
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth

@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/pdf/2012.08512.pdf
   README: configs/flavr/README.md
+  Task:
+  - video interpolation
+  Year: 2020
 Models:
 - Config: configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py
   In Collection: FLAVR

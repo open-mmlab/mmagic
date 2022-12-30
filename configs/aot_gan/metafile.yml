@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/pdf/2104.01431.pdf
   README: configs/aot_gan/README.md
+  Task:
+  - inpainting
+  Year: 2021
 Models:
 - Config: configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py
   In Collection: AOT-GAN
@@ -20,4 +23,4 @@ Models:
       SSIM: 0.682
       l1 error: 7.07
     Task: Inpainting
-  Weights: https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth
+  Weights: https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth

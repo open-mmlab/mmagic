@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1609.04802
   README: configs/srgan_resnet/README.md
+  Task:
+  - image super-resolution
+  Year: 2016
 Models:
 - Config: configs/srgan_resnet/msrresnet_x4c64b16_1xb16-1000k_div2k.py
   In Collection: SRGAN
