@@ -30,7 +30,7 @@ def test_swinir_cpu():
 
     net = SwinIRNet(
         upscale=1,
-        in_channels=4,
+        in_channels=3,
         img_size=48,
         window_size=8,
         img_range=1.0,
@@ -40,10 +40,10 @@ def test_swinir_cpu():
         mlp_ratio=2,
         upsampler='',
         resi_connection='1conv')
-    img = torch.rand(1, 4, 16, 16)
+    img = torch.rand(1, 3, 16, 16)
     output = net(img)
     assert isinstance(output, torch.Tensor)
-    assert output.shape == (1, 4, 16, 16)
+    assert output.shape == (1, 3, 16, 16)
 
     # x3 model classical SR, initialization and forward (cpu)
     net = SwinIRNet(
