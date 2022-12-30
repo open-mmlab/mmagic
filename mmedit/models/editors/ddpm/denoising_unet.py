@@ -1025,6 +1025,7 @@ class DenoisingUnet(BaseModule):
         block_out_channels = [
             times * base_channels for times in self.channel_factor_list
         ]
+        in_channels_ = self.in_channels_list[-1]
         if self.unet_type == 'stable':
             self.mid_block = UNetMidBlock2DCrossAttn(
                 in_channels=block_out_channels[-1],
