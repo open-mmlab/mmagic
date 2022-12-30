@@ -17,7 +17,7 @@ Models:
   - Dataset: Others
     Metrics: {}
     Task: Video Interpolation
-  Weights: <>
+  Weights: https://download.openmmlab.com/mmediting/ifrnet/IFRNet_vimeo90k-7a66b214.pth
 - Config: configs/ifrnet/ifrnet_in2out7_8xb4_gopro.py
   In Collection: IFRNet
   Metadata:
@@ -28,7 +28,7 @@ Models:
   - Dataset: Others
     Metrics: {}
     Task: Video Interpolation
-  Weights: <>
+  Weights: https://download.openmmlab.com/mmediting/ifrnet/IFRNet_gopro-5d2f805a.pth
 - Config: configs/ifrnet/ifrnet_in2out7_8xb4_adobe.py
   In Collection: IFRNet
   Metadata:

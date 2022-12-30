@@ -20,12 +20,12 @@ Existing flow-based frame interpolation methods almost all first estimate or mod
 
 ## Results and models
 
-|                           Method                            | FPS Upsampling Ratio |      PSNR      |      SSIM      | GPU Info |                 Download                  |
-| :---------------------------------------------------------: | :------------------: | :------------: | :------------: | :------: | :---------------------------------------: |
-| [ifrnet_in2out1_8xb4_vimeo](./ifrnet_in2out1_8xb4_vimeo.py) |          x2          | 35.7999(35.80) | 0.9680(0.9794) | 1 (A100) |      [model](<>) \| log(coming soon)      |
-| [ifrnet_in2out7_8xb4_gopro](./ifrnet_in2out7_8xb4_gopro.py) |          x8          | 29.9394(29.84) | 0.8922(0.920)  | 1 (A100) |      [model](<>) \| log(coming soon)      |
-| [ifrnet_in2out7_8xb4_adobe](./ifrnet_in2out7_8xb4_adobe.py) |          x8          | 30.0273(31.93) | 0.9057(0.943)  | 1 (A100) | model same with above \| log(coming soon) |
-|                            Note:                            |                      |                |                |          |                                           |
+|                           Method                            | FPS Upsampling Ratio |      PSNR      |      SSIM      | GPU Info |                                       Download                                        |
+| :---------------------------------------------------------: | :------------------: | :------------: | :------------: | :------: | :-----------------------------------------------------------------------------------: |
+| [ifrnet_in2out1_8xb4_vimeo](./ifrnet_in2out1_8xb4_vimeo.py) |          x2          | 35.7999(35.80) | 0.9680(0.9794) | 1 (A100) | [model](https://download.openmmlab.com/mmediting/ifrnet/IFRNet_vimeo90k-7a66b214.pth) \| log(coming soon) |
+| [ifrnet_in2out7_8xb4_gopro](./ifrnet_in2out7_8xb4_gopro.py) |          x8          | 29.9394(29.84) | 0.8922(0.920)  | 1 (A100) | [model](https://download.openmmlab.com/mmediting/ifrnet/IFRNet_gopro-5d2f805a.pth) \| log(coming soon) |
+| [ifrnet_in2out7_8xb4_adobe](./ifrnet_in2out7_8xb4_adobe.py) |          x8          | 30.0273(31.93) | 0.9057(0.943)  | 1 (A100) |                       model same with above \| log(coming soon)                       |
+|                            Note:                            |                      |                |                |          |                                                                                       |
 
 - a(b) where a denotes the value run by MMEditing, b denotes the value copied from the original paper.
 - PSNR is evaluated on RGB channels.
