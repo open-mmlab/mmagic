@@ -223,7 +223,7 @@ class QKVAttentionLegacy(BaseModule):
         super().__init__()
         self.n_heads = n_heads
 
-    def forward(self, qkv):
+    def forward(self, qkv, encoder_kv=None):
         """Apply QKV attention.
 
         :param qkv: an [N x (H * 3 * C) x T] tensor of Qs, Ks, and Vs.
@@ -234,6 +234,12 @@ class QKVAttentionLegacy(BaseModule):
         ch = width // (3 * self.n_heads)
         q, k, v = qkv.reshape(bs * self.n_heads, ch * 3, length).split(
             ch, dim=1)
+        if encoder_kv is not None:
+            assert encoder_kv.shape[1] == self.n_heads * ch * 2
+            ek, ev = encoder_kv.reshape(bs * self.n_heads, ch * 2, -1).split(
+                ch, dim=1)
+            k = torch.cat([ek, k], dim=-1)
+            v = torch.cat([ev, v], dim=-1)
         scale = 1 / math.sqrt(math.sqrt(ch))
         weight = torch.einsum(
             'bct,bcs->bts', q * scale,
@@ -252,29 +258,24 @@ class QKVAttention(BaseModule):
         super().__init__()
         self.n_heads = n_heads
 
-    def forward(self, qkv, encoder_kv=None):
+    def forward(self, qkv):
         """Apply QKV attention.
-
         :param qkv: an [N x (3 * H * C) x T] tensor of Qs, Ks, and Vs.
         :return: an [N x (H * C) x T] tensor after attention.
         """
         bs, width, length = qkv.shape
         assert width % (3 * self.n_heads) == 0
         ch = width // (3 * self.n_heads)
-        q, k, v = qkv.reshape(bs * self.n_heads, ch * 3, length).split(
-            ch, dim=1)
-        if encoder_kv is not None:
-            assert encoder_kv.shape[1] == self.n_heads * ch * 2
-            ek, ev = encoder_kv.reshape(bs * self.n_heads, ch * 2, -1).split(
-                ch, dim=1)
-            k = torch.cat([ek, k], dim=-1)
-            v = torch.cat([ev, v], dim=-1)
+        q, k, v = qkv.chunk(3, dim=1)
         scale = 1 / math.sqrt(math.sqrt(ch))
         weight = torch.einsum(
-            'bct,bcs->bts', (q * scale),
-            (k * scale))  # More stable with f16 than dividing afterwards
+            'bct,bcs->bts',
+            (q * scale).view(bs * self.n_heads, ch, length),
+            (k * scale).view(bs * self.n_heads, ch, length),
+        )  # More stable with f16 than dividing afterwards
         weight = torch.softmax(weight.float(), dim=-1).type(weight.dtype)
-        a = torch.einsum('bts,bcs->bct', weight, v)
+        a = torch.einsum('bts,bcs->bct', weight,
+                         v.reshape(bs * self.n_heads, ch, length))
         return a.reshape(bs, -1, length)
 
 
