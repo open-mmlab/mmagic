@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from .dreamfusion_hook import DreamFusionTrainingHook
 from .ema import ExponentialMovingAverageHook
 from .iter_time_hook import IterTimerHook
 from .pggan_fetch_data_hook import PGGANFetchDataHook
@@ -9,5 +10,5 @@ from .visualization_hook import BasicVisualizationHook, VisualizationHook
 __all__ = [
     'ReduceLRSchedulerHook', 'BasicVisualizationHook', 'VisualizationHook',
     'ExponentialMovingAverageHook', 'IterTimerHook', 'PGGANFetchDataHook',
-    'PickleDataHook'
+    'PickleDataHook', 'DreamFusionTrainingHook'
 ]
