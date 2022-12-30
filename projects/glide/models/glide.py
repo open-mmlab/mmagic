@@ -129,18 +129,6 @@ class Glide(BaseModel):
             image = image.to(self.device)
         else:
             image = init_image
-        # TODO
-        # import numpy as np
-        # image = torch.tensor(np.load('noises.npy'), device=self.device)
-        # image = torch.concat([image] * 2)
-        # if isinstance(labels, int):
-        #     labels = torch.tensor(labels).repeat(batch_size, 1)
-        # elif labels is None:
-        #     labels = torch.randint(
-        #         low=0,
-        #         high=self.unet.num_classes,
-        #         size=(batch_size, ),
-        #         device=self.device)
 
         # set step values
         if num_inference_steps > 0:
