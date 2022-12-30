@@ -34,25 +34,25 @@ Diffusion models have recently been shown to generate high-quality synthetic ima
 
 **Laion**
 
-| Method | Resolution | Config                                                             | Weights                                                                                                                |
-| ------ | ---------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| Glide  | 64x64      | [config](projects/glide/configs/glide_ddim-classifier-free_laion-64x64.py)   | [model](https://download.openmmlab.com/mmediting/glide/glide_laion-64x64-02afff47.pth)         |
+| Method | Resolution | Config                                                                     | Weights                                                                                |
+| ------ | ---------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Glide  | 64x64      | [config](projects/glide/configs/glide_ddim-classifier-free_laion-64x64.py) | [model](https://download.openmmlab.com/mmediting/glide/glide_laion-64x64-02afff47.pth) |
 
 ## Quick Start
 
 You can run glide as follows:
-```python
 
+```python
 import torch
-from mmengine import Config, MODELS
+from mmedit.apis import init_model
 from mmedit.utils import register_all_modules
 from projects.glide.models import *
+
 register_all_modules()
 
 config = 'projects/glide/configs/glide_ddim-classifier-free_laion-64x64.py'
-model = MODELS.build(Config.fromfile(config).model).cuda().eval()
-model.load_state_dict(torch.load('https://download.openmmlab.com/mmediting/glide/glide_laion-64x64-02afff47.pth'))
-
+ckpt = 'https://download.openmmlab.com/mmediting/glide/glide_laion-64x64-02afff47.pth'
+model = init_model(config, ckpt).cuda().eval()
 prompt = "an oil painting of a corgi"
 
 with torch.no_grad():

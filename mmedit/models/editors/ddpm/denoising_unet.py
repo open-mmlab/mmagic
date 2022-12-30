@@ -260,6 +260,7 @@ class QKVAttention(BaseModule):
 
     def forward(self, qkv):
         """Apply QKV attention.
+
         :param qkv: an [N x (3 * H * C) x T] tensor of Qs, Ks, and Vs.
         :return: an [N x (H * C) x T] tensor after attention.
         """
@@ -835,43 +836,41 @@ class DenoisingUnet(BaseModule):
         32: [1, 2, 2, 2]
     }
 
-    def __init__(
-        self,
-        image_size,
-        in_channels=3,
-        base_channels=128,
-        resblocks_per_downsample=3,
-        num_timesteps=1000,
-        use_rescale_timesteps=False,
-        dropout=0,
-        embedding_channels=-1,
-        num_classes=0,
-        use_fp16=False,
-        channels_cfg=None,
-        output_cfg=dict(mean='eps', var='learned_range'),
-        norm_cfg=dict(type='GN', num_groups=32),
-        act_cfg=dict(type='SiLU', inplace=False),
-        shortcut_kernel_size=1,
-        use_scale_shift_norm=False,
-        resblock_updown=False,
-        num_heads=4,
-        time_embedding_mode='sin',
-        time_embedding_cfg=None,
-        resblock_cfg=dict(type='DenoisingResBlock'),
-        attention_cfg=dict(type='MultiHeadAttention'),
-        encoder_channels=None,
-        downsample_conv=True,
-        upsample_conv=True,
-        downsample_cfg=dict(type='DenoisingDownsample'),
-        upsample_cfg=dict(type='DenoisingUpsample'),
-        attention_res=[16, 8],
-        pretrained=None,
-        unet_type='',
-        down_block_types: Tuple[str] = (),
-        up_block_types: Tuple[str] = (),
-        cross_attention_dim=768,
-        layers_per_block: int = 2
-    ):
+    def __init__(self,
+                 image_size,
+                 in_channels=3,
+                 base_channels=128,
+                 resblocks_per_downsample=3,
+                 num_timesteps=1000,
+                 use_rescale_timesteps=False,
+                 dropout=0,
+                 embedding_channels=-1,
+                 num_classes=0,
+                 use_fp16=False,
+                 channels_cfg=None,
+                 output_cfg=dict(mean='eps', var='learned_range'),
+                 norm_cfg=dict(type='GN', num_groups=32),
+                 act_cfg=dict(type='SiLU', inplace=False),
+                 shortcut_kernel_size=1,
+                 use_scale_shift_norm=False,
+                 resblock_updown=False,
+                 num_heads=4,
+                 time_embedding_mode='sin',
+                 time_embedding_cfg=None,
+                 resblock_cfg=dict(type='DenoisingResBlock'),
+                 attention_cfg=dict(type='MultiHeadAttention'),
+                 encoder_channels=None,
+                 downsample_conv=True,
+                 upsample_conv=True,
+                 downsample_cfg=dict(type='DenoisingDownsample'),
+                 upsample_cfg=dict(type='DenoisingUpsample'),
+                 attention_res=[16, 8],
+                 pretrained=None,
+                 unet_type='',
+                 down_block_types: Tuple[str] = (),
+                 up_block_types: Tuple[str] = (),
+                 cross_attention_dim=768,
+                 layers_per_block: int = 2):
 
         super().__init__()
 
