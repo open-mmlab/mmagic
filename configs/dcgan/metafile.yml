@@ -8,6 +8,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1511.06434
   README: configs/dcgan/README.md
+  Task:
+  - unconditional gans
+  Year: 2016
 Models:
 - Config: configs/dcgan/dcgan_Glr4e-4_Dlr1e-4_1xb128-5kiters_mnist-64x64.py
   In Collection: Unsupervised Representation Learning with Deep Convolutional Generative

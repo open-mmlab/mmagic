@@ -8,6 +8,9 @@ Collections:
   Paper:
   - https://openaccess.thecvf.com/content_iccv_2017/html/Zhu_Unpaired_Image-To-Image_Translation_ICCV_2017_paper.html
   README: configs/cyclegan/README.md
+  Task:
+  - image2image
+  Year: 2017
 Models:
 - Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-80kiters_facades.py
   In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
