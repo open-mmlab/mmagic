@@ -4,11 +4,29 @@ import torch.nn as nn
 from torch import Tensor
 import torch.nn.functional as F
 
+from mmcv.ops.fused_bias_leakyrelu import fused_bias_leakyrelu
 from mmengine.model import BaseModule
 from mmedit.registry import MODELS
+from ..stylegan2 import ModulatedToRGB
+from utils import conv2d_resample
 
+from typing import Any, List, Tuple, Union
 
 # TODO: Code Refactoring.
+
+def maybe_upsample(x, upsampling_mode: str=None, up: int=1) -> Tensor:
+    if up == 1 or upsampling_mode is None:
+        return x
+
+    if upsampling_mode == 'bilinear':
+        x = F.interpolate(x, mode='bilinear', align_corners=True, scale_factor=up)
+    else:
+        x = F.interpolate(x, mode=upsampling_mode, scale_factor=up)
+
+    return x
+
+def normalize_2nd_moment(x, dim=1, eps=1e-8):
+    return x * (x.square().mean(dim=dim, keepdim=True) + eps).rsqrt()
 
 def generate_horizontal_basis(num_feats: int) -> Tensor:
     return generate_wavefront_basis(num_feats, [0.0, 1.0], 4.0)
@@ -82,6 +100,119 @@ def generate_logarithmic_basis(
         f"num_coord_feats > max_num_fixed_coord_feats: {basis.shape, max_num_feats}."
 
     return basis
+
+
+class FullyConnectedLayer(torch.nn.Module):
+    def __init__(self,
+        in_features,                # Number of input features.
+        out_features,               # Number of output features.
+        bias            = True,     # Apply additive bias before the activation function?
+        activation      = 'linear', # Activation function: 'relu', 'lrelu', etc.
+        lr_multiplier   = 1,        # Learning rate multiplier.
+        bias_init       = 0,        # Initial value for the additive bias.
+    ):
+        super().__init__()
+        self.activation = activation
+        self.weight = torch.nn.Parameter(torch.randn([out_features, in_features]) / lr_multiplier)
+        self.bias = torch.nn.Parameter(torch.full([out_features], np.float32(bias_init))) if bias else None
+        self.weight_gain = lr_multiplier / np.sqrt(in_features)
+        self.bias_gain = lr_multiplier
+
+    def forward(self, x):
+        w = self.weight.to(x.dtype) * self.weight_gain
+        b = self.bias
+        if b is not None:
+            b = b.to(x.dtype)
+            if self.bias_gain != 1:
+                b = b * self.bias_gain
+
+        if self.activation == 'linear' and b is not None:
+            x = torch.addmm(b.unsqueeze(0), x, w.t())
+        else:
+            x = x.matmul(w.t())
+            # x = bias_act.bias_act(x, b, act=self.activation)
+            x = fused_bias_leakyrelu(x, b, negative_slope=0.2)
+        return x
+
+def modulated_conv2d(
+    x,                          # Input tensor of shape [batch_size, in_channels, in_height, in_width].
+    weight,                     # Weight tensor of shape [out_channels, in_channels, kernel_height, kernel_width].
+    styles,                     # Modulation coefficients of shape [batch_size, in_channels].
+    noise           = None,     # Optional noise tensor to add to the output activations.
+    up              = 1,        # Integer upsampling factor.
+    down            = 1,        # Integer downsampling factor.
+    padding         = 0,        # Padding with respect to the upsampled image.
+    resample_filter = None,     # Low-pass filter to apply when resampling activations. Must be prepared beforehand by calling upfirdn2d.setup_filter().
+    demodulate      = True,     # Apply weight demodulation?
+    flip_weight     = True,     # False = convolution, True = correlation (matches torch.nn.functional.conv2d).
+    fused_modconv   = True,     # Perform modulation, convolution, and demodulation as a single fused operation?
+):
+    batch_size = x.shape[0]
+    out_channels, in_channels, kh, kw = weight.shape
+    # misc.assert_shape(weight, [out_channels, in_channels, kh, kw]) # [OIkk]
+    # misc.assert_shape(x, [batch_size, in_channels, None, None]) # [NIHW]
+    # misc.assert_shape(styles, [batch_size, in_channels]) # [NI]
+
+    # Pre-normalize inputs to avoid FP16 overflow.
+    if x.dtype == torch.float16 and demodulate:
+        weight = weight * (1 / np.sqrt(in_channels * kh * kw) / weight.norm(float('inf'), dim=[1,2,3], keepdim=True)) # max_Ikk
+        styles = styles / styles.norm(float('inf'), dim=1, keepdim=True) # max_I
+
+    # Calculate per-sample weights and demodulation coefficients.
+    w = None
+    dcoefs = None
+    if demodulate or fused_modconv:
+        w = weight.unsqueeze(0) * styles.reshape(batch_size, 1, -1, 1, 1) # [NOIkk]
+    if demodulate:
+        dcoefs = (w.square().sum(dim=[2,3,4]) + 1e-8).rsqrt() # [NO]
+    if demodulate and fused_modconv:
+        w = w * dcoefs.reshape(batch_size, -1, 1, 1, 1) # [NOIkk]
+
+    # Execute by scaling the activations before and after the convolution.
+    if not fused_modconv:
+        x = x * styles.to(x.dtype).reshape(batch_size, -1, 1, 1)
+        x = conv2d_resample.conv2d_resample(x=x, w=weight.to(x.dtype), f=resample_filter, up=up, down=down, padding=padding, flip_weight=flip_weight)
+        if demodulate and noise is not None:
+            x = fma.fma(x, dcoefs.to(x.dtype).reshape(batch_size, -1, 1, 1), noise.to(x.dtype))
+        elif demodulate:
+            x = x * dcoefs.to(x.dtype).reshape(batch_size, -1, 1, 1)
+        elif noise is not None:
+            x = x.add_(noise.to(x.dtype))
+        return x
+
+    # Execute as one fused op using grouped convolution.
+    # with misc.suppress_tracer_warnings(): # this value will be treated as a constant
+        # batch_size = int(batch_size)
+    batch_size = int(batch_size)
+
+    # misc.assert_shape(x, [batch_size, in_channels, None, None])
+    x = x.reshape(1, -1, *x.shape[2:])
+    w = w.reshape(-1, in_channels, kh, kw)
+    x = conv2d_resample.conv2d_resample(x=x, w=w.to(x.dtype), f=resample_filter, up=up, down=down, padding=padding, groups=batch_size, flip_weight=flip_weight)
+    x = x.reshape(batch_size, -1, *x.shape[2:])
+    if noise is not None:
+        x = x.add_(noise)
+    return x
+
+def generate_coords(batch_size: int, img_size: int, device='cpu', align_corners: bool=False) -> Tensor:
+    """
+    Generates the coordinates in [-1, 1] range for a square image
+    if size (img_size x img_size) in such a way that
+    - upper left corner: coords[0, 0] = (-1, -1)
+    - upper right corner: coords[img_size - 1, img_size - 1] = (1, 1)
+    """
+    if align_corners:   # 跳过
+        row = torch.linspace(-1, 1, img_size, device=device).float() # [img_size]
+    else:
+        row = (torch.arange(0, img_size, device=device).float() / img_size) * 2 - 1 # [img_size]
+    x_coords = row.view(1, -1).repeat(img_size, 1) # [img_size, img_size]
+    y_coords = x_coords.t().flip(dims=(0,)) # [img_size, img_size]
+
+    coords = torch.stack([x_coords, y_coords], dim=2) # [img_size, img_size, 2]
+    coords = coords.view(-1, 2) # [img_size ** 2, 2]
+    coords = coords.t().view(1, 2, img_size, img_size).repeat(batch_size, 1, 1, 1) # [batch_size, 2, img_size, img_size]
+
+    return coords
 
 class CoordFuser(nn.Module):
     """
@@ -195,7 +326,7 @@ class CoordFuser(nn.Module):
                 raw_embs.append(raw_shared_embs)
 
             if self.predictable_emb_size > 0:
-                misc.assert_shape(w, [batch_size, None])
+                # misc.assert_shape(w, [batch_size, None])
                 mod = self.affine(w) # [batch_size, W_size + b_size]
                 W = self.fourier_scale * mod[:, :self.W_size] # [batch_size, W_size]
                 W = W.view(batch_size, self.predictable_emb_size, self.cfg.coord_dim) # [batch_size, predictable_emb_size, coord_dim]
@@ -223,6 +354,42 @@ class CoordFuser(nn.Module):
             self._full_cache = out[:, x.shape[1]:].detach()
 
         return out
+
+
+class CoordsInput(nn.Module):
+    def __init__(self, cfg: DictConfig, w_dim: int):
+        super().__init__()
+
+        self.cfg = cfg
+        self.coord_fuser = CoordFuser(self.cfg.coord_fuser_cfg, w_dim, self.cfg.resolution)
+
+    def get_total_dim(self) -> int:
+        return self.coord_fuser.total_dim
+
+    def forward(self, batch_size: int, w: Optional[Tensor]=None, device='cpu', dtype=None, memory_format=None) -> Tensor:
+        dummy_input = torch.empty(batch_size, 0, self.cfg.resolution, self.cfg.resolution)
+        dummy_input = dummy_input.to(device, dtype=dtype, memory_format=memory_format)
+        out = self.coord_fuser(dummy_input, w, dtype=dtype, memory_format=memory_format)
+
+        return out
+
+
+class ToRGBLayer(torch.nn.Module):
+    def __init__(self, in_channels, out_channels, w_dim, kernel_size=1, conv_clamp=None, channels_last=False):
+        super().__init__()
+        self.conv_clamp = conv_clamp
+        self.affine = FullyConnectedLayer(w_dim, in_channels, bias_init=1)
+        memory_format = torch.channels_last if channels_last else torch.contiguous_format
+        self.weight = torch.nn.Parameter(torch.randn([out_channels, in_channels, kernel_size, kernel_size]).to(memory_format=memory_format))
+        self.bias = torch.nn.Parameter(torch.zeros([out_channels]))
+        self.weight_gain = 1 / np.sqrt(in_channels * (kernel_size ** 2))
+
+    def forward(self, x, w, fused_modconv=True):
+        styles = self.affine(w) * self.weight_gain
+        x = modulated_conv2d(x=x, weight=self.weight, styles=styles, demodulate=False, fused_modconv=fused_modconv)
+        # x = bias_act.bias_act(x, self.bias.to(x.dtype), clamp=self.conv_clamp)
+        x = fused_bias_leakyrelu(x, self.bias.to(x.dtype))
+        return x
 
 
 class GenInput(nn.Module):
@@ -297,10 +464,10 @@ class MappingNetwork(torch.nn.Module):
         x = None
         with torch.autograd.profiler.record_function('input'):
             if self.z_dim > 0:
-                misc.assert_shape(z, [None, self.z_dim])
+                # misc.assert_shape(z, [None, self.z_dim])
                 x = normalize_2nd_moment(z.to(torch.float32))
             if self.c_dim > 0:
-                misc.assert_shape(c, [None, self.c_dim])
+                # misc.assert_shape(c, [None, self.c_dim])
                 y = normalize_2nd_moment(self.embed(c.to(torch.float32)))
                 x = torch.cat([x, y], dim=1) if x is not None else y
 
@@ -329,7 +496,50 @@ class MappingNetwork(torch.nn.Module):
                     x[:, :truncation_cutoff] = self.w_avg.lerp(x[:, :truncation_cutoff], truncation_psi)
         return x
 
+def fmm_modulate_linear(x: Tensor, weight: Tensor, styles: Tensor, noise=None, activation: str="demod") -> Tensor:
+    """
+    x: [batch_size, c_in, height, width]
+    weight: [c_out, c_in, 1, 1]
+    style: [batch_size, num_mod_params]
+    noise: Optional[batch_size, 1, height, width]
+    """
+    batch_size, c_in, h, w = x.shape
+    c_out, c_in, kh, kw = weight.shape
+    rank = styles.shape[1] // (c_in + c_out)
 
+    assert kh == 1 and kw == 1
+    assert styles.shape[1] % (c_in + c_out) == 0
+
+    # Now, we need to construct a [c_out, c_in] matrix
+    left_matrix = styles[:, :c_out * rank] # [batch_size, left_matrix_size]
+    right_matrix = styles[:, c_out * rank:] # [batch_size, right_matrix_size]
+
+    left_matrix = left_matrix.view(batch_size, c_out, rank) # [batch_size, c_out, rank]
+    right_matrix = right_matrix.view(batch_size, rank, c_in) # [batch_size, rank, c_in]
+
+    # Imagine, that the output of `self.affine` (in SynthesisLayer) is N(0, 1)
+    # Then, std of weights is sqrt(rank). Converting it back to N(0, 1)
+    modulation = left_matrix @ right_matrix / np.sqrt(rank) # [batch_size, c_out, c_in]
+
+    if activation == "tanh":
+        modulation = modulation.tanh()
+    elif activation == "sigmoid":
+        modulation = modulation.sigmoid() - 0.5
+
+    W = weight.squeeze(3).squeeze(2).unsqueeze(0) * (modulation + 1.0) # [batch_size, c_out, c_in]
+    if activation == "demod":
+        W = W / (W.norm(dim=2, keepdim=True) + 1e-8) # [batch_size, c_out, c_in]
+    W = W.to(dtype=x.dtype)
+
+    # out = torch.einsum('boi,bihw->bohw', W, x)
+    x = x.view(batch_size, c_in, h * w) # [batch_size, c_in, h * w]
+    out = torch.bmm(W, x) # [batch_size, c_out, h * w]
+    out = out.view(batch_size, c_out, h, w) # [batch_size, c_out, h, w]
+
+    if not noise is None:
+        out = out.add_(noise)
+
+    return out
 
 class SynthesisLayer(torch.nn.Module):
     def __init__(self,
@@ -353,7 +563,7 @@ class SynthesisLayer(torch.nn.Module):
         self.up = up
         self.activation = activation
         self.conv_clamp = conv_clamp
-        self.register_buffer('resample_filter', upfirdn2d.setup_filter(resample_filter))
+        # self.register_buffer('resample_filter', upfirdn2d.setup_filter(resample_filter))
         self.padding = kernel_size // 2
         self.act_gain = bias_act.activation_funcs[activation].def_gain
 
@@ -372,7 +582,7 @@ class SynthesisLayer(torch.nn.Module):
     def forward(self, x, w, noise_mode='random', fused_modconv=True, gain=1):
         assert noise_mode in ['random', 'const', 'none']
         in_resolution = self.resolution // self.up
-        misc.assert_shape(x, [None, self.weight.shape[1], in_resolution, in_resolution])
+        # misc.assert_shape(x, [None, self.weight.shape[1], in_resolution, in_resolution])
         styles = self.affine(w)
 
         noise = None
@@ -395,7 +605,8 @@ class SynthesisLayer(torch.nn.Module):
 
         act_gain = self.act_gain * gain
         act_clamp = self.conv_clamp * gain if self.conv_clamp is not None else None
-        x = bias_act.bias_act(x, self.bias.to(x.dtype), act=self.activation, gain=act_gain, clamp=act_clamp)
+        # x = bias_act.bias_act(x, self.bias.to(x.dtype), act=self.activation, gain=act_gain, clamp=act_clamp)
+        x = fused_bias_leakyrelu(x, self.bias.to(x.dtype))
         return x
 
 
@@ -436,7 +647,7 @@ class SynthesisBlock(torch.nn.Module):
         self.architecture = architecture
         self.use_fp16 = use_fp16
         self.channels_last = (use_fp16 and fp16_channels_last)
-        self.register_buffer('resample_filter', upfirdn2d.setup_filter(resample_filter))
+        # self.register_buffer('resample_filter', upfirdn2d.setup_filter(resample_filter))
         self.num_conv = 0
         self.num_torgb = 0
 
@@ -480,28 +691,30 @@ class SynthesisBlock(torch.nn.Module):
         if is_last or architecture == 'skip':
             self.torgb = ToRGBLayer(out_channels, img_channels, w_dim=w_dim,
                 conv_clamp=conv_clamp, channels_last=self.channels_last)
+            # self.torgb = ModulatedToRGB(in_channels=out_channels, style_channels=w_dim, out_channels=img_channels, upsample=False)
             self.num_torgb += 1
 
-        if in_channels != 0 and architecture == 'resnet':
-            self.skip = Conv2dLayer(in_channels, out_channels, kernel_size=1, bias=False, up=self.up,
-                resample_filter=resample_filter, channels_last=self.channels_last)
+        # if in_channels != 0 and architecture == 'resnet': # 不需要
+        #     self.skip = Conv2dLayer(in_channels, out_channels, kernel_size=1, bias=False, up=self.up,
+        #         resample_filter=resample_filter, channels_last=self.channels_last)
 
     def forward(self, x, img, ws, force_fp32=False, fused_modconv=None, **layer_kwargs):
-        misc.assert_shape(ws, [None, self.num_conv + self.num_torgb, self.w_dim])
+        # misc.assert_shape(ws, [None, self.num_conv + self.num_torgb, self.w_dim])
         w_iter = iter(ws.unbind(dim=1))
         dtype = torch.float16 if self.use_fp16 and not force_fp32 else torch.float32
         memory_format = torch.channels_last if self.channels_last and not force_fp32 else torch.contiguous_format
 
         if fused_modconv is None:
-            with misc.suppress_tracer_warnings(): # this value will be treated as a constant
-                fused_modconv = (not self.training) and (dtype == torch.float32 or (isinstance(x, Tensor) and int(x.shape[0]) == 1))
+            # with misc.suppress_tracer_warnings(): # this value will be treated as a constant
+            #     fused_modconv = (not self.training) and (dtype == torch.float32 or (isinstance(x, Tensor) and int(x.shape[0]) == 1))
+            fused_modconv = (not self.training) and (dtype == torch.float32 or (isinstance(x, Tensor) and int(x.shape[0]) == 1))
 
         # Input.
         if self.in_channels == 0:
             conv1_w = next(w_iter)
             x = self.input(ws.shape[0], conv1_w, device=ws.device, dtype=dtype, memory_format=memory_format)
         else:
-            misc.assert_shape(x, [None, self.in_channels, self.input_resolution, self.input_resolution])
+            # misc.assert_shape(x, [None, self.in_channels, self.input_resolution, self.input_resolution])
             x = x.to(dtype=dtype, memory_format=memory_format)
 
         x = maybe_upsample(x, self.cfg.upsampling_mode, self.up)
@@ -529,7 +742,7 @@ class SynthesisBlock(torch.nn.Module):
 
         # ToRGB.
         if img is not None:
-            misc.assert_shape(img, [None, self.img_channels, self.input_resolution, self.input_resolution])
+            # misc.assert_shape(img, [None, self.img_channels, self.input_resolution, self.input_resolution])
 
             if self.up == 2:
                 if self.cfg.upsampling_mode is None:
@@ -587,7 +800,7 @@ class SynthesisNetwork(torch.nn.Module):
     def forward(self, ws, **block_kwargs):
         block_ws = []
         with torch.autograd.profiler.record_function('split_ws'):
-            misc.assert_shape(ws, [None, self.num_ws, self.w_dim])
+            # misc.assert_shape(ws, [None, self.num_ws, self.w_dim])
             ws = ws.to(torch.float32)
             w_idx = 0
             for res in self.block_resolutions:
