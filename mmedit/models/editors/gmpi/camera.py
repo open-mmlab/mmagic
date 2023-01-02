@@ -3,12 +3,14 @@
 # Copyright (C) 2022 Apple Inc. All Rights Reserved.
 #
 
-import numpy as np
 from typing import Tuple, Union
 
+import numpy as np
 import torch
 
+
 class GMPICamera:
+
     def __init__(
         self,
         height: int = 480,
@@ -25,8 +27,10 @@ class GMPICamera:
         self._h = height
         self._w = width
         assert (
-            intrinsics.ndim == 2 and intrinsics.shape[0] == 3 and intrinsics.shape[1] == 3
-        ), "[Camera] Expecting a 3x3 intrinsics matrix, but instead got {}".format(intrinsics.shape)
+            intrinsics.ndim == 2 and intrinsics.shape[0] == 3
+            and intrinsics.shape[1] == 3
+        ), '[Camera] Expecting a 3x3 intrinsics matrix, but instead got {}'.format(
+            intrinsics.shape)
         self._K = intrinsics
 
         self._ray_dir_torch_cuda = None
@@ -46,16 +50,17 @@ class GMPICamera:
         return self._w
 
     def __repr__(self):
-        return f"Camera: height={self.height}, width={self.width}, intrinsics=\n{self.intrinsic_matrix}"
+        return f'Camera: height={self.height}, width={self.width}, intrinsics=\n{self.intrinsic_matrix}'
 
     def homogeneous_coordinates(self) -> np.ndarray:
-        """Construct the homogeneous coordinates [x/z, y/z, 1] for every pixel
+        """Construct the homogeneous coordinates [x/z, y/z, 1] for every pixel.
 
         Returns:
             np.ndarray: a 3 x H x W numpy ndarray corresponding to [x/z, y/z, 1]
         """
         # construct arrays of pixel coordinates
-        xx, yy = np.meshgrid(range(int(self.width)), range(int(self.height)), indexing="xy")
+        xx, yy = np.meshgrid(
+            range(int(self.width)), range(int(self.height)), indexing='xy')
 
         if self._ray_from_pix_center:
             # NOTE: we cast ray from pixel's center.
@@ -73,13 +78,16 @@ class GMPICamera:
         return xyz_div_z
 
     def homogeneous_coordinates_border(self) -> np.ndarray:
-        """Construct the homogeneous coordinates [x/z, y/z, 1] for every pixel
+        """Construct the homogeneous coordinates [x/z, y/z, 1] for every pixel.
 
         Returns:
             np.ndarray: a 3 x H x W numpy ndarray corresponding to [x/z, y/z, 1]
         """
         # construct arrays of pixel coordinates
-        xx, yy = np.meshgrid(np.array([0, self.width]), np.array([0, self.height]), indexing="xy")
+        xx, yy = np.meshgrid(
+            np.array([0, self.width]),
+            np.array([0, self.height]),
+            indexing='xy')
 
         # [u, v, 1] of shape [3, H, W]
         uv1 = np.stack([xx, yy, np.ones(xx.shape)])
@@ -125,8 +133,10 @@ class GMPICamera:
         self,
         tf_c2w: Union[np.ndarray, torch.Tensor],
         border_only: bool = False,
-    ) -> Tuple[Union[np.ndarray, torch.Tensor], Union[np.ndarray, torch.Tensor], Union[np.ndarray, torch.Tensor],]:
-        """Generate camera rays in the world space, given the camera-to-world transformation
+    ) -> Tuple[Union[np.ndarray, torch.Tensor], Union[
+            np.ndarray, torch.Tensor], Union[np.ndarray, torch.Tensor], ]:
+        """Generate camera rays in the world space, given the camera-to-world
+        transformation.
 
         Args:
             tf_c2w (np.ndarray): 4 x 4, camera-to-world transformation
@@ -182,7 +192,8 @@ class GMPICamera:
         rot_mat = tf_c2w[:3, :3]
 
         if tf_c2w.is_cuda:
-            cur_ray_dir_torch = self.ray_dir_torch_cuda(tf_c2w.device, border_only=border_only)
+            cur_ray_dir_torch = self.ray_dir_torch_cuda(
+                tf_c2w.device, border_only=border_only)
         else:
             if border_only:
                 cur_ray_dir_torch = self.ray_dir_border_torch

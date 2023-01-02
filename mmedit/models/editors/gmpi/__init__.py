@@ -2,6 +2,4 @@
 from .camera import GMPICamera
 from .gmpi_generator import GMPIGenerator
 
-__all__ = [
-    'GMPIGenerator', 'GMPICamera'
-]
+__all__ = ['GMPIGenerator', 'GMPICamera']

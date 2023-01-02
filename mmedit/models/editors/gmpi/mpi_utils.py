@@ -6,19 +6,20 @@
 import copy
 import glob
 import os
-import tqdm
 from typing import Dict, List, Union
 
 import numpy as np
 import torch
+import tqdm
 from PIL import Image
 
-from .camera import Camera
 from .cam_utils import gen_sphere_path
+from .camera import Camera
 from .color_grad import RGB_to_hex, linear_gradient, rgb_from_color_dict
 
 
-def sample_distance(dmin: float, dmax: float, num_samples: int, method: str, **kwargs) -> List:
+def sample_distance(dmin: float, dmax: float, num_samples: int, method: str,
+                    **kwargs) -> List:
     """Sampling of distances in the range [dmin, dmax]
 
     Args:
@@ -34,18 +35,25 @@ def sample_distance(dmin: float, dmax: float, num_samples: int, method: str, **k
     assert 0 < dmin <= dmax
     assert 1 <= num_samples < 9999
 
-    if method == "uniform":
+    if method == 'uniform':
         radii = [i for i in np.linspace(dmin, dmax, num=num_samples)]
-    elif method == "log-uniform":
-        radii = np.exp(np.linspace(np.log(dmin), np.log(dmax), num=num_samples)).tolist()
-    elif method == "sqrt":
-        radii = [i**2 for i in np.linspace(dmin**0.5, dmax**0.5, num=num_samples)]
-    elif method == "squared":
+    elif method == 'log-uniform':
+        radii = np.exp(
+            np.linspace(np.log(dmin), np.log(dmax), num=num_samples)).tolist()
+    elif method == 'sqrt':
+        radii = [
+            i**2 for i in np.linspace(dmin**0.5, dmax**0.5, num=num_samples)
+        ]
+    elif method == 'squared':
         # This leads to large increments in close range and small increments in far range, which is undesirable.
-        radii = [np.sqrt(i) for i in np.linspace(dmin**2, dmax**2, num=num_samples)]
-    elif method == "inverse":
+        radii = [
+            np.sqrt(i) for i in np.linspace(dmin**2, dmax**2, num=num_samples)
+        ]
+    elif method == 'inverse':
         # This leads to highly sparse sampling at far distances
-        radii = [1 / i for i in np.linspace(1 / dmax, 1 / dmin, num=num_samples)]
+        radii = [
+            1 / i for i in np.linspace(1 / dmax, 1 / dmin, num=num_samples)
+        ]
         radii.reverse()
     else:
         raise ValueError
@@ -54,10 +62,10 @@ def sample_distance(dmin: float, dmax: float, num_samples: int, method: str, **k
 
 
 def gen_tex_3d_coord_grid(
-    res_spatial: List[float],
-    res_tex: List[int],
-    distance: float,
-    device: torch.device = torch.device("cpu"),
+        res_spatial: List[float],
+        res_tex: List[int],
+        distance: float,
+        device: torch.device = torch.device('cpu'),
 ):
     """[summary]
 
@@ -109,7 +117,7 @@ def mpi_from_content_imgs(
     fixed_distances: Union[None, List[float]] = None,
     content_resize_already: bool = False,
     return_fg_range: bool = True,
-    device: torch.device = torch.device("cpu"),
+    device: torch.device = torch.device('cpu'),
 ) -> Union[torch.tensor, List[int], List[List[int]], List[List[int]]]:
     """Generate MPI from a pair of background and foreground images.
 
@@ -126,12 +134,16 @@ def mpi_from_content_imgs(
     """
 
     for elem in content_rgbas:
-        assert elem.shape[2] == 4, f"Images for plane must be RGB-alpha format. However, we receive {elem.shape}."
+        assert elem.shape[
+            2] == 4, f'Images for plane must be RGB-alpha format. However, we receive {elem.shape}.'
 
-    assert len(content_rgbas) == len(content_hws), f"{len(content_rgbas)}, {len(content_hws)}"
-    assert len(content_rgbas) == len(spatial_hws), f"{len(content_rgbas)}, {len(spatial_hws)}"
+    assert len(content_rgbas) == len(
+        content_hws), f'{len(content_rgbas)}, {len(content_hws)}'
+    assert len(content_rgbas) == len(
+        spatial_hws), f'{len(content_rgbas)}, {len(spatial_hws)}'
     if fixed_distances is not None:
-        assert len(content_rgbas) == len(fixed_distances), f"{len(content_rgbas)}, {len(fixed_distances)}"
+        assert len(content_rgbas) == len(
+            fixed_distances), f'{len(content_rgbas)}, {len(fixed_distances)}'
 
     n_planes = len(content_rgbas)
 
@@ -159,9 +171,10 @@ def mpi_from_content_imgs(
             fg_tex_w = content_w
 
         if plane_fixed_pos[i] is not None:
-            start_row = plane_fixed_pos[i]["center_row"] - content_h // 2
-            start_col = plane_fixed_pos[i]["center_col"] - content_w // 2
-            assert (start_row >= 0) and (start_col >= 0), f"{start_row}, {start_col}"
+            start_row = plane_fixed_pos[i]['center_row'] - content_h // 2
+            start_col = plane_fixed_pos[i]['center_col'] - content_w // 2
+            assert (start_row >= 0) and (start_col >=
+                                         0), f'{start_row}, {start_col}'
         else:
             if plane_rnd_pos[i]:
                 start_row = np.random.randint(0, tex_h - content_h)
@@ -173,7 +186,9 @@ def mpi_from_content_imgs(
         end_col = start_col + content_w
 
         if isinstance(cur_rgba, torch.Tensor):
-            plane_rgba = torch.zeros((tex_h, tex_w, 4), dtype=torch.uint8, device=cur_rgba.device)
+            plane_rgba = torch.zeros((tex_h, tex_w, 4),
+                                     dtype=torch.uint8,
+                                     device=cur_rgba.device)
         else:
             plane_rgba = np.zeros((tex_h, tex_w, 4), dtype=np.uint8)
 
@@ -181,8 +196,8 @@ def mpi_from_content_imgs(
             plane_rgba[start_row:end_row, start_col:end_col, :] = cur_rgba
         else:
             plane_rgba[start_row:end_row, start_col:end_col, :] = np.array(
-                Image.fromarray(cur_rgba).resize((content_w, content_h), resample=Image.LANCZOS)
-            )
+                Image.fromarray(cur_rgba).resize((content_w, content_h),
+                                                 resample=Image.LANCZOS))
 
         if isinstance(plane_rgba, torch.Tensor):
             all_plane_rgbas.append(plane_rgba.float() / 255.0)
@@ -190,7 +205,8 @@ def mpi_from_content_imgs(
             all_plane_rgbas.append(plane_rgba.astype(np.float32) / 255.0)
 
     if fixed_distances is None:
-        distances = sample_distance(dmin=dmin, dmax=dmax, num_samples=n_planes, method="inverse")
+        distances = sample_distance(
+            dmin=dmin, dmax=dmax, num_samples=n_planes, method='inverse')
     else:
         distances = fixed_distances
     distances = np.sort(distances)
@@ -232,12 +248,12 @@ def mpi_from_content_imgs(
         # we find foreground's non-zeros alpha positions
         tmp_row, tmp_col, _ = np.where(all_plane_rgbas[0][..., 3:] > 0)
         fg_range = {
-            "fg_tex_h": fg_tex_h,
-            "fg_tex_w": fg_tex_w,
-            "min_row": int(np.min(tmp_row)),
-            "max_row": int(np.max(tmp_row)),
-            "min_col": int(np.min(tmp_col)),
-            "max_col": int(np.max(tmp_col)),
+            'fg_tex_h': fg_tex_h,
+            'fg_tex_w': fg_tex_w,
+            'min_row': int(np.min(tmp_row)),
+            'max_row': int(np.max(tmp_row)),
+            'min_col': int(np.min(tmp_col)),
+            'max_col': int(np.max(tmp_col)),
         }
     else:
         fg_range = None
@@ -254,8 +270,8 @@ def get_vis_bound_in_pix_coords_from_xyz(
     content_h: int,
     content_w: int,
 ):
-    """This function computes boundary for visible area in pixel coordinates (row/col)
-    from boundary in 3D xyz coordinates.
+    """This function computes boundary for visible area in pixel coordinates
+    (row/col) from boundary in 3D xyz coordinates.
 
     Args:
         spatial_h (float): height for plane centered at (x = 0, y = 0)
@@ -276,30 +292,36 @@ def get_vis_bound_in_pix_coords_from_xyz(
     cell_w = spatial_w / tex_w
 
     # NOTE: pay attention to the floor/ceil here. We want to have a compact area.
-    min_row = max(0, int(np.ceil((vis_bound_xyz["min_y"] - range_h[0]) / cell_h)))
-    max_row = min(tex_h - 1, int(np.floor((vis_bound_xyz["max_y"] - range_h[0]) / cell_h)))
-    min_col = max(0, int(np.ceil((vis_bound_xyz["min_x"] - range_w[0]) / cell_w)))
-    max_col = min(tex_w - 1, int(np.floor((vis_bound_xyz["max_x"] - range_w[0]) / cell_w)))
+    min_row = max(0,
+                  int(np.ceil((vis_bound_xyz['min_y'] - range_h[0]) / cell_h)))
+    max_row = min(
+        tex_h - 1,
+        int(np.floor((vis_bound_xyz['max_y'] - range_h[0]) / cell_h)))
+    min_col = max(0,
+                  int(np.ceil((vis_bound_xyz['min_x'] - range_w[0]) / cell_w)))
+    max_col = min(
+        tex_w - 1,
+        int(np.floor((vis_bound_xyz['max_x'] - range_w[0]) / cell_w)))
 
     # we store the range for center pixel of content
     vis_bound_pix = {
-        "min_row": min(tex_h - 1, int(min_row + content_h // 2)),
-        "max_row": max(0, int(max_row - content_h // 2)),
-        "min_col": min(tex_w - 1, int(min_col + content_w // 2)),
-        "max_col": max(0, int(max_col - content_w // 2)),
+        'min_row': min(tex_h - 1, int(min_row + content_h // 2)),
+        'max_row': max(0, int(max_row - content_h // 2)),
+        'min_col': min(tex_w - 1, int(min_col + content_w // 2)),
+        'max_col': max(0, int(max_col - content_w // 2)),
     }
 
-    assert (
-        vis_bound_pix["min_row"] < vis_bound_pix["max_row"]
-    ), f"{vis_bound_pix['min_row']}, {vis_bound_pix['max_row']}"
-    assert (
-        vis_bound_pix["min_col"] < vis_bound_pix["max_col"]
-    ), f"{vis_bound_pix['min_col']}, {vis_bound_pix['max_col']}"
+    assert (vis_bound_pix['min_row'] < vis_bound_pix['max_row']
+            ), f"{vis_bound_pix['min_row']}, {vis_bound_pix['max_row']}"
+    assert (vis_bound_pix['min_col'] < vis_bound_pix['max_col']
+            ), f"{vis_bound_pix['min_col']}, {vis_bound_pix['max_col']}"
 
     return vis_bound_pix
 
 
-def mpi_from_plane_imgs(dmin: float = 1.0, dmax: float = 10.0, plane_rgbas: List[np.ndarray] = []):
+def mpi_from_plane_imgs(dmin: float = 1.0,
+                        dmax: float = 10.0,
+                        plane_rgbas: List[np.ndarray] = []):
     """Generate MPI from a list of RGB-alpha.
 
     Args:
@@ -316,7 +338,8 @@ def mpi_from_plane_imgs(dmin: float = 1.0, dmax: float = 10.0, plane_rgbas: List
 
     n_planes = len(plane_rgbas)
 
-    distances = sample_distance(dmin=dmin, dmax=dmax, num_samples=n_planes, method="inverse")
+    distances = sample_distance(
+        dmin=dmin, dmax=dmax, num_samples=n_planes, method='inverse')
 
     # make planes stored as from front to back
     plane_rgbas.reverse()
@@ -338,7 +361,8 @@ def mpi_from_plane_imgs(dmin: float = 1.0, dmax: float = 10.0, plane_rgbas: List
 
         # [h, w, 3] -> [1, 3, h, w]
         rgb_init = torch.FloatTensor(rgb_init).permute(2, 0, 1).unsqueeze(0)
-        alpha_init = torch.FloatTensor(alpha_init).permute(2, 0, 1).unsqueeze(0)
+        alpha_init = torch.FloatTensor(alpha_init).permute(2, 0,
+                                                           1).unsqueeze(0)
 
         rgba = torch.cat((rgb_init, alpha_init), dim=1)
         planes.append(rgba)
@@ -348,10 +372,10 @@ def mpi_from_plane_imgs(dmin: float = 1.0, dmax: float = 10.0, plane_rgbas: List
 
     tmp_row, tmp_col, _ = np.where(plane_rgbas[0][..., 3:] > 0)
     fg_range = {
-        "min_row": int(np.min(tmp_row)),
-        "max_row": int(np.max(tmp_row)),
-        "min_col": int(np.min(tmp_col)),
-        "max_col": int(np.max(tmp_col)),
+        'min_row': int(np.min(tmp_row)),
+        'max_row': int(np.max(tmp_row)),
+        'min_col': int(np.min(tmp_col)),
+        'max_col': int(np.max(tmp_col)),
     }
 
     return planes, dhws, fg_range
@@ -406,7 +430,8 @@ def add_color_to_obj(
     return obj_img
 
 
-def compute_rect_overlap_area(a: List[Union[int, float]], b: List[Union[int, float]]):
+def compute_rect_overlap_area(a: List[Union[int, float]],
+                              b: List[Union[int, float]]):
     """This function computes the overlap area for two rectangles a and b.
 
     Args:
@@ -433,8 +458,8 @@ def sample_rect_pos(
     prev_rects: List[Union[int, float]],
     obj_max_overlap_thresh: float = 0.5,
 ):
-    """Sample rectangle's positions such that
-    the position's overlap with existed rectangles is lower than some threshold.
+    """Sample rectangle's positions such that the position's overlap with
+    existed rectangles is lower than some threshold.
 
     Args:
         img_h, img_w: the canvas's size
@@ -460,8 +485,10 @@ def sample_rect_pos(
 
         if len(prev_rects) > 0:
             for i, tmp_prev_rect in enumerate(prev_rects):
-                overlap_area = compute_rect_overlap_area(cur_rect, tmp_prev_rect)
-                if (overlap_area > obj_max_overlap_thresh * area) or (overlap_area > tmp_prev_rect[-1] * area):
+                overlap_area = compute_rect_overlap_area(
+                    cur_rect, tmp_prev_rect)
+                if (overlap_area > obj_max_overlap_thresh * area) or (
+                        overlap_area > tmp_prev_rect[-1] * area):
                     break
 
             if i == len(prev_rects) - 1:
@@ -503,9 +530,10 @@ def gen_plane_imgs_from_objs(
         light_color_on_top (bool): whether to put the light end of gradient ramp on object's top.
     """
 
-    all_fs = list(glob.glob(os.path.join(obj_img_dir, "*.png")))
+    all_fs = list(glob.glob(os.path.join(obj_img_dir, '*.png')))
 
-    sampled_idxs = np.random.choice(len(all_fs), size=n_objs, replace=True).tolist()
+    sampled_idxs = np.random.choice(
+        len(all_fs), size=n_objs, replace=True).tolist()
     sampled_fs = [all_fs[_] for _ in sampled_idxs]
 
     all_objs = [np.array(Image.open(_)) for _ in sampled_fs]
@@ -536,7 +564,9 @@ def gen_plane_imgs_from_objs(
             target_w = max_target_w
             target_h = int(tmp_h / tmp_w * target_w)
 
-        resized_obj = np.array(Image.fromarray(obj).resize((target_w, target_h), resample=Image.LANCZOS))
+        resized_obj = np.array(
+            Image.fromarray(obj).resize((target_w, target_h),
+                                        resample=Image.LANCZOS))
         all_resized_objs.append(resized_obj)
 
         tmp_rect = sample_rect_pos(
@@ -561,7 +591,8 @@ def gen_plane_imgs_from_objs(
 
     if end_obj_idx < n_objs:
         tmp_n = n_objs - end_obj_idx
-        obj_plane_idxs[end_obj_idx:] = np.random.choice(np.arange(1, n_planes, tmp_n))
+        obj_plane_idxs[end_obj_idx:] = np.random.choice(
+            np.arange(1, n_planes, tmp_n))
 
     # only first object goes to foreground
     assert np.sum(obj_plane_idxs == 0) == 1
@@ -574,14 +605,13 @@ def gen_plane_imgs_from_objs(
         tmp_obj = all_resized_objs[i]
         tmp_plane_idx = obj_plane_idxs[i]
 
-        tmp_start_rgb_val = 128 + int(tmp_plane_idx * (MAX_START_RGB_VAL - 128) / n_planes)
-        tmp_base_rgb = np.array(
-            (
-                np.random.randint(tmp_start_rgb_val, 256),
-                np.random.randint(tmp_start_rgb_val, 256),
-                np.random.randint(tmp_start_rgb_val, 256),
-            )
-        ).astype(np.uint8)
+        tmp_start_rgb_val = 128 + int(tmp_plane_idx *
+                                      (MAX_START_RGB_VAL - 128) / n_planes)
+        tmp_base_rgb = np.array((
+            np.random.randint(tmp_start_rgb_val, 256),
+            np.random.randint(tmp_start_rgb_val, 256),
+            np.random.randint(tmp_start_rgb_val, 256),
+        )).astype(np.uint8)
 
         all_resized_objs[i] = add_color_to_obj(
             tmp_obj,
@@ -597,7 +627,8 @@ def gen_plane_imgs_from_objs(
     plane_imgs = []
     for plane_idx in range(n_planes - 1, -1, -1):
 
-        tmp_plane_img = Image.fromarray(np.zeros((tex_h, tex_w, 4), dtype=np.uint8))
+        tmp_plane_img = Image.fromarray(
+            np.zeros((tex_h, tex_w, 4), dtype=np.uint8))
 
         obj_idxs = np.where(obj_plane_idxs == plane_idx)[0]
 
@@ -618,8 +649,10 @@ def gen_plane_imgs_from_objs(
     return plane_imgs
 
 
-def compute_intersection_between_cam_frustum_and_plane(cam_pos, ray_dir, z_plane):
-    """We currently assume the plane is perpendicular to Z axis of world coordinate system.
+def compute_intersection_between_cam_frustum_and_plane(cam_pos, ray_dir,
+                                                       z_plane):
+    """We currently assume the plane is perpendicular to Z axis of world
+    coordinate system.
 
     Args:
         cam_pos ([type]): [description]
@@ -640,29 +673,30 @@ def compute_intersection_between_cam_frustum_and_plane(cam_pos, ray_dir, z_plane
     x, y = xyz[:, 0, :, :], xyz[:, 1, :, :]
 
     bound_dict = {
-        "min_x": torch.min(x).cpu().numpy(),
-        "max_x": torch.max(x).cpu().numpy(),
-        "min_y": torch.min(y).cpu().numpy(),
-        "max_y": torch.max(y).cpu().numpy(),
+        'min_x': torch.min(x).cpu().numpy(),
+        'max_x': torch.max(x).cpu().numpy(),
+        'min_y': torch.min(y).cpu().numpy(),
+        'max_y': torch.max(y).cpu().numpy(),
     }
 
     return bound_dict
 
 
 def compute_plane_dhws_given_cam_pose_spatial_range(
-    camera: Camera,
-    sphere_center: np.ndarray,
-    sphere_r: Union[float, None],
-    cam_horizontal_min: float,
-    cam_horizontal_max: float,
-    cam_vertical_min: float,
-    cam_vertical_max: float,
-    cam_pose_n_truncated_stds: int,
-    plane_zs: List[float],
-    enlarge_factor: float = 1.0,
-    device: torch.device = torch.device("cpu"),
+        camera: Camera,
+        sphere_center: np.ndarray,
+        sphere_r: Union[float, None],
+        cam_horizontal_min: float,
+        cam_horizontal_max: float,
+        cam_vertical_min: float,
+        cam_vertical_max: float,
+        cam_pose_n_truncated_stds: int,
+        plane_zs: List[float],
+        enlarge_factor: float = 1.0,
+        device: torch.device = torch.device('cpu'),
 ):
-    """This function computes planes's spatial height and width of MPI given camera's pose range.
+    """This function computes planes's spatial height and width of MPI given
+    camera's pose range.
 
     Args:
         camera (Camera): [description]
@@ -688,7 +722,8 @@ def compute_plane_dhws_given_cam_pose_spatial_range(
 
     cam_heuristic_angles = []
     _N = 100
-    horizontal_angle_list = np.linspace(cam_horizontal_min, cam_horizontal_max, _N)
+    horizontal_angle_list = np.linspace(cam_horizontal_min, cam_horizontal_max,
+                                        _N)
     vertical_angle_list = np.linspace(cam_vertical_min, cam_vertical_max, _N)
     for tmp_h in horizontal_angle_list:
         for tmp_v in vertical_angle_list:
@@ -698,9 +733,9 @@ def compute_plane_dhws_given_cam_pose_spatial_range(
     cam_heuristic_angles.append((horizontal_mid_angle, vertical_mid_angle))
 
     # print("\ncam_heuristic_angles: ", cam_heuristic_angles, "\n")
-    print("\n", sphere_center, sphere_r, cam_pose_n_truncated_stds, "\n")
+    print('\n', sphere_center, sphere_r, cam_pose_n_truncated_stds, '\n')
 
-    plane_bound_val = {"min_x": [], "max_x": [], "min_y": [], "max_y": []}
+    plane_bound_val = {'min_x': [], 'max_x': [], 'min_y': [], 'max_y': []}
 
     for i in tqdm.tqdm(range(len(cam_heuristic_angles))):
         # we set std to 0 so that we just choose angle to be the mean
@@ -712,17 +747,19 @@ def compute_plane_dhws_given_cam_pose_spatial_range(
             yaw_std=0,
             pitch_mean=cam_heuristic_angles[i][1],
             pitch_std=0,
-            sample_method="uniform",
+            sample_method='uniform',
             n_truncated_stds=cam_pose_n_truncated_stds,
             device=device,
         )
 
-        ray_dir, cam_pos, z_dir = camera.generate_rays(cur_c2w_mats[0, ...], border_only=True)
+        ray_dir, cam_pos, z_dir = camera.generate_rays(
+            cur_c2w_mats[0, ...], border_only=True)
         ray_dir = torch.from_numpy(ray_dir).unsqueeze(0).float().to(device)
         cam_pos = torch.from_numpy(cam_pos).view(1, 3).float().to(device)
 
         # NOTE: we assume depths are stored from front to back
-        cur_bound_val = compute_intersection_between_cam_frustum_and_plane(cam_pos, ray_dir, plane_zs[-1])
+        cur_bound_val = compute_intersection_between_cam_frustum_and_plane(
+            cam_pos, ray_dir, plane_zs[-1])
         # print("\n", cam_heuristic_angles[i], cur_bound_val, "\n")
         for k in plane_bound_val:
             plane_bound_val[k].append(cur_bound_val[k])
@@ -732,36 +769,42 @@ def compute_plane_dhws_given_cam_pose_spatial_range(
             # We need this spatial resolution as the BASE resolution.
             # We assume square plane.
             base_spatial_size = min(
-                plane_bound_val["max_x"][-1] - plane_bound_val["min_x"][-1],
-                plane_bound_val["max_y"][-1] - plane_bound_val["min_y"][-1],
+                plane_bound_val['max_x'][-1] - plane_bound_val['min_x'][-1],
+                plane_bound_val['max_y'][-1] - plane_bound_val['min_y'][-1],
             )
             # we use this spatial size as the confined size
-            confined_spatial_h = 2 * np.max(
-                [np.abs(plane_bound_val["min_y"][-1]), np.abs(plane_bound_val["max_y"][-1])]
-            )
-            confined_spatial_w = 2 * np.max(
-                [np.abs(plane_bound_val["min_x"][-1]), np.abs(plane_bound_val["max_x"][-1])]
-            )
+            confined_spatial_h = 2 * np.max([
+                np.abs(plane_bound_val['min_y'][-1]),
+                np.abs(plane_bound_val['max_y'][-1])
+            ])
+            confined_spatial_w = 2 * np.max([
+                np.abs(plane_bound_val['min_x'][-1]),
+                np.abs(plane_bound_val['max_x'][-1])
+            ])
 
-    plane_bound_val["min_x"] = np.min(plane_bound_val["min_x"])
-    plane_bound_val["max_x"] = np.max(plane_bound_val["max_x"])
-    plane_bound_val["min_y"] = np.min(plane_bound_val["min_y"])
-    plane_bound_val["max_y"] = np.max(plane_bound_val["max_y"])
+    plane_bound_val['min_x'] = np.min(plane_bound_val['min_x'])
+    plane_bound_val['max_x'] = np.max(plane_bound_val['max_x'])
+    plane_bound_val['min_y'] = np.min(plane_bound_val['min_y'])
+    plane_bound_val['max_y'] = np.max(plane_bound_val['max_y'])
 
-    print("\nplane_bound_val: ", plane_bound_val, "\n")
+    print('\nplane_bound_val: ', plane_bound_val, '\n')
 
     # NOTE: 5.0 is a heuristic value, indicating the plane is too large.
     plane_bound_max_val = np.max(np.abs(list(plane_bound_val.values())))
     assert plane_bound_max_val <= 5.0, (
         f"You have MPI's plane whose boundary value is up to {plane_bound_max_val}. "
         f"This usually means the camera poses's range is too big, which will cause problems for MPI representation. "
-        f"Please reduce h_stddev or v_stddev in curriculums.py or cam_pose_n_truncated_stds in config file."
+        f'Please reduce h_stddev or v_stddev in curriculums.py or cam_pose_n_truncated_stds in config file.'
     )
 
     # for simplicity, we enforce plane to be symmetric
     # Meanhile, we have +X right, +Y down.
-    spatial_h = 2 * np.max([np.abs(plane_bound_val["min_y"]), np.abs(plane_bound_val["max_y"])])
-    spatial_w = 2 * np.max([np.abs(plane_bound_val["min_x"]), np.abs(plane_bound_val["max_x"])])
+    spatial_h = 2 * np.max(
+        [np.abs(plane_bound_val['min_y']),
+         np.abs(plane_bound_val['max_y'])])
+    spatial_w = 2 * np.max(
+        [np.abs(plane_bound_val['min_x']),
+         np.abs(plane_bound_val['max_x'])])
 
     spatial_h = spatial_h * enlarge_factor
     spatial_w = spatial_w * enlarge_factor
@@ -785,19 +828,20 @@ def compute_plane_dhws_given_cam_pose_spatial_range(
 
 
 def compute_plane_dhws_given_cam_pose_spatial_range_confined(
-    camera: Camera,
-    sphere_center: np.ndarray,
-    sphere_r: Union[float, None],
-    cam_horizontal_min: float,
-    cam_horizontal_max: float,
-    cam_vertical_min: float,
-    cam_vertical_max: float,
-    cam_pose_n_truncated_stds: int,
-    plane_zs: List[float],
-    enlarge_factor: float = 1.0,
-    device: torch.device = torch.device("cpu"),
+        camera: Camera,
+        sphere_center: np.ndarray,
+        sphere_r: Union[float, None],
+        cam_horizontal_min: float,
+        cam_horizontal_max: float,
+        cam_vertical_min: float,
+        cam_vertical_max: float,
+        cam_pose_n_truncated_stds: int,
+        plane_zs: List[float],
+        enlarge_factor: float = 1.0,
+        device: torch.device = torch.device('cpu'),
 ):
-    """This function computes planes's spatial height and width of MPI given camera's pose range.
+    """This function computes planes's spatial height and width of MPI given
+    camera's pose range.
 
     Args:
         camera (Camera): [description]
@@ -823,7 +867,8 @@ def compute_plane_dhws_given_cam_pose_spatial_range_confined(
 
     cam_heuristic_angles = []
     _N = 100
-    horizontal_angle_list = np.linspace(cam_horizontal_min, cam_horizontal_max, _N)
+    horizontal_angle_list = np.linspace(cam_horizontal_min, cam_horizontal_max,
+                                        _N)
     vertical_angle_list = np.linspace(cam_vertical_min, cam_vertical_max, _N)
     for tmp_h in horizontal_angle_list:
         for tmp_v in vertical_angle_list:
@@ -833,9 +878,9 @@ def compute_plane_dhws_given_cam_pose_spatial_range_confined(
     cam_heuristic_angles.append((horizontal_mid_angle, vertical_mid_angle))
 
     # print("\ncam_heuristic_angles: ", cam_heuristic_angles, "\n")
-    print("\n", sphere_center, sphere_r, cam_pose_n_truncated_stds, "\n")
+    print('\n', sphere_center, sphere_r, cam_pose_n_truncated_stds, '\n')
 
-    plane_bound_val = {"min_x": [], "max_x": [], "min_y": [], "max_y": []}
+    plane_bound_val = {'min_x': [], 'max_x': [], 'min_y': [], 'max_y': []}
 
     for i in tqdm.tqdm(range(len(cam_heuristic_angles))):
         # we set std to 0 so that we just choose angle to be the mean
@@ -847,17 +892,19 @@ def compute_plane_dhws_given_cam_pose_spatial_range_confined(
             yaw_std=0,
             pitch_mean=cam_heuristic_angles[i][1],
             pitch_std=0,
-            sample_method="uniform",
+            sample_method='uniform',
             n_truncated_stds=cam_pose_n_truncated_stds,
             device=device,
         )
 
-        ray_dir, cam_pos, z_dir = camera.generate_rays(cur_c2w_mats[0, ...], border_only=True)
+        ray_dir, cam_pos, z_dir = camera.generate_rays(
+            cur_c2w_mats[0, ...], border_only=True)
         ray_dir = torch.from_numpy(ray_dir).unsqueeze(0).float().to(device)
         cam_pos = torch.from_numpy(cam_pos).view(1, 3).float().to(device)
 
         # NOTE: we assume depths are stored from front to back
-        cur_bound_val = compute_intersection_between_cam_frustum_and_plane(cam_pos, ray_dir, plane_zs[-1])
+        cur_bound_val = compute_intersection_between_cam_frustum_and_plane(
+            cam_pos, ray_dir, plane_zs[-1])
         # print("\n", cam_heuristic_angles[i], cam_pos[:, 2:], cur_bound_val, "\n")
         for k in plane_bound_val:
             plane_bound_val[k].append(cur_bound_val[k])
@@ -867,36 +914,42 @@ def compute_plane_dhws_given_cam_pose_spatial_range_confined(
             # We need this spatial resolution as the BASE resolution.
             # We assume square plane.
             base_spatial_size = min(
-                plane_bound_val["max_x"][-1] - plane_bound_val["min_x"][-1],
-                plane_bound_val["max_y"][-1] - plane_bound_val["min_y"][-1],
+                plane_bound_val['max_x'][-1] - plane_bound_val['min_x'][-1],
+                plane_bound_val['max_y'][-1] - plane_bound_val['min_y'][-1],
             )
             # we use this spatial size as the confined size
-            confined_spatial_h = 2 * np.max(
-                [np.abs(plane_bound_val["min_y"][-1]), np.abs(plane_bound_val["max_y"][-1])]
-            )
-            confined_spatial_w = 2 * np.max(
-                [np.abs(plane_bound_val["min_x"][-1]), np.abs(plane_bound_val["max_x"][-1])]
-            )
+            confined_spatial_h = 2 * np.max([
+                np.abs(plane_bound_val['min_y'][-1]),
+                np.abs(plane_bound_val['max_y'][-1])
+            ])
+            confined_spatial_w = 2 * np.max([
+                np.abs(plane_bound_val['min_x'][-1]),
+                np.abs(plane_bound_val['max_x'][-1])
+            ])
 
-    plane_bound_val["min_x"] = np.min(plane_bound_val["min_x"])
-    plane_bound_val["max_x"] = np.max(plane_bound_val["max_x"])
-    plane_bound_val["min_y"] = np.min(plane_bound_val["min_y"])
-    plane_bound_val["max_y"] = np.max(plane_bound_val["max_y"])
+    plane_bound_val['min_x'] = np.min(plane_bound_val['min_x'])
+    plane_bound_val['max_x'] = np.max(plane_bound_val['max_x'])
+    plane_bound_val['min_y'] = np.min(plane_bound_val['min_y'])
+    plane_bound_val['max_y'] = np.max(plane_bound_val['max_y'])
 
-    print("\nplane_bound_val: ", plane_bound_val, "\n")
+    print('\nplane_bound_val: ', plane_bound_val, '\n')
 
     # NOTE: 5.0 is a heuristic value, indicating the plane is too large.
     plane_bound_max_val = np.max(np.abs(list(plane_bound_val.values())))
     assert plane_bound_max_val <= 5.0, (
         f"You have MPI's plane whose boundary value is up to {plane_bound_max_val}. "
         f"This usually means the camera poses's range is too big, which will cause problems for MPI representation. "
-        f"Please reduce h_stddev or v_stddev in curriculums.py or cam_pose_n_truncated_stds in config file."
+        f'Please reduce h_stddev or v_stddev in curriculums.py or cam_pose_n_truncated_stds in config file.'
     )
 
     # for simplicity, we enforce plane to be symmetric
     # Meanhile, we have +X right, +Y down.
-    spatial_h = 2 * np.max([np.abs(plane_bound_val["min_y"]), np.abs(plane_bound_val["max_y"])])
-    spatial_w = 2 * np.max([np.abs(plane_bound_val["min_x"]), np.abs(plane_bound_val["max_x"])])
+    spatial_h = 2 * np.max(
+        [np.abs(plane_bound_val['min_y']),
+         np.abs(plane_bound_val['max_y'])])
+    spatial_w = 2 * np.max(
+        [np.abs(plane_bound_val['min_x']),
+         np.abs(plane_bound_val['max_x'])])
 
     spatial_h = spatial_h * enlarge_factor
     spatial_w = spatial_w * enlarge_factor

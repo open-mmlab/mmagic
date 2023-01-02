@@ -9,16 +9,22 @@ import numpy as np
 import torch
 from scipy.spatial.transform import Rotation
 
-from .camera import Camera
 from mmedit.models.utils import normalize_vecs, truncated_normal
+from .camera import Camera
+
 
 def gen_cam(*, h, w, f, ray_from_pix_center):
     # Create a camera for rendering purposes
     # f = FOCAL
     # K = np.array([[f, 0.0, (w - 1) / 2], [0.0, f, (h - 1) / 2], [0.0, 0.0, 1.0]])
     K = np.array([[f, 0.0, w / 2], [0.0, f, h / 2], [0.0, 0.0, 1.0]])
-    camera = Camera(height=h, width=w, intrinsics=K, ray_from_pix_center=ray_from_pix_center)
+    camera = Camera(
+        height=h,
+        width=w,
+        intrinsics=K,
+        ray_from_pix_center=ray_from_pix_center)
     return camera
+
 
 def gen_c2w_mat(cam_pos=None, rot_mat=None):
     # NOTE: this is a dummy camera used for specifying the z-coordinate
@@ -34,7 +40,9 @@ def gen_c2w_mat(cam_pos=None, rot_mat=None):
     return tf_c2w
 
 
-def get_start_xy_given_dir_and_end_xyz(ray_dir: np.ndarray, end_xyz: np.ndarray, start_z: float) -> np.ndarray:
+def get_start_xy_given_dir_and_end_xyz(ray_dir: np.ndarray,
+                                       end_xyz: np.ndarray,
+                                       start_z: float) -> np.ndarray:
     """Computes the vector's start point's XY coordinates.
 
     Essentially, end_point - start_point = ray_dir * | end_z - start_z |
@@ -54,7 +62,9 @@ def get_start_xy_given_dir_and_end_xyz(ray_dir: np.ndarray, end_xyz: np.ndarray,
     return start_xyz
 
 
-def get_end_xy_given_dir_and_start_xyz(ray_dir: np.ndarray, start_xyz: np.ndarray, end_z: float) -> np.ndarray:
+def get_end_xy_given_dir_and_start_xyz(ray_dir: np.ndarray,
+                                       start_xyz: np.ndarray,
+                                       end_z: float) -> np.ndarray:
     """Computes the vector's end point's XY coordinates.
 
     Essentially, end_point - start_point = ray_dir * | end_z - start_z |
@@ -74,9 +84,10 @@ def get_end_xy_given_dir_and_start_xyz(ray_dir: np.ndarray, start_xyz: np.ndarra
     return end_xyz
 
 
-def compute_max_xy_range_given_cam_orientation_and_z(
-    cam_img_rays: np.ndarray, plane_xyz: np.ndarray, pos_z: float
-) -> List[List[float]]:
+def compute_max_xy_range_given_cam_orientation_and_z(cam_img_rays: np.ndarray,
+                                                     plane_xyz: np.ndarray,
+                                                     pos_z: float
+                                                     ) -> List[List[float]]:
     """This function computes the maximum possible camera's position range on XY-plane given camera's orientation and position Z.
     Essentially, the range of camera's XY coordinates are constrained as following
     (format: pixel on image plane --> MPI plane's point):
@@ -105,41 +116,33 @@ def compute_max_xy_range_given_cam_orientation_and_z(
     _, mpi_h, mpi_w = plane_xyz.shape
 
     cam_img_bottom_left_xyz = get_start_xy_given_dir_and_end_xyz(
-        cam_img_rays[:, img_h - 1, 0], plane_xyz[:, 0, mpi_w - 1], pos_z
-    )
+        cam_img_rays[:, img_h - 1, 0], plane_xyz[:, 0, mpi_w - 1], pos_z)
     cam_img_top_left_xyz = get_start_xy_given_dir_and_end_xyz(
-        cam_img_rays[:, 0, 0], plane_xyz[:, mpi_h - 1, mpi_w - 1], pos_z
-    )
+        cam_img_rays[:, 0, 0], plane_xyz[:, mpi_h - 1, mpi_w - 1], pos_z)
     cam_img_top_right_xyz = get_start_xy_given_dir_and_end_xyz(
-        cam_img_rays[:, 0, img_w - 1], plane_xyz[:, mpi_h - 1, 0], pos_z
-    )
+        cam_img_rays[:, 0, img_w - 1], plane_xyz[:, mpi_h - 1, 0], pos_z)
     cam_img_bottom_right_xyz = get_start_xy_given_dir_and_end_xyz(
-        cam_img_rays[:, img_h - 1, img_w - 1], plane_xyz[:, 0, 0], pos_z
-    )
+        cam_img_rays[:, img_h - 1, img_w - 1], plane_xyz[:, 0, 0], pos_z)
 
     # left-most pixel of camera image defines right-most valid position
     # meanwhile, since +X points right, left-most position has smallest value
-    assert (
-        cam_img_bottom_left_xyz[0] >= cam_img_bottom_right_xyz[0]
-    ), f"{cam_img_bottom_left_xyz[0]}, {cam_img_bottom_right_xyz[0]}"
-    assert cam_img_top_left_xyz[0] >= cam_img_top_right_xyz[0], f"{cam_img_top_left_xyz[0]}, {cam_img_top_right_xyz[0]}"
+    assert (cam_img_bottom_left_xyz[0] >= cam_img_bottom_right_xyz[0]
+            ), f'{cam_img_bottom_left_xyz[0]}, {cam_img_bottom_right_xyz[0]}'
+    assert cam_img_top_left_xyz[0] >= cam_img_top_right_xyz[
+        0], f'{cam_img_top_left_xyz[0]}, {cam_img_top_right_xyz[0]}'
     # top-most pixel of camera image defines top-most valid position
     # meanwhile, since +Y points downward, top-most position has smallest value
-    assert (
-        cam_img_bottom_left_xyz[1] <= cam_img_top_left_xyz[1]
-    ), f"{cam_img_bottom_left_xyz[1]}, {cam_img_top_left_xyz[1]}"
-    assert (
-        cam_img_bottom_right_xyz[1] <= cam_img_top_right_xyz[1]
-    ), f"{cam_img_bottom_right_xyz[1]}, {cam_img_top_right_xyz[1]}"
+    assert (cam_img_bottom_left_xyz[1] <= cam_img_top_left_xyz[1]
+            ), f'{cam_img_bottom_left_xyz[1]}, {cam_img_top_left_xyz[1]}'
+    assert (cam_img_bottom_right_xyz[1] <= cam_img_top_right_xyz[1]
+            ), f'{cam_img_bottom_right_xyz[1]}, {cam_img_top_right_xyz[1]}'
 
-    cam_pos_bound_xyz = np.array(
-        [
-            cam_img_bottom_left_xyz,
-            cam_img_top_left_xyz,
-            cam_img_top_right_xyz,
-            cam_img_bottom_right_xyz,
-        ]
-    )
+    cam_pos_bound_xyz = np.array([
+        cam_img_bottom_left_xyz,
+        cam_img_top_left_xyz,
+        cam_img_top_right_xyz,
+        cam_img_bottom_right_xyz,
+    ])
 
     # NOTE: img_xyz_range formulates a rectangle for valid camera positions.
     # [min_x, min_y, z] is top-left corner, [max_x, max_y, z] is the bottom-right corner
@@ -147,23 +150,23 @@ def compute_max_xy_range_given_cam_orientation_and_z(
         zip(
             np.min(cam_pos_bound_xyz, axis=0).tolist(),
             np.max(cam_pos_bound_xyz, axis=0).tolist(),
-        )
-    )
+        ))
     cam_pos_xyz_range = {
-        "min_x": cam_pos_xyz_range_list[0][0],
-        "max_x": cam_pos_xyz_range_list[0][1],
-        "min_y": cam_pos_xyz_range_list[1][0],
-        "max_y": cam_pos_xyz_range_list[1][1],
-        "min_z": cam_pos_xyz_range_list[2][0],
-        "max_z": cam_pos_xyz_range_list[2][1],
+        'min_x': cam_pos_xyz_range_list[0][0],
+        'max_x': cam_pos_xyz_range_list[0][1],
+        'min_y': cam_pos_xyz_range_list[1][0],
+        'max_y': cam_pos_xyz_range_list[1][1],
+        'min_z': cam_pos_xyz_range_list[2][0],
+        'max_z': cam_pos_xyz_range_list[2][1],
     }
 
     return cam_pos_xyz_range
 
 
-def compute_min_xy_range_given_cam_orientation_and_z(
-    cam_img_rays: np.ndarray, plane_xyz: np.ndarray, pos_z: float
-) -> List[List[float]]:
+def compute_min_xy_range_given_cam_orientation_and_z(cam_img_rays: np.ndarray,
+                                                     plane_xyz: np.ndarray,
+                                                     pos_z: float
+                                                     ) -> List[List[float]]:
     """This function computes the minimum possible camera's position range on XY-plane given camera's orientation and position Z.
     Essentially, the range of camera's XY coordinates are constrained as following
     (format: pixel on image plane --> MPI plane's point):
@@ -192,39 +195,34 @@ def compute_min_xy_range_given_cam_orientation_and_z(
     _, mpi_h, mpi_w = plane_xyz.shape
 
     cam_img_bottom_left_xyz = get_start_xy_given_dir_and_end_xyz(
-        cam_img_rays[:, img_h - 1, 0], plane_xyz[:, mpi_h - 1, 0], pos_z
-    )
-    cam_img_top_left_xyz = get_start_xy_given_dir_and_end_xyz(cam_img_rays[:, 0, 0], plane_xyz[:, 0, 0], pos_z)
+        cam_img_rays[:, img_h - 1, 0], plane_xyz[:, mpi_h - 1, 0], pos_z)
+    cam_img_top_left_xyz = get_start_xy_given_dir_and_end_xyz(
+        cam_img_rays[:, 0, 0], plane_xyz[:, 0, 0], pos_z)
     cam_img_top_right_xyz = get_start_xy_given_dir_and_end_xyz(
-        cam_img_rays[:, 0, img_w - 1], plane_xyz[:, 0, mpi_w - 1], pos_z
-    )
+        cam_img_rays[:, 0, img_w - 1], plane_xyz[:, 0, mpi_w - 1], pos_z)
     cam_img_bottom_right_xyz = get_start_xy_given_dir_and_end_xyz(
-        cam_img_rays[:, img_h - 1, img_w - 1], plane_xyz[:, mpi_h - 1, mpi_w - 1], pos_z
-    )
+        cam_img_rays[:, img_h - 1, img_w - 1], plane_xyz[:, mpi_h - 1,
+                                                         mpi_w - 1], pos_z)
 
     # left-most pixel of camera image defines right-most valid position
     # meanwhile, since +X points right, left-most position has smallest value
-    assert (
-        cam_img_bottom_left_xyz[0] >= cam_img_bottom_right_xyz[0]
-    ), f"{cam_img_bottom_left_xyz[0]}, {cam_img_bottom_right_xyz[0]}"
-    assert cam_img_top_left_xyz[0] >= cam_img_top_right_xyz[0], f"{cam_img_top_left_xyz[0]}, {cam_img_top_right_xyz[0]}"
+    assert (cam_img_bottom_left_xyz[0] >= cam_img_bottom_right_xyz[0]
+            ), f'{cam_img_bottom_left_xyz[0]}, {cam_img_bottom_right_xyz[0]}'
+    assert cam_img_top_left_xyz[0] >= cam_img_top_right_xyz[
+        0], f'{cam_img_top_left_xyz[0]}, {cam_img_top_right_xyz[0]}'
     # top-most pixel of camera image defines bottom-most valid position
     # meanwhile, since +Y points downward, top-most position has smallest value
-    assert (
-        cam_img_bottom_left_xyz[1] <= cam_img_top_left_xyz[1]
-    ), f"{cam_img_bottom_left_xyz[1]}, {cam_img_top_left_xyz[1]}"
-    assert (
-        cam_img_bottom_right_xyz[1] <= cam_img_top_right_xyz[1]
-    ), f"{cam_img_bottom_right_xyz[1]}, {cam_img_top_right_xyz[1]}"
+    assert (cam_img_bottom_left_xyz[1] <= cam_img_top_left_xyz[1]
+            ), f'{cam_img_bottom_left_xyz[1]}, {cam_img_top_left_xyz[1]}'
+    assert (cam_img_bottom_right_xyz[1] <= cam_img_top_right_xyz[1]
+            ), f'{cam_img_bottom_right_xyz[1]}, {cam_img_top_right_xyz[1]}'
 
-    cam_pos_bound_xyz = np.array(
-        [
-            cam_img_bottom_left_xyz,
-            cam_img_top_left_xyz,
-            cam_img_top_right_xyz,
-            cam_img_bottom_right_xyz,
-        ]
-    )
+    cam_pos_bound_xyz = np.array([
+        cam_img_bottom_left_xyz,
+        cam_img_top_left_xyz,
+        cam_img_top_right_xyz,
+        cam_img_bottom_right_xyz,
+    ])
 
     # NOTE: img_xyz_range formulates a rectangle for valid camera positions.
     # [min_x, min_y, z] is top-left corner, [max_x, max_y, z] is the bottom-right corner
@@ -232,23 +230,22 @@ def compute_min_xy_range_given_cam_orientation_and_z(
         zip(
             np.min(cam_pos_bound_xyz, axis=0).tolist(),
             np.max(cam_pos_bound_xyz, axis=0).tolist(),
-        )
-    )
+        ))
     cam_pos_xyz_range = {
-        "min_x": cam_pos_xyz_range_list[0][0],
-        "max_x": cam_pos_xyz_range_list[0][1],
-        "min_y": cam_pos_xyz_range_list[1][0],
-        "max_y": cam_pos_xyz_range_list[1][1],
-        "min_z": cam_pos_xyz_range_list[2][0],
-        "max_z": cam_pos_xyz_range_list[2][1],
+        'min_x': cam_pos_xyz_range_list[0][0],
+        'max_x': cam_pos_xyz_range_list[0][1],
+        'min_y': cam_pos_xyz_range_list[1][0],
+        'max_y': cam_pos_xyz_range_list[1][1],
+        'min_z': cam_pos_xyz_range_list[2][0],
+        'max_z': cam_pos_xyz_range_list[2][1],
     }
 
     return cam_pos_xyz_range
 
 
 def compute_min_visible_range_given_cam_orientation_and_z(
-    cam_img_rays: np.ndarray, plane_xyz: np.ndarray, pos_z: float
-) -> List[List[float]]:
+        cam_img_rays: np.ndarray, plane_xyz: np.ndarray,
+        pos_z: float) -> List[List[float]]:
     """This function computes the minimum possible visible position range on XY-plane at position Z.
     Essentially, the range of visible XY coordinates are constrained as following
     (format: pixel on image plane --> MPI plane's point):
@@ -277,31 +274,35 @@ def compute_min_visible_range_given_cam_orientation_and_z(
     _, mpi_h, mpi_w = plane_xyz.shape
 
     bottom_left_xyz = get_end_xy_given_dir_and_start_xyz(
-        cam_img_rays[:, img_h - 1, 0], plane_xyz[:, mpi_h - 1, 0], pos_z
-    )
-    top_left_xyz = get_end_xy_given_dir_and_start_xyz(cam_img_rays[:, 0, 0], plane_xyz[:, 0, 0], pos_z)
-    top_right_xyz = get_end_xy_given_dir_and_start_xyz(cam_img_rays[:, 0, img_w - 1], plane_xyz[:, 0, mpi_w - 1], pos_z)
+        cam_img_rays[:, img_h - 1, 0], plane_xyz[:, mpi_h - 1, 0], pos_z)
+    top_left_xyz = get_end_xy_given_dir_and_start_xyz(cam_img_rays[:, 0, 0],
+                                                      plane_xyz[:, 0,
+                                                                0], pos_z)
+    top_right_xyz = get_end_xy_given_dir_and_start_xyz(
+        cam_img_rays[:, 0, img_w - 1], plane_xyz[:, 0, mpi_w - 1], pos_z)
     bottom_right_xyz = get_end_xy_given_dir_and_start_xyz(
-        cam_img_rays[:, img_h - 1, img_w - 1], plane_xyz[:, mpi_h - 1, mpi_w - 1], pos_z
-    )
+        cam_img_rays[:, img_h - 1, img_w - 1], plane_xyz[:, mpi_h - 1,
+                                                         mpi_w - 1], pos_z)
 
     # left-most pixel of camera image defines left-most visible position
     # meanwhile, since +X points right, left-most position has smallest value
-    assert bottom_left_xyz[0] <= bottom_right_xyz[0], f"{bottom_left_xyz[0]}, {bottom_right_xyz[0]}"
-    assert top_left_xyz[0] <= top_right_xyz[0], f"{top_left_xyz[0]}, {top_right_xyz[0]}"
+    assert bottom_left_xyz[0] <= bottom_right_xyz[
+        0], f'{bottom_left_xyz[0]}, {bottom_right_xyz[0]}'
+    assert top_left_xyz[0] <= top_right_xyz[
+        0], f'{top_left_xyz[0]}, {top_right_xyz[0]}'
     # top-most pixel of camera image defines top-most valid position
     # meanwhile, since +Y points downward, top-most position has smallest value
-    assert bottom_left_xyz[1] >= top_left_xyz[1], f"{bottom_left_xyz[1]}, {top_left_xyz[1]}"
-    assert bottom_right_xyz[1] >= top_right_xyz[1], f"{bottom_right_xyz[1]}, {top_right_xyz[1]}"
+    assert bottom_left_xyz[1] >= top_left_xyz[
+        1], f'{bottom_left_xyz[1]}, {top_left_xyz[1]}'
+    assert bottom_right_xyz[1] >= top_right_xyz[
+        1], f'{bottom_right_xyz[1]}, {top_right_xyz[1]}'
 
-    vis_pos_bound_xyz = np.array(
-        [
-            bottom_left_xyz,
-            top_left_xyz,
-            top_right_xyz,
-            bottom_right_xyz,
-        ]
-    )
+    vis_pos_bound_xyz = np.array([
+        bottom_left_xyz,
+        top_left_xyz,
+        top_right_xyz,
+        bottom_right_xyz,
+    ])
 
     # NOTE: img_xyz_range formulates a rectangle for valid camera positions.
     # [min_x, min_y, z] is top-left corner, [max_x, max_y, z] is the bottom-right corner
@@ -309,15 +310,14 @@ def compute_min_visible_range_given_cam_orientation_and_z(
         zip(
             np.min(vis_pos_bound_xyz, axis=0).tolist(),
             np.max(vis_pos_bound_xyz, axis=0).tolist(),
-        )
-    )
+        ))
     vis_pos_xyz_range = {
-        "min_x": vis_pos_xyz_range_list[0][0],
-        "max_x": vis_pos_xyz_range_list[0][1],
-        "min_y": vis_pos_xyz_range_list[1][0],
-        "max_y": vis_pos_xyz_range_list[1][1],
-        "min_z": vis_pos_xyz_range_list[2][0],
-        "max_z": vis_pos_xyz_range_list[2][1],
+        'min_x': vis_pos_xyz_range_list[0][0],
+        'max_x': vis_pos_xyz_range_list[0][1],
+        'min_y': vis_pos_xyz_range_list[1][0],
+        'max_y': vis_pos_xyz_range_list[1][1],
+        'min_z': vis_pos_xyz_range_list[2][0],
+        'max_z': vis_pos_xyz_range_list[2][1],
     }
 
     return vis_pos_xyz_range
@@ -344,9 +344,9 @@ def gen_zig_zag_path(
     Returns:
         List(np.ndarray): a list of camera positions along the path
     """
-    min_x, max_x = cam_pos_xyz_range["min_x"], cam_pos_xyz_range["max_x"]
-    min_y, max_y = cam_pos_xyz_range["min_y"], cam_pos_xyz_range["max_y"]
-    pos_z = cam_pos_xyz_range["min_z"]
+    min_x, max_x = cam_pos_xyz_range['min_x'], cam_pos_xyz_range['max_x']
+    min_y, max_y = cam_pos_xyz_range['min_y'], cam_pos_xyz_range['max_y']
+    pos_z = cam_pos_xyz_range['min_z']
 
     _eps_x = (max_x - min_x) * single_side_invalid_area_ratio
     _eps_y = (max_y - min_y) * single_side_invalid_area_ratio
@@ -368,7 +368,8 @@ def gen_zig_zag_path(
 
     for turn_i in np.arange(n_turns):
         if rnd_pos:
-            x_coords = np.sort(np.random.uniform(min_x, max_x, size=n_cam_per_turn))
+            x_coords = np.sort(
+                np.random.uniform(min_x, max_x, size=n_cam_per_turn))
         else:
             x_coords = np.linspace(min_x, max_x, num=n_cam_per_turn)
 
@@ -402,9 +403,9 @@ def gen_same_z_horizontal_path(
     Returns:
         List(np.ndarray): a list of camera positions along the path
     """
-    min_x, max_x = cam_pos_xyz_range["min_x"], cam_pos_xyz_range["max_x"]
-    min_y, max_y = cam_pos_xyz_range["min_y"], cam_pos_xyz_range["max_y"]
-    pos_z = cam_pos_xyz_range["min_z"]
+    min_x, max_x = cam_pos_xyz_range['min_x'], cam_pos_xyz_range['max_x']
+    min_y, max_y = cam_pos_xyz_range['min_y'], cam_pos_xyz_range['max_y']
+    pos_z = cam_pos_xyz_range['min_z']
 
     _eps_x = (max_x - min_x) * single_side_invalid_area_ratio
     _eps_y = (max_y - min_y) * single_side_invalid_area_ratio
@@ -452,9 +453,9 @@ def gen_same_z_rnd_path(
     Returns:
         List(np.ndarray): a list of camera positions along the path
     """
-    min_x, max_x = cam_pos_xyz_range["min_x"], cam_pos_xyz_range["max_x"]
-    min_y, max_y = cam_pos_xyz_range["min_y"], cam_pos_xyz_range["max_y"]
-    pos_z = cam_pos_xyz_range["min_z"]
+    min_x, max_x = cam_pos_xyz_range['min_x'], cam_pos_xyz_range['max_x']
+    min_y, max_y = cam_pos_xyz_range['min_y'], cam_pos_xyz_range['max_y']
+    pos_z = cam_pos_xyz_range['min_z']
 
     _eps_x = (max_x - min_x) * single_side_invalid_area_ratio
     _eps_y = (max_y - min_y) * single_side_invalid_area_ratio
@@ -467,29 +468,32 @@ def gen_same_z_rnd_path(
 
     cam_pos = []
 
-    x_coords = np.random.uniform(min_x, max_x, size=n_cam_poses).reshape((-1, 1))
-    y_coords = np.random.uniform(min_y, max_y, size=n_cam_poses).reshape((-1, 1))
+    x_coords = np.random.uniform(
+        min_x, max_x, size=n_cam_poses).reshape((-1, 1))
+    y_coords = np.random.uniform(
+        min_y, max_y, size=n_cam_poses).reshape((-1, 1))
 
-    cam_pos = np.concatenate((x_coords, y_coords, np.ones(x_coords.shape) * pos_z), axis=1)
+    cam_pos = np.concatenate(
+        (x_coords, y_coords, np.ones(x_coords.shape) * pos_z), axis=1)
     cam_pos = cam_pos.tolist()
 
     return cam_pos
 
 
 def sample_camera_positions_sphere(
-    n=1,
-    r=1,
-    yaw_mean=0.0,
-    yaw_std=np.sqrt(np.pi),
-    pitch_mean=0.0,
-    pitch_std=np.sqrt(np.pi),
-    given_yaws=None,
-    given_pitches=None,
-    flag_rnd=True,
-    flag_det_horizontal=True,
-    sample_method="uniform",
-    n_truncated_stds=2,
-    device=torch.device("cpu"),
+        n=1,
+        r=1,
+        yaw_mean=0.0,
+        yaw_std=np.sqrt(np.pi),
+        pitch_mean=0.0,
+        pitch_std=np.sqrt(np.pi),
+        given_yaws=None,
+        given_pitches=None,
+        flag_rnd=True,
+        flag_det_horizontal=True,
+        sample_method='uniform',
+        n_truncated_stds=2,
+        device=torch.device('cpu'),
 ):
     """Sample points from a sphere's araes defined by ranges of yaw and pitch.
 
@@ -511,13 +515,16 @@ def sample_camera_positions_sphere(
     if given_yaws is None:
         assert given_pitches is None
         if flag_rnd:
-            if sample_method == "uniform":
-                yaws = (torch.rand((n, 1), device=device) - 0.5) * 2 * n_truncated_stds * yaw_std + yaw_mean
-                pitches = (torch.rand((n, 1), device=device) - 0.5) * 2 * n_truncated_stds * pitch_std + pitch_mean
-            elif sample_method in ["normal", "gaussian"]:
+            if sample_method == 'uniform':
+                yaws = (torch.rand((n, 1), device=device) -
+                        0.5) * 2 * n_truncated_stds * yaw_std + yaw_mean
+                pitches = (torch.rand((n, 1), device=device) -
+                           0.5) * 2 * n_truncated_stds * pitch_std + pitch_mean
+            elif sample_method in ['normal', 'gaussian']:
                 yaws = torch.randn((n, 1), device=device) * yaw_std + yaw_mean
-                pitches = torch.randn((n, 1), device=device) * pitch_std + pitch_mean
-            elif sample_method == "truncated_gaussian":
+                pitches = torch.randn(
+                    (n, 1), device=device) * pitch_std + pitch_mean
+            elif sample_method == 'truncated_gaussian':
                 yaws = truncated_normal(
                     torch.zeros((n, 1), device=device),
                     mean=yaw_mean,
@@ -530,26 +537,32 @@ def sample_camera_positions_sphere(
                     std=pitch_std,
                     n_truncted_stds=n_truncated_stds,
                 )
-                assert torch.all(yaws >= yaw_mean - n_truncated_stds * yaw_std) and torch.all(
-                    yaws <= yaw_mean + n_truncated_stds * yaw_std
-                )
-                assert torch.all(pitches >= pitch_mean - n_truncated_stds * pitch_std) and torch.all(
-                    pitches <= pitch_mean + n_truncated_stds * pitch_std
-                )
+                assert torch.all(
+                    yaws >= yaw_mean -
+                    n_truncated_stds * yaw_std) and torch.all(
+                        yaws <= yaw_mean + n_truncated_stds * yaw_std)
+                assert torch.all(
+                    pitches >= pitch_mean -
+                    n_truncated_stds * pitch_std) and torch.all(
+                        pitches <= pitch_mean + n_truncated_stds * pitch_std)
             else:
                 raise ValueError
         else:
             if flag_det_horizontal:
                 # yaws = torch.linspace(min_yaw, max_yaw, steps=n, device=device).reshape((n, 1))
-                yaws = (
-                    torch.linspace(-n_truncated_stds, n_truncated_stds, steps=n, device=device).reshape((n, 1))
-                ) * yaw_std + yaw_mean
+                yaws = (torch.linspace(
+                    -n_truncated_stds,
+                    n_truncated_stds,
+                    steps=n,
+                    device=device).reshape((n, 1))) * yaw_std + yaw_mean
                 pitches = torch.ones((n, 1), device=device) * pitch_mean
             else:
                 yaws = torch.ones((n, 1), device=device) * yaw_mean
-                pitches = (
-                    torch.linspace(-n_truncated_stds, n_truncated_stds, steps=n, device=device).reshape((n, 1))
-                ) * pitch_std + pitch_mean
+                pitches = (torch.linspace(
+                    -n_truncated_stds,
+                    n_truncated_stds,
+                    steps=n,
+                    device=device).reshape((n, 1))) * pitch_std + pitch_mean
     else:
         yaws = given_yaws
         pitches = given_pitches
@@ -567,7 +580,8 @@ def sample_camera_positions_sphere(
 
 
 def create_cam2sphere_sys_matrix(forward_vector, origin, device=None):
-    """Takes in the direction the camera is pointing and the camera origin and returns a cam2sphere_sys matrix.
+    """Takes in the direction the camera is pointing and the camera origin and
+    returns a cam2sphere_sys matrix.
 
     NOTE: our camera is defined as: +X: right; +Y: downward; +Z: forward
 
@@ -599,20 +613,26 @@ def create_cam2sphere_sys_matrix(forward_vector, origin, device=None):
     # +Y: upward
     # NOTE: down_vector is defined in sphere coordinate system.
     # In sphere coordinate system, we have +X: backward, +Y: right, +Z: upward
-    down_vector = torch.tensor([0, 0, -1], dtype=torch.float, device=device).expand_as(forward_vector)
+    down_vector = torch.tensor([0, 0, -1], dtype=torch.float,
+                               device=device).expand_as(forward_vector)
 
     # +X: right
-    right_vector = normalize_vecs(torch.cross(down_vector, forward_vector, dim=-1))
+    right_vector = normalize_vecs(
+        torch.cross(down_vector, forward_vector, dim=-1))
 
-    down_vector = normalize_vecs(torch.cross(forward_vector, right_vector, dim=-1))
+    down_vector = normalize_vecs(
+        torch.cross(forward_vector, right_vector, dim=-1))
 
-    rotation_matrix = torch.eye(4, device=device).unsqueeze(0).repeat(forward_vector.shape[0], 1, 1)
-    rotation_matrix[:, :3, :3] = torch.stack((right_vector, down_vector, forward_vector), axis=-1)
+    rotation_matrix = torch.eye(
+        4, device=device).unsqueeze(0).repeat(forward_vector.shape[0], 1, 1)
+    rotation_matrix[:, :3, :3] = torch.stack(
+        (right_vector, down_vector, forward_vector), axis=-1)
 
     # tmp = np.array([0, 0, 0, 1]).reshape((-1, 1))
     # print("\nrotation_matrix: ", rotation_matrix, np.matmul(rotation_matrix, tmp))
 
-    translation_matrix = torch.eye(4, device=device).unsqueeze(0).repeat(forward_vector.shape[0], 1, 1)
+    translation_matrix = torch.eye(
+        4, device=device).unsqueeze(0).repeat(forward_vector.shape[0], 1, 1)
     translation_matrix[:, :3, 3] = origin
 
     cam2world = translation_matrix @ rotation_matrix
@@ -621,15 +641,16 @@ def create_cam2sphere_sys_matrix(forward_vector, origin, device=None):
 
 
 def create_sphere2world_sys_matrix_for_axis(sphere_center):
-    """In this function, we directly compute matrix for coordinate system's axis transformation.
+    """In this function, we directly compute matrix for coordinate system's
+    axis transformation.
 
-    Specifically, we first construct transformation matrix that transforms coordinates axises.
-    Then, matrix that transforms the point's coordinates are just inverse of the above matrix.
+    Specifically, we first construct transformation matrix that transforms
+    coordinates axises. Then, matrix that transforms the point's coordinates
+    are just inverse of the above matrix.
     """
 
     # NOTE: we do not find the conversion strategy for quaterion to rotation matrix in Scipy.
     # Therefore, we do not know whether it is intrinsic or extrinsic and we cannot guarantee the correctness.
-
     """
     # scipy's quat is scalar-last format
     # this changes cooridnate system to: +X: right; +Y: forward; +Z: upward
@@ -643,7 +664,6 @@ def create_sphere2world_sys_matrix_for_axis(sphere_center):
         [np.sin(-1 * np.pi / 4), 0, 0, np.cos(-1 * np.pi / 4)]
     ).as_matrix()
     """
-
     """
     # scipy's Euler use XYZ for intrinsic and xyz for extrinsic
     # this changes cooridnate system to: +X: right; +Y: forward; +Z: upward
@@ -663,12 +683,14 @@ def create_sphere2world_sys_matrix_for_axis(sphere_center):
     """
 
     rot_mat_for_axis = np.eye(4)
-    rot_mat_for_axis[:3, :3] = Rotation.from_euler("ZX", [90, -90], degrees=True).as_matrix()
+    rot_mat_for_axis[:3, :3] = Rotation.from_euler(
+        'ZX', [90, -90], degrees=True).as_matrix()
 
     translate_mat_for_axis = np.eye(4)
     translate_mat_for_axis[:3, 3] = -1 * sphere_center.reshape(-1)
 
-    transform_mat_for_axis = np.matmul(rot_mat_for_axis, translate_mat_for_axis)
+    transform_mat_for_axis = np.matmul(rot_mat_for_axis,
+                                       translate_mat_for_axis)
     transform_mat = np.linalg.inv(transform_mat_for_axis)
 
     # tmp = np.array([1, 0, 0, 1]).reshape((-1, 1))
@@ -683,8 +705,8 @@ def create_sphere2world_sys_matrix_for_axis(sphere_center):
 
 
 def create_sphere2world_sys_matrix_for_coord(sphere_center):
-    """In this function, we directly compute matrix for coordinate transformation."""
-
+    """In this function, we directly compute matrix for coordinate
+    transformation."""
     """
     # NOTE: this one should also work.
     # However, we do not find the conversion strategy for quaterion to rotation matrix in Scipy.
@@ -706,10 +728,10 @@ def create_sphere2world_sys_matrix_for_coord(sphere_center):
     # scipy's Euler use XYZ for intrinsic and xyz for extrinsic
     # this changes cooridnate system to: +X: right; +Y: forward; +Z: upward
     rot_mat1 = np.eye(4)
-    rot_mat1[:3, :3] = Rotation.from_euler("Z", -90, degrees=True).as_matrix()
+    rot_mat1[:3, :3] = Rotation.from_euler('Z', -90, degrees=True).as_matrix()
     # this changes cooridnate system to: +X: right; +Y: downward; +Z: forward
     rot_mat2 = np.eye(4)
-    rot_mat2[:3, :3] = Rotation.from_euler("X", 90, degrees=True).as_matrix()
+    rot_mat2[:3, :3] = Rotation.from_euler('X', 90, degrees=True).as_matrix()
 
     rot_mat = np.matmul(rot_mat2, rot_mat1)
 
@@ -730,22 +752,22 @@ def create_sphere2world_sys_matrix_for_coord(sphere_center):
 
 
 def gen_sphere_path(
-    n_cams: int,
-    sphere_center: np.ndarray,
-    sphere_r: Union[float, None],
-    # yaw_range=[-np.pi, np.pi],
-    # pitch_range=[0.0, np.pi],
-    yaw_mean=0.0,
-    yaw_std=np.sqrt(np.pi),
-    pitch_mean=0.0,
-    pitch_std=np.sqrt(np.pi),
-    given_yaws=None,
-    given_pitches=None,
-    flag_rnd=True,
-    flag_det_horizontal=True,
-    sample_method="uniform",
-    n_truncated_stds=2,
-    device=torch.device("cpu"),
+        n_cams: int,
+        sphere_center: np.ndarray,
+        sphere_r: Union[float, None],
+        # yaw_range=[-np.pi, np.pi],
+        # pitch_range=[0.0, np.pi],
+        yaw_mean=0.0,
+        yaw_std=np.sqrt(np.pi),
+        pitch_mean=0.0,
+        pitch_std=np.sqrt(np.pi),
+        given_yaws=None,
+        given_pitches=None,
+        flag_rnd=True,
+        flag_det_horizontal=True,
+        sample_method='uniform',
+        n_truncated_stds=2,
+        device=torch.device('cpu'),
 ):
     """Generate random cameras on the sphere.
 
@@ -785,13 +807,13 @@ def gen_sphere_path(
 
     # [#cam, 4, 4]
     cam2sphere_sys_mat = (
-        create_cam2sphere_sys_matrix(forward_vec_sphere_sys, cam_pos_in_sphere_sys, device=device).cpu().numpy()
-    )
+        create_cam2sphere_sys_matrix(
+            forward_vec_sphere_sys, cam_pos_in_sphere_sys,
+            device=device).cpu().numpy())
 
     # NOTE: we need to transform all camera positions back to MPI's coordinate system that:
     # - for sphere-based coordinate system: - +X: backward, +Y: right, +Z: upward, origin is at sphere's center
     # - for MPI-based coordinate system: +X: right, +Y: downward, +Z: forward, origin is not at sphere's center
-
     """
     # NOTE: this one also works
     # transform axis first, then coordinates
@@ -800,7 +822,8 @@ def gen_sphere_path(
     """
 
     # directly transform coordinates
-    transform_mat, pure_rot_mat = create_sphere2world_sys_matrix_for_coord(sphere_center)
+    transform_mat, pure_rot_mat = create_sphere2world_sys_matrix_for_coord(
+        sphere_center)
 
     # [B, 4, 4]
     cam2mpi_sys_mat = np.matmul(transform_mat, cam2sphere_sys_mat)
@@ -819,9 +842,12 @@ def gen_sphere_path(
     return cam2mpi_sys_mat, yaws, pitches
 
 
-def compute_w2c_mat_from_estimated_pose_ffhq(
-    angles, trans, sphere_center, sphere_r=1.0, normalize_trans=False, device=torch.device("cpu")
-):
+def compute_w2c_mat_from_estimated_pose_ffhq(angles,
+                                             trans,
+                                             sphere_center,
+                                             sphere_r=1.0,
+                                             normalize_trans=False,
+                                             device=torch.device('cpu')):
     """
     Return:
         rot     -- torch.tensor, size (B, 3, 3) pts @ trans_mat
@@ -867,7 +893,8 @@ def compute_w2c_mat_from_estimated_pose_ffhq(
 
     # procedure 2
     # transform from MPI (+X right, +Y downward, +Z forward) to Deep3DFace (+X right, +Y up, +Z backward)
-    rot_mat1 = torch.eye(4, device=device).unsqueeze(0).repeat(batch_size, 1, 1)
+    rot_mat1 = torch.eye(
+        4, device=device).unsqueeze(0).repeat(batch_size, 1, 1)
     rot_mat1[:, 1, 1] = -1
     rot_mat1[:, 2, 2] = -1
 
@@ -882,24 +909,35 @@ def compute_w2c_mat_from_estimated_pose_ffhq(
         angles[:, 2:],
     )
 
-    rot_x = torch.cat(
-        [ones, zeros, zeros, zeros, torch.cos(x), -torch.sin(x), zeros, torch.sin(x), torch.cos(x)], dim=1
-    ).reshape([batch_size, 3, 3])
+    rot_x = torch.cat([
+        ones, zeros, zeros, zeros,
+        torch.cos(x), -torch.sin(x), zeros,
+        torch.sin(x),
+        torch.cos(x)
+    ],
+                      dim=1).reshape([batch_size, 3, 3])
 
-    rot_y = torch.cat(
-        [torch.cos(y), zeros, torch.sin(y), zeros, ones, zeros, -torch.sin(y), zeros, torch.cos(y)], dim=1
-    ).reshape([batch_size, 3, 3])
+    rot_y = torch.cat([
+        torch.cos(y), zeros,
+        torch.sin(y), zeros, ones, zeros, -torch.sin(y), zeros,
+        torch.cos(y)
+    ],
+                      dim=1).reshape([batch_size, 3, 3])
 
-    rot_z = torch.cat(
-        [torch.cos(z), -torch.sin(z), zeros, torch.sin(z), torch.cos(z), zeros, zeros, zeros, ones], dim=1
-    ).reshape([batch_size, 3, 3])
+    rot_z = torch.cat([
+        torch.cos(z), -torch.sin(z), zeros,
+        torch.sin(z),
+        torch.cos(z), zeros, zeros, zeros, ones
+    ],
+                      dim=1).reshape([batch_size, 3, 3])
 
     rot = rot_z @ rot_y @ rot_x
     # NOTE: in original code, they use x @ R. However, we use R @ x
     # rot = rot.permute(0, 2, 1)
 
     # NOTE: this matrix transform face's vertices wrt world coordinate system
-    tmp_transform_mat = torch.eye(4, device=device).unsqueeze(0).repeat(batch_size, 1, 1)
+    tmp_transform_mat = torch.eye(
+        4, device=device).unsqueeze(0).repeat(batch_size, 1, 1)
     tmp_transform_mat[:, :3, :3] = rot
     tmp_transform_mat[:, :3, 3] = trans
 
@@ -920,11 +958,14 @@ def compute_w2c_mat_from_estimated_pose_ffhq(
         tmp_rot = transform_mat[:, :3, :3]
         tmp_trans = transform_mat[:, :3, 3:]
         # R @ x + t = 0 -> x = -R^{-1} @ t, [B, 3, 1]
-        tmp_cam_center_in_world = -1 * torch.matmul(torch.inverse(tmp_rot), tmp_trans)
+        tmp_cam_center_in_world = -1 * torch.matmul(
+            torch.inverse(tmp_rot), tmp_trans)
         # [1, 3, 1]
-        sphere_center_coord = torch.FloatTensor([0, 0, sphere_center], device=transform_mat.device)
+        sphere_center_coord = torch.FloatTensor([0, 0, sphere_center],
+                                                device=transform_mat.device)
         # [B, 3, 1]
-        sphere_center_coord = sphere_center_coord.reshape((1, 3, 1)).expand(tmp_trans.shape[0], -1, -1)
+        sphere_center_coord = sphere_center_coord.reshape(
+            (1, 3, 1)).expand(tmp_trans.shape[0], -1, -1)
         dist_vec = tmp_cam_center_in_world - sphere_center_coord
         # [B, 1, 1]
         tmp_trans_norm = torch.norm(dist_vec, p=2, dim=1, keepdim=True)
@@ -936,9 +977,11 @@ def compute_w2c_mat_from_estimated_pose_ffhq(
     return transform_mat
 
 
-def compute_w2c_mat_from_estimated_pose_afhq(
-    c2w_mats, sphere_center, sphere_r=1.0, normalize_trans=False, device=torch.device("cpu")
-):
+def compute_w2c_mat_from_estimated_pose_afhq(c2w_mats,
+                                             sphere_center,
+                                             sphere_r=1.0,
+                                             normalize_trans=False,
+                                             device=torch.device('cpu')):
     """
     Return:
         rot     -- torch.tensor, size (B, 3, 3) pts @ trans_mat
@@ -970,7 +1013,8 @@ def compute_w2c_mat_from_estimated_pose_afhq(
 
     # procedure 2
     # transform from MPI (+X right, +Y downward, +Z forward) to OpenCV's world (+X right, +Y up, +Z backward)
-    rot_mat1 = torch.eye(4, device=device).unsqueeze(0).repeat(batch_size, 1, 1)
+    rot_mat1 = torch.eye(
+        4, device=device).unsqueeze(0).repeat(batch_size, 1, 1)
     rot_mat1[:, 1, 1] = -1
     rot_mat1[:, 2, 2] = -1
 
@@ -984,11 +1028,14 @@ def compute_w2c_mat_from_estimated_pose_afhq(
         tmp_rot = transform_mat[:, :3, :3]
         tmp_trans = transform_mat[:, :3, 3:]
         # R @ x + t = 0 -> x = -R^{-1} @ t, [B, 3, 1]
-        tmp_cam_center_in_world = -1 * torch.matmul(torch.inverse(tmp_rot), tmp_trans)
+        tmp_cam_center_in_world = -1 * torch.matmul(
+            torch.inverse(tmp_rot), tmp_trans)
         # [1, 3, 1]
-        sphere_center_coord = torch.FloatTensor([0, 0, sphere_center], device=transform_mat.device)
+        sphere_center_coord = torch.FloatTensor([0, 0, sphere_center],
+                                                device=transform_mat.device)
         # [B, 3, 1]
-        sphere_center_coord = sphere_center_coord.reshape((1, 3, 1)).expand(tmp_trans.shape[0], -1, -1)
+        sphere_center_coord = sphere_center_coord.reshape(
+            (1, 3, 1)).expand(tmp_trans.shape[0], -1, -1)
         dist_vec = tmp_cam_center_in_world - sphere_center_coord
         # [B, 1, 1]
         tmp_trans_norm = torch.norm(dist_vec, p=2, dim=1, keepdim=True)
@@ -1001,8 +1048,9 @@ def compute_w2c_mat_from_estimated_pose_afhq(
 
 
 def compute_pitch_yaw_from_w2c_mat(w2c_mat, sphere_c):
-    """The goal of this function is to return camera's pitch and yaw
-    defined in func `sample_camera_positions_sphere` from world2camera transformation matrix.
+    """The goal of this function is to return camera's pitch and yaw defined in
+    func `sample_camera_positions_sphere` from world2camera transformation
+    matrix.
 
     NOTE, `sample_camera_positions_sphere` defines +X backward, +Y right, +Z upward,
     while world coordinate system is +X right, +Y downward, +Z forward.
@@ -1013,13 +1061,14 @@ def compute_pitch_yaw_from_w2c_mat(w2c_mat, sphere_c):
       - negative: left semisphere when facing -X (forward)
     - pitch is for angle starting from +X in XZ-plane with anticlockwise direction
     """
-    assert sphere_c.ndim <= 2, f"{sphere_c.shape}"
-    assert w2c_mat.ndim == 3, f"{w2c_mat.shape}"
+    assert sphere_c.ndim <= 2, f'{sphere_c.shape}'
+    assert w2c_mat.ndim == 3, f'{w2c_mat.shape}'
 
     bs = w2c_mat.shape[0]
 
     # 1) get world2sphere transformation matrix
-    sphere2world_mat, pure_rot_mat = create_sphere2world_sys_matrix_for_coord(sphere_c.numpy())
+    sphere2world_mat, pure_rot_mat = create_sphere2world_sys_matrix_for_coord(
+        sphere_c.numpy())
     # [4, 4]
     world2sphere_mat = torch.inverse(torch.FloatTensor(sphere2world_mat))
     # [B, 4, 4]
@@ -1027,12 +1076,14 @@ def compute_pitch_yaw_from_w2c_mat(w2c_mat, sphere_c):
 
     # 2) get camera backward direction in sphere coorindate system
     # [B, 4, 1]
-    cam_origin = torch.FloatTensor([0, 0, 0, 1]).reshape((1, 4, 1)).expand(bs, -1, -1)
+    cam_origin = torch.FloatTensor([0, 0, 0, 1]).reshape(
+        (1, 4, 1)).expand(bs, -1, -1)
     cam_pos_in_world = torch.matmul(torch.inverse(w2c_mat), cam_origin)
     # [B, 3, 1]
     cam_pos_in_sphere = torch.matmul(world2sphere_mat, cam_pos_in_world)[:, :3]
     # [B, 3, 1]
-    cam_pos_in_sphere = cam_pos_in_sphere / torch.norm(cam_pos_in_sphere, p=2, dim=1, keepdim=True)
+    cam_pos_in_sphere = cam_pos_in_sphere / torch.norm(
+        cam_pos_in_sphere, p=2, dim=1, keepdim=True)
 
     xs_in_sphere = cam_pos_in_sphere[:, 0]
     ys_in_sphere = cam_pos_in_sphere[:, 1]

@@ -50,12 +50,13 @@ def normalize_vecs(vectors: torch.Tensor) -> torch.Tensor:
     """
     return vectors / (torch.norm(vectors, dim=-1, keepdim=True))
 
+
 def truncated_normal(tensor, mean=0, std=1, n_truncted_stds=2):
-    assert std >= 0, f"{std}"
+    assert std >= 0, f'{std}'
     size = tensor.shape
 
     # [n, 1] -> [n, 1, 4]
-    tmp = tensor.new_empty(size + (4,), device=tensor.device).normal_()
+    tmp = tensor.new_empty(size + (4, ), device=tensor.device).normal_()
     tmp.data.mul_(std).add_(mean)
 
     lower_bound = mean - 1 * n_truncted_stds * std
@@ -65,12 +66,14 @@ def truncated_normal(tensor, mean=0, std=1, n_truncted_stds=2):
     tensor.data.copy_(tmp.gather(-1, ind).squeeze(-1))
 
     try:
-        assert torch.all(tensor >= lower_bound), f"{torch.min(tensor)}"
-        assert torch.all(tensor <= upper_bound), f"{torch.max(tensor)}"
+        assert torch.all(tensor >= lower_bound), f'{torch.min(tensor)}'
+        assert torch.all(tensor <= upper_bound), f'{torch.max(tensor)}'
     except:
         # fmt: off
-        print("\nin truncated normal lower bound: ", tensor.shape, lower_bound, torch.min(tensor), torch.sum(tensor >= lower_bound))
-        print("\nin truncated normal upper bound: ", tensor.shape, upper_bound, torch.max(tensor), torch.sum(tensor <= lower_bound))
+        print('\nin truncated normal lower bound: ', tensor.shape, lower_bound,
+              torch.min(tensor), torch.sum(tensor >= lower_bound))
+        print('\nin truncated normal upper bound: ', tensor.shape, upper_bound,
+              torch.max(tensor), torch.sum(tensor <= lower_bound))
         tensor[tensor <= lower_bound] = lower_bound
         tensor[tensor >= upper_bound] = upper_bound
         # fmt: on

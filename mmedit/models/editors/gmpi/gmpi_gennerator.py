@@ -1,14 +1,16 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from copy import deepcopy
 from typing import Optional, Tuple
 
+import numpy as np
 import torch
 from mmengine.model import BaseModule
 from torch import Tensor
-import numpy as np
 
 from mmedit.registry import MODULES
 from .gmpi_modules import Generator as StyleGAN2Generator
 from .renderer import MPIRenderer
+
 
 @MODULES.register_module('GMPIGenerator')
 @MODULES.register_module()
@@ -115,7 +117,8 @@ class GMPIGenerator(BaseModule):
                 tmp_mpi_xyz_input = {}
                 for k in mpi_xyz_input:
                     # [#planes, tex_h, tex_w, 3]
-                    tmp_mpi_xyz_input[k] = mpi_xyz_input[k][tmp_start_idx:tmp_end_idx, ...]
+                    tmp_mpi_xyz_input[k] = mpi_xyz_input[k][
+                        tmp_start_idx:tmp_end_idx, ...]
 
                 tmp_mpi_rgbas = generator(
                     z,
@@ -147,22 +150,22 @@ class GMPIGenerator(BaseModule):
             for i, tmp_angle in enumerate(face_angles):
 
                 if render_single_image:
-                    metadata["h_mean"] = tmp_angle[0]
-                    metadata["v_mean"] = tmp_angle[1]
+                    metadata['h_mean'] = tmp_angle[0]
+                    metadata['v_mean'] = tmp_angle[1]
                 else:
                     if horizontal_cam_move:
-                        metadata["h_mean"] = tmp_angle
+                        metadata['h_mean'] = tmp_angle
                     else:
-                        metadata["v_mean"] = tmp_angle
+                        metadata['v_mean'] = tmp_angle
 
                 img, depth_map, _, _ = self.renderer.render(
                     mb_mpi_rgbas,
-                    metadata["img_size"],
-                    metadata["img_size"],
-                    horizontal_mean=metadata["h_mean"],
-                    horizontal_std=metadata["h_stddev"],
-                    vertical_mean=metadata["v_mean"],
-                    vertical_std=metadata["v_stddev"],
+                    metadata['img_size'],
+                    metadata['img_size'],
+                    horizontal_mean=metadata['h_mean'],
+                    horizontal_std=metadata['h_stddev'],
+                    vertical_mean=metadata['v_mean'],
+                    vertical_std=metadata['v_stddev'],
                     assert_not_out_of_last_plane=True,
                 )
 
@@ -171,8 +174,10 @@ class GMPIGenerator(BaseModule):
                 img = (img + 1) / 2.0
                 img = (img * 255).astype(np.uint8)
 
-                depth_map = depth_map.permute(0, 2, 3, 1).squeeze().cpu().numpy()
-                depth_map = (depth_map - metadata["ray_start"]) / (metadata["ray_end"] - metadata["ray_start"])
+                depth_map = depth_map.permute(0, 2, 3,
+                                              1).squeeze().cpu().numpy()
+                depth_map = (depth_map - metadata['ray_start']) / (
+                    metadata['ray_end'] - metadata['ray_start'])
                 depth_map = np.clip(depth_map, 0, 1)
                 depth_map = (depth_map[..., None] * 255).astype(np.uint8)
 

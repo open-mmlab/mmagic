@@ -3,9 +3,9 @@
 # Copyright (C) 2022 Apple Inc. All Rights Reserved.
 #
 
-import numpy as np
 from typing import List, Union
 
+import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -44,11 +44,11 @@ def homography(
         z_dir (torch.Tensor): batched forward directions from cameras, [B, 3]
         assert_not_out_of_plane (bool): if set to be True, we will check whether rays go out of plane.
     """
-    assert rgba.ndim == 4 and rgba.shape[1] == 4, f"{rgba.shape}"
-    assert dhw.ndim == 2 and dhw.shape[1] == 3, f"{dhw.shape}"
-    assert eye_pos.ndim == 2 and eye_pos.shape[1] == 3, f"{eye_pos.shape}"
-    assert ray_dir.ndim == 4 and ray_dir.shape[1] == 3, f"{ray_dir.shape}"
-    assert z_dir.ndim == 2 and z_dir.shape[1] == 3, f"{z_dir.shape}"
+    assert rgba.ndim == 4 and rgba.shape[1] == 4, f'{rgba.shape}'
+    assert dhw.ndim == 2 and dhw.shape[1] == 3, f'{dhw.shape}'
+    assert eye_pos.ndim == 2 and eye_pos.shape[1] == 3, f'{eye_pos.shape}'
+    assert ray_dir.ndim == 4 and ray_dir.shape[1] == 3, f'{ray_dir.shape}'
+    assert z_dir.ndim == 2 and z_dir.shape[1] == 3, f'{z_dir.shape}'
 
     # print("\nin homo: ", rgba.dtype, dhw.dtype, eye_pos.dtype, ray_dir.dtype, z_dir.dtype, "\n")
 
@@ -69,7 +69,7 @@ def homography(
 
         assert torch.all(
             distance >= z_eye[0]
-        ), f"Camera must be placed closer to origin than MPI. {distance}, {eye_pos[0, ...]}"
+        ), f'Camera must be placed closer to origin than MPI. {distance}, {eye_pos[0, ...]}'
 
         z_diff = (distance - z_eye).view(n, 1, 1, 1)
         z_diff = z_diff.expand(n, 1, h, w)
@@ -95,29 +95,43 @@ def homography(
             v = 2 * y / height
             u = 2 * x / width
 
-            v[(v >= -1) & (v <= 1)] = v[(v >= -1) & (v <= 1)] * ALIGN_CORNERS_FALSE_NARROW_SCALE
-            u[(u >= -1) & (u <= 1)] = u[(u >= -1) & (u <= 1)] * ALIGN_CORNERS_FALSE_NARROW_SCALE
+            v[(v >= -1)
+              & (v <= 1)] = v[(v >= -1)
+                              & (v <= 1)] * ALIGN_CORNERS_FALSE_NARROW_SCALE
+            u[(u >= -1)
+              & (u <= 1)] = u[(u >= -1)
+                              & (u <= 1)] * ALIGN_CORNERS_FALSE_NARROW_SCALE
 
         grid = torch.stack([u, v], dim=-1)
 
         if assert_not_out_of_plane:
 
             try:
-                assert torch.min(u) >= -1, f"Ray's U direction goes out of plane at {distance}, min val {torch.min(u)}"
-                assert torch.max(u) <= 1, f"Ray's U direction goes out of plane at {distance}, max val {torch.max(u)}"
-                assert torch.min(v) >= -1, f"Ray's V direction goes out of plane at {distance}, min val {torch.min(v)}"
-                assert torch.max(v) <= 1, f"Ray's V direction goes out of plane at {distance}, max val {torch.max(v)}"
+                assert torch.min(
+                    u
+                ) >= -1, f"Ray's U direction goes out of plane at {distance}, min val {torch.min(u)}"
+                assert torch.max(
+                    u
+                ) <= 1, f"Ray's U direction goes out of plane at {distance}, max val {torch.max(u)}"
+                assert torch.min(
+                    v
+                ) >= -1, f"Ray's V direction goes out of plane at {distance}, min val {torch.min(v)}"
+                assert torch.max(
+                    v
+                ) <= 1, f"Ray's V direction goes out of plane at {distance}, max val {torch.max(v)}"
             except:
 
-                print("\npos: ", eye_pos[:4, :])
-                print("\ndir: ", ray_dir[:4, :3, 0, 0])
-                print("\nu: ", u[0, :4, 0])
-                print("\nv: ", v[0, :4, 0], "\n")
+                print('\npos: ', eye_pos[:4, :])
+                print('\ndir: ', ray_dir[:4, :3, 0, 0])
+                print('\nu: ', u[0, :4, 0])
+                print('\nv: ', v[0, :4, 0], '\n')
 
                 if c2w_mat is not None:
-                    yaws, pitches = compute_pitch_yaw_from_w2c_mat(torch.inverse(c2w_mat).cpu(), torch.FloatTensor(sphere_c))
-                    print("\nyaws: ", yaws.cpu().numpy().tolist(), "\n")
-                    print("\npitches: ", pitches.cpu().numpy().tolist(), "\n")
+                    yaws, pitches = compute_pitch_yaw_from_w2c_mat(
+                        torch.inverse(c2w_mat).cpu(),
+                        torch.FloatTensor(sphere_c))
+                    print('\nyaws: ', yaws.cpu().numpy().tolist(), '\n')
+                    print('\npitches: ', pitches.cpu().numpy().tolist(), '\n')
 
                 import sys
                 import traceback
@@ -137,8 +151,8 @@ def homography(
         rgba,
         grid,
         align_corners=align_corners,
-        mode="bilinear",
-        padding_mode="zeros",
+        mode='bilinear',
+        padding_mode='zeros',
     )
 
     rgb = rgba[:, :3, :, :]
@@ -146,7 +160,7 @@ def homography(
 
     # compute linear depth and disparity
     with torch.no_grad():
-        dist2depth = torch.einsum("nchw,nc->nhw", ray_dir, z_dir)
+        dist2depth = torch.einsum('nchw,nc->nhw', ray_dir, z_dir)
         depth = scale * dist2depth.view(n, 1, h, w)
         disp = 1 / depth
 
@@ -154,6 +168,7 @@ def homography(
 
 
 class MPI(nn.Module):
+
     def __init__(self, align_corners=True):
         super().__init__()
         self._align_corners = align_corners
@@ -168,7 +183,7 @@ class MPI(nn.Module):
         batch_z_dir: List[torch.Tensor],
         separate_background: Union[None, torch.Tensor],
     ):
-        """differentiable rendering function for MPI
+        """differentiable rendering function for MPI.
 
         Args:
             batch_rgba (torch.Tensor): MPI textures of shape (#mpi, #planes, 4, texture_height, texture_width)
@@ -181,39 +196,42 @@ class MPI(nn.Module):
         """
         assert (batch_rgba.ndim == 5) and (
             batch_rgba.shape[2] == 4
-        ), f"Expected rgba to be of shape (#mpi, #planes, 4, texture_height, texture_width), but instead got {batch_rgba.shape}"
-        assert (batch_rgba[:, :, 3, ...].min() >= 0) and (
-            batch_rgba[:, :, 3, ...].max() <= 1
-        ), f"Expected alpha to be within the the range [0, 1]"
+        ), f'Expected rgba to be of shape (#mpi, #planes, 4, texture_height, texture_width), but instead got {batch_rgba.shape}'
+        assert (batch_rgba[:, :, 3, ...].min() >=
+                0) and (batch_rgba[:, :, 3, ...].max() <=
+                        1), f'Expected alpha to be within the the range [0, 1]'
         assert (
             (batch_dhw.ndim == 3)
             and (batch_dhw.shape[0] == batch_rgba.shape[0])
             and (batch_dhw.shape[1] == batch_rgba.shape[1])
             and (batch_dhw.shape[2] == 3)
-        ), f"Expected dhw to be of shape (#mpi, #planes, 3), but instead got {batch_dhw.shape} (rgba: {batch_rgba.shape})"
+        ), f'Expected dhw to be of shape (#mpi, #planes, 3), but instead got {batch_dhw.shape} (rgba: {batch_rgba.shape})'
 
-        assert len(batch_ray_dir) == batch_rgba.shape[0], f"{len(batch_ray_dir)}, {batch_rgba.shape[0]}"
-        assert len(batch_eye_pos) == batch_rgba.shape[0], f"{len(batch_eye_pos)}, {batch_rgba.shape[0]}"
-        assert len(batch_z_dir) == batch_rgba.shape[0], f"{len(batch_z_dir)}, {batch_rgba.shape[0]}"
+        assert len(batch_ray_dir) == batch_rgba.shape[
+            0], f'{len(batch_ray_dir)}, {batch_rgba.shape[0]}'
+        assert len(batch_eye_pos) == batch_rgba.shape[
+            0], f'{len(batch_eye_pos)}, {batch_rgba.shape[0]}'
+        assert len(batch_z_dir) == batch_rgba.shape[
+            0], f'{len(batch_z_dir)}, {batch_rgba.shape[0]}'
 
         for i in range(len(batch_ray_dir)):
-            assert (batch_ray_dir[i].ndim == 4) and (batch_ray_dir[i].shape[1] == 3), (
-                f"Expected ray_dir to be of shape (minibatch, 3, image_height, image_width), "
-                f"but instead got {batch_ray_dir[i].shape} for {i} th elem."
-            )
-            assert (batch_eye_pos[i].ndim == 2) and (batch_eye_pos[i].shape[1] == 3), (
-                f"Expected eye_pos to be of shape (minibatch, 3), "
-                f"but instead got {batch_eye_pos[i].shape} for {i} th elem."
-            )
-            assert (batch_z_dir[i].ndim == 2) and (batch_z_dir[i].shape[1] == 3), (
-                f"Expected z_dir to be of shape (minibatch, 3), "
-                f"but instead got {batch_z_dir[i].shape} for {i} th elem."
-            )
+            assert (batch_ray_dir[i].ndim == 4) and (
+                batch_ray_dir[i].shape[1] == 3
+            ), (f'Expected ray_dir to be of shape (minibatch, 3, image_height, image_width), '
+                f'but instead got {batch_ray_dir[i].shape} for {i} th elem.')
+            assert (batch_eye_pos[i].ndim == 2) and (
+                batch_eye_pos[i].shape[1] == 3
+            ), (f'Expected eye_pos to be of shape (minibatch, 3), '
+                f'but instead got {batch_eye_pos[i].shape} for {i} th elem.')
+            assert (batch_z_dir[i].ndim == 2) and (
+                batch_z_dir[i].shape[1] == 3), (
+                    f'Expected z_dir to be of shape (minibatch, 3), '
+                    f'but instead got {batch_z_dir[i].shape} for {i} th elem.')
 
         if separate_background is not None:
-            assert separate_background.ndim == 4 and separate_background.shape[1] == 3, (
-                f"Expect background to be of shape (#mpi, 3, h, w), " f"but instead get {separate_background.shape}."
-            )
+            assert separate_background.ndim == 4 and separate_background.shape[
+                1] == 3, (f'Expect background to be of shape (#mpi, 3, h, w), '
+                          f'but instead get {separate_background.shape}.')
 
     def forward(
         self,
@@ -243,17 +261,23 @@ class MPI(nn.Module):
         cat_separate_backgrounds = []
         for i in range(len(batch_ray_dir)):
             tmp_n_views = batch_ray_dir[i].shape[0]
-            cat_rgbas.append(batch_rgba[i : (i + 1), ...].expand(tmp_n_views, -1, -1, -1, -1))
-            cat_dhws.append(batch_dhw[i : (i + 1), ...].expand(tmp_n_views, -1, -1))
+            cat_rgbas.append(batch_rgba[i:(i + 1),
+                                        ...].expand(tmp_n_views, -1, -1, -1,
+                                                    -1))
+            cat_dhws.append(batch_dhw[i:(i + 1),
+                                      ...].expand(tmp_n_views, -1, -1))
             if separate_background is not None:
-                cat_separate_backgrounds.append(separate_background[i : (i + 1), ...].expand(tmp_n_views, -1, -1, -1))
+                cat_separate_backgrounds.append(
+                    separate_background[i:(i + 1),
+                                        ...].expand(tmp_n_views, -1, -1, -1))
         # [#mpi x #cameras, #planes, 4, tex_h, tex_w]
         cat_rgbas = torch.cat(cat_rgbas, dim=0)
         # [#mpi x #cameras, #planes, 3]
         cat_dhws = torch.cat(cat_dhws, dim=0)
         if separate_background is not None:
             # [#mpi x #cameras, 1, 3, tex_h, tex_w]
-            cat_separate_backgrounds = torch.cat(cat_separate_backgrounds, dim=0)
+            cat_separate_backgrounds = torch.cat(
+                cat_separate_backgrounds, dim=0)
 
         # concatenate all camera-related information
         # [#mpi x #cameras, 3, img_h, img_w]
@@ -270,21 +294,26 @@ class MPI(nn.Module):
         # NOTE: we expand camera-related information by #planes times
         # [#mpi x #cameras, 1, 3, img_h, img_w] -> [#mpi x #cameras, #planes, 3, img_h, img_w] -> [#mpi x #cameras x #planes, 3, img_h, img_w]
         flat_ray_dir = (
-            cat_ray_dir.unsqueeze(1)
-            .expand(-1, num_layers, -1, -1, -1)
-            .reshape((n_total_views * num_layers, 3, img_h, img_w))
-        )
+            cat_ray_dir.unsqueeze(1).expand(-1, num_layers, -1, -1,
+                                            -1).reshape(
+                                                (n_total_views * num_layers, 3,
+                                                 img_h, img_w)))
         # [#mpi x #cameras, 3] -> # [#mpi x #cameras, 1, 3] -> # [#mpi x #cameras, #planes, 3] -> # [#mpi x #cameras x #planes, 3]
-        flat_eye_pos = cat_eye_pos.unsqueeze(1).expand(-1, num_layers, -1).reshape((n_total_views * num_layers, 3))
+        flat_eye_pos = cat_eye_pos.unsqueeze(1).expand(-1, num_layers,
+                                                       -1).reshape(
+                                                           (n_total_views *
+                                                            num_layers, 3))
         # [#mpi x #cameras, 3] -> # [#mpi x #cameras, 1, 3] -> # [#mpi x #cameras, #planes, 3] -> # [#mpi x #cameras x #planes, 3]
-        flat_z_dir = cat_z_dir.unsqueeze(1).expand(-1, num_layers, -1).reshape((n_total_views * num_layers, 3))
+        flat_z_dir = cat_z_dir.unsqueeze(1).expand(-1, num_layers, -1).reshape(
+            (n_total_views * num_layers, 3))
 
         # # NOTE: we need to reverse the planes to make sure furthest plane comes first
         # cat_rgbas = torch.flip(cat_rgbas, [1])
         # cat_dhws = torch.flip(cat_dhws, [1])
 
         # [#mpi x #cameras, #planes, 4, tex_h, tex_w] -> [#mpi x #cameras x #planes, 4, tex_h, tex_w]
-        flat_rgbas = cat_rgbas.reshape((n_total_views * num_layers, 4, tex_h, tex_w))
+        flat_rgbas = cat_rgbas.reshape(
+            (n_total_views * num_layers, 4, tex_h, tex_w))
         # [#mpi x #cameras, #planes, 3] -> # [#mpi x #cameras x #planes, 3]
         flat_dhws = cat_dhws.reshape((n_total_views * num_layers, 3))
 
@@ -293,11 +322,11 @@ class MPI(nn.Module):
             with torch.no_grad():
                 # print("\nCheck: ", flat_dhws[(num_layers-1)::num_layers, ...], "\n")
                 _ = homography(
-                    flat_rgbas[(num_layers - 1) :: num_layers, ...],
-                    flat_dhws[(num_layers - 1) :: num_layers, ...],
-                    flat_eye_pos[(num_layers - 1) :: num_layers, ...],
-                    flat_ray_dir[(num_layers - 1) :: num_layers, ...],
-                    flat_z_dir[(num_layers - 1) :: num_layers, ...],
+                    flat_rgbas[(num_layers - 1)::num_layers, ...],
+                    flat_dhws[(num_layers - 1)::num_layers, ...],
+                    flat_eye_pos[(num_layers - 1)::num_layers, ...],
+                    flat_ray_dir[(num_layers - 1)::num_layers, ...],
+                    flat_z_dir[(num_layers - 1)::num_layers, ...],
                     assert_not_out_of_plane=True,
                     align_corners=self._align_corners,
                     c2w_mat=c2w_mat,
@@ -321,16 +350,24 @@ class MPI(nn.Module):
         flat_render_depth = 1 / flat_render_disp
 
         # NOTE: the 1st plane is the closest one
-        cat_render_alpha = flat_render_alpha.reshape((n_total_views, num_layers, 1, img_h, img_w))
-        cat_render_rgb = flat_render_rgb.reshape((n_total_views, num_layers, 3, img_h, img_w))
-        cat_render_disp = flat_render_disp.reshape((n_total_views, num_layers, 1, img_h, img_w))
-        cat_render_depth = flat_render_depth.reshape((n_total_views, num_layers, 1, img_h, img_w))
+        cat_render_alpha = flat_render_alpha.reshape(
+            (n_total_views, num_layers, 1, img_h, img_w))
+        cat_render_rgb = flat_render_rgb.reshape(
+            (n_total_views, num_layers, 3, img_h, img_w))
+        cat_render_disp = flat_render_disp.reshape(
+            (n_total_views, num_layers, 1, img_h, img_w))
+        cat_render_depth = flat_render_depth.reshape(
+            (n_total_views, num_layers, 1, img_h, img_w))
 
         # alpha-composition
         # [#mpi x #cameras, #planes + 1, 1, img_h, img_w]
-        alphas_shifted = torch.cat([torch.ones_like(cat_render_alpha[:, :1, ...]), 1 - cat_render_alpha + 1e-10], 1)
+        alphas_shifted = torch.cat([
+            torch.ones_like(cat_render_alpha[:, :1, ...]),
+            1 - cat_render_alpha + 1e-10
+        ], 1)
         # [#mpi x #cameras, #planes, 1, img_h, img_w]
-        weights = cat_render_alpha * torch.cumprod(alphas_shifted, dim=1)[:, :-1, ...]
+        weights = cat_render_alpha * torch.cumprod(
+            alphas_shifted, dim=1)[:, :-1, ...]
 
         weights_sum = weights.sum(1)
         # if last_back:
