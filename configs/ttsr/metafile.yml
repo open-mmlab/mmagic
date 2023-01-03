@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2006.04139
   README: configs/ttsr/README.md
+  Task:
+  - image super-resolution
+  Year: 2020
 Models:
 - Config: configs/ttsr/ttsr-rec_x4c64b16_1xb9-200k_CUFED.py
   In Collection: TTSR

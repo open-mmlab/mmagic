@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1705.02894
   README: configs/ggan/README.md
+  Task:
+  - unconditional gans
+  Year: 2017
 Models:
 - Config: configs/ggan/ggan_dcgan-archi_lr1e-3-1xb128-12Mimgs_celeba-cropped-64x64.py
   In Collection: GGAN

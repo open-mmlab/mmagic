@@ -21,13 +21,14 @@
 
 <br/>
 
-|                             算法                             |   SAD    |    MSE    |   GRAD   |   CONN   | GPU 信息 |                                                下载                                                 |
-| :----------------------------------------------------------: | :------: | :-------: | :------: | :------: | :------: | :-------------------------------------------------------------------------------------------------: |
-|                       第一阶段 (原文)                        |   54.6   |   0.017   |   36.7   |   55.3   |    -     |                                                  -                                                  |
-|                       第三阶段 (原文)                        | **50.4** | **0.014** |   31.0   |   50.8   |    -     |                                                  -                                                  |
-|   [第一阶段 (复现)](./dim_stage1-v16_1xb1-1000k_comp1k.py)   |   53.8   |   0.017   |   32.7   |   54.5   |    1     | [模型](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_SAD-53.8_20200605_140257-979a420f.pth) \| [日志](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_20200605_140257.log.json) |
-| [第二阶段 (复现)](./dim_stage2-v16-pln_1xb1-1000k_comp1k.py) |   52.3   |   0.016   |   29.4   |   52.4   |    1     | [模型](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_SAD-52.3_20200607_171909-d83c4775.pth) \| [日志](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_20200607_171909.log.json) |
-| [第三阶段 (复现)](./dim_stage3-v16-pln_1xb1-1000k_comp1k.py) |   50.6   |   0.015   | **29.0** | **50.7** |    1     | [模型](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth) \| [日志](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_20200609_111851.log.json) |
+|                                     算法                                      |   SAD    |    MSE    |   GRAD   |   CONN   | GPU 信息 |                                        下载                                        |
+| :---------------------------------------------------------------------------: | :------: | :-------: | :------: | :------: | :------: | :--------------------------------------------------------------------------------: |
+|                                第一阶段 (原文)                                |   54.6   |   0.017   |   36.7   |   55.3   |    -     |                                         -                                          |
+|                                第三阶段 (原文)                                | **50.4** | **0.014** |   31.0   |   50.8   |    -     |                                         -                                          |
+|           [第一阶段 (复现)](./dim_stage1-v16_1xb1-1000k_comp1k.py)            |   53.8   |   0.017   |   32.7   |   54.5   |    1     | [模型](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_SAD-53.8_20200605_140257-979a420f.pth) \| [日志](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage1_v16_1x1_1000k_comp1k_20200605_140257.log.json) |
+|         [第二阶段 (复现)](./dim_stage2-v16-pln_1xb1-1000k_comp1k.py)          |   52.3   |   0.016   |   29.4   |   52.4   |    1     | [模型](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_SAD-52.3_20200607_171909-d83c4775.pth) \| [日志](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage2_v16_pln_1x1_1000k_comp1k_20200607_171909.log.json) |
+|         [第三阶段 (复现)](./dim_stage3-v16-pln_1xb1-1000k_comp1k.py)          |   50.6   |   0.015   | **29.0** | **50.7** |    1     | [模型](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth) \| [日志](https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_20200609_111851.log.json) |
+| [第一阶段 (online merge)](./dim_stage1-v16_1xb1-1000k_comp1k_online-merge.py) |    -     |     -     |    -     |    -     |    -     |                                         -                                          |
 
 **注**
 

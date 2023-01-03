@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://nvlabs-fi-cdn.nvidia.com/stylegan3/stylegan3-paper.pdf
   README: configs/styleganv3/README.md
+  Task:
+  - unconditional gans
+  Year: 2021
 Models:
 - Config: configs/styleganv3/stylegan3-t_gamma32.8_8xb4-fp16-noaug_ffhq-1024x1024.py
   In Collection: StyleGANv3

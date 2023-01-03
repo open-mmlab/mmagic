@@ -61,7 +61,7 @@ from torchvision.utils import save_image
 register_all_modules()
 
 disco = MODELS.build(
-    Config.fromfile('configs/disco/disco-baseline.py').model).cuda().eval()
+    Config.fromfile('configs/disco_diffusion/disco-baseline.py').model).cuda().eval()
 text_prompts = {
     0: [
         "A beautiful painting of a singular lighthouse, shining its light across a tumultuous sea of blood by greg rutkowski and thomas kinkade, Trending on artstation.",

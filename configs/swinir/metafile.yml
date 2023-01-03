@@ -1,0 +1,446 @@
+Collections:
+- Metadata:
+    Architecture:
+    - SwinIR
+  Name: SwinIR
+  Paper:
+  - https://arxiv.org/abs/2108.10257
+  README: configs/swinir/README.md
+  Task:
+  - image super-resolution
+  - image denoising
+  - jpeg compression artifact reduction
+  Year: 2021
+Models:
+- Config: configs/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: DIV2K
+  Name: swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K PSNR: 37.8921
+      DIV2K SSIM: 0.9481
+      Set14 PSNR: 34.1174
+      Set14 SSIM: 0.923
+      Set5 PSNR: 38.324
+      Set5 SSIM: 0.9626
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k-ed2d419e.pth
+- Config: configs/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: DIV2K
+  Name: swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K PSNR: 34.1397
+      DIV2K SSIM: 0.8917
+      Set14 PSNR: 30.7669
+      Set14 SSIM: 0.8508
+      Set5 PSNR: 34.864
+      Set5 SSIM: 0.9317
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k-926950f1.pth
+- Config: configs/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: DIV2K
+  Name: swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K PSNR: 32.0953
+      DIV2K SSIM: 0.8418
+      Set14 PSNR: 28.9065
+      Set14 SSIM: 0.7915
+      Set5 PSNR: 32.7315
+      Set5 SSIM: 0.9029
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k-88e4903d.pth
+- Config: configs/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k
+  Results:
+  - Dataset: Others
+    Metrics:
+      DIV2K PSNR: 37.9473
+      DIV2K SSIM: 0.9488
+      Set14 PSNR: 34.4149
+      Set14 SSIM: 0.9252
+      Set5 PSNR: 38.3971
+      Set5 SSIM: 0.9629
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k-69e15fb6.pth
+- Config: configs/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k
+  Results:
+  - Dataset: Others
+    Metrics:
+      DIV2K PSNR: 34.283
+      DIV2K SSIM: 0.8939
+      Set14 PSNR: 30.9258
+      Set14 SSIM: 0.854
+      Set5 PSNR: 34.9335
+      Set5 SSIM: 0.9323
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k-d6982f7b.pth
+- Config: configs/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k
+  Results:
+  - Dataset: Others
+    Metrics:
+      DIV2K PSNR: 32.3021
+      DIV2K SSIM: 0.8451
+      Set14 PSNR: 29.0792
+      Set14 SSIM: 0.7953
+      Set5 PSNR: 32.9214
+      Set5 SSIM: 0.9053
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k-0502d775.pth
+- Config: configs/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: DIV2K
+  Name: swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K PSNR: 37.5844
+      DIV2K SSIM: 0.9459
+      Set14 PSNR: 33.8404
+      Set14 SSIM: 0.9207
+      Set5 PSNR: 38.1289
+      Set5 SSIM: 0.9617
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k-131d3f64.pth
+- Config: configs/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: DIV2K
+  Name: swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K PSNR: 33.8394
+      DIV2K SSIM: 0.8867
+      Set14 PSNR: 30.534
+      Set14 SSIM: 0.8468
+      Set5 PSNR: 34.6037
+      Set5 SSIM: 0.9293
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k-309cb239.pth
+- Config: configs/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: DIV2K
+  Name: swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k
+  Results:
+  - Dataset: DIV2K
+    Metrics:
+      DIV2K PSNR: 31.8636
+      DIV2K SSIM: 0.8353
+      Set14 PSNR: 28.7441
+      Set14 SSIM: 0.7861
+      Set5 PSNR: 32.4343
+      Set5 SSIM: 0.8984
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k-d6622d03.pth
+- Config: configs/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics:
+      RealSRSet+5images NIQE: 5.7975
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-c6425057.pth
+- Config: configs/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics:
+      RealSRSet+5images NIQE: 7.2738
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-6f0c425f.pth
+- Config: configs/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics:
+      RealSRSet+5images NIQE: 5.2329
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-36960d18.pth
+- Config: configs/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics:
+      RealSRSet+5images NIQE: 7.746
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-a016a72f.pth
+- Config: configs/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics:
+      RealSRSet+5images NIQE: 5.1464
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/
+- Config: configs/swinir/swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost
+  Results:
+  - Dataset: Others
+    Metrics:
+      RealSRSet+5images NIQE: 7.6378
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-os-9f1599b5.pth
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15
+  Results:
+  - Dataset: Others
+    Metrics:
+      BSD68 PSNR: 32.5203
+      Set12 PSNR: 33.9731
+      Urban100 PSNR: 34.3424
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15-6782691b.pth
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25
+  Results:
+  - Dataset: Others
+    Metrics:
+      BSD68 PSNR: 30.1377
+      Set12 PSNR: 31.6434
+      Urban100 PSNR: 31.9493
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25-d0d8d4da.pth
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50
+  Results:
+  - Dataset: Others
+    Metrics:
+      BSD68 PSNR: 27.3157
+      Set12 PSNR: 28.5651
+      Urban100 PSNR: 28.6626
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50-54c9968a.pth
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15
+  Results:
+  - Dataset: Others
+    Metrics:
+      CBSD68 PSNR: 34.4136
+      Kodak24 PSNR: 35.3555
+      McMaster PSNR: 35.6205
+      Urban100 PSNR: 35.1836
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15-c74a2cee.pth
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25
+  Results:
+  - Dataset: Others
+    Metrics:
+      CBSD68 PSNR: 31.7626
+      Kodak24 PSNR: 32.9003
+      McMaster PSNR: 33.3198
+      Urban100 PSNR: 32.9458
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25-df2b1c0c.pth
+- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50
+  Results:
+  - Dataset: Others
+    Metrics:
+      CBSD68 PSNR: 28.5346
+      Kodak24 PSNR: 29.8058
+      McMaster PSNR: 30.2027
+      Urban100 PSNR: 29.8832
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50-e369874c.pth
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10
+  Results:
+  - Dataset: Others
+    Metrics:
+      Classic5 PSNR: 30.2746
+      Classic5 SSIM: 0.8254
+      LIVE1 PSNR: 29.8611
+      LIVE1 SSIM: 0.8292
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10-da93c8e9.pth
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20
+  Results:
+  - Dataset: Others
+    Metrics:
+      Classic5 PSNR: 32.5331
+      Classic5 SSIM: 0.8753
+      LIVE1 PSNR: 32.2667
+      LIVE1 SSIM: 0.8914
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20-d47367b1.pth
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30
+  Results:
+  - Dataset: Others
+    Metrics:
+      Classic5 PSNR: 33.7504
+      Classic5 SSIM: 0.8966
+      LIVE1 PSNR: 33.7001
+      LIVE1 SSIM: 0.9179
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30-52c083cf.pth
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40
+  Results:
+  - Dataset: Others
+    Metrics:
+      Classic5 PSNR: 34.5377
+      Classic5 SSIM: 0.9087
+      LIVE1 PSNR: 34.6846
+      LIVE1 SSIM: 0.9322
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40-803e8d9b.pth
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10
+  Results:
+  - Dataset: Others
+    Metrics:
+      Classic5 PSNR: 30.1019
+      Classic5 SSIM: 0.8217
+      LIVE1 PSNR: 28.0676
+      LIVE1 SSIM: 0.8094
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10-09aafadc.pth
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20
+  Results:
+  - Dataset: Others
+    Metrics:
+      Classic5 PSNR: 32.3489
+      Classic5 SSIM: 0.8727
+      LIVE1 PSNR: 30.4514
+      LIVE1 SSIM: 0.8745
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20-b8a42b5e.pth
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30
+  Results:
+  - Dataset: Others
+    Metrics:
+      Classic5 PSNR: 33.6028
+      Classic5 SSIM: 0.8949
+      LIVE1 PSNR: 31.8235
+      LIVE1 SSIM: 0.9023
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30-e9fe6859.pth
+- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40.py
+  In Collection: SwinIR
+  Metadata:
+    GPUs: '8'
+    Training Data: Others
+  Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40
+  Results:
+  - Dataset: Others
+    Metrics:
+      Classic5 PSNR: 34.4344
+      Classic5 SSIM: 0.9076
+      LIVE1 PSNR: 32.761
+      LIVE1 SSIM: 0.9179
+    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+  Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40-5b77a6e6.pth

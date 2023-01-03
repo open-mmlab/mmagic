@@ -1,187 +1,116 @@
-#!/usr/bin/env python
-# Copyright (c) OpenMMLab. All rights reserved.
-
-import functools as func
-import glob
 import os
-import os.path as osp
-import re
-from os.path import basename, dirname
+from glob import glob
+from os import path as osp
+from pathlib import Path
 
-import numpy as np
-import titlecase
+from modelindex.load_model_index import load
 from tqdm import tqdm
 
-github_link = 'https://github.com/open-mmlab/mmediting/blob/1.x/'
+MMEDIT_ROOT = Path(__file__).absolute().parents[3]
+TARGET_ROOT = Path(__file__).absolute().parents[1] / 'model_zoo'
 
 
-def anchor(name):
-    return re.sub(r'-+', '-',
-                  re.sub(r'[^a-zA-Z0-9\+]', '-',
-                         name.strip().lower())).strip('-')
+def write_file(file, content):
+    os.makedirs(osp.dirname(file), exist_ok=True)
+    with open(file, 'w') as f:
+        f.write(content)
 
 
-def summarize(stats, name):
-    allpapers = func.reduce(lambda a, b: a.union(b),
-                            [p for p, _, _, _, _, _, _ in stats])
-    allconfigs = func.reduce(lambda a, b: a.union(b),
-                             [c for _, c, _, _, _, _, _ in stats])
-    allckpts = func.reduce(lambda a, b: a.union(b),
-                           [c for _, _, c, _, _, _, _ in stats])
-    alltasks = func.reduce(lambda a, b: a.union(b),
-                           [t for _, _, _, t, _, _, _ in stats])
+def update_model_zoo():
+    """load collections and models from model index, return summary,
+    collections and models."""
+    model_index_file = MMEDIT_ROOT / 'model-index.yml'
+    model_index = load(str(model_index_file))
+    model_index.build_models_with_collections()
+
+    # parse model_index according to task
+    tasks = {}
+    full_models = set()
+    for model in model_index.models:
+        full_models.add(model.full_model)
+        for r in model.results:
+            _task = r.task.lower().split(', ')
+            for t in _task:
+                if t not in tasks:
+                    tasks[t] = set()
+                tasks[t].add(model.full_model)
+
+    # assert the number of configs with the number of files
+    collections = set([m.in_collection for m in full_models])
+    assert len(collections) == len(os.listdir(MMEDIT_ROOT / 'configs')) - 1
+
+    configs = set([str(MMEDIT_ROOT / m.config) for m in full_models])
+    base_configs = glob(
+        str(MMEDIT_ROOT / 'configs/_base_/**/*.py'), recursive=True)
+    all_configs = glob(str(MMEDIT_ROOT / 'configs/**/*.py'), recursive=True)
+    valid_configs = set(all_configs) - set(base_configs)
+    untrackable_configs = valid_configs - configs
+    assert len(untrackable_configs) == 0, '/n'.join(
+        list(untrackable_configs)) + ' are not trackable.'
+
+    # write for overview.md
+    papers = set()
+    for m in full_models:
+        papers.update(m.paper)
+    checkpoints = set(
+        [m.weights for m in full_models if m.weights.startswith('https:')])
     task_desc = '\n'.join([
-        f"    - [{task}]({task.replace('-', '_').replace(' ', '_').lower()}.md)"  # noqa
-        for task in list(alltasks)
+        f"  - [{t}]({t.replace('-', '_').replace(' ', '_')}.md)"
+        for t in list(tasks.keys())
     ])
 
-    # Overview
-    papertypes, papercounts = np.unique([t for t, _ in allpapers],
-                                        return_counts=True)
-    countstr = '\n'.join(
-        [f'   - {t}: {c}' for t, c in zip(papertypes, papercounts)])
-    countstr = '\n'.join([f'   - ALGORITHM: {len(stats)}'])
+    # write overview.md
+    overview = (f'# Overview\n\n'
+                f'* Number of checkpoints: {len(checkpoints)}\n'
+                f'* Number of configs: {len(configs)}\n'
+                f'* Number of papers: {len(papers)}\n'
+                f'  - ALGORITHM: {len(collections)}\n\n'
+                f'* Tasks:\n{task_desc}')
+    write_file(TARGET_ROOT / 'overview.md', overview)
 
-    summary = f"""# {name}
-"""
+    # write for index.rst
+    task_desc = '\n'.join([
+        f"    {t.replace('-', '_').replace(' ', '_')}.md"
+        for t in list(tasks.keys())
+    ])
+    overview = (f'.. toctree::\n'
+                f'    :maxdepth: 1\n'
+                f'    :caption: Model Zoo\n\n'
+                f'    overview.md\n'
+                f'{task_desc}')
+    write_file(TARGET_ROOT / 'index.rst', overview)
 
-    if name != 'Overview':
-        summary += '\n## Summary'
+    # write for all the tasks
+    for task, models in tqdm(tasks.items(), desc='create markdown files'):
+        target_md = f"{task.replace('-', '_').replace(' ', '_')}.md"
+        target_md = TARGET_ROOT / target_md
+        models = sorted(models, key=lambda x: -x.data['Year'])
 
-    summary += f"""
-* Number of checkpoints: {len(allckpts)}
-* Number of configs: {len(allconfigs)}
-* Number of papers: {len(allpapers)}
-{countstr}
-    """
+        checkpoints = set(
+            [m.weights for m in models if m.weights.startswith('https:')])
+        collections = set([m.in_collection for m in models])
 
-    if name == 'Overview':
-        summary += f"""
-* Tasks:
-{task_desc}
+        papers = set()
+        for m in models:
+            papers.update(m.paper)
 
-"""
+        content = ''
+        readme = set()
+        for m in models:
+            if m.readme not in readme:
+                readme.add(m.readme)
+                with open(MMEDIT_ROOT / m.readme, 'r') as f:
+                    c = f.read()
+                content += c.replace('# ', '## ')
+        overview = (f'# {task}\n\n'
+                    f'## Summary\n'
+                    f'* Number of checkpoints: {len(checkpoints)}\n'
+                    f'* Number of configs: {len(models)}\n'
+                    f'* Number of papers: {len(papers)}\n'
+                    f'  - ALGORITHM: {len(collections)}\n\n'
+                    f'{content}')
 
-    return summary
-
-
-# Count algorithms
-def update_model_zoo():
-
-    target_dir = 'model_zoo'
-
-    os.makedirs(target_dir, exist_ok=True)
-
-    root_dir = dirname(dirname(dirname(dirname(osp.abspath(__file__)))))
-    files = sorted(glob.glob(osp.join(root_dir, 'configs/*/README.md')))
-    stats = []
-
-    for f in tqdm(files, desc='update model zoo'):
-        with open(f, 'r') as content_file:
-            content = content_file.read()
-
-        # title
-        title = content.split('\n')[0].replace('#', '')
-        year = title.split('\'')[-1].split(')')[0]
-
-        # count papers
-        papers = set(
-            (papertype,
-             titlecase.titlecase(paper.lower().strip()).replace('+', r'\+'))
-            for (papertype, paper) in re.findall(
-                r'<!--\s*\[([A-Z]*?)\]\s*-->\s*\n.*?\btitle\s*=\s*{(.*?)}',
-                content, re.DOTALL))
-
-        # paper links
-        revcontent = '\n'.join(list(reversed(content.splitlines())))
-        paperlinks = {}
-        for _, p in papers:
-            paper_link = osp.join(github_link, 'configs', basename(dirname(f)),
-                                  'README.md')
-            # print(p, paper_link)
-            paperlinks[p] = ' '.join(
-                (f'[⇨]({paper_link}#{anchor(paperlink)})'
-                 for paperlink in re.findall(
-                     rf'\btitle\s*=\s*{{\s*{p}\s*}}.*?\n## (.*?)\s*[,;]?\s*\n',
-                     revcontent, re.DOTALL | re.IGNORECASE)))
-            # print('   ', paperlinks[p])
-        paperlist = '\n'.join(
-            sorted(f'    - [{t}] {x} ({paperlinks[x]})' for t, x in papers))
-
-        # count configs
-        configs = set(x.lower().strip()
-                      for x in re.findall(r'/configs/.*?\.py', content))
-
-        # count ckpts
-        ckpts = list(
-            x.lower().strip()
-            for x in re.findall(r'\[model\]\(https\:\/\/.*\.pth', content))
-        ckpts.extend(
-            x.lower().strip()
-            for x in re.findall(r'\[ckpt\]\(https\:\/\/.*\.pth', content))
-        ckpts = set(ckpts)
-
-        # count tasks
-        task_desc = list(
-            set(x.lower().strip()
-                for x in re.findall(r'\*\*Task\*\*: .*', content)))
-        tasks = set()
-        if len(task_desc) > 0:
-            tasks = set(task_desc[0].split('**task**: ')[1].split(', '))
-
-        statsmsg = f"""## {title}"""
-        if len(tasks) > 0:
-            statsmsg += f"\n* Tasks: {','.join(list(tasks))}"
-        statsmsg += f"""
-
-* Number of checkpoints: {len(ckpts)}
-* Number of configs: {len(configs)}
-* Number of papers: {len(papers)}
-{paperlist}
-
-"""
-        # * We should have: {len(glob.glob(osp.join(dirname(f), '*.py')))}
-        content = content.replace('# ', '## ')
-        stats.append((papers, configs, ckpts, tasks, year, statsmsg, content))
-
-    # overview
-    overview = summarize(stats, 'Overview')
-    with open(osp.join(target_dir, 'overview.md'), 'w') as f:
-        f.write(overview)
-
-    alltasks = func.reduce(lambda a, b: a.union(b),
-                           [t for _, _, _, t, _, _, _ in stats])
-
-    # index.rst
-    indexmsg = """
-.. toctree::
-   :maxdepth: 1
-   :caption: Model Zoo
-
-   overview.md
-"""
-
-    for task in alltasks:
-        task = task.replace(' ', '_').replace('-', '_').lower()
-        indexmsg += f'   {task}.md\n'
-
-    with open(osp.join(target_dir, 'index.rst'), 'w') as f:
-        f.write(indexmsg)
-
-    #  task-specific
-    for task in alltasks:
-        filtered_model = [
-            (paper, config, ckpt, tasks, year, x, content)
-            for paper, config, ckpt, tasks, year, x, content in stats
-            if task in tasks
-        ]
-        filtered_model = sorted(filtered_model, key=lambda x: x[-3])[::-1]
-        overview = summarize(filtered_model, task)
-
-        msglist = '\n'.join(x for _, _, _, _, _, _, x in filtered_model)
-        task = task.replace(' ', '_').replace('-', '_').lower()
-        with open(osp.join(target_dir, f'{task}.md'), 'w') as f:
-            f.write(overview + '\n' + msglist)
+        write_file(target_md, overview)
 
 
 if __name__ == '__main__':

@@ -255,7 +255,8 @@ class SlicedWassersteinDistance(GenMetric):
             data_batch (dict): A batch of data from the dataloader.
             data_samples (Sequence[dict]): A batch of outputs from the model.
         """
-        if self._num_processed >= self.fake_nums_per_device:
+        if self.fake_nums != -1 and (self._num_processed >=
+                                     self.fake_nums_per_device):
             return
 
         real_imgs, fake_imgs = [], []
@@ -279,6 +280,8 @@ class SlicedWassersteinDistance(GenMetric):
 
         # real images
         assert real_imgs.shape[1:] == self.image_shape
+        if real_imgs.shape[1] == 1:
+            real_imgs = real_imgs.repeat(1, 3, 1, 1)
         real_pyramid = laplacian_pyramid(real_imgs, self.n_pyramids - 1,
                                          self.gaussian_k)
         # lod: layer_of_descriptors
@@ -291,6 +294,8 @@ class SlicedWassersteinDistance(GenMetric):
 
         # fake images
         assert fake_imgs.shape[1:] == self.image_shape
+        if fake_imgs.shape[1] == 1:
+            fake_imgs = fake_imgs.repeat(1, 3, 1, 1)
         fake_pyramid = laplacian_pyramid(fake_imgs, self.n_pyramids - 1,
                                          self.gaussian_k)
         # lod: layer_of_descriptors
