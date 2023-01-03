@@ -5,6 +5,8 @@ from typing import Dict, List, Optional, Sequence, Tuple, Union
 import numpy as np
 import torch
 from mmengine.config import Config, ConfigDict
+from mmengine.dataset import Compose
+from mmengine.infer import BaseInferencer
 from mmengine.runner import load_checkpoint
 from mmengine.structures import BaseDataElement
 
@@ -19,7 +21,7 @@ ImgType = Union[np.ndarray, Sequence[np.ndarray]]
 ResType = Union[Dict, List[Dict], BaseDataElement, List[BaseDataElement]]
 
 
-class BaseMMEditInferencer:
+class BaseMMEditInferencer(BaseInferencer):
     """Base inferencer.
 
     Args:
@@ -78,6 +80,11 @@ class BaseMMEditInferencer:
         model.to(device)
         model.eval()
         self.model = model
+
+    def _init_pipeline(self, cfg: ConfigType) -> Compose:
+        """Initialize the test pipeline."""
+        pipeline_cfg = cfg.test_dataloader.dataset.pipeline
+        return Compose(pipeline_cfg)
 
     def _init_extra_parameters(self, extra_parameters: Dict) -> None:
         """Initialize extra_parameters of each kind of inferencer."""
