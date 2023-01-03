@@ -11,6 +11,7 @@ We are excited to announce the release of MMEditing 1.0.0rc4. This release suppo
 - Support Stable Diffusion
 
 **New Features & Improvements**
+
 - Disco notebook.(#1507)
 - Revise test requirements and CI.(#1514)
 - Recursive generate summary and docstring.(#1517)
@@ -22,6 +23,7 @@ We are excited to announce the release of MMEditing 1.0.0rc4. This release suppo
 - Update deployment guide.(#1551)
 
 **Bug Fixes**
+
 - Fix documentation link checker.(#1522)
 - Fix ssim first channel bug by.(#1515)
 - Fix restormer ut.(#1550)
@@ -36,14 +38,14 @@ Thanks @plyfager, @LeoXing1996, @Z-Fran, @zengyh1900, @VongolaWu, @liuwenran, @A
 
 **New Contributors**
 
-* @xiaomile made their first contribution in https://github.com/open-mmlab/mmediting/pull/1481
-* @ldr426 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1542
-* @austin273 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1553
-* @whu-lee made their first contribution in https://github.com/open-mmlab/mmediting/pull/1539
-* @willaty made their first contribution in https://github.com/open-mmlab/mmediting/pull/1541
-* @curiosity654 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1556
-* @Zdafeng made their first contribution in https://github.com/open-mmlab/mmediting/pull/1476
-* @Taited made their first contribution in https://github.com/open-mmlab/mmediting/pull/1534
+- @xiaomile made their first contribution in https://github.com/open-mmlab/mmediting/pull/1481
+- @ldr426 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1542
+- @austin273 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1553
+- @whu-lee made their first contribution in https://github.com/open-mmlab/mmediting/pull/1539
+- @willaty made their first contribution in https://github.com/open-mmlab/mmediting/pull/1541
+- @curiosity654 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1556
+- @Zdafeng made their first contribution in https://github.com/open-mmlab/mmediting/pull/1476
+- @Taited made their first contribution in https://github.com/open-mmlab/mmediting/pull/1534
 
 ## v1.0.0rc4 (05/12/2022)
 

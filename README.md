@@ -106,14 +106,13 @@ hope MMEditing could provide better experience.
 
 ### 🌟 Preview of 1.x version
 
-A brand new version of [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) was released in 05/12/2022:
+A brand new version of [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) was released in 03/01/2023:
 
-- Support Text2Image Task! [Disco-Diffusion](configs/disco_diffusion/README.md)
-- Support 3D-aware Generation Task! [EG3D](configs/eg3d/README.md)
-- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍.
-- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
-- Support patch-based and slider-based image and video comparison viewer.
-- Support image colorization.
+- Support well-known text-to-image method [Stable Diffusion](configs/stable_diffusion/README.md)!
+- Support an efficient image restoration algorithm [Restormer](configs/restormer/README.md)!
+- Support a new text-to-image algorithm [GLIDE](projects/glide/configs/README.md)!
+- Support swin based image restoration algorithm [SwinIR](configs/swinir/README.md)!
+- [Projects](projects/README.md) is opened for community to add projects to MMEditing.
 
 Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
 
