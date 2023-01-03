@@ -61,7 +61,7 @@ def test_load_image_from_file():
          'imdecode_backend=None, use_cache=False, to_float32=False, '
          'to_y_channel=False, save_original_img=False, '
          'backend_args=None)'))
-    assert isinstance(image_loader.file_client.client, LocalBackend)
+    assert isinstance(image_loader.file_backend, LocalBackend)
 
     # test save_original_img
     results = dict(img_path=path_baboon)
@@ -90,7 +90,7 @@ def test_load_image_from_file():
     assert results['gt'].shape == (h, w, 3)
     assert results['gt_path'] == path_baboon
     np.testing.assert_almost_equal(results['gt'], img_baboon)
-    assert isinstance(image_loader.file_client.client, LocalBackend)
+    assert isinstance(image_loader.file_backend, LocalBackend)
 
     # convert to y-channel (bgr2y)
     results = dict(gt_path=path_baboon)
