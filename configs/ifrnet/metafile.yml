@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2205.14620
   README: configs/ifrnet/README.md
+  Task:
+  - video interpolation
+  Year: 2022
 Models:
 - Config: configs/ifrnet/ifrnet_in2out1_8xb4_vimeo.py
   In Collection: IFRNet
