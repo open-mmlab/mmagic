@@ -24,12 +24,12 @@ def test_crossattention():
 
 def test_Transformer2DModel_init():
     with pytest.raises(Exception):
-        Transformer2DModel(in_channels=32, num_vector_embeds=4)
+        Transformer2DModel(in_channels=8, num_vector_embeds=4)
 
     with pytest.raises(Exception):
         Transformer2DModel()
 
-    Transformer2DModel(in_channels=32, use_linear_projection=True)
+    Transformer2DModel(in_channels=8, use_linear_projection=True)
 
 
 def test_FeedForward():
