@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from abc import abstractmethod
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
@@ -155,37 +154,6 @@ class BaseMMEditInferencer(BaseInferencer):
             List[str]: List of unique parameters.
         """
         return list(self.extra_parameters.keys())
-
-    @abstractmethod
-    def preprocess(self, inputs: InputsType) -> Dict:
-        """Process the inputs into a model-feedable format.
-
-        Args:
-            inputs (List[Union[str, np.ndarray]]): Inputs for the inferencer.
-
-        Returns:
-            Dict: Result of preprocess
-        """
-
-    @abstractmethod
-    def forward(self, inputs: InputsType) -> PredType:
-        """Forward the inputs to the model."""
-
-    @abstractmethod
-    def visualize(self,
-                  inputs: InputsType,
-                  preds: PredType,
-                  result_out_dir: str = None) -> List[np.ndarray]:
-        """Visualize predictions.
-
-        Args:
-            inputs (List[Union[str, np.ndarray]]): Inputs for the inferencer.
-            preds (List[Dict]): Predictions of the model.
-            result_out_dir (str): Output directory of images. Defaults to ''.
-
-        Returns:
-            List[np.ndarray]: Result of visualize
-        """
 
     def postprocess(
         self,
