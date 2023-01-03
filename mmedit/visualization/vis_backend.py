@@ -5,12 +5,11 @@ from typing import Optional, Union
 
 import cv2
 import imageio
-import mmengine
 import numpy as np
 import torch
 from mmengine import MessageHub
 from mmengine.config import Config
-from mmengine.fileio import dump
+from mmengine.fileio import dump, get_file_backend
 from mmengine.visualization import (BaseVisBackend, TensorboardVisBackend,
                                     WandbVisBackend)
 from mmengine.visualization.vis_backend import force_init_env
@@ -103,9 +102,9 @@ class GenVisBackend(BaseVisBackend):
             tar_path = self._ceph_path[:-1] if \
                 self._ceph_path.endswith('/') else self._ceph_path
 
-            file_client_args = dict(path_mapping={src_path: tar_path})
-            self._file_client = mmengine.FileClient(
-                backend='petrel', **file_client_args)
+            backend_args = dict(
+                backend='petrel', path_mapping={src_path: tar_path})
+            self._file_client = get_file_backend(backend_args=backend_args)
 
     @property  # type: ignore
     @force_init_env

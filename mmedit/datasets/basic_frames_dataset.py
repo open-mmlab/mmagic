@@ -4,7 +4,7 @@ import os.path as osp
 from typing import Callable, List, Optional, Union
 
 from mmengine.dataset import BaseDataset
-from mmengine.fileio import FileClient, list_from_file
+from mmengine.fileio import get_file_backend, list_from_file
 
 from ..registry import DATASETS
 
@@ -54,9 +54,8 @@ class BasicFramesDataset(BaseDataset):
             template excludes the file extension. Default: '{}'.
         search_key (str): The key used for searching the folder to get
             data_list. Default: 'gt'.
-        file_client_args (dict, optional): Arguments to instantiate a
-            FileClient. See :class:`mmengine.fileio.FileClient` for details.
-            Default: None.
+        backend_args (dict, optional): Arguments to instantiate the preifx of
+            uri corresponding backend. Defaults to None.
         depth (int): The depth of path. Default: 1
         num_input_frames (None | int): Number of input frames. Default: None.
         num_output_frames (None | int): Number of output frames. Default: None.
@@ -136,7 +135,7 @@ class BasicFramesDataset(BaseDataset):
                  test_mode: bool = False,
                  filename_tmpl: dict = dict(),
                  search_key: Optional[str] = None,
-                 file_client_args: Optional[str] = None,
+                 backend_args: Optional[dict] = None,
                  depth: int = 1,
                  num_input_frames: Optional[int] = None,
                  num_output_frames: Optional[int] = None,
@@ -154,14 +153,14 @@ class BasicFramesDataset(BaseDataset):
         self.search_key = search_key
         self.filename_tmpl = filename_tmpl
         self.use_ann_file = (ann_file != '')
-        self.file_client_args = file_client_args
+        self.backend_args = backend_args
         self.depth = depth
         self.seq_lens = dict(fixed_seq_len=fixed_seq_len)
         self.num_input_frames = num_input_frames
         self.num_output_frames = num_output_frames
         self.load_frames_list = load_frames_list
-        self.file_client = FileClient.infer_client(
-            file_client_args=file_client_args, uri=data_root)
+        self.file_backend = get_file_backend(
+            uri=data_root, backend_args=self.backend_args)
 
         super().__init__(
             ann_file=ann_file,
@@ -234,7 +233,7 @@ class BasicFramesDataset(BaseDataset):
         """
 
         ann_list = list_from_file(
-            self.ann_file, file_client_args=self.file_client_args)
+            self.ann_file, backend_args=self.backend_args)
         path_list = []
         for ann in ann_list:
             if ann.isspace() or ann == '':
@@ -287,7 +286,7 @@ class BasicFramesDataset(BaseDataset):
         path_list = []
         if sub_folder:
             folder = osp.join(folder, sub_folder)
-        listdir = list(self.file_client.list_dir_or_file(dir_path=folder))
+        listdir = list(self.file_backend.list_dir_or_file(dir_path=folder))
         listdir.sort()
         for path in listdir:
             basename, ext = osp.splitext(path)
@@ -317,7 +316,7 @@ class BasicFramesDataset(BaseDataset):
             if key == 'fixed_seq_len':
                 continue
             path = osp.join(folder, key)
-            num_frames = len(list(self.file_client.list_dir_or_file(path)))
+            num_frames = len(list(self.file_backend.list_dir_or_file(path)))
             self.seq_lens[key] = num_frames
 
     def _get_frames_list(self, key, folder):
@@ -333,7 +332,7 @@ class BasicFramesDataset(BaseDataset):
 
         if 'all' in self.load_frames_list[key]:
             # load all
-            files = list(self.file_client.list_dir_or_file(dir_path=folder))
+            files = list(self.file_backend.list_dir_or_file(dir_path=folder))
         else:
             files = self.load_frames_list[key]
 

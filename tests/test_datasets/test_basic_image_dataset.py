@@ -64,7 +64,7 @@ class TestImageDatasets:
         pipeline = [
             LoadImageFromFile(
                 key='img',
-                file_client_args=dict(
+                backend_args=dict(
                     backend='lmdb',
                     db_path=Path(__file__).parent.parent / 'data' / 'lq.lmdb'))
         ]

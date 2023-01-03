@@ -5,7 +5,7 @@ from typing import List, Optional, Tuple
 import mmcv
 import numpy as np
 from mmcv.transforms import BaseTransform
-from mmengine.fileio import FileClient, list_from_file
+from mmengine.fileio import get_file_backend, list_from_file
 
 from mmedit.registry import TRANSFORMS
 from mmedit.utils import (bbox2mask, brush_stroke_mask, get_irregular_mask,
@@ -41,10 +41,8 @@ class LoadImageFromFile(BaseTransform):
         to_y_channel (bool): Whether to convert the loaded image to y channel.
             Only support 'rgb2ycbcr' and 'rgb2ycbcr'
             Defaults to False.
-        file_client_args (dict): Arguments to instantiate a FileClient.
-            If not specified, will infer from file uri.
-            See :class:`mmengine.fileio.FileClient` for details.
-            Defaults to ``None``.
+        backend_args (dict, optional): Arguments to instantiate the preifx of
+            uri corresponding backend. Defaults to None.
     """
 
     def __init__(
@@ -57,7 +55,7 @@ class LoadImageFromFile(BaseTransform):
         to_float32: bool = False,
         to_y_channel: bool = False,
         save_original_img: bool = False,
-        file_client_args: Optional[dict] = None,
+        backend_args: Optional[dict] = None,
     ) -> None:
 
         self.key = key
@@ -66,13 +64,14 @@ class LoadImageFromFile(BaseTransform):
         self.imdecode_backend = imdecode_backend
         self.save_original_img = save_original_img
 
-        if file_client_args is None:
+        if backend_args is None:
             # lasy init at loading
-            self.file_client_args = None
-            self.file_client = None
+            self.backend_args = None
+            self.file_backend = None
         else:
-            self.file_client_args = file_client_args.copy()
-            self.file_client = FileClient(**self.file_client_args)
+            self.backend_args = backend_args.copy()
+            self.file_backend = get_file_backend(
+                backend_args=self.backend_args)
 
         # cache
         self.use_cache = use_cache
@@ -135,18 +134,18 @@ class LoadImageFromFile(BaseTransform):
         Returns:
             np.ndarray: Image.
         """
-        if self.file_client is None:
-            self.file_client = FileClient.infer_client(
-                uri=filename, file_client_args=self.file_client_args)
+        if self.file_backend is None:
+            self.file_backend = get_file_backend(
+                uri=filename, backend_args=self.backend_args)
 
-        if (self.file_client_args is not None) and (self.file_client_args.get(
+        if (self.backend_args is not None) and (self.backend_args.get(
                 'backend', None) == 'lmdb'):
             filename, _ = osp.splitext(osp.basename(filename))
 
         if filename in self.cache:
             img_bytes = self.cache[filename]
         else:
-            img_bytes = self.file_client.get(filename)
+            img_bytes = self.file_backend.get(filename)
             if self.use_cache:
                 self.cache[filename] = img_bytes
 
@@ -196,7 +195,7 @@ class LoadImageFromFile(BaseTransform):
                     f'to_float32={self.to_float32}, '
                     f'to_y_channel={self.to_y_channel}, '
                     f'save_original_img={self.save_original_img}, '
-                    f'file_client_args={self.file_client_args})')
+                    f'backend_args={self.backend_args})')
 
         return repr_str
 
@@ -244,7 +243,7 @@ class LoadMask(BaseTransform):
         config = dict(
             mask_list_file='xxx/xxx/ooxx.txt',
             prefix='/xxx/xxx/ooxx/',
-            io_backend='disk',
+            io_backend='local',
             color_type='unchanged',
             file_client_kwargs=dict()
         )
@@ -284,27 +283,28 @@ class LoadMask(BaseTransform):
             self.color_type = self.mask_config['color_type']
             self.file_prefix = self.mask_config['prefix']
             self.file_client_kwargs = self.mask_config['file_client_kwargs']
-            self.file_client = None
+            self.file_backend = None
 
             mask_list_file = self.mask_config['mask_list_file']
             self.mask_list = list_from_file(
-                mask_list_file, file_client_args=self.file_client_kwargs)
+                mask_list_file, backend_args=self.file_client_kwargs)
             self.mask_list = [
                 osp.join(self.file_prefix, i) for i in self.mask_list
             ]
             self.mask_set_size = len(self.mask_list)
         elif self.mask_mode == 'file':
-            self.io_backend = 'disk'
+            self.io_backend = 'local'
             self.color_type = 'unchanged'
             self.file_client_kwargs = dict()
-            self.file_client = None
+            self.file_backend = None
 
     def _get_random_mask_from_set(self):
-        if self.file_client is None:
-            self.file_client = FileClient(self.io_backend)
+        if self.file_backend is None:
+            self.file_backend = get_file_backend(
+                backend_args={'backend': self.io_backend})
         # minus 1 to avoid out of range error
         mask_idx = np.random.randint(0, self.mask_set_size)
-        mask_bytes = self.file_client.get(self.mask_list[mask_idx])
+        mask_bytes = self.file_backend.get(self.mask_list[mask_idx])
         mask = mmcv.imfrombytes(mask_bytes, flag=self.color_type)  # HWC, BGR
         if mask.ndim == 2:
             mask = np.expand_dims(mask, axis=2)
@@ -315,10 +315,11 @@ class LoadMask(BaseTransform):
         return mask
 
     def _get_mask_from_file(self, path):
-        if self.file_client is None:
-            self.file_client = FileClient(self.io_backend,
-                                          **self.file_client_kwargs)
-        mask_bytes = self.file_client.get(path)
+        if self.file_backend is None:
+            backend_args = self.file_client_kwargs.copy()
+            backend_args['backend'] = self.io_backend
+            self.file_backend = get_file_backend(backend_args=backend_args)
+        mask_bytes = self.file_backend.get(path)
         mask = mmcv.imfrombytes(mask_bytes, flag=self.color_type)  # HWC, BGR
         if mask.ndim == 2:
             mask = np.expand_dims(mask, axis=2)
@@ -464,10 +465,8 @@ class LoadPairedImageFromFile(LoadImageFromFile):
         to_y_channel (bool): Whether to convert the loaded image to y channel.
             Only support 'rgb2ycbcr' and 'rgb2ycbcr'
             Defaults to False.
-        file_client_args (dict): Arguments to instantiate a FileClient.
-            If not specified, will infer from file uri.
-            See :class:`mmengine.fileio.FileClient` for details.
-            Defaults to ``None``.
+        backend_args (dict, optional): Arguments to instantiate the preifx of
+            uri corresponding backend. Defaults to None.
         io_backend (str, optional): io backend where images are store. Defaults
             to None.
     """
@@ -483,10 +482,10 @@ class LoadPairedImageFromFile(LoadImageFromFile):
                  to_float32: bool = False,
                  to_y_channel: bool = False,
                  save_original_img: bool = False,
-                 file_client_args: Optional[dict] = None):
+                 backend_args: Optional[dict] = None):
         super().__init__(key, color_type, channel_order, imdecode_backend,
                          use_cache, to_float32, to_y_channel,
-                         save_original_img, file_client_args)
+                         save_original_img, backend_args)
         assert isinstance(domain_a, str)
         assert isinstance(domain_b, str)
         self.domain_a = domain_a
