@@ -113,6 +113,9 @@ A brand new version of [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/m
 - Support a new text-to-image algorithm [GLIDE](projects/glide/configs/README.md)!
 - Support swin based image restoration algorithm [SwinIR](configs/swinir/README.md)!
 - [Projects](projects/README.md) is opened for community to add projects to MMEditing.
+- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍.
+- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
+- Support patch-based and slider-based image and video comparison viewer.
 
 Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
 

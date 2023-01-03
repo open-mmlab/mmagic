@@ -25,7 +25,7 @@ We are excited to announce the release of MMEditing 1.0.0rc4. This release suppo
 **Bug Fixes**
 
 - Fix documentation link checker.(#1522)
-- Fix ssim first channel bug by.(#1515)
+- Fix ssim first channel bug.(#1515)
 - Fix restormer ut.(#1550)
 - Fix extract_gt_data of realesrgan.(#1542)
 - Fix model index.(#1559)

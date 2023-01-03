@@ -112,6 +112,9 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - 支持了一个新的文本到图像生成算法 [GLIDE](projects/glide/configs/README.md)!
 - 支持了基于swin的图像复原算法 [SwinIR](configs/swinir/README.md)!
 - 开启了[projects](projects/README.md)以便社区用户添加新的项目到MMEditing.
+- 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
+- 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
+- 支持基于图像子块以及滑动条的图像和视频比较可视化工具。
 
 在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
 
