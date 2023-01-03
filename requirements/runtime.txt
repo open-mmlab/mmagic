@@ -8,7 +8,7 @@ lpips
 mmcv>=2.0.0rc1
 mmengine
 numpy
-opencv-python!=4.5.5.62,!=4.5.5.64
+opencv-python!=4.5.5.62,!=4.5.5.64,!=4.7.0.68
 # MMCV depends opencv-python instead of headless, thus we install opencv-python
 # Due to a bug from upstream, we skip this two version
 # https://github.com/opencv/opencv-python/issues/602
