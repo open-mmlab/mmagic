@@ -70,8 +70,7 @@ class LoadImageFromFile(BaseTransform):
             self.file_backend = None
         else:
             self.backend_args = backend_args.copy()
-            self.file_backend = get_file_backend(
-                backend_args=self.backend_args)
+            self.file_backend = get_file_backend(backend_args=backend_args)
 
         # cache
         self.use_cache = use_cache

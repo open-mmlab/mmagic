@@ -153,14 +153,14 @@ class BasicFramesDataset(BaseDataset):
         self.search_key = search_key
         self.filename_tmpl = filename_tmpl
         self.use_ann_file = (ann_file != '')
-        self.backend_args = backend_args
+        self.backend_args = backend_args.copy()
         self.depth = depth
         self.seq_lens = dict(fixed_seq_len=fixed_seq_len)
         self.num_input_frames = num_input_frames
         self.num_output_frames = num_output_frames
         self.load_frames_list = load_frames_list
         self.file_backend = get_file_backend(
-            uri=data_root, backend_args=self.backend_args)
+            uri=data_root, backend_args=backend_args)
 
         super().__init__(
             ann_file=ann_file,

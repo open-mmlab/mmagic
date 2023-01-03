@@ -154,11 +154,11 @@ class BasicImageDataset(BaseDataset):
         self.search_key = search_key
         self.filename_tmpl = filename_tmpl
         self.use_ann_file = (ann_file != '')
-        self.backend_args = backend_args
+        self.backend_args = backend_args.copy()
         self.img_suffix = img_suffix
         self.recursive = recursive
         self.file_backend = get_file_backend(
-            uri=data_root, backend_args=self.backend_args)
+            uri=data_root, backend_args=backend_args)
 
         super().__init__(
             ann_file=ann_file,
