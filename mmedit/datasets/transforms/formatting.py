@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import copy
 from typing import Any, List, Tuple
 
 import numpy as np
@@ -7,7 +8,7 @@ from mmcv.transforms import to_tensor
 from mmcv.transforms.base import BaseTransform
 
 from mmedit.registry import TRANSFORMS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 def check_if_image(value: Any) -> bool:
@@ -99,30 +100,67 @@ def can_convert_to_image(value):
 
 @TRANSFORMS.register_module()
 class PackEditInputs(BaseTransform):
-    """Pack the inputs data for SR, VFI, matting and inpainting.
+    """Pack data into EditDataSample for training, evaluation and testing.
 
-    Keys for images include ``img``, ``gt``, ``ref``, ``mask``, ``gt_heatmap``,
-        ``trimap``, ``gt_alpha``, ``gt_fg``, ``gt_bg``. All of them will be
-        packed into data field of EditDataSample.
-    pack_all (bool): Whether pack all variables in `results` to `inputs` dict.
-        This is useful when keys of the input dict is not fixed.
-        Please be careful when using this function, because we do not
-        Defaults to False.
+    MMediting follows the design of data structure from MMEngine.
+        Data from the loader will be packed into data field of EditDataSample.
+        More details of DataSample refer to the documentation of MMEngine:
+        https://mmengine.readthedocs.io/en/latest/advanced_tutorials/data_element.html
 
-    Others will be packed into metainfo field of EditDataSample.
+    Args:
+        keys Tuple[List[str], str, None]: The keys to saved in returned
+            inputs, which are used as the input of models.
+        data_keys Tuple[List[str], str, None]: The keys to saved in
+            `data_field` of the `data_samples`.
+        meta_keys Tuple[List[str], str, None]: The meta keys to saved
+            in `metainfo` of the `data_samples`. All the other data will
+            be packed into the data of the `data_samples`
     """
+    KEYS = {'img': 'img'}
 
-    def __init__(self,
-                 keys: Tuple[List[str], str, None] = None,
-                 pack_all: bool = False):
-        if keys is not None:
-            if isinstance(keys, list):
-                self.keys = keys
+    DATA_KEYS = {
+        'gt': 'gt_img',
+        'img_lq': 'img_lq',
+        'ref': 'ref_img',
+        'ref_lq': 'ref_lq',
+        'mask': 'mask',
+        'gt_heatmap': 'gt_heatmap',
+        'cropped_img': 'cropped_img',
+        'gt_unsharp': 'gt_unsharp',
+        'trimap': 'trimap',
+        'alpha': 'gt_alpha',
+        'fg': 'gt_fg',
+        'bg': 'gt_bg',
+        'rgb_img': 'gt_rgb',
+        'gray_img': 'gray',
+    }
+
+    META_KEYS = {
+        'img_path': 'img_path',
+        'ori_shape': 'ori_shape',
+        'img_shape': 'img_shape'
+    }
+
+    def __init__(
+        self,
+        keys: Tuple[List[str], str, None] = None,
+        data_keys: Tuple[List[str], str, None] = None,
+        meta_keys: Tuple[List[str], str, None] = None,
+    ) -> None:
+
+        self.keys = self._extend_keys(self.KEYS, keys)
+        self.data_keys = self._extend_keys(self.DATA_KEYS, data_keys)
+        self.meta_keys = self._extend_keys(self.META_KEYS, meta_keys)
+
+    def _extend_keys(self, pre_defined_keys, input_keys):
+        result_keys = copy.deepcopy(pre_defined_keys)
+        if input_keys is not None:
+            if isinstance(input_keys, list):
+                for k in input_keys:
+                    result_keys.update({k: k})
             else:
-                self.keys = [keys]
-        else:
-            self.keys = None
-        self.pack_all = pack_all
+                result_keys.update({input_keys: input_keys})
+        return result_keys
 
     def transform(self, results: dict) -> dict:
         """Method to pack the input data.
@@ -131,128 +169,41 @@ class PackEditInputs(BaseTransform):
             results (dict): Result dict from the data pipeline.
 
         Returns:
-            dict:
+            dict: A dict contains
 
-            - 'inputs' (obj:`torch.Tensor`): The forward data of models.
+            - 'inputs' (obj:`dict`): The forward data of models.
+              According to different tasks, the `inputs` may contain images,
+              videos, labels, text, etc.
+
             - 'data_samples' (obj:`EditDataSample`): The annotation info of the
                 sample.
         """
 
-        packed_results = dict()
+        # prepare inputs
+        inputs = dict()
+        for key in self.keys:
+            value = results.pop(key, None)
+            if value is not None and can_convert_to_image(value):
+                inputs[key] = images_to_tensor(value)
+
+        # prepare DataSample
         data_sample = EditDataSample()
+        for key in self.data_keys:
+            value = results.pop(key, None)
+            if value is not None:
+                if can_convert_to_image(value):
+                    value = images_to_tensor(value)
+                    if len(value.shape) > 3 and value.size(0) == 1:
+                        value.squeeze_(0)
+                data_sample.set_date({key: value})
 
-        pack_keys = [k for k in results.keys()] if self.pack_all else self.keys
-        if pack_keys is not None:
-            packed_results['inputs'] = dict()
-            for key in pack_keys:
-                val = results[key]
-                if can_convert_to_image(val):
-                    packed_results['inputs'][key] = images_to_tensor(val)
-                    results.pop(key)
+        # prepare metainfo
+        for key in self.meta_keys:
+            value = results.pop(key, None)
+            if value is not None:
+                data_sample.set_metainfo({key: value})
 
-        elif 'img' in results:
-            img = results.pop('img')
-            img_tensor = images_to_tensor(img)
-            packed_results['inputs'] = img_tensor
-            data_sample.input = PixelData(data=img_tensor.clone())
-
-        if 'gt' in results:
-            gt = results.pop('gt')
-            gt_tensor = images_to_tensor(gt)
-            if len(gt_tensor.shape) > 3 and gt_tensor.size(0) == 1:
-                gt_tensor.squeeze_(0)
-            data_sample.gt_img = PixelData(data=gt_tensor)
-
-        if 'gt_label' in results:
-            gt_label = results.pop('gt_label')
-            data_sample.set_gt_label(gt_label)
-
-        if 'img_lq' in results:
-            img_lq = results.pop('img_lq')
-            img_lq_tensor = images_to_tensor(img_lq)
-            data_sample.img_lq = PixelData(data=img_lq_tensor)
-
-        if 'ref' in results:
-            ref = results.pop('ref')
-            ref_tensor = images_to_tensor(ref)
-            data_sample.ref_img = PixelData(data=ref_tensor)
-
-        if 'ref_lq' in results:
-            ref_lq = results.pop('ref_lq')
-            ref_lq_tensor = images_to_tensor(ref_lq)
-            data_sample.ref_lq = PixelData(data=ref_lq_tensor)
-
-        if 'mask' in results:
-            mask = results.pop('mask')
-            mask_tensor = images_to_tensor(mask)
-            data_sample.mask = PixelData(data=mask_tensor)
-
-        if 'gt_heatmap' in results:
-            gt_heatmap = results.pop('gt_heatmap')
-            gt_heatmap_tensor = images_to_tensor(gt_heatmap)
-            data_sample.gt_heatmap = PixelData(data=gt_heatmap_tensor)
-
-        if 'gt_unsharp' in results:
-            gt_unsharp = results.pop('gt_unsharp')
-            gt_unsharp_tensor = images_to_tensor(gt_unsharp)
-            data_sample.gt_unsharp = PixelData(data=gt_unsharp_tensor)
-
-        if 'merged' in results:
-            # image in matting annotation is named merged
-            img = results.pop('merged')
-            img_tensor = images_to_tensor(img)
-            # used for model inputs
-            packed_results['inputs'] = img_tensor
-            # used as ground truth for composition losses
-            data_sample.gt_merged = PixelData(data=img_tensor.clone())
-
-        if 'trimap' in results:
-            trimap = results.pop('trimap')
-            trimap_tensor = images_to_tensor(trimap)
-            data_sample.trimap = PixelData(data=trimap_tensor)
-
-        if 'alpha' in results:
-            # gt_alpha in matting annotation is named alpha
-            gt_alpha = results.pop('alpha')
-            gt_alpha_tensor = images_to_tensor(gt_alpha)
-            data_sample.gt_alpha = PixelData(data=gt_alpha_tensor)
-
-        if 'fg' in results:
-            # gt_fg in matting annotation is named fg
-            gt_fg = results.pop('fg')
-            gt_fg_tensor = images_to_tensor(gt_fg)
-            data_sample.gt_fg = PixelData(data=gt_fg_tensor)
-
-        if 'bg' in results:
-            # gt_bg in matting annotation is named bg
-            gt_bg = results.pop('bg')
-            gt_bg_tensor = images_to_tensor(gt_bg)
-            data_sample.gt_bg = PixelData(data=gt_bg_tensor)
-
-        if 'rgb_img' in results:
-            gt_rgb = results.pop('rgb_img')
-            gt_rgb_tensor = images_to_tensor(gt_rgb)
-            data_sample.gt_rgb = PixelData(data=gt_rgb_tensor)
-
-        if 'gray_img' in results:
-            gray = results.pop('gray_img')
-            gray_tensor = images_to_tensor(gray)
-            data_sample.gray = PixelData(data=gray_tensor)
-
-        if 'cropped_img' in results:
-            cropped_img = results.pop('cropped_img')
-            cropped_img = images_to_tensor(cropped_img)
-            data_sample.cropped_img = PixelData(data=cropped_img)
-
-        metainfo = dict()
-        for key in results:
-            metainfo[key] = results[key]
-
-        data_sample.set_metainfo(metainfo=metainfo)
-
-        packed_results['data_samples'] = data_sample
-
-        return packed_results
+        return {'inputs': inputs, 'data_samples': data_sample}
 
     def __repr__(self) -> str:
 
