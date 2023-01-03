@@ -41,7 +41,7 @@ train_pipeline = [
     dict(
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    dict(type='TemporalReverse', keys=['img'], reverse_ratio=0.5),
+    dict(type='TemporalReverse', keys=['img', 'gt'], reverse_ratio=0.5),
     dict(type='PackEditInputs')
 ]
 

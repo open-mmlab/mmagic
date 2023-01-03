@@ -41,7 +41,7 @@ train_pipeline = [
     dict(
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    dict(type='TemporalReverse', keys=['img'], reverse_ratio=0.5),
+    dict(type='TemporalReverse', keys=['img', 'gt'], reverse_ratio=0.5),
     dict(type='PackEditInputs')
 ]
 
@@ -55,7 +55,7 @@ val_pipeline = [
 # dataset settings
 train_dataset_type = 'MultipleFramesDataset'
 val_dataset_type = 'MultipleFramesDataset'
-data_root = 'data/gopro_all/'
+data_root = '/mnt/petrelfs/share_data/wubohuai/datasets/gopro_all/'
 
 train_dataloader = dict(
     num_workers=8,
