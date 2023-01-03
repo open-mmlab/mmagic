@@ -153,7 +153,7 @@ class BasicFramesDataset(BaseDataset):
         self.search_key = search_key
         self.filename_tmpl = filename_tmpl
         self.use_ann_file = (ann_file != '')
-        self.backend_args = backend_args.copy()
+        self.backend_args = backend_args
         self.depth = depth
         self.seq_lens = dict(fixed_seq_len=fixed_seq_len)
         self.num_input_frames = num_input_frames
