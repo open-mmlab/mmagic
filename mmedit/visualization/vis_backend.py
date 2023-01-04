@@ -88,7 +88,7 @@ class GenVisBackend(BaseVisBackend):
             # ceph_path: s3://a/b
             # local_files:  A/B/.../C/D/TIME_STAMP/vis_data/
             # remote files: s3://a/b/D/TIME_STAMP/vis_data/
-            if self._cfg is None:
+            if self._cfg is None or self._cfg.get('work_dir', None) is None:
                 message_hub = MessageHub.get_current_instance()
                 cfg_str = message_hub.get_info('cfg')
                 self._cfg = Config.fromstring(cfg_str, '.py')
