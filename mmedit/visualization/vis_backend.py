@@ -108,6 +108,8 @@ class GenVisBackend(BaseVisBackend):
                 backend='petrel', path_mapping={src_path: tar_path})
             self._file_client = get_file_backend(backend_args=backend_args)
 
+        self._env_initialized = True
+
     @property  # type: ignore
     @force_init_env
     def experiment(self) -> 'GenVisBackend':
@@ -123,7 +125,7 @@ class GenVisBackend(BaseVisBackend):
         """
         assert isinstance(config, Config)
         self._cfg = config
-        self.experiment()
+        self._init_env()
         config.dump(self._config_save_file)
         self._upload(self._config_save_file)
 
