@@ -14,7 +14,6 @@ opencv-python!=4.5.5.62,!=4.5.5.64
 # https://github.com/opencv/opencv-python/issues/602
 # https://github.com/opencv/opencv/issues/21366
 # It seems to be fixed in https://github.com/opencv/opencv/pull/21382
-# And, 4.7.0.68 will make circleCI stuck.
 Pillow
 resize_right
 tensorboard
