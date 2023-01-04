@@ -123,7 +123,7 @@ class GenVisBackend(BaseVisBackend):
         """
         assert isinstance(config, Config)
         self._cfg = config
-        self._init_env()
+        self.experiment()
         config.dump(self._config_save_file)
         self._upload(self._config_save_file)
 
