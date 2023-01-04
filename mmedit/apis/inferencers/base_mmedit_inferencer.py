@@ -6,10 +6,8 @@ import torch
 from mmengine.config import Config, ConfigDict
 from mmengine.dataset import Compose
 from mmengine.infer import BaseInferencer
-from mmengine.runner import load_checkpoint
 from mmengine.structures import BaseDataElement
 
-from mmedit.registry import MODELS
 from mmedit.utils import ConfigType, SampleList
 from .inference_functions import set_random_seed
 
@@ -62,23 +60,11 @@ class BaseMMEditInferencer(BaseInferencer):
             device = torch.device(
                 'cuda' if torch.cuda.is_available() else 'cpu')
         self.device = device
-        self._init_model(config, ckpt, device)
+        self.model = self._init_model(config, ckpt, device)
         self._init_extra_parameters(extra_parameters)
         self.base_params = self._dispatch_kwargs(**kwargs)
         self.seed = seed
         set_random_seed(self.seed)
-
-    def _init_model(self, cfg: Union[ConfigType, str], ckpt: Optional[str],
-                    device: str) -> None:
-        """Initialize the model with the given config and checkpoint on the
-        specific device."""
-        model = MODELS.build(cfg.model)
-        if ckpt is not None and ckpt != '':
-            ckpt = load_checkpoint(model, ckpt, map_location='cpu')
-        model.cfg = cfg
-        model.to(device)
-        model.eval()
-        self.model = model
 
     def _init_pipeline(self, cfg: ConfigType) -> Compose:
         """Initialize the test pipeline."""
