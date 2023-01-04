@@ -15,7 +15,7 @@ def test_ddpm():
 
     ddpm.set_timesteps(100)
 
-    predicted_variance = torch.tensor(1)
+    predicted_variance = torch.tensor(1.0)
     ddpm._get_variance(t=0, predicted_variance=predicted_variance)
     ddpm._get_variance(t=1, variance_type='fixed_large')
     ddpm._get_variance(t=1, variance_type='fixed_large_log')
