@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 import platform
+import sys
 import unittest
 
 import pytest
@@ -215,6 +216,8 @@ def test_restoration_face_inference():
 @pytest.mark.skipif(
     'win' in platform.system().lower() and 'cu' in torch.__version__,
     reason='skip on windows-cuda due to limited RAM.')
+@pytest.mark.skipif(
+    sys.version_info < (3, 7), reason='skip because python version is old.')
 def test_restoration_inference():
     if torch.cuda.is_available():
         device = torch.device('cuda', 0)

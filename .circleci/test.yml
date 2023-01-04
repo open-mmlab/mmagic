@@ -59,6 +59,7 @@ jobs:
       - run:
           name: Install mmediting dependencies
           command: |
+            pip install 'opencv-python!=4.7.0.68'
             pip install git+https://github.com/open-mmlab/mmengine.git@main
             pip install -U openmim
             mim install 'mmcv >= 2.0.0rc1'
@@ -102,6 +103,7 @@ jobs:
       - run:
           name: Install mmedit dependencies
           command: |
+            docker exec mmedit pip install 'opencv-python!=4.7.0.68'
             docker exec mmedit pip install -e /mmengine
             docker exec mmedit pip install -U openmim
             docker exec mmedit mim install 'mmcv >= 2.0.0rc1'
