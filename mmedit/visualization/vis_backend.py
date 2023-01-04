@@ -71,6 +71,9 @@ class GenVisBackend(BaseVisBackend):
         self._cfg = None
 
     def _init_env(self):
+        if self._env_initialized:
+            return
+        self._env_initialized = True
         """Init save dir."""
         os.makedirs(self._save_dir, exist_ok=True)
         self._img_save_dir = osp.join(
@@ -107,8 +110,6 @@ class GenVisBackend(BaseVisBackend):
             backend_args = dict(
                 backend='petrel', path_mapping={src_path: tar_path})
             self._file_client = get_file_backend(backend_args=backend_args)
-
-        self._env_initialized = True
 
     @property  # type: ignore
     @force_init_env
