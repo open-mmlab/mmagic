@@ -15,7 +15,9 @@ ForwardResults = Union[Dict[str, torch.Tensor], List[EditDataSample],
                        Tuple[torch.Tensor], torch.Tensor]
 
 
-def _pad(batch_image, ds_factor, mode='reflect'):
+def _pad(batch_image: torch.Tensor,
+         ds_factor: int,
+         mode: str = 'reflect') -> Tuple[torch.Tensor, Tuple[int, int]]:
     """Pad image to a multiple of give down-sampling factor."""
 
     h, w = batch_image.shape[-2:]  # NCHW
@@ -33,7 +35,10 @@ def _pad(batch_image, ds_factor, mode='reflect'):
     return batch_image, pad
 
 
-def _interpolate(batch_image, ds_factor, mode='bicubic'):
+def _interpolate(batch_image: torch.Tensor,
+                 ds_factor: int,
+                 mode: str = 'bicubic'
+                 ) -> Tuple[torch.Tensor, Tuple[int, int]]:
     """Resize image to multiple of give down-sampling factor."""
 
     h, w = batch_image.shape[-2:]  # NCHW
@@ -97,7 +102,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
 
         self.backbone = MODELS.build(backbone)
 
-    def resize_inputs(self, batch_inputs):
+    def resize_inputs(self, batch_inputs: torch.Tensor) -> torch.Tensor:
         """Pad or interpolate images and trimaps to multiple of given
         factor."""
 
@@ -121,7 +126,8 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
 
         return torch.cat((batch_images, batch_trimaps), dim=1)
 
-    def restore_size(self, pred_alpha, data_sample):
+    def restore_size(self, pred_alpha: torch.Tensor,
+                     data_sample: EditDataSample) -> torch.Tensor:
         """Restore the predicted alpha to the original shape.
 
         The shape of the predicted alpha may not be the same as the shape of
@@ -243,7 +249,9 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         else:
             raise ValueError('Invalid forward mode.')
 
-    def convert_to_datasample(self, inputs, data_samples):
+    def convert_to_datasample(self, inputs: DataSamples,
+                              data_samples: List[EditDataSample]
+                              ) -> List[EditDataSample]:
         for data_sample, output in zip(inputs, data_samples):
             data_sample.output = output
         return inputs

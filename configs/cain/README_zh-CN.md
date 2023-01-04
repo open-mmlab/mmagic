@@ -27,9 +27,9 @@
 我们使用 `PSNR` 和 `SSIM` 作为指标。
 学习率调整策略是等间隔调整策略。
 
-|                                      算法                                       | vimeo-90k-triplet |         GPU 信息         |                                       下载                                       |
-| :-----------------------------------------------------------------------------: | :---------------: | :----------------------: | :------------------------------------------------------------------------------: |
-| [cain_b5_g1b32_vimeo90k_triplet](/configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py) | 34.6010 / 0.9578  | 1 (Tesla V100-SXM2-32GB) | [模型](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth)/[日志](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.log.json) |
+|                                  算法                                   | vimeo-90k-triplet |         GPU 信息         |                                           下载                                           |
+| :---------------------------------------------------------------------: | :---------------: | :----------------------: | :--------------------------------------------------------------------------------------: |
+| [cain_b5_g1b32_vimeo90k_triplet](./cain_g1b32_1xb5_vimeo90k-triplet.py) | 34.6010 / 0.9578  | 1 (Tesla V100-SXM2-32GB) | [模型](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth)/[日志](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.log.json) |
 
 ## 快速开始
 

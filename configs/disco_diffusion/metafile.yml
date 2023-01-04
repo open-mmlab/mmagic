@@ -6,6 +6,11 @@ Collections:
   Paper:
   - https://github.com/alembics/disco-diffusion
   README: configs/disco_diffusion/README.md
+  Task:
+  - text2image
+  - image2image
+  - diffusion
+  Year: 2022
 Models:
 - Config: configs/disco_diffusion/disco-diffusion_adm-u-finetuned_imagenet-512x512.py
   In Collection: Disco Diffusion
@@ -15,7 +20,7 @@ Models:
   Results:
   - Dataset: Others
     Metrics: {}
-    Task: Text2Image, Image2Image
+    Task: Text2Image, Image2Image, diffusion
   Weights: https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth
 - Config: configs/disco_diffusion/disco-diffusion_adm-u-finetuned_imagenet-256x256.py
   In Collection: Disco Diffusion
@@ -25,7 +30,7 @@ Models:
   Results:
   - Dataset: Others
     Metrics: {}
-    Task: Text2Image, Image2Image
+    Task: Text2Image, Image2Image, diffusion
   Weights: <>
 - Config: configs/disco_diffusion/disco-diffusion_portrait-generator-v001.py
   In Collection: Disco Diffusion
@@ -35,5 +40,5 @@ Models:
   Results:
   - Dataset: Others
     Metrics: {}
-    Task: Text2Image, Image2Image
+    Task: Text2Image, Image2Image, diffusion
   Weights: https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth

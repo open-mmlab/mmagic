@@ -1,5 +1,6 @@
 av
 av==8.0.3; python_version < '3.7'
+einops
 face-alignment
 facexlib
 lmdb
@@ -16,5 +17,3 @@ opencv-python!=4.5.5.62,!=4.5.5.64
 Pillow
 resize_right
 tensorboard
-torch
-torchvision

@@ -59,13 +59,11 @@ jobs:
       - run:
           name: Install mmediting dependencies
           command: |
+            pip install 'opencv-python!=4.7.0.68'
             pip install git+https://github.com/open-mmlab/mmengine.git@main
             pip install -U openmim
             mim install 'mmcv >= 2.0.0rc1'
-            mim install 'mmdet >= 3.0.0rc2'
             pip install -r requirements/tests.txt
-            pip install git+https://github.com/openai/CLIP.git
-            pip install imageio-ffmpeg
       - run:
           name: Build and install
           command: |
@@ -105,13 +103,11 @@ jobs:
       - run:
           name: Install mmedit dependencies
           command: |
+            docker exec mmedit pip install 'opencv-python!=4.7.0.68'
             docker exec mmedit pip install -e /mmengine
             docker exec mmedit pip install -U openmim
             docker exec mmedit mim install 'mmcv >= 2.0.0rc1'
-            docker exec mmedit mim install 'mmdet >= 3.0.0rc2'
             docker exec mmedit pip install -r requirements/tests.txt
-            docker exec mmedit pip install git+https://github.com/openai/CLIP.git
-            docker exec mmedit pip install imageio-ffmpeg
       - run:
           name: Build and install
           command: |
@@ -131,7 +127,6 @@ workflows:
             branches:
               ignore:
                 - dev-1.x
-                - test-1.x
                 - 1.x
   pr_stage_test:
     when:
@@ -144,7 +139,6 @@ workflows:
             branches:
               ignore:
                 - dev-1.x
-                - test-1.x
                 - 1.x
       - build_cpu:
           name: minimum_version_cpu
@@ -155,8 +149,8 @@ workflows:
             - lint
       - build_cpu:
           name: maximum_version_cpu
-          torch: 1.12.1
-          torchvision: 0.13.1
+          torch: 1.13.0
+          torchvision: 0.14.0
           python: 3.9.0
           requires:
             - minimum_version_cpu
@@ -187,5 +181,3 @@ workflows:
             branches:
               only:
                 - dev-1.x
-                - test-1.x
-                - 1.x

@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from unittest.mock import MagicMock, patch
 
+import pytest
 import torch
 from mmengine.model import MMDistributedDataParallel
 
@@ -43,6 +44,7 @@ def test_GenMetric():
     # test get_metric_sampler
     model = MagicMock()
     dataset = MagicMock()
+    dataset.__len__.return_value = 10
     dataloader = MagicMock()
     dataloader.batch_size = 4
     dataloader.dataset = dataset
@@ -56,6 +58,11 @@ def test_GenMetric():
     model.module.data_preprocessor = preprocessor
     metric.prepare(model, dataloader)
     assert metric.data_preprocessor == preprocessor
+
+    # test raise error with dataset is length than real_nums
+    dataset.__len__.return_value = 5
+    with pytest.raises(AssertionError):
+        metric.get_metric_sampler(model, dataloader, [metric])
 
 
 def test_GenerativeMetric():
