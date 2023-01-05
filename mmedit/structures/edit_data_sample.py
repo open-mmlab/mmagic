@@ -7,7 +7,7 @@ import numpy as np
 import torch
 from mmengine.structures import BaseDataElement, LabelData
 
-from mmedit.utils import can_convert_to_image, images_to_tensor
+from mmedit.utils import all_to_tensor
 
 
 def format_label(value: Union[torch.Tensor, np.ndarray, Sequence, int],
@@ -121,13 +121,16 @@ class EditDataSample(BaseDataElement):
     """
 
     # source_key_in_results: target_key_in_metainfo
-    META_KEYS = ['img_path', 'ori_shape', 'img_shape']
+    META_KEYS = [
+        'img_path', 'merged_path', 'trimap_path', 'ori_shape', 'img_shape',
+        'ori_merged_shape', 'ori_trimap_shape', 'trimap_channel_order'
+    ]
 
     # source_key_in_results: target_key_in_datafield
     DATA_KEYS = [
         'gt_img', 'gt_label', 'gt_heatmap', 'gt_unsharp', 'gt_merged', 'gt_fg',
         'gt_bg', 'gt_rgb', 'gt_alpha', 'img_lq', 'ref_img', 'ref_lq', 'mask',
-        'trimap', 'gray', 'cropped_img', 'pred_img'
+        'trimap', 'gray', 'cropped_img', 'pred_img', 'ori_trimap'
     ]
 
     def set_predefined_data(self, data: dict) -> None:
@@ -158,11 +161,8 @@ class EditDataSample(BaseDataElement):
         for k, v in data.items():
             if k == 'gt_label':
                 self.set_gt_label(v)
-            elif can_convert_to_image(v):
-                v = images_to_tensor(v)
-                if len(v.shape) > 3 and v.size(0) == 1:
-                    v.squeeze_(0)
-                setattr(self, k, v)
+            else:
+                setattr(self, k, all_to_tensor(v))
 
     def set_gt_label(
         self, value: Union[np.ndarray, torch.Tensor, Sequence[Number], Number]

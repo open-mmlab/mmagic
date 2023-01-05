@@ -319,3 +319,7 @@ def test_calculate_grid_size():
     target_nrow = (3, 3, 3, 1, 2)
     for bz, ratio, tar in zip(inp_batch_size, aspect_ratio, target_nrow):
         assert calculate_grid_size(bz, ratio) == tar
+
+
+test_colorization_inference()
+# test_restoration_face_inference()
