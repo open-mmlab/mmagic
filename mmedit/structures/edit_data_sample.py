@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from numbers import Number
-from typing import Optional, Sequence, Union
+from typing import Sequence, Union
 
 import mmengine
 import numpy as np
@@ -130,25 +130,20 @@ class EditDataSample(BaseDataElement):
         'trimap', 'gray', 'cropped_img', 'pred_img'
     ]
 
-    def __init__(self,
-                 *,
-                 metainfo: Optional[dict] = None,
-                 predefined: Optional[dict] = None,
-                 **kwargs) -> None:
+    def set_predefined_data(self, data: dict) -> None:
+        """set or change pre-defined key-value pairs in ``data_field`` by
+        parameter ``data``.
 
-        super().__init__(metainfo)
+        Args:
+            data (dict): A dict contains annotations of image or
+                model predictions.
+        """
 
-        predefined_metainfo = {
-            k: v
-            for (k, v) in predefined.items() if k in self.META_KEYS
-        }
-        self.set_metainfo(predefined_metainfo)
+        metainfo = {k: v for (k, v) in data.items() if k in self.META_KEYS}
+        self.set_metainfo(metainfo)
 
-        predefined_data = {
-            k: v
-            for (k, v) in predefined.items() if k in self.DATA_KEYS
-        }
-        self.set_tensor_data(predefined_data)
+        data = {k: v for (k, v) in data.items() if k in self.DATA_KEYS}
+        self.set_tensor_data(data)
 
     def set_tensor_data(self, data: dict) -> None:
         """convert input data to tensor, and then set or change key-value pairs

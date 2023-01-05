@@ -1,12 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import List, Tuple
 
+from mmcv.transforms import to_tensor
 from mmcv.transforms.base import BaseTransform
 
 from mmedit.registry import TRANSFORMS
 from mmedit.structures import EditDataSample
-from mmedit.utils import (can_convert_to_image, check_if_image,
-                          images_to_tensor, to_tensor)
+from mmedit.utils import can_convert_to_image, check_if_image, images_to_tensor
 
 
 @TRANSFORMS.register_module()
@@ -78,15 +78,16 @@ class PackEditInputs(BaseTransform):
 
         # return the inputs as tensor, if it has only one item
         if len(inputs.values()) == 1:
-            inputs = inputs.values()[0]
+            inputs = list(inputs.items())[0]
 
+        data_sample = EditDataSample()
         # prepare metainfo and data in DataSample according to predefined keys
         predefined_data = {
             k: v
             for (k, v) in results.items()
             if not (k in self.data_keys + self.meta_keys)
         }
-        data_sample = EditDataSample(predefined=predefined_data)
+        data_sample.set_predefined_data(predefined_data)
 
         # prepare metainfo in DataSample according to user-provided meta_keys
         required_metainfo = {
@@ -103,7 +104,7 @@ class PackEditInputs(BaseTransform):
         data_sample.set_tensor_data(required_data)
 
         # set data_sample to None if it has no items
-        if len(data_sample.all_items()) == 0:
+        if len(list(data_sample.all_items())) == 0:
             data_sample = None
 
         return {'inputs': inputs, 'data_samples': data_sample}

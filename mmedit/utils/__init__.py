@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .cli import modify_args
-from .img_utils import (can_convert_to_image, get_box_info, images_to_tensor,
-                        reorder_image, tensor2img, to_numpy)
+from .img_utils import (can_convert_to_image, check_if_image, get_box_info,
+                        images_to_tensor, reorder_image, tensor2img, to_numpy)
 from .io_utils import MMEDIT_CACHE_DIR, download_from_url
 # TODO replace with engine's API
 from .logger import print_colored_log
@@ -19,5 +19,5 @@ __all__ = [
     'random_choose_unknown', 'add_gaussian_noise', 'adjust_gamma',
     'make_coord', 'bbox2mask', 'brush_stroke_mask', 'get_irregular_mask',
     'random_bbox', 'reorder_image', 'to_numpy', 'get_box_info',
-    'can_convert_to_image', 'images_to_tensor'
+    'can_convert_to_image', 'images_to_tensor', 'check_if_image'
 ]
