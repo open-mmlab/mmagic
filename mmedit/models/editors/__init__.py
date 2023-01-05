@@ -24,6 +24,7 @@ from .esrgan import ESRGAN, RRDBNet
 from .fba import FBADecoder, FBAResnetDilated
 from .flavr import FLAVR, FLAVRNet
 from .gca import GCA
+from .gcfsr import GCFSR, GCFSR_blind
 from .ggan import GGAN
 from .glean import GLEANStyleGANv2
 from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
@@ -83,5 +84,6 @@ __all__ = [
     'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
-    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D'
+    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D', 
+    'GCFSR', 'GCFSR_blind', 
 ]
