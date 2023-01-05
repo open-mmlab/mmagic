@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from numbers import Number
 from typing import Sequence, Union
 
 import mmengine
@@ -164,3 +165,32 @@ class EditDataSample(BaseDataElement):
     def pred_img(self):
         """This is the function to fetch pred_img."""
         del self._pred_img
+
+    def set_gt_label(
+        self, value: Union[np.ndarray, torch.Tensor, Sequence[Number], Number]
+    ) -> 'EditDataSample':
+        """Set label of ``gt_label``."""
+        label = format_label(value, self.get('num_classes'))
+        if 'gt_label' in self:
+            self.gt_label.label = label.label
+        else:
+            self.gt_label = label
+        return self
+
+    @property
+    def gt_label(self):
+        """This the function to fetch gt label.
+
+        Returns:
+            LabelData: gt label.
+        """
+        return self._gt_label
+
+    @gt_label.setter
+    def gt_label(self, value: LabelData):
+        """This is the function to set gt label.
+
+        Args:
+            value (LabelData): gt label.
+        """
+        self.set_field(value, '_gt_label', dtype=LabelData)
