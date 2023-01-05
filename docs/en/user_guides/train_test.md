@@ -123,7 +123,7 @@ which is specified by `work_dir` in the config file.
 ### Train with a single GPU
 
 ```shell
-CUDA_VISIBLE_DEVICES=0 python tools/train.py configs/example_config.py --work-dir work_dirs/example
+CUDA_VISIBLE=0 python tools/train.py configs/example_config.py --work-dir work_dirs/example
 ```
 
 ### Train with multiple nodes
