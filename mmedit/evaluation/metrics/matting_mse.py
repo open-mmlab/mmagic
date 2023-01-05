@@ -1,19 +1,20 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Sequence
+from typing import Dict, List, Optional, Sequence
 
-from mmengine.evaluator import BaseMetric
+from mmeval import MattingMSE as MattingMSE_MMEVAL
 
 from mmedit.registry import METRICS
-from .metrics_utils import _fetch_data_and_check, average
+from .metrics_utils import _fetch_data_and_check
 
 
 @METRICS.register_module()
-class MattingMSE(BaseMetric):
-    """Mean Squared Error metric for image matting.
+class MattingMSE(MattingMSE_MMEVAL):
+    """Mean Squared Error metric for image matting. A wrapper of
+    :class:`mmeval.MattingMSE`.
 
     This metric compute per-pixel squared error average across all
     pixels.
-    i.e. mean((a-b)^2) / norm_const
+    i.e. mean((a-b)^2)
 
     .. note::
 
@@ -25,25 +26,20 @@ class MattingMSE(BaseMetric):
         pred_alpha should be masked by trimap before passing
         into this metric
 
-    Default prefix: ''
-
-    Args:
-        norm_const (int): Divide the result to reduce its magnitude.
-            Default to 1000.
 
     Metrics:
         - MattingMSE (float): Mean of Squared Error
     """
 
-    default_prefix = ''
-
     def __init__(
         self,
-        norm_const=1000,
+        scaling: float = 1,
+        prefix: Optional[str] = None,
         **kwargs,
     ) -> None:
-        self.norm_const = norm_const
         super().__init__(**kwargs)
+        self.prefix = prefix
+        self.scaling = scaling
 
     def process(self, data_batch: Sequence[dict],
                 data_samples: Sequence[dict]) -> None:
@@ -55,18 +51,15 @@ class MattingMSE(BaseMetric):
             data_samples (Sequence[dict]): A batch of outputs from
                 the model.
         """
+        pred_alphas, gt_alphas, trimaps = [], [], []
         for data_sample in data_samples:
             pred_alpha, gt_alpha, trimap = _fetch_data_and_check(data_sample)
+            pred_alphas.append(pred_alpha)
+            gt_alphas.append(gt_alpha)
+            trimaps.append(trimap)
+        self.add(pred_alphas, gt_alphas, trimaps)
 
-            weight_sum = (trimap == 128).sum()
-            if weight_sum != 0:
-                mse_result = ((pred_alpha - gt_alpha)**2).sum() / weight_sum
-            else:
-                mse_result = 0
-
-            self.results.append({'mse': mse_result})
-
-    def compute_metrics(self, results: List):
+    def compute_metrics(self, results: List) -> Dict[str, float]:
         """Compute the metrics from processed results.
 
         Args:
@@ -77,6 +70,18 @@ class MattingMSE(BaseMetric):
             and the values are corresponding results.
         """
 
-        mse = average(results, 'mse')
+        return {'MattingMSE': self.compute_metric}
 
-        return {'MattingMSE': mse}
+    def evaluate(self, *args, **kwargs):
+        """Returns metric results and print pretty table of metrics per class.
+
+        This method would be invoked by ``mmengine.Evaluator``.
+        """
+        metric_results = self.compute(*args, **kwargs)
+        self.reset()
+
+        key_template = f'{self.prefix}/{{}}' if self.prefix else '{}'
+        return {
+            key_template.format(k): v * self.scaling
+            for k, v in metric_results.items()
+        }
