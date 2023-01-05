@@ -1,12 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import copy
 from numbers import Number
-from typing import List, Sequence, Tuple, Union
+from typing import Optional, Sequence, Union
 
 import mmengine
 import numpy as np
 import torch
 from mmengine.structures import BaseDataElement, LabelData
+
+from mmedit.utils import can_convert_to_image, images_to_tensor
 
 
 def format_label(value: Union[torch.Tensor, np.ndarray, Sequence, int],
@@ -129,26 +130,44 @@ class EditDataSample(BaseDataElement):
         'trimap', 'gray', 'cropped_img', 'pred_img'
     ]
 
-    def _extend_keys(
-        self,
-        pre_defined_keys: Tuple[List[str], dict, None],
-        input_keys: Tuple[List[str], str, None],
-    ) -> Tuple[List[str], dict]:
-        """Extend pre_defined keys with user-provided keys.
+    def __init__(self,
+                 *,
+                 metainfo: Optional[dict] = None,
+                 predefined: Optional[dict] = None,
+                 **kwargs) -> None:
+
+        super().__init__(metainfo)
+
+        predefined_metainfo = {
+            k: v
+            for (k, v) in predefined.items() if k in self.META_KEYS
+        }
+        self.set_metainfo(predefined_metainfo)
+
+        predefined_data = {
+            k: v
+            for (k, v) in predefined.items() if k in self.DATA_KEYS
+        }
+        self.set_tensor_data(predefined_data)
+
+    def set_tensor_data(self, data: dict) -> None:
+        """convert input data to tensor, and then set or change key-value pairs
+        in ``data_field`` by parameter ``data``.
 
         Args:
-            pre_defined_keys (Union[List[str], dict])
+            data (dict): A dict contains annotations of image or
+                model predictions.
         """
-        result_keys = copy.deepcopy(pre_defined_keys)
-        if input_keys is not None:
-            if isinstance(result_keys, list):
-                return result_keys.extend(input_keys)
-            if isinstance(input_keys, list):
-                for k in input_keys:
-                    result_keys.update({k: k})
-            else:
-                result_keys.update({input_keys: input_keys})
-        return result_keys
+        assert isinstance(data,
+                          dict), f'data should be a `dict` but got {data}'
+        for k, v in data.items():
+            if k == 'gt_label':
+                self.set_gt_label(v)
+            elif can_convert_to_image(v):
+                v = images_to_tensor(v)
+                if len(v.shape) > 3 and v.size(0) == 1:
+                    v.squeeze_(0)
+                setattr(self, k, v)
 
     def set_gt_label(
         self, value: Union[np.ndarray, torch.Tensor, Sequence[Number], Number]

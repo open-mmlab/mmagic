@@ -1,100 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Any, List, Tuple
+from typing import List, Tuple
 
-import numpy as np
-import torch
-from mmcv.transforms import to_tensor
 from mmcv.transforms.base import BaseTransform
 
 from mmedit.registry import TRANSFORMS
 from mmedit.structures import EditDataSample
-
-
-def check_if_image(value: Any) -> bool:
-    """Check if the  input value is image or images.
-
-    If value is a list or Tuple,
-    recursively check if  each element in ``value`` is image.
-
-    Args:
-        value (Any): The value to be checked.
-
-    Returns:
-        bool: If the value is image or sequence of images.
-    """
-
-    if isinstance(value, (List, Tuple)):
-        is_image = (len(value) > 0)
-        for v in value:
-            is_image = is_image and check_if_image(v)
-
-    else:
-        is_image = isinstance(value, np.ndarray) and len(value.shape) > 1
-
-    return is_image
-
-
-def image_to_tensor(img):
-    """Trans image to tensor.
-
-    Args:
-        img (np.ndarray): The original image.
-
-    Returns:
-        Tensor: The output tensor.
-    """
-
-    if len(img.shape) < 3:
-        img = np.expand_dims(img, -1)
-    img = np.ascontiguousarray(img.transpose(2, 0, 1))
-    tensor = to_tensor(img)
-
-    return tensor
-
-
-def images_to_tensor(value):
-    """Trans image and sequence of frames to tensor.
-
-    Args:
-        value (np.ndarray | list[np.ndarray] | Tuple[np.ndarray]):
-            The original image or list of frames.
-
-    Returns:
-        Tensor: The output tensor.
-    """
-
-    if isinstance(value, (List, Tuple)):
-        # sequence of frames
-        frames = [image_to_tensor(v) for v in value]
-        tensor = torch.stack(frames, dim=0)
-    elif isinstance(value, np.ndarray):
-        tensor = image_to_tensor(value)
-    else:
-        # Maybe the data has been converted to Tensor.
-        tensor = to_tensor(value)
-
-    return tensor
-
-
-def can_convert_to_image(value):
-    """Judge whether the input value can be converted to image tensor via
-    :func:`images_to_tensor` function.
-
-    Args:
-        value (any): The input value.
-
-    Returns:
-        bool: If true, the input value can convert to image with
-            :func:`images_to_tensor`, and vice versa.
-    """
-    if isinstance(value, (List, Tuple)):
-        return all([can_convert_to_image(v) for v in value])
-    elif isinstance(value, np.ndarray):
-        return True
-    elif isinstance(value, torch.Tensor):
-        return True
-    else:
-        return False
+from mmedit.utils import (can_convert_to_image, check_if_image,
+                          images_to_tensor, to_tensor)
 
 
 @TRANSFORMS.register_module()
@@ -120,14 +32,22 @@ class PackEditInputs(BaseTransform):
     def __init__(
         self,
         keys: Tuple[List[str], str] = ['img', 'noise', 'merged'],
-        data_keys: Tuple[List[str], str, None] = None,
-        meta_keys: Tuple[List[str], str, None] = None,
+        data_keys: Tuple[List[str], str] = [],
+        meta_keys: Tuple[List[str], str] = [],
     ) -> None:
 
-        assert keys is not None, 'keys in PackEditInputs can not be None.'
+        assert keys is not None, \
+            'keys in PackEditInputs can not be None.'
+        assert data_keys is not None, \
+            'data_keys in PackEditInputs can not be None.'
+        assert meta_keys is not None, \
+            'meta_keys in PackEditInputs can not be None.'
+
         self.keys = keys if isinstance(keys, List) else [keys]
-        self.data_keys = data_keys
-        self.meta_keys = meta_keys
+        self.data_keys = data_keys if isinstance(data_keys,
+                                                 List) else [data_keys]
+        self.meta_keys = meta_keys if isinstance(meta_keys,
+                                                 List) else [meta_keys]
 
     def transform(self, results: dict) -> dict:
         """Method to pack the input data.
@@ -151,31 +71,36 @@ class PackEditInputs(BaseTransform):
         for key in self.keys:
             value = results.pop(key, None)
             if value is not None and can_convert_to_image(value):
-                inputs[key] = images_to_tensor(value)
+                value = images_to_tensor(value)
                 if len(value.shape) > 3 and value.size(0) == 1:
                     value.squeeze_(0)
+                inputs[key] = value
+
+        # return the inputs as tensor, if it has only one item
         if len(inputs.values()) == 1:
             inputs = inputs.values()[0]
 
-        # prepare DataSample
-        data_sample = EditDataSample()
-        for key in self.data_keys:
-            value = results.pop(key, None)
-            if value is not None:
-                if key == 'gt_label':
-                    data_sample.set_gt_label(value)
-                    continue
-                if can_convert_to_image(value):
-                    value = images_to_tensor(value)
-                    if len(value.shape) > 3 and value.size(0) == 1:
-                        value.squeeze_(0)
-                data_sample.set_data({key: value})
+        # prepare metainfo and data in DataSample according to predefined keys
+        predefined_data = {
+            k: v
+            for (k, v) in results.items()
+            if not (k in self.data_keys + self.meta_keys)
+        }
+        data_sample = EditDataSample(predefined=predefined_data)
 
-        # prepare metainfo
-        for key in self.meta_keys:
-            value = results.pop(key, None)
-            if value is not None:
-                data_sample.set_metainfo({key: value})
+        # prepare metainfo in DataSample according to user-provided meta_keys
+        required_metainfo = {
+            k: v
+            for (k, v) in results.items() if k in self.meta_keys
+        }
+        data_sample.set_metainfo(required_metainfo)
+
+        # prepare metainfo in DataSample according to user-provided data_keys
+        required_data = {
+            k: v
+            for (k, v) in results.items() if k in self.data_keys
+        }
+        data_sample.set_tensor_data(required_data)
 
         # set data_sample to None if it has no items
         if len(data_sample.all_items()) == 0:
