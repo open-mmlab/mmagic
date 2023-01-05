@@ -1,13 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import copy
 from numbers import Number
-from typing import Sequence, Union
+from typing import List, Sequence, Tuple, Union
 
 import mmengine
 import numpy as np
 import torch
 from mmengine.structures import BaseDataElement, LabelData
-
-from .pixel_data import PixelData
 
 
 def format_label(value: Union[torch.Tensor, np.ndarray, Sequence, int],
@@ -120,51 +119,36 @@ class EditDataSample(BaseDataElement):
         ) at 0x1f6a5a99a00>
     """
 
-    @property
-    def gt_img(self) -> PixelData:
-        """This is the function to fetch gt_img in PixelData.
+    # source_key_in_results: target_key_in_metainfo
+    META_KEYS = ['img_path', 'ori_shape', 'img_shape']
 
-        Returns:
-            PixelData: data element
-        """
-        return self._gt_img
+    # source_key_in_results: target_key_in_datafield
+    DATA_KEYS = [
+        'gt_img', 'gt_label', 'gt_heatmap', 'gt_unsharp', 'gt_merged', 'gt_fg',
+        'gt_bg', 'gt_rgb', 'gt_alpha', 'img_lq', 'ref_img', 'ref_lq', 'mask',
+        'trimap', 'gray', 'cropped_img', 'pred_img'
+    ]
 
-    @gt_img.setter
-    def gt_img(self, value: PixelData):
-        """This is the function used to set gt_img in PixelData.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_gt_img', dtype=PixelData)
-
-    @gt_img.deleter
-    def gt_img(self):
-        """This is the function to fetch gt_img."""
-        del self._gt_img
-
-    @property
-    def pred_img(self) -> PixelData:
-        """This is the function to fetch pred_img in PixelData.
-
-        Returns:
-            PixelData: data element
-        """
-        return self._pred_img
-
-    @pred_img.setter
-    def pred_img(self, value: PixelData):
-        """This is the function to set the value of pred_img in PixelData.
+    def _extend_keys(
+        self,
+        pre_defined_keys: Tuple[List[str], dict, None],
+        input_keys: Tuple[List[str], str, None],
+    ) -> Tuple[List[str], dict]:
+        """Extend pre_defined keys with user-provided keys.
 
         Args:
-            value (PixelData):  data element
+            pre_defined_keys (Union[List[str], dict])
         """
-        self.set_field(value, '_pred_img', dtype=PixelData)
-
-    @pred_img.deleter
-    def pred_img(self):
-        """This is the function to fetch pred_img."""
-        del self._pred_img
+        result_keys = copy.deepcopy(pre_defined_keys)
+        if input_keys is not None:
+            if isinstance(result_keys, list):
+                return result_keys.extend(input_keys)
+            if isinstance(input_keys, list):
+                for k in input_keys:
+                    result_keys.update({k: k})
+            else:
+                result_keys.update({input_keys: input_keys})
+        return result_keys
 
     def set_gt_label(
         self, value: Union[np.ndarray, torch.Tensor, Sequence[Number], Number]

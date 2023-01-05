@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import copy
 from typing import Any, List, Tuple
 
 import numpy as np
@@ -109,76 +108,26 @@ class PackEditInputs(BaseTransform):
 
     Args:
         keys Tuple[List[str], str, None]: The keys to saved in returned
-            inputs, which are used as the input of models.
+            inputs, which are used as the input of models, default to
+            ['img', 'noise', 'merged'].
         data_keys Tuple[List[str], str, None]: The keys to saved in
             `data_field` of the `data_samples`.
         meta_keys Tuple[List[str], str, None]: The meta keys to saved
             in `metainfo` of the `data_samples`. All the other data will
             be packed into the data of the `data_samples`
     """
-    # source_key_in_results: target_key_in_inputs
-    # the list of KEYS are listed by priority:
-    # img > noise > merged
-    KEYS = ['img', 'noise', 'merged']
-
-    # source_key_in_results: target_key_in_datasamples
-    DATA_KEYS = {
-        'gt': 'gt_img',
-        'gt_label': '_gt_label',
-        'img_lq': 'img_lq',
-        'ref': 'ref_img',
-        'ref_lq': 'ref_lq',
-        'mask': 'mask',
-        'gt_heatmap': 'gt_heatmap',
-        'gt_unsharp': 'gt_unsharp',
-        'merged': 'gt_merged',
-        'trimap': 'trimap',
-        'alpha': 'gt_alpha',
-        'fg': 'gt_fg',
-        'bg': 'gt_bg',
-        'rgb_img': 'gt_rgb',
-        'gray_img': 'gray',
-        'cropped_img': 'cropped_img',
-    }
-
-    # source_key_in_results: target_key_in_metainfo
-    META_KEYS = {
-        'img_path': 'img_path',
-        'ori_shape': 'ori_shape',
-        'img_shape': 'img_shape'
-    }
 
     def __init__(
         self,
-        keys: Tuple[List[str], str, None] = None,
+        keys: Tuple[List[str], str] = ['img', 'noise', 'merged'],
         data_keys: Tuple[List[str], str, None] = None,
         meta_keys: Tuple[List[str], str, None] = None,
     ) -> None:
 
-        self.keys = self._extend_keys(self.KEYS, keys)
-        self.data_keys = self._extend_keys(self.DATA_KEYS, data_keys)
-        self.meta_keys = self._extend_keys(self.META_KEYS, meta_keys)
-
-    def _extend_keys(
-        self,
-        pre_defined_keys: Tuple[List[str], dict, None],
-        input_keys: Tuple[List[str], str, None],
-    ) -> Tuple[List[str], dict]:
-        """Extend pre_defined keys with user-provided keys.
-
-        Args:
-            pre_defined_keys (Union[List[str], dict])
-        """
-        result_keys = copy.deepcopy(pre_defined_keys)
-        if input_keys is not None:
-            if isinstance(result_keys, list):
-                return result_keys.extend(input_keys)
-            if isinstance(input_keys, list):
-                for k in input_keys:
-                    result_keys.update({k: k})
-            else:
-                result_keys.update({input_keys: input_keys})
-        return result_keys
+        assert keys is not None, 'keys in PackEditInputs can not be None.'
+        self.keys = keys if isinstance(keys, List) else [keys]
+        self.data_keys = data_keys
+        self.meta_keys = meta_keys
 
     def transform(self, results: dict) -> dict:
         """Method to pack the input data.
