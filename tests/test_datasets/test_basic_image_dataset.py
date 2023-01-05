@@ -24,6 +24,7 @@ class TestImageDatasets:
             data_root=self.data_root,
             data_prefix=dict(img='lq', gt='gt'),
             filename_tmpl=dict(img='{}_x4'),
+            backend_args=dict(backend='local'),
             pipeline=[])
         assert dataset[0] == dict(
             key='baboon',
