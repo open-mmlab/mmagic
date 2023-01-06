@@ -30,7 +30,7 @@ class PackEditInputs(BaseTransform):
 
     def __init__(
         self,
-        keys: Tuple[List[str], str, dict] = ['img', 'merged'],
+        keys: Tuple[List[str], str, dict] = ['img'],
         meta_keys: Tuple[List[str], str, dict] = [],
         data_keys: Tuple[List[str], str, dict] = [],
     ) -> None:

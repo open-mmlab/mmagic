@@ -53,9 +53,9 @@ def test_pack_edit_inputs():
     assert data_sample.img_shape == (64, 64)
     assert data_sample.a == 'b'
 
-    # numpy_tensor = to_tensor(ori_results['numpy'])
-    # numpy_tensor = numpy_tensor.permute(2, 0, 1)
-    # assert_tensor_equal(data_sample.numpy, numpy_tensor)
+    numpy_tensor = to_tensor(ori_results['numpy'])
+    numpy_tensor = numpy_tensor.permute(2, 0, 1)
+    assert_tensor_equal(data_sample.numpy, numpy_tensor)
 
     gt_tensors = [to_tensor(v) for v in ori_results['gt']]
     gt_tensors = [v.permute(2, 0, 1) for v in gt_tensors]
