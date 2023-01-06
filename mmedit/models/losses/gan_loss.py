@@ -79,7 +79,8 @@ class GANLoss(nn.Module):
         Returns:
             Tensor: wgan softplus loss.
         """
-        return F.softplus(-input).mean() if target is not None else F.softplus(input).mean()
+        return F.softplus(-input).mean() if target is not None else F.softplus(
+            input).mean()
 
     def get_target_label(self, input, target_is_real):
         """Get target label.

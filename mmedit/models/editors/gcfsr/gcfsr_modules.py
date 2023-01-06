@@ -4,14 +4,14 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
-from mmcv.ops.fused_bias_leakyrelu import FusedBiasLeakyReLU, fused_bias_leakyrelu
+from mmcv.ops.fused_bias_leakyrelu import (FusedBiasLeakyReLU,
+                                           fused_bias_leakyrelu)
 from mmcv.ops.upfirdn2d import upfirdn2d
-from mmedit.registry import MODULES
 
+from mmedit.registry import MODULES
 from ..pggan.pggan_modules import EqualizedLRLinearModule
 from ..stylegan1 import make_kernel
-from ..stylegan2 import UpsampleUpFIRDn, ModulatedConv2d, ModulatedToRGB
+from ..stylegan2 import ModulatedConv2d, ModulatedToRGB, UpsampleUpFIRDn
 
 
 class _FusedBiasLeakyReLU(FusedBiasLeakyReLU):
@@ -31,6 +31,7 @@ class _FusedBiasLeakyReLU(FusedBiasLeakyReLU):
 
 
 class NormStyleCode(nn.Module):
+
     def forward(self, x):
         """Normalize the style codes.
 
@@ -51,10 +52,14 @@ class UpFirDnSmooth(nn.Module):
             magnitude.
         upsample_factor (int): Upsampling scale factor. Default: 1.
         downsample_factor (int): Downsampling scale factor. Default: 1.
-        kernel_size (int): Kernel size: Deafult: 1.
+        kernel_size (int): Kernel size: Default: 1.
     """
 
-    def __init__(self, resample_kernel, upsample_factor=1, downsample_factor=1, kernel_size=1):
+    def __init__(self,
+                 resample_kernel,
+                 upsample_factor=1,
+                 downsample_factor=1,
+                 kernel_size=1):
         super(UpFirDnSmooth, self).__init__()
         self.upsample_factor = upsample_factor
         self.downsample_factor = downsample_factor
@@ -66,7 +71,8 @@ class UpFirDnSmooth(nn.Module):
             pad = (self.kernel.shape[0] - upsample_factor) - (kernel_size - 1)
             self.pad = ((pad + 1) // 2 + upsample_factor - 1, pad // 2 + 1)
         elif downsample_factor > 1:
-            pad = (self.kernel.shape[0] - downsample_factor) + (kernel_size - 1)
+            pad = (self.kernel.shape[0] - downsample_factor) + (
+                kernel_size - 1)
             self.pad = ((pad + 1) // 2, pad // 2)
         else:
             raise NotImplementedError
@@ -98,8 +104,9 @@ class EqualLinear(EqualizedLRLinearModule):
         )
         self.activation = activation
         if self.activation not in ['fused_lrelu', None]:
-            raise ValueError(f'Wrong activation value in EqualLinear: {activation}'
-                             "Supported ones are: ['fused_lrelu', None].")
+            raise ValueError(
+                f'Wrong activation value in EqualLinear: {activation}'
+                "Supported ones are: ['fused_lrelu', None].")
         self.scale = (1 / math.sqrt(in_channels)) * self.lr_mul
 
     def forward(self, x):
@@ -158,7 +165,10 @@ class GcfsrModulatedConv2d(ModulatedConv2d):
 
         self.upsample = upsample
         self.downsample = downsample
-        assert not(upsample and downsample), f"upsample and downsample should be not set to True at the same time, but get upsample={upsample} and downsample={downsample}"
+        assert not (upsample and downsample
+                    ), f'upsample and downsample should be not set to True \
+            at the same time, but get \
+            upsample={upsample} and downsample={downsample}'
 
         if upsample or downsample:
             upsample_factor, downsample_factor = 1, 1
@@ -167,22 +177,19 @@ class GcfsrModulatedConv2d(ModulatedConv2d):
             elif downsample and not upsample:
                 downsample_factor = 2
             self.smooth = UpFirDnSmooth(
-                resample_kernel, 
-                upsample_factor=upsample_factor, 
-                downsample_factor=downsample_factor, 
-                kernel_size=kernel_size
-            )
+                resample_kernel,
+                upsample_factor=upsample_factor,
+                downsample_factor=downsample_factor,
+                kernel_size=kernel_size)
 
         self.scale = 1 / math.sqrt(in_channels * kernel_size**2)
         # modulation inside each modulated conv
         self.modulation = EqualLinear(
-            num_style_feat, 
-            in_channels, 
-            bias=True, 
-            activation=None
-        )
+            num_style_feat, in_channels, bias=True, activation=None)
 
-        self.weight = nn.Parameter(torch.randn(1, out_channels, in_channels, kernel_size, kernel_size))
+        self.weight = nn.Parameter(
+            torch.randn(1, out_channels, in_channels, kernel_size,
+                        kernel_size))
         self.padding = kernel_size // 2
 
     def forward(self, x, style):
@@ -196,12 +203,16 @@ class GcfsrModulatedConv2d(ModulatedConv2d):
             demod = torch.rsqrt(weight.pow(2).sum([2, 3, 4]) + self.eps)
             weight = weight * demod.view(b, self.out_channels, 1, 1, 1)
 
-        weight = weight.view(b * self.out_channels, c, self.kernel_size, self.kernel_size)
+        weight = weight.view(b * self.out_channels, c, self.kernel_size,
+                             self.kernel_size)
 
         if self.upsample:
             x = x.view(1, b * c, h, w)
-            weight = weight.view(b, self.out_channels, c, self.kernel_size, self.kernel_size)
-            weight = weight.transpose(1, 2).reshape(b * c, self.out_channels, self.kernel_size, self.kernel_size)
+            weight = weight.view(b, self.out_channels, c, self.kernel_size,
+                                 self.kernel_size)
+            weight = weight.transpose(1, 2).reshape(b * c, self.out_channels,
+                                                    self.kernel_size,
+                                                    self.kernel_size)
             out = F.conv_transpose2d(x, weight, padding=0, stride=2, groups=b)
             out = out.view(b, self.out_channels, *out.shape[2:4])
             out = self.smooth(out)
@@ -216,7 +227,9 @@ class GcfsrModulatedConv2d(ModulatedConv2d):
             out = F.conv2d(x, weight, padding=self.padding, groups=b)
             out = out.view(b, self.out_channels, *out.shape[2:4])
         else:
-            raise ValueError(f"upsample and downsample should be not set to True at the same time.")
+            raise ValueError(
+                'upsample and downsample should be not set to True \
+                at the same time.')
 
         return out
 
@@ -252,8 +265,7 @@ class StyleConv(nn.Module):
             demodulate=demodulate,
             upsample=upsample,
             downsample=downsample,
-            resample_kernel=resample_kernel
-        )
+            resample_kernel=resample_kernel)
         self.weight = nn.Parameter(torch.zeros(1))  # for noise injection
         self.activate = _FusedBiasLeakyReLU(out_channels)
 
@@ -281,25 +293,28 @@ class ToRGB(ModulatedToRGB):
             magnitude. Default: (1, 3, 3, 1).
     """
 
-    def __init__(self, in_channels, num_style_feat, upsample=True, resample_kernel=(1, 3, 3, 1)):
+    def __init__(self,
+                 in_channels,
+                 num_style_feat,
+                 upsample=True,
+                 resample_kernel=(1, 3, 3, 1)):
         super(ToRGB, self).__init__(
             in_channels=in_channels,
             style_channels=num_style_feat,
             upsample=upsample,
-            blur_kernel=resample_kernel
-        )
+            blur_kernel=resample_kernel)
         if upsample:
             self.upsample = UpsampleUpFIRDn(resample_kernel, factor=2)
         else:
             self.upsample = None
         self.conv = GcfsrModulatedConv2d(
-            in_channels, 3, 
-            kernel_size=1, 
-            num_style_feat=num_style_feat, 
-            demodulate=False, 
-            upsample=False, 
-            downsample=False
-        )
+            in_channels,
+            3,
+            kernel_size=1,
+            num_style_feat=num_style_feat,
+            demodulate=False,
+            upsample=False,
+            downsample=False)
 
 
 class ScaledLeakyReLU(nn.Module):
@@ -333,7 +348,14 @@ class EqualConv2d(nn.Module):
         bias_init_val (float): Bias initialized value. Default: 0.
     """
 
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, bias=True, bias_init_val=0):
+    def __init__(self,
+                 in_channels,
+                 out_channels,
+                 kernel_size,
+                 stride=1,
+                 padding=0,
+                 bias=True,
+                 bias_init_val=0):
         super(EqualConv2d, self).__init__()
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -342,9 +364,11 @@ class EqualConv2d(nn.Module):
         self.padding = padding
         self.scale = 1 / math.sqrt(in_channels * kernel_size**2)
 
-        self.weight = nn.Parameter(torch.randn(out_channels, in_channels, kernel_size, kernel_size))
+        self.weight = nn.Parameter(
+            torch.randn(out_channels, in_channels, kernel_size, kernel_size))
         if bias:
-            self.bias = nn.Parameter(torch.zeros(out_channels).fill_(bias_init_val))
+            self.bias = nn.Parameter(
+                torch.zeros(out_channels).fill_(bias_init_val))
         else:
             self.register_parameter('bias', None)
 
@@ -371,7 +395,7 @@ class ConvLayer(nn.Sequential):
             Default: False.
         resample_kernel (list[int]): A list indicating the 1D resample
             kernel magnitude. A cross production will be applied to
-            extent 1D resample kenrel to 2D resample kernel.
+            extent 1D resample kernel to 2D resample kernel.
             Default: (1, 3, 3, 1).
         bias (bool): Whether with bias. Default: True.
         activate (bool): Whether use activateion. Default: True.
@@ -389,7 +413,11 @@ class ConvLayer(nn.Sequential):
         # downsample
         if downsample:
             layers.append(
-                UpFirDnSmooth(resample_kernel, upsample_factor=1, downsample_factor=2, kernel_size=kernel_size))
+                UpFirDnSmooth(
+                    resample_kernel,
+                    upsample_factor=1,
+                    downsample_factor=2,
+                    kernel_size=kernel_size))
             stride = 2
             self.padding = 0
         else:
@@ -398,8 +426,12 @@ class ConvLayer(nn.Sequential):
         # conv
         layers.append(
             EqualConv2d(
-                in_channels, out_channels, kernel_size, stride=stride, padding=self.padding, bias=bias
-                and not activate))
+                in_channels,
+                out_channels,
+                kernel_size,
+                stride=stride,
+                padding=self.padding,
+                bias=bias and not activate))
         # activation
         if activate:
             if bias:
@@ -411,12 +443,15 @@ class ConvLayer(nn.Sequential):
 
 
 class Norm2Scale(nn.Module):
+
     def forward(self, scale1, scale2):
         scales_norm = scale1**2 + scale2**2 + 1e-8
-        return scale1 * torch.rsqrt(scales_norm), scale2 * torch.rsqrt(scales_norm)
+        return scale1 * torch.rsqrt(scales_norm), scale2 * torch.rsqrt(
+            scales_norm)
 
 
 class StyleConv_norm_scale_shift(nn.Module):
+
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -440,7 +475,13 @@ class StyleConv_norm_scale_shift(nn.Module):
         self.activate = _FusedBiasLeakyReLU(out_channels)
         self.norm = Norm2Scale()
 
-    def forward(self, x, style, noise=None, scale1=None, scale2=None, shift=None):
+    def forward(self,
+                x,
+                style,
+                noise=None,
+                scale1=None,
+                scale2=None,
+                shift=None):
         # modulate
         out = self.modulated_conv(x, style)
         # noise injection
@@ -451,7 +492,8 @@ class StyleConv_norm_scale_shift(nn.Module):
 
         scale1, scale2 = self.norm(scale1, scale2)
 
-        out = out * scale1.view(-1, out.size(1), 1, 1) + shift * scale2.view(-1, out.size(1), 1, 1)
+        out = out * scale1.view(-1, out.size(1), 1, 1) + shift * scale2.view(
+            -1, out.size(1), 1, 1)
 
         # activation (with bias)
         out = self.activate(out)
@@ -460,6 +502,7 @@ class StyleConv_norm_scale_shift(nn.Module):
 
 @MODULES.register_module()
 class GCFSR(nn.Module):
+
     def __init__(self,
                  out_size,
                  num_style_feat,
@@ -490,36 +533,47 @@ class GCFSR(nn.Module):
 
         self.encoder_channels = channels
 
-        self.conv_body_first = ConvLayer(3, channels[f'{first_out_size}'], 3, bias=True, activate=True)
+        self.conv_body_first = ConvLayer(
+            3, channels[f'{first_out_size}'], 3, bias=True, activate=True)
         # downsample
         in_channels = channels[f'{first_out_size}']
         self.conv_body_down = nn.ModuleList()
-        for i in range(self.log_size-1, 2+1, -1):
+        for i in range(self.log_size - 1, 2 + 1, -1):
             out_channels = channels[f'{2**i}']
-            self.conv_body_down.append(ConvLayer(in_channels, out_channels, 3, downsample=True))
+            self.conv_body_down.append(
+                ConvLayer(in_channels, out_channels, 3, downsample=True))
             in_channels = out_channels
 
         # to generate "const 16x16";
         self.final_conv = ConvLayer(channels['16'], channels['16'], 3)
 
-        self.final_down1 = ConvLayer(channels['16'], channels['8'], 3, downsample=True)
-        self.final_down2 = ConvLayer(channels['8'], channels['4']//2, 3, downsample=True)
-        self.final_linear = EqualLinear(2 * 4 * 512, self.num_style_feat * self.num_latent, bias=True, activation='fused_lrelu')
+        self.final_down1 = ConvLayer(
+            channels['16'], channels['8'], 3, downsample=True)
+        self.final_down2 = ConvLayer(
+            channels['8'], channels['4'] // 2, 3, downsample=True)
+        self.final_linear = EqualLinear(
+            2 * 4 * 512,
+            self.num_style_feat * self.num_latent,
+            bias=True,
+            activation='fused_lrelu')
 
         self.condition_scale1 = nn.ModuleList()
         self.condition_scale2 = nn.ModuleList()
         self.condition_shift = nn.ModuleList()
-        
-        for i in range(self.log_size, 2+1, -1):
+
+        for i in range(self.log_size, 2 + 1, -1):
             out_channels = channels[f'{2**i}']
             in_channels = channels[f'{2**i}']
 
-            self.condition_scale1.append(EqualLinear(1, out_channels, bias=True, activation=None))
+            self.condition_scale1.append(
+                EqualLinear(1, out_channels, bias=True, activation=None))
 
-            self.condition_scale2.append(EqualLinear(1, out_channels, bias=True, activation=None))
-           
+            self.condition_scale2.append(
+                EqualLinear(1, out_channels, bias=True, activation=None))
+
             self.condition_shift.append(
-                ConvLayer(in_channels, out_channels, 3, bias=True, activate=False))
+                ConvLayer(
+                    in_channels, out_channels, 3, bias=True, activate=False))
 
         # stylegan decoder
         self.style_conv1 = StyleConv_norm_scale_shift(
@@ -531,8 +585,12 @@ class GCFSR(nn.Module):
             upsample=False,
             downsample=False,
             resample_kernel=resample_kernel)
-        self.to_rgb1 = ToRGB(channels['16'], num_style_feat, upsample=False, resample_kernel=resample_kernel)
-        
+        self.to_rgb1 = ToRGB(
+            channels['16'],
+            num_style_feat,
+            upsample=False,
+            resample_kernel=resample_kernel)
+
         self.log_size = int(math.log(out_size, 2))
         self.num_layers = (self.log_size - 2 - 2) * 2 + 1
 
@@ -545,9 +603,10 @@ class GCFSR(nn.Module):
         for layer_idx in range(self.num_layers):
             resolution = 2**((layer_idx + 5) // 2)
             shape = [1, 1, resolution, resolution]
-            self.noises.register_buffer(f'noise{layer_idx}', torch.randn(*shape))
+            self.noises.register_buffer(f'noise{layer_idx}',
+                                        torch.randn(*shape))
         # style convs and to_rgbs
-        for i in range(3+2, self.log_size + 1):
+        for i in range(3 + 2, self.log_size + 1):
             out_channels = channels[f'{2**i}']
             self.style_convs.append(
                 StyleConv(
@@ -570,7 +629,12 @@ class GCFSR(nn.Module):
                     upsample=False,
                     downsample=False,
                     resample_kernel=resample_kernel))
-            self.to_rgbs.append(ToRGB(out_channels, num_style_feat, upsample=True, resample_kernel=resample_kernel))
+            self.to_rgbs.append(
+                ToRGB(
+                    out_channels,
+                    num_style_feat,
+                    upsample=True,
+                    resample_kernel=resample_kernel))
             in_channels = out_channels
 
     def make_noise(self):
@@ -584,7 +648,9 @@ class GCFSR(nn.Module):
 
         return noises
 
-    def forward(self, x, in_size,
+    def forward(self,
+                x,
+                in_size,
                 noise=None,
                 randomize_noise=True,
                 return_latents=False):
@@ -594,11 +660,14 @@ class GCFSR(nn.Module):
             if randomize_noise:
                 noise = [None] * self.num_layers  # for each style conv layer
             else:  # use the stored noise
-                noise = [getattr(self.noises, f'noise{i}') for i in range(self.num_layers)]
-            
+                noise = [
+                    getattr(self.noises, f'noise{i}')
+                    for i in range(self.num_layers)
+                ]
+
         # main generation
         feat = self.conv_body_first(x)
-        
+
         scales1, scales2, shifts = [], [], []
 
         scale1 = self.condition_scale1[0](in_size)
@@ -628,20 +697,35 @@ class GCFSR(nn.Module):
         b = feat.size(0)
 
         tmp = self.final_down2(self.final_down1(feat))
-        latent = self.final_linear(tmp.view(b, -1)).view(-1, self.num_latent, self.num_style_feat)
+        latent = self.final_linear(tmp.view(b,
+                                            -1)).view(-1, self.num_latent,
+                                                      self.num_style_feat)
 
         out = self.final_conv(feat)
-        out = self.style_conv1(out, latent[:, 0], noise=noise[0], scale1=scales1[0], scale2=scales2[0], shift=shifts[0])
-        # out = out * scales1[0].view(-1, out.size(1), 1, 1) + shifts[0] * scales2[0].view(-1, out.size(1), 1, 1)
+        out = self.style_conv1(
+            out,
+            latent[:, 0],
+            noise=noise[0],
+            scale1=scales1[0],
+            scale2=scales2[0],
+            shift=shifts[0])
+        # out = out * scales1[0].view(-1, out.size(1), 1, 1) + \
+        # shifts[0] * scales2[0].view(-1, out.size(1), 1, 1)
         skip = self.to_rgb1(out, latent[:, 1])
-
 
         i = 1
         j = 1
-        for conv1, conv2, noise1, noise2, to_rgb in zip(self.style_convs[::2], self.style_convs[1::2], noise[1::2],
-                                                        noise[2::2], self.to_rgbs):
+        for conv1, conv2, noise1, noise2, to_rgb in zip(
+                self.style_convs[::2], self.style_convs[1::2], noise[1::2],
+                noise[2::2], self.to_rgbs):
             out = conv1(out, latent[:, i], noise=noise1)
-            out = conv2(out, latent[:, i + 1], noise=noise2, scale1=scales1[j], scale2=scales2[j], shift=shifts[j])
+            out = conv2(
+                out,
+                latent[:, i + 1],
+                noise=noise2,
+                scale1=scales1[j],
+                scale2=scales2[j],
+                shift=shifts[j])
             skip = to_rgb(out, latent[:, i + 2], skip)
             i += 2
             j += 1
@@ -656,6 +740,7 @@ class GCFSR(nn.Module):
 
 @MODULES.register_module()
 class GCFSR_blind(nn.Module):
+
     def __init__(self,
                  out_size,
                  num_style_feat,
@@ -686,36 +771,47 @@ class GCFSR_blind(nn.Module):
 
         self.encoder_channels = channels
 
-        self.conv_body_first = ConvLayer(3, channels[f'{first_out_size}'], 3, bias=True, activate=True)
+        self.conv_body_first = ConvLayer(
+            3, channels[f'{first_out_size}'], 3, bias=True, activate=True)
         # downsample
         in_channels = channels[f'{first_out_size}']
         self.conv_body_down = nn.ModuleList()
-        for i in range(self.log_size-1, 2+1, -1):
+        for i in range(self.log_size - 1, 2 + 1, -1):
             out_channels = channels[f'{2**i}']
-            self.conv_body_down.append(ConvLayer(in_channels, out_channels, 3, downsample=True))
+            self.conv_body_down.append(
+                ConvLayer(in_channels, out_channels, 3, downsample=True))
             in_channels = out_channels
 
         # to generate "const 16x16";
         self.final_conv = ConvLayer(channels['16'], channels['16'], 3)
 
-        self.final_down1 = ConvLayer(channels['16'], channels['8'], 3, downsample=True)
-        self.final_down2 = ConvLayer(channels['8'], channels['4'], 3, downsample=True)
-        self.final_linear = EqualLinear(4 * 4 * 512, self.num_style_feat * self.num_latent, bias=True, activation='fused_lrelu')
+        self.final_down1 = ConvLayer(
+            channels['16'], channels['8'], 3, downsample=True)
+        self.final_down2 = ConvLayer(
+            channels['8'], channels['4'], 3, downsample=True)
+        self.final_linear = EqualLinear(
+            4 * 4 * 512,
+            self.num_style_feat * self.num_latent,
+            bias=True,
+            activation='fused_lrelu')
 
         self.condition_scale1 = nn.ModuleList()
         self.condition_scale2 = nn.ModuleList()
         self.condition_shift = nn.ModuleList()
 
-        for i in range(self.log_size, 2+1, -1):
+        for i in range(self.log_size, 2 + 1, -1):
             out_channels = channels[f'{2**i}']
             in_channels = channels[f'{2**i}']
 
-            self.condition_scale1.append(EqualLinear(1, out_channels, bias=True, activation=None))
+            self.condition_scale1.append(
+                EqualLinear(1, out_channels, bias=True, activation=None))
 
-            self.condition_scale2.append(EqualLinear(1, out_channels, bias=True, activation=None))
-           
+            self.condition_scale2.append(
+                EqualLinear(1, out_channels, bias=True, activation=None))
+
             self.condition_shift.append(
-                ConvLayer(in_channels, out_channels, 3, bias=True, activate=False))
+                ConvLayer(
+                    in_channels, out_channels, 3, bias=True, activate=False))
 
         # stylegan decoder
         self.style_conv1 = StyleConv_norm_scale_shift(
@@ -727,7 +823,11 @@ class GCFSR_blind(nn.Module):
             upsample=False,
             downsample=False,
             resample_kernel=resample_kernel)
-        self.to_rgb1 = ToRGB(channels['16'], num_style_feat, upsample=False, resample_kernel=resample_kernel)
+        self.to_rgb1 = ToRGB(
+            channels['16'],
+            num_style_feat,
+            upsample=False,
+            resample_kernel=resample_kernel)
 
         self.log_size = int(math.log(out_size, 2))
         self.num_layers = (self.log_size - 2 - 2) * 2 + 1
@@ -741,9 +841,10 @@ class GCFSR_blind(nn.Module):
         for layer_idx in range(self.num_layers):
             resolution = 2**((layer_idx + 5) // 2)
             shape = [1, 1, resolution, resolution]
-            self.noises.register_buffer(f'noise{layer_idx}', torch.randn(*shape))
+            self.noises.register_buffer(f'noise{layer_idx}',
+                                        torch.randn(*shape))
         # style convs and to_rgbs
-        for i in range(3+2, self.log_size + 1):
+        for i in range(3 + 2, self.log_size + 1):
             out_channels = channels[f'{2**i}']
             self.style_convs.append(
                 StyleConv(
@@ -766,7 +867,12 @@ class GCFSR_blind(nn.Module):
                     upsample=False,
                     downsample=False,
                     resample_kernel=resample_kernel))
-            self.to_rgbs.append(ToRGB(out_channels, num_style_feat, upsample=True, resample_kernel=resample_kernel))
+            self.to_rgbs.append(
+                ToRGB(
+                    out_channels,
+                    num_style_feat,
+                    upsample=True,
+                    resample_kernel=resample_kernel))
             in_channels = out_channels
 
     def make_noise(self):
@@ -780,7 +886,8 @@ class GCFSR_blind(nn.Module):
 
         return noises
 
-    def forward(self, x,
+    def forward(self,
+                x,
                 noise=None,
                 randomize_noise=True,
                 return_latents=False):
@@ -789,7 +896,10 @@ class GCFSR_blind(nn.Module):
             if randomize_noise:
                 noise = [None] * self.num_layers  # for each style conv layer
             else:  # use the stored noise
-                noise = [getattr(self.noises, f'noise{i}') for i in range(self.num_layers)]
+                noise = [
+                    getattr(self.noises, f'noise{i}')
+                    for i in range(self.num_layers)
+                ]
 
         device = x.device
         # fix "in_size" to 1
@@ -797,7 +907,7 @@ class GCFSR_blind(nn.Module):
 
         # main generation
         feat = self.conv_body_first(x)
-        
+
         scales1, scales2, shifts = [], [], []
 
         scale1 = self.condition_scale1[0](in_size)
@@ -831,17 +941,30 @@ class GCFSR_blind(nn.Module):
         latent = latent.view(-1, self.num_latent, self.num_style_feat)
 
         out = self.final_conv(feat)
-        out = self.style_conv1(out, latent[:, 0], noise=noise[0], scale1=scales1[0], scale2=scales2[0], shift=shifts[0])
-        # out = out * scales1[0].view(-1, out.size(1), 1, 1) + shifts[0] * scales2[0].view(-1, out.size(1), 1, 1)
+        out = self.style_conv1(
+            out,
+            latent[:, 0],
+            noise=noise[0],
+            scale1=scales1[0],
+            scale2=scales2[0],
+            shift=shifts[0])
+        # out = out * scales1[0].view(-1, out.size(1), 1, 1) + \
+        # shifts[0] * scales2[0].view(-1, out.size(1), 1, 1)
         skip = self.to_rgb1(out, latent[:, 1])
-
 
         i = 1
         j = 1
-        for conv1, conv2, noise1, noise2, to_rgb in zip(self.style_convs[::2], self.style_convs[1::2], noise[1::2],
-                                                        noise[2::2], self.to_rgbs):
+        for conv1, conv2, noise1, noise2, to_rgb in zip(
+                self.style_convs[::2], self.style_convs[1::2], noise[1::2],
+                noise[2::2], self.to_rgbs):
             out = conv1(out, latent[:, i], noise=noise1)
-            out = conv2(out, latent[:, i + 1], noise=noise2, scale1=scales1[j], scale2=scales2[j], shift=shifts[j])
+            out = conv2(
+                out,
+                latent[:, i + 1],
+                noise=noise2,
+                scale1=scales1[j],
+                scale2=scales2[j],
+                shift=shifts[j])
             skip = to_rgb(out, latent[:, i + 2], skip)
             i += 2
             j += 1

@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
+
 import torch
 
 
@@ -9,11 +10,13 @@ def cubic(x):
     absx2 = absx**2
     absx3 = absx**3
     return (1.5 * absx3 - 2.5 * absx2 + 1) * (
-        (absx <= 1).type_as(absx)) + (-0.5 * absx3 + 2.5 * absx2 - 4 * absx + 2) * (((absx > 1) *
-                                                                                     (absx <= 2)).type_as(absx))
+        (absx <= 1).type_as(absx)) + (-0.5 * absx3 + 2.5 * absx2 - 4 * absx +
+                                      2) * (((absx > 1) *
+                                             (absx <= 2)).type_as(absx))
 
 
-def calculate_weights_indices(in_length, out_length, scale, kernel, kernel_width, antialiasing, device):
+def calculate_weights_indices(in_length, out_length, scale, kernel,
+                              kernel_width, antialiasing, device):
     """Calculate weights and indices, used for imresize function.
 
     Args:
@@ -48,8 +51,8 @@ def calculate_weights_indices(in_length, out_length, scale, kernel, kernel_width
 
     # The indices of the input pixels involved in computing the k-th output
     # pixel are in row k of the indices matrix.
-    indices = left.view(out_length, 1).expand(out_length, p) + torch.linspace(0, p - 1, p).view(1, p).expand(
-        out_length, p)
+    indices = left.view(out_length, 1).expand(out_length, p) + torch.linspace(
+        0, p - 1, p).view(1, p).expand(out_length, p)
 
     # The weights used to compute the k-th output pixel are in row k of the
     # weights matrix.
@@ -111,22 +114,37 @@ def imresize(img, scale, antialiasing=True):
     kernel = 'cubic'
 
     # get weights and indices
-    weights_h, indices_h, sym_len_hs, sym_len_he = calculate_weights_indices(in_h, out_h, scale, kernel, kernel_width,
-                                                                             antialiasing, device=img.device)
-    weights_w, indices_w, sym_len_ws, sym_len_we = calculate_weights_indices(in_w, out_w, scale, kernel, kernel_width,
-                                                                             antialiasing, device=img.device)
+    weights_h, indices_h, sym_len_hs, sym_len_he = calculate_weights_indices(
+        in_h,
+        out_h,
+        scale,
+        kernel,
+        kernel_width,
+        antialiasing,
+        device=img.device)
+    weights_w, indices_w, sym_len_ws, sym_len_we = calculate_weights_indices(
+        in_w,
+        out_w,
+        scale,
+        kernel,
+        kernel_width,
+        antialiasing,
+        device=img.device)
     # process H dimension
     # symmetric copying
-    img_aug = torch.empty(in_n, in_c, in_h + sym_len_hs + sym_len_he, in_w, device=img.device)
+    img_aug = torch.empty(
+        in_n, in_c, in_h + sym_len_hs + sym_len_he, in_w, device=img.device)
     img_aug.narrow(2, sym_len_hs, in_h).copy_(img)
 
     sym_patch = img[:, :, :sym_len_hs, :]
-    inv_idx = torch.arange(sym_patch.size(2) - 1, -1, -1).long(memory_format=torch.contiguous_format).to(img.device)
+    inv_idx = torch.arange(sym_patch.size(2) - 1, -1, -1).long(
+        memory_format=torch.contiguous_format).to(img.device)
     sym_patch_inv = sym_patch.index_select(2, inv_idx)
     img_aug.narrow(2, 0, sym_len_hs).copy_(sym_patch_inv)
 
     sym_patch = img[:, :, -sym_len_he:, :]
-    inv_idx = torch.arange(sym_patch.size(2) - 1, -1, -1).long(memory_format=torch.contiguous_format).to(img.device)
+    inv_idx = torch.arange(sym_patch.size(2) - 1, -1, -1).long(
+        memory_format=torch.contiguous_format).to(img.device)
     sym_patch_inv = sym_patch.index_select(2, inv_idx)
     img_aug.narrow(2, sym_len_hs + in_h, sym_len_he).copy_(sym_patch_inv)
 
@@ -135,20 +153,25 @@ def imresize(img, scale, antialiasing=True):
     for i in range(out_h):
         idx = int(indices_h[i][0])
         for j in range(in_c):
-            out_1[:, j, i, :] = img_aug[:, j, idx:idx + kernel_width, :].transpose(1, 2).matmul(weights_h[i])
+            out_1[:, j, i, :] = img_aug[:, j,
+                                        idx:idx + kernel_width, :].transpose(
+                                            1, 2).matmul(weights_h[i])
 
     # process W dimension
     # symmetric copying
-    out_1_aug = torch.empty(in_n, in_c, out_h, in_w + sym_len_ws + sym_len_we, device=img.device)
+    out_1_aug = torch.empty(
+        in_n, in_c, out_h, in_w + sym_len_ws + sym_len_we, device=img.device)
     out_1_aug.narrow(3, sym_len_ws, in_w).copy_(out_1)
 
     sym_patch = out_1[..., :sym_len_ws]
-    inv_idx = torch.arange(sym_patch.size(3) - 1, -1, -1).long(memory_format=torch.contiguous_format).to(img.device)
+    inv_idx = torch.arange(sym_patch.size(3) - 1, -1, -1).long(
+        memory_format=torch.contiguous_format).to(img.device)
     sym_patch_inv = sym_patch.index_select(3, inv_idx)
     out_1_aug.narrow(3, 0, sym_len_ws).copy_(sym_patch_inv)
 
     sym_patch = out_1[..., -sym_len_we:]
-    inv_idx = torch.arange(sym_patch.size(3) - 1, -1, -1).long(memory_format=torch.contiguous_format).to(img.device)
+    inv_idx = torch.arange(sym_patch.size(3) - 1, -1, -1).long(
+        memory_format=torch.contiguous_format).to(img.device)
     sym_patch_inv = sym_patch.index_select(3, inv_idx)
     out_1_aug.narrow(3, sym_len_ws + in_w, sym_len_we).copy_(sym_patch_inv)
 
@@ -157,7 +180,9 @@ def imresize(img, scale, antialiasing=True):
     for i in range(out_w):
         idx = int(indices_w[i][0])
         for j in range(in_c):
-            out_2[:, j, :, i] = out_1_aug[:, j, :, idx:idx + kernel_width].matmul(weights_w[i])
+            out_2[:, j, :,
+                  i] = out_1_aug[:, j, :,
+                                 idx:idx + kernel_width].matmul(weights_w[i])
 
     if squeeze_flag:
         out_2 = out_2.squeeze(1)

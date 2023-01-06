@@ -1,10 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import numpy as np
-import pytest
 import random
+
+import numpy as np
 import torch
 
-from mmedit.models.editors import GCFSR, GCFSR_blind
+from mmedit.models.editors.gcfsr import GCFSR, GCFSR_blind
 
 
 def _dummy_inputs(input_shape=(1, 3, 128, 128)):

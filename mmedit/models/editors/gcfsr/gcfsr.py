@@ -1,31 +1,27 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import random
 from copy import deepcopy
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Union
 
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from mmengine import Config, MessageHub
-from mmengine.dataset import Compose
 from mmengine.model import BaseModel, is_model_wrapper
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
 from mmedit.registry import MODELS, MODULES
-from mmedit.structures import EditDataSample
 from ...base_models import BaseGAN
-from ...losses import gen_path_regularizer, r1_gradient_penalty_loss
-from ...utils import set_requires_grad, imresize
+from ...utils import imresize, set_requires_grad
 
 ModelType = Union[Dict, nn.Module]
 
 
 @MODELS.register_module()
 class GCFSRGAN(BaseGAN):
-    """
-    """
+    """"""
+
     def __init__(self,
                  generator: ModelType,
                  discriminator: Optional[ModelType] = None,
@@ -81,23 +77,24 @@ class GCFSRGAN(BaseGAN):
         # loss config
         self.pixel_loss = MODELS.build(pixel_loss) if pixel_loss else None
         self.gan_loss = MODELS.build(gan_loss) if gan_loss else None
-        self.perceptual_loss = MODELS.build(perceptual_loss) if perceptual_loss else None
+        self.perceptual_loss = MODELS.build(
+            perceptual_loss) if perceptual_loss else None
 
     def r1_penalty(self, real_pred, real_img):
-        """
-        R1 regularization for discriminator. The core idea is to
-        penalize the gradient on real data alone: when the
-        generator distribution produces the true data distribution
-        and the discriminator is equal to 0 on the data manifold, the
-        gradient penalty ensures that the discriminator cannot create
-        a non-zero gradient orthogonal to the data manifold without
-        suffering a loss in the GAN game.
+        """R1 regularization for discriminator. The core idea is to penalize
+        the gradient on real data alone: when the generator distribution
+        produces the true data distribution and the discriminator is equal to 0
+        on the data manifold, the gradient penalty ensures that the
+        discriminator cannot create a non-zero gradient orthogonal to the data
+        manifold without suffering a loss in the GAN game.
 
         Ref:
         Eq. 9 in Which training methods for GANs do actually converge.
         """
-        grad_real = torch.autograd.grad(outputs=real_pred.sum(), inputs=real_img, create_graph=True)[0]
-        grad_penalty = grad_real.pow(2).view(grad_real.shape[0], -1).sum(1).mean()
+        grad_real = torch.autograd.grad(
+            outputs=real_pred.sum(), inputs=real_img, create_graph=True)[0]
+        grad_penalty = grad_real.pow(2).view(grad_real.shape[0],
+                                             -1).sum(1).mean()
         return grad_penalty
 
     def train_step(self, data: dict,
@@ -116,7 +113,7 @@ class GCFSRGAN(BaseGAN):
         message_hub = MessageHub.get_current_instance()
         curr_iter = message_hub.get_info('iter')
         data = self.data_preprocessor(data, True)
-        inputs_dict, data_samples = data['inputs'], data['data_samples']
+        inputs_dict, _ = data['inputs'], data['data_samples']
         gt_imgs = inputs_dict['img']
 
         disc_optimizer_wrapper: OptimWrapper = optim_wrapper['discriminator']
@@ -128,13 +125,17 @@ class GCFSRGAN(BaseGAN):
 
         scale = random.choice(self.rescale_list)
         input_imgs = imresize(imresize(gt_imgs, 1 / scale), scale)
-        conditions = torch.from_numpy(np.array([scale / self.condition_norm], dtype=np.float32)).unsqueeze(0).to(gt_imgs.device)
+        conditions = torch.from_numpy(
+            np.array([scale / self.condition_norm],
+                     dtype=np.float32)).unsqueeze(0).to(gt_imgs.device)
 
         fake_imgs, _ = self.generator(input_imgs, conditions)
         fake_pred = self.discriminator(fake_imgs.detach())
         real_pred = self.discriminator(gt_imgs)
 
-        loss_disc = self.gan_loss(real_pred, True, is_disc=True) + self.gan_loss(fake_pred, False, is_disc=True)
+        loss_disc = self.gan_loss(
+            real_pred, True, is_disc=True) + self.gan_loss(
+                fake_pred, False, is_disc=True)
         losses_dict['loss_disc'] = loss_disc.detach()
         losses_dict['real_score'] = real_pred.detach().mean()
         losses_dict['fake_score'] = fake_pred.detach().mean()
@@ -144,10 +145,14 @@ class GCFSRGAN(BaseGAN):
             gt_imgs.requires_grad = True
 
             gen_accu_iters = gen_optimizer_wrapper._accumulative_counts
+            gen_optimizer_wrapper.initialize_count_status(
+                self.generator, 0, self.generator_steps * gen_accu_iters)
 
             real_pred = self.discriminator(gt_imgs)
             loss_disc_r1 = self.r1_penalty(real_pred, gt_imgs)
-            loss_disc_r1 = (self.r1_reg_weight / 2 * loss_disc_r1 * self.net_d_reg_every + 0 * real_pred[0])
+            loss_disc_r1 = (
+                self.r1_reg_weight / 2 * loss_disc_r1 * self.net_d_reg_every +
+                0 * real_pred[0])
             # NOTE: why do we need to add 0 * real_pred, otherwise, a runtime
             # error will arise: RuntimeError: Expected to have finished
             # reduction in the prior iteration before starting a new one.
@@ -166,16 +171,18 @@ class GCFSRGAN(BaseGAN):
         loss_gen = self.gan_loss(fake_pred, True, is_disc=False)
         losses_dict['loss_gen_wgan'] = loss_gen.detach()
 
-        if self.pixel_loss: 
+        if self.pixel_loss:
             loss_gen_pixel = self.pixel_loss(fake_imgs, gt_imgs)
             loss_gen += loss_gen_pixel
             losses_dict['loss_gen_pixel'] = loss_gen_pixel.detach()
 
         if self.perceptual_loss:
-            loss_gen_perceptual, loss_gen_style = self.perceptual_loss(fake_imgs, gt_imgs)
+            loss_gen_perceptual, loss_gen_style = self.perceptual_loss(
+                fake_imgs, gt_imgs)
             if loss_gen_perceptual is not None:
                 loss_gen += loss_gen_perceptual
-                losses_dict['loss_gen_perceptual'] = loss_gen_perceptual.detach()
+                losses_dict[
+                    'loss_gen_perceptual'] = loss_gen_perceptual.detach()
             if loss_gen_style is not None:
                 loss_gen += loss_gen_style
                 losses_dict['loss_gen_style'] = loss_gen_style.detach()
@@ -185,21 +192,20 @@ class GCFSRGAN(BaseGAN):
 
         # only do ema after generator update
         if self.with_ema_gen and (curr_iter + 1) >= (
-                self.ema_start * self.discriminator_steps *
-                disc_accu_iters):
+                self.ema_start * self.discriminator_steps * disc_accu_iters):
             self.generator_ema.update_parameters(
-                self.generator.module
-                if is_model_wrapper(self.generator) else self.generator)
+                self.generator.
+                module if is_model_wrapper(self.generator) else self.generator)
             # if not update buffer, copy buffer from orig model
             if not self.generator_ema.update_buffers:
                 self.generator_ema.sync_buffers(
-                    self.generator.module if is_model_wrapper(
-                        self.generator) else self.generator)
+                    self.generator.module
+                    if is_model_wrapper(self.generator) else self.generator)
         elif self.with_ema_gen:
             # before ema, copy weights from orig
             self.generator_ema.sync_parameters(
-                self.generator.module
-                if is_model_wrapper(self.generator) else self.generator)
+                self.generator.
+                module if is_model_wrapper(self.generator) else self.generator)
 
         _, log_vars = self.parse_losses(losses_dict)
 

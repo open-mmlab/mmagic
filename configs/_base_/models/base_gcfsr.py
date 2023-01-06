@@ -21,7 +21,8 @@ metrics = [
 val_evaluator = dict(metrics=metrics)
 test_evaluator = dict(metrics=metrics)
 
-train_cfg = dict(type='IterBasedTrainLoop', max_iters=800000, val_interval=5000)
+train_cfg = dict(
+    type='IterBasedTrainLoop', max_iters=800000, val_interval=5000)
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
