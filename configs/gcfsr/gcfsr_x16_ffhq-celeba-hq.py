@@ -49,9 +49,8 @@ model = dict(
     ),
     data_preprocessor=dict(
         type='GenDataPreprocessor',
-        mean=[0.5, 0.5, 0.5],
-        std=[0.5, 0.5, 0.5],
-    )
+    ),
+    rescale_list=[64, 64, 64, 64, 32, 32, 16, 16, 8, 4]
 )
 
 optim_wrapper = dict(

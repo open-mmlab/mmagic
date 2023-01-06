@@ -34,7 +34,8 @@ class GCFSRGAN(BaseGAN):
                  ema_config: Optional[Dict] = None,
                  pixel_loss: Optional[Dict] = None,
                  perceptual_loss: Optional[Dict] = None,
-                 gan_loss: Optional[Dict] = None):
+                 gan_loss: Optional[Dict] = None,
+                 rescale_list: Optional[List] = None):
         BaseModel.__init__(self, data_preprocessor=data_preprocessor)
 
         # build generator
@@ -66,6 +67,10 @@ class GCFSRGAN(BaseGAN):
             self._ema_config = deepcopy(ema_config)
             self._init_ema_model(self._ema_config)
             self._with_ema_gen = True
+
+        # rescale config
+        self.rescale_list = rescale_list
+        self.condition_norm = max(rescale_list)
 
         # loss config
         self.pixel_loss = MODELS.build(pixel_loss) if pixel_loss else None
@@ -115,10 +120,10 @@ class GCFSRGAN(BaseGAN):
         set_requires_grad(self.discriminator, True)
         disc_optimizer_wrapper.zero_grad()
 
-        scale = 32.  # TODO
+        scale = random.choice(self.rescale_list)
         losses_dict['scale'] = scale
         input_imgs = imresize(imresize(gt_imgs, 1 / scale), scale)
-        conditions = torch.from_numpy(np.array([scale / 64.], dtype=np.float32)).unsqueeze(0).to(gt_imgs.device) 
+        conditions = torch.from_numpy(np.array([scale / self.condition_norm], dtype=np.float32)).unsqueeze(0).to(gt_imgs.device) 
 
         fake_imgs, _ = self.generator(input_imgs, conditions)
         fake_pred = self.discriminator(fake_imgs.detach())
