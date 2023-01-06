@@ -40,7 +40,6 @@ train_pipeline = [
         keys=['gt'],
         crop_size=(gt_crop_size, gt_crop_size),
         random_crop=True),
-    dict(type='RescaleToZeroOne', keys=['gt']),
     dict(
         type='UnsharpMasking',
         keys=['gt'],

@@ -574,10 +574,11 @@ class UnsharpMasking(BaseTransform):
 
         outputs = []
         for img in imgs:
+            img = img.astype(np.float32)
             residue = img - cv2.filter2D(img, -1, self.kernel)
-            mask = np.float32(np.abs(residue) * 255 > self.threshold)
+            mask = np.float32(np.abs(residue) > self.threshold)
             soft_mask = cv2.filter2D(mask, -1, self.kernel)
-            sharpened = np.clip(img + self.weight * residue, 0, 1)
+            sharpened = np.clip(img + self.weight * residue, 0, 255)
 
             outputs.append(soft_mask * sharpened + (1 - soft_mask) * img)
 
