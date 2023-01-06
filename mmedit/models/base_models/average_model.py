@@ -230,8 +230,8 @@ class RampUpEMA(BaseAveragedModel):
             steps (int): The number of times the parameters have been
                 updated.
         """
-        momentum = self.rampup(self.steps, self.ema_kimg, self.ema_rampup,
-                               self.batch_size, self.eps)
+        momentum = 1. - self.rampup(self.steps, self.ema_kimg, self.ema_rampup,
+                                    self.batch_size, self.eps)
         averaged_param.mul_(1 - momentum).add_(source_param, alpha=momentum)
 
     def _load_from_state_dict(self, state_dict: dict, prefix: str,

@@ -259,6 +259,6 @@ custom_hooks = [
         type='ExponentialMovingAverageHook',
         module_keys=('generator_ema'),
         interval=1,
-        interp_cfg=dict(momentum=0.999),
+        interp_cfg=dict(momentum=0.001),
     )
 ]

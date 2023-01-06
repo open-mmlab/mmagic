@@ -70,7 +70,7 @@ class TestExponentialMovingAverage(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.default_cfg = dict(
-            interval=1, momentum=0.9999, update_buffers=True)
+            interval=1, momentum=0.0001, update_buffers=True)
 
     def test_init(self):
         cfg = deepcopy(self.default_cfg)
