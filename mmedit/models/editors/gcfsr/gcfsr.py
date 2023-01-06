@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import random
 from copy import deepcopy
 from typing import Dict, List, Optional, Tuple, Union
 
@@ -31,6 +32,8 @@ class GCFSRGAN(BaseGAN):
                  data_preprocessor: Optional[Union[dict, Config]] = None,
                  generator_steps: int = 1,
                  discriminator_steps: int = 1,
+                 d_reg_interval: int = 16,
+                 r1_reg_weight: int = 10,
                  ema_config: Optional[Dict] = None,
                  pixel_loss: Optional[Dict] = None,
                  perceptual_loss: Optional[Dict] = None,
@@ -72,6 +75,9 @@ class GCFSRGAN(BaseGAN):
         self.rescale_list = rescale_list
         self.condition_norm = max(rescale_list)
 
+        self.net_d_reg_every = d_reg_interval
+        self.r1_reg_weight = r1_reg_weight
+
         # loss config
         self.pixel_loss = MODELS.build(pixel_loss) if pixel_loss else None
         self.gan_loss = MODELS.build(gan_loss) if gan_loss else None
@@ -90,7 +96,7 @@ class GCFSRGAN(BaseGAN):
         Ref:
         Eq. 9 in Which training methods for GANs do actually converge.
         """
-        grad_real = autograd.grad(outputs=real_pred.sum(), inputs=real_img, create_graph=True)[0]
+        grad_real = torch.autograd.grad(outputs=real_pred.sum(), inputs=real_img, create_graph=True)[0]
         grad_penalty = grad_real.pow(2).view(grad_real.shape[0], -1).sum(1).mean()
         return grad_penalty
 
@@ -121,16 +127,15 @@ class GCFSRGAN(BaseGAN):
         disc_optimizer_wrapper.zero_grad()
 
         scale = random.choice(self.rescale_list)
-        losses_dict['scale'] = scale
         input_imgs = imresize(imresize(gt_imgs, 1 / scale), scale)
-        conditions = torch.from_numpy(np.array([scale / self.condition_norm], dtype=np.float32)).unsqueeze(0).to(gt_imgs.device) 
+        conditions = torch.from_numpy(np.array([scale / self.condition_norm], dtype=np.float32)).unsqueeze(0).to(gt_imgs.device)
 
         fake_imgs, _ = self.generator(input_imgs, conditions)
         fake_pred = self.discriminator(fake_imgs.detach())
         real_pred = self.discriminator(gt_imgs)
 
         loss_disc = self.gan_loss(real_pred, True, is_disc=True) + self.gan_loss(fake_pred, False, is_disc=True)
-        losses_dict['loss_disc'] = loss_disc
+        losses_dict['loss_disc'] = loss_disc.detach()
         losses_dict['real_score'] = real_pred.detach().mean()
         losses_dict['fake_score'] = fake_pred.detach().mean()
         loss_disc.backward()
@@ -142,7 +147,7 @@ class GCFSRGAN(BaseGAN):
 
             real_pred = self.discriminator(gt_imgs)
             loss_disc_r1 = self.r1_penalty(real_pred, gt_imgs)
-            loss_disc_r1 = (self.r1_reg_weight / 2 * l_d_r1 * self.net_d_reg_every + 0 * real_pred[0])
+            loss_disc_r1 = (self.r1_reg_weight / 2 * loss_disc_r1 * self.net_d_reg_every + 0 * real_pred[0])
             # NOTE: why do we need to add 0 * real_pred, otherwise, a runtime
             # error will arise: RuntimeError: Expected to have finished
             # reduction in the prior iteration before starting a new one.
@@ -159,22 +164,22 @@ class GCFSRGAN(BaseGAN):
         fake_pred = self.discriminator(fake_imgs)
 
         loss_gen = self.gan_loss(fake_pred, True, is_disc=False)
-        losses_dict['loss_gen_wgan'] = loss_gen
+        losses_dict['loss_gen_wgan'] = loss_gen.detach()
 
         if self.pixel_loss: 
             loss_gen_pixel = self.pixel_loss(fake_imgs, gt_imgs)
             loss_gen += loss_gen_pixel
-            losses_dict['loss_gen_pixel'] = loss_gen_pixel
+            losses_dict['loss_gen_pixel'] = loss_gen_pixel.detach()
 
         if self.perceptual_loss:
             loss_gen_perceptual, loss_gen_style = self.perceptual_loss(fake_imgs, gt_imgs)
             if loss_gen_perceptual is not None:
                 loss_gen += loss_gen_perceptual
-                losses_dict['loss_gen_perceptual'] = loss_gen_perceptual
-            if loss_gen_perceptual is not None:
-                loss_gen += loss_gen_perceptual
-                losses_dict['loss_gen_style'] = loss_gen_style
-        
+                losses_dict['loss_gen_perceptual'] = loss_gen_perceptual.detach()
+            if loss_gen_style is not None:
+                loss_gen += loss_gen_style
+                losses_dict['loss_gen_style'] = loss_gen_style.detach()
+
         loss_gen.backward()
         gen_optimizer_wrapper.step()
 

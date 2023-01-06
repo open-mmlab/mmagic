@@ -62,7 +62,7 @@ class GANLoss(nn.Module):
             Tensor: wgan loss.
         """
 
-        return -input.mean() if target else input.mean()
+        return -input.mean() if target is not None else input.mean()
 
     def _wgan_softplus_loss(self, input, target):
         """wgan loss with soft plus. softplus is a smooth approximation to the
@@ -77,9 +77,9 @@ class GANLoss(nn.Module):
             target (bool): Target label.
 
         Returns:
-            Tensor: wgan loss.
+            Tensor: wgan softplus loss.
         """
-        return F.softplus(-input).mean() if target else F.softplus(input).mean()
+        return F.softplus(-input).mean() if target is not None else F.softplus(input).mean()
 
     def get_target_label(self, input, target_is_real):
         """Get target label.
