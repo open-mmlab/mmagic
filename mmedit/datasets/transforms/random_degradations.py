@@ -287,7 +287,8 @@ class RandomNoise:
                 noise = noise[..., np.newaxis]
             noise = np.clip((noise).round(), 0, 255)
             unique_val = 2**np.ceil(np.log2(len(np.unique(noise))))
-            noise = np.random.poisson(noise * unique_val) / unique_val - noise
+            noise = np.random.poisson(noise * unique_val).astype(np.float32) \
+                / unique_val - noise
 
             outputs.append(img + noise * scale)
 
