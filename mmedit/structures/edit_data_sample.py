@@ -121,17 +121,39 @@ class EditDataSample(BaseDataElement):
     """
 
     # source_key_in_results: target_key_in_metainfo
-    META_KEYS = [
-        'img_path', 'merged_path', 'trimap_path', 'ori_shape', 'img_shape',
-        'ori_merged_shape', 'ori_trimap_shape', 'trimap_channel_order'
-    ]
+    META_KEYS = {
+        'img_path': 'img_path',
+        'merged_path': 'merged_path',
+        'trimap_path': 'trimap_path',
+        'ori_shape': 'ori_shape',
+        'img_shape': 'img_shape',
+        'ori_merged_shape': 'ori_merged_shape',
+        'ori_trimap_shape': 'ori_trimap_shape',
+        'trimap_channel_order': 'trimap_channel_order',
+        'empty_box': 'empty_box'
+    }
 
     # source_key_in_results: target_key_in_datafield
-    DATA_KEYS = [
-        'gt_img', 'gt_label', 'gt_heatmap', 'gt_unsharp', 'gt_merged', 'gt_fg',
-        'gt_bg', 'gt_rgb', 'gt_alpha', 'img_lq', 'ref_img', 'ref_lq', 'mask',
-        'trimap', 'gray', 'cropped_img', 'pred_img', 'ori_trimap'
-    ]
+    DATA_KEYS = {
+        'gt': 'gt_img',
+        'gt_label': 'gt_label',
+        'gt_heatmap': 'gt_heatmap',
+        'gt_unsharp': 'gt_unsharp',
+        'gt_merged': 'gt_merged',
+        'gt_fg': 'gt_fg',
+        'gt_bg': 'gt_bg',
+        'gt_rgb': 'gt_rgb',
+        'gt_alpha': 'gt_alpha',
+        'img_lq': 'img_lq',
+        'ref': 'ref_img',
+        'ref_lq': 'ref_lq',
+        'mask': 'mask',
+        'trimap': 'trimap',
+        'gray': 'gray',
+        'cropped_img': 'cropped_img',
+        'pred_img': 'pred_img',
+        'ori_trimap': 'ori_trimap'
+    }
 
     def set_predefined_data(self, data: dict) -> None:
         """set or change pre-defined key-value pairs in ``data_field`` by
@@ -142,10 +164,16 @@ class EditDataSample(BaseDataElement):
                 model predictions.
         """
 
-        metainfo = {k: v for (k, v) in data.items() if k in self.META_KEYS}
+        metainfo = {
+            self.META_KEYS[k]: v
+            for (k, v) in data.items() if k in self.META_KEYS
+        }
         self.set_metainfo(metainfo)
 
-        data = {k: v for (k, v) in data.items() if k in self.DATA_KEYS}
+        data = {
+            self.DATA_KEYS[k]: v
+            for (k, v) in data.items() if k in self.DATA_KEYS
+        }
         self.set_tensor_data(data)
 
     def set_tensor_data(self, data: dict) -> None:

@@ -30,9 +30,9 @@ class PackEditInputs(BaseTransform):
 
     def __init__(
         self,
-        keys: Tuple[List[str], str] = ['img', 'noise', 'merged'],
-        data_keys: Tuple[List[str], str] = [],
-        meta_keys: Tuple[List[str], str] = [],
+        keys: Tuple[List[str], str, dict] = ['img', 'merged'],
+        meta_keys: Tuple[List[str], str, dict] = [],
+        data_keys: Tuple[List[str], str, dict] = [],
     ) -> None:
 
         assert keys is not None, \
@@ -67,10 +67,10 @@ class PackEditInputs(BaseTransform):
 
         # prepare inputs
         inputs = dict()
-        for key in self.keys:
-            value = results.pop(key, None)
+        for k in self.keys:
+            value = results.pop(k, None)
             if value is not None:
-                inputs[key] = all_to_tensor(value)
+                inputs[k] = all_to_tensor(value)
 
         # return the inputs as tensor, if it has only one item
         if len(inputs.values()) == 1:
@@ -81,7 +81,7 @@ class PackEditInputs(BaseTransform):
         predefined_data = {
             k: v
             for (k, v) in results.items()
-            if not (k in self.data_keys + self.meta_keys)
+            if k not in (self.data_keys + self.meta_keys)
         }
         data_sample.set_predefined_data(predefined_data)
 
