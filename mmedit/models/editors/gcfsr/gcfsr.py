@@ -106,7 +106,7 @@ class GCFSRGAN(BaseGAN):
         curr_iter = message_hub.get_info('iter')
         data = self.data_preprocessor(data, True)
         inputs_dict, data_samples = data['inputs'], data['data_samples']
-        gt_imgs = inputs_dict.get('img')
+        gt_imgs = inputs_dict['img']
 
         disc_optimizer_wrapper: OptimWrapper = optim_wrapper['discriminator']
         gen_optimizer_wrapper: OptimWrapper = optim_wrapper['generator']
@@ -117,12 +117,7 @@ class GCFSRGAN(BaseGAN):
 
         scale = 32.  # TODO
         losses_dict['scale'] = scale
-        # input_imgs = imresize(imresize(gt_imgs, 1 / scale), scale)
-        input_imgs = F.interpolate(
-            F.interpolate(
-                gt_imgs, scale_factor=1 / scale, mode='bicubic', align_corners=True
-            ), scale_factor=scale, mode='bicubic', align_corners=True
-        )
+        input_imgs = imresize(imresize(gt_imgs, 1 / scale), scale)
         conditions = torch.from_numpy(np.array([scale / 64.], dtype=np.float32)).unsqueeze(0).to(gt_imgs.device) 
 
         fake_imgs, _ = self.generator(input_imgs, conditions)
