@@ -5,6 +5,7 @@ import torch
 
 from mmedit.utils import ConfigType
 from .base_mmedit_inferencer import BaseMMEditInferencer
+from .colorization_inferencer import ColorizationInferencer
 from .conditional_inferencer import ConditionalInferencer
 from .eg3d_inferencer import EG3DInferencer
 from .inpainting_inferencer import InpaintingInferencer
@@ -39,6 +40,9 @@ class MMEditInferencer(BaseMMEditInferencer):
         self.task = task
         if self.task in ['conditional', 'Conditional GANs']:
             self.inferencer = ConditionalInferencer(
+                config, ckpt, device, extra_parameters, seed=seed)
+        elif self.task in ['colorization', 'Colorization']:
+            self.inferencer = ColorizationInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['unconditional', 'Unconditional GANs']:
             self.inferencer = UnconditionalInferencer(
