@@ -1,9 +1,9 @@
 # Changelog
 
-## v1.0.0rc5 (03/01/2023)
+## v1.0.0rc5 (04/01/2023)
 
 **Highlights**
-We are excited to announce the release of MMEditing 1.0.0rc4. This release supports 49+ models, 180+ configs and 177+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
+We are excited to announce the release of MMEditing 1.0.0rc5. This release supports 49+ models, 180+ configs and 177+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
 
 - Support Restormer
 - Support GLIDE
