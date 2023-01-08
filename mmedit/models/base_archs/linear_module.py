@@ -1,7 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional, Tuple
+
 import torch.nn as nn
 from mmcv.cnn import build_activation_layer
 from mmengine.model.weight_init import kaiming_init
+from torch import Tensor
 
 
 class LinearModule(nn.Module):
@@ -24,13 +27,13 @@ class LinearModule(nn.Module):
     """
 
     def __init__(self,
-                 in_features,
-                 out_features,
-                 bias=True,
-                 act_cfg=dict(type='ReLU'),
-                 inplace=True,
-                 with_spectral_norm=False,
-                 order=('linear', 'act')):
+                 in_features: int,
+                 out_features: int,
+                 bias: bool = True,
+                 act_cfg: Optional[dict] = dict(type='ReLU'),
+                 inplace: bool = True,
+                 with_spectral_norm: bool = False,
+                 order: Tuple[str, str] = ('linear', 'act')):
         super().__init__()
         assert act_cfg is None or isinstance(act_cfg, dict)
         self.act_cfg = act_cfg
@@ -62,7 +65,7 @@ class LinearModule(nn.Module):
         # Use msra init by default
         self.init_weights()
 
-    def init_weights(self):
+    def init_weights(self) -> None:
         """Init weights for the model."""
         if self.with_activation and self.act_cfg['type'] == 'LeakyReLU':
             nonlinearity = 'leaky_relu'
@@ -73,7 +76,7 @@ class LinearModule(nn.Module):
 
         kaiming_init(self.linear, a=a, nonlinearity=nonlinearity)
 
-    def forward(self, x, activate=True):
+    def forward(self, x: Tensor, activate: Optional[bool] = True) -> Tensor:
         """Forward Function.
 
         Args:

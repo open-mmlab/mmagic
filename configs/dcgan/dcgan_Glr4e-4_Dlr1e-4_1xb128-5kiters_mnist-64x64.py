@@ -5,47 +5,44 @@ _base_ = [
 ]
 
 # output single channel
-model = dict(generator=dict(out_channels=1), discriminator=dict(in_channels=1))
+model = dict(
+    data_preprocessor=dict(mean=[127.5], std=[127.5]),
+    generator=dict(out_channels=1),
+    discriminator=dict(in_channels=1))
 
 # define dataset
 # modify train_pipeline to load gray scale images
 train_pipeline = [
-    dict(
-        type='LoadImageFromFile',
-        key='img',
-        io_backend='disk',
-        color_type='grayscale'),
+    dict(type='LoadImageFromFile', key='img', color_type='grayscale'),
     dict(type='Resize', scale=(64, 64)),
-    dict(type='PackEditInputs', meta_keys=[])
+    dict(type='PackEditInputs')
 ]
 
 # set ``batch_size``` and ``data_root```
 batch_size = 128
 data_root = 'data/mnist_64/train'
 train_dataloader = dict(
-    batch_size=batch_size, dataset=dict(data_root=data_root))
+    batch_size=batch_size,
+    dataset=dict(data_root=data_root, pipeline=train_pipeline))
 
-val_dataloader = dict(batch_size=batch_size, dataset=dict(data_root=data_root))
+val_dataloader = dict(
+    batch_size=batch_size,
+    dataset=dict(data_root=data_root, pipeline=train_pipeline))
 
 test_dataloader = dict(
-    batch_size=batch_size, dataset=dict(data_root=data_root))
-
-default_hooks = dict(
-    checkpoint=dict(
-        interval=500,
-        save_best=['swd/avg', 'ms-ssim/avg'],
-        rule=['less', 'greater']))
+    batch_size=batch_size,
+    dataset=dict(data_root=data_root, pipeline=train_pipeline))
 
 # VIS_HOOK
 custom_hooks = [
     dict(
         type='GenVisualizationHook',
-        interval=10000,
+        interval=500,
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))
 ]
 
-train_cfg = dict(max_iters=5000)
+train_cfg = dict(max_iters=5000, val_interval=500)
 
 # METRICS
 metrics = [
@@ -55,10 +52,13 @@ metrics = [
     dict(
         type='SWD',
         prefix='swd',
-        fake_nums=16384,
+        fake_nums=-1,
         sample_model='orig',
-        image_shape=(3, 64, 64))
+        image_shape=(1, 64, 64))
 ]
+# save best checkpoints
+default_hooks = dict(
+    checkpoint=dict(interval=500, save_best='swd/avg', rule='less'))
 
 val_evaluator = dict(metrics=metrics)
 test_evaluator = dict(metrics=metrics)

@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2003.13063
   README: configs/dic/README.md
+  Task:
+  - image super-resolution
+  Year: 2020
 Models:
 - Config: configs/dic/dic_x8c48b6_4xb2-150k_celeba-hq.py
   In Collection: DIC

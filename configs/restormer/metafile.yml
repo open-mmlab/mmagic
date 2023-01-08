@@ -1,0 +1,387 @@
+Collections:
+- Metadata:
+    Architecture:
+    - Restormer
+  Name: Restormer
+  Paper:
+  - https://arxiv.org/abs/2111.09881
+  README: configs/restormer/README.md
+  Task:
+  - denoising
+  - deblurring
+  - deraining
+  Year: 2022
+Models:
+- Config: configs/restormer/restormer_official_rain13k.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_rain13k
+  Results:
+  - Dataset: Others
+    Metrics:
+      Rain100H<br>PSNR/SSIM (Y):
+        PSNR: 31.4804
+        SSIM: 0.9056
+      Rain100L<br>PSNR/SSIM (Y):
+        PSNR: 39.1023
+        SSIM: 0.9787
+      Test100<br>PSNR/SSIM (Y):
+        PSNR: 32.0287
+        SSIM: 0.9239
+      Test1200<br>PSNR/SSIM (Y):
+        PSNR: 33.2251
+        SSIM: 0.9272
+      Test2800<br>PSNR/SSIM (Y):
+        PSNR: 34.217
+        SSIM: 0.9451
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth
+- Config: configs/restormer/restormer_official_gopro.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_gopro
+  Results:
+  - Dataset: Others
+    Metrics:
+      GoPro<br>PSNR/SSIM (RGB):
+        PSNR: 32.9295
+        SSIM: 0.9496
+      HIDE<br>PSNR/SSIM (RGB):
+        PSNR: 31.2289
+        SSIM: 0.9345
+      RealBlur-J<br>PSNR/SSIM (Y):
+        PSNR: 28.4356
+        SSIM: 0.8681
+      RealBlur-R<br>PSNR/SSIM (Y):
+        PSNR: 35.9141
+        SSIM: 0.9707
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth
+- Config: configs/restormer/restormer_official_dpdd-single.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dpdd-single
+  Results:
+  - Dataset: Others
+    Metrics:
+      Combined MAE: 0.0378
+      Combined PSNR: 25.9805
+      Combined SSIM: 0.8166
+      Indoor Scenes MAE: 0.0251
+      Indoor Scenes PSNR: 28.8681
+      Indoor Scenes SSIM: 0.8859
+      Outdoor Scenes MAE: 0.0499
+      Outdoor Scenes PSNR: 23.241
+      Outdoor Scenes SSIM: 0.7509
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-single-6bc31582.pth
+- Config: configs/restormer/restormer_official_dpdd-dual.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dpdd-dual
+  Results:
+  - Dataset: Others
+    Metrics:
+      Combined MAE: 0.0354
+      Combined PSNR: 26.616
+      Combined SSIM: 0.8346
+      Indoor Scenes MAE: 0.0354
+      Indoor Scenes PSNR: 26.616
+      Indoor Scenes SSIM: 0.8346
+      Outdoor Scenes MAE: 0.0354
+      Outdoor Scenes PSNR: 26.616
+      Outdoor Scenes SSIM: 0.8346
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-dual-52c94c00.pth
+- Config: configs/restormer/restormer_official_dfwb-gray-sigma15.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-gray-sigma15
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 15.0
+      BSD68<br>PSNR/SSIM:
+        PSNR: 32.4987
+        SSIM: 0.894
+      Set12<br>PSNR/SSIM:
+        PSNR: 34.0182
+        SSIM: 0.916
+      Urban100<br>PSNR/SSIM:
+        PSNR: 34.4336
+        SSIM: 0.9419
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma15-da74417f.pth
+- Config: configs/restormer/restormer_official_dfwb-gray-sigma25.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-gray-sigma25
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 25.0
+      BSD68<br>PSNR/SSIM:
+        PSNR: 30.1613
+        SSIM: 0.837
+      Set12<br>PSNR/SSIM:
+        PSNR: 31.7289
+        SSIM: 0.8811
+      Urban100<br>PSNR/SSIM:
+        PSNR: 32.1162
+        SSIM: 0.914
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma25-08010841.pth
+- Config: configs/restormer/restormer_official_dfwb-gray-sigma50.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-gray-sigma50
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 50.0
+      BSD68<br>PSNR/SSIM:
+        PSNR: 27.3266
+        SSIM: 0.7434
+      Set12<br>PSNR/SSIM:
+        PSNR: 28.6269
+        SSIM: 0.8188
+      Urban100<br>PSNR/SSIM:
+        PSNR: 28.9636
+        SSIM: 0.8571
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-sigma50-ee852dfe.pth
+- Config: configs/restormer/restormer_official_dfwb-gray-sigma15.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-gray-sigma15
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 15.0
+      BSD68<br>PSNR/SSIM:
+        PSNR: 32.4994
+        SSIM: 0.8928
+      Set12<br>PSNR/SSIM:
+        PSNR: 33.9642
+        SSIM: 0.9153
+      Urban100<br>PSNR/SSIM:
+        PSNR: 34.3152
+        SSIM: 0.9409
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+- Config: configs/restormer/restormer_official_dfwb-gray-sigma25.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-gray-sigma25
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 25.0
+      BSD68<br>PSNR/SSIM:
+        PSNR: 30.1486
+        SSIM: 0.836
+      Set12<br>PSNR/SSIM:
+        PSNR: 31.7106
+        SSIM: 0.881
+      Urban100<br>PSNR/SSIM:
+        PSNR: 32.0457
+        SSIM: 0.9131
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+- Config: configs/restormer/restormer_official_dfwb-gray-sigma50.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-gray-sigma50
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 50.0
+      BSD68<br>PSNR/SSIM:
+        PSNR: 27.3537
+        SSIM: 0.7422
+      Set12<br>PSNR/SSIM:
+        PSNR: 28.6614
+        SSIM: 0.8197
+      Urban100<br>PSNR/SSIM:
+        PSNR: 28.9848
+        SSIM: 0.8571
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
+- Config: configs/restormer/restormer_official_dfwb-color-sigma15.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-color-sigma15
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 15.0
+      CBSD68<br>PSNR/SSIM (RGB):
+        PSNR: 34.3506
+        SSIM: 0.9352
+      Kodak24<br>PSNR/SSIM (RGB):
+        PSNR: 35.49
+        SSIM: 0.9312
+      McMaster<br>PSNR/SSIM (RGB):
+        PSNR: 35.6072
+        SSIM: 0.9352
+      Urban100<br>PSNR/SSIM (RGB):
+        PSNR: 35.1522
+        SSIM: 0.953
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma15-012ceb71.pth
+- Config: configs/restormer/restormer_official_dfwb-color-sigma25.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-color-sigma25
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 25.0
+      CBSD68<br>PSNR/SSIM (RGB):
+        PSNR: 31.7457
+        SSIM: 0.8942
+      Kodak24<br>PSNR/SSIM (RGB):
+        PSNR: 33.0489
+        SSIM: 0.8943
+      McMaster<br>PSNR/SSIM (RGB):
+        PSNR: 33.326
+        SSIM: 0.9066
+      Urban100<br>PSNR/SSIM (RGB):
+        PSNR: 32.967
+        SSIM: 0.9317
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma25-e307f222.pth
+- Config: configs/restormer/restormer_official_dfwb-color-sigma50.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-color-sigma50
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 50.0
+      CBSD68<br>PSNR/SSIM (RGB):
+        PSNR: 28.5569
+        SSIM: 0.8127
+      Kodak24<br>PSNR/SSIM (RGB):
+        PSNR: 30.0122
+        SSIM: 0.8238
+      McMaster<br>PSNR/SSIM (RGB):
+        PSNR: 30.2608
+        SSIM: 0.8515
+      Urban100<br>PSNR/SSIM (RGB):
+        PSNR: 30.023
+        SSIM: 0.8902
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma50-a991983d.pth
+- Config: configs/restormer/restormer_official_dfwb-color-sigma15.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-color-sigma15
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 15.0
+      CBSD68<br>PSNR/SSIM (RGB):
+        PSNR: 34.3422
+        SSIM: 0.9356
+      Kodak24<br>PSNR/SSIM (RGB):
+        PSNR: 35.4544
+        SSIM: 0.9308
+      McMaster<br>PSNR/SSIM (RGB):
+        PSNR: 35.5473
+        SSIM: 0.9344
+      Urban100<br>PSNR/SSIM (RGB):
+        PSNR: 35.0754
+        SSIM: 0.9524
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
+- Config: configs/restormer/restormer_official_dfwb-color-sigma25.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-color-sigma25
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 25.0
+      CBSD68<br>PSNR/SSIM (RGB):
+        PSNR: 31.7391
+        SSIM: 0.8945
+      Kodak24<br>PSNR/SSIM (RGB):
+        PSNR: 33.038
+        SSIM: 0.8941
+      McMaster<br>PSNR/SSIM (RGB):
+        PSNR: 33.304
+        SSIM: 0.9063
+      Urban100<br>PSNR/SSIM (RGB):
+        PSNR: 32.9165
+        SSIM: 0.9312
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
+- Config: configs/restormer/restormer_official_dfwb-color-sigma50.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_dfwb-color-sigma50
+  Results:
+  - Dataset: Others
+    Metrics:
+      $\\sigma$: 50.0
+      CBSD68<br>PSNR/SSIM (RGB):
+        PSNR: 28.5582
+        SSIM: 0.8126
+      Kodak24<br>PSNR/SSIM (RGB):
+        PSNR: 30.0074
+        SSIM: 0.8233
+      McMaster<br>PSNR/SSIM (RGB):
+        PSNR: 30.2671
+        SSIM: 0.852
+      Urban100<br>PSNR/SSIM (RGB):
+        PSNR: 30.0172
+        SSIM: 0.8898
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-blind-dfd03c9f.pth
+- Config: configs/restormer/restormer_official_sidd.py
+  In Collection: Restormer
+  Metadata:
+    GPUs: '1'
+    Training Data: Others
+  Name: restormer_official_sidd
+  Results:
+  - Dataset: Others
+    Metrics:
+      SIDD<br>PSNR/SSIM:
+        PSNR: 40.0156
+        SSIM: 0.9225
+    Task: Denoising, Deblurring, Deraining
+  Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_sidd-9e7025db.pth

@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h1>未找到页面</h1>
+<p>
+  未找到你要打开的页面。
+</p>
+<p>
+  如果你是从旧版本文档跳转至此，可能是对应的页面被移动了。请从左侧的目录中寻找新版本文档，或者跳转至<a href="{{ pathto(root_doc) }}">首页</a>。
+</p>
+<p>
+  如果你找不到希望打开的文档，欢迎在 <a href="https://github.com/open-mmlab/mmediting/issues/new/choose">Issue</a> 中告诉我们！
+</p>
+
+{% endblock %}
