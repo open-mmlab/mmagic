@@ -55,6 +55,21 @@ def test_gan_losses():
     loss = gan_loss(input_2, False, is_disc=True)
     npt.assert_almost_equal(loss.item(), 2.0)
 
+    # wgan softplus
+    gan_loss = GANLoss(
+        'wgan_softplus',
+        loss_weight=2.0,
+        real_label_val=1.0,
+        fake_label_val=0.0)
+    loss = gan_loss(input_2, True, is_disc=False)
+    npt.assert_almost_equal(loss.item(), 0.2538560)
+    loss = gan_loss(input_2, False, is_disc=False)
+    npt.assert_almost_equal(loss.item(), 4.2538552)
+    loss = gan_loss(input_2, True, is_disc=True)
+    npt.assert_almost_equal(loss.item(), 0.1269280)
+    loss = gan_loss(input_2, False, is_disc=True)
+    npt.assert_almost_equal(loss.item(), 2.1269276)
+
     # hinge
     gan_loss = GANLoss(
         'hinge', loss_weight=2.0, real_label_val=1.0, fake_label_val=0.0)

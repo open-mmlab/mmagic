@@ -62,15 +62,11 @@ class GANLoss(nn.Module):
             Tensor: wgan loss.
         """
 
-        return -input.mean() if target is not None else input.mean()
+        return -input.mean() if target else input.mean()
 
     def _wgan_softplus_loss(self, input, target):
         """wgan loss with soft plus. softplus is a smooth approximation to the
         ReLU function.
-
-        In StyleGAN2, it is called:
-            Logistic loss for discriminator;
-            Non-saturating loss for generator.
 
         Args:
             input (Tensor): Input tensor.
@@ -79,7 +75,8 @@ class GANLoss(nn.Module):
         Returns:
             Tensor: wgan softplus loss.
         """
-        return F.softplus(-input).mean() if target is not None else F.softplus(
+
+        return F.softplus(-input).mean() if target else F.softplus(
             input).mean()
 
     def get_target_label(self, input, target_is_real):
@@ -94,7 +91,7 @@ class GANLoss(nn.Module):
                 return Tensor.
         """
 
-        if self.gan_type == 'wgan':
+        if 'wgan' in self.gan_type:
             return target_is_real
         target_val = (
             self.real_label_val if target_is_real else self.fake_label_val)
