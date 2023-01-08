@@ -2,16 +2,15 @@
 import os
 from typing import Dict, List
 
+import mmcv
 import numpy as np
 import torch
-import mmcv
 from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
-from mmedit.utils import tensor2img
-
 from torch.nn.parallel import scatter
 
+from mmedit.utils import tensor2img
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
 
@@ -33,7 +32,7 @@ class ColorizationInferencer(BaseMMEditInferencer):
         Returns:
             results(Dict): Results of preprocess.
         """
-         # build the data pipeline
+        # build the data pipeline
         test_pipeline = Compose(self.model.cfg.test_pipeline)
         # prepare data
         data = dict(img_path=img)
@@ -46,7 +45,8 @@ class ColorizationInferencer(BaseMMEditInferencer):
             data = scatter(data, [self.device])[0]
             if not data['data_samples'][0].empty_box:
                 data['data_samples'][0].cropped_img.data = scatter(
-                    data['data_samples'][0].cropped_img.data, [self.device])[0] / 255.0
+                    data['data_samples'][0].cropped_img.data,
+                    [self.device])[0] / 255.0
 
                 data['data_samples'][0].box_info.data = scatter(
                     data['data_samples'][0].box_info.data, [self.device])[0]
