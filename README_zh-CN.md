@@ -105,7 +105,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ### 🌟 1.x 预览版本
 
-全新的 [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) 已经在 03/01/2022 发布:
+全新的 [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) 已经在 04/01/2023 发布:
 
 - 支持了著名的文本生成图像方法 [stable diffusion](configs/stable_diffusion/README.md)!
 - 支持了一个高效的图像复原算法 [Restormer](configs/restormer/README.md)!
@@ -270,7 +270,9 @@ pip3 install -e .
 <details open>
 <summary>Text2Image</summary>
 
+- ✅ [GLIDE](projects/glide/configs/README.md) (NeurIPS'2021)
 - ✅ [Disco-Diffusion](configs/disco_diffusion/README.md)
+- ✅ [Stable-Diffusion](configs/stable_diffusion/README.md)
 
 </details>
 
@@ -278,7 +280,7 @@ pip3 install -e .
 
 <summary>3D-aware Generation</summary>
 
-- ✅ [EG3D](configs/eg3d/README.md)
+- ✅ [EG3D](configs/eg3d/README.md) (CVPR'2022)
 
 </details>
 
@@ -286,7 +288,9 @@ pip3 install -e .
 
 <summary>Image Restoration</summary>
 
-- ✅ [NAFNet](configs/nafnet/README.md)
+- ✅ [SwinIR](configs/swinir/README.md) (ICCVW'2021)
+- ✅ [NAFNet](configs/nafnet/README.md) (ECCV'2022)
+- ✅ [Restormer](configs/restormer/README.md) (CVPR'2022)
 
 </details>
 

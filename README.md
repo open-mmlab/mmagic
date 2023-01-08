@@ -106,7 +106,7 @@ hope MMEditing could provide better experience.
 
 ### 🌟 Preview of 1.x version
 
-A brand new version of [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) was released in 03/01/2023:
+A brand new version of [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) was released in 04/01/2023:
 
 - Support well-known text-to-image method [Stable Diffusion](configs/stable_diffusion/README.md)!
 - Support an efficient image restoration algorithm [Restormer](configs/restormer/README.md)!
@@ -272,7 +272,9 @@ Supported algorithms:
 <details open>
 <summary>Text2Image</summary>
 
+- ✅ [GLIDE](projects/glide/configs/README.md) (NeurIPS'2021)
 - ✅ [Disco-Diffusion](configs/disco_diffusion/README.md)
+- ✅ [Stable-Diffusion](configs/stable_diffusion/README.md)
 
 </details>
 
@@ -280,7 +282,7 @@ Supported algorithms:
 
 <summary>3D-aware Generation</summary>
 
-- ✅ [EG3D](configs/eg3d/README.md)
+- ✅ [EG3D](configs/eg3d/README.md) (CVPR'2022)
 
 </details>
 
@@ -288,7 +290,9 @@ Supported algorithms:
 
 <summary>Image Restoration</summary>
 
-- ✅ [NAFNet](configs/nafnet/README.md)
+- ✅ [SwinIR](configs/swinir/README.md) (ICCVW'2021)
+- ✅ [NAFNet](configs/nafnet/README.md) (ECCV'2022)
+- ✅ [Restormer](configs/restormer/README.md) (CVPR'2022)
 
 </details>
 
