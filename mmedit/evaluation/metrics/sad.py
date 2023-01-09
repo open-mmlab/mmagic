@@ -1,20 +1,20 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Sequence
+from typing import Optional, Sequence
 
-import numpy as np
-from mmengine.evaluator import BaseMetric
+from mmeval import SAD as _SAD
 
 from mmedit.registry import METRICS
-from .metrics_utils import _fetch_data_and_check, average
+from .metrics_utils import _fetch_data_and_check
 
 
 @METRICS.register_module()
-class SAD(BaseMetric):
-    """Sum of Absolute Differences metric for image matting.
+class SAD(_SAD):
+    """Sum of Absolute Differences metric for image matting.A wrapper of
+    :class:`mmeval.SAD`.
 
     This metric compute per-pixel absolute difference and sum across all
     pixels.
-    i.e. sum(abs(a-b)) / norm_const
+    i.e. sum(abs(a-b))
 
     .. note::
 
@@ -26,25 +26,19 @@ class SAD(BaseMetric):
         pred_alpha should be masked by trimap before passing
         into this metric
 
-    Default prefix: ''
-
-    Args:
-        norm_const (int): Divide the result to reduce its magnitude.
-            Default to 1000.
-
     Metrics:
         - SAD (float): Sum of Absolute Differences
     """
 
-    default_prefix = ''
-
     def __init__(
         self,
-        norm_const=1000,
+        scaling: float = 1,
+        prefix: Optional[str] = None,
         **kwargs,
     ) -> None:
-        self.norm_const = norm_const
         super().__init__(**kwargs)
+        self.scaling = scaling
+        self.prefix = prefix
 
     def process(self, data_batch: Sequence[dict],
                 data_samples: Sequence[dict]) -> None:
@@ -56,27 +50,23 @@ class SAD(BaseMetric):
             predictions (Sequence[dict]): A batch of outputs from
                 the model.
         """
+        pred_alphas, gt_alphas = [], []
         for data_sample in data_samples:
             pred_alpha, gt_alpha, _ = _fetch_data_and_check(data_sample)
+            pred_alphas.append(pred_alpha)
+            gt_alphas.append(gt_alpha)
+        self.add(pred_alphas, gt_alphas)
 
-            # divide by 1000 to reduce the magnitude of the result
-            sad_sum = np.abs(pred_alpha - gt_alpha).sum() / self.norm_const
+    def evaluate(self, *args, **kwargs):
+        """Returns metric results and print pretty table of metrics per class.
 
-            result = {'sad': sad_sum}
-
-            self.results.append(result)
-
-    def compute_metrics(self, results: List):
-        """Compute the metrics from processed results.
-
-        Args:
-            results (dict): The processed results of each batch.
-
-        Returns:
-            Dict: The computed metrics. The keys are the names of the metrics,
-            and the values are corresponding results.
+        This method would be invoked by ``mmengine.Evaluator``.
         """
+        metric_results = self.compute(*args, **kwargs)
+        self.reset()
 
-        sad = average(results, 'sad')
-
-        return {'SAD': sad}
+        key_template = f'{self.prefix}/{{}}' if self.prefix else '{}'
+        return {
+            key_template.format(k): v * self.scaling
+            for k, v in metric_results.items()
+        }
