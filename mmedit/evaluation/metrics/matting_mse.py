@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Dict, List, Optional, Sequence
+from typing import Optional, Sequence
 
 from mmeval import MattingMSE as _MattingMSE
 
@@ -58,19 +58,6 @@ class MattingMSE(_MattingMSE):
             gt_alphas.append(gt_alpha)
             trimaps.append(trimap)
         self.add(pred_alphas, gt_alphas, trimaps)
-
-    def compute_metrics(self, results: List) -> Dict[str, float]:
-        """Compute the metrics from processed results.
-
-        Args:
-            results (dict): The processed results of each batch.
-
-        Returns:
-            Dict: The computed metrics. The keys are the names of the metrics,
-            and the values are corresponding results.
-        """
-
-        return {'MattingMSE': self.compute_metric}
 
     def evaluate(self, *args, **kwargs):
         """Returns metric results and print pretty table of metrics per class.
