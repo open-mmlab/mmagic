@@ -86,6 +86,10 @@ class ExponentialMovingAverageHook(Hook):
         Returns:
             torch.Tensor: Interpolation result.
         """
+        assert 0.0 < momentum < 1.0, 'momentum must be in range (0.0, 1.0)'\
+                                     f'but got {momentum}'
+        assert 0.0 < momentum_nontrainable <= 1.0, 'momentum_nontrainable'\
+            f'must be in range (0.0, 1.0] but got {momentum_nontrainable}'
         m = momentum if trainable else momentum_nontrainable
         return b + (a - b) * m
 

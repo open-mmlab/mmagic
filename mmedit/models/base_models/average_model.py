@@ -232,6 +232,9 @@ class RampUpEMA(BaseAveragedModel):
         """
         momentum = 1. - self.rampup(self.steps, self.ema_kimg, self.ema_rampup,
                                     self.batch_size, self.eps)
+        if not (0.0 < momentum < 1.0):
+            warnings.warn('RampUp momentum must be in range (0.0, 1.0)'
+                          f'but got {momentum}')
         averaged_param.mul_(1 - momentum).add_(source_param, alpha=momentum)
 
     def _load_from_state_dict(self, state_dict: dict, prefix: str,
