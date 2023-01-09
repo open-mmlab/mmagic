@@ -6,6 +6,7 @@ import pytest
 import torch
 from mmengine.config import ConfigDict
 
+from mmedit.datasets.transforms import PackEditInputs
 from mmedit.models.editors import DIM
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
@@ -75,26 +76,29 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
     color_shape = (batch_size, 3, img_shape[0], img_shape[1])
     gray_shape = (batch_size, 1, img_shape[0], img_shape[1])
     ori_shape = (img_shape[0], img_shape[1], 1)
+
     merged = torch.from_numpy(np.random.random(color_shape).astype(np.float32))
     trimap = torch.from_numpy(
         np.random.randint(255, size=gray_shape).astype(np.float32))
-    ori_alpha = np.random.random(ori_shape).astype(np.float32)
-    ori_trimap = np.random.randint(256, size=ori_shape).astype(np.float32)
-    if cuda:
-        merged = merged.cuda()
-        trimap = trimap.cuda()
-    meta = dict(
-        ori_alpha=ori_alpha,
-        ori_trimap=ori_trimap,
-        ori_merged_shape=img_shape,
-        **meta)
-
     inputs = torch.cat((merged, trimap), dim=1)
+
+    results = {
+        'ori_alpha': np.random.random(ori_shape).astype(np.float32),
+        'ori_trimap': np.random.randint(256,
+                                        size=ori_shape).astype(np.float32),
+        'ori_merged_shape': img_shape,
+    }
+    packinputs = PackEditInputs()
+
     data_samples = []
     for _ in range(batch_size):
-        ds = EditDataSample(metainfo=meta)
+        ds = packinputs(results)['data_samples']
+        if cuda:
+            ds = ds.cuda()
         data_samples.append(ds)
 
+    if cuda:
+        inputs = inputs.cuda()
     return inputs, data_samples
 
 
@@ -228,8 +232,8 @@ def test_dim():
     # test model forward in test mode
     with torch.no_grad():
         model = MODELS.build(model_cfg)
-        input_test = _demo_input_test((48, 48))
-        output_test = model(*input_test, mode='predict')
+        inputs, data_samples = _demo_input_test((48, 48))
+        output_test = model(inputs, data_samples, mode='predict')
         assert isinstance(output_test, list)
         assert isinstance(output_test[0], EditDataSample)
         pred_alpha = output_test[0].output.pred_alpha.data
@@ -281,3 +285,6 @@ def test_dim():
     model.cpu().eval()
     inputs = torch.ones((1, 4, 32, 32))
     model.forward(inputs)
+
+
+test_dim()
