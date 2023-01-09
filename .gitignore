@@ -126,6 +126,7 @@ demo/*.png
 out/*.png
 tests/data/*.png
 tests/data/*.mp4
+resources/
 
 # Pytorch
 *.pth
