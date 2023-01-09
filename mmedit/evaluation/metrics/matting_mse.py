@@ -1,14 +1,14 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Dict, List, Optional, Sequence
 
-from mmeval import MattingMSE as MattingMSE_MMEVAL
+from mmeval import MattingMSE as _MattingMSE
 
 from mmedit.registry import METRICS
 from .metrics_utils import _fetch_data_and_check
 
 
 @METRICS.register_module()
-class MattingMSE(MattingMSE_MMEVAL):
+class MattingMSE(_MattingMSE):
     """Mean Squared Error metric for image matting. A wrapper of
     :class:`mmeval.MattingMSE`.
 
