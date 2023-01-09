@@ -1,5 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
+import unittest
+
+import torch
 
 from mmedit.apis.inferencers.colorization_inferencer import \
     ColorizationInferencer
@@ -9,6 +12,11 @@ register_all_modules()
 
 
 def test_colorization_inferencer():
+
+    if not torch.cuda.is_available():
+        # RoI pooling only support in GPU
+        return unittest.skip('test requires GPU and torch+cuda')
+
     cfg = osp.join(
         osp.dirname(__file__), '..', '..', '..', 'configs',
         'inst_colorization',
