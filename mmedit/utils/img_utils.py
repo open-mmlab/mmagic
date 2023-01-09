@@ -41,8 +41,7 @@ def image_to_tensor(img):
 
     if len(img.shape) < 3:
         img = np.expand_dims(img, -1)
-    img = np.ascontiguousarray(img.transpose(2, 0, 1))
-    tensor = to_tensor(img)
+    tensor = to_tensor(img).permute(2, 0, 1).contiguous()
 
     return tensor
 
