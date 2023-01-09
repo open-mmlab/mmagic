@@ -20,8 +20,8 @@ class BinarizeImage(BaseTransform):
     Args:
         keys (Sequence[str]): The images to be binarized.
         binary_thr (float): Threshold for binarization.
-        amin (int): Lower limits of pixel value.
-        amx (int): Upper limits of pixel value.
+        a_min (int): Lower limits of pixel value.
+        a_max (int): Upper limits of pixel value.
         dtype (np.dtype): Set the data type of the output. Default: np.uint8
     """
 
@@ -86,8 +86,8 @@ class Clip(BaseTransform):
 
     Args:
         keys (list[str]): The keys whose values are clipped.
-        amin (int): Lower limits of pixel value.
-        amx (int): Upper limits of pixel value.
+        a_min (int): Lower limits of pixel value.
+        a_max (int): Upper limits of pixel value.
     """
 
     def __init__(self, keys, a_min=0, a_max=255):
