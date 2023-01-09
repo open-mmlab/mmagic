@@ -47,7 +47,7 @@ def image_to_tensor(img):
     return tensor
 
 
-def all_to_tensor(value, to_float32=True):
+def all_to_tensor(value):
     """Trans image and sequence of frames to tensor.
 
     Args:
@@ -74,8 +74,6 @@ def all_to_tensor(value, to_float32=True):
         # Maybe the data has been converted to Tensor.
         tensor = to_tensor(value)
 
-    # if to_float32:
-    #     tensor = tensor.float()
     return tensor
 
 
