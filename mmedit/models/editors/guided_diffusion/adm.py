@@ -100,6 +100,7 @@ class AblatedDiffusionModel(BaseModel):
         return next(self.parameters()).device
 
     def infer(self,
+              scheduler_kwargs=None,
               init_image=None,
               batch_size=1,
               num_inference_steps=1000,
@@ -119,6 +120,13 @@ class AblatedDiffusionModel(BaseModel):
         Returns:
             _type_: _description_
         """
+        if scheduler_kwargs is not None:
+            mmengine.print_log('Switch to infer diffusion scheduler!',
+                               'current')
+            infer_scheduler = DIFFUSION_SCHEDULERS.build(scheduler_kwargs)
+        else:
+            infer_scheduler = self.diffusion_scheduler
+            
         # Sample gaussian noise to begin loop
         if init_image is None:
             image = torch.randn(
@@ -140,9 +148,9 @@ class AblatedDiffusionModel(BaseModel):
 
         # set step values
         if num_inference_steps > 0:
-            self.diffusion_scheduler.set_timesteps(num_inference_steps)
+            infer_scheduler.set_timesteps(num_inference_steps)
 
-        timesteps = self.diffusion_scheduler.timesteps
+        timesteps = infer_scheduler.timesteps
 
         if show_progress and mmengine.dist.is_main_process():
             timesteps = tqdm(timesteps)
@@ -151,7 +159,7 @@ class AblatedDiffusionModel(BaseModel):
             model_output = self.unet(image, t, label=labels)['outputs']
 
             # 2. compute previous image: x_t -> x_t-1
-            diffusion_scheduler_output = self.diffusion_scheduler.step(
+            diffusion_scheduler_output = infer_scheduler.step(
                 model_output, t, image)
 
             # 3. applying classifier guide
@@ -197,7 +205,7 @@ class AblatedDiffusionModel(BaseModel):
         labels = sample_kwargs.get('labels', None)
         num_inference_steps = sample_kwargs.get(
             'num_inference_steps',
-            self.diffusion_scheduler.num_train_timesteps)
+            infer_scheduler.num_train_timesteps)
         show_progress = sample_kwargs.get('show_progress', False)
         classifier_scale = sample_kwargs.get('classifier_scale',
                                              self.classifier_scale)
