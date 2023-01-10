@@ -32,7 +32,7 @@ model = dict(
     use_fp16=False)
 
 test_dataloader = dict(batch_size=32, num_workers=8)
-
+train_cfg = dict(max_iters=100000)
 metrics = [
     dict(
         type='FrechetInceptionDistance',
