@@ -22,7 +22,8 @@ def classifier_grad(classifier, x, t, y=None, classifier_scale=1.0):
     assert y is not None
     with torch.enable_grad():
         x_in = x.detach().requires_grad_(True)
-        logits = classifier(x_in, t)
+        timesteps = torch.ones_like(y)* t
+        logits = classifier(x_in, timesteps)
         log_probs = F.log_softmax(logits, dim=-1)
         selected = log_probs[range(len(logits)), y.view(-1)]
         return torch.autograd.grad(selected.sum(), x_in)[0] * classifier_scale
@@ -85,7 +86,10 @@ class AblatedDiffusionModel(BaseModel):
             map_location = ckpt_cfg.get('map_location', 'cpu')
             strict = ckpt_cfg.get('strict', True)
             ckpt_path = ckpt_cfg.get('ckpt_path')
-            state_dict = _load_checkpoint_with_prefix(prefix, ckpt_path,
+            if prefix == '':
+                state_dict = torch.load(ckpt_path, map_location=map_location)
+            else:
+                state_dict = _load_checkpoint_with_prefix(prefix, ckpt_path,
                                                       map_location)
             getattr(self, key).load_state_dict(state_dict, strict=strict)
             mmengine.print_log(f'Load pretrained {key} from {ckpt_path}')
@@ -159,24 +163,10 @@ class AblatedDiffusionModel(BaseModel):
             model_output = self.unet(image, t, label=labels)['outputs']
 
             # 2. compute previous image: x_t -> x_t-1
+            cond_kwargs = dict(y=labels, classifier=self.classifier, classifier_scale=classifier_scale)
             diffusion_scheduler_output = infer_scheduler.step(
-                model_output, t, image)
-
-            # 3. applying classifier guide
-            if self.classifier and classifier_scale != 0.0:
-                gradient = classifier_grad(
-                    self.classifier,
-                    image,
-                    t,
-                    labels,
-                    classifier_scale=classifier_scale)
-                guided_mean = (
-                    diffusion_scheduler_output['mean'].float() +
-                    diffusion_scheduler_output['sigma'] * gradient.float())
-                image = guided_mean + diffusion_scheduler_output[
-                    'sigma'] * diffusion_scheduler_output['noise']
-            else:
-                image = diffusion_scheduler_output['prev_sample']
+                model_output, t, image, cond_fn=classifier_grad, cond_kwargs=cond_kwargs)
+            image = diffusion_scheduler_output['prev_sample']
 
         if self.rgb2bgr:
             image = image[:, [2, 1, 0], ...]

@@ -130,7 +130,10 @@ class DDPMScheduler:
              timestep: int,
              sample: Union[torch.FloatTensor],
              predict_epsilon=True,
+             cond_fn=None,
+             cond_kwargs={},
              generator=None):
+                
         t = timestep
 
         if model_output.shape[1] == sample.shape[
@@ -181,6 +184,16 @@ class DDPMScheduler:
 
         pred_prev_sample = pred_prev_mean + sigma * noise
 
+        gradient = 0.
+        if cond_fn is not None:
+            y = cond_kwargs['y']
+            classifier = cond_kwargs['classifier']
+            classifier_scale = cond_kwargs['classifier_scale']
+            gradient = cond_fn(classifier, sample, timestep, y=y, classifier_scale=classifier_scale)
+
+            guided_mean =  pred_prev_mean + sigma * gradient
+            pred_prev_sample = guided_mean + sigma* noise
+        
         return {
             'prev_sample': pred_prev_sample,
             'mean': pred_prev_mean,
