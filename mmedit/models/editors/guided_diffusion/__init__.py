@@ -1,4 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .adm import AblatedDiffusionModel
-
-__all__ = ['AblatedDiffusionModel']
+from .classifier import EncoderUNetModel
+__all__ = ['AblatedDiffusionModel', 'EncoderUNetModel']
