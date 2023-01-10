@@ -14,7 +14,7 @@ class SAD(_SAD):
 
     This metric compute per-pixel absolute difference and sum across all
     pixels.
-    i.e. sum(abs(a-b))
+    i.e. sum(abs(a-b)) / norm_const
 
     .. note::
 
@@ -25,6 +25,11 @@ class SAD(_SAD):
 
         pred_alpha should be masked by trimap before passing
         into this metric
+
+    .. note::
+
+        norm_const (int): Divide the result to reduce its magnitude.
+        Default to 1000.
 
     Metrics:
         - SAD (float): Sum of Absolute Differences
