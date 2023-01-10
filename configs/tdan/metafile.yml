@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1812.02898
   README: configs/tdan/README.md
+  Task:
+  - video super-resolution
+  Year: 2020
 Models:
 - Config: configs/tdan/tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bi.py
   In Collection: TDAN

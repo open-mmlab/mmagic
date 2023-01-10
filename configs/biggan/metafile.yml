@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://openreview.net/forum?id=B1xsqj09Fm
   README: configs/biggan/README.md
+  Task:
+  - conditional gans
+  Year: 2019
 Models:
 - Config: configs/biggan/biggan_2xb25-500kiters_cifar10-32x32.py
   In Collection: BigGAN

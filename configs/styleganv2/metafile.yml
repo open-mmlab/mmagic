@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://openaccess.thecvf.com/content_CVPR_2020/html/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.html
   README: configs/styleganv2/README.md
+  Task:
+  - unconditional gans
+  Year: 2020
 Models:
 - Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv2

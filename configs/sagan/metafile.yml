@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://proceedings.mlr.press/v97/zhang19d.html
   README: configs/sagan/README.md
+  Task:
+  - conditional gans
+  Year: 2019
 Models:
 - Config: configs/sagan/sagan_woReLUinplace_lr2e-4-ndisc5-1xb64_cifar10-32x32.py
   In Collection: SAGAN

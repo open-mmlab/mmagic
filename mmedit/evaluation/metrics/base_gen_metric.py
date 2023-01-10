@@ -155,10 +155,14 @@ class GenMetric(BaseMetric):
             DataLoader: Default sampler for normal metrics.
         """
         batch_size = dataloader.batch_size
-
+        dataset_length = len(dataloader.dataset)
         rank, num_gpus = get_dist_info()
-        item_subset = [(i * num_gpus + rank) % self.real_nums
-                       for i in range((self.real_nums - 1) // num_gpus + 1)]
+        assert self.real_nums <= dataset_length, (
+            f'\'real_nums\'({self.real_nums}) can not larger than length of '
+            f'dataset ({dataset_length}).')
+        nums = dataset_length if self.real_nums == -1 else self.real_nums
+        item_subset = [(i * num_gpus + rank) % nums
+                       for i in range((nums - 1) // num_gpus + 1)]
 
         metric_dataloader = DataLoader(
             dataloader.dataset,

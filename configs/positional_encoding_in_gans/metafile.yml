@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://openaccess.thecvf.com/content/CVPR2021/html/Xu_Positional_Encoding_As_Spatial_Inductive_Bias_in_GANs_CVPR_2021_paper.html
   README: configs/positional_encoding_in_gans/README.md
+  Task:
+  - unconditional gans
+  Year: 2021
 Models:
 - Config: configs/positional_encoding_in_gans/stylegan2_c2_8xb3-1100kiters_ffhq-256x256.py
   In Collection: Positional Encoding in GANs

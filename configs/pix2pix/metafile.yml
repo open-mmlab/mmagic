@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://openaccess.thecvf.com/content_cvpr_2017/html/Isola_Image-To-Image_Translation_With_CVPR_2017_paper.html
   README: configs/pix2pix/README.md
+  Task:
+  - image2image
+  Year: 2017
 Models:
 - Config: configs/pix2pix/pix2pix_vanilla-unet-bn_1xb1-80kiters_facades.py
   In Collection: Pix2Pix
