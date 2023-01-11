@@ -49,6 +49,13 @@ class ExponentialMovingAverage(BaseAveragedModel):
         super().__init__(model, interval, device, update_buffers)
         assert 0.0 < momentum < 1.0, 'momentum must be in range (0.0, 1.0)'\
                                      f'but got {momentum}'
+        if momentum > 0.5:
+            warnings.warn(
+                'The value of momentum in EMA is usually a small number,'
+                'which is different from the conventional notion of '
+                f'momentum but got {momentum}. Please make sure the '
+                f'value is correct.')
+                
         self.momentum = momentum
 
     def avg_func(self, averaged_param: Tensor, source_param: Tensor,
