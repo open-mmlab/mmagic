@@ -88,8 +88,9 @@ class ExponentialMovingAverageHook(Hook):
         """
         assert 0.0 < momentum < 1.0, 'momentum must be in range (0.0, 1.0)'\
                                      f'but got {momentum}'
-        assert 0.0 < momentum_nontrainable <= 1.0, 'momentum_nontrainable'\
-                f'must be in range (0.0, 1.0] but got {momentum_nontrainable}'
+        assert 0.0 < momentum_nontrainable <= 1.0, (
+            'momentum_nontrainable must be in range (0.0, 1.0] but got '
+            f'{momentum_nontrainable}')
         if momentum > 0.5:
             warnings.warn(
                 'The value of momentum in EMA is usually a small number,'

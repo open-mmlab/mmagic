@@ -55,7 +55,6 @@ class ExponentialMovingAverage(BaseAveragedModel):
                 'which is different from the conventional notion of '
                 f'momentum but got {momentum}. Please make sure the '
                 f'value is correct.')
-                
         self.momentum = momentum
 
     def avg_func(self, averaged_param: Tensor, source_param: Tensor,
