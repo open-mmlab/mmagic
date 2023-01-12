@@ -1,17 +1,14 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Sequence
+from typing import Optional, Sequence
 
-import cv2
-import numpy as np
-from mmengine.evaluator import BaseMetric
+from mmeval import GradientError as _GradientError
 
 from mmedit.registry import METRICS
-from ..functional import gauss_gradient
-from .metrics_utils import _fetch_data_and_check, average
+from .metrics_utils import _fetch_data_and_check
 
 
 @METRICS.register_module()
-class GradientError(BaseMetric):
+class GradientError(_GradientError):
     """Gradient error for evaluating alpha matte prediction.
 
     .. note::
@@ -30,21 +27,19 @@ class GradientError(BaseMetric):
         norm_const (int): Divide the result to reduce its magnitude.
             Defaults to 1000 .
 
-    Default prefix: ''
-
     Metrics:
         - GradientError (float): Gradient Error
     """
 
     def __init__(
         self,
-        sigma=1.4,
-        norm_constant=1000,
+        scaling: float = 1,
+        prefix: Optional[str] = None,
         **kwargs,
     ) -> None:
-        self.sigma = sigma
-        self.norm_constant = norm_constant
         super().__init__(**kwargs)
+        self.scaling = scaling
+        self.prefix = prefix
 
     def process(self, data_batch: Sequence[dict],
                 data_samples: Sequence[dict]) -> None:
@@ -57,39 +52,26 @@ class GradientError(BaseMetric):
             predictions (Sequence[dict]): A batch of outputs from
                 the model.
         """
+        pred_alphas, gt_alphas, trimaps = [], [], []
 
         for data_sample in data_samples:
             pred_alpha, gt_alpha, trimap = _fetch_data_and_check(data_sample)
+            pred_alphas.append(pred_alpha)
+            gt_alphas.append(gt_alpha)
+            trimaps.append(trimap)
 
-            gt_alpha_normed = np.zeros_like(gt_alpha)
-            pred_alpha_normed = np.zeros_like(pred_alpha)
+        self.add(pred_alphas, gt_alphas, trimaps)
 
-            cv2.normalize(gt_alpha, gt_alpha_normed, 1.0, 0.0, cv2.NORM_MINMAX)
-            cv2.normalize(pred_alpha, pred_alpha_normed, 1.0, 0.0,
-                          cv2.NORM_MINMAX)
+    def evaluate(self, *args, **kwargs):
+        """Returns metric results and print pretty table of metrics per class.
 
-            gt_alpha_grad = gauss_gradient(gt_alpha_normed, self.sigma)
-            pred_alpha_grad = gauss_gradient(pred_alpha_normed, self.sigma)
-            # this is the sum over n samples
-            grad_loss = ((gt_alpha_grad - pred_alpha_grad)**2 *
-                         (trimap == 128)).sum()
-
-            # divide by 1000 to reduce the magnitude of the result
-            grad_loss /= self.norm_constant
-
-            self.results.append({'grad_err': grad_loss})
-
-    def compute_metrics(self, results: List):
-        """Compute the metrics from processed results.
-
-        Args:
-            results (dict): The processed results of each batch.
-
-        Returns:
-            Dict: The computed metrics. The keys are the names of the metrics,
-            and the values are corresponding results.
+        This method would be invoked by ``mmengine.Evaluator``.
         """
+        metric_results = self.compute(*args, **kwargs)
+        self.reset()
 
-        grad_err = average(results, 'grad_err')
-
-        return {'GradientError': grad_err}
+        key_template = f'{self.prefix}/{{}}' if self.prefix else '{}'
+        return {
+            key_template.format(k): v * self.scaling
+            for k, v in metric_results.items()
+        }
