@@ -53,7 +53,6 @@ class GradientError(_GradientError):
                 the model.
         """
         pred_alphas, gt_alphas, trimaps = [], [], []
-
         for data_sample in data_samples:
             pred_alpha, gt_alpha, trimap = _fetch_data_and_check(data_sample)
             pred_alphas.append(pred_alpha)
