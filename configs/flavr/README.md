@@ -23,8 +23,8 @@ Most modern frame interpolation approaches rely on explicit bidirectional optica
 Evaluated on RGB channels.
 The metrics are `PSNR / SSIM` .
 
-|                                      Method                                      | scale |  PSNR   |  SSIM   |      GPU Info       |                                      Download                                      |
-| :------------------------------------------------------------------------------: | :---: | :-----: | :-----: | :-----------------: | :--------------------------------------------------------------------------------: |
+|                                      Model                                      | scale |  PSNR   |  SSIM   | Training Resources  |                                      Download                                       |
+| :-----------------------------------------------------------------------------: | :---: | :-----: | :-----: | :-----------------: | :---------------------------------------------------------------------------------: |
 | [flavr_in4out1_g8b4_vimeo90k_septuplet](./flavr_in4out1_8xb4_vimeo90k-septuplet.py) |  x2   | 36.3340 | 0.96015 | 8 (Tesla PG503-216) | [model](https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth) \| [log](https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.log.json) |
 
 Note: FLAVR for x8 VFI task will supported in the future.

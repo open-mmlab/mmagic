@@ -22,7 +22,7 @@ We show that pre-trained Generative Adversarial Networks (GANs), e.g., StyleGAN,
 
 For the meta info used in training and test, please refer to [here](https://github.com/ckkelvinchan/GLEAN). The results are evaluated on RGB channels.
 
-|                                        Method                                        | PSNR  |         GPU Info         |                                        Download                                         |
+|                                        Model                                         | PSNR  |    Training Resources    |                                        Download                                         |
 | :----------------------------------------------------------------------------------: | :---: | :----------------------: | :-------------------------------------------------------------------------------------: |
 |                        [glean_cat_8x](./glean_x8_2xb8_cat.py)                        | 23.98 | 2 (Tesla V100-PCIE-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614_145540.log.json) |
 |                      [glean_ffhq_16x](./glean_x16_2xb8_ffhq.py)                      | 26.91 | 2 (Tesla V100-PCIE-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527-61a3afad.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527_194536.log.json) |

@@ -24,15 +24,15 @@ We present a novel approach for image completion that results in images that are
 
 **Places365-Challenge**
 
-|                    Method                    |  Mask Type  | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  | GPU Info |                                       Download                                       |
-| :------------------------------------------: | :---------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :------: | :----------------------------------------------------------------------------------: |
-| [Global&Local](./gl_8xb12_places-256x256.py) | square bbox |  256x256   |    500k     | Places365-val |  11.164  | 23.152 | 0.862 |    8     | [model](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.log.json) |
+|                    Model                     |  Mask Type  | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  | Training Resources |                                  Download                                  |
+| :------------------------------------------: | :---------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :----------------: | :------------------------------------------------------------------------: |
+| [Global&Local](./gl_8xb12_places-256x256.py) | square bbox |  256x256   |    500k     | Places365-val |  11.164  | 23.152 | 0.862 |         8          | [model](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.log.json) |
 
 **CelebA-HQ**
 
-|                    Method                    |  Mask Type  | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  | GPU Info |                                        Download                                         |
-| :------------------------------------------: | :---------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :------: | :-------------------------------------------------------------------------------------: |
-| [Global&Local](./gl_8xb12_celeba-256x256.py) | square bbox |  256x256   |    500k     | CelebA-val |  6.678   | 26.780 | 0.904 |    8     | [model](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.log.json) |
+|                    Model                     |  Mask Type  | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  | Training Resources |                                   Download                                    |
+| :------------------------------------------: | :---------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :----------------: | :---------------------------------------------------------------------------: |
+| [Global&Local](./gl_8xb12_celeba-256x256.py) | square bbox |  256x256   |    500k     | CelebA-val |  6.678   | 26.780 | 0.904 |         8          | [model](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.log.json) |
 
 ## Quick Start
 

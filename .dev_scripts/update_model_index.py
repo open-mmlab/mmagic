@@ -260,7 +260,7 @@ if __name__ == '__main__':
 
     file_modified = False
     import tqdm
-    file_list = file_list[:1]
+    file_list = file_list
     pbar = tqdm.tqdm(range(len(file_list)), initial=0, dynamic_ncols=True)
     for fn in file_list:
         file_modified |= parse_md(fn)

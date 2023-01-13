@@ -1,6 +1,6 @@
 # AOT-GAN (TVCG'2021)
 
-> [AOT-GAN: Aggregated Contextual Transformations for High-Resolution Image Inpainting](https://arxiv.org/pdf/2104.01431.pdf)
+> [AOT-GAN: Aggregated Contextual Transformations for High-Resolution Image Inpainting](https://arxiv.org/abs/2104.01431.pdf)
 
 > **Task**: Inpainting
 
@@ -20,11 +20,9 @@ State-of-the-art image inpainting approaches can suffer from generating distorte
 
 ## Results and models
 
-**Places365-Challenge**
-
-|                       Method                       |     Mask Type      | Resolution | Train Iters |   Test Set    | l1 error | PSNR  | SSIM  |        GPU Info         |                         Download                          |
-| :------------------------------------------------: | :----------------: | :--------: | :---------: | :-----------: | :------: | :---: | :---: | :---------------------: | :-------------------------------------------------------: |
-| [AOT-GAN](./aot-gan_smpgan_4xb4_places-512x512.py) | free-form (50-60%) |  512x512   |    500k     | Places365-val |   7.07   | 19.01 | 0.682 | 4 (GeForce GTX 1080 Ti) | [model](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
+|                   Model                    |       Dataset       |     Mask Type      | Resolution | Train Iters |   Test Set    | l1 error | PSNR  | SSIM  |   Training Resources    |                    Download                    |
+| :----------------------------------------: | :-----------------: | :----------------: | :--------: | :---------: | :-----------: | :------: | :---: | :---: | :---------------------: | :--------------------------------------------: |
+| [AOT-GAN](./aot-gan_smpgan_4xb4_places-512x512.py) | Places365-Challenge | free-form (50-60%) |  512x512   |    500k     | Places365-val |   7.07   | 19.01 | 0.682 | 4 (GeForce GTX 1080 Ti) | [model](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/aot_gan/AOT-GAN_512x512_4x12_places_20220509-6641441b.json) |
 
 More results for different mask area:
 
