@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2012.02181
   README: configs/iconvsr/README.md
+  Task:
+  - video super-resolution
+  Year: 2021
 Models:
 - Config: configs/iconvsr/iconvsr_2xb4_reds4.py
   In Collection: IconVSR

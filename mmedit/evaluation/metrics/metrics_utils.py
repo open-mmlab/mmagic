@@ -121,7 +121,7 @@ def img_transform(img,
                          '"Y" and None.')
 
     if crop_border != 0:
-        img = img[crop_border:-crop_border, crop_border:-crop_border, None]
+        img = img[crop_border:-crop_border, crop_border:-crop_border, ...]
 
     return img
 

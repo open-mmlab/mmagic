@@ -24,9 +24,9 @@ Evaluated on RGB channels.
 The metrics are `PSNR / SSIM` .
 The learning rate adjustment strategy is `Step LR scheduler with min_lr clipping`.
 
-|                                      Method                                      |  PSNR   |  SSIM  |         GPU Info         |                                      Download                                       |
-| :------------------------------------------------------------------------------: | :-----: | :----: | :----------------------: | :---------------------------------------------------------------------------------: |
-| [cain_b5_g1b32_vimeo90k_triplet](/configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py) | 34.6010 | 0.9578 | 1 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth)/[log](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.log.json) |
+|                                 Method                                  |  PSNR   |  SSIM  |         GPU Info         |                                           Download                                           |
+| :---------------------------------------------------------------------: | :-----: | :----: | :----------------------: | :------------------------------------------------------------------------------------------: |
+| [cain_b5_g1b32_vimeo90k_triplet](./cain_g1b32_1xb5_vimeo90k-triplet.py) | 34.6010 | 0.9578 | 1 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth)/[log](https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.log.json) |
 
 ## Quick Start
 

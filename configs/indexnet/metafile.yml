@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1908.00672
   README: configs/indexnet/README.md
+  Task:
+  - matting
+  Year: 2019
 Models:
 - Config: configs/indexnet/indexnet_mobv2_1xb16-78k_comp1k.py
   In Collection: IndexNet

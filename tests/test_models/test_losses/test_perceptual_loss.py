@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from unittest.mock import patch
 
 import pytest
@@ -8,6 +9,9 @@ from mmedit.models import (PerceptualLoss, PerceptualVGG,
                            TransferalPerceptualLoss)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 @patch.object(PerceptualVGG, 'init_weights')
 def test_perceptual_loss(init_weights):
     if torch.cuda.is_available():

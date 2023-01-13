@@ -19,7 +19,7 @@ g_reg_interval = 4
 g_reg_ratio = g_reg_interval / (g_reg_interval + 1)
 d_reg_ratio = d_reg_interval / (d_reg_interval + 1)
 
-load_from = 'https://download.openmmlab.com/mmgen/stylegan3/stylegan3_r_ffhq_1024_b4x8_cvt_official_rgb_20220329_234933-ac0500a1.pth'  # noqa
+load_from = 'https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_ffhq_1024_b4x8_cvt_official_rgb_20220329_234933-ac0500a1.pth'  # noqa
 
 # ada settings
 aug_kwargs = {

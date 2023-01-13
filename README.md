@@ -29,13 +29,13 @@
 [📘Documentation](https://mmediting.readthedocs.io/en/1.x/) |
 [🛠️Installation](https://mmediting.readthedocs.io/en/1.x/2_get_started.html#installation) |
 [👀Model Zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) |
-[🆕Update News](docs/en/notes/3_changelog.md) |
+[🆕Update News](docs/en/changelog.md) |
 [🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
 [🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
 
-</div>
+English | [简体中文](README_zh-CN.md)
 
-English | [简体中文](/README_zh-CN.md)
+</div>
 
 ## Introduction
 
@@ -106,14 +106,16 @@ hope MMEditing could provide better experience.
 
 ### 🌟 Preview of 1.x version
 
-A brand new version of [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) was released in 05/12/2022:
+A brand new version of [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) was released in 04/01/2023:
 
-- Support Text2Image Task! [Disco-Diffusion](configs/disco_diffusion/README.md)
-- Support 3D-aware Generation Task! [EG3D](configs/eg3d/README.md)
+- Support well-known text-to-image method [Stable Diffusion](configs/stable_diffusion/README.md)!
+- Support an efficient image restoration algorithm [Restormer](configs/restormer/README.md)!
+- Support a new text-to-image algorithm [GLIDE](projects/glide/configs/README.md)!
+- Support swin based image restoration algorithm [SwinIR](configs/swinir/README.md)!
+- [Projects](projects/README.md) is opened for community to add projects to MMEditing.
 - Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍.
 - Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
 - Support patch-based and slider-based image and video comparison viewer.
-- Support image colorization.
 
 Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
 
@@ -153,11 +155,11 @@ cd mmediting
 pip3 install -e .
 ```
 
-Please refer to [get_started.md](docs/en/2_get_started.md) for more detailed instruction.
+Please refer to [installation](docs/en/get_started/install.md) for more detailed instruction.
 
 ## Getting Started
 
-Please see [get_started.md](docs/en/2_get_started.md) and [inference.md](docs/en/user_guides/3_inference.md) for the basic usage of MMEditing.
+Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMEditing.
 
 ## Model Zoo
 
@@ -253,7 +255,7 @@ Supported algorithms:
 </details>
 
 <details open>
-<summary>Image2Image Translation</summary>
+<summary>Image2Image</summary>
 
 - ✅ [Pix2Pix](configs/pix2pix/README.md) (CVPR'2017)
 - ✅ [CycleGAN](configs/cyclegan/README.md) (ICCV'2017)
@@ -270,7 +272,9 @@ Supported algorithms:
 <details open>
 <summary>Text2Image</summary>
 
+- ✅ [GLIDE](projects/glide/configs/README.md) (NeurIPS'2021)
 - ✅ [Disco-Diffusion](configs/disco_diffusion/README.md)
+- ✅ [Stable-Diffusion](configs/stable_diffusion/README.md)
 
 </details>
 
@@ -278,7 +282,17 @@ Supported algorithms:
 
 <summary>3D-aware Generation</summary>
 
-- ✅ [EG3D](configs/eg3d/README.md)
+- ✅ [EG3D](configs/eg3d/README.md) (CVPR'2022)
+
+</details>
+
+<details open>
+
+<summary>Image Restoration</summary>
+
+- ✅ [SwinIR](configs/swinir/README.md) (ICCVW'2021)
+- ✅ [NAFNet](configs/nafnet/README.md) (ECCV'2022)
+- ✅ [Restormer](configs/restormer/README.md) (CVPR'2022)
 
 </details>
 
@@ -307,7 +321,8 @@ If MMEditing is helpful to your research, please cite it as below.
 
 ## License
 
-This project is released under the [Apache 2.0 license](LICENSE). Please refer to [LICENSES.md](LICENSES.md) for the careful check, if you are using our code for commercial matters.
+This project is released under the [Apache 2.0 license](LICENSE).
+Please refer to [LICENSES](LICENSE) for the careful check, if you are using our code for commercial matters.
 
 ## Projects in OpenMMLab 2.0
 

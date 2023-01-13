@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1801.07892
   README: configs/deepfillv1/README.md
+  Task:
+  - inpainting
+  Year: 2018
 Models:
 - Config: configs/deepfillv1/deepfillv1_8xb2_places-256x256.py
   In Collection: DeepFillv1

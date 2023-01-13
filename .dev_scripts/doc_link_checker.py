@@ -1,20 +1,24 @@
 # Copyright (c) MegFlow. All rights reserved.
+# Copyright (c) OpenMMLab. All rights reserved.
 # /bin/python3
 
 import argparse
 import os
 import re
 
+import requests
+from tqdm import tqdm
+
 
 def make_parser():
     parser = argparse.ArgumentParser('Doc link checker')
-    parser.add_argument(
-        '--http', default=False, type=bool, help='check http or not ')
     parser.add_argument(
         '--target',
         default='./docs',
         type=str,
         help='the directory or file to check')
+    parser.add_argument(
+        '--ignore', type=str, nargs='+', default=[], help='input image size')
     return parser
 
 
@@ -22,7 +26,6 @@ pattern = re.compile(r'\[.*?\]\(.*?\)')
 
 
 def analyze_doc(home, path):
-    print('analyze {}'.format(path))
     problem_list = []
     code_block = 0
     with open(path) as f:
@@ -51,11 +54,31 @@ def analyze_doc(home, path):
                     end = item.find(')')
                     ref = item[start + 1:end]
 
-                    if ref.startswith('http') or ref.startswith('#'):
+                    if ref.startswith('http'):
+                        if ref.startswith(
+                                'https://download.openmmlab.com/'
+                        ) or ref.startswith('http://download.openmmlab.com/'):
+                            resp = requests.head(ref)
+                            if resp.status_code == 200:
+                                continue
+                            else:
+                                problem_list.append(ref)
+                        else:
+                            continue
+
+                    if ref.startswith('#'):
                         continue
+
+                    if ref == '<>':
+                        continue
+
                     if '.md#' in ref:
-                        ref = ref[ref.find('#'):]
-                    fullpath = os.path.join(home, ref)
+                        ref = ref[:ref.find('#')]
+                    if ref.startswith('/'):
+                        fullpath = os.path.join(
+                            os.path.dirname(__file__), '../', ref[1:])
+                    else:
+                        fullpath = os.path.join(home, ref)
                     if not os.path.exists(fullpath):
                         problem_list.append(ref)
             else:
@@ -68,11 +91,16 @@ def analyze_doc(home, path):
         raise Exception('found link error')
 
 
-def traverse(target):
+def traverse(args):
+    target = args.target
     if os.path.isfile(target):
         analyze_doc(os.path.dirname(target), target)
         return
-    for home, dirs, files in os.walk(target):
+    target_files = list(os.walk(target))
+    target_files.sort()
+    for home, dirs, files in tqdm(target_files):
+        if home in args.ignore:
+            continue
         for filename in files:
             if filename.endswith('.md'):
                 path = os.path.join(home, filename)
@@ -82,4 +110,4 @@ def traverse(target):
 
 if __name__ == '__main__':
     args = make_parser().parse_args()
-    traverse(args.target)
+    traverse(args)
