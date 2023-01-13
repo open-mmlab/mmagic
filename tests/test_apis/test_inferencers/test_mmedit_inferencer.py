@@ -56,7 +56,3 @@ def test_mmedit_inferencer():
 
     extra_parameters = inferencer_instance.get_extra_parameters()
     assert len(extra_parameters) == 2
-
-
-if __name__ == '__main__':
-    test_mmedit_inferencer()

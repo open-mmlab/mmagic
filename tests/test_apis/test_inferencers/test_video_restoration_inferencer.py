@@ -100,7 +100,3 @@ def test_video_restoration_inferencer_max_seq_len():
     inference_result = inferencer_instance(
         video=video_path, result_out_dir=result_out_dir)
     assert inference_result is None
-
-
-if __name__ == '__main__':
-    test_video_restoration_inferencer_input_dir()
