@@ -13,7 +13,7 @@ def test_matting_inferencer():
     img_path = data_root + 'tests/data/matting_dataset/merged/GT05.jpg'
     trimap_path = data_root + 'tests/data/matting_dataset/trimap/GT05.png'
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data', 'matting_result.png')
+        osp.dirname(__file__), '..', '..', 'data/out', 'matting_result.png')
 
     inferencer_instance = \
         MattingInferencer(config, None)
@@ -22,7 +22,3 @@ def test_matting_inferencer():
         img=img_path, trimap=trimap_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img.numpy().shape == (552, 800)
-
-
-if __name__ == '__main__':
-    test_matting_inferencer()
