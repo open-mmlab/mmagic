@@ -192,7 +192,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
             pa = pa[0]  # H, W
 
             pa.clamp_(min=0, max=1)
-            ori_trimap = ds.ori_trimap[:, :, 0]  # H, W
+            ori_trimap = ds.ori_trimap[0, :, :]  # H, W
             pa[ori_trimap == 255] = 1
             pa[ori_trimap == 0] = 0
 
