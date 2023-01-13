@@ -303,7 +303,7 @@ def matting_inference(model, img, trimap):
     # prepare data
     data = dict(merged_path=img, trimap_path=trimap)
     _data = test_pipeline(data)
-    trimap = _data['data_samples'].trimap.data
+    trimap = _data['data_samples'].trimap
     data = dict()
     data['inputs'] = torch.cat([_data['inputs'], trimap], dim=0).float()
     data = collate([data])

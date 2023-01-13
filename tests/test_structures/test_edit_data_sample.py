@@ -169,10 +169,6 @@ class TestEditDataSample(TestCase):
         assert _equal(edit_data_sample.ignored_data.labels,
                       ignored_data_data['labels'])
 
-        # test type error
-        with pytest.raises(AssertionError):
-            edit_data_sample.pred_img = torch.rand(2, 4)
-
         # test shape error
         with pytest.raises(AssertionError):
             gt_img_data = dict(

@@ -21,7 +21,7 @@ def test_inpainting_inferencer():
         'aot-gan_smpgan_4xb4_places-512x512.py',
     )
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data', 'inpainting_result.png')
+        osp.dirname(__file__), '..', '..', 'data/out', 'inpainting_result.png')
 
     inferencer_instance = \
         InpaintingInferencer(cfg, None)
@@ -30,7 +30,3 @@ def test_inpainting_inferencer():
         img=masked_img_path, mask=mask_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img.shape == (256, 256, 3)
-
-
-if __name__ == '__main__':
-    test_inpainting_inferencer()
