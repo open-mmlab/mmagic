@@ -34,14 +34,17 @@ Import:
 - configs/rdn/metafile.yml
 - configs/real_basicvsr/metafile.yml
 - configs/real_esrgan/metafile.yml
+- configs/restormer/metafile.yml
 - configs/sagan/metafile.yml
 - configs/singan/metafile.yml
 - configs/sngan_proj/metafile.yml
 - configs/srcnn/metafile.yml
 - configs/srgan_resnet/metafile.yml
+- configs/stable_diffusion/metafile.yml
 - configs/styleganv1/metafile.yml
 - configs/styleganv2/metafile.yml
 - configs/styleganv3/metafile.yml
+- configs/swinir/metafile.yml
 - configs/tdan/metafile.yml
 - configs/tof/metafile.yml
 - configs/ttsr/metafile.yml

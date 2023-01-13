@@ -6,6 +6,10 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1711.09078
   README: configs/tof/README.md
+  Task:
+  - video interpolation
+  - video super-resolution
+  Year: 2019
 Models:
 - Config: configs/tof/tof_spynet-chair-wobn_1xb1_vimeo90k-triplet.py
   In Collection: TOFlow

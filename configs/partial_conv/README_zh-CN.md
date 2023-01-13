@@ -23,17 +23,17 @@
 
 **Places365-Challenge**
 
-|                                算法                                 | 掩膜类型  | 分辨率  | 训练集容量 |    测试集     | l1 损失 |  PSNR  | SSIM  | GPU 信息 |                                 下载                                 |
-| :-----------------------------------------------------------------: | :-------: | :-----: | :--------: | :-----------: | :-----: | :----: | :---: | :------: | :------------------------------------------------------------------: |
-| [PConv_Stage1](/configs/partial_conv/pconv_stage1_8xb12_places-256x256.py) | free-form | 256x256 |    500k    | Places365-val |    -    |   -    |   -   |    8     |                                  -                                   |
-| [PConv_Stage2](/configs/partial_conv/pconv_stage2_4xb2_places-256x256.py) | free-form | 256x256 |    500k    | Places365-val |  8.776  | 22.762 | 0.801 |    4     | [模型](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.log.json) |
+|                          算法                          | 掩膜类型  | 分辨率  | 训练集容量 |    测试集     | l1 损失 |  PSNR  | SSIM  | GPU 信息 |                                       下载                                        |
+| :----------------------------------------------------: | :-------: | :-----: | :--------: | :-----------: | :-----: | :----: | :---: | :------: | :-------------------------------------------------------------------------------: |
+| [PConv_Stage1](./pconv_stage1_8xb12_places-256x256.py) | free-form | 256x256 |    500k    | Places365-val |    -    |   -    |   -   |    8     |                                         -                                         |
+| [PConv_Stage2](./pconv_stage2_4xb2_places-256x256.py)  | free-form | 256x256 |    500k    | Places365-val |  8.776  | 22.762 | 0.801 |    4     | [模型](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.log.json) |
 
 **CelebA-HQ**
 
-|                                 算法                                  | 掩膜类型  | 分辨率  | 训练集容量 |   测试集   | l1 损失 |  PSNR  | SSIM  | GPU 信息 |                                 下载                                  |
-| :-------------------------------------------------------------------: | :-------: | :-----: | :--------: | :--------: | :-----: | :----: | :---: | :------: | :-------------------------------------------------------------------: |
-| [PConv_Stage1](/configs/partial_conv/pconv_stage1_8xb1_celeba-256x256.py) | free-form | 256x256 |    500k    | CelebA-val |    -    |   -    |   -   |    8     |                                   -                                   |
-| [PConv_Stage2](/configs/partial_conv/pconv_stage2_4xb2_celeba-256x256.py) | free-form | 256x256 |    500k    | CelebA-val |  5.990  | 25.404 | 0.853 |    4     | [模型](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.log.json) |
+|                         算法                          | 掩膜类型  | 分辨率  | 训练集容量 |   测试集   | l1 损失 |  PSNR  | SSIM  | GPU 信息 |                                         下载                                          |
+| :---------------------------------------------------: | :-------: | :-----: | :--------: | :--------: | :-----: | :----: | :---: | :------: | :-----------------------------------------------------------------------------------: |
+| [PConv_Stage1](./pconv_stage1_8xb1_celeba-256x256.py) | free-form | 256x256 |    500k    | CelebA-val |    -    |   -    |   -   |    8     |                                           -                                           |
+| [PConv_Stage2](./pconv_stage2_4xb2_celeba-256x256.py) | free-form | 256x256 |    500k    | CelebA-val |  5.990  | 25.404 | 0.853 |    4     | [模型](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.log.json) |
 
 ## 快速开始
 

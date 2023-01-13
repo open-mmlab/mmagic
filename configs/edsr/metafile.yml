@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1707.02921
   README: configs/edsr/README.md
+  Task:
+  - image super-resolution
+  Year: 2017
 Models:
 - Config: configs/edsr/edsr_x2c64b16_1xb16-300k_div2k.py
   In Collection: EDSR

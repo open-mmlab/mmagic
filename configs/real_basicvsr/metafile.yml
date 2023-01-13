@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2111.12704
   README: configs/real_basicvsr/README.md
+  Task:
+  - video super-resolution
+  Year: 2022
 Models:
 - Config: configs/real_basicvsr/realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds.py
   In Collection: RealBasicVSR

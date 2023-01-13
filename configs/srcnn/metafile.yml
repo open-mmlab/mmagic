@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1501.00092
   README: configs/srcnn/README.md
+  Task:
+  - image super-resolution
+  Year: 2015
 Models:
 - Config: configs/srcnn/srcnn_x4k915_1xb16-1000k_div2k.py
   In Collection: SRCNN
