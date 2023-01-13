@@ -4,6 +4,7 @@ import numpy as np
 import torch
 from mmengine.config import ConfigDict
 
+from mmedit.datasets.transforms import PackEditInputs
 from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import register_all_modules
@@ -66,24 +67,26 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
     color_shape = (batch_size, 3, img_shape[0], img_shape[1])
     gray_shape = (batch_size, 1, img_shape[0], img_shape[1])
     ori_shape = (img_shape[0], img_shape[1], 1)
+
     merged = torch.from_numpy(np.random.random(color_shape).astype(np.float32))
     trimap = torch.from_numpy(
         np.random.randint(255, size=gray_shape).astype(np.float32))
     ori_alpha = np.random.random(ori_shape).astype(np.float32)
     ori_trimap = np.random.randint(256, size=ori_shape).astype(np.float32)
-    if cuda:
-        merged = merged.cuda()
-        trimap = trimap.cuda()
-    meta = dict(
-        ori_alpha=ori_alpha,
-        ori_trimap=ori_trimap,
-        ori_merged_shape=img_shape,
-        **meta)
 
     inputs = torch.cat((merged, trimap), dim=1)
+    if cuda:
+        inputs = inputs.cuda()
+
+    results = dict(
+        ori_alpha=ori_alpha, ori_trimap=ori_trimap, ori_merged_shape=img_shape)
+
     data_samples = []
+    packinputs = PackEditInputs()
     for _ in range(batch_size):
-        ds = EditDataSample(metainfo=meta)
+        ds = packinputs(results)['data_samples']
+        if cuda:
+            ds = ds.cuda()
         data_samples.append(ds)
 
     return inputs, data_samples

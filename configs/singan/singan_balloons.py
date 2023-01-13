@@ -17,8 +17,13 @@ model = dict(
     test_pkl_data=test_pkl_data)
 
 # DATA
+pipeline = [
+    dict(
+        type='PackEditInputs',
+        keys=[f'real_scale{i}' for i in range(num_scales)] + ['input_sample'])
+]
 data_root = './data/singan/balloons.png'
-train_dataloader = dict(dataset=dict(data_root=data_root))
+train_dataloader = dict(dataset=dict(data_root=data_root, pipeline=pipeline))
 
 # HOOKS
 custom_hooks = [
