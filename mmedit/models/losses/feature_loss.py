@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import warnings
+from typing import Optional
 
 import torch
 import torch.nn as nn
@@ -23,7 +24,7 @@ class LightCNNFeature(nn.Module):
         self.features = nn.Sequential(*list(model.features.children()))
         self.features.requires_grad_(False)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward function.
 
         Args:
@@ -35,7 +36,9 @@ class LightCNNFeature(nn.Module):
 
         return self.features(x)
 
-    def init_weights(self, pretrained=None, strict=True):
+    def init_weights(self,
+                     pretrained: Optional[str] = None,
+                     strict: Optional[bool] = True) -> None:
         """Init weights for models.
 
         Args:
@@ -63,7 +66,10 @@ class LightCNNFeatureLoss(nn.Module):
             Default: 'l1'.
     """
 
-    def __init__(self, pretrained, loss_weight=1.0, criterion='l1'):
+    def __init__(self,
+                 pretrained: str,
+                 loss_weigh: float = 1.0,
+                 criterion: str = 'l1') -> None:
         super().__init__()
         self.model = LightCNNFeature()
         if not isinstance(pretrained, str):
@@ -71,7 +77,7 @@ class LightCNNFeatureLoss(nn.Module):
                           'should be pretrained')
         self.model.init_weights(pretrained)
         self.model.eval()
-        self.loss_weight = loss_weight
+        self.loss_weight = loss_weigh
         if criterion == 'l1':
             self.criterion = torch.nn.L1Loss()
         elif criterion == 'mse':
@@ -80,7 +86,7 @@ class LightCNNFeatureLoss(nn.Module):
             raise ValueError("'criterion' should be 'l1' or 'mse', "
                              f'but got {criterion}')
 
-    def forward(self, pred, gt):
+    def forward(self, pred: torch.Tensor, gt: torch.Tensor) -> torch.Tensor:
         """Forward function.
 
         Args:

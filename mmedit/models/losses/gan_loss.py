@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional, Tuple, Union
+
 import numpy as np
 import torch
 import torch.autograd as autograd
@@ -6,6 +8,7 @@ import torch.distributed as dist
 import torch.nn as nn
 import torch.nn.functional as F
 from mmengine.dist import is_distributed
+from torch.cuda.amp.grad_scaler import GradScaler
 from torch.nn.functional import conv2d
 
 from mmedit.registry import LOSSES
@@ -25,10 +28,10 @@ class GANLoss(nn.Module):
     """
 
     def __init__(self,
-                 gan_type,
-                 real_label_val=1.0,
-                 fake_label_val=0.0,
-                 loss_weight=1.0):
+                 gan_type: str,
+                 real_label_val: float = 1.0,
+                 fake_label_val: float = 0.0,
+                 loss_weight: float = 1.0) -> None:
         super().__init__()
         self.gan_type = gan_type
         self.real_label_val = real_label_val
@@ -49,7 +52,7 @@ class GANLoss(nn.Module):
             raise NotImplementedError(
                 f'GAN type {self.gan_type} is not implemented.')
 
-    def _wgan_loss(self, input, target):
+    def _wgan_loss(self, input: torch.Tensor, target: bool) -> torch.Tensor:
         """wgan loss.
 
         Args:
@@ -62,7 +65,8 @@ class GANLoss(nn.Module):
 
         return -input.mean() if target else input.mean()
 
-    def get_target_label(self, input, target_is_real):
+    def get_target_label(self, input: torch.Tensor,
+                         target_is_real: bool) -> Union[bool, torch.Tensor]:
         """Get target label.
 
         Args:
@@ -80,7 +84,11 @@ class GANLoss(nn.Module):
             self.real_label_val if target_is_real else self.fake_label_val)
         return input.new_ones(input.size()) * target_val
 
-    def forward(self, input, target_is_real, is_disc=False, mask=None):
+    def forward(self,
+                input: torch.Tensor,
+                target_is_real: bool,
+                is_disc: bool = False,
+                mask: torch.Tensor = None) -> torch.Tensor:
         """
         Args:
             input (Tensor): The input for the loss module, i.e., the network
@@ -157,7 +165,11 @@ class GaussianBlur(nn.Module):
         - output: Tensor with shape of (n, c, h, w)
     """
 
-    def __init__(self, kernel_size=(71, 71), sigma=(10.0, 10.0)):
+    def __init__(
+        self,
+        kernel_size: Tuple[int] = (71, 71),
+        sigma: Tuple[float] = (10.0, 10.0)
+    ) -> None:
         super(GaussianBlur, self).__init__()
         self.kernel_size = kernel_size
         self.sigma = sigma
@@ -165,7 +177,7 @@ class GaussianBlur(nn.Module):
         self.kernel = self.get_2d_gaussian_kernel(kernel_size, sigma)
 
     @staticmethod
-    def compute_zero_padding(kernel_size):
+    def compute_zero_padding(kernel_size: Tuple[int]) -> tuple:
         """Compute zero padding tuple.
 
         Args:
@@ -179,7 +191,8 @@ class GaussianBlur(nn.Module):
 
         return padding[0], padding[1]
 
-    def get_2d_gaussian_kernel(self, kernel_size, sigma):
+    def get_2d_gaussian_kernel(self, kernel_size: Tuple[int],
+                               sigma: Tuple[int]) -> torch.Tensor:
         """Get the two-dimensional Gaussian filter matrix coefficients.
 
         Args:
@@ -213,7 +226,8 @@ class GaussianBlur(nn.Module):
 
         return kernel_2d
 
-    def get_1d_gaussian_kernel(self, kernel_size, sigma):
+    def get_1d_gaussian_kernel(self, kernel_size: int,
+                               sigma: float) -> torch.Tensor:
         """Get the Gaussian filter coefficients in one dimension (x or y
         direction).
 
@@ -236,7 +250,7 @@ class GaussianBlur(nn.Module):
         kernel_1d = self.gaussian(kernel_size, sigma)
         return kernel_1d
 
-    def gaussian(self, kernel_size, sigma):
+    def gaussian(self, kernel_size: int, sigma: float) -> torch.Tensor:
         """Gaussian function.
 
         Args:
@@ -257,7 +271,7 @@ class GaussianBlur(nn.Module):
         ])
         return gauss / gauss.sum()
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward function.
 
         Args:
@@ -280,11 +294,11 @@ class GaussianBlur(nn.Module):
         return conv2d(x, kernel, padding=self.padding, stride=1, groups=c)
 
 
-def gradient_penalty_loss(discriminator,
-                          real_data,
-                          fake_data,
-                          mask=None,
-                          norm_mode='pixel'):
+def gradient_penalty_loss(discriminator: nn.Module,
+                          real_data: torch.Tensor,
+                          fake_data: torch.Tensor,
+                          mask: Optional[torch.Tensor] = None,
+                          norm_mode: str = 'pixel') -> torch.Tensor:
     """Calculate gradient penalty for wgan-gp.
 
     Args:
@@ -339,11 +353,15 @@ class GradientPenaltyLoss(nn.Module):
         loss_weight (float): Loss weight. Default: 1.0.
     """
 
-    def __init__(self, loss_weight=1.):
+    def __init__(self, loss_weight: float = 1.) -> None:
         super().__init__()
         self.loss_weight = loss_weight
 
-    def forward(self, discriminator, real_data, fake_data, mask=None):
+    def forward(self,
+                discriminator: nn.Module,
+                real_data: torch.Tensor,
+                fake_data: torch.Tensor,
+                mask: Optional[torch.Tensor] = None) -> torch.Tensor:
         """Forward function.
 
         Args:
@@ -361,7 +379,7 @@ class GradientPenaltyLoss(nn.Module):
         return loss * self.loss_weight
 
 
-def disc_shift_loss(pred):
+def disc_shift_loss(pred: torch.Tensor) -> torch.Tensor:
     """Disc Shift loss.
 
     This loss is proposed in PGGAN as an auxiliary loss for discriminator.
@@ -383,11 +401,11 @@ class DiscShiftLoss(nn.Module):
         loss_weight (float, optional): Loss weight. Defaults to 1.0.
     """
 
-    def __init__(self, loss_weight=0.1):
+    def __init__(self, loss_weight: float = 0.1) -> None:
         super().__init__()
         self.loss_weight = loss_weight
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward function.
 
         Args:
@@ -401,12 +419,12 @@ class DiscShiftLoss(nn.Module):
         return loss * self.loss_weight
 
 
-def r1_gradient_penalty_loss(discriminator,
-                             real_data,
-                             mask=None,
-                             norm_mode='pixel',
-                             loss_scaler=None,
-                             use_apex_amp=False):
+def r1_gradient_penalty_loss(discriminator: nn.Module,
+                             real_data: torch.Tensor,
+                             mask: Optional(torch.Tensor) = None,
+                             norm_mode: str = 'pixel',
+                             loss_scaler: Optional[GradScaler] = None,
+                             use_apex_amp: bool = False) -> torch.Tensor:
     """Calculate R1 gradient penalty for WGAN-GP.
 
     R1 regularizer comes from:
@@ -472,16 +490,16 @@ def r1_gradient_penalty_loss(discriminator,
     return gradients_penalty
 
 
-def gen_path_regularizer(generator,
-                         num_batches,
-                         mean_path_length,
-                         pl_batch_shrink=1,
-                         decay=0.01,
-                         weight=1.,
-                         pl_batch_size=None,
-                         sync_mean_buffer=False,
-                         loss_scaler=None,
-                         use_apex_amp=False):
+def gen_path_regularizer(generator: nn.Module,
+                         num_batches: int,
+                         mean_path_length: torch.Tensor,
+                         pl_batch_shrink: Optional[int] = 1,
+                         decay: Optional[float] = 0.01,
+                         weight: Optional[float] = 1.,
+                         pl_batch_size: Optional[int] = None,
+                         sync_mean_buffer: Optional[bool] = False,
+                         loss_scaler: Optional[GradScaler] = None,
+                         use_apex_amp: bool = False) -> Tuple[torch.Tensor]:
     """Generator Path Regularization.
 
     Path regularization is proposed in StyelGAN2, which can help the improve

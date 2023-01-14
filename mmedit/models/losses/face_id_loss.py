@@ -1,4 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
+import torch
 import torch.nn as nn
 
 from mmedit.registry import MODULES
@@ -37,10 +40,11 @@ class FaceIdLoss(nn.Module):
     """
 
     def __init__(self,
-                 loss_weight=1.0,
-                 data_info=None,
-                 facenet=dict(type='ArcFace', ir_se50_weights=None),
-                 loss_name='loss_id'):
+                 loss_weight: Optional[float] = 1.0,
+                 data_info: Optional[dict] = None,
+                 facenet: Optional[dict] = dict(
+                     type='ArcFace', ir_se50_weights=None),
+                 loss_name: Optional[str] = 'loss_id') -> None:
 
         super(FaceIdLoss, self).__init__()
         self.loss_weight = loss_weight
@@ -48,7 +52,9 @@ class FaceIdLoss(nn.Module):
         self.net = MODULES.build(facenet)
         self._loss_name = loss_name
 
-    def forward(self, pred=None, gt=None):
+    def forward(self,
+                pred: torch.Tensor = None,
+                gt: torch.Tensor = None) -> torch.Tensor:
         """Forward function."""
 
         # NOTE: only return the loss term

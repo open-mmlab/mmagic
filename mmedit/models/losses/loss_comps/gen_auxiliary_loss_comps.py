@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch
 import torch.nn as nn
 
@@ -74,15 +76,15 @@ class GeneratorPathRegularizerComps(nn.Module):
     """
 
     def __init__(self,
-                 loss_weight=1.,
-                 pl_batch_shrink=1,
-                 decay=0.01,
-                 pl_batch_size=None,
-                 sync_mean_buffer=False,
-                 interval=1,
-                 data_info=None,
-                 use_apex_amp=False,
-                 loss_name='loss_path_regular'):
+                 loss_weight: Optional[float] = 1.,
+                 pl_batch_shrink: Optional[int] = 1,
+                 decay: Optional[float] = 0.01,
+                 pl_batch_size: Optional[int] = None,
+                 sync_mean_buffer: Optional[bool] = False,
+                 interval: Optional[int] = 1,
+                 data_info: Optional[dict] = None,
+                 use_apex_amp: bool = False,
+                 loss_name: Optional[str] = 'loss_path_regular') -> None:
         super().__init__()
         self.loss_weight = loss_weight
         self.pl_batch_shrink = pl_batch_shrink
@@ -96,7 +98,7 @@ class GeneratorPathRegularizerComps(nn.Module):
 
         self.register_buffer('mean_path_length', torch.tensor(0.))
 
-    def forward(self, *args, **kwargs):
+    def forward(self, *args, **kwargs) -> torch.Tensor:
         """Forward function.
 
         If ``self.data_info`` is not ``None``, a dictionary containing all of
@@ -155,7 +157,7 @@ class GeneratorPathRegularizerComps(nn.Module):
                 *args, **kwargs)
         return path_penalty * self.loss_weight
 
-    def loss_name(self):
+    def loss_name(self) -> str:
         """Loss Name.
 
         This function must be implemented and will return the name of this
