@@ -5,11 +5,11 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from mmedit.registry import MODELS
+from mmedit.registry import MODULES
 from .gfpgan_modules import ResBlock, StyleGAN2GeneratorCSFT
 
 
-@MODELS.register_module()
+@MODULES.register_module()
 class GFPGANv1Clean(nn.Module):
     """The GFPGAN architecture: Unet + StyleGAN2 decoder with SFT.
 
@@ -32,7 +32,6 @@ class GFPGANv1Clean(nn.Module):
         input_is_latent (bool): Whether input is latent style. Default: False.
         different_w (bool): Whether to use different latent w for different
         layers. Default: False.
-        narrow (float): The narrow ratio for channels. Default: 1.
         sft_half (bool): Whether to apply SFT on half of the input channels.
         Default: False.
     """
@@ -114,7 +113,6 @@ class GFPGANv1Clean(nn.Module):
             num_style_feat=num_style_feat,
             num_mlp=num_mlp,
             channel_multiplier=channel_multiplier,
-            narrow=narrow,
             sft_half=sft_half)
 
         # load pre-trained stylegan2 model if necessary

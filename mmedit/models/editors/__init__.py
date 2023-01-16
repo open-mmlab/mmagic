@@ -24,6 +24,7 @@ from .esrgan import ESRGAN, RRDBNet
 from .fba import FBADecoder, FBAResnetDilated
 from .flavr import FLAVR, FLAVRNet
 from .gca import GCA
+from .gfpgan import GFPGAN, GFPGANv1Clean
 from .ggan import GGAN
 from .glean import GLEANStyleGANv2
 from .global_local import (GLDecoder, GLDilationNeck, GLEncoder,
@@ -87,5 +88,5 @@ __all__ = [
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
     'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D', 'Restormer',
-    'SwinIRNet', 'StableDiffusion'
+    'SwinIRNet', 'StableDiffusion', 'GFPGAN', 'GFPGANv1Clean'
 ]
