@@ -126,6 +126,9 @@ demo/*.png
 *.csv
 out/*.png
 
+*png
+*jpg
+
 # Pytorch
 *.pth
 
