@@ -1,10 +1,8 @@
 Collections:
-- Metadata:
-    Architecture:
-    - StyleGANv3
-  Name: StyleGANv3
+- Name: StyleGANv3
   Paper:
-  - https://nvlabs-fi-cdn.nvidia.com/stylegan3/stylegan3-paper.pdf
+    Title: Alias-Free Generative Adversarial Networks
+    URL: https://nvlabs-fi-cdn.nvidia.com/stylegan3/stylegan3-paper.pdf
   README: configs/styleganv3/README.md
   Task:
   - unconditional gans
@@ -12,22 +10,18 @@ Collections:
 Models:
 - Config: configs/styleganv3/stylegan3-t_gamma32.8_8xb4-fp16-noaug_ffhq-1024x1024.py
   In Collection: StyleGANv3
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan3-t_gamma32.8_8xb4-fp16-noaug_ffhq-1024x1024
   Results:
-  - Dataset: FFHQ
+  - Dataset: ffhq1024x1024
     Metrics:
       Iter: 490000.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_best_fid_iter_490000_20220401_120733-4ff83434.pth
 - Config: configs/styleganv3/stylegan3-t_ada-gamma6.6_8xb4-fp16_metfaces-1024x1024.py
   In Collection: StyleGANv3
-  Metadata:
-    Training Data: Others
   Name: stylegan3-t_ada-gamma6.6_8xb4-fp16_metfaces-1024x1024
   Results:
-  - Dataset: Others
+  - Dataset: metface1024x1024
     Metrics:
       FID50k: 15.09
       Iter: 130000.0
@@ -35,11 +29,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_best_fid_iter_130000_20220401_115101-f2ef498e.pth
 - Config: configs/styleganv3/stylegan3-t_gamma2.0_8xb4-fp16-noaug_ffhq-256x256.py
   In Collection: StyleGANv3
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan3-t_gamma2.0_8xb4-fp16-noaug_ffhq-256x256
   Results:
-  - Dataset: FFHQ
+  - Dataset: ffhq256x256
     Metrics:
       FID50k: 4.51
       Iter: 740000.0
@@ -47,21 +39,17 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma2.0_ffhq_256_b4x8_best_fid_iter_740000_20220401_122456-730e1fba.pth
 - Config: configs/styleganv3/stylegan3-r_ada-gamma3.3_8xb4-fp16_metfaces-1024x1024.py
   In Collection: StyleGANv3
-  Metadata:
-    Training Data: Others
   Name: stylegan3-r_ada-gamma3.3_8xb4-fp16_metfaces-1024x1024
   Results:
-  - Dataset: Others
+  - Dataset: ffhq1024x1024
     Metrics: {}
     Task: Unconditional GANs
-  Weights: ''
+  Weights: <>
 - Config: configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_ffhqu-256x256.py
   In Collection: StyleGANv3
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan3-t_cvt-official-rgb_8xb4_ffhqu-256x256
   Results:
-  - Dataset: FFHQ
+  - Dataset: ffhqu256x256
     Metrics:
       EQ-R: 13.12
       EQ-T: 63.01
@@ -70,11 +58,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ffhqu_256_b4x8_cvt_official_rgb_20220329_235046-153df4c8.pth
 - Config: configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_afhqv2-512x512.py
   In Collection: StyleGANv3
-  Metadata:
-    Training Data: Others
   Name: stylegan3-t_cvt-official-rgb_8xb4_afhqv2-512x512
   Results:
-  - Dataset: Others
+  - Dataset: afhqv2512x512
     Metrics:
       EQ-R: 13.51
       EQ-T: 60.15
@@ -83,11 +69,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_afhqv2_512_b4x8_cvt_official_rgb_20220329_235017-ee6b037a.pth
 - Config: configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv3
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan3-t_cvt-official-rgb_8xb4_ffhq-1024x1024
   Results:
-  - Dataset: FFHQ
+  - Dataset: ffhq1024x1024
     Metrics:
       EQ-R: 13.82
       EQ-T: 61.21
@@ -96,11 +80,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ffhq_1024_b4x8_cvt_official_rgb_20220329_235113-db6c6580.pth
 - Config: configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4_ffhqu-256x256.py
   In Collection: StyleGANv3
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan3-r_cvt-official-rgb_8xb4_ffhqu-256x256
   Results:
-  - Dataset: FFHQ
+  - Dataset: ffhqu256x256
     Metrics:
       EQ-R: 40.48
       EQ-T: 66.65
@@ -109,11 +91,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_ffhqu_256_b4x8_cvt_official_rgb_20220329_234909-4521d963.pth
 - Config: configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4x8_afhqv2-512x512.py
   In Collection: StyleGANv3
-  Metadata:
-    Training Data: Others
   Name: stylegan3-r_cvt-official-rgb_8xb4x8_afhqv2-512x512
   Results:
-  - Dataset: Others
+  - Dataset: afhqv2512x512
     Metrics:
       EQ-R: 40.34
       EQ-T: 64.89
@@ -122,11 +102,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_afhqv2_512_b4x8_cvt_official_rgb_20220329_234829-f2eaca72.pth
 - Config: configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv3
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan3-r_cvt-official-rgb_8xb4_ffhq-1024x1024
   Results:
-  - Dataset: FFHQ
+  - Dataset: ffhq1024x1024
     Metrics:
       EQ-R: 46.62
       EQ-T: 64.76
