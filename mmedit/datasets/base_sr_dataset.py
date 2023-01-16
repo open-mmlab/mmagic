@@ -4,12 +4,15 @@ import os.path as osp
 from collections import defaultdict
 from pathlib import Path
 
+import numpy as np
 from mmcv import scandir
 
+from mmedit.core.registry import build_metric
 from .base_dataset import BaseDataset
 
 IMG_EXTENSIONS = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.ppm',
                   '.PPM', '.bmp', '.BMP', '.tif', '.TIF', '.tiff', '.TIFF')
+FEATURE_BASED_METRICS = ['FID', 'KID']
 
 
 class BaseSRDataset(BaseDataset):
@@ -78,9 +81,27 @@ class BaseSRDataset(BaseDataset):
                 f'should be {len(self)}')
 
         # average the results
-        eval_result = {
+        eval_result.update({
             metric: sum(values) / len(self)
             for metric, values in eval_result.items()
-        }
+            if metric not in ['_inception_feat'] + FEATURE_BASED_METRICS
+        })
+
+        # evaluate feature-based metrics
+        if '_inception_feat' in eval_result:
+            feat1, feat2 = [], []
+            for f1, f2 in eval_result['_inception_feat']:
+                feat1.append(f1)
+                feat2.append(f2)
+            feat1 = np.concatenate(feat1, 0)
+            feat2 = np.concatenate(feat2, 0)
+
+            for metric in FEATURE_BASED_METRICS:
+                if metric in eval_result:
+                    metric_func = build_metric(eval_result[metric].pop())
+                    eval_result[metric] = metric_func(feat1, feat2)
+
+            # delete a redundant key for clean logging
+            del eval_result['_inception_feat']
 
         return eval_result
