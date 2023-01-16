@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2001.04069
   README: configs/gca/README.md
+  Task:
+  - matting
+  Year: 2020
 Models:
 - Config: configs/gca/baseline_r34_4xb10-200k_comp1k.py
   In Collection: GCA

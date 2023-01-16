@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/1809.00219
   README: configs/esrgan/README.md
+  Task:
+  - image super-resolution
+  Year: 2018
 Models:
 - Config: configs/esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py
   In Collection: ESRGAN

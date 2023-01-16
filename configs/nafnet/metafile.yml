@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2204.04676
   README: configs/nafnet/README.md
+  Task:
+  - image restoration
+  Year: 2022
 Models:
 - Config: configs/nafnet/nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd.py
   In Collection: NAFNet

@@ -6,6 +6,9 @@ Collections:
   Paper:
   - https://arxiv.org/abs/2012.00739
   README: configs/glean/README.md
+  Task:
+  - image super-resolution
+  Year: 2021
 Models:
 - Config: configs/glean/glean_x8_2xb8_cat.py
   In Collection: GLEAN
