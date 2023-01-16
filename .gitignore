@@ -70,7 +70,6 @@ docs/en/_tmp/
 docs/zh_cn/_build/
 docs/zh_cn/_tmp/
 requirements/src/
-docs/en/api/generated
 
 # PyBuilder
 target/
@@ -125,9 +124,7 @@ mmedit/.mim
 demo/*.png
 *.csv
 out/*.png
-
-*png
-*jpg
+resources/
 
 # Pytorch
 *.pth
