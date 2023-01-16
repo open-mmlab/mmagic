@@ -5,12 +5,11 @@ from typing import Optional, Union
 
 import cv2
 import imageio
-import mmengine
 import numpy as np
 import torch
 from mmengine import MessageHub
 from mmengine.config import Config
-from mmengine.fileio import dump
+from mmengine.fileio import dump, get_file_backend
 from mmengine.visualization import (BaseVisBackend, TensorboardVisBackend,
                                     WandbVisBackend)
 from mmengine.visualization.vis_backend import force_init_env
@@ -69,7 +68,12 @@ class GenVisBackend(BaseVisBackend):
         self._file_client = None
         self._delete_local_image = delete_local_image
 
+        self._cfg = None
+
     def _init_env(self):
+        if self._env_initialized:
+            return
+        self._env_initialized = True
         """Init save dir."""
         os.makedirs(self._save_dir, exist_ok=True)
         self._img_save_dir = osp.join(
@@ -87,11 +91,11 @@ class GenVisBackend(BaseVisBackend):
             # ceph_path: s3://a/b
             # local_files:  A/B/.../C/D/TIME_STAMP/vis_data/
             # remote files: s3://a/b/D/TIME_STAMP/vis_data/
-            message_hub = MessageHub.get_current_instance()
-            cfg_str = message_hub.get_info('cfg')
-            full_work_dir = osp.abspath(
-                Config.fromstring(cfg_str, '.py')['work_dir'])
-
+            if self._cfg is None or self._cfg.get('work_dir', None) is None:
+                message_hub = MessageHub.get_current_instance()
+                cfg_str = message_hub.get_info('cfg')
+                self._cfg = Config.fromstring(cfg_str, '.py')
+            full_work_dir = osp.abspath(self._cfg['work_dir'])
             if full_work_dir.endswith('/'):
                 full_work_dir = full_work_dir[:-1]
 
@@ -103,9 +107,9 @@ class GenVisBackend(BaseVisBackend):
             tar_path = self._ceph_path[:-1] if \
                 self._ceph_path.endswith('/') else self._ceph_path
 
-            file_client_args = dict(path_mapping={src_path: tar_path})
-            self._file_client = mmengine.FileClient(
-                backend='petrel', **file_client_args)
+            backend_args = dict(
+                backend='petrel', path_mapping={src_path: tar_path})
+            self._file_client = get_file_backend(backend_args=backend_args)
 
     @property  # type: ignore
     @force_init_env
@@ -114,7 +118,6 @@ class GenVisBackend(BaseVisBackend):
         backend."""
         return self
 
-    @force_init_env
     def add_config(self, config: Config, **kwargs) -> None:
         """Record the config to disk.
 
@@ -122,6 +125,8 @@ class GenVisBackend(BaseVisBackend):
             config (Config): The Config object
         """
         assert isinstance(config, Config)
+        self._cfg = config
+        self._init_env()
         config.dump(self._config_save_file)
         self._upload(self._config_save_file)
 
