@@ -9,7 +9,7 @@ Collections:
   - inpainting
   Year: 2021
 Models:
-- Config: configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512
+- Config: configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py
   In Collection: AOT-GAN
   Name: aot-gan_smpgan_4xb4_places-512x512
   Results:

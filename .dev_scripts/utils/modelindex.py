@@ -51,7 +51,7 @@ def collate_metrics(keys):
     """
     used_metrics = dict()
     for idx, key in enumerate(keys):
-        if key in ['Model', 'Download', 'Dataset', 'Training Resources']:
+        if key in ['Model', 'Dataset', 'Training Resources', 'Download']:
             continue
         used_metrics[key] = idx
     return used_metrics

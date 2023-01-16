@@ -20,19 +20,12 @@ Existing deep learning based image inpainting methods use a standard convolution
 
 ## Results and models
 
-**Places365-Challenge**
-
-|                         Model                          | Mask Type | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  | Training Resources |                              Download                              |
+|                         Model                          | Mask Type | Resolution | Train Iters |    Dataset    | l1 error |  PSNR  | SSIM  | Training Resources |                              Download                              |
 | :----------------------------------------------------: | :-------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :----------------: | :----------------------------------------------------------------: |
 | [PConv_Stage1](./pconv_stage1_8xb12_places-256x256.py) | free-form |  256x256   |    500k     | Places365-val |    -     |   -    |   -   |         8          |                                 -                                  |
 | [PConv_Stage2](./pconv_stage2_4xb2_places-256x256.py)  | free-form |  256x256   |    500k     | Places365-val |  8.776   | 22.762 | 0.801 |         4          | [model](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.log.json) |
-
-**CelebA-HQ**
-
-|                         Model                         | Mask Type | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  | Training Resources |                                Download                                |
-| :---------------------------------------------------: | :-------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :----------------: | :--------------------------------------------------------------------: |
-| [PConv_Stage1](./pconv_stage1_8xb1_celeba-256x256.py) | free-form |  256x256   |    500k     | CelebA-val |    -     |   -    |   -   |         8          |                                   -                                    |
-| [PConv_Stage2](./pconv_stage2_4xb2_celeba-256x256.py) | free-form |  256x256   |    500k     | CelebA-val |  5.990   | 25.404 | 0.853 |         4          | [model](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.log.json) |
+| [PConv_Stage1](./pconv_stage1_8xb1_celeba-256x256.py)  | free-form |  256x256   |    500k     |  CelebA-val   |    -     |   -    |   -   |         8          |                                 -                                  |
+| [PConv_Stage2](./pconv_stage2_4xb2_celeba-256x256.py)  | free-form |  256x256   |    500k     |  CelebA-val   |  5.990   | 25.404 | 0.853 |         4          | [model](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_celeba_20200619-860f8b95.log.json) |
 
 ## Quick Start
 

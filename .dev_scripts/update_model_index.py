@@ -82,6 +82,7 @@ import posixpath as osp  # Even on windows, use posixpath
 import re
 import sys
 
+import tqdm
 from modelindex.models.Collection import Collection
 from modelindex.models.Metadata import Metadata
 from modelindex.models.Model import Model
@@ -105,7 +106,6 @@ def parse_md(md_file):
     Returns:
         Bool: If the target YAML file is different from the original.
     """
-
     readme = osp.relpath(md_file, MMEditing_ROOT)
     readme = readme.replace('\\', '/')  # for windows
     collection = Collection()
@@ -144,11 +144,15 @@ def parse_md(md_file):
             cols = [col.strip() for col in lines[i].split('|')][1:-1]
 
             # check required field for Model
-            assert 'Model' in cols, f"Lack 'Model' in line {i+1} in {md_file}"
-            model_idx = cols.index('Model')
-            dataset_idx = cols.index('Dataset')
-            download_idx = cols.index('Download')
-            used_metrics = collate_metrics(cols)
+            try:
+                model_idx = cols.index('Model')
+                dataset_idx = cols.index('Dataset')
+                download_idx = cols.index('Download')
+                used_metrics = collate_metrics(cols)
+            except Exception:
+                raise ValueError(
+                    f'required fields: Model, Dataset, Download '
+                    f'are not included in line {i+1} of {md_file}')
 
             j = i + 2
             # parse table for valid fields
@@ -157,7 +161,7 @@ def parse_md(md_file):
 
                 # name, in_collection, config of Model
                 assert line[model_idx].find(
-                    '](') >= 0, 'invalid readme for model'
+                    '](') >= 0, f'invalid {model_idx} in {line} for {md_file}.'
                 left = line[model_idx].index('](') + 2
                 right = line[model_idx].index(')', left)
                 config = line[model_idx][left:right].strip('./')
@@ -168,7 +172,8 @@ def parse_md(md_file):
                     model = Model(
                         name=model_name,
                         in_collection=collection_name,
-                        config=osp.join(osp.dirname(md_file), model_name))
+                        config=osp.join(
+                            osp.dirname(md_file), model_name + '.py'))
                     model_list[model_name] = model
 
                 # find results in each row
@@ -180,6 +185,7 @@ def parse_md(md_file):
                     value = value.replace('*', '')
                     if '/' not in value:
                         try:
+                            value = value.split('(')[0]
                             metrics[metric_name] = float(value)
                         except ValueError:
                             value = value.replace(' ', '')
@@ -194,7 +200,7 @@ def parse_md(md_file):
                 if model.results is None:
                     model.results = result
                 else:
-                    model.results.append(result)
+                    model.results.data.append(result)
 
                 # check weights
                 if line[download_idx].find('](') >= 0:
@@ -259,7 +265,6 @@ if __name__ == '__main__':
         sys.exit(0)
 
     file_modified = False
-    import tqdm
     file_list = file_list
     pbar = tqdm.tqdm(range(len(file_list)), initial=0, dynamic_ncols=True)
     for fn in file_list:
