@@ -14,7 +14,7 @@ test_pipeline = [
         imdecode_backend='cv2'),
     dict(
         type='RandomJPEGCompression',
-        params=dict(quality=[quality, quality], color_type='color'),
+        params=dict(quality=[quality, quality]),
         bgr2rgb=True,
         keys=['img']),
     dict(type='PackEditInputs')
