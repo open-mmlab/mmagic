@@ -16,7 +16,7 @@ def test_infer_io_backend():
     assert infer_io_backend(path) == 'petrel'
 
     path = 'this/is/a/test'
-    assert infer_io_backend(path) == 'disk'
+    assert infer_io_backend(path) == 'local'
 
 
 # TODO: add more uts
