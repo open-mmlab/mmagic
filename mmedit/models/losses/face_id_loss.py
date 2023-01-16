@@ -51,9 +51,7 @@ class FaceIdLoss(nn.Module):
         self.net = MODULES.build(facenet)
         self._loss_name = loss_name
 
-    def forward(self,
-                pred: torch.Tensor = None,
-                gt: torch.Tensor = None) -> torch.Tensor:
+    def forward(self, pred: torch.Tensor, gt: torch.Tensor) -> torch.Tensor:
         """Forward function."""
 
         # NOTE: only return the loss term
