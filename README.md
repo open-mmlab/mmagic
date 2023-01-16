@@ -26,16 +26,31 @@
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘Documentation](https://mmediting.readthedocs.io/en/1.x/) |
-[🛠️Installation](https://mmediting.readthedocs.io/en/1.x/2_get_started.html#installation) |
-[👀Model Zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) |
-[🆕Update News](docs/en/changelog.md) |
-[🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
-[🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
+[Documentation](https://mmediting.readthedocs.io/en/1.x/) |
+[Installation](https://mmediting.readthedocs.io/en/1.x/2_get_started.html#installation) |
+[Model Zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) |
+[Update News](docs/en/changelog.md) |
+[Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
+[Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
 
 English | [简体中文](README_zh-CN.md)
 
 </div>
+
+## Table of Contents
+- [Introduction](#introduction)
+- [What's New](#whats-new)
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+- [Model Zoo](#model-zoo)
+- [Demos](#demos)
+- [Contributing](#contributing)
+- [Acknowledgement](#acknowledgement)
+- [Citation](#citation)
+- [License](#license)
+- [Projects in OpenMMLab 2.0](#projects-in-openmmlab-20)
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ## Introduction
 
@@ -48,37 +63,6 @@ Currently, MMEditing support the following tasks:
 </div>
 
 The master branch works with **PyTorch 1.5+**.
-
-Some Demos:
-
-https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4
-
-https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
-
-<table align="center">
-<thead>
-  <tr>
-    <td>
-<div align="center">
-  <b> GAN Interpolation</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12726765/114679300-9fd4f900-9d3e-11eb-8f37-c36a018c02f7.gif" width="200"/>
-</div></td>
-    <td>
-<div align="center">
-  <b> GAN Projector</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12726765/114524392-c11ee200-9c77-11eb-8b6d-37bc637f5626.gif" width="200"/>
-</div></td>
-    <td>
-<div align="center">
-  <b> GAN Manipulation</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12726765/114523716-20302700-9c77-11eb-804e-327ae1ca0c5b.gif" width="200"/>
-</div></td>
-  </tr>
-</thead>
-</table>
 
 ### Major features
 
@@ -101,6 +85,8 @@ https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-
 Note that **MMSR** has been merged into this repo, as a part of MMEditing.
 With elaborate designs of the new framework and careful implementations,
 hope MMEditing could provide better experience.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ## What's New
 
@@ -128,6 +114,8 @@ Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/t
 - Fix the number of channels in RDB.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ## Installation
 
@@ -157,9 +145,13 @@ pip3 install -e .
 
 Please refer to [installation](docs/en/get_started/install.md) for more detailed instruction.
 
+<p align="right"><a href="#top">Back to top</a></p>
+
 ## Getting Started
 
 Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMEditing.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ## Model Zoo
 
@@ -298,13 +290,52 @@ Supported algorithms:
 
 Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) for more details.
 
+<p align="right"><a href="#top">Back to top</a></p>
+
+## Demos:
+
+https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4
+
+https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
+
+<table align="center">
+<thead>
+  <tr>
+    <td>
+<div align="center">
+  <b> GAN Interpolation</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12726765/114679300-9fd4f900-9d3e-11eb-8f37-c36a018c02f7.gif" width="200"/>
+</div></td>
+    <td>
+<div align="center">
+  <b> GAN Projector</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12726765/114524392-c11ee200-9c77-11eb-8b6d-37bc637f5626.gif" width="200"/>
+</div></td>
+    <td>
+<div align="center">
+  <b> GAN Manipulation</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12726765/114523716-20302700-9c77-11eb-804e-327ae1ca0c5b.gif" width="200"/>
+</div></td>
+  </tr>
+</thead>
+</table>
+
+<p align="right"><a href="#top">Back to top</a></p>
+
 ## Contributing
 
 We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
 
+<p align="right"><a href="#top">Back to top</a></p>
+
 ## Acknowledgement
 
 MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ## Citation
 
@@ -319,10 +350,14 @@ If MMEditing is helpful to your research, please cite it as below.
 }
 ```
 
+<p align="right"><a href="#top">Back to top</a></p>
+
 ## License
 
 This project is released under the [Apache 2.0 license](LICENSE).
 Please refer to [LICENSES](LICENSE) for the careful check, if you are using our code for commercial matters.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ## Projects in OpenMMLab 2.0
 
@@ -346,3 +381,5 @@ Please refer to [LICENSES](LICENSE) for the careful check, if you are using our 
 - [MMEditing](https://github.com/open-mmlab/mmediting/tree/1.x): OpenMMLab image and video editing toolbox.
 - [MMGeneration](https://github.com/open-mmlab/mmgeneration/tree/1.x): OpenMMLab image and video generative models toolbox.
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab model deployment framework.
+
+<p align="right"><a href="#top">Back to top</a></p>
