@@ -36,7 +36,6 @@ train_pipeline = [
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='FixedCrop', keys=['gt'], crop_size=(256, 256)),
-    dict(type='RescaleToZeroOne', keys=['gt']),
     dict(type='Flip', keys=['gt'], flip_ratio=0.5, direction='horizontal'),
     dict(type='Flip', keys=['gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['gt'], transpose_ratio=0.5),
