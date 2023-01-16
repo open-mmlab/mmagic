@@ -2,10 +2,14 @@
 import numpy as np
 import pytest
 import torch
+from packaging import version
 
 from mmedit.core.evaluation.inceptions import FID, KID, InceptionV3
 
 
+@pytest.mark.skipif(
+    version.parse(torch.__version__) <= version.parse('1.5.1'),
+    reason='torch 1.5.1 do not support interpolation with uint8')
 def test_inception():
     img1 = np.random.randint(0, 256, (224, 224, 3))
     img2 = np.random.randint(0, 256, (224, 224, 3))

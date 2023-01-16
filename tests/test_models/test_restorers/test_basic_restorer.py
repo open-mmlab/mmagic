@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 import torch
 from mmcv.runner import obj_from_dict
+from packaging import version
 
 from mmedit.core.evaluation import InceptionV3
 from mmedit.models import build_model
@@ -139,60 +140,61 @@ def test_basic_restorer():
         # evaluation with metrics must have gt images
         restorer(lq=inputs, test_mode=True)
 
-    with tempfile.TemporaryDirectory() as tmpdir:
-        outputs = restorer(
-            **data_batch,
-            test_mode=True,
-            save_image=True,
-            save_path=tmpdir,
-            iteration=None)
-        assert isinstance(outputs, dict)
-        assert isinstance(outputs['eval_result'], dict)
-        assert isinstance(outputs['eval_result']['PSNR'], float)
-        assert isinstance(outputs['eval_result']['SSIM'], float)
-
-        # for feature-based metrics
-        assert isinstance(outputs['eval_result']['FID'], dict)
-        assert isinstance(outputs['eval_result']['KID'], dict)
-        assert '_inception_feat' in restorer.allowed_metrics
-        assert isinstance(restorer.allowed_metrics['_inception_feat'],
-                          InceptionV3)
-
-        incept_result = outputs['eval_result']['_inception_feat']
-        assert isinstance(incept_result, tuple) and len(incept_result) == 2
-        for feat in incept_result:
-            assert isinstance(feat, np.ndarray)
-            assert feat.shape == (1, 2048)
-
-        outputs = restorer(
-            **data_batch,
-            test_mode=True,
-            save_image=True,
-            save_path=tmpdir,
-            iteration=100)
-        assert isinstance(outputs, dict)
-        assert isinstance(outputs['eval_result'], dict)
-        assert isinstance(outputs['eval_result']['PSNR'], float)
-        assert isinstance(outputs['eval_result']['SSIM'], float)
-
-        # for feature-based metrics
-        assert isinstance(outputs['eval_result']['FID'], dict)
-        assert isinstance(outputs['eval_result']['KID'], dict)
-        assert '_inception_feat' in restorer.allowed_metrics
-        assert isinstance(restorer.allowed_metrics['_inception_feat'],
-                          InceptionV3)
-
-        incept_result = outputs['eval_result']['_inception_feat']
-        assert isinstance(incept_result, tuple) and len(incept_result) == 2
-        for feat in incept_result:
-            assert isinstance(feat, np.ndarray)
-            assert feat.shape == (1, 2048)
-
-        with pytest.raises(ValueError):
-            # iteration should be number or None
-            restorer(
+    if version.parse(torch.__version__) <= version.parse('1.5.1'):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            outputs = restorer(
                 **data_batch,
                 test_mode=True,
                 save_image=True,
                 save_path=tmpdir,
-                iteration='100')
+                iteration=None)
+            assert isinstance(outputs, dict)
+            assert isinstance(outputs['eval_result'], dict)
+            assert isinstance(outputs['eval_result']['PSNR'], float)
+            assert isinstance(outputs['eval_result']['SSIM'], float)
+
+            # for feature-based metrics
+            assert isinstance(outputs['eval_result']['FID'], dict)
+            assert isinstance(outputs['eval_result']['KID'], dict)
+            assert '_inception_feat' in restorer.allowed_metrics
+            assert isinstance(restorer.allowed_metrics['_inception_feat'],
+                              InceptionV3)
+
+            incept_result = outputs['eval_result']['_inception_feat']
+            assert isinstance(incept_result, tuple) and len(incept_result) == 2
+            for feat in incept_result:
+                assert isinstance(feat, np.ndarray)
+                assert feat.shape == (1, 2048)
+
+            outputs = restorer(
+                **data_batch,
+                test_mode=True,
+                save_image=True,
+                save_path=tmpdir,
+                iteration=100)
+            assert isinstance(outputs, dict)
+            assert isinstance(outputs['eval_result'], dict)
+            assert isinstance(outputs['eval_result']['PSNR'], float)
+            assert isinstance(outputs['eval_result']['SSIM'], float)
+
+            # for feature-based metrics
+            assert isinstance(outputs['eval_result']['FID'], dict)
+            assert isinstance(outputs['eval_result']['KID'], dict)
+            assert '_inception_feat' in restorer.allowed_metrics
+            assert isinstance(restorer.allowed_metrics['_inception_feat'],
+                              InceptionV3)
+
+            incept_result = outputs['eval_result']['_inception_feat']
+            assert isinstance(incept_result, tuple) and len(incept_result) == 2
+            for feat in incept_result:
+                assert isinstance(feat, np.ndarray)
+                assert feat.shape == (1, 2048)
+
+            with pytest.raises(ValueError):
+                # iteration should be number or None
+                restorer(
+                    **data_batch,
+                    test_mode=True,
+                    save_image=True,
+                    save_path=tmpdir,
+                    iteration='100')
