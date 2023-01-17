@@ -28,16 +28,16 @@ We show that diffusion models can achieve image sample quality superior to the c
 
 **ImageNet**
 
-| Model |     Dataset      | Scheduler | Steps | CGS | Time Consuming(A100) | FID-Full-50K |                                                 Config                                                 |  Download  |
-| :---: | :--------------: | :-------: | :---: | :-: | :------------------: | :----------: | :----------------------------------------------------------------------------------------------------: | :--------: |
-|  ADM  |  ImageNet 64x64  |   DDIM    |  250  |  -  |          1h          |    3.2284    |    [adm_ddim250_8xb32_imagenet-64x64](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-64x64.py)    | [ckpt](https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth) |
-| ADM-G |  ImageNet 64x64  |   DDIM    |  25   | 1.0 |          2h          |    3.7566    |   [adm-g_ddim25_8xb32_imagenet-64x64](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py)   | [ckpt](<>) |
-|  ADM  | ImageNet 128x128 |   DDIM    |  250  |  -  |          -           |      -       |                                                   -                                                    |     -      |
-| ADM-G | ImageNet 128x128 |   DDIM    |  25   | 1.0 |          -           |      -       |                                                   -                                                    |     -      |
-|  ADM  | ImageNet 256x256 |   DDIM    |  250  |  -  |          -           |      -       |  [adm_ddim250_8xb32_imagenet-256x256](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-256x256.py)  | [ckpt](<>) |
-| ADM-G | ImageNet 256x256 |   DDIM    |  25   | 1.0 |          -           |      -       | [adm-g_ddim25_8xb32_imagenet-256x256](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-256x256.py) | [ckpt](<>) |
-|  ADM  | ImageNet 512x512 |   DDIM    |  250  |  -  |          -           |      -       |  [adm_ddim250_8xb32_imagenet-512x512](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-512x512.py)  | [ckpt](<>) |
-| ADM-G | ImageNet 512x512 |   DDIM    |  25   | 1.0 |          -           |      -       | [adm-g_ddim25_8xb32_imagenet-512x512](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-512x512.py) | [ckpt](<>) |
+| Model |     Dataset      | Scheduler | Steps | CGS | Time Consuming(A100) | FID-Full-50K |                              Config                              |                              Download                              |
+| :---: | :--------------: | :-------: | :---: | :-: | :------------------: | :----------: | :--------------------------------------------------------------: | :----------------------------------------------------------------: |
+|  ADM  |  ImageNet 64x64  |   DDIM    |  250  |  -  |          1h          |    3.2284    | [adm_ddim250_8xb32_imagenet-64x64](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-64x64.py) | [ckpt](https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth) |
+| ADM-G |  ImageNet 64x64  |   DDIM    |  25   | 1.0 |          2h          |    3.7566    | [adm-g_ddim25_8xb32_imagenet-64x64](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py) |                             [ckpt](<>)                             |
+|  ADM  | ImageNet 128x128 |   DDIM    |  250  |  -  |          -           |      -       |                                -                                 |                                 -                                  |
+| ADM-G | ImageNet 128x128 |   DDIM    |  25   | 1.0 |          -           |      -       |                                -                                 |                                 -                                  |
+|  ADM  | ImageNet 256x256 |   DDIM    |  250  |  -  |          -           |      -       | [adm_ddim250_8xb32_imagenet-256x256](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-256x256.py) |                             [ckpt](<>)                             |
+| ADM-G | ImageNet 256x256 |   DDIM    |  25   | 1.0 |          -           |      -       | [adm-g_ddim25_8xb32_imagenet-256x256](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-256x256.py) |                             [ckpt](<>)                             |
+|  ADM  | ImageNet 512x512 |   DDIM    |  250  |  -  |          -           |      -       | [adm_ddim250_8xb32_imagenet-512x512](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-512x512.py) |                             [ckpt](<>)                             |
+| ADM-G | ImageNet 512x512 |   DDIM    |  25   | 1.0 |          -           |      -       | [adm-g_ddim25_8xb32_imagenet-512x512](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-512x512.py) |                             [ckpt](<>)                             |
 
 ## Quick Start
 

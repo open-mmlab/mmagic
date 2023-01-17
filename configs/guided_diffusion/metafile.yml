@@ -21,7 +21,7 @@ Models:
       FID-Full-50K: 3.2284
       Steps: 250.0
     Task: Image Generation
-  Weights: <>
+  Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth
 - Config: configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py
   In Collection: Guided Diffusion
   Metadata:
