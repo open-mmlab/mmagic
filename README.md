@@ -394,20 +394,26 @@ We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUT
   <tr>
     <td>
 <div align="center">
-  <b>Stable Diffusion</b>
+  <img src="https://user-images.githubusercontent.com/12782558/210951970-a81e80c3-822e-4782-901e-db52e34b85a3.png"  height="200"/>
   <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/209609229-8221c7cc-d5c9-44d5-a1af-c254b5a95fae.png" width="200"/>
-  <img src="https://user-images.githubusercontent.com/12782558/210951970-a81e80c3-822e-4782-901e-db52e34b85a3.png" width="200"/>
+  <b> A Chinese palace is beside a beautiful lake</b>
 </div></td>
     <td>
 <div align="center">
-  <b>Disco Diffusion</b>
+  <img src="https://user-images.githubusercontent.com/12782558/210952108-df82e5ad-6eb6-4948-8d22-3802299d1131.png" height="200"/>
   <br/>
-  <img src="https://user-images.githubusercontent.com/22982797/204526957-ac30547e-5a44-417a-aaa2-6b357b4a139c.png" width="200"/>
+  <b> A panda is having dinner at KFC</b>
+</div></td>
+    <td>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/22982797/204526957-ac30547e-5a44-417a-aaa2-6b357b4a139c.png"  height="200"/>
+  <br/>
+  <b> A beautiful painting of a singular lighthouse...</b>
 </div></td>
   </tr>
 </thead>
 </table>
+
 
 ### 3D-aware Generation with EG3D
 
@@ -416,7 +422,6 @@ We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUT
 </div>
 
 ### Video Super-Resolution
-
 <div align=center>
 <video src="https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4"/>
 </div>
