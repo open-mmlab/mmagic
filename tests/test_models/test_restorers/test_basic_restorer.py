@@ -140,7 +140,7 @@ def test_basic_restorer():
         # evaluation with metrics must have gt images
         restorer(lq=inputs, test_mode=True)
 
-    if version.parse(torch.__version__) <= version.parse('1.5.1'):
+    if version.parse(torch.__version__) > version.parse('1.5.1'):
         with tempfile.TemporaryDirectory() as tmpdir:
             outputs = restorer(
                 **data_batch,
