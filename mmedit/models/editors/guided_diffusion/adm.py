@@ -103,6 +103,7 @@ class AblatedDiffusionModel(BaseModel):
         """
         return next(self.parameters()).device
 
+    @torch.no_grad()
     def infer(self,
               scheduler_kwargs=None,
               init_image=None,
@@ -163,9 +164,14 @@ class AblatedDiffusionModel(BaseModel):
             model_output = self.unet(image, t, label=labels)['outputs']
 
             # 2. compute previous image: x_t -> x_t-1
-            cond_kwargs = dict(y=labels, classifier=self.classifier, classifier_scale=classifier_scale)
+            if classifier_scale >0 and self.classifier is not None:
+                cond_fn=classifier_grad
+                cond_kwargs = dict(y=labels, classifier=self.classifier, classifier_scale=classifier_scale)
+            else:
+                cond_fn = None
+                cond_kwargs = {}
             diffusion_scheduler_output = infer_scheduler.step(
-                model_output, t, image, cond_fn=classifier_grad, cond_kwargs=cond_kwargs)
+                model_output, t, image, cond_fn=cond_fn, cond_kwargs=cond_kwargs)
             image = diffusion_scheduler_output['prev_sample']
 
         if self.rgb2bgr:
@@ -195,7 +201,7 @@ class AblatedDiffusionModel(BaseModel):
         labels = sample_kwargs.get('labels', None)
         num_inference_steps = sample_kwargs.get(
             'num_inference_steps',
-            infer_scheduler.num_train_timesteps)
+            self.diffusion_scheduler.num_train_timesteps)
         show_progress = sample_kwargs.get('show_progress', False)
         classifier_scale = sample_kwargs.get('classifier_scale',
                                              self.classifier_scale)

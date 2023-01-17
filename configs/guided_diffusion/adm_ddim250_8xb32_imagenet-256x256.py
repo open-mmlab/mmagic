@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/datasets/imagenet_512.py',
+    '../_base_/datasets/imagenet_64.py',
     '../_base_/gen_default_runtime.py',
 ]
 
@@ -8,7 +8,7 @@ model = dict(
     data_preprocessor=dict(type='GenDataPreprocessor'),
     unet=dict(
         type='DenoisingUnet',
-        image_size=512,
+        image_size=256,
         in_channels=3,
         base_channels=256,
         resblocks_per_downsample=2,
@@ -32,18 +32,25 @@ model = dict(
     use_fp16=False)
 
 test_dataloader = dict(batch_size=32, num_workers=8)
-
+train_cfg = dict(max_iters=100000)
 metrics = [
     dict(
         type='FrechetInceptionDistance',
         prefix='FID-Full-50k',
-        fake_nums=50,
-        real_nums=50,
+        fake_nums=50000,
         inception_style='StyleGAN',
         sample_model='orig',
         sample_kwargs=dict(
-            num_inference_steps=25, show_progress=False, classifier_scale=1.))
+            num_inference_steps=250, show_progress=True, classifier_scale=1.))
 ]
 
 val_evaluator = dict(metrics=metrics)
 test_evaluator = dict(metrics=metrics)
+
+# VIS_HOOK
+custom_hooks = [
+    dict(
+        type='GenVisualizationHook',
+        interval=5000,
+        fixed_input=True)
+]
