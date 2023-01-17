@@ -76,7 +76,7 @@ class TestExponentialMovingAverage(TestCase):
         cfg = deepcopy(self.default_cfg)
         model = ToyModule()
         average_model = ExponentialMovingAverage(model=model, **cfg)
-        self.assertEqual(average_model.momentum, 0.9999)
+        self.assertEqual(average_model.momentum, 0.0001)
         self.assertTrue(
             (average_model.module.conv.weight == model.conv.weight).all())
 
@@ -97,7 +97,7 @@ class TestExponentialMovingAverage(TestCase):
         tar_tensor_backup = tar_tensor.clone()
         average_model.avg_func(tar_tensor, src_tensor, steps=42)
         assert_allclose(tar_tensor,
-                        tar_tensor_backup * 0.0001 + src_tensor * 0.9999)
+                        tar_tensor_backup * 0.9999 + src_tensor * 0.0001)
 
     def test_sync_buffer_and_parameters(self):
         cfg = deepcopy(self.default_cfg)
