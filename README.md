@@ -50,7 +50,6 @@ English | [简体中文](README_zh-CN.md)
 - [License](#license)
 - [Projects in OpenMMLab 2.0](#projects-in-openmmlab-20)
 
-<p align="right"><a href="#top">Back to top</a></p>
 
 ## Introduction
 
