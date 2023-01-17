@@ -151,7 +151,7 @@ class AblatedDiffusionModel(BaseModel):
                 size=(batch_size, ),
                 device=self.device)
         labels = labels.to(self.device)
-        
+
         # set step values
         if num_inference_steps > 0:
             infer_scheduler.set_timesteps(num_inference_steps)

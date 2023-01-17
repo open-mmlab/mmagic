@@ -9,4 +9,75 @@ Collections:
   Task:
   - image generation
   Year: 2021
-Models: []
+Models:
+- Config: configs/guided_diffusion/adm_ddim250_8xb32_imagenet-64x64.py
+  In Collection: Guided Diffusion
+  Metadata:
+    Training Data: Others
+  Name: adm_ddim250_8xb32_imagenet-64x64
+  Results:
+  - Dataset: Others
+    Metrics:
+      FID-Full-50K: 3.2284
+      Steps: 250.0
+    Task: Image Generation
+  Weights: <>
+- Config: configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py
+  In Collection: Guided Diffusion
+  Metadata:
+    Training Data: Others
+  Name: adm-g_ddim25_8xb32_imagenet-64x64
+  Results:
+  - Dataset: Others
+    Metrics:
+      CGS: 1.0
+      FID-Full-50K: 3.7566
+      Steps: 25.0
+    Task: Image Generation
+  Weights: <>
+- Config: configs/guided_diffusion/adm_ddim250_8xb32_imagenet-256x256.py
+  In Collection: Guided Diffusion
+  Metadata:
+    Training Data: Others
+  Name: adm_ddim250_8xb32_imagenet-256x256
+  Results:
+  - Dataset: Others
+    Metrics:
+      Steps: 250.0
+    Task: Image Generation
+  Weights: <>
+- Config: configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-256x256.py
+  In Collection: Guided Diffusion
+  Metadata:
+    Training Data: Others
+  Name: adm-g_ddim25_8xb32_imagenet-256x256
+  Results:
+  - Dataset: Others
+    Metrics:
+      CGS: 1.0
+      Steps: 25.0
+    Task: Image Generation
+  Weights: <>
+- Config: configs/guided_diffusion/adm_ddim250_8xb32_imagenet-512x512.py
+  In Collection: Guided Diffusion
+  Metadata:
+    Training Data: Others
+  Name: adm_ddim250_8xb32_imagenet-512x512
+  Results:
+  - Dataset: Others
+    Metrics:
+      Steps: 250.0
+    Task: Image Generation
+  Weights: <>
+- Config: configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-512x512.py
+  In Collection: Guided Diffusion
+  Metadata:
+    Training Data: Others
+  Name: adm-g_ddim25_8xb32_imagenet-512x512
+  Results:
+  - Dataset: Others
+    Metrics:
+      CGS: 1.0
+      Steps: 25.0
+    Task: Image Generation
+  Weights: <>
