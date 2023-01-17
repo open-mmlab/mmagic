@@ -65,19 +65,19 @@ Currently, MMEditing support the following tasks:
 <div >
   <b>Image Generation</b>
   <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212686396-1b778277-7acc-4e48-ad77-e89f3a9cc09a.png" width="300" height="300"/>
+  <img src="https://user-images.githubusercontent.com/12782558/212686396-1b778277-7acc-4e48-ad77-e89f3a9cc09a.png" width="200" height="200"/>
 </div></td>
     <td>
 <div >
   <b>Inpainting</b>
   <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212686578-3c47b5c2-c74e-4be2-88c6-fa486f0f28de.png" width="300" height="300"/>
+  <img src="https://user-images.githubusercontent.com/12782558/212686578-3c47b5c2-c74e-4be2-88c6-fa486f0f28de.png" width="200" height="200"/>
 </div></td>
     <td>
 <div>
   <b>Frame Interpolation</b>
   <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212685664-2d2cbed4-74c0-4d9f-90d8-3beefcb51918.png" width="300" height="300"/>
+  <img src="https://user-images.githubusercontent.com/12782558/212685664-2d2cbed4-74c0-4d9f-90d8-3beefcb51918.png" width="200" height="200"/>
 </div></td>
   </tr>
 </thead>
@@ -87,19 +87,19 @@ Currently, MMEditing support the following tasks:
 <div>
   <b>Matting</b>
   <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212798790-dacfb899-ee3f-4c3c-8cd9-44823832415d.png" width="300" height="300"/>
+  <img src="https://user-images.githubusercontent.com/12782558/212798790-dacfb899-ee3f-4c3c-8cd9-44823832415d.png" width="200" height="200"/>
 </div></td>
     <td>
 <div >
   <b>Image Translation</b>
   <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212804088-c3711a50-1577-4dd6-97a4-cd3c3d37e189.png" width="300" height="300"/>
+  <img src="https://user-images.githubusercontent.com/12782558/212804088-c3711a50-1577-4dd6-97a4-cd3c3d37e189.png" width="200" height="200"/>
 </div></td>
     <td>
 <div >
   <b>Super Resolution</b>
   <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212799468-34085fbf-d38e-41ab-ad5d-bbf54f5088e9.png" width="300" height="300"/>
+  <img src="https://user-images.githubusercontent.com/12782558/212799468-34085fbf-d38e-41ab-ad5d-bbf54f5088e9.png" width="200" height="200"/>
 </div></td>
   </tr>
 </thead>
@@ -109,19 +109,19 @@ Currently, MMEditing support the following tasks:
 <div >
   <b>Text-to-Image</b>
   <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212800234-5dfcecc2-5ef4-4c08-a55b-aa020bf3ff53.png" width="300" height="300"/>
+  <img src="https://user-images.githubusercontent.com/12782558/212800234-5dfcecc2-5ef4-4c08-a55b-aa020bf3ff53.png" width="200" height="200"/>
 </div></td>
     <td>
 <div>
   <b>3D-aware Generation</b>
   <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212802550-ed80c1da-ac46-484e-b182-caeb240ea48f.png" width="300" height="300"/>
+  <img src="https://user-images.githubusercontent.com/12782558/212802550-ed80c1da-ac46-484e-b182-caeb240ea48f.png" width="200" height="200"/>
 </div></td>
     <td>
 <div >
   <b>Image Restoration</b>
   <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212806941-fcb775da-876a-4020-aa04-07f96e5c50ea.png" width="300" height="300"/>
+  <img src="https://user-images.githubusercontent.com/12782558/212806941-fcb775da-876a-4020-aa04-07f96e5c50ea.png" width="200" height="200"/>
 </div></td>
   </tr>
 </thead>
