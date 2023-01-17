@@ -63,6 +63,28 @@ Currently, MMEditing support the following tasks:
   <tr>
     <td>
 <div >
+  <b>Text-to-Image</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12782558/212800234-5dfcecc2-5ef4-4c08-a55b-aa020bf3ff53.png" width="220" height="220"/>
+</div></td>
+    <td>
+<div>
+  <b>3D-aware Generation</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12782558/212802550-ed80c1da-ac46-484e-b182-caeb240ea48f.png" width="220" height="220"/>
+</div></td>
+    <td>
+<div >
+  <b>Image Restoration</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12782558/212806941-fcb775da-876a-4020-aa04-07f96e5c50ea.png" width="220" height="220"/>
+</div></td>
+  </tr>
+</thead>
+<thead>
+  <tr>
+    <td>
+<div >
   <b>Image Generation</b>
   <br/>
   <img src="https://user-images.githubusercontent.com/12782558/212686396-1b778277-7acc-4e48-ad77-e89f3a9cc09a.png" width="220" height="220"/>
@@ -103,28 +125,6 @@ Currently, MMEditing support the following tasks:
 </div></td>
   </tr>
 </thead>
-<thead>
-  <tr>
-    <td>
-<div >
-  <b>Text-to-Image</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212800234-5dfcecc2-5ef4-4c08-a55b-aa020bf3ff53.png" width="220" height="220"/>
-</div></td>
-    <td>
-<div>
-  <b>3D-aware Generation</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212802550-ed80c1da-ac46-484e-b182-caeb240ea48f.png" width="220" height="220"/>
-</div></td>
-    <td>
-<div >
-  <b>Image Restoration</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212806941-fcb775da-876a-4020-aa04-07f96e5c50ea.png" width="220" height="220"/>
-</div></td>
-  </tr>
-</thead>
 </table>
 
 And more...
@@ -153,7 +153,7 @@ Note that **MMSR** has been merged into this repo, as a part of MMEditing.
 With elaborate designs of the new framework and careful implementations,
 hope MMEditing could provide better experience.
 
-<p align="right"><a href="#top">Back to top</a></p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## What's New
 
