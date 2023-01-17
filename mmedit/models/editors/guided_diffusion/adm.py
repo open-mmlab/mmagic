@@ -22,7 +22,7 @@ def classifier_grad(classifier, x, t, y=None, classifier_scale=1.0):
     assert y is not None
     with torch.enable_grad():
         x_in = x.detach().requires_grad_(True)
-        timesteps = torch.ones_like(y)* t
+        timesteps = torch.ones_like(y) * t
         logits = classifier(x_in, timesteps)
         log_probs = F.log_softmax(logits, dim=-1)
         selected = log_probs[range(len(logits)), y.view(-1)]
@@ -89,8 +89,8 @@ class AblatedDiffusionModel(BaseModel):
             if prefix == '':
                 state_dict = torch.load(ckpt_path, map_location=map_location)
             else:
-                state_dict = _load_checkpoint_with_prefix(prefix, ckpt_path,
-                                                      map_location)
+                state_dict = _load_checkpoint_with_prefix(
+                    prefix, ckpt_path, map_location)
             getattr(self, key).load_state_dict(state_dict, strict=strict)
             mmengine.print_log(f'Load pretrained {key} from {ckpt_path}')
 
@@ -131,26 +131,27 @@ class AblatedDiffusionModel(BaseModel):
             infer_scheduler = DIFFUSION_SCHEDULERS.build(scheduler_kwargs)
         else:
             infer_scheduler = self.diffusion_scheduler
-            
+
         # Sample gaussian noise to begin loop
         if init_image is None:
             image = torch.randn(
                 (batch_size, self.get_module(self.unet, 'in_channels'),
                  self.get_module(self.unet, 'image_size'),
                  self.get_module(self.unet, 'image_size')))
-            image = image.to(self.device)
         else:
             image = init_image
+        image = image.to(self.device)
 
         if isinstance(labels, int):
-            labels = torch.tensor(labels).repeat(batch_size, 1)
+            labels = torch.tensor(labels).repeat(batch_size)
         elif labels is None:
             labels = torch.randint(
                 low=0,
                 high=self.get_module(self.unet, 'num_classes'),
                 size=(batch_size, ),
                 device=self.device)
-
+        labels = labels.to(self.device)
+        
         # set step values
         if num_inference_steps > 0:
             infer_scheduler.set_timesteps(num_inference_steps)
@@ -164,14 +165,21 @@ class AblatedDiffusionModel(BaseModel):
             model_output = self.unet(image, t, label=labels)['outputs']
 
             # 2. compute previous image: x_t -> x_t-1
-            if classifier_scale >0 and self.classifier is not None:
-                cond_fn=classifier_grad
-                cond_kwargs = dict(y=labels, classifier=self.classifier, classifier_scale=classifier_scale)
+            if classifier_scale > 0 and self.classifier is not None:
+                cond_fn = classifier_grad
+                cond_kwargs = dict(
+                    y=labels,
+                    classifier=self.classifier,
+                    classifier_scale=classifier_scale)
             else:
                 cond_fn = None
                 cond_kwargs = {}
             diffusion_scheduler_output = infer_scheduler.step(
-                model_output, t, image, cond_fn=cond_fn, cond_kwargs=cond_kwargs)
+                model_output,
+                t,
+                image,
+                cond_fn=cond_fn,
+                cond_kwargs=cond_kwargs)
             image = diffusion_scheduler_output['prev_sample']
 
         if self.rgb2bgr:

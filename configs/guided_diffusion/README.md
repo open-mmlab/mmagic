@@ -20,17 +20,66 @@ We show that diffusion models can achieve image sample quality superior to the c
 
 ## Results and models
 
-**ImageNet**
+<div align="center">
+  <b>hamster, classifier-guidance samplings with CGS=1.0</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/22982797/212831070-470034df-0a9f-4a75-8ab8-97d39bc1806c.png" width="400"/>
+</div>
 
-| Model | Dataset          | Sampling Scheduler | Steps     | Guidance Scale | FID  | Config | Ckpt |
-| ----- | ---------------- | ------------------ | --------- | -------------- | ---- | ------ | ---- |
-| ADM   | ImageNet 64x64   | DDPM               | 250 steps | -              | 2.61 |        |      |
-| ADM-G | ImageNet 128x128 |                    |           |                | 2.97 |        |      |
-| ADM-G | ImageNet 256x256 | DDPM               | 250 steps | 1.0            | 4.59 |        |      |
-| ADM-G | ImageNet 256x256 | DDIM               | 25 steps  | 1.0            | 5.44 |        |      |
-| ADM-G | ImageNet 512x512 |                    |           |                | 7.72 |        |      |
+
+**ImageNet**
+| Model |      Dataset     | Scheduler | Steps | CGS | Time Consuming(A100) | FID-Full-50K | Config | Download |
+|:-----:|:----------------:|:---------:|:-----:|:---:|:--------------------:|:------------:|:------:|:--------:|
+|  ADM  |  ImageNet 64x64  |    DDIM   |  250  |  -  |          1h          |    3.2284    |  [adm_ddim250_8xb32_imagenet-64x64](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-64x64.py)  |   []()   |
+| ADM-G |  ImageNet 64x64  |    DDIM   |   25  | 1.0 |          2h          |    3.7566    |  [adm-g_ddim25_8xb32_imagenet-64x64](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py)  |   []()   |
+|  ADM  | ImageNet 128x128 |    DDIM   |  250  |  -  |           -          |       -      |    -   |     -    |
+| ADM-G | ImageNet 128x128 |    DDIM   |   25  | 1.0 |           -          |       -      |    -   |     -    |
+|  ADM  | ImageNet 256x256 |    DDIM   |  250  |  -  |           -          |       -      |  [adm_ddim250_8xb32_imagenet-256x256](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-256x256.py)  |   []()   |
+| ADM-G | ImageNet 256x256 |    DDIM   |   25  | 1.0 |           -          |       -      |  [adm-g_ddim25_8xb32_imagenet-256x256](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-256x256.py)  |   []()   |
+|  ADM  | ImageNet 512x512 |    DDIM   |  250  |  -  |           -          |       -      |  [adm_ddim250_8xb32_imagenet-512x512](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-512x512.py)  |   []()   |
+| ADM-G | ImageNet 512x512 |    DDIM   |   25  | 1.0 |           -          |       -      |  [adm-g_ddim25_8xb32_imagenet-512x512](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-512x512.py)  |   []()   |
 
 ## Quick Start
+
+**infer**
+<details>
+<summary>Infer Instructions</summary>
+
+You can run adm as follows:
+
+```python
+from mmedit.models import AblatedDiffusionModel
+from mmedit.utils import register_all_modules
+import torch 
+from torchvision.utils import save_image
+from mmedit.apis import init_model
+
+register_all_modules()
+
+# sampling without classifier guidance
+config = 'configs/guided_diffusion/adm_ddim250_8xb32_imagenet-64x64.py'
+ckpt_path = ''  # noqa
+model = init_model(config, ckpt_path)
+samples = model.infer(
+            init_image=None,
+            batch_size=4,
+            num_inference_steps=250,
+            labels=None,
+            classifier_scale=0.0,
+            show_progress=True)['samples']
+
+# sampling without classifier guidance, CGS=1.0
+config = 'configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py'
+ckpt_path = ''  # noqa
+model = init_model(config, ckpt_path)
+samples = model.infer(
+            init_image=None,
+            batch_size=4,
+            num_inference_steps=25,
+            labels=333,
+            classifier_scale=1.0,
+            show_progress=True)['samples']
+```
 
 **Test**
 

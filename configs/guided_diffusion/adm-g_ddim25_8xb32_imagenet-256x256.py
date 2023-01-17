@@ -1,8 +1,8 @@
 _base_ = ['./adm_ddim250_8xb32_imagenet-256x256.py']
 
- 
 model = dict(
-    classifier = dict(type = 'EncoderUNetModel',
+    classifier=dict(
+        type='EncoderUNetModel',
         image_size=256,
         in_channels=3,
         model_channels=128,
@@ -14,9 +14,7 @@ model = dict(
         num_head_channels=64,
         use_scale_shift_norm=True,
         resblock_updown=True,
-        pool='attention')
-)
-
+        pool='attention'))
 
 metrics = [
     dict(

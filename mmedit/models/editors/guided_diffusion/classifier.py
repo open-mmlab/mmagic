@@ -1,14 +1,21 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import math
-import torch.nn as nn
-import torch 
 from abc import abstractmethod
-from mmedit.models.editors.ddpm.denoising_unet import QKVAttention, QKVAttentionLegacy
-from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+from mmedit.models.editors.ddpm.denoising_unet import (QKVAttention,
+                                                       QKVAttentionLegacy,
+                                                       convert_module_to_f16,
+                                                       convert_module_to_f32)
+from mmedit.registry import MODELS
+
 
 def checkpoint(func, inputs, params, flag):
-    """
-    Evaluate a function without caching intermediate activations, allowing for
-    reduced memory at the expense of extra compute in the backward pass.
+    """Evaluate a function without caching intermediate activations, allowing
+    for reduced memory at the expense of extra compute in the backward pass.
 
     :param func: the function to evaluate.
     :param inputs: the argument sequence to pass to `func`.
@@ -24,6 +31,7 @@ def checkpoint(func, inputs, params, flag):
 
 
 class CheckpointFunction(torch.autograd.Function):
+
     @staticmethod
     def forward(ctx, run_function, length, *args):
         ctx.run_function = run_function
@@ -35,7 +43,9 @@ class CheckpointFunction(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, *output_grads):
-        ctx.input_tensors = [x.detach().requires_grad_(True) for x in ctx.input_tensors]
+        ctx.input_tensors = [
+            x.detach().requires_grad_(True) for x in ctx.input_tensors
+        ]
         with torch.enable_grad():
             # Fixes a bug where the first op in run_function modifies the
             # Tensor storage in place, which is not allowed for detach()'d
@@ -55,8 +65,7 @@ class CheckpointFunction(torch.autograd.Function):
 
 
 def timestep_embedding(timesteps, dim, max_period=10000):
-    """
-    Create sinusoidal timestep embeddings.
+    """Create sinusoidal timestep embeddings.
 
     :param timesteps: a 1-D Tensor of N indices, one per batch element.
                       These may be fractional.
@@ -65,37 +74,69 @@ def timestep_embedding(timesteps, dim, max_period=10000):
     :return: an [N x dim] Tensor of positional embeddings.
     """
     half = dim // 2
-    freqs = torch.exp(
-        -math.log(max_period) * torch.arange(start=0, end=half, dtype=torch.float32) / half
-    ).to(device=timesteps.device)
+    freqs = torch.exp(-math.log(max_period) *
+                      torch.arange(start=0, end=half, dtype=torch.float32) /
+                      half).to(device=timesteps.device)
     args = timesteps[:, None].float() * freqs[None]
     embedding = torch.cat([torch.cos(args), torch.sin(args)], dim=-1)
     if dim % 2:
-        embedding = torch.cat([embedding, torch.zeros_like(embedding[:, :1])], dim=-1)
+        embedding = torch.cat([embedding,
+                               torch.zeros_like(embedding[:, :1])],
+                              dim=-1)
     return embedding
 
+
 def zero_module(module):
-    """
-    Zero out the parameters of a module and return it.
-    """
+    """Zero out the parameters of a module and return it."""
     for p in module.parameters():
         p.detach().zero_()
     return module
 
+
+class Upsample(nn.Module):
+    """An upsampling layer with an optional convolution.
+
+    :param channels: channels in the inputs and outputs.
+    :param use_conv: a bool determining if a convolution is applied.
+    :param dims: determines if the signal is 1D, 2D, or 3D. If 3D, then
+                 upsampling occurs in the inner-two dimensions.
+    """
+
+    def __init__(self, channels, use_conv, dims=2, out_channels=None):
+        super().__init__()
+        self.channels = channels
+        self.out_channels = out_channels or channels
+        self.use_conv = use_conv
+        self.dims = dims
+        if use_conv:
+            self.conv = nn.Conv2d(
+                self.channels, self.out_channels, 3, padding=1)
+
+    def forward(self, x):
+        assert x.shape[1] == self.channels
+        if self.dims == 3:
+            x = F.interpolate(
+                x, (x.shape[2], x.shape[3] * 2, x.shape[4] * 2),
+                mode='nearest')
+        else:
+            x = F.interpolate(x, scale_factor=2, mode='nearest')
+        if self.use_conv:
+            x = self.conv(x)
+        return x
+
+
 class TimestepBlock(nn.Module):
-    """
-    Any module where forward() takes timestep embeddings as a second argument.
-    """
+    """Any module where forward() takes timestep embeddings as a second
+    argument."""
 
     @abstractmethod
     def forward(self, x, emb):
-        """
-        Apply the module to `x` given `emb` timestep embeddings.
-        """
+        """Apply the module to `x` given `emb` timestep embeddings."""
+
 
 class AttentionBlock(nn.Module):
-    """
-    An attention block that allows spatial positions to attend to each other.
+    """An attention block that allows spatial positions to attend to each
+    other.
 
     Originally ported from here, but adapted to the N-d case.
     https://github.com/hojonathanho/diffusion/blob/1e0dceb3b3495bbe19116a5e1b3596cd0706c543/diffusion_tf/models/unet.py#L66.
@@ -115,8 +156,9 @@ class AttentionBlock(nn.Module):
             self.num_heads = num_heads
         else:
             assert (
-                channels % num_head_channels == 0
-            ), f"q,k,v channels {channels} is not divisible by num_head_channels {num_head_channels}"
+                channels %
+                num_head_channels == 0), f'q,k,v channels {channels} is not '
+            'divisible by num_head_channels {num_head_channels}'
             self.num_heads = channels // num_head_channels
         self.use_checkpoint = use_checkpoint
         self.norm = normalization(channels)
@@ -131,7 +173,7 @@ class AttentionBlock(nn.Module):
         self.proj_out = zero_module(nn.Conv1d(channels, channels, 1))
 
     def forward(self, x):
-        return checkpoint(self._forward, (x,), self.parameters(), True)
+        return checkpoint(self._forward, (x, ), self.parameters(), True)
 
     def _forward(self, x):
         b, c, *spatial = x.shape
@@ -140,12 +182,11 @@ class AttentionBlock(nn.Module):
         h = self.attention(qkv)
         h = self.proj_out(h)
         return (x + h).reshape(b, c, *spatial)
-    
+
+
 class TimestepEmbedSequential(nn.Sequential, TimestepBlock):
-    """
-    A sequential module that passes timestep embeddings to the children that
-    support it as an extra input.
-    """
+    """A sequential module that passes timestep embeddings to the children that
+    support it as an extra input."""
 
     def forward(self, x, emb):
         for layer in self:
@@ -155,22 +196,24 @@ class TimestepEmbedSequential(nn.Sequential, TimestepBlock):
                 x = layer(x)
         return x
 
+
 class GroupNorm32(nn.GroupNorm):
+
     def forward(self, x):
         return super().forward(x.float()).type(x.dtype)
-    
+
+
 def normalization(channels):
-    """
-    Make a standard normalization layer.
+    """Make a standard normalization layer.
 
     :param channels: number of input channels.
     :return: an nn.Module for normalization.
     """
     return GroupNorm32(32, channels)
 
+
 class Downsample(nn.Module):
-    """
-    A downsampling layer with an optional convolution.
+    """A downsampling layer with an optional convolution.
 
     :param channels: channels in the inputs and outputs.
     :param use_conv: a bool determining if a convolution is applied.
@@ -187,8 +230,7 @@ class Downsample(nn.Module):
         stride = 2 if dims != 3 else (1, 2, 2)
         if use_conv:
             self.op = nn.Conv2d(
-                self.channels, self.out_channels, 3, stride=stride, padding=1
-            )
+                self.channels, self.out_channels, 3, stride=stride, padding=1)
         else:
             assert self.channels == self.out_channels
             self.op = nn.AvgPool2d(kernel_size=stride, stride=stride)
@@ -199,8 +241,7 @@ class Downsample(nn.Module):
 
 
 class ResBlock(TimestepBlock):
-    """
-    A residual block that can optionally change the number of channels.
+    """A residual block that can optionally change the number of channels.
 
     :param channels: the number of input channels.
     :param emb_channels: the number of timestep embedding channels.
@@ -258,7 +299,8 @@ class ResBlock(TimestepBlock):
             nn.SiLU(),
             nn.Linear(
                 emb_channels,
-                2 * self.out_channels if use_scale_shift_norm else self.out_channels,
+                2 * self.out_channels
+                if use_scale_shift_norm else self.out_channels,
             ),
         )
         self.out_layers = nn.Sequential(
@@ -266,30 +308,26 @@ class ResBlock(TimestepBlock):
             nn.SiLU(),
             nn.Dropout(p=dropout),
             zero_module(
-                nn.Conv2d(self.out_channels, self.out_channels, 3, padding=1)
-            ),
+                nn.Conv2d(self.out_channels, self.out_channels, 3, padding=1)),
         )
 
         if self.out_channels == channels:
             self.skip_connection = nn.Identity()
         elif use_conv:
             self.skip_connection = nn.Conv2d(
-                channels, self.out_channels, 3, padding=1
-            )
+                channels, self.out_channels, 3, padding=1)
         else:
             self.skip_connection = nn.Conv2d(channels, self.out_channels, 1)
 
     def forward(self, x, emb):
-        """
-        Apply the block to a Tensor, conditioned on a timestep embedding.
+        """Apply the block to a Tensor, conditioned on a timestep embedding.
 
         :param x: an [N x C x ...] Tensor of features.
         :param emb: an [N x emb_channels] Tensor of timestep embeddings.
         :return: an [N x C x ...] Tensor of outputs.
         """
-        return checkpoint(
-            self._forward, (x, emb), self.parameters(), self.use_checkpoint
-        )
+        return checkpoint(self._forward, (x, emb), self.parameters(),
+                          self.use_checkpoint)
 
     def _forward(self, x, emb):
         if self.updown:
@@ -315,8 +353,9 @@ class ResBlock(TimestepBlock):
 
 
 class AttentionPool2d(nn.Module):
-    """
-    Adapted from CLIP: https://github.com/openai/CLIP/blob/main/clip/model.py
+    """Adapted from CLIP:
+
+    https://github.com/openai/CLIP/blob/main/clip/model.py.
     """
 
     def __init__(
@@ -328,8 +367,7 @@ class AttentionPool2d(nn.Module):
     ):
         super().__init__()
         self.positional_embedding = nn.Parameter(
-            torch.randn(embed_dim, spacial_dim ** 2 + 1) / embed_dim ** 0.5
-        )
+            torch.randn(embed_dim, spacial_dim**2 + 1) / embed_dim**0.5)
         self.qkv_proj = nn.Conv1d(embed_dim, 3 * embed_dim, 1)
         self.c_proj = nn.Conv1d(embed_dim, output_dim or embed_dim, 1)
         self.num_heads = embed_dim // num_heads_channels
@@ -344,11 +382,11 @@ class AttentionPool2d(nn.Module):
         x = self.attention(x)
         x = self.c_proj(x)
         return x[:, :, 0]
-    
+
+
 @MODELS.register_module()
 class EncoderUNetModel(nn.Module):
-    """
-    The half UNet model with attention and timestep embedding.
+    """The half UNet model with attention and timestep embedding.
 
     For usage, see UNet.
     """
@@ -373,7 +411,7 @@ class EncoderUNetModel(nn.Module):
         use_scale_shift_norm=False,
         resblock_updown=False,
         use_new_attention_order=False,
-        pool="adaptive",
+        pool='adaptive',
     ):
         super().__init__()
 
@@ -402,9 +440,9 @@ class EncoderUNetModel(nn.Module):
         )
 
         ch = int(channel_mult[0] * model_channels)
-        self.input_blocks = nn.ModuleList(
-            [TimestepEmbedSequential(nn.Conv2d(in_channels, ch, 3, padding=1))]
-        )
+        self.input_blocks = nn.ModuleList([
+            TimestepEmbedSequential(nn.Conv2d(in_channels, ch, 3, padding=1))
+        ])
         self._feature_size = ch
         input_block_chans = [ch]
         ds = 1
@@ -430,8 +468,7 @@ class EncoderUNetModel(nn.Module):
                             num_heads=num_heads,
                             num_head_channels=num_head_channels,
                             use_new_attention_order=use_new_attention_order,
-                        )
-                    )
+                        ))
                 self.input_blocks.append(TimestepEmbedSequential(*layers))
                 self._feature_size += ch
                 input_block_chans.append(ch)
@@ -448,12 +485,8 @@ class EncoderUNetModel(nn.Module):
                             use_checkpoint=use_checkpoint,
                             use_scale_shift_norm=use_scale_shift_norm,
                             down=True,
-                        )
-                        if resblock_updown
-                        else Downsample(
-                            ch, conv_resample, dims=dims, out_channels=out_ch
-                        )
-                    )
+                        ) if resblock_updown else Downsample(
+                            ch, conv_resample, dims=dims, out_channels=out_ch))
                 )
                 ch = out_ch
                 input_block_chans.append(ch)
@@ -487,7 +520,7 @@ class EncoderUNetModel(nn.Module):
         )
         self._feature_size += ch
         self.pool = pool
-        if pool == "adaptive":
+        if pool == 'adaptive':
             self.out = nn.Sequential(
                 normalization(ch),
                 nn.SiLU(),
@@ -495,22 +528,21 @@ class EncoderUNetModel(nn.Module):
                 zero_module(nn.Conv2d(ch, out_channels, 1)),
                 nn.Flatten(),
             )
-        elif pool == "attention":
+        elif pool == 'attention':
             assert num_head_channels != -1
             self.out = nn.Sequential(
                 normalization(ch),
                 nn.SiLU(),
-                AttentionPool2d(
-                    (image_size // ds), ch, num_head_channels, out_channels
-                ),
+                AttentionPool2d((image_size // ds), ch, num_head_channels,
+                                out_channels),
             )
-        elif pool == "spatial":
+        elif pool == 'spatial':
             self.out = nn.Sequential(
                 nn.Linear(self._feature_size, 2048),
                 nn.ReLU(),
                 nn.Linear(2048, self.out_channels),
             )
-        elif pool == "spatial_v2":
+        elif pool == 'spatial_v2':
             self.out = nn.Sequential(
                 nn.Linear(self._feature_size, 2048),
                 normalization(2048),
@@ -518,40 +550,36 @@ class EncoderUNetModel(nn.Module):
                 nn.Linear(2048, self.out_channels),
             )
         else:
-            raise NotImplementedError(f"Unexpected {pool} pooling")
+            raise NotImplementedError(f'Unexpected {pool} pooling')
 
     def convert_to_fp16(self):
-        """
-        Convert the torso of the model to float16.
-        """
+        """Convert the torso of the model to float16."""
         self.input_blocks.apply(convert_module_to_f16)
         self.middle_block.apply(convert_module_to_f16)
 
     def convert_to_fp32(self):
-        """
-        Convert the torso of the model to float32.
-        """
+        """Convert the torso of the model to float32."""
         self.input_blocks.apply(convert_module_to_f32)
         self.middle_block.apply(convert_module_to_f32)
 
     def forward(self, x, timesteps):
-        """
-        Apply the model to an input batch.
+        """Apply the model to an input batch.
 
         :param x: an [N x C x ...] Tensor of inputs.
         :param timesteps: a 1-D batch of timesteps.
         :return: an [N x K] Tensor of outputs.
         """
-        emb = self.time_embed(timestep_embedding(timesteps, self.model_channels))
+        emb = self.time_embed(
+            timestep_embedding(timesteps, self.model_channels))
 
         results = []
         h = x.type(self.dtype)
         for module in self.input_blocks:
             h = module(h, emb)
-            if self.pool.startswith("spatial"):
+            if self.pool.startswith('spatial'):
                 results.append(h.type(x.dtype).mean(dim=(2, 3)))
         h = self.middle_block(h, emb)
-        if self.pool.startswith("spatial"):
+        if self.pool.startswith('spatial'):
             results.append(h.type(x.dtype).mean(dim=(2, 3)))
             h = torch.cat(results, axis=-1)
             return self.out(h)
@@ -559,7 +587,8 @@ class EncoderUNetModel(nn.Module):
             h = h.type(x.dtype)
             return self.out(h)
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     # 64x64
     classifier = EncoderUNetModel(
         image_size=64,
@@ -567,13 +596,13 @@ if __name__ == "__main__":
         model_channels=128,
         out_channels=1000,
         num_res_blocks=4,
-        attention_resolutions=(2,4,8),
-        channel_mult=(1,2,3,4),
+        attention_resolutions=(2, 4, 8),
+        channel_mult=(1, 2, 3, 4),
         use_fp16=False,
         num_head_channels=64,
         use_scale_shift_norm=True,
         resblock_updown=True,
-        pool='attention')    
+        pool='attention')
     ckpt_path = '/mnt/petrelfs/yangyifei/weights/64x64_classifier.pt'
     state_dict = torch.load(ckpt_path)
     classifier.load_state_dict(state_dict)
@@ -585,14 +614,14 @@ if __name__ == "__main__":
         model_channels=128,
         out_channels=1000,
         num_res_blocks=2,
-        attention_resolutions=(4,8,16),
+        attention_resolutions=(4, 8, 16),
         channel_mult=(1, 1, 2, 3, 4),
         use_fp16=False,
         num_head_channels=64,
         use_scale_shift_norm=True,
         resblock_updown=True,
         pool='attention')
-    
+
     ckpt_path = '/mnt/petrelfs/yangyifei/weights/128x128_classifier.pt'
     state_dict = torch.load(ckpt_path)
     classifier.load_state_dict(state_dict)
@@ -611,7 +640,7 @@ if __name__ == "__main__":
         use_scale_shift_norm=True,
         resblock_updown=True,
         pool='attention')
-    
+
     ckpt_path = '/mnt/petrelfs/yangyifei/weights/256x256_classifier.pt'
     state_dict = torch.load(ckpt_path)
     classifier.load_state_dict(state_dict)
@@ -630,8 +659,7 @@ if __name__ == "__main__":
         use_scale_shift_norm=True,
         resblock_updown=True,
         pool='attention')
-    
+
     ckpt_path = '/mnt/petrelfs/yangyifei/weights/512x512_classifier.pt'
     state_dict = torch.load(ckpt_path)
     classifier.load_state_dict(state_dict)
-    
