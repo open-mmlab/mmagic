@@ -154,22 +154,28 @@ hope MMEditing could provide better experience.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
-## What's New <a href="#nni-released-reminder"><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
+## What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-
-
-### New release[01/2023] A brand new version of [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) was released in 04/01/2023:
-
+### New release [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) [01/2023]
+  A brand new version of **MMEditing v1.0.0rc5** was released in 04/01/2023:
 - Support well-known text-to-image method [Stable Diffusion](configs/stable_diffusion/README.md)!
 - Support an efficient image restoration algorithm [Restormer](configs/restormer/README.md)!
 - Support a new text-to-image algorithm [GLIDE](projects/glide/configs/README.md)!
 - Support swin based image restoration algorithm [SwinIR](configs/swinir/README.md)!
 - [Projects](projects/README.md) is opened for community to add projects to MMEditing.
+
+### New release [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) [12/2022]
+  A brand new version of **MMEditing v1.0.0rc4** was released in 05/12/2022:
+- Support Text2Image Task! [Disco-Diffusion](configs/disco_diffusion/README.md)
+- Support 3D-aware Generation Task! [EG3D](configs/eg3d/README.md)
+- Support image colorization.
+
+### New features
 - Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍.
 - Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
 - Support patch-based and slider-based image and video comparison viewer.
 
-### Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
+Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
