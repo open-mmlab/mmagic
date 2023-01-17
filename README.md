@@ -152,13 +152,13 @@ Note that **MMSR** has been merged into this repo, as a part of MMEditing.
 With elaborate designs of the new framework and careful implementations,
 hope MMEditing could provide better experience.
 
-<p align="right"><a href="#top">back to top</a></p>
+<p align="right"><a href="#top">Back to top</a></p>
 
-## What's New
+## What's New <a href="#nni-released-reminder"><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### 🌟 Preview of 1.x version
 
-A brand new version of [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) was released in 04/01/2023:
+
+### New release[01/2023] A brand new version of [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) was released in 04/01/2023:
 
 - Support well-known text-to-image method [Stable Diffusion](configs/stable_diffusion/README.md)!
 - Support an efficient image restoration algorithm [Restormer](configs/restormer/README.md)!
@@ -169,17 +169,7 @@ A brand new version of [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/m
 - Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
 - Support patch-based and slider-based image and video comparison viewer.
 
-Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
-
-### 💎 Stable version
-
-**0.16.0** was released in 31/10/2022:
-
-- `VisualizationHook` is deprecated. Users should use `MMEditVisualizationHook` instead.
-- Fix FLAVR register.
-- Fix the number of channels in RDB.
-
-Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
+### Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
