@@ -55,7 +55,7 @@ English | [简体中文](README_zh-CN.md)
 
 MMEditing is an open-source image and video editing&generating toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
-Currently, MMEditing support the following tasks:
+Currently, MMEditing support multiple image and video generation/editing tasks including:
 
 <table align="center">
 <thead>
@@ -126,8 +126,6 @@ Currently, MMEditing support the following tasks:
 </thead>
 </table>
 
-And more...
-
 The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorch 1.9+**.
 
 ### Major features
@@ -138,7 +136,7 @@ The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorc
 
 - **Support of multiple tasks**
 
-  The toolbox directly supports popular and contemporary *inpainting*, *matting*, *super-resolution*, *interpolation* and *generation* tasks.
+  The toolbox directly supports popular and contemporary *text-to-image*, *3D generation*, *restoration*, *inpainting*, *matting*, *super-resolution*, *interpolation* and *generation* tasks.
 
 - **Efficient Distributed Training for Generative Models:**
 
@@ -146,11 +144,8 @@ The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorc
 
 - **State of the art**
 
-  The toolbox provides state-of-the-art methods in inpainting/matting/super-resolution/interpolation/generation.
+  The toolbox provides state-of-the-art methods for every task supported. More and more contributors are joining us to make this repo even better.
 
-Note that **MMSR** has been merged into this repo, as a part of MMEditing.
-With elaborate designs of the new framework and careful implementations,
-hope MMEditing could provide better experience.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
@@ -172,6 +167,7 @@ hope MMEditing could provide better experience.
 - Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍.
 - Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
 - Support patch-based and slider-based image and video comparison viewer.
+- **MMSR** has been merged into this repo, as a part of MMEditing.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
