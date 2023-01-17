@@ -43,8 +43,8 @@ English | [简体中文](README_zh-CN.md)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
 - [Model Zoo](#model-zoo)
-- [Demos](#demos)
 - [Contributing](#contributing)
+- [Demos](#demos)
 - [Acknowledgement](#acknowledgement)
 - [Citation](#citation)
 - [License](#license)
@@ -379,11 +379,53 @@ Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/ov
 
 <p align="right"><a href="#top">Back to top</a></p>
 
+## Contributing
+
+We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
 ## Demos:
 
-https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4
+### Text-to-Image with Diffusion Algorithms
 
-https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
+<table align="center">
+<thead>
+  <tr>
+    <td>
+<div align="center">
+  <b>Stable Diffusion</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/12782558/209609229-8221c7cc-d5c9-44d5-a1af-c254b5a95fae.png" width="200"/>
+  <img src="https://user-images.githubusercontent.com/12782558/210951970-a81e80c3-822e-4782-901e-db52e34b85a3.png" width="200"/>
+</div></td>
+    <td>
+<div align="center">
+  <b>Disco Diffusion</b>
+  <br/>
+  <img src="https://user-images.githubusercontent.com/22982797/204526957-ac30547e-5a44-417a-aaa2-6b357b4a139c.png" width="200"/>
+</div></td>
+  </tr>
+</thead>
+</table>
+
+### 3D-aware Generation with EG3D
+
+<div align=center>
+<video src="https://user-images.githubusercontent.com/28132635/204278664-b73b133b-9c3f-4a87-8750-133b7dedaebb.mp4"/>
+</div>
+
+### Video Super-Resolution
+
+<div align=center>
+<video src="https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4"/>
+</div>
+
+<div align=center>
+<video src="https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4"/>
+</div>
+
+### Image Editing with GANs
 
 <table align="center">
 <thead>
@@ -409,12 +451,6 @@ https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-
   </tr>
 </thead>
 </table>
-
-<p align="right"><a href="#top">Back to top</a></p>
-
-## Contributing
-
-We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
