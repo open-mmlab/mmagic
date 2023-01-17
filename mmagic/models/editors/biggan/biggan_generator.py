@@ -409,18 +409,19 @@ class BigGANGenerator(nn.Module):
             init_type = self.init_cfg['type']
             module_name = m.__class__.__name__
             if isinstance(m, (nn.Conv2d, nn.Linear, nn.Embedding)):
-                if self.init_type == 'ortho':
+                if init_type == 'ortho':
                     nn.init.orthogonal_(m.weight)
-                elif self.init_type == 'N02':
+                elif init_type == 'N02':
                     normal_init(m, 0.0, 0.02)
-                elif self.init_type == 'xavier':
+                elif init_type == 'xavier':
                     xavier_init(m)
                 else:
                     raise NotImplementedError(
-                        f'{self.init_type} initialization not supported now.')
+                        f'{init_type} initialization not supported now.')
                 # save init info
                 init_info = (f'{module_name} belongs to (nn.Conv2d, '
                              'nn.Linear, nn.Embedding), initialize by '
                              f'\'init_type\' {init_type}')
-                update_init_info(m, init_info)
+                if hasattr(m, '_params_init_info'):
+                    update_init_info(m, init_info)
         self._is_init = True

@@ -244,5 +244,6 @@ class BigGANDiscriminator(nn.Module):
                 init_info = (f'{module_name} belongs to (nn.Conv2d, '
                              'nn.Linear, nn.Embedding), initialize by '
                              f'\'init_type\' {init_type}')
-                update_init_info(m, init_info)
+                if hasattr(m, '_params_init_info'):
+                    update_init_info(m, init_info)
         self._is_init = True
