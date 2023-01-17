@@ -1,6 +1,6 @@
 # FLAVR (arXiv'2020)
 
-> [FLAVR: Flow-Agnostic Video Representations for Fast Frame Interpolation](https://arxiv.org/pdf/2012.08512.pdf)
+> [FLAVR: Flow-Agnostic Video Representations for Fast Frame Interpolation](https://arxiv.org/abs/2012.08512.pdf)
 
 > **任务**: 视频插帧
 
