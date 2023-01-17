@@ -79,6 +79,10 @@ Currently, MMEditing support the following tasks:
   <br/>
   <img src="https://user-images.githubusercontent.com/12782558/212685664-2d2cbed4-74c0-4d9f-90d8-3beefcb51918.png" width="300" height="300"/>
 </div></td>
+  </tr>
+</thead>
+<thead>
+  <tr>
     <td>
 <div>
   <b>Matting</b>
@@ -91,19 +95,16 @@ Currently, MMEditing support the following tasks:
   <br/>
   <img src="https://user-images.githubusercontent.com/12782558/212804088-c3711a50-1577-4dd6-97a4-cd3c3d37e189.png" width="300" height="300"/>
 </div></td>
-  </tr>
-</thead>
-</table>
-
-<table align="center">
-<thead>
-  <tr>
     <td>
 <div >
   <b>Super Resolution</b>
   <br/>
   <img src="https://user-images.githubusercontent.com/12782558/212799468-34085fbf-d38e-41ab-ad5d-bbf54f5088e9.png" width="300" height="300"/>
 </div></td>
+  </tr>
+</thead>
+<thead>
+  <tr>
     <td>
 <div >
   <b>Text-to-Image</b>
@@ -115,12 +116,6 @@ Currently, MMEditing support the following tasks:
   <b>3D-aware Generation</b>
   <br/>
   <img src="https://user-images.githubusercontent.com/12782558/212802550-ed80c1da-ac46-484e-b182-caeb240ea48f.png" width="300" height="300"/>
-</div></td>
-    <td>
-<div>
-  <b>Colorization</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12782558/212805082-f3bb0fff-423f-4ff4-85fc-4167356c9131.png" width="300" height="300"/>
 </div></td>
     <td>
 <div >
