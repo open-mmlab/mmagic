@@ -48,9 +48,14 @@ class DeepFillv1Discriminators(BaseModule):
 
     def init_weights(self):
         """Init weights for models."""
+        if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
+            super().init_weights()
+            return
 
         for m in self.modules():
             if isinstance(m, nn.Linear):
                 normal_init(m, 0, std=0.02)
             elif isinstance(m, nn.Conv2d):
                 normal_init(m, 0.0, std=0.02)
+
+        self._is_init = True

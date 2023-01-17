@@ -48,6 +48,9 @@ class GLDiscs(BaseModule):
 
     def init_weights(self):
         """Init weights for models."""
+        if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
+            super().init_weights()
+            return
 
         for m in self.modules():
             # Here, we only initialize the module with fc layer since the
@@ -55,3 +58,5 @@ class GLDiscs(BaseModule):
             if isinstance(m, nn.Linear):
                 nn.init.normal_(m.weight.data, 0.0, 0.02)
                 nn.init.constant_(m.bias.data, 0.0)
+
+        self._is_init = True
