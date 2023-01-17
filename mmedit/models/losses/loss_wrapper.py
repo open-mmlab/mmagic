@@ -1,10 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import functools
+from typing import Optional
 
+import torch
 import torch.nn.functional as F
 
 
-def reduce_loss(loss, reduction):
+def reduce_loss(loss: torch.Tensor, reduction: str) -> torch.Tensor:
     """Reduce loss as specified.
 
     Args:
@@ -25,7 +27,10 @@ def reduce_loss(loss, reduction):
     raise ValueError(f'reduction type {reduction} not supported')
 
 
-def mask_reduce_loss(loss, weight=None, reduction='mean', sample_wise=False):
+def mask_reduce_loss(loss: torch.Tensor,
+                     weight: Optional[torch.Tensor] = None,
+                     reduction: str = 'mean',
+                     sample_wise: bool = False) -> torch.Tensor:
     """Apply element-wise weight and reduce loss.
 
     Args:
@@ -102,12 +107,12 @@ def masked_loss(loss_func):
     """
 
     @functools.wraps(loss_func)
-    def wrapper(pred,
-                target,
-                weight=None,
-                reduction='mean',
-                sample_wise=False,
-                **kwargs):
+    def wrapper(pred: torch.Tensor,
+                target: torch.Tensor,
+                weight: Optional[torch.Tensor] = None,
+                reduction: str = 'mean',
+                sample_wise: bool = False,
+                **kwargs) -> torch.Tensor:
         # get element-wise loss
         loss = loss_func(pred, target, **kwargs)
         loss = mask_reduce_loss(loss, weight, reduction, sample_wise)

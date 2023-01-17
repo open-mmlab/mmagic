@@ -24,6 +24,7 @@ class TestImageDatasets:
             data_root=self.data_root,
             data_prefix=dict(img='lq', gt='gt'),
             filename_tmpl=dict(img='{}_x4'),
+            backend_args=dict(backend='local'),
             pipeline=[])
         assert dataset[0] == dict(
             key='baboon',
@@ -64,7 +65,7 @@ class TestImageDatasets:
         pipeline = [
             LoadImageFromFile(
                 key='img',
-                file_client_args=dict(
+                backend_args=dict(
                     backend='lmdb',
                     db_path=Path(__file__).parent.parent / 'data' / 'lq.lmdb'))
         ]

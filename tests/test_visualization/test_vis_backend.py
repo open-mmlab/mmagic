@@ -30,7 +30,7 @@ class TestGenVisBackend(TestCase):
         src_path = osp.abspath(
             './mmedit/test/vis_backend_test/test_vis_data/test.png')
         tar_path = 's3://xxx/vis_backend_test/test_vis_data/test.png'
-        file_client = vis_backend._file_client.client
+        file_client = vis_backend._file_client
         mapped_path = file_client._map_path(src_path)
         formatted_path = file_client._format_path(mapped_path)
         self.assertEqual(formatted_path, tar_path)
