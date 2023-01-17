@@ -12,7 +12,7 @@ from mmengine import Config, is_list_of
 from mmengine.config import ConfigDict
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
-from mmengine.fileio import FileClient
+from mmengine.fileio import get_file_backend
 from mmengine.runner import load_checkpoint
 from mmengine.runner import set_random_seed as set_random_seed_engine
 from mmengine.utils import ProgressBar
@@ -23,7 +23,7 @@ from mmedit.registry import MODELS
 from mmedit.utils import register_all_modules
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
-FILE_CLIENT = FileClient('disk')
+FILE_CLIENT = get_file_backend(backend_args={'backend': 'local'})
 
 
 def set_random_seed(seed, deterministic=False, use_rank_shift=True):

@@ -26,18 +26,18 @@ Generative Adversarial Nets (GANs) represent an important milestone for effectiv
   <img src="https://user-images.githubusercontent.com/22982797/116691577-9067d800-a9ed-11eb-8ea4-be79884d8502.PNG" width="800"/>
 </div>
 
-|    Models    |    Dataset     |               SWD               | MS-SSIM |   FID   |                             Config                              |                              Download                              |
-| :----------: | :------------: | :-----------------------------: | :-----: | :-----: | :-------------------------------------------------------------: | :----------------------------------------------------------------: |
-|  GGAN 64x64  | CelebA-Cropped |    11.18, 12.21, 39.16/20.85    | 0.3318  | 20.1797 | [config](./ggan_dcgan-archi_lr1e-3-1xb128-12Mimgs_celeba-cropped-64x64.py) | [model](https://download.openmmlab.com/mmediting/ggan/ggan_celeba-cropped_dcgan-archi_lr-1e-3_64_b128x1_12m.pth)  \| [log](https://download.openmmlab.com/mmediting/ggan/ggan_celeba-cropped_dcgan-archi_lr-1e-3_64_b128x1_12m_20210430_113839.log.json) |
-| GGAN 128x128 | CelebA-Cropped | 9.81, 11.29, 19.22, 47.79/22.03 | 0.3149  | 18.7647 | [config](./ggan_dcgan-archi_lr1e-4-1xb64-10Mimgs_celeba-cropped-128x128.py) | [model](https://download.openmmlab.com/mmediting/ggan/ggan_celeba-cropped_dcgan-archi_lr-1e-4_128_b64x1_10m_20210430_143027-516423dc.pth) \| [log](https://download.openmmlab.com/mmediting/ggan/ggan_celeba-cropped_dcgan-archi_lr-1e-4_128_b64x1_10m_20210423_154258.log.json) |
-|  GGAN 64x64  |  LSUN-Bedroom  |      9.1, 6.2, 12.27/9.19       | 0.0649  | 39.9261 | [config](./ggan_lsgan-archi_lr1e-4-1xb128-20Mimgs_lsun-bedroom-64x64.py) | [model](https://download.openmmlab.com/mmediting/ggan/ggan_lsun-bedroom_lsgan_archi_lr-1e-4_64_b128x1_20m_20210430_143114-5d99b76c.pth) \| [log](https://download.openmmlab.com/mmediting/ggan/ggan_lsun-bedroom_lsgan_archi_lr-1e-4_64_b128x1_20m_20210428_202027.log.json) |
+|                                 Model                                 |    Dataset     |               SWD               | MS-SSIM |   FID   |                                 Download                                 |
+| :-------------------------------------------------------------------: | :------------: | :-----------------------------: | :-----: | :-----: | :----------------------------------------------------------------------: |
+| [GGAN 64x64](./ggan_dcgan-archi_lr1e-3-1xb128-12Mimgs_celeba-cropped-64x64.py) | CelebA-Cropped |    11.18, 12.21, 39.16/20.85    | 0.3318  | 20.1797 | [model](https://download.openmmlab.com/mmediting/ggan/ggan_celeba-cropped_dcgan-archi_lr-1e-3_64_b128x1_12m.pth)  \| [log](https://download.openmmlab.com/mmediting/ggan/ggan_celeba-cropped_dcgan-archi_lr-1e-3_64_b128x1_12m_20210430_113839.log.json) |
+| [GGAN 128x128](./ggan_dcgan-archi_lr1e-4-1xb64-10Mimgs_celeba-cropped-128x128.py) | CelebA-Cropped | 9.81, 11.29, 19.22, 47.79/22.03 | 0.3149  | 18.7647 | [model](https://download.openmmlab.com/mmediting/ggan/ggan_celeba-cropped_dcgan-archi_lr-1e-4_128_b64x1_10m_20210430_143027-516423dc.pth) \| [log](https://download.openmmlab.com/mmediting/ggan/ggan_celeba-cropped_dcgan-archi_lr-1e-4_128_b64x1_10m_20210423_154258.log.json) |
+| [GGAN 64x64](./ggan_lsgan-archi_lr1e-4-1xb128-20Mimgs_lsun-bedroom-64x64.py) |  LSUN-Bedroom  |      9.1, 6.2, 12.27/9.19       | 0.0649  | 39.9261 | [model](https://download.openmmlab.com/mmediting/ggan/ggan_lsun-bedroom_lsgan_archi_lr-1e-4_64_b128x1_20m_20210430_143114-5d99b76c.pth) \| [log](https://download.openmmlab.com/mmediting/ggan/ggan_lsun-bedroom_lsgan_archi_lr-1e-4_64_b128x1_20m_20210428_202027.log.json) |
 
 Note: In the original implementation of [GGAN](https://github.com/lim0606/pytorch-geometric-gan), they set `G_iters` to 10. However our framework does not support `G_iters` currently, so we dropped the settings in the original implementation and conducted several experiments with our own settings. We have shown above the experiment results with the lowest `fid` score. \
 Original settings and our settings:
 
 <!-- SKIP THIS TABLE -->
 
-|       Models       |    Dataset     | Architecture | optimizer |  lr_G  |  lr_D  | G_iters | D_iters |
+|       Model        |    Dataset     | Architecture | optimizer |  lr_G  |  lr_D  | G_iters | D_iters |
 | :----------------: | :------------: | :----------: | :-------: | :----: | :----: | :-----: | :-----: |
 | GGAN(origin) 64x64 | CelebA-Cropped | dcgan-archi  |  RMSprop  | 0.0002 | 0.0002 |   10    |    1    |
 |  GGAN(ours) 64x64  | CelebA-Cropped | dcgan-archi  |   Adam    | 0.001  | 0.001  |    1    |    1    |

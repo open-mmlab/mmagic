@@ -1,10 +1,8 @@
 Collections:
-- Metadata:
-    Architecture:
-    - Guided Diffusion
-  Name: Guided Diffusion
+- Name: Guided Diffusion
   Paper:
-  - https://papers.nips.cc/paper/2021/file/49ad23d1ec9fa4bd8d77d02681df5cfa-Paper.pdf
+    Title: Diffusion Models Beat GANs on Image Synthesis
+    URL: https://papers.nips.cc/paper/2021/file/49ad23d1ec9fa4bd8d77d02681df5cfa-Paper.pdf
   README: configs/guided_diffusion/README.md
   Task:
   - image generation

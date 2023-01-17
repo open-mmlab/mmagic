@@ -1,10 +1,8 @@
 Collections:
-- Metadata:
-    Architecture:
-    - Stable Diffusion
-  Name: Stable Diffusion
+- Name: Stable Diffusion
   Paper:
-  - https://github.com/CompVis/stable-diffusion
+    Title: Stable Diffusion
+    URL: https://github.com/CompVis/stable-diffusion
   README: configs/stable_diffusion/README.md
   Task:
   - text2image
@@ -12,11 +10,9 @@ Collections:
 Models:
 - Config: configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py
   In Collection: Stable Diffusion
-  Metadata:
-    Training Data: Others
   Name: stable-diffusion_ddim_denoisingunet
   Results:
-  - Dataset: Others
+  - Dataset: '-'
     Metrics: {}
     Task: Text2Image
   Weights: https://huggingface.co/runwayml/stable-diffusion-v1-5

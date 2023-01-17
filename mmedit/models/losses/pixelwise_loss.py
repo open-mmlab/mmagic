@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -10,7 +12,7 @@ _reduction_modes = ['none', 'mean', 'sum']
 
 
 @masked_loss
-def l1_loss(pred, target):
+def l1_loss(pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
     """L1 loss.
 
     Args:
@@ -24,7 +26,7 @@ def l1_loss(pred, target):
 
 
 @masked_loss
-def mse_loss(pred, target):
+def mse_loss(pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
     """MSE loss.
 
     Args:
@@ -38,7 +40,9 @@ def mse_loss(pred, target):
 
 
 @masked_loss
-def charbonnier_loss(pred, target, eps=1e-12):
+def charbonnier_loss(pred: torch.Tensor,
+                     target: torch.Tensor,
+                     eps: float = 1e-12) -> torch.Tensor:
     """Charbonnier loss.
 
     Args:
@@ -53,7 +57,7 @@ def charbonnier_loss(pred, target, eps=1e-12):
     return torch.sqrt((pred - target)**2 + eps)
 
 
-def tv_loss(input):
+def tv_loss(input: torch.Tensor) -> torch.Tensor:
     """L2 total variation loss, as in Mahendran et al."""
     input = F.pad(input, (0, 1, 0, 1), 'replicate')
     x_diff = input[..., :-1, 1:] - input[..., :-1, :-1]
@@ -76,7 +80,10 @@ class L1Loss(nn.Module):
             Default: False.
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
+    def __init__(self,
+                 loss_weight: float = 1.0,
+                 reduction: str = 'mean',
+                 sample_wise: bool = False) -> None:
         super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
@@ -86,7 +93,11 @@ class L1Loss(nn.Module):
         self.reduction = reduction
         self.sample_wise = sample_wise
 
-    def forward(self, pred, target, weight=None, **kwargs):
+    def forward(self,
+                pred: torch.Tensor,
+                target: torch.Tensor,
+                weight: Optional[torch.Tensor] = None,
+                **kwargs) -> torch.Tensor:
         """Forward Function.
 
         Args:
@@ -118,7 +129,10 @@ class MSELoss(nn.Module):
             Default: False.
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
+    def __init__(self,
+                 loss_weight: float = 1.0,
+                 reduction: str = 'mean',
+                 sample_wise: bool = False) -> None:
         super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
@@ -128,7 +142,11 @@ class MSELoss(nn.Module):
         self.reduction = reduction
         self.sample_wise = sample_wise
 
-    def forward(self, pred, target, weight=None, **kwargs):
+    def forward(self,
+                pred: torch.Tensor,
+                target: torch.Tensor,
+                weight: Optional[torch.Tensor] = None,
+                **kwargs) -> torch.Tensor:
         """Forward Function.
 
         Args:
@@ -167,10 +185,10 @@ class CharbonnierLoss(nn.Module):
     """
 
     def __init__(self,
-                 loss_weight=1.0,
-                 reduction='mean',
-                 sample_wise=False,
-                 eps=1e-12):
+                 loss_weight: float = 1.0,
+                 reduction: str = 'mean',
+                 sample_wise: bool = False,
+                 eps: float = 1e-12) -> None:
         super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
@@ -181,7 +199,11 @@ class CharbonnierLoss(nn.Module):
         self.sample_wise = sample_wise
         self.eps = eps
 
-    def forward(self, pred, target, weight=None, **kwargs):
+    def forward(self,
+                pred: torch.Tensor,
+                target: torch.Tensor,
+                weight: Optional[torch.Tensor] = None,
+                **kwargs) -> torch.Tensor:
         """Forward Function.
 
         Args:
@@ -207,10 +229,12 @@ class MaskedTVLoss(L1Loss):
         loss_weight (float, optional): Loss weight. Defaults to 1.0.
     """
 
-    def __init__(self, loss_weight=1.0):
+    def __init__(self, loss_weight: float = 1.0) -> None:
         super().__init__(loss_weight=loss_weight)
 
-    def forward(self, pred, mask=None):
+    def forward(self,
+                pred: torch.Tensor,
+                mask: Optional[torch.Tensor] = None) -> torch.Tensor:
         """Forward function.
 
         Args:
@@ -242,7 +266,7 @@ class PSNRLoss(nn.Module):
         toY: change to calculate the PSNR of Y channel in YCbCr format
     """
 
-    def __init__(self, loss_weight=1.0, toY=False):
+    def __init__(self, loss_weight: float = 1.0, toY: bool = False) -> None:
         super(PSNRLoss, self).__init__()
         self.loss_weight = loss_weight
         import numpy as np
@@ -251,7 +275,8 @@ class PSNRLoss(nn.Module):
         self.coef = torch.tensor([65.481, 128.553, 24.966]).reshape(1, 3, 1, 1)
         self.first = True
 
-    def forward(self, pred, target):
+    def forward(self, pred: torch.Tensor,
+                target: torch.Tensor) -> torch.Tensor:
         assert len(pred.size()) == 4
 
         return self.loss_weight * self.scale * torch.log((
