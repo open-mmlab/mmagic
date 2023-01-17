@@ -1,7 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch.nn as nn
 from mmcv.cnn import ConvModule
 from mmengine.model import BaseModule
+from torch import Tensor
 
 from mmedit.models.utils import generation_init_weights
 from mmedit.registry import COMPONENTS
@@ -28,12 +31,12 @@ class SoftMaskPatchDiscriminator(BaseModule):
     """
 
     def __init__(self,
-                 in_channels,
-                 base_channels=64,
-                 num_conv=3,
-                 norm_cfg=None,
-                 init_cfg=dict(type='normal', gain=0.02),
-                 with_spectral_norm=False):
+                 in_channels: int,
+                 base_channels: Optional[int] = 64,
+                 num_conv: Optional[int] = 3,
+                 norm_cfg: Optional[dict] = None,
+                 init_cfg: Optional[dict] = dict(type='normal', gain=0.02),
+                 with_spectral_norm: Optional[bool] = False):
         super().__init__()
 
         kernel_size = 4
@@ -103,7 +106,7 @@ class SoftMaskPatchDiscriminator(BaseModule):
         self.init_gain = 0.02 if init_cfg is None else init_cfg.get(
             'gain', 0.02)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """Forward function.
 
         Args:
@@ -114,8 +117,13 @@ class SoftMaskPatchDiscriminator(BaseModule):
         """
         return self.model(x)
 
-    def init_weights(self):
+    def init_weights(self) -> None:
         """Initialize weights for the model."""
+        if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
+            super().init_weights()
+            return
 
         generation_init_weights(
             self, init_type=self.init_type, init_gain=self.init_gain)
+
+        self._is_init = True
