@@ -28,6 +28,7 @@ class TestGrowScaleImgDataset:
             self.imgs_roots,
             self.default_pipeline,
             self.len_per_stage,
+            io_backend='local',
             gpu_samples_base=self.gpu_samples_base)
         assert len(dataset) == 10
         img = dataset[2]['img']

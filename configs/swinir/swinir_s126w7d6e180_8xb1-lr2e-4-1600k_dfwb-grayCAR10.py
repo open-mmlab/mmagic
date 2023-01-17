@@ -123,7 +123,7 @@ for idx in range(len(test_dataloader)):
     else:
         test_pipeline[0]['color_type'] = 'grayscale'
         test_pipeline[1]['color_type'] = 'grayscale'
-    test_pipeline[2]['params']['color_type'] = 'grayscale'
+    test_pipeline[2]['color_type'] = 'grayscale'
 
 # optimizer
 optim_wrapper = dict(
