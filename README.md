@@ -37,9 +37,30 @@ English | [简体中文](README_zh-CN.md)
 
 </div>
 
+## What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
+
+### New release [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) [04/01/2023]:
+- Support well-known text-to-image method [Stable Diffusion](configs/stable_diffusion/README.md)!
+- Support an efficient image restoration algorithm [Restormer](configs/restormer/README.md)!
+- Support a new text-to-image algorithm [GLIDE](projects/glide/configs/README.md)!
+- Support swin based image restoration algorithm [SwinIR](configs/swinir/README.md)!
+- [Projects](projects/README.md) is opened for community to add projects to MMEditing.
+
+### New release [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) [05/12/2022]:
+- Support Text2Image Task! [Disco-Diffusion](configs/disco_diffusion/README.md)
+- Support 3D-aware Generation Task! [EG3D](configs/eg3d/README.md)
+- Support [image colorization](configs/inst_colorization/README.md).
+
+### New features:
+- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍.
+- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
+- Support patch-based and slider-based image and video comparison viewer.
+- **MMSR** has been merged into this repo, as a part of MMEditing.
+
+Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
+
 ## Table of Contents
 - [Introduction](#introduction)
-- [What's New](#whats-new)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
 - [Model Zoo](#model-zoo)
@@ -146,30 +167,6 @@ The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorc
 
   The toolbox provides state-of-the-art methods for every task supported. More and more contributors are joining us to make this repo even better.
 
-
-<p align="right"><a href="#top">Back to top</a></p>
-
-## What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
-
-### New release [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) [04/01/2023]:
-- Support well-known text-to-image method [Stable Diffusion](configs/stable_diffusion/README.md)!
-- Support an efficient image restoration algorithm [Restormer](configs/restormer/README.md)!
-- Support a new text-to-image algorithm [GLIDE](projects/glide/configs/README.md)!
-- Support swin based image restoration algorithm [SwinIR](configs/swinir/README.md)!
-- [Projects](projects/README.md) is opened for community to add projects to MMEditing.
-
-### New release [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) [05/12/2022]:
-- Support Text2Image Task! [Disco-Diffusion](configs/disco_diffusion/README.md)
-- Support 3D-aware Generation Task! [EG3D](configs/eg3d/README.md)
-- Support image colorization.
-
-### New features:
-- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍.
-- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
-- Support patch-based and slider-based image and video comparison viewer.
-- **MMSR** has been merged into this repo, as a part of MMEditing.
-
-Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
@@ -387,7 +384,7 @@ We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUT
 
 ## Demos:
 
-### Text-to-Image with Diffusion Algorithms
+**Text-to-Image with Diffusion Algorithms**
 
 <table align="center">
 <thead>
@@ -415,13 +412,13 @@ We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUT
 </table>
 
 
-### 3D-aware Generation with EG3D
+**3D-aware Generation with EG3D**
 
 <div align=center>
 <video src="https://user-images.githubusercontent.com/28132635/204278664-b73b133b-9c3f-4a87-8750-133b7dedaebb.mp4"/>
 </div>
 
-### Video Super-Resolution
+**Video Super-Resolution**
 <div align=center>
 <video src="https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4"/>
 </div>
@@ -430,7 +427,7 @@ We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUT
 <video src="https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4"/>
 </div>
 
-### Image Editing with GANs
+**Image Editing with GANs**
 
 <table align="center">
 <thead>
