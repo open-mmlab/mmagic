@@ -9,7 +9,7 @@ from .mae import MAE
 from .matting_mse import MattingMSE
 from .ms_ssim import MultiScaleStructureSimilarity
 from .mse import MSE
-from .niqe import NIQE, niqe
+from .niqe import NIQE
 from .ppl import PerceptualPathLength
 from .precision_and_recall import PrecisionAndRecall
 from .psnr import PSNR, psnr
@@ -40,6 +40,5 @@ __all__ = [
     'PrecisionAndRecall',
     'SlicedWassersteinDistance',
     'NIQE',
-    'niqe',
     'Equivariance',
 ]

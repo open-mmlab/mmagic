@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.evaluation.metrics import NIQE, niqe
+from mmedit.evaluation.metrics import NIQE
 
 
 def test_niqe():
@@ -46,37 +46,3 @@ def test_niqe():
 
     with pytest.raises(AssertionError):
         niqe_ = NIQE(convert_to='a')
-
-
-def test_calculate_niqe():
-    img = mmcv.imread('tests/data/image/gt/baboon.png')
-
-    result = niqe(img[:, :, 0], crop_border=0, input_order='HW')
-    np.testing.assert_almost_equal(result, 5.62525, decimal=5)
-    result = niqe(img, crop_border=0, input_order='HWC', convert_to='y')
-    np.testing.assert_almost_equal(result, 5.72957, decimal=5)
-    result = niqe(img, crop_border=0, input_order='HWC', convert_to='gray')
-    np.testing.assert_almost_equal(result, 5.73154, decimal=5)
-    result = niqe(
-        img.transpose(2, 0, 1),
-        crop_border=0,
-        input_order='CHW',
-        convert_to='y')
-    np.testing.assert_almost_equal(result, 5.72957, decimal=5)
-    result = niqe(
-        img.transpose(2, 0, 1),
-        crop_border=0,
-        input_order='CHW',
-        convert_to='gray')
-    np.testing.assert_almost_equal(result, 5.73154, decimal=5)
-
-    result = niqe(img[:, :, 0], crop_border=6, input_order='HW')
-    np.testing.assert_almost_equal(result, 5.82981, decimal=5)
-    result = niqe(img, crop_border=6, input_order='HWC', convert_to='y')
-    np.testing.assert_almost_equal(result, 6.10074, decimal=5)
-    result = niqe(
-        img.transpose(2, 0, 1),
-        crop_border=6,
-        input_order='CHW',
-        convert_to='y')
-    np.testing.assert_almost_equal(result, 6.10074, decimal=5)
