@@ -156,6 +156,13 @@ class TestEMA:
         assert torch.equal(runner.model.module_a.a, torch.tensor([0.25, 0.5]))
         assert torch.equal(ema_states['a'], torch.tensor([0.375, 0.75]))
 
+        default_config = dict(
+            module_keys=('module_a_ema', 'module_b_ema'),
+            interval=1,
+            interp_cfg=dict(momentum=0.6))
+        cfg_ = deepcopy(default_config)
+        ema = ExponentialMovingAverageHook(**cfg_)
+
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_ema_hook_cuda(self):
         ema = ExponentialMovingAverageHook(**self.default_config)

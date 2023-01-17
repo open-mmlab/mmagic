@@ -88,6 +88,12 @@ class TestExponentialMovingAverage(TestCase):
         with self.assertRaises(AssertionError):
             average_model = ExponentialMovingAverage(model, **cfg)
 
+        cfg = deepcopy(self.default_cfg)
+        cfg['momentum'] = 0.6
+        model = ToyModule()
+        average_model = ExponentialMovingAverage(model=model, **cfg)
+        self.assertEqual(average_model.momentum, 0.6)
+
     def test_avg_func(self):
         cfg = deepcopy(self.default_cfg)
         model = ToyModule()
@@ -159,6 +165,15 @@ class TestRamUpEMA(TestCase):
 
         # model = ToyModule()
         cfg['ema_rampup'] = None
+        average_model = RampUpEMA(model, **cfg)
+        src_tensor = torch.randn(1, 3, 2, 2)
+        tar_tensor = torch.randn(1, 3, 2, 2)
+        average_model.avg_func(tar_tensor, src_tensor, steps=42)
+
+        # test warning
+        cfg = deepcopy(self.default_cfg)
+        cfg['batch_size'] = 0
+        model = ToyModule()
         average_model = RampUpEMA(model, **cfg)
         src_tensor = torch.randn(1, 3, 2, 2)
         tar_tensor = torch.randn(1, 3, 2, 2)
