@@ -49,7 +49,7 @@ English | [简体中文](README_zh-CN.md)
 ### New release [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) [05/12/2022]:
 - Support Text2Image Task! [Disco-Diffusion](configs/disco_diffusion/README.md)
 - Support 3D-aware Generation Task! [EG3D](configs/eg3d/README.md)
-- Support [image colorization](configs/inst_colorization/README.md).
+- Support [Image Colorization](configs/inst_colorization/README.md).
 
 ### New features:
 - Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍.
@@ -71,6 +71,7 @@ Please refer to [changelog.md](docs/en/changelog.md) for details and release his
 - [License](#license)
 - [Projects in OpenMMLab 2.0](#projects-in-openmmlab-20)
 
+<p align="right"><a href="#top">Back to top</a></p>
 
 ## Introduction
 
