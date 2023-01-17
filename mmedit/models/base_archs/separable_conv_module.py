@@ -1,6 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional, Tuple, Union
+
 import torch.nn as nn
 from mmcv.cnn import ConvModule
+from torch import Tensor
 
 
 class DepthwiseSeparableConvModule(nn.Module):
@@ -39,18 +42,18 @@ class DepthwiseSeparableConvModule(nn.Module):
     """
 
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 stride=1,
-                 padding=0,
-                 dilation=1,
-                 norm_cfg=None,
-                 act_cfg=dict(type='ReLU'),
-                 dw_norm_cfg='default',
-                 dw_act_cfg='default',
-                 pw_norm_cfg='default',
-                 pw_act_cfg='default',
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Tuple[int, int]],
+                 stride: Union[int, Tuple[int, int]] = 1,
+                 padding: Union[int, Tuple[int, int]] = 0,
+                 dilation: Union[int, Tuple[int, int]] = 1,
+                 norm_cfg: Optional[dict] = None,
+                 act_cfg: Optional[dict] = dict(type='ReLU'),
+                 dw_norm_cfg: Union[dict, str] = 'default',
+                 dw_act_cfg: Union[dict, str] = 'default',
+                 pw_norm_cfg: Union[dict, str] = 'default',
+                 pw_act_cfg: Union[dict, str] = 'default',
                  **kwargs):
         super().__init__()
         assert 'groups' not in kwargs, 'groups should not be specified'
@@ -83,7 +86,7 @@ class DepthwiseSeparableConvModule(nn.Module):
             act_cfg=pw_act_cfg,
             **kwargs)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """Forward function.
 
         Args:

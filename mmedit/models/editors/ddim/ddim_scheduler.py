@@ -4,8 +4,8 @@ from typing import Union
 import numpy as np
 import torch
 
+from mmedit.models.utils.diffusion_utils import betas_for_alpha_bar
 from mmedit.registry import DIFFUSION_SCHEDULERS
-from ...utils.diffusion_utils import betas_for_alpha_bar
 
 
 @DIFFUSION_SCHEDULERS.register_module()
@@ -82,6 +82,8 @@ class DDIMScheduler:
         self.timesteps = np.arange(0, num_train_timesteps)[::-1].copy()
 
     def set_timesteps(self, num_inference_steps, offset=0):
+        """set time steps."""
+
         self.num_inference_steps = num_inference_steps
         self.timesteps = np.arange(
             0, self.num_train_timesteps,
@@ -89,6 +91,8 @@ class DDIMScheduler:
         self.timesteps += offset
 
     def _get_variance(self, timestep, prev_timestep):
+        """get variance."""
+
         alpha_prod_t = self.alphas_cumprod[timestep]
         alpha_prod_t_prev = self.alphas_cumprod[
             prev_timestep] if prev_timestep >= 0 else self.final_alpha_cumprod
@@ -109,6 +113,8 @@ class DDIMScheduler:
         use_clipped_model_output: bool = False,
         generator=None,
     ):
+        """step forward."""
+
         output = {}
         if self.num_inference_steps is None:
             raise ValueError("Number of inference steps is 'None', '\
@@ -123,7 +129,8 @@ class DDIMScheduler:
                 1] * 2 and self.variance_type in ['learned', 'learned_range']:
             model_output, _ = torch.split(model_output, sample.shape[1], dim=1)
         else:
-            raise TypeError
+            if not model_output.shape == sample.shape:
+                raise TypeError
 
         # See formulas (12) and (16) of DDIM paper https://arxiv.org/pdf/2010.02502.pdf # noqa
         # Ideally, read DDIM paper in-detail understanding
@@ -209,6 +216,8 @@ class DDIMScheduler:
         return output
 
     def add_noise(self, original_samples, noise, timesteps):
+        """add noise."""
+
         sqrt_alpha_prod = self.alphas_cumprod[timesteps]**0.5
         sqrt_one_minus_alpha_prod = (1 - self.alphas_cumprod[timesteps])**0.5
         noisy_samples = (

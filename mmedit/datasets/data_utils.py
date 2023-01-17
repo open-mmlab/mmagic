@@ -13,7 +13,7 @@ import zipfile
 from os import PathLike
 from typing import Callable, Dict, List, Tuple
 
-from mmengine.fileio.file_client import FileClient
+from mmengine.fileio.backends import BaseStorageBackend
 
 
 # TODO: we can use FileClient.infer_client to replace this function
@@ -38,19 +38,19 @@ def infer_io_backend(data_root: str) -> str:
         backend = 'petrel'
     else:
         # use default one
-        backend = 'disk'
+        backend = 'local'
     return backend
 
 
 def calculate_md5(fpath: str,
-                  file_client: FileClient = None,
+                  file_backend: BaseStorageBackend = None,
                   chunk_size: int = 1024 * 1024) -> str:
     """Calculate MD5 of the file.
 
     Args:
         fpath (str): The path of the file.
-        file_client (FileClient, optional): The file client to fetch the file.
-            Defaults to None.
+        file_backend (BaseStorageBackend, optional): The file backend to fetch
+            the file. Defaults to None.
         chunk_size (int, optional): The chunk size to calculate MD5. Defaults
             to 1024*1024.
 
@@ -58,12 +58,12 @@ def calculate_md5(fpath: str,
         str: The string of MD5.
     """
     md5 = hashlib.md5()
-    if file_client is None or file_client.name == 'HardDiskBackend':
+    if file_backend is None or file_backend.name == 'LocalBackend':
         with open(fpath, 'rb') as f:
             for chunk in iter(lambda: f.read(chunk_size), b''):
                 md5.update(chunk)
     else:
-        md5.update(file_client.get(fpath))
+        md5.update(file_backend.get(fpath))
     return md5.hexdigest()
 
 
@@ -310,8 +310,8 @@ def expanduser(path):
         return path
 
 
-def find_folders(root: str,
-                 file_client: FileClient) -> Tuple[List[str], Dict[str, int]]:
+def find_folders(root: str, file_backend: BaseStorageBackend
+                 ) -> Tuple[List[str], Dict[str, int]]:
     """Find classes by folders under a root.
 
     Args:
@@ -324,7 +324,7 @@ def find_folders(root: str,
         - folder_to_idx: The map from folder name to class idx.
     """
     folders = list(
-        file_client.list_dir_or_file(
+        file_backend.list_dir_or_file(
             root,
             list_dir=True,
             list_file=False,
@@ -336,7 +336,7 @@ def find_folders(root: str,
 
 
 def get_samples(root: str, folder_to_idx: Dict[str, int],
-                is_valid_file: Callable, file_client: FileClient):
+                is_valid_file: Callable, file_backend: BaseStorageBackend):
     """Make dataset by walking all images under a root.
 
     Args:
@@ -355,9 +355,9 @@ def get_samples(root: str, folder_to_idx: Dict[str, int],
     available_classes = set()
 
     for folder_name in sorted(list(folder_to_idx.keys())):
-        _dir = file_client.join_path(root, folder_name)
+        _dir = file_backend.join_path(root, folder_name)
         files = list(
-            file_client.list_dir_or_file(
+            file_backend.list_dir_or_file(
                 _dir,
                 list_dir=False,
                 list_file=True,
@@ -365,7 +365,7 @@ def get_samples(root: str, folder_to_idx: Dict[str, int],
             ))
         for file in sorted(list(files)):
             if is_valid_file(file):
-                path = file_client.join_path(folder_name, file)
+                path = file_backend.join_path(folder_name, file)
                 item = (path, folder_to_idx[folder_name])
                 samples.append(item)
                 available_classes.add(folder_name)

@@ -1,5 +1,52 @@
 # Changelog
 
+## v1.0.0rc5 (04/01/2023)
+
+**Highlights**
+We are excited to announce the release of MMEditing 1.0.0rc5. This release supports 49+ models, 180+ configs and 177+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
+
+- Support Restormer
+- Support GLIDE
+- Support SwinIR
+- Support Stable Diffusion
+
+**New Features & Improvements**
+
+- Disco notebook.(#1507)
+- Revise test requirements and CI.(#1514)
+- Recursive generate summary and docstring.(#1517)
+- Enable projects.(#1526)
+- Support mscoco dataset.(#1520)
+- Improve Chinese documents.(#1532)
+- Type hints.(#1481)
+- Update download link.(#1554)
+- Update deployment guide.(#1551)
+
+**Bug Fixes**
+
+- Fix documentation link checker.(#1522)
+- Fix ssim first channel bug.(#1515)
+- Fix restormer ut.(#1550)
+- Fix extract_gt_data of realesrgan.(#1542)
+- Fix model index.(#1559)
+- Fix config path in disco-diffusion.(#1553)
+- Fix text2image inferencer.(#1523)
+
+**Contributors**
+A total of 16 developers contributed to this release.
+Thanks @plyfager, @LeoXing1996, @Z-Fran, @zengyh1900, @VongolaWu, @liuwenran, @AlexZou14, @lvhan028, @xiaomile, @ldr426, @austin273, @whu-lee, @willaty, @curiosity654, @Zdafeng, @Taited
+
+**New Contributors**
+
+- @xiaomile made their first contribution in https://github.com/open-mmlab/mmediting/pull/1481
+- @ldr426 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1542
+- @austin273 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1553
+- @whu-lee made their first contribution in https://github.com/open-mmlab/mmediting/pull/1539
+- @willaty made their first contribution in https://github.com/open-mmlab/mmediting/pull/1541
+- @curiosity654 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1556
+- @Zdafeng made their first contribution in https://github.com/open-mmlab/mmediting/pull/1476
+- @Taited made their first contribution in https://github.com/open-mmlab/mmediting/pull/1534
+
 ## v1.0.0rc4 (05/12/2022)
 
 **Highlights**

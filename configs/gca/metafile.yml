@@ -1,20 +1,18 @@
 Collections:
-- Metadata:
-    Architecture:
-    - GCA
-  Name: GCA
+- Name: GCA
   Paper:
-  - https://arxiv.org/abs/2001.04069
+    Title: Natural Image Matting via Guided Contextual Attention
+    URL: https://arxiv.org/abs/2001.04069
   README: configs/gca/README.md
+  Task:
+  - matting
+  Year: 2020
 Models:
 - Config: configs/gca/baseline_r34_4xb10-200k_comp1k.py
   In Collection: GCA
-  Metadata:
-    GPUs: '4'
-    Training Data: COMP1K
   Name: baseline_r34_4xb10-200k_comp1k
   Results:
-  - Dataset: COMP1K
+  - Dataset: Composition-1K
     Metrics:
       CONN: 32.12
       GRAD: 16.21
@@ -24,12 +22,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/mattors/gca/baseline_r34_4x10_200k_comp1k_SAD-34.61_20220620-96f85d56.pth
 - Config: configs/gca/gca_r34_4xb10-200k_comp1k.py
   In Collection: GCA
-  Metadata:
-    GPUs: '4'
-    Training Data: COMP1K
   Name: gca_r34_4xb10-200k_comp1k
   Results:
-  - Dataset: COMP1K
+  - Dataset: Composition-1K
     Metrics:
       CONN: 30.59
       GRAD: 14.96
@@ -39,12 +34,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth
 - Config: configs/gca/baseline_r34_4xb10-dimaug-200k_comp1k.py
   In Collection: GCA
-  Metadata:
-    GPUs: '4'
-    Training Data: COMP1K
   Name: baseline_r34_4xb10-dimaug-200k_comp1k
   Results:
-  - Dataset: COMP1K
+  - Dataset: Composition-1K
     Metrics:
       CONN: 49.67
       GRAD: 30.21
@@ -54,12 +46,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/mattors/gca/baseline_dimaug_r34_4x10_200k_comp1k_SAD-49.95_20200626_231612-535c9a11.pth
 - Config: configs/gca/gca_r34_4xb10-dimaug-200k_comp1k.py
   In Collection: GCA
-  Metadata:
-    GPUs: '4'
-    Training Data: COMP1K
   Name: gca_r34_4xb10-dimaug-200k_comp1k
   Results:
-  - Dataset: COMP1K
+  - Dataset: Composition-1K
     Metrics:
       CONN: 49.47
       GRAD: 28.07

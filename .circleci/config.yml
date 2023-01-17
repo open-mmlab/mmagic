@@ -30,6 +30,7 @@ workflows:
             .dev_scripts/.* lint_only true
             .github/.* lint_only true
             demo/.* lint_only true
+            projects/.* lint_only true
           base-revision: dev-1.x
           # this is the path of the configuration we should trigger once
           # path filtering and pipeline parameter value updates are

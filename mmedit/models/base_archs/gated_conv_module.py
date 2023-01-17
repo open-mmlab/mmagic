@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
+from typing import Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
@@ -32,11 +33,11 @@ class SimpleGatedConvModule(nn.Module):
     """
 
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 feat_act_cfg=dict(type='ELU'),
-                 gate_act_cfg=dict(type='Sigmoid'),
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Tuple[int, int]],
+                 feat_act_cfg: Optional[dict] = dict(type='ELU'),
+                 gate_act_cfg: Optional[dict] = dict(type='Sigmoid'),
                  **kwargs):
         super().__init__()
         # the activation function should specified outside conv module
@@ -54,7 +55,7 @@ class SimpleGatedConvModule(nn.Module):
         if self.with_gate_act:
             self.gate_act = build_activation_layer(gate_act_cfg)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward Function.
 
         Args:

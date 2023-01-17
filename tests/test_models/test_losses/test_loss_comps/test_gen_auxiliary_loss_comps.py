@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import pytest
 import torch
 from mmengine.utils.dl_utils import TORCH_VERSION
@@ -8,6 +10,9 @@ from mmedit.models.editors.stylegan2 import StyleGAN2Generator
 from mmedit.models.losses import GeneratorPathRegularizerComps
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 class TestPathRegularizer:
 
     @classmethod

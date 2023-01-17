@@ -29,7 +29,7 @@
 [📘使用文档](https://mmediting.readthedocs.io/zh_CN/1.x/) |
 [🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/1.x/2_get_started.htmll) |
 [👀模型库](https://mmediting.readthedocs.io/zh_CN/1.x/3_model_zoo.html) |
-[🆕更新记录](docs/zh_cn/community/changelog.md) |
+[🆕更新记录](docs/zh_cn/changelog.md) |
 [🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
 [🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
 
@@ -105,14 +105,16 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ### 🌟 1.x 预览版本
 
-全新的 [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) 已经在 05/12/2022 发布:
+全新的 [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) 已经在 04/01/2023 发布:
 
-- 支持了图文生成任务! [Disco-Diffusion](configs/disco_diffusion/README.md)
-- 支持了3D级图像生成任务! [EG3D](configs/eg3d/README.md)
+- 支持了著名的文本生成图像方法 [stable diffusion](configs/stable_diffusion/README.md)!
+- 支持了一个高效的图像复原算法 [Restormer](configs/restormer/README.md)!
+- 支持了一个新的文本到图像生成算法 [GLIDE](projects/glide/configs/README.md)!
+- 支持了基于swin的图像复原算法 [SwinIR](configs/swinir/README.md)!
+- 开启了[projects](projects/README.md)以便社区用户添加新的项目到MMEditing.
 - 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
 - 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
 - 支持基于图像子块以及滑动条的图像和视频比较可视化工具。
-- 支持图像上色任务。
 
 在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
 
@@ -124,7 +126,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - 修复 FLAVR 的注册问题。
 - 修正 RDB 模型中的通道数。
 
-如果像了解更多版本更新细节和历史信息，请阅读[更新日志](docs/en/community/changelog.md)。
+如果像了解更多版本更新细节和历史信息，请阅读[更新日志](docs/en/changelog.md)。
 
 ## 安装
 
@@ -151,11 +153,11 @@ cd mmediting
 pip3 install -e .
 ```
 
-更详细的安装指南请参考 [get_started.md](docs/zh_cn/2_get_started.md) 。
+更详细的安装指南请参考 [installation](docs/zh_cn/get_started/install.md) 。
 
 ## 开始使用
 
-请参考[使用教程](docs/zh_cn/2_get_started.md)和[功能演示](docs/zh_cn/user_guides/3_inference.md)获取MMEditing的基本用法。
+请参考[使用教程](docs/zh_cn/get_started/install.md)和[功能演示](docs/zh_cn/get_started/quick_run.md)获取MMEditing的基本用法。
 
 ## 模型库
 
@@ -268,7 +270,9 @@ pip3 install -e .
 <details open>
 <summary>Text2Image</summary>
 
+- ✅ [GLIDE](projects/glide/configs/README.md) (NeurIPS'2021)
 - ✅ [Disco-Diffusion](configs/disco_diffusion/README.md)
+- ✅ [Stable-Diffusion](configs/stable_diffusion/README.md)
 
 </details>
 
@@ -276,7 +280,17 @@ pip3 install -e .
 
 <summary>3D-aware Generation</summary>
 
-- ✅ [EG3D](configs/eg3d/README.md)
+- ✅ [EG3D](configs/eg3d/README.md) (CVPR'2022)
+
+</details>
+
+<details open>
+
+<summary>Image Restoration</summary>
+
+- ✅ [SwinIR](configs/swinir/README.md) (ICCVW'2021)
+- ✅ [NAFNet](configs/nafnet/README.md) (ECCV'2022)
+- ✅ [Restormer](configs/restormer/README.md) (CVPR'2022)
 
 </details>
 

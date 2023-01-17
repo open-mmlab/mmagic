@@ -191,15 +191,17 @@ class RealESRGAN(SRGAN):
 
         gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
         gt = torch.stack(gt_imgs)
-        gt_unsharp = [data_sample.gt_img.data for data_sample in data_samples]
+        gt_unsharp = [
+            data_sample.gt_unsharp.data / 255. for data_sample in data_samples
+        ]
         gt_unsharp = torch.stack(gt_unsharp)
 
         gt_pixel, gt_percep, gt_gan = gt.clone(), gt.clone(), gt.clone()
         if self.is_use_sharpened_gt_in_pixel:
-            gt_pixel = gt_unsharp
+            gt_pixel = gt_unsharp.clone()
         if self.is_use_sharpened_gt_in_percep:
-            gt_percep = gt_unsharp
+            gt_percep = gt_unsharp.clone()
         if self.is_use_sharpened_gt_in_gan:
-            gt_gan = gt_unsharp
+            gt_gan = gt_unsharp.clone()
 
         return gt_pixel, gt_percep, gt_gan

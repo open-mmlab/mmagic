@@ -1,42 +1,37 @@
 Collections:
-- Metadata:
-    Architecture:
-    - SinGAN
-  Name: SinGAN
+- Name: SinGAN
   Paper:
-  - https://openaccess.thecvf.com/content_ICCV_2019/html/Shaham_SinGAN_Learning_a_Generative_Model_From_a_Single_Natural_Image_ICCV_2019_paper.html
+    Title: 'Singan: Learning a Generative Model from a Single Natural Image'
+    URL: https://openaccess.thecvf.com/content_ICCV_2019/html/Shaham_SinGAN_Learning_a_Generative_Model_From_a_Single_Natural_Image_ICCV_2019_paper.html
   README: configs/singan/README.md
+  Task:
+  - internal learning
+  Year: 2019
 Models:
-- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/singan/singan_balloons.py
+- Config: configs/singan/singan_balloons.py
   In Collection: SinGAN
-  Metadata:
-    Training Data: Others
   Name: singan_balloons
   Results:
-  - Dataset: Others
+  - Dataset: '[balloons.png](https://download.openmmlab.com/mmediting/dataset/singan/balloons.png)'
     Metrics:
       Num Scales: 8.0
     Task: Internal Learning
-  Weights: https://download.openmmlab.com/mmgen/singan/singan_balloons_20210406_191047-8fcd94cf.pth
-- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/singan/singan_fish.py
+  Weights: https://download.openmmlab.com/mmediting/singan/singan_balloons_20210406_191047-8fcd94cf.pth
+- Config: configs/singan/singan_fish.py
   In Collection: SinGAN
-  Metadata:
-    Training Data: Others
   Name: singan_fish
   Results:
-  - Dataset: Others
+  - Dataset: '[fish.jpg](https://download.openmmlab.com/mmediting/dataset/singan/fish-crop.jpg)'
     Metrics:
       Num Scales: 10.0
     Task: Internal Learning
-  Weights: https://download.openmmlab.com/mmgen/singan/singan_fis_20210406_201006-860d91b6.pth
-- Config: https://github.com/open-mmlab/mmediting/tree/master/configs/singan/singan_bohemian.py
+  Weights: https://download.openmmlab.com/mmediting/singan/singan_fis_20210406_201006-860d91b6.pth
+- Config: configs/singan/singan_bohemian.py
   In Collection: SinGAN
-  Metadata:
-    Training Data: Others
   Name: singan_bohemian
   Results:
-  - Dataset: Others
+  - Dataset: '[bohemian.png](https://download.openmmlab.com/mmediting/dataset/singan/bohemian.png)'
     Metrics:
       Num Scales: 10.0
     Task: Internal Learning
-  Weights: https://download.openmmlab.com/mmgen/singan/singan_bohemian_20210406_175439-f964ee38.pth
+  Weights: https://download.openmmlab.com/mmediting/singan/singan_bohemian_20210406_175439-f964ee38.pth

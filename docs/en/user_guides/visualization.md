@@ -1,4 +1,4 @@
-# Tutorial 5: Visualization
+# Tutorial 6: Visualization
 
 The visualization of images is an important way to measure the quality of image processing, editing and synthesis.
 Using `visualizer` in config file can save visual results when training or testing. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/visualization.md) to learn the usage of visualization. MMEditing provides a rich set of visualization functions.

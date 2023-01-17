@@ -31,19 +31,44 @@ author = 'MMEditing Authors'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
+    'sphinx.ext.autosectionlabel',
     'sphinx_markdown_tables',
     'sphinx_copybutton',
-    'myst_parser',
     'sphinx_tabs.tabs',
-    'notfound.extension',
+    'myst_parser',
 ]
 
+extensions.append('notfound.extension')  # enable customizing not-found page
+
+extensions.append('autoapi.extension')
+autoapi_type = 'python'
+autoapi_dirs = ['../../mmedit']
+autoapi_add_toctree_entry = False
+autoapi_template_dir = '_templates'
+# autoapi_options = ['members', 'undoc-members', 'show-module-summary']
+
+# # Core library for html generation from docstrings
+# extensions.append('sphinx.ext.autodoc')
+# extensions.append('sphinx.ext.autodoc.typehints')
+# # Enable 'expensive' imports for sphinx_autodoc_typehints
+# set_type_checking_flag = True
+# # Sphinx-native method. Not as good as sphinx_autodoc_typehints
+# autodoc_typehints = "description"
+
+# extensions.append('sphinx.ext.autosummary') # Create neat summary tables
+# autosummary_generate = True  # Turn on sphinx.ext.autosummary
+# # Add __init__ doc (ie. params) to class summaries
+# autoclass_content = 'both'
+# autodoc_skip_member = []
+# # If no docstring, inherit from base class
+# autodoc_inherit_docstrings = True
+
 autodoc_mock_imports = [
-    'mmedit.version', 'mmcv.ops.ModulatedDeformConv2d',
-    'mmcv.ops.modulated_deform_conv2d', 'mmcv._ext'
+    'mmedit.version', 'mmcv._ext', 'mmcv.ops.ModulatedDeformConv2d',
+    'mmcv.ops.modulated_deform_conv2d', 'clip', 'resize_right', 'pandas'
 ]
 
 source_suffix = {
@@ -56,7 +81,7 @@ copybutton_prompt_text = r'>>> |\.\.\. '
 copybutton_prompt_is_regexp = True
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ['../en/_templates']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -109,6 +134,7 @@ html_static_path = ['_static']
 html_css_files = ['css/readthedocs.css']
 
 myst_enable_extensions = ['colon_fence']
+myst_heading_anchors = 3
 
 language = 'zh_CN'
 
@@ -118,9 +144,16 @@ notfound_template = '404.html'
 
 
 def builder_inited_handler(app):
-    # subprocess.run(['./merge_docs.sh'])
-    subprocess.run(['./stat.py'])
+    subprocess.run(['python', './.dev_scripts/update_model_zoo.py'])
+    subprocess.run(['python', './.dev_scripts/update_dataset_zoo.py'])
+
+
+def skip_member(app, what, name, obj, skip, options):
+    if what == 'package' or what == 'module':
+        skip = True
+    return skip
 
 
 def setup(app):
     app.connect('builder-inited', builder_inited_handler)
+    app.connect('autoapi-skip-member', skip_member)
