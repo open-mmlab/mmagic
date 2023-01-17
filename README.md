@@ -220,19 +220,7 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
 
 <p align="right"><a href="#top">Back to top</a></p>
 
-<details open>
-<summary>Inpainting</summary>
-
-- ✅ [Global&Local](configs/global_local/README.md) (ToG'2017)
-- ✅ [DeepFillv1](configs/deepfillv1/README.md) (CVPR'2018)
-- ✅ [PConv](configs/partial_conv/README.md) (ECCV'2018)
-- ✅ [DeepFillv2](configs/deepfillv2/README.md) (CVPR'2019)
-- ✅ [AOT-GAN](configs/aot_gan/README.md) (TVCG'2021)
-
-</details>
-
 ## Model Zoo
-
 <div align="center">
   <b>Supported algorithms</b>
 </div>
@@ -243,66 +231,57 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
         <b>Conditional GANs</b>
       </td>
       <td>
-        <b>Inpainting</b>
+        <b>Unconditional GANs</b>
       </td>
       <td>
-        <b>Panoptic Segmentation</b>
+        <b>Image Restoration</b>
       </td>
       <td>
-        <b>Other</b>
+        <b>Image Super-Resolution</b>
       </td>
     </tr>
     <tr valign="top">
       <td>
         <ul>
-            <li><a href="configs/sngan">SNGAN (ICLR'2018)</a></li>
-            <li><a href="configs/sngan_proj">Projection GAN (ICLR'2018)</a></li>
-            <li><a href="configs/sagan">SAGAN (ICML'2019)</a></li>
-            <li><a href="configs/biggan">BIGGAN/BIGGAN-DEEP (ICLR'2018)</a></li>
+            <li><a href="configs/sngan_proj/README.md">SNGAN (ICLR'2018)</a></li>
+            <li><a href="configs/sngan_proj/README.md">Projection GAN (ICLR'2018)</a></li>
+            <li><a href="configs/sagan/README.md">SAGAN (ICML'2019)</a></li>
+            <li><a href="configs/biggan/README.md">BIGGAN/BIGGAN-DEEP (ICLR'2018)</a></li>
       </ul>
       </td>
       <td>
         <ul>
-          <li><a href="configs/global_local">Global&Local (ToG'2017)</a></li>
-          <li><a href="configs/deepfillv1">DeepFillv1 (CVPR'2018)</a></li>
-          <li><a href="configs/partial_conv">PConv (ECCV'2018)</a></li>
-          <li><a href="configs/deepfillv2">DeepFillv2 (CVPR'2019)</a></li>
-          <li><a href="configs/aot_gan/README.md">AOT-GAN (TVCG'2019)</a></li>
+          <li><a href="configs/dcgan/README.md">DCGAN (ICLR'2016)</a></li>
+          <li><a href="configs/wgan-gp/README.md">WGAN-GP (NeurIPS'2017)</a></li>
+          <li><a href="configs/lsgan/README.md">LSGAN (ICCV'2017)</a></li>
+          <li><a href="configs/ggan/README.md">PGGAN (ArXiv'2017)</a></li>
+          <li><a href="configs/pggan/README.md">PGGAN (ICLR'2018)</a></li>
+          <li><a href="configs/singan/README.md">SinGAN (ICCV'2019)</a></li>
+          <li><a href="configs/styleganv1/README.md">StyleGANV1 (CVPR'2019)</a></li>
+          <li><a href="configs/styleganv2/README.md">StyleGANV2 (CVPR'2019)</a></li>
+          <li><a href="configs/styleganv3/README.md">StyleGANV3 (NeurIPS'2021)</a></li>
         </ul>
       </td>
       <td>
         <ul>
-          <li><a href="configs/panoptic_fpn">Panoptic FPN (CVPR'2019)</a></li>
-          <li><a href="configs/maskformer">MaskFormer (NeurIPS'2021)</a></li>
-          <li><a href="configs/mask2former">Mask2Former (CVPR'2022)</a></li>
+          <li><a href="configs/swinir/README.md">SwinIR (ICCVW'2021)</a></li>
+          <li><a href="configs/nafnet/README.md">NAFNet (ECCV'2022)</a></li>
+          <li><a href="configs/restormer/README.md">Restormer (CVPR'2022)</a></li>
         </ul>
       </td>
       <td>
-        </ul>
-          <li><b>Contrastive Learning</b></li>
         <ul>
-        <ul>
-          <li><a href="configs/selfsup_pretrain">SwAV (NeurIPS'2020)</a></li>
-          <li><a href="configs/selfsup_pretrain">MoCo (CVPR'2020)</a></li>
-          <li><a href="configs/selfsup_pretrain">MoCov2 (ArXiv'2020)</a></li>
+          <li><a href="configs/srcnn/README.md">SRCNN (TPAMI'2015)</a></li>
+          <li><a href="configs/srgan_resnet/README.md">SRResNet&SRGAN (CVPR'2016)</a></li>
+          <li><a href="configs/edsr/README.md">EDSR (CVPR'2017)</a></li>
+          <li><a href="configs/esrgan/README.md">ESRGAN (ECCV'2018)</a></li>
+          <li><a href="configs/rdn/README.md">RDN (CVPR'2018)</a></li>
+          <li><a href="configs/dic/README.md">DIC (CVPR'2020)</a></li>
+          <li><a href="configs/ttsr/README.md">TTSR (CVPR'2020)</a></li>
+          <li><a href="configs/glean/README.md">GLEAN (CVPR'2021)</a></li>
+          <li><a href="configs/liif/README.md">LIIF (CVPR'2021)</a></li>
+          <li><a href="configs/real_esrgan/README.md">Real-ESRGAN (ICCVW'2021)</a></li>
         </ul>
-        </ul>
-        </ul>
-          <li><b>Distillation</b></li>
-        <ul>
-        <ul>
-          <li><a href="configs/ld">Localization Distillation (CVPR'2022)</a></li>
-          <li><a href="configs/lad">Label Assignment Distillation (WACV'2022)</a></li>
-        </ul>
-        </ul>
-      </ul>
-        <li><b>Receptive Field Search</b></li>
-      <ul>
-        <ul>
-          <li><a href="configs/rfnext">RF-Next (TPAMI'2022)</a></li>
-        </ul>
-        </ul>
-      </ul>
       </td>
     </tr>
 </td>
@@ -311,64 +290,95 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
 <tbody>
     <tr align="center" valign="bottom">
       <td>
-        <b>Object Detection</b>
+        <b>Video Super-Resolution</b>
       </td>
       <td>
-        <b>Instance Segmentation</b>
+        <b>Video Interpolation</b>
       </td>
       <td>
-        <b>Panoptic Segmentation</b>
+        <b>Image Colorization</b>
       </td>
       <td>
-        <b>Other</b>
+        <b>Image Translation</b>
       </td>
     </tr>
     <tr valign="top">
       <td>
         <ul>
-            <li><a href="configs/fast_rcnn">Fast R-CNN (ICCV'2015)</a></li>
-            <li><a href="configs/faster_rcnn">Faster R-CNN (NeurIPS'2015)</a></li>
+            <li><a href="configs/edvr/README.md">EDVR (CVPR'2018)</a></li>
+            <li><a href="configs/tof/README.md">TOF (IJCV'2019)</a></li>
+            <li><a href="configs/tdan/README.md">TDAN (CVPR'2020)</a></li>
+            <li><a href="configs/basicvsr/README.md">BasicVSR (CVPR'2021)</a></li>
+            <li><a href="configs/iconvsr/README.md">IconVSR (CVPR'2021)</a></li>
+            <li><a href="configs/basicvsr_pp/README.md">BasicVSR++ (CVPR'2022)</a></li>
+            <li><a href="configs/real_basicvsr/README.md">RealBasicVSR (CVPR'2022)</a></li>
       </ul>
       </td>
       <td>
         <ul>
-          <li><a href="configs/mask_rcnn">Mask R-CNN (ICCV'2017)</a></li>
-          <li><a href="configs/cascade_rcnn">Cascade Mask R-CNN (CVPR'2018)</a></li>
+          <li><a href="configs/tof/README.md">TOFlow (IJCV'2019)</a></li>
+          <li><a href="configs/cain/README.md">CAIN (AAAI'2020)</a></li>
+          <li><a href="configs/flavr/README.md">FLAVR (CVPR'2021)</a></li>
         </ul>
       </td>
       <td>
         <ul>
-          <li><a href="configs/panoptic_fpn">Panoptic FPN (CVPR'2019)</a></li>
-          <li><a href="configs/maskformer">MaskFormer (NeurIPS'2021)</a></li>
-          <li><a href="configs/mask2former">Mask2Former (CVPR'2022)</a></li>
+          <li><a href="configs/inst_colorization/README.md">DIM (CVPR'2020)</a></li>
         </ul>
       </td>
       <td>
-        </ul>
-          <li><b>Contrastive Learning</b></li>
         <ul>
+          <li><a href="configs/pix2pix/README.md">Pix2Pix (CVPR'2017)</a></li>
+          <li><a href="configs/cyclegan/README.md">CycleGAN (ICCV'2017)</a></li>
+        </ul>
+      </td>
+    </tr>
+</td>
+    </tr>
+  </tbody>
+<tbody>
+    <tr align="center" valign="bottom">
+      <td>
+        <b>Inpainting</b>
+      </td>
+      <td>
+        <b>Text-to-Image</b>
+      </td>
+      <td>
+        <b>3D-aware Generation</b>
+      </td>
+      <td>
+        <b>Matting</b>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
         <ul>
-          <li><a href="configs/selfsup_pretrain">SwAV (NeurIPS'2020)</a></li>
-          <li><a href="configs/selfsup_pretrain">MoCo (CVPR'2020)</a></li>
-          <li><a href="configs/selfsup_pretrain">MoCov2 (ArXiv'2020)</a></li>
+          <li><a href="configs/global_local/README.md">Global&Local (ToG'2017)</a></li>
+          <li><a href="configs/deepfillv1/README.md">DeepFillv1 (CVPR'2018)</a></li>
+          <li><a href="configs/partial_conv/README.md">PConv (ECCV'2018)</a></li>
+          <li><a href="configs/deepfillv2/README.md">DeepFillv2 (CVPR'2019)</a></li>
+          <li><a href="configs/aot_gan/README.md">AOT-GAN (TVCG'2019)</a></li>
         </ul>
-        </ul>
-        </ul>
-          <li><b>Distillation</b></li>
+      </td>
+      <td>
         <ul>
+          <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
+          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
+          <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
+        </ul>
+      </td>
+      <td>
         <ul>
-          <li><a href="configs/ld">Localization Distillation (CVPR'2022)</a></li>
-          <li><a href="configs/lad">Label Assignment Distillation (WACV'2022)</a></li>
+          <li><a href="configs/eg3d/README.md">EG3D (CVPR'2022)</a></li>
         </ul>
-        </ul>
-      </ul>
-        <li><b>Receptive Field Search</b></li>
-      <ul>
+      </td>
+      <td>
         <ul>
-          <li><a href="configs/rfnext">RF-Next (TPAMI'2022)</a></li>
+          <li><a href="configs/dim/README.md">DIM (CVPR'2017)</a></li>
+          <li><a href="configs/indexnet/README.md">IndexNet (ICCV'2019)</a></li>
+          <li><a href="configs/mask2former">GCA (AAAI'2020)</a></li>
         </ul>
-        </ul>
-      </ul>
       </td>
     </tr>
 </td>
@@ -376,138 +386,7 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
   </tbody>
 </table>
 
-<details open>
-<summary>Inpainting</summary>
-
-- ✅ [Global&Local](configs/global_local/README.md) (ToG'2017)
-- ✅ [DeepFillv1](configs/deepfillv1/README.md) (CVPR'2018)
-- ✅ [PConv](configs/partial_conv/README.md) (ECCV'2018)
-- ✅ [DeepFillv2](configs/deepfillv2/README.md) (CVPR'2019)
-- ✅ [AOT-GAN](configs/aot_gan/README.md) (TVCG'2021)
-
-</details>
-
-<details open>
-<summary>Matting</summary>
-
-- ✅ [DIM](configs/dim/README.md) (CVPR'2017)
-- ✅ [IndexNet](configs/indexnet/README.md) (ICCV'2019)
-- ✅ [GCA](configs/gca/README.md) (AAAI'2020)
-
-</details>
-
-<details open>
-<summary>Image-Super-Resolution</summary>
-
-- ✅ [SRCNN](configs/srcnn/README.md) (TPAMI'2015)
-- ✅ [SRResNet&SRGAN](configs/srgan_resnet/README.md) (CVPR'2016)
-- ✅ [EDSR](configs/edsr/README.md) (CVPR'2017)
-- ✅ [ESRGAN](configs/esrgan/README.md) (ECCV'2018)
-- ✅ [RDN](configs/rdn/README.md) (CVPR'2018)
-- ✅ [DIC](configs/dic/README.md) (CVPR'2020)
-- ✅ [TTSR](configs/ttsr/README.md) (CVPR'2020)
-- ✅ [GLEAN](configs/glean/README.md) (CVPR'2021)
-- ✅ [LIIF](configs/liif/README.md) (CVPR'2021)
-- ✅ [Real-ESRGAN](configs/real_esrgan/README.md) (ICCVW'2021)
-
-</details>
-
-<details open>
-<summary>Video-Super-Resolution</summary>
-
-- ✅ [EDVR](configs/edvr/README.md) (CVPR'2019)
-- ✅ [TOF](configs/tof/README.md) (IJCV'2019)
-- ✅ [TDAN](configs/tdan/README.md) (CVPR'2020)
-- ✅ [BasicVSR](configs/basicvsr/README.md) (CVPR'2021)
-- ✅ [IconVSR](configs/iconvsr/README.md) (CVPR'2021)
-- ✅ [BasicVSR++](configs/basicvsr_pp/README.md) (CVPR'2022)
-- ✅ [RealBasicVSR](configs/real_basicvsr/README.md) (CVPR'2022)
-
-</details>
-
-<details open>
-<summary>Video Interpolation</summary>
-
-- ✅ [TOFlow](configs/tof/README.md) (IJCV'2019)
-- ✅ [CAIN](configs/cain/README.md) (AAAI'2020)
-- ✅ [FLAVR](configs/flavr/README.md) (CVPR'2021)
-
-</details>
-
-<details open>
-<summary>Image Colorization</summary>
-
-- ✅ [InstColorization](configs/inst_colorization/README.md) (CVPR'2020)
-
-</details>
-
-<details open>
-<summary>Unconditional GANs</summary>
-
-- ✅ [DCGAN](configs/dcgan/README.md) (ICLR'2016)
-- ✅ [WGAN-GP](configs/wgan-gp/README.md) (NeurIPS'2017)
-- ✅ [LSGAN](configs/lsgan/README.md) (ICCV'2017)
-- ✅ [GGAN](configs/ggan/README.md) (ArXiv'2017)
-- ✅ [PGGAN](configs/pggan/README.md) (ICLR'2018)
-- ✅ [StyleGANV1](configs/styleganv1/README.md) (CVPR'2019)
-- ✅ [StyleGANV2](configs/styleganv2/README.md) (CVPR'2020)
-- ✅ [StyleGANV3](configs/styleganv3/README.md) (NeurIPS'2021)
-
-</details>
-
-<details open>
-<summary>Conditional GANs</summary>
-
-- ✅ [SNGAN](configs/sngan_proj/README.md) (ICLR'2018)
-- ✅ [Projection GAN](configs/sngan_proj/README.md) (ICLR'2018)
-- ✅ [SAGAN](configs/sagan/README.md) (ICML'2019)
-- ✅ [BIGGAN/BIGGAN-DEEP](configs/biggan/README.md) (ICLR'2019)
-
-</details>
-
-<details open>
-<summary>Image2Image</summary>
-
-- ✅ [Pix2Pix](configs/pix2pix/README.md) (CVPR'2017)
-- ✅ [CycleGAN](configs/cyclegan/README.md) (ICCV'2017)
-
-</details>
-
-<details open>
-<summary>Internal Learning</summary>
-
-- ✅ [SinGAN](configs/singan/README.md) (ICCV'2019)
-
-</details>
-
-<details open>
-<summary>Text2Image</summary>
-
-- ✅ [GLIDE](projects/glide/configs/README.md) (NeurIPS'2021)
-- ✅ [Disco-Diffusion](configs/disco_diffusion/README.md)
-- ✅ [Stable-Diffusion](configs/stable_diffusion/README.md)
-
-</details>
-
-<details open>
-
-<summary>3D-aware Generation</summary>
-
-- ✅ [EG3D](configs/eg3d/README.md) (CVPR'2022)
-
-</details>
-
-<details open>
-
-<summary>Image Restoration</summary>
-
-- ✅ [SwinIR](configs/swinir/README.md) (ICCVW'2021)
-- ✅ [NAFNet](configs/nafnet/README.md) (ECCV'2022)
-- ✅ [Restormer](configs/restormer/README.md) (CVPR'2022)
-
-</details>
-
-Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) for more details.
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/overview.html) for more details.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
