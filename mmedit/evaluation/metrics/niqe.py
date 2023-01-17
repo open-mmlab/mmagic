@@ -88,7 +88,7 @@ class NIQE(NIQE_MMEVAL):
 
         for data in data_samples:
             prediction = data['output']
-            pred = [obtain_data(prediction, self.pred_key).numpy()]
+            pred = [obtain_data(prediction, self.key).numpy()]
             self.add(pred)
 
     def evaluate(self, *args, **kwargs):

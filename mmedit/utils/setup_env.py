@@ -21,6 +21,7 @@ def register_all_modules(init_default_scope: bool = True) -> None:
             Defaults to True.
     """  # noqa
     import mmedit.datasets  # noqa: F401,F403
+    import mmedit.datasets.transforms  # noqa: F401,F403
     import mmedit.engine  # noqa: F401,F403
     import mmedit.evaluation  # noqa: F401,F403
     import mmedit.models  # noqa: F401,F403
