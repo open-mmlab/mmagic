@@ -28,12 +28,12 @@
 
 |                                算法                                 | Set5 PSNR | Set14 PSNR | DIV2K PSNR | Set5 SSIM | Set14 SSIM | DIV2K SSIM | GPU 信息 |                                下载                                 |
 | :-----------------------------------------------------------------: | :-------: | :--------: | :--------: | :-------: | :--------: | :--------: | :------: | :-----------------------------------------------------------------: |
-| [swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  38.3240  |  34.1174   |  37.8921   |  0.9626   |   0.9230   |   0.9481   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k-ed2d419e.pth) \| log |
-| [swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  34.8640  |  30.7669   |  34.1397   |  0.9317   |   0.8508   |   0.8917   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k-926950f1.pth) \| log |
-| [swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  32.7315  |  28.9065   |  32.0953   |  0.9029   |   0.7915   |   0.8418   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k-88e4903d.pth) \| log |
-| [swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k](/configs/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  38.3971  |  34.4149   |  37.9473   |  0.9629   |   0.9252   |   0.9488   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k-69e15fb6.pth) \| log |
-| [swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k](/configs/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  34.9335  |  30.9258   |  34.2830   |  0.9323   |   0.8540   |   0.8939   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k-d6982f7b.pth) \| log |
-| [swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k](/configs/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  32.9214  |  29.0792   |  32.3021   |  0.9053   |   0.7953   |   0.8451   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k-0502d775.pth) \| log |
+| [swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k](./swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  38.3240  |  34.1174   |  37.8921   |  0.9626   |   0.9230   |   0.9481   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k-ed2d419e.pth) \| log |
+| [swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k](./swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  34.8640  |  30.7669   |  34.1397   |  0.9317   |   0.8508   |   0.8917   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k-926950f1.pth) \| log |
+| [swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k](./swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k.py) |  32.7315  |  28.9065   |  32.0953   |  0.9029   |   0.7915   |   0.8418   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k-88e4903d.pth) \| log |
+| [swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k](./swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  38.3971  |  34.4149   |  37.9473   |  0.9629   |   0.9252   |   0.9488   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k-69e15fb6.pth) \| log |
+| [swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k](./swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  34.9335  |  30.9258   |  34.2830   |  0.9323   |   0.8540   |   0.8939   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k-d6982f7b.pth) \| log |
+| [swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k](./swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k.py) |  32.9214  |  29.0792   |  32.3021   |  0.9053   |   0.7953   |   0.8451   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k-0502d775.pth) \| log |
 
 ### **Lightweight Image Super-Resolution**
 
@@ -42,9 +42,9 @@
 
 |                                算法                                 | Set5 PSNR | Set14 PSNR | DIV2K PSNR | Set5 SSIM | Set14 SSIM | DIV2K SSIM | GPU 信息 |                                下载                                 |
 | :-----------------------------------------------------------------: | :-------: | :--------: | :--------: | :-------: | :--------: | :--------: | :------: | :-----------------------------------------------------------------: |
-| [swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  38.1289  |  33.8404   |  37.5844   |  0.9617   |   0.9207   |   0.9459   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k-131d3f64.pth) \| log |
-| [swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  34.6037  |  30.5340   |  33.8394   |  0.9293   |   0.8468   |   0.8867   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k-309cb239.pth) \| log |
-| [swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k](/configs/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  32.4343  |  28.7441   |  31.8636   |  0.8984   |   0.7861   |   0.8353   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k-d6622d03.pth) \| log |
+| [swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k](./swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  38.1289  |  33.8404   |  37.5844   |  0.9617   |   0.9207   |   0.9459   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k-131d3f64.pth) \| log |
+| [swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k](./swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  34.6037  |  30.5340   |  33.8394   |  0.9293   |   0.8468   |   0.8867   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k-309cb239.pth) \| log |
+| [swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k](./swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k.py) |  32.4343  |  28.7441   |  31.8636   |  0.8984   |   0.7861   |   0.8353   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k-d6622d03.pth) \| log |
 
 ### **Real-World Image Super-Resolution**
 
@@ -53,12 +53,12 @@
 
 |                                         算法                                          | RealSRSet+5images NIQE | GPU 信息 |                                         下载                                          |
 | :-----------------------------------------------------------------------------------: | :--------------------: | :------: | :-----------------------------------------------------------------------------------: |
-| [swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         5.7975         |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-c6425057.pth) \| log |
-| [swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         7.2738         |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-6f0c425f.pth) \| log |
-| [swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         5.2329         |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-36960d18.pth) \| log |
-| [swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         7.7460         |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-a016a72f.pth) \| log |
-| [swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py) |         5.1464         |    8     |           [model](https://download.openmmlab.com/mmediting/swinir/) \| log            |
-| [swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost](/configs/swinir/swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py) |         7.6378         |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-os-25f1722a.pth) \| log |
+| [swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](./swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         5.7975         |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-c6425057.pth) \| log |
+| [swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](./swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         7.2738         |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-6f0c425f.pth) \| log |
+| [swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](./swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         5.2329         |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-36960d18.pth) \| log |
+| [swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost](./swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py) |         7.7460         |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-a016a72f.pth) \| log |
+| [swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost](./swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py) |         5.1464         |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-os-9f1599b5.pth) \| log |
+| [swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost](./swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py) |         7.6378         |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-os-25f1722a.pth) \| log |
 
 ### **Grayscale Image Deoising**
 
@@ -67,9 +67,9 @@
 
 |                                      算法                                       | Set12 PSNR | BSD68 PSNR | Urban100 PSNR | GPU 信息 |                                       下载                                       |
 | :-----------------------------------------------------------------------------: | :--------: | :--------: | :-----------: | :------: | :------------------------------------------------------------------------------: |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15.py) |  33.9731   |  32.5203   |    34.3424    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15-6782691b.pth) \| log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25.py) |  31.6434   |  30.1377   |    31.9493    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25-d0d8d4da.pth) \| log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50.py) |  28.5651   |  27.3157   |    28.6626    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50-54c9968a.pth) \| log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15](./swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15.py) |  33.9731   |  32.5203   |    34.3424    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15-6782691b.pth) \| log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25](./swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25.py) |  31.6434   |  30.1377   |    31.9493    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25-d0d8d4da.pth) \| log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50](./swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50.py) |  28.5651   |  27.3157   |    28.6626    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50-54c9968a.pth) \| log |
 
 ### **Color Image Deoising**
 
@@ -78,9 +78,9 @@
 
 |                                  算法                                   | CBSD68 PSNR | Kodak24 PSNR | McMaster PSNR | Urban100 PSNR | GPU 信息 |                                   下载                                   |
 | :---------------------------------------------------------------------: | :---------: | :----------: | :-----------: | :-----------: | :------: | :----------------------------------------------------------------------: |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15.py) |   34.4136   |   35.3555    |    35.6205    |    35.1836    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15-c74a2cee.pth) \| log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25.py) |   31.7626   |   32.9003    |    33.3198    |    32.9458    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25-df2b1c0c.pth) \| log |
-| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50](/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50.py) |   28.5346   |   29.8058    |    30.2027    |    29.8832    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50-e369874c.pth) \| log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15](./swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15.py) |   34.4136   |   35.3555    |    35.6205    |    35.1836    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15-c74a2cee.pth) \| log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25](./swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25.py) |   31.7626   |   32.9003    |    33.3198    |    32.9458    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25-df2b1c0c.pth) \| log |
+| [swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50](./swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50.py) |   28.5346   |   29.8058    |    30.2027    |    29.8832    |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50-e369874c.pth) \| log |
 
 ### **JPEG Compression Artifact Reduction (grayscale)**
 
@@ -89,10 +89,10 @@
 
 |                                   算法                                    | Classic5 PSNR | Classic5 SSIM | LIVE1 PSNR | LIVE1 SSIM | GPU 信息 |                                   下载                                    |
 | :-----------------------------------------------------------------------: | :-----------: | :-----------: | :--------: | :--------: | :------: | :-----------------------------------------------------------------------: |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10.py) |    30.2746    |    0.8254     |  29.8611   |   0.8292   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10-da93c8e9.pth) \| log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20.py) |    32.5331    |    0.8753     |  32.2667   |   0.8914   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20-d47367b1.pth) \| log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30.py) |    33.7504    |    0.8966     |  33.7001   |   0.9179   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30-52c083cf.pth) \| log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40.py) |    34.5377    |    0.9087     |  34.6846   |   0.9322   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40-803e8d9b.pth) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10](./swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10.py) |    30.2746    |    0.8254     |  29.8611   |   0.8292   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10-da93c8e9.pth) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20](./swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20.py) |    32.5331    |    0.8753     |  32.2667   |   0.8914   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20-d47367b1.pth) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30](./swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30.py) |    33.7504    |    0.8966     |  33.7001   |   0.9179   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30-52c083cf.pth) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40](./swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40.py) |    34.5377    |    0.9087     |  34.6846   |   0.9322   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40-803e8d9b.pth) \| log |
 
 ### **JPEG Compression Artifact Reduction (color)**
 
@@ -101,10 +101,10 @@
 
 |                                   算法                                    | Classic5 PSNR | Classic5 SSIM | LIVE1 PSNR | LIVE1 SSIM | GPU 信息 |                                   下载                                    |
 | :-----------------------------------------------------------------------: | :-----------: | :-----------: | :--------: | :--------: | :------: | :-----------------------------------------------------------------------: |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10.py) |    30.1019    |    0.8217     |  28.0676   |   0.8094   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10-09aafadc.pth) \| log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20.py) |    32.3489    |    0.8727     |  30.3489   |   0.8745   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20-b8a42b5e.pth) \| log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30.py) |    33.6028    |    0.8949     |  31.8235   |   0.9023   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30-e9fe6859.pth) \| log |
-| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40](/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40.py) |    34.4344    |    0.9076     |  32.7610   |   0.9179   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40-5b77a6e6.pth) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10](./swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10.py) |    30.1019    |    0.8217     |  28.0676   |   0.8094   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10-09aafadc.pth) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20](./swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20.py) |    32.3489    |    0.8727     |  30.3489   |   0.8745   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20-b8a42b5e.pth) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30](./swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30.py) |    33.6028    |    0.8949     |  31.8235   |   0.9023   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30-e9fe6859.pth) \| log |
+| [swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40](./swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40.py) |    34.4344    |    0.9076     |  32.7610   |   0.9179   |    8     | [model](https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40-5b77a6e6.pth) \| log |
 
 ## 快速开始
 
@@ -494,7 +494,7 @@ python tools/test.py configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-c
 
 ./tools/dist_test.sh configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30.py https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30-e9fe6859.pth
 
-./tools/dist_test.sh configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40.py https://download.openmmlab.com/mmediting/swinir/
+./tools/dist_test.sh configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40.py https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30-e9fe6859.pth
 
 ```
 

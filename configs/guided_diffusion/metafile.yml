@@ -1,10 +1,8 @@
 Collections:
-- Metadata:
-    Architecture:
-    - Guided Diffusion
-  Name: Guided Diffusion
+- Name: Guided Diffusion
   Paper:
-  - https://papers.nips.cc/paper/2021/file/49ad23d1ec9fa4bd8d77d02681df5cfa-Paper.pdf
+    Title: Diffusion Models Beat GANs on Image Synthesis
+    URL: https://papers.nips.cc/paper/2021/file/49ad23d1ec9fa4bd8d77d02681df5cfa-Paper.pdf
   README: configs/guided_diffusion/README.md
   Task:
   - image generation
@@ -12,31 +10,25 @@ Collections:
 Models:
 - Config: configs/guided_diffusion/adm-u_8xb32_imagenet-64x64.py
   In Collection: Guided Diffusion
-  Metadata:
-    Training Data: Others
   Name: adm-u_8xb32_imagenet-64x64
   Results:
-  - Dataset: Others
+  - Dataset: ImageNet
     Metrics: {}
     Task: Image Generation
   Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth
 - Config: configs/guided_diffusion/adm-u_8xb32_imagenet-512x512.py
   In Collection: Guided Diffusion
-  Metadata:
-    Training Data: Others
   Name: adm-u_8xb32_imagenet-512x512
   Results:
-  - Dataset: Others
+  - Dataset: ImageNet
     Metrics: {}
     Task: Image Generation
   Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-u_8xb32_imagenet-512x512-60b381cb.pth
 - Config: configs/guided_diffusion/adm-u_ddim250_8xb32_imagenet-512x512.py
   In Collection: Guided Diffusion
-  Metadata:
-    Training Data: Others
   Name: adm-u_ddim250_8xb32_imagenet-512x512
   Results:
-  - Dataset: Others
+  - Dataset: ImageNet
     Metrics: {}
     Task: Image Generation
   Weights: <>

@@ -23,10 +23,10 @@ We study on image super-resolution (SR), which aims to recover realistic texture
 Evaluated on CUFED dataset (RGB channels), `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR and SSIM` .
 
-|                                   Method                                   | scale |  PSNR   |  SSIM  |   GPU Info   |                                             Download                                             |
-| :------------------------------------------------------------------------: | :---: | :-----: | :----: | :----------: | :----------------------------------------------------------------------------------------------: |
-| [ttsr-rec_x4_c64b16_g1_200k_CUFED](./ttsr-rec_x4c64b16_1xb9-200k_CUFED.py) |  x4   | 25.2433 | 0.7491 | 1 (TITAN Xp) | [model](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.log.json) |
-| [ttsr-gan_x4_c64b16_g1_500k_CUFED](./ttsr-gan_x4c64b16_1xb9-500k_CUFED.py) |  x4   | 24.6075 | 0.7234 | 1 (TITAN Xp) | [model](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.log.json) |
+|                                   Model                                    | Dataset | scale |  PSNR   |  SSIM  | Training Resources |                                      Download                                       |
+| :------------------------------------------------------------------------: | :-----: | :---: | :-----: | :----: | :----------------: | :---------------------------------------------------------------------------------: |
+| [ttsr-rec_x4_c64b16_g1_200k_CUFED](./ttsr-rec_x4c64b16_1xb9-200k_CUFED.py) |  CUFED  |  x4   | 25.2433 | 0.7491 |    1 (TITAN Xp)    | [model](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-rec_x4_c64b16_g1_200k_CUFED_20210525-b0dba584.log.json) |
+| [ttsr-gan_x4_c64b16_g1_500k_CUFED](./ttsr-gan_x4c64b16_1xb9-500k_CUFED.py) |  CUFED  |  x4   | 24.6075 | 0.7234 |    1 (TITAN Xp)    | [model](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.log.json) |
 
 ## Quick Start
 
