@@ -227,15 +227,7 @@ class AblatedDiffusionModel(BaseModel):
             if data_samples:
                 gen_sample.update(data_samples[idx])
             if isinstance(outputs, dict):
-                gen_sample.ema = EditDataSample(
-                    fake_img=PixelData(data=outputs['samples'][idx]),
-                    sample_model='ema')
-                gen_sample.orig = EditDataSample(
-                    fake_img=PixelData(data=outputs['samples'][idx]),
-                    sample_model='orig')
-                gen_sample.sample_model = 'ema/orig'
-            else:
-                gen_sample.fake_img = PixelData(data=outputs[idx])
+                gen_sample.fake_img = PixelData(data=outputs['samples'][idx])
                 gen_sample.set_gt_label(labels[idx])
 
             # Append input condition (noise and sample_kwargs) to

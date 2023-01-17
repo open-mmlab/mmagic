@@ -228,6 +228,7 @@ class GenerativeMetric(GenMetric):
             names to disambiguate homonymous metrics of different evaluators.
             If prefix is not provided in the argument, self.default_prefix
             will be used instead. Defaults to None.
+        sample_kwargs(dict): Sampling arguments for model test.
     """
     SAMPLER_MODE = 'Generative'
 
