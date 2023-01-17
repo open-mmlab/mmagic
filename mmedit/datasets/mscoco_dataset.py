@@ -4,7 +4,7 @@ import random
 from typing import Optional, Sequence, Union
 
 import mmengine
-from mmengine import FileClient
+from mmengine.fileio import get_file_backend
 
 from mmedit.registry import DATASETS
 from .basic_conditional_dataset import BasicConditionalDataset
@@ -73,14 +73,14 @@ class MSCoCoDataset(BasicConditionalDataset):
     def load_data_list(self):
         """Load image paths and gt_labels."""
         if self.img_prefix:
-            file_client = FileClient.infer_client(uri=self.img_prefix)
+            file_backend = get_file_backend(uri=self.img_prefix)
         json_file = mmengine.fileio.io.load(self.ann_file)
 
         def add_prefix(filename, prefix=''):
             if not prefix:
                 return filename
             else:
-                return file_client.join_path(prefix, filename)
+                return file_backend.join_path(prefix, filename)
 
         data_list = []
         for item in json_file['annotations']:
