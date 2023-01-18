@@ -28,16 +28,14 @@ We show that diffusion models can achieve image sample quality superior to the c
 
 **ImageNet**
 
-| Model |     Dataset      | Scheduler | Steps | CGS | Time Consuming(A100) | FID-Full-50K |                              Config                              |                              Download                              |
-| :---: | :--------------: | :-------: | :---: | :-: | :------------------: | :----------: | :--------------------------------------------------------------: | :----------------------------------------------------------------: |
-|  ADM  |  ImageNet 64x64  |   DDIM    |  250  |  -  |          1h          |    3.2284    | [adm_ddim250_8xb32_imagenet-64x64](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-64x64.py) | [ckpt](https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth) |
-| ADM-G |  ImageNet 64x64  |   DDIM    |  25   | 1.0 |          2h          |    3.7566    | [adm-g_ddim25_8xb32_imagenet-64x64](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py) |                             [ckpt](<>)                             |
-|  ADM  | ImageNet 128x128 |   DDIM    |  250  |  -  |          -           |      -       |                                -                                 |                                 -                                  |
-| ADM-G | ImageNet 128x128 |   DDIM    |  25   | 1.0 |          -           |      -       |                                -                                 |                                 -                                  |
-|  ADM  | ImageNet 256x256 |   DDIM    |  250  |  -  |          -           |      -       | [adm_ddim250_8xb32_imagenet-256x256](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-256x256.py) |                             [ckpt](<>)                             |
-| ADM-G | ImageNet 256x256 |   DDIM    |  25   | 1.0 |          -           |      -       | [adm-g_ddim25_8xb32_imagenet-256x256](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-256x256.py) |                             [ckpt](<>)                             |
-|  ADM  | ImageNet 512x512 |   DDIM    |  250  |  -  |          -           |      -       | [adm_ddim250_8xb32_imagenet-512x512](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-512x512.py) |                             [ckpt](<>)                             |
-| ADM-G | ImageNet 512x512 |   DDIM    |  25   | 1.0 |          -           |      -       | [adm-g_ddim25_8xb32_imagenet-512x512](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-512x512.py) |                             [ckpt](<>)                             |
+|                               Model                                |     Dataset      | Scheduler | Steps | CGS | Time Consuming(A100) | FID-Full-50K |                               Download                                |
+| :----------------------------------------------------------------: | :--------------: | :-------: | :---: | :-: | :------------------: | :----------: | :-------------------------------------------------------------------: |
+| [adm_ddim250_8xb32_imagenet-64x64](./adm_ddim250_8xb32_imagenet-64x64.py) |  ImageNet 64x64  |   DDIM    |  250  |  -  |          1h          |    3.2284    | [ckpt](https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth) |
+| [adm-g_ddim25_8xb32_imagenet-64x64](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py) |  ImageNet 64x64  |   DDIM    |  25   | 1.0 |          2h          |    3.7566    | [ckpt](https://download.openmmlab.com/mmediting/guided_diffusion/adm-g_8xb32_imagenet-64x64-2c0fbeda.pth) |
+| [adm_ddim250_8xb32_imagenet-256x256](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-256x256.py) | ImageNet 256x256 |   DDIM    |  250  |  -  |          -           |      -       | [ckpt](https://download.openmmlab.com/mmediting/guided_diffusion/adm_8xb32_imagenet-256x256-f94735fe.pth) |
+| [adm-g_ddim25_8xb32_imagenet-256x256](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-256x256.py) | ImageNet 256x256 |   DDIM    |  25   | 1.0 |          -           |      -       | [ckpt](https://download.openmmlab.com/mmediting/guided_diffusion/adm-g_8xb32_imagenet-256x256-aec3fc9f.pth) |
+| [adm_ddim250_8xb32_imagenet-512x512](configs/guided_diffusion/adm_ddim250_8xb32_imagenet-512x512.py) | ImageNet 512x512 |   DDIM    |  250  |  -  |          -           |      -       | [ckpt](https://download.openmmlab.com/mmediting/guided_diffusion/adm-u_8xb32_imagenet-512x512-60b381cb.pth) |
+| [adm-g_ddim25_8xb32_imagenet-512x512](configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-512x512.py) | ImageNet 512x512 |   DDIM    |  25   | 1.0 |          -           |      -       | [ckpt](https://download.openmmlab.com/mmediting/guided_diffusion/adm-g_8xb32_imagenet-512x512-23cf0b58.pth) |
 
 ## Quick Start
 
@@ -49,17 +47,14 @@ We show that diffusion models can achieve image sample quality superior to the c
 You can run adm as follows:
 
 ```python
-from mmedit.models import AblatedDiffusionModel
 from mmedit.utils import register_all_modules
-import torch
-from torchvision.utils import save_image
 from mmedit.apis import init_model
 
 register_all_modules()
 
 # sampling without classifier guidance
 config = 'configs/guided_diffusion/adm_ddim250_8xb32_imagenet-64x64.py'
-ckpt_path = 'https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth'  # noqa
+ckpt_path = 'https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth'  # noqa
 model = init_model(config, ckpt_path)
 samples = model.infer(
             init_image=None,
@@ -71,7 +66,7 @@ samples = model.infer(
 
 # sampling without classifier guidance, CGS=1.0
 config = 'configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py'
-ckpt_path = ''  # noqa
+ckpt_path = 'https://download.openmmlab.com/mmediting/guided_diffusion/adm-g_8xb32_imagenet-64x64-2c0fbeda.pth'  # noqa
 model = init_model(config, ckpt_path)
 samples = model.infer(
             init_image=None,
