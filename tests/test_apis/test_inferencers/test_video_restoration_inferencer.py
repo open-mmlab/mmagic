@@ -1,8 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
-import sys
-
-import pytest
 
 from mmedit.apis.inferencers.video_restoration_inferencer import \
     VideoRestorationInferencer

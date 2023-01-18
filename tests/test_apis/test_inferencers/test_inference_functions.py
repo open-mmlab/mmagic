@@ -1,7 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 import platform
-import sys
 import unittest
 
 import pytest
