@@ -66,10 +66,8 @@ Please refer to [changelog.md](docs/en/changelog.md) for details and release his
 
 - [Introduction](#introduction)
 - [Installation](#installation)
-- [Getting Started](#getting-started)
 - [Model Zoo](#model-zoo)
 - [Contributing](#contributing)
-- [Demos](#demos)
 - [Acknowledgement](#acknowledgement)
 - [Citation](#citation)
 - [License](#license)
@@ -202,9 +200,7 @@ pip3 install -e .
 
 Please refer to [installation](docs/en/get_started/install.md) for more detailed instruction.
 
-<p align="right"><a href="#top">Back to top</a></p>
-
-## Getting Started
+**Getting Started**
 
 Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMEditing.
 
@@ -314,7 +310,7 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
       </td>
       <td>
         <ul>
-          <li><a href="configs/inst_colorization/README.md">DIM (CVPR'2020)</a></li>
+          <li><a href="configs/inst_colorization/README.md">InstColorization (CVPR'2020)</a></li>
         </ul>
       </td>
       <td>
@@ -384,80 +380,6 @@ Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/ov
 ## Contributing
 
 We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
-
-<p align="right"><a href="#top">Back to top</a></p>
-
-## Demos:
-
-**Text-to-Image with Diffusion Algorithms**
-
-<table align="center">
-<thead>
-  <tr>
-    <td>
-<div align="center">
-  <img src="https://user-images.githubusercontent.com/12782558/210951970-a81e80c3-822e-4782-901e-db52e34b85a3.png"  height="200"/>
-  <br/>
-  <b> A Chinese palace is beside a beautiful lake</b>
-</div></td>
-    <td>
-<div align="center">
-  <img src="https://user-images.githubusercontent.com/12782558/210952108-df82e5ad-6eb6-4948-8d22-3802299d1131.png" height="200"/>
-  <br/>
-  <b> A panda is having dinner at KFC</b>
-</div></td>
-    <td>
-<div align="center">
-  <img src="https://user-images.githubusercontent.com/22982797/204526957-ac30547e-5a44-417a-aaa2-6b357b4a139c.png"  height="200"/>
-  <br/>
-  <b> A beautiful painting of a singular lighthouse...</b>
-</div></td>
-  </tr>
-</thead>
-</table>
-
-**3D-aware Generation with EG3D**
-
-<div align=center>
-<video src="https://user-images.githubusercontent.com/28132635/204278664-b73b133b-9c3f-4a87-8750-133b7dedaebb.mp4"/>
-</div>
-
-**Video Super-Resolution**
-
-<div align=center>
-<video src="https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4"/>
-</div>
-
-<div align=center>
-<video src="https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4"/>
-</div>
-
-**Image Editing with GANs**
-
-<table align="center">
-<thead>
-  <tr>
-    <td>
-<div align="center">
-  <b> GAN Interpolation</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12726765/114679300-9fd4f900-9d3e-11eb-8f37-c36a018c02f7.gif" width="200"/>
-</div></td>
-    <td>
-<div align="center">
-  <b> GAN Projector</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12726765/114524392-c11ee200-9c77-11eb-8b6d-37bc637f5626.gif" width="200"/>
-</div></td>
-    <td>
-<div align="center">
-  <b> GAN Manipulation</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12726765/114523716-20302700-9c77-11eb-804e-327ae1ca0c5b.gif" width="200"/>
-</div></td>
-  </tr>
-</thead>
-</table>
 
 <p align="right"><a href="#top">Back to top</a></p>
 
