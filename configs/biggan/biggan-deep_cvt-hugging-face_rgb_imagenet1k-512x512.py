@@ -4,15 +4,14 @@ _base_ = [
 ]
 
 # setting image size to 512x512
-train_resize = _base_.train_dataloader.dataset.pipeline[3]
-test_resize = _base_.test_dataloader.dataset.pipeline[3]
-val_resize = _base_.val_dataloader.dataset.pipeline[3]
-train_resize.scale = test_resize.scale = val_resize.scale = (512, 512)
+_base_.train_dataloader.dataset.pipeline[2].scale = (512, 512)
+_base_.test_dataloader.dataset.pipeline[2].scale = (512, 512)
+_base_.val_dataloader.dataset.pipeline[2].scale = (512, 512)
 
 ema_config = dict(
     type='ExponentialMovingAverage',
     interval=1,
-    momentum=0.9999,
+    momentum=0.0001,
     update_buffers=True,
     start_iter=20000)
 

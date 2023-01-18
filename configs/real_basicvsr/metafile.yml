@@ -1,17 +1,15 @@
 Collections:
-- Metadata:
-    Architecture:
-    - RealBasicVSR
-  Name: RealBasicVSR
+- Name: RealBasicVSR
   Paper:
-  - https://arxiv.org/abs/2111.12704
+    Title: 'RealBasicVSR: Investigating Tradeoffs in Real-World Video Super-Resolution'
+    URL: https://arxiv.org/abs/2111.12704
   README: configs/real_basicvsr/README.md
+  Task:
+  - video super-resolution
+  Year: 2022
 Models:
 - Config: configs/real_basicvsr/realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds.py
   In Collection: RealBasicVSR
-  Metadata:
-    GPUs: 8 (Tesla V100-SXM2-32GB)
-    Training Data: REDS
   Name: realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds
   Results:
   - Dataset: REDS
@@ -24,9 +22,6 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104-52f77c2c.pth
 - Config: configs/real_basicvsr/realbasicvsr_wogan-c64b20-2x30x8_8xb2-lr1e-4-300k_reds.py
   In Collection: RealBasicVSR
-  Metadata:
-    GPUs: 8 (Tesla V100-SXM2-32GB)
-    Training Data: REDS
   Name: realbasicvsr_wogan-c64b20-2x30x8_8xb2-lr1e-4-300k_reds
   Results:
   - Dataset: REDS

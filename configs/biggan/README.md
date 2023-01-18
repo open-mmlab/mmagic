@@ -38,12 +38,17 @@ We have finished training `BigGAN` in `Cifar10` (32x32) and are aligning trainin
 
 Evaluation of our trained BigGAN.
 
-|                       Models                       |  Dataset   |    FID (Iter)     |      IS (Iter)      |                       Config                        |                       Download                        |
-| :------------------------------------------------: | :--------: | :---------------: | :-----------------: | :-------------------------------------------------: | :---------------------------------------------------: |
-|                    BigGAN 32x32                    |  CIFAR10   |   9.78(390000)    |    8.70(390000)     | [config](/configs/biggan/biggan_2xb25-500kiters_cifar10-32x32.py) | [model](https://download.openmmlab.com/mmgen/biggan/biggan_cifar10_32x32_b25x2_500k_20210728_110906-08b61a44.pth)\|[log](https://download.openmmlab.com/mmgen/biggan/biggan_cifar10_32_b25x2_500k_20210706_171051.log.json) |
-|              BigGAN 128x128 Best FID               | ImageNet1k | **8.69**(1232000) |   101.15(1232000)   | [config](/configs/biggan/biggan_ajbrock-sn_8xb32-1500kiters_imagenet1k-128x128.py) | [model](https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_b32x8_best_fid_iter_1232000_20211111_122548-5315b13d.pth)\|[log](https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_b32x8_1500k_20211111_122548-5315b13d.log.json) |
-|               BigGAN 128x128 Best IS               | ImageNet1k |  13.51(1328000)   | **129.07**(1328000) | [config](/configs/biggan/biggan_ajbrock-sn_8xb32-1500kiters_imagenet1k-128x128.py) | [model](https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_b32x8_best_is_iter_1328000_20211111_122911-28c688bc.pth)\|[log](https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_b32x8_1500k_20211111_122548-5315b13d.log.json) |
-| Note: `BigGAN-Deep` trained on `ImageNet1k` will come later. |            |                   |                     |                                                     |                                                       |
+|                                    Model                                    |  Dataset   |    FID (Iter)     |      IS (Iter)      |                                    Download                                     |
+| :-------------------------------------------------------------------------: | :--------: | :---------------: | :-----------------: | :-----------------------------------------------------------------------------: |
+|          [BigGAN 32x32](./biggan_2xb25-500kiters_cifar10-32x32.py)          |  CIFAR10   |   9.78(390000)    |    8.70(390000)     | [model](https://download.openmmlab.com/mmediting/biggan/biggan_cifar10_32x32_b25x2_500k_20210728_110906-08b61a44.pth)\|[log](https://download.openmmlab.com/mmediting/biggan/biggan_cifar10_32_b25x2_500k_20210706_171051.log.json) |
+| [BigGAN 128x128 Best FID](./biggan_ajbrock-sn_8xb32-1500kiters_imagenet1k-128x128.py) | ImageNet1k | **8.69**(1232000) |   101.15(1232000)   | [model](https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_b32x8_best_fid_iter_1232000_20211111_122548-5315b13d.pth)\|[log](https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_b32x8_1500k_20211111_122548-5315b13d.log.json) |
+| [BigGAN 128x128 Best IS](./biggan_ajbrock-sn_8xb32-1500kiters_imagenet1k-128x128.py) | ImageNet1k |  13.51(1328000)   | **129.07**(1328000) | [model](https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_b32x8_best_is_iter_1328000_20211111_122911-28c688bc.pth)\|[log](https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_b32x8_1500k_20211111_122548-5315b13d.log.json) |
+
+Note: `BigGAN-Deep` trained on `ImageNet1k` will come later.
+
+### Note on reproducibility
+
+`BigGAN 128x128` model is trained with V100 GPUs and CUDA 10.1 and can hardly reproduce the result with A100 and CUDA 11.3. If you have any idea about the reproducibility, please feel free to contact with us.
 
 ## Converted weights
 
@@ -51,12 +56,12 @@ Since we haven't finished training our models, we provide you with several pre-t
 
 Evaluation results and download links are provided below.
 
-|       Models        |  Dataset   |   FID   |   IS    |                     Config                     |                     Download                     |                     Original Download link                      |
-| :-----------------: | :--------: | :-----: | :-----: | :--------------------------------------------: | :----------------------------------------------: | :-------------------------------------------------------------: |
-|   BigGAN 128x128    | ImageNet1k | 10.1414 | 96.728  | [config](/configs/biggan/biggan_cvt-BigGAN-PyTorch-rgb_imagenet1k-128x128.py) | [model](https://download.openmmlab.com/mmgen/biggan/biggan_imagenet1k_128x128_cvt_BigGAN-PyTorch_rgb_20210730_125223-3e353fef.pth) | [link](https://drive.google.com/open?id=1nAle7FCVFZdix2--ks0r5JBkFnKw8ctW) |
-| BigGAN-Deep 128x128 | ImageNet1k | 5.9471  | 107.161 | [config](/configs/biggan/biggan-deep_cvt-hugging-face-rgb_imagenet1k-128x128.py) | [model](https://download.openmmlab.com/mmgen/biggan/biggan-deep_imagenet1k_128x128_cvt_hugging-face_rgb_20210728_111659-099e96f9.pth) | [link](https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-128-pytorch_model.bin) |
-| BigGAN-Deep 256x256 | ImageNet1k | 11.3151 | 135.107 | [config](/configs/biggan/biggan-deep_cvt-hugging-face_rgb_imagenet1k-256x256.py) | [model](https://download.openmmlab.com/mmgen/biggan/biggan-deep_imagenet1k_256x256_cvt_hugging-face_rgb_20210728_111735-28651569.pth) | [link](https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-pytorch_model.bin) |
-| BigGAN-Deep 512x512 | ImageNet1k | 16.8728 | 124.368 | [config](/configs/biggan/biggan-deep_cvt-hugging-face_rgb_imagenet1k-512x512.py) | [model](https://download.openmmlab.com/mmgen/biggan/biggan-deep_imagenet1k_512x512_cvt_hugging-face_rgb_20210728_112346-a42585f2.pth) | [link](https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-512-pytorch_model.bin) |
+|                        Model                         |  Dataset   |   FID   |   IS    |                        Download                         |                        Original Download link                         |
+| :--------------------------------------------------: | :--------: | :-----: | :-----: | :-----------------------------------------------------: | :-------------------------------------------------------------------: |
+| [BigGAN 128x128](./biggan_cvt-BigGAN-PyTorch-rgb_imagenet1k-128x128.py) | ImageNet1k | 10.1414 | 96.728  | [model](https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_cvt_BigGAN-PyTorch_rgb_20210730_125223-3e353fef.pth) | [link](https://drive.google.com/open?id=1nAle7FCVFZdix2--ks0r5JBkFnKw8ctW) |
+| [BigGAN-Deep 128x128](./biggan-deep_cvt-hugging-face-rgb_imagenet1k-128x128.py) | ImageNet1k | 5.9471  | 107.161 | [model](https://download.openmmlab.com/mmediting/biggan/biggan-deep_imagenet1k_128x128_cvt_hugging-face_rgb_20210728_111659-099e96f9.pth) | [link](https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-128-pytorch_model.bin) |
+| [BigGAN-Deep 256x256](./biggan-deep_cvt-hugging-face_rgb_imagenet1k-256x256.py) | ImageNet1k | 11.3151 | 135.107 | [model](https://download.openmmlab.com/mmediting/biggan/biggan-deep_imagenet1k_256x256_cvt_hugging-face_rgb_20210728_111735-28651569.pth) | [link](https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-pytorch_model.bin) |
+| [BigGAN-Deep 512x512](./biggan-deep_cvt-hugging-face_rgb_imagenet1k-512x512.py) | ImageNet1k | 16.8728 | 124.368 | [model](https://download.openmmlab.com/mmediting/biggan/biggan-deep_imagenet1k_512x512_cvt_hugging-face_rgb_20210728_112346-a42585f2.pth) | [link](https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-512-pytorch_model.bin) |
 
 Sampling results are shown below.
 

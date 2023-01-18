@@ -1,113 +1,74 @@
 Collections:
-- Metadata:
-    Architecture:
-    - TDAN
-  Name: TDAN
+- Name: TDAN
   Paper:
-  - https://arxiv.org/abs/1812.02898
+    Title: 'TDAN: Temporally Deformable Alignment Network for Video Super-Resolution'
+    URL: https://arxiv.org/abs/1812.02898
   README: configs/tdan/README.md
+  Task:
+  - video super-resolution
+  Year: 2020
 Models:
-- Config: configs/tdan/tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi.py
+- Config: configs/tdan/tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bi.py
   In Collection: TDAN
-  Metadata:
-    GPUs: 8 (Tesla V100-SXM2-32GB)
-    Training Data: VIMEO90K
-  Name: tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi
+  Name: tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bi
   Results:
-  - Dataset: VIMEO90K
+  - Dataset: '-'
     Metrics: {}
     Task: Video Super-Resolution
-  Weights: ''
-- Config: configs/tdan/tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bd.py
+- Config: configs/tdan/tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bd.py
   In Collection: TDAN
-  Metadata:
-    GPUs: 8 (Tesla V100-SXM2-32GB)
-    Training Data: VIMEO90K
-  Name: tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bd
+  Name: tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bd
   Results:
-  - Dataset: VIMEO90K
+  - Dataset: '-'
     Metrics: {}
     Task: Video Super-Resolution
-  Weights: ''
-- Config: configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py
+- Config: configs/tdan/tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi.py
   In Collection: TDAN
-  Metadata:
-    GPUs: 8 (Tesla V100-SXM2-32GB)
-    Training Data: VIMEO90K
-  Name: tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi
+  Name: tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi
   Results:
-  - Dataset: VIMEO90K
+  - Dataset: Vid4(BIx4)
     Metrics:
-      SPMCS-30 (BDx4) PSNR (Y): 29.69
-      SPMCS-30 (BIx4) PSNR (Y): 30.42
-      Vid4 (BDx4) PSNR (Y): 25.93
-      Vid4 (BIx4) PSNR (Y): 26.49
+      PSNR (Y): 26.49
+      SSIM (Y): 0.792
+    Task: Video Super-Resolution
+  - Dataset: SPMCS-30(BIx4)
+    Metrics:
+      PSNR (Y): 30.42
+      SSIM (Y): 0.856
+    Task: Video Super-Resolution
+  - Dataset: Vid4(BDx4)
+    Metrics:
+      PSNR (Y): 25.93
+      SSIM (Y): 0.772
+    Task: Video Super-Resolution
+  - Dataset: SPMCS-30(BDx4)
+    Metrics:
+      PSNR (Y): 29.69
+      SSIM (Y): 0.842
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
-- Config: configs/tdan/tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd.py
+- Config: configs/tdan/tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd.py
   In Collection: TDAN
-  Metadata:
-    GPUs: 8 (Tesla V100-SXM2-32GB)
-    Training Data: VIMEO90K
-  Name: tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd
+  Name: tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd
   Results:
-  - Dataset: VIMEO90K
+  - Dataset: Vid4(BIx4)
     Metrics:
-      SPMCS-30 (BDx4) PSNR (Y): 30.77
-      SPMCS-30 (BIx4) PSNR (Y): 29.56
-      Vid4 (BDx4) PSNR (Y): 26.87
-      Vid4 (BIx4) PSNR (Y): 25.8
+      PSNR (Y): 25.8
+      SSIM (Y): 0.784
     Task: Video Super-Resolution
-  Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth
-- Config: configs/tdan/tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi.py
-  In Collection: TDAN
-  Metadata:
-    GPUs: 8 (Tesla V100-SXM2-32GB)
-    Training Data: VIMEO90K
-  Name: tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi
-  Results:
-  - Dataset: VIMEO90K
-    Metrics: {}
-    Task: Video Super-Resolution
-  Weights: ''
-- Config: configs/tdan/tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bd.py
-  In Collection: TDAN
-  Metadata:
-    GPUs: 8 (Tesla V100-SXM2-32GB)
-    Training Data: VIMEO90K
-  Name: tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bd
-  Results:
-  - Dataset: VIMEO90K
-    Metrics: {}
-    Task: Video Super-Resolution
-  Weights: ''
-- Config: configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py
-  In Collection: TDAN
-  Metadata:
-    GPUs: 8 (Tesla V100-SXM2-32GB)
-    Training Data: VIMEO90K
-  Name: tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi
-  Results:
-  - Dataset: VIMEO90K
+  - Dataset: SPMCS-30(BIx4)
     Metrics:
-      SPMCS-30 (BDx4) SSIM (Y): 0.842
-      SPMCS-30 (BIx4) SSIM (Y): 0.856
-      Vid4 (BDx4) SSIM (Y): 0.772
-      Vid4 (BIx4) SSIM (Y): 0.792
+      PSNR (Y): 29.56
+      SSIM (Y): 0.851
     Task: Video Super-Resolution
-  Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
-- Config: configs/tdan/tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd.py
-  In Collection: TDAN
-  Metadata:
-    GPUs: 8 (Tesla V100-SXM2-32GB)
-    Training Data: VIMEO90K
-  Name: tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd
-  Results:
-  - Dataset: VIMEO90K
+  - Dataset: Vid4(BDx4)
     Metrics:
-      SPMCS-30 (BDx4) SSIM (Y): 0.868
-      SPMCS-30 (BIx4) SSIM (Y): 0.851
-      Vid4 (BDx4) SSIM (Y): 0.815
-      Vid4 (BIx4) SSIM (Y): 0.784
+      PSNR (Y): 26.87
+      SSIM (Y): 0.815
+    Task: Video Super-Resolution
+  - Dataset: SPMCS-30(BDx4)
+    Metrics:
+      PSNR (Y): 30.77
+      SSIM (Y): 0.868
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth

@@ -1,19 +1,18 @@
 Collections:
-- Metadata:
-    Architecture:
-    - EG3D
-  Name: EG3D
+- Name: EG3D
   Paper:
-  - https://openaccess.thecvf.com/content/CVPR2022/html/Chan_Efficient_Geometry-Aware_3D_Generative_Adversarial_Networks_CVPR_2022_paper.html
+    Title: Efficient geometry-aware 3D generative adversarial networks
+    URL: https://openaccess.thecvf.com/content/CVPR2022/html/Chan_Efficient_Geometry-Aware_3D_Generative_Adversarial_Networks_CVPR_2022_paper.html
   README: configs/eg3d/README.md
+  Task:
+  - 3d-aware generation
+  Year: 2022
 Models:
 - Config: configs/eg3d/eg3d_cvt-official-rgb_shapenet-128x128.py
   In Collection: EG3D
-  Metadata:
-    Training Data: Others
   Name: eg3d_cvt-official-rgb_shapenet-128x128
   Results:
-  - Dataset: Others
+  - Dataset: ShaperNet-Car
     Metrics:
       FID50k: 5.6573
       FID50k-Camera: 5.2325
@@ -21,11 +20,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_shapenet-128x128-85757f4d.pth
 - Config: configs/eg3d/eg3d_cvt-official-rgb_afhq-512x512.py
   In Collection: EG3D
-  Metadata:
-    Training Data: Others
   Name: eg3d_cvt-official-rgb_afhq-512x512
   Results:
-  - Dataset: Others
+  - Dataset: AFHQ
     Metrics:
       FID50k: 2.9134
       FID50k-Camera: 6.4213
@@ -33,8 +30,6 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_afhq-512x512-ca1dd7c9.pth
 - Config: configs/eg3d/eg3d_cvt-official-rgb_ffhq-512x512.py
   In Collection: EG3D
-  Metadata:
-    Training Data: FFHQ
   Name: eg3d_cvt-official-rgb_ffhq-512x512
   Results:
   - Dataset: FFHQ

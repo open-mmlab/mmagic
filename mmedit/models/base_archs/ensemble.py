@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch
 import torch.nn as nn
 
@@ -13,13 +15,13 @@ class SpatialTemporalEnsemble(nn.Module):
             Default: False.
     """
 
-    def __init__(self, is_temporal_ensemble=False):
+    def __init__(self, is_temporal_ensemble: Optional[bool] = False):
 
         super().__init__()
 
         self.is_temporal_ensemble = is_temporal_ensemble
 
-    def _transform(self, imgs, mode):
+    def _transform(self, imgs: torch.Tensor, mode: str) -> torch.Tensor:
         """Apply spatial transform (flip, rotate) to the images.
 
         Args:
@@ -52,7 +54,8 @@ class SpatialTemporalEnsemble(nn.Module):
 
         return imgs
 
-    def spatial_ensemble(self, imgs, model):
+    def spatial_ensemble(self, imgs: torch.Tensor,
+                         model: nn.Module) -> torch.Tensor:
         """Apply spatial ensemble.
 
         Args:
@@ -82,7 +85,7 @@ class SpatialTemporalEnsemble(nn.Module):
 
         return outputs.to(imgs.device)
 
-    def forward(self, imgs, model):
+    def forward(self, imgs: torch.Tensor, model: nn.Module) -> torch.Tensor:
         """Apply spatial and temporal ensemble.
 
         Args:

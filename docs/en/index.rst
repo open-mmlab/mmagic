@@ -38,7 +38,7 @@ Documentation
    :maxdepth: 1
    :caption: Community
 
-   community/contribution_guide.md
+   community/contributing.md
    community/projects.md
 
 
@@ -63,7 +63,6 @@ Documentation
    user_guides/visualization.md
    user_guides/useful_tools.md
    user_guides/deploy.md
-   user_guides/faq.md
 
 
 .. toctree::
@@ -90,6 +89,8 @@ Documentation
    howto/losses.md
 
 .. toctree::
+   :maxdepth: 1
+   :caption: FAQ
 
    faq.md
 
@@ -107,6 +108,8 @@ Documentation
    dataset_zoo/index.rst
 
 .. toctree::
+   :maxdepth: 1
+   :caption: Changelog
 
    changelog.md
 

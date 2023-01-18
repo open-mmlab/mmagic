@@ -20,9 +20,9 @@ Image colorization is inherently an ill-posed problem with multi-modal uncertain
 
 ## 结果和模型
 
-|                                               Method                                                |                                               Download                                                |
-| :-------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: |
-| [instance_aware_colorization_officiial](/configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py) | [model](https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth) |
+|                                              Model                                               |                                                 Download                                                 |
+| :----------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: |
+| [instance_aware_colorization_officiial](./inst-colorizatioon_full_official_cocostuff-256x256.py) | [model](https://download.openmmlab.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth) |
 
 ## 快速开始
 
@@ -32,7 +32,7 @@ Image colorization is inherently an ill-posed problem with multi-modal uncertain
 您可以使用以下命令来对一张图像进行上色。
 
 ```shell
-python demo/colorization_demo.py configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth input.jpg output.jpg
+python demo/colorization_demo.py configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py https://download.openmmlab.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth input.jpg output.jpg
 ```
 
 更多细节可以参考 [Tutorial 3: inference with pre-trained models](https://mmediting.readthedocs.io/en/1.x/user_guides/3_inference.html)。

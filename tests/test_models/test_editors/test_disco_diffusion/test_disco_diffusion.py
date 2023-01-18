@@ -1,10 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import unittest
 from copy import deepcopy
 from unittest import TestCase
+from unittest.mock import patch
 
-import pytest
 import torch
 import torch.nn as nn
+from mmengine.utils import digit_version
+from torchvision.version import __version__ as TV_VERSION
 
 from mmedit.models import DDIMScheduler, DenoisingUnet, DiscoDiffusion
 from mmedit.utils import register_all_modules
@@ -79,7 +82,10 @@ class TestDiscoDiffusion(TestCase):
             clip_models=clip_models,
             use_fp16=True)
 
-    @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
+    @unittest.skipIf(
+        digit_version(TV_VERSION) <= digit_version('0.7.0'),
+        reason='torchvision version limitation')
+    @unittest.skipIf(not torch.cuda.is_available(), reason='requires cuda')
     def test_infer(self):
         unet32 = deepcopy(self.unet32)
         diffusion_scheduler = deepcopy(self.diffusion_scheduler)
@@ -99,7 +105,7 @@ class TestDiscoDiffusion(TestCase):
         image = self.disco_diffusion.infer(
             text_prompts=text_prompts,
             show_progress=True,
-            num_inference_steps=5,
+            num_inference_steps=2,
             eta=0.8)['samples']
         assert image.shape == (1, 3, 32, 32)
         # test with different text prompts
@@ -111,7 +117,7 @@ class TestDiscoDiffusion(TestCase):
         image = self.disco_diffusion.infer(
             text_prompts=text_prompts,
             show_progress=True,
-            num_inference_steps=5,
+            num_inference_steps=2,
             eta=0.8)['samples']
         assert image.shape == (1, 3, 32, 32)
 
@@ -126,7 +132,7 @@ class TestDiscoDiffusion(TestCase):
             text_prompts=text_prompts,
             init_image=init_image,
             show_progress=True,
-            num_inference_steps=5,
+            num_inference_steps=2,
             eta=0.8)['samples']
         assert image.shape == (1, 3, 32, 32)
 
@@ -139,7 +145,7 @@ class TestDiscoDiffusion(TestCase):
             width=128,
             text_prompts=text_prompts,
             show_progress=True,
-            num_inference_steps=5,
+            num_inference_steps=2,
             eta=0.8)['samples']
         assert image.shape == (1, 3, 64, 128)
 
@@ -147,7 +153,7 @@ class TestDiscoDiffusion(TestCase):
         image = self.disco_diffusion.infer(
             text_prompts=text_prompts,
             show_progress=True,
-            num_inference_steps=5,
+            num_inference_steps=2,
             clip_guidance_scale=8000,
             eta=0.8)['samples']
         assert image.shape == (1, 3, 32, 32)
@@ -159,7 +165,7 @@ class TestDiscoDiffusion(TestCase):
         image = self.disco_diffusion.infer(
             text_prompts=text_prompts,
             show_progress=True,
-            num_inference_steps=5,
+            num_inference_steps=2,
             eta=0.8,
             tv_scale=tv_scale,
             sat_scale=sat_scale,
@@ -175,7 +181,7 @@ class TestDiscoDiffusion(TestCase):
         image = self.disco_diffusion.infer(
             text_prompts=text_prompts,
             show_progress=True,
-            num_inference_steps=5,
+            num_inference_steps=2,
             eta=0.8,
             cut_overview=cut_overview,
             cut_innercut=cut_innercut,
@@ -207,6 +213,35 @@ class TestDiscoDiffusion(TestCase):
         image = self.disco_diffusion.infer(
             text_prompts=text_prompts,
             show_progress=True,
-            num_inference_steps=5,
+            num_inference_steps=2,
             eta=0.8)['samples']
         assert image.shape == (1, 3, 64, 64)
+
+        class affineMock(nn.Module):
+
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+
+            def forward(self, x):
+                return x
+
+        mock_path = ('mmedit.models.editors.disco_diffusion.guider.'
+                     'TORCHVISION_VERSION')
+        affine_mock_path = ('mmedit.models.editors.disco_diffusion.guider.T.'
+                            'RandomAffine')
+        with patch(affine_mock_path, new=affineMock):
+            with patch(mock_path, '0.8.1'):
+                image = self.disco_diffusion.infer(
+                    text_prompts=text_prompts,
+                    show_progress=True,
+                    num_inference_steps=2,
+                    eta=0.8)['samples']
+                assert image.shape == (1, 3, 64, 64)
+
+            with patch(mock_path, '0.9.0'):
+                image = self.disco_diffusion.infer(
+                    text_prompts=text_prompts,
+                    show_progress=True,
+                    num_inference_steps=2,
+                    eta=0.8)['samples']
+                assert image.shape == (1, 3, 64, 64)

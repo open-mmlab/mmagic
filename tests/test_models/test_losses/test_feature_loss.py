@@ -1,10 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import pytest
 import torch
 
 from mmedit.models.losses import LightCNNFeatureLoss
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 def test_light_cnn_feature_loss():
 
     pretrained = 'https://download.openmmlab.com/mmediting/' + \

@@ -1,22 +1,22 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Union
+from typing import Optional, Union
 
 import numpy as np
 import torch
 
+from mmedit.models.utils.diffusion_utils import betas_for_alpha_bar
 from mmedit.registry import DIFFUSION_SCHEDULERS
-from ...utils.diffusion_utils import betas_for_alpha_bar
 
 
 @DIFFUSION_SCHEDULERS.register_module()
 class DDPMScheduler:
 
     def __init__(self,
-                 num_train_timesteps=1000,
-                 beta_start=0.0001,
-                 beta_end=0.02,
-                 beta_schedule='linear',
-                 trained_betas=None,
+                 num_train_timesteps: int = 1000,
+                 beta_start: float = 0.0001,
+                 beta_end: float = 0.02,
+                 beta_schedule: str = 'linear',
+                 trained_betas: Optional[Union[np.array, list]] = None,
                  variance_type='fixed_small',
                  clip_sample=True):
         """```DDPMScheduler``` support the diffusion and reverse process
@@ -25,13 +25,25 @@ class DDPMScheduler:
         The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddpm.py. # noqa
 
         Args:
-            num_train_timesteps (int, optional): _description_. Defaults to 1000.
-            beta_start (float, optional): _description_. Defaults to 0.0001.
-            beta_end (float, optional): _description_. Defaults to 0.02.
-            beta_schedule (str, optional): _description_. Defaults to 'linear'.
-            trained_betas (_type_, optional): _description_. Defaults to None.
-            variance_type (str, optional): _description_. Defaults to 'fixed_small'.
-            clip_sample (bool, optional): _description_. Defaults to True.
+            num_train_timesteps (int, optional): The timesteps for training
+                process. Defaults to 1000.
+            beta_start (float, optional): The beta value at start. The beta
+                values will be interpolated from beta_start to beta_end.
+                Defaults to 0.0001.
+            beta_end (float, optional): The beta value at the end. The beta
+                values will be interpolated from beta_start to beta_end.
+                Defaults to 0.02.
+            beta_schedule (str, optional): The interpolation schedule for beta
+                values. Supported choices are 'linear', 'scaled_linear', and
+                'squaredcos_cap_v2'. Defaults to 'linear'.
+            trained_betas (list, np.array, optional): betas directly to the
+                constructor to bypass `beta_start`, `beta_end` etc. Defaults to None.
+            variance_type (str, optional): How denoising unet output variance
+                value. Supported choices are 'fixed_small', 'fixed_small_log',
+                'fixed_large', 'fixed_large_log', 'learned', and 'leanred_range'.
+                Defaults to 'fixed_small'.
+            clip_sample (bool, optional): Whether clip the value of predicted
+                original image (x0) to [-1, 1]. Defaults to True.
         """
         self.num_train_timesteps = num_train_timesteps
         if trained_betas is not None:
@@ -66,6 +78,8 @@ class DDPMScheduler:
         self.clip_sample = clip_sample
 
     def set_timesteps(self, num_inference_steps):
+        """set timesteps."""
+
         num_inference_steps = min(self.num_train_timesteps,
                                   num_inference_steps)
         self.num_inference_steps = num_inference_steps
@@ -74,6 +88,8 @@ class DDPMScheduler:
             self.num_train_timesteps // self.num_inference_steps)[::-1].copy()
 
     def _get_variance(self, t, predicted_variance=None, variance_type=None):
+        """get variance."""
+
         alpha_prod_t = self.alphas_cumprod[t]
         alpha_prod_t_prev = self.alphas_cumprod[t - 1] if t > 0 else self.one
 
@@ -93,10 +109,10 @@ class DDPMScheduler:
 
         # hacks - were probs added for training stability
         if variance_type == 'fixed_small':
-            variance = np.clip(variance, min_value=1e-20)
+            variance = np.clip(variance, a_min=1e-20, a_max=10000)
         # for rl-diffusion_scheduler https://arxiv.org/abs/2205.09991
         elif variance_type == 'fixed_small_log':
-            variance = np.log(np.clip(variance, min_value=1e-20))
+            variance = np.log(np.clip(variance, a_min=1e-20, a_max=10000))
         elif variance_type == 'fixed_large':
             variance = self.betas[t]
         elif variance_type == 'fixed_large_log':
@@ -114,12 +130,13 @@ class DDPMScheduler:
         return variance
 
     def step(self,
-             model_output: Union[torch.FloatTensor],
+             model_output: torch.FloatTensor,
              timestep: int,
-             sample: Union[torch.FloatTensor],
+             sample: torch.FloatTensor,
              predict_epsilon=True,
              generator=None):
         t = timestep
+        """step forward"""
 
         if model_output.shape[1] == sample.shape[
                 1] * 2 and self.variance_type in ['learned', 'learned_range']:
@@ -177,6 +194,8 @@ class DDPMScheduler:
         }
 
     def add_noise(self, original_samples, noise, timesteps):
+        """add noise."""
+
         sqrt_alpha_prod = self.alphas_cumprod[timesteps]**0.5
         sqrt_alpha_prod = self.match_shape(sqrt_alpha_prod, original_samples)
         sqrt_one_minus_alpha_prod = (1 - self.alphas_cumprod[timesteps])**0.5

@@ -6,8 +6,9 @@ clip @ git+https://github.com/openai/CLIP.git@d50d76daa670286dd6cacf3bcd80b5e482
 # pytest
 # pytest-runner
 # yapf
-coverage
+coverage < 7.0.0
 imageio-ffmpeg==0.4.4
 interrogate
 mmdet >= 3.0.0rc2
 pytest
+transformers

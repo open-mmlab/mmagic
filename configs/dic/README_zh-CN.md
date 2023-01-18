@@ -29,10 +29,10 @@
 
 `GPU 信息`: 训练过程中的 GPU 信息.
 
-|                                       算法                                       | scale |    CelebA-HQ     |      GPU 信息       |                                       下载                                       |
-| :------------------------------------------------------------------------------: | :---: | :--------------: | :-----------------: | :------------------------------------------------------------------------------: |
-| [dic_x8c48b6_g4_150k_CelebAHQ](/configs/dic/dic_x8c48b6_4xb2-150k_celeba-hq.py)  |  x8   | 25.2319 / 0.7422 | 4 (Tesla PG503-216) | [模型](https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.log.json) |
-| [dic_gan_x8c48b6_g4_500k_CelebAHQ](/configs/dic/dic_gan-x8c48b6_4xb2-500k_celeba-hq.py) |  x8   | 23.6241 / 0.6721 | 4 (Tesla PG503-216) | [模型](https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.log.json) |
+|                                     算法                                     | scale |    CelebA-HQ     |      GPU 信息       |                                         下载                                         |
+| :--------------------------------------------------------------------------: | :---: | :--------------: | :-----------------: | :----------------------------------------------------------------------------------: |
+|     [dic_x8c48b6_g4_150k_CelebAHQ](./dic_x8c48b6_4xb2-150k_celeba-hq.py)     |  x8   | 25.2319 / 0.7422 | 4 (Tesla PG503-216) | [模型](https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.log.json) |
+| [dic_gan_x8c48b6_g4_500k_CelebAHQ](./dic_gan-x8c48b6_4xb2-500k_celeba-hq.py) |  x8   | 23.6241 / 0.6721 | 4 (Tesla PG503-216) | [模型](https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.pth) \| [日志](https://download.openmmlab.com/mmediting/restorers/dic/dic_gan_x8c48b6_g4_500k_CelebAHQ_20210625-3b89a358.log.json) |
 
 ## 快速开始
 

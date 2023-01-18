@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import List, Optional, Sequence
+
 import torch.nn as nn
 import torch.utils.checkpoint as cp
 from mmcv.cnn import build_activation_layer, build_conv_layer, build_norm_layer
@@ -6,6 +8,7 @@ from mmengine import MMLogger
 from mmengine.model.weight_init import constant_init, kaiming_init
 from mmengine.runner import load_checkpoint
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
+from torch import Tensor
 
 
 class BasicBlock(nn.Module):
@@ -30,15 +33,15 @@ class BasicBlock(nn.Module):
     expansion = 1
 
     def __init__(self,
-                 inplanes,
-                 planes,
-                 stride=1,
-                 dilation=1,
-                 downsample=None,
-                 act_cfg=dict(type='ReLU'),
-                 conv_cfg=None,
-                 norm_cfg=dict(type='BN'),
-                 with_cp=False):
+                 inplanes: int,
+                 planes: int,
+                 stride: int = 1,
+                 dilation: int = 1,
+                 downsample: Optional[nn.Module] = None,
+                 act_cfg: dict = dict(type='ReLU'),
+                 conv_cfg: Optional[dict] = None,
+                 norm_cfg: dict = dict(type='BN'),
+                 with_cp: bool = False):
         super(BasicBlock, self).__init__()
 
         self.norm1_name, norm1 = build_norm_layer(norm_cfg, planes, postfix=1)
@@ -65,19 +68,19 @@ class BasicBlock(nn.Module):
         self.with_cp = with_cp
 
     @property
-    def norm1(self):
+    def norm1(self) -> nn.Module:
         """nn.Module: normalization layer after the first convolution layer"""
         return getattr(self, self.norm1_name)
 
     @property
-    def norm2(self):
+    def norm2(self) -> nn.Module:
         """nn.Module: normalization layer after the second convolution layer"""
         return getattr(self, self.norm2_name)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """Forward function."""
 
-        def _inner_forward(x):
+        def _inner_forward(x: Tensor) -> Tensor:
             identity = x
 
             out = self.conv1(x)
@@ -126,15 +129,15 @@ class Bottleneck(nn.Module):
     expansion = 4
 
     def __init__(self,
-                 inplanes,
-                 planes,
-                 stride=1,
-                 dilation=1,
-                 downsample=None,
-                 act_cfg=dict(type='ReLU'),
-                 conv_cfg=None,
-                 norm_cfg=dict(type='BN'),
-                 with_cp=False):
+                 inplanes: int,
+                 planes: int,
+                 stride: int = 1,
+                 dilation: int = 1,
+                 downsample: Optional[nn.Module] = None,
+                 act_cfg: dict = dict(type='ReLU'),
+                 conv_cfg: Optional[dict] = None,
+                 norm_cfg: dict = dict(type='BN'),
+                 with_cp: bool = False):
         super(Bottleneck, self).__init__()
 
         self.inplanes = inplanes
@@ -185,21 +188,21 @@ class Bottleneck(nn.Module):
         self.downsample = downsample
 
     @property
-    def norm1(self):
+    def norm1(self) -> nn.Module:
         """nn.Module: normalization layer after the first convolution layer"""
         return getattr(self, self.norm1_name)
 
     @property
-    def norm2(self):
+    def norm2(self) -> nn.Module:
         """nn.Module: normalization layer after the second convolution layer"""
         return getattr(self, self.norm2_name)
 
     @property
-    def norm3(self):
+    def norm3(self) -> nn.Module:
         """nn.Module: normalization layer after the second convolution layer"""
         return getattr(self, self.norm3_name)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         identity = x
 
         out = self.conv1(x)
@@ -269,23 +272,23 @@ class ResNet(nn.Module):
     }
 
     def __init__(self,
-                 depth,
-                 in_channels,
-                 stem_channels,
-                 base_channels,
-                 num_stages=4,
-                 strides=(1, 2, 2, 2),
-                 dilations=(1, 1, 2, 4),
-                 deep_stem=False,
-                 avg_down=False,
-                 frozen_stages=-1,
-                 act_cfg=dict(type='ReLU'),
-                 conv_cfg=None,
-                 norm_cfg=dict(type='BN'),
-                 with_cp=False,
-                 multi_grid=None,
-                 contract_dilation=False,
-                 zero_init_residual=True):
+                 depth: int,
+                 in_channels: int = 3,
+                 stem_channels: int = 64,
+                 base_channels: int = 64,
+                 num_stages: int = 4,
+                 strides: Sequence[int] = (1, 2, 2, 2),
+                 dilations: Sequence[int] = (1, 1, 2, 4),
+                 deep_stem: bool = False,
+                 avg_down: bool = False,
+                 frozen_stages: int = -1,
+                 act_cfg: dict = dict(type='ReLU'),
+                 conv_cfg: Optional[dict] = None,
+                 norm_cfg: dict = dict(type='BN'),
+                 with_cp: bool = False,
+                 multi_grid: Optional[Sequence[int]] = None,
+                 contract_dilation: bool = False,
+                 zero_init_residual: bool = True):
         super(ResNet, self).__init__()
         from functools import partial
 
@@ -334,7 +337,7 @@ class ResNet(nn.Module):
 
         self._freeze_stages()
 
-    def _make_stem_layer(self, in_channels, stem_channels):
+    def _make_stem_layer(self, in_channels: int, stem_channels: int) -> None:
         """Make stem layer for ResNet."""
         if self.deep_stem:
             self.stem = nn.Sequential(
@@ -384,11 +387,16 @@ class ResNet(nn.Module):
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 
     @property
-    def norm1(self):
+    def norm1(self) -> nn.Module:
         """nn.Module: normalization layer after the second convolution layer"""
         return getattr(self, self.norm1_name)
 
-    def _make_layer(self, block, planes, blocks, stride=1, dilation=1):
+    def _make_layer(self,
+                    block: BasicBlock,
+                    planes: int,
+                    blocks: int,
+                    stride: int = 1,
+                    dilation: int = 1) -> nn.Module:
         downsample = None
         if stride != 1 or self.inplanes != planes * block.expansion:
             downsample = nn.Sequential(
@@ -424,7 +432,7 @@ class ResNet(nn.Module):
 
         return nn.Sequential(*layers)
 
-    def _nostride_dilate(self, m, dilate):
+    def _nostride_dilate(self, m: nn.Module, dilate: int) -> None:
         classname = m.__class__.__name__
         if classname.find('Conv') != -1 and dilate > 1:
             # the convolution with stride
@@ -440,7 +448,7 @@ class ResNet(nn.Module):
                     m.dilation = (dilate, dilate)
                     m.padding = (dilate, dilate)
 
-    def init_weights(self, pretrained=None):
+    def init_weights(self, pretrained: Optional[str] = None) -> None:
         """Init weights for the model.
 
         Args:
@@ -466,7 +474,7 @@ class ResNet(nn.Module):
         else:
             raise TypeError('pretrained must be a str or None')
 
-    def _freeze_stages(self):
+    def _freeze_stages(self) -> None:
         """Freeze stages param and norm stats."""
         if self.frozen_stages >= 0:
             if self.deep_stem:
@@ -485,7 +493,7 @@ class ResNet(nn.Module):
             for param in m.parameters():
                 param.requires_grad = False
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> List[Tensor]:
         """Forward function.
 
         Args:

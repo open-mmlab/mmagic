@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch
 
 from mmedit.registry import MODELS
@@ -35,14 +37,14 @@ class BasicInterpolator(BaseEditModel):
     """
 
     def __init__(self,
-                 generator,
-                 pixel_loss,
-                 train_cfg=None,
-                 test_cfg=None,
-                 required_frames=2,
-                 step_frames=1,
-                 init_cfg=None,
-                 data_preprocessor=None):
+                 generator: dict,
+                 pixel_loss: dict,
+                 train_cfg: Optional[dict] = None,
+                 test_cfg: Optional[dict] = None,
+                 required_frames: int = 2,
+                 step_frames: int = 1,
+                 init_cfg: Optional[dict] = None,
+                 data_preprocessor: Optional[dict] = None):
 
         super().__init__(
             generator=generator,
@@ -57,7 +59,7 @@ class BasicInterpolator(BaseEditModel):
         # Step size of video frame interpolation
         self.step_frames = step_frames
 
-    def split_frames(self, input_tensors):
+    def split_frames(self, input_tensors: torch.Tensor) -> torch.Tensor:
         """split input tensors for inference.
 
         Args:
@@ -80,7 +82,8 @@ class BasicInterpolator(BaseEditModel):
         return result
 
     @staticmethod
-    def merge_frames(input_tensors, output_tensors):
+    def merge_frames(input_tensors: torch.Tensor,
+                     output_tensors: torch.Tensor) -> list:
         """merge input frames and output frames.
 
         Interpolate a frame between the given two frames.
