@@ -88,11 +88,13 @@ class TestExponentialMovingAverage(TestCase):
         with self.assertRaises(AssertionError):
             average_model = ExponentialMovingAverage(model, **cfg)
 
-        cfg = deepcopy(self.default_cfg)
-        cfg['momentum'] = 0.6
-        model = ToyModule()
-        average_model = ExponentialMovingAverage(model=model, **cfg)
-        self.assertEqual(average_model.momentum, 0.6)
+        # test warning
+        with pytest.warns(UserWarning):
+            cfg = deepcopy(self.default_cfg)
+            cfg['momentum'] = 0.6
+            model = ToyModule()
+            average_model = ExponentialMovingAverage(model=model, **cfg)
+            self.assertEqual(average_model.momentum, 0.6)
 
     def test_avg_func(self):
         cfg = deepcopy(self.default_cfg)
@@ -171,13 +173,14 @@ class TestRamUpEMA(TestCase):
         average_model.avg_func(tar_tensor, src_tensor, steps=42)
 
         # test warning
-        cfg = deepcopy(self.default_cfg)
-        cfg['batch_size'] = 0
-        model = ToyModule()
-        average_model = RampUpEMA(model, **cfg)
-        src_tensor = torch.randn(1, 3, 2, 2)
-        tar_tensor = torch.randn(1, 3, 2, 2)
-        average_model.avg_func(tar_tensor, src_tensor, steps=42)
+        with pytest.warns(UserWarning):
+            cfg = deepcopy(self.default_cfg)
+            cfg['batch_size'] = 0
+            model = ToyModule()
+            average_model = RampUpEMA(model, **cfg)
+            src_tensor = torch.randn(1, 3, 2, 2)
+            tar_tensor = torch.randn(1, 3, 2, 2)
+            average_model.avg_func(tar_tensor, src_tensor, steps=42)
 
     def test_sync_buffer_and_parameters(self):
         cfg = deepcopy(self.default_cfg)
