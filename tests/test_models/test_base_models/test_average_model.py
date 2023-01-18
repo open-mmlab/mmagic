@@ -2,6 +2,7 @@
 from copy import deepcopy
 from unittest import TestCase
 
+import pytest
 import torch
 import torch.nn as nn
 from mmengine.model import BaseModel

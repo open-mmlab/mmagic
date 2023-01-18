@@ -164,6 +164,10 @@ class TestEMA:
                 interp_cfg=dict(momentum=0.6))
             cfg_ = deepcopy(default_config)
             ema = ExponentialMovingAverageHook(**cfg_)
+            ema.lerp(
+                torch.tensor([0.25, 0.5]),
+                torch.tensor([0.25, 0.5]),
+                momentum=0.6)
 
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_ema_hook_cuda(self):
