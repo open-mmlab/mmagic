@@ -48,9 +48,6 @@ class GLDiscs(BaseModule):
 
     def init_weights(self):
         """Init weights for models."""
-        if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
-            super().init_weights()
-            return
 
         for m in self.modules():
             # Here, we only initialize the module with fc layer since the

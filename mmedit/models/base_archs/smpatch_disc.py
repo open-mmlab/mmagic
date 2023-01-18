@@ -119,9 +119,6 @@ class SoftMaskPatchDiscriminator(BaseModule):
 
     def init_weights(self) -> None:
         """Initialize weights for the model."""
-        if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
-            super().init_weights()
-            return
 
         generation_init_weights(
             self, init_type=self.init_type, init_gain=self.init_gain)
