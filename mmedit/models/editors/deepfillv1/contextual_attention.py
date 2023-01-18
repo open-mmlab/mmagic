@@ -4,9 +4,10 @@ from functools import partial
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule
 
 
-class ContextualAttentionModule(nn.Module):
+class ContextualAttentionModule(BaseModule):
     """Contexture attention module.
 
     The details of this module can be found in:
