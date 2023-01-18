@@ -7,7 +7,7 @@ _base_ = [
 ema_config = dict(
     type='ExponentialMovingAverage',
     interval=1,
-    momentum=0.9999,
+    momentum=0.0001,
     start_iter=1000)
 
 model = dict(
