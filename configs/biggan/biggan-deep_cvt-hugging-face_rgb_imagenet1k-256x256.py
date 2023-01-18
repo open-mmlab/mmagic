@@ -11,7 +11,7 @@ _base_.val_dataloader.dataset.pipeline[2].scale = (256, 256)
 ema_config = dict(
     type='ExponentialMovingAverage',
     interval=1,
-    momentum=0.9999,
+    momentum=0.0001,
     update_buffers=True,
     start_iter=20000)
 
