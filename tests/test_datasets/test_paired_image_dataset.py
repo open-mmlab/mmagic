@@ -39,7 +39,14 @@ class TestPairedImageDataset(object):
         dataset = PairedImageDataset(
             self.imgs_root, pipeline=self.default_pipeline)
         assert len(dataset) == 2
-        print(dataset)
+        img = dataset[0]['inputs']['img_a']
+        assert img.ndim == 3
+        img = dataset[0]['inputs']['img_b']
+        assert img.ndim == 3
+
+        dataset = PairedImageDataset(
+            self.imgs_root, pipeline=self.default_pipeline, io_backend='local')
+        assert len(dataset) == 2
         img = dataset[0]['inputs']['img_a']
         assert img.ndim == 3
         img = dataset[0]['inputs']['img_b']

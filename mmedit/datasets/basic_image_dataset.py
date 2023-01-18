@@ -5,7 +5,7 @@ import re
 from typing import Callable, List, Optional, Tuple, Union
 
 from mmengine.dataset import BaseDataset
-from mmengine.fileio import FileClient, list_from_file
+from mmengine.fileio import get_file_backend, list_from_file
 
 from mmedit.registry import DATASETS
 
@@ -59,9 +59,8 @@ class BasicImageDataset(BaseDataset):
             template excludes the file extension. Default: dict().
         search_key (str): The key used for searching the folder to get
             data_list. Default: 'gt'.
-        file_client_args (dict, optional): Arguments to instantiate a
-            FileClient. See :class:`mmengine.fileio.FileClient` for details.
-            Default: None.
+        backend_args (dict, optional): Arguments to instantiate the preifx of
+            uri corresponding backend. Defaults to None.
         suffix (str or tuple[str], optional):  File suffix
             that we are interested in. Default: None.
         recursive (bool): If set to True, recursively scan the
@@ -140,7 +139,7 @@ class BasicImageDataset(BaseDataset):
                  test_mode: bool = False,
                  filename_tmpl: dict = dict(),
                  search_key: Optional[str] = None,
-                 file_client_args: Optional[dict] = None,
+                 backend_args: Optional[dict] = None,
                  img_suffix: Optional[Union[str, Tuple[str]]] = IMG_EXTENSIONS,
                  recursive: bool = False,
                  **kwards):
@@ -155,11 +154,14 @@ class BasicImageDataset(BaseDataset):
         self.search_key = search_key
         self.filename_tmpl = filename_tmpl
         self.use_ann_file = (ann_file != '')
-        self.file_client_args = file_client_args
+        if backend_args is None:
+            self.backend_args = None
+        else:
+            self.backend_args = backend_args.copy()
         self.img_suffix = img_suffix
         self.recursive = recursive
-        self.file_client = FileClient.infer_client(
-            file_client_args=file_client_args, uri=data_root)
+        self.file_backend = get_file_backend(
+            uri=data_root, backend_args=backend_args)
 
         super().__init__(
             ann_file=ann_file,
@@ -218,7 +220,7 @@ class BasicImageDataset(BaseDataset):
         """
 
         ann_list = list_from_file(
-            self.ann_file, file_client_args=self.file_client_args)
+            self.ann_file, backend_args=self.backend_args)
         path_list = []
         for ann in ann_list:
             if ann.isspace() or ann == '':
@@ -241,7 +243,7 @@ class BasicImageDataset(BaseDataset):
         folder = self.data_prefix[self.search_key]
         tmpl = self.filename_tmpl[self.search_key].format('')
         virtual_path = self.filename_tmpl[self.search_key].format('.*')
-        for img_path in self.file_client.list_dir_or_file(
+        for img_path in self.file_backend.list_dir_or_file(
                 dir_path=folder,
                 list_dir=False,
                 suffix=self.img_suffix,
