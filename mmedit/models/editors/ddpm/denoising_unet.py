@@ -199,7 +199,7 @@ class MultiHeadAttentionBlock(BaseModule):
         if encoder_channels is not None:
             self.encoder_kv = nn.Conv1d(encoder_channels, in_channels * 2, 1)
 
-    def forward(self, x, encoder_out):
+    def forward(self, x, encoder_out=None):
         b, c, *spatial = x.shape
         x = x.reshape(b, c, -1)
         qkv = self.qkv(self.norm(x))

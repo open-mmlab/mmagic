@@ -168,7 +168,7 @@ class BasicVSRNet(BaseModule):
         return torch.stack(outputs, dim=1)
 
 
-class ResidualBlocksWithInputConv(nn.Module):
+class ResidualBlocksWithInputConv(BaseModule):
     """Residual blocks with a convolution in front.
 
     Args:
@@ -206,7 +206,7 @@ class ResidualBlocksWithInputConv(nn.Module):
         return self.main(feat)
 
 
-class SPyNet(nn.Module):
+class SPyNet(BaseModule):
     """SPyNet network structure.
 
     The difference to the SPyNet in [tof.py] is that
@@ -339,7 +339,7 @@ class SPyNet(nn.Module):
         return flow
 
 
-class SPyNetBasicModule(nn.Module):
+class SPyNetBasicModule(BaseModule):
     """Basic Module for SPyNet.
 
     Paper:

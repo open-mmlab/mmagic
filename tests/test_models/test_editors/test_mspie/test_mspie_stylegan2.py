@@ -29,7 +29,7 @@ class TestMSPIEStyleGAN2(TestCase):
         cls.ema_config = dict(
             type='ExponentialMovingAverage',
             interval=1,
-            momentum=0.5**(32. / (ema_half_life * 1000.)))
+            momentum=1. - (0.5**(32. / (ema_half_life * 1000.))))
 
         cls.loss_config = dict(
             r1_loss_weight=10. / 2. * d_reg_interval,
