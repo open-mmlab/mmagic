@@ -11,8 +11,6 @@ from mmedit.utils import register_all_modules
 register_all_modules()
 
 
-@pytest.mark.skipif(
-    sys.version_info < (3, 7), reason='skip because python version is old.')
 def test_video_restoration_inferencer():
     cfg = osp.join(
         osp.dirname(__file__), '..', '..', '..', 'configs', 'basicvsr',
@@ -32,8 +30,6 @@ def test_video_restoration_inferencer():
     assert inference_result is None
 
 
-@pytest.mark.skipif(
-    sys.version_info < (3, 7), reason='skip because python version is old.')
 def test_video_restoration_inferencer_input_dir():
     cfg = osp.join(
         osp.dirname(__file__), '..', '..', '..', 'configs', 'basicvsr',
@@ -54,8 +50,6 @@ def test_video_restoration_inferencer_input_dir():
     assert inference_result is None
 
 
-@pytest.mark.skipif(
-    sys.version_info < (3, 7), reason='skip because python version is old.')
 def test_video_restoration_inferencer_window_size():
     cfg = osp.join(
         osp.dirname(__file__), '..', '..', '..', 'configs', 'basicvsr',
@@ -78,8 +72,6 @@ def test_video_restoration_inferencer_window_size():
     assert inference_result is None
 
 
-@pytest.mark.skipif(
-    sys.version_info < (3, 7), reason='skip because python version is old.')
 def test_video_restoration_inferencer_max_seq_len():
     cfg = osp.join(
         osp.dirname(__file__), '..', '..', '..', 'configs', 'basicvsr',

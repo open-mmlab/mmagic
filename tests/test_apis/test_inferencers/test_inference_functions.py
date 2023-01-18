@@ -234,8 +234,6 @@ def test_restoration_inference():
     assert output.detach().cpu().numpy().shape == (3, 480, 500)
 
 
-@pytest.mark.skipif(
-    sys.version_info < (3, 7), reason='skip because python version is old.')
 def test_restoration_video_inference():
     if torch.cuda.is_available():
         device = torch.device('cuda', 0)
