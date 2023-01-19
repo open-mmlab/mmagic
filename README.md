@@ -45,7 +45,7 @@ English | [简体中文](README_zh-CN.md)
 - Support an efficient image restoration algorithm [Restormer](configs/restormer/README.md)!
 - Support a new text-to-image algorithm [GLIDE](projects/glide/configs/README.md)!
 - Support swin based image restoration algorithm [SwinIR](configs/swinir/README.md)!
-- [Projects](projects/README.md) is opened for community to add projects to MMEditing.
+- [Projects](projects/README.md) is opened for the community to add projects to MMEditing.
 
 ### New release [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) \[05/12/2022\]:
 
@@ -67,8 +67,8 @@ Please refer to [migration](docs/en/migration/overview.md) to migrate from MMEdi
 ## Table of Contents
 
 - [Introduction](#introduction)
-- [Installation](#installation)
 - [Contributing](#contributing)
+- [Installation](#installation)
 - [Model Zoo](#model-zoo)
 - [Acknowledgement](#acknowledgement)
 - [Citation](#citation)
@@ -174,6 +174,20 @@ The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorc
 
 <p align="right"><a href="#top">Back to top</a></p>
 
+## Contributing
+
+More and more community contributors are joining us to make our repo better. Some recent projects are contributed by the community including:
+
+- [GLIDE](projects/glide/configs/README.md) is contributed by @Taited.
+- [Restormer](configs/restormer/README.md) is contributed by @AlexZou14.
+- [SwinIR](configs/swinir/README.md) is contributed by @Zdafeng.
+
+[Projects](projects/README.md) is opened to make it easier for everyone to add projects to MMEditing.
+
+We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
 ## Installation
 
 MMEditing depends on [PyTorch](https://pytorch.org/), [MMEngine](https://github.com/open-mmlab/mmengine) and [MMCV](https://github.com/open-mmlab/mmcv).
@@ -205,12 +219,6 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
 **Getting Started**
 
 Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMEditing.
-
-<p align="right"><a href="#top">Back to top</a></p>
-
-## Contributing
-
-We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
@@ -394,7 +402,6 @@ We appreciate all the contributors who implement their methods or add new featur
 <a href="https://github.com/open-mmlab/mmediting/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=liuwenran/mmediting" />
 </a>
-
 
 <p align="right"><a href="#top">Back to top</a></p>
 
