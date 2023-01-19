@@ -62,7 +62,7 @@ English | [简体中文](README_zh-CN.md)
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
-Please refer to [migration](docs/en/migration/overview.md) to migrate from MMEditing 0.x to our brand new 1.x version.
+Please refer to [migration documents](docs/en/migration/overview.md) to migrate from MMEditing 0.x to our brand new 1.x version.
 
 ## Table of Contents
 
