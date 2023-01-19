@@ -1,17 +1,20 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
+from logging import WARNING
 from typing import List, Optional, Sequence, Tuple, Union
 
 import torch
 import torch.nn.functional as F
+from mmengine import print_log
 from mmengine.model import ImgDataPreprocessor
 from mmengine.structures import BaseDataElement
 from mmengine.utils import is_list_of
 from torch import Tensor
 
 from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample
 
-CastData = Union[tuple, dict, BaseDataElement, torch.Tensor, list]
+CastData = Union[tuple, dict, BaseDataElement, Tensor, list]
 
 
 @MODELS.register_module()
@@ -43,6 +46,9 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             Defaults to False.
         rgb_to_bgr (bool): whether to convert image from RGB to RGB.
             Defaults to False.
+        data_keys: keys to preprocess in data samples.
+        norm_data_samples_in_testing (bool): Whether normalize data samples in
+            testing stage. Defaults to False.
     """
     _NON_IMAGE_KEYS = ['noise']
     _NON_CONCENTATE_KEYS = ['num_batches', 'mode', 'sample_kwargs', 'eq_cfg']
@@ -57,7 +63,8 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                  non_image_keys: Optional[Tuple[str, List[str]]] = None,
                  non_concentate_keys: Optional[Tuple[str, List[str]]] = None,
                  pad_mode: str = 'constant',
-                 only_norm_gt_in_training: bool = False,
+                 norm_data_samples_in_testing: bool = False,
+                 data_keys: Union[List[str], str] = 'gt_img',
                  input_view: Optional[tuple] = None,
                  output_view: Optional[tuple] = None):
 
@@ -86,7 +93,9 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         self.pad_mode = pad_mode
         self.pad_size_dict = dict()
-        self.only_norm_gt_in_training = only_norm_gt_in_training
+        self.norm_data_samples_in_testing = norm_data_samples_in_testing
+        self.data_keys = data_keys if isinstance(data_keys,
+                                                 list) else [data_keys]
         self.input_view = input_view
         self.output_view = output_view
 
@@ -103,22 +112,42 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             return data
         return super().cast_data(data)
 
-    def _norm_and_conversion(self, inputs: Tensor) -> Tensor:
+    def _norm_and_conversion(self,
+                             inputs: Tensor,
+                             do_norm: Optional[bool] = None,
+                             do_conversion: Optional[bool] = None) -> Tensor:
         """Norm and conversion the color channel order.
 
         Args:
-            inputs (Tensor): The input tensor
+            inputs (Tensor): The input tensor.
+            do_norm (bool): Whether normalize the input tensor. If False,
+                :attr:`self._enable_normalize` will be ignored and
+                normalization will be skipped.
+            do_conversion (bool): Whether apply color channel conversion the
+                input tensor. If False, :attr:`self._channel_conversion` will
+                be ignored and channel conversion will be skipped.
 
         Returns:
             Tensor: Tensor after normalization and color channel conversion.
         """
-        if self._channel_conversion:
+        do_norm = self._enable_normalize if do_norm is None else do_norm
+        do_conversion = self._channel_conversion \
+            if do_conversion is None else do_conversion
+
+        if do_conversion:
+            new_index = [2, 1, 0]
             if inputs.ndim == 4:
-                inputs = inputs[:, [2, 1, 0], ...]
+                # handle RGBA
+                if inputs.shape[1] == 4:
+                    new_index += [3]
+                inputs = inputs[:, [*new_index], ...]
             else:
-                inputs = inputs[[2, 1, 0], ...]
+                # handle RGBA
+                if inputs.shape[0] == 4:
+                    new_index += [3]
+                inputs = inputs[[*new_index], ...]
         inputs = inputs.float()
-        if self._enable_normalize:
+        if do_norm:
             if self.input_view is None:
                 target_shape = [1 for _ in range(inputs.ndim - 3)] + [-1, 1, 1]
             else:
@@ -152,8 +181,8 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         return batch_inputs
 
-    def _preprocess_image_list(self,
-                               tensor_list: List[Tensor]) -> Tuple[Tensor]:
+    def _preprocess_image_list(self, tensor_list: List[Tensor]
+                               ) -> Tuple[Tensor, Tensor]:
         """Preprocess a list of images.
 
         Returns:
@@ -171,13 +200,13 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         max_sizes = torch.ceil(
             torch.max(all_sizes, dim=0)[0] /
             self.pad_size_divisor) * self.pad_size_divisor
-        padded_sizes = max_sizes - all_sizes
+        padding_sizes = max_sizes - all_sizes
         # The dim of channel and frame index should not be padded.
-        padded_sizes[:, :-2] = 0
-        if padded_sizes.sum() == 0:
+        padding_sizes[:, :-2] = 0
+        if padding_sizes.sum() == 0:
             stacked_tensor = torch.stack(tensor_list)
             stacked_tensor = self._norm_and_conversion(stacked_tensor)
-            return stacked_tensor, padded_sizes
+            return stacked_tensor, padding_sizes
 
         # `pad` is the second arguments of `F.pad`. If pad is (1, 2, 3, 4),
         # it means that padding the last dim with 1(left) 2(right), padding the
@@ -186,7 +215,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         # reversed, and only odd index of pad should be assigned to keep
         # padding "right" and "bottom".
         pad = torch.zeros(num_img, 2 * dim, dtype=torch.int)
-        pad[:, 1::2] = padded_sizes[:, range(dim - 1, -1, -1)]
+        pad[:, 1::2] = padding_sizes[:, range(dim - 1, -1, -1)]
         batch_tensor = []
         for idx, tensor in enumerate(tensor_list):
             paded_tensor = F.pad(tensor, tuple(pad[idx].tolist()),
@@ -194,7 +223,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             batch_tensor.append(paded_tensor)
         stacked_tensor = torch.stack(batch_tensor)
         stacked_tensor = self._norm_and_conversion(stacked_tensor)
-        return stacked_tensor, padded_sizes
+        return stacked_tensor, padding_sizes
 
     def _preprocess_dict_inputs(self, batch_inputs: dict) -> dict:
         """Preprocess dict type inputs.
@@ -205,6 +234,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         Returns:
             dict: Preprocessed dict.
         """
+        pad_size_dict = dict()
         for k, inputs in batch_inputs.items():
             # handle concentrate for values in list
             if isinstance(inputs, list):
@@ -222,25 +252,79 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                          f'But \'{k}\' is list of \'{type(inputs[0])}\'.')
 
                     if k not in self._NON_IMAGE_KEYS:
-                        inputs, pad_size = self._preprocess_image_list(inputs)
-                        self.pad_size_dict[k] = pad_size
+                        inputs, padding_sizes = self._preprocess_image_list(
+                            inputs)
+                        # self.pad_size_dict[k] = pad_size
+                        pad_size_dict[k] = [size for size in padding_sizes]
 
                     batch_inputs[k] = inputs
             elif isinstance(inputs, Tensor) and k not in self._NON_IMAGE_KEYS:
-                batch_inputs[k] = self._preprocess_image_tensor(inputs)
+                batch_inputs[k], padding_sizes = self._preprocess_image_tensor(
+                    inputs)
+                pad_size_dict[k] = [size for size in padding_sizes]
 
-        return batch_inputs
+        # NOTE: we only support all key shares the same padding size
+        if pad_size_dict:
+            padding_size = list(pad_size_dict.values())[0]
+            padding_key = list(pad_size_dict.keys())[0]
+            for k, v in pad_size_dict.items():
+                assert v == padding_size, (
+                    'All keys should share the same padding size, but got '
+                    f'different size for \'{k}\' (\'{v}\') and '
+                    f'\'{padding_key}\' (\'{padding_size}\'). Please check '
+                    'your data carefully.')
 
-    def process_data_sample(self, data_samples: List, training) -> list:
+            return batch_inputs, padding_sizes
+
+        return batch_inputs, None
+
+    def _preprocess_data_sample(self, data_samples: List,
+                                training: bool) -> list:
+        """Process data samples. Output will be normed and conversed as inputs.
+
+        # NOTE: this function do not handle padding
+        # >>> the following docstring is wrong
+        If `norm_data_samples_in_training` is True,
+        data_samples will only be normed in both training and testing phase.
+        Otherwise,
+        # <<< the above docstring is wrong
+
+        Args:
+            data_samples (List): A list of data samples to process.
+            training (bool): Whether in training mode.
+
+        Returns:
+            list: The list of processed data samples.
+        """
+        if not training:
+            # conversion to BGR
+            do_conversion = self.output_color_order == 'RGB'
+            do_norm = self.norm_data_samples_in_testing
+        else:
+            # norm and conversion in training
+            do_norm, do_conversion = True, True
+
         for data_sample in data_samples:
-            if training or not self.only_norm_gt_in_training:
-                if not hasattr(data_sample, 'gt_img'):
-                    # all data samples should have the same attribute, if
-                    # `gt_img` is not found, directly return
+            for key in self.data_keys:
+                if not hasattr(data_sample, key):
+                    # do not raise error here
+                    print_log(f'Cannot find key \'{key}\' in data sample.',
+                              'currnet', WARNING)
                     break
-                # NOTE: EditDataPreprocessor only handle gt_img,
-                data_sample.gt_img.data = (
-                    (data_sample.gt_img.data - self.mean[0]) / self.std[0])
+
+                data_sample.set_data({
+                    f'{key}':
+                    self._norm_and_conversion(
+                        data_sample.get(key), do_norm, do_conversion)
+                })
+                data_process_meta = {
+                    f'{key}_enable_norm': self._enable_normalize,
+                    f'{key}_enable_conversion': self._channel_conversion,
+                    f'{key}_mean': self.mean,
+                    f'{key}_std': self.std
+                }
+                data_sample.set_metainfo(data_process_meta)
+
         return data_samples
 
     def forward(self, data: dict, training: bool = False) -> dict:
@@ -263,19 +347,19 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         if isinstance(_batch_inputs, torch.Tensor):
             _batch_inputs = self._preprocess_image_tensor(_batch_inputs)
             _batch_inputs = {'img': _batch_inputs}  # tensor -> dict
-            self.pad_size_dict['img'] = None
+            _pad_info = None
         elif is_list_of(_batch_inputs, torch.Tensor):
-            _batch_inputs, pad_size = self._preprocess_image_list(
+            _batch_inputs, _pad_info = self._preprocess_image_list(
                 _batch_inputs)
-            _batch_inputs = {'img': _batch_inputs}  # tensor -> dict
-            self.pad_size_dict['img'] = pad_size
+            # _batch_inputs = _batch_inputs
         elif isinstance(_batch_inputs, dict):
-            _batch_inputs = self._preprocess_dict_inputs(_batch_inputs)
+            _batch_inputs, _pad_info = self._preprocess_dict_inputs(
+                _batch_inputs)
         elif is_list_of(_batch_inputs, dict):
             # convert list of dict to dict of list
             keys = _batch_inputs[0].keys()
             dict_input = {k: [inp[k] for inp in _batch_inputs] for k in keys}
-            _batch_inputs = self._preprocess_dict_inputs(dict_input)
+            _batch_inputs, _pad_info = self._preprocess_dict_inputs(dict_input)
         else:
             raise ValueError('Only support following inputs types: '
                              '\'torch.Tensor\', \'List[torch.Tensor]\', '
@@ -285,40 +369,47 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         # process data samples
         if _batch_data_samples:
-            _batch_data_samples = self.process_data_sample(
+            _batch_data_samples = self._preprocess_data_sample(
                 _batch_data_samples, training)
+
+        # update pad_size_dict to data_samples
+        if _pad_info is not None:
+            # NOTE: ops, we have to init a empty data sample to save
+            # padding_size
+            if not _batch_data_samples:
+                _batch_data_samples = [
+                    EditDataSample() for _ in range(len(_pad_info))
+                ]
+            for pad_size, data_sample in zip(_pad_info, _batch_data_samples):
+                data_sample.set_metainfo({'padding_size': pad_size})
+
         data.setdefault('data_samples', _batch_data_samples)
 
         return data
 
-    def destructor(self, batch_tensor: torch.Tensor, target_key: str = 'img'):
-        """Destructor of data processor. Destruct padding, normalization and
-        dissolve batch.
+    def destructor(
+        self,
+        outputs: Tensor,
+        data_samples: Optional[List[EditDataSample]] = None
+    ) -> Union[list, Tensor]:
+        # NOTE: only support passing tensor sample, if the output of model is
+        # a dict, users should call this manually.
+        # Since we do not know whether the outputs is image tensor.
+        _batch_outputs = self._destruct_tensor_norm_and_conversion(outputs)
+        _batch_outputs = self._destruct_tensor_padding(_batch_outputs,
+                                                       data_samples)
+        _batch_outputs = _batch_outputs.clamp_(0, 255)
+        return _batch_outputs
 
-        Args:
-            batch_tensor (Tensor): Batched output.
+    def _destruct_tensor_norm_and_conversion(self,
+                                             batch_tensor: Tensor) -> Tensor:
 
-        Returns:
-            Tensor: Destructed output.
-        """
-        # TODO: do not know why only destructor as the first sample
-        # Do not dissolve batch,
-        # all tensor will be de-padded by a same size
-        # De pad by the first sample
-        assert target_key in self.pad_size_dict, (
-            f'Target key \'{target_key}\' cannot be found in saved '
-            '\'pad_size_dict\'. Please check whether you have called '
-            '\'_preprocess_image_list\' properly.')
+        if self.output_color_order == 'RGB':
+            if batch_tensor.ndim == 4:
+                batch_tensor = batch_tensor[..., [2, 1, 0]]
+            else:
+                batch_tensor = batch_tensor[[2, 1, 0], ...]
 
-        pad_info = self.pad_size_dict[target_key]
-        if pad_info is not None:
-            padded_h, padded_w = pad_info[0][-2:]
-            padded_h = int(padded_h)
-            padded_w = int(padded_w)
-            h, w = batch_tensor.shape[-2:]
-            batch_tensor = batch_tensor[..., :h - padded_h, :w - padded_w]
-
-        # decide norm with self._enable_norm key
         if self._enable_normalize:
             if self.output_view is None:
                 target_shape = [1 for _ in range(batch_tensor.ndim - 3)
@@ -329,7 +420,46 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             std = self.std.view(target_shape)
             batch_tensor = batch_tensor * std + mean
 
-        # NOTE: should we add clamp here?
-        batch_tensor = batch_tensor.clamp_(0, 255)
-
         return batch_tensor
+
+    def _destruct_tensor_padding(self,
+                                 batch_tensor: Tensor,
+                                 data_samples: List[EditDataSample],
+                                 same_padding: bool = True
+                                 ) -> Union[list, Tensor]:
+        # NOTE: If same padding, batch_tensor will un-padded with the padding
+        # info # of the first sample and return a Unpadded tensor. Otherwise,
+        # input tensor # will un-padded with the corresponding padding info
+        # saved in data samples and return a list of tensor.
+
+        if data_samples is None:
+            return batch_tensor
+
+        if not hasattr(data_samples[0], 'padding_size'):
+            print_log(
+                'Cannot find padding information (\'padding_size\') in '
+                'meta info of \'data_samples\'. Please check whether '
+                'you have called \'self.forward\' properly.', 'currnet',
+                WARNING)
+            return batch_tensor
+
+        pad_infos = [
+            sample.metainfo['padding_size'] for sample in data_samples
+        ]
+        if same_padding:
+            padded_h, padded_w = pad_infos[0][-2:]
+            padded_h, padded_w = int(padded_h), int(padded_w)
+            h, w = batch_tensor.shape[-2:]
+            batch_tensor = batch_tensor[..., :h - padded_h, :w - padded_w]
+            return batch_tensor
+        else:
+            unpadded_tensors = []
+            for idx, pad_info in enumerate(pad_infos):
+                padded_h, padded_w = pad_info[-2:]
+                padded_h = int(padded_h)
+                padded_w = int(padded_w)
+                h, w = batch_tensor[idx].shape[-2:]
+                unpadded_tensor = batch_tensor[idx][..., :h - padded_h, :w -
+                                                    padded_w]
+                unpadded_tensors.append(unpadded_tensor)
+            return unpadded_tensors
