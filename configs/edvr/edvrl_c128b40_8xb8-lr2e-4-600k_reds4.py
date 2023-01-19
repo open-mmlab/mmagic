@@ -26,7 +26,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        only_norm_gt_in_training=True,
     ))
 
 # learning policy

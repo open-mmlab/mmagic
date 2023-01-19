@@ -14,7 +14,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0.485 * 255, 0.456 * 255, 0.406 * 255],
         std=[0.229 * 255, 0.224 * 255, 0.225 * 255],
-        only_norm_gt_in_training=True,
     ))
 
 val_pipeline = [

@@ -26,5 +26,4 @@ model = dict(
         std=[0.229 * 255, 0.224 * 255, 0.225 * 255],
         pad_size_divisor=16,
         pad_mode='reflect',
-        only_norm_gt_in_training=True,
     ))

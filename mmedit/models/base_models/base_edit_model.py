@@ -111,18 +111,41 @@ class BaseEditModel(BaseModel):
         elif mode == 'predict':
             predictions = self.forward_inference(inputs, data_samples,
                                                  **kwargs)
-            predictions = self.convert_to_datasample(data_samples, predictions)
+            predictions = self.convert_to_datasample(predictions, data_samples,
+                                                     inputs)
             return predictions
 
         elif mode == 'loss':
             return self.forward_train(inputs, data_samples, **kwargs)
 
-    def convert_to_datasample(self, inputs: List[EditDataSample],
-                              data_samples: List[EditDataSample]
+    def convert_to_datasample(self, predictions: List[EditDataSample],
+                              data_samples: List[EditDataSample],
+                              inputs: Optional[torch.Tensor]
                               ) -> List[EditDataSample]:
-        for data_sample, output in zip(inputs, data_samples):
-            data_sample.output = output
-        return inputs
+        """Add predictions and destructed inputs (if passed) to data samples.
+
+        Args:
+            predictions (List[EditDataSample]): The predictions of the model.
+            data_samples (List[EditDataSample]): The data samples loaded from
+                dataloader.
+            inputs (Optional[torch.Tensor]): The input of model. Defaults to
+                None.
+
+        Returns:
+            List[EditDataSample]: Modified data samples.
+        """
+        for data_sample, pred in zip(data_samples, predictions):
+            data_sample.output = pred
+
+        if inputs is not None:
+            assert inputs.shape[0] == len(predictions), (
+                'The length of inputs and outputs must be same.')
+            for idx, data_sample in enumerate(data_samples):
+                destructed_input = self.data_preprocessor.destructor(
+                    inputs[idx], data_samples)
+                data_sample.set_data({'input': destructed_input})
+
+        return data_samples
 
     def forward_tensor(self,
                        inputs: torch.Tensor,
@@ -162,13 +185,11 @@ class BaseEditModel(BaseModel):
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
-        feats = self.data_preprocessor.destructor(feats)
+        feats = self.data_preprocessor.destructor(feats, data_samples)
         predictions = []
         for idx in range(feats.shape[0]):
             predictions.append(
-                EditDataSample(
-                    pred_img=PixelData(data=feats[idx].to('cpu')),
-                    metainfo=data_samples[idx].metainfo))
+                EditDataSample(pred_img=PixelData(data=feats[idx].to('cpu'))))
 
         return predictions
 

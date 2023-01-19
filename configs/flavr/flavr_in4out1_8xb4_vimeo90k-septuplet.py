@@ -23,10 +23,7 @@ model = dict(
     required_frames=4,
     step_frames=1,
     init_cfg=None,
-    data_preprocessor=dict(
-        type='EditDataPreprocessor',
-        only_norm_gt_in_training=True,
-    ))
+    data_preprocessor=dict(type='EditDataPreprocessor', ))
 
 train_pipeline = [
     dict(

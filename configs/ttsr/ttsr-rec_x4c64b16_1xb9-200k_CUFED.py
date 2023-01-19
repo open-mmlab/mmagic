@@ -27,7 +27,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[127.5, 127.5, 127.5],
         std=[127.5, 127.5, 127.5],
-        only_norm_gt_in_training=True,
     ))
 
 train_pipeline = [

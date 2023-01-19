@@ -12,7 +12,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[127.5],
         std=[127.5],
-        only_norm_gt_in_training=True,
     ),
     image_model=dict(
         type='ColorizationNet', input_nc=4, output_nc=2, norm_type='batch'),

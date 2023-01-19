@@ -17,7 +17,6 @@ model = dict(
     data_preprocessor=dict(
         type='EditDataPreprocessor',
         pad_mode='reflect',
-        only_norm_gt_in_training=True,
     ))
 
 train_pipeline = [

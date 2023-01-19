@@ -23,7 +23,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0.5 * 255, 0.5 * 255, 0.5 * 255],
         std=[255, 255, 255],
-        only_norm_gt_in_training=True,
     ))
 
 val_evaluator = [
