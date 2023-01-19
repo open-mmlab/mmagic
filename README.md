@@ -68,8 +68,8 @@ Please refer to [migration](docs/en/migration/overview.md) to migrate from MMEdi
 
 - [Introduction](#introduction)
 - [Installation](#installation)
-- [Model Zoo](#model-zoo)
 - [Contributing](#contributing)
+- [Model Zoo](#model-zoo)
 - [Acknowledgement](#acknowledgement)
 - [Citation](#citation)
 - [License](#license)
@@ -205,6 +205,12 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
 **Getting Started**
 
 Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMEditing.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
+## Contributing
+
+We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
@@ -379,15 +385,16 @@ Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/ov
 
 <p align="right"><a href="#top">Back to top</a></p>
 
-## Contributing
-
-We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
-
-<p align="right"><a href="#top">Back to top</a></p>
-
 ## Acknowledgement
 
-MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
+MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
+
+We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. Thank you all!
+
+<a href="https://github.com/open-mmlab/mmediting/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=liuwenran/mmediting" />
+</a>
+
 
 <p align="right"><a href="#top">Back to top</a></p>
 
