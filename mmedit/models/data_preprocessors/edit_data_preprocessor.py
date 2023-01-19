@@ -99,6 +99,8 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         self.input_view = input_view
         self.output_view = output_view
 
+        self._done_padding = False  # flag for padding checking
+
     def cast_data(self, data: CastData) -> CastData:
         """Copying data to the target device.
 
@@ -309,7 +311,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                 if not hasattr(data_sample, key):
                     # do not raise error here
                     print_log(f'Cannot find key \'{key}\' in data sample.',
-                              'currnet', WARNING)
+                              'current', WARNING)
                     break
 
                 data_sample.set_data({
@@ -382,6 +384,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                 ]
             for pad_size, data_sample in zip(_pad_info, _batch_data_samples):
                 data_sample.set_metainfo({'padding_size': pad_size})
+            self._done_padding = True  # NOTE: any better way?
 
         data.setdefault('data_samples', _batch_data_samples)
 
@@ -422,25 +425,25 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         return batch_tensor
 
-    def _destruct_tensor_padding(self,
-                                 batch_tensor: Tensor,
-                                 data_samples: List[EditDataSample],
-                                 same_padding: bool = True
-                                 ) -> Union[list, Tensor]:
+    def _destruct_tensor_padding(
+            self,
+            batch_tensor: Tensor,
+            data_samples: Optional[List[EditDataSample]] = None,
+            same_padding: bool = True) -> Union[list, Tensor]:
         # NOTE: If same padding, batch_tensor will un-padded with the padding
         # info # of the first sample and return a Unpadded tensor. Otherwise,
         # input tensor # will un-padded with the corresponding padding info
         # saved in data samples and return a list of tensor.
-
         if data_samples is None:
             return batch_tensor
 
         if not hasattr(data_samples[0], 'padding_size'):
-            print_log(
-                'Cannot find padding information (\'padding_size\') in '
-                'meta info of \'data_samples\'. Please check whether '
-                'you have called \'self.forward\' properly.', 'currnet',
-                WARNING)
+            if self._done_padding:
+                print_log(
+                    'Cannot find padding information (\'padding_size\') in '
+                    'meta info of \'data_samples\'. Please check whether '
+                    'you have called \'self.forward\' properly.', 'current',
+                    WARNING)
             return batch_tensor
 
         pad_infos = [
