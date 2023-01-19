@@ -156,21 +156,21 @@ The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorc
 
 ### Major features
 
-- **Modular design**
+- **State of the Art**
 
-  We decompose the editing framework into different components and one can easily construct a customized editor framework by combining different modules.
+  MMEditing provides state-of-the-art generative models to process, edit and synthesize images and videos.
 
-- **Support of multiple tasks**
+- **Powerful and Popular Applications**
 
-  The toolbox directly supports popular and contemporary *text-to-image*, *3D generation*, *restoration*, *inpainting*, *matting*, *super-resolution*, *interpolation* and *generation* tasks.
+  MMEditing supports popular and contemporary image restoration, text-to-image, 3D-aware generation, inpainting, matting, super-resolution and generation applications. Specifically, MMEditing supports GAN interpolation, GAN projection, GAN manipulations and many other popular GAN’s applications. It’s time to play with your GANs!
 
-- **Efficient Distributed Training for Generative Models:**
+- **New Modular Design for Flexible Combination**
 
-  With support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
+  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](https://mmediting.readthedocs.io/en/dev-1.x/howto/losses.html))
 
-- **State of the art**
+- **Efficient Distributed Training**
 
-  The toolbox provides state-of-the-art methods for every task supported. More and more contributors are joining us to make this repo even better.
+  With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
