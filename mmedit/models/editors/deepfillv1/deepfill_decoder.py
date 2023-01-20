@@ -3,9 +3,9 @@ import copy
 from functools import partial
 
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule, build_activation_layer
+from mmengine.model import BaseModule
 
 # from ...modules import SimpleGatedConvModule
 from mmedit.models.base_archs import SimpleGatedConvModule
@@ -13,7 +13,7 @@ from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()
-class DeepFillDecoder(nn.Module):
+class DeepFillDecoder(BaseModule):
     """Decoder used in DeepFill model.
 
     This implementation follows:
