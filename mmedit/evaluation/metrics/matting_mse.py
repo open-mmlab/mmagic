@@ -16,6 +16,16 @@ class MattingMSE(_MattingMSE):
     pixels.
     i.e. mean((a-b)^2)
 
+     Args:
+
+        scaling (float, optional): Scaling factor for final metric.
+            E.g. scaling=100 means the final metric will be amplified by 100
+            for output. Default: 1
+        prefix (str, optional): The prefix that will be added in the metric
+            names to disambiguate homonymous metrics of different evaluators.
+            If prefix is not provided in the argument, self.default_prefix
+            will be used instead. Default: None.
+
     .. note::
 
         Current implementation assume image / alpha / trimap array in numpy
