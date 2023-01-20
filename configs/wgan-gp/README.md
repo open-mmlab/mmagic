@@ -26,10 +26,10 @@ Generative Adversarial Networks (GANs) are powerful generative models, but suffe
   <img src="https://user-images.githubusercontent.com/12726765/113997469-c00e3f00-988a-11eb-81dc-19b05698b74b.png" width="800"/>
 </div>
 
-|   Models    |    Dataset     |      Details       |              SWD              | MS-SSIM |                           Config                            |                            Download                            |
-| :---------: | :------------: | :----------------: | :---------------------------: | :-----: | :---------------------------------------------------------: | :------------------------------------------------------------: |
-| WGAN-GP 128 | CelebA-Cropped |         GN         | 5.87, 9.76, 9.43, 18.84/10.97 | 0.2601  | [config](./wgangp_GN_1xb64-160kiters_celeba-cropped-128x128.py) | [model](https://download.openmmlab.com/mmediting/wgangp/wgangp_GN_celeba-cropped_128_b64x1_160k_20210408_170611-f8a99336.pth) |
-| WGAN-GP 128 |  LSUN-Bedroom  | GN, GP-lambda = 50 | 11.7, 7.87, 9.82, 25.36/13.69 |  0.059  | [config](./wgangp_GN-GP-50_1xb64-160kiters_lsun-bedroom-128x128.py) | [model](https://download.openmmlab.com/mmediting/wgangp/wgangp_GN_GP-50_lsun-bedroom_128_b64x1_130k_20210408_170509-56f2a37c.pth) |
+|                              Model                               |    Dataset     |      Details       |              SWD              | MS-SSIM |                               Download                               |
+| :--------------------------------------------------------------: | :------------: | :----------------: | :---------------------------: | :-----: | :------------------------------------------------------------------: |
+| [WGAN-GP 128](./wgangp_GN_1xb64-160kiters_celeba-cropped-128x128.py) | CelebA-Cropped |         GN         | 5.87, 9.76, 9.43, 18.84/10.97 | 0.2601  | [model](https://download.openmmlab.com/mmediting/wgangp/wgangp_GN_celeba-cropped_128_b64x1_160k_20210408_170611-f8a99336.pth) |
+| [WGAN-GP 128](./wgangp_GN-GP-50_1xb64-160kiters_lsun-bedroom-128x128.py) |  LSUN-Bedroom  | GN, GP-lambda = 50 | 11.7, 7.87, 9.82, 25.36/13.69 |  0.059  | [model](https://download.openmmlab.com/mmediting/wgangp/wgangp_GN_GP-50_lsun-bedroom_128_b64x1_130k_20210408_170509-56f2a37c.pth) |
 
 ## Citation
 

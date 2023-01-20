@@ -1,13 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch.nn as nn
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
 from mmedit.models.base_archs import SimpleGatedConvModule
 from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()
-class DeepFillEncoder(nn.Module):
+class DeepFillEncoder(BaseModule):
     """Encoder used in DeepFill model.
 
     This implementation follows:
