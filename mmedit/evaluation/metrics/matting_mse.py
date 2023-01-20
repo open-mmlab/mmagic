@@ -57,7 +57,7 @@ class MattingMSE(_MattingMSE):
             pred_alphas.append(pred_alpha)
             gt_alphas.append(gt_alpha)
             trimaps.append(trimap)
-            
+
         self.add(pred_alphas, gt_alphas, trimaps)
 
     def evaluate(self, *args, **kwargs):
