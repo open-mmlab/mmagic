@@ -60,7 +60,7 @@ class SAD(_SAD):
             pred_alpha, gt_alpha, _ = _fetch_data_and_check(data_sample)
             pred_alphas.append(pred_alpha)
             gt_alphas.append(gt_alpha)
-            
+
         self.add(pred_alphas, gt_alphas)
 
     def evaluate(self, *args, **kwargs):
