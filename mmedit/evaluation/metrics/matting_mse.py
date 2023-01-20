@@ -17,7 +17,6 @@ class MattingMSE(_MattingMSE):
     i.e. mean((a-b)^2)
 
      Args:
-
         scaling (float, optional): Scaling factor for final metric.
             E.g. scaling=100 means the final metric will be amplified by 100
             for output. Default: 1
