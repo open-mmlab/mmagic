@@ -22,10 +22,13 @@ class GradientError(_GradientError):
         into this metric
 
     Args:
-        sigma (float): Standard deviation of the gaussian kernel.
-            Defaults to 1.4 .
-        norm_const (int): Divide the result to reduce its magnitude.
-            Defaults to 1000 .
+        scaling (float, optional): Scaling factor for final metric.
+            E.g. scaling=100 means the final metric will be amplified by 100
+            for output. Default: 1
+        prefix (str, optional): The prefix that will be added in the metric
+            names to disambiguate homonymous metrics of different evaluators.
+            If prefix is not provided in the argument, self.default_prefix
+            will be used instead. Default: None.
 
     Metrics:
         - GradientError (float): Gradient Error
