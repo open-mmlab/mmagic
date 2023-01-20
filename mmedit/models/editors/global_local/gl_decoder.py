@@ -4,12 +4,13 @@ from functools import partial
 import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
 from mmedit.registry import COMPONENTS
 
 
 @COMPONENTS.register_module()
-class GLDecoder(nn.Module):
+class GLDecoder(BaseModule):
     """Decoder used in Global&Local model.
 
     This implementation follows:

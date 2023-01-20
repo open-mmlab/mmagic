@@ -20,7 +20,7 @@ model = dict(
     ema_config=dict(
         type='ExponentialMovingAverage',
         interval=1,
-        momentum=0.5**(32. / (ema_half_life * 1000.))))
+        momentum=1. - (0.5**(32. / (ema_half_life * 1000.)))))
 
 optim_wrapper = dict(
     generator=dict(

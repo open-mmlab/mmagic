@@ -31,7 +31,9 @@ def test_random_noise():
             poisson_gray_noise_prob=1),
         keys=['lq'])
     results = model(results)
-    assert results['lq'].shape == (8, 8, 3)
+    shape, dtype = results['lq'].shape, results['lq'].dtype
+    assert {'shape': shape, 'dtype': dtype} == \
+           {'shape': (8, 8, 3), 'dtype': np.float32}
 
     # skip degradations with prob < 1
     params = dict(
@@ -411,3 +413,41 @@ def test_degradations_with_shuffle():
         + f'(degradations={degradations}, ' \
         + "keys=['lq'], " \
         + 'shuffle_idx=(1, 2))'
+
+    # shuffle all image degradations multiple times
+    degradations = [
+        dict(
+            type='RandomBlur',
+            params=dict(
+                kernel_size=[15],
+                kernel_list=['sinc'],
+                kernel_prob=[1],
+                sigma_x=[0.2, 10],
+                sigma_y=[0.2, 10],
+                rotate_angle=[-3.1416, 3.1416],
+                omega=[0.1, 0.1])),
+        dict(
+            type='RandomResize',
+            params=dict(
+                resize_mode_prob=[0.4, 0.4, 0.2],
+                resize_scale=[0.5, 1.5],
+                resize_opt=['bilinear', 'area', 'bicubic'],
+                resize_prob=[1 / 3., 1 / 3., 1 / 3.],
+                resize_step=0.05)),
+        dict(
+            type='RandomNoise',
+            params=dict(
+                noise_type=['gaussian', 'poisson'],
+                noise_prob=[0.4, 0.6],
+                gaussian_sigma=[0, 20],
+                gaussian_gray_noise_prob=1.,
+                gaussian_sigma_step=0.05,
+                poisson_scale=[0., 1.],
+                poisson_gray_noise_prob=1.,
+                scale_step=0.05)),
+        dict(
+            type='RandomJPEGCompression',
+            params=dict(quality=[5, 10], color_type='color'))
+    ] * 10
+    model = DegradationsWithShuffle(degradations=degradations, keys=['lq'])
+    model(results)
