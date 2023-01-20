@@ -69,22 +69,36 @@ class ExponentialMovingAverageHook(Hook):
             getattr(self, interp_mode), **self.interp_cfg)
 
     @staticmethod
-    def lerp(a, b, momentum=0.999, momentum_nontrainable=0., trainable=True):
-        """This is the function to perform linear interpolation between a and
-        b.
+    def lerp(a, b, momentum=0.001, momentum_nontrainable=1., trainable=True):
+        """Does a linear interpolation of two parameters/ buffers.
 
         Args:
-            a (float): number a
-            b (float): bumber b
-            momentum (float, optional): momentum. Defaults to 0.999.
-            momentum_nontrainable (float, optional): Defaults to 0.
-            trainable (bool, optional): trainable flag. Defaults to True.
-
+            a (torch.Tensor): Interpolation start point, refer to orig state.
+            b (torch.Tensor): Interpolation end point, refer to ema state.
+            momentum (float, optional): The weight for the interpolation
+                formula. Defaults to 0.001.
+            momentum_nontrainable (float, optional): The weight for the
+                interpolation formula used for nontrainable parameters.
+                Defaults to 1..
+            trainable (bool, optional): Whether input parameters is trainable.
+                If set to False, momentum_nontrainable will be used.
+                Defaults to True.
         Returns:
-            _type_: _description_
+            torch.Tensor: Interpolation result.
         """
+        assert 0.0 < momentum < 1.0, 'momentum must be in range (0.0, 1.0)'\
+                                     f'but got {momentum}'
+        assert 0.0 < momentum_nontrainable <= 1.0, (
+            'momentum_nontrainable must be in range (0.0, 1.0] but got '
+            f'{momentum_nontrainable}')
+        if momentum > 0.5:
+            warnings.warn(
+                'The value of momentum in EMA is usually a small number,'
+                'which is different from the conventional notion of '
+                f'momentum but got {momentum}. Please make sure the '
+                f'value is correct.')
         m = momentum if trainable else momentum_nontrainable
-        return a + (b - a) * m
+        return b + (a - b) * m
 
     def every_n_iters(self, runner: Runner, n: int):
         """This is the function to perform every n iterations.

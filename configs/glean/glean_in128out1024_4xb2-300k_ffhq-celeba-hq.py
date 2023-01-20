@@ -60,7 +60,6 @@ train_pipeline = [
         color_type='color',
         channel_order='rgb'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
-    dict(type='RescaleToZeroOne', keys=['gt']),
     dict(type='CopyValues', src_keys=['gt'], dst_keys=['img']),
     dict(
         type='RandomBlur',

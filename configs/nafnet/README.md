@@ -20,10 +20,10 @@ Although there have been significant advances in the field of image restoration 
 
 ## Results and models
 
-|                                   Method                                    | image size |       PSNR       |      SSIM      | GPU Info |                                   Download                                    |
-| :-------------------------------------------------------------------------: | :--------: | :--------------: | :------------: | :------: | :---------------------------------------------------------------------------: |
-| [nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd](./nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd.py) |  256X256   | 40.3045(40.3045) | 0.9253(0.9614) | 1 (A100) | [model](https://download.openmmlab.com/mmediting/nafnet/NAFNet-SIDD-midc64.pth) \| log(coming soon) |
-| [nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro](./nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro.py) |  1280x720  | 33.7246(33.7103) | 0.9479(0.9668) | 1 (A100) | [model](https://download.openmmlab.com/mmediting/nafnet/NAFNet-GoPro-midc64.pth) \| log(coming soon) |
+|                                  Model                                  | Dataset | image size |       PSNR       |      SSIM      | GPU Info |                                  Download                                  |
+| :---------------------------------------------------------------------: | :-----: | :--------: | :--------------: | :------------: | :------: | :------------------------------------------------------------------------: |
+| [nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd](./nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd.py) |  SIDD   |  256X256   | 40.3045(40.3045) | 0.9253(0.9614) | 1 (A100) | [model](https://download.openmmlab.com/mmediting/nafnet/NAFNet-SIDD-midc64.pth) \| log(coming soon) |
+| [nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro](./nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro.py) |  GoPro  |  1280x720  | 33.7246(33.7103) | 0.9479(0.9668) | 1 (A100) | [model](https://download.openmmlab.com/mmediting/nafnet/NAFNet-GoPro-midc64.pth) \| log(coming soon) |
 
 Note:
 

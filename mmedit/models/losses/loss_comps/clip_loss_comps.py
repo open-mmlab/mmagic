@@ -1,4 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
+import torch
 import torch.nn as nn
 
 from mmedit.registry import MODULES
@@ -38,10 +41,10 @@ class CLIPLossComps(nn.Module):
     """
 
     def __init__(self,
-                 loss_weight=1.0,
-                 data_info=None,
-                 clip_model=dict(),
-                 loss_name='loss_clip'):
+                 loss_weight: float = 1.0,
+                 data_info: Optional[dict] = None,
+                 clip_model: dict = dict(),
+                 loss_name: str = 'loss_clip') -> None:
 
         super().__init__()
         self.loss_weight = loss_weight
@@ -49,7 +52,7 @@ class CLIPLossComps(nn.Module):
         self.net = CLIPLossModel(**clip_model)
         self._loss_name = loss_name
 
-    def forward(self, *args, **kwargs):
+    def forward(self, *args, **kwargs) -> torch.Tensor:
         """Forward function.
 
         If ``self.data_info`` is not ``None``, a dictionary containing all of
@@ -88,7 +91,7 @@ class CLIPLossComps(nn.Module):
         return self.net(*args, **kwargs) * self.loss_weight
 
     @staticmethod
-    def loss_name():
+    def loss_name() -> str:
         """Loss Name.
 
         This function must be implemented and will return the name of this

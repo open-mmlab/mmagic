@@ -7,7 +7,7 @@ import os.path as osp
 import mmcv
 import numpy as np
 from mmcv.transforms import BaseTransform
-from mmengine.fileio import FileClient
+from mmengine.fileio import get_file_backend
 
 from mmedit.registry import TRANSFORMS
 from mmedit.utils import add_gaussian_noise, adjust_gamma
@@ -49,7 +49,7 @@ class CompositeFg(BaseTransform):
                                                    list) else [alpha_dirs]
         self.interpolation = interpolation
 
-        self.file_client = FileClient.infer_client(uri=fg_dirs[0])
+        self.file_backend = get_file_backend(uri=fg_dirs[0])
 
         self.fg_list, self.alpha_list = self._get_file_list(
             self.fg_dirs, self.alpha_dirs)
@@ -71,9 +71,9 @@ class CompositeFg(BaseTransform):
         # randomly select fg
         if np.random.rand() < 0.5:
             idx = np.random.randint(len(self.fg_list))
-            fg2_bytes = self.file_client.get(self.fg_list[idx])
+            fg2_bytes = self.file_backend.get(self.fg_list[idx])
             fg2 = mmcv.imfrombytes(fg2_bytes)
-            alpha2_bytes = self.file_client.get(self.alpha_list[idx])
+            alpha2_bytes = self.file_backend.get(self.alpha_list[idx])
             alpha2 = mmcv.imfrombytes(alpha2_bytes, flag='grayscale')
             alpha2 = alpha2 / 255.0  # float64
             fg2 = mmcv.imresize(fg2, (w, h), interpolation=self.interpolation)
@@ -98,9 +98,9 @@ class CompositeFg(BaseTransform):
         all_alpha_list = list()
         for fg_dir, alpha_dir in zip(fg_dirs, alpha_dirs):
             fg_list = sorted(
-                self.file_client.list_dir_or_file(fg_dir, list_dir=False))
+                self.file_backend.list_dir_or_file(fg_dir, list_dir=False))
             alpha_list = sorted(
-                self.file_client.list_dir_or_file(alpha_dir, list_dir=False))
+                self.file_backend.list_dir_or_file(alpha_dir, list_dir=False))
             # we assume the file names for fg and alpha are the same
             assert len(fg_list) == len(alpha_list), (
                 f'{fg_dir} and {alpha_dir} should have the same number of '
@@ -283,11 +283,10 @@ class RandomLoadResizeBg(BaseTransform):
     def __init__(self, bg_dir, flag='color', channel_order='bgr'):
         self.bg_dir = bg_dir
 
-        file_client = FileClient.infer_client(uri=bg_dir)
+        self.file_backend = get_file_backend(uri=bg_dir)
         self.bg_list = list(
-            file_client.list_dir_or_file(bg_dir, list_dir=False))
+            self.file_backend.list_dir_or_file(bg_dir, list_dir=False))
 
-        self.file_client = file_client
         self.flag = flag
         self.channel_order = channel_order
 
@@ -304,7 +303,7 @@ class RandomLoadResizeBg(BaseTransform):
         h, w = results['fg'].shape[:2]
         idx = np.random.randint(len(self.bg_list))
         filepath = f'{self.bg_dir}/{self.bg_list[idx]}'
-        img_bytes = self.file_client.get(filepath)
+        img_bytes = self.file_backend.get(filepath)
         img = mmcv.imfrombytes(
             img_bytes, flag=self.flag, channel_order=self.channel_order)  # HWC
         bg = mmcv.imresize(img, (w, h), interpolation='bicubic')
