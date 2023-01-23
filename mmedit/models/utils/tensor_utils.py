@@ -66,16 +66,33 @@ def truncated_normal(tensor, mean=0, std=1, n_truncted_stds=2):
     tensor.data.copy_(tmp.gather(-1, ind).squeeze(-1))
 
     try:
-        assert torch.all(tensor >= lower_bound), f'{torch.min(tensor)}'
-        assert torch.all(tensor <= upper_bound), f'{torch.max(tensor)}'
-    except:
+        assert torch.all(
+            tensor >= lower_bound), f'truncated failed {torch.min(tensor)}'
+        assert torch.all(
+            tensor <= upper_bound), f'truncated failed {torch.max(tensor)}'
+    except Exception as e:
+        print(repr(e))
         # fmt: off
-        print('\nin truncated normal lower bound: ', tensor.shape, lower_bound,
-              torch.min(tensor), torch.sum(tensor >= lower_bound))
-        print('\nin truncated normal upper bound: ', tensor.shape, upper_bound,
-              torch.max(tensor), torch.sum(tensor <= lower_bound))
+        print('\n in truncated normal lower bound: ', tensor.shape,
+              lower_bound, torch.min(tensor), torch.sum(tensor >= lower_bound))
+        print('\n in truncated normal upper bound: ', tensor.shape,
+              upper_bound, torch.max(tensor), torch.sum(tensor <= lower_bound))
         tensor[tensor <= lower_bound] = lower_bound
         tensor[tensor >= upper_bound] = upper_bound
         # fmt: on
 
     return tensor
+
+
+def transform_vectors(matrix: torch.Tensor,
+                      vectors4: torch.Tensor) -> torch.Tensor:
+    """
+    Left-multiplies MxM @ NxM. Returns NxM.
+    """
+    res = torch.matmul(vectors4, matrix.T)
+    return res
+
+
+def torch_dot(x: torch.Tensor, y: torch.Tensor):
+    """Dot product of two tensors."""
+    return (x * y).sum(-1)
