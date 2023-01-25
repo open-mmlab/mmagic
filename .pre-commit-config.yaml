@@ -48,7 +48,7 @@ repos:
         name: update-model-index
         description: Collect model information and update model-index.yml
         entry: .dev_scripts/update_model_index.py
-        additional_dependencies: [mmengine]
+        additional_dependencies: [mmengine, modelindex, tqdm, rich]
         language: python
         files: ^configs/.*\.md$
         require_serial: true

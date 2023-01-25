@@ -49,6 +49,12 @@ class ExponentialMovingAverage(BaseAveragedModel):
         super().__init__(model, interval, device, update_buffers)
         assert 0.0 < momentum < 1.0, 'momentum must be in range (0.0, 1.0)'\
                                      f'but got {momentum}'
+        if momentum > 0.5:
+            warnings.warn(
+                'The value of momentum in EMA is usually a small number,'
+                'which is different from the conventional notion of '
+                f'momentum but got {momentum}. Please make sure the '
+                f'value is correct.')
         self.momentum = momentum
 
     def avg_func(self, averaged_param: Tensor, source_param: Tensor,
@@ -230,8 +236,11 @@ class RampUpEMA(BaseAveragedModel):
             steps (int): The number of times the parameters have been
                 updated.
         """
-        momentum = self.rampup(self.steps, self.ema_kimg, self.ema_rampup,
-                               self.batch_size, self.eps)
+        momentum = 1. - self.rampup(self.steps, self.ema_kimg, self.ema_rampup,
+                                    self.batch_size, self.eps)
+        if not (0.0 < momentum < 1.0):
+            warnings.warn('RampUp momentum must be in range (0.0, 1.0)'
+                          f'but got {momentum}')
         averaged_param.mul_(1 - momentum).add_(source_param, alpha=momentum)
 
     def _load_from_state_dict(self, state_dict: dict, prefix: str,

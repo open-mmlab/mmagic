@@ -1,10 +1,9 @@
 Collections:
-- Metadata:
-    Architecture:
-    - AOT-GAN
-  Name: AOT-GAN
+- Name: AOT-GAN
   Paper:
-  - https://arxiv.org/pdf/2104.01431.pdf
+    Title: 'AOT-GAN: Aggregated Contextual Transformations for High-Resolution Image
+      Inpainting'
+    URL: https://arxiv.org/abs/2104.01431.pdf
   README: configs/aot_gan/README.md
   Task:
   - inpainting
@@ -12,12 +11,9 @@ Collections:
 Models:
 - Config: configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py
   In Collection: AOT-GAN
-  Metadata:
-    GPUs: 4 (GeForce GTX 1080 Ti)
-    Training Data: PLACES
   Name: aot-gan_smpgan_4xb4_places-512x512
   Results:
-  - Dataset: PLACES
+  - Dataset: Places365-Challenge
     Metrics:
       PSNR: 19.01
       SSIM: 0.682
