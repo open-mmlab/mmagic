@@ -1118,7 +1118,7 @@ class DenoisingUnet(BaseModule):
                 mmengine.print_log('\'SiLU\' is not supported for '
                                    f'torch < 1.6.0, found \'{torch.version}\'.'
                                    'Use ReLu instead but result maybe wrong')
-                self.conv_act == nn.ReLU()
+                self.conv_act = nn.ReLU()
             self.conv_out = nn.Conv2d(
                 block_out_channels[0],
                 self.out_channels,
