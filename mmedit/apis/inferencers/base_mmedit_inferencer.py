@@ -5,9 +5,9 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 import numpy as np
 import torch
 from mmengine import mkdir_or_exist
-from mmengine.config import Config, ConfigDict
 from mmengine.dataset import Compose
 from mmengine.infer import BaseInferencer
+from mmengine.runner import load_checkpoint
 from mmengine.structures import BaseDataElement
 from torchvision import utils
 
@@ -50,37 +50,37 @@ class BaseMMEditInferencer(BaseInferencer):
                  seed: int = 2022,
                  **kwargs) -> None:
         # Load config to cfg
-        if isinstance(config, str):
-            config = Config.fromfile(config)
-        elif not isinstance(config, (ConfigDict, Config)):
-            raise TypeError('config must be a filename or any ConfigType'
-                            f'object, but got {type(config)}')
-        self.cfg = config
-
-        if config.model.get('pretrained'):
-            config.model.pretrained = None
-
         if device is None:
             device = torch.device(
                 'cuda' if torch.cuda.is_available() else 'cpu')
         self.device = device
-        if ckpt is not None and ckpt != '':
-            self.model = self._init_model(config, ckpt, device)
-        else:
-            model = MODELS.build(config.model)
-            model.cfg = config
-            model.to(device)
-            model.eval()
-            self.model = model
+        super().__init__(config, ckpt, device)
+
         self._init_extra_parameters(extra_parameters)
         self.base_params = self._dispatch_kwargs(**kwargs)
         self.seed = seed
         set_random_seed(self.seed)
 
+    def _init_model(self, cfg: Union[ConfigType, str], ckpt: Optional[str],
+                    device: str) -> None:
+        """Initialize the model with the given config and checkpoint on the
+        specific device."""
+        model = MODELS.build(cfg.model)
+        if ckpt is not None and ckpt != '':
+            ckpt = load_checkpoint(model, ckpt, map_location='cpu')
+        model.cfg = cfg
+        model.to(device)
+        model.eval()
+        return model
+
     def _init_pipeline(self, cfg: ConfigType) -> Compose:
         """Initialize the test pipeline."""
-        pipeline_cfg = cfg.test_dataloader.dataset.pipeline
-        return Compose(pipeline_cfg)
+        if 'test_dataloader' in cfg and \
+            'dataset' in cfg.test_dataloader and \
+                'pipeline' in cfg.test_dataloader.dataset:
+            pipeline_cfg = cfg.test_dataloader.dataset.pipeline
+            return Compose(pipeline_cfg)
+        return None
 
     def _init_extra_parameters(self, extra_parameters: Dict) -> None:
         """Initialize extra_parameters of each kind of inferencer."""
