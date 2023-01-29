@@ -83,7 +83,7 @@ MMEditing is an open-source image and video editing&generating toolbox based on 
 
 Currently, MMEditing support multiple image and video generation/editing tasks.
 
-https://user-images.githubusercontent.com/12782558/215313038-5d8de5bd-b7f7-46c7-9f62-b6a433b27331.mp4
+https://user-images.githubusercontent.com/12782558/215314968-b23a43d9-c9e5-4f33-8fdc-bd79f38297f4.mp4
 
 The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorch 1.9+**.
 
