@@ -1,13 +1,17 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Dict, List, Optional, Sequence, Tuple, Union
+import os
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 import torch
+from mmengine import mkdir_or_exist
 from mmengine.config import Config, ConfigDict
 from mmengine.dataset import Compose
 from mmengine.infer import BaseInferencer
 from mmengine.structures import BaseDataElement
+from torchvision import utils
 
+from mmedit.registry import MODELS
 from mmedit.utils import ConfigType, SampleList
 from .inference_functions import set_random_seed
 
@@ -60,7 +64,14 @@ class BaseMMEditInferencer(BaseInferencer):
             device = torch.device(
                 'cuda' if torch.cuda.is_available() else 'cpu')
         self.device = device
-        self.model = self._init_model(config, ckpt, device)
+        if ckpt is not None and ckpt != '':
+            self.model = self._init_model(config, ckpt, device)
+        else:
+            model = MODELS.build(config.model)
+            model.cfg = config
+            model.to(device)
+            model.eval()
+            self.model = model
         self._init_extra_parameters(extra_parameters)
         self.base_params = self._dispatch_kwargs(**kwargs)
         self.seed = seed
@@ -187,3 +198,34 @@ class BaseMMEditInferencer(BaseInferencer):
         result = {}
         result['infer_results'] = pred_tensor
         return result
+
+    def visualize(self,
+                  inputs: list,
+                  preds: Any,
+                  show: bool = False,
+                  result_out_dir: str = '',
+                  **kwargs) -> List[np.ndarray]:
+        """Visualize predictions.
+
+        Customize your visualization by overriding this method. visualize
+        should return visualization results, which could be np.ndarray or any
+        other objects.
+
+        Args:
+            inputs (list): Inputs preprocessed by :meth:`_inputs_to_list`.
+            preds (Any): Predictions of the model.
+            show (bool): Whether to display the image in a popup window.
+                Defaults to False.
+            result_out_dir (str): Output directory of images. Defaults to ''.
+
+        Returns:
+            List[np.ndarray]: Visualization results.
+        """
+        results = (preds[:, [2, 1, 0]] + 1.) / 2.
+
+        # save images
+        if result_out_dir:
+            mkdir_or_exist(os.path.dirname(result_out_dir))
+            utils.save_image(results, result_out_dir)
+
+        return results
