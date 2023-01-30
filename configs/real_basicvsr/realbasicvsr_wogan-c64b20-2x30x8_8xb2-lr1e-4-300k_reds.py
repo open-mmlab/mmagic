@@ -262,7 +262,9 @@ val_evaluator = [
     dict(type='SSIM'),
 ]
 
-test_evaluator = [dict(type='NIQE', input_order='CHW', convert_to='Y')]
+test_evaluator = [
+    dict(type='NIQE', input_order='CHW', convert_to='Y', channel_order='bgr')
+]
 # test_evaluator = val_evaluator
 
 train_cfg = dict(
