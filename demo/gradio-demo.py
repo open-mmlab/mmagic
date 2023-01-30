@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import json
 import os
 import os.path as osp
@@ -27,7 +28,7 @@ class InpaintingGradio:
     ]
     inpainting_supported_models_cfg = {}
     inpainting_supported_models_cfg_inited = False
-    mmedit_pacgage_path = ''
+    pkg_path = ''
     error_color = '#FF0000'
     success_color = '#00FF00'
     warning_color = '#FFFF00'
@@ -81,13 +82,13 @@ class InpaintingGradio:
             return
         elif (not model_config and not model_name) and model_ckpt:
             self.send_notification(
-                'model_name and model_config should not be None when model_ckpt was used',
-                self.error_color, 'error')
+                'model_name and model_config should not be None when '
+                'model_ckpt was used', self.error_color, 'error')
             return
         elif (not model_ckpt and not model_name) and model_config:
             self.send_notification(
-                'model_name and model_ckpt should not be None when model_config was used',
-                self.error_color, 'error')
+                'model_name and model_ckpt should not be None when '
+                'model_config was used', self.error_color, 'error')
             return
         inpainting_kwargs.update(
             self._get_inpainting_kwargs(model_name, model_setting,
@@ -148,11 +149,9 @@ class InpaintingGradio:
     @staticmethod
     def init_inference_supported_models_cfg() -> None:
         if not InpaintingGradio.inpainting_supported_models_cfg_inited:
-            InpaintingGradio.mmedit_pacgage_path = InpaintingGradio.get_package_path(
-            )
+            InpaintingGradio.pkg_path = InpaintingGradio.get_package_path()
             # all_cfgs_dir = osp.join(osp.dirname(__file__), '..', 'configs')
-            all_cfgs_dir = osp.join(InpaintingGradio.mmedit_pacgage_path,
-                                    'configs')
+            all_cfgs_dir = osp.join(InpaintingGradio.pkg_path, 'configs')
             for model_name in InpaintingGradio.inpainting_supported_models:
                 meta_file_dir = osp.join(all_cfgs_dir, model_name,
                                          'metafile.yml')
@@ -187,14 +186,13 @@ class InpaintingGradio:
                     cfgs['settings']) - 1 or model_setting < -len(
                         cfgs['settings']):
                 self.send_notification(
-                    f"model_setting out of range of {model_name}'s cfgs settings",
-                    self.error_color, 'error')
+                    f"model_setting out of range of {model_name}'s "
+                    "cfgs settings", self.error_color, 'error')
             config_dir = cfgs['settings'][setting_to_use]['Config']
             config_dir = config_dir[config_dir.find('configs'):]
             # kwargs['config'] = os.path.join(
             #     osp.dirname(__file__), '..', config_dir)
-            kwargs['config'] = os.path.join(self.mmedit_pacgage_path,
-                                            config_dir)
+            kwargs['config'] = os.path.join(self.pkg_path, config_dir)
             kwargs['ckpt'] = cfgs['settings'][setting_to_use]['Weights']
 
         if model_config:
@@ -240,7 +238,7 @@ class InpaintingGradio:
                         value=self.model_name,
                         label="choose model")
                     input_setting = gr.Dropdown(
-                        value=self.model_setting, label="choose model_setting")
+                        value=self.model_setting, label="choose setting")
                     input_config = gr.Textbox(
                         value=self.model_config, label="model_config_path")
                     input_ckpt = gr.Textbox(
