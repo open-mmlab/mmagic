@@ -337,7 +337,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             sample_kwargs = {}
         else:
             noise = inputs.get('noise', None)
-            num_batches = get_valid_num_batches(inputs)
+            num_batches = get_valid_num_batches(inputs, data_samples)
             noise = self.noise_fn(noise, num_batches=num_batches)
             sample_kwargs = inputs.get('sample_kwargs', dict())
         num_batches = noise.shape[0]
@@ -350,11 +350,14 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
 
         num_batches = noise.shape[0]
         outputs = generator(noise, return_noise=False, **sample_kwargs)
+        outputs = self.data_preprocessor.destructor(outputs, data_samples)
 
         if sample_model == 'ema/orig':
             generator = self.generator
             outputs_orig = generator(
                 noise, return_noise=False, **sample_kwargs)
+            outputs_orig = self.data_preprocessor.destructor(
+                outputs_orig, data_samples)
             outputs = dict(ema=outputs, orig=outputs_orig)
 
         batch_sample_list = []
@@ -362,6 +365,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
+            # TODO: remove pixeldata
             if isinstance(inputs, dict) and 'img' in inputs:
                 gen_sample.gt_img = PixelData(data=inputs['img'][idx])
             if isinstance(outputs, dict):

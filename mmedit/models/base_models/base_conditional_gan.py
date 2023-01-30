@@ -176,14 +176,14 @@ class BaseConditionalGAN(BaseGAN):
             sample_kwargs = {}
         else:
             noise = inputs.get('noise', None)
-            num_batches = get_valid_num_batches(inputs)
+            num_batches = get_valid_num_batches(inputs, data_samples)
             noise = self.noise_fn(noise, num_batches=num_batches)
             sample_kwargs = inputs.get('sample_kwargs', dict())
         num_batches = noise.shape[0]
 
         labels = self.data_sample_to_label(data_samples)
         if labels is None:
-            num_batches = get_valid_num_batches(inputs)
+            # num_batches = get_valid_num_batches(inputs)
             labels = self.label_fn(num_batches=num_batches)
 
         sample_model = self._get_valid_model(inputs)
@@ -192,11 +192,13 @@ class BaseConditionalGAN(BaseGAN):
         else:  # sample model is `orig`
             generator = self.generator
         outputs = generator(noise, label=labels, return_noise=False)
+        outputs = self.data_preprocessor.destructor(outputs, data_samples)
 
         if sample_model == 'ema/orig':
             generator = self.generator
             outputs_orig = generator(noise, label=labels, return_noise=False)
-
+            outputs_orig = self.data_preprocessor.destructor(
+                outputs_orig, data_samples)
             outputs = dict(ema=outputs, orig=outputs_orig)
 
         batch_sample_list = []
