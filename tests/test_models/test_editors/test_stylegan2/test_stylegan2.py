@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import platform
-import sys
 from unittest import TestCase
 
 import pytest
