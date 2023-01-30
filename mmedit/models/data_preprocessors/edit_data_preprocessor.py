@@ -64,7 +64,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             non_image_keys: Optional[Tuple[str, List[str]]] = None,
             non_concentate_keys: Optional[Tuple[str, List[str]]] = None,
             pad_mode: str = 'constant',
-            norm_data_samples_in_testing: bool = False,
+            # norm_data_samples_in_testing: bool = False,
             #  input_keys: Union[List[str], str] = 'inputs',
             output_channel_order: str = 'unchanged',
             data_keys: Union[List[str], str] = 'gt_img',
@@ -97,7 +97,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         self.pad_mode = pad_mode
         self.pad_size_dict = dict()
-        self.norm_data_samples_in_testing = norm_data_samples_in_testing
+        # self.norm_data_samples_in_testing = norm_data_samples_in_testing
         # self.input_keys = input_keys if isinstance(input_keys,
         #                                            list) else [input_keys]
         self.data_keys = data_keys if isinstance(data_keys,
@@ -123,7 +123,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
     def _do_conversion(self,
                        inputs: Tensor,
-                       inputs_order: str = 'bgr',
+                       inputs_order: str = 'BGR',
                        target_order: Optional[str] = None
                        ) -> Tuple[Tensor, str]:
         """return converted inputs and order after conversion."""
@@ -370,13 +370,11 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         Returns:
             list: The list of processed data samples.
         """
+        # import ipdb
+        # ipdb.set_trace()
         if not training:
-            # conversion to BGR --> TODO: output color order may wrong
-            if self.output_color_order != 'unchanged':
-                target_order = 'BGR'
-            else:
-                target_order = 'unchanged'
-            do_norm = self.norm_data_samples_in_testing
+            # set default order to BGR in test stage
+            target_order, do_norm = 'BGR', False
         else:
             # norm in training, conversion as default (None)
             target_order, do_norm = self.output_color_order, True
@@ -391,10 +389,12 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                     break
 
                 data = data_sample.get(key)
+                channel_order_key = 'gt_channel_order' if key == 'gt_img' \
+                    else f'{key}_channel_order'
                 # data_channel_order = data_sample.get_metainfo(
                 #     f'{key}_color_order', None)
                 data_channel_order = data_sample.metainfo.get(
-                    f'{key}_color_order', None)
+                    channel_order_key, None)
                 data, color_order = self._do_conversion(
                     data, data_channel_order, target_order)
                 data = self._do_norm(data, do_norm)
@@ -512,10 +512,10 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         #         batch_tensor = batch_tensor[[2, 1, 0], ...]
 
         # convert output to 'BGR' if able
-        inputs_order = 'bgr' if self.output_color_order is None \
+        inputs_order = 'BGR' if self.output_color_order is None \
             else self.output_color_order
         batch_tensor, _ = self._do_conversion(
-            batch_tensor, inputs_order=inputs_order, target_order='bgr')
+            batch_tensor, inputs_order=inputs_order, target_order='BGR')
 
         if self._enable_normalize:
             if self.output_view is None:
