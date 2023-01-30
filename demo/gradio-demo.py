@@ -187,7 +187,7 @@ class InpaintingGradio:
                         cfgs['settings']):
                 self.send_notification(
                     f"model_setting out of range of {model_name}'s "
-                    "cfgs settings", self.error_color, 'error')
+                    'cfgs settings', self.error_color, 'error')
             config_dir = cfgs['settings'][setting_to_use]['Config']
             config_dir = config_dir[config_dir.find('configs'):]
             # kwargs['config'] = os.path.join(
@@ -236,25 +236,25 @@ class InpaintingGradio:
                     input_model_dropdown = gr.Dropdown(
                         choices=self.inpainting_supported_models,
                         value=self.model_name,
-                        label="choose model")
+                        label='choose model')
                     input_setting = gr.Dropdown(
-                        value=self.model_setting, label="choose setting")
+                        value=self.model_setting, label='choose setting')
                     input_config = gr.Textbox(
-                        value=self.model_config, label="model_config_path")
+                        value=self.model_config, label='model_config_path')
                     input_ckpt = gr.Textbox(
-                        value=self.model_ckpt, label="model_ckpt_path")
+                        value=self.model_ckpt, label='model_ckpt_path')
                     input_device_dropdown = gr.Dropdown(
-                        choices=["cuda", "cpu"],
-                        label="choose device",
-                        value="cuda")
+                        choices=['cuda', 'cpu'],
+                        label='choose device',
+                        value='cuda')
                     input_extra_parameters_input = gr.Textbox(
                         value=json.dumps(self.extra_parameters),
-                        label="extra_parameters")
+                        label='extra_parameters')
                     input_extra_parameters = gr.JSON(
-                        value=self.extra_parameters, label="extra_parameters")
+                        value=self.extra_parameters, label='extra_parameters')
                     input_seed = gr.Number(
-                        value=self.seed, precision=0, label="seed")
-                    config_button = gr.Button("CONFIG")
+                        value=self.seed, precision=0, label='seed')
+                    config_button = gr.Button('CONFIG')
                     input_extra_parameters_input.blur(
                         self.change_text2dict, input_extra_parameters_input,
                         input_extra_parameters)
@@ -262,10 +262,10 @@ class InpaintingGradio:
                 with gr.Column(visible=False) as output_col:
                     input_image = gr.Image(
                         image_mode='RGB',
-                        tool="sketch",
+                        tool='sketch',
                         type='filepath',
                         label='Input image')
-                    infer_button = gr.Button("INFER")
+                    infer_button = gr.Button('INFER')
                     infer_button.style(full_width=False)
                     output_image = gr.Image(
                         label='Output image', interactive=False)
