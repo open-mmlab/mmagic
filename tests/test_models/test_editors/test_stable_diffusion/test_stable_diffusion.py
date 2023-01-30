@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import platform
-import sys
 
 import pytest
 import torch
@@ -102,8 +101,6 @@ class dummy_text_encoder:
 @pytest.mark.skipif(
     'win' in platform.system().lower(),
     reason='skip on windows due to limited RAM.')
-@pytest.mark.skipif(
-    sys.version_info < (3, 8), reason='skip because python version is old.')
 def test_stable_diffusion():
     StableDiffuser = MODELS.build(Config(model))
     StableDiffuser.tokenizer = dummy_tokenizer()
