@@ -128,7 +128,7 @@ class InpaintingGradio:
                                                'error')
             raise Exception('module mmedit not found')
         package_path = out[out.find('Location') +
-                           len('Location: '):].split("\r\n")[0] + os.sep
+                           len('Location: '):].split('\r\n')[0] + os.sep
         return package_path
 
     def get_model_config(self, model_name: str) -> Dict:
