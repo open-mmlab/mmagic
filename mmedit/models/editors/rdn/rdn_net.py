@@ -124,7 +124,7 @@ class RDNNet(BaseModule):
         return x
 
 
-class DenseLayer(nn.Module):
+class DenseLayer(BaseModule):
     """Dense layer.
 
     Args:
@@ -150,7 +150,7 @@ class DenseLayer(nn.Module):
         return torch.cat([x, self.relu(self.conv(x))], 1)
 
 
-class RDB(nn.Module):
+class RDB(BaseModule):
     """Residual Dense Block of Residual Dense Network.
 
     Args:

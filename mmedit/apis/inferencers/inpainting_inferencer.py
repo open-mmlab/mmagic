@@ -23,6 +23,10 @@ class InpaintingInferencer(BaseMMEditInferencer):
         visualize=['result_out_dir'],
         postprocess=[])
 
+    def _init_pipeline(self, cfg) -> Compose:
+        """Initialize the test pipeline."""
+        return None
+
     def preprocess(self, img: InputsType, mask: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.
 

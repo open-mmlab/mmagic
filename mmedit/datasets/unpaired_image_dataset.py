@@ -3,11 +3,10 @@ import os.path as osp
 from typing import Optional
 
 import numpy as np
-from mmengine import FileClient
 from mmengine.dataset import BaseDataset, force_full_init
+from mmengine.fileio import get_file_backend
 
 from mmedit.registry import DATASETS
-from .data_utils import infer_io_backend
 
 IMG_EXTENSIONS = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.ppm',
                   '.PPM', '.bmp', '.BMP', '.tif', '.TIF', '.tiff', '.TIFF')
@@ -50,8 +49,10 @@ class UnpairedImageDataset(BaseDataset):
         self.dataroot_b = osp.join(str(data_root), phase + 'B')
 
         if io_backend is None:
-            io_backend = infer_io_backend(data_root)
-        self.file_client = FileClient(backend=io_backend)
+            self.file_backend = get_file_backend(uri=data_root)
+        else:
+            self.file_backend = get_file_backend(
+                backend_args={'backend': io_backend})
 
         super().__init__(
             data_root=data_root,
@@ -127,8 +128,8 @@ class UnpairedImageDataset(BaseDataset):
         Returns:
             list[str]: Image list obtained from the given folder.
         """
-        imgs_list = self.file_client.list_dir_or_file(
+        imgs_list = self.file_backend.list_dir_or_file(
             path, list_dir=False, suffix=IMG_EXTENSIONS, recursive=True)
-        images = [self.file_client.join_path(path, img) for img in imgs_list]
+        images = [self.file_backend.join_path(path, img) for img in imgs_list]
         assert images, f'{path} has no valid image file.'
         return images

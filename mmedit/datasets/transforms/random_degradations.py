@@ -165,9 +165,10 @@ class RandomJPEGCompression:
         bgr2rgb (str): Whether change channel order. Default: False.
     """
 
-    def __init__(self, params, keys, bgr2rgb=False):
+    def __init__(self, params, keys, color_type='color', bgr2rgb=False):
         self.keys = keys
         self.params = params
+        self.color_type = color_type
         self.bgr2rgb = bgr2rgb
 
     def _apply_random_compression(self, imgs):
@@ -178,7 +179,6 @@ class RandomJPEGCompression:
 
         # determine initial compression level and the step size
         quality = self.params['quality']
-        color_type = self.params['color_type']
         quality_step = self.params.get('quality_step', 0)
         jpeg_param = round(np.random.uniform(quality[0], quality[1]))
 
@@ -186,11 +186,11 @@ class RandomJPEGCompression:
         outputs = []
         for img in imgs:
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), jpeg_param]
-            if self.bgr2rgb and color_type == 'color':
+            if self.bgr2rgb and self.color_type == 'color':
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             _, img_encoded = cv2.imencode('.jpg', img, encode_param)
 
-            if color_type == 'color':
+            if self.color_type == 'color':
                 img_encoded = cv2.imdecode(img_encoded, 1)
                 if self.bgr2rgb:
                     img_encoded = cv2.cvtColor(img_encoded, cv2.COLOR_BGR2RGB)
@@ -281,13 +281,14 @@ class RandomNoise:
 
         outputs = []
         for img in imgs:
-            noise = img.copy()
+            noise = np.float32(img.copy())
             if is_gray_noise:
                 noise = cv2.cvtColor(noise[..., [2, 1, 0]], cv2.COLOR_BGR2GRAY)
                 noise = noise[..., np.newaxis]
             noise = np.clip((noise).round(), 0, 255)
             unique_val = 2**np.ceil(np.log2(len(np.unique(noise))))
-            noise = np.random.poisson(noise * unique_val) / unique_val - noise
+            noise = np.random.poisson(noise * unique_val).astype(np.float32) \
+                / unique_val - noise
 
             outputs.append(img + noise * scale)
 
@@ -498,7 +499,7 @@ class RandomVideoCompression:
             stream.bit_rate = bitrate
 
             for img in imgs:
-                img = (255 * img).astype(np.uint8)
+                img = img.astype(np.uint8)
                 frame = av.VideoFrame.from_ndarray(img, format='rgb24')
                 frame.pict_type = 'NONE'
                 for packet in stream.encode(frame):
@@ -512,8 +513,8 @@ class RandomVideoCompression:
         with av.open(buf, 'r', 'mp4') as container:
             if container.streams.video:
                 for frame in container.decode(**{'video': 0}):
-                    outputs.append(
-                        frame.to_rgb().to_ndarray().astype(np.float32) / 255.)
+                    outputs.append(frame.to_rgb().to_ndarray().astype(
+                        np.float32))
 
         return outputs
 
