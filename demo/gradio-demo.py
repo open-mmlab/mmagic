@@ -134,6 +134,7 @@ class InpaintingGradio:
     def get_model_config(self, model_name: str) -> Dict:
         """Get the model configuration including model config and checkpoint
         url.
+
         Args:
             model_name (str): Name of the model.
         Returns:
