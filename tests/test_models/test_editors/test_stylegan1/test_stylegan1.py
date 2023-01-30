@@ -36,9 +36,6 @@ class TestStyleGAN1(TestCase):
     @pytest.mark.skipif(
         'win' in platform.system().lower() and 'cu' in torch.__version__,
         reason='skip on windows-cuda due to limited RAM.')
-    @pytest.mark.skipif(
-        sys.version_info < (3, 8),
-        reason='skip because python version is old.')
     def test_stylegan_cpu(self):
         message_hub = MessageHub.get_instance('test-s1')
         message_hub.update_info('iter', 0)
