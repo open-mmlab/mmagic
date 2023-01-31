@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from mmengine import print_log
 from mmengine.model import ImgDataPreprocessor
 from mmengine.structures import BaseDataElement
-from mmengine.utils import is_list_of
+from mmengine.utils import is_seq_of
 from torch import Tensor
 
 from mmedit.registry import MODELS
@@ -445,14 +445,14 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                 _batch_inputs, inputs_channel_order)
             _batch_inputs = {'img': _batch_inputs}  # tensor -> dict
             _pad_info = None
-        elif is_list_of(_batch_inputs, torch.Tensor):
+        elif is_seq_of(_batch_inputs, torch.Tensor):
             _batch_inputs, _pad_info = self._preprocess_image_list(
                 _batch_inputs, inputs_channel_order)
             # _batch_inputs = _batch_inputs
         elif isinstance(_batch_inputs, dict):
             _batch_inputs, _pad_info = self._preprocess_dict_inputs(
                 _batch_inputs, inputs_channel_order)
-        elif is_list_of(_batch_inputs, dict):
+        elif is_seq_of(_batch_inputs, dict):
             # convert list of dict to dict of list
             keys = _batch_inputs[0].keys()
             dict_input = {k: [inp[k] for inp in _batch_inputs] for k in keys}
