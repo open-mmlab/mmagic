@@ -8,7 +8,6 @@ import torch
 from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
-from torch.nn.parallel import scatter
 
 from mmedit.utils import tensor2img
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
@@ -41,24 +40,12 @@ class ColorizationInferencer(BaseMMEditInferencer):
         data['inputs'] = _data['inputs'] / 255.0
         data = collate([data])
         data['data_samples'] = [_data['data_samples']]
+        if not data['data_samples'][0].empty_box:
+            data['data_samples'][0].cropped_img.data = \
+                data['data_samples'][0].cropped_img.data / 255.0
         if 'cuda' in str(self.device):
-            data = scatter(data, [self.device])[0]
-            if not data['data_samples'][0].empty_box:
-                data['data_samples'][0].cropped_img.data = scatter(
-                    data['data_samples'][0].cropped_img.data,
-                    [self.device])[0] / 255.0
-
-                data['data_samples'][0].box_info.data = scatter(
-                    data['data_samples'][0].box_info.data, [self.device])[0]
-
-                data['data_samples'][0].box_info_2x.data = scatter(
-                    data['data_samples'][0].box_info_2x.data, [self.device])[0]
-
-                data['data_samples'][0].box_info_4x.data = scatter(
-                    data['data_samples'][0].box_info_4x.data, [self.device])[0]
-
-                data['data_samples'][0].box_info_8x.data = scatter(
-                    data['data_samples'][0].box_info_8x.data, [self.device])[0]
+            data['inputs'] = data['inputs'].cuda()
+            data['data_samples'][0] = data['data_samples'][0].cuda()
         return data
 
     def forward(self, inputs: InputsType) -> PredType:
