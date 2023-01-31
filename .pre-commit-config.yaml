@@ -4,8 +4,8 @@ repos:
     rev: 4.0.1
     hooks:
       - id: flake8
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+  - repo: https://github.com/zhouzaida/isort
+    rev: 5.12.1
     hooks:
       - id: isort
   - repo: https://github.com/pre-commit/mirrors-yapf
@@ -48,7 +48,7 @@ repos:
         name: update-model-index
         description: Collect model information and update model-index.yml
         entry: .dev_scripts/update_model_index.py
-        additional_dependencies: [mmengine]
+        additional_dependencies: [mmengine, modelindex, tqdm, rich]
         language: python
         files: ^configs/.*\.md$
         require_serial: true

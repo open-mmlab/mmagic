@@ -4,7 +4,6 @@ from typing import Dict, List, Optional, Union
 import torch
 
 from mmedit.utils import ConfigType
-from .base_mmedit_inferencer import BaseMMEditInferencer
 from .colorization_inferencer import ColorizationInferencer
 from .conditional_inferencer import ConditionalInferencer
 from .eg3d_inferencer import EG3DInferencer
@@ -18,7 +17,7 @@ from .video_interpolation_inferencer import VideoInterpolationInferencer
 from .video_restoration_inferencer import VideoRestorationInferencer
 
 
-class MMEditInferencer(BaseMMEditInferencer):
+class MMEditInferencer:
     """Class to assign task to different inferencers.
 
     Args:

@@ -1,6 +1,6 @@
 # AOT-GAN (TVCG'2021)
 
-> [AOT-GAN: Aggregated Contextual Transformations for High-Resolution Image Inpainting](https://arxiv.org/pdf/2104.01431.pdf)
+> [AOT-GAN: Aggregated Contextual Transformations for High-Resolution Image Inpainting](https://arxiv.org/abs/2104.01431.pdf)
 
 > **任务**: 图像修复
 

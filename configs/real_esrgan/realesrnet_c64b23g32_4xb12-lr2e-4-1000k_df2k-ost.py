@@ -40,7 +40,6 @@ train_pipeline = [
         keys=['gt'],
         crop_size=(gt_crop_size, gt_crop_size),
         random_crop=True),
-    dict(type='RescaleToZeroOne', keys=['gt']),
     dict(
         type='UnsharpMasking',
         keys=['gt'],
@@ -259,6 +258,6 @@ custom_hooks = [
         type='ExponentialMovingAverageHook',
         module_keys=('generator_ema'),
         interval=1,
-        interp_cfg=dict(momentum=0.999),
+        interp_cfg=dict(momentum=0.001),
     )
 ]
