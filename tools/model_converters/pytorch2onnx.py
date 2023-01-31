@@ -11,11 +11,11 @@ import torch
 from mmcv.onnx import register_extra_symbolics
 from mmengine import Config
 from mmengine.dataset import Compose
+from mmengine.registry import init_default_scope
 from mmengine.runner import load_checkpoint
 
 from mmedit.apis import delete_cfg
 from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
 
 
 def pytorch2onnx(model,
@@ -190,14 +190,14 @@ if __name__ == '__main__':
     config = Config.fromfile(args.config)
     delete_cfg(config, key='init_cfg')
 
+    init_default_scope(config.get('default_scope', 'mmedit'))
+
     # ONNX does not support spectral norm
     if model_type == 'mattor':
         if hasattr(config.model.backbone.encoder, 'with_spectral_norm'):
             config.model.backbone.encoder.with_spectral_norm = False
             config.model.backbone.decoder.with_spectral_norm = False
         config.test_cfg.metrics = None
-
-    register_all_modules()
 
     # build the model
     model = MODELS.build(config.model)

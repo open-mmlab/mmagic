@@ -12,9 +12,9 @@ import gradio as gr
 import numpy as np
 import torch
 import yaml
+from mmengine.registry import init_default_scope
 
 from mmedit.apis.inferencers.inpainting_inferencer import InpaintingInferencer
-from mmedit.utils import register_all_modules
 
 
 class InpaintingGradio:
@@ -43,7 +43,7 @@ class InpaintingGradio:
                  extra_parameters: Dict = None,
                  seed: int = 2022,
                  **kwargs) -> None:
-        register_all_modules(init_default_scope=True)
+        init_default_scope('mmedit')
         InpaintingGradio.init_inference_supported_models_cfg()
         self.model_name = model_name
         self.model_setting = model_setting
