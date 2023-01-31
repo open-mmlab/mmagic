@@ -248,7 +248,7 @@ class TwoStageInpaintor(OneStageInpaintor):
         batch_inputs, data_samples = data['inputs'], data['data_samples']
         log_vars = {}
 
-        masked_img = batch_inputs['img']  # float
+        masked_img = batch_inputs  # float
         gt_img = torch.stack([d.gt_img.data
                               for d in data_samples])  # float, [-1,1]
         mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
