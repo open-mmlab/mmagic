@@ -40,6 +40,8 @@ class ColorizationInferencer(BaseMMEditInferencer):
         data['inputs'] = _data['inputs'] / 255.0
         data = collate([data])
         data['data_samples'] = [_data['data_samples']]
+        if 'empty_box' not in data['data_samples'][0]:
+            data['data_samples'][0].set_data({'empty_box': True})
         if not data['data_samples'][0].empty_box:
             data['data_samples'][0].cropped_img.data = \
                 data['data_samples'][0].cropped_img.data / 255.0
