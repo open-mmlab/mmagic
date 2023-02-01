@@ -13,10 +13,6 @@ register_all_modules()
 
 def test_colorization_inferencer():
 
-    if not torch.cuda.is_available():
-        # RoI pooling only support in GPU
-        return unittest.skip('test requires GPU and torch+cuda')
-
     cfg = osp.join(
         osp.dirname(__file__), '..', '..', '..', 'configs',
         'inst_colorization',
@@ -30,6 +26,18 @@ def test_colorization_inferencer():
 
     inferencer_instance = \
         ColorizationInferencer(cfg, None)
+
+    inferencer_instance.preprocess(img=data_path)
+
+    preds = torch.rand((1, 3, 256, 256))
+    result_img = inferencer_instance.visualize(preds=preds)
+    result_img = inferencer_instance.visualize(
+        preds=preds, result_out_dir=result_out_dir)
+
+    if not torch.cuda.is_available():
+        # RoI pooling only support in GPU
+        return unittest.skip('test requires GPU and torch+cuda')
+
     inferencer_instance(img=data_path)
     inference_result = inferencer_instance(
         img=data_path, result_out_dir=result_out_dir)
