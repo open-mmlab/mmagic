@@ -1,12 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
-# import unittest
 
 import torch
 
 from mmedit.apis.inferencers.colorization_inferencer import \
     ColorizationInferencer
 from mmedit.utils import register_all_modules
+
+# import unittest
 
 register_all_modules()
 
