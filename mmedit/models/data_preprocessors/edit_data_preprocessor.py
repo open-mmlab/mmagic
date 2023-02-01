@@ -153,6 +153,24 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         else:
             return channel_order
 
+    def _parse_batch_channel_order(
+            self, key: str, inputs: Sequence,
+            data_samples: Optional[Sequence[EditDataSample]]) -> str:
+        """Parse channel order of inputs in batch."""
+        batch_inputs_orders = [
+            self._parse_channel_order(key, inp, data_sample)
+            for inp, data_sample in zip(inputs, data_samples)
+        ]
+        inputs_order = batch_inputs_orders[0]
+
+        # security checking for channel order
+        assert all([
+            inputs_order == order for order in batch_inputs_orders
+        ]), (f'Channel order ({batch_inputs_orders}) of destruct targets '
+             f'(\'{key}\') are inconsistent.')
+
+        return inputs_order
+
     def _update_metainfo(self,
                          padding_info: Tensor,
                          channel_order_info: dict,
@@ -179,7 +197,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             for data_sample in data_samples:
                 for key, channel_order in channel_order_info.items():
                     data_sample.set_metainfo(
-                        {f'{key}_output_color_order': channel_order})
+                        {f'{key}_output_channel_order': channel_order})
 
         self._done_padding = padding_info.sum() != 0
         return data_samples
@@ -198,7 +216,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         if (target_order is None
                 or inputs_order.upper() == target_order.upper()):
             # order is not changed, return the input one
-            return inputs, inputs
+            return inputs, inputs_order
 
         def conversion(inputs, channel_index):
             if inputs.shape[channel_index] == 4:
@@ -226,41 +244,6 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         else:
             raise ValueError(f'Unsupported inputs order \'{inputs_order}\'.')
 
-        # inputs: [CHW] or [NCHW]
-        target_order = self.output_color_order \
-            if target_order is None else target_order
-
-        if (target_order.upper() == 'UNCHANGED'
-                or inputs_order.upper() == target_order.upper()):
-            return inputs, target_order
-
-        channel_index_mapping = {3: 0, 4: 1, 5: 2}
-        assert inputs.ndim in channel_index_mapping, (
-            'Only support (C, H, W), (N, C, H, W) or (N, t, C, H, W) '
-            f'inputs. But received \'({inputs.shape})\'.')
-        channel_index = channel_index_mapping[inputs.ndim]
-
-        if inputs.shape[channel_index] == 1:
-            if not self._conversion_warning_raised:
-                print_log(
-                    'Cannot convert single channel input to '
-                    f'\'output_color_order\'({self.output_color_order})',
-                    'current', WARNING)
-                self._conversion_warning_raised = True
-            return inputs, 'unchanged'
-
-        if inputs.shape[channel_index] == 4:
-            new_index = [2, 1, 0, 3]
-        else:
-            new_index = [2, 1, 0]
-
-        # do conversion
-        inputs = torch.index_select(
-            inputs, channel_index,
-            torch.IntTensor(new_index).to(inputs.device))
-
-        return inputs, target_order
-
     def _do_norm(self,
                  inputs: Tensor,
                  do_norm: Optional[bool] = None) -> Tensor:
@@ -277,42 +260,17 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             inputs = (inputs - mean) / std
         return inputs
 
-    def _preprocess_image_tensor(self, inputs: Tensor,
-                                 channel_order: str) -> Tensor:
-        """Process image tensor.
-
-        Args:
-            inputs (Tensor): List of image tensor to process.
-
-        Returns:
-            Tensor: Processed and stacked image tensor.
-        """
-        assert inputs.dim() == 4, (
-            'The input of `_preprocess_image_tensor` should be a NCHW '
-            'tensor or a list of tensor, but got a tensor with shape: '
-            f'{inputs.shape}')
-        inputs, _ = self._do_conversion(inputs, channel_order)
-        inputs = self._do_norm(inputs)
-        h, w = inputs.shape[2:]
-        target_h = math.ceil(h / self.pad_size_divisor) * self.pad_size_divisor
-        target_w = math.ceil(w / self.pad_size_divisor) * self.pad_size_divisor
-        pad_h = target_h - h
-        pad_w = target_w - w
-        batch_inputs = F.pad(inputs, (0, pad_w, 0, pad_h), self.pad_mode,
-                             self.pad_value)
-
-        return batch_inputs
-
-    def _preprocess_image_tensor_new(self, inputs, data_samples, key='img'):
+    def _preprocess_image_tensor(self, inputs, data_samples, key='img'):
 
         if data_samples is None:
             data_samples = [None] * inputs.shape[0]
-        channel_order = self._parse_channel_order(key, data_samples[0])
 
         assert inputs.dim() == 4, (
             'The input of `_preprocess_image_tensor` should be a NCHW '
             'tensor or a list of tensor, but got a tensor with shape: '
             f'{inputs.shape}')
+        channel_order = self._parse_batch_channel_order(
+            key, inputs, data_samples)
         inputs, output_channel_order = self._do_conversion(
             inputs, channel_order)
         inputs = self._do_norm(inputs)
@@ -330,72 +288,22 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                                              data_samples)
         return batch_inputs, data_samples
 
-    def _preprocess_image_list(self, tensor_list: List[Tensor],
-                               channel_order: str,
-                               data_samples: Optional[List[EditDataSample]]
-                               ) -> Tuple[Tensor, Tensor]:
-        """Preprocess a list of images.
-
-        Returns:
-            Tuple[Tensor]: Stacked tensor and padded size.
-        """
-        channel_order = self._parse_channel_order(data_samples[0], 'img')
-
-        dim = tensor_list[0].dim()
-        assert all([
-            tensor.ndim == dim for tensor in tensor_list
-        ]), ('Expected the dimensions of all tensors must be the same, '
-             f'but got {[tensor.ndim for tensor in tensor_list]}')
-
-        num_img = len(tensor_list)
-        all_sizes: torch.Tensor = torch.Tensor(
-            [tensor.shape for tensor in tensor_list])
-        max_sizes = torch.ceil(
-            torch.max(all_sizes, dim=0)[0] /
-            self.pad_size_divisor) * self.pad_size_divisor
-        padding_sizes = max_sizes - all_sizes
-        # The dim of channel and frame index should not be padded.
-        padding_sizes[:, :-2] = 0
-        if padding_sizes.sum() == 0:
-            stacked_tensor = torch.stack(tensor_list)
-            # stacked_tensor = self._norm_and_conversion(stacked_tensor)
-            stacked_tensor, _ = self._do_conversion(stacked_tensor,
-                                                    channel_order)
-            stacked_tensor = self._do_norm(stacked_tensor)
-            return stacked_tensor, padding_sizes
-
-        # `pad` is the second arguments of `F.pad`. If pad is (1, 2, 3, 4),
-        # it means that padding the last dim with 1(left) 2(right), padding the
-        # penultimate dim to 3(top) 4(bottom). The order of `pad` is opposite
-        # of the `padded_sizes`. Therefore, the `padded_sizes` needs to be
-        # reversed, and only odd index of pad should be assigned to keep
-        # padding "right" and "bottom".
-        pad = torch.zeros(num_img, 2 * dim, dtype=torch.int)
-        pad[:, 1::2] = padding_sizes[:, range(dim - 1, -1, -1)]
-        batch_tensor = []
-        for idx, tensor in enumerate(tensor_list):
-            paded_tensor = F.pad(tensor, tuple(pad[idx].tolist()),
-                                 self.pad_mode, self.pad_value)
-            batch_tensor.append(paded_tensor)
-        stacked_tensor = torch.stack(batch_tensor)
-        # stacked_tensor = self._norm_and_conversion(stacked_tensor)
-        stacked_tensor, _ = self._do_conversion(stacked_tensor, channel_order)
-        stacked_tensor = self._do_norm(stacked_tensor)
-        return stacked_tensor, padding_sizes
-
-    def _preprocess_image_list_new(self, tensor_list, data_samples, key='img'):
+    def _preprocess_image_list(self, tensor_list, data_samples, key='img'):
         # save padding info and output channel order in one function
 
         data_samples = [None] * len(tensor_list) if data_samples is None \
             else data_samples
 
-        channel_order = self._parse_channel_order(key, tensor_list[0],
-                                                  data_samples[0])
+        batch_inputs_orders = [
+            self._parse_channel_order(key, inp, data_sample)
+            for inp, data_sample in zip(tensor_list, data_samples)
+        ]
+        channel_order = batch_inputs_orders[0]
         # security checking for channel order
         assert all([
-            channel_order == self._parse_channel_order(key, inp, data_sample)
-            for inp, data_sample in zip(tensor_list, data_samples)
-        ])
+            channel_order == order for order in batch_inputs_orders
+        ]), (f'Channel order ({batch_inputs_orders}) of destruct targets '
+             f'(\'{key}\') are inconsistent.')
 
         dim = tensor_list[0].dim()
         assert all([
@@ -448,7 +356,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         return stacked_tensor, data_samples
 
     def _preprocess_dict_inputs(self, batch_inputs: dict,
-                                channel_order) -> dict:
+                                data_samples) -> dict:
         """Preprocess dict type inputs.
 
         Args:
@@ -475,61 +383,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                          f'But \'{k}\' is list of \'{type(inputs[0])}\'.')
 
                     if k not in self._NON_IMAGE_KEYS:
-                        inputs, padding_sizes = self._preprocess_image_list(
-                            inputs)
-                        # self.pad_size_dict[k] = pad_size
-                        pad_size_dict[k] = [size for size in padding_sizes]
-
-                    batch_inputs[k] = inputs
-            elif isinstance(inputs, Tensor) and k not in self._NON_IMAGE_KEYS:
-                batch_inputs[k], padding_sizes = self._preprocess_image_tensor(
-                    inputs, channel_order)
-                pad_size_dict[k] = [size for size in padding_sizes]
-
-        # NOTE: we only support all key shares the same padding size
-        if pad_size_dict:
-            padding_size = list(pad_size_dict.values())[0]
-            padding_key = list(pad_size_dict.keys())[0]
-            for k, v in pad_size_dict.items():
-                assert v == padding_size, (
-                    'All keys should share the same padding size, but got '
-                    f'different size for \'{k}\' (\'{v}\') and '
-                    f'\'{padding_key}\' (\'{padding_size}\'). Please check '
-                    'your data carefully.')
-
-            return batch_inputs, padding_sizes
-
-        return batch_inputs, None
-
-    def _preprocess_dict_inputs_new(self, batch_inputs: dict,
-                                    data_samples) -> dict:
-        """Preprocess dict type inputs.
-
-        Args:
-            batch_inputs (dict): Input dict.
-
-        Returns:
-            dict: Preprocessed dict.
-        """
-        pad_size_dict = dict()
-        for k, inputs in batch_inputs.items():
-            # handle concentrate for values in list
-            if isinstance(inputs, list):
-                if k in self._NON_CONCENTATE_KEYS:
-                    # use the first value
-                    assert all([
-                        inputs[0] == inp for inp in inputs
-                    ]), (f'NON_CONCENTATE_KEY \'{k}\' should be consistency '
-                         'among the data list.')
-                    batch_inputs[k] = inputs[0]
-                else:
-                    assert all([
-                        isinstance(inp, torch.Tensor) for inp in inputs
-                    ]), ('Only support stack list of Tensor in inputs dict. '
-                         f'But \'{k}\' is list of \'{type(inputs[0])}\'.')
-
-                    if k not in self._NON_IMAGE_KEYS:
-                        inputs, data_samples = self._preprocess_image_list_new(
+                        inputs, data_samples = self._preprocess_image_list(
                             inputs, data_samples, k)
                         pad_size_dict[k] = [
                             data.metainfo.get('padding_size')
@@ -540,7 +394,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
             elif isinstance(inputs, Tensor) and k not in self._NON_IMAGE_KEYS:
                 batch_inputs[k], data_samples = \
-                    self._preprocess_image_tensor_new(inputs, data_samples, k)
+                    self._preprocess_image_tensor(inputs, data_samples, k)
                 pad_size_dict[k] = [
                     data.metainfo.get('padding_size') for data in data_samples
                 ]
@@ -592,29 +446,15 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                     break
 
                 data = data_sample.get(key)
-                # specific name for gt samples
-                # channel_order_key = 'gt_channel_order' if key == 'gt_img' \
-                #     else f'{key}_channel_order'
-                # # data_channel_order = data_sample.get_metainfo(
-                # #     f'{key}_color_order', None)
-                # data_channel_order = data_sample.metainfo.get(
-                #     channel_order_key, None)
                 data_channel_order = self._parse_channel_order(
                     key, data, data_sample)
                 data, color_order = self._do_conversion(
                     data, data_channel_order, target_order)
                 data = self._do_norm(data, do_norm)
                 data_sample.set_data({f'{key}': data})
-                # data_sample.set_data({
-                #     f'{key}':
-                #     self._norm_and_conversion(
-                #         data_sample.get(key), do_norm, do_conversion)
-                # })
                 data_process_meta = {
                     f'{key}_enable_norm': self._enable_normalize,
-                    # f'{key}_enable_conversion': self._channel_conversion,
-                    # save real order
-                    f'{key}_output_color_order': color_order,
+                    f'{key}_output_channel_order': color_order,
                     f'{key}_mean': self.mean,
                     f'{key}_std': self.std
                 }
@@ -638,42 +478,25 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         _batch_inputs = data['inputs']
         _batch_data_samples = data.get('data_samples', None)
 
-        # ops, for translation model?
-        # if _batch_data_samples is not None:
-        #     inputs_channel_order = _batch_data_samples[0].get(
-        #         'img_channel_order', 'BGR').upper()
-        # else:
-        #     inputs_channel_order = None
-
         # process input
         if isinstance(_batch_inputs, torch.Tensor):
-            # _batch_inputs = self._preprocess_image_tensor(
-            #     _batch_inputs, inputs_channel_order)
-            # _batch_inputs = {'img': _batch_inputs}  # tensor -> dict
-            # _pad_info = None
             _batch_inputs, _batch_data_samples = \
-                self._preprocess_dict_inputs_new(
+                self._preprocess_dict_inputs(
                     _batch_inputs, _batch_data_samples)
         elif is_seq_of(_batch_inputs, torch.Tensor):
-            # _batch_inputs, _pad_info = self._preprocess_image_list(
-            #     _batch_inputs, inputs_channel_order)
             _batch_inputs, _batch_data_samples = \
-                self._preprocess_image_list_new(
+                self._preprocess_image_list(
                     _batch_inputs, _batch_data_samples)
         elif isinstance(_batch_inputs, dict):
-            # _batch_inputs, _pad_info = self._preprocess_dict_inputs(
-            #     _batch_inputs, inputs_channel_order)
             _batch_inputs, _batch_data_samples = \
-                self._preprocess_dict_inputs_new(
+                self._preprocess_dict_inputs(
                     _batch_inputs, _batch_data_samples)
         elif is_seq_of(_batch_inputs, dict):
             # convert list of dict to dict of list
             keys = _batch_inputs[0].keys()
             dict_input = {k: [inp[k] for inp in _batch_inputs] for k in keys}
-            # _batch_inputs, _pad_info = self._preprocess_dict_inputs(
-            #     dict_input, inputs_channel_order)
             _batch_inputs, _batch_data_samples = \
-                self._preprocess_dict_inputs_new(
+                self._preprocess_dict_inputs(
                     dict_input, _batch_data_samples)
         else:
             raise ValueError('Only support following inputs types: '
@@ -691,38 +514,31 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         return data
 
-    def destructor(
-        self,
-        outputs: Tensor,
-        data_samples: Optional[List[EditDataSample]] = None
-    ) -> Union[list, Tensor]:
+    def destructor(self,
+                   outputs: Tensor,
+                   data_samples: Optional[List[EditDataSample]] = None,
+                   key: str = 'img') -> Union[list, Tensor]:
         # NOTE: destructor a batch of tensor, therefore we take a list of
         # datasample as input
 
         # NOTE: only support passing tensor sample, if the output of model is
         # a dict, users should call this manually.
         # Since we do not know whether the outputs is image tensor.
-        _batch_outputs = self._destruct_tensor_norm_and_conversion(outputs)
+        _batch_outputs = self._destruct_tensor_norm_and_conversion(
+            outputs, data_samples, key)
         _batch_outputs = self._destruct_tensor_padding(_batch_outputs,
                                                        data_samples)
         _batch_outputs = _batch_outputs.clamp_(0, 255)
         return _batch_outputs
 
-    def _destruct_tensor_norm_and_conversion(self,
-                                             batch_tensor: Tensor) -> Tensor:
+    def _destruct_tensor_norm_and_conversion(
+            self, batch_tensor: Tensor, data_samples: List[EditDataSample],
+            key: str) -> Tensor:
 
-        # single channel -> return
-        # 3 channel -> check conversion
-        # if self.output_color_order == 'RGB':
-        #     if batch_tensor.ndim == 4:
-        #         batch_tensor = batch_tensor[..., [2, 1, 0]]
-        #     else:
-        #         batch_tensor = batch_tensor[[2, 1, 0], ...]
-
+        # get channel order from data sample
+        inputs_order = self._parse_batch_channel_order(key, batch_tensor,
+                                                       data_samples)
         # convert output to 'BGR' if able
-        inputs_order = 'BGR' if self.output_color_order is None \
-            else self.output_color_order
-        # inputs_order = self.output_color_order
         batch_tensor, _ = self._do_conversion(
             batch_tensor, inputs_order=inputs_order, target_order='BGR')
 
