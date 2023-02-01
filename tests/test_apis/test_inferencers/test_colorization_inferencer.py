@@ -1,13 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
+import unittest
 
 import torch
 
 from mmedit.apis.inferencers.colorization_inferencer import \
     ColorizationInferencer
 from mmedit.utils import register_all_modules
-
-# import unittest
 
 register_all_modules()
 
@@ -36,9 +35,9 @@ def test_colorization_inferencer():
     result_img = inferencer_instance.visualize(
         preds=preds, result_out_dir=result_out_dir)
 
-    # if not torch.cuda.is_available():
-    #     # RoI pooling only support in GPU
-    #     return unittest.skip('test requires GPU and torch+cuda')
+    if not torch.cuda.is_available():
+        # RoI pooling only support in GPU
+        return unittest.skip('test requires GPU and torch+cuda')
 
     inferencer_instance(img=data_path)
     inference_result = inferencer_instance(
