@@ -70,9 +70,8 @@ jobs:
       - run:
           name: Run unittests
           command: |
-            coverage run --branch --source mmedit -m pytest tests/
-            coverage xml
-            coverage report -m
+            pytest tests/
+
   build_cuda:
     parameters:
       torch:
@@ -114,6 +113,9 @@ jobs:
           name: Run unittests
           command: |
             docker exec mmedit pytest tests/
+            docker exec mmedit coverage run --branch --source mmedit -m pytest tests/
+            docker exec mmedit coverage xml
+            docker exec mmedit coverage report -m
 
 workflows:
   pr_stage_lint:
