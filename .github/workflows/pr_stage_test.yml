@@ -47,18 +47,19 @@ jobs:
         run: rm -rf .eggs && pip install -e .
       - name: Run unittests and generate coverage report
         run: |
-          coverage run --branch --source mmedit -m pytest tests/
-          coverage xml --omit="**/stylegan3_ops/*,**/conv2d_gradfix.py,**/grid_sample_gradfix.py,**/misc.py,**/upfirdn2d.py,**all_gather_layer.py"
-          coverage report -m
+          pytest tests/
+      #   coverage run --branch --source mmedit -m pytest tests/
+      #   coverage xml --omit="**/stylegan3_ops/*,**/conv2d_gradfix.py,**/grid_sample_gradfix.py,**/misc.py,**/upfirdn2d.py,**all_gather_layer.py"
+      #   coverage report -m
       # Upload coverage report for python3.7 && pytorch1.8.1 cpu
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1.0.14
-        with:
-          file: ./coverage.xml
-          flags: unittests
-          env_vars: OS,PYTHON
-          name: codecov-umbrella
-          fail_ci_if_error: false
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v1.0.14
+      #   with:
+      #     file: ./coverage.xml
+      #     flags: unittests
+      #     env_vars: OS,PYTHON
+      #     name: codecov-umbrella
+      #     fail_ci_if_error: false
       # - name: Setup tmate session
       #   if: ${{ failure() }}
       #   uses: mxschmitt/action-tmate@v3
@@ -101,6 +102,20 @@ jobs:
         run: |
           python setup.py check -m -s
           TORCH_CUDA_ARCH_LIST=7.0 pip install -e .
+      - name: Run unittests and generate coverage report
+        run: |
+          coverage run --branch --source mmedit -m pytest tests/
+          coverage xml --omit="**/stylegan3_ops/*,**/conv2d_gradfix.py,**/grid_sample_gradfix.py,**/misc.py,**/upfirdn2d.py,**all_gather_layer.py"
+          coverage report -m
+      # Upload coverage report for python3.7 && pytorch1.8.1 cpu
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1.0.14
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          env_vars: OS,PYTHON
+          name: codecov-umbrella
+          fail_ci_if_error: false
       # - name: Setup tmate session
       #   if: ${{ failure() }}
       #   uses: mxschmitt/action-tmate@v3
