@@ -254,7 +254,7 @@ class IconVSRNet(BaseModule):
         return torch.stack(outputs, dim=1)[:, :, :, :4 * h_input, :4 * w_input]
 
 
-class EDVRFeatureExtractor(nn.Module):
+class EDVRFeatureExtractor(BaseModule):
     """EDVR feature extractor for information-refill in IconVSR.
 
     We use EDVR-M in IconVSR. To adopt pretrained models, please
