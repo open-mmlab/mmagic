@@ -39,6 +39,9 @@ class MMEdit:
         >>> # see demo/mmediting_inference_tutorial.ipynb for more examples
     """
     inference_supported_models = [
+        # colorization models
+        'inst_colorization',
+
         # conditional models
         'biggan',
 
