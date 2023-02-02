@@ -84,7 +84,7 @@ MMEditing 同时维护 0.x 和 1.x 版本，详情见[分支维护计划](README
 
 最新的 **0.16.0** 版本已经在 31/10/2022 发布：
 
-- `VisualizationHook` 将被启用，建议用户使用 `MMEditVisualizationHook`。
+- `VisualizationHook` 将被弃用，建议用户使用 `MMEditVisualizationHook`。
 - 修复 FLAVR 的注册问题。
 - 修正 RDB 模型中的通道数。
 
