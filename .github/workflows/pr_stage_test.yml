@@ -70,6 +70,9 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7]
+        include:
+          - torch: 1.8.1
+            torchvision: 0.9.1
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -89,6 +92,10 @@ jobs:
         run: |
           apt-get update
           apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libxrender-dev curl
+      - name: Install PyTorch
+        run: pip install torch==${{matrix.torch}}+cu102 torchvision==${{matrix.torchvision}}+cu102 -f https://download.pytorch.org/whl/torch_stable.html
+      - name: Show nvidia-smi
+        run: nvidia-smi
       - name: Install mmedit dependencies
         run: |
           pip install git+https://github.com/open-mmlab/mmengine.git@main
@@ -99,9 +106,9 @@ jobs:
         run: |
           python setup.py check -m -s
           TORCH_CUDA_ARCH_LIST=7.0 pip install -e .
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #   if: ${{ failure() }}
+      #   uses: mxschmitt/action-tmate@v3
 
   build_windows:
     runs-on: ${{ matrix.os }}
