@@ -5,7 +5,6 @@ import torch
 
 from mmedit.models.base_models import OneStageInpaintor
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
 
 
 @MODELS.register_module()
@@ -15,27 +14,6 @@ class PConvInpaintor(OneStageInpaintor):
     This inpaintor is implemented according to the paper: Image inpainting for
     irregular holes using partial convolutions
     """
-
-    def forward_test(self, inputs, data_samples):
-        """Forward function for testing.
-
-        Args:
-            inputs (torch.Tensor): Input tensor.
-            data_samples (List[dict]): List of data sample dict.
-
-        Returns:
-            dict: Contain output results and eval metrics (if have).
-        """
-        fake_reses, fake_imgs = self.forward_tensor(inputs, data_samples)
-
-        predictions = []
-        for (fr, fi) in zip(fake_reses, fake_imgs):
-            fi = (fi * 127.5 + 127.5)
-            fr = (fr * 127.5 + 127.5)
-            pred = EditDataSample(
-                fake_res=fr, fake_img=fi, pred_img=PixelData(data=fi))
-            predictions.append(pred)
-        return predictions
 
     def forward_tensor(self, inputs, data_samples):
         """Forward function in tensor mode.

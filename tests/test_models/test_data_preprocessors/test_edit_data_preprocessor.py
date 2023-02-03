@@ -263,8 +263,9 @@ class TestBaseDataPreprocessor(TestCase):
         assert_allclose(outputs, targets)
         for data in data_samples:
             self.assertEqual(data.metainfo['img_output_channel_order'], 'BGR')
-            self.assertTrue(
-                (data.metainfo['padding_size'] == target_padding_info).all())
+            padding_size = data.metainfo['padding_size']
+            self.assertEqual(padding_size.shape, (3, ))
+            self.assertTrue((padding_size == target_padding_info).all())
 
         # 3. no metainfo + output channel order is RGB -> do conversion
         data_preprocessor = EditDataPreprocessor(output_channel_order='RGB')
@@ -276,8 +277,9 @@ class TestBaseDataPreprocessor(TestCase):
         assert_allclose(outputs, targets)
         for data in data_samples:
             self.assertEqual(data.metainfo['img_output_channel_order'], 'RGB')
-            self.assertTrue(
-                (data.metainfo['padding_size'] == target_padding_info).all())
+            padding_size = data.metainfo['padding_size']
+            self.assertEqual(padding_size.shape, (3, ))
+            self.assertTrue((padding_size == target_padding_info).all())
 
         # 4. metainfo (BGR) + output channel order is RGB -> do conversion
         data_preprocessor = EditDataPreprocessor(output_channel_order='RGB')
@@ -293,8 +295,9 @@ class TestBaseDataPreprocessor(TestCase):
         for data in data_samples:
             self.assertEqual(data.metainfo['gt_img_output_channel_order'],
                              'RGB')
-            self.assertTrue(
-                (data.metainfo['padding_size'] == target_padding_info).all())
+            padding_size = data.metainfo['padding_size']
+            self.assertEqual(padding_size.shape, (3, ))
+            self.assertTrue((padding_size == target_padding_info).all())
 
         # 5. metainfo (single) + output channel order is RGB -> no conversion
         data_preprocessor = EditDataPreprocessor(output_channel_order='RGB')
@@ -310,8 +313,9 @@ class TestBaseDataPreprocessor(TestCase):
         for data in data_samples:
             self.assertEqual(data.metainfo['sin_output_channel_order'],
                              'single')
-            self.assertTrue(
-                (data.metainfo['padding_size'] == target_padding_info).all())
+            padding_size = data.metainfo['padding_size']
+            self.assertEqual(padding_size.shape, (3, ))
+            self.assertTrue((padding_size == target_padding_info).all())
 
         # 6. data sample is None
         data_preprocessor = EditDataPreprocessor(output_channel_order='RGB')

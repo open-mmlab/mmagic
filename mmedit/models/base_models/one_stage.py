@@ -399,9 +399,8 @@ class OneStageInpaintor(BaseModel):
         fake_reses, fake_imgs = self.forward_tensor(inputs, data_samples)
 
         predictions = []
-        fake_reses = self.data_preprocessor.destructor(fake_reses,
-                                                       data_samples)
-        fake_imgs = self.data_preprocessor.destructor(fake_imgs, data_samples)
+        fake_reses = self.data_preprocessor.destruct(fake_reses, data_samples)
+        fake_imgs = self.data_preprocessor.destruct(fake_imgs, data_samples)
         for (fr, fi) in zip(fake_reses, fake_imgs):
             pred = EditDataSample(fake_res=fr, fake_img=fi, pred_img=fi)
             predictions.append(pred)
@@ -430,8 +429,8 @@ class OneStageInpaintor(BaseModel):
             assert inputs.shape[0] == len(predictions), (
                 'The length of inputs and outputs must be same.')
             for idx, data_sample in enumerate(data_samples):
-                destructed_input = self.data_preprocessor.destructor(
-                    inputs[idx], data_samples)
+                destructed_input = self.data_preprocessor.destruct(
+                    inputs[idx], data_sample)
                 data_sample.set_data({'input': destructed_input})
 
         return data_samples

@@ -361,8 +361,9 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         pad_w = target_w - w
         batch_inputs = F.pad(inputs, (0, pad_w, 0, pad_h), self.pad_mode,
                              self.pad_value)
+
         padding_size = torch.FloatTensor((0, pad_h, pad_w))[None, ...]
-        padding_size = padding_size.repeat(inputs.shape[0], 1, 1)
+        padding_size = padding_size.repeat(inputs.shape[0], 1)
         data_samples = self._update_metainfo(padding_size,
                                              {key: output_channel_order},
                                              data_samples)
