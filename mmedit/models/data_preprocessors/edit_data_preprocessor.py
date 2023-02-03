@@ -133,10 +133,11 @@ class EditDataPreprocessor(ImgDataPreprocessor):
     @staticmethod
     def _parse_channel_index(inputs) -> int:
         """Parse channel index of inputs."""
-        channel_index_mapping = {3: 0, 4: 1, 5: 2}
+        channel_index_mapping = {2: 1, 3: 0, 4: 1, 5: 2}
         assert inputs.ndim in channel_index_mapping, (
-            'Only support (C, H, W), (N, C, H, W) or (N, t, C, H, W) '
-            f'inputs. But received \'({inputs.shape})\'.')
+            'Only support (H*W, C), (C, H, W), (N, C, H, W) or '
+            '(N, t, C, H, W) inputs. But received '
+            f'\'({inputs.shape})\'.')
         channel_index = channel_index_mapping[inputs.ndim]
 
         return channel_index
@@ -304,7 +305,11 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         if do_norm:
             if self.input_view is None:
-                target_shape = [1 for _ in range(inputs.ndim - 3)] + [-1, 1, 1]
+                if inputs.ndim == 2:  # special case for (H*W, C) tensor
+                    target_shape = [1, -1]
+                else:
+                    target_shape = [1 for _ in range(inputs.ndim - 3)
+                                    ] + [-1, 1, 1]
             else:
                 target_shape = self.input_view
             mean = self.mean.view(target_shape)
@@ -685,8 +690,11 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                                                      data_samples)
         if self._enable_normalize:
             if self.output_view is None:
-                target_shape = [1 for _ in range(batch_tensor.ndim - 3)
-                                ] + [-1, 1, 1]
+                if batch_tensor.ndim == 2:  # special case for (H*W, C) tensor
+                    target_shape = [1, -1]
+                else:
+                    target_shape = [1 for _ in range(batch_tensor.ndim - 3)
+                                    ] + [-1, 1, 1]
             else:
                 target_shape = self.output_view
             mean = self.mean.view(target_shape)

@@ -5,7 +5,7 @@ import torch
 from mmengine.model import BaseModel
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 @MODELS.register_module()
@@ -141,8 +141,9 @@ class BaseEditModel(BaseModel):
             assert inputs.shape[0] == len(predictions), (
                 'The length of inputs and outputs must be same.')
             for idx, data_sample in enumerate(data_samples):
-                destructed_input = self.data_preprocessor.destructor(
-                    inputs[idx], data_samples)
+                # destruct input
+                destructed_input = self.data_preprocessor.destruct(
+                    inputs[idx], data_sample, 'img')
                 data_sample.set_data({'input': destructed_input})
 
         return data_samples
@@ -185,11 +186,10 @@ class BaseEditModel(BaseModel):
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
-        feats = self.data_preprocessor.destructor(feats, data_samples)
+        feats = self.data_preprocessor.destruct(feats, data_samples)
         predictions = []
         for idx in range(feats.shape[0]):
-            predictions.append(
-                EditDataSample(pred_img=PixelData(data=feats[idx].to('cpu'))))
+            predictions.append(EditDataSample(pred_img=feats[idx].to('cpu')))
 
         return predictions
 

@@ -286,7 +286,7 @@ class SRGAN(BaseEditModel):
         g_optim_wrapper = optim_wrapper['generator']
 
         data = self.data_preprocessor(data, True)
-        batch_inputs = data['inputs']['img']
+        batch_inputs = data['inputs']
         data_samples = data['data_samples']
         batch_gt_data = self.extract_gt_data(data_samples)
 

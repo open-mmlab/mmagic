@@ -6,7 +6,7 @@ from torch.optim import Adam
 
 from mmedit.models import BasicVSR, BasicVSRNet, EditDataPreprocessor
 from mmedit.models.losses import CharbonnierLoss
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 def test_basicvsr():
@@ -33,7 +33,7 @@ def test_basicvsr():
     # prepare data
     inputs = torch.rand(5, 3, 64, 64)
     target = torch.rand(5, 3, 256, 256)
-    data_sample = EditDataSample(gt_img=PixelData(data=target))
+    data_sample = EditDataSample(gt_img=target)
     data = dict(inputs=[inputs], data_samples=[data_sample])
 
     # train
@@ -49,11 +49,11 @@ def test_basicvsr():
 
     # val
     output = model.val_step(data)
-    assert output[0].output.pred_img.data.shape == (5, 3, 256, 256)
+    assert output[0].output.pred_img.shape == (5, 3, 256, 256)
 
     data['data_samples'][0].gt_img.data = torch.rand(3, 256, 256)
     output = model.val_step(data)
-    assert output[0].output.pred_img.data.shape == (3, 256, 256)
+    assert output[0].output.pred_img.shape == (3, 256, 256)
 
     model = BasicVSR(
         generator=dict(

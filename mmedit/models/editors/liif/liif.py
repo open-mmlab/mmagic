@@ -5,7 +5,7 @@ import torch
 
 from mmedit.models.base_models import BaseEditModel
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 @MODELS.register_module()
@@ -70,11 +70,10 @@ class LIIF(BaseEditModel):
         shape = [len(data_samples), round(ih * s), round(iw * s), 3]
         feats = feats.view(shape).permute(0, 3, 1, 2).contiguous()
 
-        feats = self.data_preprocessor.destructor(feats, data_samples)
+        feats = self.data_preprocessor.destruct(feats, data_samples)
 
         predictions = []
         for idx in range(feats.shape[0]):
-            predictions.append(
-                EditDataSample(pred_img=PixelData(data=feats[idx])))
+            predictions.append(EditDataSample(pred_img=feats[idx]))
 
         return predictions
