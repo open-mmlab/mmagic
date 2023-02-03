@@ -7,7 +7,7 @@ from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
 
 from mmedit.registry import MODULES
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from .color_utils import get_colorization_data, lab2rgb
 
 
@@ -170,10 +170,10 @@ class InstColorization(BaseModel):
             List[EditDataSample]: predictions.
         """
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
+        feats = self.data_preprocessor.destruct(feats, data_samples)
         predictions = []
         for idx in range(feats.shape[0]):
-            batch_tensor = feats[idx] * 127.5 + 127.5
-            pred_img = PixelData(data=batch_tensor.to('cpu'))
+            pred_img = feats[idx].to('cpu')
             predictions.append(
                 EditDataSample(
                     pred_img=pred_img, metainfo=data_samples[idx].metainfo))
