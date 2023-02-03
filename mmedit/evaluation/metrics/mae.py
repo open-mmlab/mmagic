@@ -69,7 +69,7 @@ class MAE(MAE_MMEVAL):
             gt = [obtain_data(data, self.gt_key).numpy()]
             pred = [obtain_data(prediction, self.pred_key).numpy()]
             if self.mask_key is not None:
-                mask = obtain_data(data, self.gt_key).numpy()
+                mask = obtain_data(data, self.mask_key).numpy()
                 mask[mask != 0] = 1
                 mask = [mask]
             else:
