@@ -151,7 +151,7 @@ class AOTInpaintor(OneStageInpaintor):
         mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
         mask = mask.float()
 
-        masked_img = batch_inputs['img']
+        masked_img = batch_inputs
         masked_img = masked_img.float() + mask
 
         # get common output from encdec
