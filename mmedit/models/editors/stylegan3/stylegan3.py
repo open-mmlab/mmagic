@@ -69,7 +69,7 @@ class StyleGAN3(StyleGAN2):
         inputs_dict, data_samples = data['inputs'], data['data_samples']
         # hard code to compute equivarience
         if 'mode' in inputs_dict and 'eq_cfg' in inputs_dict['mode']:
-            batch_size = get_valid_num_batches(inputs_dict)
+            batch_size = get_valid_num_batches(inputs_dict, data_samples)
             outputs = self.sample_equivarience_pairs(
                 batch_size,
                 sample_mode=inputs_dict['mode']['sample_mode'],
@@ -93,7 +93,7 @@ class StyleGAN3(StyleGAN2):
         inputs_dict, data_samples = data['inputs'], data['data_samples']
         # hard code to compute equivarience
         if 'mode' in inputs_dict and 'eq_cfg' in inputs_dict['mode']:
-            batch_size = get_valid_num_batches(inputs_dict)
+            batch_size = get_valid_num_batches(inputs_dict, data_samples)
             outputs = self.sample_equivarience_pairs(
                 batch_size,
                 sample_mode=inputs_dict['mode']['sample_mode'],
@@ -117,7 +117,7 @@ class StyleGAN3(StyleGAN2):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = inputs['img']
+        real_imgs = torch.stack([data.gt_img for data in data_samples])
 
         num_batches = real_imgs.shape[0]
 
@@ -151,7 +151,7 @@ class StyleGAN3(StyleGAN2):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        num_batches = inputs['img'].shape[0]
+        num_batches = len(data_samples)
 
         noise = self.noise_fn(num_batches=num_batches)
         fake_imgs = self.generator(
