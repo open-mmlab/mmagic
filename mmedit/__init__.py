@@ -26,8 +26,8 @@ mmcv_min_version = digit_version(MMCV_MIN)
 mmcv_max_version = digit_version(MMCV_MAX)
 mmcv_version = digit_version(mmcv.__version__)
 
-MMENGINE_MIN = '0.1.0'
-MMENGINE_MAX = '0.2.0'
+MMENGINE_MIN = '0.4.0'
+MMENGINE_MAX = '1.0.0'
 mmengine_min_version = digit_version(MMENGINE_MIN)
 mmengine_max_version = digit_version(MMENGINE_MAX)
 mmengine_version = digit_version(mmengine.__version__)
