@@ -18,9 +18,9 @@ class LSGAN(BaseGAN):
     Paper link: https://arxiv.org/pdf/1611.04076.pdf
 
     Detailed architecture can be found in
-    :class:~`mmgen.models.architectures.lsgan.generator_generator.LSGANGenerator`  # noqa
+    :class:~`mmedit.models.editors.lsgan.generator_generator.LSGANGenerator`  # noqa
     and
-    :class:~`mmgen.models.architectures.lsgan.generator_discriminator.LSGANDiscriminator`  # noqa
+    :class:~`mmedit.models.editors.lsgan.generator_discriminator.LSGANDiscriminator`  # noqa
     """
 
     def disc_loss(self, disc_pred_fake: Tensor,
@@ -85,7 +85,7 @@ class LSGAN(BaseGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = inputs['img']
+        real_imgs = torch.stack([data.gt_img for data in data_samples])
 
         num_batches = real_imgs.shape[0]
 
@@ -115,7 +115,7 @@ class LSGAN(BaseGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        num_batches = inputs['img'].shape[0]
+        num_batches = len(data_samples)
 
         noise = self.noise_fn(num_batches=num_batches)
         fake_imgs = self.generator(noise=noise, return_noise=False)

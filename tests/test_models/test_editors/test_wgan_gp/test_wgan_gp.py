@@ -9,8 +9,9 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch.optim import SGD
 
-from mmedit.models import WGANGP, GenDataPreprocessor
+from mmedit.models import WGANGP, EditDataPreprocessor
 from mmedit.registry import MODULES
+from mmedit.structures import EditDataSample
 
 generator = dict(
     type='DCGANGenerator', noise_size=10, output_scale=16, base_channels=16)
@@ -23,12 +24,12 @@ class TestWGANGP(TestCase):
     def test_init(self):
         gan = WGANGP(
             noise_size=10,
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=EditDataPreprocessor(),
             generator=generator,
             discriminator=discriminator)
 
         self.assertIsInstance(gan, WGANGP)
-        self.assertIsInstance(gan.data_preprocessor, GenDataPreprocessor)
+        self.assertIsInstance(gan.data_preprocessor, EditDataPreprocessor)
 
         # test only generator have noise size
         gen_cfg = deepcopy(generator)
@@ -36,7 +37,7 @@ class TestWGANGP(TestCase):
         gan = WGANGP(
             generator=gen_cfg,
             discriminator=discriminator,
-            data_preprocessor=GenDataPreprocessor())
+            data_preprocessor=EditDataPreprocessor())
         self.assertEqual(gan.noise_size, 10)
 
         # test init with nn.Module
@@ -48,12 +49,12 @@ class TestWGANGP(TestCase):
         gan = WGANGP(
             generator=gen,
             discriminator=disc,
-            data_preprocessor=GenDataPreprocessor())
+            data_preprocessor=EditDataPreprocessor())
         self.assertEqual(gan.generator, gen)
         self.assertEqual(gan.discriminator, disc)
 
         # test init without discriminator
-        gan = WGANGP(generator=gen, data_preprocessor=GenDataPreprocessor())
+        gan = WGANGP(generator=gen, data_preprocessor=EditDataPreprocessor())
         self.assertEqual(gan.discriminator, None)
 
     @pytest.mark.skipif(
@@ -68,7 +69,7 @@ class TestWGANGP(TestCase):
             noise_size=10,
             generator=generator,
             discriminator=discriminator,
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=EditDataPreprocessor(),
             discriminator_steps=n_disc)
         # prepare messageHub
         message_hub.update_info('iter', 0)
@@ -80,8 +81,8 @@ class TestWGANGP(TestCase):
             discriminator=OptimWrapper(
                 disc_optim, accumulative_counts=accu_iter))
         # prepare inputs
-        img = torch.randn(1, 3, 16, 16)
-        data = dict(inputs=dict(img=img))
+        img = torch.randn(3, 16, 16)
+        data = dict(inputs=dict(), data_samples=[EditDataSample(gt_img=img)])
 
         # simulate train_loop here
         for idx in range(n_disc * accu_iter):
