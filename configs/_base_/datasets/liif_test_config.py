@@ -1,4 +1,3 @@
-# scale_test = 3
 scale_test_list = [2, 3, 4, 6, 18, 30]
 
 test_pipelines = [[
