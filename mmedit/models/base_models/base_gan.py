@@ -11,7 +11,7 @@ from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
 from mmedit.registry import MODELS, MODULES
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import ForwardInputs, NoiseVar, SampleList
 from ..utils import (get_valid_noise_size, get_valid_num_batches,
                      noise_sample_fn, set_requires_grad)
@@ -350,13 +350,13 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
 
         num_batches = noise.shape[0]
         outputs = generator(noise, return_noise=False, **sample_kwargs)
-        outputs = self.data_preprocessor.destructor(outputs, data_samples)
+        outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
         if sample_model == 'ema/orig':
             generator = self.generator
             outputs_orig = generator(
                 noise, return_noise=False, **sample_kwargs)
-            outputs_orig = self.data_preprocessor.destructor(
+            outputs_orig = self.data_preprocessor.destruct(
                 outputs_orig, data_samples)
             outputs = dict(ema=outputs, orig=outputs_orig)
 
@@ -365,19 +365,16 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
-            # TODO: remove pixeldata
             if isinstance(inputs, dict) and 'img' in inputs:
-                gen_sample.gt_img = PixelData(data=inputs['img'][idx])
+                gen_sample.gt_img = inputs['img'][idx]
             if isinstance(outputs, dict):
                 gen_sample.ema = EditDataSample(
-                    fake_img=PixelData(data=outputs['ema'][idx]),
-                    sample_model='ema')
+                    fake_img=outputs['ema'][idx], sample_model='ema')
                 gen_sample.orig = EditDataSample(
-                    fake_img=PixelData(data=outputs['orig'][idx]),
-                    sample_model='orig')
+                    fake_img=outputs['orig'][idx], sample_model='orig')
                 gen_sample.sample_model = 'ema/orig'
             else:
-                gen_sample.fake_img = PixelData(data=outputs[idx])
+                gen_sample.fake_img = outputs[idx]
                 gen_sample.sample_model = sample_model
 
             # Append input condition (noise and sample_kwargs) to
