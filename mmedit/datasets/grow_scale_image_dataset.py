@@ -172,7 +172,7 @@ class GrowScaleImgDataset(BaseDataset):
         Returns:
             dict: Prepared training data batch.
         """
-        results = dict(img_path=self.data_list[idx])
+        results = dict(gt_path=self.data_list[idx])
         return self.pipeline(results)
 
     def prepare_test_data(self, idx):
@@ -184,7 +184,7 @@ class GrowScaleImgDataset(BaseDataset):
         Returns:
             dict: Prepared training data batch.
         """
-        results = dict(img_path=self.data_list[idx])
+        results = dict(gt_path=self.data_list[idx])
         return self.pipeline(results)
 
     def __getitem__(self, idx):

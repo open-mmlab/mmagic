@@ -50,8 +50,8 @@ optim_wrapper = dict(
 dataset_type = 'GrowScaleImgDataset'
 
 pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
-    dict(type='Flip', keys=['img'], direction='horizontal'),
+    dict(type='LoadImageFromFile', key='gt'),
+    dict(type='Flip', keys='gt', direction='horizontal'),
     dict(type='PackEditInputs')
 ]
 
@@ -85,6 +85,7 @@ test_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         pipeline=pipeline,
+        data_prefix=dict(gt=''),
         data_root='./data/celebahq/imgs_1024'),
     sampler=dict(type='DefaultSampler', shuffle=False))
 
