@@ -8,7 +8,7 @@ from mmengine import Config
 from mmengine.optim import OptimWrapper
 from torch import Tensor
 
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import ForwardInputs, LabelVar
 from ..utils import get_valid_num_batches, label_sample_fn
 from .base_gan import BaseGAN
@@ -192,12 +192,12 @@ class BaseConditionalGAN(BaseGAN):
         else:  # sample model is `orig`
             generator = self.generator
         outputs = generator(noise, label=labels, return_noise=False)
-        outputs = self.data_preprocessor.destructor(outputs, data_samples)
+        outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
         if sample_model == 'ema/orig':
             generator = self.generator
             outputs_orig = generator(noise, label=labels, return_noise=False)
-            outputs_orig = self.data_preprocessor.destructor(
+            outputs_orig = self.data_preprocessor.destruct(
                 outputs_orig, data_samples)
             outputs = dict(ema=outputs, orig=outputs_orig)
 
@@ -208,17 +208,15 @@ class BaseConditionalGAN(BaseGAN):
                 gen_sample.update(data_samples[idx])
             if sample_model == 'ema/orig':
                 gen_sample.ema = EditDataSample(
-                    fake_img=PixelData(data=outputs['ema'][idx]),
-                    sample_model='ema')
+                    fake_img=outputs['ema'][idx], sample_model='ema')
                 gen_sample.orig = EditDataSample(
-                    fake_img=PixelData(data=outputs['orig'][idx]),
-                    sample_model='orig')
+                    fake_img=outputs['orig'][idx], sample_model='orig')
                 gen_sample.sample_model = 'ema/orig'
                 gen_sample.set_gt_label(labels[idx])
                 gen_sample.ema.set_gt_label(labels[idx])
                 gen_sample.orig.set_gt_label(labels[idx])
             else:
-                gen_sample.fake_img = PixelData(data=outputs[idx])
+                gen_sample.fake_img = outputs[idx]
                 gen_sample.sample_model = sample_model
                 gen_sample.set_gt_label(labels[idx])
 
