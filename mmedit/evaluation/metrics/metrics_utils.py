@@ -31,8 +31,8 @@ def _fetch_data_and_check(data_samples):
         ori_alpha (Tensor): Ori_alpha data of data_batch.
         ori_trimap (Tensor): Ori_trimap data of data_batch.
     """
-    ori_trimap = data_samples['ori_trimap'][:, :, 0]
-    ori_alpha = data_samples['ori_alpha'][:, :, 0]
+    ori_trimap = data_samples['ori_trimap'][0, :, :].cpu().numpy()
+    ori_alpha = data_samples['ori_alpha'][0, :, :].cpu().numpy()
     pred_alpha = data_samples['output']['pred_alpha']['data']  # 2D tensor
     pred_alpha = pred_alpha.cpu().numpy()
 

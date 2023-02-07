@@ -153,6 +153,7 @@ class EditDataSample(BaseDataElement):
         'gt_heatmap': 'gt_heatmap',
         'gt_unsharp': 'gt_unsharp',
         'merged': 'gt_merged',
+        'ori_alpha': 'ori_alpha',
         'fg': 'gt_fg',
         'bg': 'gt_bg',
         'gt_rgb': 'gt_rgb',
