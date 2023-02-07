@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
-from functools import partial
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
@@ -11,7 +10,7 @@ from torch import Tensor
 from torchvision.utils import make_grid
 
 from mmedit.registry import VISUALIZERS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import SampleList
 
 mean_std_type = Optional[Sequence[Union[float, int]]]
@@ -49,31 +48,22 @@ class GenVisualizer(Visualizer):
         super().__init__(name, vis_backends=vis_backends, save_dir=save_dir)
 
     @staticmethod
-    def _post_process_image(image: Tensor,
-                            color_order: str,
-                            mean: mean_std_type = None,
-                            std: mean_std_type = None) -> Tensor:
-        """Post process images. First convert image to `rgb` order. And then
-        de-norm image to `mean` and `std` if they are passed.
+    def _post_process_image(image: Tensor) -> Tensor:
+        """Post process images.
 
         Args:
-            image (Tensor): Image to pose process.
-            color_order (str): The color order of the passed image.
-            mean (Optional[Sequence[Union[float, int]]], optional): Target
-                mean of the passed image. Defaults to None.
-            std (Optional[Sequence[Union[float, int]]], optional): Target
-                std of the passed image. Defaults to None.
+            image (Tensor): Image to post process. The value range of
+                image should be in [0, 255] and the channel order should
+                be BGR.
 
         Returns:
-            Tensor: Image in original value range and RGB color order.
+            Tensor: Image in RGB color order.
         """
+        # input image should be [0, 255] and BGR
         if image.shape[1] == 1:
             image = torch.cat([image, image, image], dim=1)
-        if color_order == 'bgr':
-            image = image[:, [2, 1, 0], ...]
-        if mean is not None and std is not None:
-            image = image * std + mean
-        return image.clamp(0, 255)
+        image = image[:, [2, 1, 0], ...]
+        return image
 
     @staticmethod
     def _get_n_row_and_padding(samples: Tuple[dict, Tensor],
@@ -91,7 +81,6 @@ class GenVisualizer(Visualizer):
             Tuple[int, Optional[int]]: Number of sample in each row and tensor
                 for padding the empty position.
         """
-
         if isinstance(samples, dict):
             for sample in iter(samples.values()):
                 # NOTE: dirty way to get the shape of image tensor
@@ -113,44 +102,34 @@ class GenVisualizer(Visualizer):
         return n_row, None
 
     def _vis_gif_sample(self, gen_samples: SampleList,
-                        target_keys: Union[str, List[str], None],
-                        color_order: str, target_mean: mean_std_type,
-                        target_std: mean_std_type, n_row: int) -> np.ndarray:
+                        target_keys: Union[str, List[str],
+                                           None], n_row: int) -> np.ndarray:
         """Visualize gif samples.
 
         Args:
             gen_samples (SampleList): List of data samples to visualize
             target_keys (Union[str, List[str], None]): Keys of the
                 visualization target in data samples.
-            color_order (str): The color order of the passed images.
-            target_mean (Sequence[Union[float, int]]): The target mean of the
-                visualization results.
-            target_std (Sequence[Union[float, int]]): The target std of the
-                visualization resutts.
             n_rows (int, optional): Number of images in one row.
 
         Returns:
             np.ndarray: The visualization results.
         """
-        post_process_fn = partial(
-            self._post_process_image,
-            color_order=color_order,
-            mean=target_mean,
-            std=target_std)
 
         def post_process_sequence(samples):
             num_timesteps = samples.shape[1]
             seq_list = [
-                post_process_fn(samples[:, t, ...].cpu())
+                self._post_process_image(samples[:, t, ...].cpu())
                 for t in range(num_timesteps)
             ]
             return torch.stack(seq_list, dim=1)
 
         if target_keys is None:
+            # get all the keys that are tensors with 4 dimensions
             target_keys = [
                 k for k, v in gen_samples[0].items()
-                if ((not k.startswith('_')) and (
-                    isinstance(v, PixelData)) and (v.data.ndim == 4))
+                if ((not k.startswith('_')) and (isinstance(v, Tensor)) and (
+                    v.data.ndim == 4))
             ]
         target_keys = [target_keys] if isinstance(target_keys, str) \
             else target_keys
@@ -159,7 +138,7 @@ class GenVisualizer(Visualizer):
         for sample in gen_samples:
             sample_dict = dict()
             for k in target_keys:
-                sample_dict[k] = self._get_pixel_data_by_key(sample, k)
+                sample_dict[k] = self._get_vis_data_by_key(sample, k)
             sample_list.append(sample_dict)
 
         for k in sample_list[0].keys():
@@ -189,9 +168,8 @@ class GenVisualizer(Visualizer):
         return vis_results
 
     def _vis_image_sample(self, gen_samples: SampleList,
-                          target_keys: Union[str, List[str], None],
-                          color_order: str, target_mean: mean_std_type,
-                          target_std: mean_std_type, n_row: int) -> np.ndarray:
+                          target_keys: Union[str, List[str],
+                                             None], n_row: int) -> np.ndarray:
         """Visualize image samples.
 
         Args:
@@ -209,10 +187,11 @@ class GenVisualizer(Visualizer):
             np.ndarray: The visualization results.
         """
         if target_keys is None:
+            # get all key of image tensor automatically
             target_keys = [
                 k for k, v in gen_samples[0].items()
-                if ((not k.startswith('_')) and (
-                    isinstance(v, PixelData)) and (v.data.ndim == 3))
+                if ((not k.startswith('_')) and (isinstance(v, Tensor)) and (
+                    v.data.ndim == 3))
             ]
         target_keys = [target_keys] if isinstance(target_keys, str) \
             else target_keys
@@ -221,13 +200,12 @@ class GenVisualizer(Visualizer):
         for sample in gen_samples:
             sample_dict = dict()
             for k in target_keys:
-                sample_dict[k] = self._get_pixel_data_by_key(sample, k)
+                sample_dict[k] = self._get_vis_data_by_key(sample, k)
             sample_list.append(sample_dict)
 
         for k in sample_list[0].keys():
             sample_ = torch.stack([samp[k] for samp in sample_list], dim=0)
-            sample_ = self._post_process_image(sample_.cpu(), color_order,
-                                               target_mean, target_std)
+            sample_ = self._post_process_image(sample_.cpu())
             sample_dict[k] = sample_
 
         n_row, padding_tensor = self._get_n_row_and_padding(sample_dict, n_row)
@@ -245,13 +223,12 @@ class GenVisualizer(Visualizer):
         vis_results = vis_results.numpy().astype(np.uint8)
         return vis_results
 
-    def _get_pixel_data_by_key(self, sample: EditDataSample,
-                               key: Union[str, List[str]]) -> Tensor:
+    def _get_vis_data_by_key(self, sample: EditDataSample, key: str) -> Tensor:
         """Get tensor in ``EditDataSample`` by the given key.
 
         Args:
             sample (EditDataSample): Input data sample.
-            key (Union[str, List[str]]): Name of the target tensor.
+            key (str): Name of the target tensor.
 
         Returns:
             Tensor: Tensor from the data sample.
@@ -260,28 +237,29 @@ class GenVisualizer(Visualizer):
             key_list = key.split('.')
         else:
             key_list = [key]
-        pixel_data = sample
+        vis_data = sample
         for k in key_list:
-            # get pixel data step by step
-            assert hasattr(pixel_data, k)
-            pixel_data = getattr(pixel_data, k)
-        if isinstance(pixel_data, PixelData):
-            return pixel_data.data
+            # get vis data step by step
+            assert hasattr(vis_data, k)
+            vis_data = getattr(vis_data, k)
+
+        if isinstance(vis_data, Tensor):
+            return vis_data
         else:
-            # check only one pixel data in current datasample
+            # check only one tensor in current datasample to visualize
             elements = [
-                element for k, element in pixel_data.items()
-                if not k.startswith('_') and isinstance(element, PixelData)
+                element for k, element in vis_data.items()
+                if not k.startswith('_') and isinstance(element, Tensor)
             ]
             assert len(elements) == 1, (
-                f'Find {len(elements)} PixelData in DataSample with '
+                f'Find {len(elements)} Tensor in DataSample with '
                 f'key {key}.')
-            pixel_data = elements[0]
+            vis_data = elements[0]
 
             assert isinstance(
-                pixel_data,
-                PixelData), (f'Element with key \'{key}\' is not a PixelData.')
-            return pixel_data.data
+                vis_data,
+                Tensor), (f'Element with key \'{key}\' is not a Tensor.')
+            return vis_data
 
     def add_datasample(self,
                        name: str,
@@ -290,9 +268,6 @@ class GenVisualizer(Visualizer):
                        target_keys: Optional[Tuple[str, List[str]]] = None,
                        vis_mode: Optional[str] = None,
                        n_row: Optional[int] = 1,
-                       color_order: str = 'bgr',
-                       target_mean: Sequence[Union[float, int]] = 127.5,
-                       target_std: Sequence[Union[float, int]] = 127.5,
                        show: bool = False,
                        wait_time: int = 0,
                        step: int = 0,
@@ -329,8 +304,7 @@ class GenVisualizer(Visualizer):
         else:
             vis_func = getattr(self, f'_vis_{vis_mode}_sample')
 
-        vis_sample = vis_func(gen_samples, target_keys, color_order,
-                              target_mean, target_std, n_row)
+        vis_sample = vis_func(gen_samples, target_keys, n_row)
 
         if show:
             self.show(vis_sample, win_name=name, wait_time=wait_time)

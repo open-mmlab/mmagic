@@ -210,7 +210,7 @@ class BaseEditModel(BaseModel):
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
-        gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
+        gt_imgs = [data_sample.gt_img for data_sample in data_samples]
         batch_gt_data = torch.stack(gt_imgs)
 
         loss = self.pixel_loss(feats, batch_gt_data)
