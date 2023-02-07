@@ -347,7 +347,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             Tuple[Tensor, List[EditDataSample]]: The preprocessed image tensor
                 and updated data samples.
         """
-        if data_samples is None:
+        if not data_samples:  # none or empty list
             data_samples = [EditDataSample() for _ in range(inputs.shape[0])]
 
         assert inputs.dim() == 4, (
@@ -393,7 +393,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             Tuple[Tensor, List[EditDataSample]]: The preprocessed image tensor
                 and updated data samples.
         """
-        if data_samples is None:
+        if not data_samples:  # none or empty list
             data_samples = [EditDataSample() for _ in range(len(tensor_list))]
 
         channel_order = self._parse_batch_channel_order(
