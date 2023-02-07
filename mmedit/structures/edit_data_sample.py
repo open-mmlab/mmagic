@@ -136,6 +136,8 @@ class EditDataSample(BaseDataElement):
         'ori_gt_shape': 'ori_gt_shape',
         'img_channel_order': 'img_channel_order',
         'gt_channel_order': 'gt_channel_order',
+        'gt_color_type': 'gt_color_type',
+        'img_color_type': 'img_color_type',
         'sample_idx': 'sample_idx',
         'num_input_frames': 'num_input_frames',
         'num_output_frames': 'num_output_frames',
@@ -231,3 +233,7 @@ class EditDataSample(BaseDataElement):
             value (LabelData): gt label.
         """
         self.set_field(value, '_gt_label', dtype=LabelData)
+
+    @gt_label.deleter
+    def gt_label(self):
+        del self._gt_label
