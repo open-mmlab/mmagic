@@ -107,9 +107,9 @@ def img_transform(img,
     img = img.astype(np.float32)
 
     if isinstance(convert_to, str) and convert_to.lower() == 'y':
-        if channel_order == 'rgb':
+        if channel_order.upper() == 'RGB':
             img = mmcv.rgb2ycbcr(img / 255., y_only=True) * 255.
-        elif channel_order == 'bgr':
+        elif channel_order.upper() == 'BGR':
             img = mmcv.bgr2ycbcr(img / 255., y_only=True) * 255.
         else:
             raise ValueError(
