@@ -269,7 +269,6 @@ class SlicedWassersteinDistance(GenMetric):
             if self.sample_model in fake_img_:
                 fake_img_ = fake_img_[self.sample_model]
             # get specific fake_keys
-            # TODO: in the future, remove pixelData?
             if (self.fake_key is not None and self.fake_key in fake_img_):
                 fake_img_ = fake_img_[self.fake_key]
             else:

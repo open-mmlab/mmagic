@@ -128,7 +128,6 @@ class TestFID(TestCase):
                 inception_pkl=self.inception_pkl)
         gen_images = torch.randn(4, 3, 2, 2)
         gen_samples = [
-            # EditDataSample(fake=PixelData(data=gen_images[i])).to_dict()
             EditDataSample(fake=(gen_images[i])).to_dict() for i in range(4)
         ]
         fid.process(None, gen_samples)
