@@ -32,3 +32,12 @@ def test_random_down_sampling():
         f'patch_size={down_sampling2.patch_size}, ' +
         f'interpolation={down_sampling2.interpolation}, ' +
         f'backend={down_sampling2.backend}')
+
+    # test copy meta info
+    img3 = np.uint8(np.random.randn(480, 640, 3) * 255)
+    inputs3 = dict(gt=img3, gt_channel_order='rgb', gt_color_type='color')
+    down_sampling3 = RandomDownSampling(
+        scale_min=1, scale_max=4, patch_size=48)
+    results3 = down_sampling3(inputs3)
+    assert results3['img_channel_order'] == 'rgb'
+    assert results3['img_color_type'] == 'color'

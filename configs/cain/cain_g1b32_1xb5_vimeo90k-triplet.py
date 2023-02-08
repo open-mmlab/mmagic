@@ -16,9 +16,8 @@ model = dict(
     init_cfg=None,
     data_preprocessor=dict(
         type='EditDataPreprocessor',
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1),
-        pad_args=dict(mode='reflect')))
+        pad_mode='reflect',
+    ))
 
 train_pipeline = [
     dict(

@@ -120,6 +120,7 @@ class LoadImageFromFile(BaseTransform):
         results[self.key] = images
         results[f'ori_{self.key}_shape'] = shapes
         results[f'{self.key}_channel_order'] = self.channel_order
+        results[f'{self.key}_color_type'] = self.color_type
         if self.save_original_img:
             results[f'ori_{self.key}'] = ori_imgs
 
@@ -530,6 +531,7 @@ class LoadPairedImageFromFile(LoadImageFromFile):
         results[self.key] = image
         results[f'ori_{self.key}_shape'] = shape
         results[f'{self.key}_channel_order'] = self.channel_order
+        results[f'{self.key}_color_type'] = self.color_type
         if self.save_original_img:
             results[f'ori_{self.key}'] = ori_image
 

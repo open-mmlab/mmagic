@@ -123,7 +123,7 @@ class BasicConditionalDataset(BaseDataset):
             'One of `ann_file`, `data_root` and `data_prefix` must '\
             'be specified.'
         if isinstance(data_prefix, str):
-            data_prefix = dict(img_path=expanduser(data_prefix))
+            data_prefix = dict(gt_path=expanduser(data_prefix))
 
         ann_file = expanduser(ann_file)
         metainfo = self._compat_classes(metainfo, classes)
@@ -205,7 +205,7 @@ class BasicConditionalDataset(BaseDataset):
             # convert digit label to int
             if isinstance(gt_label, str):
                 gt_label = int(gt_label) if gt_label.isdigit() else gt_label
-            info = {'img_path': img_path, 'gt_label': gt_label}
+            info = {'gt_path': img_path, 'gt_label': gt_label}
             data_list.append(info)
         return data_list
 
@@ -216,7 +216,7 @@ class BasicConditionalDataset(BaseDataset):
     @property
     def img_prefix(self):
         """The prefix of images."""
-        return self.data_prefix['img_path']
+        return self.data_prefix['gt_path']
 
     @property
     def CLASSES(self):

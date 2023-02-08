@@ -75,7 +75,7 @@ class PerceptualPathLength(GenerativeMetric):
                  fake_nums: int,
                  real_nums: int = 0,
                  fake_key: Optional[str] = None,
-                 real_key: Optional[str] = 'img',
+                 real_key: Optional[str] = 'gt_img',
                  need_cond_input: bool = False,
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
@@ -112,12 +112,13 @@ class PerceptualPathLength(GenerativeMetric):
                 fake_img_ = fake_img_[self.sample_model]
             # get specific fake_keys
             if (self.fake_key is not None and self.fake_key in fake_img_):
-                fake_img_ = fake_img_[self.fake_key]['data']
+                fake_img_ = fake_img_[self.fake_key]
             else:
                 # get img tensor
-                fake_img_ = fake_img_['fake_img']['data']
+                fake_img_ = fake_img_['fake_img']
             fake_imgs.append(fake_img_)
         fake_imgs = torch.stack(fake_imgs, dim=0)
+        fake_imgs = (fake_imgs - 127.5) / 127.5  # [0, 255] to [-1, 1]
         feat = self._compute_distance(fake_imgs)
         feat_list = list(torch.split(feat, 1))
         self.fake_results += feat_list

@@ -75,6 +75,9 @@ class TestAugmentations:
     def test_flip(self):
         results = copy.deepcopy(self.results)
 
+        trans = Flip(keys='img', flip_ratio=0)
+        assert trans.keys == ['img']
+
         with pytest.raises(ValueError):
             Flip(keys=['img', 'gt'], direction='vertically')
 
@@ -194,6 +197,10 @@ class TestAugmentations:
         assert random_rotation_results['ori_img'].shape == (256, 256, 1)
 
     def test_random_transposehw(self):
+
+        trans = RandomTransposeHW(keys='img', transpose_ratio=1)
+        assert trans.keys == ['img']
+
         results = self.results.copy()
         target_keys = ['img', 'gt', 'transpose']
         transposehw = RandomTransposeHW(keys=['img', 'gt'], transpose_ratio=1)

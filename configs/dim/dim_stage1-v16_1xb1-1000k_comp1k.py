@@ -12,10 +12,7 @@ model = dict(
         type='MattorPreprocessor',
         mean=[123.675, 116.28, 103.53],
         std=[58.395, 57.12, 57.375],
-        bgr_to_rgb=True,
-        proc_inputs='normalize',
         proc_trimap='rescale_to_zero_one',
-        proc_gt='rescale_to_zero_one',
     ),
     backbone=dict(
         type='SimpleEncoderDecoder',

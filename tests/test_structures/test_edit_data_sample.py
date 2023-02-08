@@ -2,11 +2,11 @@
 from unittest import TestCase
 
 import numpy as np
-import pytest
 import torch
-from mmengine.structures import BaseDataElement
+from mmengine.structures import LabelData
+from mmengine.testing import assert_allclose
 
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 def _equal(a, b):
@@ -29,238 +29,144 @@ class TestEditDataSample(TestCase):
         assert edit_data_sample.target_size == [256, 256]
         assert edit_data_sample.get('target_size') == [256, 256]
 
-    def test_setter(self):
+    def _check_in_and_same(self, data_sample, field, value, is_meta=False):
+        if is_meta:
+            self.assertIn(field, data_sample.metainfo)
+        else:
+            self.assertIn(field, data_sample)
 
-        edit_data_sample = EditDataSample()
+        if is_meta:
+            val_in_data = data_sample.metainfo[field]
+        else:
+            val_in_data = getattr(data_sample, field)
 
-        # test gt_img
-        gt_img_data = dict(
-            metainfo=dict(path='gt.py'),
-            img=np.random.randint(0, 255, (3, 256, 256)),
-            img1=np.random.randint(0, 255, (3, 256, 256)))
-        gt_img = PixelData(**gt_img_data)
-        edit_data_sample.gt_img = gt_img
-        assert 'gt_img' in edit_data_sample
-        assert _equal(edit_data_sample.gt_img.img, gt_img_data['img'])
-        assert _equal(edit_data_sample.gt_img.img1, gt_img_data['img1'])
+        if isinstance(value, str):
+            self.assertEqual(val_in_data, value)
+        else:
+            assert_allclose(val_in_data, value)
 
-        # test frames
-        gt_img_data = dict(
-            metainfo=dict(path='gt.py'),
-            img=np.random.randint(0, 255, (10, 3, 256, 256)))
-        gt_img = PixelData(**gt_img_data)
-        edit_data_sample.gt_img = gt_img
-        assert 'gt_img' in edit_data_sample
-        assert _equal(edit_data_sample.gt_img.img, gt_img_data['img'])
+    def test_set_prefined_data(self):
+        """Test fields mapping in this unit test."""
+        # DATA
+        gt, gt_label = torch.randn(3, 256, 256), torch.randint(0, 2, (1, ))
+        fg, bg = torch.randn(3, 256, 256), torch.randn(3, 256, 256)
+        alpha = torch.randn(3, 256, 256)
+        ref, ref_lq = torch.randn(3, 256, 256), torch.randn(3, 256, 256)
 
-        # test img_lq
-        img_lq_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        img_lq = PixelData(**img_lq_data)
-        edit_data_sample.img_lq = img_lq
-        assert 'img_lq' in edit_data_sample
-        assert _equal(edit_data_sample.img_lq.img, img_lq_data['img'])
+        # METAINFO
+        img_path, gt_path, merged_path = 'aaa', 'bbb', 'ccc'
+        gt_channel_order, gt_color_type = 'rgb', 'color'
 
-        # test pred_img
-        pred_img_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        pred_img = PixelData(**pred_img_data)
-        edit_data_sample.pred_img = pred_img
-        assert 'pred_img' in edit_data_sample
-        assert _equal(edit_data_sample.pred_img.img, pred_img_data['img'])
+        data = dict(
+            gt=gt,
+            gt_label=gt_label,
+            fg=fg,
+            bg=bg,
+            alpha=alpha,
+            ref=ref,
+            ref_lq=ref_lq,
+            img_path=img_path,
+            gt_path=gt_path,
+            merged_path=merged_path,
+            gt_channel_order=gt_channel_order,
+            gt_color_type=gt_color_type)
+        data_sample = EditDataSample()
+        data_sample.set_predefined_data(data)
 
-        # test ref_img
-        ref_img_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        ref_img = PixelData(**ref_img_data)
-        edit_data_sample.ref_img = ref_img
-        assert 'ref_img' in edit_data_sample
-        assert _equal(edit_data_sample.ref_img.img, ref_img_data['img'])
+        self._check_in_and_same(data_sample, 'gt_img', gt)
+        self._check_in_and_same(data_sample, 'gt_fg', fg)
+        self._check_in_and_same(data_sample, 'gt_bg', bg)
+        self._check_in_and_same(data_sample, 'gt_alpha', alpha)
+        self._check_in_and_same(data_sample, 'ref_img', ref)
+        self._check_in_and_same(data_sample, 'ref_lq', ref_lq)
+        self._check_in_and_same(data_sample, 'img_path', img_path, True)
+        self._check_in_and_same(data_sample, 'gt_path', gt_path, True)
+        self._check_in_and_same(data_sample, 'merged_path', merged_path, True)
+        self._check_in_and_same(data_sample, 'gt_channel_order',
+                                gt_channel_order, True)
+        self._check_in_and_same(data_sample, 'gt_color_type', gt_color_type,
+                                True)
+        # check gt label
+        data_sample.gt_label.data = gt_label
 
-        # test ref_lq
-        ref_lq_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        ref_lq = PixelData(**ref_lq_data)
-        edit_data_sample.ref_lq = ref_lq
-        assert 'ref_lq' in edit_data_sample
-        assert _equal(edit_data_sample.ref_lq.img, ref_lq_data['img'])
+    def _test_set_label(self, key):
+        data_sample = EditDataSample()
+        method = getattr(data_sample, 'set_' + key)
+        # Test number
+        method(1)
+        self.assertIn(key, data_sample)
+        label = getattr(data_sample, key)
+        self.assertIsInstance(label, LabelData)
+        self.assertIsInstance(label.label, torch.LongTensor)
 
-        # test mask
-        mask_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        mask = PixelData(**mask_data)
-        edit_data_sample.mask = mask
-        assert 'mask' in edit_data_sample
-        assert _equal(edit_data_sample.mask.img, mask_data['img'])
+        # Test tensor with single number
+        method(torch.tensor(2))
+        self.assertIn(key, data_sample)
+        label = getattr(data_sample, key)
+        self.assertIsInstance(label, LabelData)
+        self.assertIsInstance(label.label, torch.LongTensor)
 
-        # test gt_unsharp
-        gt_unsharp_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        gt_unsharp = PixelData(**gt_unsharp_data)
-        edit_data_sample.gt_unsharp = gt_unsharp
-        assert 'gt_unsharp' in edit_data_sample
-        assert _equal(edit_data_sample.gt_unsharp.img, gt_unsharp_data['img'])
+        # Test array with single number
+        method(np.array(3))
+        self.assertIn(key, data_sample)
+        label = getattr(data_sample, key)
+        self.assertIsInstance(label, LabelData)
+        self.assertIsInstance(label.label, torch.LongTensor)
 
-        # test gt_heatmap
-        gt_heatmap_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        gt_heatmap = PixelData(**gt_heatmap_data)
-        edit_data_sample.gt_heatmap = gt_heatmap
-        assert 'gt_heatmap' in edit_data_sample
-        assert _equal(edit_data_sample.gt_heatmap.img, gt_heatmap_data['img'])
+        # Test tensor
+        method(torch.tensor([1, 2, 3]))
+        self.assertIn(key, data_sample)
+        label = getattr(data_sample, key)
+        self.assertIsInstance(label, LabelData)
+        self.assertIsInstance(label.label, torch.Tensor)
+        self.assertTrue((label.label == torch.tensor([1, 2, 3])).all())
 
-        # test pred_heatmap
-        pred_heatmap_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        pred_heatmap = PixelData(**pred_heatmap_data)
-        edit_data_sample.pred_heatmap = pred_heatmap
-        assert 'pred_heatmap' in edit_data_sample
-        assert _equal(edit_data_sample.pred_heatmap.img,
-                      pred_heatmap_data['img'])
+        # Test array
+        method(np.array([1, 2, 3]))
+        self.assertIn(key, data_sample)
+        label = getattr(data_sample, key)
+        self.assertIsInstance(label, LabelData)
+        self.assertTrue((label.label == torch.tensor([1, 2, 3])).all())
 
-        # test trimap
-        trimap_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        trimap = PixelData(**trimap_data)
-        edit_data_sample.trimap = trimap
-        assert 'trimap' in edit_data_sample
-        assert _equal(edit_data_sample.trimap.img, trimap_data['img'])
+        # Test Sequence
+        method([1, 2, 3])
+        self.assertIn(key, data_sample)
+        label = getattr(data_sample, key)
+        self.assertIsInstance(label, LabelData)
+        self.assertTrue((label.label == torch.tensor([1, 2, 3])).all())
 
-        # test gt_alpha
-        gt_alpha_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        gt_alpha = PixelData(**gt_alpha_data)
-        edit_data_sample.gt_alpha = gt_alpha
-        assert 'gt_alpha' in edit_data_sample
-        assert _equal(edit_data_sample.gt_alpha.img, gt_alpha_data['img'])
+        # Test Sequence with float number
+        method([0.2, 0, 0.8])
+        self.assertIn(key, data_sample)
+        label = getattr(data_sample, key)
+        self.assertIsInstance(label, LabelData)
+        self.assertTrue((label.label == torch.tensor([0.2, 0, 0.8])).all())
 
-        # test pred_alpha
-        pred_alpha_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        pred_alpha = PixelData(**pred_alpha_data)
-        edit_data_sample.pred_alpha = pred_alpha
-        assert 'pred_alpha' in edit_data_sample
-        assert _equal(edit_data_sample.pred_alpha.img, pred_alpha_data['img'])
+        # Test unavailable type
+        with self.assertRaisesRegex(TypeError, "<class 'str'> is not"):
+            method('hi')
 
-        # test gt_fg
-        gt_fg_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        gt_fg = PixelData(**gt_fg_data)
-        edit_data_sample.gt_fg = gt_fg
-        assert 'gt_fg' in edit_data_sample
-        assert _equal(edit_data_sample.gt_fg.img, gt_fg_data['img'])
+        # Test set num_classes
+        data_sample = EditDataSample(metainfo={'num_classes': 10})
+        method = getattr(data_sample, 'set_' + key)
+        method(5)
+        self.assertIn(key, data_sample)
+        label = getattr(data_sample, key)
+        self.assertIsInstance(label, LabelData)
+        self.assertIn('num_classes', label)
+        self.assertEqual(label.num_classes, 10)
 
-        # test pred_fg
-        pred_fg_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        pred_fg = PixelData(**pred_fg_data)
-        edit_data_sample.pred_fg = pred_fg
-        assert 'pred_fg' in edit_data_sample
-        assert _equal(edit_data_sample.pred_fg.img, pred_fg_data['img'])
+        # Test unavailable label
+        with self.assertRaisesRegex(ValueError, r'data .*[15].* should '):
+            method(15)
 
-        # test gt_bg
-        gt_bg_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        gt_bg = PixelData(**gt_bg_data)
-        edit_data_sample.gt_bg = gt_bg
-        assert 'gt_bg' in edit_data_sample
-        assert _equal(edit_data_sample.gt_bg.img, gt_bg_data['img'])
+    def test_set_gt_label(self):
+        self._test_set_label('gt_label')
 
-        # test pred_bg
-        pred_bg_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        pred_bg = PixelData(**pred_bg_data)
-        edit_data_sample.pred_bg = pred_bg
-        assert 'pred_bg' in edit_data_sample
-        assert _equal(edit_data_sample.pred_bg.img, pred_bg_data['img'])
-
-        # test gt_merged
-        ignored_data_data = dict(bboxes=torch.rand(4, 4), labels=torch.rand(4))
-        ignored_data = BaseDataElement(**ignored_data_data)
-        edit_data_sample.ignored_data = ignored_data
-        assert 'ignored_data' in edit_data_sample
-        assert _equal(edit_data_sample.ignored_data.bboxes,
-                      ignored_data_data['bboxes'])
-        assert _equal(edit_data_sample.ignored_data.labels,
-                      ignored_data_data['labels'])
-
-        # test shape error
-        with pytest.raises(AssertionError):
-            gt_img_data = dict(
-                metainfo=dict(path='gt.py'),
-                img=np.random.randint(0, 255, (3, 256, 256)),
-                img1=np.random.randint(0, 255, (3, 256, 257)))
-            gt_img = PixelData(**gt_img_data)
-
-    def test_deleter(self):
-        img_data = dict(img=np.random.randint(0, 255, (3, 256, 256)))
-        edit_data_sample = EditDataSample()
-
-        gt_img = PixelData(**img_data)
-        edit_data_sample.gt_img = gt_img
-        assert 'gt_img' in edit_data_sample
-        del edit_data_sample.gt_img
-        assert 'gt_img' not in edit_data_sample
-
-        pred_img = PixelData(**img_data)
-        edit_data_sample.pred_img = pred_img
-        assert 'pred_img' in edit_data_sample
-        del edit_data_sample.pred_img
-        assert 'pred_img' not in edit_data_sample
-
-        ref_img = PixelData(**img_data)
-        edit_data_sample.ref_img = ref_img
-        assert 'ref_img' in edit_data_sample
-        del edit_data_sample.ref_img
-        assert 'ref_img' not in edit_data_sample
-
-        mask = PixelData(**img_data)
-        edit_data_sample.mask = mask
-        assert 'mask' in edit_data_sample
-        del edit_data_sample.mask
-        assert 'mask' not in edit_data_sample
-
-        gt_heatmap = PixelData(**img_data)
-        edit_data_sample.gt_heatmap = gt_heatmap
-        assert 'gt_heatmap' in edit_data_sample
-        del edit_data_sample.gt_heatmap
-        assert 'gt_heatmap' not in edit_data_sample
-
-        pred_heatmap = PixelData(**img_data)
-        edit_data_sample.pred_heatmap = pred_heatmap
-        assert 'pred_heatmap' in edit_data_sample
-        del edit_data_sample.pred_heatmap
-        assert 'pred_heatmap' not in edit_data_sample
-
-        trimap = PixelData(**img_data)
-        edit_data_sample.trimap = trimap
-        assert 'trimap' in edit_data_sample
-        del edit_data_sample.trimap
-        assert 'trimap' not in edit_data_sample
-
-        gt_alpha = PixelData(**img_data)
-        edit_data_sample.gt_alpha = gt_alpha
-        assert 'gt_alpha' in edit_data_sample
-        del edit_data_sample.gt_alpha
-        assert 'gt_alpha' not in edit_data_sample
-
-        pred_alpha = PixelData(**img_data)
-        edit_data_sample.pred_alpha = pred_alpha
-        assert 'pred_alpha' in edit_data_sample
-        del edit_data_sample.pred_alpha
-        assert 'pred_alpha' not in edit_data_sample
-
-        gt_fg = PixelData(**img_data)
-        edit_data_sample.gt_fg = gt_fg
-        assert 'gt_fg' in edit_data_sample
-        del edit_data_sample.gt_fg
-        assert 'gt_fg' not in edit_data_sample
-
-        pred_fg = PixelData(**img_data)
-        edit_data_sample.pred_fg = pred_fg
-        assert 'pred_fg' in edit_data_sample
-        del edit_data_sample.pred_fg
-        assert 'pred_fg' not in edit_data_sample
-
-        gt_bg = PixelData(**img_data)
-        edit_data_sample.gt_bg = gt_bg
-        assert 'gt_bg' in edit_data_sample
-        del edit_data_sample.gt_bg
-        assert 'gt_bg' not in edit_data_sample
-
-        pred_bg = PixelData(**img_data)
-        edit_data_sample.pred_bg = pred_bg
-        assert 'pred_bg' in edit_data_sample
-        del edit_data_sample.pred_bg
-        assert 'pred_bg' not in edit_data_sample
-
-        gt_merged = PixelData(**img_data)
-        edit_data_sample.gt_merged = gt_merged
-        assert 'gt_merged' in edit_data_sample
-        del edit_data_sample.gt_merged
-        assert 'gt_merged' not in edit_data_sample
+    def test_del_gt_label(self):
+        data_sample = EditDataSample()
+        self.assertNotIn('gt_label', data_sample)
+        data_sample.set_gt_label(1)
+        self.assertIn('gt_label', data_sample)
+        del data_sample.gt_label
+        self.assertNotIn('gt_label', data_sample)

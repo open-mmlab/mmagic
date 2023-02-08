@@ -1,14 +1,17 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Dict, Optional, Union
+import logging
+from typing import Dict, List, Optional, Union
 
 import torch
 import torch.nn as nn
+from mmengine import print_log
 from mmengine.model.weight_init import (constant_init, kaiming_init,
                                         normal_init, xavier_init)
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 from torch import Tensor
 from torch.nn import init
 
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import ForwardInputs
 
 
@@ -161,7 +164,8 @@ def get_valid_noise_size(noise_size: Optional[int],
     return noise_size
 
 
-def get_valid_num_batches(batch_inputs: ForwardInputs) -> int:
+def get_valid_num_batches(batch_inputs: Optional[ForwardInputs] = None,
+                          data_samples: List[EditDataSample] = None) -> int:
     """Try get the valid batch size from inputs.
 
     - If some values in `batch_inputs` are `Tensor` and 'num_batches' is in
@@ -184,27 +188,47 @@ def get_valid_num_batches(batch_inputs: ForwardInputs) -> int:
     Returns:
         int: The batch size of samples to generate.
     """
-    if isinstance(batch_inputs, Tensor):
-        return batch_inputs.shape[0]
+    # attempt to infer num_batches from batch_inputs
+    if batch_inputs is not None:
+        if isinstance(batch_inputs, Tensor):
+            return batch_inputs.shape[0]
 
-    # get num_batces from batch_inputs
-    num_batches_dict = {
-        k: v.shape[0]
-        for k, v in batch_inputs.items() if isinstance(v, Tensor)
-    }
-    if 'num_batches' in batch_inputs:
-        num_batches_dict['num_batches'] = batch_inputs['num_batches']
+        # get num_batces from batch_inputs
+        num_batches_dict = {
+            k: v.shape[0]
+            for k, v in batch_inputs.items() if isinstance(v, Tensor)
+        }
+        if 'num_batches' in batch_inputs:
+            num_batches_dict['num_batches'] = batch_inputs['num_batches']
 
-    # ensure num_batches is not None
-    assert len(num_batches_dict.keys()) > 0, (
-        'Cannot get \'num_batches\' form preprocessed input '
-        f'(\'{batch_inputs}\').')
+        if num_batches_dict:
+            num_batches_inputs = list(num_batches_dict.values())[0]
+            # ensure all num_batches are same
+            assert all([
+                bz == num_batches_inputs for bz in num_batches_dict.values()
+            ]), ('\'num_batches\' is inconsistency among the preprocessed '
+                 f'input. \'num_batches\' parsed resutls: {num_batches_dict}')
+        else:
+            num_batches_inputs = None
+    else:
+        num_batches_inputs = None
 
-    # ensure all num_batches are same
-    num_batches = list(num_batches_dict.values())[0]
-    assert all([
-        bz == num_batches for bz in num_batches_dict.values()
-    ]), ('\'num_batches\' is inconsistency among the preprocessed input. '
-         f'\'num_batches\' parsed resutls: {num_batches_dict}')
+    # attempt to infer num_batches from data_samples
+    if data_samples is not None:
+        num_batches_samples = len(data_samples)
+    else:
+        num_batches_samples = None
 
-    return num_batches
+    if not (num_batches_inputs or num_batches_samples):
+        print_log(
+            'Cannot get \'num_batches\' from both \'inputs\' and '
+            '\'data_samples\', automatically set \'num_batches\' as 1. '
+            'This may leads to potential error.', 'current', logging.WARNING)
+        return 1
+    elif num_batches_inputs and num_batches_samples:
+        assert num_batches_inputs == num_batches_samples, (
+            '\'num_batches\' inferred from \'inputs\' and \'data_samples\' '
+            f'are different, ({num_batches_inputs} vs. {num_batches_samples}).'
+            ' Please check your input carefully.')
+
+    return num_batches_inputs or num_batches_samples

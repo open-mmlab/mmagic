@@ -129,7 +129,11 @@ class CIFAR10(BasicConditionalDataset):
 
         data_list = []
         for img, gt_label in zip(imgs, gt_labels):
-            info = {'img': img, 'gt_label': int(gt_label)}
+            info = {
+                'gt': img,
+                'gt_label': int(gt_label),
+                'gt_channel_order': 'RGB'
+            }
             data_list.append(info)
         return data_list
 

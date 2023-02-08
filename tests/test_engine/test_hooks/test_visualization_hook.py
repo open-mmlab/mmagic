@@ -13,7 +13,7 @@ from torch.utils.data.dataset import Dataset
 
 from mmedit.engine import GenVisualizationHook
 from mmedit.engine.hooks import BasicVisualizationHook
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 from mmedit.visualization import ConcatImageVisualizer
 
@@ -33,11 +33,11 @@ class TestVisualizationHook(TestCase):
             array3d=np.ones(shape=(32, 32, 3)) * [0.4, 0.5, 0.6],
             tensor4d=torch.ones(2, 3, 32, 32) * torch.tensor(
                 [[[[0.1]], [[0.2]], [[0.3]]], [[[0.4]], [[0.5]], [[0.6]]]]),
-            pixdata=PixelData(data=torch.ones(1, 32, 32) * 0.6))
+            pixdata=torch.ones(1, 32, 32) * 0.6)
         self.data_batch = {'inputs': input, 'data_samples': [data_sample] * 2}
 
         output = copy.deepcopy(data_sample)
-        output.outpixdata = PixelData(data=np.ones(shape=(32, 32)) * 0.8)
+        output.outpixdata = np.ones(shape=(32, 32)) * 0.8
         self.outputs = [output] * 2
 
         self.vis = ConcatImageVisualizer(
@@ -110,7 +110,7 @@ class TestGenVisualizationHook(TestCase):
         gan_model_cfg = dict(
             type='DCGAN',
             noise_size=10,
-            data_preprocessor=dict(type='GenDataPreprocessor'),
+            data_preprocessor=dict(type='EditDataPreprocessor'),
             generator=dict(
                 type='DCGANGenerator', output_scale=32, base_channels=32))
         model = MODELS.build(gan_model_cfg)
@@ -127,7 +127,7 @@ class TestGenVisualizationHook(TestCase):
 
         # build a empty data sample
         data_batch = [
-            dict(inputs=None, data_sample=EditDataSample())
+            dict(inputs=None, data_samples=EditDataSample())
             for idx in range(10)
         ]
         hook.vis_sample(runner, 0, data_batch, None)
@@ -155,7 +155,9 @@ class TestGenVisualizationHook(TestCase):
     def test_vis_sample_with_translation_alias(self):
         translation_cfg = dict(
             type='CycleGAN',
-            data_preprocessor=dict(type='GenDataPreprocessor'),
+            data_preprocessor=dict(
+                type='EditDataPreprocessor',
+                data_keys=['img_photo', 'img_mask']),
             generator=dict(
                 type='ResnetGenerator',
                 in_channels=3,
@@ -189,11 +191,12 @@ class TestGenVisualizationHook(TestCase):
 
             def __getitem__(self, index):
                 weight = index if self.train else -index
+                img_photo = torch.ones(3, 32, 32) * weight
+                img_mask = torch.ones(3, 32, 32) * (weight + 1)
                 return dict(
-                    inputs=dict(
-                        img_photo=torch.ones(3, 32, 32) * weight,
-                        img_mask=torch.ones(3, 32, 32) * (weight + 1)),
-                    data_sample=EditDataSample())
+                    inputs=dict(img_photo=img_photo, img_mask=img_mask),
+                    data_samples=EditDataSample(
+                        img_photo=img_photo, img_mask=img_mask))
 
         train_dataloader = MagicMock()
         train_dataloader.batch_size = 4
@@ -220,7 +223,8 @@ class TestGenVisualizationHook(TestCase):
 
         # build a empty data sample
         data_batch = [
-            dict(inputs=None, data_sample=EditDataSample()) for idx in range(4)
+            dict(inputs=None, data_samples=EditDataSample())
+            for idx in range(4)
         ]
         hook.vis_sample(runner, 0, data_batch, None)
         called_kwargs_list = mock_visualuzer.add_datasample.call_args_list
@@ -233,31 +237,29 @@ class TestGenVisualizationHook(TestCase):
 
         # test train gen samples
         trans_gen_sample = trans_called_kwargs['gen_samples']
-        trans_gt_mask_list = [samp.gt_mask for samp in trans_gen_sample]
-        trans_gt_photo_list = [samp.gt_photo for samp in trans_gen_sample]
+        print(trans_gen_sample[0].keys())
+        trans_gt_mask_list = [samp.img_mask for samp in trans_gen_sample]
+        trans_gt_photo_list = [samp.img_photo for samp in trans_gen_sample]
 
         self.assertEqual(len(trans_gen_sample), 9)
         for idx, (mask, photo) in enumerate(
                 zip(trans_gt_mask_list, trans_gt_photo_list)):
             sample_from_dataset = train_dataloader.dataset[idx]['inputs']
-            assert_allclose(mask.data * 127.5 + 127.5,
-                            sample_from_dataset['img_mask'])
-            assert_allclose(photo.data * 127.5 + 127.5,
-                            sample_from_dataset['img_photo'])
+            # data sample in test mode --> do not normed
+            assert_allclose(mask, sample_from_dataset['img_mask'])
+            assert_allclose(photo, sample_from_dataset['img_photo'])
 
         # test val gen samples
         trans_gen_sample = trans_val_called_kwargs['gen_samples']
-        trans_gt_mask_list = [samp.gt_mask for samp in trans_gen_sample]
-        trans_gt_photo_list = [samp.gt_photo for samp in trans_gen_sample]
+        trans_gt_mask_list = [samp.img_mask for samp in trans_gen_sample]
+        trans_gt_photo_list = [samp.img_photo for samp in trans_gen_sample]
 
         self.assertEqual(len(trans_gen_sample), 9)
         for idx, (mask, photo) in enumerate(
                 zip(trans_gt_mask_list, trans_gt_photo_list)):
             sample_from_dataset = val_dataloader.dataset[idx]['inputs']
-            assert_allclose(mask.data * 127.5 + 127.5,
-                            sample_from_dataset['img_mask'])
-            assert_allclose(photo.data * 127.5 + 127.5,
-                            sample_from_dataset['img_photo'])
+            assert_allclose(mask, sample_from_dataset['img_mask'])
+            assert_allclose(photo, sample_from_dataset['img_photo'])
 
         # check input buffer
         input_buffer = hook.inputs_buffer
@@ -357,7 +359,7 @@ class TestGenVisualizationHook(TestCase):
         gan_model_cfg = dict(
             type='DCGAN',
             noise_size=10,
-            data_preprocessor=dict(type='GenDataPreprocessor'),
+            data_preprocessor=dict(type='EditDataPreprocessor'),
             generator=dict(
                 type='DCGANGenerator', output_scale=32, base_channels=32))
         model = MODELS.build(gan_model_cfg)
@@ -374,7 +376,7 @@ class TestGenVisualizationHook(TestCase):
 
         # build a empty data sample
         data_batch = [
-            dict(inputs=None, data_sample=EditDataSample())
+            dict(inputs=None, data_samples=EditDataSample())
             for idx in range(10)
         ]
         for idx in range(3):
@@ -494,10 +496,10 @@ class TestGenVisualizationHook(TestCase):
         outputs = []
         for gt, ema, orig, x_t in zip(gt_list, ema_list, orig_list, x_t_list):
             gen_sample = EditDataSample(
-                gt_img=PixelData(data=gt),
-                ema=EditDataSample(fake_img=PixelData(data=ema)),
-                orig=EditDataSample(fake_img=PixelData(data=orig)),
-                new_model=EditDataSample(x_t=PixelData(data=x_t)))
+                gt_img=gt,
+                ema=EditDataSample(fake_img=ema),
+                orig=EditDataSample(fake_img=orig),
+                new_model=EditDataSample(x_t=x_t))
             outputs.append(gen_sample)
 
         hook.after_test_iter(runner, 42, [], outputs)
@@ -547,9 +549,7 @@ class TestGenVisualizationHook(TestCase):
 
         # test get target key automatically with error
         outputs = [
-            EditDataSample(
-                ema=EditDataSample(
-                    fake_img=PixelData(data=torch.randn(3, 6, 6))))
+            EditDataSample(ema=EditDataSample(fake_img=torch.randn(3, 6, 6)))
         ]
         with self.assertRaises(AssertionError):
             hook.after_test_iter(runner, 42, [], outputs)
@@ -571,7 +571,7 @@ class TestGenVisualizationHook(TestCase):
 
         ema_list = [torch.randn(3, 6, 6) for _ in range(4)]
         outputs = [
-            EditDataSample(ema=EditDataSample(fake_img=PixelData(data=ema)))
+            EditDataSample(ema=EditDataSample(fake_img=ema))
             for ema in ema_list
         ]
         hook.after_test_iter(runner, 42, [], outputs)

@@ -3,7 +3,7 @@ _base_ = ['../_base_/gen_default_runtime.py']
 # define GAN model
 model = dict(
     type='ProgressiveGrowingGAN',
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='EditDataPreprocessor'),
     noise_size=512,
     generator=dict(type='PGGANGenerator', out_scale=128),
     discriminator=dict(type='PGGANDiscriminator', in_scale=128),
@@ -36,9 +36,14 @@ dataset_type = 'GrowScaleImgDataset'
 data_roots = {'128': './data/celeba-cropped/cropped_images_aligned_png'}
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
-    dict(type='Resize', scale=(128, 128)),
-    dict(type='Flip', keys=['img'], direction='horizontal'),
+    dict(type='LoadImageFromFile', key='gt'),
+    dict(type='Resize', keys='gt', scale=(128, 128)),
+    dict(type='Flip', keys='gt', direction='horizontal'),
+    dict(type='PackEditInputs')
+]
+test_pipeline = [
+    dict(type='LoadImageFromFile', key='gt'),
+    dict(type='Resize', keys='gt', scale=(128, 128)),
     dict(type='PackEditInputs')
 ]
 
@@ -66,7 +71,8 @@ test_dataloader = dict(
     batch_size=64,
     dataset=dict(
         type='BasicImageDataset',
-        pipeline=train_pipeline,
+        pipeline=test_pipeline,
+        data_prefix=dict(gt=''),
         data_root=data_roots['128']),
     sampler=dict(type='DefaultSampler', shuffle=False))
 

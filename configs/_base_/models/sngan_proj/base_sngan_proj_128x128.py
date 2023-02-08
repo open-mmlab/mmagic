@@ -2,7 +2,7 @@
 model = dict(
     type='SNGAN',
     num_classes=1000,
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='EditDataPreprocessor'),
     generator=dict(type='SNGANGenerator', output_scale=128, base_channels=64),
     discriminator=dict(
         type='ProjDiscriminator', input_scale=128, base_channels=64),

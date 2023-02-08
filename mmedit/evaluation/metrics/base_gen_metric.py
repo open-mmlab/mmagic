@@ -46,7 +46,7 @@ class GenMetric(BaseMetric):
                  fake_nums: int,
                  real_nums: int = 0,
                  fake_key: Optional[str] = None,
-                 real_key: Optional[str] = 'img',
+                 real_key: Optional[str] = 'gt_img',
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None) -> None:

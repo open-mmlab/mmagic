@@ -4,7 +4,6 @@ from typing import List, Optional
 import torch
 
 from mmedit.models.base_models import OneStageInpaintor
-# from .one_stage import OneStageInpaintor
 from mmedit.models.utils import extract_around_bbox, extract_bbox_patch
 from mmedit.registry import MODELS
 from ...utils import set_requires_grad

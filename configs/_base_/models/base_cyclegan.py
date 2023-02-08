@@ -2,7 +2,7 @@ _domain_a = None  # set by user
 _domain_b = None  # set by user
 model = dict(
     type='CycleGAN',
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='EditDataPreprocessor'),
     generator=dict(
         type='ResnetGenerator',
         in_channels=3,

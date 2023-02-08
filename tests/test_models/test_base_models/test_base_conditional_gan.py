@@ -9,7 +9,7 @@ from mmengine.structures import LabelData
 from mmengine.testing import assert_allclose
 from torch.nn import ModuleList
 
-from mmedit.models import BaseConditionalGAN, GenDataPreprocessor
+from mmedit.models import BaseConditionalGAN, EditDataPreprocessor
 from mmedit.models.losses import (DiscShiftLossComps, GANLossComps,
                                   GeneratorPathRegularizerComps,
                                   GradientPenaltyLossComps)
@@ -50,7 +50,7 @@ class TestBaseGAN(TestCase):
             noise_size=10,
             num_classes=10,
             generator=deepcopy(generator),
-            data_preprocessor=GenDataPreprocessor())
+            data_preprocessor=EditDataPreprocessor())
         gan.eval()
 
         # no mode
@@ -60,8 +60,8 @@ class TestBaseGAN(TestCase):
         self.assertEqual(len(outputs_val), 3)
         self.assertEqual(len(outputs_test), 3)
         for out_val, out_test in zip(outputs_val, outputs_test):
-            self.assertEqual(out_val.fake_img.data.shape, (3, 32, 32))
-            self.assertEqual(out_test.fake_img.data.shape, (3, 32, 32))
+            self.assertEqual(out_val.fake_img.shape, (3, 32, 32))
+            self.assertEqual(out_test.fake_img.shape, (3, 32, 32))
 
         # set mode
         inputs = dict(inputs=dict(num_batches=4, sample_model='orig'))
@@ -72,8 +72,8 @@ class TestBaseGAN(TestCase):
         for out_val, out_test in zip(outputs_val, outputs_test):
             self.assertEqual(out_val.sample_model, 'orig')
             self.assertEqual(out_test.sample_model, 'orig')
-            self.assertEqual(out_val.fake_img.data.shape, (3, 32, 32))
-            self.assertEqual(out_test.fake_img.data.shape, (3, 32, 32))
+            self.assertEqual(out_val.fake_img.shape, (3, 32, 32))
+            self.assertEqual(out_test.fake_img.shape, (3, 32, 32))
 
         inputs = dict(inputs=dict(num_batches=4, sample_model='orig/ema'))
         self.assertRaises(AssertionError, gan.val_step, inputs)
@@ -84,15 +84,15 @@ class TestBaseGAN(TestCase):
         # set noise and label input
         gt_label = torch.randint(0, 10, (1, ))
         inputs = dict(
-            inputs=dict(noise=torch.randn(10)),
+            inputs=dict(noise=torch.randn(1, 10)),
             data_samples=[EditDataSample(gt_label=LabelData(label=gt_label))])
         outputs_val = gan.val_step(inputs)
         outputs_test = gan.test_step(inputs)
         self.assertEqual(len(outputs_val), 1)
         self.assertEqual(len(outputs_val), 1)
         for idx in range(1):
-            test_fake_img = outputs_test[idx].fake_img.data
-            val_fake_img = outputs_val[idx].fake_img.data
+            test_fake_img = outputs_test[idx].fake_img
+            val_fake_img = outputs_val[idx].fake_img
             test_label = outputs_test[idx].gt_label.label
             val_label = outputs_val[idx].gt_label.label
             self.assertEqual(test_label, gt_label)
@@ -105,30 +105,30 @@ class TestBaseGAN(TestCase):
             noise_size=10,
             num_classes=10,
             generator=deepcopy(generator),
-            data_preprocessor=GenDataPreprocessor())
+            data_preprocessor=EditDataPreprocessor())
         gan.eval()
         inputs = dict(num_batches=3)
         outputs = gan(inputs, None)
         self.assertEqual(len(outputs), 3)
         for out in outputs:
-            self.assertEqual(out.fake_img.data.shape, (3, 32, 32))
+            self.assertEqual(out.fake_img.shape, (3, 32, 32))
 
         outputs = gan(inputs)
         self.assertEqual(len(outputs), 3)
         for out in outputs:
-            self.assertEqual(out.fake_img.data.shape, (3, 32, 32))
+            self.assertEqual(out.fake_img.shape, (3, 32, 32))
 
         outputs = gan(torch.randn(3, 10))
         self.assertEqual(len(outputs), 3)
         for out in outputs:
-            self.assertEqual(out.fake_img.data.shape, (3, 32, 32))
+            self.assertEqual(out.fake_img.shape, (3, 32, 32))
 
         # set a gan w EMA
         gan = ToyCGAN(
             noise_size=10,
             num_classes=10,
             generator=deepcopy(generator),
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=EditDataPreprocessor(),
             ema_config=dict(interval=1))
         gan.eval()
         # inputs = dict(inputs=dict(num_batches=3))
@@ -136,7 +136,7 @@ class TestBaseGAN(TestCase):
         outputs = gan(inputs)
         self.assertEqual(len(outputs), 3)
         for out in outputs:
-            self.assertEqual(out.fake_img.data.shape, (3, 32, 32))
+            self.assertEqual(out.fake_img.shape, (3, 32, 32))
 
         # inputs = dict(inputs=dict(num_batches=3, sample_model='ema/orig'))
         inputs = dict(num_batches=3, sample_model='ema/orig')
@@ -145,8 +145,7 @@ class TestBaseGAN(TestCase):
         for out in outputs:
             ema_img = out.ema
             orig_img = out.orig
-            self.assertEqual(ema_img.fake_img.data.shape,
-                             orig_img.fake_img.data.shape)
+            self.assertEqual(ema_img.fake_img.shape, orig_img.fake_img.shape)
             self.assertTrue(out.sample_model, 'ema/orig')
 
         # inputs = dict(inputs=dict(noise=torch.randn(4, 10)))
@@ -154,7 +153,7 @@ class TestBaseGAN(TestCase):
         outputs = gan(inputs)
         self.assertEqual(len(outputs), 4)
         for out in outputs:
-            self.assertEqual(out.fake_img.data.shape, (3, 32, 32))
+            self.assertEqual(out.fake_img.shape, (3, 32, 32))
 
         # test data sample input
         # inputs = dict(inputs=dict(noise=torch.randn(3, 10)))
@@ -180,7 +179,7 @@ class TestBaseGAN(TestCase):
             num_classes=10,
             generator=deepcopy(generator),
             discriminator=deepcopy(discriminator),
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=EditDataPreprocessor(),
             loss_config=dict())
         self.assertIsNone(gan.gan_loss)
         self.assertIsNone(gan.disc_auxiliary_losses)
@@ -201,7 +200,7 @@ class TestBaseGAN(TestCase):
             num_classes=10,
             generator=deepcopy(generator),
             discriminator=deepcopy(discriminator),
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=EditDataPreprocessor(),
             loss_config=loss_config)
         self.assertIsInstance(gan.disc_auxiliary_losses, ModuleList)
         self.assertIsInstance(gan.disc_auxiliary_losses[0], DiscShiftLossComps)
@@ -227,7 +226,7 @@ class TestBaseGAN(TestCase):
             num_classes=10,
             generator=deepcopy(generator),
             discriminator=deepcopy(discriminator),
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=EditDataPreprocessor(),
             loss_config=loss_config)
         self.assertIsInstance(gan.gan_loss, GANLossComps)
         self.assertIsInstance(gan.disc_auxiliary_losses, ModuleList)
@@ -242,7 +241,7 @@ class TestBaseGAN(TestCase):
             num_classes=10,
             generator=deepcopy(generator),
             discriminator=deepcopy(discriminator),
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=EditDataPreprocessor(),
             loss_config=loss_config)
         # mock gen aux loss to avoid build styleGAN Generator
         gen_aux_loss_mock = MagicMock(return_value=torch.Tensor([1.]))
@@ -278,7 +277,7 @@ class TestBaseGAN(TestCase):
             num_classes=10,
             generator=deepcopy(generator),
             discriminator=deepcopy(discriminator),
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=EditDataPreprocessor(),
             loss_config=loss_config)
         log_vars = gan.train_step(data, optim_wrapper=optimizer_wrapper)
         self.assertIn('loss', log_vars)
