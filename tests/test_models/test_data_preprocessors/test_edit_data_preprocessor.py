@@ -821,4 +821,4 @@ class TestBaseDataPreprocessor(TestCase):
         inputs = torch.stack([input1, input2], dim=0)
         destruct_batch = data_preprocessor.destruct(inputs)
         self.assertEqual(destruct_batch.shape, (2, 1, 5, 5))
-        assert_allclose(destruct_batch, inputs.float())
+        assert_allclose(destruct_batch.float(), inputs.float())
