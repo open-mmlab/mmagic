@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from unittest.mock import patch
 
+import pytest
 import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
@@ -10,9 +12,12 @@ from mmedit.models import (LTE, TTSR, EditDataPreprocessor, SearchTransformer,
 from mmedit.models.losses import (GANLoss, L1Loss, PerceptualVGG,
                                   TransferalPerceptualLoss)
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    reason='skip on windows-cuda due to limited RAM.')
 @patch.object(PerceptualVGG, 'init_weights')
 def test_ttsr(init_weights):
     model_cfg = dict(
@@ -76,10 +81,10 @@ def test_ttsr(init_weights):
     # prepare data
     inputs = torch.rand(1, 3, 32, 32)
     data_sample = EditDataSample(
-        gt_img=PixelData(data=torch.rand(3, 128, 128)),
-        ref_img=PixelData(data=torch.rand(3, 128, 128)),
-        img_lq=PixelData(data=torch.rand(3, 128, 128)),
-        ref_lq=PixelData(data=torch.rand(3, 128, 128)))
+        gt_img=torch.rand(3, 128, 128),
+        ref_img=torch.rand(3, 128, 128),
+        img_lq=torch.rand(3, 128, 128),
+        ref_lq=torch.rand(3, 128, 128))
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
@@ -93,7 +98,7 @@ def test_ttsr(init_weights):
 
     # val
     output = model.val_step(data)
-    assert output[0].output.pred_img.data.shape == (3, 128, 128)
+    assert output[0].output.pred_img.shape == (3, 128, 128)
 
     # feat
     output = model(torch.rand(1, 3, 32, 32), [data_sample], mode='tensor')

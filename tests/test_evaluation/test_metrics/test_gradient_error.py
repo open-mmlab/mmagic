@@ -39,16 +39,14 @@ class TestMattingMetrics:
         masked_pred_alpha[trimap == 0] = 0
         masked_pred_alpha[trimap == 255] = 255
 
-        gt_alpha = gt_alpha[..., None]
-        trimap = trimap[..., None]
-        # pred_alpha = pred_alpha.unsqueeze(0)
-        # masked_pred_alpha = masked_pred_alpha.unsqueeze(0)
+        gt_alpha = gt_alpha[None, ...]
+        trimap = trimap[None, ...]
 
         cls.data_batch = [{
             'inputs': [],
             'data_samples': {
-                'ori_trimap': trimap,
-                'ori_alpha': gt_alpha,
+                'ori_trimap': torch.from_numpy(trimap),
+                'ori_alpha': torch.from_numpy(gt_alpha),
             },
         }]
 

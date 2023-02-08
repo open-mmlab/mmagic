@@ -41,7 +41,8 @@ class Flip(BaseTransform):
         if direction not in self._directions:
             raise ValueError(f'Direction {direction} is not supported.'
                              f'Currently support ones are {self._directions}')
-        self.keys = keys
+
+        self.keys = keys if isinstance(keys, list) else [keys]
         self.flip_ratio = flip_ratio
         self.direction = direction
 
@@ -162,7 +163,7 @@ class RandomTransposeHW(BaseTransform):
 
     def __init__(self, keys, transpose_ratio=0.5):
 
-        self.keys = keys
+        self.keys = keys if isinstance(keys, list) else [keys]
         self.transpose_ratio = transpose_ratio
 
     def transform(self, results):

@@ -6,7 +6,7 @@ from torch.optim import Adam
 
 from mmedit.models import EDVR, EDVRNet
 from mmedit.models.losses import CharbonnierLoss
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 def test_edvr():
@@ -37,7 +37,7 @@ def test_edvr():
     # prepare data
     inputs = torch.rand(1, 5, 3, 20, 20)
     target = torch.rand(5, 3, 80, 80)
-    data_sample = EditDataSample(gt_img=PixelData(data=target))
+    data_sample = EditDataSample(gt_img=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     log_vars = model.train_step(data, optim_wrapper)

@@ -55,8 +55,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(1, -1, 1, 1),
     ))
 
 # optimizer

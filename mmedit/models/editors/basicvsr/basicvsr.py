@@ -3,7 +3,7 @@ import torch
 
 from mmedit.models import BaseEditModel
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 @MODELS.register_module()
@@ -130,7 +130,7 @@ class BasicVSR(BaseEditModel):
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
         # feats.shape = [b, t, c, h, w]
-        feats = self.data_preprocessor.destructor(feats)
+        feats = self.data_preprocessor.destruct(feats, data_samples)
 
         # If the GT is an image (i.e. the center frame), the output sequence is
         # turned to an image.
@@ -148,7 +148,7 @@ class BasicVSR(BaseEditModel):
         for idx in range(feats.shape[0]):
             predictions.append(
                 EditDataSample(
-                    pred_img=PixelData(data=feats[idx].to('cpu')),
+                    pred_img=feats[idx].to('cpu'),
                     metainfo=data_samples[idx].metainfo))
 
         return predictions

@@ -139,8 +139,7 @@ class MSPIEStyleGAN2(StyleGAN2):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        # num_batches = inputs['real_imgs'].shape[0]
-        num_batches = inputs['img'].shape[0]
+        num_batches = len(data_samples)
 
         noise = self.noise_fn(num_batches=num_batches)
         fake_imgs = self.generator(
@@ -166,7 +165,7 @@ class MSPIEStyleGAN2(StyleGAN2):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = inputs['img']
+        real_imgs = torch.stack([data.gt_img for data in data_samples])
 
         if dist.is_initialized():
             # randomly sample a scale for current training iteration

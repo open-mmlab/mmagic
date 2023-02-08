@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from mmengine import MessageHub
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import SampleList
 from ...base_models import BaseTranslationModel
 from ...utils import set_requires_grad
@@ -37,7 +37,7 @@ class Pix2Pix(BaseTranslationModel):
         # ref: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/e1bdf46198662b0f4d0b318e24568205ec4d7aee/test.py#L54  # noqa
         self.train()
         target = self.translation(img, target_domain=target_domain, **kwargs)
-        results = dict(source=img.cpu(), target=target.cpu())
+        results = dict(source=img, target=target)
         return results
 
     def _get_disc_loss(self, outputs):
@@ -188,12 +188,14 @@ class Pix2Pix(BaseTranslationModel):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
-            setattr(gen_sample, f'gt_{target_domain}',
-                    PixelData(data=inputs_dict[f'img_{target_domain}'][idx]))
-            setattr(gen_sample, f'fake_{target_domain}',
-                    PixelData(data=outputs['target'][idx]))
-            setattr(gen_sample, f'gt_{source_domain}',
-                    PixelData(data=inputs_dict[f'img_{source_domain}'][idx]))
+            # setattr(gen_sample, f'gt_{target_domain}',
+            #         inputs_dict[f'img_{target_domain}'][idx])
+            target = outputs['target'][idx]
+            target = self.data_preprocessor.destruct(target, data_samples[idx],
+                                                     f'img_{target_domain}')
+            setattr(gen_sample, f'fake_{target_domain}', target)
+            # setattr(gen_sample, f'gt_{source_domain}',
+            #         inputs_dict[f'img_{source_domain}'][idx])
             batch_sample_list.append(gen_sample)
         return batch_sample_list
 
@@ -220,11 +222,13 @@ class Pix2Pix(BaseTranslationModel):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
-            setattr(gen_sample, f'gt_{target_domain}',
-                    PixelData(data=inputs_dict[f'img_{target_domain}'][idx]))
-            setattr(gen_sample, f'fake_{target_domain}',
-                    PixelData(data=outputs['target'][idx]))
-            setattr(gen_sample, f'gt_{source_domain}',
-                    PixelData(data=inputs_dict[f'img_{source_domain}'][idx]))
+            # setattr(gen_sample, f'gt_{target_domain}',
+            #         inputs_dict[f'img_{target_domain}'][idx])
+            target = outputs['target'][idx]
+            target = self.data_preprocessor.destruct(target, data_samples[idx],
+                                                     f'img_{target_domain}')
+            setattr(gen_sample, f'fake_{target_domain}', target)
+            # setattr(gen_sample, f'gt_{source_domain}',
+            #         inputs_dict[f'img_{source_domain}'][idx])
             batch_sample_list.append(gen_sample)
         return batch_sample_list

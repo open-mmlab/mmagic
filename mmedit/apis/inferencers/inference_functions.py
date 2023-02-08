@@ -407,7 +407,7 @@ def restoration_inference(model, img, ref=None):
         data = dict(img_path=img)
     _data = test_pipeline(data)
     data = dict()
-    data['inputs'] = _data['inputs'] / 255.0
+    data['inputs'] = dict(img=(_data['inputs'] / 255.0))
     data = collate([data])
     if ref:
         data['data_samples'] = [_data['data_samples']]
@@ -497,7 +497,7 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
         data = dict(lq=img.astype(np.float32), img_path='demo/tmp.png')
         _data = test_pipeline(data)
         data = dict()
-        data['inputs'] = _data['inputs'] / 255.0
+        data['inputs'] = dict(img=(_data['inputs'] / 255.0))
         data = collate([data])
         if 'cuda' in str(device):
             data = scatter(data, [device])[0]
@@ -838,7 +838,7 @@ def colorization_inference(model, img):
     data = dict(img_path=img)
     _data = test_pipeline(data)
     data = dict()
-    data['inputs'] = _data['inputs'] / 255.0
+    data['inputs'] = dict(img=(_data['inputs'] / 255.0))
     data = collate([data])
     data['data_samples'] = [_data['data_samples']]
     if 'cuda' in str(device):

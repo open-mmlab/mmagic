@@ -9,7 +9,7 @@ from mmengine import Config
 
 from mmedit.models import GLEncoderDecoder
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 
 
@@ -61,9 +61,9 @@ def test_one_stage_inpaintor():
         mask_bbox = [100, 100, 110, 110]
         inputs = masked_img.unsqueeze(0)
         data_sample = EditDataSample(
-            mask=PixelData(data=mask),
+            mask=mask,
             mask_bbox=mask_bbox,
-            gt_img=PixelData(data=gt_img),
+            gt_img=gt_img,
         )
         data_samples = [data_sample]
         data_batch = {'inputs': inputs, 'data_samples': [data_sample]}

@@ -9,7 +9,7 @@ from mmengine.config import ConfigDict
 from mmedit.datasets.transforms import PackEditInputs
 from mmedit.models.editors import DIM
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 
 register_all_modules()
@@ -49,10 +49,10 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
     for a, m, f, b in zip(alpha, ori_merged, fg, bg):
         ds = EditDataSample()
 
-        ds.gt_alpha = PixelData(data=a)
-        ds.gt_merged = PixelData(data=m)
-        ds.gt_fg = PixelData(data=f)
-        ds.gt_bg = PixelData(data=b)
+        ds.gt_alpha = a
+        ds.gt_merged = m
+        ds.gt_fg = f
+        ds.gt_bg = b
         for k, v in meta.items():
             ds.set_field(name=k, value=v, field_type='metainfo', dtype=None)
 
@@ -126,10 +126,7 @@ def test_dim_config():
         type='MattorPreprocessor',
         mean=[123.675, 116.28, 103.53],
         std=[58.395, 57.12, 57.375],
-        bgr_to_rgb=True,
-        proc_inputs='normalize',
         proc_trimap='rescale_to_zero_one',
-        proc_gt='rescale_to_zero_one',
     )
     backbone = dict(
         type='SimpleEncoderDecoder',
@@ -187,10 +184,7 @@ def test_dim():
             type='MattorPreprocessor',
             mean=[123.675, 116.28, 103.53],
             std=[58.395, 57.12, 57.375],
-            bgr_to_rgb=True,
-            proc_inputs='normalize',
             proc_trimap='rescale_to_zero_one',
-            proc_gt='rescale_to_zero_one',
         ),
         backbone=dict(
             type='SimpleEncoderDecoder',

@@ -84,10 +84,8 @@ class TestEG3D(TestCase):
         target_keys = [
             'fake_img', 'depth', 'lr_img', 'ray_origins', 'ray_directions'
         ]
-        # NOTE: fake_img and lr_img are PixelData, shape do not contains
-        # the number of channel
-        target_shape = [(out_size, out_size), (1, n_points, n_points),
-                        (n_points, n_points), (n_points**2, 3),
+        target_shape = [(3, out_size, out_size), (1, n_points, n_points),
+                        (3, n_points, n_points), (n_points**2, 3),
                         (n_points**2, 3)]
         for output in outputs:
             for key, shape in zip(target_keys, target_shape):
