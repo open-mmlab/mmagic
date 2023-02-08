@@ -9,7 +9,7 @@ disc_step = 5
 init_cfg = dict(type='studio')
 model = dict(
     # CIFAR images are RGB, convert to BGR
-    data_preprocessor=dict(rgb_to_bgr=True),
+    data_preprocessor=dict(output_channel_order='BGR'),
     generator=dict(act_cfg=dict(type='ReLU', inplace=True), init_cfg=init_cfg),
     discriminator=dict(
         act_cfg=dict(type='ReLU', inplace=True), init_cfg=init_cfg))

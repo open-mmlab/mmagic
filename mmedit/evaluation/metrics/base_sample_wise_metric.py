@@ -55,6 +55,8 @@ class BaseSampleWiseMetric(BaseMetric):
         self.scaling = scaling
         self.device = device
 
+        self.channel_order = 'BGR'
+
     def compute_metrics(self, results: List):
         """Compute the metrics from processed results.
 
@@ -83,13 +85,6 @@ class BaseSampleWiseMetric(BaseMetric):
 
         for data in data_samples:
             prediction = data['output']
-
-            self.channel_order = 'rgb'
-            metainfo = data
-            if 'gt_channel_order' in metainfo:
-                self.channel_order = metainfo['gt_channel_order']
-            elif 'img_channel_order' in metainfo:
-                self.channel_order = metainfo['img_channel_order']
 
             gt = obtain_data(data, self.gt_key, self.device)
             pred = obtain_data(prediction, self.pred_key, self.device)

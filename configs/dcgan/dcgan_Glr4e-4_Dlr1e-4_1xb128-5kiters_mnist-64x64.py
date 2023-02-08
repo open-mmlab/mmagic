@@ -13,8 +13,8 @@ model = dict(
 # define dataset
 # modify train_pipeline to load gray scale images
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img', color_type='grayscale'),
-    dict(type='Resize', scale=(64, 64)),
+    dict(type='LoadImageFromFile', key='gt', color_type='grayscale'),
+    dict(type='Resize', keys='gt', scale=(64, 64)),
     dict(type='PackEditInputs')
 ]
 

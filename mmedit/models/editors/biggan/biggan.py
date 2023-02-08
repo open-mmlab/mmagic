@@ -118,7 +118,7 @@ class BigGAN(BaseConditionalGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = inputs['img']
+        real_imgs = torch.stack([data.gt_img for data in data_samples])
         real_labels = self.data_sample_to_label(data_samples)
         assert real_labels is not None, (
             'Cannot found \'gt_label\' in \'data_sample\'.')
@@ -153,7 +153,7 @@ class BigGAN(BaseConditionalGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        num_batches = inputs['img'].shape[0]
+        num_batches = len(data_samples)
 
         noise = self.noise_fn(num_batches=num_batches)
         fake_labels = self.label_fn(num_batches=num_batches)

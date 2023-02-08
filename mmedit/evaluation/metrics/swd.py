@@ -202,7 +202,7 @@ class SlicedWassersteinDistance(GenMetric):
         fake_key (Optional[str]): Key for get fake images of the output dict.
             Defaults to None.
         real_key (Optional[str]): Key for get real images from the input dict.
-            Defaults to 'img'.
+            Defaults to 'gt_img'.
         sample_model (str): Sampling mode for the generative model. Support
             'orig' and 'ema'. Defaults to 'ema'.
         collect_device (str): Device name used for collecting results from
@@ -220,7 +220,7 @@ class SlicedWassersteinDistance(GenMetric):
                  fake_nums: int,
                  image_shape: tuple,
                  fake_key: Optional[str] = None,
-                 real_key: Optional[str] = 'img',
+                 real_key: Optional[str] = 'gt_img',
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None):
@@ -262,7 +262,7 @@ class SlicedWassersteinDistance(GenMetric):
         real_imgs, fake_imgs = [], []
         for data in data_samples:
             # parse real images
-            real_imgs.append(data['gt_img']['data'])
+            real_imgs.append(data['gt_img'])
             # parse fake images
             fake_img_ = data
             # get ema/orig results
@@ -270,13 +270,17 @@ class SlicedWassersteinDistance(GenMetric):
                 fake_img_ = fake_img_[self.sample_model]
             # get specific fake_keys
             if (self.fake_key is not None and self.fake_key in fake_img_):
-                fake_img_ = fake_img_[self.fake_key]['data']
+                fake_img_ = fake_img_[self.fake_key]
             else:
                 # get img tensor
-                fake_img_ = fake_img_['fake_img']['data']
+                fake_img_ = fake_img_['fake_img']
             fake_imgs.append(fake_img_)
         real_imgs = torch.stack(real_imgs, dim=0)
         fake_imgs = torch.stack(fake_imgs, dim=0)
+
+        # [0, 255] -> [-1, 1]
+        real_imgs = (real_imgs - 127.5) / 127.5
+        fake_imgs = (fake_imgs - 127.5) / 127.5
 
         # real images
         assert real_imgs.shape[1:] == self.image_shape

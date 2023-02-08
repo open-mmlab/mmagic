@@ -69,7 +69,7 @@ class FrechetInceptionDistance(GenerativeMetric):
                  inception_path: Optional[str] = None,
                  inception_pkl: Optional[str] = None,
                  fake_key: Optional[str] = None,
-                 real_key: Optional[str] = 'img',
+                 real_key: Optional[str] = 'gt_img',
                  need_cond_input: bool = False,
                  sample_model: str = 'orig',
                  collect_device: str = 'cpu',
@@ -124,20 +124,20 @@ class FrechetInceptionDistance(GenerativeMetric):
         """Feed image to inception network and get the output feature.
 
         Args:
-            image (Tensor): Image tensor fed to the Inception network.
+            data_samples (Sequence[dict]): A batch of data sample dict used to
+                extract inception feature.
 
         Returns:
             Tensor: Image feature extracted from inception.
         """
+        image = image[:, [2, 1, 0]].to(self.device)
 
-        # image must passed with 'bgr'
-        image = image[:, [2, 1, 0]]
-        image = image.to(self.device)
         if self.inception_style == 'StyleGAN':
-            image = (image * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+            image = image.to(torch.uint8)
             with disable_gpu_fuser_on_pt19():
                 feat = self.inception(image, return_features=True)
         else:
+            image = (image - 127.5) / 127.5  # to [-1, 1]
             feat = self.inception(image)[0].view(image.shape[0], -1)
         return feat
 
@@ -161,10 +161,10 @@ class FrechetInceptionDistance(GenerativeMetric):
                 fake_img_ = fake_img_[self.sample_model]
             # get specific fake_keys
             if (self.fake_key is not None and self.fake_key in fake_img_):
-                fake_img_ = fake_img_[self.fake_key]['data']
+                fake_img_ = fake_img_[self.fake_key]
             else:
                 # get img tensor
-                fake_img_ = fake_img_['fake_img']['data']
+                fake_img_ = fake_img_['fake_img']
             fake_imgs.append(fake_img_)
         fake_imgs = torch.stack(fake_imgs, dim=0)
 
@@ -264,29 +264,3 @@ class TransFID(FrechetInceptionDistance):
             DataLoader: Default sampler for normal metrics.
         """
         return dataloader
-
-    def process(self, data_batch: dict, data_samples: Sequence[dict]) -> None:
-        """Process one batch of data samples and predictions. The processed
-        results should be stored in ``self.fake_results``, which will be used
-        to compute the metrics when all batches have been processed.
-
-        Args:
-            data_batch (dict): A batch of data from the dataloader.
-            data_samples (Sequence[dict]): A batch of outputs from the model.
-        """
-        fake_imgs = []
-        for pred in data_samples:
-            fake_img_ = pred
-            # get ema/orig results
-            if self.sample_model in fake_img_:
-                fake_img_ = fake_img_[self.sample_model]
-            # get specific fake_keys
-            if (self.fake_key is not None and self.fake_key in fake_img_):
-                fake_img_ = fake_img_[self.fake_key]
-            # get img tensor
-            fake_img_ = fake_img_['data']
-            fake_imgs.append(fake_img_)
-        fake_imgs = torch.stack(fake_imgs, dim=0)
-        feat = self.forward_inception(fake_imgs)
-        feat_list = list(torch.split(feat, 1))
-        self.fake_results += feat_list

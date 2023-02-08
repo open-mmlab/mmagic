@@ -6,7 +6,7 @@ import pytest
 import torch
 
 from mmedit.registry import BACKBONES
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 
 
@@ -72,9 +72,9 @@ class TestInstColorization:
         inputs = torch.rand(1, 3, 256, 256)
         target_shape = (1, 3, 256, 256)
 
-        data_sample = EditDataSample(gt_img=PixelData(data=inputs))
+        data_sample = EditDataSample(gt_img=inputs)
         metainfo = dict(
-            cropped_img=PixelData(data=torch.rand(9, 3, 256, 256)),
+            cropped_img=torch.rand(9, 3, 256, 256),
             box_info=torch.tensor([[175, 29, 96, 54, 52, 106],
                                    [14, 191, 84, 61, 51, 111],
                                    [117, 64, 115, 46, 75, 95],

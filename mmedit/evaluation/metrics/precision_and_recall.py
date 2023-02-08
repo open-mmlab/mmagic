@@ -106,7 +106,7 @@ class PrecisionAndRecall(GenerativeMetric):
                  real_nums=-1,
                  k=3,
                  fake_key: Optional[str] = None,
-                 real_key: Optional[str] = 'img',
+                 real_key: Optional[str] = 'gt_img',
                  need_cond_input: bool = False,
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
@@ -151,7 +151,7 @@ class PrecisionAndRecall(GenerativeMetric):
         return vgg16, use_tero_scirpt
 
     @torch.no_grad()
-    def extract_features(self, images):
+    def extract_features(self, images: torch.Tensor) -> torch.Tensor:
         """Extracting image features.
 
         Args:
@@ -162,9 +162,10 @@ class PrecisionAndRecall(GenerativeMetric):
         # image must passed in 'bgr'
         images = images[:, [2, 1, 0], ...]
         if self.use_tero_scirpt:
-            images = (images * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+            images = images.to(torch.uint8)
             feature = self.vgg16(images, return_features=True)
         else:
+            images = (images - 127.5) / 127.5
             batch = F.interpolate(images, size=(224, 224))
             before_fc = self.vgg16.features(batch)
             before_fc = before_fc.view(-1, 7 * 7 * 512)
@@ -231,10 +232,10 @@ class PrecisionAndRecall(GenerativeMetric):
                 fake_img_ = fake_img_[self.sample_model]
             # get specific fake_keys
             if (self.fake_key is not None and self.fake_key in fake_img_):
-                fake_img_ = fake_img_[self.fake_key]['data']
+                fake_img_ = fake_img_[self.fake_key]
             else:
                 # get img tensor
-                fake_img_ = fake_img_['fake_img']['data']
+                fake_img_ = fake_img_['fake_img']
             fake_imgs.append(fake_img_)
         fake_imgs = torch.stack(fake_imgs, dim=0)
         feat = self.extract_features(fake_imgs)

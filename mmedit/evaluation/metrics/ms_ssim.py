@@ -291,20 +291,23 @@ class MultiScaleStructureSimilarity(GenerativeMetric):
                 fake_img_ = fake_img_[self.sample_model]
             # get specific fake_keys
             if (self.fake_key is not None and self.fake_key in fake_img_):
-                fake_img_ = fake_img_[self.fake_key]['data']
+                fake_img_ = fake_img_[self.fake_key]
             else:
                 # get img tensor
-                fake_img_ = fake_img_['fake_img']['data']
+                fake_img_ = fake_img_['fake_img']
             fake_imgs.append(fake_img_)
         minibatch = torch.stack(fake_imgs, dim=0)
 
         assert minibatch.shape[0] % 2 == 0, 'batch size must be divided by 2.'
-        minibatch = ((minibatch + 1) / 2)
-        minibatch = minibatch.clamp_(0, 1)
+        # minibatch = ((minibatch + 1) / 2)
+        # minibatch = minibatch.clamp_(0, 1)
+        # half1 = minibatch[0::2].cpu().data.numpy().transpose((0, 2, 3, 1))
+        # half1 = (half1 * 255).astype('uint8')
+        # half2 = minibatch[1::2].cpu().data.numpy().transpose((0, 2, 3, 1))
+        # half2 = (half2 * 255).astype('uint8')
+
         half1 = minibatch[0::2].cpu().data.numpy().transpose((0, 2, 3, 1))
-        half1 = (half1 * 255).astype('uint8')
         half2 = minibatch[1::2].cpu().data.numpy().transpose((0, 2, 3, 1))
-        half2 = (half2 * 255).astype('uint8')
 
         scores = ms_ssim(half1, half2, reduce_mean=False)
         self.fake_results += [torch.Tensor([s]) for s in scores.tolist()]

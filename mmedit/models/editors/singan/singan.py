@@ -15,7 +15,7 @@ from torch import Tensor
 
 from mmedit.models.utils import get_module_device
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import ForwardInputs, SampleList
 from ...base_models import BaseGAN
 from ...utils import set_requires_grad
@@ -237,29 +237,36 @@ class SinGAN(BaseGAN):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
+                _data_sample = data_samples[idx]  # for destruct
+            else:
+                _data_sample = None  # for destruct
             if sample_model == 'ema/orig':
                 for model_ in ['ema', 'orig']:
                     model_sample_ = EditDataSample()
                     output_ = outputs[model_]
                     if isinstance(output_, dict):
-                        fake_img = PixelData(data=output_['fake_img'][idx])
+                        fake_img = self.data_preprocessor.destruct(
+                            output_['fake_img'][idx], _data_sample)
                         prev_res_list = [
-                            r[idx] for r in outputs[model_]['prev_res_list']
+                            self.data_preprocessor.destruct(
+                                r[idx], _data_sample)
+                            for r in outputs[model_]['prev_res_list']
                         ]
                         model_sample_.prev_res_list = prev_res_list
                     else:
-                        fake_img = PixelData(data=output_[idx])
+                        fake_img = self.data_preprocessor.destruct(
+                            output_[idx], _data_sample)
                     model_sample_.fake_img = fake_img
                     model_sample_.sample_model = sample_model
                     gen_sample.set_field(model_sample_, model_)
             elif isinstance(outputs, dict):
-                gen_sample.fake_img = PixelData(data=outputs['fake_img'][idx])
+                gen_sample.fake_img = outputs['fake_img'][idx]
                 gen_sample.prev_res_list = [
                     r[idx] for r in outputs['prev_res_list']
                 ]
                 gen_sample.sample_model = sample_model
             else:
-                gen_sample.fake_img = PixelData(data=outputs[idx])
+                gen_sample.fake_img = outputs[idx]
                 gen_sample.sample_model = sample_model
 
             batch_sample_list.append(gen_sample)

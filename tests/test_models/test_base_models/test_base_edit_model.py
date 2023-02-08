@@ -7,7 +7,7 @@ from torch.optim import Adam
 from mmedit.models import BaseEditModel, EditDataPreprocessor
 from mmedit.models.losses import L1Loss
 from mmedit.registry import BACKBONES
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 
 register_all_modules()
@@ -45,7 +45,7 @@ def test_base_edit_model():
     # prepare data
     inputs = torch.rand(1, 3, 20, 20)
     target = torch.rand(3, 20, 20)
-    data_sample = EditDataSample(gt_img=PixelData(data=target))
+    data_sample = EditDataSample(gt_img=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
@@ -59,7 +59,7 @@ def test_base_edit_model():
 
     # val
     output = model.val_step(data)
-    assert output[0].output.pred_img.data.shape == (3, 20, 20)
+    assert output[0].output.pred_img.shape == (3, 20, 20)
 
     # feat
     output = model(torch.rand(1, 3, 20, 20), mode='tensor')

@@ -123,6 +123,7 @@ class EditDataSample(BaseDataElement):
     # source_key_in_results: target_key_in_metainfo
     META_KEYS = {
         'img_path': 'img_path',
+        'gt_path': 'gt_path',
         'merged_path': 'merged_path',
         'trimap_path': 'trimap_path',
         'ori_shape': 'ori_shape',
@@ -130,7 +131,19 @@ class EditDataSample(BaseDataElement):
         'ori_merged_shape': 'ori_merged_shape',
         'ori_trimap_shape': 'ori_trimap_shape',
         'trimap_channel_order': 'trimap_channel_order',
-        'empty_box': 'empty_box'
+        'empty_box': 'empty_box',
+        'ori_img_shape': 'ori_img_shape',
+        'ori_gt_shape': 'ori_gt_shape',
+        'img_channel_order': 'img_channel_order',
+        'gt_channel_order': 'gt_channel_order',
+        'gt_color_type': 'gt_color_type',
+        'img_color_type': 'img_color_type',
+        'sample_idx': 'sample_idx',
+        'num_input_frames': 'num_input_frames',
+        'num_output_frames': 'num_output_frames',
+        # for LIIF
+        'coord': 'coord',
+        'cell': 'cell',
     }
 
     # source_key_in_results: target_key_in_datafield
@@ -140,6 +153,7 @@ class EditDataSample(BaseDataElement):
         'gt_heatmap': 'gt_heatmap',
         'gt_unsharp': 'gt_unsharp',
         'merged': 'gt_merged',
+        'ori_alpha': 'ori_alpha',
         'fg': 'gt_fg',
         'bg': 'gt_bg',
         'gt_rgb': 'gt_rgb',
@@ -220,3 +234,7 @@ class EditDataSample(BaseDataElement):
             value (LabelData): gt label.
         """
         self.set_field(value, '_gt_label', dtype=LabelData)
+
+    @gt_label.deleter
+    def gt_label(self):
+        del self._gt_label

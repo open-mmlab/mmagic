@@ -199,7 +199,7 @@ def get_inception_feat_cache_name_and_args(dataloader: DataLoader,
     inception_style = metric.inception_style
     inception_args = getattr(metric, 'inception_args', None)
 
-    real_key = 'img' if metric.real_key is None else metric.real_key
+    real_key = 'gt_img' if metric.real_key is None else metric.real_key
     args = dict(
         data_root=data_root,
         data_prefix=data_prefix,
@@ -352,8 +352,6 @@ def prepare_inception_feat(dataloader: DataLoader,
         'Metric must have a inception network to extract inception features.')
 
     real_feat = []
-    mean = getattr(data_preprocessor, 'mean', None)
-    std = getattr(data_preprocessor, 'std', None)
 
     print_log(
         f'Inception pkl \'{inception_pkl}\' is not found, extract '
@@ -400,23 +398,11 @@ def prepare_inception_feat(dataloader: DataLoader,
                 visible=True)
 
     for data in inception_dataloader:
-        # inputs, _ = data_preprocessor(data)
-        data = data_preprocessor(data)
+        # set training = False to avoid norm + convert to BGR
+        data_samples = data_preprocessor(data, False)['data_samples']
 
-        img = data['inputs']
-        if isinstance(img, dict):
-            real_key = 'img' if metric.real_key is None else metric.real_key
-            img = img[real_key]
-
-        # make sure the input image is in [-1, 1]
-        if mean is None and std is None:
-            # rescale to [-1, 1]
-            img = img / 127.5 - 1
-        else:
-            assert mean is not None and std is not None, (
-                '\'mean\' and \'std\' must be None or not None at the '
-                f'same time. But receive \'{mean}\' and \'{std}\' '
-                'respectively.')
+        real_key = 'gt_img' if metric.real_key is None else metric.real_key
+        img = torch.stack([getattr(data, real_key) for data in data_samples])
 
         real_feat_ = metric.forward_inception(img).cpu()
         real_feat.append(real_feat_)
@@ -528,8 +514,6 @@ def prepare_vgg_feat(dataloader: DataLoader,
         'vgg16'), ('Metric must have a vgg16 network to extract vgg features.')
 
     real_feat = []
-    mean = getattr(data_preprocessor, 'mean', None)
-    std = getattr(data_preprocessor, 'std', None)
 
     print_log(f'Vgg pkl \'{vgg_pkl}\' is not found, extract '
               'manually.', 'current')
@@ -552,26 +536,15 @@ def prepare_vgg_feat(dataloader: DataLoader,
             visible=True)
 
     for data in dataloader:
-        data = data_preprocessor(data)
-        img = data['inputs']
+        # set training = False to avoid norm + convert to BGR
+        data_samples = data_preprocessor(data, False)['data_samples']
 
-        if isinstance(img, dict):
-            real_key = 'img' if metric.real_key is None else metric.real_key
-            img = img[real_key]
-
-        # make sure the input image is in [-1, 1]
-        if mean is None and std is None:
-            # rescale to [-1, 1]
-            img = img / 127.5 - 1
-        else:
-            assert mean is not None and std is not None, (
-                '\'mean\' and \'std\' must be None or not None at the '
-                f'same time. But receive \'{mean}\' and \'{std}\' '
-                'respectively.')
+        real_key = 'gt_img' if metric.real_key is None else metric.real_key
+        img = torch.stack([getattr(data, real_key) for data in data_samples])
 
         real_feat_ = metric.extract_features(img)
         real_feat.append(real_feat_)
-        # real_feat += torch.tensor_split(real_feat_, real_feat_.shape[0])
+
         if is_main_process():
             pbar.update(task, advance=len(real_feat_) * get_world_size())
 

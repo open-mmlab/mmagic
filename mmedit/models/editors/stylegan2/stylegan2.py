@@ -180,7 +180,7 @@ class StyleGAN2(BaseGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = inputs['img']
+        real_imgs = torch.stack([data.gt_img for data in data_samples])
 
         num_batches = real_imgs.shape[0]
 
@@ -213,7 +213,7 @@ class StyleGAN2(BaseGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        num_batches = inputs['img'].shape[0]
+        num_batches = len(data_samples)
 
         noise = self.noise_fn(num_batches=num_batches)
         fake_imgs = self.generator(noise, return_noise=False)
@@ -305,7 +305,7 @@ class StyleGAN2(BaseGAN):
 
             log_vars.update(log_vars_gen)
 
-        batch_size = data['inputs']['img'].shape[0]
+        batch_size = len(data['data_samples'])
         # update ada p
         if hasattr(self.discriminator,
                    'with_ada') and self.discriminator.with_ada:

@@ -9,7 +9,7 @@ from mmengine.utils import ProgressBar
 from torch import Tensor
 
 from mmedit.registry import MODELS, MODULES
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import ForwardInputs, SampleList
 from ...base_models import BaseConditionalGAN
 from ...utils import get_valid_num_batches
@@ -146,11 +146,12 @@ class EG3D(BaseConditionalGAN):
             assert isinstance(v, torch.Tensor), (
                 f'Output must be tensor. But \'{k}\' is type of '
                 f'\'{type(v)}\'.')
-            if v.ndim == 4 and v.shape[1] == 3:
-                setattr(data_sample, k, PixelData(data=v[index]))
-            else:
-                # NOTE: hard code here, we assume all tensor are [bz, ...]
-                setattr(data_sample, k, v[index])
+            # if v.ndim == 4 and v.shape[1] == 3:
+            #     setattr(data_sample, k, PixelData(data=v[index]))
+            # else:
+            #     # NOTE: hard code here, we assume all tensor are [bz, ...]
+            #     setattr(data_sample, k, v[index])
+            setattr(data_sample, k, v[index])
 
         return data_sample
 
@@ -179,14 +180,14 @@ class EG3D(BaseConditionalGAN):
             sample_kwargs = {}
         else:
             noise = inputs.get('noise', None)
-            num_batches = get_valid_num_batches(inputs)
+            num_batches = get_valid_num_batches(inputs, data_samples)
             noise = self.noise_fn(noise, num_batches=num_batches)
             sample_kwargs = inputs.get('sample_kwargs', dict())
         num_batches = noise.shape[0]
 
         labels = self.data_sample_to_label(data_samples)
         if labels is None:
-            num_batches = get_valid_num_batches(inputs)
+            num_batches = get_valid_num_batches(inputs, data_samples)
             labels = self.label_fn(num_batches=num_batches)
 
         sample_model = self._get_valid_model(inputs)
