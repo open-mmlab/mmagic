@@ -49,11 +49,11 @@ class TestBaseDataPreprocessor(TestCase):
         self.assertEqual(
             data_preprocessor._parse_channel_index(torch.rand(2, 10, 3, 5, 5)),
             2)
+        self.assertEqual(
+            data_preprocessor._parse_channel_index(torch.rand(5, 5)), 1)
         with self.assertRaises(AssertionError):
             data_preprocessor._parse_channel_index(
                 torch.rand(1, 2, 10, 3, 5, 5, 5))
-        with self.assertRaises(AssertionError):
-            data_preprocessor._parse_channel_index(torch.rand(5, 5))
 
     def test_parse_channel_order(self):
         data_preprocessor = EditDataPreprocessor()
@@ -811,7 +811,8 @@ class TestBaseDataPreprocessor(TestCase):
         destruct_batch = data_preprocessor.destruct(data['inputs'],
                                                     data['data_samples'])
         self.assertEqual(destruct_batch.shape, (2, 3, 5, 5))
-        assert_allclose(destruct_batch, torch.stack([input1, input2], dim=0))
+        assert_allclose(destruct_batch,
+                        torch.stack([input1, input2], dim=0).float())
 
         # 3. test no un-norm
         data_preprocessor = EditDataPreprocessor(std=None, mean=None)
@@ -820,4 +821,4 @@ class TestBaseDataPreprocessor(TestCase):
         inputs = torch.stack([input1, input2], dim=0)
         destruct_batch = data_preprocessor.destruct(inputs)
         self.assertEqual(destruct_batch.shape, (2, 1, 5, 5))
-        assert_allclose(destruct_batch, inputs)
+        assert_allclose(destruct_batch, inputs.float())

@@ -219,7 +219,6 @@ class SinGAN(BaseGAN):
             num_batches=1,
             curr_scale=curr_scale,
             **gen_kwargs)
-        outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
         if sample_model == 'ema/orig':
             generator = self.generator
@@ -231,8 +230,6 @@ class SinGAN(BaseGAN):
                 num_batches=1,
                 curr_scale=curr_scale,
                 **gen_kwargs)
-            outputs_orig = self.data_preprocessor.destruct(
-                outputs_orig, data_samples)
             outputs = dict(ema=outputs, orig=outputs_orig)
 
         batch_sample_list = []
@@ -240,18 +237,25 @@ class SinGAN(BaseGAN):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
+                _data_sample = data_samples[idx]  # for destruct
+            else:
+                _data_sample = None  # for destruct
             if sample_model == 'ema/orig':
                 for model_ in ['ema', 'orig']:
                     model_sample_ = EditDataSample()
                     output_ = outputs[model_]
                     if isinstance(output_, dict):
-                        fake_img = output_['fake_img'][idx]
+                        fake_img = self.data_preprocessor.destruct(
+                            output_['fake_img'][idx], _data_sample)
                         prev_res_list = [
-                            r[idx] for r in outputs[model_]['prev_res_list']
+                            self.data_preprocessor.destruct(
+                                r[idx], _data_sample)
+                            for r in outputs[model_]['prev_res_list']
                         ]
                         model_sample_.prev_res_list = prev_res_list
                     else:
-                        fake_img = output_[idx]
+                        fake_img = self.data_preprocessor.destruct(
+                            output_[idx], _data_sample)
                     model_sample_.fake_img = fake_img
                     model_sample_.sample_model = sample_model
                     gen_sample.set_field(model_sample_, model_)

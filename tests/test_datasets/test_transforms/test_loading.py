@@ -94,7 +94,7 @@ def test_load_image_from_file():
     assert results['gt'].shape == (h, w, 3)
     assert results['gt_path'] == path_baboon
     np.testing.assert_almost_equal(results['gt'], img_baboon)
-    assert isinstance(image_loader.file_client.client, LocalBackend)
+    assert isinstance(image_loader.file_backend, LocalBackend)
     assert results['gt_channel_order'] == 'bgr'
     assert results['gt_color_type'] == 'color'
 

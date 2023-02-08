@@ -254,7 +254,7 @@ def inpainting_inference(model, masked_img, mask):
     data = dict(gt_path=masked_img, mask_path=mask)
     _data = test_pipeline(data)
     data = dict()
-    data['inputs'] = dict(img=(_data['inputs'] / 255.0))
+    data['inputs'] = _data['inputs'] / 255.0
     data = collate([data])
     data['data_samples'] = [_data['data_samples']]
     if 'cuda' in str(device):
@@ -268,7 +268,7 @@ def inpainting_inference(model, masked_img, mask):
         result, x = model(mode='tensor', **data)
 
     masks = _data['data_samples'].mask.data * 255
-    masked_imgs = data['inputs']['img'][0]
+    masked_imgs = data['inputs'][0]
     result = result[0] * masks + masked_imgs * (1. - masks)
     return result
 
