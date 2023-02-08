@@ -10,7 +10,7 @@ def test_iconvsr():
 
     iconvsr = IconVSRNet(
         mid_channels=64,
-        num_blocks=30,
+        num_blocks=1,
         keyframe_stride=5,
         padding=2,
         spynet_pretrained=None,
@@ -19,17 +19,18 @@ def test_iconvsr():
     input_tensor = torch.rand(1, 5, 3, 64, 64)
     output = iconvsr(input_tensor)
     assert output.shape == (1, 5, 3, 256, 256)
+    assert not iconvsr._raised_warning
 
-    with pytest.raises(AssertionError):
-        # The height and width of inputs should be at least 64
-        input_tensor = torch.rand(1, 5, 3, 61, 61)
-        iconvsr(input_tensor)
+    input_tensor = torch.rand(1, 5, 3, 16, 16)
+    output = iconvsr(input_tensor)
+    assert output.shape == (1, 5, 3, 64, 64)
+    assert iconvsr._raised_warning
 
     # spynet_pretrained should be str or None
     with pytest.raises(TypeError):
         iconvsr = IconVSRNet(
             mid_channels=64,
-            num_blocks=30,
+            num_blocks=1,
             keyframe_stride=5,
             padding=2,
             spynet_pretrained=123,
@@ -39,7 +40,7 @@ def test_iconvsr():
     with pytest.raises(TypeError):
         iconvsr = IconVSRNet(
             mid_channels=64,
-            num_blocks=30,
+            num_blocks=1,
             keyframe_stride=5,
             padding=2,
             spynet_pretrained=None,
@@ -48,26 +49,23 @@ def test_iconvsr():
     if torch.cuda.is_available():
         iconvsr = IconVSRNet(
             mid_channels=64,
-            num_blocks=30,
+            num_blocks=1,
             keyframe_stride=5,
             padding=2,
             spynet_pretrained=None,
             edvr_pretrained=None).cuda()
 
-        input_tensor = torch.rand(1, 5, 3, 64, 64).cuda()
+        # input_tensor = torch.rand(1, 5, 3, 64, 64).cuda()
+        input_tensor = torch.rand(1, 5, 3, 16, 16).cuda()
         output = iconvsr(input_tensor)
-        assert output.shape == (1, 5, 3, 256, 256)
-
-        with pytest.raises(AssertionError):
-            # The height and width of inputs should be at least 64
-            input_tensor = torch.rand(1, 5, 3, 61, 61)
-            iconvsr(input_tensor)
+        # assert output.shape == (1, 5, 3, 256, 256)
+        assert output.shape == (1, 5, 3, 64, 64)
 
         # spynet_pretrained should be str or None
         with pytest.raises(TypeError):
             iconvsr = IconVSRNet(
                 mid_channels=64,
-                num_blocks=30,
+                num_blocks=1,
                 keyframe_stride=5,
                 padding=2,
                 spynet_pretrained=123,
@@ -77,7 +75,7 @@ def test_iconvsr():
         with pytest.raises(TypeError):
             iconvsr = IconVSRNet(
                 mid_channels=64,
-                num_blocks=30,
+                num_blocks=1,
                 keyframe_stride=5,
                 padding=2,
                 spynet_pretrained=None,

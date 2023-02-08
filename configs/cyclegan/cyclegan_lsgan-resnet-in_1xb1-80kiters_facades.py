@@ -11,7 +11,8 @@ model = dict(
     loss_config=dict(cycle_loss_weight=10., id_loss_weight=0.5),
     default_domain=domain_a,
     reachable_domains=[domain_a, domain_b],
-    related_domains=[domain_a, domain_b])
+    related_domains=[domain_a, domain_b],
+    data_preprocessor=dict(data_keys=[f'img_{domain_a}', f'img_{domain_b}']))
 
 param_scheduler = dict(
     type='LinearLrInterval',
@@ -38,7 +39,9 @@ key_mapping = dict(
         f'img_{domain_b}': f'img_{domain_b}'
     })
 pack_input = dict(
-    type='PackEditInputs', keys=[f'img_{domain_a}', f'img_{domain_b}'])
+    type='PackEditInputs',
+    keys=[f'img_{domain_a}', f'img_{domain_b}'],
+    data_keys=[f'img_{domain_a}', f'img_{domain_b}'])
 
 train_pipeline += [key_mapping, pack_input]
 val_pipeline += [key_mapping, pack_input]

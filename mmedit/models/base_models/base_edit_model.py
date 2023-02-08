@@ -5,7 +5,7 @@ import torch
 from mmengine.model import BaseModel
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 @MODELS.register_module()
@@ -103,25 +103,50 @@ class BaseEditModel(BaseModel):
                 - If ``mode == tensor``, return a tensor or ``tuple`` of tensor
                   or ``dict`` or tensor for custom use.
         """
-
+        if isinstance(inputs, dict):
+            inputs = inputs['img']
         if mode == 'tensor':
             return self.forward_tensor(inputs, data_samples, **kwargs)
 
         elif mode == 'predict':
             predictions = self.forward_inference(inputs, data_samples,
                                                  **kwargs)
-            predictions = self.convert_to_datasample(data_samples, predictions)
+            predictions = self.convert_to_datasample(predictions, data_samples,
+                                                     inputs)
             return predictions
 
         elif mode == 'loss':
             return self.forward_train(inputs, data_samples, **kwargs)
 
-    def convert_to_datasample(self, inputs: List[EditDataSample],
-                              data_samples: List[EditDataSample]
+    def convert_to_datasample(self, predictions: List[EditDataSample],
+                              data_samples: List[EditDataSample],
+                              inputs: Optional[torch.Tensor]
                               ) -> List[EditDataSample]:
-        for data_sample, output in zip(inputs, data_samples):
-            data_sample.output = output
-        return inputs
+        """Add predictions and destructed inputs (if passed) to data samples.
+
+        Args:
+            predictions (List[EditDataSample]): The predictions of the model.
+            data_samples (List[EditDataSample]): The data samples loaded from
+                dataloader.
+            inputs (Optional[torch.Tensor]): The input of model. Defaults to
+                None.
+
+        Returns:
+            List[EditDataSample]: Modified data samples.
+        """
+        for data_sample, pred in zip(data_samples, predictions):
+            data_sample.output = pred
+
+        if inputs is not None:
+            assert inputs.shape[0] == len(predictions), (
+                'The length of inputs and outputs must be same.')
+            for idx, data_sample in enumerate(data_samples):
+                # destruct input
+                destructed_input = self.data_preprocessor.destruct(
+                    inputs[idx], data_sample, 'img')
+                data_sample.set_data({'input': destructed_input})
+
+        return data_samples
 
     def forward_tensor(self,
                        inputs: torch.Tensor,
@@ -161,13 +186,10 @@ class BaseEditModel(BaseModel):
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
-        feats = self.data_preprocessor.destructor(feats)
+        feats = self.data_preprocessor.destruct(feats, data_samples)
         predictions = []
         for idx in range(feats.shape[0]):
-            predictions.append(
-                EditDataSample(
-                    pred_img=PixelData(data=feats[idx].to('cpu')),
-                    metainfo=data_samples[idx].metainfo))
+            predictions.append(EditDataSample(pred_img=feats[idx].to('cpu')))
 
         return predictions
 
@@ -188,7 +210,7 @@ class BaseEditModel(BaseModel):
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
-        gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
+        gt_imgs = [data_sample.gt_img for data_sample in data_samples]
         batch_gt_data = torch.stack(gt_imgs)
 
         loss = self.pixel_loss(feats, batch_gt_data)

@@ -5,7 +5,7 @@ from unittest import TestCase
 
 import torch
 
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 from mmedit.visualization import GenVisualizer
 
@@ -22,14 +22,12 @@ class TestGenVisualer(TestCase):
         # construct gen sample to vis
         gen_sample = [
             EditDataSample(
-                fake_img=PixelData(data=torch.randn(3, 16, 16)),
-                gt_img=PixelData(data=torch.randn(1, 16, 16)),
-                ema=EditDataSample(
-                    fake_img=PixelData(data=torch.randn(10, 3, 16, 16))),
-                gif=PixelData(data=torch.randn(10, 3, 16, 16)),
+                fake_img=torch.randn(3, 16, 16),
+                gt_img=torch.randn(1, 16, 16),
+                ema=EditDataSample(fake_img=torch.randn(10, 3, 16, 16)),
+                gif=torch.randn(10, 3, 16, 16),
                 something=EditDataSample(
-                    new=EditDataSample(
-                        img=PixelData(data=torch.randn(3, 16, 16)))))
+                    new=EditDataSample(img=torch.randn(3, 16, 16))))
             for _ in range(3)
         ]
         visualizer.add_datasample(

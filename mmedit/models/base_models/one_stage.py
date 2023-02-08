@@ -7,7 +7,7 @@ from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import SampleList
 from ..utils import set_requires_grad
 
@@ -143,7 +143,8 @@ class OneStageInpaintor(BaseModel):
         elif mode == 'predict':
             # Pre-process runs in BaseModel.val_step / test_step
             predictions = self.forward_test(inputs, data_samples)
-            predictions = self.convert_to_datasample(data_samples, predictions)
+            predictions = self.convert_to_datasample(predictions, data_samples,
+                                                     inputs)
             return predictions
         elif mode == 'loss':
             raise NotImplementedError('This mode should not be used in '
@@ -398,19 +399,41 @@ class OneStageInpaintor(BaseModel):
         fake_reses, fake_imgs = self.forward_tensor(inputs, data_samples)
 
         predictions = []
+        fake_reses = self.data_preprocessor.destruct(fake_reses, data_samples)
+        fake_imgs = self.data_preprocessor.destruct(fake_imgs, data_samples)
         for (fr, fi) in zip(fake_reses, fake_imgs):
-            fi = (fi * 127.5 + 127.5)
-            fr = (fr * 127.5 + 127.5)
-            pred = EditDataSample(
-                fake_res=fr, fake_img=fi, pred_img=PixelData(data=fi))
+            pred = EditDataSample(fake_res=fr, fake_img=fi, pred_img=fi)
             predictions.append(pred)
         return predictions
 
-    def convert_to_datasample(self, inputs: SampleList,
-                              data_samples: SampleList) -> SampleList:
-        for data_sample, output in zip(inputs, data_samples):
-            data_sample.output = output
-        return inputs
+    def convert_to_datasample(self, predictions: List[EditDataSample],
+                              data_samples: List[EditDataSample],
+                              inputs: Optional[torch.Tensor]
+                              ) -> List[EditDataSample]:
+        """Add predictions and destructed inputs (if passed) to data samples.
+
+        Args:
+            predictions (List[EditDataSample]): The predictions of the model.
+            data_samples (List[EditDataSample]): The data samples loaded from
+                dataloader.
+            inputs (Optional[torch.Tensor]): The input of model. Defaults to
+                None.
+
+        Returns:
+            List[EditDataSample]: Modified data samples.
+        """
+        for data_sample, pred in zip(data_samples, predictions):
+            data_sample.output = pred
+
+        if inputs is not None:
+            assert inputs.shape[0] == len(predictions), (
+                'The length of inputs and outputs must be same.')
+            for idx, data_sample in enumerate(data_samples):
+                destructed_input = self.data_preprocessor.destruct(
+                    inputs[idx], data_sample)
+                data_sample.set_data({'input': destructed_input})
+
+        return data_samples
 
     def forward_dummy(self, x: torch.Tensor) -> torch.Tensor:
         """Forward dummy function for getting flops.

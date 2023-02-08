@@ -1,24 +1,27 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 
+from logging import WARNING
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import torch
-# import torch.nn.functional as F
-from mmengine.model import BaseDataPreprocessor
+from mmengine import print_log
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
+from mmedit.utils.typing import SampleList
+from .edit_data_preprocessor import EditDataPreprocessor
 
 DataSamples = Optional[Union[list, torch.Tensor]]
 ForwardResults = Union[Dict[str, torch.Tensor], List[EditDataSample],
                        Tuple[torch.Tensor], torch.Tensor]
+MEAN_STD_TYPE = Union[Sequence[Union[float, int]], float, int]
 
 
 @MODELS.register_module()
-class MattorPreprocessor(BaseDataPreprocessor):
+class MattorPreprocessor(EditDataPreprocessor):
     """DataPreprocessor for matting models.
 
-    See base class ``BaseDataPreprocessor`` for detailed information.
+    See base class ``EditDataPreprocessor`` for detailed information.
 
     Workflow as follow :
 
@@ -28,55 +31,36 @@ class MattorPreprocessor(BaseDataPreprocessor):
     - Stack inputs to batch_inputs.
 
     Args:
-        mean (Sequence[float or int]): The pixel mean of R, G, B channels.
-            Defaults to [123.675, 116.28, 103.53].
-        std (Sequence[float or int]): The pixel standard deviation of R, G, B
-            channels. [58.395, 57.12, 57.375].
-        bgr_to_rgb (bool): whether to convert image from BGR to RGB.
-            Defaults to True.
-        proc_inputs (str): Methods to process inputs. Default: 'normalize'.
-            Available options are ``normalize``.
+        mean (Sequence[float or int], float or int, optional): The pixel mean
+            of image channels. Noted that normalization operation is performed
+            *after channel order conversion*. If it is not specified, images
+            will not be normalized. Defaults None.
+        std (Sequence[float or int], float or int, optional): The pixel
+            standard deviation of image channels. Noted that normalization
+            operation is performed *after channel order conversion*. If it is
+            not specified, images will not be normalized. Defaults None.
         proc_trimap (str): Methods to process gt tensors.
             Default: 'rescale_to_zero_one'.
             Available options are ``rescale_to_zero_one`` and ``as-is``.
-        proc_gt (str): Methods to process gt tensors.
-            Default: 'rescale_to_zero_one'.
-            Available options are ``rescale_to_zero_one`` and ``ignore``.
     """
 
     def __init__(self,
-                 mean: float = [123.675, 116.28, 103.53],
-                 std: float = [58.395, 57.12, 57.375],
-                 bgr_to_rgb: bool = True,
-                 proc_inputs: str = 'normalize',
-                 proc_trimap: str = 'rescale_to_zero_one',
-                 proc_gt: str = 'rescale_to_zero_one'):
-        super().__init__()
-        self.register_buffer('mean', torch.tensor(mean).view(-1, 1, 1), False)
-        self.register_buffer('std', torch.tensor(std).view(-1, 1, 1), False)
-        self.bgr_to_rgb = bgr_to_rgb
-        self.proc_inputs = proc_inputs
+                 mean: MEAN_STD_TYPE = [123.675, 116.28, 103.53],
+                 std: MEAN_STD_TYPE = [58.395, 57.12, 57.375],
+                 output_channel_order: str = 'RGB',
+                 proc_trimap: str = 'rescale_to_zero_one'):
+        # specific data_keys for matting task
+        data_keys = ['gt_fg', 'gt_bg', 'gt_merged', 'gt_alpha']
+        super().__init__(
+            mean,
+            std,
+            output_channel_order=output_channel_order,
+            data_keys=data_keys)
+
         self.proc_trimap = proc_trimap
-        self.proc_gt = proc_gt
+        # self.proc_gt = proc_gt
 
-    def _proc_inputs(self, inputs: List[torch.Tensor]):
-        if self.proc_inputs == 'normalize':
-            # bgr to rgb
-            if self.bgr_to_rgb and inputs[0].size(0) == 3:
-                inputs = [_input[[2, 1, 0], ...] for _input in inputs]
-            # Normalization.
-            inputs = [(_input - self.mean) / self.std for _input in inputs]
-            # Stack Tensor.
-            batch_inputs = torch.stack(inputs)
-        else:
-            raise ValueError(
-                f'proc_inputs = {self.proc_inputs} is not supported.')
-
-        assert batch_inputs.ndim == 4
-        return batch_inputs
-
-    def _proc_trimap(self, trimaps: List[torch.Tensor]):
-        batch_trimaps = torch.stack(trimaps)
+    def _proc_batch_trimap(self, batch_trimaps: torch.Tensor):
 
         if self.proc_trimap == 'rescale_to_zero_one':
             batch_trimaps = batch_trimaps / 255.0  # uint8->float32
@@ -88,35 +72,57 @@ class MattorPreprocessor(BaseDataPreprocessor):
 
         return batch_trimaps
 
-    def _proc_gt(self, data_samples, key):
-        assert key.startswith('gt')
-        # Rescale gt_fg / gt_bg / gt_merged / gt_alpha to 0 to 1
-        if self.proc_gt == 'rescale_to_zero_one':
-            for ds in data_samples:
-                try:
-                    value = getattr(ds, key)
-                except AttributeError:
-                    continue
+    def _preprocess_data_sample(self, data_samples: SampleList,
+                                training: bool) -> list:
+        """Preprocess data samples. When `training` is True, fields belong to
+        :attr:`self.data_keys` will be converted to
+        :attr:`self.output_channel_order` and *divided by 255*. When `training`
+        is False, fields belongs to :attr:`self.data_keys` will be attempted
+        to convert to 'BGR' without normalization. The corresponding metainfo
+        related to normalization, channel order conversion will be updated to
+        data sample as well.
 
-                ispixeldata = isinstance(value, PixelData)
-                if ispixeldata:
-                    value = value.data
+        Args:
+            data_samples (List[EditDataSample]): A list of data samples to
+                preprocess.
+            training (bool): Whether in training mode.
 
-                # !! DO NOT process trimap here, as trimap may have dim == 3
-                if self.bgr_to_rgb and value[0].size(0) == 3:
-                    value = value[[2, 1, 0], ...]
-
-                value = value / 255.0  # uint8 -> float32 No inplace here
-
-                assert value.ndim == 3
-
-                if ispixeldata:
-                    value = PixelData(data=value)
-                setattr(ds, key, value)
-        elif self.proc_gt == 'ignore':
-            pass
+        Returns:
+            list: The list of processed data samples.
+        """
+        if not training:
+            # set default order to BGR in test stage
+            target_order = 'BGR'
         else:
-            raise ValueError(f'proc_gt = {self.proc_gt} is not supported.')
+            # conversion as default (None)
+            target_order = self.output_channel_order
+
+        for data_sample in data_samples:
+            for key in self.data_keys:
+                if not hasattr(data_sample, key):
+                    # do not raise error here
+                    if key != 'gt_fg' and not training:
+                        # gt_fg is not required in test stage, therefore do
+                        # not print log
+                        print_log(f'Cannot find key \'{key}\' in data sample.',
+                                  'current', WARNING)
+                    break
+
+                data = data_sample.get(key)
+                data_channel_order = self._parse_channel_order(
+                    key, data, data_sample)
+                data, channel_order = self._do_conversion(
+                    data, data_channel_order, target_order)
+                if training:
+                    data = data / 255.  # NOTE: divided by 255
+                data_sample.set_data({f'{key}': data})
+                data_process_meta = {
+                    f'{key}_enable_norm': self._enable_normalize,
+                    f'{key}_output_channel_order': channel_order,
+                    f'{key}_mean': self.mean,
+                    f'{key}_std': self.std
+                }
+                data_sample.set_metainfo(data_process_meta)
 
         return data_samples
 
@@ -136,23 +142,14 @@ class MattorPreprocessor(BaseDataPreprocessor):
         """
         if not training:
             # Image may of different size when testing
-            assert len(
-                data['data_samples']) == 1, ('only batch_size=1 '
-                                             'is supported for testing.')
+            assert len(data['data_samples']) == 1, (
+                'only batch_size=1 is supported for testing.')
         data = super().forward(data, training=training)
 
-        images, trimaps, batch_data_samples = self.collate_data(data)
-
-        batch_images = self._proc_inputs(images)
-        batch_trimaps = self._proc_trimap(trimaps)
-
-        if training:
-            self._proc_gt(batch_data_samples, 'gt_fg')
-            self._proc_gt(batch_data_samples, 'gt_bg')
-            self._proc_gt(batch_data_samples, 'gt_merged')
-            # For training, gt_alpha ranges from 0-1, is used to compute loss
-            # For testing, ori_alpha is used
-            self._proc_gt(batch_data_samples, 'gt_alpha')
+        batch_images = data['inputs']
+        batch_trimaps = torch.stack(
+            [data.trimap for data in data['data_samples']])
+        batch_trimaps = self._proc_batch_trimap(batch_trimaps)
 
         # Stack image and trimap along channel dimension
         # All existing models do concat at the start of forwarding
@@ -161,32 +158,12 @@ class MattorPreprocessor(BaseDataPreprocessor):
         # print(f"batch_trimap.dtype = {batch_trimap.dtype}")
 
         assert batch_images.ndim == batch_trimaps.ndim == 4
-        assert batch_images.shape[-2:] == batch_trimaps.shape[-2:], f"""
-            Expect merged.shape[-2:] == trimap.shape[-2:],
-            but got {batch_images.shape[-2:]} vs {batch_trimaps.shape[-2:]}
-            """
+        assert batch_images.shape[-2:] == batch_trimaps.shape[-2:], (
+            'Expect merged.shape[-2:] == trimap.shape[-2:], '
+            f'but got {batch_images.shape[-2:]} vs {batch_trimaps.shape[-2:]}')
 
         # N, (4/6), H, W
         batch_inputs = torch.cat((batch_images, batch_trimaps), dim=1)
 
         data['inputs'] = batch_inputs
-        data['data_samples'] = batch_data_samples
-        # return batch_inputs, batch_data_samples
         return data
-
-    def collate_data(self, data: Sequence[dict]) -> Tuple[list, list, list]:
-        """Collating and moving data to the target device.
-
-        See base class ``BaseDataPreprocessor`` for detailed information.
-        """
-        inputs = [data_ for data_ in data['inputs']]
-        trimaps = [data_.trimap.data for data_ in data['data_samples']]
-        batch_data_samples = [data_ for data_ in data['data_samples']]
-
-        # Move data from CPU to corresponding device.
-        inputs = [_input.to(self.device) for _input in inputs]
-        trimaps = [_trimap.to(self.device) for _trimap in trimaps]
-        batch_data_samples = [
-            data_sample.to(self.device) for data_sample in batch_data_samples
-        ]
-        return inputs, trimaps, batch_data_samples

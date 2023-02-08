@@ -6,8 +6,8 @@ import numpy as np
 import torch
 
 from mmedit.evaluation import SlicedWassersteinDistance
-from mmedit.models import GenDataPreprocessor
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.models import EditDataPreprocessor
+from mmedit.structures import EditDataSample
 
 
 class TestSWD(TestCase):
@@ -18,7 +18,7 @@ class TestSWD(TestCase):
 
     def test_prosess(self):
         model = MagicMock()
-        model.data_preprocessor = GenDataPreprocessor()
+        model.data_preprocessor = EditDataPreprocessor()
         swd = SlicedWassersteinDistance(fake_nums=100, image_shape=(3, 32, 32))
         swd.prepare(model, None)
 
@@ -28,9 +28,9 @@ class TestSWD(TestCase):
         ]
         fake_samples = [
             EditDataSample(
-                fake_img=PixelData(data=torch.rand(3, 32, 32) * 2 - 1),
-                gt_img=PixelData(data=torch.rand(3, 32, 32) * 2 -
-                                 1)).to_dict() for _ in range(100)
+                fake_img=(torch.rand(3, 32, 32) * 255),
+                gt_img=(torch.rand(3, 32, 32) * 255)).to_dict()
+            for _ in range(100)
         ]
 
         swd.process(real_samples, fake_samples)
@@ -62,9 +62,9 @@ class TestSWD(TestCase):
         ]
         fake_samples = [
             EditDataSample(
-                fake_img=PixelData(data=torch.rand(1, 32, 32) * 2 - 1),
-                gt_img=PixelData(data=torch.rand(1, 32, 32) * 2 -
-                                 1)).to_dict() for _ in range(100)
+                fake_img=torch.rand(1, 32, 32) * 255,
+                gt_img=torch.rand(1, 32, 32) * 255).to_dict()
+            for _ in range(100)
         ]
         swd.process(real_samples, fake_samples)
 
@@ -77,9 +77,9 @@ class TestSWD(TestCase):
             image_shape=(3, 32, 32))
         fake_samples = [
             EditDataSample(
-                fake_img=PixelData(data=torch.rand(3, 32, 32) * 2 - 1),
-                gt_img=PixelData(data=torch.rand(3, 32, 32) * 2 -
-                                 1)).to_dict() for _ in range(10)
+                fake_img=torch.rand(3, 32, 32) * 255,
+                gt_img=torch.rand(3, 32, 32) * 255).to_dict()
+            for _ in range(10)
         ]
         for _ in range(3):
             swd.process(None, fake_samples)

@@ -14,8 +14,7 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0.485 * 255, 0.456 * 255, 0.406 * 255],
         std=[0.229 * 255, 0.224 * 255, 0.225 * 255],
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1)))
+    ))
 
 val_pipeline = [
     dict(type='GenerateFrameIndiceswithPadding', padding='reflection_circle'),

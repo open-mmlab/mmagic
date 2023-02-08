@@ -6,7 +6,7 @@ from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
 from mmedit.models import LIIF, EditDataPreprocessor
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 def test_liif():
@@ -33,8 +33,9 @@ def test_liif():
         data_preprocessor=EditDataPreprocessor(
             mean=[0.4488 * 255, 0.4371 * 255, 0.4040 * 255],
             std=[255., 255., 255.],
-            input_view=(-1, 1, 1),
-            output_view=(1, -1)))
+            # input_view=(-1, 1, 1),
+            # output_view=(1, -1)
+        ))
 
     # test attributes
     assert model.__class__.__name__ == 'LIIF'
@@ -43,7 +44,7 @@ def test_liif():
     inputs = torch.rand(1, 3, 8, 8)
     data_sample = EditDataSample(
         metainfo=dict(coord=torch.rand(256, 2), cell=torch.rand(256, 2)))
-    data_sample.gt_img = PixelData(data=torch.rand(256, 3))
+    data_sample.gt_img = torch.rand(256, 3)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     optimizer = Adam(model.generator.parameters(), lr=0.001)
@@ -63,7 +64,7 @@ def test_liif():
     assert len(predictions) == 1
     assert isinstance(predictions[0], EditDataSample)
     assert isinstance(predictions[0].output.pred_img.data, torch.Tensor)
-    assert predictions[0].output.pred_img.data.shape == (3, 16, 16)
+    assert predictions[0].output.pred_img.shape == (3, 16, 16)
 
     # feat
     output = model(torch.rand(1, 3, 8, 8), [data_sample], mode='tensor')

@@ -6,7 +6,7 @@ from mmengine import Config
 from mmengine.optim import OptimWrapper
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 
 
@@ -30,13 +30,12 @@ def test_gl_inpaintor():
     data_batch = {
         'inputs':
         masked_img,
-        'data_samples': [
-            EditDataSample(
-                mask=PixelData(data=mask),
-                mask_bbox=mask_bbox,
-                gt_img=PixelData(data=gt_img),
-            )
-        ]
+        'data_samples':
+        [EditDataSample(
+            mask=mask,
+            mask_bbox=mask_bbox,
+            gt_img=gt_img,
+        )]
     }
 
     optim_g = torch.optim.SGD(gl.generator.parameters(), lr=0.1)

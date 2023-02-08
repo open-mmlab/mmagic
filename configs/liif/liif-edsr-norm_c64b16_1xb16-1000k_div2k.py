@@ -33,5 +33,4 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0.4488 * 255, 0.4371 * 255, 0.4040 * 255],
         std=[255., 255., 255.],
-        input_view=(-1, 1, 1),
-        output_view=(1, -1)))
+    ))

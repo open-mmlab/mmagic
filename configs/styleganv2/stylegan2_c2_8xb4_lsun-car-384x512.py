@@ -44,13 +44,13 @@ data_root = './data/lsun/images/car'
 dataset_type = 'BasicImageDataset'
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
+    dict(type='LoadImageFromFile', key='gt'),
     dict(
         type='NumpyPad',
         keys='img',
         padding=((64, 64), (0, 0), (0, 0)),
     ),
-    dict(type='Flip', keys=['img'], direction='horizontal'),
+    dict(type='Flip', keys=['gt'], direction='horizontal'),
     dict(type='PackEditInputs')
 ]
 

@@ -8,7 +8,7 @@ from mmengine import Config
 from mmengine.optim import OptimWrapper
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 
 
@@ -32,18 +32,16 @@ def test_pconv_inpaintor():
     gt_img = torch.randn(3, 256, 256)
     mask = torch.zeros_like(gt_img)[0:1, ...]
     mask[..., 100:210, 100:210] = 1.
-    masked_img = gt_img.unsqueeze(0) * (1. - mask)
+    masked_img = gt_img * (1. - mask)
     mask_bbox = [100, 100, 110, 110]
     data_batch = {
-        'inputs':
-        masked_img,
-        'data_samples': [
-            EditDataSample(
-                mask=PixelData(data=mask),
-                mask_bbox=mask_bbox,
-                gt_img=PixelData(data=gt_img),
-            )
-        ]
+        'inputs': [masked_img],
+        'data_samples':
+        [EditDataSample(
+            mask=mask,
+            mask_bbox=mask_bbox,
+            gt_img=gt_img,
+        )]
     }
 
     optim_g = torch.optim.Adam(inpaintor.generator.parameters(), lr=0.0001)
@@ -63,4 +61,4 @@ def test_pconv_inpaintor():
     assert 'fake_res' in prediction
     assert 'fake_img' in prediction
     assert 'pred_img' in prediction
-    assert prediction.pred_img.shape == (256, 256)
+    assert prediction.pred_img.shape == (3, 256, 256)

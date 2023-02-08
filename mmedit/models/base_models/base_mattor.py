@@ -8,7 +8,7 @@ from mmengine.config import Config, ConfigDict
 from mmengine.model import BaseModel
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 DataSamples = Optional[Union[list, torch.Tensor]]
 ForwardResults = Union[Dict[str, torch.Tensor], List[EditDataSample],
@@ -200,7 +200,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
             pa.round_()
             pa = pa.to(dtype=torch.uint8)
             # pa = pa.cpu().numpy()
-            pa_sample = EditDataSample(pred_alpha=PixelData(data=pa))
+            pa_sample = EditDataSample(pred_alpha=pa)
             predictions.append(pa_sample)
 
         return predictions

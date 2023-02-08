@@ -31,16 +31,14 @@ def test_process():
     mask = np.ones((32, 32, 3)) * 2
     mask[:16] *= 0
     gt = np.ones((32, 32, 3)) * 2
-    data_sample = dict(gt_img=gt, mask=mask, gt_channel_order='bgr')
+    data_sample = dict(gt_img=gt, mask=mask)
     data_batch = [dict(data_samples=data_sample)]
     predictions = [dict(pred_img=np.ones((32, 32, 3)))]
 
     data_batch.append(
         dict(
             data_samples=dict(
-                gt_img=torch.from_numpy(gt),
-                mask=torch.from_numpy(mask),
-                img_channel_order='bgr')))
+                gt_img=torch.from_numpy(gt), mask=torch.from_numpy(mask))))
 
     predictions.append({
         k: torch.from_numpy(deepcopy(v))

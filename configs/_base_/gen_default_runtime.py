@@ -20,7 +20,7 @@ default_hooks = dict(
         interval=10000,
         by_epoch=False,
         max_keep_ckpts=20,
-        less_keys=['FID-Full-50k/fid', 'swd/avg'],
+        less_keys=['FID-Full-50k/fid', 'FID-50k/fid', 'swd/avg'],
         greater_keys=['IS-50k/is', 'ms-ssim/avg'],
         save_optimizer=True))
 

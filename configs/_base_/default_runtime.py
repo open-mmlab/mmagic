@@ -35,5 +35,5 @@ visualizer = dict(
     vis_backends=vis_backends,
     fn_key='gt_path',
     img_keys=['gt_img', 'input', 'pred_img'],
-    bgr2rgb=False)
+    bgr2rgb=True)
 custom_hooks = [dict(type='BasicVisualizationHook', interval=1)]
