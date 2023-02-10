@@ -22,17 +22,17 @@ Disco Diffusion(DD)是一个 Google Colab 笔记本，它利用一种叫做 CLIP
     <td>
 <div align="center">
 
- <img src="https://user-images.githubusercontent.com/22982797/204526957-ac30547e-5a44-417a-aaa2-6b357b4a139c.png" width="400"/>
+<img src="https://user-images.githubusercontent.com/22982797/204526957-ac30547e-5a44-417a-aaa2-6b357b4a139c.png" width="400"/>
 </div></td>
     <td>
 <div align="center">
 
- <img src="https://user-images.githubusercontent.com/22982797/215749979-1ea973c4-3e76-4204-9fa0-b0adf3e942b6.png" width="400"/>
+<img src="https://user-images.githubusercontent.com/22982797/215749979-1ea973c4-3e76-4204-9fa0-b0adf3e942b6.png" width="400"/>
 </div></td>
     <td>
 <div align="center">
 
- <img src="https://user-images.githubusercontent.com/22982797/215757871-d38e1b78-fee0-4351-be61-5b1e782d1e6e.png" width="400"/>
+<img src="https://user-images.githubusercontent.com/22982797/215757871-d38e1b78-fee0-4351-be61-5b1e782d1e6e.png" width="400"/>
 </div></td>
   </tr>
 </thead>
@@ -42,33 +42,33 @@ Disco Diffusion(DD)是一个 Google Colab 笔记本，它利用一种叫做 CLIP
 
 我们已经转换了几个 `unet` 的权重，并提供相关的配置文件。在[Tutorial](#tutorials)中可以看到更多关于不同 `unet` 的细节。
 
-|                                             模型                                              | 数据集  |                                              下载                                              |
-| :--------------------------------------------------------------------------------------------: | :------: | :------------------------------------------------------------------------------------------------: |
+|                                               模型                                               |  数据集  |                                               下载                                               |
+| :----------------------------------------------------------------------------------------------: | :------: | :----------------------------------------------------------------------------------------------: |
 | [512x512_diffusion_uncond_finetune_008100](./disco-diffusion_adm-u-finetuned_imagenet-512x512.py) | ImageNet | [model](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth) |
-|       [256x256_diffusion_uncond](./disco-diffusion_adm-u-finetuned_imagenet-256x256.py)        | ImageNet |                                            [model](<>)                                             |
-|            [portrait_generator_v001](./disco-diffusion_portrait-generator-v001.py)             | unknown  | [model](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth) |
+|        [256x256_diffusion_uncond](./disco-diffusion_adm-u-finetuned_imagenet-256x256.py)         | ImageNet |                                           [model](<>)                                            |
+|             [portrait_generator_v001](./disco-diffusion_portrait-generator-v001.py)              | unknown  | [model](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth) |
 
 <!-- SKIP THIS TABLE -->
 
-|            模型             |   下载   |  
-| :--------------------------: | :----------: | 
-|  pixelartdiffusion_expanded  | Coming soon! | 
+|             模型             |     下载     |
+| :--------------------------: | :----------: |
+|  pixelartdiffusion_expanded  | Coming soon! |
 | pixel_art_diffusion_hard_256 | Coming soon! |
 | pixel_art_diffusion_soft_256 | Coming soon! |
 |     pixelartdiffusion4k      | Coming soon! |
-|    watercolordiffusion_2     | Coming soon! | 
-|     watercolordiffusion      | Coming soon! | 
-|      PulpSciFiDiffusion      | Coming soon! | 
+|    watercolordiffusion_2     | Coming soon! |
+|     watercolordiffusion      | Coming soon! |
+|      PulpSciFiDiffusion      | Coming soon! |
 
 ## 待办列表
 
 - [x] 图文生成
 - [x] 图像到图像的翻译
 - [x] Imagenet, portrait 扩散模型
-- [] 像素艺术，水彩，科幻小说的扩散模型
-- [] 支持图像提示
-- [] 支持视频生成
-- [] 支持更快的采样器(plms，dpm-solver等)
+- \[\] 像素艺术，水彩，科幻小说的扩散模型
+- \[\] 支持图像提示
+- \[\] 支持视频生成
+- \[\] 支持更快的采样器(plms，dpm-solver等)
 
 我们很欢迎社区用户支持这些项目和任何其他有趣的工作!
 
