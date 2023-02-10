@@ -22,23 +22,21 @@ Created by Somnai, augmented by Gandamu, and building on the work of RiversHaveW
     <td>
 <div align="center">
 
- <img src="https://user-images.githubusercontent.com/22982797/204526957-ac30547e-5a44-417a-aaa2-6b357b4a139c.png" width="400"/>
+<img src="https://user-images.githubusercontent.com/22982797/204526957-ac30547e-5a44-417a-aaa2-6b357b4a139c.png" width="400"/>
 </div></td>
     <td>
 <div align="center">
 
- <img src="https://user-images.githubusercontent.com/22982797/215749979-1ea973c4-3e76-4204-9fa0-b0adf3e942b6.png" width="400"/>
+<img src="https://user-images.githubusercontent.com/22982797/215749979-1ea973c4-3e76-4204-9fa0-b0adf3e942b6.png" width="400"/>
 </div></td>
     <td>
 <div align="center">
 
- <img src="https://user-images.githubusercontent.com/22982797/215757871-d38e1b78-fee0-4351-be61-5b1e782d1e6e.png" width="400"/>
+<img src="https://user-images.githubusercontent.com/22982797/215757871-d38e1b78-fee0-4351-be61-5b1e782d1e6e.png" width="400"/>
 </div></td>
   </tr>
 </thead>
 </table>
-
-
 
 ## Results and models
 
