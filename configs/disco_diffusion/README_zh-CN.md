@@ -2,17 +2,17 @@
 
 > [Disco Diffusion](https://github.com/alembics/disco-diffusion)
 
-> **Task**: Text2Image, Image2Image, diffusion
+> **任务**: 图文生成, 图像到图像的翻译, 扩散模型
 
 <!-- [ALGORITHM] -->
 
-## Abstract
+## 摘要
 
 <!-- [ABSTRACT] -->
 
-Disco Diffusion (DD) is a Google Colab Notebook which leverages an AI Image generating technique called CLIP-Guided Diffusion to allow you to create compelling and beautiful images from text inputs.
+Disco Diffusion(DD)是一个 Google Colab 笔记本，它利用一种叫做 CLIP-Guided Diffusion 的人工智能图像生成技术，让你从文本输入中创造出引人注目的精美图像。
 
-Created by Somnai, augmented by Gandamu, and building on the work of RiversHaveWings, nshepperd, and many others. See more details in [Credits](#credits).
+由 Somnai 创建，由 Gandamu 改进，并建立在 RiversHaveWings、nshepperd 和许多其他人的工作之上。更多细节见[Credits](#credits)。
 
 <!-- [IMAGE] -->
 
@@ -38,19 +38,19 @@ Created by Somnai, augmented by Gandamu, and building on the work of RiversHaveW
 </thead>
 </table>
 
-## Results and models
+## 模型与结果
 
-We have converted several `unet` weights and offer related configs. See more details of different `unet` in [Tutorial](#tutorials).
+我们已经转换了几个 `unet` 的权重，并提供相关的配置文件。在[Tutorial](#tutorials)中可以看到更多关于不同 `unet` 的细节。
 
-|                                             Model                                              | Dataset  |                                              Download                                              |
-| :--------------------------------------------------------------------------------------------: | :------: | :------------------------------------------------------------------------------------------------: |
+|                                               模型                                               |  数据集  |                                               下载                                               |
+| :----------------------------------------------------------------------------------------------: | :------: | :----------------------------------------------------------------------------------------------: |
 | [512x512_diffusion_uncond_finetune_008100](./disco-diffusion_adm-u-finetuned_imagenet-512x512.py) | ImageNet | [model](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth) |
-|       [256x256_diffusion_uncond](./disco-diffusion_adm-u-finetuned_imagenet-256x256.py)        | ImageNet |                                            [model](<>)                                             |
-|            [portrait_generator_v001](./disco-diffusion_portrait-generator-v001.py)             | unknown  | [model](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth) |
+|        [256x256_diffusion_uncond](./disco-diffusion_adm-u-finetuned_imagenet-256x256.py)         | ImageNet |                                           [model](<>)                                            |
+|             [portrait_generator_v001](./disco-diffusion_portrait-generator-v001.py)              | unknown  | [model](https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth) |
 
 <!-- SKIP THIS TABLE -->
 
-|            Model             |   Download   |
+|             模型             |     下载     |
 | :--------------------------: | :----------: |
 |  pixelartdiffusion_expanded  | Coming soon! |
 | pixel_art_diffusion_hard_256 | Coming soon! |
@@ -60,21 +60,21 @@ We have converted several `unet` weights and offer related configs. See more det
 |     watercolordiffusion      | Coming soon! |
 |      PulpSciFiDiffusion      | Coming soon! |
 
-## To-do List
+## 待办列表
 
-- [x] Text2Image
-- [x] Image2Image
-- [x] Imagenet, portrait diffusion models
-- [ ] pixelart, watercolor, sci-fiction diffusion models
-- [ ] image prompt
-- [ ] video generation
-- [ ] faster sampler(plms, dpm-solver etc.)
+- [x] 图文生成
+- [x] 图像到图像的翻译
+- [x] Imagenet, portrait 扩散模型
+- \[\] 像素艺术，水彩，科幻小说的扩散模型
+- \[\] 支持图像提示
+- \[\] 支持视频生成
+- \[\] 支持更快的采样器(plms，dpm-solver等)
 
-We really welcome community users supporting these items and any other interesting stuffs!
+我们很欢迎社区用户支持这些项目和任何其他有趣的工作!
 
 ## Quick Start
 
-Running the following codes, you can get a text-generated image.
+运行以下代码，你可以使用文本生成图像。
 
 ```python
 from mmengine import Config, MODELS
@@ -102,17 +102,17 @@ save_image(image, "image.png")
 
 ```
 
-## Tutorials
+## 教程
 
-Considering that `disco-diffusion` contains many adjustable parameters, we provide users with a [jupyter-notebook](./tutorials.ipynb) / [colab](https://githubtocolab.com/open-mmlab/mmediting/blob/dev-1.x/configs/disco_diffusion/tutorials.ipynb) tutorial that exhibits the meaning of different parameters, and gives results corresponding to adjustment.
-Refer to [Disco Sheet](https://docs.google.com/document/d/1l8s7uS2dGqjztYSjPpzlmXLjl5PM3IGkRWI3IiCuK7g/edit).
+考虑到`disco-diffusion`包含许多可调整的参数，我们为用户提供了一个[jupyter-notebook](./tutorials.ipynb)/[colab](https://githubtocolab.com/open-mmlab/mmediting/blob/dev-1.x/configs/disco_diffusion/tutorials.ipynb)的教程，展示了不同参数的含义，并给出相应的调整结果。
+请参考[Disco Sheet](https://docs.google.com/document/d/1l8s7uS2dGqjztYSjPpzlmXLjl5PM3IGkRWI3IiCuK7g/edit)。
 
-## Credits
+## 鸣谢
 
 Since our adaptation of disco-diffusion are heavily influenced by disco [colab](https://colab.research.google.com/github/alembics/disco-diffusion/blob/main/Disco_Diffusion.ipynb#scrollTo=License), here we copy the credits below.
 
 <details>
-<summary>Credits</summary>
+<summary>鸣谢</summary>
 Original notebook by Katherine Crowson (https://github.com/crowsonkb, https://twitter.com/RiversHaveWings). It uses either OpenAI's 256x256 unconditional ImageNet or Katherine Crowson's fine-tuned 512x512 diffusion model (https://github.com/openai/guided-diffusion), together with CLIP (https://github.com/openai/CLIP) to connect text prompts with images.
 
 Modified by Daniel Russell (https://github.com/russelldc, https://twitter.com/danielrussruss) to include (hopefully) optimal params for quick generations in 15-100 timesteps rather than 1000, as well as more robust augmentations.
