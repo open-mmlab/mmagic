@@ -210,10 +210,11 @@ val_dataloader = dict(
 
 test_dataloader = val_dataloader
 
-val_evaluator = [
-    dict(type='PSNR'),
-    dict(type='SSIM'),
-]
+val_evaluator = dict(
+    type='EditEvaluator', metrics=[
+        dict(type='PSNR'),
+        dict(type='SSIM'),
+    ])
 test_evaluator = val_evaluator
 
 train_cfg = dict(

@@ -52,9 +52,10 @@ test_dataloader = dict(
         data_prefix=dict(img='LQ', gt='GT'),
         pipeline=test_pipeline))
 
-test_evaluator = [
-    dict(type='PSNR'),
-    dict(type='SSIM'),
-]
+test_evaluator = dict(
+    type='EditEvaluator', metrics=[
+        dict(type='PSNR'),
+        dict(type='SSIM'),
+    ])
 
 test_cfg = dict(type='EditTestLoop')

@@ -188,11 +188,13 @@ val_dataloader = dict(
 
 test_dataloader = val_dataloader
 
-val_evaluator = [
-    dict(type='MAE'),
-    dict(type='PSNR', crop_border=scale),
-    dict(type='SSIM', crop_border=scale),
-]
+val_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[
+        dict(type='MAE'),
+        dict(type='PSNR', crop_border=scale),
+        dict(type='SSIM', crop_border=scale),
+    ])
 test_evaluator = val_evaluator
 
 train_cfg = dict(

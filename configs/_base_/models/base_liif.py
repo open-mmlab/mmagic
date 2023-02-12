@@ -86,11 +86,13 @@ val_dataloader = dict(
         data_prefix=dict(img='LRbicx4', gt='GTmod12'),
         pipeline=val_pipeline))
 
-val_evaluator = [
-    dict(type='MAE'),
-    dict(type='PSNR', crop_border=scale_max),
-    dict(type='SSIM', crop_border=scale_max),
-]
+val_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[
+        dict(type='MAE'),
+        dict(type='PSNR', crop_border=scale_max),
+        dict(type='SSIM', crop_border=scale_max),
+    ])
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_000_000, val_interval=3000)

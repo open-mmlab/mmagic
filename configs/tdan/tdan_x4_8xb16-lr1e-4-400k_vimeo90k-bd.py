@@ -25,10 +25,12 @@ model = dict(
         std=[255, 255, 255],
     ))
 
-val_evaluator = [
-    dict(type='PSNR', crop_border=8, convert_to='Y'),
-    dict(type='SSIM', crop_border=8, convert_to='Y'),
-]
+val_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[
+        dict(type='PSNR', crop_border=8, convert_to='Y'),
+        dict(type='SSIM', crop_border=8, convert_to='Y'),
+    ])
 
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),

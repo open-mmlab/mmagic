@@ -99,11 +99,13 @@ val_dataloader = dict(
         # filename_tmpl=dict(img='{}_x4', gt='{}'),
         pipeline=val_pipeline))
 
-val_evaluator = [
-    dict(type='MAE'),
-    dict(type='PSNR', crop_border=scale),
-    dict(type='SSIM', crop_border=scale),
-]
+val_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[
+        dict(type='MAE'),
+        dict(type='PSNR', crop_border=scale),
+        dict(type='SSIM', crop_border=scale),
+    ])
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1000000, val_interval=5000)

@@ -61,11 +61,13 @@ val_dataloader = dict(
 # TODO: data is not uploaded yet
 # test_dataloader = val_dataloader
 
-val_evaluator = [
-    dict(type='MAE'),
-    dict(type='PSNR'),
-    dict(type='SSIM'),
-]
+val_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[
+        dict(type='MAE'),
+        dict(type='PSNR'),
+        dict(type='SSIM'),
+    ])
 # test_evaluator = val_evaluator
 
 val_cfg = dict(type='EditValLoop')

@@ -254,13 +254,15 @@ test_dataloader = dict(
         data_prefix=dict(img='', gt=''),
         pipeline=test_pipeline))
 
-val_evaluator = [
-    dict(type='PSNR'),
-    dict(type='SSIM'),
-]
+val_evaluator = dict(
+    type='EditEvaluator', metrics=[
+        dict(type='PSNR'),
+        dict(type='SSIM'),
+    ])
 
-test_evaluator = [dict(type='NIQE', input_order='CHW', convert_to='Y')]
-# test_evaluator = val_evaluator
+test_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[dict(type='NIQE', input_order='CHW', convert_to='Y')])
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=300_000, val_interval=5000)
