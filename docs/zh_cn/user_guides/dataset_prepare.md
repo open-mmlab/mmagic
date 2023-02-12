@@ -1,4 +1,4 @@
-# 教程 2：准备数据集
+# <span id="jump1">教程 2：准备数据集</span>
 
 在这一章节，我们将会详细的讨论如何准备数据集和在仓库中如何针对不同的模型采用合适的数据集。
 
@@ -11,12 +11,12 @@
 
 教程的指引分为以下几个部分
 
-- [教程 2：准备数据集](#教程 2：准备数据集)
-  - [下载数据集](#下载数据集)
-  - [准备数据集](#准备数据集)
-  - [MMEditing中的数据集概览](#MMEditing中的数据集概览)
+- [教程 2：准备数据集](#jump1)
+  - [下载数据集](#jump2)
+  - [准备数据集](#jump3)
+  - [MMEditing 中的数据集概览](#jump4)
 
-## 下载数据集
+## <span id="jump2">下载数据集</span>
 
 大家应该先从他们的主页上下载数据集
 
@@ -24,7 +24,7 @@
 
 例如，您可以通过从 [主页](http://toflow.csail.mit.edu/) 下载数据集来简单地准备 Vimeo90K-triplet 数据集。
 
-## 准备数据集
+## <span id="jump3">准备数据集</span>
 
 一些数据集需要在训练或测试之前进行预处理。我们支持许多脚本来准备 [tools/dataset_converters](https://github.com/open-mmlab/mmediting/tree/1.x/tools/dataset_converters) 中的数据集。您可以按照每个数据集的教程来运行脚本。
 
@@ -34,7 +34,7 @@
 python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
 ```
 
-## MMEditing 中的数据集概览
+## <span id="jump4">MMEditing 中的数据集概览</span>
 
 我们支持详细的教程，并根据不同的任务进行拆分。
 
