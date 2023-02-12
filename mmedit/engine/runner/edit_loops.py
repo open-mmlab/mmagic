@@ -33,7 +33,7 @@ class EditValLoop(BaseLoop):
     >>> val_cfg = dict(type='EditValLoop')
     >>> # 2. specific EditEvaluator instead of Evaluator in MMEngine
     >>> val_evaluator = dict(
-    >>>     type='GenEvaluator',
+    >>>     type='EditEvaluator',
     >>>     metrics=[
     >>>         dict(type='PSNR', crop_border=2, prefix='Set5'),
     >>>         dict(type='SSIM', crop_border=2, prefix='Set5'),
@@ -49,10 +49,10 @@ class EditValLoop(BaseLoop):
     >>> # 2. specific a list EditEvaluator
     >>> # do not forget to add prefix for each metric group
     >>> div2k_evaluator = dict(
-    >>>     type='GenEvaluator',
+    >>>     type='EditEvaluator',
     >>>     metrics=dict(type='SSIM', crop_border=2, prefix='DIV2K'))
     >>> set5_evaluator = dict(
-    >>>     type='GenEvaluator',
+    >>>     type='EditEvaluator',
     >>>     metrics=[
     >>>         dict(type='PSNR', crop_border=2, prefix='Set5'),
     >>>         dict(type='SSIM', crop_border=2, prefix='Set5'),
@@ -287,7 +287,7 @@ class EditTestLoop(BaseLoop):
     >>> val_cfg = dict(type='EditTestLoop')
     >>> # 2. specific EditEvaluator instead of Evaluator in MMEngine
     >>> test_evaluator = dict(
-    >>>     type='GenEvaluator',
+    >>>     type='EditEvaluator',
     >>>     metrics=[
     >>>         dict(type='PSNR', crop_border=2, prefix='Set5'),
     >>>         dict(type='SSIM', crop_border=2, prefix='Set5'),
@@ -303,10 +303,10 @@ class EditTestLoop(BaseLoop):
     >>> # 2. specific a list EditEvaluator
     >>> # do not forget to add prefix for each metric group
     >>> div2k_evaluator = dict(
-    >>>     type='GenEvaluator',
+    >>>     type='EditEvaluator',
     >>>     metrics=dict(type='SSIM', crop_border=2, prefix='DIV2K'))
     >>> set5_evaluator = dict(
-    >>>     type='GenEvaluator',
+    >>>     type='EditEvaluator',
     >>>     metrics=[
     >>>         dict(type='PSNR', crop_border=2, prefix='Set5'),
     >>>         dict(type='SSIM', crop_border=2, prefix='Set5'),

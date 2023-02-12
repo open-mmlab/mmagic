@@ -26,22 +26,22 @@ def update_and_check_evaluator(evaluator: EVALUATOR_TYPE
                         'there maybe some potential bugs.')
     if isinstance(evaluator, Evaluator):
         cls_name = evaluator.__class__.__name__
-        if cls_name != 'GenEvaluator':
+        if cls_name != 'EditEvaluator':
             print_log(warning_template.format(cls_name), 'current', WARNING)
         return evaluator
 
     # add type for **single evaluator with list of metrics**
     if isinstance(evaluator, list):
-        evaluator = dict(type='GenEvaluator', metrics=evaluator)
+        evaluator = dict(type='EditEvaluator', metrics=evaluator)
         return evaluator
 
     # check and update dict config
     assert isinstance(evaluator, dict), (
         'Can only conduct check and update for list of metrics, a config dict '
         f'or a Evaluator object. But receives {type(evaluator)}.')
-    evaluator.setdefault('type', 'GenEvaluator')
+    evaluator.setdefault('type', 'EditEvaluator')
     _type = evaluator['type']
-    if _type != 'GenEvaluator':
+    if _type != 'EditEvaluator':
         print_log(warning_template.format(_type), 'current', WARNING)
     return evaluator
 

@@ -6,11 +6,11 @@ from mmengine.evaluator import Evaluator
 
 from mmedit.engine.runner.loop_utils import (is_evaluator,
                                              update_and_check_evaluator)
-from mmedit.evaluation import GenEvaluator
+from mmedit.evaluation import EditEvaluator
 
 
 def test_is_evaluator():
-    evaluator = dict(type='GenEvaluator', metrics=[dict(type='PSNR')])
+    evaluator = dict(type='EditEvaluator', metrics=[dict(type='PSNR')])
     assert is_evaluator(evaluator)
 
     evaluator = [dict(type='PSNR'), dict(type='SSIM')]
@@ -34,13 +34,13 @@ def test_update_and_check_evaluator():
     evaluator = MagicMock(spec=Evaluator)
     assert evaluator == update_and_check_evaluator(evaluator)
 
-    evaluator = MagicMock(spec=GenEvaluator)
+    evaluator = MagicMock(spec=EditEvaluator)
     assert evaluator == update_and_check_evaluator(evaluator)
 
     evaluator = [dict(type='PSNR'), dict(type='SSIM')]
     evaluator = update_and_check_evaluator(evaluator)
     assert isinstance(evaluator, dict)
-    assert evaluator['type'] == 'GenEvaluator'
+    assert evaluator['type'] == 'EditEvaluator'
 
     evaluator = 'this is wrong'
     with pytest.raises(AssertionError):
@@ -49,12 +49,12 @@ def test_update_and_check_evaluator():
     evaluator = dict(metrics=[dict(type='PSNR')])
     evaluator = update_and_check_evaluator(evaluator)
     assert 'type' in evaluator
-    assert evaluator['type'] == 'GenEvaluator'
+    assert evaluator['type'] == 'EditEvaluator'
 
     evaluator = dict(type='Evaluator', metrics=[dict(type='PSNR')])
     evaluator = update_and_check_evaluator(evaluator)
     assert evaluator['type'] == 'Evaluator'
 
-    evaluator = dict(type='GenEvaluator', metrics=[dict(type='PSNR')])
+    evaluator = dict(type='EditEvaluator', metrics=[dict(type='PSNR')])
     evaluator = update_and_check_evaluator(evaluator)
-    assert evaluator['type'] == 'GenEvaluator'
+    assert evaluator['type'] == 'EditEvaluator'
