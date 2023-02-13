@@ -15,7 +15,6 @@ from mmedit.registry import METRICS
 # from .inception_utils import disable_gpu_fuser_on_pt19, load_inception
 from ..functional import disable_gpu_fuser_on_pt19, load_inception
 from .base_gen_metric import GenerativeMetric
-from .metrics_utils import obtain_data
 
 
 @METRICS.register_module('IS')
