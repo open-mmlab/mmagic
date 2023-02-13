@@ -87,7 +87,7 @@ https://user-images.githubusercontent.com/12782558/217152698-49169038-9872-4200-
 
 The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorch 1.9+**.
 
-### Major features
+### ✨ Major features
 
 - **State of the Art**
 
