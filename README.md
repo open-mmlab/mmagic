@@ -75,7 +75,7 @@ Please refer to [migration documents](docs/en/migration/overview.md) to migrate 
 - [🎫 License](#🎫-license)
 - [🏗️ Projects in OpenMMLab 2.0](#🏗️-projects-in-openmmlab-20)
 
-<p align="right"><a href="#top">[🔝] Back to top</a></p>
+<p align="right"><a href="#top">🔝Back to top</a></p>
 
 ## 📖 Introduction
 
@@ -105,7 +105,7 @@ The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorc
 
   With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
 
-<p align="right"><a href="#top">[🔝] Back to top</a></p>
+<p align="right"><a href="#top">🔝Back to top</a></p>
 
 ## 🙌 Contributing
 
@@ -119,7 +119,7 @@ More and more community contributors are joining us to make our repo better. Som
 
 We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
 
-<p align="right"><a href="#top">[🔝] Back to top</a></p>
+<p align="right"><a href="#top">🔝Back to top</a></p>
 
 ## 🛠️ Installation
 
@@ -153,7 +153,7 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
 
 Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMEditing.
 
-<p align="right"><a href="#top">[🔝] Back to top</a></p>
+<p align="right"><a href="#top">🔝Back to top</a></p>
 
 ## 📊 Model Zoo
 
@@ -324,7 +324,7 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
 
 Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/overview.html) for more details.
 
-<p align="right"><a href="#top">[🔝] Back to top</a></p>
+<p align="right"><a href="#top">🔝Back to top</a></p>
 
 ## 🤝 Acknowledgement
 
@@ -336,7 +336,7 @@ We appreciate all the contributors who implement their methods or add new featur
   <img src="https://contrib.rocks/image?repo=liuwenran/mmediting" />
 </a>
 
-<p align="right"><a href="#top">[🔝] Back to top</a></p>
+<p align="right"><a href="#top">🔝Back to top</a></p>
 
 ## 🖊️ Citation
 
@@ -351,14 +351,14 @@ If MMEditing is helpful to your research, please cite it as below.
 }
 ```
 
-<p align="right"><a href="#top">[🔝] Back to top</a></p>
+<p align="right"><a href="#top">🔝Back to top</a></p>
 
 ## 🎫 License
 
 This project is released under the [Apache 2.0 license](LICENSE).
 Please refer to [LICENSES](LICENSE) for the careful check, if you are using our code for commercial matters.
 
-<p align="right"><a href="#top">[🔝] Back to top</a></p>
+<p align="right"><a href="#top">🔝Back to top</a></p>
 
 ## 🏗️ Projects in OpenMMLab 2.0
 
@@ -383,4 +383,4 @@ Please refer to [LICENSES](LICENSE) for the careful check, if you are using our 
 - [MMGeneration](https://github.com/open-mmlab/mmgeneration/tree/1.x): OpenMMLab image and video generative models toolbox.
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab model deployment framework.
 
-<p align="right"><a href="#top">[🔝] Back to top</a></p>
+<p align="right"><a href="#top">🔝Back to top</a></p>
