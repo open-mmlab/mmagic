@@ -37,7 +37,7 @@ English | [简体中文](README_zh-CN.md)
 
 </div>
 
-## What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
+## 🚀 What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
 ### New release [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) \[04/01/2023\]:
 
@@ -64,20 +64,20 @@ Please refer to [changelog.md](docs/en/changelog.md) for details and release his
 
 Please refer to [migration documents](docs/en/migration/overview.md) to migrate from MMEditing 0.x to our brand new 1.x version.
 
-## Table of Contents
+## 📄 Table of Contents
 
-- [Introduction](#introduction)
-- [Contributing](#contributing)
-- [Installation](#installation)
-- [Model Zoo](#model-zoo)
-- [Acknowledgement](#acknowledgement)
-- [Citation](#citation)
-- [License](#license)
-- [Projects in OpenMMLab 2.0](#projects-in-openmmlab-20)
+- [📖 Introduction](#📖-introduction)
+- [🙌 Contributing](#🙌-contributing)
+- [🛠️ Installation](#🛠️-installation)
+- [📊 Model Zoo](#📊-model-zoo)
+- [🤝 Acknowledgement](#🤝-acknowledgement)
+- [🖊️ Citation](#🖊️-citation)
+- [🎫 License](#🎫-license)
+- [🏗️ Projects in OpenMMLab 2.0](#🏗️-projects-in-openmmlab-20)
 
-<p align="right"><a href="#top">Back to top</a></p>
+<p align="right"><a href="#top">[🔝] Back to top</a></p>
 
-## Introduction
+## 📖 Introduction
 
 MMEditing is an open-source image and video editing&generating toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
@@ -105,9 +105,9 @@ The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorc
 
   With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
 
-<p align="right"><a href="#top">Back to top</a></p>
+<p align="right"><a href="#top">[🔝] Back to top</a></p>
 
-## Contributing
+## 🙌 Contributing
 
 More and more community contributors are joining us to make our repo better. Some recent projects are contributed by the community including:
 
@@ -119,9 +119,9 @@ More and more community contributors are joining us to make our repo better. Som
 
 We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
 
-<p align="right"><a href="#top">Back to top</a></p>
+<p align="right"><a href="#top">[🔝] Back to top</a></p>
 
-## Installation
+## 🛠️ Installation
 
 MMEditing depends on [PyTorch](https://pytorch.org/), [MMEngine](https://github.com/open-mmlab/mmengine) and [MMCV](https://github.com/open-mmlab/mmcv).
 Below are quick steps for installation.
@@ -153,9 +153,9 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
 
 Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMEditing.
 
-<p align="right"><a href="#top">Back to top</a></p>
+<p align="right"><a href="#top">[🔝] Back to top</a></p>
 
-## Model Zoo
+## 📊 Model Zoo
 
 <div align="center">
   <b>Supported algorithms</b>
@@ -324,9 +324,9 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
 
 Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/overview.html) for more details.
 
-<p align="right"><a href="#top">Back to top</a></p>
+<p align="right"><a href="#top">[🔝] Back to top</a></p>
 
-## Acknowledgement
+## 🤝 Acknowledgement
 
 MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
 
@@ -336,9 +336,9 @@ We appreciate all the contributors who implement their methods or add new featur
   <img src="https://contrib.rocks/image?repo=liuwenran/mmediting" />
 </a>
 
-<p align="right"><a href="#top">Back to top</a></p>
+<p align="right"><a href="#top">[🔝] Back to top</a></p>
 
-## Citation
+## 🖊️ Citation
 
 If MMEditing is helpful to your research, please cite it as below.
 
@@ -351,16 +351,16 @@ If MMEditing is helpful to your research, please cite it as below.
 }
 ```
 
-<p align="right"><a href="#top">Back to top</a></p>
+<p align="right"><a href="#top">[🔝] Back to top</a></p>
 
-## License
+## 🎫 License
 
 This project is released under the [Apache 2.0 license](LICENSE).
 Please refer to [LICENSES](LICENSE) for the careful check, if you are using our code for commercial matters.
 
-<p align="right"><a href="#top">Back to top</a></p>
+<p align="right"><a href="#top">[🔝] Back to top</a></p>
 
-## Projects in OpenMMLab 2.0
+## 🏗️ Projects in OpenMMLab 2.0
 
 - [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab foundational library for training deep learning models.
 - [MMCV](https://github.com/open-mmlab/mmcv/tree/2.x): OpenMMLab foundational library for computer vision.
@@ -383,4 +383,4 @@ Please refer to [LICENSES](LICENSE) for the careful check, if you are using our 
 - [MMGeneration](https://github.com/open-mmlab/mmgeneration/tree/1.x): OpenMMLab image and video generative models toolbox.
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab model deployment framework.
 
-<p align="right"><a href="#top">Back to top</a></p>
+<p align="right"><a href="#top">[🔝] Back to top</a></p>
