@@ -160,13 +160,13 @@ class Glide(BaseModel):
         for t in timesteps:
             # 1. predicted model_output
             half = image[:len(image) // 2]
-            combined = torch.concat([half, half], dim=0)
+            combined = torch.cat([half, half], dim=0)
             model_output = self.unet(combined, t, tokens=tokens, mask=mask)
             eps, rest = model_output[:, :3], model_output[:, 3:]
             cond_eps, uncond_eps = torch.split(eps, len(eps) // 2, dim=0)
             half_eps = uncond_eps + guidance_scale * (cond_eps - uncond_eps)
             eps = torch.cat([half_eps, half_eps], dim=0)
-            noise_pred = torch.concat([eps, rest], dim=1)
+            noise_pred = torch.cat([eps, rest], dim=1)
             # noise_pred_text, noise_pred_uncond = model_output.chunk(2)
             # noise_pred = noise_pred_uncond + guidance_scale *
             # (noise_pred_text - noise_pred_uncond)
