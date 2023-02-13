@@ -6,10 +6,10 @@ from typing import Dict, List, Optional, Union
 
 import torch
 import yaml
+from mmengine.registry import init_default_scope
 
 from mmedit.apis.inferencers import MMEditInferencer
 from mmedit.apis.inferencers.base_mmedit_inferencer import InputsType
-from mmedit.utils import register_all_modules
 
 
 class MMEdit:
@@ -87,7 +87,7 @@ class MMEdit:
                  extra_parameters: Dict = None,
                  seed: int = 2022,
                  **kwargs) -> None:
-        register_all_modules(init_default_scope=True)
+        init_default_scope('mmedit')
         MMEdit.init_inference_supported_models_cfg()
         inferencer_kwargs = {}
         inferencer_kwargs.update(
