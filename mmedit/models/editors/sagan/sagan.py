@@ -27,16 +27,16 @@ class SAGAN(BaseConditionalGAN):
     <https://arxiv.org/abs/1802.05637>`_ (Proj-GAN).
 
     Detailed architecture can be found in
-    :class:~`mmedit.models.editors.sagan.sagan_generator.SNGANGenerator`  # noqa
+    :class:`~mmedit.models.editors.sagan.SNGANGenerator`
     and
-    :class:~`mmedit.models.editors.sagan.sagan_discriminator.ProjDiscriminator`  # noqa
+    :class:`~mmedit.models.editors.sagan.ProjDiscriminator`
 
     Args:
         generator (ModelType): The config or model of the generator.
         discriminator (Optional[ModelType]): The config or model of the
             discriminator. Defaults to None.
         data_preprocessor (Optional[Union[dict, Config]]): The pre-process
-            config or :class:`~mmgen.models.GenDataPreprocessor`.
+            config or :class:`~mmedit.models.GenDataPreprocessor`.
         generator_steps (int): Number of times the generator was completely
             updated before the discriminator is updated. Defaults to 1.
         discriminator_steps (int): Number of times the discriminator was
