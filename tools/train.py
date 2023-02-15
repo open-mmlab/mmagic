@@ -46,39 +46,39 @@ def parse_args():
         nargs='+',
         type=int,
         help='Number of GPUs used by the currently machine for training. '
-             'This argument should only be set then you want to launch '
-             'distributed training directly from `train.py`. ',
+        'This argument should only be set then you want to launch '
+        'distributed training directly from `train.py`. ',
         default=[1])
     parser.add_argument(
         '--num-machines',
         type=int,
         help='Number of machines used for training. '
-             'This argument should only be set then you want to launch '
-             'distributed training directly from `train.py`. ',
+        'This argument should only be set then you want to launch '
+        'distributed training directly from `train.py`. ',
         default=1)
     parser.add_argument(
         '--machine-rank',
         type=int,
         help='Rank of current machine. '
-             'This argument should only be set then you want to launch '
-             'distributed training directly from `train.py`. ',
+        'This argument should only be set then you want to launch '
+        'distributed training directly from `train.py`. ',
         default=0)
     parser.add_argument(
         '--master-addr',
         type=str,
         help='Host address of the rank 0 machine. You do not need to set this '
-             'argument for the rank 0 machine (defaults to 127.0.0.1), '
-             'but need to set it as the address of the rank 0 machine for '
-             'the other machines. This argument should only be set then you '
-             'want to launch distributed training directly from `train.py`. ',
+        'argument for the rank 0 machine (defaults to 127.0.0.1), '
+        'but need to set it as the address of the rank 0 machine for '
+        'the other machines. This argument should only be set then you '
+        'want to launch distributed training directly from `train.py`. ',
         default='127.0.0.1')
     parser.add_argument(
         '--master-port',
         type=str,
         default='auto',
         help='Port of the master address. '
-             'This argument should only be set then you want to launch '
-             'distributed training directly from `train.py`. ',
+        'This argument should only be set then you want to launch '
+        'distributed training directly from `train.py`. ',
     )
     parser.add_argument('--local_rank', type=int, default=0)
     args = parser.parse_args()
