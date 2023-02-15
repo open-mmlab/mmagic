@@ -115,8 +115,8 @@ class GenLogProcessor(LogProcessor):
         We use `runner.val_loop.total_length` and
         `runner.test_loop.total_length` as the total number of iterations
         shown in log. If you want to know how `total_length` is calculated,
-        please refers to :meth:`mmedit.engine.runner.GenValLoop.run` and
-        :meth:`mmedit.engine.runner.GenTestLoop.run`.
+        please refers to :meth:`mmedit.engine.runner.EditValLoop.run` and
+        :meth:`mmedit.engine.runner.EditTestLoop.run`.
 
         Args:
             runner (Runner): The runner of validation/testing phase.

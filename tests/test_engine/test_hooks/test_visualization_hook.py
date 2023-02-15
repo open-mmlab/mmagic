@@ -270,7 +270,7 @@ class TestGenVisualizationHook(TestCase):
     #     ddpm_cfg = dict(
     #         type='BasicGaussianDiffusion',
     #         num_timesteps=4,
-    #         data_preprocessor=dict(type='GenDataPreprocessor'),
+    #         data_preprocessor=dict(type='EditDataPreprocessor'),
     #         betas_cfg=dict(type='cosine'),
     #         denoising=dict(
     #             type='DenoisingUnet',
