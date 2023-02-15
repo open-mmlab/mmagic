@@ -240,7 +240,7 @@ def _conv2d_gradfix(transpose, weight_shape, stride, padding, output_padding,
                     memory_format=(torch.channels_last if input.stride(1) ==
                                    1 else torch.contiguous_format))
             
-            # PyTorch conslidated convolution backward API in PR:
+            # PyTorch consolidated convolution backward API in PR:
             # https://github.com/pytorch/pytorch/commit/3dc3651e0ee3623f669c3a2c096408dbc476d122  # noqa: E501
             # Enhance the code referring to the discussion:
             # https://github.com/pytorch/pytorch/issues/74437
