@@ -5,6 +5,7 @@ import os
 import os.path as osp
 
 from mmengine.config import Config, DictAction
+from mmengine.dist import launch
 from mmengine.runner import Runner
 
 from mmedit.utils import print_colored_log, register_all_modules
@@ -40,6 +41,45 @@ def parse_args():
         choices=['none', 'pytorch', 'slurm', 'mpi'],
         default='none',
         help='job launcher')
+    parser.add_argument(
+        '--num-gpus',
+        nargs='+',
+        type=int,
+        help='Number of GPUs used by the currently machine for training. '
+             'This argument should only be set then you want to launch '
+             'distributed training directly from `train.py`. ',
+        default=[1])
+    parser.add_argument(
+        '--num-machines',
+        type=int,
+        help='Number of machines used for training. '
+             'This argument should only be set then you want to launch '
+             'distributed training directly from `train.py`. ',
+        default=1)
+    parser.add_argument(
+        '--machine-rank',
+        type=int,
+        help='Rank of current machine. '
+             'This argument should only be set then you want to launch '
+             'distributed training directly from `train.py`. ',
+        default=0)
+    parser.add_argument(
+        '--master-addr',
+        type=str,
+        help='Host address of the rank 0 machine. You do not need to set this '
+             'argument for the rank 0 machine (defaults to 127.0.0.1), '
+             'but need to set it as the address of the rank 0 machine for '
+             'the other machines. This argument should only be set then you '
+             'want to launch distributed training directly from `train.py`. ',
+        default='127.0.0.1')
+    parser.add_argument(
+        '--master-port',
+        type=str,
+        default='auto',
+        help='Port of the master address. '
+             'This argument should only be set then you want to launch '
+             'distributed training directly from `train.py`. ',
+    )
     parser.add_argument('--local_rank', type=int, default=0)
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:
@@ -48,9 +88,7 @@ def parse_args():
     return args
 
 
-def main():
-    args = parse_args()
-
+def main(args):
     # register all modules in mmedit into the registries
     # do not init the default scope here because it will be init in the runner
     register_all_modules(init_default_scope=False)
@@ -112,4 +150,13 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    args = parse_args()
+    launch(
+        main,
+        args.num_gpus,
+        args.num_machines,
+        args.machine_rank,
+        args.master_addr,
+        args.master_port,
+        args=(args, ),
+    )
