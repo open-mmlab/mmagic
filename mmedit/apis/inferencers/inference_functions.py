@@ -13,6 +13,7 @@ from mmengine.config import ConfigDict
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 from mmengine.fileio import get_file_backend
+from mmengine.registry import init_default_scope
 from mmengine.runner import load_checkpoint
 from mmengine.runner import set_random_seed as set_random_seed_engine
 from mmengine.utils import ProgressBar
@@ -20,7 +21,6 @@ from torch.nn.parallel import scatter
 
 from mmedit.models.base_models import BaseTranslationModel
 from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 FILE_CLIENT = get_file_backend(backend_args={'backend': 'local'})
@@ -81,7 +81,8 @@ def init_model(config, checkpoint=None, device='cuda:0'):
     # config.test_cfg.metrics = None
     delete_cfg(config.model, 'init_cfg')
 
-    register_all_modules()
+    init_default_scope(config.get('default_scope', 'mmedit'))
+
     model = MODELS.build(config.model)
 
     if checkpoint is not None:

@@ -11,6 +11,10 @@ register_all_modules()
 
 def test_mmedit_inferencer():
     with pytest.raises(Exception) as e_info:
+        inferencer_instance = MMEditInferencer('colorization', ['error_type'],
+                                               None)
+
+    with pytest.raises(Exception) as e_info:
         inferencer_instance = MMEditInferencer('unconditional', ['error_type'],
                                                None)
 

@@ -45,10 +45,10 @@ You can run glide as follows:
 ```python
 import torch
 from mmedit.apis import init_model
-from mmedit.utils import register_all_modules
+from mmengine.registry import init_default_scope
 from projects.glide.models import *
 
-register_all_modules()
+init_default_scope('mmedit')
 
 config = 'projects/glide/configs/glide_ddim-classifier-free_laion-64x64.py'
 ckpt = 'https://download.openmmlab.com/mmediting/glide/glide_laion-64x64-02afff47.pth'
