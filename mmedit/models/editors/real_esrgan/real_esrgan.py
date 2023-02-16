@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from copy import deepcopy
+
 import torch
 
 from mmedit.registry import MODELS
@@ -79,6 +81,11 @@ class RealESRGAN(SRGAN):
         self.is_use_sharpened_gt_in_percep = is_use_sharpened_gt_in_percep
         self.is_use_sharpened_gt_in_gan = is_use_sharpened_gt_in_gan
         self.is_use_ema = is_use_ema
+
+        if is_use_ema:
+            self.generator_ema = deepcopy(self.generator)
+        else:
+            self.generator_ema = None
 
         if train_cfg is not None:  # used for initializing from ema model
             self.start_iter = train_cfg.get('start_iter', -1)
