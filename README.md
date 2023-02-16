@@ -27,8 +27,8 @@
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
 [Documentation](https://mmediting.readthedocs.io/en/1.x/) |
-[Installation](https://mmediting.readthedocs.io/en/1.x/2_get_started.html#installation) |
-[Model Zoo](https://mmediting.readthedocs.io/en/1.x/3_model_zoo.html) |
+[Installation](https://mmediting.readthedocs.io/en/1.x/get_started/install.html) |
+[Model Zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/overview.html) |
 [Update News](docs/en/changelog.md) |
 [Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
 [Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
@@ -50,7 +50,6 @@ English | [简体中文](README_zh-CN.md)
   <a href="https://www.youtube.com/openmmlab" style="text-decoration:none;">
     <img src="https://user-images.githubusercontent.com/25839884/218346691-ceb2116a-465a-40af-8424-9f30d2348ca9.png" width="3%" alt="" /></a>
 </div>
-
 
 ## 🚀 What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
@@ -88,7 +87,7 @@ Please refer to [migration documents](docs/en/migration/overview.md) to migrate 
 - [🤝 Acknowledgement](#🤝-acknowledgement)
 - [🖊️ Citation](#🖊️-citation)
 - [🎫 License](#🎫-license)
-- [🏗️ Projects in OpenMMLab 2.0](#🏗️-projects-in-openmmlab-20)
+- [🏗️ ️OpenMMLab Family](#🏗️-️openmmlab-family)
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -375,7 +374,7 @@ Please refer to [LICENSES](LICENSE) for the careful check, if you are using our 
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
-## 🏗️ Projects in OpenMMLab 2.0
+## 🏗️ ️OpenMMLab Family
 
 - [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab foundational library for training deep learning models.
 - [MMCV](https://github.com/open-mmlab/mmcv/tree/2.x): OpenMMLab foundational library for computer vision.
