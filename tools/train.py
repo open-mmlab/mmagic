@@ -45,31 +45,31 @@ def parse_args():
         '--num-gpus',
         nargs='+',
         type=int,
-        help='Number of GPUs used by the currently machine for training. '
+        help='Number of GPUs used by the currently node for training. '
         'This argument should only be set then you want to launch '
         'distributed training directly from `train.py`. ',
         default=[1])
     parser.add_argument(
-        '--num-machines',
+        '--num-nodes',
         type=int,
-        help='Number of machines used for training. '
+        help='Number of nodes used for training. '
         'This argument should only be set then you want to launch '
         'distributed training directly from `train.py`. ',
         default=1)
     parser.add_argument(
-        '--machine-rank',
+        '--node-rank',
         type=int,
-        help='Rank of current machine. '
+        help='Rank of current node. '
         'This argument should only be set then you want to launch '
         'distributed training directly from `train.py`. ',
         default=0)
     parser.add_argument(
         '--master-addr',
         type=str,
-        help='Host address of the rank 0 machine. You do not need to set this '
-        'argument for the rank 0 machine (defaults to 127.0.0.1), '
-        'but need to set it as the address of the rank 0 machine for '
-        'the other machines. This argument should only be set then you '
+        help='Host address of the rank 0 node. You do not need to set this '
+        'argument for the rank 0 node (defaults to 127.0.0.1), '
+        'but need to set it as the address of the rank 0 node for '
+        'the other nodes. This argument should only be set then you '
         'want to launch distributed training directly from `train.py`. ',
         default='127.0.0.1')
     parser.add_argument(
@@ -154,8 +154,8 @@ if __name__ == '__main__':
     launch(
         main,
         args.num_gpus,
-        args.num_machines,
-        args.machine_rank,
+        args.num_nodes,
+        args.node_rank,
         args.master_addr,
         args.master_port,
         args=(args, ),
