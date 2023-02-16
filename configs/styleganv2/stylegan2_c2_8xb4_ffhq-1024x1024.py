@@ -42,7 +42,7 @@ optim_wrapper = dict(
                                                         0.99**d_reg_ratio))))
 
 batch_size = 4
-data_root = 's3://openmmlab/datasets/editing/ffhq/images'
+data_root = './data/ffhq/images'
 
 train_dataloader = dict(
     batch_size=batch_size, dataset=dict(data_root=data_root))
