@@ -26,12 +26,12 @@
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[Documentation](https://mmediting.readthedocs.io/en/1.x/) |
-[Installation](https://mmediting.readthedocs.io/en/1.x/get_started/install.html) |
-[Model Zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/overview.html) |
-[Update News](docs/en/changelog.md) |
-[Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
-[Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
+[📘Documentation](https://mmediting.readthedocs.io/en/1.x/) |
+[🛠️Installation](https://mmediting.readthedocs.io/en/1.x/get_started/install.html) |
+[📊Model Zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/overview.html) |
+[🆕Update News](docs/en/changelog.md) |
+[🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
+[🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
 
 English | [简体中文](README_zh-CN.md)
 
