@@ -131,11 +131,9 @@ class FrechetInceptionDistance(GenerativeMetric):
         Returns:
             Tensor: Image feature extracted from inception.
         """
+        # image must passed with 'bgr'
         image = image[:, [2, 1, 0]].to(self.device)
 
-        # image must passed with 'bgr'
-        image = image[:, [2, 1, 0]]
-        image = image.to(self.device)
         if self.inception_style == 'StyleGAN':
             image = image.to(torch.uint8)
             with disable_gpu_fuser_on_pt19():
