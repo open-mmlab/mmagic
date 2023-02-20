@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from unittest import TestCase
-import torch 
+
+import pytest
+import torch
 
 from mmedit.models import AblatedDiffusionModel
 from mmedit.utils import register_all_modules
