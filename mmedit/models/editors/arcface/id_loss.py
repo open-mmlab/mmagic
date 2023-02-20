@@ -3,11 +3,11 @@ import mmengine
 import torch
 from torch import nn
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from .model_irse import Backbone
 
 
-@MODULES.register_module('ArcFace')
+@MODELS.register_module('ArcFace')
 class IDLossModel(nn.Module):
     """Face id loss model.
 

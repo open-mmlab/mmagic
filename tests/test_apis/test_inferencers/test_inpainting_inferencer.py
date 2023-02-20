@@ -21,7 +21,7 @@ def test_inpainting_inferencer():
         'aot-gan_smpgan_4xb4_places-512x512.py',
     )
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data', 'inpainting_result.png')
+        osp.dirname(__file__), '..', '..', 'data/out', 'inpainting_result.png')
 
     inferencer_instance = \
         InpaintingInferencer(cfg, None)

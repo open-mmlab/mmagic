@@ -10,7 +10,7 @@ from mmengine.model import BaseModel, is_model_wrapper
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, NoiseVar, SampleList
 from ..utils import (get_valid_noise_size, get_valid_num_batches,
@@ -59,7 +59,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 gen_args['noise_size'] = noise_size
             if hasattr(self, 'num_classes') and self.num_classes is not None:
                 gen_args['num_classes'] = self.num_classes
-            generator = MODULES.build(generator, default_args=gen_args)
+            generator = MODELS.build(generator, default_args=gen_args)
         self.generator = generator
         # get noise_size from generator because generator may have default
         # `noise_size` value
@@ -73,7 +73,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 disc_args = dict()
                 if hasattr(self, 'num_classes'):
                     disc_args['num_classes'] = self.num_classes
-                discriminator = MODULES.build(
+                discriminator = MODELS.build(
                     discriminator, default_args=disc_args)
         self.discriminator = discriminator
 
@@ -177,7 +177,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
         # build pre-defined losses
         gan_loss = loss_config.get('gan_loss', None)
         if gan_loss is not None:
-            self.gan_loss = MODULES.build(gan_loss)
+            self.gan_loss = MODELS.build(gan_loss)
         else:
             self.gan_loss = None
 
@@ -186,7 +186,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             if not isinstance(disc_auxiliary_loss, list):
                 disc_auxiliary_loss = [disc_auxiliary_loss]
             self.disc_auxiliary_losses = nn.ModuleList(
-                [MODULES.build(loss) for loss in disc_auxiliary_loss])
+                [MODELS.build(loss) for loss in disc_auxiliary_loss])
         else:
             self.disc_auxiliary_losses = None
 
@@ -195,7 +195,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             if not isinstance(gen_auxiliary_loss, list):
                 gen_auxiliary_loss = [gen_auxiliary_loss]
             self.gen_auxiliary_losses = nn.ModuleList(
-                [MODULES.build(loss) for loss in gen_auxiliary_loss])
+                [MODELS.build(loss) for loss in gen_auxiliary_loss])
         else:
             self.gen_auxiliary_losses = None
 

@@ -4,10 +4,10 @@ from torch import nn
 
 from mmedit.models import BasicInterpolator
 from mmedit.models.losses import L1Loss
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
+@MODELS.register_module()
 class InterpolateExample(nn.Module):
     """An example of interpolate network for testing BasicInterpolator."""
 

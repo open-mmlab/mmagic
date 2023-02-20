@@ -8,7 +8,7 @@ from mmengine import Config
 from mmengine.utils import ProgressBar
 from torch import Tensor
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, SampleList
 from ...base_models import BaseConditionalGAN
@@ -67,7 +67,7 @@ class EG3D(BaseConditionalGAN):
                          generator_steps, discriminator_steps, noise_size,
                          None, ema_config, loss_config)
         if isinstance(camera, dict):
-            self.camera = MODULES.build(camera)
+            self.camera = MODELS.build(camera)
         elif isinstance(camera, nn.Module):
             self.camera = camera
         else:

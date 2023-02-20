@@ -4,12 +4,12 @@ from typing import Optional
 import torch
 import torch.nn as nn
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ..gan_loss import (disc_shift_loss, gradient_penalty_loss,
                         r1_gradient_penalty_loss)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class DiscShiftLossComps(nn.Module):
     """Disc Shift Loss.
 
@@ -130,7 +130,7 @@ class DiscShiftLossComps(nn.Module):
         return self._loss_name
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class GradientPenaltyLossComps(nn.Module):
     """Gradient Penalty for WGAN-GP.
 
@@ -262,7 +262,7 @@ class GradientPenaltyLossComps(nn.Module):
         return self._loss_name
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class R1GradientPenaltyComps(nn.Module):
     """R1 gradient penalty for WGAN-GP.
 

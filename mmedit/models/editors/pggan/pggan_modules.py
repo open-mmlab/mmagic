@@ -10,7 +10,7 @@ from mmengine.model import normal_init
 from torch.nn.init import _calculate_correct_fan
 
 from mmedit.models.base_archs import AllGatherLayer
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 
 
 class EqualizedLR:
@@ -161,7 +161,7 @@ def pixel_norm(x, eps=1e-6):
     return x / (norm + eps)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class PixelNorm(nn.Module):
     """Pixel Normalization.
 
@@ -377,7 +377,7 @@ class EqualizedLRLinearModule(nn.Linear):
             nn.init.constant_(self.bias, 0.)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class PGGANNoiseTo2DFeat(nn.Module):
 
     def __init__(self,
@@ -504,7 +504,7 @@ class PGGANDecisionHead(nn.Module):
         return x
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MiniBatchStddevLayer(nn.Module):
     """Minibatch standard deviation.
 

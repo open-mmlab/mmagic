@@ -3,10 +3,10 @@ from mmengine.model import BaseModule
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
 from mmedit.models.editors.pconv.mask_conv_module import MaskConvModule
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class PConvEncoder(BaseModule):
     """Encoder with partial conv.
 

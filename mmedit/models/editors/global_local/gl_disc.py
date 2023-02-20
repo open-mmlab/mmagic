@@ -4,10 +4,10 @@ import torch.nn as nn
 from mmengine.model import BaseModule
 
 from mmedit.models.base_archs import MultiLayerDiscriminator
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class GLDiscs(BaseModule):
     """Discriminators in Global&Local.
 

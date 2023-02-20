@@ -4,11 +4,11 @@ import torch
 import torch.nn as nn
 from mmengine.model import BaseModule
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from .weight_layer import get_norm_layer
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class ColorizationNet(BaseModule):
     """Real-Time User-Guided Image Colorization with Learned Deep Priors. The
     backbone used for.
