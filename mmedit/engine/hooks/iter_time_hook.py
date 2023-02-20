@@ -10,8 +10,8 @@ DATA_BATCH = Optional[Sequence[dict]]
 
 
 @HOOKS.register_module()
-class GenIterTimerHook(IterTimerHook):
-    """GenIterTimerHooks inherits from :class:`mmengine.hooks.IterTimerHook`
+class EditIterTimerHook(IterTimerHook):
+    """EditIterTimerHooks inherits from :class:`mmengine.hooks.IterTimerHook`
     and overwrites :meth:`self._after_iter`.
 
     This hooks should be used along with

@@ -9,8 +9,8 @@ from mmengine.runner import LogProcessor
 
 
 @LOG_PROCESSORS.register_module()  # type: ignore
-class GenLogProcessor(LogProcessor):
-    """GenLogProcessor inherits from :class:`mmengine.runner.LogProcessor` and
+class EditLogProcessor(LogProcessor):
+    """EditLogProcessor inherits from :class:`mmengine.runner.LogProcessor` and
     overwrites :meth:`self.get_log_after_iter`.
 
     This log processor should be used along with
