@@ -4,11 +4,11 @@ from typing import Optional
 import torch
 import torch.nn as nn
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ..gan_loss import gen_path_regularizer
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class GeneratorPathRegularizerComps(nn.Module):
     """Generator Path Regularizer.
 

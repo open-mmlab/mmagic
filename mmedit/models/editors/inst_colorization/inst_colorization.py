@@ -6,12 +6,12 @@ from mmengine.config import Config
 from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 from .color_utils import get_colorization_data, lab2rgb
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class InstColorization(BaseModel):
     """Colorization InstColorization  method.
 
@@ -53,13 +53,13 @@ class InstColorization(BaseModel):
 
         # colorization networks
         # image_model: used to colorize a single image
-        self.image_model = MODULES.build(image_model)
+        self.image_model = MODELS.build(image_model)
 
         # instance model: used to colorize cropped instance
-        self.instance_model = MODULES.build(instance_model)
+        self.instance_model = MODELS.build(instance_model)
 
         # fusion model: input a single image with related instance features
-        self.fusion_model = MODULES.build(fusion_model)
+        self.fusion_model = MODELS.build(fusion_model)
 
         self.color_data_opt = color_data_opt
         self.which_direction = which_direction

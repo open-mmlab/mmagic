@@ -6,14 +6,14 @@ from torch.optim import Adam
 
 from mmedit.models import BaseEditModel, EditDataPreprocessor
 from mmedit.models.losses import L1Loss
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import register_all_modules
 
 register_all_modules()
 
 
-@BACKBONES.register_module()
+@MODELS.register_module()
 class ToyBaseModel(nn.Module):
     """An example of interpolate network for testing BasicInterpolator."""
 

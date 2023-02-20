@@ -21,7 +21,7 @@ def test_colorization_inferencer():
         osp.dirname(__file__), '..', '..', 'data', 'unpaired', 'trainA',
         '1.jpg')
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data',
+        osp.dirname(__file__), '..', '..', 'data/out',
         'inst_colorization_result.jpg')
 
     inferencer_instance = \

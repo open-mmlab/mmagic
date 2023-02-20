@@ -14,7 +14,7 @@ from mmedit.models import BaseGAN, GenDataPreprocessor
 from mmedit.models.losses import (DiscShiftLossComps, GANLossComps,
                                   GeneratorPathRegularizerComps,
                                   GradientPenaltyLossComps)
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample
 
 generator = dict(type='DCGANGenerator', output_scale=8, base_channels=8)
@@ -62,8 +62,8 @@ class TestBaseGAN(TestCase):
         gen_cfg = deepcopy(generator)
         gen_cfg['noise_size'] = 10
         disc_cfg = deepcopy(discriminator)
-        gen = MODULES.build(gen_cfg)
-        disc = MODULES.build(disc_cfg)
+        gen = MODELS.build(gen_cfg)
+        disc = MODELS.build(disc_cfg)
         gan = ToyGAN(
             generator=gen,
             discriminator=disc,

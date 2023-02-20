@@ -10,7 +10,7 @@ from mmengine.model import BaseModel, is_model_wrapper
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample
 from ...base_models import BaseGAN
 from ...losses import gen_path_regularizer, r1_gradient_penalty_loss
@@ -57,7 +57,7 @@ class StyleGAN2(BaseGAN):
         # build generator
         if isinstance(generator, dict):
             self._gen_cfg = deepcopy(generator)
-            generator = MODULES.build(generator)
+            generator = MODELS.build(generator)
         self.generator = generator
 
         # get valid noise_size
@@ -71,7 +71,7 @@ class StyleGAN2(BaseGAN):
                 disc_args = dict()
                 if hasattr(self, 'num_classes'):
                     disc_args['num_classes'] = self.num_classes
-                discriminator = MODULES.build(
+                discriminator = MODELS.build(
                     discriminator, default_args=disc_args)
         self.discriminator = discriminator
 

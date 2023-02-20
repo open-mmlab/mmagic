@@ -7,15 +7,15 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ...utils import get_module_device
 from ..pggan import EqualizedLRConvModule, PixelNorm
 from .stylegan1_modules import EqualLinearActModule, StyleConv
 from .stylegan_utils import get_mean_latent, style_mixing
 
 
-@MODULES.register_module('StyleGANv1Generator')
-@MODULES.register_module()
+@MODELS.register_module('StyleGANv1Generator')
+@MODELS.register_module()
 class StyleGAN1Generator(nn.Module):
     """StyleGAN1 Generator.
 

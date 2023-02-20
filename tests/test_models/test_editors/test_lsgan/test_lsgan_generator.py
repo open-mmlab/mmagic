@@ -3,7 +3,7 @@ import pytest
 import torch
 
 from mmedit.models.editors.lsgan import LSGANGenerator
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
 class TestLSGANGenerator(object):
@@ -17,7 +17,7 @@ class TestLSGANGenerator(object):
     def test_lsgan_generator(self):
 
         # test default setting with builder
-        g = MODULES.build(self.default_config)
+        g = MODELS.build(self.default_config)
         assert isinstance(g, LSGANGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 128, 128)
@@ -30,7 +30,7 @@ class TestLSGANGenerator(object):
 
         # test different output_scale
         config = dict(type='LSGANGenerator', noise_size=128, output_scale=64)
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, LSGANGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 64, 64)
@@ -39,7 +39,7 @@ class TestLSGANGenerator(object):
     def test_lsgan_generator_cuda(self):
 
         # test default setting with builder
-        g = MODULES.build(self.default_config).cuda()
+        g = MODELS.build(self.default_config).cuda()
         assert isinstance(g, LSGANGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 128, 128)
@@ -52,7 +52,7 @@ class TestLSGANGenerator(object):
 
         # test different output_scale
         config = dict(type='LSGANGenerator', noise_size=128, output_scale=64)
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, LSGANGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 64, 64)

@@ -8,11 +8,11 @@ import torch.nn.functional as F
 from mmengine.logging import MMLogger
 from mmengine.runner import load_state_dict
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from .singan_modules import GeneratorBlock
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SinGANMultiScaleGenerator(nn.Module):
     """Multi-Scale Generator used in SinGAN.
 

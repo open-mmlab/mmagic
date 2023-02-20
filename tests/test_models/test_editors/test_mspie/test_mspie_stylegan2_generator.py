@@ -5,13 +5,13 @@ import torch
 import torch.nn as nn
 
 from mmedit.models.editors.mspie import MSStyleGANv2Generator
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from mmedit.utils import register_all_modules
 
 register_all_modules()
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MockHeadPosEncoding(nn.Module):
 
     def __init__(self):

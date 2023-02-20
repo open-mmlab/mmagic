@@ -10,12 +10,12 @@ from mmengine.runner import load_checkpoint
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from torch.nn.utils import spectral_norm
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 from .biggan_modules import SelfAttentionBlock, SNConvModule
 from .biggan_snmodule import SNEmbedding, SNLinear
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class BigGANDeepDiscriminator(nn.Module):
     """BigGAN-Deep Discriminator. The implementation refers to
     https://github.com/ajbrock/BigGAN-PyTorch/blob/master/BigGANdeep.py # noqa.

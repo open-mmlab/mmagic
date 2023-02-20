@@ -93,7 +93,7 @@ class TestTranslationInferencer(TestCase):
                        'disco-diffusion_adm-u-finetuned_imagenet-512x512.py')
         text = {0: ['sad']}
         result_out_dir = osp.join(
-            osp.dirname(__file__), '..', '..', 'data', 'disco_result.png')
+            osp.dirname(__file__), '..', '..', 'data/out', 'disco_result.png')
 
         with patch.object(Text2ImageInferencer, '_init_model'):
             inferencer_instance = Text2ImageInferencer(
