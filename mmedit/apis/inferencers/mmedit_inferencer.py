@@ -52,7 +52,7 @@ class MMEditInferencer:
         elif self.task in ['inpainting', 'Inpainting']:
             self.inferencer = InpaintingInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
-        elif self.task in ['translation', 'Image2Image Translation']:
+        elif self.task in ['translation', 'Image2Image', 'Image2Image Translation']:
             self.inferencer = TranslationInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['restoration', 'Image Super-Resolution']:
