@@ -57,6 +57,7 @@ class MMEdit:
 
         # translation models
         'pix2pix',
+        'cyclegan',
 
         # restoration models
         'esrgan',
