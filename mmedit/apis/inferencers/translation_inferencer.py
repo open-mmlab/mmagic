@@ -45,8 +45,8 @@ class TranslationInferencer(BaseMMEditInferencer):
         # dirty code to deal with test data pipeline
         data = dict()
         data['pair_path'] = img
-        data[f'img_A_path'] = img
-        data[f'img_B_path'] = img
+        data['img_A_path'] = img
+        data['img_B_path'] = img
         data = collate([test_pipeline(data)])
         data = self.model.data_preprocessor(data, False)
 
