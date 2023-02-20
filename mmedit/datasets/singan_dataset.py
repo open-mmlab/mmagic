@@ -121,7 +121,7 @@ class SinGANDataset(BaseDataset):
         different resolution to train the model.
 
         Args:
-            idx (int): This will be ignored in `:class:SinGANDataset`.
+            idx (int): This will be ignored in :class:`SinGANDataset`.
 
         Returns:
             dict: Dict contains input image in different resolution.

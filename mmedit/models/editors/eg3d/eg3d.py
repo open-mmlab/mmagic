@@ -25,9 +25,9 @@ class EG3D(BaseConditionalGAN):
     <https://openaccess.thecvf.com/content/CVPR2022/papers/Chan_Efficient_Geometry-Aware_3D_Generative_Adversarial_Networks_CVPR_2022_paper.pdf>_ (EG3D).  # noqa
 
     Detailed architecture can be found in
-    :class:~`mmedit.models.editors.eg3d.eg3d_generator.TriplaneGenerator`
+    :class:`~mmedit.models.editors.eg3d.eg3d_generator.TriplaneGenerator`
     and
-    :class:~`mmedit.models.editors.eg3d.dual_discriminator.DualDiscriminator`
+    :class:`~mmedit.models.editors.eg3d.dual_discriminator.DualDiscriminator`
 
     Args:
         generator (ModelType): The config or model of the generator.
@@ -37,7 +37,7 @@ class EG3D(BaseConditionalGAN):
             camera position. If you want to generate images or videos via
             high-level API, you must set this argument. Defaults to None.
         data_preprocessor (Optional[Union[dict, Config]]): The pre-process
-            config or :class:`~mmgen.models.GenDataPreprocessor`.
+            config or :class:`~mmedit.models.GenDataPreprocessor`.
         generator_steps (int): Number of times the generator was completely
             updated before the discriminator is updated. Defaults to 1.
         discriminator_steps (int): Number of times the discriminator was

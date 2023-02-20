@@ -158,6 +158,28 @@ def skip_member(app, what, name, obj, skip, options):
     return skip
 
 
+def viewcode_follow_imported(app, modname, attribute):
+    fullname = f'{modname}.{attribute}'
+    all_objects = app.env.autoapi_all_objects
+    if fullname not in all_objects:
+        return None
+
+    if all_objects[fullname].obj.get('type') == 'method':
+        fullname = fullname[:fullname.rfind('.')]
+        attribute = attribute[:attribute.rfind('.')]
+    while all_objects[fullname].obj.get('original_path', '') != '':
+        fullname = all_objects[fullname].obj.get('original_path')
+
+    orig_path = fullname
+    if orig_path.endswith(attribute):
+        return orig_path[:-len(attribute) - 1]
+
+    return modname
+
+
 def setup(app):
     app.connect('builder-inited', builder_inited_handler)
     app.connect('autoapi-skip-member', skip_member)
+    if 'viewcode-follow-imported' in app.events.events:
+        app.connect(
+            'viewcode-follow-imported', viewcode_follow_imported, priority=0)

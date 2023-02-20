@@ -10,12 +10,12 @@ from mmengine.runner import LogProcessor
 
 @LOG_PROCESSORS.register_module()  # type: ignore
 class GenLogProcessor(LogProcessor):
-    """GenLogProcessor inherits from `:class:~mmengine.logging.LogProcessor`
-    and overwrites `:meth:self.get_log_after_iter`.
+    """GenLogProcessor inherits from :class:`mmengine.runner.LogProcessor` and
+    overwrites :meth:`self.get_log_after_iter`.
 
     This log processor should be used along with
-    `:class:mmedit.engine.runners.loops.GenValLoop` and
-    `:class:mmedit.engine.runners.loops.GenTestLoop`.
+    :class:`mmedit.engine.runner.GenValLoop` and
+    :class:`mmedit.engine.runner.GenTestLoop`.
     """
 
     def get_log_after_iter(self, runner, batch_idx: int,
@@ -25,8 +25,8 @@ class GenLogProcessor(LogProcessor):
         If `mode` is in 'val' or 'test', we use `runner.val_loop.total_length`
         and `runner.test_loop.total_length` as the total number of iterations
         shown in log. If you want to know how `total_length` is calculated,
-        please refers to `:meth:mmedit.engine.runners.loops.GenValLoop.run` and
-        `:meth:mmedit.engien.runners.loops.GenTestLoop.run`.
+        please refers to :meth:`mmedit.engine.runner.GenValLoop.run` and
+        :meth:`mmedit.engine.runner.GenTestLoop.run`.
 
         Args:
             runner (Runner): The runner of training phase.
@@ -115,8 +115,8 @@ class GenLogProcessor(LogProcessor):
         We use `runner.val_loop.total_length` and
         `runner.test_loop.total_length` as the total number of iterations
         shown in log. If you want to know how `total_length` is calculated,
-        please refers to `:meth:mmgen.core.runners.loops.GenValLoop.run` and
-        `:meth:mmgen.core.runners.loops.GenTestLoop.run`.
+        please refers to :meth:`mmedit.engine.runner.GenValLoop.run` and
+        :meth:`mmedit.engine.runner.GenTestLoop.run`.
 
         Args:
             runner (Runner): The runner of validation/testing phase.

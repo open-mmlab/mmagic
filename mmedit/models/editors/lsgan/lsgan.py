@@ -18,9 +18,9 @@ class LSGAN(BaseGAN):
     Paper link: https://arxiv.org/pdf/1611.04076.pdf
 
     Detailed architecture can be found in
-    :class:~`mmgen.models.architectures.lsgan.generator_generator.LSGANGenerator`  # noqa
+    :class:`~mmedit.models.editors.lsgan.LSGANGenerator`
     and
-    :class:~`mmgen.models.architectures.lsgan.generator_discriminator.LSGANDiscriminator`  # noqa
+    :class:`~mmedit.models.editors.lsgan.LSGANDiscriminator`
     """
 
     def disc_loss(self, disc_pred_fake: Tensor,

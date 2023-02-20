@@ -11,12 +11,12 @@ DATA_BATCH = Optional[Sequence[dict]]
 
 @HOOKS.register_module()
 class GenIterTimerHook(IterTimerHook):
-    """GenIterTimerHooks inherits from `:class:~mmengine.hooks.IterTimerHook`
-    and overwrites `:meth:self._after_iter`.
+    """GenIterTimerHooks inherits from :class:`mmengine.hooks.IterTimerHook`
+    and overwrites :meth:`self._after_iter`.
 
     This hooks should be used along with
-    `:class:mmedit.engine.runners.loops.GenValLoop` and
-    `:class:mmedit.engine.runners.loops.GenTestLoop`.
+    :class:`mmedit.engine.runner.GenValLoop` and
+    :class:`mmedit.engine.runner.GenTestLoop`.
     """
 
     def _after_iter(self,
@@ -33,8 +33,8 @@ class GenIterTimerHook(IterTimerHook):
         `runner.val_loop.total_length` or `runner.test_loop.total_length` as
         total number of iterations. If you want to know how `total_length` is
         calculated, please refers to
-        `:meth:mmedit.engine.runners.loops.GenValLoop.run` and
-        `:meth:mmedit.engine.runners.loops.GenTestLoop.run`.
+        :meth:`mmedit.engine.runner.GenValLoop.run` and
+        :meth:`mmedit.engine.runner.GenTestLoop.run`.
 
         Args:
             runner (Runner): The runner of the training validation and
