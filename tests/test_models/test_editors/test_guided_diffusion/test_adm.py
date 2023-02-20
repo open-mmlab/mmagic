@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from unittest import TestCase
+import torch 
 
 from mmedit.models import AblatedDiffusionModel
 from mmedit.utils import register_all_modules
@@ -38,6 +39,7 @@ class TestAdm(TestCase):
             rgb2bgr=True,
             use_fp16=False)
 
+    @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_infer(self):
         # test no label infer
         self.model.cuda()
