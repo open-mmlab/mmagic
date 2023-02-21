@@ -12,7 +12,7 @@ img_size = 48
 # evaluated on Y channels
 test_evaluator = _base_.test_evaluator
 for evaluator in test_evaluator:
-    for metric in evaluator:
+    for metric in evaluator['metrics']:
         metric['convert_to'] = 'Y'
 
 # model settings

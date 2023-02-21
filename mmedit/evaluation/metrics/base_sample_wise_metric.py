@@ -5,6 +5,7 @@ from typing import List, Optional, Sequence
 
 import torch.nn as nn
 from mmengine.evaluator import BaseMetric
+from mmengine.model import is_model_wrapper
 from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import METRICS
@@ -37,7 +38,9 @@ class BaseSampleWiseMetric(BaseMetric):
             for output. Default: 1
     """
 
-    metric = None
+    SAMPLER_MODE = 'normal'
+    sample_model = 'orig'  # TODO: low-level models only support origin model
+    metric = None  # the name of metric
 
     def __init__(self,
                  gt_key: str = 'gt_img',
@@ -47,6 +50,8 @@ class BaseSampleWiseMetric(BaseMetric):
                  device='cpu',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None) -> None:
+        assert self.metric is not None, (
+            '\'metric\' must be defined for \'BaseSampleWiseMetric\'.')
         super().__init__(collect_device, prefix)
 
         self.gt_key = gt_key
@@ -105,17 +110,19 @@ class BaseSampleWiseMetric(BaseMetric):
             self.results.append({self.metric: result})
 
     def process_image(self, gt, pred, mask):
-        return 0
+        raise NotImplementedError
 
-    def evaluate(self, size=None) -> dict:
-        if size is None:
-            size = self.size
-        return super().evaluate(size)
+    def evaluate(self) -> dict:
+        assert hasattr(self, 'size'), (
+            'Cannot find \'size\', please make sure \'self.prepare\' is '
+            'called correctly.')
+        return super().evaluate(self.size)
 
     def prepare(self, module: nn.Module, dataloader: DataLoader):
-        self.SAMPLER_MODE = 'normal'
-        self.sample_model = 'orig'
-        self.size = dataloader.dataset.__len__()
+        self.size = len(dataloader.dataset)
+        if is_model_wrapper(module):
+            module = module.module
+        self.data_preprocessor = module.data_preprocessor
 
     def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
                            metrics) -> DataLoader:

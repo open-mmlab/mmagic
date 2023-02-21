@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import random
+from copy import deepcopy
 from typing import Dict, List, Union
 
 import mmcv
@@ -371,6 +372,16 @@ class Resize(BaseTransform):
             if key in results:
                 size, results[out_key] = self._resize(results[key])
                 results[f'{out_key}_shape'] = size
+                # copy metainfo
+                if f'ori_{key}_shape' in results:
+                    results[f'ori_{out_key}_shape'] = deepcopy(
+                        results[f'ori_{key}_shape'])
+                if f'{key}_channel_order' in results:
+                    results[f'{out_key}_channel_order'] = deepcopy(
+                        results[f'{key}_channel_order'])
+                if f'{key}_color_type' in results:
+                    results[f'{out_key}_color_type'] = deepcopy(
+                        results[f'{key}_color_type'])
 
         results['scale_factor'] = self.scale_factor
         results['keep_ratio'] = self.keep_ratio

@@ -52,7 +52,7 @@ class MSPIEStyleGAN2(StyleGAN2):
     def train_step(self, data: dict,
                    optim_wrapper: OptimWrapperDict) -> Dict[str, Tensor]:
         """Train GAN model. In the training of GAN models, generator and
-        discriminator are updated alternatively. In MMGeneration's design,
+        discriminator are updated alternatively. In MMEditing's design,
         `self.train_step` is called with data input. Therefore we always update
         discriminator, whose updating is relay on real data, and then determine
         if the generator needs to be updated based on the current number of

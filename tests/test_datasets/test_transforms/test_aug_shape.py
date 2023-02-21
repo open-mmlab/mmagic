@@ -310,6 +310,33 @@ class TestAugmentations:
             f'keep_ratio={False}, size_factor=None, '
             'max_size=None, interpolation=bilinear)')
 
+        # test input with shape (256, 256) + out keys and metainfo copy
+        results = dict(
+            gt_img=self.results['ori_img'][..., 0].copy(),
+            alpha=alpha,
+            ori_alpha_shape=[3, 3],
+            gt_img_channel_order='rgb',
+            alpha_color_type='grayscale')
+        resize = Resize(['gt_img', 'alpha'],
+                        scale=(128, 128),
+                        keep_ratio=False,
+                        output_keys=['img', 'beta'])
+        results = resize(results)
+        assert results['gt_img'].shape == (256, 256)
+        assert results['img'].shape == (128, 128, 1)
+        assert results['alpha'].shape == (240, 320)
+        assert results['beta'].shape == (128, 128, 1)
+        assert results['ori_beta_shape'] == [3, 3]
+        assert results['img_channel_order'] == 'rgb'
+        assert results['beta_color_type'] == 'grayscale'
+
+        name_ = str(resize_keep_ratio)
+        assert name_ == resize_keep_ratio.__class__.__name__ + (
+            "(keys=['gt_img'], output_keys=['gt_img'], "
+            'scale=(128, 128), '
+            f'keep_ratio={False}, size_factor=None, '
+            'max_size=None, interpolation=bilinear)')
+
 
 def test_random_long_edge_crop():
     results = dict(img=np.random.rand(256, 128, 3).astype(np.float32))

@@ -289,10 +289,12 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             inputs = conversion(inputs, channel_index)
             return inputs, target_order
         elif inputs_order.upper() == 'SINGLE':
-            print_log(
-                'Cannot convert inputs with \'single\' channel order '
-                f'to \'output_channel_order\' ({self.output_channel_order}'
-                '). Return without conversion.', 'current', WARNING)
+            if not self._conversion_warning_raised:
+                print_log(
+                    'Cannot convert inputs with \'single\' channel order '
+                    f'to \'output_channel_order\' ({self.output_channel_order}'
+                    '). Return without conversion.', 'current', WARNING)
+                self._conversion_warning_raised = True
             return inputs, inputs_order
         else:
             raise ValueError(f'Unsupported inputs order \'{inputs_order}\'.')
