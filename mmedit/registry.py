@@ -121,7 +121,7 @@ DATA_SAMPLERS = Registry(
 TRANSFORMS = Registry(
     'transform',
     parent=MMENGINE_TRANSFORMS,
-    locations=['mmedit.datasets'],
+    locations=['mmedit.datasets.transforms'],
 )
 
 #######################################################################
