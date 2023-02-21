@@ -8,7 +8,7 @@ from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch.optim import SGD
 
 from mmedit.models import BigGAN, GenDataPreprocessor
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample
 
 generator = dict(
@@ -62,8 +62,8 @@ class TestBigGAN(TestCase):
         gen_cfg = deepcopy(generator)
         gen_cfg['noise_size'] = 10
         disc_cfg = deepcopy(discriminator)
-        gen = MODULES.build(gen_cfg)
-        disc = MODULES.build(disc_cfg)
+        gen = MODELS.build(gen_cfg)
+        disc = MODELS.build(disc_cfg)
         gan = BigGAN(
             generator=gen,
             discriminator=disc,

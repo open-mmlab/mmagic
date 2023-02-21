@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
 def test_gl_dec():
@@ -10,6 +10,6 @@ def test_gl_dec():
 
     cfg_ = template_cfg.copy()
     cfg_['decoder'] = dict(type='AOTDecoder')
-    aot_encdec = BACKBONES.build(cfg_)
+    aot_encdec = MODELS.build(cfg_)
     output = aot_encdec(input_x)
     assert output.shape == (1, 3, 256, 256)

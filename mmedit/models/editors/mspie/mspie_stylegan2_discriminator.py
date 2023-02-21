@@ -2,12 +2,12 @@
 import numpy as np
 import torch.nn as nn
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ..stylegan1 import EqualLinearActModule
 from ..stylegan2 import ConvDownLayer, ModMBStddevLayer, ResBlock
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MSStyleGAN2Discriminator(nn.Module):
     """StyleGAN2 Discriminator.
 

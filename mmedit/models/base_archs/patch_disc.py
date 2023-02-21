@@ -8,10 +8,10 @@ from mmengine.runner import load_checkpoint
 from torch import Tensor
 
 from mmedit.models.utils import generation_init_weights
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class PatchDiscriminator(nn.Module):
     """A PatchGAN discriminator.
 

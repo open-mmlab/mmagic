@@ -5,10 +5,10 @@ from mmengine.model import BaseModule
 from mmengine.model.weight_init import constant_init, normal_init
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
+@MODELS.register_module()
 class DeepFillEncoderDecoder(BaseModule):
     """Two-stage encoder-decoder structure used in DeepFill model.
 
@@ -36,8 +36,8 @@ class DeepFillEncoderDecoder(BaseModule):
                  stage2=dict(type='DeepFillRefiner'),
                  return_offset=False):
         super().__init__()
-        self.stage1 = BACKBONES.build(stage1)
-        self.stage2 = BACKBONES.build(stage2)
+        self.stage1 = MODELS.build(stage1)
+        self.stage2 = MODELS.build(stage2)
 
         self.return_offset = return_offset
 

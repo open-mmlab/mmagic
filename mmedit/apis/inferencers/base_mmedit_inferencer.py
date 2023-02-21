@@ -12,7 +12,7 @@ from mmengine.structures import BaseDataElement
 from torchvision import utils
 
 from mmedit.registry import MODELS
-from mmedit.utils import ConfigType, SampleList
+from mmedit.utils import ConfigType, SampleList, register_all_modules
 from .inference_functions import set_random_seed
 
 InputType = Union[str, int, np.ndarray]
@@ -54,6 +54,7 @@ class BaseMMEditInferencer(BaseInferencer):
             device = torch.device(
                 'cuda' if torch.cuda.is_available() else 'cpu')
         self.device = device
+        register_all_modules()
         super().__init__(config, ckpt, device)
 
         self._init_extra_parameters(extra_parameters)

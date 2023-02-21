@@ -10,12 +10,12 @@ from mmengine.runner import load_checkpoint
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from torch.nn.utils import spectral_norm
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 from .biggan_modules import SelfAttentionBlock
 from .biggan_snmodule import SNEmbedding, SNLinear
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class BigGANDiscriminator(nn.Module):
     """BigGAN Discriminator. The implementation refers to
     https://github.com/ajbrock/BigGAN-PyTorch/blob/master/BigGAN.py # noqa.
@@ -118,7 +118,7 @@ class BigGANDiscriminator(nn.Module):
                     out_channels=out_ch,
                     with_downsample=self.arch['downsample'][index],
                     is_head_block=(index == 0)))
-            self.conv_blocks.append(MODULES.build(self.blocks_cfg))
+            self.conv_blocks.append(MODELS.build(self.blocks_cfg))
             if self.arch['attention'][index]:
                 self.conv_blocks.append(
                     SelfAttentionBlock(

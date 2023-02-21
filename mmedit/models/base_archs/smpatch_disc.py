@@ -7,10 +7,10 @@ from mmengine.model import BaseModule
 from torch import Tensor
 
 from mmedit.models.utils import generation_init_weights
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class SoftMaskPatchDiscriminator(BaseModule):
     """A Soft Mask-Guided PatchGAN discriminator.
 

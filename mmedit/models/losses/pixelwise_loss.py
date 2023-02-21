@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmedit.registry import LOSSES
+from mmedit.registry import MODELS
 from .loss_wrapper import masked_loss
 
 _reduction_modes = ['none', 'mean', 'sum']
@@ -65,7 +65,7 @@ def tv_loss(input: torch.Tensor) -> torch.Tensor:
     return (x_diff**2 + y_diff**2).mean([1, 2, 3])
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class L1Loss(nn.Module):
     """L1 (mean absolute error, MAE) loss.
 
@@ -114,7 +114,7 @@ class L1Loss(nn.Module):
             sample_wise=self.sample_wise)
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class MSELoss(nn.Module):
     """MSE (L2) loss.
 
@@ -163,7 +163,7 @@ class MSELoss(nn.Module):
             sample_wise=self.sample_wise)
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class CharbonnierLoss(nn.Module):
     """Charbonnier loss (one variant of Robust L1Loss, a differentiable variant
     of L1Loss).
@@ -221,7 +221,7 @@ class CharbonnierLoss(nn.Module):
             sample_wise=self.sample_wise)
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class MaskedTVLoss(L1Loss):
     """Masked TV loss.
 
@@ -255,7 +255,7 @@ class MaskedTVLoss(L1Loss):
         return loss
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class PSNRLoss(nn.Module):
     """PSNR Loss in "HINet: Half Instance Normalization Network for Image
     Restoration".

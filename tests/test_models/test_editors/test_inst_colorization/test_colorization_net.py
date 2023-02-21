@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
 def test_colorization_net():
@@ -10,7 +10,7 @@ def test_colorization_net():
         type='ColorizationNet', input_nc=4, output_nc=2, norm_type='batch')
 
     # build model
-    model = MODULES.build(model_cfg)
+    model = MODELS.build(model_cfg)
 
     # test attributes
     assert model.__class__.__name__ == 'ColorizationNet'

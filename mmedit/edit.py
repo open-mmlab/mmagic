@@ -44,6 +44,8 @@ class MMEdit:
 
         # conditional models
         'biggan',
+        'sngan_proj',
+        'sagan',
 
         # unconditional models
         'styleganv1',
@@ -57,6 +59,7 @@ class MMEdit:
 
         # translation models
         'pix2pix',
+        'cyclegan',
 
         # restoration models
         'esrgan',

@@ -6,7 +6,7 @@ import pytest
 import torch
 
 from mmedit.models.editors.sagan import SNGANGenerator
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
 class TestSNGANPROJGenerator(object):
@@ -28,7 +28,7 @@ class TestSNGANPROJGenerator(object):
     def test_sngan_proj_generator(self):
 
         # test default setting with builder
-        g = MODULES.build(self.default_config)
+        g = MODELS.build(self.default_config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -50,7 +50,7 @@ class TestSNGANPROJGenerator(object):
         # test different output_scale
         config = deepcopy(self.default_config)
         config['output_scale'] = 64
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 64, 64)
@@ -59,13 +59,13 @@ class TestSNGANPROJGenerator(object):
         config = deepcopy(self.default_config)
         config['num_classes'] = 0
         with pytest.raises(ValueError):
-            g = MODULES.build(config)
+            g = MODELS.build(config)
 
         # test num_classes == 0 and `use_cbn = False`
         config = deepcopy(self.default_config)
         config['num_classes'] = 0
         config['use_cbn'] = False
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -73,7 +73,7 @@ class TestSNGANPROJGenerator(object):
         # test different base_channels
         config = deepcopy(self.default_config)
         config['base_channels'] = 64
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -81,7 +81,7 @@ class TestSNGANPROJGenerator(object):
         # test different channels_cfg --> list
         config = deepcopy(self.default_config)
         config['channels_cfg'] = [1, 1, 1]
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -89,7 +89,7 @@ class TestSNGANPROJGenerator(object):
         # test different channels_cfg --> dict
         config = deepcopy(self.default_config)
         config['channels_cfg'] = {32: [1, 1, 1], 64: [16, 8, 4, 2]}
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -98,18 +98,18 @@ class TestSNGANPROJGenerator(object):
         config = deepcopy(self.default_config)
         config['channels_cfg'] = {64: [16, 8, 4, 2]}
         with pytest.raises(KeyError):
-            g = MODULES.build(config)
+            g = MODELS.build(config)
 
         # test different channels_cfg --> error (type not match)
         config = deepcopy(self.default_config)
         config['channels_cfg'] = '1234'
         with pytest.raises(ValueError):
-            g = MODULES.build(config)
+            g = MODELS.build(config)
 
         # test different act_cfg
         config = deepcopy(self.default_config)
         config['act_cfg'] = dict(type='Sigmoid')
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -117,7 +117,7 @@ class TestSNGANPROJGenerator(object):
         # test with_spectral_norm
         config = deepcopy(self.default_config)
         config['with_spectral_norm'] = True
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -125,7 +125,7 @@ class TestSNGANPROJGenerator(object):
         # test with_embedding_spectral_norm
         config = deepcopy(self.default_config)
         config['with_embedding_spectral_norm'] = True
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -133,7 +133,7 @@ class TestSNGANPROJGenerator(object):
         # test norm_eps
         config = deepcopy(self.default_config)
         config['norm_eps'] = 1e-9
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -141,7 +141,7 @@ class TestSNGANPROJGenerator(object):
         # test sn_eps
         config = deepcopy(self.default_config)
         config['sn_eps'] = 1e-12
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -149,7 +149,7 @@ class TestSNGANPROJGenerator(object):
         # test different init_cfg --> Studio
         config = deepcopy(self.default_config)
         config['init_cfg'] = dict(type='studio')
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -157,7 +157,7 @@ class TestSNGANPROJGenerator(object):
         # test different init_cfg --> BigGAN
         config = deepcopy(self.default_config)
         config['init_cfg'] = dict(type='biggan')
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -165,7 +165,7 @@ class TestSNGANPROJGenerator(object):
         # test different init_cfg --> SNGAN
         config = deepcopy(self.default_config)
         config['init_cfg'] = dict(type='sngan')
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -173,7 +173,7 @@ class TestSNGANPROJGenerator(object):
         # test different init_cfg --> SAGAN
         config = deepcopy(self.default_config)
         config['init_cfg'] = dict(type='sagan')
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -182,19 +182,19 @@ class TestSNGANPROJGenerator(object):
         config = deepcopy(self.default_config)
         config['init_cfg'] = dict(type='wgan-gp')
         with pytest.raises(NotImplementedError):
-            g = MODULES.build(config)
+            g = MODELS.build(config)
 
         # test pretrained --> raise error
         config = deepcopy(self.default_config)
         config['pretrained'] = 42
         with pytest.raises(TypeError):
-            g = MODULES.build(config)
+            g = MODELS.build(config)
 
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_sngan_proj_generator_cuda(self):
 
         # test default setting with builder
-        g = MODULES.build(self.default_config).cuda()
+        g = MODELS.build(self.default_config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -216,7 +216,7 @@ class TestSNGANPROJGenerator(object):
         # test different output_scale
         config = deepcopy(self.default_config)
         config['output_scale'] = 64
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 64, 64)
@@ -224,7 +224,7 @@ class TestSNGANPROJGenerator(object):
         # test different base_channels
         config = deepcopy(self.default_config)
         config['base_channels'] = 64
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -232,7 +232,7 @@ class TestSNGANPROJGenerator(object):
         # test different channels_cfg --> list
         config = deepcopy(self.default_config)
         config['channels_cfg'] = [1, 1, 1]
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -240,7 +240,7 @@ class TestSNGANPROJGenerator(object):
         # test different channels_cfg --> dict
         config = deepcopy(self.default_config)
         config['channels_cfg'] = {32: [1, 1, 1], 64: [16, 8, 4, 2]}
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -248,7 +248,7 @@ class TestSNGANPROJGenerator(object):
         # test different act_cfg
         config = deepcopy(self.default_config)
         config['act_cfg'] = dict(type='Sigmoid')
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -256,7 +256,7 @@ class TestSNGANPROJGenerator(object):
         # test with_spectral_norm
         config = deepcopy(self.default_config)
         config['with_spectral_norm'] = True
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -264,7 +264,7 @@ class TestSNGANPROJGenerator(object):
         # test with_embedding_spectral_norm
         config = deepcopy(self.default_config)
         config['with_embedding_spectral_norm'] = True
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -272,7 +272,7 @@ class TestSNGANPROJGenerator(object):
         # test norm_eps
         config = deepcopy(self.default_config)
         config['norm_eps'] = 1e-9
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -280,7 +280,7 @@ class TestSNGANPROJGenerator(object):
         # test sn_eps
         config = deepcopy(self.default_config)
         config['sn_eps'] = 1e-12
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2).cuda()
         assert x.shape == (2, 3, 32, 32)
@@ -288,7 +288,7 @@ class TestSNGANPROJGenerator(object):
         # test different init_cfg --> BigGAN
         config = deepcopy(self.default_config)
         config['init_cfg'] = dict(type='biggan')
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
@@ -296,7 +296,7 @@ class TestSNGANPROJGenerator(object):
         # test different init_cfg --> SNGAN
         config = deepcopy(self.default_config)
         config['init_cfg'] = dict(type='sngan')
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
