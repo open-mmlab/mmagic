@@ -211,11 +211,35 @@ class CatersianGrid(nn.Module):
     ``[1, 1]`` denotes the right-botton corner.
     """
 
-    def forward(self, x, **kwargs):
+    def forward(self, x: torch.Tensor, **kwargs) -> torch.Tensor:
+        """Forward function.
+
+        Args:
+            x (Tensor): The input 2d tensor.
+
+        Returns:
+            torch.Tensor: The generated catersian grid for input 2d tensor.
+        """
         assert x.dim() == 4
         return self.make_grid2d_like(x, **kwargs)
 
-    def make_grid2d(self, height, width, num_batches=1, requires_grad=False):
+    def make_grid2d(self,
+                    height: int,
+                    width: int,
+                    num_batches: int = 1,
+                    requires_grad: bool = False) -> torch.Tensor:
+        """
+        Args:
+            height (int): The height of 2d grid to generate.
+            width (int): The width of 2d grid to generate.
+            num_batches (int): The num batches of 2d grid to generate.
+                Defaults to 1.
+            required_grad (bool): Whether the generated grid require grad.
+                Defaults to False.
+
+        Returns:
+            torch.Tensor: The generated 2d grid.
+        """
         h, w = height, width
         grid_y, grid_x = torch.meshgrid(torch.arange(0, h), torch.arange(0, w))
         grid_x = 2 * grid_x / max(float(w) - 1., 1.) - 1.

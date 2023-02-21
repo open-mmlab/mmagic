@@ -187,7 +187,17 @@ class GrowScaleImgDataset(BaseDataset):
         results = dict(gt_path=self.data_list[idx])
         return self.pipeline(results)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx) -> dict:
+        """Get the idx-th image and data information of dataset after
+        `self.pipeline`.
+
+        Args:
+            idx (int): The index of self.data_list.
+
+        Returns:
+            dict: The idx-th image and data information of dataset after
+            ``self.pipeline``.
+        """
         if not self.test_mode:
             return self.prepare_train_data(idx)
 

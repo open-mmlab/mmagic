@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from abc import ABCMeta
 from copy import deepcopy
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
@@ -494,7 +494,19 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
 
         return log_vars
 
-    def _get_gen_loss(self, out_dict):
+    def _get_gen_loss(self, out_dict: dict) -> Tuple[Tensor, dict]:
+        """Calculate loss for generator.
+
+        Args:
+            out_dict (dict): The output dict for generator and discriminator
+                to calculate loss items.
+
+        Returns:
+            Tuple[Tensor, dict]: There are two elements. The first is the
+                loss tensor passed to optim_wrapper which may be a weighted sum
+                of all losses, and the second is log_vars which will be sent to
+                the logger.
+        """
         losses_dict = {}
         # gan loss
         losses_dict['loss_disc_fake_g'] = self.gan_loss(
@@ -517,7 +529,19 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
 
         return loss, log_var
 
-    def _get_disc_loss(self, out_dict):
+    def _get_disc_loss(self, out_dict: dict) -> Tuple[Tensor, dict]:
+        """Calculate loss for discriminator.
+
+        Args:
+            out_dict (dict): The output dict for generator and discriminator
+                to calculate loss items.
+
+        Returns:
+            Tuple[Tensor, dict]: There are two elements. The first is the
+                loss tensor passed to optim_wrapper which may be a weighted sum
+                of all losses, and the second is log_vars which will be sent to
+                the logger.
+        """
         # Construct losses dict. If you hope some items to be included in the
         # computational graph, you have to add 'loss' in its name. Otherwise,
         # items without 'loss' in their name will just be used to print
