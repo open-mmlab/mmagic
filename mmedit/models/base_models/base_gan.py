@@ -10,7 +10,7 @@ from mmengine.model import BaseModel, is_model_wrapper
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample
 from mmedit.utils.typing import ForwardInputs, NoiseVar, SampleList
 from ..utils import (get_valid_noise_size, get_valid_num_batches,
