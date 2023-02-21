@@ -159,6 +159,22 @@ class TestLogProcessor:
             else:
                 assert out == 'Iter(val) [10/10]  accuracy: 0.9000'
 
+    def test_non_scalar(self):
+        # test with non scalar
+        metric1 = np.random.rand(10)
+        metric2 = torch.tensor(10)
+
+        log_processor = LogProcessor()
+        # Collect with prefix.
+        log_infos = {'test/metric1': metric1, 'test/metric2': metric2}
+        self.runner.message_hub._runtime_info = log_infos
+        tag = log_processor._collect_non_scalars(self.runner, mode='test')
+        # Test training key in tag.
+        assert list(tag.keys()) == ['metric1', 'metric2']
+        # Test statistics lr with `current`, loss and time with 'mean'
+        assert tag['metric1'] is metric1
+        assert tag['metric2'] is metric2
+
     def test_collect_scalars(self):
         history_count = np.ones(100)
         time_scalars = np.random.randn(100)

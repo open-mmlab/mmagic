@@ -108,8 +108,11 @@ class EditLogProcessor(LogProcessor):
             log_str += '  '.join(log_items)
         return tag, log_str
 
-    def get_log_after_epoch(self, runner, batch_idx: int,
-                            mode: str) -> Tuple[dict, str]:
+    def get_log_after_epoch(self,
+                            runner,
+                            batch_idx: int,
+                            mode: str,
+                            with_non_scalar: bool = False) -> Tuple[dict, str]:
         """Format log string after validation or testing epoch.
 
         We use `runner.val_loop.total_length` and
@@ -123,6 +126,8 @@ class EditLogProcessor(LogProcessor):
             batch_idx (int): The index of the current batch in the current
                 loop.
             mode (str): Current mode of runner.
+            with_non_scalar (bool): Whether to include non-scalar infos in the
+                returned tag. Defaults to False.
 
         Return:
             Tuple(dict, str): Formatted log dict/string which will be
@@ -138,6 +143,7 @@ class EditLogProcessor(LogProcessor):
         custom_cfg_copy = self._parse_windows_size(runner, batch_idx)
         # tag is used to write log information to different backends.
         tag = self._collect_scalars(custom_cfg_copy, runner, mode)
+        non_scalar_tag = self._collect_non_scalars(runner, mode)
         # By epoch:
         #     Epoch(val) [10][1000/1000]  ...
         #     Epoch(test) [1000/1000] ...
@@ -164,4 +170,8 @@ class EditLogProcessor(LogProcessor):
                 val = f'{val:.{self.num_digits}f}'
             log_items.append(f'{name}: {val}')
         log_str += '  '.join(log_items)
+
+        if with_non_scalar:
+            tag.update(non_scalar_tag)
+
         return tag, log_str
