@@ -4,13 +4,13 @@ from typing import Optional
 import torch
 import torch.nn as nn
 
-from mmedit.registry import LOSSES
+from mmedit.registry import MODELS
 from .pixelwise_loss import charbonnier_loss, l1_loss, mse_loss
 
 _reduction_modes = ['none', 'mean', 'sum']
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class L1CompositionLoss(nn.Module):
     """L1 composition loss.
 
@@ -66,7 +66,7 @@ class L1CompositionLoss(nn.Module):
             sample_wise=self.sample_wise)
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class MSECompositionLoss(nn.Module):
     """MSE (L2) composition loss.
 
@@ -122,7 +122,7 @@ class MSECompositionLoss(nn.Module):
             sample_wise=self.sample_wise)
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class CharbonnierCompLoss(nn.Module):
     """Charbonnier composition loss.
 

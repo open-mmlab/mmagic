@@ -10,7 +10,7 @@ from mmengine.runner.amp import autocast
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from torch import Tensor
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ..stylegan1 import EqualLinearActModule
 from ..stylegan3.stylegan3_modules import MappingNetwork
 from .ada.augment import AugmentPipe
@@ -18,8 +18,8 @@ from .ada.misc import constant
 from .stylegan2_modules import ConvDownLayer, ModMBStddevLayer, ResBlock
 
 
-@MODULES.register_module('StyleGANv2Discriminator')
-@MODULES.register_module()
+@MODELS.register_module('StyleGANv2Discriminator')
+@MODELS.register_module()
 class StyleGAN2Discriminator(BaseModule):
     """StyleGAN2 Discriminator.
 
@@ -242,7 +242,7 @@ class StyleGAN2Discriminator(BaseModule):
         return x
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class ADAStyleGAN2Discriminator(StyleGAN2Discriminator):
 
     def __init__(self, in_size, *args, data_aug=None, **kwargs):
@@ -256,7 +256,7 @@ class ADAStyleGAN2Discriminator(StyleGAN2Discriminator):
         super().__init__(in_size, *args, **kwargs)
         self.with_ada = data_aug is not None and data_aug is not dict()
         if self.with_ada:
-            self.ada_aug = MODULES.build(data_aug)
+            self.ada_aug = MODELS.build(data_aug)
             self.ada_aug.requires_grad = False
         self.log_size = int(np.log2(in_size))
 
@@ -267,7 +267,7 @@ class ADAStyleGAN2Discriminator(StyleGAN2Discriminator):
         return super().forward(x)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class ADAAug(nn.Module):
     """Data Augmentation Module for Adaptive Discriminator augmentation.
 

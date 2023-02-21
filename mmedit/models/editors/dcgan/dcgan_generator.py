@@ -8,11 +8,11 @@ from mmengine.model import normal_init
 from mmengine.runner import load_checkpoint
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ...utils import get_module_device
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class DCGANGenerator(nn.Module):
     """Generator for DCGAN.
 

@@ -7,12 +7,12 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ..singan.singan_generator import SinGANMultiScaleGenerator
 from ..singan.singan_modules import GeneratorBlock
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SinGANMSGeneratorPE(SinGANMultiScaleGenerator):
     """Multi-Scale Generator used in SinGAN with positional encoding.
 
@@ -83,7 +83,7 @@ class SinGANMSGeneratorPE(SinGANMultiScaleGenerator):
 
         self.with_positional_encode = positional_encoding is not None
         if self.with_positional_encode:
-            self.head_position_encode = MODULES.build(positional_encoding)
+            self.head_position_encode = MODELS.build(positional_encoding)
 
         self.pad_head = int((kernel_size - 1) / 2 * num_layers)
         self.blocks = nn.ModuleList()

@@ -5,13 +5,13 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 from ...utils import get_module_device
 from .pggan_modules import (EqualizedLRConvModule, EqualizedLRConvUpModule,
                             PGGANNoiseTo2DFeat)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class PGGANGenerator(nn.Module):
     """Generator for PGGAN.
 
