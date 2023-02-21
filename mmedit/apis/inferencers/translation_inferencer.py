@@ -42,16 +42,15 @@ class TranslationInferencer(BaseMMEditInferencer):
         test_pipeline = Compose(cfg.test_pipeline)
 
         # prepare data
-        data = dict()
         # dirty code to deal with test data pipeline
+        data = dict()
         data['pair_path'] = img
-        data[f'img_{source_domain}_path'] = img
-        data[f'img_{self.target_domain}_path'] = img
-
+        data['img_A_path'] = img
+        data['img_B_path'] = img
         data = collate([test_pipeline(data)])
         data = self.model.data_preprocessor(data, False)
-        inputs_dict = data['inputs']
 
+        inputs_dict = data['inputs']
         results = inputs_dict[f'img_{source_domain}']
         return results
 
