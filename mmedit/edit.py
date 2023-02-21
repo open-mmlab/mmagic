@@ -44,6 +44,8 @@ class MMEdit:
 
         # conditional models
         'biggan',
+        'sngan_proj',
+        'sagan',
 
         # unconditional models
         'styleganv1',
