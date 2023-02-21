@@ -29,6 +29,7 @@ val_dataloader = dict(
 
 test_dataloader = val_dataloader
 
+# TODO: matting
 val_evaluator = [
     dict(type='SAD'),
     dict(type='MattingMSE'),

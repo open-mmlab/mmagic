@@ -10,7 +10,7 @@ from mmengine.runner import Runner
 
 from mmedit.datasets import PairedImageDataset
 from mmedit.evaluation import InceptionScore, TransIS
-from mmedit.models import GenDataPreprocessor, Pix2Pix
+from mmedit.models import EditDataPreprocessor, Pix2Pix
 from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 
@@ -167,7 +167,7 @@ class TestTransIS:
                 batch_size=2,
                 dataset=dataset,
                 sampler=dict(type='DefaultSampler')))
-        gan_data_preprocessor = GenDataPreprocessor()
+        gan_data_preprocessor = EditDataPreprocessor()
         generator = dict(
             type='UnetGenerator',
             in_channels=3,

@@ -72,9 +72,11 @@ val_dataloader = dict(
         depth=1,
         pipeline=val_pipeline))
 
-val_evaluator = [
-    dict(type='PSNR', convert_to='Y'),
-    dict(type='SSIM', convert_to='Y'),
-]
+val_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[
+        dict(type='PSNR', convert_to='Y'),
+        dict(type='SSIM', convert_to='Y'),
+    ])
 
 find_unused_parameters = True

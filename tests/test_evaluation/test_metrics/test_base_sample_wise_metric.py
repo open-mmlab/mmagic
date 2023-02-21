@@ -1,17 +1,30 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from copy import deepcopy
+from unittest.mock import MagicMock
 
 import numpy as np
 import torch
 from torch.utils.data.dataloader import DataLoader
 
 from mmedit.datasets import BasicImageDataset
-from mmedit.evaluation.metrics import base_sample_wise_metric
+from mmedit.evaluation.metrics.base_sample_wise_metric import \
+    BaseSampleWiseMetric
+
+
+class BaseSampleWiseMetricMock(BaseSampleWiseMetric):
+
+    metric = 'metric'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def process_image(self, *args, **kwargs):
+        return 0
 
 
 def test_compute_metrics():
-    metric = base_sample_wise_metric.BaseSampleWiseMetric()
-    metric.metric = 'metric'
+    metric = BaseSampleWiseMetricMock()
+
     results = []
     key = 'metric'
     total = 0
@@ -25,8 +38,7 @@ def test_compute_metrics():
 
 
 def test_process():
-    metric = base_sample_wise_metric.BaseSampleWiseMetric()
-    metric.metric = 'metric'
+    metric = BaseSampleWiseMetricMock()
 
     mask = np.ones((32, 32, 3)) * 2
     mask[:16] *= 0
@@ -64,13 +76,15 @@ def test_prepare():
         pipeline=[])
     dataloader = DataLoader(dataset)
 
-    metric = base_sample_wise_metric.BaseSampleWiseMetric()
-    metric.metric = 'metric'
+    metric = BaseSampleWiseMetricMock()
+    model = MagicMock()
+    model.data_preprocessor = MagicMock()
 
-    metric.prepare(None, dataloader)
+    metric.prepare(model, dataloader)
     assert metric.SAMPLER_MODE == 'normal'
     assert metric.sample_model == 'orig'
     assert metric.size == 1
+    assert metric.data_preprocessor == model.data_preprocessor
 
     metric.get_metric_sampler(None, dataloader, [])
     assert dataloader == dataloader

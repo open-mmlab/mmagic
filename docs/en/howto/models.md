@@ -195,7 +195,7 @@ import torch
 from mmengine.model import BaseModel
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 @MODELS.register_module()
@@ -359,7 +359,7 @@ In `forward_inference` function, `class BaseEditModel` first converts the forwar
         for idx in range(feats.shape[0]):
             predictions.append(
                 EditDataSample(
-                    pred_img=PixelData(data=feats[idx].to('cpu')),
+                    pred_img=feats[idx].to('cpu'),
                     metainfo=data_samples[idx].metainfo))
 
         return predictions
