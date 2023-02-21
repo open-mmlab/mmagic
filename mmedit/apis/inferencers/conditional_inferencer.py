@@ -20,7 +20,7 @@ class ConditionalInferencer(BaseMMEditInferencer):
         visualize=['result_out_dir'],
         postprocess=[])
 
-    extra_parameters = dict(num_batches=4, sample_model='ema')
+    extra_parameters = dict(num_batches=4, sample_model='orig')
 
     def preprocess(self, label: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.
