@@ -193,8 +193,7 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
     <tr valign="top">
       <td>
         <ul>
-            <li><a href="configs/sngan_proj/README.md">SNGAN (ICLR'2018)</a></li>
-            <li><a href="configs/sngan_proj/README.md">Projection GAN (ICLR'2018)</a></li>
+            <li><a href="configs/sngan_proj/README.md">SNGAN/Projection GAN (ICLR'2018)</a></li>
             <li><a href="configs/sagan/README.md">SAGAN (ICML'2019)</a></li>
             <li><a href="configs/biggan/README.md">BIGGAN/BIGGAN-DEEP (ICLR'2018)</a></li>
       </ul>
