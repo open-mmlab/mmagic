@@ -24,7 +24,7 @@ class GenVisBackend(BaseVisBackend):
     backend through the experiment property for custom drawing.
 
     Examples:
-        >>> from mmgen.visualization import GenVisBackend
+        >>> from mmedit.visualization import GenVisBackend
         >>> import numpy as np
         >>> vis_backend = GenVisBackend(save_dir='temp_dir',
         >>>                             ceph_path='s3://temp-bucket')

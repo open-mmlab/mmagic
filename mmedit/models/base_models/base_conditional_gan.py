@@ -24,7 +24,7 @@ class BaseConditionalGAN(BaseGAN):
         discriminator (Optional[ModelType]): The config or model of the
             discriminator. Defaults to None.
         data_preprocessor (Optional[Union[dict, Config]]): The pre-process
-            config or :class:`~mmedit.models.GenDataPreprocessor`.
+            config or :class:`~mmedit.models.EditDataPreprocessor`.
         generator_steps (int): The number of times the generator is completely
             updated before the discriminator is updated. Defaults to 1.
         discriminator_steps (int): The number of times the discriminator is

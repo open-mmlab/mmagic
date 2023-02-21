@@ -33,5 +33,5 @@ param_scheduler = dict(
     type='CosineRestartLR',
     by_epoch=False,
     periods=[150000, 150000, 150000, 150000],
-    restart_weights=[1, 1, 1, 1],
+    restart_weights=[1, 0.5, 0.5, 0.5],
     eta_min=1e-7)
