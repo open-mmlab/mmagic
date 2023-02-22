@@ -17,6 +17,6 @@ def pixel_unshuffle(x, scale):
             f'with shape: {x.shape}')
     h = h // scale
     w = w // scale
-    x = x.view([b, c, h, scale, w, scale])
+    x = x.view(b, c, h, scale, w, scale)
     x = x.permute(0, 1, 3, 5, 2, 4)
     return x.reshape(b, -1, h, w)
