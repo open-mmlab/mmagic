@@ -1,10 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from mmengine.model import BaseModule
 
-from mmedit.registry import BACKBONES, COMPONENTS
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
+@MODELS.register_module()
 class GLEncoderDecoder(BaseModule):
     """Encoder-Decoder used in Global&Local model.
 
@@ -25,9 +25,9 @@ class GLEncoderDecoder(BaseModule):
                  decoder=dict(type='GLDecoder'),
                  dilation_neck=dict(type='GLDilationNeck')):
         super().__init__()
-        self.encoder = COMPONENTS.build(encoder)
-        self.decoder = COMPONENTS.build(decoder)
-        self.dilation_neck = COMPONENTS.build(dilation_neck)
+        self.encoder = MODELS.build(encoder)
+        self.decoder = MODELS.build(decoder)
+        self.dilation_neck = MODELS.build(dilation_neck)
 
         # support fp16
         self.fp16_enabled = False

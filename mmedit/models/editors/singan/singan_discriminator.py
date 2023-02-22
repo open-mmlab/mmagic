@@ -3,11 +3,11 @@ import numpy as np
 import torch.nn as nn
 from mmengine import print_log
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from .singan_modules import DiscriminatorBlock
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SinGANMultiScaleDiscriminator(nn.Module):
     """Multi-Scale Discriminator used in SinGAN.
 

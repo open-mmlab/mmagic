@@ -8,7 +8,7 @@ from mmengine import MMLogger
 from mmengine.runner import load_checkpoint
 from torch.nn import functional as F
 
-from mmedit.registry import LOSSES
+from mmedit.registry import MODELS
 
 
 class PerceptualVGG(nn.Module):
@@ -95,7 +95,7 @@ class PerceptualVGG(nn.Module):
         load_checkpoint(model, pretrained, logger=logger)
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class PerceptualLoss(nn.Module):
     """Perceptual loss with commonly used style loss.
 
@@ -234,7 +234,7 @@ class PerceptualLoss(nn.Module):
         return gram
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class TransferalPerceptualLoss(nn.Module):
     """Transferal perceptual loss.
 

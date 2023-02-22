@@ -7,11 +7,11 @@ import torch.nn as nn
 from mmcv.cnn import ConvModule
 
 from mmedit.models.utils import get_module_device
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 from .wgan_gp_module import WGANNoiseTo2DFeat
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class WGANGPGenerator(nn.Module):
     r"""Generator for WGANGP.
 

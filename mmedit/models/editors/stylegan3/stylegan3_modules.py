@@ -6,7 +6,7 @@ import torch.nn as nn
 from mmengine.runner.amp import autocast
 
 from mmedit.models.base_archs import conv2d_gradfix
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from .stylegan3_ops.ops import bias_act, filtered_lrelu
 
 
@@ -120,7 +120,7 @@ class FullyConnectedLayer(nn.Module):
         return x
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MappingNetwork(nn.Module):
     """Style mapping network used in StyleGAN3. The main difference between it
     and styleganv1,v2 is that mean latent is registered as a buffer and dynamic
@@ -584,7 +584,7 @@ class SynthesisLayer(nn.Module):
         return torch.as_tensor(f, dtype=torch.float32)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SynthesisNetwork(nn.Module):
     """Synthesis network for stylegan3.
 

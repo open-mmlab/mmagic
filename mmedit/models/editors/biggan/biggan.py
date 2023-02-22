@@ -22,16 +22,16 @@ class BigGAN(BaseConditionalGAN):
     Image Synthesis <https://arxiv.org/abs/1809.11096>`_ (BigGAN).
 
     Detailed architecture can be found in
-    :class:~`mmgen.models.architectures.biggan.generator_discriminator.BigGANGenerator`  # noqa
+    :class:`~mmedit.models.editors.biggan.BigGANGenerator`
     and
-    :class:~`mmgen.models.architectures.biggan.generator_discriminator.BigGANDiscriminator`  # noqa
+    :class:`~mmedit.models.editors.biggan.BigGANDiscriminator`
 
     Args:
         generator (ModelType): The config or model of the generator.
         discriminator (Optional[ModelType]): The config or model of the
             discriminator. Defaults to None.
         data_preprocessor (Optional[Union[dict, Config]]): The pre-process
-            config or :class:`~mmgen.models.GANDataPreprocessor`.
+            config or :class:`~mmedit.models.GenDataPreprocessor`.
         generator_steps (int): Number of times the generator was completely
             updated before the discriminator is updated. Defaults to 1.
         discriminator_steps (int): Number of times the discriminator was

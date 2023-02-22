@@ -10,7 +10,7 @@ from mmengine.model import BaseModel, is_model_wrapper
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample
 from ...base_models import BaseGAN
 from ...losses import gen_path_regularizer, r1_gradient_penalty_loss
@@ -26,16 +26,16 @@ class StyleGAN2(BaseGAN):
 
     Paper link: https://openaccess.thecvf.com/content_CVPR_2020/html/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.html. # noqa
 
-    :class:~`mmgen.models.architectures.stylegan.generator_discriminator_v2.StyleGANv2Generator`  # noqa
+    :class:`~mmedit.models.editors.stylegan2.StyleGAN2Generator`
     and
-    :class:~`mmgen.models.architectures.stylegan.generator_discriminator_v2.StyleGAN2Discriminator`  # noqa
+    :class:`~mmedit.models.editors.stylegan2.StyleGAN2Discriminator`
 
     Args:
         generator (ModelType): The config or model of the generator.
         discriminator (Optional[ModelType]): The config or model of the
             discriminator. Defaults to None.
         data_preprocessor (Optional[Union[dict, Config]]): The pre-process
-            config or :class:`~mmgen.models.GenDataPreprocessor`.
+            config or :class:`~mmedit.models.GenDataPreprocessor`.
         generator_steps (int): The number of times the generator is completely
             updated before the discriminator is updated. Defaults to 1.
         discriminator_steps (int): The number of times the discriminator is
@@ -57,7 +57,7 @@ class StyleGAN2(BaseGAN):
         # build generator
         if isinstance(generator, dict):
             self._gen_cfg = deepcopy(generator)
-            generator = MODULES.build(generator)
+            generator = MODELS.build(generator)
         self.generator = generator
 
         # get valid noise_size
@@ -71,7 +71,7 @@ class StyleGAN2(BaseGAN):
                 disc_args = dict()
                 if hasattr(self, 'num_classes'):
                     disc_args['num_classes'] = self.num_classes
-                discriminator = MODULES.build(
+                discriminator = MODELS.build(
                     discriminator, default_args=disc_args)
         self.discriminator = discriminator
 
@@ -253,11 +253,11 @@ class StyleGAN2(BaseGAN):
         # NOTE: Do not use context manager of optim_wrapper. Because
         # in mixed-precision training, StyleGAN2 only enable fp16 in
         # specified blocks (refers to `:attr:enable_fp16` in
-        # :class:~`StyleGANv2Generator` and :class:~`StyleGAN2Discriminator`
-        # for more details), but in :func:~`AmpOptimWrapper.optim_context`,
+        # :class:`~StyleGANv2Generator` and :class:`~StyleGAN2Discriminator`
+        # for more details), but in :func:`~AmpOptimWrapper.optim_context`,
         # fp16 is applied to all modules. This may slow down gradient
         # accumulation because `no_sycn` in
-        # :func:~`OptimWrapper.optim_context` will not be called any more.
+        # :func:`~OptimWrapper.optim_context` will not be called any more.
         log_vars = self.train_discriminator(inputs_dict, data_samples,
                                             disc_optimizer_wrapper)
 
