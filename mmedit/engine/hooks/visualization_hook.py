@@ -88,7 +88,7 @@ class GenVisualizationHook(Hook):
 
     - Required key words:
         - 'type': Value must be string. Denotes what kind of sampler is used to
-            generate image. Refers to `:meth:~mmgen.core.sampler.get_sampler`.
+            generate image. Refers to :meth:`~mmedit.utils.get_sampler`.
     - Optional key words (If not passed, will use the default value):
         - 'n_rows': Value must be int. The number of images in one row.
         - 'num_samples': Value must be int. The number of samples to visualize.

@@ -6,10 +6,10 @@ from mmengine.model import BaseModule
 
 from mmedit.models.base_archs import pixel_unshuffle
 from mmedit.models.utils import default_init_weights, make_layer
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
+@MODELS.register_module()
 class RRDBNet(BaseModule):
     """Networks consisting of Residual in Residual Dense Block, which is used
     in ESRGAN and Real-ESRGAN.

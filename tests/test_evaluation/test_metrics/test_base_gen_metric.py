@@ -94,7 +94,8 @@ def test_GenerativeMetric():
 
     iterator = iter(sampler)
     output = next(iterator)
-    assert output['inputs'] == dict(sample_model='ema', num_batches=10)
+    assert output['inputs'] == dict(
+        sample_model='ema', num_batches=10, sample_kwargs={})
     assert len(output['data_samples']) == 10
 
     target_label_list = [
@@ -105,3 +106,14 @@ def test_GenerativeMetric():
     for data in output['data_samples']:
         label = data.gt_label.label
         assert any([(label == tar).all() for tar in target_label_list])
+
+    # test with sample kwargs
+    sample_kwargs = dict(
+        num_inference_steps=250, show_progress=True, classifier_scale=1.)
+    metric = ToyGenerativeMetric(
+        11, need_cond_input=True, sample_kwargs=sample_kwargs)
+    sampler = metric.get_metric_sampler(model, dataloader, [metric])
+    iterator = iter(sampler)
+    output = next(iterator)
+    assert output['inputs'] == dict(
+        sample_model='ema', num_batches=10, sample_kwargs=sample_kwargs)

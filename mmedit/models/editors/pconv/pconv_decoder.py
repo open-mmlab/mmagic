@@ -3,11 +3,11 @@ import torch
 import torch.nn.functional as F
 from mmengine.model import BaseModule
 
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 from .mask_conv_module import MaskConvModule
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class PConvDecoder(BaseModule):
     """Decoder with partial conv.
 

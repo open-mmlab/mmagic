@@ -3,11 +3,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module('SPE')
-@MODULES.register_module('SPE2d')
+@MODELS.register_module('SPE')
+@MODELS.register_module('SPE2d')
 class SinusoidalPositionalEmbedding(nn.Module):
     """Sinusoidal Positional Embedding 1D or 2D (SPE/SPE2d).
 
@@ -199,9 +199,9 @@ class SinusoidalPositionalEmbedding(nn.Module):
         return grid.to(x)
 
 
-@MODULES.register_module('CSG2d')
-@MODULES.register_module('CSG')
-@MODULES.register_module()
+@MODELS.register_module('CSG2d')
+@MODELS.register_module('CSG')
+@MODELS.register_module()
 class CatersianGrid(nn.Module):
     """Catersian Grid for 2d tensor.
 

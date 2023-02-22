@@ -16,7 +16,8 @@ def test_translation_inferencer():
         osp.dirname(__file__), '..', '..', 'data', 'unpaired', 'trainA',
         '1.jpg')
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data', 'translation_result.png')
+        osp.dirname(__file__), '..', '..', 'data/out',
+        'translation_result.png')
 
     inferencer_instance = \
         TranslationInferencer(cfg, None)

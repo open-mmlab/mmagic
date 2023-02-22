@@ -73,9 +73,11 @@ class FrechetInceptionDistance(GenerativeMetric):
                  need_cond_input: bool = False,
                  sample_model: str = 'orig',
                  collect_device: str = 'cpu',
-                 prefix: Optional[str] = None):
+                 prefix: Optional[str] = None,
+                 sample_kwargs: dict = dict()):
         super().__init__(fake_nums, real_nums, fake_key, real_key,
-                         need_cond_input, sample_model, collect_device, prefix)
+                         need_cond_input, sample_model, collect_device, prefix,
+                         sample_kwargs)
         self.real_mean = None
         self.real_cov = None
         self.device = 'cpu'

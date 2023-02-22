@@ -78,10 +78,10 @@ Running the following codes, you can get a text-generated image.
 
 ```python
 from mmengine import Config, MODELS
-from mmedit.utils import register_all_modules
+from mmengine.registry import init_default_scope
 from torchvision.utils import save_image
 
-register_all_modules()
+init_default_scope('mmedit')
 
 disco = MODELS.build(
     Config.fromfile('configs/disco_diffusion/disco-baseline.py').model).cuda().eval()

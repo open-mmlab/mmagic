@@ -11,11 +11,11 @@ from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from torch.nn.init import xavier_uniform_
 from torch.nn.utils import spectral_norm
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module('SAGANDiscriminator')
-@MODULES.register_module()
+@MODELS.register_module('SAGANDiscriminator')
+@MODELS.register_module()
 class ProjDiscriminator(nn.Module):
     r"""Discriminator for SNGAN / Proj-GAN. The implementation is refer to
     https://github.com/pfnet-research/sngan_projection/tree/master/dis_models
@@ -196,7 +196,7 @@ class ProjDiscriminator(nn.Module):
             raise ValueError('`attention_after_nth_block` only support int or '
                              'a list of int. Please check your input type.')
 
-        self.from_rgb = MODULES.build(
+        self.from_rgb = MODELS.build(
             self.from_rgb_cfg,
             default_args=dict(
                 in_channels=input_channels, out_channels=base_channels))
@@ -207,7 +207,7 @@ class ProjDiscriminator(nn.Module):
             attn_cfg_ = deepcopy(attention_cfg)
             attn_cfg_['in_channels'] = base_channels
             attn_cfg_['sn_style'] = sn_style
-            self.conv_blocks.append(MODULES.build(attn_cfg_))
+            self.conv_blocks.append(MODELS.build(attn_cfg_))
 
         for idx in range(len(self.downsample_list)):
             factor_input = 1 if idx == 0 else self.channel_factor_list[idx - 1]
@@ -218,7 +218,7 @@ class ProjDiscriminator(nn.Module):
             block_cfg_['downsample'] = self.downsample_list[idx]
             block_cfg_['in_channels'] = factor_input * base_channels
             block_cfg_['out_channels'] = factor_output * base_channels
-            self.conv_blocks.append(MODULES.build(block_cfg_))
+            self.conv_blocks.append(MODELS.build(block_cfg_))
 
             # build self-attention block
             # the first ConvBlock is `from_rgb` block,
@@ -226,7 +226,7 @@ class ProjDiscriminator(nn.Module):
             if idx + 2 in attention_after_nth_block:
                 attn_cfg_ = deepcopy(attention_cfg)
                 attn_cfg_['in_channels'] = factor_output * base_channels
-                self.conv_blocks.append(MODULES.build(attn_cfg_))
+                self.conv_blocks.append(MODELS.build(attn_cfg_))
 
         self.decision = nn.Linear(factor_output * base_channels, 1)
 

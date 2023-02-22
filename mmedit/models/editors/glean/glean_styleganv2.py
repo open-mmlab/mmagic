@@ -6,7 +6,7 @@ from mmengine.model import BaseModule
 
 from mmedit.models.base_archs import PixelShufflePack
 from mmedit.models.utils import make_layer
-from mmedit.registry import COMPONENTS, MODELS
+from mmedit.registry import MODELS
 from ..esrgan.rrdb_net import RRDB
 
 
@@ -111,7 +111,7 @@ class GLEANStyleGANv2(BaseModule):
                              f'{in_size} and {out_size}.')
 
         # latent bank (StyleGANv2), with weights being fixed
-        self.generator = COMPONENTS.build(
+        self.generator = MODELS.build(
             dict(
                 type='StyleGANv2Generator',
                 out_size=out_size,

@@ -312,7 +312,7 @@ class EG3DRenderer(BaseModule):
         In the original implementation, the mapping matrix is incorrect.
         Therefore we support users to define `projection_mode` to control
         projection behavior in the initialization function of
-        :class:~`EG3DRenderer`. If you want to run inference with the offifical
+        :class:`~EG3DRenderer`. If you want to run inference with the offifical
         pretrained model, please remember to set
         `projection_mode = 'official'`. More information please refer to
         https://github.com/NVlabs/eg3d/issues/67.

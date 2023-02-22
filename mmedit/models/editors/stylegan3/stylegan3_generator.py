@@ -6,13 +6,13 @@ import torch
 import torch.nn as nn
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ...utils import get_module_device
 from ..stylegan1 import get_mean_latent
 
 
-@MODULES.register_module('StyleGANv3Generator')
-@MODULES.register_module()
+@MODELS.register_module('StyleGANv3Generator')
+@MODELS.register_module()
 class StyleGAN3Generator(nn.Module):
     """StyleGAN3 Generator.
 
@@ -63,14 +63,14 @@ class StyleGAN3Generator(nn.Module):
         self._synthesis_cfg.setdefault('style_channels', style_channels)
         self._synthesis_cfg.setdefault('out_size', out_size)
         self._synthesis_cfg.setdefault('img_channels', img_channels)
-        self.synthesis = MODULES.build(self._synthesis_cfg)
+        self.synthesis = MODELS.build(self._synthesis_cfg)
 
         self.num_ws = self.synthesis.num_ws
         self._mapping_cfg = deepcopy(mapping_cfg)
         self._mapping_cfg.setdefault('noise_size', noise_size)
         self._mapping_cfg.setdefault('style_channels', style_channels)
         self._mapping_cfg.setdefault('num_ws', self.num_ws)
-        self.style_mapping = MODULES.build(self._mapping_cfg)
+        self.style_mapping = MODELS.build(self._mapping_cfg)
 
         if pretrained is not None:
             self._load_pretrained_model(**pretrained)
