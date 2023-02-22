@@ -11,10 +11,10 @@ from mmengine.dist import is_distributed
 from torch.cuda.amp.grad_scaler import GradScaler
 from torch.nn.functional import conv2d
 
-from mmedit.registry import LOSSES
+from mmedit.registry import MODELS
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class GANLoss(nn.Module):
     """Define GAN loss.
 
@@ -143,7 +143,7 @@ class GANLoss(nn.Module):
         return loss if is_disc else loss * self.loss_weight
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class GaussianBlur(nn.Module):
     """A Gaussian filter which blurs a given tensor with a two-dimensional
     gaussian kernel by convolving it along each channel. Batch operation is
@@ -345,7 +345,7 @@ def gradient_penalty_loss(discriminator: nn.Module,
     return gradients_penalty
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class GradientPenaltyLoss(nn.Module):
     """Gradient penalty loss for wgan-gp.
 
@@ -393,7 +393,7 @@ def disc_shift_loss(pred: torch.Tensor) -> torch.Tensor:
     return pred**2
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class DiscShiftLoss(nn.Module):
     """Disc shift loss.
 

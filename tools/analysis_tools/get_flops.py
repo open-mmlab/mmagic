@@ -3,9 +3,9 @@ import argparse
 
 import torch
 from mmengine import Config
+from mmengine.registry import init_default_scope
 
 from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
 
 try:
     from mmcv.cnn import get_model_complexity_info
@@ -39,9 +39,10 @@ def main():
     else:
         raise ValueError('invalid input shape')
 
-    register_all_modules()
-
     cfg = Config.fromfile(args.config)
+
+    init_default_scope(cfg.get('default_scope', 'mmedit'))
+
     model = MODELS.build(cfg.model)
     if torch.cuda.is_available():
         model.cuda()

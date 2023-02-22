@@ -3,11 +3,11 @@ import torch
 import torch.nn as nn
 from mmengine.model import BaseModule
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from .weight_layer import WeightLayer, get_norm_layer
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class FusionNet(BaseModule):
     """Instance-aware Image Colorization.
 

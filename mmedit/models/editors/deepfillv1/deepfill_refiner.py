@@ -3,10 +3,10 @@ import torch
 import torch.nn.functional as F
 from mmengine.model import BaseModule
 
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class DeepFillRefiner(BaseModule):
     """Refiner used in DeepFill model.
 
@@ -39,11 +39,11 @@ class DeepFillRefiner(BaseModule):
                      type='ContextualAttentionNeck', in_channels=128),
                  decoder=dict(type='DeepFillDecoder', in_channels=256)):
         super().__init__()
-        self.encoder_attention = COMPONENTS.build(encoder_attention)
-        self.encoder_conv = COMPONENTS.build(encoder_conv)
-        self.contextual_attention_neck = COMPONENTS.build(contextual_attention)
-        self.dilation_neck = COMPONENTS.build(dilation_neck)
-        self.decoder = COMPONENTS.build(decoder)
+        self.encoder_attention = MODELS.build(encoder_attention)
+        self.encoder_conv = MODELS.build(encoder_conv)
+        self.contextual_attention_neck = MODELS.build(contextual_attention)
+        self.dilation_neck = MODELS.build(dilation_neck)
+        self.decoder = MODELS.build(decoder)
 
     def forward(self, x, mask):
         """Forward Function.

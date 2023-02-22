@@ -5,11 +5,11 @@ from mmengine.logging import MMLogger
 from mmengine.runner import load_checkpoint
 
 from mmedit.models.utils import generation_init_weights
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from .cyclegan_modules import ResidualBlockWithDropout
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class ResnetGenerator(nn.Module):
     """Construct a Resnet-based generator that consists of residual blocks
     between a few downsampling/upsampling operations.

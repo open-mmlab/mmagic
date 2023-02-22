@@ -3,10 +3,10 @@ import numpy as np
 import torch.nn as nn
 from mmcv.cnn import ConvModule
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class LSGANDiscriminator(nn.Module):
     """Discriminator for LSGAN.
 

@@ -228,6 +228,7 @@ class GenerativeMetric(GenMetric):
             names to disambiguate homonymous metrics of different evaluators.
             If prefix is not provided in the argument, self.default_prefix
             will be used instead. Defaults to None.
+        sample_kwargs(dict): Sampling arguments for model test.
     """
     SAMPLER_MODE = 'Generative'
 
@@ -239,10 +240,12 @@ class GenerativeMetric(GenMetric):
                  need_cond_input: bool = False,
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
-                 prefix: Optional[str] = None):
+                 prefix: Optional[str] = None,
+                 sample_kwargs: dict = dict()):
         super().__init__(fake_nums, real_nums, fake_key, real_key,
                          sample_model, collect_device, prefix)
         self.need_cond_input = need_cond_input
+        self.sample_kwargs = sample_kwargs
         if self.need_cond_input:
             print_log('Set \'need_cond_input\' as True, this may influence '
                       'the evaluation results of conditional models.')
@@ -273,12 +276,13 @@ class GenerativeMetric(GenMetric):
         class dummy_iterator:
 
             def __init__(self, batch_size, max_length, sample_model, dataset,
-                         need_cond) -> None:
+                         need_cond, sample_kwargs) -> None:
                 self.batch_size = batch_size
                 self.max_length = max_length
                 self.sample_model = sample_model
                 self.dataset = dataset
                 self.need_cond = need_cond
+                self.sample_kwargs = sample_kwargs
 
             def __iter__(self) -> Iterator:
                 self.idx = 0
@@ -306,7 +310,8 @@ class GenerativeMetric(GenMetric):
                 output_dict = dict(
                     inputs=dict(
                         sample_model=self.sample_model,
-                        num_batches=self.batch_size))
+                        num_batches=self.batch_size,
+                        sample_kwargs=self.sample_kwargs))
 
                 if self.need_cond:
                     output_dict['data_samples'] = self.get_cond()
@@ -319,7 +324,8 @@ class GenerativeMetric(GenMetric):
                             for metric in metrics]),
             sample_model=sample_model,
             dataset=dataset,
-            need_cond=self.need_cond_input)
+            need_cond=self.need_cond_input,
+            sample_kwargs=self.sample_kwargs)
 
     def evaluate(self) -> dict():
         """Evaluate generative metric. In this function we only collect

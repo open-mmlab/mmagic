@@ -15,11 +15,11 @@ from torch.nn.init import xavier_uniform_
 from torch.nn.utils import spectral_norm
 
 from mmedit.models.utils import get_module_device
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module('SAGANGenerator')
-@MODULES.register_module()
+@MODELS.register_module('SAGANGenerator')
+@MODELS.register_module()
 class SNGANGenerator(nn.Module):
     r"""Generator for SNGAN / Proj-GAN. The implementation refers to
     https://github.com/pfnet-research/sngan_projection/tree/master/gen_models
@@ -207,7 +207,7 @@ class SNGANGenerator(nn.Module):
             block_cfg_ = deepcopy(self.blocks_cfg)
             block_cfg_['in_channels'] = factor_input * base_channels
             block_cfg_['out_channels'] = factor_output * base_channels
-            self.conv_blocks.append(MODULES.build(block_cfg_))
+            self.conv_blocks.append(MODELS.build(block_cfg_))
 
             # build self-attention block
             # `idx` is start from 0, add 1 to get the index
@@ -216,7 +216,7 @@ class SNGANGenerator(nn.Module):
                 attn_cfg_ = deepcopy(attention_cfg)
                 attn_cfg_['in_channels'] = factor_output * base_channels
                 attn_cfg_['sn_style'] = sn_style
-                self.conv_blocks.append(MODULES.build(attn_cfg_))
+                self.conv_blocks.append(MODELS.build(attn_cfg_))
 
         to_rgb_norm_cfg = dict(type='BN', eps=norm_eps)
         if is_distributed() and auto_sync_bn:

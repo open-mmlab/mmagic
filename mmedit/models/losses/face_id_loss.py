@@ -4,10 +4,10 @@ from typing import Optional
 import torch
 import torch.nn as nn
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class FaceIdLoss(nn.Module):
     """Face similarity loss. Generally this loss is used to keep the id
     consistency of the input face image and output face image.
@@ -48,7 +48,7 @@ class FaceIdLoss(nn.Module):
         super(FaceIdLoss, self).__init__()
         self.loss_weight = loss_weight
         self.data_info = data_info
-        self.net = MODULES.build(facenet)
+        self.net = MODELS.build(facenet)
         self._loss_name = loss_name
 
     def forward(self, pred: torch.Tensor, gt: torch.Tensor) -> torch.Tensor:

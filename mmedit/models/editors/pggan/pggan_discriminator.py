@@ -6,12 +6,12 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from .pggan_modules import (EqualizedLRConvDownModule, EqualizedLRConvModule,
                             MiniBatchStddevLayer, PGGANDecisionHead)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class PGGANDiscriminator(nn.Module):
     """Discriminator for PGGAN.
 

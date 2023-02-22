@@ -1,10 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from mmengine.model import BaseModule
 
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
+@MODELS.register_module()
 class PConvEncoderDecoder(BaseModule):
     """Encoder-Decoder with partial conv module.
 
@@ -15,8 +15,8 @@ class PConvEncoderDecoder(BaseModule):
 
     def __init__(self, encoder, decoder):
         super().__init__()
-        self.encoder = BACKBONES.build(encoder)
-        self.decoder = BACKBONES.build(decoder)
+        self.encoder = MODELS.build(encoder)
+        self.decoder = MODELS.build(decoder)
 
         # support fp16
         self.fp16_enabled = False

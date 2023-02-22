@@ -373,11 +373,13 @@ def parse_args():
         '--thresh-size',
         nargs='?',
         default=0,
+        type=int,
         help='threshold size for HR images')
     parser.add_argument(
         '--compression-level',
         nargs='?',
         default=3,
+        type=int,
         help='compression level when save png images')
     parser.add_argument(
         '--n-thread',

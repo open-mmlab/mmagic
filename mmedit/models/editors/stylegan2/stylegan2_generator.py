@@ -8,7 +8,7 @@ import torch.nn as nn
 from mmengine.runner.amp import autocast
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ...utils import get_module_device
 from ..pggan import PixelNorm
 from ..stylegan1 import (ConstantInput, EqualLinearActModule, get_mean_latent,
@@ -16,8 +16,8 @@ from ..stylegan1 import (ConstantInput, EqualLinearActModule, get_mean_latent,
 from .stylegan2_modules import ModulatedStyleConv, ModulatedToRGB
 
 
-@MODULES.register_module('StyleGANv2Generator')
-@MODULES.register_module()
+@MODELS.register_module('StyleGANv2Generator')
+@MODELS.register_module()
 class StyleGAN2Generator(nn.Module):
     r"""StyleGAN2 Generator.
 

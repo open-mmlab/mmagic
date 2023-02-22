@@ -3,10 +3,10 @@ import torch.nn as nn
 from mmengine.model import BaseModule
 from mmengine.model.weight_init import normal_init
 
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class DeepFillv1Discriminators(BaseModule):
     """Discriminators used in DeepFillv1 model.
 
@@ -25,8 +25,8 @@ class DeepFillv1Discriminators(BaseModule):
 
     def __init__(self, global_disc_cfg, local_disc_cfg):
         super().__init__()
-        self.global_disc = COMPONENTS.build(global_disc_cfg)
-        self.local_disc = COMPONENTS.build(local_disc_cfg)
+        self.global_disc = MODELS.build(global_disc_cfg)
+        self.local_disc = MODELS.build(local_disc_cfg)
 
     def forward(self, x):
         """Forward function.
