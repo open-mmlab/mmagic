@@ -1,8 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch
 import torch.nn as nn
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from mmedit.utils import try_import
 
 clip = try_import('clip')
@@ -25,10 +27,10 @@ class CLIPLossModel(torch.nn.Module):
     """
 
     def __init__(self,
-                 in_size=1024,
-                 scale_factor=7,
-                 pool_size=224,
-                 clip_type='ViT-B/32'):
+                 in_size: int = 1024,
+                 scale_factor: int = 7,
+                 pool_size: int = 224,
+                 clip_type: str = 'ViT-B/32') -> None:
         super(CLIPLossModel, self).__init__()
         try:
             import clip
@@ -43,7 +45,7 @@ class CLIPLossModel(torch.nn.Module):
         self.avg_pool = torch.nn.AvgPool2d(
             kernel_size=(scale_factor * in_size // pool_size))
 
-    def forward(self, image=None, text=None):
+    def forward(self, image: torch.Tensor, text: torch.Tensor) -> torch.Tensor:
         """Forward function."""
         assert image is not None
         assert text is not None
@@ -52,7 +54,7 @@ class CLIPLossModel(torch.nn.Module):
         return loss
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class CLIPLoss(nn.Module):
     """Clip loss. In styleclip, this loss is used to optimize the latent code
     to generate image that match the text.
@@ -85,10 +87,10 @@ class CLIPLoss(nn.Module):
     """
 
     def __init__(self,
-                 loss_weight=1.0,
-                 data_info=None,
-                 clip_model=dict(),
-                 loss_name='loss_clip'):
+                 loss_weight: float = 1.0,
+                 data_info: Optional[dict] = None,
+                 clip_model: dict = dict(),
+                 loss_name: str = 'loss_clip') -> None:
 
         super(CLIPLoss, self).__init__()
         self.loss_weight = loss_weight
@@ -96,7 +98,7 @@ class CLIPLoss(nn.Module):
         self.net = CLIPLossModel(**clip_model)
         self._loss_name = loss_name
 
-    def forward(self, image, text):
+    def forward(self, image: torch.Tensor, text: torch.Tensor) -> torch.Tensor:
         """Forward function.
 
         If ``self.data_info`` is not ``None``, a dictionary containing all of

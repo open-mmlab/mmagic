@@ -23,6 +23,7 @@ class TestFramesDatasets:
             data_root=self.data_root,
             data_prefix=dict(
                 img=f'sequence{os.sep}gt', gt=f'sequence{os.sep}gt'),
+            backend_args=dict(backend='local'),
             pipeline=[],
             depth=1,
             num_input_frames=5,

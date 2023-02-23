@@ -8,8 +8,8 @@ from mmedit.registry import OPTIM_WRAPPER_CONSTRUCTORS
 @OPTIM_WRAPPER_CONSTRUCTORS.register_module()
 class MultiOptimWrapperConstructor:
     """OptimizerConstructor for GAN models. This class construct optimizer for
-    the submodules of the model separately, and return a :class:~
-    `mmengine.optim.OptimWrapperDict`.
+    the submodules of the model separately, and return a
+    :class:`mmengine.optim.OptimWrapperDict`.
 
     Example:
         >>> # build GAN model

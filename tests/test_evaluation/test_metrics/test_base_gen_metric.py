@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from unittest.mock import MagicMock, patch
 
+import pytest
 import torch
 from mmengine.model import MMDistributedDataParallel
 
@@ -43,6 +44,7 @@ def test_GenMetric():
     # test get_metric_sampler
     model = MagicMock()
     dataset = MagicMock()
+    dataset.__len__.return_value = 10
     dataloader = MagicMock()
     dataloader.batch_size = 4
     dataloader.dataset = dataset
@@ -56,6 +58,11 @@ def test_GenMetric():
     model.module.data_preprocessor = preprocessor
     metric.prepare(model, dataloader)
     assert metric.data_preprocessor == preprocessor
+
+    # test raise error with dataset is length than real_nums
+    dataset.__len__.return_value = 5
+    with pytest.raises(AssertionError):
+        metric.get_metric_sampler(model, dataloader, [metric])
 
 
 def test_GenerativeMetric():
@@ -87,7 +94,8 @@ def test_GenerativeMetric():
 
     iterator = iter(sampler)
     output = next(iterator)
-    assert output['inputs'] == dict(sample_model='ema', num_batches=10)
+    assert output['inputs'] == dict(
+        sample_model='ema', num_batches=10, sample_kwargs={})
     assert len(output['data_samples']) == 10
 
     target_label_list = [
@@ -98,3 +106,14 @@ def test_GenerativeMetric():
     for data in output['data_samples']:
         label = data.gt_label.label
         assert any([(label == tar).all() for tar in target_label_list])
+
+    # test with sample kwargs
+    sample_kwargs = dict(
+        num_inference_steps=250, show_progress=True, classifier_scale=1.)
+    metric = ToyGenerativeMetric(
+        11, need_cond_input=True, sample_kwargs=sample_kwargs)
+    sampler = metric.get_metric_sampler(model, dataloader, [metric])
+    iterator = iter(sampler)
+    output = next(iterator)
+    assert output['inputs'] == dict(
+        sample_model='ema', num_batches=10, sample_kwargs=sample_kwargs)

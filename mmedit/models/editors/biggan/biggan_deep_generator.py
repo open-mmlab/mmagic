@@ -10,13 +10,13 @@ from mmengine.runner import load_checkpoint
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from torch.nn.utils import spectral_norm
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ...utils import get_module_device
 from .biggan_modules import SelfAttentionBlock, SNConvModule
 from .biggan_snmodule import SNLinear
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class BigGANDeepGenerator(nn.Module):
     """BigGAN-Deep Generator. The implementation refers to
     https://github.com/ajbrock/BigGAN-PyTorch/blob/master/BigGANdeep.py # noqa.
@@ -221,7 +221,7 @@ class BigGANDeepGenerator(nn.Module):
                         upsample_cfg=self.upsample_cfg
                         if self.arch['upsample'][index]
                         and depth == (self.block_depth - 1) else None))
-                self.conv_blocks.append(MODULES.build(block_cfg_))
+                self.conv_blocks.append(MODELS.build(block_cfg_))
 
             if self.arch['attention'][index]:
                 self.conv_blocks.append(

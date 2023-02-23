@@ -1,9 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.registry import BACKBONES, COMPONENTS
+
+from mmedit.registry import MODELS
 from ..global_local import GLEncoderDecoder
 
 
-@BACKBONES.register_module()
+@MODELS.register_module()
 class AOTEncoderDecoder(GLEncoderDecoder):
     """Encoder-Decoder used in AOT-GAN model.
 
@@ -23,6 +24,6 @@ class AOTEncoderDecoder(GLEncoderDecoder):
                  decoder=dict(type='AOTDecoder'),
                  dilation_neck=dict(type='AOTBlockNeck')):
         super().__init__()
-        self.encoder = COMPONENTS.build(encoder)
-        self.decoder = COMPONENTS.build(decoder)
-        self.dilation_neck = COMPONENTS.build(dilation_neck)
+        self.encoder = MODELS.build(encoder)
+        self.decoder = MODELS.build(decoder)
+        self.dilation_neck = MODELS.build(dilation_neck)

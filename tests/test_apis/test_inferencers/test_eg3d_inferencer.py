@@ -51,7 +51,7 @@ def test_eg3d_inferencer():
     cfg = Config(config)
 
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data', 'eg3d_output')
+        osp.dirname(__file__), '..', '..', 'data/out', 'eg3d_output')
 
     inferencer_instance = EG3DInferencer(cfg, None)
     output = inferencer_instance(

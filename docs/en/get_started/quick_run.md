@@ -34,7 +34,7 @@ you only need several lines of codes for image super-resolution by MMEditing!
 ```python
 import mmcv
 from mmedit.apis import init_model, restoration_inference
-from mmedit.engine.misc import tensor2img
+from mmedit.utils import tensor2img
 
 config = 'configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py'
 checkpoint = 'https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth'

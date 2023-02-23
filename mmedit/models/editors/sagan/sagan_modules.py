@@ -12,10 +12,10 @@ from torch.nn.utils import spectral_norm
 
 from mmedit.models.editors.biggan.biggan_modules import SNConvModule
 from mmedit.models.editors.biggan.biggan_snmodule import SNEmbedding
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SNGANGenResBlock(nn.Module):
     """ResBlock used in Generator of SNGAN / Proj-GAN.
 
@@ -212,7 +212,7 @@ class SNGANGenResBlock(nn.Module):
                                       f'\'{self.init_type}\'')
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SNGANDiscResBlock(nn.Module):
     """resblock used in discriminator of sngan / proj-gan.
 
@@ -365,7 +365,7 @@ class SNGANDiscResBlock(nn.Module):
                                       f'\'{self.init_type}\'')
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SNGANDiscHeadResBlock(nn.Module):
     """The first ResBlock used in discriminator of sngan / proj-gan. Compared
     to ``SNGANDisResBlock``, this module has a different forward order.
@@ -495,7 +495,7 @@ class SNGANDiscHeadResBlock(nn.Module):
                                       f'\'{self.init_type}\'')
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SNConditionNorm(nn.Module):
     """Conditional Normalization for SNGAN / Proj-GAN. The implementation
     refers to.

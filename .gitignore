@@ -124,6 +124,8 @@ mmedit/.mim
 demo/*.png
 *.csv
 out/*.png
+tests/data/out
+resources/
 
 # Pytorch
 *.pth

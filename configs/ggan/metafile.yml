@@ -1,19 +1,18 @@
 Collections:
-- Metadata:
-    Architecture:
-    - GGAN
-  Name: GGAN
+- Name: GGAN
   Paper:
-  - https://arxiv.org/abs/1705.02894
+    Title: Geometric GAN
+    URL: https://arxiv.org/abs/1705.02894
   README: configs/ggan/README.md
+  Task:
+  - unconditional gans
+  Year: 2017
 Models:
 - Config: configs/ggan/ggan_dcgan-archi_lr1e-3-1xb128-12Mimgs_celeba-cropped-64x64.py
   In Collection: GGAN
-  Metadata:
-    Training Data: CELEBA
   Name: ggan_dcgan-archi_lr1e-3-1xb128-12Mimgs_celeba-cropped-64x64
   Results:
-  - Dataset: CELEBA
+  - Dataset: CelebA-Cropped
     Metrics:
       FID: 20.1797
       MS-SSIM: 0.3318
@@ -21,11 +20,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/ggan/ggan_celeba-cropped_dcgan-archi_lr-1e-3_64_b128x1_12m.pth
 - Config: configs/ggan/ggan_dcgan-archi_lr1e-4-1xb64-10Mimgs_celeba-cropped-128x128.py
   In Collection: GGAN
-  Metadata:
-    Training Data: CELEBA
   Name: ggan_dcgan-archi_lr1e-4-1xb64-10Mimgs_celeba-cropped-128x128
   Results:
-  - Dataset: CELEBA
+  - Dataset: CelebA-Cropped
     Metrics:
       FID: 18.7647
       MS-SSIM: 0.3149
@@ -33,11 +30,9 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/ggan/ggan_celeba-cropped_dcgan-archi_lr-1e-4_128_b64x1_10m_20210430_143027-516423dc.pth
 - Config: configs/ggan/ggan_lsgan-archi_lr1e-4-1xb128-20Mimgs_lsun-bedroom-64x64.py
   In Collection: GGAN
-  Metadata:
-    Training Data: Others
   Name: ggan_lsgan-archi_lr1e-4-1xb128-20Mimgs_lsun-bedroom-64x64
   Results:
-  - Dataset: Others
+  - Dataset: LSUN-Bedroom
     Metrics:
       FID: 39.9261
       MS-SSIM: 0.0649

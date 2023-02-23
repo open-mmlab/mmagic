@@ -3,7 +3,7 @@ import pytest
 import torch
 
 from mmedit.models.editors.wgan_gp import WGANGPGenerator
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
 class TestWGANGPGenerator(object):
@@ -17,14 +17,14 @@ class TestWGANGPGenerator(object):
     def test_wgangp_generator(self):
 
         # test default setting with builder
-        g = MODULES.build(self.default_config)
+        g = MODELS.build(self.default_config)
         assert isinstance(g, WGANGPGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 128, 128)
 
         # test different out_scale
         config = dict(type='WGANGPGenerator', noise_size=128, out_scale=64)
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, WGANGPGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 64, 64)
@@ -43,7 +43,7 @@ class TestWGANGPGenerator(object):
                 act_cfg=dict(type='LeakyReLU', negative_slope=0.2),
                 norm_cfg=dict(type='BN'),
                 order=('conv', 'norm', 'act')))
-        g = MODULES.build(config)
+        g = MODELS.build(config)
         assert isinstance(g, WGANGPGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 128, 128)
@@ -52,14 +52,14 @@ class TestWGANGPGenerator(object):
     def test_wgangp_generator_cuda(self):
 
         # test default setting with builder
-        g = MODULES.build(self.default_config).cuda()
+        g = MODELS.build(self.default_config).cuda()
         assert isinstance(g, WGANGPGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 128, 128)
 
         # test different out_scale
         config = dict(type='WGANGPGenerator', noise_size=128, out_scale=64)
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, WGANGPGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 64, 64)
@@ -78,7 +78,7 @@ class TestWGANGPGenerator(object):
                 act_cfg=dict(type='LeakyReLU', negative_slope=0.2),
                 norm_cfg=dict(type='BN'),
                 order=('conv', 'norm', 'act')))
-        g = MODULES.build(config).cuda()
+        g = MODELS.build(config).cuda()
         assert isinstance(g, WGANGPGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 128, 128)

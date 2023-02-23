@@ -8,10 +8,10 @@ from mmengine.runner import load_checkpoint
 from torch import Tensor
 
 from mmedit.models.base_archs import LinearModule
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class MultiLayerDiscriminator(nn.Module):
     """Multilayer Discriminator.
 

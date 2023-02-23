@@ -1,13 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
+import torch
 import torch.nn as nn
 
-from mmedit.registry import LOSSES
+from mmedit.registry import MODELS
 from .pixelwise_loss import charbonnier_loss, l1_loss, mse_loss
 
 _reduction_modes = ['none', 'mean', 'sum']
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class L1CompositionLoss(nn.Module):
     """L1 composition loss.
 
@@ -22,7 +25,10 @@ class L1CompositionLoss(nn.Module):
             Default: False.
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
+    def __init__(self,
+                 loss_weight: float = 1.0,
+                 reduction: str = 'mean',
+                 sample_wise: bool = False) -> None:
         super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
@@ -32,7 +38,13 @@ class L1CompositionLoss(nn.Module):
         self.reduction = reduction
         self.sample_wise = sample_wise
 
-    def forward(self, pred_alpha, fg, bg, ori_merged, weight=None, **kwargs):
+    def forward(self,
+                pred_alpha: torch.Tensor,
+                fg: torch.Tensor,
+                bg: torch.Tensor,
+                ori_merged: torch.Tensor,
+                weight: Optional[torch.Tensor] = None,
+                **kwargs) -> torch.Tensor:
         """
         Args:
             pred_alpha (Tensor): of shape (N, 1, H, W). Predicted alpha matte.
@@ -54,7 +66,7 @@ class L1CompositionLoss(nn.Module):
             sample_wise=self.sample_wise)
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class MSECompositionLoss(nn.Module):
     """MSE (L2) composition loss.
 
@@ -69,7 +81,10 @@ class MSECompositionLoss(nn.Module):
             Default: False.
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
+    def __init__(self,
+                 loss_weight: float = 1.0,
+                 reduction: str = 'mean',
+                 sample_wise: bool = False) -> None:
         super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
@@ -79,7 +94,13 @@ class MSECompositionLoss(nn.Module):
         self.reduction = reduction
         self.sample_wise = sample_wise
 
-    def forward(self, pred_alpha, fg, bg, ori_merged, weight=None, **kwargs):
+    def forward(self,
+                pred_alpha: torch.Tensor,
+                fg: torch.Tensor,
+                bg: torch.Tensor,
+                ori_merged: torch.Tensor,
+                weight: Optional[torch.Tensor] = None,
+                **kwargs) -> torch.Tensor:
         """
         Args:
             pred_alpha (Tensor): of shape (N, 1, H, W). Predicted alpha matte.
@@ -101,7 +122,7 @@ class MSECompositionLoss(nn.Module):
             sample_wise=self.sample_wise)
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class CharbonnierCompLoss(nn.Module):
     """Charbonnier composition loss.
 
@@ -119,10 +140,10 @@ class CharbonnierCompLoss(nn.Module):
     """
 
     def __init__(self,
-                 loss_weight=1.0,
-                 reduction='mean',
-                 sample_wise=False,
-                 eps=1e-12):
+                 loss_weight: float = 1.0,
+                 reduction: str = 'mean',
+                 sample_wise: bool = False,
+                 eps: bool = 1e-12) -> None:
         super().__init__()
         if reduction not in ['none', 'mean', 'sum']:
             raise ValueError(f'Unsupported reduction mode: {reduction}. '
@@ -133,7 +154,13 @@ class CharbonnierCompLoss(nn.Module):
         self.sample_wise = sample_wise
         self.eps = eps
 
-    def forward(self, pred_alpha, fg, bg, ori_merged, weight=None, **kwargs):
+    def forward(self,
+                pred_alpha: torch.Tensor,
+                fg: torch.Tensor,
+                bg: torch.Tensor,
+                ori_merged: torch.Tensor,
+                weight: Optional[torch.Tensor] = None,
+                **kwargs) -> torch.Tensor:
         """
         Args:
             pred_alpha (Tensor): of shape (N, 1, H, W). Predicted alpha matte.

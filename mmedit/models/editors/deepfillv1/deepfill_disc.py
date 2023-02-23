@@ -1,14 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
-from mmengine import MMLogger
+from mmengine.model import BaseModule
 from mmengine.model.weight_init import normal_init
-from mmengine.runner import load_checkpoint
 
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
-class DeepFillv1Discriminators(nn.Module):
+@MODELS.register_module()
+class DeepFillv1Discriminators(BaseModule):
     """Discriminators used in DeepFillv1 model.
 
     In DeepFillv1 model, the discriminators are independent without any
@@ -26,8 +25,8 @@ class DeepFillv1Discriminators(nn.Module):
 
     def __init__(self, global_disc_cfg, local_disc_cfg):
         super().__init__()
-        self.global_disc = COMPONENTS.build(global_disc_cfg)
-        self.local_disc = COMPONENTS.build(local_disc_cfg)
+        self.global_disc = MODELS.build(global_disc_cfg)
+        self.local_disc = MODELS.build(local_disc_cfg)
 
     def forward(self, x):
         """Forward function.
@@ -47,22 +46,13 @@ class DeepFillv1Discriminators(nn.Module):
 
         return global_pred, local_pred
 
-    def init_weights(self, pretrained=None):
-        """Init weights for models.
+    def init_weights(self):
+        """Init weights for models."""
 
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-        """
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=False, logger=logger)
-        elif pretrained is None:
-            for m in self.modules():
-                if isinstance(m, nn.Linear):
-                    normal_init(m, 0, std=0.02)
-                elif isinstance(m, nn.Conv2d):
-                    normal_init(m, 0.0, std=0.02)
-        else:
-            raise TypeError('pretrained must be a str or None but got'
-                            f'{type(pretrained)} instead.')
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                normal_init(m, 0, std=0.02)
+            elif isinstance(m, nn.Conv2d):
+                normal_init(m, 0.0, std=0.02)
+
+        self._is_init = True

@@ -1,16 +1,15 @@
 Collections:
-- Metadata:
-    Architecture:
-    - Positional Encoding in GANs
-  Name: Positional Encoding in GANs
+- Name: Positional Encoding in GANs
   Paper:
-  - https://openaccess.thecvf.com/content/CVPR2021/html/Xu_Positional_Encoding_As_Spatial_Inductive_Bias_in_GANs_CVPR_2021_paper.html
+    Title: Positional Encoding as Spatial Inductive Bias in GANs
+    URL: https://openaccess.thecvf.com/content/CVPR2021/html/Xu_Positional_Encoding_As_Spatial_Inductive_Bias_in_GANs_CVPR_2021_paper.html
   README: configs/positional_encoding_in_gans/README.md
+  Task:
+  - unconditional gans
+  Year: 2021
 Models:
 - Config: configs/positional_encoding_in_gans/stylegan2_c2_8xb3-1100kiters_ffhq-256x256.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan2_c2_8xb3-1100kiters_ffhq-256x256
   Results:
   - Dataset: FFHQ
@@ -21,182 +20,6 @@ Models:
         SSIM: 51.24
       Scales: 256.0
     Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/stylegan2_c2_config-a_ffhq_256x256_b3x8_1100k_20210406_145127-71d9634b.pth
-- Config: configs/positional_encoding_in_gans/stylegan2_c2_8xb3-1100kiters_ffhq-512x512.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: stylegan2_c2_8xb3-1100kiters_ffhq-512x512
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 4.91
-      P&R10k:
-        PSNR: 75.65
-        SSIM: 54.58
-      Scales: 512.0
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/stylegan2_c2_config-b_ffhq_512x512_b3x8_1100k_20210406_145142-e85e5cf4.pth
-- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-c_c2_8xb3-1100kiters_ffhq-256-512.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: mspie-stylegan2-config-c_c2_8xb3-1100kiters_ffhq-256-512
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 3.35
-      P&R10k:
-        PSNR: 73.84
-        SSIM: 55.77
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-c_ffhq_256-512_b3x8_1100k_20210406_144824-9f43b07d.pth
-- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-d_c2_8xb3-1100kiters_ffhq-256-512.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: mspie-stylegan2-config-d_c2_8xb3-1100kiters_ffhq-256-512
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 3.5
-      P&R10k:
-        PSNR: 73.28
-        SSIM: 56.16
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-d_ffhq_256-512_b3x8_1100k_20210406_144840-dbefacf6.pth
-- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-e_c2_8xb3-1100kiters_ffhq-256-512.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: mspie-stylegan2-config-e_c2_8xb3-1100kiters_ffhq-256-512
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 3.15
-      P&R10k:
-        PSNR: 74.13
-        SSIM: 56.88
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-e_ffhq_256-512_b3x8_1100k_20210406_144906-98d5a42a.pth
-- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-512.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-512
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 2.93
-      P&R10k:
-        PSNR: 73.51
-        SSIM: 57.32
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-f_ffhq_256-512_b3x8_1100k_20210406_144927-4f4d5391.pth
-- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-g_c1_8xb3-1100kiters_ffhq-256-512.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: mspie-stylegan2-config-g_c1_8xb3-1100kiters_ffhq-256-512
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 3.4
-      P&R10k:
-        PSNR: 73.05
-        SSIM: 56.45
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c1_config-g_ffhq_256-512_b3x8_1100k_20210406_144758-2df61752.pth
-- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-h_c2_8xb3-1100kiters_ffhq-256-512.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: mspie-stylegan2-config-h_c2_8xb3-1100kiters_ffhq-256-512
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 4.01
-      P&R10k:
-        PSNR: 72.81
-        SSIM: 54.35
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-h_ffhq_256-512_b3x8_1100k_20210406_145006-84cf3f48.pth
-- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-i_c2_8xb3-1100kiters_ffhq-256-512.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: mspie-stylegan2-config-i_c2_8xb3-1100kiters_ffhq-256-512
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 3.76
-      P&R10k:
-        PSNR: 73.26
-        SSIM: 54.71
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-i_ffhq_256-512_b3x8_1100k_20210406_145023-c2b0accf.pth
-- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-j_c2_8xb3-1100kiters_ffhq-256-512.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: mspie-stylegan2-config-j_c2_8xb3-1100kiters_ffhq-256-512
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 4.23
-      P&R10k:
-        PSNR: 73.11
-        SSIM: 54.63
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-j_ffhq_256-512_b3x8_1100k_20210406_145044-c407481b.pth
-- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-k_c2_8xb3-1100kiters_ffhq-256-512.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: mspie-stylegan2-config-k_c2_8xb3-1100kiters_ffhq-256-512
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 4.17
-      P&R10k:
-        PSNR: 73.05
-        SSIM: 51.07
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-k_ffhq_256-512_b3x8_1100k_20210406_145105-6d8cc39f.pth
-- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-896.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-896
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 4.1
-      P&R10k:
-        PSNR: 72.21
-        SSIM: 50.29
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-f_ffhq_256-896_b3x8_1100k_20210406_144943-6c18ad5d.pth
-- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c1_8xb2-1600kiters_ffhq-256-1024.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: mspie-stylegan2-config-f_c1_8xb2-1600kiters_ffhq-256-1024
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 6.24
-      P&R10k:
-        PSNR: 71.79
-        SSIM: 49.92
-    Task: Unconditional GANs
-  Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c1_config-f_ffhq_256-1024_b2x8_1600k_20210406_144716-81cbdc96.pth
-- Config: configs/positional_encoding_in_gans/stylegan2_c2_8xb3-1100kiters_ffhq-256x256.py
-  In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
-  Name: stylegan2_c2_8xb3-1100kiters_ffhq-256x256
-  Results:
   - Dataset: FFHQ
     Metrics:
       FID50k: 5.56
@@ -207,10 +30,16 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/stylegan2_c2_config-a_ffhq_256x256_b3x8_1100k_20210406_145127-71d9634b.pth
 - Config: configs/positional_encoding_in_gans/stylegan2_c2_8xb3-1100kiters_ffhq-512x512.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan2_c2_8xb3-1100kiters_ffhq-512x512
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 4.91
+      P&R10k:
+        PSNR: 75.65
+        SSIM: 54.58
+      Scales: 512.0
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 4.91
@@ -221,10 +50,15 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/stylegan2_c2_config-b_ffhq_512x512_b3x8_1100k_20210406_145142-e85e5cf4.pth
 - Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-c_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: mspie-stylegan2-config-c_c2_8xb3-1100kiters_ffhq-256-512
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 3.35
+      P&R10k:
+        PSNR: 73.84
+        SSIM: 55.77
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 3.35
@@ -234,10 +68,15 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-c_ffhq_256-512_b3x8_1100k_20210406_144824-9f43b07d.pth
 - Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-d_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: mspie-stylegan2-config-d_c2_8xb3-1100kiters_ffhq-256-512
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 3.5
+      P&R10k:
+        PSNR: 73.28
+        SSIM: 56.16
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 3.5
@@ -247,10 +86,15 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-d_ffhq_256-512_b3x8_1100k_20210406_144840-dbefacf6.pth
 - Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-e_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: mspie-stylegan2-config-e_c2_8xb3-1100kiters_ffhq-256-512
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 3.15
+      P&R10k:
+        PSNR: 74.13
+        SSIM: 56.88
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 3.15
@@ -260,10 +104,15 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-e_ffhq_256-512_b3x8_1100k_20210406_144906-98d5a42a.pth
 - Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-512
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 2.93
+      P&R10k:
+        PSNR: 73.51
+        SSIM: 57.32
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 2.93
@@ -273,10 +122,15 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-f_ffhq_256-512_b3x8_1100k_20210406_144927-4f4d5391.pth
 - Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-g_c1_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: mspie-stylegan2-config-g_c1_8xb3-1100kiters_ffhq-256-512
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 3.4
+      P&R10k:
+        PSNR: 73.05
+        SSIM: 56.45
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 3.4
@@ -286,10 +140,15 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c1_config-g_ffhq_256-512_b3x8_1100k_20210406_144758-2df61752.pth
 - Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-h_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: mspie-stylegan2-config-h_c2_8xb3-1100kiters_ffhq-256-512
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 4.01
+      P&R10k:
+        PSNR: 72.81
+        SSIM: 54.35
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 4.01
@@ -299,10 +158,15 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-h_ffhq_256-512_b3x8_1100k_20210406_145006-84cf3f48.pth
 - Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-i_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: mspie-stylegan2-config-i_c2_8xb3-1100kiters_ffhq-256-512
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 3.76
+      P&R10k:
+        PSNR: 73.26
+        SSIM: 54.71
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 3.76
@@ -312,10 +176,15 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-i_ffhq_256-512_b3x8_1100k_20210406_145023-c2b0accf.pth
 - Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-j_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: mspie-stylegan2-config-j_c2_8xb3-1100kiters_ffhq-256-512
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 4.23
+      P&R10k:
+        PSNR: 73.11
+        SSIM: 54.63
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 4.23
@@ -325,10 +194,15 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-j_ffhq_256-512_b3x8_1100k_20210406_145044-c407481b.pth
 - Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-k_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: mspie-stylegan2-config-k_c2_8xb3-1100kiters_ffhq-256-512
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 4.17
+      P&R10k:
+        PSNR: 73.05
+        SSIM: 51.07
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 4.17
@@ -338,10 +212,15 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-k_ffhq_256-512_b3x8_1100k_20210406_145105-6d8cc39f.pth
 - Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-896.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-896
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 4.1
+      P&R10k:
+        PSNR: 72.21
+        SSIM: 50.29
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 4.1
@@ -351,10 +230,15 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-f_ffhq_256-896_b3x8_1100k_20210406_144943-6c18ad5d.pth
 - Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c1_8xb2-1600kiters_ffhq-256-1024.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: FFHQ
   Name: mspie-stylegan2-config-f_c1_8xb2-1600kiters_ffhq-256-1024
   Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 6.24
+      P&R10k:
+        PSNR: 71.79
+        SSIM: 49.92
+    Task: Unconditional GANs
   - Dataset: FFHQ
     Metrics:
       FID50k: 6.24
@@ -364,88 +248,72 @@ Models:
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c1_config-f_ffhq_256-1024_b2x8_1600k_20210406_144716-81cbdc96.pth
 - Config: configs/positional_encoding_in_gans/singan_interp-pad_balloons.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: Others
   Name: singan_interp-pad_balloons
   Results:
-  - Dataset: Others
+  - Dataset: '[balloons.png](https://download.openmmlab.com/mmediting/dataset/singan/balloons.png)'
     Metrics:
       Num Scales: 8.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_interp-pad_balloons_20210406_180014-96f51555.pth
 - Config: configs/positional_encoding_in_gans/singan_interp-pad_disc-nobn_balloons.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: Others
   Name: singan_interp-pad_disc-nobn_balloons
   Results:
-  - Dataset: Others
+  - Dataset: '[balloons.png](https://download.openmmlab.com/mmediting/dataset/singan/balloons.png)'
     Metrics:
       Num Scales: 8.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_interp-pad_disc-nobn_balloons_20210406_180059-7d63e65d.pth
 - Config: configs/positional_encoding_in_gans/singan_interp-pad_disc-nobn_fish.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: Others
   Name: singan_interp-pad_disc-nobn_fish
   Results:
-  - Dataset: Others
+  - Dataset: '[fish.jpg](https://download.openmmlab.com/mmediting/dataset/singan/fish-crop.jpg)'
     Metrics:
       Num Scales: 10.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_interp-pad_disc-nobn_fis_20210406_175720-9428517a.pth
 - Config: configs/positional_encoding_in_gans/singan-csg_fish.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: Others
   Name: singan-csg_fish
   Results:
-  - Dataset: Others
+  - Dataset: '[fish.jpg](https://download.openmmlab.com/mmediting/dataset/singan/fish-crop.jpg)'
     Metrics:
       Num Scales: 10.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_csg_fis_20210406_175532-f0ec7b61.pth
 - Config: configs/positional_encoding_in_gans/singan-csg_bohemian.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: Others
   Name: singan-csg_bohemian
   Results:
-  - Dataset: Others
+  - Dataset: '[bohemian.png](https://download.openmmlab.com/mmediting/dataset/singan/bohemian.png)'
     Metrics:
       Num Scales: 10.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_csg_bohemian_20210407_195455-5ed56db2.pth
 - Config: configs/positional_encoding_in_gans/singan_spe-dim4_fish.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: Others
   Name: singan_spe-dim4_fish
   Results:
-  - Dataset: Others
+  - Dataset: '[fish.jpg](https://download.openmmlab.com/mmediting/dataset/singan/fish-crop.jpg)'
     Metrics:
       Num Scales: 10.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_spe-dim4_fish_20210406_175933-f483a7e3.pth
 - Config: configs/positional_encoding_in_gans/singan_spe-dim4_bohemian.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: Others
   Name: singan_spe-dim4_bohemian
   Results:
-  - Dataset: Others
+  - Dataset: '[bohemian.png](https://download.openmmlab.com/mmediting/dataset/singan/bohemian.png)'
     Metrics:
       Num Scales: 10.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_spe-dim4_bohemian_20210406_175820-6e484a35.pth
 - Config: configs/positional_encoding_in_gans/singan_spe-dim8_bohemian.py
   In Collection: Positional Encoding in GANs
-  Metadata:
-    Training Data: Others
   Name: singan_spe-dim8_bohemian
   Results:
-  - Dataset: Others
+  - Dataset: '[bohemian.png](https://download.openmmlab.com/mmediting/dataset/singan/bohemian.png)'
     Metrics:
       Num Scales: 10.0
     Task: Unconditional GANs

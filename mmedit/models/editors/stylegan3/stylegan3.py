@@ -29,9 +29,9 @@ class StyleGAN3(StyleGAN2):
 
     Detailed architecture can be found in
 
-    :class:~`mmgen.models.architectures.stylegan.generator_discriminator_v3.StyleGANv3Generator`  # noqa
+    :class:`~mmedit.models.editors.stylegan3.StyleGAN3Generator`
     and
-    :class:~`mmgen.models.architectures.stylegan.generator_discriminator_v2.StyleGAN2Discriminator`  # noqa
+    :class:`~mmedit.models.editors.stylegan2.StyleGAN2Discriminator`
     """
 
     def __init__(self,
