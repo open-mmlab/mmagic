@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 from mmedit.models import DenoisingUnet
 from mmedit.registry import MODELS
@@ -155,3 +156,27 @@ class Text2ImUNet(DenoisingUnet):
         h = h.type(x.dtype)
         h = self.out(h)
         return h
+
+
+@MODELS.register_module()
+class SuperResText2ImUNet(Text2ImUNet):
+    """A UNetModel that performs super-resolution.
+
+    Expects an extra kwarg `low_res` to condition on a low-resolution image.
+    """
+
+    def __init__(self, *args, **kwargs):
+        if 'in_channels' in kwargs:
+            kwargs = dict(kwargs)
+            kwargs['in_channels'] = kwargs['in_channels'] * 2
+        else:
+            args = list(args)
+            args[1] = args[1] * 2
+        super().__init__(*args, **kwargs)
+
+    def forward(self, x, timesteps, low_res=None, **kwargs):
+        _, _, new_height, new_width = x.shape
+        upsampled = F.interpolate(
+            low_res, (new_height, new_width), mode='bilinear')
+        x = torch.cat([x, upsampled], dim=1)
+        return super().forward(x, timesteps, **kwargs)
