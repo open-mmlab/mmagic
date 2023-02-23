@@ -38,6 +38,9 @@ class MMEdit:
 
         >>> # see demo/mmediting_inference_tutorial.ipynb for more examples
     """
+    # unsupported now
+    # singan
+
     inference_supported_models = [
         # colorization models
         'inst_colorization',
@@ -48,7 +51,14 @@ class MMEdit:
         'sagan',
 
         # unconditional models
+        'dcgan',
+        'wgan-gp',
+        'lsgan',
+        'ggan',
+        'pggan',
         'styleganv1',
+        'styleganv2',
+        'styleganv3',
 
         # matting models
         'gca',
