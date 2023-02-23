@@ -16,8 +16,6 @@ from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, SampleList
 
-# from .guider import ImageTextGuider
-
 ModelType = Union[Dict, nn.Module]
 
 
@@ -53,6 +51,8 @@ class Glide(BaseModel):
                  data_preprocessor,
                  unet,
                  diffusion_scheduler,
+                 unet_up=None,
+                 diffusion_scheduler_up=None,
                  use_fp16=False,
                  classifier=None,
                  classifier_scale=1.0,
@@ -62,6 +62,18 @@ class Glide(BaseModel):
         self.unet = MODELS.build(unet)
         self.diffusion_scheduler = DIFFUSION_SCHEDULERS.build(
             diffusion_scheduler)
+
+        self.unet_up = None
+        self.diffusion_scheduler_up = None
+        if unet_up:
+            self.unet_up = MODELS.build(unet_up)
+            if diffusion_scheduler_up:
+                self.diffusion_scheduler_up = DIFFUSION_SCHEDULERS.build(
+                    diffusion_scheduler_up)
+            else:
+                self.diffusion_scheduler_up = deepcopy(
+                    self.diffusion_scheduler)
+
         if classifier:
             self.classifier = MODELS.build(classifier)
         else:
@@ -167,9 +179,6 @@ class Glide(BaseModel):
             half_eps = uncond_eps + guidance_scale * (cond_eps - uncond_eps)
             eps = torch.cat([half_eps, half_eps], dim=0)
             noise_pred = torch.cat([eps, rest], dim=1)
-            # noise_pred_text, noise_pred_uncond = model_output.chunk(2)
-            # noise_pred = noise_pred_uncond + guidance_scale *
-            # (noise_pred_text - noise_pred_uncond)
 
             # 2. compute previous image: x_t -> x_t-1
             diffusion_scheduler_output = self.diffusion_scheduler.step(
@@ -191,7 +200,69 @@ class Glide(BaseModel):
             else:
                 image = diffusion_scheduler_output['prev_sample']
 
+        # abandon unconditional image
+        image = image[:image.shape[0] // 2]
+
+        if self.unet_up:
+            image = self.infer_up(
+                low_res_img=image, batch_size=batch_size, prompt=prompt)
+
         return {'samples': image}
+
+    @torch.no_grad()
+    def infer_up(self,
+                 low_res_img,
+                 batch_size=1,
+                 init_image=None,
+                 prompt=None,
+                 num_inference_steps=27,
+                 show_progress=False):
+        """_summary_
+
+        Args:
+            init_image (_type_, optional): _description_. Defaults to None.
+            batch_size (int, optional): _description_. Defaults to 1.
+            num_inference_steps (int, optional): _description_.
+                Defaults to 1000.
+            labels (_type_, optional): _description_. Defaults to None.
+            show_progress (bool, optional): _description_. Defaults to False.
+
+        Returns:
+            _type_: _description_
+        """
+        if init_image is None:
+            image = torch.randn(
+                (batch_size, self.unet_up.in_channels // 2,
+                 self.unet_up.image_size, self.unet_up.image_size))
+            image = image.to(self.device)
+        else:
+            image = init_image
+
+        # set step values
+        if num_inference_steps > 0:
+            self.diffusion_scheduler_up.set_timesteps(num_inference_steps)
+        timesteps = self.diffusion_scheduler_up.timesteps
+
+        # text embedding
+        tokens = self.unet.tokenizer.encode(prompt)
+        tokens, mask = self.unet.tokenizer.padded_tokens_and_mask(tokens, 128)
+        tokens = torch.tensor(
+            [tokens] * batch_size, dtype=torch.bool, device=self.device)
+        mask = torch.tensor(
+            [mask] * batch_size, dtype=torch.bool, device=self.device)
+
+        if show_progress and mmengine.dist.is_main_process():
+            timesteps = tqdm(timesteps)
+
+        for t in timesteps:
+            noise_pred = self.unet_up(
+                image, t, low_res=low_res_img, tokens=tokens, mask=mask)
+            # compute previous image: x_t -> x_t-1
+            diffusion_scheduler_output = self.diffusion_scheduler_up.step(
+                noise_pred, t, image)
+            image = diffusion_scheduler_output['prev_sample']
+
+        return image
 
     def forward(self,
                 inputs: ForwardInputs,
