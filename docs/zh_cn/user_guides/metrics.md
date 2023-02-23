@@ -140,7 +140,7 @@ val_evaluator = [
 
 Fréchet初始距离是两个图像数据集之间相似度的度量。它被证明与人类对视觉质量的判断有很好的相关性，最常用于评估生成对抗网络样本的质量。FID是通过计算两个高斯函数之间的Fréchet距离来计算的，这些高斯函数适合于Inception网络的特征表示。
 
-在`MMEditing`中，我们提供了两个版本的FID计算。一个是常用的PyTorch版本，另一个用于StyleGAN。同时，我们在StyleGAN2-FFHQ1024模型中比较了这两种实现之间的差异(详细信息可以在这里找到[https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv2/README.md])。幸运的是，最终结果只是略有不同。因此，我们建议用户采用更方便的PyTorch版本。
+在`MMEditing`中，我们提供了两个版本的FID计算。一个是常用的PyTorch版本，另一个用于StyleGAN。同时，我们在StyleGAN2-FFHQ1024模型中比较了这两种实现之间的差异(详细信息可以在这里找到\[https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv2/README.md\])。幸运的是，最终结果只是略有不同。因此，我们建议用户采用更方便的PyTorch版本。
 
 **关于PyTorch版本和Tero版本:** 常用的PyTorch版本采用修改后的InceptionV3网络提取真假图像特征。然而，Tero的FID需要Tensorflow InceptionV3的[脚本模块](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/inception-2015-12-05.pt)。注意，应用此脚本模块需要' PyTorch >= 1.6.0 '。
 
@@ -160,6 +160,7 @@ metrics = [
 ```
 
 如果您在一台新机器上工作，那么您可以复制'MMEDIT_CACHE_DIR'中的'pkl'文件，将它们复制到新机器并设置'inception_pkl'字段。
+
 ```python
 metrics = [
     dict(
@@ -198,6 +199,7 @@ metrics = [
 对应于config，您可以设置'resize_method'和'use_pillow_resize'用于图像大小的调整。您也可以将'inception_style'设置为'StyleGAN'用于推荐的tero的初始模型，或'PyTorch'用于torchvision的实现。对于没有互联网的环境，您可以下载初始的权重，并将'inception_path'设置为您的初始模型。
 
 我们还调查了数据加载管线和预训练的Inception V3版本对IS结果的影响。所有IS都在同一组图像上进行评估，这些图像是从ImageNet数据集中随机选择的。
+
 <details> <summary> 显示对比结果 </summary>
 
 |                            Code Base                            | Inception V3 Version | Data Loader Backend | Resize Interpolation Method |          IS           |
@@ -235,7 +237,7 @@ metrics = [
 
 当在两个随机输入之间进行插值时，感知路径长度测量连续图像（其VGG16嵌入）之间的差异。剧烈的变化意味着多个特征一起发生了变化，它们可能会叠加在一起。通过实验表明，较小的PPL分数表明整体图像质量较高。
 作为该指标的基础，我们使用基于感知的成对图像距离，该距离被计算为两个VGG16嵌入之间的加权差，其中权重被拟合，从而评价指标与人类的感知相似性判断一致。
-如果我们将潜在空间插值路径细分为线性段，我们可以将该分段路径的总感知长度定义为每个段上感知差异的总和，并且感知路径长度的自然定义将是无限细分下的总和的极限，但在实践中，我们使用一个小的细分``$`\epsilon=10^｛-4｝`$``来近似它。
+如果我们将潜在空间插值路径细分为线性段，我们可以将该分段路径的总感知长度定义为每个段上感知差异的总和，并且感知路径长度的自然定义将是无限细分下的总和的极限，但在实践中，我们使用一个小的细分`` $`\epsilon=10^｛-4｝`$ ``来近似它。
 因此，潜在`space`Z中所有可能端点的平均感知路径长度为
 
 `` $$`L_Z = E[\frac{1}{\epsilon^2}d(G(slerp(z_1,z_2;t))), G(slerp(z_1,z_2;t+\epsilon)))]`$$ ``
@@ -279,6 +281,7 @@ metrics = [
 
 采用多尺度结构相似度来衡量两幅图像的相似度。我们在这里使用MS-SSIM来衡量生成图像的多样性，MS-SSIM得分低表示生成图像的多样性高。您可以在'metrics.py'中看到完整的实现，参考https://github.com/tkarras/progressive_growing_of_gans/blob/master/metrics/ms_ssim.py。
 如果您想使用'MS-SSIM'指标评估模型，请在配置文件中添加以下配置:
+
 ```python
 # at the end of the configs/dcgan/dcgan_1xb128-5epoches_lsun-bedroom-64x64.py
 metrics = [
@@ -290,9 +293,9 @@ metrics = [
 
 ## Equivarience
 
-生成模型的等价性是指模型正变换和几何变换的互换性。目前这个指标只针对StyleGANv3计算，
-您可以在'metrics.py'中看到完整的实现，参考https://github.com/NVlabs/stylegan3/blob/main/metrics/equivariance.py。
+生成模型的等价性是指模型正变换和几何变换的互换性。目前这个指标只针对StyleGANv3计算，您可以在'metrics.py'中看到完整的实现，参考https://github.com/NVlabs/stylegan3/blob/main/metrics/equivariance.py。
 如果您想使用'Equivarience'指标评估模型，请在配置文件中添加以下配置:
+
 ```python
 # at the end of the configs/styleganv3/stylegan3-t_gamma2.0_8xb4-fp16-noaug_ffhq-256x256.py
 metrics = [
