@@ -2,10 +2,10 @@
 from mmcv.cnn import ConvModule
 from mmengine.model import BaseModule
 
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class GLEncoder(BaseModule):
     """Encoder used in Global&Local model.
 

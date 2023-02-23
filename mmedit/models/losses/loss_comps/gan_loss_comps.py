@@ -5,10 +5,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class GANLossComps(nn.Module):
     """Define GAN loss.
 

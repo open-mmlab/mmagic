@@ -18,9 +18,9 @@ class WGANGP(BaseGAN):
     Paper link: https://arxiv.org/pdf/1704.00028
 
     Detailed architecture can be found in
-    :class:~`mmgen.models.architectures.wgan_gp.generator_discriminator.WGANGPGenerator`  # noqa
+    :class:`~mmedit.models.editors.wgan_gp.WGANGPGenerator`
     and
-    :class:~`mmgen.models.architectures.wgan_gp.generator_discriminator.WGANGPDiscriminator`  # noqa
+    :class:`~mmedit.models.editors.wgan_gp.WGANGPDiscriminator`
     """
 
     def __init__(self, *args, **kwargs):

@@ -6,10 +6,10 @@ import torch.nn as nn
 from mmcv.cnn import ConvModule, build_norm_layer
 from mmengine.model import constant_init
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class WGANNoiseTo2DFeat(nn.Module):
     """Module used in WGAN-GP to transform 1D noise tensor in order [N, C] to
     2D shape feature tensor in order [N, C, H, W].

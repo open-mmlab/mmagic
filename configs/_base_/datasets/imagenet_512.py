@@ -7,7 +7,7 @@ train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='RandomCropLongEdge', keys=['img']),
     dict(type='Resize', scale=(512, 512), keys=['img'], backend='pillow'),
-    dict(type='Flip', flip_ratio=0.5, direction='horizontal'),
+    dict(type='Flip', keys=['img'], flip_ratio=0.5, direction='horizontal'),
     dict(type='PackEditInputs')
 ]
 

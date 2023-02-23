@@ -17,7 +17,7 @@ from mmengine.runner import load_checkpoint
 from mmengine.utils.dl_utils import TORCH_VERSION
 from mmengine.utils.version_utils import digit_version
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 from .embeddings import TimestepEmbedding, Timesteps
 from .unet_blocks import UNetMidBlock2DCrossAttn, get_down_block, get_up_block
 
@@ -104,7 +104,7 @@ class SiLU(BaseModule):
         return F.silu(x, inplace=self.inplace)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MultiHeadAttention(BaseModule):
     """An attention block allows spatial position to attend to each other.
 
@@ -160,7 +160,7 @@ class MultiHeadAttention(BaseModule):
         constant_init(self.proj, 0)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MultiHeadAttentionBlock(BaseModule):
     """An attention block that allows spatial positions to attend to each
     other.
@@ -212,7 +212,7 @@ class MultiHeadAttentionBlock(BaseModule):
         return (x + h).reshape(b, c, *spatial)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class QKVAttentionLegacy(BaseModule):
     """A module which performs QKV attention.
 
@@ -249,7 +249,7 @@ class QKVAttentionLegacy(BaseModule):
         return a.reshape(bs, -1, length)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class QKVAttention(BaseModule):
     """A module which performs QKV attention and splits in a different
     order."""
@@ -280,7 +280,7 @@ class QKVAttention(BaseModule):
         return a.reshape(bs, -1, length)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class TimeEmbedding(BaseModule):
     """Time embedding layer, reference to Two level embedding. First embedding
     time by an embedding function, then feed to neural networks.
@@ -357,7 +357,7 @@ class TimeEmbedding(BaseModule):
         return self.blocks(self.embedding_fn(t))
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class DenoisingResBlock(BaseModule):
     """Resblock for the denoising network. If `in_channels` not equals to
     `out_channels`, a learnable shortcut with conv layers will be added.
@@ -408,7 +408,7 @@ class DenoisingResBlock(BaseModule):
             embedding_channels=embedding_channels,
             use_scale_shift=use_scale_shift_norm,
             norm_cfg=_norm_cfg)
-        self.norm_with_embedding = MODULES.build(
+        self.norm_with_embedding = MODELS.build(
             dict(type='NormWithEmbedding'),
             default_args=norm_with_embedding_cfg)
 
@@ -481,7 +481,7 @@ class DenoisingResBlock(BaseModule):
         constant_init(self.conv_2[-1], 0)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class NormWithEmbedding(BaseModule):
     """Nornalization with embedding layer. If `use_scale_shift == True`,
     embedding results will be chunked and used to re-shift and re-scale
@@ -538,7 +538,7 @@ class NormWithEmbedding(BaseModule):
         return x
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class DenoisingDownsample(BaseModule):
     """Downsampling operation used in the denoising network. Support average
     pooling and convolution for downsample operation.
@@ -568,7 +568,7 @@ class DenoisingDownsample(BaseModule):
         return self.downsample(x)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class DenoisingUpsample(BaseModule):
     """Upsampling operation used in the denoising network. Allows users to
     apply an additional convolution layer after the nearest interpolation
@@ -613,7 +613,7 @@ def build_down_block_resattn(resblocks_per_downsample, resblock_cfg,
 
     for _ in range(resblocks_per_downsample):
         layers = [
-            MODULES.build(
+            MODELS.build(
                 resblock_cfg,
                 default_args={
                     'in_channels': in_channels_,
@@ -624,7 +624,7 @@ def build_down_block_resattn(resblocks_per_downsample, resblock_cfg,
 
         if scale in attention_scale:
             layers.append(
-                MODULES.build(
+                MODELS.build(
                     attention_cfg, default_args={'in_channels': in_channels_}))
 
         in_channels_list.append(in_channels_)
@@ -640,7 +640,7 @@ def build_down_block_resattn(resblocks_per_downsample, resblock_cfg,
                     dropout,
                     norm_cfg=norm_cfg,
                     out_channels=out_channels_,
-                    down=True) if resblock_updown else MODULES.build(
+                    down=True) if resblock_updown else MODELS.build(
                         downsample_cfg,
                         default_args={'in_channels': in_channels_})))
         in_channels_list.append(in_channels_)
@@ -652,12 +652,10 @@ def build_mid_blocks_resattn(resblock_cfg, attention_cfg, in_channels_):
     """build unet mid blocks with resnet and attention."""
 
     return EmbedSequential(
-        MODULES.build(
-            resblock_cfg, default_args={'in_channels': in_channels_}),
-        MODULES.build(
+        MODELS.build(resblock_cfg, default_args={'in_channels': in_channels_}),
+        MODELS.build(
             attention_cfg, default_args={'in_channels': in_channels_}),
-        MODULES.build(
-            resblock_cfg, default_args={'in_channels': in_channels_}),
+        MODELS.build(resblock_cfg, default_args={'in_channels': in_channels_}),
     )
 
 
@@ -685,7 +683,7 @@ def build_up_blocks_resattn(
     out_blocks = nn.ModuleList()
     for idx in range(resblocks_per_downsample + 1):
         layers = [
-            MODULES.build(
+            MODELS.build(
                 resblock_cfg,
                 default_args={
                     'in_channels': in_channels_ + in_channels_list.pop(),
@@ -695,7 +693,7 @@ def build_up_blocks_resattn(
         in_channels_ = int(base_channels * factor)
         if scale in attention_scale:
             layers.append(
-                MODULES.build(
+                MODELS.build(
                     attention_cfg, default_args={'in_channels': in_channels_}))
         if (level != len(channel_factor_list) - 1
                 and idx == resblocks_per_downsample):
@@ -708,7 +706,7 @@ def build_up_blocks_resattn(
                     dropout,
                     norm_cfg=norm_cfg,
                     out_channels=out_channels_,
-                    up=True) if resblock_updown else MODULES.
+                    up=True) if resblock_updown else MODELS.
                 build(
                     upsample_cfg, default_args={'in_channels': in_channels_}))
             scale //= 2
@@ -717,7 +715,7 @@ def build_up_blocks_resattn(
     return out_blocks, in_channels_, scale
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class DenoisingUnet(BaseModule):
     """Denoising Unet. This network receives a diffused image ``x_t`` and
     current timestep ``t``, and returns a ``output_dict`` corresponding to the
@@ -1117,7 +1115,7 @@ class DenoisingUnet(BaseModule):
                 mmengine.print_log('\'SiLU\' is not supported for '
                                    f'torch < 1.6.0, found \'{torch.version}\'.'
                                    'Use ReLu instead but result maybe wrong')
-                self.conv_act == nn.ReLU()
+                self.conv_act = nn.ReLU()
             self.conv_out = nn.Conv2d(
                 block_out_channels[0],
                 self.out_channels,

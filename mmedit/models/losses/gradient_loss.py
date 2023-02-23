@@ -5,13 +5,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmedit.registry import LOSSES
+from mmedit.registry import MODELS
 from .pixelwise_loss import l1_loss
 
 _reduction_modes = ['none', 'mean', 'sum']
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class GradientLoss(nn.Module):
     """Gradient loss.
 

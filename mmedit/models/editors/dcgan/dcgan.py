@@ -20,9 +20,9 @@ class DCGAN(BaseGAN):
         <https://arxiv.org/abs/1511.06434>`_ (DCGAN).
 
     Detailed architecture can be found in
-    :class:~`mmgen.models.architectures.dcgan.generator_discriminator.DCGANGenerator`  # noqa
+    :class:`~mmedit.models.editors.dcgan.DCGANGenerator`  # noqa
     and
-    :class:~`mmgen.models.architectures.dcgan.generator_discriminator.DCGANDiscriminator`  # noqa
+    :class:`~mmedit.models.editors.dcgan.DCGANDiscriminator`  # noqa
     """
 
     def disc_loss(self, disc_pred_fake: Tensor,

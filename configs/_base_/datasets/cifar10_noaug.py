@@ -1,5 +1,3 @@
-# custom_imports = dict(
-#     imports=['mmcls.datasets.transforms'], allow_failed_imports=False)
 cifar_pipeline = [dict(type='PackEditInputs')]
 cifar_dataset = dict(
     type='CIFAR10',

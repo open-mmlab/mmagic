@@ -9,10 +9,10 @@ from mmengine.model import BaseModule
 
 # from ...modules import SimpleGatedConvModule
 from mmedit.models.base_archs import SimpleGatedConvModule
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class DeepFillDecoder(BaseModule):
     """Decoder used in DeepFill model.
 

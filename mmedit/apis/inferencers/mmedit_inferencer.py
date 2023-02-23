@@ -4,6 +4,7 @@ from typing import Dict, List, Optional, Union
 import torch
 
 from mmedit.utils import ConfigType
+from .colorization_inferencer import ColorizationInferencer
 from .conditional_inferencer import ConditionalInferencer
 from .eg3d_inferencer import EG3DInferencer
 from .inpainting_inferencer import InpaintingInferencer
@@ -39,6 +40,9 @@ class MMEditInferencer:
         if self.task in ['conditional', 'Conditional GANs']:
             self.inferencer = ConditionalInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
+        elif self.task in ['colorization', 'Colorization']:
+            self.inferencer = ColorizationInferencer(
+                config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['unconditional', 'Unconditional GANs']:
             self.inferencer = UnconditionalInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
@@ -48,7 +52,7 @@ class MMEditInferencer:
         elif self.task in ['inpainting', 'Inpainting']:
             self.inferencer = InpaintingInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
-        elif self.task in ['translation', 'Image2Image Translation']:
+        elif self.task in ['translation', 'Image2Image']:
             self.inferencer = TranslationInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['restoration', 'Image Super-Resolution']:

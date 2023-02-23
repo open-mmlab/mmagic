@@ -8,7 +8,7 @@ from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch.optim import SGD
 
 from mmedit.models import LSGAN, GenDataPreprocessor
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 generator = dict(
     type='DCGANGenerator', noise_size=10, output_scale=16, base_channels=16)
@@ -41,8 +41,8 @@ class TestLSGAN(TestCase):
         gen_cfg = deepcopy(generator)
         gen_cfg['noise_size'] = 10
         disc_cfg = deepcopy(discriminator)
-        gen = MODULES.build(gen_cfg)
-        disc = MODULES.build(disc_cfg)
+        gen = MODELS.build(gen_cfg)
+        disc = MODELS.build(disc_cfg)
         gan = LSGAN(
             generator=gen,
             discriminator=disc,

@@ -24,24 +24,24 @@ Since convolutional neural networks (CNNs) perform well at learning generalizabl
 
 Evaluated on Y channels. The metrics are `PSNR` / `SSIM` .
 
-|            Model            | Dataset|PSNR (Y) | SSIM (Y) | Training Resources |            Download             |
-| :-------------------------: | :-----------------------: | :-----------------------: | :----------------------: | :-----------------------: | :-----------------------: | :----------------: | :-------------: |
-| [restormer_official_rain13k](./restormer_official_rain13k.py) |Rain100H|31.4804|0.9056| 1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth) | log |
-| [restormer_official_rain13k](./restormer_official_rain13k.py) |Rain100L| 39.1023|0.9787| 1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth) | log |
-| [restormer_official_rain13k](./restormer_official_rain13k.py) |Test100|32.0287|0.9239| 1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth) | log |
-| [restormer_official_rain13k](./restormer_official_rain13k.py) |Test1200| 33.2251|/0.9272| 1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth) | log |
-| [restormer_official_rain13k](./restormer_official_rain13k.py) |Test2800|34.2170|0.9451| 1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth) | log |
+|                             Model                             | Dataset  | PSNR (Y) | SSIM (Y) | Training Resources |                                             Download                                              |
+| :-----------------------------------------------------------: | :------: | :------: | :------: | :----------------: | :-----------------------------------------------------------------------------------------------: |
+| [restormer_official_rain13k](./restormer_official_rain13k.py) | Rain100H | 31.4804  |  0.9056  |         1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth) \| log |
+| [restormer_official_rain13k](./restormer_official_rain13k.py) | Rain100L | 39.1023  |  0.9787  |         1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth) \| log |
+| [restormer_official_rain13k](./restormer_official_rain13k.py) | Test100  | 32.0287  |  0.9239  |         1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth) \| log |
+| [restormer_official_rain13k](./restormer_official_rain13k.py) | Test1200 | 33.2251  | /0.9272  |         1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth) \| log |
+| [restormer_official_rain13k](./restormer_official_rain13k.py) | Test2800 | 34.2170  |  0.9451  |         1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth) \| log |
 
 ### **Motion Deblurring**
 
 Evaluated on RGB channels for GoPro and HIDE, and Y channel for ReakBlur-J and ReakBlur-R. The metrics are `PSNR` / `SSIM` .
 
-|                  Model   |Dataset               | PSNR/SSIM (RGB) | <br>PSNR/SSIM (Y) |Training Resources |                  Download                  |
-| :-------------------------------------: | :----------------------: | :---------------------: | :-------------------------: | :-------------------------: | :----------------: | :----------------------------------------: |
-| [restormer_official_gopro](./restormer_official_gopro.py) | DatasetGoPro |32.9295/0.9496 |-| 1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth) | log |
-| [restormer_official_gopro](./restormer_official_gopro.py) | HIDE| 31.2289/0.9345  |-| 1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth) | log |
-| [restormer_official_gopro](./restormer_official_gopro.py) | RealBlur-J|-| 28.4356/0.8681 |  1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth) | log |
-| [restormer_official_gopro](./restormer_official_gopro.py) | RealBlur-R | -|  35.9141/0.9707    |  1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth) | log |
+|                           Model                           |   Dataset    | PSNR/SSIM (RGB) | <br>PSNR/SSIM (Y) | Training Resources |                                     Download                                      |
+| :-------------------------------------------------------: | :----------: | :-------------: | :---------------: | :----------------: | :-------------------------------------------------------------------------------: |
+| [restormer_official_gopro](./restormer_official_gopro.py) | DatasetGoPro | 32.9295/0.9496  |         -         |         1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth) \| log |
+| [restormer_official_gopro](./restormer_official_gopro.py) |     HIDE     | 31.2289/0.9345  |         -         |         1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth) \| log |
+| [restormer_official_gopro](./restormer_official_gopro.py) |  RealBlur-J  |        -        |  28.4356/0.8681   |         1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth) \| log |
+| [restormer_official_gopro](./restormer_official_gopro.py) |  RealBlur-R  |        -        |  35.9141/0.9707   |         1          | [model](https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth) \| log |
 
 ### **Defocus Deblurring**
 

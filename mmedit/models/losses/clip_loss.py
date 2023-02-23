@@ -4,7 +4,7 @@ from typing import Optional
 import torch
 import torch.nn as nn
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from mmedit.utils import try_import
 
 clip = try_import('clip')
@@ -54,7 +54,7 @@ class CLIPLossModel(torch.nn.Module):
         return loss
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class CLIPLoss(nn.Module):
     """Clip loss. In styleclip, this loss is used to optimize the latent code
     to generate image that match the text.

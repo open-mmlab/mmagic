@@ -7,7 +7,7 @@ from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
 from mmedit.models.utils import normalize_vecs
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 DeviceType = Optional[Union[str, int]]
 VectorType = Optional[Union[list, torch.Tensor]]
@@ -363,7 +363,7 @@ class BaseCamera(object):
         return repr_string
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class GaussianCamera(BaseCamera):
     """Pre-defined camera class. Sample camera position in gaussian
     distribution.
@@ -399,7 +399,7 @@ class GaussianCamera(BaseCamera):
                          'gaussian')
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class UniformCamera(BaseCamera):
     """Pre-defined camera class. Sample camera position in uniform
     distribution.

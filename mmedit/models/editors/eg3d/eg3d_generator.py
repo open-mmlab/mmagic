@@ -6,14 +6,14 @@ import torch
 from mmengine.model import BaseModule
 from torch import Tensor
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from .eg3d_modules import SuperResolutionModule, TriPlaneBackbone
 from .ray_sampler import sample_rays
 from .renderer import EG3DRenderer
 
 
-@MODULES.register_module('EG3DGenerator')
-@MODULES.register_module()
+@MODELS.register_module('EG3DGenerator')
+@MODELS.register_module()
 class TriplaneGenerator(BaseModule):
     """The generator for EG3D.
 

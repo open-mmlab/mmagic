@@ -5,7 +5,7 @@ import unittest
 import pytest
 import torch
 
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils import register_all_modules
 
@@ -63,7 +63,7 @@ class TestInstColorization:
             which_direction='AtoB',
             loss=dict(type='HuberLoss', delta=.01))
 
-        model = BACKBONES.build(model_cfg)
+        model = MODELS.build(model_cfg)
 
         # test attributes
         assert model.__class__.__name__ == 'InstColorization'

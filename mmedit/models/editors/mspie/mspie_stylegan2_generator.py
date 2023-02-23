@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ...utils import get_module_device
 from ..pggan import PixelNorm
 from ..stylegan1 import (ConstantInput, EqualLinearActModule, get_mean_latent,
@@ -17,7 +17,7 @@ from ..stylegan2 import ModulatedToRGB
 from .mspie_stylegan2_modules import ModulatedPEStyleConv
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MSStyleGANv2Generator(nn.Module):
     """StyleGAN2 Generator.
 
@@ -115,7 +115,7 @@ class MSStyleGANv2Generator(nn.Module):
                     'CatersianGrid', 'CSG', 'CSG2d'
             ]:
                 in_ch = 2
-            self.head_pos_enc = MODULES.build(self.head_pos_encoding)
+            self.head_pos_enc = MODELS.build(self.head_pos_encoding)
         else:
             size_ = 4
             if self.no_pad:
