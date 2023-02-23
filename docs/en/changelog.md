@@ -1,5 +1,52 @@
 # Changelog
 
+## v1.0.0rc6 (25/02/2023)
+
+**Highlights**
+We are excited to announce the release of MMEditing 1.0.0rc6. This release supports 50+ models, 222+ configs and 209+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
+
+- Support Gradio gui of Inpainting inference.
+- Support Colorization, Translationin and all GAN models inferencer.
+
+**New Features & Improvements**
+
+- Refactor FileIO. [#1572](https://github.com/open-mmlab/mmediting/pull/1572)
+- Refactor registry. [#1621](https://github.com/open-mmlab/mmediting/pull/1621)
+- Refactor Random degradations. [#1583](https://github.com/open-mmlab/mmediting/pull/1583)
+- Use mmengine.basemodule instead of nn.module. [#1491](https://github.com/open-mmlab/mmediting/pull/1491)
+- Refactor Main Page. [#1609](https://github.com/open-mmlab/mmediting/pull/1609)
+- Support Gradio gui of Inpainting inference. [#1601](https://github.com/open-mmlab/mmediting/pull/1601)
+- Support Colorization inferencer. [#1588](https://github.com/open-mmlab/mmediting/pull/1588)
+- Support Translation models inferencer. [#1650](https://github.com/open-mmlab/mmediting/pull/1650)
+- Support all GAN models inferencer. [#1653](https://github.com/open-mmlab/mmediting/pull/1653), [#1659](https://github.com/open-mmlab/mmediting/pull/1659)
+- Print config tool. [#1590](https://github.com/open-mmlab/mmediting/pull/1590)
+- Improve type hints. [#1604](https://github.com/open-mmlab/mmediting/pull/1604)
+- Update Chinese documents of metrics and datasets. [#1568](https://github.com/open-mmlab/mmediting/pull/1568), [#1638](https://github.com/open-mmlab/mmediting/pull/1638)
+- Update Chinese documents of BigGAN and Disco-Diffusion. [#1620](https://github.com/open-mmlab/mmediting/pull/1620)
+- Update Evaluation and README of Guided-Diffusion. [#1547](https://github.com/open-mmlab/mmediting/pull/1547)
+
+**Bug Fixes**
+
+- Fix the meaning of `momentum` in EMA. [#1581](https://github.com/open-mmlab/mmediting/pull/1581)
+- Fix output dtype of RandomNoise. [#1585](https://github.com/open-mmlab/mmediting/pull/1585)
+- Fix pytorch2onnx tool. [#1629](https://github.com/open-mmlab/mmediting/pull/1629)
+- Fix API documents. [#1641](https://github.com/open-mmlab/mmediting/pull/1641), [#1642](https://github.com/open-mmlab/mmediting/pull/1642)
+- Fix loading RealESRGAN EMA weights. [#1647](https://github.com/open-mmlab/mmediting/pull/1647)
+- Fix arg passing bug of dataset_converters scripts. [#1648](https://github.com/open-mmlab/mmediting/pull/1648)
+
+**Contributors**
+A total of 17 developers contributed to this release.
+Thanks @plyfager, @LeoXing1996, @Z-Fran, @zengyh1900, @VongolaWu, @liuwenran, @austinmw, @dienachtderwelt, @liangzelong, @i-aki-y, @xiaomile, @Li-Qingyun, @vansin, @Luo-Yihang, @ydengbi, @ruoningYu, @triple-Mu
+
+**New Contributors**
+
+- @dienachtderwelt made their first contribution in https://github.com/open-mmlab/mmediting/pull/1578
+- @i-aki-y made their first contribution in https://github.com/open-mmlab/mmediting/pull/1590
+- @triple-Mu made their first contribution in https://github.com/open-mmlab/mmediting/pull/1618
+- @Li-Qingyun made their first contribution in https://github.com/open-mmlab/mmediting/pull/1640
+- @Luo-Yihang made their first contribution in https://github.com/open-mmlab/mmediting/pull/1648
+- @ydengbi made their first contribution in https://github.com/open-mmlab/mmediting/pull/1557
+
 ## v1.0.0rc5 (04/01/2023)
 
 **Highlights**

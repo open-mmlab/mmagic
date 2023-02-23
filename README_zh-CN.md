@@ -105,7 +105,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ### 🌟 1.x 预览版本
 
-全新的 [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) 已经在 04/01/2023 发布:
+全新的 [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) 已经在 25/02/2023 发布:
 
 - 支持了著名的文本生成图像方法 [stable diffusion](configs/stable_diffusion/README.md)!
 - 支持了一个高效的图像复原算法 [Restormer](configs/restormer/README.md)!
@@ -115,6 +115,8 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 - 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
 - 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
 - 支持基于图像子块以及滑动条的图像和视频比较可视化工具。
+- 支持Inpainting任务的Gradio交互GUI。
+- 支持多种任务的inferencer和demo。
 
 在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
 
